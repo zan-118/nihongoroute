@@ -13,17 +13,16 @@
     "@sanity/image-url": "^1.1.0",
     "@sanity/vision": "latest",
     "@supabase/supabase-js": "^2.39.7",
-    "@types/canvas-confetti": "^1.9.0",
     "canvas-confetti": "^1.9.4",
     "next": "latest",
     "next-sanity": "latest",
     "react": "latest",
     "react-dom": "latest",
     "sanity": "latest",
-    "save-dev": "^0.0.1-security",
     "styled-components": "latest"
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^20.11.30",
     "@types/react": "latest",
     "@types/react-dom": "latest",
