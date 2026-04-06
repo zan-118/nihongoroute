@@ -1,100 +1,85 @@
+Tentu! Ini adalah draf `README.md` yang merangkum semua teknologi canggih dan fitur keren yang sudah kita bangun untuk NihongoPath. Kamu bisa langsung _copy-paste_ ini ke file `README.md` di _root folder_ proyekmu.
+
 ````markdown
-# 🇯🇵 NihongoPath - Free Japanese Learning Platform
+# 🌸 NihongoPath
 
-**NihongoPath** adalah platform pembelajaran bahasa Jepang mandiri yang gratis dan berbasis donasi. Dirancang untuk membantu pembelajar tingkat N5 hingga N1 menguasai tata bahasa, kosakata, dan simulasi ujian dengan pengalaman aplikasi modern (PWA).
+NihongoPath adalah platform belajar bahasa mandiri yang gratis dan berbasis donasi, didesain khusus untuk membantu pelajar menguasai bahasa Jepang dari level dasar (N5) hingga mahir (N1).
 
-![Next.js](https://img.shields.io/badge/Next.js-000?style=for-the-badge&logo=next.js&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
-![PWA](https://img.shields.io/badge/PWA-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white)
+Dibangun dengan arsitektur web modern, platform ini menggabungkan kurikulum yang terstruktur dengan teknik belajar saintifik seperti _Spaced Repetition System_ (SRS) dan Gamifikasi.
 
----
+## ✨ Fitur Utama
 
-## ✨ Fitur Unggulan
+- **📖 Kurikulum Terstruktur:** Materi pembelajaran komprehensif dari JLPT N5 hingga N1 yang dikelola sepenuhnya melalui antarmuka CMS yang lincah.
+- **🧠 SRS Flashcard Engine:** Sistem pengingat kosakata pintar yang meniru algoritma Anki/WaniKani, memastikan pengguna me-review kosakata tepat saat mereka hampir melupakannya.
+- **🎮 Gamifikasi & Progres:** Dilengkapi dengan sistem XP, _Leveling_, _Daily Streaks_, dan _Achievements_ untuk menjaga motivasi belajar.
+- **🗣️ Text-to-Speech (TTS):** Dukungan audio pelafalan bahasa Jepang asli (ja-JP) terintegrasi langsung di dalam materi menggunakan Web Speech API.
+- **🎨 Rich Text & Interaktif:** Artikel materi mendukung _Furigana_ (cara baca kanji), _Callout Info Boxes_, dan _Interactive Kana Tables_.
+- **⚡ Headless Architecture:** Performa sangat cepat dengan pemisahan antara konten materi (Sanity CMS) dan data pengguna (Supabase).
 
-- 📚 **Modul Materi Terstruktur**: Belajar per bab dengan penjelasan yang mendalam dan mudah dipahami.
-- 📝 **Mini Quiz Interaktif**: Uji pemahamanmu langsung setelah membaca materi di setiap bab.
-- ⏱️ **Simulasi Tryout JLPT**: Ujian dengan batasan waktu sungguhan. Dilengkapi fitur _Persistence Timer_ (waktu tidak reset meski browser di-refresh).
-- 📱 **Mobile First & PWA**: Bisa diinstal di Android/iOS dan diakses dengan cepat seperti aplikasi asli.
-- ❤️ **Donation-Based**: Platform ini sepenuhnya gratis, didukung oleh komunitas melalui sistem donasi.
+## 🛠️ Tech Stack
 
----
+- **Framework:** [Next.js 15](https://nextjs.org/) (App Router) & React 19
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **Content Management (CMS):** [Sanity.io](https://www.sanity.io/)
+- **Database & Auth:** [Supabase](https://supabase.com/) (PostgreSQL)
+- **Animation:** Canvas Confetti
 
-## 🚀 Teknologi yang Digunakan
+## 🚀 Cara Menjalankan di Komputer Lokal
 
-- **Frontend**: [Next.js 15 (App Router)](https://nextjs.org/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **Database & Auth**: [Supabase](https://supabase.com/)
-- **Deployment**: [Vercel](https://vercel.com/)
-- **State Management**: React Hooks (useState, useEffect, use)
+### 1. Prasyarat
 
----
+Pastikan kamu sudah menginstal Node.js (versi 18.x atau terbaru) dan npm.
 
-## 🛠️ Cara Menjalankan Secara Lokal
+### 2. Clone Repositori
 
-1. **Clone Repository**
-   ```bash
-   git clone [https://github.com/username-kamu/nihongopath.git](https://github.com/username-kamu/nihongopath.git)
-   cd nihongopath
-   ```
-````
-
-````
-
-2. **Install Dependensi**
 ```bash
-npm install
-
+git clone [https://github.com/username-kamu/nihongopath.git](https://github.com/username-kamu/nihongopath.git)
+cd nihongopath
+```
 ````
 
-3. **Konfigurasi Environment Variables**
-   Buat file `.env.local` di root folder dan masukkan key Supabase kamu:
+### 3. Instalasi Dependensi
 
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+Karena penggunaan kombinasi Next.js 15 dan ekosistem Sanity/React 19 terbaru, sangat disarankan menggunakan _flag_ ini untuk menghindari _dependency conflict_:
 
+```bash
+npm install --legacy-peer-deps
 ```
 
-4. **Jalankan Aplikasi**
+### 4. Konfigurasi Environment Variables
+
+Buat file bernama `.env.local` di _root folder_ dan isi dengan kredensial dari Supabase dan Sanity milikmu:
+
+```env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# Sanity CMS
+NEXT_PUBLIC_SANITY_PROJECT_ID=your_sanity_project_id
+NEXT_PUBLIC_SANITY_DATASET=production
+NEXT_PUBLIC_SANITY_API_VERSION=2024-01-01
+```
+
+### 5. Jalankan Development Server
 
 ```bash
 npm run dev
-
 ```
 
-Buka [http://localhost:3000](https://www.google.com/search?q=http://localhost:3000) di browser kamu.
+Buka [http://localhost:3000](http://localhost:3000) di browsermu untuk melihat hasil akhirnya.
 
----
+## 🗄️ Manajemen Konten (Sanity Studio)
 
-## 📂 Struktur Folder Utama
+NihongoPath memiliki _admin dashboard_ internal yang bisa diakses langsung di lingkungan _development_ maupun _production_ tanpa perlu membuka tab baru.
 
-- `/app`: Logika halaman (Dashboard, Materi, Tryout, Support).
-- `/components`: Komponen UI yang dapat digunakan kembali.
-- `/lib`: Konfigurasi client Supabase.
-- `/public`: Aset gambar dan manifest PWA.
+Akses URL berikut untuk masuk ke mode Editor Konten:
+[http://localhost:3000/studio](http://localhost:3000/studio)
 
----
+## 🤝 Dukungan & Donasi
 
-## 🤝 Kontribusi & Dukungan
-
-Proyek ini dibangun untuk kemajuan pendidikan bahasa Jepang yang aksesibel bagi semua orang. Jika Anda ingin mendukung operasional kami (Server & Pengembangan), Anda dapat berdonasi melalui:
-
-- [Trakteer](https://www.google.com/search?q=https://trakteer.id/Zan118)
-- [Saweria](https://www.google.com/search?q=https://saweria.co/Zan118)
-
----
-
-## 📄 Lisensi
-
-Proyek ini bersifat open-source. Silakan gunakan untuk belajar dan pengembangan lebih lanjut.
-
----
-
-_Dibuat dengan ❤️ untuk pembelajar Bahasa Jepang._
+Platform ini 100% gratis dan terbuka untuk siapa saja yang ingin belajar. Jika platform ini membantumu, pertimbangkan untuk memberikan dukungan melalui donasi agar server tetap berjalan dan fitur baru terus dikembangkan!
 
 ```
-
----
 
 ```
