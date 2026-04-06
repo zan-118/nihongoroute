@@ -1,25 +1,7 @@
-import type { Config } from "tailwindcss";
-
-const config: Config = {
-  content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
+module.exports = {
+  content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
   theme: {
-    extend: {
-      // Masukkan konfigurasi font, warna, dan shadow kamu di sini
-      colors: {
-        bodyColor: "#1f242d",
-        lightText: "#c4cfde",
-        // dan seterusnya...
-      },
-    },
+    extend: {},
   },
-  plugins: [
-    require("@tailwindcss/typography"),
-    // tambahkan plugin lain jika ada
-  ],
+  plugins: [],
 };
-
-export default config;

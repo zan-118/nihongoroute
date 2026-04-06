@@ -1,18 +1,15 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
-  /* Branding Colors */
+/* Branding Variables */
+:root {
   --color-bg-dark: #1f242d;
   --color-card-dark: #1e2024;
   --color-accent-cyan: #0ef;
   --color-text-main: #c4cfde;
   --color-text-bright: #ffffff;
 
-  /* Shadow Utilities */
-  --shadow-shadowOne: 10px 10px 19px #1c1e22, -10px -10px 19px #262a2e;
-}
-
-:root {
   --outer-shadow: 10px 10px 19px #1c1e22, -10px -10px 19px #262a2e;
   --inner-shadow: inset 5px 5px 10px #1c1e22, inset -5px -5px 10px #262a2e;
 }
@@ -20,16 +17,15 @@
 body {
   background-color: var(--color-bg-dark);
   color: var(--color-text-main);
-  /* Gunakan font sistem atau font kustom kamu */
   font-family: "Inter", sans-serif;
 }
 
-/* --- NEUMORPHIC UTILITIES --- */
+/* Neumorphic Utilities */
 
 .neu-card {
   background: var(--color-card-dark);
   box-shadow: var(--outer-shadow);
-  border-radius: 30px; /* Radius lebih besar agar lebih modern */
+  border-radius: 30px;
 }
 
 .neu-button {
@@ -38,7 +34,7 @@ body {
   color: var(--color-accent-cyan);
   font-weight: 900;
   border-radius: 0.75rem;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
   display: inline-block;
   cursor: pointer;
   text-transform: uppercase;
@@ -49,111 +45,53 @@ body {
   background: var(--color-accent-cyan);
   color: #1f242d;
   box-shadow: 0 0 20px rgba(0, 255, 239, 0.4);
-  transform: translateY(-2px);
 }
 
-.neu-button:active {
-  box-shadow: var(--inner-shadow);
-  transform: translateY(0);
-}
-
-/* --- TYPOGRAPHY (PROSE / MARKDOWN) --- */
+/* Prose styling */
 
 .prose {
   max-width: none;
-  color: var(--color-text-main) !important;
+  color: var(--color-text-main);
   line-height: 1.8;
 }
 
 .prose h1,
 .prose h2,
 .prose h3 {
-  color: var(--color-text-bright) !important;
+  color: var(--color-text-bright);
   font-weight: 900;
   font-style: italic;
-  letter-spacing: -0.02em;
-  margin-top: 2.5rem;
-  margin-bottom: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
   text-transform: uppercase;
 }
 
 .prose strong {
-  color: var(--color-accent-cyan) !important;
-  font-weight: 800;
+  color: var(--color-accent-cyan);
 }
 
-/* --- CUSTOM TABLE (CYBER STYLE) --- */
+/* Table styling */
 
 .prose table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  border-radius: 1.5rem;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  background-color: #1e2024;
-  margin: 2.5rem 0;
-  box-shadow: var(--outer-shadow);
+  border-collapse: collapse;
+  margin: 2rem 0;
+  background: var(--color-card-dark);
 }
 
-.prose th {
-  background-color: #1c1e22;
-  color: var(--color-accent-cyan);
-  padding: 1.25rem;
-  text-align: left;
-  font-size: 0.7rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  border-bottom: 2px solid rgba(0, 255, 239, 0.1);
-}
-
+.prose th,
 .prose td {
-  padding: 1.25rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.03);
-  color: #c4cfde;
-  font-size: 0.95rem;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.prose tr:hover td {
-  background-color: rgba(255, 255, 255, 0.01);
-  color: white;
-}
-
-/* --- SCROLLBAR CUSTOMIZATION --- */
+/* Scrollbar */
 
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: #1f242d;
-}
-
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: #2a2e35;
   border-radius: 10px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #0ef;
-}
-
-/* --- ANIMATIONS --- */
-
-@keyframes gradientText {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-.animate-gradientText {
-  background-size: 200% auto;
-  animation: gradientText 5s linear infinite;
 }
