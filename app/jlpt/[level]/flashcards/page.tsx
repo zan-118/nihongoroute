@@ -1,6 +1,7 @@
 import FlashcardEngine from "@/components/FlashcardEngine";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { client } from "@/sanity/lib/client";
 
 interface Params {
   params: Promise<{ level: string }>;
@@ -13,26 +14,49 @@ export default async function FlashcardPage({ params }: Params) {
 
   if (!VALID_LEVELS.includes(level)) return notFound();
 
-  const res = await fetch(
-    `${
-      process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
-    }/api/flashcards?type=vocab&level=${level}`,
-    { cache: "no-store" },
-  );
+  const query = `*[_type == "flashcard" && level->code == $level] {
+    "id": _id,
+    word,
+    romaji,
+    meaning,
+    type
+  }`;
 
-  if (!res.ok) {
+  const cards = await client.fetch(query, { level });
+
+  if (!cards || cards.length === 0) {
     return (
-      <div className="min-h-screen px-6 py-12">Failed to load vocabulary.</div>
+      <div className="min-h-screen px-4 md:px-8 py-12 bg-[#1f242d] text-center">
+        <div className="max-w-4xl mx-auto">
+          <nav className="mb-6 text-xs uppercase tracking-widest text-[#0ef]/60 text-left">
+            <Link
+              href={`/jlpt/${level}`}
+              className="text-sm text-[#0ef] hover:underline"
+            >
+              ← Back to JLPT {level.toUpperCase()}
+            </Link>
+          </nav>
+          <div className="mt-20 p-10 bg-[#1e2024] rounded-2xl border border-white/10 inline-block">
+            <p className="text-white mb-2">
+              Belum ada kosakata untuk level ini.
+            </p>
+            <p className="text-sm text-[#c4cfde]/60">
+              Silakan tambahkan data Flashcard di Sanity Studio.
+            </p>
+          </div>
+        </div>
+      </div>
     );
   }
 
-  const cards = await res.json();
-
   return (
-    <div className="min-h-screen px-4 md:px-8 py-12">
+    <div className="min-h-screen px-4 md:px-8 py-12 bg-[#1f242d]">
       <div className="max-w-4xl mx-auto">
         <nav className="mb-6 text-xs uppercase tracking-widest text-[#0ef]/60">
-          <Link href={`/jlpt/${level}`} className="text-sm text-[#0ef]">
+          <Link
+            href={`/jlpt/${level}`}
+            className="text-sm text-[#0ef] hover:underline"
+          >
             ← Back to JLPT {level.toUpperCase()}
           </Link>
         </nav>
