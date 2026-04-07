@@ -1,42 +1,17 @@
 "use client";
-
 import { useEffect, useMemo, useState } from "react";
 import { createNewCardState, updateCardState, SRSState } from "@/lib/srs";
 import { updateProgressOnReview, loadProgress } from "@/lib/progress";
 import { calculateLevel, xpForNextLevel, xpForCurrentLevel } from "@/lib/level";
-import { checkAchievements } from "@/lib/achievement";
 import { supabase } from "@/lib/supabase";
 import confetti from "canvas-confetti";
-import { updateReviewMission } from "@/lib/daily";
-
-/* ============================= */
-/* TYPES */
-/* ============================= */
-interface Card {
-  id?: string;
-  word?: string;
-  char?: string;
-  meaning?: string;
-  romaji?: string;
-}
-
-interface ProgressState {
-  streak: number;
-  totalReviews: number;
-  todayReviewCount: number;
-  dailyGoal: number;
-  studyDays: Record<string, number>;
-}
+import Flashcard from "./Flashcard";
 
 interface Props {
-  cards: Card[];
+  cards: any[];
 }
 
-/* ============================= */
-/* COMPONENT */
-/* ============================= */
 export default function FlashcardEngine({ cards }: Props) {
-  // 1. SEMUA USESTATE HARUS DI ATAS
   const [mounted, setMounted] = useState(false);
   const [initialized, setInitialized] = useState(false);
   const [index, setIndex] = useState(0);
@@ -44,244 +19,140 @@ export default function FlashcardEngine({ cards }: Props) {
   const [xp, setXp] = useState(0);
   const [level, setLevel] = useState(1);
   const [cardStates, setCardStates] = useState<Record<string, SRSState>>({});
-  const [progress, setProgress] = useState<ProgressState | null>(null);
-  const [unlocked, setUnlocked] = useState<string[]>([]);
-  const [achievementPopup, setAchievementPopup] = useState<string | null>(null);
 
-  // 2. SEMUA USEEFFECT
   useEffect(() => {
     setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
-
     const init = async () => {
-      const { data } = await supabase.auth.getUser();
-      if (!data.user) {
-        await supabase.auth.signInAnonymously();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) await supabase.auth.signInAnonymously();
+
+      // Load progress dari Supabase
+      const { data } = await supabase
+        .from("user_progress")
+        .select("*")
+        .eq("user_id", user?.id)
+        .single();
+      if (data) {
+        setXp(data.xp || 0);
+        setLevel(calculateLevel(data.xp || 0));
+        setCardStates(data.srs || {});
       }
-      await loadFromCloud();
       setInitialized(true);
     };
-
     init();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mounted]);
-
-  // 3. SEMUA USEMEMO (Dipindah ke sini, SEBELUM early return)
-  const dueCards = useMemo(() => {
-    if (!cards) return [];
-    const now = Date.now();
-
-    return cards.filter((card, i) => {
-      const id = card.id ?? card.word ?? card.char ?? `card-${i}`;
-      const state = cardStates[id];
-      if (!state) return true;
-      return state.nextReview <= now;
-    });
-  }, [cards, cardStates]);
+  }, []);
 
   const progressPercent = useMemo(() => {
     const currentXP = xpForCurrentLevel(level);
     const nextXP = xpForNextLevel(level);
     const range = nextXP - currentXP;
-    if (range <= 0) return 0;
-    const percent = ((xp - currentXP) / range) * 100;
-    return Math.min(Math.max(percent, 0), 100);
+    return range <= 0
+      ? 0
+      : Math.min(Math.max(((xp - currentXP) / range) * 100, 0), 100);
   }, [xp, level]);
 
-  // 4. FUNCTION HANDLERS
-  const loadFromCloud = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return;
-
-    const { data } = await supabase
-      .from("user_progress")
-      .select("*")
-      .eq("user_id", user.id)
-      .single();
-
-    if (data) {
-      const xpValue = data.xp ?? 0;
-      setXp(xpValue);
-      setLevel(calculateLevel(xpValue));
-      setCardStates(data.srs ?? {});
-      setUnlocked(data.achievements ?? []);
-      const local = loadProgress();
-      setProgress({
-        ...local,
-        streak: data.streak ?? 0,
-        totalReviews: data.total_reviews ?? 0,
-        todayReviewCount: data.today_review_count ?? 0,
-      });
-    } else {
-      const savedXP = localStorage.getItem("nihongo-xp");
-      const savedStates = localStorage.getItem("nihongo-srs");
-      const savedUnlocks = localStorage.getItem("nihongo-achievements");
-      const xpValue = savedXP ? Number(savedXP) : 0;
-
-      setXp(xpValue);
-      setLevel(calculateLevel(xpValue));
-      if (savedStates) setCardStates(JSON.parse(savedStates));
-      if (savedUnlocks) setUnlocked(JSON.parse(savedUnlocks));
-      setProgress(loadProgress());
-    }
-  };
-
-  const saveToCloud = async (
-    xp: number,
-    progress: ProgressState,
-    achievements: string[],
-    srsState: Record<string, SRSState>,
-  ) => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return;
-
-    await supabase.from("user_progress").upsert({
-      user_id: user.id,
-      xp,
-      streak: progress.streak,
-      total_reviews: progress.totalReviews,
-      today_review_count: progress.todayReviewCount,
-      achievements,
-      srs: srsState,
-      updated_at: new Date(),
-    });
-  };
-
   const markAnswer = async (correct: boolean) => {
-    if (dueCards.length === 0) return;
-    const safeIndex = index >= dueCards.length ? 0 : index;
-    const current = dueCards[safeIndex];
-    const cardId =
-      current.id ?? current.word ?? current.char ?? `card-${safeIndex}`;
+    const currentCard = cards[index];
+    const cardId = currentCard.id;
+    const newState = updateCardState(
+      cardStates[cardId] || createNewCardState(),
+      correct,
+    );
+    const updatedStates = { ...cardStates, [cardId]: newState };
 
-    const existing = cardStates[cardId] ?? createNewCardState();
-    const updated = updateCardState(existing, correct);
-    const newStates = { ...cardStates, [cardId]: updated };
-
-    setCardStates(newStates);
-    localStorage.setItem("nihongo-srs", JSON.stringify(newStates));
-
-    if (correct && progress) {
-      const updatedProgress = updateProgressOnReview();
-      setProgress(updatedProgress);
-
+    setCardStates(updatedStates);
+    if (correct) {
       const newXP = xp + 10;
       setXp(newXP);
-      localStorage.setItem("nihongo-xp", newXP.toString());
-
       const newLevel = calculateLevel(newXP);
       if (newLevel > level) {
         setLevel(newLevel);
-        confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
       }
 
-      const mission = updateReviewMission();
-      let finalXP = newXP;
-      if (mission.completed) {
-        finalXP = newXP + mission.rewardXP;
-        setXp(finalXP);
-        localStorage.setItem("nihongo-xp", finalXP.toString());
-        confetti({ particleCount: 80, spread: 60, origin: { y: 0.5 } });
-      }
-
-      const newUnlocks = checkAchievements({
-        xp: finalXP,
-        streak: updatedProgress.streak,
-        reviewCount: updatedProgress.totalReviews,
-        unlocked,
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      await supabase.from("user_progress").upsert({
+        user_id: user?.id,
+        xp: newXP,
+        srs: updatedStates,
+        updated_at: new Date(),
       });
-
-      let updatedUnlocked = unlocked;
-      if (newUnlocks.length > 0) {
-        updatedUnlocked = [...unlocked, ...newUnlocks.map((a) => a.id)];
-        setUnlocked(updatedUnlocked);
-        localStorage.setItem(
-          "nihongo-achievements",
-          JSON.stringify(updatedUnlocked),
-        );
-        setAchievementPopup(newUnlocks[0].title);
-        setTimeout(() => setAchievementPopup(null), 3000);
-      }
-
-      await saveToCloud(finalXP, updatedProgress, updatedUnlocked, newStates);
     }
 
     setFlipped(false);
-    setIndex((prev) => (prev + 1 >= dueCards.length ? 0 : prev + 1));
+    setIndex((prev) => (prev + 1 >= cards.length ? 0 : prev + 1));
   };
 
-  // 5. EARLY RETURNS (TIDAK BOLEH ADA HOOK SETELAH INI)
-  if (!mounted || !initialized) return null;
-
-  if (!cards || cards.length === 0) {
+  if (!mounted || !initialized)
     return (
-      <div className="text-white text-center">No flashcards available.</div>
-    );
-  }
-
-  if (dueCards.length === 0) {
-    return (
-      <div className="mt-10 p-10 bg-[#1e2024] rounded-3xl border border-[#0ef]/10 text-center">
-        <h2 className="text-2xl font-black text-[#0ef]">
-          🎉 Semua kartu sudah direview hari ini!
-        </h2>
-        <p className="mt-6 text-[#0ef] font-bold">Total XP: {xp}</p>
+      <div className="text-[#0ef] text-center mt-20 font-mono">
+        LOADING DATA...
       </div>
     );
-  }
 
-  // 6. RENDER KARTU
-  const safeIndex = index >= dueCards.length ? 0 : index;
-  const current = dueCards[safeIndex];
+  const current = cards[index];
 
   return (
-    <div className="mt-10 p-8 bg-[#1e2024] rounded-2xl border border-[#0ef]/10 text-center">
-      <div className="mb-4 text-white font-bold text-lg">Level {level}</div>
-
-      <div className="w-full bg-white/10 h-2 rounded mb-4">
-        <div
-          className="bg-yellow-400 h-2 rounded transition-all duration-500"
-          style={{ width: `${progressPercent}%` }}
-        />
+    <div className="flex flex-col items-center">
+      {/* Progress Bar */}
+      <div className="w-full max-w-md mb-8">
+        <div className="flex justify-between text-xs text-[#0ef] mb-2 font-bold uppercase tracking-widest">
+          <span>Level {level}</span>
+          <span>{xp} XP</span>
+        </div>
+        <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden border border-white/5">
+          <div
+            className="bg-[#0ef] h-full transition-all duration-700 shadow-[0_0_10px_#0ef]"
+            style={{ width: `${progressPercent}%` }}
+          />
+        </div>
       </div>
 
+      {/* Card Interaction Area */}
       <div
         onClick={() => setFlipped(!flipped)}
-        className="cursor-pointer mx-auto w-72 h-44 flex items-center justify-center rounded-xl bg-[#0ef]/10 border border-[#0ef]/30 text-4xl font-black text-white transition hover:scale-105"
+        className="w-full cursor-pointer transition-all duration-300 active:scale-95"
       >
-        {!flipped
-          ? (current.word ?? current.char)
-          : (current.meaning ?? current.romaji)}
+        {!flipped ? (
+          <div className="bg-[#1e2024] rounded-3xl p-24 border border-[#0ef]/20 shadow-2xl flex items-center justify-center min-h-[400px]">
+            <h1 className="text-9xl font-bold text-white tracking-tighter">
+              {current.word}
+            </h1>
+          </div>
+        ) : (
+          <Flashcard data={current} />
+        )}
       </div>
 
-      <div className="flex justify-center gap-4 mt-6">
+      {/* Control Buttons */}
+      <div className="flex gap-6 mt-10">
         <button
-          onClick={() => markAnswer(false)}
-          className="px-5 py-2 bg-red-500/20 border border-red-500 rounded-lg text-white"
+          onClick={(e) => {
+            e.stopPropagation();
+            markAnswer(false);
+          }}
+          className="px-10 py-4 bg-red-500/10 border border-red-500/50 rounded-2xl text-white font-bold hover:bg-red-500/20 transition-all uppercase tracking-widest text-xs"
         >
-          Wrong
+          Gagal
         </button>
-
         <button
-          onClick={() => markAnswer(true)}
-          className="px-5 py-2 bg-green-500/20 border border-green-500 rounded-lg text-white"
+          onClick={(e) => {
+            e.stopPropagation();
+            markAnswer(true);
+          }}
+          className="px-10 py-4 bg-green-500/10 border border-green-500/50 rounded-2xl text-white font-bold hover:bg-green-500/20 transition-all uppercase tracking-widest text-xs"
         >
-          Correct
+          Paham
         </button>
       </div>
 
-      {achievementPopup && (
-        <div className="mt-6 text-[#0ef] font-bold">
-          🎉 Achievement Unlocked: {achievementPopup}
-        </div>
-      )}
+      <p className="mt-8 text-[#c4cfde]/40 text-xs uppercase tracking-widest">
+        Klik kartu untuk melihat detail
+      </p>
     </div>
   );
 }

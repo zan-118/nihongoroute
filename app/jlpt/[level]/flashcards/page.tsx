@@ -14,12 +14,14 @@ export default async function FlashcardPage({ params }: Params) {
 
   if (!VALID_LEVELS.includes(level)) return notFound();
 
+  // Query ini mengambil data lengkap sesuai skema Flashcard Pro
   const query = `*[_type == "flashcard" && level->code == $level] {
     "id": _id,
     word,
     romaji,
     meaning,
-    type
+    details,
+    examples
   }`;
 
   const cards = await client.fetch(query, { level });
@@ -41,7 +43,8 @@ export default async function FlashcardPage({ params }: Params) {
               Belum ada kosakata untuk level ini.
             </p>
             <p className="text-sm text-[#c4cfde]/60">
-              Silakan tambahkan data Flashcard di Sanity Studio.
+              Pastikan dokumen Flashcard di Sanity sudah dihubungkan ke Level{" "}
+              {level.toUpperCase()}.
             </p>
           </div>
         </div>
@@ -60,11 +63,9 @@ export default async function FlashcardPage({ params }: Params) {
             ← Back to JLPT {level.toUpperCase()}
           </Link>
         </nav>
-
         <h1 className="text-3xl md:text-5xl font-bold text-white mb-10">
           JLPT {level.toUpperCase()} Vocabulary
         </h1>
-
         <FlashcardEngine cards={cards} />
       </div>
     </div>
