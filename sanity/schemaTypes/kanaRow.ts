@@ -15,7 +15,7 @@ export default defineType({
       title: "Karakter (A, I, U, E, O)",
       type: "array",
       of: [{ type: "kanaCharacter" }],
-      validation: (rule) => rule.max(5), // Maksimal 5 huruf (vokal) per baris
+      validation: (rule) => rule.max(5),
     }),
   ],
 });

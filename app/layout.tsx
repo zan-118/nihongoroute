@@ -4,6 +4,7 @@ import "./globals.css";
 import { ReactNode } from "react";
 import MobileNav from "@/components/MobileNav";
 import Navbar from "@/components/Navbar";
+import { ProgressProvider } from "@/context/UserProgressContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,18 +23,22 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="id">
       <body
-        className={`${inter.className} antialiased bg-[#1f242d] text-[#c4cfde] selection:bg-[#0ef] selection:text-[#1f242d]`}
+        className={`${inter.className} antialiased bg-[#1f242d] text-[#c4cfde] selection:bg-[#0ef] selection:text-[#1f242d] overflow-x-hidden`}
       >
-        {/* Desktop Navbar */}
-        <div className="hidden md:block">
-          <Navbar />
-        </div>
+        <ProgressProvider>
+          {/* Desktop Navbar */}
+          <div className="hidden md:block">
+            <Navbar />
+          </div>
 
-        {/* Main Content */}
-        <main className="min-h-screen pt-8  pb-20 md:pb-0">{children}</main>
+          {/* Main Content - Perhatikan pb-24 agar tidak tertutup MobileNav di HP */}
+          <main className="min-h-screen pt-4 md:pt-8 pb-24 md:pb-12 max-w-[100vw] overflow-x-hidden">
+            {children}
+          </main>
 
-        {/* Mobile Bottom Navigation */}
-        <MobileNav />
+          {/* Mobile Bottom Navigation */}
+          <MobileNav />
+        </ProgressProvider>
       </body>
     </html>
   );

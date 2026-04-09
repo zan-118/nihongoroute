@@ -1,110 +1,81 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
-import { createNewCardState, updateCardState, SRSState } from "@/lib/srs";
-import { updateProgressOnReview, loadProgress } from "@/lib/progress";
-import { calculateLevel, xpForNextLevel, xpForCurrentLevel } from "@/lib/level";
-import { supabase } from "@/lib/supabase";
+import { useMemo, useState } from "react";
+import { createNewCardState, updateCardState } from "@/lib/srs";
+import { xpForNextLevel, xpForCurrentLevel } from "@/lib/level";
 import confetti from "canvas-confetti";
 import Flashcard from "./Flashcard";
+import { useProgress } from "@/context/UserProgressContext";
 
 interface Props {
   cards: any[];
 }
 
 export default function FlashcardEngine({ cards }: Props) {
-  const [mounted, setMounted] = useState(false);
-  const [initialized, setInitialized] = useState(false);
+  const { progress, loading, updateProgress } = useProgress();
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
-  const [xp, setXp] = useState(0);
-  const [level, setLevel] = useState(1);
-  const [cardStates, setCardStates] = useState<Record<string, SRSState>>({});
-
-  useEffect(() => {
-    setMounted(true);
-    const init = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) await supabase.auth.signInAnonymously();
-
-      // Load progress dari Supabase
-      const { data } = await supabase
-        .from("user_progress")
-        .select("*")
-        .eq("user_id", user?.id)
-        .single();
-      if (data) {
-        setXp(data.xp || 0);
-        setLevel(calculateLevel(data.xp || 0));
-        setCardStates(data.srs || {});
-      }
-      setInitialized(true);
-    };
-    init();
-  }, []);
 
   const progressPercent = useMemo(() => {
-    const currentXP = xpForCurrentLevel(level);
-    const nextXP = xpForNextLevel(level);
+    const currentXP = xpForCurrentLevel(progress.level);
+    const nextXP = xpForNextLevel(progress.level);
     const range = nextXP - currentXP;
     return range <= 0
       ? 0
-      : Math.min(Math.max(((xp - currentXP) / range) * 100, 0), 100);
-  }, [xp, level]);
+      : Math.min(Math.max(((progress.xp - currentXP) / range) * 100, 0), 100);
+  }, [progress.xp, progress.level]);
 
-  const markAnswer = async (correct: boolean) => {
+  const markAnswer = (correct: boolean) => {
     const currentCard = cards[index];
     const cardId = currentCard.id;
-    const newState = updateCardState(
-      cardStates[cardId] || createNewCardState(),
-      correct,
-    );
-    const updatedStates = { ...cardStates, [cardId]: newState };
 
-    setCardStates(updatedStates);
+    const currentState = progress.srs[cardId] || createNewCardState();
+    const newState = updateCardState(currentState, correct);
+    const updatedSrs = { ...progress.srs, [cardId]: newState };
+
+    let newXp = progress.xp;
+    const oldLevel = progress.level;
+
     if (correct) {
-      const newXP = xp + 10;
-      setXp(newXP);
-      const newLevel = calculateLevel(newXP);
-      if (newLevel > level) {
-        setLevel(newLevel);
-        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-      }
+      newXp += 10;
+    }
 
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      await supabase.from("user_progress").upsert({
-        user_id: user?.id,
-        xp: newXP,
-        srs: updatedStates,
-        updated_at: new Date(),
-      });
+    updateProgress(newXp, updatedSrs);
+
+    const newCalculatedLevel = Math.floor(Math.sqrt(newXp / 50)) + 1;
+    if (correct && newCalculatedLevel > oldLevel) {
+      setTimeout(() => {
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+      }, 150);
     }
 
     setFlipped(false);
     setIndex((prev) => (prev + 1 >= cards.length ? 0 : prev + 1));
   };
 
-  if (!mounted || !initialized)
+  if (loading) {
     return (
-      <div className="text-[#0ef] text-center mt-20 font-mono">
-        LOADING DATA...
+      <div className="flex flex-col items-center w-full max-w-md mx-auto animate-pulse mt-10 px-4 md:px-0">
+        <div className="w-full flex justify-between mb-4 px-2">
+          <div className="h-4 bg-[#1e2024] rounded w-16 border border-white/5"></div>
+          <div className="h-4 bg-[#1e2024] rounded w-16 border border-white/5"></div>
+        </div>
+        <div className="w-full bg-[#1e2024] h-2 rounded-full mb-8 border border-white/5"></div>
+        <div className="w-full h-[300px] md:h-[400px] bg-[#1e2024] rounded-[2rem] border border-white/5"></div>
       </div>
     );
+  }
 
   const current = cards[index];
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center w-full max-w-md mx-auto px-2 md:px-0">
       {/* Progress Bar */}
-      <div className="w-full max-w-md mb-8">
-        <div className="flex justify-between text-xs text-[#0ef] mb-2 font-bold uppercase tracking-widest">
-          <span>Level {level}</span>
-          <span>{xp} XP</span>
+      <div className="w-full mb-6 md:mb-8">
+        <div className="flex justify-between text-[10px] md:text-xs text-[#0ef] mb-2 font-bold uppercase tracking-widest px-1">
+          <span>Level {progress.level}</span>
+          <span>{progress.xp} XP</span>
         </div>
-        <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden border border-white/5">
+        <div className="w-full bg-white/5 h-1.5 md:h-2 rounded-full overflow-hidden border border-white/5">
           <div
             className="bg-[#0ef] h-full transition-all duration-700 shadow-[0_0_10px_#0ef]"
             style={{ width: `${progressPercent}%` }}
@@ -112,14 +83,19 @@ export default function FlashcardEngine({ cards }: Props) {
         </div>
       </div>
 
-      {/* Card Interaction Area */}
+      {/* Card Area */}
       <div
         onClick={() => setFlipped(!flipped)}
-        className="w-full cursor-pointer transition-all duration-300 active:scale-95"
+        className="w-full cursor-pointer transition-transform duration-300 active:scale-95 perspective-1000 select-none relative group"
       >
+        {/* Helper Badge di pojok */}
+        <div className="absolute -top-3 -right-2 md:-right-4 bg-[#0ef] text-black text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest z-10 shadow-lg animate-bounce">
+          Tap Card
+        </div>
+
         {!flipped ? (
-          <div className="bg-[#1e2024] rounded-3xl p-24 border border-[#0ef]/20 shadow-2xl flex items-center justify-center min-h-[400px]">
-            <h1 className="text-9xl font-bold text-white tracking-tighter">
+          <div className="bg-gradient-to-br from-[#1e2024] to-[#1a1c20] rounded-[2.5rem] p-8 md:p-16 border border-[#0ef]/20 shadow-2xl flex flex-col items-center justify-center min-h-[300px] md:min-h-[400px] hover:border-[#0ef]/50 transition-colors">
+            <h1 className="text-7xl md:text-9xl font-black text-white tracking-tighter text-center">
               {current.word}
             </h1>
           </div>
@@ -128,31 +104,27 @@ export default function FlashcardEngine({ cards }: Props) {
         )}
       </div>
 
-      {/* Control Buttons */}
-      <div className="flex gap-6 mt-10">
+      {/* Control Buttons - Disesuaikan agar sangat mudah disentuh jempol (Thumb-friendly) */}
+      <div className="flex gap-3 md:gap-4 mt-8 md:mt-10 w-full justify-center">
         <button
           onClick={(e) => {
             e.stopPropagation();
             markAnswer(false);
           }}
-          className="px-10 py-4 bg-red-500/10 border border-red-500/50 rounded-2xl text-white font-bold hover:bg-red-500/20 transition-all uppercase tracking-widest text-xs"
+          className="flex-1 max-w-[180px] h-16 md:h-20 bg-gradient-to-t from-red-500/10 to-transparent border-2 border-red-500/30 rounded-[1.5rem] text-red-100 font-black hover:bg-red-500/20 hover:border-red-500 active:scale-90 transition-all uppercase tracking-widest text-xs md:text-sm shadow-[0_4px_20px_rgba(239,68,68,0.1)]"
         >
-          Gagal
+          Sulit
         </button>
         <button
           onClick={(e) => {
             e.stopPropagation();
             markAnswer(true);
           }}
-          className="px-10 py-4 bg-green-500/10 border border-green-500/50 rounded-2xl text-white font-bold hover:bg-green-500/20 transition-all uppercase tracking-widest text-xs"
+          className="flex-1 max-w-[180px] h-16 md:h-20 bg-gradient-to-t from-green-500/10 to-transparent border-2 border-green-500/30 rounded-[1.5rem] text-green-100 font-black hover:bg-green-500/20 hover:border-green-500 active:scale-90 transition-all uppercase tracking-widest text-xs md:text-sm shadow-[0_4px_20px_rgba(34,197,94,0.1)]"
         >
-          Paham
+          Hafal
         </button>
       </div>
-
-      <p className="mt-8 text-[#c4cfde]/40 text-xs uppercase tracking-widest">
-        Klik kartu untuk melihat detail
-      </p>
     </div>
   );
 }

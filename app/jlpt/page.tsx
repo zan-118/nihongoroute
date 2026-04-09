@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { supabase } from "@/lib/supabase";
+import { client } from "@/sanity/lib/client";
 
 export const revalidate = 3600;
 
@@ -15,22 +15,17 @@ export const metadata: Metadata = {
   title: "JLPT Curriculum | NihongoPath",
   description:
     "Belajar bahasa Jepang dari level N5 hingga N1 dengan sistem terstruktur dan interaktif.",
-  alternates: {
-    canonical: "/jlpt",
-  },
+  alternates: { canonical: "/jlpt" },
 };
 
 async function getLevels(): Promise<Level[]> {
-  const { data, error } = await supabase
-    .from("levels")
-    .select("*")
-    .order("code", { ascending: true });
-
-  if (error) {
-    console.error("Failed to fetch levels:", error.message);
-    return [];
-  }
-
+  const query = `*[_type == "level"] | order(code asc) {
+    "id": _id,
+    code,
+    name,
+    description
+  }`;
+  const data = await client.fetch(query);
   return data ?? [];
 }
 
@@ -74,23 +69,19 @@ export default async function JLPTLandingPage() {
   return (
     <div className="min-h-screen px-4 md:px-8 py-16">
       <div className="max-w-6xl mx-auto">
-        {/* HEADER */}
         <header className="mb-16 text-center">
           <p className="text-[#0ef] text-xs uppercase tracking-widest mb-4">
             Official Curriculum
           </p>
-
           <h1 className="text-4xl md:text-6xl font-black text-white uppercase">
             JLPT Learning Path
           </h1>
-
           <p className="text-[#c4cfde]/60 mt-6 max-w-2xl mx-auto text-sm md:text-base">
             Pilih level dan mulai perjalanan belajar bahasa Jepang secara
             sistematis dari N5 hingga N1.
           </p>
         </header>
 
-        {/* GRID LEVELS */}
         {levels.length === 0 ? (
           <div className="text-center text-[#c4cfde]/60">
             No levels available.
@@ -104,24 +95,19 @@ export default async function JLPTLandingPage() {
                 className="group"
               >
                 <div
-                  className={`bg-gradient-to-br ${getColor(
-                    level.code,
-                  )} p-8 rounded-2xl border border-white/10 hover:border-[#0ef]/40 transition-all`}
+                  className={`bg-gradient-to-br ${getColor(level.code)} p-8 rounded-2xl border border-white/10 hover:border-[#0ef]/40 transition-all`}
                 >
                   <span className="text-xs uppercase tracking-widest text-[#0ef]">
                     {getDifficultyLabel(level.code)}
                   </span>
-
                   <h2 className="text-3xl font-black text-white mt-4 group-hover:text-[#0ef] transition">
                     JLPT {level.name}
                   </h2>
-
                   {level.description && (
                     <p className="text-sm text-[#c4cfde]/60 mt-4">
                       {level.description}
                     </p>
                   )}
-
                   <div className="mt-6 text-xs uppercase tracking-wider text-white/40 group-hover:text-[#0ef] transition">
                     Explore →
                   </div>
@@ -131,12 +117,10 @@ export default async function JLPTLandingPage() {
           </div>
         )}
 
-        {/* CTA SECTION */}
         <div className="mt-20 text-center">
           <p className="text-[#c4cfde]/40 text-xs uppercase tracking-widest">
             Not sure where to start?
           </p>
-
           <Link
             href="/jlpt/n5"
             className="inline-block mt-6 px-8 py-4 bg-[#0ef] text-black font-bold rounded-xl hover:scale-105 transition"
@@ -145,24 +129,6 @@ export default async function JLPTLandingPage() {
           </Link>
         </div>
       </div>
-
-      {/* SEO Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "ItemList",
-            name: "JLPT Levels",
-            itemListElement: levels.map((level, index) => ({
-              "@type": "ListItem",
-              position: index + 1,
-              name: `JLPT ${level.name}`,
-              url: `${process.env.NEXT_PUBLIC_SITE_URL}/jlpt/${level.code}`,
-            })),
-          }),
-        }}
-      />
     </div>
   );
 }
