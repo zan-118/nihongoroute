@@ -1,128 +1,132 @@
 "use client";
-import { useMemo, useState } from "react";
-import { createNewCardState, updateCardState } from "@/lib/srs";
-import { xpForNextLevel, xpForCurrentLevel } from "@/lib/level";
-import confetti from "canvas-confetti";
-import Flashcard from "./Flashcard";
-import { useProgress } from "@/context/UserProgressContext";
 
-interface Props {
-  cards: any[];
-}
+import { useState, useEffect } from "react";
 
-export default function FlashcardEngine({ cards }: Props) {
-  const { progress, loading, updateProgress } = useProgress();
-  const [index, setIndex] = useState(0);
-  const [flipped, setFlipped] = useState(false);
+export default function FlashcardEngine({ cards }: { cards: any[] }) {
+  // State untuk menyimpan kartu yang sudah diacak
+  const [shuffledCards, setShuffledCards] = useState<any[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isFlipped, setIsFlipped] = useState(false);
 
-  const progressPercent = useMemo(() => {
-    const currentXP = xpForCurrentLevel(progress.level);
-    const nextXP = xpForNextLevel(progress.level);
-    const range = nextXP - currentXP;
-    return range <= 0
-      ? 0
-      : Math.min(Math.max(((progress.xp - currentXP) / range) * 100, 0), 100);
-  }, [progress.xp, progress.level]);
-
-  const markAnswer = (correct: boolean) => {
-    const currentCard = cards[index];
-    const cardId = currentCard.id;
-
-    const currentState = progress.srs[cardId] || createNewCardState();
-    const newState = updateCardState(currentState, correct);
-    const updatedSrs = { ...progress.srs, [cardId]: newState };
-
-    let newXp = progress.xp;
-    const oldLevel = progress.level;
-
-    if (correct) {
-      newXp += 10;
+  // Mengacak kartu saat komponen pertama kali dimuat
+  useEffect(() => {
+    if (cards && cards.length > 0) {
+      const shuffled = [...cards].sort(() => Math.random() - 0.5);
+      setShuffledCards(shuffled);
     }
+  }, [cards]);
 
-    updateProgress(newXp, updatedSrs);
+  if (!shuffledCards || shuffledCards.length === 0) return null;
 
-    const newCalculatedLevel = Math.floor(Math.sqrt(newXp / 50)) + 1;
-    if (correct && newCalculatedLevel > oldLevel) {
-      setTimeout(() => {
-        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-      }, 150);
-    }
+  const card = shuffledCards[currentIndex];
 
-    setFlipped(false);
-    setIndex((prev) => (prev + 1 >= cards.length ? 0 : prev + 1));
+  const handleNext = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsFlipped(false);
+    setTimeout(
+      () => setCurrentIndex((prev) => (prev + 1) % shuffledCards.length),
+      150,
+    );
   };
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center w-full max-w-md mx-auto animate-pulse mt-10 px-4 md:px-0">
-        <div className="w-full flex justify-between mb-4 px-2">
-          <div className="h-4 bg-[#1e2024] rounded w-16 border border-white/5"></div>
-          <div className="h-4 bg-[#1e2024] rounded w-16 border border-white/5"></div>
-        </div>
-        <div className="w-full bg-[#1e2024] h-2 rounded-full mb-8 border border-white/5"></div>
-        <div className="w-full h-[300px] md:h-[400px] bg-[#1e2024] rounded-[2rem] border border-white/5"></div>
-      </div>
+  const handlePrev = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsFlipped(false);
+    setTimeout(
+      () =>
+        setCurrentIndex(
+          (prev) => (prev - 1 + shuffledCards.length) % shuffledCards.length,
+        ),
+      150,
     );
-  }
-
-  const current = cards[index];
+  };
 
   return (
-    <div className="flex flex-col items-center w-full max-w-md mx-auto px-2 md:px-0">
-      {/* Progress Bar */}
-      <div className="w-full mb-6 md:mb-8">
-        <div className="flex justify-between text-[10px] md:text-xs text-[#0ef] mb-2 font-bold uppercase tracking-widest px-1">
-          <span>Level {progress.level}</span>
-          <span>{progress.xp} XP</span>
-        </div>
-        <div className="w-full bg-white/5 h-1.5 md:h-2 rounded-full overflow-hidden border border-white/5">
-          <div
-            className="bg-[#0ef] h-full transition-all duration-700 shadow-[0_0_10px_#0ef]"
-            style={{ width: `${progressPercent}%` }}
-          />
-        </div>
+    <div className="flex flex-col items-center w-full max-w-xl mx-auto">
+      {/* Progress Bar (Tema Ungu untuk Kanji) */}
+      <div className="w-full flex justify-between text-xs font-bold uppercase tracking-widest text-purple-400 mb-3">
+        <span>Set Kanji N5</span>
+        <span>
+          {currentIndex + 1} / {shuffledCards.length}
+        </span>
+      </div>
+      <div className="w-full bg-white/5 h-1.5 rounded-full mb-10 overflow-hidden">
+        <div
+          className="bg-purple-500 h-full transition-all duration-300 ease-out"
+          style={{
+            width: `${((currentIndex + 1) / shuffledCards.length) * 100}%`,
+          }}
+        ></div>
       </div>
 
-      {/* Card Area */}
       <div
-        onClick={() => setFlipped(!flipped)}
-        className="w-full cursor-pointer transition-transform duration-300 active:scale-95 perspective-1000 select-none relative group"
+        onClick={() => setIsFlipped(!isFlipped)}
+        className="relative w-full aspect-square md:aspect-[4/3] bg-gradient-to-br from-[#1e2024] to-[#15171a] rounded-[2.5rem] border border-white/5 shadow-2xl flex flex-col items-center justify-center p-8 cursor-pointer hover:border-purple-500/30 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] transition-all text-center group overflow-hidden"
       >
-        {/* Helper Badge di pojok */}
-        <div className="absolute -top-3 -right-2 md:-right-4 bg-[#0ef] text-black text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest z-10 shadow-lg animate-bounce">
-          Tap Card
-        </div>
-
-        {!flipped ? (
-          <div className="bg-gradient-to-br from-[#1e2024] to-[#1a1c20] rounded-[2.5rem] p-8 md:p-16 border border-[#0ef]/20 shadow-2xl flex flex-col items-center justify-center min-h-[300px] md:min-h-[400px] hover:border-[#0ef]/50 transition-colors">
-            <h1 className="text-7xl md:text-9xl font-black text-white tracking-tighter text-center">
-              {current.word}
-            </h1>
+        {!isFlipped ? (
+          // DEPAN KARTU: Kanji Raksasa
+          <div className="flex flex-col items-center justify-center h-full w-full">
+            <span className="text-[#c4cfde]/30 text-xs font-bold uppercase tracking-widest mb-8">
+              Tebak Cara Baca & Arti
+            </span>
+            <h2 className="text-8xl md:text-9xl font-black text-white tracking-widest group-hover:scale-105 transition-transform duration-300">
+              {card.word}
+            </h2>
+            <span className="absolute bottom-8 text-purple-400/50 text-[10px] uppercase font-bold tracking-widest opacity-70 group-hover:opacity-100 transition-opacity">
+              Tap kartu untuk membalik
+            </span>
           </div>
         ) : (
-          <Flashcard data={current} />
+          // BELAKANG KARTU: Detail Kanji
+          <div className="flex flex-col items-center justify-center h-full w-full">
+            <h2 className="text-5xl md:text-6xl font-black text-white mb-4">
+              {card.word}
+            </h2>
+            <h3 className="text-2xl md:text-3xl font-black text-green-400 tracking-tight mb-8">
+              {card.meaning}
+            </h3>
+
+            {/* Kotak Onyomi & Kunyomi */}
+            {(card.details?.onyomi || card.details?.kunyomi) && (
+              <div className="grid grid-cols-2 gap-4 w-full max-w-xs border-t border-white/10 pt-6">
+                {card.details?.onyomi && (
+                  <div className="text-center">
+                    <p className="text-[10px] text-purple-400 font-bold uppercase tracking-widest mb-1">
+                      Onyomi
+                    </p>
+                    <p className="text-white font-mono text-sm md:text-base">
+                      {card.details.onyomi}
+                    </p>
+                  </div>
+                )}
+                {card.details?.kunyomi && (
+                  <div className="text-center">
+                    <p className="text-[10px] text-purple-400 font-bold uppercase tracking-widest mb-1">
+                      Kunyomi
+                    </p>
+                    <p className="text-white font-mono text-sm md:text-base">
+                      {card.details.kunyomi}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         )}
       </div>
 
-      {/* Control Buttons - Disesuaikan agar sangat mudah disentuh jempol (Thumb-friendly) */}
-      <div className="flex gap-3 md:gap-4 mt-8 md:mt-10 w-full justify-center">
+      <div className="flex justify-between w-full mt-8 gap-4">
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            markAnswer(false);
-          }}
-          className="flex-1 max-w-[180px] h-16 md:h-20 bg-gradient-to-t from-red-500/10 to-transparent border-2 border-red-500/30 rounded-[1.5rem] text-red-100 font-black hover:bg-red-500/20 hover:border-red-500 active:scale-90 transition-all uppercase tracking-widest text-xs md:text-sm shadow-[0_4px_20px_rgba(239,68,68,0.1)]"
+          onClick={handlePrev}
+          className="flex-1 bg-[#1e2024] hover:bg-[#23272b] border border-white/5 text-[#c4cfde] py-4 md:py-5 rounded-2xl font-bold tracking-wide transition-all active:scale-95"
         >
-          Sulit
+          ← Mundur
         </button>
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            markAnswer(true);
-          }}
-          className="flex-1 max-w-[180px] h-16 md:h-20 bg-gradient-to-t from-green-500/10 to-transparent border-2 border-green-500/30 rounded-[1.5rem] text-green-100 font-black hover:bg-green-500/20 hover:border-green-500 active:scale-90 transition-all uppercase tracking-widest text-xs md:text-sm shadow-[0_4px_20px_rgba(34,197,94,0.1)]"
+          onClick={handleNext}
+          className="flex-1 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-400 py-4 md:py-5 rounded-2xl font-black tracking-wide transition-all active:scale-95 shadow-[0_0_20px_rgba(168,85,247,0.05)]"
         >
-          Hafal
+          Lanjut →
         </button>
       </div>
     </div>

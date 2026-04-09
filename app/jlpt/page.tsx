@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 };
 
 async function getLevels(): Promise<Level[]> {
-  const query = `*[_type == "level"] | order(code asc) {
+  const query = `*[_type == "level"] | order(code desc) {
     "id": _id,
     code,
     name,

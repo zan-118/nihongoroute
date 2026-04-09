@@ -1,9 +1,9 @@
-import VocabFlashcardEngine from "@/components/VocabFlashcardEngine";
+import FlashcardEngine from "@/components/FlashcardEngine";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { client } from "@/sanity/lib/client";
 
-export default async function FlashcardPage({
+export default async function KanjiPage({
   params,
 }: {
   params: Promise<{ level: string }>;
@@ -13,12 +13,13 @@ export default async function FlashcardPage({
 
   if (!VALID_LEVELS.includes(level)) return notFound();
 
-  const query = `*[_type == "kosakata" && level->code == $level] {
+  const query = `*[_type == "flashcard" && level->code == $level] {
     "id": _id,
     word,
-    furigana,
     romaji,
-    meaning
+    meaning,
+    details,
+    examples
   }`;
 
   const cards = await client.fetch(query, { level });
@@ -36,11 +37,9 @@ export default async function FlashcardPage({
             </Link>
           </nav>
           <div className="mt-20 p-10 bg-[#1e2024] rounded-2xl border border-white/10 inline-block">
-            <p className="text-white mb-2">
-              Belum ada kosakata untuk level ini.
-            </p>
+            <p className="text-white mb-2">Belum ada kanji untuk level ini.</p>
             <p className="text-sm text-[#c4cfde]/60">
-              Tambahkan dokumen "Flashcard Kosakata" di Sanity.
+              Tambahkan dokumen "Flashcard Pro" di Sanity.
             </p>
           </div>
         </div>
@@ -59,10 +58,10 @@ export default async function FlashcardPage({
             ← Back to JLPT {level.toUpperCase()}
           </Link>
         </nav>
-        <h1 className="text-3xl md:text-5xl font-black text-white mb-10 tracking-tighter">
-          Vocabulary Practice
+        <h1 className="text-3xl md:text-5xl font-bold text-[#0ef] mb-10">
+          JLPT {level.toUpperCase()} Kanji Practice
         </h1>
-        <VocabFlashcardEngine cards={cards} />
+        <FlashcardEngine cards={cards} />
       </div>
     </div>
   );

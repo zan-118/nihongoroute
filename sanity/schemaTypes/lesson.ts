@@ -5,16 +5,18 @@ export default defineType({
   title: "Lesson Material",
   type: "document",
   groups: [
-    { name: "main", title: "Main Info", default: true },
-    { name: "content", title: "Content & Quiz" },
-    { name: "seo", title: "SEO" },
+    { name: "main", title: "Info Utama", default: true },
+    { name: "vocab", title: "1. Kosakata" },
+    { name: "sentences", title: "2. Pola & Contoh Kalimat" },
+    { name: "conversation", title: "3. Percakapan" },
+    { name: "grammar", title: "4. Tata Bahasa & Kuis" },
   ],
   fields: [
     /* --- TAB: MAIN INFO --- */
     defineField({
       name: "title",
       type: "string",
-      title: "Judul Materi",
+      title: "Judul Bab",
       group: "main",
     }),
     defineField({
@@ -34,28 +36,10 @@ export default defineType({
       to: [{ type: "level" }],
       group: "main",
     }),
-    // FIELD BARU: CATEGORY
-    defineField({
-      name: "category",
-      type: "string",
-      title: "Kategori Materi",
-      options: {
-        list: [
-          { title: "📖 Tata Bahasa (Grammar)", value: "grammar" },
-          { title: "📝 Kosakata (Vocabulary)", value: "vocabulary" },
-          { title: "🎯 Latihan (Practice)", value: "practice" },
-          { title: "📚 Membaca (Reading)", value: "reading" },
-        ],
-      },
-      group: "main",
-      validation: (Rule) => Rule.required(),
-    }),
     defineField({
       name: "orderNumber",
       type: "number",
-      title: "Urutan Materi",
-      description:
-        "Urutan di dalam kategorinya masing-masing (Contoh: 1, 2, 3)",
+      title: "Urutan Bab",
       group: "main",
     }),
     defineField({
@@ -68,20 +52,65 @@ export default defineType({
     defineField({
       name: "summary",
       type: "text",
-      title: "Deskripsi Singkat / Summary",
-      description: "Muncul di kartu materi.",
+      title: "Deskripsi Singkat Bab",
       group: "main",
     }),
 
-    /* --- TAB: CONTENT & QUIZ --- */
+    /* --- TAB: KOSAKATA --- */
     defineField({
-      name: "content",
+      name: "vocabList",
       type: "array",
-      title: "Artikel Materi",
-      group: "content",
+      title: "Daftar Kosakata Baru",
+      group: "vocab",
+      of: [{ type: "vocabItem" }],
+    }),
+    defineField({
+      name: "referenceWords",
+      type: "array",
+      title: "Kata-kata Referensi",
+      group: "vocab",
+      of: [{ type: "vocabItem" }],
+    }),
+
+    /* --- TAB: POLA & CONTOH KALIMAT --- */
+    defineField({
+      name: "patterns",
+      type: "array",
+      title: "Pola Kalimat (Bunkei)",
+      group: "sentences",
+      of: [{ type: "exampleSentence" }],
+    }),
+    defineField({
+      name: "examples",
+      type: "array",
+      title: "Contoh Kalimat (Reibun)",
+      group: "sentences",
+      of: [{ type: "exampleSentence" }],
+    }),
+
+    /* --- TAB: PERCAKAPAN --- */
+    defineField({
+      name: "conversationTitle",
+      type: "string",
+      title: "Judul Percakapan",
+      group: "conversation",
+    }),
+    defineField({
+      name: "conversation",
+      type: "array",
+      title: "Dialog Percakapan",
+      group: "conversation",
+      of: [{ type: "exampleSentence" }],
+    }),
+
+    /* --- TAB: TATA BAHASA & KUIS --- */
+    defineField({
+      name: "grammar",
+      type: "array",
+      title: "Keterangan Tata Bahasa",
+      group: "grammar",
       of: [
         { type: "block" },
-        { type: "image", options: { hotspot: true } },
         { type: "callout" },
         { type: "kanaTable" },
         { type: "exampleSentence" },
@@ -90,44 +119,21 @@ export default defineType({
     defineField({
       name: "quizzes",
       type: "array",
-      title: "Mini Quiz di Akhir Materi",
-      group: "content",
+      title: "Mini Quiz di Akhir Bab",
+      group: "grammar",
       of: [{ type: "quiz" }],
-    }),
-    defineField({
-      name: "vocabulary",
-      type: "array",
-      title: "Kosakata Terkait (Opsional)",
-      group: "content",
-      of: [{ type: "reference", to: [{ type: "flashcard" }] }],
-    }),
-
-    /* --- TAB: SEO --- */
-    defineField({
-      name: "seoTitle",
-      type: "string",
-      title: "SEO Title",
-      group: "seo",
-    }),
-    defineField({
-      name: "seoDescription",
-      type: "text",
-      title: "SEO Description",
-      group: "seo",
     }),
   ],
   preview: {
     select: {
       title: "title",
-      category: "category",
       levelName: "level.name",
       isPublished: "is_published",
     },
-    prepare({ title, category, levelName, isPublished }) {
-      const catLabel = category ? category.toUpperCase() : "NO CAT";
+    prepare({ title, levelName, isPublished }) {
       return {
         title: title,
-        subtitle: `${isPublished ? "✅" : "❌ Draft"} | [${catLabel}] ${levelName || "No Level"}`,
+        subtitle: `${isPublished ? "✅" : "❌ Draft"} | ${levelName || "No Level"}`,
       };
     },
   },

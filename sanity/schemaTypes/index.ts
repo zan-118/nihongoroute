@@ -7,7 +7,9 @@ import kanaCharacter from "./kanaCharacter";
 import kanaRow from "./kanaRow";
 import kanaTable from "./kanaTable";
 import callout from "./callout";
-import exampleSentence from "./exampleSentence"; // Import baru
+import exampleSentence from "./exampleSentence";
+import vocabItem from "./vocabItem";
+import kosakata from "./kosakata";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -19,6 +21,8 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     kanaRow,
     kanaTable,
     callout,
-    exampleSentence, // Daftarkan di sini
+    exampleSentence,
+    vocabItem,
+    kosakata,
   ],
 };
