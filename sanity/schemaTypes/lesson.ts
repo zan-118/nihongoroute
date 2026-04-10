@@ -23,10 +23,7 @@ export default defineType({
       name: "slug",
       type: "slug",
       title: "URL Slug",
-      options: {
-        source: "title",
-        isUnique: (value, context) => context.defaultIsUnique(value, context),
-      },
+      options: { source: "title" },
       group: "main",
       validation: (Rule) => Rule.required(),
     }),
@@ -45,34 +42,40 @@ export default defineType({
     defineField({
       name: "is_published",
       type: "boolean",
-      title: "Publish Materi Ini?",
+      title: "Publish?",
       initialValue: false,
       group: "main",
     }),
     defineField({
       name: "summary",
       type: "text",
-      title: "Deskripsi Singkat Bab",
+      title: "Deskripsi Singkat",
       group: "main",
     }),
 
-    /* --- TAB: KOSAKATA --- */
+    /* --- TAB: KOSAKATA (DIUBAH MENJADI REFERENCE) --- */
     defineField({
       name: "vocabList",
       type: "array",
-      title: "Daftar Kosakata Baru",
+      title: "Daftar Kosakata Bab Ini",
+      description: "Pilih kata dari Perpustakaan Kosakata Global",
       group: "vocab",
-      of: [{ type: "vocabItem" }],
+      of: [
+        {
+          type: "reference",
+          to: [{ type: "kosakata" }],
+        },
+      ],
     }),
     defineField({
       name: "referenceWords",
       type: "array",
-      title: "Kata-kata Referensi",
+      title: "Kata-kata Referensi Ekstra",
       group: "vocab",
-      of: [{ type: "vocabItem" }],
+      of: [{ type: "reference", to: [{ type: "kosakata" }] }],
     }),
 
-    /* --- TAB: POLA & CONTOH KALIMAT --- */
+    /* --- TAB LAINNYA (TETAP SAMA) --- */
     defineField({
       name: "patterns",
       type: "array",
@@ -87,8 +90,6 @@ export default defineType({
       group: "sentences",
       of: [{ type: "exampleSentence" }],
     }),
-
-    /* --- TAB: PERCAKAPAN --- */
     defineField({
       name: "conversationTitle",
       type: "string",
@@ -102,39 +103,19 @@ export default defineType({
       group: "conversation",
       of: [{ type: "exampleSentence" }],
     }),
-
-    /* --- TAB: TATA BAHASA & KUIS --- */
     defineField({
       name: "grammar",
       type: "array",
       title: "Keterangan Tata Bahasa",
       group: "grammar",
-      of: [
-        { type: "block" },
-        { type: "callout" },
-        { type: "kanaTable" },
-        { type: "exampleSentence" },
-      ],
+      of: [{ type: "block" }, { type: "callout" }, { type: "exampleSentence" }],
     }),
     defineField({
       name: "quizzes",
       type: "array",
-      title: "Mini Quiz di Akhir Bab",
+      title: "Mini Quiz",
       group: "grammar",
       of: [{ type: "quiz" }],
     }),
   ],
-  preview: {
-    select: {
-      title: "title",
-      levelName: "level.name",
-      isPublished: "is_published",
-    },
-    prepare({ title, levelName, isPublished }) {
-      return {
-        title: title,
-        subtitle: `${isPublished ? "✅" : "❌ Draft"} | ${levelName || "No Level"}`,
-      };
-    },
-  },
 });

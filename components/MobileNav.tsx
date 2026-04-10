@@ -1,117 +1,98 @@
 "use client";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 
 export default function MobileNav() {
-  const pathname = usePathname() ?? "";
+  const pathname = usePathname() || "";
 
-  // BUKTIKAN KESAKTIANNYA DI SINI: Sembunyikan navigasi jika sedang buka CMS
+  // Sembunyikan navigasi di halaman CMS Sanity
   if (pathname.startsWith("/studio")) return null;
 
-  /* ----------------------------- */
-  /* DETECT CURRENT LEVEL */
-  /* ----------------------------- */
-  const levelMatch = pathname.match(/^\/jlpt\/(n[1-5])/);
-  const currentLevel = levelMatch?.[1];
+  const isActive = (path: string) =>
+    path === "/" ? pathname === "/" : pathname.startsWith(path);
 
-  /* ----------------------------- */
-  /* ACTIVE CHECK */
-  /* ----------------------------- */
-  const isActive = (path: string) => {
-    if (path === "/jlpt") {
-      return pathname.startsWith("/jlpt") && !pathname.includes("/flashcards");
-    }
-    if (path === "/flashcards") {
-      return pathname.includes("/flashcards");
-    }
-    return pathname.startsWith(path);
-  };
-
-  /* ----------------------------- */
-  /* RENDER */
-  /* ----------------------------- */
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-[#1f242d]/90 backdrop-blur-xl border-t border-white/10 md:hidden z-50 px-2 pb-6 pt-2">
-      <div className="grid grid-cols-4 items-center max-w-md mx-auto justify-items-center">
-        {/* Tab 1: Learn */}
-        <Link
-          href="/jlpt"
-          className={`flex flex-col items-center justify-center w-[64px] h-[64px] rounded-2xl active:scale-90 transition-all ${
-            isActive("/jlpt")
-              ? "bg-[#0ef]/10 text-[#0ef]"
-              : "text-white/40 hover:text-white/80"
-          }`}
-        >
-          <span
-            className={`text-xl mb-1 transition-transform ${isActive("/jlpt") ? "scale-110 drop-shadow-[0_0_8px_rgba(0,255,239,0.5)]" : ""}`}
-          >
-            📚
-          </span>
-          <span className="text-[9px] font-black uppercase tracking-widest">
-            Learn
-          </span>
-        </Link>
+    <nav className="fixed bottom-0 left-0 right-0 z-[60] bg-[#1f242d]/80 backdrop-blur-2xl border-t border-white/5 px-4 pb-8 pt-3 shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
+      <div className="flex justify-between items-center max-w-md mx-auto relative">
+        {/* HOME - Tombol Kembali ke Landing */}
+        <NavItem href="/" icon="🏠" label="Home" active={isActive("/")} />
 
-        {/* Tab 2: Practice */}
-        <Link
-          href={currentLevel ? `/jlpt/${currentLevel}/flashcards` : "/jlpt"}
-          className={`flex flex-col items-center justify-center w-[72px] h-[72px] -mt-8 rounded-full border-4 border-[#1f242d] shadow-xl active:scale-95 transition-all ${
-            isActive("/flashcards")
-              ? "bg-[#0ef] text-[#1f242d] shadow-[0_0_20px_rgba(0,255,239,0.4)]"
-              : "bg-gradient-to-br from-[#1e2024] to-[#23272b] text-white/60 hover:text-white"
-          }`}
-        >
-          <span
-            className={`text-2xl transition-transform ${isActive("/flashcards") ? "scale-110" : ""}`}
+        {/* LEARN - Kurikulum JLPT */}
+        <NavItem
+          href="/jlpt"
+          icon="📚"
+          label="Learn"
+          active={isActive("/jlpt")}
+        />
+
+        {/* REVIEW - Tombol Tengah Menonjol (SRS) */}
+        <Link href="/dashboard/review" className="relative -mt-12 group">
+          <motion.div
+            whileTap={{ scale: 0.9 }}
+            className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-2xl border-2 transition-all ${
+              pathname.includes("/review")
+                ? "bg-[#0ef] border-[#0ef] text-[#1f242d]"
+                : "bg-[#1e2024] border-white/10 text-white/60"
+            }`}
           >
             🧠
-          </span>
+          </motion.div>
           <span
-            className={`text-[9px] font-black uppercase tracking-widest mt-1 ${isActive("/flashcards") ? "text-[#1f242d]" : ""}`}
+            className={`text-[8px] font-black uppercase tracking-tighter text-center block mt-2 ${
+              pathname.includes("/review") ? "text-[#0ef]" : "text-white/20"
+            }`}
           >
-            Test
+            Review
           </span>
         </Link>
 
-        {/* Tab 3: Dashboard/Stats */}
-        <Link
+        {/* DICTIONARY - Kamus Kata Kerja */}
+        <NavItem
+          href="/dictionary/verbs"
+          icon="🔍"
+          label="Kamus"
+          active={isActive("/dictionary")}
+        />
+
+        {/* STATS - Dashboard User */}
+        <NavItem
           href="/dashboard"
-          className={`flex flex-col items-center justify-center w-[64px] h-[64px] rounded-2xl active:scale-90 transition-all ${
-            isActive("/dashboard")
-              ? "bg-[#0ef]/10 text-[#0ef]"
-              : "text-white/40 hover:text-white/80"
-          }`}
-        >
-          <span
-            className={`text-xl mb-1 transition-transform ${isActive("/dashboard") ? "scale-110 drop-shadow-[0_0_8px_rgba(0,255,239,0.5)]" : ""}`}
-          >
-            📊
-          </span>
-          <span className="text-[9px] font-black uppercase tracking-widest">
-            Stats
-          </span>
-        </Link>
-
-        {/* Tab 4: Support */}
-        <Link
-          href="/support"
-          className={`flex flex-col items-center justify-center w-[64px] h-[64px] rounded-2xl active:scale-90 transition-all ${
-            isActive("/support")
-              ? "bg-blue-500/10 text-blue-400"
-              : "text-white/40 hover:text-white/80"
-          }`}
-        >
-          <span
-            className={`text-xl mb-1 transition-transform ${isActive("/support") ? "scale-110 drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]" : ""}`}
-          >
-            💙
-          </span>
-          <span className="text-[9px] font-black uppercase tracking-widest">
-            Support
-          </span>
-        </Link>
+          icon="📊"
+          label="Stats"
+          active={isActive("/dashboard") && !pathname.includes("/review")}
+        />
       </div>
-    </div>
+    </nav>
+  );
+}
+
+function NavItem({
+  href,
+  icon,
+  label,
+  active,
+}: {
+  href: string;
+  icon: string;
+  label: string;
+  active: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      className={`flex flex-col items-center gap-1 transition-all active:scale-90 ${
+        active ? "text-[#0ef]" : "text-white/40"
+      }`}
+    >
+      <span
+        className={`text-xl transition-transform ${active ? "scale-110 drop-shadow-[0_0_8px_#0ef]" : ""}`}
+      >
+        {icon}
+      </span>
+      <span className="text-[9px] font-black uppercase tracking-tighter">
+        {label}
+      </span>
+    </Link>
   );
 }

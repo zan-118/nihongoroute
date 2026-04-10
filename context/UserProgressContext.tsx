@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { calculateLevel } from "@/lib/level";
-import { SRSState } from "@/lib/srs";
+import { SRSState, createNewCardState } from "@/lib/srs";
 
 interface UserProgress {
   xp: number;
@@ -14,6 +14,7 @@ interface ProgressContextType {
   progress: UserProgress;
   loading: boolean;
   updateProgress: (newXp: number, newSrs: Record<string, SRSState>) => void;
+  addToSRS: (wordId: string) => void; // Fungsi baru
   exportData: () => void;
   importData: (jsonData: string) => boolean;
 }
@@ -64,6 +65,18 @@ export const ProgressProvider = ({
     localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
   };
 
+  // Fungsi Baru: Menambahkan kata ke antrean belajar
+  const addToSRS = (wordId: string) => {
+    if (progress.srs[wordId]) return; // Cegah duplikat
+
+    const newSrs = {
+      ...progress.srs,
+      [wordId]: createNewCardState(),
+    };
+
+    updateProgress(progress.xp, newSrs);
+  };
+
   const exportData = () => {
     const dataStr =
       "data:text/json;charset=utf-8," +
@@ -95,7 +108,14 @@ export const ProgressProvider = ({
 
   return (
     <ProgressContext.Provider
-      value={{ progress, loading, updateProgress, exportData, importData }}
+      value={{
+        progress,
+        loading,
+        updateProgress,
+        addToSRS,
+        exportData,
+        importData,
+      }}
     >
       {children}
     </ProgressContext.Provider>

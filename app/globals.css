@@ -2,96 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Branding Variables */
 :root {
   --color-bg-dark: #1f242d;
-  --color-card-dark: #1e2024;
   --color-accent-cyan: #0ef;
-  --color-text-main: #c4cfde;
-  --color-text-bright: #ffffff;
 
-  --outer-shadow: 10px 10px 19px #1c1e22, -10px -10px 19px #262a2e;
-  --inner-shadow: inset 5px 5px 10px #1c1e22, inset -5px -5px 10px #262a2e;
+  /* Palet Warna Golongan Kata Kerja */
+  --color-g1: #3b82f6; /* Blue - Dasar */
+  --color-g2: #f97316; /* Orange - Perubahan */
+  --color-g3: #22c55e; /* Green - Khusus */
 }
 
-body {
-  background-color: var(--color-bg-dark);
-  color: var(--color-text-main);
-  font-family: "Inter", sans-serif;
+@layer components {
+  /* Label Golongan untuk UI */
+  .badge-g1 {
+    @apply bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded text-[10px] font-bold;
+  }
+  .badge-g2 {
+    @apply bg-orange-500/10 text-orange-400 border border-orange-500/20 px-2 py-0.5 rounded text-[10px] font-bold;
+  }
+  .badge-g3 {
+    @apply bg-green-500/10 text-green-400 border border-green-500/20 px-2 py-0.5 rounded text-[10px] font-bold;
+  }
+
+  /* Card Glassmorphism */
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-[2rem] shadow-xl transition-all hover:border-white/20;
+  }
 }
 
-/* Neumorphic Utilities */
-
-.neu-card {
-  background: var(--color-card-dark);
-  box-shadow: var(--outer-shadow);
-  border-radius: 30px;
+/* Perbaikan Prose untuk Artikel Tata Bahasa */
+.prose-custom {
+  @apply text-[#c4cfde] leading-relaxed;
+}
+.prose-custom h2 {
+  @apply text-white font-black text-2xl mt-10 mb-4 flex items-center gap-2 italic;
+}
+.prose-custom p {
+  @apply mb-5;
+}
+.prose-custom strong {
+  @apply text-[#0ef] font-bold;
 }
 
-.neu-button {
-  background: linear-gradient(145deg, #1e2024, #23272b);
-  box-shadow: var(--outer-shadow);
-  color: var(--color-accent-cyan);
-  font-weight: 900;
-  border-radius: 0.75rem;
-  transition: all 0.3s ease;
-  display: inline-block;
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+/* Menghilangkan scrollbar tapi tetap bisa scroll (opsional untuk Mobile) */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
-
-.neu-button:hover {
-  background: var(--color-accent-cyan);
-  color: #1f242d;
-  box-shadow: 0 0 20px rgba(0, 255, 239, 0.4);
-}
-
-/* Prose styling */
-
-.prose {
-  max-width: none;
-  color: var(--color-text-main);
-  line-height: 1.8;
-}
-
-.prose h1,
-.prose h2,
-.prose h3 {
-  color: var(--color-text-bright);
-  font-weight: 900;
-  font-style: italic;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-}
-
-.prose strong {
-  color: var(--color-accent-cyan);
-}
-
-/* Table styling */
-
-.prose table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 2rem 0;
-  background: var(--color-card-dark);
-}
-
-.prose th,
-.prose td {
-  padding: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* Scrollbar */
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #2a2e35;
-  border-radius: 10px;
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

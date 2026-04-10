@@ -13,6 +13,7 @@
     "@sanity/image-url": "^1.1.0",
     "@sanity/vision": "latest",
     "canvas-confetti": "^1.9.4",
+    "framer-motion": "^12.38.0",
     "next": "latest",
     "next-sanity": "latest",
     "react": "latest",

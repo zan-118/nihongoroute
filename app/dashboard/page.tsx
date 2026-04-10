@@ -1,287 +1,317 @@
 "use client";
 
-import { useEffect, useMemo, useState, useRef } from "react";
-import { xpForCurrentLevel, xpForNextLevel } from "@/lib/level";
-import { ACHIEVEMENTS } from "@/lib/achievement";
-import { loadProgress } from "@/lib/progress";
-import { loadDailyMission, DailyMission } from "@/lib/daily";
-import Heatmap from "@/components/Heatmap";
+import { useEffect, useState } from "react";
 import { useProgress } from "@/context/UserProgressContext";
-
-interface LocalProgressState {
-  streak: number;
-  totalReviews: number;
-  todayReviewCount: number;
-  dailyGoal: number;
-  studyDays: Record<string, number>;
-}
+import { motion } from "framer-motion";
+import Link from "next/link";
+import MemoryStats from "@/components/MemoryStats";
+import DailyQuests from "@/components/DailyQuests";
+import LevelUpOverlay from "@/components/LevelUpOverlay";
 
 export default function DashboardPage() {
-  const {
-    progress: globalProgress,
-    loading: globalLoading,
-    exportData,
-    importData,
-  } = useProgress();
+  const { progress, loading } = useProgress();
+  const [guestId, setGuestId] = useState<string>("LOADING...");
 
-  const [localProgress, setLocalProgress] = useState<LocalProgressState | null>(
-    null,
-  );
-  const [unlocked, setUnlocked] = useState<string[]>([]);
-  const [mission, setMission] = useState<DailyMission | null>(null);
-  const [localLoading, setLocalLoading] = useState<boolean>(true);
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
+  // Generate atau ambil ID saat komponen di-mount untuk mencegah Hydration Error
   useEffect(() => {
-    const initLocalData = () => {
-      const savedUnlocks = localStorage.getItem("nihongo-achievements");
-      if (savedUnlocks) {
-        try {
-          setUnlocked(JSON.parse(savedUnlocks));
-        } catch {
-          setUnlocked([]);
-        }
-      }
-      setLocalProgress(loadProgress());
-      setMission(loadDailyMission());
-      setLocalLoading(false);
-    };
-    initLocalData();
+    let savedId = localStorage.getItem("nihongo_guest_id");
+    if (!savedId) {
+      savedId = "NP-" + Math.random().toString(36).substr(2, 6).toUpperCase();
+      localStorage.setItem("nihongo_guest_id", savedId);
+    }
+    setGuestId(savedId);
   }, []);
 
-  const progressPercent = useMemo(() => {
-    const currentLevelXP = xpForCurrentLevel(globalProgress.level);
-    const nextLevelXP = xpForNextLevel(globalProgress.level);
-    const range = nextLevelXP - currentLevelXP;
-    if (range <= 0) return 0;
-    return Math.min(
-      Math.max(((globalProgress.xp - currentLevelXP) / range) * 100, 0),
-      100,
-    );
-  }, [globalProgress.xp, globalProgress.level]);
+  /* ================= DATA MANAGEMENT LOGIC ================= */
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleExportData = () => {
+    const data = localStorage.getItem("nihongopath_progress");
+    if (!data) return alert("Belum ada progres untuk di-export.");
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const content = event.target?.result as string;
-      const success = importData(content);
-      if (success) {
-        alert("✅ Progress berhasil dipulihkan!");
-        window.location.reload();
-      } else {
-        alert("❌ File tidak valid atau rusak.");
-      }
-    };
-    reader.readAsText(file);
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `nihongopath_backup_${new Date().toISOString().split("T")[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
   };
 
-  if (globalLoading || localLoading || !localProgress || !mission) {
+  const handleImportData = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
+    input.onchange = (e: any) => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (event: any) => {
+        try {
+          const importedData = JSON.parse(event.target.result);
+          // Validasi sederhana struktur data
+          if (importedData.xp !== undefined && importedData.srs) {
+            localStorage.setItem("nihongopath_progress", event.target.result);
+            window.location.reload();
+          } else {
+            alert("Format file tidak valid!");
+          }
+        } catch (err) {
+          alert("Gagal membaca file.");
+        }
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  };
+
+  const handleResetData = () => {
+    if (
+      confirm(
+        "APAKAH KAMU YAKIN? Semua progres, level, dan hafalan SRS akan dihapus permanen.",
+      )
+    ) {
+      localStorage.removeItem("nihongopath_progress");
+      window.location.reload();
+    }
+  };
+
+  /* ================= RENDERING ================= */
+
+  if (loading) {
     return (
-      <div className="min-h-screen bg-[#1f242d] py-20 px-8 text-white flex justify-center items-center">
-        <div className="animate-pulse text-[#0ef] font-mono tracking-widest text-sm">
-          MEMUAT DATA...
-        </div>
+      <div className="min-h-screen bg-[#1f242d] flex flex-col items-center justify-center">
+        <motion.div
+          animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+          transition={{ repeat: Infinity, duration: 2 }}
+          className="w-16 h-16 bg-[#0ef] rounded-2xl shadow-[0_0_30px_#0ef]"
+        />
+        <p className="mt-8 text-[#0ef] font-black uppercase tracking-[0.4em] text-[10px]">
+          Syncing Memory...
+        </p>
       </div>
     );
   }
 
+  const now = Date.now();
+  const dueCount = Object.values(progress.srs).filter(
+    (card: any) => card.nextReview <= now,
+  ).length;
+
   return (
-    <div className="min-h-screen bg-[#1f242d] py-20 px-4 md:px-8 text-white">
-      <div className="max-w-5xl mx-auto">
-        <h1 className="text-4xl md:text-5xl font-black mb-12 text-[#0ef] uppercase tracking-tight">
-          Dashboard
-        </h1>
+    <div className="min-h-screen bg-[#1f242d] pb-32">
+      <LevelUpOverlay level={progress.level} />
 
-        {/* LEVEL CARD */}
-        <div className="bg-[#1e2024] p-8 md:p-10 rounded-3xl border border-[#0ef]/20 mb-10 shadow-[0_0_40px_rgba(0,255,239,0.05)] relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-8 opacity-5 text-8xl font-black italic select-none">
-            {globalProgress.level}
-          </div>
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-white relative z-10">
-            Level {globalProgress.level}
-          </h2>
-
-          <div className="w-full bg-white/10 h-4 rounded-full overflow-hidden border border-white/5 relative z-10">
-            <div
-              className="bg-[#0ef] h-full rounded-full transition-all duration-1000 shadow-[0_0_15px_#0ef]"
-              style={{ width: `${progressPercent}%` }}
-            />
-          </div>
-          <p className="mt-4 text-[#c4cfde] font-mono font-bold tracking-widest text-sm relative z-10">
-            TOTAL XP: {globalProgress.xp}
-          </p>
-        </div>
-
-        {/* DAILY MISSION */}
-        <div className="bg-gradient-to-br from-[#1e2024] to-[#23272b] p-8 rounded-[2rem] border border-white/5 mb-10 shadow-lg">
-          <h3 className="text-[#0ef] font-black mb-6 uppercase tracking-widest text-sm flex items-center gap-3">
-            <span className="text-xl">🎯</span> Daily Mission
-          </h3>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center text-sm font-bold">
-              <span>Card Reviews</span>
-              <span className="text-[#0ef]">
-                {mission.reviewProgress} / {mission.reviewGoal}
+      <div className="max-w-7xl mx-auto px-4 md:px-8 pt-24 md:pt-32">
+        {/* HEADER SECTION */}
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 mb-16">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+          >
+            <div className="flex items-center gap-4 mb-2">
+              <span className="px-3 py-1 rounded-full bg-[#0ef]/10 text-[#0ef] text-[10px] font-black uppercase tracking-widest border border-[#0ef]/20">
+                Lvl {progress.level} Developer
+              </span>
+              <span className="text-white/20 text-xs font-bold uppercase tracking-widest">
+                ID: {guestId}
               </span>
             </div>
-            <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden">
-              <div
-                className="bg-green-400 h-full transition-all duration-500"
-                style={{
-                  width: `${Math.min((mission.reviewProgress / mission.reviewGoal) * 100, 100)}%`,
-                }}
-              />
-            </div>
+            <h1 className="text-6xl md:text-8xl font-black text-white italic uppercase tracking-tighter leading-none">
+              Das<span className="text-[#0ef]">hboard</span>
+            </h1>
+          </motion.div>
 
-            <div className="flex justify-between items-center text-sm font-bold mt-6">
-              <span>Lessons Completed</span>
-              <span className="text-[#0ef]">
-                {mission.lessonProgress} / {mission.lessonGoal}
-              </span>
-            </div>
-            <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden">
-              <div
-                className="bg-green-400 h-full transition-all duration-500"
-                style={{
-                  width: `${Math.min((mission.lessonProgress / mission.lessonGoal) * 100, 100)}%`,
-                }}
-              />
-            </div>
-          </div>
-
-          {mission.completed && (
-            <div className="mt-8 p-4 bg-green-500/10 border border-green-500/30 rounded-xl text-center">
-              <p className="text-green-400 font-bold uppercase tracking-widest text-xs">
-                ✅ Mission Completed! +{mission.rewardXP} XP
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* STATS GRID */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-12">
-          <div className="bg-[#1e2024] p-6 rounded-2xl border border-white/5 flex flex-col justify-center items-center text-center hover:border-[#0ef]/30 transition-colors">
-            <h3 className="text-[#c4cfde]/50 font-bold text-xs uppercase tracking-widest">
-              Streak
-            </h3>
-            <p className="text-3xl md:text-4xl mt-3 font-black text-white">
-              {localProgress.streak} <span className="text-xl">🔥</span>
-            </p>
-          </div>
-          <div className="bg-[#1e2024] p-6 rounded-2xl border border-white/5 flex flex-col justify-center items-center text-center hover:border-[#0ef]/30 transition-colors">
-            <h3 className="text-[#c4cfde]/50 font-bold text-xs uppercase tracking-widest">
-              Reviews
-            </h3>
-            <p className="text-3xl md:text-4xl mt-3 font-black text-white">
-              {localProgress.totalReviews} <span className="text-xl">📚</span>
-            </p>
-          </div>
-          <div className="bg-[#1e2024] p-6 rounded-2xl border border-white/5 flex flex-col justify-center items-center text-center hover:border-[#0ef]/30 transition-colors col-span-2 md:col-span-1">
-            <h3 className="text-[#c4cfde]/50 font-bold text-xs uppercase tracking-widest">
-              Today
-            </h3>
-            <p className="text-3xl md:text-4xl mt-3 font-black text-[#0ef]">
-              {localProgress.todayReviewCount}{" "}
-              <span className="text-white/20 text-xl">
-                / {localProgress.dailyGoal}
-              </span>
-            </p>
-          </div>
-        </div>
-
-        {/* HEATMAP */}
-        <div className="mb-16 bg-[#1e2024] p-8 rounded-[2rem] border border-white/5">
-          <Heatmap studyDays={localProgress.studyDays || {}} />
-        </div>
-
-        {/* ACHIEVEMENTS */}
-        <div className="mb-16">
-          <h2 className="text-2xl md:text-3xl font-black mb-8 text-white uppercase tracking-tight">
-            Achievements
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {ACHIEVEMENTS.map((achievement) => {
-              const isUnlocked = unlocked.includes(achievement.id);
-              return (
-                <div
-                  key={achievement.id}
-                  className={`p-6 rounded-[2rem] border transition-all duration-300 relative overflow-hidden ${
-                    isUnlocked
-                      ? "bg-gradient-to-br from-[#0ef]/10 to-[#0ef]/5 border-[#0ef]/50 shadow-[0_0_20px_rgba(0,255,239,0.1)]"
-                      : "bg-[#1e2024] border-white/5 opacity-50 grayscale"
-                  }`}
-                >
-                  <h3
-                    className={`font-black text-lg ${isUnlocked ? "text-[#0ef]" : "text-white"}`}
-                  >
-                    {achievement.title}
-                  </h3>
-                  <p className="text-sm mt-3 text-[#c4cfde]/80 leading-relaxed">
-                    {achievement.description}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* DATA MANAGEMENT (BACKUP & RESTORE) */}
-        <div className="pt-10 border-t border-white/5">
-          <h2 className="text-2xl md:text-3xl font-black mb-4 text-white uppercase tracking-tight">
-            Save Data
-          </h2>
-          <p className="text-sm text-[#c4cfde]/60 mb-8 max-w-2xl">
-            Aplikasi ini berjalan 100% di browsermu. Unduh progres (XP, Level,
-            Flashcard) kamu sesekali agar tidak hilang jika membersihkan cache
-            atau pindah perangkat.
-          </p>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <button
-              onClick={exportData}
-              className="p-8 rounded-[2rem] bg-gradient-to-br from-blue-500/10 to-[#1e2024] border border-blue-500/30 hover:border-blue-500 shadow-lg transition-all flex flex-col items-center justify-center group"
+          <Link href="/dashboard/review" className="relative group">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-10 py-5 bg-[#0ef] text-[#1f242d] font-black rounded-2xl shadow-[0_0_30px_rgba(0,255,239,0.3)] uppercase text-sm tracking-widest flex items-center gap-4"
             >
-              <div className="text-4xl mb-4 group-hover:-translate-y-2 transition-transform">
-                💾
-              </div>
-              <h3 className="font-black text-xl text-white mb-2 uppercase">
-                Backup Progress
-              </h3>
-              <p className="text-xs text-[#c4cfde]/60 text-center">
-                Download file .json ke devicemu
-              </p>
-            </button>
+              Mulai Review
+              {dueCount > 0 && (
+                <span className="bg-red-500 text-white px-2 py-0.5 rounded-lg text-[10px] animate-pulse">
+                  {dueCount} DUE
+                </span>
+              )}
+            </motion.div>
+          </Link>
+        </header>
 
-            <div>
-              <input
-                type="file"
-                accept=".json"
-                ref={fileInputRef}
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full h-full p-8 rounded-[2rem] bg-gradient-to-br from-green-500/10 to-[#1e2024] border border-green-500/30 hover:border-green-500 shadow-lg transition-all flex flex-col items-center justify-center group"
-              >
-                <div className="text-4xl mb-4 group-hover:-translate-y-2 transition-transform">
-                  📂
-                </div>
-                <h3 className="font-black text-xl text-white mb-2 uppercase">
-                  Restore Progress
+        {/* MAIN GRID */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* LEFT & CENTER COLUMN */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* XP PROGRESS BAR */}
+            <section className="bg-[#1e2024] p-8 rounded-[2.5rem] border border-white/5 relative overflow-hidden">
+              <div className="flex justify-between items-end mb-4">
+                <h3 className="text-white font-black uppercase italic tracking-tight">
+                  Experience Points
                 </h3>
-                <p className="text-xs text-[#c4cfde]/60 text-center">
-                  Upload file .json yang pernah disimpan
-                </p>
-              </button>
+                <span className="text-[#0ef] font-mono font-bold">
+                  {progress.xp} XP
+                </span>
+              </div>
+              <div className="w-full bg-white/5 h-4 rounded-full overflow-hidden border border-white/5 p-1">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${(progress.xp % 1000) / 10}%` }}
+                  className="h-full bg-[#0ef] rounded-full shadow-[0_0_15px_#0ef]"
+                />
+              </div>
+              <p className="mt-3 text-[9px] text-white/30 uppercase font-black tracking-widest">
+                {1000 - (progress.xp % 1000)} XP lagi untuk level berikutnya
+              </p>
+            </section>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <MemoryStats />
+              <DailyQuests />
+            </div>
+
+            {/* QUICK LESSON SELECTOR DENGAN MENU BARU */}
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+              <QuickLink
+                href="/jlpt/n5"
+                label="Materi N5"
+                icon="⛩️"
+                color="hover:border-blue-500/50"
+              />
+              <QuickLink
+                href="/jlpt/n5/kanji"
+                label="Kanji Power"
+                icon="🈴"
+                color="hover:border-purple-500/50"
+              />
+              <QuickLink
+                href="/dictionary/verbs"
+                label="Verb Dict"
+                icon="🔍"
+                color="hover:border-green-500/50"
+              />
+              <QuickLink
+                href="/reference/grammar"
+                label="Grammar"
+                icon="📖"
+                color="hover:border-yellow-500/50"
+              />
+              <QuickLink
+                href="/reference/cheatsheet"
+                label="Cheatsheet"
+                icon="📋"
+                color="hover:border-pink-500/50"
+              />
+              <QuickLink
+                href="/support"
+                label="Support"
+                icon="☕"
+                color="hover:border-orange-500/50"
+              />
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN (INFO & DATA MANAGEMENT) */}
+          <div className="space-y-8">
+            <div className="bg-gradient-to-br from-[#1e2024] to-transparent p-8 rounded-[2.5rem] border border-white/5">
+              <h3 className="text-white/30 font-black uppercase tracking-widest text-[10px] mb-6">
+                Global Performance
+              </h3>
+              <div className="space-y-6">
+                <SimpleStat
+                  label="Total Words"
+                  value={Object.keys(progress.srs).length}
+                />
+                <SimpleStat
+                  label="Accuracy"
+                  value="84%"
+                  color="text-green-400"
+                />
+                <SimpleStat
+                  label="Streak"
+                  value="5 Days"
+                  color="text-orange-400"
+                />
+              </div>
+            </div>
+
+            {/* DATA MANAGEMENT CARD */}
+            <div className="bg-[#1e2024] p-8 rounded-[2.5rem] border border-white/5">
+              <h3 className="text-white/30 font-black uppercase tracking-widest text-[10px] mb-6 italic">
+                Data Management
+              </h3>
+              <div className="space-y-3">
+                <button
+                  onClick={handleExportData}
+                  className="w-full flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl transition-all group"
+                >
+                  <span className="text-[10px] font-black uppercase text-white/60 group-hover:text-[#0ef]">
+                    Export Backup
+                  </span>
+                  <span className="text-lg">💾</span>
+                </button>
+
+                <button
+                  onClick={handleImportData}
+                  className="w-full flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl transition-all group"
+                >
+                  <span className="text-[10px] font-black uppercase text-white/60 group-hover:text-[#0ef]">
+                    Import Data
+                  </span>
+                  <span className="text-lg">📥</span>
+                </button>
+
+                <button
+                  onClick={handleResetData}
+                  className="w-full flex items-center justify-between p-4 bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 rounded-2xl transition-all group"
+                >
+                  <span className="text-[10px] font-black uppercase text-red-400/60 group-hover:text-red-400">
+                    Clear Progress
+                  </span>
+                  <span className="text-lg">🗑️</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-[#0ef]/5 p-8 rounded-[2.5rem] border border-[#0ef]/10">
+              <span className="text-2xl mb-4 block">💡</span>
+              <h4 className="text-white font-black uppercase italic mb-2 tracking-tight">
+                Sensei Says:
+              </h4>
+              <p className="text-sm text-[#c4cfde]/60 leading-relaxed italic">
+                "Gunakan fitur Export Backup secara berkala untuk menjaga
+                progres belajarmu tetap aman di perangkat lain."
+              </p>
             </div>
           </div>
         </div>
       </div>
     </div>
+  );
+}
+
+/* HELPER COMPONENTS */
+
+function SimpleStat({ label, value, color = "text-white" }: any) {
+  return (
+    <div className="flex justify-between items-center">
+      <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">
+        {label}
+      </span>
+      <span className={`text-xl font-black italic ${color}`}>{value}</span>
+    </div>
+  );
+}
+
+function QuickLink({ href, label, icon, color }: any) {
+  return (
+    <Link
+      href={href}
+      className={`bg-[#1e2024] p-6 rounded-[2rem] border border-white/5 transition-all group flex flex-col items-center gap-3 ${color}`}
+    >
+      <span className="text-2xl group-hover:scale-125 transition-transform">
+        {icon}
+      </span>
+      <span className="text-[9px] font-black text-white/40 uppercase tracking-tighter group-hover:text-white">
+        {label}
+      </span>
+    </Link>
   );
 }

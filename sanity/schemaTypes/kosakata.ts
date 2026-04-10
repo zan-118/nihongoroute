@@ -2,7 +2,7 @@ import { defineField, defineType } from "sanity";
 
 export default defineType({
   name: "kosakata",
-  title: "Flashcard Kosakata",
+  title: "Perpustakaan Kosakata Global",
   type: "document",
   fields: [
     defineField({
@@ -27,6 +27,27 @@ export default defineType({
       type: "string",
       title: "Arti (Bahasa Indonesia)",
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "audio",
+      type: "file",
+      title: "Audio Pengucapan (Opsional)",
+      options: { accept: "audio/*" },
+    }),
+    defineField({
+      name: "kanjiDetails",
+      type: "object",
+      title: "Detail Kanji (Onyomi/Kunyomi)",
+      fields: [
+        { name: "onyomi", type: "string", title: "Onyomi (Katakana)" },
+        { name: "kunyomi", type: "string", title: "Kunyomi (Hiragana)" },
+      ],
+    }),
+    defineField({
+      name: "examples",
+      type: "array",
+      title: "Contoh Kalimat Spesifik Kata Ini",
+      of: [{ type: "exampleSentence" }],
     }),
     defineField({
       name: "level",

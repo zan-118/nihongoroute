@@ -10,6 +10,9 @@ import callout from "./callout";
 import exampleSentence from "./exampleSentence";
 import vocabItem from "./vocabItem";
 import kosakata from "./kosakata";
+import verbDictionary from "./verbDictionary";
+import cheatsheet from "./cheatsheet";
+import grammarArticle from "./grammarArticle";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -24,5 +27,8 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     exampleSentence,
     vocabItem,
     kosakata,
+    verbDictionary,
+    cheatsheet,
+    grammarArticle,
   ],
 };
