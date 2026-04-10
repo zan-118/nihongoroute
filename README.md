@@ -1,5 +1,3 @@
-Tentu! Ini adalah draf `README.md` yang merangkum semua teknologi canggih dan fitur keren yang sudah kita bangun untuk NihongoPath. Kamu bisa langsung _copy-paste_ ini ke file `README.md` di _root folder_ proyekmu.
-
 ````markdown
 # 🌸 NihongoPath
 
