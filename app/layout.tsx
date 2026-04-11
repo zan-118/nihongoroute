@@ -10,7 +10,6 @@ import FloatingSupport from "@/components/FloatingSupport";
 
 const inter = Inter({ subsets: ["latin"] });
 
-// Pengaturan warna tema browser HP
 export const viewport: Viewport = {
   themeColor: "#15171a",
   width: "device-width",
@@ -18,7 +17,6 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
-// Pengaturan SEO, Ikon, dan OpenGraph
 export const metadata: Metadata = {
   title: "NihongoRoute | Belajar Bahasa Jepang Gratis",
   description:
@@ -33,8 +31,12 @@ export const metadata: Metadata = {
     "nihongo",
   ],
   icons: {
-    icon: "/logo-branding.png", // Favicon untuk browser
-    apple: "/logo-branding.png", // Ikon untuk Apple iOS
+    icon: "/logo-branding.png",
+    apple: "/logo-branding.png",
+  },
+  // ✨ INI ADALAH KODE VERIFIKASI GOOGLE KAMU ✨
+  verification: {
+    google: "Niyl1z2v4hJgZZzRFLzMLOk4xlYNyvSNnEiCC-eK7N4",
   },
   openGraph: {
     title: "NihongoRoute | Misi Menguasai Bahasa Jepang",
@@ -44,7 +46,7 @@ export const metadata: Metadata = {
     siteName: "NihongoRoute",
     images: [
       {
-        url: "/og-image.jpg", // Pastikan file og-image.jpg (1200x630px) ada di folder public
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "NihongoRoute Dashboard",
