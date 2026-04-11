@@ -1,106 +1,111 @@
 # 🌀 NihongoRoute (日本語ルート)
 
-NihongoRoute adalah platform e-learning bahasa Jepang modern dengan estetika Cyber Dark Neumorphic. Aplikasi ini dirancang untuk membantu pejuang JLPT (dimulai dari N5) menguasai kosakata, tata bahasa, dan kanji melalui sistem Spaced Repetition System (SRS) yang cerdas dan perpustakaan data yang interaktif.
+[![Next.js](https://img.shields.io/badge/Next.js-15-000000?style=for-the-badge&logo=nextdotjs)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Sanity](https://img.shields.io/badge/Sanity-F1662A?style=for-the-badge&logo=sanity&logoColor=white)](https://www.sanity.io/)
+[![Tailwind](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![PWA](https://img.shields.io/badge/PWA-Ready-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white)](https://web.dev/progressive-web-apps/)
 
-## 🚀 Fitur Unggulan
+**NihongoRoute** adalah platform e-learning bahasa Jepang modern dengan estetika **Cyber Dark Neumorphic**. Dirancang khusus untuk pejuang JLPT (dimulai dari N5) untuk menguasai kosakata, tata bahasa, dan kanji melalui pendekatan gamifikasi dan sistem memori yang cerdas.
 
-### 1. **Curriculum-Based Learning**
+[**Jelajahi Aplikasi »**](https://www.nihongoroute.my.id)
 
-- **Kana Basics:** Modul interaktif Hiragana & Katakana yang dilengkapi dengan **SVG Stroke Order** dinamis dari KanjiVG.
-- **JLPT Roadmap:** Struktur materi yang rapi (N5 - N1) berdasarkan bab, mencakup Kosakata, Pola Kalimat, Percakapan (Kaiwa), dan Kuis.
+---
 
-### 2. **Smart Library Hub**
+## ✨ Fitur Unggulan
 
-- **Verb Archive:** Mesin konjugasi otomatis untuk 120+ kata kerja N5 (Masu, Te, Nai, Ta, hingga bentuk Potensial & Kausatif).
-- **Grammar Guide:** Dokumentasi mendalam pola kalimat yang ditarik langsung dari Sanity CMS.
-- **Reference Sheets:** Tabel referensi cepat untuk angka, waktu, partikel, dan penghitung (_counters_).
+### 🗺️ Curriculum-Based Learning
 
-### 3. **Memory Engine**
+- **Kana Basics:** Modul interaktif Hiragana & Katakana dilengkapi dengan **SVG Stroke Order** dinamis untuk melatih cara penulisan yang benar.
+- **JLPT Roadmap:** Kurikulum terstruktur dari N5 hingga N1 yang mencakup Kosakata, Pola Kalimat, Percakapan (Kaiwa), dan Kuis evaluasi.
 
-- **Flashcards Mastery:** Kartu hafalan interaktif dengan layout vertikal yang menyertakan diagram urutan coretan Kanji.
-- **Integrated SRS:** Algoritma _Spaced Repetition_ untuk mengoptimalkan jadwal review kosakata berdasarkan daya ingat pengguna.
-- **XP & Leveling:** Sistem gamifikasi untuk memantau progres belajar secara _real-time_.
+### 📚 Smart Library Hub
+
+- **Verb Archive:** Mesin konjugasi otomatis untuk 120+ kata kerja N5 (Bentuk Masu, Te, Nai, Ta, hingga Potensial & Kausatif).
+- **Grammar Guide:** Dokumentasi mendalam pola kalimat yang dikelola secara dinamis melalui **Sanity Headless CMS**.
+- **Reference Sheets:** Tabel referensi cepat (Cheatsheets) untuk angka, waktu, partikel, dan penghitung (_counters_).
+
+### 🧠 Memory Engine (SRS)
+
+- **Integrated SRS:** Algoritma _Spaced Repetition_ yang mengatur jadwal _review_ kosakata secara otomatis berdasarkan level daya ingat pengguna.
+- **Flashcards Mastery:** Kartu hafalan interaktif dengan diagram urutan coretan Kanji dan integrasi **Text-to-Speech (TTS)**.
+- **XP & Leveling:** Sistem progres gamifikasi untuk menjaga motivasi belajar tanpa perlu sistem login yang rumit.
 
 ---
 
 ## 🛠️ Stack Teknologi
 
-- **Framework:** [Next.js 14/15](https://nextjs.org/) (App Router)
-- **Language:** [TypeScript](https://www.typescriptlang.org/)
-- **CMS:** [Sanity.io](https://www.sanity.io/) (Headless CMS untuk konten dinamis)
-- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
-- **Animation:** [Framer Motion](https://www.framer.com/motion/)
-- **Icons:** [Lucide React](https://lucide.dev/)
-- **Database (State):** Browser LocalStorage (untuk progres User tanpa login)
+- **Core:** [Next.js 15](https://nextjs.org/) (App Router & Server Actions)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/) dengan konsep _Soft UI / Neumorphism_
+- **Content:** [Sanity.io](https://www.sanity.io/) (Real-time Headless CMS)
+- **State Management:** [Zustand](https://zustand-demo.pmnd.rs/) & Context API (Persisted via LocalStorage)
+- **Animation:** [Framer Motion](https://www.framer.com/motion/) untuk transisi antar-halaman yang _smooth_
+- **Service:** [Next-PWA](https://www.npmjs.com/package/next-pwa) untuk pengalaman aplikasi mobile yang _installable_
 
 ---
 
-## 📂 Struktur Folder Utama
+## 📂 Arsitektur Proyek
 
 ```text
 ├── app/
 │   ├── jlpt/              # Modul kurikulum (Basics, N5, N4, dll)
-│   ├── library/           # Hub data (Verbs, Grammar, Cheatsheets)
-│   ├── dashboard/         # Progres user & sesi Review SRS
-│   ├── studio/            # Akses ke Sanity Studio
-│   └── support/           # Halaman donasi (Trakteer & Saweria)
-├── components/            # Reusable UI (Flashcards, TTS, FloatingSupport)
+│   ├── library/           # Database hub (Verbs, Grammar, Cheatsheets)
+│   ├── dashboard/         # Pusat progres user & sesi Review SRS
+│   └── studio/            # Interface Sanity Studio (Back-office)
+├── components/            # UI Atoms, Molecules, & Organisms
 ├── context/               # Global state (UserProgressContext)
-├── lib/                   # Utility (SRS Logic, GROQ Queries, Audio)
-└── schemas/               # Definisi skema konten Sanity
+├── lib/                   # SRS Algorithm, GROQ Queries, & Global Utils
+└── public/                # Assets, PWA Icons, & Manifest
 ```
 
 ---
 
-## ⚙️ Cara Menjalankan Proyek
+## 🎨 Filosofi Desain
 
-1. **Clone repositori:**
+Aplikasi ini mengusung tema **Cyber Dark Neumorphic**:
+
+- **Aksen Futuristik:** Menggunakan warna `#0ef` (Cyan Neon) untuk elemen interaktif.
+- **Dark Mode by Default:** Menggunakan `#15171a` untuk mengurangi kelelahan mata (_eye strain_).
+- **Neumorphic Depth:** Menggunakan teknik _double shadow_ untuk menciptakan kedalaman visual yang elegan dan modern.
+
+---
+
+## ⚙️ Instalasi Lokal
+
+1. **Clone & Install:**
 
    ```bash
    git clone https://github.com/zan-118/nihongoroute.git
    cd nihongoroute
-   ```
-
-2. **Install dependensi:**
-
-   ```bash
    npm install
    ```
 
-3. **Setup Environment Variables:**
-   Buat file `.env.local` dan masukkan kredensial Sanity kamu:
+2. **Environment Setup:**
+   Buat file `.env.local` di root folder:
 
    ```env
-   NEXT_PUBLIC_SANITY_PROJECT_ID=your_id
-   NEXT_PUBLIC_SANITY_DATASET=production
+   NEXT_PUBLIC_SANITY_PROJECT_ID="your_project_id"
+   NEXT_PUBLIC_SANITY_DATASET="production"
+   NEXT_PUBLIC_SITE_URL="http://localhost:3000"
    ```
 
-4. **Jalankan aplikasi:**
+3. **Development Mode:**
    ```bash
    npm run dev
    ```
 
 ---
 
-## 🎨 Konsep Desain
+## 💙 Dukungan
 
-Aplikasi ini menggunakan tema **Cyber Dark Neumorphic**:
+NihongoRoute adalah proyek _open-source_ yang dikembangkan untuk membantu komunitas pembelajar bahasa Jepang. Dukungan kamu sangat berarti untuk keberlangsungan server dan konten:
 
-- **Primary Color:** `#0ef` (Cyan Neon) sebagai aksen futuristik.
-- **Background:** `#1f242d` (Deep Dark) untuk kenyamanan mata saat belajar malam hari.
-- **Efek:** Shadow ganda (light/dark) untuk memberikan kesan elemen yang timbul atau tenggelam (_soft UI_).
-
----
-
-## 💙 Kontribusi & Dukungan
-
-NihongoRoute dikembangkan sebagai platform gratis dan terbuka. Kamu bisa mendukung keberlangsungan server dan pengembangan konten melalui:
-
-- [Trakteer (E-Wallet)](https://trakteer.id/Zan118/tip)
-- [Saweria (QRIS)](https://saweria.co/Zan118)
+- [**Trakteer (E-Wallet)**](https://trakteer.id/Zan118/tip)
+- [**Saweria (QRIS)**](https://saweria.co/Zan118)
 
 ---
 
-**Developed with 💙 by Fauzan Abdul Basith** _Mastering Japanese, one step at a time._
+**Developed with 💙 by [Fauzan Abdul Basith](https://github.com/zan-118)**
+_Mastering Japanese, one step at a time._
 
 ---

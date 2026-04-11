@@ -16,6 +16,7 @@
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.8.0",
     "next": "latest",
+    "next-pwa": "^5.6.0",
     "next-sanity": "latest",
     "react": "latest",
     "react-dom": "latest",
@@ -24,6 +25,7 @@
   "devDependencies": {
     "@sanity/cli": "^6.3.1",
     "@types/canvas-confetti": "^1.9.0",
+    "@types/next-pwa": "^5.6.9",
     "@types/node": "^20.11.30",
     "@types/react": "latest",
     "@types/react-dom": "latest",
