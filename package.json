@@ -1,5 +1,5 @@
 {
-  "name": "nihongopath",
+  "name": "nihongoroute",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -14,7 +14,6 @@
     "@sanity/vision": "latest",
     "canvas-confetti": "^1.9.4",
     "framer-motion": "^12.38.0",
-    "lucide-react": "^1.8.0",
     "next": "latest",
     "next-sanity": "latest",
     "react": "latest",
