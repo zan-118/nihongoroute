@@ -1,10 +1,6 @@
----
-
 # 🌀 NihongoRoute (日本語ルート)
 
-**NihongoRoute** adalah platform e-learning bahasa Jepang modern dengan estetika **Cyber Dark Neumorphic**. Aplikasi ini dirancang untuk membantu pejuang JLPT (dimulai dari N5) menguasai kosakata, tata bahasa, dan kanji melalui sistem **Spaced Repetition System (SRS)** yang cerdas dan perpustakaan data yang interaktif.
-
----
+NihongoRoute adalah platform e-learning bahasa Jepang modern dengan estetika Cyber Dark Neumorphic. Aplikasi ini dirancang untuk membantu pejuang JLPT (dimulai dari N5) menguasai kosakata, tata bahasa, dan kanji melalui sistem Spaced Repetition System (SRS) yang cerdas dan perpustakaan data yang interaktif.
 
 ## 🚀 Fitur Unggulan
 
