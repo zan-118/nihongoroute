@@ -1,0 +1,11 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="512" height="512" rx="128" fill="#15171a"/>
+  
+  <rect x="15" y="15" width="482" height="482" rx="113" stroke="white" stroke-opacity="0.02" stroke-width="4"/>
+  
+  <circle cx="256" cy="256" r="150" stroke="#0ef" stroke-width="16" style="filter:drop-shadow(0px 0px 20px rgba(0,255,239,0.4));"/>
+  
+  <text x="256" y="325" text-anchor="middle" font-family="monospace, sans-serif" font-weight="900" font-size="180" fill="white" style="filter:drop-shadow(0px 10px 10px rgba(0,0,0,0.8));">
+    N
+  </text>
+</svg>
