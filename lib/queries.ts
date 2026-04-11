@@ -34,12 +34,17 @@ export const allCheatsheetsQuery = `*[_type == "cheatsheet"] | order(category as
     romaji
   }
 }`;
-export const allGrammarArticlesQuery = `*[_type == "grammar_article"] | order(_createdAt desc) {
+export const allGrammarArticlesQuery = `*[_type == "grammar_article"] {
   _id,
   title,
   "slug": slug.current,
-  // Mengambil 200 karakter pertama dari konten untuk preview (opsional)
-  "excerpt": pt::text(content)[0...200]
+  meaning,
+  content,
+  examples[] {
+    jp,
+    furigana,
+    meaning
+  }
 }`;
 
 export const vocabByIdsQuery = `*[_type == "kosakata" && _id in $ids] {
@@ -50,4 +55,17 @@ export const vocabByIdsQuery = `*[_type == "kosakata" && _id in $ids] {
   meaning,
   kanjiDetails,
   "audioUrl": audio.asset->url
+}`;
+
+// Contoh Query untuk halaman Learn
+const lessonQuery = `*[_type == "lesson" && slug.current == $slug][0] {
+  title,
+  summary,
+  orderNumber,
+  vocabList[]->{ word, furigana, meaning }, // Mengambil data asli dari reference kosakata
+  patterns,
+  examples,
+  conversation,
+  grammar,
+  quizzes
 }`;
