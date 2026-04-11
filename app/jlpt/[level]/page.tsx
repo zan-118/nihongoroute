@@ -1,33 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import type { Metadata } from "next";
 import { client } from "@/sanity/lib/client";
-
-export const revalidate = 3600;
-
-async function getLevelData(code: string) {
-  const query = `{
-    "level": *[_type == "level" && code == $code][0] { _id, code, name, description },
-    "lessons": *[_type == "lesson" && level->code == $code && is_published == true] | order(orderNumber asc) {
-      _id, "slug": slug.current, title, summary, orderNumber
-    }
-  }`;
-  return await client.fetch(query, { code });
-}
-
-export async function generateMetadata({ params }: any): Promise<Metadata> {
-  const { level: levelCode } = await params;
-  const { level } = await getLevelData(levelCode);
-  if (!level) return { title: "Level Not Found | NihongoPath" };
-  return {
-    title: `JLPT ${level.name} Syllabus | NihongoPath`,
-    description: level.description ?? `Pelajari materi JLPT ${level.name}.`,
-  };
-}
 
 export default async function LevelPage({ params }: any) {
   const { level: levelCode } = await params;
-  const { level, lessons } = await getLevelData(levelCode);
+  const query = `{
+    "level": *[_type == "level" && code == $levelCode][0],
+    "lessons": *[_type == "lesson" && level->code == $levelCode && is_published == true] | order(orderNumber asc)
+  }`;
+  const { level, lessons } = await client.fetch(query, { levelCode });
 
   if (!level) return notFound();
 
@@ -46,85 +27,59 @@ export default async function LevelPage({ params }: any) {
           </h1>
         </header>
 
-        {/* --- TOMBOL FLASHCARD UTAMA --- */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-16">
+        {/* DRILL SECTION */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-16 font-black uppercase italic text-xs tracking-widest">
           <Link
             href={`/jlpt/${level.code}/flashcards`}
-            className="group relative overflow-hidden bg-gradient-to-br from-green-500/20 to-transparent border border-green-500/30 p-8 rounded-[2rem] hover:border-green-400 active:scale-95 transition-all"
+            className="p-8 rounded-[2rem] bg-green-500/10 border border-green-500/20 hover:border-green-400 transition-all flex items-center gap-4"
           >
-            <div className="absolute top-0 right-0 p-6 opacity-5 text-6xl font-black italic group-hover:opacity-10 transition-opacity select-none">
-              VOCAB
-            </div>
-            <div className="flex items-center gap-4 relative z-10">
-              <span className="text-4xl group-hover:scale-110 transition-transform">
-                📝
-              </span>
-              <div>
-                <h3 className="text-white font-black text-xl uppercase italic">
-                  Vocab Drill
-                </h3>
-                <p className="text-green-400/80 text-[10px] font-bold tracking-[0.2em] uppercase mt-1">
-                  Latih Hafalan Kata
-                </p>
-              </div>
+            <span className="text-3xl">📝</span>
+            <div>
+              <p className="text-white text-lg">Vocab Drill</p>
+              <p className="text-green-400/50 text-[8px]">SRS Integrated</p>
             </div>
           </Link>
-
           <Link
             href={`/jlpt/${level.code}/kanji`}
-            className="group relative overflow-hidden bg-gradient-to-br from-purple-500/20 to-transparent border border-purple-500/30 p-8 rounded-[2rem] hover:border-purple-400 active:scale-95 transition-all"
+            className="p-8 rounded-[2rem] bg-purple-500/10 border border-purple-500/20 hover:border-purple-400 transition-all flex items-center gap-4"
           >
-            <div className="absolute top-0 right-0 p-6 opacity-5 text-6xl font-black italic group-hover:opacity-10 transition-opacity select-none">
-              KANJI
-            </div>
-            <div className="flex items-center gap-4 relative z-10">
-              <span className="text-4xl group-hover:scale-110 transition-transform">
-                🈴
-              </span>
-              <div>
-                <h3 className="text-white font-black text-xl uppercase italic">
-                  Kanji Power
-                </h3>
-                <p className="text-purple-400/80 text-[10px] font-bold tracking-[0.2em] uppercase mt-1">
-                  Latih Bacaan Kanji
-                </p>
-              </div>
+            <span className="text-3xl">🈴</span>
+            <div>
+              <p className="text-white text-lg">Kanji Power</p>
+              <p className="text-purple-400/50 text-[8px]">Reading Practice</p>
             </div>
           </Link>
         </div>
 
-        {/* --- DAFTAR BAB --- */}
-        <div>
+        {/* LESSON LIST */}
+        <div className="space-y-4">
           <h2 className="text-[10px] font-black text-white/30 mb-8 uppercase tracking-[0.4em] italic border-l-2 border-[#0ef] pl-4">
             Curriculum Path
           </h2>
-
-          <div className="space-y-4">
-            {lessons.map((lesson: any) => (
-              <Link
-                key={lesson._id}
-                href={`/jlpt/${level.code}/${lesson.slug}`}
-                className="block group active:scale-[0.98] transition-all"
-              >
-                <div className="bg-[#1e2024] p-6 md:p-8 rounded-[2rem] border border-white/5 group-hover:border-[#0ef]/30 group-hover:bg-[#23272b] transition-all flex items-center gap-6">
-                  <div className="hidden md:flex shrink-0 w-16 h-16 rounded-2xl bg-[#0ef]/5 border border-white/5 items-center justify-center text-white/20 font-black text-2xl group-hover:text-[#0ef] group-hover:border-[#0ef]/20 transition-all italic">
-                    {lesson.orderNumber}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl md:text-2xl font-black text-white group-hover:text-[#0ef] transition-colors uppercase italic">
-                      {lesson.title}
-                    </h3>
-                    <p className="text-sm text-[#c4cfde]/40 mt-1 italic line-clamp-1">
-                      {lesson.summary}
-                    </p>
-                  </div>
-                  <span className="text-white/10 group-hover:text-[#0ef] transition-colors text-2xl">
-                    →
-                  </span>
+          {lessons.map((lesson: any) => (
+            <Link
+              key={lesson._id}
+              href={`/jlpt/${level.code}/${lesson.slug.current}`}
+              className="block group transition-all"
+            >
+              <div className="bg-[#1e2024] p-6 md:p-8 rounded-[2rem] border border-white/5 group-hover:border-[#0ef]/30 flex items-center gap-6">
+                <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center font-black text-white/20 group-hover:text-[#0ef] transition-colors italic">
+                  {lesson.orderNumber}
                 </div>
-              </Link>
-            ))}
-          </div>
+                <div className="flex-1">
+                  <h3 className="text-xl font-black text-white group-hover:text-[#0ef] uppercase italic transition-colors">
+                    {lesson.title}
+                  </h3>
+                  <p className="text-xs text-[#c4cfde]/40 italic mt-1">
+                    {lesson.summary}
+                  </p>
+                </div>
+                <span className="text-white/10 group-hover:text-[#0ef] transition-colors">
+                  →
+                </span>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </div>

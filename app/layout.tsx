@@ -6,10 +6,12 @@ import MobileNav from "@/components/MobileNav";
 import Navbar from "@/components/Navbar";
 import { ProgressProvider } from "@/context/UserProgressContext";
 
+import FloatingSupport from "@/components/FloatingSupport";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "NihongoPath | Belajar Bahasa Jepang Gratis",
+  title: "NihongoRoute | Belajar Bahasa Jepang Gratis",
   description:
     "Platform belajar bahasa Jepang dengan sistem terstruktur, gamifikasi, dan latihan interaktif.",
 };
@@ -33,6 +35,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <main className="min-h-screen pt-4 md:pt-20 pb-28 md:pb-12 max-w-[100vw] overflow-x-hidden">
             {children}
           </main>
+          <FloatingSupport />
 
           {/* Mobile Nav - Pastikan z-index tinggi agar di atas konten */}
           <div className="md:hidden">

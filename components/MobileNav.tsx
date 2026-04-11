@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 export default function MobileNav() {
   const pathname = usePathname() || "";
 
-  // Sembunyikan navigasi di halaman CMS Sanity
   if (pathname.startsWith("/studio")) return null;
 
   const isActive = (path: string) =>
@@ -15,10 +14,8 @@ export default function MobileNav() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-[60] bg-[#1f242d]/80 backdrop-blur-2xl border-t border-white/5 px-4 pb-8 pt-3 shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
       <div className="flex justify-between items-center max-w-md mx-auto relative">
-        {/* HOME - Tombol Kembali ke Landing */}
         <NavItem href="/" icon="🏠" label="Home" active={isActive("/")} />
 
-        {/* LEARN - Kurikulum JLPT */}
         <NavItem
           href="/jlpt"
           icon="📚"
@@ -26,7 +23,7 @@ export default function MobileNav() {
           active={isActive("/jlpt")}
         />
 
-        {/* REVIEW - Tombol Tengah Menonjol (SRS) */}
+        {/* SRS REVIEW BUTTON (Tetap di tengah) */}
         <Link href="/dashboard/review" className="relative -mt-12 group">
           <motion.div
             whileTap={{ scale: 0.9 }}
@@ -47,15 +44,14 @@ export default function MobileNav() {
           </span>
         </Link>
 
-        {/* DICTIONARY - Kamus Kata Kerja */}
+        {/* LIBRARY - Menggantikan Kamus murni */}
         <NavItem
-          href="/dictionary/verbs"
-          icon="🔍"
-          label="Kamus"
-          active={isActive("/dictionary")}
+          href="/library"
+          icon="🏛️"
+          label="Library"
+          active={isActive("/library")}
         />
 
-        {/* STATS - Dashboard User */}
         <NavItem
           href="/dashboard"
           icon="📊"

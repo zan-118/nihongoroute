@@ -1,6 +1,6 @@
 {
-  "name": "NihongoPath",
-  "short_name": "NihongoPath",
+  "name": "NihongoRoute",
+  "short_name": "NihongoRoute",
   "description": "Platform Belajar Bahasa Jepang Gratis",
   "start_url": "/",
   "display": "standalone",

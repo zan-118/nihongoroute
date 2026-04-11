@@ -3,7 +3,7 @@ import { client } from "@/sanity/lib/client";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://nihongopath-nine.vercel.app";
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.nihongoroute.my.id/";
   const urls: MetadataRoute.Sitemap = [];
 
   urls.push(

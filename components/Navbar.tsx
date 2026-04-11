@@ -8,6 +8,7 @@ const JLPT_LEVELS = ["n5", "n4", "n3", "n2", "n1"];
 
 function formatSegment(segment: string): string {
   if (segment === "jlpt") return "Curriculum";
+  if (segment === "library") return "Library"; // Penanda folder utama baru
   if (JLPT_LEVELS.includes(segment.toLowerCase())) return segment.toUpperCase();
   return segment
     .split("-")
@@ -18,7 +19,6 @@ function formatSegment(segment: string): string {
 export default function Navbar() {
   const pathname = usePathname() ?? "";
 
-  // Jangan tampilkan navbar di halaman Sanity Studio
   if (pathname.startsWith("/studio")) return null;
 
   const segments = pathname.split("/").filter(Boolean);
@@ -37,11 +37,11 @@ export default function Navbar() {
               </span>
             </div>
             <span className="text-xl font-black italic text-white tracking-tighter uppercase group-hover:text-[#0ef] transition-colors">
-              NIHONGO<span className="text-[#0ef]">PATH</span>
+              NIHONGO<span className="text-[#0ef]">ROUTE</span>
             </span>
           </Link>
 
-          {/* BREADCRUMB */}
+          {/* BREADCRUMB - Sekarang akan otomatis menampilkan /Library/Verbs dll */}
           {segments.length > 0 && (
             <div className="hidden lg:flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-white/20">
               <span className="text-lg font-thin">/</span>
@@ -69,24 +69,30 @@ export default function Navbar() {
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-6 border-r border-white/10 pr-8">
             <NavLink href="/jlpt" label="Learn" active={isActive("/jlpt")} />
+
+            {/* Navigasi Library Baru (Menggantikan 3 menu lama) */}
             <NavLink
-              href="/dictionary/verbs"
-              label="Verbs"
-              active={isActive("/dictionary")}
+              href="/library"
+              label="Library"
+              active={isActive("/library")}
             />
-            <NavLink
-              href="/reference/grammar"
-              label="Grammar"
-              active={isActive("/reference/grammar")}
-            />
-            <NavLink
-              href="/reference/cheatsheet"
-              label="Cheatsheet"
-              active={isActive("/reference/cheatsheet")}
-            />
+
+            {/* Kamu bisa tetap menaruh shortcut spesifik jika ingin, 
+                tapi /library sudah mencakup semuanya */}
           </div>
 
           <div className="flex items-center gap-4">
+            <Link
+              href="/support"
+              className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-red-500/5 border border-red-500/10 hover:bg-red-500/10 transition-all"
+            >
+              <span className="text-red-500 group-hover:scale-110 transition-transform text-sm">
+                💙
+              </span>
+              <span className="text-[9px] font-black uppercase tracking-widest text-red-400/80 group-hover:text-red-400">
+                Support
+              </span>
+            </Link>
             <Link
               href="/dashboard"
               className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${

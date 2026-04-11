@@ -1,83 +1,110 @@
-````markdown
-# 🌸 NihongoPath
+---
 
-NihongoPath adalah platform belajar bahasa mandiri yang gratis dan berbasis donasi, didesain khusus untuk membantu pelajar menguasai bahasa Jepang dari level dasar (N5) hingga mahir (N1).
+# 🌀 NihongoRoute (日本語ルート)
 
-Dibangun dengan arsitektur web modern, platform ini menggabungkan kurikulum yang terstruktur dengan teknik belajar saintifik seperti _Spaced Repetition System_ (SRS) dan Gamifikasi.
+**NihongoRoute** adalah platform e-learning bahasa Jepang modern dengan estetika **Cyber Dark Neumorphic**. Aplikasi ini dirancang untuk membantu pejuang JLPT (dimulai dari N5) menguasai kosakata, tata bahasa, dan kanji melalui sistem **Spaced Repetition System (SRS)** yang cerdas dan perpustakaan data yang interaktif.
 
-## ✨ Fitur Utama
+---
 
-- **📖 Kurikulum Terstruktur:** Materi pembelajaran komprehensif dari JLPT N5 hingga N1 yang dikelola sepenuhnya melalui antarmuka CMS yang lincah.
-- **🧠 SRS Flashcard Engine:** Sistem pengingat kosakata pintar yang meniru algoritma Anki/WaniKani, memastikan pengguna me-review kosakata tepat saat mereka hampir melupakannya.
-- **🎮 Gamifikasi & Progres:** Dilengkapi dengan sistem XP, _Leveling_, _Daily Streaks_, dan _Achievements_ untuk menjaga motivasi belajar.
-- **🗣️ Text-to-Speech (TTS):** Dukungan audio pelafalan bahasa Jepang asli (ja-JP) terintegrasi langsung di dalam materi menggunakan Web Speech API.
-- **🎨 Rich Text & Interaktif:** Artikel materi mendukung _Furigana_ (cara baca kanji), _Callout Info Boxes_, dan _Interactive Kana Tables_.
-- **⚡ Headless Architecture:** Performa sangat cepat dengan pemisahan antara konten materi (Sanity CMS) dan data pengguna (Supabase).
+## 🚀 Fitur Unggulan
 
-## 🛠️ Tech Stack
+### 1. **Curriculum-Based Learning**
 
-- **Framework:** [Next.js 15](https://nextjs.org/) (App Router) & React 19
+- **Kana Basics:** Modul interaktif Hiragana & Katakana yang dilengkapi dengan **SVG Stroke Order** dinamis dari KanjiVG.
+- **JLPT Roadmap:** Struktur materi yang rapi (N5 - N1) berdasarkan bab, mencakup Kosakata, Pola Kalimat, Percakapan (Kaiwa), dan Kuis.
+
+### 2. **Smart Library Hub**
+
+- **Verb Archive:** Mesin konjugasi otomatis untuk 120+ kata kerja N5 (Masu, Te, Nai, Ta, hingga bentuk Potensial & Kausatif).
+- **Grammar Guide:** Dokumentasi mendalam pola kalimat yang ditarik langsung dari Sanity CMS.
+- **Reference Sheets:** Tabel referensi cepat untuk angka, waktu, partikel, dan penghitung (_counters_).
+
+### 3. **Memory Engine**
+
+- **Flashcards Mastery:** Kartu hafalan interaktif dengan layout vertikal yang menyertakan diagram urutan coretan Kanji.
+- **Integrated SRS:** Algoritma _Spaced Repetition_ untuk mengoptimalkan jadwal review kosakata berdasarkan daya ingat pengguna.
+- **XP & Leveling:** Sistem gamifikasi untuk memantau progres belajar secara _real-time_.
+
+---
+
+## 🛠️ Stack Teknologi
+
+- **Framework:** [Next.js 14/15](https://nextjs.org/) (App Router)
+- **Language:** [TypeScript](https://www.typescriptlang.org/)
+- **CMS:** [Sanity.io](https://www.sanity.io/) (Headless CMS untuk konten dinamis)
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/)
-- **Content Management (CMS):** [Sanity.io](https://www.sanity.io/)
-- **Database & Auth:** [Supabase](https://supabase.com/) (PostgreSQL)
-- **Animation:** Canvas Confetti
+- **Animation:** [Framer Motion](https://www.framer.com/motion/)
+- **Icons:** [Lucide React](https://lucide.dev/)
+- **Database (State):** Browser LocalStorage (untuk progres User tanpa login)
 
-## 🚀 Cara Menjalankan di Komputer Lokal
+---
 
-### 1. Prasyarat
+## 📂 Struktur Folder Utama
 
-Pastikan kamu sudah menginstal Node.js (versi 18.x atau terbaru) dan npm.
-
-### 2. Clone Repositori
-
-```bash
-git clone [https://github.com/username-kamu/nihongopath.git](https://github.com/username-kamu/nihongopath.git)
-cd nihongopath
-```
-````
-
-### 3. Instalasi Dependensi
-
-Karena penggunaan kombinasi Next.js 15 dan ekosistem Sanity/React 19 terbaru, sangat disarankan menggunakan _flag_ ini untuk menghindari _dependency conflict_:
-
-```bash
-npm install --legacy-peer-deps
+```text
+├── app/
+│   ├── jlpt/              # Modul kurikulum (Basics, N5, N4, dll)
+│   ├── library/           # Hub data (Verbs, Grammar, Cheatsheets)
+│   ├── dashboard/         # Progres user & sesi Review SRS
+│   ├── studio/            # Akses ke Sanity Studio
+│   └── support/           # Halaman donasi (Trakteer & Saweria)
+├── components/            # Reusable UI (Flashcards, TTS, FloatingSupport)
+├── context/               # Global state (UserProgressContext)
+├── lib/                   # Utility (SRS Logic, GROQ Queries, Audio)
+└── schemas/               # Definisi skema konten Sanity
 ```
 
-### 4. Konfigurasi Environment Variables
+---
 
-Buat file bernama `.env.local` di _root folder_ dan isi dengan kredensial dari Supabase dan Sanity milikmu:
+## ⚙️ Cara Menjalankan Proyek
 
-```env
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+1. **Clone repositori:**
 
-# Sanity CMS
-NEXT_PUBLIC_SANITY_PROJECT_ID=your_sanity_project_id
-NEXT_PUBLIC_SANITY_DATASET=production
-NEXT_PUBLIC_SANITY_API_VERSION=2024-01-01
-```
+   ```bash
+   git clone https://github.com/zan-118/nihongoroute.git
+   cd nihongoroute
+   ```
 
-### 5. Jalankan Development Server
+2. **Install dependensi:**
 
-```bash
-npm run dev
-```
+   ```bash
+   npm install
+   ```
 
-Buka [http://localhost:3000](http://localhost:3000) di browsermu untuk melihat hasil akhirnya.
+3. **Setup Environment Variables:**
+   Buat file `.env.local` dan masukkan kredensial Sanity kamu:
 
-## 🗄️ Manajemen Konten (Sanity Studio)
+   ```env
+   NEXT_PUBLIC_SANITY_PROJECT_ID=your_id
+   NEXT_PUBLIC_SANITY_DATASET=production
+   ```
 
-NihongoPath memiliki _admin dashboard_ internal yang bisa diakses langsung di lingkungan _development_ maupun _production_ tanpa perlu membuka tab baru.
+4. **Jalankan aplikasi:**
+   ```bash
+   npm run dev
+   ```
 
-Akses URL berikut untuk masuk ke mode Editor Konten:
-[http://localhost:3000/studio](http://localhost:3000/studio)
+---
 
-## 🤝 Dukungan & Donasi
+## 🎨 Konsep Desain
 
-Platform ini 100% gratis dan terbuka untuk siapa saja yang ingin belajar. Jika platform ini membantumu, pertimbangkan untuk memberikan dukungan melalui donasi agar server tetap berjalan dan fitur baru terus dikembangkan!
+Aplikasi ini menggunakan tema **Cyber Dark Neumorphic**:
 
-```
+- **Primary Color:** `#0ef` (Cyan Neon) sebagai aksen futuristik.
+- **Background:** `#1f242d` (Deep Dark) untuk kenyamanan mata saat belajar malam hari.
+- **Efek:** Shadow ganda (light/dark) untuk memberikan kesan elemen yang timbul atau tenggelam (_soft UI_).
 
-```
+---
+
+## 💙 Kontribusi & Dukungan
+
+NihongoRoute dikembangkan sebagai platform gratis dan terbuka. Kamu bisa mendukung keberlangsungan server dan pengembangan konten melalui:
+
+- [Trakteer (E-Wallet)](https://trakteer.id/Zan118/tip)
+- [Saweria (QRIS)](https://saweria.co/Zan118)
+
+---
+
+**Developed with 💙 by Fauzan Abdul Basith** _Mastering Japanese, one step at a time._
+
+---

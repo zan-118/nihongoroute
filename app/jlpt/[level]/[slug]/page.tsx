@@ -55,9 +55,9 @@ async function getLessonData(levelCode: string, slug: string) {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { level, slug } = await params;
   const { lesson } = await getLessonData(level, slug);
-  if (!lesson) return { title: "Lesson Not Found | NihongoPath" };
+  if (!lesson) return { title: "Lesson Not Found | nihongoroute" };
   return {
-    title: lesson.seoTitle ?? `${lesson.title} | NihongoPath`,
+    title: lesson.seoTitle ?? `${lesson.title} | nihongoroute`,
     description: lesson.seoDescription ?? lesson.summary,
   };
 }

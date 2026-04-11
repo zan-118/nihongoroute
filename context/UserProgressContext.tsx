@@ -23,7 +23,7 @@ const ProgressContext = createContext<ProgressContextType | undefined>(
   undefined,
 );
 
-const STORAGE_KEY = "nihongopath_save_data";
+const STORAGE_KEY = "nihongoroute_save_data";
 
 export const ProgressProvider = ({
   children,
@@ -85,7 +85,7 @@ export const ProgressProvider = ({
     downloadAnchorNode.setAttribute("href", dataStr);
     downloadAnchorNode.setAttribute(
       "download",
-      `nihongopath-save-${new Date().toISOString().split("T")[0]}.json`,
+      `nihongoroute-save-${new Date().toISOString().split("T")[0]}.json`,
     );
     document.body.appendChild(downloadAnchorNode);
     downloadAnchorNode.click();

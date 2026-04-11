@@ -6,6 +6,6 @@ export default function robots() {
         allow: "/",
       },
     ],
-    sitemap: "https://nihongopath-nine.vercel.app/sitemap.xml",
+    sitemap: "https://www.nihongoroute.my.id/sitemap.xml",
   };
 }

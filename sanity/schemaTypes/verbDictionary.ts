@@ -5,46 +5,30 @@ export default defineType({
   title: "Kamus Kata Kerja (Verb)",
   type: "document",
   fields: [
-    defineField({
-      name: "group",
-      title: "Golongan (Group)",
-      type: "number",
-      description: "Golongan kata kerja: 1, 2, atau 3",
-      validation: (Rule) => Rule.required().min(1).max(3),
-    }),
+    // --- IDENTITAS UTAMA ---
     defineField({
       name: "masu",
-      title: "Bentuk Masu",
+      title: "Bentuk Masu (Utama)",
       type: "string",
-      description: "Contoh: 食べます (tabemasu)",
+      description: "Contoh: 食べます",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "te",
-      title: "Bentuk Te",
+      name: "furigana",
+      title: "Furigana (Hiragana)",
       type: "string",
-      description: "Contoh: 食べて (tabete)",
-      validation: (Rule) => Rule.required(),
+      description: "Cara baca dalam hiragana murni",
+    }),
+    defineField({
+      name: "romaji",
+      title: "Romaji",
+      type: "string",
     }),
     defineField({
       name: "jisho",
-      title: "Bentuk Kamus (Jisho)",
+      title: "Bentuk Kamus (Jisho-kei)",
       type: "string",
-      description: "Contoh: 食べる (taberu)",
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "nai",
-      title: "Bentuk Nai",
-      type: "string",
-      description: "Contoh: 食べない (tabenai)",
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "ta",
-      title: "Bentuk Ta",
-      type: "string",
-      description: "Contoh: 食べた (tabeta)",
+      description: "Teks biru di bawah judul (Contoh: 食べる)",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -54,10 +38,90 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: "group",
+      title: "Golongan (Group)",
+      type: "number",
+      options: {
+        list: [1, 2, 3],
+      },
+      validation: (Rule) => Rule.required().min(1).max(3),
+    }),
+    defineField({
       name: "lesson",
       title: "Bab (Lesson)",
       type: "string",
-      description: "Bab ke berapa kata kerja ini muncul di buku",
+    }),
+
+    // --- KONJUGASI DASAR ---
+    defineField({
+      name: "te",
+      title: "Bentuk ~Te",
+      type: "string",
+      description: "Contoh: 食べて",
+    }),
+    defineField({
+      name: "nai",
+      title: "Bentuk ~Nai",
+      type: "string",
+      description: "Contoh: 食べない",
+    }),
+    defineField({
+      name: "ta",
+      title: "Bentuk ~Ta",
+      type: "string",
+      description: "Contoh: 食べた",
+    }),
+
+    // --- KONJUGASI LANJUTAN (ULTRA) ---
+    defineField({
+      name: "teiru",
+      title: "Bentuk ~Te Iru",
+      type: "string",
+    }),
+    defineField({
+      name: "tai",
+      title: "Bentuk ~Tai (Keinginan)",
+      type: "string",
+    }),
+    defineField({
+      name: "nakereba",
+      title: "Bentuk ~Nakereba Naranai",
+      type: "string",
+    }),
+    defineField({
+      name: "kanou",
+      title: "Bentuk Kanou (Potensial)",
+      type: "string",
+    }),
+    defineField({
+      name: "shieki",
+      title: "Bentuk Shieki (Kausatif)",
+      type: "string",
+    }),
+    defineField({
+      name: "ukemi",
+      title: "Bentuk Ukemi (Pasif)",
+      type: "string",
+    }),
+    defineField({
+      name: "katei",
+      title: "Bentuk Katei (Pengandaian)",
+      type: "string",
+    }),
+    defineField({
+      name: "ikou",
+      title: "Bentuk Ikou (Volitional)",
+      type: "string",
+    }),
+    defineField({
+      name: "teshimau",
+      title: "Bentuk ~Te Shimau",
+      type: "string",
+    }),
+    defineField({
+      name: "meirei",
+      title: "Bentuk Meirei (Perintah)",
+      type: "string",
     }),
   ],
   preview: {

@@ -3,8 +3,8 @@
 export const dynamic = "force-static";
 
 export const metadata = {
-  title: "NihongoPath Studio",
-  description: "Admin Dashboard for NihongoPath",
+  title: "NihongoRoute Studio",
+  description: "Admin Dashboard for NihongoRoute",
   robots: "noindex, nofollow",
 };
 

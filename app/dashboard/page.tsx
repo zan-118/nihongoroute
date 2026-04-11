@@ -25,14 +25,14 @@ export default function DashboardPage() {
   /* ================= DATA MANAGEMENT LOGIC ================= */
 
   const handleExportData = () => {
-    const data = localStorage.getItem("nihongopath_progress");
+    const data = localStorage.getItem("nihongoroute_progress");
     if (!data) return alert("Belum ada progres untuk di-export.");
 
     const blob = new Blob([data], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `nihongopath_backup_${new Date().toISOString().split("T")[0]}.json`;
+    link.download = `nihongoroute_backup_${new Date().toISOString().split("T")[0]}.json`;
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -49,7 +49,7 @@ export default function DashboardPage() {
           const importedData = JSON.parse(event.target.result);
           // Validasi sederhana struktur data
           if (importedData.xp !== undefined && importedData.srs) {
-            localStorage.setItem("nihongopath_progress", event.target.result);
+            localStorage.setItem("nihongoroute_progress", event.target.result);
             window.location.reload();
           } else {
             alert("Format file tidak valid!");
@@ -69,7 +69,7 @@ export default function DashboardPage() {
         "APAKAH KAMU YAKIN? Semua progres, level, dan hafalan SRS akan dihapus permanen.",
       )
     ) {
-      localStorage.removeItem("nihongopath_progress");
+      localStorage.removeItem("nihongoroute_progress");
       window.location.reload();
     }
   };
