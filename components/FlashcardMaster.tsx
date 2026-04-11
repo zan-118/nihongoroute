@@ -240,14 +240,18 @@ export default function FlashcardMaster({
                   </h3>
                 </div>
 
-                {type === "kanji" && card.kanjiDetails && (
+                {/* Detail: Onyomi & Kunyomi */}
+                {type === "kanji" && (card.kanjiDetails || card.details) && (
                   <div className="grid grid-cols-2 gap-3 w-full mb-6">
                     <div className="bg-[#15171a] p-3 rounded-xl border border-white/5 text-left shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)]">
                       <span className="text-[9px] text-blue-400 block font-black uppercase tracking-widest mb-1 border-l-2 border-blue-500 pl-2">
                         Onyomi
                       </span>
                       <span className="text-white text-sm md:text-base font-bold font-japanese tracking-tight">
-                        {card.kanjiDetails.onyomi || "-"}
+                        {/* Support field baru dan field lama */}
+                        {card.kanjiDetails?.onyomi ||
+                          card.details?.onyomi ||
+                          "-"}
                       </span>
                     </div>
                     <div className="bg-[#15171a] p-3 rounded-xl border border-white/5 text-left shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)]">
@@ -255,12 +259,14 @@ export default function FlashcardMaster({
                         Kunyomi
                       </span>
                       <span className="text-white text-sm md:text-base font-bold font-japanese tracking-tight">
-                        {card.kanjiDetails.kunyomi || "-"}
+                        {/* Support field baru dan field lama */}
+                        {card.kanjiDetails?.kunyomi ||
+                          card.details?.kunyomi ||
+                          "-"}
                       </span>
                     </div>
                   </div>
                 )}
-
                 <div className="mt-auto">
                   <TTSReader text={card.word} minimal={false} />
                 </div>

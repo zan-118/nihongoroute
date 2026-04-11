@@ -4,8 +4,10 @@ import Link from "next/link";
 
 export default async function VocabFlashcardPage({ params }: any) {
   const { level } = await params;
-  const query = `*[_type == "kosakata" && level->code == $level] { _id, word, furigana, romaji, meaning }`;
-  const cards = await client.fetch(query, { level });
+  const vocabQuery = `*[_type == "kosakata" && category != "kanji" && level->code == $level] {
+  _id, word, meaning, romaji, furigana
+}`;
+  const cards = await client.fetch(vocabQuery, { level });
 
   return (
     <div className="min-h-screen px-4 py-16 bg-[#1f242d]">

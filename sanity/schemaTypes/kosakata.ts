@@ -11,6 +11,21 @@ export default defineType({
       title: "Kata (Kanji/Kana)",
       validation: (Rule) => Rule.required(),
     }),
+    // ✨ Tambahkan field ini agar peringatan "Unknown Field" hilang ✨
+    defineField({
+      name: "category",
+      type: "string",
+      title: "Kategori",
+      description: "Pilih apakah ini kosakata biasa atau data Kanji khusus",
+      options: {
+        list: [
+          { title: "Vocab / Kosakata Biasa", value: "vocab" },
+          { title: "Kanji Power", value: "kanji" },
+        ],
+      },
+      initialValue: "vocab", // Default untuk data baru adalah kosakata biasa
+      validation: (Rule) => Rule.required(),
+    }),
     defineField({
       name: "furigana",
       type: "string",
@@ -38,6 +53,8 @@ export default defineType({
       name: "kanjiDetails",
       type: "object",
       title: "Detail Kanji (Onyomi/Kunyomi)",
+      // Hidden jika kategorinya bukan kanji agar Studio lebih bersih
+      hidden: ({ document }) => document?.category !== "kanji",
       fields: [
         { name: "onyomi", type: "string", title: "Onyomi (Katakana)" },
         { name: "kunyomi", type: "string", title: "Kunyomi (Hiragana)" },
@@ -57,10 +74,16 @@ export default defineType({
     }),
   ],
   preview: {
-    select: { title: "word", subtitle: "meaning", levelCode: "level.code" },
-    prepare({ title, subtitle, levelCode }) {
+    select: {
+      title: "word",
+      subtitle: "meaning",
+      levelCode: "level.code",
+      category: "category",
+    },
+    prepare({ title, subtitle, levelCode, category }) {
+      const catEmoji = category === "kanji" ? "🏮" : "📝";
       return {
-        title: title || "Kosong",
+        title: `${catEmoji} ${title || "Kosong"}`,
         subtitle: `${levelCode ? `[${levelCode.toUpperCase()}] ` : ""}${subtitle || ""}`,
       };
     },
