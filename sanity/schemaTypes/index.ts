@@ -3,9 +3,6 @@ import level from "./level";
 import quiz from "./quiz";
 import lesson from "./lesson";
 
-import kanaCharacter from "./kanaCharacter";
-import kanaRow from "./kanaRow";
-import kanaTable from "./kanaTable";
 import callout from "./callout";
 import exampleSentence from "./exampleSentence";
 
@@ -20,9 +17,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     quiz,
     lesson,
 
-    kanaCharacter,
-    kanaRow,
-    kanaTable,
     callout,
     exampleSentence,
 
