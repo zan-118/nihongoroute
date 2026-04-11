@@ -2,39 +2,37 @@
 
 import { useEffect, useState } from "react";
 import { useProgress } from "@/context/UserProgressContext";
+import { loadProgress, ProgressState } from "@/lib/progress";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import MemoryStats from "@/components/MemoryStats";
 import DailyQuests from "@/components/DailyQuests";
+import Heatmap from "@/components/Heatmap";
 import LevelUpOverlay from "@/components/LevelUpOverlay";
 
 export default function DashboardPage() {
-  const { progress, loading } = useProgress();
+  const { progress, loading, exportData, importData } = useProgress();
   const [guestId, setGuestId] = useState<string>("LOADING...");
+  const [stats, setStats] = useState<ProgressState | null>(null);
 
-  // Generate atau ambil ID saat komponen di-mount untuk mencegah Hydration Error
   useEffect(() => {
+    // Load Guest ID
     let savedId = localStorage.getItem("nihongo_guest_id");
     if (!savedId) {
-      savedId = "NP-" + Math.random().toString(36).substr(2, 6).toUpperCase();
+      savedId =
+        "NP-" + Math.random().toString(36).substring(2, 8).toUpperCase();
       localStorage.setItem("nihongo_guest_id", savedId);
     }
     setGuestId(savedId);
+
+    // Load Stats (Streak & Study Days for Heatmap)
+    setStats(loadProgress());
   }, []);
 
   /* ================= DATA MANAGEMENT LOGIC ================= */
 
   const handleExportData = () => {
-    const data = localStorage.getItem("nihongoroute_progress");
-    if (!data) return alert("Belum ada progres untuk di-export.");
-
-    const blob = new Blob([data], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `nihongoroute_backup_${new Date().toISOString().split("T")[0]}.json`;
-    link.click();
-    URL.revokeObjectURL(url);
+    exportData(); // Menggunakan fungsi dari Context yang sudah kita perbaiki
   };
 
   const handleImportData = () => {
@@ -45,17 +43,11 @@ export default function DashboardPage() {
       const file = e.target.files[0];
       const reader = new FileReader();
       reader.onload = (event: any) => {
-        try {
-          const importedData = JSON.parse(event.target.result);
-          // Validasi sederhana struktur data
-          if (importedData.xp !== undefined && importedData.srs) {
-            localStorage.setItem("nihongoroute_progress", event.target.result);
-            window.location.reload();
-          } else {
-            alert("Format file tidak valid!");
-          }
-        } catch (err) {
-          alert("Gagal membaca file.");
+        const success = importData(event.target.result);
+        if (success) {
+          window.location.reload();
+        } else {
+          alert("Format file tidak valid atau rusak!");
         }
       };
       reader.readAsText(file);
@@ -66,10 +58,11 @@ export default function DashboardPage() {
   const handleResetData = () => {
     if (
       confirm(
-        "APAKAH KAMU YAKIN? Semua progres, level, dan hafalan SRS akan dihapus permanen.",
+        "⚠️ WARNING: INITIATING DATA PURGE. Semua progres, level, dan memori SRS akan dihapus permanen. Lanjutkan?",
       )
     ) {
-      localStorage.removeItem("nihongoroute_progress");
+      localStorage.removeItem("nihongoroute_save_data");
+      localStorage.removeItem("nihongo-progress"); // Reset juga statistik hariannya
       window.location.reload();
     }
   };
@@ -78,14 +71,14 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#1f242d] flex flex-col items-center justify-center">
+      <div className="min-h-screen bg-[#15171a] flex flex-col items-center justify-center">
         <motion.div
-          animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-          className="w-16 h-16 bg-[#0ef] rounded-2xl shadow-[0_0_30px_#0ef]"
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+          className="w-16 h-16 border-4 border-[#0ef]/20 border-t-[#0ef] rounded-full shadow-[0_0_30px_rgba(0,255,239,0.5)]"
         />
-        <p className="mt-8 text-[#0ef] font-black uppercase tracking-[0.4em] text-[10px]">
-          Syncing Memory...
+        <p className="mt-8 text-[#0ef] font-mono font-black uppercase tracking-[0.4em] text-[10px] animate-pulse">
+          Syncing Neural Link...
         </p>
       </div>
     );
@@ -97,38 +90,44 @@ export default function DashboardPage() {
   ).length;
 
   return (
-    <div className="min-h-screen bg-[#1f242d] pb-32">
+    <div className="min-h-screen bg-[#15171a] pb-32 overflow-hidden relative">
+      {/* Background Cyber Lines */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
+
       <LevelUpOverlay level={progress.level} />
 
-      <div className="max-w-7xl mx-auto px-4 md:px-8 pt-24 md:pt-32">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 pt-24 md:pt-32 relative z-10">
         {/* HEADER SECTION */}
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 mb-16">
+        <header className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-12 border-b border-white/5 pb-8">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
           >
-            <div className="flex items-center gap-4 mb-2">
-              <span className="px-3 py-1 rounded-full bg-[#0ef]/10 text-[#0ef] text-[10px] font-black uppercase tracking-widest border border-[#0ef]/20">
-                Lvl {progress.level} Developer
+            <div className="flex items-center gap-4 mb-2 font-mono">
+              <span className="px-3 py-1 rounded bg-[#0ef]/10 text-[#0ef] text-[10px] font-black uppercase tracking-widest border border-[#0ef]/30 shadow-[0_0_10px_rgba(0,255,239,0.2)]">
+                Lvl {progress.level} User
               </span>
-              <span className="text-white/20 text-xs font-bold uppercase tracking-widest">
+              <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest">
                 ID: {guestId}
               </span>
             </div>
-            <h1 className="text-6xl md:text-8xl font-black text-white italic uppercase tracking-tighter leading-none">
+            <h1 className="text-5xl md:text-7xl font-black text-white italic uppercase tracking-tighter drop-shadow-lg">
               Das<span className="text-[#0ef]">hboard</span>
             </h1>
           </motion.div>
 
-          <Link href="/dashboard/review" className="relative group">
+          <Link
+            href="/dashboard/review"
+            className="relative group w-full lg:w-auto"
+          >
             <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-10 py-5 bg-[#0ef] text-[#1f242d] font-black rounded-2xl shadow-[0_0_30px_rgba(0,255,239,0.3)] uppercase text-sm tracking-widest flex items-center gap-4"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full lg:w-auto px-10 py-5 bg-[#0ef] text-[#15171a] font-black rounded-2xl shadow-[0_0_30px_rgba(0,255,239,0.4)] uppercase text-sm tracking-widest flex items-center justify-between lg:justify-center gap-4 transition-all hover:bg-white"
             >
               Mulai Review
               {dueCount > 0 && (
-                <span className="bg-red-500 text-white px-2 py-0.5 rounded-lg text-[10px] animate-pulse">
+                <span className="bg-red-500 text-white px-3 py-1 rounded-lg text-[10px] animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.8)]">
                   {dueCount} DUE
                 </span>
               )}
@@ -136,83 +135,52 @@ export default function DashboardPage() {
           </Link>
         </header>
 
-        {/* MAIN GRID */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* LEFT & CENTER COLUMN */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* XP PROGRESS BAR */}
-            <section className="bg-[#1e2024] p-8 rounded-[2.5rem] border border-white/5 relative overflow-hidden">
-              <div className="flex justify-between items-end mb-4">
-                <h3 className="text-white font-black uppercase italic tracking-tight">
-                  Experience Points
+        {/* MAIN BENTO GRID */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 mb-8">
+          {/* Kolom Kiri: Quests & Stats */}
+          <div className="lg:col-span-2 space-y-6 md:space-y-8">
+            {/* XP PROGRESS BAR CYBER */}
+            <section className="bg-[#1e2024] p-6 md:p-8 rounded-[2.5rem] border border-white/5 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5),5px_5px_15px_rgba(0,0,0,0.4)] relative overflow-hidden">
+              <div className="flex justify-between items-end mb-4 relative z-10">
+                <h3 className="text-white font-black uppercase italic tracking-widest text-xs md:text-sm">
+                  Experience <span className="text-white/30">Points</span>
                 </h3>
-                <span className="text-[#0ef] font-mono font-bold">
+                <span className="text-[#0ef] font-mono font-bold text-lg drop-shadow-[0_0_8px_rgba(0,255,239,0.5)]">
                   {progress.xp} XP
                 </span>
               </div>
-              <div className="w-full bg-white/5 h-4 rounded-full overflow-hidden border border-white/5 p-1">
+              <div className="w-full bg-[#15171a] h-4 rounded-full overflow-hidden border border-white/5 p-1 shadow-inner relative z-10">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${(progress.xp % 1000) / 10}%` }}
-                  className="h-full bg-[#0ef] rounded-full shadow-[0_0_15px_#0ef]"
-                />
+                  transition={{ duration: 1, ease: "circOut" }}
+                  className="h-full bg-gradient-to-r from-[#0ef] to-blue-500 rounded-full shadow-[0_0_15px_rgba(0,255,239,0.6)] relative"
+                >
+                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-white/40 rounded-t-full opacity-50" />
+                </motion.div>
               </div>
-              <p className="mt-3 text-[9px] text-white/30 uppercase font-black tracking-widest">
-                {1000 - (progress.xp % 1000)} XP lagi untuk level berikutnya
+              <p className="mt-4 text-[9px] text-[#c4cfde]/40 uppercase font-black tracking-widest font-mono text-right relative z-10">
+                {1000 - (progress.xp % 1000)} XP to Next Level
               </p>
             </section>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <MemoryStats />
+            {/* Quests & Memory Widgets */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
               <DailyQuests />
+              <MemoryStats />
             </div>
 
-            {/* QUICK LESSON SELECTOR DENGAN MENU BARU */}
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
-              <QuickLink
-                href="/jlpt/n5"
-                label="Materi N5"
-                icon="⛩️"
-                color="hover:border-blue-500/50"
-              />
-              <QuickLink
-                href="/jlpt/n5/kanji"
-                label="Kanji Power"
-                icon="🈴"
-                color="hover:border-purple-500/50"
-              />
-              <QuickLink
-                href="/dictionary/verbs"
-                label="Verb Dict"
-                icon="🔍"
-                color="hover:border-green-500/50"
-              />
-              <QuickLink
-                href="/reference/grammar"
-                label="Grammar"
-                icon="📖"
-                color="hover:border-yellow-500/50"
-              />
-              <QuickLink
-                href="/reference/cheatsheet"
-                label="Cheatsheet"
-                icon="📋"
-                color="hover:border-pink-500/50"
-              />
-              <QuickLink
-                href="/support"
-                label="Support"
-                icon="☕"
-                color="hover:border-orange-500/50"
-              />
-            </div>
+            {/* Heatmap Widget */}
+            <Heatmap studyDays={stats?.studyDays || {}} />
           </div>
 
-          {/* RIGHT COLUMN (INFO & DATA MANAGEMENT) */}
-          <div className="space-y-8">
-            <div className="bg-gradient-to-br from-[#1e2024] to-transparent p-8 rounded-[2.5rem] border border-white/5">
-              <h3 className="text-white/30 font-black uppercase tracking-widest text-[10px] mb-6">
-                Global Performance
+          {/* Kolom Kanan: Info & System Actions */}
+          <div className="space-y-6 md:space-y-8">
+            {/* GLOBAL PERFORMANCE */}
+            <div className="bg-gradient-to-br from-[#1e2024] to-[#15171a] p-6 md:p-8 rounded-[2.5rem] border border-white/5 shadow-[15px_15px_40px_rgba(0,0,0,0.6)]">
+              <h3 className="text-[#0ef] font-black uppercase tracking-widest text-[10px] mb-6 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#0ef] animate-pulse" />
+                System Performance
               </h3>
               <div className="space-y-6">
                 <SimpleStat
@@ -220,65 +188,87 @@ export default function DashboardPage() {
                   value={Object.keys(progress.srs).length}
                 />
                 <SimpleStat
-                  label="Accuracy"
-                  value="84%"
-                  color="text-green-400"
+                  label="Streak"
+                  value={`${stats?.streak || 0} Days`}
+                  color="text-orange-400"
+                  glow="drop-shadow-[0_0_10px_rgba(249,115,22,0.5)]"
                 />
                 <SimpleStat
-                  label="Streak"
-                  value="5 Days"
-                  color="text-orange-400"
+                  label="Daily Reviews"
+                  value={stats?.todayReviewCount || 0}
+                  color="text-green-400"
                 />
               </div>
             </div>
 
-            {/* DATA MANAGEMENT CARD */}
-            <div className="bg-[#1e2024] p-8 rounded-[2.5rem] border border-white/5">
+            {/* QUICK LINKS */}
+            <div className="grid grid-cols-2 gap-4">
+              <QuickLink
+                href="/jlpt/n5"
+                label="Materi N5"
+                icon="⛩️"
+                color="hover:border-blue-500/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]"
+              />
+              <QuickLink
+                href="/jlpt/n5/kanji"
+                label="Kanji DB"
+                icon="🈴"
+                color="hover:border-purple-500/50 hover:shadow-[0_0_20px_rgba(168,85,247,0.2)]"
+              />
+              <QuickLink
+                href="/library"
+                label="Library"
+                icon="🏛️"
+                color="hover:border-green-500/50 hover:shadow-[0_0_20px_rgba(34,197,94,0.2)]"
+              />
+              <QuickLink
+                href="/support"
+                label="Support"
+                icon="☕"
+                color="hover:border-orange-500/50 hover:shadow-[0_0_20px_rgba(249,115,22,0.2)]"
+              />
+            </div>
+
+            {/* DATA MANAGEMENT */}
+            <div className="bg-[#1e2024] p-6 md:p-8 rounded-[2.5rem] border border-white/5">
               <h3 className="text-white/30 font-black uppercase tracking-widest text-[10px] mb-6 italic">
-                Data Management
+                Data Protocol
               </h3>
               <div className="space-y-3">
                 <button
                   onClick={handleExportData}
-                  className="w-full flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl transition-all group"
+                  className="w-full flex items-center justify-between p-4 bg-[#15171a] hover:bg-[#1a1c20] border border-white/5 rounded-2xl transition-all group shadow-inner"
                 >
-                  <span className="text-[10px] font-black uppercase text-white/60 group-hover:text-[#0ef]">
-                    Export Backup
+                  <span className="text-[10px] font-black uppercase text-white/60 group-hover:text-[#0ef] transition-colors">
+                    Export Save
                   </span>
-                  <span className="text-lg">💾</span>
+                  <span className="text-lg group-hover:scale-110 transition-transform">
+                    💾
+                  </span>
                 </button>
-
                 <button
                   onClick={handleImportData}
-                  className="w-full flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl transition-all group"
+                  className="w-full flex items-center justify-between p-4 bg-[#15171a] hover:bg-[#1a1c20] border border-white/5 rounded-2xl transition-all group shadow-inner"
                 >
-                  <span className="text-[10px] font-black uppercase text-white/60 group-hover:text-[#0ef]">
-                    Import Data
+                  <span className="text-[10px] font-black uppercase text-white/60 group-hover:text-blue-400 transition-colors">
+                    Import Save
                   </span>
-                  <span className="text-lg">📥</span>
+                  <span className="text-lg group-hover:scale-110 transition-transform">
+                    📥
+                  </span>
                 </button>
-
                 <button
                   onClick={handleResetData}
-                  className="w-full flex items-center justify-between p-4 bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 rounded-2xl transition-all group"
+                  className="w-full flex items-center justify-between p-4 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 rounded-2xl transition-all group mt-6"
                 >
-                  <span className="text-[10px] font-black uppercase text-red-400/60 group-hover:text-red-400">
-                    Clear Progress
+                  <span className="text-[10px] font-black uppercase text-red-400/80 group-hover:text-red-400">
+                    System Format
                   </span>
-                  <span className="text-lg">🗑️</span>
+                  <span className="text-lg group-hover:scale-110 transition-transform">
+                    ⚠️
+                  </span>
                 </button>
               </div>
-            </div>
-
-            <div className="bg-[#0ef]/5 p-8 rounded-[2.5rem] border border-[#0ef]/10">
-              <span className="text-2xl mb-4 block">💡</span>
-              <h4 className="text-white font-black uppercase italic mb-2 tracking-tight">
-                Sensei Says:
-              </h4>
-              <p className="text-sm text-[#c4cfde]/60 leading-relaxed italic">
-                "Gunakan fitur Export Backup secara berkala untuk menjaga
-                progres belajarmu tetap aman di perangkat lain."
-              </p>
             </div>
           </div>
         </div>
@@ -289,13 +279,15 @@ export default function DashboardPage() {
 
 /* HELPER COMPONENTS */
 
-function SimpleStat({ label, value, color = "text-white" }: any) {
+function SimpleStat({ label, value, color = "text-white", glow = "" }: any) {
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex justify-between items-center bg-[#15171a] p-4 rounded-2xl border border-white/5 shadow-inner">
       <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">
         {label}
       </span>
-      <span className={`text-xl font-black italic ${color}`}>{value}</span>
+      <span className={`text-xl font-black italic ${color} ${glow} font-mono`}>
+        {value}
+      </span>
     </div>
   );
 }
@@ -304,12 +296,12 @@ function QuickLink({ href, label, icon, color }: any) {
   return (
     <Link
       href={href}
-      className={`bg-[#1e2024] p-6 rounded-[2rem] border border-white/5 transition-all group flex flex-col items-center gap-3 ${color}`}
+      className={`bg-[#1e2024] p-5 rounded-3xl border border-white/5 transition-all duration-300 group flex flex-col items-center gap-3 shadow-[6px_6px_15px_rgba(0,0,0,0.5),-4px_-4px_10px_rgba(255,255,255,0.02)] active:shadow-[inset_4px_4px_10px_rgba(0,0,0,0.5)] active:translate-y-1 ${color}`}
     >
-      <span className="text-2xl group-hover:scale-125 transition-transform">
+      <span className="text-2xl group-hover:scale-110 transition-transform drop-shadow-md">
         {icon}
       </span>
-      <span className="text-[9px] font-black text-white/40 uppercase tracking-tighter group-hover:text-white">
+      <span className="text-[9px] font-black text-white/40 uppercase tracking-tighter group-hover:text-white transition-colors">
         {label}
       </span>
     </Link>

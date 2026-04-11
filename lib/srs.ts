@@ -30,31 +30,38 @@ export function createNewCardState(): SRSState {
 }
 
 /* ============================= */
-/* UPDATE CARD STATE (SM-2 Lite) */
+/* UPDATE CARD STATE (Modern SM-2) */
 /* ============================= */
 
 export function updateCardState(state: SRSState, correct: boolean): SRSState {
   let { repetition, interval, easeFactor } = state;
 
   if (!correct) {
-    // Reset repetition
-    repetition = 0;
-    interval = 1;
+    // ✨ MODERN PENALTY LOGIC ✨
+    // Alih-alih mereset interval ke 1, kita bagi dua (halving).
+    // Mencegah frustrasi jika user lupa kartu "Master" yang intervalnya sudah puluhan hari.
+    interval = Math.max(1, Math.floor(interval / 2));
 
-    // Slight penalty to ease factor
+    // Repetition direset ke 0 agar combo terputus,
+    // tapi perhitungan interval selanjutnya tetap menggunakan sisa memori mereka.
+    repetition = 0;
+
+    // Penalti easeFactor (kartu akan muncul sedikit lebih sering dari biasanya)
     easeFactor = Math.max(MIN_EASE_FACTOR, easeFactor - 0.2);
   } else {
     repetition += 1;
 
-    if (repetition === 1) {
+    // Logika untuk kartu yang baru pertama kali dipelajari atau intervalnya memang masih 1
+    if (repetition === 1 && interval === 1) {
       interval = 1;
-    } else if (repetition === 2) {
+    } else if (repetition === 2 && interval === 1) {
       interval = 3;
     } else {
+      // Pertumbuhan interval yang natural berdasarkan easeFactor
       interval = Math.round(interval * easeFactor);
     }
 
-    // Slight improvement
+    // Sedikit reward karena menjawab benar
     easeFactor += 0.05;
   }
 

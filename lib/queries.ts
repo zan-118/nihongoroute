@@ -1,4 +1,3 @@
-// Query untuk mengambil semua kata kerja
 // Query untuk mengambil semua kata kerja LENGKAP
 export const allVerbsQuery = `*[_type == "verb_dictionary"] | order(group asc, masu asc) {
   _id,
@@ -34,6 +33,7 @@ export const allCheatsheetsQuery = `*[_type == "cheatsheet"] | order(category as
     romaji
   }
 }`;
+
 export const allGrammarArticlesQuery = `*[_type == "grammar_article"] {
   _id,
   title,
@@ -57,12 +57,29 @@ export const vocabByIdsQuery = `*[_type == "kosakata" && _id in $ids] {
   "audioUrl": audio.asset->url
 }`;
 
-// Contoh Query untuk halaman Learn
-const lessonQuery = `*[_type == "lesson" && slug.current == $slug][0] {
+// ✨ FIX: lessonQuery sekarang mengekstrak data dari Reference Kosakata secara penuh ✨
+export const lessonQuery = `*[_type == "lesson" && slug.current == $slug][0] {
   title,
   summary,
   orderNumber,
-  vocabList[]->{ word, furigana, meaning }, // Mengambil data asli dari reference kosakata
+  vocabList[]->{ 
+    _id, 
+    word, 
+    furigana, 
+    romaji, 
+    meaning, 
+    kanjiDetails, 
+    examples 
+  },
+  referenceWords[]->{ 
+    _id, 
+    word, 
+    furigana, 
+    romaji, 
+    meaning, 
+    kanjiDetails, 
+    examples 
+  },
   patterns,
   examples,
   conversation,

@@ -17,66 +17,100 @@ export default function MemoryStats() {
     new: srsEntries.filter((s: any) => s.repetition <= 1).length,
   };
 
-  const total = srsEntries.length || 1;
+  const total = srsEntries.length || 1; // Mencegah pembagian dengan nol
+
+  // Variasi warna dan efek cahaya untuk setiap kategori
+  const statConfig = [
+    {
+      label: "Master (Ahli)",
+      count: stats.master,
+      color: "bg-green-400",
+      glow: "shadow-[0_0_12px_rgba(34,197,94,0.8)]",
+      icon: "🏆",
+      delay: 0.1,
+    },
+    {
+      label: "Menengah",
+      count: stats.intermediate,
+      color: "bg-blue-400",
+      glow: "shadow-[0_0_12px_rgba(59,130,246,0.8)]",
+      icon: "📈",
+      delay: 0.2,
+    },
+    {
+      label: "Belajar",
+      count: stats.learning,
+      color: "bg-yellow-400",
+      glow: "shadow-[0_0_12px_rgba(250,204,21,0.8)]",
+      icon: "🌱",
+      delay: 0.3,
+    },
+    {
+      label: "Baru",
+      count: stats.new,
+      color: "bg-white/50",
+      glow: "shadow-[0_0_12px_rgba(255,255,255,0.3)]",
+      icon: "🆕",
+      delay: 0.4,
+    },
+  ];
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-[#1e2024] p-8 rounded-[2.5rem] border border-white/5 shadow-xl"
+      className="bg-[#1e2024] p-6 md:p-8 rounded-[2.5rem] border border-white/5 shadow-[15px_15px_40px_rgba(0,0,0,0.6),-10px_-10px_30px_rgba(255,255,255,0.02)] relative overflow-hidden h-full flex flex-col"
     >
-      <div className="flex items-center justify-between mb-8">
-        <h3 className="text-[#0ef] font-black uppercase tracking-widest text-sm italic">
-          Memory Distribution
-        </h3>
-        <span className="text-[10px] text-white/40 font-bold uppercase">
-          {srsEntries.length} Words Known
-        </span>
+      {/* Cyber Grid Background */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:15px_15px] opacity-30 pointer-events-none" />
+
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8 relative z-10">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center shadow-[0_0_10px_rgba(59,130,246,0.2)]">
+            <span className="text-blue-400 text-sm">🧠</span>
+          </div>
+          <h3 className="text-white font-black uppercase tracking-widest text-sm md:text-base drop-shadow-md">
+            Memory Matrix
+          </h3>
+        </div>
+        <div className="flex flex-col items-end">
+          <span className="bg-[#15171a] border border-white/10 text-[#0ef] px-3 py-1.5 rounded-full text-[9px] font-black tracking-[0.2em] uppercase shadow-inner">
+            {srsEntries.length} Known
+          </span>
+        </div>
       </div>
 
-      <div className="space-y-6 mb-8">
-        <StatBar
-          label="Ahli (Master)"
-          count={stats.master}
-          total={total}
-          color="bg-green-400"
-          icon="🏆"
-        />
-        <StatBar
-          label="Menengah"
-          count={stats.intermediate}
-          total={total}
-          color="bg-blue-400"
-          icon="📈"
-        />
-        <StatBar
-          label="Belajar"
-          count={stats.learning}
-          total={total}
-          color="bg-yellow-400"
-          icon="🌱"
-        />
-        <StatBar
-          label="Baru"
-          count={stats.new}
-          total={total}
-          color="bg-white/20"
-          icon="🆕"
-        />
+      {/* Status Bars */}
+      <div className="space-y-6 mb-8 relative z-10 flex-1">
+        {statConfig.map((stat, i) => (
+          <StatBar
+            key={i}
+            label={stat.label}
+            count={stat.count}
+            total={total}
+            color={stat.color}
+            glow={stat.glow}
+            icon={stat.icon}
+            delay={stat.delay}
+          />
+        ))}
       </div>
 
-      {/* QUICK DRILL ACTIONS */}
-      <div className="pt-6 border-t border-white/5 grid grid-cols-2 gap-3">
+      {/* QUICK DRILL ACTIONS (Tactile Neumorphic Buttons) */}
+      <div className="pt-6 border-t border-white/5 grid grid-cols-2 gap-4 relative z-10 mt-auto">
         <Link
           href="/jlpt/n5/flashcards"
-          className="py-4 px-4 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/5 text-[9px] font-black text-center uppercase tracking-[0.2em] text-[#c4cfde] transition-all active:scale-95"
+          className="group relative p-4 bg-[#1e2024] rounded-2xl border border-white/5 text-[9px] md:text-[10px] font-black text-center uppercase tracking-[0.2em] text-[#c4cfde] transition-all shadow-[6px_6px_15px_rgba(0,0,0,0.5),-4px_-4px_10px_rgba(255,255,255,0.03)] active:shadow-[inset_4px_4px_10px_rgba(0,0,0,0.5),inset_-2px_-2px_5px_rgba(255,255,255,0.02)] active:translate-y-1 hover:text-[#0ef] hover:border-[#0ef]/30"
         >
+          <div className="absolute inset-0 rounded-2xl bg-[#0ef]/5 opacity-0 group-hover:opacity-100 transition-opacity" />
           Quick Vocab
         </Link>
         <Link
           href="/jlpt/n5/kanji"
-          className="py-4 px-4 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/5 text-[9px] font-black text-center uppercase tracking-[0.2em] text-[#c4cfde] transition-all active:scale-95"
+          className="group relative p-4 bg-[#1e2024] rounded-2xl border border-white/5 text-[9px] md:text-[10px] font-black text-center uppercase tracking-[0.2em] text-[#c4cfde] transition-all shadow-[6px_6px_15px_rgba(0,0,0,0.5),-4px_-4px_10px_rgba(255,255,255,0.03)] active:shadow-[inset_4px_4px_10px_rgba(0,0,0,0.5),inset_-2px_-2px_5px_rgba(255,255,255,0.02)] active:translate-y-1 hover:text-purple-400 hover:border-purple-500/30"
         >
+          <div className="absolute inset-0 rounded-2xl bg-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
           Quick Kanji
         </Link>
       </div>
@@ -84,23 +118,35 @@ export default function MemoryStats() {
   );
 }
 
-function StatBar({ label, count, total, color, icon }: any) {
-  const percent = (count / total) * 100;
+function StatBar({ label, count, total, color, glow, icon, delay }: any) {
+  // Hanya hitung persen jika ada kata di database, jika 0 maka bar kosong (0%)
+  const percent = total > 1 || count > 0 ? (count / total) * 100 : 0;
+
   return (
-    <div>
+    <div className="group cursor-default">
       <div className="flex justify-between text-[10px] font-black uppercase tracking-wider mb-2">
-        <span className="text-white/60 flex items-center gap-2">
-          <span>{icon}</span> {label}
+        <span className="text-white/60 flex items-center gap-2 transition-colors group-hover:text-white">
+          <span className="text-sm opacity-80">{icon}</span> {label}
         </span>
-        <span className="text-white">{count}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-white/40 font-mono">{percent.toFixed(0)}%</span>
+          <span className="text-white bg-white/10 px-2 py-0.5 rounded shadow-inner font-mono">
+            {String(count).padStart(3, "0")}
+          </span>
+        </div>
       </div>
-      <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+
+      {/* Container Bar (Inset Shadow) */}
+      <div className="w-full bg-[#15171a] h-2.5 rounded-full overflow-hidden shadow-[inset_0_1px_3px_rgba(0,0,0,0.8)] relative">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${percent}%` }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-          className={`${color} h-full shadow-[0_0_10px_rgba(255,255,255,0.1)]`}
-        />
+          transition={{ duration: 1.5, delay, ease: "circOut" }}
+          className={`${color} ${glow} h-full relative`}
+        >
+          {/* Subtle 3D Highlight on the glowing bar */}
+          <div className="absolute top-0 left-0 right-0 h-[1px] bg-white/40 rounded-t-full opacity-50" />
+        </motion.div>
       </div>
     </div>
   );

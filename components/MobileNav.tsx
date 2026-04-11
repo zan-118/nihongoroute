@@ -2,11 +2,23 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
+import { useProgress } from "@/context/UserProgressContext";
+import { useMemo } from "react";
 
 export default function MobileNav() {
   const pathname = usePathname() || "";
+  const { progress } = useProgress();
 
   if (pathname.startsWith("/studio")) return null;
+
+  // ✨ FIX: Logika pengecekan kartu yang jatuh tempo ✨
+  const hasDueCards = useMemo(() => {
+    const now = Date.now();
+    // Mencari apakah ada minimal satu kartu yang waktu review-nya sudah lewat/saat ini
+    return Object.values(progress.srs).some(
+      (card: any) => card.nextReview <= now,
+    );
+  }, [progress.srs]);
 
   const isActive = (path: string) =>
     path === "/" ? pathname === "/" : pathname.startsWith(path);
@@ -23,7 +35,7 @@ export default function MobileNav() {
           active={isActive("/jlpt")}
         />
 
-        {/* SRS REVIEW BUTTON (Tetap di tengah) */}
+        {/* SRS REVIEW BUTTON (Pusat Navigasi) */}
         <Link href="/dashboard/review" className="relative -mt-12 group">
           <motion.div
             whileTap={{ scale: 0.9 }}
@@ -34,7 +46,15 @@ export default function MobileNav() {
             }`}
           >
             🧠
+            {/* ✨ RED NOTIFICATION DOT ✨ */}
+            {hasDueCards && (
+              <span className="absolute -top-1 -right-1 flex h-4 w-4">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-4 w-4 bg-red-500 border-2 border-[#1f242d]"></span>
+              </span>
+            )}
           </motion.div>
+
           <span
             className={`text-[8px] font-black uppercase tracking-tighter text-center block mt-2 ${
               pathname.includes("/review") ? "text-[#0ef]" : "text-white/20"
@@ -44,7 +64,6 @@ export default function MobileNav() {
           </span>
         </Link>
 
-        {/* LIBRARY - Menggantikan Kamus murni */}
         <NavItem
           href="/library"
           icon="🏛️"
@@ -82,7 +101,9 @@ function NavItem({
       }`}
     >
       <span
-        className={`text-xl transition-transform ${active ? "scale-110 drop-shadow-[0_0_8px_#0ef]" : ""}`}
+        className={`text-xl transition-transform ${
+          active ? "scale-110 drop-shadow-[0_0_8px_#0ef]" : ""
+        }`}
       >
         {icon}
       </span>

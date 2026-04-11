@@ -4,21 +4,43 @@ import { useState, useEffect } from "react";
 
 interface Props {
   text: string;
-  minimal?: boolean; // Prop baru untuk mode ringkas
+  minimal?: boolean; // Mode ringkas (hanya ikon)
 }
 
 export default function TTSReader({ text, minimal = false }: Props) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasJapanese, setHasJapanese] = useState(true);
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
 
+  // 1. Deteksi apakah teks mengandung huruf Jepang
   useEffect(() => {
-    // Deteksi apakah ada huruf Jepang
     const jpRegex = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/;
     setHasJapanese(jpRegex.test(text));
   }, [text]);
 
+  // ✨ FIX: 2. Pre-load Voices (Anti-Bug Safari/Mobile) ✨
+  useEffect(() => {
+    // Pastikan ini hanya berjalan di browser (bukan SSR)
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+
+    const loadVoices = () => {
+      setVoices(window.speechSynthesis.getVoices());
+    };
+
+    // Pancing load pertama kali
+    loadVoices();
+
+    // Event listener: browser akan memanggil ini otomatis saat voices sudah siap diunduh
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+
+    // Cleanup listener untuk mencegah memory leak
+    return () => {
+      window.speechSynthesis.onvoiceschanged = null;
+    };
+  }, []);
+
   const speak = () => {
-    if (!window.speechSynthesis) {
+    if (typeof window === "undefined" || !window.speechSynthesis) {
       return alert("Maaf, browser kamu tidak mendukung fitur audio.");
     }
 
@@ -29,11 +51,21 @@ export default function TTSReader({ text, minimal = false }: Props) {
     }
 
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "ja-JP"; // Paksa logat Jepang
-    utterance.rate = 0.85;
+    utterance.lang = "ja-JP"; // Set logat
+    utterance.rate = 0.85; // Kecepatan sedikit diperlambat agar jelas untuk pemula
 
-    const voices = window.speechSynthesis.getVoices();
-    const jpVoice = voices.find((voice) => voice.lang.includes("ja"));
+    // Gunakan voices dari state, atau panggil getVoices() lagi sebagai fallback
+    const currentVoices =
+      voices.length > 0 ? voices : window.speechSynthesis.getVoices();
+
+    // Pencarian suara yang lebih tahan banting (Safari menggunakan "Kyoko", Android menggunakan "ja-JP")
+    const jpVoice = currentVoices.find(
+      (voice) =>
+        voice.lang === "ja-JP" ||
+        voice.lang.includes("ja") ||
+        voice.name.includes("Japanese"),
+    );
+
     if (jpVoice) {
       utterance.voice = jpVoice;
     }
@@ -50,7 +82,8 @@ export default function TTSReader({ text, minimal = false }: Props) {
   return (
     <button
       onClick={(e) => {
-        e.stopPropagation(); // Mencegah kartu ikut terbalik (flip) saat tombol audio diklik
+        e.preventDefault(); // Mencegah form tersubmit jika ada di dalam <form>
+        e.stopPropagation(); // Mencegah kartu ikut terbalik (flip) di FlashcardMaster
         speak();
       }}
       className={`flex items-center justify-center gap-2 border transition-all font-bold ${

@@ -1,4 +1,4 @@
-import TTSReader from "./TTSReader"; // Import komponennya
+import TTSReader from "./TTSReader";
 
 export default function Flashcard({ data }: { data: any }) {
   return (
@@ -26,16 +26,18 @@ export default function Flashcard({ data }: { data: any }) {
           <span className="text-[10px] text-blue-400 block uppercase font-black tracking-widest mb-1 opacity-70">
             Onyomi
           </span>
+          {/* ✨ FIX: Ubah details menjadi kanjiDetails ✨ */}
           <span className="text-white font-bold text-sm md:text-base">
-            {data.details?.onyomi || "-"}
+            {data.kanjiDetails?.onyomi || "-"}
           </span>
         </div>
         <div className="bg-orange-500/5 p-3 rounded-2xl border border-orange-500/10 text-center">
           <span className="text-[10px] text-orange-400 block uppercase font-black tracking-widest mb-1 opacity-70">
             Kunyomi
           </span>
+          {/* ✨ FIX: Ubah details menjadi kanjiDetails ✨ */}
           <span className="text-white font-bold text-sm md:text-base">
-            {data.details?.kunyomi || "-"}
+            {data.kanjiDetails?.kunyomi || "-"}
           </span>
         </div>
       </div>
