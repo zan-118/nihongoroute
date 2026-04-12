@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 const JLPT_LEVELS = ["n5", "n4", "n3", "n2", "n1"];
 
 function formatSegment(segment: string): string {
-  if (!segment) return ""; // Keamanan jika segmen kosong
+  if (!segment) return "";
 
   if (segment === "jlpt") return "Curriculum";
   if (segment === "library") return "Library";
@@ -15,7 +15,7 @@ function formatSegment(segment: string): string {
 
   return segment
     .split("-")
-    .filter(Boolean) // Menghapus elemen kosong jika ada double dash atau trailing dash
+    .filter(Boolean)
     .map((word) => {
       if (!word) return "";
       return word[0].toUpperCase() + word.slice(1);
@@ -33,17 +33,15 @@ export default function Navbar() {
     pathname === path || (path !== "/" && pathname.startsWith(path));
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#1f242d]/80 backdrop-blur-xl border-b border-white/5 h-20 hidden md:block">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-cyber-bg/80 backdrop-blur-xl border-b border-white/5 h-20 hidden md:block">
       <div className="max-w-7xl mx-auto px-8 h-full flex items-center justify-between">
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-[#0ef] rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(0,255,239,0.3)] group-hover:scale-110 transition-transform">
-              <span className="text-[#1f242d] font-black italic text-xl">
-                N
-              </span>
+            <div className="w-10 h-10 bg-cyber-neon rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(0,255,239,0.3)] group-hover:scale-110 transition-transform">
+              <span className="text-cyber-bg font-black italic text-xl">N</span>
             </div>
-            <span className="text-xl font-black italic text-white tracking-tighter uppercase group-hover:text-[#0ef] transition-colors">
-              NIHONGO<span className="text-[#0ef]">ROUTE</span>
+            <span className="text-xl font-black italic text-white tracking-tighter uppercase group-hover:text-cyber-neon transition-colors">
+              NIHONGO<span className="text-cyber-neon">ROUTE</span>
             </span>
           </Link>
 
@@ -58,7 +56,7 @@ export default function Navbar() {
                   <div key={href} className="flex items-center gap-3">
                     <Link
                       href={href}
-                      className={`hover:text-[#0ef] transition-colors ${isLast ? "text-[#0ef]" : ""}`}
+                      className={`hover:text-cyber-neon transition-colors ${isLast ? "text-cyber-neon" : ""}`}
                     >
                       {formatSegment(segment)}
                     </Link>
@@ -83,7 +81,7 @@ export default function Navbar() {
             href="/dashboard"
             className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
               isActive("/dashboard")
-                ? "bg-[#0ef] text-[#1f242d] shadow-[0_0_15px_rgba(0,255,239,0.4)]"
+                ? "bg-cyber-neon text-cyber-bg shadow-[0_0_15px_rgba(0,255,239,0.4)]"
                 : "text-white/60 hover:text-white bg-white/5 border border-white/5 hover:border-white/10"
             }`}
           >
@@ -95,19 +93,25 @@ export default function Navbar() {
   );
 }
 
-function NavLink({ href, label, active }: any) {
+interface NavLinkProps {
+  href: string;
+  label: string;
+  active: boolean;
+}
+
+function NavLink({ href, label, active }: NavLinkProps) {
   return (
     <Link
       href={href}
       className={`relative py-2 text-[10px] font-black uppercase tracking-[0.2em] transition-colors ${
-        active ? "text-[#0ef]" : "text-white/40 hover:text-white"
+        active ? "text-cyber-neon" : "text-white/40 hover:text-white"
       }`}
     >
       {label}
       {active && (
         <motion.div
           layoutId="nav-underline"
-          className="absolute bottom-0 left-0 w-full h-[2px] bg-[#0ef] shadow-[0_0_10px_#0ef]"
+          className="absolute bottom-0 left-0 w-full h-[2px] bg-cyber-neon shadow-[0_0_10px_rgba(0,255,239,0.8)]"
         />
       )}
     </Link>

@@ -57,7 +57,7 @@ export const vocabByIdsQuery = `*[_type == "kosakata" && _id in $ids] {
   "audioUrl": audio.asset->url
 }`;
 
-// ✨ FIX: lessonQuery sekarang mengekstrak data dari Reference Kosakata secara penuh ✨
+// Mengekstrak data dari Reference Kosakata secara penuh
 export const lessonQuery = `*[_type == "lesson" && slug.current == $slug][0] {
   title,
   summary,

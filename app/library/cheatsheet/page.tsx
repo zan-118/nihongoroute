@@ -1,17 +1,15 @@
 import { client } from "@/sanity/lib/client";
 import CheatsheetClient from "./CheatsheetClient";
 
-export const revalidate = 3600; // Cache data selama 1 jam
+export const revalidate = 3600;
 
 export default async function CheatsheetPage() {
-  // Query untuk mengambil semua cheatsheet dari Sanity
   const sheets = await client.fetch(
     `*[_type == "cheatsheet"] | order(category asc, title asc)`,
   );
 
   return (
-    <div className="min-h-screen bg-[#15171a] pt-24 pb-32 px-4 md:px-8 relative overflow-hidden">
-      {/* Background Cyber Grid */}
+    <main className="min-h-screen bg-cyber-bg pt-24 pb-32 px-4 md:px-8 relative overflow-hidden">
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
@@ -31,9 +29,8 @@ export default async function CheatsheetPage() {
           </p>
         </header>
 
-        {/* Memanggil Client Component dan mengirimkan data dari Sanity */}
         <CheatsheetClient initialSheets={sheets} />
       </div>
-    </div>
+    </main>
   );
 }

@@ -18,22 +18,17 @@ export default function TTSReader({ text, minimal = false }: Props) {
     setHasJapanese(jpRegex.test(text));
   }, [text]);
 
-  // ✨ FIX: 2. Pre-load Voices (Anti-Bug Safari/Mobile) ✨
+  // 2. Pre-load Voices (Anti-Bug Safari/Mobile)
   useEffect(() => {
-    // Pastikan ini hanya berjalan di browser (bukan SSR)
     if (typeof window === "undefined" || !window.speechSynthesis) return;
 
     const loadVoices = () => {
       setVoices(window.speechSynthesis.getVoices());
     };
 
-    // Pancing load pertama kali
     loadVoices();
-
-    // Event listener: browser akan memanggil ini otomatis saat voices sudah siap diunduh
     window.speechSynthesis.onvoiceschanged = loadVoices;
 
-    // Cleanup listener untuk mencegah memory leak
     return () => {
       window.speechSynthesis.onvoiceschanged = null;
     };
@@ -51,14 +46,12 @@ export default function TTSReader({ text, minimal = false }: Props) {
     }
 
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "ja-JP"; // Set logat
-    utterance.rate = 0.85; // Kecepatan sedikit diperlambat agar jelas untuk pemula
+    utterance.lang = "ja-JP";
+    utterance.rate = 0.85;
 
-    // Gunakan voices dari state, atau panggil getVoices() lagi sebagai fallback
     const currentVoices =
       voices.length > 0 ? voices : window.speechSynthesis.getVoices();
 
-    // Pencarian suara yang lebih tahan banting (Safari menggunakan "Kyoko", Android menggunakan "ja-JP")
     const jpVoice = currentVoices.find(
       (voice) =>
         voice.lang === "ja-JP" ||
@@ -82,8 +75,8 @@ export default function TTSReader({ text, minimal = false }: Props) {
   return (
     <button
       onClick={(e) => {
-        e.preventDefault(); // Mencegah form tersubmit jika ada di dalam <form>
-        e.stopPropagation(); // Mencegah kartu ikut terbalik (flip) di FlashcardMaster
+        e.preventDefault();
+        e.stopPropagation();
         speak();
       }}
       className={`flex items-center justify-center gap-2 border transition-all font-bold ${
@@ -93,7 +86,7 @@ export default function TTSReader({ text, minimal = false }: Props) {
       } ${
         isPlaying
           ? "bg-red-500/10 border-red-500/30 text-red-400 shadow-[0_0_10px_rgba(239,68,68,0.2)]"
-          : "bg-[#0ef]/10 border-[#0ef]/30 text-[#0ef] hover:bg-[#0ef]/20 active:scale-95 shadow-sm"
+          : "bg-cyber-neon/10 border-cyber-neon/30 text-cyber-neon hover:bg-cyber-neon/20 active:scale-95 shadow-sm"
       }`}
       title="Dengarkan pengucapan"
     >

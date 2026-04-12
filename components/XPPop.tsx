@@ -15,7 +15,7 @@ export default function XPPop({
           initial={{ opacity: 0, y: 0, scale: 0.5 }}
           animate={{ opacity: 1, y: -80, scale: 1.2 }}
           exit={{ opacity: 0, scale: 1.5 }}
-          className="absolute pointer-events-none text-[#0ef] font-black italic text-2xl z-50 drop-shadow-[0_0_10px_#0ef]"
+          className="absolute pointer-events-none text-cyber-neon font-black italic text-2xl z-50 drop-shadow-[0_0_10px_rgba(0,255,239,0.8)]"
         >
           +{amount} XP
         </motion.div>

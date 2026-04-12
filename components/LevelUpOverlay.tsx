@@ -12,7 +12,6 @@ export default function LevelUpOverlay({ level }: { level: number }) {
       setShow(true);
       sounds?.playSuccess();
 
-      // Ledakan kembang api digital
       const duration = 3 * 1000;
       const end = Date.now() + duration;
 
@@ -49,9 +48,9 @@ export default function LevelUpOverlay({ level }: { level: number }) {
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1.2 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-[#1f242d]/80 backdrop-blur-md"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-cyber-bg/80 backdrop-blur-md"
         >
-          <div className="text-center p-10 bg-[#1e2024] rounded-[3rem] border border-[#0ef]/30 shadow-[0_0_50px_rgba(0,255,239,0.2)]">
+          <div className="text-center p-10 bg-cyber-surface rounded-[3rem] border border-cyber-neon/30 shadow-[0_0_50px_rgba(0,255,239,0.2)]">
             <motion.div
               animate={{ rotate: [0, 10, -10, 0] }}
               transition={{ repeat: Infinity, duration: 0.5 }}
@@ -59,7 +58,7 @@ export default function LevelUpOverlay({ level }: { level: number }) {
             >
               🎉
             </motion.div>
-            <h2 className="text-[#0ef] text-[10px] font-black uppercase tracking-[0.5em] mb-2">
+            <h2 className="text-cyber-neon text-[10px] font-black uppercase tracking-[0.5em] mb-2">
               Level Up!
             </h2>
             <h1 className="text-6xl font-black text-white italic uppercase tracking-tighter">
@@ -70,7 +69,7 @@ export default function LevelUpOverlay({ level }: { level: number }) {
             </p>
             <button
               onClick={() => setShow(false)}
-              className="mt-8 px-8 py-3 bg-[#0ef] text-[#1f242d] font-black rounded-xl text-[10px] uppercase tracking-widest"
+              className="mt-8 px-8 py-3 bg-cyber-neon text-cyber-bg font-black rounded-xl text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-transform shadow-[0_0_15px_rgba(0,255,239,0.4)]"
             >
               Lanjutkan Perjuangan
             </button>

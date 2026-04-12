@@ -4,41 +4,30 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Hash, Clock, BookOpen, Layers } from "lucide-react";
 
-/* ============================= */
-/* TYPES */
-/* ============================= */
-interface SheetItem {
+export interface SheetItem {
   label: string;
   jp: string;
   romaji: string;
 }
 
-interface Cheatsheet {
+export interface Cheatsheet {
   _id: string;
   title: string;
   category: string;
   items: SheetItem[];
 }
 
-/* ============================= */
-/* COMPONENT */
-/* ============================= */
 export default function CheatsheetClient({
-  initialSheets = [], // Fallback bawaan agar tidak undefined
+  initialSheets = [],
 }: {
   initialSheets: Cheatsheet[];
 }) {
-  // ✨ FIX: Pastikan selalu berupa array yang valid
   const safeSheets = Array.isArray(initialSheets) ? initialSheets : [];
-
   const [searchTerm, setSearchTerm] = useState("");
-
-  // Ambil ID pertama dengan aman
   const [selectedSheetId, setSelectedSheetId] = useState<string>(
     safeSheets.length > 0 ? safeSheets[0]._id : "",
   );
 
-  // Filter pencarian berdasarkan judul atau kategori tabel
   const filteredSheets = safeSheets.filter(
     (sheet) =>
       sheet.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -48,15 +37,13 @@ export default function CheatsheetClient({
   const activeSheet = safeSheets.find((s) => s._id === selectedSheetId);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 min-h-[600px] relative z-10">
-      {/* SIDEBAR NAVIGATION (System Panel) */}
+    <section className="flex flex-col lg:flex-row gap-8 min-h-[600px] relative z-10">
       <aside className="w-full lg:w-80 flex flex-col gap-6 shrink-0">
-        {/* Search Input */}
         <div className="relative group">
           <input
             type="text"
             placeholder="Search dataset..."
-            className="w-full p-5 bg-[#1e2024] border border-white/5 rounded-2xl focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 outline-none text-white shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] transition-all font-mono text-sm placeholder:text-white/20"
+            className="w-full p-5 bg-cyber-surface border border-white/5 rounded-2xl focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 outline-none text-white shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] transition-all font-mono text-sm placeholder:text-white/20"
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <Search
@@ -65,8 +52,7 @@ export default function CheatsheetClient({
           />
         </div>
 
-        {/* Categories List */}
-        <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+        <nav className="space-y-3 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
           {filteredSheets.length > 0 ? (
             filteredSheets.map((sheet) => {
               const isActive = selectedSheetId === sheet._id;
@@ -76,12 +62,12 @@ export default function CheatsheetClient({
                   onClick={() => setSelectedSheetId(sheet._id)}
                   className={`w-full flex items-center gap-4 p-4 rounded-2xl border transition-all duration-300 text-left group ${
                     isActive
-                      ? "bg-[#15171a] border-purple-500/50 shadow-[inset_0_0_15px_rgba(168,85,247,0.15)]"
-                      : "bg-[#1e2024] border-white/5 hover:border-white/20 shadow-[6px_6px_15px_rgba(0,0,0,0.3)]"
+                      ? "bg-cyber-bg border-purple-500/50 shadow-[inset_0_0_15px_rgba(168,85,247,0.15)]"
+                      : "bg-cyber-surface border-white/5 hover:border-white/20 shadow-[6px_6px_15px_rgba(0,0,0,0.3)]"
                   }`}
                 >
                   <div
-                    className={`p-3 rounded-xl border shadow-inner transition-colors ${isActive ? "bg-purple-500/10 border-purple-500/30 text-purple-400" : "bg-[#15171a] border-white/5 text-white/20 group-hover:text-white/60"}`}
+                    className={`p-3 rounded-xl border shadow-inner transition-colors ${isActive ? "bg-purple-500/10 border-purple-500/30 text-purple-400" : "bg-cyber-bg border-white/5 text-white/20 group-hover:text-white/60"}`}
                   >
                     {getIconForCategory(sheet.category)}
                   </div>
@@ -105,11 +91,10 @@ export default function CheatsheetClient({
               No Data Available
             </div>
           )}
-        </div>
+        </nav>
       </aside>
 
-      {/* CONTENT AREA: DATA GRID */}
-      <main className="flex-1 w-full overflow-hidden">
+      <article className="flex-1 w-full overflow-hidden">
         <AnimatePresence mode="wait">
           {activeSheet ? (
             <motion.div
@@ -117,9 +102,9 @@ export default function CheatsheetClient({
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="bg-[#1e2024] rounded-[3rem] p-6 md:p-10 border border-white/5 shadow-[15px_15px_40px_rgba(0,0,0,0.6)] min-h-full flex flex-col"
+              className="bg-cyber-surface rounded-[3rem] p-6 md:p-10 border border-white/5 shadow-[15px_15px_40px_rgba(0,0,0,0.6)] min-h-full flex flex-col"
             >
-              <div className="flex justify-between items-end mb-8 border-b border-white/5 pb-6">
+              <header className="flex justify-between items-end mb-8 border-b border-white/5 pb-6">
                 <div>
                   <h2 className="text-3xl md:text-4xl font-black text-white mb-3 uppercase tracking-tighter italic drop-shadow-md">
                     {activeSheet.title}
@@ -129,14 +114,13 @@ export default function CheatsheetClient({
                     Dataset: {activeSheet.category}
                   </p>
                 </div>
-              </div>
+              </header>
 
-              {/* Responsive Data Table */}
-              <div className="rounded-[2rem] border border-white/5 bg-[#15171a] shadow-[inset_0_2px_10px_rgba(0,0,0,0.4)] overflow-hidden flex-1 w-full">
+              <div className="rounded-[2rem] border border-white/5 bg-cyber-bg shadow-[inset_0_2px_10px_rgba(0,0,0,0.4)] overflow-hidden flex-1 w-full">
                 <div className="overflow-x-auto custom-scrollbar w-full h-full">
                   <table className="w-full text-left border-collapse min-w-[500px]">
                     <thead>
-                      <tr className="bg-[#1e2024] border-b border-white/5">
+                      <tr className="bg-cyber-surface border-b border-white/5">
                         <th className="p-5 md:p-6 text-[10px] font-black text-purple-400 uppercase tracking-[0.2em] w-1/3 whitespace-nowrap">
                           Item Label
                         </th>
@@ -192,12 +176,11 @@ export default function CheatsheetClient({
             </div>
           )}
         </AnimatePresence>
-      </main>
-    </div>
+      </article>
+    </section>
   );
 }
 
-// Helper untuk memilih ikon berdasarkan kategori
 function getIconForCategory(cat: string) {
   const c = cat?.toLowerCase() || "";
   if (c.includes("bilangan") || c.includes("angka")) return <Hash size={18} />;

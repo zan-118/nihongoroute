@@ -8,33 +8,10 @@ export interface DailyMission {
   rewardXP: number;
 }
 
+const STORAGE_KEY = "nihongo-daily";
+
 function getTodayString() {
   return new Date().toISOString().split("T")[0];
-}
-
-export function loadDailyMission(): DailyMission {
-  const saved = localStorage.getItem("nihongo-daily");
-  const today = getTodayString();
-
-  if (!saved) {
-    const mission = createNewMission(today);
-    saveDailyMission(mission);
-    return mission;
-  }
-
-  const parsed: DailyMission = JSON.parse(saved);
-
-  if (parsed.date !== today) {
-    const mission = createNewMission(today);
-    saveDailyMission(mission);
-    return mission;
-  }
-
-  return parsed;
-}
-
-export function saveDailyMission(mission: DailyMission) {
-  localStorage.setItem("nihongo-daily", JSON.stringify(mission));
 }
 
 function createNewMission(date: string): DailyMission {
@@ -47,6 +24,46 @@ function createNewMission(date: string): DailyMission {
     completed: false,
     rewardXP: 50,
   };
+}
+
+export function saveDailyMission(mission: DailyMission) {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(mission));
+  }
+}
+
+export function loadDailyMission(): DailyMission {
+  const today = getTodayString();
+
+  if (typeof window === "undefined") {
+    return createNewMission(today);
+  }
+
+  const saved = localStorage.getItem(STORAGE_KEY);
+
+  if (!saved) {
+    const mission = createNewMission(today);
+    saveDailyMission(mission);
+    return mission;
+  }
+
+  try {
+    const parsed: DailyMission = JSON.parse(saved);
+
+    // Reset misi jika harinya sudah berganti
+    if (parsed.date !== today) {
+      const mission = createNewMission(today);
+      saveDailyMission(mission);
+      return mission;
+    }
+
+    return parsed;
+  } catch (error) {
+    console.warn("Corrupted daily mission data, resetting...", error);
+    const mission = createNewMission(today);
+    saveDailyMission(mission);
+    return mission;
+  }
 }
 
 export function updateReviewMission(): DailyMission {

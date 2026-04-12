@@ -3,10 +3,10 @@
 /* ============================= */
 
 export interface SRSState {
-  interval: number; // in days
+  interval: number; // Dalam satuan hari (days)
   repetition: number;
   easeFactor: number;
-  nextReview: number; // timestamp (ms)
+  nextReview: number; // Timestamp (ms)
 }
 
 /* ============================= */
@@ -37,7 +37,7 @@ export function updateCardState(state: SRSState, correct: boolean): SRSState {
   let { repetition, interval, easeFactor } = state;
 
   if (!correct) {
-    // ✨ MODERN PENALTY LOGIC ✨
+    // MODERN PENALTY LOGIC
     // Alih-alih mereset interval ke 1, kita bagi dua (halving).
     // Mencegah frustrasi jika user lupa kartu "Master" yang intervalnya sudah puluhan hari.
     interval = Math.max(1, Math.floor(interval / 2));

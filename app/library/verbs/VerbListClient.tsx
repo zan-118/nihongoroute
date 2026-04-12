@@ -3,16 +3,39 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import TTSReader from "@/components/TTSReader";
-import { X, Search, Info } from "lucide-react";
+import { X, Search } from "lucide-react";
+
+// ✨ Interface untuk Keamanan Tipe Data
+export interface VerbData {
+  _id: string;
+  group: number;
+  jisho: string;
+  meaning: string;
+  masu: string;
+  furigana?: string;
+  te?: string;
+  nai?: string;
+  ta?: string;
+  teiru?: string;
+  tai?: string;
+  nakereba?: string;
+  kanou?: string;
+  shieki?: string;
+  ukemi?: string;
+  katei?: string;
+  ikou?: string;
+  teshimau?: string;
+  meirei?: string;
+}
 
 export default function VerbListClient({
   initialVerbs,
 }: {
-  initialVerbs: any[];
+  initialVerbs: VerbData[];
 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeGroup, setActiveGroup] = useState<number | null>(null);
-  const [selectedVerb, setSelectedVerb] = useState<any | null>(null);
+  const [selectedVerb, setSelectedVerb] = useState<VerbData | null>(null);
 
   const filteredVerbs = initialVerbs.filter((verb) => {
     const matchesSearch =
@@ -25,24 +48,21 @@ export default function VerbListClient({
 
   return (
     <section>
-      {/* HEADER CONTROLS: SEARCH & FILTER */}
       <div className="flex flex-col xl:flex-row gap-6 mb-12">
-        {/* Search Bar */}
         <div className="relative flex-1 group">
           <input
             type="text"
             placeholder="Cari kata kerja (makan, taberu, 食べる)..."
-            className="w-full p-5 bg-[#1e2024] border border-white/5 rounded-[2rem] focus:ring-2 focus:ring-[#0ef] outline-none transition-all text-white pr-14 shadow-[10px_10px_20px_#15171a,-10px_-10px_20px_#27292e]"
+            className="w-full p-5 bg-cyber-surface border border-white/5 rounded-[2rem] focus:ring-2 focus:ring-cyber-neon outline-none transition-all text-white pr-14 shadow-[10px_10px_20px_#15171a,-10px_-10px_20px_#27292e]"
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <Search
-            className="absolute right-6 top-1/2 -translate-y-1/2 text-white/20 group-hover:text-[#0ef] transition-colors"
+            className="absolute right-6 top-1/2 -translate-y-1/2 text-white/20 group-hover:text-cyber-neon transition-colors"
             size={20}
           />
         </div>
 
-        {/* Group Filter Buttons */}
-        <div className="flex gap-3 p-2 bg-[#1e2024] rounded-[2rem] border border-white/5 shadow-[10px_10px_20px_#15171a,-10px_-10px_20px_#27292e]">
+        <div className="flex gap-3 p-2 bg-cyber-surface rounded-[2rem] border border-white/5 shadow-[10px_10px_20px_#15171a,-10px_-10px_20px_#27292e]">
           {[1, 2, 3].map((g) => (
             <button
               key={g}
@@ -71,20 +91,19 @@ export default function VerbListClient({
         </div>
       </div>
 
-      {/* VERB GRID */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <AnimatePresence>
           {filteredVerbs.map((verb) => (
-            <motion.div
+            <motion.article
               key={verb._id}
               layout
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
               onClick={() => setSelectedVerb(verb)}
-              className="bg-[#1e2024] p-8 rounded-[2.5rem] border border-white/5 hover:border-[#0ef]/30 transition-all group relative cursor-pointer shadow-[15px_15px_30px_#15171a,-15px_-15px_30px_#27292e]"
+              className="bg-cyber-surface p-8 rounded-[2.5rem] border border-white/5 hover:border-cyber-neon/30 transition-all group relative cursor-pointer shadow-[15px_15px_30px_#15171a,-15px_-15px_30px_#27292e]"
             >
-              <div className="flex justify-between items-start mb-6">
+              <header className="flex justify-between items-start mb-6">
                 <span
                   className={`px-4 py-1 rounded-full text-[9px] font-black tracking-widest border ${
                     verb.group === 1
@@ -97,14 +116,14 @@ export default function VerbListClient({
                   G{verb.group}
                 </span>
                 <TTSReader text={verb.jisho} minimal={true} />
-              </div>
+              </header>
 
               <div className="mb-6">
-                <h3 className="text-3xl font-black text-white tracking-tighter mb-2 group-hover:text-[#0ef] transition-colors">
+                <h3 className="text-3xl font-black text-white tracking-tighter mb-2 group-hover:text-cyber-neon transition-colors">
                   {verb.jisho}
                 </h3>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <p className="text-[#0ef] text-[10px] font-mono font-bold uppercase tracking-widest bg-[#0ef]/5 px-2 py-1 rounded-md">
+                  <p className="text-cyber-neon text-[10px] font-mono font-bold uppercase tracking-widest bg-cyber-neon/5 px-2 py-1 rounded-md">
                     {verb.meaning}
                   </p>
                   <span className="text-white/30 font-japanese text-xs">
@@ -125,15 +144,14 @@ export default function VerbListClient({
                   <p className="text-yellow-500 font-bold">{verb.te}</p>
                 </div>
               </div>
-            </motion.div>
+            </motion.article>
           ))}
         </AnimatePresence>
       </div>
 
-      {/* MODAL DETAIL (13+ KONJUGASI) */}
       <AnimatePresence>
         {selectedVerb && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -142,11 +160,11 @@ export default function VerbListClient({
               className="absolute inset-0 bg-black/90 backdrop-blur-xl"
             />
 
-            <motion.div
+            <motion.article
               initial={{ scale: 0.9, opacity: 0, y: 30 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 30 }}
-              className="relative w-full max-w-3xl bg-[#1e2024] rounded-[3.5rem] p-10 shadow-[0_0_100px_rgba(0,0,0,0.8)] border border-white/10 overflow-hidden"
+              className="relative w-full max-w-3xl bg-cyber-surface rounded-[3.5rem] p-10 shadow-[0_0_100px_rgba(0,0,0,0.8)] border border-white/10 overflow-hidden"
             >
               <button
                 onClick={() => setSelectedVerb(null)}
@@ -155,7 +173,7 @@ export default function VerbListClient({
                 <X size={20} />
               </button>
 
-              <div className="flex flex-col md:flex-row items-start md:items-center gap-8 mb-10 pb-8 border-b border-white/5">
+              <header className="flex flex-col md:flex-row items-start md:items-center gap-8 mb-10 pb-8 border-b border-white/5">
                 <div
                   className={`w-20 h-20 rounded-[2rem] flex items-center justify-center text-3xl font-black shadow-2xl ${
                     selectedVerb.group === 1
@@ -172,7 +190,7 @@ export default function VerbListClient({
                     {selectedVerb.jisho}
                   </h2>
                   <div className="flex items-center gap-3">
-                    <p className="text-[#0ef] font-mono font-black text-lg uppercase bg-[#0ef]/10 px-3 py-1 rounded-xl">
+                    <p className="text-cyber-neon font-mono font-black text-lg uppercase bg-cyber-neon/10 px-3 py-1 rounded-xl">
                       {selectedVerb.meaning}
                     </p>
                     <span className="text-white/40 text-xl font-japanese italic">
@@ -180,9 +198,8 @@ export default function VerbListClient({
                     </span>
                   </div>
                 </div>
-              </div>
+              </header>
 
-              {/* Grid 13+ Konjugasi */}
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-auto max-h-[50vh] pr-4 custom-scrollbar">
                 <DetailBox
                   label="Bentuk Masu"
@@ -255,7 +272,7 @@ export default function VerbListClient({
                   color="text-white bg-red-600/20 px-2 rounded"
                 />
               </div>
-            </motion.div>
+            </motion.article>
           </div>
         )}
       </AnimatePresence>
@@ -269,12 +286,12 @@ function DetailBox({
   color,
 }: {
   label: string;
-  value: string;
+  value?: string;
   color: string;
 }) {
   return (
-    <div className="bg-white/2 p-4 rounded-2xl border border-white/5 hover:bg-white/5 transition-all group/box">
-      <span className="text-[8px] font-black text-white/20 uppercase block mb-1 tracking-[0.2em] group-hover/box:text-[#0ef] transition-colors">
+    <div className="bg-white/5 p-4 rounded-2xl border border-white/5 hover:bg-white/10 transition-all group/box">
+      <span className="text-[8px] font-black text-white/20 uppercase block mb-1 tracking-[0.2em] group-hover/box:text-cyber-neon transition-colors">
         {label}
       </span>
       <span className={`text-sm font-bold tracking-tight ${color}`}>

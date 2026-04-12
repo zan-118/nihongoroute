@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 import { useProgress } from "@/context/UserProgressContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { loadProgress, ProgressState } from "@/lib/progress"; // ✨ IMPORT BARU
+import { loadProgress, ProgressState } from "@/lib/progress";
 
 // --- TYPES ---
-interface Quest {
+export interface Quest {
   id: string;
   title: string;
   type: "review" | "xp" | "streak";
@@ -49,12 +49,9 @@ export default function DailyQuests() {
     {},
   );
   const [justClaimed, setJustClaimed] = useState<string | null>(null);
-
-  // ✨ STATE BARU UNTUK STATISTIK ✨
   const [stats, setStats] = useState<ProgressState | null>(null);
 
   useEffect(() => {
-    // Memuat data streak & review harian dengan aman di sisi klien
     setStats(loadProgress());
 
     const today = new Date().toISOString().split("T")[0];
@@ -73,19 +70,15 @@ export default function DailyQuests() {
   const handleClaim = (quest: Quest) => {
     if (claimedQuests[quest.id]) return;
 
-    // Grant XP
     updateProgress(progress.xp + quest.rewardXP, progress.srs);
 
-    // Mark as claimed
     const newClaimed = { ...claimedQuests, [quest.id]: true };
     saveClaimed(newClaimed);
 
-    // Trigger animation
     setJustClaimed(quest.id);
     setTimeout(() => setJustClaimed(null), 2000);
   };
 
-  // ✨ FIX: Membaca dari `stats` bukan dari `progress` Context ✨
   const getCurrentProgress = (type: Quest["type"]) => {
     switch (type) {
       case "review":
@@ -100,26 +93,23 @@ export default function DailyQuests() {
   };
 
   return (
-    <div className="bg-[#1e2024] p-6 md:p-8 rounded-[2.5rem] border border-white/5 h-full relative overflow-hidden shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]">
-      {/* Cyber Grid Background */}
+    <section className="bg-cyber-surface p-6 md:p-8 rounded-[2.5rem] border border-white/5 h-full relative overflow-hidden shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]">
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:15px_15px] opacity-30 pointer-events-none" />
 
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8 relative z-10">
+      <header className="flex items-center justify-between mb-8 relative z-10">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-[#0ef]/10 border border-[#0ef]/30 flex items-center justify-center shadow-[0_0_10px_rgba(0,255,239,0.2)]">
-            <span className="text-[#0ef] text-sm">🎯</span>
+          <div className="w-8 h-8 rounded-lg bg-cyber-neon/10 border border-cyber-neon/30 flex items-center justify-center shadow-[0_0_10px_rgba(0,255,239,0.2)]">
+            <span className="text-cyber-neon text-sm">🎯</span>
           </div>
           <h3 className="text-white font-black uppercase tracking-widest text-sm md:text-base drop-shadow-md">
             Daily Quests
           </h3>
         </div>
-        <span className="bg-[#15171a] border border-white/10 text-[#c4cfde] px-3 py-1.5 rounded-full text-[9px] font-black tracking-[0.2em] uppercase shadow-inner">
+        <span className="bg-cyber-bg border border-white/10 text-[#c4cfde] px-3 py-1.5 rounded-full text-[9px] font-black tracking-[0.2em] uppercase shadow-inner">
           Resets at Midnight
         </span>
-      </div>
+      </header>
 
-      {/* Quests List */}
       <div className="space-y-5 relative z-10">
         {DAILY_QUESTS.map((quest) => {
           const current = getCurrentProgress(quest.type);
@@ -128,17 +118,16 @@ export default function DailyQuests() {
           const isClaimed = claimedQuests[quest.id];
 
           return (
-            <div
+            <article
               key={quest.id}
               className={`relative group p-4 rounded-2xl border transition-all duration-300 ${
                 isClaimed
                   ? "bg-white/5 border-white/5 opacity-50 grayscale"
                   : isCompleted
                     ? "bg-green-500/10 border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.15)] hover:border-green-500/50"
-                    : "bg-[#15171a] border-white/5 hover:border-white/10"
+                    : "bg-cyber-bg border-white/5 hover:border-white/10"
               }`}
             >
-              {/* Claim Animation Overlay */}
               <AnimatePresence>
                 {justClaimed === quest.id && (
                   <motion.div
@@ -158,7 +147,7 @@ export default function DailyQuests() {
                 <div className="flex items-center gap-3">
                   <span className="text-xl opacity-80">{quest.icon}</span>
                   <div>
-                    <p
+                    <h4
                       className={`text-xs font-black uppercase tracking-wide transition-colors ${
                         isCompleted && !isClaimed
                           ? "text-green-400"
@@ -166,14 +155,13 @@ export default function DailyQuests() {
                       }`}
                     >
                       {quest.title}
-                    </p>
-                    <p className="text-[10px] text-[#0ef] font-bold uppercase tracking-widest mt-0.5 opacity-80">
+                    </h4>
+                    <p className="text-[10px] text-cyber-neon font-bold uppercase tracking-widest mt-0.5 opacity-80">
                       Reward: +{quest.rewardXP} XP
                     </p>
                   </div>
                 </div>
 
-                {/* Status / Claim Button */}
                 {isClaimed ? (
                   <span className="text-[10px] font-black text-white/20 uppercase tracking-widest bg-black/20 px-2 py-1 rounded">
                     Claimed
@@ -181,7 +169,8 @@ export default function DailyQuests() {
                 ) : isCompleted ? (
                   <button
                     onClick={() => handleClaim(quest)}
-                    className="text-[10px] font-black text-[#1f242d] bg-green-400 uppercase tracking-widest px-3 py-1.5 rounded-lg shadow-[0_0_10px_rgba(34,197,94,0.4)] hover:scale-105 active:scale-95 transition-all animate-pulse"
+                    aria-label={`Klaim hadiah ${quest.rewardXP} XP`}
+                    className="text-[10px] font-black text-cyber-bg bg-green-400 uppercase tracking-widest px-3 py-1.5 rounded-lg shadow-[0_0_10px_rgba(34,197,94,0.4)] hover:scale-105 active:scale-95 transition-all animate-pulse"
                   >
                     Claim
                   </button>
@@ -192,7 +181,6 @@ export default function DailyQuests() {
                 )}
               </div>
 
-              {/* Progress Bar */}
               <div className="w-full bg-black/40 h-2 rounded-full overflow-hidden shadow-[inset_0_1px_3px_rgba(0,0,0,0.8)] relative">
                 <motion.div
                   initial={{ width: 0 }}
@@ -201,16 +189,16 @@ export default function DailyQuests() {
                   className={`h-full relative ${
                     isCompleted
                       ? "bg-green-400 shadow-[0_0_10px_rgba(34,197,94,0.8)]"
-                      : "bg-gradient-to-r from-[#0ef] to-blue-500 shadow-[0_0_10px_rgba(0,255,239,0.5)]"
+                      : "bg-gradient-to-r from-cyber-neon to-blue-500 shadow-[0_0_10px_rgba(0,255,239,0.5)]"
                   }`}
                 >
                   <div className="absolute top-0 left-0 right-0 h-[1px] bg-white/30" />
                 </motion.div>
               </div>
-            </div>
+            </article>
           );
         })}
       </div>
-    </div>
+    </section>
   );
 }

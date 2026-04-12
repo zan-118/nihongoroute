@@ -1,40 +1,50 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProgress } from "@/context/UserProgressContext";
 import { updateCardState } from "@/lib/srs";
 import { sounds } from "@/lib/audio";
 import TTSReader from "./TTSReader";
 import XPPop from "./XPPop";
-// Pastikan ini diimpor jika kamu menggunakannya di file yang sama
 import { updateProgressOnReview } from "@/lib/progress";
+
+export interface MasterCardData {
+  _id?: string;
+  id?: string;
+  word: string;
+  meaning: string;
+  furigana?: string;
+  romaji?: string;
+  level?: { code: string };
+  kanjiDetails?: { onyomi?: string; kunyomi?: string };
+  details?: { onyomi?: string; kunyomi?: string };
+}
 
 export default function FlashcardMaster({
   cards,
   type = "vocab",
 }: {
-  cards: any[];
+  cards: MasterCardData[];
   type?: "vocab" | "kanji";
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [direction, setDirection] = useState(0);
   const [showXP, setShowXP] = useState(false);
-  const [isClient, setIsClient] = useState(false); // Mencegah Hydration Error
+  const [isClient, setIsClient] = useState(false);
 
   const { progress, updateProgress } = useProgress();
+  const router = useRouter();
 
-  // ✨ KUNCI: Gunakan identifier unik untuk deck ini (bisa berdasarkan level/type)
   const sessionKey = `nihongo_session_${type}_${cards.length > 0 ? cards[0]?.level?.code || "general" : "general"}`;
 
   useEffect(() => {
     setIsClient(true);
-    // Muat index terakhir jika ada
     const savedIndex = localStorage.getItem(sessionKey);
     if (savedIndex !== null) {
       const parsedIndex = parseInt(savedIndex, 10);
-      // Pastikan index valid dan belum selesai semua
       if (!isNaN(parsedIndex) && parsedIndex < cards.length) {
         setCurrentIndex(parsedIndex);
       }
@@ -51,9 +61,8 @@ export default function FlashcardMaster({
   };
 
   const handleAnswer = (correct: boolean) => {
-    const cardId = card._id || card.id;
+    const cardId = card._id || card.id || "unknown";
 
-    // Update Daily Quests & Stats
     updateProgressOnReview();
 
     const currentState = progress.srs[cardId] || {
@@ -85,22 +94,18 @@ export default function FlashcardMaster({
         const nextIndex = currentIndex + 1;
         setCurrentIndex(nextIndex);
         setDirection(0);
-        // ✨ Simpan index baru ke LocalStorage
         localStorage.setItem(sessionKey, nextIndex.toString());
       } else {
-        // Jika selesai, bersihkan memori sesi agar besok bisa mulai dari 0 lagi
         localStorage.removeItem(sessionKey);
-
         const basePath = window.location.pathname.replace(
           /\/(flashcards|kanji)$/,
           "",
         );
-        window.location.href = basePath || "/jlpt";
+        router.push(basePath || "/jlpt");
       }
     }, 200);
   };
 
-  // Jika tidak ada kartu tersisa atau index melebihi batas (fallback)
   if (!card) {
     return (
       <div className="text-center text-white/50 p-8">
@@ -110,14 +115,13 @@ export default function FlashcardMaster({
   }
 
   return (
-    <div className="w-full max-w-xl mx-auto relative perspective-1000">
+    <section className="w-full max-w-xl mx-auto relative perspective-1000">
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50">
         <XPPop show={showXP} amount={15} />
       </div>
 
-      {/* Header Info */}
-      <div className="flex justify-between items-end mb-3 px-2">
-        <span className="text-[#0ef] font-mono text-[10px] tracking-[0.2em] uppercase font-black">
+      <header className="flex justify-between items-end mb-3 px-2">
+        <span className="text-cyber-neon font-mono text-[10px] tracking-[0.2em] uppercase font-black">
           [System.Review]
         </span>
         <div className="flex items-center gap-2 font-mono">
@@ -129,15 +133,14 @@ export default function FlashcardMaster({
             {String(cards.length).padStart(2, "0")}
           </span>
         </div>
-      </div>
+      </header>
 
-      {/* Progress Bar */}
-      <div className="w-full bg-[#15171a] h-1.5 rounded-full mb-10 overflow-hidden shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]">
+      <div className="w-full bg-cyber-bg h-1.5 rounded-full mb-10 overflow-hidden shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]">
         <motion.div
           className={`h-full ${
             type === "kanji"
               ? "bg-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.8)]"
-              : "bg-[#0ef] shadow-[0_0_15px_rgba(0,255,239,0.8)]"
+              : "bg-cyber-neon shadow-[0_0_15px_rgba(0,255,239,0.8)]"
           }`}
           initial={{ width: 0 }}
           animate={{ width: `${((currentIndex + 1) / cards.length) * 100}%` }}
@@ -145,10 +148,9 @@ export default function FlashcardMaster({
         />
       </div>
 
-      {/* Kartu Utama */}
       <div className="relative aspect-[4/5] md:aspect-square w-full">
         <AnimatePresence initial={false} mode="wait">
-          <motion.div
+          <motion.article
             key={currentIndex + (isFlipped ? "-back" : "-front")}
             initial={
               isFlipped
@@ -173,8 +175,8 @@ export default function FlashcardMaster({
             className={`absolute inset-0 w-full h-full flex flex-col items-center justify-center p-8 cursor-pointer rounded-[2.5rem] border transition-all duration-500 overflow-hidden
               ${
                 isFlipped
-                  ? "bg-[#1a1c20] border-[#0ef]/30 shadow-[0_0_40px_rgba(0,255,239,0.1)]"
-                  : "bg-[#1e2024] border-white/5 shadow-[15px_15px_40px_rgba(0,0,0,0.6),-10px_-10px_30px_rgba(255,255,255,0.02)] hover:border-white/10"
+                  ? "bg-[#1a1c20] border-cyber-neon/30 shadow-[0_0_40px_rgba(0,255,239,0.1)]"
+                  : "bg-cyber-surface border-white/5 shadow-neumorphic hover:border-white/10"
               }`}
             onClick={() => {
               if (!isFlipped) {
@@ -183,13 +185,12 @@ export default function FlashcardMaster({
               }
             }}
           >
-            {/* Background Grid */}
             <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] opacity-20 pointer-events-none" />
 
             {!isFlipped ? (
               <div className="text-center relative z-10 w-full">
                 <div className="absolute -top-16 left-0 right-0 flex justify-center">
-                  <span className="text-[9px] font-black uppercase tracking-[0.4em] text-white/20 bg-[#1e2024] px-4 py-1 rounded-full border border-white/5">
+                  <span className="text-[9px] font-black uppercase tracking-[0.4em] text-white/20 bg-cyber-surface px-4 py-1 rounded-full border border-white/5">
                     Tebak Bacaan
                   </span>
                 </div>
@@ -219,7 +220,7 @@ export default function FlashcardMaster({
                 )}
 
                 <div className="mb-6 w-full flex flex-col items-center justify-center">
-                  <p className="text-[#0ef] font-mono font-bold text-sm md:text-base tracking-[0.2em] uppercase mb-1">
+                  <p className="text-cyber-neon font-mono font-bold text-sm md:text-base tracking-[0.2em] uppercase mb-1">
                     {card.furigana || card.romaji}
                   </p>
                   <h2
@@ -240,26 +241,23 @@ export default function FlashcardMaster({
                   </h3>
                 </div>
 
-                {/* Detail: Onyomi & Kunyomi */}
                 {type === "kanji" && (card.kanjiDetails || card.details) && (
                   <div className="grid grid-cols-2 gap-3 w-full mb-6">
-                    <div className="bg-[#15171a] p-3 rounded-xl border border-white/5 text-left shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)]">
+                    <div className="bg-cyber-bg p-3 rounded-xl border border-white/5 text-left shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)]">
                       <span className="text-[9px] text-blue-400 block font-black uppercase tracking-widest mb-1 border-l-2 border-blue-500 pl-2">
                         Onyomi
                       </span>
                       <span className="text-white text-sm md:text-base font-bold font-japanese tracking-tight">
-                        {/* Support field baru dan field lama */}
                         {card.kanjiDetails?.onyomi ||
                           card.details?.onyomi ||
                           "-"}
                       </span>
                     </div>
-                    <div className="bg-[#15171a] p-3 rounded-xl border border-white/5 text-left shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)]">
+                    <div className="bg-cyber-bg p-3 rounded-xl border border-white/5 text-left shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)]">
                       <span className="text-[9px] text-orange-400 block font-black uppercase tracking-widest mb-1 border-l-2 border-orange-500 pl-2">
                         Kunyomi
                       </span>
                       <span className="text-white text-sm md:text-base font-bold font-japanese tracking-tight">
-                        {/* Support field baru dan field lama */}
                         {card.kanjiDetails?.kunyomi ||
                           card.details?.kunyomi ||
                           "-"}
@@ -272,13 +270,13 @@ export default function FlashcardMaster({
                 </div>
               </div>
             )}
-          </motion.div>
+          </motion.article>
         </AnimatePresence>
       </div>
 
       <AnimatePresence>
         {isFlipped && (
-          <motion.div
+          <motion.nav
             initial={{ y: 30, opacity: 0, scale: 0.9 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             className="grid grid-cols-2 gap-5 mt-8"
@@ -288,7 +286,7 @@ export default function FlashcardMaster({
                 e.stopPropagation();
                 handleAnswer(false);
               }}
-              className="group relative p-5 md:p-6 bg-[#1e2024] rounded-3xl border border-red-500/20 text-red-400 font-black uppercase tracking-[0.2em] text-[10px] md:text-xs shadow-[6px_6px_15px_rgba(0,0,0,0.5),-4px_-4px_10px_rgba(255,255,255,0.03)] active:shadow-[inset_4px_4px_10px_rgba(0,0,0,0.5),inset_-2px_-2px_5px_rgba(255,255,255,0.02)] active:translate-y-1 transition-all"
+              className="group relative p-5 md:p-6 bg-cyber-surface rounded-3xl border border-red-500/20 text-red-400 font-black uppercase tracking-[0.2em] text-[10px] md:text-xs shadow-neumorphic active:shadow-neumorphic-pressed active:translate-y-1 transition-all"
             >
               <div className="absolute inset-0 rounded-3xl bg-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
               Lupa ❌
@@ -298,14 +296,14 @@ export default function FlashcardMaster({
                 e.stopPropagation();
                 handleAnswer(true);
               }}
-              className="group relative p-5 md:p-6 bg-[#1e2024] rounded-3xl border border-green-500/20 text-green-400 font-black uppercase tracking-[0.2em] text-[10px] md:text-xs shadow-[6px_6px_15px_rgba(0,0,0,0.5),-4px_-4px_10px_rgba(255,255,255,0.03),0_0_15px_rgba(34,197,94,0.1)] active:shadow-[inset_4px_4px_10px_rgba(0,0,0,0.5),inset_-2px_-2px_5px_rgba(255,255,255,0.02)] active:translate-y-1 transition-all"
+              className="group relative p-5 md:p-6 bg-cyber-surface rounded-3xl border border-green-500/20 text-green-400 font-black uppercase tracking-[0.2em] text-[10px] md:text-xs shadow-[15px_15px_40px_rgba(0,0,0,0.6),-10px_-10px_30px_rgba(255,255,255,0.02),0_0_15px_rgba(34,197,94,0.1)] active:shadow-neumorphic-pressed active:translate-y-1 transition-all"
             >
               <div className="absolute inset-0 rounded-3xl bg-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
               Ingat ✅
             </button>
-          </motion.div>
+          </motion.nav>
         )}
       </AnimatePresence>
-    </div>
+    </section>
   );
 }

@@ -1,11 +1,24 @@
+// Deklarasi fallback untuk browser lama berbasis WebKit (Safari)
+interface CustomWindow extends Window {
+  webkitAudioContext?: typeof AudioContext;
+}
+
 class SoundEngine {
   private ctx: AudioContext | null = null;
 
   private init() {
     if (!this.ctx && typeof window !== "undefined") {
-      this.ctx = new (
-        window.AudioContext || (window as any).webkitAudioContext
-      )();
+      const CustomWin = window as unknown as CustomWindow;
+      const AudioCtx = window.AudioContext || CustomWin.webkitAudioContext;
+
+      if (AudioCtx) {
+        this.ctx = new AudioCtx();
+      }
+    }
+
+    // Browser moderen biasanya "menidurkan" audio context sampai user berinteraksi
+    if (this.ctx && this.ctx.state === "suspended") {
+      this.ctx.resume();
     }
   }
 
@@ -18,23 +31,27 @@ class SoundEngine {
     this.init();
     if (!this.ctx) return;
 
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
 
-    osc.type = type;
-    osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
 
-    gain.gain.setValueAtTime(volume, this.ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(
-      0.0001,
-      this.ctx.currentTime + duration,
-    );
+      gain.gain.setValueAtTime(volume, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(
+        0.0001,
+        this.ctx.currentTime + duration,
+      );
 
-    osc.connect(gain);
-    gain.connect(this.ctx.destination);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
 
-    osc.start();
-    osc.stop(this.ctx.currentTime + duration);
+      osc.start();
+      osc.stop(this.ctx.currentTime + duration);
+    } catch (error) {
+      console.warn("Audio playback failed:", error);
+    }
   }
 
   // Nada tinggi berurutan untuk sukses

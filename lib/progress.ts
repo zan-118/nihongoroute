@@ -33,12 +33,13 @@ export function getTodayString(): string {
   return formatLocalDate(new Date());
 }
 
-// ✨ BARU: Menghitung selisih hari dengan aman mengabaikan zona waktu jam ✨
+/**
+ * Menghitung selisih hari dengan aman mengabaikan zona waktu jam
+ */
 function calculateDaysBetween(
   dateString1: string,
   dateString2: string,
 ): number {
-  // Kita split 'YYYY-MM-DD' untuk menghindari timezone offset issues saat new Date()
   const [y1, m1, d1] = dateString1.split("-").map(Number);
   const [y2, m2, d2] = dateString2.split("-").map(Number);
 
@@ -53,6 +54,17 @@ function calculateDaysBetween(
 /* LOAD */
 /* ============================= */
 
+function getDefaultProgress(): ProgressState {
+  return {
+    lastStudyDate: getTodayString(),
+    streak: 0,
+    todayReviewCount: 0,
+    dailyGoal: 20,
+    totalReviews: 0,
+    studyDays: {},
+  };
+}
+
 export function loadProgress(): ProgressState {
   if (typeof window === "undefined") {
     return getDefaultProgress();
@@ -63,16 +75,13 @@ export function loadProgress(): ProgressState {
     if (!saved) return getDefaultProgress();
 
     const parsed = JSON.parse(saved);
-    const state = {
+    const state: ProgressState = {
       ...getDefaultProgress(),
       ...parsed,
       studyDays: parsed.studyDays ?? {},
     };
 
-    // ✨ FIX: Deteksi Streak Putus Saat Aplikasi Dimuat ✨
-    // Jika user membuka aplikasi dan sudah terlewat lebih dari 1 hari sejak lastStudyDate,
-    // kita biarkan lastStudyDate tetap (agar tidak false-positive 'sudah belajar hari ini'),
-    // TETAPI kita reset streak-nya menjadi 0 untuk UI.
+    // Deteksi Streak Putus Saat Aplikasi Dimuat
     const today = getTodayString();
     if (
       state.lastStudyDate !== today &&
@@ -82,20 +91,10 @@ export function loadProgress(): ProgressState {
     }
 
     return state;
-  } catch {
+  } catch (err) {
+    console.warn("Progress save corrupted, loading default:", err);
     return getDefaultProgress();
   }
-}
-
-function getDefaultProgress(): ProgressState {
-  return {
-    lastStudyDate: getTodayString(),
-    streak: 0,
-    todayReviewCount: 0,
-    dailyGoal: 20,
-    totalReviews: 0,
-    studyDays: {},
-  };
 }
 
 /* ============================= */
@@ -118,25 +117,19 @@ export function updateProgressOnReview(): ProgressState {
   let newStreak = progress.streak;
   let newTodayCount = progress.todayReviewCount;
 
-  // ✨ FIX: Logika Streak yang Lebih Akurat ✨
+  // Logika Streak yang Lebih Akurat
   if (progress.lastStudyDate !== today) {
     const daysMissed = calculateDaysBetween(progress.lastStudyDate, today);
 
     if (daysMissed === 1) {
-      // User belajar kemarin, lanjut streak
       newStreak = progress.streak + 1;
     } else if (daysMissed > 1) {
-      // User bolos lebih dari sehari, RESET streak
       newStreak = 1;
     }
-    // (Note: jika daysMissed === 0, berarti ini review kedua di hari yang sama, streak tetap)
 
-    // Karena ini hari baru, reset hitungan harian
     newTodayCount = 1;
   } else {
-    // Review tambahan di hari yang sama
     newTodayCount += 1;
-    // Khusus untuk user baru yang belum punya streak sama sekali
     if (newStreak === 0) newStreak = 1;
   }
 

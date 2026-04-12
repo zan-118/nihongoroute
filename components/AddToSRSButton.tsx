@@ -7,7 +7,6 @@ export default function AddToSRSButton({ wordId }: { wordId: string }) {
   const { addToSRS, progress } = useProgress();
   const [isAdded, setIsAdded] = useState(false);
 
-  // Cek status saat komponen dimuat
   useEffect(() => {
     if (progress.srs[wordId]) {
       setIsAdded(true);
@@ -26,10 +25,13 @@ export default function AddToSRSButton({ wordId }: { wordId: string }) {
     <button
       onClick={handleAdd}
       disabled={isAdded}
+      aria-label={
+        isAdded ? "Sudah masuk memori SRS" : "Tambahkan ke daftar SRS"
+      }
       className={`p-2.5 rounded-xl border transition-all active:scale-90 flex items-center justify-center ${
         isAdded
           ? "bg-green-500/10 border-green-500/30 text-green-400 cursor-default"
-          : "bg-white/5 border-white/10 text-white/40 hover:text-[#0ef] hover:border-[#0ef]/50 hover:bg-[#0ef]/5"
+          : "bg-white/5 border-white/10 text-white/40 hover:text-cyber-neon hover:border-cyber-neon/50 hover:bg-cyber-neon/5"
       }`}
       title={
         isAdded ? "Sudah masuk daftar review" : "Simpan untuk dilatih (SRS)"

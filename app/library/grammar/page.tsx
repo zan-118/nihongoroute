@@ -33,8 +33,7 @@ export default function GrammarArticlesPage() {
   }, [selectedLevel]);
 
   return (
-    <div className="min-h-screen bg-[#15171a] px-4 md:px-8 pt-24 pb-32 relative overflow-hidden">
-      {/* Background Cyber Grid */}
+    <main className="min-h-screen bg-cyber-bg px-4 md:px-8 pt-24 pb-32 relative overflow-hidden">
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative z-10">
@@ -55,8 +54,7 @@ export default function GrammarArticlesPage() {
             </span>
           </h1>
 
-          {/* TAB FILTER LEVEL (Tactile Neumorphic Segmented Control) */}
-          <div className="inline-flex p-1.5 bg-[#1e2024] rounded-2xl border border-white/5 shadow-inner">
+          <nav className="inline-flex p-1.5 bg-cyber-surface rounded-2xl border border-white/5 shadow-inner">
             {LEVELS.map((lvl) => {
               const isActive = selectedLevel === lvl;
               return (
@@ -65,7 +63,7 @@ export default function GrammarArticlesPage() {
                   onClick={() => setSelectedLevel(lvl)}
                   className={`px-6 md:px-10 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 ${
                     isActive
-                      ? "bg-green-500 text-[#15171a] shadow-[0_0_20px_rgba(34,197,94,0.4)]"
+                      ? "bg-green-500 text-cyber-bg shadow-[0_0_20px_rgba(34,197,94,0.4)]"
                       : "text-white/40 hover:text-white hover:bg-white/5"
                   }`}
                 >
@@ -73,22 +71,21 @@ export default function GrammarArticlesPage() {
                 </button>
               );
             })}
-          </div>
+          </nav>
         </header>
 
-        {/* DATA GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           <AnimatePresence mode="popLayout">
             {loading ? (
               [...Array(6)].map((_, i) => (
                 <div
                   key={i}
-                  className="h-48 bg-[#1e2024] border border-white/5 rounded-[2.5rem] animate-pulse shadow-inner"
+                  className="h-48 bg-cyber-surface border border-white/5 rounded-[2.5rem] animate-pulse shadow-inner"
                 />
               ))
             ) : articles.length > 0 ? (
               articles.map((article, idx) => (
-                <motion.div
+                <motion.article
                   key={article._id}
                   initial={{ opacity: 0, scale: 0.9, y: 20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -99,14 +96,13 @@ export default function GrammarArticlesPage() {
                     href={`/library/grammar/${article.slug}`}
                     className="block h-full"
                   >
-                    <div className="h-full p-8 bg-[#1e2024] border border-white/5 rounded-[2.5rem] hover:border-green-500/40 transition-all duration-300 shadow-[6px_6px_15px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(34,197,94,0.15)] flex flex-col justify-between overflow-hidden relative">
-                      {/* Watermark Level */}
+                    <div className="h-full p-8 bg-cyber-surface border border-white/5 rounded-[2.5rem] hover:border-green-500/40 transition-all duration-300 shadow-[6px_6px_15px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(34,197,94,0.15)] flex flex-col justify-between overflow-hidden relative">
                       <div className="absolute -bottom-4 -right-4 text-8xl font-black italic text-white/[0.02] group-hover:text-green-500/[0.05] transition-colors pointer-events-none">
                         {selectedLevel.toUpperCase()}
                       </div>
 
                       <div className="relative z-10">
-                        <div className="w-12 h-12 rounded-2xl bg-[#15171a] border border-white/5 shadow-inner flex items-center justify-center mb-6 group-hover:border-green-500/30 transition-colors">
+                        <div className="w-12 h-12 rounded-2xl bg-cyber-bg border border-white/5 shadow-inner flex items-center justify-center mb-6 group-hover:border-green-500/30 transition-colors">
                           <BookOpen
                             size={20}
                             className="text-white/20 group-hover:text-green-400 transition-colors"
@@ -127,10 +123,10 @@ export default function GrammarArticlesPage() {
                       </div>
                     </div>
                   </Link>
-                </motion.div>
+                </motion.article>
               ))
             ) : (
-              <div className="col-span-full py-24 border-2 border-dashed border-white/5 bg-[#1e2024]/50 rounded-[3rem] text-center">
+              <div className="col-span-full py-24 border-2 border-dashed border-white/5 bg-cyber-surface/50 rounded-[3rem] text-center">
                 <span className="text-5xl mb-6 block opacity-50">📂</span>
                 <p className="text-white/30 font-black uppercase tracking-[0.4em] italic font-mono text-sm">
                   Error 404: {selectedLevel.toUpperCase()} Data Not Found
@@ -138,8 +134,8 @@ export default function GrammarArticlesPage() {
               </div>
             )}
           </AnimatePresence>
-        </div>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }

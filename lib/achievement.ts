@@ -36,21 +36,21 @@ export const ACHIEVEMENTS: Achievement[] = [
   // XP
   {
     id: "xp100",
-    title: "💯 100 XP",
+    title: "🌟 100 XP",
     description: "Mencapai 100 XP",
     type: "xp",
     requirement: 100,
   },
   {
     id: "xp500",
-    title: "🚀 500 XP",
+    title: "🌟 500 XP",
     description: "Mencapai 500 XP",
     type: "xp",
     requirement: 500,
   },
   {
     id: "xp1000",
-    title: "🏆 1000 XP",
+    title: "🌟 1000 XP",
     description: "Mencapai 1000 XP",
     type: "xp",
     requirement: 1000,
@@ -59,7 +59,7 @@ export const ACHIEVEMENTS: Achievement[] = [
   // Reviews
   {
     id: "review50",
-    title: "📚 50 Reviews",
+    title: "🧠 50 Reviews",
     description: "Menyelesaikan 50 review",
     type: "review",
     requirement: 50,
@@ -70,13 +70,16 @@ export const ACHIEVEMENTS: Achievement[] = [
 /* CHECK ACHIEVEMENTS */
 /* ============================= */
 
-interface CheckParams {
+export interface CheckParams {
   xp: number;
   streak: number;
   reviewCount: number;
   unlocked: string[];
 }
 
+/**
+ * Mengevaluasi progres user saat ini dan mengembalikan array achievement yang baru saja terbuka
+ */
 export function checkAchievements({
   xp,
   streak,
@@ -94,11 +97,9 @@ export function checkAchievements({
       case "xp":
         achieved = xp >= achievement.requirement;
         break;
-
       case "streak":
         achieved = streak >= achievement.requirement;
         break;
-
       case "review":
         achieved = reviewCount >= achievement.requirement;
         break;

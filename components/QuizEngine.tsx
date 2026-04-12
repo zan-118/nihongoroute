@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProgress } from "@/context/UserProgressContext";
 import { sounds } from "@/lib/audio";
@@ -26,6 +27,7 @@ export default function QuizEngine({ questions }: QuizProps) {
   const [xpGained, setXpGained] = useState(0);
 
   const { progress, updateProgress } = useProgress();
+  const router = useRouter();
 
   useEffect(() => {
     setIsClient(true);
@@ -50,7 +52,6 @@ export default function QuizEngine({ questions }: QuizProps) {
       sounds?.playError();
     }
 
-    // Tunggu sebentar untuk menunjukkan animasi benar/salah, lalu lanjut
     setTimeout(() => {
       if (currentIndex < questions.length - 1) {
         setCurrentIndex((prev) => prev + 1);
@@ -59,12 +60,11 @@ export default function QuizEngine({ questions }: QuizProps) {
       } else {
         handleFinish(score + (isCorrect ? 1 : 0));
       }
-    }, 1500); // Jeda 1.5 detik agar user bisa membaca penjelasan/jawaban benar
+    }, 1500);
   };
 
   const handleFinish = (finalScore: number) => {
     setIsFinished(true);
-    // Kalkulasi XP: 25 XP per jawaban benar + Bonus 50 XP jika sempurna
     const baseXP = finalScore * 25;
     const bonusXP = finalScore === questions.length ? 50 : 0;
     const totalXP = baseXP + bonusXP;
@@ -92,8 +92,7 @@ export default function QuizEngine({ questions }: QuizProps) {
     const isPerfect = percentage === 100;
 
     return (
-      <div className="bg-[#1e2024] p-8 md:p-12 rounded-[3rem] border border-white/5 shadow-[15px_15px_40px_rgba(0,0,0,0.6)] text-center relative overflow-hidden">
-        {/* Confetti / XP Pop Layer */}
+      <section className="bg-cyber-surface p-8 md:p-12 rounded-[3rem] border border-white/5 shadow-neumorphic text-center relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50">
           <XPPop show={showXP} amount={xpGained} />
         </div>
@@ -112,7 +111,7 @@ export default function QuizEngine({ questions }: QuizProps) {
             <div
               className={`w-24 h-24 rounded-3xl border flex items-center justify-center text-4xl shadow-inner ${
                 isPerfect
-                  ? "bg-[#0ef]/10 border-[#0ef]/50 shadow-[0_0_30px_rgba(0,255,239,0.3)]"
+                  ? "bg-cyber-neon/10 border-cyber-neon/50 shadow-[0_0_30px_rgba(0,255,239,0.3)]"
                   : "bg-blue-500/10 border-blue-500/50 shadow-[0_0_30px_rgba(59,130,246,0.3)]"
               }`}
             >
@@ -120,7 +119,7 @@ export default function QuizEngine({ questions }: QuizProps) {
             </div>
           </div>
 
-          <h3 className="text-[#0ef] font-mono text-[10px] uppercase tracking-[0.4em] mb-2 block">
+          <h3 className="text-cyber-neon font-mono text-[10px] uppercase tracking-[0.4em] mb-2 block">
             Mission Evaluation
           </h3>
           <h2 className="text-5xl font-black text-white italic uppercase drop-shadow-md mb-2">
@@ -149,10 +148,10 @@ export default function QuizEngine({ questions }: QuizProps) {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
+          <nav className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
             <button
               onClick={resetQuiz}
-              className="px-8 py-4 bg-[#15171a] text-white/60 font-black rounded-2xl hover:bg-white/5 transition-all uppercase tracking-widest text-[10px] border border-white/5 shadow-inner hover:text-white"
+              className="px-8 py-4 bg-cyber-bg text-white/60 font-black rounded-2xl hover:bg-white/5 transition-all uppercase tracking-widest text-[10px] border border-white/5 shadow-inner hover:text-white"
             >
               Retry Mission
             </button>
@@ -162,28 +161,26 @@ export default function QuizEngine({ questions }: QuizProps) {
                   /\/[^/]+$/,
                   "",
                 );
-                window.location.href = basePath;
+                router.push(basePath || "/jlpt");
               }}
-              className="px-8 py-4 bg-[#0ef] text-[#15171a] font-black rounded-2xl hover:bg-white transition-all uppercase tracking-widest text-[10px] shadow-[0_0_20px_rgba(0,255,239,0.3)] hover:scale-105 active:scale-95"
+              className="px-8 py-4 bg-cyber-neon text-cyber-bg font-black rounded-2xl hover:bg-white transition-all uppercase tracking-widest text-[10px] shadow-[0_0_20px_rgba(0,255,239,0.3)] hover:scale-105 active:scale-95"
             >
               Return to Module
             </button>
-          </div>
+          </nav>
         </motion.div>
-      </div>
+      </section>
     );
   }
 
   /* ================= ACTIVE QUIZ RENDERING ================= */
   return (
-    <div className="bg-[#1e2024] p-6 md:p-10 rounded-[3rem] border border-white/5 shadow-[15px_15px_40px_rgba(0,0,0,0.6)] relative overflow-hidden">
-      {/* Background Cyber Grid */}
+    <section className="bg-cyber-surface p-6 md:p-10 rounded-[3rem] border border-white/5 shadow-neumorphic relative overflow-hidden">
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none" />
 
       <div className="relative z-10">
-        {/* HEADER */}
-        <div className="flex justify-between items-end mb-4">
-          <span className="text-[#0ef] font-mono text-[10px] tracking-[0.2em] uppercase font-black bg-[#0ef]/10 px-3 py-1 rounded border border-[#0ef]/20">
+        <header className="flex justify-between items-end mb-4">
+          <span className="text-cyber-neon font-mono text-[10px] tracking-[0.2em] uppercase font-black bg-cyber-neon/10 px-3 py-1 rounded border border-cyber-neon/20">
             [Query_0{currentIndex + 1}]
           </span>
           <div className="flex items-center gap-2 font-mono text-xs">
@@ -191,19 +188,17 @@ export default function QuizEngine({ questions }: QuizProps) {
             <span className="text-white/20">/</span>
             <span className="text-white/40">{questions.length}</span>
           </div>
-        </div>
+        </header>
 
-        {/* PROGRESS BAR */}
-        <div className="w-full bg-[#15171a] h-1.5 rounded-full mb-8 overflow-hidden shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]">
+        <div className="w-full bg-cyber-bg h-1.5 rounded-full mb-8 overflow-hidden shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]">
           <motion.div
-            className="bg-[#0ef] h-full shadow-[0_0_10px_rgba(0,255,239,0.8)]"
+            className="bg-cyber-neon h-full shadow-[0_0_10px_rgba(0,255,239,0.8)]"
             initial={{ width: 0 }}
             animate={{ width: `${(currentIndex / questions.length) * 100}%` }}
             transition={{ ease: "circOut", duration: 0.5 }}
           />
         </div>
 
-        {/* QUESTION AREA */}
         <div className="mb-10 min-h-[120px] flex items-center">
           <AnimatePresence mode="wait">
             <motion.h3
@@ -219,16 +214,14 @@ export default function QuizEngine({ questions }: QuizProps) {
           </AnimatePresence>
         </div>
 
-        {/* OPTIONS GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <AnimatePresence mode="wait">
             {currentQ.options.map((option, index) => {
               const isSelected = selectedOption === option;
               const isCorrect = option === currentQ.answer;
 
-              // Logika Pewarnaan Tombol
               let buttonStyle =
-                "bg-[#15171a] border-white/5 text-[#c4cfde] hover:border-white/20 shadow-[6px_6px_15px_rgba(0,0,0,0.5),-4px_-4px_10px_rgba(255,255,255,0.02)] active:shadow-[inset_4px_4px_10px_rgba(0,0,0,0.5)]";
+                "bg-cyber-bg border-white/5 text-[#c4cfde] hover:border-white/20 shadow-[6px_6px_15px_rgba(0,0,0,0.5),-4px_-4px_10px_rgba(255,255,255,0.02)] active:shadow-[inset_4px_4px_10px_rgba(0,0,0,0.5)]";
               let animation = {};
 
               if (isAnswered) {
@@ -242,10 +235,10 @@ export default function QuizEngine({ questions }: QuizProps) {
                   animation = {
                     x: [-10, 10, -10, 10, 0],
                     transition: { duration: 0.4 },
-                  }; // Efek getar salah
+                  };
                 } else {
                   buttonStyle =
-                    "bg-[#15171a]/50 border-transparent text-white/20 scale-95 opacity-50";
+                    "bg-cyber-bg/50 border-transparent text-white/20 scale-95 opacity-50";
                 }
               }
 
@@ -265,7 +258,6 @@ export default function QuizEngine({ questions }: QuizProps) {
                     </span>
                     <span className="flex-1">{option}</span>
 
-                    {/* Icon Status Indicator */}
                     {isAnswered && isCorrect && (
                       <motion.span
                         initial={{ scale: 0 }}
@@ -291,7 +283,6 @@ export default function QuizEngine({ questions }: QuizProps) {
           </AnimatePresence>
         </div>
 
-        {/* EXPLANATION BOX (Tampil saat dijawab jika ada penjelasan) */}
         <AnimatePresence>
           {isAnswered && currentQ.explanation && (
             <motion.div
@@ -312,6 +303,6 @@ export default function QuizEngine({ questions }: QuizProps) {
           )}
         </AnimatePresence>
       </div>
-    </div>
+    </section>
   );
 }

@@ -1,5 +1,3 @@
-// components/PremiumCard.tsx
-
 interface Example {
   jp: string;
   furigana: string;
@@ -19,18 +17,16 @@ interface CardData {
 
 export default function PremiumCard({ data }: { data: CardData }) {
   return (
-    <div className="bg-[#1e2024] rounded-3xl p-8 border border-white/5 shadow-2xl max-w-md mx-auto">
-      {/* Front: Kanji Besar */}
-      <div className="text-center mb-8">
+    <article className="bg-cyber-surface rounded-3xl p-8 border border-white/5 shadow-2xl max-w-md mx-auto">
+      <header className="text-center mb-8">
         <h1 className="text-8xl font-bold text-white mb-2">{data.word}</h1>
-        <p className="text-[#0ef] font-mono tracking-widest uppercase">
+        <p className="text-cyber-neon font-mono tracking-widest uppercase">
           {data.romaji}
         </p>
-      </div>
+      </header>
 
       <hr className="border-white/10 mb-6" />
 
-      {/* Back: Detail Info */}
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-blue-500/10 p-3 rounded-xl border border-blue-500/20 text-center">
@@ -58,7 +54,6 @@ export default function PremiumCard({ data }: { data: CardData }) {
           <p className="text-white text-lg font-semibold">{data.meaning}</p>
         </div>
 
-        {/* Opsional: Render Contoh Kalimat jika ada */}
         {data.examples && data.examples.length > 0 && (
           <div className="space-y-2 mt-4">
             {data.examples.map((ex, i) => (
@@ -76,6 +71,6 @@ export default function PremiumCard({ data }: { data: CardData }) {
           </div>
         )}
       </div>
-    </div>
+    </article>
   );
 }

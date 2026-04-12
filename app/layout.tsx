@@ -35,7 +35,6 @@ export const metadata: Metadata = {
     icon: "/logo-branding.png",
     apple: "/logo-branding.png",
   },
-  // ✨ INI ADALAH KODE VERIFIKASI GOOGLE KAMU ✨
   verification: {
     google: "Niyl1z2v4hJgZZzRFLzMLOk4xlYNyvSNnEiCC-eK7N4",
   },
@@ -69,22 +68,19 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="id">
       <body
-        className={`${inter.className} antialiased bg-[#15171a] text-[#c4cfde] selection:bg-[#0ef] selection:text-[#15171a] overflow-x-hidden`}
+        className={`${inter.className} antialiased bg-cyber-bg text-[#c4cfde] selection:bg-cyber-neon selection:text-cyber-bg overflow-x-hidden`}
       >
         <ProgressProvider>
-          {/* Desktop Navbar - Sticky agar selalu terlihat saat scroll */}
           <div className="hidden md:block sticky top-0 z-50">
             <Navbar />
           </div>
 
-          {/* Main Content */}
           <main className="min-h-screen pt-4 md:pt-20 pb-28 md:pb-12 max-w-[100vw] overflow-x-hidden">
             {children}
           </main>
 
           <FloatingSupport />
 
-          {/* Mobile Nav - Pastikan z-index tinggi agar di atas konten */}
           <div className="md:hidden relative z-50">
             <MobileNav />
           </div>
