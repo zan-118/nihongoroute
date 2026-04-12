@@ -19,7 +19,8 @@
     "next-pwa": "^5.6.0",
     "next-sanity": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "styled-components": "^6.4.0"
   },
   "devDependencies": {
     "@sanity/cli": "^6.3.1",
