@@ -11,21 +11,36 @@ export default defineType({
       title: "Kata (Kanji/Kana)",
       validation: (Rule) => Rule.required(),
     }),
-    // ✨ Tambahkan field ini agar peringatan "Unknown Field" hilang ✨
+
+    // ✨ FITUR BARU: Kategori Jenis Kata (Part of Speech)
     defineField({
       name: "category",
       type: "string",
-      title: "Kategori",
-      description: "Pilih apakah ini kosakata biasa atau data Kanji khusus",
+      title: "Jenis Kata",
       options: {
         list: [
-          { title: "Vocab / Kosakata Biasa", value: "vocab" },
-          { title: "Kanji Power", value: "kanji" },
+          { title: "Kata Benda (Noun)", value: "noun" },
+          { title: "Kata Sifat (I-Adj / Na-Adj)", value: "adjective" },
+          { title: "Kata Keterangan (Adverb)", value: "adverb" },
+          { title: "Partikel (Particle)", value: "particle" },
+          { title: "Ungkapan (Expression)", value: "expression" },
+          { title: "Kanji Power (Khusus Mode Kanji)", value: "kanji" },
         ],
       },
-      initialValue: "vocab", // Default untuk data baru adalah kosakata biasa
+      initialValue: "noun",
       validation: (Rule) => Rule.required(),
     }),
+
+    // ✨ FITUR BARU: Kontrol Tampilan Flashcard
+    defineField({
+      name: "showInFlashcard",
+      type: "boolean",
+      title: "Munculkan di Flashcard (Vocab Drill)?",
+      description:
+        "Matikan (OFF) jika kata ini hanya untuk referensi Cheatsheet / UI materi.",
+      initialValue: true,
+    }),
+
     defineField({
       name: "furigana",
       type: "string",
@@ -44,16 +59,9 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "audio",
-      type: "file",
-      title: "Audio Pengucapan (Opsional)",
-      options: { accept: "audio/*" },
-    }),
-    defineField({
       name: "kanjiDetails",
       type: "object",
-      title: "Detail Kanji (Onyomi/Kunyomi)",
-      // Hidden jika kategorinya bukan kanji agar Studio lebih bersih
+      title: "Detail Kanji",
       hidden: ({ document }) => document?.category !== "kanji",
       fields: [
         { name: "onyomi", type: "string", title: "Onyomi (Katakana)" },
@@ -61,30 +69,31 @@ export default defineType({
       ],
     }),
     defineField({
-      name: "examples",
-      type: "array",
-      title: "Contoh Kalimat Spesifik Kata Ini",
-      of: [{ type: "exampleSentence" }],
+      name: "course_category",
+      title: "Course Category",
+      type: "reference",
+      to: [{ type: "course_category" }],
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "level",
-      type: "reference",
-      to: [{ type: "level" }],
-      validation: (Rule) => Rule.required(),
+      name: "audio",
+      type: "file",
+      title: "Audio Pengucapan (Opsional)",
+      options: { accept: "audio/*" },
     }),
   ],
   preview: {
     select: {
       title: "word",
       subtitle: "meaning",
-      levelCode: "level.code",
       category: "category",
+      showInFlashcard: "showInFlashcard",
     },
-    prepare({ title, subtitle, levelCode, category }) {
-      const catEmoji = category === "kanji" ? "🏮" : "📝";
+    prepare({ title, subtitle, category, showInFlashcard }) {
+      const isHidden = showInFlashcard === false ? " 🚷 (Hidden)" : "";
       return {
-        title: `${catEmoji} ${title || "Kosong"}`,
-        subtitle: `${levelCode ? `[${levelCode.toUpperCase()}] ` : ""}${subtitle || ""}`,
+        title: `${title || "Kosong"}${isHidden}`,
+        subtitle: `[${category?.toUpperCase()}] ${subtitle || ""}`,
       };
     },
   },

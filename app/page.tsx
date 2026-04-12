@@ -45,7 +45,7 @@ export default function LandingPage() {
 
           <nav className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
-              href="/jlpt"
+              href="/courses"
               className="w-full sm:w-auto px-12 py-5 bg-cyber-neon text-cyber-bg font-black rounded-2xl hover:scale-105 transition-all text-xs uppercase tracking-[0.2em] shadow-[0_0_30px_rgba(0,255,239,0.4)]"
             >
               Mulai Belajar

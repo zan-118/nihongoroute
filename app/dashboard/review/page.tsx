@@ -71,7 +71,7 @@ export default function ReviewPage() {
             di-review saat ini.
           </p>
           <Link
-            href="/jlpt"
+            href="/courses"
             className="mt-8 px-8 py-4 bg-[#0ef] text-[#15171a] font-black rounded-2xl hover:scale-105 hover:bg-white transition-all uppercase text-[10px] tracking-widest shadow-[0_0_20px_rgba(0,255,239,0.3)]"
           >
             Akses Materi Baru

@@ -194,13 +194,13 @@ export default function DashboardPage() {
 
             <nav className="grid grid-cols-2 gap-4">
               <QuickLink
-                href="/jlpt/n5"
+                href="/courses/n5"
                 label="Materi N5"
                 icon="⛩️"
                 color="hover:border-blue-500/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]"
               />
               <QuickLink
-                href="/jlpt/n5/kanji"
+                href="/courses/jlpt-n5/kanji"
                 label="Kanji DB"
                 icon="🈴"
                 color="hover:border-purple-500/50 hover:shadow-[0_0_20px_rgba(168,85,247,0.2)]"

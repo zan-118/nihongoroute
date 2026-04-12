@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Hash, Clock, BookOpen, Layers } from "lucide-react";
 
+// 1. UPDATE INTERFACE: Tambahkan linkedVocab dan items
 export interface SheetItem {
   label: string;
   jp: string;
@@ -14,30 +15,40 @@ export interface Cheatsheet {
   _id: string;
   title: string;
   category: string;
-  items: SheetItem[];
+  linkedVocab?: SheetItem[]; // Data dari relasi Kosakata Global
+  items?: SheetItem[]; // Data dari ketikan manual
 }
 
 export default function CheatsheetClient({
-  initialSheets = [],
+  initialSheets,
 }: {
   initialSheets: Cheatsheet[];
 }) {
   const safeSheets = Array.isArray(initialSheets) ? initialSheets : [];
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSheetId, setSelectedSheetId] = useState<string>(
-    safeSheets.length > 0 ? safeSheets[0]._id : "",
+    safeSheets?.length > 0 ? safeSheets[0]?._id : "",
   );
 
-  const filteredSheets = safeSheets.filter(
-    (sheet) =>
-      sheet.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      sheet.category.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const filteredSheets = safeSheets.filter((sheet) => {
+    if (!sheet) return false;
+    const searchLower = (searchTerm || "").toLowerCase();
+    const titleMatch = (sheet.title || "").toLowerCase().includes(searchLower);
+    const catMatch = (sheet.category || "").toLowerCase().includes(searchLower);
+    return titleMatch || catMatch;
+  });
 
-  const activeSheet = safeSheets.find((s) => s._id === selectedSheetId);
+  const activeSheet = safeSheets.find((s) => s?._id === selectedSheetId);
+
+  // 2. LOGIKA PENGGABUNGAN (MERGE): Gabungkan kedua sumber data menjadi satu array
+  const combinedItems = [
+    ...(activeSheet?.linkedVocab || []),
+    ...(activeSheet?.items || []),
+  ];
 
   return (
     <section className="flex flex-col lg:flex-row gap-8 min-h-[600px] relative z-10">
+      {/* SIDEBAR NAVIGATION */}
       <aside className="w-full lg:w-80 flex flex-col gap-6 shrink-0">
         <div className="relative group">
           <input
@@ -53,7 +64,7 @@ export default function CheatsheetClient({
         </div>
 
         <nav className="space-y-3 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
-          {filteredSheets.length > 0 ? (
+          {filteredSheets?.length > 0 ? (
             filteredSheets.map((sheet) => {
               const isActive = selectedSheetId === sheet._id;
               return (
@@ -67,18 +78,26 @@ export default function CheatsheetClient({
                   }`}
                 >
                   <div
-                    className={`p-3 rounded-xl border shadow-inner transition-colors ${isActive ? "bg-purple-500/10 border-purple-500/30 text-purple-400" : "bg-cyber-bg border-white/5 text-white/20 group-hover:text-white/60"}`}
+                    className={`p-3 rounded-xl border shadow-inner transition-colors ${
+                      isActive
+                        ? "bg-purple-500/10 border-purple-500/30 text-purple-400"
+                        : "bg-cyber-bg border-white/5 text-white/20 group-hover:text-white/60"
+                    }`}
                   >
                     {getIconForCategory(sheet.category)}
                   </div>
                   <div className="overflow-hidden">
                     <p
-                      className={`text-[9px] uppercase font-black tracking-widest mb-1 transition-colors ${isActive ? "text-purple-400" : "text-white/30"}`}
+                      className={`text-[9px] uppercase font-black tracking-widest mb-1 transition-colors ${
+                        isActive ? "text-purple-400" : "text-white/30"
+                      }`}
                     >
                       {sheet.category}
                     </p>
                     <p
-                      className={`text-sm font-bold truncate w-full transition-colors ${isActive ? "text-white" : "text-[#c4cfde]/80"}`}
+                      className={`text-sm font-bold truncate w-full transition-colors ${
+                        isActive ? "text-white" : "text-[#c4cfde]/80"
+                      }`}
                     >
                       {sheet.title}
                     </p>
@@ -94,6 +113,7 @@ export default function CheatsheetClient({
         </nav>
       </aside>
 
+      {/* MAIN CONTENT AREA */}
       <article className="flex-1 w-full overflow-hidden">
         <AnimatePresence mode="wait">
           {activeSheet ? (
@@ -117,10 +137,10 @@ export default function CheatsheetClient({
               </header>
 
               <div className="rounded-[2rem] border border-white/5 bg-cyber-bg shadow-[inset_0_2px_10px_rgba(0,0,0,0.4)] overflow-hidden flex-1 w-full">
-                <div className="overflow-x-auto custom-scrollbar w-full h-full">
+                <div className="overflow-x-auto custom-scrollbar w-full h-full max-h-[60vh]">
                   <table className="w-full text-left border-collapse min-w-[500px]">
-                    <thead>
-                      <tr className="bg-cyber-surface border-b border-white/5">
+                    <thead className="sticky top-0 bg-cyber-surface z-10 shadow-md">
+                      <tr className="border-b border-white/5">
                         <th className="p-5 md:p-6 text-[10px] font-black text-purple-400 uppercase tracking-[0.2em] w-1/3 whitespace-nowrap">
                           Item Label
                         </th>
@@ -133,31 +153,43 @@ export default function CheatsheetClient({
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
-                      {activeSheet.items?.map((item, idx) => (
-                        <motion.tr
-                          key={idx}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: idx * 0.02 }}
-                          className="group hover:bg-white/5 transition-colors"
-                        >
-                          <td className="p-5 md:p-6">
-                            <span className="text-white/60 font-medium text-sm">
-                              {item.label}
-                            </span>
+                      {/* 3. RENDER MENGGUNAKAN combinedItems */}
+                      {combinedItems.length > 0 ? (
+                        combinedItems.map((item, idx) => (
+                          <motion.tr
+                            key={idx}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: idx * 0.02 }}
+                            className="group hover:bg-white/5 transition-colors"
+                          >
+                            <td className="p-5 md:p-6">
+                              <span className="text-white/60 font-medium text-sm">
+                                {item.label}
+                              </span>
+                            </td>
+                            <td className="p-5 md:p-6">
+                              <span className="text-white text-xl md:text-2xl font-japanese font-bold group-hover:text-purple-400 transition-colors drop-shadow-sm">
+                                {item.jp}
+                              </span>
+                            </td>
+                            <td className="p-5 md:p-6">
+                              <span className="text-[#c4cfde]/40 font-mono text-xs group-hover:text-[#c4cfde] transition-colors">
+                                {item.romaji}
+                              </span>
+                            </td>
+                          </motion.tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td
+                            colSpan={3}
+                            className="p-10 text-center text-white/20 font-mono text-xs"
+                          >
+                            No items in this cheatsheet yet.
                           </td>
-                          <td className="p-5 md:p-6">
-                            <span className="text-white text-xl md:text-2xl font-japanese font-bold group-hover:text-purple-400 transition-colors drop-shadow-sm">
-                              {item.jp}
-                            </span>
-                          </td>
-                          <td className="p-5 md:p-6">
-                            <span className="text-[#c4cfde]/40 font-mono text-xs group-hover:text-[#c4cfde] transition-colors">
-                              {item.romaji}
-                            </span>
-                          </td>
-                        </motion.tr>
-                      ))}
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -168,10 +200,6 @@ export default function CheatsheetClient({
               <span className="text-6xl mb-6 opacity-50">📡</span>
               <p className="font-mono font-black uppercase tracking-widest text-sm text-center">
                 Awaiting Data Selection
-                <br />
-                <span className="text-[10px] mt-2 block opacity-50">
-                  (Atau data di Sanity masih kosong)
-                </span>
               </p>
             </div>
           )}

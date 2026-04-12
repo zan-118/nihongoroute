@@ -52,6 +52,27 @@ export default defineType({
       type: "string",
     }),
 
+    // ... field group, lesson, dll ...
+
+    // ✨ 1. Tambahkan Referensi Kategori
+    defineField({
+      name: "course_category",
+      title: "Course Category (Level)",
+      type: "reference",
+      to: [{ type: "course_category" }],
+      description: "Pilih level untuk memunculkan kata kerja ini di Flashcard",
+    }),
+
+    // ✨ 2. Tambahkan Toggle Flashcard (Opsional tapi bagus)
+    defineField({
+      name: "showInFlashcard",
+      type: "boolean",
+      title: "Munculkan di Flashcard?",
+      initialValue: true,
+    }),
+
+    // ... field te, ta, nai, dll ...
+
     // --- KONJUGASI DASAR ---
     defineField({
       name: "te",

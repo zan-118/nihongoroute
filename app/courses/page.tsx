@@ -3,11 +3,10 @@ import { client } from "@/sanity/lib/client";
 
 export const revalidate = 3600;
 
-// --- TYPES ---
-interface LevelData {
+interface CategoryData {
   _id: string;
-  code: string;
-  name: string;
+  title: string;
+  slug: { current: string };
 }
 
 interface LibraryCardProps {
@@ -17,9 +16,9 @@ interface LibraryCardProps {
   color: "blue" | "green" | "pink";
 }
 
-export default async function JLPTLandingPage() {
-  const levels: LevelData[] = await client.fetch(
-    `*[_type == "level"] | order(code desc)`,
+export default async function CoursesLandingPage() {
+  const jlptCategories: CategoryData[] = await client.fetch(
+    `*[_type == "course_category" && type == "jlpt"] | order(title desc)`,
   );
 
   return (
@@ -36,10 +35,9 @@ export default async function JLPTLandingPage() {
           </h1>
         </header>
 
-        {/* BASICS SECTION */}
         <section className="mb-16">
           <Link
-            href="/jlpt/basics"
+            href="/courses/basics"
             className="group block relative overflow-hidden bg-gradient-to-br from-blue-600/10 to-cyber-surface border border-blue-500/20 p-8 md:p-10 rounded-[3rem] hover:border-blue-400/50 transition-all shadow-[0_10px_30px_rgba(0,0,0,0.5)] active:scale-[0.98]"
           >
             <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -58,35 +56,30 @@ export default async function JLPTLandingPage() {
                 </h2>
                 <p className="text-[#c4cfde]/60 text-sm mt-2 max-w-md">
                   Pelajari huruf Hiragana dan Katakana sebelum memulai
-                  perjalanan JLPT Anda.
+                  perjalanan belajar Anda.
                 </p>
               </div>
             </div>
           </Link>
         </section>
 
-        {/* LEVEL GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-24">
-          {levels.map((level) => (
+          {jlptCategories.map((category) => (
             <Link
-              key={level._id}
-              href={`/jlpt/${level.code}`}
+              key={category._id}
+              href={`/courses/${category.slug.current}`}
               className="group relative h-[300px]"
             >
               <div className="absolute inset-0 bg-cyber-neon blur-[50px] opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
               <div className="relative bg-cyber-surface p-10 rounded-[3rem] border border-white/5 group-hover:border-cyber-neon/50 transition-all flex flex-col items-center text-center h-full shadow-[15px_15px_40px_rgba(0,0,0,0.6),-10px_-10px_30px_rgba(255,255,255,0.02)] active:shadow-[inset_4px_4px_10px_rgba(0,0,0,0.5)] overflow-hidden">
                 <div className="absolute top-0 left-10 right-10 h-[2px] bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:via-cyber-neon transition-colors" />
-
                 <span className="text-[10px] font-black text-white/30 group-hover:text-cyber-neon uppercase tracking-[0.4em] mb-auto transition-colors">
                   Path Unlocked
                 </span>
-
-                <h2 className="text-7xl font-black text-white italic group-hover:scale-110 transition-transform uppercase drop-shadow-lg z-10">
-                  {level.name}
+                <h2 className="text-5xl font-black text-white italic group-hover:scale-110 transition-transform uppercase drop-shadow-lg z-10 leading-tight">
+                  {category.title}
                 </h2>
-
                 <div className="h-1 w-12 bg-white/10 rounded-full my-6 group-hover:bg-cyber-neon/50 transition-colors" />
-
                 <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mt-auto flex items-center gap-2 group-hover:text-cyber-neon">
                   Explore Syllabus{" "}
                   <span className="text-lg leading-none group-hover:translate-x-1 transition-transform">
@@ -98,7 +91,6 @@ export default async function JLPTLandingPage() {
           ))}
         </div>
 
-        {/* REFERENCE HUB */}
         <section className="pt-16 border-t border-white/5">
           <header className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
             <div>
@@ -113,7 +105,6 @@ export default async function JLPTLandingPage() {
               Reference DB
             </span>
           </header>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <LibraryCard
               href="/library/verbs"
@@ -147,7 +138,6 @@ function LibraryCard({ href, icon, title, color }: LibraryCardProps) {
       "hover:border-green-500/50 group-hover:text-green-400 group-hover:shadow-[0_0_20px_rgba(34,197,94,0.2)]",
     pink: "hover:border-pink-500/50 group-hover:text-pink-400 group-hover:shadow-[0_0_20px_rgba(236,72,153,0.2)]",
   };
-
   return (
     <Link
       href={href}

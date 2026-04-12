@@ -5,7 +5,7 @@ const categories = [
   {
     title: "Kana Basics",
     desc: "Hiragana & Katakana interaktif dengan Stroke Order.",
-    href: "/jlpt/basics",
+    href: "/courses/basics",
     icon: (
       <PenTool className="w-8 h-8 text-blue-400 drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
     ),

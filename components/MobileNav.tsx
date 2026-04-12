@@ -26,10 +26,10 @@ export default function MobileNav() {
       <div className="flex justify-between items-center max-w-md mx-auto relative">
         <NavItem href="/" icon="🏠" label="Home" active={isActive("/")} />
         <NavItem
-          href="/jlpt"
+          href="/courses"
           icon="📚"
           label="Learn"
-          active={isActive("/jlpt")}
+          active={isActive("/courses")}
         />
 
         <Link

@@ -8,7 +8,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   urls.push(
     { url: `${baseUrl}/`, lastModified: new Date() },
-    { url: `${baseUrl}/jlpt`, lastModified: new Date() },
+    { url: `${baseUrl}/courses`, lastModified: new Date() },
   );
 
   const levelsQuery = `*[_type == "level"] { code }`;
@@ -17,7 +17,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (levels) {
     for (const level of levels) {
       urls.push({
-        url: `${baseUrl}/jlpt/${level.code}`,
+        url: `${baseUrl}/courses/${level.code}`,
         lastModified: new Date(),
       });
     }
@@ -33,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (lessons) {
     for (const lesson of lessons) {
       urls.push({
-        url: `${baseUrl}/jlpt/${lesson.level_code}/${lesson.slug}`,
+        url: `${baseUrl}/courses/${lesson.level_code}/${lesson.slug}`,
         lastModified: new Date(lesson._updatedAt),
       });
     }

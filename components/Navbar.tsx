@@ -9,7 +9,7 @@ const JLPT_LEVELS = ["n5", "n4", "n3", "n2", "n1"];
 function formatSegment(segment: string): string {
   if (!segment) return "";
 
-  if (segment === "jlpt") return "Curriculum";
+  if (segment === "courses") return "Curriculum";
   if (segment === "library") return "Library";
   if (JLPT_LEVELS.includes(segment.toLowerCase())) return segment.toUpperCase();
 
@@ -70,7 +70,11 @@ export default function Navbar() {
 
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-6 border-r border-white/10 pr-8">
-            <NavLink href="/jlpt" label="Learn" active={isActive("/jlpt")} />
+            <NavLink
+              href="/courses"
+              label="Learn"
+              active={isActive("/courses")}
+            />
             <NavLink
               href="/library"
               label="Library"

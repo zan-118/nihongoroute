@@ -161,7 +161,7 @@ export default function QuizEngine({ questions }: QuizProps) {
                   /\/[^/]+$/,
                   "",
                 );
-                router.push(basePath || "/jlpt");
+                router.push(basePath || "/courses");
               }}
               className="px-8 py-4 bg-cyber-neon text-cyber-bg font-black rounded-2xl hover:bg-white transition-all uppercase tracking-widest text-[10px] shadow-[0_0_20px_rgba(0,255,239,0.3)] hover:scale-105 active:scale-95"
             >

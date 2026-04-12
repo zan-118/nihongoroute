@@ -107,7 +107,7 @@ export default function MemoryStats() {
           Quick Vocab
         </Link>
         <Link
-          href="/jlpt/n5/kanji"
+          href="/courses/jlpt-n5/kanji"
           className="group relative p-4 bg-[#1e2024] rounded-2xl border border-white/5 text-[9px] md:text-[10px] font-black text-center uppercase tracking-[0.2em] text-[#c4cfde] transition-all shadow-[6px_6px_15px_rgba(0,0,0,0.5),-4px_-4px_10px_rgba(255,255,255,0.03)] active:shadow-[inset_4px_4px_10px_rgba(0,0,0,0.5),inset_-2px_-2px_5px_rgba(255,255,255,0.02)] active:translate-y-1 hover:text-purple-400 hover:border-purple-500/30"
         >
           <div className="absolute inset-0 rounded-2xl bg-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />

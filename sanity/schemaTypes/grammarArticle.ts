@@ -1,39 +1,32 @@
-import { defineField, defineType } from "sanity";
+import { defineType, defineField } from "sanity";
 
 export default defineType({
   name: "grammar_article",
-  title: "Artikel Tata Bahasa (Grammar)",
+  title: "Grammar Article",
   type: "document",
   fields: [
-    defineField({
-      name: "title",
-      title: "Judul Artikel",
-      type: "string",
-      validation: (Rule) => Rule.required(),
-    }),
+    defineField({ name: "title", title: "Title", type: "string" }),
     defineField({
       name: "slug",
       title: "Slug",
       type: "slug",
-      options: { source: "title", maxLength: 96 },
-      validation: (Rule) => Rule.required(),
+      options: { source: "title" },
     }),
+
+    // Field Baru
+    defineField({
+      name: "course_category",
+      title: "Course Category",
+      type: "reference",
+      to: [{ type: "course_category" }],
+    }),
+
+    defineField({ name: "meaning", title: "Meaning / Focus", type: "string" }),
     defineField({
       name: "content",
-      title: "Isi Artikel",
+      title: "Content",
       type: "array",
-      of: [
-        { type: "block" },
-        {
-          type: "object",
-          name: "exampleSentence",
-          title: "Contoh Kalimat",
-          fields: [
-            { name: "jp", type: "string", title: "Bahasa Jepang" },
-            { name: "id", type: "string", title: "Arti Bahasa Indonesia" },
-          ],
-        },
-      ],
+      of: [{ type: "block" }, { type: "exampleSentence" }, { type: "callout" }],
     }),
   ],
 });

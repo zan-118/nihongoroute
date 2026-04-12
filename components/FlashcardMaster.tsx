@@ -101,7 +101,7 @@ export default function FlashcardMaster({
           /\/(flashcards|kanji)$/,
           "",
         );
-        router.push(basePath || "/jlpt");
+        router.push(basePath || "/courses");
       }
     }, 200);
   };

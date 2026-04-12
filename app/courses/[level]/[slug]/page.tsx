@@ -15,29 +15,14 @@ interface Props {
 
 async function getLessonData(levelCode: string, slug: string) {
   const query = `{
-    "lesson": *[_type == "lesson" && level->code == $levelCode && slug.current == $slug][0] {
-      _id,
-      title,
-      summary,
-      "levelCode": level->code,
-      vocabList[]-> {
-        _id, word, furigana, romaji, meaning, kanjiDetails
-      },
-      referenceWords[]-> {
-        _id, word, furigana, romaji, meaning
-      },
-      patterns,
-      examples,
-      conversationTitle,
-      conversation,
-      grammar,
-      quizzes,
-      seoTitle,
-      seoDescription
+    "lesson": *[_type == "lesson" && course_category->slug.current == $levelCode && slug.current == $slug][0] {
+      _id, title, summary, "levelCode": course_category->slug.current, "levelTitle": course_category->title,
+      vocabList[]-> { _id, word, furigana, romaji, meaning, kanjiDetails },
+      referenceWords[]-> { _id, word, furigana, romaji, meaning },
+      patterns, examples, conversationTitle, conversation, grammar, quizzes, seoTitle, seoDescription
     },
-    "nav": *[_type == "lesson" && level->code == $levelCode && is_published == true] | order(orderNumber asc) {
-      "slug": slug.current,
-      title
+    "nav": *[_type == "lesson" && course_category->slug.current == $levelCode && is_published == true] | order(orderNumber asc) {
+      "slug": slug.current, title
     }
   }`;
   return await client.fetch(query, { levelCode, slug });
@@ -53,7 +38,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-/* ================= CUSTOM PORTABLE TEXT COMPONENTS ================= */
 const ptComponents: PortableTextComponents = {
   block: {
     h2: ({ children }) => (
@@ -81,11 +65,7 @@ const ptComponents: PortableTextComponents = {
   types: {
     callout: ({ value }: any) => (
       <div
-        className={`border-l-4 p-6 rounded-r-2xl my-8 relative overflow-hidden shadow-lg ${
-          value.type === "warning"
-            ? "border-yellow-500 bg-yellow-500/10 shadow-[0_0_15px_rgba(250,204,21,0.1)]"
-            : "border-cyber-neon bg-cyber-neon/10 shadow-[0_0_15px_rgba(0,255,239,0.1)]"
-        }`}
+        className={`border-l-4 p-6 rounded-r-2xl my-8 relative overflow-hidden shadow-lg ${value.type === "warning" ? "border-yellow-500 bg-yellow-500/10 shadow-[0_0_15px_rgba(250,204,21,0.1)]" : "border-cyber-neon bg-cyber-neon/10 shadow-[0_0_15px_rgba(0,255,239,0.1)]"}`}
       >
         <div
           className={`absolute top-0 right-0 p-4 opacity-10 text-6xl ${value.type === "warning" ? "text-yellow-500" : "text-cyber-neon"}`}
@@ -93,9 +73,7 @@ const ptComponents: PortableTextComponents = {
           {value.type === "warning" ? "⚠️" : "💡"}
         </div>
         <strong
-          className={`flex items-center gap-2 mb-2 font-black uppercase tracking-widest text-xs relative z-10 ${
-            value.type === "warning" ? "text-yellow-400" : "text-cyber-neon"
-          }`}
+          className={`flex items-center gap-2 mb-2 font-black uppercase tracking-widest text-xs relative z-10 ${value.type === "warning" ? "text-yellow-400" : "text-cyber-neon"}`}
         >
           {value.title}
         </strong>
@@ -143,10 +121,10 @@ export default async function LessonPage({ params }: Props) {
       <article className="max-w-4xl mx-auto relative z-10">
         <nav className="mb-8 font-mono text-[10px] font-bold uppercase tracking-[0.2em] flex items-center gap-3">
           <Link
-            href={`/jlpt/${lesson.levelCode}`}
+            href={`/courses/${lesson.levelCode}`}
             className="text-cyber-neon bg-cyber-neon/10 px-3 py-1.5 rounded-lg border border-cyber-neon/20 hover:bg-cyber-neon/20 transition-colors"
           >
-            JLPT {lesson.levelCode.toUpperCase()}
+            {lesson.levelTitle}
           </Link>
           <span className="text-white/20">/</span>
           <span className="text-white/60 bg-white/5 px-3 py-1.5 rounded-lg border border-white/5">
@@ -336,11 +314,10 @@ export default async function LessonPage({ params }: Props) {
           </section>
         )}
 
-        {/* BOTTOM NAVIGATION */}
         <nav className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-12 border-t border-white/10">
           {prevLesson ? (
             <Link
-              href={`/jlpt/${lesson.levelCode}/${prevLesson.slug}`}
+              href={`/courses/${lesson.levelCode}/${prevLesson.slug}`}
               className="group relative p-8 bg-cyber-surface rounded-[2.5rem] border border-white/5 shadow-[6px_6px_15px_rgba(0,0,0,0.5),-4px_-4px_10px_rgba(255,255,255,0.02)] active:shadow-[inset_4px_4px_10px_rgba(0,0,0,0.5)] active:translate-y-1 transition-all flex flex-col items-start"
             >
               <div className="absolute inset-0 bg-cyber-neon/5 opacity-0 group-hover:opacity-100 rounded-[2.5rem] transition-opacity" />
@@ -357,7 +334,7 @@ export default async function LessonPage({ params }: Props) {
 
           {nextLesson ? (
             <Link
-              href={`/jlpt/${lesson.levelCode}/${nextLesson.slug}`}
+              href={`/courses/${lesson.levelCode}/${nextLesson.slug}`}
               className="group relative p-8 bg-cyber-surface rounded-[2.5rem] border border-white/5 shadow-[6px_6px_15px_rgba(0,0,0,0.5),-4px_-4px_10px_rgba(255,255,255,0.02)] active:shadow-[inset_4px_4px_10px_rgba(0,0,0,0.5)] active:translate-y-1 transition-all flex flex-col items-end text-right"
             >
               <div className="absolute inset-0 bg-cyber-neon/5 opacity-0 group-hover:opacity-100 rounded-[2.5rem] transition-opacity" />
@@ -370,7 +347,7 @@ export default async function LessonPage({ params }: Props) {
             </Link>
           ) : (
             <Link
-              href={`/jlpt/${lesson.levelCode}`}
+              href={`/courses/${lesson.levelCode}`}
               className="group relative p-8 bg-cyber-neon/10 rounded-[2.5rem] border border-cyber-neon/30 shadow-[0_0_20px_rgba(0,255,239,0.1)] active:shadow-[inset_4px_4px_10px_rgba(0,255,239,0.2)] active:translate-y-1 transition-all flex flex-col items-center justify-center text-center"
             >
               <span className="text-3xl mb-3 drop-shadow-md group-hover:scale-110 transition-transform">

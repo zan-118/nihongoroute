@@ -1,4 +1,5 @@
-// Query untuk mengambil semua kata kerja LENGKAP
+// lib/queries.ts
+
 export const allVerbsQuery = `*[_type == "verb_dictionary"] | order(group asc, masu asc) {
   _id,
   group,
@@ -22,11 +23,17 @@ export const allVerbsQuery = `*[_type == "verb_dictionary"] | order(group asc, m
   meirei
 }`;
 
-// Tambahkan romaji di Cheatsheet sekalian biar muncul di tabel
 export const allCheatsheetsQuery = `*[_type == "cheatsheet"] | order(category asc) {
   _id,
   title,
   category,
+  // 1. Tarik dari relasi Kosakata dan samakan nama key-nya
+  linkedVocab[]-> {
+    "label": meaning,
+    "jp": word,
+    romaji
+  },
+  // 2. Tarik dari input manual
   items[] {
     label,
     jp,
@@ -57,28 +64,16 @@ export const vocabByIdsQuery = `*[_type == "kosakata" && _id in $ids] {
   "audioUrl": audio.asset->url
 }`;
 
-// Mengekstrak data dari Reference Kosakata secara penuh
+// ✨ PERUBAHAN DI SINI: Menggunakan course_category
 export const lessonQuery = `*[_type == "lesson" && slug.current == $slug][0] {
   title,
   summary,
   orderNumber,
   vocabList[]->{ 
-    _id, 
-    word, 
-    furigana, 
-    romaji, 
-    meaning, 
-    kanjiDetails, 
-    examples 
+    _id, word, furigana, romaji, meaning, kanjiDetails, examples 
   },
   referenceWords[]->{ 
-    _id, 
-    word, 
-    furigana, 
-    romaji, 
-    meaning, 
-    kanjiDetails, 
-    examples 
+    _id, word, furigana, romaji, meaning, kanjiDetails, examples 
   },
   patterns,
   examples,
