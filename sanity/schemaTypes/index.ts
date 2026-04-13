@@ -12,6 +12,7 @@ import cheatsheet from "./cheatsheet";
 import grammarArticle from "./grammarArticle";
 import courseCategory from "./courseCategory"; // <-- 1. Import skema baru
 import mockExam from "./mockExam";
+import examResult from "./examResult";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -21,7 +22,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
 
     callout,
     exampleSentence,
-
+    examResult,
     kosakata,
     verbDictionary,
     cheatsheet,

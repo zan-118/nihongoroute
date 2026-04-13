@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useProgress } from "@/context/UserProgressContext";
 import { loadProgress, ProgressState } from "@/lib/progress";
 import { motion } from "framer-motion";
@@ -9,11 +9,19 @@ import MemoryStats from "@/components/MemoryStats";
 import DailyQuests from "@/components/DailyQuests";
 import Heatmap from "@/components/Heatmap";
 import LevelUpOverlay from "@/components/LevelUpOverlay";
+import { client } from "@/sanity/lib/client";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 export default function DashboardPage() {
   const { progress, loading, exportData, importData } = useProgress();
   const [guestId, setGuestId] = useState<string>("LOADING...");
   const [stats, setStats] = useState<ProgressState | null>(null);
+
+  // State untuk Riwayat Ujian
+  const [examHistory, setExamHistory] = useState<any[]>([]);
+  const [isExporting, setIsExporting] = useState(false);
+  const certificateRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let savedId = localStorage.getItem("nihongo_guest_id");
@@ -23,9 +31,52 @@ export default function DashboardPage() {
       localStorage.setItem("nihongo_guest_id", savedId);
     }
     setGuestId(savedId);
-
     setStats(loadProgress());
+
+    // Fetch riwayat ujian dari Sanity berdasarkan guestId
+    const fetchHistory = async () => {
+      try {
+        const query = `*[_type == "examResult" && guestId == $id] | order(completedAt desc)`;
+        const data = await client.fetch(query, { id: savedId });
+        setExamHistory(data);
+      } catch (error) {
+        console.error("Gagal menarik riwayat ujian:", error);
+      }
+    };
+
+    fetchHistory();
   }, []);
+
+  // Fungsi Export ke PDF
+  const handleDownloadCertificate = async () => {
+    if (!certificateRef.current) return;
+    setIsExporting(true);
+
+    try {
+      const element = certificateRef.current;
+      const canvas = await html2canvas(element, {
+        backgroundColor: "#0a0a0a", // Sesuai dengan warna cyber-bg
+        scale: 2, // Kualitas HD
+        logging: false,
+        useCORS: true,
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "px",
+        format: [canvas.width, canvas.height],
+      });
+
+      pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+      pdf.save(`NihongoRoute_Report_${guestId}.pdf`);
+    } catch (error) {
+      console.error("Gagal membuat PDF:", error);
+      alert("Terjadi kesalahan saat meng-export PDF.");
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   const handleExportData = () => {
     exportData();
@@ -258,13 +309,151 @@ export default function DashboardPage() {
             </section>
           </div>
         </div>
+
+        {/* =========================================
+            EXAM HISTORY & CERTIFICATE SECTION
+        ========================================= */}
+        <section className="mt-8 mb-24">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div className="flex items-center gap-4">
+              <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-widest italic border-l-4 border-amber-500 pl-4">
+                Official <span className="text-amber-500">Records</span>
+              </h3>
+            </div>
+            {examHistory.length > 0 && (
+              <button
+                onClick={handleDownloadCertificate}
+                disabled={isExporting}
+                className="bg-white/5 hover:bg-white/10 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest py-3 px-6 rounded-xl transition-all flex items-center gap-2 disabled:opacity-50"
+              >
+                {isExporting ? "Rendering PDF..." : "📥 Download Certificate"}
+              </button>
+            )}
+          </div>
+
+          <div
+            ref={certificateRef}
+            className="bg-cyber-surface p-8 md:p-12 rounded-[3rem] border border-white/5 shadow-2xl relative overflow-hidden"
+          >
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[150px] font-black italic opacity-[0.02] text-white pointer-events-none whitespace-nowrap">
+              NIHONGO PATH
+            </div>
+
+            <div className="relative z-10">
+              <div className="flex justify-between items-end border-b border-white/10 pb-6 mb-8">
+                <div>
+                  <h4 className="text-cyber-neon font-mono text-[10px] uppercase tracking-[0.3em] mb-1">
+                    Candidature Report
+                  </h4>
+                  <p className="text-white text-lg font-bold font-mono tracking-widest">
+                    {guestId}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold">
+                    Level Achieved
+                  </p>
+                  <p className="text-amber-500 text-2xl font-black italic uppercase">
+                    LVL {progress.level}
+                  </p>
+                </div>
+              </div>
+
+              {examHistory.length > 0 ? (
+                <div className="space-y-6">
+                  {examHistory.map((exam) => (
+                    <div
+                      key={exam._id}
+                      className="bg-cyber-bg/50 p-6 md:p-8 rounded-3xl border border-white/5 shadow-lg"
+                    >
+                      {/* Header Kartu */}
+                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 pb-6 border-b border-white/5">
+                        <div>
+                          <h5 className="text-white font-black italic uppercase tracking-wide text-xl md:text-2xl mb-1">
+                            {exam.examTitle}
+                          </h5>
+                          <p className="text-white/40 text-xs font-mono">
+                            {new Date(exam.completedAt).toLocaleString("id-ID")}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-6">
+                          <div className="text-right">
+                            <p className="text-white/40 text-[10px] font-black uppercase tracking-widest mb-1">
+                              Total Score
+                            </p>
+                            <p
+                              className={`text-3xl font-black font-mono ${exam.passed ? "text-green-400" : "text-red-400"}`}
+                            >
+                              {exam.score}{" "}
+                              <span className="text-sm text-white/30">
+                                / 180
+                              </span>
+                            </p>
+                          </div>
+                          <div
+                            className={`px-4 py-2 rounded-xl font-black uppercase tracking-widest text-xs border ${exam.passed ? "bg-green-500/10 border-green-500/30 text-green-500 shadow-[0_0_15px_rgba(34,197,94,0.3)]" : "bg-red-500/10 border-red-500/30 text-red-500 shadow-[0_0_15px_rgba(239,68,68,0.3)]"}`}
+                          >
+                            {exam.passed ? "CLEARED" : "FAILED"}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Rincian Skor Per Sesi */}
+                      {exam.sectionScores && (
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
+                            <p className="text-[9px] text-white/40 uppercase font-bold tracking-widest mb-1">
+                              Vocabulary
+                            </p>
+                            <p className="text-lg font-mono text-white">
+                              {exam.sectionScores.vocabulary}%
+                            </p>
+                          </div>
+                          <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
+                            <p className="text-[9px] text-white/40 uppercase font-bold tracking-widest mb-1">
+                              Grammar
+                            </p>
+                            <p className="text-lg font-mono text-white">
+                              {exam.sectionScores.grammar}%
+                            </p>
+                          </div>
+                          <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
+                            <p className="text-[9px] text-white/40 uppercase font-bold tracking-widest mb-1">
+                              Reading
+                            </p>
+                            <p className="text-lg font-mono text-white">
+                              {exam.sectionScores.reading}%
+                            </p>
+                          </div>
+                          <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
+                            <p className="text-[9px] text-white/40 uppercase font-bold tracking-widest mb-1">
+                              Listening
+                            </p>
+                            <p className="text-lg font-mono text-white">
+                              {exam.sectionScores.listening}%
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-white/40 text-sm font-mono uppercase tracking-widest">
+                    Belum ada data ujian yang terekam.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   );
 }
 
 /* HELPER COMPONENTS */
-
 interface SimpleStatProps {
   label: string;
   value: string | number;

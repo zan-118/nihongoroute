@@ -1,3 +1,9 @@
+Ini dia pembaruan `README.md` Anda! Saya telah menambahkan fitur **Mock Exam** yang baru saja kita bangun (termasuk _Anti-Cheat_, Analitik, dan _Export_ PDF), memperbarui struktur folder untuk mencakup rute API, dan menambahkan sedikit sentuhan profesional pada deskripsi pembuka yang sangat cocok jika repositori ini akan digunakan sebagai portofolio atau referensi riset akademik.
+
+Silakan _copy-paste_ teks di bawah ini:
+
+---
+
 # 🌀 NihongoRoute (日本語ルート)
 
 [![Next.js](https://img.shields.io/badge/Next.js-15-000000?style=for-the-badge&logo=nextdotjs)](https://nextjs.org/)
@@ -6,7 +12,7 @@
 [![Tailwind](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![PWA](https://img.shields.io/badge/PWA-Ready-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white)](https://web.dev/progressive-web-apps/)
 
-**NihongoRoute** adalah platform e-learning bahasa Jepang modern dengan estetika **Cyber Dark Neumorphic**. Dirancang khusus untuk pejuang JLPT (dimulai dari N5) untuk menguasai kosakata, tata bahasa, dan kanji melalui pendekatan gamifikasi dan sistem memori yang cerdas.
+**NihongoRoute** adalah platform e-learning bahasa Jepang modern dengan estetika **Cyber Dark Neumorphic**. Dirancang khusus untuk pejuang JLPT (dimulai dari N5) untuk menguasai kosakata, tata bahasa, dan kanji melalui pendekatan gamifikasi dan sistem memori yang cerdas. Proyek ini juga diinisiasi sebagai bentuk implementasi riset _Educational Technology_ untuk menguji efektivitas gamifikasi dan simulasi interaktif dalam pembelajaran bahasa.
 
 [**Jelajahi Aplikasi »**](https://www.nihongoroute.my.id)
 
@@ -19,17 +25,23 @@
 - **Kana Basics:** Modul interaktif Hiragana & Katakana dilengkapi dengan **SVG Stroke Order** dinamis untuk melatih cara penulisan yang benar.
 - **JLPT Roadmap:** Kurikulum terstruktur dari N5 hingga N1 yang mencakup Kosakata, Pola Kalimat, Percakapan (Kaiwa), dan Kuis evaluasi.
 
+### 🎓 Official Mock Exam (JLPT Tryout)
+
+- **Proctoring & Anti-Cheat:** Dilengkapi sistem deteksi _tab-switching_ dan pemutar audio _uninterrupted_ (tanpa jeda/kontrol) khusus untuk sesi _Choukai_ (Mendengar).
+- **Sectional Analytics:** Kalkulasi skor JLPT realistis dengan rincian performa visual per bagian (Moji/Goi, Bunpou, Dokkai, Choukai).
+- **Candidature Report:** Menghasilkan "Sertifikat Kelulusan" dalam format PDF beresolusi tinggi yang ditarik langsung dari riwayat ujian pengguna di Dashboard.
+
 ### 📚 Smart Library Hub
 
 - **Verb Archive:** Mesin konjugasi otomatis untuk 120+ kata kerja N5 (Bentuk Masu, Te, Nai, Ta, hingga Potensial & Kausatif).
-- **Grammar Guide:** Dokumentasi mendalam pola kalimat yang dikelola secara dinamis melalui **Sanity Headless CMS**.
+- **Grammar Guide:** Dokumentasi mendalam pola kalimat yang dikelola secara dinamis melalui CMS.
 - **Reference Sheets:** Tabel referensi cepat (Cheatsheets) untuk angka, waktu, partikel, dan penghitung (_counters_).
 
 ### 🧠 Memory Engine (SRS)
 
 - **Integrated SRS:** Algoritma _Spaced Repetition_ yang mengatur jadwal _review_ kosakata secara otomatis berdasarkan level daya ingat pengguna.
 - **Flashcards Mastery:** Kartu hafalan interaktif dengan diagram urutan coretan Kanji dan integrasi **Text-to-Speech (TTS)**.
-- **XP & Leveling:** Sistem progres gamifikasi untuk menjaga motivasi belajar tanpa perlu sistem login yang rumit.
+- **XP & Leveling:** Sistem progres gamifikasi global untuk menjaga motivasi belajar.
 
 ---
 
@@ -37,10 +49,10 @@
 
 - **Core:** [Next.js 15](https://nextjs.org/) (App Router & Server Actions)
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/) dengan konsep _Soft UI / Neumorphism_
-- **Content:** [Sanity.io](https://www.sanity.io/) (Real-time Headless CMS)
+- **Content & Database:** [Sanity.io](https://www.sanity.io/) (Real-time Headless CMS) _dengan transisi arsitektur menuju [Supabase](https://supabase.com/) untuk skalabilitas dan manajemen data relasional yang lebih masif._
 - **State Management:** [Zustand](https://zustand-demo.pmnd.rs/) & Context API (Persisted via LocalStorage)
-- **Animation:** [Framer Motion](https://www.framer.com/motion/) untuk transisi antar-halaman yang _smooth_
-- **Service:** [Next-PWA](https://www.npmjs.com/package/next-pwa) untuk pengalaman aplikasi mobile yang _installable_
+- **Animation & Export:** [Framer Motion](https://www.framer.com/motion/) untuk transisi UI yang _smooth_, dipadukan dengan `html2canvas` & `jspdf` untuk _rendering_ sertifikat klien.
+- **Service:** [Next-PWA](https://www.npmjs.com/package/next-pwa) untuk pengalaman aplikasi mobile yang _installable_.
 
 ---
 
@@ -48,11 +60,12 @@
 
 ```text
 ├── app/
-│   ├── jlpt/              # Modul kurikulum (Basics, N5, N4, dll)
+│   ├── api/               # Server-side endpoints (misal: Webhook & POST skor ujian)
+│   ├── courses/              # Modul kurikulum (Basics, N5, N4, dll)
 │   ├── library/           # Database hub (Verbs, Grammar, Cheatsheets)
-│   ├── dashboard/         # Pusat progres user & sesi Review SRS
+│   ├── dashboard/         # Pusat progres user, PDF Report, & sesi Review SRS
 │   └── studio/            # Interface Sanity Studio (Back-office)
-├── components/            # UI Atoms, Molecules, & Organisms
+├── components/            # UI Atoms, Molecules, & Organisms (MockExamEngine, CyberCard, dll)
 ├── context/               # Global state (UserProgressContext)
 ├── lib/                   # SRS Algorithm, GROQ Queries, & Global Utils
 └── public/                # Assets, PWA Icons, & Manifest
@@ -66,7 +79,7 @@ Aplikasi ini mengusung tema **Cyber Dark Neumorphic**:
 
 - **Aksen Futuristik:** Menggunakan warna `#0ef` (Cyan Neon) untuk elemen interaktif.
 - **Dark Mode by Default:** Menggunakan `#15171a` untuk mengurangi kelelahan mata (_eye strain_).
-- **Neumorphic Depth:** Menggunakan teknik _double shadow_ untuk menciptakan kedalaman visual yang elegan dan modern.
+- **Neumorphic Depth:** Menggunakan teknik _double shadow_ untuk menciptakan kedalaman visual yang elegan dan modern pada kartu soal dan dasbor.
 
 ---
 
@@ -86,6 +99,7 @@ Aplikasi ini mengusung tema **Cyber Dark Neumorphic**:
    ```env
    NEXT_PUBLIC_SANITY_PROJECT_ID="your_project_id"
    NEXT_PUBLIC_SANITY_DATASET="production"
+   SANITY_API_WRITE_TOKEN="your_sanity_editor_token_here"
    NEXT_PUBLIC_SITE_URL="http://localhost:3000"
    ```
 
@@ -98,14 +112,11 @@ Aplikasi ini mengusung tema **Cyber Dark Neumorphic**:
 
 ## 💙 Dukungan
 
-NihongoRoute adalah proyek _open-source_ yang dikembangkan untuk membantu komunitas pembelajar bahasa Jepang. Dukungan kamu sangat berarti untuk keberlangsungan server dan konten:
+NihongoRoute adalah proyek _open-source_ yang dikembangkan untuk membantu komunitas pembelajar bahasa Jepang. Dukungan kamu sangat berarti untuk keberlangsungan server dan pembaruan konten secara berkala:
 
 - [**Trakteer (E-Wallet)**](https://trakteer.id/Zan118/tip)
 - [**Saweria (QRIS)**](https://saweria.co/Zan118)
 
 ---
 
-**Developed with 💙 by [Fauzan Abdul Basith](https://github.com/zan-118)**
-_Mastering Japanese, one step at a time._
-
----
+**Developed with 💙 by [Fauzan Abdul Basith](https://github.com/zan-118)** _Mastering Japanese, one step at a time._ _والله الموفق إلى أقوم الطريق_

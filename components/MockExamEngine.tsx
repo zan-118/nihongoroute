@@ -1,3 +1,4 @@
+// components/MockExamEngine.tsx
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
@@ -29,7 +30,7 @@ export interface ExamQuestion {
 export interface ExamData {
   _id: string;
   title: string;
-  timeLimit: number; // Dalam menit
+  timeLimit: number;
   passingScore: number;
   questions: ExamQuestion[];
 }
@@ -53,9 +54,12 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
-  // Anti-Cheat State
+  // Anti-Cheat & Audio State
   const [cheatWarnings, setCheatWarnings] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Prevent duplicate API calls
+  const hasSavedScore = useRef(false);
 
   /* =====================
      ANTI-CHEAT LOGIC
@@ -89,7 +93,6 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
   useEffect(() => {
     const activeQuestion = exam.questions[currentQuestionIndex];
 
-    // Jika masuk ke soal listening dan ada URL audio
     if (
       gameState === "playing" &&
       activeQuestion.section === "listening" &&
@@ -102,14 +105,15 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
           .catch((err) => console.log("User must interact first:", err));
       }
     } else {
-      // Stop audio jika pindah ke seksi lain
       if (audioRef.current) {
         audioRef.current.pause();
       }
     }
   }, [currentQuestionIndex, gameState, exam.questions]);
 
-  // Timer Logic
+  /* =====================
+     TIMER LOGIC
+  ===================== */
   useEffect(() => {
     if (gameState !== "playing") return;
 
@@ -128,12 +132,69 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
   }, [gameState]);
 
   /* =====================
-     CONFETTI EFFECT
+     SAVE SCORE & CONFETTI
   ===================== */
   useEffect(() => {
-    if (gameState === "result") {
-      const { finalScore } = calculateScore();
-      if (finalScore >= exam.passingScore) {
+    if (gameState === "result" && !hasSavedScore.current) {
+      hasSavedScore.current = true; // Kunci agar tidak terkirim dua kali
+
+      const { finalScore, sectionBreakdown } = calculateScore();
+      const isPassed = finalScore >= exam.passingScore;
+
+      // Ambil ID dari LocalStorage
+      const guestId =
+        localStorage.getItem("nihongo_guest_id") || "UNKNOWN_GUEST";
+
+      const formattedSectionScores = {
+        vocabulary:
+          sectionBreakdown.vocabulary.total > 0
+            ? Math.round(
+                (sectionBreakdown.vocabulary.correct /
+                  sectionBreakdown.vocabulary.total) *
+                  100,
+              )
+            : 0,
+        grammar:
+          sectionBreakdown.grammar.total > 0
+            ? Math.round(
+                (sectionBreakdown.grammar.correct /
+                  sectionBreakdown.grammar.total) *
+                  100,
+              )
+            : 0,
+        reading:
+          sectionBreakdown.reading.total > 0
+            ? Math.round(
+                (sectionBreakdown.reading.correct /
+                  sectionBreakdown.reading.total) *
+                  100,
+              )
+            : 0,
+        listening:
+          sectionBreakdown.listening.total > 0
+            ? Math.round(
+                (sectionBreakdown.listening.correct /
+                  sectionBreakdown.listening.total) *
+                  100,
+              )
+            : 0,
+      };
+      // 1. Tembak data ke API Sanity
+      fetch("/api/exam-result", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          guestId,
+          examTitle: exam.title,
+          score: finalScore,
+          totalQuestions: exam.questions.length,
+          passed: isPassed,
+          sectionScores: formattedSectionScores,
+        }),
+      }).catch((err) => console.error("Gagal mengirim riwayat ujian:", err));
+
+      // 2. Jalankan Confetti jika lulus
+      if (isPassed) {
         const duration = 3 * 1000;
         const animationEnd = Date.now() + duration;
         const defaults = {
@@ -155,7 +216,8 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
         }, 250);
       }
     }
-  }, [gameState, exam.passingScore]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameState, exam.passingScore, exam.title, exam.questions.length]);
 
   const finishExam = () => {
     setGameState("result");
@@ -188,7 +250,6 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
   const calculateScore = () => {
     let correctCount = 0;
 
-    // Siapkan wadah untuk menghitung skor per bagian
     const sectionBreakdown: Record<string, { total: number; correct: number }> =
       {
         vocabulary: { total: 0, correct: 0 },
@@ -198,15 +259,12 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
       };
 
     exam.questions.forEach((q) => {
-      // Pastikan section terekam (mencegah error jika data kosong)
       if (!sectionBreakdown[q.section]) {
         sectionBreakdown[q.section] = { total: 0, correct: 0 };
       }
 
-      // Tambah total soal di seksi tersebut
       sectionBreakdown[q.section].total += 1;
 
-      // Jika jawaban benar
       if (answers[q._key] === q.correctAnswer) {
         correctCount++;
         sectionBreakdown[q.section].correct += 1;
@@ -312,7 +370,6 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
             {exam.title}
           </p>
 
-          {/* Kotak Skor Utama */}
           <div className="grid grid-cols-2 gap-4 mb-8">
             <div className="bg-cyber-bg p-6 rounded-2xl border border-white/5">
               <p className="text-white/40 text-[10px] uppercase font-black tracking-widest mb-1">
@@ -342,13 +399,11 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
             </h3>
             <div className="space-y-4">
               {Object.entries(sectionBreakdown).map(([sectionKey, data]) => {
-                if (data.total === 0) return null; // Sembunyikan seksi yang tidak ada soalnya
+                if (data.total === 0) return null;
 
                 const percentage = Math.round(
                   (data.correct / data.total) * 100,
                 );
-
-                // Tentukan warna berdasarkan performa
                 let colorClass =
                   "bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]";
                 if (percentage >= 70)
@@ -394,10 +449,10 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
               🔍 Review Answers
             </button>
             <Link
-              href="/courses"
+              href="/dashboard"
               className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-black uppercase tracking-widest py-4 px-8 rounded-2xl transition-all"
             >
-              Return to Hub
+              View Certificate
             </Link>
           </div>
         </div>
@@ -454,9 +509,10 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
                 </div>
 
                 {q.questionText && (
-                  <p className="text-xl text-white font-japanese leading-relaxed mb-6">
-                    {q.questionText}
-                  </p>
+                  <p
+                    className="text-xl text-white font-japanese leading-relaxed mb-6"
+                    dangerouslySetInnerHTML={{ __html: q.questionText }}
+                  />
                 )}
 
                 {q.imageUrl && (
@@ -470,7 +526,6 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
                   </div>
                 )}
 
-                {/* Mode Review: Boleh memutar audio untuk belajar */}
                 {q.audioUrl && (
                   <div className="mb-6 p-4 rounded-xl bg-cyber-bg/50 border border-white/5">
                     <p className="text-[10px] text-white/40 uppercase font-black tracking-widest mb-2">
@@ -532,14 +587,12 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
      LAYAR UJIAN (PLAYING)
   ===================== */
   const activeQuestion = exam.questions[currentQuestionIndex];
-  const isTimeCritical = timeLeft < 300; // Merah jika sisa kurang dari 5 menit
+  const isTimeCritical = timeLeft < 300;
 
   return (
     <div className="max-w-4xl mx-auto w-full flex flex-col min-h-[70vh]">
-      {/* Audio Hidden Element */}
       <audio ref={audioRef} className="hidden" />
 
-      {/* HUD (Heads Up Display) */}
       <header className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8 bg-cyber-surface p-5 rounded-3xl border border-white/5 shadow-inner sticky top-4 z-50">
         <div className="flex flex-col gap-1">
           <div className="bg-white/5 px-4 py-2 rounded-xl border border-white/5 inline-flex w-fit">
@@ -578,7 +631,6 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
         </button>
       </header>
 
-      {/* Area Pertanyaan */}
       <AnimatePresence mode="wait">
         <motion.div
           key={currentQuestionIndex}
@@ -599,7 +651,6 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
             )}
           </div>
 
-          {/* Sesi Listening Indicator */}
           {activeQuestion.section === "listening" && (
             <div className="mb-8 p-6 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center gap-4">
               <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center animate-pulse shadow-[0_0_20px_rgba(239,68,68,0.5)] shrink-0">
@@ -617,7 +668,6 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
             </div>
           )}
 
-          {/* Teks Pertanyaan */}
           {activeQuestion.questionText && (
             <p
               className="text-2xl text-white font-medium leading-relaxed mb-8 font-japanese"
@@ -625,7 +675,6 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
             />
           )}
 
-          {/* Gambar Soal */}
           {activeQuestion.imageUrl && (
             <div className="mb-8 rounded-2xl overflow-hidden border border-white/10 bg-white/5">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -637,7 +686,6 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
             </div>
           )}
 
-          {/* Pilihan Ganda */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-auto">
             {activeQuestion.options.map((opt, idx) => {
               const isSelected = answers[activeQuestion._key] === idx;
@@ -664,7 +712,6 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
         </motion.div>
       </AnimatePresence>
 
-      {/* Navigasi Bawah */}
       <div className="flex justify-between mt-8">
         <button
           onClick={prevQuestion}

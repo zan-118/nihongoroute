@@ -20,7 +20,7 @@ interface LibraryCardProps {
 export default async function CoursesLandingPage() {
   // 1. Tarik kategori JLPT (Main Quest)
   const jlptCategories: CategoryData[] = await client.fetch(
-    `*[_type == "course_category" && type == "jlpt"] | order(title asc)`,
+    `*[_type == "course_category" && type == "jlpt"] | order(title desc)`,
   );
 
   // 2. ✨ Tarik kategori General (Side Quests)
