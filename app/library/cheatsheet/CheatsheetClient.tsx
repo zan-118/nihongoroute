@@ -2,7 +2,14 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Hash, Clock, BookOpen, Layers } from "lucide-react";
+import {
+  Search,
+  Hash,
+  Clock,
+  BookOpen,
+  Layers,
+  ChevronDown,
+} from "lucide-react";
 
 export interface SheetItem {
   label: string;
@@ -28,13 +35,15 @@ export default function CheatsheetClient({
   const [selectedSheetId, setSelectedSheetId] = useState<string>(
     safeSheets?.length > 0 ? safeSheets[0]?._id : "",
   );
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const filteredSheets = safeSheets.filter((sheet) => {
     if (!sheet) return false;
     const searchLower = (searchTerm || "").toLowerCase();
-    const titleMatch = (sheet.title || "").toLowerCase().includes(searchLower);
-    const catMatch = (sheet.category || "").toLowerCase().includes(searchLower);
-    return titleMatch || catMatch;
+    return (
+      sheet.title?.toLowerCase().includes(searchLower) ||
+      sheet.category?.toLowerCase().includes(searchLower)
+    );
   });
 
   const activeSheet = safeSheets.find((s) => s?._id === selectedSheetId);
@@ -44,15 +53,14 @@ export default function CheatsheetClient({
   ];
 
   return (
-    <section className="flex flex-col lg:flex-row gap-8 min-h-[600px] relative z-10 pb-20">
-      {/* SIDEBAR NAVIGATION */}
-      <aside className="w-full lg:w-80 flex flex-col gap-6 shrink-0">
+    <section className="flex flex-col lg:flex-row gap-6 lg:gap-10 min-h-[600px] relative z-10 pb-20 uppercase">
+      {/* SIDEBAR / MOBILE NAV */}
+      <aside className="w-full lg:w-80 flex flex-col gap-4 shrink-0">
         <div className="relative group">
-          {/* Menggunakan neo-inset untuk Search Bar */}
           <input
             type="text"
-            placeholder="Search dataset..."
-            className="neo-inset w-full p-4 pl-12 focus:border-cyan-400/50 focus:ring-1 focus:ring-cyan-400/50 outline-none text-white transition-all font-mono text-sm placeholder:text-slate-600"
+            placeholder="Cari dataset..."
+            className="w-full bg-white/5 border border-white/10 p-4 pl-12 rounded-2xl focus:border-cyan-400/50 focus:ring-1 focus:ring-cyan-400/50 outline-none text-white transition-all font-mono text-sm"
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <Search
@@ -61,142 +69,138 @@ export default function CheatsheetClient({
           />
         </div>
 
-        <nav className="space-y-3 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
-          {filteredSheets?.length > 0 ? (
-            filteredSheets.map((sheet) => {
-              const isActive = selectedSheetId === sheet._id;
-              return (
-                <button
-                  key={sheet._id}
-                  onClick={() => setSelectedSheetId(sheet._id)}
-                  className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 text-left group ${
-                    isActive
-                      ? "neo-inset border-cyan-400/50 shadow-[inset_0_0_15px_rgba(34,211,238,0.1)]"
-                      : "neo-card border-transparent hover:border-white/10"
-                  }`}
+        {/* Mobile Dropdown Trigger */}
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="lg:hidden flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl text-white"
+        >
+          <span className="flex items-center gap-2 font-bold">
+            {activeSheet ? activeSheet.title : "Pilih Kategori"}
+          </span>
+          <ChevronDown
+            className={`transition-transform ${isMobileMenuOpen ? "rotate-180" : ""}`}
+          />
+        </button>
+
+        {/* Navigation List */}
+        <nav
+          className={`
+          ${isMobileMenuOpen ? "flex" : "hidden"} 
+          lg:flex flex-col gap-2 max-h-[50vh] lg:max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar
+        `}
+        >
+          {filteredSheets.map((sheet) => {
+            const isActive = selectedSheetId === sheet._id;
+            return (
+              <button
+                key={sheet._id}
+                onClick={() => {
+                  setSelectedSheetId(sheet._id);
+                  setIsMobileMenuOpen(false);
+                }}
+                className={`w-full flex items-center gap-4 p-4 rounded-xl transition-all duration-200 text-left group border ${
+                  isActive
+                    ? "bg-cyan-400/10 border-cyan-400/30 shadow-[0_0_20px_rgba(34,211,238,0.1)]"
+                    : "bg-transparent border-white/5 hover:bg-white/5"
+                }`}
+              >
+                <div
+                  className={`p-2 rounded-lg ${isActive ? "text-cyan-400" : "text-slate-500 group-hover:text-white"}`}
                 >
-                  <div
-                    className={`p-3 rounded-xl transition-colors ${
-                      isActive
-                        ? "bg-cyan-400/20 text-cyan-400"
-                        : "bg-white/5 text-slate-500 group-hover:text-white"
-                    }`}
+                  {getIconForCategory(sheet.category)}
+                </div>
+                <div className="overflow-hidden">
+                  <p
+                    className={`text-[10px] uppercase font-bold tracking-tighter ${isActive ? "text-cyan-400" : "text-slate-500"}`}
                   >
-                    {getIconForCategory(sheet.category)}
-                  </div>
-                  <div className="overflow-hidden">
-                    <p
-                      className={`text-[9px] uppercase font-black font-mono tracking-widest mb-1 transition-colors ${
-                        isActive ? "text-cyan-400" : "text-slate-500"
-                      }`}
-                    >
-                      {sheet.category}
-                    </p>
-                    <p
-                      className={`text-sm font-bold truncate w-full transition-colors ${
-                        isActive ? "text-white" : "text-slate-400"
-                      }`}
-                    >
-                      {sheet.title}
-                    </p>
-                  </div>
-                </button>
-              );
-            })
-          ) : (
-            <div className="text-center p-8 text-slate-500 text-xs font-mono border border-dashed border-white/10 rounded-2xl">
-              No Data Available
-            </div>
-          )}
+                    {sheet.category}
+                  </p>
+                  <p
+                    className={`text-sm font-semibold truncate ${isActive ? "text-white" : "text-slate-400"}`}
+                  >
+                    {sheet.title}
+                  </p>
+                </div>
+              </button>
+            );
+          })}
         </nav>
       </aside>
 
-      {/* MAIN CONTENT AREA */}
-      <article className="flex-1 w-full overflow-hidden">
+      {/* CONTENT AREA */}
+      <article className="flex-1 min-w-0">
         <AnimatePresence mode="wait">
           {activeSheet ? (
             <motion.div
               key={activeSheet._id}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="neo-card p-6 md:p-10 min-h-full flex flex-col"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="bg-white/[0.02] border border-white/10 rounded-[2rem] p-4 md:p-8"
             >
-              <header className="flex justify-between items-end mb-8 border-b border-white/5 pb-6">
-                <div>
-                  <h2 className="text-3xl md:text-4xl font-black text-white mb-3 uppercase tracking-tighter italic drop-shadow-md">
-                    {activeSheet.title}
-                  </h2>
-                  <p className="text-cyan-400 font-mono text-[10px] uppercase tracking-widest opacity-80 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                    Dataset: {activeSheet.category}
-                  </p>
+              <div className="mb-8">
+                <h2 className="text-2xl md:text-4xl font-black text-white mb-2 uppercase italic tracking-tight">
+                  {activeSheet.title}
+                </h2>
+                <div className="flex items-center gap-2">
+                  <div className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-ping" />
+                  <span className="text-cyan-400 font-mono text-[10px] uppercase tracking-[0.2em]">
+                    {activeSheet.category}
+                  </span>
                 </div>
-              </header>
+              </div>
 
-              <div className="neo-inset overflow-hidden flex-1 w-full">
-                <div className="overflow-x-auto custom-scrollbar w-full h-full max-h-[60vh]">
-                  <table className="w-full text-left border-collapse min-w-[500px]">
-                    <thead className="sticky top-0 bg-[#0f1115] z-10 shadow-md">
-                      <tr className="border-b border-white/5">
-                        <th className="p-5 md:p-6 text-[10px] font-black font-mono text-cyan-400 uppercase tracking-[0.2em] w-1/3 whitespace-nowrap">
-                          Item Label
-                        </th>
-                        <th className="p-5 md:p-6 text-[10px] font-black font-mono text-cyan-400 uppercase tracking-[0.2em] w-1/3 whitespace-nowrap">
-                          Target (JP)
-                        </th>
-                        <th className="p-5 md:p-6 text-[10px] font-black font-mono text-cyan-400 uppercase tracking-[0.2em] w-1/3 whitespace-nowrap">
-                          Romaji
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-white/5">
-                      {combinedItems.length > 0 ? (
-                        combinedItems.map((item, idx) => (
-                          <motion.tr
-                            key={idx}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: idx * 0.02 }}
-                            className="group hover:bg-white/5 transition-colors"
-                          >
-                            <td className="p-5 md:p-6">
-                              <span className="text-slate-400 font-medium text-sm">
-                                {item.label}
-                              </span>
-                            </td>
-                            <td className="p-5 md:p-6">
-                              <span className="text-white text-xl md:text-2xl font-japanese font-bold group-hover:text-cyan-400 transition-colors drop-shadow-sm">
-                                {item.jp}
-                              </span>
-                            </td>
-                            <td className="p-5 md:p-6">
-                              <span className="text-slate-500 font-mono text-xs group-hover:text-slate-300 transition-colors">
-                                {item.romaji}
-                              </span>
-                            </td>
-                          </motion.tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td
-                            colSpan={3}
-                            className="p-10 text-center text-slate-500 font-mono text-xs"
-                          >
-                            No items in this cheatsheet yet.
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
+              {/* Responsive Table / Card View */}
+              <div className="grid grid-cols-1 gap-3 md:block">
+                {/* Header Table (Hanya muncul di Desktop) */}
+                <div className="hidden md:grid grid-cols-3 p-4 border-b border-white/10 text-[10px] font-black font-mono text-cyan-400 uppercase tracking-widest">
+                  <div>LABEL</div>
+                  <div>TARGET (JP)</div>
+                  <div>ROMAJI</div>
                 </div>
+
+                {combinedItems.length > 0 ? (
+                  combinedItems.map((item, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: idx * 0.03 }}
+                      className="group flex flex-col md:flex-row md:items-center p-5 md:p-4 rounded-2xl md:rounded-none md:border-b border-white/5 hover:bg-white/[0.04] transition-all bg-white/5 md:bg-transparent "
+                    >
+                      {/* Label */}
+                      <div className="md:w-1/3 mb-1 md:mb-0">
+                        <span className="text-xs md:text-sm text-slate-400 font-medium">
+                          {item.label}
+                        </span>
+                      </div>
+
+                      {/* Japanese */}
+                      <div className="md:w-1/3 mb-2 md:mb-0">
+                        <span className="text-2xl md:text-xl font-japanese font-bold text-white group-hover:text-cyan-300 transition-colors">
+                          {item.jp}
+                        </span>
+                      </div>
+
+                      {/* Romaji */}
+                      <div className="md:w-1/3">
+                        <span className="text-[10px] md:text-xs font-mono text-slate-500 uppercase tracking-tighter">
+                          {item.romaji}
+                        </span>
+                      </div>
+                    </motion.div>
+                  ))
+                ) : (
+                  <div className="p-20 text-center text-slate-500 font-mono text-xs">
+                    Belum ada item tersedia.
+                  </div>
+                )}
               </div>
             </motion.div>
           ) : (
-            <div className="flex flex-col items-center justify-center h-full text-slate-600 border border-dashed border-white/10 rounded-[3rem] p-20">
-              <span className="text-6xl mb-6 opacity-30">📡</span>
-              <p className="font-mono font-black uppercase tracking-widest text-sm text-center">
-                Awaiting Data Selection
+            <div className="h-full flex items-center justify-center p-20 border border-dashed border-white/10 rounded-[2rem]">
+              <p className="text-slate-600 font-mono animate-pulse uppercase tracking-widest text-sm">
+                Pilih dataset di samping
               </p>
             </div>
           )}
