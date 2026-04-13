@@ -20,7 +20,7 @@ interface SanityResponse {
 export default async function CoursesLandingPage() {
   // Fetching digabung dalam satu query GROQ
   const { jlpt, general }: SanityResponse = await client.fetch(`{
-    "jlpt": *[_type == "course_category" && type == "jlpt"] | order(title asc),
+    "jlpt": *[_type == "course_category" && type == "jlpt"] | order(title desc),
     "general": *[_type == "course_category" && type == "general"] | order(title asc)
   }`);
 

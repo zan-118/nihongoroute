@@ -1,52 +1,89 @@
-import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import { ReactNode } from "react";
 import MobileNav from "@/components/MobileNav";
+import Navbar from "@/components/Navbar";
 import { ProgressProvider } from "@/context/UserProgressContext";
+
 import FloatingSupport from "@/components/FloatingSupport";
 
-// Font utama untuk kemudahan membaca
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
+const inter = Inter({ subsets: ["latin"] });
 
-// Font monospace untuk aksen cyber/coding/angka
-const jetbrains = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  display: "swap",
-});
-
-export const metadata: Metadata = {
-  title: "NihongoRoute | Cyberpunk JLPT Learning",
-  description: "Master Japanese with SRS and Cyberpunk aesthetics.",
+export const viewport: Viewport = {
+  themeColor: "#15171a",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export const metadata: Metadata = {
+  title: "NihongoRoute | Belajar Bahasa Jepang Gratis",
+  description:
+    "Platform belajar bahasa Jepang dengan sistem terstruktur, gamifikasi, dan latihan interaktif.",
+  keywords: [
+    "belajar bahasa jepang",
+    "JLPT N5",
+    "hiragana",
+    "katakana",
+    "kanji",
+    "flashcard",
+    "nihongo",
+  ],
+  manifest: "/manifest.json",
+  icons: {
+    icon: "/logo-branding.png",
+    apple: "/logo-branding.png",
+  },
+  verification: {
+    google: "Niyl1z2v4hJgZZzRFLzMLOk4xlYNyvSNnEiCC-eK7N4",
+  },
+  openGraph: {
+    title: "NihongoRoute | Misi Menguasai Bahasa Jepang",
+    description:
+      "Tingkatkan level bahasa Jepangmu! Belajar JLPT N5 dengan sistem Flashcard SRS, Quiz interaktif, dan kamus pintar.",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.nihongoroute.my.id",
+    siteName: "NihongoRoute",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "NihongoRoute Dashboard",
+      },
+    ],
+    locale: "id_ID",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NihongoRoute | Belajar Bahasa Jepang Gratis",
+    description:
+      "Platform e-learning bahasa Jepang gratis dengan gaya UI interaktif.",
+    images: ["/og-image.jpg"],
+  },
+};
+
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="id" className="scroll-smooth">
+    <html lang="id">
       <body
-        className={`${inter.variable} ${jetbrains.variable} font-sans bg-[#0a0c10] text-slate-200 antialiased selection:bg-cyan-500/30 selection:text-cyan-200`}
+        className={`${inter.className} antialiased bg-cyber-bg text-[#c4cfde] selection:bg-cyber-neon selection:text-cyber-bg overflow-x-hidden`}
       >
         <ProgressProvider>
-          {/* Latar Belakang Cyber Grid Global */}
-          <div className="fixed inset-0 z-[-1] bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
-          <div className="fixed inset-0 z-[-1] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(0,255,239,0.05),rgba(255,255,255,0))]" />
+          <div className="hidden md:block sticky top-0 z-50">
+            <Navbar />
+          </div>
 
-          <Navbar />
+          <main className="min-h-screen pt-4 md:pt-20 pb-28 md:pb-12 max-w-[100vw] overflow-x-hidden">
+            {children}
+          </main>
 
-          {/* Wrapper utama agar tidak tertutup nav bottom di mobile */}
-          <div className="min-h-screen pb-20 md:pb-0 pt-20">{children}</div>
-
-          <MobileNav />
           <FloatingSupport />
+
+          <div className="md:hidden relative z-50">
+            <MobileNav />
+          </div>
         </ProgressProvider>
       </body>
     </html>
