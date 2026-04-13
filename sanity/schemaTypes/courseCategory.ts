@@ -6,10 +6,15 @@ export default defineType({
   type: "document",
   fields: [
     defineField({
+      name: "categoryId",
+      title: "Category ID",
+      type: "string",
+      description: "Contoh: CAT-N5, CAT-TRAVEL",
+    }),
+    defineField({
       name: "title",
       title: "Title",
       type: "string",
-      description: "Contoh: JLPT N5, Japanese for Travel, Business Japanese",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -29,10 +34,7 @@ export default defineType({
       name: "slug",
       title: "Slug",
       type: "slug",
-      options: {
-        source: "title",
-        maxLength: 96,
-      },
+      options: { source: "title", maxLength: 96 },
       validation: (Rule) => Rule.required(),
     }),
   ],
@@ -40,6 +42,15 @@ export default defineType({
     select: {
       title: "title",
       subtitle: "type",
+      customId: "categoryId",
+      systemId: "_id",
+    },
+    prepare({ title, subtitle, customId, systemId }) {
+      const displayTitle = customId ? `[${customId}] ${title}` : title;
+      return {
+        title: displayTitle,
+        subtitle: `SysID: ${systemId} | Type: ${subtitle}`,
+      };
     },
   },
 });

@@ -7,6 +7,12 @@ export default defineType({
   fields: [
     // --- IDENTITAS UTAMA ---
     defineField({
+      name: "verbId",
+      title: "Verb ID",
+      type: "string",
+      description: "Contoh: VRB-G1-001",
+    }),
+    defineField({
       name: "masu",
       title: "Bentuk Masu (Utama)",
       type: "string",
@@ -41,9 +47,7 @@ export default defineType({
       name: "group",
       title: "Golongan (Group)",
       type: "number",
-      options: {
-        list: [1, 2, 3],
-      },
+      options: { list: [1, 2, 3] },
       validation: (Rule) => Rule.required().min(1).max(3),
     }),
     defineField({
@@ -51,10 +55,6 @@ export default defineType({
       title: "Bab (Lesson)",
       type: "string",
     }),
-
-    // ... field group, lesson, dll ...
-
-    // ✨ 1. Tambahkan Referensi Kategori
     defineField({
       name: "course_category",
       title: "Course Category (Level)",
@@ -62,16 +62,12 @@ export default defineType({
       to: [{ type: "course_category" }],
       description: "Pilih level untuk memunculkan kata kerja ini di Flashcard",
     }),
-
-    // ✨ 2. Tambahkan Toggle Flashcard (Opsional tapi bagus)
     defineField({
       name: "showInFlashcard",
       type: "boolean",
       title: "Munculkan di Flashcard?",
       initialValue: true,
     }),
-
-    // ... field te, ta, nai, dll ...
 
     // --- KONJUGASI DASAR ---
     defineField({
@@ -94,11 +90,7 @@ export default defineType({
     }),
 
     // --- KONJUGASI LANJUTAN (ULTRA) ---
-    defineField({
-      name: "teiru",
-      title: "Bentuk ~Te Iru",
-      type: "string",
-    }),
+    defineField({ name: "teiru", title: "Bentuk ~Te Iru", type: "string" }),
     defineField({
       name: "tai",
       title: "Bentuk ~Tai (Keinginan)",
@@ -150,12 +142,14 @@ export default defineType({
       title: "masu",
       subtitle: "meaning",
       group: "group",
+      customId: "verbId",
+      systemId: "_id",
     },
-    prepare(selection) {
-      const { title, subtitle, group } = selection;
+    prepare({ title, subtitle, group, customId, systemId }) {
+      const displayTitle = customId ? `[${customId}] ${title}` : title;
       return {
-        title: title,
-        subtitle: `${subtitle} (Golongan ${group})`,
+        title: displayTitle,
+        subtitle: `SysID: ${systemId} | ${subtitle} (Gol. ${group})`,
       };
     },
   },

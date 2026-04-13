@@ -1,4 +1,3 @@
-// sanity/schemaTypes/cheatsheet.ts
 import { defineField, defineType } from "sanity";
 
 export default defineType({
@@ -6,6 +5,13 @@ export default defineType({
   title: "Cheatsheet (Referensi Cepat)",
   type: "document",
   fields: [
+    defineField({
+      name: "sheetId",
+      title: "ID / Kode Sheet (Opsional)",
+      type: "string",
+      description:
+        "Contoh: CS-N5-01 (Berguna untuk pengurutan atau pencarian spesifik).",
+    }),
     defineField({
       name: "title",
       title: "Judul Cheatsheet",
@@ -28,33 +34,29 @@ export default defineType({
       },
       validation: (Rule) => Rule.required(),
     }),
-
-    // ✨ OPSI 1: Tarik data otomatis dari Database Kosakata Global
     defineField({
       name: "linkedVocab",
       title: "Tarik dari Kosakata Global",
       type: "array",
       description:
         "Gunakan ini untuk menarik kosakata yang sudah ada di database tanpa perlu mengetik ulang.",
-      of: [
-        {
-          type: "reference",
-          to: [{ type: "kosakata" }],
-        },
-      ],
+      of: [{ type: "reference", to: [{ type: "kosakata" }] }],
     }),
-
-    // 📝 OPSI 2: Ketik manual (Hanya untuk tabel rumus / tata bahasa)
     defineField({
       name: "items",
       title: "Item Manual (Opsional)",
       type: "array",
-      description:
-        "Gunakan ini HANYA jika datanya bukan kosakata biasa (misal: Aturan penggunaan Partikel WA vs GA).",
+      description: "Gunakan ini HANYA jika datanya bukan kosakata biasa.",
       of: [
         {
           type: "object",
           fields: [
+            {
+              name: "itemId",
+              title: "ID Item (Opsional)",
+              type: "string",
+              description: "Bisa diisi angka urut (1, 2, 3) atau kode",
+            },
             { name: "label", title: "Konteks / Arti", type: "string" },
             { name: "jp", title: "Bahasa Jepang / Rumus", type: "string" },
             { name: "romaji", title: "Romaji", type: "string" },
@@ -67,6 +69,15 @@ export default defineType({
     select: {
       title: "title",
       subtitle: "category",
+      customId: "sheetId",
+      systemId: "_id",
+    },
+    prepare({ title, subtitle, customId, systemId }) {
+      const displayTitle = customId ? `[${customId}] ${title}` : title;
+      return {
+        title: displayTitle,
+        subtitle: `SysID: ${systemId} | ${subtitle}`,
+      };
     },
   },
 });

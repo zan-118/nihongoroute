@@ -152,7 +152,7 @@ export default function CheatsheetClient({
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/5">
+                    <tbody className="divide-y divide-white/5 u">
                       {/* 3. RENDER MENGGUNAKAN combinedItems */}
                       {combinedItems.length > 0 ? (
                         combinedItems.map((item, idx) => (
@@ -164,7 +164,7 @@ export default function CheatsheetClient({
                             className="group hover:bg-white/5 transition-colors"
                           >
                             <td className="p-5 md:p-6">
-                              <span className="text-white/60 font-medium text-sm">
+                              <span className="text-white/60 font-medium text-sm uppercase">
                                 {item.label}
                               </span>
                             </td>
@@ -174,7 +174,7 @@ export default function CheatsheetClient({
                               </span>
                             </td>
                             <td className="p-5 md:p-6">
-                              <span className="text-[#c4cfde]/40 font-mono text-xs group-hover:text-[#c4cfde] transition-colors">
+                              <span className="text-[#c4cfde]/40 font-mono text-xs group-hover:text-[#c4cfde] transition-colors uppercase">
                                 {item.romaji}
                               </span>
                             </td>

@@ -18,10 +18,6 @@ export default function FloatingSupport() {
       className="fixed bottom-24 right-6 md:bottom-10 md:right-10 z-[100]"
     >
       <Link href="/support" className="group flex items-center gap-3">
-        <span className="hidden md:block opacity-0 group-hover:opacity-100 transition-all duration-300 bg-cyber-surface text-cyber-neon text-[9px] font-black uppercase tracking-[0.2em] px-4 py-2 rounded-full border border-cyber-neon/20 shadow-[0_0_20px_rgba(0,238,255,0.1)]">
-          Support NihongoRoute
-        </span>
-
         <div className="relative">
           <div className="absolute inset-0 bg-cyber-neon rounded-2xl blur-xl opacity-20 group-hover:opacity-40 animate-pulse transition-opacity" />
 

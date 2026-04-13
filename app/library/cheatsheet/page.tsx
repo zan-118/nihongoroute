@@ -5,7 +5,17 @@ export const revalidate = 3600;
 
 export default async function CheatsheetPage() {
   const sheets = await client.fetch(
-    `*[_type == "cheatsheet"] | order(category asc, title asc)`,
+    `*[_type == "cheatsheet"] | order(category asc, title asc) {
+      _id,
+      title,
+      category,
+      items,
+      linkedVocab[]->{
+        "jp": word,       // 👈 Ganti 'word' dengan nama field 'huruf jepang' di skema kosakata Anda
+        "label": meaning, // 👈 Ganti 'meaning' dengan nama field 'arti' di skema kosakata Anda
+        romaji
+      }
+    }`,
   );
 
   return (

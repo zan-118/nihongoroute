@@ -5,6 +5,12 @@ export default defineType({
   title: "Lesson",
   type: "document",
   fields: [
+    defineField({
+      name: "lessonId",
+      title: "Lesson ID",
+      type: "string",
+      description: "Contoh: LSN-N5-01",
+    }),
     defineField({ name: "title", title: "Title", type: "string" }),
     defineField({
       name: "slug",
@@ -14,24 +20,12 @@ export default defineType({
     }),
     defineField({ name: "orderNumber", title: "Order Number", type: "number" }),
     defineField({ name: "summary", title: "Summary", type: "text" }),
-
-    // Field Lama (Pertahankan untuk sementara)
-    defineField({
-      name: "level",
-      title: "Level (OLD)",
-      type: "reference",
-      to: [{ type: "level" }],
-    }),
-
-    // Field Baru
     defineField({
       name: "course_category",
-      title: "Course Category (NEW)",
+      title: "Course Category",
       type: "reference",
       to: [{ type: "course_category" }],
-      description: "Pilih kategori pembelajaran untuk materi ini",
     }),
-
     defineField({
       name: "vocabList",
       title: "Vocab List",
@@ -40,7 +34,7 @@ export default defineType({
     }),
     defineField({
       name: "referenceWords",
-      title: "Reference Words (Other Lessons)",
+      title: "Reference Words",
       type: "array",
       of: [{ type: "reference", to: [{ type: "kosakata" }] }],
     }),
@@ -75,4 +69,19 @@ export default defineType({
       type: "text",
     }),
   ],
+  preview: {
+    select: {
+      title: "title",
+      subtitle: "summary",
+      customId: "lessonId",
+      systemId: "_id",
+    },
+    prepare({ title, subtitle, customId, systemId }) {
+      const displayTitle = customId ? `[${customId}] ${title}` : title;
+      return {
+        title: displayTitle,
+        subtitle: `SysID: ${systemId} | ${subtitle || "No summary"}`,
+      };
+    },
+  },
 });

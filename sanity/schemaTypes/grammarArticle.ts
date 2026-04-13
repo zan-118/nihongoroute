@@ -5,6 +5,12 @@ export default defineType({
   title: "Grammar Article",
   type: "document",
   fields: [
+    defineField({
+      name: "grammarId",
+      title: "Grammar ID",
+      type: "string",
+      description: "Contoh: GRM-N5-01",
+    }),
     defineField({ name: "title", title: "Title", type: "string" }),
     defineField({
       name: "slug",
@@ -12,15 +18,12 @@ export default defineType({
       type: "slug",
       options: { source: "title" },
     }),
-
-    // Field Baru
     defineField({
       name: "course_category",
       title: "Course Category",
       type: "reference",
       to: [{ type: "course_category" }],
     }),
-
     defineField({ name: "meaning", title: "Meaning / Focus", type: "string" }),
     defineField({
       name: "content",
@@ -29,4 +32,19 @@ export default defineType({
       of: [{ type: "block" }, { type: "exampleSentence" }, { type: "callout" }],
     }),
   ],
+  preview: {
+    select: {
+      title: "title",
+      subtitle: "meaning",
+      customId: "grammarId",
+      systemId: "_id",
+    },
+    prepare({ title, subtitle, customId, systemId }) {
+      const displayTitle = customId ? `[${customId}] ${title}` : title;
+      return {
+        title: displayTitle,
+        subtitle: `SysID: ${systemId} | ${subtitle || ""}`,
+      };
+    },
+  },
 });
