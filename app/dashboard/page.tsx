@@ -18,7 +18,6 @@ export default function DashboardPage() {
   const [guestId, setGuestId] = useState<string>("LOADING...");
   const [stats, setStats] = useState<ProgressState | null>(null);
 
-  // State untuk Riwayat Ujian
   const [examHistory, setExamHistory] = useState<any[]>([]);
   const [isExporting, setIsExporting] = useState(false);
   const certificateRef = useRef<HTMLDivElement>(null);
@@ -33,7 +32,6 @@ export default function DashboardPage() {
     setGuestId(savedId);
     setStats(loadProgress());
 
-    // Fetch riwayat ujian dari Sanity berdasarkan guestId
     const fetchHistory = async () => {
       try {
         const query = `*[_type == "examResult" && guestId == $id] | order(completedAt desc)`;
@@ -43,33 +41,28 @@ export default function DashboardPage() {
         console.error("Gagal menarik riwayat ujian:", error);
       }
     };
-
     fetchHistory();
   }, []);
 
-  // Fungsi Export ke PDF
   const handleDownloadCertificate = async () => {
     if (!certificateRef.current) return;
     setIsExporting(true);
-
     try {
       const element = certificateRef.current;
       const canvas = await html2canvas(element, {
-        backgroundColor: "#0a0a0a", // Sesuai dengan warna cyber-bg
-        scale: 2, // Kualitas HD
+        backgroundColor: "#0a0c10",
+        scale: 2,
         logging: false,
         useCORS: true,
       });
-
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF({
         orientation: "landscape",
         unit: "px",
         format: [canvas.width, canvas.height],
       });
-
       pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
-      pdf.save(`NihongoRoute_Report_${guestId}.pdf`);
+      pdf.save(`NihongoPath_Report_${guestId}.pdf`);
     } catch (error) {
       console.error("Gagal membuat PDF:", error);
       alert("Terjadi kesalahan saat meng-export PDF.");
@@ -90,16 +83,11 @@ export default function DashboardPage() {
       const target = e.target as HTMLInputElement;
       const file = target.files?.[0];
       if (!file) return;
-
       const reader = new FileReader();
       reader.onload = (event: ProgressEvent<FileReader>) => {
         const result = event.target?.result as string;
-        const success = importData(result);
-        if (success) {
-          window.location.reload();
-        } else {
-          alert("Format file tidak valid atau rusak!");
-        }
+        if (importData(result)) window.location.reload();
+        else alert("Format file tidak valid atau rusak!");
       };
       reader.readAsText(file);
     };
@@ -109,7 +97,7 @@ export default function DashboardPage() {
   const handleResetData = () => {
     if (
       confirm(
-        "⚠️ WARNING: INITIATING DATA PURGE. Semua progres, level, dan memori SRS akan dihapus permanen. Lanjutkan?",
+        "⚠️ WARNING: INITIATING DATA PURGE. Semua progres akan dihapus permanen. Lanjutkan?",
       )
     ) {
       localStorage.removeItem("nihongoroute_save_data");
@@ -120,13 +108,13 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-cyber-bg flex flex-col items-center justify-center">
+      <div className="min-h-screen flex flex-col items-center justify-center">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-          className="w-16 h-16 border-4 border-cyber-neon/20 border-t-cyber-neon rounded-full shadow-[0_0_30px_rgba(0,255,239,0.5)]"
+          className="w-16 h-16 border-4 border-cyan-400/20 border-t-cyan-400 rounded-full shadow-[0_0_30px_rgba(34,211,238,0.5)]"
         />
-        <p className="mt-8 text-cyber-neon font-mono font-black uppercase tracking-[0.4em] text-[10px] animate-pulse">
+        <p className="mt-8 text-cyan-400 font-mono font-black uppercase tracking-[0.4em] text-[10px] animate-pulse">
           Syncing Neural Link...
         </p>
       </div>
@@ -139,365 +127,325 @@ export default function DashboardPage() {
   ).length;
 
   return (
-    <div className="min-h-screen bg-cyber-bg pb-32 overflow-hidden relative">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
-
+    <div className="max-w-7xl mx-auto px-4 md:px-8 pt-8 md:pt-12 relative z-10 pb-32">
       <LevelUpOverlay level={progress.level} />
 
-      <main className="max-w-7xl mx-auto px-4 md:px-8 pt-24 md:pt-32 relative z-10">
-        <header className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-12 border-b border-white/5 pb-8">
+      <header className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-12 border-b border-white/5 pb-8">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+        >
+          <div className="flex items-center gap-4 mb-3 font-mono">
+            <span className="neo-inset px-3 py-1 text-cyan-400 text-[10px] font-black uppercase tracking-widest border border-cyan-400/30">
+              Lvl {progress.level} User
+            </span>
+            <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest">
+              ID: {guestId}
+            </span>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-black text-white italic uppercase tracking-tighter drop-shadow-lg">
+            Das<span className="text-cyan-400">hboard</span>
+          </h1>
+        </motion.div>
+
+        <Link href="/review" className="w-full lg:w-auto">
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="btn-cyber flex items-center justify-between lg:justify-center gap-4"
           >
-            <div className="flex items-center gap-4 mb-2 font-mono">
-              <span className="px-3 py-1 rounded bg-cyber-neon/10 text-cyber-neon text-[10px] font-black uppercase tracking-widest border border-cyber-neon/30 shadow-[0_0_10px_rgba(0,255,239,0.2)]">
-                Lvl {progress.level} User
+            Mulai Review
+            {dueCount > 0 && (
+              <span className="bg-red-500 text-white px-3 py-1 rounded-lg text-[10px] animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.8)]">
+                {dueCount} DUE
               </span>
-              <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest">
-                ID: {guestId}
-              </span>
-            </div>
-            <h1 className="text-5xl md:text-7xl font-black text-white italic uppercase tracking-tighter drop-shadow-lg">
-              Das<span className="text-cyber-neon">hboard</span>
-            </h1>
+            )}
           </motion.div>
+        </Link>
+      </header>
 
-          <Link href="/review" className="relative group w-full lg:w-auto">
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full lg:w-auto px-10 py-5 bg-cyber-neon text-cyber-bg font-black rounded-2xl shadow-[0_0_30px_rgba(0,255,239,0.4)] uppercase text-sm tracking-widest flex items-center justify-between lg:justify-center gap-4 transition-all hover:bg-white"
-            >
-              Mulai Review
-              {dueCount > 0 && (
-                <span className="bg-red-500 text-white px-3 py-1 rounded-lg text-[10px] animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.8)]">
-                  {dueCount} DUE
-                </span>
-              )}
-            </motion.div>
-          </Link>
-        </header>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 mb-8">
-          {/* Kolom Kiri: Quests & Stats */}
-          <div className="lg:col-span-2 space-y-6 md:space-y-8">
-            <section className="bg-cyber-surface p-6 md:p-8 rounded-[2.5rem] border border-white/5 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5),5px_5px_15px_rgba(0,0,0,0.4)] relative overflow-hidden">
-              <div className="flex justify-between items-end mb-4 relative z-10">
-                <h2 className="text-white font-black uppercase italic tracking-widest text-xs md:text-sm">
-                  Experience <span className="text-white/30">Points</span>
-                </h2>
-                <span className="text-cyber-neon font-mono font-bold text-lg drop-shadow-[0_0_8px_rgba(0,255,239,0.5)]">
-                  {progress.xp} XP
-                </span>
-              </div>
-              <div className="w-full bg-cyber-bg h-4 rounded-full overflow-hidden border border-white/5 p-1 shadow-inner relative z-10">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${(progress.xp % 1000) / 10}%` }}
-                  transition={{ duration: 1, ease: "circOut" }}
-                  className="h-full bg-gradient-to-r from-cyber-neon to-blue-500 rounded-full shadow-[0_0_15px_rgba(0,255,239,0.6)] relative"
-                >
-                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-white/40 rounded-t-full opacity-50" />
-                </motion.div>
-              </div>
-              <p className="mt-4 text-[9px] text-[#c4cfde]/40 uppercase font-black tracking-widest font-mono text-right relative z-10">
-                {1000 - (progress.xp % 1000)} XP to Next Level
-              </p>
-            </section>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-              <DailyQuests />
-              <MemoryStats />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 mb-8">
+        {/* Kolom Kiri */}
+        <div className="lg:col-span-2 space-y-6 md:space-y-8">
+          <section className="neo-card p-6 md:p-8 relative overflow-hidden">
+            <div className="flex justify-between items-end mb-4 relative z-10">
+              <h2 className="text-white font-black uppercase italic tracking-widest text-xs md:text-sm">
+                Experience <span className="text-white/30">Points</span>
+              </h2>
+              <span className="text-cyan-400 font-mono font-bold text-lg drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]">
+                {progress.xp} XP
+              </span>
             </div>
+            <div className="neo-inset w-full h-4 overflow-hidden relative z-10">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${(progress.xp % 1000) / 10}%` }}
+                transition={{ duration: 1, ease: "circOut" }}
+                className="h-full bg-gradient-to-r from-cyan-400 to-indigo-500 rounded-full shadow-[0_0_15px_rgba(34,211,238,0.6)]"
+              />
+            </div>
+            <p className="mt-4 text-[9px] text-slate-500 uppercase font-black tracking-widest font-mono text-right relative z-10">
+              {1000 - (progress.xp % 1000)} XP to Next Level
+            </p>
+          </section>
 
-            <Heatmap studyDays={stats?.studyDays || {}} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            <DailyQuests />
+            <MemoryStats />
           </div>
 
-          {/* Kolom Kanan: Info & System Actions */}
-          <div className="space-y-6 md:space-y-8">
-            <section className="bg-gradient-to-br from-cyber-surface to-cyber-bg p-6 md:p-8 rounded-[2.5rem] border border-white/5 shadow-neumorphic">
-              <h2 className="text-cyber-neon font-black uppercase tracking-widest text-[10px] mb-6 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-cyber-neon animate-pulse" />
-                System Performance
-              </h2>
-              <div className="space-y-6">
-                <SimpleStat
-                  label="Total Words"
-                  value={Object.keys(progress.srs).length}
-                />
-                <SimpleStat
-                  label="Streak"
-                  value={`${stats?.streak || 0} Days`}
-                  color="text-orange-400"
-                  glow="drop-shadow-[0_0_10px_rgba(249,115,22,0.5)]"
-                />
-                <SimpleStat
-                  label="Daily Reviews"
-                  value={stats?.todayReviewCount || 0}
-                  color="text-green-400"
-                />
-              </div>
-            </section>
-
-            <nav className="grid grid-cols-2 gap-4">
-              <QuickLink
-                href="/courses/n5"
-                label="Materi N5"
-                icon="⛩️"
-                color="hover:border-blue-500/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]"
-              />
-              <QuickLink
-                href="/courses/jlpt-n5/kanji"
-                label="Kanji DB"
-                icon="🈴"
-                color="hover:border-purple-500/50 hover:shadow-[0_0_20px_rgba(168,85,247,0.2)]"
-              />
-              <QuickLink
-                href="/library"
-                label="Library"
-                icon="🏛️"
-                color="hover:border-green-500/50 hover:shadow-[0_0_20px_rgba(34,197,94,0.2)]"
-              />
-              <QuickLink
-                href="/support"
-                label="Support"
-                icon="☕"
-                color="hover:border-orange-500/50 hover:shadow-[0_0_20px_rgba(249,115,22,0.2)]"
-              />
-            </nav>
-
-            <section className="bg-cyber-surface p-6 md:p-8 rounded-[2.5rem] border border-white/5">
-              <h2 className="text-white/30 font-black uppercase tracking-widest text-[10px] mb-6 italic">
-                Data Protocol
-              </h2>
-              <div className="space-y-3">
-                <button
-                  onClick={handleExportData}
-                  className="w-full flex items-center justify-between p-4 bg-cyber-bg hover:bg-[#1a1c20] border border-white/5 rounded-2xl transition-all group shadow-inner"
-                >
-                  <span className="text-[10px] font-black uppercase text-white/60 group-hover:text-cyber-neon transition-colors">
-                    Export Save
-                  </span>
-                  <span className="text-lg group-hover:scale-110 transition-transform">
-                    💾
-                  </span>
-                </button>
-                <button
-                  onClick={handleImportData}
-                  className="w-full flex items-center justify-between p-4 bg-cyber-bg hover:bg-[#1a1c20] border border-white/5 rounded-2xl transition-all group shadow-inner"
-                >
-                  <span className="text-[10px] font-black uppercase text-white/60 group-hover:text-blue-400 transition-colors">
-                    Import Save
-                  </span>
-                  <span className="text-lg group-hover:scale-110 transition-transform">
-                    📥
-                  </span>
-                </button>
-                <button
-                  onClick={handleResetData}
-                  className="w-full flex items-center justify-between p-4 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 rounded-2xl transition-all group mt-6"
-                >
-                  <span className="text-[10px] font-black uppercase text-red-400/80 group-hover:text-red-400">
-                    System Format
-                  </span>
-                  <span className="text-lg group-hover:scale-110 transition-transform">
-                    ⚠️
-                  </span>
-                </button>
-              </div>
-            </section>
-          </div>
+          <Heatmap studyDays={stats?.studyDays || {}} />
         </div>
 
-        {/* =========================================
-            EXAM HISTORY & CERTIFICATE SECTION
-        ========================================= */}
-        <section className="mt-8 mb-24">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-            <div className="flex items-center gap-4">
-              <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-widest italic border-l-4 border-amber-500 pl-4">
-                Official <span className="text-amber-500">Records</span>
-              </h3>
+        {/* Kolom Kanan */}
+        <div className="space-y-6 md:space-y-8">
+          <section className="neo-card p-6 md:p-8 bg-gradient-to-br from-[#0f1115] to-[#0a0c10]">
+            <h2 className="text-cyan-400 font-mono font-black uppercase tracking-widest text-[10px] mb-6 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+              System Performance
+            </h2>
+            <div className="space-y-4">
+              <SimpleStat
+                label="Total Words"
+                value={Object.keys(progress.srs).length}
+              />
+              <SimpleStat
+                label="Streak"
+                value={`${stats?.streak || 0} Days`}
+                color="text-amber-400"
+              />
+              <SimpleStat
+                label="Daily Reviews"
+                value={stats?.todayReviewCount || 0}
+                color="text-emerald-400"
+              />
             </div>
-            {examHistory.length > 0 && (
+          </section>
+
+          <nav className="grid grid-cols-2 gap-4">
+            <QuickLink href="/courses/n5" label="Materi N5" icon="⛩️" />
+            <QuickLink
+              href="/courses/jlpt-n5/kanji"
+              label="Kanji DB"
+              icon="🈴"
+            />
+            <QuickLink href="/library" label="Library" icon="🏛️" />
+            <QuickLink href="/support" label="Support" icon="☕" />
+          </nav>
+
+          <section className="neo-card p-6 md:p-8">
+            <h2 className="text-slate-500 font-mono font-black uppercase tracking-widest text-[10px] mb-6">
+              Data Protocol
+            </h2>
+            <div className="space-y-3">
               <button
-                onClick={handleDownloadCertificate}
-                disabled={isExporting}
-                className="bg-white/5 hover:bg-white/10 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest py-3 px-6 rounded-xl transition-all flex items-center gap-2 disabled:opacity-50"
+                onClick={handleExportData}
+                className="neo-inset w-full flex items-center justify-between p-4 hover:bg-white/5 transition-all group"
               >
-                {isExporting ? "Rendering PDF..." : "📥 Download Certificate"}
+                <span className="text-[10px] font-black uppercase text-slate-400 group-hover:text-cyan-400 transition-colors">
+                  Export Save
+                </span>
+                <span className="text-lg group-hover:scale-110 transition-transform">
+                  💾
+                </span>
               </button>
-            )}
+              <button
+                onClick={handleImportData}
+                className="neo-inset w-full flex items-center justify-between p-4 hover:bg-white/5 transition-all group"
+              >
+                <span className="text-[10px] font-black uppercase text-slate-400 group-hover:text-indigo-400 transition-colors">
+                  Import Save
+                </span>
+                <span className="text-lg group-hover:scale-110 transition-transform">
+                  📥
+                </span>
+              </button>
+              <button
+                onClick={handleResetData}
+                className="neo-inset border-red-500/20 w-full flex items-center justify-between p-4 hover:bg-red-500/10 transition-all group mt-6"
+              >
+                <span className="text-[10px] font-black uppercase text-red-500/80 group-hover:text-red-400">
+                  System Format
+                </span>
+                <span className="text-lg group-hover:scale-110 transition-transform">
+                  ⚠️
+                </span>
+              </button>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      {/* EXAM HISTORY */}
+      <section className="mt-12 mb-24">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+          <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-widest italic border-l-4 border-amber-500 pl-4">
+            Official <span className="text-amber-500">Records</span>
+          </h3>
+          {examHistory.length > 0 && (
+            <button
+              onClick={handleDownloadCertificate}
+              disabled={isExporting}
+              className="neo-inset px-6 py-3 text-cyan-400 text-[10px] font-black uppercase tracking-widest hover:bg-white/5 transition-all flex items-center gap-2 disabled:opacity-50"
+            >
+              {isExporting ? "Rendering PDF..." : "📥 Download Certificate"}
+            </button>
+          )}
+        </div>
+
+        <div
+          ref={certificateRef}
+          className="neo-card p-8 md:p-12 relative overflow-hidden"
+        >
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[150px] font-black italic opacity-[0.02] text-white pointer-events-none whitespace-nowrap">
+            NIHONGO PATH
           </div>
 
-          <div
-            ref={certificateRef}
-            className="bg-cyber-surface p-8 md:p-12 rounded-[3rem] border border-white/5 shadow-2xl relative overflow-hidden"
-          >
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[150px] font-black italic opacity-[0.02] text-white pointer-events-none whitespace-nowrap">
-              NIHONGO PATH
+          <div className="relative z-10">
+            <div className="flex justify-between items-end border-b border-white/10 pb-6 mb-8">
+              <div>
+                <h4 className="text-cyan-400 font-mono text-[10px] uppercase tracking-[0.3em] mb-1">
+                  Candidature Report
+                </h4>
+                <p className="text-white text-lg font-bold font-mono tracking-widest">
+                  {guestId}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="text-slate-500 font-mono text-[10px] uppercase tracking-widest font-bold">
+                  Level Achieved
+                </p>
+                <p className="text-amber-500 text-2xl font-black italic uppercase">
+                  LVL {progress.level}
+                </p>
+              </div>
             </div>
 
-            <div className="relative z-10">
-              <div className="flex justify-between items-end border-b border-white/10 pb-6 mb-8">
-                <div>
-                  <h4 className="text-cyber-neon font-mono text-[10px] uppercase tracking-[0.3em] mb-1">
-                    Candidature Report
-                  </h4>
-                  <p className="text-white text-lg font-bold font-mono tracking-widest">
-                    {guestId}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold">
-                    Level Achieved
-                  </p>
-                  <p className="text-amber-500 text-2xl font-black italic uppercase">
-                    LVL {progress.level}
-                  </p>
-                </div>
-              </div>
-
-              {examHistory.length > 0 ? (
-                <div className="space-y-6">
-                  {examHistory.map((exam) => (
-                    <div
-                      key={exam._id}
-                      className="bg-cyber-bg/50 p-6 md:p-8 rounded-3xl border border-white/5 shadow-lg"
-                    >
-                      {/* Header Kartu */}
-                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 pb-6 border-b border-white/5">
-                        <div>
-                          <h5 className="text-white font-black italic uppercase tracking-wide text-xl md:text-2xl mb-1">
-                            {exam.examTitle}
-                          </h5>
-                          <p className="text-white/40 text-xs font-mono">
-                            {new Date(exam.completedAt).toLocaleString("id-ID")}
+            {examHistory.length > 0 ? (
+              <div className="space-y-6">
+                {examHistory.map((exam) => (
+                  <div key={exam._id} className="neo-inset p-6 md:p-8">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 pb-6 border-b border-white/5">
+                      <div>
+                        <h5 className="text-white font-black italic uppercase tracking-wide text-xl md:text-2xl mb-1">
+                          {exam.examTitle}
+                        </h5>
+                        <p className="text-slate-500 text-xs font-mono">
+                          {new Date(exam.completedAt).toLocaleString("id-ID")}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-6">
+                        <div className="text-right">
+                          <p className="text-slate-500 font-mono text-[10px] font-black uppercase tracking-widest mb-1">
+                            Total Score
+                          </p>
+                          <p
+                            className={`text-3xl font-black font-mono ${exam.passed ? "text-emerald-400" : "text-rose-400"}`}
+                          >
+                            {exam.score}{" "}
+                            <span className="text-sm text-slate-600">
+                              / 180
+                            </span>
                           </p>
                         </div>
-                        <div className="flex items-center gap-6">
-                          <div className="text-right">
-                            <p className="text-white/40 text-[10px] font-black uppercase tracking-widest mb-1">
-                              Total Score
-                            </p>
-                            <p
-                              className={`text-3xl font-black font-mono ${exam.passed ? "text-green-400" : "text-red-400"}`}
-                            >
-                              {exam.score}{" "}
-                              <span className="text-sm text-white/30">
-                                / 180
-                              </span>
-                            </p>
-                          </div>
-                          <div
-                            className={`px-4 py-2 rounded-xl font-black uppercase tracking-widest text-xs border ${exam.passed ? "bg-green-500/10 border-green-500/30 text-green-500 shadow-[0_0_15px_rgba(34,197,94,0.3)]" : "bg-red-500/10 border-red-500/30 text-red-500 shadow-[0_0_15px_rgba(239,68,68,0.3)]"}`}
-                          >
-                            {exam.passed ? "CLEARED" : "FAILED"}
-                          </div>
+                        <div
+                          className={`px-4 py-2 rounded-xl font-black font-mono uppercase tracking-widest text-xs border ${exam.passed ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400" : "bg-rose-500/10 border-rose-500/30 text-rose-400"}`}
+                        >
+                          {exam.passed ? "CLEARED" : "FAILED"}
                         </div>
                       </div>
-
-                      {/* Rincian Skor Per Sesi */}
-                      {exam.sectionScores && (
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                          <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
-                            <p className="text-[9px] text-white/40 uppercase font-bold tracking-widest mb-1">
-                              Vocabulary
-                            </p>
-                            <p className="text-lg font-mono text-white">
-                              {exam.sectionScores.vocabulary}%
-                            </p>
-                          </div>
-                          <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
-                            <p className="text-[9px] text-white/40 uppercase font-bold tracking-widest mb-1">
-                              Grammar
-                            </p>
-                            <p className="text-lg font-mono text-white">
-                              {exam.sectionScores.grammar}%
-                            </p>
-                          </div>
-                          <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
-                            <p className="text-[9px] text-white/40 uppercase font-bold tracking-widest mb-1">
-                              Reading
-                            </p>
-                            <p className="text-lg font-mono text-white">
-                              {exam.sectionScores.reading}%
-                            </p>
-                          </div>
-                          <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
-                            <p className="text-[9px] text-white/40 uppercase font-bold tracking-widest mb-1">
-                              Listening
-                            </p>
-                            <p className="text-lg font-mono text-white">
-                              {exam.sectionScores.listening}%
-                            </p>
-                          </div>
-                        </div>
-                      )}
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-12">
-                  <p className="text-white/40 text-sm font-mono uppercase tracking-widest">
-                    Belum ada data ujian yang terekam.
-                  </p>
-                </div>
-              )}
-            </div>
+
+                    {exam.sectionScores && (
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <SectionScore
+                          label="Vocabulary"
+                          score={exam.sectionScores.vocabulary}
+                        />
+                        <SectionScore
+                          label="Grammar"
+                          score={exam.sectionScores.grammar}
+                        />
+                        <SectionScore
+                          label="Reading"
+                          score={exam.sectionScores.reading}
+                        />
+                        <SectionScore
+                          label="Listening"
+                          score={exam.sectionScores.listening}
+                        />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-slate-500 text-sm font-mono uppercase tracking-widest">
+                  Belum ada data ujian yang terekam.
+                </p>
+              </div>
+            )}
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
     </div>
   );
 }
 
 /* HELPER COMPONENTS */
-interface SimpleStatProps {
-  label: string;
-  value: string | number;
-  color?: string;
-  glow?: string;
-}
-
 function SimpleStat({
   label,
   value,
   color = "text-white",
-  glow = "",
-}: SimpleStatProps) {
+}: {
+  label: string;
+  value: string | number;
+  color?: string;
+}) {
   return (
-    <div className="flex justify-between items-center bg-cyber-bg p-4 rounded-2xl border border-white/5 shadow-inner">
-      <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">
+    <div className="neo-inset flex justify-between items-center p-4">
+      <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest">
         {label}
       </span>
-      <span className={`text-xl font-black italic ${color} ${glow} font-mono`}>
+      <span className={`text-lg font-black italic ${color} font-mono`}>
         {value}
       </span>
     </div>
   );
 }
 
-interface QuickLinkProps {
+function QuickLink({
+  href,
+  label,
+  icon,
+}: {
   href: string;
   label: string;
   icon: string;
-  color: string;
-}
-
-function QuickLink({ href, label, icon, color }: QuickLinkProps) {
+}) {
   return (
     <Link
       href={href}
-      className={`bg-cyber-surface p-5 rounded-3xl border border-white/5 transition-all duration-300 group flex flex-col items-center gap-3 shadow-[6px_6px_15px_rgba(0,0,0,0.5),-4px_-4px_10px_rgba(255,255,255,0.02)] active:shadow-[inset_4px_4px_10px_rgba(0,0,0,0.5)] active:translate-y-1 ${color}`}
+      className="neo-card p-5 hover:border-cyan-400/30 transition-all duration-300 group flex flex-col items-center gap-3"
     >
       <span className="text-2xl group-hover:scale-110 transition-transform drop-shadow-md">
         {icon}
       </span>
-      <span className="text-[9px] font-black text-white/40 uppercase tracking-tighter group-hover:text-white transition-colors">
+      <span className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-tighter group-hover:text-white transition-colors">
         {label}
       </span>
     </Link>
+  );
+}
+
+function SectionScore({ label, score }: { label: string; score: number }) {
+  return (
+    <div className="neo-card !bg-transparent p-4">
+      <p className="text-[9px] font-mono text-slate-500 uppercase font-bold tracking-widest mb-1">
+        {label}
+      </p>
+      <p className="text-lg font-mono text-white">{score}%</p>
+    </div>
   );
 }

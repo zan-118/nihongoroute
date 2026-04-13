@@ -1,91 +1,99 @@
+"use client";
+
 import Link from "next/link";
-import { Languages, Table, Book, PenTool } from "lucide-react";
+import { motion } from "framer-motion";
 
-const categories = [
-  {
-    title: "Kana Basics",
-    desc: "Hiragana & Katakana interaktif dengan Stroke Order.",
-    href: "/courses/basics",
-    icon: (
-      <PenTool className="w-8 h-8 text-blue-400 drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
-    ),
-    color: "blue",
-  },
-  {
-    title: "Verbs Matrix",
-    desc: "120+ Verba N5 dengan mesin konjugasi otomatis.",
-    href: "/library/verbs",
-    icon: (
-      <Languages className="w-8 h-8 text-cyber-neon drop-shadow-[0_0_8px_rgba(0,255,239,0.5)]" />
-    ),
-    color: "cyan",
-  },
-  {
-    title: "Grammar Archive",
-    desc: "Penjelasan pola kalimat JLPT secara mendalam.",
-    href: "/library/grammar",
-    icon: (
-      <Book className="w-8 h-8 text-green-400 drop-shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
-    ),
-    color: "green",
-  },
-  {
-    title: "Data Sheets",
-    desc: "Tabel angka, waktu, partikel, dan kosakata tematik.",
-    href: "/library/cheatsheet",
-    icon: (
-      <Table className="w-8 h-8 text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]" />
-    ),
-    color: "purple",
-  },
-];
-
-export default function LibraryHub() {
-  const colorStyles: Record<string, string> = {
-    blue: "hover:border-blue-500/50 group-hover:shadow-[0_0_30px_rgba(59,130,246,0.15)]",
-    cyan: "hover:border-cyber-neon/50 group-hover:shadow-[0_0_30px_rgba(0,255,239,0.15)]",
-    green:
-      "hover:border-green-500/50 group-hover:shadow-[0_0_30px_rgba(34,197,94,0.15)]",
-    purple:
-      "hover:border-purple-500/50 group-hover:shadow-[0_0_30px_rgba(168,85,247,0.15)]",
-  };
+export default function LibraryPage() {
+  const librarySections = [
+    {
+      title: "Verb Archive",
+      desc: "Mesin konjugasi untuk 120+ kata kerja N5. Bentuk Masu, Te, Nai, Ta, hingga Potensial.",
+      icon: "🔄",
+      href: "/library/verbs",
+      color: "text-cyan-400",
+      bgHover: "hover:border-cyan-400/30",
+      tag: "DATABASE",
+    },
+    {
+      title: "Grammar Guide",
+      desc: "Dokumentasi pola kalimat lengkap dengan contoh audio dan penjelasan mendetail.",
+      icon: "📚",
+      href: "/library/grammar",
+      color: "text-indigo-400",
+      bgHover: "hover:border-indigo-400/30",
+      tag: "DOCUMENTATION",
+    },
+    {
+      title: "Reference Sheets",
+      desc: "Tabel referensi cepat (Cheatsheet) untuk angka, waktu, partikel, dan konter.",
+      icon: "📊",
+      href: "/library/cheatsheet",
+      color: "text-emerald-400",
+      bgHover: "hover:border-emerald-400/30",
+      tag: "CHEATSHEET",
+    },
+  ];
 
   return (
-    <main className="min-h-screen bg-cyber-bg p-8 pt-32 pb-32 flex flex-col items-center relative overflow-hidden">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
-
-      <div className="max-w-6xl w-full relative z-10">
-        <header className="text-center mb-20">
-          <p className="text-cyber-neon text-[10px] font-black uppercase tracking-[0.5em] mb-4 drop-shadow-[0_0_5px_rgba(0,255,239,0.5)]">
-            Reference Database
+    <main className="max-w-7xl mx-auto px-4 md:px-8 pt-8 md:pt-12 pb-32">
+      <header className="mb-16 border-b border-white/5 pb-8">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <div className="flex items-center gap-4 mb-4">
+            <div className="h-10 w-2 bg-cyan-400 rounded-full shadow-[0_0_15px_rgba(34,211,238,0.5)] hidden md:block" />
+            <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase italic drop-shadow-lg">
+              Smart <span className="text-cyan-400">Library</span>
+            </h1>
+          </div>
+          <p className="text-slate-400 font-medium md:ml-6 max-w-2xl text-sm leading-relaxed">
+            Pusat data referensi bahasa Jepang. Akses cepat ke aturan tata
+            bahasa, mesin konjugasi, dan tabel partikel tanpa harus membuka
+            kamus fisik.
           </p>
-          <h1 className="text-5xl md:text-7xl font-black text-white italic tracking-tighter uppercase mb-6 drop-shadow-lg">
-            The <span className="text-cyber-neon">Library</span>
-          </h1>
-          <div className="h-1 w-24 bg-gradient-to-r from-transparent via-cyber-neon to-transparent mx-auto rounded-full shadow-[0_0_15px_rgba(0,255,239,0.8)]" />
-        </header>
+        </motion.div>
+      </header>
 
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-          {categories.map((cat) => (
-            <Link href={cat.href} key={cat.title}>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {librarySections.map((section, idx) => (
+          <motion.div
+            key={section.title}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: idx * 0.1 }}
+          >
+            <Link href={section.href} className="block group h-full">
               <article
-                className={`group p-8 md:p-10 rounded-[3rem] bg-cyber-surface border border-white/5 transition-all duration-300 active:scale-95 h-full flex flex-col items-center text-center relative overflow-hidden shadow-[15px_15px_40px_rgba(0,0,0,0.6),-10px_-10px_30px_rgba(255,255,255,0.02)] active:shadow-[inset_4px_4px_10px_rgba(0,0,0,0.5)] ${colorStyles[cat.color]}`}
+                className={`neo-card p-8 h-full flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 ${section.bgHover}`}
               >
-                <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                <div>
+                  <div className="flex justify-between items-start mb-6">
+                    <span className="text-5xl drop-shadow-md group-hover:scale-110 transition-transform origin-top-left">
+                      {section.icon}
+                    </span>
+                    <span className="neo-inset px-3 py-1 text-[9px] font-mono font-black uppercase tracking-widest text-slate-500">
+                      {section.tag}
+                    </span>
+                  </div>
 
-                <div className="w-20 h-20 rounded-2xl bg-cyber-bg border border-white/5 shadow-inner mb-8 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  {cat.icon}
+                  <h2
+                    className={`text-2xl font-black uppercase italic tracking-tight mb-3 ${section.color}`}
+                  >
+                    {section.title}
+                  </h2>
+                  <p className="text-sm text-slate-400 leading-relaxed mb-8">
+                    {section.desc}
+                  </p>
                 </div>
-                <h2 className="text-xl font-black text-white mb-3 uppercase italic tracking-tight transition-colors relative z-10">
-                  {cat.title}
-                </h2>
-                <p className="text-[#c4cfde]/50 leading-relaxed text-xs italic font-medium relative z-10">
-                  {cat.desc}
-                </p>
+
+                <div className="neo-inset w-full text-center py-3 text-xs font-mono font-black uppercase tracking-widest text-slate-500 group-hover:text-white transition-colors">
+                  Access Data →
+                </div>
               </article>
             </Link>
-          ))}
-        </section>
+          </motion.div>
+        ))}
       </div>
     </main>
   );
