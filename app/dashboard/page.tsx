@@ -112,10 +112,7 @@ export default function DashboardPage() {
             </h1>
           </motion.div>
 
-          <Link
-            href="/dashboard/review"
-            className="relative group w-full lg:w-auto"
-          >
+          <Link href="/review" className="relative group w-full lg:w-auto">
             <motion.div
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}

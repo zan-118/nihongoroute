@@ -11,6 +11,7 @@ import verbDictionary from "./verbDictionary";
 import cheatsheet from "./cheatsheet";
 import grammarArticle from "./grammarArticle";
 import courseCategory from "./courseCategory"; // <-- 1. Import skema baru
+import mockExam from "./mockExam";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -25,7 +26,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     verbDictionary,
     cheatsheet,
     grammarArticle,
-
+    mockExam,
     courseCategory, // <-- 2. Daftarkan di sini
   ],
 };

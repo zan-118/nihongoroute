@@ -33,7 +33,7 @@ export default function MobileNav() {
         />
 
         <Link
-          href="/dashboard/review"
+          href="/review"
           className="relative -mt-12 group"
           aria-label="Review Cards"
         >

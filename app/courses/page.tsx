@@ -7,6 +7,7 @@ interface CategoryData {
   _id: string;
   title: string;
   slug: { current: string };
+  description?: string;
 }
 
 interface LibraryCardProps {
@@ -17,8 +18,14 @@ interface LibraryCardProps {
 }
 
 export default async function CoursesLandingPage() {
+  // 1. Tarik kategori JLPT (Main Quest)
   const jlptCategories: CategoryData[] = await client.fetch(
-    `*[_type == "course_category" && type == "jlpt"] | order(title desc)`,
+    `*[_type == "course_category" && type == "jlpt"] | order(title asc)`,
+  );
+
+  // 2. ✨ Tarik kategori General (Side Quests)
+  const generalCategories: CategoryData[] = await client.fetch(
+    `*[_type == "course_category" && type == "general"] | order(title asc)`,
   );
 
   return (
@@ -28,13 +35,16 @@ export default async function CoursesLandingPage() {
       <div className="max-w-6xl mx-auto relative z-10">
         <header className="mb-16 text-center md:text-left border-b border-white/5 pb-10">
           <p className="text-cyber-neon text-[10px] font-black uppercase tracking-[0.5em] mb-3 drop-shadow-[0_0_5px_rgba(0,255,239,0.5)]">
-            Curriculum Path
+            Curriculum Hub
           </p>
           <h1 className="text-5xl md:text-7xl font-black text-white uppercase italic tracking-tighter leading-none drop-shadow-lg">
-            Choose Your <span className="text-cyber-neon">Level</span>
+            Choose Your <span className="text-cyber-neon">Path</span>
           </h1>
         </header>
 
+        {/* =========================================
+            PHASE 0: BASICS
+        ========================================= */}
         <section className="mb-16">
           <Link
             href="/courses/basics"
@@ -63,6 +73,16 @@ export default async function CoursesLandingPage() {
           </Link>
         </section>
 
+        {/* =========================================
+            MAIN QUEST: JLPT PATH
+        ========================================= */}
+        <div className="mb-8 flex items-center gap-4">
+          <h3 className="text-2xl font-black text-white uppercase tracking-widest italic border-l-4 border-cyber-neon pl-4">
+            Main Quest: <span className="text-cyber-neon">JLPT</span>
+          </h3>
+          <div className="h-[1px] flex-1 bg-white/5" />
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-24">
           {jlptCategories.map((category) => (
             <Link
@@ -74,7 +94,7 @@ export default async function CoursesLandingPage() {
               <div className="relative bg-cyber-surface p-10 rounded-[3rem] border border-white/5 group-hover:border-cyber-neon/50 transition-all flex flex-col items-center text-center h-full shadow-[15px_15px_40px_rgba(0,0,0,0.6),-10px_-10px_30px_rgba(255,255,255,0.02)] active:shadow-[inset_4px_4px_10px_rgba(0,0,0,0.5)] overflow-hidden">
                 <div className="absolute top-0 left-10 right-10 h-[2px] bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:via-cyber-neon transition-colors" />
                 <span className="text-[10px] font-black text-white/30 group-hover:text-cyber-neon uppercase tracking-[0.4em] mb-auto transition-colors">
-                  Path Unlocked
+                  Formal Track
                 </span>
                 <h2 className="text-5xl font-black text-white italic group-hover:scale-110 transition-transform uppercase drop-shadow-lg z-10 leading-tight">
                   {category.title}
@@ -91,6 +111,52 @@ export default async function CoursesLandingPage() {
           ))}
         </div>
 
+        {/* =========================================
+            SIDE QUESTS: EXPLORATION MODE
+        ========================================= */}
+        {generalCategories.length > 0 && (
+          <>
+            <div className="mb-8 flex items-center gap-4">
+              <h3 className="text-2xl font-black text-white uppercase tracking-widest italic border-l-4 border-amber-500 pl-4">
+                Side Quests: <span className="text-amber-500">Exploration</span>
+              </h3>
+              <div className="h-[1px] flex-1 bg-white/5" />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-24">
+              {generalCategories.map((category) => (
+                <Link
+                  key={category._id}
+                  href={`/courses/${category.slug.current}`}
+                  className="group relative overflow-hidden bg-gradient-to-br from-amber-600/10 to-cyber-surface border border-amber-500/20 p-8 rounded-[2.5rem] hover:border-amber-400/50 transition-all shadow-[0_10px_30px_rgba(0,0,0,0.4)] active:scale-[0.98]"
+                >
+                  <div className="absolute inset-0 bg-amber-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="relative z-10 flex items-center justify-between gap-6">
+                    <div>
+                      <h4 className="text-3xl font-black text-white uppercase italic tracking-tighter drop-shadow-md group-hover:text-amber-400 transition-colors">
+                        {category.title}
+                      </h4>
+                      {category.description && (
+                        <p className="text-[#c4cfde]/60 text-sm mt-2 max-w-sm">
+                          {category.description}
+                        </p>
+                      )}
+                    </div>
+                    <div className="w-16 h-16 shrink-0 bg-cyber-bg rounded-2xl flex items-center justify-center border border-white/5 shadow-inner group-hover:border-amber-500/50 transition-colors">
+                      <span className="text-3xl group-hover:scale-110 transition-transform drop-shadow-md">
+                        🎒
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* =========================================
+            LIBRARY HUB
+        ========================================= */}
         <section className="pt-16 border-t border-white/5">
           <header className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
             <div>

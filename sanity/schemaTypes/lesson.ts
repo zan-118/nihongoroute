@@ -45,6 +45,12 @@ export default defineType({
       of: [{ type: "reference", to: [{ type: "kosakata" }] }],
     }),
     defineField({
+      name: "articles",
+      title: "Articles",
+      type: "array",
+      of: [{ type: "block" }, { type: "exampleSentence" }, { type: "callout" }],
+    }),
+    defineField({
       name: "grammar",
       title: "Grammar Material",
       type: "array",
