@@ -1,9 +1,3 @@
-Ini dia pembaruan `README.md` Anda! Saya telah menambahkan fitur **Mock Exam** yang baru saja kita bangun (termasuk _Anti-Cheat_, Analitik, dan _Export_ PDF), memperbarui struktur folder untuk mencakup rute API, dan menambahkan sedikit sentuhan profesional pada deskripsi pembuka yang sangat cocok jika repositori ini akan digunakan sebagai portofolio atau referensi riset akademik.
-
-Silakan _copy-paste_ teks di bawah ini:
-
----
-
 # 🌀 NihongoRoute (日本語ルート)
 
 [![Next.js](https://img.shields.io/badge/Next.js-15-000000?style=for-the-badge&logo=nextdotjs)](https://nextjs.org/)
