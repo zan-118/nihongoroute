@@ -1,3 +1,11 @@
+/**
+ * LOKASI FILE: app/courses/[level]/exam/[id]/page.tsx
+ * DESKRIPSI:
+ * Halaman sesi ujian simulasi (Mock Exam). Berfungsi sebagai container yang
+ * mengambil data soal dari Sanity CMS dan menyerahkannya ke komponen
+ * 'MockExamEngine' untuk dijalankan.
+ */
+
 import { client } from "@/sanity/lib/client";
 import MockExamEngine from "@/components/MockExamEngine";
 import Link from "next/link";
@@ -6,23 +14,47 @@ interface PageProps {
   params: Promise<{ level: string; id: string }>;
 }
 
+/**
+ * Konfigurasi Revalidasi:
+ * Mengatur agar halaman ini diperbarui setiap 60 detik jika ada perubahan
+ * data pada soal ujian di Sanity tanpa perlu build ulang.
+ */
 export const revalidate = 60;
 
+/**
+ * KOMPONEN UTAMA HALAMAN SESI UJIAN
+ */
 export default async function ExamSessionPage({ params }: PageProps) {
+  // Destrukturisasi level (n5, n4, dll) dan ID dokumen ujian dari parameter URL
   const { level, id } = await params;
 
+  /**
+   * QUERY GROQ:
+   * Mengambil detail ujian termasuk daftar pertanyaan, asset gambar,
+   * dan asset audio untuk seksi Choukai (Listening).
+   */
   const query = `*[_type == "mockExam" && _id == $id][0] {
-    _id, title, timeLimit, passingScore,
+    _id, 
+    title, 
+    timeLimit, 
+    passingScore,
     questions[] {
-      _key, section, questionText,
-      "imageUrl": image.asset->url,
-      "audioUrl": audio.asset->url,
-      options, correctAnswer
+      _key, 
+      section, 
+      questionText,
+      "imageUrl": image.asset->url, // Transformasi asset gambar ke URL string
+      "audioUrl": audio.asset->url, // Transformasi asset audio ke URL string
+      options, 
+      correctAnswer
     }
   }`;
 
   const examData = await client.fetch(query, { id });
 
+  /**
+   * HANDLING: DATA TIDAK DITEMUKAN
+   * Menampilkan pesan error jika ID ujian tidak valid atau dokumen telah dihapus.
+   */
   if (!examData) {
     return (
       <div className="w-full min-h-screen flex flex-col items-center justify-center bg-cyber-bg px-4 text-center pt-24 pb-32">
@@ -48,6 +80,11 @@ export default async function ExamSessionPage({ params }: PageProps) {
     );
   }
 
+  /**
+   * HANDLING: SOAL MASIH KOSONG
+   * Menampilkan status "Under Construction" jika dokumen ujian ada namun
+   * admin belum menginput pertanyaan di Sanity Studio.
+   */
   if (!examData.questions || examData.questions.length === 0) {
     return (
       <div className="w-full min-h-screen flex flex-col items-center justify-center bg-cyber-bg px-4 text-center pt-24 pb-32">
@@ -59,7 +96,7 @@ export default async function ExamSessionPage({ params }: PageProps) {
           <h1 className="text-2xl md:text-3xl font-black text-white uppercase italic tracking-tighter mb-4 leading-tight relative z-10">
             Sedang Dalam Pembuatan
           </h1>
-          <p className="text-white/60 mb-8 text-sm leading-relaxed relative z-10">
+          <p className="text-white/60 mb-8 text-sm max-w-sm mx-auto leading-relaxed relative z-10">
             Paket ujian{" "}
             <strong className="text-amber-400">{examData.title}</strong> belum
             memiliki butir soal. Tim kami akan segera menambahkannya!
@@ -75,9 +112,16 @@ export default async function ExamSessionPage({ params }: PageProps) {
     );
   }
 
+  /**
+   * RENDER UTAMA:
+   * Jika data valid dan soal tersedia, kirim seluruh objek 'examData'
+   * ke 'MockExamEngine' yang mengelola state interaktif ujian.
+   */
   return (
     <div className="min-h-screen w-full bg-cyber-bg pt-24 md:pt-32 pb-32 px-4 md:px-8 relative overflow-hidden">
+      {/* Background Decor: Efek pendaran amber (tema ujian) */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-900/10 via-cyber-bg to-cyber-bg pointer-events-none z-0" />
+
       <div className="w-full max-w-4xl mx-auto relative z-10">
         <MockExamEngine exam={examData} />
       </div>

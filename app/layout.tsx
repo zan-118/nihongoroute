@@ -1,3 +1,11 @@
+/**
+ * LOKASI FILE: app/layout.tsx
+ * DESKRIPSI:
+ * Root Layout adalah kerangka utama yang membungkus seluruh halaman di aplikasi.
+ * Berfungsi untuk mengatur struktur HTML dasar (html, body), memuat font global,
+ * mendefinisikan metadata SEO, konfigurasi viewport, dan menyediakan context provider.
+ */
+
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -7,17 +15,28 @@ import Navbar from "@/components/Navbar";
 import { ProgressProvider } from "@/context/UserProgressContext";
 import FloatingSupport from "@/components/FloatingSupport";
 
+// Inisialisasi Font Inter dari Google Fonts untuk tipografi global
 const inter = Inter({ subsets: ["latin"] });
 
+/**
+ * KONFIGURASI VIEWPORT:
+ * Mengatur tampilan layar di berbagai perangkat.
+ * 'userScalable: false' digunakan untuk mencegah zoom otomatis yang tidak diinginkan
+ * pada elemen input di perangkat seluler agar terasa lebih seperti aplikasi native (Web App).
+ */
 export const viewport: Viewport = {
-  themeColor: "#0a0c10", // Disamakan dengan warna gelap dominan di palet Anda
+  themeColor: "#0a0c10", // Warna tema bar status di mobile (sesuai palet cyber-dark)
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  // Mencegah zoom paksa di iOS saat mengetik di input field (opsional namun sangat disarankan untuk Web App)
   userScalable: false,
 };
 
+/**
+ * METADATA SEO & SOSIAL MEDIA:
+ * Mendefinisikan informasi situs untuk mesin pencari (Google) dan preview kartu
+ * saat tautan dibagikan (OpenGraph untuk Facebook/WhatsApp, Twitter Card).
+ */
 export const metadata: Metadata = {
   title: "NihongoRoute | Belajar Bahasa Jepang Gratis",
   description:
@@ -31,13 +50,13 @@ export const metadata: Metadata = {
     "flashcard",
     "nihongo",
   ],
-  manifest: "/manifest.json",
+  manifest: "/manifest.json", // Path untuk PWA (Progressive Web App)
   icons: {
-    icon: "/logo-branding.svg", // Lebih disarankan SVG/PNG untuk icon utama di Next.js App Router
+    icon: "/logo-branding.svg",
     apple: "/logo-branding.png",
   },
   verification: {
-    google: "Niyl1z2v4hJgZZzRFLzMLOk4xlYNyvSNnEiCC-eK7N4",
+    google: "Niyl1z2v4hJgZZzRFLzMLOk4xlYNyvSNnEiCC-eK7N4", // Kode verifikasi Google Search Console
   },
   openGraph: {
     title: "NihongoRoute | Misi Menguasai Bahasa Jepang",
@@ -47,7 +66,7 @@ export const metadata: Metadata = {
     siteName: "NihongoRoute",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/og-image.jpg", // Gambar preview saat link dishare
         width: 1200,
         height: 630,
         alt: "NihongoRoute Dashboard",
@@ -65,29 +84,36 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * KOMPONEN ROOT LAYOUT
+ * Layout ini merangkum seluruh hierarki komponen aplikasi.
+ */
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="id">
       <body
         className={`${inter.className} antialiased bg-cyber-bg text-[#c4cfde] selection:bg-cyan-400 selection:text-black overflow-x-hidden min-h-screen flex flex-col`}
       >
+        {/* PROGRESS PROVIDER: 
+          Wrapper Context API untuk menyimpan dan menyebarkan data progres pengguna 
+          (XP, Level, SRS) ke seluruh komponen di bawahnya.
+        */}
         <ProgressProvider>
-          {/* PERBAIKAN 1: Navbar sudah memiliki class 'fixed' di dalamnya, 
-            jadi membungkusnya dengan 'sticky top-0' di sini adalah redundan 
-            dan bisa merusak flow dokumen. Kita cukup panggil komponennya.
-          */}
+          {/* Navigasi Atas (Desktop) */}
           <Navbar />
 
-          {/* PERBAIKAN 2: Kita hapus pt (padding-top) dari main container, 
-            karena setiap halaman (page.tsx) di dalam aplikasi ini sudah menangani 
-            padding top-nya masing-masing (misal: pt-20, pt-24) untuk menyesuaikan 
-            jarak dari Navbar.
+          {/* MAIN CONTAINER:
+            Wadah utama untuk konten dinamis (halaman). 
+            'flex-1' memastikan footer/navigasi bawah tetap di posisi bawah jika konten sedikit.
           */}
           <main className="flex-1 w-full max-w-[100vw] overflow-x-hidden flex flex-col">
             {children}
           </main>
 
-          {/* Komponen Mengambang */}
+          {/* KOMPONEN GLOBAL:
+            - FloatingSupport: Tombol bantuan/donasi yang melayang.
+            - MobileNav: Navigasi bar khusus tampilan perangkat mobile (bawah).
+          */}
           <FloatingSupport />
           <MobileNav />
         </ProgressProvider>
