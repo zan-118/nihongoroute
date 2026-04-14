@@ -6,8 +6,8 @@ import { motion } from "framer-motion";
 export default function LibraryPage() {
   const librarySections = [
     {
-      title: "Verb Archive",
-      desc: "Mesin konjugasi untuk 120+ kata kerja N5. Bentuk Masu, Te, Nai, Ta, hingga Potensial.",
+      title: "Kamus Kata Kerja",
+      desc: "Mesin konjugasi untuk kata kerja N5. Bentuk Masu, Te, Nai, Ta, hingga Potensial. Lengkap dengan latihan hafalan.",
       icon: "🔄",
       href: "/library/verbs",
       color: "text-cyan-400",
@@ -15,22 +15,22 @@ export default function LibraryPage() {
       tag: "DATABASE",
     },
     {
-      title: "Grammar Guide",
+      title: "Panduan Tata Bahasa",
       desc: "Dokumentasi pola kalimat lengkap dengan contoh audio dan penjelasan mendetail.",
       icon: "📚",
       href: "/library/grammar",
       color: "text-indigo-400",
       bgHover: "hover:border-indigo-400/30",
-      tag: "DOCUMENTATION",
+      tag: "TATA BAHASA",
     },
     {
-      title: "Reference Sheets",
+      title: "Catatan Ringkas",
       desc: "Tabel referensi cepat (Cheatsheet) untuk angka, waktu, partikel, dan konter.",
       icon: "📊",
       href: "/library/cheatsheet",
       color: "text-emerald-400",
       bgHover: "hover:border-emerald-400/30",
-      tag: "CHEATSHEET",
+      tag: "RINGKASAN",
     },
   ];
 
@@ -44,7 +44,7 @@ export default function LibraryPage() {
           <div className="flex items-center gap-4 mb-4">
             <div className="h-10 w-2 bg-cyan-400 rounded-full shadow-[0_0_15px_rgba(34,211,238,0.5)] hidden md:block" />
             <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase italic drop-shadow-lg">
-              Smart <span className="text-cyan-400">Library</span>
+              Koleksi <span className="text-cyan-400">Pintar</span>
             </h1>
           </div>
           <p className="text-slate-400 font-medium md:ml-6 max-w-2xl text-sm leading-relaxed">
@@ -88,7 +88,7 @@ export default function LibraryPage() {
                 </div>
 
                 <div className="neo-inset w-full text-center py-3 text-xs font-mono font-black uppercase tracking-widest text-slate-500 group-hover:text-white transition-colors">
-                  Access Data →
+                  Buka Data →
                 </div>
               </article>
             </Link>

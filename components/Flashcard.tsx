@@ -1,102 +1,71 @@
-import TTSReader from "./TTSReader";
+"use client";
 
-// Definisi Tipe Data agar terhindar dari 'any'
-export interface ExampleSentence {
-  jp: string;
-  furigana?: string;
-  id: string;
-}
+import { motion } from "framer-motion";
 
-export interface FlashcardData {
+interface FlashcardProps {
   word: string;
-  romaji: string;
   meaning: string;
-  kanjiDetails?: {
-    onyomi?: string;
-    kunyomi?: string;
-  };
-  examples?: ExampleSentence[];
+  furigana?: string;
+  romaji?: string;
+  isFlipped: boolean;
+  onFlip: () => void;
 }
 
-export default function Flashcard({ data }: { data: FlashcardData }) {
+export default function Flashcard({
+  word,
+  meaning,
+  furigana,
+  romaji,
+  isFlipped,
+  onFlip,
+}: FlashcardProps) {
   return (
-    <article className="bg-gradient-to-br from-cyber-surface to-[#1a1c20] rounded-[2rem] p-6 md:p-8 border border-white/5 shadow-2xl w-full max-w-md mx-auto cursor-default">
-      <header className="text-center mb-8 relative">
-        <h1 className="text-6xl md:text-7xl font-black text-white mb-4 tracking-tighter">
-          {data.word}
-        </h1>
-
-        <div className="flex justify-center items-center gap-4">
-          <p className="text-cyber-neon font-mono tracking-widest uppercase text-sm md:text-base font-bold bg-cyber-neon/5 px-4 py-1 rounded-full border border-cyber-neon/10">
-            {data.romaji}
-          </p>
-          <TTSReader text={data.word} minimal={true} />
-        </div>
-      </header>
-
-      <hr className="border-white/5 mb-6" />
-
-      {/* Detail: Onyomi & Kunyomi */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="bg-blue-500/5 p-3 rounded-2xl border border-blue-500/10 text-center">
-          <span className="text-[10px] text-blue-400 block uppercase font-black tracking-widest mb-1 opacity-70">
-            Onyomi
+    <div
+      className="relative w-full aspect-square cursor-pointer perspective-1000"
+      onClick={onFlip}
+    >
+      <motion.div
+        className="w-full h-full transition-all duration-500 preserve-3d"
+        initial={false}
+        animate={{ rotateY: isFlipped ? 180 : 0 }}
+      >
+        {/* SISI DEPAN (PERTANYAAN) */}
+        <div className="absolute inset-0 w-full h-full backface-hidden bg-cyber-surface border border-white/10 rounded-[2.5rem] shadow-neumorphic flex flex-col items-center justify-center p-8">
+          <span className="absolute top-6 text-[10px] font-black uppercase tracking-[0.3em] text-white/20 border border-white/5 px-3 py-1 rounded-full">
+            Pertanyaan / Kanji
           </span>
-          <span className="text-white font-bold text-sm md:text-base">
-            {data.kanjiDetails?.onyomi || "-"}
-          </span>
-        </div>
-        <div className="bg-orange-500/5 p-3 rounded-2xl border border-orange-500/10 text-center">
-          <span className="text-[10px] text-orange-400 block uppercase font-black tracking-widest mb-1 opacity-70">
-            Kunyomi
-          </span>
-          <span className="text-white font-bold text-sm md:text-base">
-            {data.kanjiDetails?.kunyomi || "-"}
-          </span>
-        </div>
-      </div>
-
-      <div className="space-y-4">
-        <div className="bg-green-500/5 p-4 rounded-2xl border border-green-500/10 text-center">
-          <span className="text-[10px] text-green-400 block uppercase tracking-widest font-black mb-2 opacity-70">
-            Arti
-          </span>
-          <p className="text-white text-lg font-bold leading-tight">
-            {data.meaning}
+          <h2 className="text-7xl md:text-8xl font-black text-white tracking-tighter drop-shadow-2xl">
+            {word}
+          </h2>
+          <p className="absolute bottom-10 text-cyber-neon/40 text-[10px] font-black uppercase tracking-[0.4em] animate-pulse">
+            Ketuk untuk melihat arti
           </p>
         </div>
 
-        {data.examples && data.examples.length > 0 && (
-          <div className="space-y-2 pt-2">
-            <p className="text-[10px] text-[#c4cfde]/40 uppercase tracking-widest font-bold mb-3 px-2">
-              Contoh Kalimat
+        {/* SISI BELAKANG (JAWABAN) */}
+        <div
+          className="absolute inset-0 w-full h-full backface-hidden bg-[#1a1c20] border border-cyber-neon/30 rounded-[2.5rem] shadow-[0_0_40px_rgba(0,255,239,0.1)] flex flex-col items-center justify-center p-8"
+          style={{ transform: "rotateY(180deg)" }}
+        >
+          <span className="absolute top-6 text-[10px] font-black uppercase tracking-[0.3em] text-cyber-neon/40 border border-cyber-neon/20 px-3 py-1 rounded-full">
+            Jawaban / Arti
+          </span>
+
+          <div className="text-center">
+            <p className="text-cyber-neon font-mono font-bold text-lg tracking-[0.2em] uppercase mb-2">
+              {furigana || romaji}
             </p>
-            {data.examples.map((ex, i) => (
-              <div
-                key={i}
-                className="bg-white/5 p-4 rounded-2xl border border-white/5 flex justify-between items-center gap-4"
-              >
-                <div className="flex-1">
-                  <ruby className="text-white text-sm font-bold leading-relaxed">
-                    {ex.jp}{" "}
-                    {ex.furigana && (
-                      <rt className="text-[10px] text-cyber-neon font-normal opacity-80 ml-1">
-                        {ex.furigana}
-                      </rt>
-                    )}
-                  </ruby>
-                  <p className="text-xs text-[#c4cfde]/60 mt-2 line-clamp-2">
-                    {ex.id}
-                  </p>
-                </div>
-                <div className="shrink-0">
-                  <TTSReader text={ex.jp} minimal={true} />
-                </div>
-              </div>
-            ))}
+            <h2 className="text-5xl md:text-6xl font-black text-white tracking-tighter mb-6">
+              {word}
+            </h2>
+            <div className="py-3 px-6 bg-cyber-neon/10 rounded-2xl border border-cyber-neon/20">
+              <h3 className="text-2xl md:text-3xl font-black text-cyber-neon uppercase tracking-tight">
+                {meaning}
+              </h3>
+            </div>
           </div>
-        )}
-      </div>
-    </article>
+        </div>
+      </motion.div>
+    </div>
   );
 }

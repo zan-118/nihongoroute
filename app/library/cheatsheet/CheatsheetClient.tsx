@@ -9,7 +9,9 @@ import {
   BookOpen,
   Layers,
   ChevronDown,
+  Home,
 } from "lucide-react";
+import Link from "next/link";
 
 export interface SheetItem {
   label: string;
@@ -47,29 +49,51 @@ export default function CheatsheetClient({
   });
 
   const activeSheet = safeSheets.find((s) => s?._id === selectedSheetId);
+
+  // ✨ PERBAIKAN: Gunakan .filter(Boolean) untuk membuang nilai null/undefined
+  // yang mungkin disebabkan oleh referensi Sanity yang terputus/dihapus
   const combinedItems = [
     ...(activeSheet?.linkedVocab || []),
     ...(activeSheet?.items || []),
-  ];
+  ].filter(Boolean);
 
   return (
     <section className="flex flex-col lg:flex-row gap-6 lg:gap-10 min-h-[600px] relative z-10 pb-20 uppercase">
-      {/* SIDEBAR / MOBILE NAV */}
+      {/* BREADCRUMB */}
+      <nav className="mb-4 flex flex-wrap items-center gap-2 text-[9px] md:text-xs font-black uppercase tracking-[0.2em] font-mono w-full col-span-full">
+        <Link
+          href="/dashboard"
+          className="text-white/30 hover:text-emerald-400 transition-colors flex items-center gap-1.5 p-2 rounded-lg hover:bg-white/5"
+        >
+          <Home size={14} /> Beranda
+        </Link>
+        <span className="text-white/10">/</span>
+        <Link
+          href="/library"
+          className="text-white/40 hover:text-emerald-400 transition-colors flex items-center gap-1.5 p-2 rounded-lg hover:bg-white/5"
+        >
+          <Layers size={14} /> Koleksi
+        </Link>
+        <span className="text-white/10">/</span>
+        <span className="text-emerald-400 bg-emerald-400/10 px-3 py-1.5 rounded-lg border border-emerald-400/20 flex items-center gap-1.5 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
+          <Hash size={14} /> Ringkasan
+        </span>
+      </nav>
+
       <aside className="w-full lg:w-80 flex flex-col gap-4 shrink-0">
         <div className="relative group">
           <input
             type="text"
-            placeholder="Cari dataset..."
-            className="w-full bg-white/5 border border-white/10 p-4 pl-12 rounded-2xl focus:border-cyan-400/50 focus:ring-1 focus:ring-cyan-400/50 outline-none text-white transition-all font-mono text-sm"
+            placeholder="Cari referensi..."
+            className="w-full bg-white/5 border border-white/10 p-4 pl-12 rounded-2xl focus:border-emerald-400/50 focus:ring-1 focus:ring-emerald-400/50 outline-none text-white transition-all font-mono text-sm"
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <Search
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyan-400 transition-colors"
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-emerald-400 transition-colors"
             size={18}
           />
         </div>
 
-        {/* Mobile Dropdown Trigger */}
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="lg:hidden flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl text-white"
@@ -82,12 +106,8 @@ export default function CheatsheetClient({
           />
         </button>
 
-        {/* Navigation List */}
         <nav
-          className={`
-          ${isMobileMenuOpen ? "flex" : "hidden"} 
-          lg:flex flex-col gap-2 max-h-[50vh] lg:max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar
-        `}
+          className={`${isMobileMenuOpen ? "flex" : "hidden"} lg:flex flex-col gap-2 max-h-[50vh] lg:max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar`}
         >
           {filteredSheets.map((sheet) => {
             const isActive = selectedSheetId === sheet._id;
@@ -98,20 +118,16 @@ export default function CheatsheetClient({
                   setSelectedSheetId(sheet._id);
                   setIsMobileMenuOpen(false);
                 }}
-                className={`w-full flex items-center gap-4 p-4 rounded-xl transition-all duration-200 text-left group border ${
-                  isActive
-                    ? "bg-cyan-400/10 border-cyan-400/30 shadow-[0_0_20px_rgba(34,211,238,0.1)]"
-                    : "bg-transparent border-white/5 hover:bg-white/5"
-                }`}
+                className={`w-full flex items-center gap-4 p-4 rounded-xl transition-all duration-200 text-left group border ${isActive ? "bg-emerald-400/10 border-emerald-400/30 shadow-[0_0_20px_rgba(16,185,129,0.1)]" : "bg-transparent border-white/5 hover:bg-white/5"}`}
               >
                 <div
-                  className={`p-2 rounded-lg ${isActive ? "text-cyan-400" : "text-slate-500 group-hover:text-white"}`}
+                  className={`p-2 rounded-lg ${isActive ? "text-emerald-400" : "text-slate-500 group-hover:text-white"}`}
                 >
                   {getIconForCategory(sheet.category)}
                 </div>
                 <div className="overflow-hidden">
                   <p
-                    className={`text-[10px] uppercase font-bold tracking-tighter ${isActive ? "text-cyan-400" : "text-slate-500"}`}
+                    className={`text-[10px] uppercase font-bold tracking-tighter ${isActive ? "text-emerald-400" : "text-slate-500"}`}
                   >
                     {sheet.category}
                   </p>
@@ -127,7 +143,6 @@ export default function CheatsheetClient({
         </nav>
       </aside>
 
-      {/* CONTENT AREA */}
       <article className="flex-1 min-w-0">
         <AnimatePresence mode="wait">
           {activeSheet ? (
@@ -143,19 +158,17 @@ export default function CheatsheetClient({
                   {activeSheet.title}
                 </h2>
                 <div className="flex items-center gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-ping" />
-                  <span className="text-cyan-400 font-mono text-[10px] uppercase tracking-[0.2em]">
+                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping" />
+                  <span className="text-emerald-400 font-mono text-[10px] uppercase tracking-[0.2em]">
                     {activeSheet.category}
                   </span>
                 </div>
               </div>
 
-              {/* Responsive Table / Card View */}
               <div className="grid grid-cols-1 gap-3 md:block">
-                {/* Header Table (Hanya muncul di Desktop) */}
-                <div className="hidden md:grid grid-cols-3 p-4 border-b border-white/10 text-[10px] font-black font-mono text-cyan-400 uppercase tracking-widest">
-                  <div>LABEL</div>
-                  <div>TARGET (JP)</div>
+                <div className="hidden md:grid grid-cols-3 p-4 border-b border-white/10 text-[10px] font-black font-mono text-emerald-400 uppercase tracking-widest">
+                  <div>LABEL ARTI</div>
+                  <div>HURUF JEPANG</div>
                   <div>ROMAJI</div>
                 </div>
 
@@ -168,21 +181,16 @@ export default function CheatsheetClient({
                       transition={{ delay: idx * 0.03 }}
                       className="group flex flex-col md:flex-row md:items-center p-5 md:p-4 rounded-2xl md:rounded-none md:border-b border-white/5 hover:bg-white/[0.04] transition-all bg-white/5 md:bg-transparent "
                     >
-                      {/* Label */}
                       <div className="md:w-1/3 mb-1 md:mb-0">
                         <span className="text-xs md:text-sm text-slate-400 font-medium">
                           {item.label}
                         </span>
                       </div>
-
-                      {/* Japanese */}
                       <div className="md:w-1/3 mb-2 md:mb-0">
-                        <span className="text-2xl md:text-xl font-japanese font-bold text-white group-hover:text-cyan-300 transition-colors">
+                        <span className="text-2xl md:text-xl font-japanese font-bold text-white group-hover:text-emerald-300 transition-colors">
                           {item.jp}
                         </span>
                       </div>
-
-                      {/* Romaji */}
                       <div className="md:w-1/3">
                         <span className="text-[10px] md:text-xs font-mono text-slate-500 uppercase tracking-tighter">
                           {item.romaji}
@@ -192,7 +200,7 @@ export default function CheatsheetClient({
                   ))
                 ) : (
                   <div className="p-20 text-center text-slate-500 font-mono text-xs">
-                    Belum ada item tersedia.
+                    Belum ada data tersedia.
                   </div>
                 )}
               </div>
@@ -200,7 +208,7 @@ export default function CheatsheetClient({
           ) : (
             <div className="h-full flex items-center justify-center p-20 border border-dashed border-white/10 rounded-[2rem]">
               <p className="text-slate-600 font-mono animate-pulse uppercase tracking-widest text-sm">
-                Pilih dataset di samping
+                Pilih referensi di samping
               </p>
             </div>
           )}

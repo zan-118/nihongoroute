@@ -10,13 +10,13 @@ interface PageProps {
 export default async function SurvivalPage({ params }: PageProps) {
   const { level } = await params;
 
-  // Tarik data Kosakata dan Verba sama seperti Flashcard biasa
+  // ✨ PERBAIKAN: Menambahkan 'category' pada kedua fetch data
   const query = `{
     "vocab": *[_type == "kosakata" && category != "kanji" && showInFlashcard != false && course_category->slug.current == $level] {
-      _id, word, meaning, romaji, furigana
+      _id, word, meaning, romaji, furigana, category
     },
     "verbs": *[_type == "verb_dictionary" && showInFlashcard != false && course_category->slug.current == $level] {
-      _id, "word": jisho, meaning, romaji, furigana
+      _id, "word": jisho, meaning, romaji, furigana, "category": "verb"
     }
   }`;
 

@@ -2,17 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, BookOpen, Layers, User, ShieldAlert } from "lucide-react";
+import { Home, BookOpen, Layers, User, BrainCircuit } from "lucide-react";
 
 export default function MobileNav() {
   const pathname = usePathname();
 
   const navItems = [
-    { href: "/", icon: Home, label: "Home" },
-    { href: "/courses", icon: BookOpen, label: "Learn" },
-    { href: "/review", icon: ShieldAlert, label: "Review" },
-    { href: "/library", icon: Layers, label: "Library" },
-    { href: "/dashboard", icon: User, label: "Profile" },
+    { href: "/", icon: Home, label: "Beranda" },
+    { href: "/courses", icon: BookOpen, label: "Belajar" },
+    { href: "/review", icon: BrainCircuit, label: "Hafalan" }, // Ubah ikon dan teks
+    { href: "/library", icon: Layers, label: "Koleksi" },
+    { href: "/dashboard", icon: User, label: "Profil" },
   ];
 
   return (
@@ -26,7 +26,7 @@ export default function MobileNav() {
                 : pathname.startsWith(item.href);
 
             return (
-              <li key={item.href} className="w-16">
+              <li key={item.href} className="w-[18%]">
                 <Link
                   href={item.href}
                   className="flex flex-col items-center justify-center p-2 rounded-xl transition-all"
@@ -34,15 +34,15 @@ export default function MobileNav() {
                   <div
                     className={`p-2 rounded-xl mb-1 transition-all ${
                       isActive
-                        ? "bg-cyan-400/10 text-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.2)]"
-                        : "text-slate-500"
+                        ? "bg-cyber-neon/10 text-cyber-neon shadow-[0_0_15px_rgba(0,255,239,0.2)]"
+                        : "text-white/40"
                     }`}
                   >
                     <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
                   </div>
                   <span
-                    className={`text-[9px] font-bold uppercase tracking-wider ${
-                      isActive ? "text-cyan-400" : "text-slate-500"
+                    className={`text-[8px] font-black uppercase tracking-wider ${
+                      isActive ? "text-cyber-neon" : "text-white/40"
                     }`}
                   >
                     {item.label}

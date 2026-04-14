@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import TTSReader from "@/components/TTSReader";
-import { X, Search } from "lucide-react";
+import FlashcardMaster from "@/components/FlashcardMaster";
+import { X, Search, BrainCircuit, Home, Layers, Database } from "lucide-react";
 
-// ✨ Interface untuk Keamanan Tipe Data
 export interface VerbData {
   _id: string;
   group: number;
@@ -36,6 +37,7 @@ export default function VerbListClient({
   const [searchTerm, setSearchTerm] = useState("");
   const [activeGroup, setActiveGroup] = useState<number | null>(null);
   const [selectedVerb, setSelectedVerb] = useState<VerbData | null>(null);
+  const [isFlashcardMode, setIsFlashcardMode] = useState(false);
 
   const filteredVerbs = initialVerbs.filter((verb) => {
     const matchesSearch =
@@ -46,38 +48,82 @@ export default function VerbListClient({
     return matchesSearch && matchesGroup;
   });
 
+  if (isFlashcardMode && filteredVerbs.length > 0) {
+    const flashcardData = filteredVerbs.map((verb) => ({
+      _id: verb._id,
+      word: verb.jisho,
+      meaning: verb.meaning,
+      furigana: verb.furigana,
+      romaji: verb.masu,
+      level: { code: "library" },
+    }));
+
+    return (
+      <section className="animate-in fade-in zoom-in-95 duration-300 max-w-xl mx-auto">
+        <button
+          onClick={() => setIsFlashcardMode(false)}
+          className="mb-8 flex items-center gap-2 text-white/50 hover:text-white transition-colors text-sm font-bold uppercase tracking-widest bg-white/5 px-4 py-2 rounded-xl border border-white/5"
+        >
+          ← Kembali ke Kamus
+        </button>
+        <FlashcardMaster cards={flashcardData} type="vocab" />
+      </section>
+    );
+  }
+
   return (
     <section>
+      <nav className="mb-8 flex flex-wrap items-center gap-2 text-[9px] md:text-xs font-black uppercase tracking-[0.2em] font-mono">
+        <Link
+          href="/dashboard"
+          className="text-white/30 hover:text-cyan-400 transition-colors flex items-center gap-1.5 p-2 rounded-lg hover:bg-white/5"
+        >
+          <Home size={14} /> Beranda
+        </Link>
+        <span className="text-white/10">/</span>
+        <Link
+          href="/library"
+          className="text-white/40 hover:text-cyan-400 transition-colors flex items-center gap-1.5 p-2 rounded-lg hover:bg-white/5"
+        >
+          <Layers size={14} /> Koleksi
+        </Link>
+        <span className="text-white/10">/</span>
+        <span className="text-cyan-400 bg-cyan-400/10 px-3 py-1.5 rounded-lg border border-cyan-400/20 flex items-center gap-1.5 shadow-[0_0_15px_rgba(34,211,238,0.15)]">
+          <Database size={14} /> Kata Kerja
+        </span>
+      </nav>
+
+      <header className="mb-12 border-b border-white/5 pb-8">
+        <h1 className="text-4xl md:text-6xl font-black text-white uppercase italic tracking-tighter drop-shadow-lg flex items-center gap-4">
+          <span className="text-5xl md:text-7xl">🔍</span> Matriks{" "}
+          <span className="text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">
+            Verba
+          </span>
+        </h1>
+      </header>
+
       <div className="flex flex-col xl:flex-row gap-6 mb-12">
         <div className="relative flex-1 group">
           <input
             type="text"
-            placeholder="Cari kata kerja (makan, taberu, 食べる)..."
-            className="w-full p-5 bg-cyber-surface border border-white/5 rounded-[2rem] focus:ring-2 focus:ring-cyber-neon outline-none transition-all text-white pr-14 shadow-[10px_10px_20px_#15171a,-10px_-10px_20px_#27292e]"
+            placeholder="Cari arti, romaji, atau kana (makan, taberu)..."
+            className="w-full p-5 bg-cyber-surface border border-white/5 rounded-[2rem] focus:ring-2 focus:ring-cyan-400 outline-none transition-all text-white pr-14 shadow-[10px_10px_20px_#15171a,-10px_-10px_20px_#27292e]"
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <Search
-            className="absolute right-6 top-1/2 -translate-y-1/2 text-white/20 group-hover:text-cyber-neon transition-colors"
+            className="absolute right-6 top-1/2 -translate-y-1/2 text-white/20 group-hover:text-cyan-400 transition-colors"
             size={20}
           />
         </div>
 
-        <div className="flex gap-3 p-2 bg-cyber-surface rounded-[2rem] border border-white/5 shadow-[10px_10px_20px_#15171a,-10px_-10px_20px_#27292e]">
+        <div className="flex gap-3 p-2 bg-cyber-surface rounded-[2rem] border border-white/5 shadow-[10px_10px_20px_#15171a,-10px_-10px_20px_#27292e] overflow-x-auto">
           {[1, 2, 3].map((g) => (
             <button
               key={g}
               onClick={() => setActiveGroup(activeGroup === g ? null : g)}
-              className={`flex-1 md:flex-none px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${
-                activeGroup === g
-                  ? g === 1
-                    ? "bg-blue-500 text-white shadow-[0_0_20px_rgba(59,130,246,0.5)]"
-                    : g === 2
-                      ? "bg-orange-500 text-white shadow-[0_0_20px_rgba(249,115,22,0.5)]"
-                      : "bg-green-500 text-white shadow-[0_0_20px_rgba(34,197,94,0.5)]"
-                  : "text-white/30 hover:bg-white/5 hover:text-white"
-              }`}
+              className={`flex-1 md:flex-none px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 whitespace-nowrap ${activeGroup === g ? "bg-cyan-500 text-white shadow-[0_0_20px_rgba(34,211,238,0.5)]" : "text-white/30 hover:bg-white/5 hover:text-white"}`}
             >
-              Group {g}
+              Golongan {g}
             </button>
           ))}
           {activeGroup && (
@@ -91,6 +137,22 @@ export default function VerbListClient({
         </div>
       </div>
 
+      {filteredVerbs.length > 0 && (
+        <div className="mb-8 flex justify-between items-center bg-cyan-400/5 border border-cyan-400/20 p-4 rounded-2xl">
+          <p className="text-white/60 text-xs md:text-sm font-medium">
+            Ditemukan{" "}
+            <strong className="text-cyan-400">{filteredVerbs.length}</strong>{" "}
+            kata.
+          </p>
+          <button
+            onClick={() => setIsFlashcardMode(true)}
+            className="flex items-center gap-2 bg-cyan-400 text-black px-4 md:px-6 py-2 rounded-xl font-black uppercase text-[10px] md:text-xs tracking-widest hover:scale-105 transition-transform shadow-[0_0_15px_rgba(34,211,238,0.3)]"
+          >
+            <BrainCircuit size={16} /> Latih Daftar Ini
+          </button>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <AnimatePresence>
           {filteredVerbs.map((verb) => (
@@ -101,47 +163,22 @@ export default function VerbListClient({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
               onClick={() => setSelectedVerb(verb)}
-              className="bg-cyber-surface p-8 rounded-[2.5rem] border border-white/5 hover:border-cyber-neon/30 transition-all group relative cursor-pointer shadow-[15px_15px_30px_#15171a,-15px_-15px_30px_#27292e]"
+              className="bg-cyber-surface p-8 rounded-[2.5rem] border border-white/5 hover:border-cyan-400/30 transition-all group relative cursor-pointer shadow-[15px_15px_30px_#15171a,-15px_-15px_30px_#27292e]"
             >
               <header className="flex justify-between items-start mb-6">
-                <span
-                  className={`px-4 py-1 rounded-full text-[9px] font-black tracking-widest border ${
-                    verb.group === 1
-                      ? "border-blue-500/30 text-blue-400 bg-blue-500/5"
-                      : verb.group === 2
-                        ? "border-orange-500/30 text-orange-400 bg-orange-500/5"
-                        : "border-green-500/30 text-green-400 bg-green-500/5"
-                  }`}
-                >
+                <span className="px-4 py-1 rounded-full text-[9px] font-black tracking-widest border border-white/10 text-white/40">
                   G{verb.group}
                 </span>
                 <TTSReader text={verb.jisho} minimal={true} />
               </header>
-
               <div className="mb-6">
-                <h3 className="text-3xl font-black text-white tracking-tighter mb-2 group-hover:text-cyber-neon transition-colors">
+                <h3 className="text-3xl font-black text-white tracking-tighter mb-2 group-hover:text-cyan-400 transition-colors">
                   {verb.jisho}
                 </h3>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <p className="text-cyber-neon text-[10px] font-mono font-bold uppercase tracking-widest bg-cyber-neon/5 px-2 py-1 rounded-md">
+                  <p className="text-cyan-400 text-[10px] font-mono font-bold uppercase tracking-widest bg-cyan-400/5 px-2 py-1 rounded-md">
                     {verb.meaning}
                   </p>
-                  <span className="text-white/30 font-japanese text-xs">
-                    {verb.furigana}
-                  </span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 text-[10px]">
-                <div className="bg-white/5 p-2 rounded-lg border border-white/5">
-                  <p className="opacity-30 uppercase font-black mb-1">Masu</p>
-                  <p className="text-white/80 font-bold">{verb.masu}</p>
-                </div>
-                <div className="bg-white/5 p-2 rounded-lg border border-white/5">
-                  <p className="opacity-30 uppercase font-black mb-1">
-                    Te-Form
-                  </p>
-                  <p className="text-yellow-500 font-bold">{verb.te}</p>
                 </div>
               </div>
             </motion.article>
@@ -159,7 +196,6 @@ export default function VerbListClient({
               onClick={() => setSelectedVerb(null)}
               className="absolute inset-0 bg-black/90 backdrop-blur-xl"
             />
-
             <motion.article
               initial={{ scale: 0.9, opacity: 0, y: 30 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -175,13 +211,7 @@ export default function VerbListClient({
 
               <header className="flex flex-col md:flex-row items-start md:items-center gap-8 mb-10 pb-8 border-b border-white/5">
                 <div
-                  className={`w-20 h-20 rounded-[2rem] flex items-center justify-center text-3xl font-black shadow-2xl ${
-                    selectedVerb.group === 1
-                      ? "bg-blue-600 shadow-blue-500/20"
-                      : selectedVerb.group === 2
-                        ? "bg-orange-600 shadow-orange-500/20"
-                        : "bg-green-600 shadow-green-500/20"
-                  }`}
+                  className={`w-20 h-20 rounded-[2rem] flex items-center justify-center text-3xl font-black shadow-2xl ${selectedVerb.group === 1 ? "bg-blue-600 shadow-blue-500/20" : selectedVerb.group === 2 ? "bg-orange-600 shadow-orange-500/20" : "bg-green-600 shadow-green-500/20"}`}
                 >
                   {selectedVerb.group}
                 </div>
@@ -190,7 +220,7 @@ export default function VerbListClient({
                     {selectedVerb.jisho}
                   </h2>
                   <div className="flex items-center gap-3">
-                    <p className="text-cyber-neon font-mono font-black text-lg uppercase bg-cyber-neon/10 px-3 py-1 rounded-xl">
+                    <p className="text-cyan-400 font-mono font-black text-lg uppercase bg-cyan-400/10 px-3 py-1 rounded-xl">
                       {selectedVerb.meaning}
                     </p>
                     <span className="text-white/40 text-xl font-japanese italic">
@@ -291,7 +321,7 @@ function DetailBox({
 }) {
   return (
     <div className="bg-white/5 p-4 rounded-2xl border border-white/5 hover:bg-white/10 transition-all group/box">
-      <span className="text-[8px] font-black text-white/20 uppercase block mb-1 tracking-[0.2em] group-hover/box:text-cyber-neon transition-colors">
+      <span className="text-[8px] font-black text-white/20 uppercase block mb-1 tracking-[0.2em] group-hover/box:text-cyan-400 transition-colors">
         {label}
       </span>
       <span className={`text-sm font-bold tracking-tight ${color}`}>

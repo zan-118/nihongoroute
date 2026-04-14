@@ -4,28 +4,22 @@ import { useState, useEffect } from "react";
 import { client } from "@/sanity/lib/client";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen } from "lucide-react";
+import { BookOpen, Home, Layers } from "lucide-react";
 
 const LEVELS = ["n5", "n4", "n3", "n2", "n1"];
 
-interface GrammarArticle {
-  _id: string;
-  title: string;
-  slug: string;
-}
-
 export default function GrammarArticlesPage() {
   const [selectedLevel, setSelectedLevel] = useState("n5");
-  const [articles, setArticles] = useState<GrammarArticle[]>([]);
+  const [articles, setArticles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchGrammar() {
       setLoading(true);
-      const query = `*[_type == "grammar_article" && slug.current match $level + "*"] | order(title asc) {
-        _id, title, "slug": slug.current
-      }`;
-      const data = await client.fetch(query, { level: selectedLevel });
+      const data = await client.fetch(
+        `*[_type == "grammar_article" && slug.current match $level + "*"] | order(title asc) { _id, title, "slug": slug.current }`,
+        { level: selectedLevel },
+      );
       setArticles(data);
       setLoading(false);
     }
@@ -37,40 +31,48 @@ export default function GrammarArticlesPage() {
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative z-10">
-        <header className="mb-16 text-center border-b border-white/5 pb-12">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded bg-green-500/10 border border-green-500/30 text-[10px] text-green-400 font-black tracking-[0.3em] uppercase shadow-[0_0_15px_rgba(34,197,94,0.15)]"
+        <nav className="mb-12 flex flex-wrap items-center gap-2 text-[9px] md:text-xs font-black uppercase tracking-[0.2em] font-mono">
+          <Link
+            href="/dashboard"
+            className="text-white/30 hover:text-indigo-400 transition-colors flex items-center gap-1.5 p-2 rounded-lg hover:bg-white/5"
           >
-            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            Syntax Repository
-          </motion.div>
+            <Home size={14} /> Beranda
+          </Link>
+          <span className="text-white/10">/</span>
+          <Link
+            href="/library"
+            className="text-white/40 hover:text-indigo-400 transition-colors flex items-center gap-1.5 p-2 rounded-lg hover:bg-white/5"
+          >
+            <Layers size={14} /> Koleksi
+          </Link>
+          <span className="text-white/10">/</span>
+          <span className="text-indigo-400 bg-indigo-500/10 px-3 py-1.5 rounded-lg border border-indigo-500/20 flex items-center gap-1.5 shadow-[0_0_15px_rgba(99,102,241,0.15)]">
+            <BookOpen size={14} /> Tata Bahasa
+          </span>
+        </nav>
 
+        <header className="mb-16 text-center border-b border-white/5 pb-12">
           <h1 className="text-5xl md:text-7xl font-black text-white italic uppercase tracking-tighter mb-12 drop-shadow-lg">
-            Grammar{" "}
-            <span className="text-green-400 drop-shadow-[0_0_20px_rgba(34,197,94,0.4)]">
-              Archive
+            Panduan{" "}
+            <span className="text-indigo-400 drop-shadow-[0_0_20px_rgba(99,102,241,0.4)]">
+              Tata Bahasa
             </span>
           </h1>
 
-          <nav className="inline-flex p-1.5 bg-cyber-surface rounded-2xl border border-white/5 shadow-inner">
-            {LEVELS.map((lvl) => {
-              const isActive = selectedLevel === lvl;
-              return (
-                <button
-                  key={lvl}
-                  onClick={() => setSelectedLevel(lvl)}
-                  className={`px-6 md:px-10 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 ${
-                    isActive
-                      ? "bg-green-500 text-cyber-bg shadow-[0_0_20px_rgba(34,197,94,0.4)]"
-                      : "text-white/40 hover:text-white hover:bg-white/5"
-                  }`}
-                >
-                  {lvl}
-                </button>
-              );
-            })}
+          <nav className="inline-flex p-1.5 bg-cyber-surface rounded-2xl border border-white/5 shadow-inner overflow-x-auto max-w-full">
+            {LEVELS.map((lvl) => (
+              <button
+                key={lvl}
+                onClick={() => setSelectedLevel(lvl)}
+                className={`px-6 md:px-10 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 ${
+                  selectedLevel === lvl
+                    ? "bg-indigo-500 text-white shadow-[0_0_20px_rgba(99,102,241,0.4)]"
+                    : "text-white/40 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                {lvl}
+              </button>
+            ))}
           </nav>
         </header>
 
@@ -96,28 +98,26 @@ export default function GrammarArticlesPage() {
                     href={`/library/grammar/${article.slug}`}
                     className="block h-full"
                   >
-                    <div className="h-full p-8 bg-cyber-surface border border-white/5 rounded-[2.5rem] hover:border-green-500/40 transition-all duration-300 shadow-[6px_6px_15px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(34,197,94,0.15)] flex flex-col justify-between overflow-hidden relative">
-                      <div className="absolute -bottom-4 -right-4 text-8xl font-black italic text-white/[0.02] group-hover:text-green-500/[0.05] transition-colors pointer-events-none">
+                    <div className="h-full p-8 bg-cyber-surface border border-white/5 rounded-[2.5rem] hover:border-indigo-500/40 transition-all duration-300 shadow-[6px_6px_15px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.15)] flex flex-col justify-between overflow-hidden relative">
+                      <div className="absolute -bottom-4 -right-4 text-8xl font-black italic text-white/[0.02] group-hover:text-indigo-500/[0.05] transition-colors pointer-events-none">
                         {selectedLevel.toUpperCase()}
                       </div>
-
                       <div className="relative z-10">
-                        <div className="w-12 h-12 rounded-2xl bg-cyber-bg border border-white/5 shadow-inner flex items-center justify-center mb-6 group-hover:border-green-500/30 transition-colors">
+                        <div className="w-12 h-12 rounded-2xl bg-cyber-bg border border-white/5 shadow-inner flex items-center justify-center mb-6 group-hover:border-indigo-500/30 transition-colors">
                           <BookOpen
                             size={20}
-                            className="text-white/20 group-hover:text-green-400 transition-colors"
+                            className="text-white/20 group-hover:text-indigo-400 transition-colors"
                           />
                         </div>
-                        <h2 className="text-xl md:text-2xl font-black text-white italic uppercase tracking-tighter leading-tight group-hover:text-green-400 transition-colors drop-shadow-sm">
+                        <h2 className="text-xl md:text-2xl font-black text-white italic uppercase tracking-tighter leading-tight group-hover:text-indigo-400 transition-colors drop-shadow-sm">
                           {article.title}
                         </h2>
                       </div>
-
                       <div className="mt-8 flex items-center justify-between text-[10px] font-black uppercase tracking-[0.2em] relative z-10">
                         <span className="text-white/30 group-hover:text-white/80 transition-colors">
-                          Access File
+                          Pelajari
                         </span>
-                        <span className="text-white/20 group-hover:text-green-400 group-hover:translate-x-1 transition-all text-lg leading-none">
+                        <span className="text-white/20 group-hover:text-indigo-400 group-hover:translate-x-1 transition-all text-lg leading-none">
                           →
                         </span>
                       </div>
@@ -129,7 +129,7 @@ export default function GrammarArticlesPage() {
               <div className="col-span-full py-24 border-2 border-dashed border-white/5 bg-cyber-surface/50 rounded-[3rem] text-center">
                 <span className="text-5xl mb-6 block opacity-50">📂</span>
                 <p className="text-white/30 font-black uppercase tracking-[0.4em] italic font-mono text-sm">
-                  Error 404: {selectedLevel.toUpperCase()} Data Not Found
+                  Belum ada data untuk level {selectedLevel.toUpperCase()}
                 </p>
               </div>
             )}

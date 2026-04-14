@@ -4,11 +4,9 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useProgress } from "@/context/UserProgressContext";
 import { updateCardState, createNewCardState } from "@/lib/srs";
-import TTSReader from "./TTSReader";
+import Flashcard from "./Flashcard";
 import { motion, AnimatePresence } from "framer-motion";
-import { updateProgressOnReview } from "@/lib/progress";
 
-// 1. Definisikan Interface TypeScript
 export interface FlashcardType {
   _id: string;
   word: string;
@@ -21,210 +19,164 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [direction, setDirection] = useState(0);
+  const [studyMode, setStudyMode] = useState<"free" | "test">("free");
   const [isClient, setIsClient] = useState(false);
 
   const { progress, updateProgress } = useProgress();
   const router = useRouter();
 
-  const SESSION_KEY = "nihongo_srs_review_session_index";
-
   useEffect(() => {
     setIsClient(true);
-    const savedIndex = localStorage.getItem(SESSION_KEY);
-    if (savedIndex !== null) {
-      const parsedIndex = parseInt(savedIndex, 10);
-      if (!isNaN(parsedIndex) && parsedIndex < cards.length) {
-        setCurrentIndex(parsedIndex);
-      } else {
-        localStorage.removeItem(SESSION_KEY);
-      }
-    }
-  }, [cards.length]);
+  }, []);
 
-  if (!isClient || !cards || cards.length === 0) {
-    return (
-      <section className="flex flex-col items-center justify-center py-20 text-white/50">
-        <h2 className="text-xl font-black uppercase tracking-widest mb-2">
-          Review Selesai
-        </h2>
-        <p className="text-sm">Tidak ada kartu yang jatuh tempo saat ini.</p>
-      </section>
-    );
-  }
+  if (!isClient || !cards || cards.length === 0) return null;
 
   const currentCard = cards[currentIndex];
 
   const handleAnswer = (correct: boolean) => {
-    updateProgressOnReview();
+    // Hanya update memori jika dalam Mode Tes (Tinjauan)
+    if (studyMode === "test") {
+      const cardId = currentCard._id;
+      const currentState = progress.srs[cardId] || createNewCardState();
+      const newState = updateCardState(currentState, correct);
 
-    const cardId = currentCard._id;
-    // 2. PERBAIKAN BUG KRITIS: Fallback jika kartu belum ada di memori
-    const currentState = progress.srs[cardId] || createNewCardState();
-    const newState = updateCardState(currentState, correct);
+      updateProgress(progress.xp + (correct ? 10 : 2), {
+        ...progress.srs,
+        [cardId]: newState,
+      });
+    }
 
-    setDirection(correct ? 1 : -1);
+    // Navigasi ke kartu berikutnya
+    goToNext();
+  };
 
-    updateProgress(progress.xp + (correct ? 10 : 2), {
-      ...progress.srs,
-      [cardId]: newState,
-    });
-
+  const goToNext = () => {
+    setDirection(1);
     setIsFlipped(false);
-
     setTimeout(() => {
       if (currentIndex < cards.length - 1) {
-        const nextIndex = currentIndex + 1;
-        setCurrentIndex(nextIndex);
+        setCurrentIndex((prev) => prev + 1);
         setDirection(0);
-        localStorage.setItem(SESSION_KEY, nextIndex.toString());
-      } else {
-        localStorage.removeItem(SESSION_KEY);
-        // 3. PENGGUNAAN ROUTER NEXT.JS
+      } else if (studyMode === "test") {
         router.push("/dashboard");
+      } else {
+        // Jika mode bebas dan habis, balik ke awal
+        setCurrentIndex(0);
+        setDirection(0);
       }
     }, 200);
   };
 
+  const goToPrev = () => {
+    if (currentIndex > 0) {
+      setDirection(-1);
+      setIsFlipped(false);
+      setTimeout(() => {
+        setCurrentIndex((prev) => prev - 1);
+        setDirection(0);
+      }, 200);
+    }
+  };
+
   return (
-    <section className="w-full max-w-xl mx-auto relative perspective-1000">
-      <header className="flex justify-between items-end mb-3 px-2">
-        <span className="text-cyber-neon font-mono text-[10px] tracking-[0.2em] uppercase font-black">
-          [System.SRS_Active]
-        </span>
-        <div className="flex items-center gap-2 font-mono">
-          <span className="text-white font-bold text-sm">
-            {String(currentIndex + 1).padStart(2, "0")}
+    <section className="w-full max-w-xl mx-auto px-4">
+      {/* HEADER: Pemilihan Mode */}
+      <header className="flex flex-col gap-4 mb-8">
+        <div className="flex justify-between items-center">
+          <span className="text-cyber-neon font-mono text-[10px] tracking-[0.2em] uppercase font-black">
+            {studyMode === "free"
+              ? "[Mode_Belajar_Bebas]"
+              : "[Mode_Tinjauan_Pintar]"}
           </span>
-          <span className="text-white/20 text-xs">/</span>
-          <span className="text-white/40 text-xs">
-            {String(cards.length).padStart(2, "0")}
-          </span>
+          <div className="flex bg-cyber-bg p-1 rounded-xl border border-white/5">
+            <button
+              onClick={() => setStudyMode("free")}
+              className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all ${studyMode === "free" ? "bg-white/10 text-white" : "text-white/30"}`}
+            >
+              Latihan
+            </button>
+            <button
+              onClick={() => setStudyMode("test")}
+              className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all ${studyMode === "test" ? "bg-cyber-neon text-black" : "text-white/30"}`}
+            >
+              Tes Hafalan
+            </button>
+          </div>
         </div>
+
+        {/* Info Bantuan untuk User Awam */}
+        <p className="text-white/40 text-[11px] leading-relaxed italic">
+          {studyMode === "free"
+            ? "Gunakan mode ini untuk mengulang kartu sesukamu tanpa memengaruhi level hafalan."
+            : "Gunakan mode ini untuk menguji ingatanmu. Algoritma akan mengatur jadwal ulang secara otomatis."}
+        </p>
       </header>
 
-      {/* Progress Bar */}
-      <div className="w-full bg-cyber-bg h-1.5 rounded-full mb-10 overflow-hidden shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]">
-        <motion.div
-          className="bg-cyber-neon h-full shadow-[0_0_15px_rgba(0,255,239,0.8)]"
-          initial={{ width: 0 }}
-          animate={{ width: `${((currentIndex + 1) / cards.length) * 100}%` }}
-          transition={{ ease: "circOut", duration: 0.5 }}
-        />
-      </div>
-
-      <div className="relative aspect-[4/5] md:aspect-square w-full">
-        <AnimatePresence initial={false} mode="wait">
-          {/* 4. MENGGUNAKAN <article> UNTUK SEMANTIK KARTU */}
-          <motion.article
-            key={currentIndex + (isFlipped ? "-back" : "-front")}
-            initial={
-              isFlipped
-                ? { rotateY: 90, opacity: 0 }
-                : {
-                    x: direction === 1 ? 300 : direction === -1 ? -300 : 0,
-                    opacity: 0,
-                  }
-            }
-            animate={
-              isFlipped ? { rotateY: 0, opacity: 1 } : { x: 0, opacity: 1 }
-            }
-            exit={
-              isFlipped
-                ? { rotateY: -90, opacity: 0 }
-                : {
-                    x: direction === 1 ? -300 : direction === -1 ? 300 : 0,
-                    opacity: 0,
-                  }
-            }
-            transition={{ type: "spring", stiffness: 200, damping: 20 }}
-            // 5. MENGGUNAKAN TAILWIND CONFIG CUSTOM
-            className={`absolute inset-0 w-full h-full flex flex-col items-center justify-center p-8 cursor-pointer rounded-[2.5rem] border transition-all duration-500 overflow-hidden
-              ${
-                isFlipped
-                  ? "bg-[#1a1c20] border-cyber-neon/30 shadow-[0_0_40px_rgba(0,255,239,0.1)]"
-                  : "bg-cyber-surface border-white/5 shadow-neumorphic hover:border-white/10"
-              }`}
-            onClick={() => !isFlipped && setIsFlipped(true)}
+      {/* FLASHCARD COMPONENT */}
+      <div className="relative">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentIndex}
+            initial={{ x: direction * 100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -direction * 100, opacity: 0 }}
           >
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] opacity-20 pointer-events-none" />
-
-            {!isFlipped ? (
-              <div className="text-center relative z-10 w-full">
-                <div className="absolute -top-16 left-0 right-0 flex justify-center">
-                  <span className="text-[9px] font-black uppercase tracking-[0.4em] text-white/20 bg-cyber-surface px-4 py-1 rounded-full border border-white/5">
-                    Uji Memori
-                  </span>
-                </div>
-                <h2 className="text-6xl md:text-8xl font-black text-white tracking-tighter drop-shadow-2xl">
-                  {currentCard.word}
-                </h2>
-                <p className="text-cyber-neon/40 text-[10px] font-black uppercase tracking-[0.4em] mt-8 animate-pulse">
-                  Tap to reveal
-                </p>
-              </div>
-            ) : (
-              <div className="text-center w-full flex flex-col items-center relative z-10 h-full">
-                <header className="mb-6 w-full flex flex-col items-center justify-center mt-4">
-                  <p className="text-cyber-neon font-mono font-bold text-sm md:text-base tracking-[0.2em] uppercase mb-1">
-                    {currentCard.furigana || currentCard.romaji}
-                  </p>
-                  <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter drop-shadow-lg">
-                    {currentCard.word}
-                  </h2>
-                </header>
-
-                <div className="w-full mb-6 py-4 px-6 bg-green-500/10 rounded-2xl border-l-4 border-green-500 shadow-[inset_0_0_20px_rgba(34,197,94,0.05)] relative overflow-hidden">
-                  <div className="absolute top-0 right-0 p-2 opacity-10">
-                    <span className="font-mono text-4xl font-black text-green-500">
-                      JP
-                    </span>
-                  </div>
-                  <h3 className="text-xl md:text-2xl font-black text-green-400 uppercase tracking-tight relative z-10">
-                    {currentCard.meaning}
-                  </h3>
-                </div>
-
-                <div className="mt-auto">
-                  <TTSReader text={currentCard.word} minimal={false} />
-                </div>
-              </div>
-            )}
-          </motion.article>
+            <Flashcard
+              word={currentCard.word}
+              meaning={currentCard.meaning}
+              furigana={currentCard.furigana}
+              romaji={currentCard.romaji}
+              isFlipped={isFlipped}
+              onFlip={() => setIsFlipped(!isFlipped)}
+            />
+          </motion.div>
         </AnimatePresence>
       </div>
 
-      <AnimatePresence>
-        {isFlipped && (
-          <motion.nav
-            initial={{ y: 30, opacity: 0, scale: 0.9 }}
-            animate={{ y: 0, opacity: 1, scale: 1 }}
-            className="grid grid-cols-2 gap-5 mt-8"
+      {/* CONTROLS */}
+      <div className="mt-8 space-y-6">
+        {!isFlipped ? (
+          /* Navigasi Manual di Depan */
+          <div className="flex justify-between items-center gap-4">
+            <button
+              onClick={goToPrev}
+              disabled={currentIndex === 0}
+              className="p-4 rounded-2xl bg-cyber-surface border border-white/5 text-white disabled:opacity-20"
+            >
+              ←
+            </button>
+            <div className="text-white/20 font-mono text-xs">
+              KARTU {currentIndex + 1} / {cards.length}
+            </div>
+            <button
+              onClick={goToNext}
+              className="p-4 rounded-2xl bg-cyber-surface border border-white/5 text-white"
+            >
+              →
+            </button>
+          </div>
+        ) : (
+          /* Tombol Evaluasi (Hanya muncul jika sudah di-flip) */
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="grid grid-cols-2 gap-4"
           >
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleAnswer(false);
-              }}
-              aria-label="Tandai sebagai Lupa"
-              className="group relative p-5 md:p-6 bg-cyber-surface rounded-3xl border border-red-500/20 text-red-400 font-black uppercase tracking-[0.2em] text-[10px] md:text-xs shadow-neumorphic active:shadow-neumorphic-pressed active:translate-y-1 transition-all"
+              onClick={() => handleAnswer(false)}
+              className="p-6 bg-red-500/10 border border-red-500/30 rounded-3xl text-red-400 font-black uppercase tracking-widest text-xs"
             >
-              <div className="absolute inset-0 rounded-3xl bg-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-              Lupa ❌
+              Masih Lupa
             </button>
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleAnswer(true);
-              }}
-              aria-label="Tandai sebagai Ingat"
-              className="group relative p-5 md:p-6 bg-cyber-surface rounded-3xl border border-green-500/20 text-green-400 font-black uppercase tracking-[0.2em] text-[10px] md:text-xs shadow-[15px_15px_40px_rgba(0,0,0,0.6),-10px_-10px_30px_rgba(255,255,255,0.02),0_0_15px_rgba(34,197,94,0.1)] active:shadow-neumorphic-pressed active:translate-y-1 transition-all"
+              onClick={() => handleAnswer(true)}
+              className="p-6 bg-green-500/10 border border-green-500/30 rounded-3xl text-green-400 font-black uppercase tracking-widest text-xs shadow-[0_0_20px_rgba(34,197,94,0.1)]"
             >
-              <div className="absolute inset-0 rounded-3xl bg-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-              Ingat ✅
+              Sudah Ingat
             </button>
-          </motion.nav>
+          </motion.div>
         )}
-      </AnimatePresence>
+      </div>
     </section>
   );
 }
