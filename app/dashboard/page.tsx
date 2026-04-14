@@ -12,10 +12,11 @@ import LevelUpOverlay from "@/components/LevelUpOverlay";
 import { client } from "@/sanity/lib/client";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { BrainCircuit, PlayCircle } from "lucide-react";
 
 export default function DashboardPage() {
   const { progress, loading, exportData, importData } = useProgress();
-  const [guestId, setGuestId] = useState<string>("LOADING...");
+  const [guestId, setGuestId] = useState<string>("MEMUAT...");
   const [stats, setStats] = useState<ProgressState | null>(null);
 
   const [examHistory, setExamHistory] = useState<any[]>([]);
@@ -62,10 +63,10 @@ export default function DashboardPage() {
         format: [canvas.width, canvas.height],
       });
       pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
-      pdf.save(`NihongoPath_Report_${guestId}.pdf`);
+      pdf.save(`Sertifikat_NihongoRoute_${guestId}.pdf`);
     } catch (error) {
       console.error("Gagal membuat PDF:", error);
-      alert("Terjadi kesalahan saat meng-export PDF.");
+      alert("Terjadi kesalahan saat mengunduh sertifikat.");
     } finally {
       setIsExporting(false);
     }
@@ -87,7 +88,7 @@ export default function DashboardPage() {
       reader.onload = (event: ProgressEvent<FileReader>) => {
         const result = event.target?.result as string;
         if (importData(result)) window.location.reload();
-        else alert("Format file tidak valid atau rusak!");
+        else alert("Format file data tidak valid atau rusak!");
       };
       reader.readAsText(file);
     };
@@ -97,7 +98,7 @@ export default function DashboardPage() {
   const handleResetData = () => {
     if (
       confirm(
-        "⚠️ WARNING: INITIATING DATA PURGE. Semua progres akan dihapus permanen. Lanjutkan?",
+        "⚠️ PERINGATAN: Semua progres, level, dan hafalan Anda akan dihapus permanen secara lokal. Apakah Anda yakin ingin mengulang dari awal?",
       )
     ) {
       localStorage.removeItem("nihongoroute_save_data");
@@ -115,7 +116,7 @@ export default function DashboardPage() {
           className="w-16 h-16 border-4 border-cyan-400/20 border-t-cyan-400 rounded-full shadow-[0_0_30px_rgba(34,211,238,0.5)]"
         />
         <p className="mt-8 text-cyan-400 font-mono font-black uppercase tracking-[0.4em] text-[10px] animate-pulse">
-          Syncing Neural Link...
+          Memuat Data...
         </p>
       </div>
     );
@@ -137,7 +138,7 @@ export default function DashboardPage() {
         >
           <div className="flex items-center gap-4 mb-3 font-mono">
             <span className="neo-inset px-3 py-1 text-cyan-400 text-[10px] font-black uppercase tracking-widest border border-cyan-400/30">
-              Lvl {progress.level} User
+              Pengguna Lvl {progress.level}
             </span>
             <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest">
               ID: {guestId}
@@ -148,20 +149,30 @@ export default function DashboardPage() {
           </h1>
         </motion.div>
 
-        <Link href="/review" className="w-full lg:w-auto">
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="btn-cyber flex items-center justify-between lg:justify-center gap-4"
-          >
-            Mulai Review
-            {dueCount > 0 && (
-              <span className="bg-red-500 text-white px-3 py-1 rounded-lg text-[10px] animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.8)]">
-                {dueCount} DUE
-              </span>
-            )}
-          </motion.div>
-        </Link>
+        {/* ✨ SMART CALL TO ACTION */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="w-full lg:w-auto"
+        >
+          {dueCount > 0 ? (
+            <Link
+              href="/review"
+              className="flex items-center justify-center gap-3 w-full md:w-auto bg-cyan-400 hover:bg-cyan-300 text-black px-8 py-4 rounded-[2rem] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(34,211,238,0.4)]"
+            >
+              <BrainCircuit size={20} />
+              <span>Mulai Hafalan ({dueCount} Kartu)</span>
+            </Link>
+          ) : (
+            <Link
+              href="/courses/n5"
+              className="flex items-center justify-center gap-3 w-full md:w-auto bg-blue-500/20 border border-blue-500/50 hover:bg-blue-500/30 text-blue-400 px-8 py-4 rounded-[2rem] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(59,130,246,0.2)]"
+            >
+              <PlayCircle size={20} />
+              <span>Pelajari Materi Baru</span>
+            </Link>
+          )}
+        </motion.div>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 mb-8">
@@ -170,7 +181,7 @@ export default function DashboardPage() {
           <section className="neo-card p-6 md:p-8 relative overflow-hidden">
             <div className="flex justify-between items-end mb-4 relative z-10">
               <h2 className="text-white font-black uppercase italic tracking-widest text-xs md:text-sm">
-                Experience <span className="text-white/30">Points</span>
+                Poin <span className="text-white/30">Pengalaman</span>
               </h2>
               <span className="text-cyan-400 font-mono font-bold text-lg drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]">
                 {progress.xp} XP
@@ -185,7 +196,7 @@ export default function DashboardPage() {
               />
             </div>
             <p className="mt-4 text-[9px] text-slate-500 uppercase font-black tracking-widest font-mono text-right relative z-10">
-              {1000 - (progress.xp % 1000)} XP to Next Level
+              Butuh {1000 - (progress.xp % 1000)} XP untuk Naik Level
             </p>
           </section>
 
@@ -202,20 +213,20 @@ export default function DashboardPage() {
           <section className="neo-card p-6 md:p-8 bg-gradient-to-br from-[#0f1115] to-[#0a0c10]">
             <h2 className="text-cyan-400 font-mono font-black uppercase tracking-widest text-[10px] mb-6 flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-              System Performance
+              Statistik Belajar
             </h2>
             <div className="space-y-4">
               <SimpleStat
-                label="Total Words"
+                label="Total Kata"
                 value={Object.keys(progress.srs).length}
               />
               <SimpleStat
-                label="Streak"
-                value={`${stats?.streak || 0} Days`}
+                label="Beruntun"
+                value={`${stats?.streak || 0} Hari`}
                 color="text-amber-400"
               />
               <SimpleStat
-                label="Daily Reviews"
+                label="Diulang Hari Ini"
                 value={stats?.todayReviewCount || 0}
                 color="text-emerald-400"
               />
@@ -226,16 +237,16 @@ export default function DashboardPage() {
             <QuickLink href="/courses/n5" label="Materi N5" icon="⛩️" />
             <QuickLink
               href="/courses/jlpt-n5/kanji"
-              label="Kanji DB"
+              label="Kamus Kanji"
               icon="🈴"
             />
-            <QuickLink href="/library" label="Library" icon="🏛️" />
-            <QuickLink href="/support" label="Support" icon="☕" />
+            <QuickLink href="/library" label="Koleksi" icon="🏛️" />
+            <QuickLink href="/support" label="Bantuan" icon="☕" />
           </nav>
 
           <section className="neo-card p-6 md:p-8">
             <h2 className="text-slate-500 font-mono font-black uppercase tracking-widest text-[10px] mb-6">
-              Data Protocol
+              Pengaturan Data
             </h2>
             <div className="space-y-3">
               <button
@@ -243,7 +254,7 @@ export default function DashboardPage() {
                 className="neo-inset w-full flex items-center justify-between p-4 hover:bg-white/5 transition-all group"
               >
                 <span className="text-[10px] font-black uppercase text-slate-400 group-hover:text-cyan-400 transition-colors">
-                  Export Save
+                  Simpan Data Lokal
                 </span>
                 <span className="text-lg group-hover:scale-110 transition-transform">
                   💾
@@ -254,7 +265,7 @@ export default function DashboardPage() {
                 className="neo-inset w-full flex items-center justify-between p-4 hover:bg-white/5 transition-all group"
               >
                 <span className="text-[10px] font-black uppercase text-slate-400 group-hover:text-indigo-400 transition-colors">
-                  Import Save
+                  Muat Data Lokal
                 </span>
                 <span className="text-lg group-hover:scale-110 transition-transform">
                   📥
@@ -265,7 +276,7 @@ export default function DashboardPage() {
                 className="neo-inset border-red-500/20 w-full flex items-center justify-between p-4 hover:bg-red-500/10 transition-all group mt-6"
               >
                 <span className="text-[10px] font-black uppercase text-red-500/80 group-hover:text-red-400">
-                  System Format
+                  Hapus Semua Data
                 </span>
                 <span className="text-lg group-hover:scale-110 transition-transform">
                   ⚠️
@@ -280,7 +291,7 @@ export default function DashboardPage() {
       <section className="mt-12 mb-24">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-widest italic border-l-4 border-amber-500 pl-4">
-            Official <span className="text-amber-500">Records</span>
+            Riwayat <span className="text-amber-500">Ujian</span>
           </h3>
           {examHistory.length > 0 && (
             <button
@@ -288,7 +299,7 @@ export default function DashboardPage() {
               disabled={isExporting}
               className="neo-inset px-6 py-3 text-cyan-400 text-[10px] font-black uppercase tracking-widest hover:bg-white/5 transition-all flex items-center gap-2 disabled:opacity-50"
             >
-              {isExporting ? "Rendering PDF..." : "📥 Download Certificate"}
+              {isExporting ? "Membuat PDF..." : "📥 Unduh Sertifikat"}
             </button>
           )}
         </div>
@@ -305,7 +316,7 @@ export default function DashboardPage() {
             <div className="flex justify-between items-end border-b border-white/10 pb-6 mb-8">
               <div>
                 <h4 className="text-cyan-400 font-mono text-[10px] uppercase tracking-[0.3em] mb-1">
-                  Candidature Report
+                  Laporan Hasil Ujian
                 </h4>
                 <p className="text-white text-lg font-bold font-mono tracking-widest">
                   {guestId}
@@ -313,7 +324,7 @@ export default function DashboardPage() {
               </div>
               <div className="text-right">
                 <p className="text-slate-500 font-mono text-[10px] uppercase tracking-widest font-bold">
-                  Level Achieved
+                  Level Saat Ini
                 </p>
                 <p className="text-amber-500 text-2xl font-black italic uppercase">
                   LVL {progress.level}
@@ -337,7 +348,7 @@ export default function DashboardPage() {
                       <div className="flex items-center gap-6">
                         <div className="text-right">
                           <p className="text-slate-500 font-mono text-[10px] font-black uppercase tracking-widest mb-1">
-                            Total Score
+                            Skor Total
                           </p>
                           <p
                             className={`text-3xl font-black font-mono ${exam.passed ? "text-emerald-400" : "text-rose-400"}`}
@@ -351,7 +362,7 @@ export default function DashboardPage() {
                         <div
                           className={`px-4 py-2 rounded-xl font-black font-mono uppercase tracking-widest text-xs border ${exam.passed ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400" : "bg-rose-500/10 border-rose-500/30 text-rose-400"}`}
                         >
-                          {exam.passed ? "CLEARED" : "FAILED"}
+                          {exam.passed ? "LULUS" : "GAGAL"}
                         </div>
                       </div>
                     </div>
@@ -359,19 +370,19 @@ export default function DashboardPage() {
                     {exam.sectionScores && (
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <SectionScore
-                          label="Vocabulary"
+                          label="Kosakata"
                           score={exam.sectionScores.vocabulary}
                         />
                         <SectionScore
-                          label="Grammar"
+                          label="Tata Bahasa"
                           score={exam.sectionScores.grammar}
                         />
                         <SectionScore
-                          label="Reading"
+                          label="Membaca"
                           score={exam.sectionScores.reading}
                         />
                         <SectionScore
-                          label="Listening"
+                          label="Mendengar"
                           score={exam.sectionScores.listening}
                         />
                       </div>
@@ -393,7 +404,6 @@ export default function DashboardPage() {
   );
 }
 
-/* HELPER COMPONENTS */
 function SimpleStat({
   label,
   value,
@@ -432,7 +442,7 @@ function QuickLink({
       <span className="text-2xl group-hover:scale-110 transition-transform drop-shadow-md">
         {icon}
       </span>
-      <span className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-tighter group-hover:text-white transition-colors">
+      <span className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-tighter group-hover:text-white transition-colors text-center">
         {label}
       </span>
     </Link>

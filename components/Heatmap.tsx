@@ -30,10 +30,10 @@ function getBoxStyle(value: number): string {
   if (!value)
     return "bg-cyber-bg border-white/5 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]";
   if (value < 10)
-    return "bg-cyber-neon/20 border-cyber-neon/30 shadow-[0_0_5px_rgba(0,255,239,0.1)]";
+    return "bg-cyan-400/20 border-cyan-400/30 shadow-[0_0_5px_rgba(34,211,238,0.1)]";
   if (value < 30)
-    return "bg-cyber-neon/60 border-cyber-neon/80 shadow-[0_0_10px_rgba(0,255,239,0.4)]";
-  return "bg-cyber-neon border-white shadow-[0_0_15px_rgba(0,255,239,0.8),inset_0_0_10px_rgba(255,255,255,0.8)]";
+    return "bg-cyan-400/60 border-cyan-400/80 shadow-[0_0_10px_rgba(34,211,238,0.4)]";
+  return "bg-cyan-400 border-white shadow-[0_0_15px_rgba(34,211,238,0.8),inset_0_0_10px_rgba(255,255,255,0.8)]";
 }
 
 export default function Heatmap({ studyDays }: Props) {
@@ -49,11 +49,11 @@ export default function Heatmap({ studyDays }: Props) {
             <span className="text-purple-400 text-sm">📅</span>
           </div>
           <h3 className="text-white font-black uppercase tracking-widest text-sm md:text-base drop-shadow-md">
-            Study Matrix
+            Riwayat Belajar
           </h3>
         </div>
         <span className="bg-cyber-bg border border-white/10 text-[#c4cfde] px-3 py-1.5 rounded-full text-[9px] font-black tracking-[0.2em] uppercase shadow-inner hidden md:block">
-          Last 35 Days
+          35 Hari Terakhir
         </span>
       </header>
 
@@ -75,7 +75,7 @@ export default function Heatmap({ studyDays }: Props) {
 
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-3 py-2 bg-cyber-surface border border-white/10 text-white text-[10px] font-bold uppercase tracking-widest rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-[0_10px_20px_rgba(0,0,0,0.5)] z-30">
                 {day}{" "}
-                <span className="text-cyber-neon ml-1">{value} Reviews</span>
+                <span className="text-cyan-400 ml-1">{value} Kartu Dibaca</span>
               </div>
             </motion.div>
           );
@@ -84,16 +84,16 @@ export default function Heatmap({ studyDays }: Props) {
 
       <div className="flex items-center gap-3 mt-8 justify-end relative z-10">
         <span className="text-[9px] font-black uppercase tracking-widest text-white/40">
-          Less
+          Sedikit
         </span>
         <div className="flex gap-1.5">
           <div className="w-4 h-4 rounded-[4px] bg-cyber-bg border border-white/5 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"></div>
-          <div className="w-4 h-4 rounded-[4px] bg-cyber-neon/20 border border-cyber-neon/30 shadow-[0_0_5px_rgba(0,255,239,0.1)]"></div>
-          <div className="w-4 h-4 rounded-[4px] bg-cyber-neon/60 border border-cyber-neon/80 shadow-[0_0_10px_rgba(0,255,239,0.4)]"></div>
-          <div className="w-4 h-4 rounded-[4px] bg-cyber-neon border-white shadow-[0_0_15px_rgba(0,255,239,0.8),inset_0_0_5px_rgba(255,255,255,0.8)]"></div>
+          <div className="w-4 h-4 rounded-[4px] bg-cyan-400/20 border border-cyan-400/30 shadow-[0_0_5px_rgba(34,211,238,0.1)]"></div>
+          <div className="w-4 h-4 rounded-[4px] bg-cyan-400/60 border border-cyan-400/80 shadow-[0_0_10px_rgba(34,211,238,0.4)]"></div>
+          <div className="w-4 h-4 rounded-[4px] bg-cyan-400 border-white shadow-[0_0_15px_rgba(34,211,238,0.8),inset_0_0_5px_rgba(255,255,255,0.8)]"></div>
         </div>
-        <span className="text-[9px] font-black uppercase tracking-widest text-cyber-neon drop-shadow-[0_0_5px_rgba(0,255,239,0.5)]">
-          More
+        <span className="text-[9px] font-black uppercase tracking-widest text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.5)]">
+          Banyak
         </span>
       </div>
     </section>

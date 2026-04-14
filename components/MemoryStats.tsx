@@ -17,12 +17,11 @@ export default function MemoryStats() {
     new: srsEntries.filter((s: any) => s.repetition <= 1).length,
   };
 
-  const total = srsEntries.length || 1; // Mencegah pembagian dengan nol
+  const total = srsEntries.length || 1;
 
-  // Variasi warna dan efek cahaya untuk setiap kategori
   const statConfig = [
     {
-      label: "Master (Ahli)",
+      label: "Sangat Mahir",
       count: stats.master,
       color: "bg-green-400",
       glow: "shadow-[0_0_12px_rgba(34,197,94,0.8)]",
@@ -30,7 +29,7 @@ export default function MemoryStats() {
       delay: 0.1,
     },
     {
-      label: "Menengah",
+      label: "Cukup Ingat",
       count: stats.intermediate,
       color: "bg-blue-400",
       glow: "shadow-[0_0_12px_rgba(59,130,246,0.8)]",
@@ -38,19 +37,19 @@ export default function MemoryStats() {
       delay: 0.2,
     },
     {
-      label: "Belajar",
+      label: "Sedang Belajar",
       count: stats.learning,
       color: "bg-yellow-400",
       glow: "shadow-[0_0_12px_rgba(250,204,21,0.8)]",
-      icon: "🌱",
+      icon: "🔥",
       delay: 0.3,
     },
     {
-      label: "Baru",
+      label: "Kata Baru",
       count: stats.new,
       color: "bg-white/50",
       glow: "shadow-[0_0_12px_rgba(255,255,255,0.3)]",
-      icon: "🆕",
+      icon: "🌱",
       delay: 0.4,
     },
   ];
@@ -61,27 +60,24 @@ export default function MemoryStats() {
       animate={{ opacity: 1, y: 0 }}
       className="bg-[#1e2024] p-6 md:p-8 rounded-[2.5rem] border border-white/5 shadow-[15px_15px_40px_rgba(0,0,0,0.6),-10px_-10px_30px_rgba(255,255,255,0.02)] relative overflow-hidden h-full flex flex-col"
     >
-      {/* Cyber Grid Background */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:15px_15px] opacity-30 pointer-events-none" />
 
-      {/* Header */}
       <div className="flex items-center justify-between mb-8 relative z-10">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center shadow-[0_0_10px_rgba(59,130,246,0.2)]">
             <span className="text-blue-400 text-sm">🧠</span>
           </div>
           <h3 className="text-white font-black uppercase tracking-widest text-sm md:text-base drop-shadow-md">
-            Memory Matrix
+            Status Ingatan
           </h3>
         </div>
         <div className="flex flex-col items-end">
-          <span className="bg-[#15171a] border border-white/10 text-[#0ef] px-3 py-1.5 rounded-full text-[9px] font-black tracking-[0.2em] uppercase shadow-inner">
-            {srsEntries.length} Known
+          <span className="bg-[#15171a] border border-white/10 text-cyan-400 px-3 py-1.5 rounded-full text-[9px] font-black tracking-[0.2em] uppercase shadow-inner">
+            {srsEntries.length} Dikuasai
           </span>
         </div>
       </div>
 
-      {/* Status Bars */}
       <div className="space-y-6 mb-8 relative z-10 flex-1">
         {statConfig.map((stat, i) => (
           <StatBar
@@ -97,13 +93,12 @@ export default function MemoryStats() {
         ))}
       </div>
 
-      {/* QUICK DRILL ACTIONS (Tactile Neumorphic Buttons) */}
       <div className="pt-6 border-t border-white/5 grid grid-cols-2 gap-4 relative z-10 mt-auto">
         <Link
           href="/jlpt/n5/flashcards"
-          className="group relative p-4 bg-[#1e2024] rounded-2xl border border-white/5 text-[9px] md:text-[10px] font-black text-center uppercase tracking-[0.2em] text-[#c4cfde] transition-all shadow-[6px_6px_15px_rgba(0,0,0,0.5),-4px_-4px_10px_rgba(255,255,255,0.03)] active:shadow-[inset_4px_4px_10px_rgba(0,0,0,0.5),inset_-2px_-2px_5px_rgba(255,255,255,0.02)] active:translate-y-1 hover:text-[#0ef] hover:border-[#0ef]/30"
+          className="group relative p-4 bg-[#1e2024] rounded-2xl border border-white/5 text-[9px] md:text-[10px] font-black text-center uppercase tracking-[0.2em] text-[#c4cfde] transition-all shadow-[6px_6px_15px_rgba(0,0,0,0.5),-4px_-4px_10px_rgba(255,255,255,0.03)] active:shadow-[inset_4px_4px_10px_rgba(0,0,0,0.5),inset_-2px_-2px_5px_rgba(255,255,255,0.02)] active:translate-y-1 hover:text-cyan-400 hover:border-cyan-400/30"
         >
-          <div className="absolute inset-0 rounded-2xl bg-[#0ef]/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="absolute inset-0 rounded-2xl bg-cyan-400/5 opacity-0 group-hover:opacity-100 transition-opacity" />
           📚 Pemanasan Kosakata
         </Link>
         <Link
@@ -119,7 +114,6 @@ export default function MemoryStats() {
 }
 
 function StatBar({ label, count, total, color, glow, icon, delay }: any) {
-  // Hanya hitung persen jika ada kata di database, jika 0 maka bar kosong (0%)
   const percent = total > 1 || count > 0 ? (count / total) * 100 : 0;
 
   return (
@@ -136,7 +130,6 @@ function StatBar({ label, count, total, color, glow, icon, delay }: any) {
         </div>
       </div>
 
-      {/* Container Bar (Inset Shadow) */}
       <div className="w-full bg-[#15171a] h-2.5 rounded-full overflow-hidden shadow-[inset_0_1px_3px_rgba(0,0,0,0.8)] relative">
         <motion.div
           initial={{ width: 0 }}
@@ -144,7 +137,6 @@ function StatBar({ label, count, total, color, glow, icon, delay }: any) {
           transition={{ duration: 1.5, delay, ease: "circOut" }}
           className={`${color} ${glow} h-full relative`}
         >
-          {/* Subtle 3D Highlight on the glowing bar */}
           <div className="absolute top-0 left-0 right-0 h-[1px] bg-white/40 rounded-t-full opacity-50" />
         </motion.div>
       </div>

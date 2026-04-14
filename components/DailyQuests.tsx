@@ -5,7 +5,6 @@ import { useProgress } from "@/context/UserProgressContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { loadProgress, ProgressState } from "@/lib/progress";
 
-// --- TYPES ---
 export interface Quest {
   id: string;
   title: string;
@@ -15,11 +14,10 @@ export interface Quest {
   icon: string;
 }
 
-// --- CONSTANTS ---
 const DAILY_QUESTS: Quest[] = [
   {
     id: "q_review_10",
-    title: "Pemanasan Memori",
+    title: "Pemanasan Otak",
     type: "review",
     target: 10,
     rewardXP: 20,
@@ -27,7 +25,7 @@ const DAILY_QUESTS: Quest[] = [
   },
   {
     id: "q_review_50",
-    title: "Ahli Flashcard",
+    title: "Pejuang Memori",
     type: "review",
     target: 50,
     rewardXP: 100,
@@ -98,15 +96,15 @@ export default function DailyQuests() {
 
       <header className="flex items-center justify-between mb-8 relative z-10">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-cyber-neon/10 border border-cyber-neon/30 flex items-center justify-center shadow-[0_0_10px_rgba(0,255,239,0.2)]">
-            <span className="text-cyber-neon text-sm">🎯</span>
+          <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+            <span className="text-emerald-400 text-sm">🎯</span>
           </div>
           <h3 className="text-white font-black uppercase tracking-widest text-sm md:text-base drop-shadow-md">
-            Daily Quests
+            Misi Harian
           </h3>
         </div>
-        <span className="bg-cyber-bg border border-white/10 text-[#c4cfde] px-3 py-1.5 rounded-full text-[9px] font-black tracking-[0.2em] uppercase shadow-inner">
-          Resets at Midnight
+        <span className="bg-cyber-bg border border-white/10 text-[#c4cfde] px-3 py-1.5 rounded-full text-[9px] font-black tracking-[0.2em] uppercase shadow-inner hidden md:block">
+          Direset Tengah Malam
         </span>
       </header>
 
@@ -124,7 +122,7 @@ export default function DailyQuests() {
                 isClaimed
                   ? "bg-white/5 border-white/5 opacity-50 grayscale"
                   : isCompleted
-                    ? "bg-green-500/10 border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.15)] hover:border-green-500/50"
+                    ? "bg-emerald-500/10 border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.15)] hover:border-emerald-500/50"
                     : "bg-cyber-bg border-white/5 hover:border-white/10"
               }`}
             >
@@ -134,10 +132,10 @@ export default function DailyQuests() {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 1.2 }}
-                    className="absolute inset-0 flex items-center justify-center bg-green-500/20 backdrop-blur-sm rounded-2xl z-20"
+                    className="absolute inset-0 flex items-center justify-center bg-emerald-500/20 backdrop-blur-sm rounded-2xl z-20"
                   >
-                    <span className="text-green-400 font-black italic tracking-widest uppercase drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]">
-                      +{quest.rewardXP} XP CLAIMED!
+                    <span className="text-emerald-400 font-black italic tracking-widest uppercase drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]">
+                      +{quest.rewardXP} XP DIAMBIL!
                     </span>
                   </motion.div>
                 )}
@@ -150,29 +148,29 @@ export default function DailyQuests() {
                     <h4
                       className={`text-xs font-black uppercase tracking-wide transition-colors ${
                         isCompleted && !isClaimed
-                          ? "text-green-400"
+                          ? "text-emerald-400"
                           : "text-white"
                       }`}
                     >
                       {quest.title}
                     </h4>
-                    <p className="text-[10px] text-cyber-neon font-bold uppercase tracking-widest mt-0.5 opacity-80">
-                      Reward: +{quest.rewardXP} XP
+                    <p className="text-[10px] text-cyan-400 font-bold uppercase tracking-widest mt-0.5 opacity-80">
+                      Hadiah: +{quest.rewardXP} XP
                     </p>
                   </div>
                 </div>
 
                 {isClaimed ? (
                   <span className="text-[10px] font-black text-white/20 uppercase tracking-widest bg-black/20 px-2 py-1 rounded">
-                    Claimed
+                    Selesai
                   </span>
                 ) : isCompleted ? (
                   <button
                     onClick={() => handleClaim(quest)}
-                    aria-label={`Klaim hadiah ${quest.rewardXP} XP`}
-                    className="text-[10px] font-black text-cyber-bg bg-green-400 uppercase tracking-widest px-3 py-1.5 rounded-lg shadow-[0_0_10px_rgba(34,197,94,0.4)] hover:scale-105 active:scale-95 transition-all animate-pulse"
+                    aria-label={`Ambil hadiah ${quest.rewardXP} XP`}
+                    className="text-[10px] font-black text-black bg-emerald-400 uppercase tracking-widest px-3 py-1.5 rounded-lg shadow-[0_0_10px_rgba(16,185,129,0.4)] hover:scale-105 active:scale-95 transition-all animate-pulse"
                   >
-                    Claim
+                    Ambil
                   </button>
                 ) : (
                   <span className="text-[10px] font-black text-white/40 font-mono bg-black/30 px-2 py-1 rounded shadow-inner">
@@ -188,8 +186,8 @@ export default function DailyQuests() {
                   transition={{ duration: 1, ease: "easeOut" }}
                   className={`h-full relative ${
                     isCompleted
-                      ? "bg-green-400 shadow-[0_0_10px_rgba(34,197,94,0.8)]"
-                      : "bg-gradient-to-r from-cyber-neon to-blue-500 shadow-[0_0_10px_rgba(0,255,239,0.5)]"
+                      ? "bg-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.8)]"
+                      : "bg-gradient-to-r from-cyan-400 to-blue-500 shadow-[0_0_10px_rgba(0,255,239,0.5)]"
                   }`}
                 >
                   <div className="absolute top-0 left-0 right-0 h-[1px] bg-white/30" />

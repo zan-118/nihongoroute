@@ -5,7 +5,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import TTSReader from "@/components/TTSReader";
 import FlashcardMaster from "@/components/FlashcardMaster";
-import { X, Search, BrainCircuit, Home, Layers, Database } from "lucide-react";
+import {
+  Search,
+  BrainCircuit,
+  Home,
+  Layers,
+  Database,
+  ChevronDown,
+} from "lucide-react";
 
 export interface VerbData {
   _id: string;
@@ -36,7 +43,7 @@ export default function VerbListClient({
 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeGroup, setActiveGroup] = useState<number | null>(null);
-  const [selectedVerb, setSelectedVerb] = useState<VerbData | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [isFlashcardMode, setIsFlashcardMode] = useState(false);
 
   const filteredVerbs = initialVerbs.filter((verb) => {
@@ -59,10 +66,10 @@ export default function VerbListClient({
     }));
 
     return (
-      <section className="animate-in fade-in zoom-in-95 duration-300 max-w-xl mx-auto">
+      <section className="animate-in fade-in zoom-in-95 duration-300 max-w-xl mx-auto pb-24">
         <button
           onClick={() => setIsFlashcardMode(false)}
-          className="mb-8 flex items-center gap-2 text-white/50 hover:text-white transition-colors text-sm font-bold uppercase tracking-widest bg-white/5 px-4 py-2 rounded-xl border border-white/5"
+          className="mb-8 flex items-center gap-2 text-white/50 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest bg-white/5 px-4 py-3 rounded-xl border border-white/5 w-full sm:w-auto justify-center"
         >
           ← Kembali ke Kamus
         </button>
@@ -72,8 +79,9 @@ export default function VerbListClient({
   }
 
   return (
-    <section>
-      <nav className="mb-8 flex flex-wrap items-center gap-2 text-[9px] md:text-xs font-black uppercase tracking-[0.2em] font-mono">
+    <section className="pb-24">
+      {/* BREADCRUMB */}
+      <nav className="mb-6 flex flex-wrap items-center gap-2 text-[9px] md:text-xs font-black uppercase tracking-[0.2em] font-mono">
         <Link
           href="/dashboard"
           className="text-white/30 hover:text-cyan-400 transition-colors flex items-center gap-1.5 p-2 rounded-lg hover:bg-white/5"
@@ -93,239 +101,230 @@ export default function VerbListClient({
         </span>
       </nav>
 
-      <header className="mb-12 border-b border-white/5 pb-8">
-        <h1 className="text-4xl md:text-6xl font-black text-white uppercase italic tracking-tighter drop-shadow-lg flex items-center gap-4">
-          <span className="text-5xl md:text-7xl">🔍</span> Matriks{" "}
-          <span className="text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">
-            Verba
-          </span>
+      <header className="mb-8 border-b border-white/5 pb-6">
+        <h1 className="text-4xl md:text-6xl font-black text-white uppercase italic tracking-tighter drop-shadow-lg flex items-center gap-3">
+          <Database className="text-cyan-400 w-8 h-8 md:w-12 md:h-12" /> Matriks{" "}
+          <span className="text-cyan-400">Verba</span>
         </h1>
       </header>
 
-      <div className="flex flex-col xl:flex-row gap-6 mb-12">
-        <div className="relative flex-1 group">
+      {/* ✨ PERBAIKAN 1: Filter & Search Lebih Ramping untuk Mobile */}
+      <div className="flex flex-col gap-4 mb-8">
+        <div className="relative w-full">
+          <Search
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"
+            size={18}
+          />
           <input
             type="text"
-            placeholder="Cari arti, romaji, atau kana (makan, taberu)..."
-            className="w-full p-5 bg-cyber-surface border border-white/5 rounded-[2rem] focus:ring-2 focus:ring-cyan-400 outline-none transition-all text-white pr-14 shadow-[10px_10px_20px_#15171a,-10px_-10px_20px_#27292e]"
+            placeholder="Cari arti, romaji, atau kana..."
+            className="w-full pl-12 pr-4 py-4 bg-cyber-surface border border-white/10 rounded-2xl focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 outline-none text-sm text-white transition-all shadow-inner font-mono"
             onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <Search
-            className="absolute right-6 top-1/2 -translate-y-1/2 text-white/20 group-hover:text-cyan-400 transition-colors"
-            size={20}
           />
         </div>
 
-        <div className="flex gap-3 p-2 bg-cyber-surface rounded-[2rem] border border-white/5 shadow-[10px_10px_20px_#15171a,-10px_-10px_20px_#27292e] overflow-x-auto">
-          {[1, 2, 3].map((g) => (
-            <button
-              key={g}
-              onClick={() => setActiveGroup(activeGroup === g ? null : g)}
-              className={`flex-1 md:flex-none px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 whitespace-nowrap ${activeGroup === g ? "bg-cyan-500 text-white shadow-[0_0_20px_rgba(34,211,238,0.5)]" : "text-white/30 hover:bg-white/5 hover:text-white"}`}
-            >
-              Golongan {g}
-            </button>
-          ))}
-          {activeGroup && (
-            <button
-              onClick={() => setActiveGroup(null)}
-              className="px-4 text-white/20 hover:text-red-500 transition-colors text-xs font-bold uppercase"
-            >
-              Reset
-            </button>
-          )}
+        <div className="flex flex-wrap items-center gap-2">
+          {["Semua", 1, 2, 3].map((g) => {
+            const isActive =
+              g === "Semua" ? activeGroup === null : activeGroup === g;
+            return (
+              <button
+                key={g}
+                onClick={() =>
+                  setActiveGroup(g === "Semua" ? null : (g as number))
+                }
+                className={`px-4 py-2.5 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all border flex-1 sm:flex-none text-center ${
+                  isActive
+                    ? "bg-cyan-500/20 text-cyan-400 border-cyan-500/50 shadow-[0_0_15px_rgba(34,211,238,0.2)]"
+                    : "bg-cyber-surface text-slate-400 border-white/5 hover:bg-white/5 hover:text-white"
+                }`}
+              >
+                {g === "Semua" ? "Semua" : `Gol. ${g}`}
+              </button>
+            );
+          })}
         </div>
       </div>
 
+      {/* ✨ PERBAIKAN 2: Banner Aksi Pintar yang tidak berdesakan */}
       {filteredVerbs.length > 0 && (
-        <div className="mb-8 flex justify-between items-center bg-cyan-400/5 border border-cyan-400/20 p-4 rounded-2xl">
-          <p className="text-white/60 text-xs md:text-sm font-medium">
-            Ditemukan{" "}
+        <div className="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 bg-cyan-400/5 border border-cyan-400/20 p-4 rounded-2xl">
+          <p className="text-slate-300 text-xs sm:text-sm font-medium text-center sm:text-left">
+            Menampilkan{" "}
             <strong className="text-cyan-400">{filteredVerbs.length}</strong>{" "}
-            kata.
+            kata kerja
           </p>
           <button
             onClick={() => setIsFlashcardMode(true)}
-            className="flex items-center gap-2 bg-cyan-400 text-black px-4 md:px-6 py-2 rounded-xl font-black uppercase text-[10px] md:text-xs tracking-widest hover:scale-105 transition-transform shadow-[0_0_15px_rgba(34,211,238,0.3)]"
+            className="flex items-center justify-center gap-2 bg-cyan-400 text-black w-full sm:w-auto px-6 py-3 rounded-xl font-black uppercase text-[10px] sm:text-xs tracking-widest hover:scale-105 transition-transform shadow-[0_0_15px_rgba(34,211,238,0.3)]"
           >
             <BrainCircuit size={16} /> Latih Daftar Ini
           </button>
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* ✨ PERBAIKAN 3: Desain Kartu Mobile First yang Elegan */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
         <AnimatePresence>
-          {filteredVerbs.map((verb) => (
-            <motion.article
-              key={verb._id}
-              layout
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              onClick={() => setSelectedVerb(verb)}
-              className="bg-cyber-surface p-8 rounded-[2.5rem] border border-white/5 hover:border-cyan-400/30 transition-all group relative cursor-pointer shadow-[15px_15px_30px_#15171a,-15px_-15px_30px_#27292e]"
-            >
-              <header className="flex justify-between items-start mb-6">
-                <span className="px-4 py-1 rounded-full text-[9px] font-black tracking-widest border border-white/10 text-white/40">
-                  G{verb.group}
-                </span>
-                <TTSReader text={verb.jisho} minimal={true} />
-              </header>
-              <div className="mb-6">
-                <h3 className="text-3xl font-black text-white tracking-tighter mb-2 group-hover:text-cyan-400 transition-colors">
-                  {verb.jisho}
-                </h3>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <p className="text-cyan-400 text-[10px] font-mono font-bold uppercase tracking-widest bg-cyan-400/5 px-2 py-1 rounded-md">
-                    {verb.meaning}
-                  </p>
-                </div>
-              </div>
-            </motion.article>
-          ))}
-        </AnimatePresence>
-      </div>
-
-      <AnimatePresence>
-        {selectedVerb && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          {filteredVerbs.length === 0 ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedVerb(null)}
-              className="absolute inset-0 bg-black/90 backdrop-blur-xl"
-            />
-            <motion.article
-              initial={{ scale: 0.9, opacity: 0, y: 30 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 30 }}
-              className="relative w-full max-w-3xl bg-cyber-surface rounded-[3.5rem] p-10 shadow-[0_0_100px_rgba(0,0,0,0.8)] border border-white/10 overflow-hidden"
+              className="col-span-full py-20 text-center border-2 border-dashed border-white/10 rounded-3xl"
             >
-              <button
-                onClick={() => setSelectedVerb(null)}
-                className="absolute top-8 right-8 p-3 rounded-2xl bg-white/5 hover:bg-white/10 text-white transition-all shadow-lg"
-              >
-                <X size={20} />
-              </button>
+              <p className="text-slate-500 font-mono text-sm uppercase tracking-widest">
+                Kosakata tidak ditemukan.
+              </p>
+            </motion.div>
+          ) : (
+            filteredVerbs.map((verb) => {
+              const isExpanded = expandedId === verb._id;
 
-              <header className="flex flex-col md:flex-row items-start md:items-center gap-8 mb-10 pb-8 border-b border-white/5">
-                <div
-                  className={`w-20 h-20 rounded-[2rem] flex items-center justify-center text-3xl font-black shadow-2xl ${selectedVerb.group === 1 ? "bg-blue-600 shadow-blue-500/20" : selectedVerb.group === 2 ? "bg-orange-600 shadow-orange-500/20" : "bg-green-600 shadow-green-500/20"}`}
+              // Tentukan warna berdasarkan golongan
+              const badgeColor =
+                verb.group === 1
+                  ? "text-blue-400 bg-blue-500/10 border-blue-500/30"
+                  : verb.group === 2
+                    ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/30"
+                    : "text-purple-400 bg-purple-500/10 border-purple-500/30";
+
+              return (
+                <motion.article
+                  key={verb._id}
+                  layout
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className={`bg-cyber-surface border rounded-[2rem] overflow-hidden transition-all duration-300 ${
+                    isExpanded
+                      ? "border-cyan-400/50 shadow-[0_0_30px_rgba(34,211,238,0.1)]"
+                      : "border-white/5 hover:border-white/20 shadow-lg"
+                  }`}
                 >
-                  {selectedVerb.group}
-                </div>
-                <div>
-                  <h2 className="text-5xl font-black text-white mb-2 tracking-tighter italic">
-                    {selectedVerb.jisho}
-                  </h2>
-                  <div className="flex items-center gap-3">
-                    <p className="text-cyan-400 font-mono font-black text-lg uppercase bg-cyan-400/10 px-3 py-1 rounded-xl">
-                      {selectedVerb.meaning}
-                    </p>
-                    <span className="text-white/40 text-xl font-japanese italic">
-                      ({selectedVerb.furigana})
-                    </span>
-                  </div>
-                </div>
-              </header>
+                  {/* Bagian Atas Kartu (Bisa Diklik untuk Expand) */}
+                  <div
+                    onClick={() => setExpandedId(isExpanded ? null : verb._id)}
+                    className="p-5 sm:p-6 flex flex-col gap-4 cursor-pointer group"
+                  >
+                    {/* Header Kecil: Badge Golongan & Aksi */}
+                    <div className="flex justify-between items-center">
+                      <span
+                        className={`px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-full border ${badgeColor}`}
+                      >
+                        Golongan {verb.group}
+                      </span>
+                      <div className="flex items-center gap-3">
+                        <TTSReader text={verb.jisho} minimal={true} />
+                        <div
+                          className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all ${
+                            isExpanded
+                              ? "bg-cyan-400/20 border-cyan-400/50 text-cyan-400 rotate-180"
+                              : "bg-white/5 border-white/10 text-slate-400 group-hover:text-white"
+                          }`}
+                        >
+                          <ChevronDown size={16} />
+                        </div>
+                      </div>
+                    </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-auto max-h-[50vh] pr-4 custom-scrollbar">
-                <DetailBox
-                  label="Bentuk Masu"
-                  value={selectedVerb.masu}
-                  color="text-white"
-                />
-                <DetailBox
-                  label="Bentuk Te"
-                  value={selectedVerb.te}
-                  color="text-yellow-400"
-                />
-                <DetailBox
-                  label="Bentuk Nai"
-                  value={selectedVerb.nai}
-                  color="text-red-400"
-                />
-                <DetailBox
-                  label="Bentuk Lampau"
-                  value={selectedVerb.ta}
-                  color="text-blue-400"
-                />
-                <DetailBox
-                  label="Sedang (~Teiru)"
-                  value={selectedVerb.teiru}
-                  color="text-green-400"
-                />
-                <DetailBox
-                  label="Ingin (~Tai)"
-                  value={selectedVerb.tai}
-                  color="text-pink-400"
-                />
-                <DetailBox
-                  label="Harus (~Nakereba)"
-                  value={selectedVerb.nakereba}
-                  color="text-orange-400"
-                />
-                <DetailBox
-                  label="Bisa (Potensial)"
-                  value={selectedVerb.kanou}
-                  color="text-cyan-400"
-                />
-                <DetailBox
-                  label="Menyuruh (Kausatif)"
-                  value={selectedVerb.shieki}
-                  color="text-purple-400"
-                />
-                <DetailBox
-                  label="Pasif (Dikenai)"
-                  value={selectedVerb.ukemi}
-                  color="text-indigo-400"
-                />
-                <DetailBox
-                  label="Pengandaian (~Ba)"
-                  value={selectedVerb.katei}
-                  color="text-emerald-400"
-                />
-                <DetailBox
-                  label="Ajakan (~Ikou)"
-                  value={selectedVerb.ikou}
-                  color="text-amber-400"
-                />
-                <DetailBox
-                  label="Penyesalan (~Teshimau)"
-                  value={selectedVerb.teshimau}
-                  color="text-rose-400"
-                />
-                <DetailBox
-                  label="Perintah (Meirei)"
-                  value={selectedVerb.meirei}
-                  color="text-white bg-red-600/20 px-2 rounded"
-                />
-              </div>
-            </motion.article>
-          </div>
-        )}
-      </AnimatePresence>
+                    {/* Konten Utama: Kanji & Arti */}
+                    <div className="mt-2">
+                      <ruby className="text-4xl sm:text-5xl font-black text-white font-japanese mb-1 block group-hover:text-cyan-400 transition-colors drop-shadow-md">
+                        {verb.jisho}
+                        <rt className="text-[11px] sm:text-xs text-cyan-400 font-normal tracking-widest opacity-90">
+                          {verb.furigana}
+                        </rt>
+                      </ruby>
+                      <p className="inline-block mt-3 px-3 py-1.5 bg-black/30 border border-white/5 rounded-lg text-xs sm:text-sm font-bold text-slate-300">
+                        {verb.meaning}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Bagian Detail Ekstra (Expanded) */}
+                  <AnimatePresence>
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="bg-[#0a0c10]/50 border-t border-white/5"
+                      >
+                        <div className="p-5 sm:p-6 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+                          <ConjugationCard
+                            label="Masu (Sopan)"
+                            value={verb.masu}
+                            color="text-white"
+                          />
+                          <ConjugationCard
+                            label="Te (Sambung)"
+                            value={verb.te}
+                            color="text-yellow-400"
+                          />
+                          <ConjugationCard
+                            label="Nai (Negatif)"
+                            value={verb.nai}
+                            color="text-red-400"
+                          />
+                          <ConjugationCard
+                            label="Ta (Lampau)"
+                            value={verb.ta}
+                            color="text-blue-400"
+                          />
+                          <ConjugationCard
+                            label="Te-iru (Sedang)"
+                            value={verb.teiru}
+                            color="text-emerald-400"
+                          />
+                          <ConjugationCard
+                            label="Tai (Ingin)"
+                            value={verb.tai}
+                            color="text-pink-400"
+                          />
+                          <ConjugationCard
+                            label="Kanou (Bisa)"
+                            value={verb.kanou}
+                            color="text-cyan-400"
+                          />
+                          <ConjugationCard
+                            label="Meirei (Perintah)"
+                            value={verb.meirei}
+                            color="text-orange-400"
+                          />
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.article>
+              );
+            })
+          )}
+        </AnimatePresence>
+      </div>
     </section>
   );
 }
 
-function DetailBox({
+// Sub-komponen Kotak Konjugasi yang lebih ringkas
+function ConjugationCard({
   label,
   value,
   color,
 }: {
   label: string;
   value?: string;
-  color: string;
+  color?: string;
 }) {
+  if (!value) return null;
   return (
-    <div className="bg-white/5 p-4 rounded-2xl border border-white/5 hover:bg-white/10 transition-all group/box">
-      <span className="text-[8px] font-black text-white/20 uppercase block mb-1 tracking-[0.2em] group-hover/box:text-cyan-400 transition-colors">
+    <div className="bg-cyber-surface p-3 rounded-xl border border-white/5 shadow-inner flex flex-col justify-center">
+      <span className="block text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-slate-500 mb-1">
         {label}
       </span>
-      <span className={`text-sm font-bold tracking-tight ${color}`}>
-        {value || "-"}
+      <span
+        className={`text-sm sm:text-base font-bold font-japanese tracking-wide ${color || "text-white"}`}
+      >
+        {value}
       </span>
     </div>
   );
