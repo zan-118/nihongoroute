@@ -1,5 +1,4 @@
 import { client } from "@/sanity/lib/client";
-import { notFound } from "next/navigation";
 import MockExamEngine from "@/components/MockExamEngine";
 import Link from "next/link";
 
@@ -26,56 +25,62 @@ export default async function ExamSessionPage({ params }: PageProps) {
 
   if (!examData) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center bg-cyber-bg px-4 text-center">
-        <div className="bg-cyber-surface p-8 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-red-500/20 shadow-2xl">
-          <span className="text-5xl md:text-6xl mb-4 md:mb-6 block">🚫</span>
-          <h1 className="text-2xl md:text-3xl font-black text-white uppercase italic tracking-tighter mb-3 md:mb-4">
+      <div className="w-full min-h-screen flex flex-col items-center justify-center bg-cyber-bg px-4 text-center pt-24 pb-32">
+        <div className="bg-cyber-surface p-8 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-red-500/20 shadow-[0_0_40px_rgba(239,68,68,0.1)] max-w-lg w-full">
+          <span className="text-6xl md:text-7xl mb-6 block drop-shadow-lg">
+            🚫
+          </span>
+          <h1 className="text-2xl md:text-3xl font-black text-white uppercase italic tracking-tighter mb-4 leading-tight">
             Ujian Tidak Ditemukan
           </h1>
-          <p className="text-white/50 mb-6 md:mb-8 text-xs md:text-sm max-w-sm mx-auto">
+          <p className="text-white/50 mb-8 text-sm leading-relaxed">
             Data ujian ini tidak ditemukan atau mungkin sudah dihapus dari
             sistem.
           </p>
           <Link
             href={`/courses/${level}`}
-            className="inline-block bg-white/5 hover:bg-white/10 border border-white/10 text-white font-black uppercase tracking-widest py-3 px-6 md:px-8 rounded-xl transition-all text-xs md:text-sm"
+            className="inline-block bg-white/5 hover:bg-white/10 border border-white/10 text-white font-black uppercase tracking-widest py-3.5 px-8 rounded-xl transition-all text-xs active:scale-95"
           >
             ← Kembali ke Materi
           </Link>
         </div>
-      </main>
+      </div>
     );
   }
 
   if (!examData.questions || examData.questions.length === 0) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center bg-cyber-bg px-4 text-center">
-        <div className="bg-cyber-surface p-8 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-amber-500/20 shadow-2xl">
-          <span className="text-5xl md:text-6xl mb-4 md:mb-6 block">🚧</span>
-          <h1 className="text-2xl md:text-3xl font-black text-white uppercase italic tracking-tighter mb-3 md:mb-4">
+      <div className="w-full min-h-screen flex flex-col items-center justify-center bg-cyber-bg px-4 text-center pt-24 pb-32">
+        <div className="bg-cyber-surface p-8 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-amber-500/20 shadow-[0_0_40px_rgba(245,158,11,0.1)] max-w-lg w-full relative overflow-hidden">
+          <div className="absolute inset-0 bg-amber-500/5 pointer-events-none" />
+          <span className="text-6xl md:text-7xl mb-6 block relative z-10 drop-shadow-[0_0_15px_rgba(245,158,11,0.5)]">
+            🚧
+          </span>
+          <h1 className="text-2xl md:text-3xl font-black text-white uppercase italic tracking-tighter mb-4 leading-tight relative z-10">
             Sedang Dalam Pembuatan
           </h1>
-          <p className="text-white/50 mb-6 md:mb-8 text-xs md:text-sm max-w-sm mx-auto">
-            Paket ujian <strong>{examData.title}</strong> belum memiliki soal.
-            Admin akan segera menambahkannya!
+          <p className="text-white/60 mb-8 text-sm leading-relaxed relative z-10">
+            Paket ujian{" "}
+            <strong className="text-amber-400">{examData.title}</strong> belum
+            memiliki butir soal. Tim kami akan segera menambahkannya!
           </p>
           <Link
             href={`/courses/${level}`}
-            className="inline-block bg-amber-500/10 border border-amber-500/30 text-amber-500 hover:bg-amber-500/20 font-black uppercase tracking-widest py-3 px-6 md:px-8 rounded-xl transition-all text-xs md:text-sm"
+            className="inline-block bg-amber-500/10 border border-amber-500/30 text-amber-500 hover:bg-amber-500 hover:text-black font-black uppercase tracking-widest py-3.5 px-8 rounded-xl transition-all text-xs active:scale-95 relative z-10 shadow-[0_0_15px_rgba(245,158,11,0.2)]"
           >
             ← Kembali
           </Link>
         </div>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-cyber-bg pt-20 pb-16 px-4 relative overflow-hidden flex flex-col items-center justify-center">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-900/10 via-cyber-bg to-cyber-bg pointer-events-none" />
-      <div className="w-full max-w-4xl relative z-10 flex-1 flex flex-col justify-center">
+    <div className="min-h-screen w-full bg-cyber-bg pt-24 md:pt-32 pb-32 px-4 md:px-8 relative overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-900/10 via-cyber-bg to-cyber-bg pointer-events-none z-0" />
+      <div className="w-full max-w-4xl mx-auto relative z-10">
         <MockExamEngine exam={examData} />
       </div>
-    </main>
+    </div>
   );
 }

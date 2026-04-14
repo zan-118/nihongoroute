@@ -16,66 +16,21 @@
 
 ### 🗺️ Curriculum-Based Learning
 
-- **Kana Basics:** Modul interaktif Hiragana & Katakana dilengkapi dengan **SVG Stroke Order** dinamis untuk melatih cara penulisan yang benar.
-- **JLPT Roadmap:** Kurikulum terstruktur dari N5 hingga N1 yang mencakup Kosakata, Pola Kalimat, Percakapan (Kaiwa), dan Kuis evaluasi.
-
-### 🎓 Official Mock Exam (JLPT Tryout)
-
-- **Proctoring & Anti-Cheat:** Dilengkapi sistem deteksi _tab-switching_ dan pemutar audio _uninterrupted_ (tanpa jeda/kontrol) khusus untuk sesi _Choukai_ (Mendengar).
-- **Sectional Analytics:** Kalkulasi skor JLPT realistis dengan rincian performa visual per bagian (Moji/Goi, Bunpou, Dokkai, Choukai).
-- **Candidature Report:** Menghasilkan "Sertifikat Kelulusan" dalam format PDF beresolusi tinggi yang ditarik langsung dari riwayat ujian pengguna di Dashboard.
+### 🎓 Mock Exam (JLPT Tryout)
 
 ### 📚 Smart Library Hub
 
-- **Verb Archive:** Mesin konjugasi otomatis untuk 120+ kata kerja N5 (Bentuk Masu, Te, Nai, Ta, hingga Potensial & Kausatif).
-- **Grammar Guide:** Dokumentasi mendalam pola kalimat yang dikelola secara dinamis melalui CMS.
-- **Reference Sheets:** Tabel referensi cepat (Cheatsheets) untuk angka, waktu, partikel, dan penghitung (_counters_).
-
 ### 🧠 Memory Engine (SRS)
-
-- **Integrated SRS:** Algoritma _Spaced Repetition_ yang mengatur jadwal _review_ kosakata secara otomatis berdasarkan level daya ingat pengguna.
-- **Flashcards Mastery:** Kartu hafalan interaktif dengan diagram urutan coretan Kanji dan integrasi **Text-to-Speech (TTS)**.
-- **XP & Leveling:** Sistem progres gamifikasi global untuk menjaga motivasi belajar.
 
 ---
 
 ## 🛠️ Stack Teknologi
 
-- **Core:** [Next.js 15](https://nextjs.org/) (App Router & Server Actions)
-- **Styling:** [Tailwind CSS](https://tailwindcss.com/) dengan konsep _Soft UI / Neumorphism_
-- **Content & Database:** [Sanity.io](https://www.sanity.io/) (Real-time Headless CMS) _dengan transisi arsitektur menuju [Supabase](https://supabase.com/) untuk skalabilitas dan manajemen data relasional yang lebih masif._
-- **State Management:** [Zustand](https://zustand-demo.pmnd.rs/) & Context API (Persisted via LocalStorage)
-- **Animation & Export:** [Framer Motion](https://www.framer.com/motion/) untuk transisi UI yang _smooth_, dipadukan dengan `html2canvas` & `jspdf` untuk _rendering_ sertifikat klien.
-- **Service:** [Next-PWA](https://www.npmjs.com/package/next-pwa) untuk pengalaman aplikasi mobile yang _installable_.
-
 ---
 
 ## 📂 Arsitektur Proyek
 
-```text
-├── app/
-│   ├── api/               # Server-side endpoints (misal: Webhook & POST skor ujian)
-│   ├── courses/              # Modul kurikulum (Basics, N5, N4, dll)
-│   ├── library/           # Database hub (Verbs, Grammar, Cheatsheets)
-│   ├── dashboard/         # Pusat progres user, PDF Report, & sesi Review SRS
-│   └── studio/            # Interface Sanity Studio (Back-office)
-├── components/            # UI Atoms, Molecules, & Organisms (MockExamEngine, CyberCard, dll)
-├── context/               # Global state (UserProgressContext)
-├── lib/                   # SRS Algorithm, GROQ Queries, & Global Utils
-└── public/                # Assets, PWA Icons, & Manifest
-```
-
----
-
 ## 🎨 Filosofi Desain
-
-Aplikasi ini mengusung tema **Cyber Dark Neumorphic**:
-
-- **Aksen Futuristik:** Menggunakan warna `#0ef` (Cyan Neon) untuk elemen interaktif.
-- **Dark Mode by Default:** Menggunakan `#15171a` untuk mengurangi kelelahan mata (_eye strain_).
-- **Neumorphic Depth:** Menggunakan teknik _double shadow_ untuk menciptakan kedalaman visual yang elegan dan modern pada kartu soal dan dasbor.
-
----
 
 ## ⚙️ Instalasi Lokal
 
@@ -113,4 +68,4 @@ NihongoRoute adalah proyek _open-source_ yang dikembangkan untuk membantu komuni
 
 ---
 
-**Developed with 💙 by [Fauzan Abdul Basith](https://github.com/zan-118)** _Mastering Japanese, one step at a time._ _والله الموفق إلى أقوم الطريق_
+**Developed with 💙 by [Fauzan Abdul Basith](https://github.com/zan-118)**

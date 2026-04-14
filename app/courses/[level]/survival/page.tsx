@@ -1,7 +1,7 @@
-// app/courses/[level]/survival/page.tsx
 import { client } from "@/sanity/lib/client";
 import Link from "next/link";
-import SurvivalMode from "@/components/SurvivalMode"; // Pastikan path import ini benar
+import SurvivalMode from "@/components/SurvivalMode";
+import { ArrowLeft } from "lucide-react";
 
 interface PageProps {
   params: Promise<{ level: string }>;
@@ -10,7 +10,6 @@ interface PageProps {
 export default async function SurvivalPage({ params }: PageProps) {
   const { level } = await params;
 
-  // ✨ PERBAIKAN: Menambahkan 'category' pada kedua fetch data
   const query = `{
     "vocab": *[_type == "kosakata" && category != "kanji" && showInFlashcard != false && course_category->slug.current == $level] {
       _id, word, meaning, romaji, furigana, category
@@ -24,30 +23,43 @@ export default async function SurvivalPage({ params }: PageProps) {
   const cards = [...(data.vocab || []), ...(data.verbs || [])];
 
   return (
-    <main className="min-h-screen px-4 py-16 bg-cyber-bg relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-900/10 via-cyber-bg to-cyber-bg pointer-events-none" />
+    <main className="min-h-screen px-4 md:px-8 pt-28 pb-32 bg-cyber-bg relative overflow-hidden flex flex-col">
+      {/* Latar Belakang Khusus Survival (Merah Gelap) */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-red-900/15 via-cyber-bg to-cyber-bg pointer-events-none z-0" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none z-0" />
 
-      <div className="max-w-4xl mx-auto relative z-10">
-        <nav className="mb-12 italic">
+      <div className="max-w-3xl mx-auto w-full relative z-10 flex-1 flex flex-col">
+        <header className="mb-8 flex justify-between items-center border-b border-white/5 pb-6">
           <Link
             href={`/courses/${level}`}
-            className="text-red-400 hover:text-red-300 text-xs uppercase tracking-widest font-black transition-colors"
+            className="flex items-center gap-2 text-red-400/60 hover:text-red-400 text-[10px] sm:text-xs uppercase tracking-widest font-black transition-colors bg-red-500/5 hover:bg-red-500/10 px-4 py-2 rounded-xl border border-red-500/10"
           >
-            ← Abort Mission
+            <ArrowLeft size={16} />
+            <span className="hidden sm:inline">Abort Mission</span>
+            <span className="inline sm:hidden">Keluar</span>
           </Link>
-        </nav>
+          <div className="text-right">
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 bg-white/5 px-3 py-1.5 rounded-full border border-white/5">
+              Level {level.toUpperCase()}
+            </span>
+          </div>
+        </header>
 
         {cards.length >= 4 ? (
           <SurvivalMode cards={cards} />
         ) : (
-          <div className="text-white bg-red-500/10 border border-red-500/50 p-8 rounded-[2rem] text-center">
-            <p className="font-bold text-xl text-red-500 mb-2">
-              Insufficient Data
+          <div className="text-white bg-red-500/10 border border-red-500/30 p-10 md:p-16 rounded-[2.5rem] text-center shadow-[0_0_30px_rgba(239,68,68,0.15)] max-w-lg mx-auto my-auto flex flex-col items-center">
+            <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center border border-red-500/30 mb-6 text-4xl shadow-inner">
+              ⚠️
+            </div>
+            <p className="font-black text-2xl md:text-3xl uppercase italic tracking-tighter text-red-500 mb-4 drop-shadow-[0_0_10px_rgba(239,68,68,0.5)]">
+              Data Tidak Cukup
             </p>
-            <p className="text-sm opacity-80">
-              Mode Survival membutuhkan minimal 4 kosakata di level{" "}
-              <strong>{level.toUpperCase()}</strong> agar bisa mengacak pilihan
-              ganda. Saat ini hanya ada {cards.length} kartu.
+            <p className="text-xs md:text-sm text-white/60 leading-relaxed font-medium px-4">
+              Mode Survival membutuhkan minimal 4 kosakata terpublikasi di level{" "}
+              <strong className="text-white">"{level.toUpperCase()}"</strong>{" "}
+              agar sistem pengacakan opsi bisa bekerja. Saat ini sistem hanya
+              mendeteksi {cards.length} kartu aktif.
             </p>
           </div>
         )}

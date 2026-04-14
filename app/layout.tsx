@@ -5,16 +5,17 @@ import { ReactNode } from "react";
 import MobileNav from "@/components/MobileNav";
 import Navbar from "@/components/Navbar";
 import { ProgressProvider } from "@/context/UserProgressContext";
-
 import FloatingSupport from "@/components/FloatingSupport";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const viewport: Viewport = {
-  themeColor: "#15171a",
+  themeColor: "#0a0c10", // Disamakan dengan warna gelap dominan di palet Anda
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
+  // Mencegah zoom paksa di iOS saat mengetik di input field (opsional namun sangat disarankan untuk Web App)
+  userScalable: false,
 };
 
 export const metadata: Metadata = {
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
   ],
   manifest: "/manifest.json",
   icons: {
-    icon: "/logo-branding.png",
+    icon: "/logo-branding.svg", // Lebih disarankan SVG/PNG untuk icon utama di Next.js App Router
     apple: "/logo-branding.png",
   },
   verification: {
@@ -68,22 +69,27 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="id">
       <body
-        className={`${inter.className} antialiased bg-cyber-bg text-[#c4cfde] selection:bg-cyber-neon selection:text-cyber-bg overflow-x-hidden`}
+        className={`${inter.className} antialiased bg-cyber-bg text-[#c4cfde] selection:bg-cyan-400 selection:text-black overflow-x-hidden min-h-screen flex flex-col`}
       >
         <ProgressProvider>
-          <div className="hidden md:block sticky top-0 z-50">
-            <Navbar />
-          </div>
+          {/* PERBAIKAN 1: Navbar sudah memiliki class 'fixed' di dalamnya, 
+            jadi membungkusnya dengan 'sticky top-0' di sini adalah redundan 
+            dan bisa merusak flow dokumen. Kita cukup panggil komponennya.
+          */}
+          <Navbar />
 
-          <main className="min-h-screen pt-4 md:pt-20 pb-28 md:pb-12 max-w-[100vw] overflow-x-hidden">
+          {/* PERBAIKAN 2: Kita hapus pt (padding-top) dari main container, 
+            karena setiap halaman (page.tsx) di dalam aplikasi ini sudah menangani 
+            padding top-nya masing-masing (misal: pt-20, pt-24) untuk menyesuaikan 
+            jarak dari Navbar.
+          */}
+          <main className="flex-1 w-full max-w-[100vw] overflow-x-hidden flex flex-col">
             {children}
           </main>
 
+          {/* Komponen Mengambang */}
           <FloatingSupport />
-
-          <div className="md:hidden relative z-50">
-            <MobileNav />
-          </div>
+          <MobileNav />
         </ProgressProvider>
       </body>
     </html>

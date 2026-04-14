@@ -165,7 +165,7 @@ export default function DashboardPage() {
             </Link>
           ) : (
             <Link
-              href="/courses/n5"
+              href="/courses"
               className="flex items-center justify-center gap-3 w-full md:w-auto bg-blue-500/20 border border-blue-500/50 hover:bg-blue-500/30 text-blue-400 px-8 py-4 rounded-[2rem] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(59,130,246,0.2)]"
             >
               <PlayCircle size={20} />
@@ -234,7 +234,7 @@ export default function DashboardPage() {
           </section>
 
           <nav className="grid grid-cols-2 gap-4">
-            <QuickLink href="/courses/n5" label="Materi N5" icon="⛩️" />
+            <QuickLink href="/courses/jlpt-n5" label="Materi N5" icon="⛩️" />
             <QuickLink
               href="/courses/jlpt-n5/kanji"
               label="Kamus Kanji"

@@ -67,7 +67,7 @@ export default defineType({
               title: "Teks Pertanyaan / Konteks",
               type: "text",
               description:
-                "Kosongkan jika pertanyaan sepenuhnya ada di dalam Audio/Gambar.",
+                "Kosongkan jika pertanyaan sepenuhnya ada di dalam Audio/Gambar. BISA MENGGUNAKAN TAG HTML seperti <u>kata</u> untuk garis bawah.",
             },
             {
               name: "image",
@@ -95,6 +95,29 @@ export default defineType({
               validation: (Rule) => Rule.required().min(0).max(3),
             },
           ],
+          // ✨ PERBAIKAN: Preview agar daftar soal mudah dibaca di Sanity Studio
+          preview: {
+            select: {
+              title: "questionText",
+              subtitle: "section",
+              media: "image",
+            },
+            prepare({ title, subtitle, media }) {
+              const sectionLabels: Record<string, string> = {
+                vocabulary: "📝 Kosakata/Kanji",
+                grammar: "🎯 Tata Bahasa",
+                reading: "📖 Membaca",
+                listening: "🎧 Mendengar",
+              };
+              return {
+                title: title
+                  ? title.replace(/<[^>]*>?/gm, "")
+                  : "[Soal Gambar/Audio Tanpa Teks]", // Hapus tag HTML di preview
+                subtitle: sectionLabels[subtitle] || subtitle,
+                media: media || undefined,
+              };
+            },
+          },
         },
       ],
     }),

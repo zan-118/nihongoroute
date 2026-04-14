@@ -52,11 +52,12 @@ export default function LandingPage() {
             Platform Belajar 100% Gratis
           </motion.div>
 
+          {/* PERBAIKAN: leading-tight (jarak baris proporsional) dan tracking-tight */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black uppercase italic tracking-tighter leading-[0.95] md:leading-[0.9] mb-6 md:mb-8 drop-shadow-2xl text-white"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black uppercase italic tracking-tight leading-tight mb-6 md:mb-8 drop-shadow-2xl text-white"
           >
             Kuasai Bahasa <br className="hidden sm:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
@@ -105,7 +106,7 @@ export default function LandingPage() {
 
         <section className="py-16 md:py-20 border-t border-white/5">
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter text-white mb-4">
+            <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tight text-white mb-4">
               Dibangun Untuk <span className="text-cyan-400">Progres</span>
             </h2>
             <p className="text-slate-400 text-xs md:text-sm max-w-xl mx-auto px-4">
@@ -140,7 +141,6 @@ export default function LandingPage() {
 
         <footer className="mt-16 md:mt-20 pt-8 md:pt-10 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6 text-center md:text-left mb-8 md:mb-0">
           <div className="flex items-center gap-3">
-            {/* ✨ GAMBAR LOGO ASLI DI FOOTER */}
             <div className="relative w-8 h-8 shrink-0 drop-shadow-[0_0_8px_rgba(34,211,238,0.2)]">
               <Image
                 src="/logo-branding.svg"

@@ -1,99 +1,149 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import { RefreshCw, BookOpen, BarChart2, ArrowRight } from "lucide-react";
 
 export default function LibraryPage() {
-  const librarySections = [
-    {
-      title: "Kamus Kata Kerja",
-      desc: "Mesin konjugasi untuk kata kerja N5. Bentuk Masu, Te, Nai, Ta, hingga Potensial. Lengkap dengan latihan hafalan.",
-      icon: "🔄",
-      href: "/library/verbs",
-      color: "text-cyan-400",
-      bgHover: "hover:border-cyan-400/30",
-      tag: "DATABASE",
-    },
-    {
-      title: "Panduan Tata Bahasa",
-      desc: "Dokumentasi pola kalimat lengkap dengan contoh audio dan penjelasan mendetail.",
-      icon: "📚",
-      href: "/library/grammar",
-      color: "text-indigo-400",
-      bgHover: "hover:border-indigo-400/30",
-      tag: "TATA BAHASA",
-    },
-    {
-      title: "Catatan Ringkas",
-      desc: "Tabel referensi cepat (Cheatsheet) untuk angka, waktu, partikel, dan konter.",
-      icon: "📊",
-      href: "/library/cheatsheet",
-      color: "text-emerald-400",
-      bgHover: "hover:border-emerald-400/30",
-      tag: "RINGKASAN",
-    },
-  ];
-
   return (
-    <main className="max-w-7xl mx-auto px-4 md:px-8 pt-8 md:pt-12 pb-32">
-      <header className="mb-16 border-b border-white/5 pb-8">
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <div className="flex items-center gap-4 mb-4">
-            <div className="h-10 w-2 bg-cyan-400 rounded-full shadow-[0_0_15px_rgba(34,211,238,0.5)] hidden md:block" />
-            <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase italic drop-shadow-lg">
-              Koleksi <span className="text-cyan-400">Pintar</span>
-            </h1>
-          </div>
-          <p className="text-slate-400 font-medium md:ml-6 max-w-2xl text-sm leading-relaxed">
+    // PERBAIKAN: Menambahkan pt-28 md:pt-36 agar konten turun ke bawah Navbar
+    <main className="min-h-screen px-4 md:px-8 pt-28 md:pt-36 pb-24 bg-cyber-bg relative overflow-hidden">
+      {/* Latar Belakang Grid & Pendaran */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/10 via-transparent to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
+
+      <div className="max-w-6xl mx-auto relative z-10">
+        {/* HEADER HALAMAN */}
+        <header className="mb-12 md:mb-16">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-5xl md:text-7xl font-black uppercase italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-4 md:mb-6 drop-shadow-lg leading-none"
+          >
+            Koleksi Pintar
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-[#c4cfde]/70 text-sm md:text-base max-w-2xl leading-relaxed"
+          >
             Pusat data referensi bahasa Jepang. Akses cepat ke aturan tata
             bahasa, mesin konjugasi, dan tabel partikel tanpa harus membuka
             kamus fisik.
-          </p>
-        </motion.div>
-      </header>
+          </motion.p>
+        </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {librarySections.map((section, idx) => (
-          <motion.div
-            key={section.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.1 }}
+        {/* GRID KARTU MENU */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          {/* KARTU 1: KAMUS KATA KERJA (Cyan) */}
+          <Link href="/library/verbs" className="group flex flex-col h-full">
+            <motion.article
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="flex-1 bg-cyber-surface p-8 md:p-10 rounded-[2.5rem] border border-white/5 hover:border-cyan-400/50 hover:bg-cyan-400/5 transition-all duration-300 shadow-[10px_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(34,211,238,0.15)] flex flex-col"
+            >
+              <div className="flex justify-between items-start mb-10">
+                <div className="w-14 h-14 bg-cyan-400/10 rounded-2xl flex items-center justify-center border border-cyan-400/30 group-hover:scale-110 transition-transform shadow-inner">
+                  <RefreshCw className="text-cyan-400" size={24} />
+                </div>
+                <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/30 bg-white/5 px-3 py-1.5 rounded-full border border-white/5">
+                  Database
+                </span>
+              </div>
+
+              <h2 className="text-2xl md:text-3xl font-black text-cyan-400 uppercase italic tracking-tighter mb-4 leading-none">
+                Kamus Kata Kerja
+              </h2>
+              <p className="text-sm text-slate-400 leading-relaxed mb-10 flex-1">
+                Mesin konjugasi untuk kata kerja N5. Bentuk Masu, Te, Nai, Ta,
+                hingga Potensial. Lengkap dengan latihan hafalan.
+              </p>
+
+              <div className="mt-auto flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-white/40 group-hover:text-cyan-400 transition-colors bg-black/20 p-4 rounded-xl border border-white/5 group-hover:border-cyan-400/30">
+                <span>Buka Data</span>
+                <ArrowRight
+                  size={14}
+                  className="group-hover:translate-x-1 transition-transform"
+                />
+              </div>
+            </motion.article>
+          </Link>
+
+          {/* KARTU 2: PANDUAN TATA BAHASA (Purple) */}
+          <Link href="/library/grammar" className="group flex flex-col h-full">
+            <motion.article
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="flex-1 bg-cyber-surface p-8 md:p-10 rounded-[2.5rem] border border-white/5 hover:border-purple-500/50 hover:bg-purple-500/5 transition-all duration-300 shadow-[10px_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] flex flex-col"
+            >
+              <div className="flex justify-between items-start mb-10">
+                <div className="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center border border-purple-500/30 group-hover:scale-110 transition-transform shadow-inner">
+                  <BookOpen className="text-purple-400" size={24} />
+                </div>
+                <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/30 bg-white/5 px-3 py-1.5 rounded-full border border-white/5">
+                  Tata Bahasa
+                </span>
+              </div>
+
+              <h2 className="text-2xl md:text-3xl font-black text-purple-400 uppercase italic tracking-tighter mb-4 leading-none">
+                Panduan Tata Bahasa
+              </h2>
+              <p className="text-sm text-slate-400 leading-relaxed mb-10 flex-1">
+                Dokumentasi pola kalimat lengkap dengan contoh audio dan
+                penjelasan mendetail yang mudah dipahami.
+              </p>
+
+              <div className="mt-auto flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-white/40 group-hover:text-purple-400 transition-colors bg-black/20 p-4 rounded-xl border border-white/5 group-hover:border-purple-500/30">
+                <span>Buka Data</span>
+                <ArrowRight
+                  size={14}
+                  className="group-hover:translate-x-1 transition-transform"
+                />
+              </div>
+            </motion.article>
+          </Link>
+
+          {/* KARTU 3: CATATAN RINGKAS (Emerald) */}
+          <Link
+            href="/library/cheatsheet"
+            className="group flex flex-col h-full"
           >
-            <Link href={section.href} className="block group h-full">
-              <article
-                className={`neo-card p-8 h-full flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 ${section.bgHover}`}
-              >
-                <div>
-                  <div className="flex justify-between items-start mb-6">
-                    <span className="text-5xl drop-shadow-md group-hover:scale-110 transition-transform origin-top-left">
-                      {section.icon}
-                    </span>
-                    <span className="neo-inset px-3 py-1 text-[9px] font-mono font-black uppercase tracking-widest text-slate-500">
-                      {section.tag}
-                    </span>
-                  </div>
-
-                  <h2
-                    className={`text-2xl font-black uppercase italic tracking-tight mb-3 ${section.color}`}
-                  >
-                    {section.title}
-                  </h2>
-                  <p className="text-sm text-slate-400 leading-relaxed mb-8">
-                    {section.desc}
-                  </p>
+            <motion.article
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="flex-1 bg-cyber-surface p-8 md:p-10 rounded-[2.5rem] border border-white/5 hover:border-emerald-400/50 hover:bg-emerald-400/5 transition-all duration-300 shadow-[10px_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(16,185,129,0.15)] flex flex-col"
+            >
+              <div className="flex justify-between items-start mb-10">
+                <div className="w-14 h-14 bg-emerald-400/10 rounded-2xl flex items-center justify-center border border-emerald-400/30 group-hover:scale-110 transition-transform shadow-inner">
+                  <BarChart2 className="text-emerald-400" size={24} />
                 </div>
+                <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/30 bg-white/5 px-3 py-1.5 rounded-full border border-white/5">
+                  Ringkasan
+                </span>
+              </div>
 
-                <div className="neo-inset w-full text-center py-3 text-xs font-mono font-black uppercase tracking-widest text-slate-500 group-hover:text-white transition-colors">
-                  Buka Data →
-                </div>
-              </article>
-            </Link>
-          </motion.div>
-        ))}
+              <h2 className="text-2xl md:text-3xl font-black text-emerald-400 uppercase italic tracking-tighter mb-4 leading-none">
+                Catatan Ringkas
+              </h2>
+              <p className="text-sm text-slate-400 leading-relaxed mb-10 flex-1">
+                Tabel referensi cepat (Cheatsheet) untuk hitungan angka, format
+                waktu, daftar partikel, dan konter benda.
+              </p>
+
+              <div className="mt-auto flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-white/40 group-hover:text-emerald-400 transition-colors bg-black/20 p-4 rounded-xl border border-white/5 group-hover:border-emerald-400/30">
+                <span>Buka Data</span>
+                <ArrowRight
+                  size={14}
+                  className="group-hover:translate-x-1 transition-transform"
+                />
+              </div>
+            </motion.article>
+          </Link>
+        </div>
       </div>
     </main>
   );
