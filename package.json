@@ -13,6 +13,7 @@
     "@sanity/image-url": "^1.1.0",
     "@sanity/vision": "latest",
     "canvas-confetti": "^1.9.4",
+    "csv-parser": "^3.2.0",
     "framer-motion": "^12.38.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^4.2.1",
@@ -22,7 +23,8 @@
     "next-sanity": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "styled-components": "^6.4.0"
+    "styled-components": "^6.4.0",
+    "wanakana": "^5.3.1"
   },
   "devDependencies": {
     "@sanity/cli": "^6.3.1",

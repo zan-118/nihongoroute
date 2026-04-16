@@ -8,7 +8,7 @@ import { createClient } from "next-sanity";
  */
 const writeClient = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "development",
   apiVersion: "2024-04-12",
   token: process.env.SANITY_API_WRITE_TOKEN,
   useCdn: false, // CDN dinonaktifkan agar data yang baru ditulis bisa langsung terbaca

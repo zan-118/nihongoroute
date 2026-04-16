@@ -90,17 +90,13 @@ export default defineType({
     }),
 
     // --- KONJUGASI LANJUTAN (ULTRA) ---
-    defineField({ name: "teiru", title: "Bentuk ~Te Iru", type: "string" }),
+
     defineField({
       name: "tai",
       title: "Bentuk ~Tai (Keinginan)",
       type: "string",
     }),
-    defineField({
-      name: "nakereba",
-      title: "Bentuk ~Nakereba Naranai",
-      type: "string",
-    }),
+
     defineField({
       name: "kanou",
       title: "Bentuk Kanou (Potensial)",
@@ -126,11 +122,7 @@ export default defineType({
       title: "Bentuk Ikou (Volitional)",
       type: "string",
     }),
-    defineField({
-      name: "teshimau",
-      title: "Bentuk ~Te Shimau",
-      type: "string",
-    }),
+
     defineField({
       name: "meirei",
       title: "Bentuk Meirei (Perintah)",

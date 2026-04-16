@@ -32,7 +32,6 @@ export interface VerbData {
   ukemi?: string;
   katei?: string;
   ikou?: string;
-  teshimau?: string;
   meirei?: string;
 }
 
@@ -61,7 +60,7 @@ export default function VerbListClient({
       word: verb.jisho,
       meaning: verb.meaning,
       furigana: verb.furigana,
-      romaji: verb.masu, // Kita pinjam romaji untuk menampilkan bentuk Masu di Flashcard
+      romaji: verb.masu,
       level: { code: "library" },
     }));
 
@@ -184,7 +183,6 @@ export default function VerbListClient({
           ) : (
             filteredVerbs.map((verb) => {
               const isExpanded = expandedId === verb._id;
-
               const badgeColor =
                 verb.group === 1
                   ? "text-blue-400 bg-blue-500/10 border-blue-500/30"
@@ -208,7 +206,7 @@ export default function VerbListClient({
                   {/* HEADER KARTU (KLIK UNTUK BUKA) */}
                   <div
                     onClick={() => setExpandedId(isExpanded ? null : verb._id)}
-                    className="p-5 sm:p-6 md:p-8 flex flex-col gap-4 cursor-pointer group"
+                    className="p-5 sm:p-6 flex flex-col gap-4 cursor-pointer group"
                   >
                     <div className="flex justify-between items-start">
                       <span
@@ -250,41 +248,90 @@ export default function VerbListClient({
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        className="bg-[#0a0c10]/80 border-t border-white/5"
+                        className="bg-black/40 border-t border-white/5 overflow-hidden"
                       >
-                        <div className="p-5 sm:p-6 md:p-8 grid grid-cols-2 gap-3 sm:gap-4">
-                          <ConjugationCard
-                            label="Masu (Sopan)"
-                            value={verb.masu}
-                          />
-                          <ConjugationCard
-                            label="Te (Sambung)"
-                            value={verb.te}
-                          />
-                          <ConjugationCard
-                            label="Nai (Negatif)"
-                            value={verb.nai}
-                          />
-                          <ConjugationCard
-                            label="Ta (Lampau)"
-                            value={verb.ta}
-                          />
-                          <ConjugationCard
-                            label="Te-iru (Sedang)"
-                            value={verb.teiru}
-                          />
-                          <ConjugationCard
-                            label="Tai (Ingin)"
-                            value={verb.tai}
-                          />
-                          <ConjugationCard
-                            label="Kanou (Bisa)"
-                            value={verb.kanou}
-                          />
-                          <ConjugationCard
-                            label="Meirei (Perintah)"
-                            value={verb.meirei}
-                          />
+                        <div className="p-5 sm:p-6 flex flex-col gap-6">
+                          {/* GRUP DASAR */}
+                          <div className="flex flex-col gap-3">
+                            <h4 className="text-[9px] font-black text-cyan-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                              <div className="h-[1px] flex-1 bg-gradient-to-r from-cyan-400/50 to-transparent" />
+                              Bentuk Dasar
+                              <div className="h-[1px] flex-1 bg-gradient-to-l from-cyan-400/50 to-transparent" />
+                            </h4>
+                            <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                              <ConjugationCard
+                                label="Masu (Sopan)"
+                                value={verb.masu}
+                              />
+                              <ConjugationCard
+                                label="Te (Sambung)"
+                                value={verb.te}
+                              />
+                              <ConjugationCard
+                                label="Nai (Negatif)"
+                                value={verb.nai}
+                              />
+                              <ConjugationCard
+                                label="Ta (Lampau)"
+                                value={verb.ta}
+                              />
+                            </div>
+                          </div>
+
+                          {/* GRUP LANJUTAN */}
+                          <div className="flex flex-col gap-3">
+                            <h4 className="text-[9px] font-black text-cyan-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                              <div className="h-[1px] flex-1 bg-gradient-to-r from-cyan-400/50 to-transparent" />
+                              Bentuk Lanjutan
+                              <div className="h-[1px] flex-1 bg-gradient-to-l from-cyan-400/50 to-transparent" />
+                            </h4>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
+                              <ConjugationCard
+                                label="Te-iru (Sedang)"
+                                value={verb.teiru}
+                              />
+                              <ConjugationCard
+                                label="Kanou (Bisa)"
+                                value={verb.kanou}
+                              />
+                              <ConjugationCard
+                                label="Ukemi (Pasif)"
+                                value={verb.ukemi}
+                              />
+                              <ConjugationCard
+                                label="Shieki (Kausatif)"
+                                value={verb.shieki}
+                              />
+                            </div>
+                          </div>
+
+                          {/* GRUP EKSPRESI */}
+                          <div className="flex flex-col gap-3">
+                            <h4 className="text-[9px] font-black text-cyan-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                              <div className="h-[1px] flex-1 bg-gradient-to-r from-cyan-400/50 to-transparent" />
+                              Ekspresi & Kondisi
+                              <div className="h-[1px] flex-1 bg-gradient-to-l from-cyan-400/50 to-transparent" />
+                            </h4>
+                            <div className="grid grid-cols-2 md:grid-cols-5 gap-2 sm:gap-3">
+                              <ConjugationCard
+                                label="Tai (Ingin)"
+                                value={verb.tai}
+                              />
+
+                              <ConjugationCard
+                                label="Katei (Andaikan)"
+                                value={verb.katei}
+                              />
+                              <ConjugationCard
+                                label="Ikou (Ajakan)"
+                                value={verb.ikou}
+                              />
+                              <ConjugationCard
+                                label="Meirei (Perintah)"
+                                value={verb.meirei}
+                              />
+                            </div>
+                          </div>
                         </div>
                       </motion.div>
                     )}
@@ -299,14 +346,15 @@ export default function VerbListClient({
   );
 }
 
+// Sub-komponen yang telah diperbarui agar lebih estetik dan mentoleransi data kosong
 function ConjugationCard({ label, value }: { label: string; value?: string }) {
-  if (!value) return null;
+  if (!value || value === "-") return null;
   return (
-    <div className="bg-cyber-surface p-4 rounded-2xl border border-white/5 shadow-inner flex flex-col justify-center gap-1.5">
-      <span className="block text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-slate-500">
+    <div className="bg-[#0a0c10] p-3 sm:p-4 rounded-xl border border-white/5 shadow-inner flex flex-col justify-center gap-1 hover:border-cyan-400/30 transition-colors group/card">
+      <span className="block text-[8px] sm:text-[9px] font-black uppercase tracking-[0.1em] text-slate-500 group-hover/card:text-cyan-400/70 transition-colors">
         {label}
       </span>
-      <span className="text-sm sm:text-base font-bold font-japanese tracking-wide text-white">
+      <span className="text-sm sm:text-base font-bold font-japanese tracking-wide text-white group-hover/card:text-cyan-50">
         {value}
       </span>
     </div>
