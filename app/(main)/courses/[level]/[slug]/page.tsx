@@ -34,7 +34,32 @@ async function getLessonData(levelCode: string, slug: string) {
       "levelCode": course_category->slug.current, 
       "levelTitle": course_category->title,
       "categoryType": course_category->type,
-      vocabList[]-> { _id, word, furigana, romaji, meaning, kanjiDetails },
+      
+      // INI BAGIAN YANG DIUBAH
+      vocabList[]-> { 
+        _id, 
+        _type, // Wajib dipanggil untuk membedakan UI (jika butuh label "Verb")
+        
+        // 1. Jika dokumennya dari tabel Kosakata biasa
+        _type == "kosakata" => {
+          word, 
+          furigana, 
+          romaji, 
+          meaning, 
+          kanjiDetails 
+        },
+        
+        // 2. Jika dokumennya dari tabel Kata Kerja (Verb Dictionary)
+        _type == "verb_dictionary" => {
+          // Trik Alias: "nama_di_frontend": nama_field_di_sanity
+          "word": jisho,     // Mengambil bentuk kamus saja, dan mengubah namanya menjadi "word"
+          "furigana": furigana,   // (Ganti 'furigana' kanan dengan nama field hiragana di tabel verb kamu jika beda)
+          "romaji": romaji,
+          "meaning": meaning      // (Ganti 'meaning' kanan dengan 'arti' jika di tabel verb kamu namanya 'arti')
+          // Catatan: Jika di verbDictionary tidak ada field 'kanjiDetails', abaikan saja.
+        }
+      },
+      
       referenceWords[]-> { _id, word, furigana, romaji, meaning },
       articles, grammar, quizzes, seoTitle, seoDescription
     },
@@ -42,9 +67,9 @@ async function getLessonData(levelCode: string, slug: string) {
       "slug": slug.current, title
     }
   }`;
+
   return await client.fetch(query, { levelCode, slug });
 }
-
 /**
  * SEO & METADATA DINAMIS
  */

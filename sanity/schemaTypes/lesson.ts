@@ -30,7 +30,12 @@ export default defineType({
       name: "vocabList",
       title: "Vocab List",
       type: "array",
-      of: [{ type: "reference", to: [{ type: "kosakata" }] }],
+      of: [
+        {
+          type: "reference",
+          to: [{ type: "kosakata" }, { type: "verb_dictionary" }],
+        },
+      ],
     }),
     defineField({
       name: "referenceWords",

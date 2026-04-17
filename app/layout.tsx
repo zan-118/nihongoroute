@@ -88,35 +88,17 @@ export const metadata: Metadata = {
  * KOMPONEN ROOT LAYOUT
  * Layout ini merangkum seluruh hierarki komponen aplikasi.
  */
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="id">
       <body
-        className={`${inter.className} antialiased bg-cyber-bg text-[#c4cfde] selection:bg-cyan-400 selection:text-black overflow-x-hidden min-h-screen flex flex-col`}
+        className={`${inter.className} antialiased bg-cyber-bg text-[#c4cfde] selection:bg-cyan-400 selection:text-black`}
       >
-        {/* PROGRESS PROVIDER: 
-          Wrapper Context API untuk menyimpan dan menyebarkan data progres pengguna 
-          (XP, Level, SRS) ke seluruh komponen di bawahnya.
-        */}
-        <ProgressProvider>
-          {/* Navigasi Atas (Desktop) */}
-          <Navbar />
-
-          {/* MAIN CONTAINER:
-            Wadah utama untuk konten dinamis (halaman). 
-            'flex-1' memastikan footer/navigasi bawah tetap di posisi bawah jika konten sedikit.
-          */}
-          <main className="flex-1 w-full max-w-[100vw] overflow-x-hidden flex flex-col">
-            {children}
-          </main>
-
-          {/* KOMPONEN GLOBAL:
-            - FloatingSupport: Tombol bantuan/donasi yang melayang.
-            - MobileNav: Navigasi bar khusus tampilan perangkat mobile (bawah).
-          */}
-          <FloatingSupport />
-          <MobileNav />
-        </ProgressProvider>
+        {children}
       </body>
     </html>
   );
