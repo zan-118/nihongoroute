@@ -14,6 +14,7 @@ import { PortableText, PortableTextComponents } from "@portabletext/react";
 import QuizEngine from "@/components/QuizEngine";
 import TTSReader from "@/components/TTSReader";
 import AddToSRSButton from "@/components/AddToSRSButton";
+import DownloadPdfButton from "@/components/DownloadPdfButton";
 
 // Mengatur ISR (Incremental Static Regeneration) untuk menyegarkan cache data setiap 1 jam.
 export const revalidate = 3600;
@@ -219,6 +220,9 @@ export default async function LessonPage({ params }: Props) {
               </p>
             </div>
           )}
+          <div className="mt-6 md:mt-8 flex justify-start">
+            <DownloadPdfButton data={lesson} />
+          </div>
         </header>
 
         <div className="mb-16 md:mb-24">
