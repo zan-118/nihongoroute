@@ -24,8 +24,8 @@ interface Props {
 
 /**
  * MENGAMBIL DATA PELAJARAN
- * Fungsi asinkron untuk mengambil konten pelajaran spesifik dan data navigasi
- * (pelajaran sebelum/sesudah) berdasarkan level dan slug dari Sanity.
+ * Fungsi asinkron untuk mengambil konten pelajaran spesifik dan data navigasi.
+ * ✨ DIPERBARUI: Query disesuaikan dengan skema baru (articles, grammar, quizzes)
  */
 async function getLessonData(levelCode: string, slug: string) {
   const query = `{
@@ -36,7 +36,7 @@ async function getLessonData(levelCode: string, slug: string) {
       "categoryType": course_category->type,
       vocabList[]-> { _id, word, furigana, romaji, meaning, kanjiDetails },
       referenceWords[]-> { _id, word, furigana, romaji, meaning },
-      patterns, examples, conversationTitle, conversation, grammar, quizzes, seoTitle, seoDescription
+      articles, grammar, quizzes, seoTitle, seoDescription
     },
     "nav": *[_type == "lesson" && course_category->slug.current == $levelCode && is_published == true] | order(orderNumber asc) {
       "slug": slug.current, title
@@ -47,8 +47,6 @@ async function getLessonData(levelCode: string, slug: string) {
 
 /**
  * SEO & METADATA DINAMIS
- * Menghasilkan tag meta (title & description) secara otomatis berdasarkan
- * data pelajaran yang diambil untuk optimasi SEO.
  */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { level, slug } = await params;
@@ -62,19 +60,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 /**
  * KONFIGURASI RENDERER TEKS (Portable Text)
- * Mendefinisikan bagaimana elemen blok (h2, h3, p, blockquote) dan tipe data kustom
- * (callout, exampleSentence) dari Sanity ditampilkan dalam UI aplikasi.
  */
 const ptComponents: PortableTextComponents = {
   block: {
-    // Styling untuk sub-judul level 2 dengan aksen neon cyan
     h2: ({ children }) => (
       <h2 className="text-xl md:text-2xl font-black text-cyan-400 mt-12 mb-6 uppercase tracking-[0.2em] flex items-center gap-3 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)] border-b border-cyan-400/20 pb-4 leading-snug">
         <span className="w-3 h-3 bg-cyan-400 rounded-sm shadow-[0_0_10px_#0ef] shrink-0" />
         <span>{children}</span>
       </h2>
     ),
-    // Styling untuk judul paragraf/seksi kecil
     h3: ({ children }) => (
       <h3 className="text-lg md:text-xl font-bold text-white mt-8 mb-4 tracking-wide flex items-center gap-2 leading-snug">
         <span className="text-cyan-400 opacity-50 shrink-0">#</span>{" "}
@@ -86,7 +80,6 @@ const ptComponents: PortableTextComponents = {
         {children}
       </p>
     ),
-    // Styling kutipan dengan aksen ungu
     blockquote: ({ children }) => (
       <blockquote className="my-8 border-l-4 border-purple-500 bg-purple-500/10 p-4 md:p-6 rounded-r-2xl text-purple-100 italic shadow-[inset_0_0_20px_rgba(168,85,247,0.05)] text-sm md:text-base leading-relaxed">
         {children}
@@ -94,7 +87,6 @@ const ptComponents: PortableTextComponents = {
     ),
   },
   types: {
-    // Komponen kotak informasi (tip/peringatan)
     callout: ({ value }: any) => (
       <div
         className={`border-l-4 p-5 md:p-6 rounded-r-2xl my-8 relative overflow-hidden shadow-lg ${value.type === "warning" ? "border-amber-500 bg-amber-500/10" : "border-cyan-400 bg-cyan-400/10"}`}
@@ -114,7 +106,6 @@ const ptComponents: PortableTextComponents = {
         </p>
       </div>
     ),
-    // Komponen kalimat contoh yang mendukung penulisan Furigana dan Audio (TTS)
     exampleSentence: ({ value }: any) => (
       <div className="bg-cyber-bg p-4 md:p-5 rounded-2xl border border-white/5 my-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] hover:border-white/10 transition-colors">
         <div>
@@ -143,10 +134,8 @@ export default async function LessonPage({ params }: Props) {
   const { level, slug } = await params;
   const { lesson, nav } = await getLessonData(level, slug);
 
-  // Menampilkan halaman 404 jika slug pelajaran tidak ditemukan
   if (!lesson) return notFound();
 
-  // Logika Navigasi: Mencari index pelajaran saat ini untuk menentukan tombol 'Sebelumnya' dan 'Berikutnya'
   const currentIndex = nav.findIndex((l: any) => l.slug === slug);
   const prevLesson = currentIndex > 0 ? nav[currentIndex - 1] : null;
   const nextLesson =
@@ -154,16 +143,24 @@ export default async function LessonPage({ params }: Props) {
       ? nav[currentIndex + 1]
       : null;
 
-  // Menentukan tema warna berdasarkan tipe kategori (Materi Utama vs Side Quest)
   const isSideQuest = lesson.categoryType === "general";
+
+  // ✨ DIPERBARUI: Memformat data Kuis agar sesuai dengan prop yang diminta QuizEngine
+  const formattedQuizzes = lesson.quizzes?.map((quiz: any) => {
+    const correctOption = quiz.options?.find((opt: any) => opt.isCorrect);
+    return {
+      question: quiz.question,
+      options: quiz.options?.map((opt: any) => opt.text) || [],
+      answer: correctOption ? correctOption.text : "",
+      explanation: quiz.explanation,
+    };
+  });
 
   return (
     <main className="min-h-screen px-4 md:px-8 pt-20 md:pt-24 pb-40 bg-cyber-bg relative overflow-hidden flex flex-col">
-      {/* Dekorasi Latar Belakang Grid */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
       <article className="max-w-4xl mx-auto w-full relative z-10 flex-1">
-        {/* BREADCRUMB: Navigasi hierarki halaman */}
         <nav className="mb-6 md:mb-8 font-mono text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] flex flex-wrap items-center gap-2 md:gap-3">
           <Link
             href={`/courses/${lesson.levelCode}`}
@@ -180,7 +177,6 @@ export default async function LessonPage({ params }: Props) {
           </span>
         </nav>
 
-        {/* HEADER: Judul Pelajaran dan Ringkasan Materi */}
         <header className="mb-12 md:mb-16">
           <h1
             className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-4 md:mb-6 tracking-tighter italic uppercase drop-shadow-lg leading-tight ${isSideQuest ? "text-amber-400" : "text-white"}`}
@@ -200,9 +196,8 @@ export default async function LessonPage({ params }: Props) {
           )}
         </header>
 
-        {/* KONTEN UTAMA */}
         <div className="mb-16 md:mb-24">
-          {/* SEKSI KOSAKATA: Daftar kata yang wajib dihafal dalam bab ini */}
+          {/* SEKSI KOSAKATA */}
           {lesson.vocabList?.length > 0 && (
             <section className="mb-16 md:mb-24">
               <h2 className="text-2xl md:text-3xl font-black text-white border-b border-white/10 pb-4 md:pb-6 mb-6 md:mb-8 uppercase tracking-[0.2em] flex items-center gap-3 md:gap-4 italic drop-shadow-md leading-tight">
@@ -236,8 +231,7 @@ export default async function LessonPage({ params }: Props) {
                       </p>
                     </div>
                     <div className="flex flex-row sm:flex-col gap-2 md:gap-3 w-full sm:w-auto justify-end">
-                      <AddToSRSButton wordId={v._id} />{" "}
-                      {/* Menambahkan kata ke sistem Spaced Repetition */}
+                      <AddToSRSButton wordId={v._id} />
                       <TTSReader text={v.word} minimal={true} />
                     </div>
                   </div>
@@ -246,48 +240,26 @@ export default async function LessonPage({ params }: Props) {
             </section>
           )}
 
-          {/* SEKSI POLA KALIMAT: Penjelasan struktur tata bahasa utama */}
-          {(lesson.patterns || lesson.examples) && (
-            <section className="mb-16 md:mb-24 bg-cyber-surface p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/5 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)]">
-              <h2 className="text-2xl md:text-3xl font-black text-cyan-400 mb-8 md:mb-10 uppercase tracking-[0.2em] flex items-center gap-3 md:gap-4 italic drop-shadow-[0_0_10px_rgba(34,211,238,0.3)] leading-tight">
-                <span className="text-3xl md:text-4xl not-italic shrink-0">
-                  🎯
-                </span>{" "}
-                Pola Kalimat
-              </h2>
-              {/* Mapping Pola Kalimat */}
-              {lesson.patterns?.map((p: any, i: number) => (
-                <div
-                  key={i}
-                  className="bg-cyber-bg p-5 md:p-8 rounded-2xl md:rounded-3xl border border-cyan-400/20 mb-5 flex flex-col md:flex-row justify-between items-start md:items-center shadow-[0_10px_30px_rgba(0,0,0,0.4)] hover:border-cyan-400/50 transition-colors gap-4"
-                >
-                  <div>
-                    <ruby className="text-white text-2xl md:text-3xl font-black tracking-wider leading-relaxed drop-shadow-md">
-                      {p.jp}
-                      <rt className="text-[10px] md:text-[11px] text-cyan-400 font-normal tracking-widest">
-                        {p.furigana}
-                      </rt>
-                    </ruby>
-                    <p className="text-[#c4cfde] mt-3 md:mt-4 font-bold text-sm md:text-base border-l-2 border-cyan-400 pl-3 md:pl-4 italic leading-relaxed">
-                      {p.id}
-                    </p>
-                  </div>
-                  <div className="self-end md:self-auto shrink-0 mt-2 md:mt-0">
-                    <TTSReader text={p.jp} minimal={true} />
-                  </div>
-                </div>
-              ))}
+          {/* ✨ DIPERBARUI: SEKSI ARTICLES (Pengantar Materi) */}
+          {lesson.articles && (
+            <section className="mb-16 md:mb-24">
+              <div className="prose-custom max-w-none">
+                <PortableText
+                  value={lesson.articles}
+                  components={ptComponents}
+                />
+              </div>
             </section>
           )}
 
-          {/* SEKSI GRAMMAR (PORTABLE TEXT): Penjelasan naratif yang lebih mendalam dari CMS */}
+          {/* ✨ DIPERBARUI: SEKSI GRAMMAR (Penjelasan Tata Bahasa Inti) */}
           {lesson.grammar && (
             <section className="mb-16 md:mb-24">
               <h2 className="text-2xl md:text-3xl font-black text-white border-b border-white/10 pb-4 md:pb-6 mb-6 md:mb-8 uppercase tracking-[0.2em] flex items-center gap-3 md:gap-4 italic drop-shadow-md leading-tight">
                 <span className="text-3xl md:text-4xl not-italic shrink-0">
                   📖
                 </span>{" "}
-                Penjelasan Materi
+                Materi Inti
               </h2>
               <div className="bg-cyber-surface p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/5 shadow-inner">
                 <div className="prose-custom max-w-none">
@@ -300,8 +272,8 @@ export default async function LessonPage({ params }: Props) {
             </section>
           )}
 
-          {/* SEKSI KUIS: Evaluasi pemahaman pengguna di akhir materi */}
-          {lesson.quizzes?.length > 0 && (
+          {/* SEKSI KUIS */}
+          {formattedQuizzes?.length > 0 && (
             <section className="mb-16 md:mb-24">
               <h2 className="text-2xl md:text-3xl font-black text-white border-b border-white/10 pb-4 md:pb-6 mb-6 md:mb-8 uppercase tracking-[0.2em] flex items-center gap-3 md:gap-4 italic drop-shadow-md leading-tight">
                 <span className="text-3xl md:text-4xl not-italic shrink-0">
@@ -309,12 +281,12 @@ export default async function LessonPage({ params }: Props) {
                 </span>{" "}
                 Uji Pemahaman
               </h2>
-              <QuizEngine questions={lesson.quizzes} />
+              <QuizEngine questions={formattedQuizzes} />
             </section>
           )}
         </div>
 
-        {/* FOOTER NAVIGATION: Tombol navigasi antar bab */}
+        {/* FOOTER NAVIGATION */}
         <nav className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 pt-10 md:pt-12 border-t border-white/10 mt-auto">
           {prevLesson ? (
             <Link
