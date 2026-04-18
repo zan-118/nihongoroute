@@ -184,9 +184,9 @@ export default function DashboardPage() {
         </header>
 
         {/* MAIN GRID */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 mb-20">
           {/* KOLOM KIRI (Progress & Stats) */}
-          <div className="lg:col-span-2 space-y-6 md:space-y-8">
+          <div className="lg:col-span-2 space-y-8 md:space-y-12">
             <motion.section
               variants={itemVariants}
               className="bg-[#0d1117] rounded-[2rem] p-8 border border-white/5 shadow-[12px_12px_30px_#050608,-10px_-10px_25px_rgba(255,255,255,0.02)]"
@@ -228,7 +228,7 @@ export default function DashboardPage() {
           </div>
 
           {/* KOLOM KANAN (Overview & Actions) */}
-          <div className="space-y-6 md:space-y-8">
+          <div className="space-y-8 md:space-y-12">
             <motion.section
               variants={itemVariants}
               className="bg-gradient-to-br from-[#121620] to-[#0d1117] rounded-[2rem] p-8 border border-white/5 shadow-[12px_12px_30px_#050608,-10px_-10px_25px_rgba(255,255,255,0.02)]"
@@ -257,11 +257,11 @@ export default function DashboardPage() {
 
             <motion.nav
               variants={itemVariants}
-              className="grid grid-cols-2 gap-4"
+              className="grid grid-cols-2 gap-5 md:gap-6"
             >
               <QuickLink href="/courses/n5" label="Materi N5" icon="⛩️" />
               <QuickLink
-                href="/courses/jlpt-n5/kanji"
+                href="/courses/n5/kanji"
                 label="Kamus Kanji"
                 icon="🈴"
               />

@@ -65,33 +65,29 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
   };
 
   const goToNext = () => {
+    // 1. Tentukan arah animasi
     setDirection(1);
     setIsFlipped(false);
-    setTimeout(() => {
-      if (currentIndex < shuffledCards.length - 1) {
-        setCurrentIndex((prev) => prev + 1);
-        setDirection(0);
-      } else if (studyMode === "test") {
-        router.push("/dashboard");
-      } else {
-        // Jika mode bebas dan habis, balik ke awal
-        setCurrentIndex(0);
-        setDirection(0);
-      }
-    }, 200);
+
+    // 2. Langsung ubah index (Tanpa setTimeout!)
+    if (currentIndex < shuffledCards.length - 1) {
+      setCurrentIndex((prev) => prev + 1);
+    } else if (studyMode === "test") {
+      router.push("/dashboard");
+    } else {
+      setCurrentIndex(0);
+    }
   };
 
   const goToPrev = () => {
     if (currentIndex > 0) {
       setDirection(-1);
       setIsFlipped(false);
-      setTimeout(() => {
-        setCurrentIndex((prev) => prev - 1);
-        setDirection(0);
-      }, 200);
+
+      // Langsung ubah index
+      setCurrentIndex((prev) => prev - 1);
     }
   };
-
   return (
     <section className="w-full max-w-xl mx-auto px-4">
       {/* HEADER: Pemilihan Mode */}
