@@ -15,16 +15,8 @@ import DailyQuests from "@/components/DailyQuests";
 import Heatmap from "@/components/Heatmap";
 import LevelUpOverlay from "@/components/LevelUpOverlay";
 import { client } from "@/sanity/lib/client";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
-import {
-  BrainCircuit,
-  PlayCircle,
-  Download,
-  Save,
-  Upload,
-  Trash2,
-} from "lucide-react";
+
+import { BrainCircuit, PlayCircle, Save, Upload, Trash2 } from "lucide-react";
 
 // --- KONFIGURASI ANIMASI ---
 const containerVariants: Variants = {
@@ -74,33 +66,6 @@ export default function DashboardPage() {
     };
     fetchHistory();
   }, []);
-
-  const handleDownloadCertificate = async () => {
-    if (!certificateRef.current) return;
-    setIsExporting(true);
-    try {
-      const element = certificateRef.current;
-      const canvas = await html2canvas(element, {
-        backgroundColor: "#080a0f",
-        scale: 2,
-        logging: false,
-        useCORS: true,
-      });
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF({
-        orientation: "landscape",
-        unit: "px",
-        format: [canvas.width, canvas.height],
-      });
-      pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
-      pdf.save(`Sertifikat_NihongoRoute_${guestId}.pdf`);
-    } catch (error) {
-      console.error("Gagal membuat PDF:", error);
-      alert("Terjadi kesalahan saat mengunduh sertifikat.");
-    } finally {
-      setIsExporting(false);
-    }
-  };
 
   const handleExportData = () => exportData();
 
@@ -335,127 +300,6 @@ export default function DashboardPage() {
             </motion.section>
           </div>
         </div>
-
-        {/* EXAM HISTORY */}
-        <motion.section variants={itemVariants} className="mt-20 mb-10">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
-            <h3 className="text-2xl font-black text-white uppercase tracking-widest italic border-l-4 border-amber-500 pl-4 leading-none">
-              Riwayat <span className="text-amber-500">Ujian</span>
-            </h3>
-            {examHistory.length > 0 && (
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleDownloadCertificate}
-                disabled={isExporting}
-                className="bg-[#0a0c10] border border-white/10 shadow-[inset_2px_2px_8px_#050608,inset_-2px_-2px_8px_rgba(255,255,255,0.02)] px-6 py-3 rounded-xl text-cyan-400 text-[10px] font-black uppercase tracking-widest hover:border-cyan-400/50 transition-colors flex items-center gap-2 disabled:opacity-50"
-              >
-                <Download size={14} />{" "}
-                {isExporting ? "Membuat PDF..." : "Unduh Sertifikat"}
-              </motion.button>
-            )}
-          </div>
-
-          <div
-            ref={certificateRef}
-            className="bg-[#0d1117] rounded-[2.5rem] p-8 md:p-12 border border-white/5 shadow-[15px_15px_40px_#050608,-10px_-10px_30px_rgba(255,255,255,0.01)] relative overflow-hidden"
-          >
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[120px] md:text-[180px] font-black italic opacity-[0.02] text-white pointer-events-none whitespace-nowrap select-none">
-              NIHONGO ROUTE
-            </div>
-
-            <div className="relative z-10">
-              <div className="flex justify-between items-end border-b border-white/10 pb-6 mb-8">
-                <div>
-                  <h4 className="text-cyan-400 font-mono text-[10px] uppercase tracking-[0.3em] mb-2">
-                    Laporan Hasil Ujian
-                  </h4>
-                  <p className="text-white text-xl font-bold font-mono tracking-widest bg-white/5 px-3 py-1 rounded-lg border border-white/10">
-                    {guestId}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-slate-500 font-mono text-[10px] uppercase tracking-widest font-bold mb-1">
-                    Level Pengguna
-                  </p>
-                  <p className="text-amber-500 text-3xl font-black italic uppercase drop-shadow-[0_0_10px_rgba(245,158,11,0.3)]">
-                    LVL {progress.level}
-                  </p>
-                </div>
-              </div>
-
-              {examHistory.length > 0 ? (
-                <div className="space-y-6">
-                  {examHistory.map((exam) => (
-                    <motion.div
-                      key={exam._id}
-                      whileHover={{ x: 5 }}
-                      className="bg-[#0a0c10] border border-white/5 shadow-[inset_4px_4px_10px_#050608,inset_-2px_-2px_8px_rgba(255,255,255,0.02)] rounded-2xl p-6 md:p-8"
-                    >
-                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 pb-6 border-b border-white/5">
-                        <div>
-                          <h5 className="text-white font-black italic uppercase tracking-wide text-2xl mb-2">
-                            {exam.examTitle}
-                          </h5>
-                          <p className="text-slate-500 text-xs font-mono">
-                            {new Date(exam.completedAt).toLocaleString("id-ID")}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-6">
-                          <div className="text-right">
-                            <p className="text-slate-500 font-mono text-[10px] font-black uppercase tracking-widest mb-1">
-                              Skor Total
-                            </p>
-                            <p
-                              className={`text-4xl font-black font-mono ${exam.passed ? "text-emerald-400 drop-shadow-[0_0_10px_rgba(16,185,129,0.4)]" : "text-rose-400"}`}
-                            >
-                              {exam.score}{" "}
-                              <span className="text-base text-slate-600">
-                                / 180
-                              </span>
-                            </p>
-                          </div>
-                          <div
-                            className={`px-4 py-2 rounded-xl font-black font-mono uppercase tracking-widest text-xs border ${exam.passed ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400" : "bg-rose-500/10 border-rose-500/30 text-rose-400"}`}
-                          >
-                            {exam.passed ? "LULUS" : "GAGAL"}
-                          </div>
-                        </div>
-                      </div>
-
-                      {exam.sectionScores && (
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                          <SectionScore
-                            label="Kosakata"
-                            score={exam.sectionScores.vocabulary}
-                          />
-                          <SectionScore
-                            label="Tata Bahasa"
-                            score={exam.sectionScores.grammar}
-                          />
-                          <SectionScore
-                            label="Membaca"
-                            score={exam.sectionScores.reading}
-                          />
-                          <SectionScore
-                            label="Mendengar"
-                            score={exam.sectionScores.listening}
-                          />
-                        </div>
-                      )}
-                    </motion.div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-16 border border-dashed border-white/10 rounded-[2rem] bg-[#080a0f]">
-                  <p className="text-slate-500 text-sm font-mono uppercase tracking-widest">
-                    Belum ada data ujian yang terekam.
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        </motion.section>
       </motion.div>
     </main>
   );

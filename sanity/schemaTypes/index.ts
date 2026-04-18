@@ -10,7 +10,7 @@ import cheatsheet from "./cheatsheet";
 import grammarArticle from "./grammarArticle";
 import courseCategory from "./courseCategory";
 import mockExam from "./mockExam";
-import examResult from "./examResult";
+
 import kanji from "./kanji";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
@@ -19,7 +19,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     lesson,
     callout,
     exampleSentence,
-    examResult,
     vocab,
     verbDictionary,
     cheatsheet,

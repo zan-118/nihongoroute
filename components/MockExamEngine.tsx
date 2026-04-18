@@ -1,7 +1,10 @@
 /**
  * LOKASI FILE: components/MockExamEngine.tsx
  * KONSEP: Cyber-Dark Neumorphic (Visual Overhaul)
- * CATATAN: Logika ujian, skor, dan API 100% dipertahankan.
+ * FITUR BARU:
+ * - Audio Play 1-Kali (Bypass larangan Auto-Play Browser)
+ * - Share Result via Base64 URL (Nol Database)
+ * - Toleransi Anti-Cheat 1.5 Detik
  */
 
 "use client";
@@ -19,6 +22,7 @@ import {
   ShieldAlert,
   ArrowRight,
   ArrowLeft,
+  Share2,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import Link from "next/link";
@@ -49,9 +53,11 @@ interface MockExamEngineProps {
 const SECTION_LABELS = {
   vocabulary: "Kosakata & Kanji (Moji/Goi)",
   grammar: "Tata Bahasa (Bunpou)",
-  reading: "Membaca (Dokkai)",
   listening: "Mendengar (Choukai)",
+  reading: "Membaca (Dokkai)",
 };
+
+type AudioState = "idle" | "playing" | "played";
 
 export default function MockExamEngine({ exam }: MockExamEngineProps) {
   const [gameState, setGameState] = useState<
@@ -61,7 +67,12 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
+  // Status Pemutaran Audio per Soal
+  const [audioStatus, setAudioStatus] = useState<Record<string, AudioState>>(
+    {},
+  );
   const [cheatWarnings, setCheatWarnings] = useState(0);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const hasSavedScore = useRef(false);
 
@@ -69,46 +80,37 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
     ? `/courses/${exam.categorySlug}`
     : "/courses";
 
-  // --- LOGIKA ANTI-CHEAT ---
+  // --- LOGIKA ANTI-CHEAT (Dengan Grace Period 1.5s) ---
   useEffect(() => {
     if (gameState !== "playing") return;
+
+    let cheatTimer: NodeJS.Timeout;
+
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden") {
-        setCheatWarnings((prev) => prev + 1);
-        alert(
-          "PERINGATAN: Jangan meninggalkan halaman ujian! Aktivitas Anda dicatat.",
-        );
+        // Beri toleransi 1.5 detik jika hanya kepencet/notifikasi lewat
+        cheatTimer = setTimeout(() => {
+          setCheatWarnings((prev) => prev + 1);
+          alert(
+            "PERINGATAN: Jangan meninggalkan halaman ujian! Aktivitas Anda dicatat.",
+          );
+        }, 5000);
+      } else {
+        clearTimeout(cheatTimer);
       }
     };
+
     const handleContextMenu = (e: MouseEvent) => e.preventDefault();
+
     document.addEventListener("visibilitychange", handleVisibilityChange);
     document.addEventListener("contextmenu", handleContextMenu);
+
     return () => {
+      clearTimeout(cheatTimer);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       document.removeEventListener("contextmenu", handleContextMenu);
     };
   }, [gameState]);
-
-  // --- LOGIKA AUDIO ---
-  useEffect(() => {
-    const activeQuestion = exam.questions[currentQuestionIndex];
-    if (
-      gameState === "playing" &&
-      activeQuestion.section === "listening" &&
-      activeQuestion.audioUrl
-    ) {
-      if (audioRef.current) {
-        audioRef.current.src = activeQuestion.audioUrl;
-        audioRef.current
-          .play()
-          .catch((err) => console.log("User must interact first:", err));
-      }
-    } else {
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
-    }
-  }, [currentQuestionIndex, gameState, exam.questions]);
 
   // --- LOGIKA TIMER ---
   useEffect(() => {
@@ -127,63 +129,14 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState]);
 
-  // --- LOGIKA HASIL & API ---
+  // --- LOGIKA HASIL (Konfeti Saja, API Dihapus) ---
   useEffect(() => {
     if (gameState === "result" && !hasSavedScore.current) {
       hasSavedScore.current = true;
-      const { finalScore, sectionBreakdown } = calculateScore();
+      const { finalScore } = calculateScore();
       const isPassed = finalScore >= exam.passingScore;
-      const guestId =
-        localStorage.getItem("nihongo_guest_id") || "UNKNOWN_GUEST";
 
-      const formattedSectionScores = {
-        vocabulary:
-          sectionBreakdown.vocabulary.total > 0
-            ? Math.round(
-                (sectionBreakdown.vocabulary.correct /
-                  sectionBreakdown.vocabulary.total) *
-                  100,
-              )
-            : 0,
-        grammar:
-          sectionBreakdown.grammar.total > 0
-            ? Math.round(
-                (sectionBreakdown.grammar.correct /
-                  sectionBreakdown.grammar.total) *
-                  100,
-              )
-            : 0,
-        reading:
-          sectionBreakdown.reading.total > 0
-            ? Math.round(
-                (sectionBreakdown.reading.correct /
-                  sectionBreakdown.reading.total) *
-                  100,
-              )
-            : 0,
-        listening:
-          sectionBreakdown.listening.total > 0
-            ? Math.round(
-                (sectionBreakdown.listening.correct /
-                  sectionBreakdown.listening.total) *
-                  100,
-              )
-            : 0,
-      };
-
-      fetch("/api/exam-result", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          guestId,
-          examTitle: exam.title,
-          score: finalScore,
-          totalQuestions: exam.questions.length,
-          passed: isPassed,
-          sectionScores: formattedSectionScores,
-        }),
-      }).catch((err) => console.error("Gagal mengirim riwayat ujian:", err));
-
+      // HANYA Memicu Konfeti jika Lulus (API Call Dihapus Sepenuhnya)
       if (isPassed) {
         const duration = 3 * 1000;
         const animationEnd = Date.now() + duration;
@@ -206,7 +159,31 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameState, exam.passingScore, exam.title, exam.questions.length]);
+  }, [gameState, exam.passingScore, exam.questions.length]);
+
+  // --- HANDLER AUDIO (1 KALI PUTAR) ---
+  const handlePlayAudio = () => {
+    const activeQuestion = exam.questions[currentQuestionIndex];
+    const qKey = activeQuestion._key;
+    const currentStatus = audioStatus[qKey] || "idle";
+
+    // Blokir jika sudah pernah diputar atau sedang diputar
+    if (currentStatus === "played" || currentStatus === "playing") return;
+
+    if (audioRef.current && activeQuestion.audioUrl) {
+      audioRef.current.src = activeQuestion.audioUrl;
+      audioRef.current
+        .play()
+        .catch((err) => console.error("Gagal memutar audio", err));
+
+      setAudioStatus((prev) => ({ ...prev, [qKey]: "playing" }));
+
+      // Kunci audio saat selesai
+      audioRef.current.onended = () => {
+        setAudioStatus((prev) => ({ ...prev, [qKey]: "played" }));
+      };
+    }
+  };
 
   const finishExam = () => {
     setGameState("result");
@@ -263,6 +240,66 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
     return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   };
 
+  // --- HANDLER SHARE URL BASE64 ---
+  const handleShareResult = () => {
+    // 1. Ambil data kalkulasi skor saat ini
+    const { finalScore, sectionBreakdown } = calculateScore();
+    const isPassed = finalScore >= exam.passingScore;
+    const guestId = localStorage.getItem("nihongo_guest_id") || "UNKNOWN_GUEST";
+
+    // 2. Rakit objek data sesuai dengan format yang diharapkan halaman penerima
+    const shareData = {
+      guestId,
+      examTitle: exam.title,
+      score: finalScore,
+      totalQuestions: exam.questions.length,
+      passed: isPassed,
+      sectionScores: {
+        vocabulary:
+          sectionBreakdown.vocabulary.total > 0
+            ? Math.round(
+                (sectionBreakdown.vocabulary.correct /
+                  sectionBreakdown.vocabulary.total) *
+                  100,
+              )
+            : 0,
+        grammar:
+          sectionBreakdown.grammar.total > 0
+            ? Math.round(
+                (sectionBreakdown.grammar.correct /
+                  sectionBreakdown.grammar.total) *
+                  100,
+              )
+            : 0,
+        reading:
+          sectionBreakdown.reading.total > 0
+            ? Math.round(
+                (sectionBreakdown.reading.correct /
+                  sectionBreakdown.reading.total) *
+                  100,
+              )
+            : 0,
+        listening:
+          sectionBreakdown.listening.total > 0
+            ? Math.round(
+                (sectionBreakdown.listening.correct /
+                  sectionBreakdown.listening.total) *
+                  100,
+              )
+            : 0,
+      },
+      date: new Date().toISOString(),
+    };
+
+    // 3. Encode data yang sudah dirakit
+    const encodedData = btoa(encodeURIComponent(JSON.stringify(shareData)));
+    const shareUrl = `${window.location.origin}/share?data=${encodedData}`;
+
+    // 4. Salin ke clipboard
+    navigator.clipboard.writeText(shareUrl);
+    alert("Link sertifikat berhasil disalin! Silakan bagikan ke teman Anda.");
+  };
+
   /* =========================================
      1. TAMPILAN INTRO (Mulai Ujian)
   ========================================= */
@@ -310,9 +347,9 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
         </div>
 
         <p className="text-[10px] text-slate-500 mb-10 font-mono uppercase tracking-widest leading-relaxed px-2 relative z-10">
-          Seksi Mendengar (Choukai) otomatis diputar dan tidak bisa
-          dijeda/diulang. Sistem mendeteksi jika Anda meninggalkan tab
-          (Anti-Cheat aktif).
+          Sistem memiliki fitur Anti-Cheat aktif. Untuk Seksi Mendengar
+          (Choukai), audio HANYA DAPAT DIPUTAR SATU KALI dan tidak bisa
+          dijeda/diulang.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 relative z-10">
@@ -444,6 +481,13 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {/* Tombol Share Baru */}
+            <button
+              onClick={handleShareResult}
+              className="w-full sm:w-auto btn-cyber flex justify-center items-center gap-2 py-4 px-8 text-[10px] md:text-xs"
+            >
+              <Share2 size={16} /> Bagikan Hasil
+            </button>
             <button
               onClick={() => {
                 setGameState("review");
@@ -457,7 +501,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
               href={backLink}
               className="w-full sm:w-auto neo-inset text-slate-400 hover:text-white font-black uppercase tracking-widest py-4 px-8 flex justify-center items-center transition-all text-[10px] md:text-xs"
             >
-              Kembali ke Materi
+              Selesai
             </Link>
           </div>
         </div>
@@ -532,10 +576,11 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
                   </div>
                 )}
 
+                {/* Di mode Review, Audio boleh diplay berkali-kali pake kontrol bawaan browser */}
                 {q.audioUrl && (
                   <div className="mb-8 p-5 neo-inset flex flex-col gap-3">
                     <p className="text-[9px] text-slate-500 uppercase font-black tracking-widest flex items-center gap-2">
-                      <Volume2 size={14} /> Audio Track
+                      <Volume2 size={14} /> Audio Track (Review)
                     </p>
                     <audio
                       controls
@@ -549,7 +594,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
                   {q.options.map((opt, optIdx) => {
                     const isCorrectAnswer = optIdx === q.correctAnswer;
                     const isUserSelection = optIdx === userAnswer;
-                    let wrapperClass = "neo-inset opacity-50"; // Unselected
+                    let wrapperClass = "neo-inset opacity-50";
 
                     if (isCorrectAnswer)
                       wrapperClass =
@@ -598,14 +643,19 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
   ========================================= */
   const activeQuestion = exam.questions[currentQuestionIndex];
   const isTimeCritical = timeLeft < 300;
+
+  // Status Audio Spesifik untuk UI Navigation Lock
   const isCurrentlyListening =
     activeQuestion.section === "listening" || !!activeQuestion.audioUrl;
+
+  // Mencegah user mundur jika soal sebelumnya adalah soal listening
   const previousQuestionData =
     currentQuestionIndex > 0 ? exam.questions[currentQuestionIndex - 1] : null;
   const isPrevQuestionListening = previousQuestionData
     ? previousQuestionData.section === "listening" ||
       !!previousQuestionData.audioUrl
     : false;
+
   const disablePreviousButton =
     currentQuestionIndex === 0 ||
     isCurrentlyListening ||
@@ -613,6 +663,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
 
   return (
     <div className="w-full flex flex-col">
+      {/* Audio Element Tersembunyi (Dikontrol secara Programmatic) */}
       <audio ref={audioRef} className="hidden" />
 
       {/* HEADER HUD (HEAD-UP DISPLAY) */}
@@ -623,9 +674,6 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
               {currentQuestionIndex + 1} / {exam.questions.length}
             </span>
             <div className="neo-inset px-4 py-2 flex items-center gap-2">
-              {isCurrentlyListening && (
-                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-              )}
               <span className="text-[9px] sm:text-[10px] text-red-500 font-black uppercase tracking-widest">
                 {SECTION_LABELS[activeQuestion.section]}
               </span>
@@ -674,18 +722,44 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
           transition={{ duration: 0.2 }}
           className="w-full neo-card p-6 sm:p-8 md:p-12 flex flex-col mb-8"
         >
+          {/* UI AUDIO BARU (Tanpa Auto-Play) */}
           {isCurrentlyListening && (
-            <div className="mb-8 p-5 neo-inset !border-red-500/30 flex items-start gap-4 shadow-[inset_0_0_20px_rgba(239,68,68,0.1)]">
-              <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center animate-pulse shrink-0">
-                <Volume2 className="text-black w-5 h-5" />
-              </div>
+            <div className="mb-8 p-5 neo-inset !border-red-500/30 flex items-center gap-4 shadow-[inset_0_0_20px_rgba(239,68,68,0.1)]">
+              <button
+                onClick={handlePlayAudio}
+                disabled={
+                  audioStatus[activeQuestion._key] !== "idle" &&
+                  audioStatus[activeQuestion._key] !== undefined
+                }
+                className={`p-4 rounded-full flex items-center justify-center transition-all shrink-0 ${
+                  !audioStatus[activeQuestion._key] ||
+                  audioStatus[activeQuestion._key] === "idle"
+                    ? "bg-red-500 text-white hover:scale-105 shadow-[0_0_15px_rgba(239,68,68,0.5)] cursor-pointer"
+                    : "bg-slate-800 text-slate-500 cursor-not-allowed"
+                }`}
+              >
+                <Volume2
+                  size={24}
+                  className={
+                    audioStatus[activeQuestion._key] === "playing"
+                      ? "animate-pulse text-red-500"
+                      : ""
+                  }
+                />
+              </button>
               <div>
-                <p className="text-[10px] md:text-xs text-red-500 font-black uppercase tracking-widest mb-1">
-                  Audio Sedang Diputar
+                <p className="text-[10px] md:text-xs font-black uppercase tracking-widest mb-1 text-white">
+                  {!audioStatus[activeQuestion._key] ||
+                  audioStatus[activeQuestion._key] === "idle"
+                    ? "Putar Audio Choukai"
+                    : audioStatus[activeQuestion._key] === "playing"
+                      ? "Audio Sedang Diputar..."
+                      : "Pemutaran Audio Selesai"}
                 </p>
                 <p className="text-[9px] md:text-[10px] text-slate-400 leading-relaxed uppercase font-mono tracking-wide">
-                  Audio tidak dapat diulang. Anda tidak dapat kembali ke soal
-                  ini jika sudah dilewati.
+                  Perhatian: Audio HANYA BISA DIPUTAR 1 KALI. Audio tidak dapat
+                  dijeda atau diulang. Pastikan volume suara perangkat Anda
+                  sudah cukup.
                 </p>
               </div>
             </div>

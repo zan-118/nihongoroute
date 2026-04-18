@@ -22,17 +22,31 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
   const [studyMode, setStudyMode] = useState<"free" | "test">("free");
   const [isClient, setIsClient] = useState(false);
 
+  // 1. Tambahkan tipe <FlashcardType[]> di sini
+  const [shuffledCards, setShuffledCards] = useState<FlashcardType[]>([]);
+
   const { progress, updateProgress } = useProgress();
   const router = useRouter();
 
   useEffect(() => {
+    // 2. Ubah kondisi menjadi cards.length > 0
+    if (cards && cards.length > 0) {
+      // Algoritma Fisher-Yates Shuffle
+      const shuffled = [...cards];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      setShuffledCards(shuffled);
+    }
     setIsClient(true);
-  }, []);
+  }, [cards]);
 
-  if (!isClient || !cards || cards.length === 0) return null;
+  if (!isClient || shuffledCards.length === 0) return null;
 
-  const currentCard = cards[currentIndex];
+  const currentCard = shuffledCards[currentIndex];
 
+  // ... (Sisa kode ke bawah sama persis seperti yang Anda buat)
   const handleAnswer = (correct: boolean) => {
     // Hanya update memori jika dalam Mode Tes (Tinjauan)
     if (studyMode === "test") {
@@ -54,7 +68,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
     setDirection(1);
     setIsFlipped(false);
     setTimeout(() => {
-      if (currentIndex < cards.length - 1) {
+      if (currentIndex < shuffledCards.length - 1) {
         setCurrentIndex((prev) => prev + 1);
         setDirection(0);
       } else if (studyMode === "test") {
@@ -146,7 +160,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
               ←
             </button>
             <div className="text-white/20 font-mono text-xs">
-              KARTU {currentIndex + 1} / {cards.length}
+              KARTU {currentIndex + 1} / {shuffledCards.length}
             </div>
             <button
               onClick={goToNext}

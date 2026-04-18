@@ -71,6 +71,38 @@ export const ProgressProvider = ({
     }
   }, []);
 
+  // --- DEBOUNCED SAVE LOGIC ---
+  useEffect(() => {
+    // 1. Abaikan penyimpanan jika aplikasi masih dalam proses memuat data awal (loading)
+    //    agar data kosong tidak menimpa data lama.
+    if (loading) return;
+
+    // 2. Set timer untuk menyimpan data setelah 1.5 detik
+    const debounceTimer = setTimeout(() => {
+      if (typeof window !== "undefined") {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+        // console.log("Progress tersimpan ke LocalStorage (Debounced)"); // Bisa di-uncomment untuk tes
+      }
+    }, 1500);
+
+    // 3. Cleanup function:
+    // Jika state 'progress' berubah lagi SEBELUM 1.5 detik habis, batalkan timer sebelumnya.
+    // Inilah inti dari teknik "Debouncing".
+    return () => clearTimeout(debounceTimer);
+  }, [progress, loading]);
+
+  // --- SAFETY SAVE PADA SAAT TAB DITUTUP ---
+  useEffect(() => {
+    if (loading) return;
+
+    const handleBeforeUnload = () => {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [progress, loading]);
+
   /**
    * Memperbarui progress XP dan status SRS, lalu menyimpannya ke LocalStorage.
    */
@@ -81,10 +113,6 @@ export const ProgressProvider = ({
       srs: newSrs,
     };
     setProgress(newState);
-
-    if (typeof window !== "undefined") {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
-    }
   };
 
   /**

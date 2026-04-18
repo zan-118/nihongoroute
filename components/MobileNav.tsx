@@ -42,7 +42,7 @@ export default function MobileNav() {
                     <item.icon size={22} strokeWidth={isActive ? 2.5 : 2} />
                   </div>
                   <span
-                    className={`text-[8px] font-black uppercase tracking-widest transition-colors ${
+                    className={`text-[10px] font-black uppercase tracking-wider transition-colors mt-0.5 ${
                       isActive
                         ? "text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.5)]"
                         : "text-slate-500"
