@@ -27,13 +27,13 @@ export const allCheatsheetsQuery = `*[_type == "cheatsheet"] | order(category as
   _id,
   title,
   category,
-  // 1. Tarik dari relasi Kosakata dan samakan nama key-nya
+  // Menyesuaikan referensi ke skema 'vocab'
   linkedVocab[]-> {
     "label": meaning,
     "jp": word,
-    romaji
+    romaji,
+    hinshi
   },
-  // 2. Tarik dari input manual
   items[] {
     label,
     jp,
@@ -54,26 +54,27 @@ export const allGrammarArticlesQuery = `*[_type == "grammar_article"] {
   }
 }`;
 
-export const vocabByIdsQuery = `*[_type == "kosakata" && _id in $ids] {
+// Update: Menggunakan _type "vocab", menghapus kanjiDetails, dan menambahkan hinshi
+export const vocabByIdsQuery = `*[_type == "vocab" && _id in $ids] {
   _id,
   word,
   furigana,
   romaji,
   meaning,
-  kanjiDetails,
+  hinshi,
   "audioUrl": audio.asset->url
 }`;
 
-// ✨ PERUBAHAN DI SINI: Menggunakan course_category
+// Update: Menghapus kanjiDetails dan menambahkan hinshi pada proyeksi vocabList dan referenceWords
 export const lessonQuery = `*[_type == "lesson" && slug.current == $slug][0] {
   title,
   summary,
   orderNumber,
   vocabList[]->{ 
-    _id, word, furigana, romaji, meaning, kanjiDetails, examples 
+    _id, word, furigana, romaji, meaning, hinshi, examples 
   },
   referenceWords[]->{ 
-    _id, word, furigana, romaji, meaning, kanjiDetails, examples 
+    _id, word, furigana, romaji, meaning, hinshi, examples 
   },
   patterns,
   examples,

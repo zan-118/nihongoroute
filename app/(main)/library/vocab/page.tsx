@@ -1,7 +1,7 @@
 import VocabClient from "./VocabClient";
 
 export const metadata = {
-  title: "Kamus Kosakata | Nihongopath",
+  title: "Kamus Kosakata | NihongoRoute",
   description: "Ribuan kosakata bahasa Jepang N5-N2",
 };
 

@@ -38,6 +38,7 @@ export const viewport: Viewport = {
  * saat tautan dibagikan (OpenGraph untuk Facebook/WhatsApp, Twitter Card).
  */
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.nihongoroute.my.id"), // Sesuaikan dengan domain asli nanti
   title: "NihongoRoute | Belajar Bahasa Jepang Gratis",
   description:
     "Platform belajar bahasa Jepang dengan sistem terstruktur, gamifikasi, dan latihan interaktif.",
@@ -62,7 +63,7 @@ export const metadata: Metadata = {
     title: "NihongoRoute | Misi Menguasai Bahasa Jepang",
     description:
       "Tingkatkan level bahasa Jepangmu! Belajar JLPT N5 dengan sistem Flashcard SRS, Quiz interaktif, dan kamus pintar.",
-    url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.nihongoroute.my.id",
+    url: "https://www.nihongoroute.my.id",
     siteName: "NihongoRoute",
     images: [
       {

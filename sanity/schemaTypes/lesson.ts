@@ -33,7 +33,7 @@ export default defineType({
       of: [
         {
           type: "reference",
-          to: [{ type: "kosakata" }, { type: "verb_dictionary" }],
+          to: [{ type: "vocab" }, { type: "verb_dictionary" }],
         },
       ],
     }),
@@ -41,7 +41,7 @@ export default defineType({
       name: "referenceWords",
       title: "Reference Words",
       type: "array",
-      of: [{ type: "reference", to: [{ type: "kosakata" }] }],
+      of: [{ type: "reference", to: [{ type: "vocab" }] }],
     }),
     defineField({
       name: "articles",

@@ -1,188 +1,238 @@
 /**
  * LOKASI FILE: app/page.tsx
- * DESKRIPSI:
- * Komponen Landing Page utama aplikasi NihongoRoute.
- * Halaman ini berfungsi untuk menarik perhatian pengguna baru, memperkenalkan
- * proposisi nilai (gratis, cerdas, terstruktur), dan mengarahkan mereka ke
- * fitur-fitur utama (Dashboard/Courses).
+ * KONSEP: Cyber-Dark Neumorphic + Framer Motion
  */
 
 "use client";
 
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import {
   BrainCircuit,
   Library,
-  LayoutDashboard,
+  Zap,
   Sparkles,
   ArrowRight,
+  ShieldCheck,
+  PlayCircle,
 } from "lucide-react";
 
-/**
- * KOMPONEN UTAMA LANDING PAGE
- */
 export default function LandingPage() {
-  /**
-   * DATA FITUR UNGGULAN:
-   * Mendefinisikan konten kartu fitur di bawah Hero Section.
-   * Setiap fitur memiliki ikon, skema warna border/glow, dan deskripsi singkat.
-   */
+  // Variabel Animasi untuk Stagger Effect (Dilengkapi tipe 'Variants' untuk TypeScript)
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.15, delayChildren: 0.2 },
+    },
+  };
+
+  const itemVariants: Variants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { type: "spring", stiffness: 100 },
+    },
+  };
+
   const features = [
     {
       title: "Sistem Hafalan Pintar",
-      desc: "Algoritma kami mengatur jadwal ulang kosakata secara otomatis, memastikannya menempel di otak permanen.",
+      desc: "Algoritma Spaced Repetition yang mengatur jadwal ulang kosakata secara otomatis.",
       icon: <BrainCircuit size={28} className="text-cyan-400" />,
-      color: "border-cyan-400/30 bg-cyan-400/5",
-      glow: "group-hover:shadow-[0_0_30px_rgba(34,211,238,0.15)]",
+      color: "text-cyan-400",
     },
     {
       title: "Koleksi Terpadu",
-      desc: "Akses ratusan kosakata, mesin konjugasi kata kerja, dan panduan tata bahasa lengkap dalam satu tempat.",
+      desc: "Akses ratusan tata bahasa, matriks verba, dan kamus dalam satu dashboard intuitif.",
       icon: <Library size={28} className="text-purple-400" />,
-      color: "border-purple-500/30 bg-purple-500/5",
-      glow: "group-hover:shadow-[0_0_30px_rgba(168,85,247,0.15)]",
+      color: "text-purple-400",
     },
     {
-      title: "Belajar Terstruktur",
-      desc: "Kumpulkan XP, naikkan level, dan selesaikan misi harian untuk menjaga konsistensi belajarmu.",
-      icon: <LayoutDashboard size={28} className="text-emerald-400" />,
-      color: "border-emerald-500/30 bg-emerald-500/5",
-      glow: "group-hover:shadow-[0_0_30px_rgba(16,185,129,0.15)]",
+      title: "Ujian Simulasi",
+      desc: "Uji kesiapan JLPT Anda dengan mesin simulasi waktu nyata berstandar resmi.",
+      icon: <Zap size={28} className="text-amber-400" />,
+      color: "text-amber-400",
     },
   ];
 
   return (
-    <main className="min-h-screen bg-cyber-bg text-[#c4cfde] selection:bg-cyan-400 selection:text-black overflow-x-hidden pt-24 pb-20">
-      {/* DEKORASI VISUAL: Efek pendaran radial dan grid futuristik yang menempel di latar belakang */}
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/20 via-[#0a0c10] to-[#0a0c10] pointer-events-none z-0" />
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none z-0" />
+    <main className="min-h-screen bg-[#080a0f] text-[#c4cfde] selection:bg-cyan-400/30 overflow-x-hidden">
+      {/* BACKGROUND AMBIENT */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[10%] left-[-5%] w-[400px] h-[400px] bg-blue-600/5 rounded-full blur-[100px]" />
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
-        {/* HERO SECTION: Judul utama dan Call to Action (CTA) */}
-        <section className="min-h-[75vh] flex flex-col items-center justify-center text-center pt-10 pb-16">
-          {/* Badge Promo: Menekankan aspek 'Gratis' */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-32">
+        {/* HERO SECTION */}
+        <section className="min-h-[75vh] flex flex-col items-center justify-center text-center mb-24">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-6 md:mb-8 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-slate-300 shadow-inner"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="mb-8 p-2 neo-inset rounded-2xl"
           >
-            <Sparkles size={14} className="text-cyan-400" />
-            Platform Belajar 100% Gratis
+            <div className="bg-cyan-400/10 border border-cyan-400/20 px-4 py-2 rounded-xl flex items-center gap-2">
+              <Sparkles size={14} className="text-cyan-400 animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-cyan-400">
+                Next-Gen Learning Platform
+              </span>
+            </div>
           </motion.div>
 
-          {/* Judul Utama dengan Gradasi Neon */}
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black uppercase italic tracking-tight leading-tight mb-6 md:mb-8 drop-shadow-2xl text-white"
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="text-5xl md:text-8xl lg:text-9xl font-black italic uppercase tracking-tighter leading-[0.9] text-white mb-8"
           >
-            Kuasai Bahasa <br className="hidden sm:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
-              Jepang
-            </span>{" "}
-            <br className="block sm:hidden" />
-            Dengan Cerdas.
+            Mastering <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-[0_0_15px_rgba(34,211,238,0.3)]">
+              Japanese Art.
+            </span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="text-slate-400 text-xs sm:text-sm md:text-base max-w-2xl mx-auto mb-10 md:mb-12 leading-relaxed px-4"
+            transition={{ delay: 0.4 }}
+            className="text-slate-400 text-sm md:text-lg max-w-2xl mb-12 leading-relaxed italic"
           >
-            Tinggalkan cara menghafal yang membosankan. NihongoRoute
-            menggabungkan materi JLPT dengan algoritma memori modern dan
-            gamifikasi untuk efektivitas belajar.
+            Platform belajar mandiri gratis yang menggabungkan estetika
+            futuristik dengan metode sains kognitif untuk akselerasi kemampuan
+            bahasa Anda.
           </motion.p>
 
-          {/* Tombol Navigasi Utama */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-center gap-4 md:gap-6 w-full sm:w-auto px-4"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto"
           >
-            {/* CTA Primer: Masuk ke Dashboard Progres */}
             <Link
               href="/dashboard"
-              className="group relative w-full sm:w-auto px-6 md:px-8 py-4 md:py-5 bg-cyan-400 rounded-[2rem] text-black font-black uppercase tracking-widest text-[10px] md:text-xs transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(34,211,238,0.4)] flex items-center justify-center gap-3"
+              className="btn-cyber flex items-center justify-center gap-3 group"
             >
-              Mulai Perjalananmu
+              Akses Dashboard{" "}
               <ArrowRight
                 size={18}
                 className="group-hover:translate-x-1 transition-transform"
               />
             </Link>
-
-            {/* CTA Sekunder: Melihat Daftar Pelajaran */}
             <Link
               href="/courses"
-              className="w-full sm:w-auto px-6 md:px-8 py-4 md:py-5 bg-cyber-surface border border-white/10 rounded-[2rem] text-white font-black uppercase tracking-widest text-[10px] md:text-xs transition-all hover:bg-white/5 hover:border-white/20 text-center"
+              className="px-8 py-3 neo-card hover:shadow-none transition-all flex items-center justify-center gap-3 text-white font-bold uppercase tracking-widest text-sm"
             >
-              Lihat Materi Belajar
+              <PlayCircle size={18} className="text-cyan-400" /> Lihat Silabus
             </Link>
           </motion.div>
         </section>
 
-        {/* FEATURES SECTION: Penjelasan 3 pilar utama aplikasi */}
-        <section className="py-16 md:py-20 border-t border-white/5">
-          <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tight text-white mb-4">
-              Dibangun Untuk <span className="text-cyan-400">Progres</span>
-            </h2>
-            <p className="text-slate-400 text-xs md:text-sm max-w-xl mx-auto px-4">
-              Semua alat pendukung yang kamu butuhkan untuk lulus JLPT ada di
-              dalam satu genggaman.
-            </p>
-          </div>
-
-          {/* Grid Kartu Fitur dengan efek Neumorphic Shadow */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 px-4 md:px-0">
-            {features.map((feature, idx) => (
-              <motion.article
-                key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ delay: idx * 0.2 }}
-                className={`group p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] bg-cyber-surface border transition-all duration-300 hover:-translate-y-2 shadow-[15px_15px_30px_#0a0c10,-10px_-10px_20px_rgba(255,255,255,0.02)] ${feature.color} ${feature.glow}`}
+        {/* FEATURES GRID */}
+        <motion.section
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32"
+        >
+          {features.map((feature, i) => (
+            <motion.div
+              key={i}
+              variants={itemVariants}
+              whileHover={{ y: -10 }}
+              className="neo-card p-8 md:p-10 group relative overflow-hidden transition-all duration-300"
+            >
+              <div className="absolute top-0 right-0 p-8 opacity-[0.02] text-7xl font-black italic pointer-events-none group-hover:opacity-[0.05] transition-opacity">
+                0{i + 1}
+              </div>
+              <div className="mb-6 p-4 neo-inset w-fit rounded-2xl group-hover:shadow-none transition-all">
+                {feature.icon}
+              </div>
+              <h3
+                className={`text-xl md:text-2xl font-black uppercase italic tracking-tight mb-4 ${feature.color}`}
               >
-                {/* Ikon Fitur dengan efek hover Scale */}
-                <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-[#0a0c10] border border-white/5 flex items-center justify-center mb-6 md:mb-8 shadow-inner group-hover:scale-110 transition-transform">
-                  {feature.icon}
-                </div>
-                <h3 className="text-xl md:text-2xl font-black text-white uppercase italic tracking-tight mb-3 md:mb-4">
-                  {feature.title}
-                </h3>
-                <p className="text-slate-400 text-xs md:text-sm leading-relaxed">
-                  {feature.desc}
-                </p>
-              </motion.article>
-            ))}
-          </div>
-        </section>
+                {feature.title}
+              </h3>
+              <p className="text-slate-500 text-xs md:text-sm leading-relaxed">
+                {feature.desc}
+              </p>
+            </motion.div>
+          ))}
+        </motion.section>
 
-        {/* FOOTER: Identitas merek dan Hak Cipta */}
-        <footer className="mt-16 md:mt-20 pt-8 md:pt-10 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6 text-center md:text-left mb-8 md:mb-0">
-          <div className="flex items-center gap-3">
-            <div className="relative w-8 h-8 shrink-0 drop-shadow-[0_0_8px_rgba(34,211,238,0.2)]">
+        {/* TRUST BANNER */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="neo-inset p-8 md:p-12 rounded-[3rem] flex flex-col md:flex-row items-center justify-between gap-8 border border-white/5"
+        >
+          <div className="flex items-center gap-6">
+            <div className="w-16 h-16 neo-card flex items-center justify-center rounded-2xl shrink-0">
+              <ShieldCheck size={32} className="text-cyan-400" />
+            </div>
+            <div>
+              <h4 className="text-white font-black uppercase italic text-xl">
+                100% Gratis & Open Source
+              </h4>
+              <p className="text-slate-500 text-xs mt-1">
+                Dikembangkan dengan dedikasi untuk komunitas pembelajar bahasa
+                Jepang.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/support"
+            className="text-cyan-400 font-black uppercase tracking-widest text-[10px] md:text-xs flex items-center gap-2 hover:gap-4 transition-all whitespace-nowrap shrink-0"
+          >
+            Dukung Pengembangan <ArrowRight size={14} />
+          </Link>
+        </motion.section>
+
+        {/* FOOTER */}
+        <footer className="mt-32 pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="flex items-center gap-4">
+            <div className="relative w-10 h-10 drop-shadow-[0_0_10px_rgba(34,211,238,0.3)]">
               <Image
                 src="/logo-branding.svg"
-                alt="Logo NihongoRoute"
+                alt="NihongoRoute"
                 fill
-                className="object-contain rounded-md"
+                className="object-contain"
               />
             </div>
-            <span className="text-slate-500 font-black text-[10px] uppercase tracking-widest">
-              © {new Date().getFullYear()} NihongoRoute
-            </span>
+            <div className="flex flex-col">
+              <span className="text-white font-black italic uppercase tracking-widest">
+                Nihongo<span className="text-cyan-400">Route</span>
+              </span>
+              <span className="text-[8px] text-slate-600 font-bold uppercase tracking-[0.4em]">
+                Digital Learning Ecosystem © {new Date().getFullYear()}
+              </span>
+            </div>
           </div>
-          <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest">
-            Akses Terbuka. Berbasis Komunitas.
-          </p>
+          <div className="flex gap-6 text-[10px] font-black uppercase tracking-widest text-slate-500">
+            <Link
+              href="/library"
+              className="hover:text-cyan-400 transition-colors"
+            >
+              Library
+            </Link>
+            <Link
+              href="/review"
+              className="hover:text-cyan-400 transition-colors"
+            >
+              Review
+            </Link>
+            <a
+              href="https://github.com/zan-118"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-cyan-400 transition-colors"
+            >
+              GitHub
+            </a>
+          </div>
         </footer>
       </div>
     </main>

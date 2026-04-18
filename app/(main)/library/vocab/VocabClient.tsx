@@ -6,17 +6,20 @@ import Link from "next/link";
 import { client } from "@/sanity/lib/client";
 import { Search, Home, Layers, BookOpen, Loader2 } from "lucide-react";
 import TTSReader from "@/components/TTSReader";
+import PdfGenerator from "@/components/PdfGenerator";
 
 const LEVELS = ["N5", "N4", "N3", "N2"];
 const HINSHI = [
-  { label: "Semua", value: "all" },
-  { label: "Kata Benda (Noun)", value: "noun" },
-  { label: "Kata Sifat (Adj)", value: "adjective" },
-  { label: "Keterangan (Adverb)", value: "adverb" },
-  { label: "Partikel", value: "particle" },
-  { label: "Ungkapan", value: "expression" },
+  { label: "Semua Kata", value: "all" },
+  { label: "Meishi (Benda)", value: "noun" },
+  { label: "I-Keiyoushi (Sifat-I)", value: "i-adjective" },
+  { label: "Na-Keiyoushi (Sifat-Na)", value: "na-adjective" },
+  { label: "Fukushi (Keterangan)", value: "adverb" },
+  { label: "Joshi (Partikel)", value: "particle" },
+  { label: "Setsuzokushi (Sambung)", value: "conjunction" },
+  { label: "Daimeishi (Ganti)", value: "pronoun" },
+  { label: "Hyougen (Ungkapan)", value: "expression" },
 ];
-
 const ITEMS_PER_PAGE = 30;
 
 export default function VocabClient() {
@@ -42,6 +45,7 @@ export default function VocabClient() {
     setPage(0);
     setHasMore(true);
     fetchData(0, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [level, hinshi, debouncedSearch]);
 
   const fetchData = async (currentPage: number, isReset = false) => {
@@ -51,27 +55,39 @@ export default function VocabClient() {
     const start = currentPage * ITEMS_PER_PAGE;
     const end = start + ITEMS_PER_PAGE;
 
-    // GROQ Query yang efisien dengan parameter
-    const query = `*[_type == "kosakata" 
-      && category != "kanji" 
-      && vocabId match "VOC-" + $level + "*"
-      && ($search == "" || word match $search + "*" || romaji match $search + "*" || meaning match $search + "*")
-      && ($hinshi == "all" || category == $hinshi)
-    ] | order(romaji asc) [$start...$end] {
-      _id, vocabId, word, furigana, romaji, meaning, category
+    // Kita sediakan 2 variasi slug agar pasti cocok (misal: "n5" atau "jlpt-n5")
+    const baseLevel = level.toLowerCase();
+    const jlptLevel = `jlpt-${baseLevel}`;
+
+    // 1. Bangun query dasar
+    let queryStr = `*[_type == "vocab" && course_category->slug.current in [$baseLevel, $jlptLevel]`;
+
+    // 2. Tambahkan filter pencarian HANYA jika ada teks yang diketik
+    if (debouncedSearch.trim() !== "") {
+      queryStr += ` && (word match $search + "*" || romaji match $search + "*" || meaning match $search + "*")`;
+    }
+
+    // 3. Tambahkan filter golongan kata HANYA jika bukan "Semua"
+    if (hinshi !== "all") {
+      queryStr += ` && hinshi == $hinshi`;
+    }
+
+    // 4. Tutup query, urutkan, dan ambil sesuai halaman (pagination)
+    queryStr += `] | order(romaji asc) [$start...$end] {
+      _id, word, furigana, romaji, meaning, hinshi
     }`;
 
     try {
-      const data = await client.fetch(query, {
-        level,
-        search: debouncedSearch,
+      const data = await client.fetch(queryStr, {
+        baseLevel,
+        jlptLevel,
+        search: debouncedSearch.trim(),
         hinshi,
         start,
         end,
       });
 
       if (data.length < ITEMS_PER_PAGE) setHasMore(false);
-
       setVocabList((prev) => (isReset ? data : [...prev, ...data]));
     } catch (error) {
       console.error("Gagal mengambil data:", error);
@@ -80,6 +96,7 @@ export default function VocabClient() {
     }
   };
 
+  // 🔥 FUNGSI INI YANG TADI TERHAPUS 🔥
   const loadMore = () => {
     const nextPage = page + 1;
     setPage(nextPage);
@@ -167,6 +184,10 @@ export default function VocabClient() {
         </div>
       </div>
 
+      <div className="flex justify-end mb-4">
+        <PdfGenerator data={vocabList} type="vocab" level={level} />
+      </div>
+
       {/* DATA GRID */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <AnimatePresence>
@@ -179,7 +200,7 @@ export default function VocabClient() {
             >
               <div className="flex justify-between items-start mb-4">
                 <span className="px-2.5 py-1 text-[8px] font-black uppercase tracking-widest rounded-md bg-white/5 text-slate-400 border border-white/10">
-                  {vocab.category}
+                  {vocab.hinshi || "Vocab"}
                 </span>
                 <TTSReader text={vocab.word} minimal={true} />
               </div>

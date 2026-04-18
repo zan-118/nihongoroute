@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Font,
   Image,
+  Link,
 } from "@react-pdf/renderer";
 
 Font.register({
@@ -19,65 +20,55 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: 45,
+    padding: 40,
     fontFamily: "NotoSansJP",
     backgroundColor: "#ffffff",
-    color: "#1a1a1a",
   },
+  // HEADER MODERN
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "flex-end",
     marginBottom: 30,
-    borderBottom: 2,
+    borderBottomWidth: 3,
     borderBottomColor: "#22d3ee",
     paddingBottom: 15,
   },
-  logoContainer: { flexDirection: "row", alignItems: "center", gap: 10 },
-  logoImage: { width: 30, height: 30 },
+  logoBox: {
+    flexDirection: "column",
+  },
   brandName: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#0891b2",
-    letterSpacing: 1,
+    letterSpacing: 1.5,
+  },
+  tagline: {
+    fontSize: 8,
+    color: "#64748b",
+    marginTop: 2,
+    textTransform: "uppercase",
   },
   levelBadge: {
     backgroundColor: "#ecfeff",
-    border: 1,
-    borderColor: "#22d3ee",
-    padding: "3 10",
-    borderRadius: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 5,
     fontSize: 10,
     color: "#0891b2",
     fontWeight: "bold",
+    borderWidth: 1,
+    borderColor: "#22d3ee",
   },
+
+  // TYPOGRAPHY
   title: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: "bold",
     color: "#0f172a",
-    marginBottom: 12,
+    marginBottom: 20,
+    letterSpacing: -0.5,
   },
-
-  // Box Contoh Kalimat (Sesuai Skema)
-  exampleBox: {
-    backgroundColor: "#f8fafc",
-    border: 1,
-    borderColor: "#e2e8f0",
-    borderRadius: 8,
-    padding: 12,
-    marginVertical: 8,
-    borderLeft: 4,
-    borderLeftColor: "#22d3ee",
-  },
-  exampleJp: {
-    fontSize: 13,
-    fontWeight: "bold",
-    color: "#0f172a",
-    marginBottom: 2,
-  },
-  exampleFurigana: { fontSize: 8, color: "#0891b2", marginBottom: 4 },
-  exampleId: { fontSize: 9, color: "#64748b" },
-
   sectionTitle: {
     fontSize: 14,
     fontWeight: "bold",
@@ -86,7 +77,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     textTransform: "uppercase",
     letterSpacing: 1.5,
-    borderLeft: 3,
+    borderLeftWidth: 3,
     borderLeftColor: "#22d3ee",
     paddingLeft: 8,
   },
@@ -95,71 +86,139 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#0f172a",
     marginTop: 15,
-    marginBottom: 8,
+    marginBottom: 10,
   },
   contentParagraph: {
-    fontSize: 10.5,
+    fontSize: 10,
     lineHeight: 1.6,
     marginBottom: 10,
     color: "#334155",
   },
 
+  // PORTABLE TEXT COMPONENTS
+  exampleBox: {
+    backgroundColor: "#f8fafc",
+    borderRadius: 8,
+    padding: 12,
+    marginVertical: 8,
+    borderLeftWidth: 4,
+    borderLeftColor: "#22d3ee",
+  },
+  exampleFurigana: { fontSize: 8, color: "#0891b2", marginBottom: 2 },
+  exampleJp: { fontSize: 13, fontWeight: "bold", color: "#0f172a" },
+  exampleId: { fontSize: 9, color: "#64748b", marginTop: 4 },
+
+  calloutBox: {
+    backgroundColor: "#f0fdfa",
+    borderRadius: 8,
+    padding: 12,
+    marginVertical: 10,
+    borderWidth: 1,
+    borderColor: "#cffafe",
+  },
+  calloutTitle: {
+    fontSize: 10,
+    fontWeight: "bold",
+    color: "#0891b2",
+    marginBottom: 4,
+    textTransform: "uppercase",
+  },
+  calloutText: { fontSize: 10, color: "#334155", lineHeight: 1.5 },
+
+  // QUIZ COMPONENTS
+  quizBox: {
+    marginBottom: 15,
+    padding: 15,
+    backgroundColor: "#f8fafc",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+  },
+  quizQuestion: {
+    fontSize: 11,
+    fontWeight: "bold",
+    color: "#0f172a",
+    marginBottom: 10,
+  },
+  quizOption: {
+    fontSize: 10,
+    color: "#475569",
+    marginLeft: 10,
+    marginBottom: 5,
+  },
+  quizCorrect: {
+    fontSize: 10,
+    color: "#059669",
+    marginLeft: 10,
+    marginBottom: 5,
+    fontWeight: "bold",
+  },
+  quizExplanation: {
+    fontSize: 9,
+    color: "#64748b",
+    marginTop: 10,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: "#e2e8f0",
+  },
+
+  // VOCAB TABLE
   table: {
-    marginTop: 5,
-    borderRadius: 4,
+    marginTop: 10,
+    borderRadius: 6,
     overflow: "hidden",
-    border: 1,
+    borderWidth: 1,
     borderColor: "#e2e8f0",
   },
   tableHeader: {
     flexDirection: "row",
-    backgroundColor: "#f1f5f9",
+    backgroundColor: "#0f172a",
     padding: 10,
-    borderBottom: 1,
-    borderBottomColor: "#e2e8f0",
+  },
+  headerText: {
+    fontSize: 9,
+    fontWeight: "bold",
+    color: "#ffffff",
+    textTransform: "uppercase",
   },
   tableRow: {
     flexDirection: "row",
-    borderBottom: 1,
+    borderBottomWidth: 1,
     borderBottomColor: "#f1f5f9",
     padding: 10,
     alignItems: "center",
   },
   tableRowZebra: { backgroundColor: "#f8fafc" },
-  cellHeader: {
-    fontSize: 9,
-    color: "#64748b",
-    fontWeight: "bold",
-    textTransform: "uppercase",
-  },
   cellKanji: { fontSize: 12, fontWeight: "bold", color: "#0f172a" },
 
+  // FOOTER
   footer: {
     position: "absolute",
     bottom: 30,
-    left: 45,
-    right: 45,
-    borderTop: 1,
-    borderTopColor: "#f1f5f9",
-    paddingTop: 12,
+    left: 40,
+    right: 40,
+    borderTopWidth: 1,
+    borderTopColor: "#e2e8f0",
+    paddingTop: 15,
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
+  },
+  footerText: { fontSize: 8, color: "#94a3b8" },
+  footerUrl: {
     fontSize: 9,
-    color: "#94a3b8",
+    color: "#0891b2",
+    fontWeight: "bold",
+    textDecoration: "none",
   },
 });
 
 export const LessonPdfTemplate = ({ lessonData }: { lessonData: any }) => {
-  const vocabList =
-    lessonData.vocabList?.filter((i: any) => i._type === "kosakata") || [];
-  const verbList =
-    lessonData.vocabList?.filter((i: any) => i._type === "verb_dictionary") ||
-    [];
+  const combinedVocabList = lessonData.vocabList || [];
 
   const renderRichText = (blocks: any[]) => {
     if (!blocks || !Array.isArray(blocks)) return null;
     return blocks.map((block: any, index: number) => {
-      // 1. Handle Teks Biasa (H2, H3, Paragraph)
       if (block._type === "block") {
         const textContent =
           block.children?.map((c: any) => c.text).join("") || "";
@@ -176,13 +235,21 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: any }) => {
         );
       }
 
-      // 2. Handle Custom Type: exampleSentence (Sesuai Skema Sanity)
       if (block._type === "exampleSentence") {
         return (
           <View key={index} style={styles.exampleBox} wrap={false}>
             <Text style={styles.exampleFurigana}>{block.furigana}</Text>
             <Text style={styles.exampleJp}>{block.jp}</Text>
             <Text style={styles.exampleId}>{block.id}</Text>
+          </View>
+        );
+      }
+
+      if (block._type === "callout") {
+        return (
+          <View key={index} style={styles.calloutBox} wrap={false}>
+            <Text style={styles.calloutTitle}>{block.title || "Note"}</Text>
+            <Text style={styles.calloutText}>{block.text}</Text>
           </View>
         );
       }
@@ -193,21 +260,23 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: any }) => {
   return (
     <Document title={lessonData.title}>
       <Page size="A4" style={styles.page}>
-        <View style={styles.header}>
-          <View style={styles.logoContainer}>
-            <Image src="/logo-branding.png" style={styles.logoImage} />
+        {/* HEADER */}
+        <View style={styles.header} fixed>
+          <View style={styles.logoBox}>
             <Text style={styles.brandName}>NIHONGO ROUTE</Text>
+            <Text style={styles.tagline}>Japanese Self-Learning Platform</Text>
           </View>
           <Text style={styles.levelBadge}>{lessonData.levelTitle || "N5"}</Text>
         </View>
 
         <Text style={styles.title}>{lessonData.title}</Text>
 
-        {/* Render Articles & Grammar (Termasuk Contoh Kalimat di dalamnya) */}
+        {/* ARTICLES */}
         {lessonData.articles && (
           <View>{renderRichText(lessonData.articles)}</View>
         )}
 
+        {/* GRAMMAR */}
         {lessonData.grammar && (
           <View>
             <Text style={styles.sectionTitle}>Materi Inti (文法)</Text>
@@ -215,23 +284,23 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: any }) => {
           </View>
         )}
 
-        {/* Tabel Kosakata */}
-        {vocabList.length > 0 && (
-          <View>
+        {/* VOCAB TABLE */}
+        {combinedVocabList.length > 0 && (
+          <View wrap={false}>
             <Text style={styles.sectionTitle}>Target Kosakata</Text>
             <View style={styles.table}>
               <View style={styles.tableHeader}>
-                <View style={{ width: "25%" }}>
-                  <Text style={styles.cellHeader}>Kata</Text>
+                <View style={{ width: "30%" }}>
+                  <Text style={styles.headerText}>Word</Text>
                 </View>
-                <View style={{ width: "25%" }}>
-                  <Text style={styles.cellHeader}>Furigana</Text>
+                <View style={{ width: "30%" }}>
+                  <Text style={styles.headerText}>Reading</Text>
                 </View>
-                <View style={{ width: "50%" }}>
-                  <Text style={styles.cellHeader}>Arti</Text>
+                <View style={{ width: "40%" }}>
+                  <Text style={styles.headerText}>Meaning</Text>
                 </View>
               </View>
-              {vocabList.map((item: any, idx: number) => (
+              {combinedVocabList.map((item: any, idx: number) => (
                 <View
                   key={idx}
                   style={[
@@ -240,14 +309,21 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: any }) => {
                   ]}
                   wrap={false}
                 >
-                  <View style={{ width: "25%" }}>
+                  <View style={{ width: "30%" }}>
                     <Text style={styles.cellKanji}>{item.word}</Text>
                   </View>
-                  <View style={{ width: "25%" }}>
-                    <Text style={{ fontSize: 10 }}>{item.furigana}</Text>
+                  <View style={{ width: "30%" }}>
+                    <Text style={{ fontSize: 10, color: "#334155" }}>
+                      {item.furigana || "-"}
+                    </Text>
+                    <Text style={{ fontSize: 8, color: "#94a3b8" }}>
+                      {item.romaji}
+                    </Text>
                   </View>
-                  <View style={{ width: "50%" }}>
-                    <Text style={{ fontSize: 10 }}>{item.meaning}</Text>
+                  <View style={{ width: "40%" }}>
+                    <Text style={{ fontSize: 10, color: "#334155" }}>
+                      {item.meaning}
+                    </Text>
                   </View>
                 </View>
               ))}
@@ -255,11 +331,51 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: any }) => {
           </View>
         )}
 
+        {/* QUIZ */}
+        {lessonData.quizzes && lessonData.quizzes.length > 0 && (
+          <View>
+            <Text style={styles.sectionTitle}>Latihan Pemahaman</Text>
+            {lessonData.quizzes.map((quiz: any, qIdx: number) => {
+              const alphabet = ["A", "B", "C", "D"];
+              return (
+                <View key={qIdx} style={styles.quizBox} wrap={false}>
+                  <Text style={styles.quizQuestion}>
+                    {qIdx + 1}. {quiz.question}
+                  </Text>
+                  {quiz.options?.map((opt: any, oIdx: number) => (
+                    <Text
+                      key={oIdx}
+                      style={
+                        opt.isCorrect ? styles.quizCorrect : styles.quizOption
+                      }
+                    >
+                      {alphabet[oIdx]}. {opt.text}{" "}
+                      {opt.isCorrect ? " (✓ Correct)" : ""}
+                    </Text>
+                  ))}
+                  {quiz.explanation && (
+                    <Text style={styles.quizExplanation}>
+                      Note: {quiz.explanation}
+                    </Text>
+                  )}
+                </View>
+              );
+            })}
+          </View>
+        )}
+
+        {/* FOOTER */}
         <View style={styles.footer} fixed>
-          <Text>www.nihongoroute.my.id</Text>
+          <Text style={styles.footerText}>
+            © {new Date().getFullYear()} NihongoRoute
+          </Text>
+          <Link style={styles.footerUrl} src="https://www.nihongoroute.my.id">
+            www.nihongoroute.my.id
+          </Link>
           <Text
+            style={styles.footerText}
             render={({ pageNumber, totalPages }) =>
-              `Halaman ${pageNumber} dari ${totalPages}`
+              `${pageNumber} / ${totalPages}`
             }
           />
         </View>

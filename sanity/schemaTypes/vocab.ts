@@ -7,7 +7,8 @@ const isUniqueVocabId = async (value: string | undefined, context: any) => {
   const client = getClient({ apiVersion: "2024-04-12" });
   const id = document._id.replace(/^drafts\./, "");
 
-  const query = `*[_type == "kosakata" && vocabId == $value && _id != $draftId && _id != $publishedId][0]`;
+  // PERBAIKAN: Ubah "kosakata" menjadi "vocab"
+  const query = `*[_type == "vocab" && vocabId == $value && _id != $draftId && _id != $publishedId][0]`;
   const params = { value, draftId: `drafts.${id}`, publishedId: id };
   const result = await client.fetch(query, params);
 
@@ -23,7 +24,8 @@ const isUniqueWord = async (value: string | undefined, context: any) => {
   const client = getClient({ apiVersion: "2024-04-12" });
   const id = document._id.replace(/^drafts\./, "");
 
-  const query = `*[_type == "kosakata" && word == $value && _id != $draftId && _id != $publishedId][0]`;
+  // PERBAIKAN: Ubah "kosakata" menjadi "vocab"
+  const query = `*[_type == "vocab" && word == $value && _id != $draftId && _id != $publishedId][0]`;
   const params = { value, draftId: `drafts.${id}`, publishedId: id };
   const result = await client.fetch(query, params);
 
@@ -33,7 +35,7 @@ const isUniqueWord = async (value: string | undefined, context: any) => {
 };
 
 export default defineType({
-  name: "kosakata",
+  name: "vocab", // PERBAIKAN: Typo "vocbab" diperbaiki
   title: "Perpustakaan Kosakata Global",
   type: "document",
   fields: [
@@ -50,18 +52,22 @@ export default defineType({
       title: "Kata (Kanji/Kana)",
       validation: (Rule) => Rule.required().custom(isUniqueWord),
     }),
+    // ✨ PENAMBAHAN: Field Hinshi yang lebih detail
     defineField({
-      name: "category",
+      name: "hinshi",
       type: "string",
-      title: "Jenis Kata",
+      title: "Hinshi (Kelas Kata / Part of Speech)",
       options: {
         list: [
-          { title: "Kata Benda (Noun)", value: "noun" },
-          { title: "Kata Sifat (I-Adj / Na-Adj)", value: "adjective" },
-          { title: "Kata Keterangan (Adverb)", value: "adverb" },
-          { title: "Partikel (Particle)", value: "particle" },
-          { title: "Ungkapan (Expression)", value: "expression" },
-          { title: "Kanji Power (Khusus Mode Kanji)", value: "kanji" },
+          { title: "Meishi (Kata Benda)", value: "noun" },
+          { title: "I-Keiyoushi (Kata Sifat-I)", value: "i-adjective" },
+          { title: "Na-Keiyoushi (Kata Sifat-Na)", value: "na-adjective" },
+          { title: "Fukushi (Kata Keterangan)", value: "adverb" },
+          { title: "Joshi (Partikel)", value: "particle" },
+          { title: "Setsuzokushi (Kata Sambung)", value: "conjunction" },
+          { title: "Daimeishi (Kata Ganti)", value: "pronoun" },
+          { title: "Hyougen (Ungkapan / Frasa)", value: "expression" },
+          // Catatan: Verb (Kata Kerja) tidak dimasukkan karena kamu sudah punya verbDictionary.ts
         ],
       },
       initialValue: "noun",
@@ -93,16 +99,6 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "kanjiDetails",
-      type: "object",
-      title: "Detail Kanji",
-      hidden: ({ document }) => document?.category !== "kanji",
-      fields: [
-        { name: "onyomi", type: "string", title: "Onyomi (Katakana)" },
-        { name: "kunyomi", type: "string", title: "Kunyomi (Hiragana)" },
-      ],
-    }),
-    defineField({
       name: "course_category",
       title: "Course Category",
       type: "reference",
@@ -120,19 +116,12 @@ export default defineType({
     select: {
       title: "word",
       subtitle: "meaning",
-      category: "category",
+      hinshi: "hinshi", // Sesuaikan dengan nama field baru
       showInFlashcard: "showInFlashcard",
       customId: "vocabId",
       systemId: "_id",
     },
-    prepare({
-      title,
-      subtitle,
-      category,
-      showInFlashcard,
-      customId,
-      systemId,
-    }) {
+    prepare({ title, subtitle, hinshi, showInFlashcard, customId, systemId }) {
       const isHidden = showInFlashcard === false ? " 🚷 (Hidden)" : "";
       const displayTitle = customId
         ? `[${customId}] ${title || "Kosong"}`
@@ -140,7 +129,7 @@ export default defineType({
 
       return {
         title: `${displayTitle}${isHidden}`,
-        subtitle: `SysID: ${systemId} | [${category?.toUpperCase()}] ${subtitle || ""}`,
+        subtitle: `SysID: ${systemId} | [${hinshi?.toUpperCase() || "UNKNOWN"}] ${subtitle || ""}`,
       };
     },
   },

@@ -40,7 +40,7 @@ export default defineType({
       type: "array",
       description:
         "Gunakan ini untuk menarik kosakata yang sudah ada di database tanpa perlu mengetik ulang.",
-      of: [{ type: "reference", to: [{ type: "kosakata" }] }],
+      of: [{ type: "reference", to: [{ type: "vocab" }] }],
     }),
     defineField({
       name: "items",

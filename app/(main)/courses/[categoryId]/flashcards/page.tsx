@@ -3,22 +3,22 @@ import { client } from "@/sanity/lib/client";
 import Link from "next/link";
 
 interface PageProps {
-  params: Promise<{ level: string }>;
+  params: Promise<{ categoryId: string }>;
 }
 
 export default async function VocabFlashcardPage({ params }: PageProps) {
-  const { level } = await params;
+  const { categoryId } = await params;
 
   const query = `{
-    "vocab": *[_type == "kosakata" && category != "kanji" && showInFlashcard != false && course_category->slug.current == $level] {
+    "vocab": *[_type == "vocab" && showInFlashcard != false && course_category->slug.current == $categoryId] {
       _id, word, meaning, romaji, furigana
     },
-    "verbs": *[_type == "verb_dictionary" && showInFlashcard != false && course_category->slug.current == $level] {
+    "verbs": *[_type == "verb_dictionary" && showInFlashcard != false && course_category->slug.current == $categoryId] {
       _id, "word": jisho, meaning, romaji, furigana
     }
   }`;
 
-  const data = await client.fetch(query, { level });
+  const data = await client.fetch(query, { categoryId });
   const cards = [...(data.vocab || []), ...(data.verbs || [])];
 
   return (
@@ -28,7 +28,7 @@ export default async function VocabFlashcardPage({ params }: PageProps) {
       <div className="max-w-xl mx-auto relative z-10">
         <nav className="mb-6 md:mb-8 italic">
           <Link
-            href={`/courses/${level}`}
+            href={`/courses/${categoryId}`}
             className="text-cyan-400 text-[10px] md:text-xs font-black uppercase tracking-widest hover:text-cyan-300 transition-colors bg-cyan-400/10 px-4 py-2 rounded-lg border border-cyan-400/20"
           >
             ← Kembali ke Materi
@@ -57,7 +57,7 @@ export default async function VocabFlashcardPage({ params }: PageProps) {
             </p>
             <p className="text-xs text-white/60 mt-3 max-w-xs mx-auto leading-relaxed">
               Pastikan Anda sudah memasukkan kosakata di database (Sanity) untuk
-              level <strong>{level.toUpperCase()}</strong>.
+              level <strong>{categoryId.toUpperCase()}</strong>.
             </p>
           </div>
         )}

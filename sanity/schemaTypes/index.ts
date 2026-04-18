@@ -1,33 +1,31 @@
 import { type SchemaTypeDefinition } from "sanity";
-import level from "./level";
+
 import quiz from "./quiz";
 import lesson from "./lesson";
-
 import callout from "./callout";
 import exampleSentence from "./exampleSentence";
-
-import kosakata from "./kosakata";
+import vocab from "./vocab";
 import verbDictionary from "./verbDictionary";
 import cheatsheet from "./cheatsheet";
 import grammarArticle from "./grammarArticle";
-import courseCategory from "./courseCategory"; // <-- 1. Import skema baru
+import courseCategory from "./courseCategory";
 import mockExam from "./mockExam";
 import examResult from "./examResult";
+import kanji from "./kanji";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
-    level,
     quiz,
     lesson,
-
     callout,
     exampleSentence,
     examResult,
-    kosakata,
+    vocab,
     verbDictionary,
     cheatsheet,
     grammarArticle,
     mockExam,
-    courseCategory, // <-- 2. Daftarkan di sini
+    courseCategory,
+    kanji,
   ],
 };

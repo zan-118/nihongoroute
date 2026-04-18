@@ -1,3 +1,9 @@
+/**
+ * LOKASI FILE: components/MockExamEngine.tsx
+ * KONSEP: Cyber-Dark Neumorphic (Visual Overhaul)
+ * CATATAN: Logika ujian, skor, dan API 100% dipertahankan.
+ */
+
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
@@ -32,6 +38,7 @@ export interface ExamData {
   title: string;
   timeLimit: number;
   passingScore: number;
+  categorySlug?: string;
   questions: ExamQuestion[];
 }
 
@@ -58,6 +65,11 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const hasSavedScore = useRef(false);
 
+  const backLink = exam.categorySlug
+    ? `/courses/${exam.categorySlug}`
+    : "/courses";
+
+  // --- LOGIKA ANTI-CHEAT ---
   useEffect(() => {
     if (gameState !== "playing") return;
     const handleVisibilityChange = () => {
@@ -77,6 +89,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
     };
   }, [gameState]);
 
+  // --- LOGIKA AUDIO ---
   useEffect(() => {
     const activeQuestion = exam.questions[currentQuestionIndex];
     if (
@@ -97,6 +110,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
     }
   }, [currentQuestionIndex, gameState, exam.questions]);
 
+  // --- LOGIKA TIMER ---
   useEffect(() => {
     if (gameState !== "playing") return;
     const timer = setInterval(() => {
@@ -110,8 +124,10 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
       });
     }, 1000);
     return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState]);
 
+  // --- LOGIKA HASIL & API ---
   useEffect(() => {
     if (gameState === "result" && !hasSavedScore.current) {
       hasSavedScore.current = true;
@@ -119,6 +135,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
       const isPassed = finalScore >= exam.passingScore;
       const guestId =
         localStorage.getItem("nihongo_guest_id") || "UNKNOWN_GUEST";
+
       const formattedSectionScores = {
         vocabulary:
           sectionBreakdown.vocabulary.total > 0
@@ -193,18 +210,13 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
 
   const finishExam = () => {
     setGameState("result");
-    if (audioRef.current) {
-      audioRef.current.pause();
-    }
+    if (audioRef.current) audioRef.current.pause();
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleAnswer = (optionIndex: number) => {
     const question = exam.questions[currentQuestionIndex];
-    setAnswers((prev) => ({
-      ...prev,
-      [question._key]: optionIndex,
-    }));
+    setAnswers((prev) => ({ ...prev, [question._key]: optionIndex }));
   };
 
   const nextQuestion = () => {
@@ -214,7 +226,6 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
     }
   };
 
-  // FUNGSI INI BERNAMA prevQuestion
   const prevQuestion = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex((prev) => prev - 1);
@@ -242,10 +253,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
       }
     });
 
-    const maxScore = 180;
-    const finalScore = Math.round(
-      (correctCount / exam.questions.length) * maxScore,
-    );
+    const finalScore = Math.round((correctCount / exam.questions.length) * 180);
     return { correctCount, finalScore, sectionBreakdown };
   };
 
@@ -255,119 +263,149 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
     return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   };
 
+  /* =========================================
+     1. TAMPILAN INTRO (Mulai Ujian)
+  ========================================= */
   if (gameState === "intro") {
     return (
-      <div className="w-full max-w-2xl mx-auto bg-cyber-surface p-8 md:p-12 rounded-[2.5rem] md:rounded-[3rem] border border-white/5 shadow-2xl text-center mt-6 md:mt-12">
-        <AlertCircle
-          size={64}
-          className="mx-auto text-amber-500 mb-6 drop-shadow-[0_0_15px_rgba(245,158,11,0.5)]"
-        />
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white uppercase italic tracking-tighter mb-6 leading-tight">
+      <div className="w-full max-w-2xl mx-auto neo-card p-8 md:p-12 text-center mt-6 md:mt-12 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-red-500/5 blur-[100px] rounded-full pointer-events-none" />
+
+        <div className="w-24 h-24 mx-auto neo-inset text-amber-500 flex items-center justify-center rounded-full mb-8 shadow-inner">
+          <AlertCircle
+            size={40}
+            className="drop-shadow-[0_0_15px_rgba(245,158,11,0.5)]"
+          />
+        </div>
+
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white uppercase italic tracking-tighter mb-8 leading-tight relative z-10">
           {exam.title}
         </h1>
-        <div className="bg-[#0a0c10]/50 p-6 rounded-2xl border border-white/5 mb-8 text-left space-y-4 shadow-inner">
-          <p className="text-[#c4cfde] flex justify-between border-b border-white/5 pb-3">
-            <span className="opacity-60 text-sm">Total Soal:</span>
-            <span className="font-bold text-white text-sm">
+
+        <div className="neo-inset p-6 md:p-8 rounded-2xl mb-8 text-left space-y-5 relative z-10">
+          <div className="flex justify-between items-center border-b border-white/5 pb-4">
+            <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500">
+              Total Soal
+            </span>
+            <span className="font-mono font-bold text-white text-sm md:text-base">
               {exam.questions.length} Butir
             </span>
-          </p>
-          <p className="text-[#c4cfde] flex justify-between border-b border-white/5 pb-3">
-            <span className="opacity-60 text-sm">Batas Waktu:</span>
-            <span className="font-bold text-amber-500 text-sm">
+          </div>
+          <div className="flex justify-between items-center border-b border-white/5 pb-4">
+            <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500">
+              Batas Waktu
+            </span>
+            <span className="font-mono font-bold text-red-400 text-sm md:text-base">
               {exam.timeLimit} Menit
             </span>
-          </p>
-          <p className="text-[#c4cfde] flex justify-between">
-            <span className="opacity-60 text-sm">Target Kelulusan:</span>
-            <span className="font-bold text-cyan-400 text-sm">
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500">
+              Target Pass
+            </span>
+            <span className="font-mono font-bold text-amber-400 text-sm md:text-base">
               {exam.passingScore} / 180
             </span>
-          </p>
+          </div>
         </div>
-        <p className="text-[10px] sm:text-xs text-white/40 mb-8 font-mono uppercase tracking-widest leading-relaxed px-2">
-          Peringatan: Jika timer habis, ujian otomatis diselesaikan. Pastikan
-          audio perangkat menyala untuk sesi Choukai (Mendengar). Seksi
-          Mendengar hanya diputar sekali dan tidak bisa diulang. Dilarang
-          meninggalkan tab selama ujian.
+
+        <p className="text-[10px] text-slate-500 mb-10 font-mono uppercase tracking-widest leading-relaxed px-2 relative z-10">
+          Seksi Mendengar (Choukai) otomatis diputar dan tidak bisa
+          dijeda/diulang. Sistem mendeteksi jika Anda meninggalkan tab
+          (Anti-Cheat aktif).
         </p>
-        <button
-          onClick={() => setGameState("playing")}
-          className="w-full bg-amber-500 hover:bg-amber-400 text-black font-black uppercase tracking-widest py-4 px-10 rounded-2xl transition-all shadow-[0_0_20px_rgba(245,158,11,0.4)] active:scale-95 text-xs sm:text-sm"
-        >
-          Mulai Ujian
-        </button>
+
+        <div className="flex flex-col sm:flex-row gap-4 relative z-10">
+          <Link
+            href={backLink}
+            className="neo-inset w-full hover:text-white text-slate-400 font-black uppercase tracking-widest py-4 px-6 flex justify-center transition-colors text-[10px] sm:text-xs"
+          >
+            ← Batal
+          </Link>
+          <button
+            onClick={() => setGameState("playing")}
+            className="w-full bg-red-500 hover:bg-white text-[#0a0c10] font-black uppercase tracking-widest py-4 px-10 rounded-xl transition-all shadow-[0_0_20px_rgba(239,68,68,0.4)] active:scale-95 text-[10px] sm:text-xs"
+          >
+            Mulai Ujian
+          </button>
+        </div>
       </div>
     );
   }
 
+  /* =========================================
+     2. TAMPILAN HASIL (Result)
+  ========================================= */
   if (gameState === "result") {
     const { correctCount, finalScore, sectionBreakdown } = calculateScore();
     const isPassed = finalScore >= exam.passingScore;
 
     return (
-      <div className="w-full max-w-3xl mx-auto bg-cyber-surface p-8 md:p-12 rounded-[2.5rem] md:rounded-[3rem] border shadow-2xl text-center relative overflow-hidden mt-6 md:mt-12">
-        {isPassed ? (
-          <div className="absolute inset-0 bg-emerald-500/5 pointer-events-none" />
-        ) : (
-          <div className="absolute inset-0 bg-red-500/5 pointer-events-none" />
-        )}
+      <div className="w-full max-w-3xl mx-auto neo-card p-8 md:p-12 text-center relative overflow-hidden mt-6 md:mt-12">
+        <div
+          className={`absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[400px] blur-[150px] rounded-full pointer-events-none ${isPassed ? "bg-emerald-500/10" : "bg-red-500/10"}`}
+        />
 
         <div className="relative z-10">
-          {isPassed ? (
-            <Trophy
-              size={80}
-              className="mx-auto text-emerald-400 mb-6 drop-shadow-[0_0_20px_rgba(52,211,153,0.6)]"
-            />
-          ) : (
-            <Skull
-              size={80}
-              className="mx-auto text-red-500 mb-6 drop-shadow-[0_0_20px_rgba(239,68,68,0.6)]"
-            />
-          )}
+          <div
+            className={`w-28 h-28 mx-auto neo-inset flex items-center justify-center rounded-full mb-8 shadow-inner ${isPassed ? "text-emerald-400" : "text-red-500"}`}
+          >
+            {isPassed ? (
+              <Trophy
+                size={48}
+                className="drop-shadow-[0_0_20px_rgba(52,211,153,0.6)]"
+              />
+            ) : (
+              <Skull
+                size={48}
+                className="drop-shadow-[0_0_20px_rgba(239,68,68,0.6)]"
+              />
+            )}
+          </div>
 
           <h1
             className={`text-4xl md:text-5xl font-black uppercase italic tracking-tighter mb-2 ${isPassed ? "text-emerald-400" : "text-red-500"}`}
           >
-            {isPassed ? "Exam Cleared!" : "Exam Failed"}
+            {isPassed ? "Exam Cleared" : "Exam Failed"}
           </h1>
-          <p className="text-white/50 font-mono uppercase tracking-widest text-[10px] md:text-sm mb-8">
+          <p className="text-slate-500 font-mono uppercase tracking-widest text-[10px] md:text-xs mb-10">
             {exam.title}
           </p>
 
-          <div className="grid grid-cols-2 gap-4 mb-8">
-            <div className="bg-[#0a0c10]/50 p-6 rounded-2xl border border-white/5 shadow-inner">
-              <p className="text-white/40 text-[9px] md:text-[10px] uppercase font-black tracking-widest mb-1 md:mb-2">
+          {/* Kotak Skor Neumorphic */}
+          <div className="grid grid-cols-2 gap-4 mb-10">
+            <div className="neo-inset p-6 md:p-8 flex flex-col items-center justify-center">
+              <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest mb-3">
                 Final Score
               </p>
               <p
-                className={`text-3xl md:text-4xl font-black ${isPassed ? "text-emerald-400" : "text-red-400"}`}
+                className={`text-4xl md:text-5xl font-black font-mono ${isPassed ? "text-emerald-400" : "text-red-500"}`}
               >
                 {finalScore}{" "}
-                <span className="text-sm md:text-lg text-white/20">/ 180</span>
+                <span className="text-lg md:text-xl text-slate-600">/ 180</span>
               </p>
             </div>
-            <div className="bg-[#0a0c10]/50 p-6 rounded-2xl border border-white/5 shadow-inner">
-              <p className="text-white/40 text-[9px] md:text-[10px] uppercase font-black tracking-widest mb-1 md:mb-2">
+            <div className="neo-inset p-6 md:p-8 flex flex-col items-center justify-center">
+              <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest mb-3">
                 Accuracy
               </p>
-              <p className="text-3xl md:text-4xl font-black text-white">
+              <p className="text-4xl md:text-5xl font-black font-mono text-white">
                 {Math.round((correctCount / exam.questions.length) * 100)}%
               </p>
             </div>
           </div>
 
-          <div className="bg-cyber-surface/50 p-6 rounded-2xl border border-white/5 mb-10 text-left">
-            <h3 className="text-xs md:text-sm font-black text-white uppercase italic tracking-widest border-b border-white/10 pb-3 mb-5 flex items-center gap-2">
-              📊 Analisis Bagian
+          {/* Breakdown Section */}
+          <div className="neo-card !bg-transparent p-6 md:p-8 border-white/5 mb-10 text-left">
+            <h3 className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest border-b border-white/5 pb-4 mb-6">
+              Analisis Sektor
             </h3>
-            <div className="space-y-5">
+            <div className="space-y-6">
               {Object.entries(sectionBreakdown).map(([sectionKey, data]) => {
                 if (data.total === 0) return null;
                 const percentage = Math.round(
                   (data.correct / data.total) * 100,
                 );
-
                 let colorClass =
                   "bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]";
                 if (percentage >= 70)
@@ -380,23 +418,23 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
                 return (
                   <div key={sectionKey}>
                     <div className="flex justify-between items-end mb-2">
-                      <span className="text-[10px] md:text-xs font-bold text-white/80 uppercase tracking-widest">
+                      <span className="text-[9px] md:text-[10px] font-black text-slate-300 uppercase tracking-widest">
                         {
                           SECTION_LABELS[
                             sectionKey as keyof typeof SECTION_LABELS
                           ]
                         }
                       </span>
-                      <span className="text-[9px] md:text-[10px] font-mono text-white/50">
+                      <span className="text-[9px] font-mono font-bold text-slate-500">
                         {data.correct}/{data.total} ({percentage}%)
                       </span>
                     </div>
-                    <div className="h-1.5 bg-[#0a0c10] rounded-full overflow-hidden border border-white/5 shadow-inner">
+                    <div className="h-2 neo-inset p-0.5">
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${percentage}%` }}
-                        transition={{ duration: 1, ease: "easeOut" }}
-                        className={`h-full ${colorClass}`}
+                        transition={{ duration: 1 }}
+                        className={`h-full rounded-full ${colorClass}`}
                       />
                     </div>
                   </div>
@@ -411,15 +449,15 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
                 setGameState("review");
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }}
-              className="w-full sm:w-auto bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-500 font-black uppercase tracking-widest py-4 px-8 rounded-xl transition-all text-xs"
+              className="w-full sm:w-auto neo-inset !border-amber-500/30 text-amber-500 hover:bg-amber-500 hover:text-black font-black uppercase tracking-widest py-4 px-8 flex justify-center items-center gap-2 transition-all text-[10px] md:text-xs"
             >
               🔍 Review Jawaban
             </button>
             <Link
-              href="/dashboard"
-              className="w-full sm:w-auto bg-white/5 hover:bg-white/10 border border-white/10 text-white font-black uppercase tracking-widest py-4 px-8 rounded-xl transition-all text-xs flex items-center justify-center"
+              href={backLink}
+              className="w-full sm:w-auto neo-inset text-slate-400 hover:text-white font-black uppercase tracking-widest py-4 px-8 flex justify-center items-center transition-all text-[10px] md:text-xs"
             >
-              Kembali ke Dashboard
+              Kembali ke Materi
             </Link>
           </div>
         </div>
@@ -427,11 +465,14 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
     );
   }
 
+  /* =========================================
+     3. TAMPILAN REVIEW (Pembahasan)
+  ========================================= */
   if (gameState === "review") {
     return (
       <div className="w-full pb-10">
-        <header className="relative z-20 flex justify-between items-center mb-8 bg-cyber-surface p-5 sm:p-6 rounded-3xl border border-white/5 shadow-xl mt-6 md:mt-10">
-          <h2 className="text-lg sm:text-xl font-black text-white uppercase italic tracking-tighter">
+        <header className="relative z-20 flex justify-between items-center mb-10 neo-card p-5 sm:p-6 mt-6 md:mt-10">
+          <h2 className="text-xl sm:text-2xl font-black text-white uppercase italic tracking-tighter">
             Exam <span className="text-amber-500">Review</span>
           </h2>
           <button
@@ -439,13 +480,13 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
               setGameState("result");
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            className="text-[10px] sm:text-xs bg-white/5 hover:bg-white/10 px-4 py-2.5 rounded-xl text-white font-bold uppercase tracking-widest transition-all border border-white/5"
+            className="text-[9px] sm:text-[10px] neo-inset hover:text-white text-slate-400 px-4 py-2.5 font-black uppercase tracking-widest transition-all"
           >
             ← Kembali
           </button>
         </header>
 
-        <div className="space-y-6 md:space-y-8">
+        <div className="space-y-8 md:space-y-12">
           {exam.questions.map((q, idx) => {
             const userAnswer = answers[q._key];
             const isCorrect = userAnswer === q.correctAnswer;
@@ -456,20 +497,18 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 key={q._key}
-                className={`p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border bg-cyber-surface shadow-xl ${
-                  isCorrect ? "border-emerald-500/20" : "border-red-500/20"
-                }`}
+                className={`neo-card p-6 md:p-8 lg:p-10 ${isCorrect ? "border-emerald-500/30" : "border-red-500/30"}`}
               >
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-6 border-b border-white/5 pb-4">
-                  <span className="text-[9px] md:text-[10px] font-mono font-black uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-lg text-white/40 w-fit">
-                    Question {idx + 1} • {SECTION_LABELS[q.section]}
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-8 border-b border-white/5 pb-6">
+                  <span className="text-[9px] font-mono font-black uppercase tracking-widest neo-inset px-3 py-1.5 text-slate-400 w-fit">
+                    Soal {idx + 1} • {SECTION_LABELS[q.section]}
                   </span>
                   {isCorrect ? (
-                    <span className="text-emerald-400 flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest bg-emerald-500/10 px-3 py-1.5 rounded-lg w-fit">
+                    <span className="text-emerald-400 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 neo-inset !border-emerald-500/20 w-fit">
                       <CheckCircle size={14} /> Benar
                     </span>
                   ) : (
-                    <span className="text-red-400 flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest bg-red-500/10 px-3 py-1.5 rounded-lg w-fit">
+                    <span className="text-red-500 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 neo-inset !border-red-500/20 w-fit">
                       <XCircle size={14} /> Salah
                     </span>
                   )}
@@ -477,69 +516,68 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
 
                 {q.questionText && (
                   <div
-                    className="text-lg md:text-xl text-white font-medium leading-relaxed mb-6 font-japanese prose-custom"
+                    className="text-lg md:text-xl text-white font-medium leading-relaxed mb-8 font-japanese prose-custom"
                     dangerouslySetInnerHTML={{ __html: q.questionText }}
                   />
                 )}
 
                 {q.imageUrl && (
-                  <div className="mb-6 rounded-2xl overflow-hidden border border-white/10 bg-[#0a0c10]">
+                  <div className="mb-8 rounded-2xl overflow-hidden neo-inset p-2">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={q.imageUrl}
                       alt="Ilustrasi Soal"
-                      className="w-full max-h-[300px] object-contain opacity-80"
+                      className="w-full max-h-[300px] object-contain opacity-90 rounded-xl"
                     />
                   </div>
                 )}
 
                 {q.audioUrl && (
-                  <div className="mb-6 p-4 rounded-xl bg-[#0a0c10]/50 border border-white/5">
-                    <p className="text-[9px] md:text-[10px] text-white/40 uppercase font-black tracking-widest mb-3 flex items-center gap-2">
-                      <Volume2 size={14} /> Audio Review
+                  <div className="mb-8 p-5 neo-inset flex flex-col gap-3">
+                    <p className="text-[9px] text-slate-500 uppercase font-black tracking-widest flex items-center gap-2">
+                      <Volume2 size={14} /> Audio Track
                     </p>
                     <audio
                       controls
-                      className="w-full h-8 outline-none opacity-80 custom-audio-player"
+                      className="w-full h-10 outline-none opacity-80"
                       src={q.audioUrl}
                     />
                   </div>
                 )}
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {q.options.map((opt, optIdx) => {
                     const isCorrectAnswer = optIdx === q.correctAnswer;
                     const isUserSelection = optIdx === userAnswer;
+                    let wrapperClass = "neo-inset opacity-50"; // Unselected
 
-                    let borderClass =
-                      "border-white/5 bg-[#0a0c10]/50 opacity-50";
                     if (isCorrectAnswer)
-                      borderClass =
-                        "border-emerald-500 bg-emerald-500/10 opacity-100 ring-1 ring-emerald-500/50";
-                    if (isUserSelection && !isCorrectAnswer)
-                      borderClass =
-                        "border-red-500 bg-red-500/10 opacity-100 ring-1 ring-red-500/50";
+                      wrapperClass =
+                        "neo-inset !border-emerald-500/50 !shadow-[inset_0_0_15px_rgba(16,185,129,0.15)] opacity-100 text-white";
+                    else if (isUserSelection)
+                      wrapperClass =
+                        "neo-inset !border-red-500/50 !shadow-[inset_0_0_15px_rgba(239,68,68,0.15)] opacity-100 text-white";
 
                     return (
                       <div
                         key={optIdx}
-                        className={`p-4 rounded-xl border flex items-start gap-3 transition-all ${borderClass}`}
+                        className={`p-5 flex items-start gap-4 transition-all ${wrapperClass}`}
                       >
-                        <span className="font-mono text-[10px] md:text-xs opacity-60 mt-0.5">
+                        <span className="font-mono font-bold text-[10px] md:text-xs opacity-50 mt-1 shrink-0">
                           {optIdx + 1}.
                         </span>
-                        <span className="text-sm md:text-base font-japanese">
+                        <span className="text-sm md:text-base font-japanese font-medium leading-snug">
                           {opt}
                         </span>
                         {isCorrectAnswer && (
                           <CheckCircle
-                            size={16}
+                            size={18}
                             className="ml-auto text-emerald-400 shrink-0 mt-0.5"
                           />
                         )}
                         {isUserSelection && !isCorrectAnswer && (
                           <XCircle
-                            size={16}
+                            size={18}
                             className="ml-auto text-red-500 shrink-0 mt-0.5"
                           />
                         )}
@@ -555,24 +593,19 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
     );
   }
 
-  /* =====================
-     LAYAR UJIAN (PLAYING)
-  ===================== */
+  /* =========================================
+     4. LAYAR UJIAN (Playing Mode)
+  ========================================= */
   const activeQuestion = exam.questions[currentQuestionIndex];
   const isTimeCritical = timeLeft < 300;
-
-  // ✨ KATUP SATU ARAH: Mencegah pengguna mundur kembali ke Listening!
   const isCurrentlyListening =
     activeQuestion.section === "listening" || !!activeQuestion.audioUrl;
-
-  // PERBAIKAN ERROR: Mengubah nama variabel agar tidak tabrakan dengan nama fungsi `prevQuestion()`
   const previousQuestionData =
     currentQuestionIndex > 0 ? exam.questions[currentQuestionIndex - 1] : null;
   const isPrevQuestionListening = previousQuestionData
     ? previousQuestionData.section === "listening" ||
       !!previousQuestionData.audioUrl
     : false;
-
   const disablePreviousButton =
     currentQuestionIndex === 0 ||
     isCurrentlyListening ||
@@ -582,40 +615,39 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
     <div className="w-full flex flex-col">
       <audio ref={audioRef} className="hidden" />
 
-      <header className="relative z-20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 md:mb-8 bg-cyber-surface p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-white/5 shadow-xl mt-2 md:mt-6">
-        <div className="flex flex-col gap-2 w-full sm:w-auto">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="bg-[#0a0c10] border border-white/5 px-3 py-1.5 rounded-lg text-white/50 font-mono text-[10px] md:text-xs font-bold shadow-inner">
+      {/* HEADER HUD (HEAD-UP DISPLAY) */}
+      <header className="relative z-20 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 neo-card p-5 sm:p-6 mt-2 md:mt-6">
+        <div className="flex flex-col gap-3 w-full md:w-auto">
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="neo-inset px-4 py-2 text-slate-400 font-mono text-[10px] md:text-xs font-black shadow-inner">
               {currentQuestionIndex + 1} / {exam.questions.length}
             </span>
-            <div className="bg-[#0a0c10] px-3 py-1.5 rounded-lg border border-white/5 shadow-inner flex items-center gap-2">
+            <div className="neo-inset px-4 py-2 flex items-center gap-2">
               {isCurrentlyListening && (
                 <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
               )}
-              <span className="text-[9px] sm:text-[10px] text-cyan-400 font-black uppercase tracking-widest">
+              <span className="text-[9px] sm:text-[10px] text-red-500 font-black uppercase tracking-widest">
                 {SECTION_LABELS[activeQuestion.section]}
               </span>
             </div>
           </div>
-
           {cheatWarnings > 0 && (
-            <span className="text-[9px] text-red-500 font-bold animate-pulse flex items-center gap-1 pl-1 mt-1">
-              <ShieldAlert size={12} /> Fraud Detection: {cheatWarnings}
+            <span className="text-[9px] text-amber-500 font-black uppercase tracking-widest animate-pulse flex items-center gap-1.5 pl-1">
+              <ShieldAlert size={14} /> Peringatan Tab Keluar: {cheatWarnings}x
             </span>
           )}
         </div>
 
-        <div className="flex items-center justify-between w-full sm:w-auto gap-4">
+        <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-4">
           <div
-            className={`flex items-center gap-2 font-mono text-2xl sm:text-3xl font-black px-4 sm:px-6 py-1.5 sm:py-2 rounded-xl bg-[#0a0c10] border shadow-inner transition-colors duration-500 ${
-              isTimeCritical
-                ? "text-red-500 border-red-500/30 animate-pulse"
-                : "text-amber-400 border-white/5"
-            }`}
+            className={`flex items-center gap-3 font-mono text-2xl sm:text-3xl font-black px-6 py-2 neo-inset transition-colors duration-500 ${isTimeCritical ? "text-red-500 !border-red-500/50 animate-pulse shadow-[inset_0_0_15px_rgba(239,68,68,0.2)]" : "text-white"}`}
           >
-            <Clock size={20} className="sm:w-6 sm:h-6" /> {formatTime(timeLeft)}
+            <Clock
+              size={20}
+              className={isTimeCritical ? "text-red-500" : "text-slate-500"}
+            />{" "}
+            {formatTime(timeLeft)}
           </div>
-
           <button
             onClick={() => {
               if (
@@ -625,13 +657,14 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
               )
                 finishExam();
             }}
-            className="text-[10px] sm:text-xs text-white/40 hover:text-red-400 font-bold uppercase tracking-widest transition-colors bg-white/5 hover:bg-white/10 px-3 py-2 rounded-lg border border-white/5"
+            className="text-[9px] sm:text-[10px] neo-inset text-slate-500 hover:text-white font-black uppercase tracking-widest px-4 py-3 transition-colors"
           >
             Akhiri
           </button>
         </div>
       </header>
 
+      {/* KOTAK SOAL UTAMA */}
       <AnimatePresence mode="wait">
         <motion.div
           key={currentQuestionIndex}
@@ -639,21 +672,20 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.2 }}
-          className="w-full bg-cyber-surface rounded-[2rem] md:rounded-[3rem] p-6 sm:p-8 md:p-12 border border-white/5 shadow-2xl flex flex-col"
+          className="w-full neo-card p-6 sm:p-8 md:p-12 flex flex-col mb-8"
         >
           {isCurrentlyListening && (
-            <div className="mb-6 md:mb-8 p-4 md:p-6 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-start sm:items-center gap-4">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-red-500 rounded-full flex items-center justify-center animate-pulse shadow-[0_0_20px_rgba(239,68,68,0.5)] shrink-0">
-                <Volume2 className="text-white w-5 h-5 sm:w-6 sm:h-6" />
+            <div className="mb-8 p-5 neo-inset !border-red-500/30 flex items-start gap-4 shadow-[inset_0_0_20px_rgba(239,68,68,0.1)]">
+              <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center animate-pulse shrink-0">
+                <Volume2 className="text-black w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs sm:text-sm text-red-300 font-black uppercase tracking-widest mb-1">
-                  Seksi Mendengar (Choukai)
+                <p className="text-[10px] md:text-xs text-red-500 font-black uppercase tracking-widest mb-1">
+                  Audio Sedang Diputar
                 </p>
-                <p className="text-[10px] sm:text-xs text-red-200/70 leading-relaxed">
-                  Audio akan diputar otomatis dan tidak dapat dijeda. Anda{" "}
-                  <strong>tidak dapat kembali</strong> ke soal sebelumnya pada
-                  seksi ini.
+                <p className="text-[9px] md:text-[10px] text-slate-400 leading-relaxed uppercase font-mono tracking-wide">
+                  Audio tidak dapat diulang. Anda tidak dapat kembali ke soal
+                  ini jika sudah dilewati.
                 </p>
               </div>
             </div>
@@ -661,37 +693,38 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
 
           {activeQuestion.questionText && (
             <div
-              className="text-lg sm:text-xl md:text-2xl text-white font-medium leading-relaxed mb-8 font-japanese prose-custom"
+              className="text-lg sm:text-xl md:text-2xl text-white font-medium leading-relaxed mb-10 font-japanese prose-custom"
               dangerouslySetInnerHTML={{ __html: activeQuestion.questionText }}
             />
           )}
 
           {activeQuestion.imageUrl && (
-            <div className="mb-8 rounded-2xl overflow-hidden border border-white/10 bg-[#0a0c10]">
+            <div className="mb-10 rounded-2xl overflow-hidden neo-inset p-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={activeQuestion.imageUrl}
                 alt="Ilustrasi Soal"
-                className="w-full max-h-[300px] md:max-h-[400px] object-contain opacity-90"
+                className="w-full max-h-[300px] md:max-h-[400px] object-contain opacity-90 rounded-xl"
               />
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mt-8">
+          {/* OPSI JAWABAN */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-auto">
             {activeQuestion.options.map((opt, idx) => {
               const isSelected = answers[activeQuestion._key] === idx;
               return (
                 <button
                   key={idx}
                   onClick={() => handleAnswer(idx)}
-                  className={`p-5 md:p-6 rounded-2xl border text-left transition-all font-medium text-base md:text-lg font-japanese group flex items-start gap-3 md:gap-4 ${
+                  className={`p-5 md:p-6 rounded-2xl text-left transition-all font-medium text-base md:text-lg font-japanese group flex items-start gap-4 ${
                     isSelected
-                      ? "bg-cyan-400/10 border-cyan-400 text-cyan-400 shadow-[inset_0_0_20px_rgba(34,211,238,0.15)]"
-                      : "bg-[#0a0c10] border-white/5 text-[#c4cfde] hover:border-cyan-400/30 hover:bg-white/5"
+                      ? "neo-inset !bg-red-500/10 !border-red-500/50 text-white shadow-[inset_0_0_20px_rgba(239,68,68,0.15)]"
+                      : "neo-inset text-slate-400 hover:text-white hover:border-white/20"
                   }`}
                 >
                   <span
-                    className={`font-mono text-[10px] md:text-xs transition-colors mt-1 shrink-0 ${isSelected ? "text-cyan-400" : "text-white/30 group-hover:text-white/50"}`}
+                    className={`font-mono text-[10px] md:text-xs font-black transition-colors mt-1 shrink-0 ${isSelected ? "text-red-500" : "text-slate-600 group-hover:text-slate-400"}`}
                   >
                     {idx + 1}.
                   </span>
@@ -703,11 +736,12 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
         </motion.div>
       </AnimatePresence>
 
-      <div className="flex flex-col sm:flex-row justify-between gap-4 mt-6 md:mt-8 pb-10">
+      {/* NAVIGASI BAWAH */}
+      <div className="flex flex-col sm:flex-row justify-between gap-4 pb-10">
         <button
           onClick={prevQuestion}
           disabled={disablePreviousButton}
-          className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 md:px-8 py-3.5 md:py-4 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:hover:bg-white/5 disabled:cursor-not-allowed rounded-xl md:rounded-2xl text-white font-black uppercase tracking-widest text-[10px] md:text-xs transition-all border border-white/5"
+          className="w-full sm:w-auto neo-inset px-6 md:px-8 py-4 text-slate-400 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed flex items-center justify-center gap-3 font-black uppercase tracking-widest text-[10px] md:text-xs transition-colors"
         >
           <ArrowLeft size={16} /> Sebelumnya
         </button>
@@ -718,14 +752,14 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
               if (confirm("Kirim jawaban sekarang? Waktu masih tersisa."))
                 finishExam();
             }}
-            className="w-full sm:w-auto px-6 md:px-8 py-3.5 md:py-4 bg-amber-500 hover:bg-amber-400 rounded-xl md:rounded-2xl text-black font-black uppercase tracking-widest text-[10px] md:text-xs transition-all shadow-[0_0_20px_rgba(245,158,11,0.4)]"
+            className="w-full sm:w-auto btn-cyber !bg-amber-500 !text-black px-6 md:px-10 py-4 flex items-center justify-center font-black uppercase tracking-widest text-[10px] md:text-xs shadow-[0_0_20px_rgba(245,158,11,0.4)]"
           >
             Kirim Ujian
           </button>
         ) : (
           <button
             onClick={nextQuestion}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 md:px-8 py-3.5 md:py-4 bg-cyan-400/10 border border-cyan-400/30 hover:bg-cyan-400 hover:text-black rounded-xl md:rounded-2xl text-cyan-400 font-black uppercase tracking-widest text-[10px] md:text-xs transition-all shadow-[0_0_15px_rgba(34,211,238,0.2)]"
+            className="w-full sm:w-auto neo-inset !border-red-500/30 text-red-500 hover:bg-red-500 hover:text-black px-6 md:px-8 py-4 flex items-center justify-center gap-3 font-black uppercase tracking-widest text-[10px] md:text-xs transition-all"
           >
             Selanjutnya <ArrowRight size={16} />
           </button>

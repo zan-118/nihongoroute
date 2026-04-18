@@ -58,16 +58,26 @@ Simulasi ujian JLPT lengkap (`components/MockExamEngine.tsx`) dengan fitur:
 
 ## 📂 Arsitektur Proyek
 
+````text
+## 📂 Arsitektur Proyek
+
 ```text
-├── app/                  # Route Pages (Dashboard, Courses, Library, Exam)
-│   ├── api/              # API Route untuk menyimpan hasil ujian ke Sanity
-│   └── (routes)/         # Struktur folder berbasis level (Basics, N5)
-├── components/           # UI Inti (Flashcards, ExamEngine, WritingCanvas, XPPop)
-├── context/              # Logic utama XP, Progres Belajar, dan SRS
-├── lib/                  # Utilitas (SRS logic, achievement system, Groq queries)
-├── public/               # Aset statis & PWA Manifest
-└── sanity/               # Definisi skema Content Lake (Mock Exam, Lessons, Verbs)
-```
+├── app/
+│   ├── api/                 # API Route (misal: menyimpan hasil ujian ke Sanity)
+│   ├── (main)/              # Main App Group (menggunakan layout utama)
+│   │   ├── courses/         # Hub Materi
+│   │   │   ├── basics/      # Materi Statis (Hiragana/Katakana)
+│   │   │   └── [categoryId]/# Rute Dinamis per Level (N5, N4, dst.)
+│   │   ├── exams/[id]/      # Mesin Ujian Simulasi Mandiri (Mock Exam)
+│   │   ├── library/         # Koleksi Cerdas (Vocab, Kanji, Grammar, Verbs)
+│   │   └── dashboard/       # Pusat Progres Belajar & SRS
+│   └── layout.tsx           # Root Layout
+├── components/              # UI Inti (Flashcards, ExamEngine, WritingCanvas)
+├── context/                 # Logic utama XP, Progres Belajar, dan SRS
+├── lib/                     # Utilitas (SRS logic, GROQ queries)
+├── public/                  # Aset statis & Logo
+└── sanity/                  # Definisi skema Content Lake terpisah (Kanji, Vocab, dll.)
+````
 
 ## ⚙️ Instalasi Lokal
 

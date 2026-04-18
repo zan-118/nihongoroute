@@ -16,12 +16,26 @@ export default function GrammarArticlesPage() {
   useEffect(() => {
     async function fetchGrammar() {
       setLoading(true);
-      const data = await client.fetch(
-        `*[_type == "grammar_article" && slug.current match $level + "*"] | order(title asc) { _id, title, "slug": slug.current }`,
-        { level: selectedLevel },
-      );
-      setArticles(data);
-      setLoading(false);
+
+      // ✨ PERBAIKAN 1: Menyiapkan dua kemungkinan format slug (n5 atau jlpt-n5)
+      const baseLevel = selectedLevel.toLowerCase();
+      const jlptLevel = `jlpt-${baseLevel}`;
+
+      // ✨ PERBAIKAN 2: Menggunakan relasi course_category agar terhubung dengan struktur baru
+      const queryStr = `*[_type == "grammar_article" && course_category->slug.current in [$baseLevel, $jlptLevel]] | order(title asc) { 
+        _id, 
+        title, 
+        "slug": slug.current 
+      }`;
+
+      try {
+        const data = await client.fetch(queryStr, { baseLevel, jlptLevel });
+        setArticles(data);
+      } catch (error) {
+        console.error("Gagal memuat tata bahasa:", error);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchGrammar();
   }, [selectedLevel]);
@@ -31,7 +45,7 @@ export default function GrammarArticlesPage() {
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative z-10">
-        <nav className="mb-12 flex flex-wrap items-center gap-2 text-[9px] md:text-xs font-black uppercase tracking-[0.2em] font-mono">
+        <nav className="mb-12 flex flex-wrap items-center gap-2 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] font-mono">
           <Link
             href="/dashboard"
             className="text-white/30 hover:text-indigo-400 transition-colors flex items-center gap-1.5 p-2 rounded-lg hover:bg-white/5"
