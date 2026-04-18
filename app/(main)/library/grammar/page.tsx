@@ -41,7 +41,7 @@ export default function GrammarArticlesPage() {
   }, [selectedLevel]);
 
   return (
-    <main className="min-h-screen bg-cyber-bg px-4 md:px-8 pt-24 pb-32 relative overflow-hidden">
+    <main className="w-full relative overflow-hidden flex flex-1 flex-col  ">
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative z-10">

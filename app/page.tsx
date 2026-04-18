@@ -19,7 +19,6 @@ import {
 } from "lucide-react";
 
 export default function LandingPage() {
-  // Variabel Animasi untuk Stagger Effect (Dilengkapi tipe 'Variants' untuk TypeScript)
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -59,14 +58,16 @@ export default function LandingPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#080a0f] text-[#c4cfde] selection:bg-cyan-400/30 overflow-x-hidden">
+    // DIUBAH: Dihapus min-h-screen agar layout tidak terpaksa tinggi, melainkan menyesuaikan isi.
+    // Padding disesuaikan dengan standar baru.
+    <main className="bg-[#080a0f] text-[#c4cfde] selection:bg-cyan-400/30 overflow-x-hidden w-full relative">
       {/* BACKGROUND AMBIENT */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[120px] animate-pulse" />
         <div className="absolute bottom-[10%] left-[-5%] w-[400px] h-[400px] bg-blue-600/5 rounded-full blur-[100px]" />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-32">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 pt-24 pb-32 md:pb-12">
         {/* HERO SECTION */}
         <section className="min-h-[75vh] flex flex-col items-center justify-center text-center mb-24">
           <motion.div
@@ -97,7 +98,7 @@ export default function LandingPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="text-slate-400 text-sm md:text-lg max-w-2xl mb-12 leading-relaxed italic"
+            className="text-slate-200 text-sm md:text-lg max-w-2xl mb-12 leading-relaxed italic"
           >
             Platform belajar mandiri gratis yang menggabungkan estetika
             futuristik dengan metode sains kognitif untuk akselerasi kemampuan
@@ -142,7 +143,8 @@ export default function LandingPage() {
               key={i}
               variants={itemVariants}
               whileHover={{ y: -10 }}
-              className="neo-card p-8 md:p-10 group relative overflow-hidden transition-all duration-300"
+              // DIUBAH: flex-col dan h-full agar grid presisi
+              className="neo-card p-8 md:p-10 group relative overflow-hidden transition-all duration-300 flex flex-col h-full"
             >
               <div className="absolute top-0 right-0 p-8 opacity-[0.02] text-7xl font-black italic pointer-events-none group-hover:opacity-[0.05] transition-opacity">
                 0{i + 1}
@@ -155,7 +157,8 @@ export default function LandingPage() {
               >
                 {feature.title}
               </h3>
-              <p className="text-slate-500 text-xs md:text-sm leading-relaxed">
+              {/* DIUBAH: flex-1 pada deskripsi untuk mendorong konten lain (jika ada) ke bawah, menjaga kesejajaran */}
+              <p className="text-slate-300 text-xs md:text-sm leading-relaxed flex-1">
                 {feature.desc}
               </p>
             </motion.div>
@@ -177,7 +180,7 @@ export default function LandingPage() {
               <h4 className="text-white font-black uppercase italic text-xl">
                 100% Gratis & Open Source
               </h4>
-              <p className="text-slate-500 text-xs mt-1">
+              <p className="text-slate-300 text-xs mt-1">
                 Dikembangkan dengan dedikasi untuk komunitas pembelajar bahasa
                 Jepang.
               </p>
@@ -211,7 +214,7 @@ export default function LandingPage() {
               </span>
             </div>
           </div>
-          <div className="flex gap-6 text-[10px] font-black uppercase tracking-widest text-slate-500">
+          <div className="flex gap-6 text-[10px] font-black uppercase tracking-widest text-slate-300">
             <Link
               href="/library"
               className="hover:text-cyan-400 transition-colors"

@@ -29,7 +29,7 @@ export default function PdfGenerator({
 
   if (!isClient || !data || (Array.isArray(data) && data.length === 0)) {
     return (
-      <button className="bg-[#0a0c10] border border-white/5 shadow-[inset_3px_3px_8px_#050608,inset_-2px_-2px_6px_rgba(255,255,255,0.02)] px-6 py-3 rounded-xl text-slate-500 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 w-full sm:w-auto cursor-not-allowed">
+      <button className="bg-[#0a0c10] border border-white/5 shadow-[inset_3px_3px_8px_#050608,inset_-2px_-2px_6px_rgba(255,255,255,0.02)] px-6 py-3 rounded-xl text-slate-300 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 w-full sm:w-auto cursor-not-allowed">
         Menunggu Data...
       </button>
     );

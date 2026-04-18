@@ -15,17 +15,14 @@ export default function DailyReviewPage() {
   const [isFetching, setIsFetching] = useState(true);
   const [isFinished, setIsFinished] = useState(false);
 
-  // Mencegah fetch berulang kali
   const hasFetched = useRef(false);
 
   useEffect(() => {
-    // Tunggu sampai context selesai dimuat
     if (loading || hasFetched.current) return;
 
     const fetchDueCards = async () => {
       try {
         const now = Date.now();
-        // Filter kartu yang waktunya direview (nextReview <= waktu saat ini)
         const dueItemIds = Object.entries(progress.srs)
           .filter(([_, state]) => state.nextReview <= now)
           .map(([id]) => id);
@@ -36,7 +33,6 @@ export default function DailyReviewPage() {
           return;
         }
 
-        // Ambil data detail kata dari Sanity berdasarkan ID yang waktunya due
         const query = `*[_id in $ids] {
           _id,
           "word": coalesce(jisho, word),
@@ -48,8 +44,6 @@ export default function DailyReviewPage() {
         }`;
 
         const data = await client.fetch(query, { ids: dueItemIds });
-
-        // Acak urutan kartu agar tidak monoton
         const shuffled = data.sort(() => Math.random() - 0.5);
         setDueCards(shuffled);
         hasFetched.current = true;
@@ -63,23 +57,22 @@ export default function DailyReviewPage() {
     fetchDueCards();
   }, [loading, progress.srs]);
 
-  // Tampilan 1: Sedang Memuat (Loading)
   if (loading || isFetching) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center bg-cyber-bg px-4">
+      // DIUBAH: div biasa, memanfaatkan space-y-4 dari flex.
+      <div className="flex-1 flex flex-col items-center justify-center px-4">
         <RotateCw className="text-cyan-400 animate-spin mb-4" size={40} />
         <p className="text-white/50 font-mono uppercase tracking-widest text-sm animate-pulse">
           Sinkronisasi Memori...
         </p>
-      </main>
+      </div>
     );
   }
 
-  // Tampilan 2: Tidak ada hafalan hari ini
   if (dueCards.length === 0 && !isFinished) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center bg-cyber-bg px-4">
-        <div className="bg-cyber-surface p-12 rounded-[3rem] border border-white/5 shadow-2xl text-center max-w-md relative overflow-hidden">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 w-full">
+        <div className="bg-cyber-surface p-12 rounded-[3rem] border border-white/5 shadow-2xl text-center max-w-md w-full relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cyan-900/20 via-transparent to-transparent pointer-events-none" />
 
           <BrainCircuit
@@ -100,19 +93,17 @@ export default function DailyReviewPage() {
             Lihat Materi
           </Link>
         </div>
-      </main>
+      </div>
     );
   }
 
-  // Tampilan 3: Sesi Selesai (Completion Screen khusus Review Page)
-  // Catatan: FlashcardMaster juga punya completion screen, tapi karena di halaman utama kita ingin desain penuh, kita akan menangkap momen kartunya habis.
   if (isFinished || dueCards.length === 0) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center bg-cyber-bg px-4">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 w-full">
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="bg-cyber-surface p-12 rounded-[3rem] border border-emerald-500/30 shadow-[0_0_40px_rgba(16,185,129,0.2)] text-center max-w-md relative overflow-hidden"
+          className="bg-cyber-surface p-12 rounded-[3rem] border border-emerald-500/30 shadow-[0_0_40px_rgba(16,185,129,0.2)] text-center max-w-md w-full relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-emerald-500/5 pointer-events-none" />
           <Trophy
@@ -132,17 +123,17 @@ export default function DailyReviewPage() {
             Kembali ke Area Belajar
           </Link>
         </motion.div>
-      </main>
+      </div>
     );
   }
 
-  // Tampilan 4: Mulai Sesi Review menggunakan FlashcardMaster
   return (
-    <main className="min-h-screen pt-24 pb-16 px-4 md:px-8 bg-cyber-bg flex flex-col items-center relative overflow-hidden">
+    // DIUBAH: pt-24 dihilangkan. Menggunakan flex-1 untuk memastikan layar penuh.
+    <div className="flex-1 w-full px-4 md:px-8 relative overflow-hidden flex flex-col items-center">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/10 via-cyber-bg to-cyber-bg pointer-events-none z-0" />
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none z-0" />
 
-      <div className="relative z-10 w-full max-w-2xl">
+      <div className="relative z-10 w-full max-w-2xl mt-4 sm:mt-8">
         <header className="flex justify-between items-center mb-8 border-b border-white/5 pb-6">
           <Link
             href="/dashboard"
@@ -157,15 +148,12 @@ export default function DailyReviewPage() {
           </div>
         </header>
 
-        {/* MENGGUNAKAN FLASHCARD MASTER! */}
-        {/* Kita melempar properti key agar komponen me-reset dirinya jika datanya berubah */}
         <FlashcardMaster
           key={dueCards[0]?._id}
           cards={dueCards}
-          // Paksa tipe menjadi 'kanji' jika kartu pertama kategori 'kanji' agar warnanya seragam (ungu/cyan)
           type={dueCards[0]?.category === "kanji" ? "kanji" : "vocab"}
         />
       </div>
-    </main>
+    </div>
   );
 }

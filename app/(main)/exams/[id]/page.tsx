@@ -17,19 +17,12 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
   const { id } = await params;
 
   const query = `*[_type == "mockExam" && _id == $id][0] {
-    _id, 
-    title, 
-    timeLimit, 
-    passingScore,
+    _id, title, timeLimit, passingScore,
     "categorySlug": course_category->slug.current, 
     questions[] {
-      _key, 
-      section, 
-      questionText,
-      "imageUrl": image.asset->url,
-      "audioUrl": audio.asset->url,
-      options, 
-      correctAnswer
+      _key, section, questionText,
+      "imageUrl": image.asset->url, "audioUrl": audio.asset->url,
+      options, correctAnswer
     }
   }`;
 
@@ -38,47 +31,46 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
     ? `/courses/${examData.categorySlug}`
     : "/courses";
 
-  // 1. HANDLING: DATA TIDAK DITEMUKAN (Neumorphic Style)
+  // 1. HANDLING: DATA TIDAK DITEMUKAN
   if (!examData) {
     return (
-      <main className="w-full min-h-screen flex flex-col items-center justify-center bg-[#080a0f] px-6 text-center pt-24 pb-32 relative overflow-hidden">
+      // DIUBAH: Menggunakan flex-1 dan my-auto agar terpusat secara vertikal di ruang yang tersisa
+      <div className="w-full flex-1 flex flex-col items-center justify-center px-6 text-center relative overflow-hidden py-12">
         <div className="absolute top-0 right-1/4 w-[400px] h-[400px] bg-red-500/5 blur-[120px] rounded-full pointer-events-none" />
-
-        <div className="neo-card p-10 md:p-14 border-red-500/20 max-w-lg w-full relative z-10">
+        <div className="neo-card p-10 md:p-14 border-red-500/20 max-w-lg w-full relative z-10 my-auto">
           <div className="w-20 h-20 mx-auto neo-inset text-red-500 flex items-center justify-center rounded-full mb-8 shadow-inner">
             <span className="text-4xl block">🚫</span>
           </div>
           <h1 className="text-2xl md:text-3xl font-black text-white uppercase italic tracking-tighter mb-4">
             Ujian Tidak Ditemukan
           </h1>
-          <p className="text-slate-500 mb-10 text-sm leading-relaxed">
+          <p className="text-slate-300 mb-10 text-sm leading-relaxed">
             Data ujian ini tidak ditemukan atau sudah dihapus dari sistem.
           </p>
           <Link
             href={backLink}
-            className="inline-block bg-[#0a0c10] border border-white/5 shadow-[inset_2px_2px_8px_#050608,inset_-2px_-2px_8px_rgba(255,255,255,0.02)] hover:border-white/20 text-slate-400 hover:text-white font-black uppercase tracking-widest py-4 px-8 rounded-xl text-[10px] transition-all"
+            className="inline-block bg-[#0a0c10] border border-white/5 shadow-[inset_2px_2px_8px_#050608,inset_-2px_-2px_8px_rgba(255,255,255,0.02)] hover:border-white/20 text-slate-200 hover:text-white font-black uppercase tracking-widest py-4 px-8 rounded-xl text-[10px] transition-all"
           >
             ← Kembali ke Menu
           </Link>
         </div>
-      </main>
+      </div>
     );
   }
 
-  // 2. HANDLING: SOAL MASIH KOSONG (Neumorphic Style)
+  // 2. HANDLING: SOAL MASIH KOSONG
   if (!examData.questions || examData.questions.length === 0) {
     return (
-      <main className="w-full min-h-screen flex flex-col items-center justify-center bg-[#080a0f] px-6 text-center pt-24 pb-32 relative overflow-hidden">
+      <div className="w-full flex-1 flex flex-col items-center justify-center px-6 text-center relative overflow-hidden py-12">
         <div className="absolute top-0 left-1/4 w-[400px] h-[400px] bg-amber-500/5 blur-[120px] rounded-full pointer-events-none" />
-
-        <div className="neo-card p-10 md:p-14 border-amber-500/20 max-w-lg w-full relative z-10">
+        <div className="neo-card p-10 md:p-14 border-amber-500/20 max-w-lg w-full relative z-10 my-auto">
           <div className="w-20 h-20 mx-auto neo-inset text-amber-500 flex items-center justify-center rounded-full mb-8 shadow-inner">
             <span className="text-4xl block">🚧</span>
           </div>
           <h1 className="text-2xl md:text-3xl font-black text-white uppercase italic tracking-tighter mb-4">
             Sedang Dalam Pembuatan
           </h1>
-          <p className="text-slate-500 mb-10 text-sm leading-relaxed">
+          <p className="text-slate-300 mb-10 text-sm leading-relaxed">
             Paket ujian{" "}
             <strong className="text-amber-400">{examData.title}</strong> belum
             memiliki butir soal di database.
@@ -90,21 +82,19 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
             ← Kembali ke Menu
           </Link>
         </div>
-      </main>
+      </div>
     );
   }
 
   // 3. RENDER MOCK EXAM ENGINE
   return (
-    <main className="min-h-screen w-full bg-[#080a0f] pt-24 md:pt-32 pb-32 px-4 md:px-8 relative overflow-hidden">
-      {/* Background Ambient Red untuk kesan "Ujian/Urgensi" */}
+    // DIUBAH: Dihapus min-h-screen, pt-24 md:pt-32 pb-32. Memakai flex-1 agar engine menyesuaikan wadah.
+    <div className="w-full flex-1 px-4 md:px-8 relative overflow-hidden flex flex-col mt-4 md:mt-8">
       <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-red-500/5 blur-[150px] rounded-full pointer-events-none" />
       <div className="absolute bottom-[10%] left-[-5%] w-[500px] h-[500px] bg-amber-500/5 blur-[120px] rounded-full pointer-events-none" />
-
-      <div className="w-full max-w-5xl mx-auto relative z-10">
-        {/* Komponen Mesin Ujian Asli Anda */}
+      <div className="w-full max-w-5xl mx-auto relative z-10 flex-1 flex flex-col">
         <MockExamEngine exam={examData} />
       </div>
-    </main>
+    </div>
   );
 }

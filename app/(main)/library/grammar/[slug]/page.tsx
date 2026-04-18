@@ -5,9 +5,7 @@ import { notFound } from "next/navigation";
 import { ChevronLeft, Home, Layers, BookOpen } from "lucide-react";
 import TTSReader from "@/components/TTSReader";
 
-const articleQuery = `*[_type == "grammar_article" && slug.current == $slug][0] {
-  title, content
-}`;
+const articleQuery = `*[_type == "grammar_article" && slug.current == $slug][0] { title, content }`;
 
 const ptComponents = {
   types: {
@@ -48,15 +46,14 @@ export default async function GrammarDetailPage({
 }) {
   const { slug } = await params;
   const article = await client.fetch(articleQuery, { slug });
-
   if (!article) notFound();
 
   return (
-    <main className="min-h-screen bg-cyber-bg text-[#c4cfde] px-4 py-20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-900/10 via-cyber-bg to-cyber-bg pointer-events-none" />
+    // DIUBAH: py-20 diganti menjadi w-full px-4 md:px-8
+    <div className="w-full text-[#c4cfde] px-4 md:px-8 relative overflow-hidden flex flex-col flex-1 mt-4 md:mt-8">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-900/10 via-transparent to-transparent pointer-events-none" />
 
-      <article className="max-w-3xl mx-auto relative z-10">
-        {/* BREADCRUMB */}
+      <article className="max-w-3xl mx-auto w-full relative z-10 flex-1">
         <nav className="mb-12 flex flex-wrap items-center gap-2 text-[9px] md:text-xs font-black uppercase tracking-[0.2em] font-mono">
           <Link
             href="/dashboard"
@@ -91,11 +88,11 @@ export default async function GrammarDetailPage({
           <div className="h-1 w-24 bg-indigo-500 mt-6 rounded-full shadow-[0_0_15px_rgba(99,102,241,0.8)]" />
         </header>
 
-        <div className="prose prose-invert max-w-none">
+        <div className="prose prose-invert max-w-none mb-12">
           <PortableText value={article.content} components={ptComponents} />
         </div>
 
-        <footer className="mt-20 pt-8 border-t border-white/5 text-center flex flex-col items-center gap-4">
+        <footer className="mt-auto pt-8 border-t border-white/5 text-center flex flex-col items-center gap-4">
           <Link
             href="/library/grammar"
             className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] bg-white/5 hover:bg-white/10 px-6 py-3 rounded-xl text-white transition-all"
@@ -104,6 +101,6 @@ export default async function GrammarDetailPage({
           </Link>
         </footer>
       </article>
-    </main>
+    </div>
   );
 }

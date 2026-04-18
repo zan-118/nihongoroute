@@ -37,7 +37,6 @@ function ShareContent() {
     const rawData = searchParams.get("data");
     if (rawData) {
       try {
-        // Decode Base64 ke String, lalu parse ke JSON
         const decodedData = JSON.parse(decodeURIComponent(atob(rawData)));
         setData(decodedData);
       } catch (err) {
@@ -51,13 +50,13 @@ function ShareContent() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#080a0f] flex flex-col items-center justify-center p-6 text-center">
+      <div className="w-full  bg-[#080a0f] flex flex-col items-center justify-center p-6 text-center">
         <div className="neo-card p-10 border-red-500/20">
           <XCircle size={60} className="text-red-500 mx-auto mb-6" />
           <h1 className="text-2xl font-black text-white uppercase italic mb-4">
             Link Tidak Valid
           </h1>
-          <p className="text-slate-500 text-sm mb-8">
+          <p className="text-slate-300 text-sm mb-8">
             Data hasil ujian rusak atau link tidak lengkap.
           </p>
           <Link href="/" className="btn-cyber block">
@@ -68,11 +67,11 @@ function ShareContent() {
     );
   }
 
-  if (!data) return null; // Loading state bisa ditambahkan di sini
+  if (!data) return null;
 
   return (
-    <main className="min-h-screen bg-[#080a0f] py-20 px-4 relative overflow-hidden">
-      {/* Dekorasi Background agar mirip Dashboard */}
+    // DIUBAH: Dihilangkan min-h-screen dan diganti menjadi w-full, menghapus padding atas (py-20 menjadi py-12)
+    <div className="w-full py-12 px-4 relative overflow-hidden flex flex-col items-center justify-center min-h-[70vh]">
       <div
         className={`absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] blur-[150px] rounded-full pointer-events-none ${data.passed ? "bg-emerald-500/10" : "bg-red-500/10"}`}
       />
@@ -80,7 +79,7 @@ function ShareContent() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-2xl mx-auto relative z-10"
+        className="w-full max-w-2xl mx-auto relative z-10"
       >
         <div className="neo-card p-8 md:p-12 text-center border-white/5 shadow-neumorphic">
           <div
@@ -100,7 +99,7 @@ function ShareContent() {
 
           <div className="neo-inset p-6 rounded-2xl mb-10 text-left">
             <div className="flex justify-between items-center border-b border-white/5 pb-4 mb-4">
-              <span className="text-xs font-black uppercase text-slate-500">
+              <span className="text-xs font-black uppercase text-slate-300">
                 Peserta
               </span>
               <span className="font-mono font-bold text-white uppercase tracking-widest">
@@ -108,7 +107,7 @@ function ShareContent() {
               </span>
             </div>
             <div className="flex justify-between items-center border-b border-white/5 pb-4 mb-4">
-              <span className="text-xs font-black uppercase text-slate-500">
+              <span className="text-xs font-black uppercase text-slate-300">
                 Materi
               </span>
               <span className="text-white font-bold italic">
@@ -116,7 +115,7 @@ function ShareContent() {
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-xs font-black uppercase text-slate-500">
+              <span className="text-xs font-black uppercase text-slate-300">
                 Skor Akhir
               </span>
               <span
@@ -128,14 +127,13 @@ function ShareContent() {
             </div>
           </div>
 
-          {/* Breakdown Per Bagian */}
           <div className="grid grid-cols-2 gap-4 mb-10">
             {Object.entries(data.sectionScores).map(([key, score]) => (
               <div
                 key={key}
                 className="bg-[#080a0f] border border-white/5 rounded-xl p-4"
               >
-                <p className="text-[9px] font-mono text-slate-500 uppercase font-bold tracking-widest mb-1">
+                <p className="text-[9px] font-mono text-slate-300 uppercase font-bold tracking-widest mb-1">
                   {key}
                 </p>
                 <p className="text-xl font-black italic text-white">{score}%</p>
@@ -146,7 +144,7 @@ function ShareContent() {
           <div className="flex flex-col sm:flex-row gap-4">
             <Link
               href="/"
-              className="neo-inset flex-1 py-4 flex items-center justify-center gap-2 text-slate-400 hover:text-white transition-colors uppercase text-[10px] font-black tracking-widest"
+              className="neo-inset flex-1 py-4 flex items-center justify-center gap-2 text-slate-200 hover:text-white transition-colors uppercase text-[10px] font-black tracking-widest"
             >
               <Home size={16} /> Coba Ujian Sendiri
             </Link>
@@ -161,7 +159,7 @@ function ShareContent() {
           </div>
         </div>
       </motion.div>
-    </main>
+    </div>
   );
 }
 

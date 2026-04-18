@@ -16,7 +16,7 @@ export default function SupportPage() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-cyber-bg text-[#c4cfde] selection:bg-cyan-400/30 flex flex-col overflow-x-hidden">
+    <div className="w-full flex-1  selection:bg-cyan-400/30 flex flex-col overflow-x-hidden">
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-[-10%] right-[-5%] w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-cyan-400/5 rounded-full blur-[80px] sm:blur-[120px]" />
         <div className="absolute bottom-[-10%] left-[-5%] w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] bg-blue-600/5 rounded-full blur-[60px] sm:blur-[100px]" />
@@ -66,7 +66,6 @@ export default function SupportPage() {
             <div className="absolute inset-0 bg-red-500 blur-xl opacity-20" />
           </motion.div>
 
-          {/* PERBAIKAN: tracking-tight dan leading-tight */}
           <motion.h1
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -148,7 +147,8 @@ export default function SupportPage() {
           </div>
         </section>
 
-        <footer className="mt-16 sm:mt-24 text-center pb-8 sm:pb-12">
+        {/* DIUBAH: Menambahkan margin-bottom ekstra agar tidak terhalang MobileNav */}
+        <footer className="mt-16 sm:mt-24 mb-20 text-center pb-8 sm:pb-12">
           <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.5em] text-cyan-400/50 mb-3 sm:mb-4 bg-cyan-400/5 w-max mx-auto px-4 py-1.5 rounded-full border border-cyan-400/10">
             Kontribusi Langsung
           </p>
@@ -162,6 +162,7 @@ export default function SupportPage() {
   );
 }
 
+// ... komponen DonationCard dan StatItem tetap sama
 function DonationCard({
   href,
   title,

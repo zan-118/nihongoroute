@@ -155,7 +155,7 @@ export default function WritingCanvas({ character }: WritingCanvasProps) {
           className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all ${
             showGuide
               ? "bg-cyan-400/10 text-cyan-400 border border-cyan-400/30"
-              : "bg-transparent text-slate-400 border border-transparent hover:bg-white/5"
+              : "bg-transparent text-slate-200 border border-transparent hover:bg-white/5"
           }`}
         >
           {showGuide ? <Eye size={16} /> : <EyeOff size={16} />}

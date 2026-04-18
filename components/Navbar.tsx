@@ -53,7 +53,7 @@ export default function Navbar() {
                   className={
                     isActive
                       ? "text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.6)]"
-                      : "text-slate-500 hover:text-white transition-colors"
+                      : "text-slate-300 hover:text-white transition-colors"
                   }
                 >
                   {link.label}

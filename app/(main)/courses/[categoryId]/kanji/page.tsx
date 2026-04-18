@@ -8,24 +8,17 @@ interface PageProps {
 
 export default async function KanjiFlashcardPage({ params }: PageProps) {
   const { categoryId } = await params;
-
   const kanjiQuery = `*[_type == "kanji" && showInFlashcard != false && course_category->slug.current == $categoryId] {
-    _id, 
-    "word": character, 
-    meaning, 
-    onyomi, 
-    kunyomi,
-    examples
+    _id, "word": character, meaning, onyomi, kunyomi, examples
   }`;
-
   const cards = await client.fetch(kanjiQuery, { categoryId });
 
   return (
-    <main className="min-h-screen px-4 py-20 md:py-24 bg-cyber-bg relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/20 via-cyber-bg to-cyber-bg pointer-events-none" />
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none z-0" />
+    // DIUBAH: Penghapusan py-20, memakai w-full dan layout flex-1
+    <div className="w-full px-4 md:px-8 relative overflow-hidden flex flex-col flex-1 mt-4 md:mt-8">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent pointer-events-none" />
 
-      <div className="max-w-xl mx-auto relative z-10">
+      <div className="max-w-xl mx-auto w-full relative z-10 flex-1 flex flex-col">
         <nav className="mb-6 md:mb-8 italic">
           <Link
             href={`/courses/${categoryId}`}
@@ -64,6 +57,6 @@ export default async function KanjiFlashcardPage({ params }: PageProps) {
           </div>
         )}
       </div>
-    </main>
+    </div>
   );
 }

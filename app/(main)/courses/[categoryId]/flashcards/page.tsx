@@ -8,24 +8,19 @@ interface PageProps {
 
 export default async function VocabFlashcardPage({ params }: PageProps) {
   const { categoryId } = await params;
-
   const query = `{
-    "vocab": *[_type == "vocab" && showInFlashcard != false && course_category->slug.current == $categoryId] {
-      _id, word, meaning, romaji, furigana
-    },
-    "verbs": *[_type == "verb_dictionary" && showInFlashcard != false && course_category->slug.current == $categoryId] {
-      _id, "word": jisho, meaning, romaji, furigana
-    }
+    "vocab": *[_type == "vocab" && showInFlashcard != false && course_category->slug.current == $categoryId] { _id, word, meaning, romaji, furigana },
+    "verbs": *[_type == "verb_dictionary" && showInFlashcard != false && course_category->slug.current == $categoryId] { _id, "word": jisho, meaning, romaji, furigana }
   }`;
-
   const data = await client.fetch(query, { categoryId });
   const cards = [...(data.vocab || []), ...(data.verbs || [])];
 
   return (
-    <main className="min-h-screen px-4 py-20 md:py-24 bg-cyber-bg relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/10 via-cyber-bg to-cyber-bg pointer-events-none" />
+    // DIUBAH: min-h-screen dan py-20 diganti w-full flex-1
+    <div className="w-full px-4 md:px-8 relative overflow-hidden flex flex-col flex-1 mt-4 md:mt-8">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/10 via-transparent to-transparent pointer-events-none" />
 
-      <div className="max-w-xl mx-auto relative z-10">
+      <div className="max-w-xl mx-auto w-full relative z-10 flex-1 flex flex-col">
         <nav className="mb-6 md:mb-8 italic">
           <Link
             href={`/courses/${categoryId}`}
@@ -62,6 +57,6 @@ export default async function VocabFlashcardPage({ params }: PageProps) {
           </div>
         )}
       </div>
-    </main>
+    </div>
   );
 }

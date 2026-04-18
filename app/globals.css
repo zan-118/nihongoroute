@@ -18,7 +18,7 @@
     @apply text-xl md:text-2xl font-bold text-white;
   }
   p {
-    @apply leading-relaxed text-slate-400;
+    @apply leading-relaxed text-slate-200;
   }
 }
 

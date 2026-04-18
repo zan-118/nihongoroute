@@ -27,19 +27,16 @@ export default function VocabClient() {
   const [hinshi, setHinshi] = useState("all");
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-
   const [vocabList, setVocabList] = useState<any[]>([]);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
-  // Debounce untuk Search agar tidak spam request ke Sanity
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(search), 500);
     return () => clearTimeout(timer);
   }, [search]);
 
-  // Reset pagination saat filter berubah
   useEffect(() => {
     setVocabList([]);
     setPage(0);
@@ -51,31 +48,19 @@ export default function VocabClient() {
   const fetchData = async (currentPage: number, isReset = false) => {
     if (loading) return;
     setLoading(true);
-
     const start = currentPage * ITEMS_PER_PAGE;
     const end = start + ITEMS_PER_PAGE;
-
-    // Kita sediakan 2 variasi slug agar pasti cocok (misal: "n5" atau "jlpt-n5")
     const baseLevel = level.toLowerCase();
     const jlptLevel = `jlpt-${baseLevel}`;
 
-    // 1. Bangun query dasar
     let queryStr = `*[_type == "vocab" && course_category->slug.current in [$baseLevel, $jlptLevel]`;
-
-    // 2. Tambahkan filter pencarian HANYA jika ada teks yang diketik
     if (debouncedSearch.trim() !== "") {
       queryStr += ` && (word match $search + "*" || romaji match $search + "*" || meaning match $search + "*")`;
     }
-
-    // 3. Tambahkan filter golongan kata HANYA jika bukan "Semua"
     if (hinshi !== "all") {
       queryStr += ` && hinshi == $hinshi`;
     }
-
-    // 4. Tutup query, urutkan, dan ambil sesuai halaman (pagination)
-    queryStr += `] | order(romaji asc) [$start...$end] {
-      _id, word, furigana, romaji, meaning, hinshi
-    }`;
+    queryStr += `] | order(romaji asc) [$start...$end] { _id, word, furigana, romaji, meaning, hinshi }`;
 
     try {
       const data = await client.fetch(queryStr, {
@@ -86,7 +71,6 @@ export default function VocabClient() {
         start,
         end,
       });
-
       if (data.length < ITEMS_PER_PAGE) setHasMore(false);
       setVocabList((prev) => (isReset ? data : [...prev, ...data]));
     } catch (error) {
@@ -96,7 +80,6 @@ export default function VocabClient() {
     }
   };
 
-  // 🔥 FUNGSI INI YANG TADI TERHAPUS 🔥
   const loadMore = () => {
     const nextPage = page + 1;
     setPage(nextPage);
@@ -104,8 +87,8 @@ export default function VocabClient() {
   };
 
   return (
-    <section className="w-full flex flex-col mt-2 md:mt-4">
-      {/* BREADCRUMB */}
+    // DIUBAH: Section diberi w-full dan padding agar tidak melebar melewati batas saat di mobile
+    <div className="w-full px-4 md:px-8 flex flex-col flex-1 mt-4 md:mt-8">
       <nav className="mb-6 flex flex-wrap items-center gap-2 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] font-mono">
         <Link
           href="/dashboard"
@@ -135,41 +118,33 @@ export default function VocabClient() {
         </h1>
       </header>
 
-      {/* FILTER & SEARCH CONTAINER */}
       <div className="flex flex-col gap-4 mb-8 bg-cyber-surface p-4 md:p-6 rounded-[2rem] border border-white/5 shadow-inner">
-        {/* Search Bar */}
         <div className="relative w-full">
           <Search
-            className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500"
+            className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300"
             size={18}
           />
           <input
             type="text"
-            placeholder="Cari kanji, romaji, atau arti bahasa Indonesia..."
+            placeholder="Cari kanji, romaji, atau arti..."
             className="w-full pl-12 pr-6 py-4 bg-[#0a0c10] border border-white/5 rounded-xl focus:border-rose-400 focus:ring-1 focus:ring-rose-400 outline-none text-sm text-white transition-all shadow-inner font-medium placeholder:text-white/30"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
 
-        {/* Level & Hinshi Controls */}
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex bg-[#0a0c10] border border-white/5 rounded-xl overflow-hidden shadow-inner">
             {LEVELS.map((l) => (
               <button
                 key={l}
                 onClick={() => setLevel(l)}
-                className={`flex-1 px-4 py-3 text-[10px] font-black uppercase tracking-widest transition-colors ${
-                  level === l
-                    ? "bg-rose-400 text-black shadow-[0_0_15px_rgba(244,63,94,0.3)]"
-                    : "text-slate-400 hover:bg-white/5 hover:text-white"
-                }`}
+                className={`flex-1 px-4 py-3 text-[10px] font-black uppercase tracking-widest transition-colors ${level === l ? "bg-rose-400 text-black shadow-[0_0_15px_rgba(244,63,94,0.3)]" : "text-slate-200 hover:bg-white/5 hover:text-white"}`}
               >
                 {l}
               </button>
             ))}
           </div>
-
           <select
             value={hinshi}
             onChange={(e) => setHinshi(e.target.value)}
@@ -188,18 +163,18 @@ export default function VocabClient() {
         <PdfGenerator data={vocabList} type="vocab" level={level} />
       </div>
 
-      {/* DATA GRID */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <AnimatePresence>
           {vocabList.map((vocab) => (
+            // DIUBAH: h-full ditambahkan untuk presisi grid
             <motion.article
               key={vocab._id}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-cyber-surface border border-white/5 hover:border-rose-400/30 rounded-2xl p-5 shadow-[6px_6px_15px_rgba(0,0,0,0.4)] hover:shadow-[0_0_20px_rgba(244,63,94,0.1)] transition-all group flex flex-col"
+              className="bg-cyber-surface border border-white/5 hover:border-rose-400/30 rounded-2xl p-5 shadow-[6px_6px_15px_rgba(0,0,0,0.4)] hover:shadow-[0_0_20px_rgba(244,63,94,0.1)] transition-all group flex flex-col h-full"
             >
               <div className="flex justify-between items-start mb-4">
-                <span className="px-2.5 py-1 text-[8px] font-black uppercase tracking-widest rounded-md bg-white/5 text-slate-400 border border-white/10">
+                <span className="px-2.5 py-1 text-[8px] font-black uppercase tracking-widest rounded-md bg-white/5 text-slate-200 border border-white/10">
                   {vocab.hinshi || "Vocab"}
                 </span>
                 <TTSReader text={vocab.word} minimal={true} />
@@ -212,11 +187,12 @@ export default function VocabClient() {
                     {vocab.furigana}
                   </rt>
                 </ruby>
-                <p className="text-xs font-mono text-slate-500 uppercase tracking-tighter mt-2">
+                <p className="text-xs font-mono text-slate-300 uppercase tracking-tighter mt-2">
                   {vocab.romaji}
                 </p>
               </div>
 
+              {/* DIUBAH: mt-auto menempatkan arti selalu di bawah walau panjang romaji beda */}
               <p className="mt-auto pt-4 border-t border-white/5 text-sm font-semibold text-[#c4cfde]">
                 {vocab.meaning}
               </p>
@@ -225,7 +201,6 @@ export default function VocabClient() {
         </AnimatePresence>
       </div>
 
-      {/* LOADER & LOAD MORE BUTTON */}
       <div className="mt-10 flex justify-center w-full">
         {loading ? (
           <div className="flex items-center gap-2 text-rose-400 text-sm font-bold uppercase tracking-widest animate-pulse">
@@ -240,12 +215,12 @@ export default function VocabClient() {
           </button>
         ) : vocabList.length === 0 && !loading ? (
           <div className="py-10 text-center w-full border border-dashed border-white/10 rounded-3xl">
-            <p className="text-slate-500 font-mono text-sm uppercase tracking-widest">
+            <p className="text-slate-300 font-mono text-sm uppercase tracking-widest">
               Tidak ada kata yang cocok.
             </p>
           </div>
         ) : null}
       </div>
-    </section>
+    </div>
   );
 }

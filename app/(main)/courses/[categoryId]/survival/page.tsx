@@ -23,7 +23,7 @@ export default async function SurvivalPage({ params }: PageProps) {
   const cards = [...(data.vocab || []), ...(data.verbs || [])];
 
   return (
-    <main className="min-h-screen px-4 md:px-8 pt-28 pb-32 bg-cyber-bg relative overflow-hidden flex flex-col">
+    <main className="w-full flex-1 flex flex-colflow-hidden  flex-col">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-red-900/15 via-cyber-bg to-cyber-bg pointer-events-none z-0" />
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none z-0" />
 

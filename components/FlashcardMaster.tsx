@@ -130,7 +130,7 @@ export default function FlashcardMaster({
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-cyber-surface p-8 md:p-12 rounded-[3rem] border border-white/5 shadow-2xl text-center max-w-md mx-auto relative overflow-hidden"
+        className="w-full bg-cyber-surface p-8 md:p-12 rounded-[3rem] border border-white/5 shadow-2xl text-center max-w-md mx-auto my-auto relative overflow-hidden"
       >
         <div
           className={`absolute top-0 left-0 right-0 h-2 ${themeBgColor} opacity-50`}
@@ -146,7 +146,7 @@ export default function FlashcardMaster({
         <h2 className="text-3xl font-black text-white uppercase italic tracking-tighter mb-2">
           Sesi Selesai!
         </h2>
-        <p className="text-slate-400 text-xs sm:text-sm mb-8">
+        <p className="text-slate-200 text-xs sm:text-sm mb-8">
           Kamu telah meninjau {cards.length} kartu hari ini.
         </p>
 
@@ -185,7 +185,7 @@ export default function FlashcardMaster({
           </button>
           <button
             onClick={() => router.back()}
-            className="w-full py-4 text-slate-500 hover:text-white font-black uppercase tracking-widest text-[10px] transition-colors"
+            className="w-full py-4 text-slate-300 hover:text-white font-black uppercase tracking-widest text-[10px] transition-colors"
           >
             Kembali ke Menu
           </button>

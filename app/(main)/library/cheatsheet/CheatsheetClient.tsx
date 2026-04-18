@@ -18,7 +18,6 @@ export interface SheetItem {
   jp: string;
   romaji: string;
 }
-
 export interface Cheatsheet {
   _id: string;
   title: string;
@@ -49,16 +48,14 @@ export default function CheatsheetClient({
   });
 
   const activeSheet = safeSheets.find((s) => s?._id === selectedSheetId);
-
   const combinedItems = [
     ...(activeSheet?.linkedVocab || []),
     ...(activeSheet?.items || []),
   ].filter((item) => item !== null && item !== undefined);
 
   return (
-    // ✨ PERBAIKAN: Gunakan div biasa sebagai wrapper luar agar Judul tidak ikut menjadi flex-item menyamping
-    <div className="relative z-10 pb-20">
-      {/* BREADCRUMB - Sekarang aman di atas */}
+    // DIUBAH: Ditambahkan w-full dan px-4 md:px-8, dihapus pb-20 agar seragam.
+    <div className="relative w-full z-10 px-4 md:px-8 mt-4 md:mt-8">
       <nav className="mb-6 flex flex-wrap items-center gap-2 text-[9px] md:text-xs font-black uppercase tracking-[0.2em] font-mono">
         <Link
           href="/dashboard"
@@ -79,16 +76,13 @@ export default function CheatsheetClient({
         </span>
       </nav>
 
-      {/* HEADER - Sekarang aman di atas */}
       <header className="mb-10 border-b border-white/5 pb-8">
         <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase italic drop-shadow-lg">
           Catatan <span className="text-emerald-400">Ringkas</span>
         </h1>
       </header>
 
-      {/* ✨ PERBAIKAN: Ini adalah kontainer pembagi kiri-kanan yang sebenarnya */}
       <section className="flex flex-col lg:flex-row gap-6 lg:gap-10 min-h-[600px] uppercase">
-        {/* SIDEBAR */}
         <aside className="w-full lg:w-80 flex flex-col gap-4 shrink-0">
           <div className="relative group">
             <input
@@ -98,7 +92,7 @@ export default function CheatsheetClient({
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <Search
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-emerald-400 transition-colors"
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-emerald-400 transition-colors"
               size={18}
             />
           </div>
@@ -130,18 +124,18 @@ export default function CheatsheetClient({
                   className={`w-full flex items-center gap-4 p-4 rounded-xl transition-all duration-200 text-left group border ${isActive ? "bg-emerald-400/10 border-emerald-400/30 shadow-[0_0_20px_rgba(16,185,129,0.1)]" : "bg-transparent border-white/5 hover:bg-white/5"}`}
                 >
                   <div
-                    className={`p-2 rounded-lg ${isActive ? "text-emerald-400" : "text-slate-500 group-hover:text-white"}`}
+                    className={`p-2 rounded-lg ${isActive ? "text-emerald-400" : "text-slate-300 group-hover:text-white"}`}
                   >
                     {getIconForCategory(sheet.category)}
                   </div>
                   <div className="overflow-hidden">
                     <p
-                      className={`text-[10px] uppercase font-bold tracking-tighter ${isActive ? "text-emerald-400" : "text-slate-500"}`}
+                      className={`text-[10px] uppercase font-bold tracking-tighter ${isActive ? "text-emerald-400" : "text-slate-300"}`}
                     >
                       {sheet.category}
                     </p>
                     <p
-                      className={`text-sm font-semibold truncate ${isActive ? "text-white" : "text-slate-400"}`}
+                      className={`text-sm font-semibold truncate ${isActive ? "text-white" : "text-slate-200"}`}
                     >
                       {sheet.title}
                     </p>
@@ -152,7 +146,6 @@ export default function CheatsheetClient({
           </nav>
         </aside>
 
-        {/* MAIN CONTENT */}
         <article className="flex-1 min-w-0">
           <AnimatePresence mode="wait">
             {activeSheet ? (
@@ -175,14 +168,12 @@ export default function CheatsheetClient({
                   </div>
                 </div>
 
-                {/* TABEL DATA */}
                 <div className="flex flex-col w-full">
                   <div className="hidden md:grid grid-cols-3 p-4 border-b border-white/10 text-[10px] font-black font-mono text-emerald-400 uppercase tracking-widest gap-4">
                     <div>LABEL ARTI</div>
                     <div>HURUF JEPANG</div>
                     <div>ROMAJI</div>
                   </div>
-
                   {combinedItems.length > 0 ? (
                     <div className="flex flex-col gap-3 md:gap-0 mt-3 md:mt-0">
                       {combinedItems.map((item, idx) => (
@@ -193,7 +184,7 @@ export default function CheatsheetClient({
                           className="group flex flex-col md:grid md:grid-cols-3 md:items-center p-5 md:p-4 rounded-2xl md:rounded-none md:border-b border-white/5 hover:bg-white/[0.04] transition-all bg-white/5 md:bg-transparent gap-2 md:gap-4"
                         >
                           <div className="w-full">
-                            <span className="text-xs md:text-sm text-slate-400 font-medium block">
+                            <span className="text-xs md:text-sm text-slate-200 font-medium block">
                               {item?.label || "-"}
                             </span>
                           </div>
@@ -203,7 +194,7 @@ export default function CheatsheetClient({
                             </span>
                           </div>
                           <div className="w-full">
-                            <span className="text-[10px] md:text-xs font-mono text-slate-500 uppercase tracking-tighter block">
+                            <span className="text-[10px] md:text-xs font-mono text-slate-300 uppercase tracking-tighter block">
                               {item?.romaji || "-"}
                             </span>
                           </div>
@@ -211,7 +202,7 @@ export default function CheatsheetClient({
                       ))}
                     </div>
                   ) : (
-                    <div className="p-10 md:p-20 text-center text-slate-500 font-mono text-xs border border-dashed border-white/10 rounded-2xl mt-4">
+                    <div className="p-10 md:p-20 text-center text-slate-300 font-mono text-xs border border-dashed border-white/10 rounded-2xl mt-4">
                       Belum ada data tersedia di dataset ini.
                     </div>
                   )}

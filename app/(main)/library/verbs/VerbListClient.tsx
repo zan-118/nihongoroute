@@ -63,9 +63,8 @@ export default function VerbListClient({
       romaji: verb.masu,
       level: { code: "library" },
     }));
-
     return (
-      <section className="animate-in fade-in zoom-in-95 duration-300 max-w-2xl mx-auto w-full mt-4 md:mt-8">
+      <div className="animate-in fade-in zoom-in-95 duration-300 max-w-2xl mx-auto w-full mt-4 md:mt-8 px-4 flex-1">
         <button
           onClick={() => setIsFlashcardMode(false)}
           className="mb-8 flex items-center justify-center gap-2 text-white/50 hover:text-white transition-colors text-[10px] md:text-xs font-bold uppercase tracking-widest bg-white/5 hover:bg-white/10 px-6 py-3 rounded-xl border border-white/10 w-full sm:w-auto mx-auto sm:mx-0"
@@ -73,13 +72,13 @@ export default function VerbListClient({
           ← Kembali ke Kamus
         </button>
         <FlashcardMaster cards={flashcardData} type="vocab" />
-      </section>
+      </div>
     );
   }
 
   return (
-    <section className="w-full flex flex-col mt-2 md:mt-4">
-      {/* BREADCRUMB */}
+    // DIUBAH: Gunakan div dengan w-full px-4 md:px-8 untuk pembungkus yang aman
+    <div className="w-full px-4 md:px-8 flex flex-col flex-1 mt-4 md:mt-8">
       <nav className="mb-6 flex flex-wrap items-center gap-2 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] font-mono">
         <Link
           href="/dashboard"
@@ -109,11 +108,10 @@ export default function VerbListClient({
         </h1>
       </header>
 
-      {/* FILTER & SEARCH */}
       <div className="flex flex-col gap-4 mb-8 bg-cyber-surface p-4 md:p-6 rounded-[2rem] border border-white/5 shadow-inner">
         <div className="relative w-full">
           <Search
-            className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500"
+            className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300"
             size={18}
           />
           <input
@@ -134,11 +132,7 @@ export default function VerbListClient({
                 onClick={() =>
                   setActiveGroup(g === "Semua" ? null : (g as number))
                 }
-                className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all border flex-1 sm:flex-none text-center ${
-                  isActive
-                    ? "bg-cyan-400/10 text-cyan-400 border-cyan-400/30 shadow-[0_0_15px_rgba(34,211,238,0.2)]"
-                    : "bg-[#0a0c10] text-slate-400 border-white/5 hover:bg-white/5 hover:text-white shadow-inner"
-                }`}
+                className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all border flex-1 sm:flex-none text-center ${isActive ? "bg-cyan-400/10 text-cyan-400 border-cyan-400/30 shadow-[0_0_15px_rgba(34,211,238,0.2)]" : "bg-[#0a0c10] text-slate-200 border-white/5 hover:bg-white/5 hover:text-white shadow-inner"}`}
               >
                 {g === "Semua" ? "Semua Golongan" : `Golongan ${g}`}
               </button>
@@ -147,7 +141,6 @@ export default function VerbListClient({
         </div>
       </div>
 
-      {/* BANNER AKSI */}
       {filteredVerbs.length > 0 && (
         <div className="mb-8 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 bg-gradient-to-r from-cyan-900/20 to-transparent border-l-4 border-cyan-400 p-4 md:p-5 rounded-r-2xl border-y border-r border-white/5">
           <p className="text-slate-300 text-xs sm:text-sm font-medium text-center sm:text-left">
@@ -166,8 +159,7 @@ export default function VerbListClient({
         </div>
       )}
 
-      {/* DATA GRID */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 items-start">
         <AnimatePresence>
           {filteredVerbs.length === 0 ? (
             <motion.div
@@ -176,7 +168,7 @@ export default function VerbListClient({
               className="col-span-full py-20 text-center border border-dashed border-white/10 rounded-[3rem] bg-cyber-surface shadow-inner"
             >
               <div className="text-5xl mb-4 opacity-50">🕵️</div>
-              <p className="text-slate-400 font-mono text-sm uppercase tracking-widest">
+              <p className="text-slate-200 font-mono text-sm uppercase tracking-widest">
                 Tidak ada kata kerja yang cocok.
               </p>
             </motion.div>
@@ -189,7 +181,6 @@ export default function VerbListClient({
                   : verb.group === 2
                     ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/30"
                     : "text-purple-400 bg-purple-500/10 border-purple-500/30";
-
               return (
                 <motion.article
                   key={verb._id}
@@ -197,13 +188,8 @@ export default function VerbListClient({
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  className={`bg-cyber-surface border rounded-[2rem] overflow-hidden transition-all duration-300 ${
-                    isExpanded
-                      ? "border-cyan-400/50 shadow-[0_0_30px_rgba(34,211,238,0.1)]"
-                      : "border-white/5 hover:border-white/20 shadow-[6px_6px_15px_rgba(0,0,0,0.4)]"
-                  }`}
+                  className={`bg-cyber-surface border rounded-[2rem] overflow-hidden transition-all duration-300 ${isExpanded ? "border-cyan-400/50 shadow-[0_0_30px_rgba(34,211,238,0.1)]" : "border-white/5 hover:border-white/20 shadow-[6px_6px_15px_rgba(0,0,0,0.4)]"}`}
                 >
-                  {/* HEADER KARTU (KLIK UNTUK BUKA) */}
                   <div
                     onClick={() => setExpandedId(isExpanded ? null : verb._id)}
                     className="p-5 sm:p-6 flex flex-col gap-4 cursor-pointer group"
@@ -217,17 +203,12 @@ export default function VerbListClient({
                       <div className="flex items-center gap-3">
                         <TTSReader text={verb.jisho} minimal={true} />
                         <div
-                          className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all ${
-                            isExpanded
-                              ? "bg-cyan-400/20 border-cyan-400/50 text-cyan-400 rotate-180"
-                              : "bg-white/5 border-white/10 text-slate-400 group-hover:text-white group-hover:bg-white/10"
-                          }`}
+                          className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all ${isExpanded ? "bg-cyan-400/20 border-cyan-400/50 text-cyan-400 rotate-180" : "bg-white/5 border-white/10 text-slate-200 group-hover:text-white group-hover:bg-white/10"}`}
                         >
                           <ChevronDown size={16} />
                         </div>
                       </div>
                     </div>
-
                     <div className="mt-2">
                       <ruby className="text-3xl sm:text-4xl md:text-5xl font-black text-white font-japanese block group-hover:text-cyan-400 transition-colors drop-shadow-md leading-none">
                         {verb.jisho}
@@ -240,8 +221,6 @@ export default function VerbListClient({
                       </p>
                     </div>
                   </div>
-
-                  {/* KONTEN EXPANDED (DETAIL KONJUGASI) */}
                   <AnimatePresence>
                     {isExpanded && (
                       <motion.div
@@ -251,7 +230,6 @@ export default function VerbListClient({
                         className="bg-black/40 border-t border-white/5 overflow-hidden"
                       >
                         <div className="p-5 sm:p-6 flex flex-col gap-6">
-                          {/* GRUP DASAR */}
                           <div className="flex flex-col gap-3">
                             <h4 className="text-[9px] font-black text-cyan-400 uppercase tracking-[0.2em] flex items-center gap-2">
                               <div className="h-[1px] flex-1 bg-gradient-to-r from-cyan-400/50 to-transparent" />
@@ -277,8 +255,6 @@ export default function VerbListClient({
                               />
                             </div>
                           </div>
-
-                          {/* GRUP LANJUTAN */}
                           <div className="flex flex-col gap-3">
                             <h4 className="text-[9px] font-black text-cyan-400 uppercase tracking-[0.2em] flex items-center gap-2">
                               <div className="h-[1px] flex-1 bg-gradient-to-r from-cyan-400/50 to-transparent" />
@@ -304,8 +280,6 @@ export default function VerbListClient({
                               />
                             </div>
                           </div>
-
-                          {/* GRUP EKSPRESI */}
                           <div className="flex flex-col gap-3">
                             <h4 className="text-[9px] font-black text-cyan-400 uppercase tracking-[0.2em] flex items-center gap-2">
                               <div className="h-[1px] flex-1 bg-gradient-to-r from-cyan-400/50 to-transparent" />
@@ -317,7 +291,6 @@ export default function VerbListClient({
                                 label="Tai (Ingin)"
                                 value={verb.tai}
                               />
-
                               <ConjugationCard
                                 label="Katei (Andaikan)"
                                 value={verb.katei}
@@ -342,16 +315,15 @@ export default function VerbListClient({
           )}
         </AnimatePresence>
       </div>
-    </section>
+    </div>
   );
 }
 
-// Sub-komponen yang telah diperbarui agar lebih estetik dan mentoleransi data kosong
 function ConjugationCard({ label, value }: { label: string; value?: string }) {
   if (!value || value === "-") return null;
   return (
     <div className="bg-[#0a0c10] p-3 sm:p-4 rounded-xl border border-white/5 shadow-inner flex flex-col justify-center gap-1 hover:border-cyan-400/30 transition-colors group/card">
-      <span className="block text-[8px] sm:text-[9px] font-black uppercase tracking-[0.1em] text-slate-500 group-hover/card:text-cyan-400/70 transition-colors">
+      <span className="block text-[8px] sm:text-[9px] font-black uppercase tracking-[0.1em] text-slate-300 group-hover/card:text-cyan-400/70 transition-colors">
         {label}
       </span>
       <span className="text-sm sm:text-base font-bold font-japanese tracking-wide text-white group-hover/card:text-cyan-50">

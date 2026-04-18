@@ -30,7 +30,8 @@ const itemVariants: Variants = {
 
 export default function ExamsClient({ exams }: { exams: any[] }) {
   return (
-    <main className="min-h-screen bg-[#080a0f] text-slate-300 pt-32 pb-40 px-6 relative overflow-hidden">
+    // DIUBAH: Tag main diganti div. Dihapus pt-32 pb-40.
+    <div className="w-full px-6 relative overflow-hidden">
       {/* Background Ambient */}
       <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-red-500/5 rounded-full blur-[150px] pointer-events-none animate-pulse" />
       <div className="absolute bottom-[10%] left-[-10%] w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[120px] pointer-events-none" />
@@ -67,7 +68,7 @@ export default function ExamsClient({ exams }: { exams: any[] }) {
             variants={itemVariants}
             className="neo-inset p-8 md:p-10 rounded-[2rem] border-l-8 border-red-500 bg-red-500/5"
           >
-            <p className="text-sm md:text-lg text-slate-400 font-medium leading-relaxed italic">
+            <p className="text-sm md:text-lg text-slate-200 font-medium leading-relaxed italic">
               Uji kesiapan Anda dengan mesin simulasi berstandar resmi. Sistem
               akan menghitung skor Anda secara real-time berdasarkan bobot soal
               JLPT asli.
@@ -85,7 +86,7 @@ export default function ExamsClient({ exams }: { exams: any[] }) {
             <h4 className="text-amber-500 font-black uppercase tracking-widest text-xs mb-1">
               Perhatian Sebelum Memulai
             </h4>
-            <p className="text-slate-400 text-sm leading-relaxed">
+            <p className="text-slate-200 text-sm leading-relaxed">
               Pastikan koneksi internet stabil. Jika Anda keluar dari halaman
               ujian sebelum menekan tombol "Selesai", progres jawaban Anda tidak
               akan tersimpan.
@@ -102,7 +103,9 @@ export default function ExamsClient({ exams }: { exams: any[] }) {
                 variants={itemVariants}
                 whileHover={{ y: -5 }}
                 whileTap={{ scale: 0.98 }}
+                className="h-full"
               >
+                {/* DIUBAH: Tambahkan h-full agar grid presisi rata */}
                 <Link
                   href={`/exams/${exam._id}`}
                   className="neo-card p-8 group hover:border-red-500/50 hover:bg-red-500/5 transition-all duration-300 flex flex-col h-full relative overflow-hidden"
@@ -114,7 +117,7 @@ export default function ExamsClient({ exams }: { exams: any[] }) {
                     <span className="neo-inset px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-red-500 border border-red-500/20">
                       {exam.levelCode?.toUpperCase() || "General"}
                     </span>
-                    <div className="w-12 h-12 neo-inset text-slate-500 flex items-center justify-center group-hover:text-red-500 transition-colors rounded-full">
+                    <div className="w-12 h-12 neo-inset text-slate-300 flex items-center justify-center group-hover:text-red-500 transition-colors rounded-full">
                       <Activity size={20} />
                     </div>
                   </div>
@@ -124,40 +127,43 @@ export default function ExamsClient({ exams }: { exams: any[] }) {
                   </h2>
 
                   {exam.description && (
-                    <p className="text-slate-500 text-sm mb-8 line-clamp-2 relative z-10">
+                    <p className="text-slate-300 text-sm mb-8 line-clamp-2 relative z-10">
                       {exam.description}
                     </p>
                   )}
 
-                  <div className="mt-auto grid grid-cols-2 gap-3 mb-8 relative z-10">
-                    <div className="neo-inset p-3 flex flex-col gap-1 items-center text-center">
-                      <Clock size={16} className="text-slate-400 mb-1" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">
-                        Durasi
-                      </span>
-                      <span className="font-mono font-bold text-white">
-                        {exam.timeLimit} Menit
-                      </span>
+                  {/* DIUBAH: mt-auto memastikan informasi di bawah selalu rata pada tiap kartu */}
+                  <div className="mt-auto relative z-10">
+                    <div className="grid grid-cols-2 gap-3 mb-8">
+                      <div className="neo-inset p-3 flex flex-col gap-1 items-center text-center">
+                        <Clock size={16} className="text-slate-200 mb-1" />
+                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">
+                          Durasi
+                        </span>
+                        <span className="font-mono font-bold text-white">
+                          {exam.timeLimit} Menit
+                        </span>
+                      </div>
+                      <div className="neo-inset p-3 flex flex-col gap-1 items-center text-center">
+                        <Target size={16} className="text-slate-200 mb-1" />
+                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">
+                          Target
+                        </span>
+                        <span className="font-mono font-bold text-emerald-400">
+                          {exam.passingScore} Poin
+                        </span>
+                      </div>
                     </div>
-                    <div className="neo-inset p-3 flex flex-col gap-1 items-center text-center">
-                      <Target size={16} className="text-slate-400 mb-1" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">
-                        Target
-                      </span>
-                      <span className="font-mono font-bold text-emerald-400">
-                        {exam.passingScore} Poin
-                      </span>
-                    </div>
-                  </div>
 
-                  <div className="w-full neo-inset p-4 flex items-center justify-between group-hover:border-red-500/30 transition-colors relative z-10">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-red-400">
-                      Mulai Simulasi
-                    </span>
-                    <ChevronRight
-                      size={16}
-                      className="text-slate-500 group-hover:text-red-400 group-hover:translate-x-1 transition-transform"
-                    />
+                    <div className="w-full neo-inset p-4 flex items-center justify-between group-hover:border-red-500/30 transition-colors">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-200 group-hover:text-red-400">
+                        Mulai Simulasi
+                      </span>
+                      <ChevronRight
+                        size={16}
+                        className="text-slate-300 group-hover:text-red-400 group-hover:translate-x-1 transition-transform"
+                      />
+                    </div>
                   </div>
                 </Link>
               </motion.div>
@@ -168,13 +174,13 @@ export default function ExamsClient({ exams }: { exams: any[] }) {
               className="col-span-full neo-inset p-16 text-center"
             >
               <span className="text-5xl mb-6 block opacity-50">🚧</span>
-              <p className="text-slate-500 font-mono text-sm font-bold uppercase tracking-widest">
+              <p className="text-slate-300 font-mono text-sm font-bold uppercase tracking-widest">
                 Sistem ujian sedang dalam pemeliharaan.
               </p>
             </motion.div>
           )}
         </div>
       </motion.div>
-    </main>
+    </div>
   );
 }

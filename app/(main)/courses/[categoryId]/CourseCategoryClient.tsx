@@ -45,7 +45,9 @@ export default function CourseCategoryClient({
     : "hover:bg-cyan-400/5 hover:border-cyan-400/50";
 
   return (
-    <main className="min-h-screen bg-[#080a0f] text-slate-300 pt-32 pb-40 px-6 relative overflow-hidden">
+    // DIUBAH: Tag main diganti div. Dihapus pt-32 pb-40.
+    // Lebar diatur agar konsisten dengan layout global.
+    <div className="w-full px-4 md:px-6 relative overflow-hidden">
       {/* Background Decor Ambient */}
       <div
         className={`absolute top-0 left-[-10%] w-[500px] h-[500px] rounded-full blur-[150px] pointer-events-none ${isSideQuest ? "bg-amber-500/5" : "bg-cyan-500/5"}`}
@@ -66,7 +68,7 @@ export default function CourseCategoryClient({
           >
             <Link
               href="/courses"
-              className="neo-inset px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400 border border-white/5 hover:text-white hover:border-white/20 transition-all flex items-center gap-2"
+              className="neo-inset px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-200 border border-white/5 hover:text-white hover:border-white/20 transition-all flex items-center gap-2"
             >
               <ArrowLeft size={14} /> Pusat Rute
             </Link>
@@ -90,7 +92,7 @@ export default function CourseCategoryClient({
               variants={itemVariants}
               className={`neo-inset p-8 md:p-10 rounded-[2rem] border-l-8 ${themeBorder}`}
             >
-              <p className="text-sm md:text-lg text-slate-400 font-medium leading-relaxed italic">
+              <p className="text-sm md:text-lg text-slate-200 font-medium leading-relaxed italic">
                 {data.category.description}
               </p>
             </motion.div>
@@ -103,13 +105,17 @@ export default function CourseCategoryClient({
             <h3
               className={`text-xl font-black uppercase tracking-widest italic flex items-center gap-3 ${themeColor}`}
             >
-              <span className="text-2xl not-italic">🎮</span> Area Latihan
+              <span className="text-2xl not-italic">式</span> Area Latihan
             </h3>
             <div className="h-[1px] flex-1 bg-white/5" />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <motion.div whileHover={{ y: -5 }} whileTap={{ scale: 0.98 }}>
+            <motion.div
+              whileHover={{ y: -5 }}
+              whileTap={{ scale: 0.98 }}
+              className="h-full"
+            >
               <Link
                 href={`/courses/${categoryId}/flashcards`}
                 className="neo-card p-6 md:p-8 group hover:border-cyan-400/50 transition-all duration-300 flex flex-col items-center text-center gap-4 h-full"
@@ -117,18 +123,22 @@ export default function CourseCategoryClient({
                 <div className="w-16 h-16 neo-inset text-cyan-400 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <Layers size={28} />
                 </div>
-                <div>
+                <div className="mt-auto">
                   <p className="text-xl font-black text-white group-hover:text-cyan-400 transition-colors uppercase italic tracking-tight mb-1">
                     Kosakata
                   </p>
-                  <p className="text-slate-500 text-[10px] font-mono font-bold uppercase tracking-widest">
+                  <p className="text-slate-300 text-[10px] font-mono font-bold uppercase tracking-widest">
                     Mode Flashcard
                   </p>
                 </div>
               </Link>
             </motion.div>
 
-            <motion.div whileHover={{ y: -5 }} whileTap={{ scale: 0.98 }}>
+            <motion.div
+              whileHover={{ y: -5 }}
+              whileTap={{ scale: 0.98 }}
+              className="h-full"
+            >
               <Link
                 href={`/courses/${categoryId}/kanji`}
                 className="neo-card p-6 md:p-8 group hover:border-purple-500/50 transition-all duration-300 flex flex-col items-center text-center gap-4 h-full"
@@ -136,11 +146,11 @@ export default function CourseCategoryClient({
                 <div className="w-16 h-16 neo-inset text-purple-400 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <PenTool size={28} />
                 </div>
-                <div>
+                <div className="mt-auto">
                   <p className="text-xl font-black text-white group-hover:text-purple-400 transition-colors uppercase italic tracking-tight mb-1">
                     Kamus Kanji
                   </p>
-                  <p className="text-slate-500 text-[10px] font-mono font-bold uppercase tracking-widest">
+                  <p className="text-slate-300 text-[10px] font-mono font-bold uppercase tracking-widest">
                     Baca & Tulis
                   </p>
                 </div>
@@ -150,7 +160,7 @@ export default function CourseCategoryClient({
             <motion.div
               whileHover={{ y: -5 }}
               whileTap={{ scale: 0.98 }}
-              className="sm:col-span-2 md:col-span-1"
+              className="sm:col-span-2 md:col-span-1 h-full"
             >
               <Link
                 href={`/courses/${categoryId}/survival`}
@@ -159,11 +169,11 @@ export default function CourseCategoryClient({
                 <div className="w-16 h-16 neo-inset text-red-500 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <Flame size={28} />
                 </div>
-                <div>
+                <div className="mt-auto">
                   <p className="text-xl font-black text-white group-hover:text-red-400 transition-colors uppercase italic tracking-tight mb-1">
                     Survival
                   </p>
-                  <p className="text-slate-500 text-[10px] font-mono font-bold uppercase tracking-widest">
+                  <p className="text-slate-300 text-[10px] font-mono font-bold uppercase tracking-widest">
                     Adu Kecepatan
                   </p>
                 </div>
@@ -177,7 +187,7 @@ export default function CourseCategoryClient({
           <motion.section variants={itemVariants} className="mb-24">
             <div className="mb-10 flex items-center gap-4">
               <h3 className="text-xl font-black uppercase tracking-widest italic flex items-center gap-3 text-amber-500">
-                <span className="text-2xl not-italic">📝</span> Ujian Simulasi
+                <span className="text-2xl not-italic">統</span> Ujian Simulasi
               </h3>
               <div className="h-[1px] flex-1 bg-white/5" />
             </div>
@@ -188,10 +198,11 @@ export default function CourseCategoryClient({
                   key={exam._id}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
+                  className="h-full"
                 >
                   <Link
                     href={`/exams/${exam._id}`}
-                    className="neo-card p-8 group hover:border-amber-500/50 hover:bg-amber-500/5 transition-all duration-300 flex items-center justify-between gap-6"
+                    className="neo-card p-8 group hover:border-amber-500/50 hover:bg-amber-500/5 transition-all duration-300 flex items-center justify-between gap-6 h-full"
                   >
                     <div className="flex-1">
                       <span className="inline-block px-3 py-1 text-[9px] font-black uppercase tracking-[0.3em] bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded-md mb-3">
@@ -200,12 +211,12 @@ export default function CourseCategoryClient({
                       <h4 className="text-2xl font-black text-white uppercase italic tracking-tighter group-hover:text-amber-400 transition-colors mb-4">
                         {exam.title}
                       </h4>
-                      <div className="flex gap-4 text-[10px] font-mono font-bold uppercase tracking-widest text-slate-500">
+                      <div className="flex gap-4 text-[10px] font-mono font-bold uppercase tracking-widest text-slate-300 mt-auto">
                         <span className="neo-inset px-2 py-1">
-                          ⏱ {exam.timeLimit} Menit
+                          竢ｱ {exam.timeLimit} Menit
                         </span>
                         <span className="neo-inset px-2 py-1">
-                          🎯 Pass: {exam.passingScore}/180
+                          識 Pass: {exam.passingScore}/180
                         </span>
                       </div>
                     </div>
@@ -225,7 +236,7 @@ export default function CourseCategoryClient({
             <h3
               className={`text-xl font-black uppercase tracking-widest italic flex items-center gap-3 ${themeColor}`}
             >
-              <span className="text-2xl not-italic">📚</span> Daftar Materi
+              <span className="text-2xl not-italic">答</span> Daftar Materi
             </h3>
             <div className="h-[1px] flex-1 bg-white/5" />
           </div>
@@ -254,7 +265,7 @@ export default function CourseCategoryClient({
                         {lesson.title}
                       </h4>
                       {lesson.summary && (
-                        <p className="text-slate-500 text-sm font-medium line-clamp-2 leading-relaxed">
+                        <p className="text-slate-300 text-sm font-medium line-clamp-2 leading-relaxed">
                           {lesson.summary}
                         </p>
                       )}
@@ -275,14 +286,14 @@ export default function CourseCategoryClient({
             </div>
           ) : (
             <div className="text-center p-16 neo-inset">
-              <span className="text-5xl mb-6 block opacity-50">🚧</span>
-              <p className="text-slate-500 font-mono text-sm font-bold uppercase tracking-widest">
+              <span className="text-5xl mb-6 block opacity-50">圦</span>
+              <p className="text-slate-300 font-mono text-sm font-bold uppercase tracking-widest">
                 Materi sedang dalam tahap penyusunan.
               </p>
             </div>
           )}
         </motion.section>
       </motion.div>
-    </main>
+    </div>
   );
 }

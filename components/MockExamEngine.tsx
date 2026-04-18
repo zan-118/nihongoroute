@@ -321,7 +321,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
 
         <div className="neo-inset p-6 md:p-8 rounded-2xl mb-8 text-left space-y-5 relative z-10">
           <div className="flex justify-between items-center border-b border-white/5 pb-4">
-            <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500">
+            <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-300">
               Total Soal
             </span>
             <span className="font-mono font-bold text-white text-sm md:text-base">
@@ -329,7 +329,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
             </span>
           </div>
           <div className="flex justify-between items-center border-b border-white/5 pb-4">
-            <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500">
+            <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-300">
               Batas Waktu
             </span>
             <span className="font-mono font-bold text-red-400 text-sm md:text-base">
@@ -337,7 +337,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500">
+            <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-300">
               Target Pass
             </span>
             <span className="font-mono font-bold text-amber-400 text-sm md:text-base">
@@ -346,7 +346,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
           </div>
         </div>
 
-        <p className="text-[10px] text-slate-500 mb-10 font-mono uppercase tracking-widest leading-relaxed px-2 relative z-10">
+        <p className="text-[10px] text-slate-300 mb-10 font-mono uppercase tracking-widest leading-relaxed px-2 relative z-10">
           Sistem memiliki fitur Anti-Cheat aktif. Untuk Seksi Mendengar
           (Choukai), audio HANYA DAPAT DIPUTAR SATU KALI dan tidak bisa
           dijeda/diulang.
@@ -355,7 +355,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
         <div className="flex flex-col sm:flex-row gap-4 relative z-10">
           <Link
             href={backLink}
-            className="neo-inset w-full hover:text-white text-slate-400 font-black uppercase tracking-widest py-4 px-6 flex justify-center transition-colors text-[10px] sm:text-xs"
+            className="neo-inset w-full hover:text-white text-slate-200 font-black uppercase tracking-widest py-4 px-6 flex justify-center transition-colors text-[10px] sm:text-xs"
           >
             ← Batal
           </Link>
@@ -405,14 +405,14 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
           >
             {isPassed ? "Exam Cleared" : "Exam Failed"}
           </h1>
-          <p className="text-slate-500 font-mono uppercase tracking-widest text-[10px] md:text-xs mb-10">
+          <p className="text-slate-300 font-mono uppercase tracking-widest text-[10px] md:text-xs mb-10">
             {exam.title}
           </p>
 
           {/* Kotak Skor Neumorphic */}
           <div className="grid grid-cols-2 gap-4 mb-10">
             <div className="neo-inset p-6 md:p-8 flex flex-col items-center justify-center">
-              <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest mb-3">
+              <p className="text-slate-300 text-[10px] uppercase font-black tracking-widest mb-3">
                 Final Score
               </p>
               <p
@@ -423,7 +423,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
               </p>
             </div>
             <div className="neo-inset p-6 md:p-8 flex flex-col items-center justify-center">
-              <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest mb-3">
+              <p className="text-slate-300 text-[10px] uppercase font-black tracking-widest mb-3">
                 Accuracy
               </p>
               <p className="text-4xl md:text-5xl font-black font-mono text-white">
@@ -434,7 +434,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
 
           {/* Breakdown Section */}
           <div className="neo-card !bg-transparent p-6 md:p-8 border-white/5 mb-10 text-left">
-            <h3 className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest border-b border-white/5 pb-4 mb-6">
+            <h3 className="text-[10px] md:text-xs font-black text-slate-200 uppercase tracking-widest border-b border-white/5 pb-4 mb-6">
               Analisis Sektor
             </h3>
             <div className="space-y-6">
@@ -462,7 +462,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
                           ]
                         }
                       </span>
-                      <span className="text-[9px] font-mono font-bold text-slate-500">
+                      <span className="text-[9px] font-mono font-bold text-slate-300">
                         {data.correct}/{data.total} ({percentage}%)
                       </span>
                     </div>
@@ -499,7 +499,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
             </button>
             <Link
               href={backLink}
-              className="w-full sm:w-auto neo-inset text-slate-400 hover:text-white font-black uppercase tracking-widest py-4 px-8 flex justify-center items-center transition-all text-[10px] md:text-xs"
+              className="w-full sm:w-auto neo-inset text-slate-200 hover:text-white font-black uppercase tracking-widest py-4 px-8 flex justify-center items-center transition-all text-[10px] md:text-xs"
             >
               Selesai
             </Link>
@@ -524,7 +524,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
               setGameState("result");
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            className="text-[9px] sm:text-[10px] neo-inset hover:text-white text-slate-400 px-4 py-2.5 font-black uppercase tracking-widest transition-all"
+            className="text-[9px] sm:text-[10px] neo-inset hover:text-white text-slate-200 px-4 py-2.5 font-black uppercase tracking-widest transition-all"
           >
             ← Kembali
           </button>
@@ -544,7 +544,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
                 className={`neo-card p-6 md:p-8 lg:p-10 ${isCorrect ? "border-emerald-500/30" : "border-red-500/30"}`}
               >
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-8 border-b border-white/5 pb-6">
-                  <span className="text-[9px] font-mono font-black uppercase tracking-widest neo-inset px-3 py-1.5 text-slate-400 w-fit">
+                  <span className="text-[9px] font-mono font-black uppercase tracking-widest neo-inset px-3 py-1.5 text-slate-200 w-fit">
                     Soal {idx + 1} • {SECTION_LABELS[q.section]}
                   </span>
                   {isCorrect ? (
@@ -579,7 +579,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
                 {/* Di mode Review, Audio boleh diplay berkali-kali pake kontrol bawaan browser */}
                 {q.audioUrl && (
                   <div className="mb-8 p-5 neo-inset flex flex-col gap-3">
-                    <p className="text-[9px] text-slate-500 uppercase font-black tracking-widest flex items-center gap-2">
+                    <p className="text-[9px] text-slate-300 uppercase font-black tracking-widest flex items-center gap-2">
                       <Volume2 size={14} /> Audio Track (Review)
                     </p>
                     <audio
@@ -670,7 +670,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
       <header className="relative z-20 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 neo-card p-5 sm:p-6 mt-2 md:mt-6">
         <div className="flex flex-col gap-3 w-full md:w-auto">
           <div className="flex items-center gap-3 flex-wrap">
-            <span className="neo-inset px-4 py-2 text-slate-400 font-mono text-[10px] md:text-xs font-black shadow-inner">
+            <span className="neo-inset px-4 py-2 text-slate-200 font-mono text-[10px] md:text-xs font-black shadow-inner">
               {currentQuestionIndex + 1} / {exam.questions.length}
             </span>
             <div className="neo-inset px-4 py-2 flex items-center gap-2">
@@ -692,7 +692,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
           >
             <Clock
               size={20}
-              className={isTimeCritical ? "text-red-500" : "text-slate-500"}
+              className={isTimeCritical ? "text-red-500" : "text-slate-300"}
             />{" "}
             {formatTime(timeLeft)}
           </div>
@@ -705,7 +705,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
               )
                 finishExam();
             }}
-            className="text-[9px] sm:text-[10px] neo-inset text-slate-500 hover:text-white font-black uppercase tracking-widest px-4 py-3 transition-colors"
+            className="text-[9px] sm:text-[10px] neo-inset text-slate-300 hover:text-white font-black uppercase tracking-widest px-4 py-3 transition-colors"
           >
             Akhiri
           </button>
@@ -735,7 +735,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
                   !audioStatus[activeQuestion._key] ||
                   audioStatus[activeQuestion._key] === "idle"
                     ? "bg-red-500 text-white hover:scale-105 shadow-[0_0_15px_rgba(239,68,68,0.5)] cursor-pointer"
-                    : "bg-slate-800 text-slate-500 cursor-not-allowed"
+                    : "bg-slate-800 text-slate-300 cursor-not-allowed"
                 }`}
               >
                 <Volume2
@@ -756,7 +756,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
                       ? "Audio Sedang Diputar..."
                       : "Pemutaran Audio Selesai"}
                 </p>
-                <p className="text-[9px] md:text-[10px] text-slate-400 leading-relaxed uppercase font-mono tracking-wide">
+                <p className="text-[9px] md:text-[10px] text-slate-200 leading-relaxed uppercase font-mono tracking-wide">
                   Perhatian: Audio HANYA BISA DIPUTAR 1 KALI. Audio tidak dapat
                   dijeda atau diulang. Pastikan volume suara perangkat Anda
                   sudah cukup.
@@ -794,11 +794,11 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
                   className={`p-5 md:p-6 rounded-2xl text-left transition-all font-medium text-base md:text-lg font-japanese group flex items-start gap-4 ${
                     isSelected
                       ? "neo-inset !bg-red-500/10 !border-red-500/50 text-white shadow-[inset_0_0_20px_rgba(239,68,68,0.15)]"
-                      : "neo-inset text-slate-400 hover:text-white hover:border-white/20"
+                      : "neo-inset text-slate-200 hover:text-white hover:border-white/20"
                   }`}
                 >
                   <span
-                    className={`font-mono text-[10px] md:text-xs font-black transition-colors mt-1 shrink-0 ${isSelected ? "text-red-500" : "text-slate-600 group-hover:text-slate-400"}`}
+                    className={`font-mono text-[10px] md:text-xs font-black transition-colors mt-1 shrink-0 ${isSelected ? "text-red-500" : "text-slate-600 group-hover:text-slate-200"}`}
                   >
                     {idx + 1}.
                   </span>
@@ -815,7 +815,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
         <button
           onClick={prevQuestion}
           disabled={disablePreviousButton}
-          className="w-full sm:w-auto neo-inset px-6 md:px-8 py-4 text-slate-400 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed flex items-center justify-center gap-3 font-black uppercase tracking-widest text-[10px] md:text-xs transition-colors"
+          className="w-full sm:w-auto neo-inset px-6 md:px-8 py-4 text-slate-200 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed flex items-center justify-center gap-3 font-black uppercase tracking-widest text-[10px] md:text-xs transition-colors"
         >
           <ArrowLeft size={16} /> Sebelumnya
         </button>

@@ -137,7 +137,7 @@ export default function BasicsPage() {
   const themeAccent = isHira ? "bg-[#0ef]" : "bg-purple-500";
 
   return (
-    <div className="min-h-screen bg-[#15171a] pt-20 pb-24 px-4 md:px-8 relative overflow-hidden flex flex-col">
+    <div className="w-full flex-1  relative overflow-hidden flex flex-col">
       {/* Background Grid */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
@@ -158,7 +158,7 @@ export default function BasicsPage() {
               <h1 className="text-4xl md:text-6xl font-black text-white uppercase italic tracking-tighter drop-shadow-lg">
                 Matriks <span className={themeColor}>Kana</span>
               </h1>
-              <p className="text-slate-400 text-xs mt-2 max-w-md">
+              <p className="text-slate-200 text-xs mt-2 max-w-md">
                 Pondasi utama bahasa Jepang. Kuasai cara baca dan cara tulis
                 sebelum lanjut ke materi tata bahasa.
               </p>
@@ -330,7 +330,7 @@ export default function BasicsPage() {
                   <WritingCanvas character={selectedChar.char} />
                 </div>
 
-                <p className="text-center text-[9px] text-slate-500 font-bold uppercase tracking-[0.2em] mt-4 shrink-0">
+                <p className="text-center text-[9px] text-slate-300 font-bold uppercase tracking-[0.2em] mt-4 shrink-0">
                   <Sparkles size={10} className="inline mr-1 text-cyan-400" />{" "}
                   Gunakan jari atau mouse untuk menulis
                 </p>

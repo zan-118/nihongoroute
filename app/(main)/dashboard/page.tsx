@@ -121,7 +121,8 @@ export default function DashboardPage() {
   ).length;
 
   return (
-    <main className="min-h-screen bg-[#080a0f] text-slate-300 pt-28 pb-32 px-4 md:px-8 relative overflow-hidden">
+    // DIUBAH: Dihapus pt-28, pb-32. Diubah menjadi div w-full.
+    <div className="w-full px-4 md:px-8 relative overflow-hidden">
       {/* Background Decor */}
       <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-cyan-500/5 blur-[150px] rounded-full pointer-events-none animate-pulse" />
 
@@ -193,7 +194,7 @@ export default function DashboardPage() {
             >
               <div className="flex justify-between items-end mb-6">
                 <h2 className="text-white font-black uppercase italic tracking-widest text-sm">
-                  Poin <span className="text-slate-500">Pengalaman</span>
+                  Poin <span className="text-slate-300">Pengalaman</span>
                 </h2>
                 <span className="text-cyan-400 font-mono font-black text-xl drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]">
                   {progress.xp} XP
@@ -209,7 +210,7 @@ export default function DashboardPage() {
                   <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent)] -translate-x-full animate-[shimmer_2s_infinite]" />
                 </motion.div>
               </div>
-              <p className="mt-4 text-[10px] text-slate-500 uppercase font-black tracking-widest font-mono text-right">
+              <p className="mt-4 text-[10px] text-slate-300 uppercase font-black tracking-widest font-mono text-right">
                 Butuh {1000 - (progress.xp % 1000)} XP untuk Naik Level
               </p>
             </motion.section>
@@ -273,7 +274,7 @@ export default function DashboardPage() {
               variants={itemVariants}
               className="bg-[#0d1117] rounded-[2rem] p-8 border border-white/5 shadow-[12px_12px_30px_#050608,-10px_-10px_25px_rgba(255,255,255,0.02)]"
             >
-              <h2 className="text-slate-500 font-mono font-black uppercase tracking-widest text-[10px] mb-6">
+              <h2 className="text-slate-300 font-mono font-black uppercase tracking-widest text-[10px] mb-6">
                 Pengaturan Data
               </h2>
               <div className="space-y-4">
@@ -301,12 +302,11 @@ export default function DashboardPage() {
           </div>
         </div>
       </motion.div>
-    </main>
+    </div>
   );
 }
 
-// --- SUB-COMPONENTS (With Neumorphic Styling) ---
-
+// --- SUB-COMPONENTS ---
 function SimpleStat({
   label,
   value,
@@ -318,7 +318,7 @@ function SimpleStat({
 }) {
   return (
     <div className="bg-[#0a0c10] shadow-[inset_3px_3px_8px_#050608,inset_-2px_-2px_6px_rgba(255,255,255,0.02)] rounded-xl flex justify-between items-center p-4 border border-white/5">
-      <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest">
+      <span className="text-[10px] font-mono font-bold text-slate-300 uppercase tracking-widest">
         {label}
       </span>
       <span className={`text-lg font-black italic ${color} font-mono`}>
@@ -346,7 +346,7 @@ function QuickLink({
         <span className="text-3xl group-hover:scale-110 transition-transform drop-shadow-md">
           {icon}
         </span>
-        <span className="text-[9px] font-mono font-black text-slate-400 uppercase tracking-tighter group-hover:text-cyan-400 transition-colors text-center">
+        <span className="text-[9px] font-mono font-black text-slate-200 uppercase tracking-tighter group-hover:text-cyan-400 transition-colors text-center">
           {label}
         </span>
       </Link>
@@ -360,23 +360,12 @@ function SettingsButton({ icon, label, onClick, hoverColor, isDanger }: any) {
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className={`w-full bg-[#0a0c10] shadow-[inset_3px_3px_8px_#050608,inset_-2px_-2px_6px_rgba(255,255,255,0.02)] border ${isDanger ? "border-red-500/20 text-red-500/80" : "border-white/5 text-slate-400"} p-4 rounded-xl flex items-center justify-between transition-colors ${hoverColor} group`}
+      className={`w-full bg-[#0a0c10] shadow-[inset_3px_3px_8px_#050608,inset_-2px_-2px_6px_rgba(255,255,255,0.02)] border ${isDanger ? "border-red-500/20 text-red-500/80" : "border-white/5 text-slate-200"} p-4 rounded-xl flex items-center justify-between transition-colors ${hoverColor} group`}
     >
       <span className="text-[10px] font-black uppercase tracking-widest">
         {label}
       </span>
       <span className="group-hover:scale-110 transition-transform">{icon}</span>
     </motion.button>
-  );
-}
-
-function SectionScore({ label, score }: { label: string; score: number }) {
-  return (
-    <div className="bg-[#080a0f] border border-white/5 rounded-xl p-4 text-center">
-      <p className="text-[9px] font-mono text-slate-500 uppercase font-bold tracking-widest mb-1">
-        {label}
-      </p>
-      <p className="text-xl font-black italic text-white">{score}%</p>
-    </div>
   );
 }

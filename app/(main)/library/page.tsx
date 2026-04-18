@@ -6,8 +6,8 @@ import { RefreshCw, BookOpen, BarChart2, ArrowRight } from "lucide-react";
 
 export default function LibraryPage() {
   return (
-    // PERBAIKAN: Menambahkan pt-28 md:pt-36 agar konten turun ke bawah Navbar
-    <main className="min-h-screen px-4 md:px-8 pt-28 md:pt-36 pb-24 bg-cyber-bg relative overflow-hidden">
+    // DIUBAH: Tag main diganti div. Dihapus pt-28 md:pt-36 pb-24. Lebar diatur 100% dan padding samping dipertahankan.
+    <div className="w-full px-4 md:px-8 relative overflow-hidden">
       {/* Latar Belakang Grid & Pendaran */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/10 via-transparent to-transparent pointer-events-none" />
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
@@ -42,7 +42,7 @@ export default function LibraryPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="flex-1 bg-cyber-surface p-8 md:p-10 rounded-[2.5rem] border border-white/5 hover:border-cyan-400/50 hover:bg-cyan-400/5 transition-all duration-300 shadow-[10px_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(34,211,238,0.15)] flex flex-col"
+              className="flex-1 bg-cyber-surface p-8 md:p-10 rounded-[2.5rem] border border-white/5 hover:border-cyan-400/50 hover:bg-cyan-400/5 transition-all duration-300 shadow-[10px_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(34,211,238,0.15)] flex flex-col h-full"
             >
               <div className="flex justify-between items-start mb-10">
                 <div className="w-14 h-14 bg-cyan-400/10 rounded-2xl flex items-center justify-center border border-cyan-400/30 group-hover:scale-110 transition-transform shadow-inner">
@@ -56,11 +56,12 @@ export default function LibraryPage() {
               <h2 className="text-2xl md:text-3xl font-black text-cyan-400 uppercase italic tracking-tighter mb-4 leading-none">
                 Kamus Kata Kerja
               </h2>
-              <p className="text-sm text-slate-400 leading-relaxed mb-10 flex-1">
+              <p className="text-sm text-slate-200 leading-relaxed mb-10 flex-1">
                 Mesin konjugasi untuk kata kerja N5. Bentuk Masu, Te, Nai, Ta,
                 hingga Potensial. Lengkap dengan latihan hafalan.
               </p>
 
+              {/* mt-auto sangat penting untuk menjaga tinggi card */}
               <div className="mt-auto flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-white/40 group-hover:text-cyan-400 transition-colors bg-black/20 p-4 rounded-xl border border-white/5 group-hover:border-cyan-400/30">
                 <span>Buka Data</span>
                 <ArrowRight
@@ -77,7 +78,7 @@ export default function LibraryPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="flex-1 bg-cyber-surface p-8 md:p-10 rounded-[2.5rem] border border-white/5 hover:border-purple-500/50 hover:bg-purple-500/5 transition-all duration-300 shadow-[10px_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] flex flex-col"
+              className="flex-1 bg-cyber-surface p-8 md:p-10 rounded-[2.5rem] border border-white/5 hover:border-purple-500/50 hover:bg-purple-500/5 transition-all duration-300 shadow-[10px_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] flex flex-col h-full"
             >
               <div className="flex justify-between items-start mb-10">
                 <div className="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center border border-purple-500/30 group-hover:scale-110 transition-transform shadow-inner">
@@ -91,7 +92,7 @@ export default function LibraryPage() {
               <h2 className="text-2xl md:text-3xl font-black text-purple-400 uppercase italic tracking-tighter mb-4 leading-none">
                 Panduan Tata Bahasa
               </h2>
-              <p className="text-sm text-slate-400 leading-relaxed mb-10 flex-1">
+              <p className="text-sm text-slate-200 leading-relaxed mb-10 flex-1">
                 Dokumentasi pola kalimat lengkap dengan contoh audio dan
                 penjelasan mendetail yang mudah dipahami.
               </p>
@@ -112,7 +113,7 @@ export default function LibraryPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="flex-1 bg-cyber-surface p-8 md:p-10 rounded-[2.5rem] border border-white/5 hover:border-rose-400/50 hover:bg-rose-400/5 transition-all duration-300 shadow-[10px_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(244,63,94,0.15)] flex flex-col"
+              className="flex-1 bg-cyber-surface p-8 md:p-10 rounded-[2.5rem] border border-white/5 hover:border-rose-400/50 hover:bg-rose-400/5 transition-all duration-300 shadow-[10px_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(244,63,94,0.15)] flex flex-col h-full"
             >
               <div className="flex justify-between items-start mb-10">
                 <div className="w-14 h-14 bg-rose-400/10 rounded-2xl flex items-center justify-center border border-rose-400/30 group-hover:scale-110 transition-transform shadow-inner">
@@ -127,7 +128,7 @@ export default function LibraryPage() {
               <h2 className="text-2xl md:text-3xl font-black text-rose-400 uppercase italic tracking-tighter mb-4 leading-none">
                 Kamus Kosakata
               </h2>
-              <p className="text-sm text-slate-400 leading-relaxed mb-10 flex-1">
+              <p className="text-sm text-slate-200 leading-relaxed mb-10 flex-1">
                 Ribuan perbendaharaan kata dari N5 hingga N2. Dilengkapi dengan
                 filter jenis kata (Hinshi) dan sistem pencarian instan.
               </p>
@@ -151,7 +152,7 @@ export default function LibraryPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="flex-1 bg-cyber-surface p-8 md:p-10 rounded-[2.5rem] border border-white/5 hover:border-emerald-400/50 hover:bg-emerald-400/5 transition-all duration-300 shadow-[10px_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(16,185,129,0.15)] flex flex-col"
+              className="flex-1 bg-cyber-surface p-8 md:p-10 rounded-[2.5rem] border border-white/5 hover:border-emerald-400/50 hover:bg-emerald-400/5 transition-all duration-300 shadow-[10px_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(16,185,129,0.15)] flex flex-col h-full"
             >
               <div className="flex justify-between items-start mb-10">
                 <div className="w-14 h-14 bg-emerald-400/10 rounded-2xl flex items-center justify-center border border-emerald-400/30 group-hover:scale-110 transition-transform shadow-inner">
@@ -165,7 +166,7 @@ export default function LibraryPage() {
               <h2 className="text-2xl md:text-3xl font-black text-emerald-400 uppercase italic tracking-tighter mb-4 leading-none">
                 Catatan Ringkas
               </h2>
-              <p className="text-sm text-slate-400 leading-relaxed mb-10 flex-1">
+              <p className="text-sm text-slate-200 leading-relaxed mb-10 flex-1">
                 Tabel referensi cepat (Cheatsheet) untuk hitungan angka, format
                 waktu, daftar partikel, dan konter benda.
               </p>
@@ -181,6 +182,6 @@ export default function LibraryPage() {
           </Link>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
