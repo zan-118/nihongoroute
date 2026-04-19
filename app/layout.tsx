@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     siteName: "NihongoRoute",
     images: [
       {
-        url: "/og-image.jpg", 
+        url: "/og-image.png", 
         width: 1200,
         height: 630,
         alt: "NihongoRoute Dashboard",
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
     title: "NihongoRoute | Belajar Bahasa Jepang Gratis",
     description:
       "Platform e-learning bahasa Jepang gratis dengan gaya UI interaktif.",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.png"],
   },
 };
 
