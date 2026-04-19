@@ -1,3 +1,13 @@
+/**
+ * @file page.tsx
+ * @description Halaman Mode Survival untuk latihan kecepatan mengingat kosakata.
+ * Mengharuskan minimal 4 kosakata agar sistem pengacakan opsi dapat berfungsi.
+ * @module SurvivalPage
+ */
+
+// ======================
+// IMPORTS
+// ======================
 import { client } from "@/sanity/lib/client";
 import Link from "next/link";
 import SurvivalMode from "@/components/SurvivalMode";
@@ -5,13 +15,28 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
+// ======================
+// TYPES
+// ======================
 interface PageProps {
   params: Promise<{ categoryId: string }>;
 }
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen SurvivalPage: Mengambil data dan merender sistem permainan survival.
+ * 
+ * @returns {JSX.Element} Antarmuka permainan survival.
+ */
 export default async function SurvivalPage({ params }: PageProps) {
   const { categoryId } = await params;
 
+  // ======================
+  // DATABASE OPERATIONS
+  // ======================
   const query = `{
     "vocab": *[_type == "vocab" && showInFlashcard != false && course_category->slug.current == $categoryId] {
       _id, word, meaning, romaji, furigana, category
@@ -24,6 +49,9 @@ export default async function SurvivalPage({ params }: PageProps) {
   const data = await client.fetch(query, { categoryId });
   const cards = [...(data.vocab || []), ...(data.verbs || [])];
 
+  // ======================
+  // RENDER
+  // ======================
   return (
     <main className="w-full flex-1 flex flex-colflow-hidden  flex-col">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-red-900/15 via-cyber-bg to-cyber-bg pointer-events-none z-0" />

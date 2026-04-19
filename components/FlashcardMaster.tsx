@@ -1,10 +1,15 @@
 /**
- * LOKASI FILE: components/FlashcardMaster.tsx
- * KONSEP: Mobile-First Neumorphic (Sistem Hafalan)
+ * @file FlashcardMaster.tsx
+ * @description Komponen pengelola sistem hafalan (Flashcard) yang mendukung mode latihan dan ujian.
+ * Mengintegrasikan algoritma Spaced Repetition System (SRS) untuk pelacakan kemajuan belajar.
+ * @module FlashcardMaster
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -26,6 +31,9 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 
+// ======================
+// TYPES
+// ======================
 export interface MasterCardData {
   _id?: string;
   id?: string;
@@ -39,6 +47,18 @@ export interface MasterCardData {
   category?: string;
 }
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen FlashcardMaster: Mesin utama untuk interaksi kartu hafalan.
+ * 
+ * @param {Object} props - Properti komponen.
+ * @param {MasterCardData[]} props.cards - Daftar kartu yang akan dipelajari.
+ * @param {"vocab" | "kanji"} props.type - Tipe kartu (kosakata atau kanji).
+ * @returns {JSX.Element | null} Interface sistem flashcard.
+ */
 export default function FlashcardMaster({
   cards,
   type = "vocab",
@@ -63,7 +83,9 @@ export default function FlashcardMaster({
   const { progress, updateProgress } = useProgress();
   const router = useRouter();
 
-  // THEME CONFIG
+  // ======================
+  // CONFIG / CONSTANTS
+  // ======================
   const isKanji = type === "kanji";
   const themeColor = isKanji ? "text-purple-400" : "text-cyber-neon";
   const themeBgColor = isKanji ? "bg-purple-500" : "bg-cyber-neon";
@@ -79,6 +101,15 @@ export default function FlashcardMaster({
 
   const card = cards[currentIndex];
 
+  // ======================
+  // BUSINESS LOGIC
+  // ======================
+
+  /**
+   * Mengatur navigasi antar kartu dalam mode latihan.
+   * 
+   * @param {1 | -1} dir - Arah navigasi (1 untuk maju, -1 untuk mundur).
+   */
   const handleNav = (dir: 1 | -1) => {
     if (currentIndex + dir >= 0 && currentIndex + dir < cards.length) {
       setDirection(dir);
@@ -89,10 +120,16 @@ export default function FlashcardMaster({
     }
   };
 
+  /**
+   * Memproses jawaban user (benar/salah) dan memperbarui status SRS.
+   * 
+   * @param {boolean} correct - Apakah user menjawab dengan benar.
+   */
   const handleAnswer = (correct: boolean) => {
     const cardId = card._id || card.id || "unknown";
     const xpReward = correct ? 15 : 5;
 
+    // Update statistik sesi saat ini
     setSessionStats((prev) => ({
       known: prev.known + (correct ? 1 : 0),
       learning: prev.learning + (correct ? 0 : 1),
@@ -101,6 +138,7 @@ export default function FlashcardMaster({
 
     updateProgressOnReview();
 
+    // Mengambil state SRS saat ini atau inisialisasi jika baru
     const currentState = progress.srs[cardId] || {
       interval: 1,
       repetition: 0,
@@ -108,6 +146,7 @@ export default function FlashcardMaster({
       nextReview: Date.now(),
     };
 
+    // Feedback visual dan audio
     if (correct) {
       sounds?.playSuccess();
       setShowXP(true);
@@ -117,14 +156,19 @@ export default function FlashcardMaster({
     }
 
     setDirection(correct ? 1 : -1);
+    
+    // Hitung state SRS baru berdasarkan performa
     const newState = updateCardState(currentState, correct);
 
+    // Update progress global ke database/context
     updateProgress(progress.xp + xpReward, {
       ...progress.srs,
       [cardId]: newState,
     });
 
     setIsFlipped(false);
+    
+    // Transisi ke kartu berikutnya atau selesaikan sesi
     setTimeout(() => {
       if (currentIndex < cards.length - 1) {
         setCurrentIndex(currentIndex + 1);
@@ -135,6 +179,9 @@ export default function FlashcardMaster({
     }, 200);
   };
 
+  /**
+   * Mereset seluruh state sesi untuk mengulang pembelajaran.
+   */
   const handleRestart = () => {
     setCurrentIndex(0);
     setIsFlipped(false);
@@ -142,6 +189,9 @@ export default function FlashcardMaster({
     setSessionStats({ known: 0, learning: 0, xpGained: 0 });
   };
 
+  // ======================
+  // RENDER
+  // ======================
   return (
     <section className="w-full max-w-2xl mx-auto relative px-4 md:px-0">
       <Dialog open={isFinished} onOpenChange={setIsFinished}>
@@ -271,7 +321,7 @@ export default function FlashcardMaster({
         </div>
       </header>
 
-      {/* KARTU UTAMA */}
+      {/* KARTU UTAMA SECTION */}
       <div className="relative w-full mb-8 md:mb-10">
         <AnimatePresence initial={false} mode="wait">
           <motion.div

@@ -1,32 +1,46 @@
 /**
- * @file app/(main)/exams/[id]/page.tsx
- * @description Halaman Sesi Ujian Dinamis (Standalone Exam Session). Bertanggung jawab meresolusi ID rute URL, menarik struktur soal dari Sanity CMS, dan menangani state "404 Not Found" atau "Under Construction" secara kondisional di sisi server.
- * @module Server Component
+ * @file page.tsx
+ * @description Halaman Sesi Ujian Dinamis (Standalone Exam Session). 
+ * Bertanggung jawab meresolusi ID rute URL dan menarik struktur soal dari Sanity CMS.
+ * @module StandaloneExamSessionPage
  */
 
+// ======================
+// IMPORTS
+// ======================
 import { client } from "@/sanity/lib/client";
 import MockExamEngine from "@/components/MockExamEngine";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+// ======================
+// TYPES
+// ======================
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-// Konfigurasi ISR untuk mereset cache hasil kueri setiap menit (60 detik)
+// ======================
+// CONFIG / CONSTANTS
+// ======================
 export const revalidate = 60;
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
 /**
- * Komponen Induk Layar Ujian.
- * Melakukan pengecekan validitas ketersediaan data ujian. Jika data kosong/rusak, menampilkan peringatan pencegahan; jika ada, merender `MockExamEngine` ke klien.
+ * Komponen StandaloneExamSessionPage: Melakukan pengecekan validitas ketersediaan data ujian.
  * 
  * @returns {JSX.Element} Merender layar Error/Kosong, atau mesin interaktif ujian JLPT.
  */
 export default async function StandaloneExamSessionPage({ params }: PageProps) {
   const { id } = await params;
 
-  // Menarik spesifikasi dan rentetan soal beserta opsi jawaban, referensi audio, maupun referensi gambar.
+  // ======================
+  // DATABASE OPERATIONS
+  // ======================
   const query = `*[_type == "mockExam" && _id == $id][0] {
     _id, title, timeLimit, passingScore,
     "categorySlug": course_category->slug.current, 
@@ -42,7 +56,11 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
     ? `/courses/${examData.categorySlug}`
     : "/courses";
 
-  // 1. HANDLING: DATA TIDAK DITEMUKAN (Invalid ID / Terhapus dari Sanity)
+  // ======================
+  // RENDER (Error Handling & Engine)
+  // ======================
+
+  // 1. HANDLING: DATA TIDAK DITEMUKAN
   if (!examData) {
     return (
       <div className="w-full flex-1 flex flex-col items-center justify-center px-6 text-center relative overflow-hidden py-12">
@@ -71,7 +89,7 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
     );
   }
 
-  // 2. HANDLING: SOAL MASIH KOSONG (Header metadata ada, tapi Array questions kosong)
+  // 2. HANDLING: SOAL MASIH KOSONG
   if (!examData.questions || examData.questions.length === 0) {
     return (
       <div className="w-full flex-1 flex flex-col items-center justify-center px-6 text-center relative overflow-hidden py-12">
@@ -102,7 +120,7 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
     );
   }
 
-  // 3. RENDER MOCK EXAM ENGINE (Berhasil memuat butir soal)
+  // 3. MAIN RENDER
   return (
     <div className="w-full flex-1 px-4 md:px-8 relative overflow-hidden flex flex-col mt-4 md:mt-8">
       <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-red-500/5 blur-[150px] rounded-full pointer-events-none" />

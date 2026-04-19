@@ -1,26 +1,35 @@
 /**
- * @file app/(main)/courses/[categoryId]/page.tsx
- * @description Halaman indeks daftar materi (kurikulum) untuk level spesifik seperti N5 atau N4. Mengambil metadata materi beserta daftar simulasi ujian dari Sanity CMS.
- * @module Server Component
+ * @file page.tsx
+ * @description Halaman indeks daftar materi untuk level spesifik (e.g., N5, N4).
+ * @module CourseCategoryPage
  */
 
+// ======================
+// IMPORTS
+// ======================
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { client } from "@/sanity/lib/client";
-import CourseCategoryClient from "./CourseCategoryClient"; // Import komponen klien
+import CourseCategoryClient from "./CourseCategoryClient";
 
-// ISR: Regenerasi halaman statis secara latar belakang setiap 1 Jam (3600 detik)
+// ======================
+// CONFIG / CONSTANTS
+// ======================
 export const revalidate = 3600;
 
 interface PageProps {
   params: Promise<{ categoryId: string }>;
 }
 
+// ======================
+// DATABASE OPERATIONS
+// ======================
+
 /**
- * Mengambil metadata kategori dan daftar pelajaran (lessons) dari Sanity CMS berdasarkan referensi kategori silabus yang cocok.
+ * Mengambil metadata kategori dan daftar pelajaran dari Sanity CMS.
  * 
- * @param {string} slug - String identifikasi level (contoh: "n5" atau "n4").
- * @returns {Promise<Object>} Kumpulan data kategori, daftar artikel/bab pelajaran, dan daftar ujian terkait.
+ * @param {string} slug - Identifikasi level (e.g., "n5").
+ * @returns {Promise<Object>} Data kategori, pelajaran, dan ujian.
  */
 async function getCourseData(slug: string) {
   const query = `{
@@ -35,9 +44,12 @@ async function getCourseData(slug: string) {
   return await client.fetch(query, { slug });
 }
 
+// ======================
+// METADATA
+// ======================
+
 /**
- * Penyuntikan Metadata SEO Secara Dinamis.
- * Mengekstrak informasi kategori sebelum render untuk memberi informasi *title* dan *description* ke metatag HTML.
+ * Menghasilkan metadata SEO dinamis berdasarkan kategori.
  */
 export async function generateMetadata({
   params,
@@ -56,12 +68,14 @@ export async function generateMetadata({
   };
 }
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
 /**
- * Rute Induk Daftar Materi Silabus.
- * Mengelola pengunduhan data server, memberikan status 'notFound' jika parameter gagal dipenuhi,
- * dan mendelegasikan perenderan visual ke antarmuka klien (CourseCategoryClient).
+ * Komponen CourseCategoryPage: Mengambil data kategori dan merender CourseCategoryClient.
  * 
- * @returns {JSX.Element} Merender komponen interaktif atau pesan 404 jika silabus kosong.
+ * @returns {JSX.Element} Halaman kategori materi.
  */
 export default async function CourseCategoryPage({ params }: PageProps) {
   const { categoryId } = await params;
@@ -69,6 +83,6 @@ export default async function CourseCategoryPage({ params }: PageProps) {
 
   if (!data.category) return notFound();
 
-  // Oper data ke komponen klien untuk keperluan animasi dan state manajemen
   return <CourseCategoryClient data={data} categoryId={categoryId} />;
 }
+

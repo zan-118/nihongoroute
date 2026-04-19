@@ -1,5 +1,17 @@
-// lib/queries.ts
+/**
+ * @file queries.ts
+ * @description Koleksi query GROQ (Graph Relational Object Queries) untuk pengambilan data dari Sanity CMS.
+ * Mengatur struktur proyeksi data yang dikirimkan ke frontend.
+ * @module lib/queries
+ */
 
+// ======================
+// DICTIONARY QUERIES
+// ======================
+
+/**
+ * Mengambil semua daftar kata kerja dari kamus beserta konjugasinya.
+ */
 export const allVerbsQuery = `*[_type == "verb_dictionary"] | order(group asc, masu asc) {
   _id,
   group,
@@ -23,11 +35,13 @@ export const allVerbsQuery = `*[_type == "verb_dictionary"] | order(group asc, m
   meirei
 }`;
 
+/**
+ * Mengambil semua ringkasan materi (cheatsheets) beserta referensi kosakatanya.
+ */
 export const allCheatsheetsQuery = `*[_type == "cheatsheet"] | order(category asc) {
   _id,
   title,
   category,
-  // Menyesuaikan referensi ke skema 'vocab'
   linkedVocab[]-> {
     "label": meaning,
     "jp": word,
@@ -41,6 +55,13 @@ export const allCheatsheetsQuery = `*[_type == "cheatsheet"] | order(category as
   }
 }`;
 
+// ======================
+// CONTENT QUERIES
+// ======================
+
+/**
+ * Mengambil artikel tata bahasa lengkap.
+ */
 export const allGrammarArticlesQuery = `*[_type == "grammar_article"] {
   _id,
   title,
@@ -54,7 +75,10 @@ export const allGrammarArticlesQuery = `*[_type == "grammar_article"] {
   }
 }`;
 
-// Update: Menggunakan _type "vocab", menghapus kanjiDetails, dan menambahkan hinshi
+/**
+ * Mengambil dataset kosakata spesifik berdasarkan daftar ID.
+ * Digunakan terutama oleh sistem SRS (Spaced Repetition System).
+ */
 export const vocabByIdsQuery = `*[_type == "vocab" && _id in $ids] {
   _id,
   word,
@@ -65,7 +89,9 @@ export const vocabByIdsQuery = `*[_type == "vocab" && _id in $ids] {
   "audioUrl": audio.asset->url
 }`;
 
-// Update: Menghapus kanjiDetails dan menambahkan hinshi pada proyeksi vocabList dan referenceWords
+/**
+ * Query detail materi (Lesson) mencakup daftar kosakata dan kuis.
+ */
 export const lessonQuery = `*[_type == "lesson" && slug.current == $slug][0] {
   title,
   summary,

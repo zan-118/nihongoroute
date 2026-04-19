@@ -1,10 +1,14 @@
 /**
- * LOKASI FILE: components/QuizEngine.tsx
- * KONSEP: Cyber-Dark Neumorphic (Quiz HUD)
+ * @file QuizEngine.tsx
+ * @description Mesin kuis interaktif yang digunakan dalam pelajaran untuk menguji pemahaman pengguna secara real-time.
+ * @module QuizEngine
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -17,6 +21,9 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Target, RefreshCw, ArrowRight, Brain, AlertCircle } from "lucide-react";
 
+// ======================
+// TYPES
+// ======================
 interface QuizProps {
   questions: Array<{
     question: string;
@@ -26,7 +33,18 @@ interface QuizProps {
   }>;
 }
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen QuizEngine: Menangani logika kuis, perhitungan skor, dan pemberian XP.
+ * 
+ * @param {QuizProps} props - Daftar pertanyaan kuis.
+ * @returns {JSX.Element} Antarmuka kuis.
+ */
 export default function QuizEngine({ questions }: QuizProps) {
+  // State Management
   const [isClient, setIsClient] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -47,6 +65,13 @@ export default function QuizEngine({ questions }: QuizProps) {
 
   const currentQ = questions[currentIndex];
 
+  // ======================
+  // HELPER FUNCTIONS
+  // ======================
+
+  /**
+   * Menangani pemilihan opsi jawaban.
+   */
   const handleSelect = (option: string) => {
     if (isAnswered) return;
 
@@ -73,6 +98,9 @@ export default function QuizEngine({ questions }: QuizProps) {
     }, 1500);
   };
 
+  /**
+   * Menyelesaikan sesi kuis dan menghitung XP.
+   */
   const handleFinish = (finalScore: number) => {
     setIsFinished(true);
     const baseXP = finalScore * 25;
@@ -87,6 +115,9 @@ export default function QuizEngine({ questions }: QuizProps) {
     }
   };
 
+  /**
+   * Mereset ulang kuis.
+   */
   const resetQuiz = () => {
     setCurrentIndex(0);
     setScore(0);
@@ -95,7 +126,9 @@ export default function QuizEngine({ questions }: QuizProps) {
     setIsFinished(false);
   };
 
-  /* ================= RENDERING ================= */
+  // ======================
+  // RENDER: FINISHED STATE
+  // ======================
 
   if (isFinished) {
     const percentage = Math.round((score / questions.length) * 100);
@@ -175,7 +208,9 @@ export default function QuizEngine({ questions }: QuizProps) {
     );
   }
 
-  /* ================= ACTIVE QUIZ RENDERING ================= */
+  // ======================
+  // RENDER: ACTIVE QUIZ
+  // ======================
   return (
     <Card className="bg-cyber-surface p-8 md:p-12 rounded-[4rem] border-white/5 shadow-none relative overflow-hidden neo-card">
       {/* HUD Background elements */}
@@ -298,3 +333,4 @@ export default function QuizEngine({ questions }: QuizProps) {
     </Card>
   );
 }
+

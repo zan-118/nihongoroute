@@ -1,5 +1,15 @@
+/**
+ * @file PdfGenerator.tsx
+ * @description Mesin penghasil file PDF menggunakan @react-pdf/renderer.
+ * Mendukung berbagai template (Pelajaran & Kosakata) dengan sistem unduhan asinkron.
+ * @module PdfGenerator
+ */
+
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import React, { useState, useEffect } from "react";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { LessonPdfTemplate } from "./LessonPdfTemplate";
@@ -7,6 +17,9 @@ import { VocabPdfTemplate } from "./VocabPdfTemplate";
 import { Download, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+// ======================
+// TYPES
+// ======================
 export type TemplateType = "lesson" | "vocab";
 
 interface PdfGeneratorProps {
@@ -16,6 +29,16 @@ interface PdfGeneratorProps {
   level?: string;
 }
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen PdfGenerator: Mengonfigurasi data ke dalam template PDF dan menangani status unduhan.
+ * 
+ * @param {PdfGeneratorProps} props - Properti komponen.
+ * @returns {JSX.Element} Komponen link unduhan PDF.
+ */
 export default function PdfGenerator({
   data,
   type,
@@ -24,18 +47,21 @@ export default function PdfGenerator({
 }: PdfGeneratorProps) {
   const [isClient, setIsClient] = useState(false);
 
+  // ======================
+  // EFFECTS
+  // ======================
+
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  if (!isClient || !data || (Array.isArray(data) && data.length === 0)) {
-    return (
-      <Button variant="ghost" disabled className="bg-[#0a0c10] border-white/5 neo-inset shadow-none px-6 py-3 rounded-xl text-slate-300 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 w-full sm:w-auto h-auto">
-        Menunggu Data...
-      </Button>
-    );
-  }
+  // ======================
+  // HELPER FUNCTIONS
+  // ======================
 
+  /**
+   * Menentukan template dokumen PDF yang akan digunakan.
+   */
   const getDocument = (): any => {
     if (type === "lesson") return <LessonPdfTemplate lessonData={data} />;
     if (type === "vocab")
@@ -44,6 +70,9 @@ export default function PdfGenerator({
     return <LessonPdfTemplate lessonData={data} />;
   };
 
+  /**
+   * Menghasilkan nama file PDF berdasarkan metadata.
+   */
   const getFileName = () => {
     if (title) return `${title}_NihongoRoute.pdf`;
     const timestamp = new Date()
@@ -54,6 +83,18 @@ export default function PdfGenerator({
       return `Kamus_Kosakata_${level || "All"}_${timestamp}.pdf`;
     return `Materi_NihongoRoute_${timestamp}.pdf`;
   };
+
+  // ======================
+  // RENDER
+  // ======================
+
+  if (!isClient || !data || (Array.isArray(data) && data.length === 0)) {
+    return (
+      <Button variant="ghost" disabled className="bg-[#0a0c10] border-white/5 neo-inset shadow-none px-6 py-3 rounded-xl text-slate-300 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 w-full sm:w-auto h-auto">
+        Menunggu Data...
+      </Button>
+    );
+  }
 
   return (
     <PDFDownloadLink

@@ -86,7 +86,9 @@ export default function VerbListClient({
       </div>
     );
   }
-
+  // ======================
+  // RENDER
+  // ======================
   return (
     <div className="w-full flex flex-col flex-1 pb-24 px-4 md:px-8 lg:px-12">
       <nav className="mb-8 md:mb-12 flex flex-wrap items-center gap-2 md:gap-4 text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-widest">

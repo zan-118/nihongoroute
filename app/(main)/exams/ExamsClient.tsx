@@ -1,11 +1,15 @@
 /**
- * @file app/(main)/exams/ExamsClient.tsx
- * @description Antarmuka Daftar Ujian interaktif. Menerima properti (props) data mentah dari `exams/page.tsx` lalu membungkusnya dengan transisi Framer Motion agar tampil dinamis kepada pengguna.
- * @module Client Component
+ * @file ExamsClient.tsx
+ * @description Antarmuka Daftar Ujian interaktif. 
+ * Menerima data mentah dari server dan membungkusnya dengan transisi Framer Motion.
+ * @module ExamsClient
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
 import {
@@ -19,7 +23,9 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-// Variabel transisi kontainer induk untuk merender daftar kartu secara sekuensial
+// ======================
+// CONFIG / CONSTANTS
+// ======================
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -28,24 +34,28 @@ const containerVariants: Variants = {
   },
 };
 
-// Variabel transisi individu (efek pantul dari bawah)
 const itemVariants: Variants = {
   hidden: { y: 20, opacity: 0 },
   visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100 } },
 };
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
 /**
- * Komponen Penampil Data Antrean Ujian.
- * Menampilkan grid kartu ujian berdasarkan data yang diturunkan oleh Server Component.
+ * Komponen ExamsClient: Menampilkan grid kartu ujian dengan animasi.
  * 
  * @param {Object} props - Properti komponen.
- * @param {Array} props.exams - Array objek yang merinci judul, batas waktu, dan nilai lulus simulasi ujian.
- * @returns {JSX.Element} Grid navigasi interaktif menuju modul `MockExamEngine`.
- */
-export default function ExamsClient({ exams }: { exams: any[] }) {
+ * @param {any[]} props.exams - Daftar objek data ujian.
+ * @returns {JSX.Element} Antarmuka daftar ujian.
+ */export default function ExamsClient({ exams }: { exams: any[] }) {
+  // ======================
+  // RENDER
+  // ======================
   return (
     <div className="w-full px-6 relative overflow-hidden">
-      {/* Background Ambient */}
+      {/* Background Ambient Decor */}
       <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-red-500/5 rounded-full blur-[150px] pointer-events-none animate-pulse" />
       <div className="absolute bottom-[10%] left-[-10%] w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[120px] pointer-events-none" />
 
@@ -55,7 +65,7 @@ export default function ExamsClient({ exams }: { exams: any[] }) {
         animate="visible"
         variants={containerVariants}
       >
-        {/* HEADER */}
+        {/* HEADER SECTION */}
         <header className="mb-20">
           <motion.div
             variants={itemVariants}
@@ -92,7 +102,7 @@ export default function ExamsClient({ exams }: { exams: any[] }) {
           </motion.div>
         </header>
 
-        {/* PERINGATAN */}
+        {/* WARNING SECTION */}
         <motion.div variants={itemVariants} className="mb-12">
           <Card className="p-6 border-amber-500/20 bg-amber-500/5 flex items-start gap-4 rounded-2xl">
             <AlertTriangle className="text-amber-500 shrink-0 mt-1" size={24} />
@@ -109,7 +119,7 @@ export default function ExamsClient({ exams }: { exams: any[] }) {
           </Card>
         </motion.div>
 
-        {/* DAFTAR UJIAN GRID */}
+        {/* EXAM LIST GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {exams.length > 0 ? (
             exams.map((exam) => (
@@ -127,7 +137,6 @@ export default function ExamsClient({ exams }: { exams: any[] }) {
                   legacyBehavior
                 >
                   <Card className="p-8 group hover:border-red-500/50 hover:bg-red-500/5 transition-all duration-300 flex flex-col h-full relative overflow-hidden cursor-pointer neo-card rounded-[2rem] border-white/5">
-                    {/* Efek Glow Latar Belakang */}
                     <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-red-500/10 rounded-full blur-[40px] group-hover:bg-red-500/20 transition-colors pointer-events-none" />
 
                     <div className="flex justify-between items-start mb-8 relative z-10">
@@ -203,3 +212,4 @@ export default function ExamsClient({ exams }: { exams: any[] }) {
     </div>
   );
 }
+

@@ -1,3 +1,9 @@
+/**
+ * @file VocabPdfTemplate.tsx
+ * @description Template dokumen PDF untuk daftar kosakata (Vocabulary).
+ * @module VocabPdfTemplate
+ */
+
 import React from "react";
 import {
   Page,
@@ -8,11 +14,17 @@ import {
   Link,
 } from "@react-pdf/renderer";
 
+// ======================
+// TYPES
+// ======================
 interface VocabTemplateProps {
   data: any[];
   level: string;
 }
 
+// ======================
+// STYLES
+// ======================
 const styles = StyleSheet.create({
   page: {
     padding: 40,
@@ -138,10 +150,20 @@ const styles = StyleSheet.create({
   },
 });
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen VocabPdfTemplate: Menyusun struktur visual PDF untuk daftar kosakata.
+ * 
+ * @param {VocabTemplateProps} props - Data kosakata dan level.
+ * @returns {JSX.Element} Dokumen PDF.
+ */
 export const VocabPdfTemplate = ({ data, level }: VocabTemplateProps) => (
   <Document title={`Vocab_NihongoRoute_${level}`}>
     <Page size="A4" style={styles.page}>
-      {/* Header Section */}
+      {/* HEADER SECTION */}
       <View style={styles.header}>
         <View style={styles.logoBox}>
           <Text style={styles.brandName}>NIHONGO ROUTE</Text>
@@ -155,7 +177,7 @@ export const VocabPdfTemplate = ({ data, level }: VocabTemplateProps) => (
         </View>
       </View>
 
-      {/* Table Section */}
+      {/* TABLE SECTION */}
       <View style={styles.table}>
         <View style={styles.tableHeader}>
           <View style={styles.col1}>
@@ -196,7 +218,7 @@ export const VocabPdfTemplate = ({ data, level }: VocabTemplateProps) => (
         ))}
       </View>
 
-      {/* Footer Section with active URL */}
+      {/* FOOTER SECTION */}
       <View style={styles.footer} fixed>
         <Text style={styles.footerText}>
           © {new Date().getFullYear()} NihongoRoute.my.id

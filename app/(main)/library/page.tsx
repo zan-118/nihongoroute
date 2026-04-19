@@ -1,23 +1,30 @@
 /**
- * @file app/(main)/library/page.tsx
- * @description Pusat Data (Data Center) yang menjadi gerbang sentral menuju koleksi bahan ajar taktis, seperti matriks konjugasi kata kerja, tata bahasa (bunpou), glosarium, dan catatan kilat (cheatsheet).
- * @module Client Component
+ * @file page.tsx
+ * @description Pusat Data (Data Center) yang menjadi gerbang sentral menuju koleksi bahan ajar taktis.
+ * @module LibraryPage
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import { motion } from "motion/react";
 import Link from "next/link";
 import { RefreshCw, BookOpen, BarChart2, ArrowRight, Library, Database, Activity, Server, GraduationCap, ArrowUpRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
 /**
- * Komponen Halaman Pustaka Pusat (Library Landing Page).
- * Mengusung gaya dasbor administrator data, memberikan pengguna rasa memiliki akses terhadap seluruh "database" pembelajaran bahasa Jepang yang terstruktur.
+ * Komponen LibraryPage: Menampilkan panel navigasi untuk berbagai modul pustaka pembelajaran.
  * 
- * @returns {JSX.Element} Panel navigasi antar-modul pembelajaran komprehensif.
+ * @returns {JSX.Element} Elemen halaman pustaka.
  */
 export default function LibraryPage() {
+  // CONFIG: Kategori Modul
   const categories = [
     {
       href: "/library/verbs",
@@ -52,7 +59,9 @@ export default function LibraryPage() {
       delay: 0.5
     }
   ];
-
+  // ======================
+  // RENDER
+  // ======================
   return (
     <div className="w-full px-4 md:px-8 lg:px-12 relative overflow-hidden pb-24">
       {/* Background Neural Overlays */}
@@ -92,8 +101,7 @@ export default function LibraryPage() {
                 transition={{ delay: 0.2 }}
                 className="text-slate-400 text-xs md:text-base lg:text-xl max-w-2xl leading-relaxed font-bold tracking-wide"
               >
-                Akses instan ke materi pembelajaran bahasa Jepang. 
-                Pilih modul di bawah ini untuk mulai belajar pola kalimat, kosakata, dan konjugasi.
+                Akses instan ke materi pembelajaran bahasa Jepang. Pilih modul di bawah ini.
               </motion.p>
             </div>
             
@@ -132,7 +140,6 @@ export default function LibraryPage() {
                 className="w-full h-full"
               >
                 <Card className="h-full p-8 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] border-white/5 bg-cyber-surface hover:border-cyber-neon/40 transition-all duration-500 neo-card shadow-none flex flex-col group relative overflow-hidden">
-                  {/* Decorative background number */}
                   <div className="absolute -top-6 -right-6 md:-top-10 md:-right-10 text-[10rem] md:text-[12rem] font-black text-white/[0.02] group-hover:text-cyber-neon/[0.04] transition-all duration-700 pointer-events-none uppercase">
                     0{idx + 1}
                   </div>
@@ -174,3 +181,4 @@ export default function LibraryPage() {
     </div>
   );
 }
+

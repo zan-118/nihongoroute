@@ -4,114 +4,137 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Sanity](https://img.shields.io/badge/Sanity-F1662A?style=for-the-badge&logo=sanity&logoColor=white)](https://www.sanity.io/)
 [![Tailwind](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)](https://www.framer.com/motion/)
 
-**NihongoRoute** adalah platform _self-learning_ bahasa Jepang modern dengan estetika **Cyber-Dark Neumorphic**. Aplikasi ini dirancang untuk memandu pembelajar (khususnya tingkat N5 hingga N2) menguasai kosakata, tata bahasa, dan kanji melalui sistem yang tergamifikasi, responsif, dan berbasis data.
-
-[**Jelajahi Aplikasi »**](https://www.nihongoroute.my.id)
+## 📝 Deskripsi
+**NihongoRoute** adalah platform pembelajaran mandiri (self-learning) bahasa Jepang tingkat profesional untuk pembelajar JLPT N5 hingga N2. Dibangun dengan estetika modern **Cyber-Dark Neumorphic**, aplikasi ini memberikan pengalaman belajar yang imersif dan tergamifikasi untuk menguasai kosakata, tata bahasa, dan kanji. Platform ini mengutamakan performa *local-first* yang dikombinasikan dengan arsitektur headless CMS yang tangguh.
 
 ---
 
-## ✨ Fitur Unggulan Berbasis Kode
-
-### 🧠 Spaced Repetition System (SRS) Engine
-
-Implementasi algoritma memori di `lib/srs.ts` yang mengatur interval pengulangan kosakata. Terintegrasi dengan `UserProgressContext` menggunakan teknik _debouncing_ canggih untuk memastikan performa aplikasi tetap secepat kilat tanpa _memory leak_, meskipun pengguna memiliki ribuan kata hafalan.
-
-### 🎮 Gamified Dashboard & XP System
-
-Sistem progres pengguna yang interaktif dan berjalan 100% secara lokal:
-
-- **XP & Leveling:** Dapatkan XP dari setiap aktivitas belajar.
-- **Activity Heatmap:** Pelacakan konsistensi belajar visual layaknya kontribusi GitHub.
-- **Daily Quests:** Tantangan harian untuk meningkatkan motivasi.
-
-### 🎓 Serverless Mock Exam Engine
-
-Simulasi ujian JLPT lengkap (`components/MockExamEngine.tsx`) dengan fitur berstandar resmi:
-
-- **Hidden Audio Logic:** Audio _Choukai_ otomatis mengunci diri setelah 1 kali pemutaran (mereplikasi ujian asli).
-- **Grace-Period Anti-Cheat:** Deteksi perpindahan _tab_ dengan toleransi waktu manusiawi untuk pengguna perangkat seluler.
-- **Base64 Certificate Sharing:** Sistem berbagi hasil ujian menggunakan _URL Encoding_ yang 100% _serverless_, mencegah _bot spam_, dan menjaga biaya _database_ tetap Rp 0.
-
-### 🖋️ Interactive Kanji & Writing Pad
-
-- **Animated Stroke Order:** Visualisasi urutan coretan kanji menggunakan data SVG.
-- **Writing Canvas:** Fitur latihan menulis karakter secara langsung di layar perangkat sentuh menggunakan `WritingCanvas.tsx`.
-
-### 📚 Smart Reference Library
-
-- **Verb Conjugation Matrix:** Kamus perubahan bentuk kata kerja (Masu, Te, Nai, Ta, dll) yang dilengkapi akordion detail.
-- **Interactive Cheatsheet:** Tabel referensi cepat untuk angka, waktu, dan partikel yang mudah dinavigasi.
+## ✨ Fitur Utama
+- **🧠 SRS Memory Engine:** Sistem Repetisi Spasi (Spaced Repetition System) canggih untuk retensi kosakata yang efisien.
+- **🎮 Progres Tergamifikasi:** Dashboard interaktif dengan sistem XP, level, dan heatmap aktivitas.
+- **🎓 Mock Exam Engine:** Simulasi ujian JLPT lengkap dengan sesi waktu, penguncian audio, dan mekanisme anti-curang.
+- **🖋️ Interactive Kanji Pad:** Animasi urutan coretan (*stroke order*) dan kanvas menulis digital untuk latihan aktif.
+- **📚 Perpustakaan Referensi:** Database lengkap konjugasi kata kerja, artikel tata bahasa, dan tabel referensi cepat interaktif.
+- **📱 Siap PWA:** Dapat diinstal di perangkat seluler dan desktop untuk pengalaman layaknya aplikasi native.
 
 ---
 
-## 🛠️ Stack Teknologi & Arsitektur
-
-- **Core:** Next.js 15 (App Router), TypeScript.
-- **State Management:** React Context API (`UserProgressContext`) dengan persistensi LocalStorage yang aman.
-- **Backend/CMS:** Sanity.io (Akses _Read-Only_ berkinerja tinggi untuk pelajaran, kuis, dan simulasi ujian).
-- **Styling & UI:** Tailwind CSS (Mobile-First Layout), Framer Motion (Animasi Transisi Mulus), Lucide React (Ikon).
-- **Audio:** Web Speech API (TTS) & Integrasi file audio bawaan Sanity.
+## 🛠️ Stack Teknologi
+- **Framework:** [Next.js 15](https://nextjs.org/) (App Router)
+- **Bahasa:** [TypeScript](https://www.typescriptlang.org/)
+- **CMS:** [Sanity.io](https://www.sanity.io/) (Content Lake)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/) & [Shadcn UI](https://ui.shadcn.com/)
+- **Animasi:** [Framer Motion](https://www.framer.com/motion/)
+- **Manajemen State:** React Context API dengan persistensi LocalStorage
+- **Library Tambahan:** Wanakana (Pemrosesan teks Jepang), Lucide React (Ikon), Canvas Confetti
 
 ---
 
 ## 📂 Struktur Proyek
-
 ```text
-├── app/
-│   ├── (main)/              # Main App Group (Menggunakan layout aman 'Safe Zone')
-│   │   ├── courses/         # Hub Materi & Rute JLPT
-│   │   ├── exams/[id]/      # Mesin Ujian Simulasi Mandiri (Mock Exam)
-│   │   ├── library/         # Koleksi Cerdas (Vocab, Kanji, Grammar, Verbs, Cheatsheet)
-│   │   ├── review/          # Sesi Hafalan Aktif (SRS)
-│   │   ├── share/           # Generator Sertifikat Ujian Base64 URL
-│   │   ├── support/         # Halaman Donasi & Transparansi
-│   │   └── dashboard/       # Pusat Progres Belajar
-│   ├── layout.tsx           # Root Layout (Menangani margin Navbar Mobile)
-│   └── page.tsx             # Landing Page
-├── components/              # UI Inti (Flashcards, ExamEngine, WritingCanvas, Navbar)
-├── context/                 # Logic utama XP, Progres Belajar, dan Sinkronisasi Lokal
-├── lib/                     # Utilitas (Algoritma SRS, Pembaca Audio, Konverter XP)
-└── sanity/                  # Definisi skema Content Lake terpisah (Kanji, Vocab, Exam, dll.)
+├── app/                  # Next.js App Router (Halaman & API)
+│   ├── (main)/           # Rute utama aplikasi (Dashboard, Kursus, Perpustakaan)
+│   ├── studio/           # Rute untuk Sanity Studio (Embedded)
+│   └── api/              # Endpoint API backend
+├── components/           # Komponen UI yang dapat digunakan kembali (Atomic design)
+├── context/              # Provider state global (XP, Progress, Tema)
+├── lib/                  # Fungsi utilitas & logika inti (SRS, Formatter)
+├── public/               # Aset statis (Gambar, Audio, Font)
+├── sanity/               # Konfigurasi Sanity CMS & skema data
+│   ├── schemaTypes/      # Definisi Dokumen & Objek
+│   └── lib/              # Client Sanity & logika pengambilan data
+└── types/                # Interface TypeScript global
 ```
 
-## ⚙️ Instalasi Lokal
+---
 
-Karena NihongoRoute kini menggunakan arsitektur _Serverless Read-Only_, Anda tidak lagi memerlukan token tulis (Write Token) yang rumit. Cukup atur ID publik Sanity Anda.
-
-1. **Clone & Install:**
-
+## 🚀 Instalasi
+1. **Clone repositori:**
    ```bash
-   git clone [https://github.com/zan-118/nihongoroute.git](https://github.com/zan-118/nihongoroute.git)
+   git clone https://github.com/zan-118/nihongoroute.git
    cd nihongoroute
-   npm install
    ```
 
-2. **Environment Setup:**
-   Buat file `.env.local` di _root directory_:
-
-   ```env
-   NEXT_PUBLIC_SANITY_PROJECT_ID="project_id_kamu"
-   NEXT_PUBLIC_SANITY_DATASET="production"
-   ```
-
-3. **Jalankan:**
+2. **Instal dependensi:**
    ```bash
-   npm run dev
+   npm install
    ```
 
 ---
 
-## 💙 Dukungan & Kontribusi
+## 🔑 Variabel Lingkungan
+Buat file `.env.local` di direktori root dan tambahkan variabel berikut:
 
-NihongoRoute dikembangkan sebagai proyek riset _Educational Technology_ yang 100% Gratis dan Open-Source. Dukungan kamu adalah bahan bakar utama untuk menjaga server tetap hidup dan membiayai pengembangan silabus materi baru:
-
-- [**Trakteer (E-Wallet/Gopay/OVO)**](https://trakteer.id/Zan118/tip)
-- [**Saweria (QRIS/Dana)**](https://saweria.co/Zan118)
-
-**Developed with 💙 by [Fauzan Abdul Basith](https://github.com/zan-118)**
-
+```env
+NEXT_PUBLIC_SANITY_PROJECT_ID="id_proyek_anda"
+NEXT_PUBLIC_SANITY_DATASET="production"
+NEXT_PUBLIC_SANITY_API_VERSION="2024-04-01"
 ```
 
-```
+---
+
+## 🏃 Menjalankan Proyek
+- **Mode Pengembangan:**
+  ```bash
+  npm run dev
+  ```
+- **Build Produksi:**
+  ```bash
+  npm run build
+  npm run start
+  ```
+- **Linting:**
+  ```bash
+  npm run lint
+  ```
+
+---
+
+## 📖 Dokumentasi API
+Proyek ini menggunakan **Sanity GROQ** untuk pengambilan data. Struktur data utama meliputi:
+- `vocab`: Item kosakata dengan level JLPT dan terjemahan.
+- `grammarArticle`: Penjelasan tata bahasa mendalam.
+- `mockExam`: Soal ujian simulasi JLPT dan audio terkait.
+- `kanji`: Karakter kanji dengan data urutan coretan.
+- `verbDictionary`: Aturan konjugasi dan contoh penggunaan.
+
+Akses CMS Studio di rute `/studio` untuk mengelola konten secara lokal atau melalui Sanity Cloud.
+
+---
+
+## 🧪 Pengujian (Testing)
+Saat ini, proyek fokus pada QA manual dan pengujian unit untuk logika inti.
+- **Logika Inti:** Berada di dalam direktori `lib/`.
+- **Komponen UI:** Diuji melalui iterasi cepat di mode `dev`.
+
+*Direncanakan: Implementasi Playwright untuk pengujian E2E.*
+
+---
+
+## 🌐 Deployment
+Proyek ini dioptimalkan untuk **Vercel**.
+1. Push kode Anda ke GitHub.
+2. Hubungkan repositori Anda ke Vercel.
+3. Konfigurasi [Variabel Lingkungan](#-variabel-lingkungan).
+4. Deploy.
+
+---
+
+## 🤝 Kontribusi
+Kami menerima kontribusi dengan senang hati! Langkah-langkah kontribusi:
+1. Fork Proyek ini.
+2. Buat Branch Fitur baru (`git checkout -b feature/FiturKeren`).
+3. Commit Perubahan Anda (`git commit -m 'Menambahkan FiturKeren'`).
+4. Push ke Branch tersebut (`git push origin feature/FiturKeren`).
+5. Buka Pull Request.
+
+---
+
+## 👤 Maintainer
+**Fauzan Abdul Basith**
+- GitHub: [@zan-118](https://github.com/zan-118)
+- Website: [nihongoroute.my.id](https://www.nihongoroute.my.id)
+
+---
+Dikembangkan dengan 💙 untuk komunitas pembelajar bahasa Jepang.

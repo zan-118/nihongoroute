@@ -1,10 +1,15 @@
 /**
- * LOKASI FILE: app/(main)/courses/[categoryId]/CourseCategoryClient.tsx
- * KONSEP: Cyber-Dark Neumorphic + Framer Motion
+ * @file CourseCategoryClient.tsx
+ * @description Antarmuka Daftar Materi untuk level spesifik. 
+ * Menampilkan pilihan latihan (flashcard, kanji, survival), simulasi ujian, dan daftar pelajaran.
+ * @module CourseCategoryClient
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
 import {
@@ -18,7 +23,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
-// --- KONFIGURASI ANIMASI ---
+// ======================
+// CONFIG / CONSTANTS
+// ======================
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -32,6 +39,18 @@ const itemVariants: Variants = {
   visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100 } },
 };
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen CourseCategoryClient: Menampilkan struktur kurikulum level spesifik.
+ * 
+ * @param {Object} props - Properti komponen.
+ * @param {any} props.data - Data kategori, pelajaran, dan ujian.
+ * @param {string} props.categoryId - ID Kategori (e.g., "n5").
+ * @returns {JSX.Element} Antarmuka kategori materi.
+ */
 export default function CourseCategoryClient({
   data,
   categoryId,
@@ -45,10 +64,10 @@ export default function CourseCategoryClient({
   const themeBgHover = isSideQuest
     ? "hover:bg-amber-500/5 hover:border-amber-500/50"
     : "hover:bg-cyan-400/5 hover:border-cyan-400/50";
-
+  // ======================
+  // RENDER
+  // ======================
   return (
-    // DIUBAH: Tag main diganti div. Dihapus pt-32 pb-40.
-    // Lebar diatur agar konsisten dengan layout global.
     <div className="w-full px-4 md:px-6 relative overflow-hidden">
       {/* Background Decor Ambient */}
       <div
@@ -62,7 +81,7 @@ export default function CourseCategoryClient({
         animate="visible"
         variants={containerVariants}
       >
-        {/* HEADER & BREADCRUMB */}
+        {/* HEADER & BREADCRUMB SECTION */}
         <header className="mb-20">
           <motion.nav
             variants={itemVariants}
@@ -104,7 +123,7 @@ export default function CourseCategoryClient({
           )}
         </header>
 
-        {/* AREA LATIHAN (MINI GAMES) */}
+        {/* AREA LATIHAN (MINI GAMES) SECTION */}
         <motion.section variants={itemVariants} className="mb-24">
           <div className="mb-10 flex items-center gap-4">
             <h3
@@ -199,7 +218,7 @@ export default function CourseCategoryClient({
           </div>
         </motion.section>
 
-        {/* UJIAN SIMULASI */}
+        {/* UJIAN SIMULASI SECTION */}
         {data.mockExams && data.mockExams.length > 0 && (
           <motion.section variants={itemVariants} className="mb-24">
             <div className="mb-10 flex items-center gap-4">
@@ -251,7 +270,7 @@ export default function CourseCategoryClient({
           </motion.section>
         )}
 
-        {/* DAFTAR SILABUS (LESSONS) */}
+        {/* DAFTAR SILABUS (LESSONS) SECTION */}
         <motion.section variants={itemVariants}>
           <div className="mb-10 flex items-center gap-4">
             <h3
@@ -279,7 +298,6 @@ export default function CourseCategoryClient({
                     <Card
                       className={`p-6 md:p-8 group ${themeBgHover} transition-all duration-300 flex flex-col sm:flex-row items-start sm:items-center gap-6 cursor-pointer`}
                     >
-                      {/* Nomor Bab (Inset) */}
                       <div
                         className={`w-14 h-14 shrink-0 rounded-2xl flex items-center justify-center font-black text-xl font-mono neo-inset transition-colors ${isSideQuest ? "text-amber-500 group-hover:bg-amber-500/20" : "text-cyan-400 group-hover:bg-cyan-400/20"}`}
                       >
@@ -297,7 +315,6 @@ export default function CourseCategoryClient({
                         )}
                       </div>
 
-                      {/* Icon Panah Kanan */}
                       <div
                         className={`w-10 h-10 shrink-0 rounded-full neo-inset items-center justify-center transition-colors hidden md:flex ${isSideQuest ? "text-amber-500 group-hover:bg-amber-500/20" : "text-cyan-400 group-hover:bg-cyan-400/20"}`}
                       >
@@ -324,3 +341,4 @@ export default function CourseCategoryClient({
     </div>
   );
 }
+

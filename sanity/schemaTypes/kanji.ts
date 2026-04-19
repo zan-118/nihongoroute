@@ -1,6 +1,19 @@
+/**
+ * @file kanji.ts
+ * @description Definisi skema Sanity untuk dokumen 'kanji' (karakter kanji).
+ * Mencakup logika validasi keunikan karakter dan ID untuk menjaga integritas data kamus kanji.
+ * @module sanity/schemaTypes/kanji
+ */
+
 import { defineField, defineType } from "sanity";
 
-// ✨ 1. Fungsi Pengecek Duplikasi ID Kanji
+// ======================
+// VALIDATION LOGIC
+// ======================
+
+/**
+ * Memastikan Kanji ID bersifat unik di seluruh dataset.
+ */
 const isUniqueKanjiId = async (value: string | undefined, context: any) => {
   if (!value) return true;
   const { document, getClient } = context;
@@ -16,7 +29,9 @@ const isUniqueKanjiId = async (value: string | undefined, context: any) => {
     : true;
 };
 
-// ✨ 2. Fungsi Pengecek Duplikasi Karakter Kanji
+/**
+ * Memastikan karakter kanji tidak duplikat dalam database.
+ */
 const isUniqueKanji = async (value: string | undefined, context: any) => {
   if (!value) return true;
   const { document, getClient } = context;
@@ -31,6 +46,10 @@ const isUniqueKanji = async (value: string | undefined, context: any) => {
     ? `🚨 Kanji "${value}" sudah ada di database! Hindari duplikat.`
     : true;
 };
+
+// ======================
+// SCHEMA DEFINITION
+// ======================
 
 export default defineType({
   name: "kanji",
@@ -71,7 +90,6 @@ export default defineType({
       type: "string",
       title: "Romaji / Cara Baca Utama",
     }),
-    // ✨ PENAMBAHAN: Field Examples untuk mengakomodasi kolom CSV
     defineField({
       name: "examples",
       title: "Contoh Kosakata / Penggunaan",

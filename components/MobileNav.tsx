@@ -1,18 +1,34 @@
 /**
- * LOKASI FILE: components/MobileNav.tsx
- * KONSEP: Mobile-First Neumorphic (Navigasi Seluler)
+ * @file MobileNav.tsx
+ * @description Komponen navigasi bawah (bottom navigation) khusus untuk perangkat mobile.
+ * @module MobileNav
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, BookOpen, Layers, LayoutDashboard, BrainCircuit } from "lucide-react";
 import { motion } from "framer-motion";
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen MobileNav: Menyediakan akses navigasi cepat di bagian bawah layar pada resolusi kecil.
+ * 
+ * @returns {JSX.Element} Antarmuka navigasi mobile.
+ */
 export default function MobileNav() {
   const pathname = usePathname();
 
+  // ======================
+  // CONFIG / CONSTANTS
+  // ======================
   const navItems = [
     { href: "/", icon: Home, label: "Beranda" },
     { href: "/courses", icon: BookOpen, label: "Materi" },
@@ -21,6 +37,9 @@ export default function MobileNav() {
     { href: "/dashboard", icon: LayoutDashboard, label: "Dasbor" },
   ];
 
+  // ======================
+  // RENDER
+  // ======================
   return (
     <div className="md:hidden fixed bottom-6 left-4 right-4 z-50">
       <nav className="bg-[#0a0c10]/90 backdrop-blur-2xl border border-white/[0.05] rounded-[2rem] p-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.8)] neo-card">

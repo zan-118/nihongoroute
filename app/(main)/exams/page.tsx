@@ -1,15 +1,20 @@
 /**
- * @file app/(main)/exams/page.tsx
- * @description Pusat ujian simulasi JLPT. Berfungsi sebagai Server Component yang mengeksekusi kueri langsung ke Sanity CMS untuk mengambil daftar ujian, lalu mendelegasikan hasil rendering ke ExamsClient.
- * @module Server Component
+ * @file page.tsx
+ * @description Pusat ujian simulasi JLPT. 
+ * Mengambil daftar ujian dari CMS dan mendelegasikan rendering ke komponen client.
+ * @module ExamsPage
  */
 
+// ======================
+// IMPORTS
+// ======================
 import type { Metadata } from "next";
 import { client } from "@/sanity/lib/client";
 import ExamsClient from "./ExamsClient";
 
-// Konfigurasi Incremental Static Regeneration (ISR).
-// Waktu hidup cache (cache lifetime) ditetapkan selama 60 detik.
+// ======================
+// CONFIG / CONSTANTS
+// ======================
 export const revalidate = 60; 
 
 export const metadata: Metadata = {
@@ -18,9 +23,12 @@ export const metadata: Metadata = {
     "Uji kemampuan bahasa Jepang Anda dengan mesin simulasi ujian JLPT waktu nyata.",
 };
 
+// ======================
+// DATABASE OPERATIONS
+// ======================
+
 /**
- * Menarik spesifikasi dasar (judul, deskripsi, durasi, nilai kelulusan) dari 
- * seluruh antrean ujian yang tersedia (kecuali rancangan/draft) di CMS.
+ * Menarik daftar ujian simulasi dari Sanity CMS.
  * 
  * @returns {Promise<Array>} Kumpulan data metadata simulasi ujian.
  */
@@ -37,16 +45,18 @@ async function getExamsData() {
   return await client.fetch(query);
 }
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
 /**
- * Komponen Rute Induk Halaman Ujian.
- * Karena status komponen ini dirender di server, ia mendelegasikan data
- * ke `ExamsClient` agar interaktivitas klien (animasi framer-motion) dapat berjalan.
+ * Komponen ExamsPage (Server Component): Mengambil data ujian dan merender ExamsClient.
  * 
- * @returns {JSX.Element} Merender komponen antarmuka klien ExamsClient dengan data dari CMS.
+ * @returns {JSX.Element} Halaman pusat ujian.
  */
 export default async function ExamsPage() {
   const exams = await getExamsData();
 
-  // Oper data ke Client Component untuk dianimasikan
   return <ExamsClient exams={exams} />;
 }
+

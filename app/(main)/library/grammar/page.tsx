@@ -53,7 +53,9 @@ export default function GrammarArticlesPage() {
     }
     fetchGrammar();
   }, [selectedLevel]);
-
+  // ======================
+  // RENDER
+  // ======================
   return (
     <main className="w-full relative overflow-hidden flex flex-1 flex-col pb-24 px-4 md:px-8 lg:px-12">
       {/* Background Neural Overlays */}

@@ -1,20 +1,34 @@
 /**
- * LOKASI FILE: components/Heatmap.tsx
- * KONSEP: Mobile-First Neumorphic (Grafik Aktivitas)
+ * @file Heatmap.tsx
+ * @description Komponen Grafik Aktivitas (Heatmap) yang memvisualisasikan frekuensi belajar pengguna dalam 35 hari terakhir.
+ * @module Heatmap
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Activity } from "lucide-react";
 
+// ======================
+// TYPES
+// ======================
 interface Props {
   studyDays: Record<string, number>;
 }
 
+// ======================
+// HELPER FUNCTIONS
+// ======================
+
+/**
+ * Memformat objek Date menjadi string ISO YYYY-MM-DD.
+ */
 function formatLocalDate(date: Date): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -22,6 +36,9 @@ function formatLocalDate(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
+/**
+ * Menghasilkan array tanggal untuk N hari terakhir.
+ */
 function generateLastNDays(n: number): string[] {
   const days: string[] = [];
   const today = new Date();
@@ -34,6 +51,9 @@ function generateLastNDays(n: number): string[] {
   return days;
 }
 
+/**
+ * Mendapatkan kelas gaya berdasarkan intensitas aktivitas.
+ */
 function getBoxStyle(value: number): string {
   if (!value)
     return "bg-black/40 border-white/5 neo-inset shadow-none opacity-30";
@@ -44,9 +64,21 @@ function getBoxStyle(value: number): string {
   return "bg-cyber-neon border-white shadow-[0_0_25px_rgba(0,238,255,0.7)] neo-card shadow-none";
 }
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen Heatmap: Merender grid aktivitas belajar harian.
+ * 
+ * @param {Props} props - Properti komponen.
+ * @returns {JSX.Element} Grafik heatmap aktivitas.
+ */
 export default function Heatmap({ studyDays }: Props) {
   const days = useMemo(() => generateLastNDays(35), []);
-
+  // ======================
+  // RENDER
+  // ======================
   return (
     <Card className="bg-[#0a0c10] p-6 md:p-8 lg:p-10 rounded-[2.5rem] md:rounded-[3rem] border-white/5 relative overflow-hidden neo-card shadow-none">
       {/* Background patterns */}
@@ -109,3 +141,4 @@ export default function Heatmap({ studyDays }: Props) {
     </Card>
   );
 }
+

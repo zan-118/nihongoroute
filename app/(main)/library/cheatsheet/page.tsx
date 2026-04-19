@@ -1,24 +1,35 @@
 /**
- * @file app/(main)/library/cheatsheet/page.tsx
- * @description Halaman rute referensi kilat (Cheatsheets). Mendefinisikan permintaan data secara dinamis (Dynamic Rendering) dari Sanity CMS tanpa melakukan mekanisme caching karena referensi ini sering diperbarui.
- * @module Server Component
+ * @file page.tsx
+ * @description Halaman rute referensi kilat (Cheatsheets). 
+ * Menangani penarikan data referensi statis dari Sanity CMS.
+ * @module CheatsheetPage
  */
 
+// ======================
+// IMPORTS
+// ======================
 import { client } from "@/sanity/lib/client";
 import CheatsheetClient from "./CheatsheetClient";
 
-// Konfigurasi Server: Selalu merender data terbaru pada setiap kunjungan ulang halaman
+// ======================
+// CONFIG / CONSTANTS
+// ======================
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
 /**
- * Komponen Induk Layar Referensi Kilat.
- * Mengeksekusi penarikan data GROQ (beserta relasi 'linkedVocab' ke dokumen kosakata) dari sisi peladen (server), 
- * lalu mem-pass data tersebut ke komponen antarmuka antrean klien.
+ * Komponen CheatsheetPage: Menarik data cheatsheet dan merender CheatsheetClient.
  * 
- * @returns {JSX.Element} Merender komponen antrean CheatsheetClient beserta data array.
+ * @returns {JSX.Element} Halaman referensi kilat.
  */
 export default async function CheatsheetPage() {
+  // ======================
+  // DATABASE OPERATIONS
+  // ======================
   const sheets = await client.fetch(
     `*[_type == "cheatsheet"] | order(category asc, title asc) {
       _id, title, category, items,
@@ -26,6 +37,9 @@ export default async function CheatsheetPage() {
     }`,
   );
 
+  // ======================
+  // RENDER
+  // ======================
   return (
     <main className="w-full bg-cyber-bg px-6 md:px-12 relative overflow-hidden flex flex-col justify-start min-h-screen">
       {/* Background Neural Overlays */}

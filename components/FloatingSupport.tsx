@@ -1,20 +1,37 @@
 /**
- * LOKASI FILE: components/FloatingSupport.tsx
- * KONSEP: Cyber-Dark Neumorphic (Service Uplink)
+ * @file FloatingSupport.tsx
+ * @description Tombol bantuan melayang (floating button) untuk akses cepat ke halaman dukungan.
+ * @module FloatingSupport
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Coffee, Radio } from "lucide-react";
+import { Coffee } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen FloatingSupport: Menampilkan tombol CTA (Call to Action) untuk dukungan pengembang.
+ * 
+ * @returns {JSX.Element | null} Tombol melayang atau null jika di halaman fokus.
+ */
 export default function FloatingSupport() {
   const pathname = usePathname();
 
-  // Menyembunyikan tombol di halaman yang membutuhkan fokus penuh
+  // ======================
+  // BUSINESS LOGIC
+  // ======================
+
+  // Menyembunyikan tombol di halaman yang membutuhkan fokus penuh (Ujian, Review, dsb)
   if (
     pathname === "/support" ||
     pathname?.startsWith("/studio") ||
@@ -24,17 +41,20 @@ export default function FloatingSupport() {
     return null;
   }
 
+  // ======================
+  // RENDER
+  // ======================
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.8, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       whileHover={{ y: -5 }}
-      // PERBAIKAN POSISI: bottom-36 di mobile agar benar-benar aman dari tabrakan MobileNav
+      // Penempatan yang aman agar tidak bertabrakan dengan MobileNav di tampilan seluler
       className="fixed bottom-36 right-4 md:bottom-10 md:right-10 z-[40]"
     >
       <Link href="/support" className="group block">
         <div className="relative">
-          {/* Neural Glow */}
+          {/* Efek Glow */}
           <div className="absolute inset-0 bg-red-500 rounded-full blur-2xl opacity-10 group-hover:opacity-30 animate-pulse transition-opacity" />
 
           {/* Tombol Utama */}

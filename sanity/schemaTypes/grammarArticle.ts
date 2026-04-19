@@ -1,4 +1,15 @@
+/**
+ * @file grammarArticle.ts
+ * @description Definisi skema Sanity untuk dokumen 'grammar_article' (artikel tata bahasa).
+ * Menyediakan struktur konten berbasis blok (Portable Text) untuk penjelasan tata bahasa yang mendalam.
+ * @module sanity/schemaTypes/grammarArticle
+ */
+
 import { defineType, defineField } from "sanity";
+
+// ======================
+// SCHEMA DEFINITION
+// ======================
 
 export default defineType({
   name: "grammar_article",

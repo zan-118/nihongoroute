@@ -1,27 +1,29 @@
 /**
- * @file app/layout.tsx
- * @description Kerangka utama aplikasi yang mengatur struktur HTML dasar, font, metadata SEO, konfigurasi viewport, dan membungkus seluruh halaman dengan context provider.
- * @module Server Component
+ * @file layout.tsx
+ * @description Kerangka utama aplikasi (Root Layout) yang mengatur struktur dasar HTML, konfigurasi SEO global, 
+ * inisialisasi font, dan pembungkusan context provider untuk seluruh aplikasi.
+ * @module AppLayout
  */
 
+// ======================
+// IMPORTS
+// ======================
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ReactNode } from "react";
-import MobileNav from "@/components/MobileNav";
-import Navbar from "@/components/Navbar";
-import { ProgressProvider } from "@/context/UserProgressContext";
-import FloatingSupport from "@/components/FloatingSupport";
 
-// Inisialisasi Font Inter dari Google Fonts untuk tipografi global
+// ======================
+// CONFIG / CONSTANTS
+// ======================
 const inter = Inter({ subsets: ["latin"] });
 
 /**
- * Konfigurasi layar (Viewport) lintas perangkat.
- * Mengunci opsi zoom (`userScalable: false`) untuk memberikan kesan native app pada perangkat seluler.
+ * Konfigurasi viewport untuk mengoptimalkan tampilan di perangkat seluler.
+ * Menonaktifkan user-scaling untuk memberikan pengalaman aplikasi native.
  */
 export const viewport: Viewport = {
-  themeColor: "#0a0c10", // Warna tema bar status di seluler (sesuai palet cyber-dark)
+  themeColor: "#0a0c10",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -29,8 +31,8 @@ export const viewport: Viewport = {
 };
 
 /**
- * Pendefinisian Metadata SEO dan Protokol OpenGraph secara terpusat.
- * Data ini akan dibaca oleh *web crawlers* (Google, dsb) maupun saat tautan dibagikan via sosial media.
+ * Metadata SEO global untuk aplikasi.
+ * Mengatur judul, deskripsi, OpenGraph, dan verifikasi mesin pencari.
  */
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.nihongoroute.my.id"), 
@@ -80,13 +82,16 @@ export const metadata: Metadata = {
   },
 };
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
 /**
- * Komponen Root Layout tingkat teratas di dalam ekosistem Next.js.
- * Membungkus semua struktur rute bersarang (nested routes) di seluruh platform.
+ * RootLayout: Komponen pembungkus utama aplikasi.
  * 
- * @param {Object} props - Properti untuk Root Layout.
- * @param {ReactNode} props.children - Komponen rute turunan yang akan dirender di dalam kerangka HTML.
- * @returns {JSX.Element} Kerangka halaman global berisi tag html dan body dasar.
+ * @param {Object} props - Properti komponen.
+ * @param {ReactNode} props.children - Konten halaman yang akan dirender.
+ * @returns {JSX.Element} Struktur dasar HTML aplikasi.
  */
 export default function RootLayout({
   children,
@@ -103,3 +108,4 @@ export default function RootLayout({
     </html>
   );
 }
+

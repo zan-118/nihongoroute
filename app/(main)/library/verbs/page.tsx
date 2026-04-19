@@ -1,28 +1,43 @@
 /**
- * @file app/(main)/library/verbs/page.tsx
- * @description Halaman indeks direktori konjugasi kata kerja (Matriks Verba). Rute peladen statis yang menangani penarikan data dasar kata kerja, bentuk Masu, Te, Nai, dan Potensial dari Sanity CMS.
- * @module Server Component
+ * @file page.tsx
+ * @description Halaman indeks direktori konjugasi kata kerja (Matriks Verba). 
+ * Menangani penarikan data kata kerja lengkap dari Sanity CMS.
+ * @module VerbDictionaryPage
  */
 
+// ======================
+// IMPORTS
+// ======================
 import { client } from "@/sanity/lib/client";
 import VerbListClient from "./VerbListClient";
 
-// Konfigurasi revalidasi statis berkala setiap 1 jam untuk memperbarui daftar kosakata dari CMS.
+// ======================
+// CONFIG / CONSTANTS
+// ======================
 export const revalidate = 3600;
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
 /**
- * Komponen Induk Layar Kamus Verba.
- * Menyediakan struktur kontainer utama dan mendelegasikan daftar lengkap array kata kerja ke klien.
+ * Komponen VerbDictionaryPage: Menarik data verba dan merender VerbListClient.
  * 
- * @returns {JSX.Element} Grid interaktif kartu konjugasi kata kerja.
+ * @returns {JSX.Element} Antarmuka kamus verba.
  */
 export default async function VerbDictionaryPage() {
+  // ======================
+  // DATABASE OPERATIONS
+  // ======================
   const query = `*[_type == "verb_dictionary" && showInFlashcard != false] | order(jisho asc) {
     _id, group, jisho, meaning, masu, furigana, te, nai, ta, teiru, tai, nakereba, kanou, shieki, ukemi, katei, ikou, teshimau, meirei
   }`;
 
   const verbs = await client.fetch(query);
 
+  // ======================
+  // RENDER
+  // ======================
   return (
     <main className="w-full bg-cyber-bg px-6 md:px-12 relative overflow-hidden flex flex-col justify-start min-h-screen">
       {/* Background Neural Overlays */}

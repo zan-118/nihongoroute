@@ -1,11 +1,15 @@
 /**
- * @file app/(main)/support/page.tsx
- * @description Halaman khusus donasi dan transparansi pengembangan aplikasi. Menghubungkan pengguna dengan pintu dukungan eksternal (Trakteer/Saweria) dan merinci biaya operasional peladen (server).
- * @module Client Component
+ * @file page.tsx
+ * @description Halaman khusus donasi dan transparansi pengembangan aplikasi. 
+ * Menghubungkan pengguna dengan pintu dukungan eksternal (Trakteer/Saweria).
+ * @module SupportPage
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -21,15 +25,21 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
 /**
- * Komponen utama antarmuka halaman dukungan proyek.
- * Merupakan etalase transparansi yang digabungkan dengan ajakan bertindak (CTA) untuk mendanai kelangsungan hidup server dan pemeliharaan domain.
+ * Komponen SupportPage: Menampilkan antarmuka donasi yang terstruktur.
  * 
- * @returns {JSX.Element} Antarmuka donasi yang terstruktur dengan penjelasan alokasi dana (StatItem).
+ * @returns {JSX.Element} Halaman dukungan proyek.
  */
 export default function SupportPage() {
   const router = useRouter();
 
+  // ======================
+  // RENDER
+  // ======================
   return (
     <div className="w-full flex-1  selection:bg-cyan-400/30 flex flex-col overflow-x-hidden">
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
@@ -163,7 +173,6 @@ export default function SupportPage() {
           </div>
         </Card>
 
-        {/* DIUBAH: Menambahkan margin-bottom ekstra agar tidak terhalang MobileNav */}
         <footer className="mt-16 sm:mt-24 mb-20 text-center pb-8 sm:pb-12">
           <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.5em] text-cyan-400/50 mb-3 sm:mb-4 bg-cyan-400/5 w-max mx-auto px-4 py-1.5 rounded-full border border-cyan-400/10">
             Kontribusi Langsung
@@ -178,8 +187,12 @@ export default function SupportPage() {
   );
 }
 
+// ======================
+// HELPER COMPONENTS
+// ======================
+
 /**
- * Komponen pembantu untuk menampilkan akses instan menuju gerbang eksternal platform donasi.
+ * DonationCard: Komponen pembantu untuk menampilkan akses platform donasi.
  */
 function DonationCard({
   href,
@@ -223,7 +236,7 @@ function DonationCard({
 }
 
 /**
- * Komponen pembantu (helper) untuk menguraikan transparansi penggunaan dana donasi.
+ * StatItem: Komponen pembantu untuk menguraikan transparansi penggunaan dana.
  */
 function StatItem({ icon, title, desc, color }: any) {
   return (

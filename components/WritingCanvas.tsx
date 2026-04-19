@@ -1,29 +1,53 @@
 /**
- * LOKASI FILE: components/WritingCanvas.tsx
- * KONSEP: Cyber-Dark Neumorphic (Neural Writing Terminal)
+ * @file WritingCanvas.tsx
+ * @description Komponen kanvas interaktif untuk melatih penulisan karakter Kanji/Kana menggunakan mouse atau touch input.
+ * Mendukung animasi urutan goresan (stroke order) dan pembersihan kanvas secara real-time.
+ * @module WritingCanvas
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { Trash2, Eye, EyeOff, RotateCcw, Zap } from "lucide-react";
 import AnimatedKanji from "./AnimatedKanji";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+// ======================
+// TYPES
+// ======================
 interface WritingCanvasProps {
   character: string;
 }
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen WritingCanvas: Menyediakan area menggambar digital dengan panduan karakter.
+ * 
+ * @param {WritingCanvasProps} props - Karakter yang akan dilatih penulisan-nya.
+ * @returns {JSX.Element} Antarmuka kanvas menulis.
+ */
 export default function WritingCanvas({ character }: WritingCanvasProps) {
+  // Refs & State
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [showGuide, setShowGuide] = useState(true);
-
-  // State ini digunakan untuk me-restart animasi SVG
   const [replayKey, setReplayKey] = useState(0);
 
+  // ======================
+  // EFFECTS
+  // ======================
+
+  /**
+   * Mengatur ukuran kanvas sesuai dengan kontainer pembungkusnya dan menangani pixel ratio (Retina/High DPI).
+   */
   useEffect(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
@@ -64,6 +88,10 @@ export default function WritingCanvas({ character }: WritingCanvasProps) {
     window.addEventListener("resize", resizeCanvas);
     return () => window.removeEventListener("resize", resizeCanvas);
   }, []);
+
+  // ======================
+  // HELPER FUNCTIONS
+  // ======================
 
   const startDrawing = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
@@ -123,6 +151,9 @@ export default function WritingCanvas({ character }: WritingCanvasProps) {
     setReplayKey((prev) => prev + 1);
   };
 
+  // ======================
+  // RENDER
+  // ======================
   return (
     <div className="flex flex-col gap-6 w-full max-w-sm mx-auto">
       {/* AREA KANVAS */}
@@ -202,3 +233,4 @@ export default function WritingCanvas({ character }: WritingCanvasProps) {
     </div>
   );
 }
+

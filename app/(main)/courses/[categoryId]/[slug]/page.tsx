@@ -1,9 +1,13 @@
 /**
- * @file app/(main)/courses/[categoryId]/[slug]/page.tsx
- * @description Halaman ruang kelas dinamis yang menangani pemuatan dan rendering materi pembelajaran tunggal. Melibatkan pemrosesan 'Portable Text', Kuis, Audio, dan modul penyematan SRS.
- * @module Server Component
+ * @file page.tsx
+ * @description Halaman ruang kelas dinamis untuk materi pembelajaran tunggal.
+ * Menangani Portable Text, Kuis, Audio, dan modul SRS.
+ * @module LessonPage
  */
 
+// ======================
+// IMPORTS
+// ======================
 import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -22,16 +26,25 @@ import TTSReader from "@/components/TTSReader";
 import AddToSRSButton from "@/components/AddToSRSButton";
 import DownloadPdfButton from "@/components/DownloadPdfButton";
 
-// Mengonfigurasi regenerasi konten server untuk sinkronisasi dengan Sanity CMS setiap jam (3600 detik).
+// ======================
+// CONFIG / CONSTANTS
+// ======================
 export const revalidate = 3600;
 
 interface Props {
   params: Promise<{ categoryId: string; slug: string }>;
 }
 
+// ======================
+// DATABASE OPERATIONS
+// ======================
+
 /**
- * Menarik seluruh data lengkap materi, termasuk konten teks, daftar kuis tersarang, daftar target kosakata,
- * serta navigasi indeks pelajaran dari Sanity CMS.
+ * Menarik data materi lengkap dari Sanity CMS.
+ * 
+ * @param {string} categoryId - ID Kategori.
+ * @param {string} slug - Slug Pelajaran.
+ * @returns {Promise<Object>} Data pelajaran dan navigasi.
  */
 async function getLessonData(categoryId: string, slug: string) {
   const query = `{
@@ -55,8 +68,12 @@ async function getLessonData(categoryId: string, slug: string) {
   return await client.fetch(query, { categoryId, slug });
 }
 
+// ======================
+// METADATA
+// ======================
+
 /**
- * Menyusun metatag SEO spesifik per materi.
+ * Menghasilkan metadata SEO dinamis untuk pelajaran.
  */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { categoryId, slug } = await params;
@@ -69,10 +86,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+// ======================
+// HELPERS / COMPONENTS
+// ======================
+
 /**
- * Konfigurasi Pemetaan Portable Text (Groq).
- * Mengubah tipe data 'Block' spesifik bawaan Sanity CMS menjadi tag elemen HTML dengan
- * kelas gaya Tailwind pilihan agar konten artikel tetap interaktif namun estetis.
+ * Konfigurasi Pemetaan Portable Text.
  */
 const ptComponents: PortableTextComponents = {
   block: {
@@ -148,11 +167,14 @@ const ptComponents: PortableTextComponents = {
   },
 };
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
 /**
- * Komponen Induk Layar Pembelajaran (Materi/Bab).
- * Merender daftar kosakata target, mendeskripsikan blok teori, dan memberikan tombol untuk berpindah silabus (next/prev).
+ * Komponen LessonPage: Menampilkan konten artikel, kosakata, dan kuis.
  * 
- * @returns {JSX.Element} Modul komprehensif penampil kursus.
+ * @returns {JSX.Element} Halaman materi.
  */
 export default async function LessonPage({ params }: Props) {
   const { categoryId, slug } = await params;
@@ -162,7 +184,7 @@ export default async function LessonPage({ params }: Props) {
 
   if (!lesson) return notFound();
 
-  // Menentukan indeks pelajaran untuk kalkulasi navigasi rute mundur/maju
+  // Logic Navigasi
   const currentIndex = nav.findIndex((l: any) => l.slug === slug);
   const prevLesson = currentIndex > 0 ? nav[currentIndex - 1] : null;
   const nextLesson =
@@ -171,6 +193,7 @@ export default async function LessonPage({ params }: Props) {
       : null;
   const isSideQuest = lesson.categoryType === "general";
 
+  // Formatting Quiz
   const formattedQuizzes =
     lesson.quizzes
       ?.map((quiz: any) => {
@@ -184,13 +207,17 @@ export default async function LessonPage({ params }: Props) {
         };
       })
       .filter(Boolean) || [];
-
+  // ======================
+  // RENDER
+  // ======================
   return (
     <div className="w-full text-slate-300 px-4 md:px-8 relative overflow-hidden flex flex-col flex-1">
+      {/* Background Ambient Decor */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-500/5 blur-[150px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-500/5 blur-[120px] rounded-full pointer-events-none" />
 
       <article className="max-w-4xl mx-auto w-full relative z-10 flex-1">
+        {/* TOP NAV */}
         <nav className="mb-10 flex items-center gap-4">
           <Link
             href={`/courses/${lesson.levelCode || categoryId}`}
@@ -204,6 +231,7 @@ export default async function LessonPage({ params }: Props) {
           </span>
         </nav>
 
+        {/* HEADER SECTION */}
         <header className="mb-20">
           <h1
             className={`text-5xl md:text-7xl lg:text-8xl font-black italic uppercase tracking-tighter leading-none mb-8 ${isSideQuest ? "text-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.4)]" : "text-white drop-shadow-lg"}`}
@@ -224,7 +252,9 @@ export default async function LessonPage({ params }: Props) {
           </div>
         </header>
 
+        {/* CONTENT SECTIONS */}
         <div className="space-y-24 mb-24">
+          {/* VOCAB SECTION */}
           {lesson.vocabList && lesson.vocabList.length > 0 && (
             <section>
               <div className="flex items-center gap-4 mb-10">
@@ -271,12 +301,14 @@ export default async function LessonPage({ params }: Props) {
             </section>
           )}
 
+          {/* ARTICLES SECTION */}
           {lesson.articles && lesson.articles.length > 0 && (
             <section className="prose-custom">
               <PortableText value={lesson.articles} components={ptComponents} />
             </section>
           )}
 
+          {/* GRAMMAR SECTION */}
           {lesson.grammar && lesson.grammar.length > 0 && (
             <section>
               <div className="flex items-center gap-4 mb-10">
@@ -299,6 +331,7 @@ export default async function LessonPage({ params }: Props) {
             </section>
           )}
 
+          {/* QUIZ SECTION */}
           {formattedQuizzes.length > 0 && (
             <section>
               <div className="flex items-center gap-4 mb-10">
@@ -312,6 +345,7 @@ export default async function LessonPage({ params }: Props) {
           )}
         </div>
 
+        {/* FOOTER NAV SECTION */}
         <nav className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-12 border-t border-white/5 mt-auto">
           {prevLesson ? (
             <Link
@@ -358,3 +392,4 @@ export default async function LessonPage({ params }: Props) {
     </div>
   );
 }
+

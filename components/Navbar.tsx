@@ -1,30 +1,49 @@
 /**
- * LOKASI FILE: components/Navbar.tsx
- * KONSEP: Mobile-First Neumorphic (Navbar Utama)
+ * @file Navbar.tsx
+ * @description Komponen navigasi utama untuk tampilan desktop.
+ * Mengatur link navigasi, branding logo, dan akses cepat ke dashboard.
+ * @module Navbar
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen Navbar: Menyediakan navigasi tingkat atas yang responsif dengan efek visual Cyber-Neon.
+ * 
+ * @returns {JSX.Element} Elemen header/navigasi.
+ */
 export default function Navbar() {
   const pathname = usePathname();
 
+  // ======================
+  // CONFIG / CONSTANTS
+  // ======================
   const links = [
     { href: "/courses", label: "Materi" },
     { href: "/exams", label: "Ujian" },
     { href: "/library", label: "Pustaka" },
     { href: "/review", label: "Hafalan" },
   ];
-
+  // ======================
+  // RENDER
+  // ======================
   return (
     <header className="hidden md:flex fixed top-0 w-full z-50 bg-cyber-bg/80 backdrop-blur-xl border-b border-white/[0.03] transition-all">
       <div className="max-w-7xl mx-auto px-6 lg:px-12 h-20 w-full flex items-center justify-between">
-        {/* LOGO */}
+        {/* LOGO SECTION */}
         <Link href="/" className="flex items-center gap-4 group shrink-0">
           <div className="relative w-10 h-10 lg:w-11 lg:h-11 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(0,238,255,0.3)]">
             <Image
@@ -40,7 +59,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* NAV MENU */}
+        {/* NAVIGATION LINKS */}
         <nav className="flex items-center gap-6 lg:gap-10">
           {links.map((link) => {
             const isActive = pathname.startsWith(link.href);
@@ -71,7 +90,7 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* DASHBOARD BUTTON */}
+        {/* ACTIONS SECTION */}
         <div className="flex items-center gap-4">
           <Link href="/dashboard">
             <Button
@@ -86,3 +105,4 @@ export default function Navbar() {
     </header>
   );
 }
+

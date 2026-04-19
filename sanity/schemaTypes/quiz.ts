@@ -1,4 +1,15 @@
+/**
+ * @file quiz.ts
+ * @description Definisi skema Sanity untuk objek 'quiz' (pertanyaan kuis).
+ * Digunakan sebagai komponen evaluasi interaktif dalam dokumen materi (lesson).
+ * @module sanity/schemaTypes/quiz
+ */
+
 import { defineField, defineType } from "sanity";
+
+// ======================
+// SCHEMA DEFINITION
+// ======================
 
 export default defineType({
   name: "quiz",

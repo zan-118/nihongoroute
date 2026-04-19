@@ -1,10 +1,14 @@
 /**
- * LOKASI FILE: components/SurvivalMode.tsx
- * KONSEP: Mobile-First Neumorphic (Mode Evaluasi / Survival)
+ * @file SurvivalMode.tsx
+ * @description Komponen Mode Survival (Evaluasi Kecepatan) untuk menguji ingatan kosakata pengguna dalam batas waktu tertentu.
+ * @module SurvivalMode
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Timer, Zap, Trophy, ShieldAlert, RotateCcw, AlertTriangle, Target, Activity, BatteryMedium } from "lucide-react";
@@ -13,6 +17,9 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 
+// ======================
+// TYPES
+// ======================
 interface CardData {
   _id: string;
   word: string;
@@ -26,10 +33,22 @@ interface SurvivalModeProps {
   cards: CardData[];
 }
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen SurvivalMode: Menangani logika permainan evaluasi kosakata cepat.
+ * 
+ * @param {SurvivalModeProps} props - Daftar kartu kosakata.
+ * @returns {JSX.Element} Antarmuka permainan mode survival.
+ */
 export default function SurvivalMode({ cards }: SurvivalModeProps) {
+  // Config
   const MAX_HP = 3;
   const TIME_PER_QUESTION = 10;
 
+  // State Management
   const [gameState, setGameState] = useState<
     "idle" | "playing" | "gameover" | "victory"
   >("idle");
@@ -42,6 +61,13 @@ export default function SurvivalMode({ cards }: SurvivalModeProps) {
   const [options, setOptions] = useState<CardData[]>([]);
   const [isShaking, setIsShaking] = useState(false);
 
+  // ======================
+  // HELPER FUNCTIONS
+  // ======================
+
+  /**
+   * Mengacak urutan array.
+   */
   const shuffleArray = (array: any[]) => {
     const newArr = [...array];
     for (let i = newArr.length - 1; i > 0; i--) {
@@ -51,6 +77,9 @@ export default function SurvivalMode({ cards }: SurvivalModeProps) {
     return newArr;
   };
 
+  /**
+   * Memulai permainan baru.
+   */
   const startGame = () => {
     if (cards.length < 4) return;
     const shuffledDeck = shuffleArray(cards);
@@ -61,6 +90,9 @@ export default function SurvivalMode({ cards }: SurvivalModeProps) {
     loadNextQuestion(shuffledDeck, 0);
   };
 
+  /**
+   * Memuat pertanyaan berikutnya dan menghasilkan opsi jawaban acak.
+   */
   const loadNextQuestion = (currentDeck: CardData[], index: number) => {
     if (index >= currentDeck.length) {
       setGameState("victory");
@@ -73,6 +105,7 @@ export default function SurvivalMode({ cards }: SurvivalModeProps) {
 
     let wrongOptions = currentDeck.filter((c) => c._id !== targetCard._id);
 
+    // Prioritaskan distraktor dari kategori yang sama jika memungkinkan
     if (targetCard.category) {
       const sameCategoryOptions = wrongOptions.filter(
         (c) => c.category === targetCard.category,
@@ -86,22 +119,9 @@ export default function SurvivalMode({ cards }: SurvivalModeProps) {
     setOptions(shuffleArray([targetCard, ...selectedWrongOptions]));
   };
 
-  useEffect(() => {
-    if (gameState !== "playing") return;
-
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          handleWrongAnswer();
-          return TIME_PER_QUESTION;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [gameState, currentCard]);
-
+  /**
+   * Menangani jawaban salah atau waktu habis.
+   */
   const handleWrongAnswer = useCallback(() => {
     setIsShaking(true);
     setTimeout(() => setIsShaking(false), 500);
@@ -118,6 +138,9 @@ export default function SurvivalMode({ cards }: SurvivalModeProps) {
     });
   }, [deck, currentCard]);
 
+  /**
+   * Validasi jawaban pengguna.
+   */
   const handleAnswer = (selectedOption: CardData) => {
     if (selectedOption._id === currentCard?._id) {
       setScore((prev) => prev + 1);
@@ -128,9 +151,29 @@ export default function SurvivalMode({ cards }: SurvivalModeProps) {
     }
   };
 
-  // =====================================
+  // ======================
+  // EFFECTS
+  // ======================
+
+  useEffect(() => {
+    if (gameState !== "playing") return;
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          handleWrongAnswer();
+          return TIME_PER_QUESTION;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [gameState, currentCard, handleWrongAnswer]);
+
+  // ======================
   // RENDER: LAYAR AWAL
-  // =====================================
+  // ======================
   if (gameState === "idle") {
     return (
       <Card className="p-8 md:p-16 lg:p-20 rounded-[3rem] md:rounded-[4rem] border-white/5 bg-cyber-surface text-center relative overflow-hidden group max-w-2xl mx-auto my-8 md:my-10 neo-card shadow-none">
@@ -157,9 +200,9 @@ export default function SurvivalMode({ cards }: SurvivalModeProps) {
     );
   }
 
-  // =====================================
-  // RENDER: LAYAR AKHIR (MENANG/KALAH)
-  // =====================================
+  // ======================
+  // RENDER: LAYAR AKHIR
+  // ======================
   if (gameState === "gameover" || gameState === "victory") {
     const isVictory = gameState === "victory";
     const accentColor = isVictory ? "text-amber-400" : "text-cyber-neon";
@@ -219,15 +262,15 @@ export default function SurvivalMode({ cards }: SurvivalModeProps) {
     );
   }
 
-  // =====================================
-  // RENDER: LAYAR BERMAIN (IN-GAME)
-  // =====================================
+  // ======================
+  // RENDER: IN-GAME
+  // ======================
   const isDangerTime = timeLeft <= 3;
   const isCriticalHp = hp === 1;
 
   return (
     <div className="w-full flex flex-col h-full min-h-[60vh] max-w-3xl mx-auto pb-10 px-4 md:px-0">
-      {/* HUD (Heads Up Display) */}
+      {/* HUD Bar */}
       <Card
         className={`flex justify-between items-center mb-8 md:mb-10 p-6 md:p-10 rounded-[2.5rem] md:rounded-[3rem] border transition-all duration-500 neo-card shadow-none ${isCriticalHp ? "border-cyber-neon/60 bg-cyber-neon/10 shadow-[0_0_30px_rgba(0,238,255,0.15)]" : "bg-cyber-surface border-white/5"}`}
       >
@@ -257,7 +300,6 @@ export default function SurvivalMode({ cards }: SurvivalModeProps) {
         </div>
       </Card>
 
-      {/* Main Question Card */}
       <AnimatePresence mode="wait">
         <motion.div
           key={currentCard?._id}
@@ -279,7 +321,6 @@ export default function SurvivalMode({ cards }: SurvivalModeProps) {
                 : "border-white/5"
             }`}
           >
-            {/* HUD scanline effect */}
             <div className="absolute inset-0 bg-[linear-gradient(rgba(0,238,255,0.03)_1px,transparent_1px)] bg-[size:100%_4px] md:bg-[size:100%_6px] pointer-events-none opacity-40 rounded-[3rem] md:rounded-[4rem]" />
 
             <Badge
@@ -292,7 +333,7 @@ export default function SurvivalMode({ cards }: SurvivalModeProps) {
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
-                  <Target size={14} className="animate-pulse md:w-4 md:h-4" /> KATA TARGET: {currentCard?._id.substring(0,6).toUpperCase()}
+                  <Target size={14} className="animate-pulse md:w-4 md:h-4" /> KATA TARGET
                 </span>
               )}
             </Badge>
@@ -321,7 +362,6 @@ export default function SurvivalMode({ cards }: SurvivalModeProps) {
          />
       </div>
 
-      {/* Multiple Choice Options Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 items-stretch">
         {options.map((option, idx) => (
           <Button
@@ -342,3 +382,4 @@ export default function SurvivalMode({ cards }: SurvivalModeProps) {
     </div>
   );
 }
+

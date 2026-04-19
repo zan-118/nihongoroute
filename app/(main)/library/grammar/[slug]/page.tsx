@@ -1,8 +1,13 @@
 /**
- * LOKASI FILE: app/(main)/library/grammar/[slug]/page.tsx
- * KONSEP: Mobile-First Neumorphic (Detail Tata Bahasa)
+ * @file page.tsx
+ * @description Halaman detail panduan tata bahasa (Grammar Detail). 
+ * Menampilkan konten artikel tata bahasa menggunakan Portable Text.
+ * @module GrammarDetailPage
  */
 
+// ======================
+// IMPORTS
+// ======================
 import { client } from "@/sanity/lib/client";
 import { PortableText } from "@portabletext/react";
 import Link from "next/link";
@@ -13,8 +18,14 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
+// ======================
+// CONFIG / CONSTANTS
+// ======================
 const articleQuery = `*[_type == "grammar_article" && slug.current == $slug][0] { title, content }`;
 
+/**
+ * Konfigurasi Pemetaan Portable Text untuk Detail Tata Bahasa.
+ */
 const ptComponents = {
   types: {
     exampleSentence: ({ value }: any) => (
@@ -57,15 +68,31 @@ const ptComponents = {
   },
 };
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen GrammarDetailPage: Mengambil data artikel dan merender konten.
+ * 
+ * @returns {JSX.Element} Halaman detail tata bahasa.
+ */
 export default async function GrammarDetailPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+
+  // ======================
+  // DATABASE OPERATIONS
+  // ======================
   const article = await client.fetch(articleQuery, { slug });
   if (!article) notFound();
 
+  // ======================
+  // RENDER
+  // ======================
   return (
     <main className="w-full bg-cyber-bg px-4 md:px-8 lg:px-12 relative overflow-hidden flex flex-col justify-start min-h-screen pb-24">
       {/* Background Neural Overlays */}

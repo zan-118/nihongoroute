@@ -1,4 +1,15 @@
+/**
+ * @file exampleSentence.ts
+ * @description Definisi skema Sanity untuk objek 'exampleSentence' (contoh kalimat).
+ * Digunakan sebagai komponen pendukung dalam kosakata (vocab) atau artikel tata bahasa.
+ * @module sanity/schemaTypes/exampleSentence
+ */
+
 import { defineField, defineType } from "sanity";
+
+// ======================
+// SCHEMA DEFINITION
+// ======================
 
 export default defineType({
   name: "exampleSentence",

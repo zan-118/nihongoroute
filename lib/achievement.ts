@@ -1,7 +1,12 @@
-/* ============================= */
-/* TYPES */
-/* ============================= */
+/**
+ * @file achievement.ts
+ * @description Modul konfigurasi dan pengecekan pencapaian (Achievements) pengguna.
+ * @module lib/achievement
+ */
 
+// ======================
+// TYPES
+// ======================
 export type AchievementType = "xp" | "streak" | "review";
 
 export interface Achievement {
@@ -12,10 +17,20 @@ export interface Achievement {
   requirement: number;
 }
 
-/* ============================= */
-/* ACHIEVEMENT CONFIG */
-/* ============================= */
+export interface CheckParams {
+  xp: number;
+  streak: number;
+  reviewCount: number;
+  unlocked: string[];
+}
 
+// ======================
+// CONSTANTS / CONFIG
+// ======================
+
+/**
+ * Daftar konfigurasi achievement yang tersedia dalam sistem.
+ */
 export const ACHIEVEMENTS: Achievement[] = [
   // Streak
   {
@@ -66,19 +81,15 @@ export const ACHIEVEMENTS: Achievement[] = [
   },
 ];
 
-/* ============================= */
-/* CHECK ACHIEVEMENTS */
-/* ============================= */
-
-export interface CheckParams {
-  xp: number;
-  streak: number;
-  reviewCount: number;
-  unlocked: string[];
-}
+// ======================
+// BUSINESS LOGIC
+// ======================
 
 /**
- * Mengevaluasi progres user saat ini dan mengembalikan array achievement yang baru saja terbuka
+ * Mengevaluasi progres user saat ini dan mengembalikan array achievement yang baru saja terbuka.
+ * 
+ * @param {CheckParams} params - Data progres terbaru pengguna.
+ * @returns {Achievement[]} Daftar achievement yang baru saja dicapai.
  */
 export function checkAchievements({
   xp,
@@ -89,10 +100,12 @@ export function checkAchievements({
   const newlyUnlocked: Achievement[] = [];
 
   for (const achievement of ACHIEVEMENTS) {
+    // Lewati jika achievement sudah pernah dibuka sebelumnya
     if (unlocked.includes(achievement.id)) continue;
 
     let achieved = false;
 
+    // Evaluasi berdasarkan tipe pencapaian
     switch (achievement.type) {
       case "xp":
         achieved = xp >= achievement.requirement;

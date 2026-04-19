@@ -1,4 +1,15 @@
+/**
+ * @file mockExam.ts
+ * @description Definisi skema Sanity untuk dokumen 'mockExam' (simulasi ujian JLPT).
+ * Mengatur struktur soal ujian multi-seksi (Kosakata, Tata Bahasa, Membaca, Mendengar) dengan dukungan audio dan gambar.
+ * @module sanity/schemaTypes/mockExam
+ */
+
 import { defineField, defineType } from "sanity";
+
+// ======================
+// SCHEMA DEFINITION
+// ======================
 
 export default defineType({
   name: "mockExam",
@@ -95,7 +106,6 @@ export default defineType({
               validation: (Rule) => Rule.required().min(0).max(3),
             },
           ],
-          // ✨ PERBAIKAN: Preview agar daftar soal mudah dibaca di Sanity Studio
           preview: {
             select: {
               title: "questionText",

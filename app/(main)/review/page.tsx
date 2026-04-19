@@ -1,11 +1,15 @@
 /**
- * @file app/(main)/review/page.tsx
- * @description Halaman Sesi Ulasan Harian (Daily Review) yang bertugas memindai kartu kosakata jatuh tempo (due cards) dan menarik datanya dari Sanity CMS untuk dirender di komponen Flashcard.
- * @module Client Component
+ * @file page.tsx
+ * @description Halaman Sesi Ulasan Harian (Daily Review).
+ * Memindai kartu jatuh tempo (due cards) dan menarik datanya dari Sanity CMS.
+ * @module DailyReviewPage
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import React, { useState, useEffect, useRef } from "react";
 import { client } from "@/sanity/lib/client";
 import { useProgress } from "@/context/UserProgressContext";
@@ -17,11 +21,15 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
 /**
- * Komponen Utama Halaman Review Harian.
- * Berperan ganda sebagai mesin pencari data antrean Spaced Repetition (SRS) dan sebagai antarmuka induk bagi sistem `FlashcardMaster`.
+ * Komponen DailyReviewPage: Mengelola pengambilan data kartu SRS yang jatuh tempo 
+ * dan menampilkan antarmuka flashcard.
  * 
- * @returns {JSX.Element} Merender layar tunggu, status antrean kosong, status selesai, atau UI Flashcard interaktif sesuai siklus data.
+ * @returns {JSX.Element} Elemen halaman review harian.
  */
 export default function DailyReviewPage() {
   const { progress, loading } = useProgress();
@@ -33,14 +41,18 @@ export default function DailyReviewPage() {
   const hasFetched = useRef(false);
 
   useEffect(() => {
-    // Mencegah pengambilan data ganda jika komponen re-render
+    // ======================
+    // DATABASE OPERATIONS
+    // ======================
+    
+    // Mencegah pengambilan data ganda
     if (loading || hasFetched.current) return;
 
     const fetchDueCards = async () => {
       try {
         const now = Date.now();
         
-        // Memfilter ID kartu di memori lokal pengguna yang waktu "nextReview" nya sudah terlewati (<= now)
+        // Filter ID kartu yang sudah waktunya direview
         const dueItemIds = Object.entries(progress.srs)
           .filter(([_, state]) => state.nextReview <= now)
           .map(([id]) => id);
@@ -51,7 +63,7 @@ export default function DailyReviewPage() {
           return;
         }
 
-        // Kueri GROQ ke Sanity CMS untuk mendapatkan data teks, bacaan, dan makna dari ID kartu yang terpilih
+        // Fetch data kartu dari CMS
         const query = `*[_id in $ids] {
           _id,
           "word": coalesce(jisho, word),
@@ -64,7 +76,7 @@ export default function DailyReviewPage() {
 
         const data = await client.fetch(query, { ids: dueItemIds });
         
-        // Mengacak urutan kemunculan kartu agar proses belajar lebih natural dan tidak berpola
+        // Acak urutan kartu
         const shuffled = data.sort(() => Math.random() - 0.5);
         
         setDueCards(shuffled);
@@ -79,9 +91,11 @@ export default function DailyReviewPage() {
     fetchDueCards();
   }, [loading, progress.srs]);
 
-  /* =========================================
-     LAYAR 1: Status Sinkronisasi
-  ========================================= */
+  // ======================
+  // RENDER
+  // ======================
+
+  // LAYAR 1: Status Sinkronisasi
   if (loading || isFetching) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center px-4">
@@ -93,9 +107,7 @@ export default function DailyReviewPage() {
     );
   }
 
-  /* =========================================
-     LAYAR 2: Antrean Kosong (Istirahat)
-  ========================================= */
+  // LAYAR 2: Antrean Kosong (Istirahat)
   if (dueCards.length === 0 && !isFinished) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center px-4 w-full">
@@ -127,9 +139,7 @@ export default function DailyReviewPage() {
     );
   }
 
-  /* =========================================
-     LAYAR 3: Status Selesai Belajar
-  ========================================= */
+  // LAYAR 3: Status Selesai Belajar
   if (isFinished || dueCards.length === 0) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center px-4 w-full">
@@ -165,9 +175,7 @@ export default function DailyReviewPage() {
     );
   }
 
-  /* =========================================
-     LAYAR UTAMA: UI Flashcard
-  ========================================= */
+  // LAYAR UTAMA: UI Flashcard
   return (
     <div className="flex-1 w-full px-4 md:px-8 relative overflow-hidden flex flex-col items-center">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/10 via-cyber-bg to-cyber-bg pointer-events-none z-0" />

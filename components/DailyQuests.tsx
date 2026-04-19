@@ -1,10 +1,14 @@
 /**
- * LOKASI FILE: components/DailyQuests.tsx
- * KONSEP: Mobile-First Neumorphic (Misi Harian)
+ * @file DailyQuests.tsx
+ * @description Komponen Misi Harian yang memberikan XP kepada pengguna berdasarkan aktivitas (review, XP harian).
+ * @module DailyQuests
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import { useState, useEffect } from "react";
 import { useProgress } from "@/context/UserProgressContext";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,6 +19,9 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Target, CheckCircle2, Zap, Brain, Flame, Lock } from "lucide-react";
 
+// ======================
+// CONSTANTS / CONFIG
+// ======================
 export interface Quest {
   id: string;
   title: string;
@@ -51,6 +58,15 @@ const DAILY_QUESTS: Quest[] = [
   },
 ];
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen DailyQuests: Menampilkan daftar misi harian dan menangani pengambilan hadiah.
+ * 
+ * @returns {JSX.Element} Panel misi harian.
+ */
 export default function DailyQuests() {
   const { progress, updateProgress } = useProgress();
   const [claimedQuests, setClaimedQuests] = useState<Record<string, boolean>>(
@@ -69,12 +85,22 @@ export default function DailyQuests() {
     }
   }, []);
 
+  // ======================
+  // HELPER FUNCTIONS
+  // ======================
+
+  /**
+   * Menyimpan status misi yang sudah diklaim ke local storage.
+   */
   const saveClaimed = (newClaimed: Record<string, boolean>) => {
     const today = new Date().toISOString().split("T")[0];
     localStorage.setItem(`nihongo-quests-${today}`, JSON.stringify(newClaimed));
     setClaimedQuests(newClaimed);
   };
 
+  /**
+   * Menangani aksi klaim hadiah misi.
+   */
   const handleClaim = (quest: Quest) => {
     if (claimedQuests[quest.id]) return;
 
@@ -87,6 +113,9 @@ export default function DailyQuests() {
     setTimeout(() => setJustClaimed(null), 2000);
   };
 
+  /**
+   * Mendapatkan progres saat ini berdasarkan tipe misi.
+   */
   const getCurrentProgress = (type: Quest["type"]) => {
     switch (type) {
       case "review":
@@ -99,7 +128,9 @@ export default function DailyQuests() {
         return 0;
     }
   };
-
+  // ======================
+  // RENDER
+  // ======================
   return (
     <Card className="bg-[#0a0c10] p-6 md:p-8 lg:p-10 rounded-[2.5rem] md:rounded-[3rem] border-white/5 h-full relative overflow-hidden neo-card shadow-none flex flex-col">
       {/* Decorative scanline overlay */}
@@ -217,3 +248,4 @@ export default function DailyQuests() {
     </Card>
   );
 }
+

@@ -1,19 +1,35 @@
+/**
+ * @file UserProgressContext.tsx
+ * @description Manajer state global untuk progres pengguna (XP, Level, SRS).
+ * Menangani penyimpanan lokal (LocalStorage) dengan sistem debouncing untuk performa.
+ * @module UserProgressContext
+ */
+
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { calculateLevel } from "@/lib/level";
 import { SRSState, createNewCardState } from "@/lib/srs";
 
-/* ============================= */
-/* INTERFACES & TYPES */
-/* ============================= */
+// ======================
+// TYPES / INTERFACES
+// ======================
 
+/**
+ * Representasi data progres inti pengguna.
+ */
 export interface UserProgress {
   xp: number;
   level: number;
   srs: Record<string, SRSState>;
 }
 
+/**
+ * Kontrak API untuk Progress Context.
+ */
 export interface ProgressContextType {
   progress: UserProgress;
   loading: boolean;
@@ -23,20 +39,27 @@ export interface ProgressContextType {
   importData: (jsonData: string) => boolean;
 }
 
-/* ============================= */
-/* CONSTANTS */
-/* ============================= */
-
+// ======================
+// CONFIG / CONSTANTS
+// ======================
 const ProgressContext = createContext<ProgressContextType | undefined>(
   undefined,
 );
+
 const STORAGE_KEY = "nihongoroute_save_data";
 const STATS_STORAGE_KEY = "nihongo-progress";
 
-/* ============================= */
-/* PROVIDER COMPONENT */
-/* ============================= */
+// ======================
+// PROVIDER COMPONENT
+// ======================
 
+/**
+ * ProgressProvider: Pembungkus aplikasi yang menyediakan akses ke data progres.
+ * 
+ * @param {Object} props - Properti komponen.
+ * @param {React.ReactNode} props.children - Node anak yang akan dibungkus.
+ * @returns {JSX.Element} Provider context progres.
+ */
 export const ProgressProvider = ({
   children,
 }: {
@@ -48,6 +71,10 @@ export const ProgressProvider = ({
     srs: {},
   });
   const [loading, setLoading] = useState(true);
+
+  // ======================
+  // DATA INITIALIZATION
+  // ======================
 
   // Muat data saat aplikasi pertama kali di-render di client
   useEffect(() => {
@@ -71,27 +98,30 @@ export const ProgressProvider = ({
     }
   }, []);
 
-  // --- DEBOUNCED SAVE LOGIC ---
+  // ======================
+  // BUSINESS LOGIC (SAVE)
+  // ======================
+
+  /**
+   * DEBOUNCED SAVE LOGIC:
+   * Menunda penyimpanan ke LocalStorage hingga aktivitas perubahan state berhenti selama 1.5 detik.
+   */
   useEffect(() => {
-    // 1. Abaikan penyimpanan jika aplikasi masih dalam proses memuat data awal (loading)
-    //    agar data kosong tidak menimpa data lama.
     if (loading) return;
 
-    // 2. Set timer untuk menyimpan data setelah 1.5 detik
     const debounceTimer = setTimeout(() => {
       if (typeof window !== "undefined") {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-        // console.log("Progress tersimpan ke LocalStorage (Debounced)"); // Bisa di-uncomment untuk tes
       }
     }, 1500);
 
-    // 3. Cleanup function:
-    // Jika state 'progress' berubah lagi SEBELUM 1.5 detik habis, batalkan timer sebelumnya.
-    // Inilah inti dari teknik "Debouncing".
     return () => clearTimeout(debounceTimer);
   }, [progress, loading]);
 
-  // --- SAFETY SAVE PADA SAAT TAB DITUTUP ---
+  /**
+   * SAFETY SAVE:
+   * Memastikan data tersimpan saat tab/browser ditutup secara paksa.
+   */
   useEffect(() => {
     if (loading) return;
 
@@ -103,8 +133,15 @@ export const ProgressProvider = ({
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [progress, loading]);
 
+  // ======================
+  // HELPER FUNCTIONS
+  // ======================
+
   /**
-   * Memperbarui progress XP dan status SRS, lalu menyimpannya ke LocalStorage.
+   * Memperbarui progress XP dan status SRS.
+   * 
+   * @param {number} newXp - Nilai XP baru.
+   * @param {Record<string, SRSState>} newSrs - Dataset SRS yang diperbarui.
    */
   const updateProgress = (newXp: number, newSrs: Record<string, SRSState>) => {
     const newState = {
@@ -117,6 +154,8 @@ export const ProgressProvider = ({
 
   /**
    * Mendaftarkan kata/kartu baru ke dalam sistem SRS user.
+   * 
+   * @param {string} wordId - ID dokumen kartu.
    */
   const addToSRS = (wordId: string) => {
     // Abaikan jika kartu sudah ada di dalam memori
@@ -131,7 +170,7 @@ export const ProgressProvider = ({
   };
 
   /**
-   * Mengekspor data utama dan statistik menjadi file JSON.
+   * Mengekspor data utama dan statistik menjadi file JSON untuk backup manual.
    */
   const exportData = () => {
     if (typeof window === "undefined") return;
@@ -160,6 +199,9 @@ export const ProgressProvider = ({
 
   /**
    * Mengimpor data JSON dan memulihkan sesi belajar user.
+   * 
+   * @param {string} jsonData - String JSON hasil ekspor.
+   * @returns {boolean} Status keberhasilan impor.
    */
   const importData = (jsonData: string): boolean => {
     try {
@@ -183,6 +225,9 @@ export const ProgressProvider = ({
     }
   };
 
+  // ======================
+  // RENDER
+  // ======================
   return (
     <ProgressContext.Provider
       value={{
@@ -199,10 +244,15 @@ export const ProgressProvider = ({
   );
 };
 
-/* ============================= */
-/* CUSTOM HOOK */
-/* ============================= */
+// ======================
+// CUSTOM HOOK
+// ======================
 
+/**
+ * useProgress: Hook untuk mengakses data progres di seluruh aplikasi.
+ * 
+ * @returns {ProgressContextType} Objek context progres.
+ */
 export const useProgress = () => {
   const context = useContext(ProgressContext);
   if (!context) {

@@ -1,22 +1,50 @@
+/**
+ * @file page.tsx
+ * @description Halaman latihan Kanji menggunakan sistem Flashcard.
+ * Menarik data karakter Kanji dari Sanity CMS berdasarkan kategori level.
+ * @module KanjiFlashcardPage
+ */
+
+// ======================
+// IMPORTS
+// ======================
 import FlashcardMaster from "@/components/FlashcardMaster";
 import { client } from "@/sanity/lib/client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
+// ======================
+// TYPES
+// ======================
 interface PageProps {
   params: Promise<{ categoryId: string }>;
 }
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen KanjiFlashcardPage: Mengambil data dan merender sistem flashcard khusus Kanji.
+ * 
+ * @returns {JSX.Element} Antarmuka flashcard Kanji.
+ */
 export default async function KanjiFlashcardPage({ params }: PageProps) {
   const { categoryId } = await params;
+
+  // ======================
+  // DATABASE OPERATIONS
+  // ======================
   const kanjiQuery = `*[_type == "kanji" && showInFlashcard != false && course_category->slug.current == $categoryId] {
     _id, "word": character, meaning, onyomi, kunyomi, examples
   }`;
   const cards = await client.fetch(kanjiQuery, { categoryId });
 
+  // ======================
+  // RENDER
+  // ======================
   return (
-    // DIUBAH: Penghapusan py-20, memakai w-full dan layout flex-1
     <div className="w-full px-4 md:px-8 relative overflow-hidden flex flex-col flex-1 mt-4 md:mt-8">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent pointer-events-none" />
 

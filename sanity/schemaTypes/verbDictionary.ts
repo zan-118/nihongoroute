@@ -1,4 +1,15 @@
+/**
+ * @file verbDictionary.ts
+ * @description Definisi skema Sanity untuk dokumen 'verb_dictionary' (kamus kata kerja).
+ * Menyimpan data kata kerja beserta seluruh konjugasi teknisnya (masu, jisho, te, nai, potensial, pasif, dsb).
+ * @module sanity/schemaTypes/verbDictionary
+ */
+
 import { defineField, defineType } from "sanity";
+
+// ======================
+// SCHEMA DEFINITION
+// ======================
 
 export default defineType({
   name: "verb_dictionary",
@@ -89,14 +100,12 @@ export default defineType({
       description: "Contoh: 食べた",
     }),
 
-    // --- KONJUGASI LANJUTAN (ULTRA) ---
-
+    // --- KONJUGASI LANJUTAN ---
     defineField({
       name: "tai",
       title: "Bentuk ~Tai (Keinginan)",
       type: "string",
     }),
-
     defineField({
       name: "kanou",
       title: "Bentuk Kanou (Potensial)",
@@ -122,7 +131,6 @@ export default defineType({
       title: "Bentuk Ikou (Volitional)",
       type: "string",
     }),
-
     defineField({
       name: "meirei",
       title: "Bentuk Meirei (Perintah)",

@@ -1,13 +1,25 @@
+/**
+ * @file vocab.ts
+ * @description Definisi skema Sanity untuk dokumen 'vocab' (kosakata).
+ * Mencakup logika validasi keunikan ID dan kata Jepang.
+ * @module sanity/schemaTypes/vocab
+ */
+
 import { defineField, defineType } from "sanity";
 
-// ✨ 1. Fungsi Pengecek Duplikasi ID
+// ======================
+// VALIDATION LOGIC
+// ======================
+
+/**
+ * Memastikan Vocab ID bersifat unik di seluruh dataset.
+ */
 const isUniqueVocabId = async (value: string | undefined, context: any) => {
   if (!value) return true;
   const { document, getClient } = context;
   const client = getClient({ apiVersion: "2024-04-12" });
   const id = document._id.replace(/^drafts\./, "");
 
-  // PERBAIKAN: Ubah "kosakata" menjadi "vocab"
   const query = `*[_type == "vocab" && vocabId == $value && _id != $draftId && _id != $publishedId][0]`;
   const params = { value, draftId: `drafts.${id}`, publishedId: id };
   const result = await client.fetch(query, params);
@@ -17,14 +29,15 @@ const isUniqueVocabId = async (value: string | undefined, context: any) => {
     : true;
 };
 
-// ✨ 2. Fungsi Pengecek Duplikasi Kata Jepang
+/**
+ * Memastikan kata Jepang (word) tidak duplikat untuk menjaga integritas data.
+ */
 const isUniqueWord = async (value: string | undefined, context: any) => {
   if (!value) return true;
   const { document, getClient } = context;
   const client = getClient({ apiVersion: "2024-04-12" });
   const id = document._id.replace(/^drafts\./, "");
 
-  // PERBAIKAN: Ubah "kosakata" menjadi "vocab"
   const query = `*[_type == "vocab" && word == $value && _id != $draftId && _id != $publishedId][0]`;
   const params = { value, draftId: `drafts.${id}`, publishedId: id };
   const result = await client.fetch(query, params);
@@ -34,8 +47,12 @@ const isUniqueWord = async (value: string | undefined, context: any) => {
     : true;
 };
 
+// ======================
+// SCHEMA DEFINITION
+// ======================
+
 export default defineType({
-  name: "vocab", // PERBAIKAN: Typo "vocbab" diperbaiki
+  name: "vocab",
   title: "Perpustakaan Kosakata Global",
   type: "document",
   fields: [
@@ -52,7 +69,6 @@ export default defineType({
       title: "Kata (Kanji/Kana)",
       validation: (Rule) => Rule.required().custom(isUniqueWord),
     }),
-    // ✨ PENAMBAHAN: Field Hinshi yang lebih detail
     defineField({
       name: "hinshi",
       type: "string",
@@ -67,7 +83,6 @@ export default defineType({
           { title: "Setsuzokushi (Kata Sambung)", value: "conjunction" },
           { title: "Daimeishi (Kata Ganti)", value: "pronoun" },
           { title: "Hyougen (Ungkapan / Frasa)", value: "expression" },
-          // Catatan: Verb (Kata Kerja) tidak dimasukkan karena kamu sudah punya verbDictionary.ts
         ],
       },
       initialValue: "noun",
@@ -116,7 +131,7 @@ export default defineType({
     select: {
       title: "word",
       subtitle: "meaning",
-      hinshi: "hinshi", // Sesuaikan dengan nama field baru
+      hinshi: "hinshi",
       showInFlashcard: "showInFlashcard",
       customId: "vocabId",
       systemId: "_id",

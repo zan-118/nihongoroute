@@ -1,23 +1,44 @@
 /**
- * LOKASI FILE: components/AnimatedKanji.tsx
- * KONSEP: Cyber-Dark Neumorphic (Neural Kanji Tracer)
+ * @file AnimatedKanji.tsx
+ * @description Komponen penampil animasi urutan goresan (stroke order) untuk karakter Kanji/Kana menggunakan data SVG dari KanjiVG.
+ * @module AnimatedKanji
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import React, { useEffect, useRef, useState } from "react";
 
+// ======================
+// TYPES
+// ======================
 interface AnimatedKanjiProps {
   character: string;
   triggerKey: number; // Digunakan untuk me-restart animasi
 }
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen AnimatedKanji: Mengambil data SVG dan menganimasikan setiap path secara berurutan.
+ * 
+ * @param {AnimatedKanjiProps} props - Karakter dan kunci pemicu animasi.
+ * @returns {JSX.Element} Visualisasi urutan goresan kanji.
+ */
 export default function AnimatedKanji({
   character,
   triggerKey,
 }: AnimatedKanjiProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState(false);
+
+  // ======================
+  // EFFECTS
+  // ======================
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -42,25 +63,23 @@ export default function AnimatedKanji({
 
         if (!svg) return;
 
-        // Sesuaikan ukuran SVG agar pas dengan kanvas kita
+        // Sesuaikan ukuran SVG
         svg.setAttribute("width", "100%");
         svg.setAttribute("height", "100%");
         svg.style.width = "100%";
         svg.style.height = "100%";
         svg.style.overflow = "visible";
 
-        // Ambil semua elemen path (garis coretan)
         const paths = svg.querySelectorAll("path");
 
         paths.forEach((path, index) => {
-          // 1. Hitung panjang asli dari garis ini
           const length = path.getTotalLength();
 
-          // 2. Sembunyikan garis dengan mendorong dash-offset sejauh panjangnya
+          // Sembunyikan garis dengan mendorong dash-offset sejauh panjangnya
           path.style.strokeDasharray = length.toString();
           path.style.strokeDashoffset = length.toString();
 
-          // 3. Beri gaya Cyber-Neumorphic (Purple Glow)
+          // Gaya Cyber-Neumorphic
           path.style.stroke = "#a855f7"; // Warna ungu (purple-500)
           path.style.strokeWidth = "3.5";
           path.style.strokeLinecap = "round";
@@ -68,20 +87,24 @@ export default function AnimatedKanji({
           path.style.fill = "none";
           path.style.filter = "drop-shadow(0 0 4px rgba(168, 85, 247, 0.8))";
 
-          // 4. Animasikan secara berurutan (0.8 detik per coretan)
+          // Animasikan secara berurutan
           path.style.animation = `drawKanji 0.8s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.7}s forwards`;
         });
 
-        // Sembunyikan teks angka urutan bawaan KanjiVG agar lebih rapi
+        // Sembunyikan label angka KanjiVG
         const texts = svg.querySelectorAll("text");
         texts.forEach((text) => (text.style.display = "none"));
       })
       .catch(() => {
-        setError(true); // Jika karakter campuran (Yoon) atau data tidak ada
+        setError(true); 
       });
   }, [character, triggerKey]);
 
-  // Jika gagal memuat SVG, tampilkan teks statis biasa sebagai fallback
+  // ======================
+  // RENDER
+  // ======================
+
+  // Fallback jika SVG gagal dimuat
   if (error) {
     return (
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">

@@ -1,3 +1,10 @@
+/**
+ * @file LessonPdfTemplate.tsx
+ * @description Template dokumen PDF untuk materi pelajaran (Lessons).
+ * Mengatur tata letak, tipografi, dan komponen visual untuk ekspor materi.
+ * @module LessonPdfTemplate
+ */
+
 import React from "react";
 import {
   Page,
@@ -6,9 +13,12 @@ import {
   Document,
   StyleSheet,
   Font,
-  Image,
   Link,
 } from "@react-pdf/renderer";
+
+// ======================
+// CONFIG / FONTS
+// ======================
 
 Font.register({
   family: "NotoSansJP",
@@ -17,6 +27,10 @@ Font.register({
     { src: "/fonts/NotoSansJP-Bold.ttf", fontWeight: "bold" },
   ],
 });
+
+// ======================
+// STYLES
+// ======================
 
 const styles = StyleSheet.create({
   page: {
@@ -213,9 +227,26 @@ const styles = StyleSheet.create({
   },
 });
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen LessonPdfTemplate: Menyusun struktur visual PDF untuk satu materi pelajaran.
+ * 
+ * @param {Object} props - Data pelajaran yang akan dirender.
+ * @returns {JSX.Element} Dokumen PDF.
+ */
 export const LessonPdfTemplate = ({ lessonData }: { lessonData: any }) => {
   const combinedVocabList = lessonData.vocabList || [];
 
+  // ======================
+  // HELPER FUNCTIONS
+  // ======================
+
+  /**
+   * Mengonversi Portable Text (Sanity) ke dalam komponen Text react-pdf.
+   */
   const renderRichText = (blocks: any[]) => {
     if (!blocks || !Array.isArray(blocks)) return null;
     return blocks.map((block: any, index: number) => {
@@ -257,10 +288,13 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: any }) => {
     });
   };
 
+  // ======================
+  // RENDER
+  // ======================
   return (
     <Document title={lessonData.title}>
       <Page size="A4" style={styles.page}>
-        {/* HEADER */}
+        {/* HEADER SECTION */}
         <View style={styles.header} fixed>
           <View style={styles.logoBox}>
             <Text style={styles.brandName}>NIHONGO ROUTE</Text>
@@ -271,12 +305,12 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: any }) => {
 
         <Text style={styles.title}>{lessonData.title}</Text>
 
-        {/* ARTICLES */}
+        {/* ARTICLES SECTION */}
         {lessonData.articles && (
           <View>{renderRichText(lessonData.articles)}</View>
         )}
 
-        {/* GRAMMAR */}
+        {/* GRAMMAR SECTION */}
         {lessonData.grammar && (
           <View>
             <Text style={styles.sectionTitle}>Materi Inti (文法)</Text>
@@ -284,7 +318,7 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: any }) => {
           </View>
         )}
 
-        {/* VOCAB TABLE */}
+        {/* VOCAB TABLE SECTION */}
         {combinedVocabList.length > 0 && (
           <View wrap={false}>
             <Text style={styles.sectionTitle}>Target Kosakata</Text>
@@ -331,7 +365,7 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: any }) => {
           </View>
         )}
 
-        {/* QUIZ */}
+        {/* QUIZ SECTION */}
         {lessonData.quizzes && lessonData.quizzes.length > 0 && (
           <View>
             <Text style={styles.sectionTitle}>Latihan Pemahaman</Text>
@@ -364,7 +398,7 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: any }) => {
           </View>
         )}
 
-        {/* FOOTER */}
+        {/* FOOTER SECTION */}
         <View style={styles.footer} fixed>
           <Text style={styles.footerText}>
             © {new Date().getFullYear()} NihongoRoute

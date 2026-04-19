@@ -1,4 +1,15 @@
+/**
+ * @file courseCategory.ts
+ * @description Definisi skema Sanity untuk dokumen 'course_category' (kategori kursus).
+ * Mengelompokkan materi pembelajaran berdasarkan level JLPT, topik umum, atau simulasi ujian.
+ * @module sanity/schemaTypes/courseCategory
+ */
+
 import { defineType, defineField } from "sanity";
+
+// ======================
+// SCHEMA DEFINITION
+// ======================
 
 export default defineType({
   name: "course_category",

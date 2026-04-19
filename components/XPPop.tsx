@@ -1,11 +1,28 @@
 /**
- * LOKASI FILE: components/XPPop.tsx
- * KONSEP: Cyber-Dark Neumorphic (XP Notification)
+ * @file XPPop.tsx
+ * @description Komponen notifikasi visual yang muncul saat pengguna mendapatkan XP.
+ * @module XPPop
  */
 
 "use client";
+
+// ======================
+// IMPORTS
+// ======================
 import { motion, AnimatePresence } from "framer-motion";
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen XPPop: Animasi teks melayang untuk feedback perolehan XP.
+ * 
+ * @param {Object} props - Properti komponen.
+ * @param {boolean} props.show - Status tampilan animasi.
+ * @param {number} props.amount - Jumlah XP yang didapatkan.
+ * @returns {JSX.Element} Animasi perolehan XP.
+ */
 export default function XPPop({
   show,
   amount,

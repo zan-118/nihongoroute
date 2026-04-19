@@ -1,11 +1,15 @@
 /**
- * @file app/(main)/share/page.tsx
- * @description Halaman penerima tautan sertifikat ujian. Men-decode parameter URL format Base64 menjadi struktur data statistik kelulusan. Bekerja tanpa penyimpanan server (Stateless).
- * @module Client Component
+ * @file page.tsx
+ * @description Halaman penerima tautan sertifikat ujian. 
+ * Men-decode parameter URL format Base64 menjadi struktur data statistik kelulusan.
+ * @module SharePage
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 import { motion } from "framer-motion";
@@ -21,9 +25,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
-/**
- * Struktur objek hasil ujian yang diringkas di dalam parameter string URL.
- */
+// ======================
+// TYPES
+// ======================
 interface SharedResult {
   guestId: string;
   examTitle: string;
@@ -39,9 +43,12 @@ interface SharedResult {
   date: string;
 }
 
+// ======================
+// COMPONENTS
+// ======================
+
 /**
- * Komponen sub-modul yang menangani pemrosesan logika dekripsi parameter URL.
- * Harus dipisahkan dan dibungkus Suspense karena berinteraksi dengan API useRouter klien (useSearchParams).
+ * Komponen ShareContent: Menangani pemrosesan logika dekripsi parameter URL.
  * 
  * @returns {JSX.Element} Antarmuka Sertifikat digital.
  */
@@ -51,6 +58,10 @@ function ShareContent() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    // ======================
+    // BUSINESS LOGIC
+    // ======================
+    
     // 1. Ekstrak data teks hasil Base64 encoding dari URL param (?data=...)
     const rawData = searchParams.get("data");
     if (rawData) {
@@ -66,6 +77,10 @@ function ShareContent() {
       setError(true);
     }
   }, [searchParams]);
+
+  // ======================
+  // RENDER (Content)
+  // ======================
 
   if (error) {
     return (
@@ -183,6 +198,10 @@ function ShareContent() {
     </div>
   );
 }
+
+// ======================
+// MAIN EXECUTION
+// ======================
 
 /**
  * Halaman Utama Sertifikat Ujian.

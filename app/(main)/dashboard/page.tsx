@@ -1,11 +1,15 @@
 /**
- * @file app/(main)/dashboard/page.tsx
- * @description Pusat kendali pengguna (Dashboard) yang menampilkan level progres (XP), jadwal hafalan flashcard harian (SRS), heatmap aktivitas, riwayat ujian, serta konfigurasi manajemen data lokal.
- * @module Client Component
+ * @file page.tsx
+ * @description Pusat kendali pengguna (Dashboard) yang menampilkan progres, statistik, 
+ * dan manajemen data lokal aplikasi.
+ * @module DashboardPage
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import { useEffect, useState, useRef } from "react";
 import { useProgress } from "@/context/UserProgressContext";
 import { loadProgress, ProgressState } from "@/lib/progress";
@@ -16,14 +20,15 @@ import DailyQuests from "@/components/DailyQuests";
 import Heatmap from "@/components/Heatmap";
 import LevelUpOverlay from "@/components/LevelUpOverlay";
 import { client } from "@/sanity/lib/client";
-
 import { BrainCircuit, PlayCircle, Save, Upload, Trash2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-// --- KONFIGURASI ANIMASI ---
+// ======================
+// CONFIG / CONSTANTS
+// ======================
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -41,12 +46,15 @@ const itemVariants: Variants = {
   },
 };
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
 /**
- * Komponen Utama Halaman Dashboard.
- * Menampilkan ringkasan status pengguna (Guest ID otomatis), metrik pertumbuhan XP,
- * serta menjadi gerbang navigasi utama menuju sesi Review memori SRS dan modul pembelajaran.
+ * Komponen DashboardPage: Menampilkan ringkasan progres belajar, quest harian, 
+ * dan kontrol manajemen data user.
  * 
- * @returns {JSX.Element} Antarmuka Dasbor interaktif.
+ * @returns {JSX.Element} Elemen halaman dashboard.
  */
 export default function DashboardPage() {
   const { progress, loading, exportData, importData } = useProgress();
@@ -58,8 +66,7 @@ export default function DashboardPage() {
   const certificateRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Membaca ID Pengunjung anonim (Guest ID) dari Local Storage. 
-    // Jika belum ada (pengguna baru), sistem akan otomatis menggenerasikan serangkaian ID acak.
+    // Inisialisasi atau pengambilan Guest ID dari LocalStorage
     let savedId = localStorage.getItem("nihongo_guest_id");
     if (!savedId) {
       savedId =
@@ -69,7 +76,7 @@ export default function DashboardPage() {
     setGuestId(savedId);
     setStats(loadProgress());
 
-    // Menarik riwayat hasil simulasi JLPT dari Sanity CMS berdasarkan Guest ID saat ini
+    // Fetch riwayat ujian dari CMS
     const fetchHistory = async () => {
       try {
         const query = `*[_type == "examResult" && guestId == $id] | order(completedAt desc)`;
@@ -82,12 +89,14 @@ export default function DashboardPage() {
     fetchHistory();
   }, []);
 
+  // ======================
+  // BUSINESS LOGIC
+  // ======================
+
   const handleExportData = () => exportData();
 
   /**
-   * Logika Import Data (Pemulihan Cadangan):
-   * Membuka pemilih file sistem secara terprogram, membaca isi file berekstensi .json,
-   * kemudian memasukkannya ke dalam konteks progres untuk memulihkan status (XP/SRS) lokal.
+   * Mengimpor data progres dari file JSON eksternal.
    */
   const handleImportData = () => {
     const input = document.createElement("input");
@@ -109,8 +118,7 @@ export default function DashboardPage() {
   };
 
   /**
-   * Logika Hard Reset:
-   * Menghapus semua kunci terkait penyimpanan game/sistem dan menyegarkan ulang sesi.
+   * Menghapus seluruh data progres lokal (Hard Reset).
    */
   const handleResetData = () => {
     if (
@@ -135,15 +143,16 @@ export default function DashboardPage() {
     );
   }
 
-  // Menghitung berapa banyak kartu kosakata yang jadwal pengulangannya (nextReview) sudah tiba saat ini
+  // Hitung jumlah kartu yang jatuh tempo untuk direview
   const now = Date.now();
   const dueCount = Object.values(progress.srs).filter(
     (card) => card.nextReview <= now,
   ).length;
-
+  // ======================
+  // RENDER
+  // ======================
   return (
     <div className="w-full px-4 md:px-8 lg:px-12 relative overflow-hidden pb-24 pt-8">
-      {/* Background Decor */}
       <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-cyber-neon/5 blur-[150px] rounded-full pointer-events-none animate-pulse" />
 
       <LevelUpOverlay level={progress.level} />
@@ -199,9 +208,7 @@ export default function DashboardPage() {
           </motion.div>
         </header>
 
-        {/* MAIN GRID */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 mb-20">
-          {/* KOLOM KIRI (Progress & Stats) */}
           <div className="lg:col-span-2 space-y-8 md:space-y-12">
             <motion.section variants={itemVariants}>
               <Card className="rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 border-white/5 shadow-2xl bg-[#0a0c10]">
@@ -237,7 +244,6 @@ export default function DashboardPage() {
             </motion.div>
           </div>
 
-          {/* KOLOM KANAN (Overview & Actions) */}
           <div className="space-y-8 md:space-y-12">
             <motion.section variants={itemVariants}>
               <Card className="bg-gradient-to-br from-[#121620] to-[#0d1117] rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 border-white/5 shadow-2xl">
@@ -313,10 +319,12 @@ export default function DashboardPage() {
   );
 }
 
-// --- SUB-COMPONENTS ---
+// ======================
+// HELPER COMPONENTS
+// ======================
 
 /**
- * Komponen pembantu untuk menampilkan poin statistik sederhana (Metrik).
+ * SimpleStat: Menampilkan metrik statistik sederhana dalam kartu kecil.
  */
 function SimpleStat({
   label,
@@ -340,7 +348,7 @@ function SimpleStat({
 }
 
 /**
- * Komponen pembantu untuk kartu tautan navigasi instan (Quick Access).
+ * QuickLink: Tombol navigasi cepat dengan ikon besar.
  */
 function QuickLink({
   href,
@@ -356,7 +364,7 @@ function QuickLink({
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
       className="w-full h-full"
     >
-      <Link href={href} passHref legacyBehavior>
+      <Link href={href}>
         <Card className="p-6 md:p-8 border-white/5 shadow-xl hover:border-cyber-neon/30 hover:bg-cyber-neon/5 transition-all flex flex-col items-center justify-center gap-4 group cursor-pointer h-full rounded-[2rem]">
           <span className="text-4xl md:text-5xl group-hover:scale-110 transition-transform drop-shadow-lg">
             {icon}
@@ -371,7 +379,7 @@ function QuickLink({
 }
 
 /**
- * Komponen pembantu untuk menampilkan tombol aksi pada panel pengaturan data.
+ * SettingsButton: Tombol untuk aksi pengaturan data dengan efek hover warna-warni.
  */
 function SettingsButton({ icon, label, onClick, hoverColor, isDanger }: any) {
   return (
@@ -387,3 +395,4 @@ function SettingsButton({ icon, label, onClick, hoverColor, isDanger }: any) {
     </Button>
   );
 }
+

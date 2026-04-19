@@ -1,14 +1,40 @@
+/**
+ * @file page.tsx
+ * @description Halaman latihan kosakata menggunakan sistem Flashcard.
+ * Menarik data kosakata dan verba dari Sanity CMS berdasarkan kategori level.
+ * @module VocabFlashcardPage
+ */
+
+// ======================
+// IMPORTS
+// ======================
 import FlashcardMaster from "@/components/FlashcardMaster";
 import { client } from "@/sanity/lib/client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
+// ======================
+// TYPES
+// ======================
 interface PageProps {
   params: Promise<{ categoryId: string }>;
 }
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen VocabFlashcardPage: Mengambil data dan merender sistem flashcard.
+ * 
+ * @returns {JSX.Element} Antarmuka flashcard kosakata.
+ */
 export default async function VocabFlashcardPage({ params }: PageProps) {
   const { categoryId } = await params;
+
+  // ======================
+  // DATABASE OPERATIONS
+  // ======================
   const query = `{
     "vocab": *[_type == "vocab" && showInFlashcard != false && course_category->slug.current == $categoryId] { _id, word, meaning, romaji, furigana },
     "verbs": *[_type == "verb_dictionary" && showInFlashcard != false && course_category->slug.current == $categoryId] { _id, "word": jisho, meaning, romaji, furigana }
@@ -16,8 +42,10 @@ export default async function VocabFlashcardPage({ params }: PageProps) {
   const data = await client.fetch(query, { categoryId });
   const cards = [...(data.vocab || []), ...(data.verbs || [])];
 
+  // ======================
+  // RENDER
+  // ======================
   return (
-    // DIUBAH: min-h-screen dan py-20 diganti w-full flex-1
     <div className="w-full px-4 md:px-8 relative overflow-hidden flex flex-col flex-1 mt-4 md:mt-8">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/10 via-transparent to-transparent pointer-events-none" />
 

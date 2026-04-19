@@ -1,4 +1,15 @@
+/**
+ * @file level.ts
+ * @description Definisi skema Sanity untuk dokumen 'level' (tingkat kecakapan JLPT).
+ * Mengatur metadata dasar untuk kategori level seperti N5, N4, dst.
+ * @module sanity/schemaTypes/level
+ */
+
 import { defineField, defineType } from "sanity";
+
+// ======================
+// SCHEMA DEFINITION
+// ======================
 
 export default defineType({
   name: "level",

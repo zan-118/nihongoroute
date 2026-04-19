@@ -1,10 +1,14 @@
 /**
- * LOKASI FILE: components/Flashcard.tsx
- * KONSEP: Mobile-First Neumorphic (Kartu Interaktif)
+ * @file Flashcard.tsx
+ * @description Komponen kartu hafalan interaktif yang mendukung rotasi 3D dan mode menulis kanji.
+ * @module Flashcard
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PenTool, X, MousePointer2 } from "lucide-react";
@@ -14,6 +18,9 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
+// ======================
+// TYPES
+// ======================
 interface FlashcardProps {
   word: string;
   meaning: string;
@@ -25,6 +32,16 @@ interface FlashcardProps {
   type?: "vocab" | "kanji";
 }
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen Flashcard: Menampilkan kartu interaktif dengan sisi depan dan belakang.
+ * 
+ * @param {FlashcardProps} props - Properti kartu.
+ * @returns {JSX.Element} Antarmuka kartu flashcard.
+ */
 export default function Flashcard({
   word,
   meaning,
@@ -35,9 +52,12 @@ export default function Flashcard({
   onFlip,
   type = "vocab",
 }: FlashcardProps) {
+  // State Management
   const [isDrawingMode, setIsDrawingMode] = useState(false);
 
-  // THEME CONFIG
+  // ======================
+  // CONFIG / THEME
+  // ======================
   const isKanji = type === "kanji";
   const themeColor = isKanji ? "text-purple-400" : "text-cyber-neon";
   const themeBorder = isKanji ? "border-purple-500/30" : "border-cyber-neon/30";
@@ -47,6 +67,10 @@ export default function Flashcard({
   const glowClass = isKanji 
     ? "drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]" 
     : "drop-shadow-[0_0_15px_rgba(0,238,255,0.5)]";
+
+  // ======================
+  // HELPER FUNCTIONS
+  // ======================
 
   const handleClick = (e: React.MouseEvent) => {
     if (isDrawingMode) {
@@ -66,6 +90,9 @@ export default function Flashcard({
     setIsDrawingMode(false);
   };
 
+  // ======================
+  // RENDER
+  // ======================
   return (
     <div
       className="relative w-full aspect-[4/5] sm:aspect-square md:aspect-[4/3] cursor-pointer"
@@ -102,9 +129,6 @@ export default function Flashcard({
             {isKanji ? "Karakter Kanji" : "Kosakata Utama"}
           </Badge>
 
-          <div className="absolute top-5 right-5 md:top-8 md:right-8 z-20">
-            <TTSReader text={word} minimal={true} />
-          </div>
 
           <h2
             className={`${word.length > 4 ? "text-5xl sm:text-6xl md:text-7xl lg:text-9xl" : "text-7xl sm:text-8xl md:text-9xl lg:text-[11rem]"} font-black text-white tracking-tight font-japanese leading-none z-10 ${glowClass} transition-all duration-300`}

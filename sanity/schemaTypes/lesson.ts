@@ -1,4 +1,15 @@
+/**
+ * @file lesson.ts
+ * @description Definisi skema Sanity untuk dokumen 'lesson' (materi pembelajaran).
+ * Mengatur struktur konten materi, referensi kosakata, artikel, dan kuis terkait.
+ * @module sanity/schemaTypes/lesson
+ */
+
 import { defineType, defineField } from "sanity";
+
+// ======================
+// SCHEMA DEFINITION
+// ======================
 
 export default defineType({
   name: "lesson",

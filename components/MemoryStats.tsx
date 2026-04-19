@@ -1,9 +1,14 @@
 /**
- * LOKASI FILE: components/MemoryStats.tsx
- * KONSEP: Mobile-First Neumorphic (Statistik Memori HUD)
+ * @file MemoryStats.tsx
+ * @description Komponen Statistik Memori (HUD) yang merangkum data SRS pengguna ke dalam kategori master, intermediate, learning, dan new.
+ * @module MemoryStats
  */
 
 "use client";
+
+// ======================
+// IMPORTS
+// ======================
 import { useProgress } from "@/context/UserProgressContext";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -12,10 +17,20 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Trophy, TrendingUp, Flame, Sprout, BookOpen, PenTool, Database } from "lucide-react";
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen MemoryStats: Menampilkan ringkasan statistik retensi memori SRS.
+ * 
+ * @returns {JSX.Element} Panel statistik memori.
+ */
 export default function MemoryStats() {
   const { progress } = useProgress();
   const srsEntries = Object.values(progress.srs);
 
+  // Kalkulasi Statistik Berdasarkan Interval dan Repetisi
   const stats = {
     master: srsEntries.filter((s: any) => s.interval >= 30).length,
     intermediate: srsEntries.filter(
@@ -28,6 +43,7 @@ export default function MemoryStats() {
 
   const total = srsEntries.length || 1;
 
+  // Konfigurasi Visual Bar Statistik
   const statConfig = [
     {
       label: "Tingkat Master",
@@ -62,7 +78,9 @@ export default function MemoryStats() {
       delay: 0.4,
     },
   ];
-
+  // ======================
+  // RENDER
+  // ======================
   return (
     <Card className="bg-[#0a0c10] p-6 md:p-8 lg:p-10 rounded-[2.5rem] md:rounded-[3rem] border-white/5 relative overflow-hidden h-full flex flex-col neo-card shadow-none">
       <div className="absolute inset-0 bg-[linear-gradient(rgba(0,238,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,238,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none opacity-50" />
@@ -125,6 +143,13 @@ export default function MemoryStats() {
   );
 }
 
+// ======================
+// HELPER COMPONENTS
+// ======================
+
+/**
+ * Komponen StatBar: Merender bar progres untuk satu kategori statistik memori.
+ */
 function StatBar({ label, count, total, indicatorColor, icon, colorClass }: any) {
   const percent = total > 1 || count > 0 ? (count / total) * 100 : 0;
 
@@ -150,3 +175,4 @@ function StatBar({ label, count, total, indicatorColor, icon, colorClass }: any)
     </div>
   );
 }
+

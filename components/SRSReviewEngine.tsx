@@ -1,10 +1,15 @@
 /**
- * LOKASI FILE: components/SRSReviewEngine.tsx
- * KONSEP: Cyber-Dark Neumorphic (Review HUD)
+ * @file SRSReviewEngine.tsx
+ * @description Mesin sesi ulasan SRS (Spaced Repetition System).
+ * Mendukung mode 'free training' (tanpa efek progres) dan mode 'test' (sinkronisasi progres dengan algoritma SRS).
+ * @module SRSReviewEngine
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useProgress } from "@/context/UserProgressContext";
@@ -16,6 +21,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, ArrowRight, BrainCircuit, Check, X, ShieldCheck } from "lucide-react";
 
+// ======================
+// TYPES
+// ======================
 export interface FlashcardType {
   _id: string;
   word: string;
@@ -24,19 +32,30 @@ export interface FlashcardType {
   romaji?: string;
 }
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
+/**
+ * Komponen SRSReviewEngine: Menangani logika navigasi dan pembaruan state SRS pada setiap kartu.
+ * 
+ * @param {Object} props - Daftar kartu flashcard.
+ * @returns {JSX.Element} Antarmuka sesi review.
+ */
 export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
+  // State Management
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [direction, setDirection] = useState(0);
   const [studyMode, setStudyMode] = useState<"free" | "test">("free");
   const [isClient, setIsClient] = useState(false);
-
   const [shuffledCards, setShuffledCards] = useState<FlashcardType[]>([]);
 
   const { progress, updateProgress } = useProgress();
   const router = useRouter();
 
   useEffect(() => {
+    // Pengacakan urutan kartu (Fisher-Yates Shuffle)
     if (cards && cards.length > 0) {
       const shuffled = [...cards];
       for (let i = shuffled.length - 1; i > 0; i--) {
@@ -52,6 +71,13 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
 
   const currentCard = shuffledCards[currentIndex];
 
+  // ======================
+  // HELPER FUNCTIONS
+  // ======================
+
+  /**
+   * Menangani penilaian jawaban pengguna dan sinkronisasi data SRS.
+   */
   const handleAnswer = (correct: boolean) => {
     if (studyMode === "test") {
       const cardId = currentCard._id;
@@ -67,6 +93,9 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
     goToNext();
   };
 
+  /**
+   * Navigasi ke kartu berikutnya.
+   */
   const goToNext = () => {
     setDirection(1);
     setIsFlipped(false);
@@ -80,6 +109,9 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
     }
   };
 
+  /**
+   * Navigasi ke kartu sebelumnya.
+   */
   const goToPrev = () => {
     if (currentIndex > 0) {
       setDirection(-1);
@@ -205,3 +237,4 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
     </section>
   );
 }
+

@@ -1,11 +1,15 @@
 /**
- * @file app/(main)/courses/page.tsx
- * @description Halaman utama direktori silabus pembelajaran (Course Landing Page). Mengarahkan pengguna menuju pusat ujian simulasi, fondasi aksara (Kana), atau lintasan terstruktur level JLPT.
- * @module Client Component
+ * @file page.tsx
+ * @description Halaman utama direktori silabus pembelajaran (Course Landing Page).
+ * Mengarahkan pengguna menuju pusat ujian simulasi, fondasi aksara (Kana), atau lintasan level JLPT.
+ * @module CoursesLandingPage
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -13,23 +17,27 @@ import { Zap, Play, ArrowRight, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
-// Variabel animasi standar untuk kontainer grid dengan efek berurutan
+// ======================
+// CONFIG / CONSTANTS
+// ======================
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
 };
 
-// Variabel animasi standar untuk elemen individual
 const itemVariants = {
   hidden: { y: 20, opacity: 0 },
   visible: { y: 0, opacity: 1 },
 };
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
 /**
- * Komponen Halaman Silabus Utama.
- * Menampilkan rute-rute kurikulum yang dapat dipilih oleh pengguna dengan efek masuk dari framer-motion.
+ * Komponen CoursesLandingPage: Menampilkan pilihan jalur belajar JLPT.
  * 
- * @returns {JSX.Element} Antarmuka navigasi pilihan jalur belajar JLPT.
+ * @returns {JSX.Element} Antarmuka navigasi pilihan jalur belajar.
  */
 export default function CoursesLandingPage() {
   const jlptLevels = ["N5", "N4", "N3", "N2"];
@@ -59,7 +67,7 @@ export default function CoursesLandingPage() {
           </motion.h1>
         </header>
 
-        {/* SECTION 1: EXAM CENTER */}
+        {/* SECTION: EXAM CENTER */}
         <motion.section variants={itemVariants} className="mb-16">
           <Link href="/exams" className="group block" passHref legacyBehavior>
             <motion.div
@@ -92,7 +100,7 @@ export default function CoursesLandingPage() {
           </Link>
         </motion.section>
 
-        {/* SECTION 2: BASICS */}
+        {/* SECTION: BASICS (FOUNDATION) */}
         <motion.section variants={itemVariants} className="mb-24">
           <div className="flex items-center gap-4 mb-8">
             <h3 className="text-xs font-black uppercase tracking-[0.4em] text-cyan-400">
@@ -114,7 +122,7 @@ export default function CoursesLandingPage() {
           </Link>
         </motion.section>
 
-        {/* SECTION 3: JLPT TRACKS */}
+        {/* SECTION: JLPT TRACKS */}
         <motion.section variants={itemVariants}>
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-xs font-black uppercase tracking-[0.4em] text-cyan-400">
@@ -165,3 +173,4 @@ export default function CoursesLandingPage() {
     </div>
   );
 }
+

@@ -156,7 +156,9 @@ export default function BasicsPage() {
   const themeBorder = isHira ? "border-[#0ef]/30" : "border-purple-500/30";
   const themeBgHover = isHira ? "hover:bg-[#0ef]/10" : "hover:bg-purple-500/10";
   const themeAccent = isHira ? "bg-[#0ef]" : "bg-purple-500";
-
+  // ======================
+  // RENDER
+  // ======================
   return (
     <div className="w-full flex-1  relative overflow-hidden flex flex-col">
       {/* Background Grid */}

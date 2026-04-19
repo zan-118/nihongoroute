@@ -1,11 +1,15 @@
 /**
- * @file components/MockExamEngine.tsx
- * @description Mesin simulasi ujian utama dengan fitur anti-cheat, pemutaran audio satu-kali (Choukai), pewaktu otomatis, dan pembuat URL hasil ujian tanpa database.
- * @module Client Component
+ * @file MockExamEngine.tsx
+ * @description Mesin simulasi ujian JLPT utama.
+ * Fitur: Anti-cheat, Audio Choukai (1x play), Auto-timer, Encoding Hasil (Base64).
+ * @module MockExamEngine
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -27,6 +31,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+
+// ======================
+// CONSTANTS / TYPES
+// ======================
 
 /**
  * Representasi data untuk setiap butir pertanyaan dalam ujian.
@@ -53,9 +61,6 @@ export interface ExamData {
   questions: ExamQuestion[];
 }
 
-/**
- * Properti untuk komponen MockExamEngine.
- */
 interface MockExamEngineProps {
   exam: ExamData;
 }
@@ -69,15 +74,18 @@ const SECTION_LABELS = {
 
 type AudioState = "idle" | "playing" | "played";
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
 /**
- * Komponen utama mesin ujian (Mock Exam Engine).
- * Menangani state siklus penuh mulai dari halaman intro, pengerjaan ujian, hingga hasil akhir dan pembahasan (review).
+ * Komponen MockExamEngine: Mengelola seluruh siklus simulasi ujian.
  * 
  * @param {MockExamEngineProps} props - Properti komponen.
- * @returns {JSX.Element} Antarmuka mesin ujian sesuai state (intro/playing/result/review).
+ * @returns {JSX.Element} Antarmuka ujian.
  */
 export default function MockExamEngine({ exam }: MockExamEngineProps) {
-  // State untuk mengelola perpindahan halaman antar mode ujian
+  // State Management
   const [gameState, setGameState] = useState<
     "intro" | "playing" | "result" | "review"
   >("intro");
@@ -85,7 +93,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
-  // Status Pemutaran Audio per Soal
+  // Status Pemutaran Audio & Anti-Cheat
   const [audioStatus, setAudioStatus] = useState<Record<string, AudioState>>(
     {},
   );
@@ -98,16 +106,19 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
     ? `/courses/${exam.categorySlug}`
     : "/courses";
 
-  // --- LOGIKA ANTI-CHEAT (Dengan Grace Period 1.5s) ---
+  // ======================
+  // BUSINESS LOGIC / EFFECTS
+  // ======================
+
+  // ANTI-CHEAT LOGIC
   useEffect(() => {
     if (gameState !== "playing") return;
 
     let cheatTimer: NodeJS.Timeout;
 
-    // Listener untuk mendeteksi apabila pengguna berpindah tab/jendela browser (Visibility API)
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden") {
-        // Beri toleransi 1.5 detik jika pengguna secara tidak sengaja mengklik notifikasi
+        // Grace period 1.5s
         cheatTimer = setTimeout(() => {
           setCheatWarnings((prev) => prev + 1);
           alert(
@@ -119,7 +130,6 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
       }
     };
 
-    // Mencegah klik kanan untuk menghindari inspeksi elemen
     const handleContextMenu = (e: MouseEvent) => e.preventDefault();
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -132,11 +142,10 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
     };
   }, [gameState]);
 
-  // --- LOGIKA TIMER ---
+  // TIMER LOGIC
   useEffect(() => {
     if (gameState !== "playing") return;
     
-    // Interval 1 detik untuk menghitung mundur sisa waktu
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
@@ -148,17 +157,15 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
       });
     }, 1000);
     return () => clearInterval(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState]);
 
-  // --- LOGIKA HASIL (Konfeti Saja, API Dihapus) ---
+  // RESULT EFFECTS (Confetti)
   useEffect(() => {
     if (gameState === "result" && !hasSavedScore.current) {
       hasSavedScore.current = true;
       const { finalScore } = calculateScore();
       const isPassed = finalScore >= exam.passingScore;
 
-      // HANYA Memicu partikel Konfeti jika pengguna lulus (melewati passing score)
       if (isPassed) {
         const duration = 3 * 1000;
         const animationEnd = Date.now() + duration;
@@ -180,19 +187,20 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
         }, 250);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState, exam.passingScore, exam.questions.length]);
 
+  // ======================
+  // HELPER FUNCTIONS
+  // ======================
+
   /**
-   * Mengatur pemutaran audio khusus soal Choukai (Mendengar).
-   * Dibatasi hanya satu kali pemutaran untuk mensimulasikan kondisi ujian JLPT asli.
+   * Menangani pemutaran audio Choukai (1x play).
    */
   const handlePlayAudio = () => {
     const activeQuestion = exam.questions[currentQuestionIndex];
     const qKey = activeQuestion._key;
     const currentStatus = audioStatus[qKey] || "idle";
 
-    // Blokir secara ketat jika audio sudah pernah diputar atau sedang berjalan
     if (currentStatus === "played" || currentStatus === "playing") return;
 
     if (audioRef.current && activeQuestion.audioUrl) {
@@ -203,7 +211,6 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
 
       setAudioStatus((prev) => ({ ...prev, [qKey]: "playing" }));
 
-      // Kunci audio secara permanen saat trek selesai berputar
       audioRef.current.onended = () => {
         setAudioStatus((prev) => ({ ...prev, [qKey]: "played" }));
       };
@@ -211,7 +218,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
   };
 
   /**
-   * Menghentikan ujian secara paksa, menyimpan status, dan beralih ke layar hasil.
+   * Mengakhiri sesi ujian.
    */
   const finishExam = () => {
     setGameState("result");
@@ -220,8 +227,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
   };
 
   /**
-   * Menyimpan indeks opsi jawaban yang dipilih pengguna berdasarkan ID soal (_key).
-   * @param {number} optionIndex - Indeks opsi yang dipilih pengguna.
+   * Menyimpan jawaban pengguna.
    */
   const handleAnswer = (optionIndex: number) => {
     const question = exam.questions[currentQuestionIndex];
@@ -243,9 +249,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
   };
 
   /**
-   * Menghitung skor akhir dan memecahnya berdasarkan setiap sesi (kosakata, tata bahasa, dsb).
-   * Algoritma bobot disesuaikan pada skala JLPT standar (maksimum 180 poin).
-   * @returns {Object} Total jawaban benar, skor final (skala 180), dan pemecahan data statistik skor per sesi.
+   * Menghitung skor akhir dan statistik per sesi.
    */
   const calculateScore = () => {
     let correctCount = 0;
@@ -262,7 +266,6 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
         sectionBreakdown[q.section] = { total: 0, correct: 0 };
       sectionBreakdown[q.section].total += 1;
       
-      // Pencocokan validasi kunci jawaban
       if (answers[q._key] === q.correctAnswer) {
         correctCount++;
         sectionBreakdown[q.section].correct += 1;
@@ -274,9 +277,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
   };
 
   /**
-   * Utilitas format waktu dari detik ke MM:SS.
-   * @param {number} seconds - Jumlah waktu dalam satuan detik.
-   * @returns {string} String format menit dan detik.
+   * Memformat detik ke MM:SS.
    */
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
@@ -285,17 +286,13 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
   };
 
   /**
-   * Merakit payload data kelulusan, melakukan pengkodean (encoding) menggunakan Base64, 
-   * dan menyalin URL hasil ke clipboard. 
-   * Teknik ini memungkinkan fitur pembagian sertifikat bekerja optimal tanpa backend / database tersendiri.
+   * Membuat URL hasil untuk dibagikan (Base64).
    */
   const handleShareResult = () => {
-    // 1. Ambil data kalkulasi skor saat ini
     const { finalScore, sectionBreakdown } = calculateScore();
     const isPassed = finalScore >= exam.passingScore;
     const guestId = localStorage.getItem("nihongo_guest_id") || "UNKNOWN_GUEST";
 
-    // 2. Rakit objek data sesuai dengan struktur yang diharapkan halaman sertifikat
     const shareData = {
       guestId,
       examTitle: exam.title,
@@ -339,18 +336,16 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
       date: new Date().toISOString(),
     };
 
-    // 3. Serialisasi ke JSON, lalu Encode (btoa) agar aman dijadikan parameter URL
     const encodedData = btoa(encodeURIComponent(JSON.stringify(shareData)));
     const shareUrl = `${window.location.origin}/share?data=${encodedData}`;
 
-    // 4. Salin langsung ke clipboard pengguna
     navigator.clipboard.writeText(shareUrl);
     alert("Link sertifikat berhasil disalin! Silakan bagikan ke teman Anda.");
   };
 
-  /* =========================================
-     1. TAMPILAN INTRO (Layar Persiapan)
-  ========================================= */
+  // ======================
+  // 1. TAMPILAN INTRO
+  // ======================
   if (gameState === "intro") {
     return (
       <Card className="w-full max-w-2xl mx-auto p-8 md:p-12 text-center mt-6 md:mt-12 relative overflow-hidden neo-card rounded-[3rem] border-white/5 bg-cyber-surface shadow-none">
@@ -421,9 +416,9 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
     );
   }
 
-  /* =========================================
-     2. TAMPILAN HASIL (Layar Penilaian)
-  ========================================= */
+  // ======================
+  // 2. TAMPILAN HASIL
+  // ======================
   if (gameState === "result") {
     const { correctCount, finalScore, sectionBreakdown } = calculateScore();
     const isPassed = finalScore >= exam.passingScore;
@@ -556,9 +551,9 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
     );
   }
 
-  /* =========================================
-     3. TAMPILAN REVIEW (Pembahasan Kunci)
-  ========================================= */
+  // ======================
+  // 3. TAMPILAN REVIEW
+  // ======================
   if (gameState === "review") {
     return (
       <div className="w-full pb-20 max-w-4xl mx-auto">
@@ -692,9 +687,9 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
     );
   }
 
-  /* =========================================
-     4. LAYAR UJIAN (Playing Mode)
-  ========================================= */
+  // ======================
+  // 4. TAMPILAN PLAYING
+  // ======================
   const activeQuestion = exam.questions[currentQuestionIndex];
   const isTimeCritical = timeLeft < 300;
 

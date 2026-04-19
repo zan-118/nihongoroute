@@ -101,7 +101,9 @@ export default function VocabClient() {
     setPage(nextPage);
     fetchData(nextPage, false);
   };
-
+  // ======================
+  // RENDER
+  // ======================
   return (
     <div className="w-full flex flex-col flex-1 pb-24 px-4 md:px-8">
       {/* Breadcrumb Navigation */}

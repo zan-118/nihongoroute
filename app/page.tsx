@@ -1,11 +1,15 @@
 /**
- * @file app/page.tsx
- * @description Halaman beranda (landing page) NihongoRoute yang menampilkan presentasi fitur utama dan jembatan akses menuju modul belajar.
- * @module Client Component
+ * @file page.tsx
+ * @description Halaman landas (Landing Page) utama NihongoRoute.
+ * Menyediakan informasi fitur, branding, dan akses cepat ke dashboard pembelajaran.
+ * @module LandingPage
  */
 
 "use client";
 
+// ======================
+// IMPORTS
+// ======================
 import Link from "next/link";
 import Image from "next/image";
 import { motion, Variants } from "framer-motion";
@@ -22,15 +26,25 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+// ======================
+// MAIN EXECUTION
+// ======================
+
 /**
- * Komponen halaman beranda utama dengan efek visual Cyber-Dark Neumorphic.
- * Memanfaatkan transisi berbasis statika `framer-motion` untuk entri yang halus dan futuristik.
+ * Komponen LandingPage: Merupakan wajah utama aplikasi dengan gaya visual Cyber-Dark.
+ * Menggunakan framer-motion untuk animasi interaktif dan responsive layout.
  * 
- * @returns {JSX.Element} Antarmuka halaman landing penuh animasi dan informasi pendaftaran.
+ * @returns {JSX.Element} Elemen halaman landas.
  */
 export default function LandingPage() {
   
-  // Konfigurasi container untuk animasi beruntun (staggered animations) pada grid fitur
+  // ======================
+  // BUSINESS LOGIC (Animation Config)
+  // ======================
+  
+  /**
+   * Variabel animasi untuk container fitur agar muncul secara berurutan.
+   */
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -39,7 +53,9 @@ export default function LandingPage() {
     },
   };
 
-  // Konfigurasi animasi muncul-dari-bawah pada masing-masing item kartu
+  /**
+   * Variabel animasi untuk masing-masing item kartu fitur.
+   */
   const itemVariants: Variants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
@@ -49,6 +65,9 @@ export default function LandingPage() {
     },
   };
 
+  // ======================
+  // CONSTANTS / CONFIG
+  // ======================
   const features = [
     {
       title: "Sistem Hafalan Pintar",
@@ -265,3 +284,4 @@ export default function LandingPage() {
     </main>
   );
 }
+

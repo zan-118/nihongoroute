@@ -1,4 +1,15 @@
+/**
+ * @file cheatsheet.ts
+ * @description Definisi skema Sanity untuk dokumen 'cheatsheet' (referensi cepat).
+ * Memungkinkan penggabungan data dari database kosakata global dan item manual untuk topik khusus.
+ * @module sanity/schemaTypes/cheatsheet
+ */
+
 import { defineField, defineType } from "sanity";
+
+// ======================
+// SCHEMA DEFINITION
+// ======================
 
 export default defineType({
   name: "cheatsheet",
