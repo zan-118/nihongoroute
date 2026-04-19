@@ -5,6 +5,7 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import { LessonPdfTemplate } from "./LessonPdfTemplate";
 import { VocabPdfTemplate } from "./VocabPdfTemplate";
 import { Download, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export type TemplateType = "lesson" | "vocab";
 
@@ -29,9 +30,9 @@ export default function PdfGenerator({
 
   if (!isClient || !data || (Array.isArray(data) && data.length === 0)) {
     return (
-      <button className="bg-[#0a0c10] border border-white/5 shadow-[inset_3px_3px_8px_#050608,inset_-2px_-2px_6px_rgba(255,255,255,0.02)] px-6 py-3 rounded-xl text-slate-300 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 w-full sm:w-auto cursor-not-allowed">
+      <Button variant="ghost" disabled className="bg-[#0a0c10] border-white/5 neo-inset shadow-none px-6 py-3 rounded-xl text-slate-300 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 w-full sm:w-auto h-auto">
         Menunggu Data...
-      </button>
+      </Button>
     );
   }
 
@@ -58,11 +59,15 @@ export default function PdfGenerator({
     <PDFDownloadLink
       document={getDocument()}
       fileName={getFileName()}
-      className="bg-[#0d1117] border border-white/5 shadow-[6px_6px_15px_#050608,-4px_-4px_10px_rgba(255,255,255,0.02)] hover:border-cyan-400/50 hover:bg-cyan-400/5 px-6 py-3 rounded-xl text-cyan-400 text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 w-full sm:w-auto active:scale-95 group"
+      style={{ textDecoration: 'none' }}
     >
       {/* @ts-ignore */}
       {({ loading }) => (
-        <>
+        <Button
+          variant="ghost"
+          disabled={loading}
+          className="bg-[#0d1117] border-white/5 neo-card shadow-none hover:border-cyan-400/50 hover:bg-cyan-400/10 px-6 py-3 rounded-xl text-cyan-400 text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 w-full sm:w-auto active:scale-95 group h-auto"
+        >
           {loading ? (
             <Loader2 size={14} className="animate-spin text-cyan-400" />
           ) : (
@@ -72,7 +77,7 @@ export default function PdfGenerator({
             />
           )}
           <span>{loading ? "Menyusun PDF..." : `Unduh PDF`}</span>
-        </>
+        </Button>
       )}
     </PDFDownloadLink>
   );

@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     marginBottom: 30,
     borderBottomWidth: 3,
-    borderBottomColor: "#22d3ee",
+    borderBottomColor: "#ef4444",
     paddingBottom: 15,
   },
   logoBox: {
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   brandName: {
     fontSize: 22,
     fontWeight: "bold",
-    color: "#0891b2",
+    color: "#b91c1c",
     letterSpacing: 1.5,
   },
   tagline: {
@@ -57,8 +57,8 @@ const styles = StyleSheet.create({
   levelValue: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "#0891b2",
-    backgroundColor: "#ecfeff",
+    color: "#b91c1c",
+    backgroundColor: "#fef2f2",
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 5,
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   },
   cellBadge: {
     fontSize: 8,
-    color: "#0891b2",
+    color: "#b91c1c",
     fontWeight: "bold",
     textAlign: "center",
   },
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   },
   footerUrl: {
     fontSize: 9,
-    color: "#0891b2",
+    color: "#b91c1c",
     fontWeight: "bold",
     textDecoration: "none",
   },

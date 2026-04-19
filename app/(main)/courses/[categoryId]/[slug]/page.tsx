@@ -1,5 +1,7 @@
 /**
- * LOKASI FILE: app/(main)/courses/[categoryId]/[slug]/page.tsx
+ * @file app/(main)/courses/[categoryId]/[slug]/page.tsx
+ * @description Halaman ruang kelas dinamis yang menangani pemuatan dan rendering materi pembelajaran tunggal. Melibatkan pemrosesan 'Portable Text', Kuis, Audio, dan modul penyematan SRS.
+ * @module Server Component
  */
 
 import React from "react";
@@ -20,12 +22,17 @@ import TTSReader from "@/components/TTSReader";
 import AddToSRSButton from "@/components/AddToSRSButton";
 import DownloadPdfButton from "@/components/DownloadPdfButton";
 
+// Mengonfigurasi regenerasi konten server untuk sinkronisasi dengan Sanity CMS setiap jam (3600 detik).
 export const revalidate = 3600;
 
 interface Props {
   params: Promise<{ categoryId: string; slug: string }>;
 }
 
+/**
+ * Menarik seluruh data lengkap materi, termasuk konten teks, daftar kuis tersarang, daftar target kosakata,
+ * serta navigasi indeks pelajaran dari Sanity CMS.
+ */
 async function getLessonData(categoryId: string, slug: string) {
   const query = `{
     "lesson": *[_type == "lesson" && course_category->slug.current == $categoryId && slug.current == $slug][0] {
@@ -48,6 +55,9 @@ async function getLessonData(categoryId: string, slug: string) {
   return await client.fetch(query, { categoryId, slug });
 }
 
+/**
+ * Menyusun metatag SEO spesifik per materi.
+ */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { categoryId, slug } = await params;
   const data = await getLessonData(categoryId, slug);
@@ -59,6 +69,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+/**
+ * Konfigurasi Pemetaan Portable Text (Groq).
+ * Mengubah tipe data 'Block' spesifik bawaan Sanity CMS menjadi tag elemen HTML dengan
+ * kelas gaya Tailwind pilihan agar konten artikel tetap interaktif namun estetis.
+ */
 const ptComponents: PortableTextComponents = {
   block: {
     h2: ({ children }) => (
@@ -133,6 +148,12 @@ const ptComponents: PortableTextComponents = {
   },
 };
 
+/**
+ * Komponen Induk Layar Pembelajaran (Materi/Bab).
+ * Merender daftar kosakata target, mendeskripsikan blok teori, dan memberikan tombol untuk berpindah silabus (next/prev).
+ * 
+ * @returns {JSX.Element} Modul komprehensif penampil kursus.
+ */
 export default async function LessonPage({ params }: Props) {
   const { categoryId, slug } = await params;
   const data = await getLessonData(categoryId, slug);
@@ -141,6 +162,7 @@ export default async function LessonPage({ params }: Props) {
 
   if (!lesson) return notFound();
 
+  // Menentukan indeks pelajaran untuk kalkulasi navigasi rute mundur/maju
   const currentIndex = nav.findIndex((l: any) => l.slug === slug);
   const prevLesson = currentIndex > 0 ? nav[currentIndex - 1] : null;
   const nextLesson =
@@ -164,7 +186,6 @@ export default async function LessonPage({ params }: Props) {
       .filter(Boolean) || [];
 
   return (
-    // DIUBAH: Dihapus pt-32 pb-40, main -> div w-full
     <div className="w-full text-slate-300 px-4 md:px-8 relative overflow-hidden flex flex-col flex-1">
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-500/5 blur-[150px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-500/5 blur-[120px] rounded-full pointer-events-none" />
@@ -193,13 +214,13 @@ export default async function LessonPage({ params }: Props) {
             <div
               className={`p-8 rounded-[2rem] neo-inset border-l-8 mb-8 ${isSideQuest ? "border-amber-500" : "border-cyan-400"}`}
             >
-              <p className="text-base md:text-lg font-medium leading-relaxed italic text-slate-200">
-                {lesson.summary}
-              </p>
+               <p className="text-base md:text-lg font-medium leading-relaxed italic text-slate-200">
+                 {lesson.summary}
+               </p>
             </div>
           )}
           <div className="flex justify-start">
-            <DownloadPdfButton data={lesson} />
+             <DownloadPdfButton data={lesson} />
           </div>
         </header>
 

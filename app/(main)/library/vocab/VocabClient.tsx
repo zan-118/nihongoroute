@@ -1,24 +1,40 @@
+/**
+ * LOKASI FILE: app/(main)/library/vocab/VocabClient.tsx
+ * KONSEP: Mobile-First Neumorphic (Kamus Kosakata)
+ */
+
 "use client";
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { client } from "@/sanity/lib/client";
-import { Search, Home, Layers, BookOpen, Loader2 } from "lucide-react";
+import { Search, Home, Library, BookOpen, Loader2, Filter, Languages, ArrowRight, LibraryBig } from "lucide-react";
 import TTSReader from "@/components/TTSReader";
 import PdfGenerator from "@/components/PdfGenerator";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 const LEVELS = ["N5", "N4", "N3", "N2"];
 const HINSHI = [
-  { label: "Semua Kata", value: "all" },
-  { label: "Meishi (Benda)", value: "noun" },
-  { label: "I-Keiyoushi (Sifat-I)", value: "i-adjective" },
-  { label: "Na-Keiyoushi (Sifat-Na)", value: "na-adjective" },
-  { label: "Fukushi (Keterangan)", value: "adverb" },
-  { label: "Joshi (Partikel)", value: "particle" },
-  { label: "Setsuzokushi (Sambung)", value: "conjunction" },
-  { label: "Daimeishi (Ganti)", value: "pronoun" },
-  { label: "Hyougen (Ungkapan)", value: "expression" },
+  { label: "Semua Tipe", value: "all" },
+  { label: "Kata Benda (Meishi)", value: "noun" },
+  { label: "Kata Sifat-I (I-Keiyoushi)", value: "i-adjective" },
+  { label: "Kata Sifat-Na (Na-Keiyoushi)", value: "na-adjective" },
+  { label: "Kata Keterangan (Fukushi)", value: "adverb" },
+  { label: "Partikel (Joshi)", value: "particle" },
+  { label: "Kata Penghubung (Setsuzokushi)", value: "conjunction" },
+  { label: "Kata Ganti (Daimeishi)", value: "pronoun" },
+  { label: "Ungkapan (Hyougen)", value: "expression" },
 ];
 const ITEMS_PER_PAGE = 30;
 
@@ -87,138 +103,179 @@ export default function VocabClient() {
   };
 
   return (
-    // DIUBAH: Section diberi w-full dan padding agar tidak melebar melewati batas saat di mobile
-    <div className="w-full px-4 md:px-8 flex flex-col flex-1 mt-4 md:mt-8">
-      <nav className="mb-6 flex flex-wrap items-center gap-2 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] font-mono">
-        <Link
-          href="/dashboard"
-          className="text-white/30 hover:text-rose-400 transition-colors flex items-center gap-1.5 p-2 rounded-lg hover:bg-white/5"
-        >
+    <div className="w-full flex flex-col flex-1 pb-24 px-4 md:px-8">
+      {/* Breadcrumb Navigation */}
+      <nav className="mb-8 md:mb-12 flex flex-wrap items-center gap-2 md:gap-4 text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-widest">
+        <Link href="/dashboard" className="hover:text-cyber-neon transition-colors flex items-center gap-1.5 md:gap-2">
           <Home size={14} /> Beranda
         </Link>
         <span className="text-white/10">/</span>
-        <Link
-          href="/library"
-          className="text-white/40 hover:text-rose-400 transition-colors flex items-center gap-1.5 p-2 rounded-lg hover:bg-white/5"
-        >
-          <Layers size={14} /> Koleksi
+        <Link href="/library" className="hover:text-cyber-neon transition-colors flex items-center gap-1.5 md:gap-2">
+          <Library size={14} /> Pustaka
         </Link>
         <span className="text-white/10">/</span>
-        <span className="text-rose-400 bg-rose-400/10 px-3 py-1.5 rounded-lg border border-rose-400/20 flex items-center gap-1.5 shadow-[0_0_15px_rgba(244,63,94,0.15)]">
-          <BookOpen size={14} /> Kosakata
+        <span className="text-cyber-neon flex items-center gap-1.5 md:gap-2 drop-shadow-[0_0_8px_rgba(0,238,255,0.5)]">
+          <Languages size={14} /> Kosakata
         </span>
       </nav>
 
-      <header className="mb-8 border-b border-white/5 pb-6">
-        <h1 className="text-4xl md:text-6xl font-black text-white uppercase italic tracking-tighter drop-shadow-lg flex items-center gap-3 leading-none">
-          <BookOpen className="text-rose-400 w-8 h-8 md:w-12 md:h-12 shrink-0" />
-          <span>
-            Kamus <span className="text-rose-400">Kosakata</span>
-          </span>
-        </h1>
+      {/* Header Section */}
+      <header className="mb-8 md:mb-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 border-b border-white/5 pb-8 md:pb-12">
+          <div className="flex items-center gap-5 md:gap-6">
+            <Card className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-2xl bg-cyber-neon/10 border-cyber-neon/20 flex items-center justify-center neo-inset shadow-none">
+              <LibraryBig size={28} className="text-cyber-neon md:w-8 md:h-8" />
+            </Card>
+            <div className="text-left">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-none mb-2">
+                Kamus <span className="text-cyber-neon">Kosakata</span>
+              </h1>
+              <span className="text-xs md:text-sm text-slate-400 font-medium tracking-wide">Pusat data perbendaharaan kata bahasa Jepang.</span>
+            </div>
+          </div>
+          <div className="flex items-center justify-between md:justify-end gap-4 w-full md:w-auto">
+             <div className="flex flex-col items-start md:items-end gap-1">
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Total Data</span>
+                <span className="text-xs md:text-sm font-black text-white">{vocabList.length} Kata</span>
+             </div>
+             <PdfGenerator data={vocabList} type="vocab" level={level} />
+          </div>
+        </div>
       </header>
 
-      <div className="flex flex-col gap-4 mb-8 bg-cyber-surface p-4 md:p-6 rounded-[2rem] border border-white/5 shadow-inner">
-        <div className="relative w-full">
-          <Search
-            className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300"
-            size={18}
-          />
-          <input
-            type="text"
-            placeholder="Cari kanji, romaji, atau arti..."
-            className="w-full pl-12 pr-6 py-4 bg-[#0a0c10] border border-white/5 rounded-xl focus:border-rose-400 focus:ring-1 focus:ring-rose-400 outline-none text-sm text-white transition-all shadow-inner font-medium placeholder:text-white/30"
+      {/* Filter & Search Section */}
+      <div className="flex flex-col gap-5 md:gap-6 mb-10 md:mb-16 bg-cyber-surface p-5 md:p-8 rounded-[2rem] border border-white/5 neo-card shadow-none">
+        <div className="relative w-full group">
+          <Search className="absolute left-5 md:left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyber-neon transition-colors z-10" size={20} />
+          <Input
+            placeholder="Cari kanji, romaji, atau arti kata..."
+            className="w-full pl-12 md:pl-14 pr-6 py-6 md:py-7 h-auto bg-black/40 border-white/5 rounded-2xl md:rounded-[1.5rem] text-sm md:text-base text-white placeholder:text-slate-600 font-medium neo-inset shadow-none focus-visible:ring-cyber-neon/30"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
 
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex bg-[#0a0c10] border border-white/5 rounded-xl overflow-hidden shadow-inner">
+        <div className="flex flex-col lg:flex-row gap-5">
+          <div className="w-full lg:w-1/2 flex bg-black/40 border border-white/5 rounded-2xl p-1.5 md:p-2 neo-inset shadow-none overflow-x-auto no-scrollbar">
             {LEVELS.map((l) => (
-              <button
+              <Button
                 key={l}
+                variant="ghost"
                 onClick={() => setLevel(l)}
-                className={`flex-1 px-4 py-3 text-[10px] font-black uppercase tracking-widest transition-colors ${level === l ? "bg-rose-400 text-black shadow-[0_0_15px_rgba(244,63,94,0.3)]" : "text-slate-200 hover:bg-white/5 hover:text-white"}`}
+                className={`flex-1 rounded-xl h-12 md:h-14 text-xs md:text-sm font-bold tracking-wider transition-all duration-300 ${
+                  level === l
+                    ? "bg-cyber-neon text-black shadow-[0_0_15px_rgba(0,238,255,0.4)]"
+                    : "text-slate-500 hover:text-white hover:bg-white/5"
+                }`}
               >
                 {l}
-              </button>
+              </Button>
             ))}
           </div>
-          <select
-            value={hinshi}
-            onChange={(e) => setHinshi(e.target.value)}
-            className="flex-1 bg-[#0a0c10] border border-white/5 rounded-xl px-4 py-3 text-sm text-slate-300 focus:border-rose-400 outline-none shadow-inner"
-          >
-            {HINSHI.map((h) => (
-              <option key={h.value} value={h.value}>
-                {h.label}
-              </option>
-            ))}
-          </select>
+          
+          <div className="w-full lg:w-1/2 relative group">
+             <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 z-10 group-focus-within:text-cyber-neon transition-colors">
+                <Filter size={18} />
+             </div>
+             <Select value={hinshi} onValueChange={setHinshi}>
+                <SelectTrigger className="w-full pl-12 md:pl-14 h-12 md:h-14 py-6 bg-black/40 border-white/5 rounded-2xl text-xs md:text-sm font-bold tracking-wide neo-inset shadow-none text-slate-400 focus:ring-cyber-neon/30 transition-all">
+                  <SelectValue placeholder="Pilih Jenis Kata" />
+                </SelectTrigger>
+                <SelectContent className="bg-cyber-surface border-white/10 rounded-2xl overflow-hidden shadow-2xl p-1">
+                  {HINSHI.map((h) => (
+                    <SelectItem 
+                      key={h.value} 
+                      value={h.value}
+                      className="text-xs font-bold tracking-wide py-3 md:py-4 rounded-xl focus:bg-cyber-neon focus:text-black transition-colors cursor-pointer"
+                    >
+                      {h.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+          </div>
         </div>
       </div>
 
-      <div className="flex justify-end mb-4">
-        <PdfGenerator data={vocabList} type="vocab" level={level} />
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <AnimatePresence>
-          {vocabList.map((vocab) => (
-            // DIUBAH: h-full ditambahkan untuk presisi grid
-            <motion.article
+      {/* Data Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 md:gap-8 items-stretch">
+        <AnimatePresence mode="popLayout">
+          {vocabList.map((vocab, idx) => (
+            <motion.div
               key={vocab._id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="bg-cyber-surface border border-white/5 hover:border-rose-400/30 rounded-2xl p-5 shadow-[6px_6px_15px_rgba(0,0,0,0.4)] hover:shadow-[0_0_20px_rgba(244,63,94,0.1)] transition-all group flex flex-col h-full"
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ delay: (idx % 10) * 0.05 }}
+              className="flex h-full w-full"
             >
-              <div className="flex justify-between items-start mb-4">
-                <span className="px-2.5 py-1 text-[8px] font-black uppercase tracking-widest rounded-md bg-white/5 text-slate-200 border border-white/10">
-                  {vocab.hinshi || "Vocab"}
-                </span>
-                <TTSReader text={vocab.word} minimal={true} />
-              </div>
+              <Card className="p-6 md:p-8 h-full w-full flex flex-col bg-cyber-surface border-white/5 rounded-[2.5rem] hover:border-cyber-neon/40 transition-all duration-500 neo-card shadow-none group relative overflow-hidden">
+                <div className="flex justify-between items-start mb-8 relative z-10">
+                  <Badge variant="outline" className="px-3 py-1.5 md:px-4 md:py-2 text-[10px] md:text-xs font-bold uppercase tracking-wider rounded-xl bg-black/40 text-slate-400 border-white/10 neo-inset h-auto">
+                    {vocab.hinshi ? vocab.hinshi.replace("-", " ") : "TIDAK DIKETAHUI"}
+                  </Badge>
+                  <TTSReader text={vocab.word} minimal={true} />
+                </div>
 
-              <div className="mb-4">
-                <ruby className="text-3xl font-black text-white font-japanese block group-hover:text-rose-400 transition-colors">
-                  {vocab.word}
-                  <rt className="text-[10px] text-rose-400 font-normal tracking-widest opacity-80 pt-1">
-                    {vocab.furigana}
-                  </rt>
-                </ruby>
-                <p className="text-xs font-mono text-slate-300 uppercase tracking-tighter mt-2">
-                  {vocab.romaji}
-                </p>
-              </div>
+                <div className="mb-8 relative z-10 flex-1">
+                  <div className="min-h-[80px] md:min-h-[100px] flex flex-col justify-center">
+                    <ruby className="text-4xl md:text-5xl font-black text-white font-japanese block group-hover:text-cyber-neon transition-colors duration-500 drop-shadow-lg leading-tight">
+                      {vocab.word}
+                      <rt className="text-xs md:text-sm text-cyber-neon font-bold tracking-widest opacity-80 pt-2">
+                        {vocab.furigana || "—"}
+                      </rt>
+                    </ruby>
+                  </div>
+                  <div className="mt-6 flex items-center gap-3">
+                     <div className="h-0.5 w-4 bg-cyber-neon/40 rounded-full" />
+                     <p className="text-xs md:text-sm font-bold text-slate-500 uppercase tracking-widest">
+                       {vocab.romaji}
+                     </p>
+                  </div>
+                </div>
 
-              {/* DIUBAH: mt-auto menempatkan arti selalu di bawah walau panjang romaji beda */}
-              <p className="mt-auto pt-4 border-t border-white/5 text-sm font-semibold text-[#c4cfde]">
-                {vocab.meaning}
-              </p>
-            </motion.article>
+                <div className="mt-auto pt-6 border-t border-white/10 relative z-10">
+                  <p className="text-sm md:text-base font-bold text-slate-300 leading-relaxed group-hover:text-white transition-colors duration-500 line-clamp-3 min-h-[3rem]">
+                    {vocab.meaning}
+                  </p>
+                </div>
+
+                {/* Decorative Elements */}
+                <div className="absolute -bottom-4 -right-4 text-[10rem] md:text-[12rem] font-black text-white/[0.02] pointer-events-none group-hover:text-cyber-neon/[0.05] transition-all duration-700 rotate-6">
+                   {idx + 1}
+                </div>
+                <div className="absolute top-0 right-0 w-24 h-24 md:w-32 md:h-32 bg-cyber-neon/5 blur-[60px] pointer-events-none rounded-full" />
+              </Card>
+            </motion.div>
           ))}
         </AnimatePresence>
       </div>
 
-      <div className="mt-10 flex justify-center w-full">
+      {/* Pagination & Status */}
+      <div className="mt-12 md:mt-16 flex justify-center w-full">
         {loading ? (
-          <div className="flex items-center gap-2 text-rose-400 text-sm font-bold uppercase tracking-widest animate-pulse">
-            <Loader2 className="animate-spin" size={18} /> Memuat...
+          <div className="flex items-center gap-4 text-cyber-neon text-xs md:text-sm font-bold uppercase tracking-widest animate-pulse">
+            <Loader2 className="animate-spin" size={20} /> Memuat Kosakata...
           </div>
         ) : hasMore && vocabList.length > 0 ? (
-          <button
+          <Button
+            variant="ghost"
             onClick={loadMore}
-            className="bg-white/5 hover:bg-rose-400 hover:text-black border border-white/10 text-white px-8 py-3 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-[0.2em] transition-all shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(244,63,94,0.3)]"
+            className="w-full sm:w-auto px-10 py-6 md:px-14 md:py-8 h-auto text-xs md:text-sm font-bold uppercase tracking-widest rounded-2xl md:rounded-3xl bg-black/40 border-white/5 neo-card shadow-none hover:bg-cyber-neon hover:text-black transition-all gap-3 md:gap-4 group"
           >
-            Muat Lebih Banyak
-          </button>
+            Muat Lebih Banyak <ArrowRight size={18} className="group-hover:translate-x-1.5 transition-transform duration-300" />
+          </Button>
         ) : vocabList.length === 0 && !loading ? (
-          <div className="py-10 text-center w-full border border-dashed border-white/10 rounded-3xl">
-            <p className="text-slate-300 font-mono text-sm uppercase tracking-widest">
-              Tidak ada kata yang cocok.
+          <Card className="py-24 md:py-32 text-center w-full border border-dashed border-white/10 bg-black/20 rounded-[3rem] md:rounded-[4rem] neo-inset shadow-none px-4">
+            <div className="flex justify-center mb-6 md:mb-8">
+               <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-cyber-neon/10 flex items-center justify-center border border-cyber-neon/20">
+                  <Search size={32} className="text-slate-500 md:w-10 md:h-10" />
+               </div>
+            </div>
+            <p className="text-slate-400 font-bold text-sm md:text-base tracking-wide">
+              Tidak ada kosakata yang cocok dengan kriteria pencarian Anda.
             </p>
-          </div>
+          </Card>
         ) : null}
       </div>
     </div>

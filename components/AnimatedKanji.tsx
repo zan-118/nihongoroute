@@ -1,3 +1,8 @@
+/**
+ * LOKASI FILE: components/AnimatedKanji.tsx
+ * KONSEP: Cyber-Dark Neumorphic (Neural Kanji Tracer)
+ */
+
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -42,6 +47,7 @@ export default function AnimatedKanji({
         svg.setAttribute("height", "100%");
         svg.style.width = "100%";
         svg.style.height = "100%";
+        svg.style.overflow = "visible";
 
         // Ambil semua elemen path (garis coretan)
         const paths = svg.querySelectorAll("path");
@@ -54,14 +60,16 @@ export default function AnimatedKanji({
           path.style.strokeDasharray = length.toString();
           path.style.strokeDashoffset = length.toString();
 
-          // 3. Beri gaya Cyber-Neumorphic
-          path.style.stroke = "#a855f7"; // Warna ungu (purple-500) untuk panduan
-          path.style.strokeWidth = "4";
+          // 3. Beri gaya Cyber-Neumorphic (Purple Glow)
+          path.style.stroke = "#a855f7"; // Warna ungu (purple-500)
+          path.style.strokeWidth = "3.5";
           path.style.strokeLinecap = "round";
+          path.style.strokeLinejoin = "round";
           path.style.fill = "none";
+          path.style.filter = "drop-shadow(0 0 4px rgba(168, 85, 247, 0.8))";
 
           // 4. Animasikan secara berurutan (0.8 detik per coretan)
-          path.style.animation = `drawKanji 0.8s ease-out ${index * 0.8}s forwards`;
+          path.style.animation = `drawKanji 0.8s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.7}s forwards`;
         });
 
         // Sembunyikan teks angka urutan bawaan KanjiVG agar lebih rapi
@@ -77,7 +85,7 @@ export default function AnimatedKanji({
   if (error) {
     return (
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-        <span className="text-[12rem] font-japanese font-black text-white/10 opacity-50">
+        <span className="text-[12rem] font-japanese font-black text-white/5 opacity-30">
           {character}
         </span>
       </div>
@@ -93,7 +101,7 @@ export default function AnimatedKanji({
       `}</style>
       <div
         ref={containerRef}
-        className="absolute inset-0 w-full h-full opacity-60 pointer-events-none drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]"
+        className="absolute inset-0 w-full h-full opacity-40 pointer-events-none"
       />
     </>
   );

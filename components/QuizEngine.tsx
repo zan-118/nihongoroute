@@ -1,3 +1,8 @@
+/**
+ * LOKASI FILE: components/QuizEngine.tsx
+ * KONSEP: Cyber-Dark Neumorphic (Quiz HUD)
+ */
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -6,6 +11,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useProgress } from "@/context/UserProgressContext";
 import { sounds } from "@/lib/audio";
 import XPPop from "./XPPop";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { Trophy, Target, RefreshCw, ArrowRight, Brain, AlertCircle } from "lucide-react";
 
 interface QuizProps {
   questions: Array<{
@@ -92,153 +102,144 @@ export default function QuizEngine({ questions }: QuizProps) {
     const isPerfect = percentage === 100;
 
     return (
-      <section className="bg-cyber-surface p-8 md:p-12 rounded-[3rem] border border-white/5 shadow-neumorphic text-center relative overflow-hidden">
+      <Card className="bg-cyber-surface p-10 md:p-16 rounded-[4rem] border-white/5 text-center relative overflow-hidden neo-card shadow-none">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50">
           <XPPop show={showXP} amount={xpGained} />
         </div>
 
-        <div className="absolute top-0 right-0 p-8 opacity-5 text-8xl font-black italic select-none uppercase tracking-tighter">
-          Result
-        </div>
-
         <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
+          initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", bounce: 0.5 }}
           className="relative z-10"
         >
-          <div className="mb-6 inline-block">
-            <div
-              className={`w-24 h-24 rounded-3xl border flex items-center justify-center text-4xl shadow-inner ${
+          <div className="mb-8 inline-block">
+            <Card
+              className={`w-28 h-28 rounded-[2.5rem] border flex items-center justify-center text-4xl neo-inset shadow-none ${
                 isPerfect
-                  ? "bg-cyber-neon/10 border-cyber-neon/50 shadow-[0_0_30px_rgba(0,255,239,0.3)]"
-                  : "bg-blue-500/10 border-blue-500/50 shadow-[0_0_30px_rgba(59,130,246,0.3)]"
+                  ? "bg-red-500/10 border-red-500/30 shadow-[0_0_40px_rgba(239,68,68,0.2)]"
+                  : "bg-amber-500/10 border-amber-500/30"
               }`}
             >
-              {isPerfect ? "🏆" : "🎯"}
-            </div>
+              {isPerfect ? <Trophy size={56} className="text-red-500" /> : <Target size={56} className="text-amber-500" />}
+            </Card>
           </div>
 
-          <h3 className="text-cyber-neon font-mono text-[10px] uppercase tracking-[0.4em] mb-2 block">
+          <Badge variant="outline" className="border-red-500/20 text-red-500 font-black text-[10px] uppercase tracking-[0.5em] mb-6 h-auto px-6 py-2 rounded-xl neo-inset bg-red-500/5">
             Mission Evaluation
-          </h3>
-          <h2 className="text-5xl font-black text-white italic uppercase drop-shadow-md mb-2">
-            {isPerfect ? "Flawless" : "Completed"}
+          </Badge>
+          
+          <h2 className="text-5xl md:text-6xl font-black text-white italic uppercase tracking-tighter mb-4">
+            {isPerfect ? "Operation Flawless" : "Mission Complete"}
           </h2>
 
-          <div className="flex items-center justify-center gap-6 my-8">
+          <div className="flex items-center justify-center gap-10 my-12">
             <div className="text-center">
-              <p className="text-white/40 text-[10px] font-black uppercase tracking-widest mb-1">
-                Score
+              <p className="text-slate-500 text-[11px] font-black uppercase tracking-widest mb-2">
+                Score Rank
               </p>
-              <p className="text-4xl font-mono font-bold text-white">
-                {score}/{questions.length}
+              <p className="text-5xl font-black text-white italic">
+                {score}<span className="text-xl opacity-20 not-italic mx-1">/</span>{questions.length}
               </p>
             </div>
-            <div className="w-px h-12 bg-white/10" />
+            <div className="w-px h-16 bg-white/5" />
             <div className="text-center">
-              <p className="text-white/40 text-[10px] font-black uppercase tracking-widest mb-1">
+              <p className="text-slate-500 text-[11px] font-black uppercase tracking-widest mb-2">
                 Accuracy
               </p>
-              <p
-                className={`text-4xl font-mono font-bold ${isPerfect ? "text-green-400" : "text-blue-400"}`}
-              >
+              <p className={`text-5xl font-black italic ${isPerfect ? "text-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]" : "text-amber-500"}`}>
                 {percentage}%
               </p>
             </div>
           </div>
 
-          <nav className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
-            <button
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-5 mt-10">
+            <Button
               onClick={resetQuiz}
-              className="px-8 py-4 bg-cyber-bg text-white/60 font-black rounded-2xl hover:bg-white/5 transition-all uppercase tracking-widest text-[10px] border border-white/5 shadow-inner hover:text-white"
+              variant="ghost"
+              className="w-full sm:w-auto h-auto px-10 py-5 bg-black/40 text-slate-400 font-black rounded-2xl hover:bg-white hover:text-black transition-all uppercase tracking-widest text-[10px] border border-white/5 neo-inset"
             >
-              Retry Mission
-            </button>
-            <button
+              <RefreshCw size={18} className="mr-3" /> Re-Deploy
+            </Button>
+            <Button
               onClick={() => {
-                const basePath = window.location.pathname.replace(
-                  /\/[^/]+$/,
-                  "",
-                );
+                const basePath = window.location.pathname.replace(/\/[^/]+$/, "");
                 router.push(basePath || "/courses");
               }}
-              className="px-8 py-4 bg-cyber-neon text-cyber-bg font-black rounded-2xl hover:bg-white transition-all uppercase tracking-widest text-[10px] shadow-[0_0_20px_rgba(0,255,239,0.3)] hover:scale-105 active:scale-95"
+              className="w-full sm:w-auto h-auto px-10 py-5 bg-red-500 hover:bg-white text-black font-black rounded-2xl transition-all uppercase tracking-[0.2em] text-[10px] shadow-[0_0_25px_rgba(239,68,68,0.4)] border-none"
             >
-              Return to Module
-            </button>
-          </nav>
+              Next Module <ArrowRight size={18} className="ml-3" />
+            </Button>
+          </div>
         </motion.div>
-      </section>
+      </Card>
     );
   }
 
   /* ================= ACTIVE QUIZ RENDERING ================= */
   return (
-    <section className="bg-cyber-surface p-6 md:p-10 rounded-[3rem] border border-white/5 shadow-neumorphic relative overflow-hidden">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none" />
+    <Card className="bg-cyber-surface p-8 md:p-12 rounded-[4rem] border-white/5 shadow-none relative overflow-hidden neo-card">
+      {/* HUD Background elements */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-red-500/5 blur-[100px] pointer-events-none" />
+      <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-red-500/5 blur-[80px] pointer-events-none" />
 
       <div className="relative z-10">
-        <header className="flex justify-between items-end mb-4">
-          <span className="text-cyber-neon font-mono text-[10px] tracking-[0.2em] uppercase font-black bg-cyber-neon/10 px-3 py-1 rounded border border-cyber-neon/20">
-            [Query_0{currentIndex + 1}]
-          </span>
-          <div className="flex items-center gap-2 font-mono text-xs">
-            <span className="text-white font-bold">{currentIndex + 1}</span>
-            <span className="text-white/20">/</span>
+        <header className="flex justify-between items-end mb-6">
+          <div className="flex items-center gap-4">
+             <Card className="w-12 h-12 rounded-2xl bg-black/40 border-white/5 flex items-center justify-center neo-inset shadow-none">
+                <Brain size={22} className="text-red-500" />
+             </Card>
+             <div className="text-left">
+                <Badge variant="outline" className="text-red-500 font-black text-[9px] tracking-[0.3em] uppercase bg-red-500/5 px-3 py-1 rounded-lg border-red-500/20 neo-inset h-auto">
+                  PHASE_0{currentIndex + 1}
+                </Badge>
+                <span className="block text-slate-500 text-[10px] font-black uppercase mt-1">Intelligence Test</span>
+             </div>
+          </div>
+          <div className="flex items-center gap-3 font-black text-sm italic">
+            <span className="text-red-500 text-2xl drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]">{currentIndex + 1}</span>
+            <span className="text-white/10 text-xl">/</span>
             <span className="text-white/40">{questions.length}</span>
           </div>
         </header>
 
-        <div className="w-full bg-cyber-bg h-1.5 rounded-full mb-8 overflow-hidden shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]">
-          <motion.div
-            className="bg-cyber-neon h-full shadow-[0_0_10px_rgba(0,255,239,0.8)]"
-            initial={{ width: 0 }}
-            animate={{ width: `${(currentIndex / questions.length) * 100}%` }}
-            transition={{ ease: "circOut", duration: 0.5 }}
-          />
-        </div>
+        <Progress
+          value={(currentIndex / questions.length) * 100}
+          className="h-2 mb-12 bg-black/40"
+          indicatorClassName="bg-red-500 shadow-[0_0_15px_rgba(239,68,68,0.8)]"
+        />
 
-        <div className="mb-10 min-h-[120px] flex items-center">
+        <div className="mb-14 min-h-[140px] flex items-center">
           <AnimatePresence mode="wait">
             <motion.h3
               key={currentIndex}
-              initial={{ x: 20, opacity: 0 }}
+              initial={{ x: 30, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -20, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="text-2xl md:text-4xl font-black text-white leading-snug tracking-tight drop-shadow-md"
+              exit={{ x: -30, opacity: 0 }}
+              className="text-3xl md:text-5xl font-black text-white leading-tight tracking-tighter italic uppercase"
             >
               {currentQ.question}
             </motion.h3>
           </AnimatePresence>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <AnimatePresence mode="wait">
             {currentQ.options.map((option, index) => {
               const isSelected = selectedOption === option;
               const isCorrect = option === currentQ.answer;
 
-              let buttonStyle =
-                "bg-cyber-bg border-white/5 text-[#c4cfde] hover:border-white/20 shadow-[6px_6px_15px_rgba(0,0,0,0.5),-4px_-4px_10px_rgba(255,255,255,0.02)] active:shadow-[inset_4px_4px_10px_rgba(0,0,0,0.5)]";
-              let animation = {};
+              let buttonStyle = "bg-black/20 border-white/5 text-slate-400 hover:border-white/20 hover:bg-black/40 neo-card";
+              let statusIcon = null;
 
               if (isAnswered) {
                 if (isCorrect) {
-                  buttonStyle =
-                    "bg-green-500/20 border-green-500/50 text-green-400 shadow-[0_0_20px_rgba(34,197,94,0.3)] z-10";
-                  if (isSelected) animation = { scale: 1.05 };
+                  buttonStyle = "bg-emerald-500/10 border-emerald-500/50 text-emerald-400 shadow-[0_0_30px_rgba(16,185,129,0.2)] neo-card scale-105 z-10";
+                  statusIcon = "✓";
                 } else if (isSelected && !isCorrect) {
-                  buttonStyle =
-                    "bg-red-500/20 border-red-500/50 text-red-400 shadow-[0_0_20px_rgba(239,68,68,0.3)] z-10";
-                  animation = {
-                    x: [-10, 10, -10, 10, 0],
-                    transition: { duration: 0.4 },
-                  };
+                  buttonStyle = "bg-red-500/10 border-red-500/50 text-red-500 shadow-[0_0_30px_rgba(239,68,68,0.2)] neo-card z-10";
+                  statusIcon = "✗";
                 } else {
-                  buttonStyle =
-                    "bg-cyber-bg/50 border-transparent text-white/20 scale-95 opacity-50";
+                  buttonStyle = "bg-black/10 border-transparent text-white/10 scale-95 opacity-40 neo-card grayscale";
                 }
               }
 
@@ -246,34 +247,25 @@ export default function QuizEngine({ questions }: QuizProps) {
                 <motion.button
                   key={`${currentIndex}-${index}`}
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0, ...animation }}
-                  transition={{ delay: index * 0.1 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
                   disabled={isAnswered}
                   onClick={() => handleSelect(option)}
-                  className={`relative p-5 md:p-6 rounded-2xl border text-left font-bold text-lg md:text-xl transition-all duration-300 group ${buttonStyle}`}
+                  className={`relative p-6 md:p-8 rounded-3xl border text-left transition-all duration-500 h-auto group ${buttonStyle}`}
                 >
-                  <div className="flex items-center gap-4">
-                    <span className="w-8 h-8 shrink-0 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-black uppercase text-white/40">
+                  <div className="flex items-center gap-6">
+                    <Card className={`w-10 h-10 shrink-0 rounded-xl flex items-center justify-center text-xs font-black uppercase neo-inset shadow-none transition-colors ${isSelected ? 'bg-white text-black' : 'bg-black/40 text-white/30 border-white/5'}`}>
                       {String.fromCharCode(65 + index)}
-                    </span>
-                    <span className="flex-1">{option}</span>
+                    </Card>
+                    <span className="flex-1 text-xl md:text-2xl font-black uppercase italic tracking-tight">{option}</span>
 
-                    {isAnswered && isCorrect && (
+                    {statusIcon && (
                       <motion.span
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="text-green-400 text-2xl"
+                        initial={{ scale: 0, rotate: -45 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        className="text-3xl font-black"
                       >
-                        ✓
-                      </motion.span>
-                    )}
-                    {isAnswered && isSelected && !isCorrect && (
-                      <motion.span
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="text-red-400 text-2xl"
-                      >
-                        ✗
+                        {statusIcon}
                       </motion.span>
                     )}
                   </div>
@@ -286,23 +278,23 @@ export default function QuizEngine({ questions }: QuizProps) {
         <AnimatePresence>
           {isAnswered && currentQ.explanation && (
             <motion.div
-              initial={{ opacity: 0, height: 0, marginTop: 0 }}
-              animate={{ opacity: 1, height: "auto", marginTop: 24 }}
-              exit={{ opacity: 0, height: 0, marginTop: 0 }}
-              className="overflow-hidden"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-10"
             >
-              <div className="bg-blue-500/10 border-l-4 border-blue-500 p-5 rounded-r-2xl">
-                <p className="text-[10px] text-blue-400 font-black uppercase tracking-widest mb-1 block">
-                  System Note
-                </p>
-                <p className="text-white/80 text-sm leading-relaxed">
+              <Card className="bg-red-500/5 border-l-4 border-l-red-500 p-8 rounded-[2rem] border-y-white/5 border-r-white/5 neo-inset shadow-none">
+                 <div className="flex items-center gap-3 mb-3">
+                    <AlertCircle size={18} className="text-red-500" />
+                    <span className="text-[10px] text-red-500 font-black uppercase tracking-[0.4em]">Strategic Intel</span>
+                 </div>
+                 <p className="text-slate-300 text-base md:text-lg leading-relaxed italic font-medium">
                   {currentQ.explanation}
                 </p>
-              </div>
+              </Card>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
-    </section>
+    </Card>
   );
 }

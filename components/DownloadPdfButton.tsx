@@ -1,23 +1,29 @@
+/**
+ * LOKASI FILE: components/DownloadPdfButton.tsx
+ * KONSEP: Cyber-Dark Neumorphic (Intel Export HUD)
+ */
+
 "use client";
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { Download } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Loader2, Download } from "lucide-react";
 
 // Dynamic import dengan SSR dinonaktifkan
 const PdfGenerator = dynamic(() => import("./PdfGenerator"), {
   ssr: false,
   loading: () => (
-    <button className="bg-[#0a0c10] border border-white/5 shadow-[inset_3px_3px_8px_#050608,inset_-2px_-2px_6px_rgba(255,255,255,0.02)] px-6 py-3 rounded-xl text-slate-300 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 w-full sm:w-auto cursor-wait">
-      <div className="w-3 h-3 border-2 border-slate-300 border-t-transparent rounded-full animate-spin" />
-      Menyiapkan Engine...
-    </button>
+    <Button variant="ghost" disabled className="bg-black/40 border-white/5 neo-inset shadow-none px-8 py-4 rounded-[1.5rem] text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 w-full sm:w-auto h-auto italic">
+      <Loader2 size={16} className="animate-spin text-red-500" />
+      Initializing_Engine...
+    </Button>
   ),
 });
 
 export default function DownloadPdfButton({
   data,
-  type = "lesson", // ✨ PASTIKAN TYPE ADA NILAI DEFAULT-NYA
+  type = "lesson",
 }: {
   data: any;
   type?: "lesson" | "vocab";
@@ -31,13 +37,12 @@ export default function DownloadPdfButton({
 
   if (!isMounted || !data) {
     return (
-      <button className="bg-[#0a0c10] border border-white/5 shadow-[inset_3px_3px_8px_#050608,inset_-2px_-2px_6px_rgba(255,255,255,0.02)] px-6 py-3 rounded-xl text-slate-300 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 w-full sm:w-auto cursor-wait">
-        <div className="w-3 h-3 border-2 border-slate-300 border-t-transparent rounded-full animate-spin" />
-        Memuat Komponen...
-      </button>
+      <Button variant="ghost" disabled className="bg-black/40 border-white/5 neo-inset shadow-none px-8 py-4 rounded-[1.5rem] text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 w-full sm:w-auto h-auto italic">
+        <Loader2 size={16} className="animate-spin text-red-500" />
+        Loading_Payload...
+      </Button>
     );
   }
 
-  // ✨ KIRIM TYPE KE GENERATOR
   return <PdfGenerator data={data} type={type} />;
 }

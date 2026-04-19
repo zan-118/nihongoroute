@@ -1,3 +1,9 @@
+/**
+ * @file app/(main)/support/page.tsx
+ * @description Halaman khusus donasi dan transparansi pengembangan aplikasi. Menghubungkan pengguna dengan pintu dukungan eksternal (Trakteer/Saweria) dan merinci biaya operasional peladen (server).
+ * @module Client Component
+ */
+
 "use client";
 
 import { motion } from "framer-motion";
@@ -11,7 +17,16 @@ import {
   Zap,
   Globe,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
+/**
+ * Komponen utama antarmuka halaman dukungan proyek.
+ * Merupakan etalase transparansi yang digabungkan dengan ajakan bertindak (CTA) untuk mendanai kelangsungan hidup server dan pemeliharaan domain.
+ * 
+ * @returns {JSX.Element} Antarmuka donasi yang terstruktur dengan penjelasan alokasi dana (StatItem).
+ */
 export default function SupportPage() {
   const router = useRouter();
 
@@ -25,16 +40,17 @@ export default function SupportPage() {
 
       <nav className="p-4 sm:p-6 sticky top-0 bg-cyber-bg/80 backdrop-blur-xl z-50 border-b border-white/5">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
-          <button
+          <Button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-white/40 hover:text-cyan-400 transition-all group bg-white/5 px-4 py-2 rounded-xl border border-white/10"
+            variant="ghost"
+            className="flex items-center gap-2 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-white/40 hover:text-cyan-400 transition-all group bg-white/5 h-auto px-4 py-2 rounded-xl border border-white/10 neo-inset"
           >
             <ChevronLeft
               size={16}
               className="group-hover:-translate-x-1 transition-transform"
             />
             Kembali
-          </button>
+          </Button>
 
           <div className="flex items-center gap-2">
             <div className="relative w-8 h-8 shrink-0 drop-shadow-[0_0_8px_rgba(34,211,238,0.2)]">
@@ -111,13 +127,13 @@ export default function SupportPage() {
           />
         </div>
 
-        <section className="bg-cyber-surface/80 border border-white/5 rounded-[2rem] sm:rounded-[3.5rem] p-8 sm:p-10 md:p-16 shadow-2xl backdrop-blur-sm relative overflow-hidden">
+        <Card className="bg-cyber-surface/80 border border-white/5 rounded-[2rem] sm:rounded-[3.5rem] p-8 sm:p-10 md:p-16 shadow-2xl backdrop-blur-sm relative overflow-hidden neo-card shadow-none">
           <div className="absolute top-0 right-0 p-8 opacity-5 text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none">
             TRANSPARANSI
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-3 sm:gap-4 mb-10 sm:mb-12 relative z-10 text-center sm:text-left">
-            <div className="w-12 h-12 rounded-xl bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center shadow-inner">
+            <div className="w-12 h-12 rounded-xl bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center shadow-inner neo-inset">
               <ShieldCheck className="text-cyan-400" size={24} />
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-white uppercase italic tracking-widest leading-none pt-1">
@@ -130,22 +146,22 @@ export default function SupportPage() {
               icon={<Zap className="text-yellow-400" size={20} />}
               title="Infrastruktur"
               desc="Biaya server database (Sanity), hosting (Vercel), dan domain agar aplikasi tetap ngebut dan stabil."
-              color="bg-yellow-400/10 border-yellow-400/30"
+              color="bg-yellow-400/10 border-yellow-400/30 neo-inset"
             />
             <StatItem
               icon={<Globe className="text-blue-400" size={20} />}
               title="Konten Baru"
               desc="Pengembangan silabus, rekaman audio, dan ekspansi materi JLPT dari level N4 hingga N1 secara bertahap."
-              color="bg-blue-400/10 border-blue-400/30"
+              color="bg-blue-400/10 border-blue-400/30 neo-inset"
             />
             <StatItem
               icon={<Coffee className="text-cyan-400" size={20} />}
               title="Pengembangan"
               desc="Menjaga saya (Developer) tetap terjaga untuk coding fitur-fitur baru dan membasmi bug di malam hari."
-              color="bg-cyan-400/10 border-cyan-400/30"
+              color="bg-cyan-400/10 border-cyan-400/30 neo-inset"
             />
           </div>
-        </section>
+        </Card>
 
         {/* DIUBAH: Menambahkan margin-bottom ekstra agar tidak terhalang MobileNav */}
         <footer className="mt-16 sm:mt-24 mb-20 text-center pb-8 sm:pb-12">
@@ -162,7 +178,9 @@ export default function SupportPage() {
   );
 }
 
-// ... komponen DonationCard dan StatItem tetap sama
+/**
+ * Komponen pembantu untuk menampilkan akses instan menuju gerbang eksternal platform donasi.
+ */
 function DonationCard({
   href,
   title,
@@ -178,28 +196,35 @@ function DonationCard({
       target="_blank"
       whileHover={{ y: -8 }}
       whileTap={{ scale: 0.98 }}
-      className={`group relative p-8 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] bg-cyber-surface border border-white/5 ${accent} ${shadowColor} transition-all duration-500 shadow-xl overflow-hidden flex flex-col h-full`}
+      className="block h-full"
     >
-      <div className="absolute top-0 right-0 p-4 sm:p-6 opacity-[0.02] text-5xl sm:text-7xl font-black italic group-hover:opacity-[0.05] transition-opacity pointer-events-none">
-        {title}
-      </div>
-      <div className="text-4xl sm:text-5xl mb-4 sm:mb-6 group-hover:scale-110 transition-transform origin-left drop-shadow-lg">
-        {icon}
-      </div>
-      <h3 className="text-2xl sm:text-3xl font-black text-white italic mb-2 uppercase tracking-tighter">
-        {title}
-      </h3>
-      <p className="text-[10px] sm:text-xs text-white/50 font-medium uppercase tracking-widest mb-6 sm:mb-8 leading-relaxed">
-        {desc}
-      </p>
-      <div className="mt-auto flex items-center gap-3 text-cyan-400 font-black uppercase text-[9px] sm:text-[10px] tracking-[0.2em] sm:tracking-[0.3em]">
-        <div className="h-[2px] w-6 sm:w-8 bg-cyan-400 group-hover:w-10 sm:group-hover:w-12 transition-all shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
-        {label}
-      </div>
+      <Card
+        className={`group relative p-8 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] bg-cyber-surface border border-white/5 ${accent} ${shadowColor} transition-all duration-500 shadow-xl overflow-hidden flex flex-col h-full neo-card shadow-none`}
+      >
+        <div className="absolute top-0 right-0 p-4 sm:p-6 opacity-[0.02] text-5xl sm:text-7xl font-black italic group-hover:opacity-[0.05] transition-opacity pointer-events-none uppercase">
+          {title}
+        </div>
+        <div className="text-4xl sm:text-5xl mb-4 sm:mb-6 group-hover:scale-110 transition-transform origin-left drop-shadow-lg">
+          {icon}
+        </div>
+        <h3 className="text-2xl sm:text-3xl font-black text-white italic mb-2 uppercase tracking-tighter">
+          {title}
+        </h3>
+        <p className="text-[10px] sm:text-xs text-white/50 font-medium uppercase tracking-widest mb-6 sm:mb-8 leading-relaxed">
+          {desc}
+        </p>
+        <div className="mt-auto flex items-center gap-3 text-cyan-400 font-black uppercase text-[9px] sm:text-[10px] tracking-[0.2em] sm:tracking-[0.3em]">
+          <div className="h-[2px] w-6 sm:w-8 bg-cyan-400 group-hover:w-10 sm:group-hover:w-12 transition-all shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
+          {label}
+        </div>
+      </Card>
     </motion.a>
   );
 }
 
+/**
+ * Komponen pembantu (helper) untuk menguraikan transparansi penggunaan dana donasi.
+ */
 function StatItem({ icon, title, desc, color }: any) {
   return (
     <div className="group text-center sm:text-left flex flex-col items-center sm:items-start">

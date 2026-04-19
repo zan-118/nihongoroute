@@ -1,9 +1,19 @@
+/**
+ * LOKASI FILE: components/DailyQuests.tsx
+ * KONSEP: Mobile-First Neumorphic (Misi Harian)
+ */
+
 "use client";
 
 import { useState, useEffect } from "react";
 import { useProgress } from "@/context/UserProgressContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { loadProgress, ProgressState } from "@/lib/progress";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Target, CheckCircle2, Zap, Brain, Flame, Lock } from "lucide-react";
 
 export interface Quest {
   id: string;
@@ -11,7 +21,7 @@ export interface Quest {
   type: "review" | "xp" | "streak";
   target: number;
   rewardXP: number;
-  icon: string;
+  icon: React.ReactNode;
 }
 
 const DAILY_QUESTS: Quest[] = [
@@ -21,7 +31,7 @@ const DAILY_QUESTS: Quest[] = [
     type: "review",
     target: 10,
     rewardXP: 20,
-    icon: "🧠",
+    icon: <Brain size={18} className="text-cyber-neon" />,
   },
   {
     id: "q_review_50",
@@ -29,7 +39,7 @@ const DAILY_QUESTS: Quest[] = [
     type: "review",
     target: 50,
     rewardXP: 100,
-    icon: "🔥",
+    icon: <Flame size={18} className="text-cyber-neon" />,
   },
   {
     id: "q_xp_500",
@@ -37,7 +47,7 @@ const DAILY_QUESTS: Quest[] = [
     type: "xp",
     target: 500,
     rewardXP: 150,
-    icon: "⚡",
+    icon: <Zap size={18} className="text-cyber-neon" />,
   },
 ];
 
@@ -91,24 +101,33 @@ export default function DailyQuests() {
   };
 
   return (
-    <section className="bg-cyber-surface p-6 md:p-8 rounded-[2.5rem] border border-white/5 h-full relative overflow-hidden shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:15px_15px] opacity-30 pointer-events-none" />
+    <Card className="bg-[#0a0c10] p-6 md:p-8 lg:p-10 rounded-[2.5rem] md:rounded-[3rem] border-white/5 h-full relative overflow-hidden neo-card shadow-none flex flex-col">
+      {/* Decorative scanline overlay */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,238,255,0.02)_1px,transparent_1px)] bg-[size:100%_4px] opacity-40 pointer-events-none" />
 
-      <header className="flex items-center justify-between mb-8 relative z-10">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shadow-[0_0_10px_rgba(16,185,129,0.2)]">
-            <span className="text-emerald-400 text-sm">🎯</span>
+      <header className="flex items-center justify-between mb-8 md:mb-10 relative z-10">
+        <div className="flex items-center gap-3 md:gap-4">
+          <Card className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-cyber-neon/10 border-cyber-neon/20 flex items-center justify-center neo-inset shadow-none shrink-0">
+            <Target size={20} className="text-cyber-neon md:w-6 md:h-6" />
+          </Card>
+          <div className="text-left">
+            <h3 className="text-white font-black uppercase tracking-widest text-xs md:text-sm drop-shadow-md">
+              Misi Harian
+            </h3>
+            <span className="block text-[9px] md:text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">
+              Selesaikan Target
+            </span>
           </div>
-          <h3 className="text-white font-black uppercase tracking-widest text-sm md:text-base drop-shadow-md">
-            Misi Harian
-          </h3>
         </div>
-        <span className="bg-cyber-bg border border-white/10 text-[#c4cfde] px-3 py-1.5 rounded-full text-[9px] font-black tracking-[0.2em] uppercase shadow-inner hidden md:block">
-          Direset Tengah Malam
-        </span>
+        <Badge
+          variant="outline"
+          className="bg-[#121620] border-white/5 text-slate-500 px-3 py-1.5 md:px-4 md:py-2 rounded-xl text-[9px] md:text-[10px] font-bold tracking-widest uppercase neo-inset h-auto"
+        >
+          Reset 00:00
+        </Badge>
       </header>
 
-      <div className="space-y-5 relative z-10">
+      <div className="space-y-4 md:space-y-6 relative z-10 flex-1 flex flex-col justify-center">
         {DAILY_QUESTS.map((quest) => {
           const current = getCurrentProgress(quest.type);
           const percent = Math.min((current / quest.target) * 100, 100);
@@ -116,87 +135,85 @@ export default function DailyQuests() {
           const isClaimed = claimedQuests[quest.id];
 
           return (
-            <article
+            <Card
               key={quest.id}
-              className={`relative group p-4 rounded-2xl border transition-all duration-300 ${
+              className={`relative group p-5 md:p-6 rounded-[1.5rem] md:rounded-[2rem] border transition-all duration-500 neo-card shadow-none ${
                 isClaimed
-                  ? "bg-white/5 border-white/5 opacity-50 grayscale"
+                  ? "bg-black/20 border-white/5 opacity-50 grayscale"
                   : isCompleted
-                    ? "bg-emerald-500/10 border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.15)] hover:border-emerald-500/50"
-                    : "bg-cyber-bg border-white/5 hover:border-white/10"
+                    ? "bg-emerald-500/5 border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.1)]"
+                    : "bg-[#121620] border-white/5 hover:border-cyber-neon/30"
               }`}
             >
-              <AnimatePresence>
+              <AnimatePresence mode="wait">
                 {justClaimed === quest.id && (
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 1.2 }}
-                    className="absolute inset-0 flex items-center justify-center bg-emerald-500/20 backdrop-blur-sm rounded-2xl z-20"
+                    exit={{ opacity: 0, scale: 1.05 }}
+                    className="absolute inset-0 flex items-center justify-center bg-emerald-500/10 backdrop-blur-md rounded-[1.5rem] md:rounded-[2rem] z-20"
                   >
-                    <span className="text-emerald-400 font-black italic tracking-widest uppercase drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]">
-                      +{quest.rewardXP} XP DIAMBIL!
+                    <span className="text-emerald-400 font-black tracking-widest uppercase text-[10px] md:text-xs">
+                      MISI SELESAI +{quest.rewardXP} XP
                     </span>
                   </motion.div>
                 )}
               </AnimatePresence>
 
-              <div className="flex justify-between items-start mb-3">
-                <div className="flex items-center gap-3">
-                  <span className="text-xl opacity-80">{quest.icon}</span>
-                  <div>
+              <div className="flex justify-between items-center mb-4 md:mb-5">
+                <div className="flex items-center gap-3 md:gap-4">
+                  <Card className={`w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center neo-inset shadow-none transition-all shrink-0 ${isCompleted && !isClaimed ? 'bg-emerald-500/10 border-emerald-500/20' : 'bg-black/40 border-white/5'}`}>
+                    {isClaimed ? <CheckCircle2 size={18} className="text-emerald-500/60" /> : quest.icon}
+                  </Card>
+                  <div className="text-left">
                     <h4
-                      className={`text-xs font-black uppercase tracking-wide transition-colors ${
+                      className={`text-xs md:text-sm font-black uppercase tracking-widest transition-colors ${
                         isCompleted && !isClaimed
-                          ? "text-emerald-400"
+                          ? "text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]"
                           : "text-white"
                       }`}
                     >
                       {quest.title}
                     </h4>
-                    <p className="text-[10px] text-cyan-400 font-bold uppercase tracking-widest mt-0.5 opacity-80">
-                      Hadiah: +{quest.rewardXP} XP
+                    <p className={`text-[9px] md:text-[10px] font-bold uppercase tracking-widest mt-1 ${isCompleted ? 'text-emerald-400/70' : 'text-cyber-neon/70'}`}>
+                      HADIAH: +{quest.rewardXP} XP
                     </p>
                   </div>
                 </div>
 
                 {isClaimed ? (
-                  <span className="text-[10px] font-black text-white/20 uppercase tracking-widest bg-black/20 px-2 py-1 rounded">
-                    Selesai
-                  </span>
+                   <div className="text-slate-600 font-bold text-[9px] md:text-[10px] uppercase tracking-widest flex items-center gap-1.5 shrink-0">
+                     <Lock size={12} /> Diambil
+                   </div>
                 ) : isCompleted ? (
-                  <button
+                  <Button
                     onClick={() => handleClaim(quest)}
-                    aria-label={`Ambil hadiah ${quest.rewardXP} XP`}
-                    className="text-[10px] font-black text-black bg-emerald-400 uppercase tracking-widest px-3 py-1.5 rounded-lg shadow-[0_0_10px_rgba(16,185,129,0.4)] hover:scale-105 active:scale-95 transition-all animate-pulse"
+                    className="h-auto text-[9px] md:text-[10px] font-black text-black bg-emerald-400 hover:bg-white uppercase tracking-widest px-4 py-2 md:px-5 md:py-2.5 rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all animate-pulse border-none shrink-0"
                   >
                     Ambil
-                  </button>
+                  </Button>
                 ) : (
-                  <span className="text-[10px] font-black text-white/40 font-mono bg-black/30 px-2 py-1 rounded shadow-inner">
+                  <Badge variant="outline" className="text-[9px] md:text-[10px] font-bold text-slate-400 font-mono bg-black/40 px-2 py-1 md:px-3 md:py-1.5 rounded-lg border-white/5 neo-inset h-auto shrink-0">
                     {current} / {quest.target}
-                  </span>
+                  </Badge>
                 )}
               </div>
 
-              <div className="w-full bg-black/40 h-2 rounded-full overflow-hidden shadow-[inset_0_1px_3px_rgba(0,0,0,0.8)] relative">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${percent}%` }}
-                  transition={{ duration: 1, ease: "easeOut" }}
-                  className={`h-full relative ${
-                    isCompleted
+              <Progress
+                value={percent}
+                className="h-1.5 md:h-2 bg-black/40"
+                indicatorClassName={
+                  isClaimed 
+                    ? "bg-slate-700" 
+                    : isCompleted
                       ? "bg-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.8)]"
-                      : "bg-gradient-to-r from-cyan-400 to-blue-500 shadow-[0_0_10px_rgba(0,255,239,0.5)]"
-                  }`}
-                >
-                  <div className="absolute top-0 left-0 right-0 h-[1px] bg-white/30" />
-                </motion.div>
-              </div>
-            </article>
+                      : "bg-cyber-neon shadow-[0_0_10px_rgba(0,238,255,0.5)]"
+                }
+              />
+            </Card>
           );
         })}
       </div>
-    </section>
+    </Card>
   );
 }

@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     marginBottom: 30,
     borderBottomWidth: 3,
-    borderBottomColor: "#22d3ee",
+    borderBottomColor: "#ef4444",
     paddingBottom: 15,
   },
   logoBox: {
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   brandName: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#0891b2",
+    color: "#b91c1c",
     letterSpacing: 1.5,
   },
   tagline: {
@@ -50,15 +50,15 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
   },
   levelBadge: {
-    backgroundColor: "#ecfeff",
+    backgroundColor: "#fef2f2",
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 5,
     fontSize: 10,
-    color: "#0891b2",
+    color: "#b91c1c",
     fontWeight: "bold",
     borderWidth: 1,
-    borderColor: "#22d3ee",
+    borderColor: "#ef4444",
   },
 
   // TYPOGRAPHY
@@ -72,13 +72,13 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "#0891b2",
+    color: "#b91c1c",
     marginTop: 25,
     marginBottom: 12,
     textTransform: "uppercase",
     letterSpacing: 1.5,
     borderLeftWidth: 3,
-    borderLeftColor: "#22d3ee",
+    borderLeftColor: "#ef4444",
     paddingLeft: 8,
   },
   contentH2: {
@@ -102,24 +102,24 @@ const styles = StyleSheet.create({
     padding: 12,
     marginVertical: 8,
     borderLeftWidth: 4,
-    borderLeftColor: "#22d3ee",
+    borderLeftColor: "#ef4444",
   },
-  exampleFurigana: { fontSize: 8, color: "#0891b2", marginBottom: 2 },
+  exampleFurigana: { fontSize: 8, color: "#b91c1c", marginBottom: 2 },
   exampleJp: { fontSize: 13, fontWeight: "bold", color: "#0f172a" },
   exampleId: { fontSize: 9, color: "#64748b", marginTop: 4 },
 
   calloutBox: {
-    backgroundColor: "#f0fdfa",
+    backgroundColor: "#fef2f2",
     borderRadius: 8,
     padding: 12,
     marginVertical: 10,
     borderWidth: 1,
-    borderColor: "#cffafe",
+    borderColor: "#fee2e2",
   },
   calloutTitle: {
     fontSize: 10,
     fontWeight: "bold",
-    color: "#0891b2",
+    color: "#b91c1c",
     marginBottom: 4,
     textTransform: "uppercase",
   },

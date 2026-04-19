@@ -1,6 +1,7 @@
 /**
- * LOKASI FILE: app/page.tsx
- * KONSEP: Cyber-Dark Neumorphic + Framer Motion
+ * @file app/page.tsx
+ * @description Halaman beranda (landing page) NihongoRoute yang menampilkan presentasi fitur utama dan jembatan akses menuju modul belajar.
+ * @module Client Component
  */
 
 "use client";
@@ -17,8 +18,19 @@ import {
   ShieldCheck,
   PlayCircle,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
+/**
+ * Komponen halaman beranda utama dengan efek visual Cyber-Dark Neumorphic.
+ * Memanfaatkan transisi berbasis statika `framer-motion` untuk entri yang halus dan futuristik.
+ * 
+ * @returns {JSX.Element} Antarmuka halaman landing penuh animasi dan informasi pendaftaran.
+ */
 export default function LandingPage() {
+  
+  // Konfigurasi container untuk animasi beruntun (staggered animations) pada grid fitur
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -27,6 +39,7 @@ export default function LandingPage() {
     },
   };
 
+  // Konfigurasi animasi muncul-dari-bawah pada masing-masing item kartu
   const itemVariants: Variants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
@@ -58,8 +71,6 @@ export default function LandingPage() {
   ];
 
   return (
-    // DIUBAH: Dihapus min-h-screen agar layout tidak terpaksa tinggi, melainkan menyesuaikan isi.
-    // Padding disesuaikan dengan standar baru.
     <main className="bg-[#080a0f] text-[#c4cfde] selection:bg-cyan-400/30 overflow-x-hidden w-full relative">
       {/* BACKGROUND AMBIENT */}
       <div className="fixed inset-0 pointer-events-none z-0">
@@ -73,14 +84,17 @@ export default function LandingPage() {
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="mb-8 p-2 neo-inset rounded-2xl"
+            className="mb-8"
           >
-            <div className="bg-cyan-400/10 border border-cyan-400/20 px-4 py-2 rounded-xl flex items-center gap-2">
+            <Badge
+              variant="outline"
+              className="bg-cyan-400/10 border-cyan-400/20 px-4 py-2 rounded-xl flex items-center gap-2 neo-inset"
+            >
               <Sparkles size={14} className="text-cyan-400 animate-pulse" />
               <span className="text-[10px] font-black uppercase tracking-[0.3em] text-cyan-400">
                 Next-Gen Learning Platform
               </span>
-            </div>
+            </Badge>
           </motion.div>
 
           <motion.h1
@@ -111,22 +125,27 @@ export default function LandingPage() {
             transition={{ delay: 0.6 }}
             className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto"
           >
-            <Link
-              href="/dashboard"
-              className="btn-cyber flex items-center justify-center gap-3 group"
+            <Button
+              asChild
+              className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-black uppercase tracking-widest h-auto py-4 px-10 rounded-xl shadow-[0_0_30px_rgba(34,211,238,0.4)] transition-all group border-none"
             >
-              Akses Dashboard{" "}
-              <ArrowRight
-                size={18}
-                className="group-hover:translate-x-1 transition-transform"
-              />
-            </Link>
-            <Link
-              href="/courses"
-              className="px-8 py-3 neo-card hover:shadow-none transition-all flex items-center justify-center gap-3 text-white font-bold uppercase tracking-widest text-sm"
+              <Link href="/dashboard">
+                Akses Dashboard{" "}
+                <ArrowRight
+                  size={18}
+                  className="ml-2 group-hover:translate-x-1 transition-transform"
+                />
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="ghost"
+              className="h-auto py-4 px-10 neo-card hover:bg-white/5 transition-all text-white font-bold uppercase tracking-widest text-sm border-white/5 shadow-none"
             >
-              <PlayCircle size={18} className="text-cyan-400" /> Lihat Silabus
-            </Link>
+              <Link href="/courses">
+                <PlayCircle size={18} className="mr-2 text-cyan-400" /> Lihat Silabus
+              </Link>
+            </Button>
           </motion.div>
         </section>
 
@@ -143,24 +162,24 @@ export default function LandingPage() {
               key={i}
               variants={itemVariants}
               whileHover={{ y: -10 }}
-              // DIUBAH: flex-col dan h-full agar grid presisi
-              className="neo-card p-8 md:p-10 group relative overflow-hidden transition-all duration-300 flex flex-col h-full"
+              className="h-full"
             >
-              <div className="absolute top-0 right-0 p-8 opacity-[0.02] text-7xl font-black italic pointer-events-none group-hover:opacity-[0.05] transition-opacity">
-                0{i + 1}
-              </div>
-              <div className="mb-6 p-4 neo-inset w-fit rounded-2xl group-hover:shadow-none transition-all">
-                {feature.icon}
-              </div>
-              <h3
-                className={`text-xl md:text-2xl font-black uppercase italic tracking-tight mb-4 ${feature.color}`}
-              >
-                {feature.title}
-              </h3>
-              {/* DIUBAH: flex-1 pada deskripsi untuk mendorong konten lain (jika ada) ke bawah, menjaga kesejajaran */}
-              <p className="text-slate-300 text-xs md:text-sm leading-relaxed flex-1">
-                {feature.desc}
-              </p>
+              <Card className="p-8 md:p-10 group relative overflow-hidden transition-all duration-300 flex flex-col h-full neo-card rounded-[2.5rem] border-white/5 bg-cyber-surface/50 shadow-none">
+                <div className="absolute top-0 right-0 p-8 opacity-[0.02] text-7xl font-black italic pointer-events-none group-hover:opacity-[0.05] transition-opacity">
+                  0{i + 1}
+                </div>
+                <div className="mb-6 p-4 neo-inset w-fit rounded-2xl group-hover:bg-black/40 transition-all bg-black/20 border-white/5">
+                  {feature.icon}
+                </div>
+                <h3
+                  className={`text-xl md:text-2xl font-black uppercase italic tracking-tight mb-4 ${feature.color}`}
+                >
+                  {feature.title}
+                </h3>
+                <p className="text-slate-300 text-xs md:text-sm leading-relaxed flex-1 italic">
+                  {feature.desc}
+                </p>
+              </Card>
             </motion.div>
           ))}
         </motion.section>
@@ -170,28 +189,33 @@ export default function LandingPage() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="neo-inset p-8 md:p-12 rounded-[3rem] flex flex-col md:flex-row items-center justify-between gap-8 border border-white/5"
+          className="w-full"
         >
-          <div className="flex items-center gap-6">
-            <div className="w-16 h-16 neo-card flex items-center justify-center rounded-2xl shrink-0">
-              <ShieldCheck size={32} className="text-cyan-400" />
+          <Card className="neo-inset p-8 md:p-12 rounded-[3rem] flex flex-col md:flex-row items-center justify-between gap-8 border-white/5 bg-black/20 shadow-none">
+            <div className="flex items-center gap-6">
+              <div className="w-16 h-16 neo-card flex items-center justify-center rounded-2xl shrink-0 border-white/5 bg-cyber-surface">
+                <ShieldCheck size={32} className="text-cyan-400" />
+              </div>
+              <div>
+                <h4 className="text-white font-black uppercase italic text-xl">
+                  100% Gratis & Open Source
+                </h4>
+                <p className="text-slate-300 text-xs mt-1">
+                  Dikembangkan dengan dedikasi untuk komunitas pembelajar bahasa
+                  Jepang.
+                </p>
+              </div>
             </div>
-            <div>
-              <h4 className="text-white font-black uppercase italic text-xl">
-                100% Gratis & Open Source
-              </h4>
-              <p className="text-slate-300 text-xs mt-1">
-                Dikembangkan dengan dedikasi untuk komunitas pembelajar bahasa
-                Jepang.
-              </p>
-            </div>
-          </div>
-          <Link
-            href="/support"
-            className="text-cyan-400 font-black uppercase tracking-widest text-[10px] md:text-xs flex items-center gap-2 hover:gap-4 transition-all whitespace-nowrap shrink-0"
-          >
-            Dukung Pengembangan <ArrowRight size={14} />
-          </Link>
+            <Button
+              asChild
+              variant="link"
+              className="text-cyan-400 font-black uppercase tracking-widest text-[10px] md:text-xs flex items-center gap-2 hover:gap-4 transition-all whitespace-nowrap shrink-0 group hover:no-underline"
+            >
+              <Link href="/support">
+                Dukung Pengembangan <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </Card>
         </motion.section>
 
         {/* FOOTER */}

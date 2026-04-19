@@ -1,9 +1,15 @@
+/**
+ * LOKASI FILE: components/FloatingSupport.tsx
+ * KONSEP: Cyber-Dark Neumorphic (Service Uplink)
+ */
+
 "use client";
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Coffee } from "lucide-react";
+import { Coffee, Radio } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 export default function FloatingSupport() {
   const pathname = usePathname();
@@ -26,20 +32,25 @@ export default function FloatingSupport() {
       // PERBAIKAN POSISI: bottom-36 di mobile agar benar-benar aman dari tabrakan MobileNav
       className="fixed bottom-36 right-4 md:bottom-10 md:right-10 z-[40]"
     >
-      <Link href="/support" className="group flex items-center gap-3">
+      <Link href="/support" className="group block">
         <div className="relative">
-          {/* Pendaran Cahaya */}
-          <div className="absolute inset-0 bg-cyan-400 rounded-full blur-xl opacity-20 group-hover:opacity-40 animate-pulse transition-opacity" />
+          {/* Neural Glow */}
+          <div className="absolute inset-0 bg-red-500 rounded-full blur-2xl opacity-10 group-hover:opacity-30 animate-pulse transition-opacity" />
 
           {/* Tombol Utama */}
-          <div className="relative w-12 h-12 md:w-14 md:h-14 bg-cyber-surface border border-white/10 rounded-full flex items-center justify-center shadow-[5px_5px_15px_rgba(0,0,0,0.5),inset_0_2px_5px_rgba(255,255,255,0.05)] group-hover:border-cyan-400/50 group-hover:bg-cyan-400/10 transition-all active:scale-90 cursor-pointer">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative w-14 h-14 md:w-16 md:h-16 bg-cyber-surface border border-white/10 rounded-full flex items-center justify-center neo-card shadow-none group-hover:border-red-500/50 group-hover:bg-red-500/10 transition-all active:scale-90 cursor-pointer h-auto"
+          >
             <Coffee
-              size={20}
-              className="text-white/60 group-hover:text-cyan-400 transition-colors"
+              size={24}
+              className="text-slate-500 group-hover:text-red-500 transition-colors duration-300"
             />
-            {/* Titik Notifikasi Merah */}
-            <div className="absolute top-0 right-0 md:top-1 md:right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-[#15171a] shadow-[0_0_10px_rgba(239,68,68,0.8)]" />
-          </div>
+            {/* Status Indicator */}
+            <div className="absolute top-1 right-1 md:top-2 md:right-2 w-3.5 h-3.5 bg-red-500 rounded-full border-2 border-cyber-bg shadow-[0_0_15px_rgba(239,68,68,0.8)] animate-ping opacity-40" />
+            <div className="absolute top-1 right-1 md:top-2 md:right-2 w-3.5 h-3.5 bg-red-500 rounded-full border-2 border-cyber-bg" />
+          </Button>
         </div>
       </Link>
     </motion.div>

@@ -1,6 +1,13 @@
+/**
+ * LOKASI FILE: components/TTSReader.tsx
+ * KONSEP: Cyber-Dark Neumorphic (Vocal Synthesis HUD)
+ */
+
 "use client";
 
 import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Volume2, AudioLines } from "lucide-react";
 
 interface Props {
   text: string;
@@ -73,29 +80,30 @@ export default function TTSReader({ text, minimal = false }: Props) {
   if (!hasJapanese || !text) return null;
 
   return (
-    <button
+    <Button
+      variant="ghost"
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
         speak();
       }}
-      className={`flex items-center justify-center gap-2 border transition-all font-bold ${
+      className={`flex items-center justify-center gap-3 border transition-all font-black uppercase tracking-[0.2em] h-auto italic ${
         minimal
-          ? "p-2 md:p-3 aspect-square rounded-xl"
-          : "px-4 py-2 rounded-xl w-max text-xs"
+          ? "w-12 h-12 md:w-14 md:h-14 rounded-2xl"
+          : "px-6 py-2.5 rounded-xl w-max text-[10px]"
       } ${
         isPlaying
-          ? "bg-red-500/10 border-red-500/30 text-red-400 shadow-[0_0_10px_rgba(239,68,68,0.2)]"
-          : "bg-cyber-neon/10 border-cyber-neon/30 text-cyber-neon hover:bg-cyber-neon/20 active:scale-95 shadow-sm"
+          ? "bg-red-500/10 border-red-500/40 text-red-500 shadow-[0_0_20px_rgba(239,68,68,0.2)] neo-card shadow-none"
+          : "bg-black/40 border-white/5 text-slate-500 hover:text-red-500 hover:border-red-500/30 neo-inset shadow-none"
       }`}
-      title="Dengarkan pengucapan"
+      title="Vocal_Synthesis_Execution"
     >
-      <span
-        className={`${minimal ? "text-lg md:text-xl" : "text-base"} ${isPlaying ? "animate-pulse" : ""}`}
-      >
-        {isPlaying ? "⏹️" : "🔊"}
-      </span>
-      {!minimal && (isPlaying ? "Berhenti" : "Dengarkan")}
-    </button>
+      {isPlaying ? (
+        <AudioLines size={minimal ? 24 : 16} className="animate-pulse" />
+      ) : (
+        <Volume2 size={minimal ? 24 : 16} />
+      )}
+      {!minimal && (isPlaying ? "Terminate" : "Listen")}
+    </Button>
   );
 }

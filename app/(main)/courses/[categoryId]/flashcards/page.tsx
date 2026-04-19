@@ -1,6 +1,7 @@
 import FlashcardMaster from "@/components/FlashcardMaster";
 import { client } from "@/sanity/lib/client";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 interface PageProps {
   params: Promise<{ categoryId: string }>;
@@ -22,12 +23,13 @@ export default async function VocabFlashcardPage({ params }: PageProps) {
 
       <div className="max-w-xl mx-auto w-full relative z-10 flex-1 flex flex-col">
         <nav className="mb-6 md:mb-8 italic">
-          <Link
-            href={`/courses/${categoryId}`}
-            className="text-cyan-400 text-[10px] md:text-xs font-black uppercase tracking-widest hover:text-cyan-300 transition-colors bg-cyan-400/10 px-4 py-2 rounded-lg border border-cyan-400/20"
+          <Button
+            variant="outline"
+            asChild
+            className="h-auto text-cyan-400 text-[10px] md:text-xs font-black uppercase tracking-widest border-cyan-400/20 hover:border-cyan-400 hover:bg-cyan-400/5 transition-all"
           >
-            ← Kembali ke Materi
-          </Link>
+            <Link href={`/courses/${categoryId}`}>← Kembali ke Materi</Link>
+          </Button>
         </nav>
 
         <header className="mb-8 md:mb-10 text-center md:text-left">

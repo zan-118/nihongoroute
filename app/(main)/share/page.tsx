@@ -1,3 +1,9 @@
+/**
+ * @file app/(main)/share/page.tsx
+ * @description Halaman penerima tautan sertifikat ujian. Men-decode parameter URL format Base64 menjadi struktur data statistik kelulusan. Bekerja tanpa penyimpanan server (Stateless).
+ * @module Client Component
+ */
+
 "use client";
 
 import { useSearchParams } from "next/navigation";
@@ -12,7 +18,12 @@ import {
   Home,
 } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
+/**
+ * Struktur objek hasil ujian yang diringkas di dalam parameter string URL.
+ */
 interface SharedResult {
   guestId: string;
   examTitle: string;
@@ -28,15 +39,23 @@ interface SharedResult {
   date: string;
 }
 
+/**
+ * Komponen sub-modul yang menangani pemrosesan logika dekripsi parameter URL.
+ * Harus dipisahkan dan dibungkus Suspense karena berinteraksi dengan API useRouter klien (useSearchParams).
+ * 
+ * @returns {JSX.Element} Antarmuka Sertifikat digital.
+ */
 function ShareContent() {
   const searchParams = useSearchParams();
   const [data, setData] = useState<SharedResult | null>(null);
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    // 1. Ekstrak data teks hasil Base64 encoding dari URL param (?data=...)
     const rawData = searchParams.get("data");
     if (rawData) {
       try {
+        // 2. Dekode mundur (decodeURIComponent -> atob) dan parsing kembali ke bentuk Objek JSON
         const decodedData = JSON.parse(decodeURIComponent(atob(rawData)));
         setData(decodedData);
       } catch (err) {
@@ -51,7 +70,7 @@ function ShareContent() {
   if (error) {
     return (
       <div className="w-full  bg-[#080a0f] flex flex-col items-center justify-center p-6 text-center">
-        <div className="neo-card p-10 border-red-500/20">
+        <Card className="p-10 border-red-500/20">
           <XCircle size={60} className="text-red-500 mx-auto mb-6" />
           <h1 className="text-2xl font-black text-white uppercase italic mb-4">
             Link Tidak Valid
@@ -59,10 +78,10 @@ function ShareContent() {
           <p className="text-slate-300 text-sm mb-8">
             Data hasil ujian rusak atau link tidak lengkap.
           </p>
-          <Link href="/" className="btn-cyber block">
-            Kembali ke Beranda
-          </Link>
-        </div>
+          <Button asChild className="w-full">
+            <Link href="/">Kembali ke Beranda</Link>
+          </Button>
+        </Card>
       </div>
     );
   }
@@ -70,7 +89,6 @@ function ShareContent() {
   if (!data) return null;
 
   return (
-    // DIUBAH: Dihilangkan min-h-screen dan diganti menjadi w-full, menghapus padding atas (py-20 menjadi py-12)
     <div className="w-full py-12 px-4 relative overflow-hidden flex flex-col items-center justify-center min-h-[70vh]">
       <div
         className={`absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] blur-[150px] rounded-full pointer-events-none ${data.passed ? "bg-emerald-500/10" : "bg-red-500/10"}`}
@@ -81,7 +99,7 @@ function ShareContent() {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-2xl mx-auto relative z-10"
       >
-        <div className="neo-card p-8 md:p-12 text-center border-white/5 shadow-neumorphic">
+        <Card className="p-8 md:p-12 text-center border-white/5 shadow-neumorphic">
           <div
             className={`w-24 h-24 mx-auto neo-inset flex items-center justify-center rounded-full mb-8 ${data.passed ? "text-emerald-400" : "text-red-500"}`}
           >
@@ -131,7 +149,7 @@ function ShareContent() {
             {Object.entries(data.sectionScores).map(([key, score]) => (
               <div
                 key={key}
-                className="bg-[#080a0f] border border-white/5 rounded-xl p-4"
+                className="bg-[#080a0f] border border-white/5 rounded-xl p-4 shadow-inner"
               >
                 <p className="text-[9px] font-mono text-slate-300 uppercase font-bold tracking-widest mb-1">
                   {key}
@@ -142,27 +160,34 @@ function ShareContent() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link
-              href="/"
-              className="neo-inset flex-1 py-4 flex items-center justify-center gap-2 text-slate-200 hover:text-white transition-colors uppercase text-[10px] font-black tracking-widest"
+            <Button
+              variant="outline"
+              asChild
+              className="flex-1 py-6 text-[10px] font-black tracking-widest"
             >
-              <Home size={16} /> Coba Ujian Sendiri
-            </Link>
-            <button
+              <Link href="/">
+                <Home size={16} className="mr-2" /> Coba Ujian Sendiri
+              </Link>
+            </Button>
+            <Button
               onClick={() =>
                 navigator.clipboard.writeText(window.location.href)
               }
-              className="btn-cyber flex-1 flex items-center justify-center gap-2"
+              className="flex-1 py-6 text-[10px] font-black tracking-widest"
             >
-              <Share2 size={16} /> Salin Link Share
-            </button>
+              <Share2 size={16} className="mr-2" /> Salin Link Share
+            </Button>
           </div>
-        </div>
+        </Card>
       </motion.div>
     </div>
   );
 }
 
+/**
+ * Halaman Utama Sertifikat Ujian.
+ * @returns {JSX.Element} Pembungkus Suspense yang membungkus sub-komponen pemroses URL.
+ */
 export default function SharePage() {
   return (
     <Suspense fallback={null}>

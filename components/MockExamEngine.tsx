@@ -1,15 +1,12 @@
 /**
- * LOKASI FILE: components/MockExamEngine.tsx
- * KONSEP: Cyber-Dark Neumorphic (Visual Overhaul)
- * FITUR BARU:
- * - Audio Play 1-Kali (Bypass larangan Auto-Play Browser)
- * - Share Result via Base64 URL (Nol Database)
- * - Toleransi Anti-Cheat 1.5 Detik
+ * @file components/MockExamEngine.tsx
+ * @description Mesin simulasi ujian utama dengan fitur anti-cheat, pemutaran audio satu-kali (Choukai), pewaktu otomatis, dan pembuat URL hasil ujian tanpa database.
+ * @module Client Component
  */
 
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Clock,
@@ -26,7 +23,14 @@ import {
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 
+/**
+ * Representasi data untuk setiap butir pertanyaan dalam ujian.
+ */
 export interface ExamQuestion {
   _key: string;
   section: "vocabulary" | "grammar" | "reading" | "listening";
@@ -37,6 +41,9 @@ export interface ExamQuestion {
   correctAnswer: number;
 }
 
+/**
+ * Konfigurasi utama parameter ujian.
+ */
 export interface ExamData {
   _id: string;
   title: string;
@@ -46,6 +53,9 @@ export interface ExamData {
   questions: ExamQuestion[];
 }
 
+/**
+ * Properti untuk komponen MockExamEngine.
+ */
 interface MockExamEngineProps {
   exam: ExamData;
 }
@@ -59,7 +69,15 @@ const SECTION_LABELS = {
 
 type AudioState = "idle" | "playing" | "played";
 
+/**
+ * Komponen utama mesin ujian (Mock Exam Engine).
+ * Menangani state siklus penuh mulai dari halaman intro, pengerjaan ujian, hingga hasil akhir dan pembahasan (review).
+ * 
+ * @param {MockExamEngineProps} props - Properti komponen.
+ * @returns {JSX.Element} Antarmuka mesin ujian sesuai state (intro/playing/result/review).
+ */
 export default function MockExamEngine({ exam }: MockExamEngineProps) {
+  // State untuk mengelola perpindahan halaman antar mode ujian
   const [gameState, setGameState] = useState<
     "intro" | "playing" | "result" | "review"
   >("intro");
@@ -86,20 +104,22 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
 
     let cheatTimer: NodeJS.Timeout;
 
+    // Listener untuk mendeteksi apabila pengguna berpindah tab/jendela browser (Visibility API)
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden") {
-        // Beri toleransi 1.5 detik jika hanya kepencet/notifikasi lewat
+        // Beri toleransi 1.5 detik jika pengguna secara tidak sengaja mengklik notifikasi
         cheatTimer = setTimeout(() => {
           setCheatWarnings((prev) => prev + 1);
           alert(
             "PERINGATAN: Jangan meninggalkan halaman ujian! Aktivitas Anda dicatat.",
           );
-        }, 5000);
+        }, 1500);
       } else {
         clearTimeout(cheatTimer);
       }
     };
 
+    // Mencegah klik kanan untuk menghindari inspeksi elemen
     const handleContextMenu = (e: MouseEvent) => e.preventDefault();
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -115,6 +135,8 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
   // --- LOGIKA TIMER ---
   useEffect(() => {
     if (gameState !== "playing") return;
+    
+    // Interval 1 detik untuk menghitung mundur sisa waktu
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
@@ -136,7 +158,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
       const { finalScore } = calculateScore();
       const isPassed = finalScore >= exam.passingScore;
 
-      // HANYA Memicu Konfeti jika Lulus (API Call Dihapus Sepenuhnya)
+      // HANYA Memicu partikel Konfeti jika pengguna lulus (melewati passing score)
       if (isPassed) {
         const duration = 3 * 1000;
         const animationEnd = Date.now() + duration;
@@ -161,13 +183,16 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState, exam.passingScore, exam.questions.length]);
 
-  // --- HANDLER AUDIO (1 KALI PUTAR) ---
+  /**
+   * Mengatur pemutaran audio khusus soal Choukai (Mendengar).
+   * Dibatasi hanya satu kali pemutaran untuk mensimulasikan kondisi ujian JLPT asli.
+   */
   const handlePlayAudio = () => {
     const activeQuestion = exam.questions[currentQuestionIndex];
     const qKey = activeQuestion._key;
     const currentStatus = audioStatus[qKey] || "idle";
 
-    // Blokir jika sudah pernah diputar atau sedang diputar
+    // Blokir secara ketat jika audio sudah pernah diputar atau sedang berjalan
     if (currentStatus === "played" || currentStatus === "playing") return;
 
     if (audioRef.current && activeQuestion.audioUrl) {
@@ -178,19 +203,26 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
 
       setAudioStatus((prev) => ({ ...prev, [qKey]: "playing" }));
 
-      // Kunci audio saat selesai
+      // Kunci audio secara permanen saat trek selesai berputar
       audioRef.current.onended = () => {
         setAudioStatus((prev) => ({ ...prev, [qKey]: "played" }));
       };
     }
   };
 
+  /**
+   * Menghentikan ujian secara paksa, menyimpan status, dan beralih ke layar hasil.
+   */
   const finishExam = () => {
     setGameState("result");
     if (audioRef.current) audioRef.current.pause();
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  /**
+   * Menyimpan indeks opsi jawaban yang dipilih pengguna berdasarkan ID soal (_key).
+   * @param {number} optionIndex - Indeks opsi yang dipilih pengguna.
+   */
   const handleAnswer = (optionIndex: number) => {
     const question = exam.questions[currentQuestionIndex];
     setAnswers((prev) => ({ ...prev, [question._key]: optionIndex }));
@@ -210,6 +242,11 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
     }
   };
 
+  /**
+   * Menghitung skor akhir dan memecahnya berdasarkan setiap sesi (kosakata, tata bahasa, dsb).
+   * Algoritma bobot disesuaikan pada skala JLPT standar (maksimum 180 poin).
+   * @returns {Object} Total jawaban benar, skor final (skala 180), dan pemecahan data statistik skor per sesi.
+   */
   const calculateScore = () => {
     let correctCount = 0;
     const sectionBreakdown: Record<string, { total: number; correct: number }> =
@@ -224,6 +261,8 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
       if (!sectionBreakdown[q.section])
         sectionBreakdown[q.section] = { total: 0, correct: 0 };
       sectionBreakdown[q.section].total += 1;
+      
+      // Pencocokan validasi kunci jawaban
       if (answers[q._key] === q.correctAnswer) {
         correctCount++;
         sectionBreakdown[q.section].correct += 1;
@@ -234,20 +273,29 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
     return { correctCount, finalScore, sectionBreakdown };
   };
 
+  /**
+   * Utilitas format waktu dari detik ke MM:SS.
+   * @param {number} seconds - Jumlah waktu dalam satuan detik.
+   * @returns {string} String format menit dan detik.
+   */
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
     return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   };
 
-  // --- HANDLER SHARE URL BASE64 ---
+  /**
+   * Merakit payload data kelulusan, melakukan pengkodean (encoding) menggunakan Base64, 
+   * dan menyalin URL hasil ke clipboard. 
+   * Teknik ini memungkinkan fitur pembagian sertifikat bekerja optimal tanpa backend / database tersendiri.
+   */
   const handleShareResult = () => {
     // 1. Ambil data kalkulasi skor saat ini
     const { finalScore, sectionBreakdown } = calculateScore();
     const isPassed = finalScore >= exam.passingScore;
     const guestId = localStorage.getItem("nihongo_guest_id") || "UNKNOWN_GUEST";
 
-    // 2. Rakit objek data sesuai dengan format yang diharapkan halaman penerima
+    // 2. Rakit objek data sesuai dengan struktur yang diharapkan halaman sertifikat
     const shareData = {
       guestId,
       examTitle: exam.title,
@@ -291,101 +339,104 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
       date: new Date().toISOString(),
     };
 
-    // 3. Encode data yang sudah dirakit
+    // 3. Serialisasi ke JSON, lalu Encode (btoa) agar aman dijadikan parameter URL
     const encodedData = btoa(encodeURIComponent(JSON.stringify(shareData)));
     const shareUrl = `${window.location.origin}/share?data=${encodedData}`;
 
-    // 4. Salin ke clipboard
+    // 4. Salin langsung ke clipboard pengguna
     navigator.clipboard.writeText(shareUrl);
     alert("Link sertifikat berhasil disalin! Silakan bagikan ke teman Anda.");
   };
 
   /* =========================================
-     1. TAMPILAN INTRO (Mulai Ujian)
+     1. TAMPILAN INTRO (Layar Persiapan)
   ========================================= */
   if (gameState === "intro") {
     return (
-      <div className="w-full max-w-2xl mx-auto neo-card p-8 md:p-12 text-center mt-6 md:mt-12 relative overflow-hidden">
+      <Card className="w-full max-w-2xl mx-auto p-8 md:p-12 text-center mt-6 md:mt-12 relative overflow-hidden neo-card rounded-[3rem] border-white/5 bg-cyber-surface shadow-none">
         <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-red-500/5 blur-[100px] rounded-full pointer-events-none" />
 
-        <div className="w-24 h-24 mx-auto neo-inset text-amber-500 flex items-center justify-center rounded-full mb-8 shadow-inner">
+        <Card className="w-24 h-24 mx-auto neo-inset flex items-center justify-center rounded-[2rem] mb-8 bg-black/20 border-white/5 shadow-none">
           <AlertCircle
             size={40}
-            className="drop-shadow-[0_0_15px_rgba(245,158,11,0.5)]"
+            className="text-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.5)]"
           />
-        </div>
+        </Card>
 
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white uppercase italic tracking-tighter mb-8 leading-tight relative z-10">
           {exam.title}
         </h1>
 
-        <div className="neo-inset p-6 md:p-8 rounded-2xl mb-8 text-left space-y-5 relative z-10">
+        <Card className="neo-inset p-6 md:p-8 rounded-2xl mb-8 text-left space-y-5 relative z-10 bg-black/20 border-white/5 shadow-none">
           <div className="flex justify-between items-center border-b border-white/5 pb-4">
             <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-300">
               Total Soal
             </span>
-            <span className="font-mono font-bold text-white text-sm md:text-base">
+            <Badge variant="ghost" className="font-mono font-bold text-white text-sm md:text-base">
               {exam.questions.length} Butir
-            </span>
+            </Badge>
           </div>
           <div className="flex justify-between items-center border-b border-white/5 pb-4">
             <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-300">
               Batas Waktu
             </span>
-            <span className="font-mono font-bold text-red-400 text-sm md:text-base">
+            <Badge variant="ghost" className="font-mono font-bold text-red-400 text-sm md:text-base">
               {exam.timeLimit} Menit
-            </span>
+            </Badge>
           </div>
           <div className="flex justify-between items-center">
             <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-300">
               Target Pass
             </span>
-            <span className="font-mono font-bold text-amber-400 text-sm md:text-base">
+            <Badge variant="ghost" className="font-mono font-bold text-amber-400 text-sm md:text-base">
               {exam.passingScore} / 180
-            </span>
+            </Badge>
           </div>
-        </div>
+        </Card>
 
-        <p className="text-[10px] text-slate-300 mb-10 font-mono uppercase tracking-widest leading-relaxed px-2 relative z-10">
+        <p className="text-[10px] text-slate-400 mb-10 font-mono uppercase tracking-widest leading-relaxed px-2 relative z-10 italic">
           Sistem memiliki fitur Anti-Cheat aktif. Untuk Seksi Mendengar
           (Choukai), audio HANYA DAPAT DIPUTAR SATU KALI dan tidak bisa
           dijeda/diulang.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 relative z-10">
-          <Link
-            href={backLink}
-            className="neo-inset w-full hover:text-white text-slate-200 font-black uppercase tracking-widest py-4 px-6 flex justify-center transition-colors text-[10px] sm:text-xs"
+          <Button
+            asChild
+            variant="ghost"
+            className="neo-inset w-full hover:bg-white hover:text-black text-slate-200 font-black uppercase tracking-widest h-auto py-5 px-6 rounded-xl transition-all text-[10px] sm:text-xs border-white/5 bg-black/10 shadow-none"
           >
-            ← Batal
-          </Link>
-          <button
+            <Link href={backLink}>
+              ← Batal
+            </Link>
+          </Button>
+          <Button
             onClick={() => setGameState("playing")}
-            className="w-full bg-red-500 hover:bg-white text-[#0a0c10] font-black uppercase tracking-widest py-4 px-10 rounded-xl transition-all shadow-[0_0_20px_rgba(239,68,68,0.4)] active:scale-95 text-[10px] sm:text-xs"
+            className="w-full bg-red-500 hover:bg-white text-black font-black uppercase tracking-widest h-auto py-5 px-10 rounded-xl transition-all shadow-[0_0_25px_rgba(239,68,68,0.4)] active:scale-95 text-[10px] sm:text-xs border-none"
           >
             Mulai Ujian
-          </button>
+          </Button>
         </div>
-      </div>
+      </Card>
     );
   }
 
   /* =========================================
-     2. TAMPILAN HASIL (Result)
+     2. TAMPILAN HASIL (Layar Penilaian)
   ========================================= */
   if (gameState === "result") {
     const { correctCount, finalScore, sectionBreakdown } = calculateScore();
     const isPassed = finalScore >= exam.passingScore;
 
     return (
-      <div className="w-full max-w-3xl mx-auto neo-card p-8 md:p-12 text-center relative overflow-hidden mt-6 md:mt-12">
+      <Card className="w-full max-w-3xl mx-auto p-8 md:p-12 text-center relative overflow-hidden mt-6 md:mt-12 neo-card rounded-[3rem] border-white/5 bg-cyber-surface shadow-none">
         <div
           className={`absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[400px] blur-[150px] rounded-full pointer-events-none ${isPassed ? "bg-emerald-500/10" : "bg-red-500/10"}`}
         />
 
         <div className="relative z-10">
-          <div
-            className={`w-28 h-28 mx-auto neo-inset flex items-center justify-center rounded-full mb-8 shadow-inner ${isPassed ? "text-emerald-400" : "text-red-500"}`}
+          <Card
+            className={`w-28 h-28 mx-auto neo-inset flex items-center justify-center rounded-[2.5rem] mb-8 bg-black/20 border-white/5 shadow-none ${isPassed ? "text-emerald-400" : "text-red-500"}`}
           >
             {isPassed ? (
               <Trophy
@@ -398,139 +449,141 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
                 className="drop-shadow-[0_0_20px_rgba(239,68,68,0.6)]"
               />
             )}
-          </div>
+          </Card>
 
           <h1
             className={`text-4xl md:text-5xl font-black uppercase italic tracking-tighter mb-2 ${isPassed ? "text-emerald-400" : "text-red-500"}`}
           >
             {isPassed ? "Exam Cleared" : "Exam Failed"}
           </h1>
-          <p className="text-slate-300 font-mono uppercase tracking-widest text-[10px] md:text-xs mb-10">
+          <Badge variant="ghost" className="text-slate-300 font-mono uppercase tracking-widest text-[10px] md:text-xs mb-10 h-auto">
             {exam.title}
-          </p>
+          </Badge>
 
           {/* Kotak Skor Neumorphic */}
-          <div className="grid grid-cols-2 gap-4 mb-10">
-            <div className="neo-inset p-6 md:p-8 flex flex-col items-center justify-center">
-              <p className="text-slate-300 text-[10px] uppercase font-black tracking-widest mb-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+            <Card className="neo-inset p-6 md:p-8 flex flex-col items-center justify-center border-white/5 bg-black/20 shadow-none">
+              <p className="text-slate-400 text-[10px] uppercase font-black tracking-widest mb-3">
                 Final Score
               </p>
               <p
-                className={`text-4xl md:text-5xl font-black font-mono ${isPassed ? "text-emerald-400" : "text-red-500"}`}
+                className={`text-4xl md:text-6xl font-black font-mono ${isPassed ? "text-emerald-400" : "text-red-500"}`}
               >
                 {finalScore}{" "}
-                <span className="text-lg md:text-xl text-slate-600">/ 180</span>
+                <span className="text-lg md:text-2xl text-slate-600">/ 180</span>
               </p>
-            </div>
-            <div className="neo-inset p-6 md:p-8 flex flex-col items-center justify-center">
-              <p className="text-slate-300 text-[10px] uppercase font-black tracking-widest mb-3">
+            </Card>
+            <Card className="neo-inset p-6 md:p-8 flex flex-col items-center justify-center border-white/5 bg-black/20 shadow-none">
+              <p className="text-slate-400 text-[10px] uppercase font-black tracking-widest mb-3">
                 Accuracy
               </p>
-              <p className="text-4xl md:text-5xl font-black font-mono text-white">
+              <p className="text-4xl md:text-6xl font-black font-mono text-white">
                 {Math.round((correctCount / exam.questions.length) * 100)}%
               </p>
-            </div>
+            </Card>
           </div>
 
           {/* Breakdown Section */}
-          <div className="neo-card !bg-transparent p-6 md:p-8 border-white/5 mb-10 text-left">
-            <h3 className="text-[10px] md:text-xs font-black text-slate-200 uppercase tracking-widest border-b border-white/5 pb-4 mb-6">
-              Analisis Sektor
+          <Card className="bg-black/20 p-6 md:p-10 border-white/5 mb-10 text-left rounded-3xl neo-inset shadow-none">
+            <h3 className="text-[10px] md:text-xs font-black text-slate-200 uppercase tracking-[0.3em] border-b border-white/5 pb-4 mb-8">
+              Analisis Per Sektor
             </h3>
-            <div className="space-y-6">
+            <div className="space-y-8">
               {Object.entries(sectionBreakdown).map(([sectionKey, data]) => {
                 if (data.total === 0) return null;
                 const percentage = Math.round(
                   (data.correct / data.total) * 100,
                 );
-                let colorClass =
-                  "bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]";
-                if (percentage >= 70)
-                  colorClass =
-                    "bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]";
-                else if (percentage >= 40)
-                  colorClass =
-                    "bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.5)]";
+                let indicatorColor = "bg-red-500";
+                if (percentage >= 70) indicatorColor = "bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]";
+                else if (percentage >= 40) indicatorColor = "bg-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.5)]";
+                else indicatorColor = "bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]";
 
                 return (
                   <div key={sectionKey}>
-                    <div className="flex justify-between items-end mb-2">
-                      <span className="text-[9px] md:text-[10px] font-black text-slate-300 uppercase tracking-widest">
+                    <div className="flex justify-between items-end mb-3">
+                      <span className="text-[9px] md:text-[10px] font-black text-slate-300 uppercase tracking-widest italic">
                         {
                           SECTION_LABELS[
                             sectionKey as keyof typeof SECTION_LABELS
                           ]
                         }
                       </span>
-                      <span className="text-[9px] font-mono font-bold text-slate-300">
-                        {data.correct}/{data.total} ({percentage}%)
-                      </span>
+                      <Badge variant="outline" className="text-[9px] font-mono font-bold text-slate-300 border-white/10 neo-inset h-auto px-2">
+                        {data.correct} / {data.total}
+                      </Badge>
                     </div>
-                    <div className="h-2 neo-inset p-0.5">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${percentage}%` }}
-                        transition={{ duration: 1 }}
-                        className={`h-full rounded-full ${colorClass}`}
-                      />
-                    </div>
+                    <Progress
+                      value={percentage}
+                      className="h-2 bg-[#080a0f] border-none"
+                      indicatorClassName={indicatorColor}
+                    />
                   </div>
                 );
               })}
             </div>
-          </div>
+          </Card>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            {/* Tombol Share Baru */}
-            <button
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <Button
               onClick={handleShareResult}
-              className="w-full sm:w-auto btn-cyber flex justify-center items-center gap-2 py-4 px-8 text-[10px] md:text-xs"
+              className="w-full bg-red-500 hover:bg-white text-black font-black uppercase tracking-widest h-auto py-5 px-6 rounded-xl text-[10px] md:text-xs shadow-[0_0_20px_rgba(239,68,68,0.3)] border-none"
             >
-              <Share2 size={16} /> Bagikan Hasil
-            </button>
-            <button
+              <Share2 size={16} className="mr-2" /> Bagikan Hasil
+            </Button>
+            <Button
               onClick={() => {
                 setGameState("review");
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }}
-              className="w-full sm:w-auto neo-inset !border-amber-500/30 text-amber-500 hover:bg-amber-500 hover:text-black font-black uppercase tracking-widest py-4 px-8 flex justify-center items-center gap-2 transition-all text-[10px] md:text-xs"
+              variant="ghost"
+              className="w-full neo-card border-white/5 bg-black/20 text-amber-500 hover:bg-amber-500 hover:text-black font-black uppercase tracking-widest h-auto py-5 px-6 rounded-xl flex justify-center items-center gap-2 transition-all text-[10px] md:text-xs shadow-none"
             >
               🔍 Review Jawaban
-            </button>
-            <Link
-              href={backLink}
-              className="w-full sm:w-auto neo-inset text-slate-200 hover:text-white font-black uppercase tracking-widest py-4 px-8 flex justify-center items-center transition-all text-[10px] md:text-xs"
+            </Button>
+            <Button
+              asChild
+              variant="ghost"
+              className="w-full neo-card text-slate-200 border-white/5 bg-black/20 hover:bg-white hover:text-black font-black uppercase tracking-widest h-auto py-5 px-6 rounded-xl flex justify-center items-center transition-all text-[10px] md:text-xs shadow-none"
             >
-              Selesai
-            </Link>
+              <Link href={backLink}>
+                Selesai
+              </Link>
+            </Button>
           </div>
         </div>
-      </div>
+      </Card>
     );
   }
 
   /* =========================================
-     3. TAMPILAN REVIEW (Pembahasan)
+     3. TAMPILAN REVIEW (Pembahasan Kunci)
   ========================================= */
   if (gameState === "review") {
     return (
-      <div className="w-full pb-10">
-        <header className="relative z-20 flex justify-between items-center mb-10 neo-card p-5 sm:p-6 mt-6 md:mt-10">
-          <h2 className="text-xl sm:text-2xl font-black text-white uppercase italic tracking-tighter">
-            Exam <span className="text-amber-500">Review</span>
-          </h2>
-          <button
-            onClick={() => {
-              setGameState("result");
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
-            className="text-[9px] sm:text-[10px] neo-inset hover:text-white text-slate-200 px-4 py-2.5 font-black uppercase tracking-widest transition-all"
-          >
-            ← Kembali
-          </button>
+      <div className="w-full pb-20 max-w-4xl mx-auto">
+        <header className="relative z-20 flex justify-between items-center mb-10">
+          <Card className="flex-1 flex justify-between items-center p-5 sm:p-8 mt-6 md:mt-10 border-white/5 bg-cyber-surface rounded-3xl neo-card shadow-none">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-black text-white uppercase italic tracking-tighter">
+                Exam <span className="text-amber-500">Review</span>
+              </h2>
+              <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mt-1">Pembahasan Detail Soal</p>
+            </div>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setGameState("result");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="text-[9px] sm:text-[10px] neo-inset hover:bg-white hover:text-black text-slate-200 px-5 py-3 h-auto font-black uppercase tracking-widest transition-all border-white/5 bg-black/20 shadow-none rounded-xl"
+            >
+              ← Kembali
+            </Button>
+          </Card>
         </header>
 
-        <div className="space-y-8 md:space-y-12">
+        <div className="space-y-10 md:space-y-16">
           {exam.questions.map((q, idx) => {
             const userAnswer = answers[q._key];
             const isCorrect = userAnswer === q.correctAnswer;
@@ -541,95 +594,96 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 key={q._key}
-                className={`neo-card p-6 md:p-8 lg:p-10 ${isCorrect ? "border-emerald-500/30" : "border-red-500/30"}`}
+                className="w-full"
               >
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-8 border-b border-white/5 pb-6">
-                  <span className="text-[9px] font-mono font-black uppercase tracking-widest neo-inset px-3 py-1.5 text-slate-200 w-fit">
-                    Soal {idx + 1} • {SECTION_LABELS[q.section]}
-                  </span>
-                  {isCorrect ? (
-                    <span className="text-emerald-400 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 neo-inset !border-emerald-500/20 w-fit">
-                      <CheckCircle size={14} /> Benar
-                    </span>
-                  ) : (
-                    <span className="text-red-500 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 neo-inset !border-red-500/20 w-fit">
-                      <XCircle size={14} /> Salah
-                    </span>
-                  )}
-                </div>
+                <Card className={`p-8 md:p-12 neo-card rounded-[3rem] border-white/5 bg-cyber-surface shadow-none ${isCorrect ? "border-emerald-500/20" : "border-red-500/20"}`}>
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-10 border-b border-white/5 pb-8">
+                    <Badge
+                      variant="outline"
+                      className="text-[9px] font-mono font-black uppercase tracking-widest neo-inset px-4 py-2 text-slate-300 w-fit rounded-xl bg-black/20 border-white/5 h-auto"
+                    >
+                      SOAL {idx + 1} • {SECTION_LABELS[q.section]}
+                    </Badge>
+                    {isCorrect ? (
+                      <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 px-4 py-2 neo-inset rounded-xl h-auto font-black uppercase text-[10px] italic tracking-widest">
+                        <CheckCircle size={14} className="mr-2" /> Benar
+                      </Badge>
+                    ) : (
+                      <Badge className="bg-red-500/10 text-red-500 border-red-500/20 px-4 py-2 neo-inset rounded-xl h-auto font-black uppercase text-[10px] italic tracking-widest">
+                        <XCircle size={14} className="mr-2" /> Salah
+                      </Badge>
+                    )}
+                  </div>
 
                 {q.questionText && (
                   <div
-                    className="text-lg md:text-xl text-white font-medium leading-relaxed mb-8 font-japanese prose-custom"
+                    className="text-lg md:text-2xl text-white font-medium leading-relaxed mb-10 font-japanese prose-custom bg-black/10 p-6 rounded-2xl border border-white/5 neo-inset"
                     dangerouslySetInnerHTML={{ __html: q.questionText }}
                   />
                 )}
 
                 {q.imageUrl && (
-                  <div className="mb-8 rounded-2xl overflow-hidden neo-inset p-2">
+                  <div className="mb-10 rounded-3xl overflow-hidden neo-inset p-3 bg-black/20 border-white/5">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={q.imageUrl}
                       alt="Ilustrasi Soal"
-                      className="w-full max-h-[300px] object-contain opacity-90 rounded-xl"
+                      className="w-full max-h-[400px] object-contain opacity-90 rounded-2xl"
                     />
                   </div>
                 )}
 
-                {/* Di mode Review, Audio boleh diplay berkali-kali pake kontrol bawaan browser */}
+                {/* Khusus mode Pembahasan (Review), blok Audio diaktifkan kembali tanpa proteksi Auto-Play agar peserta bisa mempelajari kesalahannya. */}
                 {q.audioUrl && (
-                  <div className="mb-8 p-5 neo-inset flex flex-col gap-3">
-                    <p className="text-[9px] text-slate-300 uppercase font-black tracking-widest flex items-center gap-2">
-                      <Volume2 size={14} /> Audio Track (Review)
+                  <Card className="mb-10 p-6 neo-inset border-white/5 bg-black/30 flex flex-col gap-4 shadow-none rounded-2xl">
+                    <p className="text-[10px] text-slate-400 uppercase font-black tracking-[0.3em] flex items-center gap-2">
+                      <Volume2 size={16} className="text-cyan-400" /> Audio Track (Review)
                     </p>
                     <audio
                       controls
-                      className="w-full h-10 outline-none opacity-80"
+                      className="w-full h-12 outline-none opacity-90 contrast-125 invert"
                       src={q.audioUrl}
                     />
-                  </div>
+                  </Card>
                 )}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {q.options.map((opt, optIdx) => {
-                    const isCorrectAnswer = optIdx === q.correctAnswer;
-                    const isUserSelection = optIdx === userAnswer;
-                    let wrapperClass = "neo-inset opacity-50";
+                <div className="grid grid-cols-1 gap-4">
+                    {q.options.map((opt, optIdx) => {
+                      const isCorrectAnswer = optIdx === q.correctAnswer;
+                      const isUserSelection = optIdx === userAnswer;
+                      
+                      let variantStyle = "bg-black/10 border-white/5 opacity-50";
+                      if (isCorrectAnswer) variantStyle = "bg-emerald-500/10 border-emerald-500/30 text-white opacity-100 shadow-[0_0_15px_rgba(16,185,129,0.1)]";
+                      else if (isUserSelection) variantStyle = "bg-red-500/10 border-red-500/30 text-white opacity-100 shadow-[0_0_15px_rgba(239,68,68,0.1)]";
 
-                    if (isCorrectAnswer)
-                      wrapperClass =
-                        "neo-inset !border-emerald-500/50 !shadow-[inset_0_0_15px_rgba(16,185,129,0.15)] opacity-100 text-white";
-                    else if (isUserSelection)
-                      wrapperClass =
-                        "neo-inset !border-red-500/50 !shadow-[inset_0_0_15px_rgba(239,68,68,0.15)] opacity-100 text-white";
-
-                    return (
-                      <div
-                        key={optIdx}
-                        className={`p-5 flex items-start gap-4 transition-all ${wrapperClass}`}
-                      >
-                        <span className="font-mono font-bold text-[10px] md:text-xs opacity-50 mt-1 shrink-0">
-                          {optIdx + 1}.
-                        </span>
-                        <span className="text-sm md:text-base font-japanese font-medium leading-snug">
-                          {opt}
-                        </span>
-                        {isCorrectAnswer && (
-                          <CheckCircle
-                            size={18}
-                            className="ml-auto text-emerald-400 shrink-0 mt-0.5"
-                          />
-                        )}
-                        {isUserSelection && !isCorrectAnswer && (
-                          <XCircle
-                            size={18}
-                            className="ml-auto text-red-500 shrink-0 mt-0.5"
-                          />
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
+                      return (
+                        <Card
+                          key={optIdx}
+                          className={`p-6 flex items-center gap-5 transition-all rounded-2xl border neo-inset shadow-none ${variantStyle}`}
+                        >
+                          <Badge variant="outline" className={`font-mono font-black text-xs h-8 w-8 rounded-lg flex items-center justify-center border-none ${isCorrectAnswer ? "bg-emerald-500 text-black" : isUserSelection ? "bg-red-500 text-black" : "bg-white/5 text-slate-500"}`}>
+                            {optIdx + 1}
+                          </Badge>
+                          <span className="text-base md:text-xl font-japanese font-medium leading-tight flex-1">
+                            {opt}
+                          </span>
+                          {isCorrectAnswer && (
+                            <CheckCircle
+                              size={24}
+                              className="text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.5)]"
+                            />
+                          )}
+                          {isUserSelection && !isCorrectAnswer && (
+                            <XCircle
+                              size={24}
+                              className="text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.5)]"
+                            />
+                          )}
+                        </Card>
+                      );
+                    })}
+                  </div>
+                </Card>
               </motion.div>
             );
           })}
@@ -644,11 +698,11 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
   const activeQuestion = exam.questions[currentQuestionIndex];
   const isTimeCritical = timeLeft < 300;
 
-  // Status Audio Spesifik untuk UI Navigation Lock
+  // Mendeteksi status soal untuk menerapkan penguncian UI pada saat Sesi Listening berjalan
   const isCurrentlyListening =
     activeQuestion.section === "listening" || !!activeQuestion.audioUrl;
 
-  // Mencegah user mundur jika soal sebelumnya adalah soal listening
+  // Mencegah peserta mundur/curang jika soal sebelumnya adalah soal listening
   const previousQuestionData =
     currentQuestionIndex > 0 ? exam.questions[currentQuestionIndex - 1] : null;
   const isPrevQuestionListening = previousQuestionData
@@ -662,93 +716,101 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
     isPrevQuestionListening;
 
   return (
-    <div className="w-full flex flex-col">
-      {/* Audio Element Tersembunyi (Dikontrol secara Programmatic) */}
+    <div className="w-full flex flex-col max-w-5xl mx-auto">
+      {/* Audio Element Tersembunyi (Dikontrol secara terpusat oleh fungsi handlePlayAudio) */}
       <audio ref={audioRef} className="hidden" />
 
       {/* HEADER HUD (HEAD-UP DISPLAY) */}
-      <header className="relative z-20 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 neo-card p-5 sm:p-6 mt-2 md:mt-6">
-        <div className="flex flex-col gap-3 w-full md:w-auto">
-          <div className="flex items-center gap-3 flex-wrap">
-            <span className="neo-inset px-4 py-2 text-slate-200 font-mono text-[10px] md:text-xs font-black shadow-inner">
-              {currentQuestionIndex + 1} / {exam.questions.length}
-            </span>
-            <div className="neo-inset px-4 py-2 flex items-center gap-2">
-              <span className="text-[9px] sm:text-[10px] text-red-500 font-black uppercase tracking-widest">
+      <header className="relative z-20 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+        <Card className="w-full flex flex-col md:flex-row justify-between items-start md:items-center p-6 mt-2 md:mt-8 border-white/5 bg-cyber-surface rounded-3xl neo-card shadow-none">
+          <div className="flex flex-col gap-4 w-full md:w-auto">
+            <div className="flex items-center gap-3 flex-wrap">
+              <Badge
+                variant="outline"
+                className="neo-inset px-5 py-2.5 text-slate-300 font-mono text-[10px] md:text-xs font-black bg-black/40 border-white/10 h-auto"
+              >
+                {currentQuestionIndex + 1} <span className="mx-1 opacity-30">/</span> {exam.questions.length}
+              </Badge>
+              <Badge
+                variant="outline"
+                className="neo-inset px-5 py-2.5 text-red-400 font-black uppercase tracking-widest text-[9px] sm:text-[10px] bg-red-500/10 border-red-500/30 h-auto italic"
+              >
                 {SECTION_LABELS[activeQuestion.section]}
-              </span>
+              </Badge>
             </div>
+            {cheatWarnings > 0 && (
+              <Badge variant="ghost" className="text-[9px] text-amber-500 font-black uppercase tracking-widest animate-pulse flex items-center gap-2 p-0 h-auto">
+                <ShieldAlert size={14} /> CHEAT ALERT: {cheatWarnings}x
+              </Badge>
+            )}
           </div>
-          {cheatWarnings > 0 && (
-            <span className="text-[9px] text-amber-500 font-black uppercase tracking-widest animate-pulse flex items-center gap-1.5 pl-1">
-              <ShieldAlert size={14} /> Peringatan Tab Keluar: {cheatWarnings}x
-            </span>
-          )}
-        </div>
 
-        <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-4">
-          <div
-            className={`flex items-center gap-3 font-mono text-2xl sm:text-3xl font-black px-6 py-2 neo-inset transition-colors duration-500 ${isTimeCritical ? "text-red-500 !border-red-500/50 animate-pulse shadow-[inset_0_0_15px_rgba(239,68,68,0.2)]" : "text-white"}`}
-          >
-            <Clock
-              size={20}
-              className={isTimeCritical ? "text-red-500" : "text-slate-300"}
-            />{" "}
-            {formatTime(timeLeft)}
-          </div>
-          <button
-            onClick={() => {
-              if (
-                confirm(
-                  "Yakin ingin menyelesaikan ujian sekarang? Skor akan dihitung dari jawaban yang sudah terisi.",
+          <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-6">
+            <div
+              className={`flex items-center gap-4 font-mono text-3xl md:text-5xl font-black px-8 py-3 neo-inset transition-all duration-500 rounded-2xl bg-black/40 border-white/5 ${isTimeCritical ? "text-red-500 !border-red-500/50 animate-pulse shadow-[inset_0_0_20px_rgba(239,68,68,0.2)]" : "text-white"}`}
+            >
+              <Clock
+                size={24}
+                className={isTimeCritical ? "text-red-500" : "text-slate-500"}
+              />{" "}
+              {formatTime(timeLeft)}
+            </div>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                if (
+                  confirm(
+                    "Yakin ingin menyelesaikan ujian sekarang? Skor akan dihitung dari jawaban yang sudah terisi.",
+                  )
                 )
-              )
-                finishExam();
-            }}
-            className="text-[9px] sm:text-[10px] neo-inset text-slate-300 hover:text-white font-black uppercase tracking-widest px-4 py-3 transition-colors"
-          >
-            Akhiri
-          </button>
-        </div>
+                  finishExam();
+              }}
+              className="text-[10px] neo-card border-white/5 bg-black/20 text-slate-400 hover:bg-red-500 hover:text-black font-black uppercase tracking-widest h-auto px-6 py-4 rounded-xl shadow-none transition-all"
+            >
+              Akhiri
+            </Button>
+          </div>
+        </Card>
       </header>
 
       {/* KOTAK SOAL UTAMA */}
       <AnimatePresence mode="wait">
         <motion.div
           key={currentQuestionIndex}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.2 }}
-          className="w-full neo-card p-6 sm:p-8 md:p-12 flex flex-col mb-8"
+          className="w-full mb-10"
         >
-          {/* UI AUDIO BARU (Tanpa Auto-Play) */}
+          <Card className="p-8 sm:p-12 md:p-16 flex flex-col neo-card rounded-[3.5rem] border-white/5 bg-cyber-surface shadow-none min-h-[500px]">
+          {/* UI AUDIO BARU (Proteksi Auto-Play Dinonaktifkan dengan eksekusi on-click) */}
           {isCurrentlyListening && (
-            <div className="mb-8 p-5 neo-inset !border-red-500/30 flex items-center gap-4 shadow-[inset_0_0_20px_rgba(239,68,68,0.1)]">
-              <button
+            <Card className="mb-10 p-6 neo-inset border-red-500/30 flex flex-col sm:flex-row items-center gap-6 shadow-none bg-red-500/5 rounded-3xl">
+              <Button
                 onClick={handlePlayAudio}
                 disabled={
                   audioStatus[activeQuestion._key] !== "idle" &&
                   audioStatus[activeQuestion._key] !== undefined
                 }
-                className={`p-4 rounded-full flex items-center justify-center transition-all shrink-0 ${
+                className={`w-16 h-16 rounded-full flex items-center justify-center transition-all shrink-0 border-none ${
                   !audioStatus[activeQuestion._key] ||
                   audioStatus[activeQuestion._key] === "idle"
-                    ? "bg-red-500 text-white hover:scale-105 shadow-[0_0_15px_rgba(239,68,68,0.5)] cursor-pointer"
-                    : "bg-slate-800 text-slate-300 cursor-not-allowed"
+                    ? "bg-red-500 text-white hover:scale-110 shadow-[0_0_25px_rgba(239,68,68,0.5)] cursor-pointer"
+                    : "bg-slate-800 text-slate-500 cursor-not-allowed"
                 }`}
               >
                 <Volume2
-                  size={24}
+                  size={32}
                   className={
                     audioStatus[activeQuestion._key] === "playing"
-                      ? "animate-pulse text-red-500"
+                      ? "animate-pulse"
                       : ""
                   }
                 />
-              </button>
-              <div>
-                <p className="text-[10px] md:text-xs font-black uppercase tracking-widest mb-1 text-white">
+              </Button>
+              <div className="text-center sm:text-left">
+                <p className="text-xs md:text-sm font-black uppercase tracking-[0.3em] mb-2 text-white italic">
                   {!audioStatus[activeQuestion._key] ||
                   audioStatus[activeQuestion._key] === "idle"
                     ? "Putar Audio Choukai"
@@ -756,87 +818,88 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
                       ? "Audio Sedang Diputar..."
                       : "Pemutaran Audio Selesai"}
                 </p>
-                <p className="text-[9px] md:text-[10px] text-slate-200 leading-relaxed uppercase font-mono tracking-wide">
-                  Perhatian: Audio HANYA BISA DIPUTAR 1 KALI. Audio tidak dapat
-                  dijeda atau diulang. Pastikan volume suara perangkat Anda
-                  sudah cukup.
+                <p className="text-[10px] md:text-xs text-slate-400 leading-relaxed uppercase font-black tracking-widest">
+                  Perhatian: Audio HANYA BISA DIPUTAR <span className="text-red-500 underline">1 KALI</span>. Pastikan konsentrasi penuh.
                 </p>
               </div>
-            </div>
+            </Card>
           )}
 
           {activeQuestion.questionText && (
             <div
-              className="text-lg sm:text-xl md:text-2xl text-white font-medium leading-relaxed mb-10 font-japanese prose-custom"
+              className="text-xl sm:text-2xl md:text-3xl text-white font-medium leading-relaxed mb-12 font-japanese prose-custom bg-black/20 p-8 rounded-3xl border border-white/5 neo-inset"
               dangerouslySetInnerHTML={{ __html: activeQuestion.questionText }}
             />
           )}
 
           {activeQuestion.imageUrl && (
-            <div className="mb-10 rounded-2xl overflow-hidden neo-inset p-2">
+            <div className="mb-12 rounded-3xl overflow-hidden neo-inset p-3 bg-black/20 border-white/5">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={activeQuestion.imageUrl}
                 alt="Ilustrasi Soal"
-                className="w-full max-h-[300px] md:max-h-[400px] object-contain opacity-90 rounded-xl"
+                className="w-full max-h-[400px] md:max-h-[500px] object-contain opacity-90 rounded-2xl"
               />
             </div>
           )}
 
           {/* OPSI JAWABAN */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-auto">
+          <div className="grid grid-cols-1 gap-5 mt-auto">
             {activeQuestion.options.map((opt, idx) => {
               const isSelected = answers[activeQuestion._key] === idx;
               return (
-                <button
+                <Button
                   key={idx}
+                  variant="ghost"
                   onClick={() => handleAnswer(idx)}
-                  className={`p-5 md:p-6 rounded-2xl text-left transition-all font-medium text-base md:text-lg font-japanese group flex items-start gap-4 ${
+                  className={`p-8 md:p-10 rounded-3xl text-left transition-all font-medium h-auto group flex items-center gap-6 border neo-card shadow-none ${
                     isSelected
-                      ? "neo-inset !bg-red-500/10 !border-red-500/50 text-white shadow-[inset_0_0_20px_rgba(239,68,68,0.15)]"
-                      : "neo-inset text-slate-200 hover:text-white hover:border-white/20"
+                      ? "bg-red-500/10 border-red-500/50 text-white neo-inset shadow-none"
+                      : "bg-black/20 border-white/5 text-slate-300 hover:border-white/20 hover:bg-white/5"
                   }`}
                 >
-                  <span
-                    className={`font-mono text-[10px] md:text-xs font-black transition-colors mt-1 shrink-0 ${isSelected ? "text-red-500" : "text-slate-600 group-hover:text-slate-200"}`}
-                  >
-                    {idx + 1}.
-                  </span>
-                  <span className="leading-snug">{opt}</span>
-                </button>
+                  <Badge variant="outline" className={`font-mono text-sm font-black transition-colors h-10 w-10 rounded-xl flex items-center justify-center border-none ${isSelected ? "bg-red-500 text-black" : "bg-white/5 text-slate-600 group-hover:text-slate-200"}`}>
+                    {idx + 1}
+                  </Badge>
+                  <span className="leading-tight font-japanese text-lg md:text-2xl flex-1">{opt}</span>
+                  {isSelected && <div className="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,1)] animate-pulse" />}
+                </Button>
               );
             })}
           </div>
+                </Card>
         </motion.div>
       </AnimatePresence>
 
       {/* NAVIGASI BAWAH */}
-      <div className="flex flex-col sm:flex-row justify-between gap-4 pb-10">
-        <button
+      <div className="flex flex-col sm:flex-row justify-between gap-5 pb-20">
+        <Button
+          variant="ghost"
           onClick={prevQuestion}
           disabled={disablePreviousButton}
-          className="w-full sm:w-auto neo-inset px-6 md:px-8 py-4 text-slate-200 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed flex items-center justify-center gap-3 font-black uppercase tracking-widest text-[10px] md:text-xs transition-colors"
+          className="w-full sm:w-auto neo-card border-white/5 bg-black/20 px-10 py-8 h-auto text-slate-300 hover:bg-white hover:text-black disabled:opacity-20 disabled:cursor-not-allowed flex items-center justify-center gap-3 font-black uppercase tracking-widest text-xs transition-all rounded-2xl shadow-none"
         >
-          <ArrowLeft size={16} /> Sebelumnya
-        </button>
+          <ArrowLeft size={20} /> Sebelumnya
+        </Button>
 
         {currentQuestionIndex === exam.questions.length - 1 ? (
-          <button
+          <Button
             onClick={() => {
               if (confirm("Kirim jawaban sekarang? Waktu masih tersisa."))
                 finishExam();
             }}
-            className="w-full sm:w-auto btn-cyber !bg-amber-500 !text-black px-6 md:px-10 py-4 flex items-center justify-center font-black uppercase tracking-widest text-[10px] md:text-xs shadow-[0_0_20px_rgba(245,158,11,0.4)]"
+            className="w-full sm:w-auto bg-amber-500 hover:bg-white text-black px-12 py-8 h-auto flex items-center justify-center font-black uppercase tracking-widest text-xs shadow-[0_0_30px_rgba(245,158,11,0.4)] rounded-2xl border-none transition-all"
           >
-            Kirim Ujian
-          </button>
+            <CheckCircle size={20} className="mr-3" /> Kirim Jawaban Ujian
+          </Button>
         ) : (
-          <button
+          <Button
             onClick={nextQuestion}
-            className="w-full sm:w-auto neo-inset !border-red-500/30 text-red-500 hover:bg-red-500 hover:text-black px-6 md:px-8 py-4 flex items-center justify-center gap-3 font-black uppercase tracking-widest text-[10px] md:text-xs transition-all"
+            variant="ghost"
+            className="w-full sm:w-auto neo-card border-red-500/30 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-black px-10 py-8 h-auto flex items-center justify-center gap-3 font-black uppercase tracking-widest text-xs transition-all rounded-2xl shadow-none"
           >
-            Selanjutnya <ArrowRight size={16} />
-          </button>
+            Selanjutnya <ArrowRight size={20} />
+          </Button>
         )}
       </div>
     </div>

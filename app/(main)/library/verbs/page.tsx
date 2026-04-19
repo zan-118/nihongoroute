@@ -1,9 +1,21 @@
+/**
+ * @file app/(main)/library/verbs/page.tsx
+ * @description Halaman indeks direktori konjugasi kata kerja (Matriks Verba). Rute peladen statis yang menangani penarikan data dasar kata kerja, bentuk Masu, Te, Nai, dan Potensial dari Sanity CMS.
+ * @module Server Component
+ */
+
 import { client } from "@/sanity/lib/client";
 import VerbListClient from "./VerbListClient";
 
-// Fitur Next.js: Data disimpan dalam cache selama 1 jam, halaman dimuat instan
+// Konfigurasi revalidasi statis berkala setiap 1 jam untuk memperbarui daftar kosakata dari CMS.
 export const revalidate = 3600;
 
+/**
+ * Komponen Induk Layar Kamus Verba.
+ * Menyediakan struktur kontainer utama dan mendelegasikan daftar lengkap array kata kerja ke klien.
+ * 
+ * @returns {JSX.Element} Grid interaktif kartu konjugasi kata kerja.
+ */
 export default async function VerbDictionaryPage() {
   const query = `*[_type == "verb_dictionary" && showInFlashcard != false] | order(jisho asc) {
     _id, group, jisho, meaning, masu, furigana, te, nai, ta, teiru, tai, nakereba, kanou, shieki, ukemi, katei, ikou, teshimau, meirei
@@ -12,12 +24,12 @@ export default async function VerbDictionaryPage() {
   const verbs = await client.fetch(query);
 
   return (
-    // PERBAIKAN: pt-24 md:pt-28 agar pas di bawah Navbar, dan flex-col agar isi tidak melebar vertikal tak wajar
-    <main className="w-full  bg-cyber-bg  px-4 md:px-8 relative overflow-hidden flex flex-col justify-start">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none z-0" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/10 via-cyber-bg to-cyber-bg pointer-events-none z-0" />
+    <main className="w-full bg-cyber-bg px-6 md:px-12 relative overflow-hidden flex flex-col justify-start min-h-screen">
+      {/* Background Neural Overlays */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none z-0" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(239,68,68,0.05)_0%,transparent_70%)] pointer-events-none z-0" />
 
-      <div className="max-w-5xl mx-auto w-full relative z-10 flex flex-col">
+      <div className="max-w-7xl mx-auto w-full relative z-10 flex flex-col pt-10">
         <VerbListClient initialVerbs={verbs} />
       </div>
     </main>

@@ -1,9 +1,7 @@
 /**
- * LOKASI FILE: app/layout.tsx
- * DESKRIPSI:
- * Root Layout adalah kerangka utama yang membungkus seluruh halaman di aplikasi.
- * Berfungsi untuk mengatur struktur HTML dasar (html, body), memuat font global,
- * mendefinisikan metadata SEO, konfigurasi viewport, dan menyediakan context provider.
+ * @file app/layout.tsx
+ * @description Kerangka utama aplikasi yang mengatur struktur HTML dasar, font, metadata SEO, konfigurasi viewport, dan membungkus seluruh halaman dengan context provider.
+ * @module Server Component
  */
 
 import type { Metadata, Viewport } from "next";
@@ -19,13 +17,11 @@ import FloatingSupport from "@/components/FloatingSupport";
 const inter = Inter({ subsets: ["latin"] });
 
 /**
- * KONFIGURASI VIEWPORT:
- * Mengatur tampilan layar di berbagai perangkat.
- * 'userScalable: false' digunakan untuk mencegah zoom otomatis yang tidak diinginkan
- * pada elemen input di perangkat seluler agar terasa lebih seperti aplikasi native (Web App).
+ * Konfigurasi layar (Viewport) lintas perangkat.
+ * Mengunci opsi zoom (`userScalable: false`) untuk memberikan kesan native app pada perangkat seluler.
  */
 export const viewport: Viewport = {
-  themeColor: "#0a0c10", // Warna tema bar status di mobile (sesuai palet cyber-dark)
+  themeColor: "#0a0c10", // Warna tema bar status di seluler (sesuai palet cyber-dark)
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -33,12 +29,11 @@ export const viewport: Viewport = {
 };
 
 /**
- * METADATA SEO & SOSIAL MEDIA:
- * Mendefinisikan informasi situs untuk mesin pencari (Google) dan preview kartu
- * saat tautan dibagikan (OpenGraph untuk Facebook/WhatsApp, Twitter Card).
+ * Pendefinisian Metadata SEO dan Protokol OpenGraph secara terpusat.
+ * Data ini akan dibaca oleh *web crawlers* (Google, dsb) maupun saat tautan dibagikan via sosial media.
  */
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.nihongoroute.my.id"), // Sesuaikan dengan domain asli nanti
+  metadataBase: new URL("https://www.nihongoroute.my.id"), 
   title: "NihongoRoute | Belajar Bahasa Jepang Gratis",
   description:
     "Platform belajar bahasa Jepang dengan sistem terstruktur, gamifikasi, dan latihan interaktif.",
@@ -51,13 +46,13 @@ export const metadata: Metadata = {
     "flashcard",
     "nihongo",
   ],
-  manifest: "/manifest.json", // Path untuk PWA (Progressive Web App)
+  manifest: "/manifest.json", 
   icons: {
     icon: "/logo-branding.svg",
     apple: "/logo-branding.png",
   },
   verification: {
-    google: "Niyl1z2v4hJgZZzRFLzMLOk4xlYNyvSNnEiCC-eK7N4", // Kode verifikasi Google Search Console
+    google: "Niyl1z2v4hJgZZzRFLzMLOk4xlYNyvSNnEiCC-eK7N4", 
   },
   openGraph: {
     title: "NihongoRoute | Misi Menguasai Bahasa Jepang",
@@ -67,7 +62,7 @@ export const metadata: Metadata = {
     siteName: "NihongoRoute",
     images: [
       {
-        url: "/og-image.jpg", // Gambar preview saat link dishare
+        url: "/og-image.jpg", 
         width: 1200,
         height: 630,
         alt: "NihongoRoute Dashboard",
@@ -86,8 +81,12 @@ export const metadata: Metadata = {
 };
 
 /**
- * KOMPONEN ROOT LAYOUT
- * Layout ini merangkum seluruh hierarki komponen aplikasi.
+ * Komponen Root Layout tingkat teratas di dalam ekosistem Next.js.
+ * Membungkus semua struktur rute bersarang (nested routes) di seluruh platform.
+ * 
+ * @param {Object} props - Properti untuk Root Layout.
+ * @param {ReactNode} props.children - Komponen rute turunan yang akan dirender di dalam kerangka HTML.
+ * @returns {JSX.Element} Kerangka halaman global berisi tag html dan body dasar.
  */
 export default function RootLayout({
   children,
@@ -97,7 +96,7 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body
-        className={`${inter.className} antialiased bg-cyber-bg text-[#c4cfde] selection:bg-cyan-400 selection:text-black`}
+        className={`${inter.className} antialiased bg-cyber-bg text-[#c4cfde] selection:bg-red-500 selection:text-white`}
       >
         {children}
       </body>

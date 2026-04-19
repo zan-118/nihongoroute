@@ -1,3 +1,8 @@
+/**
+ * LOKASI FILE: app/(main)/library/cheatsheet/CheatsheetClient.tsx
+ * KONSEP: Mobile-First Neumorphic (Catatan Referensi Cepat)
+ */
+
 "use client";
 
 import { useState } from "react";
@@ -10,8 +15,17 @@ import {
   Layers,
   ChevronDown,
   Home,
+  Activity,
+  FileText,
+  Database,
+  ArrowRight,
+  Library,
 } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 export interface SheetItem {
   label: string;
@@ -54,166 +68,190 @@ export default function CheatsheetClient({
   ].filter((item) => item !== null && item !== undefined);
 
   return (
-    // DIUBAH: Ditambahkan w-full dan px-4 md:px-8, dihapus pb-20 agar seragam.
-    <div className="relative w-full z-10 px-4 md:px-8 mt-4 md:mt-8">
-      <nav className="mb-6 flex flex-wrap items-center gap-2 text-[9px] md:text-xs font-black uppercase tracking-[0.2em] font-mono">
-        <Link
-          href="/dashboard"
-          className="text-white/30 hover:text-emerald-400 transition-colors flex items-center gap-1.5 p-2 rounded-lg hover:bg-white/5"
-        >
+    <div className="relative w-full z-10 flex flex-col flex-1 pb-24 px-4 md:px-8 lg:px-12">
+      <nav className="mb-8 md:mb-12 flex flex-wrap items-center gap-2 md:gap-4 text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-widest">
+        <Link href="/dashboard" className="hover:text-cyber-neon transition-colors flex items-center gap-1.5 md:gap-2">
           <Home size={14} /> Beranda
         </Link>
         <span className="text-white/10">/</span>
-        <Link
-          href="/library"
-          className="text-white/40 hover:text-emerald-400 transition-colors flex items-center gap-1.5 p-2 rounded-lg hover:bg-white/5"
-        >
-          <Layers size={14} /> Koleksi
+        <Link href="/library" className="hover:text-cyber-neon transition-colors flex items-center gap-1.5 md:gap-2">
+          <Library size={14} /> Pustaka
         </Link>
         <span className="text-white/10">/</span>
-        <span className="text-emerald-400 bg-emerald-400/10 px-3 py-1.5 rounded-lg border border-emerald-400/20 flex items-center gap-1.5 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
-          <Hash size={14} /> Ringkasan
+        <span className="text-cyber-neon flex items-center gap-1.5 md:gap-2 drop-shadow-[0_0_8px_rgba(0,238,255,0.5)]">
+          <FileText size={14} /> Cheatsheet
         </span>
       </nav>
 
-      <header className="mb-10 border-b border-white/5 pb-8">
-        <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase italic drop-shadow-lg">
-          Catatan <span className="text-emerald-400">Ringkas</span>
-        </h1>
+      <header className="mb-10 md:mb-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 border-b border-white/5 pb-8 md:pb-12">
+          <div className="flex items-center gap-5 md:gap-6">
+            <Card className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-2xl bg-cyber-neon/10 border-cyber-neon/20 flex items-center justify-center neo-inset shadow-none">
+              <FileText size={28} className="text-cyber-neon md:w-8 md:h-8" />
+            </Card>
+            <div className="text-left">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-none mb-2">
+                Catatan <span className="text-cyber-neon">Cepat</span>
+              </h1>
+              <span className="text-xs md:text-sm text-slate-400 font-medium tracking-wide">Tabel referensi kilat untuk belajar.</span>
+            </div>
+          </div>
+        </div>
       </header>
 
-      <section className="flex flex-col lg:flex-row gap-6 lg:gap-10 min-h-[600px] uppercase">
-        <aside className="w-full lg:w-80 flex flex-col gap-4 shrink-0">
+      <section className="flex flex-col lg:flex-row gap-8 lg:gap-10 min-h-[600px] lg:min-h-[700px] items-start">
+        <aside className="w-full lg:w-80 xl:w-96 flex flex-col gap-5 shrink-0 lg:sticky lg:top-24">
           <div className="relative group">
-            <input
+            <Search className="absolute left-5 md:left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyber-neon transition-colors z-10" size={18} />
+            <Input
               type="text"
               placeholder="Cari referensi..."
-              className="w-full bg-white/5 border border-white/10 p-4 pl-12 rounded-2xl focus:border-emerald-400/50 focus:ring-1 focus:ring-emerald-400/50 outline-none text-white transition-all font-mono text-sm"
+              className="w-full bg-black/40 border-white/5 pl-12 md:pl-14 pr-6 py-6 rounded-2xl text-white font-medium text-sm neo-inset shadow-none placeholder:text-slate-600 focus-visible:ring-cyber-neon/30"
               onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <Search
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-emerald-400 transition-colors"
-              size={18}
             />
           </div>
 
-          <button
+          <Button
+            variant="ghost"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl text-white"
+            className="lg:hidden flex items-center justify-between h-auto py-5 px-6 bg-black/40 border-white/5 rounded-2xl text-white neo-card shadow-none active:translate-y-1 transition-all"
           >
-            <span className="flex items-center gap-2 font-bold">
-              {activeSheet ? activeSheet.title : "Pilih Kategori"}
+            <span className="flex items-center gap-3 font-bold uppercase tracking-widest text-xs">
+              {activeSheet ? activeSheet.title : "PILIH KATEGORI"}
             </span>
-            <ChevronDown
-              className={`transition-transform ${isMobileMenuOpen ? "rotate-180" : ""}`}
-            />
-          </button>
+            <ChevronDown className={`transition-transform duration-300 ${isMobileMenuOpen ? "rotate-180 text-cyber-neon" : ""}`} size={18} />
+          </Button>
 
-          <nav
-            className={`${isMobileMenuOpen ? "flex" : "hidden"} lg:flex flex-col gap-2 max-h-[50vh] lg:max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar`}
-          >
+          <nav className={`${isMobileMenuOpen ? "flex" : "hidden"} lg:flex flex-col gap-3 max-h-[50vh] lg:max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar no-scrollbar py-2`}>
             {filteredSheets.map((sheet) => {
               const isActive = selectedSheetId === sheet._id;
               return (
-                <button
+                <Button
                   key={sheet._id}
+                  variant="ghost"
                   onClick={() => {
                     setSelectedSheetId(sheet._id);
                     setIsMobileMenuOpen(false);
                   }}
-                  className={`w-full flex items-center gap-4 p-4 rounded-xl transition-all duration-200 text-left group border ${isActive ? "bg-emerald-400/10 border-emerald-400/30 shadow-[0_0_20px_rgba(16,185,129,0.1)]" : "bg-transparent border-white/5 hover:bg-white/5"}`}
+                  className={`w-full flex items-center justify-start gap-4 md:gap-5 h-auto p-4 md:p-5 rounded-2xl transition-all duration-300 text-left group border neo-card shadow-none ${
+                    isActive 
+                      ? "bg-cyber-neon text-black border-none shadow-[0_0_20px_rgba(0,238,255,0.3)]" 
+                      : "bg-black/40 border-white/5 hover:border-cyber-neon/40 text-slate-500 hover:text-white"
+                  }`}
                 >
-                  <div
-                    className={`p-2 rounded-lg ${isActive ? "text-emerald-400" : "text-slate-300 group-hover:text-white"}`}
-                  >
+                  <div className={`w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-xl neo-inset shadow-none flex items-center justify-center transition-all duration-300 ${isActive ? "bg-black/20 text-black border-none" : "bg-black/20 text-slate-600 group-hover:text-cyber-neon"}`}>
                     {getIconForCategory(sheet.category)}
                   </div>
-                  <div className="overflow-hidden">
-                    <p
-                      className={`text-[10px] uppercase font-bold tracking-tighter ${isActive ? "text-emerald-400" : "text-slate-300"}`}
-                    >
+                  <div className="overflow-hidden flex-1">
+                    <p className={`text-[9px] md:text-[10px] uppercase font-bold tracking-widest mb-1 ${isActive ? "text-black/70" : "text-slate-500 group-hover:text-cyber-neon/80"}`}>
                       {sheet.category}
                     </p>
-                    <p
-                      className={`text-sm font-semibold truncate ${isActive ? "text-white" : "text-slate-200"}`}
-                    >
+                    <p className={`text-sm md:text-base font-bold tracking-tight truncate ${isActive ? "text-black" : "text-slate-300 group-hover:text-white"}`}>
                       {sheet.title}
                     </p>
                   </div>
-                </button>
+                  {!isActive && (
+                     <ArrowRight size={16} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all text-cyber-neon shrink-0" />
+                  )}
+                </Button>
               );
             })}
           </nav>
         </aside>
 
-        <article className="flex-1 min-w-0">
+        <article className="flex-1 min-w-0 w-full h-full">
           <AnimatePresence mode="wait">
             {activeSheet ? (
               <motion.div
                 key={activeSheet._id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="bg-white/[0.02] border border-white/10 rounded-[2rem] p-4 md:p-8"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                className="w-full h-full"
               >
-                <div className="mb-8">
-                  <h2 className="text-2xl md:text-4xl font-black text-white mb-2 uppercase italic tracking-tight">
-                    {activeSheet.title}
-                  </h2>
-                  <div className="flex items-center gap-2">
-                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping" />
-                    <span className="text-emerald-400 font-mono text-[10px] uppercase tracking-[0.2em]">
-                      {activeSheet.category}
-                    </span>
+                <Card className="bg-cyber-surface border-white/5 rounded-3xl md:rounded-[3.5rem] p-6 md:p-10 lg:p-12 neo-card shadow-none h-full flex flex-col relative overflow-hidden">
+                  {/* Decorative background number */}
+                  <div className="absolute top-6 right-6 md:top-10 md:right-10 text-[6rem] md:text-[8rem] lg:text-[10rem] font-black text-white/[0.02] pointer-events-none tracking-tighter">
+                     {activeSheet.category.substring(0,3).toUpperCase()}
                   </div>
-                </div>
 
-                <div className="flex flex-col w-full">
-                  <div className="hidden md:grid grid-cols-3 p-4 border-b border-white/10 text-[10px] font-black font-mono text-emerald-400 uppercase tracking-widest gap-4">
-                    <div>LABEL ARTI</div>
-                    <div>HURUF JEPANG</div>
-                    <div>ROMAJI</div>
+                  <div className="mb-10 md:mb-14 flex flex-col xl:flex-row xl:items-end justify-between gap-6 relative z-10">
+                    <div>
+                       <div className="flex items-center gap-3 mb-4">
+                          <Activity size={14} className="text-cyber-neon animate-pulse" />
+                          <span className="text-cyber-neon font-bold text-[10px] md:text-xs uppercase tracking-widest">
+                            ReferensI Aktif
+                          </span>
+                        </div>
+                        <h2 className="text-3xl md:text-5xl lg:text-6xl font-black text-white tracking-tight drop-shadow-xl leading-none">
+                          {activeSheet.title}
+                        </h2>
+                    </div>
+                    <Badge variant="outline" className="px-4 py-2 md:px-5 md:py-2.5 text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-500 border-white/10 neo-inset h-auto bg-black/40">
+                      KAT: {activeSheet.category.toUpperCase()}
+                    </Badge>
                   </div>
-                  {combinedItems.length > 0 ? (
-                    <div className="flex flex-col gap-3 md:gap-0 mt-3 md:mt-0">
-                      {combinedItems.map((item, idx) => (
-                        <motion.div
-                          key={idx}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          className="group flex flex-col md:grid md:grid-cols-3 md:items-center p-5 md:p-4 rounded-2xl md:rounded-none md:border-b border-white/5 hover:bg-white/[0.04] transition-all bg-white/5 md:bg-transparent gap-2 md:gap-4"
-                        >
-                          <div className="w-full">
-                            <span className="text-xs md:text-sm text-slate-200 font-medium block">
-                              {item?.label || "-"}
-                            </span>
-                          </div>
-                          <div className="w-full">
-                            <span className="text-2xl md:text-xl font-japanese font-bold text-white group-hover:text-emerald-300 transition-colors block">
-                              {item?.jp || "-"}
-                            </span>
-                          </div>
-                          <div className="w-full">
-                            <span className="text-[10px] md:text-xs font-mono text-slate-300 uppercase tracking-tighter block">
-                              {item?.romaji || "-"}
-                            </span>
-                          </div>
-                        </motion.div>
-                      ))}
+
+                  <div className="flex flex-col w-full flex-1 relative z-10">
+                    <div className="hidden md:grid grid-cols-3 p-6 md:p-8 border-b border-white/10 text-[10px] md:text-xs font-bold text-cyber-neon uppercase tracking-widest gap-6 md:gap-10">
+                      <div>Label</div>
+                      <div>Huruf/Kanji</div>
+                      <div>Cara Baca (Romaji)</div>
                     </div>
-                  ) : (
-                    <div className="p-10 md:p-20 text-center text-slate-300 font-mono text-xs border border-dashed border-white/10 rounded-2xl mt-4">
-                      Belum ada data tersedia di dataset ini.
-                    </div>
-                  )}
-                </div>
+                    
+                    {combinedItems.length > 0 ? (
+                      <div className="flex flex-col mt-4 md:mt-6 h-full">
+                        {combinedItems.map((item, idx) => (
+                          <motion.div
+                            key={idx}
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: (idx % 20) * 0.03 }}
+                            className="group flex flex-col md:grid md:grid-cols-3 md:items-center p-6 md:p-8 rounded-2xl md:rounded-none md:border-b border-white/[0.05] hover:bg-white/[0.02] transition-all duration-300 bg-black/20 md:bg-transparent gap-4 md:gap-6 mb-4 md:mb-0 relative overflow-hidden"
+                          >
+                            <div className="min-w-0">
+                              <span className="text-sm md:text-base lg:text-lg text-slate-400 font-bold uppercase tracking-wide group-hover:text-white transition-colors block truncate">
+                                {item?.label || "TIDAK ADA LABEL"}
+                              </span>
+                            </div>
+                            <div className="min-w-0">
+                              <span className="text-3xl md:text-2xl lg:text-3xl font-japanese font-black text-white group-hover:text-cyber-neon transition-colors duration-500 drop-shadow-lg block">
+                                {item?.jp || "—"}
+                              </span>
+                            </div>
+                            <div className="min-w-0">
+                              <span className="text-xs md:text-sm font-bold text-slate-500 uppercase tracking-widest block group-hover:text-cyber-neon transition-colors duration-500 truncate">
+                                {item?.romaji || "N/A"}
+                              </span>
+                            </div>
+                            
+                            {/* Mobile only decorative index */}
+                            <div className="absolute top-4 right-5 text-3xl font-black text-white/[0.03] md:hidden">
+                               {idx + 1}
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    ) : (
+                      <Card className="flex-1 flex flex-col items-center justify-center p-16 md:p-24 border border-dashed border-white/10 bg-black/20 rounded-3xl md:rounded-[3rem] neo-inset shadow-none">
+                        <Database size={48} className="text-slate-600 mb-6 md:mb-8" />
+                        <p className="text-slate-400 font-bold uppercase tracking-widest text-xs md:text-sm text-center">
+                          Belum ada data referensi untuk kategori ini
+                        </p>
+                      </Card>
+                    )}
+                  </div>
+                </Card>
               </motion.div>
             ) : (
-              <div className="h-full flex items-center justify-center p-20 border border-dashed border-white/10 rounded-[2rem]">
-                <p className="text-slate-600 font-mono animate-pulse uppercase tracking-widest text-sm">
-                  Pilih referensi di samping
+              <Card className="h-[400px] md:h-[600px] flex flex-col items-center justify-center p-12 md:p-24 border border-dashed border-white/10 bg-black/20 rounded-3xl md:rounded-[3.5rem] neo-inset shadow-none">
+                <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-cyber-neon/5 flex items-center justify-center border border-cyber-neon/10 mb-6 md:mb-10">
+                   <FileText size={32} className="text-slate-500 md:w-10 md:h-10 animate-pulse" />
+                </div>
+                <p className="text-slate-400 font-bold uppercase tracking-widest text-xs md:text-sm text-center">
+                  Pilih modul referensi di samping untuk memulai
                 </p>
-              </div>
+              </Card>
             )}
           </AnimatePresence>
         </article>
@@ -225,9 +263,7 @@ export default function CheatsheetClient({
 function getIconForCategory(cat: string) {
   const c = cat?.toLowerCase() || "";
   if (c.includes("bilangan") || c.includes("angka")) return <Hash size={18} />;
-  if (c.includes("waktu") || c.includes("hari") || c.includes("tanggal"))
-    return <Clock size={18} />;
-  if (c.includes("grammar") || c.includes("partikel"))
-    return <BookOpen size={18} />;
+  if (c.includes("waktu") || c.includes("hari") || c.includes("tanggal")) return <Clock size={18} />;
+  if (c.includes("grammar") || c.includes("partikel")) return <BookOpen size={18} />;
   return <Layers size={18} />;
 }

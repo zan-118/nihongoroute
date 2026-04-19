@@ -1,3 +1,9 @@
+/**
+ * @file app/(main)/courses/basics/page.tsx
+ * @description Halaman fondasi aksara bahasa Jepang (Matriks Kana) yang memuat tabel Hiragana & Katakana lengkap. Dilengkapi integrasi kanvas digital untuk latihan menulis.
+ * @module Client Component
+ */
+
 "use client";
 
 import React, { useState } from "react";
@@ -5,9 +11,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, PenTool, ChevronLeft, LayoutGrid, Sparkles } from "lucide-react";
 import Link from "next/link";
 import WritingCanvas from "@/components/WritingCanvas";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 /* ====================================================
-    DATA KANA LENGKAP
+    DATA KANA LENGKAP (Statis)
 ==================================================== */
 const kanaData = {
   seion: {
@@ -120,6 +134,13 @@ const kanaData = {
 type KanaType = "hiragana" | "katakana";
 type KanaCategory = "seion" | "dakuon" | "yoon";
 
+/**
+ * Komponen Utama Matriks Kana.
+ * Merender grid adaptif untuk karakter Hiragana dan Katakana. Mengatur tab navigasi silang (Seion/Dakuon/Yoon).
+ * Mengintegrasikan komponen WritingCanvas secara asinkron di dalam modul Dialog untuk memfasilitasi latihan menulis sentuh.
+ * 
+ * @returns {JSX.Element} Antarmuka navigasi dan grid visual untuk mempelajari aksara Kana.
+ */
 export default function BasicsPage() {
   const [type, setType] = useState<KanaType>("hiragana");
   const [category, setCategory] = useState<KanaCategory>("seion");
@@ -145,12 +166,15 @@ export default function BasicsPage() {
         {/* HEADER */}
         <header className="mb-8">
           <nav className="mb-4">
-            <Link
-              href="/courses"
-              className="inline-flex items-center gap-2 text-white/40 hover:text-white transition-colors bg-white/5 px-4 py-2 rounded-xl border border-white/10 text-[10px] font-black uppercase tracking-widest"
+            <Button
+              variant="outline"
+              asChild
+              className="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest"
             >
-              <ChevronLeft size={14} /> Kembali ke Pusat
-            </Link>
+              <Link href="/courses">
+                <ChevronLeft size={14} className="mr-2" /> Kembali ke Pusat
+              </Link>
+            </Button>
           </nav>
 
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
@@ -173,24 +197,21 @@ export default function BasicsPage() {
 
         {/* CONTROLS */}
         <div className="mb-8 space-y-6">
-          <div className="bg-[#1e2024] p-1.5 rounded-2xl border border-white/5 flex gap-2 shadow-inner relative max-w-sm">
-            <button
+          <div className="bg-[#1e2024] p-1 rounded-2xl border border-white/5 flex gap-2 shadow-inner relative max-w-sm">
+            <Button
+              variant={isHira ? "default" : "ghost"}
               onClick={() => setType("hiragana")}
-              className={`relative z-10 flex-1 py-3 rounded-xl font-black uppercase tracking-widest text-[10px] md:text-xs transition-all duration-500 ${isHira ? "text-[#15171a]" : "text-white/40 hover:text-white"}`}
+              className={`relative z-10 flex-1 py-6 rounded-xl font-black uppercase tracking-widest text-[10px] md:text-xs transition-all duration-500 h-10 ${isHira ? "bg-[#0ef] text-[#15171a] hover:bg-[#0ef]/90 shadow-[0_0_15px_rgba(0,238,255,0.5)]" : "text-white/40 hover:text-white"}`}
             >
               Hiragana
-            </button>
-            <button
+            </Button>
+            <Button
+              variant={!isHira ? "default" : "ghost"}
               onClick={() => setType("katakana")}
-              className={`relative z-10 flex-1 py-3 rounded-xl font-black uppercase tracking-widest text-[10px] md:text-xs transition-all duration-500 ${!isHira ? "text-[#15171a]" : "text-white/40 hover:text-white"}`}
+              className={`relative z-10 flex-1 py-6 rounded-xl font-black uppercase tracking-widest text-[10px] md:text-xs transition-all duration-500 h-10 ${!isHira ? "bg-purple-500 text-white hover:bg-purple-600 shadow-[0_0_15px_rgba(168,85,247,0.5)]" : "text-white/40 hover:text-white"}`}
             >
               Katakana
-            </button>
-            <motion.div
-              layout
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              className={`absolute top-1.5 bottom-1.5 w-[calc(50%-0.375rem)] rounded-xl ${isHira ? "bg-[#0ef] left-1.5" : "bg-purple-500 right-1.5"} shadow-[0_0_15px_currentColor]`}
-            />
+            </Button>
           </div>
 
           <div className="flex flex-wrap gap-2">
@@ -199,23 +220,24 @@ export default function BasicsPage() {
               { id: "dakuon", label: "Tenten / Maru" },
               { id: "yoon", label: "Campuran" },
             ].map((cat) => (
-              <button
+              <Button
                 key={cat.id}
+                variant={category === cat.id ? "default" : "outline"}
                 onClick={() => setCategory(cat.id as KanaCategory)}
-                className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border ${
+                className={`px-5 py-2.5 h-auto rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                   category === cat.id
-                    ? `bg-[#1e2024] ${themeColor} ${themeBorder} shadow-[0_0_10px_currentColor]`
+                    ? `bg-[#1e2024] ${themeColor} ${themeBorder} shadow-[0_0_10px_currentColor] hover:bg-[#1e2024]`
                     : "bg-transparent text-white/30 border-white/5 hover:bg-white/5"
                 }`}
               >
                 {cat.label}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
 
         {/* DATA GRID */}
-        <div className="bg-[#1e2024] p-4 md:p-8 rounded-[2.5rem] border border-white/5 shadow-2xl relative flex-1 min-h-[400px]">
+        <Card className="p-4 md:p-8 rounded-[2.5rem] border-white/5 shadow-2xl relative flex-1 min-h-[400px]">
           <div
             className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[12rem] md:text-[18rem] font-black italic opacity-[0.02] pointer-events-none select-none transition-colors duration-700 ${themeColor}`}
           >
@@ -261,84 +283,74 @@ export default function BasicsPage() {
               ))}
             </AnimatePresence>
           </div>
-        </div>
+        </Card>
       </div>
 
-      {/* WRITING MODAL OVERLAY (Dikeluarkan dari dalam hierarki Grid) */}
-      <AnimatePresence>
-        {selectedChar && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedChar(null)}
-              className="absolute inset-0 bg-[#0a0c10]/95 backdrop-blur-xl"
-            />
-
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0, y: 40 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 40 }}
-              className={`relative bg-[#1e2024] p-5 sm:p-8 rounded-[2rem] sm:rounded-[3rem] border ${themeBorder} shadow-2xl max-w-md w-full max-h-[90vh] flex flex-col overflow-y-auto custom-scrollbar`}
-            >
-              <button
-                onClick={() => setSelectedChar(null)}
-                className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-xl bg-white/5 hover:bg-red-500/20 text-white/60 hover:text-red-400 transition-all border border-white/5 z-20"
+      {/* WRITING MODAL OVERLAY */}
+      <Dialog
+        open={!!selectedChar}
+        onOpenChange={(open) => !open && setSelectedChar(null)}
+      >
+        <DialogContent className="max-w-md p-0 border-none bg-transparent shadow-none">
+          <AnimatePresence>
+            {selectedChar && (
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0, y: 40 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.9, opacity: 0, y: 40 }}
+                className={`relative bg-[#1e2024] p-5 sm:p-8 rounded-[2rem] sm:rounded-[3rem] border ${themeBorder} shadow-2xl max-w-md w-full max-h-[90vh] flex flex-col overflow-y-auto custom-scrollbar`}
               >
-                <X size={20} />
-              </button>
-
-              <div className="relative z-10 flex flex-col h-full">
-                <header className="flex items-center gap-3 mb-5 sm:mb-6 pr-10 shrink-0">
-                  <div
-                    className={`w-10 h-10 shrink-0 rounded-xl ${themeAccent}/10 border ${themeBorder} flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.2)]`}
-                  >
-                    <PenTool size={18} className={themeColor} />
-                  </div>
-                  <div>
-                    <span
-                      className={`font-mono uppercase tracking-[0.2em] text-[9px] sm:text-[10px] font-black ${themeColor} block leading-none mb-1.5`}
+                <div className="relative z-10 flex flex-col h-full">
+                  <header className="flex items-center gap-3 mb-5 sm:mb-6 pr-10 shrink-0">
+                    <div
+                      className={`w-10 h-10 shrink-0 rounded-xl ${themeAccent}/10 border ${themeBorder} flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.2)]`}
                     >
-                      Latihan Menulis
-                    </span>
-                    <h2 className="text-white text-lg sm:text-xl font-black italic uppercase tracking-tighter leading-none">
-                      Data Karakter
-                    </h2>
-                  </div>
-                </header>
+                      <PenTool size={18} className={themeColor} />
+                    </div>
+                    <DialogHeader className="p-0">
+                      <span
+                        className={`font-mono uppercase tracking-[0.2em] text-[9px] sm:text-[10px] font-black ${themeColor} block leading-none mb-1.5 text-left`}
+                      >
+                        Latihan Menulis
+                      </span>
+                      <DialogTitle className="text-white text-lg sm:text-xl font-black italic uppercase tracking-tighter leading-none text-left">
+                        Data Karakter
+                      </DialogTitle>
+                    </DialogHeader>
+                  </header>
 
-                <div className="bg-[#15171a] p-4 sm:p-5 rounded-2xl border border-white/5 flex justify-between items-center shadow-inner mb-6 shrink-0">
-                  <div className="flex items-center gap-4">
-                    <p className="text-4xl sm:text-5xl font-black text-white font-japanese leading-none translate-y-[-2px]">
-                      {selectedChar.char}
-                    </p>
-                    <p
-                      className={`font-mono uppercase tracking-[0.3em] text-xs sm:text-sm font-bold ${themeColor}`}
+                  <div className="bg-[#15171a] p-4 sm:p-5 rounded-2xl border border-white/5 flex justify-between items-center shadow-inner mb-6 shrink-0">
+                    <div className="flex items-center gap-4">
+                      <p className="text-4xl sm:text-5xl font-black text-white font-japanese leading-none translate-y-[-2px]">
+                        {selectedChar!.char}
+                      </p>
+                      <p
+                        className={`font-mono uppercase tracking-[0.3em] text-xs sm:text-sm font-bold ${themeColor}`}
+                      >
+                        "{selectedChar!.romaji}"
+                      </p>
+                    </div>
+                    <div
+                      className={`px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[8px] sm:text-[9px] font-black uppercase tracking-widest ${themeColor} italic shadow-inner`}
                     >
-                      "{selectedChar.romaji}"
-                    </p>
+                      Sistem {type}
+                    </div>
                   </div>
-                  <div
-                    className={`px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[8px] sm:text-[9px] font-black uppercase tracking-widest ${themeColor} italic shadow-inner`}
-                  >
-                    Sistem {type}
+
+                  <div className="w-full flex-1 flex flex-col justify-center min-h-[300px] mb-2">
+                    <WritingCanvas character={selectedChar!.char} />
                   </div>
-                </div>
 
-                <div className="w-full flex-1 flex flex-col justify-center min-h-[300px] mb-2">
-                  <WritingCanvas character={selectedChar.char} />
+                  <p className="text-center text-[9px] text-slate-300 font-bold uppercase tracking-[0.2em] mt-4 shrink-0">
+                    <Sparkles size={10} className="inline mr-1 text-cyan-400" />{" "}
+                    Gunakan jari atau mouse untuk menulis
+                  </p>
                 </div>
-
-                <p className="text-center text-[9px] text-slate-300 font-bold uppercase tracking-[0.2em] mt-4 shrink-0">
-                  <Sparkles size={10} className="inline mr-1 text-cyan-400" />{" "}
-                  Gunakan jari atau mouse untuk menulis
-                </p>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

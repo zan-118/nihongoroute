@@ -10,10 +10,16 @@
   },
   "dependencies": {
     "@portabletext/react": "^6.0.3",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-progress": "^1.1.8",
+    "@radix-ui/react-select": "^2.2.6",
+    "@radix-ui/react-slot": "^1.2.4",
     "@react-pdf/renderer": "^4.5.1",
     "@sanity/image-url": "^1.1.0",
     "@sanity/vision": "latest",
     "canvas-confetti": "^1.9.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.8.0",
     "next": "latest",
@@ -22,6 +28,8 @@
     "react": "latest",
     "react-dom": "latest",
     "styled-components": "^6.4.0",
+    "tailwind-merge": "^3.5.0",
+    "tailwindcss-animate": "^1.0.7",
     "wanakana": "^5.3.1"
   },
   "devDependencies": {

@@ -15,6 +15,8 @@ import {
   Award,
   ChevronRight,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 // --- KONFIGURASI ANIMASI ---
 const containerVariants: Variants = {
@@ -66,12 +68,15 @@ export default function CourseCategoryClient({
             variants={itemVariants}
             className="mb-8 flex items-center gap-4"
           >
-            <Link
-              href="/courses"
-              className="neo-inset px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-200 border border-white/5 hover:text-white hover:border-white/20 transition-all flex items-center gap-2"
+            <Button
+              variant="outline"
+              asChild
+              className="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest"
             >
-              <ArrowLeft size={14} /> Pusat Rute
-            </Link>
+              <Link href="/courses">
+                <ArrowLeft size={14} className="mr-2" /> Pusat Rute
+              </Link>
+            </Button>
             <div className="h-[1px] flex-1 bg-white/5" />
             <span
               className={`text-[10px] font-mono font-black uppercase tracking-widest px-3 py-1 rounded border hidden sm:block ${isSideQuest ? "bg-amber-500/10 text-amber-500 border-amber-500/20" : "bg-cyan-400/10 text-cyan-400 border-cyan-400/20"}`}
@@ -118,19 +123,23 @@ export default function CourseCategoryClient({
             >
               <Link
                 href={`/courses/${categoryId}/flashcards`}
-                className="neo-card p-6 md:p-8 group hover:border-cyan-400/50 transition-all duration-300 flex flex-col items-center text-center gap-4 h-full"
+                className="group flex flex-col h-full"
+                passHref
+                legacyBehavior
               >
-                <div className="w-16 h-16 neo-inset text-cyan-400 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Layers size={28} />
-                </div>
-                <div className="mt-auto">
-                  <p className="text-xl font-black text-white group-hover:text-cyan-400 transition-colors uppercase italic tracking-tight mb-1">
-                    Kosakata
-                  </p>
-                  <p className="text-slate-300 text-[10px] font-mono font-bold uppercase tracking-widest">
-                    Mode Flashcard
-                  </p>
-                </div>
+                <Card className="p-6 md:p-8 group hover:border-cyan-400/50 transition-all duration-300 flex flex-col items-center text-center gap-4 h-full cursor-pointer">
+                  <div className="w-16 h-16 neo-inset text-cyan-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Layers size={28} />
+                  </div>
+                  <div className="mt-auto">
+                    <p className="text-xl font-black text-white group-hover:text-cyan-400 transition-colors uppercase italic tracking-tight mb-1">
+                      Kosakata
+                    </p>
+                    <p className="text-slate-300 text-[10px] font-mono font-bold uppercase tracking-widest">
+                      Mode Flashcard
+                    </p>
+                  </div>
+                </Card>
               </Link>
             </motion.div>
 
@@ -141,19 +150,23 @@ export default function CourseCategoryClient({
             >
               <Link
                 href={`/courses/${categoryId}/kanji`}
-                className="neo-card p-6 md:p-8 group hover:border-purple-500/50 transition-all duration-300 flex flex-col items-center text-center gap-4 h-full"
+                className="group flex flex-col h-full"
+                passHref
+                legacyBehavior
               >
-                <div className="w-16 h-16 neo-inset text-purple-400 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <PenTool size={28} />
-                </div>
-                <div className="mt-auto">
-                  <p className="text-xl font-black text-white group-hover:text-purple-400 transition-colors uppercase italic tracking-tight mb-1">
-                    Kamus Kanji
-                  </p>
-                  <p className="text-slate-300 text-[10px] font-mono font-bold uppercase tracking-widest">
-                    Baca & Tulis
-                  </p>
-                </div>
+                <Card className="p-6 md:p-8 group hover:border-purple-500/50 transition-all duration-300 flex flex-col items-center text-center gap-4 h-full cursor-pointer">
+                  <div className="w-16 h-16 neo-inset text-purple-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <PenTool size={28} />
+                  </div>
+                  <div className="mt-auto">
+                    <p className="text-xl font-black text-white group-hover:text-purple-400 transition-colors uppercase italic tracking-tight mb-1">
+                      Kamus Kanji
+                    </p>
+                    <p className="text-slate-300 text-[10px] font-mono font-bold uppercase tracking-widest">
+                      Baca & Tulis
+                    </p>
+                  </div>
+                </Card>
               </Link>
             </motion.div>
 
@@ -164,19 +177,23 @@ export default function CourseCategoryClient({
             >
               <Link
                 href={`/courses/${categoryId}/survival`}
-                className="neo-card p-6 md:p-8 group hover:border-red-500/50 transition-all duration-300 flex flex-col items-center text-center gap-4 h-full"
+                className="group flex flex-col h-full"
+                passHref
+                legacyBehavior
               >
-                <div className="w-16 h-16 neo-inset text-red-500 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Flame size={28} />
-                </div>
-                <div className="mt-auto">
-                  <p className="text-xl font-black text-white group-hover:text-red-400 transition-colors uppercase italic tracking-tight mb-1">
-                    Survival
-                  </p>
-                  <p className="text-slate-300 text-[10px] font-mono font-bold uppercase tracking-widest">
-                    Adu Kecepatan
-                  </p>
-                </div>
+                <Card className="p-6 md:p-8 group hover:border-red-500/50 transition-all duration-300 flex flex-col items-center text-center gap-4 h-full cursor-pointer">
+                  <div className="w-16 h-16 neo-inset text-red-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Flame size={28} />
+                  </div>
+                  <div className="mt-auto">
+                    <p className="text-xl font-black text-white group-hover:text-red-400 transition-colors uppercase italic tracking-tight mb-1">
+                      Survival
+                    </p>
+                    <p className="text-slate-300 text-[10px] font-mono font-bold uppercase tracking-widest">
+                      Adu Kecepatan
+                    </p>
+                  </div>
+                </Card>
               </Link>
             </motion.div>
           </div>
@@ -202,27 +219,31 @@ export default function CourseCategoryClient({
                 >
                   <Link
                     href={`/exams/${exam._id}`}
-                    className="neo-card p-8 group hover:border-amber-500/50 hover:bg-amber-500/5 transition-all duration-300 flex items-center justify-between gap-6 h-full"
+                    className="group flex flex-col h-full"
+                    passHref
+                    legacyBehavior
                   >
-                    <div className="flex-1">
-                      <span className="inline-block px-3 py-1 text-[9px] font-black uppercase tracking-[0.3em] bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded-md mb-3">
-                        Sertifikasi Live
-                      </span>
-                      <h4 className="text-2xl font-black text-white uppercase italic tracking-tighter group-hover:text-amber-400 transition-colors mb-4">
-                        {exam.title}
-                      </h4>
-                      <div className="flex gap-4 text-[10px] font-mono font-bold uppercase tracking-widest text-slate-300 mt-auto">
-                        <span className="neo-inset px-2 py-1">
-                          竢ｱ {exam.timeLimit} Menit
+                    <Card className="p-8 group hover:border-amber-500/50 hover:bg-amber-500/5 transition-all duration-300 flex items-center justify-between gap-6 h-full cursor-pointer">
+                      <div className="flex-1">
+                        <span className="inline-block px-3 py-1 text-[9px] font-black uppercase tracking-[0.3em] bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded-md mb-3">
+                          Sertifikasi Live
                         </span>
-                        <span className="neo-inset px-2 py-1">
-                          識 Pass: {exam.passingScore}/180
-                        </span>
+                        <h4 className="text-2xl font-black text-white uppercase italic tracking-tighter group-hover:text-amber-400 transition-colors mb-4">
+                          {exam.title}
+                        </h4>
+                        <div className="flex gap-4 text-[10px] font-mono font-bold uppercase tracking-widest text-slate-300 mt-auto">
+                          <span className="neo-inset px-2 py-1">
+                            🕒 {exam.timeLimit} Menit
+                          </span>
+                          <span className="neo-inset px-2 py-1">
+                            🎯 Pass: {exam.passingScore}/180
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                    <div className="w-16 h-16 neo-inset text-amber-500 flex items-center justify-center group-hover:scale-110 transition-transform shrink-0 hidden sm:flex">
-                      <Award size={28} />
-                    </div>
+                      <div className="w-16 h-16 neo-inset text-amber-500 flex items-center justify-center group-hover:scale-110 transition-transform shrink-0 hidden sm:flex">
+                        <Award size={28} />
+                      </div>
+                    </Card>
                   </Link>
                 </motion.div>
               ))}
@@ -251,35 +272,41 @@ export default function CourseCategoryClient({
                 >
                   <Link
                     href={`/courses/${categoryId}/${lesson.slug}`}
-                    className={`neo-card p-6 md:p-8 group ${themeBgHover} transition-all duration-300 flex flex-col sm:flex-row items-start sm:items-center gap-6`}
+                    className="group flex flex-col"
+                    passHref
+                    legacyBehavior
                   >
-                    {/* Nomor Bab (Inset) */}
-                    <div
-                      className={`w-14 h-14 shrink-0 rounded-2xl flex items-center justify-center font-black text-xl font-mono neo-inset transition-colors ${isSideQuest ? "text-amber-500 group-hover:bg-amber-500/20" : "text-cyan-400 group-hover:bg-cyan-400/20"}`}
+                    <Card
+                      className={`p-6 md:p-8 group ${themeBgHover} transition-all duration-300 flex flex-col sm:flex-row items-start sm:items-center gap-6 cursor-pointer`}
                     >
-                      {(index + 1).toString().padStart(2, "0")}
-                    </div>
+                      {/* Nomor Bab (Inset) */}
+                      <div
+                        className={`w-14 h-14 shrink-0 rounded-2xl flex items-center justify-center font-black text-xl font-mono neo-inset transition-colors ${isSideQuest ? "text-amber-500 group-hover:bg-amber-500/20" : "text-cyan-400 group-hover:bg-cyan-400/20"}`}
+                      >
+                        {(index + 1).toString().padStart(2, "0")}
+                      </div>
 
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-xl md:text-3xl font-black text-white group-hover:tracking-wide transition-all italic uppercase tracking-tighter mb-2">
-                        {lesson.title}
-                      </h4>
-                      {lesson.summary && (
-                        <p className="text-slate-300 text-sm font-medium line-clamp-2 leading-relaxed">
-                          {lesson.summary}
-                        </p>
-                      )}
-                    </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-xl md:text-3xl font-black text-white group-hover:tracking-wide transition-all italic uppercase tracking-tighter mb-2">
+                          {lesson.title}
+                        </h4>
+                        {lesson.summary && (
+                          <p className="text-slate-300 text-sm font-medium line-clamp-2 leading-relaxed">
+                            {lesson.summary}
+                          </p>
+                        )}
+                      </div>
 
-                    {/* Icon Panah Kanan */}
-                    <div
-                      className={`w-10 h-10 shrink-0 rounded-full neo-inset items-center justify-center transition-colors hidden md:flex ${isSideQuest ? "text-amber-500 group-hover:bg-amber-500/20" : "text-cyan-400 group-hover:bg-cyan-400/20"}`}
-                    >
-                      <ChevronRight
-                        size={18}
-                        className="group-hover:translate-x-1 transition-transform"
-                      />
-                    </div>
+                      {/* Icon Panah Kanan */}
+                      <div
+                        className={`w-10 h-10 shrink-0 rounded-full neo-inset items-center justify-center transition-colors hidden md:flex ${isSideQuest ? "text-amber-500 group-hover:bg-amber-500/20" : "text-cyan-400 group-hover:bg-cyan-400/20"}`}
+                      >
+                        <ChevronRight
+                          size={18}
+                          className="group-hover:translate-x-1 transition-transform"
+                        />
+                      </div>
+                    </Card>
                   </Link>
                 </motion.div>
               ))}

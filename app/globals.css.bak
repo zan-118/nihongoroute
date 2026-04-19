@@ -3,39 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 220 23% 5%;
-    --foreground: 213 27% 84%;
-    --card: 216 18% 7%;
-    --card-foreground: 213 27% 84%;
-    --popover: 216 18% 7%;
-    --popover-foreground: 213 27% 84%;
-    --primary: 189 84% 54%;
-    --primary-foreground: 220 23% 5%;
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 217 33% 17%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 189 84% 54%;
-    --radius: 1rem;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-  }
-
-  * {
-    @apply border-white/5;
-  }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-[#0a0c10] text-slate-300;
   }
 
   /* HIERARKI TIPOGRAFI GLOBAL */

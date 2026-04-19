@@ -2,6 +2,8 @@ import { client } from "@/sanity/lib/client";
 import Link from "next/link";
 import SurvivalMode from "@/components/SurvivalMode";
 import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 interface PageProps {
   params: Promise<{ categoryId: string }>;
@@ -29,14 +31,17 @@ export default async function SurvivalPage({ params }: PageProps) {
 
       <div className="max-w-3xl mx-auto w-full relative z-10 flex-1 flex flex-col">
         <header className="mb-8 flex justify-between items-center border-b border-white/5 pb-6">
-          <Link
-            href={`/courses/${categoryId}`}
-            className="flex items-center gap-2 text-red-400/60 hover:text-red-400 text-[10px] sm:text-xs uppercase tracking-widest font-black transition-colors bg-red-500/5 hover:bg-red-500/10 px-4 py-2 rounded-xl border border-red-500/10"
+          <Button
+            variant="outline"
+            asChild
+            className="flex items-center gap-2 text-red-400/60 hover:text-red-400 text-[10px] sm:text-xs uppercase tracking-widest font-black transition-colors border-red-500/10 hover:border-red-500/50 hover:bg-red-500/5"
           >
-            <ArrowLeft size={16} />
-            <span className="hidden sm:inline">Abort Mission</span>
-            <span className="inline sm:hidden">Keluar</span>
-          </Link>
+            <Link href={`/courses/${categoryId}`}>
+              <ArrowLeft size={16} />
+              <span className="hidden sm:inline">Abort Mission</span>
+              <span className="inline sm:hidden">Keluar</span>
+            </Link>
+          </Button>
           <div className="text-right">
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 bg-white/5 px-3 py-1.5 rounded-full border border-white/5">
               Level {categoryId.toUpperCase()}
@@ -47,7 +52,7 @@ export default async function SurvivalPage({ params }: PageProps) {
         {cards.length >= 4 ? (
           <SurvivalMode cards={cards} />
         ) : (
-          <div className="text-white bg-red-500/10 border border-red-500/30 p-10 md:p-16 rounded-[2.5rem] text-center shadow-[0_0_30px_rgba(239,68,68,0.15)] max-w-lg mx-auto my-auto flex flex-col items-center">
+          <Card className="text-white bg-red-500/10 border border-red-500/30 p-10 md:p-16 rounded-[2.5rem] text-center shadow-2xl max-w-lg mx-auto my-auto flex flex-col items-center">
             <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center border border-red-500/30 mb-6 text-4xl shadow-inner">
               ⚠️
             </div>
@@ -62,7 +67,7 @@ export default async function SurvivalPage({ params }: PageProps) {
               agar sistem pengacakan opsi bisa bekerja. Saat ini sistem hanya
               mendeteksi {cards.length} kartu aktif.
             </p>
-          </div>
+          </Card>
         )}
       </div>
     </main>
