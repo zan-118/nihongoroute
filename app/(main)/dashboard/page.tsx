@@ -9,8 +9,11 @@ import MemoryStats from "@/components/MemoryStats";
 import DailyQuests from "@/components/DailyQuests";
 import Heatmap from "@/components/Heatmap";
 import LevelUpOverlay from "@/components/LevelUpOverlay";
-import { BrainCircuit, PlayCircle, Save, Upload, Trash2, Loader2, Sparkles, BookMarked, Target, TrendingUp, Trophy } from "lucide-react";
+import ConfirmModal from "@/components/ConfirmModal";
+import { BrainCircuit, PlayCircle, Save, Upload, Trash2, Loader2, Sparkles, BookMarked, Target, TrendingUp, Trophy, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -37,9 +40,20 @@ const itemVariants: Variants = {
 };
 
 export default function DashboardPage() {
-  const { progress, loading, exportData, importData, userFullName } = useProgress();
+  const { progress, loading, exportData, importData, userFullName, isAuthenticated } = useProgress();
   const [guestId, setGuestId] = useState<string>("MEMUAT...");
   const [stats, setStats] = useState<ProgressState | null>(null);
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: "",
+    description: "",
+    confirmText: "",
+    isDestructive: false,
+    onConfirm: () => {},
+  });
+
+  const router = useRouter();
+  const supabase = createClient();
 
   useEffect(() => {
     let savedId = localStorage.getItem("nihongo_guest_id");
@@ -72,12 +86,36 @@ export default function DashboardPage() {
     input.click();
   };
 
+  const openConfirm = (title: string, description: string, confirmText: string, isDestructive: boolean, onConfirm: () => void) => {
+    setConfirmModal({ isOpen: true, title, description, confirmText, isDestructive, onConfirm });
+  };
+  const closeConfirm = () => setConfirmModal(prev => ({ ...prev, isOpen: false }));
+
   const handleResetData = () => {
-    if (confirm("⚠️ PERINGATAN: Semua progres akan dihapus permanen secara lokal. Apakah Anda yakin?")) {
-      localStorage.removeItem("nihongoroute_save_data");
-      localStorage.removeItem("nihongo-progress");
-      window.location.reload();
-    }
+    openConfirm(
+      "Hapus Semua Data?",
+      "Peringatan: Semua progres belajar akan dihapus permanen secara lokal. Tindakan ini tidak dapat dibatalkan.",
+      "Ya, Hapus Data",
+      true,
+      () => {
+        localStorage.removeItem("nihongoroute_save_data");
+        localStorage.removeItem("nihongo-progress");
+        window.location.reload();
+      }
+    );
+  };
+
+  const handleLogout = () => {
+    openConfirm(
+      "Keluar Akun?",
+      "Sesi belajar Anda akan diakhiri. Pastikan data sudah tersinkronisasi sebelum keluar.",
+      "Keluar",
+      true,
+      async () => {
+        await supabase.auth.signOut();
+        router.push("/login");
+      }
+    );
   };
 
   if (loading) {
@@ -105,6 +143,15 @@ export default function DashboardPage() {
       <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] pointer-events-none mix-blend-overlay" />
 
       <LevelUpOverlay level={progress.level} />
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        onClose={closeConfirm}
+        title={confirmModal.title}
+        description={confirmModal.description}
+        confirmText={confirmModal.confirmText}
+        isDestructive={confirmModal.isDestructive}
+        onConfirm={confirmModal.onConfirm}
+      />
 
       <motion.div
         className="max-w-7xl mx-auto relative z-10"
@@ -267,9 +314,9 @@ export default function DashboardPage() {
             <Card className="bg-slate-900/30 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-8 md:p-10">
               <h2 className="text-slate-400 font-black uppercase tracking-[0.3em] text-[10px] md:text-xs mb-8 flex items-center gap-3">
                 <div className="w-1.5 h-1.5 rounded-full bg-slate-500" />
-                Manajemen Data Lokal
+                Pengaturan Akun & Data
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <Button
                   variant="outline"
                   onClick={handleExportData}
@@ -289,8 +336,17 @@ export default function DashboardPage() {
                   onClick={handleResetData}
                   className="h-14 bg-red-500/5 border-red-500/20 hover:bg-red-500/20 hover:border-red-500/40 text-red-400 rounded-2xl uppercase tracking-widest font-bold text-[10px] transition-all"
                 >
-                  <Trash2 size={16} className="mr-2" /> Reset Akun
+                  <Trash2 size={16} className="mr-2" /> Reset Data
                 </Button>
+                {isAuthenticated && (
+                  <Button
+                    variant="outline"
+                    onClick={handleLogout}
+                    className="h-14 bg-red-500/10 border-red-500/30 hover:bg-red-500/30 hover:border-red-500/50 text-red-400 rounded-2xl uppercase tracking-widest font-bold text-[10px] transition-all"
+                  >
+                    <LogOut size={16} className="mr-2" /> Keluar
+                  </Button>
+                )}
               </div>
             </Card>
           </motion.div>

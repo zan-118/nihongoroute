@@ -16,6 +16,7 @@ import { SRSState, createNewCardState } from "@/lib/srs";
 import { createClient } from "@/lib/supabase/client";
 import { syncLocalToCloud } from "@/lib/supabase/sync";
 import { Session } from "@supabase/supabase-js";
+import { toast } from "sonner";
 
 // ======================
 // TYPES / INTERFACES
@@ -74,8 +75,22 @@ export const ProgressProvider = ({
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
+      
+      if (event === "SIGNED_IN" && session?.user) {
+        if (typeof sessionStorage !== "undefined" && !sessionStorage.getItem("nihongo_welcomed")) {
+          const name = session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || "Siswa";
+          toast.success(`Okaeri, ${name}!`, {
+            description: "Autentikasi berhasil. Selamat belajar!",
+          });
+          sessionStorage.setItem("nihongo_welcomed", "true");
+        }
+      } else if (event === "SIGNED_OUT") {
+        if (typeof sessionStorage !== "undefined") {
+          sessionStorage.removeItem("nihongo_welcomed");
+        }
+      }
     });
 
     return () => subscription.unsubscribe();
