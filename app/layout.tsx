@@ -12,6 +12,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ReactNode } from "react";
+import { Toaster } from "sonner";
 
 // ======================
 // CONFIG / CONSTANTS
@@ -104,6 +105,20 @@ export default function RootLayout({
         className={`${inter.className} antialiased bg-cyber-bg text-[#c4cfde] selection:bg-red-500 selection:text-white`}
       >
         {children}
+        <Toaster 
+          theme="dark"
+          position="top-center"
+          toastOptions={{
+            style: {
+              background: 'rgba(10, 12, 16, 0.95)',
+              border: '1px solid rgba(0, 238, 255, 0.3)',
+              backdropFilter: 'blur(12px)',
+              color: '#ffffff',
+            },
+            className: 'rounded-2xl shadow-[0_0_20px_rgba(0,238,255,0.15)]',
+            duration: 4000,
+          }}
+        />
       </body>
     </html>
   );

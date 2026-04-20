@@ -1,89 +1,84 @@
-/**
- * @file MobileNav.tsx
- * @description Komponen navigasi bawah (bottom navigation) khusus untuk perangkat mobile.
- * @module MobileNav
- */
-
 "use client";
 
-// ======================
-// IMPORTS
-// ======================
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, BookOpen, Layers, LayoutDashboard, BrainCircuit } from "lucide-react";
+import { Home, BookOpen, Layers, LayoutDashboard, BrainCircuit, User, LogIn } from "lucide-react";
 import { motion } from "framer-motion";
+import { useProgress } from "@/context/UserProgressContext";
 
-// ======================
-// MAIN EXECUTION
-// ======================
-
-/**
- * Komponen MobileNav: Menyediakan akses navigasi cepat di bagian bawah layar pada resolusi kecil.
- * 
- * @returns {JSX.Element} Antarmuka navigasi mobile.
- */
 export default function MobileNav() {
   const pathname = usePathname();
+  const { isAuthenticated, userFullName } = useProgress();
 
-  // ======================
-  // CONFIG / CONSTANTS
-  // ======================
-  const navItems = [
-    { href: "/", icon: Home, label: "Beranda" },
-    { href: "/courses", icon: BookOpen, label: "Materi" },
-    { href: "/review", icon: BrainCircuit, label: "Hafalan" },
-    { href: "/library", icon: Layers, label: "Pustaka" },
-    { href: "/dashboard", icon: LayoutDashboard, label: "Dasbor" },
-  ];
+  const navItems = isAuthenticated
+    ? [
+        { href: "/", icon: Home, label: "Beranda" },
+        { href: "/courses", icon: BookOpen, label: "Materi" },
+        { href: "/review", icon: BrainCircuit, label: "Hafalan" },
+        { href: "/library", icon: Layers, label: "Pustaka" },
+        { 
+          href: "/dashboard", 
+          icon: User, 
+          label: userFullName ? userFullName.split(' ')[0].substring(0, 7) : "Dasbor" 
+        },
+      ]
+    : [
+        { href: "/", icon: Home, label: "Beranda" },
+        { href: "/courses", icon: BookOpen, label: "Materi" },
+        { href: "/review", icon: BrainCircuit, label: "Hafalan" },
+        { href: "/dashboard", icon: LayoutDashboard, label: "Dasbor" },
+        { href: "/login", icon: LogIn, label: "Masuk" },
+      ];
 
-  // ======================
-  // RENDER
-  // ======================
   return (
-    <div className="md:hidden fixed bottom-6 left-4 right-4 z-50">
-      <nav className="bg-[#0a0c10]/90 backdrop-blur-2xl border border-white/[0.05] rounded-[2rem] p-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.8)] neo-card">
-        <ul className="flex justify-between items-center px-1">
+    <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm z-50">
+      <nav className="bg-slate-950/80 backdrop-blur-3xl border border-white/10 rounded-[2rem] p-2 shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_20px_rgba(0,238,255,0.1)]">
+        <ul className="flex justify-between items-center relative">
           {navItems.map((item) => {
-            const isActive =
-              item.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(item.href);
+            const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
 
             return (
-              <li key={item.href} className="w-[18%] relative">
+              <li key={item.href + item.label} className="flex-1 relative z-10">
                 <Link
                   href={item.href}
-                  className="flex flex-col items-center justify-center py-2.5 rounded-[1.5rem] transition-all relative z-10 group"
+                  className="flex flex-col items-center justify-center py-2 relative group"
                 >
-                  <div
-                    className={`mb-1 transition-all duration-300 ${
+                  <motion.div
+                    animate={{
+                      y: isActive ? -4 : 0,
+                      scale: isActive ? 1.1 : 1,
+                    }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    className={`relative z-10 p-2 rounded-xl transition-colors ${
                       isActive
-                        ? "text-cyber-neon scale-110 drop-shadow-[0_0_8px_rgba(0,238,255,0.5)]"
+                        ? "text-cyber-neon"
                         : "text-slate-500 group-hover:text-white"
                     }`}
                   >
-                    <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
-                  </div>
-                  <span
-                    className={`text-[8px] font-bold uppercase tracking-widest transition-all duration-300 ${
-                      isActive
-                        ? "text-cyber-neon opacity-100"
-                        : "text-slate-500 opacity-80"
+                    <item.icon size={22} strokeWidth={isActive ? 2.5 : 2} className={isActive ? "drop-shadow-[0_0_8px_rgba(0,238,255,0.8)]" : ""} />
+                    
+                    {/* Active Background Pill */}
+                    {isActive && (
+                      <motion.div
+                        layoutId="mobile-active-pill"
+                        className="absolute inset-0 bg-cyber-neon/10 rounded-xl -z-10 border border-cyber-neon/20 shadow-[inset_0_0_10px_rgba(0,238,255,0.2)]"
+                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                      />
+                    )}
+                  </motion.div>
+                  
+                  <motion.span
+                    animate={{
+                      opacity: isActive ? 1 : 0.7,
+                      y: isActive ? -2 : 0,
+                    }}
+                    className={`text-[9px] font-bold tracking-wide mt-1 transition-colors ${
+                      isActive ? "text-cyber-neon" : "text-slate-500"
                     }`}
                   >
                     {item.label}
-                  </span>
+                  </motion.span>
                 </Link>
-
-                {/* Indikator Latar Belakang Aktif */}
-                {isActive && (
-                  <motion.div
-                    layoutId="mobile-nav-indicator"
-                    className="absolute inset-0 bg-cyber-neon/5 border border-cyber-neon/20 rounded-[1.5rem] z-0 shadow-[inset_0_0_15px_rgba(0,238,255,0.05)]"
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
-                )}
               </li>
             );
           })}

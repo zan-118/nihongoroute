@@ -1,7 +1,7 @@
 /**
  * @file UserProgressContext.tsx
  * @description Manajer state global untuk progres pengguna (XP, Level, SRS).
- * Menangani penyimpanan lokal (LocalStorage) dengan sistem debouncing untuk performa.
+ * Menangani penyimpanan lokal (LocalStorage) dengan sinkronisasi ke Supabase.
  * @module UserProgressContext
  */
 
@@ -13,23 +13,20 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { calculateLevel } from "@/lib/level";
 import { SRSState, createNewCardState } from "@/lib/srs";
+import { createClient } from "@/lib/supabase/client";
+import { syncLocalToCloud } from "@/lib/supabase/sync";
+import { Session } from "@supabase/supabase-js";
 
 // ======================
 // TYPES / INTERFACES
 // ======================
 
-/**
- * Representasi data progres inti pengguna.
- */
 export interface UserProgress {
   xp: number;
   level: number;
   srs: Record<string, SRSState>;
 }
 
-/**
- * Kontrak API untuk Progress Context.
- */
 export interface ProgressContextType {
   progress: UserProgress;
   loading: boolean;
@@ -37,14 +34,14 @@ export interface ProgressContextType {
   addToSRS: (wordId: string) => void;
   exportData: () => void;
   importData: (jsonData: string) => boolean;
+  isAuthenticated: boolean;
+  userFullName: string | null;
 }
 
 // ======================
 // CONFIG / CONSTANTS
 // ======================
-const ProgressContext = createContext<ProgressContextType | undefined>(
-  undefined,
-);
+const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
 
 const STORAGE_KEY = "nihongoroute_save_data";
 const STATS_STORAGE_KEY = "nihongo-progress";
@@ -53,13 +50,6 @@ const STATS_STORAGE_KEY = "nihongo-progress";
 // PROVIDER COMPONENT
 // ======================
 
-/**
- * ProgressProvider: Pembungkus aplikasi yang menyediakan akses ke data progres.
- * 
- * @param {Object} props - Properti komponen.
- * @param {React.ReactNode} props.children - Node anak yang akan dibungkus.
- * @returns {JSX.Element} Provider context progres.
- */
 export const ProgressProvider = ({
   children,
 }: {
@@ -71,151 +61,194 @@ export const ProgressProvider = ({
     srs: {},
   });
   const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<Session | null>(null);
+  const supabase = createClient();
+
+  // ======================
+  // AUTH LISTENER
+  // ======================
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase.auth]);
 
   // ======================
   // DATA INITIALIZATION
   // ======================
-
-  // Muat data saat aplikasi pertama kali di-render di client
   useEffect(() => {
-    try {
-      const localData = localStorage.getItem(STORAGE_KEY);
-      if (localData) {
-        const parsed = JSON.parse(localData);
-        setProgress({
-          xp: parsed.xp || 0,
-          level: calculateLevel(parsed.xp || 0),
-          srs: parsed.srs || {},
-        });
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        if (session?.user) {
+          // Mode Cloud: Cek apakah ada data lokal yang perlu disinkronkan
+          const localData = localStorage.getItem(STORAGE_KEY);
+          if (localData) {
+            const parsed = JSON.parse(localData);
+            const syncSuccess = await syncLocalToCloud(session.user.id, parsed);
+            if (syncSuccess) {
+              localStorage.removeItem(STORAGE_KEY); // Hapus setelah berhasil
+            }
+          }
+
+          // Muat data dari Supabase
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("xp, level")
+            .eq("id", session.user.id)
+            .single();
+
+          const { data: srsData } = await supabase
+            .from("user_srs")
+            .select("*")
+            .eq("user_id", session.user.id);
+
+          const parsedSrs: Record<string, SRSState> = {};
+          if (srsData) {
+            srsData.forEach((row) => {
+              parsedSrs[row.word_id] = {
+                interval: row.interval,
+                repetition: 0, // Repetition default untuk Supabase
+                easeFactor: row.ease_factor,
+                nextReview: new Date(row.next_review).getTime(),
+              };
+            });
+          }
+
+          setProgress({
+            xp: profile?.xp || 0,
+            level: profile?.level || calculateLevel(profile?.xp || 0),
+            srs: parsedSrs,
+          });
+        } else {
+          // Mode Guest: Muat dari LocalStorage
+          const localData = localStorage.getItem(STORAGE_KEY);
+          if (localData) {
+            const parsed = JSON.parse(localData);
+            setProgress({
+              xp: parsed.xp || 0,
+              level: calculateLevel(parsed.xp || 0),
+              srs: parsed.srs || {},
+            });
+          } else {
+            // Reset jika logout
+            setProgress({ xp: 0, level: 1, srs: {} });
+          }
+        }
+      } catch (err) {
+        console.error("Gagal memuat data progress:", err);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.warn(
-        "Gagal memuat data save lokal, menggunakan state default:",
-        err,
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    };
+
+    loadData();
+  }, [session, supabase]);
 
   // ======================
   // BUSINESS LOGIC (SAVE)
   // ======================
-
-  /**
-   * DEBOUNCED SAVE LOGIC:
-   * Menunda penyimpanan ke LocalStorage hingga aktivitas perubahan state berhenti selama 1.5 detik.
-   */
   useEffect(() => {
     if (loading) return;
 
-    const debounceTimer = setTimeout(() => {
-      if (typeof window !== "undefined") {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    const debounceTimer = setTimeout(async () => {
+      if (session?.user) {
+        // Simpan ke Supabase (Cloud)
+        try {
+          await supabase.from("profiles").upsert({
+            id: session.user.id,
+            xp: progress.xp,
+            level: progress.level,
+            updated_at: new Date().toISOString(),
+          }, { onConflict: 'id' });
+
+          const srsEntries = Object.entries(progress.srs).map(([wordId, state]) => ({
+            user_id: session.user.id,
+            word_id: wordId,
+            interval: state.interval,
+            ease_factor: state.easeFactor,
+            next_review: new Date(state.nextReview).toISOString(),
+            status: state.interval > 21 ? 'graduated' : (state.interval > 1 ? 'reviewing' : 'learning'),
+            updated_at: new Date().toISOString(),
+          }));
+
+          if (srsEntries.length > 0) {
+            await supabase.from("user_srs").upsert(srsEntries, { onConflict: 'user_id,word_id' });
+          }
+        } catch (err) {
+          console.error("Gagal menyimpan ke cloud:", err);
+        }
+      } else {
+        // Simpan ke LocalStorage (Guest)
+        if (typeof window !== "undefined") {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+        }
       }
     }, 1500);
 
     return () => clearTimeout(debounceTimer);
-  }, [progress, loading]);
+  }, [progress, loading, session, supabase]);
 
-  /**
-   * SAFETY SAVE:
-   * Memastikan data tersimpan saat tab/browser ditutup secara paksa.
-   */
   useEffect(() => {
-    if (loading) return;
-
+    if (loading || session?.user) return; // Hanya untuk guest
     const handleBeforeUnload = () => {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
     };
-
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [progress, loading]);
+  }, [progress, loading, session]);
 
   // ======================
   // HELPER FUNCTIONS
   // ======================
-
-  /**
-   * Memperbarui progress XP dan status SRS.
-   * 
-   * @param {number} newXp - Nilai XP baru.
-   * @param {Record<string, SRSState>} newSrs - Dataset SRS yang diperbarui.
-   */
   const updateProgress = (newXp: number, newSrs: Record<string, SRSState>) => {
-    const newState = {
+    setProgress({
       xp: newXp,
       level: calculateLevel(newXp),
       srs: newSrs,
-    };
-    setProgress(newState);
+    });
   };
 
-  /**
-   * Mendaftarkan kata/kartu baru ke dalam sistem SRS user.
-   * 
-   * @param {string} wordId - ID dokumen kartu.
-   */
   const addToSRS = (wordId: string) => {
-    // Abaikan jika kartu sudah ada di dalam memori
     if (progress.srs[wordId]) return;
-
-    const newSrs = {
+    updateProgress(progress.xp, {
       ...progress.srs,
       [wordId]: createNewCardState(),
-    };
-
-    updateProgress(progress.xp, newSrs);
+    });
   };
 
-  /**
-   * Mengekspor data utama dan statistik menjadi file JSON untuk backup manual.
-   */
   const exportData = () => {
     if (typeof window === "undefined") return;
-
     const statsData = localStorage.getItem(STATS_STORAGE_KEY);
     const fullPayload = {
       ...progress,
       stats: statsData ? JSON.parse(statsData) : null,
     };
-
-    const dataStr =
-      "data:text/json;charset=utf-8," +
-      encodeURIComponent(JSON.stringify(fullPayload));
-
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullPayload));
     const downloadAnchorNode = document.createElement("a");
     downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute(
-      "download",
-      `nihongoroute-save-${new Date().toISOString().split("T")[0]}.json`,
-    );
-
+    downloadAnchorNode.setAttribute("download", `nihongoroute-save-${new Date().toISOString().split("T")[0]}.json`);
     document.body.appendChild(downloadAnchorNode);
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
   };
 
-  /**
-   * Mengimpor data JSON dan memulihkan sesi belajar user.
-   * 
-   * @param {string} jsonData - String JSON hasil ekspor.
-   * @returns {boolean} Status keberhasilan impor.
-   */
   const importData = (jsonData: string): boolean => {
     try {
       const parsed = JSON.parse(jsonData);
-
       if (parsed.xp !== undefined && typeof parsed.xp === "number") {
-        // 1. Pulihkan data utama (XP & SRS)
         updateProgress(parsed.xp, parsed.srs || {});
-
-        // 2. Pulihkan data statistik jika tersedia di file backup
-        if (parsed.stats && typeof window !== "undefined") {
+        if (parsed.stats && typeof window !== "undefined" && !session?.user) {
           localStorage.setItem(STATS_STORAGE_KEY, JSON.stringify(parsed.stats));
         }
-
         return true;
       }
       return false;
@@ -225,9 +258,8 @@ export const ProgressProvider = ({
     }
   };
 
-  // ======================
-  // RENDER
-  // ======================
+  const userFullName = session?.user?.user_metadata?.full_name || session?.user?.email?.split('@')[0] || "Siswa";
+
   return (
     <ProgressContext.Provider
       value={{
@@ -237,6 +269,8 @@ export const ProgressProvider = ({
         addToSRS,
         exportData,
         importData,
+        isAuthenticated: !!session?.user,
+        userFullName,
       }}
     >
       {children}
@@ -244,19 +278,8 @@ export const ProgressProvider = ({
   );
 };
 
-// ======================
-// CUSTOM HOOK
-// ======================
-
-/**
- * useProgress: Hook untuk mengakses data progres di seluruh aplikasi.
- * 
- * @returns {ProgressContextType} Objek context progres.
- */
 export const useProgress = () => {
   const context = useContext(ProgressContext);
-  if (!context) {
-    throw new Error("useProgress harus digunakan di dalam ProgressProvider");
-  }
+  if (!context) throw new Error("useProgress harus digunakan di dalam ProgressProvider");
   return context;
 };

@@ -1,16 +1,6 @@
-/**
- * @file page.tsx
- * @description Pusat kendali pengguna (Dashboard) yang menampilkan progres, statistik, 
- * dan manajemen data lokal aplikasi.
- * @module DashboardPage
- */
-
 "use client";
 
-// ======================
-// IMPORTS
-// ======================
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useProgress } from "@/context/UserProgressContext";
 import { loadProgress, ProgressState } from "@/lib/progress";
 import { motion, Variants } from "framer-motion";
@@ -19,8 +9,7 @@ import MemoryStats from "@/components/MemoryStats";
 import DailyQuests from "@/components/DailyQuests";
 import Heatmap from "@/components/Heatmap";
 import LevelUpOverlay from "@/components/LevelUpOverlay";
-import { client } from "@/sanity/lib/client";
-import { BrainCircuit, PlayCircle, Save, Upload, Trash2, Loader2 } from "lucide-react";
+import { BrainCircuit, PlayCircle, Save, Upload, Trash2, Loader2, Sparkles, BookMarked, Target, TrendingUp, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
@@ -38,66 +27,32 @@ const containerVariants: Variants = {
 };
 
 const itemVariants: Variants = {
-  hidden: { y: 20, opacity: 0 },
+  hidden: { y: 20, opacity: 0, filter: "blur(10px)" },
   visible: {
     y: 0,
     opacity: 1,
-    transition: { type: "spring", stiffness: 100 },
+    filter: "blur(0px)",
+    transition: { type: "spring", stiffness: 100, damping: 20 },
   },
 };
 
-// ======================
-// MAIN EXECUTION
-// ======================
-
-/**
- * Komponen DashboardPage: Menampilkan ringkasan progres belajar, quest harian, 
- * dan kontrol manajemen data user.
- * 
- * @returns {JSX.Element} Elemen halaman dashboard.
- */
 export default function DashboardPage() {
-  const { progress, loading, exportData, importData } = useProgress();
+  const { progress, loading, exportData, importData, userFullName } = useProgress();
   const [guestId, setGuestId] = useState<string>("MEMUAT...");
   const [stats, setStats] = useState<ProgressState | null>(null);
 
-  const [examHistory, setExamHistory] = useState<any[]>([]);
-  const [isExporting, setIsExporting] = useState(false);
-  const certificateRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    // Inisialisasi atau pengambilan Guest ID dari LocalStorage
     let savedId = localStorage.getItem("nihongo_guest_id");
     if (!savedId) {
-      savedId =
-        "NP-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+      savedId = "NP-" + Math.random().toString(36).substring(2, 8).toUpperCase();
       localStorage.setItem("nihongo_guest_id", savedId);
     }
     setGuestId(savedId);
     setStats(loadProgress());
-
-    // Fetch riwayat ujian dari CMS
-    const fetchHistory = async () => {
-      try {
-        const query = `*[_type == "examResult" && guestId == $id] | order(completedAt desc)`;
-        const data = await client.fetch(query, { id: savedId });
-        setExamHistory(data);
-      } catch (error) {
-        console.error("Gagal menarik riwayat ujian:", error);
-      }
-    };
-    fetchHistory();
   }, []);
-
-  // ======================
-  // BUSINESS LOGIC
-  // ======================
 
   const handleExportData = () => exportData();
 
-  /**
-   * Mengimpor data progres dari file JSON eksternal.
-   */
   const handleImportData = () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -117,15 +72,8 @@ export default function DashboardPage() {
     input.click();
   };
 
-  /**
-   * Menghapus seluruh data progres lokal (Hard Reset).
-   */
   const handleResetData = () => {
-    if (
-      confirm(
-        "⚠️ PERINGATAN: Semua progres akan dihapus permanen secara lokal. Apakah Anda yakin?",
-      )
-    ) {
+    if (confirm("⚠️ PERINGATAN: Semua progres akan dihapus permanen secara lokal. Apakah Anda yakin?")) {
       localStorage.removeItem("nihongoroute_save_data");
       localStorage.removeItem("nihongo-progress");
       window.location.reload();
@@ -134,26 +82,27 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#080a0f] flex flex-col items-center justify-center">
+      <div className="min-h-screen bg-[#05060A] flex flex-col items-center justify-center">
         <Loader2 className="w-16 h-16 text-cyber-neon animate-spin drop-shadow-[0_0_15px_rgba(0,238,255,0.5)]" />
         <p className="mt-8 text-cyber-neon font-mono font-black uppercase tracking-[0.4em] text-[10px] animate-pulse">
-          SINKRONISASI DATA...
+          INITIALIZING...
         </p>
       </div>
     );
   }
 
-  // Hitung jumlah kartu yang jatuh tempo untuk direview
   const now = Date.now();
-  const dueCount = Object.values(progress.srs).filter(
-    (card) => card.nextReview <= now,
-  ).length;
-  // ======================
-  // RENDER
-  // ======================
+  const dueCount = Object.values(progress.srs).filter((card) => card.nextReview <= now).length;
+  const displayName = userFullName || "Pelajar";
+  const xpNeeded = 1000 - (progress.xp % 1000);
+  const xpProgress = (progress.xp % 1000) / 10;
+
   return (
-    <div className="w-full px-4 md:px-8 lg:px-12 relative overflow-hidden pb-24 pt-8">
-      <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-cyber-neon/5 blur-[150px] rounded-full pointer-events-none animate-pulse" />
+    <div className="w-full min-h-screen bg-[#05060A] relative overflow-hidden pt-32 pb-24 px-4 md:px-8">
+      {/* BACKGROUND EFFECTS */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[500px] bg-cyber-neon/10 blur-[120px] rounded-[100%] pointer-events-none opacity-50" />
+      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-blue-600/5 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] pointer-events-none mix-blend-overlay" />
 
       <LevelUpOverlay level={progress.level} />
 
@@ -163,236 +112,191 @@ export default function DashboardPage() {
         animate="visible"
         variants={containerVariants}
       >
-        {/* HEADER SECTION */}
-        <header className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-12 md:mb-16 border-b border-white/5 pb-8 md:pb-10">
-          <motion.div variants={itemVariants}>
-            <div className="flex items-center gap-3 md:gap-4 mb-4 font-mono">
-              <Badge
-                variant="outline"
-                className="bg-[#0a0c10] neo-inset px-3 py-1 md:px-4 md:py-1.5 rounded-lg text-cyber-neon text-[9px] md:text-[10px] font-black uppercase tracking-widest border-cyber-neon/20"
-              >
-                Pengguna Lvl {progress.level}
-              </Badge>
-              <span className="text-white/40 text-[9px] md:text-[10px] font-bold uppercase tracking-widest">
-                ID: {guestId}
+        {/* HEADER HERO SECTION */}
+        <motion.div variants={itemVariants} className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center justify-between mb-16">
+          <div className="flex-1 w-full flex flex-col items-center lg:items-start text-center lg:text-left">
+            <Badge variant="outline" className="bg-cyber-neon/10 text-cyber-neon border-cyber-neon/30 px-4 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest mb-6 flex items-center gap-2 w-fit">
+              <Sparkles size={14} /> ID: {guestId}
+            </Badge>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white italic tracking-tighter leading-[1.1] mb-4">
+              Okaeri, <br className="hidden lg:block" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyber-neon to-blue-500 drop-shadow-[0_0_20px_rgba(0,238,255,0.3)]">
+                {displayName}
               </span>
-            </div>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white italic tracking-tighter drop-shadow-lg leading-none">
-              Das<span className="text-cyber-neon drop-shadow-[0_0_15px_rgba(0,238,255,0.4)]">hboard</span>
             </h1>
-          </motion.div>
+            <p className="text-slate-400 text-sm md:text-base font-medium max-w-lg leading-relaxed">
+              Selamat datang kembali di pusat komando belajarmu. Lanjutkan progres JLPT-mu hari ini dan pertahankan rentetan belajarmu.
+            </p>
+          </div>
 
-          <motion.div variants={itemVariants} className="w-full lg:w-auto">
-            {dueCount > 0 ? (
-              <Button
-                asChild
-                className="flex items-center justify-center gap-3 w-full lg:w-auto bg-cyber-neon text-black px-6 py-6 md:px-8 md:py-8 h-auto rounded-2xl md:rounded-[2rem] font-black uppercase tracking-widest transition-all shadow-[0_0_30px_rgba(0,238,255,0.3)] hover:bg-white hover:scale-105 active:scale-95 text-[10px] md:text-xs"
-              >
-                <Link href="/review">
-                  <BrainCircuit size={20} className="md:w-6 md:h-6" />
-                  <span>Mulai Hafalan ({dueCount} Kartu)</span>
-                </Link>
-              </Button>
-            ) : (
-              <Button
-                variant="outline"
-                asChild
-                className="flex items-center justify-center gap-3 w-full lg:w-auto bg-[#0d1117] border-cyber-neon/30 text-cyber-neon px-6 py-6 md:px-8 md:py-8 h-auto rounded-2xl md:rounded-[2rem] font-black uppercase tracking-widest transition-all shadow-xl hover:border-cyber-neon hover:bg-cyber-neon/10 hover:scale-105 active:scale-95 text-[10px] md:text-xs"
-              >
-                <Link href="/courses">
-                  <PlayCircle size={20} className="md:w-6 md:h-6" />
-                  <span>Pelajari Materi Baru</span>
-                </Link>
-              </Button>
-            )}
-          </motion.div>
-        </header>
+          {/* MAIN CALL TO ACTION */}
+          <div className="w-full lg:w-[450px] shrink-0">
+            <Card className="p-8 rounded-[2.5rem] bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.1)] relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-cyber-neon/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              
+              <div className="relative z-10 flex flex-col items-center text-center">
+                <div className="w-20 h-20 rounded-full bg-cyber-neon/20 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(0,238,255,0.3)] border border-cyber-neon/50">
+                  {dueCount > 0 ? (
+                    <BrainCircuit size={40} className="text-cyber-neon" />
+                  ) : (
+                    <PlayCircle size={40} className="text-cyber-neon" />
+                  )}
+                </div>
+                
+                <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-tight mb-2">
+                  {dueCount > 0 ? "Waktunya Review" : "Materi Baru"}
+                </h3>
+                <p className="text-slate-400 text-xs md:text-sm mb-8 font-medium">
+                  {dueCount > 0 
+                    ? `Ada ${dueCount} kartu SRS yang menunggumu. Jangan sampai lupa!` 
+                    : "Semua kartu sudah direview. Saatnya belajar hal baru."}
+                </p>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 mb-20">
-          <div className="lg:col-span-2 space-y-8 md:space-y-12">
-            <motion.section variants={itemVariants}>
-              <Card className="rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 border-white/5 shadow-2xl bg-[#0a0c10]">
-                <div className="flex justify-between items-end mb-6">
-                  <h2 className="text-white font-black uppercase tracking-widest text-xs md:text-sm">
-                    Poin <span className="text-slate-400">Pengalaman</span>
+                {dueCount > 0 ? (
+                  <Button asChild className="w-full h-14 bg-cyber-neon hover:bg-white text-black font-black uppercase tracking-[0.2em] rounded-2xl text-xs transition-all shadow-[0_0_20px_rgba(0,238,255,0.4)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] border-none">
+                    <Link href="/review">
+                      Mulai Sesi Hafalan <Target size={16} className="ml-2" />
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button asChild variant="outline" className="w-full h-14 bg-white/5 border-cyber-neon/30 text-cyber-neon hover:bg-cyber-neon/20 font-black uppercase tracking-[0.2em] rounded-2xl text-xs transition-all border">
+                    <Link href="/courses">
+                      Jelajahi Materi <BookMarked size={16} className="ml-2" />
+                    </Link>
+                  </Button>
+                )}
+              </div>
+            </Card>
+          </div>
+        </motion.div>
+
+        {/* BENTO GRID LAYOUT */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 mb-20">
+          
+          {/* LEVEL & XP CARD (SPAN 8) */}
+          <motion.div variants={itemVariants} className="md:col-span-8">
+            <Card className="h-full bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-center relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[80px] rounded-full pointer-events-none" />
+              <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
+                <div>
+                  <h2 className="text-slate-400 font-black uppercase tracking-widest text-[10px] md:text-xs mb-2">
+                    Current Level
                   </h2>
-                  <span className="text-cyber-neon font-mono font-black text-xl md:text-2xl drop-shadow-[0_0_8px_rgba(0,238,255,0.5)]">
-                    {progress.xp} XP
+                  <div className="flex items-baseline gap-3">
+                    <span className="text-5xl md:text-7xl font-black text-white italic tracking-tighter">
+                      {progress.level}
+                    </span>
+                    <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 px-3 py-1 font-bold uppercase tracking-widest text-[9px]">
+                      Peringkat Rank
+                    </Badge>
+                  </div>
+                </div>
+                <div className="text-left md:text-right">
+                  <span className="text-cyber-neon font-mono font-black text-3xl drop-shadow-[0_0_10px_rgba(0,238,255,0.4)]">
+                    {progress.xp} <span className="text-sm text-cyber-neon/70">XP</span>
                   </span>
                 </div>
+              </div>
+              
+              <div className="relative z-10">
+                <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">
+                  <span>Progress to Level {progress.level + 1}</span>
+                  <span>{xpProgress}%</span>
+                </div>
                 <Progress
-                  value={(progress.xp % 1000) / 10}
-                  className="h-4 md:h-5 bg-[#121620] border border-white/5 neo-inset"
-                  indicatorClassName="bg-gradient-to-r from-cyber-neon to-blue-500 shadow-[0_0_15px_rgba(0,238,255,0.6)]"
+                  value={xpProgress}
+                  className="h-3 bg-black/50 border border-white/10"
+                  indicatorClassName="bg-gradient-to-r from-emerald-400 via-cyber-neon to-blue-500 shadow-[0_0_15px_rgba(0,238,255,0.5)]"
                 />
-                <p className="mt-4 text-[9px] md:text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono text-right">
-                  Butuh {1000 - (progress.xp % 1000)} XP untuk Naik Level
+                <p className="mt-4 text-[10px] text-slate-500 uppercase font-bold tracking-widest font-mono text-center md:text-right">
+                  Membutuhkan <span className="text-white">{xpNeeded} XP</span> lagi untuk Naik Level
                 </p>
-              </Card>
-            </motion.section>
+              </div>
+            </Card>
+          </motion.div>
 
-            <motion.div
-              variants={itemVariants}
-              className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8"
-            >
-              <DailyQuests />
-              <MemoryStats />
-            </motion.div>
+          {/* STATS HIGHLIGHT (SPAN 4) */}
+          <motion.div variants={itemVariants} className="md:col-span-4 flex flex-col gap-6">
+            <Card className="flex-1 bg-gradient-to-br from-amber-500/20 to-orange-600/10 backdrop-blur-xl border border-amber-500/20 rounded-[2rem] p-6 flex flex-col justify-between group overflow-hidden relative">
+              <div className="absolute -right-4 -top-4 opacity-10 scale-150 rotate-12 group-hover:rotate-45 transition-transform duration-1000">
+                <Trophy size={120} />
+              </div>
+              <h3 className="text-amber-500/80 font-black uppercase tracking-widest text-[10px]">
+                Streak Aktif
+              </h3>
+              <div className="flex items-end gap-2 mt-4">
+                <span className="text-5xl font-black text-amber-400 italic">
+                  {stats?.streak || 0}
+                </span>
+                <span className="text-amber-500/80 font-bold uppercase tracking-widest mb-1.5">Hari</span>
+              </div>
+            </Card>
+            
+            <Card className="flex-1 bg-gradient-to-br from-blue-500/20 to-indigo-600/10 backdrop-blur-xl border border-blue-500/20 rounded-[2rem] p-6 flex flex-col justify-between group overflow-hidden relative">
+              <div className="absolute -right-4 -top-4 opacity-10 scale-150 -rotate-12 group-hover:-rotate-45 transition-transform duration-1000">
+                <TrendingUp size={120} />
+              </div>
+              <h3 className="text-blue-400/80 font-black uppercase tracking-widest text-[10px]">
+                Total Kata Dikuasai
+              </h3>
+              <div className="flex items-end gap-2 mt-4">
+                <span className="text-5xl font-black text-blue-400 italic">
+                  {Object.keys(progress.srs).length}
+                </span>
+                <span className="text-blue-400/80 font-bold uppercase tracking-widest mb-1.5">Kata</span>
+              </div>
+            </Card>
+          </motion.div>
 
-            <motion.div variants={itemVariants}>
-              <Heatmap studyDays={stats?.studyDays || {}} />
-            </motion.div>
-          </div>
+          {/* DAILY QUESTS & MEMORY STATS */}
+          <motion.div variants={itemVariants} className="md:col-span-6">
+            <DailyQuests />
+          </motion.div>
+          
+          <motion.div variants={itemVariants} className="md:col-span-6">
+            <MemoryStats />
+          </motion.div>
 
-          <div className="space-y-8 md:space-y-12">
-            <motion.section variants={itemVariants}>
-              <Card className="bg-gradient-to-br from-[#121620] to-[#0d1117] rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 border-white/5 shadow-2xl">
-                <h2 className="text-cyber-neon font-mono font-black uppercase tracking-widest text-[10px] md:text-xs mb-6 md:mb-8 flex items-center gap-3">
-                  <span className="w-2.5 h-2.5 rounded-full bg-cyber-neon animate-pulse shadow-[0_0_10px_#0ef]" />
-                  Statistik Belajar
-                </h2>
-                <div className="space-y-4 md:space-y-5">
-                  <SimpleStat
-                    label="Total Kata"
-                    value={Object.keys(progress.srs).length}
-                  />
-                  <SimpleStat
-                    label="Beruntun"
-                    value={`${stats?.streak || 0} Hari`}
-                    color="text-amber-400"
-                  />
-                  <SimpleStat
-                    label="Review Hari Ini"
-                    value={stats?.todayReviewCount || 0}
-                    color="text-emerald-400"
-                  />
-                </div>
-              </Card>
-            </motion.section>
+          {/* HEATMAP */}
+          <motion.div variants={itemVariants} className="md:col-span-12">
+            <Heatmap studyDays={stats?.studyDays || {}} />
+          </motion.div>
 
-            <motion.nav
-              variants={itemVariants}
-              className="grid grid-cols-2 gap-4 md:gap-6"
-            >
-              <QuickLink href="/courses/n5" label="Materi N5" icon="⛩️" />
-              <QuickLink
-                href="/courses/n5/kanji"
-                label="Kamus Kanji"
-                icon="🈴"
-              />
-              <QuickLink href="/exams" label="Pusat Ujian" icon="📝" />
-              <QuickLink href="/library" label="Koleksi" icon="🏛️" />
-            </motion.nav>
+          {/* SETTINGS / DANGER ZONE */}
+          <motion.div variants={itemVariants} className="md:col-span-12">
+            <Card className="bg-slate-900/30 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-8 md:p-10">
+              <h2 className="text-slate-400 font-black uppercase tracking-[0.3em] text-[10px] md:text-xs mb-8 flex items-center gap-3">
+                <div className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+                Manajemen Data Lokal
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <Button
+                  variant="outline"
+                  onClick={handleExportData}
+                  className="h-14 bg-black/40 border-white/10 hover:bg-cyber-neon/10 hover:border-cyber-neon/30 hover:text-cyber-neon text-slate-300 rounded-2xl uppercase tracking-widest font-bold text-[10px] transition-all"
+                >
+                  <Save size={16} className="mr-2" /> Backup Data
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleImportData}
+                  className="h-14 bg-black/40 border-white/10 hover:bg-indigo-500/10 hover:border-indigo-500/30 hover:text-indigo-400 text-slate-300 rounded-2xl uppercase tracking-widest font-bold text-[10px] transition-all"
+                >
+                  <Upload size={16} className="mr-2" /> Restore Data
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleResetData}
+                  className="h-14 bg-red-500/5 border-red-500/20 hover:bg-red-500/20 hover:border-red-500/40 text-red-400 rounded-2xl uppercase tracking-widest font-bold text-[10px] transition-all"
+                >
+                  <Trash2 size={16} className="mr-2" /> Reset Akun
+                </Button>
+              </div>
+            </Card>
+          </motion.div>
 
-            <motion.section variants={itemVariants}>
-              <Card className="rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 border-white/5 shadow-2xl bg-[#0a0c10]">
-                <h2 className="text-slate-400 font-mono font-black uppercase tracking-widest text-[10px] md:text-xs mb-6 md:mb-8">
-                  Pengaturan Data
-                </h2>
-                <div className="space-y-3 md:space-y-4">
-                  <SettingsButton
-                    icon={<Save size={18} />}
-                    label="Simpan Data Lokal"
-                    onClick={handleExportData}
-                    hoverColor="hover:text-cyber-neon hover:border-cyber-neon/30"
-                  />
-                  <SettingsButton
-                    icon={<Upload size={18} />}
-                    label="Muat Data Lokal"
-                    onClick={handleImportData}
-                    hoverColor="hover:text-indigo-400 hover:border-indigo-400/30"
-                  />
-                  <SettingsButton
-                    icon={<Trash2 size={18} />}
-                    label="Hapus Semua Data"
-                    onClick={handleResetData}
-                    hoverColor="hover:text-red-400 hover:border-red-400/30 hover:bg-red-500/5"
-                    isDanger
-                  />
-                </div>
-              </Card>
-            </motion.section>
-          </div>
         </div>
       </motion.div>
     </div>
   );
 }
-
-// ======================
-// HELPER COMPONENTS
-// ======================
-
-/**
- * SimpleStat: Menampilkan metrik statistik sederhana dalam kartu kecil.
- */
-function SimpleStat({
-  label,
-  value,
-  color = "text-white",
-}: {
-  label: string;
-  value: string | number;
-  color?: string;
-}) {
-  return (
-    <Card className="bg-[#080a0f] neo-inset rounded-2xl flex justify-between items-center p-5 border-white/5">
-      <span className="text-[10px] md:text-xs font-mono font-bold text-slate-400 uppercase tracking-widest">
-        {label}
-      </span>
-      <span className={`text-xl md:text-2xl font-black italic ${color} font-mono`}>
-        {value}
-      </span>
-    </Card>
-  );
-}
-
-/**
- * QuickLink: Tombol navigasi cepat dengan ikon besar.
- */
-function QuickLink({
-  href,
-  label,
-  icon,
-}: {
-  href: string;
-  label: string;
-  icon: string;
-}) {
-  return (
-    <motion.div
-      whileHover={{ y: -5, transition: { duration: 0.2 } }}
-      className="w-full h-full"
-    >
-      <Link href={href}>
-        <Card className="p-6 md:p-8 border-white/5 shadow-xl hover:border-cyber-neon/30 hover:bg-cyber-neon/5 transition-all flex flex-col items-center justify-center gap-4 group cursor-pointer h-full rounded-[2rem]">
-          <span className="text-4xl md:text-5xl group-hover:scale-110 transition-transform drop-shadow-lg">
-            {icon}
-          </span>
-          <span className="text-[10px] md:text-xs font-mono font-bold text-slate-300 uppercase tracking-widest group-hover:text-cyber-neon transition-colors text-center">
-            {label}
-          </span>
-        </Card>
-      </Link>
-    </motion.div>
-  );
-}
-
-/**
- * SettingsButton: Tombol untuk aksi pengaturan data dengan efek hover warna-warni.
- */
-function SettingsButton({ icon, label, onClick, hoverColor, isDanger }: any) {
-  return (
-    <Button
-      variant="ghost"
-      onClick={onClick}
-      className={`w-full bg-[#080a0f] neo-inset border h-auto ${isDanger ? "border-red-500/20 text-red-500/80" : "border-white/5 text-slate-300"} p-5 md:p-6 rounded-2xl flex items-center justify-between transition-all ${hoverColor} group hover:scale-[1.02] active:scale-[0.98]`}
-    >
-      <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest">
-        {label}
-      </span>
-      <span className="group-hover:scale-110 transition-transform">{icon}</span>
-    </Button>
-  );
-}
-

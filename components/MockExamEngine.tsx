@@ -25,7 +25,6 @@ import {
   ArrowLeft,
   Share2,
 } from "lucide-react";
-import confetti from "canvas-confetti";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -167,24 +166,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
       const isPassed = finalScore >= exam.passingScore;
 
       if (isPassed) {
-        const duration = 3 * 1000;
-        const animationEnd = Date.now() + duration;
-        const defaults = {
-          startVelocity: 30,
-          spread: 360,
-          ticks: 60,
-          zIndex: 0,
-        };
-        const interval: any = setInterval(function () {
-          const timeLeft = animationEnd - Date.now();
-          if (timeLeft <= 0) return clearInterval(interval);
-          const particleCount = 50 * (timeLeft / duration);
-          confetti({
-            ...defaults,
-            particleCount,
-            origin: { x: Math.random(), y: Math.random() - 0.2 },
-          });
-        }, 250);
+        // Confetti removed for performance
       }
     }
   }, [gameState, exam.passingScore, exam.questions.length]);

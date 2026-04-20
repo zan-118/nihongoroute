@@ -1,20 +1,12 @@
 {
   "name": "nihongoroute",
   "version": "1.0.0",
-  "description": "NihongoRoute - Path to Japanese Mastery",
-  "author": "NihongoRoute Team",
-  "license": "MIT",
   "private": true,
-  "engines": {
-    "node": ">=22.19.0",
-    "npm": ">=10.9.3"
-  },
   "scripts": {
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "lint": "next lint"
   },
   "dependencies": {
     "@portabletext/react": "^6.0.3",
@@ -24,17 +16,19 @@
     "@radix-ui/react-slot": "^1.2.4",
     "@react-pdf/renderer": "^4.5.1",
     "@sanity/image-url": "^1.1.0",
-    "@sanity/vision": "^3.71.0",
-    "canvas-confetti": "^1.9.4",
+    "@sanity/vision": "latest",
+    "@supabase/ssr": "^0.10.2",
+    "@supabase/supabase-js": "^2.104.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
-    "lucide-react": "^0.475.0",
-    "next": "^15.1.7",
+    "lucide-react": "^1.8.0",
+    "next": "latest",
     "next-pwa": "^5.6.0",
-    "next-sanity": "^9.8.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "next-sanity": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "sonner": "^2.0.7",
     "styled-components": "^6.4.0",
     "tailwind-merge": "^3.5.0",
     "tailwindcss-animate": "^1.0.7",
@@ -42,18 +36,17 @@
   },
   "devDependencies": {
     "@sanity/cli": "^6.3.1",
-    "@types/canvas-confetti": "^1.9.0",
     "@types/next-pwa": "^5.6.9",
-    "@types/node": "^22.10.0",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
+    "@types/node": "^20.11.30",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
     "autoprefixer": "^10.4.24",
     "eslint": "^8.57.0",
-    "eslint-config-next": "15.1.7",
+    "eslint-config-next": "15.0.4",
     "postcss": "^8.5.6",
     "sanity": "^5.19.0",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5.7.0"
+    "typescript": "^5.3.3"
   },
   "overrides": {
     "react": "$react",

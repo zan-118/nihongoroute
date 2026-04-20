@@ -42,13 +42,9 @@ export default function LevelUpOverlay({ level }: { level: number }) {
       setShow(true);
       sounds?.playSuccess();
 
-      const timer = setTimeout(() => {
-        setShow(false);
-      }, 6000);
-      
-      return () => {
-        clearTimeout(timer);
-      };
+      // Confetti removed for performance
+      const timer = setTimeout(() => setShow(false), 6000);
+      return () => clearTimeout(timer);
     }
   }, [level]);
 
@@ -62,24 +58,24 @@ export default function LevelUpOverlay({ level }: { level: number }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 md:p-8"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-2xl p-4 md:p-8"
         >
           <motion.div
             initial={{ scale: 0.95, y: 20, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 1.05, opacity: 0 }}
             transition={{ type: "spring", stiffness: 200, damping: 20 }}
-            className="w-full max-w-lg h-auto max-h-[90vh] flex items-center justify-center will-change-transform"
+            className="w-full max-w-lg h-auto max-h-[90vh] flex items-center justify-center"
           >
-            <Card className="text-center py-6 px-4 md:py-10 md:px-12 bg-[#0a0c10] rounded-[2rem] md:rounded-[3rem] border border-cyber-neon/30 shadow-[0_0_40px_rgba(0,238,255,0.15)] neo-card relative overflow-hidden w-full h-auto flex flex-col items-center">
+            <Card className="text-center py-6 px-4 md:py-10 md:px-12 bg-[#0a0c10] rounded-[2rem] md:rounded-[3rem] border border-cyber-neon/30 shadow-[0_0_80px_rgba(0,238,255,0.2)] neo-card relative overflow-hidden w-full h-auto flex flex-col items-center">
               {/* Decorative Scanlines */}
               <div className="absolute inset-0 bg-[linear-gradient(rgba(0,238,255,0.03)_1px,transparent_1px)] bg-[size:100%_4px] pointer-events-none" />
-              <div className="absolute -top-16 -left-16 w-48 h-48 md:w-64 md:h-64 bg-cyber-neon/10 blur-[40px] md:blur-[60px] pointer-events-none" />
+              <div className="absolute -top-16 -left-16 w-48 h-48 md:w-64 md:h-64 bg-cyber-neon/10 blur-[80px] md:blur-[100px] pointer-events-none" />
 
               <motion.div
                 animate={{ 
-                  scale: [1, 1.02, 1],
-                  rotate: [0, 2, -2, 0] 
+                  scale: [1, 1.05, 1],
+                  rotate: [0, 3, -3, 0] 
                 }}
                 transition={{ 
                   repeat: Infinity, 
@@ -88,7 +84,7 @@ export default function LevelUpOverlay({ level }: { level: number }) {
                 }}
                 className="w-16 h-16 md:w-28 md:h-28 mx-auto bg-cyber-neon/10 rounded-2xl md:rounded-[2.5rem] flex items-center justify-center mb-6 md:mb-10 neo-inset shadow-none border border-cyber-neon/30"
               >
-                <Trophy size={40} className="text-cyber-neon drop-shadow-[0_0_10px_rgba(0,238,255,0.4)] md:w-14 md:h-14" />
+                <Trophy size={40} className="text-cyber-neon drop-shadow-[0_0_20px_rgba(0,238,255,0.6)] md:w-14 md:h-14" />
               </motion.div>
 
               <Badge variant="outline" className="text-cyber-neon text-[9px] md:text-[11px] font-bold uppercase tracking-widest mb-4 md:mb-6 h-auto neo-inset px-4 py-1.5 md:px-8 md:py-2.5 border-cyber-neon/30 bg-cyber-neon/5 rounded-xl">
