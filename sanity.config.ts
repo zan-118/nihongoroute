@@ -1,23 +1,18 @@
-// file: sanity.config.ts
-
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { visionTool } from "@sanity/vision";
-import { schema } from "./sanity/schemaTypes";
-
-import { apiVersion, dataset, projectId } from "./sanity/env";
+import { schema } from "./sanity/schemaTypes"; // Hubungkan ke index.ts skema Anda
 
 export default defineConfig({
-  basePath: "/studio", // URL untuk mengakses CMS Sanity
-  projectId,
-  dataset,
+  name: "default",
+  title: "NihongoRoute CMS",
 
-  // Mendaftarkan schema yang kita buat sebelumnya
-  schema,
+  projectId: "qoczxvvo",
+  dataset: "production",
 
-  plugins: [
-    structureTool(),
-    // Vision tool berguna untuk testing query GROQ langsung di dalam Studio
-    visionTool({ defaultApiVersion: apiVersion }),
-  ],
+  plugins: [structureTool(), visionTool()],
+
+  schema: {
+    types: schema.types, // Ini akan memuat Vocab, Lesson, Quiz, dll.
+  },
 });
