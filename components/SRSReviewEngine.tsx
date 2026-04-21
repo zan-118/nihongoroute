@@ -1,7 +1,8 @@
 /**
  * @file SRSReviewEngine.tsx
- * @description Mesin sesi ulasan SRS (Spaced Repetition System).
- * Mendukung mode 'free training' (tanpa efek progres) dan mode 'test' (sinkronisasi progres dengan algoritma SRS).
+ * @description Mesin sesi ulasan SRS murni.
+ * Setiap jawaban dievaluasi oleh algoritma untuk menentukan interval review berikutnya.
+ * Dilengkapi dengan pintasan keyboard untuk efisiensi desktop.
  * @module SRSReviewEngine
  */
 
@@ -10,7 +11,7 @@
 // ======================
 // IMPORTS
 // ======================
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useProgress } from "@/context/UserProgressContext";
 import { updateCardState, createNewCardState } from "@/lib/srs";
@@ -19,7 +20,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, ArrowRight, BrainCircuit, Check, X, ShieldCheck } from "lucide-react";
+import { BrainCircuit, Check, X, ShieldCheck } from "lucide-react";
 
 // ======================
 // TYPES
@@ -36,18 +37,11 @@ export interface FlashcardType {
 // MAIN EXECUTION
 // ======================
 
-/**
- * Komponen SRSReviewEngine: Menangani logika navigasi dan pembaruan state SRS pada setiap kartu.
- * 
- * @param {Object} props - Daftar kartu flashcard.
- * @returns {JSX.Element} Antarmuka sesi review.
- */
 export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
   // State Management
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [direction, setDirection] = useState(0);
-  const [studyMode, setStudyMode] = useState<"free" | "test">("free");
   const [isClient, setIsClient] = useState(false);
   const [shuffledCards, setShuffledCards] = useState<FlashcardType[]>([]);
 
@@ -55,7 +49,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
   const router = useRouter();
 
   useEffect(() => {
-    // Pengacakan urutan kartu (Fisher-Yates Shuffle)
+    // Pengacakan urutan kartu (Fisher-Yates) agar ulasan tidak monoton
     if (cards && cards.length > 0) {
       const shuffled = [...cards];
       for (let i = shuffled.length - 1; i > 0; i--) {
@@ -67,106 +61,120 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
     setIsClient(true);
   }, [cards]);
 
-  if (!isClient || shuffledCards.length === 0) return null;
-
   const currentCard = shuffledCards[currentIndex];
 
   // ======================
   // HELPER FUNCTIONS
   // ======================
 
-  /**
-   * Menangani penilaian jawaban pengguna dan sinkronisasi data SRS.
-   */
-  const handleAnswer = (correct: boolean) => {
-    if (studyMode === "test") {
-      const cardId = currentCard._id;
-      const currentState = progress.srs[cardId] || createNewCardState();
-      const newState = updateCardState(currentState, correct);
-
-      updateProgress(progress.xp + (correct ? 10 : 2), {
-        ...progress.srs,
-        [cardId]: newState,
-      });
-    }
-
-    goToNext();
-  };
-
-  /**
-   * Navigasi ke kartu berikutnya.
-   */
-  const goToNext = () => {
+  const goToNext = useCallback(() => {
     setDirection(1);
     setIsFlipped(false);
 
     if (currentIndex < shuffledCards.length - 1) {
       setCurrentIndex((prev) => prev + 1);
-    } else if (studyMode === "test") {
-      router.push("/dashboard");
     } else {
-      setCurrentIndex(0);
+      // Sesi selesai, kembali ke dasbor
+      router.push("/dashboard");
     }
-  };
+  }, [currentIndex, shuffledCards.length, router]);
 
-  /**
-   * Navigasi ke kartu sebelumnya.
-   */
-  const goToPrev = () => {
-    if (currentIndex > 0) {
-      setDirection(-1);
-      setIsFlipped(false);
-      setCurrentIndex((prev) => prev - 1);
-    }
-  };
+  const handleAnswer = useCallback(
+    (correct: boolean) => {
+      if (!currentCard) return;
 
+      const cardId = currentCard._id;
+      const currentState = progress.srs[cardId] || createNewCardState();
+      const newState = updateCardState(currentState, correct);
+
+      // Berikan XP lebih besar untuk jawaban benar
+      updateProgress(progress.xp + (correct ? 10 : 2), {
+        ...progress.srs,
+        [cardId]: newState,
+      });
+
+      goToNext();
+    },
+    [currentCard, progress, updateProgress, goToNext],
+  );
+
+  const toggleFlip = useCallback(() => {
+    setIsFlipped((prev) => !prev);
+  }, []);
+
+  // ======================
+  // KEYBOARD SHORTCUTS
+  // ======================
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        document.activeElement?.tagName === "INPUT" ||
+        document.activeElement?.tagName === "TEXTAREA"
+      )
+        return;
+
+      if (!isFlipped) {
+        // Jika belum dibalik, Spasi atau Enter untuk membalik
+        if (e.key === " " || e.key === "Enter") {
+          e.preventDefault();
+          toggleFlip();
+        }
+      } else {
+        // Jika sudah dibalik, 1/Kiri untuk Lupa, 2/Kanan untuk Ingat
+        if (e.key === "1" || e.key === "ArrowLeft") {
+          e.preventDefault();
+          handleAnswer(false);
+        } else if (e.key === "2" || e.key === "ArrowRight") {
+          e.preventDefault();
+          handleAnswer(true);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isFlipped, toggleFlip, handleAnswer]);
+
+  if (!isClient || shuffledCards.length === 0) return null;
+
+  // ======================
+  // RENDER
+  // ======================
   return (
     <section className="w-full max-w-2xl mx-auto px-4">
-      {/* HEADER: Pemilihan Mode */}
+      {/* HEADER: Mode SRS Aktif */}
       <header className="flex flex-col gap-6 mb-10">
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-3">
-             <Card className="w-10 h-10 rounded-xl bg-red-500/10 border-red-500/20 flex items-center justify-center neo-inset shadow-none">
-                <BrainCircuit size={20} className="text-red-500" />
-             </Card>
-             <Badge
-                variant="outline"
-                className="text-red-500 font-black text-[10px] tracking-[0.3em] uppercase bg-red-500/5 px-4 py-1.5 rounded-xl border-red-500/20 neo-inset h-auto"
-              >
-                {studyMode === "free" ? "Free Training" : "SRS Intel Review"}
-              </Badge>
-          </div>
-
-          <Card className="flex bg-black/40 p-1.5 rounded-2xl border-white/5 neo-inset shadow-none w-full sm:w-auto">
-            <Button
-              variant="ghost"
-              onClick={() => setStudyMode("free")}
-              className={`flex-1 sm:flex-initial px-6 py-2 h-10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${studyMode === "free" ? "bg-white/10 text-white" : "text-slate-500 hover:text-slate-300"}`}
-            >
-              Belajar
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={() => setStudyMode("test")}
-              className={`flex-1 sm:flex-initial px-6 py-2 h-10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${studyMode === "test" ? "bg-red-500 text-black shadow-[0_0_20px_rgba(239,68,68,0.4)]" : "text-slate-500 hover:text-slate-300"}`}
-            >
-              Uji SRS
-            </Button>
+        <div className="flex items-center gap-3">
+          <Card className="w-10 h-10 rounded-xl bg-red-500/10 border-red-500/20 flex items-center justify-center neo-inset shadow-none">
+            <BrainCircuit size={20} className="text-red-500" />
           </Card>
+          <div>
+            <Badge
+              variant="outline"
+              className="text-red-500 font-black text-[10px] tracking-[0.3em] uppercase bg-red-500/5 px-4 py-1.5 rounded-xl border-red-500/20 neo-inset h-auto"
+            >
+              SRS Intel Review
+            </Badge>
+            <p className="text-slate-500 text-[10px] font-bold uppercase mt-1 tracking-widest">
+              Evaluasi Algoritma Memori
+            </p>
+          </div>
         </div>
 
-        <Card className="bg-black/20 border-white/5 p-5 rounded-[2rem] neo-inset shadow-none border-dashed">
-          <p className="text-slate-400 text-[11px] leading-relaxed italic flex items-start gap-4 font-medium">
-            <ShieldCheck size={16} className="shrink-0 mt-0.5 text-red-500 opacity-60" />
-            {studyMode === "free"
-              ? "Ulangi materi tanpa batas untuk memperkuat pondasi memori visual dan auditori."
-              : "Setiap jawaban akan dianalisis oleh algoritma SRS untuk menentukan interval review berikutnya."}
+        <Card className="bg-red-500/5 border-red-500/10 p-4 rounded-[1.5rem] neo-inset shadow-none border-dashed">
+          <p className="text-red-400/80 text-[11px] leading-relaxed italic flex items-center gap-3 font-medium">
+            <ShieldCheck size={16} className="shrink-0 text-red-500" />
+            Setiap jawaban menentukan jadwal kemunculan kartu ini di masa depan.
+            Jawab dengan jujur.
           </p>
         </Card>
       </header>
 
-      {/* FLASHCARD COMPONENT */}
-      <div className="relative mb-10">
+      {/* AREA KARTU */}
+      <div
+        className="relative mb-10"
+        onClick={!isFlipped ? toggleFlip : undefined}
+      >
         <AnimatePresence mode="wait">
           <motion.div
             key={currentIndex}
@@ -174,6 +182,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
             animate={{ x: 0, opacity: 1, scale: 1 }}
             exit={{ x: -direction * 50, opacity: 0, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className={!isFlipped ? "cursor-pointer" : ""}
           >
             <Flashcard
               word={currentCard.word}
@@ -181,35 +190,30 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
               furigana={currentCard.furigana}
               romaji={currentCard.romaji}
               isFlipped={isFlipped}
-              onFlip={() => setIsFlipped(!isFlipped)}
+              onFlip={toggleFlip}
             />
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* CONTROLS */}
+      {/* KONTROL BAWAH */}
       <footer className="min-h-[100px]">
         {!isFlipped ? (
-          <div className="flex justify-between items-center gap-6">
-            <Button
-              variant="ghost"
-              onClick={goToPrev}
-              disabled={currentIndex === 0}
-              className="w-20 h-20 rounded-[2rem] bg-black/40 border border-white/5 text-slate-400 disabled:opacity-10 neo-inset transition-all hover:bg-black/60 hover:text-white"
-            >
-              <ArrowLeft size={24} />
-            </Button>
+          <div className="flex flex-col items-center gap-6">
             <div className="text-slate-600 font-mono text-[11px] font-black tracking-[0.4em] uppercase text-center flex flex-col gap-1">
-              <span className="text-white/40 italic">Data_Point</span>
-              <span className="text-white text-lg">0{currentIndex + 1} <span className="text-white/10 mx-1">/</span> 0{shuffledCards.length}</span>
+              <span className="text-white/40 italic">Kartu Tersisa</span>
+              <span className="text-white text-lg">
+                {currentIndex + 1} <span className="text-white/10 mx-1">/</span>{" "}
+                {shuffledCards.length}
+              </span>
             </div>
-            <Button
-              variant="ghost"
-              onClick={goToNext}
-              className="w-20 h-20 rounded-[2rem] bg-black/40 border border-white/5 text-slate-400 neo-inset transition-all hover:bg-black/60 hover:text-white"
-            >
-              <ArrowRight size={24} />
-            </Button>
+
+            <div className="hidden md:flex justify-center mt-2">
+              <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold bg-black/40 px-4 py-2 rounded-xl neo-inset border border-white/5">
+                Tekan <kbd className="font-mono text-red-400">Spasi</kbd> untuk
+                melihat jawaban
+              </p>
+            </div>
           </div>
         ) : (
           <motion.div
@@ -220,16 +224,35 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
             <Button
               variant="ghost"
               onClick={() => handleAnswer(false)}
-              className="h-auto py-8 bg-red-500/5 border border-red-500/20 rounded-[2.5rem] text-red-500 font-black uppercase tracking-[0.2em] text-[10px] md:text-xs neo-card hover:bg-red-500 hover:text-black transition-all group"
+              className="relative h-auto py-8 bg-red-500/5 border border-red-500/20 rounded-[2.5rem] text-red-500 font-black uppercase tracking-[0.2em] text-[10px] md:text-xs neo-card hover:bg-red-500 hover:text-black transition-all group overflow-hidden"
             >
-              <X size={18} className="mr-2 group-hover:scale-125 transition-transform" /> Masih Lupa
+              <div className="relative z-10 flex items-center">
+                <X
+                  size={18}
+                  className="mr-2 group-hover:scale-125 transition-transform"
+                />{" "}
+                Masih Lupa
+              </div>
+              <kbd className="hidden md:inline-block absolute top-4 left-4 bg-red-500/20 text-red-400 px-2 py-0.5 rounded font-mono text-[9px]">
+                1
+              </kbd>
             </Button>
+
             <Button
               variant="ghost"
               onClick={() => handleAnswer(true)}
-              className="h-auto py-8 bg-emerald-500/5 border border-emerald-500/20 rounded-[2.5rem] text-emerald-400 font-black uppercase tracking-[0.2em] text-[10px] md:text-xs neo-card hover:bg-emerald-500 hover:text-black transition-all group shadow-[0_0_20px_rgba(16,185,129,0.1)]"
+              className="relative h-auto py-8 bg-emerald-500/5 border border-emerald-500/20 rounded-[2.5rem] text-emerald-400 font-black uppercase tracking-[0.2em] text-[10px] md:text-xs neo-card hover:bg-emerald-500 hover:text-black transition-all group shadow-[0_0_20px_rgba(16,185,129,0.1)] overflow-hidden"
             >
-              <Check size={18} className="mr-2 group-hover:scale-125 transition-transform" /> Sudah Ingat
+              <div className="relative z-10 flex items-center">
+                <Check
+                  size={18}
+                  className="mr-2 group-hover:scale-125 transition-transform"
+                />{" "}
+                Sudah Ingat
+              </div>
+              <kbd className="hidden md:inline-block absolute top-4 right-4 bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-mono text-[9px]">
+                2
+              </kbd>
             </Button>
           </motion.div>
         )}
@@ -237,4 +260,3 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
     </section>
   );
 }
-
