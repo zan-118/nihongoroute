@@ -15,7 +15,6 @@
     "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-slot": "^1.2.4",
     "@react-pdf/renderer": "^4.5.1",
-    "@sanity/assist": "^6.0.4",
     "@sanity/image-url": "^1.1.0",
     "@sanity/vision": "latest",
     "@supabase/ssr": "^0.10.2",
