@@ -63,6 +63,11 @@ export const metadata: Metadata = {
   verification: {
     google: "Niyl1z2v4hJgZZzRFLzMLOk4xlYNyvSNnEiCC-eK7N4", 
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "NihongoRoute",
+  },
   openGraph: {
     title: "NihongoRoute | Misi Menguasai Bahasa Jepang",
     description:
