@@ -17,6 +17,7 @@ import React, { useEffect, useRef, useState } from "react";
 interface AnimatedKanjiProps {
   character: string;
   triggerKey: number; // Digunakan untuk me-restart animasi
+  color?: string; // Warna goresan (HEX atau CSS color)
 }
 
 // ======================
@@ -32,6 +33,7 @@ interface AnimatedKanjiProps {
 export default function AnimatedKanji({
   character,
   triggerKey,
+  color = "#a855f7", // Default purple-500
 }: AnimatedKanjiProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState(false);
@@ -80,12 +82,12 @@ export default function AnimatedKanji({
           path.style.strokeDashoffset = length.toString();
 
           // Gaya Cyber-Neumorphic
-          path.style.stroke = "#a855f7"; // Warna ungu (purple-500)
+          path.style.stroke = color;
           path.style.strokeWidth = "3.5";
           path.style.strokeLinecap = "round";
           path.style.strokeLinejoin = "round";
           path.style.fill = "none";
-          path.style.filter = "drop-shadow(0 0 4px rgba(168, 85, 247, 0.8))";
+          path.style.filter = `drop-shadow(0 0 4px ${color})`;
 
           // Animasikan secara berurutan
           path.style.animation = `drawKanji 0.8s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.7}s forwards`;

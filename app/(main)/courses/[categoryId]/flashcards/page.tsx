@@ -40,7 +40,7 @@ export default async function VocabFlashcardPage({ params }: PageProps) {
     "verbs": *[_type == "verb_dictionary" && showInFlashcard != false && course_category->slug.current == $categoryId] { _id, "word": jisho, meaning, romaji, furigana }
   }`;
   const data = await client.fetch(query, { categoryId });
-  const cards = [...(data.vocab || []), ...(data.verbs || [])];
+  const cards = [...(data.vocab || []), ...(data.verbs || [])].sort(() => Math.random() - 0.5);
 
   // ======================
   // RENDER
@@ -73,7 +73,12 @@ export default async function VocabFlashcardPage({ params }: PageProps) {
         </header>
 
         {cards.length > 0 ? (
-          <FlashcardMaster cards={cards} type="vocab" />
+          <FlashcardMaster 
+            cards={cards} 
+            type="vocab" 
+            mode="latihan" 
+            isFixedMode={true} 
+          />
         ) : (
           <div className="text-white bg-red-500/10 border border-red-500/30 p-8 md:p-10 rounded-[2rem] text-center shadow-[0_0_20px_rgba(239,68,68,0.1)]">
             <span className="text-4xl md:text-5xl mb-4 block">📡</span>

@@ -70,6 +70,11 @@ export default function LevelUpOverlay({ level }: { level: number }) {
             <Card className="text-center py-6 px-4 md:py-10 md:px-12 bg-[#0a0c10] rounded-[2rem] md:rounded-[3rem] border border-cyber-neon/30 shadow-[0_0_80px_rgba(0,238,255,0.2)] neo-card relative overflow-hidden w-full h-auto flex flex-col items-center">
               {/* Decorative Scanlines */}
               <div className="absolute inset-0 bg-[linear-gradient(rgba(0,238,255,0.03)_1px,transparent_1px)] bg-[size:100%_4px] pointer-events-none" />
+              
+              {/* Massive Bloom Effects */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-cyber-neon/10 blur-[120px] rounded-full animate-bloom pointer-events-none" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-indigo-500/10 blur-[100px] rounded-full animate-pulse pointer-events-none" />
+              
               <div className="absolute -top-16 -left-16 w-48 h-48 md:w-64 md:h-64 bg-cyber-neon/10 blur-[80px] md:blur-[100px] pointer-events-none" />
 
               <motion.div

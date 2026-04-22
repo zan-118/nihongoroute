@@ -21,6 +21,8 @@ import { Button } from "@/components/ui/button";
 // ======================
 interface WritingCanvasProps {
   character: string;
+  strokeColor?: string; // Warna goresan tangan (default: red-500)
+  guideColor?: string; // Warna panduan stroke order (default: purple-500)
 }
 
 // ======================
@@ -33,7 +35,11 @@ interface WritingCanvasProps {
  * @param {WritingCanvasProps} props - Karakter yang akan dilatih penulisan-nya.
  * @returns {JSX.Element} Antarmuka kanvas menulis.
  */
-export default function WritingCanvas({ character }: WritingCanvasProps) {
+export default function WritingCanvas({ 
+  character, 
+  strokeColor = "#ef4444", 
+  guideColor = "#a855f7" 
+}: WritingCanvasProps) {
   // Refs & State
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -46,7 +52,7 @@ export default function WritingCanvas({ character }: WritingCanvasProps) {
   // ======================
 
   /**
-   * Mengatur ukuran kanvas sesuai dengan kontainer pembungkusnya dan menangani pixel ratio (Retina/High DPI).
+   * Mengatur ukuran kanvas dan mencegah scroll browser saat menyentuh kanvas.
    */
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -67,9 +73,9 @@ export default function WritingCanvas({ character }: WritingCanvasProps) {
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
         ctx.lineWidth = 10;
-        ctx.strokeStyle = "#ef4444"; // red-500
+        ctx.strokeStyle = strokeColor;
         ctx.shadowBlur = 8;
-        ctx.shadowColor = "rgba(239, 68, 68, 0.6)";
+        ctx.shadowColor = strokeColor + "99"; // Transparansi 60%
 
         const img = new Image();
         img.src = dataUrl;
@@ -84,9 +90,27 @@ export default function WritingCanvas({ character }: WritingCanvasProps) {
       }
     };
 
+    // Mencegah scroll pada touch devices secara paksa
+    const preventScroll = (e: TouchEvent) => {
+      if (e.target === canvas) {
+        e.preventDefault();
+      }
+    };
+
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
-    return () => window.removeEventListener("resize", resizeCanvas);
+    
+    // Gunakan listener non-passive untuk mendukung preventDefault()
+    canvas.addEventListener("touchstart", preventScroll as any, { passive: false });
+    canvas.addEventListener("touchmove", preventScroll as any, { passive: false });
+    canvas.addEventListener("touchend", preventScroll as any, { passive: false });
+
+    return () => {
+      window.removeEventListener("resize", resizeCanvas);
+      canvas.removeEventListener("touchstart", preventScroll as any);
+      canvas.removeEventListener("touchmove", preventScroll as any);
+      canvas.removeEventListener("touchend", preventScroll as any);
+    };
   }, []);
 
   // ======================
@@ -155,11 +179,12 @@ export default function WritingCanvas({ character }: WritingCanvasProps) {
   // RENDER
   // ======================
   return (
-    <div className="flex flex-col gap-6 w-full max-w-sm mx-auto">
+    <div className="flex flex-col gap-4 w-full max-w-[280px] sm:max-w-sm mx-auto">
       {/* AREA KANVAS */}
       <Card
         ref={containerRef}
         className="relative w-full aspect-square bg-black/60 border-2 border-white/5 rounded-[3rem] overflow-hidden group touch-none neo-inset shadow-none"
+        style={{ touchAction: 'none' }}
       >
         {/* Background Grid Protocol */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(239,68,68,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(239,68,68,0.02)_1px,transparent_1px)] bg-[size:25%_25%] opacity-40 pointer-events-none" />
@@ -173,7 +198,11 @@ export default function WritingCanvas({ character }: WritingCanvasProps) {
         {/* Lapis Bawah: Animasi Stroke Order SVG */}
         {showGuide && (
           <div className="absolute inset-8 pointer-events-none z-0">
-            <AnimatedKanji character={character} triggerKey={replayKey} />
+            <AnimatedKanji 
+              character={character} 
+              triggerKey={replayKey} 
+              color={guideColor}
+            />
           </div>
         )}
 
@@ -188,6 +217,7 @@ export default function WritingCanvas({ character }: WritingCanvasProps) {
           onTouchMove={draw}
           onTouchEnd={stopDrawing}
           className="absolute inset-0 w-full h-full cursor-crosshair z-10"
+          style={{ touchAction: 'none' }}
         />
 
         {/* Status Indicator */}
@@ -198,11 +228,11 @@ export default function WritingCanvas({ character }: WritingCanvasProps) {
       </Card>
 
       {/* KONTROL BAWAH */}
-      <Card className="grid grid-cols-3 gap-3 bg-cyber-surface p-3 rounded-[2rem] border-white/5 neo-card shadow-none">
+      <Card className="grid grid-cols-3 gap-2 bg-cyber-surface p-2 md:p-3 rounded-[2rem] border-white/5 neo-card shadow-none">
         <Button
           variant="ghost"
           onClick={() => setShowGuide(!showGuide)}
-          className={`flex flex-col items-center justify-center gap-2 h-auto py-4 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all neo-inset ${
+          className={`flex flex-col items-center justify-center gap-2 h-auto py-3 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all neo-inset ${
             showGuide
               ? "bg-red-500/10 text-red-500 border-red-500/30"
               : "bg-black/40 text-slate-500 border-white/5"
@@ -215,7 +245,7 @@ export default function WritingCanvas({ character }: WritingCanvasProps) {
         <Button
           variant="ghost"
           onClick={handleReplay}
-          className="flex flex-col items-center justify-center gap-2 h-auto py-4 rounded-2xl bg-black/40 text-slate-500 border-white/5 text-[9px] font-black uppercase tracking-widest hover:text-purple-400 hover:border-purple-500/30 transition-all neo-inset"
+          className="flex flex-col items-center justify-center gap-2 h-auto py-3 rounded-2xl bg-black/40 text-slate-500 border-white/5 text-[9px] font-black uppercase tracking-widest hover:text-purple-400 hover:border-purple-500/30 transition-all neo-inset"
         >
           <RotateCcw size={18} />
           <span className="italic">Replay</span>
@@ -224,7 +254,7 @@ export default function WritingCanvas({ character }: WritingCanvasProps) {
         <Button
           variant="ghost"
           onClick={clearCanvas}
-          className="flex flex-col items-center justify-center gap-2 h-auto py-4 rounded-2xl bg-black/40 text-slate-500 border-white/5 text-[9px] font-black uppercase tracking-widest hover:text-red-500 hover:border-red-500/30 transition-all neo-inset"
+          className="flex flex-col items-center justify-center gap-2 h-auto py-3 rounded-2xl bg-black/40 text-slate-500 border-white/5 text-[9px] font-black uppercase tracking-widest hover:text-red-500 hover:border-red-500/30 transition-all neo-inset"
         >
           <Trash2 size={18} />
           <span className="italic">Clear</span>

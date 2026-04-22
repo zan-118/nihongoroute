@@ -80,7 +80,7 @@ export default function PdfGenerator({
       .replace(/\//g, "-");
 
     if (type === "vocab")
-      return `Kamus_Kosakata_${level || "All"}_${timestamp}.pdf`;
+      return `ListKosakata_${level || "All"}_${timestamp}.pdf`;
     return `Materi_NihongoRoute_${timestamp}.pdf`;
   };
 

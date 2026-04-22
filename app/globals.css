@@ -68,6 +68,40 @@
   .btn-cyber {
     @apply px-6 py-3 bg-cyan-400 text-[#0a0c10] font-bold uppercase tracking-widest text-sm rounded-xl transition-all duration-300 hover:bg-white hover:shadow-[0_0_20px_rgba(34,211,238,0.6)] active:scale-95;
   }
+
+  /* Font Jepang Khusus */
+  .font-japanese {
+    font-family: var(--font-noto-jp), sans-serif;
+  }
+
+  /* Efek Glow & Bloom Animasi */
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  .animate-bloom {
+    animation: bloom 3s ease-in-out infinite;
+  }
+
+  @keyframes glow {
+    from {
+      filter: drop-shadow(0 0 5px rgba(0, 238, 255, 0.4));
+    }
+    to {
+      filter: drop-shadow(0 0 20px rgba(0, 238, 255, 0.8));
+    }
+  }
+
+  @keyframes bloom {
+    0%, 100% {
+      opacity: 0.3;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.6;
+      transform: scale(1.1);
+    }
+  }
 }
 
 /* Custom Scrollbar Futuristik */

@@ -21,8 +21,8 @@ export default function UpdatePasswordPage() {
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        toast.error("Sesi Tidak Valid", {
-          description: "Sesi pemulihan tidak valid atau sudah kedaluwarsa. Silakan minta tautan baru.",
+        toast.error("Sesi Berakhir", {
+          description: "Tautan ini sudah tidak berlaku. Silakan minta tautan pemulihan yang baru ya.",
         });
       }
     };
@@ -33,12 +33,16 @@ export default function UpdatePasswordPage() {
     e.preventDefault();
     
     if (password !== confirmPassword) {
-      toast.error("Kata Sandi Tidak Cocok!");
+      toast.error("Wah, passwordnya beda...", {
+        description: "Pastikan kedua kolom kata sandi terisi dengan karakter yang sama persis.",
+      });
       return;
     }
     
     if (password.length < 6) {
-      toast.error("Kata sandi harus minimal 6 karakter.");
+      toast.error("Password terlalu singkat", {
+        description: "Gunakan minimal 6 karakter agar akunmu tetap aman.",
+      });
       return;
     }
 
@@ -52,8 +56,8 @@ export default function UpdatePasswordPage() {
       if (error) throw error;
       
       setIsSuccess(true);
-      toast.success("Berhasil!", {
-        description: "Kata sandi berhasil diperbarui! Anda dapat melanjutkan ke dashboard.",
+      toast.success("Berhasil Diperbarui!", {
+        description: "Kata sandi barumu sudah aktif. Yuk, lanjut belajar lagi!",
       });
       
       // Redirect setelah 3 detik

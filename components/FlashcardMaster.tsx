@@ -18,7 +18,6 @@ import { useProgress } from "@/context/UserProgressContext";
 import { updateCardState } from "@/lib/srs";
 import { sounds } from "@/lib/audio";
 import XPPop from "./XPPop";
-import { updateProgressOnReview } from "@/lib/progress";
 import Flashcard from "./Flashcard";
 import {
   Dialog,
@@ -62,16 +61,20 @@ export interface MasterCardData {
 export default function FlashcardMaster({
   cards,
   type = "vocab",
+  mode = "latihan",
+  isFixedMode = false,
 }: {
   cards: MasterCardData[];
   type?: "vocab" | "kanji";
+  mode?: "latihan" | "ujian";
+  isFixedMode?: boolean;
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [direction, setDirection] = useState(0);
   const [showXP, setShowXP] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const [studyMode, setStudyMode] = useState<"latihan" | "ujian">("latihan");
+  const [studyMode, setStudyMode] = useState<"latihan" | "ujian">(mode);
 
   const [sessionStats, setSessionStats] = useState({
     known: 0,
@@ -96,6 +99,34 @@ export default function FlashcardMaster({
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // Pintasan Keyboard
+  useEffect(() => {
+    if (!isClient || isFinished) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Space: Balik Kartu
+      if (e.code === "Space") {
+        e.preventDefault();
+        if (studyMode === "ujian" && isFlipped) return;
+        sounds?.playPop();
+        setIsFlipped(prev => !prev);
+      }
+      
+      // Tombol 1: Masih Lupa (Hanya jika kartu sudah terbalik)
+      if (e.key === "1" && isFlipped && studyMode === "ujian") {
+        handleAnswer(false);
+      }
+      
+      // Tombol 2: Sudah Hafal (Hanya jika kartu sudah terbalik)
+      if (e.key === "2" && isFlipped && studyMode === "ujian") {
+        handleAnswer(true);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isClient, isFinished, isFlipped, studyMode]);
 
   if (!isClient || !cards || cards.length === 0) return null;
 
@@ -129,14 +160,17 @@ export default function FlashcardMaster({
     const cardId = card._id || card.id || "unknown";
     const xpReward = correct ? 15 : 5;
 
+    // Haptic Feedback
+    if (typeof window !== "undefined" && window.navigator.vibrate) {
+      window.navigator.vibrate(correct ? [50] : [100, 50, 100]);
+    }
+
     // Update statistik sesi saat ini
     setSessionStats((prev) => ({
       known: prev.known + (correct ? 1 : 0),
       learning: prev.learning + (correct ? 0 : 1),
       xpGained: prev.xpGained + xpReward,
     }));
-
-    updateProgressOnReview();
 
     // Mengambil state SRS saat ini atau inisialisasi jika baru
     const currentState = progress.srs[cardId] || {
@@ -265,6 +299,7 @@ export default function FlashcardMaster({
       </div>
 
       <header className="flex flex-col gap-4 md:gap-6 mb-8 md:mb-10">
+      {!isFixedMode && (
         <Card className="flex justify-between items-center bg-[#121620] p-1.5 rounded-xl md:rounded-2xl border-white/5 neo-inset shadow-none">
           <Button
             variant="ghost"
@@ -295,6 +330,7 @@ export default function FlashcardMaster({
             <Check size={14} className="mr-1.5 md:mr-2 md:w-4 md:h-4" /> Uji Hafalan
           </Button>
         </Card>
+      )}
 
         <div className="flex flex-col gap-3 md:gap-4">
           <div className="flex justify-between items-end">
@@ -323,6 +359,19 @@ export default function FlashcardMaster({
 
       {/* KARTU UTAMA SECTION */}
       <div className="relative w-full mb-8 md:mb-10">
+        {/* SRS LIFE BAR (Mini Progress) */}
+        <div className="mb-4 flex flex-col gap-1.5 px-2">
+          <div className="flex justify-between items-center text-[8px] font-black uppercase tracking-[0.3em] text-slate-500">
+            <span>Session Energy</span>
+            <span className={themeColor}>{Math.round(((currentIndex + 1) / cards.length) * 100)}%</span>
+          </div>
+          <Progress
+            value={((currentIndex + 1) / cards.length) * 100}
+            className="h-1 bg-black/40 border-none overflow-hidden rounded-full"
+            indicatorClassName={`${themeBgColor} shadow-[0_0_15px_rgba(0,238,255,0.8)] animate-pulse`}
+          />
+        </div>
+
         <AnimatePresence initial={false} mode="wait">
           <motion.div
             key={currentIndex}

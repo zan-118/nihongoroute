@@ -34,8 +34,8 @@ export default function LoginPage() {
           },
         });
         if (error) throw error;
-        toast.success("Pendaftaran berhasil!", {
-          description: "Silakan periksa email Anda untuk verifikasi, atau langsung masuk jika tidak ada verifikasi email.",
+        toast.success("Selamat Bergabung!", {
+          description: "Akunmu sudah siap. Silakan masuk untuk mulai petualangan belajarmu!",
         });
         setIsRegistering(false);
       } else {
@@ -46,8 +46,8 @@ export default function LoginPage() {
         });
         if (error) throw error;
         
-        toast.success(`Selamat datang kembali${data.user?.user_metadata?.full_name ? `, ${data.user.user_metadata.full_name.split(' ')[0]}` : ''}!`, {
-          description: "Membuka dashboard Anda...",
+        toast.success(`Okaeri, ${data.user?.user_metadata?.full_name ? data.user.user_metadata.full_name.split(' ')[0] : 'Siswa'}!`, {
+          description: "Senang melihatmu kembali. Mari lanjut belajarnya!",
         });
 
         // Redirect setelah sukses
@@ -55,8 +55,8 @@ export default function LoginPage() {
       }
     } catch (error: any) {
       console.error("Gagal autentikasi email:", error);
-      toast.error("Gagal Autentikasi", {
-        description: error.message || "Terjadi kesalahan. Coba lagi.",
+      toast.error("Ada sedikit kendala...", {
+        description: error.message || "Email atau kata sandi mungkin salah. Coba cek lagi ya!",
       });
     } finally {
       setLoading(false);
@@ -85,8 +85,8 @@ export default function LoginPage() {
       const { data, error } = await supabase.auth.signInAnonymously();
       if (error) throw error;
       
-      toast.success("Masuk sebagai Tamu", {
-        description: "Menyiapkan pengalaman belajar Anda...",
+      toast.success("Mode Tamu Aktif", {
+        description: "Kamu bisa belajar sekarang, tapi progresmu hanya tersimpan di perangkat ini.",
       });
       router.push("/");
     } catch (error) {

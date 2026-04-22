@@ -78,7 +78,7 @@ const kanaData = {
       ["ザ", "ジ", "ズ", "ゼ", "ゾ"],
       ["ダ", "ヂ", "ヅ", "デ", "ド"],
       ["バ", "ビ", "ブ", "ベ", "ボ"],
-      ["パ", "ピ", "プ", "pe", "ポ"],
+      ["パ", "ピ", "プ", "ペ", "ポ"],
     ],
     romaji: [
       ["ga", "gi", "gu", "ge", "go"],
@@ -182,54 +182,54 @@ export default function BasicsPage() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
             <div>
               <h1 className="text-4xl md:text-6xl font-black text-white uppercase italic tracking-tighter drop-shadow-lg">
-                Matriks <span className={themeColor}>Kana</span>
+                Huruf <span className={themeColor}>Dasar</span>
               </h1>
               <p className="text-slate-200 text-xs mt-2 max-w-md">
-                Pondasi utama bahasa Jepang. Kuasai cara baca dan cara tulis
-                sebelum lanjut ke materi tata bahasa.
+                Kunci utama untuk bisa membaca teks Jepang. Kuasai Hiragana & 
+                Katakana di sini sebelum mulai belajar kalimat dan tata bahasa.
               </p>
             </div>
             <div
               className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#1e2024] border border-white/5 text-[9px] font-black uppercase tracking-[0.2em] ${themeColor}`}
             >
-              <LayoutGrid size={12} /> Tampilan Ringkas
+              <LayoutGrid size={12} /> Tampilan Penuh
             </div>
           </div>
         </header>
 
         {/* CONTROLS */}
         <div className="mb-8 space-y-6">
-          <div className="bg-[#1e2024] p-1 rounded-2xl border border-white/5 flex gap-2 shadow-inner relative max-w-sm">
+          <div className="bg-slate-900/60 backdrop-blur-md p-1.5 rounded-2xl border border-white/10 flex gap-2 shadow-inner relative max-w-sm">
             <Button
               variant={isHira ? "default" : "ghost"}
               onClick={() => setType("hiragana")}
-              className={`relative z-10 flex-1 py-6 rounded-xl font-black uppercase tracking-widest text-[10px] md:text-xs transition-all duration-500 h-10 ${isHira ? "bg-[#0ef] text-[#15171a] hover:bg-[#0ef]/90 shadow-[0_0_15px_rgba(0,238,255,0.5)]" : "text-white/40 hover:text-white"}`}
+              className={`relative z-10 flex-1 py-6 rounded-xl font-black uppercase tracking-[0.2em] text-[10px] md:text-xs transition-all duration-500 h-10 ${isHira ? "bg-[#0ef] text-[#15171a] hover:bg-[#0ef]/90 shadow-[0_0_20px_rgba(0,238,255,0.4)]" : "text-white/40 hover:text-white"}`}
             >
               Hiragana
             </Button>
             <Button
               variant={!isHira ? "default" : "ghost"}
               onClick={() => setType("katakana")}
-              className={`relative z-10 flex-1 py-6 rounded-xl font-black uppercase tracking-widest text-[10px] md:text-xs transition-all duration-500 h-10 ${!isHira ? "bg-purple-500 text-white hover:bg-purple-600 shadow-[0_0_15px_rgba(168,85,247,0.5)]" : "text-white/40 hover:text-white"}`}
+              className={`relative z-10 flex-1 py-6 rounded-xl font-black uppercase tracking-[0.2em] text-[10px] md:text-xs transition-all duration-500 h-10 ${!isHira ? "bg-purple-500 text-white hover:bg-purple-600 shadow-[0_0_20px_rgba(168,85,247,0.4)]" : "text-white/40 hover:text-white"}`}
             >
               Katakana
             </Button>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 md:gap-3">
             {[
-              { id: "seion", label: "Dasar" },
-              { id: "dakuon", label: "Tenten / Maru" },
-              { id: "yoon", label: "Campuran" },
+              { id: "seion", label: "Huruf Utama" },
+              { id: "dakuon", label: "Bunyi Turunan" },
+              { id: "yoon", label: "Bunyi Gabungan" },
             ].map((cat) => (
               <Button
                 key={cat.id}
                 variant={category === cat.id ? "default" : "outline"}
                 onClick={() => setCategory(cat.id as KanaCategory)}
-                className={`px-5 py-2.5 h-auto rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                className={`px-6 py-3 h-auto rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${
                   category === cat.id
-                    ? `bg-[#1e2024] ${themeColor} ${themeBorder} shadow-[0_0_10px_currentColor] hover:bg-[#1e2024]`
-                    : "bg-transparent text-white/30 border-white/5 hover:bg-white/5"
+                    ? `bg-slate-900/80 ${themeColor} ${themeBorder} shadow-[0_0_15px_currentColor] border-opacity-50`
+                    : "bg-transparent text-white/30 border-white/5 hover:bg-white/5 hover:text-white"
                 }`}
               >
                 {cat.label}
@@ -239,15 +239,15 @@ export default function BasicsPage() {
         </div>
 
         {/* DATA GRID */}
-        <Card className="p-4 md:p-8 rounded-[2.5rem] border-white/5 shadow-2xl relative flex-1 min-h-[400px]">
+        <Card className="p-5 md:p-10 rounded-[2.5rem] md:rounded-[3.5rem] border-white/10 bg-slate-900/40 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative flex-1 min-h-[450px] overflow-hidden">
           <div
-            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[12rem] md:text-[18rem] font-black italic opacity-[0.02] pointer-events-none select-none transition-colors duration-700 ${themeColor}`}
+            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15rem] md:text-[22rem] font-black italic opacity-[0.03] pointer-events-none select-none transition-colors duration-700 ${themeColor}`}
           >
             {isHira ? "あ" : "ア"}
           </div>
 
           <div
-            className={`relative z-10 grid gap-2 md:gap-4 mx-auto ${category === "yoon" ? "grid-cols-3 max-w-lg" : "grid-cols-5 max-w-2xl"}`}
+            className={`relative z-10 grid gap-3 md:gap-5 mx-auto ${category === "yoon" ? "grid-cols-3 max-w-lg" : "grid-cols-5 max-w-2xl"}`}
           >
             <AnimatePresence mode="wait">
               {currentData[type].map((row, rowIndex) => (
@@ -265,12 +265,12 @@ export default function BasicsPage() {
                             romaji: currentData.romaji[rowIndex][colIndex],
                           })
                         }
-                        className={`relative aspect-square bg-[#15171a] border border-white/5 rounded-xl md:rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-all duration-300 ${themeBgHover} hover:border-current group active:scale-90`}
+                        className={`relative aspect-square bg-black/40 border border-white/5 rounded-2xl md:rounded-3xl flex flex-col items-center justify-center cursor-pointer transition-all duration-500 ${themeBgHover} hover:border-current group active:scale-95 hover:shadow-[0_0_20px_rgba(0,0,0,0.3),0_0_10px_currentColor] shadow-inner`}
                       >
-                        <span className="text-2xl md:text-4xl font-black text-white group-hover:scale-110 transition-transform font-japanese">
+                        <span className="text-3xl md:text-5xl font-black text-white group-hover:scale-110 transition-transform font-japanese drop-shadow-md">
                           {char}
                         </span>
-                        <span className="text-[8px] md:text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest mt-1 group-hover:text-white/60 transition-colors">
+                        <span className="text-[9px] md:text-[11px] font-black font-mono text-white/20 uppercase tracking-[0.2em] mt-2 group-hover:text-white/80 transition-colors">
                           {currentData.romaji[rowIndex][colIndex]}
                         </span>
                       </motion.div>
@@ -316,7 +316,7 @@ export default function BasicsPage() {
                         Latihan Menulis
                       </span>
                       <DialogTitle className="text-white text-lg sm:text-xl font-black italic uppercase tracking-tighter leading-none text-left">
-                        Data Karakter
+                        Cara Menulis
                       </DialogTitle>
                     </DialogHeader>
                   </header>
@@ -340,12 +340,16 @@ export default function BasicsPage() {
                   </div>
 
                   <div className="w-full flex-1 flex flex-col justify-center min-h-[300px] mb-2">
-                    <WritingCanvas character={selectedChar!.char} />
+                    <WritingCanvas 
+                      character={selectedChar!.char} 
+                      strokeColor={isHira ? "#0ef" : "#a855f7"}
+                      guideColor={isHira ? "#0ef" : "#a855f7"}
+                    />
                   </div>
 
                   <p className="text-center text-[9px] text-slate-300 font-bold uppercase tracking-[0.2em] mt-4 shrink-0">
                     <Sparkles size={10} className="inline mr-1 text-cyan-400" />{" "}
-                    Gunakan jari atau mouse untuk menulis
+                    Yuk, coba tulis huruf ini di kanvas!
                   </p>
                 </div>
               </motion.div>

@@ -67,55 +67,27 @@ export default function CoursesLandingPage() {
           </motion.h1>
         </header>
 
-        {/* SECTION: EXAM CENTER */}
-        <motion.section variants={itemVariants} className="mb-16">
-          <Link href="/exams" className="group block" passHref legacyBehavior>
-            <motion.div
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <Card className="rounded-[2.5rem] p-8 md:p-12 border-white/5 shadow-2xl hover:border-cyan-400/30 transition-colors cursor-pointer">
-                <div className="flex flex-col md:flex-row justify-between items-center gap-10">
-                  <div className="max-w-md text-center md:text-left">
-                    <div className="flex items-center justify-center md:justify-start gap-2 mb-4">
-                      <span className="w-2 h-2 bg-cyan-400 rounded-full animate-ping" />
-                      <span className="text-cyan-400 font-black text-[10px] tracking-[0.3em] uppercase">
-                        Test Center Live
-                      </span>
-                    </div>
-                    <h2 className="text-4xl font-black italic uppercase text-white mb-4">
-                      JLPT Mock Exam
-                    </h2>
-                    <p className="text-sm text-slate-300 line-clamp-2">
-                      Uji kemampuan instan dengan simulasi waktu nyata berstandar
-                      resmi.
-                    </p>
-                  </div>
-                  <div className="bg-cyan-400 text-black p-6 rounded-3xl shadow-[0_0_25px_rgba(34,211,238,0.4)]">
-                    <Play fill="currentColor" size={32} />
-                  </div>
-                </div>
-              </Card>
-            </motion.div>
-          </Link>
-        </motion.section>
+
 
         {/* SECTION: BASICS (FOUNDATION) */}
         <motion.section variants={itemVariants} className="mb-24">
-          <div className="flex items-center gap-4 mb-8">
-            <h3 className="text-xs font-black uppercase tracking-[0.4em] text-cyan-400">
-              Foundation
+          <div className="flex items-center gap-6 mb-10">
+            <h3 className="text-xs md:text-sm font-black uppercase tracking-[0.5em] text-cyan-400/60 italic">
+              Core_Protocol
             </h3>
             <div className="h-[1px] flex-1 bg-white/5" />
           </div>
-          <Link href="/courses/basics" passHref legacyBehavior>
+          <Link href="/courses/basics">
             <motion.div whileHover={{ x: 10 }}>
-              <Card className="rounded-[2rem] p-10 border-white/5 shadow-2xl cursor-pointer group hover:border-cyan-400/20 transition-all">
-                <div className="flex justify-between items-center">
-                  <h4 className="text-3xl font-black italic uppercase text-white group-hover:text-cyan-400 transition-colors">
-                    Kana Mastery
+              <Card className="rounded-[2rem] md:rounded-[3rem] p-10 md:p-12 bg-slate-900/40 backdrop-blur-xl border-white/10 shadow-2xl cursor-pointer group hover:border-cyan-400/30 transition-all overflow-hidden relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="flex justify-between items-center relative z-10">
+                  <h4 className="text-3xl md:text-5xl font-black italic uppercase text-white group-hover:text-cyan-400 transition-colors tracking-tighter">
+                    Mastery: <span className="text-cyan-400 group-hover:text-white transition-colors">Kana</span>
                   </h4>
-                  <Zap className="text-cyan-400" size={30} />
+                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-cyan-400 group-hover:bg-cyan-400 group-hover:text-black transition-all duration-500 shadow-inner">
+                    <Zap size={32} />
+                  </div>
                 </div>
               </Card>
             </motion.div>
@@ -124,43 +96,44 @@ export default function CoursesLandingPage() {
 
         {/* SECTION: JLPT TRACKS */}
         <motion.section variants={itemVariants}>
-          <div className="flex items-center gap-4 mb-10">
-            <h3 className="text-xs font-black uppercase tracking-[0.4em] text-cyan-400">
-              JLPT Tracks
+          <div className="flex items-center gap-6 mb-12">
+            <h3 className="text-xs md:text-sm font-black uppercase tracking-[0.5em] text-cyan-400/60 italic">
+              Level_Tracks
             </h3>
             <div className="h-[1px] flex-1 bg-white/5" />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {jlptLevels.map((level) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
+            {jlptLevels.map((level, idx) => (
               <motion.div
                 key={level}
                 variants={itemVariants}
-                whileHover={{ y: -10, transition: { duration: 0.2 } }}
+                whileHover={{ y: -12, transition: { duration: 0.3 } }}
                 className="h-full"
               >
                 <Link
                   href={`/courses/${level.toLowerCase()}`}
                   className="group flex flex-col h-full"
-                  passHref
-                  legacyBehavior
                 >
-                  <Card className="flex flex-col h-full min-h-[288px] bg-gradient-to-br from-[#121620] to-[#0d1117] rounded-[2.5rem] p-8 border-white/[0.05] shadow-2xl cursor-pointer hover:border-cyan-400/30 transition-all">
-                    <span className="text-5xl font-black italic text-slate-800 group-hover:text-cyan-400 transition-colors mb-4 block">
+                  <Card className="flex flex-col h-full min-h-[320px] bg-slate-900/40 backdrop-blur-xl rounded-[2.5rem] md:rounded-[3.5rem] p-8 md:p-10 border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.4)] cursor-pointer hover:border-cyan-400/40 hover:bg-cyan-400/[0.02] transition-all duration-500 relative overflow-hidden group hover:shadow-[0_20px_50px_rgba(34,211,238,0.1)]">
+                    {/* Interactive Glow */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                    
+                    <span className="text-6xl md:text-8xl font-black italic text-slate-800/40 group-hover:text-cyan-400 transition-colors duration-500 mb-6 block tracking-tighter">
                       {level}
                     </span>
-                    <div className="mt-auto flex flex-col gap-4">
-                      <p className="text-xs text-slate-300 line-clamp-2">
-                        Materi terstruktur dan komprehensif untuk level {level}.
+                    
+                    <div className="mt-auto flex flex-col gap-6 relative z-10">
+                      <p className="text-[11px] md:text-xs text-slate-400 italic font-bold leading-relaxed group-hover:text-slate-200 transition-colors">
+                        Materi terstruktur dan komprehensif untuk penguasaan level {level}.
                       </p>
-                      <div className="flex items-center justify-between border-t border-white/5 pt-4">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-300 group-hover:text-white transition-colors">
+                      <div className="flex items-center justify-between border-t border-white/10 pt-6">
+                        <span className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.3em] text-slate-500 group-hover:text-cyan-400 transition-colors">
                           Mulai Rute
                         </span>
-                        <ArrowRight
-                          className="group-hover:text-cyan-400 transition-colors"
-                          size={18}
-                        />
+                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-cyan-400 group-hover:text-black group-hover:border-none transition-all duration-500 shadow-lg group-hover:translate-x-2">
+                          <ArrowRight size={18} />
+                        </div>
                       </div>
                     </div>
                   </Card>

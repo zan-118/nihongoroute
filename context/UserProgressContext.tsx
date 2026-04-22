@@ -1,10 +1,3 @@
-/**
- * @file UserProgressContext.tsx
- * @description Manajer state global untuk progres pengguna (XP, Level, SRS).
- * Menangani penyimpanan lokal (LocalStorage) dengan sinkronisasi ke Supabase.
- * @module UserProgressContext
- */
-
 "use client";
 
 // ======================
@@ -25,6 +18,10 @@ import { toast } from "sonner";
 export interface UserProgress {
   xp: number;
   level: number;
+  streak: number;
+  todayReviewCount: number;
+  lastStudyDate: string | null;
+  studyDays: Record<string, number>;
   srs: Record<string, SRSState>;
 }
 
@@ -59,10 +56,15 @@ export const ProgressProvider = ({
   const [progress, setProgress] = useState<UserProgress>({
     xp: 0,
     level: 1,
+    streak: 0,
+    todayReviewCount: 0,
+    lastStudyDate: null,
+    studyDays: {},
     srs: {},
   });
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
+  const [dirtySrs, setDirtySrs] = useState<Set<string>>(new Set());
   const supabase = createClient();
 
   // ======================
@@ -82,7 +84,7 @@ export const ProgressProvider = ({
         if (typeof sessionStorage !== "undefined" && !sessionStorage.getItem("nihongo_welcomed")) {
           const name = session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || "Siswa";
           toast.success(`Okaeri, ${name}!`, {
-            description: "Autentikasi berhasil. Selamat belajar!",
+            description: "Senang kamu kembali, mari taklukkan tantangan hari ini!",
           });
           sessionStorage.setItem("nihongo_welcomed", "true");
         }
@@ -103,27 +105,50 @@ export const ProgressProvider = ({
     const loadData = async () => {
       setLoading(true);
       try {
+        // 1. Muat Cache Lokal Segera (Instant UI)
+        const localCache = localStorage.getItem(STORAGE_KEY);
+        if (localCache) {
+          const parsed = JSON.parse(localCache);
+          setProgress(prev => ({ ...prev, ...parsed, srs: parsed.srs || {} }));
+        }
+
         if (session?.user) {
-          // Mode Cloud: Cek apakah ada data lokal yang perlu disinkronkan
-          const localData = localStorage.getItem(STORAGE_KEY);
-          if (localData) {
-            const parsed = JSON.parse(localData);
+          // 2. Cek Migrasi Guest -> User
+          if (localCache) {
+            const parsed = JSON.parse(localCache);
+            const gamificationData = localStorage.getItem(STATS_STORAGE_KEY);
+            if (gamificationData) {
+              const parsedStats = JSON.parse(gamificationData);
+              parsed.streak = parsedStats.streak;
+              parsed.todayReviewCount = parsedStats.todayReviewCount;
+              parsed.lastStudyDate = parsedStats.lastStudyDate;
+              
+              // Konversi studyDays migrasi
+              const migratedStudyDays: Record<string, number> = {};
+              if (parsedStats.studyDays) {
+                Object.entries(parsedStats.studyDays).forEach(([date, val]) => {
+                  migratedStudyDays[date] = typeof val === "boolean" ? (val ? 1 : 0) : (val as number);
+                });
+              }
+              parsed.studyDays = migratedStudyDays;
+            }
+
             const syncSuccess = await syncLocalToCloud(session.user.id, parsed);
             if (syncSuccess) {
-              localStorage.removeItem(STORAGE_KEY); // Hapus setelah berhasil
+              localStorage.removeItem(STATS_STORAGE_KEY);
             }
           }
 
-          // Muat data dari Supabase
+          // 3. Tarik data terbaru dari Cloud
           const { data: profile } = await supabase
             .from("profiles")
-            .select("xp, level")
+            .select("xp, level, streak, today_review_count, last_study_date, study_days")
             .eq("id", session.user.id)
             .single();
 
           const { data: srsData } = await supabase
             .from("user_srs")
-            .select("*")
+            .select("word_id, interval, repetition, ease_factor, next_review")
             .eq("user_id", session.user.id);
 
           const parsedSrs: Record<string, SRSState> = {};
@@ -131,31 +156,75 @@ export const ProgressProvider = ({
             srsData.forEach((row) => {
               parsedSrs[row.word_id] = {
                 interval: row.interval,
-                repetition: 0, // Repetition default untuk Supabase
+                repetition: row.repetition,
                 easeFactor: row.ease_factor,
                 nextReview: new Date(row.next_review).getTime(),
               };
             });
           }
 
-          setProgress({
+          const today = new Date().toISOString().split("T")[0];
+          let cloudStreak = profile?.streak || 0;
+          let cloudReviewCount = profile?.today_review_count || 0;
+          const cloudLastDate = profile?.last_study_date || null;
+
+          // Reset review harian jika hari sudah berganti
+          if (cloudLastDate !== today) {
+            cloudReviewCount = 0;
+          }
+
+          // Konversi studyDays lama (boolean) ke numerik jika perlu
+          const sanitizedStudyDays: Record<string, number> = {};
+          if (profile?.study_days) {
+            Object.entries(profile.study_days).forEach(([date, val]) => {
+              sanitizedStudyDays[date] = typeof val === "boolean" ? (val ? 1 : 0) : (val as number);
+            });
+          }
+
+          const cloudProgress: UserProgress = {
             xp: profile?.xp || 0,
             level: profile?.level || calculateLevel(profile?.xp || 0),
+            streak: cloudStreak,
+            todayReviewCount: cloudReviewCount,
+            lastStudyDate: cloudLastDate,
+            studyDays: sanitizedStudyDays,
             srs: parsedSrs,
-          });
+          };
+
+          setProgress(cloudProgress);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(cloudProgress));
         } else {
-          // Mode Guest: Muat dari LocalStorage
+          // Mode Guest: Jika tidak ada di cache (meskipun sudah dimuat di atas), muat lagi untuk kepastian
           const localData = localStorage.getItem(STORAGE_KEY);
           if (localData) {
             const parsed = JSON.parse(localData);
+            const sanitizedStudyDays: Record<string, number> = {};
+            if (parsed.studyDays) {
+              Object.entries(parsed.studyDays).forEach(([date, val]) => {
+                sanitizedStudyDays[date] = typeof val === "boolean" ? (val ? 1 : 0) : (val as number);
+              });
+            }
+
             setProgress({
               xp: parsed.xp || 0,
               level: calculateLevel(parsed.xp || 0),
+              streak: parsed.streak || 0,
+              todayReviewCount: parsed.todayReviewCount || 0,
+              lastStudyDate: parsed.lastStudyDate || null,
+              studyDays: sanitizedStudyDays,
               srs: parsed.srs || {},
             });
           } else {
             // Reset jika logout
-            setProgress({ xp: 0, level: 1, srs: {} });
+            setProgress({
+              xp: 0,
+              level: 1,
+              streak: 0,
+              todayReviewCount: 0,
+              lastStudyDate: null,
+              studyDays: {},
+              srs: {},
+            });
           }
         }
       } catch (err) {
@@ -175,65 +244,123 @@ export const ProgressProvider = ({
     if (loading) return;
 
     const debounceTimer = setTimeout(async () => {
+      // SELALU simpan ke LocalStorage (Cache) untuk dukungan offline
+      if (typeof window !== "undefined") {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+      }
+
       if (session?.user) {
-        // Simpan ke Supabase (Cloud)
         try {
+          // 1. Update Profile
           await supabase.from("profiles").upsert({
             id: session.user.id,
             xp: progress.xp,
             level: progress.level,
+            streak: progress.streak,
+            today_review_count: progress.todayReviewCount,
+            last_study_date: progress.lastStudyDate,
+            study_days: progress.studyDays,
             updated_at: new Date().toISOString(),
           }, { onConflict: 'id' });
 
-          const srsEntries = Object.entries(progress.srs).map(([wordId, state]) => ({
-            user_id: session.user.id,
-            word_id: wordId,
-            interval: state.interval,
-            ease_factor: state.easeFactor,
-            next_review: new Date(state.nextReview).toISOString(),
-            status: state.interval > 21 ? 'graduated' : (state.interval > 1 ? 'reviewing' : 'learning'),
-            updated_at: new Date().toISOString(),
-          }));
+          // 2. Partial Update SRS
+          if (dirtySrs.size > 0) {
+            const entriesToSync = Array.from(dirtySrs)
+              .filter(id => progress.srs[id])
+              .map(id => {
+                const state = progress.srs[id];
+                return {
+                  user_id: session.user.id,
+                  word_id: id,
+                  repetition: state.repetition,
+                  interval: state.interval,
+                  ease_factor: state.easeFactor,
+                  next_review: new Date(state.nextReview).toISOString(),
+                  status: state.interval > 21 ? 'graduated' : (state.interval > 1 ? 'reviewing' : 'learning'),
+                  updated_at: new Date().toISOString(),
+                };
+              });
 
-          if (srsEntries.length > 0) {
-            await supabase.from("user_srs").upsert(srsEntries, { onConflict: 'user_id,word_id' });
+            if (entriesToSync.length > 0) {
+              const { error } = await supabase.from("user_srs").upsert(entriesToSync, { onConflict: 'user_id,word_id' });
+              if (!error) {
+                setDirtySrs(new Set());
+              } else {
+                throw error;
+              }
+            }
           }
         } catch (err) {
-          console.error("Gagal menyimpan ke cloud:", err);
-        }
-      } else {
-        // Simpan ke LocalStorage (Guest)
-        if (typeof window !== "undefined") {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+          console.error("Gagal melakukan partial sync ke cloud (offline?):", err);
         }
       }
     }, 1500);
 
     return () => clearTimeout(debounceTimer);
-  }, [progress, loading, session, supabase]);
-
-  useEffect(() => {
-    if (loading || session?.user) return; // Hanya untuk guest
-    const handleBeforeUnload = () => {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-    };
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [progress, loading, session]);
+  }, [progress, loading, session, supabase, dirtySrs]);
 
   // ======================
   // HELPER FUNCTIONS
   // ======================
   const updateProgress = (newXp: number, newSrs: Record<string, SRSState>) => {
-    setProgress({
-      xp: newXp,
-      level: calculateLevel(newXp),
-      srs: newSrs,
+    const today = new Date().toISOString().split("T")[0];
+    const newDirty = new Set(dirtySrs);
+    let srsChanged = false;
+
+    Object.keys(newSrs).forEach(id => {
+      if (JSON.stringify(newSrs[id]) !== JSON.stringify(progress.srs[id])) {
+        newDirty.add(id);
+        srsChanged = true;
+      }
+    });
+    
+    setDirtySrs(newDirty);
+    
+    setProgress(prev => {
+      let { streak, todayReviewCount, lastStudyDate } = prev;
+      let studyDays = { ...prev.studyDays } as Record<string, number>;
+
+      // Logika Review Count & Streak
+      if (srsChanged) {
+        todayReviewCount += 1;
+        
+        if (lastStudyDate !== today) {
+          const yesterday = new Date();
+          yesterday.setDate(yesterday.getDate() - 1);
+          const yesterdayStr = yesterday.toISOString().split("T")[0];
+
+          if (lastStudyDate === yesterdayStr) {
+            streak += 1;
+          } else {
+            // Jika absen lebih dari sehari, reset streak jadi 1
+            streak = 1;
+          }
+          
+          lastStudyDate = today;
+          studyDays = { ...studyDays, [today]: (studyDays[today] || 0) + 1 };
+        } else {
+          // Jika hari yang sama, tetap update hitungan aktivitas di studyDays
+          studyDays = { ...studyDays, [today]: (studyDays[today] || 0) + 1 };
+        }
+      }
+
+      return {
+        ...prev,
+        xp: newXp,
+        level: calculateLevel(newXp),
+        srs: newSrs,
+        streak,
+        todayReviewCount,
+        lastStudyDate,
+        studyDays,
+      };
     });
   };
 
   const addToSRS = (wordId: string) => {
     if (progress.srs[wordId]) return;
+    
+    setDirtySrs(prev => new Set(prev).add(wordId));
     updateProgress(progress.xp, {
       ...progress.srs,
       [wordId]: createNewCardState(),
@@ -242,12 +369,7 @@ export const ProgressProvider = ({
 
   const exportData = () => {
     if (typeof window === "undefined") return;
-    const statsData = localStorage.getItem(STATS_STORAGE_KEY);
-    const fullPayload = {
-      ...progress,
-      stats: statsData ? JSON.parse(statsData) : null,
-    };
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullPayload));
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(progress));
     const downloadAnchorNode = document.createElement("a");
     downloadAnchorNode.setAttribute("href", dataStr);
     downloadAnchorNode.setAttribute("download", `nihongoroute-save-${new Date().toISOString().split("T")[0]}.json`);
@@ -260,10 +382,7 @@ export const ProgressProvider = ({
     try {
       const parsed = JSON.parse(jsonData);
       if (parsed.xp !== undefined && typeof parsed.xp === "number") {
-        updateProgress(parsed.xp, parsed.srs || {});
-        if (parsed.stats && typeof window !== "undefined" && !session?.user) {
-          localStorage.setItem(STATS_STORAGE_KEY, JSON.stringify(parsed.stats));
-        }
+        setProgress(parsed as UserProgress);
         return true;
       }
       return false;

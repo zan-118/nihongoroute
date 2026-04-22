@@ -7,6 +7,10 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
   xp INTEGER NOT NULL DEFAULT 0,
   level INTEGER NOT NULL DEFAULT 1,
+  streak INTEGER NOT NULL DEFAULT 0,
+  today_review_count INTEGER NOT NULL DEFAULT 0,
+  last_study_date TEXT, -- YYYY-MM-DD
+  study_days JSONB DEFAULT '{}'::jsonb NOT NULL, -- Heatmap data
   created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
   updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
@@ -17,6 +21,7 @@ CREATE TABLE IF NOT EXISTS public.user_srs (
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   word_id TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'learning', -- misal: 'learning', 'reviewing', 'graduated'
+  repetition INTEGER NOT NULL DEFAULT 0,
   interval INTEGER NOT NULL DEFAULT 0,
   ease_factor REAL NOT NULL DEFAULT 2.5,
   next_review TIMESTAMPTZ NOT NULL DEFAULT now(),

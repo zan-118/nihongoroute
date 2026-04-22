@@ -23,13 +23,13 @@ export default function ForgotPasswordPage() {
       
       if (error) throw error;
       
-      toast.success("Email Terkirim!", {
-        description: "Tautan pemulihan kata sandi telah dikirim ke email Anda. Silakan periksa kotak masuk atau spam.",
+      toast.success("Email Pemulihan Meluncur!", {
+        description: "Silakan cek kotak masuk (atau spam) email Anda untuk mengatur ulang kata sandi.",
       });
     } catch (error: any) {
       console.error("Gagal mengirim email pemulihan:", error);
-      toast.error("Gagal Mengirim Email", {
-        description: error.message || "Terjadi kesalahan saat mengirim email pemulihan. Pastikan email Anda terdaftar.",
+      toast.error("Ups, pengiriman gagal...", {
+        description: error.message || "Pastikan alamat email yang Anda masukkan sudah benar dan terdaftar.",
       });
     } finally {
       setLoading(false);

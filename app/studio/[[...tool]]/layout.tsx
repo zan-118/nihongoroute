@@ -1,18 +1,11 @@
-// app/studio/[[...tool]]/layout.tsx
+import { metadata, viewport } from 'next-sanity/studio'
 
-export const dynamic = "force-static";
+export { metadata, viewport }
 
-export const metadata = {
-  title: "NihongoRoute Studio",
-  description: "Admin Dashboard for NihongoRoute",
-  robots: "noindex, nofollow",
-};
-
-export default function StudioLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  // Hanya me-return children karena kita sudah punya Root Layout utama
-  return <>{children}</>;
+export default function StudioLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  )
 }

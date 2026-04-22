@@ -132,12 +132,12 @@ export default function VocabClient() {
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-none mb-2">
                 Kamus <span className="text-cyber-neon">Kosakata</span>
               </h1>
-              <span className="text-xs md:text-sm text-slate-400 font-medium tracking-wide">Pusat data perbendaharaan kata bahasa Jepang.</span>
+              <span className="text-xs md:text-sm text-slate-400 font-medium tracking-wide">Kumpulan kata penting untuk memperkaya bahasamu.</span>
             </div>
           </div>
           <div className="flex items-center justify-between md:justify-end gap-4 w-full md:w-auto">
              <div className="flex flex-col items-start md:items-end gap-1">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Total Data</span>
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Jumlah Kata</span>
                 <span className="text-xs md:text-sm font-black text-white">{vocabList.length} Kata</span>
              </div>
              <PdfGenerator data={vocabList} type="vocab" level={level} />
@@ -181,7 +181,7 @@ export default function VocabClient() {
              </div>
              <Select value={hinshi} onValueChange={setHinshi}>
                 <SelectTrigger className="w-full pl-12 md:pl-14 h-12 md:h-14 py-6 bg-black/40 border-white/5 rounded-2xl text-xs md:text-sm font-bold tracking-wide neo-inset shadow-none text-slate-400 focus:ring-cyber-neon/30 transition-all">
-                  <SelectValue placeholder="Pilih Jenis Kata" />
+                  <SelectValue placeholder="Cari Berdasarkan Tipe" />
                 </SelectTrigger>
                 <SelectContent className="bg-cyber-surface border-white/10 rounded-2xl overflow-hidden shadow-2xl p-1">
                   {HINSHI.map((h) => (
@@ -211,42 +211,44 @@ export default function VocabClient() {
               transition={{ delay: (idx % 10) * 0.05 }}
               className="flex h-full w-full"
             >
-              <Card className="p-6 md:p-8 h-full w-full flex flex-col bg-cyber-surface border-white/5 rounded-[2.5rem] hover:border-cyber-neon/40 transition-all duration-500 neo-card shadow-none group relative overflow-hidden">
-                <div className="flex justify-between items-start mb-8 relative z-10">
-                  <Badge variant="outline" className="px-3 py-1.5 md:px-4 md:py-2 text-[10px] md:text-xs font-bold uppercase tracking-wider rounded-xl bg-black/40 text-slate-400 border-white/10 neo-inset h-auto">
+              <Card className="p-5 md:p-8 h-full w-full flex flex-col bg-slate-900/40 backdrop-blur-xl border-white/10 rounded-[2.5rem] hover:border-cyber-neon/50 hover:bg-cyber-neon/[0.02] transition-all duration-500 neo-card shadow-none group relative overflow-hidden hover:scale-[1.03] hover:shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_30px_rgba(0,238,255,0.1)]">
+                {/* Interactive Gradient Glow */}
+                <div className="absolute inset-0 bg-gradient-to-br from-cyber-neon/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                
+                <div className="flex justify-between items-start mb-6 md:mb-8 relative z-10">
+                  <Badge variant="outline" className="px-3 py-1.5 md:px-4 md:py-2 text-[9px] md:text-xs font-black uppercase tracking-[0.2em] rounded-xl bg-black/20 backdrop-blur-md text-slate-400 border-white/10 h-auto">
                     {vocab.hinshi ? vocab.hinshi.replace("-", " ") : "TIDAK DIKETAHUI"}
                   </Badge>
                   <TTSReader text={vocab.word} minimal={true} />
                 </div>
 
-                <div className="mb-8 relative z-10 flex-1">
-                  <div className="min-h-[80px] md:min-h-[100px] flex flex-col justify-center">
-                    <ruby className="text-4xl md:text-5xl font-black text-white font-japanese block group-hover:text-cyber-neon transition-colors duration-500 drop-shadow-lg leading-tight">
+                <div className="mb-6 md:mb-8 relative z-10 flex-1">
+                  <div className="min-h-[70px] md:min-h-[100px] flex flex-col justify-center">
+                    <ruby className="text-2xl md:text-4xl font-black text-white font-japanese block group-hover:text-cyber-neon transition-colors duration-500 drop-shadow-2xl leading-tight italic">
                       {vocab.word}
-                      <rt className="text-xs md:text-sm text-cyber-neon font-bold tracking-widest opacity-80 pt-2">
+                      <rt className="text-[10px] md:text-xs text-cyber-neon font-black tracking-[0.3em] opacity-80 pt-1 md:pt-2 not-italic">
                         {vocab.furigana || "—"}
                       </rt>
                     </ruby>
                   </div>
-                  <div className="mt-6 flex items-center gap-3">
-                     <div className="h-0.5 w-4 bg-cyber-neon/40 rounded-full" />
-                     <p className="text-xs md:text-sm font-bold text-slate-500 uppercase tracking-widest">
+                  <div className="mt-4 md:mt-6 flex items-center gap-3">
+                     <div className="h-0.5 w-6 md:w-8 bg-cyber-neon/40 rounded-full group-hover:w-10 transition-all duration-500" />
+                     <p className="text-[10px] md:text-sm font-black text-slate-500 uppercase tracking-[0.3em] group-hover:text-slate-400 transition-colors">
                        {vocab.romaji}
                      </p>
                   </div>
                 </div>
 
-                <div className="mt-auto pt-6 border-t border-white/10 relative z-10">
-                  <p className="text-sm md:text-base font-bold text-slate-300 leading-relaxed group-hover:text-white transition-colors duration-500 line-clamp-3 min-h-[3rem]">
+                <div className="mt-auto pt-5 md:pt-6 border-t border-white/10 relative z-10">
+                  <p className="text-xs md:text-base font-bold text-slate-300 leading-relaxed group-hover:text-white transition-colors duration-500 line-clamp-3 min-h-[2.5rem] md:min-h-[3rem] italic">
                     {vocab.meaning}
                   </p>
                 </div>
 
                 {/* Decorative Elements */}
-                <div className="absolute -bottom-4 -right-4 text-[10rem] md:text-[12rem] font-black text-white/[0.02] pointer-events-none group-hover:text-cyber-neon/[0.05] transition-all duration-700 rotate-6">
+                <div className="absolute -bottom-4 -right-4 text-[10rem] md:text-[12rem] font-black text-white/[0.03] pointer-events-none group-hover:text-cyber-neon/[0.06] transition-all duration-700 rotate-6 italic">
                    {idx + 1}
                 </div>
-                <div className="absolute top-0 right-0 w-24 h-24 md:w-32 md:h-32 bg-cyber-neon/5 blur-[60px] pointer-events-none rounded-full" />
               </Card>
             </motion.div>
           ))}

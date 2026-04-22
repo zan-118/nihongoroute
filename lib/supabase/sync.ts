@@ -18,8 +18,12 @@ export async function syncLocalToCloud(userId: string, localData: UserProgress):
       .from("profiles")
       .upsert({
         id: userId,
-        xp: localData.xp,
-        level: localData.level,
+        xp: (localData as any).xp,
+        level: (localData as any).level,
+        streak: (localData as any).streak || 0,
+        today_review_count: (localData as any).todayReviewCount || 0,
+        last_study_date: (localData as any).lastStudyDate,
+        study_days: (localData as any).studyDays || {},
         updated_at: new Date().toISOString()
       }, { onConflict: 'id' });
 
@@ -29,11 +33,10 @@ export async function syncLocalToCloud(userId: string, localData: UserProgress):
     const srsEntries = Object.entries(localData.srs).map(([wordId, state]) => ({
       user_id: userId,
       word_id: wordId,
+      repetition: state.repetition,
       interval: state.interval,
       ease_factor: state.easeFactor,
       next_review: new Date(state.nextReview).toISOString(),
-      // status bisa disesuaikan, kita set 'learning' sebagai default,
-      // mungkin bisa ditingkatkan nanti berdasarkan interval
       status: state.interval > 21 ? 'graduated' : (state.interval > 1 ? 'reviewing' : 'learning'),
       updated_at: new Date().toISOString()
     }));

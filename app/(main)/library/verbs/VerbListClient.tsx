@@ -34,9 +34,9 @@ export interface VerbData {
   te?: string;
   nai?: string;
   ta?: string;
-  teiru?: string;
+  
   tai?: string;
-  nakereba?: string;
+  
   kanou?: string;
   shieki?: string;
   ukemi?: string;
@@ -80,7 +80,7 @@ export default function VerbListClient({
           onClick={() => setIsFlashcardMode(false)}
           className="mb-8 flex items-center justify-center gap-3 px-8 py-6 rounded-2xl text-[10px] md:text-xs font-bold uppercase tracking-widest w-full sm:w-auto mx-auto sm:mx-0 neo-card bg-black/40 border-white/5 hover:bg-white hover:text-black transition-all"
         >
-          <ArrowLeft size={18} /> KEMBALI KE MATRIKS
+          <ArrowLeft size={18} /> KEMBALI KE DAFTAR
         </Button>
         <FlashcardMaster cards={flashcardData} />
       </div>
@@ -113,14 +113,14 @@ export default function VerbListClient({
             </Card>
             <div className="text-left">
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-none mb-2">
-                Matriks <span className="text-cyber-neon">Kata Kerja</span>
+                Kamus <span className="text-cyber-neon">Kata Kerja</span>
               </h1>
-              <span className="text-xs md:text-sm text-slate-400 font-medium tracking-wide">Pusat pelatihan konjugasi interaktif.</span>
+              <span className="text-xs md:text-sm text-slate-400 font-medium tracking-wide">Latih cara mengubah bentuk kata kerja dengan mudah.</span>
             </div>
           </div>
           <div className="flex items-center justify-between md:justify-end gap-6 w-full md:w-auto">
              <div className="flex flex-col items-start md:items-end gap-1">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Total Data</span>
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Jumlah Kata</span>
                 <span className="text-xs md:text-sm font-black text-white">{filteredVerbs.length} Kata</span>
              </div>
              <Button
@@ -204,46 +204,49 @@ export default function VerbListClient({
                   className={`${isExpanded ? "col-span-full" : "h-full"}`}
                 >
                   <Card
-                    className={`bg-cyber-surface border overflow-hidden transition-all duration-500 rounded-[2.5rem] md:rounded-[3.5rem] neo-card shadow-none ${isExpanded ? "border-cyber-neon/50 shadow-[0_0_40px_rgba(0,238,255,0.15)]" : "border-white/5 hover:border-cyber-neon/40"}`}
+                    className={`bg-slate-900/40 backdrop-blur-xl border transition-all duration-500 rounded-[2.5rem] md:rounded-[3.5rem] neo-card shadow-none ${isExpanded ? "border-cyber-neon/60 shadow-[0_0_50px_rgba(0,238,255,0.2)] bg-slate-900/60" : "border-white/10 hover:border-cyber-neon/50 hover:bg-cyber-neon/[0.02] hover:scale-[1.02] hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]"}`}
                   >
                     <div
                       onClick={() => setExpandedId(isExpanded ? null : verb._id)}
-                      className="p-8 md:p-10 lg:p-12 flex flex-col gap-6 md:gap-8 cursor-pointer group relative"
+                      className="p-6 md:p-10 lg:p-12 flex flex-col gap-6 md:gap-8 cursor-pointer group relative overflow-hidden"
                     >
+                      {/* Interactive Gradient Glow */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-cyber-neon/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
                       <div className="flex justify-between items-start relative z-10">
                         <Badge
                           variant="outline"
-                          className={`px-3 py-1.5 md:px-4 md:py-2 text-[10px] md:text-xs font-bold uppercase tracking-widest rounded-xl border h-auto neo-inset ${badgeColor}`}
+                          className={`px-3 py-1.5 md:px-4 md:py-2 text-[9px] md:text-xs font-black uppercase tracking-[0.2em] rounded-xl border h-auto bg-black/20 backdrop-blur-md ${badgeColor}`}
                         >
                           GOLONGAN {verb.group}
                         </Badge>
                         <div className="flex items-center gap-4 md:gap-6">
                           <TTSReader text={verb.jisho} minimal={true} />
                           <div
-                            className={`w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl border flex items-center justify-center transition-all duration-500 neo-inset shadow-none ${isExpanded ? "bg-cyber-neon border-none text-black rotate-180" : "bg-black/40 border-white/10 text-slate-500 group-hover:text-cyber-neon group-hover:border-cyber-neon/40"}`}
+                            className={`w-9 h-9 md:w-12 md:h-12 rounded-xl md:rounded-2xl border flex items-center justify-center transition-all duration-500 shadow-lg ${isExpanded ? "bg-cyber-neon border-none text-black rotate-180" : "bg-white/5 border-white/10 text-slate-500 group-hover:text-cyber-neon group-hover:border-cyber-neon/40"}`}
                           >
-                            <ChevronDown size={20} className={isExpanded ? "" : "group-hover:translate-y-1 transition-transform md:w-6 md:h-6"} />
+                            <ChevronDown size={18} className={isExpanded ? "" : "group-hover:translate-y-1 transition-transform md:w-6 md:h-6"} />
                           </div>
                         </div>
                       </div>
                       
                       <div className="relative z-10 flex-1">
-                        <ruby className="text-4xl md:text-5xl lg:text-7xl font-black text-white font-japanese block group-hover:text-cyber-neon transition-colors duration-500 drop-shadow-xl leading-tight">
+                        <ruby className="text-2xl md:text-4xl lg:text-5xl font-black text-white font-japanese block group-hover:text-cyber-neon transition-colors duration-500 drop-shadow-2xl leading-tight italic">
                           {verb.jisho}
-                          <rt className="text-xs md:text-sm lg:text-base text-cyber-neon font-bold tracking-widest opacity-80 pt-2 md:pt-4">
+                          <rt className="text-[10px] md:text-xs lg:text-sm text-cyber-neon font-black tracking-[0.3em] opacity-80 pt-2 md:pt-4 not-italic">
                             {verb.furigana}
                           </rt>
                         </ruby>
-                        <div className="mt-6 md:mt-10 flex flex-wrap items-center gap-3 md:gap-4">
-                           <div className="h-0.5 w-4 md:w-6 bg-cyber-neon/40 rounded-full" />
-                           <p className="text-sm md:text-base lg:text-xl font-bold text-slate-400 leading-tight group-hover:text-white transition-colors duration-500 line-clamp-2">
+                        <div className="mt-5 md:mt-10 flex flex-wrap items-center gap-3 md:gap-4">
+                           <div className="h-0.5 w-6 md:w-10 bg-cyber-neon/40 rounded-full group-hover:w-12 transition-all duration-500" />
+                           <p className="text-xs md:text-base lg:text-xl font-black text-slate-400 leading-tight group-hover:text-white transition-colors duration-500 line-clamp-2 italic">
                              {verb.meaning}
                            </p>
                         </div>
                       </div>
 
                       {/* Ghost Background Number */}
-                      <div className="absolute -bottom-6 -right-6 md:-bottom-10 md:-right-10 text-[10rem] md:text-[12rem] font-black text-white/[0.02] pointer-events-none group-hover:text-cyber-neon/[0.04] transition-all duration-700 rotate-6">
+                      <div className="absolute -bottom-6 -right-6 md:-bottom-10 md:-right-10 text-[10rem] md:text-[12rem] font-black text-white/[0.03] pointer-events-none group-hover:text-cyber-neon/[0.06] transition-all duration-700 rotate-6 italic">
                          {idx + 1}
                       </div>
                     </div>
@@ -264,9 +267,7 @@ export default function VerbListClient({
                               <ConjugationItem label="Bentuk Nai" value={verb.nai} />
                               <ConjugationItem label="Bentuk Ta" value={verb.ta} />
                               <ConjugationItem label="Potensial (Bisa)" value={verb.kanou} />
-                              <ConjugationItem label="Sedang/Telah" value={verb.teiru} />
                               <ConjugationItem label="Ingin (Tai)" value={verb.tai} />
-                              <ConjugationItem label="Harus (Nakereba)" value={verb.nakereba} />
                               <ConjugationItem label="Kausatif (Menyuruh)" value={verb.shieki} />
                               <ConjugationItem label="Pasif (Di-)" value={verb.ukemi} />
                               <ConjugationItem label="Kondisional (Jika)" value={verb.katei} />

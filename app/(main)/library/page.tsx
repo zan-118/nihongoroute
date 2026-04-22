@@ -11,7 +11,7 @@
 // ======================
 import { motion } from "motion/react";
 import Link from "next/link";
-import { RefreshCw, BookOpen, BarChart2, ArrowRight, Library, Database, Activity, Server, GraduationCap, ArrowUpRight } from "lucide-react";
+import { RefreshCw, BookOpen, BarChart2, ArrowRight, Library, Database, Activity, Server, GraduationCap, ArrowUpRight, Award } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 // ======================
@@ -28,35 +28,43 @@ export default function LibraryPage() {
   const categories = [
     {
       href: "/library/verbs",
-      title: "Matriks Kata Kerja",
-      desc: "Pelajari konjugasi untuk kata kerja N5-N4. Bentuk Masu, Te, Nai, Ta, hingga Potensial secara interaktif.",
+      title: "Kamus Kata Kerja",
+      desc: "Pelajari konjugasi kata kerja N5-N4. Lengkap dengan bentuk Masu, Te, hingga Potensial yang mudah dipahami.",
       icon: <RefreshCw size={28} />,
-      label: "KONJUGASI_DOUCHI",
+      label: "KONJUGASI_KATA_KERJA",
       delay: 0.2
     },
     {
       href: "/library/grammar",
-      title: "Panduan Bunpou",
-      desc: "Kumpulan tata bahasa lengkap dengan contoh kalimat audio dan penjelasan mendetail.",
+      title: "Panduan Tata Bahasa",
+      desc: "Kumpulan tata bahasa lengkap dengan contoh kalimat audio dan penjelasan yang sederhana.",
       icon: <BookOpen size={28} />,
-      label: "TATA_BAHASA",
+      label: "BUNPOU_HITS",
       delay: 0.3
     },
     {
       href: "/library/vocab",
-      title: "Kamus Kosakata",
-      desc: "Ribuan perbendaharaan kata dari N5 hingga N2 dengan sistem pencarian dan filter cepat.",
+      title: "Daftar Kosakata",
+      desc: "Ribuan kosakata dari N5 hingga N2 dengan sistem pencarian kilat untuk membantumu belajar tiap hari.",
       icon: <Database size={28} />,
-      label: "DATABASE_KOSAKATA",
+      label: "DAFTAR_KOSAKATA",
       delay: 0.4
     },
     {
       href: "/library/cheatsheet",
       title: "Catatan Cepat",
-      desc: "Tabel referensi instan untuk angka, penunjuk waktu, bilangan, dan partikel dasar.",
+      desc: "Referensi instan untuk angka, penunjuk waktu, dan partikel dasar. Cocok untuk contekan cepat!",
       icon: <BarChart2 size={28} />,
       label: "REFERENSI_KILAT",
       delay: 0.5
+    },
+    {
+      href: "/exams",
+      title: "Ujian & Sertifikasi",
+      desc: "Uji kemampuanmu dengan simulasi ujian JLPT. Dapatkan skor dan ukur kesiapanmu menghadapi ujian asli.",
+      icon: <Award size={28} />,
+      label: "SIMULASI_JLPT",
+      delay: 0.6
     }
   ];
   // ======================
@@ -76,10 +84,10 @@ export default function LibraryPage() {
               <Library size={28} className="text-cyber-neon md:w-8 md:h-8" />
             </Card>
             <div className="flex flex-col">
-              <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-cyber-neon">Pusat Pustaka v3.0</span>
+              <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-cyber-neon">Perpustakaan Digital</span>
               <div className="flex items-center gap-2 md:gap-3 mt-1 md:mt-2">
                  <Activity size={12} className="text-cyber-neon animate-pulse md:w-3.5 md:h-3.5" />
-                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none">Status: Online</span>
+                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none">Status: Siap Belajar</span>
               </div>
             </div>
           </div>
@@ -91,17 +99,17 @@ export default function LibraryPage() {
                 animate={{ opacity: 1, x: 0 }}
                 className="text-5xl md:text-7xl lg:text-9xl font-black uppercase tracking-tight text-white mb-6 md:mb-10 drop-shadow-2xl leading-none md:leading-[0.85]"
               >
-                Pusat<br />
-                <span className="text-cyber-neon drop-shadow-[0_0_30px_rgba(0,238,255,0.5)]">Data</span>
+                Pustaka<br />
+                <span className="text-cyber-neon drop-shadow-[0_0_30px_rgba(0,238,255,0.5)]">Materi</span>
               </motion.h1>
               
               <motion.p
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-slate-400 text-xs md:text-base lg:text-xl max-w-2xl leading-relaxed font-bold tracking-wide"
+                className="text-slate-400 text-xs md:text-base lg:text-xl max-w-2xl leading-relaxed font-bold tracking-wide italic"
               >
-                Akses instan ke materi pembelajaran bahasa Jepang. Pilih modul di bawah ini.
+                Temukan segala amunisi yang kamu butuhkan untuk menaklukkan JLPT. Mulai dari daftar kata kerja hingga tata bahasa, semuanya ada di sini.
               </motion.p>
             </div>
             
@@ -139,13 +147,16 @@ export default function LibraryPage() {
                 transition={{ delay: cat.delay }}
                 className="w-full h-full"
               >
-                <Card className="h-full p-8 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] border-white/5 bg-cyber-surface hover:border-cyber-neon/40 transition-all duration-500 neo-card shadow-none flex flex-col group relative overflow-hidden">
-                  <div className="absolute -top-6 -right-6 md:-top-10 md:-right-10 text-[10rem] md:text-[12rem] font-black text-white/[0.02] group-hover:text-cyber-neon/[0.04] transition-all duration-700 pointer-events-none uppercase">
+                <Card className="h-full p-8 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] border-white/10 bg-slate-900/40 backdrop-blur-xl hover:border-cyber-neon/50 hover:bg-cyber-neon/[0.02] transition-all duration-500 neo-card shadow-none flex flex-col group relative overflow-hidden hover:scale-[1.03] hover:shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_30px_rgba(0,238,255,0.15)]">
+                  {/* Interactive Gradient Glow */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyber-neon/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  
+                  <div className="absolute -top-6 -right-6 md:-top-10 md:-right-10 text-[10rem] md:text-[12rem] font-black text-white/[0.03] group-hover:text-cyber-neon/[0.06] transition-all duration-700 pointer-events-none uppercase italic">
                     0{idx + 1}
                   </div>
                   
                   <div className="flex justify-between items-start mb-12 md:mb-16 relative z-10">
-                    <div className="w-14 h-14 md:w-16 md:h-16 bg-cyber-neon/10 rounded-2xl flex items-center justify-center border border-cyber-neon/20 group-hover:scale-110 group-hover:bg-cyber-neon group-hover:text-black transition-all duration-500 neo-inset shadow-none text-cyber-neon group-hover:border-none">
+                    <div className="w-14 h-14 md:w-16 md:h-16 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:scale-110 group-hover:bg-cyber-neon group-hover:text-black transition-all duration-500 shadow-inner text-cyber-neon group-hover:border-none">
                       {cat.icon}
                     </div>
                     <div className="flex flex-col items-end gap-1">
@@ -155,20 +166,20 @@ export default function LibraryPage() {
                   </div>
 
                   <div className="relative z-10 flex-1">
-                    <span className="text-[9px] md:text-[10px] font-bold text-cyber-neon/80 uppercase tracking-[0.3em] mb-3 md:mb-4 block">
+                    <span className="text-[9px] md:text-[10px] font-black text-cyber-neon/80 uppercase tracking-[0.4em] mb-3 md:mb-4 block">
                       {cat.label}
                     </span>
-                    <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight mb-4 md:mb-6 group-hover:text-cyber-neon transition-colors duration-500 leading-tight">
+                    <h2 className="text-2xl md:text-3xl font-black text-white tracking-tighter mb-4 md:mb-6 group-hover:text-cyber-neon transition-colors duration-500 leading-tight italic">
                       {cat.title}
                     </h2>
-                    <p className="text-[11px] md:text-xs text-slate-400 leading-relaxed font-medium group-hover:text-slate-300 transition-colors duration-500">
+                    <p className="text-[11px] md:text-xs text-slate-400 leading-relaxed font-bold group-hover:text-slate-300 transition-colors duration-500 italic">
                       {cat.desc}
                     </p>
                   </div>
 
-                  <div className="mt-10 md:mt-14 flex items-center justify-between text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] text-slate-600 group-hover:text-cyber-neon transition-all duration-500 border-t border-white/10 pt-6 md:pt-10 relative z-10">
+                  <div className="mt-10 md:mt-14 flex items-center justify-between text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-slate-600 group-hover:text-cyber-neon transition-all duration-500 border-t border-white/10 pt-6 md:pt-10 relative z-10">
                     <span>Akses Modul</span>
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/40 border border-white/10 flex items-center justify-center group-hover:bg-cyber-neon group-hover:text-black group-hover:border-none group-hover:translate-x-2 transition-all duration-500 neo-inset shadow-none">
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-cyber-neon group-hover:text-black group-hover:border-none group-hover:translate-x-2 transition-all duration-500 shadow-lg">
                        <ArrowRight size={18} className="md:w-5 md:h-5" />
                     </div>
                   </div>

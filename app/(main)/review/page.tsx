@@ -38,18 +38,16 @@ export default function DailyReviewPage() {
   const [isFetching, setIsFetching] = useState(true);
   const [isFinished, setIsFinished] = useState(false);
 
-  const hasFetched = useRef(false);
-
   useEffect(() => {
     // ======================
     // DATABASE OPERATIONS
     // ======================
     
-    // Mencegah pengambilan data ganda
-    if (loading || hasFetched.current) return;
+    if (loading) return;
 
     const fetchDueCards = async () => {
       try {
+        setIsFetching(true);
         const now = Date.now();
         
         // Filter ID kartu yang sudah waktunya direview
@@ -58,8 +56,7 @@ export default function DailyReviewPage() {
           .map(([id]) => id);
 
         if (dueItemIds.length === 0) {
-          setIsFetching(false);
-          hasFetched.current = true;
+          setDueCards([]);
           return;
         }
 
@@ -80,7 +77,6 @@ export default function DailyReviewPage() {
         const shuffled = data.sort(() => Math.random() - 0.5);
         
         setDueCards(shuffled);
-        hasFetched.current = true;
       } catch (error) {
         console.error("Gagal menarik data review dari Sanity:", error);
       } finally {
@@ -206,6 +202,8 @@ export default function DailyReviewPage() {
           key={dueCards[0]?._id}
           cards={dueCards}
           type={dueCards[0]?.category === "kanji" ? "kanji" : "vocab"}
+          mode="ujian"
+          isFixedMode={true}
         />
       </div>
     </div>

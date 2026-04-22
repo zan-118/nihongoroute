@@ -60,6 +60,9 @@ export default function SurvivalMode({ cards }: SurvivalModeProps) {
   const [currentCard, setCurrentCard] = useState<CardData | null>(null);
   const [options, setOptions] = useState<CardData[]>([]);
   const [isShaking, setIsShaking] = useState(false);
+  const [selectedWrongId, setSelectedWrongId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [isCorrecting, setIsCorrecting] = useState(false);
 
   // ======================
   // HELPER FUNCTIONS
@@ -102,16 +105,22 @@ export default function SurvivalMode({ cards }: SurvivalModeProps) {
     const targetCard = currentDeck[index];
     setCurrentCard(targetCard);
     setTimeLeft(TIME_PER_QUESTION);
+    setSelectedId(null);
 
     let wrongOptions = currentDeck.filter((c) => c._id !== targetCard._id);
 
-    // Prioritaskan distraktor dari kategori yang sama jika memungkinkan
+    // Mencari distraktor dari kategori yang sama (misal: kata kerja vs kata kerja)
     if (targetCard.category) {
       const sameCategoryOptions = wrongOptions.filter(
         (c) => c.category === targetCard.category,
       );
+      
+      // Jika ada cukup banyak kata sejenis, gunakan hanya kata sejenis sebagai pengecoh
       if (sameCategoryOptions.length >= 3) {
         wrongOptions = sameCategoryOptions;
+      } else {
+        // Jika tidak cukup, campur dengan kata lain tapi tetap prioritaskan yang sejenis di urutan awal
+        wrongOptions = [...sameCategoryOptions, ...shuffleArray(wrongOptions.filter(c => c.category !== targetCard.category))];
       }
     }
 
@@ -142,12 +151,30 @@ export default function SurvivalMode({ cards }: SurvivalModeProps) {
    * Validasi jawaban pengguna.
    */
   const handleAnswer = (selectedOption: CardData) => {
+    if (gameState !== "playing" || isCorrecting) return;
+
     if (selectedOption._id === currentCard?._id) {
+      setSelectedId(selectedOption._id);
       setScore((prev) => prev + 1);
       const currentIndex = deck.findIndex((c) => c._id === currentCard?._id);
-      loadNextQuestion(deck, currentIndex + 1);
+      
+      // Delay sedikit agar user bisa melihat jawaban yang benar (hijau)
+      setIsCorrecting(true);
+      setTimeout(() => {
+        loadNextQuestion(deck, currentIndex + 1);
+        setIsCorrecting(false);
+      }, 400);
     } else {
-      handleWrongAnswer();
+      setSelectedId(selectedOption._id);
+      setSelectedWrongId(selectedOption._id);
+      setIsCorrecting(true);
+      
+      // Delay sedikit agar user bisa melihat jawaban yang salah (merah)
+      setTimeout(() => {
+        handleWrongAnswer();
+        setSelectedWrongId(null);
+        setIsCorrecting(false);
+      }, 600);
     }
   };
 
@@ -344,11 +371,7 @@ export default function SurvivalMode({ cards }: SurvivalModeProps) {
                >
                  {currentCard?.word}
                </h2>
-               {currentCard?.furigana && (
-                  <span className="text-sm md:text-lg lg:text-xl text-cyber-neon font-bold uppercase tracking-widest mt-6 md:mt-8 opacity-60">
-                     {currentCard.furigana}
-                  </span>
-               )}
+               {/* Furigana disembunyikan di Mode Survival untuk tantangan ekstra */}
             </div>
           </Card>
         </motion.div>
@@ -363,21 +386,40 @@ export default function SurvivalMode({ cards }: SurvivalModeProps) {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 items-stretch">
-        {options.map((option, idx) => (
-          <Button
-            key={idx}
-            variant="ghost"
-            onClick={() => handleAnswer(option)}
-            className="group flex h-full w-full p-0 overflow-hidden rounded-3xl md:rounded-[2.5rem] border border-white/5 bg-black/40 hover:border-cyber-neon/50 hover:bg-cyber-neon hover:text-black neo-card shadow-none transition-all duration-500 min-h-[80px] md:min-h-[100px] lg:min-h-[120px]"
-          >
-            <div className="flex items-center justify-center w-full h-full p-6 md:p-8 relative">
-               <span className="absolute top-3 left-4 md:top-4 md:left-6 text-[9px] md:text-[10px] font-bold text-white/10 group-hover:text-black/30 transition-colors uppercase tracking-widest">OPSI {idx+1}</span>
-               <p className="font-bold text-base md:text-xl lg:text-2xl text-center leading-tight w-full break-words">
-                 {option.meaning}
-               </p>
-            </div>
-          </Button>
-        ))}
+        {options.map((option, idx) => {
+          const isCorrect = selectedId === option._id && option._id === currentCard?._id;
+          const isWrong = selectedWrongId === option._id;
+          
+          return (
+            <Button
+              key={idx}
+              variant="ghost"
+              onClick={() => handleAnswer(option)}
+              disabled={isCorrecting}
+              className={`group flex h-full w-full p-0 overflow-hidden rounded-3xl md:rounded-[2.5rem] border transition-all duration-300 min-h-[80px] md:min-h-[100px] lg:min-h-[120px] shadow-none ${
+                isWrong 
+                  ? "bg-red-500/20 border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.4)] text-red-400" 
+                  : isCorrect
+                  ? "bg-emerald-500/20 border-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.4)] text-emerald-400"
+                  : "bg-black/40 border-white/5 hover:border-cyber-neon/50 hover:bg-cyber-neon hover:text-black neo-card"
+              }`}
+            >
+              <div className="flex items-center justify-center w-full h-full p-6 md:p-8 relative">
+                 <span className={`absolute top-3 left-4 md:top-4 md:left-6 text-[9px] md:text-[10px] font-bold uppercase tracking-widest transition-colors ${isWrong ? 'text-red-400/30' : 'text-white/10 group-hover:text-black/30'}`}>
+                   OPSI {idx+1}
+                 </span>
+                 <p className="font-bold text-base md:text-xl lg:text-2xl text-center leading-tight w-full break-words">
+                   {option.meaning}
+                 </p>
+                 {isWrong && (
+                   <div className="absolute right-6 top-1/2 -translate-y-1/2">
+                      <ShieldAlert className="text-red-500 animate-pulse" size={24} />
+                   </div>
+                 )}
+              </div>
+            </Button>
+          );
+        })}
       </div>
     </div>
   );

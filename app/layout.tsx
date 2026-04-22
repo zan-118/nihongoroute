@@ -9,7 +9,7 @@
 // IMPORTS
 // ======================
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import { ReactNode } from "react";
 import { Toaster } from "sonner";
@@ -17,7 +17,12 @@ import { Toaster } from "sonner";
 // ======================
 // CONFIG / CONSTANTS
 // ======================
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const notoJsonJP = Noto_Sans_JP({
+  subsets: ["latin"],
+  weight: ["400", "500", "700", "900"],
+  variable: "--font-noto-jp",
+});
 
 /**
  * Konfigurasi viewport untuk mengoptimalkan tampilan di perangkat seluler.
@@ -102,7 +107,7 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body
-        className={`${inter.className} antialiased bg-cyber-bg text-[#c4cfde] selection:bg-red-500 selection:text-white`}
+        className={`${inter.variable} ${notoJsonJP.variable} font-sans antialiased bg-cyber-bg text-[#c4cfde] selection:bg-red-500 selection:text-white`}
       >
         {children}
         <Toaster 
@@ -110,12 +115,16 @@ export default function RootLayout({
           position="top-center"
           toastOptions={{
             style: {
-              background: 'rgba(10, 12, 16, 0.95)',
-              border: '1px solid rgba(0, 238, 255, 0.3)',
-              backdropFilter: 'blur(12px)',
+              background: 'rgba(10, 12, 16, 0.9)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(16px)',
               color: '#ffffff',
+              borderRadius: '16px',
             },
-            className: 'rounded-2xl shadow-[0_0_20px_rgba(0,238,255,0.15)]',
+            classNames: {
+              success: "border-cyber-neon/50 shadow-[0_0_20px_rgba(0,238,255,0.2)]",
+              error: "border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.2)]",
+            },
             duration: 4000,
           }}
         />

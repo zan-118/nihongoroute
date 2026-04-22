@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, BookOpen, Layers, LayoutDashboard, BrainCircuit, User, LogIn } from "lucide-react";
+import { Home, BookOpen, Layers, LayoutDashboard, BrainCircuit, User, LogIn, Award } from "lucide-react";
 import { motion } from "framer-motion";
 import { useProgress } from "@/context/UserProgressContext";
 
@@ -14,8 +14,8 @@ export default function MobileNav() {
     ? [
         { href: "/", icon: Home, label: "Beranda" },
         { href: "/courses", icon: BookOpen, label: "Materi" },
-        { href: "/review", icon: BrainCircuit, label: "Hafalan" },
         { href: "/library", icon: Layers, label: "Pustaka" },
+        { href: "/review", icon: BrainCircuit, label: "Hafalan" },
         { 
           href: "/dashboard", 
           icon: User, 
@@ -25,8 +25,8 @@ export default function MobileNav() {
     : [
         { href: "/", icon: Home, label: "Beranda" },
         { href: "/courses", icon: BookOpen, label: "Materi" },
+        { href: "/library", icon: Layers, label: "Pustaka" },
         { href: "/review", icon: BrainCircuit, label: "Hafalan" },
-        { href: "/dashboard", icon: LayoutDashboard, label: "Dasbor" },
         { href: "/login", icon: LogIn, label: "Masuk" },
       ];
 

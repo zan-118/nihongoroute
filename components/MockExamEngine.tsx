@@ -105,6 +105,26 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
     ? `/courses/${exam.categorySlug}`
     : "/courses";
 
+  const activeQuestion = exam.questions[currentQuestionIndex];
+  const isTimeCritical = timeLeft < 300;
+
+  // Mendeteksi status soal untuk menerapkan penguncian UI pada saat Sesi Listening berjalan
+  const isCurrentlyListening =
+    activeQuestion.section === "listening" || !!activeQuestion.audioUrl;
+
+  // Mencegah peserta mundur/curang jika soal sebelumnya adalah soal listening
+  const previousQuestionData =
+    currentQuestionIndex > 0 ? exam.questions[currentQuestionIndex - 1] : null;
+  const isPrevQuestionListening = previousQuestionData
+    ? previousQuestionData.section === "listening" ||
+      !!previousQuestionData.audioUrl
+    : false;
+
+  const disablePreviousButton =
+    currentQuestionIndex === 0 ||
+    isCurrentlyListening ||
+    isPrevQuestionListening;
+
   // ======================
   // BUSINESS LOGIC / EFFECTS
   // ======================
@@ -140,6 +160,38 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
       document.removeEventListener("contextmenu", handleContextMenu);
     };
   }, [gameState]);
+
+  // KEYBOARD SHORTCUTS
+  useEffect(() => {
+    if (gameState !== "playing") return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if user is typing (though unlikely here)
+      if (document.activeElement?.tagName === "INPUT" || document.activeElement?.tagName === "TEXTAREA") return;
+
+      // Numbers 1-4 for options
+      if (["1", "2", "3", "4"].includes(e.key)) {
+        const idx = parseInt(e.key) - 1;
+        if (idx < activeQuestion.options.length) {
+          handleAnswer(idx);
+        }
+      }
+
+      // Navigation
+      if (e.key === "ArrowRight" || e.key === "Enter") {
+        if (currentQuestionIndex < exam.questions.length - 1) {
+          nextQuestion();
+        }
+      } else if (e.key === "ArrowLeft") {
+        if (!disablePreviousButton) {
+          prevQuestion();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [gameState, currentQuestionIndex, activeQuestion, disablePreviousButton]);
 
   // TIMER LOGIC
   useEffect(() => {
@@ -391,7 +443,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
             onClick={() => setGameState("playing")}
             className="w-full bg-red-500 hover:bg-white text-black font-black uppercase tracking-widest h-auto py-5 px-10 rounded-xl transition-all shadow-[0_0_25px_rgba(239,68,68,0.4)] active:scale-95 text-[10px] sm:text-xs border-none"
           >
-            Mulai Ujian
+            Mulai Sekarang
           </Button>
         </div>
       </Card>
@@ -431,7 +483,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
           <h1
             className={`text-4xl md:text-5xl font-black uppercase italic tracking-tighter mb-2 ${isPassed ? "text-emerald-400" : "text-red-500"}`}
           >
-            {isPassed ? "Exam Cleared" : "Exam Failed"}
+            {isPassed ? "Lulus Ujian!" : "Belum Berhasil"}
           </h1>
           <Badge variant="ghost" className="text-slate-300 font-mono uppercase tracking-widest text-[10px] md:text-xs mb-10 h-auto">
             {exam.title}
@@ -672,26 +724,6 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
   // ======================
   // 4. TAMPILAN PLAYING
   // ======================
-  const activeQuestion = exam.questions[currentQuestionIndex];
-  const isTimeCritical = timeLeft < 300;
-
-  // Mendeteksi status soal untuk menerapkan penguncian UI pada saat Sesi Listening berjalan
-  const isCurrentlyListening =
-    activeQuestion.section === "listening" || !!activeQuestion.audioUrl;
-
-  // Mencegah peserta mundur/curang jika soal sebelumnya adalah soal listening
-  const previousQuestionData =
-    currentQuestionIndex > 0 ? exam.questions[currentQuestionIndex - 1] : null;
-  const isPrevQuestionListening = previousQuestionData
-    ? previousQuestionData.section === "listening" ||
-      !!previousQuestionData.audioUrl
-    : false;
-
-  const disablePreviousButton =
-    currentQuestionIndex === 0 ||
-    isCurrentlyListening ||
-    isPrevQuestionListening;
-
   return (
     <div className="w-full flex flex-col max-w-5xl mx-auto">
       {/* Audio Element Tersembunyi (Dikontrol secara terpusat oleh fungsi handlePlayAudio) */}

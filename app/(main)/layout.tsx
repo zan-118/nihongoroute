@@ -29,11 +29,19 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   return (
     <ProgressProvider>
       <div className="relative min-h-screen bg-[#080a0f] text-slate-300 flex flex-col overflow-x-hidden w-full">
+        {/* Aksesibilitas: Skip to Content */}
+        <a 
+          href="#main-content" 
+          className="sr-only focus:not-sr-only focus:fixed focus:top-6 focus:left-6 focus:z-[100] focus:px-6 focus:py-3 focus:bg-cyan-400 focus:text-black focus:font-black focus:rounded-xl focus:shadow-[0_0_30px_rgba(34,211,238,0.5)] outline-none transition-all"
+        >
+          Skip to Content
+        </a>
+
         {/* Navigasi Utama */}
         <Navbar />
 
         {/* Area Konten Utama */}
-        <main className="flex-1 w-full flex flex-col pt-24 pb-32 md:pb-12">
+        <main id="main-content" className="flex-1 w-full flex flex-col pt-24 pb-28 md:pb-12 outline-none">
           {children}
         </main>
 

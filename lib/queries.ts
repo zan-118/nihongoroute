@@ -6,74 +6,8 @@
  */
 
 // ======================
-// DICTIONARY QUERIES
-// ======================
-
-/**
- * Mengambil semua daftar kata kerja dari kamus beserta konjugasinya.
- */
-export const allVerbsQuery = `*[_type == "verb_dictionary"] | order(group asc, masu asc) {
-  _id,
-  group,
-  masu,
-  jisho,
-  furigana,
-  meaning,
-  lesson,
-  te,
-  nai,
-  ta,
-  teiru,
-  tai,
-  nakereba,
-  kanou,
-  shieki,
-  ukemi,
-  katei,
-  ikou,
-  teshimau,
-  meirei
-}`;
-
-/**
- * Mengambil semua ringkasan materi (cheatsheets) beserta referensi kosakatanya.
- */
-export const allCheatsheetsQuery = `*[_type == "cheatsheet"] | order(category asc) {
-  _id,
-  title,
-  category,
-  linkedVocab[]-> {
-    "label": meaning,
-    "jp": word,
-    romaji,
-    hinshi
-  },
-  items[] {
-    label,
-    jp,
-    romaji
-  }
-}`;
-
-// ======================
 // CONTENT QUERIES
 // ======================
-
-/**
- * Mengambil artikel tata bahasa lengkap.
- */
-export const allGrammarArticlesQuery = `*[_type == "grammar_article"] {
-  _id,
-  title,
-  "slug": slug.current,
-  meaning,
-  content,
-  examples[] {
-    jp,
-    furigana,
-    meaning
-  }
-}`;
 
 /**
  * Mengambil dataset kosakata spesifik berdasarkan daftar ID.

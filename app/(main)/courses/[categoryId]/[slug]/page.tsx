@@ -25,6 +25,7 @@ import QuizEngine from "@/components/QuizEngine";
 import TTSReader from "@/components/TTSReader";
 import AddToSRSButton from "@/components/AddToSRSButton";
 import DownloadPdfButton from "@/components/DownloadPdfButton";
+import AppBreadcrumbs from "@/components/AppBreadcrumbs";
 
 // ======================
 // CONFIG / CONSTANTS
@@ -217,19 +218,14 @@ export default async function LessonPage({ params }: Props) {
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-500/5 blur-[120px] rounded-full pointer-events-none" />
 
       <article className="max-w-4xl mx-auto w-full relative z-10 flex-1">
-        {/* TOP NAV */}
-        <nav className="mb-10 flex items-center gap-4">
-          <Link
-            href={`/courses/${lesson.levelCode || categoryId}`}
-            className="neo-inset px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-cyan-400 border border-cyan-400/20 hover:border-cyan-400 hover:bg-cyan-400/5 transition-all flex items-center gap-2"
-          >
-            <ChevronLeft size={14} /> {lesson.levelTitle || "Materi"}
-          </Link>
-          <div className="h-[1px] flex-1 bg-white/5" />
-          <span className="text-[10px] font-mono text-slate-600 uppercase tracking-widest hidden sm:block">
-            Bab: {lesson.title}
-          </span>
-        </nav>
+        {/* TOP NAV / BREADCRUMBS */}
+        <AppBreadcrumbs 
+          items={[
+            { label: "Pusat Rute", href: "/courses" },
+            { label: lesson.levelTitle || "Materi", href: `/courses/${lesson.levelCode || categoryId}` },
+            { label: lesson.title, active: true }
+          ]} 
+        />
 
         {/* HEADER SECTION */}
         <header className="mb-20">
@@ -392,4 +388,3 @@ export default async function LessonPage({ params }: Props) {
     </div>
   );
 }
-

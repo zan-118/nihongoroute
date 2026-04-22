@@ -39,7 +39,7 @@ export default async function KanjiFlashcardPage({ params }: PageProps) {
   const kanjiQuery = `*[_type == "kanji" && showInFlashcard != false && course_category->slug.current == $categoryId] {
     _id, "word": character, meaning, onyomi, kunyomi, examples
   }`;
-  const cards = await client.fetch(kanjiQuery, { categoryId });
+  const cards = (await client.fetch(kanjiQuery, { categoryId })).sort(() => Math.random() - 0.5);
 
   // ======================
   // RENDER
@@ -73,7 +73,12 @@ export default async function KanjiFlashcardPage({ params }: PageProps) {
         </header>
 
         {cards.length > 0 ? (
-          <FlashcardMaster cards={cards} type="kanji" />
+          <FlashcardMaster 
+            cards={cards} 
+            type="kanji" 
+            mode="latihan" 
+            isFixedMode={true} 
+          />
         ) : (
           <Card className="text-white bg-red-500/10 border border-red-500/30 p-8 md:p-10 rounded-[2rem] text-center shadow-2xl">
             <span className="text-4xl md:text-5xl mb-4 block">📡</span>
