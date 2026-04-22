@@ -4,14 +4,35 @@
   "description": "Platform Belajar Bahasa Jepang Gratis",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#15171a",
-  "theme_color": "#0ef",
+  "background_color": "#0a0c10",
+  "theme_color": "#0a0c10",
   "icons": [
     {
       "src": "/logo-branding.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-branding.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "NihongoRoute Dashboard"
+    },
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "label": "NihongoRoute Dashboard"
     }
   ]
 }
