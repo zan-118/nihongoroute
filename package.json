@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ducanh2912/next-pwa": "^10.2.9",
     "@portabletext/react": "^6.0.3",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-progress": "^1.1.8",
@@ -24,7 +25,6 @@
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.8.0",
     "next": "latest",
-    "next-pwa": "^5.6.0",
     "next-sanity": "latest",
     "react": "latest",
     "react-dom": "latest",

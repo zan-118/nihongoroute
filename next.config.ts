@@ -1,20 +1,27 @@
-/** @type {import('next').NextConfig} */
-import withPWAInit from "next-pwa";
+import withPWAInit from "@ducanh2912/next-pwa";
+import type { NextConfig } from "next";
 
 const withPWA = withPWAInit({
   dest: "public",
   disable: process.env.NODE_ENV === "development",
-  register: true,
-  skipWaiting: true,
+  workboxOptions: {
+    maximumFileSizeToCacheInBytes: 5242880, // 5MB
+  },
 });
 
-const nextConfig = {
+const nextConfig: NextConfig = {
   reactStrictMode: true,
   compiler: {
     styledComponents: true,
   },
-  // Jika kamu punya konfigurasi lain seperti images remote patterns, taruh di sini
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cdn.sanity.io",
+      },
+    ],
+  },
 };
 
-// ✨ Bungkus nextConfig dengan withPWA ✨
 export default withPWA(nextConfig);

@@ -49,6 +49,7 @@ node_modules
 **/public/workbox-*.js
 **/public/worker-*.js
 **/public/sw.js.map
+**/public/swe-worker-*.js
 
 .sanity
 dist
