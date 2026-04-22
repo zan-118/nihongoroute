@@ -14,6 +14,7 @@ import "./globals.css";
 import { ReactNode } from "react";
 import { Toaster } from "sonner";
 import PWARegistration from "@/components/PWARegistration";
+import PWAInstallBanner from "@/components/PWAInstallBanner";
 
 // ======================
 // CONFIG / CONSTANTS
@@ -116,6 +117,7 @@ export default function RootLayout({
         className={`${inter.variable} ${notoJsonJP.variable} font-sans antialiased bg-cyber-bg text-[#c4cfde] selection:bg-red-500 selection:text-white`}
       >
         <PWARegistration />
+        <PWAInstallBanner />
         {children}
         <Toaster 
           theme="dark"
