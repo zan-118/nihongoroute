@@ -9,7 +9,7 @@
   "icons": [
     {
       "src": "/logo-branding.png",
-      "sizes": "512x512",
+      "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
@@ -32,7 +32,8 @@
       "src": "/og-image.png",
       "sizes": "1920x1080",
       "type": "image/png",
-      "label": "NihongoRoute Dashboard"
+      "form_factor": "narrow",
+      "label": "NihongoRoute Mobile"
     }
   ]
 }
