@@ -8,16 +8,18 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, PenTool, ChevronLeft, LayoutGrid, Sparkles } from "lucide-react";
+import { X, PenTool, ChevronLeft, LayoutGrid, Sparkles, Swords, Heart, Trophy } from "lucide-react";
 import Link from "next/link";
 import WritingCanvas from "@/components/WritingCanvas";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 
 /* ====================================================
@@ -149,6 +151,87 @@ export default function BasicsPage() {
     romaji: string;
   } | null>(null);
 
+  // Survival Quiz State
+  const [isQuizActive, setIsQuizActive] = useState(false);
+  const [quizScore, setQuizScore] = useState(0);
+  const [quizLives, setQuizLives] = useState(3);
+  const [quizChar, setQuizChar] = useState<{ char: string; romaji: string } | null>(null);
+  const [quizOptions, setQuizOptions] = useState<string[]>([]);
+  const [quizInput, setQuizInput] = useState("");
+  const [quizFeedback, setQuizFeedback] = useState<"correct" | "incorrect" | null>(null);
+  const [gameOver, setGameOver] = useState(false);
+
+  // Helper function to get all current kana
+  const getAllKanaForType = (currentType: KanaType) => {
+    const pairs: { char: string; romaji: string }[] = [];
+    const categories: KanaCategory[] = ["seion", "dakuon", "yoon"];
+    categories.forEach((cat) => {
+      const data = kanaData[cat];
+      data[currentType].forEach((row, rowIndex) => {
+        row.forEach((char, colIndex) => {
+          if (char !== "") {
+            pairs.push({
+              char,
+              romaji: data.romaji[rowIndex][colIndex],
+            });
+          }
+        });
+      });
+    });
+    return pairs;
+  };
+
+  const nextQuizQuestion = (currentType: KanaType = type) => {
+    const pairs = getAllKanaForType(currentType);
+    const randomPair = pairs[Math.floor(Math.random() * pairs.length)];
+    
+    // Generate options
+    const options = new Set<string>();
+    options.add(randomPair.romaji);
+    while (options.size < 4 && options.size < pairs.length) {
+      const randomWrong = pairs[Math.floor(Math.random() * pairs.length)].romaji;
+      options.add(randomWrong);
+    }
+    
+    const shuffledOptions = Array.from(options).sort(() => Math.random() - 0.5);
+    
+    setQuizChar(randomPair);
+    setQuizOptions(shuffledOptions);
+    setQuizInput("");
+    setQuizFeedback(null);
+  };
+
+  const startQuiz = () => {
+    setQuizScore(0);
+    setQuizLives(3);
+    setGameOver(false);
+    setIsQuizActive(true);
+    nextQuizQuestion(type);
+  };
+
+  const handleOptionClick = (option: string) => {
+    if (gameOver || !quizChar || quizFeedback) return;
+    setQuizInput(option);
+
+    if (option.toLowerCase() === quizChar.romaji.toLowerCase()) {
+      setQuizFeedback("correct");
+      setQuizScore((s) => s + 1);
+      setTimeout(() => {
+        nextQuizQuestion();
+      }, 500);
+    } else {
+      setQuizFeedback("incorrect");
+      setQuizLives((l) => l - 1);
+      if (quizLives - 1 <= 0) {
+        setGameOver(true);
+      } else {
+        setTimeout(() => {
+          setQuizFeedback(null);
+        }, 500);
+      }
+    }
+  };
+
   const currentData = kanaData[category];
   const isHira = type === "hiragana";
 
@@ -216,25 +299,34 @@ export default function BasicsPage() {
             </Button>
           </div>
 
-          <div className="flex flex-wrap gap-2 md:gap-3">
-            {[
-              { id: "seion", label: "Huruf Utama" },
-              { id: "dakuon", label: "Bunyi Turunan" },
-              { id: "yoon", label: "Bunyi Gabungan" },
-            ].map((cat) => (
-              <Button
-                key={cat.id}
-                variant={category === cat.id ? "default" : "outline"}
-                onClick={() => setCategory(cat.id as KanaCategory)}
-                className={`px-6 py-3 h-auto rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${
-                  category === cat.id
-                    ? `bg-slate-900/80 ${themeColor} ${themeBorder} shadow-[0_0_15px_currentColor] border-opacity-50`
-                    : "bg-transparent text-white/30 border-white/5 hover:bg-white/5 hover:text-white"
-                }`}
-              >
-                {cat.label}
-              </Button>
-            ))}
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-wrap gap-2 md:gap-3">
+              {[
+                { id: "seion", label: "Huruf Utama" },
+                { id: "dakuon", label: "Bunyi Turunan" },
+                { id: "yoon", label: "Bunyi Gabungan" },
+              ].map((cat) => (
+                <Button
+                  key={cat.id}
+                  variant={category === cat.id ? "default" : "outline"}
+                  onClick={() => setCategory(cat.id as KanaCategory)}
+                  className={`px-6 py-3 h-auto rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${
+                    category === cat.id
+                      ? `bg-slate-900/80 ${themeColor} ${themeBorder} shadow-[0_0_15px_currentColor] border-opacity-50`
+                      : "bg-transparent text-white/30 border-white/5 hover:bg-white/5 hover:text-white"
+                  }`}
+                >
+                  {cat.label}
+                </Button>
+              ))}
+            </div>
+
+            <Button 
+              onClick={startQuiz}
+              className={`px-6 py-3 h-auto rounded-xl text-[10px] md:text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 ${themeAccent} text-white shadow-[0_0_20px_currentColor] hover:scale-105 active:scale-95 border-none bg-opacity-80 hover:bg-opacity-100`}
+            >
+              <Swords size={16} className="mr-2" /> Latihan
+            </Button>
           </div>
         </div>
 
@@ -351,6 +443,116 @@ export default function BasicsPage() {
                     <Sparkles size={10} className="inline mr-1 text-cyan-400" />{" "}
                     Yuk, coba tulis huruf ini di kanvas!
                   </p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </DialogContent>
+      </Dialog>
+
+      {/* SURVIVAL QUIZ MODAL */}
+      <Dialog
+        open={isQuizActive}
+        onOpenChange={(open) => {
+          setIsQuizActive(open);
+          if (!open) setGameOver(false);
+        }}
+      >
+        <DialogContent className="max-w-md p-0 border-none bg-transparent shadow-none">
+          <DialogTitle className="sr-only">Latihan Kana</DialogTitle>
+          <DialogDescription className="sr-only">Latihan membaca huruf kana.</DialogDescription>
+          <AnimatePresence>
+            {isQuizActive && (
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0, y: 40 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.9, opacity: 0, y: 40 }}
+                className={`relative bg-[#1e2024] p-6 sm:p-8 rounded-[2rem] sm:rounded-[3rem] border ${themeBorder} shadow-2xl max-w-md w-full max-h-[90vh] flex flex-col`}
+              >
+                <div className="relative z-10 flex flex-col h-full">
+                  <header className="flex justify-between items-center mb-6">
+                    <div className="flex items-center gap-2">
+                      <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 font-black text-sm`}>
+                        <Heart size={16} className={quizLives > 0 ? "fill-current" : ""} />
+                        {quizLives}
+                      </div>
+                      <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 font-black text-sm`}>
+                        <Trophy size={16} className="fill-current" />
+                        {quizScore}
+                      </div>
+                    </div>
+                    <div className={`px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest ${themeColor} italic`}>
+                      {isHira ? "Hiragana" : "Katakana"} Quiz
+                    </div>
+                  </header>
+
+                  {!gameOver ? (
+                    <div className="flex flex-col items-center">
+                      <div className={`w-full aspect-video bg-[#15171a] rounded-2xl border ${quizFeedback === 'correct' ? 'border-green-500 shadow-[0_0_30px_rgba(34,197,94,0.3)]' : quizFeedback === 'incorrect' ? 'border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.3)]' : 'border-white/5 shadow-inner'} flex items-center justify-center mb-8 transition-all duration-300`}>
+                        <AnimatePresence mode="wait">
+                          <motion.span
+                            key={quizChar?.char}
+                            initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
+                            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                            exit={{ opacity: 0, scale: 0.5, rotate: 10 }}
+                            className="text-7xl sm:text-9xl font-black text-white font-japanese"
+                          >
+                            {quizChar?.char}
+                          </motion.span>
+                        </AnimatePresence>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3 w-full">
+                        {quizOptions.map((option, i) => {
+                          const isCorrect = option === quizChar?.romaji;
+                          const isClicked = option === quizInput;
+                          let btnClass = "bg-black/40 border-white/10 text-white/80 hover:bg-white/5 hover:text-white";
+                          
+                          if (quizFeedback) {
+                            if (isCorrect) {
+                              btnClass = "bg-green-500 border-green-500 text-white shadow-[0_0_20px_rgba(34,197,94,0.4)]";
+                            } else if (isClicked && !isCorrect) {
+                              btnClass = "bg-red-500 border-red-500 text-white shadow-[0_0_20px_rgba(239,68,68,0.4)]";
+                            } else {
+                              btnClass = "bg-black/20 border-white/5 text-white/20 opacity-50";
+                            }
+                          } else {
+                            btnClass = `bg-black/40 border-white/10 text-white/80 hover:border-current focus-visible:ring-1 focus-visible:ring-current hover:${themeColor}`;
+                          }
+
+                          return (
+                            <Button
+                              key={i}
+                              type="button"
+                              onClick={() => handleOptionClick(option)}
+                              disabled={!!quizFeedback}
+                              variant="outline"
+                              className={`h-14 rounded-xl text-lg font-black uppercase tracking-widest transition-all duration-300 ${btnClass}`}
+                            >
+                              {option}
+                            </Button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-8 text-center">
+                      <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mb-6">
+                        <Heart size={40} className="text-red-500" />
+                      </div>
+                      <h2 className="text-3xl font-black text-white uppercase italic tracking-tighter mb-2">Game Over!</h2>
+                      <p className="text-slate-400 mb-8">Skor akhir kamu:</p>
+                      <div className="text-6xl font-black text-yellow-500 mb-8 drop-shadow-[0_0_20px_rgba(234,179,8,0.4)]">
+                        {quizScore}
+                      </div>
+                      <Button
+                        onClick={() => startQuiz()}
+                        className={`w-full h-14 rounded-xl font-black uppercase tracking-widest ${themeAccent} text-white text-sm`}
+                      >
+                        Main Lagi
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             )}
