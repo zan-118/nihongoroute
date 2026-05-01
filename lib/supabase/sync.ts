@@ -18,12 +18,12 @@ export async function syncLocalToCloud(userId: string, localData: UserProgress):
       .from("profiles")
       .upsert({
         id: userId,
-        xp: (localData as any).xp,
-        level: (localData as any).level,
-        streak: (localData as any).streak || 0,
-        today_review_count: (localData as any).todayReviewCount || 0,
-        last_study_date: (localData as any).lastStudyDate,
-        study_days: (localData as any).studyDays || {},
+        xp: localData.xp,
+        level: localData.level,
+        streak: localData.streak || 0,
+        today_review_count: localData.todayReviewCount || 0,
+        last_study_date: localData.lastStudyDate,
+        study_days: localData.studyDays || {},
         updated_at: new Date().toISOString()
       }, { onConflict: 'id' });
 

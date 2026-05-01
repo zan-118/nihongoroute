@@ -15,7 +15,6 @@ import { notFound } from "next/navigation";
 import { ChevronLeft, Home, Library, BookOpen, Activity, BookText } from "lucide-react";
 import TTSReader from "@/components/TTSReader";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 // ======================
@@ -28,6 +27,7 @@ const articleQuery = `*[_type == "grammar_article" && slug.current == $slug][0] 
  */
 const ptComponents = {
   types: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     exampleSentence: ({ value }: any) => (
       <Card className="bg-cyber-surface p-6 md:p-8 rounded-3xl md:rounded-[2.5rem] border-white/5 my-8 md:my-10 neo-card shadow-none group hover:border-cyber-neon/40 transition-all duration-500 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 relative overflow-hidden">
         <div className="absolute -left-4 -top-4 text-5xl md:text-6xl font-black italic text-white/[0.01] pointer-events-none uppercase">CTH</div>
@@ -49,17 +49,20 @@ const ptComponents = {
     ),
   },
   block: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     h2: ({ children }: any) => (
       <h2 className="text-2xl md:text-3xl font-black text-white mt-12 md:mt-16 mb-6 md:mb-8 uppercase tracking-tight flex items-center gap-3 md:gap-4 group">
         <span className="w-1.5 md:w-2 h-6 md:h-8 bg-cyber-neon rounded-full neo-card" />
         {children}
       </h2>
     ),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     h3: ({ children }: any) => (
       <h3 className="text-lg md:text-xl font-black text-cyber-neon mt-8 md:mt-10 mb-3 md:mb-4 uppercase tracking-widest">
         {children}
       </h3>
     ),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     normal: ({ children }: any) => (
       <p className="mb-4 md:mb-6 text-slate-400 text-base md:text-lg leading-relaxed font-medium">
         {children}

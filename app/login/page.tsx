@@ -53,6 +53,7 @@ export default function LoginPage() {
         // Redirect setelah sukses
         router.push("/");
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Gagal autentikasi email:", error);
       toast.error("Ada sedikit kendala...", {
@@ -82,7 +83,7 @@ export default function LoginPage() {
   const handleAnonymousLogin = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.auth.signInAnonymously();
+      const { error } = await supabase.auth.signInAnonymously();
       if (error) throw error;
       
       toast.success("Mode Tamu Aktif", {

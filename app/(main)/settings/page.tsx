@@ -6,7 +6,7 @@ import { useProgressStore } from "@/store/useProgressStore";
 import { useShallow } from "zustand/react/shallow";
 import { createClient } from "@/lib/supabase/client";
 import { motion, Variants } from "framer-motion";
-import { Save, Upload, Trash2, LogOut, Settings as SettingsIcon, BookOpen, Layers, ShieldAlert, Database, Sparkles } from "lucide-react";
+import { Save, Upload, Trash2, LogOut, Settings as SettingsIcon, Layers, ShieldAlert, Database } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";

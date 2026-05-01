@@ -6,9 +6,11 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "node --max-old-space-size=4096 node_modules/eslint/bin/eslint.js .",
+    "lint:fix": "node --max-old-space-size=4096 node_modules/eslint/bin/eslint.js . --fix",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepare": "husky"
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
@@ -48,7 +50,9 @@
     "autoprefixer": "^10.4.24",
     "eslint": "^8.57.0",
     "eslint-config-next": "15.0.4",
+    "husky": "^9.1.7",
     "jsdom": "^29.1.1",
+    "lint-staged": "^16.4.0",
     "postcss": "^8.5.6",
     "sanity": "^5.19.0",
     "tailwindcss": "^3.4.1",
@@ -58,5 +62,8 @@
   "overrides": {
     "react": "$react",
     "react-dom": "$react-dom"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "node --max-old-space-size=4096 node_modules/eslint/bin/eslint.js --fix"
   }
 }

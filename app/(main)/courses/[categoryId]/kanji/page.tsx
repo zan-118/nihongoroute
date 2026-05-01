@@ -87,7 +87,7 @@ export default async function KanjiFlashcardPage({ params }: PageProps) {
             </p>
             <p className="text-xs text-white/60 mt-3 max-w-xs mx-auto leading-relaxed">
               Pastikan Anda sudah memasukkan karakter ke database (Sanity),
-              memilih kategori <strong>"Kanji"</strong>, dan mengatur levelnya
+              memilih kategori <strong>&quot;Kanji&quot;</strong>, dan mengatur levelnya
               ke <strong>{categoryId.toUpperCase()}</strong>.
             </p>
           </Card>

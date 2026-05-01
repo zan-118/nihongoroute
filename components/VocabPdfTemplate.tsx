@@ -32,6 +32,7 @@ Font.register({
 // TYPES
 // ======================
 interface VocabTemplateProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any[];
   level: string;
 }
@@ -210,6 +211,7 @@ export const VocabPdfTemplate = ({ data, level }: VocabTemplateProps) => (
       {/* HEADER SECTION */}
       <View style={styles.header} fixed>
         <View style={styles.logoSection}>
+          {/* eslint-disable-next-line jsx-a11y/alt-text */}
           <Image src="/logo-branding.png" style={styles.logoImage} />
           <View style={styles.brandText}>
             <Text style={styles.brandName}>NIHONGO ROUTE</Text>

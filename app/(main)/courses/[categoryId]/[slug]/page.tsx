@@ -119,6 +119,7 @@ const ptComponents: PortableTextComponents = {
     ),
   },
   types: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     callout: ({ value }: any) => {
       if (!value) return null;
       const isWarning = value.type === "warning";
@@ -144,6 +145,7 @@ const ptComponents: PortableTextComponents = {
         </div>
       );
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     exampleSentence: ({ value }: any) => {
       if (!value) return null;
       return (
@@ -186,6 +188,7 @@ export default async function LessonPage({ params }: Props) {
   if (!lesson) return notFound();
 
   // Logic Navigasi
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const currentIndex = nav.findIndex((l: any) => l.slug === slug);
   const prevLesson = currentIndex > 0 ? nav[currentIndex - 1] : null;
   const nextLesson =
@@ -197,11 +200,14 @@ export default async function LessonPage({ params }: Props) {
   // Formatting Quiz
   const formattedQuizzes =
     lesson.quizzes
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ?.map((quiz: any) => {
         if (!quiz) return null;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const correctOption = quiz.options?.find((opt: any) => opt?.isCorrect);
         return {
           question: quiz.question || "",
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           options: quiz.options?.map((opt: any) => opt?.text || "") || [],
           answer: correctOption ? correctOption.text : "",
           explanation: quiz.explanation || "",
@@ -261,6 +267,7 @@ export default async function LessonPage({ params }: Props) {
                 <div className="h-[1px] flex-1 bg-white/5" />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {lesson.vocabList.map((v: any) => {
                   if (!v) return null;
                   return (

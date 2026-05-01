@@ -13,8 +13,7 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Zap, Play, ArrowRight, BookOpen } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Zap, ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 // ======================
@@ -104,7 +103,7 @@ export default function CoursesLandingPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
-            {jlptLevels.map((level, idx) => (
+            {jlptLevels.map((level) => (
               <motion.div
                 key={level}
                 variants={itemVariants}

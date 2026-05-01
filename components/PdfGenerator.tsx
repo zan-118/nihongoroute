@@ -11,6 +11,7 @@ import { usePdfGenerator } from "./features/pdf/usePdfGenerator";
 export type TemplateType = "lesson" | "vocab";
 
 interface PdfGeneratorProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
   type: TemplateType;
   title?: string;
@@ -25,6 +26,7 @@ export default function PdfGenerator({
 }: PdfGeneratorProps) {
   const { isClient, getFileName } = usePdfGenerator({ type, title, level });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const getDocument = (): any => {
     if (type === "lesson") return <LessonPdfTemplate lessonData={data} />;
     if (type === "vocab")
@@ -46,7 +48,6 @@ export default function PdfGenerator({
       fileName={getFileName()}
       style={{ textDecoration: 'none' }}
     >
-      {/* @ts-ignore */}
       {({ loading }) => (
         <Button
           variant="ghost"

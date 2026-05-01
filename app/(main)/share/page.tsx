@@ -16,7 +16,6 @@ import { motion } from "framer-motion";
 import {
   Trophy,
   Skull,
-  CheckCircle,
   XCircle,
   Share2,
   Home,

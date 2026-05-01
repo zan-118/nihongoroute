@@ -23,7 +23,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 // ======================
 // MAIN EXECUTION
@@ -178,8 +177,8 @@ export default function SupportPage() {
             Kontribusi Langsung
           </p>
           <p className="text-xs sm:text-sm text-white/40 italic max-w-md mx-auto leading-relaxed">
-            "Satu cangkir kopi darimu, satu langkah lebih dekat untuk kita semua
-            menguasai bahasa Jepang."
+            &quot;Satu cangkir kopi darimu, satu langkah lebih dekat untuk kita semua
+            menguasai bahasa Jepang.&quot;
           </p>
         </footer>
       </main>
@@ -194,6 +193,16 @@ export default function SupportPage() {
 /**
  * DonationCard: Komponen pembantu untuk menampilkan akses platform donasi.
  */
+interface DonationCardProps {
+  href: string;
+  title: string;
+  desc: string;
+  icon: string;
+  accent: string;
+  label: string;
+  shadowColor: string;
+}
+
 function DonationCard({
   href,
   title,
@@ -202,7 +211,7 @@ function DonationCard({
   accent,
   label,
   shadowColor,
-}: any) {
+}: DonationCardProps) {
   return (
     <motion.a
       href={href}
@@ -238,7 +247,14 @@ function DonationCard({
 /**
  * StatItem: Komponen pembantu untuk menguraikan transparansi penggunaan dana.
  */
-function StatItem({ icon, title, desc, color }: any) {
+interface StatItemProps {
+  icon: React.ReactNode;
+  title: string;
+  desc: string;
+  color: string;
+}
+
+function StatItem({ icon, title, desc, color }: StatItemProps) {
   return (
     <div className="group text-center sm:text-left flex flex-col items-center sm:items-start">
       <div

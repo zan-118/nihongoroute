@@ -21,7 +21,6 @@ import {
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 
 // ======================
 // CONFIG / CONSTANTS
@@ -49,7 +48,8 @@ const itemVariants: Variants = {
  * @param {Object} props - Properti komponen.
  * @param {any[]} props.exams - Daftar objek data ujian.
  * @returns {JSX.Element} Antarmuka daftar ujian.
- */export default function ExamsClient({ exams }: { exams: any[] }) {
+ */// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function ExamsClient({ exams }: { exams: any[] }) {
   // ======================
   // RENDER
   // ======================
@@ -121,7 +121,7 @@ const itemVariants: Variants = {
         {/* EXAM LIST GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 pb-20">
           {exams.length > 0 ? (
-            exams.map((exam, idx) => (
+            exams.map((exam) => (
               <motion.div
                 key={exam._id}
                 variants={itemVariants}

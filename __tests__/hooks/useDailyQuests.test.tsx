@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useDailyQuests } from "@/components/features/dashboard/quests/useDailyQuests";
 import { useProgressStore } from "@/store/useProgressStore";
@@ -49,7 +49,7 @@ describe("useDailyQuests", () => {
   });
 
   it("getCurrentProgress mengembalikan 0 untuk tipe yang tidak dikenal", () => {
-    const { result } = renderHook(() => useDailyQuests());
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect(result.current.getCurrentProgress("unknown" as any)).toBe(0);
   });
 

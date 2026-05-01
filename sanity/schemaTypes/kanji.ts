@@ -5,7 +5,7 @@
  * @module sanity/schemaTypes/kanji
  */
 
-import { defineField, defineType } from "sanity";
+import { defineField, defineType, type ValidationContext } from "sanity";
 
 // ======================
 // VALIDATION LOGIC
@@ -14,9 +14,10 @@ import { defineField, defineType } from "sanity";
 /**
  * Memastikan Kanji ID bersifat unik di seluruh dataset.
  */
-const isUniqueKanjiId = async (value: string | undefined, context: any) => {
+const isUniqueKanjiId = async (value: string | undefined, context: ValidationContext) => {
   if (!value) return true;
   const { document, getClient } = context;
+  if (!document) return true;
   const client = getClient({ apiVersion: "2024-04-12" });
   const id = document._id.replace(/^drafts\./, "");
 
@@ -32,9 +33,10 @@ const isUniqueKanjiId = async (value: string | undefined, context: any) => {
 /**
  * Memastikan karakter kanji tidak duplikat dalam database.
  */
-const isUniqueKanji = async (value: string | undefined, context: any) => {
+const isUniqueKanji = async (value: string | undefined, context: ValidationContext) => {
   if (!value) return true;
   const { document, getClient } = context;
+  if (!document) return true;
   const client = getClient({ apiVersion: "2024-04-12" });
   const id = document._id.replace(/^drafts\./, "");
 

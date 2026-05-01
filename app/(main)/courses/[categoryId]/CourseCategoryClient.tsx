@@ -16,7 +16,6 @@ import {
   Layers,
   PenTool,
   Flame,
-  Award,
   ChevronRight,
   Sparkles,
 } from "lucide-react";
@@ -56,6 +55,7 @@ export default function CourseCategoryClient({
   data,
   categoryId,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
   categoryId: string;
 }) {
@@ -237,6 +237,7 @@ export default function CourseCategoryClient({
 
           {data.lessons && data.lessons.length > 0 ? (
             <div className="grid gap-4 md:gap-6">
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               {data.lessons.map((lesson: any, index: number) => (
                 <motion.div
                   key={lesson._id}

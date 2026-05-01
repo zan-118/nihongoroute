@@ -1,0 +1,19 @@
+﻿Usage: next [options] [command]
+
+The Next.js CLI allows you to develop, build, start your application, and more.
+
+Options:
+  -v, --version                               Outputs the Next.js version.
+  -h, --help                                  Displays this message.
+
+Commands:
+  build [directory] [options]                 Creates an optimized production build of your application. The output displays information about each route.
+  experimental-analyze [options] [directory]  Analyze production bundle output with an interactive web ui. Does not produce an application build. Only compatible with Turbopack.
+  dev [directory] [options]                   Starts Next.js in development mode with hot-code reloading, error reporting, and more.
+  info [options]                              Prints relevant details about the current system which can be used to report Next.js bugs.
+  start [directory] [options]                 Starts Next.js in production mode. The application should be compiled with `next build` first.
+  telemetry [options] [arg]                   Allows you to enable or disable Next.js' completely anonymous telemetry collection.
+  typegen [directory] [options]               Generate TypeScript definitions for routes, pages, and layouts without running a full build.
+  upgrade [directory] [options]               Upgrade Next.js apps to desired versions with a single command.
+  experimental-test [directory] [options]     Execute `next/experimental/testmode` tests using a specified test runner. The test runner defaults to 'playwright' if the `experimental.defaultTestRunner` configuration option or the `--test-runner` option are not set.
+  internal [options] [command]                Internal debugging commands. Use with caution. Not covered by semver.

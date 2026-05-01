@@ -9,6 +9,7 @@ describe("useHeatmap - getBoxStyle", () => {
   });
 
   it("mengembalikan style inactive untuk value undefined/null", () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const style = getBoxStyle(undefined as any);
     expect(style).toContain("opacity-30");
   });

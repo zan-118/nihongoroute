@@ -68,26 +68,7 @@ export default function LandingPage() {
   // ======================
   // CONSTANTS / CONFIG
   // ======================
-  const features = [
-    {
-      title: "Sistem Hafalan Pintar",
-      desc: "Algoritma Spaced Repetition yang mengatur jadwal ulang kosakata secara otomatis.",
-      icon: <BrainCircuit size={28} className="text-cyan-400" />,
-      color: "text-cyan-400",
-    },
-    {
-      title: "Koleksi Terpadu",
-      desc: "Akses ratusan tata bahasa, matriks verba, dan kamus dalam satu dashboard intuitif.",
-      icon: <Library size={28} className="text-purple-400" />,
-      color: "text-purple-400",
-    },
-    {
-      title: "Ujian Simulasi",
-      desc: "Uji kesiapan JLPT Anda dengan mesin simulasi waktu nyata berstandar resmi.",
-      icon: <Zap size={28} className="text-amber-400" />,
-      color: "text-amber-400",
-    },
-  ];
+
 
   return (
     <main className="bg-[#080a0f] text-[#c4cfde] selection:bg-cyan-400/30 overflow-x-hidden w-full relative">

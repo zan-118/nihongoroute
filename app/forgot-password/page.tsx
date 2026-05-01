@@ -28,6 +28,7 @@ export default function ForgotPasswordPage() {
       toast.success("Email Pemulihan Meluncur!", {
         description: "Silakan cek kotak masuk (atau spam) email Anda untuk mengatur ulang kata sandi.",
       });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Gagal mengirim email pemulihan:", error);
       toast.error("Ups, pengiriman gagal...", {

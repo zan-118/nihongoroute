@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { PenTool, X, Sparkles } from "lucide-react";
 import WritingCanvas from "@/components/WritingCanvas";
@@ -52,7 +52,7 @@ export function WritingPracticeModal({
                   {kanjiChar}
                 </p>
                 <p className="font-mono uppercase tracking-[0.3em] text-xs font-bold text-purple-400">
-                  "{word}"
+                  &quot;{word}&quot;
                 </p>
               </div>
               <div className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[8px] font-black uppercase tracking-widest text-purple-400 italic">

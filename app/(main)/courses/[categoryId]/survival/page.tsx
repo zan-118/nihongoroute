@@ -90,7 +90,7 @@ export default async function SurvivalPage({ params }: PageProps) {
             <p className="text-xs md:text-sm text-white/60 leading-relaxed font-medium px-4">
               Mode Survival membutuhkan minimal 4 kosakata terpublikasi di level{" "}
               <strong className="text-white">
-                "{categoryId.toUpperCase()}"
+                &quot;{categoryId.toUpperCase()}&quot;
               </strong>{" "}
               agar sistem pengacakan opsi bisa bekerja. Saat ini sistem hanya
               mendeteksi {cards.length} kartu aktif.

@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { client } from "@/sanity/lib/client";
-import { Search, Home, Library, BookOpen, Loader2, Filter, Languages, ArrowRight, LibraryBig } from "lucide-react";
+import { Search, Home, Library, Loader2, Filter, Languages, ArrowRight, LibraryBig } from "lucide-react";
 import TTSReader from "@/components/TTSReader";
 import PdfGenerator from "@/components/PdfGenerator";
 import { Input } from "@/components/ui/input";
@@ -43,6 +43,7 @@ export default function VocabClient() {
   const [hinshi, setHinshi] = useState("all");
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [vocabList, setVocabList] = useState<any[]>([]);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);

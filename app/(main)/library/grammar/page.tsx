@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 import { client } from "@/sanity/lib/client";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Home, Library, Bookmark, Search, Activity, BookText, ArrowRight } from "lucide-react";
+import { BookOpen, Home, Library, Bookmark, Search, BookText, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -28,6 +28,7 @@ const LEVELS = ["n5", "n4", "n3", "n2", "n1"];
 export default function GrammarArticlesPage() {
   const [selectedLevel, setSelectedLevel] = useState("n5");
   const [searchTerm, setSearchTerm] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [articles, setArticles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 

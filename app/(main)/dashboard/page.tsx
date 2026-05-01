@@ -11,7 +11,7 @@ import Heatmap from "@/components/Heatmap";
 import SRSAnalytics from "@/components/SRSAnalytics";
 import LevelUpOverlay from "@/components/LevelUpOverlay";
 import ConfirmModal from "@/components/ConfirmModal";
-import { BrainCircuit, PlayCircle, Save, Upload, Trash2, Sparkles, BookMarked, Target, TrendingUp, Flame, LogOut } from "lucide-react";
+import { BrainCircuit, Save, Upload, Trash2, Sparkles, BookMarked, Target, Flame, TrendingUp, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -80,12 +80,14 @@ export default function DashboardPage() {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = ".json";
-    input.onchange = (e: Event) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    input.onchange = (e: any) => {
       const target = e.target as HTMLInputElement;
       const file = target.files?.[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = (event: ProgressEvent<FileReader>) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      reader.onload = (event: any) => {
         const result = event.target?.result as string;
         if (importData(result)) window.location.reload();
         else alert("Format file data tidak valid atau rusak!");
@@ -128,7 +130,8 @@ export default function DashboardPage() {
   };
 
   const now = Date.now();
-  const dueCount = Object.values(progress.srs).filter((card) => card.nextReview <= now).length;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const dueCount = Object.values(progress.srs).filter((card: any) => card.nextReview <= now).length;
   const displayName = userFullName || "Pelajar";
   const xpNeeded = 1000 - (progress.xp % 1000);
   const xpProgress = (progress.xp % 1000) / 10;

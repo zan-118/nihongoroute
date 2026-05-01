@@ -77,8 +77,9 @@ export const useProgressStore = create<ProgressState>()(
           }
         });
 
-        let { streak, todayReviewCount, lastStudyDate, studyDays } = state.progress;
-        let newStudyDays = { ...studyDays };
+        let { streak, todayReviewCount, lastStudyDate } = state.progress;
+        const { studyDays } = state.progress;
+        const newStudyDays = { ...studyDays };
 
         if (srsChanged) {
           todayReviewCount += 1;

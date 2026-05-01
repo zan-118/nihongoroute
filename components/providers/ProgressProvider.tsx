@@ -64,7 +64,7 @@ export const ProgressProvider = ({
 
         if (session?.user) {
           const gamificationData = localStorage.getItem(STATS_STORAGE_KEY);
-          let currentProgress = useProgressStore.getState().progress;
+          const currentProgress = useProgressStore.getState().progress;
 
           if (gamificationData) {
             const parsedStats = JSON.parse(gamificationData);
@@ -99,7 +99,7 @@ export const ProgressProvider = ({
 
           const parsedSrs: Record<string, SRSState> = {};
           if (srsData) {
-            srsData.forEach((row: any) => {
+            (srsData as Array<{ word_id: string; interval: number; repetition: number; ease_factor: number; next_review: string }>).forEach((row) => {
               parsedSrs[row.word_id] = {
                 interval: row.interval,
                 repetition: row.repetition,
@@ -110,7 +110,7 @@ export const ProgressProvider = ({
           }
 
           const today = new Date().toISOString().split("T")[0];
-          let cloudStreak = profile?.streak || 0;
+          const cloudStreak = profile?.streak || 0;
           let cloudReviewCount = profile?.today_review_count || 0;
           const cloudLastDate = profile?.last_study_date || null;
 

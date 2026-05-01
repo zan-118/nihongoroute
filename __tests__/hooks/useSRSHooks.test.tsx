@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { renderHook } from "@testing-library/react";
 import { useMemoryStats } from "@/components/features/srs/stats/useMemoryStats";
 import { useSRSAnalytics } from "@/components/features/srs/analytics/useSRSAnalytics";

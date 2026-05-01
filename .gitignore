@@ -53,3 +53,13 @@ node_modules
 
 .sanity
 dist
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo

@@ -8,12 +8,11 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, PenTool, ChevronLeft, LayoutGrid, Sparkles, Swords, Heart, Trophy } from "lucide-react";
+import { PenTool, ChevronLeft, LayoutGrid, Sparkles, Swords, Heart, Trophy } from "lucide-react";
 import Link from "next/link";
 import WritingCanvas from "@/components/WritingCanvas";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -421,7 +420,7 @@ export default function BasicsPage() {
                       <p
                         className={`font-mono uppercase tracking-[0.3em] text-xs sm:text-sm font-bold ${themeColor}`}
                       >
-                        "{selectedChar!.romaji}"
+                        &quot;{selectedChar!.romaji}&quot;
                       </p>
                     </div>
                     <div

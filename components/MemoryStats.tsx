@@ -103,7 +103,16 @@ export default function MemoryStats() {
   );
 }
 
-function StatBar({ label, count, total, indicatorColor, icon, colorClass }: any) {
+interface StatBarProps {
+  label: string;
+  count: number;
+  total: number;
+  indicatorColor: string;
+  icon: React.ReactNode;
+  colorClass: string;
+}
+
+function StatBar({ label, count, total, indicatorColor, icon, colorClass }: StatBarProps) {
   const percent = total > 1 || count > 0 ? (count / total) * 100 : 0;
 
   return (

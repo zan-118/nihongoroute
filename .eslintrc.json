@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "next/typescript"
+  ],
+  "ignorePatterns": [
+    "node_modules/**",
+    ".next/**",
+    "public/**",
+    "dist/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts"
+  ]
+}

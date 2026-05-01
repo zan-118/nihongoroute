@@ -50,15 +50,15 @@ export function useWritingCanvas({ strokeColor }: UseWritingCanvasProps) {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
     
-    canvas.addEventListener("touchstart", preventScroll as any, { passive: false });
-    canvas.addEventListener("touchmove", preventScroll as any, { passive: false });
-    canvas.addEventListener("touchend", preventScroll as any, { passive: false });
+    canvas.addEventListener("touchstart", preventScroll as EventListener, { passive: false });
+    canvas.addEventListener("touchmove", preventScroll as EventListener, { passive: false });
+    canvas.addEventListener("touchend", preventScroll as EventListener, { passive: false });
 
     return () => {
       window.removeEventListener("resize", resizeCanvas);
-      canvas.removeEventListener("touchstart", preventScroll as any);
-      canvas.removeEventListener("touchmove", preventScroll as any);
-      canvas.removeEventListener("touchend", preventScroll as any);
+      canvas.removeEventListener("touchstart", preventScroll as EventListener);
+      canvas.removeEventListener("touchmove", preventScroll as EventListener);
+      canvas.removeEventListener("touchend", preventScroll as EventListener);
     };
   }, [strokeColor]);
 

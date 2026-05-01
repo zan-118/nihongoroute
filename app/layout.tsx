@@ -11,7 +11,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
-import { ReactNode } from "react";
 import { Toaster } from "sonner";
 import FeedbackWidget from "@/components/FeedbackWidget";
 

@@ -10,7 +10,7 @@
 // ======================
 // IMPORTS
 // ======================
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { client } from "@/sanity/lib/client";
 import { useProgressStore } from "@/store/useProgressStore";
 import { useShallow } from "zustand/react/shallow";
@@ -40,7 +40,7 @@ export default function DailyReviewPage() {
 
   const [dueCards, setDueCards] = useState<MasterCardData[]>([]);
   const [isFetching, setIsFetching] = useState(true);
-  const [isFinished, setIsFinished] = useState(false);
+  const [isFinished] = useState(false);
 
   useEffect(() => {
     // ======================
@@ -56,7 +56,7 @@ export default function DailyReviewPage() {
         
         // Filter ID kartu yang sudah waktunya direview
         const dueItemIds = Object.entries(progress.srs)
-          .filter(([_, state]) => state.nextReview <= now)
+          .filter(([, state]) => state.nextReview <= now)
           .map(([id]) => id);
 
         if (dueItemIds.length === 0) {

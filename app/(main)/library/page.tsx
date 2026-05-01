@@ -11,7 +11,7 @@
 // ======================
 import { motion } from "motion/react";
 import Link from "next/link";
-import { RefreshCw, BookOpen, BarChart2, ArrowRight, Library, Database, Activity, Server, GraduationCap, ArrowUpRight, Award } from "lucide-react";
+import { RefreshCw, BookOpen, BarChart2, ArrowRight, Library, Database, Activity, Server, GraduationCap, Award } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 // ======================

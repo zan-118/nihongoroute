@@ -70,7 +70,7 @@ export default function LevelUpOverlay({ level }: { level: number }) {
               </div>
 
               <p className="text-slate-400 text-[10px] md:text-sm lg:text-base font-medium max-w-sm mx-auto mb-8 md:mb-12 leading-relaxed uppercase tracking-wide px-4 md:px-0">
-                "Selamat! Kemampuan bahasamu semakin meningkat. Pintu ke tantangan yang lebih sulit kini telah terbuka untukmu."
+                &quot;Selamat! Kemampuan bahasamu semakin meningkat. Pintu ke tantangan yang lebih sulit kini telah terbuka untukmu.&quot;
               </p>
 
               <Button

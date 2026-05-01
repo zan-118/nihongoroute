@@ -65,6 +65,7 @@ export default function UpdatePasswordPage() {
         router.push("/");
       }, 3000);
       
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Gagal memperbarui kata sandi:", error);
       toast.error("Gagal Memperbarui", {

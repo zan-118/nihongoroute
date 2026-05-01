@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -159,11 +160,12 @@ export function ExamPlaying({
             )}
 
             {activeQuestion.imageUrl && (
-              <div className="mb-12 rounded-3xl overflow-hidden neo-inset p-3 bg-black/20 border-white/5">
-                <img
+              <div className="mb-12 rounded-3xl overflow-hidden neo-inset p-3 bg-black/20 border-white/5 relative min-h-[300px] md:min-h-[400px]">
+                <Image
                   src={activeQuestion.imageUrl}
-                  alt="Gambar Pendukung"
-                  className="w-full max-h-[400px] md:max-h-[500px] object-contain opacity-90 rounded-2xl"
+                  alt="Gambar Pendukung Soal"
+                  fill
+                  className="object-contain opacity-90 rounded-2xl p-4"
                 />
               </div>
             )}
