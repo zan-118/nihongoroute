@@ -1,5 +1,5 @@
 import { createClient } from "./client";
-import { UserProgress } from "@/context/UserProgressContext";
+import { UserProgress } from "@/store/useProgressStore";
 
 /**
  * Sinkronisasi data progres dari LocalStorage (guest) ke Supabase (cloud)

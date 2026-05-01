@@ -1,87 +1,20 @@
-/**
- * @file Heatmap.tsx
- * @description Komponen Grafik Aktivitas (Heatmap) yang memvisualisasikan frekuensi belajar pengguna dalam 35 hari terakhir.
- * @module Heatmap
- */
-
 "use client";
 
-// ======================
-// IMPORTS
-// ======================
-import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Activity } from "lucide-react";
+import { useHeatmap, getBoxStyle } from "./features/dashboard/heatmap/useHeatmap";
 
-// ======================
-// TYPES
-// ======================
 interface Props {
   studyDays: Record<string, number>;
 }
 
-// ======================
-// HELPER FUNCTIONS
-// ======================
-
-/**
- * Memformat objek Date menjadi string ISO YYYY-MM-DD.
- */
-function formatLocalDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-/**
- * Menghasilkan array tanggal untuk N hari terakhir.
- */
-function generateLastNDays(n: number): string[] {
-  const days: string[] = [];
-  const today = new Date();
-
-  for (let i = n - 1; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(today.getDate() - i);
-    days.push(formatLocalDate(d));
-  }
-  return days;
-}
-
-/**
- * Mendapatkan kelas gaya berdasarkan intensitas aktivitas.
- */
-function getBoxStyle(value: number): string {
-  if (!value)
-    return "bg-black/40 border-white/5 neo-inset shadow-none opacity-30";
-  if (value < 10)
-    return "bg-cyber-neon/20 border-cyber-neon/30 shadow-[0_0_10px_rgba(0,238,255,0.1)] neo-card shadow-none";
-  if (value < 30)
-    return "bg-cyber-neon/50 border-cyber-neon/60 shadow-[0_0_20px_rgba(0,238,255,0.3)] neo-card shadow-none";
-  return "bg-cyber-neon border-white shadow-[0_0_25px_rgba(0,238,255,0.7)] neo-card shadow-none";
-}
-
-// ======================
-// MAIN EXECUTION
-// ======================
-
-/**
- * Komponen Heatmap: Merender grid aktivitas belajar harian.
- * 
- * @param {Props} props - Properti komponen.
- * @returns {JSX.Element} Grafik heatmap aktivitas.
- */
 export default function Heatmap({ studyDays }: Props) {
-  const days = useMemo(() => generateLastNDays(35), []);
-  // ======================
-  // RENDER
-  // ======================
+  const { days } = useHeatmap();
+
   return (
     <Card className="bg-[#0a0c10] p-6 md:p-8 lg:p-10 rounded-[2.5rem] md:rounded-[3rem] border-white/5 relative overflow-hidden neo-card shadow-none">
-      {/* Background patterns */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(0,238,255,0.01)_1px,transparent_1px)] bg-[size:100%_4px] opacity-50 pointer-events-none" />
 
       <header className="flex items-center justify-between mb-8 md:mb-10 relative z-10">
@@ -141,4 +74,3 @@ export default function Heatmap({ studyDays }: Props) {
     </Card>
   );
 }
-

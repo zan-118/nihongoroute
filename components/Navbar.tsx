@@ -2,30 +2,13 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { useProgress } from "@/context/UserProgressContext";
-import { createClient } from "@/lib/supabase/client";
 import { LogOut, LayoutDashboard, User } from "lucide-react";
+import { useNavbar } from "./layout/navbar/useNavbar";
 
 export default function Navbar() {
-  const pathname = usePathname();
-  const router = useRouter();
-  const { isAuthenticated, userFullName } = useProgress();
-  const supabase = createClient();
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.refresh();
-  };
-
-  const links = [
-    { href: "/courses", label: "Materi" },
-    { href: "/exams", label: "Ujian" },
-    { href: "/library", label: "Pustaka" },
-    { href: "/review", label: "Hafalan" },
-  ];
+  const { pathname, isAuthenticated, userFullName, handleLogout, links } = useNavbar();
 
   return (
     <header className="hidden md:flex fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-50">

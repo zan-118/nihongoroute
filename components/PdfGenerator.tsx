@@ -1,25 +1,13 @@
-/**
- * @file PdfGenerator.tsx
- * @description Mesin penghasil file PDF menggunakan @react-pdf/renderer.
- * Mendukung berbagai template (Pelajaran & Kosakata) dengan sistem unduhan asinkron.
- * @module PdfGenerator
- */
-
 "use client";
 
-// ======================
-// IMPORTS
-// ======================
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { LessonPdfTemplate } from "./LessonPdfTemplate";
 import { VocabPdfTemplate } from "./VocabPdfTemplate";
 import { Download, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { usePdfGenerator } from "./features/pdf/usePdfGenerator";
 
-// ======================
-// TYPES
-// ======================
 export type TemplateType = "lesson" | "vocab";
 
 interface PdfGeneratorProps {
@@ -29,64 +17,20 @@ interface PdfGeneratorProps {
   level?: string;
 }
 
-// ======================
-// MAIN EXECUTION
-// ======================
-
-/**
- * Komponen PdfGenerator: Mengonfigurasi data ke dalam template PDF dan menangani status unduhan.
- * 
- * @param {PdfGeneratorProps} props - Properti komponen.
- * @returns {JSX.Element} Komponen link unduhan PDF.
- */
 export default function PdfGenerator({
   data,
   type,
   title,
   level,
 }: PdfGeneratorProps) {
-  const [isClient, setIsClient] = useState(false);
+  const { isClient, getFileName } = usePdfGenerator({ type, title, level });
 
-  // ======================
-  // EFFECTS
-  // ======================
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  // ======================
-  // HELPER FUNCTIONS
-  // ======================
-
-  /**
-   * Menentukan template dokumen PDF yang akan digunakan.
-   */
   const getDocument = (): any => {
     if (type === "lesson") return <LessonPdfTemplate lessonData={data} />;
     if (type === "vocab")
       return <VocabPdfTemplate data={data} level={level || "N5"} />;
-    // Default fallback agar tidak pernah me-return null secara fatal
     return <LessonPdfTemplate lessonData={data} />;
   };
-
-  /**
-   * Menghasilkan nama file PDF berdasarkan metadata.
-   */
-  const getFileName = () => {
-    if (title) return `${title}_NihongoRoute.pdf`;
-    const timestamp = new Date()
-      .toLocaleDateString("id-ID")
-      .replace(/\//g, "-");
-
-    if (type === "vocab")
-      return `ListKosakata_${level || "All"}_${timestamp}.pdf`;
-    return `Materi_NihongoRoute_${timestamp}.pdf`;
-  };
-
-  // ======================
-  // RENDER
-  // ======================
 
   if (!isClient || !data || (Array.isArray(data) && data.length === 0)) {
     return (

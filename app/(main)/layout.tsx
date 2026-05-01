@@ -11,7 +11,7 @@
 import { ReactNode } from "react";
 import MobileNav from "@/components/MobileNav";
 import Navbar from "@/components/Navbar";
-import { ProgressProvider } from "@/context/UserProgressContext";
+import { ProgressProvider } from "@/components/providers/ProgressProvider";
 import FloatingSupport from "@/components/FloatingSupport";
 
 // ======================

@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useProgress } from "@/context/UserProgressContext";
+import { useProgressStore } from "@/store/useProgressStore";
+import { useShallow } from "zustand/react/shallow";
 import { createClient } from "@/lib/supabase/client";
 import { motion, Variants } from "framer-motion";
 import { Save, Upload, Trash2, LogOut, Settings as SettingsIcon, BookOpen, Layers, ShieldAlert, Database, Sparkles } from "lucide-react";
@@ -26,7 +27,9 @@ const itemVariants: Variants = {
 };
 
 export default function SettingsPage() {
-  const { exportData, importData, isAuthenticated } = useProgress();
+  const { exportData, importData, isAuthenticated } = useProgressStore(
+    useShallow((state) => ({ exportData: state.exportData, importData: state.importData, isAuthenticated: state.isAuthenticated }))
+  );
   const router = useRouter();
   const supabase = createClient();
 

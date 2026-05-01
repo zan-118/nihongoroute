@@ -1,65 +1,27 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { MessageSquarePlus, Send, Loader2 } from "lucide-react";
-import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { createClient } from "@/lib/supabase/client";
-import { toast } from "sonner";
+import { useFeedbackWidget } from "./features/feedback/useFeedbackWidget";
 
 export default function FeedbackWidget() {
-  const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
-  const [type, setType] = useState<"bug" | "suggestion" | "compliment">("suggestion");
-  const [message, setMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const {
+    isOpen,
+    setIsOpen,
+    type,
+    setType,
+    message,
+    setMessage,
+    isSubmitting,
+    isHidden,
+    handleSubmit,
+  } = useFeedbackWidget();
 
-  // Menyembunyikan tombol di halaman yang membutuhkan fokus penuh
-  if (
-    pathname === "/support" ||
-    pathname?.startsWith("/studio") ||
-    pathname?.includes("/exam") ||
-    pathname === "/review"
-  ) {
+  if (isHidden) {
     return null;
   }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!message.trim()) return;
-
-    setIsSubmitting(true);
-    const supabase = createClient();
-
-    try {
-      // Mendapatkan session user saat ini (opsional)
-      const { data: { session } } = await supabase.auth.getSession();
-
-      const { error } = await supabase
-        .from('user_feedback')
-        .insert([
-          { 
-            user_id: session?.user?.id || null, // null jika user belum login
-            type, 
-            message, 
-            route: pathname 
-          }
-        ]);
-
-      if (error) throw error;
-
-      toast.success("Feedback berhasil dikirim. Terima kasih!");
-      setIsOpen(false);
-      setMessage("");
-    } catch (error) {
-      console.error(error);
-      toast.error("Gagal mengirim feedback. Silakan coba lagi.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <>
@@ -67,7 +29,6 @@ export default function FeedbackWidget() {
         initial={{ opacity: 0, scale: 0.8, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         whileHover={{ y: -5 }}
-        // Ditempatkan di atas FloatingSupport
         className="fixed bottom-52 right-4 md:bottom-32 md:right-10 z-[40]"
       >
         <div className="relative group block">
@@ -123,11 +84,11 @@ export default function FeedbackWidget() {
             <div className="space-y-2">
               <label className="text-sm font-medium text-slate-300">Pesan</label>
               <textarea
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Ceritakan detailnya di sini..."
-                className="w-full min-h-[120px] p-3 rounded-lg bg-black/40 border border-white/10 text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none"
-                required
+               value={message}
+               onChange={(e) => setMessage(e.target.value)}
+               placeholder="Ceritakan detailnya di sini..."
+               className="w-full min-h-[120px] p-3 rounded-lg bg-black/40 border border-white/10 text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none"
+               required
               />
             </div>
 

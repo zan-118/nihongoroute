@@ -1,117 +1,19 @@
-/**
- * @file TTSReader.tsx
- * @description Komponen Text-to-Speech (TTS) khusus untuk pelafalan bahasa Jepang.
- * Mendukung deteksi otomatis karakter Jepang dan pemilihan suara (voice) sistem yang optimal.
- * @module TTSReader
- */
-
 "use client";
 
-// ======================
-// IMPORTS
-// ======================
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Volume2, AudioLines } from "lucide-react";
+import { useTTSReader } from "./features/tools/audio/useTTSReader";
 
-// ======================
-// TYPES
-// ======================
 interface Props {
   text: string;
-  minimal?: boolean; // Mode ringkas (hanya ikon)
+  minimal?: boolean;
 }
 
-// ======================
-// MAIN EXECUTION
-// ======================
-
-/**
- * Komponen TTSReader: Mengubah teks Jepang menjadi suara menggunakan Web Speech API.
- * 
- * @param {Props} props - Properti komponen.
- * @returns {JSX.Element | null} Tombol kontrol audio.
- */
 export default function TTSReader({ text, minimal = false }: Props) {
-  // State Management
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [hasJapanese, setHasJapanese] = useState(true);
-  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
-
-  // ======================
-  // BUSINESS LOGIC
-  // ======================
-
-  // Deteksi apakah teks mengandung huruf Jepang
-  useEffect(() => {
-    const jpRegex = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/;
-    setHasJapanese(jpRegex.test(text));
-  }, [text]);
-
-  // Pre-load Voices (Anti-Bug Safari/Mobile)
-  useEffect(() => {
-    if (typeof window === "undefined" || !window.speechSynthesis) return;
-
-    const loadVoices = () => {
-      setVoices(window.speechSynthesis.getVoices());
-    };
-
-    loadVoices();
-    window.speechSynthesis.onvoiceschanged = loadVoices;
-
-    return () => {
-      window.speechSynthesis.onvoiceschanged = null;
-    };
-  }, []);
-
-  // ======================
-  // HELPER FUNCTIONS
-  // ======================
-
-  /**
-   * Menjalankan sintesis suara.
-   */
-  const speak = () => {
-    if (typeof window === "undefined" || !window.speechSynthesis) {
-      return alert("Maaf, browser kamu tidak mendukung fitur audio.");
-    }
-
-    if (isPlaying) {
-      window.speechSynthesis.cancel();
-      setIsPlaying(false);
-      return;
-    }
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "ja-JP";
-    utterance.rate = 0.85;
-
-    const currentVoices =
-      voices.length > 0 ? voices : window.speechSynthesis.getVoices();
-
-    const jpVoice = currentVoices.find(
-      (voice) =>
-        voice.lang === "ja-JP" ||
-        voice.lang.includes("ja") ||
-        voice.name.includes("Japanese"),
-    );
-
-    if (jpVoice) {
-      utterance.voice = jpVoice;
-    }
-
-    utterance.onend = () => setIsPlaying(false);
-    utterance.onerror = () => setIsPlaying(false);
-
-    setIsPlaying(true);
-    window.speechSynthesis.speak(utterance);
-  };
+  const { isPlaying, hasJapanese, speak } = useTTSReader(text);
 
   if (!hasJapanese || !text) return null;
 
-  // ======================
-  // RENDER
-  // ======================
   return (
     <Button
       variant="ghost"

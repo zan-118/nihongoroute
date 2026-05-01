@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useProgress } from "@/context/UserProgressContext";
+import { useProgressStore } from "@/store/useProgressStore";
+import { useShallow } from "zustand/react/shallow";
 import { motion, Variants } from "framer-motion";
 import Link from "next/link";
 import MemoryStats from "@/components/MemoryStats";
@@ -41,7 +42,16 @@ const itemVariants: Variants = {
 };
 
 export default function DashboardPage() {
-  const { progress, loading, exportData, importData, userFullName, isAuthenticated } = useProgress();
+  const { progress, loading, exportData, importData, userFullName, isAuthenticated } = useProgressStore(
+    useShallow((state) => ({
+      progress: state.progress,
+      loading: state.loading,
+      exportData: state.exportData,
+      importData: state.importData,
+      userFullName: state.userFullName,
+      isAuthenticated: state.isAuthenticated,
+    }))
+  );
   const [guestId, setGuestId] = useState<string>("MEMUAT...");
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,

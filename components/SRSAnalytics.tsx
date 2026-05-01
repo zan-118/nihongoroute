@@ -1,44 +1,23 @@
-/**
- * @file SRSAnalytics.tsx
- * @description Komponen analitik SRS yang memvisualisasikan "Kesehatan Memori" pengguna.
- * Menganalisis distribusi Ease Factor untuk mengidentifikasi kosa kata yang sulit diingat.
- * @module SRSAnalytics
- */
-
 "use client";
 
-import { useProgress } from "@/context/UserProgressContext";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { LineChart, BarChart2, AlertTriangle, Zap, ShieldCheck } from "lucide-react";
+import { useSRSAnalytics } from "./features/srs/analytics/useSRSAnalytics";
 
 export default function SRSAnalytics() {
-  const { progress } = useProgress();
-  const srsEntries = Object.values(progress.srs);
-  const total = srsEntries.length;
+  const { total, rawData, maxCount } = useSRSAnalytics();
 
   if (total === 0) return null;
 
-  // 1. Kategorisasi berdasarkan Ease Factor (Mental Stability)
-  // Ease Factor < 1.7: Critical (User struggle)
-  // 1.7 - 2.2: Warning (Fragile memory)
-  // 2.2 - 2.7: Stable
-  // > 2.7: Master
-  const categories = {
-    critical: srsEntries.filter(s => s.easeFactor < 1.7).length,
-    fragile: srsEntries.filter(s => s.easeFactor >= 1.7 && s.easeFactor < 2.2).length,
-    stable: srsEntries.filter(s => s.easeFactor >= 2.2 && s.easeFactor < 2.7).length,
-    master: srsEntries.filter(s => s.easeFactor >= 2.7).length,
-  };
+  const data = rawData.map((item) => {
+    let icon = <AlertTriangle size={14} />;
+    if (item.label === "Fragile") icon = <Zap size={14} />;
+    if (item.label === "Stable") icon = <BarChart2 size={14} />;
+    if (item.label === "Master") icon = <ShieldCheck size={14} />;
 
-  const data = [
-    { label: "Critical", count: categories.critical, color: "#ef4444", icon: <AlertTriangle size={14} />, desc: "Butuh Review Intensif" },
-    { label: "Fragile", count: categories.fragile, color: "#f59e0b", icon: <Zap size={14} />, desc: "Memori Kurang Stabil" },
-    { label: "Stable", count: categories.stable, color: "#3b82f6", icon: <BarChart2 size={14} />, desc: "Penyimpanan Optimal" },
-    { label: "Master", count: categories.master, color: "#10b981", icon: <ShieldCheck size={14} />, desc: "Retensi Permanen" },
-  ];
-
-  const maxCount = Math.max(...data.map(d => d.count)) || 1;
+    return { ...item, icon };
+  });
 
   return (
     <Card className="bg-[#0a0c10] p-8 rounded-[3rem] border-white/5 relative overflow-hidden neo-card shadow-none flex flex-col h-full">
@@ -67,12 +46,10 @@ export default function SRSAnalytics() {
             return (
               <div key={i} className="flex-1 flex flex-col items-center gap-4 group">
                 <div className="relative w-full flex flex-col items-center">
-                  {/* Tooltip on hover */}
                   <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-white text-black text-[9px] font-black px-2 py-1 rounded uppercase tracking-tighter whitespace-nowrap z-20">
                     {item.count} Items
                   </div>
                   
-                  {/* Bar */}
                   <div 
                     className="w-full max-w-[40px] rounded-t-xl transition-all duration-1000 ease-out relative group-hover:brightness-125"
                     style={{ 

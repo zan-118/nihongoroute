@@ -1,34 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Home, BookOpen, Layers, LayoutDashboard, BrainCircuit, User, LogIn, Award } from "lucide-react";
 import { motion } from "framer-motion";
-import { useProgress } from "@/context/UserProgressContext";
+import { useMobileNav } from "./layout/navbar/useMobileNav";
 
 export default function MobileNav() {
-  const pathname = usePathname();
-  const { isAuthenticated, userFullName } = useProgress();
-
-  const navItems = isAuthenticated
-    ? [
-        { href: "/", icon: Home, label: "Beranda" },
-        { href: "/courses", icon: BookOpen, label: "Materi" },
-        { href: "/library", icon: Layers, label: "Pustaka" },
-        { href: "/review", icon: BrainCircuit, label: "Hafalan" },
-        { 
-          href: "/dashboard", 
-          icon: User, 
-          label: userFullName ? userFullName.split(' ')[0].substring(0, 7) : "Dasbor" 
-        },
-      ]
-    : [
-        { href: "/", icon: Home, label: "Beranda" },
-        { href: "/courses", icon: BookOpen, label: "Materi" },
-        { href: "/library", icon: Layers, label: "Pustaka" },
-        { href: "/review", icon: BrainCircuit, label: "Hafalan" },
-        { href: "/login", icon: LogIn, label: "Masuk" },
-      ];
+  const { pathname, navItems } = useMobileNav();
 
   return (
     <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm z-50">
@@ -57,7 +34,6 @@ export default function MobileNav() {
                   >
                     <item.icon size={22} strokeWidth={isActive ? 2.5 : 2} className={isActive ? "drop-shadow-[0_0_8px_rgba(0,238,255,0.8)]" : ""} />
                     
-                    {/* Active Background Pill */}
                     {isActive && (
                       <motion.div
                         layoutId="mobile-active-pill"

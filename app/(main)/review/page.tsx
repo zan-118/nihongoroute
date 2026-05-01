@@ -12,11 +12,13 @@
 // ======================
 import React, { useState, useEffect, useRef } from "react";
 import { client } from "@/sanity/lib/client";
-import { useProgress } from "@/context/UserProgressContext";
+import { useProgressStore } from "@/store/useProgressStore";
+import { useShallow } from "zustand/react/shallow";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { BrainCircuit, RotateCw, Trophy } from "lucide-react";
-import FlashcardMaster, { MasterCardData } from "@/components/FlashcardMaster";
+import FlashcardMaster from "@/components/FlashcardMaster";
+import { MasterCardData } from "@/components/features/flashcards/master/types";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -32,7 +34,9 @@ import { Badge } from "@/components/ui/badge";
  * @returns {JSX.Element} Elemen halaman review harian.
  */
 export default function DailyReviewPage() {
-  const { progress, loading } = useProgress();
+  const { progress, loading } = useProgressStore(
+    useShallow((state) => ({ progress: state.progress, loading: state.loading }))
+  );
 
   const [dueCards, setDueCards] = useState<MasterCardData[]>([]);
   const [isFetching, setIsFetching] = useState(true);

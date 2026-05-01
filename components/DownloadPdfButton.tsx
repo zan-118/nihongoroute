@@ -1,27 +1,10 @@
-/**
- * @file DownloadPdfButton.tsx
- * @description Komponen wrapper untuk memuat PdfGenerator secara dinamis (client-side only).
- * Menghindari masalah hidrasi dan memastikan library PDF hanya dimuat saat dibutuhkan.
- * @module DownloadPdfButton
- */
-
 "use client";
 
-// ======================
-// IMPORTS
-// ======================
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { useDownloadPdfButton } from "./features/pdf/useDownloadPdfButton";
 
-// ======================
-// CONFIG / DYNAMIC IMPORTS
-// ======================
-
-/**
- * Memuat PdfGenerator secara dinamis dengan SSR dinonaktifkan.
- */
 const PdfGenerator = dynamic(() => import("./PdfGenerator"), {
   ssr: false,
   loading: () => (
@@ -32,18 +15,6 @@ const PdfGenerator = dynamic(() => import("./PdfGenerator"), {
   ),
 });
 
-// ======================
-// MAIN EXECUTION
-// ======================
-
-/**
- * Komponen DownloadPdfButton: Tombol pemicu unduhan PDF.
- * 
- * @param {Object} props - Properti komponen.
- * @param {any} props.data - Data konten (pelajaran/kosakata) yang akan dijadikan PDF.
- * @param {"lesson" | "vocab"} props.type - Tipe template PDF.
- * @returns {JSX.Element} Antarmuka tombol unduh.
- */
 export default function DownloadPdfButton({
   data,
   type = "lesson",
@@ -51,20 +22,7 @@ export default function DownloadPdfButton({
   data: any;
   type?: "lesson" | "vocab";
 }) {
-  const [isMounted, setIsMounted] = useState(false);
-
-  // ======================
-  // EFFECTS
-  // ======================
-
-  // Mencegah hydration mismatch error dengan memastikan komponen hanya render di client
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  // ======================
-  // RENDER
-  // ======================
+  const { isMounted } = useDownloadPdfButton();
 
   if (!isMounted || !data) {
     return (
