@@ -68,7 +68,7 @@ export default async function VocabFlashcardPage({ params }: PageProps) {
             </span>
           </h1>
           <p className="text-white/40 text-[9px] md:text-[10px] font-mono uppercase tracking-widest mt-2 md:mt-3">
-            Database Terintegrasi: {cards.length} Kartu Dimuat
+            Total Hafalan: {cards.length} Kata Dimuat
           </p>
         </header>
 

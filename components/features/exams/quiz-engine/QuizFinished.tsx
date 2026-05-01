@@ -49,17 +49,17 @@ export function QuizFinished({
         </div>
 
         <Badge variant="outline" className="border-red-500/20 text-red-500 font-black text-[10px] uppercase tracking-[0.5em] mb-6 h-auto px-6 py-2 rounded-xl neo-inset bg-red-500/5">
-          Mission Evaluation
+          Evaluasi Latihan
         </Badge>
         
         <h2 className="text-5xl md:text-6xl font-black text-white italic uppercase tracking-tighter mb-4">
-          {isPerfect ? "Operation Flawless" : "Mission Complete"}
+          {isPerfect ? "Latihan Sempurna!" : "Latihan Selesai"}
         </h2>
 
         <div className="flex items-center justify-center gap-10 my-12">
           <div className="text-center">
             <p className="text-slate-500 text-[11px] font-black uppercase tracking-widest mb-2">
-              Score Rank
+              Skor Akhir
             </p>
             <p className="text-5xl font-black text-white italic">
               {score}<span className="text-xl opacity-20 not-italic mx-1">/</span>{totalQuestions}
@@ -68,7 +68,7 @@ export function QuizFinished({
           <div className="w-px h-16 bg-white/5" />
           <div className="text-center">
             <p className="text-slate-500 text-[11px] font-black uppercase tracking-widest mb-2">
-              Accuracy
+              Akurasi
             </p>
             <p className={`text-5xl font-black italic ${isPerfect ? "text-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]" : "text-amber-500"}`}>
               {percentage}%
@@ -82,7 +82,7 @@ export function QuizFinished({
             variant="ghost"
             className="w-full sm:w-auto h-auto px-10 py-5 bg-black/40 text-slate-400 font-black rounded-2xl hover:bg-white hover:text-black transition-all uppercase tracking-widest text-[10px] border border-white/5 neo-inset"
           >
-            <RefreshCw size={18} className="mr-3" /> Re-Deploy
+            <RefreshCw size={18} className="mr-3" /> Ulangi Latihan
           </Button>
           <Button
             onClick={() => {
@@ -91,7 +91,7 @@ export function QuizFinished({
             }}
             className="w-full sm:w-auto h-auto px-10 py-5 bg-red-500 hover:bg-white text-black font-black rounded-2xl transition-all uppercase tracking-[0.2em] text-[10px] shadow-[0_0_25px_rgba(239,68,68,0.4)] border-none"
           >
-            Next Module <ArrowRight size={18} className="ml-3" />
+            Materi Selanjutnya <ArrowRight size={18} className="ml-3" />
           </Button>
         </div>
       </motion.div>

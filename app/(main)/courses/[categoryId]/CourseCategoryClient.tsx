@@ -88,7 +88,7 @@ export default function CourseCategoryClient({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
             <AppBreadcrumbs 
               items={[
-                { label: "Pusat Rute", href: "/courses" },
+                { label: "Pusat Belajar", href: "/courses" },
                 { label: data.category.title, active: true }
               ]} 
             />
@@ -109,7 +109,7 @@ export default function CourseCategoryClient({
             <span
               className={`text-[10px] font-mono font-black uppercase tracking-widest px-3 py-1 rounded border hidden sm:block ${isSideQuest ? "bg-amber-500/10 text-amber-500 border-amber-500/20" : "bg-cyan-400/10 text-cyan-400 border-cyan-400/20"}`}
             >
-              {isSideQuest ? "Side Quest" : "Main Track"}
+              {isSideQuest ? "Bahan Belajar Seru" : "Jalur Utama"}
             </span>
           </motion.nav>
 
@@ -290,10 +290,10 @@ export default function CourseCategoryClient({
               </div>
               
               <h4 className="text-2xl md:text-4xl font-black text-white italic uppercase tracking-tighter mb-4 relative z-10">
-                Materi <span className="text-cyan-400">Sedang Disiapkan</span>
+                Sabar ya, <span className="text-cyan-400">Materi Lagi Diracik!</span>
               </h4>
               <p className="max-w-md text-slate-400 text-sm md:text-base font-bold italic leading-relaxed relative z-10">
-                Sabar ya! Kami sedang menyusun materi terbaik untuk rute ini. Cek lagi nanti untuk konten seru lainnya!
+                Wah, bagian ini masih dalam proses masak nih. Sabar ya, kami pasti bakal kasih materi paling oke buat kamu. Balik lagi nanti ya!
               </p>
               
               <div className="mt-12 flex flex-col sm:flex-row gap-4 relative z-10">

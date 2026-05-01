@@ -66,7 +66,7 @@ export default async function SurvivalPage({ params }: PageProps) {
           >
             <Link href={`/courses/${categoryId}`}>
               <ArrowLeft size={16} />
-              <span className="hidden sm:inline">Abort Mission</span>
+              <span className="hidden sm:inline">Keluar Sesi</span>
               <span className="inline sm:hidden">Keluar</span>
             </Link>
           </Button>

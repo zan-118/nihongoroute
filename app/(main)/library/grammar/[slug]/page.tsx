@@ -121,7 +121,7 @@ export default async function GrammarDetailPage({
         <header className="mb-16 md:mb-20">
           <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
              <Activity size={16} className="text-cyber-neon animate-pulse md:w-5 md:h-5" />
-             <span className="text-cyber-neon font-bold text-[10px] md:text-xs uppercase tracking-widest">Panduan Sintaksis</span>
+             <span className="text-cyber-neon font-bold text-[10px] md:text-xs uppercase tracking-widest">Cara Pakai Pola Kalimat</span>
           </div>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-none tracking-tight drop-shadow-xl">
             {article.title}
@@ -145,7 +145,7 @@ export default async function GrammarDetailPage({
         <footer className="pt-10 md:pt-12 border-t border-white/10 flex justify-center">
           <Link href="/library/grammar">
             <Button variant="ghost" className="w-full sm:w-auto px-8 py-6 md:px-10 md:py-8 h-auto text-[11px] md:text-xs font-bold uppercase tracking-widest rounded-2xl bg-black/40 border-white/5 neo-card shadow-none hover:bg-cyber-neon hover:text-black transition-all gap-3 group">
-              <ChevronLeft size={18} className="group-hover:-translate-x-1.5 transition-transform" /> KEMBALI KE PANDUAN
+              <ChevronLeft size={18} className="group-hover:-translate-x-1.5 transition-transform" /> Kembali ke Panduan
             </Button>
           </Link>
         </footer>

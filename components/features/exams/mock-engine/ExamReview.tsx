@@ -18,10 +18,10 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
       <header className="relative z-20 flex justify-between items-center mb-10">
         <Card className="flex-1 flex justify-between items-center p-5 sm:p-8 mt-6 md:mt-10 border-white/5 bg-cyber-surface rounded-3xl neo-card shadow-none">
           <div>
-            <h2 className="text-xl sm:text-2xl font-black text-white uppercase italic tracking-tighter">
-              Exam <span className="text-amber-500">Review</span>
+            <h2 className="text-xl sm:text-2xl font-black text-white uppercase italic tracking-tighter leading-none">
+              Tinjau <span className="text-amber-500">Jawaban</span>
             </h2>
-            <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mt-1">Pembahasan Detail Soal</p>
+            <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mt-1">Yuk, cek detail jawabannya!</p>
           </div>
           <Button
             variant="ghost"
@@ -80,7 +80,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={q.imageUrl}
-                      alt="Ilustrasi Soal"
+                      alt="Gambar Pendukung"
                       className="w-full max-h-[400px] object-contain opacity-90 rounded-2xl"
                     />
                   </div>

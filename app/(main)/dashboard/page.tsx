@@ -176,13 +176,13 @@ export default function DashboardPage() {
             ) : (
               <>
                 <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white italic tracking-tighter leading-[1.1] mb-4">
-                  Okaeri, <br className="hidden lg:block" />
+                  Selamat Datang Kembali, <br className="hidden lg:block" />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyber-neon to-blue-500 drop-shadow-[0_0_20px_rgba(0,238,255,0.3)]">
                     {displayName}!
                   </span>
                 </h1>
                 <p className="text-slate-400 text-sm md:text-base font-medium max-w-lg leading-relaxed">
-                  Senang melihatmu kembali di ruang belajarmu. Yuk, lanjutkan progres JLPT-mu hari ini dan pertahankan semangat belajarmu!
+                  Senang melihatmu lagi! Yuk, lanjut asah kemampuan bahasamu dan temukan hal seru baru hari ini.
                 </p>
               </>
             )}
@@ -206,12 +206,12 @@ export default function DashboardPage() {
                 </div>
                 
                 <h3 className={`text-xl md:text-2xl font-black uppercase tracking-tight mb-2 ${dueCount > 0 ? 'text-white' : 'text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.5)]'}`}>
-                  {dueCount > 0 ? "Ayo Review!" : "Hafalan Aman!"}
+                  {dueCount > 0 ? "Waktunya Sapa Ingatan!" : "Ingatanmu Hebat!"}
                 </h3>
                 <p className="text-slate-400 text-xs md:text-sm mb-8 font-medium italic">
                   {dueCount > 0 
-                    ? `Ada ${dueCount} kata yang perlu kamu ingat lagi. Jangan sampai lupa ya!` 
-                    : "Kamu sudah menyelesaikan semua review hari ini. Bagus sekali! Mau coba pelajari materi baru?"}
+                    ? `Ada ${dueCount} kosakata yang kangen kamu nih. Yuk, segarkan ingatanmu sebentar!` 
+                    : "Semua hafalanmu masih segar bugar! Mau coba pelajari materi baru?"}
                 </p>
 
                 {dueCount > 0 ? (
@@ -275,7 +275,7 @@ export default function DashboardPage() {
                     indicatorClassName="bg-gradient-to-r from-emerald-400 via-cyber-neon to-blue-500 shadow-[0_0_15px_rgba(0,238,255,0.5)]"
                   />
                   <p className="mt-4 text-[10px] text-slate-500 uppercase font-bold tracking-widest font-mono text-center md:text-right">
-                    Hanya butuh <span className="text-white">{xpNeeded} XP</span> lagi untuk naik level!
+                    Kumpulkan <span className="text-white">{xpNeeded} XP</span> lagi untuk naik level!
                   </p>
                 </div>
               </Card>

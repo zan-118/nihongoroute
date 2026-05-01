@@ -95,7 +95,7 @@ export default function CheatsheetClient({
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-none mb-2">
                 Catatan <span className="text-cyber-neon">Cepat</span>
               </h1>
-              <span className="text-xs md:text-sm text-slate-400 font-medium tracking-wide">Tabel referensi kilat untuk belajar.</span>
+              <span className="text-xs md:text-sm text-slate-400 font-medium tracking-wide">Butuh referensi cepat? Semuanya ada di sini!</span>
             </div>
           </div>
         </div>
@@ -107,7 +107,7 @@ export default function CheatsheetClient({
             <Search className="absolute left-5 md:left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyber-neon transition-colors z-10" size={18} />
             <Input
               type="text"
-              placeholder="Cari referensi..."
+              placeholder="Cari apa nih? Ketik aja di sini..."
               className="w-full bg-black/40 border-white/5 pl-12 md:pl-14 pr-6 py-6 rounded-2xl text-white font-medium text-sm neo-inset shadow-none placeholder:text-slate-600 focus-visible:ring-cyber-neon/30"
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -119,7 +119,7 @@ export default function CheatsheetClient({
             className="lg:hidden flex items-center justify-between h-auto py-5 px-6 bg-black/40 border-white/5 rounded-2xl text-white neo-card shadow-none active:translate-y-1 transition-all"
           >
             <span className="flex items-center gap-3 font-bold uppercase tracking-widest text-xs">
-              {activeSheet ? activeSheet.title : "PILIH KATEGORI"}
+              {activeSheet ? activeSheet.title : "Pilih Kategori"}
             </span>
             <ChevronDown className={`transition-transform duration-300 ${isMobileMenuOpen ? "rotate-180 text-cyber-neon" : ""}`} size={18} />
           </Button>
@@ -182,7 +182,7 @@ export default function CheatsheetClient({
                        <div className="flex items-center gap-3 mb-4">
                           <Activity size={14} className="text-cyber-neon animate-pulse" />
                           <span className="text-cyber-neon font-bold text-[10px] md:text-xs uppercase tracking-widest">
-                            ReferensI Aktif
+                            Catatan Pilihanmu
                           </span>
                         </div>
                         <h2 className="text-3xl md:text-5xl lg:text-6xl font-black text-white tracking-tight drop-shadow-xl leading-none">
@@ -190,7 +190,7 @@ export default function CheatsheetClient({
                         </h2>
                     </div>
                     <Badge variant="outline" className="px-4 py-2 md:px-5 md:py-2.5 text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-500 border-white/10 neo-inset h-auto bg-black/40">
-                      KAT: {activeSheet.category.toUpperCase()}
+                      Kategori: {activeSheet.category.toUpperCase()}
                     </Badge>
                   </div>
 
@@ -198,7 +198,7 @@ export default function CheatsheetClient({
                     <div className="hidden md:grid grid-cols-3 p-6 md:p-8 border-b border-white/10 text-[10px] md:text-xs font-bold text-cyber-neon uppercase tracking-widest gap-6 md:gap-10">
                       <div>Label</div>
                       <div>Huruf/Kanji</div>
-                      <div>Cara Baca (Romaji)</div>
+                      <div>Cara Baca</div>
                     </div>
                     
                     {combinedItems.length > 0 ? (
@@ -251,7 +251,7 @@ export default function CheatsheetClient({
                    <FileText size={32} className="text-slate-500 md:w-10 md:h-10 animate-pulse" />
                 </div>
                 <p className="text-slate-400 font-bold uppercase tracking-widest text-xs md:text-sm text-center">
-                  Pilih modul referensi di samping untuk memulai
+                  Pilih salah satu catatan di sebelah kiri buat mulai belajar ya!
                 </p>
               </Card>
             )}

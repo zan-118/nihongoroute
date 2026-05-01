@@ -37,7 +37,7 @@ export function FlashcardFront({ word, themeContext }: FlashcardFrontProps) {
       <div className="absolute bottom-6 md:bottom-10 flex flex-col items-center gap-1.5 md:gap-2">
          <MousePointer2 size={16} className={`${themeColor} opacity-50 animate-bounce md:w-5 md:h-5`} />
          <p className={`${themeColor} opacity-50 text-[9px] md:text-[10px] font-bold uppercase tracking-widest`}>
-           Ketuk Untuk Membuka
+           Ketuk untuk Melihat Arti
          </p>
       </div>
     </Card>

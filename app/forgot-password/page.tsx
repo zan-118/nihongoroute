@@ -9,6 +9,7 @@ import { toast } from "sonner";
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
   
   const supabase = createClient();
 
@@ -23,6 +24,7 @@ export default function ForgotPasswordPage() {
       
       if (error) throw error;
       
+      setEmailSent(true);
       toast.success("Email Pemulihan Meluncur!", {
         description: "Silakan cek kotak masuk (atau spam) email Anda untuk mengatur ulang kata sandi.",
       });
@@ -57,10 +59,12 @@ export default function ForgotPasswordPage() {
             <KeyRound className="text-red-400" size={32} />
           </div>
           <h1 className="text-2xl font-bold text-white mb-2">
-            Lupa Kata Sandi?
+            Lupa Kata Sandi? Tenang aja!
           </h1>
           <p className="text-sm text-slate-400">
-            Jangan khawatir! Masukkan alamat email yang terdaftar dan kami akan mengirimkan tautan untuk mengatur ulang kata sandi Anda.
+            {emailSent 
+              ? "Yess! Email buat ganti sandi udah dikirim. Tunggu bentar ya..." 
+              : "Yuk, tulis email kamu di bawah, nanti kita kirim link buat bikin sandi baru."}
           </p>
         </div>
 
@@ -69,7 +73,7 @@ export default function ForgotPasswordPage() {
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
             <input 
               type="email" 
-              placeholder="Masukkan email Anda" 
+              placeholder="Contoh: nama@email.com" 
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -82,7 +86,7 @@ export default function ForgotPasswordPage() {
             disabled={loading || !email}
             className="w-full py-3 px-4 bg-red-600 hover:bg-red-500 text-white rounded-xl font-bold transition-colors disabled:opacity-50 disabled:hover:bg-red-600 shadow-[0_0_15px_rgba(239,68,68,0.2)]"
           >
-            {loading ? "Mengirim..." : "Kirim Tautan Pemulihan"}
+            {loading ? "Lagi dikirim..." : "Kirim Link Pemulihan"}
           </button>
         </form>
       </div>

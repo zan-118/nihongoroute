@@ -80,7 +80,7 @@ export default function VerbListClient({
           onClick={() => setIsFlashcardMode(false)}
           className="mb-8 flex items-center justify-center gap-3 px-8 py-6 rounded-2xl text-[10px] md:text-xs font-bold uppercase tracking-widest w-full sm:w-auto mx-auto sm:mx-0 neo-card bg-black/40 border-white/5 hover:bg-white hover:text-black transition-all"
         >
-          <ArrowLeft size={18} /> KEMBALI KE DAFTAR
+          <ArrowLeft size={18} /> Kembali ke Daftar
         </Button>
         <FlashcardMaster cards={flashcardData} />
       </div>
@@ -115,7 +115,7 @@ export default function VerbListClient({
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-none mb-2">
                 Kamus <span className="text-cyber-neon">Kata Kerja</span>
               </h1>
-              <span className="text-xs md:text-sm text-slate-400 font-medium tracking-wide">Latih cara mengubah bentuk kata kerja dengan mudah.</span>
+              <span className="text-xs md:text-sm text-slate-400 font-medium tracking-wide">Ubah bentuk kata kerja jadi lebih gampang. Yuk, coba satu-satu!</span>
             </div>
           </div>
           <div className="flex items-center justify-between md:justify-end gap-6 w-full md:w-auto">
@@ -141,7 +141,7 @@ export default function VerbListClient({
               size={20}
             />
             <Input
-              placeholder="Cari kata kerja atau arti..."
+              placeholder="Cari kata kerja atau arti yang kamu mau..."
               className="w-full pl-12 md:pl-16 pr-6 md:pr-8 py-6 md:py-8 h-auto bg-black/40 border-white/5 rounded-2xl md:rounded-[2rem] text-sm md:text-base text-white placeholder:text-slate-600 font-medium neo-inset shadow-none focus-visible:ring-cyber-neon/30"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -181,7 +181,7 @@ export default function VerbListClient({
                  </div>
               </div>
               <p className="text-slate-400 font-bold text-xs md:text-sm uppercase tracking-widest">
-                Kata kerja tidak ditemukan
+                Waduh, kata kerjanya gak ketemu nih...
               </p>
             </motion.div>
           ) : (
@@ -218,7 +218,7 @@ export default function VerbListClient({
                           variant="outline"
                           className={`px-3 py-1.5 md:px-4 md:py-2 text-[9px] md:text-xs font-black uppercase tracking-[0.2em] rounded-xl border h-auto bg-black/20 backdrop-blur-md ${badgeColor}`}
                         >
-                          GOLONGAN {verb.group}
+                          Golongan {verb.group}
                         </Badge>
                         <div className="flex items-center gap-4 md:gap-6">
                           <TTSReader text={verb.jisho} minimal={true} />
@@ -288,11 +288,11 @@ export default function VerbListClient({
       <footer className="mt-16 md:mt-24 pt-10 md:pt-16 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-6">
          <div className="flex items-center gap-3">
             <Activity size={16} className="text-cyber-neon animate-pulse" />
-            <span className="text-slate-500 font-bold text-[10px] md:text-xs uppercase tracking-widest">Sistem Konjugasi Aktif</span>
+            <span className="text-slate-500 font-bold text-[10px] md:text-xs uppercase tracking-widest">Matriks Konjugasi Siap!</span>
          </div>
          <Link href="/library" className="w-full sm:w-auto">
             <Button variant="ghost" className="w-full px-8 py-6 md:px-10 md:py-7 h-auto text-[10px] md:text-xs font-bold uppercase tracking-widest rounded-2xl bg-black/40 border-white/5 neo-card shadow-none hover:bg-cyber-neon hover:text-black transition-all gap-3 group">
-               <ArrowLeft size={16} className="group-hover:-translate-x-1.5 transition-transform duration-300" /> KEMBALI KE PUSTAKA
+               <ArrowLeft size={16} className="group-hover:-translate-x-1.5 transition-transform duration-300" /> Kembali ke Pustaka
             </Button>
          </Link>
       </footer>

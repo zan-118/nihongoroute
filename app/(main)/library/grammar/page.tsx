@@ -93,7 +93,7 @@ export default function GrammarArticlesPage() {
                 <h1 className="text-3xl md:text-5xl lg:text-7xl font-black text-white tracking-tight leading-none mb-1 md:mb-2">
                   Panduan <span className="text-cyber-neon">Tata Bahasa</span>
                 </h1>
-                <span className="text-[10px] md:text-sm text-slate-400 font-medium tracking-wide">Kumpulan pola kalimat untuk membantumu bicara lebih lancar.</span>
+                <span className="text-[10px] md:text-sm text-slate-400 font-medium tracking-wide">Pahami pola kalimat biar ngomongnya gak kaku dan makin lancar!</span>
               </div>
             </div>
 
@@ -123,7 +123,7 @@ export default function GrammarArticlesPage() {
         <div className="mb-8 md:mb-12 relative group max-w-2xl">
           <Search className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyber-neon transition-colors z-10" size={18} />
           <Input
-            placeholder="Cari pola kalimat (misal: ~koto ga aru)..."
+            placeholder="Cari pola kalimat apa? (misal: ~koto ga aru)..."
             className="w-full pl-11 md:pl-14 pr-6 py-5 md:py-6 h-auto bg-black/40 border-white/5 rounded-xl md:rounded-[1.5rem] text-xs md:text-base text-white placeholder:text-slate-600 font-medium neo-inset shadow-none focus-visible:ring-cyber-neon/30"
             value={searchTerm}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
@@ -205,8 +205,8 @@ export default function GrammarArticlesPage() {
                 </div>
                 <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] md:text-sm mb-6">
                   {searchTerm 
-                    ? `Tidak ada hasil untuk "${searchTerm}"` 
-                    : `Data tata bahasa belum tersedia untuk level ${selectedLevel.toUpperCase()}`}
+                    ? `Waduh, hasil buat "${searchTerm}" gak ketemu nih...` 
+                    : `Sabar ya, materi tata bahasa buat level ${selectedLevel.toUpperCase()} belum ada nih.`}
                 </p>
                 {searchTerm && (
                   <Button 
@@ -214,7 +214,7 @@ export default function GrammarArticlesPage() {
                     variant="outline"
                     className="bg-cyber-neon/10 border-cyber-neon/30 text-cyber-neon hover:bg-cyber-neon hover:text-black rounded-xl px-6 font-bold uppercase tracking-widest text-[10px] transition-all"
                   >
-                    Reset Pencarian
+                    Hapus Filter
                   </Button>
                 )}
               </Card>

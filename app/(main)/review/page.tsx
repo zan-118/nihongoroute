@@ -101,7 +101,7 @@ export default function DailyReviewPage() {
       <div className="flex-1 flex flex-col items-center justify-center px-4">
         <RotateCw className="text-cyan-400 animate-spin mb-4" size={40} />
         <p className="text-white/50 font-mono uppercase tracking-widest text-sm animate-pulse">
-          Sinkronisasi Memori...
+          Jemput ingatan dulu...
         </p>
       </div>
     );
@@ -119,11 +119,11 @@ export default function DailyReviewPage() {
             className="mx-auto text-cyan-400 mb-6 drop-shadow-[0_0_20px_rgba(34,211,238,0.4)]"
           />
           <h1 className="text-3xl font-black text-white uppercase tracking-tighter italic mb-4 relative z-10">
-            Semua <span className="text-cyan-400">Tuntas!</span>
+            Ingatanmu <span className="text-cyan-400">Luar Biasa!</span>
           </h1>
           <p className="text-[#c4cfde]/70 mb-8 leading-relaxed text-sm relative z-10 italic">
-            Otak Anda sedang beristirahat. Tidak ada kosakata yang perlu diulang
-            saat ini. Jelajahi materi baru untuk menambah hafalan!
+            Belum ada hafalan yang perlu diulang untuk saat ini. Semuanya masih segar di ingatan! 
+            Mau coba tambah kosakata baru?
           </p>
           <Button
             asChild
@@ -158,7 +158,7 @@ export default function DailyReviewPage() {
               Review <span className="text-emerald-400">Selesai</span>
             </h1>
             <p className="text-[#c4cfde]/70 mb-8 font-mono text-sm relative z-10">
-              Anda telah menyelesaikan jadwal hari ini.
+              Kamu berhasil menyelesaikan semua review hari ini. Mantap!
             </p>
             <Button
               asChild

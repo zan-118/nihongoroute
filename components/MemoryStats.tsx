@@ -52,9 +52,9 @@ export default function MemoryStats() {
           </Card>
           <div className="text-left">
             <h3 className="text-white font-black uppercase tracking-widest text-xs md:text-sm">
-              Matriks Memori
+              Status Hafalan
             </h3>
-            <span className="block text-[9px] md:text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Jaringan Saraf SRS</span>
+            <span className="block text-[9px] md:text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Distribusi Memori Pintar</span>
           </div>
         </div>
         <Badge
@@ -86,7 +86,7 @@ export default function MemoryStats() {
         >
           <div className="flex flex-col items-center gap-2 md:gap-3">
             <BookOpen size={18} className="md:w-5 md:h-5 group-hover:scale-110 transition-transform duration-300" />
-            <span>HUD Kosakata</span>
+            <span>Koleksi Kata</span>
           </div>
         </Link>
         <Link
@@ -95,7 +95,7 @@ export default function MemoryStats() {
         >
           <div className="flex flex-col items-center gap-2 md:gap-3">
             <PenTool size={18} className="md:w-5 md:h-5 group-hover:scale-110 transition-transform duration-300" />
-            <span>HUD Kanji</span>
+            <span>Daftar Kanji</span>
           </div>
         </Link>
       </div>

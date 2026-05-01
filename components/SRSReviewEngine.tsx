@@ -27,20 +27,26 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
               variant="outline"
               className="text-red-500 font-black text-[10px] tracking-[0.3em] uppercase bg-red-500/5 px-4 py-1.5 rounded-xl border-red-500/20 neo-inset h-auto"
             >
-              SRS Intel Review
+              Latihan Mengingat (SRS)
             </Badge>
             <p className="text-slate-500 text-[10px] font-bold uppercase mt-1 tracking-widest">
-              Evaluasi Algoritma Memori
+              Mari segarkan ingatanmu hari ini
             </p>
           </div>
         </div>
 
         <Card className="bg-red-500/5 border-red-500/10 p-4 rounded-[1.5rem] neo-inset shadow-none border-dashed">
-          <p className="text-red-400/80 text-[11px] leading-relaxed italic flex items-center gap-3 font-medium">
-            <ShieldCheck size={16} className="shrink-0 text-red-500" />
-            Setiap jawaban menentukan jadwal kemunculan kartu ini di masa depan.
-            Jawab dengan jujur.
-          </p>
+          <div className="flex items-start gap-3">
+            <ShieldCheck size={16} className="shrink-0 text-red-500 mt-0.5" />
+            <div className="space-y-1">
+              <p className="text-red-400/80 text-[11px] leading-relaxed italic font-medium">
+                Kejujuran adalah kunci. Beritahu kami jika kamu benar-benar ingat atau lupa kata ini.
+              </p>
+              <p className="text-slate-500 text-[9px] leading-relaxed uppercase tracking-widest font-bold">
+                Sistem SRS akan menjadwalkan ulang kata ini secara otomatis agar kamu tidak lupa.
+              </p>
+            </div>
+          </div>
         </Card>
       </header>
 

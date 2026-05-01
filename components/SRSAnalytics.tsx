@@ -29,12 +29,12 @@ export default function SRSAnalytics() {
             <LineChart size={24} className="text-purple-400" />
           </Card>
           <div>
-            <h3 className="text-white font-black uppercase tracking-widest text-sm">Analitik Retensi</h3>
+            <h3 className="text-white font-black uppercase tracking-widest text-sm">Kekuatan Ingatan</h3>
             <span className="block text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Stabilitas Memori (Ease Factor)</span>
           </div>
         </div>
         <Badge variant="outline" className="bg-purple-500/5 border-purple-500/20 text-purple-400 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">
-          Memory Intelligence
+          Kecerdasan Memori
         </Badge>
       </header>
 

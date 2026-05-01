@@ -33,7 +33,7 @@ export function ExamIntro({ exam, setGameState, backLink }: ExamIntroProps) {
             Total Soal
           </span>
           <Badge variant="ghost" className="font-mono font-bold text-white text-sm md:text-base">
-            {exam.questions.length} Butir
+            {exam.questions.length} Soal
           </Badge>
         </div>
         <div className="flex justify-between items-center border-b border-white/5 pb-4">
@@ -55,9 +55,7 @@ export function ExamIntro({ exam, setGameState, backLink }: ExamIntroProps) {
       </Card>
 
       <p className="text-[10px] text-slate-400 mb-10 font-mono uppercase tracking-widest leading-relaxed px-2 relative z-10 italic">
-        Sistem memiliki fitur Anti-Cheat aktif. Untuk Seksi Mendengar
-        (Choukai), audio HANYA DAPAT DIPUTAR SATU KALI dan tidak bisa
-        dijeda/diulang.
+        Ingat ya: Sistem deteksi kecurangan lagi aktif nih. Khusus bagian Mendengar (Choukai), audionya cuma bisa diputar SEKALI dan gak bisa diulang. Fokus ya!
       </p>
 
       <div className="flex flex-col sm:flex-row gap-4 relative z-10">
@@ -67,7 +65,7 @@ export function ExamIntro({ exam, setGameState, backLink }: ExamIntroProps) {
           className="neo-inset w-full hover:bg-white hover:text-black text-slate-200 font-black uppercase tracking-widest h-auto py-5 px-6 rounded-xl transition-all text-[10px] sm:text-xs border-white/5 bg-black/10 shadow-none"
         >
           <Link href={backLink}>
-            ← Batal
+            ← Nanti Saja
           </Link>
         </Button>
         <Button

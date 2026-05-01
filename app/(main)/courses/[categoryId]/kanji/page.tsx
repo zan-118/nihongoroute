@@ -68,7 +68,7 @@ export default async function KanjiFlashcardPage({ params }: PageProps) {
           </h1>
           <p className="text-white/40 text-[9px] md:text-[10px] font-mono uppercase tracking-widest mt-2 md:mt-3 flex items-center justify-center md:justify-start gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />{" "}
-            Database Terintegrasi: {cards.length} Karakter Dimuat
+            Total Karakter: {cards.length} Karakter Dimuat
           </p>
         </header>
 

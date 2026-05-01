@@ -55,7 +55,7 @@ export function ExamResult({
         <h1
           className={`text-4xl md:text-5xl font-black uppercase italic tracking-tighter mb-2 ${isPassed ? "text-emerald-400" : "text-red-500"}`}
         >
-          {isPassed ? "Lulus Ujian!" : "Belum Berhasil"}
+          {isPassed ? "Keren! Kamu Lulus!" : "Jangan Menyerah, Coba Lagi Yuk!"}
         </h1>
         <Badge variant="ghost" className="text-slate-300 font-mono uppercase tracking-widest text-[10px] md:text-xs mb-10 h-auto">
           {exam.title}
@@ -64,7 +64,7 @@ export function ExamResult({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
           <Card className="neo-inset p-6 md:p-8 flex flex-col items-center justify-center border-white/5 bg-black/20 shadow-none">
             <p className="text-slate-400 text-[10px] uppercase font-black tracking-widest mb-3">
-              Final Score
+              Skor Akhir
             </p>
             <p
               className={`text-4xl md:text-6xl font-black font-mono ${isPassed ? "text-emerald-400" : "text-red-500"}`}
@@ -75,7 +75,7 @@ export function ExamResult({
           </Card>
           <Card className="neo-inset p-6 md:p-8 flex flex-col items-center justify-center border-white/5 bg-black/20 shadow-none">
             <p className="text-slate-400 text-[10px] uppercase font-black tracking-widest mb-3">
-              Accuracy
+              Akurasi
             </p>
             <p className="text-4xl md:text-6xl font-black font-mono text-white">
               {Math.round((correctCount / exam.questions.length) * 100)}%
@@ -85,7 +85,7 @@ export function ExamResult({
 
         <Card className="bg-black/20 p-6 md:p-10 border-white/5 mb-10 text-left rounded-3xl neo-inset shadow-none">
           <h3 className="text-[10px] md:text-xs font-black text-slate-200 uppercase tracking-[0.3em] border-b border-white/5 pb-4 mb-8">
-            Analisis Per Sektor
+            Gimana Hasil Tiap Bagian?
           </h3>
           <div className="space-y-8">
             {Object.entries(sectionBreakdown).map(([sectionKey, data]) => {
@@ -132,7 +132,7 @@ export function ExamResult({
             variant="ghost"
             className="w-full neo-card border-white/5 bg-black/20 text-amber-500 hover:bg-amber-500 hover:text-black font-black uppercase tracking-widest h-auto py-5 px-6 rounded-xl flex justify-center items-center gap-2 transition-all text-[10px] md:text-xs shadow-none"
           >
-            🔍 Review Jawaban
+            🔍 Cek Kesalahanmu
           </Button>
           <Button
             asChild

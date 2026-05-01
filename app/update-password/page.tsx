@@ -92,8 +92,8 @@ export default function UpdatePasswordPage() {
           </h1>
           <p className="text-sm text-slate-400">
             {isSuccess 
-              ? "Kata sandi Anda telah berhasil diubah. Mengalihkan..." 
-              : "Silakan masukkan kata sandi baru Anda di bawah ini."}
+              ? "Yess! Kata sandimu udah diganti. Tunggu sebentar ya..." 
+              : "Yuk, ketik kata sandi barumu di bawah ini."}
           </p>
         </div>
 
@@ -130,7 +130,7 @@ export default function UpdatePasswordPage() {
               disabled={loading}
               className="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition-colors disabled:opacity-50 disabled:hover:bg-emerald-600 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
             >
-              {loading ? "Menyimpan..." : "Simpan Kata Sandi"}
+              {loading ? "Lagi disimpan..." : "Aktifkan Sandi Baru"}
             </button>
           </form>
         ) : (

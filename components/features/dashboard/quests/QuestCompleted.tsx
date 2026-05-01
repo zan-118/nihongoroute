@@ -16,7 +16,7 @@ export function QuestCompleted() {
         Target Tercapai!
       </h4>
       <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest max-w-[200px] leading-relaxed relative z-10">
-        Kamu luar biasa! Semua misi hari ini sudah beres. Istirahat yang cukup ya, esok misi baru menanti.
+        Keren! Semua target hari ini sudah beres. Istirahat yang cukup ya, sampai jumpa di tantangan besok!
       </p>
     </motion.div>
   );

@@ -46,7 +46,7 @@ export default function LoginPage() {
         });
         if (error) throw error;
         
-        toast.success(`Okaeri, ${data.user?.user_metadata?.full_name ? data.user.user_metadata.full_name.split(' ')[0] : 'Siswa'}!`, {
+        toast.success(`Selamat Datang Kembali, ${data.user?.user_metadata?.full_name ? data.user.user_metadata.full_name.split(' ')[0] : 'Siswa'}!`, {
           description: "Senang melihatmu kembali. Mari lanjut belajarnya!",
         });
 
@@ -109,12 +109,12 @@ export default function LoginPage() {
             <Sparkles className="text-blue-400" size={32} />
           </div>
           <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
-            {isRegistering ? "Buat Akun Baru" : "Mulai Perjalananmu"}
+            {isRegistering ? "Yuk, bikin akun baru!" : "Siap lanjut belajar?"}
           </h1>
           <p className="text-sm text-slate-400">
             {isRegistering 
-              ? "Daftar dengan email untuk menyimpan progres belajarmu di cloud." 
-              : "Masuk ke akun untuk melanjutkan belajarmu yang tersimpan."}
+              ? "Bikin akun yuk, biar semua progres belajarmu tersimpan rapi dan bisa diakses kapan aja." 
+              : "Masuk ke akunmu, yuk! Kita lanjutin petualangan belajar yang seru ini."}
           </p>
         </div>
 
@@ -126,7 +126,7 @@ export default function LoginPage() {
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
                 <input 
                   type="text" 
-                  placeholder="Nama Lengkap" 
+                  placeholder="Nama panggilannya siapa?" 
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required={isRegistering}
@@ -138,7 +138,7 @@ export default function LoginPage() {
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
               <input 
                 type="email" 
-                placeholder="Alamat Email" 
+                placeholder="Alamat emailmu" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -149,7 +149,7 @@ export default function LoginPage() {
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
               <input 
                 type="password" 
-                placeholder="Kata Sandi" 
+                placeholder="Kata sandi rahasia" 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -163,7 +163,7 @@ export default function LoginPage() {
                   href="/forgot-password" 
                   className="text-xs text-slate-400 hover:text-blue-400 transition-colors"
                 >
-                  Lupa kata sandi?
+                  Lupa kata sandi? Tenang, bisa kita bantu kok!
                 </Link>
               </div>
             )}
@@ -174,7 +174,7 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-colors disabled:opacity-50 disabled:hover:bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.3)]"
           >
-            {loading ? "Memproses..." : (isRegistering ? "Daftar Akun" : "Masuk")}
+            {loading ? "Sedang memproses..." : (isRegistering ? "Daftar Sekarang!" : "Masuk Yuk!")}
           </button>
         </form>
 
@@ -187,8 +187,8 @@ export default function LoginPage() {
             className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
           >
             {isRegistering 
-              ? "Sudah punya akun? Masuk di sini" 
-              : "Belum punya akun? Daftar di sini"}
+              ? "Sudah punya akun? Masuk lewat sini aja" 
+              : "Belum punya akun? Yuk, daftar dulu!"}
           </button>
         </div>
 
@@ -197,7 +197,7 @@ export default function LoginPage() {
             <div className="w-full border-t border-slate-800"></div>
           </div>
           <div className="relative flex justify-center">
-            <span className="bg-slate-900 px-4 text-xs text-slate-500 uppercase tracking-widest">Opsi Lainnya</span>
+            <span className="bg-slate-900 px-4 text-xs text-slate-500 uppercase tracking-widest">Atau pakai cara ini</span>
           </div>
         </div>
 
@@ -215,7 +215,7 @@ export default function LoginPage() {
                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
               </svg>
-              Lanjutkan dengan Google
+              Masuk dengan akun Google
             </div>
             <ChevronRight size={16} className="text-slate-400" />
           </button>
@@ -229,7 +229,7 @@ export default function LoginPage() {
             <div className="flex items-center gap-3">
               <User size={20} className="text-slate-400" />
               <div className="text-left">
-                <div className="font-semibold">Mulai Tanpa Akun</div>
+                <div className="font-semibold">Coba Intip Dulu (Mode Tamu)</div>
               </div>
             </div>
             <LogIn size={16} className="text-slate-400" />

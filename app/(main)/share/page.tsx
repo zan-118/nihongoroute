@@ -127,7 +127,7 @@ function ShareContent() {
           <h1
             className={`text-4xl md:text-5xl font-black uppercase italic tracking-tighter mb-6 ${data.passed ? "text-emerald-400" : "text-red-500"}`}
           >
-            {data.passed ? "Exam Cleared" : "Exam Failed"}
+            {data.passed ? "Lulus Ujian" : "Gagal Ujian"}
           </h1>
 
           <div className="neo-inset p-6 rounded-2xl mb-10 text-left">

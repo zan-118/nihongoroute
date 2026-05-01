@@ -76,7 +76,7 @@ export function ExamPlaying({
             </div>
             {cheatWarnings > 0 && (
               <Badge variant="ghost" className="text-[9px] text-amber-500 font-black uppercase tracking-widest animate-pulse flex items-center gap-2 p-0 h-auto">
-                <ShieldAlert size={14} /> CHEAT ALERT: {cheatWarnings}x
+                <ShieldAlert size={14} /> PERINGATAN: {cheatWarnings}x
               </Badge>
             )}
           </div>
@@ -94,7 +94,7 @@ export function ExamPlaying({
             <Button
               variant="ghost"
               onClick={() => {
-                if (confirm("Yakin ingin menyelesaikan ujian sekarang? Skor akan dihitung dari jawaban yang sudah terisi."))
+                if (confirm("Beneran mau selesai sekarang? Tenang, jawaban yang sudah kamu isi bakal tetap dihitung kok."))
                   finishExam();
               }}
               className="text-[10px] neo-card border-white/5 bg-black/20 text-slate-400 hover:bg-red-500 hover:text-black font-black uppercase tracking-widest h-auto px-6 py-4 rounded-xl shadow-none transition-all"
@@ -139,13 +139,13 @@ export function ExamPlaying({
                 <div className="text-center sm:text-left">
                   <p className="text-xs md:text-sm font-black uppercase tracking-[0.3em] mb-2 text-white italic">
                     {!audioStatus[activeQuestion._key] || audioStatus[activeQuestion._key] === "idle"
-                      ? "Putar Audio Choukai"
+                      ? "Dengarkan Audio"
                       : audioStatus[activeQuestion._key] === "playing"
-                        ? "Audio Sedang Diputar..."
-                        : "Pemutaran Audio Selesai"}
+                        ? "Lagi Didengarkan..."
+                        : "Selesai Didengarkan"}
                   </p>
                   <p className="text-[10px] md:text-xs text-slate-400 leading-relaxed uppercase font-black tracking-widest">
-                    Perhatian: Audio HANYA BISA DIPUTAR <span className="text-red-500 underline">1 KALI</span>. Pastikan konsentrasi penuh.
+                    Ingat: Audionya cuma bisa diputar <span className="text-red-500 underline">SEKALI</span>. Yuk, fokus dengerin!
                   </p>
                 </div>
               </Card>
@@ -162,7 +162,7 @@ export function ExamPlaying({
               <div className="mb-12 rounded-3xl overflow-hidden neo-inset p-3 bg-black/20 border-white/5">
                 <img
                   src={activeQuestion.imageUrl}
-                  alt="Ilustrasi Soal"
+                  alt="Gambar Pendukung"
                   className="w-full max-h-[400px] md:max-h-[500px] object-contain opacity-90 rounded-2xl"
                 />
               </div>
@@ -212,7 +212,7 @@ export function ExamPlaying({
             }}
             className="w-full sm:w-auto bg-amber-500 hover:bg-white text-black px-12 py-8 h-auto flex items-center justify-center font-black uppercase tracking-widest text-xs shadow-[0_0_30px_rgba(245,158,11,0.4)] rounded-2xl border-none transition-all"
           >
-            <CheckCircle size={20} className="mr-3" /> Kirim Jawaban Ujian
+            <CheckCircle size={20} className="mr-3" /> Kumpulkan Jawaban
           </Button>
         ) : (
           <Button

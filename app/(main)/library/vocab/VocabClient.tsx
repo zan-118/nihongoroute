@@ -132,12 +132,12 @@ export default function VocabClient() {
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-none mb-2">
                 Kamus <span className="text-cyber-neon">Kosakata</span>
               </h1>
-              <span className="text-xs md:text-sm text-slate-400 font-medium tracking-wide">Kumpulan kata penting untuk memperkaya bahasamu.</span>
+              <span className="text-xs md:text-sm text-slate-400 font-medium tracking-wide">Kumpulan kata penting biar bahasamu makin jago dan keren!</span>
             </div>
           </div>
           <div className="flex items-center justify-between md:justify-end gap-4 w-full md:w-auto">
              <div className="flex flex-col items-start md:items-end gap-1">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Jumlah Kata</span>
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Total Koleksi</span>
                 <span className="text-xs md:text-sm font-black text-white">{vocabList.length} Kata</span>
              </div>
              <PdfGenerator data={vocabList} type="vocab" level={level} />
@@ -150,7 +150,7 @@ export default function VocabClient() {
         <div className="relative w-full group">
           <Search className="absolute left-5 md:left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyber-neon transition-colors z-10" size={20} />
           <Input
-            placeholder="Cari kanji, romaji, atau arti kata..."
+            placeholder="Mau cari kata apa? Ketik kanji atau artinya di sini ya..."
             className="w-full pl-12 md:pl-14 pr-6 py-6 md:py-7 h-auto bg-black/40 border-white/5 rounded-2xl md:rounded-[1.5rem] text-sm md:text-base text-white placeholder:text-slate-600 font-medium neo-inset shadow-none focus-visible:ring-cyber-neon/30"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -217,7 +217,17 @@ export default function VocabClient() {
                 
                 <div className="flex justify-between items-start mb-6 md:mb-8 relative z-10">
                   <Badge variant="outline" className="px-3 py-1.5 md:px-4 md:py-2 text-[9px] md:text-xs font-black uppercase tracking-[0.2em] rounded-xl bg-black/20 backdrop-blur-md text-slate-400 border-white/10 h-auto">
-                    {vocab.hinshi ? vocab.hinshi.replace("-", " ") : "TIDAK DIKETAHUI"}
+                    {vocab.hinshi ? (
+                      vocab.hinshi === 'noun' ? 'Kata Benda' :
+                      vocab.hinshi === 'i-adjective' ? 'Kata Sifat-I' :
+                      vocab.hinshi === 'na-adjective' ? 'Kata Sifat-Na' :
+                      vocab.hinshi === 'adverb' ? 'Kata Keterangan' :
+                      vocab.hinshi === 'particle' ? 'Partikel' :
+                      vocab.hinshi === 'conjunction' ? 'Penghubung' :
+                      vocab.hinshi === 'pronoun' ? 'Kata Ganti' :
+                      vocab.hinshi === 'expression' ? 'Ungkapan' : 
+                      vocab.hinshi.replace("-", " ")
+                    ) : "TIPE UMUM"}
                   </Badge>
                   <TTSReader text={vocab.word} minimal={true} />
                 </div>
@@ -259,7 +269,7 @@ export default function VocabClient() {
       <div className="mt-12 md:mt-16 flex justify-center w-full">
         {loading ? (
           <div className="flex items-center gap-4 text-cyber-neon text-xs md:text-sm font-bold uppercase tracking-widest animate-pulse">
-            <Loader2 className="animate-spin" size={20} /> Memuat Kosakata...
+            <Loader2 className="animate-spin" size={20} /> Lagi ngambil data kosakata...
           </div>
         ) : hasMore && vocabList.length > 0 ? (
           <Button
@@ -277,7 +287,7 @@ export default function VocabClient() {
                </div>
             </div>
             <p className="text-slate-400 font-bold text-sm md:text-base tracking-wide">
-              Tidak ada kosakata yang cocok dengan kriteria pencarian Anda.
+              Waduh, kosakata yang kamu cari gak ada nih. Coba kata lain yuk!
             </p>
           </Card>
         ) : null}

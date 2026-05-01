@@ -31,39 +31,39 @@ export default function LibraryPage() {
       title: "Kamus Kata Kerja",
       desc: "Pelajari konjugasi kata kerja N5-N4. Lengkap dengan bentuk Masu, Te, hingga Potensial yang mudah dipahami.",
       icon: <RefreshCw size={28} />,
-      label: "KONJUGASI_KATA_KERJA",
+      label: "Kamus Verba",
       delay: 0.2
     },
     {
       href: "/library/grammar",
       title: "Panduan Tata Bahasa",
-      desc: "Kumpulan tata bahasa lengkap dengan contoh kalimat audio dan penjelasan yang sederhana.",
+      desc: "Belajar pola kalimat jadi lebih asyik dengan contoh audio dan penjelasan yang gampang dimengerti.",
       icon: <BookOpen size={28} />,
-      label: "BUNPOU_HITS",
+      label: "Pola Kalimat",
       delay: 0.3
     },
     {
       href: "/library/vocab",
       title: "Daftar Kosakata",
-      desc: "Ribuan kosakata dari N5 hingga N2 dengan sistem pencarian kilat untuk membantumu belajar tiap hari.",
+      desc: "Gak perlu bingung cari kata, ribuan kosakata N5-N2 siap kamu kuasai setiap hari!",
       icon: <Database size={28} />,
-      label: "DAFTAR_KOSAKATA",
+      label: "Perbendaharaan Kata",
       delay: 0.4
     },
     {
       href: "/library/cheatsheet",
       title: "Catatan Cepat",
-      desc: "Referensi instan untuk angka, penunjuk waktu, dan partikel dasar. Cocok untuk contekan cepat!",
+      desc: "Butuh contekan kilat buat angka atau partikel? Cek panduannya di sini, dijamin makin lancar!",
       icon: <BarChart2 size={28} />,
-      label: "REFERENSI_KILAT",
+      label: "Panduan Cepat",
       delay: 0.5
     },
     {
       href: "/exams",
       title: "Ujian & Sertifikasi",
-      desc: "Uji kemampuanmu dengan simulasi ujian JLPT. Dapatkan skor dan ukur kesiapanmu menghadapi ujian asli.",
+      desc: "Siap buat ujian beneran? Uji nyalimu di simulasi JLPT dan lihat seberapa jago skor kesiapanmu!",
       icon: <Award size={28} />,
-      label: "SIMULASI_JLPT",
+      label: "Latihan Ujian",
       delay: 0.6
     }
   ];
@@ -109,7 +109,7 @@ export default function LibraryPage() {
                 transition={{ delay: 0.2 }}
                 className="text-slate-400 text-xs md:text-base lg:text-xl max-w-2xl leading-relaxed font-bold tracking-wide italic"
               >
-                Temukan segala amunisi yang kamu butuhkan untuk menaklukkan JLPT. Mulai dari daftar kata kerja hingga tata bahasa, semuanya ada di sini.
+                Gudang ilmumu ada di sini! Dari kata kerja sampai tata bahasa, semua amunisi buat naklukin JLPT sudah siap semua!
               </motion.p>
             </div>
             
@@ -117,7 +117,7 @@ export default function LibraryPage() {
                <Card className="p-8 md:p-10 rounded-3xl md:rounded-[3.5rem] bg-black/40 border-white/5 neo-card shadow-none min-w-[320px]">
                   <div className="flex items-center justify-between mb-6">
                      <div className="flex items-center gap-3 md:gap-4 text-slate-500 font-bold uppercase text-[10px] md:text-xs tracking-widest">
-                        <Server size={16} className="md:w-5 md:h-5" /> Kapasitas Sistem
+                        <Server size={16} className="md:w-5 md:h-5" /> Kesiapan Materi
                      </div>
                      <span className="text-[10px] md:text-xs font-mono text-cyber-neon/80 font-bold">100%</span>
                   </div>

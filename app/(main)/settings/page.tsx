@@ -126,7 +126,7 @@ export default function SettingsPage() {
             Pengaturan
           </motion.h1>
           <motion.p variants={itemVariants} className="text-slate-500 text-sm font-medium max-w-lg leading-relaxed">
-            Kelola data belajarmu, akun, dan simpan progres biar gak hilang.
+            Atur data belajar dan akunmu di sini. Jangan lupa backup biar progresmu selalu aman!
           </motion.p>
         </header>
 
@@ -147,21 +147,21 @@ export default function SettingsPage() {
                   onClick={handleExportData}
                   className="h-12 bg-black/30 border-white/5 hover:bg-cyan-400/10 hover:border-cyan-400/30 hover:text-cyan-400 text-slate-400 rounded-xl uppercase tracking-wider font-bold text-[11px] transition-all group"
                 >
-                  <Save size={16} className="mr-2 group-hover:scale-110 transition-transform" /> Backup Progres
+                  <Save size={16} className="mr-2 group-hover:scale-110 transition-transform" /> Simpan Backup
                 </Button>
                 <Button
                   variant="outline"
                   onClick={handleImportData}
                   className="h-12 bg-black/30 border-white/5 hover:bg-purple-500/10 hover:border-purple-500/30 hover:text-purple-400 text-slate-400 rounded-xl uppercase tracking-wider font-bold text-[11px] transition-all group"
                 >
-                  <Upload size={16} className="mr-2 group-hover:scale-110 transition-transform" /> Restore Data
+                  <Upload size={16} className="mr-2 group-hover:scale-110 transition-transform" /> Muat Backup
                 </Button>
                 <Button
                   variant="outline"
                   onClick={handleResetData}
                   className="h-12 bg-red-500/5 border-red-500/10 hover:bg-red-500/15 hover:border-red-500/30 text-red-400 rounded-xl uppercase tracking-wider font-bold text-[11px] transition-all group"
                 >
-                  <Trash2 size={16} className="mr-2 group-hover:scale-110 transition-transform" /> Hapus Progres
+                  <Trash2 size={16} className="mr-2 group-hover:scale-110 transition-transform" /> Reset Semua Progres
                 </Button>
                 {isAuthenticated && (
                   <Button
@@ -183,9 +183,9 @@ export default function SettingsPage() {
                 <ShieldAlert size={20} className="text-red-500" />
               </div>
               <div className="flex-1">
-                <h4 className="text-white font-bold uppercase text-sm mb-1">Hati-hati!</h4>
+                <h4 className="text-white font-bold uppercase text-sm mb-1">Zona Bahaya!</h4>
                 <p className="text-slate-500 text-xs leading-relaxed">
-                  Menghapus atau mereset data bakal ngilangin semua XP, Level, dan hafalanmu secara permanen. Pastikan kamu udah simpan backup.
+                  Ingat ya, hapus data berarti semua XP dan hafalanmu hilang selamanya. Pikir-pikir dulu atau simpan backup-nya ya!
                 </p>
               </div>
             </Card>

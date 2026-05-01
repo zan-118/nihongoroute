@@ -121,7 +121,7 @@ export default function LandingPage() {
             animate={{ y: 0, opacity: 1 }}
             className="text-5xl md:text-8xl lg:text-9xl font-black italic uppercase tracking-tighter leading-[0.9] text-white mb-8"
           >
-            Taklukkan <br />
+            Kuasai <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-[0_0_15px_rgba(34,211,238,0.3)]">
               Bahasa Jepang.
             </span>
@@ -265,8 +265,8 @@ export default function LandingPage() {
                   Sepenuhnya <span className="text-cyan-400">Gratis Untukmu</span>
                 </h4>
                 <p className="text-slate-400 text-sm md:text-lg font-bold italic opacity-80 group-hover:opacity-100 transition-opacity">
-                  Dikembangkan dengan sepenuh hati untuk mendukung impianmu menguasai
-                  bahasa Jepang tanpa hambatan biaya.
+                  Dibuat dengan sepenuh hati untuk membantu siapa saja yang ingin belajar 
+                  bahasa Jepang tanpa harus terhalang biaya.
                 </p>
               </div>
             </div>

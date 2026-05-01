@@ -97,9 +97,9 @@ export default function SupportPage() {
             animate={{ y: 0, opacity: 1 }}
             className="text-4xl sm:text-5xl md:text-7xl font-black italic tracking-tight text-white leading-tight mb-4 sm:mb-6 uppercase"
           >
-            Misi Akses <br />
+            Wujudkan Akses <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-[0_0_15px_rgba(34,211,238,0.2)]">
-              Pendidikan Gratis.
+              Belajar Gratis.
             </span>
           </motion.h1>
 
@@ -109,7 +109,7 @@ export default function SupportPage() {
             transition={{ delay: 0.1 }}
             className="text-[#c4cfde]/60 text-xs sm:text-sm md:text-base max-w-lg mx-auto leading-relaxed italic px-2 sm:px-0"
           >
-            Dukungan Anda adalah bahan bakar utama agar{" "}
+            Dukungan Anda adalah nyawa utama agar{" "}
             <span className="text-white font-bold">NihongoRoute</span> tetap
             hidup, gratis, terus berkembang, dan tanpa iklan yang mengganggu
             bagi para pejuang bahasa Jepang.

@@ -221,7 +221,7 @@ export default async function LessonPage({ params }: Props) {
         {/* TOP NAV / BREADCRUMBS */}
         <AppBreadcrumbs 
           items={[
-            { label: "Pusat Rute", href: "/courses" },
+            { label: "Pusat Belajar", href: "/courses" },
             { label: lesson.levelTitle || "Materi", href: `/courses/${lesson.levelCode || categoryId}` },
             { label: lesson.title, active: true }
           ]} 
@@ -275,7 +275,14 @@ export default async function LessonPage({ params }: Props) {
                           </span>
                           {v.hinshi && (
                             <span className="text-[9px] font-mono font-black text-purple-400 uppercase tracking-widest bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 rounded">
-                              {v.hinshi}
+                              {v.hinshi === "Meishi" ? "Kata Benda" :
+                               v.hinshi === "Doushi" ? "Kata Kerja" :
+                               v.hinshi === "I-Keiyoushi" ? "Kata Sifat-I" :
+                               v.hinshi === "Na-Keiyoushi" ? "Kata Sifat-Na" :
+                               v.hinshi === "Fukushi" ? "Kata Keterangan" :
+                               v.hinshi === "Joshi" ? "Partikel" :
+                               v.hinshi === "Kandoushi" ? "Kata Seru" :
+                               v.hinshi === "Rentaishi" ? "Kata Penunjuk" : v.hinshi}
                             </span>
                           )}
                         </div>
@@ -349,7 +356,7 @@ export default async function LessonPage({ params }: Props) {
               className="neo-card h-full p-8 group flex flex-col justify-center items-start hover:bg-cyan-400/5 hover:border-cyan-400/30 transition-all duration-300"
             >
               <span className="text-[10px] font-black uppercase tracking-widest text-slate-300 group-hover:text-cyan-400 mb-3 flex items-center gap-2 transition-colors">
-                <ChevronLeft size={14} /> Bab Sebelumnya
+                <ChevronLeft size={14} /> Materi Sebelumnya
               </span>
               <h4 className="text-xl font-black italic uppercase text-white tracking-tight leading-tight">
                 {prevLesson.title}
@@ -364,7 +371,7 @@ export default async function LessonPage({ params }: Props) {
               className="neo-card h-full p-8 group flex flex-col justify-center items-end text-right hover:bg-cyan-400/5 hover:border-cyan-400/30 transition-all duration-300"
             >
               <span className="text-[10px] font-black uppercase tracking-widest text-slate-300 group-hover:text-cyan-400 mb-3 flex items-center gap-2 transition-colors">
-                Bab Selanjutnya <ChevronRight size={14} />
+                Materi Selanjutnya <ChevronRight size={14} />
               </span>
               <h4 className="text-xl font-black italic uppercase text-white tracking-tight leading-tight">
                 {nextLesson.title}
@@ -379,7 +386,7 @@ export default async function LessonPage({ params }: Props) {
                 脂
               </span>
               <p className="text-xs font-black uppercase tracking-widest text-cyan-400">
-                Kurikulum Selesai
+                Yeay! Materi Selesai
               </p>
             </Link>
           )}

@@ -39,8 +39,9 @@ export function FlashcardBack({
         <Badge
           variant="outline"
           className={`absolute top-0 left-1/2 -translate-x-1/2 text-[9px] md:text-[10px] font-bold uppercase tracking-widest ${themeColor} border-current/20 px-4 md:px-5 py-1.5 md:py-2 rounded-lg md:rounded-xl h-auto neo-inset bg-black/20`}
+          title="Definisi atau arti dari kata ini dalam Bahasa Indonesia"
         >
-          Definisi
+          Definisi & Arti
         </Badge>
 
         <div className="absolute top-0 right-0 z-20">
@@ -68,7 +69,7 @@ export function FlashcardBack({
               {kanjiDetails.onyomi && (
                 <Card className="bg-black/40 px-4 py-2.5 md:px-6 md:py-3 rounded-xl md:rounded-2xl border-white/5 flex flex-col items-center min-w-[100px] md:min-w-[120px] neo-inset shadow-none">
                   <span className="text-[9px] md:text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-1">
-                    Onyomi
+                    Bacaan 1 (Onyomi)
                   </span>
                   <span className="text-purple-400 font-japanese font-bold text-lg md:text-xl">
                     {kanjiDetails.onyomi}
@@ -78,7 +79,7 @@ export function FlashcardBack({
               {kanjiDetails.kunyomi && (
                 <Card className="bg-black/40 px-4 py-2.5 md:px-6 md:py-3 rounded-xl md:rounded-2xl border-white/5 flex flex-col items-center min-w-[100px] md:min-w-[120px] neo-inset shadow-none">
                   <span className="text-[9px] md:text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-1">
-                    Kunyomi
+                    Bacaan 2 (Kunyomi)
                   </span>
                   <span className="text-purple-400 font-japanese font-bold text-lg md:text-xl">
                     {kanjiDetails.kunyomi}

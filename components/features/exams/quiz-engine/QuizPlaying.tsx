@@ -35,9 +35,9 @@ export function QuizPlaying({
              </Card>
              <div className="text-left">
                 <Badge variant="outline" className="text-red-500 font-black text-[9px] tracking-[0.3em] uppercase bg-red-500/5 px-3 py-1 rounded-lg border-red-500/20 neo-inset h-auto">
-                  PHASE_0{currentIndex + 1}
+                  Tahap 0{currentIndex + 1}
                 </Badge>
-                <span className="block text-slate-500 text-[10px] font-black uppercase mt-1">Intelligence Test</span>
+                <span className="block text-slate-500 text-[10px] font-black uppercase mt-1">Tes Pemahaman</span>
              </div>
           </div>
           <div className="flex items-center gap-3 font-black text-sm italic">
@@ -130,7 +130,7 @@ export function QuizPlaying({
               <Card className="bg-red-500/5 border-l-4 border-l-red-500 p-8 rounded-[2rem] border-y-white/5 border-r-white/5 neo-inset shadow-none">
                  <div className="flex items-center gap-3 mb-3">
                     <AlertCircle size={18} className="text-red-500" />
-                    <span className="text-[10px] text-red-500 font-black uppercase tracking-[0.4em]">Strategic Intel</span>
+                    <span className="text-[10px] text-red-500 font-black uppercase tracking-[0.4em]">Penjelasan</span>
                  </div>
                  <p className="text-slate-300 text-base md:text-lg leading-relaxed italic font-medium">
                   {currentQ.explanation}

@@ -59,11 +59,11 @@ export default function CoursesLandingPage() {
             variants={itemVariants}
             className="text-5xl md:text-8xl font-black italic uppercase tracking-tighter text-white"
           >
-            PILIH{" "}
+            MAU MULAI <br />
             <span className="text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">
-              RUTE
+              DARI
             </span>{" "}
-            <br /> BELAJAR.
+            MANA?
           </motion.h1>
         </header>
 
@@ -73,7 +73,7 @@ export default function CoursesLandingPage() {
         <motion.section variants={itemVariants} className="mb-24">
           <div className="flex items-center gap-6 mb-10">
             <h3 className="text-xs md:text-sm font-black uppercase tracking-[0.5em] text-cyan-400/60 italic">
-              Core_Protocol
+              Dasar Bahasa
             </h3>
             <div className="h-[1px] flex-1 bg-white/5" />
           </div>
@@ -83,7 +83,7 @@ export default function CoursesLandingPage() {
                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="flex justify-between items-center relative z-10">
                   <h4 className="text-3xl md:text-5xl font-black italic uppercase text-white group-hover:text-cyan-400 transition-colors tracking-tighter">
-                    Mastery: <span className="text-cyan-400 group-hover:text-white transition-colors">Kana</span>
+                    Kuasai: <span className="text-cyan-400 group-hover:text-white transition-colors">Kana</span>
                   </h4>
                   <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-cyan-400 group-hover:bg-cyan-400 group-hover:text-black transition-all duration-500 shadow-inner">
                     <Zap size={32} />
@@ -98,7 +98,7 @@ export default function CoursesLandingPage() {
         <motion.section variants={itemVariants}>
           <div className="flex items-center gap-6 mb-12">
             <h3 className="text-xs md:text-sm font-black uppercase tracking-[0.5em] text-cyan-400/60 italic">
-              Level_Tracks
+              Jalur Level JLPT
             </h3>
             <div className="h-[1px] flex-1 bg-white/5" />
           </div>
@@ -125,11 +125,11 @@ export default function CoursesLandingPage() {
                     
                     <div className="mt-auto flex flex-col gap-6 relative z-10">
                       <p className="text-[11px] md:text-xs text-slate-400 italic font-bold leading-relaxed group-hover:text-slate-200 transition-colors">
-                        Materi terstruktur dan komprehensif untuk penguasaan level {level}.
+                        Semua materi yang kamu butuhkan untuk lulus level {level} ada di sini!
                       </p>
                       <div className="flex items-center justify-between border-t border-white/10 pt-6">
                         <span className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.3em] text-slate-500 group-hover:text-cyan-400 transition-colors">
-                          Mulai Rute
+                          Mulai Belajar
                         </span>
                         <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-cyan-400 group-hover:text-black group-hover:border-none transition-all duration-500 shadow-lg group-hover:translate-x-2">
                           <ArrowRight size={18} />

@@ -76,7 +76,7 @@ const itemVariants: Variants = {
               variant="outline"
               className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px] md:text-xs border-red-500/30 px-4 py-1.5 bg-red-500/5 backdrop-blur-md rounded-xl h-auto"
             >
-              Protocol: JLPT_Simulation_Active
+              Simulasi JLPT Aktif
             </Badge>
           </motion.div>
 
@@ -96,9 +96,7 @@ const itemVariants: Variants = {
           >
             <div className="absolute inset-0 bg-gradient-to-r from-red-600/5 to-transparent pointer-events-none" />
             <p className="text-sm md:text-xl text-slate-200 font-bold leading-relaxed italic relative z-10">
-              Uji kesiapan Anda dengan mesin simulasi berstandar resmi. Sistem
-              akan menghitung skor Anda secara real-time berdasarkan algoritma
-              pembobotan JLPT asli.
+              Cek sejauh mana kemampuanmu dengan simulasi standar resmi. Jangan tegang, pasti bisa!
             </p>
           </motion.div>
         </header>
@@ -111,10 +109,10 @@ const itemVariants: Variants = {
             </div>
             <div>
               <h4 className="text-amber-500 font-black uppercase tracking-[0.3em] text-xs md:text-sm mb-2">
-                Critical Note
+                Catatan Penting
               </h4>
               <p className="text-slate-300 text-xs md:text-base font-bold italic leading-relaxed">
-                Pastikan stabilitas koneksi. Keluar dari sesi ujian sebelum finalisasi akan mengakibatkan pembersihan progres data secara otomatis.
+                Cek sinyal dulu ya! Kalau kamu keluar di tengah jalan, progres ujianmu bakal hilang otomatis. Sayang kan?
               </p>
             </div>
           </Card>
@@ -170,7 +168,7 @@ const itemVariants: Variants = {
                         <div className="p-4 md:p-6 flex flex-col gap-2 items-center text-center rounded-2xl md:rounded-3xl bg-white/5 border border-white/10 group-hover:border-red-500/20 transition-all duration-500">
                           <Clock size={20} className="text-red-400 mb-1 md:w-6 md:h-6" />
                           <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">
-                            Limit_Time
+                            Batas Waktu
                           </span>
                           <span className="font-mono font-black text-white text-base md:text-2xl">
                             {exam.timeLimit}m
@@ -179,7 +177,7 @@ const itemVariants: Variants = {
                         <div className="p-4 md:p-6 flex flex-col gap-2 items-center text-center rounded-2xl md:rounded-3xl bg-white/5 border border-white/10 group-hover:border-red-500/20 transition-all duration-500">
                           <Target size={20} className="text-emerald-400 mb-1 md:w-6 md:h-6" />
                           <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">
-                            Min_Score
+                            Skor Minimum
                           </span>
                           <span className="font-mono font-black text-emerald-400 text-base md:text-2xl">
                             {exam.passingScore}p
@@ -189,7 +187,7 @@ const itemVariants: Variants = {
 
                       <div className="w-full bg-white/5 border border-white/10 p-5 md:p-7 flex items-center justify-between group-hover:border-red-500/40 group-hover:bg-red-600 group-hover:text-black transition-all duration-500 rounded-2xl md:rounded-[2rem] shadow-xl">
                         <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-slate-300 group-hover:text-black transition-colors">
-                          Mulai Protokol Ujian
+                          Mulai Ujian Yuk!
                         </span>
                         <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-black/20 transition-all duration-500">
                            <ChevronRight
@@ -208,7 +206,7 @@ const itemVariants: Variants = {
               <Card className="p-20 text-center bg-slate-900/40 backdrop-blur-xl border border-dashed border-white/10 rounded-[3rem] md:rounded-[5rem]">
                 <span className="text-6xl mb-8 block opacity-30">圦</span>
                 <p className="text-slate-500 font-black text-sm md:text-base uppercase tracking-[0.5em] italic">
-                  Exam_System_Offline
+                  Lagi Gak Ada Ujian Nih
                 </p>
               </Card>
             </motion.div>
