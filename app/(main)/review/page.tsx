@@ -98,9 +98,9 @@ export default function DailyReviewPage() {
   // LAYAR 1: Status Sinkronisasi
   if (loading || isFetching) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center px-4">
-        <RotateCw className="text-cyber-neon animate-spin mb-4" size={32} />
-        <p className="text-slate-500 font-mono uppercase tracking-widest text-[10px] animate-pulse font-bold">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 transition-colors duration-300">
+        <RotateCw className="text-primary animate-spin mb-4" size={32} />
+        <p className="text-muted-foreground font-mono uppercase tracking-widest text-[10px] animate-pulse font-bold">
           Jemput ingatan dulu...
         </p>
       </div>
@@ -110,23 +110,23 @@ export default function DailyReviewPage() {
   // LAYAR 2: Antrean Kosong (Istirahat)
   if (dueCards.length === 0 && !isFinished) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center px-4 w-full">
-        <Card className="bg-white/[0.02] p-8 md:p-12 rounded-2xl border border-white/[0.08] shadow-2xl text-center max-w-md w-full relative overflow-hidden">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 w-full transition-colors duration-300">
+        <Card className="bg-card dark:bg-white/[0.02] p-8 md:p-12 rounded-2xl border border-border dark:border-white/[0.08] shadow-2xl text-center max-w-md w-full relative overflow-hidden">
           <BrainCircuit
             size={64}
-            className="mx-auto text-cyber-neon mb-6 drop-shadow-[0_0_20px_rgba(0,238,255,0.4)]"
+            className="mx-auto text-primary mb-6 drop-shadow-sm dark:drop-shadow-[0_0_20px_rgba(0,238,255,0.4)]"
           />
-          <h1 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tight mb-4 relative z-10">
-            Ingatanmu <span className="text-cyber-neon">Luar Biasa!</span>
+          <h1 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tight mb-4 relative z-10">
+            Ingatanmu <span className="text-primary">Luar Biasa!</span>
           </h1>
-          <p className="text-slate-500 mb-8 leading-relaxed text-sm relative z-10 font-medium">
+          <p className="text-muted-foreground mb-8 leading-relaxed text-sm relative z-10 font-medium">
             Belum ada hafalan yang perlu diulang untuk saat ini. Semuanya masih segar di ingatan! 
             Mau coba pelajari materi baru?
           </p>
           <Button
             asChild
             variant="ghost"
-            className="w-full bg-cyber-neon/10 hover:bg-cyber-neon hover:text-black border border-cyber-neon/30 text-cyber-neon font-bold uppercase tracking-widest h-auto py-4 rounded-xl transition-all relative z-10 text-[10px]"
+            className="w-full bg-primary/10 hover:bg-foreground hover:text-background dark:hover:bg-white dark:hover:text-black border border-primary/30 text-primary font-bold uppercase tracking-widest h-auto py-4 rounded-xl transition-all relative z-10 text-[10px]"
           >
             <Link href="/courses">
               Lihat Materi
@@ -140,27 +140,27 @@ export default function DailyReviewPage() {
   // LAYAR 3: Status Selesai Belajar
   if (isFinished || dueCards.length === 0) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center px-4 w-full">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 w-full transition-colors duration-300">
         <motion.div
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           className="w-full max-w-md"
         >
-          <Card className="bg-white/[0.02] p-8 md:p-12 rounded-2xl border border-emerald-500/30 shadow-[0_0_40px_rgba(16,185,129,0.1)] text-center w-full relative overflow-hidden">
+          <Card className="bg-card dark:bg-white/[0.02] p-8 md:p-12 rounded-2xl border border-emerald-500/30 shadow-2xl dark:shadow-[0_0_40px_rgba(16,185,129,0.1)] text-center w-full relative overflow-hidden">
             <Trophy
               size={64}
-              className="mx-auto text-emerald-400 mb-6 drop-shadow-[0_0_20px_rgba(16,185,129,0.4)]"
+              className="mx-auto text-emerald-600 dark:text-emerald-400 mb-6 drop-shadow-sm dark:drop-shadow-[0_0_20px_rgba(16,185,129,0.4)]"
             />
-            <h1 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight mb-4 relative z-10">
-              Review <span className="text-emerald-400">Selesai</span>
+            <h1 className="text-3xl md:text-4xl font-black text-foreground uppercase tracking-tight mb-4 relative z-10">
+              Review <span className="text-emerald-600 dark:text-emerald-400">Selesai</span>
             </h1>
-            <p className="text-slate-500 mb-8 font-medium text-sm relative z-10">
+            <p className="text-muted-foreground mb-8 font-medium text-sm relative z-10">
               Kamu berhasil menyelesaikan semua review hari ini. Mantap!
             </p>
             <Button
               asChild
               variant="ghost"
-              className="w-full bg-emerald-500/10 hover:bg-emerald-500 hover:text-black border border-emerald-500/30 text-emerald-400 font-bold uppercase tracking-widest h-auto py-4 rounded-xl transition-all relative z-10 text-[10px]"
+              className="w-full bg-emerald-500/10 hover:bg-foreground hover:text-background dark:hover:bg-white dark:hover:text-black border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-widest h-auto py-4 rounded-xl transition-all relative z-10 text-[10px]"
             >
               <Link href="/dashboard">
                 Kembali ke Area Belajar
@@ -174,13 +174,13 @@ export default function DailyReviewPage() {
 
   // LAYAR UTAMA: UI Flashcard
   return (
-    <div className="flex-1 w-full px-4 md:px-8 relative overflow-hidden flex flex-col items-center">
+    <div className="flex-1 w-full px-4 md:px-8 relative overflow-hidden flex flex-col items-center transition-colors duration-300">
       <div className="relative z-10 w-full max-w-2xl mt-4 sm:mt-8">
         <header className="flex justify-between items-center mb-10">
           <Button
             asChild
             variant="ghost"
-            className="text-slate-500 hover:text-white transition-colors text-[10px] font-bold uppercase tracking-widest bg-white/[0.03] h-auto px-4 py-2.5 rounded-xl border border-white/[0.08]"
+            className="text-muted-foreground hover:text-foreground transition-colors text-[10px] font-bold uppercase tracking-widest bg-muted/50 dark:bg-white/[0.03] h-auto px-4 py-2.5 rounded-xl border border-border dark:border-white/[0.08]"
           >
             <Link href="/dashboard">
               <ChevronLeft size={14} className="mr-2" /> Keluar Sesi
@@ -188,7 +188,7 @@ export default function DailyReviewPage() {
           </Button>
           <Badge
             variant="outline"
-            className="bg-cyber-neon/10 border-cyber-neon/30 text-cyber-neon px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 h-auto"
+            className="bg-primary/10 border border-primary/30 text-primary px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 h-auto"
           >
             <BrainCircuit size={16} />
             <span>Hafalan Aktif</span>

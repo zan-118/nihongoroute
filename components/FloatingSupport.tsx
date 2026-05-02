@@ -27,14 +27,14 @@ export default function FloatingSupport() {
           <Button
             variant="ghost"
             size="icon"
-            className="relative w-14 h-14 md:w-16 md:h-16 bg-cyber-surface border border-white/10 rounded-full flex items-center justify-center neo-card shadow-none group-hover:border-red-500/50 group-hover:bg-red-500/10 transition-all active:scale-90 cursor-pointer h-auto"
+            className="relative w-14 h-14 md:w-16 md:h-16 bg-card dark:bg-slate-900 border border-border dark:border-white/10 rounded-full flex items-center justify-center neo-card shadow-lg group-hover:border-red-500/50 group-hover:bg-red-500/10 transition-all active:scale-90 cursor-pointer h-auto"
           >
             <Coffee
               size={24}
-              className="text-slate-500 group-hover:text-red-500 transition-colors duration-300"
+              className="text-muted-foreground group-hover:text-red-500 transition-colors duration-300"
             />
-            <div className="absolute top-1 right-1 md:top-2 md:right-2 w-3.5 h-3.5 bg-red-500 rounded-full border-2 border-cyber-bg shadow-[0_0_15px_rgba(239,68,68,0.8)] animate-ping opacity-40" />
-            <div className="absolute top-1 right-1 md:top-2 md:right-2 w-3.5 h-3.5 bg-red-500 rounded-full border-2 border-cyber-bg" />
+            <div className="absolute top-1 right-1 md:top-2 md:right-2 w-3.5 h-3.5 bg-red-500 rounded-full border-2 border-background shadow-lg animate-ping opacity-40" />
+            <div className="absolute top-1 right-1 md:top-2 md:right-2 w-3.5 h-3.5 bg-red-500 rounded-full border-2 border-background" />
           </Button>
         </div>
       </Link>

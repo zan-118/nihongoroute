@@ -1,6 +1,6 @@
 /**
  * @file app/(main)/courses/basics/page.tsx
- * @description Halaman fondasi aksara bahasa Jepang (Matriks Kana) yang memuat tabel Hiragana & Katakana lengkap. Dilengkapi integrasi kanvas digital untuk latihan menulis.
+ * @description Halaman fondasi aksara bahasa Jepang (Matriks Kana) yang memuat tabel Hiragana & Katakana lengkap.
  * @module Client Component
  */
 
@@ -135,13 +135,6 @@ const kanaData = {
 type KanaType = "hiragana" | "katakana";
 type KanaCategory = "seion" | "dakuon" | "yoon";
 
-/**
- * Komponen Utama Matriks Kana.
- * Merender grid adaptif untuk karakter Hiragana dan Katakana. Mengatur tab navigasi silang (Seion/Dakuon/Yoon).
- * Mengintegrasikan komponen WritingCanvas secara asinkron di dalam modul Dialog untuk memfasilitasi latihan menulis sentuh.
- * 
- * @returns {JSX.Element} Antarmuka navigasi dan grid visual untuk mempelajari aksara Kana.
- */
 export default function BasicsPage() {
   const [type, setType] = useState<KanaType>("hiragana");
   const [category, setCategory] = useState<KanaCategory>("seion");
@@ -150,7 +143,6 @@ export default function BasicsPage() {
     romaji: string;
   } | null>(null);
 
-  // Survival Quiz State
   const [isQuizActive, setIsQuizActive] = useState(false);
   const [quizScore, setQuizScore] = useState(0);
   const [quizLives, setQuizLives] = useState(3);
@@ -160,7 +152,6 @@ export default function BasicsPage() {
   const [quizFeedback, setQuizFeedback] = useState<"correct" | "incorrect" | null>(null);
   const [gameOver, setGameOver] = useState(false);
 
-  // Helper function to get all current kana
   const getAllKanaForType = (currentType: KanaType) => {
     const pairs: { char: string; romaji: string }[] = [];
     const categories: KanaCategory[] = ["seion", "dakuon", "yoon"];
@@ -184,7 +175,6 @@ export default function BasicsPage() {
     const pairs = getAllKanaForType(currentType);
     const randomPair = pairs[Math.floor(Math.random() * pairs.length)];
     
-    // Generate options
     const options = new Set<string>();
     options.add(randomPair.romaji);
     while (options.size < 4 && options.size < pairs.length) {
@@ -234,26 +224,22 @@ export default function BasicsPage() {
   const currentData = kanaData[category];
   const isHira = type === "hiragana";
 
-  const themeColor = isHira ? "text-[#0ef]" : "text-purple-400";
-  const themeBorder = isHira ? "border-[#0ef]/30" : "border-purple-500/30";
-  const themeBgHover = isHira ? "hover:bg-[#0ef]/10" : "hover:bg-purple-500/10";
-  const themeAccent = isHira ? "bg-[#0ef]" : "bg-purple-500";
-  // ======================
-  // RENDER
-  // ======================
+  const themeColor = isHira ? "text-cyan-600 dark:text-cyan-400" : "text-purple-600 dark:text-purple-400";
+  const themeBorder = isHira ? "border-cyan-500/30" : "border-purple-500/30";
+  const themeBgHover = isHira ? "hover:bg-cyan-500/10" : "hover:bg-purple-500/10";
+  const themeAccent = isHira ? "bg-cyan-500" : "bg-purple-500";
+
   return (
-    <div className="w-full flex-1  relative overflow-hidden flex flex-col">
-      {/* Background Grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
+    <div className="w-full flex-1 relative overflow-hidden flex flex-col bg-background transition-colors duration-300 pt-12 pb-24 px-4 md:px-8">
+      <div className="neural-grid" />
 
       <div className="max-w-4xl mx-auto w-full relative z-10 flex flex-col h-full">
-        {/* HEADER */}
         <header className="mb-8">
           <nav className="mb-4">
             <Button
               variant="outline"
               asChild
-              className="px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest bg-white/[0.03] border-white/[0.08]"
+              className="px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest bg-muted border-border"
             >
               <Link href="/courses">
                 <ChevronLeft size={14} className="mr-2" /> Kembali ke Pusat
@@ -263,36 +249,35 @@ export default function BasicsPage() {
 
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
             <div>
-              <h1 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tight">
+              <h1 className="text-4xl md:text-5xl font-black text-foreground uppercase tracking-tight">
                 Huruf <span className={themeColor}>Dasar</span>
               </h1>
-              <p className="text-slate-500 text-xs mt-2 max-w-md font-medium leading-relaxed">
+              <p className="text-muted-foreground text-xs mt-2 max-w-md font-medium leading-relaxed">
                 Kunci utama untuk bisa membaca teks Jepang. Kuasai Hiragana & 
                 Katakana di sini sebelum mulai belajar kalimat dan tata bahasa.
               </p>
             </div>
             <div
-              className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-[9px] font-bold uppercase tracking-widest ${themeColor}`}
+              className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-muted border border-border text-[9px] font-bold uppercase tracking-widest ${themeColor}`}
             >
               <LayoutGrid size={12} /> Tampilan Penuh
             </div>
           </div>
         </header>
 
-        {/* CONTROLS */}
         <div className="mb-8 space-y-6">
-          <div className="bg-slate-900/60 backdrop-blur-md p-1.5 rounded-2xl border border-white/10 flex gap-2 shadow-inner relative max-w-sm">
+          <div className="bg-muted p-1.5 rounded-2xl border border-border flex gap-2 shadow-inner relative max-w-sm">
             <Button
               variant={isHira ? "default" : "ghost"}
               onClick={() => setType("hiragana")}
-              className={`relative z-10 flex-1 py-6 rounded-xl font-bold uppercase tracking-widest text-[10px] md:text-xs transition-all duration-500 h-10 ${isHira ? "bg-[#0ef] text-[#15171a] hover:bg-[#0ef]/90 shadow-[0_0_20px_rgba(0,238,255,0.4)]" : "text-white/40 hover:text-white"}`}
+              className={`relative z-10 flex-1 py-6 rounded-xl font-bold uppercase tracking-widest text-[10px] md:text-xs transition-all duration-500 h-10 ${isHira ? "bg-cyan-500 text-black hover:bg-cyan-600 shadow-lg" : "text-muted-foreground hover:text-foreground"}`}
             >
               Hiragana
             </Button>
             <Button
               variant={!isHira ? "default" : "ghost"}
               onClick={() => setType("katakana")}
-              className={`relative z-10 flex-1 py-6 rounded-xl font-bold uppercase tracking-widest text-[10px] md:text-xs transition-all duration-500 h-10 ${!isHira ? "bg-purple-500 text-white hover:bg-purple-600 shadow-[0_0_20px_rgba(168,85,247,0.4)]" : "text-white/40 hover:text-white"}`}
+              className={`relative z-10 flex-1 py-6 rounded-xl font-bold uppercase tracking-widest text-[10px] md:text-xs transition-all duration-500 h-10 ${!isHira ? "bg-purple-500 text-black hover:bg-purple-600 shadow-lg" : "text-muted-foreground hover:text-foreground"}`}
             >
               Katakana
             </Button>
@@ -311,8 +296,8 @@ export default function BasicsPage() {
                   onClick={() => setCategory(cat.id as KanaCategory)}
                   className={`px-5 py-2.5 h-auto rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${
                     category === cat.id
-                      ? `bg-white/[0.08] ${themeColor} ${themeBorder} border-opacity-50`
-                      : "bg-transparent text-slate-500 border-white/[0.08] hover:bg-white/[0.03] hover:text-white"
+                      ? `bg-muted ${themeColor} ${themeBorder} border-opacity-50`
+                      : "bg-transparent text-muted-foreground border-border hover:bg-muted/50 hover:text-foreground"
                   }`}
                 >
                   {cat.label}
@@ -322,15 +307,14 @@ export default function BasicsPage() {
 
             <Button 
               onClick={startQuiz}
-              className={`px-6 py-3 h-auto rounded-xl text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all duration-300 ${themeAccent} text-white shadow-lg hover:opacity-90 border-none`}
+              className={`px-6 py-3 h-auto rounded-xl text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all duration-300 ${themeAccent} text-black shadow-lg hover:opacity-90 border-none`}
             >
               <Swords size={16} className="mr-2" /> Latihan
             </Button>
           </div>
         </div>
 
-        {/* DATA GRID */}
-        <Card className="p-6 md:p-8 rounded-2xl border-white/[0.08] bg-white/[0.02] shadow-2xl relative flex-1 min-h-[450px] overflow-hidden">
+        <Card className="p-6 md:p-8 rounded-2xl border border-border bg-card shadow-2xl relative flex-1 min-h-[450px] overflow-hidden">
           <div
             className={`relative z-10 grid gap-3 md:gap-4 mx-auto ${category === "yoon" ? "grid-cols-3 max-w-lg" : "grid-cols-5 max-w-2xl"}`}
           >
@@ -347,12 +331,12 @@ export default function BasicsPage() {
                               romaji: currentData.romaji[rowIndex][colIndex],
                             })
                           }
-                          className={`relative aspect-square bg-white/[0.03] border border-white/[0.08] rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all duration-300 ${themeBgHover} hover:border-current group active:scale-95`}
+                          className={`relative aspect-square bg-muted/30 border border-border rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all duration-300 ${themeBgHover} hover:border-current group active:scale-95 shadow-sm`}
                         >
-                          <span className="text-3xl md:text-4xl font-black text-white group-hover:scale-105 transition-transform font-japanese drop-shadow-md">
+                          <span className="text-3xl md:text-4xl font-black text-foreground group-hover:scale-105 transition-transform font-japanese drop-shadow-sm">
                             {char}
                           </span>
-                          <span className="text-[9px] md:text-[10px] font-bold font-mono text-slate-500 uppercase tracking-widest mt-2 group-hover:text-white/80 transition-colors">
+                          <span className="text-[9px] md:text-[10px] font-bold font-mono text-muted-foreground uppercase tracking-widest mt-2 group-hover:text-foreground transition-colors">
                             {currentData.romaji[rowIndex][colIndex]}
                           </span>
                         </div>
@@ -370,7 +354,6 @@ export default function BasicsPage() {
         </Card>
       </div>
 
-      {/* WRITING MODAL OVERLAY */}
       <Dialog
         open={!!selectedChar}
         onOpenChange={(open) => !open && setSelectedChar(null)}
@@ -382,12 +365,12 @@ export default function BasicsPage() {
                 initial={{ scale: 0.95, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.95, opacity: 0, y: 20 }}
-                className={`relative bg-[#121417] p-6 md:p-8 rounded-2xl border ${themeBorder} shadow-2xl max-w-md w-full max-h-[90vh] flex flex-col overflow-y-auto custom-scrollbar`}
+                className={`relative bg-card p-6 md:p-8 rounded-2xl border ${themeBorder} shadow-2xl max-w-md w-full max-h-[90vh] flex flex-col overflow-y-auto custom-scrollbar`}
               >
                 <div className="relative z-10 flex flex-col h-full">
                   <header className="flex items-center gap-3 mb-5 sm:mb-6 pr-10 shrink-0">
                     <div
-                      className={`w-10 h-10 shrink-0 rounded-xl ${themeAccent}/10 border ${themeBorder} flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.2)]`}
+                      className={`w-10 h-10 shrink-0 rounded-xl ${isHira ? "bg-cyan-500/10" : "bg-purple-500/10"} border ${themeBorder} flex items-center justify-center shadow-sm`}
                     >
                       <PenTool size={18} className={themeColor} />
                     </div>
@@ -397,15 +380,15 @@ export default function BasicsPage() {
                       >
                         Latihan Menulis
                       </span>
-                      <DialogTitle className="text-white text-lg sm:text-xl font-black uppercase tracking-tight leading-none text-left">
+                      <DialogTitle className="text-foreground text-lg sm:text-xl font-black uppercase tracking-tight leading-none text-left">
                         Cara Menulis
                       </DialogTitle>
                     </DialogHeader>
                   </header>
 
-                  <div className="bg-black/20 p-4 sm:p-5 rounded-xl border border-white/[0.06] flex justify-between items-center mb-6 shrink-0">
+                  <div className="bg-muted p-4 sm:p-5 rounded-xl border border-border flex justify-between items-center mb-6 shrink-0">
                     <div className="flex items-center gap-4">
-                      <p className="text-4xl sm:text-5xl font-black text-white font-japanese leading-none">
+                      <p className="text-4xl sm:text-5xl font-black text-foreground font-japanese leading-none">
                         {selectedChar!.char}
                       </p>
                       <p
@@ -415,22 +398,22 @@ export default function BasicsPage() {
                       </p>
                     </div>
                     <div
-                      className={`px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-[8px] sm:text-[9px] font-bold uppercase tracking-widest ${themeColor}`}
+                      className={`px-3 py-1.5 rounded-lg bg-background border border-border text-[8px] sm:text-[9px] font-bold uppercase tracking-widest ${themeColor}`}
                     >
                       Sistem {type}
                     </div>
                   </div>
 
-                  <div className="w-full flex-1 flex flex-col justify-center min-h-[300px] mb-2">
+                  <div className="w-full flex-1 flex flex-col justify-center min-h-[300px] mb-2 bg-background rounded-xl border border-border overflow-hidden">
                     <WritingCanvas 
                       character={selectedChar!.char} 
-                      strokeColor={isHira ? "#0ef" : "#a855f7"}
-                      guideColor={isHira ? "#0ef" : "#a855f7"}
+                      strokeColor={isHira ? "#06b6d4" : "#a855f7"}
+                      guideColor={isHira ? "#06b6d4" : "#a855f7"}
                     />
                   </div>
 
-                  <p className="text-center text-[9px] text-slate-300 font-bold uppercase tracking-[0.2em] mt-4 shrink-0">
-                    <Sparkles size={10} className="inline mr-1 text-cyan-400" />{" "}
+                  <p className="text-center text-[9px] text-muted-foreground font-bold uppercase tracking-[0.2em] mt-4 shrink-0">
+                    <Sparkles size={10} className="inline mr-1 text-primary" />{" "}
                     Yuk, coba tulis huruf ini di kanvas!
                   </p>
                 </div>
@@ -440,7 +423,6 @@ export default function BasicsPage() {
         </DialogContent>
       </Dialog>
 
-      {/* SURVIVAL QUIZ MODAL */}
       <Dialog
         open={isQuizActive}
         onOpenChange={(open) => {
@@ -457,35 +439,35 @@ export default function BasicsPage() {
                 initial={{ scale: 0.9, opacity: 0, y: 40 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.9, opacity: 0, y: 40 }}
-                className={`relative bg-[#1e2024] p-6 sm:p-8 rounded-2xl border ${themeBorder} shadow-2xl max-w-md w-full max-h-[90vh] flex flex-col`}
+                className={`relative bg-card p-6 sm:p-8 rounded-2xl border ${themeBorder} shadow-2xl max-w-md w-full max-h-[90vh] flex flex-col`}
               >
                 <div className="relative z-10 flex flex-col h-full">
                   <header className="flex justify-between items-center mb-6">
                     <div className="flex items-center gap-2">
-                      <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 font-black text-sm`}>
+                      <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-500 font-black text-sm`}>
                         <Heart size={16} className={quizLives > 0 ? "fill-current" : ""} />
                         {quizLives}
                       </div>
-                      <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 font-black text-sm`}>
+                      <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-yellow-500/10 border border-yellow-500/20 text-yellow-600 dark:text-yellow-500 font-black text-sm`}>
                         <Trophy size={16} className="fill-current" />
                         {quizScore}
                       </div>
                     </div>
-                    <div className={`px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-widest ${themeColor}`}>
+                    <div className={`px-3 py-1.5 rounded-lg bg-muted border border-border text-[9px] font-bold uppercase tracking-widest ${themeColor}`}>
                       {isHira ? "Hiragana" : "Katakana"} Quiz
                     </div>
                   </header>
 
                   {!gameOver ? (
                     <div className="flex flex-col items-center">
-                      <div className={`w-full aspect-video bg-[#15171a] rounded-2xl border ${quizFeedback === 'correct' ? 'border-green-500 shadow-[0_0_30px_rgba(34,197,94,0.3)]' : quizFeedback === 'incorrect' ? 'border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.3)]' : 'border-white/5 shadow-inner'} flex items-center justify-center mb-8 transition-all duration-300`}>
+                      <div className={`w-full aspect-video bg-background rounded-2xl border ${quizFeedback === 'correct' ? 'border-emerald-500 shadow-lg' : quizFeedback === 'incorrect' ? 'border-destructive shadow-lg' : 'border-border shadow-inner'} flex items-center justify-center mb-8 transition-all duration-300`}>
                         <AnimatePresence mode="wait">
                           <motion.span
                             key={quizChar?.char}
                             initial={{ opacity: 0, scale: 0.5 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.5 }}
-                            className="text-7xl sm:text-9xl font-black text-white font-japanese"
+                            className="text-7xl sm:text-9xl font-black text-foreground font-japanese"
                           >
                             {quizChar?.char}
                           </motion.span>
@@ -496,18 +478,18 @@ export default function BasicsPage() {
                         {quizOptions.map((option, i) => {
                           const isCorrect = option === quizChar?.romaji;
                           const isClicked = option === quizInput;
-                          let btnClass = "bg-black/40 border-white/10 text-white/80 hover:bg-white/5 hover:text-white";
+                          let btnClass = "bg-muted border-border text-muted-foreground hover:bg-background hover:text-foreground";
                           
                           if (quizFeedback) {
                             if (isCorrect) {
-                              btnClass = "bg-green-500 border-green-500 text-white shadow-[0_0_20px_rgba(34,197,94,0.4)]";
+                              btnClass = "bg-emerald-500 border-emerald-500 text-white shadow-lg";
                             } else if (isClicked && !isCorrect) {
-                              btnClass = "bg-red-500 border-red-500 text-white shadow-[0_0_20px_rgba(239,68,68,0.4)]";
+                              btnClass = "bg-destructive border-destructive text-white shadow-lg";
                             } else {
-                              btnClass = "bg-black/20 border-white/5 text-white/20 opacity-50";
+                              btnClass = "bg-muted/50 border-border text-muted-foreground/20 opacity-50";
                             }
                           } else {
-                            btnClass = `bg-black/40 border-white/10 text-white/80 hover:border-current focus-visible:ring-1 focus-visible:ring-current hover:${themeColor}`;
+                            btnClass = `bg-muted border-border text-muted-foreground hover:border-current focus-visible:ring-1 focus-visible:ring-current hover:${themeColor}`;
                           }
 
                           return (
@@ -526,18 +508,18 @@ export default function BasicsPage() {
                       </div>
                     </div>
                   ) : (
-                    <Card className="bg-white/[0.02] p-8 md:p-10 rounded-2xl border border-white/[0.08] text-center w-full relative overflow-hidden shadow-2xl">
-                      <div className="w-16 h-16 bg-red-500/10 rounded-xl flex items-center justify-center mx-auto mb-6 border border-red-500/20">
-                        <Heart size={32} className="text-red-500" />
+                    <Card className="bg-muted/20 p-8 md:p-10 rounded-2xl border border-border text-center w-full relative overflow-hidden shadow-2xl">
+                      <div className="w-16 h-16 bg-destructive/10 rounded-xl flex items-center justify-center mx-auto mb-6 border border-destructive/20">
+                        <Heart size={32} className="text-destructive" />
                       </div>
-                      <h2 className="text-2xl font-black text-white uppercase tracking-tight mb-2">Game Over!</h2>
-                      <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-6">Skor akhir kamu:</p>
-                      <div className="text-6xl font-black text-amber-400 mb-8 drop-shadow-[0_0_20px_rgba(251,191,36,0.3)]">
+                      <h2 className="text-2xl font-black text-foreground uppercase tracking-tight mb-2">Game Over!</h2>
+                      <p className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest mb-6">Skor akhir kamu:</p>
+                      <div className="text-6xl font-black text-amber-500 mb-8 drop-shadow-md">
                         {quizScore}
                       </div>
                       <Button
                         onClick={() => startQuiz()}
-                        className={`w-full h-auto py-4 rounded-xl font-black uppercase tracking-widest ${themeAccent} text-white text-[10px] transition-all shadow-lg border-none`}
+                        className={`w-full h-auto py-4 rounded-xl font-black uppercase tracking-widest ${themeAccent} text-black text-[10px] transition-all shadow-lg border-none`}
                       >
                         Main Lagi
                       </Button>

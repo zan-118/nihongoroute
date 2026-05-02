@@ -13,6 +13,8 @@ import { Inter, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import FeedbackWidget from "@/components/FeedbackWidget";
+import DictionaryPopup from "@/components/DictionaryPopup";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { cn } from "@/lib/utils";
 
 // ======================
@@ -116,33 +118,39 @@ export default function RootLayout({
         className={cn(
           inter.variable,
           notoJsonJP.variable,
-          "font-sans antialiased bg-cyber-bg text-[#c4cfde] selection:bg-red-500 selection:text-white"
+          "font-sans antialiased text-foreground selection:bg-red-500 selection:text-white transition-colors duration-300"
         )}
         suppressHydrationWarning
       >
-        
-        {children}
-        <FeedbackWidget />
-        <Toaster 
-          theme="dark"
-          position="top-center"
-          toastOptions={{
-            style: {
-              background: 'rgba(10, 12, 16, 0.9)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              backdropFilter: 'blur(16px)',
-              color: '#ffffff',
-              borderRadius: '16px',
-            },
-            classNames: {
-              success: "border-cyber-neon/50 shadow-[0_0_20px_rgba(0,238,255,0.2)]",
-              error: "border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.2)]",
-            },
-            duration: 4000,
-          }}
-        />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <FeedbackWidget />
+          <DictionaryPopup />
+          <Toaster 
+            theme="dark"
+            position="top-center"
+            toastOptions={{
+              style: {
+                background: 'rgba(10, 12, 16, 0.9)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                backdropFilter: 'blur(16px)',
+                color: '#ffffff',
+                borderRadius: '16px',
+              },
+              classNames: {
+                success: "border-cyber-neon/50 shadow-[0_0_20px_rgba(0,238,255,0.2)]",
+                error: "border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.2)]",
+              },
+              duration: 4000,
+            }}
+          />
+        </ThemeProvider>
       </body>
     </html>
   );
 }
-

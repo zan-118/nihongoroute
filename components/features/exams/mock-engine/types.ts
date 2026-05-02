@@ -14,6 +14,7 @@ export interface ExamData {
   timeLimit: number;
   passingScore: number;
   categorySlug?: string;
+  levelCode?: string;
   questions: ExamQuestion[];
 }
 

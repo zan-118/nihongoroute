@@ -4,11 +4,12 @@ import React from "react";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { LessonPdfTemplate } from "./LessonPdfTemplate";
 import { VocabPdfTemplate } from "./VocabPdfTemplate";
+import { CertificatePdfTemplate } from "./CertificatePdfTemplate";
 import { Download, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePdfGenerator } from "./features/pdf/usePdfGenerator";
 
-export type TemplateType = "lesson" | "vocab";
+export type TemplateType = "lesson" | "vocab" | "certificate";
 
 interface PdfGeneratorProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -31,6 +32,8 @@ export default function PdfGenerator({
     if (type === "lesson") return <LessonPdfTemplate lessonData={data} />;
     if (type === "vocab")
       return <VocabPdfTemplate data={data} level={level || "N5"} />;
+    if (type === "certificate")
+      return <CertificatePdfTemplate data={data} />;
     return <LessonPdfTemplate lessonData={data} />;
   };
 
@@ -62,7 +65,7 @@ export default function PdfGenerator({
               className="group-hover:-translate-y-0.5 transition-transform"
             />
           )}
-          <span>{loading ? "Menyusun PDF..." : `Unduh PDF`}</span>
+          <span>{loading ? "Menyusun PDF..." : type === 'certificate' ? 'Unduh Sertifikat' : `Unduh PDF`}</span>
         </Button>
       )}
     </PDFDownloadLink>

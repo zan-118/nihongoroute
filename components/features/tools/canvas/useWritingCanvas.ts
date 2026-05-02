@@ -1,8 +1,16 @@
 import { useRef, useState, useEffect, useCallback } from "react";
+import { useProgressStore } from "@/store/useProgressStore";
 
 interface UseWritingCanvasProps {
   strokeColor: string;
 }
+
+/**
+ * @file useWritingCanvas.ts
+ * @description Hook untuk mengelola kanvas latihan menulis.
+ * Dioptimalkan dengan PointerEvents untuk mendukung sensitivitas tekanan (pressure sensitivity)
+ * layaknya menulis dengan kuas (Fude) dan terintegrasi dengan sistem XP.
+ */
 
 export function useWritingCanvas({ strokeColor }: UseWritingCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -10,6 +18,10 @@ export function useWritingCanvas({ strokeColor }: UseWritingCanvasProps) {
   const [isDrawing, setIsDrawing] = useState(false);
   const [showGuide, setShowGuide] = useState(true);
   const [replayKey, setReplayKey] = useState(0);
+  const [hasDrawn, setHasDrawn] = useState(false);
+  const [showXP, setShowXP] = useState(false);
+  
+  const addXP = useProgressStore((state) => state.addXP);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -29,10 +41,10 @@ export function useWritingCanvas({ strokeColor }: UseWritingCanvasProps) {
         ctx.scale(ratio, ratio);
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
-        ctx.lineWidth = 10;
+        ctx.lineWidth = 8;
         ctx.strokeStyle = strokeColor;
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = strokeColor + "99";
+        ctx.shadowBlur = 4;
+        ctx.shadowColor = strokeColor + "66";
 
         const img = new Image();
         img.src = dataUrl;
@@ -41,78 +53,71 @@ export function useWritingCanvas({ strokeColor }: UseWritingCanvasProps) {
       }
     };
 
-    const preventScroll = (e: TouchEvent) => {
-      if (e.target === canvas) {
-        e.preventDefault();
-      }
-    };
-
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
     
-    canvas.addEventListener("touchstart", preventScroll as EventListener, { passive: false });
-    canvas.addEventListener("touchmove", preventScroll as EventListener, { passive: false });
-    canvas.addEventListener("touchend", preventScroll as EventListener, { passive: false });
-
-    return () => {
-      window.removeEventListener("resize", resizeCanvas);
-      canvas.removeEventListener("touchstart", preventScroll as EventListener);
-      canvas.removeEventListener("touchmove", preventScroll as EventListener);
-      canvas.removeEventListener("touchend", preventScroll as EventListener);
-    };
+    return () => window.removeEventListener("resize", resizeCanvas);
   }, [strokeColor]);
 
-  const startDrawing = useCallback((e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault();
+  const startDrawing = useCallback((e: React.PointerEvent) => {
+    // Only allow primary pointer (mouse left click, touch, pen)
+    if (e.button !== 0 && e.pointerType === "mouse") return;
+    
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
 
     const rect = canvas.getBoundingClientRect();
-    const x =
-      ("touches" in e
-        ? e.touches[0].clientX
-        : (e as React.MouseEvent).clientX) - rect.left;
-    const y =
-      ("touches" in e
-        ? e.touches[0].clientY
-        : (e as React.MouseEvent).clientY) - rect.top;
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
 
     ctx.beginPath();
     ctx.moveTo(x, y);
     setIsDrawing(true);
+    setHasDrawn(true);
+
+    // Haptic feedback for supported devices
+    if ("vibrate" in navigator) navigator.vibrate(5);
   }, []);
 
   const draw = useCallback(
-    (e: React.MouseEvent | React.TouchEvent) => {
-      e.preventDefault();
+    (e: React.PointerEvent) => {
       if (!isDrawing) return;
       const canvas = canvasRef.current;
       const ctx = canvas?.getContext("2d");
       if (!canvas || !ctx) return;
 
       const rect = canvas.getBoundingClientRect();
-      const x =
-        ("touches" in e
-          ? e.touches[0].clientX
-          : (e as React.MouseEvent).clientX) - rect.left;
-      const y =
-        ("touches" in e
-          ? e.touches[0].clientY
-          : (e as React.MouseEvent).clientY) - rect.top;
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
 
+      // Efek kuas: Variasi lebar garis berdasarkan tekanan (default 0.5 jika tidak didukung)
+      const pressure = e.pressure || 0.5;
+      ctx.lineWidth = 4 + (pressure * 16); 
+      
       ctx.lineTo(x, y);
       ctx.stroke();
     },
     [isDrawing]
   );
 
-  const stopDrawing = useCallback(() => setIsDrawing(false), []);
+  const stopDrawing = useCallback(() => {
+    setIsDrawing(false);
+  }, []);
 
   const clearCanvas = () => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
-    if (ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (ctx && canvas) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      if (hasDrawn) {
+        addXP(2);
+        setShowXP(true);
+        setTimeout(() => setShowXP(false), 1500);
+        setHasDrawn(false);
+      }
+    }
   };
 
   const handleReplay = () => {
@@ -131,5 +136,6 @@ export function useWritingCanvas({ strokeColor }: UseWritingCanvasProps) {
     stopDrawing,
     clearCanvas,
     handleReplay,
+    showXP,
   };
 }

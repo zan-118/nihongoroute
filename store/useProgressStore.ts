@@ -3,6 +3,15 @@ import { persist } from "zustand/middleware";
 import { SRSState, createNewCardState } from "@/lib/srs";
 import { calculateLevel } from "@/lib/level";
 
+export interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  type: "info" | "success" | "warning" | "achievement";
+  timestamp: number;
+  read: boolean;
+}
+
 export interface UserProgress {
   xp: number;
   level: number;
@@ -11,6 +20,7 @@ export interface UserProgress {
   lastStudyDate: string | null;
   studyDays: Record<string, number>;
   srs: Record<string, SRSState>;
+  notifications: Notification[];
 }
 
 export interface ProgressState {
@@ -27,7 +37,12 @@ export interface ProgressState {
   setDirtySrs: (dirtySrs: Set<string> | ((prev: Set<string>) => Set<string>)) => void;
   
   updateProgress: (newXp: number, newSrs: Record<string, SRSState>) => void;
+  updateProfileName: (name: string) => void;
+  addXP: (amount: number) => void;
   addToSRS: (wordId: string) => void;
+  addNotification: (notification: Omit<Notification, "id" | "timestamp" | "read">) => void;
+  markNotificationAsRead: (id: string) => void;
+  clearNotifications: () => void;
   exportData: () => void;
   importData: (jsonData: string) => boolean;
   clearDirtySrs: () => void;
@@ -41,6 +56,16 @@ const defaultProgress: UserProgress = {
   lastStudyDate: null,
   studyDays: {},
   srs: {},
+  notifications: [
+    {
+      id: "welcome",
+      title: "Selamat Datang!",
+      message: "Selamat bergabung di NihongoRoute. Mari mulai perjalanan belajar Anda hari ini!",
+      type: "info",
+      timestamp: Date.now(),
+      read: false
+    }
+  ],
 };
 
 export const useProgressStore = create<ProgressState>()(
@@ -116,6 +141,30 @@ export const useProgressStore = create<ProgressState>()(
           },
         });
       },
+      
+      updateProfileName: (name) => set({ userFullName: name }),
+
+      addXP: (amount: number) => {
+        const state = get();
+        const newXp = state.progress.xp + amount;
+        set({
+          progress: {
+            ...state.progress,
+            xp: newXp,
+            level: calculateLevel(newXp),
+          },
+        });
+        
+        // Auto-notify on level up
+        const newLevel = calculateLevel(newXp);
+        if (newLevel > state.progress.level) {
+          get().addNotification({
+            title: "Level Up!",
+            message: `Selamat! Anda sekarang berada di Level ${newLevel}.`,
+            type: "achievement"
+          });
+        }
+      },
 
       addToSRS: (wordId) => {
         const state = get();
@@ -132,6 +181,32 @@ export const useProgressStore = create<ProgressState>()(
         // The updateProgress already modifies dirtySrs, but doing it again to be safe
         set({ dirtySrs: newDirty });
       },
+
+      addNotification: (n) => set((state) => ({
+        progress: {
+          ...state.progress,
+          notifications: [
+            { ...n, id: Math.random().toString(36).substring(7), timestamp: Date.now(), read: false },
+            ...state.progress.notifications
+          ]
+        }
+      })),
+
+      markNotificationAsRead: (id) => set((state) => ({
+        progress: {
+          ...state.progress,
+          notifications: state.progress.notifications.map(n => 
+            n.id === id ? { ...n, read: true } : n
+          )
+        }
+      })),
+
+      clearNotifications: () => set((state) => ({
+        progress: {
+          ...state.progress,
+          notifications: []
+        }
+      })),
 
       exportData: () => {
         if (typeof window === "undefined") return;

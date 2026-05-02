@@ -20,20 +20,20 @@ export default function SRSAnalytics() {
   });
 
   return (
-    <Card className="bg-[#0a0c10] p-8 rounded-[3rem] border-white/5 relative overflow-hidden neo-card shadow-none flex flex-col h-full">
+    <Card className="bg-card p-8 rounded-[3rem] border-border relative overflow-hidden neo-card shadow-none flex flex-col h-full">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(0,238,255,0.05),transparent_50%)]" />
       
       <header className="flex items-center justify-between mb-10 relative z-10">
         <div className="flex items-center gap-4">
           <Card className="w-12 h-12 rounded-xl bg-purple-500/10 border-purple-500/20 flex items-center justify-center neo-inset shadow-none">
-            <LineChart size={24} className="text-purple-400" />
+            <LineChart size={24} className="text-purple-500 dark:text-purple-400" />
           </Card>
           <div>
-            <h3 className="text-white font-black uppercase tracking-widest text-sm">Kekuatan Ingatan</h3>
-            <span className="block text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Stabilitas Memori (Ease Factor)</span>
+            <h3 className="text-foreground font-black uppercase tracking-widest text-sm">Kekuatan Ingatan</h3>
+            <span className="block text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-1">Stabilitas Memori (Ease Factor)</span>
           </div>
         </div>
-        <Badge variant="outline" className="bg-purple-500/5 border-purple-500/20 text-purple-400 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">
+        <Badge variant="outline" className="bg-purple-500/5 border-purple-500/20 text-purple-500 dark:text-purple-400 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">
           Kecerdasan Memori
         </Badge>
       </header>
@@ -46,7 +46,7 @@ export default function SRSAnalytics() {
             return (
               <div key={i} className="flex-1 flex flex-col items-center gap-4 group">
                 <div className="relative w-full flex flex-col items-center">
-                  <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-white text-black text-[9px] font-black px-2 py-1 rounded uppercase tracking-tighter whitespace-nowrap z-20">
+                  <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-foreground text-background text-[9px] font-black px-2 py-1 rounded uppercase tracking-tighter whitespace-nowrap z-20">
                     {item.count} Items
                   </div>
                   
@@ -67,7 +67,7 @@ export default function SRSAnalytics() {
                 </div>
                 <div className="text-center">
                   <div style={{ color: item.color }} className="flex justify-center mb-1">{item.icon}</div>
-                  <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">{item.label}</span>
+                  <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">{item.label}</span>
                 </div>
               </div>
             );
@@ -77,15 +77,15 @@ export default function SRSAnalytics() {
         {/* INSIGHT LIST */}
         <div className="grid grid-cols-1 gap-3 mt-4">
           {data.map((item, i) => (
-            <div key={i} className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] transition-colors">
+            <div key={i} className="flex items-center justify-between p-3 rounded-2xl bg-muted/30 border border-border hover:bg-muted/50 transition-colors">
               <div className="flex items-center gap-3">
                 <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: item.color }} />
                 <div>
-                  <p className="text-[10px] font-black text-white uppercase tracking-tight">{item.label}</p>
-                  <p className="text-[8px] text-slate-500 font-bold uppercase tracking-widest">{item.desc}</p>
+                  <p className="text-[10px] font-black text-foreground uppercase tracking-tight">{item.label}</p>
+                  <p className="text-[8px] text-muted-foreground font-bold uppercase tracking-widest">{item.desc}</p>
                 </div>
               </div>
-              <span className="font-mono text-xs font-bold text-slate-400">
+              <span className="font-mono text-xs font-bold text-muted-foreground">
                 {Math.round((item.count / total) * 100)}%
               </span>
             </div>

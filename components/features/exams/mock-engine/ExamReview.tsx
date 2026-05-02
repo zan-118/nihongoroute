@@ -14,14 +14,14 @@ interface ExamReviewProps {
 
 export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
   return (
-    <div className="w-full pb-20 max-w-4xl mx-auto">
+    <div className="w-full pb-20 max-w-4xl mx-auto transition-colors duration-300">
       <header className="relative z-20 flex justify-between items-center mb-10">
-        <Card className="flex-1 flex justify-between items-center p-5 sm:p-8 mt-6 md:mt-10 border-white/5 bg-cyber-surface rounded-3xl neo-card shadow-none">
+        <Card className="flex-1 flex justify-between items-center p-5 sm:p-8 mt-6 md:mt-10 border border-border dark:border-white/5 bg-card dark:bg-slate-900 rounded-3xl neo-card shadow-lg">
           <div>
-            <h2 className="text-xl sm:text-2xl font-black text-white uppercase tracking-tight leading-none">
-              Tinjau <span className="text-amber-500">Jawaban</span>
+            <h2 className="text-xl sm:text-2xl font-black text-foreground uppercase tracking-tight leading-none">
+              Tinjau <span className="text-amber-600 dark:text-amber-500">Jawaban</span>
             </h2>
-            <p className="text-[9px] text-slate-500 uppercase font-bold tracking-widest mt-1">Yuk, cek detail jawabannya!</p>
+            <p className="text-[9px] text-muted-foreground uppercase font-bold tracking-widest mt-1">Yuk, cek detail jawabannya!</p>
           </div>
           <Button
             variant="ghost"
@@ -29,7 +29,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
               setGameState("result");
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            className="text-[9px] sm:text-[10px] neo-inset hover:bg-white hover:text-black text-slate-200 px-5 py-3 h-auto font-black uppercase tracking-widest transition-all border-white/5 bg-black/20 shadow-none rounded-xl"
+            className="text-[9px] sm:text-[10px] neo-inset hover:bg-background text-muted-foreground hover:text-foreground px-5 py-3 h-auto font-black uppercase tracking-widest transition-all border border-border bg-muted/50 dark:bg-black/20 shadow-none rounded-xl"
           >
             ← Kembali
           </Button>
@@ -49,20 +49,20 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
               key={q._key}
               className="w-full"
             >
-              <Card className={`p-8 md:p-12 neo-card rounded-[3rem] border-white/5 bg-cyber-surface shadow-none ${isCorrect ? "border-emerald-500/20" : "border-red-500/20"}`}>
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-10 border-b border-white/5 pb-8">
+              <Card className={`p-8 md:p-12 neo-card rounded-[3rem] border border-border dark:border-white/5 bg-card dark:bg-slate-900 shadow-2xl transition-colors ${isCorrect ? "border-emerald-500/20" : "border-red-500/20"}`}>
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-10 border-b border-border dark:border-white/5 pb-8">
                   <Badge
                     variant="outline"
-                    className="text-[9px] font-bold uppercase tracking-widest neo-inset px-4 py-2 text-slate-500 w-fit rounded-xl bg-black/20 border-white/5 h-auto"
+                    className="text-[9px] font-bold uppercase tracking-widest neo-inset px-4 py-2 text-muted-foreground w-fit rounded-xl bg-muted/50 dark:bg-black/20 border border-border dark:border-white/5 h-auto"
                   >
                     SOAL {idx + 1} • {SECTION_LABELS[q.section]}
                   </Badge>
                   {isCorrect ? (
-                    <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 px-4 py-2 neo-inset rounded-xl h-auto font-bold uppercase text-[9px] tracking-widest">
+                    <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 px-4 py-2 neo-inset rounded-xl h-auto font-bold uppercase text-[9px] tracking-widest">
                       <CheckCircle size={14} className="mr-2" /> Benar
                     </Badge>
                   ) : (
-                    <Badge className="bg-red-500/10 text-red-500 border-red-500/20 px-4 py-2 neo-inset rounded-xl h-auto font-bold uppercase text-[9px] tracking-widest">
+                    <Badge className="bg-red-500/10 text-red-600 dark:text-red-500 border-red-500/20 px-4 py-2 neo-inset rounded-xl h-auto font-bold uppercase text-[9px] tracking-widest">
                       <XCircle size={14} className="mr-2" /> Salah
                     </Badge>
                   )}
@@ -70,13 +70,13 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
 
                 {q.questionText && (
                   <div
-                    className="text-lg md:text-2xl text-white font-medium leading-relaxed mb-10 font-japanese prose-custom bg-black/10 p-6 rounded-2xl border border-white/5 neo-inset"
+                    className="text-lg md:text-2xl text-foreground font-medium leading-relaxed mb-10 font-japanese prose-custom bg-muted/30 dark:bg-black/10 p-6 rounded-2xl border border-border dark:border-white/5 neo-inset"
                     dangerouslySetInnerHTML={{ __html: q.questionText }}
                   />
                 )}
 
                 {q.imageUrl && (
-                  <div className="mb-10 rounded-3xl overflow-hidden neo-inset p-3 bg-black/20 border-white/5">
+                  <div className="mb-10 rounded-3xl overflow-hidden neo-inset p-3 bg-muted/20 dark:bg-black/20 border border-border dark:border-white/5">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={q.imageUrl}
@@ -87,13 +87,13 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                 )}
 
                 {q.audioUrl && (
-                  <Card className="mb-10 p-6 neo-inset border-white/5 bg-black/30 flex flex-col gap-4 shadow-none rounded-2xl">
-                    <p className="text-[9px] text-slate-500 uppercase font-bold tracking-widest flex items-center gap-2">
-                      <Volume2 size={16} className="text-cyan-400" /> Audio Track (Review)
+                  <Card className="mb-10 p-6 neo-inset border border-border dark:border-white/5 bg-muted/20 dark:bg-black/30 flex flex-col gap-4 shadow-none rounded-2xl">
+                    <p className="text-[9px] text-muted-foreground uppercase font-bold tracking-widest flex items-center gap-2">
+                      <Volume2 size={16} className="text-primary" /> Audio Track (Review)
                     </p>
                     <audio
                       controls
-                      className="w-full h-12 outline-none opacity-90 contrast-125 invert"
+                      className={`w-full h-12 outline-none opacity-90 transition-all ${typeof window !== 'undefined' && document.documentElement.classList.contains('dark') ? 'invert' : ''}`}
                       src={q.audioUrl}
                     />
                   </Card>
@@ -104,16 +104,16 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                     const isCorrectAnswer = optIdx === q.correctAnswer;
                     const isUserSelection = optIdx === userAnswer;
                     
-                    let variantStyle = "bg-black/10 border-white/5 opacity-50";
-                    if (isCorrectAnswer) variantStyle = "bg-emerald-500/10 border-emerald-500/30 text-white opacity-100 shadow-[0_0_15px_rgba(16,185,129,0.1)]";
-                    else if (isUserSelection) variantStyle = "bg-red-500/10 border-red-500/30 text-white opacity-100 shadow-[0_0_15px_rgba(239,68,68,0.1)]";
+                    let variantStyle = "bg-muted/50 dark:bg-black/10 border-border dark:border-white/5 opacity-60";
+                    if (isCorrectAnswer) variantStyle = "bg-emerald-500/10 border-emerald-500/30 text-foreground dark:text-white opacity-100 shadow-sm";
+                    else if (isUserSelection) variantStyle = "bg-red-500/10 border-red-500/30 text-foreground dark:text-white opacity-100 shadow-sm";
 
                     return (
                       <Card
                         key={optIdx}
                         className={`p-6 flex items-center gap-5 transition-all rounded-2xl border neo-inset shadow-none ${variantStyle}`}
                       >
-                        <Badge variant="outline" className={`font-mono font-black text-xs h-8 w-8 rounded-lg flex items-center justify-center border-none ${isCorrectAnswer ? "bg-emerald-500 text-black" : isUserSelection ? "bg-red-500 text-black" : "bg-white/5 text-slate-500"}`}>
+                        <Badge variant="outline" className={`font-mono font-black text-xs h-8 w-8 rounded-lg flex items-center justify-center border-none ${isCorrectAnswer ? "bg-emerald-600 dark:bg-emerald-500 text-white dark:text-black" : isUserSelection ? "bg-red-600 dark:bg-red-500 text-white dark:text-black" : "bg-muted dark:bg-white/5 text-muted-foreground"}`}>
                           {optIdx + 1}
                         </Badge>
                         <span className="text-base md:text-xl font-japanese font-medium leading-tight flex-1">
@@ -122,13 +122,13 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                         {isCorrectAnswer && (
                           <CheckCircle
                             size={24}
-                            className="text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.5)]"
+                            className="text-emerald-600 dark:text-emerald-400 drop-shadow-sm"
                           />
                         )}
                         {isUserSelection && !isCorrectAnswer && (
                           <XCircle
                             size={24}
-                            className="text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.5)]"
+                            className="text-red-600 dark:text-red-500 drop-shadow-sm"
                           />
                         )}
                       </Card>

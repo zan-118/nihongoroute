@@ -47,14 +47,14 @@ export default function FlashcardMaster({
 
   const card = cards[currentIndex];
   const isKanji = type === "kanji";
-  const themeColor = isKanji ? "text-purple-400" : "text-cyber-neon";
-  const themeBgColor = isKanji ? "bg-purple-500" : "bg-cyber-neon";
+  const themeColor = isKanji ? "text-purple-600 dark:text-purple-400" : "text-primary";
+  const themeBgColor = isKanji ? "bg-purple-600 dark:bg-purple-500" : "bg-primary";
   const themeShadow = isKanji
-    ? "shadow-[0_0_20px_rgba(168,85,247,0.3)]"
-    : "shadow-[0_0_20px_rgba(0,238,255,0.3)]";
+    ? "shadow-lg dark:shadow-[0_0_20px_rgba(168,85,247,0.3)]"
+    : "shadow-lg dark:shadow-[0_0_20px_rgba(0,238,255,0.3)]";
 
   return (
-    <section className="w-full max-w-2xl mx-auto relative px-4 md:px-0">
+    <section className="w-full max-w-2xl mx-auto relative px-4 md:px-0 transition-colors duration-300">
       <SessionSummaryModal
         isFinished={isFinished}
         setIsFinished={setIsFinished}
@@ -73,7 +73,7 @@ export default function FlashcardMaster({
       {/* HEADER SECTION */}
       <div className="mb-6 flex flex-col gap-4">
         {!isFixedMode && (
-          <Card className="flex justify-between items-center bg-white/[0.03] p-1 rounded-xl md:rounded-2xl border-white/[0.08] shadow-none">
+          <Card className="flex justify-between items-center bg-muted/50 dark:bg-white/[0.03] p-1 rounded-xl md:rounded-2xl border border-border dark:border-white/[0.08] shadow-none">
             <Button
               variant="ghost"
               onClick={() => {
@@ -82,8 +82,8 @@ export default function FlashcardMaster({
               }}
               className={`flex-1 rounded-lg md:rounded-xl h-9 md:h-11 text-[9px] md:text-[10px] font-bold uppercase tracking-widest transition-all ${
                 studyMode === "latihan"
-                  ? "bg-white/10 text-white shadow-none"
-                  : "text-slate-500 hover:text-slate-300"
+                  ? "bg-background dark:bg-white/10 text-foreground dark:text-white shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               <Brain size={14} className="mr-1.5 md:mr-2" /> Pemanasan
@@ -96,8 +96,8 @@ export default function FlashcardMaster({
               }}
               className={`flex-1 rounded-lg md:rounded-xl h-9 md:h-11 text-[9px] md:text-[10px] font-bold uppercase tracking-widest transition-all ${
                 studyMode === "ujian"
-                  ? `${themeBgColor} text-black ${themeShadow} hover:opacity-90`
-                  : "text-slate-500 hover:text-slate-300"
+                  ? `${themeBgColor} text-white dark:text-black ${themeShadow} hover:opacity-90`
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               <Check size={14} className="mr-1.5 md:mr-2" /> Uji Hafalan
@@ -106,13 +106,13 @@ export default function FlashcardMaster({
         )}
 
         <div className="flex items-center gap-3 px-1">
-          <Badge variant="ghost" className="text-white/60 font-mono text-[9px] md:text-[10px] font-bold bg-white/[0.03] px-3 py-1 md:px-4 md:py-1.5 rounded-lg border border-white/[0.08] shadow-none h-auto">
+          <Badge variant="ghost" className="text-muted-foreground font-mono text-[9px] md:text-[10px] font-bold bg-muted/50 dark:bg-white/[0.03] px-3 py-1 md:px-4 md:py-1.5 rounded-lg border border-border dark:border-white/[0.08] shadow-none h-auto">
             {currentIndex + 1} <span className="opacity-30 mx-1">/</span> {cards.length}
           </Badge>
           <Progress
             value={((currentIndex + 1) / cards.length) * 100}
-            className="h-1 bg-black/40 border-none overflow-hidden rounded-full flex-1"
-            indicatorClassName={`${themeBgColor} shadow-[0_0_10px_rgba(0,238,255,0.5)]`}
+            className="h-1 bg-muted dark:bg-black/40 border-none overflow-hidden rounded-full flex-1"
+            indicatorClassName={`${themeBgColor} shadow-sm dark:shadow-[0_0_10px_rgba(0,238,255,0.5)]`}
           />
         </div>
       </div>

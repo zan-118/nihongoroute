@@ -44,6 +44,7 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
   const query = `*[_type == "mockExam" && _id == $id][0] {
     _id, title, timeLimit, passingScore,
     "categorySlug": course_category->slug.current, 
+    "levelCode": level,
     questions[] {
       _key, section, questionText,
       "imageUrl": image.asset->url, "audioUrl": audio.asset->url,

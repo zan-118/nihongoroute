@@ -42,10 +42,6 @@ interface Props {
 
 /**
  * Menarik data materi lengkap dari Sanity CMS.
- * 
- * @param {string} categoryId - ID Kategori.
- * @param {string} slug - Slug Pelajaran.
- * @returns {Promise<Object>} Data pelajaran dan navigasi.
  */
 async function getLessonData(categoryId: string, slug: string) {
   const query = `{
@@ -72,10 +68,6 @@ async function getLessonData(categoryId: string, slug: string) {
 // ======================
 // METADATA
 // ======================
-
-/**
- * Menghasilkan metadata SEO dinamis untuk pelajaran.
- */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { categoryId, slug } = await params;
   const data = await getLessonData(categoryId, slug);
@@ -97,67 +89,65 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const ptComponents: PortableTextComponents = {
   block: {
     h2: ({ children }) => (
-      <h2 className="text-2xl md:text-3xl font-black text-white mt-16 mb-8 uppercase tracking-tight flex items-center gap-4">
+      <h2 className="text-2xl md:text-3xl font-black text-foreground mt-16 mb-8 uppercase tracking-tight flex items-center gap-4">
         <span className="w-1.5 h-8 bg-cyan-400 shadow-[0_0_15px_#22d3ee]" />
         {children}
       </h2>
     ),
     h3: ({ children }) => (
-      <h3 className="text-xl font-bold text-cyan-400 mt-10 mb-4 tracking-widest uppercase text-[13px] md:text-sm">
+      <h3 className="text-xl font-bold text-cyan-500 dark:text-cyan-400 mt-10 mb-4 tracking-widest uppercase text-[13px] md:text-sm">
         {children}
       </h3>
     ),
     normal: ({ children }) => (
-      <p className="mb-6 text-slate-400 text-base leading-relaxed font-medium">
+      <p className="mb-6 text-muted-foreground text-base leading-relaxed font-medium">
         {children}
       </p>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="my-10 neo-inset p-6 md:p-8 border-l-4 border-purple-500 text-purple-200/80 italic text-sm md:text-base leading-relaxed">
+      <blockquote className="my-10 neo-inset p-6 md:p-8 border-l-4 border-purple-500 text-purple-600 dark:text-purple-200/80 italic text-sm md:text-base leading-relaxed">
         {children}
       </blockquote>
     ),
   },
   types: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    callout: ({ value }: any) => {
+    callout: ({ value }: { value: { type?: string; title?: string; text?: string } }) => {
       if (!value) return null;
       const isWarning = value.type === "warning";
       return (
         <div
-          className={`my-10 p-6 md:p-8 rounded-[2rem] border border-white/5 relative overflow-hidden ${isWarning ? "bg-[#150a0a] shadow-[inset_4px_4px_10px_rgba(0,0,0,0.6)]" : "neo-inset"}`}
+          className={`my-10 p-6 md:p-8 rounded-[2rem] border border-border relative overflow-hidden ${isWarning ? "bg-red-500/5 dark:bg-[#150a0a]" : "bg-muted/30"}`}
         >
           <div className="flex items-center gap-3 mb-4">
             {isWarning ? (
               <AlertTriangle className="text-red-500" size={20} />
             ) : (
-              <Lightbulb className="text-cyan-400" size={20} />
+              <Lightbulb className="text-cyan-500 dark:text-cyan-400" size={20} />
             )}
             <strong
-              className={`font-bold uppercase tracking-widest text-[10px] ${isWarning ? "text-red-400" : "text-cyan-400"}`}
+              className={`font-bold uppercase tracking-widest text-[10px] ${isWarning ? "text-red-500" : "text-cyan-500 dark:text-cyan-400"}`}
             >
               {value.title || "Catatan"}
             </strong>
           </div>
-          <p className="text-sm md:text-base text-slate-400 relative z-10 leading-relaxed font-medium">
+          <p className="text-sm md:text-base text-muted-foreground relative z-10 leading-relaxed font-medium">
             {value.text || ""}
           </p>
         </div>
       );
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    exampleSentence: ({ value }: any) => {
+    exampleSentence: ({ value }: { value: { jp?: string; furigana?: string; id?: string } }) => {
       if (!value) return null;
       return (
         <div className="neo-card p-6 my-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 group hover:border-cyan-400/30 transition-all duration-300">
           <div className="flex-1">
-            <ruby className="text-white text-xl md:text-2xl font-black tracking-tight drop-shadow-md">
+            <ruby className="text-foreground text-xl md:text-2xl font-black tracking-tight">
               {value.jp || ""}
-              <rt className="text-[10px] text-cyan-400/70 font-bold tracking-widest uppercase">
+              <rt className="text-[10px] text-cyan-500 dark:text-cyan-400/70 font-bold tracking-widest uppercase">
                 {value.furigana || ""}
               </rt>
             </ruby>
-            <p className="text-[10px] md:text-xs text-slate-500 mt-3 font-bold uppercase tracking-widest border-l-2 border-white/10 pl-4">
+            <p className="text-[10px] md:text-xs text-muted-foreground mt-3 font-bold uppercase tracking-widest border-l-2 border-border pl-4">
               {value.id || ""}
             </p>
           </div>
@@ -170,15 +160,6 @@ const ptComponents: PortableTextComponents = {
   },
 };
 
-// ======================
-// MAIN EXECUTION
-// ======================
-
-/**
- * Komponen LessonPage: Menampilkan konten artikel, kosakata, dan kuis.
- * 
- * @returns {JSX.Element} Halaman materi.
- */
 export default async function LessonPage({ params }: Props) {
   const { categoryId, slug } = await params;
   const data = await getLessonData(categoryId, slug);
@@ -187,9 +168,7 @@ export default async function LessonPage({ params }: Props) {
 
   if (!lesson) return notFound();
 
-  // Logic Navigasi
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const currentIndex = nav.findIndex((l: any) => l.slug === slug);
+  const currentIndex = nav.findIndex((l: { slug: string }) => l.slug === slug);
   const prevLesson = currentIndex > 0 ? nav[currentIndex - 1] : null;
   const nextLesson =
     currentIndex >= 0 && currentIndex < nav.length - 1
@@ -197,34 +176,27 @@ export default async function LessonPage({ params }: Props) {
       : null;
   const isSideQuest = lesson.categoryType === "general";
 
-  // Formatting Quiz
   const formattedQuizzes =
     lesson.quizzes
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ?.map((quiz: any) => {
+      ?.map((quiz: { question: string; options: { text: string; isCorrect?: boolean }[]; explanation?: string }) => {
         if (!quiz) return null;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const correctOption = quiz.options?.find((opt: any) => opt?.isCorrect);
+        const correctOption = quiz.options?.find((opt: { isCorrect?: boolean }) => opt?.isCorrect);
         return {
           question: quiz.question || "",
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          options: quiz.options?.map((opt: any) => opt?.text || "") || [],
+          options: quiz.options?.map((opt: { text: string }) => opt?.text || "") || [],
           answer: correctOption ? correctOption.text : "",
           explanation: quiz.explanation || "",
         };
       })
       .filter(Boolean) || [];
-  // ======================
-  // RENDER
-  // ======================
+
   return (
-    <div className="w-full text-slate-300 px-4 md:px-8 relative overflow-hidden flex flex-col flex-1">
+    <div className="w-full text-foreground px-4 md:px-8 relative overflow-hidden flex flex-col flex-1 transition-colors duration-300">
       {/* Background Ambient Decor */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-500/5 blur-[150px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-500/5 blur-[120px] rounded-full pointer-events-none" />
 
       <article className="max-w-4xl mx-auto w-full relative z-10 flex-1">
-        {/* TOP NAV / BREADCRUMBS */}
         <AppBreadcrumbs 
           items={[
             { label: "Pusat Belajar", href: "/courses" },
@@ -233,10 +205,9 @@ export default async function LessonPage({ params }: Props) {
           ]} 
         />
 
-        {/* HEADER SECTION */}
         <header className="mb-20">
           <h1
-            className={`text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-none mb-8 ${isSideQuest ? "text-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.3)]" : "text-white drop-shadow-lg"}`}
+            className={`text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-none mb-8 ${isSideQuest ? "text-amber-500" : "text-foreground"}`}
           >
             {lesson.title}
           </h1>
@@ -244,7 +215,7 @@ export default async function LessonPage({ params }: Props) {
             <div
               className={`p-8 rounded-[2rem] neo-inset border-l-8 mb-8 ${isSideQuest ? "border-amber-500" : "border-cyan-400"}`}
             >
-               <p className="text-base md:text-lg font-medium leading-relaxed text-slate-300">
+               <p className="text-base md:text-lg font-medium leading-relaxed text-muted-foreground">
                  {lesson.summary}
                </p>
             </div>
@@ -254,21 +225,18 @@ export default async function LessonPage({ params }: Props) {
           </div>
         </header>
 
-        {/* CONTENT SECTIONS */}
         <div className="space-y-24 mb-24">
-          {/* VOCAB SECTION */}
           {lesson.vocabList && lesson.vocabList.length > 0 && (
             <section>
               <div className="flex items-center gap-4 mb-10">
-                <h2 className="text-xl font-black uppercase tracking-tight text-white flex items-center gap-3">
+                <h2 className="text-xl font-black uppercase tracking-tight text-foreground flex items-center gap-3">
                   <span className="text-2xl">統</span> Target
                   Kosakata
                 </h2>
-                <div className="h-[1px] flex-1 bg-white/5" />
+                <div className="h-[1px] flex-1 bg-border" />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                {lesson.vocabList.map((v: any) => {
+                {lesson.vocabList.map((v: { _id: string; word: string; romaji?: string; meaning: string; hinshi?: string }) => {
                   if (!v) return null;
                   return (
                     <div
@@ -277,11 +245,11 @@ export default async function LessonPage({ params }: Props) {
                     >
                       <div className="flex-1 w-full">
                         <div className="flex items-center gap-2 mb-2">
-                          <span className="text-[9px] font-bold text-cyan-400 uppercase tracking-widest bg-cyan-400/10 px-2 py-0.5 rounded">
+                          <span className="text-[9px] font-bold text-cyan-600 dark:text-cyan-400 uppercase tracking-widest bg-cyan-400/10 px-2 py-0.5 rounded">
                             {v.romaji || "-"}
                           </span>
                           {v.hinshi && (
-                            <span className="text-[9px] font-mono font-black text-purple-400 uppercase tracking-widest bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 rounded">
+                            <span className="text-[9px] font-mono font-black text-purple-600 dark:text-purple-400 uppercase tracking-widest bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 rounded">
                               {v.hinshi === "Meishi" ? "Kata Benda" :
                                v.hinshi === "Doushi" ? "Kata Kerja" :
                                v.hinshi === "I-Keiyoushi" ? "Kata Sifat-I" :
@@ -293,10 +261,10 @@ export default async function LessonPage({ params }: Props) {
                             </span>
                           )}
                         </div>
-                        <h4 className="text-3xl font-black text-white group-hover:text-cyan-400 transition-colors tracking-tight mb-1">
+                        <h4 className="text-3xl font-black text-foreground group-hover:text-cyan-500 dark:group-hover:text-cyan-400 transition-colors tracking-tight mb-1">
                           {v.word || "-"}
                         </h4>
-                        <p className="text-[13px] md:text-sm text-slate-500 font-medium leading-relaxed">
+                        <p className="text-[13px] md:text-sm text-muted-foreground font-medium leading-relaxed">
                           {v.meaning || "-"}
                         </p>
                       </div>
@@ -311,24 +279,22 @@ export default async function LessonPage({ params }: Props) {
             </section>
           )}
 
-          {/* ARTICLES SECTION */}
           {lesson.articles && lesson.articles.length > 0 && (
             <section className="prose-custom">
               <PortableText value={lesson.articles} components={ptComponents} />
             </section>
           )}
 
-          {/* GRAMMAR SECTION */}
           {lesson.grammar && lesson.grammar.length > 0 && (
             <section>
               <div className="flex items-center gap-4 mb-10">
-                <h2 className="text-xl font-black uppercase italic tracking-tighter text-white flex items-center gap-3">
+                <h2 className="text-xl font-black uppercase italic tracking-tighter text-foreground flex items-center gap-3">
                   <span className="text-2xl not-italic">当</span> Materi Inti
                 </h2>
-                <div className="h-[1px] flex-1 bg-white/5" />
+                <div className="h-[1px] flex-1 bg-border" />
               </div>
               <div className="neo-card p-8 md:p-14 relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-10 opacity-[0.02] pointer-events-none">
+                <div className="absolute top-0 right-0 p-10 opacity-[0.05] pointer-events-none">
                   <FileText size={180} />
                 </div>
                 <div className="relative z-10 prose-custom">
@@ -341,31 +307,29 @@ export default async function LessonPage({ params }: Props) {
             </section>
           )}
 
-          {/* QUIZ SECTION */}
           {formattedQuizzes.length > 0 && (
             <section>
               <div className="flex items-center gap-4 mb-10">
-                <h2 className="text-xl font-black uppercase tracking-tight text-white flex items-center gap-3">
+                <h2 className="text-xl font-black uppercase tracking-tight text-foreground flex items-center gap-3">
                   <span className="text-2xl">笞｡</span> Uji Pemahaman
                 </h2>
-                <div className="h-[1px] flex-1 bg-white/5" />
+                <div className="h-[1px] flex-1 bg-border" />
               </div>
               <QuizEngine questions={formattedQuizzes} />
             </section>
           )}
         </div>
 
-        {/* FOOTER NAV SECTION */}
-        <nav className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-12 border-t border-white/5 mt-auto">
+        <nav className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-12 border-t border-border mt-auto mb-20">
           {prevLesson ? (
             <Link
               href={`/courses/${lesson.levelCode || categoryId}/${prevLesson.slug}`}
               className="neo-card h-full p-8 group flex flex-col justify-center items-start hover:bg-cyan-400/5 hover:border-cyan-400/30 transition-all duration-300"
             >
-              <span className="text-[9px] font-bold uppercase tracking-widest text-slate-600 group-hover:text-cyan-400 mb-3 flex items-center gap-2 transition-colors">
+              <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground group-hover:text-cyan-500 dark:group-hover:text-cyan-400 mb-3 flex items-center gap-2 transition-colors">
                 <ChevronLeft size={14} /> Materi Sebelumnya
               </span>
-              <h4 className="text-xl font-black uppercase text-white tracking-tight leading-tight">
+              <h4 className="text-xl font-black uppercase text-foreground tracking-tight leading-tight">
                 {prevLesson.title}
               </h4>
             </Link>
@@ -377,10 +341,10 @@ export default async function LessonPage({ params }: Props) {
               href={`/courses/${lesson.levelCode || categoryId}/${nextLesson.slug}`}
               className="neo-card h-full p-8 group flex flex-col justify-center items-end text-right hover:bg-cyan-400/5 hover:border-cyan-400/30 transition-all duration-300"
             >
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-300 group-hover:text-cyan-400 mb-3 flex items-center gap-2 transition-colors">
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground group-hover:text-cyan-500 dark:group-hover:text-cyan-400 mb-3 flex items-center gap-2 transition-colors">
                 Materi Selanjutnya <ChevronRight size={14} />
               </span>
-              <h4 className="text-xl font-black italic uppercase text-white tracking-tight leading-tight">
+              <h4 className="text-xl font-black italic uppercase text-foreground tracking-tight leading-tight">
                 {nextLesson.title}
               </h4>
             </Link>
@@ -392,7 +356,7 @@ export default async function LessonPage({ params }: Props) {
               <span className="text-4xl mb-3 group-hover:scale-110 transition-transform">
                 脂
               </span>
-              <p className="text-xs font-black uppercase tracking-widest text-cyan-400">
+              <p className="text-xs font-black uppercase tracking-widest text-cyan-500 dark:text-cyan-400">
                 Yeay! Materi Selesai
               </p>
             </Link>

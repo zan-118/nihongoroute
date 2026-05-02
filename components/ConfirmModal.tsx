@@ -42,23 +42,23 @@ export default function ConfirmModal({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              className="w-full max-w-md bg-slate-900/90 backdrop-blur-2xl border border-white/10 p-6 md:p-8 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] pointer-events-auto relative overflow-hidden"
+              className="w-full max-w-md bg-card backdrop-blur-2xl border border-border p-6 md:p-8 rounded-[2rem] shadow-2xl pointer-events-auto relative overflow-hidden transition-colors duration-300"
             >
-              <div className={`absolute top-0 left-0 w-full h-1 ${isDestructive ? 'bg-red-500' : 'bg-cyber-neon'} shadow-[0_0_15px_currentColor]`} />
+              <div className={`absolute top-0 left-0 w-full h-1 ${isDestructive ? 'bg-destructive' : 'bg-primary'} shadow-sm`} />
               
               <div className="flex flex-col items-center text-center">
                 <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-6 border ${
                   isDestructive 
-                    ? 'bg-red-500/10 border-red-500/30 text-red-500 shadow-[0_0_20px_rgba(239,68,68,0.3)]' 
-                    : 'bg-cyber-neon/10 border-cyber-neon/30 text-cyber-neon shadow-[0_0_20px_rgba(0,238,255,0.3)]'
+                    ? 'bg-destructive/10 border-destructive/30 text-destructive shadow-lg' 
+                    : 'bg-primary/10 border-primary/30 text-primary shadow-lg'
                 }`}>
                   <AlertTriangle size={32} />
                 </div>
                 
-                <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-tight mb-3">
+                <h3 className="text-xl md:text-2xl font-black text-foreground uppercase tracking-tight mb-3">
                   {title}
                 </h3>
-                <p className="text-slate-400 text-sm mb-8 font-medium leading-relaxed">
+                <p className="text-muted-foreground text-sm mb-8 font-medium leading-relaxed">
                   {description}
                 </p>
                 
@@ -66,7 +66,7 @@ export default function ConfirmModal({
                   <Button
                     variant="outline"
                     onClick={onClose}
-                    className="flex-1 h-12 rounded-xl bg-white/5 border-white/10 hover:bg-white/10 text-slate-300 font-bold uppercase tracking-widest text-xs"
+                    className="flex-1 h-12 rounded-xl bg-muted border border-border hover:bg-background text-muted-foreground font-bold uppercase tracking-widest text-xs"
                   >
                     {cancelText}
                   </Button>
@@ -77,8 +77,8 @@ export default function ConfirmModal({
                     }}
                     className={`flex-1 h-12 rounded-xl font-bold uppercase tracking-widest text-xs shadow-lg border-none ${
                       isDestructive
-                        ? 'bg-red-500 hover:bg-red-600 text-white shadow-[0_0_15px_rgba(239,68,68,0.4)] hover:shadow-[0_0_25px_rgba(239,68,68,0.6)]'
-                        : 'bg-cyber-neon hover:bg-white text-black shadow-[0_0_15px_rgba(0,238,255,0.4)] hover:shadow-[0_0_25px_rgba(255,255,255,0.6)]'
+                        ? 'bg-destructive hover:opacity-90 text-white transition-all'
+                        : 'bg-primary hover:bg-foreground text-white dark:text-black transition-all'
                     }`}
                   >
                     {confirmText}

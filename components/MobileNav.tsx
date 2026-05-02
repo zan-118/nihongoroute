@@ -8,52 +8,58 @@ export default function MobileNav() {
   const { pathname, navItems } = useMobileNav();
 
   return (
-    <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm z-50">
-      <nav className="bg-slate-950/80 backdrop-blur-3xl border border-white/10 rounded-[2rem] p-2 shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_20px_rgba(0,238,255,0.1)]">
-        <ul className="flex justify-between items-center relative">
+    <div className="md:hidden fixed bottom-5 left-1/2 -translate-x-1/2 w-[92%] max-w-md z-50">
+      <nav className="bg-card/30 dark:bg-slate-950/30 backdrop-blur-3xl border border-border/40 rounded-[2rem] p-1.5 shadow-2xl transition-all duration-500 overflow-hidden relative">
+        {/* Ambient Glow */}
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent pointer-events-none" />
+        
+        <ul className="flex justify-between items-center relative z-10 gap-1 px-1">
           {navItems.map((item) => {
             const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
 
             return (
-              <li key={item.href + item.label} className="flex-1 relative z-10">
+              <li key={item.href + item.label} className="flex-1 relative">
                 <Link
                   href={item.href}
                   className="flex flex-col items-center justify-center py-2 relative group"
                 >
+                  {/* Fluid Background Indicator */}
+                  {isActive && (
+                    <motion.div
+                      layoutId="mobile-nav-pill"
+                      className="absolute inset-x-1 inset-y-1 bg-primary/10 border border-primary/20 rounded-2xl z-0 shadow-[0_0_20px_rgba(0,238,255,0.05)]"
+                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    />
+                  )}
+
                   <motion.div
                     animate={{
-                      y: isActive ? -4 : 0,
+                      y: isActive ? -1 : 0,
                       scale: isActive ? 1.1 : 1,
                     }}
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                    className={`relative z-10 p-2 rounded-xl transition-colors ${
+                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                    className={`relative z-10 p-2 rounded-2xl transition-all duration-300 ${
                       isActive
-                        ? "text-cyber-neon"
-                        : "text-slate-500 group-hover:text-white"
+                        ? "text-primary"
+                        : "text-muted-foreground group-hover:text-foreground"
                     }`}
                   >
-                    <item.icon size={22} strokeWidth={isActive ? 2.5 : 2} className={isActive ? "drop-shadow-[0_0_8px_rgba(0,238,255,0.8)]" : ""} />
-                    
-                    {isActive && (
-                      <motion.div
-                        layoutId="mobile-active-pill"
-                        className="absolute inset-0 bg-cyber-neon/10 rounded-xl -z-10 border border-cyber-neon/20 shadow-[inset_0_0_10px_rgba(0,238,255,0.2)]"
-                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                      />
-                    )}
+                    <item.icon 
+                      size={18} 
+                      strokeWidth={isActive ? 2.5 : 2} 
+                      className={isActive ? "drop-shadow-[0_0_8px_rgba(0,238,255,0.6)]" : ""} 
+                    />
                   </motion.div>
                   
-                  <motion.span
-                    animate={{
-                      opacity: isActive ? 1 : 0.7,
-                      y: isActive ? -2 : 0,
-                    }}
-                    className={`text-[9px] font-bold uppercase tracking-widest mt-1.5 transition-colors ${
-                      isActive ? "text-cyber-neon" : "text-slate-500"
+                  <span
+                    className={`text-[7px] font-black uppercase tracking-[0.15em] mt-1 transition-all duration-300 relative z-10 ${
+                      isActive 
+                        ? "text-primary opacity-100" 
+                        : "text-muted-foreground opacity-60"
                     }`}
                   >
                     {item.label}
-                  </motion.span>
+                  </span>
                 </Link>
               </li>
             );

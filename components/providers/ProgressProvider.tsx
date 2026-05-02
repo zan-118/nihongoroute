@@ -133,6 +133,7 @@ export const ProgressProvider = ({
             lastStudyDate: cloudLastDate,
             studyDays: sanitizedStudyDays,
             srs: parsedSrs,
+            notifications: useProgressStore.getState().progress.notifications || [],
           };
 
           setProgress(cloudProgress);
@@ -161,6 +162,7 @@ export const ProgressProvider = ({
             xp: progress.xp,
             level: progress.level,
             streak: progress.streak,
+            full_name: useProgressStore.getState().userFullName,
             today_review_count: progress.todayReviewCount,
             last_study_date: progress.lastStudyDate,
             study_days: progress.studyDays,

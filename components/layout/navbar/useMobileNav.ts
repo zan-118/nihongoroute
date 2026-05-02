@@ -1,5 +1,5 @@
 import { usePathname } from "next/navigation";
-import { Home, BookOpen, Layers, BrainCircuit, User, LogIn } from "lucide-react";
+import { Home, BookOpen, BrainCircuit, Trophy, LogIn, User } from "lucide-react";
 import { useProgressStore } from "@/store/useProgressStore";
 import { useShallow } from "zustand/react/shallow";
 
@@ -9,25 +9,17 @@ export function useMobileNav() {
     useShallow((state) => ({ isAuthenticated: state.isAuthenticated, userFullName: state.userFullName }))
   );
 
-  const navItems = isAuthenticated
-    ? [
-        { href: "/", icon: Home, label: "Beranda" },
-        { href: "/courses", icon: BookOpen, label: "Materi" },
-        { href: "/library", icon: Layers, label: "Pustaka" },
-        { href: "/review", icon: BrainCircuit, label: "Hafalan" },
-        { 
-          href: "/dashboard", 
-          icon: User, 
-          label: userFullName ? userFullName.split(' ')[0].substring(0, 7) : "Dasbor" 
-        },
-      ]
-    : [
-        { href: "/", icon: Home, label: "Beranda" },
-        { href: "/courses", icon: BookOpen, label: "Materi" },
-        { href: "/library", icon: Layers, label: "Pustaka" },
-        { href: "/review", icon: BrainCircuit, label: "Hafalan" },
-        { href: "/login", icon: LogIn, label: "Masuk" },
-      ];
+  const navItems = [
+    { href: "/", icon: Home, label: "Beranda" },
+    { href: "/courses", icon: BookOpen, label: "Materi" },
+    { href: "/review", icon: BrainCircuit, label: "Hafalan" },
+    { href: "/social", icon: Trophy, label: "Sosial" },
+    { 
+      href: isAuthenticated ? "/dashboard" : "/login", 
+      icon: isAuthenticated ? User : LogIn, 
+      label: isAuthenticated ? (userFullName ? userFullName.split(' ')[0].substring(0, 7) : "Profil") : "Masuk" 
+    },
+  ];
 
   return { pathname, navItems };
 }

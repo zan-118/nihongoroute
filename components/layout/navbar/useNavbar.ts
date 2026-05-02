@@ -2,12 +2,26 @@ import { usePathname, useRouter } from "next/navigation";
 import { useProgressStore } from "@/store/useProgressStore";
 import { useShallow } from "zustand/react/shallow";
 import { createClient } from "@/lib/supabase/client";
+import { 
+  LayoutDashboard, 
+  BookOpen, 
+  Trophy, 
+  Layers, 
+  BrainCircuit, 
+  Heart, 
+  Settings,
+  Share2
+} from "lucide-react";
 
 export function useNavbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { isAuthenticated, userFullName } = useProgressStore(
-    useShallow((state) => ({ isAuthenticated: state.isAuthenticated, userFullName: state.userFullName }))
+  const { isAuthenticated, userFullName, progress } = useProgressStore(
+    useShallow((state) => ({ 
+      isAuthenticated: state.isAuthenticated, 
+      userFullName: state.userFullName,
+      progress: state.progress
+    }))
   );
   const supabase = createClient();
 
@@ -16,12 +30,23 @@ export function useNavbar() {
     router.refresh();
   };
 
-  const links = [
-    { href: "/courses", label: "Materi" },
-    { href: "/exams", label: "Ujian" },
-    { href: "/library", label: "Pustaka" },
-    { href: "/review", label: "Hafalan" },
-  ];
+  const links = {
+    main: [
+      { href: "/dashboard", label: "Dasbor", icon: LayoutDashboard },
+      { href: "/courses", label: "Materi", icon: BookOpen },
+      { href: "/exams", label: "Ujian", icon: Trophy },
+    ],
+    learn: [
+      { href: "/library", label: "Pustaka", icon: Layers },
+      { href: "/review", label: "Hafalan", icon: BrainCircuit },
+      { href: "/social", label: "Sosial", icon: Trophy },
+    ],
+    system: [
+      { href: "/support", label: "Dukungan", icon: Heart },
+      { href: "/settings", label: "Pengaturan", icon: Settings },
+      { href: "/share", label: "Bagikan", icon: Share2 },
+    ]
+  };
 
-  return { pathname, isAuthenticated, userFullName, handleLogout, links };
+  return { pathname, isAuthenticated, userFullName, handleLogout, links, progress };
 }

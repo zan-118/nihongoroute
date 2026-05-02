@@ -23,7 +23,6 @@ export default function LoginPage() {
 
     try {
       if (isRegistering) {
-        // Mode Daftar
         const { error } = await supabase.auth.signUp({
           email,
           password,
@@ -39,7 +38,6 @@ export default function LoginPage() {
         });
         setIsRegistering(false);
       } else {
-        // Mode Masuk
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password,
@@ -50,14 +48,13 @@ export default function LoginPage() {
           description: "Senang melihatmu kembali. Mari lanjut belajarnya!",
         });
 
-        // Redirect setelah sukses
         router.push("/");
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.error("Gagal autentikasi email:", error);
+    } catch (error: unknown) {
+      const err = error as Error;
+      console.error("Gagal autentikasi email:", err);
       toast.error("Ada sedikit kendala...", {
-        description: error.message || "Email atau kata sandi mungkin salah. Coba cek lagi ya!",
+        description: err.message || "Email atau kata sandi mungkin salah. Coba cek lagi ya!",
       });
     } finally {
       setLoading(false);
@@ -97,22 +94,32 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-300">
       {/* Background Effect */}
       <div className="absolute inset-0 z-0 flex items-center justify-center">
-        <div className="w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[100px] opacity-50 pointer-events-none" />
-        <div className="w-[300px] h-[300px] bg-purple-600/20 rounded-full blur-[80px] absolute -top-10 -right-10 opacity-30 pointer-events-none" />
+        <div className="w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] opacity-50 pointer-events-none" />
+        <div className="w-[300px] h-[300px] bg-purple-500/10 rounded-full blur-[80px] absolute -top-10 -right-10 opacity-30 pointer-events-none" />
       </div>
 
-      <div className="w-full max-w-md bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-3xl p-8 z-10 shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <div className="text-center mb-6">
-          <div className="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-            <Sparkles className="text-blue-400" size={32} />
+      <div className="w-full max-w-md bg-card/80 backdrop-blur-xl border border-border rounded-3xl p-8 z-10 shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500 relative">
+        <Link 
+          href="/" 
+          className="absolute -top-12 left-0 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors group"
+        >
+          <div className="w-8 h-8 rounded-full bg-muted/50 border border-border flex items-center justify-center group-hover:border-primary/30 transition-all">
+            <ChevronRight className="rotate-180" size={14} />
           </div>
-          <h1 className="text-2xl md:text-3xl font-black text-white mb-2 uppercase tracking-tight">
+          Kembali ke Beranda
+        </Link>
+
+        <div className="text-center mb-6">
+          <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary/20 shadow-lg">
+            <Sparkles className="text-primary" size={32} />
+          </div>
+          <h1 className="text-2xl md:text-3xl font-black text-foreground mb-2 uppercase tracking-tight">
             {isRegistering ? "Yuk, bikin akun baru!" : "Siap lanjut belajar?"}
           </h1>
-          <p className="text-xs md:text-sm text-slate-500 font-medium leading-relaxed">
+          <p className="text-xs md:text-sm text-muted-foreground font-medium leading-relaxed">
             {isRegistering 
               ? "Bikin akun yuk, biar semua progres belajarmu tersimpan rapi dan bisa diakses kapan aja." 
               : "Masuk ke akunmu, yuk! Kita lanjutin petualangan belajar yang seru ini."}
@@ -124,30 +131,30 @@ export default function LoginPage() {
           <div className="space-y-2">
             {isRegistering && (
               <div className="relative animate-in fade-in slide-in-from-top-2 duration-300">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
                 <input 
                   type="text" 
                   placeholder="Nama panggilannya siapa?" 
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required={isRegistering}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-10 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                  className="w-full bg-muted border border-border rounded-xl py-3 pl-10 pr-4 text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
                 />
               </div>
             )}
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
               <input 
                 type="email" 
                 placeholder="Alamat emailmu" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-10 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                className="w-full bg-muted border border-border rounded-xl py-3 pl-10 pr-4 text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
               />
             </div>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
               <input 
                 type="password" 
                 placeholder="Kata sandi rahasia" 
@@ -155,14 +162,14 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-10 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                className="w-full bg-muted border border-border rounded-xl py-3 pl-10 pr-4 text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
               />
             </div>
             {!isRegistering && (
               <div className="flex justify-end mt-1">
                 <Link 
                   href="/forgot-password" 
-                  className="text-xs text-slate-400 hover:text-blue-400 transition-colors"
+                  className="text-xs text-muted-foreground hover:text-primary transition-colors"
                 >
                   Lupa kata sandi? Tenang, bisa kita bantu kok!
                 </Link>
@@ -173,7 +180,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-4 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold uppercase tracking-widest text-[10px] md:text-xs transition-all disabled:opacity-50 shadow-[0_0_20px_rgba(37,99,235,0.3)] border-none"
+            className="w-full py-4 px-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-bold uppercase tracking-widest text-[10px] md:text-xs transition-all disabled:opacity-50 shadow-lg border-none"
           >
             {loading ? "Sedang memproses..." : (isRegistering ? "Daftar Sekarang" : "Masuk Sekarang")}
           </button>
@@ -185,7 +192,7 @@ export default function LoginPage() {
             onClick={() => {
               setIsRegistering(!isRegistering);
             }}
-            className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+            className="text-sm text-primary hover:text-primary/80 transition-colors"
           >
             {isRegistering 
               ? "Sudah punya akun? Masuk lewat sini aja" 
@@ -195,10 +202,10 @@ export default function LoginPage() {
 
         <div className="relative py-4 mb-2">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-slate-800"></div>
+            <div className="w-full border-t border-border"></div>
           </div>
           <div className="relative flex justify-center">
-            <span className="bg-slate-900 px-4 text-[9px] md:text-[10px] font-bold text-slate-600 uppercase tracking-widest">Atau pakai cara ini</span>
+            <span className="bg-card px-4 text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Atau pakai cara ini</span>
           </div>
         </div>
 
@@ -207,7 +214,7 @@ export default function LoginPage() {
             type="button"
             onClick={handleGoogleLogin}
             disabled={loading}
-            className="w-full flex items-center justify-between p-3 rounded-xl bg-white text-slate-900 hover:bg-slate-100 transition-colors disabled:opacity-50 font-semibold text-sm"
+            className="w-full flex items-center justify-between p-3 rounded-xl bg-foreground text-background hover:opacity-90 transition-all disabled:opacity-50 font-semibold text-sm"
           >
             <div className="flex items-center gap-3">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -218,22 +225,22 @@ export default function LoginPage() {
               </svg>
               Masuk dengan akun Google
             </div>
-            <ChevronRight size={16} className="text-slate-400" />
+            <ChevronRight size={16} className="text-muted-foreground" />
           </button>
 
           <button
             type="button"
             onClick={handleAnonymousLogin}
             disabled={loading}
-            className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-colors text-white disabled:opacity-50 text-sm"
+            className="w-full flex items-center justify-between p-3 rounded-xl bg-muted hover:bg-muted/80 border border-border transition-colors text-foreground disabled:opacity-50 text-sm"
           >
             <div className="flex items-center gap-3">
-              <User size={20} className="text-slate-400" />
+              <User size={20} className="text-primary" />
               <div className="text-left">
                 <div className="font-semibold">Coba Intip Dulu (Mode Tamu)</div>
               </div>
             </div>
-            <LogIn size={16} className="text-slate-400" />
+            <LogIn size={16} className="text-muted-foreground" />
           </button>
         </div>
       </div>
