@@ -46,6 +46,9 @@ const withPWA = withPWAInit({
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  compiler: {
+    styledComponents: true,
+  },
   images: {
     remotePatterns: [
       {
