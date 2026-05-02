@@ -30,9 +30,9 @@
       "label": "NihongoRoute Dashboard"
     },
     {
-      "src": "/og-image.png",
+      "src": "/og-image.jpeg",
       "sizes": "1920x1080",
-      "type": "image/png",
+      "type": "image/jpeg",
       "form_factor": "narrow",
       "label": "NihongoRoute Mobile"
     }
