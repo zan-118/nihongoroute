@@ -33,8 +33,10 @@ interface PageProps {
  */
 async function getCourseData(slug: string) {
   const query = `{
-    "category": *[_type == "course_category" && slug.current == $slug][0],
-    "lessons": *[_type == "lesson" && course_category->slug.current == $slug && is_published == true] | order(orderNumber asc) {
+    "category": *[_type == "course_category" && slug.current == $slug][0] {
+      _id, title, type, description, "slug": slug.current
+    },
+    "lessons": *[_type == "lesson" && course_category->slug.current == $slug] | order(orderNumber asc, _createdAt desc) {
       _id, title, summary, "slug": slug.current
     },
     "mockExams": *[_type == "mockExam" && course_category->slug.current == $slug] | order(_createdAt desc) {

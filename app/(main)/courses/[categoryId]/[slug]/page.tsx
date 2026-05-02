@@ -62,7 +62,7 @@ async function getLessonData(categoryId: string, slug: string) {
       referenceWords[]-> { _id, word, furigana, romaji, meaning, hinshi },
       articles, grammar, quizzes, seoTitle, seoDescription
     },
-    "nav": *[_type == "lesson" && course_category->slug.current == $categoryId && is_published == true] | order(orderNumber asc) {
+    "nav": *[_type == "lesson" && course_category->slug.current == $categoryId] | order(orderNumber asc, _createdAt desc) {
       "slug": slug.current, title
     }
   }`;

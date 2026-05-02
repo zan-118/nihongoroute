@@ -129,88 +129,90 @@ export default function CourseCategoryClient({
           )}
         </header>
 
-        {/* AREA LATIHAN (MINI GAMES) SECTION */}
-        <motion.section variants={itemVariants} className="mb-20 md:mb-24">
-          <div className="mb-6 md:mb-8 flex items-center gap-4">
-            <h3
-              className={`text-lg md:text-xl font-black uppercase tracking-tight flex items-center gap-3 ${themeColor}`}
-            >
-              Area Latihan
-            </h3>
-            <div className="h-[1px] flex-1 bg-white/5" />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
-            <motion.div
-              className="h-full"
-            >
-              <Link
-                href={`/courses/${categoryId}/flashcards`}
-                className="group flex flex-col h-full"
+        {/* AREA LATIHAN (MINI GAMES) SECTION - Hidden for General Articles */}
+        {!isSideQuest && (
+          <motion.section variants={itemVariants} className="mb-20 md:mb-24">
+            <div className="mb-6 md:mb-8 flex items-center gap-4">
+              <h3
+                className={`text-lg md:text-xl font-black uppercase tracking-tight flex items-center gap-3 ${themeColor}`}
               >
-                <Card className="p-6 md:p-8 bg-white/[0.03] border-white/[0.08] rounded-2xl hover:border-cyan-400/40 hover:bg-cyan-400/[0.02] transition-all duration-300 flex flex-col items-center text-center gap-5 h-full cursor-pointer relative overflow-hidden group hover:shadow-[0_15px_30px_rgba(0,0,0,0.3)]">
-                  <div className="w-12 h-12 md:w-14 md:h-14 bg-white/[0.04] border border-white/[0.08] rounded-xl text-cyan-400 flex items-center justify-center group-hover:bg-cyan-400 group-hover:text-black transition-all duration-300 shadow-inner relative z-10">
-                    <Layers size={24} />
-                  </div>
-                  <div className="mt-auto relative z-10">
-                    <p className="text-lg md:text-xl font-black text-white group-hover:text-cyan-400 transition-colors uppercase tracking-tight mb-1">
-                      Kosakata
-                    </p>
-                    <p className="text-slate-500 text-[9px] font-bold uppercase tracking-widest">
-                      Mode Flashcard
-                    </p>
-                  </div>
-                </Card>
-              </Link>
-            </motion.div>
+                Area Latihan
+              </h3>
+              <div className="h-[1px] flex-1 bg-white/5" />
+            </div>
 
-            <motion.div
-              className="h-full"
-            >
-              <Link
-                href={`/courses/${categoryId}/kanji`}
-                className="group flex flex-col h-full"
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
+              <motion.div
+                className="h-full"
               >
-                <Card className="p-6 md:p-8 bg-white/[0.03] border-white/[0.08] rounded-2xl hover:border-purple-500/40 hover:bg-purple-500/[0.02] transition-all duration-300 flex flex-col items-center text-center gap-5 h-full cursor-pointer relative overflow-hidden group hover:shadow-[0_15px_30px_rgba(0,0,0,0.3)]">
-                  <div className="w-12 h-12 md:w-14 md:h-14 bg-white/[0.04] border border-white/[0.08] rounded-xl text-purple-400 flex items-center justify-center group-hover:bg-purple-500 group-hover:text-white transition-all duration-300 shadow-inner relative z-10">
-                    <PenTool size={24} />
-                  </div>
-                  <div className="mt-auto relative z-10">
-                    <p className="text-lg md:text-xl font-black text-white group-hover:text-purple-400 transition-colors uppercase tracking-tight mb-1">
-                      Kamus Kanji
-                    </p>
-                    <p className="text-slate-500 text-[9px] font-bold uppercase tracking-wider">
-                      Baca & Tulis
-                    </p>
-                  </div>
-                </Card>
-              </Link>
-            </motion.div>
+                <Link
+                  href={`/courses/${categoryId}/flashcards`}
+                  className="group flex flex-col h-full"
+                >
+                  <Card className="p-6 md:p-8 bg-white/[0.03] border-white/[0.08] rounded-2xl hover:border-cyan-400/40 hover:bg-cyan-400/[0.02] transition-all duration-300 flex flex-col items-center text-center gap-5 h-full cursor-pointer relative overflow-hidden group hover:shadow-[0_15px_30px_rgba(0,0,0,0.3)]">
+                    <div className="w-12 h-12 md:w-14 md:h-14 bg-white/[0.04] border border-white/[0.08] rounded-xl text-cyan-400 flex items-center justify-center group-hover:bg-cyan-400 group-hover:text-black transition-all duration-300 shadow-inner relative z-10">
+                      <Layers size={24} />
+                    </div>
+                    <div className="mt-auto relative z-10">
+                      <p className="text-lg md:text-xl font-black text-white group-hover:text-cyan-400 transition-colors uppercase tracking-tight mb-1">
+                        Kosakata
+                      </p>
+                      <p className="text-slate-500 text-[9px] font-bold uppercase tracking-widest">
+                        Mode Flashcard
+                      </p>
+                    </div>
+                  </Card>
+                </Link>
+              </motion.div>
 
-            <motion.div
-              className="sm:col-span-2 md:col-span-1 h-full"
-            >
-              <Link
-                href={`/courses/${categoryId}/survival`}
-                className="group flex flex-col h-full"
+              <motion.div
+                className="h-full"
               >
-                <Card className="p-6 md:p-8 bg-white/[0.03] border-white/[0.08] rounded-2xl hover:border-red-500/40 hover:bg-red-500/[0.02] transition-all duration-300 flex flex-col items-center text-center gap-5 h-full cursor-pointer relative overflow-hidden group hover:shadow-[0_15px_30px_rgba(0,0,0,0.3)]">
-                  <div className="w-12 h-12 md:w-14 md:h-14 bg-white/[0.04] border border-white/[0.08] rounded-xl text-red-500 flex items-center justify-center group-hover:bg-red-500 group-hover:text-white transition-all duration-300 shadow-inner relative z-10">
-                    <Flame size={24} />
-                  </div>
-                  <div className="mt-auto relative z-10">
-                    <p className="text-lg md:text-xl font-black text-white group-hover:text-red-400 transition-colors uppercase tracking-tight mb-1">
-                      Survival
-                    </p>
-                    <p className="text-slate-500 text-[9px] font-bold uppercase tracking-widest">
-                      Adu Kecepatan
-                    </p>
-                  </div>
-                </Card>
-              </Link>
-            </motion.div>
-          </div>
-        </motion.section>
+                <Link
+                  href={`/courses/${categoryId}/kanji`}
+                  className="group flex flex-col h-full"
+                >
+                  <Card className="p-6 md:p-8 bg-white/[0.03] border-white/[0.08] rounded-2xl hover:border-purple-500/40 hover:bg-purple-500/[0.02] transition-all duration-300 flex flex-col items-center text-center gap-5 h-full cursor-pointer relative overflow-hidden group hover:shadow-[0_15px_30px_rgba(0,0,0,0.3)]">
+                    <div className="w-12 h-12 md:w-14 md:h-14 bg-white/[0.04] border border-white/[0.08] rounded-xl text-purple-400 flex items-center justify-center group-hover:bg-purple-500 group-hover:text-white transition-all duration-300 shadow-inner relative z-10">
+                      <PenTool size={24} />
+                    </div>
+                    <div className="mt-auto relative z-10">
+                      <p className="text-lg md:text-xl font-black text-white group-hover:text-purple-400 transition-colors uppercase tracking-tight mb-1">
+                        Kamus Kanji
+                      </p>
+                      <p className="text-slate-500 text-[9px] font-bold uppercase tracking-wider">
+                        Baca & Tulis
+                      </p>
+                    </div>
+                  </Card>
+                </Link>
+              </motion.div>
+
+              <motion.div
+                className="sm:col-span-2 md:col-span-1 h-full"
+              >
+                <Link
+                  href={`/courses/${categoryId}/survival`}
+                  className="group flex flex-col h-full"
+                >
+                  <Card className="p-6 md:p-8 bg-white/[0.03] border-white/[0.08] rounded-2xl hover:border-red-500/40 hover:bg-red-500/[0.02] transition-all duration-300 flex flex-col items-center text-center gap-5 h-full cursor-pointer relative overflow-hidden group hover:shadow-[0_15px_30px_rgba(0,0,0,0.3)]">
+                    <div className="w-12 h-12 md:w-14 md:h-14 bg-white/[0.04] border border-white/[0.08] rounded-xl text-red-500 flex items-center justify-center group-hover:bg-red-500 group-hover:text-white transition-all duration-300 shadow-inner relative z-10">
+                      <Flame size={24} />
+                    </div>
+                    <div className="mt-auto relative z-10">
+                      <p className="text-lg md:text-xl font-black text-white group-hover:text-red-400 transition-colors uppercase tracking-tight mb-1">
+                        Survival
+                      </p>
+                      <p className="text-slate-500 text-[9px] font-bold uppercase tracking-widest">
+                        Adu Kecepatan
+                      </p>
+                    </div>
+                  </Card>
+                </Link>
+              </motion.div>
+            </div>
+          </motion.section>
+        )}
 
         {/* DAFTAR SILABUS (LESSONS) SECTION */}
         <motion.section variants={itemVariants} className="pb-12">
@@ -224,42 +226,48 @@ export default function CourseCategoryClient({
           </div>
 
           {data.lessons && data.lessons.length > 0 ? (
-            <div className="grid gap-4 md:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               {data.lessons.map((lesson: any, index: number) => (
                 <motion.div
                   key={lesson._id}
                   variants={itemVariants}
-                  whileHover={{ x: 12 }}
+                  whileHover={{ y: -8 }}
                 >
                   <Link
                     href={`/courses/${categoryId}/${lesson.slug}`}
-                    className="group flex flex-col"
+                    className="group flex flex-col h-full"
                   >
                     <Card
-                      className={`p-4 md:p-5 bg-white/[0.03] border-white/[0.06] rounded-2xl group transition-all duration-300 flex flex-col sm:flex-row items-start sm:items-center gap-5 cursor-pointer hover:border-cyber-neon/40 hover:bg-cyber-neon/[0.02]`}
+                      className={`p-6 md:p-8 bg-white/[0.03] border-white/[0.06] rounded-3xl group transition-all duration-300 flex flex-col items-start gap-6 cursor-pointer hover:border-cyber-neon/40 hover:bg-cyber-neon/[0.02] h-full shadow-lg hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)] relative overflow-hidden`}
                     >
+                      {/* Badge Number */}
                       <div
-                        className={`w-10 h-10 md:w-11 md:h-11 shrink-0 rounded-xl flex items-center justify-center font-black text-base md:text-lg font-mono bg-white/[0.04] border border-white/[0.08] transition-all duration-300 ${isSideQuest ? "text-amber-500 group-hover:bg-amber-500 group-hover:text-black group-hover:border-none" : "text-cyan-400 group-hover:bg-cyan-400 group-hover:text-black group-hover:border-none"}`}
+                        className={`w-10 h-10 shrink-0 rounded-xl flex items-center justify-center font-black text-base font-mono bg-white/[0.04] border border-white/[0.08] transition-all duration-300 ${isSideQuest ? "text-amber-500 group-hover:bg-amber-500 group-hover:text-black" : "text-cyan-400 group-hover:bg-cyan-400 group-hover:text-black"}`}
                       >
                         {(index + 1).toString().padStart(2, "0")}
                       </div>
 
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-lg md:text-xl font-black text-white group-hover:text-cyber-neon transition-all uppercase tracking-tight mb-0.5">
+                      <div className="flex-1">
+                        <h4 className="text-xl md:text-2xl font-black text-white group-hover:text-cyber-neon transition-all uppercase tracking-tight mb-3 leading-tight">
                           {lesson.title}
                         </h4>
                         {lesson.summary && (
-                          <p className="text-slate-500 text-[10px] md:text-[11px] font-medium line-clamp-1 opacity-70 group-hover:opacity-100 transition-opacity">
+                          <p className="text-slate-500 text-xs font-medium line-clamp-3 opacity-70 group-hover:opacity-100 transition-opacity leading-relaxed">
                             {lesson.summary}
                           </p>
                         )}
                       </div>
 
-                      <div
-                        className={`w-8 h-8 shrink-0 rounded-lg border border-white/[0.08] items-center justify-center transition-all duration-300 hidden md:flex ${isSideQuest ? "text-amber-500 group-hover:bg-amber-500 group-hover:text-black group-hover:border-none" : "text-cyan-400 group-hover:bg-cyan-400 group-hover:text-black group-hover:border-none"}`}
-                      >
-                        <ChevronRight size={14} />
+                      <div className="mt-auto pt-6 w-full flex items-center justify-between border-t border-white/[0.05]">
+                        <span className={`text-[9px] font-bold uppercase tracking-widest ${isSideQuest ? "text-amber-500/50 group-hover:text-amber-500" : "text-cyan-400/50 group-hover:text-cyan-400"}`}>
+                          Baca Materi
+                        </span>
+                        <div
+                          className={`w-8 h-8 rounded-lg border border-white/[0.08] flex items-center justify-center transition-all duration-300 ${isSideQuest ? "group-hover:bg-amber-500 group-hover:text-black" : "group-hover:bg-cyan-400 group-hover:text-black"}`}
+                        >
+                          <ChevronRight size={14} />
+                        </div>
                       </div>
                     </Card>
                   </Link>
