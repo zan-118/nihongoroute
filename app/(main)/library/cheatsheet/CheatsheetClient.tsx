@@ -12,7 +12,6 @@ import {
   Hash,
   Clock,
   BookOpen,
-  Layers,
   ChevronDown,
   Home,
   Activity,
@@ -20,6 +19,9 @@ import {
   Database,
   ArrowRight,
   Library,
+  Users,
+  MessageSquare,
+  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -67,6 +69,27 @@ export default function CheatsheetClient({
     ...(activeSheet?.items || []),
   ].filter((item) => item !== null && item !== undefined);
   // ======================
+  // HELPERS
+  // ======================
+  const formatLabel = (text: string) => {
+    if (!text) return text;
+    // Highlight keywords followed by colon
+    const keywords = [
+      "Contoh", "Catatan", "Penting", "Fakta budaya", 
+      "Perubahan fonetis", "Nuansa", "Tips", "Catatan menarik",
+      "Pengecualian penting", "Batas", "Fakta budaya", "Nuansa sosial"
+    ];
+    
+    let formatted = text;
+    keywords.forEach(key => {
+      const regex = new RegExp(`(${key}:)`, 'g');
+      formatted = formatted.replace(regex, '<strong class="text-cyber-neon/80 font-bold">$1</strong>');
+    });
+
+    return <span dangerouslySetInnerHTML={{ __html: formatted }} />;
+  };
+
+  // ======================
   // RENDER
   // ======================
   return (
@@ -91,11 +114,11 @@ export default function CheatsheetClient({
             <Card className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-2xl bg-cyber-neon/10 border-cyber-neon/20 flex items-center justify-center neo-inset shadow-none">
               <FileText size={28} className="text-cyber-neon md:w-8 md:h-8" />
             </Card>
-            <div className="text-left">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight leading-none mb-2">
+            <div className="text-left flex-1 min-w-0">
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white tracking-tight leading-none mb-2 break-words">
                 Catatan <span className="text-cyber-neon">Cepat</span>
               </h1>
-              <span className="text-[10px] md:text-xs text-slate-500 font-medium tracking-tight uppercase tracking-widest">Referensi kilat buat bantu hafalanmu.</span>
+              <span className="text-[10px] md:text-xs text-slate-500 font-medium tracking-tight uppercase tracking-widest block">Referensi kilat buat bantu hafalanmu.</span>
             </div>
           </div>
         </div>
@@ -116,9 +139,9 @@ export default function CheatsheetClient({
           <Button
             variant="ghost"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden flex items-center justify-between h-auto py-5 px-6 bg-black/40 border-white/5 rounded-2xl text-white neo-card shadow-none active:translate-y-1 transition-all"
+            className="lg:hidden flex items-center justify-between h-auto py-5 px-6 bg-black/40 border-white/5 rounded-2xl text-white neo-card shadow-none active:translate-y-1 transition-all whitespace-normal"
           >
-            <span className="flex items-center gap-3 font-bold uppercase tracking-widest text-xs">
+            <span className="flex-1 flex items-center gap-3 font-bold uppercase tracking-widest text-[10px] md:text-xs text-left leading-tight pr-4">
               {activeSheet ? activeSheet.title : "Pilih Kategori"}
             </span>
             <ChevronDown className={`transition-transform duration-300 ${isMobileMenuOpen ? "rotate-180 text-cyber-neon" : ""}`} size={18} />
@@ -135,7 +158,7 @@ export default function CheatsheetClient({
                     setSelectedSheetId(sheet._id);
                     setIsMobileMenuOpen(false);
                   }}
-                  className={`w-full flex items-center justify-start gap-4 md:gap-5 h-auto p-4 md:p-5 rounded-2xl transition-all duration-300 text-left group border neo-card shadow-none ${
+                  className={`w-full flex items-center justify-start gap-4 md:gap-5 h-auto p-4 md:p-5 rounded-2xl transition-all duration-300 text-left group border neo-card shadow-none whitespace-normal ${
                     isActive 
                       ? "bg-cyber-neon text-black border-none shadow-[0_0_20px_rgba(0,238,255,0.3)]" 
                       : "bg-black/40 border-white/5 hover:border-cyber-neon/40 text-slate-500 hover:text-white"
@@ -144,11 +167,11 @@ export default function CheatsheetClient({
                   <div className={`w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-xl neo-inset shadow-none flex items-center justify-center transition-all duration-300 ${isActive ? "bg-black/20 text-black border-none" : "bg-black/20 text-slate-600 group-hover:text-cyber-neon"}`}>
                     {getIconForCategory(sheet.category)}
                   </div>
-                  <div className="overflow-hidden flex-1">
-                    <p className={`text-[8px] md:text-[9px] uppercase font-bold tracking-widest mb-1 ${isActive ? "text-black/60" : "text-slate-500 group-hover:text-cyber-neon/80"}`}>
+                  <div className="overflow-hidden flex-1 flex flex-col items-start">
+                    <p className={`text-[7px] md:text-[9px] uppercase font-bold tracking-widest mb-1 text-left leading-tight ${isActive ? "text-black/60" : "text-slate-500 group-hover:text-cyber-neon/80"}`}>
                       {sheet.category}
                     </p>
-                    <p className={`text-sm md:text-base font-bold tracking-tight truncate ${isActive ? "text-black" : "text-slate-300 group-hover:text-white"}`}>
+                    <p className={`text-xs md:text-base font-bold tracking-tight text-left leading-snug break-words ${isActive ? "text-black" : "text-slate-300 group-hover:text-white"}`}>
                       {sheet.title}
                     </p>
                   </div>
@@ -195,10 +218,9 @@ export default function CheatsheetClient({
                   </div>
 
                   <div className="flex flex-col w-full flex-1 relative z-10">
-                    <div className="hidden md:grid grid-cols-3 p-6 md:p-8 border-b border-white/10 text-[9px] md:text-[10px] font-bold text-cyber-neon/60 uppercase tracking-widest gap-6 md:gap-10">
-                      <div>Label</div>
-                      <div>Huruf/Kanji</div>
-                      <div>Cara Baca</div>
+                    <div className="hidden md:flex items-center justify-between p-6 md:p-8 border-b border-white/10 text-[9px] md:text-[10px] font-bold text-cyber-neon/60 uppercase tracking-widest">
+                      <div className="w-1/3">Ekspresi / Kata</div>
+                      <div className="w-2/3 pl-10">Penjelasan & Penggunaan</div>
                     </div>
                     
                     {combinedItems.length > 0 ? (
@@ -209,26 +231,32 @@ export default function CheatsheetClient({
                             initial={{ opacity: 0, y: 15 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: (idx % 20) * 0.03 }}
-                            className="group flex flex-col md:grid md:grid-cols-3 md:items-center p-6 md:p-8 rounded-2xl md:rounded-none md:border-b border-white/[0.05] hover:bg-white/[0.02] transition-all duration-300 bg-black/20 md:bg-transparent gap-4 md:gap-6 mb-4 md:mb-0 relative overflow-hidden"
+                            className="group flex flex-col md:flex-row p-6 md:p-10 rounded-2xl md:rounded-none md:border-b border-white/[0.05] hover:bg-white/[0.015] transition-all duration-300 bg-black/20 md:bg-transparent gap-6 md:gap-0 mb-4 md:mb-0 relative overflow-hidden"
                           >
-                            <div className="min-w-0">
-                              <span className="text-sm md:text-base lg:text-lg text-slate-500 font-bold uppercase tracking-wide group-hover:text-white transition-colors block truncate">
-                                {item?.label || "TIDAK ADA LABEL"}
-                              </span>
-                            </div>
-                            <div className="min-w-0">
-                              <span className="text-3xl md:text-2xl lg:text-3xl font-japanese font-black text-white group-hover:text-cyber-neon transition-colors duration-500 drop-shadow-lg block tracking-tight">
-                                {item?.jp || "—"}
-                              </span>
-                            </div>
-                            <div className="min-w-0">
-                              <span className="text-[10px] md:text-xs font-bold text-slate-600 uppercase tracking-widest block group-hover:text-cyber-neon transition-colors duration-500 truncate">
-                                {item?.romaji || "N/A"}
-                              </span>
+                            {/* Left Side: The Japanese Term & Romaji */}
+                            <div className="w-full md:w-[35%] flex flex-col gap-3 relative z-10 shrink-0">
+                              <div className="flex flex-col">
+                                <span className="text-xl md:text-2xl lg:text-4xl font-japanese font-black text-white group-hover:text-cyber-neon transition-all duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.1)] tracking-tighter break-words">
+                                  {item?.jp || "—"}
+                                </span>
+                                <div className="flex items-center gap-2 mt-2">
+                                  <div className="w-4 h-[1px] bg-cyber-neon/30" />
+                                  <span className="text-[9px] md:text-[11px] font-black text-slate-500 uppercase tracking-[0.15em] break-all">
+                                    {item?.romaji || "N/A"}
+                                  </span>
+                                </div>
+                              </div>
                             </div>
                             
-                            {/* Mobile only decorative index */}
-                            <div className="absolute top-4 right-5 text-3xl font-black text-white/[0.03] md:hidden">
+                            {/* Right Side: The Detailed Explanation */}
+                            <div className="w-full md:w-[65%] md:pl-10 relative z-10">
+                              <div className="text-sm md:text-base text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors duration-300 whitespace-pre-wrap font-medium tracking-wide break-words">
+                                {formatLabel(item?.label || "")}
+                              </div>
+                            </div>
+                            
+                            {/* Decorative background number */}
+                            <div className="absolute -bottom-4 -right-2 text-5xl md:text-7xl font-black text-white/[0.02] pointer-events-none select-none italic group-hover:text-cyber-neon/[0.03] transition-colors">
                                {idx + 1}
                             </div>
                           </motion.div>
@@ -264,8 +292,10 @@ export default function CheatsheetClient({
 
 function getIconForCategory(cat: string) {
   const c = cat?.toLowerCase() || "";
-  if (c.includes("bilangan") || c.includes("angka")) return <Hash size={18} />;
+  if (c.includes("bilangan") || c.includes("angka") || c.includes("counter")) return <Hash size={18} />;
   if (c.includes("waktu") || c.includes("hari") || c.includes("tanggal")) return <Clock size={18} />;
-  if (c.includes("grammar") || c.includes("partikel")) return <BookOpen size={18} />;
-  return <Layers size={18} />;
+  if (c.includes("grammar") || c.includes("partikel") || c.includes("aturan")) return <BookOpen size={18} />;
+  if (c.includes("keluarga") || c.includes("relasi")) return <Users size={18} />;
+  if (c.includes("topik") || c.includes("sosial") || c.includes("sapaan")) return <MessageSquare size={18} />;
+  return <Sparkles size={18} />;
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -9,6 +10,11 @@ import { useNavbar } from "./layout/navbar/useNavbar";
 
 export default function Navbar() {
   const { pathname, isAuthenticated, userFullName, handleLogout, links } = useNavbar();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return (
     <header className="hidden md:flex fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-50">
@@ -25,8 +31,8 @@ export default function Navbar() {
               priority
             />
           </div>
-          <span className="text-xl font-black text-white tracking-tighter uppercase">
-            Nihongo<span className="text-cyber-neon drop-shadow-[0_0_10px_rgba(0,238,255,0.4)]">Route</span>
+          <span className="text-xl font-black text-white italic tracking-tighter uppercase">
+            Nihongo<span className="text-cyber-neon drop-shadow-[0_0_10px_rgba(0,238,255,0.5)]">Route</span>
           </span>
         </Link>
 
@@ -41,7 +47,7 @@ export default function Navbar() {
                 className="relative px-5 py-2.5 rounded-xl group overflow-hidden"
               >
                 <span
-                  className={`relative z-10 text-[10px] md:text-[11px] font-bold uppercase tracking-widest transition-all duration-300 ${
+                  className={`relative z-10 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${
                     isActive
                       ? "text-cyber-neon drop-shadow-[0_0_5px_rgba(0,238,255,0.5)]"
                       : "text-slate-500 group-hover:text-white"
@@ -66,8 +72,11 @@ export default function Navbar() {
 
         {/* ACTIONS SECTION */}
         <div className="flex items-center gap-3">
-          {isAuthenticated ? (
+          {!isMounted ? (
+            <div className="h-11 w-32 bg-white/5 animate-pulse rounded-2xl" />
+          ) : isAuthenticated ? (
             <div className="flex items-center bg-black/40 border border-white/10 rounded-2xl p-1.5">
+              {/* ... (existing profile info) */}
               <div className="flex items-center gap-3 px-3">
                 <div className="w-7 h-7 rounded-full bg-gradient-to-br from-cyber-neon to-blue-600 flex items-center justify-center text-black text-xs font-black shadow-[0_0_15px_rgba(0,238,255,0.4)]">
                   {userFullName ? userFullName.charAt(0).toUpperCase() : "U"}
@@ -79,16 +88,17 @@ export default function Navbar() {
               
               <div className="w-px h-6 bg-white/10 mx-2" />
               
-              <Link href="/dashboard">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="w-9 h-9 rounded-xl hover:bg-cyber-neon/20 hover:text-cyber-neon text-slate-300 transition-colors"
-                  title="Dasbor"
-                >
+              <Button
+                asChild
+                variant="ghost"
+                size="icon"
+                className="w-9 h-9 rounded-xl hover:bg-cyber-neon/20 hover:text-cyber-neon text-slate-300 transition-colors"
+                title="Dasbor"
+              >
+                <Link href="/dashboard">
                   <LayoutDashboard size={18} />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
               
               <Button
                 variant="ghost"
@@ -101,13 +111,14 @@ export default function Navbar() {
               </Button>
             </div>
           ) : (
-            <Link href="/login">
-              <Button
-                className="h-11 px-6 rounded-2xl bg-cyber-neon hover:bg-white text-black font-black text-[11px] uppercase tracking-[0.2em] transition-all shadow-[0_0_20px_rgba(0,238,255,0.3)] hover:scale-105 active:scale-95 border-none"
-              >
+            <Button
+              asChild
+              className="h-11 px-6 rounded-2xl bg-cyber-neon hover:bg-white text-black font-black text-[11px] uppercase tracking-[0.2em] transition-all shadow-[0_0_20px_rgba(0,238,255,0.3)] hover:scale-105 active:scale-95 border-none"
+            >
+              <Link href="/login">
                 Masuk / Daftar
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           )}
         </div>
         

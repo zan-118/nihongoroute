@@ -13,6 +13,7 @@ import { Inter, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import FeedbackWidget from "@/components/FeedbackWidget";
+import { cn } from "@/lib/utils";
 
 // ======================
 // CONFIG / CONSTANTS
@@ -110,9 +111,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id">
+    <html lang="id" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${notoJsonJP.variable} font-sans antialiased bg-cyber-bg text-[#c4cfde] selection:bg-red-500 selection:text-white`}
+        className={cn(
+          inter.variable,
+          notoJsonJP.variable,
+          "font-sans antialiased bg-cyber-bg text-[#c4cfde] selection:bg-red-500 selection:text-white"
+        )}
+        suppressHydrationWarning
       >
         
         {children}

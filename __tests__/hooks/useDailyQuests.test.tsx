@@ -49,6 +49,7 @@ describe("useDailyQuests", () => {
   });
 
   it("getCurrentProgress mengembalikan 0 untuk tipe yang tidak dikenal", () => {
+    const { result } = renderHook(() => useDailyQuests());
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect(result.current.getCurrentProgress("unknown" as any)).toBe(0);
   });
@@ -56,7 +57,7 @@ describe("useDailyQuests", () => {
   it("handleClaim menambah XP dan menyimpan quest sebagai claimed", () => {
     const { result } = renderHook(() => useDailyQuests());
 
-    const mockQuest = { id: "quest-1", title: "Review 10 Kata", type: "review" as const, target: 10, rewardXP: 50 };
+    const mockQuest = { id: "quest-1", title: "Review 10 Kata", type: "review" as const, target: 10, rewardXP: 50, icon: null };
 
     act(() => {
       result.current.handleClaim(mockQuest);
@@ -69,7 +70,7 @@ describe("useDailyQuests", () => {
   it("handleClaim tidak bisa claim quest yang sama dua kali", () => {
     const { result } = renderHook(() => useDailyQuests());
 
-    const mockQuest = { id: "quest-1", title: "Review 10 Kata", type: "review" as const, target: 10, rewardXP: 50 };
+    const mockQuest = { id: "quest-1", title: "Review 10 Kata", type: "review" as const, target: 10, rewardXP: 50, icon: null };
 
     act(() => { result.current.handleClaim(mockQuest); });
     act(() => { result.current.handleClaim(mockQuest); }); // coba lagi
@@ -81,7 +82,7 @@ describe("useDailyQuests", () => {
   it("menyimpan claimed quests ke localStorage", () => {
     const { result } = renderHook(() => useDailyQuests());
 
-    const mockQuest = { id: "quest-1", title: "Review 10 Kata", type: "review" as const, target: 10, rewardXP: 50 };
+    const mockQuest = { id: "quest-1", title: "Review 10 Kata", type: "review" as const, target: 10, rewardXP: 50, icon: null };
 
     act(() => { result.current.handleClaim(mockQuest); });
 
