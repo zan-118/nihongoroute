@@ -18,9 +18,12 @@ Platform ini mengutamakan arsitektur **local-first** dengan sinkronisasi cloud y
 
 ## ✨ Fitur Utama
 
-- **🧠 Hybrid SRS Engine** — Algoritma Spaced Repetition System berbasis SM-2 yang dimodifikasi dengan *Modern Halving Strategy*. Bekerja instan di localStorage (Guest Mode) dan disinkronkan ke cloud setelah login.
+- **🧠 Hybrid SRS Engine** — Algoritma Spaced Repetition System berbasis SM-2 yang dimodifikasi dengan *Modern Halving Strategy*. Bekerja instan di localStorage (Guest Mode) dan disinkronkan ke cloud secara otomatis.
+- **🔄 Sync & Data Control** — Dashboard sinkronisasi real-time dengan indikator *dirty data* dan fitur **Manual Sync** untuk menjamin integritas progres lintas perangkat.
+- **👤 Profile Customization** — Manajemen akun lengkap dengan fitur edit profil yang tersinkronisasi langsung ke Cloud.
 - **🎮 Progres Tergamifikasi** — Dashboard interaktif dengan sistem XP, level (formula akar kuadrat), streak harian, daily quests, dan heatmap aktivitas.
-- **🎓 Mock Exam Engine** — Simulasi ujian JLPT lengkap dengan timer, *section breakdown* (vocab/grammar/reading/listening), skor skala 180, dan mekanisme anti-curang.
+- **🎓 Mock Exam Engine** — Simulasi ujian JLPT lengkap dengan timer, *section breakdown*, skor skala 180, dan mekanisme anti-curang.
+- **📜 Sertifikat Digital & Sharing** — Generator hasil ujian yang dapat dibagikan via media sosial melalui mekanisme **Base64-encoded achievement links** yang aman dan interaktif.
 - **⚡ Quiz Engine** — Mode kuis cepat dengan *bonus perfect score*, *auto-advance*, dan proteksi *double-answer*.
 - **🎯 Survival Mode** — Mode tantangan *endless* untuk melatih pengenalan Kana secara intensif.
 - **🖋️ Kanji Writing Pad** — Modal latihan menulis digital full-screen dengan animasi *stroke order* interaktif.
