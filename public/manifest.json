@@ -24,14 +24,14 @@
   "screenshots": [
     {
       "src": "/og-image.png",
-      "sizes": "1920x1080",
+      "sizes": "1200x630",
       "type": "image/png",
       "form_factor": "wide",
       "label": "NihongoRoute Dashboard"
     },
     {
       "src": "/og-image.jpeg",
-      "sizes": "1920x1080",
+      "sizes": "774x1600",
       "type": "image/jpeg",
       "form_factor": "narrow",
       "label": "NihongoRoute Mobile"
