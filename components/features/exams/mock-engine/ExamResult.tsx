@@ -53,17 +53,17 @@ export function ExamResult({
         </Card>
 
         <h1
-          className={`text-4xl md:text-5xl font-black uppercase italic tracking-tighter mb-2 ${isPassed ? "text-emerald-400" : "text-red-500"}`}
+          className={`text-4xl md:text-5xl font-black uppercase tracking-tight mb-2 ${isPassed ? "text-emerald-400" : "text-red-500"}`}
         >
           {isPassed ? "Keren! Kamu Lulus!" : "Jangan Menyerah, Coba Lagi Yuk!"}
         </h1>
-        <Badge variant="ghost" className="text-slate-300 font-mono uppercase tracking-widest text-[10px] md:text-xs mb-10 h-auto">
+        <Badge variant="ghost" className="text-slate-500 font-bold uppercase tracking-widest text-[9px] md:text-[10px] mb-10 h-auto">
           {exam.title}
         </Badge>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
           <Card className="neo-inset p-6 md:p-8 flex flex-col items-center justify-center border-white/5 bg-black/20 shadow-none">
-            <p className="text-slate-400 text-[10px] uppercase font-black tracking-widest mb-3">
+            <p className="text-slate-600 text-[10px] font-bold uppercase tracking-widest mb-3">
               Skor Akhir
             </p>
             <p
@@ -74,7 +74,7 @@ export function ExamResult({
             </p>
           </Card>
           <Card className="neo-inset p-6 md:p-8 flex flex-col items-center justify-center border-white/5 bg-black/20 shadow-none">
-            <p className="text-slate-400 text-[10px] uppercase font-black tracking-widest mb-3">
+            <p className="text-slate-600 text-[10px] font-bold uppercase tracking-widest mb-3">
               Akurasi
             </p>
             <p className="text-4xl md:text-6xl font-black font-mono text-white">
@@ -84,7 +84,7 @@ export function ExamResult({
         </div>
 
         <Card className="bg-black/20 p-6 md:p-10 border-white/5 mb-10 text-left rounded-3xl neo-inset shadow-none">
-          <h3 className="text-[10px] md:text-xs font-black text-slate-200 uppercase tracking-[0.3em] border-b border-white/5 pb-4 mb-8">
+          <h3 className="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest border-b border-white/5 pb-4 mb-8">
             Gimana Hasil Tiap Bagian?
           </h3>
           <div className="space-y-8">
@@ -99,7 +99,7 @@ export function ExamResult({
               return (
                 <div key={sectionKey}>
                   <div className="flex justify-between items-end mb-3">
-                    <span className="text-[9px] md:text-[10px] font-black text-slate-300 uppercase tracking-widest italic">
+                    <span className="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                       {SECTION_LABELS[sectionKey as keyof typeof SECTION_LABELS]}
                     </span>
                     <Badge variant="outline" className="text-[9px] font-mono font-bold text-slate-300 border-white/10 neo-inset h-auto px-2">

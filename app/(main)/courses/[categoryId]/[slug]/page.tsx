@@ -97,18 +97,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const ptComponents: PortableTextComponents = {
   block: {
     h2: ({ children }) => (
-      <h2 className="text-2xl md:text-3xl font-black text-white mt-16 mb-8 uppercase italic tracking-tighter flex items-center gap-4">
-        <span className="w-2 h-8 bg-cyan-400 shadow-[0_0_15px_#22d3ee]" />
+      <h2 className="text-2xl md:text-3xl font-black text-white mt-16 mb-8 uppercase tracking-tight flex items-center gap-4">
+        <span className="w-1.5 h-8 bg-cyan-400 shadow-[0_0_15px_#22d3ee]" />
         {children}
       </h2>
     ),
     h3: ({ children }) => (
-      <h3 className="text-xl font-bold text-cyan-400 mt-10 mb-4 tracking-wide uppercase">
+      <h3 className="text-xl font-bold text-cyan-400 mt-10 mb-4 tracking-widest uppercase text-[13px] md:text-sm">
         {children}
       </h3>
     ),
     normal: ({ children }) => (
-      <p className="mb-6 text-slate-200 text-base leading-relaxed font-medium">
+      <p className="mb-6 text-slate-400 text-base leading-relaxed font-medium">
         {children}
       </p>
     ),
@@ -134,12 +134,12 @@ const ptComponents: PortableTextComponents = {
               <Lightbulb className="text-cyan-400" size={20} />
             )}
             <strong
-              className={`font-black uppercase tracking-widest text-xs ${isWarning ? "text-red-400" : "text-cyan-400"}`}
+              className={`font-bold uppercase tracking-widest text-[10px] ${isWarning ? "text-red-400" : "text-cyan-400"}`}
             >
               {value.title || "Catatan"}
             </strong>
           </div>
-          <p className="text-sm md:text-base text-slate-300 relative z-10 leading-relaxed">
+          <p className="text-sm md:text-base text-slate-400 relative z-10 leading-relaxed font-medium">
             {value.text || ""}
           </p>
         </div>
@@ -151,13 +151,13 @@ const ptComponents: PortableTextComponents = {
       return (
         <div className="neo-card p-6 my-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 group hover:border-cyan-400/30 transition-all duration-300">
           <div className="flex-1">
-            <ruby className="text-white text-xl md:text-2xl font-black tracking-wide drop-shadow-md">
+            <ruby className="text-white text-xl md:text-2xl font-black tracking-tight drop-shadow-md">
               {value.jp || ""}
-              <rt className="text-[10px] text-cyan-400 font-bold tracking-widest uppercase opacity-70">
+              <rt className="text-[10px] text-cyan-400/70 font-bold tracking-widest uppercase">
                 {value.furigana || ""}
               </rt>
             </ruby>
-            <p className="text-xs md:text-sm text-slate-300 mt-3 font-bold italic uppercase tracking-tight border-l-2 border-white/10 pl-4">
+            <p className="text-[10px] md:text-xs text-slate-500 mt-3 font-bold uppercase tracking-widest border-l-2 border-white/10 pl-4">
               {value.id || ""}
             </p>
           </div>
@@ -236,7 +236,7 @@ export default async function LessonPage({ params }: Props) {
         {/* HEADER SECTION */}
         <header className="mb-20">
           <h1
-            className={`text-5xl md:text-7xl lg:text-8xl font-black italic uppercase tracking-tighter leading-none mb-8 ${isSideQuest ? "text-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.4)]" : "text-white drop-shadow-lg"}`}
+            className={`text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-none mb-8 ${isSideQuest ? "text-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.3)]" : "text-white drop-shadow-lg"}`}
           >
             {lesson.title}
           </h1>
@@ -244,7 +244,7 @@ export default async function LessonPage({ params }: Props) {
             <div
               className={`p-8 rounded-[2rem] neo-inset border-l-8 mb-8 ${isSideQuest ? "border-amber-500" : "border-cyan-400"}`}
             >
-               <p className="text-base md:text-lg font-medium leading-relaxed italic text-slate-200">
+               <p className="text-base md:text-lg font-medium leading-relaxed text-slate-300">
                  {lesson.summary}
                </p>
             </div>
@@ -260,8 +260,8 @@ export default async function LessonPage({ params }: Props) {
           {lesson.vocabList && lesson.vocabList.length > 0 && (
             <section>
               <div className="flex items-center gap-4 mb-10">
-                <h2 className="text-xl font-black uppercase italic tracking-tighter text-white flex items-center gap-3">
-                  <span className="text-2xl not-italic">統</span> Target
+                <h2 className="text-xl font-black uppercase tracking-tight text-white flex items-center gap-3">
+                  <span className="text-2xl">統</span> Target
                   Kosakata
                 </h2>
                 <div className="h-[1px] flex-1 bg-white/5" />
@@ -277,7 +277,7 @@ export default async function LessonPage({ params }: Props) {
                     >
                       <div className="flex-1 w-full">
                         <div className="flex items-center gap-2 mb-2">
-                          <span className="text-[10px] font-mono font-black text-cyan-400 uppercase tracking-widest bg-cyan-400/10 px-2 py-0.5 rounded">
+                          <span className="text-[9px] font-bold text-cyan-400 uppercase tracking-widest bg-cyan-400/10 px-2 py-0.5 rounded">
                             {v.romaji || "-"}
                           </span>
                           {v.hinshi && (
@@ -296,7 +296,7 @@ export default async function LessonPage({ params }: Props) {
                         <h4 className="text-3xl font-black text-white group-hover:text-cyan-400 transition-colors tracking-tight mb-1">
                           {v.word || "-"}
                         </h4>
-                        <p className="text-sm text-slate-300 font-medium leading-relaxed">
+                        <p className="text-[13px] md:text-sm text-slate-500 font-medium leading-relaxed">
                           {v.meaning || "-"}
                         </p>
                       </div>
@@ -345,8 +345,8 @@ export default async function LessonPage({ params }: Props) {
           {formattedQuizzes.length > 0 && (
             <section>
               <div className="flex items-center gap-4 mb-10">
-                <h2 className="text-xl font-black uppercase italic tracking-tighter text-white flex items-center gap-3">
-                  <span className="text-2xl not-italic">笞｡</span> Uji Pemahaman
+                <h2 className="text-xl font-black uppercase tracking-tight text-white flex items-center gap-3">
+                  <span className="text-2xl">笞｡</span> Uji Pemahaman
                 </h2>
                 <div className="h-[1px] flex-1 bg-white/5" />
               </div>
@@ -362,10 +362,10 @@ export default async function LessonPage({ params }: Props) {
               href={`/courses/${lesson.levelCode || categoryId}/${prevLesson.slug}`}
               className="neo-card h-full p-8 group flex flex-col justify-center items-start hover:bg-cyan-400/5 hover:border-cyan-400/30 transition-all duration-300"
             >
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-300 group-hover:text-cyan-400 mb-3 flex items-center gap-2 transition-colors">
+              <span className="text-[9px] font-bold uppercase tracking-widest text-slate-600 group-hover:text-cyan-400 mb-3 flex items-center gap-2 transition-colors">
                 <ChevronLeft size={14} /> Materi Sebelumnya
               </span>
-              <h4 className="text-xl font-black italic uppercase text-white tracking-tight leading-tight">
+              <h4 className="text-xl font-black uppercase text-white tracking-tight leading-tight">
                 {prevLesson.title}
               </h4>
             </Link>

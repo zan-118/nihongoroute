@@ -11,7 +11,7 @@
 // ======================
 import { motion } from "motion/react";
 import Link from "next/link";
-import { RefreshCw, BookOpen, BarChart2, ArrowRight, Library, Database, Activity, Server, GraduationCap, Award } from "lucide-react";
+import { RefreshCw, BookOpen, BarChart2, ArrowRight, Library, Database, Activity, Server, Award } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 // ======================
@@ -84,10 +84,10 @@ export default function LibraryPage() {
               <Library size={28} className="text-cyber-neon md:w-8 md:h-8" />
             </Card>
             <div className="flex flex-col">
-              <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-cyber-neon">Perpustakaan Digital</span>
-              <div className="flex items-center gap-2 md:gap-3 mt-1 md:mt-2">
-                 <Activity size={12} className="text-cyber-neon animate-pulse md:w-3.5 md:h-3.5" />
-                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none">Status: Siap Belajar</span>
+              <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-cyber-neon/50">Perpustakaan Digital</span>
+              <div className="flex items-center gap-2 mt-1">
+                 <Activity size={12} className="text-cyber-neon animate-pulse" />
+                 <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-none">Status: Siap Belajar</span>
               </div>
             </div>
           </div>
@@ -100,14 +100,14 @@ export default function LibraryPage() {
                 className="text-5xl md:text-7xl lg:text-9xl font-black uppercase tracking-tight text-white mb-6 md:mb-10 drop-shadow-2xl leading-none md:leading-[0.85]"
               >
                 Pustaka<br />
-                <span className="text-cyber-neon drop-shadow-[0_0_30px_rgba(0,238,255,0.5)]">Materi</span>
+                <span className="text-cyber-neon drop-shadow-[0_0_30px_rgba(0,238,255,0.4)]">Materi</span>
               </motion.h1>
               
               <motion.p
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-slate-400 text-xs md:text-base lg:text-xl max-w-2xl leading-relaxed font-bold tracking-wide italic"
+                className="text-slate-500 text-xs md:text-base lg:text-xl max-w-2xl leading-relaxed font-medium"
               >
                 Gudang ilmumu ada di sini! Dari kata kerja sampai tata bahasa, semua amunisi buat naklukin JLPT sudah siap semua!
               </motion.p>
@@ -138,49 +138,42 @@ export default function LibraryPage() {
         </header>
 
         {/* NAVIGATION GRID */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10 items-stretch">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 items-stretch">
           {categories.map((cat, idx) => (
             <Link key={cat.href} href={cat.href} className="group flex h-full">
               <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: cat.delay }}
                 className="w-full h-full"
               >
-                <Card className="h-full p-8 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] border-white/10 bg-slate-900/40 backdrop-blur-xl hover:border-cyber-neon/50 hover:bg-cyber-neon/[0.02] transition-all duration-500 neo-card shadow-none flex flex-col group relative overflow-hidden hover:scale-[1.03] hover:shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_30px_rgba(0,238,255,0.15)]">
-                  {/* Interactive Gradient Glow */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-cyber-neon/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  
-                  <div className="absolute -top-6 -right-6 md:-top-10 md:-right-10 text-[10rem] md:text-[12rem] font-black text-white/[0.03] group-hover:text-cyber-neon/[0.06] transition-all duration-700 pointer-events-none uppercase italic">
-                    0{idx + 1}
-                  </div>
-                  
-                  <div className="flex justify-between items-start mb-12 md:mb-16 relative z-10">
-                    <div className="w-14 h-14 md:w-16 md:h-16 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:scale-110 group-hover:bg-cyber-neon group-hover:text-black transition-all duration-500 shadow-inner text-cyber-neon group-hover:border-none">
+                <Card className="h-full p-5 md:p-6 rounded-2xl border border-white/[0.06] bg-white/[0.03] hover:border-cyber-neon/40 hover:bg-cyber-neon/[0.03] hover:shadow-[0_0_30px_rgba(0,238,255,0.06)] transition-all duration-300 flex flex-col group">
+                  {/* Top row: icon + index */}
+                  <div className="flex justify-between items-center mb-5">
+                    <div className="w-10 h-10 md:w-11 md:h-11 bg-white/[0.04] rounded-xl flex items-center justify-center border border-white/[0.06] group-hover:bg-cyber-neon group-hover:text-black group-hover:border-none transition-all duration-300 text-cyber-neon">
                       {cat.icon}
                     </div>
-                    <div className="flex flex-col items-end gap-1">
-                       <GraduationCap size={16} className="text-slate-700 group-hover:text-cyber-neon/40 transition-colors" />
-                       <div className="w-4 h-0.5 bg-slate-700 group-hover:bg-cyber-neon/40 transition-colors rounded-full" />
-                    </div>
+                    <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">0{idx + 1}</span>
                   </div>
 
-                  <div className="relative z-10 flex-1">
-                    <span className="text-[9px] md:text-[10px] font-black text-cyber-neon/80 uppercase tracking-[0.4em] mb-3 md:mb-4 block">
+                  {/* Content */}
+                  <div className="flex-1 space-y-1.5">
+                    <span className="text-[9px] font-bold text-cyber-neon/50 uppercase tracking-widest block">
                       {cat.label}
                     </span>
-                    <h2 className="text-2xl md:text-3xl font-black text-white tracking-tighter mb-4 md:mb-6 group-hover:text-cyber-neon transition-colors duration-500 leading-tight italic">
+                    <h2 className="text-lg md:text-xl font-black text-white tracking-tight group-hover:text-cyber-neon transition-colors duration-300 leading-snug">
                       {cat.title}
                     </h2>
-                    <p className="text-[11px] md:text-xs text-slate-400 leading-relaxed font-bold group-hover:text-slate-300 transition-colors duration-500 italic">
+                    <p className="text-[11px] md:text-xs text-slate-500 leading-relaxed font-medium group-hover:text-slate-300 transition-colors">
                       {cat.desc}
                     </p>
                   </div>
 
-                  <div className="mt-10 md:mt-14 flex items-center justify-between text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-slate-600 group-hover:text-cyber-neon transition-all duration-500 border-t border-white/10 pt-6 md:pt-10 relative z-10">
-                    <span>Akses Modul</span>
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-cyber-neon group-hover:text-black group-hover:border-none group-hover:translate-x-2 transition-all duration-500 shadow-lg">
-                       <ArrowRight size={18} className="md:w-5 md:h-5" />
+                  {/* Bottom CTA */}
+                  <div className="mt-5 pt-3 border-t border-white/[0.06] flex items-center justify-between">
+                    <span className="text-[9px] md:text-[10px] font-bold text-slate-600 uppercase tracking-wider group-hover:text-cyber-neon transition-colors">Akses Modul</span>
+                    <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-cyber-neon group-hover:text-black group-hover:border-none transition-all duration-300">
+                       <ArrowRight size={14} />
                     </div>
                   </div>
                 </Card>

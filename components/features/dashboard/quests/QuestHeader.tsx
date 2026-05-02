@@ -4,23 +4,23 @@ import { Target } from "lucide-react";
 
 export function QuestHeader() {
   return (
-    <header className="flex items-center justify-between mb-8 md:mb-10 relative z-10">
-      <div className="flex items-center gap-3 md:gap-4">
-        <Card className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-cyber-neon/10 border-cyber-neon/20 flex items-center justify-center neo-inset shadow-none shrink-0">
-          <Target size={20} className="text-cyber-neon md:w-6 md:h-6" />
+    <header className="flex items-center justify-between mb-8 relative z-10">
+      <div className="flex items-center gap-3">
+        <Card className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center shadow-none shrink-0">
+          <Target size={18} className="text-cyber-neon" />
         </Card>
         <div className="text-left">
-          <h3 className="text-white font-black uppercase tracking-widest text-xs md:text-sm drop-shadow-md">
+          <h3 className="text-white font-black uppercase tracking-tight text-xs md:text-sm">
             Target Hari Ini
           </h3>
-          <span className="block text-[9px] md:text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">
+          <span className="block text-[9px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">
             Yuk, kejar targetmu!
           </span>
         </div>
       </div>
       <Badge
-        variant="outline"
-        className="bg-[#121620] border-white/5 text-slate-500 px-3 py-1.5 md:px-4 md:py-2 rounded-xl text-[9px] md:text-[10px] font-bold tracking-widest uppercase neo-inset h-auto"
+        variant="ghost"
+        className="bg-white/[0.03] border border-white/[0.08] text-slate-500 px-3 py-1.5 rounded-lg text-[9px] font-bold tracking-widest uppercase shadow-none h-auto"
       >
         Reset 00:00
       </Badge>

@@ -48,7 +48,7 @@ export default function MobileNav() {
                       opacity: isActive ? 1 : 0.7,
                       y: isActive ? -2 : 0,
                     }}
-                    className={`text-[9px] font-bold tracking-wide mt-1 transition-colors ${
+                    className={`text-[9px] font-bold uppercase tracking-widest mt-1.5 transition-colors ${
                       isActive ? "text-cyber-neon" : "text-slate-500"
                     }`}
                   >

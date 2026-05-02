@@ -35,14 +35,14 @@ export default function WritingCanvas({
     <div className="flex flex-col gap-4 w-full max-w-[280px] sm:max-w-sm mx-auto">
       <Card
         ref={containerRef}
-        className="relative w-full aspect-square bg-black/60 border-2 border-white/5 rounded-[3rem] overflow-hidden group touch-none neo-inset shadow-none"
+        className="relative w-full aspect-square bg-black/40 border border-white/[0.08] rounded-2xl overflow-hidden group touch-none shadow-none"
         style={{ touchAction: 'none' }}
       >
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(239,68,68,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(239,68,68,0.02)_1px,transparent_1px)] bg-[size:25%_25%] opacity-40 pointer-events-none" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(239,68,68,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(239,68,68,0.01)_1px,transparent_1px)] bg-[size:25%_25%] opacity-40 pointer-events-none" />
         
-        <div className="absolute inset-0 pointer-events-none opacity-20">
-          <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-red-500/40 border-dashed" />
-          <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-red-500/40 border-dashed" />
+        <div className="absolute inset-0 pointer-events-none opacity-10">
+          <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-red-500/30 border-dashed" />
+          <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-red-500/30 border-dashed" />
         </div>
 
         {showGuide && (
@@ -68,42 +68,42 @@ export default function WritingCanvas({
           style={{ touchAction: 'none' }}
         />
 
-        <div className="absolute top-4 left-4 flex items-center gap-2 z-20">
-           <Zap size={12} className="text-red-500 animate-pulse" />
-           <span className="text-[8px] font-black uppercase tracking-[0.3em] text-red-500/60 italic">Writing_Module_Active</span>
+        <div className="absolute top-3 left-3 flex items-center gap-2 z-20">
+           <Zap size={10} className="text-red-500 animate-pulse" />
+           <span className="text-[7px] font-bold uppercase tracking-widest text-red-500/40">WRITING_ACTIVE</span>
         </div>
       </Card>
 
-      <Card className="grid grid-cols-3 gap-2 bg-cyber-surface p-2 md:p-3 rounded-[2rem] border-white/5 neo-card shadow-none">
+      <Card className="grid grid-cols-3 gap-2 bg-white/[0.02] p-2 rounded-2xl border-white/[0.08] shadow-none">
         <Button
           variant="ghost"
           onClick={() => setShowGuide(!showGuide)}
-          className={`flex flex-col items-center justify-center gap-2 h-auto py-3 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all neo-inset ${
+          className={`flex flex-col items-center justify-center gap-1.5 h-auto py-2.5 rounded-xl text-[8px] font-bold uppercase tracking-wider transition-all ${
             showGuide
-              ? "bg-red-500/10 text-red-500 border-red-500/30"
-              : "bg-black/40 text-slate-500 border-white/5"
-          }`}
+              ? "bg-red-500/10 text-red-500 border-red-500/20"
+              : "bg-white/[0.04] text-slate-500 border-white/[0.06]"
+          } border`}
         >
-          {showGuide ? <Eye size={18} /> : <EyeOff size={18} />}
-          <span className="italic">Guide</span>
+          {showGuide ? <Eye size={16} /> : <EyeOff size={16} />}
+          <span>Guide</span>
         </Button>
 
         <Button
           variant="ghost"
           onClick={handleReplay}
-          className="flex flex-col items-center justify-center gap-2 h-auto py-3 rounded-2xl bg-black/40 text-slate-500 border-white/5 text-[9px] font-black uppercase tracking-widest hover:text-purple-400 hover:border-purple-500/30 transition-all neo-inset"
+          className="flex flex-col items-center justify-center gap-1.5 h-auto py-2.5 rounded-xl bg-white/[0.04] text-slate-500 border border-white/[0.06] text-[8px] font-bold uppercase tracking-wider hover:text-purple-400 hover:border-purple-500/20 transition-all"
         >
-          <RotateCcw size={18} />
-          <span className="italic">Replay</span>
+          <RotateCcw size={16} />
+          <span>Replay</span>
         </Button>
 
         <Button
           variant="ghost"
           onClick={clearCanvas}
-          className="flex flex-col items-center justify-center gap-2 h-auto py-3 rounded-2xl bg-black/40 text-slate-500 border-white/5 text-[9px] font-black uppercase tracking-widest hover:text-red-500 hover:border-red-500/30 transition-all neo-inset"
+          className="flex flex-col items-center justify-center gap-1.5 h-auto py-2.5 rounded-xl bg-white/[0.04] text-slate-500 border border-white/[0.06] text-[8px] font-bold uppercase tracking-wider hover:text-red-500 hover:border-red-500/20 transition-all"
         >
-          <Trash2 size={18} />
-          <span className="italic">Clear</span>
+          <Trash2 size={16} />
+          <span>Clear</span>
         </Button>
       </Card>
     </div>

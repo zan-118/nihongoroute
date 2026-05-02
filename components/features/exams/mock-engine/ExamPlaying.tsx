@@ -70,13 +70,13 @@ export function ExamPlaying({
               </Badge>
               <Badge
                 variant="outline"
-                className="neo-inset px-5 py-2.5 text-red-400 font-black uppercase tracking-widest text-[9px] sm:text-[10px] bg-red-500/10 border-red-500/30 h-auto italic"
+                className="neo-inset px-5 py-2.5 text-red-400 font-bold uppercase tracking-widest text-[9px] sm:text-[10px] bg-red-500/10 border-red-500/30 h-auto"
               >
                 {SECTION_LABELS[activeQuestion.section]}
               </Badge>
             </div>
             {cheatWarnings > 0 && (
-              <Badge variant="ghost" className="text-[9px] text-amber-500 font-black uppercase tracking-widest animate-pulse flex items-center gap-2 p-0 h-auto">
+              <Badge variant="ghost" className="text-[9px] text-amber-500 font-bold uppercase tracking-widest animate-pulse flex items-center gap-2 p-0 h-auto">
                 <ShieldAlert size={14} /> PERINGATAN: {cheatWarnings}x
               </Badge>
             )}
@@ -138,14 +138,14 @@ export function ExamPlaying({
                   />
                 </Button>
                 <div className="text-center sm:text-left">
-                  <p className="text-xs md:text-sm font-black uppercase tracking-[0.3em] mb-2 text-white italic">
+                  <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest mb-2 text-white">
                     {!audioStatus[activeQuestion._key] || audioStatus[activeQuestion._key] === "idle"
                       ? "Dengarkan Audio"
                       : audioStatus[activeQuestion._key] === "playing"
                         ? "Lagi Didengarkan..."
                         : "Selesai Didengarkan"}
                   </p>
-                  <p className="text-[10px] md:text-xs text-slate-400 leading-relaxed uppercase font-black tracking-widest">
+                  <p className="text-[9px] md:text-[10px] text-slate-500 leading-relaxed uppercase font-bold tracking-widest">
                     Ingat: Audionya cuma bisa diputar <span className="text-red-500 underline">SEKALI</span>. Yuk, fokus dengerin!
                   </p>
                 </div>
@@ -154,7 +154,7 @@ export function ExamPlaying({
 
             {activeQuestion.questionText && (
               <div
-                className="text-xl sm:text-2xl md:text-3xl text-white font-medium leading-relaxed mb-12 font-japanese prose-custom bg-black/20 p-8 rounded-3xl border border-white/5 neo-inset"
+                className="text-xl sm:text-2xl md:text-3xl text-white font-medium leading-relaxed mb-12 font-japanese prose-custom bg-black/10 p-8 rounded-3xl border border-white/5 neo-inset"
                 dangerouslySetInnerHTML={{ __html: activeQuestion.questionText }}
               />
             )}

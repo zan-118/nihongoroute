@@ -18,10 +18,10 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
       <header className="relative z-20 flex justify-between items-center mb-10">
         <Card className="flex-1 flex justify-between items-center p-5 sm:p-8 mt-6 md:mt-10 border-white/5 bg-cyber-surface rounded-3xl neo-card shadow-none">
           <div>
-            <h2 className="text-xl sm:text-2xl font-black text-white uppercase italic tracking-tighter leading-none">
+            <h2 className="text-xl sm:text-2xl font-black text-white uppercase tracking-tight leading-none">
               Tinjau <span className="text-amber-500">Jawaban</span>
             </h2>
-            <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mt-1">Yuk, cek detail jawabannya!</p>
+            <p className="text-[9px] text-slate-500 uppercase font-bold tracking-widest mt-1">Yuk, cek detail jawabannya!</p>
           </div>
           <Button
             variant="ghost"
@@ -53,16 +53,16 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-10 border-b border-white/5 pb-8">
                   <Badge
                     variant="outline"
-                    className="text-[9px] font-mono font-black uppercase tracking-widest neo-inset px-4 py-2 text-slate-300 w-fit rounded-xl bg-black/20 border-white/5 h-auto"
+                    className="text-[9px] font-bold uppercase tracking-widest neo-inset px-4 py-2 text-slate-500 w-fit rounded-xl bg-black/20 border-white/5 h-auto"
                   >
                     SOAL {idx + 1} • {SECTION_LABELS[q.section]}
                   </Badge>
                   {isCorrect ? (
-                    <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 px-4 py-2 neo-inset rounded-xl h-auto font-black uppercase text-[10px] italic tracking-widest">
+                    <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 px-4 py-2 neo-inset rounded-xl h-auto font-bold uppercase text-[9px] tracking-widest">
                       <CheckCircle size={14} className="mr-2" /> Benar
                     </Badge>
                   ) : (
-                    <Badge className="bg-red-500/10 text-red-500 border-red-500/20 px-4 py-2 neo-inset rounded-xl h-auto font-black uppercase text-[10px] italic tracking-widest">
+                    <Badge className="bg-red-500/10 text-red-500 border-red-500/20 px-4 py-2 neo-inset rounded-xl h-auto font-bold uppercase text-[9px] tracking-widest">
                       <XCircle size={14} className="mr-2" /> Salah
                     </Badge>
                   )}
@@ -88,7 +88,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
 
                 {q.audioUrl && (
                   <Card className="mb-10 p-6 neo-inset border-white/5 bg-black/30 flex flex-col gap-4 shadow-none rounded-2xl">
-                    <p className="text-[10px] text-slate-400 uppercase font-black tracking-[0.3em] flex items-center gap-2">
+                    <p className="text-[9px] text-slate-500 uppercase font-bold tracking-widest flex items-center gap-2">
                       <Volume2 size={16} className="text-cyan-400" /> Audio Track (Review)
                     </p>
                     <audio

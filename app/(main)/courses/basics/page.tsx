@@ -253,7 +253,7 @@ export default function BasicsPage() {
             <Button
               variant="outline"
               asChild
-              className="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest"
+              className="px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest bg-white/[0.03] border-white/[0.08]"
             >
               <Link href="/courses">
                 <ChevronLeft size={14} className="mr-2" /> Kembali ke Pusat
@@ -263,16 +263,16 @@ export default function BasicsPage() {
 
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
             <div>
-              <h1 className="text-4xl md:text-6xl font-black text-white uppercase italic tracking-tighter drop-shadow-lg">
+              <h1 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tight">
                 Huruf <span className={themeColor}>Dasar</span>
               </h1>
-              <p className="text-slate-200 text-xs mt-2 max-w-md">
+              <p className="text-slate-500 text-xs mt-2 max-w-md font-medium leading-relaxed">
                 Kunci utama untuk bisa membaca teks Jepang. Kuasai Hiragana & 
                 Katakana di sini sebelum mulai belajar kalimat dan tata bahasa.
               </p>
             </div>
             <div
-              className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#1e2024] border border-white/5 text-[9px] font-black uppercase tracking-[0.2em] ${themeColor}`}
+              className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-[9px] font-bold uppercase tracking-widest ${themeColor}`}
             >
               <LayoutGrid size={12} /> Tampilan Penuh
             </div>
@@ -285,14 +285,14 @@ export default function BasicsPage() {
             <Button
               variant={isHira ? "default" : "ghost"}
               onClick={() => setType("hiragana")}
-              className={`relative z-10 flex-1 py-6 rounded-xl font-black uppercase tracking-[0.2em] text-[10px] md:text-xs transition-all duration-500 h-10 ${isHira ? "bg-[#0ef] text-[#15171a] hover:bg-[#0ef]/90 shadow-[0_0_20px_rgba(0,238,255,0.4)]" : "text-white/40 hover:text-white"}`}
+              className={`relative z-10 flex-1 py-6 rounded-xl font-bold uppercase tracking-widest text-[10px] md:text-xs transition-all duration-500 h-10 ${isHira ? "bg-[#0ef] text-[#15171a] hover:bg-[#0ef]/90 shadow-[0_0_20px_rgba(0,238,255,0.4)]" : "text-white/40 hover:text-white"}`}
             >
               Hiragana
             </Button>
             <Button
               variant={!isHira ? "default" : "ghost"}
               onClick={() => setType("katakana")}
-              className={`relative z-10 flex-1 py-6 rounded-xl font-black uppercase tracking-[0.2em] text-[10px] md:text-xs transition-all duration-500 h-10 ${!isHira ? "bg-purple-500 text-white hover:bg-purple-600 shadow-[0_0_20px_rgba(168,85,247,0.4)]" : "text-white/40 hover:text-white"}`}
+              className={`relative z-10 flex-1 py-6 rounded-xl font-bold uppercase tracking-widest text-[10px] md:text-xs transition-all duration-500 h-10 ${!isHira ? "bg-purple-500 text-white hover:bg-purple-600 shadow-[0_0_20px_rgba(168,85,247,0.4)]" : "text-white/40 hover:text-white"}`}
             >
               Katakana
             </Button>
@@ -309,10 +309,10 @@ export default function BasicsPage() {
                   key={cat.id}
                   variant={category === cat.id ? "default" : "outline"}
                   onClick={() => setCategory(cat.id as KanaCategory)}
-                  className={`px-6 py-3 h-auto rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${
+                  className={`px-5 py-2.5 h-auto rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${
                     category === cat.id
-                      ? `bg-slate-900/80 ${themeColor} ${themeBorder} shadow-[0_0_15px_currentColor] border-opacity-50`
-                      : "bg-transparent text-white/30 border-white/5 hover:bg-white/5 hover:text-white"
+                      ? `bg-white/[0.08] ${themeColor} ${themeBorder} border-opacity-50`
+                      : "bg-transparent text-slate-500 border-white/[0.08] hover:bg-white/[0.03] hover:text-white"
                   }`}
                 >
                   {cat.label}
@@ -322,7 +322,7 @@ export default function BasicsPage() {
 
             <Button 
               onClick={startQuiz}
-              className={`px-6 py-3 h-auto rounded-xl text-[10px] md:text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 ${themeAccent} text-white shadow-[0_0_20px_currentColor] hover:scale-105 active:scale-95 border-none bg-opacity-80 hover:bg-opacity-100`}
+              className={`px-6 py-3 h-auto rounded-xl text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all duration-300 ${themeAccent} text-white shadow-lg hover:opacity-90 border-none`}
             >
               <Swords size={16} className="mr-2" /> Latihan
             </Button>
@@ -330,41 +330,32 @@ export default function BasicsPage() {
         </div>
 
         {/* DATA GRID */}
-        <Card className="p-5 md:p-10 rounded-[2.5rem] md:rounded-[3.5rem] border-white/10 bg-slate-900/40 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative flex-1 min-h-[450px] overflow-hidden">
+        <Card className="p-6 md:p-8 rounded-2xl border-white/[0.08] bg-white/[0.02] shadow-2xl relative flex-1 min-h-[450px] overflow-hidden">
           <div
-            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15rem] md:text-[22rem] font-black italic opacity-[0.03] pointer-events-none select-none transition-colors duration-700 ${themeColor}`}
-          >
-            {isHira ? "あ" : "ア"}
-          </div>
-
-          <div
-            className={`relative z-10 grid gap-3 md:gap-5 mx-auto ${category === "yoon" ? "grid-cols-3 max-w-lg" : "grid-cols-5 max-w-2xl"}`}
+            className={`relative z-10 grid gap-3 md:gap-4 mx-auto ${category === "yoon" ? "grid-cols-3 max-w-lg" : "grid-cols-5 max-w-2xl"}`}
           >
             <AnimatePresence mode="wait">
               {currentData[type].map((row, rowIndex) => (
                 <React.Fragment key={`${category}-${type}-${rowIndex}`}>
                   {row.map((char, colIndex) =>
                     char !== "" ? (
-                      <motion.div
-                        key={`${category}-${type}-${rowIndex}-${colIndex}`}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: rowIndex * 0.02 }}
-                        onClick={() =>
-                          setSelectedChar({
-                            char,
-                            romaji: currentData.romaji[rowIndex][colIndex],
-                          })
-                        }
-                        className={`relative aspect-square bg-black/40 border border-white/5 rounded-2xl md:rounded-3xl flex flex-col items-center justify-center cursor-pointer transition-all duration-500 ${themeBgHover} hover:border-current group active:scale-95 hover:shadow-[0_0_20px_rgba(0,0,0,0.3),0_0_10px_currentColor] shadow-inner`}
-                      >
-                        <span className="text-3xl md:text-5xl font-black text-white group-hover:scale-110 transition-transform font-japanese drop-shadow-md">
-                          {char}
-                        </span>
-                        <span className="text-[9px] md:text-[11px] font-black font-mono text-white/20 uppercase tracking-[0.2em] mt-2 group-hover:text-white/80 transition-colors">
-                          {currentData.romaji[rowIndex][colIndex]}
-                        </span>
-                      </motion.div>
+                        <div
+                          key={`${category}-${type}-${rowIndex}-${colIndex}`}
+                          onClick={() =>
+                            setSelectedChar({
+                              char,
+                              romaji: currentData.romaji[rowIndex][colIndex],
+                            })
+                          }
+                          className={`relative aspect-square bg-white/[0.03] border border-white/[0.08] rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all duration-300 ${themeBgHover} hover:border-current group active:scale-95`}
+                        >
+                          <span className="text-3xl md:text-4xl font-black text-white group-hover:scale-105 transition-transform font-japanese drop-shadow-md">
+                            {char}
+                          </span>
+                          <span className="text-[9px] md:text-[10px] font-bold font-mono text-slate-500 uppercase tracking-widest mt-2 group-hover:text-white/80 transition-colors">
+                            {currentData.romaji[rowIndex][colIndex]}
+                          </span>
+                        </div>
                     ) : (
                       <div
                         key={`empty-${rowIndex}-${colIndex}`}
@@ -388,10 +379,10 @@ export default function BasicsPage() {
           <AnimatePresence>
             {selectedChar && (
               <motion.div
-                initial={{ scale: 0.9, opacity: 0, y: 40 }}
+                initial={{ scale: 0.95, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.9, opacity: 0, y: 40 }}
-                className={`relative bg-[#1e2024] p-5 sm:p-8 rounded-[2rem] sm:rounded-[3rem] border ${themeBorder} shadow-2xl max-w-md w-full max-h-[90vh] flex flex-col overflow-y-auto custom-scrollbar`}
+                exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                className={`relative bg-[#121417] p-6 md:p-8 rounded-2xl border ${themeBorder} shadow-2xl max-w-md w-full max-h-[90vh] flex flex-col overflow-y-auto custom-scrollbar`}
               >
                 <div className="relative z-10 flex flex-col h-full">
                   <header className="flex items-center gap-3 mb-5 sm:mb-6 pr-10 shrink-0">
@@ -406,25 +397,25 @@ export default function BasicsPage() {
                       >
                         Latihan Menulis
                       </span>
-                      <DialogTitle className="text-white text-lg sm:text-xl font-black italic uppercase tracking-tighter leading-none text-left">
+                      <DialogTitle className="text-white text-lg sm:text-xl font-black uppercase tracking-tight leading-none text-left">
                         Cara Menulis
                       </DialogTitle>
                     </DialogHeader>
                   </header>
 
-                  <div className="bg-[#15171a] p-4 sm:p-5 rounded-2xl border border-white/5 flex justify-between items-center shadow-inner mb-6 shrink-0">
+                  <div className="bg-black/20 p-4 sm:p-5 rounded-xl border border-white/[0.06] flex justify-between items-center mb-6 shrink-0">
                     <div className="flex items-center gap-4">
-                      <p className="text-4xl sm:text-5xl font-black text-white font-japanese leading-none translate-y-[-2px]">
+                      <p className="text-4xl sm:text-5xl font-black text-white font-japanese leading-none">
                         {selectedChar!.char}
                       </p>
                       <p
-                        className={`font-mono uppercase tracking-[0.3em] text-xs sm:text-sm font-bold ${themeColor}`}
+                        className={`font-mono uppercase tracking-widest text-xs sm:text-sm font-bold ${themeColor}`}
                       >
                         &quot;{selectedChar!.romaji}&quot;
                       </p>
                     </div>
                     <div
-                      className={`px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[8px] sm:text-[9px] font-black uppercase tracking-widest ${themeColor} italic shadow-inner`}
+                      className={`px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-[8px] sm:text-[9px] font-bold uppercase tracking-widest ${themeColor}`}
                     >
                       Sistem {type}
                     </div>
@@ -466,7 +457,7 @@ export default function BasicsPage() {
                 initial={{ scale: 0.9, opacity: 0, y: 40 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.9, opacity: 0, y: 40 }}
-                className={`relative bg-[#1e2024] p-6 sm:p-8 rounded-[2rem] sm:rounded-[3rem] border ${themeBorder} shadow-2xl max-w-md w-full max-h-[90vh] flex flex-col`}
+                className={`relative bg-[#1e2024] p-6 sm:p-8 rounded-2xl border ${themeBorder} shadow-2xl max-w-md w-full max-h-[90vh] flex flex-col`}
               >
                 <div className="relative z-10 flex flex-col h-full">
                   <header className="flex justify-between items-center mb-6">
@@ -480,7 +471,7 @@ export default function BasicsPage() {
                         {quizScore}
                       </div>
                     </div>
-                    <div className={`px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest ${themeColor} italic`}>
+                    <div className={`px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-widest ${themeColor}`}>
                       {isHira ? "Hiragana" : "Katakana"} Quiz
                     </div>
                   </header>
@@ -491,9 +482,9 @@ export default function BasicsPage() {
                         <AnimatePresence mode="wait">
                           <motion.span
                             key={quizChar?.char}
-                            initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
-                            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                            exit={{ opacity: 0, scale: 0.5, rotate: 10 }}
+                            initial={{ opacity: 0, scale: 0.5 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.5 }}
                             className="text-7xl sm:text-9xl font-black text-white font-japanese"
                           >
                             {quizChar?.char}
@@ -535,22 +526,22 @@ export default function BasicsPage() {
                       </div>
                     </div>
                   ) : (
-                    <div className="flex flex-col items-center justify-center py-8 text-center">
-                      <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mb-6">
-                        <Heart size={40} className="text-red-500" />
+                    <Card className="bg-white/[0.02] p-8 md:p-10 rounded-2xl border border-white/[0.08] text-center w-full relative overflow-hidden shadow-2xl">
+                      <div className="w-16 h-16 bg-red-500/10 rounded-xl flex items-center justify-center mx-auto mb-6 border border-red-500/20">
+                        <Heart size={32} className="text-red-500" />
                       </div>
-                      <h2 className="text-3xl font-black text-white uppercase italic tracking-tighter mb-2">Game Over!</h2>
-                      <p className="text-slate-400 mb-8">Skor akhir kamu:</p>
-                      <div className="text-6xl font-black text-yellow-500 mb-8 drop-shadow-[0_0_20px_rgba(234,179,8,0.4)]">
+                      <h2 className="text-2xl font-black text-white uppercase tracking-tight mb-2">Game Over!</h2>
+                      <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-6">Skor akhir kamu:</p>
+                      <div className="text-6xl font-black text-amber-400 mb-8 drop-shadow-[0_0_20px_rgba(251,191,36,0.3)]">
                         {quizScore}
                       </div>
                       <Button
                         onClick={() => startQuiz()}
-                        className={`w-full h-14 rounded-xl font-black uppercase tracking-widest ${themeAccent} text-white text-sm`}
+                        className={`w-full h-auto py-4 rounded-xl font-black uppercase tracking-widest ${themeAccent} text-white text-[10px] transition-all shadow-lg border-none`}
                       >
                         Main Lagi
                       </Button>
-                    </div>
+                    </Card>
                   )}
                 </div>
               </motion.div>

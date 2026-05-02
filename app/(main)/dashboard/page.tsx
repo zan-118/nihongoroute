@@ -11,7 +11,7 @@ import Heatmap from "@/components/Heatmap";
 import SRSAnalytics from "@/components/SRSAnalytics";
 import LevelUpOverlay from "@/components/LevelUpOverlay";
 import ConfirmModal from "@/components/ConfirmModal";
-import { BrainCircuit, Save, Upload, Trash2, Sparkles, BookMarked, Target, Flame, TrendingUp, LogOut } from "lucide-react";
+import { BrainCircuit, Save, Upload, Trash2, Sparkles, BookMarked, Target, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -166,7 +166,7 @@ export default function DashboardPage() {
             {loading ? (
               <Skeleton className="h-6 w-32 rounded-full mb-6" />
             ) : (
-              <Badge variant="outline" className="bg-cyber-neon/10 text-cyber-neon border-cyber-neon/30 px-4 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest mb-6 flex items-center gap-2 w-fit">
+              <Badge variant="outline" className="bg-cyber-neon/10 text-cyber-neon border-cyber-neon/30 px-4 py-1.5 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest mb-6 flex items-center gap-2 w-fit">
                 <Sparkles size={14} /> ID: {guestId}
               </Badge>
             )}
@@ -178,7 +178,7 @@ export default function DashboardPage() {
               </div>
             ) : (
               <>
-                <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white italic tracking-tighter leading-[1.1] mb-4">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter leading-[1.1] mb-4">
                   Selamat Datang Kembali, <br className="hidden lg:block" />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyber-neon to-blue-500 drop-shadow-[0_0_20px_rgba(0,238,255,0.3)]">
                     {displayName}!
@@ -192,11 +192,11 @@ export default function DashboardPage() {
           </div>
 
           {/* MAIN CALL TO ACTION */}
-          <div className="w-full lg:w-[450px] shrink-0">
+          <div className="w-full lg:w-[400px] shrink-0">
             {loading ? (
-              <Skeleton className="h-[320px] w-full rounded-[2.5rem]" />
+              <Skeleton className="h-[280px] w-full rounded-2xl" />
             ) : (
-            <Card className="p-8 rounded-[2.5rem] bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.1)] relative overflow-hidden group">
+            <Card className="p-6 md:p-8 rounded-2xl bg-white/[0.03] border border-white/[0.08] shadow-[0_20px_40px_rgba(0,0,0,0.4)] relative overflow-hidden group transition-all duration-300 hover:border-cyber-neon/40 hover:bg-cyber-neon/[0.02]">
               <div className="absolute inset-0 bg-gradient-to-br from-cyber-neon/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               
               <div className="relative z-10 flex flex-col items-center text-center">
@@ -208,23 +208,23 @@ export default function DashboardPage() {
                   )}
                 </div>
                 
-                <h3 className={`text-xl md:text-2xl font-black uppercase tracking-tight mb-2 ${dueCount > 0 ? 'text-white' : 'text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.5)]'}`}>
+                <h3 className={`text-lg md:text-xl font-black uppercase tracking-tight mb-2 ${dueCount > 0 ? 'text-white' : 'text-emerald-400'}`}>
                   {dueCount > 0 ? "Waktunya Sapa Ingatan!" : "Ingatanmu Hebat!"}
                 </h3>
-                <p className="text-slate-400 text-xs md:text-sm mb-8 font-medium italic">
+                <p className="text-slate-400 text-xs md:text-sm mb-6 font-medium">
                   {dueCount > 0 
                     ? `Ada ${dueCount} kosakata yang kangen kamu nih. Yuk, segarkan ingatanmu sebentar!` 
                     : "Semua hafalanmu masih segar bugar! Mau coba pelajari materi baru?"}
                 </p>
 
                 {dueCount > 0 ? (
-                  <Button asChild className="w-full h-14 bg-cyber-neon hover:bg-white text-black font-black uppercase tracking-[0.2em] rounded-2xl text-xs transition-all shadow-[0_0_20px_rgba(0,238,255,0.4)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] border-none">
+                  <Button asChild className="w-full h-14 bg-cyber-neon hover:bg-white text-black font-black uppercase tracking-widest rounded-2xl text-[10px] md:text-xs transition-all shadow-[0_0_20px_rgba(0,238,255,0.4)] border-none">
                     <Link href="/review">
                       Mulai Sesi Review <Target size={16} className="ml-2" />
                     </Link>
                   </Button>
                 ) : (
-                  <Button asChild className="w-full h-14 bg-white hover:bg-emerald-400 text-black font-black uppercase tracking-[0.2em] rounded-2xl text-xs transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)] border-none">
+                  <Button asChild className="w-full h-14 bg-white hover:bg-emerald-400 text-black font-black uppercase tracking-widest rounded-2xl text-[10px] md:text-xs transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)] border-none">
                     <Link href="/courses">
                       Pelajari Materi Baru <BookMarked size={16} className="ml-2" />
                     </Link>
@@ -242,20 +242,20 @@ export default function DashboardPage() {
           {/* LEVEL & XP CARD (SPAN 8) */}
           <motion.div variants={itemVariants} className="md:col-span-8">
             {loading ? (
-              <Skeleton className="h-[280px] w-full rounded-[2.5rem]" />
+              <Skeleton className="h-[250px] w-full rounded-2xl" />
             ) : (
-              <Card className="h-full bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-center relative overflow-hidden group">
+              <Card className="h-full bg-white/[0.03] border border-white/[0.08] rounded-2xl p-6 md:p-8 flex flex-col justify-center relative overflow-hidden group transition-all duration-300 hover:border-emerald-500/30">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[80px] rounded-full pointer-events-none" />
                 <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
                   <div>
-                    <h2 className="text-slate-400 font-black uppercase tracking-widest text-[10px] md:text-xs mb-2">
+                    <h2 className="text-slate-500 font-bold uppercase tracking-widest text-[9px] md:text-[10px] mb-2">
                       Level Kamu
                     </h2>
                     <div className="flex items-baseline gap-3">
-                      <span className="text-5xl md:text-7xl font-black text-white italic tracking-tighter">
+                      <span className="text-5xl md:text-6xl font-black text-white tracking-tighter">
                         {progress.level}
                       </span>
-                      <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 px-3 py-1 font-bold uppercase tracking-widest text-[9px]">
+                      <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 px-3 py-1 font-bold uppercase tracking-widest text-[8px] md:text-[9px]">
                         Status Belajar
                       </Badge>
                     </div>
@@ -289,38 +289,32 @@ export default function DashboardPage() {
           <motion.div variants={itemVariants} className="md:col-span-4 flex flex-col gap-6">
             {loading ? (
               <>
-                <Skeleton className="h-[130px] w-full rounded-[2rem]" />
-                <Skeleton className="h-[130px] w-full rounded-[2rem]" />
+                <Skeleton className="h-[110px] w-full rounded-2xl" />
+                <Skeleton className="h-[110px] w-full rounded-2xl" />
               </>
             ) : (
               <>
-                <Card className="flex-1 bg-gradient-to-br from-amber-500/20 to-orange-600/10 backdrop-blur-xl border border-amber-500/20 rounded-[2rem] p-6 flex flex-col justify-between group overflow-hidden relative">
-                  <div className="absolute -right-4 -top-4 opacity-10 scale-150 rotate-12 group-hover:rotate-45 transition-transform duration-1000">
-                    <Flame size={120} />
-                  </div>
-                  <h3 className="text-amber-500/80 font-black uppercase tracking-widest text-[10px]">
+                <Card className="flex-1 bg-white/[0.03] border border-white/[0.08] rounded-2xl p-5 flex flex-col justify-between group overflow-hidden relative transition-all duration-300 hover:border-amber-500/30 shadow-none">
+                  <h3 className="text-amber-500/60 font-bold uppercase tracking-widest text-[9px]">
                     Semangat Belajar
                   </h3>
-                  <div className="flex items-end gap-2 mt-4">
-                    <span className="text-5xl font-black text-amber-400 italic">
+                  <div className="flex items-end gap-2 mt-2">
+                    <span className="text-4xl font-black text-amber-400 tracking-tighter">
                       {progress.streak}
                     </span>
-                    <span className="text-amber-500/80 font-bold uppercase tracking-widest mb-1.5">Hari</span>
+                    <span className="text-amber-500/80 font-bold uppercase tracking-widest text-[10px] mb-1">Hari</span>
                   </div>
                 </Card>
                 
-                <Card className="flex-1 bg-gradient-to-br from-blue-500/20 to-indigo-600/10 backdrop-blur-xl border border-blue-500/20 rounded-[2rem] p-6 flex flex-col justify-between group overflow-hidden relative">
-                  <div className="absolute -right-4 -top-4 opacity-10 scale-150 -rotate-12 group-hover:-rotate-45 transition-transform duration-1000">
-                    <TrendingUp size={120} />
-                  </div>
-                  <h3 className="text-blue-400/80 font-black uppercase tracking-widest text-[10px]">
+                <Card className="flex-1 bg-white/[0.03] border border-white/[0.08] rounded-2xl p-5 flex flex-col justify-between group overflow-hidden relative transition-all duration-300 hover:border-blue-500/30 shadow-none">
+                  <h3 className="text-blue-400/60 font-bold uppercase tracking-widest text-[9px]">
                     Total Kosakata
                   </h3>
-                  <div className="flex items-end gap-2 mt-4">
-                    <span className="text-5xl font-black text-blue-400 italic">
+                  <div className="flex items-end gap-2 mt-2">
+                    <span className="text-4xl font-black text-blue-400 tracking-tighter">
                       {Object.keys(progress.srs).length}
                     </span>
-                    <span className="text-blue-400/80 font-bold uppercase tracking-widest mb-1.5">Kata</span>
+                    <span className="text-blue-400/80 font-bold uppercase tracking-widest text-[10px] mb-1">Kata</span>
                   </div>
                 </Card>
               </>
@@ -329,27 +323,27 @@ export default function DashboardPage() {
 
           {/* DAILY QUESTS, MEMORY STATS, SRS ANALYTICS */}
           <motion.div variants={itemVariants} className="md:col-span-4">
-            {loading ? <Skeleton className="h-[450px] w-full rounded-[2.5rem]" /> : <DailyQuests />}
+            {loading ? <Skeleton className="h-[400px] w-full rounded-2xl" /> : <DailyQuests />}
           </motion.div>
           
           <motion.div variants={itemVariants} className="md:col-span-4">
-            {loading ? <Skeleton className="h-[450px] w-full rounded-[2.5rem]" /> : <MemoryStats />}
+            {loading ? <Skeleton className="h-[400px] w-full rounded-2xl" /> : <MemoryStats />}
           </motion.div>
 
           <motion.div variants={itemVariants} className="md:col-span-4">
-            {loading ? <Skeleton className="h-[450px] w-full rounded-[2.5rem]" /> : <SRSAnalytics />}
+            {loading ? <Skeleton className="h-[400px] w-full rounded-2xl" /> : <SRSAnalytics />}
           </motion.div>
 
           {/* HEATMAP */}
           <motion.div variants={itemVariants} className="md:col-span-12">
-            {loading ? <Skeleton className="h-[250px] w-full rounded-[2.5rem]" /> : <Heatmap studyDays={progress.studyDays} />}
+            {loading ? <Skeleton className="h-[220px] w-full rounded-2xl" /> : <Heatmap studyDays={progress.studyDays} />}
           </motion.div>
 
           {/* SETTINGS / DANGER ZONE */}
           <motion.div variants={itemVariants} className="md:col-span-12">
-            <Card className="bg-slate-900/30 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-8 md:p-10">
-              <h2 className="text-slate-400 font-black uppercase tracking-[0.3em] text-[10px] md:text-xs mb-8 flex items-center gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+            <Card className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 md:p-8">
+              <h2 className="text-slate-500 font-bold uppercase tracking-widest text-[10px] mb-8 flex items-center gap-3">
+                <div className="w-1 h-1 rounded-full bg-slate-700" />
                 Pengaturan Akun & Data
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

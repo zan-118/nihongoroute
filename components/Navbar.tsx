@@ -25,8 +25,8 @@ export default function Navbar() {
               priority
             />
           </div>
-          <span className="text-xl font-black text-white italic tracking-tighter uppercase">
-            Nihongo<span className="text-cyber-neon drop-shadow-[0_0_10px_rgba(0,238,255,0.5)]">Route</span>
+          <span className="text-xl font-black text-white tracking-tighter uppercase">
+            Nihongo<span className="text-cyber-neon drop-shadow-[0_0_10px_rgba(0,238,255,0.4)]">Route</span>
           </span>
         </Link>
 
@@ -41,10 +41,10 @@ export default function Navbar() {
                 className="relative px-5 py-2.5 rounded-xl group overflow-hidden"
               >
                 <span
-                  className={`relative z-10 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${
+                  className={`relative z-10 text-[10px] md:text-[11px] font-bold uppercase tracking-widest transition-all duration-300 ${
                     isActive
-                      ? "text-cyber-neon drop-shadow-[0_0_5px_rgba(0,238,255,0.6)]"
-                      : "text-slate-400 group-hover:text-white"
+                      ? "text-cyber-neon drop-shadow-[0_0_5px_rgba(0,238,255,0.5)]"
+                      : "text-slate-500 group-hover:text-white"
                   }`}
                 >
                   {link.label}
@@ -72,7 +72,7 @@ export default function Navbar() {
                 <div className="w-7 h-7 rounded-full bg-gradient-to-br from-cyber-neon to-blue-600 flex items-center justify-center text-black text-xs font-black shadow-[0_0_15px_rgba(0,238,255,0.4)]">
                   {userFullName ? userFullName.charAt(0).toUpperCase() : "U"}
                 </div>
-                <span className="text-[11px] font-bold text-white tracking-[0.1em] uppercase max-w-[120px] truncate">
+                <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase max-w-[120px] truncate">
                   {userFullName || "Pelajar"}
                 </span>
               </div>

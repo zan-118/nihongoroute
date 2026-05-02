@@ -71,7 +71,7 @@ export default function CheatsheetClient({
   // ======================
   return (
     <div className="relative w-full z-10 flex flex-col flex-1 pb-24 px-4 md:px-8 lg:px-12">
-      <nav className="mb-8 md:mb-12 flex flex-wrap items-center gap-2 md:gap-4 text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-widest">
+      <nav className="mb-8 md:mb-12 flex flex-wrap items-center gap-2 md:gap-4 text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest">
         <Link href="/dashboard" className="hover:text-cyber-neon transition-colors flex items-center gap-1.5 md:gap-2">
           <Home size={14} /> Beranda
         </Link>
@@ -80,7 +80,7 @@ export default function CheatsheetClient({
           <Library size={14} /> Pustaka
         </Link>
         <span className="text-white/10">/</span>
-        <span className="text-cyber-neon flex items-center gap-1.5 md:gap-2 drop-shadow-[0_0_8px_rgba(0,238,255,0.5)]">
+        <span className="text-cyber-neon flex items-center gap-1.5 md:gap-2">
           <FileText size={14} /> Cheatsheet
         </span>
       </nav>
@@ -92,10 +92,10 @@ export default function CheatsheetClient({
               <FileText size={28} className="text-cyber-neon md:w-8 md:h-8" />
             </Card>
             <div className="text-left">
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-none mb-2">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight leading-none mb-2">
                 Catatan <span className="text-cyber-neon">Cepat</span>
               </h1>
-              <span className="text-xs md:text-sm text-slate-400 font-medium tracking-wide">Butuh referensi cepat? Semuanya ada di sini!</span>
+              <span className="text-[10px] md:text-xs text-slate-500 font-medium tracking-tight uppercase tracking-widest">Referensi kilat buat bantu hafalanmu.</span>
             </div>
           </div>
         </div>
@@ -145,7 +145,7 @@ export default function CheatsheetClient({
                     {getIconForCategory(sheet.category)}
                   </div>
                   <div className="overflow-hidden flex-1">
-                    <p className={`text-[9px] md:text-[10px] uppercase font-bold tracking-widest mb-1 ${isActive ? "text-black/70" : "text-slate-500 group-hover:text-cyber-neon/80"}`}>
+                    <p className={`text-[8px] md:text-[9px] uppercase font-bold tracking-widest mb-1 ${isActive ? "text-black/60" : "text-slate-500 group-hover:text-cyber-neon/80"}`}>
                       {sheet.category}
                     </p>
                     <p className={`text-sm md:text-base font-bold tracking-tight truncate ${isActive ? "text-black" : "text-slate-300 group-hover:text-white"}`}>
@@ -189,13 +189,13 @@ export default function CheatsheetClient({
                           {activeSheet.title}
                         </h2>
                     </div>
-                    <Badge variant="outline" className="px-4 py-2 md:px-5 md:py-2.5 text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-500 border-white/10 neo-inset h-auto bg-black/40">
-                      Kategori: {activeSheet.category.toUpperCase()}
+                    <Badge variant="outline" className="px-4 py-2 md:px-5 md:py-2.5 text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-600 border-white/10 neo-inset h-auto bg-black/40">
+                      {activeSheet.category}
                     </Badge>
                   </div>
 
                   <div className="flex flex-col w-full flex-1 relative z-10">
-                    <div className="hidden md:grid grid-cols-3 p-6 md:p-8 border-b border-white/10 text-[10px] md:text-xs font-bold text-cyber-neon uppercase tracking-widest gap-6 md:gap-10">
+                    <div className="hidden md:grid grid-cols-3 p-6 md:p-8 border-b border-white/10 text-[9px] md:text-[10px] font-bold text-cyber-neon/60 uppercase tracking-widest gap-6 md:gap-10">
                       <div>Label</div>
                       <div>Huruf/Kanji</div>
                       <div>Cara Baca</div>
@@ -212,17 +212,17 @@ export default function CheatsheetClient({
                             className="group flex flex-col md:grid md:grid-cols-3 md:items-center p-6 md:p-8 rounded-2xl md:rounded-none md:border-b border-white/[0.05] hover:bg-white/[0.02] transition-all duration-300 bg-black/20 md:bg-transparent gap-4 md:gap-6 mb-4 md:mb-0 relative overflow-hidden"
                           >
                             <div className="min-w-0">
-                              <span className="text-sm md:text-base lg:text-lg text-slate-400 font-bold uppercase tracking-wide group-hover:text-white transition-colors block truncate">
+                              <span className="text-sm md:text-base lg:text-lg text-slate-500 font-bold uppercase tracking-wide group-hover:text-white transition-colors block truncate">
                                 {item?.label || "TIDAK ADA LABEL"}
                               </span>
                             </div>
                             <div className="min-w-0">
-                              <span className="text-3xl md:text-2xl lg:text-3xl font-japanese font-black text-white group-hover:text-cyber-neon transition-colors duration-500 drop-shadow-lg block">
+                              <span className="text-3xl md:text-2xl lg:text-3xl font-japanese font-black text-white group-hover:text-cyber-neon transition-colors duration-500 drop-shadow-lg block tracking-tight">
                                 {item?.jp || "—"}
                               </span>
                             </div>
                             <div className="min-w-0">
-                              <span className="text-xs md:text-sm font-bold text-slate-500 uppercase tracking-widest block group-hover:text-cyber-neon transition-colors duration-500 truncate">
+                              <span className="text-[10px] md:text-xs font-bold text-slate-600 uppercase tracking-widest block group-hover:text-cyber-neon transition-colors duration-500 truncate">
                                 {item?.romaji || "N/A"}
                               </span>
                             </div>

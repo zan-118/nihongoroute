@@ -108,7 +108,7 @@ export default function VocabClient() {
   return (
     <div className="w-full flex flex-col flex-1 pb-24 px-4 md:px-8">
       {/* Breadcrumb Navigation */}
-      <nav className="mb-8 md:mb-12 flex flex-wrap items-center gap-2 md:gap-4 text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-widest">
+      <nav className="mb-8 md:mb-12 flex flex-wrap items-center gap-2 md:gap-4 text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest">
         <Link href="/dashboard" className="hover:text-cyber-neon transition-colors flex items-center gap-1.5 md:gap-2">
           <Home size={14} /> Beranda
         </Link>
@@ -117,7 +117,7 @@ export default function VocabClient() {
           <Library size={14} /> Pustaka
         </Link>
         <span className="text-white/10">/</span>
-        <span className="text-cyber-neon flex items-center gap-1.5 md:gap-2 drop-shadow-[0_0_8px_rgba(0,238,255,0.5)]">
+        <span className="text-cyber-neon flex items-center gap-1.5 md:gap-2">
           <Languages size={14} /> Kosakata
         </span>
       </nav>
@@ -130,16 +130,16 @@ export default function VocabClient() {
               <LibraryBig size={28} className="text-cyber-neon md:w-8 md:h-8" />
             </Card>
             <div className="text-left">
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-none mb-2">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight leading-none mb-2">
                 Kamus <span className="text-cyber-neon">Kosakata</span>
               </h1>
-              <span className="text-xs md:text-sm text-slate-400 font-medium tracking-wide">Kumpulan kata penting biar bahasamu makin jago dan keren!</span>
+              <span className="text-[10px] md:text-xs text-slate-500 font-medium tracking-tight uppercase tracking-widest">Kumpulan kata penting buat naklukin JLPT.</span>
             </div>
           </div>
           <div className="flex items-center justify-between md:justify-end gap-4 w-full md:w-auto">
              <div className="flex flex-col items-start md:items-end gap-1">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Total Koleksi</span>
-                <span className="text-xs md:text-sm font-black text-white">{vocabList.length} Kata</span>
+                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Total Koleksi</span>
+                <span className="text-[10px] md:text-xs font-black text-white">{vocabList.length} Kata</span>
              </div>
              <PdfGenerator data={vocabList} type="vocab" level={level} />
           </div>
@@ -161,18 +161,18 @@ export default function VocabClient() {
         <div className="flex flex-col lg:flex-row gap-5">
           <div className="w-full lg:w-1/2 flex bg-black/40 border border-white/5 rounded-2xl p-1.5 md:p-2 neo-inset shadow-none overflow-x-auto no-scrollbar">
             {LEVELS.map((l) => (
-              <Button
-                key={l}
-                variant="ghost"
-                onClick={() => setLevel(l)}
-                className={`flex-1 rounded-xl h-12 md:h-14 text-xs md:text-sm font-bold tracking-wider transition-all duration-300 ${
-                  level === l
-                    ? "bg-cyber-neon text-black shadow-[0_0_15px_rgba(0,238,255,0.4)]"
-                    : "text-slate-500 hover:text-white hover:bg-white/5"
-                }`}
-              >
-                {l}
-              </Button>
+                <Button
+                  key={l}
+                  variant="ghost"
+                  onClick={() => setLevel(l)}
+                  className={`flex-1 rounded-xl h-12 md:h-14 text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all duration-300 ${
+                    level === l
+                      ? "bg-cyber-neon text-black shadow-[0_0_15px_rgba(0,238,255,0.4)]"
+                      : "text-slate-500 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  {l}
+                </Button>
             ))}
           </div>
           
@@ -181,8 +181,8 @@ export default function VocabClient() {
                 <Filter size={18} />
              </div>
              <Select value={hinshi} onValueChange={setHinshi}>
-                <SelectTrigger className="w-full pl-12 md:pl-14 h-12 md:h-14 py-6 bg-black/40 border-white/5 rounded-2xl text-xs md:text-sm font-bold tracking-wide neo-inset shadow-none text-slate-400 focus:ring-cyber-neon/30 transition-all">
-                  <SelectValue placeholder="Cari Berdasarkan Tipe" />
+                <SelectTrigger className="w-full pl-12 md:pl-14 h-12 md:h-14 py-6 bg-black/40 border-white/5 rounded-2xl text-[10px] md:text-xs font-bold uppercase tracking-widest neo-inset shadow-none text-slate-500 focus:ring-cyber-neon/30 transition-all">
+                  <SelectValue placeholder="Tipe Kata" />
                 </SelectTrigger>
                 <SelectContent className="bg-cyber-surface border-white/10 rounded-2xl overflow-hidden shadow-2xl p-1">
                   {HINSHI.map((h) => (
@@ -201,64 +201,54 @@ export default function VocabClient() {
       </div>
 
       {/* Data Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 md:gap-8 items-stretch">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-5 items-stretch">
         <AnimatePresence mode="popLayout">
           {vocabList.map((vocab, idx) => (
             <motion.div
               key={vocab._id}
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ delay: (idx % 10) * 0.05 }}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ delay: (idx % 12) * 0.03 }}
               className="flex h-full w-full"
             >
-              <Card className="p-5 md:p-8 h-full w-full flex flex-col bg-slate-900/40 backdrop-blur-xl border-white/10 rounded-[2.5rem] hover:border-cyber-neon/50 hover:bg-cyber-neon/[0.02] transition-all duration-500 neo-card shadow-none group relative overflow-hidden hover:scale-[1.03] hover:shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_30px_rgba(0,238,255,0.1)]">
-                {/* Interactive Gradient Glow */}
-                <div className="absolute inset-0 bg-gradient-to-br from-cyber-neon/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                
-                <div className="flex justify-between items-start mb-6 md:mb-8 relative z-10">
-                  <Badge variant="outline" className="px-3 py-1.5 md:px-4 md:py-2 text-[9px] md:text-xs font-black uppercase tracking-[0.2em] rounded-xl bg-black/20 backdrop-blur-md text-slate-400 border-white/10 h-auto">
+              <Card className="p-5 md:p-6 h-full w-full flex flex-col bg-white/[0.03] border border-white/[0.06] rounded-2xl group hover:border-cyber-neon/40 hover:bg-cyber-neon/[0.03] hover:shadow-[0_0_30px_rgba(0,238,255,0.06)] transition-all duration-300">
+                {/* Top row */}
+                <div className="flex justify-between items-center mb-4">
+                  <Badge variant="outline" className="px-2.5 py-1 text-[9px] md:text-[10px] font-bold uppercase tracking-wider rounded-lg text-slate-400 border-white/[0.08] h-auto">
                     {vocab.hinshi ? (
                       vocab.hinshi === 'noun' ? 'Kata Benda' :
-                      vocab.hinshi === 'i-adjective' ? 'Kata Sifat-I' :
-                      vocab.hinshi === 'na-adjective' ? 'Kata Sifat-Na' :
-                      vocab.hinshi === 'adverb' ? 'Kata Keterangan' :
+                      vocab.hinshi === 'i-adjective' ? 'Sifat-I' :
+                      vocab.hinshi === 'na-adjective' ? 'Sifat-Na' :
+                      vocab.hinshi === 'adverb' ? 'Keterangan' :
                       vocab.hinshi === 'particle' ? 'Partikel' :
                       vocab.hinshi === 'conjunction' ? 'Penghubung' :
                       vocab.hinshi === 'pronoun' ? 'Kata Ganti' :
                       vocab.hinshi === 'expression' ? 'Ungkapan' : 
                       vocab.hinshi.replace("-", " ")
-                    ) : "TIPE UMUM"}
+                    ) : "Umum"}
                   </Badge>
                   <TTSReader text={vocab.word} minimal={true} />
                 </div>
 
-                <div className="mb-6 md:mb-8 relative z-10 flex-1">
-                  <div className="min-h-[70px] md:min-h-[100px] flex flex-col justify-center">
-                    <ruby className="text-2xl md:text-4xl font-black text-white font-japanese block group-hover:text-cyber-neon transition-colors duration-500 drop-shadow-2xl leading-tight italic">
-                      {vocab.word}
-                      <rt className="text-[10px] md:text-xs text-cyber-neon font-black tracking-[0.3em] opacity-80 pt-1 md:pt-2 not-italic">
-                        {vocab.furigana || "—"}
-                      </rt>
-                    </ruby>
-                  </div>
-                  <div className="mt-4 md:mt-6 flex items-center gap-3">
-                     <div className="h-0.5 w-6 md:w-8 bg-cyber-neon/40 rounded-full group-hover:w-10 transition-all duration-500" />
-                     <p className="text-[10px] md:text-sm font-black text-slate-500 uppercase tracking-[0.3em] group-hover:text-slate-400 transition-colors">
-                       {vocab.romaji}
-                     </p>
-                  </div>
-                </div>
-
-                <div className="mt-auto pt-5 md:pt-6 border-t border-white/10 relative z-10">
-                  <p className="text-xs md:text-base font-bold text-slate-300 leading-relaxed group-hover:text-white transition-colors duration-500 line-clamp-3 min-h-[2.5rem] md:min-h-[3rem] italic">
-                    {vocab.meaning}
+                {/* Main content */}
+                <div className="flex-1 space-y-1.5 mb-4">
+                  <ruby className="text-2xl md:text-3xl font-black text-white font-japanese block group-hover:text-cyber-neon transition-colors duration-300 leading-tight tracking-tight">
+                    {vocab.word}
+                    <rt className="text-[9px] md:text-[10px] text-cyber-neon/80 font-bold tracking-widest not-italic">
+                      {vocab.furigana || "—"}
+                    </rt>
+                  </ruby>
+                  <p className="text-[9px] md:text-[10px] font-bold text-slate-600 uppercase tracking-widest group-hover:text-slate-400 transition-colors">
+                    {vocab.romaji}
                   </p>
                 </div>
 
-                {/* Decorative Elements */}
-                <div className="absolute -bottom-4 -right-4 text-[10rem] md:text-[12rem] font-black text-white/[0.03] pointer-events-none group-hover:text-cyber-neon/[0.06] transition-all duration-700 rotate-6 italic">
-                   {idx + 1}
+                {/* Bottom meaning */}
+                <div className="mt-auto pt-3 border-t border-white/[0.06]">
+                  <p className="text-xs md:text-[13px] font-medium text-slate-500 leading-snug group-hover:text-white transition-colors line-clamp-2">
+                    {vocab.meaning}
+                  </p>
                 </div>
               </Card>
             </motion.div>
@@ -281,10 +271,10 @@ export default function VocabClient() {
             Muat Lebih Banyak <ArrowRight size={18} className="group-hover:translate-x-1.5 transition-transform duration-300" />
           </Button>
         ) : vocabList.length === 0 && !loading ? (
-          <Card className="py-24 md:py-32 text-center w-full border border-dashed border-white/10 bg-black/20 rounded-[3rem] md:rounded-[4rem] neo-inset shadow-none px-4">
-            <div className="flex justify-center mb-6 md:mb-8">
-               <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-cyber-neon/10 flex items-center justify-center border border-cyber-neon/20">
-                  <Search size={32} className="text-slate-500 md:w-10 md:h-10" />
+          <Card className="py-16 md:py-24 text-center w-full border border-dashed border-white/10 bg-black/20 rounded-2xl px-4">
+            <div className="flex justify-center mb-5">
+               <div className="w-14 h-14 rounded-full bg-cyber-neon/5 flex items-center justify-center border border-cyber-neon/10">
+                  <Search size={24} className="text-slate-500" />
                </div>
             </div>
             <p className="text-slate-400 font-bold text-sm md:text-base tracking-wide">

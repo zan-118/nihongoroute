@@ -28,18 +28,17 @@ export function FlashcardBack({
 
   return (
     <Card
-      className={`absolute inset-0 w-full h-full border ${themeBorder} rounded-[2.5rem] md:rounded-[3rem] ${themeShadow} flex flex-col items-center justify-center p-4 sm:p-10 md:p-12 transition-all duration-500 neo-card shadow-none overflow-hidden bg-[#0a0c10]`}
+      className={`absolute inset-0 w-full h-full border ${themeBorder} rounded-2xl ${themeShadow} flex flex-col items-center justify-center p-6 md:p-8 transition-all duration-500 shadow-none overflow-hidden bg-[#0a0c10]`}
       style={{
         transform: "rotateY(180deg)",
         backfaceVisibility: "hidden",
         WebkitBackfaceVisibility: "hidden",
       }}
     >
-      <div className="w-full h-full flex flex-col items-center justify-center relative pt-8 md:pt-10">
+      <div className="w-full h-full flex flex-col items-center justify-center relative pt-8">
         <Badge
           variant="outline"
-          className={`absolute top-0 left-1/2 -translate-x-1/2 text-[9px] md:text-[10px] font-bold uppercase tracking-widest ${themeColor} border-current/20 px-4 md:px-5 py-1.5 md:py-2 rounded-lg md:rounded-xl h-auto neo-inset bg-black/20`}
-          title="Definisi atau arti dari kata ini dalam Bahasa Indonesia"
+          className={`absolute top-0 left-1/2 -translate-x-1/2 text-[9px] md:text-[10px] font-bold uppercase tracking-widest ${themeColor} border-current/20 px-4 py-1.5 rounded-lg h-auto bg-black/20`}
         >
           Definisi & Arti
         </Badge>
@@ -51,7 +50,7 @@ export function FlashcardBack({
         <div className="text-center w-full flex flex-col items-center justify-center h-full space-y-4 md:space-y-6">
           {!isKanji && (
             <p
-              className={`${themeColor} font-mono font-bold text-sm sm:text-lg md:text-2xl tracking-widest uppercase opacity-80`}
+              className={`${themeColor} font-mono font-bold text-xs md:text-sm tracking-widest uppercase opacity-40`}
             >
               {furigana || romaji || "..."}
             </p>
@@ -65,23 +64,23 @@ export function FlashcardBack({
 
           {/* KANJI DETAILS */}
           {isKanji && kanjiDetails && (
-            <div className="flex flex-wrap justify-center gap-3 md:gap-4 w-full">
+            <div className="flex flex-wrap justify-center gap-2 md:gap-3 w-full">
               {kanjiDetails.onyomi && (
-                <Card className="bg-black/40 px-4 py-2.5 md:px-6 md:py-3 rounded-xl md:rounded-2xl border-white/5 flex flex-col items-center min-w-[100px] md:min-w-[120px] neo-inset shadow-none">
-                  <span className="text-[9px] md:text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-1">
-                    Bacaan 1 (Onyomi)
+                <Card className="bg-white/[0.04] px-4 py-2.5 rounded-xl border-white/[0.08] flex flex-col items-center min-w-[100px] md:min-w-[120px] shadow-none">
+                  <span className="text-[9px] text-slate-500 uppercase tracking-widest font-bold mb-1">
+                    ONYOMI
                   </span>
-                  <span className="text-purple-400 font-japanese font-bold text-lg md:text-xl">
+                  <span className="text-purple-400 font-japanese font-bold text-base md:text-lg">
                     {kanjiDetails.onyomi}
                   </span>
                 </Card>
               )}
               {kanjiDetails.kunyomi && (
-                <Card className="bg-black/40 px-4 py-2.5 md:px-6 md:py-3 rounded-xl md:rounded-2xl border-white/5 flex flex-col items-center min-w-[100px] md:min-w-[120px] neo-inset shadow-none">
-                  <span className="text-[9px] md:text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-1">
-                    Bacaan 2 (Kunyomi)
+                <Card className="bg-white/[0.04] px-4 py-2.5 rounded-xl border-white/[0.08] flex flex-col items-center min-w-[100px] md:min-w-[120px] shadow-none">
+                  <span className="text-[9px] text-slate-500 uppercase tracking-widest font-bold mb-1">
+                    KUNYOMI
                   </span>
-                  <span className="text-purple-400 font-japanese font-bold text-lg md:text-xl">
+                  <span className="text-purple-400 font-japanese font-bold text-base md:text-lg">
                     {kanjiDetails.kunyomi}
                   </span>
                 </Card>
@@ -91,10 +90,10 @@ export function FlashcardBack({
 
           {/* MEANING CARD */}
           <Card
-            className={`p-5 md:p-8 bg-black/40 rounded-[2rem] md:rounded-[2.5rem] border ${themeBorder} w-full flex items-center justify-center neo-inset shadow-none min-h-[100px] md:min-h-[140px] mt-2 md:mt-0`}
+            className={`p-5 md:p-6 bg-white/[0.03] rounded-2xl border ${themeBorder} w-full flex items-center justify-center shadow-none min-h-[80px] md:min-h-[100px] mt-2 md:mt-0`}
           >
             <h3
-              className={`${themeColor} text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold uppercase tracking-tight leading-snug`}
+              className={`${themeColor} text-lg md:text-xl lg:text-2xl font-black uppercase tracking-tight leading-snug`}
             >
               {meaning}
             </h3>
@@ -103,9 +102,9 @@ export function FlashcardBack({
           {isKanji && (
             <Button
               onClick={onDrawClick}
-              className="mt-4 md:mt-8 flex items-center justify-center gap-2 md:gap-3 w-full max-w-sm mx-auto bg-purple-500 hover:bg-white text-black font-bold uppercase tracking-widest h-auto py-4 md:py-5 px-6 md:px-8 rounded-xl md:rounded-2xl transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] border-none text-[10px] md:text-xs"
+              className="mt-4 md:mt-6 flex items-center justify-center gap-2 w-full max-w-[240px] mx-auto bg-purple-500 hover:bg-white text-black font-black uppercase tracking-widest h-auto py-3.5 px-6 rounded-xl transition-all shadow-[0_0_20px_rgba(168,85,247,0.3)] border-none text-[9px] md:text-[10px]"
             >
-              <PenTool size={18} className="md:w-5 md:h-5" />
+              <PenTool size={16} />
               <span>Latih Menulis</span>
             </Button>
           )}

@@ -23,13 +23,13 @@ export function ExamIntro({ exam, setGameState, backLink }: ExamIntroProps) {
         />
       </Card>
 
-      <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white uppercase italic tracking-tighter mb-8 leading-tight relative z-10">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white uppercase tracking-tight mb-8 leading-tight relative z-10">
         {exam.title}
       </h1>
 
       <Card className="neo-inset p-6 md:p-8 rounded-2xl mb-8 text-left space-y-5 relative z-10 bg-black/20 border-white/5 shadow-none">
         <div className="flex justify-between items-center border-b border-white/5 pb-4">
-          <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-300">
+          <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-500">
             Total Soal
           </span>
           <Badge variant="ghost" className="font-mono font-bold text-white text-sm md:text-base">
@@ -37,7 +37,7 @@ export function ExamIntro({ exam, setGameState, backLink }: ExamIntroProps) {
           </Badge>
         </div>
         <div className="flex justify-between items-center border-b border-white/5 pb-4">
-          <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-300">
+          <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-500">
             Batas Waktu
           </span>
           <Badge variant="ghost" className="font-mono font-bold text-red-400 text-sm md:text-base">
@@ -45,7 +45,7 @@ export function ExamIntro({ exam, setGameState, backLink }: ExamIntroProps) {
           </Badge>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-300">
+          <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-500">
             Target Pass
           </span>
           <Badge variant="ghost" className="font-mono font-bold text-amber-400 text-sm md:text-base">
@@ -54,7 +54,7 @@ export function ExamIntro({ exam, setGameState, backLink }: ExamIntroProps) {
         </div>
       </Card>
 
-      <p className="text-[10px] text-slate-400 mb-10 font-mono uppercase tracking-widest leading-relaxed px-2 relative z-10 italic">
+      <p className="text-[9px] text-slate-500 mb-10 font-bold uppercase tracking-widest leading-relaxed px-2 relative z-10">
         Ingat ya: Sistem deteksi kecurangan lagi aktif nih. Khusus bagian Mendengar (Choukai), audionya cuma bisa diputar SEKALI dan gak bisa diulang. Fokus ya!
       </p>
 

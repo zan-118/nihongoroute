@@ -48,29 +48,29 @@ export function QuizFinished({
           </Card>
         </div>
 
-        <Badge variant="outline" className="border-red-500/20 text-red-500 font-black text-[10px] uppercase tracking-[0.5em] mb-6 h-auto px-6 py-2 rounded-xl neo-inset bg-red-500/5">
+        <Badge variant="outline" className="border-red-500/20 text-red-500 font-bold text-[9px] uppercase tracking-widest mb-6 h-auto px-6 py-2 rounded-xl neo-inset bg-red-500/5">
           Evaluasi Latihan
         </Badge>
         
-        <h2 className="text-5xl md:text-6xl font-black text-white italic uppercase tracking-tighter mb-4">
+        <h2 className="text-5xl md:text-6xl font-black text-white uppercase tracking-tighter mb-4">
           {isPerfect ? "Latihan Sempurna!" : "Latihan Selesai"}
         </h2>
 
         <div className="flex items-center justify-center gap-10 my-12">
           <div className="text-center">
-            <p className="text-slate-500 text-[11px] font-black uppercase tracking-widest mb-2">
+            <p className="text-slate-600 text-[10px] font-bold uppercase tracking-widest mb-2">
               Skor Akhir
             </p>
-            <p className="text-5xl font-black text-white italic">
-              {score}<span className="text-xl opacity-20 not-italic mx-1">/</span>{totalQuestions}
+            <p className="text-5xl font-black text-white tracking-tight">
+              {score}<span className="text-xl opacity-10 mx-1">/</span>{totalQuestions}
             </p>
           </div>
           <div className="w-px h-16 bg-white/5" />
           <div className="text-center">
-            <p className="text-slate-500 text-[11px] font-black uppercase tracking-widest mb-2">
+            <p className="text-slate-600 text-[10px] font-bold uppercase tracking-widest mb-2">
               Akurasi
             </p>
-            <p className={`text-5xl font-black italic ${isPerfect ? "text-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]" : "text-amber-500"}`}>
+            <p className={`text-5xl font-black tracking-tight ${isPerfect ? "text-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.4)]" : "text-amber-500"}`}>
               {percentage}%
             </p>
           </div>
@@ -80,7 +80,7 @@ export function QuizFinished({
           <Button
             onClick={resetQuiz}
             variant="ghost"
-            className="w-full sm:w-auto h-auto px-10 py-5 bg-black/40 text-slate-400 font-black rounded-2xl hover:bg-white hover:text-black transition-all uppercase tracking-widest text-[10px] border border-white/5 neo-inset"
+            className="w-full sm:w-auto h-auto px-10 py-5 bg-black/40 text-slate-500 font-bold rounded-2xl hover:bg-white hover:text-black transition-all uppercase tracking-widest text-[10px] border border-white/5 neo-inset"
           >
             <RefreshCw size={18} className="mr-3" /> Ulangi Latihan
           </Button>
@@ -89,7 +89,7 @@ export function QuizFinished({
               const basePath = window.location.pathname.replace(/\/[^/]+$/, "");
               router.push(basePath || "/courses");
             }}
-            className="w-full sm:w-auto h-auto px-10 py-5 bg-red-500 hover:bg-white text-black font-black rounded-2xl transition-all uppercase tracking-[0.2em] text-[10px] shadow-[0_0_25px_rgba(239,68,68,0.4)] border-none"
+            className="w-full sm:w-auto h-auto px-10 py-5 bg-red-500 hover:bg-white text-black font-bold rounded-2xl transition-all uppercase tracking-widest text-[10px] shadow-[0_0_25px_rgba(239,68,68,0.3)] border-none"
           >
             Materi Selanjutnya <ArrowRight size={18} className="ml-3" />
           </Button>

@@ -70,7 +70,7 @@ export default function GrammarArticlesPage() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(0,238,255,0.05)_0%,transparent_70%)] pointer-events-none z-0" />
 
       <div className="max-w-7xl mx-auto w-full relative z-10 pt-8 md:pt-10">
-        <nav className="mb-6 md:mb-10 flex flex-wrap items-center gap-2 md:gap-4 text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-widest">
+        <nav className="mb-6 md:mb-10 flex flex-wrap items-center gap-2 md:gap-4 text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest">
           <Link href="/dashboard" className="hover:text-cyber-neon transition-colors flex items-center gap-1.5 md:gap-2">
             <Home size={14} /> Beranda
           </Link>
@@ -79,7 +79,7 @@ export default function GrammarArticlesPage() {
             <Library size={14} /> Pustaka
           </Link>
           <span className="text-white/10">/</span>
-          <span className="text-cyber-neon flex items-center gap-1.5 md:gap-2 drop-shadow-[0_0_8px_rgba(0,238,255,0.5)]">
+          <span className="text-cyber-neon flex items-center gap-1.5 md:gap-2">
             <BookOpen size={14} /> Tata Bahasa
           </span>
         </nav>
@@ -91,10 +91,10 @@ export default function GrammarArticlesPage() {
                 <BookOpen size={24} className="text-cyber-neon md:w-8 md:h-8" />
               </Card>
               <div className="text-left">
-                <h1 className="text-3xl md:text-5xl lg:text-7xl font-black text-white tracking-tight leading-none mb-1 md:mb-2">
+                <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white tracking-tight leading-none mb-1 md:mb-2">
                   Panduan <span className="text-cyber-neon">Tata Bahasa</span>
                 </h1>
-                <span className="text-[10px] md:text-sm text-slate-400 font-medium tracking-wide">Pahami pola kalimat biar ngomongnya gak kaku dan makin lancar!</span>
+                <span className="text-[10px] md:text-xs text-slate-500 font-medium tracking-tight uppercase tracking-widest">Pahami pola kalimat biar naklukin JLPT.</span>
               </div>
             </div>
 
@@ -107,7 +107,7 @@ export default function GrammarArticlesPage() {
                     setSelectedLevel(lvl);
                     setSearchTerm("");
                   }}
-                  className={`flex-1 md:flex-none px-6 md:px-10 py-4 md:py-5 h-auto rounded-lg md:rounded-2xl text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all duration-300 ${
+                  className={`flex-1 md:flex-none px-6 md:px-10 py-4 md:py-5 h-auto rounded-lg md:rounded-2xl text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all duration-300 ${
                     selectedLevel === lvl
                       ? "bg-cyber-neon text-black shadow-[0_0_15px_rgba(0,238,255,0.4)]"
                       : "text-slate-500 hover:text-white hover:bg-white/5"
@@ -131,66 +131,58 @@ export default function GrammarArticlesPage() {
           />
         </div>
 
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10 items-stretch">
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 items-stretch">
           <AnimatePresence mode="popLayout">
             {loading ? (
               [...Array(6)].map((_, i) => (
                 <div
                   key={i}
-                  className="h-56 md:h-64 bg-cyber-surface border border-white/5 rounded-3xl md:rounded-[3.5rem] animate-pulse neo-card shadow-none"
+                  className="h-48 md:h-52 bg-white/[0.02] border border-white/[0.06] rounded-2xl animate-pulse"
                 />
               ))
             ) : filteredArticles.length > 0 ? (
               filteredArticles.map((article, idx) => (
                 <motion.div
                   key={article._id}
-                  initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ delay: (idx % 10) * 0.05 }}
-                  className="group relative flex h-full w-full"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ delay: (idx % 12) * 0.03 }}
+                  className="group flex h-full w-full"
                 >
                   <Link
                     href={`/library/grammar/${article.slug}`}
                     className="block w-full h-full"
                   >
-                    <Card className="h-full p-6 md:p-10 lg:p-12 bg-slate-900/40 backdrop-blur-xl border-white/10 rounded-[2.5rem] md:rounded-[3.5rem] hover:border-cyber-neon/50 hover:bg-cyber-neon/[0.03] transition-all duration-500 neo-card shadow-none flex flex-col justify-between overflow-hidden relative cursor-pointer group hover:scale-[1.03] hover:shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_30px_rgba(0,238,255,0.1)]">
-                      {/* Interactive Gradient Glow */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-cyber-neon/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                      
-                      {/* Decorative Element */}
-                      <div className="absolute -bottom-6 -right-6 md:-bottom-10 md:-right-10 text-[10rem] md:text-[12rem] font-black text-white/[0.03] group-hover:text-cyber-neon/[0.06] transition-all duration-700 pointer-events-none uppercase italic">
-                        {selectedLevel}
-                      </div>
-                      
-                      <div className="relative z-10 flex-1">
-                        <div className="flex justify-between items-start mb-6 md:mb-10">
-                          <div className="w-10 h-10 md:w-16 md:h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-cyber-neon/40 group-hover:bg-cyber-neon/10 transition-all duration-500 shadow-inner">
+                    <Card className="h-full p-5 md:p-6 bg-white/[0.03] border border-white/[0.06] rounded-2xl hover:border-cyber-neon/40 hover:bg-cyber-neon/[0.03] hover:shadow-[0_0_30px_rgba(0,238,255,0.06)] transition-all duration-300 flex flex-col justify-between cursor-pointer group">
+                      <div className="flex-1">
+                        {/* Top row */}
+                        <div className="flex justify-between items-center mb-4">
+                          <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:border-cyber-neon/30 group-hover:bg-cyber-neon/10 transition-all duration-300">
                             <Bookmark
-                              size={20}
-                              className="text-slate-500 group-hover:text-cyber-neon transition-colors duration-500 md:w-7 md:h-7"
+                              size={16}
+                              className="text-slate-500 group-hover:text-cyber-neon transition-colors duration-300 md:w-[18px] md:h-[18px]"
                             />
                           </div>
-                          <Badge variant="outline" className="text-[9px] md:text-xs font-bold uppercase tracking-[0.2em] text-slate-500 border-white/10 px-3 py-1.5 md:px-4 md:py-2 bg-black/20 backdrop-blur-md h-auto">
-                            ID: {article.slug.substring(0, 8).toUpperCase()}
+                          <Badge variant="outline" className="text-[9px] md:text-[10px] font-bold uppercase tracking-wider text-slate-500 border-white/[0.08] px-2.5 py-1 rounded-lg h-auto">
+                            {article.slug.substring(0, 8).toUpperCase()}
                           </Badge>
                         </div>
                         
-                        <h2 className="text-2xl md:text-4xl lg:text-5xl font-black text-white tracking-tighter leading-[1.1] group-hover:text-cyber-neon transition-colors duration-500 drop-shadow-2xl italic">
+                        {/* Title */}
+                        <h2 className="text-lg md:text-xl font-black text-white tracking-tight leading-snug group-hover:text-cyber-neon transition-colors duration-300 mb-2 line-clamp-3">
                           {article.title}
                         </h2>
-                        <div className="mt-4 md:mt-6 flex items-center gap-3">
-                           <div className="h-0.5 w-6 md:w-10 bg-cyber-neon/40 rounded-full group-hover:w-12 transition-all duration-500" />
-                           <span className="text-[9px] md:text-xs font-black text-slate-500 uppercase tracking-[0.3em] leading-none group-hover:text-slate-400 transition-colors">Sintaksis</span>
-                        </div>
+                        <span className="text-[9px] md:text-[10px] font-bold text-slate-600 uppercase tracking-widest">Sintaksis</span>
                       </div>
 
-                      <div className="mt-8 md:mt-12 pt-6 md:pt-10 border-t border-white/10 flex items-center justify-between text-[9px] md:text-xs font-black uppercase tracking-[0.3em] relative z-10">
-                        <span className="text-slate-500 group-hover:text-cyber-neon transition-colors duration-300">
+                      {/* Bottom CTA */}
+                      <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between">
+                        <span className="text-[9px] md:text-[10px] font-bold text-slate-600 uppercase tracking-wider group-hover:text-cyber-neon transition-colors">
                           Pelajari Modul
                         </span>
-                        <div className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-cyber-neon group-hover:text-black group-hover:border-none group-hover:translate-x-2 transition-all duration-500 shadow-lg">
-                           <ArrowRight size={16} className="md:w-5 md:h-5" />
+                        <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-cyber-neon group-hover:text-black group-hover:border-none transition-all duration-300">
+                           <ArrowRight size={14} />
                         </div>
                       </div>
                     </Card>
@@ -198,10 +190,10 @@ export default function GrammarArticlesPage() {
                 </motion.div>
               ))
             ) : (
-              <Card className="col-span-full py-16 md:py-32 lg:py-40 border border-dashed border-white/10 bg-black/20 rounded-3xl md:rounded-[4rem] text-center neo-inset shadow-none px-4">
-                <div className="flex justify-center mb-6 md:mb-10">
-                   <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-cyber-neon/5 flex items-center justify-center border border-cyber-neon/10">
-                      <BookText size={28} className="text-slate-500 md:w-10 md:h-10" />
+              <Card className="col-span-full py-16 md:py-24 border border-dashed border-white/10 bg-black/20 rounded-2xl text-center px-4">
+                <div className="flex justify-center mb-5">
+                   <div className="w-14 h-14 rounded-full bg-cyber-neon/5 flex items-center justify-center border border-cyber-neon/10">
+                      <BookText size={24} className="text-slate-500" />
                    </div>
                 </div>
                 <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] md:text-sm mb-6">

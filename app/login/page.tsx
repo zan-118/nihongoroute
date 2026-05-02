@@ -109,10 +109,10 @@ export default function LoginPage() {
           <div className="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
             <Sparkles className="text-blue-400" size={32} />
           </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
+          <h1 className="text-2xl md:text-3xl font-black text-white mb-2 uppercase tracking-tight">
             {isRegistering ? "Yuk, bikin akun baru!" : "Siap lanjut belajar?"}
           </h1>
-          <p className="text-sm text-slate-400">
+          <p className="text-xs md:text-sm text-slate-500 font-medium leading-relaxed">
             {isRegistering 
               ? "Bikin akun yuk, biar semua progres belajarmu tersimpan rapi dan bisa diakses kapan aja." 
               : "Masuk ke akunmu, yuk! Kita lanjutin petualangan belajar yang seru ini."}
@@ -173,9 +173,9 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-colors disabled:opacity-50 disabled:hover:bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.3)]"
+            className="w-full py-4 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold uppercase tracking-widest text-[10px] md:text-xs transition-all disabled:opacity-50 shadow-[0_0_20px_rgba(37,99,235,0.3)] border-none"
           >
-            {loading ? "Sedang memproses..." : (isRegistering ? "Daftar Sekarang!" : "Masuk Yuk!")}
+            {loading ? "Sedang memproses..." : (isRegistering ? "Daftar Sekarang" : "Masuk Sekarang")}
           </button>
         </form>
 
@@ -198,7 +198,7 @@ export default function LoginPage() {
             <div className="w-full border-t border-slate-800"></div>
           </div>
           <div className="relative flex justify-center">
-            <span className="bg-slate-900 px-4 text-xs text-slate-500 uppercase tracking-widest">Atau pakai cara ini</span>
+            <span className="bg-slate-900 px-4 text-[9px] md:text-[10px] font-bold text-slate-600 uppercase tracking-widest">Atau pakai cara ini</span>
           </div>
         </div>
 

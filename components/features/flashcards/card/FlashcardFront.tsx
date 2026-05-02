@@ -9,11 +9,11 @@ interface FlashcardFrontProps {
 }
 
 export function FlashcardFront({ word, themeContext }: FlashcardFrontProps) {
-  const { isKanji, themeColor, glowClass } = themeContext;
+  const { isKanji, themeColor, themeBorder, themeShadow } = themeContext;
 
   return (
     <Card
-      className="absolute inset-0 w-full h-full bg-[#0a0c10] border-white/5 flex flex-col items-center justify-center p-4 sm:p-10 md:p-12 rounded-[2.5rem] md:rounded-[3rem] neo-card shadow-none overflow-hidden"
+      className={`absolute inset-0 w-full h-full border ${themeBorder} rounded-2xl ${themeShadow} flex flex-col items-center justify-center p-6 md:p-8 transition-all duration-500 shadow-none overflow-hidden bg-[#0a0c10]`}
       style={{
         backfaceVisibility: "hidden",
         WebkitBackfaceVisibility: "hidden",
@@ -23,20 +23,20 @@ export function FlashcardFront({ word, themeContext }: FlashcardFrontProps) {
 
       <Badge
         variant="outline"
-        className="absolute top-6 md:top-8 left-1/2 -translate-x-1/2 text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-400 border-white/5 px-4 md:px-6 py-1.5 md:py-2 rounded-lg md:rounded-xl bg-black/20 neo-inset h-auto whitespace-nowrap"
+        className="absolute top-6 md:top-8 left-1/2 -translate-x-1/2 text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-400 border-white/[0.08] px-4 md:px-5 py-1.5 rounded-lg bg-black/20 h-auto whitespace-nowrap"
       >
         {isKanji ? "Karakter Kanji" : "Kosakata Utama"}
       </Badge>
 
       <h2
-        className={`${word.length > 4 ? "text-5xl sm:text-6xl md:text-7xl lg:text-9xl" : "text-7xl sm:text-8xl md:text-9xl lg:text-[11rem]"} font-black text-white tracking-tight font-japanese leading-none z-10 ${glowClass} transition-all duration-300`}
+        className={`${word.length > 4 ? "text-4xl sm:text-5xl md:text-6xl lg:text-7xl" : "text-5xl sm:text-6xl md:text-7xl lg:text-8xl"} font-black text-white tracking-tight font-japanese leading-tight transition-all duration-300 drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]`}
       >
         {word}
       </h2>
 
-      <div className="absolute bottom-6 md:bottom-10 flex flex-col items-center gap-1.5 md:gap-2">
-         <MousePointer2 size={16} className={`${themeColor} opacity-50 animate-bounce md:w-5 md:h-5`} />
-         <p className={`${themeColor} opacity-50 text-[9px] md:text-[10px] font-bold uppercase tracking-widest`}>
+      <div className="absolute bottom-6 md:bottom-8 flex flex-col items-center gap-1.5">
+         <MousePointer2 size={16} className={`${themeColor} opacity-40 animate-bounce`} />
+         <p className={`${themeColor} opacity-40 text-[9px] font-bold uppercase tracking-widest`}>
            Ketuk untuk Melihat Arti
          </p>
       </div>

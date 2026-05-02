@@ -8,8 +8,11 @@ import { sounds } from "@/lib/audio";
 import { MasterCardData } from "./features/flashcards/master/types";
 import { useFlashcardMaster } from "./features/flashcards/master/useFlashcardMaster";
 import { SessionSummaryModal } from "./features/flashcards/master/SessionSummaryModal";
-import { FlashcardHeader } from "./features/flashcards/master/FlashcardHeader";
 import { FlashcardActions } from "./features/flashcards/master/FlashcardActions";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Brain, Check } from "lucide-react";
 
 export default function FlashcardMaster({
   cards,
@@ -67,35 +70,55 @@ export default function FlashcardMaster({
         <XPPop show={showXP} amount={15} />
       </div>
 
-      <FlashcardHeader
-        isFixedMode={isFixedMode}
-        studyMode={studyMode}
-        setStudyMode={setStudyMode}
-        setIsFlipped={setIsFlipped}
-        currentIndex={currentIndex}
-        totalCards={cards.length}
-        themeColor={themeColor}
-        themeBgColor={themeBgColor}
-        themeShadow={themeShadow}
-      />
+      {/* HEADER SECTION */}
+      <div className="mb-6 flex flex-col gap-4">
+        {!isFixedMode && (
+          <Card className="flex justify-between items-center bg-white/[0.03] p-1 rounded-xl md:rounded-2xl border-white/[0.08] shadow-none">
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setStudyMode("latihan");
+                setIsFlipped(false);
+              }}
+              className={`flex-1 rounded-lg md:rounded-xl h-9 md:h-11 text-[9px] md:text-[10px] font-bold uppercase tracking-widest transition-all ${
+                studyMode === "latihan"
+                  ? "bg-white/10 text-white shadow-none"
+                  : "text-slate-500 hover:text-slate-300"
+              }`}
+            >
+              <Brain size={14} className="mr-1.5 md:mr-2" /> Pemanasan
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setStudyMode("ujian");
+                setIsFlipped(false);
+              }}
+              className={`flex-1 rounded-lg md:rounded-xl h-9 md:h-11 text-[9px] md:text-[10px] font-bold uppercase tracking-widest transition-all ${
+                studyMode === "ujian"
+                  ? `${themeBgColor} text-black ${themeShadow} hover:opacity-90`
+                  : "text-slate-500 hover:text-slate-300"
+              }`}
+            >
+              <Check size={14} className="mr-1.5 md:mr-2" /> Uji Hafalan
+            </Button>
+          </Card>
+        )}
+
+        <div className="flex items-center gap-3 px-1">
+          <Badge variant="ghost" className="text-white/60 font-mono text-[9px] md:text-[10px] font-bold bg-white/[0.03] px-3 py-1 md:px-4 md:py-1.5 rounded-lg border border-white/[0.08] shadow-none h-auto">
+            {currentIndex + 1} <span className="opacity-30 mx-1">/</span> {cards.length}
+          </Badge>
+          <Progress
+            value={((currentIndex + 1) / cards.length) * 100}
+            className="h-1 bg-black/40 border-none overflow-hidden rounded-full flex-1"
+            indicatorClassName={`${themeBgColor} shadow-[0_0_10px_rgba(0,238,255,0.5)]`}
+          />
+        </div>
+      </div>
 
       {/* KARTU UTAMA SECTION */}
       <div className="relative w-full mb-8 md:mb-10">
-        {/* SRS LIFE BAR (Mini Progress) */}
-        <div className="mb-4 flex flex-col gap-1.5 px-2">
-          <div className="flex justify-between items-center text-[8px] font-black uppercase tracking-[0.3em] text-slate-500">
-            <span>Session Energy</span>
-            <span className={themeColor}>
-              {Math.round(((currentIndex + 1) / cards.length) * 100)}%
-            </span>
-          </div>
-          <Progress
-            value={((currentIndex + 1) / cards.length) * 100}
-            className="h-1 bg-black/40 border-none overflow-hidden rounded-full"
-            indicatorClassName={`${themeBgColor} shadow-[0_0_15px_rgba(0,238,255,0.8)] animate-pulse`}
-          />
-        </div>
-
         <AnimatePresence initial={false} mode="wait">
           <motion.div
             key={currentIndex}

@@ -88,10 +88,10 @@ export default function LandingPage() {
           >
             <Badge
               variant="outline"
-              className="bg-cyan-400/10 border-cyan-400/20 px-4 py-2 rounded-xl flex items-center gap-2 neo-inset"
+              className="bg-cyan-400/10 border-cyan-400/20 px-4 py-2 rounded-xl flex items-center gap-2 shadow-none"
             >
               <Sparkles size={14} className="text-cyan-400 animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-cyan-400">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-cyan-400">
                 Next-Gen Learning Platform
               </span>
             </Badge>
@@ -100,7 +100,7 @@ export default function LandingPage() {
           <motion.h1
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="text-5xl md:text-8xl lg:text-9xl font-black italic uppercase tracking-tighter leading-[0.9] text-white mb-8"
+            className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[0.9] text-white mb-8"
           >
             Kuasai <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-[0_0_15px_rgba(34,211,238,0.3)]">
@@ -112,11 +112,10 @@ export default function LandingPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="text-slate-200 text-sm md:text-lg max-w-2xl mb-12 leading-relaxed italic"
+            className="text-slate-400 text-sm md:text-lg max-w-2xl mb-12 leading-relaxed font-medium"
           >
             Belajar bahasa Jepang jadi lebih seru dan mudah. Gratis, modern, 
-            dan didesain khusus dengan metode sains kognitif untuk membantumu 
-            mahir lebih cepat.
+            dan didesain khusus untuk membantumu mahir lebih cepat.
           </motion.p>
 
           <motion.div
@@ -140,7 +139,7 @@ export default function LandingPage() {
             <Button
               asChild
               variant="ghost"
-              className="h-auto py-4 px-10 neo-card hover:bg-white/5 transition-all text-white font-bold uppercase tracking-widest text-sm border-white/5 shadow-none"
+              className="h-auto py-4 px-10 bg-white/[0.03] border border-white/[0.08] hover:bg-white/5 transition-all text-white font-bold uppercase tracking-widest text-[10px] md:text-xs shadow-none rounded-xl"
             >
               <Link href="/courses">
                 <PlayCircle size={18} className="mr-2 text-cyan-400" /> Jelajahi Materi
@@ -160,21 +159,16 @@ export default function LandingPage() {
           {/* Feature 1 */}
           <motion.div
             variants={itemVariants}
-            whileHover={{ y: -12 }}
             className="h-full"
           >
-            <Card className="p-8 md:p-12 group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-slate-900/40 backdrop-blur-xl rounded-[2.5rem] md:rounded-[3.5rem] border-white/10 hover:border-white/20 hover:bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.4)] hover:shadow-[0_20px_60px_rgba(34,211,238,0.1)]">
-              <div className="absolute -top-6 -right-6 md:-top-10 md:-right-10 text-[10rem] md:text-[12rem] font-black italic text-white/[0.03] group-hover:text-cyan-400/[0.06] transition-all duration-700 pointer-events-none select-none">
-                01
+            <Card className="p-6 md:p-8 group relative overflow-hidden transition-all duration-300 flex flex-col h-full bg-white/[0.03] rounded-2xl border-white/[0.08] hover:border-cyan-400/40 hover:bg-cyan-400/[0.02] shadow-lg">
+              <div className="mb-8 p-4 bg-white/[0.04] border border-white/[0.08] w-fit rounded-xl group-hover:bg-cyan-400 group-hover:text-black transition-all duration-300 shadow-inner text-cyan-400 group-hover:border-none relative z-10">
+                <BrainCircuit size={24} />
               </div>
-              <div className={`absolute inset-0 bg-gradient-to-br from-cyan-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
-              <div className="mb-10 p-5 bg-white/5 border border-white/10 w-fit rounded-2xl md:rounded-3xl group-hover:scale-110 group-hover:bg-cyan-400 group-hover:text-black transition-all duration-500 shadow-inner text-cyan-400 group-hover:border-none relative z-10">
-                <BrainCircuit size={28} />
-              </div>
-              <h3 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter mb-6 relative z-10 transition-colors duration-500 text-cyan-400 group-hover:text-white">
+              <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight mb-4 relative z-10 transition-colors duration-300 text-white group-hover:text-cyan-400">
                 Hafal Tanpa Lupa
               </h3>
-              <p className="text-slate-400 text-sm md:text-base leading-relaxed flex-1 italic font-bold group-hover:text-slate-200 transition-colors duration-500 relative z-10">
+              <p className="text-slate-500 text-xs md:text-sm leading-relaxed flex-1 font-medium group-hover:text-slate-300 transition-colors duration-300 relative z-10">
                 Gunakan algoritma cerdas untuk mengunci kosakata dalam ingatan jangka panjangmu secara otomatis.
               </p>
             </Card>
@@ -183,21 +177,16 @@ export default function LandingPage() {
           {/* Feature 2 */}
           <motion.div
             variants={itemVariants}
-            whileHover={{ y: -12 }}
             className="h-full"
           >
-            <Card className="p-8 md:p-12 group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-slate-900/40 backdrop-blur-xl rounded-[2.5rem] md:rounded-[3.5rem] border-white/10 hover:border-white/20 hover:bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.4)] hover:shadow-[0_20px_60px_rgba(34,211,238,0.1)]">
-              <div className="absolute -top-6 -right-6 md:-top-10 md:-right-10 text-[10rem] md:text-[12rem] font-black italic text-white/[0.03] group-hover:text-purple-400/[0.06] transition-all duration-700 pointer-events-none select-none">
-                02
+            <Card className="p-6 md:p-8 group relative overflow-hidden transition-all duration-300 flex flex-col h-full bg-white/[0.03] rounded-2xl border-white/[0.08] hover:border-purple-400/40 hover:bg-purple-400/[0.02] shadow-lg">
+              <div className="mb-8 p-4 bg-white/[0.04] border border-white/[0.08] w-fit rounded-xl group-hover:bg-purple-400 group-hover:text-black transition-all duration-300 shadow-inner text-purple-400 group-hover:border-none relative z-10">
+                <Library size={24} />
               </div>
-              <div className={`absolute inset-0 bg-gradient-to-br from-purple-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
-              <div className="mb-10 p-5 bg-white/5 border border-white/10 w-fit rounded-2xl md:rounded-3xl group-hover:scale-110 group-hover:bg-purple-400 group-hover:text-black transition-all duration-500 shadow-inner text-purple-400 group-hover:border-none relative z-10">
-                <Library size={28} />
-              </div>
-              <h3 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter mb-6 relative z-10 transition-colors duration-500 text-purple-400 group-hover:text-white">
+              <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight mb-4 relative z-10 transition-colors duration-300 text-white group-hover:text-purple-400">
                 Pustaka Lengkap
               </h3>
-              <p className="text-slate-400 text-sm md:text-base leading-relaxed flex-1 italic font-bold group-hover:text-slate-200 transition-colors duration-500 relative z-10">
+              <p className="text-slate-500 text-xs md:text-sm leading-relaxed flex-1 font-medium group-hover:text-slate-300 transition-colors duration-300 relative z-10">
                 Akses ribuan tata bahasa, matriks kata kerja, dan kamus praktis dalam satu genggaman.
               </p>
             </Card>
@@ -206,21 +195,16 @@ export default function LandingPage() {
           {/* Feature 3 */}
           <motion.div
             variants={itemVariants}
-            whileHover={{ y: -12 }}
             className="h-full"
           >
-            <Card className="p-8 md:p-12 group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-slate-900/40 backdrop-blur-xl rounded-[2.5rem] md:rounded-[3.5rem] border-white/10 hover:border-white/20 hover:bg-white/[0.02] shadow-[0_20px_50px_rgba(0,0,0,0.4)] hover:shadow-[0_20px_60px_rgba(34,211,238,0.1)]">
-              <div className="absolute -top-6 -right-6 md:-top-10 md:-right-10 text-[10rem] md:text-[12rem] font-black italic text-white/[0.03] group-hover:text-amber-400/[0.06] transition-all duration-700 pointer-events-none select-none">
-                03
+            <Card className="p-6 md:p-8 group relative overflow-hidden transition-all duration-300 flex flex-col h-full bg-white/[0.03] rounded-2xl border-white/[0.08] hover:border-amber-400/40 hover:bg-amber-400/[0.02] shadow-lg">
+              <div className="mb-8 p-4 bg-white/[0.04] border border-white/[0.08] w-fit rounded-xl group-hover:bg-amber-400 group-hover:text-black transition-all duration-300 shadow-inner text-amber-400 group-hover:border-none relative z-10">
+                <Zap size={24} />
               </div>
-              <div className={`absolute inset-0 bg-gradient-to-br from-amber-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
-              <div className="mb-10 p-5 bg-white/5 border border-white/10 w-fit rounded-2xl md:rounded-3xl group-hover:scale-110 group-hover:bg-amber-400 group-hover:text-black transition-all duration-500 shadow-inner text-amber-400 group-hover:border-none relative z-10">
-                <Zap size={28} />
-              </div>
-              <h3 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter mb-6 relative z-10 transition-colors duration-500 text-amber-400 group-hover:text-white">
+              <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight mb-4 relative z-10 transition-colors duration-300 text-white group-hover:text-amber-400">
                 Siap Ujian JLPT
               </h3>
-              <p className="text-slate-400 text-sm md:text-base leading-relaxed flex-1 italic font-bold group-hover:text-slate-200 transition-colors duration-500 relative z-10">
+              <p className="text-slate-500 text-xs md:text-sm leading-relaxed flex-1 font-medium group-hover:text-slate-300 transition-colors duration-300 relative z-10">
                 Latih kesiapanmu dengan simulasi ujian waktu nyata yang akurat untuk target kelulusanmu.
               </p>
             </Card>
@@ -234,18 +218,16 @@ export default function LandingPage() {
           viewport={{ once: true }}
           className="w-full"
         >
-          <Card className="p-10 md:p-16 rounded-[3rem] md:rounded-[5rem] flex flex-col lg:flex-row items-center justify-between gap-12 bg-slate-900/40 backdrop-blur-2xl border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.5)] relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            
-            <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
-              <div className="w-20 h-20 md:w-24 md:h-24 bg-white/5 border border-white/10 flex items-center justify-center rounded-3xl shrink-0 group-hover:scale-110 group-hover:border-cyan-400/40 transition-all duration-700 shadow-2xl">
-                <ShieldCheck size={48} className="text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]" />
+          <Card className="p-8 md:p-12 rounded-[2rem] flex flex-col lg:flex-row items-center justify-between gap-10 bg-white/[0.03] border-white/[0.08] shadow-2xl relative overflow-hidden group transition-all duration-300 hover:border-cyan-400/30">
+            <div className="flex flex-col md:flex-row items-center gap-6 relative z-10">
+              <div className="w-16 h-16 md:w-20 md:h-20 bg-white/[0.04] border border-white/[0.08] flex items-center justify-center rounded-2xl shrink-0 group-hover:border-cyan-400/40 transition-all duration-500">
+                <ShieldCheck size={36} className="text-cyan-400" />
               </div>
               <div className="text-center md:text-left">
-                <h4 className="text-white font-black uppercase italic text-2xl md:text-4xl tracking-tighter mb-2">
+                <h4 className="text-white font-black uppercase text-2xl md:text-3xl tracking-tight mb-2">
                   Sepenuhnya <span className="text-cyan-400">Gratis Untukmu</span>
                 </h4>
-                <p className="text-slate-400 text-sm md:text-lg font-bold italic opacity-80 group-hover:opacity-100 transition-opacity">
+                <p className="text-slate-400 text-sm md:text-base font-medium">
                   Dibuat dengan sepenuh hati untuk membantu siapa saja yang ingin belajar 
                   bahasa Jepang tanpa harus terhalang biaya.
                 </p>
@@ -275,10 +257,10 @@ export default function LandingPage() {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-white font-black italic uppercase tracking-widest">
+              <span className="text-white font-black uppercase tracking-widest">
                 Nihongo<span className="text-cyan-400">Route</span>
               </span>
-              <span className="text-[8px] text-slate-600 font-bold uppercase tracking-[0.4em]">
+              <span className="text-[8px] text-slate-600 font-bold uppercase tracking-widest">
                 Digital Learning Ecosystem © {new Date().getFullYear()}
               </span>
             </div>
