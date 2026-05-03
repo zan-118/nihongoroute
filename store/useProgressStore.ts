@@ -15,6 +15,7 @@ export interface Notification {
 }
 
 export interface UserProgress {
+  name: string | null;
   xp: number;
   level: number;
   streak: number;
@@ -36,7 +37,6 @@ export interface ProgressState {
   loading: boolean;
   dirtySrs: Set<string>;
   isAuthenticated: boolean;
-  userFullName: string | null;
   
   // Actions
   setProgress: (progress: UserProgress) => void;
@@ -58,9 +58,11 @@ export interface ProgressState {
   toggleNotifications: (enabled: boolean) => void;
   mergeProgress: (cloudData: UserProgress) => void;
   removeFromSRS: (wordId: string) => void;
+  resetProgress: () => void;
 }
 
 const defaultProgress: UserProgress = {
+  name: null,
   xp: 0,
   level: 1,
   streak: 0,
@@ -105,11 +107,13 @@ export const useProgressStore = create<ProgressState>()(
       loading: true,
       dirtySrs: new Set(),
       isAuthenticated: false,
-      userFullName: null,
 
       setProgress: (progress) => set({ progress }),
       setLoading: (loading) => set({ loading }),
-      setAuth: (isAuthenticated, userFullName) => set({ isAuthenticated, userFullName }),
+      setAuth: (isAuthenticated, userFullName) => set((state) => ({ 
+        isAuthenticated, 
+        progress: { ...state.progress, name: userFullName || state.progress.name } 
+      })),
       
       setDirtySrs: (updater) => set((state) => ({ 
         dirtySrs: typeof updater === 'function' ? updater(state.dirtySrs) : updater 
@@ -192,7 +196,9 @@ export const useProgressStore = create<ProgressState>()(
         });
       },
       
-      updateProfileName: (name) => set({ userFullName: name }),
+      updateProfileName: (name) => set((state) => ({ 
+        progress: { ...state.progress, name } 
+      })),
 
       addXP: (amount: number) => {
         const state = get();
@@ -426,6 +432,8 @@ export const useProgressStore = create<ProgressState>()(
           }
         });
       },
+
+      resetProgress: () => set({ progress: defaultProgress, dirtySrs: new Set() }),
     }),
     {
       name: "nihongoroute_save_data",

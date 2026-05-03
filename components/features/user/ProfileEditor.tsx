@@ -16,9 +16,9 @@ import { toast } from "sonner";
  */
 
 export default function ProfileEditor() {
-  const { userFullName, updateProfileName, isAuthenticated } = useProgressStore();
+  const { progress, updateProfileName, isAuthenticated } = useProgressStore();
   const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState(userFullName || "");
+  const [name, setName] = useState(progress.name || "");
   const [isLoading, setIsLoading] = useState(false);
   const supabase = createClient();
 
@@ -105,7 +105,7 @@ export default function ProfileEditor() {
           <div className="flex-1">
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground tracking-tighter leading-none flex items-center gap-4">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">
-                {userFullName || "Pelajar"}
+                {progress.name || "Pelajar"}
               </span>
               <button
                 onClick={() => setIsEditing(true)}

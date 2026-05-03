@@ -16,13 +16,13 @@ import {
 export function useNavbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { isAuthenticated, userFullName, progress } = useProgressStore(
+  const { isAuthenticated, progress } = useProgressStore(
     useShallow((state) => ({ 
       isAuthenticated: state.isAuthenticated, 
-      userFullName: state.userFullName,
       progress: state.progress
     }))
   );
+  const userFullName = progress.name;
   const supabase = createClient();
 
   const handleLogout = async () => {

@@ -12,6 +12,7 @@ import LevelUpOverlay from "@/components/features/gamification/LevelUpOverlay";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import OnboardingTour from "@/components/features/onboarding/OnboardingTour";
 import DailyQuests from "@/components/features/dashboard/DailyQuests";
+import { toast } from "sonner";
 
 const KanjiProgressGrid = dynamic(() => import("@/components/features/dashboard/KanjiProgressGrid"), { 
   ssr: false,
@@ -39,13 +40,14 @@ const itemVariants: Variants = {
 };
 
 export default function DashboardPage() {
-  const { progress, loading, exportData, importData, isAuthenticated } = useProgressStore(
+  const { progress, loading, exportData, importData, isAuthenticated, resetProgress } = useProgressStore(
     useShallow((state) => ({
       progress: state.progress,
       loading: state.loading,
       exportData: state.exportData,
       importData: state.importData,
       isAuthenticated: state.isAuthenticated,
+      resetProgress: state.resetProgress,
     }))
   );
   const [guestId, setGuestId] = useState<string>("MEMUAT...");
@@ -62,13 +64,27 @@ export default function DashboardPage() {
   const supabase = createClient();
 
   useEffect(() => {
-    let savedId = localStorage.getItem("nihongo_guest_id");
-    if (!savedId) {
-      savedId = "NP-" + Math.random().toString(36).substring(2, 8).toUpperCase();
-      localStorage.setItem("nihongo_guest_id", savedId);
-    }
-    setGuestId(savedId);
-  }, []);
+    const checkId = async () => {
+      if (isAuthenticated) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          // Gunakan UID Supabase yang dipendekkan sebagai Student ID
+          setGuestId("ST-" + session.user.id.substring(0, 8).toUpperCase());
+          return;
+        }
+      }
+
+      // Fallback ke Guest ID
+      let savedId = localStorage.getItem("nihongo_guest_id");
+      if (!savedId) {
+        savedId = "NP-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+        localStorage.setItem("nihongo_guest_id", savedId);
+      }
+      setGuestId(savedId);
+    };
+
+    checkId();
+  }, [isAuthenticated, supabase.auth]);
 
   const handleExportData = () => exportData();
 
@@ -103,9 +119,10 @@ export default function DashboardPage() {
       "Ya, Hapus Data",
       true,
       () => {
-        localStorage.removeItem("nihongoroute_save_data");
-        localStorage.removeItem("nihongo-progress");
-        window.location.reload();
+        resetProgress();
+        toast.success("Semua data telah dihapus.");
+        // reload tidak wajib karena state reaktif, tapi bisa membantu reset state lokal lainnya
+        window.location.reload(); 
       }
     );
   };
@@ -118,6 +135,7 @@ export default function DashboardPage() {
       true,
       async () => {
         await supabase.auth.signOut();
+        resetProgress();
         router.push("/login");
       }
     );
@@ -185,6 +203,7 @@ export default function DashboardPage() {
                 guestId={guestId} 
                 dueCount={dueCount}
                 itemVariants={itemVariants}
+                isAuthenticated={isAuthenticated}
               />
               <div className="space-y-8">
                 <div className="flex flex-col">

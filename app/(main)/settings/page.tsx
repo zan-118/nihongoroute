@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useProgressStore } from "@/store/useProgressStore";
 import { useShallow } from "zustand/react/shallow";
@@ -30,13 +30,13 @@ const itemVariants: Variants = {
 };
 
 export default function SettingsPage() {
-  const { exportData, importData, isAuthenticated, userFullName, updateProfileName, dirtySrs, progress, clearDirtySrs } = useProgressStore(
+  const { exportData, importData, isAuthenticated, updateProfileName, resetProgress, dirtySrs, progress, clearDirtySrs } = useProgressStore(
     useShallow((state) => ({ 
       exportData: state.exportData, 
       importData: state.importData, 
       isAuthenticated: state.isAuthenticated,
-      userFullName: state.userFullName,
       updateProfileName: state.updateProfileName,
+      resetProgress: state.resetProgress,
       dirtySrs: state.dirtySrs,
       progress: state.progress,
       clearDirtySrs: state.clearDirtySrs
@@ -44,9 +44,16 @@ export default function SettingsPage() {
   );
   const hasMounted = useHasMounted();
   const [isSyncing, setIsSyncing] = useState(false);
-  const [newName, setNewName] = useState(userFullName || "");
+  const [newName, setNewName] = useState("");
   const router = useRouter();
   const supabase = createClient();
+
+  // Update newName when progress.name is available after mounting
+  useEffect(() => {
+    if (hasMounted && progress.name) {
+      setNewName(progress.name);
+    }
+  }, [hasMounted, progress.name]);
 
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,
@@ -90,9 +97,9 @@ export default function SettingsPage() {
       "Ya, Hapus Semuanya",
       true,
       () => {
-        localStorage.removeItem("nihongoroute_save_data");
-        localStorage.removeItem("nihongo-progress");
-        window.location.reload();
+        resetProgress();
+        toast.success("Semua data progres telah direset.");
+        // Kita tidak perlu reload karena Zustand akan mengupdate UI secara reaktif
       }
     );
   };
@@ -105,6 +112,7 @@ export default function SettingsPage() {
       true,
       async () => {
         await supabase.auth.signOut();
+        resetProgress(); // Reset local state on logout for safety
         router.push("/login");
       }
     );
@@ -193,7 +201,7 @@ export default function SettingsPage() {
               
               <div className="flex flex-col md:flex-row items-center gap-6 relative z-10">
                 <div className="w-20 h-20 rounded-[2rem] bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-white shadow-lg shadow-primary/20">
-                  <span className="text-3xl font-black italic">{(userFullName || "S").charAt(0).toUpperCase()}</span>
+                  <span className="text-3xl font-black italic">{(progress.name || "S").charAt(0).toUpperCase()}</span>
                 </div>
                 
                 <div className="flex-1 w-full text-center md:text-left">
@@ -211,13 +219,36 @@ export default function SettingsPage() {
                       />
                     </div>
                     <Button 
-                      onClick={() => {
-                        updateProfileName(newName);
-                        toast.success("Nama profil berhasil diperbarui!");
+                      onClick={async () => {
+                        setIsSyncing(true);
+                        try {
+                          // 1. Update lokal
+                          updateProfileName(newName);
+                          
+                          // 2. Update Cloud jika login
+                          if (isAuthenticated) {
+                            const { data: { user } } = await supabase.auth.getUser();
+                            if (user) {
+                              const { error } = await supabase
+                                .from("profiles")
+                                .update({ full_name: newName.trim() })
+                                .eq("id", user.id);
+                              
+                              if (error) throw error;
+                            }
+                          }
+                          toast.success("Nama profil berhasil diperbarui!");
+                        } catch (error) {
+                          console.error("Gagal sinkron nama:", error);
+                          toast.error("Nama disimpan lokal, tapi gagal sinkron ke cloud.");
+                        } finally {
+                          setIsSyncing(false);
+                        }
                       }}
-                      className="h-12 bg-primary text-primary-foreground font-black uppercase tracking-widest text-xs rounded-xl px-8 shadow-lg hover:shadow-primary/20 transition-all"
+                      disabled={isSyncing}
+                      className="h-12 bg-primary text-primary-foreground font-black uppercase tracking-widest text-xs rounded-xl px-8 shadow-lg hover:shadow-primary/20 transition-all disabled:opacity-50"
                     >
-                      Simpan Nama
+                      {isSyncing ? "Menyimpan..." : "Simpan Nama"}
                     </Button>
                   </div>
                 </div>

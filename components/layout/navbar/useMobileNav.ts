@@ -5,9 +5,13 @@ import { useShallow } from "zustand/react/shallow";
 
 export function useMobileNav() {
   const pathname = usePathname();
-  const { isAuthenticated, userFullName } = useProgressStore(
-    useShallow((state) => ({ isAuthenticated: state.isAuthenticated, userFullName: state.userFullName }))
+  const { isAuthenticated, progress } = useProgressStore(
+    useShallow((state) => ({ 
+      isAuthenticated: state.isAuthenticated, 
+      progress: state.progress 
+    }))
   );
+  const userFullName = progress.name;
 
   const navItems = [
     { href: "/dashboard", icon: Home, label: "Beranda" },

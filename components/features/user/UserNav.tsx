@@ -77,7 +77,7 @@ export default function UserNav() {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild className="rounded-xl cursor-pointer hover:bg-primary/10 hover:text-primary transition-colors py-2.5">
-            <Link href="/library" className="flex items-center">
+            <Link href="/dashboard" className="flex items-center">
               <User size={16} className="mr-3" />
               <span className="text-xs font-bold uppercase tracking-widest">Profil Belajar</span>
             </Link>

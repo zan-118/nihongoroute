@@ -31,7 +31,7 @@ export function ExamResult({
 }: ExamResultProps) {
   const { correctCount, finalScore, sectionBreakdown } = calculateScore();
   const isPassed = finalScore >= exam.passingScore;
-  const userFullName = useProgressStore((state) => state.userFullName) || "Siswa NihongoRoute";
+  const userFullName = useProgressStore((state) => state.progress.name) || "Siswa NihongoRoute";
 
   const certificateData = {
     userName: userFullName,

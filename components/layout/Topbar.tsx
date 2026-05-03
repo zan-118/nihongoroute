@@ -46,8 +46,8 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
            <Menu size={20} />
         </button>
 
-        <div className="flex flex-col">
-          <nav className="flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-muted-foreground mb-1">
+        <div className="flex flex-col min-w-0">
+          <nav className="hidden sm:flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-muted-foreground mb-1">
             <Link href="/dashboard" className="hover:text-primary transition-colors">Route</Link>
             {pathSegments.map((segment, idx) => (
               <div key={idx} className="flex items-center gap-1.5">
@@ -61,13 +61,13 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
               </div>
             ))}
           </nav>
-          <h1 className="text-xs md:text-sm font-black text-foreground uppercase tracking-wider capitalize">
+          <h1 className="text-[10px] md:text-sm font-black text-foreground uppercase tracking-wider truncate">
             {pathSegments.length > 0 ? pathSegments[pathSegments.length - 1].replace(/-/g, ' ') : "Dashboard"}
           </h1>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 md:gap-6">
+      <div className="flex items-center gap-2 md:gap-6">
         {/* Progress Pill */}
         {!hasMounted ? (
           <Skeleton className="hidden sm:block h-8 w-32 rounded-2xl" />

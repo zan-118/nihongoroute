@@ -14,9 +14,10 @@ interface DashboardHeroProps {
   guestId: string;
   dueCount: number;
   itemVariants: Variants;
+  isAuthenticated?: boolean;
 }
 
-export default function DashboardHero({ loading, guestId, dueCount, itemVariants }: DashboardHeroProps) {
+export default function DashboardHero({ loading, guestId, dueCount, itemVariants, isAuthenticated }: DashboardHeroProps) {
   return (
     <motion.div variants={itemVariants} className="flex flex-col gap-6 items-start w-full">
       <div className="flex-1 w-full flex flex-col items-center lg:items-start text-center lg:text-left">
@@ -24,11 +25,11 @@ export default function DashboardHero({ loading, guestId, dueCount, itemVariants
           <Skeleton className="h-6 w-32 rounded-full mb-6" />
         ) : (
           <div className="flex flex-col items-center lg:items-start gap-1 mb-8">
-            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30 px-4 py-1.5 rounded-full text-xs md:text-xs font-bold uppercase tracking-widest flex items-center gap-2 w-fit shadow-none">
-              <Sparkles size={14} /> Guest ID: {guestId}
+            <Badge variant="outline" className={`px-4 py-1.5 rounded-full text-xs md:text-xs font-bold uppercase tracking-widest flex items-center gap-2 w-fit shadow-none transition-all ${isAuthenticated ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/30' : 'bg-primary/10 text-primary border-primary/30'}`}>
+              <Sparkles size={14} /> {isAuthenticated ? 'Student ID:' : 'Guest ID:'} {guestId}
             </Badge>
             <span className="text-xs text-muted-foreground font-medium uppercase tracking-tighter opacity-60 ml-1">
-              Data disimpan secara lokal di browser Anda
+              {isAuthenticated ? 'Data Anda aman di sinkronisasi Cloud' : 'Data disimpan secara lokal di browser Anda'}
             </span>
           </div>
         )}
