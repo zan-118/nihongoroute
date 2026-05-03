@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { useProgressStore } from "@/store/useProgressStore";
 import { useSyncProgress } from "@/hooks/useSyncProgress";
+import { useHasMounted } from "@/hooks/useHasMounted";
 import ReminderSystem from "@/components/features/notifications/ReminderSystem";
 
 export const ProgressProvider = ({
@@ -12,6 +13,7 @@ export const ProgressProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const hasMounted = useHasMounted();
   const setAuth = useProgressStore((state) => state.setAuth);
   const dirtySrs = useProgressStore((state) => state.dirtySrs);
   
@@ -53,7 +55,7 @@ export const ProgressProvider = ({
   // UNSYNCED DATA WARNING (beforeunload)
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (dirtySrs.size > 0) {
+      if (dirtySrs.size > 0 && hasMounted) {
         const message = "Ada data belajar yang belum tersinkron ke Cloud. Yakin ingin keluar?";
         e.preventDefault();
         e.returnValue = message;
@@ -63,7 +65,9 @@ export const ProgressProvider = ({
 
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [dirtySrs]);
+  }, [dirtySrs, hasMounted]);
+
+  if (!hasMounted) return null;
 
   return (
     <>

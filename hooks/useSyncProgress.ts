@@ -8,6 +8,7 @@ import { calculateLevel } from "@/lib/level";
 import { syncLocalToCloud } from "@/lib/supabase/sync";
 import { getLocalDateString } from "@/lib/utils";
 import { useEffect, useRef } from "react";
+import { useHasMounted } from "@/hooks/useHasMounted";
 
 const STATS_STORAGE_KEY = "nihongo-progress";
 
@@ -19,6 +20,7 @@ export function useSyncProgress() {
   const dirtySrs = useProgressStore((state) => state.dirtySrs);
   const clearDirtySrs = useProgressStore((state) => state.clearDirtySrs);
 
+  const hasMounted = useHasMounted();
   const initialLoadDone = useRef(false);
 
   // 1. QUERY: Load Data dari Cloud
@@ -28,12 +30,13 @@ export function useSyncProgress() {
       const { data: { session } } = await supabase.auth.getSession();
       return session;
     },
+    enabled: hasMounted,
   });
 
   const { data: cloudData, isLoading: isFetching } = useQuery({
     queryKey: ["user-progress", session?.user?.id],
     queryFn: async () => {
-      if (!session?.user) return null;
+      if (!session?.user || !hasMounted) return null;
 
       // Cek apakah ada data lokal yang perlu migrasi (hanya sekali)
       if (!initialLoadDone.current) {
@@ -116,19 +119,21 @@ export function useSyncProgress() {
         notifications: useProgressStore.getState().progress.notifications || [],
       } as UserProgress;
     },
-    enabled: !!session?.user,
+    enabled: hasMounted && !!session?.user,
   });
 
   // Sinkronkan Cloud Data ke Zustand jika ada perubahan (Gunakan Merge, bukan Overwrite)
   useEffect(() => {
-    if (cloudData) {
+    if (cloudData && hasMounted) {
       mergeProgress(cloudData);
     }
-  }, [cloudData, mergeProgress]);
+  }, [cloudData, mergeProgress, hasMounted]);
 
   useEffect(() => {
-    setLoading(isFetching);
-  }, [isFetching, setLoading]);
+    if (hasMounted) {
+      setLoading(isFetching);
+    }
+  }, [isFetching, setLoading, hasMounted]);
 
   // 2. MUTATION: Atomic Sync to Cloud via RPC
   const syncMutation = useMutation({
