@@ -126,8 +126,17 @@ interface VocabularyValue {
 interface SanityImageValue {
   _type: "image";
   asset: {
-    _ref: string;
-    _type: "reference";
+    _id?: string;
+    _ref?: string;
+    _type?: "reference";
+    metadata?: {
+      lqip?: string;
+      dimensions?: {
+        width: number;
+        height: number;
+        aspectRatio: number;
+      };
+    };
   };
 }
 

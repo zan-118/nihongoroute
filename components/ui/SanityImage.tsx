@@ -6,7 +6,8 @@ import { urlFor } from "@/sanity/lib/image";
 interface SanityImageProps {
   value: {
     asset: {
-      _id: string;
+      _id?: string;
+      _ref?: string;
       metadata?: {
         lqip?: string;
         dimensions?: {
@@ -25,7 +26,7 @@ interface SanityImageProps {
  * Mendukung placeholder "blur" jika metadata lqip tersedia.
  */
 export default function SanityImage({ value }: SanityImageProps) {
-  if (!value?.asset?._id) return null;
+  if (!value?.asset?._id && !value?.asset?._ref) return null;
 
   const { metadata } = value.asset;
   const width = metadata?.dimensions?.width || 800;
