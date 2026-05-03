@@ -28,7 +28,7 @@ export default function StreakFreezeCard() {
     
     if (buyFreeze()) {
       toast.success("Streak Terlindungi!", {
-        description: "1 Streak Freeze telah ditambahkan ke kantongmu."
+        description: "1 Pelindung Streak telah ditambahkan ke kantongmu."
       });
     }
   };
@@ -45,8 +45,8 @@ export default function StreakFreezeCard() {
             <ShieldCheck size={20} />
           </div>
           <div>
-            <h4 className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mb-0.5">Upgrade</h4>
-            <h3 className="text-sm font-black text-foreground uppercase tracking-tight">Streak Freeze</h3>
+            <h4 className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mb-0.5">Peningkatan</h4>
+            <h3 className="text-sm font-black text-foreground uppercase tracking-tight">Pelindung Streak</h3>
           </div>
         </div>
         

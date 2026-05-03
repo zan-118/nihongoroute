@@ -13,10 +13,10 @@ export function useSRSAnalytics() {
   };
 
   const rawData = [
-    { label: "Critical", count: categories.critical, color: "#ef4444", desc: "Butuh Review Intensif" },
-    { label: "Fragile", count: categories.fragile, color: "#f59e0b", desc: "Memori Kurang Stabil" },
-    { label: "Stable", count: categories.stable, color: "#3b82f6", desc: "Penyimpanan Optimal" },
-    { label: "Master", count: categories.master, color: "#10b981", desc: "Retensi Permanen" },
+    { label: "Kritis", count: categories.critical, color: "#ef4444", desc: "Butuh Review Intensif" },
+    { label: "Rentan", count: categories.fragile, color: "#f59e0b", desc: "Memori Kurang Stabil" },
+    { label: "Stabil", count: categories.stable, color: "#3b82f6", desc: "Penyimpanan Optimal" },
+    { label: "Mahir", count: categories.master, color: "#10b981", desc: "Retensi Permanen" },
   ];
 
   const maxCount = Math.max(...rawData.map((d) => d.count)) || 1;

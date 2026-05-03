@@ -50,7 +50,7 @@ const ACHIEVEMENTS: Achievement[] = [
   },
   {
     id: "xp_master",
-    title: "XP Master",
+    title: "Pakar XP",
     description: "Kumpulkan total 5.000 XP",
     icon: Zap,
     condition: (p) => (p.xp / 5000) * 100,

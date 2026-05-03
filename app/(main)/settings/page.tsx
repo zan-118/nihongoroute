@@ -292,7 +292,7 @@ export default function SettingsPage() {
                   className="h-10 px-4 bg-muted/30 border-border rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
                 >
                   <RefreshCw size={14} className={`mr-2 ${isSyncing ? 'animate-spin' : ''}`} />
-                  {isSyncing ? "Sinkron..." : "Sync Now"}
+                  {isSyncing ? "Sinkron..." : "Sinkron Sekarang"}
                 </Button>
               </div>
             </Card>

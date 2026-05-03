@@ -230,7 +230,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
                 <span className="flex items-center gap-1.5"><ArrowRight size={10} className="rotate-90" /> Navigasi</span>
                 <span className="flex items-center gap-1.5"><Command size={10} className="rotate-90" /> Pilih</span>
               </div>
-              <span className="opacity-50">Global Search v2.0</span>
+              <span className="opacity-50">Pencarian Global v2.0</span>
             </div>
           </motion.div>
         </div>

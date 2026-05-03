@@ -73,7 +73,7 @@ export default function DashboardHero({ loading, guestId, dueCount, itemVariants
                 </Button>
                 <Button asChild variant="outline" className="flex-1 h-14 bg-background border-border hover:bg-primary/10 hover:border-primary hover:text-primary rounded-2xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-all">
                   <Link href="/review/quick">
-                    <Zap size={16} className="mr-2" /> Quick Quiz
+                    <Zap size={16} className="mr-2" /> Kuis Cepat
                   </Link>
                 </Button>
               </div>
@@ -86,7 +86,7 @@ export default function DashboardHero({ loading, guestId, dueCount, itemVariants
                 </Button>
                 <Button asChild variant="outline" className="flex-1 h-14 bg-background border-border hover:bg-primary/10 hover:border-primary hover:text-primary rounded-2xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-all">
                   <Link href="/review/quick">
-                    <Zap size={16} className="mr-2" /> Quick Quiz
+                    <Zap size={16} className="mr-2" /> Kuis Cepat
                   </Link>
                 </Button>
               </div>
@@ -107,11 +107,11 @@ export default function DashboardHero({ loading, guestId, dueCount, itemVariants
               <Zap size={14} />
             </div>
             <div>
-              <h4 className="text-[10px] font-bold text-primary uppercase tracking-widest mb-0.5">Pro Tip</h4>
+              <h4 className="text-[10px] font-bold text-primary uppercase tracking-widest mb-0.5">Tips Ahli</h4>
               <p className="text-[11px] text-muted-foreground leading-snug font-medium">
                 {Math.random() > 0.5 
                   ? "Aktifkan notifikasi di pengaturan agar tidak ketinggalan sesi review krusial." 
-                  : "Beli 'Streak Freeze' di shop untuk melindungi progresmu saat libur belajar."}
+                  : "Gunakan 'Pelindung Streak' dari toko untuk menjaga progresmu saat sedang sibuk."}
               </p>
             </div>
           </motion.div>

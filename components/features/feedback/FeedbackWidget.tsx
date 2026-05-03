@@ -53,7 +53,7 @@ export default function FeedbackWidget() {
           <DialogHeader>
             <DialogTitle className="text-xl font-bold text-foreground flex items-center gap-2">
               <MessageSquarePlus className="text-blue-500" />
-              Kirim Feedback
+              Kirim Masukan
             </DialogTitle>
             <DialogDescription className="text-muted-foreground">
               Bantu kami membuat NihongoRoute menjadi lebih baik.
@@ -62,7 +62,7 @@ export default function FeedbackWidget() {
 
           <form onSubmit={handleSubmit} className="space-y-4 mt-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground/80">Jenis Feedback</label>
+              <label className="text-sm font-medium text-foreground/80">Jenis Masukan</label>
               <div className="flex gap-2">
                 {(['bug', 'suggestion', 'compliment'] as const).map((t) => (
                   <button
@@ -102,7 +102,7 @@ export default function FeedbackWidget() {
               ) : (
                 <>
                   <Send className="w-4 h-4 mr-2" />
-                  Kirim Feedback
+                  Kirim Masukan
                 </>
               )}
             </Button>
