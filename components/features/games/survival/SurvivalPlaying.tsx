@@ -142,14 +142,14 @@ export function SurvivalPlaying({
                   ? "bg-red-500/20 border-red-500 shadow-lg text-red-600 dark:text-red-400" 
                   : isCorrect
                   ? "bg-emerald-500/20 border-emerald-500 shadow-lg text-emerald-600 dark:text-emerald-400"
-                  : "bg-muted/50 dark:bg-black/40 border-border dark:border-white/5 hover:border-primary/50 hover:bg-primary hover:text-primary-foreground neo-card"
+                  : "bg-muted/50 dark:bg-black/40 border-border dark:border-white/5 md:hover:border-primary/50 md:hover:bg-primary md:hover:text-primary-foreground neo-card active:scale-[0.98] transition-transform"
               }`}
             >
               <div className="flex items-center justify-center w-full h-full p-4 md:p-8 relative">
-                 <span className={`absolute top-2 left-3 md:top-4 md:left-6 text-[8px] md:text-xs font-bold uppercase tracking-widest transition-colors ${isWrong ? 'text-red-600/30' : 'text-muted-foreground/30 group-hover:text-foreground/30 dark:group-hover:text-black/30'}`}>
+                 <span className={`absolute top-2 left-3 md:top-4 md:left-6 text-[8px] md:text-xs font-bold uppercase tracking-widest transition-colors ${isWrong ? 'text-red-600/30' : 'text-muted-foreground/30 md:group-hover:text-foreground/30 dark:md:group-hover:text-black/30'}`}>
                    OPSI {idx+1}
                  </span>
-                 <p className="font-bold text-sm md:text-xl lg:text-2xl text-center leading-tight w-full break-words text-foreground group-hover:text-primary-foreground">
+                 <p className="font-bold text-sm md:text-xl lg:text-2xl text-center leading-tight w-full break-words text-foreground md:group-hover:text-primary-foreground">
                    {option.meaning}
                  </p>
                  {isWrong && (

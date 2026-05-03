@@ -36,6 +36,7 @@ export default function QuizEngine({ questions }: QuizProps) {
       selectedOption={engine.selectedOption}
       isAnswered={engine.isAnswered}
       handleSelect={engine.handleSelect}
+      nextQuestion={engine.nextQuestion}
     />
   );
 }

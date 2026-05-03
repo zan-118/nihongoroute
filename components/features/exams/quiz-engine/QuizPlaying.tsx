@@ -2,8 +2,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Brain, AlertCircle } from "lucide-react";
+import { Brain, AlertCircle, ArrowRight } from "lucide-react";
 import { QuizQuestion } from "./types";
+import { Button } from "@/components/ui/button";
 
 interface QuizPlayingProps {
   currentQ: QuizQuestion;
@@ -12,6 +13,7 @@ interface QuizPlayingProps {
   selectedOption: string | null;
   isAnswered: boolean;
   handleSelect: (option: string) => void;
+  nextQuestion: () => void;
 }
 
 export function QuizPlaying({
@@ -21,6 +23,7 @@ export function QuizPlaying({
   selectedOption,
   isAnswered,
   handleSelect,
+  nextQuestion,
 }: QuizPlayingProps) {
   return (
     <Card className="bg-card p-5 md:p-12 rounded-[2rem] md:rounded-[4rem] border-border shadow-none relative overflow-hidden neo-card">
@@ -73,7 +76,7 @@ export function QuizPlaying({
               const isSelected = selectedOption === option;
               const isCorrect = option === currentQ.answer;
 
-              let buttonStyle = "bg-muted/50 border-border text-muted-foreground hover:border-primary/50 hover:bg-muted neo-card";
+              let buttonStyle = "bg-muted/50 border-border text-muted-foreground md:hover:border-primary/50 md:hover:bg-muted neo-card active:scale-[0.98] transition-transform";
               let statusIcon = null;
 
               if (isAnswered) {
@@ -121,13 +124,14 @@ export function QuizPlaying({
         </div>
 
         <AnimatePresence>
-          {isAnswered && currentQ.explanation && (
+          {isAnswered && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-6 md:mt-10"
+              className="mt-6 md:mt-10 flex flex-col gap-6"
             >
-               <Card className="bg-red-500/5 border-l-4 border-l-red-500 p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-border neo-inset shadow-none">
+              {currentQ.explanation && (
+                <Card className="bg-red-500/5 border-l-4 border-l-red-500 p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-border neo-inset shadow-none">
                   <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-4">
                      <AlertCircle size={16} className="text-red-500 md:w-5 md:h-5" />
                      <span className="text-[10px] md:text-xs text-red-600 dark:text-red-500 font-bold uppercase tracking-widest">Penjelasan Materi</span>
@@ -135,7 +139,15 @@ export function QuizPlaying({
                   <p className="text-muted-foreground text-sm md:text-lg leading-relaxed font-medium">
                    {currentQ.explanation}
                  </p>
-               </Card>
+                </Card>
+              )}
+              
+              <Button 
+                onClick={nextQuestion}
+                className="w-full py-6 md:py-8 rounded-[1.5rem] md:rounded-[2rem] bg-red-600 hover:bg-red-700 text-white font-black text-sm md:text-lg uppercase tracking-widest shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
+              >
+                Lanjutkan <ArrowRight size={20} className="ml-3" />
+              </Button>
             </motion.div>
           )}
         </AnimatePresence>
