@@ -29,11 +29,25 @@ export default function ReminderSystem() {
 
       // Only notify if there are cards due and we haven't notified in the last 1 hour
       if (dueCount > 0 && now - lastNotifiedRef.current > 3600000) {
-        new Notification("NihongoRoute", {
+        const title = "NihongoRoute";
+        const options = {
           body: `Okaeri! Ada ${dueCount} kartu yang butuh kamu review sekarang. Jangan sampai lupa ya!`,
           icon: "/logo-branding.png",
+          badge: "/logo-branding.png",
           tag: "srs-reminder", // Avoid duplicates
-        });
+          vibrate: [100, 50, 100],
+        };
+
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.ready.then((registration) => {
+            registration.showNotification(title, options);
+          }).catch(() => {
+            new Notification(title, options);
+          });
+        } else {
+          new Notification(title, options);
+        }
+        
         lastNotifiedRef.current = now;
       }
     };

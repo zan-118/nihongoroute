@@ -47,11 +47,27 @@ export default function NotificationManager() {
           description: "Anda akan menerima pengingat untuk sesi review berikutnya."
         });
         
-        // Test notification
-        new Notification("NihongoRoute", {
-          body: "Notifikasi berhasil diaktifkan! Kami akan mengingatkanmu jika ada kartu yang jatuh tempo.",
-          icon: "/logo-branding.png"
-        });
+        // Test notification using Service Worker if available (Better for Mobile)
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.ready.then((registration) => {
+            registration.showNotification("NihongoRoute", {
+              body: "Notifikasi berhasil diaktifkan! Kami akan mengingatkanmu jika ada kartu yang jatuh tempo.",
+              icon: "/logo-branding.png",
+              badge: "/logo-branding.png",
+              vibrate: [100, 50, 100],
+            });
+          }).catch(() => {
+            new Notification("NihongoRoute", {
+              body: "Notifikasi berhasil diaktifkan! Kami akan mengingatkanmu jika ada kartu yang jatuh tempo.",
+              icon: "/logo-branding.png"
+            });
+          });
+        } else {
+          new Notification("NihongoRoute", {
+            body: "Notifikasi berhasil diaktifkan! Kami akan mengingatkanmu jika ada kartu yang jatuh tempo.",
+            icon: "/logo-branding.png"
+          });
+        }
       } else {
         toggleNotifications(false);
         toast.warning("Izin Ditolak", {
