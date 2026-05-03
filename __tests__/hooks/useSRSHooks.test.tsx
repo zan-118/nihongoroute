@@ -24,6 +24,9 @@ describe("useMemoryStats", () => {
           "w6": makeSRS(50, 15, 3.0),  // master
           "w7": makeSRS(10, 4, 2.3),   // intermediate
         },
+        notifications: [],
+        inventory: { streakFreeze: 0 },
+        settings: { notificationsEnabled: false },
       },
       loading: false,
       dirtySrs: new Set(),
@@ -59,7 +62,12 @@ describe("useMemoryStats", () => {
 
   it("mengembalikan total = 1 saat SRS kosong (untuk menghindari divide by zero)", () => {
     useProgressStore.setState({
-      progress: { xp: 0, level: 1, streak: 0, todayReviewCount: 0, lastStudyDate: null, studyDays: {}, srs: {} },
+      progress: { 
+        xp: 0, level: 1, streak: 0, todayReviewCount: 0, lastStudyDate: null, studyDays: {}, srs: {},
+        notifications: [],
+        inventory: { streakFreeze: 0 },
+        settings: { notificationsEnabled: false },
+      },
     });
 
     const { result } = renderHook(() => useMemoryStats());
@@ -80,6 +88,9 @@ describe("useSRSAnalytics", () => {
           "a5": makeSRS(30, 10, 2.9), // master (ef >= 2.7)
           "a6": makeSRS(50, 15, 3.0), // master
         },
+        notifications: [],
+        inventory: { streakFreeze: 0 },
+        settings: { notificationsEnabled: false },
       },
       loading: false,
       dirtySrs: new Set(),
@@ -95,25 +106,25 @@ describe("useSRSAnalytics", () => {
 
   it("mengkategorikan critical dengan benar", () => {
     const { result } = renderHook(() => useSRSAnalytics());
-    const criticalData = result.current.rawData.find(d => d.label === "Critical");
+    const criticalData = result.current.rawData.find(d => d.label === "Kritis");
     expect(criticalData?.count).toBe(2); // a1, a2
   });
 
   it("mengkategorikan fragile dengan benar", () => {
     const { result } = renderHook(() => useSRSAnalytics());
-    const fragileData = result.current.rawData.find(d => d.label === "Fragile");
+    const fragileData = result.current.rawData.find(d => d.label === "Rentan");
     expect(fragileData?.count).toBe(1); // a3
   });
 
   it("mengkategorikan stable dengan benar", () => {
     const { result } = renderHook(() => useSRSAnalytics());
-    const stableData = result.current.rawData.find(d => d.label === "Stable");
+    const stableData = result.current.rawData.find(d => d.label === "Stabil");
     expect(stableData?.count).toBe(1); // a4
   });
 
   it("mengkategorikan master dengan benar", () => {
     const { result } = renderHook(() => useSRSAnalytics());
-    const masterData = result.current.rawData.find(d => d.label === "Master");
+    const masterData = result.current.rawData.find(d => d.label === "Mahir");
     expect(masterData?.count).toBe(2); // a5, a6
   });
 
