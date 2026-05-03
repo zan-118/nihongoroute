@@ -3,9 +3,10 @@
 import React, { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { User, LogIn, ChevronRight, Sparkles, Mail, Lock } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
+import { useEffect } from "react";
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
@@ -15,7 +16,15 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
+
+  useEffect(() => {
+    const mode = searchParams.get("mode");
+    if (mode === "signup") {
+      setIsRegistering(true);
+    }
+  }, [searchParams]);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();

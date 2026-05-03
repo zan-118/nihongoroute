@@ -36,7 +36,7 @@ export default function UserNav() {
           asChild 
           className="h-9 rounded-xl bg-primary text-primary-foreground text-xs font-black uppercase tracking-widest shadow-lg shadow-primary/20"
         >
-          <Link href="/login">Mulai Gratis</Link>
+          <Link href="/login?mode=signup">Mulai Gratis</Link>
         </Button>
       </div>
     );
