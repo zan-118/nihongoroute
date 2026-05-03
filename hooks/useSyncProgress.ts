@@ -68,7 +68,7 @@ export function useSyncProgress() {
       const [profileRes, srsRes] = await Promise.all([
         supabase
           .from("profiles")
-          .select("xp, level, streak, today_review_count, last_study_date, study_days, inventory, settings")
+          .select("full_name, xp, level, streak, today_review_count, last_study_date, study_days, inventory, settings")
           .eq("id", session.user.id)
           .single(),
         supabase
@@ -107,6 +107,7 @@ export function useSyncProgress() {
       }
 
       return {
+        name: profile?.full_name || null,
         xp: profile?.xp || 0,
         level: profile?.level || calculateLevel(profile?.xp || 0),
         streak: profile?.streak || 0,
@@ -160,6 +161,7 @@ export function useSyncProgress() {
 
       // Panggil RPC untuk update atomik
       const { error: rpcError } = await supabase.rpc('sync_user_progress', {
+        p_full_name: progress.name,
         p_xp: progress.xp,
         p_streak: progress.streak,
         p_today_review_count: progress.todayReviewCount,
@@ -210,6 +212,7 @@ export function useSyncProgress() {
     if (isFetching || !session?.user) return;
 
     const currentProgressStr = JSON.stringify({
+      name: progress.name,
       xp: progress.xp,
       streak: progress.streak,
       studyDays: progress.studyDays,

@@ -112,7 +112,11 @@ export const useProgressStore = create<ProgressState>()(
       setLoading: (loading) => set({ loading }),
       setAuth: (isAuthenticated, userFullName) => set((state) => ({ 
         isAuthenticated, 
-        progress: { ...state.progress, name: userFullName || state.progress.name } 
+        progress: { 
+          ...state.progress, 
+          // Prioritaskan nama yang sudah ada di profil daripada nama Google
+          name: state.progress.name || userFullName 
+        } 
       })),
       
       setDirtySrs: (updater) => set((state) => ({ 
@@ -425,6 +429,8 @@ export const useProgressStore = create<ProgressState>()(
             inventory: mergedInventory,
             settings: mergedSettings,
             notifications: uniqueNotifications,
+            // Prioritaskan nama dari cloud jika ada perubahan
+            name: cloudData.name || local.name,
             // Gunakan review count terbaru jika tanggalnya sama
             todayReviewCount: local.lastStudyDate === cloudData.lastStudyDate 
               ? Math.max(local.todayReviewCount, cloudData.todayReviewCount)

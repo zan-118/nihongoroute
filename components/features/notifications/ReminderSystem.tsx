@@ -40,12 +40,15 @@ export default function ReminderSystem() {
 
         if ("serviceWorker" in navigator) {
           navigator.serviceWorker.ready.then((registration) => {
-            registration.showNotification(title, options);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            registration.showNotification(title, options as any);
           }).catch(() => {
-            new Notification(title, options);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            new Notification(title, options as any);
           });
         } else {
-          new Notification(title, options);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          new Notification(title, options as any);
         }
         
         lastNotifiedRef.current = now;
