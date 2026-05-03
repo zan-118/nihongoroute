@@ -108,19 +108,19 @@ export function ExamPlaying({
             <div className="flex items-center gap-3 flex-wrap">
               <Badge
                 variant="outline"
-                className="neo-inset px-5 py-2.5 text-muted-foreground dark:text-slate-300 font-mono text-[10px] md:text-xs font-black bg-muted dark:bg-black/40 border border-border dark:border-white/10 h-auto"
+                className="neo-inset px-5 py-2.5 text-muted-foreground dark:text-slate-300 font-mono text-xs md:text-xs font-black bg-muted dark:bg-black/40 border border-border dark:border-white/10 h-auto"
               >
                 {currentQuestionIndex + 1} <span className="mx-1 opacity-30">/</span> {exam.questions.length}
               </Badge>
               <Badge
                 variant="outline"
-                className="neo-inset px-5 py-2.5 text-red-600 dark:text-red-400 font-bold uppercase tracking-widest text-[9px] sm:text-[10px] bg-red-500/10 border border-red-500/30 h-auto"
+                className="neo-inset px-5 py-2.5 text-red-600 dark:text-red-400 font-bold uppercase tracking-widest text-xs sm:text-xs bg-red-500/10 border border-red-500/30 h-auto"
               >
                 {SECTION_LABELS[activeQuestion.section]}
               </Badge>
             </div>
             {cheatWarnings > 0 && (
-              <Badge variant="ghost" className="text-[9px] text-amber-600 dark:text-amber-500 font-bold uppercase tracking-widest animate-pulse flex items-center gap-2 p-0 h-auto">
+              <Badge variant="ghost" className="text-xs text-amber-600 dark:text-amber-500 font-bold uppercase tracking-widest animate-pulse flex items-center gap-2 p-0 h-auto">
                 <ShieldAlert size={14} /> PERINGATAN: {cheatWarnings}x
               </Badge>
             )}
@@ -142,7 +142,7 @@ export function ExamPlaying({
                 if (confirm("Beneran mau selesai sekarang? Tenang, jawaban yang sudah kamu isi bakal tetap dihitung kok."))
                   finishExam();
               }}
-              className="text-[10px] neo-card border border-border dark:border-white/5 bg-muted/50 dark:bg-black/20 text-muted-foreground hover:bg-destructive hover:text-white font-black uppercase tracking-widest h-auto px-6 py-4 rounded-xl shadow-none transition-all"
+              className="text-xs neo-card border border-border dark:border-white/5 bg-muted/50 dark:bg-black/20 text-muted-foreground hover:bg-destructive hover:text-white font-black uppercase tracking-widest h-auto px-6 py-4 rounded-xl shadow-none transition-all"
             >
               Akhiri
             </Button>
@@ -182,14 +182,14 @@ export function ExamPlaying({
                   />
                 </Button>
                 <div className="text-center sm:text-left">
-                  <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest mb-2 text-foreground">
+                  <p className="text-xs md:text-xs font-bold uppercase tracking-widest mb-2 text-foreground">
                     {!audioStatus[activeQuestion._key] || audioStatus[activeQuestion._key] === "idle"
                       ? "Dengarkan Audio"
                       : audioStatus[activeQuestion._key] === "playing"
                         ? "Lagi Didengarkan..."
                         : "Selesai Didengarkan"}
                   </p>
-                  <p className="text-[9px] md:text-[10px] text-muted-foreground leading-relaxed uppercase font-bold tracking-widest">
+                  <p className="text-xs md:text-xs text-muted-foreground leading-relaxed uppercase font-bold tracking-widest">
                     Ingat: Audionya cuma bisa diputar <span className="text-red-600 dark:text-red-500 underline">SEKALI</span>. Yuk, fokus dengerin!
                   </p>
                 </div>

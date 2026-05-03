@@ -1,15 +1,10 @@
+import { defineField, defineType } from "sanity";
+
 /**
  * @file callout.ts
  * @description Definisi skema Sanity untuk objek 'callout' (kotak informasi/catatan).
  * Digunakan sebagai komponen visual dalam blok konten untuk menonjolkan informasi penting.
- * @module sanity/schemaTypes/callout
  */
-
-import { defineField, defineType } from "sanity";
-
-// ======================
-// SCHEMA DEFINITION
-// ======================
 
 export default defineType({
   name: "callout",

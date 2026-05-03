@@ -17,6 +17,8 @@ export default function Flashcard({
   isFlipped,
   onFlip,
   type = "vocab",
+  srsState,
+  isShaking,
 }: FlashcardProps) {
   const {
     showWritingModal,
@@ -28,10 +30,14 @@ export default function Flashcard({
 
   return (
     <>
-      <div
+      <motion.div
         className="relative w-full aspect-square max-h-[550px] sm:max-h-[600px] cursor-pointer mx-auto"
         style={{ perspective: "1500px" }}
         onClick={handleClick}
+        animate={isShaking ? {
+          x: [-10, 10, -10, 10, 0],
+          transition: { duration: 0.4 }
+        } : {}}
       >
         <motion.div
           className="w-full h-full relative"
@@ -53,9 +59,10 @@ export default function Flashcard({
             kanjiDetails={kanjiDetails}
             themeContext={themeContext}
             onDrawClick={handleDrawClick}
+            srsState={srsState}
           />
         </motion.div>
-      </div>
+      </motion.div>
 
       <WritingPracticeModal
         word={word}

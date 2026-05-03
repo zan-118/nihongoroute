@@ -16,6 +16,12 @@ interface FlashcardBackProps {
   kanjiDetails?: { onyomi?: string; kunyomi?: string };
   themeContext: FlashcardThemeContext;
   onDrawClick: (e: React.MouseEvent) => void;
+  srsState?: {
+    interval: number;
+    repetition: number;
+    easeFactor: number;
+    nextReview: number;
+  };
 }
 
 export function FlashcardBack({
@@ -27,8 +33,19 @@ export function FlashcardBack({
   kanjiDetails,
   themeContext,
   onDrawClick,
+  srsState,
 }: FlashcardBackProps) {
   const { isKanji, themeColor, themeBorder, themeShadow } = themeContext;
+
+  const getMemoryLevel = (interval: number) => {
+    if (interval <= 1) return { label: "Baru", color: "text-blue-500 bg-blue-500/10" };
+    if (interval <= 3) return { label: "Belajar", color: "text-cyan-500 bg-cyan-500/10" };
+    if (interval <= 10) return { label: "Akrab", color: "text-emerald-500 bg-emerald-500/10" };
+    if (interval <= 30) return { label: "Kuat", color: "text-amber-500 bg-amber-500/10" };
+    return { label: "Master", color: "text-rose-500 bg-rose-500/10" };
+  };
+
+  const memory = srsState ? getMemoryLevel(srsState.interval) : { label: "Baru", color: "text-blue-500 bg-blue-500/10" };
 
   return (
     <Card
@@ -42,7 +59,7 @@ export function FlashcardBack({
       <div className="w-full h-full flex flex-col items-center justify-center relative pt-14">
         <Badge
           variant="outline"
-          className={`absolute top-4 left-1/2 -translate-x-1/2 text-[9px] md:text-[10px] font-bold uppercase tracking-widest ${themeColor} border-current/20 px-4 py-1.5 rounded-lg h-auto bg-muted dark:bg-black/20 z-30`}
+          className={`absolute top-4 left-1/2 -translate-x-1/2 text-xs md:text-xs font-bold uppercase tracking-widest ${themeColor} border-current/20 px-4 py-1.5 rounded-lg h-auto bg-muted dark:bg-black/20 z-30`}
         >
           Definisi & Arti
         </Badge>
@@ -123,12 +140,28 @@ export function FlashcardBack({
           {isKanji && (
             <Button
               onClick={onDrawClick}
-              className="mt-2 flex items-center justify-center gap-2 w-full max-w-[240px] mx-auto bg-purple-600 dark:bg-purple-500 hover:bg-foreground hover:text-background dark:hover:bg-white text-white dark:text-black font-black uppercase tracking-widest h-auto py-3.5 px-6 rounded-xl transition-all shadow-lg border-none text-[9px] md:text-[10px]"
+              className="mt-2 flex items-center justify-center gap-2 w-full max-w-[240px] mx-auto bg-purple-600 dark:bg-purple-500 hover:bg-foreground hover:text-background dark:hover:bg-white text-white dark:text-black font-black uppercase tracking-widest h-auto py-3.5 px-6 rounded-xl transition-all shadow-lg border-none text-xs md:text-xs"
             >
               <PenTool size={16} />
               <span>Latih Menulis</span>
             </Button>
           )}
+
+          {/* SRS STATUS FOOTER */}
+          <div className="pt-4 flex items-center justify-center gap-4 w-full border-t border-border/50 dark:border-white/5 mt-auto">
+            <div className={`flex flex-col items-center gap-1`}>
+              <span className="text-[8px] text-muted-foreground uppercase tracking-widest font-bold opacity-50">Kekuatan Memori</span>
+              <Badge variant="outline" className={`${memory.color} border-none text-[9px] font-black uppercase px-3 py-1 rounded-full h-auto`}>
+                {memory.label}
+              </Badge>
+            </div>
+            {srsState && (
+               <div className="flex flex-col items-center gap-1 border-l border-border/50 dark:border-white/5 pl-4">
+                <span className="text-[8px] text-muted-foreground uppercase tracking-widest font-bold opacity-50">Interval</span>
+                <span className="text-[10px] font-black text-foreground">{srsState.interval} Hari</span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </Card>

@@ -26,6 +26,9 @@ export function useFlashcardMaster({
     xpGained: 0,
   });
   const [isFinished, setIsFinished] = useState(false);
+  const [isShaking, setIsShaking] = useState(false);
+  const [mistakeIndices, setMistakeIndices] = useState<number[]>([]);
+  const [currentCards, setCurrentCards] = useState<MasterCardData[]>(cards);
 
   const { progress, updateProgress } = useProgressStore(
     useShallow((state) => ({ progress: state.progress, updateProgress: state.updateProgress }))
@@ -37,8 +40,8 @@ export function useFlashcardMaster({
   }, []);
 
   const handleAnswer = useCallback((correct: boolean) => {
-    if (cards.length === 0) return;
-    const card = cards[currentIndex];
+    if (currentCards.length === 0) return;
+    const card = currentCards[currentIndex];
     const cardId = card._id || card.id || "unknown";
     const xpReward = correct ? 15 : 5;
 
@@ -65,6 +68,9 @@ export function useFlashcardMaster({
       setTimeout(() => setShowXP(false), 800);
     } else {
       sounds?.playError();
+      setIsShaking(true);
+      setMistakeIndices((prev) => [...new Set([...prev, currentIndex])]);
+      setTimeout(() => setIsShaking(false), 500);
     }
 
     setDirection(correct ? 1 : -1);
@@ -79,48 +85,71 @@ export function useFlashcardMaster({
     setIsFlipped(false);
     
     setTimeout(() => {
-      if (currentIndex < cards.length - 1) {
+      if (currentIndex < currentCards.length - 1) {
         setCurrentIndex((prev) => prev + 1);
         setDirection(0);
       } else {
         setIsFinished(true);
       }
     }, 200);
-  }, [cards, currentIndex, progress, updateProgress]);
+  }, [currentCards, currentIndex, progress, updateProgress]);
 
-  useEffect(() => {
-    if (!isClient || isFinished) return;
+  const handleReviewMistakes = () => {
+    if (mistakeIndices.length === 0) return;
+    const cardsToReview = mistakeIndices.map(idx => currentCards[idx]);
+    setCurrentCards(cardsToReview);
+    setCurrentIndex(0);
+    setIsFlipped(false);
+    setIsFinished(false);
+    setMistakeIndices([]);
+    setSessionStats({ known: 0, learning: 0, xpGained: 0 });
+  };
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.code === "Space") {
-        e.preventDefault();
-        if (studyMode === "ujian" && isFlipped) return;
-        sounds?.playPop();
-        setIsFlipped((prev) => !prev);
-      }
-      
-      if (e.key === "1" && isFlipped && studyMode === "ujian") {
-        handleAnswer(false);
-      }
-      
-      if (e.key === "2" && isFlipped && studyMode === "ujian") {
-        handleAnswer(true);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isClient, isFinished, isFlipped, studyMode, handleAnswer]);
-
-  const handleNav = (dir: 1 | -1) => {
-    if (currentIndex + dir >= 0 && currentIndex + dir < cards.length) {
+  const handleNav = useCallback((dir: 1 | -1) => {
+    if (currentIndex + dir >= 0 && currentIndex + dir < currentCards.length) {
       setDirection(dir);
       setIsFlipped(false);
       setTimeout(() => {
         setCurrentIndex(currentIndex + dir);
       }, 200);
     }
-  };
+  }, [currentIndex, currentCards.length]);
+
+  useEffect(() => {
+    if (!isClient || isFinished) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Tombol Space untuk Membalik Kartu
+      if (e.code === "Space") {
+        e.preventDefault();
+        // Di mode ujian, jika sudah terbuka tidak boleh balik lagi (standar SRS)
+        if (studyMode === "ujian" && isFlipped) return;
+        sounds?.playPop();
+        setIsFlipped((prev) => !prev);
+      }
+      
+      // Navigasi & Jawaban (Mode Ujian)
+      if (isFlipped && studyMode === "ujian") {
+        if (e.key === "1" || e.key === "ArrowLeft") {
+          handleAnswer(false);
+        } else if (e.key === "2" || e.key === "ArrowRight") {
+          handleAnswer(true);
+        }
+      }
+
+      // Navigasi (Mode Latihan)
+      if (studyMode === "latihan") {
+        if (e.key === "ArrowLeft") {
+          handleNav(-1);
+        } else if (e.key === "ArrowRight") {
+          handleNav(1);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isClient, isFinished, isFlipped, studyMode, handleAnswer, handleNav]);
 
   const handleRestart = () => {
     setCurrentIndex(0);
@@ -141,9 +170,18 @@ export function useFlashcardMaster({
     sessionStats,
     isFinished,
     setIsFinished,
+    isShaking,
     handleNav,
     handleAnswer,
-    handleRestart,
+    handleRestart: () => {
+      handleRestart();
+      setMistakeIndices([]);
+      setCurrentCards(cards);
+    },
+    handleReviewMistakes,
+    mistakeIndices,
+    currentCards,
+    progress,
     router,
   };
 }

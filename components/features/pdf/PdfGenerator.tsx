@@ -39,7 +39,7 @@ export default function PdfGenerator({
 
   if (!isClient || !data || (Array.isArray(data) && data.length === 0)) {
     return (
-      <Button variant="ghost" disabled className="bg-[#0a0c10] border-white/5 neo-inset shadow-none px-6 py-3 rounded-xl text-slate-300 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 w-full sm:w-auto h-auto">
+      <Button variant="ghost" disabled className="bg-[#0a0c10] border-white/5 neo-inset shadow-none px-6 py-3 rounded-xl text-slate-300 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 w-full sm:w-auto h-auto">
         Menunggu Data...
       </Button>
     );
@@ -55,7 +55,7 @@ export default function PdfGenerator({
         <Button
           variant="ghost"
           disabled={loading}
-          className="bg-[#0d1117] border-white/5 neo-card shadow-none hover:border-cyan-400/50 hover:bg-cyan-400/10 px-6 py-3 rounded-xl text-cyan-400 text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 w-full sm:w-auto active:scale-95 group h-auto"
+          className="bg-[#0d1117] border-white/5 neo-card shadow-none hover:border-cyan-400/50 hover:bg-cyan-400/10 px-6 py-3 rounded-xl text-cyan-400 text-xs font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 w-full sm:w-auto active:scale-95 group h-auto"
         >
           {loading ? (
             <Loader2 size={14} className="animate-spin text-cyan-400" />

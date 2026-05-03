@@ -25,11 +25,11 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
           <div>
             <Badge
               variant="outline"
-              className="text-red-600 dark:text-red-500 font-black text-[10px] tracking-[0.3em] uppercase bg-red-500/5 px-4 py-1.5 rounded-xl border-red-500/20 neo-inset h-auto"
+              className="text-red-600 dark:text-red-500 font-black text-xs tracking-[0.3em] uppercase bg-red-500/5 px-4 py-1.5 rounded-xl border-red-500/20 neo-inset h-auto"
             >
               Latihan Mengingat (SRS)
             </Badge>
-            <p className="text-muted-foreground text-[10px] font-bold uppercase mt-1 tracking-widest">
+            <p className="text-muted-foreground text-xs font-bold uppercase mt-1 tracking-widest">
               Mari segarkan ingatanmu hari ini
             </p>
           </div>
@@ -39,10 +39,10 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
           <div className="flex items-start gap-3">
             <ShieldCheck size={16} className="shrink-0 text-red-600 dark:text-red-500 mt-0.5" />
             <div className="space-y-1">
-              <p className="text-red-600/80 dark:text-red-400/80 text-[11px] leading-relaxed italic font-medium">
+              <p className="text-red-600/80 dark:text-red-400/80 text-xs leading-relaxed italic font-medium">
                 Kejujuran adalah kunci. Beritahu kami jika kamu benar-benar ingat atau lupa kata ini.
               </p>
-              <p className="text-muted-foreground text-[9px] leading-relaxed uppercase tracking-widest font-bold">
+              <p className="text-muted-foreground text-xs leading-relaxed uppercase tracking-widest font-bold">
                 Sistem SRS akan menjadwalkan ulang kata ini secara otomatis agar kamu tidak lupa.
               </p>
             </div>
@@ -83,7 +83,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
       <footer className="min-h-[100px]">
         {!engine.isFlipped ? (
           <div className="flex flex-col items-center gap-6">
-            <div className="text-muted-foreground font-mono text-[11px] font-black tracking-[0.4em] uppercase text-center flex flex-col gap-1">
+            <div className="text-muted-foreground font-mono text-xs font-black tracking-[0.4em] uppercase text-center flex flex-col gap-1">
               <span className="text-muted-foreground/40 italic">Kartu Tersisa</span>
               <span className="text-foreground text-lg">
                 {engine.currentIndex + 1} <span className="text-border mx-1">/</span>{" "}
@@ -92,7 +92,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
             </div>
 
             <div className="hidden md:flex justify-center mt-2">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold bg-muted/50 dark:bg-black/40 px-4 py-2 rounded-xl neo-inset border border-border dark:border-white/5">
+              <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold bg-muted/50 dark:bg-black/40 px-4 py-2 rounded-xl neo-inset border border-border dark:border-white/5">
                 Tekan <kbd className="font-mono text-red-600 dark:text-red-400">Spasi</kbd> untuk
                 melihat jawaban
               </p>
@@ -107,7 +107,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
             <Button
               variant="ghost"
               onClick={() => engine.handleAnswer(false)}
-              className="relative h-auto py-8 bg-red-500/5 border border-red-500/20 rounded-[2.5rem] text-red-600 dark:text-red-500 font-black uppercase tracking-[0.2em] text-[10px] md:text-xs neo-card hover:bg-red-600 hover:text-white dark:hover:text-black transition-all group overflow-hidden"
+              className="relative h-auto py-8 bg-red-500/5 border border-red-500/20 rounded-[2.5rem] text-red-600 dark:text-red-500 font-black uppercase tracking-[0.2em] text-xs md:text-xs neo-card hover:bg-red-600 hover:text-white dark:hover:text-black transition-all group overflow-hidden"
             >
               <div className="relative z-10 flex items-center">
                 <X
@@ -116,7 +116,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
                 />{" "}
                 Masih Lupa
               </div>
-              <kbd className="hidden md:inline-block absolute top-4 left-4 bg-red-500/20 text-red-600 dark:text-red-400 px-2 py-0.5 rounded font-mono text-[9px]">
+              <kbd className="hidden md:inline-block absolute top-4 left-4 bg-red-500/20 text-red-600 dark:text-red-400 px-2 py-0.5 rounded font-mono text-xs">
                 1
               </kbd>
             </Button>
@@ -124,7 +124,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
             <Button
               variant="ghost"
               onClick={() => engine.handleAnswer(true)}
-              className="relative h-auto py-8 bg-emerald-500/5 border border-emerald-500/20 rounded-[2.5rem] text-emerald-600 dark:text-emerald-400 font-black uppercase tracking-[0.2em] text-[10px] md:text-xs neo-card hover:bg-emerald-600 hover:text-white dark:hover:text-black transition-all group shadow-sm dark:shadow-[0_0_20px_rgba(16,185,129,0.1)] overflow-hidden"
+              className="relative h-auto py-8 bg-emerald-500/5 border border-emerald-500/20 rounded-[2.5rem] text-emerald-600 dark:text-emerald-400 font-black uppercase tracking-[0.2em] text-xs md:text-xs neo-card hover:bg-emerald-600 hover:text-white dark:hover:text-black transition-all group shadow-sm dark:shadow-[0_0_20px_rgba(16,185,129,0.1)] overflow-hidden"
             >
               <div className="relative z-10 flex items-center">
                 <Check
@@ -133,7 +133,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
                 />{" "}
                 Sudah Ingat
               </div>
-              <kbd className="hidden md:inline-block absolute top-4 right-4 bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded font-mono text-[9px]">
+              <kbd className="hidden md:inline-block absolute top-4 right-4 bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded font-mono text-xs">
                 2
               </kbd>
             </Button>

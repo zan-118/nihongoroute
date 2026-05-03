@@ -106,7 +106,7 @@ export default function VerbListClient({
         <Button
           variant="ghost"
           onClick={() => setIsFlashcardMode(false)}
-          className="mb-8 flex items-center justify-center gap-3 px-8 py-6 rounded-2xl text-[10px] md:text-xs font-bold uppercase tracking-widest w-full sm:w-auto mx-auto sm:mx-0 neo-card bg-muted border-border hover:bg-primary hover:text-white dark:hover:text-black transition-all"
+          className="mb-8 flex items-center justify-center gap-3 px-8 py-6 rounded-2xl text-xs md:text-xs font-bold uppercase tracking-widest w-full sm:w-auto mx-auto sm:mx-0 neo-card bg-muted border-border hover:bg-primary hover:text-white dark:hover:text-black transition-all"
         >
           <ArrowLeft size={18} /> Kembali ke Daftar
         </Button>
@@ -162,7 +162,7 @@ export default function VerbListClient({
   return (
     <div className="w-full flex flex-col flex-1 pb-24 px-4 md:px-8 lg:px-12">
       {/* Breadcrumb Navigation */}
-      <nav className="mb-8 md:mb-12 flex flex-wrap items-center gap-2 md:gap-4 text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+      <nav className="mb-8 md:mb-12 flex flex-wrap items-center gap-2 md:gap-4 text-xs md:text-xs font-bold text-muted-foreground uppercase tracking-widest">
         <Link href="/dashboard" className="hover:text-primary transition-colors flex items-center gap-1.5 md:gap-2">
           <Home size={14} /> Beranda
         </Link>
@@ -187,13 +187,13 @@ export default function VerbListClient({
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground tracking-tight leading-none mb-2">
                 Kamus <span className="text-primary">Kata Kerja</span>
               </h1>
-              <span className="text-[10px] md:text-xs text-muted-foreground font-medium tracking-tight uppercase tracking-widest">Ubah bentuk kata kerja jadi lebih gampang.</span>
+              <span className="text-xs md:text-xs text-muted-foreground font-medium tracking-tight uppercase tracking-widest">Ubah bentuk kata kerja jadi lebih gampang.</span>
             </div>
           </div>
           <div className="flex items-center justify-between md:justify-end gap-6 w-full md:w-auto">
              <div className="flex flex-col items-start md:items-end gap-1">
-                <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Jumlah Kata</span>
-                <span className="text-[10px] md:text-xs font-black text-foreground">{filteredVerbs.length} Kata</span>
+                <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Jumlah Kata</span>
+                <span className="text-xs md:text-xs font-black text-foreground">{filteredVerbs.length} Kata</span>
              </div>
              <Button
                onClick={() => setIsFlashcardMode(true)}
@@ -227,7 +227,7 @@ export default function VerbListClient({
                  key={g === null ? "all" : g}
                  variant="ghost"
                  onClick={() => handleGroupChange(g)}
-                 className={`px-4 py-2 md:px-6 md:py-3 h-auto rounded-xl text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all border ${
+                 className={`px-4 py-2 md:px-6 md:py-3 h-auto rounded-xl text-xs md:text-xs font-bold uppercase tracking-widest transition-all border ${
                    activeGroup === g 
                      ? "bg-primary text-primary-foreground border-none shadow-lg" 
                      : "bg-muted border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"
@@ -279,7 +279,7 @@ export default function VerbListClient({
                       <div className="flex justify-between items-center">
                         <Badge
                           variant="outline"
-                          className={`px-2.5 py-1 text-[9px] md:text-[10px] font-bold uppercase tracking-wider rounded-lg border h-auto ${badgeColor}`}
+                          className={`px-2.5 py-1 text-xs md:text-xs font-bold uppercase tracking-wider rounded-lg border h-auto ${badgeColor}`}
                         >
                           Gol. {verb.group}
                         </Badge>
@@ -291,7 +291,7 @@ export default function VerbListClient({
                       <div className="flex-1 space-y-2">
                         <ruby className="text-2xl md:text-3xl font-black text-foreground font-japanese block group-hover:text-primary transition-colors duration-300 leading-tight tracking-tight">
                           {verb.jisho}
-                          <rt className="text-[9px] md:text-[10px] text-primary/80 font-bold tracking-widest not-italic">
+                          <rt className="text-xs md:text-xs text-primary/80 font-bold tracking-widest not-italic">
                             {verb.furigana}
                           </rt>
                         </ruby>
@@ -303,17 +303,17 @@ export default function VerbListClient({
                       <div className="pt-3 border-t border-border flex items-center justify-between gap-2">
                         <div className="flex gap-1.5 flex-wrap min-w-0">
                           {verb.masu && (
-                            <span className="px-2 py-0.5 text-[9px] font-semibold text-muted-foreground bg-muted rounded-md border border-border font-japanese truncate">
+                            <span className="px-2 py-0.5 text-xs font-semibold text-muted-foreground bg-muted rounded-md border border-border font-japanese truncate">
                               {verb.masu}
                             </span>
                           )}
                           {verb.te && (
-                            <span className="px-2 py-0.5 text-[9px] font-semibold text-muted-foreground bg-muted rounded-md border border-border font-japanese truncate">
+                            <span className="px-2 py-0.5 text-xs font-semibold text-muted-foreground bg-muted rounded-md border border-border font-japanese truncate">
                               {verb.te}
                             </span>
                           )}
                         </div>
-                        <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider group-hover:text-primary transition-colors whitespace-nowrap shrink-0">
+                        <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider group-hover:text-primary transition-colors whitespace-nowrap shrink-0">
                           Detail →
                         </span>
                       </div>
@@ -329,7 +329,7 @@ export default function VerbListClient({
       {/* Pagination Controls */}
       {totalPages > 1 && (
         <div className="mt-10 md:mt-14 flex flex-col items-center gap-5">
-          <div className="flex items-center gap-3 text-[10px] md:text-xs font-bold text-muted-foreground uppercase tracking-widest">
+          <div className="flex items-center gap-3 text-xs md:text-xs font-bold text-muted-foreground uppercase tracking-widest">
             <span>Halaman <span className="text-primary">{currentPage}</span> dari {totalPages}</span>
             <span className="text-border">|</span>
             <span>{filteredVerbs.length} Kata Kerja</span>
@@ -429,7 +429,7 @@ export default function VerbListClient({
 
       {/* Conjugation Detail Modal */}
       <Dialog open={!!selectedVerb} onOpenChange={(open) => !open && setSelectedVerb(null)}>
-        <DialogContent hideClose className="max-w-3xl w-[95vw] max-h-[85vh] overflow-y-auto bg-card border border-border rounded-2xl p-0 gap-0 shadow-2xl no-scrollbar">
+        <DialogContent hideClose className="max-w-2xl w-[95vw] max-h-[90vh] overflow-y-auto bg-card border border-border rounded-3xl p-0 gap-0 shadow-2xl no-scrollbar z-[100]">
           {selectedVerb && (() => {
             const groupStyle = getGroupAccent(selectedVerb.group);
             const sections = getConjugationSections(selectedVerb);
@@ -441,7 +441,7 @@ export default function VerbListClient({
                       <div className="flex items-center gap-3 mb-4">
                         <Badge
                           variant="outline"
-                          className={`px-3 py-1.5 text-[9px] md:text-xs font-black uppercase tracking-[0.2em] rounded-xl border h-auto bg-muted ${getBadgeColor(selectedVerb.group)}`}
+                          className={`px-3 py-1.5 text-xs md:text-xs font-black uppercase tracking-[0.2em] rounded-xl border h-auto bg-muted ${getBadgeColor(selectedVerb.group)}`}
                         >
                           Golongan {selectedVerb.group}
                         </Badge>
@@ -451,7 +451,7 @@ export default function VerbListClient({
                       <DialogTitle asChild>
                         <ruby className="text-3xl md:text-4xl font-black text-foreground font-japanese block leading-tight tracking-tight">
                           {selectedVerb.jisho}
-                          <rt className="text-[10px] md:text-xs text-primary/80 font-bold tracking-widest not-italic">
+                          <rt className="text-xs md:text-xs text-primary/80 font-bold tracking-widest not-italic">
                             {selectedVerb.furigana}
                           </rt>
                         </ruby>
@@ -491,7 +491,7 @@ export default function VerbListClient({
                           </h3>
                         </div>
 
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                           {section.items.map((item) => (
                             <ConjugationCell
                               key={item.label}
@@ -508,14 +508,14 @@ export default function VerbListClient({
                 <div className="sticky bottom-0 z-20 bg-card/95 backdrop-blur-xl border-t border-border px-5 md:px-6 py-3 md:py-4 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Activity size={12} className="text-primary animate-pulse" />
-                    <span className="text-[10px] md:text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                    <span className="text-xs md:text-xs font-bold text-muted-foreground uppercase tracking-widest">
                       Matriks Konjugasi
                     </span>
                   </div>
                   <Button
                     variant="ghost"
                     onClick={() => setSelectedVerb(null)}
-                    className="h-auto px-5 py-2.5 md:px-6 md:py-3 text-[10px] md:text-xs font-bold uppercase tracking-widest rounded-xl bg-muted border border-border text-muted-foreground hover:bg-primary hover:text-white dark:hover:text-black hover:border-none transition-all"
+                    className="h-auto px-5 py-2.5 md:px-6 md:py-3 text-xs md:text-xs font-bold uppercase tracking-widest rounded-xl bg-muted border border-border text-muted-foreground hover:bg-primary hover:text-white dark:hover:text-black hover:border-none transition-all"
                   >
                     Tutup
                   </Button>
@@ -529,10 +529,10 @@ export default function VerbListClient({
       <footer className="mt-16 md:mt-24 pt-10 md:pt-16 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-6">
          <div className="flex items-center gap-3">
             <Activity size={16} className="text-primary animate-pulse" />
-            <span className="text-muted-foreground font-bold text-[10px] md:text-xs uppercase tracking-widest">Matriks Konjugasi Siap!</span>
+            <span className="text-muted-foreground font-bold text-xs md:text-xs uppercase tracking-widest">Matriks Konjugasi Siap!</span>
          </div>
          <Link href="/library" className="w-full sm:w-auto">
-            <Button variant="ghost" className="w-full px-8 py-6 md:px-10 md:py-7 h-auto text-[10px] md:text-xs font-bold uppercase tracking-widest rounded-2xl bg-muted border border-border neo-card shadow-none hover:bg-primary hover:text-white dark:hover:text-black transition-all gap-3 group">
+            <Button variant="ghost" className="w-full px-8 py-6 md:px-10 md:py-7 h-auto text-xs md:text-xs font-bold uppercase tracking-widest rounded-2xl bg-muted border border-border neo-card shadow-none hover:bg-primary hover:text-white dark:hover:text-black transition-all gap-3 group">
                <ArrowLeft size={16} className="group-hover:-translate-x-1.5 transition-transform duration-300" /> Kembali ke Pustaka
             </Button>
          </Link>
@@ -544,11 +544,11 @@ export default function VerbListClient({
 function ConjugationCell({ label, value }: { label: string; value?: string }) {
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-[8px] md:text-[9px] font-bold text-primary/70 uppercase tracking-widest leading-tight line-clamp-2 min-h-[2em]">
+      <span className="text-[10px] md:text-xs font-black text-primary/90 uppercase tracking-widest leading-tight line-clamp-2 min-h-[2em]">
         {label}
       </span>
-      <div className="p-3 md:p-4 rounded-xl bg-muted border border-border hover:border-primary/30 transition-all duration-300 group/cell flex items-center justify-center min-h-[3.5rem] md:min-h-[4rem]">
-        <p className="text-sm md:text-base font-japanese font-black text-foreground text-center leading-none group-hover/cell:text-primary transition-colors">
+      <div className="p-3 md:p-4 rounded-2xl bg-muted/50 border border-border hover:border-primary/40 transition-all duration-300 group/cell flex items-center justify-center min-h-[4rem] shadow-sm">
+        <p className="text-base md:text-lg font-japanese font-black text-foreground text-center leading-none group-hover/cell:text-primary transition-colors">
           {value || "—"}
         </p>
       </div>

@@ -68,7 +68,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
         {/* SECTION: BASICS (FOUNDATION) */}
         <motion.section variants={itemVariants} className="mb-24">
           <div className="flex items-center gap-6 mb-8">
-            <h3 className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-primary/60 dark:text-primary/50">
+            <h3 className="text-xs md:text-xs font-bold uppercase tracking-widest text-primary/60 dark:text-primary/50">
               Dasar Bahasa
             </h3>
             <div className="h-[1px] flex-1 bg-border" />
@@ -93,7 +93,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
         {jlptCategories.length > 0 && (
           <motion.section variants={itemVariants} className="mb-24">
             <div className="flex items-center gap-6 mb-10">
-              <h3 className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-primary/60 dark:text-primary/50">
+              <h3 className="text-xs md:text-xs font-bold uppercase tracking-widest text-primary/60 dark:text-primary/50">
                 Jalur Level JLPT
               </h3>
               <div className="h-[1px] flex-1 bg-border" />
@@ -112,11 +112,11 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
                       </span>
 
                       <div className="mt-auto flex flex-col gap-5 relative z-10">
-                        <p className="text-[11px] md:text-xs text-muted-foreground font-medium leading-relaxed group-hover:text-foreground transition-colors">
+                        <p className="text-xs md:text-xs text-muted-foreground font-medium leading-relaxed group-hover:text-foreground transition-colors">
                           {cat.description || `Materi lengkap untuk persiapan ujian ${cat.title}.`}
                         </p>
                         <div className="flex items-center justify-between border-t border-border pt-5">
-                          <span className="text-[9px] font-bold uppercase tracking-widest text-foreground/60 dark:text-muted-foreground group-hover:text-primary transition-colors">
+                          <span className="text-xs font-bold uppercase tracking-widest text-foreground/60 dark:text-muted-foreground group-hover:text-primary transition-colors">
                             Mulai Belajar
                           </span>
                           <div className="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-muted border border-border flex items-center justify-center group-hover:bg-primary group-hover:text-white dark:group-hover:text-black group-hover:border-none transition-all duration-300">
@@ -136,7 +136,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
         {generalCategories.length > 0 && (
           <motion.section variants={itemVariants}>
             <div className="flex items-center gap-6 mb-10">
-              <h3 className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-500/50">
+              <h3 className="text-xs md:text-xs font-bold uppercase tracking-widest text-amber-600 dark:text-amber-500/50">
                 Topik Umum & Praktis
               </h3>
               <div className="h-[1px] flex-1 bg-border" />
@@ -151,7 +151,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
                     
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 relative z-10">
                       <div>
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-600 dark:text-amber-500/60 mb-3 block">
+                        <span className="text-xs font-black uppercase tracking-[0.2em] text-amber-600 dark:text-amber-500/60 mb-3 block">
                           Kategori Umum
                         </span>
                         <h4 className="text-3xl md:text-5xl font-black text-foreground tracking-tight leading-none">
@@ -170,7 +170,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
                     {/* Preview List */}
                     {cat.previews && cat.previews.length > 0 && (
                       <div className="grid gap-3 mb-10 relative z-10">
-                        <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-2 block">
+                        <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2 block">
                           Pratinjau Materi:
                         </span>
                         {cat.previews.map((preview) => (
@@ -191,7 +191,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
                     <div className="mt-auto pt-8 border-t border-border relative z-10">
                       <Link
                         href={`/courses/${cat.slug}`}
-                        className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-amber-500 hover:bg-foreground text-white dark:text-black font-black uppercase tracking-widest text-[10px] dark:hover:bg-white transition-all duration-300 shadow-lg"
+                        className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-amber-500 hover:bg-foreground text-white dark:text-black font-black uppercase tracking-widest text-xs dark:hover:bg-white transition-all duration-300 shadow-lg"
                       >
                         Buka Semua Materi <ArrowRight size={16} />
                       </Link>

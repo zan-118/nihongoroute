@@ -45,17 +45,17 @@ export default function StreakFreezeCard() {
             <ShieldCheck size={20} />
           </div>
           <div>
-            <h4 className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mb-0.5">Peningkatan</h4>
+            <h4 className="text-xs font-bold text-indigo-500 uppercase tracking-widest mb-0.5">Peningkatan</h4>
             <h3 className="text-sm font-black text-foreground uppercase tracking-tight">Pelindung Streak</h3>
           </div>
         </div>
         
-        <p className="text-[10px] text-muted-foreground font-medium leading-relaxed mb-6">
+        <p className="text-xs text-muted-foreground font-medium leading-relaxed mb-6">
           Lindungi streak harianmu jika lupa belajar selama 1 hari. Sangat berguna untuk pejuang streak!
         </p>
 
         <div className="flex items-center justify-between mb-4">
-          <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Milikmu:</span>
+          <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Milikmu:</span>
           <span className="text-xl font-black text-indigo-500">{freezeCount}</span>
         </div>
       </div>
@@ -64,7 +64,7 @@ export default function StreakFreezeCard() {
         <Button 
           onClick={handleBuy}
           disabled={xp < COST}
-          className={`w-full h-10 text-[9px] font-black uppercase tracking-widest rounded-xl transition-all border-none ${
+          className={`w-full h-10 text-xs font-black uppercase tracking-widest rounded-xl transition-all border-none ${
             xp >= COST 
               ? 'bg-indigo-500 hover:bg-indigo-600 text-white shadow-lg shadow-indigo-500/20' 
               : 'bg-muted text-muted-foreground'

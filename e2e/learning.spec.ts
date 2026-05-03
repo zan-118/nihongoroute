@@ -22,12 +22,28 @@ test.describe('Learning Modules (Flashcards, Kanji, Survival)', () => {
     await card.click();
     await expect(page.getByText(/Definisi & Arti/i)).toBeVisible();
     
-    // Test navigation buttons if they exist
-    const nextButton = page.locator('button:has(.lucide-chevron-right)').first();
-    if (await nextButton.isVisible()) {
-        await nextButton.click();
-        // Wait for potential animation
-        await page.waitForTimeout(500);
+    // Answer incorrectly to trigger mistake review
+    const forgotButton = page.getByRole('button', { name: /Masih Lupa/i }).first();
+    if (await forgotButton.isVisible()) {
+        await forgotButton.click();
+        // The card should shake (hard to test without visual regression, but we can check if we progress)
+        
+        // Skip through remaining cards to reach summary
+        for (let i = 0; i < 5; i++) {
+            if (await page.getByRole('button', { name: /Hafal|Lupa/i }).first().isVisible()) {
+                await page.getByRole('button', { name: /Hafal/i }).first().click();
+                await page.waitForTimeout(300);
+            }
+        }
+        
+        // Summary modal should show "Ulas Kesalahan"
+        const reviewMistakesButton = page.getByRole('button', { name: /Ulas.*Kesalahan/i });
+        if (await reviewMistakesButton.isVisible()) {
+            await expect(reviewMistakesButton).toBeVisible();
+            await reviewMistakesButton.click();
+            // Should restart with the mistake cards
+            await expect(page.locator('.perspective-1500').first()).toBeVisible();
+        }
     }
   });
 

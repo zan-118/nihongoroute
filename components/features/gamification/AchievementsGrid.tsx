@@ -97,7 +97,7 @@ export default function AchievementsGrid() {
                 <h4 className={`text-sm font-black uppercase tracking-wider mb-1 ${isUnlocked ? 'text-foreground' : 'text-muted-foreground'}`}>
                   {ach.title}
                 </h4>
-                <p className="text-[10px] text-muted-foreground font-medium mb-3">
+                <p className="text-xs text-muted-foreground font-medium mb-3">
                   {ach.description}
                 </p>
                 

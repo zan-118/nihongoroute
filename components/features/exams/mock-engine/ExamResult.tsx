@@ -73,13 +73,13 @@ export function ExamResult({
           <h1 className={`text-4xl md:text-6xl font-black uppercase tracking-tighter mb-4 leading-tight ${isPassed ? "text-emerald-500" : "text-red-500"}`}>
             {isPassed ? "OMEDETOU! Keren Banget!" : "WADUH! Belum Lulus..."}
           </h1>
-          <p className="text-muted-foreground font-black uppercase tracking-[0.3em] text-[10px] md:text-xs mb-12">
+          <p className="text-muted-foreground font-black uppercase tracking-[0.3em] text-xs md:text-xs mb-12">
             Hasil Akhir: {exam.title}
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             <Card className="neo-inset p-8 flex flex-col items-center justify-center border border-border bg-muted/10">
-              <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-4">Skor Akhir</span>
+              <span className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-4">Skor Akhir</span>
               <div className="flex items-baseline gap-2">
                 <span className={`text-5xl md:text-7xl font-black font-mono ${isPassed ? 'text-emerald-500' : 'text-red-500'}`}>{finalScore}</span>
                 <span className="text-xl font-bold text-muted-foreground/40">/180</span>
@@ -87,14 +87,14 @@ export function ExamResult({
             </Card>
 
             <Card className="neo-inset p-8 flex flex-col items-center justify-center border border-border bg-muted/10">
-              <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-4">Akurasi</span>
+              <span className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-4">Akurasi</span>
               <span className="text-5xl md:text-7xl font-black font-mono text-foreground">
                 {Math.round((correctCount / (exam.questions?.length || 1)) * 100)}%
               </span>
             </Card>
 
             <Card className="neo-inset p-8 flex flex-col items-center justify-center border border-border bg-muted/10">
-              <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-4">Benar</span>
+              <span className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-4">Benar</span>
               <div className="flex items-baseline gap-2">
                  <span className="text-5xl md:text-7xl font-black font-mono text-foreground">{correctCount}</span>
                  <span className="text-xl font-bold text-muted-foreground/40">/{exam.questions?.length || 0}</span>
@@ -118,10 +118,10 @@ export function ExamResult({
                     return (
                       <div key={sectionKey} className="space-y-3">
                         <div className="flex justify-between items-end">
-                           <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                           <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">
                              {SECTION_LABELS[sectionKey as keyof typeof SECTION_LABELS] || sectionKey}
                            </span>
-                           <span className="text-[10px] font-mono font-black text-foreground">
+                           <span className="text-xs font-mono font-black text-foreground">
                              {data.correct}/{data.total}
                            </span>
                         </div>
@@ -150,7 +150,7 @@ export function ExamResult({
                     <div className="absolute -top-10 -right-10 w-40 h-40 bg-amber-500/10 blur-[60px] rounded-full group-hover:scale-150 transition-transform duration-700" />
                     <Trophy className="text-amber-500 mb-6 group-hover:scale-110 transition-transform" size={40} />
                     <h4 className="text-lg font-black uppercase tracking-tight text-amber-600 dark:text-amber-500 mb-2">Klaim Sertifikat Anda</h4>
-                    <p className="text-[11px] font-medium text-muted-foreground mb-8 leading-relaxed">
+                    <p className="text-xs font-medium text-muted-foreground mb-8 leading-relaxed">
                       Selamat! Anda telah menguasai materi ini dengan baik. Unduh sertifikat digital Anda sekarang.
                     </p>
                     <div className="flex flex-col gap-3">
@@ -164,7 +164,7 @@ export function ExamResult({
                            handleShareResult();
                          }}
                          variant="ghost"
-                         className="w-full h-12 bg-white/5 border border-border text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+                         className="w-full h-12 bg-white/5 border border-border text-xs font-black uppercase tracking-widest rounded-xl hover:bg-white/10 transition-all flex items-center justify-center gap-2"
                        >
                          <Share2 size={16} /> Bagikan Pencapaian
                        </Button>
@@ -174,13 +174,13 @@ export function ExamResult({
                   <div className="bg-muted/30 border border-border rounded-[2.5rem] p-8 opacity-80 h-full flex flex-col justify-center">
                     <Skull className="text-muted-foreground/30 mb-6" size={40} />
                     <h4 className="text-lg font-black uppercase tracking-tight text-muted-foreground mb-2">Terus Berlatih!</h4>
-                    <p className="text-[11px] font-medium text-muted-foreground mb-8 leading-relaxed">
+                    <p className="text-xs font-medium text-muted-foreground mb-8 leading-relaxed">
                       Dibutuhkan lebih banyak latihan untuk mencapai skor kelulusan. Pelajari kembali materi yang salah.
                     </p>
                     <Button
                       onClick={() => setGameState("review")}
                       variant="ghost"
-                      className="w-full h-12 bg-primary/10 border border-primary/30 text-primary text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary/20 transition-all"
+                      className="w-full h-12 bg-primary/10 border border-primary/30 text-primary text-xs font-black uppercase tracking-widest rounded-xl hover:bg-primary/20 transition-all"
                     >
                       Periksa Jawaban Salah
                     </Button>
@@ -193,7 +193,7 @@ export function ExamResult({
              <Button
                 asChild
                 variant="ghost"
-                className="w-full sm:w-auto px-12 h-14 bg-muted hover:bg-foreground hover:text-background text-[11px] font-black uppercase tracking-widest rounded-2xl transition-all"
+                className="w-full sm:w-auto px-12 h-14 bg-muted hover:bg-foreground hover:text-background text-xs font-black uppercase tracking-widest rounded-2xl transition-all"
              >
                <Link href={backLink}>Selesai & Keluar</Link>
              </Button>
@@ -202,7 +202,7 @@ export function ExamResult({
                <Button
                   onClick={() => setGameState("review")}
                   variant="ghost"
-                  className="w-full sm:w-auto px-12 h-14 border border-border hover:bg-muted text-[11px] font-black uppercase tracking-widest rounded-2xl transition-all"
+                  className="w-full sm:w-auto px-12 h-14 border border-border hover:bg-muted text-xs font-black uppercase tracking-widest rounded-2xl transition-all"
                >
                  Tinjau Ujian
                </Button>

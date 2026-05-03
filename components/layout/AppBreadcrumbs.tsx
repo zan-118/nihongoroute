@@ -33,13 +33,13 @@ export default function AppBreadcrumbs({ items }: AppBreadcrumbsProps) {
         <div key={index} className="flex items-center gap-2">
           <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
           {item.active ? (
-            <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-foreground bg-muted border border-border px-3 py-1.5 rounded-lg shadow-sm">
+            <span className="text-xs md:text-xs font-black uppercase tracking-widest text-foreground bg-muted border border-border px-3 py-1.5 rounded-lg shadow-sm">
               {item.label}
             </span>
           ) : (
             <Link
               href={item.href || "#"}
-              className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors"
+              className="text-xs md:text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors"
             >
               {item.label}
             </Link>

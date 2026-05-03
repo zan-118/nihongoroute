@@ -8,6 +8,13 @@ export interface FlashcardProps {
   isFlipped: boolean;
   onFlip: () => void;
   type?: "vocab" | "kanji";
+  srsState?: {
+    interval: number;
+    repetition: number;
+    easeFactor: number;
+    nextReview: number;
+  };
+  isShaking?: boolean;
 }
 
 export interface FlashcardThemeContext {

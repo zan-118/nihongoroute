@@ -121,9 +121,9 @@ export default function DictionaryPopup() {
                 <div>
                   <div className="flex items-center gap-2">
                     <h4 className="text-2xl font-black text-foreground">{result.word}</h4>
-                    <span className="text-[10px] font-bold text-primary/70">{result.furigana}</span>
+                    <span className="text-xs font-bold text-primary/70">{result.furigana}</span>
                   </div>
-                  <p className="text-[10px] text-muted-foreground font-mono tracking-widest uppercase">{result.romaji}</p>
+                  <p className="text-xs text-muted-foreground font-mono tracking-widest uppercase">{result.romaji}</p>
                 </div>
 
                 <p className="text-xs text-muted-foreground leading-relaxed bg-muted/30 p-2 rounded-lg border border-border">
@@ -141,7 +141,7 @@ export default function DictionaryPopup() {
               </div>
             ) : (
               <div className="text-center py-4">
-                <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Tidak Ditemukan</p>
+                <p className="text-xs text-muted-foreground uppercase font-black tracking-widest">Tidak Ditemukan</p>
               </div>
             )}
             

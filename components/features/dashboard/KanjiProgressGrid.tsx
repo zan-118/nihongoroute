@@ -59,12 +59,12 @@ export default function KanjiProgressGrid() {
       
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
-          <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-[10px] mb-2 flex items-center gap-2">
+          <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-xs mb-2 flex items-center gap-2">
             <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
             Peta Penguasaan Kanji N5
           </h2>
           <p className="text-sm font-black text-foreground uppercase tracking-tight">
-            {masteredCount} <span className="text-muted-foreground font-medium text-[10px]">Dikuasai</span> / {kanjis.length} <span className="text-muted-foreground font-medium text-[10px]">Total</span>
+            {masteredCount} <span className="text-muted-foreground font-medium text-xs">Dikuasai</span> / {kanjis.length} <span className="text-muted-foreground font-medium text-xs">Total</span>
           </p>
         </div>
         
@@ -108,7 +108,7 @@ export default function KanjiProgressGrid() {
 
       <div className="mt-8 flex items-center gap-2 text-muted-foreground">
         <Info size={12} />
-        <p className="text-[9px] font-bold uppercase tracking-widest">
+        <p className="text-xs font-bold uppercase tracking-widest">
           Tip: Pelajari kanji baru di menu kursus untuk mengisi peta ini.
         </p>
       </div>

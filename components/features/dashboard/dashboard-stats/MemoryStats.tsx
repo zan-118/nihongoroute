@@ -54,12 +54,12 @@ export default function MemoryStats() {
             <h3 className="text-foreground font-black uppercase tracking-widest text-xs md:text-sm">
               Status Hafalan
             </h3>
-            <span className="block text-[9px] md:text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-1">Distribusi Memori Pintar</span>
+            <span className="block text-xs md:text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">Distribusi Memori Pintar</span>
           </div>
         </div>
         <Badge
           variant="outline"
-          className="bg-muted border-border text-primary px-3 py-1.5 md:px-4 md:py-2 rounded-xl text-[9px] md:text-[10px] font-bold tracking-widest uppercase neo-inset h-auto"
+          className="bg-muted border-border text-primary px-3 py-1.5 md:px-4 md:py-2 rounded-xl text-xs md:text-xs font-bold tracking-widest uppercase neo-inset h-auto"
         >
           {srsEntries.length} Unit
         </Badge>
@@ -82,7 +82,7 @@ export default function MemoryStats() {
       <div className="pt-6 md:pt-8 border-t border-border grid grid-cols-2 gap-4 md:gap-5 relative z-10 mt-auto">
         <Link
           href="/library/vocab"
-          className="group relative p-4 md:p-5 bg-muted rounded-2xl md:rounded-3xl border border-border text-[9px] md:text-[10px] font-bold text-center uppercase tracking-widest text-muted-foreground transition-all neo-card shadow-none active:translate-y-1 hover:text-primary hover:border-primary/30 hover:bg-primary/5"
+          className="group relative p-4 md:p-5 bg-muted rounded-2xl md:rounded-3xl border border-border text-xs md:text-xs font-bold text-center uppercase tracking-widest text-muted-foreground transition-all neo-card shadow-none active:translate-y-1 hover:text-primary hover:border-primary/30 hover:bg-primary/5"
         >
           <div className="flex flex-col items-center gap-2 md:gap-3">
             <BookOpen size={18} className="md:w-5 md:h-5 group-hover:scale-110 transition-transform duration-300" />
@@ -91,7 +91,7 @@ export default function MemoryStats() {
         </Link>
         <Link
           href="/courses/n5/kanji"
-          className="group relative p-4 md:p-5 bg-muted rounded-2xl md:rounded-3xl border border-border text-[9px] md:text-[10px] font-bold text-center uppercase tracking-widest text-muted-foreground transition-all neo-card shadow-none active:translate-y-1 hover:text-purple-500 hover:border-purple-500/30 hover:bg-purple-500/5"
+          className="group relative p-4 md:p-5 bg-muted rounded-2xl md:rounded-3xl border border-border text-xs md:text-xs font-bold text-center uppercase tracking-widest text-muted-foreground transition-all neo-card shadow-none active:translate-y-1 hover:text-purple-500 hover:border-purple-500/30 hover:bg-purple-500/5"
         >
           <div className="flex flex-col items-center gap-2 md:gap-3">
             <PenTool size={18} className="md:w-5 md:h-5 group-hover:scale-110 transition-transform duration-300" />
@@ -117,7 +117,7 @@ function StatBar({ label, count, total, indicatorColor, icon, colorClass }: Stat
 
   return (
     <div className="group cursor-default">
-      <div className="flex justify-between text-[10px] md:text-[11px] font-bold uppercase tracking-widest mb-2.5 md:mb-3">
+      <div className="flex justify-between text-xs md:text-xs font-bold uppercase tracking-widest mb-2.5 md:mb-3">
         <span className="text-muted-foreground flex items-center gap-2.5 md:gap-3 transition-colors group-hover:text-foreground">
           <span className={colorClass}>{icon}</span> {label}
         </span>

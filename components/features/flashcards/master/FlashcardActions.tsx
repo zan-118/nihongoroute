@@ -30,7 +30,7 @@ export function FlashcardActions({
               variant="ghost"
               onClick={() => handleNav(-1)}
               disabled={currentIndex === 0}
-              className="flex-1 h-auto py-4 md:py-5 text-[9px] md:text-[10px] font-bold uppercase tracking-widest bg-white/[0.03] border border-white/[0.08] disabled:opacity-20 rounded-xl transition-all"
+              className="flex-1 h-auto py-4 md:py-5 text-xs md:text-xs font-bold uppercase tracking-widest bg-muted/50 border border-border disabled:opacity-20 rounded-xl transition-all shadow-sm"
             >
               Sebelumnya
             </Button>
@@ -38,7 +38,7 @@ export function FlashcardActions({
               variant="ghost"
               onClick={() => handleNav(1)}
               disabled={currentIndex === totalCards - 1}
-              className={`flex-1 h-auto py-4 md:py-5 text-[9px] md:text-[10px] font-bold uppercase tracking-widest bg-white/[0.03] border border-white/[0.08] ${themeColor} disabled:opacity-20 rounded-xl transition-all`}
+              className={`flex-1 h-auto py-4 md:py-5 text-xs md:text-xs font-bold uppercase tracking-widest bg-muted/50 border border-border ${themeColor} disabled:opacity-20 rounded-xl transition-all shadow-sm`}
             >
               Selanjutnya
             </Button>
@@ -57,7 +57,7 @@ export function FlashcardActions({
                   e.stopPropagation();
                   handleAnswer(false);
                 }}
-                className="h-auto py-4 md:py-5 border-cyber-neon/20 bg-cyber-neon/5 text-cyber-neon hover:bg-cyber-neon hover:text-black font-bold uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl transition-all"
+                className="h-auto py-4 md:py-5 border-cyber-neon/20 bg-cyber-neon/5 text-cyber-neon hover:bg-cyber-neon hover:text-black font-bold uppercase tracking-widest text-xs md:text-xs rounded-xl transition-all"
               >
                 <X size={16} className="mr-2" /> Masih Lupa
               </Button>
@@ -67,7 +67,7 @@ export function FlashcardActions({
                   e.stopPropagation();
                   handleAnswer(true);
                 }}
-                className="h-auto py-4 md:py-5 border-emerald-500/20 bg-emerald-500/5 text-emerald-400 hover:bg-emerald-500 hover:text-black font-bold uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl transition-all"
+                className="h-auto py-4 md:py-5 border-emerald-500/20 bg-emerald-500/5 text-emerald-400 hover:bg-emerald-500 hover:text-black font-bold uppercase tracking-widest text-xs md:text-xs rounded-xl transition-all"
               >
                 <Check size={16} className="mr-2" /> Sudah Hafal
               </Button>
@@ -80,7 +80,7 @@ export function FlashcardActions({
               className="flex items-center justify-center gap-2 text-slate-500 py-4 md:py-6"
             >
               <Info size={14} className="opacity-50" />
-              <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest opacity-30">
+              <span className="text-xs md:text-xs font-bold uppercase tracking-widest opacity-60">
                 Ketuk kartu untuk melihat jawaban
               </span>
             </motion.div>

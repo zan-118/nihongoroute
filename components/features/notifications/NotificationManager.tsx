@@ -76,7 +76,7 @@ export default function NotificationManager() {
               {isEnabled ? <BellRing size={20} /> : <BellOff size={20} />}
             </div>
             <div>
-              <h4 className="text-[10px] font-bold text-primary uppercase tracking-widest mb-0.5">Retensi PWA</h4>
+              <h4 className="text-xs font-bold text-primary uppercase tracking-widest mb-0.5">Retensi PWA</h4>
               <h3 className="text-sm font-black text-foreground uppercase tracking-tight">Pengingat Review</h3>
             </div>
           </div>
@@ -97,14 +97,14 @@ export default function NotificationManager() {
           />
         </div>
 
-        <p className="text-[10px] text-muted-foreground font-medium leading-relaxed">
+        <p className="text-xs text-muted-foreground font-medium leading-relaxed">
           Jangan biarkan ingatanmu pudar! Aktifkan notifikasi untuk mendapatkan pengingat saat kosakata masuk jadwal review (SRS).
         </p>
 
         <div className="flex items-center gap-4 pt-2">
           <div className="flex-1 p-3 rounded-xl bg-muted/50 border border-border flex flex-col gap-1">
             <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Status Izin</span>
-            <span className={`text-[10px] font-black uppercase ${permission === 'granted' ? 'text-emerald-500' : 'text-amber-500'}`}>
+            <span className={`text-xs font-black uppercase ${permission === 'granted' ? 'text-emerald-500' : 'text-amber-500'}`}>
               {permission === 'granted' ? 'Diberikan' : permission === 'denied' ? 'Ditolak' : 'Belum Diatur'}
             </span>
           </div>
@@ -112,7 +112,7 @@ export default function NotificationManager() {
             variant="outline"
             size="sm"
             onClick={requestPermission}
-            className="h-auto py-2.5 px-4 rounded-xl text-[9px] font-bold uppercase tracking-widest border-primary/30 text-primary hover:bg-primary/10"
+            className="h-auto py-2.5 px-4 rounded-xl text-xs font-bold uppercase tracking-widest border-primary/30 text-primary hover:bg-primary/10"
           >
             <Settings2 size={12} className="mr-2" /> Konfigurasi
           </Button>

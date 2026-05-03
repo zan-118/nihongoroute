@@ -65,7 +65,7 @@ export default function QuickQuizPage() {
     return (
       <div className="flex-1 flex flex-col items-center justify-center px-4">
         <RotateCw className="text-primary animate-spin mb-4" size={32} />
-        <p className="text-muted-foreground font-mono uppercase tracking-widest text-[10px] animate-pulse font-bold">
+        <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs animate-pulse font-bold">
           Menyiapkan Tantangan Cepat...
         </p>
       </div>
@@ -95,12 +95,12 @@ export default function QuickQuizPage() {
     <div className="flex-1 w-full px-4 md:px-8 relative overflow-hidden flex flex-col items-center">
       <div className="relative z-10 w-full max-w-2xl mt-4 sm:mt-8">
         <header className="flex justify-between items-center mb-10">
-          <Button asChild variant="ghost" className="text-muted-foreground hover:text-foreground text-[10px] font-bold uppercase tracking-widest bg-muted/50 h-auto px-4 py-2.5 rounded-xl border border-border">
+          <Button asChild variant="ghost" className="text-muted-foreground hover:text-foreground text-xs font-bold uppercase tracking-widest bg-muted/50 h-auto px-4 py-2.5 rounded-xl border border-border">
             <Link href="/dashboard">
               <ChevronLeft size={14} className="mr-2" /> Batal
             </Link>
           </Button>
-          <Badge variant="outline" className="bg-amber-500/10 border border-amber-500/30 text-amber-500 px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 h-auto">
+          <Badge variant="outline" className="bg-amber-500/10 border border-amber-500/30 text-amber-500 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center gap-2 h-auto">
             <Zap size={16} />
             <span>Quick Quiz (1 Menit)</span>
           </Badge>

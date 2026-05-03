@@ -34,10 +34,10 @@ export function QuizPlaying({
                 <Brain size={22} className="text-red-500" />
              </Card>
               <div className="text-left">
-                <Badge variant="outline" className="text-red-600 dark:text-red-500 font-bold text-[9px] tracking-widest uppercase bg-red-500/5 px-3 py-1 rounded-lg border-red-500/20 neo-inset h-auto">
+                <Badge variant="outline" className="text-red-600 dark:text-red-500 font-bold text-xs tracking-widest uppercase bg-red-500/5 px-3 py-1 rounded-lg border-red-500/20 neo-inset h-auto">
                    TAHAP 0{currentIndex + 1}
                 </Badge>
-                <span className="block text-muted-foreground text-[9px] font-bold uppercase tracking-widest mt-1">Tes Pemahaman</span>
+                <span className="block text-muted-foreground text-xs font-bold uppercase tracking-widest mt-1">Tes Pemahaman</span>
               </div>
           </div>
           <div className="flex items-center gap-3 font-black text-sm italic">
@@ -99,7 +99,7 @@ export function QuizPlaying({
                   className={`relative p-6 md:p-8 rounded-3xl border text-left transition-all duration-500 h-auto group ${buttonStyle}`}
                 >
                   <div className="flex items-center gap-6">
-                    <Card className={`w-10 h-10 shrink-0 rounded-xl flex items-center justify-center text-[10px] font-black uppercase neo-inset shadow-none transition-colors ${isSelected ? 'bg-foreground text-background border-none' : 'bg-muted text-muted-foreground border-border'}`}>
+                    <Card className={`w-10 h-10 shrink-0 rounded-xl flex items-center justify-center text-xs font-black uppercase neo-inset shadow-none transition-colors ${isSelected ? 'bg-foreground text-background border-none' : 'bg-muted text-muted-foreground border-border'}`}>
                       {String.fromCharCode(65 + index)}
                     </Card>
                     <span className="flex-1 text-xl md:text-2xl font-black uppercase tracking-tight">{option}</span>
@@ -130,7 +130,7 @@ export function QuizPlaying({
                <Card className="bg-red-500/5 border-l-4 border-l-red-500 p-8 rounded-[2rem] border border-border neo-inset shadow-none">
                   <div className="flex items-center gap-3 mb-4">
                      <AlertCircle size={18} className="text-red-500" />
-                     <span className="text-[9px] text-red-600 dark:text-red-500 font-bold uppercase tracking-widest">Penjelasan Materi</span>
+                     <span className="text-xs text-red-600 dark:text-red-500 font-bold uppercase tracking-widest">Penjelasan Materi</span>
                   </div>
                   <p className="text-muted-foreground text-base md:text-lg leading-relaxed font-medium">
                    {currentQ.explanation}

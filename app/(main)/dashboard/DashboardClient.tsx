@@ -10,6 +10,8 @@ import DashboardStats from "@/components/features/dashboard/DashboardStats";
 import DashboardSettings from "@/components/features/dashboard/DashboardSettings";
 import LevelUpOverlay from "@/components/features/gamification/LevelUpOverlay";
 import ConfirmModal from "@/components/ui/ConfirmModal";
+import OnboardingTour from "@/components/features/onboarding/OnboardingTour";
+import DailyQuests from "@/components/features/dashboard/DailyQuests";
 
 const KanjiProgressGrid = dynamic(() => import("@/components/features/dashboard/KanjiProgressGrid"), { 
   ssr: false,
@@ -26,14 +28,6 @@ import { createClient } from "@/lib/supabase/client";
 // ======================
 // CONFIG / CONSTANTS
 // ======================
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.1 },
-  },
-};
-
 const itemVariants: Variants = {
   hidden: { y: 20, opacity: 0, filter: "blur(10px)" },
   visible: {
@@ -134,8 +128,18 @@ export default function DashboardPage() {
   const xpNeeded = 1000 - (progress.xp % 1000);
   const xpProgress = (progress.xp % 1000) / 10;
 
+  const [activeTab, setActiveTab] = useState("beranda");
+
+  const tabs = [
+    { id: "beranda", label: "Beranda", icon: "🏠" },
+    { id: "progres", label: "Progres", icon: "📈" },
+    { id: "pencapaian", label: "Koleksi", icon: "🏆" },
+    { id: "pengaturan", label: "Setelan", icon: "⚙️" },
+  ];
+
   return (
     <div className="max-w-7xl mx-auto relative z-10">
+      <OnboardingTour />
       <LevelUpOverlay level={progress.level} />
       <ConfirmModal
         isOpen={confirmModal.isOpen}
@@ -147,51 +151,110 @@ export default function DashboardPage() {
         onConfirm={confirmModal.onConfirm}
       />
 
+      {/* TAB NAVIGATION */}
+      <div className="flex items-center justify-center mb-12">
+        <div className="bg-muted/50 dark:bg-white/[0.03] p-1.5 rounded-[2rem] border border-border/50 dark:border-white/5 flex gap-1 shadow-sm">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 flex items-center gap-2 ${
+                activeTab === tab.id
+                  ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105"
+                  : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+              }`}
+            >
+              <span className="text-base">{tab.icon}</span>
+              <span className="hidden sm:inline">{tab.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
       <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
+        key={activeTab}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
       >
-        <DashboardHero 
-          loading={loading} 
-          guestId={guestId} 
-          dueCount={dueCount} 
-          itemVariants={itemVariants} 
-        />
-
-        <DashboardStats 
-          loading={loading} 
-          progress={progress} 
-          xpNeeded={xpNeeded} 
-          xpProgress={xpProgress} 
-          itemVariants={itemVariants} 
-        />
-
-        <motion.div variants={itemVariants} className="mb-16">
-          <KanjiProgressGrid />
-        </motion.div>
-
-        <motion.div variants={itemVariants} className="mb-16">
-          <div className="flex flex-col mb-8">
-            <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-[10px] mb-2 flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-              Pencapaian & Badge
-            </h2>
-            <h3 className="text-lg md:text-xl font-black text-foreground uppercase tracking-tight">
-              Koleksi <span className="text-primary">Trophy</span> Kamu
-            </h3>
+        {activeTab === "beranda" && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-8">
+              <DashboardHero 
+                loading={loading} 
+                guestId={guestId} 
+                dueCount={dueCount}
+                itemVariants={itemVariants}
+              />
+              <div className="space-y-8">
+                <div className="flex flex-col">
+                  <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-xs mb-2 flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                    Peta Penguasaan Kanji
+                  </h2>
+                  <h3 className="text-lg md:text-xl font-black text-foreground uppercase tracking-tight">
+                    Ringkasan <span className="text-primary">Progress</span> Cepat
+                  </h3>
+                </div>
+                <KanjiProgressGrid />
+              </div>
+            </div>
+            
+            <div className="space-y-8">
+              <DailyQuests progress={progress} />
+            </div>
           </div>
-          <AchievementsGrid />
-        </motion.div>
+        )}
 
-        <DashboardSettings 
-          isAuthenticated={isAuthenticated}
-          handleExportData={handleExportData}
-          handleImportData={handleImportData}
-          handleResetData={handleResetData}
-          handleLogout={handleLogout}
-          itemVariants={itemVariants}
-        />
+        {activeTab === "progres" && (
+          <div className="space-y-16">
+            <DashboardStats 
+              loading={loading} 
+              progress={progress} 
+              xpNeeded={xpNeeded} 
+              xpProgress={xpProgress} 
+              itemVariants={itemVariants} 
+            />
+            <div className="space-y-8">
+              <div className="flex flex-col">
+                <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-xs mb-2 flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                  Penguasaan Kanji
+                </h2>
+                <h3 className="text-lg md:text-xl font-black text-foreground uppercase tracking-tight">
+                  Visualisasi <span className="text-primary">Progress</span> Kamu
+                </h3>
+              </div>
+              <KanjiProgressGrid />
+            </div>
+          </div>
+        )}
+
+        {activeTab === "pencapaian" && (
+          <div className="space-y-8">
+            <div className="flex flex-col">
+              <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-xs mb-2 flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                Pencapaian & Badge
+              </h2>
+              <h3 className="text-lg md:text-xl font-black text-foreground uppercase tracking-tight">
+                Koleksi <span className="text-primary">Trophy</span> Kamu
+              </h3>
+            </div>
+            <AchievementsGrid />
+          </div>
+        )}
+
+        {activeTab === "pengaturan" && (
+          <DashboardSettings 
+            isAuthenticated={isAuthenticated}
+            handleExportData={handleExportData}
+            handleImportData={handleImportData}
+            handleResetData={handleResetData}
+            handleLogout={handleLogout}
+            itemVariants={itemVariants}
+          />
+        )}
       </motion.div>
     </div>
   );

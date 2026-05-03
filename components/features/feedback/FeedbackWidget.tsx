@@ -1,12 +1,16 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { MessageSquarePlus, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useFeedbackWidget } from "./useFeedbackWidget";
 
-export default function FeedbackWidget() {
+interface FeedbackWidgetProps {
+  forceOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export default function FeedbackWidget({ forceOpen, onOpenChange }: FeedbackWidgetProps) {
   const {
     isOpen,
     setIsOpen,
@@ -19,39 +23,20 @@ export default function FeedbackWidget() {
     handleSubmit,
   } = useFeedbackWidget();
 
+  // If externally controlled, use the props
+  const openState = forceOpen !== undefined ? forceOpen : isOpen;
+  const setOpenState = onOpenChange !== undefined ? onOpenChange : setIsOpen;
+
   if (isHidden) {
     return null;
   }
 
   return (
     <>
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        whileHover={{ y: -5 }}
-        className="fixed bottom-52 right-4 md:bottom-32 md:right-10 z-[40]"
-      >
-        <div className="relative group block">
-          <div className="absolute inset-0 bg-blue-500 rounded-full blur-2xl opacity-10 group-hover:opacity-30 animate-pulse transition-opacity" />
-          
-          <Button
-            onClick={() => setIsOpen(true)}
-            variant="ghost"
-            size="icon"
-            className="relative w-12 h-12 md:w-14 md:h-14 bg-card dark:bg-slate-900 border border-border dark:border-white/10 rounded-full flex items-center justify-center neo-card shadow-lg group-hover:border-blue-500/50 group-hover:bg-blue-500/10 transition-all active:scale-90 cursor-pointer h-auto"
-          >
-            <MessageSquarePlus
-              size={22}
-              className="text-muted-foreground group-hover:text-blue-500 transition-colors duration-300"
-            />
-          </Button>
-        </div>
-      </motion.div>
-
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-[425px] border-border dark:border-white/10 bg-card dark:bg-slate-950 text-foreground transition-colors duration-300">
+      <Dialog open={openState} onOpenChange={setOpenState}>
+        <DialogContent className="sm:max-w-[425px] border-border dark:border-white/10 bg-card dark:bg-slate-950 text-foreground transition-colors duration-300 shadow-2xl rounded-3xl">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold text-foreground flex items-center gap-2">
+            <DialogTitle className="text-xl font-bold text-foreground flex items-center gap-2 font-black uppercase tracking-tight">
               <MessageSquarePlus className="text-blue-500" />
               Kirim Masukan
             </DialogTitle>

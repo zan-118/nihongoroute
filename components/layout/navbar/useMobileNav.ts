@@ -1,5 +1,5 @@
 import { usePathname } from "next/navigation";
-import { Home, BookOpen, BrainCircuit, Trophy, LogIn, User } from "lucide-react";
+import { Home, BookOpen, BrainCircuit, Library, LogIn, User } from "lucide-react";
 import { useProgressStore } from "@/store/useProgressStore";
 import { useShallow } from "zustand/react/shallow";
 
@@ -10,10 +10,10 @@ export function useMobileNav() {
   );
 
   const navItems = [
-    { href: "/", icon: Home, label: "Beranda" },
+    { href: "/dashboard", icon: Home, label: "Beranda" },
     { href: "/courses", icon: BookOpen, label: "Materi" },
     { href: "/review", icon: BrainCircuit, label: "Hafalan" },
-    { href: "/social", icon: Trophy, label: "Sosial" },
+    { href: "/library", icon: Library, label: "Pustaka" },
     { 
       href: isAuthenticated ? "/dashboard" : "/login", 
       icon: isAuthenticated ? User : LogIn, 

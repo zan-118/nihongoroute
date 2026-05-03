@@ -43,8 +43,8 @@ export default function MainError({
 
         {process.env.NODE_ENV === "development" && (
           <div className="mb-8 p-4 bg-muted/50 rounded-lg border border-destructive/20 text-left overflow-auto max-h-32">
-            <p className="text-[9px] uppercase tracking-widest text-destructive font-bold mb-2">Error Log:</p>
-            <code className="text-[10px] text-destructive/80 font-mono break-all italic">
+            <p className="text-xs uppercase tracking-widest text-destructive font-bold mb-2">Error Log:</p>
+            <code className="text-xs text-destructive/80 font-mono break-all italic">
               {error.message || "Unknown error occurred"}
             </code>
           </div>
@@ -53,7 +53,7 @@ export default function MainError({
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button
             onClick={() => reset()}
-            className="bg-primary hover:bg-foreground text-white dark:text-black font-black uppercase tracking-widest h-auto py-4 px-8 rounded-xl text-[10px] transition-all shadow-lg border-none"
+            className="bg-primary hover:bg-foreground text-white dark:text-black font-black uppercase tracking-widest h-auto py-4 px-8 rounded-xl text-xs transition-all shadow-lg border-none"
           >
             Segarkan Sesi
           </Button>
@@ -61,7 +61,7 @@ export default function MainError({
           <Button
             asChild
             variant="ghost"
-            className="bg-muted border border-border hover:bg-background text-muted-foreground hover:text-foreground font-black uppercase tracking-widest h-auto py-4 px-8 rounded-xl text-[10px] transition-all"
+            className="bg-muted border border-border hover:bg-background text-muted-foreground hover:text-foreground font-black uppercase tracking-widest h-auto py-4 px-8 rounded-xl text-xs transition-all"
           >
             <Link href="/dashboard">
               Ke Dashboard
@@ -70,7 +70,7 @@ export default function MainError({
         </div>
       </Card>
       
-      <p className="mt-8 text-muted-foreground/30 text-[9px] uppercase tracking-[0.3em]">
+      <p className="mt-8 text-muted-foreground/30 text-xs uppercase tracking-[0.3em]">
         Status: Circuit Breaker Active
       </p>
     </div>

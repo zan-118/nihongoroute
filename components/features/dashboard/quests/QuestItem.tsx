@@ -42,7 +42,7 @@ export function QuestItem({
             exit={{ opacity: 0, scale: 1.05 }}
             className="absolute inset-0 flex items-center justify-center bg-emerald-500/10 backdrop-blur-md rounded-2xl z-20"
           >
-            <span className="text-emerald-600 dark:text-emerald-400 font-black tracking-widest uppercase text-[10px]">
+            <span className="text-emerald-600 dark:text-emerald-400 font-black tracking-widest uppercase text-xs">
               BERHASIL! +{quest.rewardXP} XP
             </span>
           </motion.div>
@@ -64,25 +64,25 @@ export function QuestItem({
             >
               {quest.title}
             </h4>
-            <p className={`text-[9px] font-bold uppercase tracking-widest mt-1 ${isCompleted ? 'text-emerald-600/70 dark:text-emerald-400/70' : 'text-primary/60'}`}>
+            <p className={`text-xs font-bold uppercase tracking-widest mt-1 ${isCompleted ? 'text-emerald-600/70 dark:text-emerald-400/70' : 'text-primary/60'}`}>
               +{quest.rewardXP} XP
             </p>
           </div>
         </div>
 
         {isClaimed ? (
-          <div className="text-muted-foreground font-bold text-[9px] uppercase tracking-widest flex items-center gap-1.5 shrink-0">
+          <div className="text-muted-foreground font-bold text-xs uppercase tracking-widest flex items-center gap-1.5 shrink-0">
             <Lock size={12} /> Diambil
           </div>
         ) : isCompleted ? (
           <Button
             onClick={() => onClaim(quest)}
-            className="h-auto text-[9px] font-black text-white dark:text-black bg-emerald-500 dark:bg-emerald-400 hover:bg-foreground hover:text-background dark:hover:bg-white uppercase tracking-widest px-4 py-2 rounded-xl transition-all border-none shrink-0"
+            className="h-auto text-xs font-black text-white dark:text-black bg-emerald-500 dark:bg-emerald-400 hover:bg-foreground hover:text-background dark:hover:bg-white uppercase tracking-widest px-4 py-2 rounded-xl transition-all border-none shrink-0"
           >
             Ambil
           </Button>
         ) : (
-          <Badge variant="ghost" className="text-[10px] font-bold text-muted-foreground font-mono bg-background dark:bg-white/[0.03] px-2.5 py-1 rounded-lg border border-border dark:border-white/[0.08] shadow-none h-auto shrink-0">
+          <Badge variant="ghost" className="text-xs font-bold text-muted-foreground font-mono bg-background dark:bg-white/[0.03] px-2.5 py-1 rounded-lg border border-border dark:border-white/[0.08] shadow-none h-auto shrink-0">
             {current} / {quest.target}
           </Badge>
         )}

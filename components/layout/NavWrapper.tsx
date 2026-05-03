@@ -4,7 +4,7 @@ import { ReactNode, useState } from "react";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import MobileNav from "./MobileNav";
-import FloatingSupport from "@/components/features/support/FloatingSupport";
+import FloatingActions from "@/components/features/global/FloatingActions";
 
 interface NavWrapperProps {
   children: ReactNode;
@@ -38,7 +38,7 @@ export default function NavWrapper({ children }: NavWrapperProps) {
         </main>
       </div>
 
-      <FloatingSupport />
+      <FloatingActions />
 
       {/* Navigasi Khusus Seluler */}
       <MobileNav />

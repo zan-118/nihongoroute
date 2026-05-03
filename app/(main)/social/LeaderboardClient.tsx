@@ -91,9 +91,9 @@ export default function LeaderboardClient() {
             </div>
           </div>
           <div className="bg-gradient-to-b from-slate-400/20 to-transparent p-4 sm:p-6 rounded-t-3xl w-full text-center border-x border-t border-slate-400/30 h-28 sm:h-36">
-            <p className="text-[9px] font-black uppercase text-slate-500 mb-1">Rank #2</p>
+            <p className="text-xs font-black uppercase text-slate-500 mb-1">Rank #2</p>
             <p className="text-xs sm:text-sm font-bold text-foreground truncate mb-2">{topThree[1]?.full_name || "Misterius"}</p>
-            <Badge variant="outline" className="font-mono text-[10px] border-slate-400/30 text-slate-600 dark:text-slate-300">
+            <Badge variant="outline" className="font-mono text-xs border-slate-400/30 text-slate-600 dark:text-slate-300">
               {topThree[1]?.xp || 0} XP
             </Badge>
           </div>
@@ -114,9 +114,9 @@ export default function LeaderboardClient() {
             </div>
           </div>
           <div className="bg-gradient-to-b from-amber-500/20 to-transparent p-4 sm:p-8 rounded-t-3xl w-full text-center border-x border-t border-amber-500/40 h-36 sm:h-48">
-            <p className="text-[10px] font-black uppercase text-amber-600 dark:text-amber-400 mb-1 animate-pulse">Champion</p>
+            <p className="text-xs font-black uppercase text-amber-600 dark:text-amber-400 mb-1 animate-pulse">Champion</p>
             <p className="text-sm sm:text-base font-black text-foreground truncate mb-3">{topThree[0]?.full_name || "Sang Juara"}</p>
-            <Badge variant="outline" className="font-mono text-[10px] sm:text-xs border-amber-500/50 text-amber-700 dark:text-amber-300 bg-amber-500/10">
+            <Badge variant="outline" className="font-mono text-xs sm:text-xs border-amber-500/50 text-amber-700 dark:text-amber-300 bg-amber-500/10">
               {topThree[0]?.xp || 0} XP
             </Badge>
           </div>
@@ -138,9 +138,9 @@ export default function LeaderboardClient() {
             </div>
           </div>
           <div className="bg-gradient-to-b from-orange-600/20 to-transparent p-4 sm:p-6 rounded-t-3xl w-full text-center border-x border-t border-orange-600/30 h-24 sm:h-32">
-            <p className="text-[9px] font-black uppercase text-orange-600 mb-1">Rank #3</p>
+            <p className="text-xs font-black uppercase text-orange-600 mb-1">Rank #3</p>
             <p className="text-xs sm:text-sm font-bold text-foreground truncate mb-2">{topThree[2]?.full_name || "Pesaing"}</p>
-            <Badge variant="outline" className="font-mono text-[10px] border-orange-600/30 text-orange-600 dark:text-orange-400">
+            <Badge variant="outline" className="font-mono text-xs border-orange-600/30 text-orange-600 dark:text-orange-400">
               {topThree[2]?.xp || 0} XP
             </Badge>
           </div>
@@ -151,7 +151,7 @@ export default function LeaderboardClient() {
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between px-4 mb-4">
           <h3 className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground">Peringkat Lainnya</h3>
-          <div className="flex items-center gap-2 text-muted-foreground/50 text-[10px] font-bold uppercase tracking-widest">
+          <div className="flex items-center gap-2 text-muted-foreground/50 text-xs font-bold uppercase tracking-widest">
             <Search size={14} /> Global League
           </div>
         </div>
@@ -181,11 +181,11 @@ export default function LeaderboardClient() {
                   {user.full_name || "Siswa Misterius"}
                 </h4>
                 <div className="flex items-center gap-3 sm:gap-4 mt-1">
-                  <Badge variant="ghost" className="p-0 text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                  <Badge variant="ghost" className="p-0 text-xs sm:text-xs font-black uppercase tracking-widest text-muted-foreground">
                     Level {user.level}
                   </Badge>
                   <div className="w-1 h-1 rounded-full bg-muted" />
-                  <div className="flex items-center gap-1.5 text-[9px] sm:text-[10px] font-bold text-orange-600 dark:text-orange-500">
+                  <div className="flex items-center gap-1.5 text-xs sm:text-xs font-bold text-orange-600 dark:text-orange-500">
                     <Flame size={12} className="drop-shadow-sm" /> 
                     {user.streak} <span className="hidden sm:inline">Hari Berturut</span>
                   </div>
@@ -197,7 +197,7 @@ export default function LeaderboardClient() {
                 <p className="text-base sm:text-xl font-black font-mono text-primary drop-shadow-sm">
                   {user.xp.toLocaleString()}
                 </p>
-                <p className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground">XP Points</p>
+                <p className="text-[8px] sm:text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">XP Points</p>
               </div>
             </Card>
           </motion.div>

@@ -239,7 +239,7 @@ export default function BasicsPage() {
             <Button
               variant="outline"
               asChild
-              className="px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest bg-muted border-border"
+              className="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest bg-muted border-border"
             >
               <Link href="/courses">
                 <ChevronLeft size={14} className="mr-2" /> Kembali ke Pusat
@@ -258,7 +258,7 @@ export default function BasicsPage() {
               </p>
             </div>
             <div
-              className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-muted border border-border text-[9px] font-bold uppercase tracking-widest ${themeColor}`}
+              className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-muted border border-border text-xs font-bold uppercase tracking-widest ${themeColor}`}
             >
               <LayoutGrid size={12} /> Tampilan Penuh
             </div>
@@ -270,14 +270,14 @@ export default function BasicsPage() {
             <Button
               variant={isHira ? "default" : "ghost"}
               onClick={() => setType("hiragana")}
-              className={`relative z-10 flex-1 py-6 rounded-xl font-bold uppercase tracking-widest text-[10px] md:text-xs transition-all duration-500 h-10 ${isHira ? "bg-cyan-500 text-black hover:bg-cyan-600 shadow-lg" : "text-muted-foreground hover:text-foreground"}`}
+              className={`relative z-10 flex-1 py-6 rounded-xl font-bold uppercase tracking-widest text-xs md:text-xs transition-all duration-500 h-10 ${isHira ? "bg-cyan-500 text-black hover:bg-cyan-600 shadow-lg" : "text-muted-foreground hover:text-foreground"}`}
             >
               Hiragana
             </Button>
             <Button
               variant={!isHira ? "default" : "ghost"}
               onClick={() => setType("katakana")}
-              className={`relative z-10 flex-1 py-6 rounded-xl font-bold uppercase tracking-widest text-[10px] md:text-xs transition-all duration-500 h-10 ${!isHira ? "bg-purple-500 text-black hover:bg-purple-600 shadow-lg" : "text-muted-foreground hover:text-foreground"}`}
+              className={`relative z-10 flex-1 py-6 rounded-xl font-bold uppercase tracking-widest text-xs md:text-xs transition-all duration-500 h-10 ${!isHira ? "bg-purple-500 text-black hover:bg-purple-600 shadow-lg" : "text-muted-foreground hover:text-foreground"}`}
             >
               Katakana
             </Button>
@@ -294,7 +294,7 @@ export default function BasicsPage() {
                   key={cat.id}
                   variant={category === cat.id ? "default" : "outline"}
                   onClick={() => setCategory(cat.id as KanaCategory)}
-                  className={`px-5 py-2.5 h-auto rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${
+                  className={`px-5 py-2.5 h-auto rounded-xl text-xs font-bold uppercase tracking-widest transition-all duration-300 ${
                     category === cat.id
                       ? `bg-muted ${themeColor} ${themeBorder} border-opacity-50`
                       : "bg-transparent text-muted-foreground border-border hover:bg-muted/50 hover:text-foreground"
@@ -307,7 +307,7 @@ export default function BasicsPage() {
 
             <Button 
               onClick={startQuiz}
-              className={`px-6 py-3 h-auto rounded-xl text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all duration-300 ${themeAccent} text-black shadow-lg hover:opacity-90 border-none`}
+              className={`px-6 py-3 h-auto rounded-xl text-xs md:text-xs font-bold uppercase tracking-widest transition-all duration-300 ${themeAccent} text-black shadow-lg hover:opacity-90 border-none`}
             >
               <Swords size={16} className="mr-2" /> Latihan
             </Button>
@@ -336,7 +336,7 @@ export default function BasicsPage() {
                           <span className="text-3xl md:text-4xl font-black text-foreground group-hover:scale-105 transition-transform font-japanese drop-shadow-sm">
                             {char}
                           </span>
-                          <span className="text-[9px] md:text-[10px] font-bold font-mono text-muted-foreground uppercase tracking-widest mt-2 group-hover:text-foreground transition-colors">
+                          <span className="text-xs md:text-xs font-bold font-mono text-muted-foreground uppercase tracking-widest mt-2 group-hover:text-foreground transition-colors">
                             {currentData.romaji[rowIndex][colIndex]}
                           </span>
                         </div>
@@ -376,7 +376,7 @@ export default function BasicsPage() {
                     </div>
                     <DialogHeader className="p-0">
                       <span
-                        className={`font-mono uppercase tracking-[0.2em] text-[9px] sm:text-[10px] font-black ${themeColor} block leading-none mb-1.5 text-left`}
+                        className={`font-mono uppercase tracking-[0.2em] text-xs sm:text-xs font-black ${themeColor} block leading-none mb-1.5 text-left`}
                       >
                         Latihan Menulis
                       </span>
@@ -398,7 +398,7 @@ export default function BasicsPage() {
                       </p>
                     </div>
                     <div
-                      className={`px-3 py-1.5 rounded-lg bg-background border border-border text-[8px] sm:text-[9px] font-bold uppercase tracking-widest ${themeColor}`}
+                      className={`px-3 py-1.5 rounded-lg bg-background border border-border text-[8px] sm:text-xs font-bold uppercase tracking-widest ${themeColor}`}
                     >
                       Sistem {type}
                     </div>
@@ -412,7 +412,7 @@ export default function BasicsPage() {
                     />
                   </div>
 
-                  <p className="text-center text-[9px] text-muted-foreground font-bold uppercase tracking-[0.2em] mt-4 shrink-0">
+                  <p className="text-center text-xs text-muted-foreground font-bold uppercase tracking-[0.2em] mt-4 shrink-0">
                     <Sparkles size={10} className="inline mr-1 text-primary" />{" "}
                     Yuk, coba tulis huruf ini di kanvas!
                   </p>
@@ -453,7 +453,7 @@ export default function BasicsPage() {
                         {quizScore}
                       </div>
                     </div>
-                    <div className={`px-3 py-1.5 rounded-lg bg-muted border border-border text-[9px] font-bold uppercase tracking-widest ${themeColor}`}>
+                    <div className={`px-3 py-1.5 rounded-lg bg-muted border border-border text-xs font-bold uppercase tracking-widest ${themeColor}`}>
                       {isHira ? "Hiragana" : "Katakana"} Quiz
                     </div>
                   </header>
@@ -513,13 +513,13 @@ export default function BasicsPage() {
                         <Heart size={32} className="text-destructive" />
                       </div>
                       <h2 className="text-2xl font-black text-foreground uppercase tracking-tight mb-2">Game Over!</h2>
-                      <p className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest mb-6">Skor akhir kamu:</p>
+                      <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mb-6">Skor akhir kamu:</p>
                       <div className="text-6xl font-black text-amber-500 mb-8 drop-shadow-md">
                         {quizScore}
                       </div>
                       <Button
                         onClick={() => startQuiz()}
-                        className={`w-full h-auto py-4 rounded-xl font-black uppercase tracking-widest ${themeAccent} text-black text-[10px] transition-all shadow-lg border-none`}
+                        className={`w-full h-auto py-4 rounded-xl font-black uppercase tracking-widest ${themeAccent} text-black text-xs transition-all shadow-lg border-none`}
                       >
                         Main Lagi
                       </Button>

@@ -18,7 +18,7 @@ export default function FloatingSupport() {
       initial={{ opacity: 0, scale: 0.8, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       whileHover={{ y: -5 }}
-      className="fixed bottom-36 right-4 md:bottom-10 md:right-10 z-[40]"
+      className="fixed bottom-6 right-4 md:bottom-8 md:right-10 z-[40] opacity-40 hover:opacity-100 transition-opacity duration-500"
     >
       <Link href="/support" className="group block">
         <div className="relative">

@@ -33,14 +33,14 @@ export default function DashboardStats({ loading, progress, xpNeeded, xpProgress
             <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[80px] rounded-full pointer-events-none" />
             <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
               <div>
-                <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-[9px] md:text-[10px] mb-2">
+                <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-xs md:text-xs mb-2">
                   Level Kamu
                 </h2>
                 <div className="flex items-baseline gap-3">
                   <span className="text-5xl md:text-6xl font-black text-foreground tracking-tighter">
                     {progress.level}
                   </span>
-                  <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 px-3 py-1 font-bold uppercase tracking-widest text-[8px] md:text-[9px] shadow-none">
+                  <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 px-3 py-1 font-bold uppercase tracking-widest text-[8px] md:text-xs shadow-none">
                     Status Belajar
                   </Badge>
                 </div>
@@ -53,7 +53,7 @@ export default function DashboardStats({ loading, progress, xpNeeded, xpProgress
             </div>
             
             <div className="relative z-10">
-              <div className="flex justify-between text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">
+              <div className="flex justify-between text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">
                 <span>Progres ke Level {progress.level + 1}</span>
                 <span>{xpProgress}%</span>
               </div>
@@ -62,7 +62,7 @@ export default function DashboardStats({ loading, progress, xpNeeded, xpProgress
                 className="h-3 bg-muted border border-border"
                 indicatorClassName="bg-gradient-to-r from-emerald-400 via-primary to-blue-500"
               />
-              <p className="mt-4 text-[10px] text-muted-foreground uppercase font-bold tracking-widest font-mono text-center md:text-right">
+              <p className="mt-4 text-xs text-muted-foreground uppercase font-bold tracking-widest font-mono text-center md:text-right">
                 Kumpulkan <span className="text-foreground">{xpNeeded} XP</span> lagi untuk naik level!
               </p>
             </div>
@@ -80,14 +80,14 @@ export default function DashboardStats({ loading, progress, xpNeeded, xpProgress
         ) : (
           <>
             <Card className="h-[140px] bg-card border border-border rounded-2xl p-5 flex flex-col justify-between group overflow-hidden relative transition-all duration-300 hover:border-amber-500/30 shadow-lg">
-              <h3 className="text-amber-500/60 font-bold uppercase tracking-widest text-[9px]">
+              <h3 className="text-amber-500/60 font-bold uppercase tracking-widest text-xs">
                 Semangat Belajar
               </h3>
               <div className="flex items-end gap-2 mt-2">
                 <span className="text-4xl font-black text-amber-500 tracking-tighter">
                   {progress.streak}
                 </span>
-                <span className="text-amber-500/80 font-bold uppercase tracking-widest text-[10px] mb-1">Hari</span>
+                <span className="text-amber-500/80 font-bold uppercase tracking-widest text-xs mb-1">Hari</span>
               </div>
               <div className="absolute -bottom-4 -right-4 text-amber-500/10 rotate-12 group-hover:scale-125 transition-transform duration-700">
                 <Flame size={80} />

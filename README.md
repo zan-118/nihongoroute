@@ -6,110 +6,72 @@
 [![Sanity](https://img.shields.io/badge/Sanity-F1662A?style=for-the-badge&logo=sanity&logoColor=white)](https://www.sanity.io/)
 [![Tailwind](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Zustand](https://img.shields.io/badge/Zustand-443E38?style=for-the-badge&logo=zustand&logoColor=white)](https://zustand-demo.pmnd.rs/)
-[![Vitest](https://img.shields.io/badge/Vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)](https://vitest.dev/)
-[![Playwright](https://img.shields.io/badge/Playwright-45BA4B?style=for-the-badge&logo=playwright&logoColor=white)](https://playwright.dev/)
 
 ## 📝 Deskripsi
 
-**NihongoRoute** adalah platform pembelajaran mandiri (*self-learning*) bahasa Jepang tingkat profesional untuk pembelajar JLPT N5 hingga N2. Dibangun dengan estetika modern **Cyber-Dark Neumorphic**, aplikasi ini memberikan pengalaman belajar yang imersif dan tergamifikasi untuk menguasai kosakata, tata bahasa, dan kanji.
+**NihongoRoute** adalah platform edutech profesional yang dirancang untuk membantu pembelajar menguasai bahasa Jepang (JLPT N5 - N2) dengan pendekatan yang terstruktur, interaktif, dan visual yang memukau. Mengusung desain **Cyber-Dark Neumorphic**, aplikasi ini menggabungkan efisiensi Spaced Repetition System (SRS) dengan antarmuka modern yang dioptimalkan untuk perangkat seluler.
 
-Platform ini mengutamakan arsitektur **local-first** dengan sinkronisasi cloud yang mulus menggunakan Supabase dan Sanity CMS sebagai headless content engine. Seluruh antarmuka telah **dilokalisasi penuh ke bahasa Indonesia** untuk memudahkan pelajar lokal tanpa hambatan bahasa.
-
----
-
-## ✨ Fitur Utama
-
-- **🧠 Hybrid SRS Engine** — Algoritma Spaced Repetition System berbasis SM-2 yang dimodifikasi. Bekerja instan di localStorage (Guest Mode) dan disinkronkan ke cloud secara otomatis.
-- **🔄 Sync & Data Control** — Dashboard sinkronisasi real-time dengan indikator *dirty data* dan fitur **Manual Sync** untuk menjamin integritas progres lintas perangkat.
-- **🎮 Progres Tergamifikasi** — Sistem XP, level, streak harian, daily quests, heatmap, dan fitur **Pelindung Streak** (Streak Freeze) untuk menjaga progres.
-- **🎓 Mock Exam Engine** — Simulasi ujian JLPT lengkap dengan timer, *section breakdown*, dan skor skala 180.
-- **⚡ Quiz & Survival Mode** — Mode latihan cepat dan tantangan bertahan hidup untuk menguji kecepatan ingatan.
-- **🖋️ Kanji Writing Pad** — Latihan menulis digital dengan animasi *stroke order* interaktif dan detail Onyomi/Kunyomi.
-- **📚 Pustaka Lengkap** — Database tata bahasa, kosakata, kanji, dan cheatsheet konjugasi kata kerja yang komprehensif.
-- **📱 PWA Ready** — Aplikasi dapat diinstal di Android/iOS/Desktop dengan performa tinggi dan akses cepat.
+Seluruh ekosistem NihongoRoute telah **dilokalisasi penuh ke bahasa Indonesia**, memberikan aksesibilitas tanpa batas bagi pelajar lokal untuk memahami konsep bahasa Jepang yang kompleks melalui materi yang mudah dicerna.
 
 ---
 
-## 🛠️ Stack Teknologi
+## ✨ Fitur Unggulan
+
+- **🧠 Hybrid SRS Engine (SM-2 Modified)** — Algoritma pengulangan cerdas yang menjamin hafalan terkunci di ingatan jangka panjang.
+- **📚 Next-Gen Library Ecosystem** — Modul Pustaka (Kosakata, Tata Bahasa, Kata Kerja, Cheatsheet) dengan layout **Bento-Grid** dan sistem **Pagination** yang teratur.
+- **📄 Global PDF Generator** — Ekspor materi belajar ke format PDF profesional secara instan menggunakan `@react-pdf/renderer`.
+- **🎮 Gamified Dashboard** — Pantau progres melalui Heatmap, XP, Level, dan rayakan pencapaian dengan efek **Canvas Confetti**.
+- **⌨️ Smart Input with Wanakana** — Input teks Jepang otomatis yang cerdas dan intuitif.
+- **📱 PWA & Local-First** — Dukungan instalasi aplikasi (PWA) dengan persistensi data menggunakan **IndexedDB (idb-keyval)** untuk pengalaman offline yang mulus.
+- **🔍 Smart Dictionary Popup** — Kamus mengambang yang muncul saat menyorot teks Jepang di mana pun dalam aplikasi.
+
+---
+
+## 🛠️ Stack Teknologi (Lengkap)
 
 | Kategori | Teknologi |
 |---|---|
-| **Framework** | [Next.js 15+](https://nextjs.org/) (App Router) |
-| **Bahasa** | [TypeScript](https://www.typescriptlang.org/) |
-| **Database & Auth** | [Supabase](https://supabase.com/) |
-| **CMS** | [Sanity.io](https://www.sanity.io/) |
-| **State Management** | [Zustand](https://zustand-demo.pmnd.rs/) |
-| **Styling** | [Tailwind CSS](https://tailwindcss.com/) & [Shadcn UI](https://ui.shadcn.com/) |
-| **Testing (Unit)** | [Vitest](https://vitest.dev/) |
-| **Testing (E2E)** | [Playwright](https://playwright.dev/) |
-| **Automation** | Husky & Lint-Staged |
+| **Core Framework** | [Next.js 15+](https://nextjs.org/) (App Router), React 19, TypeScript |
+| **Styling & UI** | [Tailwind CSS](https://tailwindcss.com/), Radix UI, Shadcn UI, Framer Motion |
+| **Backend & Auth** | [Supabase](https://supabase.com/) (PostgreSQL), [Sanity CMS](https://www.sanity.io/) |
+| **State & Sync** | [Zustand](https://zustand-demo.pmnd.rs/), [TanStack Query v5](https://tanstack.com/query) |
+| **Persistence** | IndexedDB via `idb-keyval` (Local-First Architecture) |
+| **Japanese Tools** | [Wanakana](https://wanakana.com/) (Romaji-Kana conversion) |
+| **Export & Utils** | `@react-pdf/renderer`, `date-fns`, `canvas-confetti` |
+| **Testing** | Vitest, Playwright, Testing Library |
+| **Dev Ops** | Husky, Lint-Staged, ESLint |
 
 ---
 
-## 🏗️ Arsitektur
+## 🏗️ Arsitektur & Pola Desain
 
-NihongoRoute mengadopsi pola **Feature-Sliced Design (FSD)** yang memisahkan UI murni dari logika bisnis melalui *custom hooks*.
-
-- **Komponen `.tsx`** hanya merender UI — tidak mengandung logika bisnis.
-- **Custom Hooks `.ts`** menangani state, kalkulasi, dan side-effects.
-- **Zustand Store** menyimpan *global state* dengan *atomic selectors*.
-
----
-
-## 📂 Struktur Proyek
-
-```text
-nihongoroute/
-├── app/                          # Next.js App Router (Routes & Pages)
-├── components/                   # UI Components
-│   ├── features/                 # Domain-specific logic & components
-│   ├── layout/                   # Global layouts (Navbar, Sidebar)
-│   ├── providers/                # Auth & Context providers
-│   └── ui/                       # Shadcn UI primitives
-├── e2e/                          # Playwright End-to-End Tests
-├── __tests__/                    # Vitest Unit Tests
-├── store/                        # Zustand Stores
-├── lib/                          # Core Utilities & SRS Algorithm
-├── hooks/                        # Shared Custom Hooks
-├── sanity/                       # Sanity CMS Schema
-├── public/                       # Static Assets & PWA Icons
-└── supabase/                     # Database Migrations & Config
-```
+NihongoRoute mengadopsi prinsip **Clean Architecture** dengan pemisahan tanggung jawab yang ketat:
+- **Feature-Sliced Design (FSD):** Memisahkan domain logika ke dalam modul-modul independen.
+- **Atomic Components:** UI yang dibangun dari unit terkecil untuk konsistensi desain maksimal.
+- **Type-Safety:** Implementasi TypeScript 100% pada seluruh jalur data (dari CMS hingga Client).
 
 ---
 
 ## 🧪 Quality Assurance
 
-Kami menjaga kualitas kode dengan pengujian otomatis yang ketat di setiap level.
-
-### 1. Unit Testing (Vitest)
-Fokus pada logika bisnis, algoritma SRS, dan kalkulasi progres.
-- **Status:** **158 tests — 100% passed**
-- Perintah: `npm test`
-
-### 2. E2E Testing (Playwright)
-Memastikan alur pengguna dari login hingga latihan berjalan mulus.
-- **Cakupan:** Navigasi, Learning Flow, Dashboard, & Library.
-- Perintah: `npx playwright test`
-
-### 3. Pre-commit Hooks
-Menggunakan **Husky** dan **Lint-staged** untuk memastikan kode yang di-commit selalu bersih (linting) dan bebas error TypeScript.
+Kualitas adalah prioritas utama. NihongoRoute melewati rangkaian pengujian otomatis:
+- **Unit Testing:** 150+ test cases untuk menjamin akurasi algoritma SRS.
+- **E2E Testing:** Skenario kritis diuji menggunakan Playwright untuk menjamin kelancaran navigasi.
+- **Pre-commit Checks:** Husky memastikan kode selalu bersih sebelum masuk ke repositori.
 
 ---
 
-## 🚀 Instalasi & Setup
+## 🚀 Instalasi & Pengembangan
 
-1. **Clone & Install:**
+1. **Clone Proyek:**
    ```bash
    git clone https://github.com/zan-118/nihongoroute.git
-   npm install
    ```
-
-2. **Environment Variables:**
-   Buat file `.env.local` dan isi kredensial Sanity & Supabase Anda.
-
-3. **Run Project:**
+2. **Setup Env:**
+   Salin `.env.example` menjadi `.env.local` dan lengkapi API Keys.
+3. **Mulai Belajar:**
    ```bash
+   npm install
    npm run dev
    ```
 
@@ -122,4 +84,4 @@ Menggunakan **Husky** dan **Lint-staged** untuk memastikan kode yang di-commit s
 - Portfolio: [www.fauzanabdulbasith.com](https://www.fauzanabdulbasith.com)
 
 ---
-Dikembangkan dengan 💙 untuk komunitas pembelajar bahasa Jepang.
+Dibuat dengan semangat untuk mendemokratisasi akses belajar bahasa Jepang yang berkualitas. 🇯🇵💙

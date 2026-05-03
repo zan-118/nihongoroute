@@ -79,7 +79,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
             <div className="w-3.5 h-3.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_15px_#ef4444]" />
             <Badge
               variant="outline"
-              className="text-red-600 dark:text-red-500 font-bold uppercase tracking-widest text-[9px] md:text-[10px] border-red-500/30 px-4 py-1.5 bg-red-500/5 backdrop-blur-md rounded-xl h-auto"
+              className="text-red-600 dark:text-red-500 font-bold uppercase tracking-widest text-xs md:text-xs border-red-500/30 px-4 py-1.5 bg-red-500/5 backdrop-blur-md rounded-xl h-auto"
             >
               Simulasi JLPT Aktif
             </Badge>
@@ -113,7 +113,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
                <AlertTriangle className="text-amber-600 dark:text-amber-500" size={20} />
             </div>
             <div>
-              <h4 className="text-amber-600 dark:text-amber-500 font-bold uppercase tracking-widest text-[9px] md:text-[10px] mb-1">
+              <h4 className="text-amber-600 dark:text-amber-500 font-bold uppercase tracking-widest text-xs md:text-xs mb-1">
                 Catatan Penting
               </h4>
               <p className="text-muted-foreground text-xs md:text-sm font-medium leading-relaxed">
@@ -141,7 +141,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
                     <div className="flex justify-between items-start mb-8 md:mb-10 relative z-10">
                       <Badge
                         variant="outline"
-                        className="px-3 py-1.5 text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-red-600 dark:text-red-500 border-red-500/30 bg-muted rounded-lg h-auto"
+                        className="px-3 py-1.5 text-xs md:text-xs font-bold uppercase tracking-widest text-red-600 dark:text-red-500 border-red-500/30 bg-muted rounded-lg h-auto"
                       >
                         {exam.levelCode || "GENERAL"}
                       </Badge>
@@ -164,7 +164,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
                       <div className="grid grid-cols-2 gap-3 mb-8 md:mb-10">
                         <div className="p-4 flex flex-col gap-1 items-center text-center rounded-xl bg-muted border border-border group-hover:border-red-500/20 transition-all duration-300">
                           <Clock size={16} className="text-red-500 mb-1" />
-                          <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground">
+                          <span className="text-[8px] md:text-xs font-bold uppercase tracking-widest text-muted-foreground">
                             Waktu
                           </span>
                           <span className="font-bold text-foreground text-base md:text-xl">
@@ -173,7 +173,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
                         </div>
                         <div className="p-4 flex flex-col gap-1 items-center text-center rounded-xl bg-muted border border-border group-hover:border-red-500/20 transition-all duration-300">
                           <Target size={16} className="text-emerald-500 mb-1" />
-                          <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground">
+                          <span className="text-[8px] md:text-xs font-bold uppercase tracking-widest text-muted-foreground">
                             Passing
                           </span>
                           <span className="font-bold text-emerald-600 dark:text-emerald-400 text-base md:text-xl">
@@ -183,7 +183,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
                       </div>
 
                       <div className="w-full bg-muted border border-border p-4 md:p-5 flex items-center justify-between group-hover:border-red-500/40 group-hover:bg-red-600 group-hover:text-white dark:group-hover:text-black transition-all duration-300 rounded-xl shadow-sm">
-                        <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-muted-foreground group-hover:text-white dark:group-hover:text-black transition-colors">
+                        <span className="text-xs md:text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-white dark:group-hover:text-black transition-colors">
                           Mulai Ujian
                         </span>
                         <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-foreground/10 flex items-center justify-center group-hover:bg-black/20 transition-all duration-300">

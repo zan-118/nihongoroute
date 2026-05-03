@@ -104,7 +104,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md bg-card/80 backdrop-blur-xl border border-border rounded-3xl p-8 z-10 shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500 relative">
         <Link 
           href="/" 
-          className="absolute -top-12 left-0 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors group"
+          className="absolute -top-12 left-0 flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors group"
         >
           <div className="w-8 h-8 rounded-full bg-muted/50 border border-border flex items-center justify-center group-hover:border-primary/30 transition-all">
             <ChevronRight className="rotate-180" size={14} />
@@ -180,7 +180,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-4 px-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-bold uppercase tracking-widest text-[10px] md:text-xs transition-all disabled:opacity-50 shadow-lg border-none"
+            className="w-full py-4 px-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-bold uppercase tracking-widest text-xs md:text-xs transition-all disabled:opacity-50 shadow-lg border-none"
           >
             {loading ? "Sedang memproses..." : (isRegistering ? "Daftar Sekarang" : "Masuk Sekarang")}
           </button>
@@ -205,7 +205,7 @@ export default function LoginPage() {
             <div className="w-full border-t border-border"></div>
           </div>
           <div className="relative flex justify-center">
-            <span className="bg-card px-4 text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Atau pakai cara ini</span>
+            <span className="bg-card px-4 text-xs md:text-xs font-bold text-muted-foreground uppercase tracking-widest">Atau pakai cara ini</span>
           </div>
         </div>
 

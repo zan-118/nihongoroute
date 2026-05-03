@@ -63,10 +63,10 @@ export default function LibraryPage() {
               <Library size={28} className="text-primary md:w-8 md:h-8" />
             </Card>
             <div className="flex flex-col">
-              <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-primary/50">Perpustakaan Digital</span>
+              <span className="text-xs md:text-xs font-bold uppercase tracking-widest text-primary/50">Perpustakaan Digital</span>
               <div className="flex items-center gap-2 mt-1">
                  <Activity size={12} className="text-primary animate-pulse" />
-                 <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Status: Siap Belajar</span>
+                 <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest leading-none">Status: Siap Belajar</span>
               </div>
             </div>
           </div>
@@ -95,10 +95,10 @@ export default function LibraryPage() {
             <div className="shrink-0 hidden xl:block w-full lg:w-auto mt-8 lg:mt-0">
                <Card className="p-8 md:p-10 rounded-3xl md:rounded-[3.5rem] bg-muted/30 border-border neo-card shadow-none min-w-[320px]">
                   <div className="flex items-center justify-between mb-6">
-                     <div className="flex items-center gap-3 md:gap-4 text-muted-foreground font-bold uppercase text-[10px] md:text-xs tracking-widest">
+                     <div className="flex items-center gap-3 md:gap-4 text-muted-foreground font-bold uppercase text-xs md:text-xs tracking-widest">
                         <Server size={16} className="md:w-5 md:h-5" /> Kesiapan Materi
                      </div>
-                     <span className="text-[10px] md:text-xs font-mono text-primary font-bold">100%</span>
+                     <span className="text-xs md:text-xs font-mono text-primary font-bold">100%</span>
                   </div>
                   <div className="flex gap-2 md:gap-2.5">
                      {[...Array(6)].map((_, i) => (
@@ -131,23 +131,23 @@ export default function LibraryPage() {
                     <div className="w-10 h-10 md:w-11 md:h-11 bg-muted rounded-xl flex items-center justify-center border border-border group-hover:bg-primary group-hover:text-white dark:group-hover:text-black group-hover:border-none transition-all duration-300 text-primary">
                       {cat.icon}
                     </div>
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">0{idx + 1}</span>
+                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">0{idx + 1}</span>
                   </div>
 
                   <div className="flex-1 space-y-1.5">
-                    <span className="text-[9px] font-bold text-primary/50 uppercase tracking-widest block">
+                    <span className="text-xs font-bold text-primary/50 uppercase tracking-widest block">
                       {cat.label}
                     </span>
                     <h2 className="text-lg md:text-xl font-black text-foreground tracking-tight group-hover:text-primary transition-colors duration-300 leading-snug">
                       {cat.title}
                     </h2>
-                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed font-medium group-hover:text-foreground transition-colors">
+                    <p className="text-xs md:text-xs text-muted-foreground leading-relaxed font-medium group-hover:text-foreground transition-colors">
                       {cat.desc}
                     </p>
                   </div>
 
                   <div className="mt-5 pt-3 border-t border-border flex items-center justify-between">
-                    <span className="text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-wider group-hover:text-primary transition-colors">Akses Modul</span>
+                    <span className="text-xs md:text-xs font-bold text-muted-foreground uppercase tracking-wider group-hover:text-primary transition-colors">Akses Modul</span>
                     <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-muted border border-border flex items-center justify-center group-hover:bg-primary group-hover:text-white dark:group-hover:text-black group-hover:border-none transition-all duration-300">
                        <ArrowRight size={14} />
                     </div>

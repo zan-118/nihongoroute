@@ -48,7 +48,7 @@ export function QuizFinished({
           </Card>
         </div>
 
-        <Badge variant="outline" className="border-red-500/20 text-red-600 dark:text-red-500 font-bold text-[9px] uppercase tracking-widest mb-6 h-auto px-6 py-2 rounded-xl neo-inset bg-red-500/5">
+        <Badge variant="outline" className="border-red-500/20 text-red-600 dark:text-red-500 font-bold text-xs uppercase tracking-widest mb-6 h-auto px-6 py-2 rounded-xl neo-inset bg-red-500/5">
           Evaluasi Latihan
         </Badge>
         
@@ -58,7 +58,7 @@ export function QuizFinished({
 
         <div className="flex items-center justify-center gap-10 my-12">
           <div className="text-center">
-            <p className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest mb-2">
+            <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mb-2">
               Skor Akhir
             </p>
             <p className="text-5xl font-black text-foreground tracking-tight">
@@ -67,7 +67,7 @@ export function QuizFinished({
           </div>
           <div className="w-px h-16 bg-border dark:bg-white/5" />
           <div className="text-center">
-            <p className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest mb-2">
+            <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mb-2">
               Akurasi
             </p>
             <p className={`text-5xl font-black tracking-tight ${isPerfect ? "text-red-600 dark:text-red-500 drop-shadow-sm dark:drop-shadow-[0_0_15px_rgba(239,68,68,0.4)]" : "text-amber-600 dark:text-amber-500"}`}>
@@ -80,7 +80,7 @@ export function QuizFinished({
           <Button
             onClick={resetQuiz}
             variant="ghost"
-            className="w-full sm:w-auto h-auto px-10 py-5 bg-muted dark:bg-black/40 text-muted-foreground font-bold rounded-2xl hover:bg-foreground hover:text-background dark:hover:bg-white dark:hover:text-black transition-all uppercase tracking-widest text-[10px] border border-border dark:border-white/5 neo-inset shadow-none"
+            className="w-full sm:w-auto h-auto px-10 py-5 bg-muted dark:bg-black/40 text-muted-foreground font-bold rounded-2xl hover:bg-foreground hover:text-background dark:hover:bg-white dark:hover:text-black transition-all uppercase tracking-widest text-xs border border-border dark:border-white/5 neo-inset shadow-none"
           >
             <RefreshCw size={18} className="mr-3" /> Ulangi Latihan
           </Button>
@@ -89,7 +89,7 @@ export function QuizFinished({
               const basePath = window.location.pathname.replace(/\/[^/]+$/, "");
               router.push(basePath || "/courses");
             }}
-            className="w-full sm:w-auto h-auto px-10 py-5 bg-red-600 dark:bg-red-500 hover:bg-foreground dark:hover:bg-white text-white dark:text-black font-black rounded-2xl transition-all uppercase tracking-widest text-[10px] shadow-xl border-none"
+            className="w-full sm:w-auto h-auto px-10 py-5 bg-red-600 dark:bg-red-500 hover:bg-foreground dark:hover:bg-white text-white dark:text-black font-black rounded-2xl transition-all uppercase tracking-widest text-xs shadow-xl border-none"
           >
             Materi Selanjutnya <ArrowRight size={18} className="ml-3" />
           </Button>

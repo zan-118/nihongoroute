@@ -86,7 +86,7 @@ export default function LandingPage() {
               className="bg-cyan-400/10 border-cyan-400/20 px-4 py-2 rounded-xl flex items-center gap-2 shadow-none"
             >
               <Sparkles size={14} className="text-cyan-600 dark:text-cyan-400 animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-cyan-600 dark:text-cyan-400">
+              <span className="text-xs font-black uppercase tracking-widest text-cyan-600 dark:text-cyan-400">
                 Next-Gen Learning Platform
               </span>
             </Badge>
@@ -134,7 +134,7 @@ export default function LandingPage() {
             <Button
               asChild
               variant="ghost"
-              className="h-auto py-4 px-10 bg-muted border border-border hover:bg-background transition-all text-foreground font-bold uppercase tracking-widest text-[10px] md:text-xs shadow-none rounded-xl"
+              className="h-auto py-4 px-10 bg-muted border border-border hover:bg-background transition-all text-foreground font-bold uppercase tracking-widest text-xs md:text-xs shadow-none rounded-xl"
             >
               <Link href="/courses">
                 <PlayCircle size={18} className="mr-2 text-primary" /> Jelajahi Materi
@@ -260,7 +260,7 @@ export default function LandingPage() {
               </span>
             </div>
           </div>
-          <div className="flex gap-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+          <div className="flex gap-6 text-xs font-black uppercase tracking-widest text-muted-foreground">
             <Link
               href="/library"
               className="hover:text-primary transition-colors"

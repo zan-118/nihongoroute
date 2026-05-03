@@ -37,7 +37,7 @@ export default function KanjiStrokeOrder({ kanji, minimal = false }: KanjiStroke
         )}
         
         {error ? (
-          <div className="text-[10px] text-muted-foreground text-center px-4 leading-tight">
+          <div className="text-xs text-muted-foreground text-center px-4 leading-tight">
             <Info size={minimal ? 14 : 20} className="mx-auto mb-1 opacity-50" />
             {!minimal && "Urutan goresan tidak tersedia."}
           </div>
@@ -66,7 +66,7 @@ export default function KanjiStrokeOrder({ kanji, minimal = false }: KanjiStroke
             <Button 
               variant="outline" 
               size="sm" 
-              className="h-8 px-3 rounded-lg text-[10px] font-bold uppercase tracking-widest gap-2"
+              className="h-8 px-3 rounded-lg text-xs font-bold uppercase tracking-widest gap-2"
               onClick={() => {
                 const currentUrl = svgUrl;
                 setSvgUrl("");
@@ -79,7 +79,7 @@ export default function KanjiStrokeOrder({ kanji, minimal = false }: KanjiStroke
               asChild
               variant="ghost" 
               size="sm" 
-              className="h-8 px-3 rounded-lg text-[10px] font-bold uppercase tracking-widest gap-2 text-muted-foreground"
+              className="h-8 px-3 rounded-lg text-xs font-bold uppercase tracking-widest gap-2 text-muted-foreground"
             >
               <a href={`https://jisho.org/search/${kanji}%20%23kanji`} target="_blank" rel="noopener noreferrer">
                 Jisho.org
@@ -87,7 +87,7 @@ export default function KanjiStrokeOrder({ kanji, minimal = false }: KanjiStroke
             </Button>
           </div>
           
-          <p className="text-[9px] text-center text-muted-foreground font-medium italic">
+          <p className="text-xs text-center text-muted-foreground font-medium italic">
             Sumber: KanjiVG Project
           </p>
         </>

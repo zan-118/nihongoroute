@@ -9,6 +9,7 @@ import SearchModal from "@/components/features/tools/search/SearchModal";
 import UserNav from "@/components/features/user/UserNav";
 import { useHasMounted } from "@/hooks/useHasMounted";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
   const hasMounted = useHasMounted();
@@ -46,7 +47,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
         </button>
 
         <div className="flex flex-col">
-          <nav className="flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-1">
+          <nav className="flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-muted-foreground mb-1">
             <Link href="/dashboard" className="hover:text-primary transition-colors">Route</Link>
             {pathSegments.map((segment, idx) => (
               <div key={idx} className="flex items-center gap-1.5">
@@ -74,12 +75,12 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
           <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-muted/50 border border-border/50 rounded-2xl">
             <div className="flex items-center gap-1.5">
               <Trophy size={14} className="text-amber-500" />
-              <span className="text-[10px] font-black text-foreground">{progress.level}</span>
+              <span className="text-xs font-black text-foreground">{progress.level}</span>
             </div>
             <div className="w-[1px] h-3 bg-border mx-1" />
             <div className="flex items-center gap-1.5">
               <Zap size={14} className="text-primary" />
-              <span className="text-[10px] font-black text-foreground">{progress.xp} <span className="opacity-50">XP</span></span>
+              <span className="text-xs font-black text-foreground">{progress.xp} <span className="opacity-50">XP</span></span>
             </div>
           </div>
         )}
@@ -90,9 +91,9 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
           className="hidden lg:flex relative w-48 xl:w-64 group cursor-pointer"
         >
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-hover:text-primary transition-colors" size={14} />
-          <div className="w-full h-8 pl-9 pr-4 bg-muted/50 border border-border/50 rounded-xl text-[9px] uppercase font-bold tracking-widest text-muted-foreground/60 flex items-center justify-between hover:border-primary/30 transition-all">
+          <div className="w-full h-8 pl-9 pr-4 bg-muted/50 border border-border/50 rounded-xl text-xs uppercase font-bold tracking-widest text-muted-foreground/60 flex items-center justify-between hover:border-primary/30 transition-all">
             Cari materi...
-            <kbd className="hidden xl:inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
+            <kbd className="hidden xl:inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-xs font-medium opacity-100">
               <span className="text-xs">⌘</span>K
             </kbd>
           </div>
@@ -105,6 +106,8 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
         >
           <Search size={18} />
         </button>
+
+        <ThemeToggle />
 
         <div className="flex items-center gap-2 relative">
            <button 

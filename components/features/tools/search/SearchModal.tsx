@@ -164,7 +164,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
-              <div className="hidden md:flex items-center gap-1 px-2 py-1 bg-muted border border-border rounded-lg text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+              <div className="hidden md:flex items-center gap-1 px-2 py-1 bg-muted border border-border rounded-lg text-xs font-black text-muted-foreground uppercase tracking-widest">
                 <Command size={10} /> K
               </div>
               <button onClick={onClose} className="p-2 hover:bg-muted rounded-xl text-muted-foreground transition-all">
@@ -202,7 +202,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
                               {item.category}
                             </span>
                           </div>
-                          <p className="text-[10px] md:text-xs text-muted-foreground font-medium truncate mt-1">
+                          <p className="text-xs md:text-xs text-muted-foreground font-medium truncate mt-1">
                             {item.description}
                           </p>
                         </div>
@@ -225,7 +225,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
             </div>
 
             {/* Footer */}
-            <div className="p-4 bg-muted/30 border-t border-border flex items-center justify-between text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+            <div className="p-4 bg-muted/30 border-t border-border flex items-center justify-between text-xs font-black uppercase tracking-widest text-muted-foreground">
               <div className="flex items-center gap-4">
                 <span className="flex items-center gap-1.5"><ArrowRight size={10} className="rotate-90" /> Navigasi</span>
                 <span className="flex items-center gap-1.5"><Command size={10} className="rotate-90" /> Pilih</span>

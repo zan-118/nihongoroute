@@ -44,7 +44,7 @@ export default function SupportPage() {
           <Button
             onClick={() => router.back()}
             variant="ghost"
-            className="flex items-center gap-2 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-all group bg-muted/50 h-auto px-4 py-2 rounded-xl border border-border"
+            className="flex items-center gap-2 text-xs sm:text-xs font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-all group bg-muted/50 h-auto px-4 py-2 rounded-xl border border-border"
           >
             <ChevronLeft
               size={16}
@@ -165,7 +165,7 @@ export default function SupportPage() {
         </Card>
 
         <footer className="mt-16 sm:mt-24 mb-20 text-center pb-8 sm:pb-12">
-          <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.5em] text-primary/50 mb-3 sm:mb-4 bg-primary/5 w-max mx-auto px-4 py-1.5 rounded-full border border-primary/10">
+          <p className="text-xs sm:text-xs font-black uppercase tracking-[0.5em] text-primary/50 mb-3 sm:mb-4 bg-primary/5 w-max mx-auto px-4 py-1.5 rounded-full border border-primary/10">
             Kontribusi Langsung
           </p>
           <p className="text-xs sm:text-sm text-muted-foreground italic max-w-md mx-auto leading-relaxed">
@@ -221,10 +221,10 @@ function DonationCard({
         <h3 className="text-2xl sm:text-3xl font-black text-foreground italic mb-2 uppercase tracking-tighter">
           {title}
         </h3>
-        <p className="text-[10px] sm:text-xs text-muted-foreground font-medium uppercase tracking-widest mb-6 sm:mb-8 leading-relaxed">
+        <p className="text-xs sm:text-xs text-muted-foreground font-medium uppercase tracking-widest mb-6 sm:mb-8 leading-relaxed">
           {desc}
         </p>
-        <div className="mt-auto flex items-center gap-3 text-primary font-black uppercase text-[9px] sm:text-[10px] tracking-[0.2em] sm:tracking-[0.3em]">
+        <div className="mt-auto flex items-center gap-3 text-primary font-black uppercase text-xs sm:text-xs tracking-[0.2em] sm:tracking-[0.3em]">
           <div className="h-[2px] w-6 sm:w-8 bg-primary group-hover:w-10 sm:group-hover:w-12 transition-all shadow-lg" />
           {label}
         </div>

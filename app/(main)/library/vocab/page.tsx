@@ -27,8 +27,8 @@ export const revalidate = 3600;
 // ======================
 
 export default async function VocabLibraryPage() {
-  // Pre-fetch 30 item pertama untuk N5 (default view) di sisi server
-  const initialQuery = `*[_type == "vocab" && course_category->slug.current in ["n5", "jlpt-n5"]] | order(romaji asc) [0...30] { _id, word, furigana, romaji, meaning, hinshi }`;
+  // Pre-fetch 50 item pertama untuk N5 (default view) di sisi server
+  const initialQuery = `*[_type == "vocab" && course_category->slug.current in ["n5", "jlpt-n5"]] | order(romaji asc) [0...50] { _id, word, furigana, romaji, meaning, hinshi }`;
   
   const initialData = await client.fetch(initialQuery);
 

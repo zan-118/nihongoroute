@@ -48,7 +48,7 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
                 </div>
                 <div>
                   <h3 className="text-xs font-black uppercase tracking-widest text-foreground">Notifikasi</h3>
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
                     {unreadCount} Belum Dibaca
                   </p>
                 </div>
@@ -89,14 +89,14 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex justify-between items-start mb-1">
-                            <h4 className={`text-[11px] font-black uppercase tracking-wider truncate ${!n.read ? 'text-foreground' : 'text-muted-foreground'}`}>
+                            <h4 className={`text-xs font-black uppercase tracking-wider truncate ${!n.read ? 'text-foreground' : 'text-muted-foreground'}`}>
                               {n.title}
                             </h4>
                             <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest whitespace-nowrap ml-2">
                               {formatDistanceToNow(n.timestamp, { addSuffix: true, locale: id })}
                             </span>
                           </div>
-                          <p className="text-[10px] text-muted-foreground leading-relaxed line-clamp-2">
+                          <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
                             {n.message}
                           </p>
                         </div>
@@ -113,7 +113,7 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
                   <div className="w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center mx-auto mb-4 border border-border/50">
                     <Bell className="text-muted-foreground/30" size={24} />
                   </div>
-                  <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Tidak Ada Notifikasi</h4>
+                  <h4 className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground">Tidak Ada Notifikasi</h4>
                 </div>
               )}
             </div>
@@ -122,7 +122,7 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
                <div className="p-3 border-t border-border bg-muted/20">
                   <Button 
                     variant="ghost" 
-                    className="w-full h-8 text-[9px] font-black uppercase tracking-widest text-primary hover:bg-primary/5"
+                    className="w-full h-8 text-xs font-black uppercase tracking-widest text-primary hover:bg-primary/5"
                     onClick={() => notifications.forEach(n => markAsRead(n.id))}
                   >
                     Tandai Semua Selesai

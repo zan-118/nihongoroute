@@ -25,7 +25,7 @@ export default function TTSReader({ text, minimal = false }: Props) {
       className={`flex items-center justify-center gap-3 border transition-all font-black uppercase tracking-[0.2em] h-auto italic ${
         minimal
           ? "w-12 h-12 md:w-14 md:h-14 rounded-2xl"
-          : "px-6 py-2.5 rounded-xl w-max text-[10px]"
+          : "px-6 py-2.5 rounded-xl w-max text-xs"
       } ${
         isPlaying
           ? "bg-red-500/10 border-red-500/40 text-red-500 shadow-[0_0_20px_rgba(239,68,68,0.2)] neo-card shadow-none"

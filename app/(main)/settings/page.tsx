@@ -173,7 +173,7 @@ export default function SettingsPage() {
         {/* HEADER */}
         <header className="mb-8 px-1">
           <motion.div variants={itemVariants}>
-            <Badge variant="outline" className="bg-muted text-muted-foreground border-border px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-4 flex items-center gap-1.5 w-fit neo-inset shadow-none">
+            <Badge variant="outline" className="bg-muted text-muted-foreground border-border px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-4 flex items-center gap-1.5 w-fit neo-inset shadow-none">
               <SettingsIcon size={12} /> Konfigurasi
             </Badge>
           </motion.div>
@@ -215,7 +215,7 @@ export default function SettingsPage() {
                         updateProfileName(newName);
                         toast.success("Nama profil berhasil diperbarui!");
                       }}
-                      className="h-12 bg-primary text-primary-foreground font-black uppercase tracking-widest text-[10px] rounded-xl px-8 shadow-lg hover:shadow-primary/20 transition-all"
+                      className="h-12 bg-primary text-primary-foreground font-black uppercase tracking-widest text-xs rounded-xl px-8 shadow-lg hover:shadow-primary/20 transition-all"
                     >
                       Simpan Nama
                     </Button>
@@ -239,21 +239,21 @@ export default function SettingsPage() {
                 <Button
                   variant="outline"
                   onClick={handleExportData}
-                  className="h-12 bg-muted/30 border-border hover:bg-primary/10 hover:border-primary/30 hover:text-primary text-muted-foreground rounded-xl uppercase tracking-wider font-bold text-[11px] transition-all group"
+                  className="h-12 bg-muted/30 border-border hover:bg-primary/10 hover:border-primary/30 hover:text-primary text-muted-foreground rounded-xl uppercase tracking-wider font-bold text-xs transition-all group"
                 >
                   <Save size={16} className="mr-2 group-hover:scale-110 transition-transform" /> Simpan Backup
                 </Button>
                 <Button
                   variant="outline"
                   onClick={handleImportData}
-                  className="h-12 bg-muted/30 border-border hover:bg-purple-500/10 hover:border-purple-500/30 hover:text-purple-600 dark:hover:text-purple-400 text-muted-foreground rounded-xl uppercase tracking-wider font-bold text-[11px] transition-all group"
+                  className="h-12 bg-muted/30 border-border hover:bg-purple-500/10 hover:border-purple-500/30 hover:text-purple-600 dark:hover:text-purple-400 text-muted-foreground rounded-xl uppercase tracking-wider font-bold text-xs transition-all group"
                 >
                   <Upload size={16} className="mr-2 group-hover:scale-110 transition-transform" /> Muat Backup
                 </Button>
                 <Button
                   variant="outline"
                   onClick={handleResetData}
-                  className="h-12 bg-destructive/5 border-destructive/10 hover:bg-destructive/15 hover:border-destructive text-destructive rounded-xl uppercase tracking-wider font-bold text-[11px] transition-all group"
+                  className="h-12 bg-destructive/5 border-destructive/10 hover:bg-destructive/15 hover:border-destructive text-destructive rounded-xl uppercase tracking-wider font-bold text-xs transition-all group"
                 >
                   <Trash2 size={16} className="mr-2 group-hover:scale-110 transition-transform" /> Reset Semua Progres
                 </Button>
@@ -261,7 +261,7 @@ export default function SettingsPage() {
                   <Button
                     variant="outline"
                     onClick={handleLogout}
-                    className="h-12 bg-destructive/10 border-destructive/15 hover:bg-destructive/20 hover:border-destructive text-destructive rounded-xl uppercase tracking-wider font-bold text-[11px] transition-all group"
+                    className="h-12 bg-destructive/10 border-destructive/15 hover:bg-destructive/20 hover:border-destructive text-destructive rounded-xl uppercase tracking-wider font-bold text-xs transition-all group"
                   >
                     <LogOut size={16} className="mr-2 group-hover:translate-x-0.5 transition-transform" /> Keluar Akun
                   </Button>
@@ -280,7 +280,7 @@ export default function SettingsPage() {
                   </div>
                   <div>
                     <h3 className="text-sm font-black uppercase tracking-tight text-foreground">Status Sinkronisasi</h3>
-                    <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest mt-0.5">
+                    <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest mt-0.5">
                       {dirtySrs.size > 0 ? `${dirtySrs.size} Item belum tersinkron` : "Semua data aman di Cloud"}
                     </p>
                   </div>
@@ -289,7 +289,7 @@ export default function SettingsPage() {
                   onClick={handleManualSync}
                   disabled={isSyncing || dirtySrs.size === 0}
                   variant="outline" 
-                  className="h-10 px-4 bg-muted/30 border-border rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+                  className="h-10 px-4 bg-muted/30 border-border rounded-xl text-xs font-black uppercase tracking-widest transition-all"
                 >
                   <RefreshCw size={14} className={`mr-2 ${isSyncing ? 'animate-spin' : ''}`} />
                   {isSyncing ? "Sinkron..." : "Sinkron Sekarang"}
@@ -316,8 +316,8 @@ export default function SettingsPage() {
           {/* MOBILE EXTRA NAV */}
           <motion.div variants={itemVariants} className="md:hidden">
             <Card className="bg-muted/40 border border-border rounded-2xl p-5 neo-card shadow-sm">
-              <h3 className="text-muted-foreground font-bold uppercase tracking-wider text-[10px] mb-3">Eksplorasi Lainnya</h3>
-              <Button asChild variant="outline" className="w-full h-11 bg-muted/30 border-border justify-start hover:bg-background text-foreground rounded-xl font-bold uppercase tracking-wider text-[11px]">
+              <h3 className="text-muted-foreground font-bold uppercase tracking-wider text-xs mb-3">Eksplorasi Lainnya</h3>
+              <Button asChild variant="outline" className="w-full h-11 bg-muted/30 border-border justify-start hover:bg-background text-foreground rounded-xl font-bold uppercase tracking-wider text-xs">
                 <Link href="/library">
                   <Layers size={16} className="mr-2 text-primary" /> Buka Pustaka Data
                 </Link>

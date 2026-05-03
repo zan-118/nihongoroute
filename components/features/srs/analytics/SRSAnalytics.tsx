@@ -30,10 +30,10 @@ export default function SRSAnalytics() {
           </Card>
           <div>
             <h3 className="text-foreground font-black uppercase tracking-widest text-sm">Kekuatan Ingatan</h3>
-            <span className="block text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-1">Stabilitas Memori (Ease Factor)</span>
+            <span className="block text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">Stabilitas Memori (Ease Factor)</span>
           </div>
         </div>
-        <Badge variant="outline" className="bg-purple-500/5 border-purple-500/20 text-purple-500 dark:text-purple-400 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">
+        <Badge variant="outline" className="bg-purple-500/5 border-purple-500/20 text-purple-500 dark:text-purple-400 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest">
           Kecerdasan Memori
         </Badge>
       </header>
@@ -46,7 +46,7 @@ export default function SRSAnalytics() {
             return (
               <div key={i} className="flex-1 flex flex-col items-center gap-4 group">
                 <div className="relative w-full flex flex-col items-center">
-                  <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-foreground text-background text-[9px] font-black px-2 py-1 rounded uppercase tracking-tighter whitespace-nowrap z-20">
+                  <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-foreground text-background text-xs font-black px-2 py-1 rounded uppercase tracking-tighter whitespace-nowrap z-20">
                     {item.count} Items
                   </div>
                   
@@ -67,7 +67,7 @@ export default function SRSAnalytics() {
                 </div>
                 <div className="text-center">
                   <div style={{ color: item.color }} className="flex justify-center mb-1">{item.icon}</div>
-                  <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">{item.label}</span>
+                  <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">{item.label}</span>
                 </div>
               </div>
             );
@@ -81,7 +81,7 @@ export default function SRSAnalytics() {
               <div className="flex items-center gap-3">
                 <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: item.color }} />
                 <div>
-                  <p className="text-[10px] font-black text-foreground uppercase tracking-tight">{item.label}</p>
+                  <p className="text-xs font-black text-foreground uppercase tracking-tight">{item.label}</p>
                   <p className="text-[8px] text-muted-foreground font-bold uppercase tracking-widest">{item.desc}</p>
                 </div>
               </div>

@@ -33,7 +33,7 @@ export function WritingPracticeModal({
                   <PenTool size={18} className="text-purple-400" />
                 </div>
                 <div className="text-left">
-                  <span className="block font-bold text-[9px] uppercase tracking-widest text-purple-500/50 mb-0.5">Latihan Kanji</span>
+                  <span className="block font-bold text-xs uppercase tracking-widest text-purple-500/50 mb-0.5">Latihan Kanji</span>
                   <h3 className="text-white text-lg font-black uppercase tracking-tight leading-none">Cara Menulis</h3>
                 </div>
               </div>
@@ -51,7 +51,7 @@ export function WritingPracticeModal({
                 <p className="text-4xl font-black text-white font-japanese leading-none">
                   {kanjiChar}
                 </p>
-                <p className="font-mono uppercase tracking-widest text-[9px] font-bold text-purple-500/60">
+                <p className="font-mono uppercase tracking-widest text-xs font-bold text-purple-500/60">
                   &quot;{word}&quot;
                 </p>
               </div>
@@ -68,7 +68,7 @@ export function WritingPracticeModal({
               />
             </div>
 
-            <p className="text-center text-[9px] text-slate-500 font-bold uppercase tracking-widest mt-4">
+            <p className="text-center text-xs text-slate-500 font-bold uppercase tracking-widest mt-4">
               <Sparkles size={10} className="inline mr-1 text-purple-400/50" />{" "}
               Tulis goresan kanji di atas secara berurutan!
             </p>

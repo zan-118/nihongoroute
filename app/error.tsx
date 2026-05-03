@@ -41,7 +41,7 @@ export default function RootError({
           Coba Hubungkan Ulang
         </Button>
         
-        <p className="mt-12 text-[9px] text-muted-foreground/30 uppercase tracking-widest">
+        <p className="mt-12 text-xs text-muted-foreground/30 uppercase tracking-widest">
           Network Status: Error Code {error.digest || "500_SYSTEM_FAILURE"}
         </p>
       </div>

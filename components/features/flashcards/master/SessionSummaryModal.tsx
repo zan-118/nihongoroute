@@ -12,6 +12,8 @@ interface SessionSummaryModalProps {
   themeBgColor: string;
   themeShadow: string;
   handleRestart: () => void;
+  handleReviewMistakes: () => void;
+  mistakeCount: number;
   router: AppRouterInstance;
 }
 
@@ -23,6 +25,8 @@ export function SessionSummaryModal({
   themeBgColor,
   themeShadow,
   handleRestart,
+  handleReviewMistakes,
+  mistakeCount,
   router,
 }: SessionSummaryModalProps) {
   return (
@@ -43,7 +47,7 @@ export function SessionSummaryModal({
               Sesi Selesai
             </DialogTitle>
           </DialogHeader>
-          <p className="text-muted-foreground text-[10px] md:text-xs mb-8 uppercase font-bold tracking-widest">
+          <p className="text-muted-foreground text-xs md:text-xs mb-8 uppercase font-bold tracking-widest">
             {cardsCount} KARTU SELESAI DITINJAU
           </p>
 
@@ -52,7 +56,7 @@ export function SessionSummaryModal({
               <span className="text-2xl md:text-3xl font-black text-emerald-600 dark:text-emerald-400">
                 {sessionStats.known}
               </span>
-              <span className="text-[9px] font-bold text-emerald-600/80 dark:text-emerald-400/80 uppercase tracking-widest mt-2">
+              <span className="text-xs font-bold text-emerald-600/80 dark:text-emerald-400/80 uppercase tracking-widest mt-2">
                 Sudah Hafal
               </span>
             </Card>
@@ -60,7 +64,7 @@ export function SessionSummaryModal({
               <span className="text-2xl md:text-3xl font-black text-primary">
                 {sessionStats.learning}
               </span>
-              <span className="text-[9px] font-bold text-primary/80 uppercase tracking-widest mt-2">
+              <span className="text-xs font-bold text-primary/80 uppercase tracking-widest mt-2">
                 Masih Lupa
               </span>
             </Card>
@@ -74,18 +78,26 @@ export function SessionSummaryModal({
           </Card>
 
           <div className="flex flex-col gap-3">
+            {mistakeCount > 0 && (
+              <Button
+                onClick={handleReviewMistakes}
+                className="w-full h-auto py-4 rounded-xl text-xs md:text-xs font-bold uppercase tracking-widest border border-primary/30 bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all shadow-lg"
+              >
+                Ulas {mistakeCount} Kesalahan
+              </Button>
+            )}
             <Button
               onClick={handleRestart}
-              className={`w-full h-auto py-4 rounded-xl text-[10px] md:text-xs font-bold uppercase tracking-widest border-none bg-primary text-white dark:text-black hover:bg-foreground hover:text-background dark:hover:bg-white transition-all shadow-lg`}
+              className={`w-full h-auto py-4 rounded-xl text-xs md:text-xs font-bold uppercase tracking-widest border-none bg-primary text-white dark:text-black hover:bg-foreground hover:text-background dark:hover:bg-white transition-all shadow-lg`}
             >
-              <RotateCcw size={16} className="mr-2" /> Ulangi Sesi
+              <RotateCcw size={16} className="mr-2" /> Ulangi Semua
             </Button>
             <Button
               variant="ghost"
-              onClick={() => router.back()}
-              className="w-full h-auto py-4 text-muted-foreground hover:text-foreground font-bold uppercase tracking-widest text-[10px] md:text-xs border-border dark:border-white/[0.08] bg-muted dark:bg-white/[0.03] rounded-xl transition-all"
+              onClick={() => router.push("/dashboard")}
+              className="w-full h-auto py-4 text-muted-foreground hover:text-foreground font-bold uppercase tracking-widest text-xs md:text-xs border-border dark:border-white/[0.08] bg-muted dark:bg-white/[0.03] rounded-xl transition-all"
             >
-              Keluar
+              Kembali ke Dashboard
             </Button>
           </div>
         </Card>

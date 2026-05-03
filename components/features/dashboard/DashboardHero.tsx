@@ -18,14 +18,19 @@ interface DashboardHeroProps {
 
 export default function DashboardHero({ loading, guestId, dueCount, itemVariants }: DashboardHeroProps) {
   return (
-    <motion.div variants={itemVariants} className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center justify-between mb-16">
+    <motion.div variants={itemVariants} className="flex flex-col gap-6 items-start w-full">
       <div className="flex-1 w-full flex flex-col items-center lg:items-start text-center lg:text-left">
         {loading ? (
           <Skeleton className="h-6 w-32 rounded-full mb-6" />
         ) : (
-          <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30 px-4 py-1.5 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest mb-6 flex items-center gap-2 w-fit shadow-none">
-            <Sparkles size={14} /> ID: {guestId}
-          </Badge>
+          <div className="flex flex-col items-center lg:items-start gap-1 mb-8">
+            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30 px-4 py-1.5 rounded-full text-xs md:text-xs font-bold uppercase tracking-widest flex items-center gap-2 w-fit shadow-none">
+              <Sparkles size={14} /> Guest ID: {guestId}
+            </Badge>
+            <span className="text-xs text-muted-foreground font-medium uppercase tracking-tighter opacity-60 ml-1">
+              Data disimpan secara lokal di browser Anda
+            </span>
+          </div>
         )}
         
         {loading ? (
@@ -39,7 +44,7 @@ export default function DashboardHero({ loading, guestId, dueCount, itemVariants
       </div>
 
       {/* MAIN CALL TO ACTION */}
-      <div className="w-full lg:w-[400px] shrink-0">
+      <div className="w-full">
         {loading ? (
           <Skeleton className="h-[280px] w-full rounded-2xl" />
         ) : (
@@ -66,12 +71,12 @@ export default function DashboardHero({ loading, guestId, dueCount, itemVariants
 
             {dueCount > 0 ? (
               <div className="flex flex-col sm:flex-row gap-3 w-full">
-                <Button asChild className="flex-1 h-14 bg-primary hover:bg-foreground text-primary-foreground font-black uppercase tracking-widest rounded-2xl text-[10px] md:text-xs transition-all shadow-lg border-none">
+                <Button asChild className="flex-1 h-14 bg-primary hover:bg-foreground text-primary-foreground font-black uppercase tracking-widest rounded-2xl text-xs md:text-xs transition-all shadow-lg border-none">
                   <Link href="/review">
                     Mulai Sesi Review <Target size={16} className="ml-2" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" className="flex-1 h-14 bg-background border-border hover:bg-primary/10 hover:border-primary hover:text-primary rounded-2xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-all">
+                <Button asChild variant="outline" className="flex-1 h-14 bg-background border-border hover:bg-primary/10 hover:border-primary hover:text-primary rounded-2xl text-xs md:text-xs font-black uppercase tracking-widest transition-all">
                   <Link href="/review/quick">
                     <Zap size={16} className="mr-2" /> Kuis Cepat
                   </Link>
@@ -79,12 +84,12 @@ export default function DashboardHero({ loading, guestId, dueCount, itemVariants
               </div>
             ) : (
               <div className="flex flex-col sm:flex-row gap-3 w-full">
-                <Button asChild className="flex-1 h-14 bg-foreground text-background hover:bg-emerald-500 hover:text-white font-black uppercase tracking-widest rounded-2xl text-[10px] md:text-xs transition-all shadow-lg border-none">
+                <Button asChild className="flex-1 h-14 bg-foreground text-background hover:bg-emerald-500 hover:text-white font-black uppercase tracking-widest rounded-2xl text-xs md:text-xs transition-all shadow-lg border-none">
                   <Link href="/courses">
                     Pelajari Materi Baru <BookMarked size={16} className="ml-2" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" className="flex-1 h-14 bg-background border-border hover:bg-primary/10 hover:border-primary hover:text-primary rounded-2xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-all">
+                <Button asChild variant="outline" className="flex-1 h-14 bg-background border-border hover:bg-primary/10 hover:border-primary hover:text-primary rounded-2xl text-xs md:text-xs font-black uppercase tracking-widest transition-all">
                   <Link href="/review/quick">
                     <Zap size={16} className="mr-2" /> Kuis Cepat
                   </Link>
@@ -107,8 +112,8 @@ export default function DashboardHero({ loading, guestId, dueCount, itemVariants
               <Zap size={14} />
             </div>
             <div>
-              <h4 className="text-[10px] font-bold text-primary uppercase tracking-widest mb-0.5">Tips Ahli</h4>
-              <p className="text-[11px] text-muted-foreground leading-snug font-medium">
+              <h4 className="text-xs font-bold text-primary uppercase tracking-widest mb-0.5">Tips Ahli</h4>
+              <p className="text-xs text-muted-foreground leading-snug font-medium">
                 {Math.random() > 0.5 
                   ? "Aktifkan notifikasi di pengaturan agar tidak ketinggalan sesi review krusial." 
                   : "Gunakan 'Pelindung Streak' dari toko untuk menjaga progresmu saat sedang sibuk."}

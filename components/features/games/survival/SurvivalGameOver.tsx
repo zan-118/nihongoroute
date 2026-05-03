@@ -47,19 +47,19 @@ export function SurvivalGameOver({ gameState, score, startGame }: SurvivalGameOv
         </h2>
         
         <div className="flex flex-col items-center gap-3 md:gap-4 mb-10 md:mb-14 relative z-10">
-          <Badge variant="outline" className="text-muted-foreground font-bold uppercase tracking-widest text-[9px] md:text-[10px] h-auto border border-border dark:border-white/10 neo-inset px-6 py-2 md:px-8 md:py-3 rounded-2xl bg-muted/50 dark:bg-black/30">
+          <Badge variant="outline" className="text-muted-foreground font-bold uppercase tracking-widest text-xs md:text-xs h-auto border border-border dark:border-white/10 neo-inset px-6 py-2 md:px-8 md:py-3 rounded-2xl bg-muted/50 dark:bg-black/30">
             SKOR AKHIR
           </Badge>
           <div className="flex flex-col">
              <span className="text-foreground text-7xl md:text-8xl lg:text-9xl font-black drop-shadow-sm leading-none">{score}</span>
-             <span className="text-muted-foreground font-bold text-[9px] md:text-[10px] uppercase tracking-widest mt-3 md:mt-4">KATA TERJAWAB</span>
+             <span className="text-muted-foreground font-bold text-xs md:text-xs uppercase tracking-widest mt-3 md:mt-4">KATA TERJAWAB</span>
           </div>
         </div>
 
         <Button
           onClick={startGame}
           variant="ghost"
-          className="flex items-center justify-center gap-4 md:gap-6 w-full h-auto py-6 md:py-8 relative z-10 font-bold uppercase tracking-widest text-[10px] md:text-xs border border-border dark:border-white/5 neo-card shadow-none bg-muted/50 dark:bg-black/40 hover:bg-primary hover:text-primary-foreground transition-all rounded-[2rem] group"
+          className="flex items-center justify-center gap-4 md:gap-6 w-full h-auto py-6 md:py-8 relative z-10 font-bold uppercase tracking-widest text-xs md:text-xs border border-border dark:border-white/5 neo-card shadow-none bg-muted/50 dark:bg-black/40 hover:bg-primary hover:text-primary-foreground transition-all rounded-[2rem] group"
         >
           <RotateCcw size={20} className="group-hover:-rotate-180 transition-transform duration-700 md:w-6 md:h-6" /> ULANGI EVALUASI
         </Button>

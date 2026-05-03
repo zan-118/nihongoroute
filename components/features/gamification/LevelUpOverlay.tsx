@@ -76,7 +76,7 @@ export default function LevelUpOverlay({ level }: { level: number }) {
                 <Trophy size={40} className="text-primary drop-shadow-sm dark:drop-shadow-[0_0_20px_rgba(0,238,255,0.6)] md:w-14 md:h-14" />
               </motion.div>
 
-              <Badge variant="outline" className="text-primary text-[9px] md:text-[11px] font-bold uppercase tracking-widest mb-4 md:mb-6 h-auto neo-inset px-4 py-1.5 md:px-8 md:py-2.5 border-primary/30 bg-primary/5 rounded-xl">
+              <Badge variant="outline" className="text-primary text-xs md:text-xs font-bold uppercase tracking-widest mb-4 md:mb-6 h-auto neo-inset px-4 py-1.5 md:px-8 md:py-2.5 border-primary/30 bg-primary/5 rounded-xl">
                 Level Baru Tercapai
               </Badge>
               
@@ -87,22 +87,22 @@ export default function LevelUpOverlay({ level }: { level: number }) {
               <div className="flex items-center justify-center gap-4 md:gap-8 mb-6 md:mb-12">
                  <div className="flex flex-col items-center">
                     <ShieldCheck size={20} className="text-emerald-600 dark:text-emerald-400 mb-2 md:w-6 md:h-6" />
-                    <span className="text-[9px] md:text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Target Selesai</span>
+                    <span className="text-xs md:text-xs text-muted-foreground font-bold uppercase tracking-widest">Target Selesai</span>
                  </div>
                  <div className="w-px h-8 md:h-10 bg-border dark:bg-white/10" />
                  <div className="flex flex-col items-center">
                     <Zap size={20} className="text-amber-600 dark:text-amber-400 mb-2 md:w-6 md:h-6" />
-                    <span className="text-[9px] md:text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Kapasitas Maksimal</span>
+                    <span className="text-xs md:text-xs text-muted-foreground font-bold uppercase tracking-widest">Kapasitas Maksimal</span>
                  </div>
               </div>
 
-              <p className="text-muted-foreground text-[10px] md:text-sm lg:text-base font-medium max-w-sm mx-auto mb-8 md:mb-12 leading-relaxed uppercase tracking-wide px-4 md:px-0">
+              <p className="text-muted-foreground text-xs md:text-sm lg:text-base font-medium max-w-sm mx-auto mb-8 md:mb-12 leading-relaxed uppercase tracking-wide px-4 md:px-0">
                 &quot;Selamat! Kemampuan bahasamu semakin meningkat. Pintu ke tantangan yang lebih sulit kini telah terbuka untukmu.&quot;
               </p>
 
               <Button
                 onClick={() => setShow(false)}
-                className="h-auto w-full sm:w-auto px-8 py-4 md:px-12 md:py-5 bg-primary hover:bg-foreground text-white dark:text-black font-bold rounded-[1.2rem] md:rounded-[1.5rem] text-[10px] md:text-xs uppercase tracking-widest transition-all shadow-xl hover:scale-105 active:scale-95 border-none group relative overflow-hidden"
+                className="h-auto w-full sm:w-auto px-8 py-4 md:px-12 md:py-5 bg-primary hover:bg-foreground text-white dark:text-black font-bold rounded-[1.2rem] md:rounded-[1.5rem] text-xs md:text-xs uppercase tracking-widest transition-all shadow-xl hover:scale-105 active:scale-95 border-none group relative overflow-hidden"
               >
                 <span className="relative z-10 flex items-center justify-center">
                   Lanjutkan Perjalanan <ArrowRight size={16} className="ml-3 group-hover:translate-x-1.5 transition-transform duration-300 md:w-5 md:h-5" />

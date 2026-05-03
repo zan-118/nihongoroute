@@ -94,7 +94,7 @@ export function SurvivalPlaying({
 
             <Badge
               variant="outline"
-              className={`absolute top-6 md:top-10 left-1/2 -translate-x-1/2 text-[9px] md:text-[10px] lg:text-[11px] font-bold uppercase tracking-widest border px-6 py-2 md:px-8 md:py-3 rounded-xl md:rounded-2xl neo-inset h-auto transition-all duration-300 ${isDangerTime ? "text-primary border-primary/50 bg-primary/10 shadow-sm" : "text-muted-foreground border-border dark:border-white/10 bg-muted/50 dark:bg-black/30"}`}
+              className={`absolute top-6 md:top-10 left-1/2 -translate-x-1/2 text-xs md:text-xs lg:text-xs font-bold uppercase tracking-widest border px-6 py-2 md:px-8 md:py-3 rounded-xl md:rounded-2xl neo-inset h-auto transition-all duration-300 ${isDangerTime ? "text-primary border-primary/50 bg-primary/10 shadow-sm" : "text-muted-foreground border-border dark:border-white/10 bg-muted/50 dark:bg-black/30"}`}
             >
               {isDangerTime ? (
                 <span className="flex items-center gap-2">
@@ -146,7 +146,7 @@ export function SurvivalPlaying({
               }`}
             >
               <div className="flex items-center justify-center w-full h-full p-6 md:p-8 relative">
-                 <span className={`absolute top-3 left-4 md:top-4 md:left-6 text-[9px] md:text-[10px] font-bold uppercase tracking-widest transition-colors ${isWrong ? 'text-red-600/30' : 'text-muted-foreground/30 group-hover:text-foreground/30 dark:group-hover:text-black/30'}`}>
+                 <span className={`absolute top-3 left-4 md:top-4 md:left-6 text-xs md:text-xs font-bold uppercase tracking-widest transition-colors ${isWrong ? 'text-red-600/30' : 'text-muted-foreground/30 group-hover:text-foreground/30 dark:group-hover:text-black/30'}`}>
                    OPSI {idx+1}
                  </span>
                  <p className="font-bold text-base md:text-xl lg:text-2xl text-center leading-tight w-full break-words text-foreground group-hover:text-primary-foreground">

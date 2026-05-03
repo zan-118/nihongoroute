@@ -22,7 +22,7 @@ export default function RootLoading() {
           initial={{ opacity: 0 }}
           animate={{ opacity: [0.3, 1, 0.3] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="mt-6 text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground"
+          className="mt-6 text-xs font-black uppercase tracking-[0.4em] text-muted-foreground"
         >
           Initializing NihongoRoute
         </motion.p>

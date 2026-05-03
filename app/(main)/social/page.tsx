@@ -34,10 +34,10 @@ export default function SocialPage() {
           </p>
           
           <div className="flex gap-3 mt-8">
-            <Badge className="bg-primary/10 text-primary border-primary/20 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full">
+            <Badge className="bg-primary/10 text-primary border-primary/20 px-4 py-1.5 text-xs font-black uppercase tracking-widest rounded-full">
               Live Ranking
             </Badge>
-            <Badge variant="outline" className="text-muted-foreground border-border px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full">
+            <Badge variant="outline" className="text-muted-foreground border-border px-4 py-1.5 text-xs font-black uppercase tracking-widest rounded-full">
               Updated Just Now
             </Badge>
           </div>
