@@ -23,6 +23,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import * as wanakana from "wanakana";
+import { splitFurigana } from "@/lib/furigana";
 
 const LEVELS = ["N5", "N4", "N3", "N2"];
 const HINSHI = [
@@ -56,6 +59,7 @@ export default function VocabClient({ initialData = [] }: VocabClientProps) {
   const [hinshi, setHinshi] = useState("all");
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [showRomaji, setShowRomaji] = useState(true);
   // Inisialisasi dengan data dari server
   const [vocabList, setVocabList] = useState<VocabItem[]>(initialData);
   const [currentPage, setCurrentPage] = useState(1);
@@ -87,9 +91,12 @@ export default function VocabClient({ initialData = [] }: VocabClientProps) {
   const fetchTotalCount = async () => {
     const baseLevel = level.toLowerCase();
     const jlptLevel = `jlpt-${baseLevel}`;
+    const kanaSearch = wanakana.toHiragana(debouncedSearch.trim());
+    const kataSearch = wanakana.toKatakana(debouncedSearch.trim());
+
     let queryStr = `count(*[_type == "vocab" && course_category->slug.current in [$baseLevel, $jlptLevel]`;
     if (debouncedSearch.trim() !== "") {
-      queryStr += ` && (word match $search + "*" || romaji match $search + "*" || meaning match $search + "*")`;
+      queryStr += ` && (word match $search + "*" || romaji match $search + "*" || meaning match $search + "*" || word match $kana + "*" || furigana match $kana + "*" || word match $kata + "*")`;
     }
     if (hinshi !== "all") {
       queryStr += ` && hinshi == $hinshi`;
@@ -101,6 +108,8 @@ export default function VocabClient({ initialData = [] }: VocabClientProps) {
         baseLevel,
         jlptLevel,
         search: debouncedSearch.trim(),
+        kana: kanaSearch,
+        kata: kataSearch,
         hinshi,
       });
       setTotalItems(count);
@@ -115,10 +124,12 @@ export default function VocabClient({ initialData = [] }: VocabClientProps) {
     const end = start + ITEMS_PER_PAGE;
     const baseLevel = level.toLowerCase();
     const jlptLevel = `jlpt-${baseLevel}`;
+    const kanaSearch = wanakana.toHiragana(debouncedSearch.trim());
+    const kataSearch = wanakana.toKatakana(debouncedSearch.trim());
 
     let filterStr = `_type == "vocab" && course_category->slug.current in [$baseLevel, $jlptLevel]`;
     if (debouncedSearch.trim() !== "") {
-      filterStr += ` && (word match $search + "*" || romaji match $search + "*" || meaning match $search + "*")`;
+      filterStr += ` && (word match $search + "*" || romaji match $search + "*" || meaning match $search + "*" || word match $kana + "*" || furigana match $kana + "*" || word match $kata + "*")`;
     }
     if (hinshi !== "all") {
       filterStr += ` && hinshi == $hinshi`;
@@ -134,6 +145,8 @@ export default function VocabClient({ initialData = [] }: VocabClientProps) {
         baseLevel,
         jlptLevel,
         search: debouncedSearch.trim(),
+        kana: kanaSearch,
+        kata: kataSearch,
         hinshi,
         start,
         end,
@@ -247,6 +260,18 @@ export default function VocabClient({ initialData = [] }: VocabClientProps) {
                 </SelectContent>
               </Select>
           </div>
+
+          <div className="w-full lg:w-auto flex items-center justify-between lg:justify-end gap-4 px-4 py-3 bg-muted/20 border border-border rounded-xl md:rounded-2xl neo-inset">
+            <div className="flex flex-col">
+              <span className="text-[10px] font-black uppercase tracking-widest text-foreground">Tampilkan Romaji</span>
+              <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-tight">Pemandu bacaan Latin</span>
+            </div>
+            <Switch 
+              checked={showRomaji} 
+              onCheckedChange={setShowRomaji}
+              className="data-[state=checked]:bg-primary"
+            />
+          </div>
         </div>
       </div>
 
@@ -281,15 +306,32 @@ export default function VocabClient({ initialData = [] }: VocabClientProps) {
                 </div>
 
                 <div className="flex-1 space-y-1.5 mb-4">
-                  <ruby className="text-2xl md:text-3xl font-black text-foreground font-japanese block group-hover:text-primary transition-colors duration-300 leading-tight tracking-tight">
-                    {vocab.word}
-                    <rt className="text-xs md:text-xs text-primary/80 font-bold tracking-widest not-italic">
-                      {vocab.furigana || "—"}
-                    </rt>
-                  </ruby>
-                  <p className="text-xs md:text-xs font-bold text-muted-foreground/40 uppercase tracking-widest group-hover:text-muted-foreground transition-colors">
-                    {vocab.romaji}
-                  </p>
+                  <div className="text-2xl md:text-3xl font-black text-foreground font-japanese block group-hover:text-primary transition-colors duration-300 leading-tight tracking-tight">
+                    {splitFurigana(vocab.word, vocab.furigana || "").map((chunk, i) => (
+                      chunk.furi ? (
+                        <ruby key={i}>
+                          {chunk.text}
+                          <rt className="text-xs md:text-xs text-primary/80 font-bold tracking-widest not-italic">
+                            {chunk.furi}
+                          </rt>
+                        </ruby>
+                      ) : (
+                        <span key={i}>{chunk.text}</span>
+                      )
+                    ))}
+                  </div>
+                  <AnimatePresence>
+                    {showRomaji && (
+                      <motion.p 
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="text-xs md:text-xs font-bold text-muted-foreground/40 uppercase tracking-widest group-hover:text-muted-foreground transition-colors overflow-hidden"
+                      >
+                        {vocab.romaji || (vocab.furigana ? wanakana.toRomaji(vocab.furigana) : "")}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 <div className="mt-auto pt-3 border-t border-border">

@@ -31,6 +31,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import * as wanakana from "wanakana";
+import { splitFurigana } from "@/lib/furigana";
 import {
   Dialog,
   DialogContent,
@@ -69,12 +72,20 @@ export default function VerbListClient({
   const [selectedVerb, setSelectedVerb] = useState<VerbData | null>(null);
   const [isFlashcardMode, setIsFlashcardMode] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showRomaji, setShowRomaji] = useState(true);
 
   const filteredVerbs = initialVerbs.filter((verb) => {
+    const s = searchTerm.toLowerCase().trim();
+    if (s === "") return activeGroup ? verb.group === activeGroup : true;
+
+    const kanaSearch = wanakana.toHiragana(s);
     const matchesSearch =
-      verb.jisho.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      verb.meaning.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      verb.masu.toLowerCase().includes(searchTerm.toLowerCase());
+      verb.jisho.toLowerCase().includes(s) ||
+      verb.meaning.toLowerCase().includes(s) ||
+      verb.masu.toLowerCase().includes(s) ||
+      verb.jisho.includes(kanaSearch) ||
+      (verb.furigana && verb.furigana.includes(kanaSearch));
+    
     const matchesGroup = activeGroup ? verb.group === activeGroup : true;
     return matchesSearch && matchesGroup;
   });
@@ -98,7 +109,7 @@ export default function VerbListClient({
       word: verb.jisho,
       meaning: verb.meaning,
       furigana: verb.furigana,
-      romaji: verb.masu,
+      romaji: wanakana.toRomaji(verb.furigana || verb.jisho),
       level: { code: "library" },
     }));
     return (
@@ -237,6 +248,18 @@ export default function VerbListClient({
                </Button>
              ))}
           </div>
+
+          <div className="w-full lg:w-auto flex items-center justify-between lg:justify-end gap-4 px-4 py-3 bg-muted/20 border border-border rounded-xl md:rounded-2xl neo-inset">
+            <div className="flex flex-col">
+              <span className="text-[10px] font-black uppercase tracking-widest text-foreground">Tampilkan Romaji</span>
+              <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-tight">Pemandu bacaan Latin</span>
+            </div>
+            <Switch 
+              checked={showRomaji} 
+              onCheckedChange={setShowRomaji}
+              className="data-[state=checked]:bg-primary"
+            />
+          </div>
         </div>
       </div>
 
@@ -289,12 +312,32 @@ export default function VerbListClient({
                       </div>
 
                       <div className="flex-1 space-y-2">
-                        <ruby className="text-2xl md:text-3xl font-black text-foreground font-japanese block group-hover:text-primary transition-colors duration-300 leading-tight tracking-tight">
-                          {verb.jisho}
-                          <rt className="text-xs md:text-xs text-primary/80 font-bold tracking-widest not-italic">
-                            {verb.furigana}
-                          </rt>
-                        </ruby>
+                        <div className="text-2xl md:text-3xl font-black text-foreground font-japanese block group-hover:text-primary transition-colors duration-300 leading-tight tracking-tight">
+                          {splitFurigana(verb.jisho, verb.furigana || "").map((chunk, i) => (
+                            chunk.furi ? (
+                              <ruby key={i}>
+                                {chunk.text}
+                                <rt className="text-xs md:text-xs text-primary/80 font-bold tracking-widest not-italic">
+                                  {chunk.furi}
+                                </rt>
+                              </ruby>
+                            ) : (
+                              <span key={i}>{chunk.text}</span>
+                            )
+                          ))}
+                        </div>
+                        <AnimatePresence>
+                          {showRomaji && (
+                            <motion.p 
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              className="text-[10px] md:text-xs font-bold text-muted-foreground/40 uppercase tracking-widest group-hover:text-muted-foreground transition-colors overflow-hidden"
+                            >
+                              {wanakana.toRomaji(verb.furigana || verb.jisho)}
+                            </motion.p>
+                          )}
+                        </AnimatePresence>
                         <p className="text-xs md:text-[13px] font-medium text-muted-foreground leading-snug group-hover:text-foreground transition-colors line-clamp-2">
                           {verb.meaning}
                         </p>
@@ -449,12 +492,30 @@ export default function VerbListClient({
                       </div>
 
                       <DialogTitle asChild>
-                        <ruby className="text-3xl md:text-4xl font-black text-foreground font-japanese block leading-tight tracking-tight">
-                          {selectedVerb.jisho}
-                          <rt className="text-xs md:text-xs text-primary/80 font-bold tracking-widest not-italic">
-                            {selectedVerb.furigana}
-                          </rt>
-                        </ruby>
+                        <div className="text-3xl md:text-4xl font-black text-foreground font-japanese block leading-tight tracking-tight">
+                          {(() => {
+                            const jisho = selectedVerb.jisho;
+                            const furi = selectedVerb.furigana || "";
+                            const isRomaji = furi && /^[a-zA-Z\s.,?!'-]+$/.test(furi);
+                            const hiraReading = isRomaji ? wanakana.toHiragana(furi) : furi;
+                            
+                            // Note: If jisho is different from masu (the source of furigana),
+                            // we might need a better matching. But for most verbs, 
+                            // the Kanji part is consistent.
+                            return splitFurigana(jisho, hiraReading).map((chunk, i) => (
+                              chunk.furi ? (
+                                <ruby key={i}>
+                                  {chunk.text}
+                                  <rt className="text-xs md:text-xs text-primary/80 font-bold tracking-widest not-italic">
+                                    {chunk.furi}
+                                  </rt>
+                                </ruby>
+                              ) : (
+                                <span key={i}>{chunk.text}</span>
+                              )
+                            ));
+                          })()}
+                        </div>
                       </DialogTitle>
 
                       <DialogDescription asChild>

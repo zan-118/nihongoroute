@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { DailyMission, loadDailyMission } from "@/lib/daily";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -54,6 +56,14 @@ function SidebarItem({ item, pathname, onClick }: { item: { href: string; label:
 export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const hasMounted = useHasMounted();
   const { pathname, isAuthenticated, userFullName, handleLogout, links } = useNavbar();
+
+  const [mission, setMission] = useState<DailyMission | null>(null);
+
+  useEffect(() => {
+    if (hasMounted) {
+      setMission(loadDailyMission());
+    }
+  }, [hasMounted]);
 
   return (
     <>
@@ -130,7 +140,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
 
         {/* Quick Progress - UX Improvement */}
         <div className="pt-4 px-2 pb-2">
-          {!hasMounted ? (
+          {!hasMounted || !mission ? (
             <Skeleton className="h-32 w-full rounded-2xl" />
           ) : (
             <div className="bg-muted/30 border border-border/50 rounded-2xl p-4 relative overflow-hidden group/target">
@@ -143,13 +153,13 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
                  <div>
                     <div className="flex justify-between text-xs font-bold text-muted-foreground uppercase mb-1.5">
                       <span>Materi Selesai</span>
-                      <span className="text-foreground">2/5</span>
+                      <span className="text-foreground">{mission.lessonProgress}/{mission.lessonGoal}</span>
                     </div>
                     <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
                       <motion.div 
                         initial={{ width: 0 }}
-                        animate={{ width: "40%" }}
-                        className="h-full bg-primary" 
+                        animate={{ width: `${Math.min(100, (mission.lessonProgress / mission.lessonGoal) * 100)}%` }}
+                        className="h-full bg-primary shadow-[0_0_10px_rgba(0,238,255,0.5)]" 
                       />
                     </div>
                  </div>

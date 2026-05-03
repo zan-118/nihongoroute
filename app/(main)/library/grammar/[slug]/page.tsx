@@ -12,11 +12,13 @@ import { client } from "@/sanity/lib/client";
 import { PortableText } from "@portabletext/react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronLeft, Home, Library, BookOpen, Activity, BookText } from "lucide-react";
+import { ChevronLeft, Home, Library, BookOpen, Activity, BookText, FileText } from "lucide-react";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import SanityImage from "@/components/ui/SanityImage";
+import * as wanakana from "wanakana";
+import { splitFurigana } from "@/lib/furigana";
 
 // ======================
 // CONFIG / CONSTANTS
@@ -43,25 +45,58 @@ const articleQuery = `*[_type == "grammar_article" && slug.current == $slug][0] 
  */
 const ptComponents = {
   types: {
-    exampleSentence: ({ value }: { value: { jp: string; id: string } }) => (
-      <Card className="bg-card dark:bg-slate-900 p-6 md:p-8 rounded-3xl md:rounded-[2.5rem] border border-border dark:border-white/5 my-8 md:my-10 neo-card shadow-lg group hover:border-primary/40 transition-all duration-500 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 relative overflow-hidden">
-        <div className="absolute -left-4 -top-4 text-5xl md:text-6xl font-black italic text-foreground/[0.03] dark:text-white/[0.01] pointer-events-none uppercase">CTH</div>
-        <div className="flex-1 relative z-10 w-full">
-          <p className="text-2xl md:text-3xl font-black text-foreground group-hover:text-primary transition-colors duration-500 font-japanese leading-relaxed drop-shadow-sm dark:drop-shadow-xl">
-            {value.jp}
-          </p>
-          <div className="flex items-center gap-3 md:gap-4">
-             <div className="h-0.5 w-4 md:w-6 bg-primary/40 rounded-full" />
-             <p className="text-muted-foreground text-xs md:text-sm font-medium tracking-wide">
-               {value.id}
-             </p>
+    exampleSentence: ({ value }: { value: { jp: string; furigana?: string; id: string } }) => {
+      if (!value) return null;
+      const isRomaji = value.furigana && /^[a-zA-Z\s.,?!'-]+$/.test(value.furigana);
+      
+      return (
+        <div className="my-8 p-6 md:p-10 bg-card border border-border rounded-[2rem] md:rounded-[3rem] shadow-sm hover:border-primary/30 transition-all duration-500 group relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none group-hover:scale-110 transition-transform duration-700">
+             <FileText size={120} />
+          </div>
+          
+          <div className="relative z-10 space-y-6">
+            <div className="flex flex-col gap-3">
+            <div className="text-xl md:text-3xl font-black text-foreground font-japanese leading-relaxed tracking-tight">
+               {(() => {
+                 const hiraReading = isRomaji ? wanakana.toHiragana(value.furigana || "") : (value.furigana || "");
+                 // Strip spaces/dots for sentence splitting robustness
+                 return splitFurigana(value.jp || "", hiraReading.replace(/[\s.]/g, "")).map((chunk, i) => (
+                    chunk.furi ? (
+                      <ruby key={i}>
+                        {chunk.text}
+                        <rt className="text-[10px] md:text-xs text-primary/80 font-bold tracking-[0.1em] not-italic mb-1">
+                           {chunk.furi}
+                        </rt>
+                      </ruby>
+                    ) : (
+                      <span key={i}>{chunk.text}</span>
+                    )
+                 ));
+               })()}
+            </div>
+            <p className="text-[10px] md:text-sm font-bold text-muted-foreground/40 uppercase tracking-[0.1em] group-hover:text-muted-foreground transition-colors leading-relaxed">
+               {isRomaji ? value.furigana : (value.furigana ? wanakana.toRomaji(value.furigana) : "")}
+            </p>
+            </div>
+
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pt-6 border-t border-border/50">
+               <div className="flex-1">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-primary/60 block mb-2">Arti Kalimat</span>
+                  <p className="text-sm md:text-lg font-medium text-muted-foreground leading-relaxed italic">
+                     &quot;{value.id}&quot;
+                  </p>
+               </div>
+               <div className="shrink-0 flex items-center gap-3">
+                  <div className="neo-inset p-2 rounded-2xl bg-muted/30 group-hover:shadow-none transition-all">
+                    <TTSReader text={value.jp} minimal={true} />
+                  </div>
+               </div>
+            </div>
           </div>
         </div>
-        <div className="shrink-0 relative z-10 self-end sm:self-center mt-2 sm:mt-0">
-          <TTSReader text={value.jp} minimal={true} />
-        </div>
-      </Card>
-    ),
+      );
+    },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     image: (props: any) => <SanityImage {...props} />,
   },

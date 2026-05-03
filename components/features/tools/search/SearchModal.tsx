@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, Command, BookOpen, Trophy, Layers, BrainCircuit, Heart, Settings, Share2, ArrowRight, Zap, Loader2, FileText, Hash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { client } from "@/sanity/lib/client";
+import * as wanakana from "wanakana";
 
 interface SearchItem {
   id: string;
@@ -56,10 +57,14 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
         );
 
         // 2. Fetch from Sanity (Global Content Search)
+        // Convert romaji to hiragana for broader matching
+        const kanaQuery = wanakana.toHiragana(query);
+        const katakanaQuery = wanakana.toKatakana(query);
+
         const sanityQuery = `*[
-          (_type == "vocab" && (word match $search || meaning match $search || romaji match $search)) ||
+          (_type == "vocab" && (word match $search || meaning match $search || romaji match $search || word match $kana || furigana match $kana || word match $kata)) ||
           (_type == "grammar" && (title match $search || slug.current match $search)) ||
-          (_type == "kanji" && (kanji match $search || meaning match $search))
+          (_type == "kanji" && (kanji match $search || meaning match $search || kanji match $kana))
         ] | order(_type asc) [0...10] {
           _id,
           _type,
@@ -69,7 +74,11 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
           "category": _type
         }`;
 
-        const sanityResults = await client.fetch(sanityQuery, { search: `*${query}*` });
+        const sanityResults = await client.fetch(sanityQuery, { 
+          search: `*${query}*`,
+          kana: `*${kanaQuery}*`,
+          kata: `*${katakanaQuery}*`
+        });
         
         const mappedSanity: SearchItem[] = sanityResults.map((item: { _id: string; title: string; description: string; _type: string; slug: string }) => ({
           id: item._id,

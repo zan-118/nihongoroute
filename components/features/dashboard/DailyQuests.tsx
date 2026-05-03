@@ -1,10 +1,13 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle2, Zap, Target, BookOpen } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { UserProgress } from "@/store/useProgressStore";
+
+import { DailyMission, loadDailyMission } from "@/lib/daily";
 
 interface Quest {
   id: string;
@@ -16,22 +19,26 @@ interface Quest {
 }
 
 export default function DailyQuests({ progress }: { progress: UserProgress }) {
-  // Logic sederhana: quests bisa dihitung dari progress.srs atau stat lainnya
-  // Untuk demo, kita buat mock data yang terasa nyata
+  const [mission, setMission] = useState<DailyMission | null>(null);
+
+  useEffect(() => {
+    setMission(loadDailyMission());
+  }, []);
+
   const quests: Quest[] = [
     {
       id: "review",
       title: "Ulas 10 Kosakata",
       target: 10,
-      current: Math.min(Object.values(progress.srs).length, 10), // Mock
+      current: Math.min(progress.todayReviewCount || 0, 10),
       icon: <Target size={16} className="text-rose-500" />,
       xpReward: 50,
     },
     {
       id: "learn",
-      title: "Pelajari 2 Kanji Baru",
-      target: 2,
-      current: 1, // Mock
+      title: "Pelajari Materi Baru",
+      target: mission?.lessonGoal || 1,
+      current: Math.min(mission?.lessonProgress || 0, mission?.lessonGoal || 1),
       icon: <BookOpen size={16} className="text-primary" />,
       xpReward: 100,
     },

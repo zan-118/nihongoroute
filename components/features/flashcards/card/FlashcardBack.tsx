@@ -5,6 +5,8 @@ import { PenTool, ExternalLink } from "lucide-react";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import { FlashcardThemeContext } from "./types";
 import Link from "next/link";
+import * as wanakana from "wanakana";
+import { splitFurigana } from "@/lib/furigana";
 
 interface FlashcardBackProps {
   id: string;
@@ -36,6 +38,10 @@ export function FlashcardBack({
 }: FlashcardBackProps) {
   const { isKanji, themeColor, themeBorder, themeShadow } = themeContext;
 
+  const isRomaji = furigana && /^[a-zA-Z\s.,?!'-]+$/.test(furigana);
+  const displayRomaji = romaji || (isRomaji ? furigana : (furigana ? wanakana.toRomaji(furigana) : ""));
+  const hiraReading = isRomaji ? wanakana.toHiragana(furigana || "") : (furigana || "");
+
   const getMemoryLevel = (interval: number) => {
     if (interval <= 1) return { label: "Baru", color: "text-blue-500 bg-blue-500/10" };
     if (interval <= 3) return { label: "Belajar", color: "text-cyan-500 bg-cyan-500/10" };
@@ -62,7 +68,7 @@ export function FlashcardBack({
             variant="outline"
             className={`text-[10px] md:text-xs font-black uppercase tracking-widest ${themeColor} border-current/20 px-4 py-1.5 rounded-lg h-auto bg-muted dark:bg-black/20 z-30`}
           >
-            Definisi & Arti
+            {isKanji ? "Detail Karakter" : "Definisi & Arti"}
           </Badge>
 
           <div className="z-20">
@@ -70,22 +76,32 @@ export function FlashcardBack({
           </div>
         </div>
 
-        <div className={`text-center w-full flex flex-col items-center justify-center flex-1 ${isKanji ? 'space-y-4 md:space-y-6' : 'space-y-4 md:space-y-8'}`}>
+        <div className={`text-center w-full flex flex-col items-center justify-center flex-1 ${isKanji ? 'space-y-4 md:space-y-6' : 'space-y-2'}`}>
           {/* WORD DISPLAY */}
           <div className="flex flex-col items-center relative group/kanji">
-            {!isKanji && (
-              <p
-                className={`${themeColor} font-mono font-bold text-xs md:text-sm tracking-widest uppercase opacity-40 mb-1`}
-              >
-                {furigana || romaji || "..."}
-              </p>
-            )}
-
             <h2
               className={`${isKanji ? "text-7xl md:text-9xl" : word.length > 4 ? "text-4xl sm:text-5xl md:text-6xl lg:text-7xl" : "text-5xl sm:text-6xl md:text-7xl lg:text-8xl"} font-black text-foreground tracking-tight font-japanese leading-none drop-shadow-sm dark:drop-shadow-lg transition-all`}
             >
-              {word}
+              {isKanji ? word : (
+                splitFurigana(word, hiraReading).map((chunk, i) => (
+                  chunk.furi ? (
+                    <ruby key={i}>
+                      {chunk.text}
+                      <rt className="text-xs md:text-sm text-primary/80 font-bold tracking-widest not-italic mb-1">
+                        {chunk.furi}
+                      </rt>
+                    </ruby>
+                  ) : (
+                    <span key={i}>{chunk.text}</span>
+                  )
+                ))
+              )}
             </h2>
+            {!isKanji && displayRomaji && (
+              <p className="text-[10px] md:text-xs font-black text-muted-foreground uppercase tracking-[0.2em] opacity-40 mt-4">
+                {displayRomaji}
+              </p>
+            )}
           </div>
 
           {/* KANJI DETAILS */}

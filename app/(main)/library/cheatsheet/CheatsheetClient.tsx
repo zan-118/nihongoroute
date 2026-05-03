@@ -37,6 +37,8 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog";
+import * as wanakana from "wanakana";
+import { splitFurigana } from "@/lib/furigana";
 
 export interface SheetItem {
   label: string;
@@ -269,10 +271,24 @@ export default function CheatsheetClient({
                                        }}
                                        className="flex flex-col items-start gap-1 group/btn no-print"
                                      >
-                                        <span className="text-2xl md:text-3xl font-japanese font-black text-foreground group-hover/btn:text-primary transition-colors tracking-tighter leading-none">
-                                           {item.jp}
-                                        </span>
-                                        <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] opacity-60 group-hover/btn:opacity-100 transition-opacity">
+                                        <div className="text-2xl md:text-3xl font-japanese font-black text-foreground group-hover/btn:text-primary transition-colors tracking-tighter leading-relaxed">
+                                           {(() => {
+                                             const hiraReading = wanakana.toHiragana(item.romaji || "");
+                                             return splitFurigana(item.jp || "", hiraReading).map((chunk, i) => (
+                                               chunk.furi ? (
+                                                 <ruby key={i}>
+                                                   {chunk.text}
+                                                   <rt className="text-[10px] md:text-xs text-primary/80 font-bold tracking-widest not-italic mb-1">
+                                                     {chunk.furi}
+                                                   </rt>
+                                                 </ruby>
+                                               ) : (
+                                                 <span key={i}>{chunk.text}</span>
+                                               )
+                                             ));
+                                           })()}
+                                        </div>
+                                        <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] opacity-60 group-hover/btn:opacity-100 transition-opacity mt-1">
                                            {item.romaji}
                                         </span>
                                      </button>

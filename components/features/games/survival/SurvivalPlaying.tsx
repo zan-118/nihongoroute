@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Timer, Zap, ShieldAlert, AlertTriangle, Target, BatteryMedium } from "lucide-react";
 import { CardData } from "./types";
+import * as wanakana from "wanakana";
+import { splitFurigana } from "@/lib/furigana";
 
 interface SurvivalPlayingProps {
   hp: number;
@@ -111,7 +113,25 @@ export function SurvivalPlaying({
                <h2
                  className={`${(currentCard?.word?.length || 0) > 4 ? "text-4xl sm:text-6xl md:text-7xl lg:text-8xl" : "text-6xl sm:text-8xl md:text-9xl lg:text-[11rem]"} font-black text-foreground tracking-tight drop-shadow-sm font-japanese leading-none transition-all duration-500`}
                >
-                 {currentCard?.word}
+                 {(() => {
+                   const word = currentCard?.word || "";
+                   const furi = currentCard?.furigana || "";
+                   const isRomaji = furi && /^[a-zA-Z\s.,?!'-]+$/.test(furi);
+                   const hiraReading = isRomaji ? wanakana.toHiragana(furi) : furi;
+                   
+                   return splitFurigana(word, hiraReading).map((chunk, i) => (
+                     chunk.furi ? (
+                       <ruby key={i}>
+                         {chunk.text}
+                         <rt className="text-xs md:text-sm lg:text-base text-primary/80 font-bold tracking-widest not-italic mb-1 md:mb-2">
+                           {chunk.furi}
+                         </rt>
+                       </ruby>
+                     ) : (
+                       <span key={i}>{chunk.text}</span>
+                     )
+                   ));
+                 })()}
                </h2>
             </div>
           </Card>
