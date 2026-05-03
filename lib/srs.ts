@@ -10,6 +10,8 @@
 // ======================
 const DAY = 24 * 60 * 60 * 1000;
 const MIN_EASE_FACTOR = 1.3;
+const MAX_EASE_FACTOR = 5.0; // Batas maksimal ease factor
+const MAX_INTERVAL = 3650;   // Maksimal interval 10 tahun
 
 export interface SRSState {
   interval: number; // Dalam satuan hari (days)
@@ -17,6 +19,7 @@ export interface SRSState {
   easeFactor: number;
   nextReview: number; // Timestamp (ms)
   updatedAt: number; // Timestamp (ms) update terakhir
+  isDeleted?: boolean; // Flag untuk sinkronisasi penghapusan
 }
 
 // ======================
@@ -73,11 +76,13 @@ export function updateCardState(state: SRSState, correct: boolean): SRSState {
       interval = 3;
     } else {
       // Pertumbuhan interval yang natural berdasarkan easeFactor
-      interval = Math.round(interval * easeFactor);
+      // Gunakan Math.ceil agar interval minimal bertambah 1 jika easeFactor > 1.0
+      // Ini mencegah kartu terjebak di interval 1 hari selamanya (Ease Hell)
+      interval = Math.min(MAX_INTERVAL, Math.max(interval + 1, Math.ceil(interval * easeFactor)));
     }
 
     // Sedikit reward pada easeFactor karena menjawab benar
-    easeFactor += 0.05;
+    easeFactor = Math.min(MAX_EASE_FACTOR, easeFactor + 0.05);
   }
 
   const nextReview = Date.now() + interval * DAY;

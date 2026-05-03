@@ -5,6 +5,8 @@
  * @module lib/daily
  */
 
+import { getLocalDateString } from "./utils";
+
 // ======================
 // TYPES
 // ======================
@@ -28,10 +30,10 @@ const STORAGE_KEY = "nihongo-daily";
 // ======================
 
 /**
- * Mendapatkan string tanggal hari ini dalam format YYYY-MM-DD.
+ * Mendapatkan string tanggal hari ini dalam format YYYY-MM-DD (LOKAL).
  */
 function getTodayString() {
-  return new Date().toISOString().split("T")[0];
+  return getLocalDateString();
 }
 
 /**

@@ -44,7 +44,7 @@ export interface ProgressState {
   setAuth: (isAuthenticated: boolean, userFullName: string | null) => void;
   setDirtySrs: (dirtySrs: Set<string> | ((prev: Set<string>) => Set<string>)) => void;
   
-  updateProgress: (newXp: number, newSrs: Record<string, SRSState>) => void;
+  updateProgress: (newXp: number, srsUpdates: Record<string, SRSState>) => void;
   updateProfileName: (name: string) => void;
   addXP: (amount: number) => void;
   addToSRS: (wordId: string) => void;
@@ -56,6 +56,8 @@ export interface ProgressState {
   clearDirtySrs: (syncedIds?: string[]) => void;
   buyStreakFreeze: () => boolean;
   toggleNotifications: (enabled: boolean) => void;
+  mergeProgress: (cloudData: UserProgress) => void;
+  removeFromSRS: (wordId: string) => void;
 }
 
 const defaultProgress: UserProgress = {
@@ -120,23 +122,24 @@ export const useProgressStore = create<ProgressState>()(
         return { dirtySrs: newDirty };
       }),
 
-      updateProgress: (newXp, newSrs) => {
+      updateProgress: (newXp, srsUpdates) => {
         const state = get();
         const today = getLocalDateString();
         
         const newDirty = new Set(state.dirtySrs);
+        const newSrs = { ...state.progress.srs };
         let srsChanged = false;
 
-        Object.keys(newSrs).forEach((id) => {
-          if (JSON.stringify(newSrs[id]) !== JSON.stringify(state.progress.srs[id])) {
-            newDirty.add(id);
-            srsChanged = true;
-          }
+        Object.keys(srsUpdates).forEach((id) => {
+          newSrs[id] = srsUpdates[id];
+          newDirty.add(id);
+          srsChanged = true;
         });
 
         let { streak, todayReviewCount, lastStudyDate } = state.progress;
-        const { studyDays } = state.progress;
+        const { studyDays, inventory } = state.progress;
         const newStudyDays = { ...studyDays };
+        let newStreakFreeze = inventory?.streakFreeze || 0;
 
         if (srsChanged) {
           todayReviewCount += 1;
@@ -149,6 +152,16 @@ export const useProgressStore = create<ProgressState>()(
 
             if (lastStudyDate === yesterdayStr) {
               streak += 1;
+            } else if (newStreakFreeze > 0 && lastStudyDate !== null) {
+              // Gunakan Streak Freeze
+              newStreakFreeze -= 1;
+              get().addNotification({
+                title: "Streak Freeze Digunakan!",
+                message: "Streak Anda terselamatkan oleh item Streak Freeze.",
+                type: "warning"
+              });
+              // Streak tetap, tidak berubah
+              streak += 1; // Anggap hari yang bolong ditutup oleh freeze
             } else {
               streak = 1;
             }
@@ -171,6 +184,10 @@ export const useProgressStore = create<ProgressState>()(
             todayReviewCount,
             lastStudyDate,
             studyDays: newStudyDays,
+            inventory: {
+              ...state.progress.inventory,
+              streakFreeze: newStreakFreeze
+            }
           },
         });
       },
@@ -206,11 +223,33 @@ export const useProgressStore = create<ProgressState>()(
         newDirty.add(wordId);
 
         state.updateProgress(state.progress.xp, {
-          ...state.progress.srs,
           [wordId]: createNewCardState(),
         });
         
         set({ dirtySrs: newDirty });
+      },
+
+      removeFromSRS: (wordId) => {
+        const state = get();
+        if (!state.progress.srs[wordId]) return;
+
+        const newDirty = new Set(state.dirtySrs);
+        newDirty.add(wordId);
+
+        const newSrs = { ...state.progress.srs };
+        newSrs[wordId] = {
+          ...newSrs[wordId],
+          isDeleted: true,
+          updatedAt: Date.now()
+        };
+
+        set({
+          dirtySrs: newDirty,
+          progress: {
+            ...state.progress,
+            srs: newSrs
+          }
+        });
       },
 
       addNotification: (n) => set((state) => ({
@@ -307,6 +346,86 @@ export const useProgressStore = create<ProgressState>()(
           } 
         } 
       })),
+
+      mergeProgress: (cloudData) => {
+        const state = get();
+        const local = state.progress;
+        
+        // 1. Merge Gamification (Ambil yang tertinggi/terbaru)
+        const mergedXP = Math.max(local.xp, cloudData.xp);
+        const mergedStreak = Math.max(local.streak, cloudData.streak);
+        
+        // 2. Merge Study Days (Heatmap)
+        const mergedStudyDays = { ...cloudData.studyDays };
+        Object.entries(local.studyDays).forEach(([date, count]) => {
+          mergedStudyDays[date] = Math.max(count, mergedStudyDays[date] || 0);
+        });
+
+        // 3. Merge SRS (Conflict Resolution LWW)
+        const mergedSrs = { ...cloudData.srs };
+        const newDirty = new Set(state.dirtySrs);
+
+        Object.entries(local.srs).forEach(([id, localState]) => {
+          const cloudState = cloudData.srs[id];
+          
+          if (localState.isDeleted) {
+            // Jika lokal sudah dihapus, tetap hapus dan tandai dirty jika cloud masih punya
+            if (cloudState) {
+              newDirty.add(id);
+              delete mergedSrs[id]; // Jangan tampilkan di UI
+            }
+            return;
+          }
+
+          if (!cloudState) {
+            mergedSrs[id] = localState;
+            newDirty.add(id);
+          } else {
+            if (localState.updatedAt > cloudState.updatedAt) {
+              mergedSrs[id] = localState;
+              newDirty.add(id);
+            } else {
+              mergedSrs[id] = cloudState;
+              newDirty.delete(id);
+            }
+          }
+        });
+
+        // 4. Merge Inventory & Settings
+        const mergedInventory = {
+          streakFreeze: Math.max(local.inventory?.streakFreeze || 0, cloudData.inventory?.streakFreeze || 0)
+        };
+
+        const mergedSettings = {
+          ...cloudData.settings,
+          ...local.settings,
+        };
+
+        // 5. Merge Notifications (Deduplicate by ID)
+        const allNotifications = [...local.notifications, ...cloudData.notifications];
+        const uniqueNotifications = Array.from(new Map(allNotifications.map(n => [n.id, n])).values())
+          .sort((a, b) => b.timestamp - a.timestamp)
+          .slice(0, 50); // Batasi 50 terakhir agar tidak bengkak
+
+        set({
+          dirtySrs: newDirty,
+          progress: {
+            ...local,
+            xp: mergedXP,
+            level: calculateLevel(mergedXP),
+            streak: mergedStreak,
+            studyDays: mergedStudyDays,
+            srs: mergedSrs,
+            inventory: mergedInventory,
+            settings: mergedSettings,
+            notifications: uniqueNotifications,
+            // Gunakan review count terbaru jika tanggalnya sama
+            todayReviewCount: local.lastStudyDate === cloudData.lastStudyDate 
+              ? Math.max(local.todayReviewCount, cloudData.todayReviewCount)
+              : (local.lastStudyDate === getLocalDateString() ? local.todayReviewCount : cloudData.todayReviewCount)
+          }
+        });
+      },
     }),
     {
       name: "nihongoroute_save_data",

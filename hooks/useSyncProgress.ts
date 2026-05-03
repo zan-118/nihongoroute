@@ -13,12 +13,11 @@ const STATS_STORAGE_KEY = "nihongo-progress";
 
 export function useSyncProgress() {
   const supabase = createClient();
-  const setProgress = useProgressStore((state) => state.setProgress);
+  const mergeProgress = useProgressStore((state) => state.mergeProgress);
   const setLoading = useProgressStore((state) => state.setLoading);
   const progress = useProgressStore((state) => state.progress);
   const dirtySrs = useProgressStore((state) => state.dirtySrs);
   const clearDirtySrs = useProgressStore((state) => state.clearDirtySrs);
-  const userFullName = useProgressStore((state) => state.userFullName);
 
   const initialLoadDone = useRef(false);
 
@@ -120,80 +119,108 @@ export function useSyncProgress() {
     enabled: !!session?.user,
   });
 
-  // Sinkronkan Cloud Data ke Zustand jika ada perubahan
+  // Sinkronkan Cloud Data ke Zustand jika ada perubahan (Gunakan Merge, bukan Overwrite)
   useEffect(() => {
     if (cloudData) {
-      setProgress(cloudData);
+      mergeProgress(cloudData);
     }
-  }, [cloudData, setProgress]);
+  }, [cloudData, mergeProgress]);
 
   useEffect(() => {
     setLoading(isFetching);
   }, [isFetching, setLoading]);
 
-  // 2. MUTATION: Sync Local Changes to Cloud
+  // 2. MUTATION: Atomic Sync to Cloud via RPC
   const syncMutation = useMutation({
     mutationFn: async (data: { progress: UserProgress, dirtySrs: Set<string> }) => {
       if (!session?.user) return;
 
       const { progress, dirtySrs } = data;
 
-      // Upsert Profile
-      const { error: profileError } = await supabase.from("profiles").upsert({
-        id: session.user.id,
-        xp: progress.xp,
-        level: progress.level,
-        streak: progress.streak,
-        full_name: userFullName,
-        today_review_count: progress.todayReviewCount,
-        last_study_date: progress.lastStudyDate,
-        study_days: progress.studyDays,
-        inventory: progress.inventory,
-        settings: progress.settings,
-        updated_at: new Date().toISOString(),
-      }, { onConflict: 'id' });
+      // Siapkan data SRS untuk dikirim sebagai JSON array
+      const srsUpdates = Array.from(dirtySrs)
+        .filter(id => progress.srs[id])
+        .map(id => {
+          const state = progress.srs[id];
+          return {
+            word_id: id,
+            repetition: state.repetition,
+            interval: state.interval,
+            ease_factor: state.easeFactor,
+            next_review: new Date(state.nextReview).toISOString(),
+            status: state.interval > 21 ? 'graduated' : (state.interval > 1 ? 'reviewing' : 'learning'),
+            is_deleted: !!state.isDeleted
+          };
+        });
 
-      if (profileError) throw profileError;
+      // Panggil RPC untuk update atomik
+      const { error: rpcError } = await supabase.rpc('sync_user_progress', {
+        p_xp: progress.xp,
+        p_streak: progress.streak,
+        p_today_review_count: progress.todayReviewCount,
+        p_last_study_date: progress.lastStudyDate,
+        p_study_days: progress.studyDays,
+        p_inventory: progress.inventory,
+        p_settings: progress.settings,
+        p_srs_updates: srsUpdates
+      });
 
-      // Upsert Dirty SRS
-      if (dirtySrs.size > 0) {
-        const entriesToSync = Array.from(dirtySrs)
-          .filter(id => progress.srs[id])
-          .map(id => {
-            const state = progress.srs[id];
-            return {
-              user_id: session.user.id,
-              word_id: id,
-              repetition: state.repetition,
-              interval: state.interval,
-              ease_factor: state.easeFactor,
-              next_review: new Date(state.nextReview).toISOString(),
-              status: state.interval > 21 ? 'graduated' : (state.interval > 1 ? 'reviewing' : 'learning'),
-              updated_at: new Date().toISOString(),
-            };
-          });
-
-        if (entriesToSync.length > 0) {
-          const { error: srsError } = await supabase.from("user_srs").upsert(entriesToSync, { onConflict: 'user_id,word_id' });
-          if (srsError) throw srsError;
-        }
-      }
+      if (rpcError) throw rpcError;
 
       return { success: true, syncedWordIds: Array.from(dirtySrs) };
     },
     onSuccess: (result) => {
       if (result?.success && result.syncedWordIds) {
         clearDirtySrs(result.syncedWordIds);
+        
+        // Broadcast ke tab lain bahwa sinkronisasi berhasil
+        if (typeof window !== "undefined" && "BroadcastChannel" in window) {
+          const channel = new BroadcastChannel("nihongoroute_sync");
+          channel.postMessage("SYNC_COMPLETE");
+          channel.close();
+        }
       }
     },
   });
 
-  // Debounced Auto-sync (Trigger mutation saat progress berubah)
+  // Dengarkan broadcast dari tab lain
+  useEffect(() => {
+    if (typeof window === "undefined" || !("BroadcastChannel" in window)) return;
+
+    const channel = new BroadcastChannel("nihongoroute_sync");
+    channel.onmessage = (event) => {
+      if (event.data === "SYNC_COMPLETE") {
+        // Karena TanStack Query akan otomatis me-refetch saat window focus, 
+        // kita bisa memicu refetch manual di sini jika diinginkan.
+        // Untuk sekarang, kita biarkan queryKey ["user-progress"] yang mengaturnya.
+      }
+    };
+    return () => channel.close();
+  }, []);
+
+  const lastSyncedProgress = useRef<string>(JSON.stringify(progress));
+
+  // Debounced Auto-sync
   useEffect(() => {
     if (isFetching || !session?.user) return;
 
+    const currentProgressStr = JSON.stringify({
+      xp: progress.xp,
+      streak: progress.streak,
+      studyDays: progress.studyDays,
+      inventory: progress.inventory,
+      settings: progress.settings,
+      lastStudyDate: progress.lastStudyDate,
+      todayReviewCount: progress.todayReviewCount
+    });
+
+    const isProfileChanged = currentProgressStr !== lastSyncedProgress.current;
+
+    if (!isProfileChanged && dirtySrs.size === 0) return;
+
     const timer = setTimeout(() => {
       syncMutation.mutate({ progress, dirtySrs });
+      lastSyncedProgress.current = currentProgressStr;
     }, 2000);
 
     return () => clearTimeout(timer);

@@ -8,7 +8,9 @@
  * Berguna untuk key local storage yang bersifat harian.
  */
 export const getTodayDateString = (): string => {
-  return new Date().toISOString().split("T")[0];
+  const now = new Date();
+  const offset = now.getTimezoneOffset() * 60000;
+  return new Date(now.getTime() - offset).toISOString().split("T")[0];
 };
 
 /**

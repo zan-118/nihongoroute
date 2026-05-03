@@ -47,7 +47,6 @@ export function useSRSReview(cards: FlashcardType[]) {
       const newState = updateCardState(currentState, correct);
 
       updateProgress(progress.xp + (correct ? 10 : 2), {
-        ...progress.srs,
         [cardId]: newState,
       });
 
