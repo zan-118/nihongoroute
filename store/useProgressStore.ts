@@ -1,7 +1,9 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
+import { get, set as idbSet, del } from "idb-keyval";
 import { SRSState, createNewCardState } from "@/lib/srs";
 import { calculateLevel } from "@/lib/level";
+import { getLocalDateString } from "@/lib/utils";
 
 export interface Notification {
   id: string;
@@ -51,7 +53,7 @@ export interface ProgressState {
   clearNotifications: () => void;
   exportData: () => void;
   importData: (jsonData: string) => boolean;
-  clearDirtySrs: () => void;
+  clearDirtySrs: (syncedIds?: string[]) => void;
   buyStreakFreeze: () => boolean;
   toggleNotifications: (enabled: boolean) => void;
 }
@@ -82,6 +84,18 @@ const defaultProgress: UserProgress = {
   }
 };
 
+const idbStorage: StateStorage = {
+  getItem: async (name: string): Promise<string | null> => {
+    return (await get(name)) || null;
+  },
+  setItem: async (name: string, value: string): Promise<void> => {
+    await idbSet(name, value);
+  },
+  removeItem: async (name: string): Promise<void> => {
+    await del(name);
+  },
+};
+
 export const useProgressStore = create<ProgressState>()(
   persist(
     (set, get) => ({
@@ -99,11 +113,16 @@ export const useProgressStore = create<ProgressState>()(
         dirtySrs: typeof updater === 'function' ? updater(state.dirtySrs) : updater 
       })),
       
-      clearDirtySrs: () => set({ dirtySrs: new Set() }),
+      clearDirtySrs: (syncedIds?: string[]) => set((state) => {
+        if (!syncedIds) return { dirtySrs: new Set() };
+        const newDirty = new Set(state.dirtySrs);
+        syncedIds.forEach(id => newDirty.delete(id));
+        return { dirtySrs: newDirty };
+      }),
 
       updateProgress: (newXp, newSrs) => {
         const state = get();
-        const today = new Date().toISOString().split("T")[0];
+        const today = getLocalDateString();
         
         const newDirty = new Set(state.dirtySrs);
         let srsChanged = false;
@@ -125,7 +144,8 @@ export const useProgressStore = create<ProgressState>()(
           if (lastStudyDate !== today) {
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
-            const yesterdayStr = yesterday.toISOString().split("T")[0];
+            const offset = yesterday.getTimezoneOffset() * 60000;
+            const yesterdayStr = new Date(yesterday.getTime() - offset).toISOString().split("T")[0];
 
             if (lastStudyDate === yesterdayStr) {
               streak += 1;
@@ -234,10 +254,18 @@ export const useProgressStore = create<ProgressState>()(
       importData: (jsonData) => {
         try {
           const parsed = JSON.parse(jsonData);
-          if (parsed.xp !== undefined && typeof parsed.xp === "number") {
+          if (
+            typeof parsed === 'object' && parsed !== null &&
+            typeof parsed.xp === "number" &&
+            typeof parsed.level === "number" &&
+            typeof parsed.srs === "object" && !Array.isArray(parsed.srs) &&
+            Array.isArray(parsed.notifications) &&
+            typeof parsed.studyDays === "object"
+          ) {
             set({ progress: parsed as UserProgress });
             return true;
           }
+          console.error("Format data tidak valid.");
           return false;
         } catch (e) {
           console.error("Gagal mengurai file data import:", e);
@@ -282,6 +310,7 @@ export const useProgressStore = create<ProgressState>()(
     }),
     {
       name: "nihongoroute_save_data",
+      storage: createJSONStorage(() => idbStorage),
       partialize: (state) => ({ progress: state.progress }),
     }
   )

@@ -23,3 +23,15 @@ import { twMerge } from "tailwind-merge"
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
+
+/**
+ * Mengambil tanggal "YYYY-MM-DD" dalam zona waktu LOKAL perangkat user.
+ * 
+ * @returns {string} String format tanggal.
+ */
+export function getLocalDateString(): string {
+  const now = new Date();
+  const offset = now.getTimezoneOffset() * 60000;
+  const localISOTime = (new Date(now.getTime() - offset)).toISOString().split('T')[0];
+  return localISOTime;
+}

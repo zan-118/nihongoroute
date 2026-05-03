@@ -16,6 +16,7 @@ export interface SRSState {
   repetition: number;
   easeFactor: number;
   nextReview: number; // Timestamp (ms)
+  updatedAt: number; // Timestamp (ms) update terakhir
 }
 
 // ======================
@@ -33,6 +34,7 @@ export function createNewCardState(): SRSState {
     repetition: 0,
     easeFactor: 2.5,
     nextReview: Date.now(),
+    updatedAt: Date.now(),
   };
 }
 
@@ -85,6 +87,7 @@ export function updateCardState(state: SRSState, correct: boolean): SRSState {
     interval,
     easeFactor,
     nextReview,
+    updatedAt: Date.now(),
   };
 }
 

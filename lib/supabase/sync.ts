@@ -23,7 +23,7 @@ export async function syncLocalToCloud(userId: string, localData: UserProgress):
         .single(),
       supabase
         .from("user_srs")
-        .select("word_id, repetition, interval, ease_factor, next_review")
+        .select("word_id, repetition, interval, ease_factor, next_review, updated_at")
         .eq("user_id", userId)
     ]);
 
@@ -87,8 +87,8 @@ export async function syncLocalToCloud(userId: string, localData: UserProgress):
     const srsEntries = Object.entries(localData.srs).map(([wordId, localState]) => {
       const cloudState = cloudSrsMap.get(wordId);
       
-      // Jika ada di cloud, bandingkan mana yang lebih matang (interval lebih tinggi)
-      if (cloudState && cloudState.interval > localState.interval) {
+      // Jika ada di cloud, bandingkan mana yang lebih baru
+      if (cloudState && new Date(cloudState.updated_at).getTime() > localState.updatedAt) {
         return {
           user_id: userId,
           word_id: wordId,
@@ -97,7 +97,7 @@ export async function syncLocalToCloud(userId: string, localData: UserProgress):
           ease_factor: cloudState.ease_factor,
           next_review: cloudState.next_review,
           status: cloudState.interval > 21 ? 'graduated' : (cloudState.interval > 1 ? 'reviewing' : 'learning'),
-          updated_at: new Date().toISOString()
+          updated_at: cloudState.updated_at
         };
       }
 

@@ -6,6 +6,7 @@ import { useProgressStore, UserProgress } from "@/store/useProgressStore";
 import { SRSState } from "@/lib/srs";
 import { calculateLevel } from "@/lib/level";
 import { syncLocalToCloud } from "@/lib/supabase/sync";
+import { getLocalDateString } from "@/lib/utils";
 import { useEffect, useRef } from "react";
 
 const STATS_STORAGE_KEY = "nihongo-progress";
@@ -70,7 +71,7 @@ export function useSyncProgress() {
           .single(),
         supabase
           .from("user_srs")
-          .select("word_id, interval, repetition, ease_factor, next_review")
+          .select("word_id, interval, repetition, ease_factor, next_review, updated_at")
           .eq("user_id", session.user.id)
       ]);
 
@@ -85,11 +86,12 @@ export function useSyncProgress() {
             repetition: row.repetition,
             easeFactor: row.ease_factor,
             nextReview: new Date(row.next_review).getTime(),
+            updatedAt: new Date(row.updated_at).getTime(),
           };
         });
       }
 
-      const today = new Date().toISOString().split("T")[0];
+      const today = getLocalDateString();
       let cloudReviewCount = profile?.today_review_count || 0;
       if (profile?.last_study_date !== today) {
         cloudReviewCount = 0;
@@ -177,10 +179,12 @@ export function useSyncProgress() {
         }
       }
 
-      return { success: true };
+      return { success: true, syncedWordIds: Array.from(dirtySrs) };
     },
-    onSuccess: () => {
-      clearDirtySrs();
+    onSuccess: (result) => {
+      if (result?.success && result.syncedWordIds) {
+        clearDirtySrs(result.syncedWordIds);
+      }
     },
   });
 
