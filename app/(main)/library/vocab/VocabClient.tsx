@@ -10,8 +10,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { client } from "@/sanity/lib/client";
 import { Search, Home, Library, Loader2, Filter, Languages, ArrowRight, LibraryBig } from "lucide-react";
-import TTSReader from "@/components/TTSReader";
-import PdfGenerator from "@/components/PdfGenerator";
+import TTSReader from "@/components/features/tools/tts/TTSReader";
+import PdfGenerator from "@/components/features/pdf/PdfGenerator";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -38,16 +38,29 @@ const HINSHI = [
 ];
 const ITEMS_PER_PAGE = 30;
 
-export default function VocabClient() {
+interface VocabItem {
+  _id: string;
+  word: string;
+  furigana?: string;
+  romaji?: string;
+  meaning: string;
+  hinshi?: string;
+}
+
+interface VocabClientProps {
+  initialData?: VocabItem[];
+}
+
+export default function VocabClient({ initialData = [] }: VocabClientProps) {
   const [level, setLevel] = useState("N5");
   const [hinshi, setHinshi] = useState("all");
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [vocabList, setVocabList] = useState<any[]>([]);
+  // Inisialisasi dengan data dari server
+  const [vocabList, setVocabList] = useState<VocabItem[]>(initialData);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(initialData.length >= ITEMS_PER_PAGE);
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(search), 500);
@@ -55,6 +68,15 @@ export default function VocabClient() {
   }, [search]);
 
   useEffect(() => {
+    // Jangan fetch ulang jika ini adalah render pertama dan filter masih default (N5, all, empty search)
+    // karena data sudah disediakan oleh server.
+    const isDefaultFilter = level === "N5" && hinshi === "all" && debouncedSearch === "";
+    const isFirstRender = vocabList === initialData;
+
+    if (isFirstRender && isDefaultFilter && initialData.length > 0) {
+      return;
+    }
+
     setVocabList([]);
     setPage(0);
     setHasMore(true);

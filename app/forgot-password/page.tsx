@@ -28,11 +28,11 @@ export default function ForgotPasswordPage() {
       toast.success("Email Pemulihan Meluncur!", {
         description: "Silakan cek kotak masuk (atau spam) email Anda untuk mengatur ulang kata sandi.",
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Gagal mengirim email pemulihan:", error);
+      const message = error instanceof Error ? error.message : "Terjadi kesalahan tidak dikenal";
       toast.error("Ups, pengiriman gagal...", {
-        description: error.message || "Pastikan alamat email yang Anda masukkan sudah benar dan terdaftar.",
+        description: message || "Pastikan alamat email yang Anda masukkan sudah benar dan terdaftar.",
       });
     } finally {
       setLoading(false);

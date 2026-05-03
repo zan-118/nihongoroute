@@ -21,11 +21,13 @@ import {
   AlertTriangle,
   FileText,
 } from "lucide-react";
-import QuizEngine from "@/components/QuizEngine";
-import TTSReader from "@/components/TTSReader";
-import AddToSRSButton from "@/components/AddToSRSButton";
-import DownloadPdfButton from "@/components/DownloadPdfButton";
-import AppBreadcrumbs from "@/components/AppBreadcrumbs";
+import QuizEngine from "@/components/features/exams/quiz-engine/QuizEngine";
+import TTSReader from "@/components/features/tools/tts/TTSReader";
+import AddToSRSButton from "@/components/features/srs/actions/AddToSRSButton";
+import DownloadPdfButton from "@/components/features/pdf/actions/DownloadPdfButton";
+import AppBreadcrumbs from "@/components/layout/AppBreadcrumbs";
+import SanityImage from "@/components/ui/SanityImage";
+import { renderSmartText } from "@/lib/smartLinks";
 
 // ======================
 // CONFIG / CONSTANTS
@@ -53,10 +55,42 @@ async function getLessonData(categoryId: string, slug: string) {
       vocabList[]-> { 
         _id, _type,
         _type == "vocab" => { word, furigana, romaji, meaning, hinshi },
-        _type == "verb_dictionary" => { "word": jisho, furigana, romaji, meaning }
+        _type == "verb_dictionary" => { "word": jisho, furigana, romaji, meaning },
+        _type == "kanji" => { "word": character, meaning, onyomi, kunyomi }
       },
-      referenceWords[]-> { _id, word, furigana, romaji, meaning, hinshi },
-      articles, grammar, quizzes, seoTitle, seoDescription
+      referenceWords[]-> { 
+        _id, _type,
+        _type == "vocab" => { word, furigana, romaji, meaning, hinshi },
+        _type == "verb_dictionary" => { "word": jisho, furigana, romaji, meaning },
+        _type == "kanji" => { "word": character, meaning, onyomi, kunyomi }
+      },
+      articles[] {
+        ...,
+        _type == "image" => {
+          ...,
+          asset-> {
+            _id,
+            metadata {
+              lqip,
+              dimensions
+            }
+          }
+        }
+      },
+      grammar[] {
+        ...,
+        _type == "image" => {
+          ...,
+          asset-> {
+            _id,
+            metadata {
+              lqip,
+              dimensions
+            }
+          }
+        }
+      },
+      quizzes, seoTitle, seoDescription
     },
     "nav": *[_type == "lesson" && course_category->slug.current == $categoryId] | order(orderNumber asc, _createdAt desc) {
       "slug": slug.current, title
@@ -83,28 +117,42 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 // HELPERS / COMPONENTS
 // ======================
 
+interface VocabularyValue {
+  jp: string;
+  furigana: string;
+  id: string;
+}
+
+interface SanityImageValue {
+  _type: "image";
+  asset: {
+    _ref: string;
+    _type: "reference";
+  };
+}
+
 /**
  * Konfigurasi Pemetaan Portable Text.
  */
 const ptComponents: PortableTextComponents = {
   block: {
-    h2: ({ children }) => (
+    h2: ({ children }: { children?: React.ReactNode }) => (
       <h2 className="text-2xl md:text-3xl font-black text-foreground mt-16 mb-8 uppercase tracking-tight flex items-center gap-4">
         <span className="w-1.5 h-8 bg-cyan-400 shadow-[0_0_15px_#22d3ee]" />
         {children}
       </h2>
     ),
-    h3: ({ children }) => (
+    h3: ({ children }: { children?: React.ReactNode }) => (
       <h3 className="text-xl font-bold text-cyan-500 dark:text-cyan-400 mt-10 mb-4 tracking-widest uppercase text-[13px] md:text-sm">
         {children}
       </h3>
     ),
-    normal: ({ children }) => (
+    normal: ({ children }: { children?: React.ReactNode }) => (
       <p className="mb-6 text-muted-foreground text-base leading-relaxed font-medium">
         {children}
       </p>
     ),
-    blockquote: ({ children }) => (
+    blockquote: ({ children }: { children?: React.ReactNode }) => (
       <blockquote className="my-10 neo-inset p-6 md:p-8 border-l-4 border-purple-500 text-purple-600 dark:text-purple-200/80 italic text-sm md:text-base leading-relaxed">
         {children}
       </blockquote>
@@ -136,14 +184,14 @@ const ptComponents: PortableTextComponents = {
         </div>
       );
     },
-    exampleSentence: ({ value }: { value: { jp?: string; furigana?: string; id?: string } }) => {
-      if (!value) return null;
+    vocabulary: ({ value }: { value: VocabularyValue }) => {
       return (
-        <div className="neo-card p-6 my-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 group hover:border-cyan-400/30 transition-all duration-300">
-          <div className="flex-1">
-            <ruby className="text-foreground text-xl md:text-2xl font-black tracking-tight">
+        <div className="group relative flex items-center justify-between p-4 md:p-6 bg-muted/30 border border-border rounded-2xl hover:border-primary/40 hover:bg-primary/[0.02] transition-all duration-300 mb-4 overflow-hidden">
+          <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary/20 group-hover:bg-primary transition-all duration-300" />
+          <div className="flex flex-col">
+            <ruby className="text-xl md:text-2xl font-black text-foreground tracking-tight">
               {value.jp || ""}
-              <rt className="text-[10px] text-cyan-500 dark:text-cyan-400/70 font-bold tracking-widest uppercase">
+              <rt className="text-[10px] text-cyan-500 dark:text-cyan-400/70 font-bold tracking-widest uppercase mb-1">
                 {value.furigana || ""}
               </rt>
             </ruby>
@@ -157,6 +205,7 @@ const ptComponents: PortableTextComponents = {
         </div>
       );
     },
+    image: ({ value }: { value: SanityImageValue }) => <SanityImage value={value} />,
   },
 };
 
@@ -216,7 +265,7 @@ export default async function LessonPage({ params }: Props) {
               className={`p-8 rounded-[2rem] neo-inset border-l-8 mb-8 ${isSideQuest ? "border-amber-500" : "border-cyan-400"}`}
             >
                <p className="text-base md:text-lg font-medium leading-relaxed text-muted-foreground">
-                 {lesson.summary}
+                 {renderSmartText(lesson.summary)}
                </p>
             </div>
           )}
@@ -236,7 +285,7 @@ export default async function LessonPage({ params }: Props) {
                 <div className="h-[1px] flex-1 bg-border" />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {lesson.vocabList.map((v: { _id: string; word: string; romaji?: string; meaning: string; hinshi?: string }) => {
+                {lesson.vocabList.map((v: { _id: string; word: string; romaji?: string; meaning: string; hinshi?: string; onyomi?: string; kunyomi?: string }) => {
                   if (!v) return null;
                   return (
                     <div
@@ -264,6 +313,22 @@ export default async function LessonPage({ params }: Props) {
                         <h4 className="text-3xl font-black text-foreground group-hover:text-cyan-500 dark:group-hover:text-cyan-400 transition-colors tracking-tight mb-1">
                           {v.word || "-"}
                         </h4>
+                        
+                        {(v.onyomi || v.kunyomi) && (
+                          <div className="flex flex-wrap gap-2 mb-3">
+                            {v.onyomi && (
+                              <span className="text-[10px] font-bold text-purple-500 dark:text-purple-400 border border-purple-500/20 px-2 py-0.5 rounded-lg bg-purple-500/5">
+                                ON: {v.onyomi}
+                              </span>
+                            )}
+                            {v.kunyomi && (
+                              <span className="text-[10px] font-bold text-emerald-500 dark:text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-lg bg-emerald-500/5">
+                                KUN: {v.kunyomi}
+                              </span>
+                            )}
+                          </div>
+                        )}
+
                         <p className="text-[13px] md:text-sm text-muted-foreground font-medium leading-relaxed">
                           {v.meaning || "-"}
                         </p>

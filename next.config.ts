@@ -5,6 +5,13 @@ const withPWA = withPWAInit({
   dest: "public",
   disable: process.env.NODE_ENV === "development",
   workboxOptions: {
+    additionalManifestEntries: [
+      { url: "/logo-branding.svg", revision: "1" },
+      { url: "/logo-branding.png", revision: "1" },
+      { url: "/manifest.json", revision: "1" },
+      { url: "/fonts/NotoSansJP-Bold.ttf", revision: "1" },
+      { url: "/fonts/NotoSansJP-Regular.ttf", revision: "1" },
+    ],
     maximumFileSizeToCacheInBytes: 5242880, // 5MB
     skipWaiting: true,
     clientsClaim: true,

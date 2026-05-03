@@ -1,4 +1,5 @@
 export interface FlashcardProps {
+  id: string;
   word: string;
   meaning: string;
   furigana?: string;

@@ -162,4 +162,33 @@ describe("lib/srs", () => {
       expect(state.easeFactor).toBeCloseTo(initialEF + 10 * 0.05, 2);
     });
   });
+
+  // ========================================
+  // Kasus Ekstrem & Stabilitas
+  // ========================================
+  describe("kasus ekstrem dan stabilitas", () => {
+    it("menangani interval besar (100+ hari) dengan halving yang tepat", () => {
+      const state: SRSState = { interval: 100, repetition: 10, easeFactor: 2.5, nextReview: Date.now() };
+      const updated = updateCardState(state, false);
+      expect(updated.interval).toBe(50);
+      expect(updated.repetition).toBe(0);
+    });
+
+    it("menghasilkan interval yang masuk akal dengan easeFactor minimum (1.3)", () => {
+      const state: SRSState = { interval: 10, repetition: 5, easeFactor: 1.3, nextReview: Date.now() };
+      const updated = updateCardState(state, true);
+      // round(10 * 1.3) = 13
+      expect(updated.interval).toBe(13);
+    });
+
+    it("menghindari penumpukan floating point pada easeFactor", () => {
+      let state = createNewCardState();
+      for (let i = 0; i < 20; i++) {
+        state = updateCardState(state, true);
+      }
+      // Pastikan tidak ada isu presisi yang aneh
+      expect(Number.isFinite(state.easeFactor)).toBe(true);
+      expect(state.easeFactor).toBeGreaterThan(3.0);
+    });
+  });
 });

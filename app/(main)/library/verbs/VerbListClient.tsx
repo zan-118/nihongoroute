@@ -9,8 +9,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import TTSReader from "@/components/TTSReader";
-import FlashcardMaster from "@/components/FlashcardMaster";
+import TTSReader from "@/components/features/tools/tts/TTSReader";
+import FlashcardMaster from "@/components/features/flashcards/master/FlashcardMaster";
 import {
   Search,
   Home,

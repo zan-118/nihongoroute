@@ -8,7 +8,7 @@ import Link from "next/link";
 import { ExamData, GameState } from "./types";
 import { SECTION_LABELS } from "./constants";
 import { useProgressStore } from "@/store/useProgressStore";
-import PdfGenerator from "@/components/PdfGenerator";
+import PdfGenerator from "@/components/features/pdf/PdfGenerator";
 
 interface ExamResultProps {
   exam: ExamData;

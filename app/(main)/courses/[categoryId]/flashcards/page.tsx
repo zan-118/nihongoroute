@@ -8,7 +8,7 @@
 // ======================
 // IMPORTS
 // ======================
-import FlashcardMaster from "@/components/FlashcardMaster";
+import FlashcardMaster from "@/components/features/flashcards/master/FlashcardMaster";
 import { client } from "@/sanity/lib/client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";

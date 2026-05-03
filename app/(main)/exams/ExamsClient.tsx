@@ -39,17 +39,22 @@ const itemVariants: Variants = {
 };
 
 // ======================
+// INTERFACES
+// ======================
+export interface ExamData {
+  _id: string;
+  title: string;
+  description?: string;
+  levelCode?: string;
+  timeLimit: number;
+  passingScore: number;
+}
+
+// ======================
 // MAIN EXECUTION
 // ======================
 
-/**
- * Komponen ExamsClient: Menampilkan grid kartu ujian dengan animasi.
- * 
- * @param {Object} props - Properti komponen.
- * @param {any[]} props.exams - Daftar objek data ujian.
- * @returns {JSX.Element} Antarmuka daftar ujian.
- */// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function ExamsClient({ exams }: { exams: any[] }) {
+export default function ExamsClient({ exams }: { exams: ExamData[] }) {
   // ======================
   // RENDER
   // ======================

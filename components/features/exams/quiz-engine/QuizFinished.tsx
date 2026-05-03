@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import XPPop from "@/components/XPPop";
+import XPPop from "@/components/features/gamification/XPPop";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";

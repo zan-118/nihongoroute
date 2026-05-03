@@ -8,7 +8,7 @@
 // ======================
 // IMPORTS
 // ======================
-import FlashcardMaster from "@/components/FlashcardMaster";
+import FlashcardMaster from "@/components/features/flashcards/master/FlashcardMaster";
 import { client } from "@/sanity/lib/client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -37,7 +37,7 @@ export default async function KanjiFlashcardPage({ params }: PageProps) {
   // DATABASE OPERATIONS
   // ======================
   const kanjiQuery = `*[_type == "kanji" && showInFlashcard != false && course_category->slug.current == $categoryId] {
-    _id, "word": character, meaning, onyomi, kunyomi, examples
+    _id, "word": character, meaning, "details": { onyomi, kunyomi }, examples
   }`;
   const cards = (await client.fetch(kanjiQuery, { categoryId })).sort(() => Math.random() - 0.5);
 

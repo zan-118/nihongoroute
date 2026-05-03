@@ -10,7 +10,7 @@
 // ======================
 import { client } from "@/sanity/lib/client";
 import Link from "next/link";
-import SurvivalMode from "@/components/SurvivalMode";
+import SurvivalMode from "@/components/features/games/SurvivalMode";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

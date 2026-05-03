@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { PenTool, X, Sparkles } from "lucide-react";
-import WritingCanvas from "@/components/WritingCanvas";
+import WritingCanvas from "@/components/features/tools/writing/WritingCanvas";
 
 interface WritingPracticeModalProps {
   word: string;

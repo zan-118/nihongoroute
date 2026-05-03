@@ -12,7 +12,9 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import Link from "next/link";
-import ConfirmModal from "@/components/ConfirmModal";
+import ConfirmModal from "@/components/ui/ConfirmModal";
+import { useHasMounted } from "@/hooks/useHasMounted";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -40,6 +42,7 @@ export default function SettingsPage() {
       clearDirtySrs: state.clearDirtySrs
     }))
   );
+  const hasMounted = useHasMounted();
   const [isSyncing, setIsSyncing] = useState(false);
   const [newName, setNewName] = useState(userFullName || "");
   const router = useRouter();
@@ -150,6 +153,17 @@ export default function SettingsPage() {
         onConfirm={confirmModal.onConfirm}
       />
 
+      {!hasMounted ? (
+        <div className="max-w-3xl mx-auto pt-12 space-y-8">
+           <div className="space-y-4">
+              <Skeleton className="h-6 w-32 rounded-full" />
+              <Skeleton className="h-12 w-64" />
+              <Skeleton className="h-4 w-96" />
+           </div>
+           <Skeleton className="h-[200px] w-full rounded-3xl" />
+           <Skeleton className="h-[200px] w-full rounded-2xl" />
+        </div>
+      ) : (
       <motion.div
         className="max-w-3xl mx-auto relative z-10"
         initial="hidden"
@@ -312,6 +326,7 @@ export default function SettingsPage() {
           </motion.div>
         </div>
       </motion.div>
+      )}
     </div>
   );
 }

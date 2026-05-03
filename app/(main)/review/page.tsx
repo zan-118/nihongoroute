@@ -17,11 +17,13 @@ import { useShallow } from "zustand/react/shallow";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { BrainCircuit, RotateCw, Trophy, ChevronLeft } from "lucide-react";
-import FlashcardMaster from "@/components/FlashcardMaster";
+import FlashcardMaster from "@/components/features/flashcards/master/FlashcardMaster";
 import { MasterCardData } from "@/components/features/flashcards/master/types";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { offlineCache } from "@/lib/offlineCache";
+import { toast } from "sonner";
 
 // ======================
 // MAIN EXECUTION
@@ -54,7 +56,6 @@ export default function DailyReviewPage() {
         setIsFetching(true);
         const now = Date.now();
         
-        // Filter ID kartu yang sudah waktunya direview
         const dueItemIds = Object.entries(progress.srs)
           .filter(([, state]) => state.nextReview <= now)
           .map(([id]) => id);
@@ -64,25 +65,41 @@ export default function DailyReviewPage() {
           return;
         }
 
-        // Fetch data kartu dari CMS
-        const query = `*[_id in $ids] {
-          _id,
-          "word": coalesce(jisho, word),
-          meaning,
-          romaji,
-          furigana,
-          category,
-          kanjiDetails
-        }`;
-
-        const data = await client.fetch(query, { ids: dueItemIds });
+        let data: MasterCardData[] = [];
+        try {
+          const query = `*[_id in $ids] {
+            _id,
+            "word": coalesce(jisho, word),
+            meaning,
+            romaji,
+            furigana,
+            category,
+            kanjiDetails
+          }`;
+          data = await client.fetch<MasterCardData[]>(query, { ids: dueItemIds });
+          
+          // Simpan ke cache untuk penggunaan offline nanti
+          offlineCache.saveCards(data);
+        } catch (cmsError) {
+          console.warn("CMS Offline, mencoba mengambil dari cache lokal...");
+          data = offlineCache.getCards(dueItemIds);
+          
+          if (data.length > 0) {
+            toast.info("Mode Offline Aktif", {
+              description: "Menggunakan data yang tersimpan di perangkat Anda."
+            });
+          } else {
+            throw cmsError;
+          }
+        }
         
-        // Acak urutan kartu
         const shuffled = data.sort(() => Math.random() - 0.5);
-        
         setDueCards(shuffled);
       } catch (error) {
-        console.error("Gagal menarik data review dari Sanity:", error);
+        console.error("Gagal menarik data review:", error);
+        toast.error("Koneksi Bermasalah", {
+          description: "Gagal memuat kartu. Pastikan Anda online setidaknya sekali untuk menyimpan data."
+        });
       } finally {
         setIsFetching(false);
       }

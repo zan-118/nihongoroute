@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { TemplateType } from "../../PdfGenerator";
+import { TemplateType } from "./PdfGenerator";
 
 interface UsePdfGeneratorProps {
   type: TemplateType;

@@ -21,6 +21,12 @@ export interface UserProgress {
   studyDays: Record<string, number>;
   srs: Record<string, SRSState>;
   notifications: Notification[];
+  inventory: {
+    streakFreeze: number;
+  };
+  settings: {
+    notificationsEnabled: boolean;
+  };
 }
 
 export interface ProgressState {
@@ -46,6 +52,8 @@ export interface ProgressState {
   exportData: () => void;
   importData: (jsonData: string) => boolean;
   clearDirtySrs: () => void;
+  buyStreakFreeze: () => boolean;
+  toggleNotifications: (enabled: boolean) => void;
 }
 
 const defaultProgress: UserProgress = {
@@ -66,6 +74,12 @@ const defaultProgress: UserProgress = {
       read: false
     }
   ],
+  inventory: {
+    streakFreeze: 0
+  },
+  settings: {
+    notificationsEnabled: false
+  }
 };
 
 export const useProgressStore = create<ProgressState>()(
@@ -91,7 +105,6 @@ export const useProgressStore = create<ProgressState>()(
         const state = get();
         const today = new Date().toISOString().split("T")[0];
         
-        // We can't put Sets easily in persist, but dirtySrs doesn't need to persist to local storage.
         const newDirty = new Set(state.dirtySrs);
         let srsChanged = false;
 
@@ -155,7 +168,6 @@ export const useProgressStore = create<ProgressState>()(
           },
         });
         
-        // Auto-notify on level up
         const newLevel = calculateLevel(newXp);
         if (newLevel > state.progress.level) {
           get().addNotification({
@@ -178,7 +190,6 @@ export const useProgressStore = create<ProgressState>()(
           [wordId]: createNewCardState(),
         });
         
-        // The updateProgress already modifies dirtySrs, but doing it again to be safe
         set({ dirtySrs: newDirty });
       },
 
@@ -233,10 +244,45 @@ export const useProgressStore = create<ProgressState>()(
           return false;
         }
       },
+
+      buyStreakFreeze: () => {
+        const state = get();
+        const COST = 500;
+        if (state.progress.xp < COST) return false;
+
+        set({
+          progress: {
+            ...state.progress,
+            xp: state.progress.xp - COST,
+            inventory: {
+              ...state.progress.inventory,
+              streakFreeze: (state.progress.inventory?.streakFreeze || 0) + 1
+            }
+          }
+        });
+
+        get().addNotification({
+          title: "Pembelian Berhasil!",
+          message: "Streak Freeze telah ditambahkan ke koleksi Anda.",
+          type: "success"
+        });
+
+        return true;
+      },
+
+      toggleNotifications: (enabled: boolean) => set((state) => ({ 
+        progress: { 
+          ...state.progress, 
+          settings: { 
+            ...(state.progress.settings || { notificationsEnabled: false }), 
+            notificationsEnabled: enabled 
+          } 
+        } 
+      })),
     }),
     {
       name: "nihongoroute_save_data",
-      partialize: (state) => ({ progress: state.progress }), // Only save progress to localStorage
+      partialize: (state) => ({ progress: state.progress }),
     }
   )
 );

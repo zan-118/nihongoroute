@@ -12,9 +12,10 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
-import FeedbackWidget from "@/components/FeedbackWidget";
-import DictionaryPopup from "@/components/DictionaryPopup";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import FeedbackWidget from "@/components/features/feedback/FeedbackWidget";
+import DictionaryPopup from "@/components/features/tools/dictionary/DictionaryPopup";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import QueryProvider from "@/components/providers/QueryProvider";
 import { cn } from "@/lib/utils";
 
 // ======================
@@ -113,14 +114,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" suppressHydrationWarning>
+    <html lang="id">
       <body
         className={cn(
           inter.variable,
           notoJsonJP.variable,
           "font-sans antialiased text-foreground selection:bg-red-500 selection:text-white transition-colors duration-300"
         )}
-        suppressHydrationWarning
       >
         <ThemeProvider
           attribute="class"
@@ -128,7 +128,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <QueryProvider>
+            {children}
+          </QueryProvider>
           <FeedbackWidget />
           <DictionaryPopup />
           <Toaster 

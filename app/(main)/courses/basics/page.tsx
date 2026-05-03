@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PenTool, ChevronLeft, LayoutGrid, Sparkles, Swords, Heart, Trophy } from "lucide-react";
 import Link from "next/link";
-import WritingCanvas from "@/components/WritingCanvas";
+import WritingCanvas from "@/components/features/tools/writing/WritingCanvas";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {

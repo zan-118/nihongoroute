@@ -13,22 +13,37 @@ import { PortableText } from "@portabletext/react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft, Home, Library, BookOpen, Activity, BookText } from "lucide-react";
-import TTSReader from "@/components/TTSReader";
+import TTSReader from "@/components/features/tools/tts/TTSReader";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import SanityImage from "@/components/ui/SanityImage";
 
 // ======================
 // CONFIG / CONSTANTS
 // ======================
-const articleQuery = `*[_type == "grammar_article" && slug.current == $slug][0] { title, content }`;
+const articleQuery = `*[_type == "grammar_article" && slug.current == $slug][0] { 
+  title, 
+  content[] {
+    ...,
+    _type == "image" => {
+      ...,
+      asset-> {
+        _id,
+        metadata {
+          lqip,
+          dimensions
+        }
+      }
+    }
+  } 
+}`;
 
 /**
  * Konfigurasi Pemetaan Portable Text untuk Detail Tata Bahasa.
  */
 const ptComponents = {
   types: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    exampleSentence: ({ value }: any) => (
+    exampleSentence: ({ value }: { value: { jp: string; id: string } }) => (
       <Card className="bg-card dark:bg-slate-900 p-6 md:p-8 rounded-3xl md:rounded-[2.5rem] border border-border dark:border-white/5 my-8 md:my-10 neo-card shadow-lg group hover:border-primary/40 transition-all duration-500 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 relative overflow-hidden">
         <div className="absolute -left-4 -top-4 text-5xl md:text-6xl font-black italic text-foreground/[0.03] dark:text-white/[0.01] pointer-events-none uppercase">CTH</div>
         <div className="flex-1 relative z-10 w-full">
@@ -47,23 +62,22 @@ const ptComponents = {
         </div>
       </Card>
     ),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    image: (props: any) => <SanityImage {...props} />,
   },
   block: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    h2: ({ children }: any) => (
+    h2: ({ children }: { children?: React.ReactNode }) => (
       <h2 className="text-2xl md:text-3xl font-black text-foreground mt-12 md:mt-16 mb-6 md:mb-8 uppercase tracking-tight flex items-center gap-3 md:gap-4 group">
         <span className="w-1.5 md:w-2 h-6 md:h-8 bg-primary rounded-full neo-card shadow-sm" />
         {children}
       </h2>
     ),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    h3: ({ children }: any) => (
+    h3: ({ children }: { children?: React.ReactNode }) => (
       <h3 className="text-lg md:text-xl font-black text-primary mt-8 md:mt-10 mb-3 md:mb-4 uppercase tracking-widest">
         {children}
       </h3>
     ),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    normal: ({ children }: any) => (
+    normal: ({ children }: { children?: React.ReactNode }) => (
       <p className="mb-4 md:mb-6 text-muted-foreground text-base md:text-lg leading-relaxed font-medium">
         {children}
       </p>

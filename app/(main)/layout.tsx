@@ -1,52 +1,20 @@
-"use client";
-
 /**
  * @file layout.tsx
- * @description Layout sekunder untuk grup rute fungsional (dashboard, library, courses, dsb). 
- * Menyediakan konteks pelacakan XP pengguna (ProgressProvider) serta menyusun tata letak navigasi responsif.
+ * @description Layout sekunder untuk grup rute fungsional.
+ * Menjadi Server Component untuk performa optimal, dengan logika client-side navigasi didelegasikan ke NavWrapper.
  * @module MainLayout
  */
 
-// ======================
-// IMPORTS
-// ======================
-import { ReactNode, useState } from "react";
-import MobileNav from "@/components/MobileNav";
-import Sidebar from "@/components/Sidebar";
-import Topbar from "@/components/Topbar";
+import { ReactNode } from "react";
 import { ProgressProvider } from "@/components/providers/ProgressProvider";
-import FloatingSupport from "@/components/FloatingSupport";
+import NavWrapper from "@/components/layout/NavWrapper";
 
 export default function MainLayout({ children }: { children: ReactNode }) {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   return (
     <ProgressProvider>
-      <div className="relative min-h-screen bg-background text-foreground flex flex-col md:flex-row overflow-x-hidden w-full transition-colors duration-300">
-        {/* Aksesibilitas: Skip to Content */}
-        <a 
-          href="#main-content" 
-          className="sr-only focus:not-sr-only focus:fixed focus:top-6 focus:left-6 focus:z-[100] focus:px-6 focus:py-3 focus:bg-primary focus:text-primary-foreground focus:font-black focus:rounded-xl focus:shadow-xl outline-none transition-all"
-        >
-          Skip to Content
-        </a>
-
-        {/* Sidebar Desktop & Mobile Drawer */}
-        <Sidebar isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
-
-        {/* Area Konten Utama */}
-        <div className="flex-1 flex flex-col min-w-0 md:pl-72 transition-all duration-500">
-          <Topbar onMenuClick={() => setIsMobileMenuOpen(true)} />
-          <main id="main-content" className="flex-1 w-full flex flex-col pb-40 md:pb-12 outline-none">
-            {children}
-          </main>
-        </div>
-
-        <FloatingSupport />
-
-        {/* Navigasi Khusus Seluler */}
-        <MobileNav />
-      </div>
+      <NavWrapper>
+        {children}
+      </NavWrapper>
     </ProgressProvider>
   );
 }

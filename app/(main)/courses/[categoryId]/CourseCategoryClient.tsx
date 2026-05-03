@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import AppBreadcrumbs from "@/components/AppBreadcrumbs";
+import AppBreadcrumbs from "@/components/layout/AppBreadcrumbs";
 
 // ======================
 // CONFIG / CONSTANTS

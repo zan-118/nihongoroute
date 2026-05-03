@@ -9,7 +9,7 @@
 // IMPORTS
 // ======================
 import { client } from "@/sanity/lib/client";
-import MockExamEngine from "@/components/MockExamEngine";
+import MockExamEngine from "@/components/features/exams/mock-engine/MockExamEngine";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

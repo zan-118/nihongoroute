@@ -65,11 +65,11 @@ export default function UpdatePasswordPage() {
         router.push("/");
       }, 3000);
       
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Gagal memperbarui kata sandi:", error);
+      const message = error instanceof Error ? error.message : "Terjadi kesalahan tidak dikenal";
       toast.error("Gagal Memperbarui", {
-        description: error.message || "Terjadi kesalahan saat memperbarui kata sandi.",
+        description: message || "Terjadi kesalahan saat memperbarui kata sandi.",
       });
     } finally {
       setLoading(false);

@@ -1,0 +1,199 @@
+"use client";
+
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createClient } from "@/lib/supabase/client";
+import { useProgressStore, UserProgress } from "@/store/useProgressStore";
+import { SRSState } from "@/lib/srs";
+import { calculateLevel } from "@/lib/level";
+import { syncLocalToCloud } from "@/lib/supabase/sync";
+import { useEffect, useRef } from "react";
+
+const STATS_STORAGE_KEY = "nihongo-progress";
+
+export function useSyncProgress() {
+  const supabase = createClient();
+  const setProgress = useProgressStore((state) => state.setProgress);
+  const setLoading = useProgressStore((state) => state.setLoading);
+  const progress = useProgressStore((state) => state.progress);
+  const dirtySrs = useProgressStore((state) => state.dirtySrs);
+  const clearDirtySrs = useProgressStore((state) => state.clearDirtySrs);
+  const userFullName = useProgressStore((state) => state.userFullName);
+
+  const initialLoadDone = useRef(false);
+
+  // 1. QUERY: Load Data dari Cloud
+  const { data: session } = useQuery({
+    queryKey: ["session"],
+    queryFn: async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      return session;
+    },
+  });
+
+  const { data: cloudData, isLoading: isFetching } = useQuery({
+    queryKey: ["user-progress", session?.user?.id],
+    queryFn: async () => {
+      if (!session?.user) return null;
+
+      // Cek apakah ada data lokal yang perlu migrasi (hanya sekali)
+      if (!initialLoadDone.current) {
+        const gamificationData = localStorage.getItem(STATS_STORAGE_KEY);
+        if (gamificationData) {
+          const parsedStats = JSON.parse(gamificationData);
+          const currentProgress = { ...useProgressStore.getState().progress };
+          currentProgress.streak = parsedStats.streak;
+          currentProgress.todayReviewCount = parsedStats.todayReviewCount;
+          currentProgress.lastStudyDate = parsedStats.lastStudyDate;
+          
+          const migratedStudyDays: Record<string, number> = {};
+          if (parsedStats.studyDays) {
+            Object.entries(parsedStats.studyDays).forEach(([date, val]) => {
+              migratedStudyDays[date] = typeof val === "boolean" ? (val ? 1 : 0) : (val as number);
+            });
+          }
+          currentProgress.studyDays = migratedStudyDays;
+
+          const syncSuccess = await syncLocalToCloud(session.user.id, currentProgress);
+          if (syncSuccess) {
+            localStorage.removeItem(STATS_STORAGE_KEY);
+          }
+        }
+        initialLoadDone.current = true;
+      }
+
+      // Ambil data dari Cloud
+      const [profileRes, srsRes] = await Promise.all([
+        supabase
+          .from("profiles")
+          .select("xp, level, streak, today_review_count, last_study_date, study_days, inventory, settings")
+          .eq("id", session.user.id)
+          .single(),
+        supabase
+          .from("user_srs")
+          .select("word_id, interval, repetition, ease_factor, next_review")
+          .eq("user_id", session.user.id)
+      ]);
+
+      const profile = profileRes.data;
+      const srsData = srsRes.data;
+
+      const parsedSrs: Record<string, SRSState> = {};
+      if (srsData) {
+        srsData.forEach((row) => {
+          parsedSrs[row.word_id] = {
+            interval: row.interval,
+            repetition: row.repetition,
+            easeFactor: row.ease_factor,
+            nextReview: new Date(row.next_review).getTime(),
+          };
+        });
+      }
+
+      const today = new Date().toISOString().split("T")[0];
+      let cloudReviewCount = profile?.today_review_count || 0;
+      if (profile?.last_study_date !== today) {
+        cloudReviewCount = 0;
+      }
+
+      const sanitizedStudyDays: Record<string, number> = {};
+      if (profile?.study_days) {
+        Object.entries(profile.study_days).forEach(([date, val]) => {
+          sanitizedStudyDays[date] = typeof val === "boolean" ? (val ? 1 : 0) : (val as number);
+        });
+      }
+
+      return {
+        xp: profile?.xp || 0,
+        level: profile?.level || calculateLevel(profile?.xp || 0),
+        streak: profile?.streak || 0,
+        todayReviewCount: cloudReviewCount,
+        lastStudyDate: profile?.last_study_date || null,
+        studyDays: sanitizedStudyDays,
+        srs: parsedSrs,
+        inventory: profile?.inventory || { streakFreeze: 0 },
+        settings: profile?.settings || { notificationsEnabled: false },
+        notifications: useProgressStore.getState().progress.notifications || [],
+      } as UserProgress;
+    },
+    enabled: !!session?.user,
+  });
+
+  // Sinkronkan Cloud Data ke Zustand jika ada perubahan
+  useEffect(() => {
+    if (cloudData) {
+      setProgress(cloudData);
+    }
+  }, [cloudData, setProgress]);
+
+  useEffect(() => {
+    setLoading(isFetching);
+  }, [isFetching, setLoading]);
+
+  // 2. MUTATION: Sync Local Changes to Cloud
+  const syncMutation = useMutation({
+    mutationFn: async (data: { progress: UserProgress, dirtySrs: Set<string> }) => {
+      if (!session?.user) return;
+
+      const { progress, dirtySrs } = data;
+
+      // Upsert Profile
+      const { error: profileError } = await supabase.from("profiles").upsert({
+        id: session.user.id,
+        xp: progress.xp,
+        level: progress.level,
+        streak: progress.streak,
+        full_name: userFullName,
+        today_review_count: progress.todayReviewCount,
+        last_study_date: progress.lastStudyDate,
+        study_days: progress.studyDays,
+        inventory: progress.inventory,
+        settings: progress.settings,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'id' });
+
+      if (profileError) throw profileError;
+
+      // Upsert Dirty SRS
+      if (dirtySrs.size > 0) {
+        const entriesToSync = Array.from(dirtySrs)
+          .filter(id => progress.srs[id])
+          .map(id => {
+            const state = progress.srs[id];
+            return {
+              user_id: session.user.id,
+              word_id: id,
+              repetition: state.repetition,
+              interval: state.interval,
+              ease_factor: state.easeFactor,
+              next_review: new Date(state.nextReview).toISOString(),
+              status: state.interval > 21 ? 'graduated' : (state.interval > 1 ? 'reviewing' : 'learning'),
+              updated_at: new Date().toISOString(),
+            };
+          });
+
+        if (entriesToSync.length > 0) {
+          const { error: srsError } = await supabase.from("user_srs").upsert(entriesToSync, { onConflict: 'user_id,word_id' });
+          if (srsError) throw srsError;
+        }
+      }
+
+      return { success: true };
+    },
+    onSuccess: () => {
+      clearDirtySrs();
+    },
+  });
+
+  // Debounced Auto-sync (Trigger mutation saat progress berubah)
+  useEffect(() => {
+    if (isFetching || !session?.user) return;
+
+    const timer = setTimeout(() => {
+      syncMutation.mutate({ progress, dirtySrs });
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [progress, dirtySrs, session?.user, isFetching, syncMutation]);
+
+  return { isLoading: isFetching, syncNow: () => syncMutation.mutate({ progress, dirtySrs }) };
+}
