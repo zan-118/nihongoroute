@@ -19,6 +19,7 @@ interface UserState {
   addXP: (amount: number) => void;
   setGamification: (data: Partial<UserState>) => void;
   buyStreakFreeze: () => boolean;
+  claimQuest: (questId: string, date: string, rewardXP: number) => void;
   resetUser: () => void;
 }
 
@@ -86,6 +87,35 @@ export const useUserStore = create<UserState>()(
         });
 
         return true;
+      },
+
+      claimQuest: (questId: string, date: string, rewardXP: number) => {
+        const state = get();
+        const currentClaimed = state.inventory.claimedQuests;
+        
+        let newQuests = [...(currentClaimed?.quests || [])];
+        
+        // Reset if date is different
+        if (currentClaimed?.date !== date) {
+          newQuests = [];
+        }
+        
+        if (!newQuests.includes(questId)) {
+          newQuests.push(questId);
+          
+          set({
+            inventory: {
+              ...state.inventory,
+              claimedQuests: {
+                date,
+                quests: newQuests
+              }
+            }
+          });
+          
+          // Add the XP reward locally (will be validated and synced by backend)
+          state.addXP(rewardXP);
+        }
       },
 
       resetUser: () => set({

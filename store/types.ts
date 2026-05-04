@@ -11,6 +11,10 @@ export interface Notification {
 
 export interface Inventory {
   streakFreeze: number;
+  claimedQuests?: {
+    date: string;
+    quests: string[];
+  };
 }
 
 export interface Settings {
