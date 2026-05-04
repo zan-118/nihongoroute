@@ -1,7 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import { useUserStore } from "@/store/useUserStore";
-import { useSRSStore } from "@/store/useSRSStore";
-import { useUIStore } from "@/store/useUIStore";
 
 interface UseWritingCanvasProps {
   strokeColor: string;
@@ -23,10 +21,8 @@ export function useWritingCanvas({ strokeColor }: UseWritingCanvasProps) {
   const [hasDrawn, setHasDrawn] = useState(false);
   const [showXP, setShowXP] = useState(false);
   
-  const { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory } = useUserStore();
-    const { srs } = useSRSStore();
-    const { notifications, settings } = useUIStore();
-    const addXP = { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
+  const { addXP } = useUserStore();
+
 
   useEffect(() => {
     const canvas = canvasRef.current;

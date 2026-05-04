@@ -1,5 +1,4 @@
 import { usePathname, useRouter } from "next/navigation";
-
 import { createClient } from "@/lib/supabase/client";
 import { 
   LayoutDashboard, 
@@ -9,21 +8,29 @@ import {
   BrainCircuit, 
   Heart, 
   Settings,
-  Share2
+  Share2,
+  LucideIcon
 } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
-import { useSRSStore } from "@/store/useSRSStore";
-import { useUIStore } from "@/store/useUIStore";
+import { useAuthStore } from "@/store/useAuthStore";
+
+interface NavLink {
+  href: string;
+  label: string;
+  icon: LucideIcon;
+}
+
+interface NavLinks {
+  main: NavLink[];
+  learn: NavLink[];
+  system: NavLink[];
+}
 
 export function useNavbar() {
   const pathname = usePathname();
   const router = useRouter();
   const { isAuthenticated } = useAuthStore();
-    const { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory } = useUserStore();
-    const { srs } = useSRSStore();
-    const { notifications, settings } = useUIStore();
-    const progress = { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
-  const userFullName = progress.name;
+  const { name: userFullName } = useUserStore();
   const supabase = createClient();
 
   const handleLogout = async () => {
@@ -31,23 +38,28 @@ export function useNavbar() {
     router.refresh();
   };
 
-  const links = {
+  const links: NavLinks = {
     main: [
       { href: "/dashboard", label: "Dasbor", icon: LayoutDashboard },
       { href: "/courses", label: "Materi", icon: BookOpen },
       { href: "/exams", label: "Ujian", icon: Trophy },
     ],
     learn: [
+      { href: "/review", label: "Hafalan (SRS)", icon: BrainCircuit },
       { href: "/library", label: "Pustaka", icon: Layers },
-      { href: "/review", label: "Hafalan", icon: BrainCircuit },
-      { href: "/social", label: "Sosial", icon: Trophy },
+      { href: "/community", label: "Komunitas", icon: Heart },
     ],
     system: [
-      { href: "/support", label: "Dukungan", icon: Heart },
       { href: "/settings", label: "Pengaturan", icon: Settings },
       { href: "/share", label: "Bagikan", icon: Share2 },
     ]
   };
 
-  return { pathname, isAuthenticated, userFullName, handleLogout, links, progress };
+  return { 
+    pathname, 
+    links, 
+    isAuthenticated, 
+    userFullName, 
+    handleLogout 
+  };
 }

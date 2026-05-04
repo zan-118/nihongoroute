@@ -49,6 +49,7 @@ export default function FlashcardMaster({
     inputResult,
     checkAnswer,
     combo,
+    isSyncing,
   } = useFlashcardMaster({ cards, initialMode: mode });
 
   if (!isClient || !cards || cards.length === 0) return null;

@@ -101,7 +101,7 @@ export function useMockExamEngine(exam: ExamData) {
   const handleShareResult = useCallback(() => {
     const { finalScore, sectionBreakdown } = calculateScore();
     const isPassed = finalScore >= exam.passingScore;
-    const userFullName = useProgressStore.getState().progress.name;
+    const userFullName = useUserStore.getState().name;
     const guestId = userFullName || "Pelajar NihongoRoute";
 
     const shareData = {

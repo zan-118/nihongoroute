@@ -196,6 +196,7 @@ const ptComponents: PortableTextComponents = {
       );
     },
     vocabulary: ({ value }: { value: VocabularyValue }) => {
+      const isRomaji = value.furigana && /^[a-zA-Z\s.,?!'-]+$/.test(value.furigana);
       return (
         <div className="group relative flex items-center justify-between p-4 md:p-6 bg-muted/30 border border-border rounded-2xl hover:border-primary/40 hover:bg-primary/[0.02] transition-all duration-300 mb-4 overflow-hidden">
           <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary/20 group-hover:bg-primary transition-all duration-300" />
@@ -362,7 +363,7 @@ export default async function LessonPage({ params }: Props) {
                 <div className="h-[1px] flex-1 bg-border" />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {lesson.vocabList.map((v: { _id: string; word: string; furigana?: string; romaji?: string; meaning: string; hinshi?: string; onyomi?: string; kunyomi?: string }) => {
+                {lesson.vocabList.map((v: { _id: string; word: string; furigana?: string; romaji?: string; meaning: string; hinshi?: string; onyomi?: string; kunyomi?: string; transitivity?: string }) => {
                   if (!v) return null;
                   return (
                     <div

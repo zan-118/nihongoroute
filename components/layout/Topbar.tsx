@@ -12,13 +12,14 @@ import SearchModal from "@/components/features/tools/search/SearchModal";
 import UserNav from "@/components/features/user/UserNav";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
-  const { pathname, progress } = useNavbar();
+  const { pathname } = useNavbar();
+  const notifications = useUIStore((s) => s.notifications);
   const isSyncing = useUIStore((s) => s.isSyncing);
   const syncError = useUIStore((s) => s.syncError);
   const hasPendingSync = useSRSStore((s) => s.dirtySrs.size > 0);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const unreadNotifications = progress.notifications?.filter((n: { read: boolean }) => !n.read).length || 0;
+  const unreadNotifications = notifications?.filter((n: { read: boolean }) => !n.read).length || 0;
 
   // Breadcrumb logic
   const pathSegments = pathname.split('/').filter(Boolean);

@@ -17,6 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useUIStore } from "@/store/useUIStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -32,13 +33,20 @@ const itemVariants: Variants = {
 };
 
 export default function SettingsPage() {
-  const { updateProfileName } = useUserStore();
-    const { dirtySrs, clearDirtySrs } = useSRSStore();
-    const { exportData, importData } = useUIStore();
-    const { isAuthenticated } = useAuthStore();
+  const { updateProfileName, resetUser } = useUserStore();
+    const { dirtySrs, clearDirtySrs, resetSRS } = useSRSStore();
+    const { exportData, importData, resetUI } = useUIStore();
+    const { isAuthenticated, resetAuth } = useAuthStore();
     const { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory } = useUserStore();
     const { srs } = useSRSStore();
     const { notifications, settings } = useUIStore();
+
+    const resetAll = () => {
+      resetAuth();
+      resetUser();
+      resetSRS();
+      resetUI();
+    };
     const progress = { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
   const hasMounted = useHasMounted();
   const [isSyncing, setIsSyncing] = useState(false);
@@ -95,7 +103,7 @@ export default function SettingsPage() {
       "Ya, Hapus Semuanya",
       true,
       () => {
-        resetProgress();
+        resetAll();
         toast.success("Semua data progres telah direset.");
         // Kita tidak perlu reload karena Zustand akan mengupdate UI secara reaktif
       }
@@ -110,7 +118,7 @@ export default function SettingsPage() {
       true,
       async () => {
         await supabase.auth.signOut();
-        resetProgress(); // Reset local state on logout for safety
+        resetAll(); // Reset local state on logout for safety
         router.push("/login");
       }
     );
