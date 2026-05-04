@@ -26,12 +26,12 @@ export default function ProfileEditor() {
     const { notifications, settings } = useUIStore();
     const progress = { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
   const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState(progress.name || "");
+  const [editName, setEditName] = useState(progress.name || "");
   const [isLoading, setIsLoading] = useState(false);
   const supabase = createClient();
 
   const handleSave = async () => {
-    if (!name.trim()) {
+    if (!editName.trim()) {
       toast.error("Nama tidak boleh kosong!");
       return;
     }
@@ -39,7 +39,7 @@ export default function ProfileEditor() {
     setIsLoading(true);
     try {
       // 1. Update lokal store
-      updateProfileName(name.trim());
+      updateProfileName(editName.trim());
 
       // 2. Jika login, sync ke Supabase
       if (isAuthenticated) {
@@ -47,7 +47,7 @@ export default function ProfileEditor() {
         if (user) {
           const { error } = await supabase
             .from("profiles")
-            .update({ full_name: name.trim() })
+            .update({ full_name: editName.trim() })
             .eq("id", user.id);
             
           if (error) throw error;
@@ -70,8 +70,8 @@ export default function ProfileEditor() {
       {isEditing ? (
         <Card className="p-1 bg-muted border-border flex items-center gap-2 rounded-2xl animate-in fade-in slide-in-from-top-1 shadow-sm">
           <Input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={editName}
+            onChange={(e) => setEditName(e.target.value)}
             placeholder="Masukkan nama kamu..."
             className="bg-transparent border-none text-foreground font-black uppercase tracking-tighter text-xl h-12 focus-visible:ring-0 placeholder:text-muted-foreground/30"
             autoFocus

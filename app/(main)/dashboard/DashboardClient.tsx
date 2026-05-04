@@ -14,9 +14,10 @@ import DashboardSettings from "@/components/features/dashboard/DashboardSettings
 import LevelUpOverlay from "@/components/features/gamification/LevelUpOverlay";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import OnboardingTour from "@/components/features/onboarding/OnboardingTour";
-import DailyQuests from "@/components/features/dashboard/DailyQuests";
+import DailyQuests from "@/components/features/dashboard/quests/DailyQuests";
 import { toast } from "sonner";
 import { UserProgress } from "@/store/types";
+import { SRSState } from "@/lib/srs";
 
 const KanjiProgressGrid = dynamic(() => import("@/components/features/dashboard/KanjiProgressGrid"), { 
   ssr: false,
@@ -272,7 +273,7 @@ export default function DashboardPage() {
             </div>
             
             <div className="space-y-8">
-              <DailyQuests progress={progress} />
+              <DailyQuests />
             </div>
           </div>
         )}
