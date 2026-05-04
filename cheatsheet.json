@@ -1,0 +1,4480 @@
+[
+  {
+    "_createdAt": "2026-05-02T07:17:28Z",
+    "_id": "75129696-c14a-4715-becd-5a01ef7e134a",
+    "_originalId": "75129696-c14a-4715-becd-5a01ef7e134a",
+    "_rev": "nIg1U3PwlcnhewHbLowNWe",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-03T13:33:44Z",
+    "category": "Kata Bantu Bilangan (Counter)",
+    "items": [
+      {
+        "_key": "c-hon-1",
+        "itemId": "1",
+        "jp": "一本",
+        "label": "1 batang (pensil, botol, dll)",
+        "romaji": "Ippon"
+      },
+      {
+        "_key": "c-hon-2",
+        "itemId": "2",
+        "jp": "二本",
+        "label": "2 batang",
+        "romaji": "Nihon"
+      },
+      {
+        "_key": "c-hon-3",
+        "itemId": "3",
+        "jp": "三本",
+        "label": "3 batang",
+        "romaji": "Sanbon"
+      },
+      {
+        "_key": "c-hon-4",
+        "itemId": "4",
+        "jp": "四本",
+        "label": "4 batang",
+        "romaji": "Yonhon"
+      },
+      {
+        "_key": "c-hon-5",
+        "itemId": "5",
+        "jp": "五本",
+        "label": "5 batang",
+        "romaji": "Gohon"
+      },
+      {
+        "_key": "c-mai-1",
+        "itemId": "6",
+        "jp": "一枚",
+        "label": "1 lembar (kertas, baju)",
+        "romaji": "Ichimai"
+      },
+      {
+        "_key": "c-mai-2",
+        "itemId": "7",
+        "jp": "二枚",
+        "label": "2 lembar",
+        "romaji": "Nimai"
+      },
+      {
+        "_key": "c-mai-3",
+        "itemId": "8",
+        "jp": "三枚",
+        "label": "3 lembar",
+        "romaji": "Sanmai"
+      },
+      {
+        "_key": "c-mai-4",
+        "itemId": "9",
+        "jp": "四枚",
+        "label": "4 lembar",
+        "romaji": "Yonmai"
+      },
+      {
+        "_key": "c-mai-5",
+        "itemId": "10",
+        "jp": "五枚",
+        "label": "5 lembar",
+        "romaji": "Gomai"
+      },
+      {
+        "_key": "c-hiki-1",
+        "itemId": "11",
+        "jp": "一匹",
+        "label": "1 ekor (hewan kecil)",
+        "romaji": "Ippiki"
+      },
+      {
+        "_key": "c-hiki-2",
+        "itemId": "12",
+        "jp": "二匹",
+        "label": "2 ekor",
+        "romaji": "Nihiki"
+      },
+      {
+        "_key": "c-hiki-3",
+        "itemId": "13",
+        "jp": "三匹",
+        "label": "3 ekor",
+        "romaji": "Sanbiki"
+      },
+      {
+        "_key": "c-tou-1",
+        "itemId": "14",
+        "jp": "一頭",
+        "label": "1 ekor (hewan besar)",
+        "romaji": "Ittou"
+      },
+      {
+        "_key": "c-tou-2",
+        "itemId": "15",
+        "jp": "二頭",
+        "label": "2 ekor (hewan besar)",
+        "romaji": "Nitou"
+      },
+      {
+        "_key": "c-wa-1",
+        "itemId": "16",
+        "jp": "一羽",
+        "label": "1 ekor (burung)",
+        "romaji": "Ichiwa"
+      },
+      {
+        "_key": "c-wa-2",
+        "itemId": "17",
+        "jp": "二羽",
+        "label": "2 ekor (burung)",
+        "romaji": "Niwa"
+      },
+      {
+        "_key": "c-hai-1",
+        "itemId": "18",
+        "jp": "一杯",
+        "label": "1 gelas / cangkir",
+        "romaji": "Ippai"
+      },
+      {
+        "_key": "c-hai-2",
+        "itemId": "19",
+        "jp": "二杯",
+        "label": "2 gelas",
+        "romaji": "Nihai"
+      },
+      {
+        "_key": "c-hai-3",
+        "itemId": "20",
+        "jp": "三杯",
+        "label": "3 gelas",
+        "romaji": "Sanbai"
+      },
+      {
+        "_key": "c-ko-1",
+        "itemId": "21",
+        "jp": "一個",
+        "label": "1 buah (benda kecil bulat)",
+        "romaji": "Ikko"
+      },
+      {
+        "_key": "c-ko-2",
+        "itemId": "22",
+        "jp": "二個",
+        "label": "2 buah",
+        "romaji": "Niko"
+      },
+      {
+        "_key": "c-ko-3",
+        "itemId": "23",
+        "jp": "三個",
+        "label": "3 buah",
+        "romaji": "Sanko"
+      },
+      {
+        "_key": "c-dai-1",
+        "itemId": "24",
+        "jp": "一台",
+        "label": "1 unit (mesin, kendaraan)",
+        "romaji": "Ichidai"
+      },
+      {
+        "_key": "c-dai-2",
+        "itemId": "25",
+        "jp": "二台",
+        "label": "2 unit",
+        "romaji": "Nidai"
+      },
+      {
+        "_key": "c-satsu-1",
+        "itemId": "26",
+        "jp": "一冊",
+        "label": "1 buku",
+        "romaji": "Issatsu"
+      },
+      {
+        "_key": "c-satsu-2",
+        "itemId": "27",
+        "jp": "二冊",
+        "label": "2 buku",
+        "romaji": "Nisatsu"
+      },
+      {
+        "_key": "c-satsu-3",
+        "itemId": "28",
+        "jp": "三冊",
+        "label": "3 buku",
+        "romaji": "Sansatsu"
+      },
+      {
+        "_key": "c-ken-1",
+        "itemId": "29",
+        "jp": "一軒",
+        "label": "1 rumah / gedung",
+        "romaji": "Ikken"
+      },
+      {
+        "_key": "c-ken-2",
+        "itemId": "30",
+        "jp": "二軒",
+        "label": "2 rumah",
+        "romaji": "Niken"
+      },
+      {
+        "_key": "c-kai-1",
+        "itemId": "31",
+        "jp": "一回",
+        "label": "1 kali (frekuensi)",
+        "romaji": "Ikkai"
+      },
+      {
+        "_key": "c-kai-2",
+        "itemId": "32",
+        "jp": "二回",
+        "label": "2 kali",
+        "romaji": "Nikai"
+      },
+      {
+        "_key": "c-kai-3",
+        "itemId": "33",
+        "jp": "三回",
+        "label": "3 kali",
+        "romaji": "Sankai"
+      },
+      {
+        "_key": "c-nin-1",
+        "itemId": "34",
+        "jp": "一人",
+        "label": "1 orang",
+        "romaji": "Hitori"
+      },
+      {
+        "_key": "c-nin-2",
+        "itemId": "35",
+        "jp": "二人",
+        "label": "2 orang",
+        "romaji": "Futari"
+      },
+      {
+        "_key": "c-nin-3",
+        "itemId": "36",
+        "jp": "三人",
+        "label": "3 orang",
+        "romaji": "Sannin"
+      },
+      {
+        "_key": "c-nin-4",
+        "itemId": "37",
+        "jp": "四人",
+        "label": "4 orang",
+        "romaji": "Yonin"
+      },
+      {
+        "_key": "c-nin-5",
+        "itemId": "38",
+        "jp": "五人",
+        "label": "5 orang",
+        "romaji": "Gonin"
+      },
+      {
+        "_key": "c-ban-1",
+        "itemId": "39",
+        "jp": "一階",
+        "label": "Lantai 1",
+        "romaji": "Ikkai"
+      },
+      {
+        "_key": "c-ban-2",
+        "itemId": "40",
+        "jp": "二階",
+        "label": "Lantai 2",
+        "romaji": "Nikai"
+      },
+      {
+        "_key": "c-ban-3",
+        "itemId": "41",
+        "jp": "三階",
+        "label": "Lantai 3",
+        "romaji": "Sangai"
+      }
+    ],
+    "sheetId": "CS-CNT-001",
+    "title": "Kata Bantu Bilangan (Counter)"
+  },
+  {
+    "_createdAt": "2026-05-02T07:17:28Z",
+    "_id": "b6147446-1333-483b-85a0-7a82bada8a71",
+    "_originalId": "b6147446-1333-483b-85a0-7a82bada8a71",
+    "_rev": "nIg1U3PwlcnhewHbLowb0c",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-03T13:35:30Z",
+    "category": "Waktu & Tanggal",
+    "items": [
+      {
+        "_key": "tgl-01",
+        "itemId": "1",
+        "jp": "一日",
+        "label": "Tanggal 1",
+        "romaji": "Tsuitachi"
+      },
+      {
+        "_key": "tgl-02",
+        "itemId": "2",
+        "jp": "二日",
+        "label": "Tanggal 2",
+        "romaji": "Futsuka"
+      },
+      {
+        "_key": "tgl-03",
+        "itemId": "3",
+        "jp": "三日",
+        "label": "Tanggal 3",
+        "romaji": "Mikka"
+      },
+      {
+        "_key": "tgl-04",
+        "itemId": "4",
+        "jp": "四日",
+        "label": "Tanggal 4",
+        "romaji": "Yokka"
+      },
+      {
+        "_key": "tgl-05",
+        "itemId": "5",
+        "jp": "五日",
+        "label": "Tanggal 5",
+        "romaji": "Itsuka"
+      },
+      {
+        "_key": "tgl-06",
+        "itemId": "6",
+        "jp": "六日",
+        "label": "Tanggal 6",
+        "romaji": "Muika"
+      },
+      {
+        "_key": "tgl-07",
+        "itemId": "7",
+        "jp": "七日",
+        "label": "Tanggal 7",
+        "romaji": "Nanoka"
+      },
+      {
+        "_key": "tgl-08",
+        "itemId": "8",
+        "jp": "八日",
+        "label": "Tanggal 8",
+        "romaji": "Youka"
+      },
+      {
+        "_key": "tgl-09",
+        "itemId": "9",
+        "jp": "九日",
+        "label": "Tanggal 9",
+        "romaji": "Kokonoka"
+      },
+      {
+        "_key": "tgl-10",
+        "itemId": "10",
+        "jp": "十日",
+        "label": "Tanggal 10",
+        "romaji": "Tooka"
+      },
+      {
+        "_key": "tgl-11",
+        "itemId": "11",
+        "jp": "十一日",
+        "label": "Tanggal 11",
+        "romaji": "Juuichinichi"
+      },
+      {
+        "_key": "tgl-12",
+        "itemId": "12",
+        "jp": "十二日",
+        "label": "Tanggal 12",
+        "romaji": "Juuninichi"
+      },
+      {
+        "_key": "tgl-13",
+        "itemId": "13",
+        "jp": "十三日",
+        "label": "Tanggal 13",
+        "romaji": "Juusannichi"
+      },
+      {
+        "_key": "tgl-14",
+        "itemId": "14",
+        "jp": "十四日",
+        "label": "Tanggal 14",
+        "romaji": "Juuyokka"
+      },
+      {
+        "_key": "tgl-15",
+        "itemId": "15",
+        "jp": "十五日",
+        "label": "Tanggal 15",
+        "romaji": "Juugonichi"
+      },
+      {
+        "_key": "tgl-16",
+        "itemId": "16",
+        "jp": "十六日",
+        "label": "Tanggal 16",
+        "romaji": "Juurokunichi"
+      },
+      {
+        "_key": "tgl-17",
+        "itemId": "17",
+        "jp": "十七日",
+        "label": "Tanggal 17",
+        "romaji": "Juushichinichi"
+      },
+      {
+        "_key": "tgl-18",
+        "itemId": "18",
+        "jp": "十八日",
+        "label": "Tanggal 18",
+        "romaji": "Juuhachinichi"
+      },
+      {
+        "_key": "tgl-19",
+        "itemId": "19",
+        "jp": "十九日",
+        "label": "Tanggal 19",
+        "romaji": "Juukunichi"
+      },
+      {
+        "_key": "tgl-20",
+        "itemId": "20",
+        "jp": "二十日",
+        "label": "Tanggal 20",
+        "romaji": "Hatsuka"
+      },
+      {
+        "_key": "tgl-21",
+        "itemId": "21",
+        "jp": "二十一日",
+        "label": "Tanggal 21",
+        "romaji": "Nijuuichinichi"
+      },
+      {
+        "_key": "tgl-22",
+        "itemId": "22",
+        "jp": "二十二日",
+        "label": "Tanggal 22",
+        "romaji": "Nijuuninichi"
+      },
+      {
+        "_key": "tgl-23",
+        "itemId": "23",
+        "jp": "二十三日",
+        "label": "Tanggal 23",
+        "romaji": "Nijuusannichi"
+      },
+      {
+        "_key": "tgl-24",
+        "itemId": "24",
+        "jp": "二十四日",
+        "label": "Tanggal 24",
+        "romaji": "Nijuuyokka"
+      },
+      {
+        "_key": "tgl-25",
+        "itemId": "25",
+        "jp": "二十五日",
+        "label": "Tanggal 25",
+        "romaji": "Nijuugonichi"
+      },
+      {
+        "_key": "tgl-26",
+        "itemId": "26",
+        "jp": "二十六日",
+        "label": "Tanggal 26",
+        "romaji": "Nijuurokunichi"
+      },
+      {
+        "_key": "tgl-27",
+        "itemId": "27",
+        "jp": "二十七日",
+        "label": "Tanggal 27",
+        "romaji": "Nijuushichinichi"
+      },
+      {
+        "_key": "tgl-28",
+        "itemId": "28",
+        "jp": "二十八日",
+        "label": "Tanggal 28",
+        "romaji": "Nijuuhachinichi"
+      },
+      {
+        "_key": "tgl-29",
+        "itemId": "29",
+        "jp": "二十九日",
+        "label": "Tanggal 29",
+        "romaji": "Nijuukunichi"
+      },
+      {
+        "_key": "tgl-30",
+        "itemId": "30",
+        "jp": "三十日",
+        "label": "Tanggal 30",
+        "romaji": "Sanjuunichi"
+      },
+      {
+        "_key": "tgl-31",
+        "itemId": "31",
+        "jp": "三十一日",
+        "label": "Tanggal 31",
+        "romaji": "Sanjuuichinichi"
+      },
+      {
+        "_key": "bln-01",
+        "itemId": "32",
+        "jp": "一月",
+        "label": "Januari",
+        "romaji": "Ichigatsu"
+      },
+      {
+        "_key": "bln-02",
+        "itemId": "33",
+        "jp": "二月",
+        "label": "Februari",
+        "romaji": "Nigatsu"
+      },
+      {
+        "_key": "bln-03",
+        "itemId": "34",
+        "jp": "三月",
+        "label": "Maret",
+        "romaji": "Sangatsu"
+      },
+      {
+        "_key": "bln-04",
+        "itemId": "35",
+        "jp": "四月",
+        "label": "April",
+        "romaji": "Shigatsu"
+      },
+      {
+        "_key": "bln-05",
+        "itemId": "36",
+        "jp": "五月",
+        "label": "Mei",
+        "romaji": "Gogatsu"
+      },
+      {
+        "_key": "bln-06",
+        "itemId": "37",
+        "jp": "六月",
+        "label": "Juni",
+        "romaji": "Rokugatsu"
+      },
+      {
+        "_key": "bln-07",
+        "itemId": "38",
+        "jp": "七月",
+        "label": "Juli",
+        "romaji": "Shichigatsu"
+      },
+      {
+        "_key": "bln-08",
+        "itemId": "39",
+        "jp": "八月",
+        "label": "Agustus",
+        "romaji": "Hachigatsu"
+      },
+      {
+        "_key": "bln-09",
+        "itemId": "40",
+        "jp": "九月",
+        "label": "September",
+        "romaji": "Kugatsu"
+      },
+      {
+        "_key": "bln-10",
+        "itemId": "41",
+        "jp": "十月",
+        "label": "Oktober",
+        "romaji": "Juugatsu"
+      },
+      {
+        "_key": "bln-11",
+        "itemId": "42",
+        "jp": "十一月",
+        "label": "November",
+        "romaji": "Juuichigatsu"
+      },
+      {
+        "_key": "bln-12",
+        "itemId": "43",
+        "jp": "十二月",
+        "label": "Desember",
+        "romaji": "Juunigatsu"
+      },
+      {
+        "_key": "jam-01",
+        "itemId": "44",
+        "jp": "一時",
+        "label": "Jam 1",
+        "romaji": "Ichiji"
+      },
+      {
+        "_key": "jam-02",
+        "itemId": "45",
+        "jp": "二時",
+        "label": "Jam 2",
+        "romaji": "Niji"
+      },
+      {
+        "_key": "jam-03",
+        "itemId": "46",
+        "jp": "三時",
+        "label": "Jam 3",
+        "romaji": "Sanji"
+      },
+      {
+        "_key": "jam-04",
+        "itemId": "47",
+        "jp": "四時",
+        "label": "Jam 4",
+        "romaji": "Yoji"
+      },
+      {
+        "_key": "jam-05",
+        "itemId": "48",
+        "jp": "五時",
+        "label": "Jam 5",
+        "romaji": "Goji"
+      },
+      {
+        "_key": "jam-06",
+        "itemId": "49",
+        "jp": "六時",
+        "label": "Jam 6",
+        "romaji": "Rokuji"
+      },
+      {
+        "_key": "jam-07",
+        "itemId": "50",
+        "jp": "七時",
+        "label": "Jam 7",
+        "romaji": "Shichiji"
+      },
+      {
+        "_key": "jam-08",
+        "itemId": "51",
+        "jp": "八時",
+        "label": "Jam 8",
+        "romaji": "Hachiji"
+      },
+      {
+        "_key": "jam-09",
+        "itemId": "52",
+        "jp": "九時",
+        "label": "Jam 9",
+        "romaji": "Kuji"
+      },
+      {
+        "_key": "jam-10",
+        "itemId": "53",
+        "jp": "十時",
+        "label": "Jam 10",
+        "romaji": "Juuji"
+      },
+      {
+        "_key": "jam-11",
+        "itemId": "54",
+        "jp": "十一時",
+        "label": "Jam 11",
+        "romaji": "Juuichiji"
+      },
+      {
+        "_key": "jam-12",
+        "itemId": "55",
+        "jp": "十二時",
+        "label": "Jam 12",
+        "romaji": "Juuniji"
+      },
+      {
+        "_key": "mnt-00",
+        "itemId": "56",
+        "jp": "〜分",
+        "label": "Menit (pola)",
+        "romaji": "~fun / ~pun"
+      },
+      {
+        "_key": "hari-1",
+        "itemId": "57",
+        "jp": "月曜日",
+        "label": "Senin",
+        "romaji": "Getsuyoubi"
+      },
+      {
+        "_key": "hari-2",
+        "itemId": "58",
+        "jp": "火曜日",
+        "label": "Selasa",
+        "romaji": "Kayoubi"
+      },
+      {
+        "_key": "hari-3",
+        "itemId": "59",
+        "jp": "水曜日",
+        "label": "Rabu",
+        "romaji": "Suiyoubi"
+      },
+      {
+        "_key": "hari-4",
+        "itemId": "60",
+        "jp": "木曜日",
+        "label": "Kamis",
+        "romaji": "Mokuyoubi"
+      },
+      {
+        "_key": "hari-5",
+        "itemId": "61",
+        "jp": "金曜日",
+        "label": "Jumat",
+        "romaji": "Kin'youbi"
+      },
+      {
+        "_key": "hari-6",
+        "itemId": "62",
+        "jp": "土曜日",
+        "label": "Sabtu",
+        "romaji": "Doyoubi"
+      },
+      {
+        "_key": "hari-7",
+        "itemId": "63",
+        "jp": "日曜日",
+        "label": "Minggu",
+        "romaji": "Nichiyoubi"
+      },
+      {
+        "_key": "rel-1",
+        "itemId": "64",
+        "jp": "昨日",
+        "label": "Kemarin",
+        "romaji": "Kinou"
+      },
+      {
+        "_key": "rel-2",
+        "itemId": "65",
+        "jp": "今日",
+        "label": "Hari ini",
+        "romaji": "Kyou"
+      },
+      {
+        "_key": "rel-3",
+        "itemId": "66",
+        "jp": "明日",
+        "label": "Besok",
+        "romaji": "Ashita"
+      },
+      {
+        "_key": "rel-4",
+        "itemId": "67",
+        "jp": "先週",
+        "label": "Minggu lalu",
+        "romaji": "Senshuu"
+      },
+      {
+        "_key": "rel-5",
+        "itemId": "68",
+        "jp": "今週",
+        "label": "Minggu ini",
+        "romaji": "Konshuu"
+      },
+      {
+        "_key": "rel-6",
+        "itemId": "69",
+        "jp": "来週",
+        "label": "Minggu depan",
+        "romaji": "Raishuu"
+      },
+      {
+        "_key": "rel-7",
+        "itemId": "70",
+        "jp": "先月",
+        "label": "Bulan lalu",
+        "romaji": "Sengetsu"
+      },
+      {
+        "_key": "rel-8",
+        "itemId": "71",
+        "jp": "今月",
+        "label": "Bulan ini",
+        "romaji": "Kongetsu"
+      },
+      {
+        "_key": "rel-9",
+        "itemId": "72",
+        "jp": "来月",
+        "label": "Bulan depan",
+        "romaji": "Raigetsu"
+      },
+      {
+        "_key": "rel-10",
+        "itemId": "73",
+        "jp": "去年",
+        "label": "Tahun lalu",
+        "romaji": "Kyonen"
+      },
+      {
+        "_key": "rel-11",
+        "itemId": "74",
+        "jp": "今年",
+        "label": "Tahun ini",
+        "romaji": "Kotoshi"
+      },
+      {
+        "_key": "rel-12",
+        "itemId": "75",
+        "jp": "来年",
+        "label": "Tahun depan",
+        "romaji": "Rainen"
+      }
+    ],
+    "sheetId": "CS-TIME-001",
+    "title": "Ekspresi Waktu & Tanggal"
+  },
+  {
+    "_createdAt": "2026-05-02T07:05:47Z",
+    "_id": "bba66ce4-7978-41c8-bee8-b5007f435de6",
+    "_originalId": "bba66ce4-7978-41c8-bee8-b5007f435de6",
+    "_rev": "nIg1U3PwlcnhewHbLowcvi",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-03T13:35:48Z",
+    "category": "Aturan Partikel & Grammar",
+    "items": [
+      {
+        "_key": "ni-01",
+        "itemId": "1",
+        "jp": "に (Ni)",
+        "label": "Lokasi keberadaan (ada di)",
+        "romaji": "Ni"
+      },
+      {
+        "_key": "ni-02",
+        "itemId": "2",
+        "jp": "に (Ni)",
+        "label": "Tujuan pergerakan (pergi ke)",
+        "romaji": "Ni"
+      },
+      {
+        "_key": "ni-03",
+        "itemId": "3",
+        "jp": "に (Ni)",
+        "label": "Waktu spesifik (pada jam/hari)",
+        "romaji": "Ni"
+      },
+      {
+        "_key": "ni-04",
+        "itemId": "4",
+        "jp": "に (Ni)",
+        "label": "Penerima tindakan (memberi kepada)",
+        "romaji": "Ni"
+      },
+      {
+        "_key": "ni-05",
+        "itemId": "5",
+        "jp": "に (Ni)",
+        "label": "Tujuan / hasil perubahan",
+        "romaji": "Ni"
+      },
+      {
+        "_key": "de-01",
+        "itemId": "6",
+        "jp": "で (De)",
+        "label": "Lokasi tindakan (melakukan di)",
+        "romaji": "De"
+      },
+      {
+        "_key": "de-02",
+        "itemId": "7",
+        "jp": "で (De)",
+        "label": "Sarana / alat (menggunakan)",
+        "romaji": "De"
+      },
+      {
+        "_key": "de-03",
+        "itemId": "8",
+        "jp": "で (De)",
+        "label": "Bahan / material",
+        "romaji": "De"
+      },
+      {
+        "_key": "de-04",
+        "itemId": "9",
+        "jp": "で (De)",
+        "label": "Alasan / sebab",
+        "romaji": "De"
+      },
+      {
+        "_key": "de-05",
+        "itemId": "10",
+        "jp": "で (De)",
+        "label": "Batas / ruang lingkup",
+        "romaji": "De"
+      },
+      {
+        "_key": "ex-01",
+        "itemId": "11",
+        "jp": "家にいます",
+        "label": "Saya ada di rumah",
+        "romaji": "Ie ni imasu"
+      },
+      {
+        "_key": "ex-02",
+        "itemId": "12",
+        "jp": "家で勉強します",
+        "label": "Saya belajar di rumah",
+        "romaji": "Ie de benkyou shimasu"
+      },
+      {
+        "_key": "ex-03",
+        "itemId": "13",
+        "jp": "学校に行きます",
+        "label": "Pergi ke sekolah",
+        "romaji": "Gakkou ni ikimasu"
+      },
+      {
+        "_key": "ex-04",
+        "itemId": "14",
+        "jp": "バスで行きます",
+        "label": "Naik bus",
+        "romaji": "Basu de ikimasu"
+      },
+      {
+        "_key": "ex-05",
+        "itemId": "15",
+        "jp": "三時に",
+        "label": "Pada jam 3",
+        "romaji": "Sanji ni"
+      }
+    ],
+    "sheetId": "CS-GRAM-001",
+    "title": "Partikel に (Ni) vs で (De)"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-actions-1",
+    "_originalId": "cs-actions-1",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "浴びます",
+        "label": "Mandi",
+        "romaji": "Abimasu"
+      },
+      {
+        "_key": "item-1",
+        "jp": "食べます",
+        "label": "Sarapan",
+        "romaji": "Tabemasu"
+      }
+    ],
+    "sheetId": "CS-ACTIONS-1",
+    "title": "Aksi Harian (Pagi)"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-actions-2",
+    "_originalId": "cs-actions-2",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "寝ます",
+        "label": "Tidur",
+        "romaji": "Nemasu"
+      },
+      {
+        "_key": "item-1",
+        "jp": "見ます",
+        "label": "Mimpi",
+        "romaji": "Mimasu"
+      }
+    ],
+    "sheetId": "CS-ACTIONS-2",
+    "title": "Aksi Harian (Malam)"
+  },
+  {
+    "_createdAt": "2026-05-04T08:26:59Z",
+    "_id": "cs-adj-i",
+    "_originalId": "cs-adj-i",
+    "_rev": "nIg1U3PwlcnhewHbLypz0E",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:26:59Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "大きい / 小さい",
+        "label": "Besar/Kecil",
+        "romaji": "Ookii / Chiisai"
+      },
+      {
+        "_key": "item-1",
+        "jp": "暑い / 寒い",
+        "label": "Panas/Dingin",
+        "romaji": "Atsui / Samui"
+      }
+    ],
+    "sheetId": "CS-ADJ-I",
+    "title": "Kata Sifat -i Populer"
+  },
+  {
+    "_createdAt": "2026-05-04T08:26:59Z",
+    "_id": "cs-adj-na",
+    "_originalId": "cs-adj-na",
+    "_rev": "nIg1U3PwlcnhewHbLypz0E",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:26:59Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "好き / 嫌い",
+        "label": "Suka/Benci",
+        "romaji": "Suki / Kirai"
+      },
+      {
+        "_key": "item-1",
+        "jp": "上手 / 下手",
+        "label": "Pintar/Bodoh",
+        "romaji": "Jouzu / Heta"
+      }
+    ],
+    "sheetId": "CS-ADJ-NA",
+    "title": "Kata Sifat -na Populer"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-aisatsu-social",
+    "_originalId": "cs-aisatsu-social",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "すみません",
+        "label": "Permisi",
+        "romaji": "Sumimasen"
+      },
+      {
+        "_key": "item-1",
+        "jp": "ありがとうございます",
+        "label": "Terima Kasih",
+        "romaji": "Arigatou"
+      }
+    ],
+    "sheetId": "CS-AISATSU-SOCIAL",
+    "title": "Salam Sosial (Permisi, Maaf)"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-animals-pets",
+    "_originalId": "cs-animals-pets",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "犬 / 猫",
+        "label": "Anjing/Kucing",
+        "romaji": "Inu / Neko"
+      },
+      {
+        "_key": "item-1",
+        "jp": "うさぎ / 鳥",
+        "label": "Kelinci/Burung",
+        "romaji": "Usagi / Tori"
+      }
+    ],
+    "sheetId": "CS-ANIMALS-PETS",
+    "title": "Hewan Peliharaan"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-animals-wild",
+    "_originalId": "cs-animals-wild",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "ライオン / 象",
+        "label": "Singa/Gajah",
+        "romaji": "Raion / Zou"
+      },
+      {
+        "_key": "item-1",
+        "jp": "猿 / 蛇",
+        "label": "Monyet/Ular",
+        "romaji": "Saru / Hebi"
+      }
+    ],
+    "sheetId": "CS-ANIMALS-WILD",
+    "title": "Hewan Liar"
+  },
+  {
+    "_createdAt": "2026-05-04T08:26:59Z",
+    "_id": "cs-body",
+    "_originalId": "cs-body",
+    "_rev": "nIg1U3PwlcnhewHbLypz0E",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:26:59Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "頭 / 目",
+        "label": "Kepala/Mata",
+        "romaji": "Atama / Me"
+      },
+      {
+        "_key": "item-1",
+        "jp": "手 / 足",
+        "label": "Tangan/Kaki",
+        "romaji": "Te / Ashi"
+      }
+    ],
+    "sheetId": "CS-BODY",
+    "title": "Anggota Tubuh"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-body-head",
+    "_originalId": "cs-body-head",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "目 / 鼻",
+        "label": "Mata/Hidung",
+        "romaji": "Me / Hana"
+      },
+      {
+        "_key": "item-1",
+        "jp": "耳 / 口",
+        "label": "Telinga/Mulut",
+        "romaji": "Mimi / Kuchi"
+      }
+    ],
+    "sheetId": "CS-BODY-HEAD",
+    "title": "Bagian Wajah & Kepala"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-body-limbs",
+    "_originalId": "cs-body-limbs",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "手 / 足",
+        "label": "Tangan/Kaki",
+        "romaji": "Te / Ashi"
+      },
+      {
+        "_key": "item-1",
+        "jp": "肩 / お腹",
+        "label": "Bahu/Perut",
+        "romaji": "Kata / Onaka"
+      }
+    ],
+    "sheetId": "CS-BODY-LIMBS",
+    "title": "Bagian Tubuh & Anggota Gerak"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-cities-jp",
+    "_originalId": "cs-cities-jp",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "東京",
+        "label": "Tokyo",
+        "romaji": "Toukyou"
+      },
+      {
+        "_key": "item-1",
+        "jp": "大阪",
+        "label": "Osaka",
+        "romaji": "Oosaka"
+      }
+    ],
+    "sheetId": "CS-CITIES-JP",
+    "title": "Kota Besar di Jepang"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-clothing-low",
+    "_originalId": "cs-clothing-low",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "ズボン / スカート",
+        "label": "Celana/Rok",
+        "romaji": "Zubon / Suka-to"
+      },
+      {
+        "_key": "item-1",
+        "jp": "靴 / 靴下",
+        "label": "Sepatu/Kaos Kaki",
+        "romaji": "Kutsu / Kutsushita"
+      }
+    ],
+    "sheetId": "CS-CLOTHING-LOW",
+    "title": "Pakaian (Bawah) & Alas Kaki"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-clothing-up",
+    "_originalId": "cs-clothing-up",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "シャツ / Tシャツ",
+        "label": "Kemeja/Kaos",
+        "romaji": "Shatsu / Ti-shatsu"
+      },
+      {
+        "_key": "item-1",
+        "jp": "ジャケット / 背広",
+        "label": "Jaket/Jas",
+        "romaji": "Jaketto / Sebiro"
+      }
+    ],
+    "sheetId": "CS-CLOTHING-UP",
+    "title": "Pakaian (Atas)"
+  },
+  {
+    "_createdAt": "2026-05-04T08:26:59Z",
+    "_id": "cs-colors",
+    "_originalId": "cs-colors",
+    "_rev": "nIg1U3PwlcnhewHbLypz0E",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:26:59Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "赤 / 青 / 黄",
+        "label": "M/B/K",
+        "romaji": "Aka / Ao / Ki"
+      },
+      {
+        "_key": "item-1",
+        "jp": "白 / 黒",
+        "label": "P/H",
+        "romaji": "Shiro / Kuro"
+      }
+    ],
+    "sheetId": "CS-COLORS",
+    "title": "Warna"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-colors-detail",
+    "_originalId": "cs-colors-detail",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "赤",
+        "label": "Merah",
+        "romaji": "Aka"
+      },
+      {
+        "_key": "item-1",
+        "jp": "青",
+        "label": "Biru",
+        "romaji": "Ao"
+      }
+    ],
+    "sheetId": "CS-COLORS-DETAIL",
+    "title": "Warna Detail"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-countries",
+    "_originalId": "cs-countries",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "インドネシア / 日本",
+        "label": "Indo/Jepang",
+        "romaji": "Indoneshia / Nihon"
+      },
+      {
+        "_key": "item-1",
+        "jp": "アメリカ / イギリス",
+        "label": "AS/Inggris",
+        "romaji": "Amerika / Igirisu"
+      }
+    ],
+    "sheetId": "CS-COUNTRIES",
+    "title": "Nama Negara"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-days-month",
+    "_originalId": "cs-days-month",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Waktu & Tanggal",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "ついたち, ふつka, みっか...",
+        "label": "1-10",
+        "romaji": "Tsuitachi, Futsuka, Mikka..."
+      },
+      {
+        "_key": "item-1",
+        "jp": "はつか",
+        "label": "20",
+        "romaji": "Hatsuka"
+      }
+    ],
+    "sheetId": "CS-DAYS-MONTH",
+    "title": "Tanggal 1-31"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-direction-detail",
+    "_originalId": "cs-direction-detail",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "北",
+        "label": "Utara",
+        "romaji": "Kita"
+      },
+      {
+        "_key": "item-1",
+        "jp": "南",
+        "label": "Selatan",
+        "romaji": "Minami"
+      }
+    ],
+    "sheetId": "CS-DIRECTION-DETAIL",
+    "title": "Arah Mata Angin"
+  },
+  {
+    "_createdAt": "2026-05-04T08:26:59Z",
+    "_id": "cs-directions",
+    "_originalId": "cs-directions",
+    "_rev": "nIg1U3PwlcnhewHbLypz0E",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:26:59Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "上 / 下",
+        "label": "Atas/Bawah",
+        "romaji": "Ue / Shita"
+      },
+      {
+        "_key": "item-1",
+        "jp": "前 / 後ろ",
+        "label": "Depan/Belakang",
+        "romaji": "Mae / Ushiro"
+      },
+      {
+        "_key": "item-2",
+        "jp": "右 / 左",
+        "label": "Kanan/Kiri",
+        "romaji": "Migi / Hidari"
+      }
+    ],
+    "sheetId": "CS-DIRECTIONS",
+    "title": "Arah & Posisi"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-electronics",
+    "_originalId": "cs-electronics",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "テレビ / 冷蔵庫",
+        "label": "TV/Kulkas",
+        "romaji": "Terebi / Reizouko"
+      },
+      {
+        "_key": "item-1",
+        "jp": "エアコン / 洗濯機",
+        "label": "AC/Mesin Cuci",
+        "romaji": "Eakon / Sentakuki"
+      }
+    ],
+    "sheetId": "CS-ELECTRONICS",
+    "title": "Barang Elektronik"
+  },
+  {
+    "_createdAt": "2026-05-04T08:26:59Z",
+    "_id": "cs-family-1",
+    "_originalId": "cs-family-1",
+    "_rev": "nIg1U3PwlcnhewHbLypz0E",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:26:59Z",
+    "category": "Keluarga & Relasi",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "父 / 母",
+        "label": "Ayah/Ibu",
+        "romaji": "Chichi / Haha"
+      },
+      {
+        "_key": "item-1",
+        "jp": "兄 / 姉",
+        "label": "Kakak L/P",
+        "romaji": "Ani / Ane"
+      },
+      {
+        "_key": "item-2",
+        "jp": "弟 / 妹",
+        "label": "Adik L/P",
+        "romaji": "Otouto / Imouto"
+      }
+    ],
+    "sheetId": "CS-FAMILY-1",
+    "title": "Keluarga Sendiri (Humble)"
+  },
+  {
+    "_createdAt": "2026-05-04T08:26:59Z",
+    "_id": "cs-family-2",
+    "_originalId": "cs-family-2",
+    "_rev": "nIg1U3PwlcnhewHbLypz0E",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:26:59Z",
+    "category": "Keluarga & Relasi",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "お父さん / お母さん",
+        "label": "Ayah/Ibu",
+        "romaji": "Otousan / Okaasan"
+      },
+      {
+        "_key": "item-1",
+        "jp": "お兄さん / お姉さん",
+        "label": "Kakak L/P",
+        "romaji": "Oniisan / Oneesan"
+      }
+    ],
+    "sheetId": "CS-FAMILY-2",
+    "title": "Keluarga Orang Lain (Polite)"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-family-soto",
+    "_originalId": "cs-family-soto",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Keluarga & Relasi",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "お父さん / お母さん",
+        "label": "Ayah/Ibu",
+        "romaji": "Otousan / Okaasan"
+      },
+      {
+        "_key": "item-1",
+        "jp": "お兄さん / お姉さん",
+        "label": "Kakak L/P",
+        "romaji": "Oniisan / Oneesan"
+      }
+    ],
+    "sheetId": "CS-FAMILY-SOTO",
+    "title": "Keluarga Orang Lain (Sopan)"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-family-uchi",
+    "_originalId": "cs-family-uchi",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Keluarga & Relasi",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "父 / 母",
+        "label": "Ayah/Ibu",
+        "romaji": "Chichi / Haha"
+      },
+      {
+        "_key": "item-1",
+        "jp": "兄 / 姉",
+        "label": "Kakak L/P",
+        "romaji": "Ani / Ane"
+      }
+    ],
+    "sheetId": "CS-FAMILY-UCHI",
+    "title": "Keluarga Sendiri (Humble)"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-feelings",
+    "_originalId": "cs-feelings",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "嬉しい",
+        "label": "Senang",
+        "romaji": "Ureshii"
+      },
+      {
+        "_key": "item-1",
+        "jp": "悲しい",
+        "label": "Sedih",
+        "romaji": "Kanashii"
+      }
+    ],
+    "sheetId": "CS-FEELINGS",
+    "title": "Perasaan & Emosi"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-flavors",
+    "_originalId": "cs-flavors",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "甘い / 苦い",
+        "label": "Manis/Pahit",
+        "romaji": "Amai / Nigai"
+      },
+      {
+        "_key": "item-1",
+        "jp": "塩辛い / 辛い",
+        "label": "Asin/Pedas",
+        "romaji": "Shiokarai / Karai"
+      }
+    ],
+    "sheetId": "CS-FLAVORS",
+    "title": "Rasa & Bumbu"
+  },
+  {
+    "_createdAt": "2026-05-04T08:26:59Z",
+    "_id": "cs-food",
+    "_originalId": "cs-food",
+    "_rev": "nIg1U3PwlcnhewHbLypz0E",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:26:59Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "肉 / 魚",
+        "label": "Daging/Ikan",
+        "romaji": "Niku / Sakana"
+      },
+      {
+        "_key": "item-1",
+        "jp": "野菜 / 果物",
+        "label": "Sayur/Buah",
+        "romaji": "Yasai / Kudamono"
+      }
+    ],
+    "sheetId": "CS-FOOD",
+    "title": "Makanan"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-fruits",
+    "_originalId": "cs-fruits",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "りんご / みかん",
+        "label": "Apel/Jeruk",
+        "romaji": "Ringo / Mikan"
+      },
+      {
+        "_key": "item-1",
+        "jp": "バナナ / ぶどう",
+        "label": "Pisang/Anggur",
+        "romaji": "Banana / Budou"
+      }
+    ],
+    "sheetId": "CS-FRUITS",
+    "title": "Buah-Buahan"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-furniture",
+    "_originalId": "cs-furniture",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "机",
+        "label": "Meja",
+        "romaji": "Tsukue"
+      },
+      {
+        "_key": "item-1",
+        "jp": "椅子",
+        "label": "Kursi",
+        "romaji": "Isu"
+      }
+    ],
+    "sheetId": "CS-FURNITURE",
+    "title": "Perabotan Rumah"
+  },
+  {
+    "_createdAt": "2026-05-02T08:04:24Z",
+    "_id": "cs-gram-002",
+    "_originalId": "cs-gram-002",
+    "_rev": "nIg1U3PwlcnhewHbLowbkQ",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-03T13:35:37Z",
+    "category": "Aturan Partikel & Grammar",
+    "items": [
+      {
+        "_key": "tv-01",
+        "itemId": "1",
+        "jp": "開ける",
+        "label": "Membuka (transitif)",
+        "romaji": "Akeru"
+      },
+      {
+        "_key": "tv-02",
+        "itemId": "2",
+        "jp": "開く",
+        "label": "Terbuka (intransitif)",
+        "romaji": "Aku"
+      },
+      {
+        "_key": "tv-03",
+        "itemId": "3",
+        "jp": "閉める",
+        "label": "Menutup (transitif)",
+        "romaji": "Shimeru"
+      },
+      {
+        "_key": "tv-04",
+        "itemId": "4",
+        "jp": "閉まる",
+        "label": "Tertutup (intransitif)",
+        "romaji": "Shimaru"
+      },
+      {
+        "_key": "tv-05",
+        "itemId": "5",
+        "jp": "つける",
+        "label": "Menyalakan (transitif)",
+        "romaji": "Tsukeru"
+      },
+      {
+        "_key": "tv-06",
+        "itemId": "6",
+        "jp": "つく",
+        "label": "Menyala (intransitif)",
+        "romaji": "Tsuku"
+      },
+      {
+        "_key": "tv-07",
+        "itemId": "7",
+        "jp": "消す",
+        "label": "Mematikan (transitif)",
+        "romaji": "Kesu"
+      },
+      {
+        "_key": "tv-08",
+        "itemId": "8",
+        "jp": "消える",
+        "label": "Padam (intransitif)",
+        "romaji": "Kieru"
+      },
+      {
+        "_key": "tv-09",
+        "itemId": "9",
+        "jp": "入れる",
+        "label": "Memasukkan (transitif)",
+        "romaji": "Ireru"
+      },
+      {
+        "_key": "tv-10",
+        "itemId": "10",
+        "jp": "入る",
+        "label": "Masuk (intransitif)",
+        "romaji": "Hairu"
+      },
+      {
+        "_key": "tv-11",
+        "itemId": "11",
+        "jp": "出す",
+        "label": "Mengeluarkan (transitif)",
+        "romaji": "Dasu"
+      },
+      {
+        "_key": "tv-12",
+        "itemId": "12",
+        "jp": "出る",
+        "label": "Keluar (intransitif)",
+        "romaji": "Deru"
+      },
+      {
+        "_key": "tv-13",
+        "itemId": "13",
+        "jp": "上げる",
+        "label": "Menaikkan (transitif)",
+        "romaji": "Ageru"
+      },
+      {
+        "_key": "tv-14",
+        "itemId": "14",
+        "jp": "上がる",
+        "label": "Naik (intransitif)",
+        "romaji": "Agaru"
+      },
+      {
+        "_key": "tv-15",
+        "itemId": "15",
+        "jp": "下げる",
+        "label": "Menurunkan (transitif)",
+        "romaji": "Sageru"
+      },
+      {
+        "_key": "tv-16",
+        "itemId": "16",
+        "jp": "下がる",
+        "label": "Turun (intransitif)",
+        "romaji": "Sagaru"
+      },
+      {
+        "_key": "tv-17",
+        "itemId": "17",
+        "jp": "壊す",
+        "label": "Mematahkan (transitif)",
+        "romaji": "Kowasu"
+      },
+      {
+        "_key": "tv-18",
+        "itemId": "18",
+        "jp": "壊れる",
+        "label": "Rusak (intransitif)",
+        "romaji": "Kowareru"
+      },
+      {
+        "_key": "tv-19",
+        "itemId": "19",
+        "jp": "かける",
+        "label": "Menggantung (transitif)",
+        "romaji": "Kakeru"
+      },
+      {
+        "_key": "tv-20",
+        "itemId": "20",
+        "jp": "かかる",
+        "label": "Tergantung (intransitif)",
+        "romaji": "Kakaru"
+      }
+    ],
+    "sheetId": "CS-GRAM-002",
+    "title": "Kata Kerja Transitif vs Intransitif"
+  },
+  {
+    "_createdAt": "2026-05-02T08:04:24Z",
+    "_id": "cs-gram-003",
+    "_originalId": "cs-gram-003",
+    "_rev": "nIg1U3PwlcnhewHbLowZyU",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-03T13:35:21Z",
+    "category": "Aturan Partikel & Grammar",
+    "items": [
+      {
+        "_key": "adj-i-01",
+        "itemId": "1",
+        "jp": "〜い",
+        "label": "Bentuk dasar (i-adj)",
+        "romaji": "~i"
+      },
+      {
+        "_key": "adj-i-02",
+        "itemId": "2",
+        "jp": "〜くない",
+        "label": "Negatif sekarang (i-adj)",
+        "romaji": "~kunai"
+      },
+      {
+        "_key": "adj-i-03",
+        "itemId": "3",
+        "jp": "〜かった",
+        "label": "Lampau positif (i-adj)",
+        "romaji": "~katta"
+      },
+      {
+        "_key": "adj-i-04",
+        "itemId": "4",
+        "jp": "〜くなかった",
+        "label": "Lampau negatif (i-adj)",
+        "romaji": "~kunakatta"
+      },
+      {
+        "_key": "adj-i-05",
+        "itemId": "5",
+        "jp": "〜くて",
+        "label": "Bentuk te (i-adj)",
+        "romaji": "~kute"
+      },
+      {
+        "_key": "adj-i-06",
+        "itemId": "6",
+        "jp": "〜く",
+        "label": "Bentuk adverb (i-adj)",
+        "romaji": "~ku"
+      },
+      {
+        "_key": "adj-ex-01",
+        "itemId": "7",
+        "jp": "大きい",
+        "label": "Besar (dasar)",
+        "romaji": "Ookii"
+      },
+      {
+        "_key": "adj-ex-02",
+        "itemId": "8",
+        "jp": "大きくない",
+        "label": "Tidak besar",
+        "romaji": "Ookikunai"
+      },
+      {
+        "_key": "adj-ex-03",
+        "itemId": "9",
+        "jp": "大きかった",
+        "label": "Tadinya besar",
+        "romaji": "Ookikatta"
+      },
+      {
+        "_key": "adj-ex-04",
+        "itemId": "10",
+        "jp": "大きくなかった",
+        "label": "Tadinya tidak besar",
+        "romaji": "Ookikunakatta"
+      },
+      {
+        "_key": "adj-na-01",
+        "itemId": "11",
+        "jp": "〜な",
+        "label": "Bentuk dasar (na-adj)",
+        "romaji": "~na"
+      },
+      {
+        "_key": "adj-na-02",
+        "itemId": "12",
+        "jp": "〜じゃない",
+        "label": "Negatif sekarang (na-adj)",
+        "romaji": "~ja nai"
+      },
+      {
+        "_key": "adj-na-03",
+        "itemId": "13",
+        "jp": "〜だった",
+        "label": "Lampau positif (na-adj)",
+        "romaji": "~datta"
+      },
+      {
+        "_key": "adj-na-04",
+        "itemId": "14",
+        "jp": "〜じゃなかった",
+        "label": "Lampau negatif (na-adj)",
+        "romaji": "~ja nakatta"
+      },
+      {
+        "_key": "adj-na-05",
+        "itemId": "15",
+        "jp": "〜で",
+        "label": "Bentuk te (na-adj)",
+        "romaji": "~de"
+      },
+      {
+        "_key": "adj-na-06",
+        "itemId": "16",
+        "jp": "〜に",
+        "label": "Bentuk adverb (na-adj)",
+        "romaji": "~ni"
+      },
+      {
+        "_key": "adj-ex-11",
+        "itemId": "17",
+        "jp": "静かな",
+        "label": "Tenang (dasar)",
+        "romaji": "Shizuka na"
+      },
+      {
+        "_key": "adj-ex-12",
+        "itemId": "18",
+        "jp": "静かじゃない",
+        "label": "Tidak tenang",
+        "romaji": "Shizuka ja nai"
+      },
+      {
+        "_key": "adj-ex-13",
+        "itemId": "19",
+        "jp": "静かだった",
+        "label": "Tadinya tenang",
+        "romaji": "Shizuka datta"
+      },
+      {
+        "_key": "adj-ex-14",
+        "itemId": "20",
+        "jp": "静かじゃなかった",
+        "label": "Tadinya tidak tenang",
+        "romaji": "Shizuka ja nakatta"
+      },
+      {
+        "_key": "adj-irr-01",
+        "itemId": "21",
+        "jp": "いい / よい",
+        "label": "Bagus (dasar) — tidak beraturan",
+        "romaji": "Ii / Yoi"
+      },
+      {
+        "_key": "adj-irr-02",
+        "itemId": "22",
+        "jp": "よくない",
+        "label": "Tidak bagus",
+        "romaji": "Yokunai"
+      },
+      {
+        "_key": "adj-irr-03",
+        "itemId": "23",
+        "jp": "よかった",
+        "label": "Tadinya bagus",
+        "romaji": "Yokatta"
+      },
+      {
+        "_key": "adj-irr-04",
+        "itemId": "24",
+        "jp": "よくなかった",
+        "label": "Tadinya tidak bagus",
+        "romaji": "Yokunakatta"
+      }
+    ],
+    "sheetId": "CS-GRAM-003",
+    "title": "Konjugasi Kata Sifat (i & na)"
+  },
+  {
+    "_createdAt": "2026-05-02T08:04:24Z",
+    "_id": "cs-gram-004",
+    "_originalId": "cs-gram-004",
+    "_rev": "1OX1FIr4lU0Z7vRNlUAuNl",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-03T13:35:13Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "kg-01",
+        "itemId": "1",
+        "jp": "行く",
+        "label": "Pergi (biasa)",
+        "romaji": "Iku"
+      },
+      {
+        "_key": "kg-02",
+        "itemId": "2",
+        "jp": "いらっしゃる",
+        "label": "Pergi (sonkeigo)",
+        "romaji": "Irassharu"
+      },
+      {
+        "_key": "kg-03",
+        "itemId": "3",
+        "jp": "参る",
+        "label": "Pergi (kenjougo)",
+        "romaji": "Mairu"
+      },
+      {
+        "_key": "kg-04",
+        "itemId": "4",
+        "jp": "いる",
+        "label": "Ada (biasa)",
+        "romaji": "Iru"
+      },
+      {
+        "_key": "kg-05",
+        "itemId": "5",
+        "jp": "いらっしゃる",
+        "label": "Ada (sonkeigo)",
+        "romaji": "Irassharu"
+      },
+      {
+        "_key": "kg-06",
+        "itemId": "6",
+        "jp": "おる",
+        "label": "Ada (kenjougo)",
+        "romaji": "Oru"
+      },
+      {
+        "_key": "kg-07",
+        "itemId": "7",
+        "jp": "食べる",
+        "label": "Makan (biasa)",
+        "romaji": "Taberu"
+      },
+      {
+        "_key": "kg-08",
+        "itemId": "8",
+        "jp": "召し上がる",
+        "label": "Makan (sonkeigo)",
+        "romaji": "Meshiagaru"
+      },
+      {
+        "_key": "kg-09",
+        "itemId": "9",
+        "jp": "いただく",
+        "label": "Makan (kenjougo)",
+        "romaji": "Itadaku"
+      },
+      {
+        "_key": "kg-10",
+        "itemId": "10",
+        "jp": "言う",
+        "label": "Berkata (biasa)",
+        "romaji": "Iu"
+      },
+      {
+        "_key": "kg-11",
+        "itemId": "11",
+        "jp": "おっしゃる",
+        "label": "Berkata (sonkeigo)",
+        "romaji": "Ossharu"
+      },
+      {
+        "_key": "kg-12",
+        "itemId": "12",
+        "jp": "申す",
+        "label": "Berkata (kenjougo)",
+        "romaji": "Mousu"
+      },
+      {
+        "_key": "kg-13",
+        "itemId": "13",
+        "jp": "知る",
+        "label": "Tahu (biasa)",
+        "romaji": "Shiru"
+      },
+      {
+        "_key": "kg-14",
+        "itemId": "14",
+        "jp": "ご存知",
+        "label": "Tahu (sonkeigo)",
+        "romaji": "Gozonji"
+      },
+      {
+        "_key": "kg-15",
+        "itemId": "15",
+        "jp": "存じる",
+        "label": "Tahu (kenjougo)",
+        "romaji": "Zonjiru"
+      },
+      {
+        "_key": "kg-16",
+        "itemId": "16",
+        "jp": "する",
+        "label": "Melakukan (biasa)",
+        "romaji": "Suru"
+      },
+      {
+        "_key": "kg-17",
+        "itemId": "17",
+        "jp": "なさる",
+        "label": "Melakukan (sonkeigo)",
+        "romaji": "Nasaru"
+      },
+      {
+        "_key": "kg-18",
+        "itemId": "18",
+        "jp": "いたす",
+        "label": "Melakukan (kenjougo)",
+        "romaji": "Itasu"
+      },
+      {
+        "_key": "kg-19",
+        "itemId": "19",
+        "jp": "もらう",
+        "label": "Menerima (biasa)",
+        "romaji": "Morau"
+      },
+      {
+        "_key": "kg-20",
+        "itemId": "20",
+        "jp": "いただく",
+        "label": "Menerima (kenjougo)",
+        "romaji": "Itadaku"
+      }
+    ],
+    "sheetId": "CS-GRAM-004",
+    "title": "Keigo: Sonkeigo vs Kenjougo"
+  },
+  {
+    "_createdAt": "2026-05-04T08:26:59Z",
+    "_id": "cs-greetings",
+    "_originalId": "cs-greetings",
+    "_rev": "nIg1U3PwlcnhewHbLypz0E",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:26:59Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "おはよう / こんにちは",
+        "label": "Pagi/Siang",
+        "romaji": "Ohayou / Konnichiwa"
+      },
+      {
+        "_key": "item-1",
+        "jp": "すみません / ありがとう",
+        "label": "Maaf/Terima Kasih",
+        "romaji": "Sumimasen / Arigatou"
+      }
+    ],
+    "sheetId": "CS-GREETINGS",
+    "title": "Aisatsu (Salam)"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-health-symptoms",
+    "_originalId": "cs-health-symptoms",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "頭痛",
+        "label": "Sakit Kepala",
+        "romaji": "Zutsuu"
+      },
+      {
+        "_key": "item-1",
+        "jp": "熱 / 咳",
+        "label": "Demam/Batuk",
+        "romaji": "Netsu / Seki"
+      }
+    ],
+    "sheetId": "CS-HEALTH-SYMPTOMS",
+    "title": "Gejala Kesehatan"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-hobbies",
+    "_originalId": "cs-hobbies",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "読書",
+        "label": "Membaca",
+        "romaji": "Dokusho"
+      },
+      {
+        "_key": "item-1",
+        "jp": "音楽",
+        "label": "Musik",
+        "romaji": "Ongaku"
+      }
+    ],
+    "sheetId": "CS-HOBBIES",
+    "title": "Hobi & Aktivitas"
+  },
+  {
+    "_createdAt": "2026-05-04T08:26:59Z",
+    "_id": "cs-house",
+    "_originalId": "cs-house",
+    "_rev": "nIg1U3PwlcnhewHbLypz0E",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:26:59Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "部屋 / 台所",
+        "label": "Kamar/Dapur",
+        "romaji": "Heya / Daidokoro"
+      },
+      {
+        "_key": "item-1",
+        "jp": "ドア / 窓",
+        "label": "Pintu/Jendela",
+        "romaji": "Doa / Mado"
+      }
+    ],
+    "sheetId": "CS-HOUSE",
+    "title": "Rumah"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-house-rooms",
+    "_originalId": "cs-house-rooms",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "部屋 / 台所",
+        "label": "Kamar/Dapur",
+        "romaji": "Heya / Daidokoro"
+      },
+      {
+        "_key": "item-1",
+        "jp": "お風呂 / トイレ",
+        "label": "Kamar Mandi/Toilet",
+        "romaji": "Ofuro / Toire"
+      }
+    ],
+    "sheetId": "CS-HOUSE-ROOMS",
+    "title": "Ruangan di Rumah"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-insects",
+    "_originalId": "cs-insects",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "あり / 蚊",
+        "label": "Semut/Nyamuk",
+        "romaji": "Ari / Ka"
+      },
+      {
+        "_key": "item-1",
+        "jp": "蝶 / はえ",
+        "label": "Kupu-kupu/Lalat",
+        "romaji": "Chou / Hae"
+      }
+    ],
+    "sheetId": "CS-INSECTS",
+    "title": "Serangga"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-instruments",
+    "_originalId": "cs-instruments",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "ギター",
+        "label": "Gitar",
+        "romaji": "Gitaa"
+      },
+      {
+        "_key": "item-1",
+        "jp": "ピアノ",
+        "label": "Piano",
+        "romaji": "Piano"
+      }
+    ],
+    "sheetId": "CS-INSTRUMENTS",
+    "title": "Alat Musik"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-kitchen-tools",
+    "_originalId": "cs-kitchen-tools",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "包丁 / 皿",
+        "label": "Pisau/Piring",
+        "romaji": "Houchou / Sara"
+      },
+      {
+        "_key": "item-1",
+        "jp": "箸 / スプーン",
+        "label": "Sumpit/Sendok",
+        "romaji": "Hashi / Supu-n"
+      }
+    ],
+    "sheetId": "CS-KITCHEN-TOOLS",
+    "title": "Peralatan Dapur"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-languages",
+    "_originalId": "cs-languages",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "日本語",
+        "label": "B. Jepang",
+        "romaji": "Nihongo"
+      },
+      {
+        "_key": "item-1",
+        "jp": "英語",
+        "label": "B. Inggris",
+        "romaji": "Eigo"
+      }
+    ],
+    "sheetId": "CS-LANGUAGES",
+    "title": "Nama Bahasa"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-months",
+    "_originalId": "cs-months",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Waktu & Tanggal",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "一月, 二月... 十二月",
+        "label": "Jan-Des",
+        "romaji": "Ichigatsu... Juunigatsu"
+      },
+      {
+        "_key": "item-1",
+        "jp": "しがつ, しちがつ, くがつ",
+        "label": "Bulan 4, 7, 9",
+        "romaji": "Shigatsu, Shichigatsu, Kugatsu"
+      }
+    ],
+    "sheetId": "CS-MONTHS",
+    "title": "Nama-Nama Bulan"
+  },
+  {
+    "_createdAt": "2026-05-04T08:26:59Z",
+    "_id": "cs-nature",
+    "_originalId": "cs-nature",
+    "_rev": "nIg1U3PwlcnhewHbLypz0E",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:26:59Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "山 / 海",
+        "label": "Gunung/Laut",
+        "romaji": "Yama / Umi"
+      },
+      {
+        "_key": "item-1",
+        "jp": "花 / 木",
+        "label": "Bunga/Pohon",
+        "romaji": "Hana / Ki"
+      }
+    ],
+    "sheetId": "CS-NATURE",
+    "title": "Alam"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-nature-land",
+    "_originalId": "cs-nature-land",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "山",
+        "label": "Gunung",
+        "romaji": "Yama"
+      },
+      {
+        "_key": "item-1",
+        "jp": "森",
+        "label": "Hutan",
+        "romaji": "Mori"
+      }
+    ],
+    "sheetId": "CS-NATURE-LAND",
+    "title": "Bentuk Daratan"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-nature-water",
+    "_originalId": "cs-nature-water",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "海",
+        "label": "Laut",
+        "romaji": "Umi"
+      },
+      {
+        "_key": "item-1",
+        "jp": "川",
+        "label": "Sungai",
+        "romaji": "Kawa"
+      }
+    ],
+    "sheetId": "CS-NATURE-WATER",
+    "title": "Bentuk Perairan"
+  },
+  {
+    "_createdAt": "2026-05-04T08:26:59Z",
+    "_id": "cs-num-1",
+    "_originalId": "cs-num-1",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Angka & Matematika",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "一, 二, 三, 四, 五, 六, 七, 八, 九, 十",
+        "label": "1-10",
+        "romaji": "Ichi, Ni, San, Yon, Go, Roku, Nana, Hachi, Kyuu, Juu"
+      },
+      {
+        "_key": "item-1",
+        "jp": "二十, 三十, 四十...",
+        "label": "Puluhan",
+        "romaji": "Nijuu, Sanjuu, Yonjuu..."
+      },
+      {
+        "_key": "item-2",
+        "jp": "百",
+        "label": "100",
+        "romaji": "Hyaku"
+      }
+    ],
+    "sheetId": "CS-NUM-1",
+    "title": "Angka 1-100"
+  },
+  {
+    "_createdAt": "2026-05-04T08:26:59Z",
+    "_id": "cs-num-2",
+    "_originalId": "cs-num-2",
+    "_rev": "nIg1U3PwlcnhewHbLypz0E",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:26:59Z",
+    "category": "Angka & Matematika",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "百 (Hyaku)",
+        "label": "100",
+        "romaji": "Hyaku"
+      },
+      {
+        "_key": "item-1",
+        "jp": "千 (Sen)",
+        "label": "1.000",
+        "romaji": "Sen"
+      },
+      {
+        "_key": "item-2",
+        "jp": "万 (Man)",
+        "label": "10.000",
+        "romaji": "Man"
+      },
+      {
+        "_key": "item-3",
+        "jp": "円 (En)",
+        "label": "Mata Uang",
+        "romaji": "Yen"
+      }
+    ],
+    "sheetId": "CS-NUM-2",
+    "title": "Angka Besar & Uang"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-num-large",
+    "_originalId": "cs-num-large",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Angka & Matematika",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "千",
+        "label": "1.000",
+        "romaji": "Sen"
+      },
+      {
+        "_key": "item-1",
+        "jp": "万",
+        "label": "10.000",
+        "romaji": "Man"
+      },
+      {
+        "_key": "item-2",
+        "jp": "十万",
+        "label": "100.000",
+        "romaji": "Juuman"
+      },
+      {
+        "_key": "item-3",
+        "jp": "百万",
+        "label": "1.000.000",
+        "romaji": "Hyakuman"
+      }
+    ],
+    "sheetId": "CS-NUM-LARGE",
+    "title": "Angka Besar & Uang"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-onomatopoeia-1",
+    "_originalId": "cs-onomatopoeia-1",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "ワンワン",
+        "label": "Guk guk",
+        "romaji": "Wanwan"
+      },
+      {
+        "_key": "item-1",
+        "jp": "ニャーニャー",
+        "label": "Meong",
+        "romaji": "Nyanya"
+      }
+    ],
+    "sheetId": "CS-ONOMATOPOEIA-1",
+    "title": "Onomatopoeia (Hewan)"
+  },
+  {
+    "_createdAt": "2026-05-04T08:26:59Z",
+    "_id": "cs-particles",
+    "_originalId": "cs-particles",
+    "_rev": "nIg1U3PwlcnhewHbLypz0E",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:26:59Z",
+    "category": "Aturan Partikel & Grammar",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "は (Wa)",
+        "label": "Topik",
+        "romaji": "Subjek utama"
+      },
+      {
+        "_key": "item-1",
+        "jp": "を (O)",
+        "label": "Objek",
+        "romaji": "Objek tindakan"
+      },
+      {
+        "_key": "item-2",
+        "jp": "へ (E)",
+        "label": "Arah",
+        "romaji": "Tujuan perjalanan"
+      },
+      {
+        "_key": "item-3",
+        "jp": "の (No)",
+        "label": "Kepemilikan",
+        "romaji": "Milik / Bagian dari"
+      }
+    ],
+    "sheetId": "CS-PARTICLES",
+    "title": "Partikel Dasar"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-particles-1",
+    "_originalId": "cs-particles-1",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Aturan Partikel & Grammar",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "は",
+        "label": "Fungsi Wa",
+        "romaji": "Topik"
+      },
+      {
+        "_key": "item-1",
+        "jp": "を",
+        "label": "Fungsi O",
+        "romaji": "Objek"
+      }
+    ],
+    "sheetId": "CS-PARTICLES-1",
+    "title": "Partikel Dasar (Wa, O, Ni)"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-particles-2",
+    "_originalId": "cs-particles-2",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Aturan Partikel & Grammar",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "へ",
+        "label": "Fungsi E",
+        "romaji": "Ke (Arah)"
+      },
+      {
+        "_key": "item-1",
+        "jp": "で",
+        "label": "Fungsi De",
+        "romaji": "Di (Aksi)"
+      }
+    ],
+    "sheetId": "CS-PARTICLES-2",
+    "title": "Partikel Arah & Tempat (E, De)"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-particles-3",
+    "_originalId": "cs-particles-3",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Aturan Partikel & Grammar",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "の",
+        "label": "Fungsi No",
+        "romaji": "Milik"
+      },
+      {
+        "_key": "item-1",
+        "jp": "も",
+        "label": "Fungsi Mo",
+        "romaji": "Juga"
+      }
+    ],
+    "sheetId": "CS-PARTICLES-3",
+    "title": "Partikel Kepemilikan & Juga (No, Mo)"
+  },
+  {
+    "_createdAt": "2026-05-04T08:26:59Z",
+    "_id": "cs-places",
+    "_originalId": "cs-places",
+    "_rev": "nIg1U3PwlcnhewHbLypz0E",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:26:59Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "学校 / 病院",
+        "label": "Sekolah/RS",
+        "romaji": "Gakkou / Byouin"
+      },
+      {
+        "_key": "item-1",
+        "jp": "銀行 / 公園",
+        "label": "Bank/Taman",
+        "romaji": "Ginkou / Kouen"
+      }
+    ],
+    "sheetId": "CS-PLACES",
+    "title": "Tempat Umum"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-places-town",
+    "_originalId": "cs-places-town",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "銀行 / 病院",
+        "label": "Bank/RS",
+        "romaji": "Ginkou / Byouin"
+      },
+      {
+        "_key": "item-1",
+        "jp": "駅 / 公園",
+        "label": "Stasiun/Taman",
+        "romaji": "Eki / Kouen"
+      }
+    ],
+    "sheetId": "CS-PLACES-TOWN",
+    "title": "Tempat Umum di Kota"
+  },
+  {
+    "_createdAt": "2026-05-04T08:26:59Z",
+    "_id": "cs-professions",
+    "_originalId": "cs-professions",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "医者 / 先生",
+        "label": "Dokter/Guru",
+        "romaji": "Isha / Sensei"
+      },
+      {
+        "_key": "item-1",
+        "jp": "会社員 / 警察官",
+        "label": "Pegawai/Polisi",
+        "romaji": "Kaishain / Keisatsukan"
+      }
+    ],
+    "sheetId": "CS-PROFESSIONS",
+    "title": "Daftar Pekerjaan Umum"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-pronouns",
+    "_originalId": "cs-pronouns",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Keluarga & Relasi",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "私 / あなた",
+        "label": "Saya/Kamu",
+        "romaji": "Watashi / Anata"
+      },
+      {
+        "_key": "item-1",
+        "jp": "彼 / 彼女",
+        "label": "Dia L/P",
+        "romaji": "Kare / Kanojo"
+      }
+    ],
+    "sheetId": "CS-PRONOUNS",
+    "title": "Kata Ganti Orang"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-sea-life",
+    "_originalId": "cs-sea-life",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "魚 / 鮫",
+        "label": "Ikan/Hiu",
+        "romaji": "Sakana / Same"
+      },
+      {
+        "_key": "item-1",
+        "jp": "たこ / いか",
+        "label": "Gurita/Cumi",
+        "romaji": "Tako / Ika"
+      }
+    ],
+    "sheetId": "CS-SEA-LIFE",
+    "title": "Makhluk Laut"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-seasonal-things",
+    "_originalId": "cs-seasonal-things",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "扇風機",
+        "label": "Kipas",
+        "romaji": "Senpuuki"
+      },
+      {
+        "_key": "item-1",
+        "jp": "こたつ",
+        "label": "Kotatsu",
+        "romaji": "Kotatsu"
+      }
+    ],
+    "sheetId": "CS-SEASONAL-THINGS",
+    "title": "Barang Musiman"
+  },
+  {
+    "_createdAt": "2026-05-02T08:04:24Z",
+    "_id": "cs-spec-002",
+    "_originalId": "cs-spec-002",
+    "_rev": "1OX1FIr4lU0Z7vRNlUAomp",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-03T13:34:53Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "ono-01",
+        "itemId": "1",
+        "jp": "ペラペラ",
+        "label": "Fasih berbicara",
+        "romaji": "Pera-pera"
+      },
+      {
+        "_key": "ono-02",
+        "itemId": "2",
+        "jp": "ワクワク",
+        "label": "Bersemangat / antusias",
+        "romaji": "Waku-waku"
+      },
+      {
+        "_key": "ono-03",
+        "itemId": "3",
+        "jp": "ふわふわ",
+        "label": "Lembut / empuk",
+        "romaji": "Fuwa-fuwa"
+      },
+      {
+        "_key": "ono-04",
+        "itemId": "4",
+        "jp": "キラキラ",
+        "label": "Berkilau / bersinar",
+        "romaji": "Kira-kira"
+      },
+      {
+        "_key": "ono-05",
+        "itemId": "5",
+        "jp": "ドキドキ",
+        "label": "Gemetar / takut",
+        "romaji": "Doki-doki"
+      },
+      {
+        "_key": "ono-06",
+        "itemId": "6",
+        "jp": "プニプニ",
+        "label": "Kenyal / elastis",
+        "romaji": "Puni-puni"
+      },
+      {
+        "_key": "ono-07",
+        "itemId": "7",
+        "jp": "サクサク",
+        "label": "Renyah / garing",
+        "romaji": "Saku-saku"
+      },
+      {
+        "_key": "ono-08",
+        "itemId": "8",
+        "jp": "ベタベタ",
+        "label": "Lengket",
+        "romaji": "Beta-beta"
+      },
+      {
+        "_key": "ono-09",
+        "itemId": "9",
+        "jp": "ツルツル",
+        "label": "Licin / halus",
+        "romaji": "Tsuru-tsuru"
+      },
+      {
+        "_key": "ono-10",
+        "itemId": "10",
+        "jp": "ザラザラ",
+        "label": "Kasar / berpasir",
+        "romaji": "Zara-zara"
+      },
+      {
+        "_key": "ono-11",
+        "itemId": "11",
+        "jp": "ぼんやり",
+        "label": "Mengantuk / lesu",
+        "romaji": "Bonyari"
+      },
+      {
+        "_key": "ono-12",
+        "itemId": "12",
+        "jp": "いきなり",
+        "label": "Tiba-tiba",
+        "romaji": "Ikinari"
+      },
+      {
+        "_key": "ono-13",
+        "itemId": "13",
+        "jp": "ゆっくり",
+        "label": "Pelan-pelan",
+        "romaji": "Yukkuri"
+      },
+      {
+        "_key": "ono-14",
+        "itemId": "14",
+        "jp": "ぎっしり",
+        "label": "Penuh sesak",
+        "romaji": "Gisshiri"
+      },
+      {
+        "_key": "ono-15",
+        "itemId": "15",
+        "jp": "くるくる",
+        "label": "Berputar-putar",
+        "romaji": "Kuru-kuru"
+      }
+    ],
+    "sheetId": "CS-SPEC-002",
+    "title": "Onomatopoeia (Giseigo & Gitaigo)"
+  },
+  {
+    "_createdAt": "2026-05-02T08:04:24Z",
+    "_id": "cs-spec-003",
+    "_originalId": "cs-spec-003",
+    "_rev": "nIg1U3PwlcnhewHbLowUsQ",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-03T13:34:42Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "dir-01",
+        "itemId": "1",
+        "jp": "右",
+        "label": "Kanan",
+        "romaji": "Migi"
+      },
+      {
+        "_key": "dir-02",
+        "itemId": "2",
+        "jp": "左",
+        "label": "Kiri",
+        "romaji": "Hidari"
+      },
+      {
+        "_key": "dir-03",
+        "itemId": "3",
+        "jp": "まっすぐ",
+        "label": "Lurus",
+        "romaji": "Massugu"
+      },
+      {
+        "_key": "dir-04",
+        "itemId": "4",
+        "jp": "北",
+        "label": "Utara",
+        "romaji": "Kita"
+      },
+      {
+        "_key": "dir-05",
+        "itemId": "5",
+        "jp": "南",
+        "label": "Selatan",
+        "romaji": "Minami"
+      },
+      {
+        "_key": "dir-06",
+        "itemId": "6",
+        "jp": "東",
+        "label": "Timur",
+        "romaji": "Higashi"
+      },
+      {
+        "_key": "dir-07",
+        "itemId": "7",
+        "jp": "西",
+        "label": "Barat",
+        "romaji": "Nishi"
+      },
+      {
+        "_key": "dir-08",
+        "itemId": "8",
+        "jp": "上",
+        "label": "Di atas",
+        "romaji": "Ue"
+      },
+      {
+        "_key": "dir-09",
+        "itemId": "9",
+        "jp": "下",
+        "label": "Di bawah",
+        "romaji": "Shita"
+      },
+      {
+        "_key": "dir-10",
+        "itemId": "10",
+        "jp": "中",
+        "label": "Di dalam",
+        "romaji": "Naka"
+      },
+      {
+        "_key": "dir-11",
+        "itemId": "11",
+        "jp": "外",
+        "label": "Di luar",
+        "romaji": "Soto"
+      },
+      {
+        "_key": "dir-12",
+        "itemId": "12",
+        "jp": "前",
+        "label": "Di depan",
+        "romaji": "Mae"
+      },
+      {
+        "_key": "dir-13",
+        "itemId": "13",
+        "jp": "後ろ",
+        "label": "Di belakang",
+        "romaji": "Ushiro"
+      },
+      {
+        "_key": "dir-14",
+        "itemId": "14",
+        "jp": "横",
+        "label": "Di samping",
+        "romaji": "Yoko"
+      },
+      {
+        "_key": "dir-15",
+        "itemId": "15",
+        "jp": "間",
+        "label": "Di antara",
+        "romaji": "Aida"
+      },
+      {
+        "_key": "dir-16",
+        "itemId": "16",
+        "jp": "近く",
+        "label": "Di dekat",
+        "romaji": "Chikaku"
+      },
+      {
+        "_key": "dir-17",
+        "itemId": "17",
+        "jp": "遠く",
+        "label": "Di jauh",
+        "romaji": "Tooku"
+      },
+      {
+        "_key": "dir-18",
+        "itemId": "18",
+        "jp": "角",
+        "label": "Pojok / sudut",
+        "romaji": "Kado"
+      },
+      {
+        "_key": "dir-19",
+        "itemId": "19",
+        "jp": "交差点",
+        "label": "Persimpangan",
+        "romaji": "Kousaten"
+      },
+      {
+        "_key": "dir-20",
+        "itemId": "20",
+        "jp": "右に曲がる",
+        "label": "Belok kanan",
+        "romaji": "Migi ni magaru"
+      },
+      {
+        "_key": "dir-21",
+        "itemId": "21",
+        "jp": "左に曲がる",
+        "label": "Belok kiri",
+        "romaji": "Hidari ni magaru"
+      }
+    ],
+    "sheetId": "CS-SPEC-003",
+    "title": "Arah & Posisi Spasial"
+  },
+  {
+    "_createdAt": "2026-05-02T08:04:24Z",
+    "_id": "cs-spec-004",
+    "_originalId": "cs-spec-004",
+    "_rev": "1OX1FIr4lU0Z7vRNlUAjRJ",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-03T13:34:25Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "med-01",
+        "itemId": "1",
+        "jp": "頭",
+        "label": "Kepala",
+        "romaji": "Atama"
+      },
+      {
+        "_key": "med-02",
+        "itemId": "2",
+        "jp": "目",
+        "label": "Mata",
+        "romaji": "Me"
+      },
+      {
+        "_key": "med-03",
+        "itemId": "3",
+        "jp": "耳",
+        "label": "Telinga",
+        "romaji": "Mimi"
+      },
+      {
+        "_key": "med-04",
+        "itemId": "4",
+        "jp": "鼻",
+        "label": "Hidung",
+        "romaji": "Hana"
+      },
+      {
+        "_key": "med-05",
+        "itemId": "5",
+        "jp": "口",
+        "label": "Mulut",
+        "romaji": "Kuchi"
+      },
+      {
+        "_key": "med-06",
+        "itemId": "6",
+        "jp": "喉",
+        "label": "Tenggorokan",
+        "romaji": "Nodo"
+      },
+      {
+        "_key": "med-07",
+        "itemId": "7",
+        "jp": "胸",
+        "label": "Dada",
+        "romaji": "Mune"
+      },
+      {
+        "_key": "med-08",
+        "itemId": "8",
+        "jp": "お腹",
+        "label": "Perut",
+        "romaji": "Onaka"
+      },
+      {
+        "_key": "med-09",
+        "itemId": "9",
+        "jp": "背中",
+        "label": "Punggung",
+        "romaji": "Senaka"
+      },
+      {
+        "_key": "med-10",
+        "itemId": "10",
+        "jp": "手",
+        "label": "Tangan",
+        "romaji": "Te"
+      },
+      {
+        "_key": "med-11",
+        "itemId": "11",
+        "jp": "足",
+        "label": "Kaki",
+        "romaji": "Ashi"
+      },
+      {
+        "_key": "med-12",
+        "itemId": "12",
+        "jp": "頭痛",
+        "label": "Sakit kepala",
+        "romaji": "Zutsuu"
+      },
+      {
+        "_key": "med-13",
+        "itemId": "13",
+        "jp": "熱",
+        "label": "Demam",
+        "romaji": "Netsu"
+      },
+      {
+        "_key": "med-14",
+        "itemId": "14",
+        "jp": "咳",
+        "label": "Batuk",
+        "romaji": "Seki"
+      },
+      {
+        "_key": "med-15",
+        "itemId": "15",
+        "jp": "鼻水",
+        "label": "Pilek",
+        "romaji": "Hanamizu"
+      },
+      {
+        "_key": "med-16",
+        "itemId": "16",
+        "jp": "吐き気",
+        "label": "Mual",
+        "romaji": "Hakike"
+      },
+      {
+        "_key": "med-17",
+        "itemId": "17",
+        "jp": "めまい",
+        "label": "Pusing",
+        "romaji": "Memai"
+      },
+      {
+        "_key": "med-18",
+        "itemId": "18",
+        "jp": "腹痛",
+        "label": "Sakit perut",
+        "romaji": "Fukutsuu"
+      },
+      {
+        "_key": "med-19",
+        "itemId": "19",
+        "jp": "アレルギー",
+        "label": "Alergi",
+        "romaji": "Arerugii"
+      },
+      {
+        "_key": "med-20",
+        "itemId": "20",
+        "jp": "ここが痛いです",
+        "label": "Saya sakit di sini",
+        "romaji": "Koko ga itai desu"
+      }
+    ],
+    "sheetId": "CS-SPEC-004",
+    "title": "Gejala Medis & Anatomi Tubuh"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-sports",
+    "_originalId": "cs-sports",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "サッカー",
+        "label": "Sepakbola",
+        "romaji": "Sakkaa"
+      },
+      {
+        "_key": "item-1",
+        "jp": "バスケットボール",
+        "label": "Basket",
+        "romaji": "Basuketto"
+      }
+    ],
+    "sheetId": "CS-SPORTS",
+    "title": "Daftar Olahraga"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-stationary",
+    "_originalId": "cs-stationary",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "ペン / 鉛筆",
+        "label": "Pena/Pensil",
+        "romaji": "Pen / Enpitsu"
+      },
+      {
+        "_key": "item-1",
+        "jp": "本 / 消しゴム",
+        "label": "Buku/Penghapus",
+        "romaji": "Hon / Keshigomu"
+      }
+    ],
+    "sheetId": "CS-STATIONARY",
+    "title": "Alat Tulis"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-subjects",
+    "_originalId": "cs-subjects",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "数学",
+        "label": "Matematika",
+        "romaji": "Suugaku"
+      },
+      {
+        "_key": "item-1",
+        "jp": "科学",
+        "label": "Sains",
+        "romaji": "Kagaku"
+      }
+    ],
+    "sheetId": "CS-SUBJECTS",
+    "title": "Mata Pelajaran"
+  },
+  {
+    "_createdAt": "2026-05-04T08:26:59Z",
+    "_id": "cs-time-1",
+    "_originalId": "cs-time-1",
+    "_rev": "nIg1U3PwlcnhewHbLypz0E",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:26:59Z",
+    "category": "Waktu & Tanggal",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "〜時 (Ji)",
+        "label": "Jam",
+        "romaji": "Ji"
+      },
+      {
+        "_key": "item-1",
+        "jp": "〜分 (Fun/Pun)",
+        "label": "Menit",
+        "romaji": "Fun/Pun"
+      },
+      {
+        "_key": "item-2",
+        "jp": "半 (Han)",
+        "label": "Setengah",
+        "romaji": "Han (30 Menit)"
+      }
+    ],
+    "sheetId": "CS-TIME-1",
+    "title": "Jam & Menit"
+  },
+  {
+    "_createdAt": "2026-05-04T08:26:59Z",
+    "_id": "cs-time-2",
+    "_originalId": "cs-time-2",
+    "_rev": "nIg1U3PwlcnhewHbLypz0E",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:26:59Z",
+    "category": "Waktu & Tanggal",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "月, 火, 水, 木, 金, 土, 日",
+        "label": "Senin-Minggu",
+        "romaji": "Getsu, Ka, Sui, Moku, Kin, Do, Nichi (-youbi)"
+      },
+      {
+        "_key": "item-1",
+        "jp": "ついたち, ふつか, みっか...",
+        "label": "Tanggal 1-10",
+        "romaji": "Tsuitachi, Futsuka, Mikka..."
+      }
+    ],
+    "sheetId": "CS-TIME-2",
+    "title": "Hari & Tanggal"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-time-hours",
+    "_originalId": "cs-time-hours",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Waktu & Tanggal",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "一時, 二時... 十二時",
+        "label": "Jam 1-12",
+        "romaji": "Ichiji... Juuniji"
+      },
+      {
+        "_key": "item-1",
+        "jp": "よじ, しちじ, くじ",
+        "label": "Jam 4, 7, 9",
+        "romaji": "Yoji, Shichiji, Kuji"
+      }
+    ],
+    "sheetId": "CS-TIME-HOURS",
+    "title": "Sistem Jam (1-12)"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-time-minutes",
+    "_originalId": "cs-time-minutes",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Waktu & Tanggal",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "いっぷん, にふん, さんぷん...",
+        "label": "1-10 Menit",
+        "romaji": "Ippun, Nifun, Sanpun..."
+      },
+      {
+        "_key": "item-1",
+        "jp": "半",
+        "label": "30 Menit (Setengah)",
+        "romaji": "Han"
+      }
+    ],
+    "sheetId": "CS-TIME-MINUTES",
+    "title": "Sistem Menit (1-60)"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-transport-parts",
+    "_originalId": "cs-transport-parts",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "タイヤ / エンジン",
+        "label": "Roda/Mesin",
+        "romaji": "Taiya / Enjin"
+      },
+      {
+        "_key": "item-1",
+        "jp": "窓 / ドア",
+        "label": "Jendela/Pintu",
+        "romaji": "Mado / Doa"
+      }
+    ],
+    "sheetId": "CS-TRANSPORT-PARTS",
+    "title": "Bagian Kendaraan"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-transport-public",
+    "_originalId": "cs-transport-public",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "バス",
+        "label": "Bis",
+        "romaji": "Basu"
+      },
+      {
+        "_key": "item-1",
+        "jp": "電車",
+        "label": "Kereta",
+        "romaji": "Densha"
+      }
+    ],
+    "sheetId": "CS-TRANSPORT-PUBLIC",
+    "title": "Transportasi Publik"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-vegetables",
+    "_originalId": "cs-vegetables",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "にんじん / じゃがいも",
+        "label": "Wortel/Kentang",
+        "romaji": "Ninjin / Jagaimo"
+      },
+      {
+        "_key": "item-1",
+        "jp": "たまねぎ / トマト",
+        "label": "Bawang/Tomat",
+        "romaji": "Tamanegi / Tomato"
+      }
+    ],
+    "sheetId": "CS-VEGETABLES",
+    "title": "Sayur-Sayuran"
+  },
+  {
+    "_createdAt": "2026-05-04T08:26:59Z",
+    "_id": "cs-verbs-1",
+    "_originalId": "cs-verbs-1",
+    "_rev": "nIg1U3PwlcnhewHbLypz0E",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:26:59Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "食べる / 飲む",
+        "label": "Makan/Minum",
+        "romaji": "Taberu / Nomu"
+      },
+      {
+        "_key": "item-1",
+        "jp": "行く / 帰る",
+        "label": "Pergi/Pulang",
+        "romaji": "Iku / Kaeru"
+      }
+    ],
+    "sheetId": "CS-VERBS-1",
+    "title": "Kata Kerja Harian"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-verbs-group1",
+    "_originalId": "cs-verbs-group1",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Aturan Partikel & Grammar",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "書く",
+        "label": "Menulis",
+        "romaji": "Kaku"
+      },
+      {
+        "_key": "item-1",
+        "jp": "聞く",
+        "label": "Mendengar",
+        "romaji": "Kiku"
+      }
+    ],
+    "sheetId": "CS-VERBS-GROUP1",
+    "title": "Kata Kerja Group 1"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-verbs-group2",
+    "_originalId": "cs-verbs-group2",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Aturan Partikel & Grammar",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "食べる",
+        "label": "Makan",
+        "romaji": "Taberu"
+      },
+      {
+        "_key": "item-1",
+        "jp": "見る",
+        "label": "Melihat",
+        "romaji": "Miru"
+      }
+    ],
+    "sheetId": "CS-VERBS-GROUP2",
+    "title": "Kata Kerja Group 2"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-verbs-group3",
+    "_originalId": "cs-verbs-group3",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Aturan Partikel & Grammar",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "する",
+        "label": "Melakukan",
+        "romaji": "Suru"
+      },
+      {
+        "_key": "item-1",
+        "jp": "来る",
+        "label": "Datang",
+        "romaji": "Kuru"
+      }
+    ],
+    "sheetId": "CS-VERBS-GROUP3",
+    "title": "Kata Kerja Group 3 (Irreguler)"
+  },
+  {
+    "_createdAt": "2026-05-04T08:26:59Z",
+    "_id": "cs-weather",
+    "_originalId": "cs-weather",
+    "_rev": "nIg1U3PwlcnhewHbLypz0E",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:26:59Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "晴れ / 雨",
+        "label": "Cerah/Hujan",
+        "romaji": "Hare / Ame"
+      },
+      {
+        "_key": "item-1",
+        "jp": "雪 / 風",
+        "label": "Salju/Angin",
+        "romaji": "Yuki / Kaze"
+      }
+    ],
+    "sheetId": "CS-WEATHER",
+    "title": "Cuaca"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-weather-detail",
+    "_originalId": "cs-weather-detail",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "晴れ",
+        "label": "Cerah",
+        "romaji": "Hare"
+      },
+      {
+        "_key": "item-1",
+        "jp": "曇り",
+        "label": "Berawan",
+        "romaji": "Kumori"
+      }
+    ],
+    "sheetId": "CS-WEATHER-DETAIL",
+    "title": "Cuaca Detail"
+  },
+  {
+    "_createdAt": "2026-05-04T08:39:58Z",
+    "_id": "cs-week-days",
+    "_originalId": "cs-week-days",
+    "_rev": "kWXWidmuPc1STj8NNDrETR",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-04T08:39:58Z",
+    "category": "Waktu & Tanggal",
+    "items": [
+      {
+        "_key": "item-0",
+        "jp": "月, 火, 水, 木, 金, 土, 日",
+        "label": "Sen-Min",
+        "romaji": "Getsu, Ka, Sui, Moku, Kin, Do, Nichi"
+      }
+    ],
+    "sheetId": "CS-WEEK-DAYS",
+    "title": "Nama Hari"
+  },
+  {
+    "_createdAt": "2026-05-02T07:17:28Z",
+    "_id": "dba28efe-e4c0-4085-ab93-23747c6082e4",
+    "_originalId": "dba28efe-e4c0-4085-ab93-23747c6082e4",
+    "_rev": "1OX1FIr4lU0Z7vRNlUAiwT",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-03T13:34:16Z",
+    "category": "Keluarga & Relasi",
+    "items": [
+      {
+        "_key": "fam-01",
+        "itemId": "1",
+        "jp": "父",
+        "label": "Ayah (milik sendiri)",
+        "romaji": "Chichi"
+      },
+      {
+        "_key": "fam-02",
+        "itemId": "2",
+        "jp": "お父さん",
+        "label": "Ayah (orang lain)",
+        "romaji": "Otousan"
+      },
+      {
+        "_key": "fam-03",
+        "itemId": "3",
+        "jp": "母",
+        "label": "Ibu (milik sendiri)",
+        "romaji": "Haha"
+      },
+      {
+        "_key": "fam-04",
+        "itemId": "4",
+        "jp": "お母さん",
+        "label": "Ibu (orang lain)",
+        "romaji": "Okaasan"
+      },
+      {
+        "_key": "fam-05",
+        "itemId": "5",
+        "jp": "兄",
+        "label": "Kakak laki-laki (milik sendiri)",
+        "romaji": "Ani"
+      },
+      {
+        "_key": "fam-06",
+        "itemId": "6",
+        "jp": "お兄さん",
+        "label": "Kakak laki-laki (orang lain)",
+        "romaji": "Oniisan"
+      },
+      {
+        "_key": "fam-07",
+        "itemId": "7",
+        "jp": "姉",
+        "label": "Kakak perempuan (milik sendiri)",
+        "romaji": "Ane"
+      },
+      {
+        "_key": "fam-08",
+        "itemId": "8",
+        "jp": "お姉さん",
+        "label": "Kakak perempuan (orang lain)",
+        "romaji": "Oneesan"
+      },
+      {
+        "_key": "fam-09",
+        "itemId": "9",
+        "jp": "弟",
+        "label": "Adik laki-laki (milik sendiri)",
+        "romaji": "Otouto"
+      },
+      {
+        "_key": "fam-10",
+        "itemId": "10",
+        "jp": "弟さん",
+        "label": "Adik laki-laki (orang lain)",
+        "romaji": "Otoutosan"
+      },
+      {
+        "_key": "fam-11",
+        "itemId": "11",
+        "jp": "妹",
+        "label": "Adik perempuan (milik sendiri)",
+        "romaji": "Imouto"
+      },
+      {
+        "_key": "fam-12",
+        "itemId": "12",
+        "jp": "妹さん",
+        "label": "Adik perempuan (orang lain)",
+        "romaji": "Imoutosan"
+      },
+      {
+        "_key": "fam-13",
+        "itemId": "13",
+        "jp": "祖父",
+        "label": "Kakek (milik sendiri)",
+        "romaji": "Sofu"
+      },
+      {
+        "_key": "fam-14",
+        "itemId": "14",
+        "jp": "おじいさん",
+        "label": "Kakek (orang lain)",
+        "romaji": "Ojiisan"
+      },
+      {
+        "_key": "fam-15",
+        "itemId": "15",
+        "jp": "祖母",
+        "label": "Nenek (milik sendiri)",
+        "romaji": "Sobo"
+      },
+      {
+        "_key": "fam-16",
+        "itemId": "16",
+        "jp": "おばあさん",
+        "label": "Nenek (orang lain)",
+        "romaji": "Obaasan"
+      },
+      {
+        "_key": "fam-17",
+        "itemId": "17",
+        "jp": "夫",
+        "label": "Suami (milik sendiri)",
+        "romaji": "Otto"
+      },
+      {
+        "_key": "fam-18",
+        "itemId": "18",
+        "jp": "ご主人",
+        "label": "Suami (orang lain)",
+        "romaji": "Goshujin"
+      },
+      {
+        "_key": "fam-19",
+        "itemId": "19",
+        "jp": "妻",
+        "label": "Istri (milik sendiri)",
+        "romaji": "Tsuma"
+      },
+      {
+        "_key": "fam-20",
+        "itemId": "20",
+        "jp": "奥さん",
+        "label": "Istri (orang lain)",
+        "romaji": "Okusan"
+      },
+      {
+        "_key": "fam-21",
+        "itemId": "21",
+        "jp": "息子",
+        "label": "Anak laki-laki (milik sendiri)",
+        "romaji": "Musuko"
+      },
+      {
+        "_key": "fam-22",
+        "itemId": "22",
+        "jp": "息子さん",
+        "label": "Anak laki-laki (orang lain)",
+        "romaji": "Musukosan"
+      },
+      {
+        "_key": "fam-23",
+        "itemId": "23",
+        "jp": "娘",
+        "label": "Anak perempuan (milik sendiri)",
+        "romaji": "Musume"
+      },
+      {
+        "_key": "fam-24",
+        "itemId": "24",
+        "jp": "娘さん",
+        "label": "Anak perempuan (orang lain)",
+        "romaji": "Musumeson"
+      },
+      {
+        "_key": "fam-25",
+        "itemId": "25",
+        "jp": "叔父",
+        "label": "Paman (milik sendiri)",
+        "romaji": "Oji"
+      },
+      {
+        "_key": "fam-26",
+        "itemId": "26",
+        "jp": "おじさん",
+        "label": "Paman (orang lain)",
+        "romaji": "Ojisan"
+      },
+      {
+        "_key": "fam-27",
+        "itemId": "27",
+        "jp": "叔母",
+        "label": "Bibi (milik sendiri)",
+        "romaji": "Oba"
+      },
+      {
+        "_key": "fam-28",
+        "itemId": "28",
+        "jp": "おばさん",
+        "label": "Bibi (orang lain)",
+        "romaji": "Obasan"
+      },
+      {
+        "_key": "fam-29",
+        "itemId": "29",
+        "jp": "いとこ",
+        "label": "Sepupu",
+        "romaji": "Itoko"
+      },
+      {
+        "_key": "fam-30",
+        "itemId": "30",
+        "jp": "家族",
+        "label": "Keluarga",
+        "romaji": "Kazoku"
+      }
+    ],
+    "sheetId": "CS-FAM-001",
+    "title": "Kosakata Keluarga & Relasi Sosial"
+  },
+  {
+    "_createdAt": "2026-05-02T07:17:28Z",
+    "_id": "f1c26037-b4da-4657-bcb2-c6ac1a28bc0f",
+    "_originalId": "f1c26037-b4da-4657-bcb2-c6ac1a28bc0f",
+    "_rev": "kWXWidmuPc1STj8NN3hZYX",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-03T13:34:03Z",
+    "category": "Topik Khusus Lainnya",
+    "items": [
+      {
+        "_key": "soc-01",
+        "itemId": "1",
+        "jp": "おはようございます",
+        "label": "Selamat pagi",
+        "romaji": "Ohayou gozaimasu"
+      },
+      {
+        "_key": "soc-02",
+        "itemId": "2",
+        "jp": "こんにちは",
+        "label": "Selamat siang",
+        "romaji": "Konnichiwa"
+      },
+      {
+        "_key": "soc-03",
+        "itemId": "3",
+        "jp": "こんばんは",
+        "label": "Selamat malam",
+        "romaji": "Konbanwa"
+      },
+      {
+        "_key": "soc-04",
+        "itemId": "4",
+        "jp": "さようなら",
+        "label": "Selamat tinggal",
+        "romaji": "Sayounara"
+      },
+      {
+        "_key": "soc-05",
+        "itemId": "5",
+        "jp": "じゃあね",
+        "label": "Sampai jumpa (informal)",
+        "romaji": "Jaa ne"
+      },
+      {
+        "_key": "soc-06",
+        "itemId": "6",
+        "jp": "ありがとうございます",
+        "label": "Terima kasih",
+        "romaji": "Arigatou gozaimasu"
+      },
+      {
+        "_key": "soc-07",
+        "itemId": "7",
+        "jp": "どういたしまして",
+        "label": "Sama-sama",
+        "romaji": "Dou itashimashite"
+      },
+      {
+        "_key": "soc-08",
+        "itemId": "8",
+        "jp": "すみません",
+        "label": "Maaf (minta maaf)",
+        "romaji": "Sumimasen"
+      },
+      {
+        "_key": "soc-09",
+        "itemId": "9",
+        "jp": "ごめんなさい",
+        "label": "Maaf (bersalah)",
+        "romaji": "Gomen nasai"
+      },
+      {
+        "_key": "soc-10",
+        "itemId": "10",
+        "jp": "いただきます",
+        "label": "Sebelum makan",
+        "romaji": "Itadakimasu"
+      },
+      {
+        "_key": "soc-11",
+        "itemId": "11",
+        "jp": "ごちそうさまでした",
+        "label": "Setelah makan",
+        "romaji": "Gochisousama deshita"
+      },
+      {
+        "_key": "soc-12",
+        "itemId": "12",
+        "jp": "行ってきます",
+        "label": "Saat pergi dari rumah",
+        "romaji": "Itte kimasu"
+      },
+      {
+        "_key": "soc-13",
+        "itemId": "13",
+        "jp": "行ってらっしゃい",
+        "label": "Menjawab yang pergi",
+        "romaji": "Itte rasshai"
+      },
+      {
+        "_key": "soc-14",
+        "itemId": "14",
+        "jp": "ただいま",
+        "label": "Saat pulang",
+        "romaji": "Tadaima"
+      },
+      {
+        "_key": "soc-15",
+        "itemId": "15",
+        "jp": "おかえりなさい",
+        "label": "Menyambut yang pulang",
+        "romaji": "Okaeri nasai"
+      },
+      {
+        "_key": "soc-16",
+        "itemId": "16",
+        "jp": "失礼します",
+        "label": "Permisi (masuk/lewat)",
+        "romaji": "Shitsurei shimasu"
+      },
+      {
+        "_key": "soc-17",
+        "itemId": "17",
+        "jp": "いらっしゃいませ",
+        "label": "Selamat datang (toko)",
+        "romaji": "Irasshaimase"
+      },
+      {
+        "_key": "soc-18",
+        "itemId": "18",
+        "jp": "お久しぶりです",
+        "label": "Sudah lama tidak bertemu",
+        "romaji": "Ohisashiburi desu"
+      },
+      {
+        "_key": "soc-19",
+        "itemId": "19",
+        "jp": "お元気ですか",
+        "label": "Apa kabar?",
+        "romaji": "Ogenki desu ka"
+      },
+      {
+        "_key": "soc-20",
+        "itemId": "20",
+        "jp": "元気です",
+        "label": "Baik-baik saja",
+        "romaji": "Genki desu"
+      }
+    ],
+    "sheetId": "CS-SPEC-001",
+    "title": "Ekspresi Sosial & Sapaan"
+  },
+  {
+    "_createdAt": "2026-05-02T07:17:28Z",
+    "_id": "f27a6399-c8ef-491f-9c57-1136b798d274",
+    "_originalId": "f27a6399-c8ef-491f-9c57-1136b798d274",
+    "_rev": "nIg1U3PwlcnhewHbLowWiw",
+    "_type": "cheatsheet",
+    "_updatedAt": "2026-05-03T13:35:01Z",
+    "category": "Angka & Matematika",
+    "items": [
+      {
+        "_key": "num-00",
+        "itemId": "1",
+        "jp": "ゼロ / れい",
+        "label": "0",
+        "romaji": "Zero / Rei"
+      },
+      {
+        "_key": "num-01",
+        "itemId": "2",
+        "jp": "一",
+        "label": "1",
+        "romaji": "Ichi"
+      },
+      {
+        "_key": "num-02",
+        "itemId": "3",
+        "jp": "二",
+        "label": "2",
+        "romaji": "Ni"
+      },
+      {
+        "_key": "num-03",
+        "itemId": "4",
+        "jp": "三",
+        "label": "3",
+        "romaji": "San"
+      },
+      {
+        "_key": "num-04",
+        "itemId": "5",
+        "jp": "四",
+        "label": "4",
+        "romaji": "Shi / Yon"
+      },
+      {
+        "_key": "num-05",
+        "itemId": "6",
+        "jp": "五",
+        "label": "5",
+        "romaji": "Go"
+      },
+      {
+        "_key": "num-06",
+        "itemId": "7",
+        "jp": "六",
+        "label": "6",
+        "romaji": "Roku"
+      },
+      {
+        "_key": "num-07",
+        "itemId": "8",
+        "jp": "七",
+        "label": "7",
+        "romaji": "Shichi / Nana"
+      },
+      {
+        "_key": "num-08",
+        "itemId": "9",
+        "jp": "八",
+        "label": "8",
+        "romaji": "Hachi"
+      },
+      {
+        "_key": "num-09",
+        "itemId": "10",
+        "jp": "九",
+        "label": "9",
+        "romaji": "Ku / Kyuu"
+      },
+      {
+        "_key": "num-10",
+        "itemId": "11",
+        "jp": "十",
+        "label": "10",
+        "romaji": "Juu"
+      },
+      {
+        "_key": "num-11",
+        "itemId": "12",
+        "jp": "十一",
+        "label": "11",
+        "romaji": "Juuichi"
+      },
+      {
+        "_key": "num-12",
+        "itemId": "13",
+        "jp": "十二",
+        "label": "12",
+        "romaji": "Juuni"
+      },
+      {
+        "_key": "num-13",
+        "itemId": "14",
+        "jp": "十三",
+        "label": "13",
+        "romaji": "Juusan"
+      },
+      {
+        "_key": "num-14",
+        "itemId": "15",
+        "jp": "十四",
+        "label": "14",
+        "romaji": "Juushi / Juuyon"
+      },
+      {
+        "_key": "num-15",
+        "itemId": "16",
+        "jp": "十五",
+        "label": "15",
+        "romaji": "Juugo"
+      },
+      {
+        "_key": "num-16",
+        "itemId": "17",
+        "jp": "十六",
+        "label": "16",
+        "romaji": "Juuroku"
+      },
+      {
+        "_key": "num-17",
+        "itemId": "18",
+        "jp": "十七",
+        "label": "17",
+        "romaji": "Juushichi / Juunana"
+      },
+      {
+        "_key": "num-18",
+        "itemId": "19",
+        "jp": "十八",
+        "label": "18",
+        "romaji": "Juuhachi"
+      },
+      {
+        "_key": "num-19",
+        "itemId": "20",
+        "jp": "十九",
+        "label": "19",
+        "romaji": "Juuku / Juukyuu"
+      },
+      {
+        "_key": "num-20",
+        "itemId": "21",
+        "jp": "二十",
+        "label": "20",
+        "romaji": "Nijuu"
+      },
+      {
+        "_key": "num-30",
+        "itemId": "22",
+        "jp": "三十",
+        "label": "30",
+        "romaji": "Sanjuu"
+      },
+      {
+        "_key": "num-40",
+        "itemId": "23",
+        "jp": "四十",
+        "label": "40",
+        "romaji": "Yonjuu"
+      },
+      {
+        "_key": "num-50",
+        "itemId": "24",
+        "jp": "五十",
+        "label": "50",
+        "romaji": "Gojuu"
+      },
+      {
+        "_key": "num-60",
+        "itemId": "25",
+        "jp": "六十",
+        "label": "60",
+        "romaji": "Rokujuu"
+      },
+      {
+        "_key": "num-70",
+        "itemId": "26",
+        "jp": "七十",
+        "label": "70",
+        "romaji": "Nanajuu"
+      },
+      {
+        "_key": "num-80",
+        "itemId": "27",
+        "jp": "八十",
+        "label": "80",
+        "romaji": "Hachijuu"
+      },
+      {
+        "_key": "num-90",
+        "itemId": "28",
+        "jp": "九十",
+        "label": "90",
+        "romaji": "Kyuujuu"
+      },
+      {
+        "_key": "num-100",
+        "itemId": "29",
+        "jp": "百",
+        "label": "100",
+        "romaji": "Hyaku"
+      },
+      {
+        "_key": "num-200",
+        "itemId": "30",
+        "jp": "二百",
+        "label": "200",
+        "romaji": "Nihyaku"
+      },
+      {
+        "_key": "num-300",
+        "itemId": "31",
+        "jp": "三百",
+        "label": "300",
+        "romaji": "Sanbyaku"
+      },
+      {
+        "_key": "num-400",
+        "itemId": "32",
+        "jp": "四百",
+        "label": "400",
+        "romaji": "Yonhyaku"
+      },
+      {
+        "_key": "num-500",
+        "itemId": "33",
+        "jp": "五百",
+        "label": "500",
+        "romaji": "Gohyaku"
+      },
+      {
+        "_key": "num-600",
+        "itemId": "34",
+        "jp": "六百",
+        "label": "600",
+        "romaji": "Roppyaku"
+      },
+      {
+        "_key": "num-700",
+        "itemId": "35",
+        "jp": "七百",
+        "label": "700",
+        "romaji": "Nanahyaku"
+      },
+      {
+        "_key": "num-800",
+        "itemId": "36",
+        "jp": "八百",
+        "label": "800",
+        "romaji": "Happyaku"
+      },
+      {
+        "_key": "num-900",
+        "itemId": "37",
+        "jp": "九百",
+        "label": "900",
+        "romaji": "Kyuuhyaku"
+      },
+      {
+        "_key": "num-1000",
+        "itemId": "38",
+        "jp": "千",
+        "label": "1.000",
+        "romaji": "Sen"
+      },
+      {
+        "_key": "num-2000",
+        "itemId": "39",
+        "jp": "二千",
+        "label": "2.000",
+        "romaji": "Nisen"
+      },
+      {
+        "_key": "num-3000",
+        "itemId": "40",
+        "jp": "三千",
+        "label": "3.000",
+        "romaji": "Sanzen"
+      },
+      {
+        "_key": "num-10000",
+        "itemId": "41",
+        "jp": "万",
+        "label": "10.000",
+        "romaji": "Man"
+      },
+      {
+        "_key": "num-100000",
+        "itemId": "42",
+        "jp": "十万",
+        "label": "100.000",
+        "romaji": "Juuman"
+      },
+      {
+        "_key": "num-1000000",
+        "itemId": "43",
+        "jp": "百万",
+        "label": "1.000.000",
+        "romaji": "Hyakuman"
+      },
+      {
+        "_key": "math-01",
+        "itemId": "44",
+        "jp": "足す",
+        "label": "Tambah (+)",
+        "romaji": "Tasu"
+      },
+      {
+        "_key": "math-02",
+        "itemId": "45",
+        "jp": "引く",
+        "label": "Kurang (-)",
+        "romaji": "Hiku"
+      },
+      {
+        "_key": "math-03",
+        "itemId": "46",
+        "jp": "かける",
+        "label": "Kali (×)",
+        "romaji": "Kakeru"
+      },
+      {
+        "_key": "math-04",
+        "itemId": "47",
+        "jp": "わる",
+        "label": "Bagi (÷)",
+        "romaji": "Waru"
+      },
+      {
+        "_key": "math-05",
+        "itemId": "48",
+        "jp": "は",
+        "label": "Sama dengan (=)",
+        "romaji": "Wa"
+      }
+    ],
+    "sheetId": "CS-NUM-001",
+    "title": "Sistem Bilangan Jepang"
+  }
+]
