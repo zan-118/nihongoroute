@@ -10,7 +10,7 @@ import { UserProgress } from "./types";
  */
 export const useProgressStore = Object.assign(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (selector: (state: unknown) => any) => {
+  (selector: (state: any) => any = (s) => s) => {
     // This is a bit tricky because Zustand stores are individual hooks.
     // A selector that expects a combined state won't work easily.
     // However, most components use specific selectors.
