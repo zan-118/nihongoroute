@@ -70,7 +70,7 @@ export function FlashcardBack({
         WebkitBackfaceVisibility: "hidden",
       }}
     >
-      <div className="w-full h-full flex flex-col relative overflow-y-auto no-scrollbar">
+      <div className={`w-full h-full flex flex-col relative ${isKanji ? '' : 'overflow-y-auto no-scrollbar'}`}>
         {/* HEADER SECTION */}
         <div className="w-full flex items-center justify-between mb-4 shrink-0">
           <Badge
@@ -85,11 +85,11 @@ export function FlashcardBack({
           </div>
         </div>
 
-        <div className={`text-center w-full flex flex-col items-center flex-1 ${isKanji ? 'space-y-4 md:space-y-6' : 'space-y-4'}`}>
+        <div className={`text-center w-full flex flex-col items-center flex-1 ${isKanji ? 'space-y-2 md:space-y-4 justify-between' : 'space-y-4'}`}>
           {/* WORD DISPLAY */}
           <div className="flex flex-col items-center relative group/kanji shrink-0">
             <h2
-              className={`${isKanji ? "text-7xl md:text-7xl" : word.length > 4 ? "text-4xl sm:text-5xl md:text-6xl lg:text-7xl" : "text-5xl sm:text-6xl md:text-7xl lg:text-8xl"} font-black text-foreground tracking-tight font-japanese leading-none drop-shadow-sm dark:drop-shadow-lg transition-all`}
+              className={`${isKanji ? "text-6xl md:text-7xl" : word.length > 4 ? "text-4xl sm:text-5xl md:text-6xl lg:text-7xl" : "text-5xl sm:text-6xl md:text-7xl lg:text-8xl"} font-black text-foreground tracking-tight font-japanese leading-none drop-shadow-sm dark:drop-shadow-lg transition-all`}
             >
               {isKanji ? word : (
                 splitFurigana(word, hiraReading).map((chunk, i) => (
@@ -115,23 +115,23 @@ export function FlashcardBack({
 
           {/* KANJI DETAILS */}
           {isKanji && kanjiDetails && (
-            <div className="grid grid-cols-2 gap-3 w-full max-w-sm px-2">
+            <div className="grid grid-cols-2 gap-2 w-full max-w-sm px-2">
               {kanjiDetails.onyomi && (
-                <div className="bg-muted/30 dark:bg-white/[0.03] p-3 rounded-2xl border border-border/50 dark:border-white/[0.05] flex flex-col items-center shadow-none">
+                <div className="bg-muted/30 dark:bg-white/[0.03] p-2 md:p-3 rounded-2xl border border-border/50 dark:border-white/[0.05] flex flex-col items-center shadow-none">
                   <span className="text-[8px] text-muted-foreground uppercase tracking-[0.2em] font-black mb-1 opacity-60">
                     Onyomi
                   </span>
-                  <span className="text-purple-600 dark:text-purple-400 font-japanese font-bold text-sm md:text-base leading-tight text-center">
+                  <span className="text-purple-600 dark:text-purple-400 font-japanese font-bold text-[10px] md:text-base leading-tight text-center line-clamp-2">
                     {kanjiDetails.onyomi}
                   </span>
                 </div>
               )}
               {kanjiDetails.kunyomi && (
-                <div className="bg-muted/30 dark:bg-white/[0.03] p-3 rounded-2xl border border-border/50 dark:border-white/[0.05] flex flex-col items-center shadow-none">
+                <div className="bg-muted/30 dark:bg-white/[0.03] p-2 md:p-3 rounded-2xl border border-border/50 dark:border-white/[0.05] flex flex-col items-center shadow-none">
                   <span className="text-[8px] text-muted-foreground uppercase tracking-[0.2em] font-black mb-1 opacity-60">
                     Kunyomi
                   </span>
-                  <span className="text-purple-600 dark:text-purple-400 font-japanese font-bold text-sm md:text-base leading-tight text-center">
+                  <span className="text-purple-600 dark:text-purple-400 font-japanese font-bold text-[10px] md:text-base leading-tight text-center line-clamp-2">
                     {kanjiDetails.kunyomi}
                   </span>
                 </div>
@@ -142,10 +142,10 @@ export function FlashcardBack({
           {/* MEANING CARD */}
           <div className="w-full px-2">
             <Card
-              className={`p-5 md:p-6 bg-muted/50 dark:bg-white/[0.03] rounded-2xl border ${themeBorder} w-full flex items-center justify-center shadow-none min-h-[80px] md:min-h-[100px] relative group/meaning overflow-hidden`}
+              className={`${isKanji ? 'p-3 md:p-4 min-h-[60px]' : 'p-5 md:p-6 min-h-[80px]'} bg-muted/50 dark:bg-white/[0.03] rounded-2xl border ${themeBorder} w-full flex items-center justify-center shadow-none relative group/meaning overflow-hidden`}
             >
               <h3
-                className={`${themeColor} text-lg md:text-xl lg:text-2xl font-black uppercase tracking-tight leading-snug`}
+                className={`${themeColor} ${isKanji ? 'text-base md:text-xl' : 'text-lg md:text-xl lg:text-2xl'} font-black uppercase tracking-tight leading-snug`}
               >
                 {meaning}
               </h3>
@@ -167,7 +167,7 @@ export function FlashcardBack({
           {isKanji && (
             <Button
               onClick={onDrawClick}
-              className="mt-2 flex items-center justify-center gap-2 w-full max-w-[240px] mx-auto bg-purple-600 dark:bg-purple-500 hover:bg-foreground hover:text-background dark:hover:bg-white text-white dark:text-black font-black uppercase tracking-widest h-auto py-3 px-6 rounded-xl transition-all shadow-lg border-none text-[10px] md:text-xs"
+              className="mt-1 flex items-center justify-center gap-2 w-full max-w-[200px] mx-auto bg-purple-600 dark:bg-purple-500 hover:bg-foreground hover:text-background dark:hover:bg-white text-white dark:text-black font-black uppercase tracking-widest h-auto py-2 px-4 rounded-xl transition-all shadow-lg border-none text-[9px] md:text-xs shrink-0"
             >
               <PenTool size={14} />
               <span>Latih Menulis</span>
@@ -216,7 +216,7 @@ export function FlashcardBack({
         </div>
 
         {/* SRS STATUS FOOTER */}
-        <div className="w-full pt-4 flex items-center justify-center gap-4 border-t border-border/50 dark:border-white/5 mt-4 shrink-0">
+        <div className={`w-full pt-2 flex items-center justify-center gap-4 border-t border-border/50 dark:border-white/5 ${isKanji ? 'mt-2' : 'mt-4'} shrink-0`}>
           <div className={`flex flex-col items-center gap-1`}>
             <span className="text-[8px] text-muted-foreground uppercase tracking-widest font-bold opacity-50">Kekuatan Memori</span>
             <Badge variant="outline" className={`${memory.color} border-none text-[9px] font-black uppercase px-3 py-1 rounded-full h-auto`}>

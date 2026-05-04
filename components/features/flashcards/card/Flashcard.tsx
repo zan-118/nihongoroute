@@ -1,14 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { FlashcardProps } from "./types";
 import { useFlashcard } from "./useFlashcard";
 import { FlashcardFront } from "./FlashcardFront";
 import { FlashcardBack } from "./FlashcardBack";
 import { WritingPracticeModal } from "./WritingPracticeModal";
-
-import { useTTSReader } from "../../tools/audio/useTTSReader";
 
 export default function Flashcard({
   id,
@@ -38,23 +35,11 @@ export default function Flashcard({
     handleDrawClick,
   } = useFlashcard({ type, onFlip });
 
-  const { speak } = useTTSReader(word);
-
-  // Auto-Audio Immersion: Play pronunciation when flipped
-  useEffect(() => {
-    if (isFlipped) {
-      // Small delay to let the animation start
-      const timer = setTimeout(() => {
-        speak();
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [isFlipped, speak]);
 
   return (
     <>
       <motion.div
-        className="relative w-full aspect-square max-h-[550px] sm:max-h-[600px] cursor-pointer mx-auto"
+        className="relative w-full aspect-[4/5] md:aspect-square max-h-[550px] sm:max-h-[600px] cursor-pointer mx-auto"
         style={{ perspective: "1500px" }}
         onClick={handleClick}
         animate={isShaking ? {
