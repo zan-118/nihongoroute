@@ -107,13 +107,14 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
             <Button
               variant="ghost"
               onClick={() => engine.handleAnswer(0)}
-              className="relative h-auto py-8 bg-red-500/5 border border-red-500/20 rounded-[2.5rem] text-red-600 dark:text-red-500 font-black uppercase tracking-[0.2em] text-xs md:text-xs neo-card hover:bg-red-600 hover:text-white dark:hover:text-black transition-all group overflow-hidden"
+              disabled={engine.isSyncing}
+              className="relative h-auto py-8 bg-red-500/5 border border-red-500/20 rounded-[2.5rem] text-red-600 dark:text-red-500 font-black uppercase tracking-[0.2em] text-xs md:text-xs neo-card hover:bg-red-600 hover:text-white dark:hover:text-black transition-all group overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <div className="relative z-10 flex items-center">
+              <div className="relative z-10 flex items-center gap-2">
                 <X
                   size={18}
-                  className="mr-2 group-hover:scale-125 transition-transform"
-                />{" "}
+                  className="group-hover:scale-125 transition-transform"
+                />
                 Masih Lupa
               </div>
               <kbd className="hidden md:inline-block absolute top-4 left-4 bg-red-500/20 text-red-600 dark:text-red-400 px-2 py-0.5 rounded font-mono text-xs">
@@ -124,19 +125,26 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
             <Button
               variant="ghost"
               onClick={() => engine.handleAnswer(2)}
-              className="relative h-auto py-8 bg-emerald-500/5 border border-emerald-500/20 rounded-[2.5rem] text-emerald-600 dark:text-emerald-400 font-black uppercase tracking-[0.2em] text-xs md:text-xs neo-card hover:bg-emerald-600 hover:text-white dark:hover:text-black transition-all group shadow-sm dark:shadow-[0_0_20px_rgba(16,185,129,0.1)] overflow-hidden"
+              disabled={engine.isSyncing}
+              className="relative h-auto py-8 bg-emerald-500/5 border border-emerald-500/20 rounded-[2.5rem] text-emerald-600 dark:text-emerald-400 font-black uppercase tracking-[0.2em] text-xs md:text-xs neo-card hover:bg-emerald-600 hover:text-white dark:hover:text-black transition-all group shadow-sm dark:shadow-[0_0_20px_rgba(16,185,129,0.1)] overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <div className="relative z-10 flex items-center">
+              <div className="relative z-10 flex items-center gap-2">
                 <Check
                   size={18}
-                  className="mr-2 group-hover:scale-125 transition-transform"
-                />{" "}
+                  className="group-hover:scale-125 transition-transform"
+                />
                 Sudah Ingat
               </div>
               <kbd className="hidden md:inline-block absolute top-4 right-4 bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded font-mono text-xs">
                 2
               </kbd>
             </Button>
+            
+            {engine.isSyncing && (
+               <div className="col-span-2 text-center text-xs text-muted-foreground animate-pulse mt-2">
+                 Menyinkronkan progres ke cloud...
+               </div>
+            )}
           </motion.div>
         )}
       </footer>

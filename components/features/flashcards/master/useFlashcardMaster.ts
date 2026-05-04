@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
+import { useUIStore } from "@/store/useUIStore";
 import { updateCardState } from "@/lib/srs";
 import { sounds } from "@/lib/audio";
 import confetti from "canvas-confetti";
@@ -38,6 +39,7 @@ export function useFlashcardMaster({
 
   const { srs, updateProgress } = useSRSStore();
   const { xp } = useUserStore();
+  const { isSyncing } = useUIStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -45,7 +47,7 @@ export function useFlashcardMaster({
   }, []);
 
   const handleAnswer = useCallback((grade: number) => {
-    if (currentCards.length === 0) return;
+    if (currentCards.length === 0 || isSyncing) return;
     const card = currentCards[currentIndex];
     const cardId = card._id || card.id || "unknown";
     
@@ -122,7 +124,7 @@ export function useFlashcardMaster({
         setIsFinished(true);
       }
     }, 200);
-  }, [currentCards, currentIndex, srs, xp, updateProgress]);
+  }, [currentCards, currentIndex, srs, xp, updateProgress, isSyncing]);
 
   const checkAnswer = useCallback(() => {
     if (studyMode !== "tantangan" || isAnswerChecked) return;
@@ -252,5 +254,6 @@ export function useFlashcardMaster({
     inputResult,
     checkAnswer,
     combo,
+    isSyncing,
   };
 }

@@ -161,7 +161,13 @@ export default function FlashcardMaster({
         handleAnswer={handleAnswer}
         isAnswerChecked={isAnswerChecked}
         onCheckAnswer={checkAnswer}
+        isSyncing={isSyncing}
       />
+      {isSyncing && (
+        <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-[10px] text-muted-foreground animate-pulse text-center w-full">
+          Menyinkronkan progres ke cloud...
+        </div>
+      )}
     </section>
   );
 }

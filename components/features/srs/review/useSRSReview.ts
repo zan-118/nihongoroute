@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
+import { useUIStore } from "@/store/useUIStore";
 import { updateCardState, createNewCardState } from "@/lib/srs";
 import { FlashcardType } from "./types";
 import { shuffleArray } from "@/lib/helpers";
@@ -15,6 +16,7 @@ export function useSRSReview(cards: FlashcardType[]) {
 
   const { srs, updateProgress } = useSRSStore();
   const { xp } = useUserStore();
+  const { isSyncing } = useUIStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -39,7 +41,7 @@ export function useSRSReview(cards: FlashcardType[]) {
 
   const handleAnswer = useCallback(
     (grade: number) => {
-      if (!currentCard) return;
+      if (!currentCard || isSyncing) return;
 
       const cardId = currentCard._id;
       const currentState = srs[cardId] || createNewCardState();
@@ -51,7 +53,7 @@ export function useSRSReview(cards: FlashcardType[]) {
 
       goToNext();
     },
-    [currentCard, srs, xp, updateProgress, goToNext],
+    [currentCard, srs, xp, isSyncing, updateProgress, goToNext],
   );
 
   const toggleFlip = useCallback(() => {
@@ -71,7 +73,7 @@ export function useSRSReview(cards: FlashcardType[]) {
           e.preventDefault();
           toggleFlip();
         }
-      } else {
+      } else if (!isSyncing) {
         if (e.key === "1" || e.key === "ArrowLeft") {
           e.preventDefault();
           handleAnswer(0);
@@ -84,7 +86,7 @@ export function useSRSReview(cards: FlashcardType[]) {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isFlipped, toggleFlip, handleAnswer]);
+  }, [isFlipped, toggleFlip, handleAnswer, isSyncing]);
 
   return {
     currentIndex,
@@ -95,5 +97,6 @@ export function useSRSReview(cards: FlashcardType[]) {
     currentCard,
     handleAnswer,
     toggleFlip,
+    isSyncing,
   };
 }
