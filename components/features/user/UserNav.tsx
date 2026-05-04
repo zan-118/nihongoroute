@@ -8,6 +8,7 @@ import {
   ShieldCheck,
   ChevronDown
 } from "lucide-react";
+import { useUserStore } from "@/store/useUserStore";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -20,7 +21,8 @@ import {
 import Link from "next/link";
 
 export default function UserNav() {
-  const { isAuthenticated, userFullName, handleLogout, progress } = useNavbar();
+  const { isAuthenticated, userFullName, handleLogout } = useNavbar();
+  const { level } = useUserStore();
 
   if (!isAuthenticated) {
     return (
@@ -55,7 +57,7 @@ export default function UserNav() {
              </span>
              <div className="flex items-center gap-1">
                <ShieldCheck size={8} className="text-primary" />
-               <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Level {progress.level}</span>
+               <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Level {level}</span>
              </div>
           </div>
           <ChevronDown size={14} className="text-muted-foreground group-hover:text-primary transition-colors ml-1" />
