@@ -66,6 +66,11 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
       handleAnswer={engine.handleAnswer}
       nextQuestion={engine.nextQuestion}
       prevQuestion={engine.prevQuestion}
+      sections={engine.sections}
+      availableSections={engine.availableSections}
+      currentSection={engine.currentSection}
+      goToQuestion={engine.goToQuestion}
+      activeSectionIndex={engine.activeSectionIndex}
     />
   );
 }

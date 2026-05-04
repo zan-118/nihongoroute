@@ -15,6 +15,7 @@ export interface ExamData {
   passingScore: number;
   categorySlug?: string;
   levelCode?: string;
+  choukaiAudioUrl?: string;
   questions: ExamQuestion[];
 }
 

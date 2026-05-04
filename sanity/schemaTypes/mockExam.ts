@@ -52,6 +52,14 @@ export default defineType({
       validation: (Rule) => Rule.required().min(1),
     }),
     defineField({
+      name: "choukaiAudio",
+      title: "Audio Sesi Choukai (Global)",
+      type: "file",
+      description:
+        "Unggah satu file audio panjang untuk seluruh sesi mendengarkan (opsional). Jika diisi, aplikasi akan menggunakan file ini sebagai audio utama sesi Choukai.",
+      options: { accept: "audio/*" },
+    }),
+    defineField({
       name: "questions",
       title: "Daftar Pertanyaan",
       type: "array",

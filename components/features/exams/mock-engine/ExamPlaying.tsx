@@ -11,6 +11,7 @@ import {
   ArrowLeft,
   Volume2,
   CheckCircle,
+  Lock as LockIcon,
 } from "lucide-react";
 import { ExamData, ExamQuestion, AudioState } from "./types";
 import { SECTION_LABELS } from "./constants";
@@ -33,6 +34,11 @@ interface ExamPlayingProps {
   handleAnswer: (idx: number) => void;
   nextQuestion: () => void;
   prevQuestion: () => void;
+  sections: Record<string, number[]>;
+  availableSections: string[];
+  currentSection: string;
+  goToQuestion: (idx: number) => void;
+  activeSectionIndex: number;
 }
 
 /**
@@ -95,6 +101,11 @@ export function ExamPlaying({
   handleAnswer,
   nextQuestion,
   prevQuestion,
+  sections,
+  availableSections,
+  currentSection,
+  goToQuestion,
+  activeSectionIndex,
 }: ExamPlayingProps) {
   if (!activeQuestion) return null;
 
@@ -105,19 +116,29 @@ export function ExamPlaying({
       <header className="relative z-20 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
         <Card className="w-full flex flex-col md:flex-row justify-between items-start md:items-center p-6 mt-2 md:mt-8 border border-border dark:border-white/5 bg-card dark:bg-slate-900 rounded-3xl neo-card shadow-lg">
           <div className="flex flex-col gap-4 w-full md:w-auto">
-            <div className="flex items-center gap-3 flex-wrap">
-              <Badge
-                variant="outline"
-                className="neo-inset px-5 py-2.5 text-muted-foreground dark:text-slate-300 font-mono text-xs md:text-xs font-black bg-muted dark:bg-black/40 border border-border dark:border-white/10 h-auto"
-              >
-                {currentQuestionIndex + 1} <span className="mx-1 opacity-30">/</span> {exam.questions.length}
-              </Badge>
-              <Badge
-                variant="outline"
-                className="neo-inset px-5 py-2.5 text-red-600 dark:text-red-400 font-bold uppercase tracking-widest text-xs sm:text-xs bg-red-500/10 border border-red-500/30 h-auto"
-              >
-                {SECTION_LABELS[activeQuestion.section]}
-              </Badge>
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide no-scrollbar w-full md:w-auto">
+              {availableSections.map((section, idx) => {
+                const isLocked = idx < activeSectionIndex;
+                const isActive = currentSection === section;
+                
+                return (
+                  <Badge
+                    key={section}
+                    variant="outline"
+                    onClick={() => !isLocked && goToQuestion(sections[section][0])}
+                    className={`whitespace-nowrap px-4 py-2 rounded-xl border transition-all font-bold uppercase tracking-widest text-[10px] ${
+                      isActive
+                        ? "bg-red-600 dark:bg-red-500 text-white dark:text-black border-transparent shadow-lg scale-105 cursor-pointer"
+                        : isLocked
+                        ? "bg-muted/50 text-muted-foreground/30 border-border/50 cursor-not-allowed opacity-50"
+                        : "bg-muted dark:bg-black/20 text-muted-foreground border-border dark:border-white/5 hover:border-red-500/30 cursor-pointer"
+                    }`}
+                  >
+                    {isLocked && <LockIcon size={10} className="mr-2" />}
+                    {SECTION_LABELS[section]}
+                  </Badge>
+                );
+              })}
             </div>
             {cheatWarnings > 0 && (
               <Badge variant="ghost" className="text-xs text-amber-600 dark:text-amber-500 font-bold uppercase tracking-widest animate-pulse flex items-center gap-2 p-0 h-auto">
@@ -165,11 +186,13 @@ export function ExamPlaying({
                 <Button
                   onClick={handlePlayAudio}
                   disabled={
-                    audioStatus[activeQuestion._key] !== "idle" &&
-                    audioStatus[activeQuestion._key] !== undefined
+                    exam.choukaiAudioUrl 
+                      ? (audioStatus.global === "playing")
+                      : (audioStatus[activeQuestion._key] !== "idle" && audioStatus[activeQuestion._key] !== undefined)
                   }
                   className={`w-16 h-16 rounded-full flex items-center justify-center transition-all shrink-0 border-none ${
-                    !audioStatus[activeQuestion._key] || audioStatus[activeQuestion._key] === "idle"
+                    (!exam.choukaiAudioUrl && (!audioStatus[activeQuestion._key] || audioStatus[activeQuestion._key] === "idle")) ||
+                    (exam.choukaiAudioUrl && (!audioStatus.global || audioStatus.global === "idle"))
                       ? "bg-red-600 dark:bg-red-500 text-white hover:scale-110 shadow-lg cursor-pointer"
                       : "bg-muted dark:bg-slate-800 text-muted-foreground dark:text-slate-500 cursor-not-allowed"
                   }`}
@@ -177,20 +200,26 @@ export function ExamPlaying({
                   <Volume2
                     size={32}
                     className={
-                      audioStatus[activeQuestion._key] === "playing" ? "animate-pulse" : ""
+                      (exam.choukaiAudioUrl ? audioStatus.global === "playing" : audioStatus[activeQuestion._key] === "playing") 
+                        ? "animate-pulse" 
+                        : ""
                     }
                   />
                 </Button>
                 <div className="text-center sm:text-left">
                   <p className="text-xs md:text-xs font-bold uppercase tracking-widest mb-2 text-foreground">
-                    {!audioStatus[activeQuestion._key] || audioStatus[activeQuestion._key] === "idle"
-                      ? "Dengarkan Audio"
-                      : audioStatus[activeQuestion._key] === "playing"
-                        ? "Lagi Didengarkan..."
-                        : "Selesai Didengarkan"}
+                    {exam.choukaiAudioUrl
+                      ? (audioStatus.global === "playing" ? "Sesi Mendengarkan Berjalan..." : "Mulai Sesi Mendengarkan")
+                      : (!audioStatus[activeQuestion._key] || audioStatus[activeQuestion._key] === "idle"
+                          ? "Dengarkan Audio"
+                          : audioStatus[activeQuestion._key] === "playing"
+                            ? "Lagi Didengarkan..."
+                            : "Selesai Didengarkan")}
                   </p>
                   <p className="text-xs md:text-xs text-muted-foreground leading-relaxed uppercase font-bold tracking-widest">
-                    Ingat: Audionya cuma bisa diputar <span className="text-red-600 dark:text-red-500 underline">SEKALI</span>. Yuk, fokus dengerin!
+                    {exam.choukaiAudioUrl 
+                      ? "Audio diputar sekaligus untuk seluruh sesi. Kamu bebas pindah soal sambil mendengarkan."
+                      : <>Ingat: Audionya cuma bisa diputar <span className="text-red-600 dark:text-red-500 underline">SEKALI</span>. Yuk, fokus dengerin!</>}
                   </p>
                 </div>
               </Card>
@@ -225,6 +254,35 @@ export function ExamPlaying({
                 />
               ))}
             </div>
+
+            {/* Question Grid for Current Section */}
+            <div className="mt-12 pt-10 border-t border-border dark:border-white/5">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-6 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                Navigasi Soal: {SECTION_LABELS[currentSection]}
+              </p>
+              <div className="flex flex-wrap gap-3">
+                {sections[currentSection]?.map((qIdx) => {
+                  const isAnswered = answers[exam.questions[qIdx]._key] !== undefined;
+                  const isActive = qIdx === currentQuestionIndex;
+                  return (
+                    <button
+                      key={qIdx}
+                      onClick={() => goToQuestion(qIdx)}
+                      className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center text-xs font-mono font-black transition-all border ${
+                        isActive
+                          ? "bg-red-600 dark:bg-red-500 text-white dark:text-black border-transparent scale-110 shadow-xl z-10"
+                          : isAnswered
+                          ? "bg-green-500/20 text-green-600 dark:text-green-400 border-green-500/30"
+                          : "bg-muted dark:bg-black/20 text-muted-foreground border-border dark:border-white/5 hover:border-red-500/30"
+                      }`}
+                    >
+                      {qIdx + 1}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </Card>
         </motion.div>
       </AnimatePresence>
@@ -254,7 +312,11 @@ export function ExamPlaying({
             variant="ghost"
             className="w-full sm:w-auto neo-card border border-primary/30 dark:border-red-500/30 bg-primary/10 dark:bg-red-500/10 text-primary dark:text-red-500 hover:bg-primary dark:hover:bg-red-500 hover:text-white dark:hover:text-black px-10 py-8 h-auto flex items-center justify-center gap-3 font-black uppercase tracking-widest text-xs transition-all rounded-2xl shadow-none"
           >
-            Selanjutnya <ArrowRight size={20} />
+            {sections[currentSection][sections[currentSection].length - 1] === currentQuestionIndex ? (
+              <>Lanjut ke Bagian {SECTION_LABELS[availableSections[availableSections.indexOf(currentSection) + 1]] || "Berikutnya"} <ArrowRight size={20} /></>
+            ) : (
+              <>Selanjutnya <ArrowRight size={20} /></>
+            )}
           </Button>
         )}
       </div>

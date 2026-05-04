@@ -45,6 +45,7 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
     _id, title, timeLimit, passingScore,
     "categorySlug": course_category->slug.current, 
     "levelCode": level,
+    "choukaiAudioUrl": choukaiAudio.asset->url,
     questions[] {
       _key, section, questionText,
       "imageUrl": image.asset->url, "audioUrl": audio.asset->url,

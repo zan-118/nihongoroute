@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { ExamData, GameState, AudioState, ExamQuestion } from "./types";
 import { toast } from "sonner";
 import { useUserStore } from "@/store/useUserStore";
+import { SECTION_LABELS } from "./constants";
 
 
 /**
@@ -45,22 +46,41 @@ export function useMockExamEngine(exam: ExamData) {
   const [timeLeft, setTimeLeft] = useState(() => exam.timeLimit * 60);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [activeSectionIndex, setActiveSectionIndex] = useState(0);
   const [audioStatus, setAudioStatus] = useState<Record<string, AudioState>>({});
   const [cheatWarnings, setCheatWarnings] = useState(0);
+
+  // Group questions by section
+  const sections = useMemo(() => {
+    const groups: Record<string, number[]> = {};
+    exam.questions.forEach((q, idx) => {
+      const section = q.section || "vocabulary";
+      if (!groups[section]) groups[section] = [];
+      groups[section].push(idx);
+    });
+    return groups;
+  }, [exam.questions]);
 
   const { addXP } = useUserStore();
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // Order of sections
+  const sectionOrder = ["vocabulary", "grammar", "reading", "listening"];
+  const availableSections = sectionOrder.filter(s => sections[s] && sections[s].length > 0);
+
   const activeQuestion = useMemo(() => exam.questions[currentQuestionIndex], [exam.questions, currentQuestionIndex]);
+  const currentSection = activeQuestion?.section || "vocabulary";
   const isTimeCritical = useMemo(() => timeLeft < 300, [timeLeft]);
-  const isCurrentlyListening = useMemo(() => activeQuestion?.section === "listening" || !!activeQuestion?.audioUrl, [activeQuestion]);
+  const isCurrentlyListening = useMemo(() => activeQuestion?.section === "listening" || !!activeQuestion?.audioUrl || !!exam.choukaiAudioUrl, [activeQuestion, exam.choukaiAudioUrl]);
+  const hasGlobalChoukai = !!exam.choukaiAudioUrl;
 
   const disablePreviousButton = useMemo(() => {
     if (currentQuestionIndex === 0) return true;
+    if (hasGlobalChoukai) return false;
     if (isCurrentlyListening) return true;
     const prevQ = exam.questions[currentQuestionIndex - 1];
     return prevQ?.section === "listening" || !!prevQ?.audioUrl;
-  }, [currentQuestionIndex, isCurrentlyListening, exam.questions]);
+  }, [currentQuestionIndex, isCurrentlyListening, exam.questions, hasGlobalChoukai]);
 
   const finishExam = useCallback(() => {
     const { correctCount, finalScore } = performScoreCalculation(exam.questions, answers);
@@ -81,18 +101,41 @@ export function useMockExamEngine(exam: ExamData) {
   }, [activeQuestion]);
 
   const nextQuestion = useCallback(() => {
-    if (currentQuestionIndex < exam.questions.length - 1) {
-      setCurrentQuestionIndex((prev) => prev + 1);
+    const sectionQuestions = sections[currentSection];
+    const isLastInSection = sectionQuestions[sectionQuestions.length - 1] === currentQuestionIndex;
+
+    if (isLastInSection) {
+      // If it's the last question of the section, we move to the next section
+      if (activeSectionIndex < availableSections.length - 1) {
+        if (confirm(`Lanjut ke bagian ${SECTION_LABELS[availableSections[activeSectionIndex + 1]]}? Setelah pindah, kamu tidak bisa kembali ke bagian ini.`)) {
+          const nextSecIndex = activeSectionIndex + 1;
+          setActiveSectionIndex(nextSecIndex);
+          const firstQuestionOfNextSection = sections[availableSections[nextSecIndex]][0];
+          setCurrentQuestionIndex(firstQuestionOfNextSection);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      } else {
+        // If it's the last question of the last section
+        if (confirm("Kumpulkan jawaban sekarang?")) {
+          finishExam();
+        }
+      }
+    } else {
+      setCurrentQuestionIndex((prev) => Math.min(prev + 1, exam.questions.length - 1));
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }, [currentQuestionIndex, exam.questions.length]);
+  }, [currentQuestionIndex, exam.questions.length, sections, currentSection, activeSectionIndex, availableSections, finishExam]);
 
   const prevQuestion = useCallback(() => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex((prev) => prev - 1);
+    const sectionQuestions = sections[currentSection];
+    const isFirstInSection = sectionQuestions[0] === currentQuestionIndex;
+
+    // Only allow previous if it's NOT the first question of the current section
+    if (!isFirstInSection) {
+      setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0));
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }, [currentQuestionIndex]);
+  }, [currentQuestionIndex, sections, currentSection]);
 
   const calculateScore = useCallback(() => {
     return performScoreCalculation(exam.questions, answers);
@@ -169,22 +212,56 @@ export function useMockExamEngine(exam: ExamData) {
   }, [gameState, finishExam]);
 
   const handlePlayAudio = useCallback(() => {
+    // 1. Prioritaskan Global Choukai Audio
+    if (exam.choukaiAudioUrl && activeQuestion?.section === "listening") {
+      if (audioRef.current) {
+        if (audioRef.current.paused && audioRef.current.currentTime === 0) {
+          audioRef.current.src = exam.choukaiAudioUrl;
+          audioRef.current.play().catch((err: unknown) => {
+            console.error("Gagal memutar global audio", err);
+          });
+          setAudioStatus((prev) => ({ ...prev, global: "playing" }));
+          audioRef.current.onended = () => setAudioStatus((prev) => ({ ...prev, global: "played" }));
+        } else if (audioRef.current.paused) {
+          audioRef.current.play();
+          setAudioStatus(prev => ({ ...prev, global: "playing" }));
+        }
+      }
+      return;
+    }
+
     if (!activeQuestion) return;
     const qKey = activeQuestion._key;
     if (audioStatus[qKey] === "played" || audioStatus[qKey] === "playing") return;
 
     if (audioRef.current && activeQuestion.audioUrl) {
       audioRef.current.src = activeQuestion.audioUrl;
-      audioRef.current.play().catch(err => console.error("Gagal memutar audio", err));
+      audioRef.current.play().catch((err: unknown) => {
+        console.error("Gagal memutar audio", err);
+      });
       setAudioStatus(prev => ({ ...prev, [qKey]: "playing" }));
       audioRef.current.onended = () => setAudioStatus(prev => ({ ...prev, [qKey]: "played" }));
     }
-  }, [activeQuestion, audioStatus]);
+  }, [activeQuestion, audioStatus, exam.choukaiAudioUrl]);
+
+  const goToQuestion = useCallback((index: number) => {
+    if (index >= 0 && index < exam.questions.length) {
+      const targetQuestion = exam.questions[index];
+      const targetSection = targetQuestion.section || "vocabulary";
+      
+      // Only allow jumping if the target question is in the CURRENT active section
+      if (targetSection === currentSection) {
+        setCurrentQuestionIndex(index);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+  }, [exam.questions, currentSection]);
 
   return {
     gameState, setGameState, timeLeft, answers, currentQuestionIndex, audioStatus,
     cheatWarnings, audioRef, activeQuestion, isTimeCritical, isCurrentlyListening,
     disablePreviousButton, handlePlayAudio, finishExam, handleAnswer, nextQuestion,
     prevQuestion, calculateScore, handleShareResult,
+    sections, availableSections, currentSection, goToQuestion, activeSectionIndex
   };
 }
