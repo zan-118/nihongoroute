@@ -52,8 +52,10 @@ export default function DashboardPage() {
     }))
   );
 
-  const { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, resetUser } = useUserStore(
+  const { id, isGuest, name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, resetUser } = useUserStore(
     useShallow((s) => ({
+      id: s.id,
+      isGuest: s.isGuest,
       name: s.name,
       xp: s.xp,
       level: s.level,
@@ -94,7 +96,7 @@ export default function DashboardPage() {
   // Reconstruct a lightweight progress object for legacy components if needed,
   // but ideally we should update components to take individual props.
   const progress: UserProgress = {
-    name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings
+    id, isGuest, name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings
   };
   const [guestId, setGuestId] = useState<string>("MEMUAT...");
   const [confirmModal, setConfirmModal] = useState({

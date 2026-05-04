@@ -69,10 +69,10 @@ const ACHIEVEMENTS: Achievement[] = [
 ];
 
 export default function AchievementsGrid() {
-  const { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory } = useUserStore();
-    const { srs } = useSRSStore();
-    const { notifications, settings } = useUIStore();
-    const progress = { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
+  const { id, isGuest, name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory } = useUserStore();
+  const { srs } = useSRSStore();
+  const { notifications, settings } = useUIStore();
+  const progress: UserProgress = { id, isGuest, name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

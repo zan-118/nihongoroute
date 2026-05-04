@@ -22,6 +22,8 @@ export interface Settings {
 }
 
 export interface UserProgress {
+  id: string;
+  isGuest: boolean;
   name: string | null;
   xp: number;
   level: number;

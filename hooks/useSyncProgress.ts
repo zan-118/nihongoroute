@@ -62,15 +62,18 @@ export function useSyncProgress() {
         const gamificationData = localStorage.getItem(STATS_STORAGE_KEY);
         if (gamificationData) {
           const parsedStats = JSON.parse(gamificationData);
+          const userState = useUserStore.getState();
           const currentProgress: UserProgress = {
-            name: useUserStore.getState().name,
-            xp: useUserStore.getState().xp,
-            level: useUserStore.getState().level,
-            streak: useUserStore.getState().streak,
-            todayReviewCount: useUserStore.getState().todayReviewCount,
-            lastStudyDate: useUserStore.getState().lastStudyDate,
-            studyDays: useUserStore.getState().studyDays,
-            inventory: useUserStore.getState().inventory,
+            id: userState.id,
+            isGuest: userState.isGuest,
+            name: userState.name,
+            xp: userState.xp,
+            level: userState.level,
+            streak: userState.streak,
+            todayReviewCount: userState.todayReviewCount,
+            lastStudyDate: userState.lastStudyDate,
+            studyDays: userState.studyDays,
+            inventory: userState.inventory,
             srs: useSRSStore.getState().srs,
             notifications: useUIStore.getState().notifications,
             settings: useUIStore.getState().settings,
@@ -138,6 +141,8 @@ export function useSyncProgress() {
       }
 
       return {
+        id: session!.user.id,
+        isGuest: false,
         name: profile?.full_name || null,
         xp: profile?.xp || 0,
         level: profile?.level || calculateLevel(profile?.xp || 0),
@@ -284,9 +289,11 @@ export function useSyncProgress() {
 
   const lastSyncedProgress = useRef<string>(JSON.stringify(currentProgressData));
 
+  const isGuest = useUserStore((s) => s.isGuest);
+
   // Debounced Auto-sync
   useEffect(() => {
-    if (isFetching || !session?.user) return;
+    if (isFetching || !session?.user || isGuest) return;
 
     const currentProgressStr = JSON.stringify({
       name,

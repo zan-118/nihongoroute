@@ -17,7 +17,7 @@ export const ProgressProvider = ({
 }) => {
   const hasMounted = useHasMounted();
   const { setAuth } = useAuthStore();
-  const { updateProfileName } = useUserStore();
+  const { syncUserData } = useUserStore();
   const { dirtySrs } = useSRSStore();
   
   const supabase = createClient();
@@ -31,7 +31,9 @@ export const ProgressProvider = ({
       const userFullName = session?.user?.user_metadata?.full_name || session?.user?.email?.split('@')[0] || "Siswa";
       setAuth(!!session?.user);
       if (session?.user) {
-        updateProfileName(userFullName);
+        syncUserData({ id: session.user.id, isGuest: false, name: userFullName });
+      } else {
+        syncUserData({ id: "guest", isGuest: true, name: null });
       }
     });
 
@@ -41,7 +43,9 @@ export const ProgressProvider = ({
       const userFullName = session?.user?.user_metadata?.full_name || session?.user?.email?.split('@')[0] || "Siswa";
       setAuth(!!session?.user);
       if (session?.user) {
-        updateProfileName(userFullName);
+        syncUserData({ id: session.user.id, isGuest: false, name: userFullName });
+      } else {
+        syncUserData({ id: "guest", isGuest: true, name: null });
       }
       
       if (event === "SIGNED_IN" && session?.user) {
@@ -59,7 +63,7 @@ export const ProgressProvider = ({
     });
 
     return () => subscription.unsubscribe();
-  }, [supabase.auth, setAuth, updateProfileName]);
+  }, [supabase.auth, setAuth, syncUserData]);
   
   // UNSYNCED DATA WARNING (beforeunload)
   useEffect(() => {

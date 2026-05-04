@@ -6,6 +6,8 @@ import { calculateLevel } from "@/lib/level";
 import { useUIStore } from "./useUIStore";
 
 interface UserState {
+  id: string;
+  isGuest: boolean;
   name: string | null;
   xp: number;
   level: number;
@@ -20,6 +22,7 @@ interface UserState {
   setGamification: (data: Partial<UserState>) => void;
   buyStreakFreeze: () => boolean;
   claimQuest: (questId: string, date: string, rewardXP: number) => void;
+  syncUserData: (data: { id: string; isGuest: boolean; name?: string | null }) => void;
   resetUser: () => void;
 }
 
@@ -32,6 +35,8 @@ const idbStorage = {
 export const useUserStore = create<UserState>()(
   persist(
     (set, get) => ({
+      id: "guest",
+      isGuest: true,
       name: null,
       xp: 0,
       level: 1,
@@ -117,8 +122,17 @@ export const useUserStore = create<UserState>()(
           state.addXP(rewardXP);
         }
       },
+      
+      syncUserData: (data) => set((state) => ({ 
+        ...state, 
+        id: data.id, 
+        isGuest: data.isGuest,
+        name: data.name !== undefined ? data.name : state.name
+      })),
 
       resetUser: () => set({
+        id: "guest",
+        isGuest: true,
         name: null,
         xp: 0,
         level: 1,

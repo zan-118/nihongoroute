@@ -11,6 +11,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useUIStore } from "@/store/useUIStore";
 import { useAuthStore } from "@/store/useAuthStore";
+import { UserProgress } from "@/store/types";
 
 /**
  * @file ProfileEditor.tsx
@@ -19,12 +20,13 @@ import { useAuthStore } from "@/store/useAuthStore";
  */
 
 export default function ProfileEditor() {
-  const { updateProfileName } = useUserStore();
-    const { isAuthenticated } = useAuthStore();
-    const { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory } = useUserStore();
-    const { srs } = useSRSStore();
-    const { notifications, settings } = useUIStore();
-    const progress = { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
+  const { updateProfileName, id, isGuest, name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory } = useUserStore();
+  const { isAuthenticated } = useAuthStore();
+  const { srs } = useSRSStore();
+  const { notifications, settings } = useUIStore();
+  
+  const progress: UserProgress = { id, isGuest, name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
+  
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(progress.name || "");
   const [isLoading, setIsLoading] = useState(false);

@@ -30,7 +30,7 @@ export function useNavbar() {
   const pathname = usePathname();
   const router = useRouter();
   const { isAuthenticated } = useAuthStore();
-  const { name: userFullName } = useUserStore();
+  const { name: userFullName, isGuest } = useUserStore();
   const supabase = createClient();
 
   const handleLogout = async () => {
@@ -59,6 +59,7 @@ export function useNavbar() {
     pathname, 
     links, 
     isAuthenticated, 
+    isGuest,
     userFullName, 
     handleLogout 
   };
