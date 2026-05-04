@@ -71,7 +71,10 @@ export function useMockExamEngine(exam: ExamData) {
   const activeQuestion = useMemo(() => exam.questions[currentQuestionIndex], [exam.questions, currentQuestionIndex]);
   const currentSection = activeQuestion?.section || "vocabulary";
   const isTimeCritical = useMemo(() => timeLeft < 300, [timeLeft]);
-  const isCurrentlyListening = useMemo(() => activeQuestion?.section === "listening" || !!activeQuestion?.audioUrl || !!exam.choukaiAudioUrl, [activeQuestion, exam.choukaiAudioUrl]);
+  const isCurrentlyListening = useMemo(() => 
+    currentSection === "listening" || !!activeQuestion?.audioUrl, 
+    [currentSection, activeQuestion]
+  );
   const hasGlobalChoukai = !!exam.choukaiAudioUrl;
 
   const disablePreviousButton = useMemo(() => {
@@ -212,9 +215,11 @@ export function useMockExamEngine(exam: ExamData) {
   }, [gameState, finishExam]);
 
   const handlePlayAudio = useCallback(() => {
-    // 1. Prioritaskan Global Choukai Audio
-    if (exam.choukaiAudioUrl && activeQuestion?.section === "listening") {
+    if (exam.choukaiAudioUrl) {
       if (audioRef.current) {
+        // If already played, don't allow restart
+        if (audioStatus.global === "played") return;
+
         if (audioRef.current.paused && audioRef.current.currentTime === 0) {
           audioRef.current.src = exam.choukaiAudioUrl;
           audioRef.current.play().catch((err: unknown) => {
