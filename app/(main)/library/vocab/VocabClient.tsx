@@ -37,6 +37,7 @@ const LEVELS = ["N5", "N4", "N3", "N2"];
 const HINSHI = [
   { label: "Semua Tipe", value: "all" },
   { label: "Kata Benda (Meishi)", value: "noun" },
+  { label: "Kata Kerja (Verb)", value: "verb" },
   { label: "Kata Sifat-I (I-Keiyoushi)", value: "i-adjective" },
   { label: "Kata Sifat-Na (Na-Keiyoushi)", value: "na-adjective" },
   { label: "Kata Keterangan (Fukushi)", value: "adverb" },
@@ -107,12 +108,16 @@ export default function VocabClient({ initialData = [] }: VocabClientProps) {
     const kanaSearch = wanakana.toHiragana(debouncedSearch.trim());
     const kataSearch = wanakana.toKatakana(debouncedSearch.trim());
 
-    let queryStr = `count(*[_type == "vocab" && (course_category->slug.current match $baseLevel + "*" || course_category->slug.current match "jlpt-" + $baseLevel + "*")`;
+    let queryStr = `count(*[(_type == "vocab" || _type == "verb_dictionary") && (course_category->slug.current match $baseLevel + "*" || course_category->slug.current match "jlpt-" + $baseLevel + "*")`;
     if (debouncedSearch.trim() !== "") {
-      queryStr += ` && (word match $search + "*" || romaji match $search + "*" || meaning match $search + "*" || word match $kana + "*" || furigana match $kana + "*" || word match $kata + "*")`;
+      queryStr += ` && (word match $search + "*" || jisho match $search + "*" || romaji match $search + "*" || meaning match $search + "*" || word match $kana + "*" || jisho match $kana + "*" || furigana match $kana + "*" || word match $kata + "*" || jisho match $kata + "*")`;
     }
     if (hinshi !== "all") {
-      queryStr += ` && hinshi == $hinshi`;
+      if (hinshi === "verb") {
+        queryStr += ` && _type == "verb_dictionary"`;
+      } else {
+        queryStr += ` && _type == "vocab" && hinshi == $hinshi`;
+      }
     }
     queryStr += `])`;
 
@@ -140,22 +145,27 @@ export default function VocabClient({ initialData = [] }: VocabClientProps) {
     const kanaSearch = wanakana.toHiragana(debouncedSearch.trim());
     const kataSearch = wanakana.toKatakana(debouncedSearch.trim());
 
-    let filterStr = `_type == "vocab" && (course_category->slug.current match $baseLevel + "*" || course_category->slug.current match "jlpt-" + $baseLevel + "*")`;
+    let filterStr = `(_type == "vocab" || _type == "verb_dictionary") && (course_category->slug.current match $baseLevel + "*" || course_category->slug.current match "jlpt-" + $baseLevel + "*")`;
     if (debouncedSearch.trim() !== "") {
-      filterStr += ` && (word match $search + "*" || romaji match $search + "*" || meaning match $search + "*" || word match $kana + "*" || furigana match $kana + "*" || word match $kata + "*")`;
+      filterStr += ` && (word match $search + "*" || jisho match $search + "*" || romaji match $search + "*" || meaning match $search + "*" || word match $kana + "*" || jisho match $kana + "*" || furigana match $kana + "*" || word match $kata + "*" || jisho match $kata + "*")`;
     }
     if (hinshi !== "all") {
-      filterStr += ` && hinshi == $hinshi`;
+      if (hinshi === "verb") {
+        filterStr += ` && _type == "verb_dictionary"`;
+      } else {
+        filterStr += ` && _type == "vocab" && hinshi == $hinshi`;
+      }
     }
 
     const queryStr = `{
-      "items": *[${filterStr}] | order(romaji asc) [$start...$end] { 
+      "items": *[${filterStr}] | order(coalesce(romaji, "") asc) [$start...$end] { 
         _id, 
-        word, 
+        _type,
+        "word": coalesce(word, jisho), 
         furigana, 
         romaji, 
         meaning, 
-        hinshi,
+        "hinshi": coalesce(hinshi, "verb"),
         mnemonic,
         "relatedKanji": relatedKanji[]->{ character, meaning }
       },
