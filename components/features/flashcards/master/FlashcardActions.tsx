@@ -13,7 +13,6 @@ interface FlashcardActionsProps {
   handleAnswer: (grade: number) => void;
   isAnswerChecked?: boolean;
   onCheckAnswer?: () => void;
-  isSyncing?: boolean;
 }
 
 export function FlashcardActions({
@@ -26,7 +25,6 @@ export function FlashcardActions({
   handleAnswer,
   isAnswerChecked,
   onCheckAnswer,
-  isSyncing,
 }: FlashcardActionsProps) {
   const isChallenge = studyMode === "tantangan";
 
@@ -63,12 +61,11 @@ export function FlashcardActions({
             >
               <Button
                 variant="ghost"
-                disabled={isSyncing}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleAnswer(0);
                 }}
-                className="flex flex-col h-auto py-3 border-rose-500/20 bg-rose-500/5 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex flex-col h-auto py-3 border-rose-500/20 bg-rose-500/5 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl transition-all"
               >
                 <X size={16} className="mb-1" />
                 <span className="text-[10px] font-bold uppercase tracking-tight">Lupa</span>
@@ -76,12 +73,11 @@ export function FlashcardActions({
               </Button>
               <Button
                 variant="ghost"
-                disabled={isSyncing}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleAnswer(1);
                 }}
-                className="flex flex-col h-auto py-3 border-amber-500/20 bg-amber-500/5 text-amber-500 hover:bg-amber-500 hover:text-white rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex flex-col h-auto py-3 border-amber-500/20 bg-amber-500/5 text-amber-500 hover:bg-amber-500 hover:text-white rounded-xl transition-all"
               >
                 <Info size={16} className="mb-1" />
                 <span className="text-[10px] font-bold uppercase tracking-tight">Sulit</span>
@@ -89,12 +85,11 @@ export function FlashcardActions({
               </Button>
               <Button
                 variant="ghost"
-                disabled={isSyncing}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleAnswer(2);
                 }}
-                className="flex flex-col h-auto py-3 border-emerald-500/20 bg-emerald-500/5 text-emerald-400 hover:bg-emerald-500 hover:text-white rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex flex-col h-auto py-3 border-emerald-500/20 bg-emerald-500/5 text-emerald-400 hover:bg-emerald-500 hover:text-white rounded-xl transition-all"
               >
                 <Check size={16} className="mb-1" />
                 <span className="text-[10px] font-bold uppercase tracking-tight">Bisa</span>
@@ -102,12 +97,11 @@ export function FlashcardActions({
               </Button>
               <Button
                 variant="ghost"
-                disabled={isSyncing}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleAnswer(3);
                 }}
-                className="flex flex-col h-auto py-3 border-sky-500/20 bg-sky-500/5 text-sky-400 hover:bg-sky-500 hover:text-white rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex flex-col h-auto py-3 border-sky-500/20 bg-sky-500/5 text-sky-400 hover:bg-sky-500 hover:text-white rounded-xl transition-all"
               >
                 <Check size={16} className="mb-1" />
                 <span className="text-[10px] font-bold uppercase tracking-tight">Mudah</span>

@@ -165,8 +165,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
             <Button
               variant="ghost"
               onClick={() => engine.handleAnswer(0)}
-              disabled={engine.isSyncing}
-              className="relative h-auto py-8 bg-red-500/5 border border-red-500/20 rounded-[2.5rem] text-red-600 dark:text-red-500 font-black uppercase tracking-[0.2em] text-xs md:text-xs neo-card hover:bg-red-600 hover:text-white dark:hover:text-black transition-all group overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+              className="relative h-auto py-8 bg-red-500/5 border border-red-500/20 rounded-[2.5rem] text-red-600 dark:text-red-500 font-black uppercase tracking-[0.2em] text-xs md:text-xs neo-card hover:bg-red-600 hover:text-white dark:hover:text-black transition-all group overflow-hidden"
             >
               <div className="relative z-10 flex items-center gap-2">
                 <X
@@ -183,8 +182,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
             <Button
               variant="ghost"
               onClick={() => engine.handleAnswer(2)}
-              disabled={engine.isSyncing}
-              className="relative h-auto py-8 bg-emerald-500/5 border border-emerald-500/20 rounded-[2.5rem] text-emerald-600 dark:text-emerald-400 font-black uppercase tracking-[0.2em] text-xs md:text-xs neo-card hover:bg-emerald-600 hover:text-white dark:hover:text-black transition-all group shadow-sm dark:shadow-[0_0_20px_rgba(16,185,129,0.1)] overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+              className="relative h-auto py-8 bg-emerald-500/5 border border-emerald-500/20 rounded-[2.5rem] text-emerald-600 dark:text-emerald-400 font-black uppercase tracking-[0.2em] text-xs md:text-xs neo-card hover:bg-emerald-600 hover:text-white dark:hover:text-black transition-all group shadow-sm dark:shadow-[0_0_20px_rgba(16,185,129,0.1)] overflow-hidden"
             >
               <div className="relative z-10 flex items-center gap-2">
                 <Check

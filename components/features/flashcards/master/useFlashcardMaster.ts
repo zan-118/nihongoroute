@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
@@ -46,8 +46,12 @@ export function useFlashcardMaster({
     setIsClient(true);
   }, []);
 
+  const isProcessing = useRef(false);
+
   const handleAnswer = useCallback((grade: number) => {
-    if (currentCards.length === 0 || isSyncing) return;
+    if (currentCards.length === 0 || isProcessing.current) return;
+    isProcessing.current = true;
+    
     const card = currentCards[currentIndex];
     const cardId = card._id || card.id || "unknown";
     
@@ -84,7 +88,7 @@ export function useFlashcardMaster({
       sounds?.playError();
       setIsShaking(true);
       setMistakeIndices((prev) => [...new Set([...prev, currentIndex])]);
-      setTimeout(() => setIsShaking(false), 500);
+      setTimeout(() => setIsShaking(false), 200);
     }
 
     setDirection(isCorrect ? 1 : -1);
@@ -123,8 +127,9 @@ export function useFlashcardMaster({
       } else {
         setIsFinished(true);
       }
+      isProcessing.current = false;
     }, 200);
-  }, [currentCards, currentIndex, srs, xp, updateProgress, isSyncing]);
+  }, [currentCards, currentIndex, srs, xp, updateProgress]);
 
   const checkAnswer = useCallback(() => {
     if (studyMode !== "tantangan" || isAnswerChecked) return;
@@ -146,7 +151,7 @@ export function useFlashcardMaster({
       }, 500);
     } else {
       setIsShaking(true);
-      setTimeout(() => setIsShaking(false), 500);
+      setTimeout(() => setIsShaking(false), 200);
     }
   }, [studyMode, isAnswerChecked, currentCards, currentIndex, userInput]);
 
@@ -245,7 +250,7 @@ export function useFlashcardMaster({
     handleReviewMistakes,
     mistakeIndices,
     currentCards,
-    progress,
+    srs,
     router,
     userInput,
     setUserInput,

@@ -41,7 +41,7 @@ export default function FlashcardMaster({
     handleReviewMistakes,
     mistakeIndices,
     currentCards,
-    progress,
+    srs,
     router,
     userInput,
     setUserInput,
@@ -55,7 +55,7 @@ export default function FlashcardMaster({
 
   const card = cards[currentIndex];
   const cardId = card._id || card.id || "";
-  const srsState = progress.srs[cardId];
+  const srsState = srs[cardId];
   const isKanji = type === "kanji";
   const themeColor = isKanji ? "text-purple-600 dark:text-purple-400" : "text-primary";
   const themeBgColor = isKanji ? "bg-purple-600 dark:bg-purple-500" : "bg-primary";
@@ -161,7 +161,6 @@ export default function FlashcardMaster({
         handleAnswer={handleAnswer}
         isAnswerChecked={isAnswerChecked}
         onCheckAnswer={checkAnswer}
-        isSyncing={isSyncing}
       />
       {isSyncing && (
         <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-[10px] text-muted-foreground animate-pulse text-center w-full">

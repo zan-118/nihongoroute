@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
@@ -47,9 +47,12 @@ export function useSRSReview(cards: FlashcardType[]) {
     }
   }, [currentIndex, shuffledCards.length]);
 
+  const isProcessing = useRef(false);
+
   const handleAnswer = useCallback(
     (grade: number) => {
-      if (!currentCard || isSyncing) return;
+      if (!currentCard || isProcessing.current) return;
+      isProcessing.current = true;
 
       const cardId = currentCard._id;
       const currentState = srs[cardId] || createNewCardState();
@@ -62,7 +65,7 @@ export function useSRSReview(cards: FlashcardType[]) {
       setEarnedXP((prev) => prev + xpGain);
 
       if (grade >= 2) {
-        sounds?.playCorrect();
+        sounds?.playSuccess();
         setFlash("correct");
         setShowXP(true);
         setTimeout(() => setShowXP(false), 800);
@@ -70,15 +73,16 @@ export function useSRSReview(cards: FlashcardType[]) {
         sounds?.playError();
         setFlash("wrong");
         setIsShaking(true);
-        setTimeout(() => setIsShaking(false), 400);
+        setTimeout(() => setIsShaking(false), 300);
       }
 
       setTimeout(() => {
         setFlash(null);
         goToNext();
+        isProcessing.current = false;
       }, 300);
     },
-    [currentCard, srs, xp, isSyncing, updateProgress, goToNext],
+    [currentCard, srs, xp, updateProgress, goToNext],
   );
 
   const toggleFlip = useCallback(() => {
@@ -99,7 +103,7 @@ export function useSRSReview(cards: FlashcardType[]) {
           e.preventDefault();
           toggleFlip();
         }
-      } else if (!isSyncing) {
+      } else {
         if (e.key === "1" || e.key === "ArrowLeft") {
           e.preventDefault();
           handleAnswer(0);
@@ -112,7 +116,7 @@ export function useSRSReview(cards: FlashcardType[]) {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isFlipped, toggleFlip, handleAnswer, isSyncing]);
+  }, [isFlipped, toggleFlip, handleAnswer]);
 
   return {
     currentIndex,
