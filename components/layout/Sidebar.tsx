@@ -90,6 +90,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
               src="/logo-branding.svg"
               alt="NihongoRoute"
               fill
+              priority
               className="object-contain"
             />
           </div>
