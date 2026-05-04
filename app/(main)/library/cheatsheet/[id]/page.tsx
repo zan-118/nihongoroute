@@ -40,7 +40,7 @@ export default async function CheatsheetDetailPage({
 }) {
   const { id } = await params;
   const sheet: Cheatsheet = await client.fetch(
-    `*[_type == "cheatsheet" && _id == $id][0] {
+    `*[_type == "cheatsheet" && (_id == $id || _id == "drafts." + $id || slug.current == $id)][0] {
       _id, title, category, items,
       linkedVocab[]->{ "jp": word, "label": meaning, "romaji": coalesce(romaji, furigana) }
     }`,
@@ -137,60 +137,68 @@ export default async function CheatsheetDetailPage({
               </tr>
             </thead>
             <tbody className="divide-y divide-border/30">
-              {allItems.map((item, idx) => (
-                <tr key={idx} className="group hover:bg-primary/[0.01] transition-all duration-300">
-                  <td className="px-8 py-10 text-center">
-                    <span className="text-sm font-black text-muted-foreground/20 italic group-hover:text-primary/30 transition-colors">
-                      {String(idx + 1).padStart(2, '0')}
-                    </span>
-                  </td>
-                  <td className="px-8 py-10">
-                    <div className="text-base md:text-lg font-bold text-foreground leading-tight mb-1 group-hover:text-primary transition-colors">
-                      {formatLabel(item.label)}
-                    </div>
-                    <div className="text-[10px] font-black text-muted-foreground uppercase tracking-widest opacity-60">
-                      Meaning & Context
-                    </div>
-                  </td>
-                  <td className="px-8 py-10">
-                    <div className="flex flex-col gap-1.5">
-                      <div className="text-3xl md:text-4xl font-japanese font-black text-foreground tracking-tighter leading-normal">
-                        {(() => {
-                          const hiraReading = wanakana.toHiragana(item.romaji || "");
-                          return splitFurigana(item.jp || "", hiraReading).map((chunk, i) => (
-                            chunk.furi ? (
-                              <ruby key={i}>
-                                {chunk.text}
-                                <rt className="text-[10px] md:text-xs text-primary font-bold tracking-widest mb-1 select-none">
-                                  {chunk.furi}
-                                </rt>
-                              </ruby>
-                            ) : (
-                              <span key={i}>{chunk.text}</span>
-                            )
-                          ));
-                        })()}
+              {allItems.length > 0 ? (
+                allItems.map((item, idx) => (
+                  <tr key={idx} className="group hover:bg-primary/[0.01] transition-all duration-300">
+                    <td className="px-8 py-10 text-center">
+                      <span className="text-sm font-black text-muted-foreground/20 italic group-hover:text-primary/30 transition-colors">
+                        {String(idx + 1).padStart(2, '0')}
+                      </span>
+                    </td>
+                    <td className="px-8 py-10">
+                      <div className="text-base md:text-lg font-bold text-foreground leading-tight mb-1 group-hover:text-primary transition-colors">
+                        {formatLabel(item.label)}
                       </div>
-                      <div className="text-[10px] font-black text-primary uppercase tracking-[0.3em] italic">
-                        {item.romaji}
+                      <div className="text-[10px] font-black text-muted-foreground uppercase tracking-widest opacity-60">
+                        Meaning & Context
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-8 py-10 text-right">
-                    <Button 
-                      variant="ghost" 
-                      size="icon"
-                      className="rounded-xl hover:bg-primary/10 hover:text-primary text-muted-foreground transition-all"
-                      onClick={() => {
-                        navigator.clipboard.writeText(item.jp);
-                        toast.success("Disalin ke papan klip!");
-                      }}
-                    >
-                      <Copy size={18} />
-                    </Button>
+                    </td>
+                    <td className="px-8 py-10">
+                      <div className="flex flex-col gap-1.5">
+                        <div className="text-3xl md:text-4xl font-japanese font-black text-foreground tracking-tighter leading-normal">
+                          {(() => {
+                            const hiraReading = wanakana.toHiragana(item.romaji || "");
+                            return splitFurigana(item.jp || "", hiraReading).map((chunk, i) => (
+                              chunk.furi ? (
+                                <ruby key={i}>
+                                  {chunk.text}
+                                  <rt className="text-[10px] md:text-xs text-primary font-bold tracking-widest mb-1 select-none">
+                                    {chunk.furi}
+                                  </rt>
+                                </ruby>
+                              ) : (
+                                <span key={i}>{chunk.text}</span>
+                              )
+                            ));
+                          })()}
+                        </div>
+                        <div className="text-[10px] font-black text-primary uppercase tracking-[0.3em] italic">
+                          {item.romaji}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-8 py-10 text-right">
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        className="rounded-xl hover:bg-primary/10 hover:text-primary text-muted-foreground transition-all"
+                        onClick={() => {
+                          navigator.clipboard.writeText(item.jp);
+                          toast.success("Disalin ke papan klip!");
+                        }}
+                      >
+                        <Copy size={18} />
+                      </Button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={4} className="px-8 py-20 text-center text-muted-foreground font-medium italic">
+                    Belum ada data tersedia untuk cheatsheet ini.
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </Card>
