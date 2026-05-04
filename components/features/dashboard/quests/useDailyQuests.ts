@@ -1,14 +1,18 @@
 import { useState, useEffect } from "react";
-import { useProgressStore } from "@/store/useProgressStore";
-import { useShallow } from "zustand/react/shallow";
+
 import { toast } from "sonner";
 import { Quest } from "./types";
 import { getTodayDateString } from "@/lib/helpers";
+import { useUserStore } from "@/store/useUserStore";
+import { useSRSStore } from "@/store/useSRSStore";
+import { useUIStore } from "@/store/useUIStore";
 
 export function useDailyQuests() {
-  const { progress, updateProgress } = useProgressStore(
-    useShallow((state) => ({ progress: state.progress, updateProgress: state.updateProgress }))
-  );
+  const { updateProgress } = useSRSStore();
+    const { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory } = useUserStore();
+    const { srs } = useSRSStore();
+    const { notifications, settings } = useUIStore();
+    const progress = { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
   const [claimedQuests, setClaimedQuests] = useState<Record<string, boolean>>({});
   const [justClaimed, setJustClaimed] = useState<string | null>(null);
 

@@ -8,8 +8,6 @@ import { Trophy, Skull, Share2, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { ExamData, GameState } from "./types";
 import { SECTION_LABELS } from "./constants";
-import { useProgressStore } from "@/store/useProgressStore";
-
 const PdfGenerator = dynamic(() => import("@/components/features/pdf/PdfGenerator"), {
   ssr: false,
   loading: () => <Loader2 className="animate-spin text-primary" size={20} />

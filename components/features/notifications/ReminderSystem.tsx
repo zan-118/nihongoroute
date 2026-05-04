@@ -1,21 +1,17 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useProgressStore } from "@/store/useProgressStore";
-import { useShallow } from "zustand/react/shallow";
+import { useSRSStore } from "@/store/useSRSStore";
+import { useUIStore } from "@/store/useUIStore";
 
 export default function ReminderSystem() {
-  const { srs, notificationsEnabled } = useProgressStore(
-    useShallow((state) => ({
-      srs: state.progress.srs,
-      notificationsEnabled: state.progress.settings?.notificationsEnabled || false,
-    }))
-  );
+  const { srs } = useSRSStore();
+  const { settings } = useUIStore();
 
   const lastNotifiedRef = useRef<number>(0);
 
   useEffect(() => {
-    if (!notificationsEnabled || typeof window === "undefined" || !("Notification" in window)) {
+    if (!settings.notificationsEnabled || typeof window === "undefined" || !("Notification" in window)) {
       return;
     }
 
@@ -60,7 +56,7 @@ export default function ReminderSystem() {
     const interval = setInterval(checkDueCards, 15 * 60 * 1000);
 
     return () => clearInterval(interval);
-  }, [srs, notificationsEnabled]);
+  }, [srs, settings.notificationsEnabled]);
 
   return null; // This is a logic-only component
 }

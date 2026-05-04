@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { useProgressStore } from "@/store/useProgressStore";
-import { useShallow } from "zustand/react/shallow";
+import { useUserStore } from "@/store/useUserStore";
+import { useSRSStore } from "@/store/useSRSStore";
 import { updateCardState } from "@/lib/srs";
 import { sounds } from "@/lib/audio";
 import confetti from "canvas-confetti";
@@ -36,10 +36,8 @@ export function useFlashcardMaster({
   const [combo, setCombo] = useState(0);
 
 
-  const { progress, updateProgress } = useProgressStore(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useShallow((state: any) => ({ progress: state.progress, updateProgress: state.updateProgress }))
-  );
+  const { srs, updateProgress } = useSRSStore();
+  const { xp } = useUserStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -69,7 +67,7 @@ export function useFlashcardMaster({
       xpGained: prev.xpGained + xpReward,
     }));
 
-    const currentState = progress.srs[cardId] || {
+    const currentState = srs[cardId] || {
       interval: 1,
       repetition: 0,
       easeFactor: 2.5,
@@ -107,7 +105,7 @@ export function useFlashcardMaster({
       setCombo(0);
     }
 
-    updateProgress(progress.xp + xpReward, {
+    updateProgress(xp + xpReward, {
       [cardId]: newState,
     });
 
@@ -124,7 +122,7 @@ export function useFlashcardMaster({
         setIsFinished(true);
       }
     }, 200);
-  }, [currentCards, currentIndex, progress, updateProgress]);
+  }, [currentCards, currentIndex, srs, xp, updateProgress]);
 
   const checkAnswer = useCallback(() => {
     if (studyMode !== "tantangan" || isAnswerChecked) return;

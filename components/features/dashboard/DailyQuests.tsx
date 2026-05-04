@@ -5,9 +5,8 @@ import { motion } from "framer-motion";
 import { CheckCircle2, Zap, Target, BookOpen } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { UserProgress } from "@/store/useProgressStore";
-
 import { DailyMission, loadDailyMission } from "@/lib/daily";
+import { UserProgress } from "@/store/types";
 
 interface Quest {
   id: string;

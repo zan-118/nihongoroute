@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { client } from "@/sanity/lib/client";
-import { useProgressStore } from "@/store/useProgressStore";
-import { useShallow } from "zustand/react/shallow";
+
 import Link from "next/link";
 import { Zap, RotateCw, ChevronLeft, BrainCircuit } from "lucide-react";
 import FlashcardMaster from "@/components/features/flashcards/master/FlashcardMaster";
@@ -11,11 +10,16 @@ import { MasterCardData } from "@/components/features/flashcards/master/types";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useUserStore } from "@/store/useUserStore";
+import { useSRSStore } from "@/store/useSRSStore";
+import { useUIStore } from "@/store/useUIStore";
 
 export default function QuickQuizPage() {
-  const { progress, loading } = useProgressStore(
-    useShallow((state) => ({ progress: state.progress, loading: state.loading }))
-  );
+  const { loading } = useUIStore();
+    const { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory } = useUserStore();
+    const { srs } = useSRSStore();
+    const { notifications, settings } = useUIStore();
+    const progress = { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
 
   const [cards, setCards] = useState<MasterCardData[]>([]);
   const [isFetching, setIsFetching] = useState(true);

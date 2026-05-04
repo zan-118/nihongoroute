@@ -12,8 +12,7 @@
 // ======================
 import React, { useState, useEffect } from "react";
 import { client } from "@/sanity/lib/client";
-import { useProgressStore } from "@/store/useProgressStore";
-import { useShallow } from "zustand/react/shallow";
+
 import Link from "next/link";
 import { BrainCircuit, RotateCw, Trophy, ChevronLeft } from "lucide-react";
 import FlashcardMaster from "@/components/features/flashcards/master/FlashcardMaster";
@@ -24,6 +23,9 @@ import { offlineCache } from "@/lib/offlineCache";
 import { toast } from "sonner";
 import EmptyState from "@/components/ui/EmptyState";
 import { Sparkles } from "lucide-react";
+import { useUserStore } from "@/store/useUserStore";
+import { useSRSStore } from "@/store/useSRSStore";
+import { useUIStore } from "@/store/useUIStore";
 
 // ======================
 // MAIN EXECUTION
@@ -36,9 +38,11 @@ import { Sparkles } from "lucide-react";
  * @returns {JSX.Element} Elemen halaman review harian.
  */
 export default function DailyReviewPage() {
-  const { progress, loading } = useProgressStore(
-    useShallow((state) => ({ progress: state.progress, loading: state.loading }))
-  );
+  const { loading } = useUIStore();
+    const { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory } = useUserStore();
+    const { srs } = useSRSStore();
+    const { notifications, settings } = useUIStore();
+    const progress = { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
 
   const [dueCards, setDueCards] = useState<MasterCardData[]>([]);
   const [isFetching, setIsFetching] = useState(true);

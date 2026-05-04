@@ -5,10 +5,9 @@ import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { client } from "@/sanity/lib/client";
-import { useProgressStore } from "@/store/useProgressStore";
-import { useShallow } from "zustand/react/shallow";
-import { Loader2, Info } from "lucide-react";
 
+import { Loader2, Info } from "lucide-react";
+import { useSRSStore } from "@/store/useSRSStore";
 
 interface KanjiItem {
   _id: string;
@@ -19,9 +18,7 @@ interface KanjiItem {
 export default function KanjiProgressGrid() {
   const [kanjis, setKanjis] = useState<KanjiItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const { srs } = useProgressStore(
-    useShallow((state) => ({ srs: state.progress.srs }))
-  );
+  const { srs } = useSRSStore();
 
   useEffect(() => {
     const fetchKanjis = async () => {

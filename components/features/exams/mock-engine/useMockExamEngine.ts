@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { useProgressStore } from "@/store/useProgressStore";
 import { ExamData, GameState, AudioState, ExamQuestion } from "./types";
 import { toast } from "sonner";
+import { useUserStore } from "@/store/useUserStore";
+
 
 /**
  * @file useMockExamEngine.ts
@@ -47,7 +48,7 @@ export function useMockExamEngine(exam: ExamData) {
   const [audioStatus, setAudioStatus] = useState<Record<string, AudioState>>({});
   const [cheatWarnings, setCheatWarnings] = useState(0);
 
-  const addXP = useProgressStore((state) => state.addXP);
+  const { addXP } = useUserStore();
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const activeQuestion = useMemo(() => exam.questions[currentQuestionIndex], [exam.questions, currentQuestionIndex]);

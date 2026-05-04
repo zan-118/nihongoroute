@@ -2,20 +2,14 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { Bell, X, Trash2, Info, Trophy, AlertTriangle, Zap } from "lucide-react";
-import { useProgressStore } from "@/store/useProgressStore";
-import { useShallow } from "zustand/react/shallow";
+
 import { formatDistanceToNow } from "date-fns";
 import { id } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
+import { useUIStore } from "@/store/useUIStore";
 
 export default function NotificationPopover({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const { notifications, markAsRead, clearAll } = useProgressStore(
-    useShallow((state) => ({
-      notifications: state.progress.notifications,
-      markAsRead: state.markNotificationAsRead,
-      clearAll: state.clearNotifications,
-    }))
-  );
+  const { notifications } = useUIStore();
 
   const unreadCount = notifications?.filter(n => !n.read).length || 0;
 

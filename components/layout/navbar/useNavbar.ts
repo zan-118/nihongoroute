@@ -1,6 +1,5 @@
 import { usePathname, useRouter } from "next/navigation";
-import { useProgressStore } from "@/store/useProgressStore";
-import { useShallow } from "zustand/react/shallow";
+
 import { createClient } from "@/lib/supabase/client";
 import { 
   LayoutDashboard, 
@@ -12,16 +11,18 @@ import {
   Settings,
   Share2
 } from "lucide-react";
+import { useUserStore } from "@/store/useUserStore";
+import { useSRSStore } from "@/store/useSRSStore";
+import { useUIStore } from "@/store/useUIStore";
 
 export function useNavbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { isAuthenticated, progress } = useProgressStore(
-    useShallow((state) => ({ 
-      isAuthenticated: state.isAuthenticated, 
-      progress: state.progress
-    }))
-  );
+  const { isAuthenticated } = useAuthStore();
+    const { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory } = useUserStore();
+    const { srs } = useSRSStore();
+    const { notifications, settings } = useUIStore();
+    const progress = { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
   const userFullName = progress.name;
   const supabase = createClient();
 

@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
-import { useProgressStore } from "@/store/useProgressStore";
-import { useShallow } from "zustand/react/shallow";
+import { useUserStore } from "@/store/useUserStore";
+import { useSRSStore } from "@/store/useSRSStore";
 import { sounds } from "@/lib/audio";
 import { QuizQuestion } from "./types";
 
@@ -13,9 +13,8 @@ export function useQuizEngine(questions: QuizQuestion[]) {
   const [showXP, setShowXP] = useState(false);
   const [xpGained, setXpGained] = useState(0);
 
-  const { progress, updateProgress } = useProgressStore(
-    useShallow((state) => ({ progress: state.progress, updateProgress: state.updateProgress }))
-  );
+  const { updateProgress, srs } = useSRSStore();
+  const { xp } = useUserStore();
 
   const handleFinish = useCallback((finalScore: number) => {
     setIsFinished(true);
@@ -26,10 +25,10 @@ export function useQuizEngine(questions: QuizQuestion[]) {
     if (totalXP > 0) {
       setXpGained(totalXP);
       setShowXP(true);
-      updateProgress(progress.xp + totalXP, progress.srs);
+      updateProgress(xp + totalXP, srs);
       setTimeout(() => setShowXP(false), 2000);
     }
-  }, [questions.length, progress, updateProgress]);
+  }, [questions.length, xp, srs, updateProgress]);
 
   const nextQuestion = useCallback(() => {
     if (currentIndex < questions.length - 1) {

@@ -3,18 +3,12 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, Zap, Info } from "lucide-react";
-import { useProgressStore } from "@/store/useProgressStore";
-import { useShallow } from "zustand/react/shallow";
+
 import { toast } from "sonner";
+import { useUserStore } from "@/store/useUserStore";
 
 export default function StreakFreezeCard() {
-  const { xp, freezeCount, buyFreeze } = useProgressStore(
-    useShallow((state) => ({ 
-      xp: state.progress.xp, 
-      freezeCount: state.progress.inventory?.streakFreeze || 0,
-      buyFreeze: state.buyStreakFreeze 
-    }))
-  );
+  const { xp } = useUserStore();
 
   const COST = 500;
 

@@ -11,7 +11,7 @@ import MemoryStats from "./dashboard-stats/MemoryStats";
 import SRSAnalytics from "../srs/analytics/SRSAnalytics";
 import Heatmap from "./heatmap/Heatmap";
 import StreakFreezeCard from "../gamification/StreakFreezeCard";
-import { UserProgress } from "@/store/useProgressStore";
+import { UserProgress } from "@/store/types";
 
 interface DashboardStatsProps {
   loading: boolean;

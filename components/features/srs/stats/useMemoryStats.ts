@@ -1,7 +1,12 @@
-import { useProgressStore } from "@/store/useProgressStore";
+import { useUserStore } from "@/store/useUserStore";
+import { useSRSStore } from "@/store/useSRSStore";
+import { useUIStore } from "@/store/useUIStore";
 
 export function useMemoryStats() {
-  const progress = useProgressStore((state) => state.progress);
+  const { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory } = useUserStore();
+    const { srs } = useSRSStore();
+    const { notifications, settings } = useUIStore();
+    const progress = { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
   const srsEntries = Object.values(progress.srs || {});
 
   const stats = {

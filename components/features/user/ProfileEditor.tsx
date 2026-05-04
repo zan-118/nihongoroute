@@ -1,13 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { useProgressStore } from "@/store/useProgressStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Edit2, Check, X, UserCircle, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
+import { useUserStore } from "@/store/useUserStore";
+import { useSRSStore } from "@/store/useSRSStore";
+import { useUIStore } from "@/store/useUIStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
 /**
  * @file ProfileEditor.tsx
@@ -16,7 +19,12 @@ import { toast } from "sonner";
  */
 
 export default function ProfileEditor() {
-  const { progress, updateProfileName, isAuthenticated } = useProgressStore();
+  const { updateProfileName } = useUserStore();
+    const { isAuthenticated } = useAuthStore();
+    const { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory } = useUserStore();
+    const { srs } = useSRSStore();
+    const { notifications, settings } = useUIStore();
+    const progress = { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(progress.name || "");
   const [isLoading, setIsLoading] = useState(false);

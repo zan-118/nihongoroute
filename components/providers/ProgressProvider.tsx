@@ -3,7 +3,9 @@
 import React, { useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
-import { useProgressStore } from "@/store/useProgressStore";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useUserStore } from "@/store/useUserStore";
+import { useSRSStore } from "@/store/useSRSStore";
 import { useSyncProgress } from "@/hooks/useSyncProgress";
 import { useHasMounted } from "@/hooks/useHasMounted";
 import ReminderSystem from "@/components/features/notifications/ReminderSystem";
@@ -14,12 +16,9 @@ export const ProgressProvider = ({
   children: React.ReactNode;
 }) => {
   const hasMounted = useHasMounted();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const setAuth = useProgressStore((state: any) => state.setAuth);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const updateProfileName = useProgressStore((state: any) => state.updateProfileName);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const dirtySrs = useProgressStore((state: any) => state.dirtySrs);
+  const { setAuth } = useAuthStore();
+  const { updateProfileName } = useUserStore();
+  const { dirtySrs } = useSRSStore();
   
   const supabase = createClient();
 

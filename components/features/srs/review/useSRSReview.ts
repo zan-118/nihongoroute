@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { useProgressStore } from "@/store/useProgressStore";
-import { useShallow } from "zustand/react/shallow";
+import { useUserStore } from "@/store/useUserStore";
+import { useSRSStore } from "@/store/useSRSStore";
 import { updateCardState, createNewCardState } from "@/lib/srs";
 import { FlashcardType } from "./types";
 import { shuffleArray } from "@/lib/helpers";
@@ -13,10 +13,8 @@ export function useSRSReview(cards: FlashcardType[]) {
   const [isClient, setIsClient] = useState(false);
   const [shuffledCards, setShuffledCards] = useState<FlashcardType[]>([]);
 
-  const { progress, updateProgress } = useProgressStore(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useShallow((state: any) => ({ progress: state.progress, updateProgress: state.updateProgress }))
-  );
+  const { srs, updateProgress } = useSRSStore();
+  const { xp } = useUserStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -44,16 +42,16 @@ export function useSRSReview(cards: FlashcardType[]) {
       if (!currentCard) return;
 
       const cardId = currentCard._id;
-      const currentState = progress.srs[cardId] || createNewCardState();
+      const currentState = srs[cardId] || createNewCardState();
       const newState = updateCardState(currentState, grade);
 
-      updateProgress(progress.xp + (grade >= 2 ? 10 : 2), {
+      updateProgress(xp + (grade >= 2 ? 10 : 2), {
         [cardId]: newState,
       });
 
       goToNext();
     },
-    [currentCard, progress, updateProgress, goToNext],
+    [currentCard, srs, xp, updateProgress, goToNext],
   );
 
   const toggleFlip = useCallback(() => {

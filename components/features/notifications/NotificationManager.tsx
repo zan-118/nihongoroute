@@ -6,16 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Switch } from "../../ui/switch";
 import { toast } from "sonner";
-import { useProgressStore } from "@/store/useProgressStore";
-import { useShallow } from "zustand/react/shallow";
+import { useUIStore } from "@/store/useUIStore";
 
 export default function NotificationManager() {
-  const { notificationsEnabled, toggleNotifications } = useProgressStore(
-    useShallow((state) => ({ 
-      notificationsEnabled: state.progress.settings?.notificationsEnabled || false,
-      toggleNotifications: state.toggleNotifications 
-    }))
-  );
+  const { settings, toggleNotifications } = useUIStore();
+  const notificationsEnabled = settings?.notificationsEnabled || false;
   
   const [permission, setPermission] = useState<NotificationPermission>("default");
   const [isEnabled, setIsEnabled] = useState(notificationsEnabled);

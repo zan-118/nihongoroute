@@ -1,11 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
-import { useProgressStore } from "@/store/useProgressStore";
-import { useShallow } from "zustand/react/shallow";
+import { useUserStore } from "@/store/useUserStore";
+import { useSRSStore } from "@/store/useSRSStore";
+import { useUIStore } from "@/store/useUIStore";
 
 export function useAddToSRS(wordId: string) {
-  const { progress, addToSRS } = useProgressStore(
-    useShallow((state) => ({ progress: state.progress, addToSRS: state.addToSRS }))
-  );
+  const { addToSRS } = useSRSStore();
+    const { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory } = useUserStore();
+    const { srs } = useSRSStore();
+    const { notifications, settings } = useUIStore();
+    const progress = { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
   const [isAdded, setIsAdded] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 

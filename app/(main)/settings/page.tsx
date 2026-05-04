@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useProgressStore } from "@/store/useProgressStore";
-import { useShallow } from "zustand/react/shallow";
+
 import { createClient } from "@/lib/supabase/client";
 import { motion, Variants } from "framer-motion";
 import { Save, Upload, Trash2, LogOut, Settings as SettingsIcon, Layers, ShieldAlert, Database, Cloud, CloudCheck, RefreshCw } from "lucide-react";
@@ -15,6 +14,9 @@ import Link from "next/link";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import { useHasMounted } from "@/hooks/useHasMounted";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useUserStore } from "@/store/useUserStore";
+import { useSRSStore } from "@/store/useSRSStore";
+import { useUIStore } from "@/store/useUIStore";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -30,18 +32,14 @@ const itemVariants: Variants = {
 };
 
 export default function SettingsPage() {
-  const { exportData, importData, isAuthenticated, updateProfileName, resetProgress, dirtySrs, progress, clearDirtySrs } = useProgressStore(
-    useShallow((state) => ({ 
-      exportData: state.exportData, 
-      importData: state.importData, 
-      isAuthenticated: state.isAuthenticated,
-      updateProfileName: state.updateProfileName,
-      resetProgress: state.resetProgress,
-      dirtySrs: state.dirtySrs,
-      progress: state.progress,
-      clearDirtySrs: state.clearDirtySrs
-    }))
-  );
+  const { updateProfileName } = useUserStore();
+    const { dirtySrs, clearDirtySrs } = useSRSStore();
+    const { exportData, importData } = useUIStore();
+    const { isAuthenticated } = useAuthStore();
+    const { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory } = useUserStore();
+    const { srs } = useSRSStore();
+    const { notifications, settings } = useUIStore();
+    const progress = { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
   const hasMounted = useHasMounted();
   const [isSyncing, setIsSyncing] = useState(false);
   const [newName, setNewName] = useState("");

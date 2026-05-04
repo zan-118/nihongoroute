@@ -3,8 +3,10 @@
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Trophy, Star, Zap, Flame, BookOpen, Crown, Target } from "lucide-react";
-import { useProgressStore, UserProgress } from "@/store/useProgressStore";
-import { useShallow } from "zustand/react/shallow";
+import { UserProgress } from "@/store/types";
+import { useUserStore } from "@/store/useUserStore";
+import { useSRSStore } from "@/store/useSRSStore";
+import { useUIStore } from "@/store/useUIStore";
 
 interface Achievement {
   id: string;
@@ -67,9 +69,10 @@ const ACHIEVEMENTS: Achievement[] = [
 ];
 
 export default function AchievementsGrid() {
-  const { progress } = useProgressStore(
-    useShallow((state) => ({ progress: state.progress }))
-  );
+  const { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory } = useUserStore();
+    const { srs } = useSRSStore();
+    const { notifications, settings } = useUIStore();
+    const progress = { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
