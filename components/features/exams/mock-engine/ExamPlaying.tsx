@@ -1,12 +1,9 @@
 import { memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Clock,
-  ShieldAlert,
   ArrowRight,
   ArrowLeft,
   Volume2,
@@ -24,7 +21,6 @@ interface ExamPlayingProps {
   timeLeft: number;
   answers: Record<string, number>;
   audioStatus: Record<string, AudioState>;
-  cheatWarnings: number;
   audioRef: React.MutableRefObject<HTMLAudioElement | null>;
   isTimeCritical: boolean;
   isCurrentlyListening: boolean;
@@ -57,28 +53,26 @@ const OptionButton = memo(({
   onSelect: (idx: number) => void;
 }) => {
   return (
-    <Button
-      variant="ghost"
+    <button
       onClick={() => onSelect(idx)}
-      className={`p-8 md:p-10 rounded-3xl text-left transition-all font-medium h-auto group flex items-center gap-6 border neo-card shadow-none ${
+      className={`p-4 rounded-xl text-left transition-all font-medium flex items-center gap-4 border ${
         isSelected
-          ? "bg-red-600/10 dark:bg-red-500/10 border-red-500/50 text-foreground dark:text-white neo-inset shadow-none"
-          : "bg-muted/50 dark:bg-black/20 border-border dark:border-white/5 text-muted-foreground hover:border-primary/30 hover:bg-muted dark:hover:bg-white/5"
+          ? "bg-red-50 text-red-600 border-red-200 dark:bg-red-500/10 dark:border-red-500/30 dark:text-red-400"
+          : "bg-white dark:bg-white/5 border-border dark:border-white/10 text-muted-foreground hover:border-red-500/30"
       }`}
     >
-      <Badge 
-        variant="outline" 
-        className={`font-mono text-sm font-black transition-colors h-10 w-10 rounded-xl flex items-center justify-center border-none ${
-          isSelected ? "bg-red-600 dark:bg-red-500 text-white dark:text-black" : "bg-muted dark:bg-white/5 text-muted-foreground group-hover:text-foreground"
+      <div 
+        className={`font-mono text-xs font-bold h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${
+          isSelected ? "bg-red-600 text-white" : "bg-muted dark:bg-white/10 text-muted-foreground"
         }`}
       >
         {idx + 1}
-      </Badge>
-      <span className="leading-tight font-japanese text-lg md:text-2xl flex-1">{text}</span>
+      </div>
+      <span className="leading-tight font-japanese text-base md:text-lg flex-1">{text}</span>
       {isSelected && (
-        <div className="w-3 h-3 rounded-full bg-red-600 dark:bg-red-500 shadow-sm animate-pulse" />
+        <CheckCircle size={16} className="text-red-600 dark:text-red-400" />
       )}
-    </Button>
+    </button>
   );
 });
 
@@ -91,7 +85,6 @@ export function ExamPlaying({
   timeLeft,
   answers,
   audioStatus,
-  cheatWarnings,
   audioRef,
   isTimeCritical,
   isCurrentlyListening,
@@ -110,216 +103,195 @@ export function ExamPlaying({
   if (!activeQuestion) return null;
 
   return (
-    <div className="w-full flex flex-col max-w-5xl mx-auto transition-colors duration-300">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B0E14] text-foreground pb-20 font-sans selection:bg-red-500/30">
       <audio ref={audioRef} className="hidden" />
-
-      <header className="relative z-20 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
-        <Card className="w-full flex flex-col md:flex-row justify-between items-start md:items-center p-6 mt-2 md:mt-8 border border-border dark:border-white/5 bg-card dark:bg-slate-900 rounded-3xl neo-card shadow-lg">
-          <div className="flex flex-col gap-4 w-full md:w-auto">
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide no-scrollbar w-full md:w-auto">
-              {availableSections.map((section, idx) => {
-                const isLocked = idx < activeSectionIndex;
-                const isActive = currentSection === section;
-                
-                return (
-                  <Badge
-                    key={section}
-                    variant="outline"
-                    onClick={() => !isLocked && goToQuestion(sections[section][0])}
-                    className={`whitespace-nowrap px-4 py-2 rounded-xl border transition-all font-bold uppercase tracking-widest text-[10px] ${
-                      isActive
-                        ? "bg-red-600 dark:bg-red-500 text-white dark:text-black border-transparent shadow-lg scale-105 cursor-pointer"
-                        : isLocked
-                        ? "bg-muted/50 text-muted-foreground/30 border-border/50 cursor-not-allowed opacity-50"
-                        : "bg-muted dark:bg-black/20 text-muted-foreground border-border dark:border-white/5 hover:border-red-500/30 cursor-pointer"
-                    }`}
-                  >
-                    {isLocked && <LockIcon size={10} className="mr-2" />}
-                    {SECTION_LABELS[section]}
-                  </Badge>
-                );
-              })}
-            </div>
-            {cheatWarnings > 0 && (
-              <Badge variant="ghost" className="text-xs text-amber-600 dark:text-amber-500 font-bold uppercase tracking-widest animate-pulse flex items-center gap-2 p-0 h-auto">
-                <ShieldAlert size={14} /> PERINGATAN: {cheatWarnings}x
-              </Badge>
-            )}
-          </div>
-
-          <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-6">
-            <div
-              className={`flex items-center gap-4 font-mono text-3xl md:text-5xl font-black px-8 py-3 neo-inset transition-all duration-500 rounded-2xl bg-muted dark:bg-black/40 border border-border dark:border-white/5 ${isTimeCritical ? "text-red-600 dark:text-red-500 !border-red-500/50 animate-pulse shadow-inner" : "text-foreground"}`}
-            >
-              <Clock
-                size={24}
-                className={isTimeCritical ? "text-red-600 dark:text-red-500" : "text-muted-foreground"}
-              />{" "}
-              {formatTime(timeLeft)}
-            </div>
-            <Button
-              variant="ghost"
-              onClick={() => {
-                if (confirm("Beneran mau selesai sekarang? Tenang, jawaban yang sudah kamu isi bakal tetap dihitung kok."))
-                  finishExam();
-              }}
-              className="text-xs neo-card border border-border dark:border-white/5 bg-muted/50 dark:bg-black/20 text-muted-foreground hover:bg-destructive hover:text-white font-black uppercase tracking-widest h-auto px-6 py-4 rounded-xl shadow-none transition-all"
-            >
-              Akhiri
-            </Button>
-          </div>
-        </Card>
-      </header>
-
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentQuestionIndex}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.2 }}
-          className="w-full mb-10"
-        >
-          <Card className="p-8 sm:p-12 md:p-16 flex flex-col neo-card rounded-[3.5rem] border border-border dark:border-white/5 bg-card dark:bg-slate-900 shadow-2xl min-h-[500px]">
-            {isCurrentlyListening && (
-              <Card className="mb-10 p-6 neo-inset border border-red-500/30 flex flex-col sm:flex-row items-center gap-6 shadow-none bg-red-500/5 rounded-3xl">
-                <Button
-                  onClick={handlePlayAudio}
-                  disabled={
-                    exam.choukaiAudioUrl 
-                      ? (audioStatus.global === "playing")
-                      : (audioStatus[activeQuestion._key] !== "idle" && audioStatus[activeQuestion._key] !== undefined)
-                  }
-                  className={`w-16 h-16 rounded-full flex items-center justify-center transition-all shrink-0 border-none ${
-                    (!exam.choukaiAudioUrl && (!audioStatus[activeQuestion._key] || audioStatus[activeQuestion._key] === "idle")) ||
-                    (exam.choukaiAudioUrl && (!audioStatus.global || audioStatus.global === "idle"))
-                      ? "bg-red-600 dark:bg-red-500 text-white hover:scale-110 shadow-lg cursor-pointer"
-                      : "bg-muted dark:bg-slate-800 text-muted-foreground dark:text-slate-500 cursor-not-allowed"
-                  }`}
-                >
-                  <Volume2
-                    size={32}
-                    className={
-                      (exam.choukaiAudioUrl ? audioStatus.global === "playing" : audioStatus[activeQuestion._key] === "playing") 
-                        ? "animate-pulse" 
-                        : ""
-                    }
-                  />
-                </Button>
-                <div className="text-center sm:text-left">
-                  <p className="text-xs md:text-xs font-bold uppercase tracking-widest mb-2 text-foreground">
-                    {exam.choukaiAudioUrl
-                      ? (audioStatus.global === "playing" ? "Sesi Mendengarkan Berjalan..." : "Mulai Sesi Mendengarkan")
-                      : (!audioStatus[activeQuestion._key] || audioStatus[activeQuestion._key] === "idle"
-                          ? "Dengarkan Audio"
-                          : audioStatus[activeQuestion._key] === "playing"
-                            ? "Lagi Didengarkan..."
-                            : "Selesai Didengarkan")}
-                  </p>
-                  <p className="text-xs md:text-xs text-muted-foreground leading-relaxed uppercase font-bold tracking-widest">
-                    {exam.choukaiAudioUrl 
-                      ? "Audio diputar sekaligus untuk seluruh sesi. Kamu bebas pindah soal sambil mendengarkan."
-                      : <>Ingat: Audionya cuma bisa diputar <span className="text-red-600 dark:text-red-500 underline">SEKALI</span>. Yuk, fokus dengerin!</>}
-                  </p>
-                </div>
-              </Card>
-            )}
-
-            {activeQuestion.questionText && (
-              <div
-                className="text-xl sm:text-2xl md:text-3xl text-foreground font-medium leading-relaxed mb-12 font-japanese prose-custom bg-muted/30 dark:bg-black/10 p-8 rounded-3xl border border-border dark:border-white/5 neo-inset"
-                dangerouslySetInnerHTML={{ __html: activeQuestion.questionText }}
-              />
-            )}
-
-            {activeQuestion.imageUrl && (
-              <div className="mb-12 rounded-3xl overflow-hidden neo-inset p-3 bg-muted/20 dark:bg-black/20 border border-border dark:border-white/5 relative min-h-[300px] md:min-h-[400px]">
-                <Image
-                  src={activeQuestion.imageUrl}
-                  alt="Gambar Pendukung Soal"
-                  fill
-                  className="object-contain opacity-90 rounded-2xl p-4"
-                />
-              </div>
-            )}
-
-            <div className="grid grid-cols-1 gap-5 mt-auto">
-              {activeQuestion.options.map((opt, idx) => (
-                <OptionButton
-                  key={idx}
-                  idx={idx}
-                  text={opt}
-                  isSelected={answers[activeQuestion._key] === idx}
-                  onSelect={handleAnswer}
-                />
-              ))}
-            </div>
-
-            {/* Question Grid for Current Section */}
-            <div className="mt-12 pt-10 border-t border-border dark:border-white/5">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-6 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-                Navigasi Soal: {SECTION_LABELS[currentSection]}
-              </p>
-              <div className="flex flex-wrap gap-3">
-                {sections[currentSection]?.map((qIdx) => {
-                  const isAnswered = answers[exam.questions[qIdx]._key] !== undefined;
-                  const isActive = qIdx === currentQuestionIndex;
+      <div className="max-w-4xl mx-auto px-4 md:px-6">
+        <header className="sticky top-0 z-50 pt-6 pb-4 bg-[#F8FAFC]/80 dark:bg-[#0B0E14]/80 backdrop-blur-md">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar flex-1">
+                {availableSections.map((section, idx) => {
+                  const isLocked = idx < activeSectionIndex;
+                  const isActive = currentSection === section;
                   return (
                     <button
-                      key={qIdx}
-                      onClick={() => goToQuestion(qIdx)}
-                      className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center text-xs font-mono font-black transition-all border ${
+                      key={section}
+                      disabled={isLocked}
+                      onClick={() => !isLocked && goToQuestion(sections[section][0])}
+                      className={`whitespace-nowrap px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border ${
                         isActive
-                          ? "bg-red-600 dark:bg-red-500 text-white dark:text-black border-transparent scale-110 shadow-xl z-10"
-                          : isAnswered
-                          ? "bg-green-500/20 text-green-600 dark:text-green-400 border-green-500/30"
-                          : "bg-muted dark:bg-black/20 text-muted-foreground border-border dark:border-white/5 hover:border-red-500/30"
+                          ? "bg-red-600 text-white border-transparent shadow-sm"
+                          : isLocked
+                          ? "bg-transparent text-muted-foreground/30 border-border/50 cursor-not-allowed"
+                          : "bg-white dark:bg-white/5 text-muted-foreground border-border dark:border-white/10 hover:border-red-500/30"
                       }`}
                     >
-                      {qIdx + 1}
+                      {isLocked && <LockIcon size={10} className="inline mr-1" />}
+                      {SECTION_LABELS[section].split(" ")[0]}
                     </button>
                   );
                 })}
               </div>
+              
+              <div className="flex items-center gap-3 shrink-0">
+                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors ${
+                  isTimeCritical 
+                    ? "bg-red-500/10 border-red-500/30 text-red-600 animate-pulse" 
+                    : "bg-white dark:bg-white/5 border-border dark:border-white/10 text-muted-foreground"
+                }`}>
+                  <Clock size={14} />
+                  <span className="font-mono font-bold text-xs">{formatTime(timeLeft)}</span>
+                </div>
+              </div>
             </div>
-          </Card>
-        </motion.div>
-      </AnimatePresence>
+          </div>
+        </header>
 
-      <div className="flex flex-col sm:flex-row justify-between gap-5 pb-20">
-        <Button
-          variant="ghost"
-          onClick={prevQuestion}
-          disabled={disablePreviousButton}
-          className="w-full sm:w-auto neo-card border border-border dark:border-white/5 bg-muted/50 dark:bg-black/20 px-10 py-8 h-auto text-muted-foreground hover:bg-background hover:text-foreground disabled:opacity-20 disabled:cursor-not-allowed flex items-center justify-center gap-3 font-black uppercase tracking-widest text-xs transition-all rounded-2xl shadow-none"
-        >
-          <ArrowLeft size={20} /> Sebelumnya
-        </Button>
+        <main className="mt-4">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeQuestion._key}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="space-y-6">
+                {isCurrentlyListening && (
+                  <div className="bg-white dark:bg-white/5 border border-border dark:border-white/10 rounded-2xl p-4 flex items-center gap-4 shadow-sm">
+                    <Button
+                      onClick={handlePlayAudio}
+                      disabled={
+                        exam.choukaiAudioUrl 
+                          ? (audioStatus.global === "playing")
+                          : (audioStatus[activeQuestion._key] !== "idle" && audioStatus[activeQuestion._key] !== undefined)
+                      }
+                      size="sm"
+                      className={`w-10 h-10 rounded-full shrink-0 ${
+                        (!exam.choukaiAudioUrl && (!audioStatus[activeQuestion._key] || audioStatus[activeQuestion._key] === "idle")) ||
+                        (exam.choukaiAudioUrl && (!audioStatus.global || audioStatus.global === "idle"))
+                          ? "bg-red-600 text-white"
+                          : "bg-muted text-muted-foreground cursor-not-allowed"
+                      }`}
+                    >
+                      <Volume2 size={18} className={(exam.choukaiAudioUrl ? audioStatus.global === "playing" : audioStatus[activeQuestion._key] === "playing") ? "animate-pulse" : ""} />
+                    </Button>
+                    <div className="flex-1">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-0.5">
+                        {exam.choukaiAudioUrl ? "Global Audio Session" : "Question Audio"}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground italic leading-tight">
+                        {exam.choukaiAudioUrl ? "Audio terus berjalan walau pindah soal." : "Hanya bisa diputar SEKALI."}
+                      </p>
+                    </div>
+                  </div>
+                )}
 
-        {currentQuestionIndex === exam.questions.length - 1 ? (
-          <Button
-            onClick={() => {
-              if (confirm("Kirim jawaban sekarang? Waktu masih tersisa.")) finishExam();
-            }}
-            className="w-full sm:w-auto bg-amber-600 dark:bg-amber-500 hover:bg-foreground text-white dark:text-black px-12 py-8 h-auto flex items-center justify-center font-black uppercase tracking-widest text-xs shadow-lg rounded-2xl border-none transition-all"
-          >
-            <CheckCircle size={20} className="mr-3" /> Kumpulkan Jawaban
-          </Button>
-        ) : (
-          <Button
-            onClick={nextQuestion}
-            variant="ghost"
-            className="w-full sm:w-auto neo-card border border-primary/30 dark:border-red-500/30 bg-primary/10 dark:bg-red-500/10 text-primary dark:text-red-500 hover:bg-primary dark:hover:bg-red-500 hover:text-white dark:hover:text-black px-10 py-8 h-auto flex items-center justify-center gap-3 font-black uppercase tracking-widest text-xs transition-all rounded-2xl shadow-none"
-          >
-            {sections[currentSection][sections[currentSection].length - 1] === currentQuestionIndex ? (
-              <>Lanjut ke Bagian {SECTION_LABELS[availableSections[availableSections.indexOf(currentSection) + 1]] || "Berikutnya"} <ArrowRight size={20} /></>
-            ) : (
-              <>Selanjutnya <ArrowRight size={20} /></>
-            )}
-          </Button>
-        )}
+                <div className="bg-white dark:bg-white/5 border border-border dark:border-white/10 rounded-3xl p-6 md:p-8 shadow-sm">
+                  <div className="flex items-start justify-between gap-4 mb-6">
+                    <div className="px-3 py-1 bg-muted dark:bg-white/10 rounded-lg text-[10px] font-mono font-bold text-muted-foreground">
+                      SOAL {currentQuestionIndex + 1}
+                    </div>
+                  </div>
+
+                  {activeQuestion.imageUrl && (
+                    <div className="mb-8 rounded-2xl overflow-hidden border border-border dark:border-white/10 bg-muted/30">
+                      <Image
+                        src={activeQuestion.imageUrl}
+                        alt="Question Image"
+                        width={800}
+                        height={400}
+                        className="w-full h-auto object-contain"
+                      />
+                    </div>
+                  )}
+
+                  {activeQuestion.questionText && (
+                    <div 
+                      className="text-lg md:text-xl font-medium leading-relaxed mb-8 dark:text-slate-200"
+                      dangerouslySetInnerHTML={{ __html: activeQuestion.questionText }}
+                    />
+                  )}
+
+                  <div className="grid grid-cols-1 gap-3">
+                    {activeQuestion.options.map((opt, idx) => (
+                      <OptionButton
+                        key={idx}
+                        idx={idx}
+                        text={opt}
+                        isSelected={answers[activeQuestion._key] === idx}
+                        onSelect={handleAnswer}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-white/50 dark:bg-white/5 border border-border dark:border-white/10 rounded-2xl p-4">
+                  <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4 flex items-center gap-2">
+                    NAVIGASI {SECTION_LABELS[currentSection].split(" ")[0]}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {sections[currentSection]?.map((qIdx) => {
+                      const isAnswered = answers[exam.questions[qIdx]._key] !== undefined;
+                      const isActive = qIdx === currentQuestionIndex;
+                      return (
+                        <button
+                          key={qIdx}
+                          onClick={() => goToQuestion(qIdx)}
+                          className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-mono font-bold transition-all border ${
+                            isActive
+                              ? "bg-red-600 text-white border-transparent shadow-md scale-105"
+                              : isAnswered
+                              ? "bg-green-500/10 text-green-600 border-green-500/20"
+                              : "bg-white dark:bg-white/5 text-muted-foreground border-border dark:border-white/10"
+                          }`}
+                        >
+                          {qIdx + 1}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </main>
       </div>
+
+      <footer className="fixed bottom-0 left-0 right-0 z-50 bg-white/80 dark:bg-[#0B0E14]/80 backdrop-blur-md border-t border-border dark:border-white/10 p-4">
+        <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
+          <Button
+            onClick={prevQuestion}
+            variant="ghost"
+            disabled={disablePreviousButton}
+            className="flex-1 sm:flex-none py-6 rounded-xl border border-border dark:border-white/10 hover:bg-muted font-bold uppercase tracking-wider text-[10px] transition-all"
+          >
+            <ArrowLeft size={16} className="mr-2" /> Kembali
+          </Button>
+
+          {currentQuestionIndex === exam.questions.length - 1 ? (
+            <Button
+              onClick={() => {
+                if (confirm("Kirim jawaban sekarang? Waktu masih tersisa.")) finishExam();
+              }}
+              className="flex-1 sm:flex-none bg-amber-600 hover:bg-amber-700 text-white px-8 py-6 rounded-xl font-bold uppercase tracking-wider text-[10px] transition-all shadow-md"
+            >
+              <CheckCircle size={16} className="mr-2" /> Selesai
+            </Button>
+          ) : (
+            <Button
+              onClick={nextQuestion}
+              className="flex-1 sm:flex-none bg-red-600 hover:bg-red-700 text-white px-8 py-6 rounded-xl font-bold uppercase tracking-wider text-[10px] transition-all shadow-md"
+            >
+              {sections[currentSection][sections[currentSection].length - 1] === currentQuestionIndex ? (
+                <>Lanjut: {SECTION_LABELS[availableSections[availableSections.indexOf(currentSection) + 1]]?.split(" ")[0] || "Next"} <ArrowRight size={16} className="ml-2" /></>
+              ) : (
+                <>Selanjutnya <ArrowRight size={16} className="ml-2" /></>
+              )}
+            </Button>
+          )}
+        </div>
+      </footer>
     </div>
   );
 }

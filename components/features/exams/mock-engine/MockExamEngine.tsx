@@ -56,7 +56,6 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
       timeLeft={engine.timeLeft}
       answers={engine.answers}
       audioStatus={engine.audioStatus}
-      cheatWarnings={engine.cheatWarnings}
       audioRef={engine.audioRef}
       isTimeCritical={engine.isTimeCritical}
       isCurrentlyListening={engine.isCurrentlyListening}
