@@ -1,4 +1,4 @@
-# 🌀 NihongoRoute (日本語ルート) v2.0
+# 🌀 NihongoRoute (日本語ルート) v2.5
 
 [![Next.js](https://img.shields.io/badge/Next.js-15-000000?style=for-the-badge&logo=nextdotjs)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -9,72 +9,61 @@
 
 ## 📝 Deskripsi
 
-**NihongoRoute** adalah platform edutech profesional yang dirancang untuk membantu pembelajar menguasai bahasa Jepang (JLPT N5 - N2) dengan pendekatan yang terstruktur, interaktif, dan visual yang memukau. Mengusung desain **Cyber-Dark Neumorphic**, aplikasi ini menggabungkan efisiensi Spaced Repetition System (SRS) dengan antarmuka modern yang dioptimalkan untuk performa tinggi dan pengalaman belajar yang *distraction-free*.
+**NihongoRoute** adalah ekosistem pembelajaran bahasa Jepang profesional yang menggabungkan **Big Data Pedagogis** dengan antarmuka **Cyber-Dark Neumorphic**. Dirancang untuk pembelajar Indonesia (JLPT N5 - N2), platform ini menawarkan lebih dari sekadar materi—ia menyediakan rute belajar yang cerdas, lokal, dan terstruktur secara masif.
 
-Seluruh ekosistem NihongoRoute telah **dilokalisasi penuh ke bahasa Indonesia**, memberikan aksesibilitas tanpa batas bagi pelajar lokal untuk memahami konsep bahasa Jepang yang kompleks melalui materi yang elegan.
-
----
-
-## ✨ Fitur Unggulan v2.0
-
-### 🧠 Spaced Repetition System (SRS) & Analytics
-- **Hybrid SRS Engine (SM-2 Modified)** — Algoritma pengulangan cerdas yang menjamin hafalan terkunci di ingatan jangka panjang.
-- **SRS Power Analytics** — Visualisasi stabilitas memori (Fragile, Stable, Master) dan heatmap aktivitas belajar harian.
-- **Quick Quiz Mode** — Sesi ulasan cepat 60 detik untuk penyegaran memori instan.
-
-### 📝 Tipografi Jepang Tingkat Lanjut
-- **Smart Furigana System** — Rendering Furigana granular (hanya di atas Kanji) menggunakan tag `<ruby>` standar industri.
-- **Auto-Script Conversion** — Konversi otomatis dari Romaji ke Hiragana/Katakana secara *real-time* menggunakan integrasi `Wanakana`.
-
-### 📚 Ekosistem Library & Learning
-- **Next-Gen Library Ecosystem** — Modul Pustaka (Kosakata, Tata Bahasa, Kata Kerja, Kanji, Cheatsheet) dengan layout **Bento-Grid**.
-- **Interactive Verb Dictionary** — Modal detail konjugasi kata kerja yang komprehensif untuk memahami perubahan bentuk kata secara visual.
-- **Global PDF Generator** — Ekspor materi belajar ke format PDF profesional secara instan.
-
-### 🎮 Gamifikasi & Retensi
-- **Daily Mission System** — Target harian dinamis (ulasan & materi baru) untuk menjaga disiplin belajar.
-- **Survival Mode Game** — Game edukasi berbasis waktu untuk menguji kecepatan membaca dan pemahaman arti kata.
-- **Streak Protection** — Lindungi progres belajar Anda dengan item *Streak Freeze* yang bisa didapatkan melalui XP.
+Dengan basis data lebih dari **10.000+ kosakata** dan **1.500+ kata kerja**, NihongoRoute menghadirkan kedalaman informasi yang jarang ditemukan di aplikasi lain, termasuk status transitivitas kata kerja, rumus tata bahasa yang presisi, hingga catatan nuansa budaya yang dilokalisasi penuh.
 
 ---
 
-## 🛠️ Stack Teknologi (v2.0)
+## ✨ Fitur Unggulan v2.5 (Enriched Edition)
+
+### 📚 Big Data Pedagogis & Library
+- **AI-Enriched Dictionary** — Akses ke 10.000+ kosakata dan 1.500+ kata kerja dengan metadata lengkap (transitivitas, mnemonik, dan contoh penggunaan).
+- **Comprehensive Grammar Guides** — Ratusan panduan tata bahasa yang dilengkapi dengan **Rumus (Formation)** dan **Catatan Nuansa (Notes)** untuk pemahaman yang lebih mendalam.
+- **75-Chapter Structured Curriculum** — Kurikulum terbagi rata (25 Umum, 25 N5, 25 N4) untuk memastikan progres belajar yang linear dan terukur.
+
+### 🧠 Smart Learning Engine
+- **Hybrid SRS (Spaced Repetition System)** — Algoritma cerdas yang menjamin hafalan terkunci di ingatan jangka panjang melalui kartu flashcard interaktif.
+- **Smart Furigana & Audio TTS** — Rendering Furigana granular dan integrasi Text-to-Speech (TTS) di setiap kata dan contoh kalimat untuk melatih pendengaran.
+- **Dynamic PDF Generator** — Ekspor bab belajar atau daftar kosakata ke format PDF profesional secara instan untuk belajar offline.
+
+### 📝 Tipografi & Visual Premium
+- **Cyber-Dark Neumorphic UI** — Antarmuka modern yang dioptimalkan untuk fokus tinggi dan keindahan visual di perangkat mobile maupun desktop.
+- **Interactive Verb Matrix** — Visualisasi konjugasi kata kerja yang dinamis, memudahkan pemahaman perubahan bentuk kata secara visual.
+
+---
+
+## 🛠️ Stack Teknologi
 
 | Kategori | Teknologi |
 |---|---|
 | **Core Framework** | [Next.js 15+](https://nextjs.org/) (App Router), React 19, TypeScript |
-| **Styling & UI** | [Tailwind CSS](https://tailwindcss.com/), Radix UI, Shadcn UI, Framer Motion |
-| **Backend & Auth** | [Supabase](https://supabase.com/) (PostgreSQL), [Sanity CMS](https://www.sanity.io/) |
-| **State & Sync** | [Zustand](https://zustand-demo.pmnd.rs/), [TanStack Query v5](https://tanstack.com/query) |
-| **Persistence** | IndexedDB via `idb-keyval` (Local-First Architecture) |
-| **Japanese Tools** | [Wanakana](https://wanakana.com/) (Real-time script conversion) |
-| **Testing** | Vitest, Playwright, Testing Library |
-| **PWA Support** | `@ducanh2912/next-pwa` |
+| **Styling & UI** | [Tailwind CSS](https://tailwindcss.com/), Shadcn UI, Framer Motion |
+| **Backend & Auth** | [Supabase](https://supabase.com/) (Auth & Sync), [Sanity CMS](https://www.sanity.io/) (Content Hub) |
+| **State & Storage** | [Zustand](https://zustand-demo.pmnd.rs/), IndexedDB via `idb-keyval` (Local-First) |
+| **Performance** | Incremental Static Regeneration (ISR) & PWA Support |
 
 ---
 
-## 🏗️ Arsitektur & Pola Desain
+## 🏗️ Arsitektur Data
 
-NihongoRoute mengadopsi prinsip **Clean Architecture** dengan pemisahan tanggung jawab yang ketat:
-- **Local-First Architecture:** Data SRS disimpan di IndexedDB untuk kecepatan akses instan dan dukungan offline, disinkronkan secara cerdas ke Cloud.
-- **Feature-Sliced Design (FSD):** Struktur kode yang modular dan mudah dipelihara.
-- **100% Type-Safe:** Integrasi TypeScript end-to-end dari skema CMS hingga antarmuka pengguna.
+NihongoRoute menggunakan pola **Local-First Architecture** untuk memastikan kecepatan akses data raksasa:
+- **Fast Search:** Pencarian kosakata dan kata kerja dioptimalkan melalui debouncing dan caching client-side.
+- **Content Sync:** Data pedagogis dikelola melalui Sanity Studio yang terhubung langsung ke frontend untuk update konten tanpa redeploy.
+- **Type-Safety:** Skema data 100% tersinkronisasi antara database CMS dan TypeScript frontend.
 
 ---
 
 ## 🚀 Instalasi & Pengembangan
 
-1. **Clone Proyek:**
+1. **Clone & Install:**
    ```bash
    git clone https://github.com/zan-118/nihongoroute.git
-   ```
-2. **Instal Dependensi:**
-   ```bash
    npm install
    ```
-3. **Setup Lingkungan:**
-   Buat file `.env.local` dan masukkan kunci API untuk Sanity dan Supabase.
-4. **Jalankan Aplikasi:**
+2. **Setup Environment:**
+   Siapkan `.env.local` dengan API Key Sanity & Supabase.
+3. **Run Dev:**
    ```bash
    npm run dev
    ```
@@ -85,7 +74,7 @@ NihongoRoute mengadopsi prinsip **Clean Architecture** dengan pemisahan tanggung
 
 **Fauzan Abdul Basith**
 - GitHub: [@zan-118](https://github.com/zan-118)
-- Portfolio: [www.fauzanabdulbasith.com](https://www.fauzanabdulbasith.com)
+- Website: [www.fauzanabdulbasith.com](https://www.fauzanabdulbasith.com)
 
 ---
-Dibuat dengan semangat untuk mendemokratisasi akses belajar bahasa Jepang yang berkualitas. 🇯🇵💙
+Dibuat dengan semangat untuk mendemokratisasi akses belajar bahasa Jepang yang berkualitas di Indonesia. 🇯🇵💙
