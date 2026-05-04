@@ -10,12 +10,16 @@ interface NavWrapperProps {
   children: ReactNode;
 }
 
+import { motion, AnimatePresence } from "framer-motion";
+import { usePathname } from "next/navigation";
+
 /**
  * NavWrapper: Komponen pembungkus navigasi sisi client.
  * Menangani state menu mobile agar layout utama bisa menjadi Server Component.
  */
 export default function NavWrapper({ children }: NavWrapperProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <div className="relative min-h-screen bg-background text-foreground flex flex-col md:flex-row overflow-x-hidden w-full transition-colors duration-300">
@@ -33,9 +37,19 @@ export default function NavWrapper({ children }: NavWrapperProps) {
       {/* Area Konten Utama */}
       <div className="flex-1 flex flex-col min-w-0 md:pl-72 transition-all duration-500">
         <Topbar onMenuClick={() => setIsMobileMenuOpen(true)} />
-        <main id="main-content" className="flex-1 w-full flex flex-col pb-40 md:pb-12 outline-none">
-          {children}
-        </main>
+        <AnimatePresence mode="wait">
+          <motion.main 
+            key={pathname}
+            id="main-content" 
+            initial={{ opacity: 0, y: 12, filter: "blur(10px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            exit={{ opacity: 0, y: -12, filter: "blur(10px)" }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="flex-1 w-full flex flex-col pb-40 md:pb-12 outline-none"
+          >
+            {children}
+          </motion.main>
+        </AnimatePresence>
       </div>
 
       <FloatingActions />

@@ -2,23 +2,41 @@
 
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
-import { useProgressStore, UserProgress } from "@/store/useProgressStore";
+import { useUserStore } from "@/store/useUserStore";
+import { useSRSStore } from "@/store/useSRSStore";
+import { useUIStore } from "@/store/useUIStore";
+import { UserProgress, Inventory, Settings } from "@/store/types";
 import { SRSState } from "@/lib/srs";
 import { calculateLevel } from "@/lib/level";
 import { syncLocalToCloud } from "@/lib/supabase/sync";
 import { getLocalDateString } from "@/lib/utils";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import { useHasMounted } from "@/hooks/useHasMounted";
 
 const STATS_STORAGE_KEY = "nihongo-progress";
 
 export function useSyncProgress() {
   const supabase = createClient();
-  const mergeProgress = useProgressStore((state) => state.mergeProgress);
-  const setLoading = useProgressStore((state) => state.setLoading);
-  const progress = useProgressStore((state) => state.progress);
-  const dirtySrs = useProgressStore((state) => state.dirtySrs);
-  const clearDirtySrs = useProgressStore((state) => state.clearDirtySrs);
+  
+  // User Store
+  const name = useUserStore((s) => s.name);
+  const xp = useUserStore((s) => s.xp);
+  const streak = useUserStore((s) => s.streak);
+  const todayReviewCount = useUserStore((s) => s.todayReviewCount);
+  const lastStudyDate = useUserStore((s) => s.lastStudyDate);
+  const studyDays = useUserStore((s) => s.studyDays);
+  const inventory = useUserStore((s) => s.inventory);
+
+  // SRS Store
+  const srs = useSRSStore((s) => s.srs);
+  const dirtySrs = useSRSStore((s) => s.dirtySrs);
+  const mergeProgress = useSRSStore((s) => s.mergeProgress);
+  const clearDirtySrs = useSRSStore((s) => s.clearDirtySrs);
+
+  // UI Store
+  const setLoading = useUIStore((s) => s.setLoading);
+  const setSyncing = useUIStore((s) => s.setSyncing);
+  const settings = useUIStore((s) => s.settings);
 
   const hasMounted = useHasMounted();
   const initialLoadDone = useRef(false);
@@ -43,7 +61,19 @@ export function useSyncProgress() {
         const gamificationData = localStorage.getItem(STATS_STORAGE_KEY);
         if (gamificationData) {
           const parsedStats = JSON.parse(gamificationData);
-          const currentProgress = { ...useProgressStore.getState().progress };
+          const currentProgress: UserProgress = {
+            name: useUserStore.getState().name,
+            xp: useUserStore.getState().xp,
+            level: useUserStore.getState().level,
+            streak: useUserStore.getState().streak,
+            todayReviewCount: useUserStore.getState().todayReviewCount,
+            lastStudyDate: useUserStore.getState().lastStudyDate,
+            studyDays: useUserStore.getState().studyDays,
+            inventory: useUserStore.getState().inventory,
+            srs: useSRSStore.getState().srs,
+            notifications: useUIStore.getState().notifications,
+            settings: useUIStore.getState().settings,
+          };
           currentProgress.streak = parsedStats.streak;
           currentProgress.todayReviewCount = parsedStats.todayReviewCount;
           currentProgress.lastStudyDate = parsedStats.lastStudyDate;
@@ -117,7 +147,7 @@ export function useSyncProgress() {
         srs: parsedSrs,
         inventory: profile?.inventory || { streakFreeze: 0 },
         settings: profile?.settings || { notificationsEnabled: false },
-        notifications: useProgressStore.getState().progress.notifications || [],
+        notifications: useUIStore.getState().notifications || [],
       } as UserProgress;
     },
     enabled: hasMounted && !!session?.user,
@@ -138,7 +168,21 @@ export function useSyncProgress() {
 
   // 2. MUTATION: Atomic Sync to Cloud via RPC
   const syncMutation = useMutation({
-    mutationFn: async (data: { progress: UserProgress, dirtySrs: Set<string> }) => {
+    mutationFn: async (data: { 
+      progress: { 
+        name: string | null, 
+        xp: number, 
+        streak: number, 
+        todayReviewCount: number, 
+        lastStudyDate: string | null, 
+        studyDays: Record<string, number>, 
+        inventory: Inventory, 
+        settings: Settings,
+        srs: Record<string, SRSState>
+      }, 
+      dirtySrs: Set<string> 
+    }) => {
+      setSyncing(true);
       if (!session?.user) return;
 
       const { progress, dirtySrs } = data;
@@ -154,6 +198,7 @@ export function useSyncProgress() {
             interval: state.interval,
             ease_factor: state.easeFactor,
             next_review: new Date(state.nextReview).toISOString(),
+            updated_at: new Date(state.updatedAt).toISOString(),
             status: state.interval > 21 ? 'graduated' : (state.interval > 1 ? 'reviewing' : 'learning'),
             is_deleted: !!state.isDeleted
           };
@@ -177,6 +222,7 @@ export function useSyncProgress() {
       return { success: true, syncedWordIds: Array.from(dirtySrs) };
     },
     onSuccess: (result) => {
+      setSyncing(false);
       if (result?.success && result.syncedWordIds) {
         clearDirtySrs(result.syncedWordIds);
         
@@ -188,6 +234,9 @@ export function useSyncProgress() {
         }
       }
     },
+    onError: () => {
+      setSyncing(false);
+    }
   });
 
   // Dengarkan broadcast dari tab lain
@@ -205,21 +254,33 @@ export function useSyncProgress() {
     return () => channel.close();
   }, []);
 
-  const lastSyncedProgress = useRef<string>(JSON.stringify(progress));
+  const currentProgressData = useMemo(() => ({
+    name,
+    xp,
+    streak,
+    todayReviewCount,
+    lastStudyDate,
+    studyDays,
+    inventory,
+    settings,
+    srs
+  }), [name, xp, streak, todayReviewCount, lastStudyDate, studyDays, inventory, settings, srs]);
+
+  const lastSyncedProgress = useRef<string>(JSON.stringify(currentProgressData));
 
   // Debounced Auto-sync
   useEffect(() => {
     if (isFetching || !session?.user) return;
 
     const currentProgressStr = JSON.stringify({
-      name: progress.name,
-      xp: progress.xp,
-      streak: progress.streak,
-      studyDays: progress.studyDays,
-      inventory: progress.inventory,
-      settings: progress.settings,
-      lastStudyDate: progress.lastStudyDate,
-      todayReviewCount: progress.todayReviewCount
+      name,
+      xp,
+      streak,
+      studyDays,
+      inventory,
+      settings,
+      lastStudyDate,
+      todayReviewCount
     });
 
     const isProfileChanged = currentProgressStr !== lastSyncedProgress.current;
@@ -227,12 +288,12 @@ export function useSyncProgress() {
     if (!isProfileChanged && dirtySrs.size === 0) return;
 
     const timer = setTimeout(() => {
-      syncMutation.mutate({ progress, dirtySrs });
+      syncMutation.mutate({ progress: currentProgressData, dirtySrs });
       lastSyncedProgress.current = currentProgressStr;
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [progress, dirtySrs, session?.user, isFetching, syncMutation]);
+  }, [name, xp, streak, studyDays, inventory, settings, lastStudyDate, todayReviewCount, srs, dirtySrs, session?.user, isFetching, syncMutation, currentProgressData]);
 
-  return { isLoading: isFetching, syncNow: () => syncMutation.mutate({ progress, dirtySrs }) };
+  return { isLoading: isFetching, syncNow: () => syncMutation.mutate({ progress: currentProgressData, dirtySrs }) };
 }

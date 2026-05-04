@@ -76,7 +76,7 @@ export default function LibraryPage() {
               <motion.h1
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="text-5xl md:text-7xl lg:text-9xl font-black uppercase tracking-tight text-foreground mb-6 md:mb-10 drop-shadow-2xl leading-none md:leading-[0.85]"
+                className="text-5xl md:text-7xl lg:text-7xl font-black uppercase tracking-tight text-foreground mb-6 md:mb-10 drop-shadow-2xl leading-none md:leading-[0.85]"
               >
                 Pustaka<br />
                 <span className="text-primary drop-shadow-[0_0_30px_rgba(0,238,255,0.4)]">Materi</span>
@@ -123,6 +123,8 @@ export default function LibraryPage() {
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -5 }}
+                whileTap={{ scale: 0.98 }}
                 transition={{ delay: cat.delay }}
                 className="w-full h-full"
               >

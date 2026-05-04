@@ -70,6 +70,7 @@ const nextConfig: NextConfig = {
   devIndicators: {
     position: 'top-right',
   },
+  transpilePackages: ["@react-pdf/renderer"],
 };
 
 export default withPWA(nextConfig);

@@ -30,14 +30,13 @@ const notoJsonJP = Noto_Sans_JP({
 
 /**
  * Konfigurasi viewport untuk mengoptimalkan tampilan di perangkat seluler.
- * Menonaktifkan user-scaling untuk memberikan pengalaman aplikasi native.
+ * Mengizinkan user-scaling untuk memenuhi standar aksesibilitas WCAG 2.1 AA.
  */
 export const viewport: Viewport = {
   themeColor: "#0a0c10",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  userScalable: true,
 };
 
 /**

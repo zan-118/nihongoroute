@@ -75,7 +75,7 @@
   }
   
   .dark .neo-card {
-    @apply bg-[#0f1115] border-white/5 shadow-[8px_8px_16px_rgba(0,0,0,0.6),-4px_-4px_10px_rgba(255,255,255,0.03)];
+    @apply bg-[#0f1115] border-white/10 shadow-[8px_8px_16px_rgba(0,0,0,0.6),-4px_-4px_10px_rgba(255,255,255,0.03)];
   }
 
   .neo-inset {
@@ -83,7 +83,7 @@
   }
   
   .dark .neo-inset {
-    @apply bg-[#0a0c10] border-white/5 shadow-[inset_4px_4px_10px_rgba(0,0,0,0.6),inset_-2px_-2px_8px_rgba(255,255,255,0.02)];
+    @apply bg-[#0a0c10] border-white/10 shadow-[inset_4px_4px_10px_rgba(0,0,0,0.6),inset_-2px_-2px_8px_rgba(255,255,255,0.02)];
   }
 
   .btn-cyber {

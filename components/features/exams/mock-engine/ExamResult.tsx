@@ -3,12 +3,17 @@
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trophy, Skull, Share2 } from "lucide-react";
+import dynamic from "next/dynamic";
+import { Trophy, Skull, Share2, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { ExamData, GameState } from "./types";
 import { SECTION_LABELS } from "./constants";
 import { useProgressStore } from "@/store/useProgressStore";
-import PdfGenerator from "@/components/features/pdf/PdfGenerator";
+
+const PdfGenerator = dynamic(() => import("@/components/features/pdf/PdfGenerator"), {
+  ssr: false,
+  loading: () => <Loader2 className="animate-spin text-primary" size={20} />
+});
 
 interface ExamResultProps {
   exam: ExamData;

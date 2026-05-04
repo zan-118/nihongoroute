@@ -1,13 +1,31 @@
 "use client";
 
 import React from "react";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import { LessonPdfTemplate } from "./templates/LessonPdfTemplate";
-import { VocabPdfTemplate } from "./templates/VocabPdfTemplate";
-import { CertificatePdfTemplate } from "./templates/CertificatePdfTemplate";
+import dynamic from "next/dynamic";
 import { Download, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePdfGenerator } from "./usePdfGenerator";
+import { LessonPdfTemplate } from "./templates/LessonPdfTemplate";
+import { VocabPdfTemplate } from "./templates/VocabPdfTemplate";
+import { CertificatePdfTemplate } from "./templates/CertificatePdfTemplate";
+
+// Dynamic import for PDFDownloadLink to reduce initial bundle size
+const PDFDownloadLink = dynamic(
+  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+  {
+    ssr: false,
+    loading: () => (
+      <Button 
+        variant="ghost" 
+        disabled 
+        className="bg-[#0a0c10] border-white/5 neo-inset shadow-none px-6 py-3 rounded-xl text-slate-300 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 w-full sm:w-auto h-auto"
+      >
+        <Loader2 size={14} className="animate-spin text-cyan-400" />
+        <span>Menyiapkan Engine...</span>
+      </Button>
+    ),
+  }
+);
 
 export type TemplateType = "lesson" | "vocab" | "certificate";
 

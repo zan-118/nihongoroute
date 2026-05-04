@@ -129,6 +129,7 @@ $$ LANGUAGE plpgsql;
 -- 4. Atomic Sync Function (RPC)
 -- Melakukan update Profile dan SRS dalam satu transaksi database.
 CREATE OR REPLACE FUNCTION sync_user_progress(
+  p_full_name TEXT,
   p_xp INTEGER,
   p_streak INTEGER,
   p_today_review_count INTEGER,
@@ -151,6 +152,7 @@ BEGIN
   -- 1. Update Profile
   UPDATE public.profiles
   SET 
+    full_name = p_full_name,
     xp = p_xp,
     streak = p_streak,
     today_review_count = p_today_review_count,
@@ -180,7 +182,7 @@ BEGIN
         (v_item->>'ease_factor')::REAL,
         (v_item->>'next_review')::TIMESTAMPTZ,
         v_item->>'status',
-        now()
+        COALESCE((v_item->>'updated_at')::TIMESTAMPTZ, now())
       )
       ON CONFLICT (user_id, word_id) 
       DO UPDATE SET
@@ -189,7 +191,8 @@ BEGIN
         ease_factor = EXCLUDED.ease_factor,
         next_review = EXCLUDED.next_review,
         status = EXCLUDED.status,
-        updated_at = now();
+        updated_at = EXCLUDED.updated_at
+      WHERE user_srs.updated_at < EXCLUDED.updated_at;
     END IF;
   END LOOP;
 

@@ -467,7 +467,7 @@ export default function BasicsPage() {
                             initial={{ opacity: 0, scale: 0.5 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.5 }}
-                            className="text-7xl sm:text-9xl font-black text-foreground font-japanese"
+                            className="text-6xl sm:text-7xl font-black text-foreground font-japanese"
                           >
                             {quizChar?.char}
                           </motion.span>

@@ -8,10 +8,14 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { client } from "@/sanity/lib/client";
+import dynamic from "next/dynamic";
 import { Search, Home, Library, Loader2, Filter, Languages, LibraryBig, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
-import PdfGenerator from "@/components/features/pdf/PdfGenerator";
+
+const PdfGenerator = dynamic(() => import("@/components/features/pdf/PdfGenerator"), {
+  ssr: false,
+  loading: () => <Loader2 className="animate-spin text-primary" size={20} />
+});
 import { Input } from "@/components/ui/input";
 import {
   Select,

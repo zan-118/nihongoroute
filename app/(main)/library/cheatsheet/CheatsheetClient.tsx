@@ -8,6 +8,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import dynamic from "next/dynamic";
 import {
   Search,
   Hash,
@@ -24,14 +25,19 @@ import {
   X,
   ChevronRight,
   Info,
+  Loader2,
 } from "lucide-react";
+
+const PdfGenerator = dynamic(() => import("@/components/features/pdf/PdfGenerator"), {
+  ssr: false,
+  loading: () => <Loader2 className="animate-spin text-primary" size={20} />
+});
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import PdfGenerator from "@/components/features/pdf/PdfGenerator";
 import {
   Dialog,
   DialogContent,

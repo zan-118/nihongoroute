@@ -51,7 +51,7 @@ export function SurvivalGameOver({ gameState, score, startGame }: SurvivalGameOv
             SKOR AKHIR
           </Badge>
           <div className="flex flex-col">
-             <span className="text-foreground text-7xl md:text-8xl lg:text-9xl font-black drop-shadow-sm leading-none">{score}</span>
+             <span className="text-foreground text-7xl md:text-7xl lg:text-7xl font-black drop-shadow-sm leading-none">{score}</span>
              <span className="text-muted-foreground font-bold text-xs md:text-xs uppercase tracking-widest mt-3 md:mt-4">KATA TERJAWAB</span>
           </div>
         </div>

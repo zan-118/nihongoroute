@@ -80,7 +80,7 @@ export function FlashcardBack({
           {/* WORD DISPLAY */}
           <div className="flex flex-col items-center relative group/kanji">
             <h2
-              className={`${isKanji ? "text-7xl md:text-9xl" : word.length > 4 ? "text-4xl sm:text-5xl md:text-6xl lg:text-7xl" : "text-5xl sm:text-6xl md:text-7xl lg:text-8xl"} font-black text-foreground tracking-tight font-japanese leading-none drop-shadow-sm dark:drop-shadow-lg transition-all`}
+              className={`${isKanji ? "text-7xl md:text-7xl" : word.length > 4 ? "text-4xl sm:text-5xl md:text-6xl lg:text-7xl" : "text-5xl sm:text-6xl md:text-7xl lg:text-8xl"} font-black text-foreground tracking-tight font-japanese leading-none drop-shadow-sm dark:drop-shadow-lg transition-all`}
             >
               {isKanji ? word : (
                 splitFurigana(word, hiraReading).map((chunk, i) => (

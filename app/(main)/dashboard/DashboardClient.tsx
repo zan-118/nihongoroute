@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useProgressStore } from "@/store/useProgressStore";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useUserStore } from "@/store/useUserStore";
+import { useSRSStore } from "@/store/useSRSStore";
+import { useUIStore } from "@/store/useUIStore";
 import { useShallow } from "zustand/react/shallow";
 import { motion, Variants } from "framer-motion";
 import dynamic from "next/dynamic";
@@ -13,6 +16,7 @@ import ConfirmModal from "@/components/ui/ConfirmModal";
 import OnboardingTour from "@/components/features/onboarding/OnboardingTour";
 import DailyQuests from "@/components/features/dashboard/DailyQuests";
 import { toast } from "sonner";
+import { UserProgress } from "@/store/types";
 
 const KanjiProgressGrid = dynamic(() => import("@/components/features/dashboard/KanjiProgressGrid"), { 
   ssr: false,
@@ -40,16 +44,57 @@ const itemVariants: Variants = {
 };
 
 export default function DashboardPage() {
-  const { progress, loading, exportData, importData, isAuthenticated, resetProgress } = useProgressStore(
-    useShallow((state) => ({
-      progress: state.progress,
-      loading: state.loading,
-      exportData: state.exportData,
-      importData: state.importData,
-      isAuthenticated: state.isAuthenticated,
-      resetProgress: state.resetProgress,
+  const { isAuthenticated, resetAuth } = useAuthStore(
+    useShallow((s) => ({
+      isAuthenticated: s.isAuthenticated,
+      resetAuth: s.resetAuth,
     }))
   );
+
+  const { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, resetUser } = useUserStore(
+    useShallow((s) => ({
+      name: s.name,
+      xp: s.xp,
+      level: s.level,
+      streak: s.streak,
+      todayReviewCount: s.todayReviewCount,
+      lastStudyDate: s.lastStudyDate,
+      studyDays: s.studyDays,
+      inventory: s.inventory,
+      resetUser: s.resetUser,
+    }))
+  );
+
+  const { srs, resetSRS } = useSRSStore(
+    useShallow((s) => ({
+      srs: s.srs,
+      resetSRS: s.resetSRS,
+    }))
+  );
+
+  const { loading, resetUI, exportData, importData, notifications, settings } = useUIStore(
+    useShallow((s) => ({
+      loading: s.loading,
+      resetUI: s.resetUI,
+      exportData: s.exportData,
+      importData: s.importData,
+      notifications: s.notifications,
+      settings: s.settings,
+    }))
+  );
+
+  const resetProgress = () => {
+    resetAuth();
+    resetUser();
+    resetSRS();
+    resetUI();
+  };
+
+  // Reconstruct a lightweight progress object for legacy components if needed,
+  // but ideally we should update components to take individual props.
+  const progress: UserProgress = {
+    name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings
+  };
   const [guestId, setGuestId] = useState<string>("MEMUAT...");
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,
@@ -142,7 +187,7 @@ export default function DashboardPage() {
   };
 
   const now = Date.now();
-  const dueCount = Object.values(progress.srs).filter((card) => card.nextReview <= now).length;
+  const dueCount = Object.values(progress.srs as Record<string, SRSState>).filter((card: SRSState) => card.nextReview <= now).length;
   const xpNeeded = 1000 - (progress.xp % 1000);
   const xpProgress = (progress.xp % 1000) / 10;
 
@@ -171,10 +216,14 @@ export default function DashboardPage() {
 
       {/* TAB NAVIGATION */}
       <div className="flex items-center justify-center mb-12">
-        <div className="bg-muted/50 dark:bg-white/[0.03] p-1.5 rounded-[2rem] border border-border/50 dark:border-white/5 flex gap-1 shadow-sm">
+        <div role="tablist" aria-label="Dashboard Navigation" className="bg-muted/50 dark:bg-white/[0.03] p-1.5 rounded-[2rem] border border-border/50 dark:border-white/5 flex gap-1 shadow-sm">
           {tabs.map((tab) => (
-            <button
+            <motion.button
               key={tab.id}
+              role="tab"
+              aria-selected={activeTab === tab.id}
+              aria-controls={`${tab.id}-panel`}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setActiveTab(tab.id)}
               className={`px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 flex items-center gap-2 ${
                 activeTab === tab.id
@@ -182,15 +231,18 @@ export default function DashboardPage() {
                   : "text-muted-foreground hover:text-foreground hover:bg-white/5"
               }`}
             >
-              <span className="text-base">{tab.icon}</span>
+              <span className="text-base" aria-hidden="true">{tab.icon}</span>
               <span className="hidden sm:inline">{tab.label}</span>
-            </button>
+            </motion.button>
           ))}
         </div>
       </div>
 
       <motion.div
         key={activeTab}
+        id={`${activeTab}-panel`}
+        role="tabpanel"
+        tabIndex={0}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}

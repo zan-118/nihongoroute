@@ -202,24 +202,28 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
               
               <div className="flex gap-2">
                  <ThemeToggle />
-                 <Button
-                   variant="ghost"
-                   onClick={handleLogout}
-                   className="flex-1 h-10 rounded-xl bg-red-500/5 hover:bg-red-500 hover:text-white dark:hover:text-black text-red-500 text-xs font-black uppercase tracking-widest transition-all border border-red-500/10"
-                 >
-                   <LogOut size={16} className="mr-2" /> Keluar
-                 </Button>
+                 <motion.div whileTap={{ scale: 0.95 }} className="flex-1">
+                   <Button
+                     variant="ghost"
+                     onClick={handleLogout}
+                     className="w-full h-10 rounded-xl bg-red-500/5 hover:bg-red-500 hover:text-white dark:hover:text-black text-red-500 text-xs font-black uppercase tracking-widest transition-all border border-red-500/10"
+                   >
+                     <LogOut size={16} className="mr-2" /> Keluar
+                   </Button>
+                 </motion.div>
               </div>
             </div>
          ) : (
             <div className="space-y-4">
                <ThemeToggle />
-               <Button
-                 asChild
-                 className="w-full h-12 bg-primary text-primary-foreground font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg border-none hover:opacity-90"
-               >
-                 <Link href="/login">Masuk / Daftar</Link>
-               </Button>
+               <motion.div whileTap={{ scale: 0.95 }}>
+                 <Button
+                   asChild
+                   className="w-full h-12 bg-primary text-primary-foreground font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg border-none hover:opacity-90"
+                 >
+                   <Link href="/login">Masuk / Daftar</Link>
+                 </Button>
+               </motion.div>
             </div>
          )}
 

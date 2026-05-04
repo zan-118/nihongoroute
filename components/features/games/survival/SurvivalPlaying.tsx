@@ -111,7 +111,7 @@ export function SurvivalPlaying({
 
             <div className="flex flex-col items-center justify-center w-full min-h-[100px] md:min-h-[200px]">
                <h2
-                 className={`${(currentCard?.word?.length || 0) > 4 ? "text-4xl sm:text-6xl md:text-7xl lg:text-8xl" : "text-6xl sm:text-8xl md:text-9xl lg:text-[11rem]"} font-black text-foreground tracking-tight drop-shadow-sm font-japanese leading-none transition-all duration-500`}
+                className={`${(currentCard?.word?.length || 0) > 4 ? "text-4xl sm:text-6xl md:text-7xl lg:text-8xl" : "text-6xl sm:text-7xl md:text-7xl lg:text-8xl"} font-black text-foreground tracking-tight drop-shadow-sm font-japanese leading-none transition-all duration-500`}
                >
                  {(() => {
                    const word = currentCard?.word || "";
