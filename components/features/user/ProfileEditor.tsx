@@ -20,10 +20,22 @@ import { UserProgress } from "@/store/types";
  */
 
 export default function ProfileEditor() {
-  const { updateProfileName, id, isGuest, name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory } = useUserStore();
-  const { isAuthenticated } = useAuthStore();
-  const { srs } = useSRSStore();
-  const { notifications, settings } = useUIStore();
+  const name = useUserStore(s => s.name);
+  const xp = useUserStore(s => s.xp);
+  const level = useUserStore(s => s.level);
+  const streak = useUserStore(s => s.streak);
+  const todayReviewCount = useUserStore(s => s.todayReviewCount);
+  const lastStudyDate = useUserStore(s => s.lastStudyDate);
+  const studyDays = useUserStore(s => s.studyDays);
+  const inventory = useUserStore(s => s.inventory);
+  const id = useUserStore(s => s.id);
+  const isGuest = useUserStore(s => s.isGuest);
+  const updateProfileName = useUserStore(s => s.updateProfileName);
+
+  const isAuthenticated = useAuthStore(s => s.isAuthenticated);
+  const srs = useSRSStore(s => s.srs);
+  const notifications = useUIStore(s => s.notifications);
+  const settings = useUIStore(s => s.settings);
   
   const progress: UserProgress = { id, isGuest, name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
   

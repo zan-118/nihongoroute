@@ -30,7 +30,7 @@ export const useSRSStore = create<SRSStateStore>()(
   persist(
     (set, get) => ({
       srs: {},
-      dirtySrs: new Set(),
+      dirtySrs: new Set<string>(),
 
       setSRS: (srs) => set({ srs }),
 
@@ -148,17 +148,18 @@ export const useSRSStore = create<SRSStateStore>()(
         const mergedSrs = { ...cloudData.srs };
         
         // Safety check for dirtySrs iteration
-        let currentDirty: Set<string>;
+        let recoveredDirty: Set<string>;
         try {
-          currentDirty = get().dirtySrs instanceof Set 
-            ? get().dirtySrs 
-            : new Set(Array.isArray(get().dirtySrs) ? get().dirtySrs : []);
+          const rawDirty = get().dirtySrs;
+          recoveredDirty = rawDirty instanceof Set 
+            ? rawDirty 
+            : new Set(Array.isArray(rawDirty) ? rawDirty : []);
         } catch (e) {
           console.error("Failed to recover dirtySrs, resetting to empty", e);
-          currentDirty = new Set();
+          recoveredDirty = new Set();
         }
         
-        const newDirty = new Set(currentDirty);
+        const newDirty = new Set(recoveredDirty);
 
         Object.entries(localSrs).forEach(([id, localState]) => {
           const cloudState = cloudData.srs[id];
@@ -191,7 +192,8 @@ export const useSRSStore = create<SRSStateStore>()(
           streak: mergedStreak,
           studyDays: mergedStudyDays,
           inventory: {
-            streakFreeze: Math.max(userState.inventory.streakFreeze, cloudData.inventory.streakFreeze)
+            streakFreeze: Math.max(userState.inventory.streakFreeze, cloudData.inventory.streakFreeze),
+            claimedQuests: userState.inventory.claimedQuests
           },
           todayReviewCount: userState.lastStudyDate === cloudData.lastStudyDate 
             ? Math.max(userState.todayReviewCount, cloudData.todayReviewCount)

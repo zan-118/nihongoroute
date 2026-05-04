@@ -41,9 +41,11 @@ export function useQuizEngine(questions: QuizQuestion[]) {
   }, [currentIndex, questions.length, score, handleFinish]);
 
   const handleSelect = useCallback((option: string) => {
-    if (isAnswered) return;
+    if (isAnswered || !questions || questions.length === 0) return;
 
     const currentQ = questions[currentIndex];
+    if (!currentQ) return;
+
     setSelectedOption(option);
     setIsAnswered(true);
 
@@ -55,7 +57,8 @@ export function useQuizEngine(questions: QuizQuestion[]) {
     } else {
       sounds?.playError();
     }
-  }, [isAnswered, currentIndex, questions]);
+  }, [isAnswered, currentIndex, questions]); 
+
 
   const resetQuiz = useCallback(() => {
     setCurrentIndex(0);
@@ -65,8 +68,11 @@ export function useQuizEngine(questions: QuizQuestion[]) {
     setIsFinished(false);
   }, []);
 
+  const currentQ = questions && questions.length > 0 ? questions[currentIndex] : null;
+
   return {
     currentIndex,
+    currentQ,
     selectedOption,
     isAnswered,
     score,

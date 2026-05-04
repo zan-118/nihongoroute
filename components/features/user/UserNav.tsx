@@ -22,7 +22,7 @@ import Link from "next/link";
 
 export default function UserNav() {
   const { isAuthenticated, userFullName, handleLogout } = useNavbar();
-  const { level } = useUserStore();
+  const level = useUserStore(s => s.level);
 
   if (!isAuthenticated) {
     return (

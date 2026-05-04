@@ -15,11 +15,23 @@ import { useSRSStore } from "@/store/useSRSStore";
 import { useUIStore } from "@/store/useUIStore";
 
 export default function QuickQuizPage() {
-  const { loading } = useUIStore();
-    const { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory } = useUserStore();
-    const { srs } = useSRSStore();
-    const { notifications, settings } = useUIStore();
-    const progress = { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
+  const loading = useUIStore(s => s.loading);
+  const name = useUserStore(s => s.name);
+  const xp = useUserStore(s => s.xp);
+  const level = useUserStore(s => s.level);
+  const streak = useUserStore(s => s.streak);
+  const todayReviewCount = useUserStore(s => s.todayReviewCount);
+  const lastStudyDate = useUserStore(s => s.lastStudyDate);
+  const studyDays = useUserStore(s => s.studyDays);
+  const inventory = useUserStore(s => s.inventory);
+  const id = useUserStore(s => s.id);
+  const isGuest = useUserStore(s => s.isGuest);
+  
+  const srs = useSRSStore(s => s.srs);
+  const notifications = useUIStore(s => s.notifications);
+  const settings = useUIStore(s => s.settings);
+
+  const progress = { id, isGuest, name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
 
   const [cards, setCards] = useState<MasterCardData[]>([]);
   const [isFetching, setIsFetching] = useState(true);
@@ -31,8 +43,8 @@ export default function QuickQuizPage() {
       try {
         setIsFetching(true);
         
-        // Ambil semua ID kartu di SRS
-        const allItemIds = Object.keys(progress.srs);
+        // Ambil semua ID kartu di SRS dengan safe access
+        const allItemIds = Object.keys(progress?.srs || {});
 
         if (allItemIds.length === 0) {
           setCards([]);

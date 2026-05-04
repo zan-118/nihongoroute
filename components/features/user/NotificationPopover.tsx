@@ -9,7 +9,9 @@ import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/store/useUIStore";
 
 export default function NotificationPopover({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const { notifications } = useUIStore();
+  const notifications = useUIStore(s => s.notifications);
+  const markAsRead = useUIStore(s => s.markNotificationAsRead);
+  const clearAll = useUIStore(s => s.clearNotifications);
 
   const unreadCount = notifications?.filter(n => !n.read).length || 0;
 

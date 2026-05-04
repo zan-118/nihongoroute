@@ -11,7 +11,7 @@ export interface Notification {
 
 export interface Inventory {
   streakFreeze: number;
-  claimedQuests?: {
+  claimedQuests: {
     date: string;
     quests: string[];
   };

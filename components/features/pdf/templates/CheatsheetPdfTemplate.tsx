@@ -203,6 +203,7 @@ export const CheatsheetPdfTemplate = ({ data, title, category }: CheatsheetTempl
     <Page size="A4" style={styles.page}>
       <View style={styles.header} fixed>
         <View style={styles.logoSection}>
+          {/* eslint-disable-next-line jsx-a11y/alt-text */}
           <Image src="/logo-branding.png" style={styles.logoImage} />
           <View style={styles.brandText}>
             <Text style={styles.brandName}>NIHONGO ROUTE</Text>

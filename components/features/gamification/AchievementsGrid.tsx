@@ -23,7 +23,7 @@ const ACHIEVEMENTS: Achievement[] = [
     title: "Langkah Pertama",
     description: "Pelajari 5 kosakata pertama Anda",
     icon: Star,
-    condition: (p) => (Object.keys(p.srs).length / 5) * 100,
+    condition: (p) => (Object.keys(p?.srs || {}).length / 5) * 100,
     threshold: 5
   },
   {
@@ -31,7 +31,7 @@ const ACHIEVEMENTS: Achievement[] = [
     title: "Kolektor Kata",
     description: "Pelajari 50 kosakata",
     icon: BookOpen,
-    condition: (p) => (Object.keys(p.srs).length / 50) * 100,
+    condition: (p) => (Object.keys(p?.srs || {}).length / 50) * 100,
     threshold: 50
   },
   {
@@ -68,10 +68,22 @@ const ACHIEVEMENTS: Achievement[] = [
   }
 ];
 
-export default function AchievementsGrid() {
-  const { id, isGuest, name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory } = useUserStore();
-  const { srs } = useSRSStore();
-  const { notifications, settings } = useUIStore();
+export function AchievementsGrid() {
+  const name = useUserStore(s => s.name);
+  const xp = useUserStore(s => s.xp);
+  const level = useUserStore(s => s.level);
+  const streak = useUserStore(s => s.streak);
+  const todayReviewCount = useUserStore(s => s.todayReviewCount);
+  const lastStudyDate = useUserStore(s => s.lastStudyDate);
+  const studyDays = useUserStore(s => s.studyDays);
+  const inventory = useUserStore(s => s.inventory);
+  const id = useUserStore(s => s.id);
+  const isGuest = useUserStore(s => s.isGuest);
+  
+  const srs = useSRSStore(s => s.srs);
+  const notifications = useUIStore(s => s.notifications);
+  const settings = useUIStore(s => s.settings);
+
   const progress: UserProgress = { id, isGuest, name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
 
   return (

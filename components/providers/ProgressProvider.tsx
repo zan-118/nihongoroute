@@ -80,7 +80,9 @@ export const ProgressProvider = ({
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [dirtySrs, hasMounted]);
 
-  if (!hasMounted) return null;
+  // Always render children to avoid white screen flicker during hydration
+  // Components should handle their own internal loading states if needed
+  // if (!hasMounted) return null;
 
   return (
     <>

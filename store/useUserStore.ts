@@ -45,8 +45,13 @@ export const useUserStore = create<UserState>()(
       lastStudyDate: null,
       studyDays: {},
       inventory: {
-        streakFreeze: 0
+        streakFreeze: 0,
+        claimedQuests: {
+          date: "",
+          quests: []
+        }
       },
+      dirtySrs: new Set<string>(),
 
       updateProfileName: (name) => set({ name }),
 
@@ -140,7 +145,13 @@ export const useUserStore = create<UserState>()(
         todayReviewCount: 0,
         lastStudyDate: null,
         studyDays: {},
-        inventory: { streakFreeze: 0 }
+        inventory: { 
+          streakFreeze: 0,
+          claimedQuests: {
+            date: "",
+            quests: []
+          }
+        }
       }),
     }),
     {

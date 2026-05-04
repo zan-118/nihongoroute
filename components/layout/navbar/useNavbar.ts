@@ -29,8 +29,9 @@ interface NavLinks {
 export function useNavbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { isAuthenticated } = useAuthStore();
-  const { name: userFullName, isGuest } = useUserStore();
+  const isAuthenticated = useAuthStore(s => s.isAuthenticated);
+  const userFullName = useUserStore(s => s.name);
+  const isGuest = useUserStore(s => s.isGuest);
   const supabase = createClient();
 
   const handleLogout = async () => {

@@ -316,7 +316,8 @@ export function useSyncProgress() {
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [name, xp, streak, studyDays, inventory, settings, lastStudyDate, todayReviewCount, srs, dirtySrs, session?.user, isFetching, syncMutation, currentProgressData]);
+  }, [name, xp, streak, studyDays, inventory, settings, lastStudyDate, todayReviewCount, srs, dirtySrs, session?.user, isFetching, isGuest, syncMutation, currentProgressData]);
+
 
   return { isLoading: isFetching, syncNow: () => syncMutation.mutate({ progress: currentProgressData, dirtySrs }) };
 }

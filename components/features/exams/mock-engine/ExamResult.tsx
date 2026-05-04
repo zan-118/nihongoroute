@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useUserStore } from "@/store/useUserStore";
 import dynamic from "next/dynamic";
 import { Trophy, Skull, Share2, Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -34,7 +35,7 @@ export function ExamResult({
 }: ExamResultProps) {
   const { correctCount, finalScore, sectionBreakdown } = calculateScore();
   const isPassed = finalScore >= exam.passingScore;
-  const userFullName = useProgressStore((state) => state.progress.name) || "Siswa NihongoRoute";
+  const userFullName = useUserStore(s => s.name) || "Siswa NihongoRoute";
 
   const certificateData = {
     userName: userFullName,
