@@ -1,16 +1,18 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
 import { get, set as idbSet, del } from "idb-keyval";
 import { Notification, Settings } from "./types";
 
 interface UIState {
   loading: boolean;
   isSyncing: boolean;
+  syncError: boolean;
   notifications: Notification[];
   settings: Settings;
   
   setLoading: (loading: boolean) => void;
   setSyncing: (isSyncing: boolean) => void;
+  setSyncError: (hasError: boolean) => void;
   addNotification: (notification: Omit<Notification, "id" | "timestamp" | "read">) => void;
   markNotificationAsRead: (id: string) => void;
   clearNotifications: () => void;
@@ -20,7 +22,7 @@ interface UIState {
   resetUI: () => void;
 }
 
-const idbStorage = {
+const idbStorage: StateStorage = {
   getItem: async (name: string) => (await get(name)) || null,
   setItem: async (name: string, value: string) => await idbSet(name, value),
   removeItem: async (name: string) => await del(name),
@@ -31,13 +33,17 @@ export const useUIStore = create<UIState>()(
     (set) => ({
       loading: false,
       isSyncing: false,
+      syncError: false,
       notifications: [],
       settings: {
+        dailyReviewGoal: 50,
+        dailyLessonGoal: 10,
         notificationsEnabled: false,
       },
 
       setLoading: (loading) => set({ loading }),
       setSyncing: (isSyncing) => set({ isSyncing }),
+      setSyncError: (hasError) => set({ syncError: hasError }),
       
       addNotification: (n) => set((state) => ({
         notifications: [
@@ -146,7 +152,7 @@ export const useUIStore = create<UIState>()(
     }),
     {
       name: "nihongoroute_ui_data",
-      storage: createJSONStorage(() => idbStorage as unknown as unknown),
+      storage: createJSONStorage(() => idbStorage),
     }
   )
 );

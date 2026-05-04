@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Search, Bell, Menu, ChevronRight, Cloud, RefreshCw } from "lucide-react";
+import { Search, Bell, Menu, ChevronRight, Cloud, RefreshCw, CloudOff, CloudUpload } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useUIStore } from "@/store/useUIStore";
+import { useSRSStore } from "@/store/useSRSStore";
 import { useNavbar } from "@/components/layout/navbar/useNavbar";
 import NotificationPopover from "@/components/features/user/NotificationPopover";
 import SearchModal from "@/components/features/tools/search/SearchModal";
@@ -13,10 +14,11 @@ import { ThemeToggle } from "@/components/layout/ThemeToggle";
 export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
   const { pathname, progress } = useNavbar();
   const isSyncing = useUIStore((s) => s.isSyncing);
+  const syncError = useUIStore((s) => s.syncError);
+  const hasPendingSync = useSRSStore((s) => s.dirtySrs.size > 0);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-
-  const unreadNotifications = progress.notifications?.filter((n) => !n.read).length || 0;
+  const unreadNotifications = progress.notifications?.filter((n: { read: boolean }) => !n.read).length || 0;
 
   // Breadcrumb logic
   const pathSegments = pathname.split('/').filter(Boolean);
@@ -86,6 +88,28 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
               >
                 <RefreshCw size={12} className="animate-spin text-primary" aria-hidden="true" />
                 <span className="animate-pulse">Sinkron...</span>
+              </motion.div>
+            ) : syncError ? (
+              <motion.div 
+                key="error"
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                className="flex items-center gap-2"
+              >
+                <CloudOff size={12} className="text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]" aria-hidden="true" />
+                <span className="text-red-500/90">Gagal</span>
+              </motion.div>
+            ) : hasPendingSync ? (
+              <motion.div 
+                key="pending"
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                className="flex items-center gap-2"
+              >
+                <CloudUpload size={12} className="text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.4)]" aria-hidden="true" />
+                <span className="text-amber-500/90">Tertunda</span>
               </motion.div>
             ) : (
               <motion.div 

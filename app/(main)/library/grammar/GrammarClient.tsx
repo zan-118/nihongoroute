@@ -55,6 +55,7 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
       }
     }
     fetchGrammar();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedLevel]);
 
   const filteredArticles = articles.filter(art => 

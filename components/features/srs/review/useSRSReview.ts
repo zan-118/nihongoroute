@@ -14,7 +14,8 @@ export function useSRSReview(cards: FlashcardType[]) {
   const [shuffledCards, setShuffledCards] = useState<FlashcardType[]>([]);
 
   const { progress, updateProgress } = useProgressStore(
-    useShallow((state) => ({ progress: state.progress, updateProgress: state.updateProgress }))
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    useShallow((state: any) => ({ progress: state.progress, updateProgress: state.updateProgress }))
   );
   const router = useRouter();
 
@@ -39,14 +40,14 @@ export function useSRSReview(cards: FlashcardType[]) {
   }, [currentIndex, shuffledCards.length, router]);
 
   const handleAnswer = useCallback(
-    (correct: boolean) => {
+    (grade: number) => {
       if (!currentCard) return;
 
       const cardId = currentCard._id;
       const currentState = progress.srs[cardId] || createNewCardState();
-      const newState = updateCardState(currentState, correct);
+      const newState = updateCardState(currentState, grade);
 
-      updateProgress(progress.xp + (correct ? 10 : 2), {
+      updateProgress(progress.xp + (grade >= 2 ? 10 : 2), {
         [cardId]: newState,
       });
 
@@ -75,10 +76,10 @@ export function useSRSReview(cards: FlashcardType[]) {
       } else {
         if (e.key === "1" || e.key === "ArrowLeft") {
           e.preventDefault();
-          handleAnswer(false);
+          handleAnswer(0);
         } else if (e.key === "2" || e.key === "ArrowRight") {
           e.preventDefault();
-          handleAnswer(true);
+          handleAnswer(2);
         }
       }
     };

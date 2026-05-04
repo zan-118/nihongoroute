@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
@@ -36,6 +36,7 @@ export function useSyncProgress() {
   // UI Store
   const setLoading = useUIStore((s) => s.setLoading);
   const setSyncing = useUIStore((s) => s.setSyncing);
+  const setSyncError = useUIStore((s) => s.setSyncError);
   const settings = useUIStore((s) => s.settings);
 
   const hasMounted = useHasMounted();
@@ -205,7 +206,7 @@ export function useSyncProgress() {
         });
 
       // Panggil RPC untuk update atomik
-      const { error: rpcError } = await supabase.rpc('sync_user_progress', {
+      const { data: rpcData, error: rpcError } = await supabase.rpc('sync_user_progress', {
         p_full_name: progress.name,
         p_xp: progress.xp,
         p_streak: progress.streak,
@@ -219,12 +220,20 @@ export function useSyncProgress() {
 
       if (rpcError) throw rpcError;
 
-      return { success: true, syncedWordIds: Array.from(dirtySrs) };
+      const acceptedXp = (rpcData as { accepted_xp?: number })?.accepted_xp;
+
+      return { success: true, syncedWordIds: Array.from(dirtySrs), acceptedXp };
     },
     onSuccess: (result) => {
       setSyncing(false);
+      setSyncError(false);
       if (result?.success && result.syncedWordIds) {
         clearDirtySrs(result.syncedWordIds);
+        
+        // C6 Fix: Sync the client's XP with the server's validated XP
+        if (result.acceptedXp !== undefined) {
+          useUserStore.getState().setGamification({ xp: result.acceptedXp });
+        }
         
         // Broadcast ke tab lain bahwa sinkronisasi berhasil
         if (typeof window !== "undefined" && "BroadcastChannel" in window) {
@@ -234,10 +243,17 @@ export function useSyncProgress() {
         }
       }
     },
-    onError: () => {
+    onError: (error) => {
+      console.error("Sync failed after retries:", error);
       setSyncing(false);
-    }
+      setSyncError(true);
+    },
+    // Tambahkan mekanisme retry dengan exponential backoff
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
   });
+
+  const queryClient = useQueryClient();
 
   // Dengarkan broadcast dari tab lain
   useEffect(() => {
@@ -246,13 +262,13 @@ export function useSyncProgress() {
     const channel = new BroadcastChannel("nihongoroute_sync");
     channel.onmessage = (event) => {
       if (event.data === "SYNC_COMPLETE") {
-        // Karena TanStack Query akan otomatis me-refetch saat window focus, 
-        // kita bisa memicu refetch manual di sini jika diinginkan.
-        // Untuk sekarang, kita biarkan queryKey ["user-progress"] yang mengaturnya.
+        // C7 Fix: Langsung picu refetch data dari cloud agar UI terupdate instan
+        // tanpa harus menunggu window kembali fokus.
+        queryClient.invalidateQueries({ queryKey: ["user-progress"] });
       }
     };
     return () => channel.close();
-  }, []);
+  }, [queryClient]);
 
   const currentProgressData = useMemo(() => ({
     name,

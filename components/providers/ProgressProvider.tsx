@@ -14,8 +14,12 @@ export const ProgressProvider = ({
   children: React.ReactNode;
 }) => {
   const hasMounted = useHasMounted();
-  const setAuth = useProgressStore((state) => state.setAuth);
-  const dirtySrs = useProgressStore((state) => state.dirtySrs);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const setAuth = useProgressStore((state: any) => state.setAuth);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const updateProfileName = useProgressStore((state: any) => state.updateProfileName);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const dirtySrs = useProgressStore((state: any) => state.dirtySrs);
   
   const supabase = createClient();
 
@@ -26,14 +30,20 @@ export const ProgressProvider = ({
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       const userFullName = session?.user?.user_metadata?.full_name || session?.user?.email?.split('@')[0] || "Siswa";
-      setAuth(!!session?.user, session?.user ? userFullName : null);
+      setAuth(!!session?.user);
+      if (session?.user) {
+        updateProfileName(userFullName);
+      }
     });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
       const userFullName = session?.user?.user_metadata?.full_name || session?.user?.email?.split('@')[0] || "Siswa";
-      setAuth(!!session?.user, session?.user ? userFullName : null);
+      setAuth(!!session?.user);
+      if (session?.user) {
+        updateProfileName(userFullName);
+      }
       
       if (event === "SIGNED_IN" && session?.user) {
         if (typeof sessionStorage !== "undefined" && !sessionStorage.getItem("nihongo_welcomed")) {
@@ -50,7 +60,7 @@ export const ProgressProvider = ({
     });
 
     return () => subscription.unsubscribe();
-  }, [supabase.auth, setAuth]);
+  }, [supabase.auth, setAuth, updateProfileName]);
   
   // UNSYNCED DATA WARNING (beforeunload)
   useEffect(() => {

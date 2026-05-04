@@ -143,17 +143,40 @@ RETURNS JSONB AS $$
 DECLARE
   v_user_id UUID;
   v_item JSONB;
+  v_old_xp INTEGER;
+  v_delta_xp INTEGER;
+  v_max_plausible_xp INTEGER;
 BEGIN
   v_user_id := auth.uid();
   IF v_user_id IS NULL THEN
     RAISE EXCEPTION 'Not authenticated';
   END IF;
 
-  -- 1. Update Profile
+  -- Get current XP from DB to calculate delta
+  SELECT xp INTO v_old_xp FROM public.profiles WHERE id = v_user_id;
+  
+  -- Calculate how much XP the client is claiming to have gained
+  v_delta_xp := COALESCE(p_xp, 0) - COALESCE(v_old_xp, 0);
+  
+  -- 1. Anti-Cheat & Multi-device correction
+  -- Never allow XP to decrease via sync
+  IF v_delta_xp < 0 THEN
+    v_delta_xp := 0;
+  END IF;
+
+  -- Cap the XP gain based on the number of items synced + buffer for daily missions
+  -- 15 XP per card max + 100 XP buffer for local daily missions/achievements
+  v_max_plausible_xp := (jsonb_array_length(COALESCE(p_srs_updates, '[]'::jsonb)) * 15) + 100;
+  
+  IF v_delta_xp > v_max_plausible_xp THEN
+    v_delta_xp := v_max_plausible_xp;
+  END IF;
+
+  -- 2. Update Profile using the validated server-side delta
   UPDATE public.profiles
   SET 
     full_name = p_full_name,
-    xp = p_xp,
+    xp = COALESCE(v_old_xp, 0) + v_delta_xp,
     streak = p_streak,
     today_review_count = p_today_review_count,
     last_study_date = p_last_study_date,
@@ -198,7 +221,12 @@ BEGIN
 
   RETURN jsonb_build_object('success', true);
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+-- Revoke public execution and only grant to authenticated users
+REVOKE EXECUTE ON FUNCTION public.sync_user_progress(TEXT, INTEGER, INTEGER, INTEGER, TEXT, JSONB, JSONB, JSONB, JSONB) FROM public;
+REVOKE EXECUTE ON FUNCTION public.sync_user_progress(TEXT, INTEGER, INTEGER, INTEGER, TEXT, JSONB, JSONB, JSONB, JSONB) FROM anon;
+GRANT EXECUTE ON FUNCTION public.sync_user_progress(TEXT, INTEGER, INTEGER, INTEGER, TEXT, JSONB, JSONB, JSONB, JSONB) TO authenticated;
 
 -- ==========================================
 -- TRIGGERS

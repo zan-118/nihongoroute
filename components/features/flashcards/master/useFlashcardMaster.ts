@@ -108,7 +108,6 @@ export function useFlashcardMaster({
     }
 
     updateProgress(progress.xp + xpReward, {
-      ...progress.srs,
       [cardId]: newState,
     });
 
