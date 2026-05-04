@@ -3,12 +3,13 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, Zap, Info } from "lucide-react";
-
 import { toast } from "sonner";
 import { useUserStore } from "@/store/useUserStore";
 
 export default function StreakFreezeCard() {
-  const { xp } = useUserStore();
+  const xp = useUserStore(s => s.xp);
+  const freezeCount = useUserStore(s => s.inventory.streakFreeze || 0);
+  const buyStreakFreeze = useUserStore(s => s.buyStreakFreeze);
 
   const COST = 500;
 
@@ -20,7 +21,7 @@ export default function StreakFreezeCard() {
       return;
     }
     
-    if (buyFreeze()) {
+    if (buyStreakFreeze()) {
       toast.success("Streak Terlindungi!", {
         description: "1 Pelindung Streak telah ditambahkan ke kantongmu."
       });

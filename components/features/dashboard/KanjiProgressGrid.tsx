@@ -18,7 +18,7 @@ interface KanjiItem {
 export default function KanjiProgressGrid() {
   const [kanjis, setKanjis] = useState<KanjiItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const { srs } = useSRSStore();
+  const srs = useSRSStore(s => s.srs);
 
   useEffect(() => {
     const fetchKanjis = async () => {
@@ -47,8 +47,8 @@ export default function KanjiProgressGrid() {
     );
   }
 
-  const masteredCount = kanjis.filter(k => srs[k._id]?.interval > 21).length;
-  const learningCount = kanjis.filter(k => srs[k._id] && srs[k._id].interval <= 21).length;
+  const masteredCount = kanjis.filter(k => (srs?.[k._id]?.interval || 0) > 21).length;
+  const learningCount = kanjis.filter(k => srs?.[k._id] && srs[k._id].interval <= 21).length;
 
   return (
     <Card className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-lg overflow-hidden relative">
@@ -77,8 +77,8 @@ export default function KanjiProgressGrid() {
 
         <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-2">
           {kanjis.map((item, idx) => {
-            const status = srs[item._id];
-            const isMastered = status?.interval > 21;
+            const status = srs?.[item._id];
+            const isMastered = (status?.interval || 0) > 21;
             const isLearning = status && !isMastered;
 
             return (

@@ -5,7 +5,11 @@ import { getTodayDateString } from "@/lib/helpers";
 import { useUserStore } from "@/store/useUserStore";
 
 export function useDailyQuests() {
-  const { xp, streak, todayReviewCount, inventory, claimQuest } = useUserStore();
+  const xp = useUserStore(s => s.xp);
+  const streak = useUserStore(s => s.streak);
+  const todayReviewCount = useUserStore(s => s.todayReviewCount);
+  const inventory = useUserStore(s => s.inventory);
+  const claimQuest = useUserStore(s => s.claimQuest);
   const [justClaimed, setJustClaimed] = useState<string | null>(null);
 
   const today = getTodayDateString();
