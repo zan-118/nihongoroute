@@ -4,8 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { BrainCircuit, Check, X, ShieldCheck } from "lucide-react";
+import { BrainCircuit, Check, X, ShieldCheck, Flame, Trophy } from "lucide-react";
 import Flashcard from "@/components/features/flashcards/card/Flashcard";
+import XPPop from "@/components/features/gamification/XPPop";
 import { FlashcardType } from "./types";
 import { useSRSReview } from "./useSRSReview";
 
@@ -14,8 +15,53 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
 
   if (!engine.isClient || engine.shuffledCards.length === 0) return null;
 
+  if (engine.isFinished) {
+    return (
+      <section className="w-full max-w-xl mx-auto px-4 mt-10">
+        <Card className="w-full bg-card dark:bg-[#0a0c10] p-8 md:p-10 rounded-2xl border border-border dark:border-white/[0.08] text-center relative overflow-hidden shadow-2xl">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-red-500 shadow-lg" />
+          
+          <div className="w-16 h-16 md:w-20 md:h-20 mx-auto bg-muted/50 dark:bg-white/[0.04] rounded-xl flex items-center justify-center border border-border dark:border-white/[0.08] mb-6 shadow-none">
+            <Trophy size={32} className="text-amber-600 dark:text-amber-400 drop-shadow-sm" />
+          </div>
+
+          <h2 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tight mb-2 text-center">
+            Review Selesai
+          </h2>
+          <p className="text-muted-foreground text-xs md:text-xs mb-8 uppercase font-bold tracking-widest">
+            {engine.shuffledCards.length} KARTU SELESAI DITINJAU
+          </p>
+
+          <Card className="bg-muted/50 dark:bg-white/[0.03] py-4 rounded-xl border border-border dark:border-white/[0.08] mb-8 flex justify-center items-center gap-3 shadow-none">
+            <Flame size={18} className="text-red-500" />
+            <span className="text-foreground dark:text-white font-mono font-black text-base md:text-lg">
+              +{engine.earnedXP} XP
+            </span>
+          </Card>
+
+          <Button
+            onClick={() => engine.router.push("/dashboard")}
+            className="w-full h-auto py-4 text-white font-bold uppercase tracking-widest text-xs md:text-xs bg-red-600 hover:bg-red-700 rounded-xl transition-all shadow-lg"
+          >
+            Kembali ke Dashboard
+          </Button>
+        </Card>
+      </section>
+    );
+  }
+
+  const progressPercent = (engine.currentIndex / engine.shuffledCards.length) * 100;
+
   return (
     <section className="w-full max-w-2xl mx-auto px-4 transition-colors duration-300">
+      {/* PROGRESS BAR */}
+      <div className="w-full h-1 bg-muted rounded-full overflow-hidden mb-8">
+        <div 
+          className="h-full bg-red-500 transition-all duration-500 ease-out" 
+          style={{ width: `${progressPercent}%` }} 
+        />
+      </div>
+
       {/* HEADER */}
       <header className="flex flex-col gap-6 mb-10">
         <div className="flex items-center gap-3">
@@ -62,8 +108,19 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
             animate={{ x: 0, opacity: 1, scale: 1 }}
             exit={{ x: -engine.direction * 50, opacity: 0, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className={!engine.isFlipped ? "cursor-pointer" : ""}
+            className={`relative ${!engine.isFlipped ? "cursor-pointer" : ""}`}
           >
+            {/* XP Pop & Visual Flash */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50">
+              <XPPop show={engine.showXP} amount={10} />
+            </div>
+            
+            {engine.flash && (
+              <div 
+                className={`absolute inset-0 z-40 rounded-[2.5rem] pointer-events-none mix-blend-overlay opacity-30 ${engine.flash === "correct" ? "bg-emerald-500" : "bg-red-500"}`} 
+              />
+            )}
+
             {engine.currentCard && (
               <Flashcard
                 id={engine.currentCard._id}
@@ -73,6 +130,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
                 romaji={engine.currentCard.romaji}
                 isFlipped={engine.isFlipped}
                 onFlip={engine.toggleFlip}
+                isShaking={engine.isShaking}
               />
             )}
           </motion.div>

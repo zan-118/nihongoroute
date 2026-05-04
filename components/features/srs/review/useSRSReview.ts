@@ -6,6 +6,7 @@ import { useUIStore } from "@/store/useUIStore";
 import { updateCardState, createNewCardState } from "@/lib/srs";
 import { FlashcardType } from "./types";
 import { shuffleArray } from "@/lib/helpers";
+import { sounds } from "@/lib/audio";
 
 export function useSRSReview(cards: FlashcardType[]) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -13,6 +14,13 @@ export function useSRSReview(cards: FlashcardType[]) {
   const [direction, setDirection] = useState(0);
   const [isClient, setIsClient] = useState(false);
   const [shuffledCards, setShuffledCards] = useState<FlashcardType[]>([]);
+  
+  // Feedback states
+  const [isFinished, setIsFinished] = useState(false);
+  const [showXP, setShowXP] = useState(false);
+  const [isShaking, setIsShaking] = useState(false);
+  const [flash, setFlash] = useState<"correct" | "wrong" | null>(null);
+  const [earnedXP, setEarnedXP] = useState(0);
 
   const { srs, updateProgress } = useSRSStore();
   const { xp } = useUserStore();
@@ -35,9 +43,9 @@ export function useSRSReview(cards: FlashcardType[]) {
     if (currentIndex < shuffledCards.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     } else {
-      router.push("/dashboard");
+      setIsFinished(true);
     }
-  }, [currentIndex, shuffledCards.length, router]);
+  }, [currentIndex, shuffledCards.length]);
 
   const handleAnswer = useCallback(
     (grade: number) => {
@@ -47,16 +55,34 @@ export function useSRSReview(cards: FlashcardType[]) {
       const currentState = srs[cardId] || createNewCardState();
       const newState = updateCardState(currentState, grade);
 
-      updateProgress(xp + (grade >= 2 ? 10 : 2), {
+      const xpGain = grade >= 2 ? 10 : 2;
+      updateProgress(xp + xpGain, {
         [cardId]: newState,
       });
+      setEarnedXP((prev) => prev + xpGain);
 
-      goToNext();
+      if (grade >= 2) {
+        sounds?.playCorrect();
+        setFlash("correct");
+        setShowXP(true);
+        setTimeout(() => setShowXP(false), 800);
+      } else {
+        sounds?.playError();
+        setFlash("wrong");
+        setIsShaking(true);
+        setTimeout(() => setIsShaking(false), 400);
+      }
+
+      setTimeout(() => {
+        setFlash(null);
+        goToNext();
+      }, 300);
     },
     [currentCard, srs, xp, isSyncing, updateProgress, goToNext],
   );
 
   const toggleFlip = useCallback(() => {
+    sounds?.playPop();
     setIsFlipped((prev) => !prev);
   }, []);
 
@@ -98,5 +124,11 @@ export function useSRSReview(cards: FlashcardType[]) {
     handleAnswer,
     toggleFlip,
     isSyncing,
+    isFinished,
+    showXP,
+    isShaking,
+    flash,
+    earnedXP,
+    router,
   };
 }
