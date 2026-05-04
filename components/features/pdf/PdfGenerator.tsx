@@ -8,6 +8,7 @@ import { usePdfGenerator } from "./usePdfGenerator";
 import { LessonPdfTemplate } from "./templates/LessonPdfTemplate";
 import { VocabPdfTemplate } from "./templates/VocabPdfTemplate";
 import { CertificatePdfTemplate } from "./templates/CertificatePdfTemplate";
+import { CheatsheetPdfTemplate } from "./templates/CheatsheetPdfTemplate";
 
 // Dynamic import for PDFDownloadLink to reduce initial bundle size
 const PDFDownloadLink = dynamic(
@@ -27,7 +28,7 @@ const PDFDownloadLink = dynamic(
   }
 );
 
-export type TemplateType = "lesson" | "vocab" | "certificate";
+export type TemplateType = "lesson" | "vocab" | "certificate" | "cheatsheet";
 
 interface PdfGeneratorProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -35,6 +36,7 @@ interface PdfGeneratorProps {
   type: TemplateType;
   title?: string;
   level?: string;
+  category?: string;
 }
 
 export default function PdfGenerator({
@@ -42,6 +44,7 @@ export default function PdfGenerator({
   type,
   title,
   level,
+  category,
 }: PdfGeneratorProps) {
   const { isClient, getFileName } = usePdfGenerator({ type, title, level });
 
@@ -52,6 +55,8 @@ export default function PdfGenerator({
       return <VocabPdfTemplate data={data} level={level || "N5"} />;
     if (type === "certificate")
       return <CertificatePdfTemplate data={data} />;
+    if (type === "cheatsheet")
+      return <CheatsheetPdfTemplate data={data} title={title || "Cheatsheet"} category={category || "General"} />;
     return <LessonPdfTemplate lessonData={data} />;
   };
 

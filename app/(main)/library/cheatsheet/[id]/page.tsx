@@ -3,14 +3,13 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { 
   ChevronLeft, 
-  Printer, 
-  Share2,
   Home,
   Library,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheatsheetTable } from "./CheatsheetTable";
+import PdfGenerator from "@/components/features/pdf/PdfGenerator";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -96,12 +95,12 @@ export default async function CheatsheetDetailPage({
           </div>
 
           <div className="flex items-center gap-3 no-print">
-            <Button variant="outline" className="rounded-2xl border-border bg-muted/20 hover:bg-muted font-bold text-xs gap-2 py-6 px-6">
-              <Printer size={16} /> Print
-            </Button>
-            <Button className="rounded-2xl bg-primary hover:bg-primary/90 text-white font-bold text-xs gap-2 py-6 px-8 shadow-xl shadow-primary/20">
-              <Share2 size={16} /> Bagikan
-            </Button>
+            <PdfGenerator 
+              data={allItems} 
+              type="cheatsheet" 
+              title={sheet.title} 
+              category={sheet.category} 
+            />
           </div>
         </div>
 
