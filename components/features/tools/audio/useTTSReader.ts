@@ -56,15 +56,17 @@ export function useTTSReader(text: string) {
 
     const currentVoices = voices.length > 0 ? voices : window.speechSynthesis.getVoices();
     
-    // Cari suara Jepang yang berkualitas tinggi (biasanya yang bertipe 'online')
+    // Cari suara Jepang yang berkualitas tinggi
     const premiumJPVoice = currentVoices.find(
       (v) => (v.lang === "ja-JP" || v.lang.includes("ja")) && 
              (v.name.includes("Google") || v.name.includes("Natural") || v.name.includes("Online"))
     );
 
+    // RESET: Pastikan tidak ada antrian suara yang macet
+    window.speechSynthesis.cancel();
+
     // JIKA: Dipaksa menggunakan proxy atau tidak ada suara premium di browser
     if (forceProxy || !premiumJPVoice) {
-      // Menggunakan Google Translate TTS (Client-side only, 0 storage, 0 cost)
       const proxyUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=ja&client=tw-ob`;
       
       if (!audioRef.current) {
@@ -74,35 +76,44 @@ export function useTTSReader(text: string) {
       audioRef.current.src = proxyUrl;
       audioRef.current.onplay = () => setIsPlaying(true);
       audioRef.current.onended = () => setIsPlaying(false);
-      audioRef.current.onerror = () => {
-        console.warn("Proxy TTS gagal, mencoba fallback ke OS voice.");
-        playNativeTTS(text, null); // Fallback terakhir ke OS
+      audioRef.current.onerror = (e) => {
+        console.error("Proxy TTS Error:", e);
+        setIsPlaying(false);
+        playNativeTTS(text, null); 
       };
       
-      audioRef.current.play().catch(() => playNativeTTS(text, null));
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.warn("Autoplay/Proxy blocked:", error);
+          playNativeTTS(text, null);
+        });
+      }
       return;
     }
 
-    // JIKA: Ada suara premium di browser
     playNativeTTS(text, premiumJPVoice);
   };
 
   const playNativeTTS = (txt: string, voice: SpeechSynthesisVoice | null) => {
+    window.speechSynthesis.cancel(); // Bersihkan antrian lagi
     const utterance = new SpeechSynthesisUtterance(txt);
     utterance.lang = "ja-JP";
-    utterance.rate = 0.9; // Sedikit lebih lambat untuk pembelajar
+    utterance.rate = 0.9;
 
     if (voice) {
       utterance.voice = voice;
     } else {
-      // Fallback cari suara Jepang apa saja
       const anyJPVoice = voices.find(v => v.lang === "ja-JP" || v.lang.includes("ja"));
       if (anyJPVoice) utterance.voice = anyJPVoice;
     }
 
     utterance.onstart = () => setIsPlaying(true);
     utterance.onend = () => setIsPlaying(false);
-    utterance.onerror = () => setIsPlaying(false);
+    utterance.onerror = (e) => {
+      console.error("Native TTS Error:", e);
+      setIsPlaying(false);
+    };
 
     window.speechSynthesis.speak(utterance);
   };

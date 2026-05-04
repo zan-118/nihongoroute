@@ -36,15 +36,14 @@ import { splitFurigana } from "@/lib/furigana";
 const LEVELS = ["N5", "N4", "N3", "N2"];
 const HINSHI = [
   { label: "Semua Tipe", value: "all" },
-  { label: "Kata Benda (Meishi)", value: "Meishi" },
-  { label: "Kata Kerja (Doushi)", value: "Doushi" },
-  { label: "Kata Sifat-I (I-Keiyoushi)", value: "I-Keiyoushi" },
-  { label: "Kata Sifat-Na (Na-Keiyoushi)", value: "Na-Keiyoushi" },
-  { label: "Kata Keterangan (Fukushi)", value: "Fukushi" },
-  { label: "Partikel (Joshi)", value: "Joshi" },
-  { label: "Kata Penghubung (Setsuzokushi)", value: "Setsuzokushi" },
-  { label: "Kata Ganti (Daimeishi)", value: "Daimeishi" },
-  { label: "Ungkapan (Hyougen)", value: "Hyougen" },
+  { label: "Kata Benda (Meishi)", value: "noun" },
+  { label: "Kata Sifat-I (I-Keiyoushi)", value: "i-adjective" },
+  { label: "Kata Sifat-Na (Na-Keiyoushi)", value: "na-adjective" },
+  { label: "Kata Keterangan (Fukushi)", value: "adverb" },
+  { label: "Partikel (Joshi)", value: "particle" },
+  { label: "Kata Penghubung (Setsuzokushi)", value: "conjunction" },
+  { label: "Kata Ganti (Daimeishi)", value: "pronoun" },
+  { label: "Ungkapan (Hyougen)", value: "expression" },
 ];
 const ITEMS_PER_PAGE = 50;
 
@@ -108,7 +107,7 @@ export default function VocabClient({ initialData = [] }: VocabClientProps) {
     const kanaSearch = wanakana.toHiragana(debouncedSearch.trim());
     const kataSearch = wanakana.toKatakana(debouncedSearch.trim());
 
-    let queryStr = `count(*[_type == "vocab" && course_category->slug.current in [$baseLevel, $jlptLevel]`;
+    let queryStr = `count(*[_type == "vocab" && (course_category->slug.current match $baseLevel + "*" || course_category->slug.current match "jlpt-" + $baseLevel + "*")`;
     if (debouncedSearch.trim() !== "") {
       queryStr += ` && (word match $search + "*" || romaji match $search + "*" || meaning match $search + "*" || word match $kana + "*" || furigana match $kana + "*" || word match $kata + "*")`;
     }
@@ -141,7 +140,7 @@ export default function VocabClient({ initialData = [] }: VocabClientProps) {
     const kanaSearch = wanakana.toHiragana(debouncedSearch.trim());
     const kataSearch = wanakana.toKatakana(debouncedSearch.trim());
 
-    let filterStr = `_type == "vocab" && course_category->slug.current in [$baseLevel, $jlptLevel]`;
+    let filterStr = `_type == "vocab" && (course_category->slug.current match $baseLevel + "*" || course_category->slug.current match "jlpt-" + $baseLevel + "*")`;
     if (debouncedSearch.trim() !== "") {
       filterStr += ` && (word match $search + "*" || romaji match $search + "*" || meaning match $search + "*" || word match $kana + "*" || furigana match $kana + "*" || word match $kata + "*")`;
     }
@@ -348,15 +347,15 @@ export default function VocabClient({ initialData = [] }: VocabClientProps) {
                 <div className="flex justify-between items-center mb-3 md:mb-4">
                   <Badge variant="outline" className="px-2 py-0.5 md:px-2.5 md:py-1 text-[9px] md:text-xs font-bold uppercase tracking-wider rounded-lg text-muted-foreground border-border h-auto">
                     {vocab.hinshi ? (
-                      vocab.hinshi === 'Meishi' ? 'Kata Benda' :
-                      vocab.hinshi === 'Doushi' ? 'Kata Kerja' :
-                      vocab.hinshi === 'I-Keiyoushi' ? 'Sifat-I' :
-                      vocab.hinshi === 'Na-Keiyoushi' ? 'Sifat-Na' :
-                      vocab.hinshi === 'Fukushi' ? 'Keterangan' :
-                      vocab.hinshi === 'Joshi' ? 'Partikel' :
-                      vocab.hinshi === 'Setsuzokushi' ? 'Penghubung' :
-                      vocab.hinshi === 'Daimeishi' ? 'Kata Ganti' :
-                      vocab.hinshi === 'Hyougen' ? 'Ungkapan' : 
+                      vocab.hinshi === 'noun' ? 'Kata Benda' :
+                      vocab.hinshi === 'verb' ? 'Kata Kerja' :
+                      vocab.hinshi === 'i-adjective' ? 'Sifat-I' :
+                      vocab.hinshi === 'na-adjective' ? 'Sifat-Na' :
+                      vocab.hinshi === 'adverb' ? 'Keterangan' :
+                      vocab.hinshi === 'particle' ? 'Partikel' :
+                      vocab.hinshi === 'conjunction' ? 'Penghubung' :
+                      vocab.hinshi === 'pronoun' ? 'Kata Ganti' :
+                      vocab.hinshi === 'expression' ? 'Ungkapan' : 
                       vocab.hinshi.replace("-", " ")
                     ) : "Umum"}
                   </Badge>

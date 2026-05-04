@@ -39,7 +39,7 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
       const baseLevel = selectedLevel.toLowerCase();
       const jlptLevel = `jlpt-${baseLevel}`;
 
-      const queryStr = `*[_type == "grammar_article" && course_category->slug.current in [$baseLevel, $jlptLevel]] | order(title asc) { 
+      const queryStr = `*[_type == "grammar_article" && (course_category->slug.current match $baseLevel + "*" || course_category->slug.current match "jlpt-" + $baseLevel + "*")] | order(title asc) { 
         _id, 
         title, 
         "slug": slug.current 
@@ -55,7 +55,7 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
       }
     }
     fetchGrammar();
-  }, [selectedLevel, initialArticles, articles]);
+  }, [selectedLevel]);
 
   const filteredArticles = articles.filter(art => 
     art.title.toLowerCase().includes(searchTerm.toLowerCase())

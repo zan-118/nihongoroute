@@ -63,19 +63,19 @@ export function FlashcardBack({
 
   return (
     <Card
-      className={`absolute inset-0 w-full h-full border ${themeBorder} rounded-2xl ${themeShadow} flex flex-col items-center justify-center p-6 md:p-8 transition-all duration-500 shadow-none overflow-hidden bg-card dark:bg-[#0a0c10]`}
+      className={`absolute inset-0 w-full h-full border ${themeBorder} rounded-2xl ${themeShadow} flex flex-col p-4 md:p-8 transition-all duration-500 shadow-none overflow-hidden bg-card dark:bg-[#0a0c10]`}
       style={{
         transform: "rotateY(180deg)",
         backfaceVisibility: "hidden",
         WebkitBackfaceVisibility: "hidden",
       }}
     >
-      <div className="w-full h-full flex flex-col items-center relative p-1 pb-4">
+      <div className="w-full h-full flex flex-col relative overflow-y-auto no-scrollbar">
         {/* HEADER SECTION */}
-        <div className="w-full flex items-center justify-between mb-4 px-1">
+        <div className="w-full flex items-center justify-between mb-4 shrink-0">
           <Badge
             variant="outline"
-            className={`text-[10px] md:text-xs font-black uppercase tracking-widest ${themeColor} border-current/20 px-4 py-1.5 rounded-lg h-auto bg-muted dark:bg-black/20 z-30`}
+            className={`text-[9px] md:text-xs font-black uppercase tracking-widest ${themeColor} border-current/20 px-3 py-1 rounded-lg h-auto bg-muted dark:bg-black/20 z-30`}
           >
             {isKanji ? "Detail Karakter" : "Definisi & Arti"}
           </Badge>
@@ -85,9 +85,9 @@ export function FlashcardBack({
           </div>
         </div>
 
-        <div className={`text-center w-full flex flex-col items-center justify-center flex-1 ${isKanji ? 'space-y-4 md:space-y-6' : 'space-y-2'}`}>
+        <div className={`text-center w-full flex flex-col items-center flex-1 ${isKanji ? 'space-y-4 md:space-y-6' : 'space-y-4'}`}>
           {/* WORD DISPLAY */}
-          <div className="flex flex-col items-center relative group/kanji">
+          <div className="flex flex-col items-center relative group/kanji shrink-0">
             <h2
               className={`${isKanji ? "text-7xl md:text-7xl" : word.length > 4 ? "text-4xl sm:text-5xl md:text-6xl lg:text-7xl" : "text-5xl sm:text-6xl md:text-7xl lg:text-8xl"} font-black text-foreground tracking-tight font-japanese leading-none drop-shadow-sm dark:drop-shadow-lg transition-all`}
             >
@@ -216,7 +216,7 @@ export function FlashcardBack({
         </div>
 
         {/* SRS STATUS FOOTER */}
-        <div className="w-full pt-4 flex items-center justify-center gap-4 border-t border-border/50 dark:border-white/5 mt-4">
+        <div className="w-full pt-4 flex items-center justify-center gap-4 border-t border-border/50 dark:border-white/5 mt-4 shrink-0">
           <div className={`flex flex-col items-center gap-1`}>
             <span className="text-[8px] text-muted-foreground uppercase tracking-widest font-bold opacity-50">Kekuatan Memori</span>
             <Badge variant="outline" className={`${memory.color} border-none text-[9px] font-black uppercase px-3 py-1 rounded-full h-auto`}>

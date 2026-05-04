@@ -36,14 +36,15 @@ interface Cheatsheet {
 export default async function CheatsheetDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const sheet: Cheatsheet = await client.fetch(
     `*[_type == "cheatsheet" && _id == $id][0] {
       _id, title, category, items,
-      linkedVocab[]->{ "jp": word, "label": meaning, romaji }
+      linkedVocab[]->{ "jp": word, "label": meaning, "romaji": coalesce(romaji, furigana) }
     }`,
-    { id: params.id }
+    { id }
   );
 
   if (!sheet) notFound();
