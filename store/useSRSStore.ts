@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { persist } from "zustand/middleware";
 import { get, set as idbSet, del } from "idb-keyval";
 import { SRSState, createNewCardState } from "@/lib/srs";
 import { getLocalDateString } from "@/lib/utils";
@@ -23,32 +23,8 @@ interface SRSStateStore {
   resetSRS: () => void;
 }
 
-const idbStorage = {
-  getItem: async (name: string) => (await get(name)) || null,
-  setItem: async (name: string, value: string) => await idbSet(name, value),
-  removeItem: async (name: string) => await del(name),
-};
+// Custom storage handlers for IndexedDB persistence
 
-// Custom serialization for Set because JSON.stringify doesn't support it
-const storageWrapper = {
-  getItem: async (name: string) => {
-    const data = await idbStorage.getItem(name);
-    if (!data) return null;
-    const parsed = JSON.parse(data);
-    if (parsed.state && parsed.state.dirtySrs) {
-      parsed.state.dirtySrs = new Set(parsed.state.dirtySrs);
-    }
-    return JSON.stringify(parsed);
-  },
-  setItem: async (name: string, value: string) => {
-    const parsed = JSON.parse(value);
-    if (parsed.state && parsed.state.dirtySrs) {
-      parsed.state.dirtySrs = Array.from(parsed.state.dirtySrs);
-    }
-    await idbSet(name, JSON.stringify(parsed));
-  },
-  removeItem: async (name: string) => await del(name),
-};
 
 export const useSRSStore = create<SRSStateStore>()(
   persist(
@@ -170,7 +146,19 @@ export const useSRSStore = create<SRSStateStore>()(
 
         // 3. Merge SRS
         const mergedSrs = { ...cloudData.srs };
-        const newDirty = new Set(get().dirtySrs);
+        
+        // Safety check for dirtySrs iteration
+        let currentDirty: Set<string>;
+        try {
+          currentDirty = get().dirtySrs instanceof Set 
+            ? get().dirtySrs 
+            : new Set(Array.isArray(get().dirtySrs) ? get().dirtySrs : []);
+        } catch (e) {
+          console.error("Failed to recover dirtySrs, resetting to empty", e);
+          currentDirty = new Set();
+        }
+        
+        const newDirty = new Set(currentDirty);
 
         Object.entries(localSrs).forEach(([id, localState]) => {
           const cloudState = cloudData.srs[id];
@@ -212,7 +200,6 @@ export const useSRSStore = create<SRSStateStore>()(
 
         // 5. Update UI Store
         uiState.toggleNotifications(cloudData.settings.notificationsEnabled);
-        // Notifications merge is omitted here for simplicity, or can be handled in UI store
 
         set({ srs: mergedSrs, dirtySrs: newDirty });
       },
@@ -221,8 +208,41 @@ export const useSRSStore = create<SRSStateStore>()(
     }),
     {
       name: "nihongoroute_srs_data",
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      storage: createJSONStorage(() => storageWrapper as unknown as any),
+      storage: {
+        getItem: async (name) => {
+          const data = await get(name);
+          if (!data) return null;
+          
+          try {
+            // Manual parsing to handle Set reviver
+            const parsed = JSON.parse(data, (key, value) => {
+              if (key === 'dirtySrs' && Array.isArray(value)) {
+                return new Set(value);
+              }
+              return value;
+            });
+            return parsed;
+          } catch (e) {
+            console.error("Failed to parse SRS store data:", e);
+            return null;
+          }
+        },
+        setItem: async (name, value) => {
+          try {
+            // Manual stringification to handle Set replacer
+            const stringified = JSON.stringify(value, (key, val) => {
+              if (val instanceof Set) {
+                return Array.from(val);
+              }
+              return val;
+            });
+            await idbSet(name, stringified);
+          } catch (e) {
+            console.error("Failed to save SRS store data:", e);
+          }
+        },
+        removeItem: async (name) => await del(name),
+      },
     }
   )
 );
