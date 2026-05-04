@@ -12,7 +12,7 @@ import { client } from "@/sanity/lib/client";
 import { PortableText } from "@portabletext/react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronLeft, Home, Library, BookOpen, Activity, BookText, FileText } from "lucide-react";
+import { ChevronLeft, Home, Library, BookOpen, Activity, BookText, FileText, Lightbulb } from "lucide-react";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,8 @@ import { splitFurigana } from "@/lib/furigana";
 // ======================
 const articleQuery = `*[_type == "grammar_article" && slug.current == $slug][0] { 
   title, 
+  formation,
+  notes,
   content[] {
     ...,
     _type == "image" => {
@@ -180,6 +182,33 @@ export default async function GrammarDetailPage({
           </h1>
           <div className="h-1.5 md:h-2 w-24 md:w-32 bg-primary mt-8 md:mt-10 rounded-full neo-card shadow-lg" />
         </header>
+
+        {(article.formation || article.notes) && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+            {article.formation && (
+              <div className="p-6 md:p-8 bg-primary/5 border border-primary/20 rounded-[2rem] neo-inset shadow-none relative overflow-hidden group">
+                <div className="absolute top-0 right-0 p-4 opacity-[0.05] group-hover:scale-110 transition-transform">
+                  <BookText size={80} />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary block mb-3">Rumus (Formation)</span>
+                <p className="text-xl md:text-2xl font-black text-foreground font-japanese leading-relaxed">
+                  {article.formation}
+                </p>
+              </div>
+            )}
+            {article.notes && (
+              <div className="p-6 md:p-8 bg-muted/30 border border-border rounded-[2rem] relative overflow-hidden group">
+                 <div className="absolute top-0 right-0 p-4 opacity-[0.05] group-hover:scale-110 transition-transform">
+                  <Lightbulb size={80} />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-3">Catatan (Notes)</span>
+                <p className="text-sm md:text-base font-medium text-muted-foreground leading-relaxed">
+                  {article.notes}
+                </p>
+              </div>
+            )}
+          </div>
+        )}
 
         <section className="prose prose-slate dark:prose-invert max-w-none mb-16 md:mb-20 relative">
           {/* Decorative Side Badge */}

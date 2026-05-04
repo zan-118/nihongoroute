@@ -128,6 +128,19 @@ export default defineType({
       title: "Audio Pengucapan (Opsional)",
       options: { accept: "audio/*" },
     }),
+    defineField({
+      name: "mnemonic",
+      title: "Mnemonic (Cerita Pengingat)",
+      type: "text",
+      description: "Tuliskan cerita atau cara mudah untuk mengingat kata ini.",
+    }),
+    defineField({
+      name: "relatedKanji",
+      title: "Kanji Terkait",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "kanji" }] }],
+      description: "Pilih karakter Kanji yang membentuk kosa kata ini.",
+    }),
   ],
   preview: {
     select: {

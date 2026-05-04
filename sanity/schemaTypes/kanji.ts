@@ -112,6 +112,12 @@ export default defineType({
       to: [{ type: "course_category" }],
       validation: (Rule) => Rule.required(),
     }),
+    defineField({
+      name: "mnemonic",
+      title: "Mnemonic (Cerita Pengingat)",
+      type: "text",
+      description: "Tuliskan cerita atau cara mudah untuk mengingat karakter ini.",
+    }),
   ],
   preview: {
     select: {

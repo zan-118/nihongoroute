@@ -136,6 +136,44 @@ export default defineType({
       title: "Bentuk Meirei (Perintah)",
       type: "string",
     }),
+    defineField({
+      name: "mnemonic",
+      title: "Mnemonic (Cerita Pengingat)",
+      type: "text",
+      description: "Tuliskan cerita atau cara mudah untuk mengingat kata kerja ini.",
+    }),
+    defineField({
+      name: "relatedKanji",
+      title: "Kanji Terkait",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "kanji" }] }],
+      description: "Pilih karakter Kanji yang membentuk kata kerja ini.",
+    }),
+    defineField({
+      name: "transitivity",
+      title: "Transitivitas",
+      type: "string",
+      options: {
+        list: [
+          { title: "Tadoushi (Transitif - Membutuhkan Objek)", value: "transitive" },
+          { title: "Jidoushi (Intransitif - Tanpa Objek)", value: "intransitive" },
+        ],
+      },
+    }),
+    defineField({
+      name: "pair_verb",
+      title: "Pasangan Kata Kerja (Pair)",
+      type: "reference",
+      to: [{ type: "verb_dictionary" }],
+      description: "Pilih pasangan kata kerja (misal: Akeru berpasangan dengan Aku).",
+    }),
+    defineField({
+      name: "examples",
+      title: "Contoh Kalimat",
+      type: "array",
+      of: [{ type: "exampleSentence" }],
+      description: "Daftar contoh kalimat penggunaan kata kerja ini.",
+    }),
   ],
   preview: {
     select: {

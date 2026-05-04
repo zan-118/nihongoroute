@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { PenTool, ExternalLink } from "lucide-react";
+import { PenTool, ExternalLink, Sparkles } from "lucide-react";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import { FlashcardThemeContext } from "./types";
 import Link from "next/link";
@@ -23,6 +23,13 @@ interface FlashcardBackProps {
     easeFactor: number;
     nextReview: number;
   };
+  mnemonic?: string;
+  relatedKanji?: Array<{
+    character: string;
+    meaning: string;
+    onyomi?: string;
+    kunyomi?: string;
+  }>;
 }
 
 export function FlashcardBack({
@@ -35,6 +42,8 @@ export function FlashcardBack({
   themeContext,
   onDrawClick,
   srsState,
+  mnemonic,
+  relatedKanji,
 }: FlashcardBackProps) {
   const { isKanji, themeColor, themeBorder, themeShadow } = themeContext;
 
@@ -163,6 +172,46 @@ export function FlashcardBack({
               <PenTool size={14} />
               <span>Latih Menulis</span>
             </Button>
+          )}
+
+          {/* MNEMONIC SECTION */}
+          {mnemonic && (
+            <div className="w-full px-2 mt-4">
+              <div className="p-4 bg-amber-500/5 border border-amber-500/20 rounded-2xl text-left relative overflow-hidden group/mnemonic">
+                <div className="absolute top-0 right-0 p-2 opacity-20 group-hover/mnemonic:opacity-40 transition-opacity">
+                  <Sparkles size={14} className="text-amber-500" />
+                </div>
+                <span className="text-[8px] font-black uppercase tracking-widest text-amber-500/80 block mb-1">Mnemonic</span>
+                <p className="text-[11px] md:text-xs font-medium text-muted-foreground leading-relaxed italic">
+                  &quot;{mnemonic}&quot;
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* KANJI BREAKDOWN SECTION */}
+          {relatedKanji && relatedKanji.length > 0 && (
+            <div className="w-full px-2 mt-4">
+              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-50 block mb-2 text-center">Analisis Karakter</span>
+              <div className="flex flex-wrap justify-center gap-2">
+                {relatedKanji.map((k, i) => (
+                  <div key={i} className="flex flex-col items-center p-3 rounded-xl bg-muted/30 border border-border/50 min-w-[70px] relative group/kitem">
+                    <span className="text-2xl font-japanese font-bold text-foreground mb-1">{k.character}</span>
+                    <div className="flex flex-col items-center gap-0.5 w-full border-t border-border/30 pt-1.5 mt-1">
+                      {k.onyomi && (
+                        <span className="text-[7px] font-bold text-primary/70 uppercase leading-none">{k.onyomi}</span>
+                      )}
+                      {k.kunyomi && (
+                        <span className="text-[7px] font-bold text-emerald-600/70 leading-none">{k.kunyomi}</span>
+                      )}
+                    </div>
+                    <span className="text-[8px] font-black text-muted-foreground uppercase tracking-tighter truncate max-w-[60px] text-center mt-2 opacity-50 group-hover/kitem:opacity-100 transition-opacity">
+                      {k.meaning}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </div>
 

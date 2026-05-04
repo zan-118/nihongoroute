@@ -46,52 +46,71 @@ export function createNewCardState(): SRSState {
 // ======================
 
 /**
- * Menghitung status SRS baru berdasarkan apakah jawaban user benar atau salah.
- * Menggunakan logika Modern Halving untuk penalti guna menjaga retensi tanpa membuat frustrasi.
+ * Menghitung status SRS baru berdasarkan kualitas jawaban user (grade 0-3).
+ * Menggunakan logika Modern Halving untuk penalti dan Due-Date Guard untuk mencegah inflasi.
  * 
  * @param {SRSState} state - State kartu saat ini.
- * @param {boolean} correct - Apakah jawaban user benar.
+ * @param {number} grade - Kualitas jawaban (0: Lupa, 1: Sulit, 2: Bisa, 3: Mudah).
  * @returns {SRSState} State kartu yang telah diperbarui.
  */
-export function updateCardState(state: SRSState, correct: boolean): SRSState {
+export function updateCardState(state: SRSState, grade: number): SRSState {
   let { repetition, interval, easeFactor } = state;
+  const { nextReview } = state;
+  const isDue = Date.now() >= nextReview - (DAY / 4); // Toleransi 6 jam untuk fleksibilitas
 
-  if (!correct) {
-    // Alih-alih mereset interval ke 1, kita bagi dua (halving).
-    // Mencegah frustrasi jika user lupa kartu "Master" yang intervalnya sudah puluhan hari.
-    interval = Math.max(1, Math.floor(interval / 2));
-
-    // Repetition direset ke 0 agar combo terputus
-    repetition = 0;
-
-    // Penalti easeFactor (kartu akan muncul sedikit lebih sering dari biasanya)
-    easeFactor = Math.max(MIN_EASE_FACTOR, easeFactor - 0.2);
-  } else {
-    repetition += 1;
-
-    // Logika untuk kartu yang baru pertama kali dipelajari
-    if (repetition === 1 && interval === 1) {
-      interval = 1;
-    } else if (repetition === 2 && interval === 1) {
-      interval = 3;
+  if (grade < 2) {
+    // ======================
+    // LOGIKA PENALTI (Lupa/Sulit)
+    // ======================
+    if (grade === 0) {
+      // Lupa Total: Halving interval & Reset repetition
+      interval = Math.max(1, Math.floor(interval / 2));
+      repetition = 0;
+      easeFactor = Math.max(MIN_EASE_FACTOR, easeFactor - 0.2);
     } else {
-      // Pertumbuhan interval yang natural berdasarkan easeFactor
-      // Gunakan Math.ceil agar interval minimal bertambah 1 jika easeFactor > 1.0
-      // Ini mencegah kartu terjebak di interval 1 hari selamanya (Ease Hell)
-      interval = Math.min(MAX_INTERVAL, Math.max(interval + 1, Math.ceil(interval * easeFactor)));
+      // Sulit: Sedikit pengurangan interval untuk penguatan kembali
+      interval = Math.max(1, Math.ceil(interval * 0.7));
+      easeFactor = Math.max(MIN_EASE_FACTOR, easeFactor - 0.15);
     }
+  } else {
+    // ======================
+    // LOGIKA PERTUMBUHAN (Bisa/Mudah)
+    // ======================
+    
+    // Hanya naikkan interval jika kartu memang sudah waktunya diulas (Due-Date Guard)
+    if (isDue) {
+      repetition += 1;
 
-    // Sedikit reward pada easeFactor karena menjawab benar
-    easeFactor = Math.min(MAX_EASE_FACTOR, easeFactor + 0.05);
+      if (repetition === 1 && interval === 1) {
+        interval = grade === 3 ? 2 : 1;
+      } else if (repetition === 2 && interval <= 2) {
+        interval = grade === 3 ? 5 : 3;
+      } else {
+        // Multiplier bonus untuk jawaban "Sangat Mudah"
+        const multiplier = grade === 3 ? 1.3 : 1.0;
+        interval = Math.min(MAX_INTERVAL, Math.max(interval + 1, Math.ceil(interval * easeFactor * multiplier)));
+      }
+
+      // Penyesuaian Ease Factor
+      if (grade === 3) {
+        easeFactor = Math.min(MAX_EASE_FACTOR, easeFactor + 0.15);
+      } else {
+        easeFactor = Math.min(MAX_EASE_FACTOR, easeFactor + 0.05);
+      }
+    } else {
+      // Belajar awal (Early Study): Tidak menambah interval untuk mencegah Mastery palsu.
+      // Hanya memberikan sedikit bonus pada easeFactor sebagai reward ketekunan.
+      easeFactor = Math.min(MAX_EASE_FACTOR, easeFactor + 0.02);
+    }
   }
 
-  const nextReview = Date.now() + interval * DAY;
+  const newNextReview = Date.now() + interval * DAY;
 
   return {
     repetition,
     interval,
     easeFactor,
-    nextReview,
+    nextReview: newNextReview,
     updatedAt: Date.now(),
   };
 }

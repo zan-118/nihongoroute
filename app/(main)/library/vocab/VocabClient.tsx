@@ -9,8 +9,10 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { Search, Home, Library, Loader2, Filter, Languages, LibraryBig, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { Search, Home, Library, Loader2, Filter, Languages, LibraryBig, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ArrowLeft } from "lucide-react";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
+import FlashcardMaster from "@/components/features/flashcards/master/FlashcardMaster";
+import { client } from "@/sanity/lib/client";
 
 const PdfGenerator = dynamic(() => import("@/components/features/pdf/PdfGenerator"), {
   ssr: false,
@@ -34,14 +36,15 @@ import { splitFurigana } from "@/lib/furigana";
 const LEVELS = ["N5", "N4", "N3", "N2"];
 const HINSHI = [
   { label: "Semua Tipe", value: "all" },
-  { label: "Kata Benda (Meishi)", value: "noun" },
-  { label: "Kata Sifat-I (I-Keiyoushi)", value: "i-adjective" },
-  { label: "Kata Sifat-Na (Na-Keiyoushi)", value: "na-adjective" },
-  { label: "Kata Keterangan (Fukushi)", value: "adverb" },
-  { label: "Partikel (Joshi)", value: "particle" },
-  { label: "Kata Penghubung (Setsuzokushi)", value: "conjunction" },
-  { label: "Kata Ganti (Daimeishi)", value: "pronoun" },
-  { label: "Ungkapan (Hyougen)", value: "expression" },
+  { label: "Kata Benda (Meishi)", value: "Meishi" },
+  { label: "Kata Kerja (Doushi)", value: "Doushi" },
+  { label: "Kata Sifat-I (I-Keiyoushi)", value: "I-Keiyoushi" },
+  { label: "Kata Sifat-Na (Na-Keiyoushi)", value: "Na-Keiyoushi" },
+  { label: "Kata Keterangan (Fukushi)", value: "Fukushi" },
+  { label: "Partikel (Joshi)", value: "Joshi" },
+  { label: "Kata Penghubung (Setsuzokushi)", value: "Setsuzokushi" },
+  { label: "Kata Ganti (Daimeishi)", value: "Daimeishi" },
+  { label: "Ungkapan (Hyougen)", value: "Hyougen" },
 ];
 const ITEMS_PER_PAGE = 50;
 
@@ -52,6 +55,11 @@ interface VocabItem {
   romaji?: string;
   meaning: string;
   hinshi?: string;
+  mnemonic?: string;
+  relatedKanji?: Array<{
+    character: string;
+    meaning: string;
+  }>;
 }
 
 interface VocabClientProps {
@@ -69,6 +77,8 @@ export default function VocabClient({ initialData = [] }: VocabClientProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [loading, setLoading] = useState(false);
+
+  const [isFlashcardMode, setIsFlashcardMode] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(search), 500);
@@ -140,7 +150,16 @@ export default function VocabClient({ initialData = [] }: VocabClientProps) {
     }
 
     const queryStr = `{
-      "items": *[${filterStr}] | order(romaji asc) [$start...$end] { _id, word, furigana, romaji, meaning, hinshi },
+      "items": *[${filterStr}] | order(romaji asc) [$start...$end] { 
+        _id, 
+        word, 
+        furigana, 
+        romaji, 
+        meaning, 
+        hinshi,
+        mnemonic,
+        "relatedKanji": relatedKanji[]->{ character, meaning }
+      },
       "total": count(*[${filterStr}])
     }`;
 
@@ -171,6 +190,32 @@ export default function VocabClient({ initialData = [] }: VocabClientProps) {
     fetchData(newPage);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  if (isFlashcardMode && vocabList.length > 0) {
+    const flashcardData = vocabList.map((vocab) => ({
+      _id: vocab._id,
+      word: vocab.word,
+      meaning: vocab.meaning,
+      furigana: vocab.furigana,
+      romaji: vocab.romaji || (vocab.furigana ? wanakana.toRomaji(vocab.furigana) : ""),
+      level: { code: level },
+      mnemonic: vocab.mnemonic,
+      relatedKanji: vocab.relatedKanji,
+    }));
+
+    return (
+      <div className="animate-in fade-in zoom-in-95 duration-500 max-w-2xl mx-auto w-full mt-10 px-4 flex-1 pb-24">
+        <Button
+          variant="ghost"
+          onClick={() => setIsFlashcardMode(false)}
+          className="mb-8 flex items-center justify-center gap-3 px-8 py-6 rounded-2xl text-xs md:text-xs font-bold uppercase tracking-widest w-full sm:w-auto neo-card bg-muted border-border hover:bg-primary hover:text-white dark:hover:text-black transition-all"
+        >
+          <ArrowLeft size={18} /> Kembali ke Daftar
+        </Button>
+        <FlashcardMaster cards={flashcardData} />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full flex flex-col flex-1 pb-24 px-4 md:px-8">
@@ -206,9 +251,17 @@ export default function VocabClient({ initialData = [] }: VocabClientProps) {
           <div className="flex items-center justify-between md:justify-end gap-4 w-full md:w-auto">
              <div className="flex flex-col items-start md:items-end gap-0.5">
                 <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Total Koleksi</span>
-                <span className="text-[10px] md:text-xs font-black text-foreground">{vocabList.length} Kata</span>
+                <span className="text-[10px] md:text-xs font-black text-foreground">{totalItems} Kata</span>
              </div>
-             <PdfGenerator data={vocabList} type="vocab" level={level} />
+             <div className="flex items-center gap-2">
+               <Button
+                 onClick={() => setIsFlashcardMode(true)}
+                 className="h-auto py-2.5 px-4 md:py-3 md:px-6 rounded-xl bg-primary hover:bg-foreground text-white dark:text-black font-bold uppercase tracking-widest transition-all shadow-lg border-none text-[10px] md:text-xs"
+               >
+                 Mulai Latihan
+               </Button>
+               <PdfGenerator data={vocabList} type="vocab" level={level} />
+             </div>
           </div>
         </div>
       </header>
@@ -295,14 +348,15 @@ export default function VocabClient({ initialData = [] }: VocabClientProps) {
                 <div className="flex justify-between items-center mb-3 md:mb-4">
                   <Badge variant="outline" className="px-2 py-0.5 md:px-2.5 md:py-1 text-[9px] md:text-xs font-bold uppercase tracking-wider rounded-lg text-muted-foreground border-border h-auto">
                     {vocab.hinshi ? (
-                      vocab.hinshi === 'noun' ? 'Kata Benda' :
-                      vocab.hinshi === 'i-adjective' ? 'Sifat-I' :
-                      vocab.hinshi === 'na-adjective' ? 'Sifat-Na' :
-                      vocab.hinshi === 'adverb' ? 'Keterangan' :
-                      vocab.hinshi === 'particle' ? 'Partikel' :
-                      vocab.hinshi === 'conjunction' ? 'Penghubung' :
-                      vocab.hinshi === 'pronoun' ? 'Kata Ganti' :
-                      vocab.hinshi === 'expression' ? 'Ungkapan' : 
+                      vocab.hinshi === 'Meishi' ? 'Kata Benda' :
+                      vocab.hinshi === 'Doushi' ? 'Kata Kerja' :
+                      vocab.hinshi === 'I-Keiyoushi' ? 'Sifat-I' :
+                      vocab.hinshi === 'Na-Keiyoushi' ? 'Sifat-Na' :
+                      vocab.hinshi === 'Fukushi' ? 'Keterangan' :
+                      vocab.hinshi === 'Joshi' ? 'Partikel' :
+                      vocab.hinshi === 'Setsuzokushi' ? 'Penghubung' :
+                      vocab.hinshi === 'Daimeishi' ? 'Kata Ganti' :
+                      vocab.hinshi === 'Hyougen' ? 'Ungkapan' : 
                       vocab.hinshi.replace("-", " ")
                     ) : "Umum"}
                   </Badge>

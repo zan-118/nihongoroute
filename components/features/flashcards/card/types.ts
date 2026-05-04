@@ -15,6 +15,18 @@ export interface FlashcardProps {
     nextReview: number;
   };
   isShaking?: boolean;
+  studyMode?: "latihan" | "ujian" | "tantangan";
+  userInput?: string;
+  onUserInputChange?: (val: string) => void;
+  isAnswerChecked?: boolean;
+  inputResult?: "correct" | "wrong" | null;
+  mnemonic?: string;
+  relatedKanji?: Array<{
+    character: string;
+    meaning: string;
+    onyomi?: string;
+    kunyomi?: string;
+  }>;
 }
 
 export interface FlashcardThemeContext {

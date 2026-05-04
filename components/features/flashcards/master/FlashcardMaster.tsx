@@ -19,7 +19,7 @@ export default function FlashcardMaster({
 }: {
   cards: MasterCardData[];
   type?: "vocab" | "kanji";
-  mode?: "latihan" | "ujian";
+  mode?: "latihan" | "ujian" | "tantangan";
   isFixedMode?: boolean;
 }) {
   const {
@@ -43,6 +43,12 @@ export default function FlashcardMaster({
     currentCards,
     progress,
     router,
+    userInput,
+    setUserInput,
+    isAnswerChecked,
+    inputResult,
+    checkAnswer,
+    combo,
   } = useFlashcardMaster({ cards, initialMode: mode });
 
   if (!isClient || !cards || cards.length === 0) return null;
@@ -88,6 +94,7 @@ export default function FlashcardMaster({
         themeBgColor={themeBgColor}
         themeShadow={themeShadow}
         router={router}
+        combo={combo}
       />
 
       {/* KARTU UTAMA SECTION */}
@@ -117,7 +124,11 @@ export default function FlashcardMaster({
               kanjiDetails={currentCards[currentIndex]?.kanjiDetails || currentCards[currentIndex]?.details}
               isFlipped={isFlipped}
               onFlip={() => {
-                if (studyMode === "ujian" && isFlipped) return;
+                if ((studyMode === "ujian" || studyMode === "tantangan") && isFlipped) return;
+                if (studyMode === "tantangan" && !isFlipped) {
+                  // Disable flip in challenge mode until answered correctly
+                  return;
+                }
                 sounds?.playPop();
                 if (studyMode === "ujian") {
                   setIsFlipped(true);
@@ -128,6 +139,13 @@ export default function FlashcardMaster({
               type={type}
               srsState={srsState}
               isShaking={isShaking}
+              studyMode={studyMode}
+              userInput={userInput}
+              onUserInputChange={setUserInput}
+              isAnswerChecked={isAnswerChecked}
+              inputResult={inputResult}
+              mnemonic={card.mnemonic}
+              relatedKanji={card.relatedKanji}
             />
           </motion.div>
         </AnimatePresence>
@@ -137,10 +155,12 @@ export default function FlashcardMaster({
         studyMode={studyMode}
         isFlipped={isFlipped}
         currentIndex={currentIndex}
-        totalCards={cards.length}
+        totalCards={currentCards.length}
         themeColor={themeColor}
         handleNav={handleNav}
         handleAnswer={handleAnswer}
+        isAnswerChecked={isAnswerChecked}
+        onCheckAnswer={checkAnswer}
       />
     </section>
   );

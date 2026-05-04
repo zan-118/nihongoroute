@@ -4,6 +4,7 @@ import { useProgressStore } from "@/store/useProgressStore";
 import { useShallow } from "zustand/react/shallow";
 import { updateCardState } from "@/lib/srs";
 import { sounds } from "@/lib/audio";
+import confetti from "canvas-confetti";
 import { MasterCardData, StudyMode } from "./types";
 
 export function useFlashcardMaster({
@@ -29,9 +30,15 @@ export function useFlashcardMaster({
   const [isShaking, setIsShaking] = useState(false);
   const [mistakeIndices, setMistakeIndices] = useState<number[]>([]);
   const [currentCards, setCurrentCards] = useState<MasterCardData[]>(cards);
+  const [userInput, setUserInput] = useState("");
+  const [isAnswerChecked, setIsAnswerChecked] = useState(false);
+  const [inputResult, setInputResult] = useState<"correct" | "wrong" | null>(null);
+  const [combo, setCombo] = useState(0);
+
 
   const { progress, updateProgress } = useProgressStore(
-    useShallow((state) => ({ progress: state.progress, updateProgress: state.updateProgress }))
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    useShallow((state: any) => ({ progress: state.progress, updateProgress: state.updateProgress }))
   );
   const router = useRouter();
 
@@ -39,19 +46,26 @@ export function useFlashcardMaster({
     setIsClient(true);
   }, []);
 
-  const handleAnswer = useCallback((correct: boolean) => {
+  const handleAnswer = useCallback((grade: number) => {
     if (currentCards.length === 0) return;
     const card = currentCards[currentIndex];
     const cardId = card._id || card.id || "unknown";
-    const xpReward = correct ? 15 : 5;
+    
+    // XP Scaling based on Grade (0: 5, 1: 10, 2: 15, 3: 20)
+    const xpRewards = [5, 10, 15, 20];
+    const xpReward = xpRewards[grade] || 15;
+    const isCorrect = grade >= 2;
 
     if (typeof window !== "undefined" && window.navigator.vibrate) {
-      window.navigator.vibrate(correct ? [50] : [100, 50, 100]);
+      if (grade === 0) window.navigator.vibrate([100, 50, 100]);
+      else if (grade === 1) window.navigator.vibrate([80]);
+      else if (grade === 2) window.navigator.vibrate([50]);
+      else window.navigator.vibrate([50, 30, 50]);
     }
 
     setSessionStats((prev) => ({
-      known: prev.known + (correct ? 1 : 0),
-      learning: prev.learning + (correct ? 0 : 1),
+      known: prev.known + (isCorrect ? 1 : 0),
+      learning: prev.learning + (isCorrect ? 0 : 1),
       xpGained: prev.xpGained + xpReward,
     }));
 
@@ -62,7 +76,7 @@ export function useFlashcardMaster({
       nextReview: Date.now(),
     };
 
-    if (correct) {
+    if (isCorrect) {
       sounds?.playSuccess();
       setShowXP(true);
       setTimeout(() => setShowXP(false), 800);
@@ -73,9 +87,25 @@ export function useFlashcardMaster({
       setTimeout(() => setIsShaking(false), 500);
     }
 
-    setDirection(correct ? 1 : -1);
+    setDirection(isCorrect ? 1 : -1);
     
-    const newState = updateCardState(currentState, correct);
+    const newState = updateCardState(currentState, grade);
+
+    // Combo Logic
+    if (isCorrect) {
+      setCombo(prev => prev + 1);
+      // Mastery Celebration
+      if (newState.interval >= 30 && currentState.interval < 30) {
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ["#FFD700", "#FFA500", "#00EEFF"]
+        });
+      }
+    } else {
+      setCombo(0);
+    }
 
     updateProgress(progress.xp + xpReward, {
       ...progress.srs,
@@ -83,7 +113,10 @@ export function useFlashcardMaster({
     });
 
     setIsFlipped(false);
-    
+    setUserInput("");
+    setIsAnswerChecked(false);
+    setInputResult(null);
+
     setTimeout(() => {
       if (currentIndex < currentCards.length - 1) {
         setCurrentIndex((prev) => prev + 1);
@@ -93,6 +126,31 @@ export function useFlashcardMaster({
       }
     }, 200);
   }, [currentCards, currentIndex, progress, updateProgress]);
+
+  const checkAnswer = useCallback(() => {
+    if (studyMode !== "tantangan" || isAnswerChecked) return;
+    
+    const card = currentCards[currentIndex];
+    const target = (card.furigana || card.word).toLowerCase();
+    const isCorrect = userInput.trim().toLowerCase() === target;
+
+    setIsAnswerChecked(true);
+    setInputResult(isCorrect ? "correct" : "wrong");
+
+    if (typeof window !== "undefined" && window.navigator.vibrate) {
+      window.navigator.vibrate(isCorrect ? [50] : [100, 50, 100]);
+    }
+
+    if (isCorrect) {
+      setTimeout(() => {
+        setIsFlipped(true);
+      }, 500);
+    } else {
+      setIsShaking(true);
+      setTimeout(() => setIsShaking(false), 500);
+    }
+  }, [studyMode, isAnswerChecked, currentCards, currentIndex, userInput]);
+
 
   const handleReviewMistakes = () => {
     if (mistakeIndices.length === 0) return;
@@ -119,43 +177,50 @@ export function useFlashcardMaster({
     if (!isClient || isFinished) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Tombol Space untuk Membalik Kartu
+      // Space to Flip
       if (e.code === "Space") {
         e.preventDefault();
-        // Di mode ujian, jika sudah terbuka tidak boleh balik lagi (standar SRS)
-        if (studyMode === "ujian" && isFlipped) return;
+        if ((studyMode === "ujian" || studyMode === "tantangan") && isFlipped) return;
+        if (studyMode === "tantangan" && !isFlipped) return;
+        
         sounds?.playPop();
         setIsFlipped((prev) => !prev);
       }
       
-      // Navigasi & Jawaban (Mode Ujian)
-      if (isFlipped && studyMode === "ujian") {
-        if (e.key === "1" || e.key === "ArrowLeft") {
-          handleAnswer(false);
-        } else if (e.key === "2" || e.key === "ArrowRight") {
-          handleAnswer(true);
-        }
+      // Navigation & Grades (when Flipped)
+      if (isFlipped && (studyMode === "ujian" || studyMode === "tantangan")) {
+        if (e.key === "1") handleAnswer(0); // Again
+        else if (e.key === "2") handleAnswer(1); // Hard
+        else if (e.key === "3") handleAnswer(2); // Good
+        else if (e.key === "4") handleAnswer(3); // Easy
+        else if (e.key === "ArrowLeft") handleAnswer(0);
+        else if (e.key === "ArrowRight") handleAnswer(2);
       }
 
-      // Navigasi (Mode Latihan)
+      // Challenge Mode - Enter to Check
+      if (studyMode === "tantangan" && !isFlipped && e.key === "Enter") {
+        checkAnswer();
+      }
+
+      // Practice Mode Navigation
       if (studyMode === "latihan") {
-        if (e.key === "ArrowLeft") {
-          handleNav(-1);
-        } else if (e.key === "ArrowRight") {
-          handleNav(1);
-        }
+        if (e.key === "ArrowLeft") handleNav(-1);
+        else if (e.key === "ArrowRight") handleNav(1);
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isClient, isFinished, isFlipped, studyMode, handleAnswer, handleNav]);
+  }, [isClient, isFinished, isFlipped, studyMode, handleAnswer, handleNav, checkAnswer]);
 
   const handleRestart = () => {
     setCurrentIndex(0);
     setIsFlipped(false);
     setIsFinished(false);
     setSessionStats({ known: 0, learning: 0, xpGained: 0 });
+    setUserInput("");
+    setIsAnswerChecked(false);
+    setInputResult(null);
   };
 
   return {
@@ -183,5 +248,12 @@ export function useFlashcardMaster({
     currentCards,
     progress,
     router,
+    userInput,
+    setUserInput,
+    isAnswerChecked,
+    setIsAnswerChecked,
+    inputResult,
+    checkAnswer,
+    combo,
   };
 }

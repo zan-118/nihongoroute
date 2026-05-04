@@ -42,6 +42,18 @@ export default defineType({
       type: "array",
       of: [{ type: "block" }, { type: "exampleSentence" }, { type: "callout" }],
     }),
+    defineField({
+      name: "formation",
+      title: "Rumus (Formation)",
+      type: "string",
+      description: "Contoh: V-ta / N-no + あげく",
+    }),
+    defineField({
+      name: "notes",
+      title: "Catatan (Notes)",
+      type: "text",
+      description: "Penjelasan nuansa atau tips penggunaan tata bahasa ini.",
+    }),
   ],
   preview: {
     select: {

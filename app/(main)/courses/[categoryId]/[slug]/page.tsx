@@ -57,13 +57,13 @@ async function getLessonData(categoryId: string, slug: string) {
       vocabList[]-> { 
         _id, _type,
         _type == "vocab" => { word, furigana, romaji, meaning, hinshi },
-        _type == "verb_dictionary" => { "word": jisho, furigana, romaji, meaning },
+        _type == "verb_dictionary" => { "word": jisho, furigana, romaji, meaning, transitivity },
         _type == "kanji" => { "word": character, meaning, onyomi, kunyomi }
       },
       referenceWords[]-> { 
         _id, _type,
         _type == "vocab" => { word, furigana, romaji, meaning, hinshi },
-        _type == "verb_dictionary" => { "word": jisho, furigana, romaji, meaning },
+        _type == "verb_dictionary" => { "word": jisho, furigana, romaji, meaning, transitivity },
         _type == "kanji" => { "word": character, meaning, onyomi, kunyomi }
       },
       articles[] {
@@ -384,6 +384,15 @@ export default async function LessonPage({ params }: Props) {
                                v.hinshi === "Joshi" ? "Partikel" :
                                v.hinshi === "Kandoushi" ? "Kata Seru" :
                                v.hinshi === "Rentaishi" ? "Kata Penunjuk" : v.hinshi}
+                            </span>
+                          )}
+                          {v.transitivity && (
+                            <span className={`text-[9px] font-mono font-black uppercase tracking-widest px-2 py-0.5 rounded border ${
+                              v.transitivity === "transitive" 
+                                ? "text-orange-600 dark:text-orange-400 bg-orange-500/10 border-orange-500/20" 
+                                : "text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20"
+                            }`}>
+                              {v.transitivity === "transitive" ? "Transitif" : "Intransitif"}
                             </span>
                           )}
                         </div>

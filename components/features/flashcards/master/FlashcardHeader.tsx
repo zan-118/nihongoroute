@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Brain, Check, X } from "lucide-react";
+import { Brain, Check, X, Search } from "lucide-react";
 import { StudyMode } from "./types";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
@@ -30,7 +30,8 @@ export function FlashcardHeader({
   themeBgColor,
   themeShadow,
   router,
-}: FlashcardHeaderProps) {
+  combo = 0,
+}: FlashcardHeaderProps & { combo?: number }) {
   return (
     <header className="flex flex-col gap-4 md:gap-6 mb-8 md:mb-10">
       <div className="flex justify-between items-center gap-3">
@@ -56,15 +57,35 @@ export function FlashcardHeader({
                 setStudyMode("ujian");
                 setIsFlipped(false);
               }}
-              className={`flex-1 rounded-lg md:rounded-xl h-10 md:h-12 text-xs md:text-xs font-bold uppercase tracking-widest transition-all ${
+              className={`flex-1 rounded-lg md:rounded-xl h-10 md:h-12 text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all ${
                 studyMode === "ujian"
                   ? `${themeBgColor} text-black ${themeShadow} hover:bg-white`
-                  : "text-slate-500 hover:text-slate-300"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               <Check size={14} className="mr-1.5 md:mr-2 md:w-4 md:h-4" /> Uji Hafalan
             </Button>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setStudyMode("tantangan");
+                setIsFlipped(false);
+              }}
+              className={`flex-1 rounded-lg md:rounded-xl h-10 md:h-12 text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all ${
+                studyMode === "tantangan"
+                  ? `bg-rose-500 text-white shadow-lg shadow-rose-500/20`
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Search size={14} className="mr-1.5 md:mr-2 md:w-4 md:h-4" /> Tantangan
+            </Button>
           </Card>
+        )}
+
+        {combo > 1 && (
+          <div className="flex items-center gap-1.5 bg-orange-500 text-white px-3 py-2 rounded-xl animate-in zoom-in duration-300 shadow-lg shadow-orange-500/20">
+            <span className="text-sm font-black">🔥 {combo}</span>
+          </div>
         )}
 
         <Button
@@ -84,10 +105,10 @@ export function FlashcardHeader({
               variant="outline"
               className={`${themeColor} text-xs md:text-xs uppercase tracking-widest font-bold border-border h-auto bg-muted/50 px-3 py-1 md:px-4 md:py-1.5`}
             >
-              {studyMode === "latihan" ? "Mode Santai" : "Mode Ujian"}
+              {studyMode === "latihan" ? "Mode Santai" : studyMode === "tantangan" ? "Mode Tantangan" : "Mode Ujian"}
             </Badge>
             <span className="text-xs md:text-xs text-slate-500 font-bold uppercase tracking-widest hidden sm:inline opacity-80">
-              {studyMode === "latihan" ? "Belajar Santai" : "Kumpulkan XP"}
+              {studyMode === "latihan" ? "Belajar Santai" : studyMode === "tantangan" ? "Ingat & Ketik" : "Kumpulkan XP"}
             </span>
           </div>
           <Badge variant="ghost" className="text-muted-foreground font-mono text-xs md:text-sm font-bold bg-muted/50 px-3 py-1 md:px-4 md:py-1.5 rounded-lg md:rounded-xl border border-border h-auto">
