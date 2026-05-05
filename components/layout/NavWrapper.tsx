@@ -20,6 +20,7 @@ import { usePathname } from "next/navigation";
 export default function NavWrapper({ children }: NavWrapperProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const isExamPage = pathname?.includes("/exams/");
 
   return (
     <div className="relative min-h-screen bg-background text-foreground flex flex-col md:flex-row overflow-x-hidden w-full transition-colors duration-300">
@@ -32,11 +33,11 @@ export default function NavWrapper({ children }: NavWrapperProps) {
       </a>
 
       {/* Sidebar Desktop & Mobile Drawer */}
-      <Sidebar isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
+      {!isExamPage && <Sidebar isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />}
 
       {/* Area Konten Utama */}
-      <div className="flex-1 flex flex-col min-w-0 md:pl-72 transition-all duration-500">
-        <Topbar onMenuClick={() => setIsMobileMenuOpen(true)} />
+      <div className={`flex-1 flex flex-col min-w-0 ${!isExamPage ? 'md:pl-72' : ''} transition-all duration-500`}>
+        {!isExamPage && <Topbar onMenuClick={() => setIsMobileMenuOpen(true)} />}
         <AnimatePresence mode="wait">
           <motion.main 
             key={pathname}
@@ -45,17 +46,17 @@ export default function NavWrapper({ children }: NavWrapperProps) {
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             exit={{ opacity: 0, y: -12, filter: "blur(10px)" }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="flex-1 w-full flex flex-col pb-40 md:pb-12 outline-none"
+            className={`flex-1 w-full flex flex-col ${!isExamPage ? 'pb-40 md:pb-12' : 'pb-12'} outline-none`}
           >
             {children}
           </motion.main>
         </AnimatePresence>
       </div>
 
-      <FloatingActions />
+      {!isExamPage && <FloatingActions />}
 
       {/* Navigasi Khusus Seluler */}
-      <MobileNav />
+      {!isExamPage && <MobileNav />}
     </div>
   );
 }
