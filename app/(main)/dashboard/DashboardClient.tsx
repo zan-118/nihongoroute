@@ -96,7 +96,19 @@ export default function DashboardPage() {
   // Reconstruct a lightweight progress object for legacy components if needed,
   // but ideally we should update components to take individual props.
   const progress: UserProgress = {
-    id, isGuest, name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings
+    id: id || "guest", 
+    isGuest: !!isGuest, 
+    name: name || "Pelajar", 
+    xp: xp || 0, 
+    level: level || 1, 
+    streak: streak || 0, 
+    todayReviewCount: todayReviewCount || 0, 
+    lastStudyDate: lastStudyDate || null, 
+    studyDays: studyDays || {}, 
+    inventory: inventory || { streakFreeze: 0, claimedQuests: { date: "", quests: [] } }, 
+    srs: srs || {}, 
+    notifications: notifications || [], 
+    settings: settings || { notificationsEnabled: true }
   };
   const [guestId, setGuestId] = useState<string>("MEMUAT...");
   const [confirmModal, setConfirmModal] = useState({
@@ -218,8 +230,12 @@ export default function DashboardPage() {
       />
 
       {/* TAB NAVIGATION */}
-      <div className="flex items-center justify-center mb-12">
-        <div role="tablist" aria-label="Dashboard Navigation" className="bg-muted/50 dark:bg-white/[0.03] p-1.5 rounded-[2rem] border border-border/50 dark:border-white/5 flex gap-1 shadow-sm">
+      <div className="flex items-center gap-4 md:gap-5 mb-16">
+        <div 
+          role="tablist" 
+          aria-label="Dashboard Navigation" 
+          className="bg-muted/50 dark:bg-white/[0.03] p-1.5 rounded-[2rem] border border-border/50 dark:border-white/5 flex gap-1 shadow-sm max-w-full overflow-x-auto no-scrollbar"
+        >
           {tabs.map((tab) => (
             <motion.button
               key={tab.id}

@@ -55,7 +55,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
         <header className="mb-20">
           <motion.h1
             variants={itemVariants}
-            className="text-5xl md:text-7xl font-black uppercase tracking-tighter text-foreground"
+            className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-foreground"
           >
             MAU MULAI <br />
             <span className="text-primary drop-shadow-sm dark:drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">

@@ -21,7 +21,7 @@ export default function DashboardSettings({
   handleImportData, 
   handleResetData, 
   handleLogout,
-  itemVariants 
+  itemVariants
 }: DashboardSettingsProps) {
   return (
     <motion.div variants={itemVariants} className="md:col-span-12">

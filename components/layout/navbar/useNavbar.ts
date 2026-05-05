@@ -6,9 +6,10 @@ import {
   Trophy, 
   Layers, 
   BrainCircuit, 
-  Heart, 
   Settings,
   Share2,
+  Users,
+  HelpCircle,
   LucideIcon
 } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
@@ -48,11 +49,12 @@ export function useNavbar() {
     learn: [
       { href: "/review", label: "Hafalan (SRS)", icon: BrainCircuit },
       { href: "/library", label: "Pustaka", icon: Layers },
-      { href: "/community", label: "Komunitas", icon: Heart },
+      { href: "/social", label: "Komunitas", icon: Users },
     ],
     system: [
       { href: "/settings", label: "Pengaturan", icon: Settings },
       { href: "/share", label: "Bagikan", icon: Share2 },
+      { href: "/support", label: "Bantuan", icon: HelpCircle },
     ]
   };
 

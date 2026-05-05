@@ -23,7 +23,7 @@ const ACHIEVEMENTS: Achievement[] = [
     title: "Langkah Pertama",
     description: "Pelajari 5 kosakata pertama Anda",
     icon: Star,
-    condition: (p) => (Object.keys(p?.srs || {}).length / 5) * 100,
+    condition: (p) => ((Object.keys(p?.srs || {}).length) / 5) * 100,
     threshold: 5
   },
   {
@@ -31,7 +31,7 @@ const ACHIEVEMENTS: Achievement[] = [
     title: "Kolektor Kata",
     description: "Pelajari 50 kosakata",
     icon: BookOpen,
-    condition: (p) => (Object.keys(p?.srs || {}).length / 50) * 100,
+    condition: (p) => ((Object.keys(p?.srs || {}).length) / 50) * 100,
     threshold: 50
   },
   {
@@ -39,7 +39,7 @@ const ACHIEVEMENTS: Achievement[] = [
     title: "Pejuang Streak",
     description: "Pertahankan streak selama 7 hari",
     icon: Flame,
-    condition: (p) => (p.streak / 7) * 100,
+    condition: (p) => ((p?.streak || 0) / 7) * 100,
     threshold: 7
   },
   {
@@ -47,7 +47,7 @@ const ACHIEVEMENTS: Achievement[] = [
     title: "Elit Nihongo",
     description: "Capai Level 10",
     icon: Crown,
-    condition: (p) => (p.level / 10) * 100,
+    condition: (p) => ((p?.level || 0) / 10) * 100,
     threshold: 10
   },
   {
@@ -55,7 +55,7 @@ const ACHIEVEMENTS: Achievement[] = [
     title: "Pakar XP",
     description: "Kumpulkan total 5.000 XP",
     icon: Zap,
-    condition: (p) => (p.xp / 5000) * 100,
+    condition: (p) => ((p?.xp || 0) / 5000) * 100,
     threshold: 5000
   },
   {
@@ -63,12 +63,12 @@ const ACHIEVEMENTS: Achievement[] = [
     title: "Fokus Maksimal",
     description: "Selesaikan 100 review hari ini",
     icon: Target,
-    condition: (p) => (p.todayReviewCount / 100) * 100,
+    condition: (p) => ((p?.todayReviewCount || 0) / 100) * 100,
     threshold: 100
   }
 ];
 
-export function AchievementsGrid() {
+export default function AchievementsGrid() {
   const name = useUserStore(s => s.name);
   const xp = useUserStore(s => s.xp);
   const level = useUserStore(s => s.level);
@@ -84,7 +84,21 @@ export function AchievementsGrid() {
   const notifications = useUIStore(s => s.notifications);
   const settings = useUIStore(s => s.settings);
 
-  const progress: UserProgress = { id, isGuest, name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
+  const progress: UserProgress = { 
+    id: id || "guest", 
+    isGuest: !!isGuest, 
+    name: name || "Pelajar", 
+    xp: xp || 0, 
+    level: level || 1, 
+    streak: streak || 0, 
+    todayReviewCount: todayReviewCount || 0, 
+    lastStudyDate: lastStudyDate || null, 
+    studyDays: studyDays || {}, 
+    inventory: inventory || { streakFreeze: 0, claimedQuests: { date: "", quests: [] } }, 
+    srs: srs || {}, 
+    notifications: notifications || [], 
+    settings: settings || { notificationsEnabled: true } 
+  };
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

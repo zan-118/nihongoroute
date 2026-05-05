@@ -71,7 +71,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
         </div>
       </div>
 
-      <div className="flex items-center gap-3 md:gap-5">
+      <div className="flex items-center gap-4 md:gap-5">
         {/* Sync Status Indicator */}
         <div 
           aria-live="polite"
