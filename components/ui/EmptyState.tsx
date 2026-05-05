@@ -11,6 +11,7 @@ interface EmptyStateProps {
   description: string;
   actionText?: string;
   actionHref?: string;
+  onClick?: () => void;
 }
 
 export default function EmptyState({
@@ -19,6 +20,7 @@ export default function EmptyState({
   description,
   actionText,
   actionHref,
+  onClick,
 }: EmptyStateProps) {
   return (
     <motion.div 
@@ -37,10 +39,16 @@ export default function EmptyState({
         {description}
       </p>
 
-      {actionText && actionHref && (
-        <Button asChild className="h-14 px-10 bg-primary hover:bg-foreground text-primary-foreground font-black uppercase tracking-widest rounded-2xl shadow-lg transition-all">
-          <Link href={actionHref}>{actionText}</Link>
-        </Button>
+      {actionText && (
+        actionHref ? (
+          <Button asChild className="h-14 px-10 bg-primary hover:bg-foreground text-primary-foreground font-black uppercase tracking-widest rounded-2xl shadow-lg transition-all">
+            <Link href={actionHref}>{actionText}</Link>
+          </Button>
+        ) : (
+          <Button onClick={onClick} className="h-14 px-10 bg-primary hover:bg-foreground text-primary-foreground font-black uppercase tracking-widest rounded-2xl shadow-lg transition-all">
+            {actionText}
+          </Button>
+        )
       )}
     </motion.div>
   );

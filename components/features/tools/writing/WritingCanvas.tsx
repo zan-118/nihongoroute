@@ -9,15 +9,17 @@ import XPPop from "@/components/features/gamification/XPPop";
 import { useWritingCanvas } from "../canvas/useWritingCanvas";
 
 interface WritingCanvasProps {
-  character: string;
+  character?: string;
   strokeColor?: string;
   guideColor?: string;
+  className?: string;
 }
 
 export default function WritingCanvas({ 
-  character, 
+  character = "", 
   strokeColor = "#ef4444", 
-  guideColor = "#a855f7" 
+  guideColor = "#a855f7",
+  className = "max-w-[280px] sm:max-w-sm mx-auto"
 }: WritingCanvasProps) {
   const {
     canvasRef,
@@ -34,7 +36,7 @@ export default function WritingCanvas({
   } = useWritingCanvas({ strokeColor });
 
   return (
-    <div className="flex flex-col gap-4 w-full max-w-[280px] sm:max-w-sm mx-auto">
+    <div className={`flex flex-col gap-4 w-full ${className}`}>
       <Card
         ref={containerRef}
         className="relative w-full aspect-square bg-muted/50 dark:bg-black/40 border border-border dark:border-white/[0.08] rounded-2xl overflow-hidden group touch-none shadow-none"
@@ -77,32 +79,36 @@ export default function WritingCanvas({
       </Card>
 
       <Card className="grid grid-cols-3 gap-2 bg-white/[0.02] p-2 rounded-2xl border-white/[0.08] shadow-none">
-        <Button
-          variant="ghost"
-          onClick={() => setShowGuide(!showGuide)}
-          className={`flex flex-col items-center justify-center gap-1.5 h-auto py-2.5 rounded-xl text-[8px] font-bold uppercase tracking-wider transition-all ${
-            showGuide
-              ? "bg-red-500/10 text-red-600 dark:text-red-500 border-red-500/20"
-              : "bg-muted dark:bg-white/[0.04] text-muted-foreground border-border dark:border-white/[0.06]"
-          } border`}
-        >
-          {showGuide ? <Eye size={16} /> : <EyeOff size={16} />}
-          <span>Guide</span>
-        </Button>
+        {character && (
+          <>
+            <Button
+              variant="ghost"
+              onClick={() => setShowGuide(!showGuide)}
+              className={`flex flex-col items-center justify-center gap-1.5 h-auto py-2.5 rounded-xl text-[8px] font-bold uppercase tracking-wider transition-all ${
+                showGuide
+                  ? "bg-red-500/10 text-red-600 dark:text-red-500 border-red-500/20"
+                  : "bg-muted dark:bg-white/[0.04] text-muted-foreground border-border dark:border-white/[0.06]"
+              } border`}
+            >
+              {showGuide ? <Eye size={16} /> : <EyeOff size={16} />}
+              <span>Guide</span>
+            </Button>
 
-        <Button
-          variant="ghost"
-          onClick={handleReplay}
-          className="flex flex-col items-center justify-center gap-1.5 h-auto py-2.5 rounded-xl bg-muted dark:bg-white/[0.04] text-muted-foreground border border-border dark:border-white/[0.06] text-[8px] font-bold uppercase tracking-wider hover:text-purple-600 dark:hover:text-purple-400 hover:border-purple-500/20 transition-all"
-        >
-          <RotateCcw size={16} />
-          <span>Replay</span>
-        </Button>
+            <Button
+              variant="ghost"
+              onClick={handleReplay}
+              className="flex flex-col items-center justify-center gap-1.5 h-auto py-2.5 rounded-xl bg-muted dark:bg-white/[0.04] text-muted-foreground border border-border dark:border-white/[0.06] text-[8px] font-bold uppercase tracking-wider hover:text-purple-600 dark:hover:text-purple-400 hover:border-purple-500/20 transition-all"
+            >
+              <RotateCcw size={16} />
+              <span>Replay</span>
+            </Button>
+          </>
+        )}
 
         <Button
           variant="ghost"
           onClick={clearCanvas}
-          className="flex flex-col items-center justify-center gap-1.5 h-auto py-2.5 rounded-xl bg-muted dark:bg-white/[0.04] text-muted-foreground border border-border dark:border-white/[0.06] text-[8px] font-bold uppercase tracking-wider hover:text-red-600 dark:hover:text-red-500 hover:border-red-500/20 transition-all"
+          className={`flex flex-col items-center justify-center gap-1.5 h-auto py-2.5 rounded-xl bg-muted dark:bg-white/[0.04] text-muted-foreground border border-border dark:border-white/[0.06] text-[8px] font-bold uppercase tracking-wider hover:text-red-600 dark:hover:text-red-500 hover:border-red-500/20 transition-all ${!character ? 'col-span-3' : ''}`}
         >
           <Trash2 size={16} />
           <span>Clear</span>

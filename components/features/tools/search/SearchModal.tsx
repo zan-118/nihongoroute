@@ -27,7 +27,7 @@ const SEARCH_ITEMS: SearchItem[] = [
   { id: "pengaturan", title: "Pengaturan", description: "Kelola profil dan preferensi aplikasi", href: "/settings", icon: Settings, category: "Sistem" },
   { id: "bagikan", title: "Bagikan", description: "Ajak teman belajar bersama di NihongoRoute", href: "/share", icon: Share2, category: "Sistem" },
   { id: "quick-review", title: "Review Sekarang", description: "Mulai sesi review SRS yang tertunda", href: "/review", icon: Zap, category: "Aksi Cepat" },
-  { id: "quick-kana", title: "Belajar Kana", description: "Latihan dasar Hiragana & Katakana", href: "/courses/basics", icon: BookOpen, category: "Aksi Cepat" },
+  { id: "quick-kana", title: "Belajar Kana", description: "Latihan dasar Hiragana & Katakana", href: "/tools/kana", icon: BookOpen, category: "Aksi Cepat" },
 ];
 
 export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {

@@ -10,7 +10,7 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Zap, ArrowRight, BookOpen } from "lucide-react";
+import { ArrowRight, BookOpen } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 const containerVariants = {
@@ -65,29 +65,6 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
           </motion.h1>
         </header>
 
-        {/* SECTION: BASICS (FOUNDATION) */}
-        <motion.section variants={itemVariants} className="mb-24">
-          <div className="flex items-center gap-6 mb-8">
-            <h3 className="text-xs md:text-xs font-bold uppercase tracking-widest text-primary/60 dark:text-primary/50">
-              Dasar Bahasa
-            </h3>
-            <div className="h-[1px] flex-1 bg-border" />
-          </div>
-          <Link href="/courses/basics">
-            <motion.div>
-              <Card className="rounded-2xl p-6 md:p-8 bg-card border border-border shadow-xl cursor-pointer group hover:border-primary/40 hover:bg-primary/[0.02] transition-all duration-300 relative overflow-hidden">
-                <div className="flex justify-between items-center relative z-10">
-                  <h4 className="text-2xl md:text-3xl font-black uppercase text-foreground group-hover:text-primary transition-colors tracking-tight">
-                    Kuasai: <span className="text-primary group-hover:text-foreground transition-colors">Kana</span>
-                  </h4>
-                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-muted border border-border flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white dark:group-hover:text-black group-hover:border-none transition-all duration-300">
-                    <Zap size={24} />
-                  </div>
-                </div>
-              </Card>
-            </motion.div>
-          </Link>
-        </motion.section>
 
         {/* SECTION: JLPT TRACKS */}
         {jlptCategories.length > 0 && (

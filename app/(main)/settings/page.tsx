@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-
 import { createClient } from "@/lib/supabase/client";
 import { motion, Variants } from "framer-motion";
-import { Save, Upload, Trash2, LogOut, Settings as SettingsIcon, Layers, ShieldAlert, Database, Cloud, CloudCheck, RefreshCw } from "lucide-react";
+import { Settings as SettingsIcon, Layers, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +17,11 @@ import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useUIStore } from "@/store/useUIStore";
 import { useAuthStore } from "@/store/useAuthStore";
+
+// Sub-components
+import ProfileSection from "./components/ProfileSection";
+import DataManagementSection from "./components/DataManagementSection";
+import SyncStatusSection from "./components/SyncStatusSection";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -33,33 +37,17 @@ const itemVariants: Variants = {
 };
 
 export default function SettingsPage() {
-  const { updateProfileName, resetUser } = useUserStore();
-    const { dirtySrs, clearDirtySrs, resetSRS } = useSRSStore();
-    const { exportData, importData, resetUI } = useUIStore();
-    const { isAuthenticated, resetAuth } = useAuthStore();
-    const { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory } = useUserStore();
-    const { srs } = useSRSStore();
-    const { notifications, settings } = useUIStore();
-
-    const resetAll = () => {
-      resetAuth();
-      resetUser();
-      resetSRS();
-      resetUI();
-    };
-    const progress = { name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
+  const { updateProfileName, resetUser, id, isGuest, name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory } = useUserStore();
+  const { dirtySrs, clearDirtySrs, resetSRS, srs } = useSRSStore();
+  const { exportData, importData, resetUI, notifications, settings } = useUIStore();
+  const { isAuthenticated, resetAuth } = useAuthStore();
+  
   const hasMounted = useHasMounted();
   const [isSyncing, setIsSyncing] = useState(false);
-  const [newName, setNewName] = useState("");
   const router = useRouter();
   const supabase = createClient();
 
-  // Update newName when progress.name is available after mounting
-  useEffect(() => {
-    if (hasMounted && progress.name) {
-      setNewName(progress.name);
-    }
-  }, [hasMounted, progress.name]);
+  const progress = { id, isGuest, name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings };
 
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,
@@ -74,6 +62,13 @@ export default function SettingsPage() {
     setConfirmModal({ isOpen: true, title, description, confirmText, isDestructive, onConfirm });
   };
   const closeConfirm = () => setConfirmModal(prev => ({ ...prev, isOpen: false }));
+
+  const resetAll = () => {
+    resetAuth();
+    resetUser();
+    resetSRS();
+    resetUI();
+  };
 
   const handleExportData = () => exportData();
 
@@ -105,7 +100,6 @@ export default function SettingsPage() {
       () => {
         resetAll();
         toast.success("Semua data progres telah direset.");
-        // Kita tidak perlu reload karena Zustand akan mengupdate UI secara reaktif
       }
     );
   };
@@ -118,7 +112,7 @@ export default function SettingsPage() {
       true,
       async () => {
         await supabase.auth.signOut();
-        resetAll(); // Reset local state on logout for safety
+        resetAll();
         router.push("/login");
       }
     );
@@ -153,6 +147,20 @@ export default function SettingsPage() {
     }
   };
 
+  if (!hasMounted) {
+    return (
+      <div className="max-w-3xl mx-auto pt-12 space-y-8 px-4">
+         <div className="space-y-4">
+            <Skeleton className="h-6 w-32 rounded-full" />
+            <Skeleton className="h-12 w-64" />
+            <Skeleton className="h-4 w-96" />
+         </div>
+         <Skeleton className="h-[200px] w-full rounded-3xl" />
+         <Skeleton className="h-[200px] w-full rounded-2xl" />
+      </div>
+    );
+  }
+
   return (
     <div className="w-full min-h-screen bg-background relative overflow-hidden pt-12 pb-20 px-4 md:px-6 transition-colors duration-300">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[600px] h-[300px] bg-primary/5 blur-[100px] rounded-full pointer-events-none opacity-40" />
@@ -167,27 +175,15 @@ export default function SettingsPage() {
         onConfirm={confirmModal.onConfirm}
       />
 
-      {!hasMounted ? (
-        <div className="max-w-3xl mx-auto pt-12 space-y-8">
-           <div className="space-y-4">
-              <Skeleton className="h-6 w-32 rounded-full" />
-              <Skeleton className="h-12 w-64" />
-              <Skeleton className="h-4 w-96" />
-           </div>
-           <Skeleton className="h-[200px] w-full rounded-3xl" />
-           <Skeleton className="h-[200px] w-full rounded-2xl" />
-        </div>
-      ) : (
       <motion.div
         className="max-w-3xl mx-auto relative z-10"
         initial="hidden"
         animate="visible"
         variants={containerVariants}
       >
-        {/* HEADER */}
         <header className="mb-8 px-1">
           <motion.div variants={itemVariants}>
-            <Badge variant="outline" className="bg-muted text-muted-foreground border-border px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-4 flex items-center gap-1.5 w-fit neo-inset shadow-none">
+            <Badge variant="outline" className="bg-muted text-muted-foreground border-border px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-4 flex items-center gap-1.5 w-fit shadow-none">
               <SettingsIcon size={12} /> Konfigurasi
             </Badge>
           </motion.div>
@@ -200,144 +196,32 @@ export default function SettingsPage() {
         </header>
 
         <div className="grid grid-cols-1 gap-5 px-1">
-          {/* PROFILE SECTION */}
-          <motion.div variants={itemVariants}>
-            <Card className="bg-card backdrop-blur-xl border border-border rounded-3xl p-6 md:p-8 neo-card shadow-sm overflow-hidden relative">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl rounded-full -mr-16 -mt-16" />
-              
-              <div className="flex flex-col md:flex-row items-center gap-6 relative z-10">
-                <div className="w-20 h-20 rounded-[2rem] bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-white shadow-lg shadow-primary/20">
-                  <span className="text-3xl font-black italic">{(progress.name || "S").charAt(0).toUpperCase()}</span>
-                </div>
-                
-                <div className="flex-1 w-full text-center md:text-left">
-                  <h2 className="text-xl font-black uppercase italic tracking-tight text-foreground mb-1">Profil Saya</h2>
-                  <p className="text-xs text-muted-foreground mb-4 font-medium uppercase tracking-widest">Atur identitas belajarmu</p>
-                  
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <div className="relative flex-1">
-                      <input 
-                        type="text" 
-                        value={newName}
-                        onChange={(e) => setNewName(e.target.value)}
-                        placeholder="Masukkan nama Anda..."
-                        className="w-full h-12 bg-muted/50 border border-border rounded-xl px-4 text-sm font-bold text-foreground focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                      />
-                    </div>
-                    <Button 
-                      onClick={async () => {
-                        setIsSyncing(true);
-                        try {
-                          // 1. Update lokal
-                          updateProfileName(newName);
-                          
-                          // 2. Update Cloud jika login
-                          if (isAuthenticated) {
-                            const { data: { user } } = await supabase.auth.getUser();
-                            if (user) {
-                              const { error } = await supabase
-                                .from("profiles")
-                                .update({ full_name: newName.trim() })
-                                .eq("id", user.id);
-                              
-                              if (error) throw error;
-                            }
-                          }
-                          toast.success("Nama profil berhasil diperbarui!");
-                        } catch (error) {
-                          console.error("Gagal sinkron nama:", error);
-                          toast.error("Nama disimpan lokal, tapi gagal sinkron ke cloud.");
-                        } finally {
-                          setIsSyncing(false);
-                        }
-                      }}
-                      disabled={isSyncing}
-                      className="h-12 bg-primary text-primary-foreground font-black uppercase tracking-widest text-xs rounded-xl px-8 shadow-lg hover:shadow-primary/20 transition-all disabled:opacity-50"
-                    >
-                      {isSyncing ? "Menyimpan..." : "Simpan Nama"}
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </motion.div>
+          <ProfileSection 
+            name={name || ""} 
+            isAuthenticated={isAuthenticated} 
+            updateProfileName={updateProfileName} 
+            itemVariants={itemVariants} 
+          />
 
-          {/* DATA MANAGEMENT CARD */}
-          <motion.div variants={itemVariants}>
-            <Card className="bg-card backdrop-blur-xl border border-border rounded-2xl p-6 md:p-7 neo-card shadow-sm">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/15">
-                  <Database size={20} className="text-primary" />
-                </div>
-                <h2 className="text-foreground font-black uppercase italic tracking-tight text-base">Kelola Data & Akun</h2>
-              </div>
+          <DataManagementSection 
+            isAuthenticated={isAuthenticated}
+            handleExportData={handleExportData}
+            handleImportData={handleImportData}
+            handleResetData={handleResetData}
+            handleLogout={handleLogout}
+            itemVariants={itemVariants}
+          />
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <Button
-                  variant="outline"
-                  onClick={handleExportData}
-                  className="h-12 bg-muted/30 border-border hover:bg-primary/10 hover:border-primary/30 hover:text-primary text-muted-foreground rounded-xl uppercase tracking-wider font-bold text-xs transition-all group"
-                >
-                  <Save size={16} className="mr-2 group-hover:scale-110 transition-transform" /> Simpan Backup
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={handleImportData}
-                  className="h-12 bg-muted/30 border-border hover:bg-purple-500/10 hover:border-purple-500/30 hover:text-purple-600 dark:hover:text-purple-400 text-muted-foreground rounded-xl uppercase tracking-wider font-bold text-xs transition-all group"
-                >
-                  <Upload size={16} className="mr-2 group-hover:scale-110 transition-transform" /> Muat Backup
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={handleResetData}
-                  className="h-12 bg-destructive/5 border-destructive/10 hover:bg-destructive/15 hover:border-destructive text-destructive rounded-xl uppercase tracking-wider font-bold text-xs transition-all group"
-                >
-                  <Trash2 size={16} className="mr-2 group-hover:scale-110 transition-transform" /> Reset Semua Progres
-                </Button>
-                {isAuthenticated && (
-                  <Button
-                    variant="outline"
-                    onClick={handleLogout}
-                    className="h-12 bg-destructive/10 border-destructive/15 hover:bg-destructive/20 hover:border-destructive text-destructive rounded-xl uppercase tracking-wider font-bold text-xs transition-all group"
-                  >
-                    <LogOut size={16} className="mr-2 group-hover:translate-x-0.5 transition-transform" /> Keluar Akun
-                  </Button>
-                )}
-              </div>
-            </Card>
-          </motion.div>
-
-          {/* SYNC STATUS CARD */}
-          <motion.div variants={itemVariants}>
-            <Card className="bg-card backdrop-blur-xl border border-border rounded-2xl p-6 neo-card shadow-sm">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${dirtySrs.size > 0 ? 'bg-amber-500/10 border-amber-500/20 text-amber-500' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500'}`}>
-                    {dirtySrs.size > 0 ? <Cloud size={24} /> : <CloudCheck size={24} />}
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-black uppercase tracking-tight text-foreground">Status Sinkronisasi</h3>
-                    <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest mt-0.5">
-                      {dirtySrs.size > 0 ? `${dirtySrs.size} Item belum tersinkron` : "Semua data aman di Cloud"}
-                    </p>
-                  </div>
-                </div>
-                <Button 
-                  onClick={handleManualSync}
-                  disabled={isSyncing || dirtySrs.size === 0}
-                  variant="outline" 
-                  className="h-10 px-4 bg-muted/30 border-border rounded-xl text-xs font-black uppercase tracking-widest transition-all"
-                >
-                  <RefreshCw size={14} className={`mr-2 ${isSyncing ? 'animate-spin' : ''}`} />
-                  {isSyncing ? "Sinkron..." : "Sinkron Sekarang"}
-                </Button>
-              </div>
-            </Card>
-          </motion.div>
+          <SyncStatusSection 
+            dirtySrsCount={dirtySrs.size}
+            isSyncing={isSyncing}
+            handleManualSync={handleManualSync}
+            itemVariants={itemVariants}
+          />
 
           {/* DANGER ZONE INFO */}
           <motion.div variants={itemVariants}>
-            <Card className="bg-destructive/[0.02] border-destructive/10 rounded-2xl p-5 md:p-6 neo-card shadow-sm flex items-start gap-4">
+            <Card className="bg-destructive/[0.02] border-destructive/10 rounded-2xl p-5 md:p-6 shadow-sm flex items-start gap-4">
               <div className="w-10 h-10 shrink-0 rounded-xl bg-destructive/10 flex items-center justify-center border border-destructive/15">
                 <ShieldAlert size={20} className="text-destructive" />
               </div>
@@ -352,7 +236,7 @@ export default function SettingsPage() {
 
           {/* MOBILE EXTRA NAV */}
           <motion.div variants={itemVariants} className="md:hidden">
-            <Card className="bg-muted/40 border border-border rounded-2xl p-5 neo-card shadow-sm">
+            <Card className="bg-muted/40 border border-border rounded-2xl p-5 shadow-sm">
               <h3 className="text-muted-foreground font-bold uppercase tracking-wider text-xs mb-3">Eksplorasi Lainnya</h3>
               <Button asChild variant="outline" className="w-full h-11 bg-muted/30 border-border justify-start hover:bg-background text-foreground rounded-xl font-bold uppercase tracking-wider text-xs">
                 <Link href="/library">
@@ -363,7 +247,6 @@ export default function SettingsPage() {
           </motion.div>
         </div>
       </motion.div>
-      )}
     </div>
   );
 }

@@ -13,8 +13,8 @@ const COMMON_KEYWORDS: KeywordLink[] = [
   { keyword: "Kata Sifat", href: "/library/cheatsheet#adjectives", description: "Keiyōshi - Kata yang mendeskripsikan benda." },
   { keyword: "JLPT", href: "/exams", description: "Japanese Language Proficiency Test." },
   { keyword: "Kanji", href: "/library/kanji", description: "Karakter logografis yang digunakan dalam penulisan Jepang." },
-  { keyword: "Hiragana", href: "/courses/basics#hiragana", description: "Suku kata dasar dalam penulisan bahasa Jepang." },
-  { keyword: "Katakana", href: "/courses/basics#katakana", description: "Suku kata untuk kata serapan asing." },
+  { keyword: "Hiragana", href: "/tools/kana#hiragana", description: "Suku kata dasar dalam penulisan bahasa Jepang." },
+  { keyword: "Katakana", href: "/tools/kana#katakana", description: "Suku kata untuk kata serapan asing." },
 ];
 
 /**

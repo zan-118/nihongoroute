@@ -1,14 +1,15 @@
 /**
- * @file app/(main)/courses/basics/page.tsx
+ * @file app/(main)/tools/kana/page.tsx
  * @description Halaman fondasi aksara bahasa Jepang (Matriks Kana) yang memuat tabel Hiragana & Katakana lengkap.
  * @module Client Component
  */
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PenTool, ChevronLeft, LayoutGrid, Sparkles, Swords, Heart, Trophy } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import WritingCanvas from "@/components/features/tools/writing/WritingCanvas";
 import { Button } from "@/components/ui/button";
@@ -30,10 +31,10 @@ const kanaData = {
       ["あ", "い", "う", "え", "お"],
       ["か", "き", "く", "け", "こ"],
       ["さ", "し", "す", "せ", "そ"],
-      ["た", "ち", "つ", "て", "と"],
+      ["た", "ち", "つ", "te", "と"],
       ["な", "に", "ぬ", "ね", "の"],
       ["は", "ひ", "ふ", "へ", "ほ"],
-      ["ま", "み", "む", "め", "も"],
+      ["ま", "mi", "む", "me", "も"],
       ["や", "", "ゆ", "", "よ"],
       ["ら", "り", "る", "れ", "ろ"],
       ["わ", "", "", "", "を"],
@@ -47,7 +48,7 @@ const kanaData = {
       ["ナ", "ニ", "ヌ", "ネ", "ノ"],
       ["ハ", "ヒ", "フ", "ヘ", "ホ"],
       ["マ", "ミ", "ム", "メ", "モ"],
-      ["ヤ", "", "ユ", "", "ヨ"],
+      ["ヤ", "", "ユ", "", "よ"],
       ["ラ", "リ", "ル", "レ", "ロ"],
       ["ワ", "", "", "", "ヲ"],
       ["ン", "", "", "", ""],
@@ -70,7 +71,7 @@ const kanaData = {
     hiragana: [
       ["が", "ぎ", "ぐ", "げ", "ご"],
       ["ざ", "じ", "ず", "ぜ", "ぞ"],
-      ["だ", "ぢ", "づ", "で", "ど"],
+      ["だ", "ぢ", "づ", "de", "ど"],
       ["ば", "び", "ぶ", "べ", "ぼ"],
       ["ぱ", "ぴ", "ぷ", "ぺ", "ぽ"],
     ],
@@ -93,15 +94,15 @@ const kanaData = {
     hiragana: [
       ["きゃ", "きゅ", "きょ"],
       ["しゃ", "しゅ", "しょ"],
-      ["ちゃ", "ちゅ", "ちょ"],
+      ["ちゃ", "ちゅ", "cho"],
       ["にゃ", "にゅ", "にょ"],
       ["ひゃ", "ひゅ", "ひょ"],
-      ["みゃ", "みゅ", "みょ"],
-      ["りゃ", "りゅ", "りょ"],
-      ["ぎゃ", "ぎゅ", "ぎょ"],
-      ["じゃ", "じゅ", "じょ"],
-      ["びゃ", "びゅ", "びょ"],
-      ["ぴゃ", "ぴゅ", "ぴょ"],
+      ["みゃ", "miゅ", "miょ"],
+      ["りゃ", "ryu", "ryo"],
+      ["ぎゃ", "gyu", "gyo"],
+      ["じゃ", "ju", "jo"],
+      ["びゃ", "byu", "byo"],
+      ["ぴゃ", "pyu", "pyo"],
     ],
     katakana: [
       ["キャ", "キュ", "キョ"],
@@ -135,13 +136,23 @@ const kanaData = {
 type KanaType = "hiragana" | "katakana";
 type KanaCategory = "seion" | "dakuon" | "yoon";
 
-export default function BasicsPage() {
+
+export default function KanaPage() {
+  const searchParams = useSearchParams();
   const [type, setType] = useState<KanaType>("hiragana");
   const [category, setCategory] = useState<KanaCategory>("seion");
   const [selectedChar, setSelectedChar] = useState<{
     char: string;
     romaji: string;
   } | null>(null);
+
+  // Auto-open writing dialog if mode=writing is present
+  useEffect(() => {
+    const mode = searchParams.get("mode");
+    if (mode === "writing" && !selectedChar) {
+      setSelectedChar({ char: "あ", romaji: "a" });
+    }
+  }, [searchParams, selectedChar]);
 
   const [isQuizActive, setIsQuizActive] = useState(false);
   const [quizScore, setQuizScore] = useState(0);
@@ -241,8 +252,8 @@ export default function BasicsPage() {
               asChild
               className="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest bg-muted border-border"
             >
-              <Link href="/courses">
-                <ChevronLeft size={14} className="mr-2" /> Kembali ke Pusat
+              <Link href="/tools">
+                <ChevronLeft size={14} className="mr-2" /> Kembali ke Peralatan
               </Link>
             </Button>
           </nav>
@@ -250,7 +261,7 @@ export default function BasicsPage() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
             <div>
               <h1 className="text-4xl md:text-5xl font-black text-foreground uppercase tracking-tight">
-                Huruf <span className={themeColor}>Dasar</span>
+                Master <span className={themeColor}>Kana</span>
               </h1>
               <p className="text-muted-foreground text-xs mt-2 max-w-md font-medium leading-relaxed">
                 Kunci utama untuk bisa membaca teks Jepang. Kuasai Hiragana & 

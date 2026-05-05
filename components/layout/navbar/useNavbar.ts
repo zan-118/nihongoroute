@@ -10,6 +10,7 @@ import {
   Share2,
   Users,
   HelpCircle,
+  Wrench,
   LucideIcon
 } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
@@ -44,6 +45,7 @@ export function useNavbar() {
     main: [
       { href: "/dashboard", label: "Dasbor", icon: LayoutDashboard },
       { href: "/courses", label: "Materi", icon: BookOpen },
+      { href: "/tools", label: "Peralatan", icon: Wrench },
       { href: "/exams", label: "Ujian", icon: Trophy },
     ],
     learn: [
