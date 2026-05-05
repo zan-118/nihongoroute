@@ -234,19 +234,24 @@ export function ExamPlaying({
                     {sections[currentSection]?.map((qIdx) => {
                       const isAnswered = answers[exam.questions[qIdx]._key] !== undefined;
                       const isActive = qIdx === currentQuestionIndex;
+                      const isLocked = currentSection === "listening" && !exam.choukaiAudioUrl && qIdx !== currentQuestionIndex;
+
                       return (
                         <button
                           key={qIdx}
-                          onClick={() => goToQuestion(qIdx)}
+                          disabled={isLocked}
+                          onClick={() => !isLocked && goToQuestion(qIdx)}
                           className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-mono font-bold transition-all border ${
                             isActive
                               ? "bg-red-600 text-white border-transparent shadow-md scale-105"
                               : isAnswered
                               ? "bg-green-500/10 text-green-600 border-green-500/20"
+                              : isLocked
+                              ? "bg-transparent text-muted-foreground/30 border-border/50 cursor-not-allowed"
                               : "bg-white dark:bg-white/5 text-muted-foreground border-border dark:border-white/10"
                           }`}
                         >
-                          {qIdx + 1}
+                          {isLocked ? <LockIcon size={10} /> : qIdx + 1}
                         </button>
                       );
                     })}

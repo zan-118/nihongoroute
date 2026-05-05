@@ -214,6 +214,14 @@ export function useMockExamEngine(exam: ExamData) {
     return () => clearInterval(timer);
   }, [gameState, finishExam]);
 
+  // Stop audio when switching questions (to prevent overlap)
+  useEffect(() => {
+    if (audioRef.current && !exam.choukaiAudioUrl) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+  }, [currentQuestionIndex, exam.choukaiAudioUrl]);
+
   const handlePlayAudio = useCallback(() => {
     if (exam.choukaiAudioUrl) {
       if (audioRef.current) {
@@ -254,13 +262,21 @@ export function useMockExamEngine(exam: ExamData) {
       const targetQuestion = exam.questions[index];
       const targetSection = targetQuestion.section || "vocabulary";
       
+      // Block jumping in listening section (linear navigation only)
+      if (currentSection === "listening" && !exam.choukaiAudioUrl) {
+        if (index !== currentQuestionIndex) {
+          toast.error("Bagian Mendengar (Choukai) harus dikerjakan secara berurutan.");
+          return;
+        }
+      }
+
       // Only allow jumping if the target question is in the CURRENT active section
       if (targetSection === currentSection) {
         setCurrentQuestionIndex(index);
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
     }
-  }, [exam.questions, currentSection]);
+  }, [exam.questions, currentSection, currentQuestionIndex, exam.choukaiAudioUrl]);
 
   return {
     gameState, setGameState, timeLeft, answers, currentQuestionIndex, audioStatus,
