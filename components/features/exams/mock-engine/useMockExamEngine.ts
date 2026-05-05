@@ -20,8 +20,8 @@ const performScoreCalculation = (questions: ExamQuestion[], answers: Record<stri
   const sectionBreakdown: Record<string, { total: number; correct: number }> = {
     vocabulary: { total: 0, correct: 0 },
     grammar: { total: 0, correct: 0 },
-    reading: { total: 0, correct: 0 },
     listening: { total: 0, correct: 0 },
+    reading: { total: 0, correct: 0 },
   };
 
   questions.forEach((q) => {
@@ -65,7 +65,7 @@ export function useMockExamEngine(exam: ExamData) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Order of sections
-  const sectionOrder = ["vocabulary", "grammar", "reading", "listening"];
+  const sectionOrder = ["vocabulary", "grammar", "listening", "reading"];
   const availableSections = sectionOrder.filter(s => sections[s] && sections[s].length > 0);
 
   const activeQuestion = useMemo(() => exam.questions[currentQuestionIndex], [exam.questions, currentQuestionIndex]);

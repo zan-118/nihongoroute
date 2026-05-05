@@ -103,7 +103,7 @@ export function ExamPlaying({
   if (!activeQuestion) return null;
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B0E14] text-foreground pb-20 font-sans selection:bg-red-500/30">
+    <div className="fixed inset-0 z-[100] bg-[#F8FAFC] dark:bg-[#0B0E14] text-foreground overflow-y-auto pb-32 font-sans selection:bg-red-500/30">
       <audio ref={audioRef} className="hidden" />
       <div className="max-w-4xl mx-auto px-4 md:px-6">
         <header className="sticky top-0 z-50 pt-6 pb-4 bg-[#F8FAFC]/80 dark:bg-[#0B0E14]/80 backdrop-blur-md">
@@ -258,7 +258,7 @@ export function ExamPlaying({
         </main>
       </div>
 
-      <footer className="fixed bottom-0 left-0 right-0 z-50 bg-white/80 dark:bg-[#0B0E14]/80 backdrop-blur-md border-t border-border dark:border-white/10 p-4">
+      <footer className="fixed bottom-0 left-0 right-0 z-[110] bg-white/80 dark:bg-[#0B0E14]/80 backdrop-blur-md border-t border-border dark:border-white/10 p-4 pb-safe">
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
           <Button
             onClick={prevQuestion}

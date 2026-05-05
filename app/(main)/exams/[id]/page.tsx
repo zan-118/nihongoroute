@@ -24,7 +24,7 @@ interface PageProps {
 // ======================
 // CONFIG / CONSTANTS
 // ======================
-export const revalidate = 60;
+export const revalidate = 0;
 
 // ======================
 // MAIN EXECUTION
