@@ -105,7 +105,7 @@ export default defineType({
               title: "Pilihan Jawaban",
               type: "array",
               of: [{ type: "string" }],
-              validation: (Rule) => Rule.required().length(4),
+              validation: (Rule) => Rule.required().min(3).max(4),
             },
             {
               name: "correctAnswer",
