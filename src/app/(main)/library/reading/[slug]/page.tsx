@@ -13,5 +13,5 @@ export default async function ReadingPage({ params }: { params: Promise<{ slug: 
     notFound();
   }
 
-  return <ReadingPageClient data={data} />;
+  return <ReadingPageClient data={data as unknown as import("@/components/features/reading/types").ReadingData} />;
 }

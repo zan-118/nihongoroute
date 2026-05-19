@@ -2,9 +2,14 @@ import React from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+export interface MinimalLessonData {
+  slug: string;
+  title: string;
+}
+
 interface LessonNavigationProps {
-  prevLesson: any;
-  nextLesson: any;
+  prevLesson: MinimalLessonData | null;
+  nextLesson: MinimalLessonData | null;
   levelCode: string;
   categoryId: string;
 }

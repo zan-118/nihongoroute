@@ -5,7 +5,7 @@
 
 export interface TranscriptLine {
   _key: string;
-  text: string | any[]; // Bisa text biasa atau Portable Text (VocabTrigger)
+  text: string | unknown[]; // Bisa text biasa atau Portable Text (VocabTrigger)
   startTime: number; // Dalam detik
   endTime: number; // Dalam detik
   speaker?: string;

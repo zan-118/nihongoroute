@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
@@ -10,7 +11,7 @@ import { Inventory, Settings, LessonProgress } from "@/store/types";
 import { Session } from "@supabase/supabase-js";
 
 export function useCloudMutation(session: Session | null | undefined) {
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const setSyncing = useUIStore((s) => s.setSyncing);
   const setSyncError = useUIStore((s) => s.setSyncError);
   const clearDirtySrs = useSRSStore((s) => s.clearDirtySrs);

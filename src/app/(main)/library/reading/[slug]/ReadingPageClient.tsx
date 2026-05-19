@@ -131,7 +131,6 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
             isZenMode={isZenMode}
             onComplete={() => {
               // Handle completion logic here
-              console.log("Reading completed");
             }}
           />
         </div>

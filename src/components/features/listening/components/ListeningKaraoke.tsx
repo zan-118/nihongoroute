@@ -7,6 +7,11 @@ import { Button } from "@/components/ui/button";
 import { TranscriptLine } from "../types";
 import { cn } from "@/lib/utils";
 
+interface PortableTextNode {
+  text?: string;
+  children?: { text?: string }[];
+}
+
 interface ListeningKaraokeProps {
   transcript: TranscriptLine[];
   activeIndex: number;
@@ -114,9 +119,9 @@ export default function ListeningKaraoke({
                     ? line.text
                     : Array.isArray(line.text)
                       ? line.text
-                          .map((block: any) =>
+                          .map((block: PortableTextNode) =>
                             block?.children
-                              ?.map((c: any) => c?.text || "")
+                              ?.map((c: { text?: string }) => c?.text || "")
                               .join("") || block?.text || ""
                           )
                           .join(" ")

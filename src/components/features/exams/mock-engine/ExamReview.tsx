@@ -1,11 +1,14 @@
+"use client";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, XCircle, Volume2 } from "lucide-react";
+import Image from "next/image";
 import { useTheme } from "next-themes";
 import { ExamData, GameState } from "./types";
 import { SECTION_LABELS } from "./constants";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 interface ExamReviewProps {
   exam: ExamData;
@@ -74,16 +77,18 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                 {q.questionText && (
                   <div
                     className="text-lg md:text-2xl text-foreground font-medium leading-relaxed mb-10 font-japanese prose-custom bg-[rgba(var(--muted-rgb),0.3)] dark:bg-[rgba(var(--background-rgb),0.1)] p-6 rounded-2xl border border-border neo-inset"
-                    dangerouslySetInnerHTML={{ __html: q.questionText }}
+                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(q.questionText) }}
                   />
                 )}
 
                 {q.imageUrl && (
                   <div className="mb-10 rounded-3xl overflow-hidden neo-inset p-3 bg-[rgba(var(--muted-rgb),0.2)] dark:bg-[rgba(var(--background-rgb),0.2)] border border-border">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src={q.imageUrl}
                       alt="Gambar Pendukung"
+                      width={800}
+                      height={400}
+                      unoptimized
                       className="w-full max-h-[400px] object-contain opacity-90 rounded-2xl"
                     />
                   </div>

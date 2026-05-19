@@ -4,8 +4,31 @@ import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import SanityMedia from "@/components/ui/SanityMedia";
 
+export interface DialogueSpeakerItem {
+  speaker?: string;
+  speakerName?: string;
+  jp?: string;
+  text?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  furigana?: any[];
+  translation?: string;
+  id?: string;
+}
+
+export interface DialogueItem {
+  _id?: string;
+  id?: string;
+  title?: string;
+  audioUrl?: string;
+  audio_url?: string;
+  imageUrl?: string;
+  videoUrl?: string;
+  transcript?: DialogueSpeakerItem[];
+  body?: DialogueSpeakerItem[];
+}
+
 interface DialogueSectionProps {
-  listeningList: any[];
+  listeningList: DialogueItem[];
 }
 
 export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList }) => {
@@ -21,7 +44,7 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
       </div>
       
       <div className="space-y-10">
-        {listeningList.map((l: any) => (
+        {listeningList.map((l: DialogueItem) => (
           <div key={l._id || l.id} className="neo-card p-5 md:p-10 border-l-4 border-l-secondary">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 border-b border-border/50 pb-8">
               <div>
@@ -50,7 +73,7 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
             
             {(l.transcript || l.body) && (
               <div className="space-y-8">
-                {(l.transcript || l.body).map((item: any, idx: number) => (
+                {(l.transcript || l.body)!.map((item: DialogueSpeakerItem, idx: number) => (
                   <div key={idx} className="flex flex-col gap-2 group/dialogue">
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] font-black text-secondary uppercase tracking-[0.2em] bg-secondary/10 px-2 py-0.5 rounded">

@@ -32,7 +32,7 @@ export type TemplateType = "lesson" | "vocab" | "certificate" | "cheatsheet";
 
 interface PdfGeneratorProps {
    
-  data: any;
+  data: unknown;
   type: TemplateType;
   title?: string;
   level?: string;
@@ -49,7 +49,7 @@ export default function PdfGenerator({
   const { isClient, getFileName } = usePdfGenerator({ type, title, level });
 
    
-  const getDocument = (): any => {
+  const getDocument = (): React.ReactElement => {
     if (type === "lesson") return <LessonPdfTemplate lessonData={data} />;
     if (type === "vocab")
       return <VocabPdfTemplate data={data} level={level || "N5"} />;

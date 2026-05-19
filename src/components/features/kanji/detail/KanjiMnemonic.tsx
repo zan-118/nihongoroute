@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
 
 interface KanjiMnemonicProps {
-  mnemonics?: any;
+  mnemonics?: string | unknown[];
 }
 
 export function KanjiMnemonic({ mnemonics }: KanjiMnemonicProps) {
@@ -22,11 +22,14 @@ export function KanjiMnemonic({ mnemonics }: KanjiMnemonicProps) {
               <p key={i} className="text-warning italic">{line}</p>
             ))
           : Array.isArray(mnemonics)
-            ? mnemonics.map((m: any, i: number) => (
-                <p key={i} className="text-warning italic">
-                  {typeof m === "string" ? m : m?.text || m?.children?.[0]?.text || ""}
-                </p>
-              ))
+            ? mnemonics.map((m: unknown, i: number) => {
+                const item = m as string | { text?: string; children?: { text?: string }[] };
+                return (
+                  <p key={i} className="text-warning italic">
+                    {typeof item === "string" ? item : item?.text || item?.children?.[0]?.text || ""}
+                  </p>
+                );
+              })
             : null}
       </div>
     </Card>

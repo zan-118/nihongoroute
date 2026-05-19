@@ -125,8 +125,7 @@ export function useVocabList(initialData: VocabItem[] = []) {
       setCurrentPage(1);
       fetchData(1);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [level, hinshi, debouncedSearch]);
+  }, [level, hinshi, debouncedSearch, fetchData, fetchTotalCount, initialData.length, totalItems]);
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);

@@ -1,8 +1,15 @@
 import React from "react";
 import Link from "next/link";
 
+export interface KanjiLessonItem {
+  _id?: string;
+  id?: string;
+  character: string;
+  meaning?: string;
+}
+
 interface KanjiSectionProps {
-  kanjiList: any[];
+  kanjiList: KanjiLessonItem[];
 }
 
 export const KanjiSection: React.FC<KanjiSectionProps> = ({ kanjiList }) => {
@@ -17,7 +24,7 @@ export const KanjiSection: React.FC<KanjiSectionProps> = ({ kanjiList }) => {
         <div className="h-[1px] flex-1 bg-border" />
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {kanjiList.map((k: any) => (
+        {kanjiList.map((k: KanjiLessonItem) => (
           <Link
             key={k._id || k.id}
             href={`/library/kanji/${k.character}`}

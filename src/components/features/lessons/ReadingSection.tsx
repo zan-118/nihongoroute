@@ -3,8 +3,23 @@ import { BookOpen } from "lucide-react";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import SanityMedia from "@/components/ui/SanityMedia";
 
+export interface ReadingLessonItem {
+  _id?: string;
+  id?: string;
+  difficulty?: string;
+  level?: string;
+  title?: string;
+  audioUrl?: string;
+  audio_url?: string;
+  imageUrl?: string;
+  videoUrl?: string;
+  body?: string;
+  hiragana?: string;
+  translation?: string;
+}
+
 interface ReadingSectionProps {
-  readingList: any[];
+  readingList: ReadingLessonItem[];
 }
 
 export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) => {
@@ -19,7 +34,7 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
         <div className="h-[1px] flex-1 bg-border" />
       </div>
       <div className="space-y-16">
-        {readingList.map((r: any) => (
+        {readingList.map((r: ReadingLessonItem) => (
           <div key={r._id || r.id} className="relative">
             <div className="flex items-center justify-between mb-8">
                <div>

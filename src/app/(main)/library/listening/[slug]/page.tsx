@@ -13,5 +13,5 @@ export default async function ListeningPage({ params }: { params: Promise<{ slug
     notFound();
   }
 
-  return <ListeningPageClient data={data} />;
+  return <ListeningPageClient data={data as unknown as import("@/components/features/listening/types").ListeningTaskData} />;
 }

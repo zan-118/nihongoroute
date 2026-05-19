@@ -15,7 +15,7 @@ export default {
       title: 'Judul Ujian',
       type: 'string',
       group: 'metadata',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: import('sanity').Rule) => Rule.required(),
     },
     {
       name: 'slug',
@@ -26,7 +26,7 @@ export default {
         source: 'title',
         maxLength: 96,
       },
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: import('sanity').Rule) => Rule.required(),
     },
     {
       name: 'description',
@@ -50,7 +50,7 @@ export default {
       type: 'number',
       group: 'metadata',
       initialValue: 60,
-      validation: (Rule: any) => Rule.required().min(1),
+      validation: (Rule: import('sanity').Rule) => Rule.required().min(1),
     },
     {
       name: 'passing_score',
@@ -58,7 +58,7 @@ export default {
       type: 'number',
       group: 'metadata',
       initialValue: 80,
-      validation: (Rule: any) => Rule.required().min(0).max(100),
+      validation: (Rule: import('sanity').Rule) => Rule.required().min(0).max(100),
     },
     {
       name: 'is_published',
@@ -84,21 +84,21 @@ export default {
               name: 'questionText',
               title: 'Pertanyaan',
               type: 'text',
-              validation: (Rule: any) => Rule.required(),
+              validation: (Rule: import('sanity').Rule) => Rule.required(),
             },
             {
               name: 'options',
               title: 'Pilihan Jawaban',
               type: 'array',
               of: [{ type: 'string' }],
-              validation: (Rule: any) => Rule.required().min(2),
+              validation: (Rule: import('sanity').Rule) => Rule.required().min(2),
             },
             {
               name: 'correctAnswer',
               title: 'Indeks Jawaban Benar (0-indexed)',
               description: 'Misal pilihan ke-1 adalah 0, pilihan ke-2 adalah 1, dst.',
               type: 'number',
-              validation: (Rule: any) => Rule.required().min(0),
+              validation: (Rule: import('sanity').Rule) => Rule.required().min(0),
             },
             {
               name: 'section',
@@ -112,7 +112,7 @@ export default {
                   { title: 'Menyimak (Listening)', value: 'listening' },
                 ],
               },
-              validation: (Rule: any) => Rule.required(),
+              validation: (Rule: import('sanity').Rule) => Rule.required(),
             },
             {
               name: 'audioUrl',

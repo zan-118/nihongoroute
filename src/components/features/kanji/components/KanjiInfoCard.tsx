@@ -3,7 +3,7 @@ import { BookOpen, Sparkles } from "lucide-react";
 
 interface KanjiInfoCardProps {
   radicals?: string[];
-  mnemonics?: any; // Portable Text content
+  mnemonics?: string | unknown[]; // Portable Text content
   meaning?: string;
 }
 
@@ -56,11 +56,14 @@ export default function KanjiInfoCard({
               ? mnemonics
               : Array.isArray(mnemonics)
                 ? mnemonics
-                    .map((block: any) =>
-                      block?.children
-                        ?.map((c: any) => c?.text || "")
-                        .join("") || block?.text || (typeof block === "string" ? block : "")
-                    )
+                    .map((block: unknown) => {
+                      const b = block as { children?: { text?: string }[]; text?: string };
+                      return (
+                        b?.children
+                          ?.map((c) => c?.text || "")
+                          .join("") || b?.text || (typeof block === "string" ? block as string : "")
+                      );
+                    })
                     .filter(Boolean)
                     .join(" ")
                 : null}

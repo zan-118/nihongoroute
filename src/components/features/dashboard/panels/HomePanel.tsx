@@ -16,7 +16,7 @@ interface HomePanelProps {
   dueCount: number;
   itemVariants: Variants;
   isAuthenticated: boolean;
-  courseMetadata: any;
+  courseMetadata: unknown;
 }
 
 export function HomePanel({

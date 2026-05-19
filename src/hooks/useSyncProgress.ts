@@ -11,7 +11,7 @@ import { useCloudData } from "./useCloudData";
 import { useCloudMutation } from "./useCloudMutation";
 
 export function useSyncProgress() {
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   
   // User Store Selectors
   const name = useUserStore((s) => s.name);
@@ -70,6 +70,11 @@ export function useSyncProgress() {
   }), [name, xp, streak, todayReviewCount, lastStudyDate, studyDays, inventory, settings, srs, completedLessons]);
 
   const lastSyncedProgress = useRef<string>(JSON.stringify(currentProgressData));
+  const syncMutateRef = useRef(syncMutation.mutate);
+  
+  useEffect(() => {
+    syncMutateRef.current = syncMutation.mutate;
+  }, [syncMutation.mutate]);
 
   useEffect(() => {
     if (isFetching || !session?.user || isGuest) return;
@@ -83,12 +88,12 @@ export function useSyncProgress() {
     if (!isProfileChanged && dirtySrs.size === 0 && dirtyLessons.size === 0) return;
 
     const timer = setTimeout(() => {
-      syncMutation.mutate({ progress: currentProgressData, dirtySrs, dirtyLessons });
+      syncMutateRef.current({ progress: currentProgressData, dirtySrs, dirtyLessons });
       lastSyncedProgress.current = currentProgressStr;
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [name, xp, streak, studyDays, inventory, settings, lastStudyDate, todayReviewCount, srs, dirtySrs, dirtyLessons, session?.user, isFetching, isGuest, syncMutation, currentProgressData, completedLessons]);
+  }, [name, xp, streak, studyDays, inventory, settings, lastStudyDate, todayReviewCount, srs, dirtySrs, dirtyLessons, session?.user, isFetching, isGuest, currentProgressData, completedLessons]);
 
   return { isLoading: isFetching, syncNow: () => syncMutation.mutate({ progress: currentProgressData, dirtySrs, dirtyLessons }) };
 }

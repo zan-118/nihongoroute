@@ -2,12 +2,11 @@
  * @file page.tsx
  * @description Halaman landas (Landing Page) utama NihongoRoute.
  * Menyediakan informasi fitur, branding, dan akses cepat ke dashboard pembelajaran.
+ * Server Component untuk SSG dan SEO optimal.
  * @module LandingPage
  */
 
-"use client";
-
-// Domain Components
+// Domain Components (all "use client" internally)
 import { Hero } from "@/components/features/landing/Hero";
 import { FeatureGrid } from "@/components/features/landing/FeatureGrid";
 import { TrustBanner } from "@/components/features/landing/TrustBanner";

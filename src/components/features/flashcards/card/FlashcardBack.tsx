@@ -33,8 +33,8 @@ interface FlashcardBackProps {
     jp?: string;
     meaning?: string;
   }> | null;
-  kanjiDetails?: any;
-  relatedKanji?: any[] | null;
+  kanjiDetails?: unknown;
+  relatedKanji?: unknown[] | null;
 }
 
 export function FlashcardBack({

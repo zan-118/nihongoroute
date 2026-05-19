@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { User, LogIn, ChevronRight, Sparkles, Mail, Lock, ArrowLeft } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
 
-export default function LoginPage() {
+function LoginContent() {
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
   const [isRegistering, setIsRegistering] = useState(() => searchParams.get("mode") === "signup");
@@ -254,5 +254,17 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest animate-pulse">Memuat...</p>
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }

@@ -48,7 +48,7 @@ export default function NotificationManager() {
               badge: "/logo-branding.png",
               vibrate: [100, 50, 100],
                
-          } as any);
+          } as NotificationOptions);
           }).catch(() => {
             new Notification("NihongoRoute", {
               body: "Notifikasi berhasil diaktifkan! Kami akan mengingatkanmu jika ada kartu yang jatuh tempo.",

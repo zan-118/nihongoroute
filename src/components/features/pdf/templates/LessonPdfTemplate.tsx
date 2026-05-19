@@ -305,7 +305,49 @@ const styles = StyleSheet.create({
  * Komponen LessonPdfTemplate: Menyusun struktur visual PDF untuk satu materi pelajaran.
  */
  
-export const LessonPdfTemplate = ({ lessonData }: { lessonData: any }) => {
+export interface PdfVocabItem {
+  word?: string;
+  furigana?: string;
+  romaji?: string;
+  meaning?: string;
+}
+
+export interface PdfQuizItem {
+  question?: string;
+  options?: string[];
+  answer?: string;
+  explanation?: string;
+}
+
+export interface PdfContentBlock {
+  _type?: string;
+  type?: string;
+  style?: string;
+  children?: { text?: string }[];
+  jp?: string;
+  romaji?: string;
+  id?: string;
+  title?: string;
+  text?: string;
+  content?: string;
+  translation?: string;
+  furigana?: string;
+  examples?: { jp?: string; romaji?: string; id?: string }[];
+}
+
+export interface PdfLessonData {
+  title?: string;
+  levelTitle?: string;
+  vocabList?: PdfVocabItem[];
+  vocab_list?: PdfVocabItem[];
+  articles?: PdfContentBlock[];
+  content_blocks?: PdfContentBlock[];
+  grammar?: PdfContentBlock[];
+  quizzes?: PdfQuizItem[];
+  questions?: PdfQuizItem[];
+}
+
+export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData }) => {
   const combinedVocabList = lessonData.vocabList || lessonData.vocab_list || [];
   const contentBlocks = lessonData.articles || lessonData.content_blocks || [];
   const grammarBlocks = lessonData.grammar || [];
@@ -340,15 +382,15 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: any }) => {
     return parts.length > 2 ? `${parts.slice(0, 2).join(", ")}, dll.` : text;
   };
 
-  const renderRichText = (blocks: any[]) => {
+  const renderRichText = (blocks: PdfContentBlock[]) => {
     if (!blocks || !Array.isArray(blocks)) return null;
     let h2Counter = 0;
      
-    return blocks.map((block: any, index: number) => {
+    return blocks.map((block: PdfContentBlock, index: number) => {
       const type = block._type || block.type || "text";
 
       if (type === "block") {
-        const textContent = block.children?.map((c: any) => c.text).join("") || "";
+        const textContent = block.children?.map((c: { text?: string }) => c.text).join("") || "";
         if (block.style === "h2") {
           h2Counter++;
           const sanitizedText = stripEmojisAndPrefixes(textContent);
@@ -392,7 +434,7 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: any }) => {
             {block.furigana && <Text style={{ fontSize: 10, color: "#64748b", marginBottom: 4 }}>{block.furigana}</Text>}
             {block.translation && <Text style={{ fontSize: 10, color: "#64748b", marginBottom: 8 }}>{stripEmojisOnly(block.translation)}</Text>}
             
-            {block.examples?.map((ex: any, exIdx: number) => (
+            {block.examples?.map((ex: { jp?: string; romaji?: string; id?: string }, exIdx: number) => (
               <View key={`ex-${exIdx}`} style={styles.exampleBox} wrap={false}>
                 <Text style={styles.exampleJp}>{ex.jp}</Text>
                 {ex.romaji && <Text style={[styles.exampleFurigana, { marginTop: 4, color: "#64748b" }]}>{ex.romaji}</Text>}
@@ -440,7 +482,7 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: any }) => {
                 {stripEmojisOnly(block.translation)}
               </Text>
             )}
-            {block.examples?.map((ex: any, exIdx: number) => (
+            {block.examples?.map((ex: { jp?: string; romaji?: string; id?: string }, exIdx: number) => (
               <View key={`ex-${exIdx}`} style={styles.exampleBox} wrap={false}>
                 <Text style={styles.exampleJp}>{ex.jp}</Text>
                 {ex.romaji && <Text style={[styles.exampleFurigana, { marginTop: 4, color: "#64748b" }]}>{ex.romaji}</Text>}
@@ -509,7 +551,7 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: any }) => {
                   <Text style={styles.headerText}>Arti / Makna</Text>
                 </View>
               </View>
-              {combinedVocabList.map((item: any, idx: number) => (
+              {combinedVocabList.map((item: PdfVocabItem, idx: number) => (
                 <View
                   key={idx}
                   style={[
@@ -548,7 +590,7 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: any }) => {
         {quizzesList.length > 0 && (
           <View>
             <Text style={styles.sectionTitle}>Latihan Pemahaman</Text>
-            {quizzesList.map((quiz: any, qIdx: number) => {
+            {quizzesList.map((quiz: PdfQuizItem, qIdx: number) => {
               const alphabet = ["A", "B", "C", "D"];
               return (
                 <View key={qIdx} style={styles.quizBox} wrap={false}>

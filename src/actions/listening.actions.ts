@@ -3,6 +3,17 @@
 import { sanityClient } from "@/lib/sanity.client";
 import { PaginatedListeningResponse, ListeningTaskItem } from "@/types/library";
 
+interface SanityListeningItem {
+  _id: string;
+  title: string;
+  slug: string;
+  jlpt_level: string;
+  difficulty: string;
+  audio_url: string;
+  body?: unknown;
+  _createdAt: string;
+}
+
 /**
  * Mengambil materi mendengarkan (listening) dengan paginasi dan filter level dari Sanity.
  */
@@ -33,7 +44,7 @@ export async function getPaginatedListening(
       "total": count(*[${filter}])
     }`;
 
-    const params: any = {
+    const params: Record<string, string | number> = {
       offset,
       limit: offset + limit
     };
@@ -45,7 +56,7 @@ export async function getPaginatedListening(
     const result = await sanityClient.fetch(query, params);
 
     return {
-      data: (result.data || []).map((l: any) => ({
+      data: (result.data || []).map((l: SanityListeningItem) => ({
         ...l,
         id: l._id,
         audioUrl: l.audio_url,

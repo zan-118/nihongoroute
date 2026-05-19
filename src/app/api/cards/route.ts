@@ -40,7 +40,21 @@ export async function GET(request: NextRequest) {
 
     if (error) throw error;
 
-    const formattedData = (data ?? []).map((v: any) => ({
+interface VocabQueryRow {
+  id: string;
+  word: string;
+  meaning: string;
+  romaji: string | null;
+  furigana: string | null;
+  jlpt_level: string | null;
+  examples: unknown;
+  mnemonic: string | null;
+  usage_notes: string | null;
+  pitch_accent: string | null;
+  hinshi: string | null;
+}
+
+    const formattedData = (data as unknown as VocabQueryRow[] ?? []).map((v: VocabQueryRow) => ({
       _id: v.id,
       id: v.id,
       word: v.word,
@@ -48,7 +62,7 @@ export async function GET(request: NextRequest) {
       romaji: v.romaji,
       furigana: v.furigana,
       jlptLevel: v.jlpt_level,
-      examples: v.examples || [],
+      examples: Array.isArray(v.examples) ? v.examples : [],
       mnemonic: v.mnemonic,
       usageNotes: v.usage_notes,
       pitchAccent: v.pitch_accent,

@@ -3,11 +3,32 @@ import { Stack, Card, Text, TextInput, Button, Flex, Box, Spinner, Select, Label
 import { set, useFormValue } from 'sanity';
 import { getApiUrl } from './api';
 
-export function AIAssistantBar(props: any) {
+interface ContentBlock {
+  _type: string;
+  title?: string;
+  content?: string;
+  furigana?: string;
+  examples?: Array<{
+    jp?: string;
+    [key: string]: unknown;
+  }>;
+  [key: string]: unknown;
+}
+
+interface SanityDocumentValue {
+  content_blocks?: ContentBlock[];
+  [key: string]: unknown;
+}
+
+interface AIAssistantBarProps {
+  onChange: (patches: unknown[]) => void;
+}
+
+export function AIAssistantBar(props: AIAssistantBarProps) {
   const { onChange } = props;
 
   // Retrieve the full document state from Sanity form
-  const docValue: any = useFormValue([]);
+  const docValue = useFormValue([]) as SanityDocumentValue | null | undefined;
 
   const [topic, setTopic] = useState('');
   const [level, setLevel] = useState('N5');
@@ -64,9 +85,10 @@ export function AIAssistantBar(props: any) {
         setStatusMessage('✅ Sukses! Seluruh pelajaran, blok konten, kuis, dan kosakata otomatis terisi.');
         setTopic('');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to auto-generate lesson:', err);
-      setStatusMessage(`❌ Error: ${err.message || 'Gagal menghubungi asisten AI'}`);
+      const errorMessage = err instanceof Error ? err.message : 'Gagal menghubungi asisten AI';
+      setStatusMessage(`❌ Error: ${errorMessage}`);
     } finally {
       setGenerating(false);
     }
@@ -86,11 +108,11 @@ export function AIAssistantBar(props: any) {
     try {
       // Gather all Japanese text from blocks
       let allText = '';
-      blocks.forEach((b: any) => {
+      blocks.forEach((b: ContentBlock) => {
         if (b.content) allText += b.content + '\n';
         if (b.title) allText += b.title + '\n';
         if (b.examples) {
-          b.examples.forEach((ex: any) => {
+          b.examples.forEach((ex) => {
             if (ex.jp) allText += ex.jp + '\n';
           });
         }
@@ -124,9 +146,10 @@ export function AIAssistantBar(props: any) {
         onChange(patches);
         setStatusMessage(`✅ Scan berhasil! Dihubungkan otomatis: ${vocab?.length || 0} kosakata, ${kanji?.length || 0} kanji, ${grammar?.length || 0} tata bahasa.`);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to scan database:', err);
-      setStatusMessage(`❌ Error: ${err.message}`);
+      const errorMessage = err instanceof Error ? err.message : 'Gagal menscan database';
+      setStatusMessage(`❌ Error: ${errorMessage}`);
     } finally {
       setScanning(false);
     }
@@ -135,7 +158,7 @@ export function AIAssistantBar(props: any) {
   // 3. Auto-Generator Furigana
   const handleGenerateFurigana = async () => {
     const blocks = docValue?.content_blocks || [];
-    const blocksWithText = blocks.filter((b: any) => b.content && !b.furigana);
+    const blocksWithText = blocks.filter((b: ContentBlock) => b.content && !b.furigana);
 
     if (blocksWithText.length === 0) {
       setStatusMessage('💡 Semua blok konten Jepang sudah memiliki Furigana!');
@@ -146,7 +169,7 @@ export function AIAssistantBar(props: any) {
     setStatusMessage('✍️ Menganalisis kalimat Jepang & memformulasikan Furigana...');
 
     try {
-      const textToConvert = blocksWithText.map((b: any) => b.content).join('\n');
+      const textToConvert = blocksWithText.map((b: ContentBlock) => b.content).join('\n');
 
       const response = await fetch(getApiUrl('/api/admin/ai-assistant'), {
         method: 'POST',
@@ -169,7 +192,7 @@ export function AIAssistantBar(props: any) {
 
         // Map furigana lines back to their corresponding blocks
         let linesIdx = 0;
-        const updatedBlocks = blocks.map((b: any) => {
+        const updatedBlocks = blocks.map((b: ContentBlock) => {
           if (b.content && !b.furigana && linesIdx < furiganaLines.length) {
             const f = furiganaLines[linesIdx].trim();
             linesIdx++;
@@ -178,12 +201,13 @@ export function AIAssistantBar(props: any) {
           return b;
         });
 
-        onChange(set(updatedBlocks, ['content_blocks']));
+        onChange([set(updatedBlocks, ['content_blocks'])]);
         setStatusMessage('✅ Sukses melengkapi seluruh Furigana otomatis!');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to generate Furigana:', err);
-      setStatusMessage(`❌ Error: ${err.message}`);
+      const errorMessage = err instanceof Error ? err.message : 'Gagal men-generate furigana';
+      setStatusMessage(`❌ Error: ${errorMessage}`);
     } finally {
       setFuriganaGen(false);
     }

@@ -25,13 +25,19 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
       "Pengecualian penting", "Batas", "Fakta budaya", "Nuansa sosial"
     ];
     
-    let formatted = text;
-    keywords.forEach(key => {
-      const regex = new RegExp(`(${key}:)`, 'g');
-      formatted = formatted.replace(regex, '<strong class="text-primary font-bold">$1</strong>');
-    });
+    // Buat regex gabungan dari semua keyword
+    const pattern = new RegExp(`(${keywords.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')}:)`, 'g');
+    const parts = text.split(pattern);
 
-    return <span dangerouslySetInnerHTML={{ __html: formatted }} />;
+    return (
+      <span>
+        {parts.map((part, i) =>
+          pattern.test(part)
+            ? <strong key={i} className="text-primary font-bold">{part}</strong>
+            : <span key={i}>{part}</span>
+        )}
+      </span>
+    );
   };
 
   if (!items || items.length === 0) {
@@ -120,3 +126,4 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
     </div>
   );
 }
+

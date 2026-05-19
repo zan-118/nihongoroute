@@ -11,35 +11,40 @@ import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
  * Menggunakan singleton pattern untuk menghindari inisialisasi ulang kamus Kuromoji yang berat.
  */
 
-let kuroshiro: any = null;
+interface KuroshiroInstance {
+  init(analyzer: unknown): Promise<void>;
+  convert(text: string, options: { to: string; mode: string }): Promise<string>;
+}
+
+let kuroshiro: KuroshiroInstance | null = null;
 let isInitializing = false;
 
-async function getKuroshiro() {
+async function getKuroshiro(): Promise<KuroshiroInstance> {
   if (kuroshiro) return kuroshiro;
   
   if (isInitializing) {
-    console.log("Kuroshiro is already initializing, waiting...");
+    if (process.env.NODE_ENV === 'development') console.log("Kuroshiro is already initializing, waiting...");
     while (isInitializing) {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
-    return kuroshiro;
+    return kuroshiro!;
   }
 
   isInitializing = true;
-  console.log("Initializing Kuroshiro for the first time...");
+  if (process.env.NODE_ENV === 'development') console.log("Initializing Kuroshiro for the first time...");
   try {
     // Handle potential CJS/ESM interop issues
-    const KConstructor = (Kuroshiro as any).default || Kuroshiro;
-    const AConstructor = (KuromojiAnalyzer as any).default || KuromojiAnalyzer;
+    const KConstructor = (Kuroshiro as { default?: new () => KuroshiroInstance }).default || (Kuroshiro as new () => KuroshiroInstance);
+    const AConstructor = (KuromojiAnalyzer as { default?: unknown }).default || KuromojiAnalyzer;
 
     const instance = new KConstructor();
-    console.log("Loading Kuromoji Analyzer with explicit dict path...");
+    if (process.env.NODE_ENV === 'development') console.log("Loading Kuromoji Analyzer with explicit dict path...");
     // Menunjuk langsung ke folder dict di node_modules/kuromoji
     const dictPath = path.join(process.cwd(), "node_modules", "kuromoji", "dict");
     
     await instance.init(new AConstructor({ dictPath }));
     kuroshiro = instance;
-    console.log("Kuroshiro Initialization Successful!");
+    if (process.env.NODE_ENV === 'development') console.log("Kuroshiro Initialization Successful!");
     return kuroshiro;
   } catch (error) {
     console.error("Kuroshiro Init Error:", error);
@@ -91,10 +96,10 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ hiragana: result }, { headers: corsHeaders });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Furigana API Error:", error);
     return NextResponse.json(
-      { error: "Gagal mengonversi teks ke Hiragana", details: error.message },
+      { error: "Gagal mengonversi teks ke Hiragana", details: error instanceof Error ? error.message : "Unknown error" },
       { 
         status: 500,
         headers: corsHeaders

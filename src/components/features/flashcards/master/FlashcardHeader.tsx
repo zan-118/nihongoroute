@@ -90,7 +90,7 @@ export function FlashcardHeader({
 
         <Button
           variant="ghost"
-          size="icon"
+          size="icon" aria-label="Aksi"
           onClick={() => router.push("/dashboard")}
           className="shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-xl bg-muted/50 hover:bg-destructive hover:text-destructive-foreground transition-all border border-border"
         >
@@ -124,3 +124,5 @@ export function FlashcardHeader({
     </header>
   );
 }
+
+

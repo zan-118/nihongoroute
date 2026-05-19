@@ -31,23 +31,28 @@ function getCorsHeaders(req: Request) {
   };
 }
 
-let kuroshiro: any = null;
+interface KuroshiroInstance {
+  init(analyzer: unknown): Promise<void>;
+  convert(text: string, options: { to: string; mode: string }): Promise<string>;
+}
+
+let kuroshiro: KuroshiroInstance | null = null;
 let isInitializing = false;
 
-async function getKuroshiro() {
+async function getKuroshiro(): Promise<KuroshiroInstance> {
   if (kuroshiro) return kuroshiro;
   
   if (isInitializing) {
     while (isInitializing) {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
-    return kuroshiro;
+    if (kuroshiro) return kuroshiro;
   }
 
   isInitializing = true;
   try {
-    const KConstructor = (Kuroshiro as any).default || Kuroshiro;
-    const AConstructor = (KuromojiAnalyzer as any).default || KuromojiAnalyzer;
+    const KConstructor = (Kuroshiro as { default?: new () => KuroshiroInstance }).default || (Kuroshiro as new () => KuroshiroInstance);
+    const AConstructor = (KuromojiAnalyzer as { default?: unknown }).default || KuromojiAnalyzer;
 
     const instance = new KConstructor();
     const dictPath = path.join(process.cwd(), "node_modules", "kuromoji", "dict");
@@ -75,7 +80,7 @@ async function performDatabaseScan(text: string) {
       .select("character")
       .in("character", kanjiChars);
     if (kanjiData) {
-      matchedKanjis = kanjiData.map((k: any) => k.character);
+      matchedKanjis = kanjiData.map((k: { character: string }) => k.character);
     }
   }
 
@@ -116,10 +121,10 @@ async function performDatabaseScan(text: string) {
       ]);
       
       if (wordRes.data) {
-        wordRes.data.forEach((v: any) => v.slug && vocabSlugsSet.add(v.slug));
+        wordRes.data.forEach((v: { slug: string | null }) => v.slug && vocabSlugsSet.add(v.slug));
       }
       if (furiganaRes.data) {
-        furiganaRes.data.forEach((v: any) => v.slug && vocabSlugsSet.add(v.slug));
+        furiganaRes.data.forEach((v: { slug: string | null }) => v.slug && vocabSlugsSet.add(v.slug));
       }
     }
     matchedVocabs = Array.from(vocabSlugsSet);
@@ -239,10 +244,11 @@ Respon Anda harus berupa format JSON murni tanpa markdown, tanpa penjelasan di l
     }
 
     return NextResponse.json({ error: "Aksi tidak valid" }, { status: 400, headers: corsHeaders });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("AI Assistant API Error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Terjadi kesalahan internal";
     return NextResponse.json(
-      { error: "Gagal memproses permintaan asisten AI", details: error.message },
+      { error: "Gagal memproses permintaan asisten AI", details: errorMessage },
       { status: 500, headers: corsHeaders }
     );
   }

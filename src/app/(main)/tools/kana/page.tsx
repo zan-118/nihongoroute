@@ -6,7 +6,7 @@
 
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 // Feature Components & Data
@@ -17,7 +17,7 @@ import { KanaMatrix } from "@/components/features/tools/kana/KanaMatrix";
 import { KanaWritingDialog } from "@/components/features/tools/kana/KanaWritingDialog";
 import { KanaQuizDialog } from "@/components/features/tools/kana/KanaQuizDialog";
 
-export default function KanaPage() {
+function KanaContent() {
   const searchParams = useSearchParams();
   const [type, setType] = useState<KanaType>("hiragana");
   const [category, setCategory] = useState<KanaCategory>("seion");
@@ -175,5 +175,17 @@ export default function KanaPage() {
         themeAccent={themeAccent}
       />
     </div>
+  );
+}
+
+export default function KanaPage() {
+  return (
+    <Suspense fallback={
+      <div className="w-full flex-1 flex items-center justify-center bg-background">
+        <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest animate-pulse">Memuat Kana...</p>
+      </div>
+    }>
+      <KanaContent />
+    </Suspense>
   );
 }

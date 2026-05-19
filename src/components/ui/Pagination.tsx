@@ -26,7 +26,7 @@ export function Pagination({
       <div className="flex items-center gap-2">
         <Button
           variant="ghost"
-          size="icon"
+          size="icon" aria-label="Aksi"
           onClick={() => onPageChange(1)}
           disabled={currentPage === 1}
           className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-primary transition-all disabled:opacity-30"
@@ -35,7 +35,7 @@ export function Pagination({
         </Button>
         <Button
           variant="ghost"
-          size="icon"
+          size="icon" aria-label="Aksi"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
           className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-primary transition-all disabled:opacity-30"
@@ -75,7 +75,7 @@ export function Pagination({
 
         <Button
           variant="ghost"
-          size="icon"
+          size="icon" aria-label="Aksi"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
           className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-primary transition-all disabled:opacity-30"
@@ -84,7 +84,7 @@ export function Pagination({
         </Button>
         <Button
           variant="ghost"
-          size="icon"
+          size="icon" aria-label="Aksi"
           onClick={() => onPageChange(totalPages)}
           disabled={currentPage === totalPages}
           className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-primary transition-all disabled:opacity-30"
@@ -95,3 +95,5 @@ export function Pagination({
     </div>
   );
 }
+
+

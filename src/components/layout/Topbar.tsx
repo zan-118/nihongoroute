@@ -182,9 +182,9 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
                 onClick={() => {
                   if (window.innerWidth < 640) {
                     const nextMode = arr[(idx + 1) % arr.length].id;
-                    useUIStore.getState().setReadingState({ mode: nextMode as any });
+                    useUIStore.getState().setReadingState({ mode: nextMode as "kanji" | "furigana" | "hiragana" });
                   } else {
-                    useUIStore.getState().setReadingState({ mode: m.id as any });
+                    useUIStore.getState().setReadingState({ mode: m.id as "kanji" | "furigana" | "hiragana" });
                   }
                 }}
                 className={`w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-lg transition-all ${

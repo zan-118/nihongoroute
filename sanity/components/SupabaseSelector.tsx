@@ -4,14 +4,55 @@ import { set, unset, useFormValue } from 'sanity';
 
 import { getApiUrl, SECRET_TOKEN } from './api';
 
-export function SupabaseSelector(props: any) {
+interface ContentBlock {
+  _type: string;
+  title?: string;
+  content?: string;
+  furigana?: string;
+  examples?: Array<{
+    jp?: string;
+    [key: string]: unknown;
+  }>;
+  [key: string]: unknown;
+}
+
+interface SanityDocumentValue {
+  content_blocks?: ContentBlock[];
+  [key: string]: unknown;
+}
+
+interface SupabaseSearchResult {
+  id: string | number;
+  character?: string;
+  meaning?: string;
+  word?: string;
+  furigana?: string;
+  meaning_id?: string;
+  title?: string;
+  slug?: string;
+  jlpt_level?: string;
+  [key: string]: unknown;
+}
+
+interface SupabaseSelectorProps {
+  onChange: (patch: unknown) => void;
+  value?: string[];
+  schemaType: {
+    title?: string;
+    options?: {
+      supabaseType?: 'vocab' | 'kanji' | 'grammar';
+    };
+  };
+}
+
+export function SupabaseSelector(props: SupabaseSelectorProps) {
   const { onChange, value = [], schemaType } = props;
   const supabaseType = schemaType.options?.supabaseType || 'vocab';
-  const docValue: any = useFormValue([]);
+  const docValue = useFormValue([]) as SanityDocumentValue | null | undefined;
   const [scanning, setScanning] = useState(false);
   
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<SupabaseSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -42,13 +83,13 @@ export function SupabaseSelector(props: any) {
     return () => clearTimeout(delayDebounce);
   }, [query, supabaseType]);
 
-  const handleAdd = useCallback((item: any) => {
+  const handleAdd = useCallback((item: SupabaseSearchResult) => {
     // For kanji, use character. For vocab, use slug or word. For grammar, use slug or title.
     let itemValue = '';
     if (supabaseType === 'kanji') {
-      itemValue = item.character || item.id;
+      itemValue = item.character || String(item.id);
     } else {
-      itemValue = item.slug || item.word || item.title || item.id;
+      itemValue = item.slug || item.word || item.title || String(item.id);
     }
 
     if (!value.includes(itemValue)) {
@@ -78,11 +119,11 @@ export function SupabaseSelector(props: any) {
     try {
       // Gather Japanese text from blocks
       let allText = '';
-      blocks.forEach((b: any) => {
+      blocks.forEach((b: ContentBlock) => {
         if (b.content) allText += b.content + '\n';
         if (b.title) allText += b.title + '\n';
         if (b.examples) {
-          b.examples.forEach((ex: any) => {
+          b.examples.forEach((ex) => {
             if (ex.jp) allText += ex.jp + '\n';
           });
         }
@@ -115,9 +156,6 @@ export function SupabaseSelector(props: any) {
         onChange(mergedValues.length ? set(mergedValues) : unset());
         alert(`Berhasil menscan materi! Menambahkan ${scannedItems.length} item ${supabaseType} baru ke pilihan.`);
       }
-    } catch (err: any) {
-      console.error('Failed to scan from content:', err);
-      alert(`Terjadi kesalahan: ${err.message}`);
     } finally {
       setScanning(false);
     }

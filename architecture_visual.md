@@ -1,6 +1,6 @@
 # 🌀 Visualisasi Arsitektur Proyek NihongoRoute
 
-Dokumen ini menyajikan representasi visual dari arsitektur proyek NihongoRoute yang memprioritaskan fitur luring (*offline-first*), performa tinggi (< 16ms untuk interaksi lokal), dan sinkronisasi awan yang aman.
+Dokumen ini menyajikan representasi visual dari arsitektur proyek NihongoRoute yang memprioritaskan fitur luring (*offline-first*), performa tinggi (< 16ms untuk interaksi lokal), dan sinkronisasi awan yang aman. Seluruh kode sumber berada di dalam direktori `src/`.
 
 ---
 
@@ -20,13 +20,13 @@ graph TD
     end
 
     subgraph Server ["Next.js Server Side"]
-        Actions["Server Actions<br/>(app/actions/*)"]
-        Queries["Sanity Queries<br/>(lib/queries.ts)"]
+        Actions["Server Actions<br/>(src/actions/*)"]
+        Queries["Sanity Queries<br/>(src/lib/queries.ts)"]
     end
 
-    subgraph Client ["Client Side (Next.js App)"]
-        Zustand["Zustand Stores<br/>(State Management)"]
-        RQ["React Query<br/>(useCloudData & useCloudMutation)"]
+    subgraph Client ["Client Side (src/)"]
+        Zustand["Zustand Stores<br/>(src/store/*)"]
+        RQ["React Query<br/>(src/hooks/useCloudData & useCloudMutation)"]
         IDB["IndexedDB<br/>(Persist via idb-keyval)"]
         UI["Visual UI Components<br/>(< 16ms Interactive)"]
     end
@@ -65,30 +65,30 @@ sequenceDiagram
     actor User as Pengguna (UI)
     participant Zustand as Tier 1: Zustand Store
     participant IDB as IndexedDB (Lokal)
-    participant Sync as Tier 2: useSyncProgress (Orchestration)
+    participant Sync as Tier 2: useSyncProgress (src/hooks)
     participant Mutation as Tier 3: useCloudMutation (React Query)
     participant Cloud as Supabase (Cloud RPC)
     participant BC as BroadcastChannel (nihongoroute_sync)
     participant Tabs as Tab Peramban Lain
 
     User->>Zustand: Berinteraksi (e.g. Jawab Kartu SRS, XP bertambah)
-    Note over Zustand: Pembaruan Instan (< 16ms)<br/>Tandai data sebagai "Dirty" (srsDirty / userDirty)
+    Note over Zustand: Pembaruan Instan (< 16ms)<br/>Tandai data sebagai "Dirty" (dirtySrs / dirtyLessons)
     Zustand->>IDB: Simpan otomatis asinkron
     Zustand-->>User: Tampilan UI langsung ter-update (Mulus)
 
-    Note over Sync: Memantau Zustand secara berkala & melakukan Debounce
+    Note over Sync: Memantau Zustand secara berkala & melakukan Debounce (2 detik)
     Sync->>Mutation: Kirim paket data "Dirty"
     Mutation->>Cloud: Eksekusi RPC "sync_user_progress"
     
     alt Sinkronisasi Sukses
         Cloud-->>Mutation: Respon OK (Data Tersimpan di Awan)
-        Mutation->>Zustand: Hapus penanda "Dirty"
+        Mutation->>Zustand: Hapus penanda "Dirty" (clearDirtySrs / clearDirtyLessons)
         Mutation->>BC: Siarkan pesan "SYNC_COMPLETE"
         BC-->>Tabs: Terima pesan & Invalidate Cache React Query
         Note over Tabs: Data di tab lain tersinkronisasi tanpa muat ulang halaman
     else Terjadi Masalah Jaringan (Luring)
         Cloud--xMutation: Gagal / Timeout
-        Note over Mutation,Zustand: Data tetap ditandai "Dirty" di Zustand & IndexedDB<br/>Akan dicoba kembali secara otomatis saat daring
+        Note over Mutation,Zustand: Data tetap ditandai "Dirty" di Zustand & IndexedDB<br/>Retry otomatis 3x (exponential backoff)
     end
 ```
 
@@ -100,17 +100,17 @@ Sistem rendering teks bahasa Jepang dikelola secara cerdas dan interaktif berdas
 
 ```mermaid
 graph TD
-    subgraph UIStore ["useUIStore"]
+    subgraph UIStore ["useUIStore (src/store)"]
         ReadingState["readingState<br/>(Kanji / Furigana / Hiragana)"]
     end
 
-    subgraph Rendering ["Smart Rendering System"]
-        SmartJapanese["SmartJapanese Component<br/>(Mendeteksi teks Jepang)"]
-        FuriganaDisplay["FuriganaDisplay Component<br/>(Mengatur visual Ruby 0.55em)"]
+    subgraph Rendering ["Smart Rendering System (src/components/ui)"]
+        SmartJapanese["SmartJapanese<br/>(Mendeteksi teks Jepang)"]
+        FuriganaDisplay["FuriganaDisplay<br/>(Visual Ruby 0.55em)"]
     end
 
     subgraph Interaction ["Interactive Dictionary"]
-        WordPopover["WordPopover Component<br/>(Pop-up detail saat kata diklik)"]
+        WordPopover["WordPopover<br/>(Pop-up detail kata)"]
         DictionaryQuery["Pencarian Leksikal<br/>(Supabase / IndexedDB)"]
     end
 
@@ -132,34 +132,43 @@ graph TD
 
 ---
 
-## 4. Arsitektur Direktori & Struktur Peta Rute (`app/`)
+## 4. Arsitektur Direktori & Struktur Peta Rute (`src/app/`)
 
-Struktur folder NihongoRoute yang diatur secara modular untuk memudahkan pemeliharaan dan skalabilitas.
+Struktur folder NihongoRoute yang diatur secara modular di dalam `src/` untuk memudahkan pemeliharaan dan skalabilitas.
 
 ```mermaid
 graph TD
-    Root["app/"] --> Main["(main)/<br/>(Navigasi Samping & Atas)"]
-    Root --> Auth["auth/<br/>(Autentikasi & Callback)"]
-    Root --> Onboarding["onboarding/<br/>(Pengenalan Bertahap - Layar Penuh)"]
-    Root --> Studio["studio/<br/>(Sanity Studio Embedded)"]
+    Root["src/"] --> Actions["actions/<br/>(Server Actions)"]
+    Root --> App["app/<br/>(App Router)"]
+    Root --> Components["components/<br/>(Fitur & UI)"]
+    Root --> Hooks["hooks/<br/>(Hooks Global)"]
+    Root --> Lib["lib/<br/>(Utilitas Murni)"]
+    Root --> Store["store/<br/>(Zustand Stores)"]
+    Root --> Types["types/<br/>(Definisi Tipe)"]
 
-    Main --> Courses["courses/<br/>(Katalog Materi)"]
-    Main --> Dashboard["dashboard/<br/>(Statistik & Kemajuan)"]
-    Main --> Exams["exams/<br/>(Simulasi JLPT)"]
-    Main --> Review["review/<br/>(Mesin Pengulangan SRS)"]
-    Main --> Library["library/<br/>(Kamus & Tata Bahasa)"]
-    Main --> Tools["tools/<br/>(Alat Bantu Belajar)"]
+    App --> Main["(main)/<br/>(Navigasi Samping & Atas)"]
+    App --> Auth["auth/<br/>(Autentikasi)"]
+    App --> Onboarding["onboarding/<br/>(Onboarding)"]
+    App --> Studio["studio/<br/>(Sanity CMS)"]
+    App --> API["api/<br/>(Internal API)"]
 
-    Tools --> Flashcards["flashcards/<br/>(Kartu Pengingat)"]
-    Tools --> Kana["kana/<br/>(Latihan Hiragana/Katakana)"]
-    Tools --> Writing["writing/<br/>(Latihan Menulis Kanji)"]
+    Main --> Courses["courses/<br/>(Katalog)"]
+    Main --> Dashboard["dashboard/<br/>(Statistik)"]
+    Main --> Exams["exams/<br/>(Ujian JLPT)"]
+    Main --> Review["review/<br/>(SRS Review)"]
+    Main --> Library["library/<br/>(Perpustakaan)"]
+    Main --> Tools["tools/<br/>(Alat Belajar)"]
+    Main --> Settings["settings/<br/>(Pengaturan)"]
+    Main --> Social["social/<br/>(Papan Peringkat)"]
     
     %% Styling
+    classDef root fill:#339af0,stroke:#333,stroke-width:2px,color:#fff;
     classDef folder fill:#20c997,stroke:#333,stroke-width:2px,color:#fff;
     classDef subfolder fill:#fab005,stroke:#333,stroke-width:2px,color:#111;
     
-    class Root,Main,Auth,Onboarding,Studio folder;
-    class Courses,Dashboard,Exams,Review,Library,Tools,Flashcards,Kana,Writing subfolder;
+    class Root root;
+    class Actions,App,Components,Hooks,Lib,Store,Types,Main,Auth,Onboarding,Studio,API folder;
+    class Courses,Dashboard,Exams,Review,Library,Tools,Settings,Social subfolder;
 ```
 
 ---

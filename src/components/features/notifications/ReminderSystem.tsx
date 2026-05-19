@@ -37,14 +37,14 @@ export default function ReminderSystem() {
         if ("serviceWorker" in navigator) {
           navigator.serviceWorker.ready.then((registration) => {
              
-            registration.showNotification(title, options as any);
+            registration.showNotification(title, options as NotificationOptions);
           }).catch(() => {
              
-            new Notification(title, options as any);
+            new Notification(title, options as NotificationOptions);
           });
         } else {
            
-          new Notification(title, options as any);
+          new Notification(title, options as NotificationOptions);
         }
         
         lastNotifiedRef.current = now;

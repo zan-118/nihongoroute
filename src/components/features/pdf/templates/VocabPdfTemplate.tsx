@@ -31,9 +31,10 @@ Font.register({
 // ======================
 // TYPES
 // ======================
+import { PdfVocabItem } from "./LessonPdfTemplate";
+
 interface VocabTemplateProps {
-   
-  data: any[];
+  data: PdfVocabItem[];
   level: string;
 }
 

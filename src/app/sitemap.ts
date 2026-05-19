@@ -65,10 +65,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         slug
       )
     `)
-    .eq("is_published", true) as any);
+    .eq("is_published", true) as unknown as Promise<{ data: SitemapLesson[] | null }>);
 
   if (lessons) {
-    for (const lesson of (lessons as SitemapLesson[])) {
+    for (const lesson of lessons) {
       const categorySlug = lesson.course_categories?.slug;
       if (categorySlug) {
         urls.push({

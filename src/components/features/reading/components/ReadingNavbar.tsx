@@ -10,7 +10,7 @@ interface ReadingNavbarProps {
   title: string;
   difficulty: string;
   mode: string;
-  modes: any[];
+  modes: { id: string; icon: React.ElementType; label: string }[];
   onModeChange: (id: string) => void;
   onZenModeToggle: () => void;
 }
@@ -81,3 +81,4 @@ export function ReadingNavbar({
     </motion.nav>
   );
 }
+

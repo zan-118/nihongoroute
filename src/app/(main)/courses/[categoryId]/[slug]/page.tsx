@@ -102,30 +102,30 @@ export default async function LessonPage({ params }: Props) {
       <div className="max-w-4xl mx-auto w-full relative z-10 flex flex-col flex-1">
         <article className="flex-1 min-w-0">
           <LessonHeader 
-            title={lesson.title} 
-            summary={lesson.summary} 
+            title={lesson.title || ""} 
+            summary={lesson.summary || ""} 
             isSideQuest={isSideQuest} 
             lesson={lesson} 
           />
 
           <div className="space-y-24 mb-24">
-            {(lesson.articles || lesson.content_blocks) && (
+            {!!(lesson.articles || lesson.content_blocks) && (
               <section className="prose-custom">
                 <ContentBlockRenderer 
-                  blocks={lesson.articles || lesson.content_blocks} 
-                  vocabList={lesson.vocabList || lesson.vocab_list}
-                  kanjiList={lesson.kanjiList || lesson.kanji_list}
+                  blocks={(lesson.articles || lesson.content_blocks) as import("@/types/database").ContentBlock[]} 
+                  vocabList={(lesson.vocabList || lesson.vocab_list || []) as unknown[]}
+                  kanjiList={(lesson.kanjiList || lesson.kanji_list || []) as unknown[]}
                 />
               </section>
             )}
 
-            <DialogueSection listeningList={lesson.listeningList || lesson.listening_list} />
+            <DialogueSection listeningList={(lesson.listeningList || lesson.listening_list || []) as import("@/components/features/lessons/DialogueSection").DialogueItem[]} />
 
-            <ReadingSection readingList={lesson.readingList || lesson.reading_list} />
+            <ReadingSection readingList={(lesson.readingList || lesson.reading_list || []) as import("@/components/features/lessons/ReadingSection").ReadingLessonItem[]} />
 
-            <CheatsheetSection cheatsheets={lesson.cheatsheets} />
+            <CheatsheetSection cheatsheets={(lesson.cheatsheets || []) as import("@/components/features/lessons/CheatsheetSection").CheatsheetData[]} />
 
-            <PracticeSection lesson={lesson} />
+            <PracticeSection lesson={lesson as import("@/components/features/lessons/PracticeSection").LessonPracticeData} />
 
             {formattedQuizzes.length > 0 ? (
               <section>
@@ -135,12 +135,12 @@ export default async function LessonPage({ params }: Props) {
                   </h2>
                   <div className="h-[1px] flex-1 bg-border" />
                 </div>
-                <QuizEngine questions={formattedQuizzes} lessonId={lesson._id || lesson.id} />
+                <QuizEngine questions={formattedQuizzes} lessonId={lesson._id || lesson.id || ""} />
               </section>
             ) : (
               <section className="flex justify-center my-12">
                 <MarkCompleteButton 
-                  lessonId={lesson._id || lesson.id} 
+                  lessonId={lesson._id || lesson.id || ""} 
                   nextLessonSlug={nextLesson?.slug}
                   categoryId={categoryId}
                 />
@@ -151,7 +151,7 @@ export default async function LessonPage({ params }: Props) {
           <LessonNavigation 
             prevLesson={prevLesson} 
             nextLesson={nextLesson} 
-            levelCode={lesson.levelCode} 
+            levelCode={lesson.levelCode || ""} 
             categoryId={categoryId} 
           />
 

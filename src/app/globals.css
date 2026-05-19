@@ -38,6 +38,7 @@
     --input: 216 15% 85%;
     --ring: 184 100% 35%;
     --radius: 1rem;
+    --border-opacity: 1;
   }
 
   .dark {

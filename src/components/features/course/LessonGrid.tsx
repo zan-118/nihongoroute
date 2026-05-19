@@ -19,7 +19,7 @@ interface LessonGridProps {
   onPageChange: (page: number) => void;
   categoryId: string;
   isSideQuest: boolean;
-  completedLessons: Record<string, any>;
+  completedLessons: Record<string, { isDeleted?: boolean; [key: string]: unknown }>;
   itemVariants: Variants;
 }
 
@@ -76,7 +76,7 @@ export function LessonGrid({
           <div className="flex items-center gap-3 p-2 bg-card/30 backdrop-blur-md border border-border rounded-2xl glass">
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Aksi"
               onClick={() => onPageChange(1)}
               disabled={currentPage === 1}
               className="w-11 h-11 rounded-xl hover:bg-background transition-all disabled:opacity-20"
@@ -85,7 +85,7 @@ export function LessonGrid({
             </Button>
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Aksi"
               onClick={() => onPageChange(currentPage - 1)}
               disabled={currentPage === 1}
               className="w-11 h-11 rounded-xl hover:bg-background transition-all disabled:opacity-20"
@@ -120,7 +120,7 @@ export function LessonGrid({
 
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Aksi"
               onClick={() => onPageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
               className="w-11 h-11 rounded-xl hover:bg-background transition-all disabled:opacity-20"
@@ -129,7 +129,7 @@ export function LessonGrid({
             </Button>
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Aksi"
               onClick={() => onPageChange(totalPages)}
               disabled={currentPage === totalPages}
               className="w-11 h-11 rounded-xl hover:bg-background transition-all disabled:opacity-20"
@@ -142,3 +142,5 @@ export function LessonGrid({
     </motion.section>
   );
 }
+
+

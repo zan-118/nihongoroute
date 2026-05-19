@@ -1,11 +1,30 @@
+export interface RawQuizItem {
+  options?: unknown[] | { text?: string; isCorrect?: boolean }[];
+  choices?: { text?: string; isCorrect?: boolean }[];
+  correct_answer?: number | string;
+  correctAnswer?: number | string;
+  question?: string;
+  text?: string;
+  questionText?: string;
+  explanation?: string;
+  [key: string]: unknown;
+}
+
+export interface FormattedQuizItem {
+  question: string;
+  options: string[];
+  answer: string;
+  explanation: string;
+}
+
 /**
  * Normalizes quiz data from various formats (Sanity/Supabase) to a unified format.
  */
-export function formatQuizzes(quizzesRaw: any[]): any[] {
+export function formatQuizzes(quizzesRaw: RawQuizItem[]): FormattedQuizItem[] {
   if (!quizzesRaw) return [];
   
   return quizzesRaw
-    .map((quiz: any) => {
+    .map((quiz: RawQuizItem) => {
       if (!quiz) return null;
       
       // Handle format baru (Supabase): options adalah string[], correct_answer adalah index
@@ -30,9 +49,9 @@ export function formatQuizzes(quizzesRaw: any[]): any[] {
           answer = options[0] || "";
         }
       } else {
-        const rawOptions = quiz.options || quiz.choices || [];
-        options = rawOptions.map((opt: any) => (typeof opt === 'string' ? opt : (opt?.text || ""))) || [];
-        const correctOption = rawOptions.find((opt: any) => opt?.isCorrect);
+        const rawOptions = (quiz.options || quiz.choices || []) as { text?: string; isCorrect?: boolean }[];
+        options = rawOptions.map((opt) => (typeof opt === 'string' ? opt : (opt?.text || ""))) || [];
+        const correctOption = rawOptions.find((opt) => opt?.isCorrect);
         answer = correctOption ? (correctOption.text || "") : (options[0] || "");
       }
 
@@ -43,14 +62,20 @@ export function formatQuizzes(quizzesRaw: any[]): any[] {
         explanation: quiz.explanation || "",
       };
     })
-    .filter((q: any) => q && q.question);
+    .filter((q): q is FormattedQuizItem => q !== null && Boolean(q.question));
 }
 
 /**
  * Calculates navigation (prev/next) for a lesson within a category.
  */
-export function getLessonNavigation(nav: any[], slug: string) {
-  const currentIndex = nav.findIndex((l: { slug: string }) => l.slug === slug);
+export interface NavLessonItem {
+  slug: string;
+  title: string;
+  [key: string]: unknown;
+}
+
+export function getLessonNavigation(nav: NavLessonItem[], slug: string) {
+  const currentIndex = nav.findIndex((l: NavLessonItem) => l.slug === slug);
   const prevLesson = currentIndex > 0 ? nav[currentIndex - 1] : null;
   const nextLesson =
     currentIndex >= 0 && currentIndex < nav.length - 1

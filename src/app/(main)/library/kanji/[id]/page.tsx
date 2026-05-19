@@ -91,26 +91,26 @@ export default async function KanjiDetailPage({
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-[minmax(0,auto)] animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out">
           {/* 1. Stroke & Visual Bento (Fokus Utama) */}
           <KanjiStrokeHero 
-            character={kanji.character} 
-            strokeOrderSvg={kanji.strokeOrderSvg} 
-            meaning={kanji.meaning} 
-            jlpt={kanji.jlpt} 
+            character={kanji.character || ""} 
+            strokeOrderSvg={kanji.strokeOrderSvg || undefined} 
+            meaning={kanji.meaning || ""} 
+            jlpt={kanji.jlpt_level || undefined} 
           />
 
           {/* 2 & 3. Onyomi & Kunyomi */}
           <KanjiReadings 
-            onyomi={kanji.onyomi} 
-            kunyomi={kanji.kunyomi} 
+            onyomi={kanji.onyomi || undefined} 
+            kunyomi={kanji.kunyomi || undefined} 
           />
 
           {/* 4. Radicals Bento (Akar Kata) */}
-          <KanjiRadicals radicals={kanji.radicals} />
+          <KanjiRadicals radicals={kanji.radicals || undefined} />
 
           {/* 5. Mnemonic Bento (Jembatan Keledai) */}
-          <KanjiMnemonic mnemonics={kanji.mnemonics} />
+          <KanjiMnemonic mnemonics={kanji.mnemonics || undefined} />
 
           {/* 6. Related Context Bento (Kosakata Terkait) */}
-          <KanjiRelatedVocab relatedVocab={kanji.relatedVocab} />
+          <KanjiRelatedVocab relatedVocab={kanji.relatedVocab || undefined} />
         </div>
 
         {/* Footer Actions */}

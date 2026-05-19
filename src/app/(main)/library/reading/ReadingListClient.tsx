@@ -146,7 +146,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
           <div className="flex items-center gap-2">
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Aksi"
               onClick={() => handlePageChange(1)}
               disabled={currentPage === 1}
               className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-foreground transition-all disabled:opacity-30"
@@ -155,7 +155,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
             </Button>
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Aksi"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
               className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-foreground transition-all disabled:opacity-30"
@@ -195,7 +195,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
 
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Aksi"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
               className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-foreground transition-all disabled:opacity-30"
@@ -204,7 +204,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
             </Button>
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Aksi"
               onClick={() => handlePageChange(totalPages)}
               disabled={currentPage === totalPages}
               className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-foreground transition-all disabled:opacity-30"
@@ -217,3 +217,5 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
     </div>
   );
 }
+
+

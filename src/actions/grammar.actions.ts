@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { GrammarTable } from "@/types/database";
 
 /**
  * Mengambil daftar tata bahasa dengan paginasi dan filter level.
@@ -9,7 +10,7 @@ export async function getPaginatedGrammar(
   page: number,
   limit: number,
   level: string = ""
-): Promise<{ data: any[]; total: number }> {
+): Promise<{ data: (GrammarTable & { _id: string; jlptLevel: string | null })[]; total: number }> {
   const supabase = await createClient();
   const offset = (page - 1) * limit;
 

@@ -4,7 +4,21 @@ import { set, unset, useFormValue } from 'sanity';
 
 import { getApiUrl } from './api';
 
-export function FuriganaGeneratorInput(props: any) {
+interface FuriganaGeneratorInputProps {
+  onChange: (patch: unknown) => void;
+  value?: string;
+  schemaType: {
+    title?: string;
+    name?: string;
+    type?: {
+      name?: string;
+    };
+  };
+  path: import('sanity').Path;
+  elementProps: Record<string, unknown>;
+}
+
+export function FuriganaGeneratorInput(props: FuriganaGeneratorInputProps) {
   const { onChange, value = '', schemaType, path, elementProps } = props;
   const [loading, setLoading] = useState(false);
   const prevSourceRef = useRef<string | null>(null);

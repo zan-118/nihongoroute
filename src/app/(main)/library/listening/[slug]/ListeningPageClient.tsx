@@ -56,7 +56,7 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
     setIsCompleted(true);
     const reward = score * 50;
     addXP(reward);
-    completeLesson((data as any)._id || data.id);
+    completeLesson(data._id || data.id || "");
   };
 
   return (

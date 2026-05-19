@@ -2,8 +2,18 @@ import React from "react";
 import Link from "next/link";
 import { Award } from "lucide-react";
 
+export interface PracticeLessonItem {
+  slug: string;
+  title: string;
+}
+
+export interface LessonPracticeData {
+  title: string;
+  finalPractice?: PracticeLessonItem;
+}
+
 interface PracticeSectionProps {
-  lesson: any;
+  lesson: LessonPracticeData;
 }
 
 export const PracticeSection: React.FC<PracticeSectionProps> = ({ lesson }) => {

@@ -4,8 +4,16 @@ import { Loader2, ArrowRight, Search } from "lucide-react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 
+export interface KanjiGridItem {
+  id?: string;
+  _id?: string;
+  character: string;
+  jlpt?: string;
+  meaning?: string;
+}
+
 interface KanjiGridProps {
-  kanjis: any[];
+  kanjis: KanjiGridItem[];
   isFetching: boolean;
 }
 

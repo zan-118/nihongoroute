@@ -5,11 +5,73 @@ import { slugify } from "@/lib/utils";
 import { getSanityLessonBySlug, getSanityReadingBySlug, getSanityListeningBySlug, getSanityExamBySlug } from "@/lib/queries";
 
 // --- Types ---
+export interface LibraryItem {
+  id?: string;
+  _id?: string;
+  character?: string;
+  word?: string;
+  meaning?: string;
+  meaning_id?: string;
+  title?: string | null;
+  summary?: string | null;
+  jlptLevel?: string | null;
+  jlpt_level?: string | null;
+  strokeOrderSvg?: string | null;
+  stroke_order_svg?: string | null;
+  onyomi?: string | null;
+  kunyomi?: string | null;
+  radicals?: string[] | null;
+  mnemonics?: import("@/types/database").MnemonicBlock[] | string[] | null;
+  relatedVocab?: {
+    id: string;
+    _id?: string;
+    word: string;
+    furigana: string;
+    meaning: string;
+    romaji?: string;
+    slug?: string;
+  }[] | null;
+  pitchAccent?: string | null;
+  pitch_accent?: string | null;
+  usageNotes?: string | null;
+  usage_notes?: string | null;
+  notes?: string | null;
+  formation?: string | null;
+  relatedKanji?: unknown;
+  synonyms?: unknown;
+  antonyms?: unknown;
+  examples?: unknown[] | null;
+  conjugations?: Record<string, string | null>;
+  negative?: string | null;
+  past?: string | null;
+  pastNegative?: string | null;
+  teForm?: string | null;
+  adverbial?: string | null;
+  content_blocks?: unknown;
+  vocab_list?: unknown;
+  kanji_list?: unknown;
+  grammar_list?: unknown;
+  listening_list?: unknown;
+  reading_list?: unknown;
+  articles?: unknown;
+  quizzes?: import("@/lib/utils/lesson-utils").RawQuizItem[] | null;
+  questions?: import("@/lib/utils/lesson-utils").RawQuizItem[] | null;
+  vocabList?: unknown[];
+  kanjiList?: unknown[];
+  grammarList?: unknown[];
+  listeningList?: unknown[];
+  readingList?: unknown[];
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  levelCode?: string | null;
+  [key: string]: unknown;
+}
+
 type ContentBlock = {
   _type?: string;
   type?: string;
-  children?: any[];
-  [key: string]: any;
+  children?: unknown[];
+  [key: string]: unknown;
 };
 
 type ListeningTable = {
@@ -17,11 +79,60 @@ type ListeningTable = {
   audio_url?: string;
   image_url?: string;
   video_url?: string;
-  body?: any;
-  translation?: any;
-  hiragana?: any;
-  [key: string]: any;
+  body?: unknown;
+  translation?: unknown;
+  hiragana?: unknown;
+  [key: string]: unknown;
 };
+
+interface VocabRow {
+  id: string;
+  word: string;
+  furigana: string | null;
+  romaji: string | null;
+  meaning_id: string;
+  hinshi: string | null;
+  pitch_accent: string | null;
+  usage_notes: string | null;
+  mnemonic: string | null;
+}
+
+interface GrammarRow {
+  id: string;
+  title: string;
+  meaning: string;
+  formation: string | null;
+  formation_furigana: string | null;
+  slug: string;
+  jlpt_level: string | null;
+  examples: unknown;
+  notes: string | null;
+}
+
+interface ListeningMaterialRow {
+  id: string;
+  title: string;
+  slug: string;
+  audio_url?: string;
+  image_url?: string;
+  video_url?: string;
+  body?: unknown;
+  translation?: unknown;
+  hiragana?: unknown;
+  [key: string]: unknown;
+}
+
+interface ReadingMaterialRow {
+  id: string;
+  title: string;
+  slug: string;
+  audio_url?: string;
+  image_url?: string;
+  video_url?: string;
+  body?: unknown;
+  translation?: unknown;
+  [key: string]: unknown;
+}
 
 export async function checkExistingContent(
   keyword: string,
@@ -64,11 +175,11 @@ export async function checkExistingContent(
 export async function getLibraryItemBySlug(
   type: "kanji" | "vocab" | "verb" | "adjective" | "grammar" | "reading" | "listening" | "lessons" | "exams" | "phrase",
   slugOrId: string
-): Promise<any | null> {
+): Promise<LibraryItem | null> {
   const supabase = await createClient();
   
   try {
-    let data: Record<string, any> | null = null;
+    let data: LibraryItem | null = null;
 
     if (type === "kanji") {
       const { data: d, error } = await supabase.from("kanji").select("*").eq("character", slugOrId).single();
@@ -130,7 +241,7 @@ export async function getLibraryItemBySlug(
           .select("*")
           .ilike("related_kanji::text", `%"${data.character}"%`)
           .limit(6);
-        data.relatedVocab = (related || []).map((v: { id: string; word: string; furigana: string | null; meaning_id: string; slug: string }) => ({ ...v, _id: v.id, meaning: v.meaning_id }));
+        data.relatedVocab = (related || []).map((v: { id: string; word: string; furigana: string | null; meaning_id: string; slug: string }) => ({ ...v, _id: v.id, meaning: v.meaning_id, furigana: v.furigana || "" }));
       } catch {
         data.relatedVocab = [];
       }
@@ -159,9 +270,9 @@ export async function getLibraryItemBySlug(
         }
         data.examples = Array.isArray(data.examples) ? data.examples : [];
 
-        data.relatedKanji = data.relatedKanji.map((k: { id?: string; _id?: string }) => ({ ...k, _id: k.id || k._id }));
-        data.synonyms = data.synonyms.map((s: { id?: string; _id?: string }) => ({ ...s, _id: s.id || s._id }));
-        data.antonyms = data.antonyms.map((a: { id?: string; _id?: string }) => ({ ...a, _id: a.id || a._id }));
+        data.relatedKanji = ((data.relatedKanji as Array<{ id?: string; _id?: string }>) || []).map((k) => ({ ...k, _id: k.id || k._id }));
+        data.synonyms = ((data.synonyms as Array<{ id?: string; _id?: string }>) || []).map((s) => ({ ...s, _id: s.id || s._id }));
+        data.antonyms = ((data.antonyms as Array<{ id?: string; _id?: string }>) || []).map((a) => ({ ...a, _id: a.id || a._id }));
 
         // Handle conjugations
         const conj = typeof data.conjugations === "object" && data.conjugations !== null ? data.conjugations : {};
@@ -202,8 +313,8 @@ export async function getLibraryItemBySlug(
       const articles = contentBlocks.map((block: ContentBlock | Record<string, unknown>) => {
         if (!block) return block;
         const normalized = { ...block };
-        if (!normalized._type && (normalized as any).type) {
-          normalized._type = (normalized as any).type;
+        if (!normalized._type && (normalized as Record<string, unknown>).type) {
+          normalized._type = (normalized as Record<string, unknown>).type as string;
         }
         if (!normalized._type) {
           normalized._type = 'block';
@@ -212,7 +323,7 @@ export async function getLibraryItemBySlug(
       });
 
       // Create a clean result object with initial data
-      const result: Record<string, any> = {
+      const result: LibraryItem = {
         ...data,
         _id: data.id || data._id,
         articles: articles,
@@ -237,7 +348,7 @@ export async function getLibraryItemBySlug(
         const cleanList = vocabListRaw.map((s: unknown) => String(s).trim());
         const hasUUIDs = cleanList.some(isUUID);
         
-        let vItems: any[] = [];
+        let vItems: VocabRow[] = [];
         if (hasUUIDs) {
           const { data } = await supabase.from("vocab").select("id, word, furigana, romaji, meaning_id, hinshi, pitch_accent, usage_notes, mnemonic").in("id", cleanList);
           vItems = data || [];
@@ -274,7 +385,7 @@ export async function getLibraryItemBySlug(
         const cleanList = grammarListRaw.map((s: unknown) => String(s).trim());
         const hasUUIDs = cleanList.some(isUUID);
         
-        let gItems: any[] = [];
+        let gItems: GrammarRow[] = [];
         if (hasUUIDs) {
           const { data } = await supabase.from("grammar").select("id, title, meaning, formation, formation_furigana, slug, jlpt_level, examples, notes").in("id", cleanList);
           gItems = data || [];
@@ -297,7 +408,7 @@ export async function getLibraryItemBySlug(
         const cleanList = listeningListRaw.map((s: unknown) => String(s).trim());
         const hasUUIDs = cleanList.some(isUUID);
         
-        let lItems: any[] = [];
+        let lItems: ListeningMaterialRow[] = [];
         if (hasUUIDs) {
           const { data } = await supabase.from("listening_material").select("*").in("id", cleanList);
           lItems = data || [];
@@ -368,10 +479,10 @@ export async function getLibraryItemBySlug(
 
       const fetchReading = async () => {
         if (!readingListRaw.length) return;
-        const cleanList = readingListRaw.map((s: any) => String(s).trim());
+        const cleanList = readingListRaw.map((s: unknown) => String(s).trim());
         const hasUUIDs = cleanList.some(isUUID);
         
-        let rItems: any[] = [];
+        let rItems: ReadingMaterialRow[] = [];
         if (hasUUIDs) {
           const { data } = await supabase.from("reading_material").select("*").in("id", cleanList);
           rItems = data || [];
@@ -406,7 +517,7 @@ export async function getLibraryItemBySlug(
       ]);
 
       // Add final check for articles
-      if (!result.articles || result.articles.length === 0) {
+      if (!result.articles || (result.articles as unknown[]).length === 0) {
         result.articles = articles.length > 0 ? articles : contentBlocks;
       }
 
@@ -426,6 +537,6 @@ export async function getLibraryItemBySlug(
 export async function getLibraryDetail(
   type: "kanji" | "vocab" | "grammar" | "reading" | "listening" | "lessons" | "exams" | "phrase",
   slugOrId: string
-): Promise<any | null> {
+): Promise<LibraryItem | null> {
   return getLibraryItemBySlug(type, slugOrId);
 }

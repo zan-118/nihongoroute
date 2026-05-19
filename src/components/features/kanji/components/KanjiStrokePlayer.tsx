@@ -215,7 +215,7 @@ export default function KanjiStrokePlayer({
         <div className="grid grid-cols-5 gap-2 bg-[rgba(var(--background-rgb),0.05)] p-2 rounded-2xl border border-border">
           <Button
             variant="ghost"
-            size="icon"
+            size="icon" 
             onClick={handlePrev}
             aria-label="Previous stroke"
             className="rounded-xl hover:bg-background/10"
@@ -225,7 +225,7 @@ export default function KanjiStrokePlayer({
 
           <Button
             variant="ghost"
-            size="icon"
+            size="icon" 
             onClick={togglePlay}
             aria-label={status === "playing" ? "Pause animation" : "Play animation"}
             className="rounded-xl bg-primary/10 text-primary hover:bg-primary/20 col-span-1"
@@ -235,7 +235,7 @@ export default function KanjiStrokePlayer({
 
           <Button
             variant="ghost"
-            size="icon"
+            size="icon" 
             onClick={handleNext}
             aria-label="Next stroke"
             className="rounded-xl hover:bg-background/10"
@@ -245,7 +245,7 @@ export default function KanjiStrokePlayer({
 
           <Button
             variant="ghost"
-            size="icon"
+            size="icon" 
             onClick={handleReset}
             aria-label="Reset animation"
             className="rounded-xl hover:bg-background/10"
@@ -255,7 +255,7 @@ export default function KanjiStrokePlayer({
 
           <Button
             variant="ghost"
-            size="icon"
+            size="icon" 
             onClick={() => setShowNumbers(!showNumbers)}
             aria-label={showNumbers ? "Hide stroke numbers" : "Show stroke numbers"}
             className={`rounded-xl transition-colors ${showNumbers ? "text-primary bg-primary/5" : "text-muted-foreground"}`}
@@ -287,3 +287,6 @@ export default function KanjiStrokePlayer({
     </div>
   );
 }
+
+
+

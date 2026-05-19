@@ -4,9 +4,24 @@ import { set, unset } from 'sanity';
 
 import { getApiUrl, SECRET_TOKEN } from './api';
 
-export function SupabaseCategorySelect(props: any) {
+interface SupabaseCategory {
+  id: string | number;
+  title: string;
+  slug?: string;
+}
+
+interface SupabaseCategorySelectProps {
+  onChange: (patch: unknown) => void;
+  value?: string;
+  schemaType: {
+    title?: string;
+    description?: string;
+  };
+}
+
+export function SupabaseCategorySelect(props: SupabaseCategorySelectProps) {
   const { onChange, value = '', schemaType } = props;
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<SupabaseCategory[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,10 +41,11 @@ export function SupabaseCategorySelect(props: any) {
         if (json.data && active) {
           setCategories(json.data);
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Failed to fetch categories from Supabase Bridge:', err);
         if (active) {
-          setError(err.message || 'Gagal memuat kategori');
+          const errorMessage = err instanceof Error ? err.message : 'Gagal memuat kategori';
+          setError(errorMessage);
         }
       } finally {
         if (active) {

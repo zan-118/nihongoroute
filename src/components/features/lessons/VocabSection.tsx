@@ -4,8 +4,22 @@ import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import AddToSRSButton from "@/components/features/srs/actions/AddToSRSButton";
 
+export interface VocabLessonItem {
+  _id?: string;
+  id?: string;
+  romaji?: string;
+  furigana?: string;
+  hinshi?: string | string[];
+  transitivity?: string;
+  word?: string;
+  onyomi?: string;
+  kunyomi?: string;
+  meaning?: string;
+  meaning_id?: string;
+}
+
 interface VocabSectionProps {
-  vocabList: any[];
+  vocabList: VocabLessonItem[];
 }
 
 export const VocabSection: React.FC<VocabSectionProps> = ({ vocabList }) => {
@@ -20,7 +34,7 @@ export const VocabSection: React.FC<VocabSectionProps> = ({ vocabList }) => {
         <div className="h-[1px] flex-1 bg-border" />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {vocabList.map((v: any, idx: number) => {
+        {vocabList.map((v: VocabLessonItem, idx: number) => {
           if (!v) return null;
           return (
             <div

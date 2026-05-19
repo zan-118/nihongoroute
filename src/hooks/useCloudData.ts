@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useUIStore } from "@/store/useUIStore";
@@ -13,7 +13,7 @@ import { handleLegacyMigration } from "@/lib/supabase/sync";
 import { Session } from "@supabase/supabase-js";
 
 export function useCloudData(session: Session | null | undefined, hasMounted: boolean) {
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const mergeProgress = useSRSStore((s) => s.mergeProgress);
   const setLoading = useUIStore((s) => s.setLoading);
   const initialLoadDone = useRef(false);

@@ -2,6 +2,8 @@
 
 Dokumen ini menyajikan audit struktural yang komprehensif dari proyek NihongoRoute, merinci tumpukan teknologi, hubungan antar lapisan aplikasi, serta arsitektur alur data. File ini berfungsi sebagai rujukan teknis utama bagi para pengembang.
 
+> **Catatan:** Seluruh kode sumber aplikasi berada di dalam direktori `src/`. Alias path `@/*` merujuk ke `./src/*` (dikonfigurasi di `tsconfig.json`).
+
 ---
 
 ## 1. Tumpukan Teknologi Utama
@@ -22,13 +24,13 @@ NihongoRoute dibangun menggunakan arsitektur modern yang berfokus pada sisi anta
 
 ---
 
-## 2. Peta Rute & Tata Letak (`app/`)
+## 2. Peta Rute & Tata Letak (`src/app/`)
 
 Sistem perutean menggunakan App Router dari Next.js 16 dengan pemisahan tegas antara area utama aplikasi dan area yang terisolasi.
 
 ### Struktur Pohon Rute
 ```text
-app/
+src/app/
 ├── (main)/                 # Grup Rute: Memerlukan Navigasi Samping & Atas
 │   ├── courses/            # Katalog materi & detail pelajaran
 │   ├── dashboard/          # Statistik pengguna & ringkasan kemajuan
@@ -43,8 +45,14 @@ app/
 │       ├── flashcards/     # Mesin kartu pengingat dinamis
 │       ├── kana/           # Latihan Hiragana & Katakana
 │       └── writing/        # Mesin latihan menulis Kanji
+├── api/                    # Endpoints API internal (furigana, admin, webhooks)
 ├── auth/                   # Alur masuk, daftar, & panggilan balik
+├── login/                  # Halaman login
+├── forgot-password/        # Pemulihan kata sandi
+├── update-password/        # Pembaruan kata sandi
 ├── onboarding/             # Pengenalan bertahap (Terisolasi dari Tata Letak Utama)
+├── privacy/                # Kebijakan privasi
+├── terms/                  # Syarat & ketentuan
 ├── studio/                 # Sanity Studio (Embedded CMS)
 ├── globals.css             # Gaya dasar (Tailwind + Token Cyber-Glass)
 ├── layout.tsx              # Penyedia Utama (Autentikasi, Kueri, Tema)
@@ -53,15 +61,15 @@ app/
 
 ### Tujuan Tata Letak Khusus
 
-* **`app/layout.tsx`**: Membungkus seluruh aplikasi dengan penyedia tema (`ThemeProvider`), kueri (`QueryClientProvider`), dan autentikasi (`AuthProvider`).
-* **`app/(main)/layout.tsx`**: Menyediakan kerangka navigasi (Navigasi Samping, Navigasi Atas) yang seragam untuk pengalaman belajar.
-* **`app/onboarding/`**: Menggunakan tata letak kosong (layar penuh) untuk meminimalkan gangguan saat pengguna pertama kali mengatur akun.
+* **`src/app/layout.tsx`**: Membungkus seluruh aplikasi dengan penyedia tema (`ThemeProvider`), kueri (`QueryClientProvider`), dan autentikasi (`AuthProvider`).
+* **`src/app/(main)/layout.tsx`**: Menyediakan kerangka navigasi (Navigasi Samping, Navigasi Atas) yang seragam untuk pengalaman belajar.
+* **`src/app/onboarding/`**: Menggunakan tata letak kosong (layar penuh) untuk meminimalkan gangguan saat pengguna pertama kali mengatur akun.
 
 ---
 
-## 3. Anatomi Komponen & Fitur Domain (`components/`)
+## 3. Anatomi Komponen & Fitur Domain (`src/components/`)
 
-Folder `components/features/` dikelompokkan berdasarkan area fungsional untuk menghindari ketergantungan yang rumit.
+Folder `src/components/features/` dikelompokkan berdasarkan area fungsional untuk menghindari ketergantungan yang rumit.
 
 | Folder Fitur | Tanggung Jawab |
 | --- | --- |
@@ -77,15 +85,18 @@ Folder `components/features/` dikelompokkan berdasarkan area fungsional untuk me
 | `review` | Ringkasan sesi setelah menyelesaikan latihan pengulangan berkala (SRS). |
 | `srs` | Tombol evaluasi (Sulit/Mudah) dan perhitungan jeda waktu. |
 
-### Komponen Kerangka Global (`components/layout/`)
+### Komponen Kerangka Global (`src/components/layout/`)
 
 * **`Sidebar.tsx`**: Navigasi utama (Desktop) dengan integrasi tautan legal di bagian bawah.
 * **`Topbar.tsx`**: Pusat kendali pengguna (XP, Level, Rekor) dan menu profil.
 * **`MobileNav.tsx`**: Navigasi bawah (Bilah tab) untuk perangkat seluler.
+* **`NavWrapper.tsx`**: Pembungkus navigasi responsif yang menggabungkan Sidebar, Topbar, dan MobileNav.
+* **`AppBreadcrumbs.tsx`**: Jejak navigasi kontekstual.
+* **`ThemeToggle.tsx`**: Tombol pengalih tema terang/gelap.
 
 ---
 
-## 4. Analisis Manajemen Status (`store/`)
+## 4. Analisis Manajemen Status (`src/store/`)
 
 NihongoRoute menggunakan Zustand yang dipadukan dengan persistensi IndexedDB untuk menjamin performa tinggi dan fungsionalitas luring (*offline*).
 
@@ -112,9 +123,9 @@ Sistem menggunakan arsitektur terpadu berbasis Supabase untuk semua jenis data, 
 
 ### Langkah 1: Pengambilan Konten Paralel (Promise.all & Server Actions)
 
-Data edukasi diambil secara paralel menggunakan arsitektur *Split-Source* melalui Server Actions. 
-- **Sanity CMS** melayani pemanggilan konten editorial yang kaya (mis. `lesson.actions.ts`, `reading.actions.ts`).
-- **Supabase** melayani pengambilan data kamus leksikal yang kaku (mis. `library.actions.ts`).
+Data edukasi diambil secara paralel menggunakan arsitektur *Split-Source* melalui Server Actions yang berada di `src/actions/`. 
+- **Sanity CMS** melayani pemanggilan konten editorial yang kaya (mis. `lessons.actions.ts`, `reading.actions.ts`).
+- **Supabase** melayani pengambilan data kamus leksikal yang kaku (mis. `library.actions.ts`, `vocab.actions.ts`).
 Proses pengambilan data ini secara ketat mengimplementasikan pola `Promise.all` untuk menghindari *waterfall latency*, memanfaatkan *fetch caching* bawaan Next.js alih-alih invalidasi waktu kaku.
 
 ### Langkah 2: Sinkronisasi Awan ke Lokal (Supabase → Zustand)
@@ -154,8 +165,8 @@ Status pembacaan dikendalikan secara terpusat melalui `readingState`:
 - **Hiragana**: Mengonversi seluruh teks Jepang menjadi Hiragana.
 
 ### 7.2 Komponen Rendering Cerdas
-- **`SmartJapanese`**: Komponen utama yang mendeteksi teks Jepang dan membungkusnya dengan logika interaksi.
-- **`FuriganaDisplay`**: Mengelola tampilan visual (Ruby) berdasarkan mode yang aktif. Menggunakan `0.55em` untuk proporsi yang optimal.
+- **`SmartJapanese`** (`src/components/ui/SmartJapanese.tsx`): Komponen utama yang mendeteksi teks Jepang dan membungkusnya dengan logika interaksi.
+- **`FuriganaDisplay`** (`src/components/ui/FuriganaDisplay.tsx`): Mengelola tampilan visual (Ruby) berdasarkan mode yang aktif. Menggunakan `0.55em` untuk proporsi yang optimal.
 - **`WordPopover`**: Muncul saat teks diklik, melakukan pencarian kosakata secara dinamis di Supabase/IDB untuk memberikan definisi, contoh, dan audio TTS.
 
 ---
@@ -164,9 +175,9 @@ Status pembacaan dikendalikan secara terpusat melalui `readingState`:
 
 Untuk menjamin performa luring (*offline-first*) yang tangguh, NihongoRoute mengikuti protokol sinkronisasi tiga lapis:
 
-1.  **Lapis UI (Zustand)**: Interaksi pengguna langsung memperbarui Zustand store (`useUserStore`, `useSRSStore`) untuk umpan balik instan (< 16ms).
-2.  **Lapis Orkestrasi (`useSyncProgress`)**: Hook ini memantau perubahan store, melakukan *debouncing*, dan menyiapkan paket data untuk dikirim ke awan.
-3.  **Lapis Persistensi Awan (`useCloudMutation`)**: Menggunakan React Query untuk mengeksekusi mutasi ke Supabase RPC. Jika sukses, ia akan menyiarkan `"SYNC_COMPLETE"` melalui `BroadcastChannel` untuk sinkronisasi antar-tab.
+1.  **Lapis UI (Zustand)**: Interaksi pengguna langsung memperbarui Zustand store di `src/store/` (`useUserStore`, `useSRSStore`) untuk umpan balik instan (< 16ms).
+2.  **Lapis Orkestrasi (`useSyncProgress`)**: Hook di `src/hooks/useSyncProgress.ts` memantau perubahan store, melakukan *debouncing*, dan menyiapkan paket data untuk dikirim ke awan.
+3.  **Lapis Persistensi Awan (`useCloudMutation`)**: Hook di `src/hooks/useCloudMutation.ts` menggunakan React Query untuk mengeksekusi mutasi ke Supabase RPC. Jika sukses, ia akan menyiarkan `"SYNC_COMPLETE"` melalui `BroadcastChannel` untuk sinkronisasi antar-tab.
 
 ---
 

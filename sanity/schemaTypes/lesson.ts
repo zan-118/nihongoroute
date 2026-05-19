@@ -19,7 +19,7 @@ export default {
       title: 'Judul Pelajaran',
       type: 'string',
       group: 'metadata',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: import('sanity').Rule) => Rule.required(),
     },
     {
       name: 'slug',
@@ -30,7 +30,7 @@ export default {
         source: 'title',
         maxLength: 96,
       },
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: import('sanity').Rule) => Rule.required(),
     },
     {
       name: 'order_number',
@@ -38,7 +38,7 @@ export default {
       type: 'number',
       group: 'metadata',
       initialValue: 0,
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: import('sanity').Rule) => Rule.required(),
     },
     {
       name: 'category_id',
@@ -120,7 +120,7 @@ export default {
               title: 'Teks Dialog (Format: Pembicara: Teks)',
               type: 'text',
               description: 'Contoh:\nTakahashi: 初めまして。\nAyu: 初めまして。',
-              validation: (Rule: any) => Rule.required()
+              validation: (Rule: import('sanity').Rule) => Rule.required()
             },
             { name: 'translation', title: 'Terjemahan Dialog', type: 'text' },
             { name: 'furigana', title: 'Furigana (Satu baris per baris dialog)', type: 'text', components: { input: FuriganaGeneratorInput } }
@@ -132,7 +132,7 @@ export default {
           name: 'grammarBlock',
           title: 'Sisipkan: Pola Tata Bahasa',
           fields: [
-            { name: 'title', title: 'Nama Pola Tata Bahasa', type: 'string', validation: (Rule: any) => Rule.required() },
+            { name: 'title', title: 'Nama Pola Tata Bahasa', type: 'string', validation: (Rule: import('sanity').Rule) => Rule.required() },
             { name: 'content', title: 'Formula / Bentuk Jepang', type: 'string' },
             { name: 'furigana', title: 'Furigana Tata Bahasa', type: 'string', components: { input: FuriganaGeneratorInput } },
             { name: 'translation', title: 'Fungsi / Arti', type: 'text' },
@@ -146,8 +146,8 @@ export default {
                   name: 'exampleSentence',
                   title: 'Kalimat Contoh',
                   fields: [
-                    { name: 'jp', title: 'Bahasa Jepang', type: 'string', validation: (Rule: any) => Rule.required() },
-                    { name: 'id', title: 'Terjemahan Indonesia', type: 'string', validation: (Rule: any) => Rule.required() },
+                    { name: 'jp', title: 'Bahasa Jepang', type: 'string', validation: (Rule: import('sanity').Rule) => Rule.required() },
+                    { name: 'id', title: 'Terjemahan Indonesia', type: 'string', validation: (Rule: import('sanity').Rule) => Rule.required() },
                     { name: 'romaji', title: 'Romaji', type: 'string' },
                     { name: 'furigana', title: 'Furigana', type: 'string', components: { input: FuriganaGeneratorInput } }
                   ]
@@ -163,7 +163,7 @@ export default {
           title: 'Sisipkan: Catatan Penting / Budaya',
           fields: [
             { name: 'title', title: 'Judul Catatan', type: 'string' },
-            { name: 'content', title: 'Isi Catatan', type: 'text', validation: (Rule: any) => Rule.required() },
+            { name: 'content', title: 'Isi Catatan', type: 'text', validation: (Rule: import('sanity').Rule) => Rule.required() },
             { name: 'translation', title: 'Terjemahan / Arti (Opsional)', type: 'text' }
           ]
         },
@@ -174,7 +174,7 @@ export default {
           title: 'Sisipkan: Gambar',
           fields: [
             { name: 'title', title: 'Caption Gambar', type: 'string' },
-            { name: 'content', title: 'URL Gambar (Sanity/CDN)', type: 'string', validation: (Rule: any) => Rule.required() }
+            { name: 'content', title: 'URL Gambar (Sanity/CDN)', type: 'string', validation: (Rule: import('sanity').Rule) => Rule.required() }
           ]
         },
         // 6. Custom Embed: Vocab Block
@@ -213,26 +213,26 @@ export default {
               name: 'id',
               title: 'Unique Quiz ID',
               type: 'string',
-              validation: (Rule: any) => Rule.required(),
+              validation: (Rule: import('sanity').Rule) => Rule.required(),
             },
             {
               name: 'question',
               title: 'Pertanyaan',
               type: 'text',
-              validation: (Rule: any) => Rule.required(),
+              validation: (Rule: import('sanity').Rule) => Rule.required(),
             },
             {
               name: 'options',
               title: 'Pilihan Jawaban',
               type: 'array',
               of: [{ type: 'string' }],
-              validation: (Rule: any) => Rule.required().min(2),
+              validation: (Rule: import('sanity').Rule) => Rule.required().min(2),
             },
             {
               name: 'correct_answer',
               title: 'Jawaban Benar (Ketik teks jawabannya persis)',
               type: 'string',
-              validation: (Rule: any) => Rule.required(),
+              validation: (Rule: import('sanity').Rule) => Rule.required(),
             },
             {
               name: 'explanation',
@@ -260,7 +260,7 @@ export default {
                   { title: 'Isian Rumpang (Fill in the Blank)', value: 'fill-in-the-blank' },
                 ],
               },
-              validation: (Rule: any) => Rule.required(),
+              validation: (Rule: import('sanity').Rule) => Rule.required(),
             },
           ],
         },

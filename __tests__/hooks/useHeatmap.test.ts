@@ -10,7 +10,7 @@ describe("useHeatmap - getBoxStyle", () => {
 
   it("mengembalikan style inactive untuk value undefined/null", () => {
      
-    const style = getBoxStyle(undefined as any);
+    const style = getBoxStyle(undefined as unknown as number);
     expect(style).toContain("opacity-30");
   });
 

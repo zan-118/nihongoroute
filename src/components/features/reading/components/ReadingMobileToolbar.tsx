@@ -27,7 +27,7 @@ export function ReadingMobileToolbar({
           size="icon"
           className="rounded-xl w-12 h-12"
           onClick={onFontSizeToggle}
-        >
+         aria-label="Aksi" >
           <Type size={22} />
         </Button>
         <Button
@@ -35,7 +35,7 @@ export function ReadingMobileToolbar({
           size="icon"
           className={cn("rounded-xl w-12 h-12 transition-all", showTranslation && "shadow-lg shadow-primary/30")}
           onClick={onTranslationToggle}
-        >
+         aria-label="Aksi" >
           <Languages size={22} />
         </Button>
         {onAudioToggle && (
@@ -44,7 +44,7 @@ export function ReadingMobileToolbar({
             size="icon"
             className={cn("rounded-xl w-12 h-12 transition-all", showAudio && "shadow-lg shadow-primary/30")}
             onClick={onAudioToggle}
-          >
+           aria-label="Aksi" >
             <Headphones size={22} />
           </Button>
         )}
@@ -52,3 +52,4 @@ export function ReadingMobileToolbar({
     </div>
   );
 }
+

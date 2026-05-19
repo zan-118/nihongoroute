@@ -103,7 +103,7 @@ export interface VerbConjugations {
 export interface MnemonicBlock {
   _type: string;
   children: Array<{ _type: string; text: string }>;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface LibraryContentAIResponse {
@@ -172,7 +172,7 @@ export interface LibraryContentAIResponse {
   is_published?: boolean;
   status?: ContentStatus;
   seo?: SEOMetadata;
-  resolution_metadata?: any;
+  resolution_metadata?: Record<string, unknown>;
   warnings?: EditorialWarning[];
   generation_context?: GenerationContext;
   audit_log?: AuditEntry[];
@@ -195,7 +195,7 @@ export interface LibraryContentAIResponse {
 
   // Cheatsheet Fields
   category?: string;
-  items?: any[];
+  items?: Record<string, unknown>[];
 }
 
 export interface ContentBlock {
@@ -291,7 +291,7 @@ export interface ReadingMaterialTable {
   audio_url?: string;
   image_url?: string;
   video_url?: string;
-  seo?: any;
+  seo?: SEOMetadata;
   jlpt_level?: string;
   created_at: string;
 }
@@ -307,7 +307,7 @@ export interface ListeningMaterialTable {
   body: string;
   hiragana?: string;
   translation?: string;
-  seo?: any;
+  seo?: SEOMetadata;
   jlpt_level?: string;
   created_at: string;
 }
@@ -325,12 +325,12 @@ export interface LessonTable {
   grammar_list: string[]; // array of grammar slugs/ids
   reading_list: string[];
   listening_list: string[];
-  quizzes: any[];
+  quizzes: Quiz[];
   estimated_minutes: number;
   is_premium: boolean;
   is_published: boolean;
   status: ContentStatus;
-  seo: any;
+  seo: SEOMetadata;
   warnings?: EditorialWarning[];
   audit_log?: AuditEntry[];
   confidence?: EditorialConfidence;

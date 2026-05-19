@@ -155,7 +155,7 @@ export default function CourseCategoryClient({
           onPageChange={handlePageChange}
           categoryId={categoryId}
           isSideQuest={isSideQuest}
-          completedLessons={completedLessons}
+          completedLessons={completedLessons as unknown as Record<string, { isDeleted?: boolean; [key: string]: unknown }>}
           itemVariants={itemVariants}
         />
       </motion.div>

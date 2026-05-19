@@ -68,16 +68,18 @@ export default function VocabClient({
 
   const vocabListRaw = data?.data || [];
   
+  type VocabItemType = (typeof vocabListRaw)[number];
+
   // De-duplikasi Konten berdasarkan kata
   const uniqueVocab = Object.values(
-    vocabListRaw.reduce((acc: Record<string, any>, item: any) => {
-      const key = item.word;
+    vocabListRaw.reduce((acc: Record<string, VocabItemType>, item: VocabItemType) => {
+      const key = item.word || "";
       if (!acc[key]) {
         acc[key] = item;
       }
       return acc;
     }, {})
-  ) as any[];
+  );
 
   const vocabList = uniqueVocab;
   const totalItems = data?.total || 0;

@@ -14,6 +14,7 @@ import ConfirmModal from "@/components/ui/ConfirmModal";
 import { ExamData, ExamQuestion, AudioState, PendingConfirmType } from "./types";
 import { SECTION_LABELS } from "./constants";
 import { formatTime } from "@/lib/utils";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 interface ExamPlayingProps {
   exam: ExamData;
@@ -215,7 +216,7 @@ export function ExamPlaying({
 
                     <div 
                       className="text-lg md:text-xl font-medium leading-relaxed mb-8 text-foreground"
-                      dangerouslySetInnerHTML={{ __html: activeQuestion.questionText || "" }}
+                      dangerouslySetInnerHTML={{ __html: sanitizeHtml(activeQuestion.questionText || "") }}
                     />
 
                   <div className="grid grid-cols-1 gap-3">

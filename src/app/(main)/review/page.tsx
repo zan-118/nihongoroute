@@ -7,6 +7,12 @@
 import { Suspense } from "react";
 import { ReviewClient } from "@/app/(main)/review/ReviewClient";
 import { RotateCw } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Review SRS | NihongoRoute",
+  description: "Sesi ulangan spasi repetisi (SRS) untuk memperkuat hafalan kosakata dan kanji bahasa Jepang.",
+};
 
 export default function ReviewPage() {
   return (

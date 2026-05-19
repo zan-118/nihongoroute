@@ -18,6 +18,12 @@ export async function getLessonDetail(slug: string) {
   return data;
 }
 
+interface SanityLessonListItem {
+  _id: string;
+  title: string;
+  slug: string;
+}
+
 export async function getCourseCategories() {
   const supabase = await createClient();
   const { data: categories, error } = await supabase
@@ -38,7 +44,7 @@ export async function getCourseCategories() {
         ...cat,
         _id: cat.id,
         lessonCount: (lessons || []).length,
-        previews: (lessons || []).slice(0, 4).map((l: any) => ({
+        previews: (lessons || []).slice(0, 4).map((l: SanityLessonListItem) => ({
           _id: l._id,
           title: l.title,
           slug: l.slug

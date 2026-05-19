@@ -179,7 +179,7 @@ export default function AudioController({
         {/* Play/Pause Button */}
         <Button
           variant="ghost"
-          size="icon"
+          size="icon" 
           className={cn(
             "rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-all duration-300 active:scale-90",
             compact ? "w-10 h-10" : "w-14 h-14"
@@ -235,7 +235,7 @@ export default function AudioController({
           <div className="flex items-center gap-1 pr-2">
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" 
               className="w-10 h-10 rounded-full hover:bg-background/5 text-muted-foreground/60 transition-all hover:text-primary"
               onClick={() => {
                 if (audioRef.current) {
@@ -249,7 +249,7 @@ export default function AudioController({
             </Button>
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" 
               className="w-10 h-10 rounded-full hover:bg-background/5 text-muted-foreground/60 transition-all hover:text-destructive"
               onClick={stopAll}
               disabled={!isPlaying && currentTime === 0}
@@ -281,3 +281,6 @@ export default function AudioController({
     </div>
   );
 }
+
+
+

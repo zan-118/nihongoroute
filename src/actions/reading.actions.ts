@@ -3,6 +3,17 @@
 import { sanityClient } from "@/lib/sanity.client";
 import { PaginatedReadingResponse } from "@/types/library";
 
+interface SanityReadingItem {
+  _id: string;
+  title: string;
+  slug: string;
+  jlpt_level: string;
+  difficulty: string;
+  estimated_minutes: number;
+  body?: unknown;
+  _createdAt: string;
+}
+
 /**
  * Mengambil materi membaca (reading) dengan paginasi dan filter level dari Sanity.
  */
@@ -33,7 +44,7 @@ export async function getPaginatedReading(
       "total": count(*[${filter}])
     }`;
 
-    const params: any = {
+    const params: Record<string, string | number> = {
       offset,
       limit: offset + limit
     };
@@ -45,7 +56,7 @@ export async function getPaginatedReading(
     const result = await sanityClient.fetch(query, params);
 
     return {
-      data: (result.data || []).map((r: any) => ({
+      data: (result.data || []).map((r: SanityReadingItem) => ({
         ...r,
         id: r._id,
         difficulty: r.difficulty || r.jlpt_level,

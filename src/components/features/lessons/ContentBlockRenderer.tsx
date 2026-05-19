@@ -13,8 +13,25 @@ import { KanjiSection } from "./KanjiSection";
 
 interface ContentBlockRendererProps {
   blocks: ContentBlock[];
-  vocabList?: any[];
-  kanjiList?: any[];
+  vocabList?: unknown[];
+  kanjiList?: unknown[];
+}
+
+interface SanityPortableTextBlock {
+  _type?: string;
+  _key?: string;
+  [key: string]: unknown;
+}
+
+interface PortableTextValueProps {
+  value: {
+    _type: string;
+    [key: string]: unknown;
+  };
+}
+
+interface PortableTextChildrenProps {
+  children: React.ReactNode;
 }
 
 export default function ContentBlockRenderer({ 
@@ -27,42 +44,42 @@ export default function ContentBlockRenderer({
   // Define components dynamically to close over vocabList and kanjiList
   const components = {
     types: {
-      dialogueBlock: ({ value }: any) => <DialogueBlock block={value} />,
-      grammarBlock: ({ value }: any) => <GrammarBlock block={value} />,
-      calloutBlock: ({ value }: any) => <CalloutBlock block={value} />,
-      imageBlock: ({ value }: any) => <ImageBlock block={value} />,
+      dialogueBlock: ({ value }: PortableTextValueProps) => <DialogueBlock block={value as unknown as ContentBlock} />,
+      grammarBlock: ({ value }: PortableTextValueProps) => <GrammarBlock block={value as unknown as ContentBlock} />,
+      calloutBlock: ({ value }: PortableTextValueProps) => <CalloutBlock block={value as unknown as ContentBlock} />,
+      imageBlock: ({ value }: PortableTextValueProps) => <ImageBlock block={value as unknown as ContentBlock} />,
       vocabBlock: () => <VocabSection vocabList={vocabList} />,
       kanjiBlock: () => <KanjiSection kanjiList={kanjiList} />,
     },
     block: {
-      h2: ({ children }: any) => (
+      h2: ({ children }: PortableTextChildrenProps) => (
         <h2 className="text-2xl font-black uppercase tracking-tight text-foreground mt-8 mb-4 border-b border-border pb-2 font-japanese">
           {children}
         </h2>
       ),
-      h3: ({ children }: any) => (
+      h3: ({ children }: PortableTextChildrenProps) => (
         <h3 className="text-xl font-black uppercase tracking-tight text-foreground mt-6 mb-3 font-japanese">
           {children}
         </h3>
       ),
-      normal: ({ children }: any) => (
+      normal: ({ children }: PortableTextChildrenProps) => (
         <p className="text-lg leading-relaxed text-foreground/90 font-japanese mb-4">
           {children}
         </p>
       ),
-      blockquote: ({ children }: any) => (
+      blockquote: ({ children }: PortableTextChildrenProps) => (
         <blockquote className="border-l-4 border-primary pl-4 italic my-4 text-muted-foreground">
           {children}
         </blockquote>
       )
     },
     list: {
-      bullet: ({ children }: any) => (
+      bullet: ({ children }: PortableTextChildrenProps) => (
         <ul className="list-disc pl-6 mb-4 space-y-2 text-lg text-foreground/90 font-japanese">
           {children}
         </ul>
       ),
-      number: ({ children }: any) => (
+      number: ({ children }: PortableTextChildrenProps) => (
         <ol className="list-decimal pl-6 mb-4 space-y-2 text-lg text-foreground/90 font-japanese">
           {children}
         </ol>
@@ -158,10 +175,13 @@ function PedagogicalBadges({ block }: { block: ContentBlock }) {
   );
 }
 
-function PortableTextBlockRenderer({ block, components }: { block: any; components: any }) {
+function PortableTextBlockRenderer({ block, components }: { block: SanityPortableTextBlock; components: React.ComponentProps<typeof PortableText>["components"] }) {
   return (
     <div className="prose-custom max-w-none">
-      <PortableText value={[block]} components={components} />
+      <PortableText 
+        value={[block as unknown as Record<string, unknown>] as unknown as React.ComponentProps<typeof PortableText>["value"]} 
+        components={components} 
+      />
     </div>
   );
 }
@@ -173,29 +193,29 @@ function BlockItem({
   kanjiList = []
 }: { 
   block: ContentBlock;
-  components: any;
-  vocabList?: any[];
-  kanjiList?: any[];
+  components: React.ComponentProps<typeof PortableText>["components"];
+  vocabList?: unknown[];
+  kanjiList?: unknown[];
 }) {
-  const type = block.type || (block as any)._type || "text";
+  const type = block.type || (block as Record<string, unknown>)._type || "text";
 
-  const isPortableText = (block as any)._type === "block" || 
-                         (block as any)._type === "dialogueBlock" || 
-                         (block as any)._type === "grammarBlock" || 
-                         (block as any)._type === "calloutBlock" || 
-                         (block as any)._type === "imageBlock" ||
-                         (block as any)._type === "vocabBlock" ||
-                         (block as any)._type === "kanjiBlock";
+  const isPortableText = (block as Record<string, unknown>)._type === "block" || 
+                         (block as Record<string, unknown>)._type === "dialogueBlock" || 
+                         (block as Record<string, unknown>)._type === "grammarBlock" || 
+                         (block as Record<string, unknown>)._type === "calloutBlock" || 
+                         (block as Record<string, unknown>)._type === "imageBlock" ||
+                         (block as Record<string, unknown>)._type === "vocabBlock" ||
+                         (block as Record<string, unknown>)._type === "kanjiBlock";
 
   return (
     <div className="group relative">
       <PedagogicalBadges block={block} />
       {(() => {
         if (isPortableText) {
-          return <PortableTextBlockRenderer block={block} components={components} />;
+          return <PortableTextBlockRenderer block={block as unknown as SanityPortableTextBlock} components={components} />;
         }
 
-        switch (type as any) {
+        switch (type as string) {
           case "callout":
             return <CalloutBlock block={block} />;
           case "dialogue":

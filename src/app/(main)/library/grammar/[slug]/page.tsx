@@ -105,7 +105,7 @@ export default async function GrammarDetailPage({
              <span className="text-primary font-black text-[10px] md:text-xs uppercase tracking-[0.3em]">Modul Pembelajaran</span>
           </div>
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-foreground leading-[0.9] tracking-tighter drop-shadow-2xl mb-8">
-            {article.title.split('').map((char: string, i: number) => (
+            {(article.title || "").split('').map((char: string, i: number) => (
               <span key={i} className="inline-block hover:text-primary transition-colors duration-300">
                 {char}
               </span>
@@ -155,7 +155,7 @@ export default async function GrammarDetailPage({
             {/* Grammar examples rendered as plain text */}
             {article.examples && article.examples.length > 0 && (
               <div className="space-y-6">
-                {article.examples.map((ex: any, i: number) => (
+                {(article.examples as Array<{ jp: string; furigana?: string; id: string }>).map((ex, i: number) => (
                   <div key={i} className="border border-border rounded-2xl p-6 space-y-2">
                     <p className="text-xl font-japanese font-bold text-foreground">{ex.jp}</p>
                     {ex.furigana && <p className="text-sm text-muted-foreground">{ex.furigana}</p>}

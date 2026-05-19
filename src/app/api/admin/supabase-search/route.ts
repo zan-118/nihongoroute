@@ -107,10 +107,11 @@ export async function GET(req: Request) {
     }
 
     return NextResponse.json({ error: "Invalid search type" }, { status: 400, headers: corsHeaders });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Supabase Search Bridge Error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Terjadi kesalahan internal";
     return NextResponse.json(
-      { error: "Gagal memproses pencarian", details: error.message },
+      { error: "Gagal memproses pencarian", details: errorMessage },
       { status: 500, headers: corsHeaders }
     );
   }

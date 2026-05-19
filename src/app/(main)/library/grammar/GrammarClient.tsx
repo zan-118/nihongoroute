@@ -21,7 +21,7 @@ interface GrammarArticle {
   _id: string;
   title: string;
   slug: string;
-  jlptLevel?: string;
+  jlptLevel?: string | null;
   meaning?: string;
   formation?: string;
   notes?: string;

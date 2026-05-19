@@ -20,7 +20,7 @@ export default function DownloadPdfButton({
   type = "lesson",
 }: {
    
-  data: any;
+  data: unknown;
   type?: "lesson" | "vocab";
 }) {
   const { isMounted } = useDownloadPdfButton();

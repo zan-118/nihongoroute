@@ -51,7 +51,7 @@ describe("useDailyQuests", () => {
   it("getCurrentProgress mengembalikan 0 untuk tipe yang tidak dikenal", () => {
     const { result } = renderHook(() => useDailyQuests());
      
-    expect(result.current.getCurrentProgress("unknown" as any)).toBe(0);
+    expect(result.current.getCurrentProgress("unknown" as unknown as "xp")).toBe(0);
   });
 
   it("handleClaim menambah XP dan menyimpan quest sebagai claimed", () => {

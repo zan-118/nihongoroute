@@ -18,9 +18,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   devIndicators: {
     position: 'top-right',
   },

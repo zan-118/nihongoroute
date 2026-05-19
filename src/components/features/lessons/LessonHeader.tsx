@@ -6,7 +6,7 @@ interface LessonHeaderProps {
   title: string;
   summary?: string;
   isSideQuest?: boolean;
-  lesson: any; // Keep it flexible for now, or use a proper type if available
+  lesson: unknown; // Keep it flexible for now, or use a proper type if available
 }
 
 export const LessonHeader: React.FC<LessonHeaderProps> = ({ 

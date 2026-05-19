@@ -4,6 +4,33 @@ import { createClient } from "@/lib/supabase/server";
 import { sanityClient } from "@/lib/sanity.client";
 import { getSanityLessonsByCategory } from "@/lib/queries";
 
+interface SanityLessonListItem {
+  _id: string;
+  title: string;
+  summary?: string;
+  slug: string;
+}
+
+interface SanityMockExamListItem {
+  _id: string;
+  title: string;
+  time_limit?: number;
+  passing_score?: number;
+  slug: string;
+  category_id?: string;
+  description?: string;
+}
+
+interface SanityQuestionItem {
+  _key: string;
+  section: string;
+  questionText: string;
+  imageUrl?: string;
+  audioUrl?: string;
+  options: string[];
+  correctAnswer: number | string;
+}
+
 /**
  * Mengambil data kategori kursus beserta pelajaran dan ujian di dalamnya.
  */
@@ -42,13 +69,13 @@ export async function getCourseCategoryData(slug: string) {
         description: category.description,
         slug: category.slug
       },
-      lessons: (sanityLessons || []).map((l: any) => ({
+      lessons: (sanityLessons || []).map((l: SanityLessonListItem) => ({
         _id: l._id,
         title: l.title,
         summary: l.summary || "",
         slug: l.slug
       })),
-      mockExams: (mockExams || []).map((e: any) => ({
+      mockExams: (mockExams || []).map((e: SanityMockExamListItem) => ({
         id: e._id,
         title: e.title,
         timeLimit: e.time_limit ?? 30,
@@ -82,7 +109,7 @@ export async function getExamsList() {
     // Karena kategori kursus ada di Supabase, kita bisa fetch daftar kategori untuk join,
     // atau jika levelCode bisa di-infer dari slug kategori, kita fetch Supabase kategori.
     // Tapi untuk sementara, kita kembalikan category_id sebagai levelCode.
-    return (data || []).map((e: any) => ({
+    return (data || []).map((e: SanityMockExamListItem) => ({
       id: e._id,
       slug: e.slug,
       title: e.title,
@@ -122,7 +149,7 @@ export async function getExamByIdOrSlug(idOrSlug: string) {
       timeLimit: exam.time_limit,
       passingScore: exam.passing_score,
       categorySlug: exam.category_id, // Kita map sementara ke categorySlug, idealnya kita query DB ke course_categories
-      questions: (exam.questions || []).map((q: any) => ({
+      questions: (exam.questions || []).map((q: SanityQuestionItem) => ({
         _key: q._key,
         section: q.section,
         questionText: q.questionText,

@@ -12,11 +12,11 @@ interface FlashcardSetupProps {
 
 const JLPT_LEVELS = [
   { id: "all", label: "Campur (Semua)", color: "bg-muted text-muted-foreground border-border" },
-  { id: "N5", label: "N5", color: "bg-blue-500/10 text-blue-500 border-blue-500/20" },
-  { id: "N4", label: "N4", color: "bg-green-500/10 text-green-500 border-green-500/20" },
-  { id: "N3", label: "N3", color: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20" },
-  { id: "N2", label: "N2", color: "bg-orange-500/10 text-orange-500 border-orange-500/20" },
-  { id: "N1", label: "N1", color: "bg-red-500/10 text-red-500 border-red-500/20" }
+  { id: "N5", label: "N5", color: "bg-[rgba(var(--primary-rgb),0.1)] text-primary border-[rgba(var(--primary-rgb),0.2)]" },
+  { id: "N4", label: "N4", color: "bg-[rgba(var(--success-rgb),0.1)] text-success border-[rgba(var(--success-rgb),0.2)]" },
+  { id: "N3", label: "N3", color: "bg-[rgba(var(--warning-rgb),0.1)] text-warning border-[rgba(var(--warning-rgb),0.2)]" },
+  { id: "N2", label: "N2", color: "bg-[rgba(var(--secondary-rgb),0.1)] text-secondary border-[rgba(var(--secondary-rgb),0.2)]" },
+  { id: "N1", label: "N1", color: "bg-[rgba(var(--destructive-rgb),0.1)] text-destructive border-[rgba(var(--destructive-rgb),0.2)]" }
 ];
 
 const MODES = [

@@ -53,7 +53,11 @@ export async function getPaginatedVocab(
     let query = supabase.from("vocab").select("*", { count: "exact" });
 
     if (search) {
-      const safeSearch = search.replace(/"/g, '');
+      const safeSearch = search
+        .replace(/\\/g, '\\\\')  // escape backslash first
+        .replace(/%/g, '\\%')    // escape SQL wildcard %
+        .replace(/_/g, '\\_')    // escape SQL wildcard _
+        .replace(/"/g, '');       // remove quotes for PostgREST syntax
       query = query.or(`word.ilike."%${safeSearch}%",meaning_id.ilike."%${safeSearch}%",furigana.ilike."%${safeSearch}%",romaji.ilike."%${safeSearch}%"`);
     }
 

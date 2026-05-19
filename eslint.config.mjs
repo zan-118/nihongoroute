@@ -36,7 +36,7 @@ export default [
           "message": "Zustand destructuring is forbidden to prevent infinite re-renders. Use Atomic Selectors instead: `const value = useStore(state => state.value)`. See ARCHITECTURE.md."
         }
       ],
-      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/ban-ts-comment": "off"
     },
   },

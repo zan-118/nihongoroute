@@ -16,7 +16,7 @@ interface ProgressPanelProps {
   xpNeeded: number;
   xpProgress: number;
   itemVariants: Variants;
-  courseMetadata: any;
+  courseMetadata: unknown;
 }
 
 export function ProgressPanel({

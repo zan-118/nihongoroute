@@ -58,7 +58,14 @@ function FlashcardsContent() {
         const data = await getFlashcardsByMode(mode, level, amount);
 
         if (mode === "kanji") {
-          combined = data.map((k: any) => ({
+          const kanjiData = data as unknown as Array<{
+            id: string;
+            character: string;
+            meaning: string;
+            onyomi?: string | null;
+            kunyomi?: string | null;
+          }>;
+          combined = kanjiData.map((k) => ({
             id: k.id,
             docType: "kanji",
             word: k.character,
@@ -67,7 +74,15 @@ function FlashcardsContent() {
             slug: k.character,
           }));
         } else {
-          combined = data.map((v: any) => ({
+          const vocabData = data as unknown as Array<{
+            id: string;
+            word: string;
+            meaning_id?: string | null;
+            romaji?: string | null;
+            furigana?: string | null;
+            slug?: string | null;
+          }>;
+          combined = vocabData.map((v) => ({
             id: v.id,
             docType: "vocab",
             word: v.word,
