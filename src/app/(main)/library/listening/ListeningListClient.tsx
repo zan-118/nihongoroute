@@ -1,0 +1,214 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { Search, Headphones, Play, ArrowRight, Clock, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { getPaginatedListening, PaginatedListeningResponse, ListeningTaskItem } from "@/actions/library.actions";
+
+interface ListeningListClientProps {
+  initialData: PaginatedListeningResponse;
+}
+
+const ITEMS_PER_PAGE = 10;
+
+export default function ListeningListClient({ initialData }: ListeningListClientProps) {
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+      setCurrentPage(1);
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [search]);
+
+  const { data, isFetching } = useQuery({
+    queryKey: ["listening", currentPage, debouncedSearch],
+    queryFn: () => getPaginatedListening(currentPage, ITEMS_PER_PAGE, debouncedSearch),
+    placeholderData: keepPreviousData,
+    initialData: currentPage === 1 && debouncedSearch === "" ? initialData : undefined,
+  });
+
+  const tasks = data?.data || [];
+  const totalPages = data?.total ? Math.ceil(data.total / ITEMS_PER_PAGE) : 0;
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  return (
+    <div className="space-y-12">
+      {/* Header */}
+      <div className="flex flex-col gap-6">
+        <div className="flex items-center gap-4 mb-2">
+          <div className="w-12 h-12 rounded-2xl bg-[rgba(var(--primary-rgb),0.1)] flex items-center justify-center text-primary border border-[rgba(var(--primary-rgb),0.2)]">
+            <Headphones size={24} />
+          </div>
+          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight text-foreground">
+            Listening <span className="text-primary">Lab</span>
+          </h1>
+        </div>
+        <p className="text-muted-foreground text-lg max-w-2xl leading-relaxed">
+          Latih kemampuan pendengaranmu dengan rekaman suara asli dan dialog interaktif. Dilengkapi dengan transkrip dan kuis pemahaman.
+        </p>
+
+        <div className="relative max-w-2xl">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
+          <Input 
+            placeholder="Cari materi listening..." 
+            className="pl-12 h-14 bg-[rgba(var(--card-rgb),0.4)] backdrop-blur-xl border-[rgba(var(--border-rgb),0.4)] rounded-2xl text-lg shadow-2xl focus:ring-[rgba(var(--primary-rgb),0.2)]"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* List */}
+      <div className="relative">
+        {isFetching && (
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-[rgba(var(--background-rgb),0.5)] backdrop-blur-sm rounded-[2rem]">
+            <Loader2 className="w-10 h-10 animate-spin text-primary" />
+          </div>
+        )}
+        <div className="grid grid-cols-1 gap-4 min-h-[300px]">
+          {tasks.map((task: ListeningTaskItem, idx: number) => (
+            <div
+              key={task.id}
+              className="transform hover:-translate-y-1 transition-all duration-300"
+              style={{ 
+                contentVisibility: 'auto', 
+                containIntrinsicSize: '0 100px',
+              }}
+            >
+              <Link href={`/library/listening/${task.slug}`}>
+                <Card className="group relative flex items-center gap-6 p-6 bg-[rgba(var(--card-rgb),0.3)] backdrop-blur-3xl border-[rgba(var(--border-rgb),0.4)] hover:border-[rgba(var(--primary-rgb),0.5)] transition-all duration-500 rounded-3xl overflow-hidden hover:shadow-[0_0_40px_rgba(var(--primary-rgb),0.1)] cursor-pointer">
+                  {/* Play Button Background */}
+                  <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-[rgba(var(--primary-rgb),0.1)] flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500 shrink-0 shadow-inner">
+                    <Play size={24} className="ml-1" />
+                  </div>
+
+                  <div className="flex-1 flex flex-col gap-1">
+                    <div className="flex items-center gap-3">
+                       <span className="text-lg md:text-2xl font-black text-foreground group-hover:text-primary transition-colors duration-300">
+                        {task.title}
+                       </span>
+                    </div>
+                    <div className="flex items-center gap-4 text-xs font-medium text-muted-foreground">
+                      <span className="flex items-center gap-1.5 bg-[rgba(var(--background-rgb),0.05)] px-2 py-1 rounded-md">
+                        <Clock size={12} />
+                        Auto-Duration
+                      </span>
+                      <span className="flex items-center gap-1.5 bg-[rgba(var(--background-rgb),0.05)] px-2 py-1 rounded-md">
+                        <Headphones size={12} />
+                        Native/TTS Supported
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="hidden md:flex items-center gap-2 text-primary font-bold uppercase tracking-widest text-[10px] opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-300">
+                    Mulai Belajar <ArrowRight size={14} />
+                  </div>
+                </Card>
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex flex-col items-center gap-6 pt-8">
+          <div className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
+            Halaman <span className="text-primary">{currentPage}</span> dari {totalPages}
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => handlePageChange(1)}
+              disabled={currentPage === 1}
+              className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-foreground transition-all disabled:opacity-30"
+            >
+              <ChevronsLeft size={18} />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-foreground transition-all disabled:opacity-30"
+            >
+              <ChevronLeft size={18} />
+            </Button>
+
+            <div className="flex items-center gap-2">
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = currentPage - 2 + i;
+                }
+                
+                return (
+                  <Button
+                    key={pageNum}
+                    variant={currentPage === pageNum ? "default" : "ghost"}
+                    onClick={() => handlePageChange(pageNum)}
+                    className={`w-10 h-10 rounded-xl font-bold transition-all ${
+                      currentPage === pageNum 
+                        ? "bg-primary text-primary-foreground shadow-lg shadow-[rgba(var(--primary-rgb),0.2)]" 
+                        : "bg-card border border-border text-muted-foreground hover:border-[rgba(var(--primary-rgb),0.4)]"
+                    }`}
+                  >
+                    {pageNum}
+                  </Button>
+                );
+              })}
+            </div>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-foreground transition-all disabled:opacity-30"
+            >
+              <ChevronRight size={18} />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => handlePageChange(totalPages)}
+              disabled={currentPage === totalPages}
+              className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-foreground transition-all disabled:opacity-30"
+            >
+              <ChevronsRight size={18} />
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {tasks.length === 0 && !isFetching && (
+        <div className="flex flex-col items-center justify-center py-24 text-center">
+          <div className="w-20 h-20 rounded-full bg-[rgba(var(--muted-rgb),0.2)] flex items-center justify-center mb-6">
+             <Headphones size={32} className="text-muted-foreground/50" />
+          </div>
+          <h3 className="text-xl font-bold text-foreground">Materi tidak ditemukan</h3>
+          <p className="text-muted-foreground">Coba cari dengan kata kunci lain.</p>
+        </div>
+      )}
+    </div>
+  );
+}
