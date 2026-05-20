@@ -31,11 +31,11 @@ export function formatQuizzes(quizzesRaw: RawQuizItem[]): FormattedQuizItem[] {
       // Handle format lama (Sanity): options adalah { text, isCorrect }[]
       const isNewFormat = Array.isArray(quiz.options) && (quiz.options.length === 0 || typeof quiz.options[0] === "string");
       
-      let options = [];
+      let options: string[] = [];
       let answer = "";
 
       if (isNewFormat) {
-        options = quiz.options || [];
+        options = (quiz.options || []) as string[];
         // Handle correct_answer sebagai index (number) ATAU teks jawaban langsung (string)
         if (typeof quiz.correct_answer === 'number') {
           answer = options[quiz.correct_answer] || "";

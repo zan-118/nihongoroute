@@ -351,7 +351,7 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
   const combinedVocabList = lessonData.vocabList || lessonData.vocab_list || [];
   const contentBlocks = lessonData.articles || lessonData.content_blocks || [];
   const grammarBlocks = lessonData.grammar || [];
-  const quizzesList = formatQuizzes(lessonData.quizzes || lessonData.questions || []);
+  const quizzesList = formatQuizzes((lessonData.quizzes || lessonData.questions || []) as unknown as import("@/lib/utils/lesson-utils").RawQuizItem[]);
 
   // ======================
   // HELPER FUNCTIONS

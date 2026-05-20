@@ -118,7 +118,7 @@ export default function ListeningKaraoke({
                   {typeof line.text === "string"
                     ? line.text
                     : Array.isArray(line.text)
-                      ? line.text
+                      ? (line.text as unknown as PortableTextNode[])
                           .map((block: PortableTextNode) =>
                             block?.children
                               ?.map((c: { text?: string }) => c?.text || "")

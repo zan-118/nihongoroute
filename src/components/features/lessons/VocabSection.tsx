@@ -92,7 +92,7 @@ export const VocabSection: React.FC<VocabSectionProps> = ({ vocabList }) => {
                 </p>
               </div>
               <div className="flex flex-row sm:flex-col gap-3 shrink-0 w-full sm:w-auto justify-end">
-                {(v._id || v.id) && <AddToSRSButton wordId={v._id || v.id} />}
+                {(v._id || v.id) && <AddToSRSButton wordId={v._id || v.id || ""} />}
                 {v.word && <TTSReader text={v.word} minimal={true} />}
               </div>
             </div>

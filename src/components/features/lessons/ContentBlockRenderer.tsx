@@ -8,13 +8,13 @@ import FuriganaDisplay from "@/components/ui/FuriganaDisplay";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import { PortableText } from "next-sanity";
-import { VocabSection } from "./VocabSection";
-import { KanjiSection } from "./KanjiSection";
+import { VocabSection, VocabLessonItem } from "./VocabSection";
+import { KanjiSection, KanjiLessonItem } from "./KanjiSection";
 
 interface ContentBlockRendererProps {
   blocks: ContentBlock[];
-  vocabList?: unknown[];
-  kanjiList?: unknown[];
+  vocabList?: VocabLessonItem[];
+  kanjiList?: KanjiLessonItem[];
 }
 
 interface SanityPortableTextBlock {
@@ -31,7 +31,7 @@ interface PortableTextValueProps {
 }
 
 interface PortableTextChildrenProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export default function ContentBlockRenderer({ 
@@ -194,18 +194,19 @@ function BlockItem({
 }: { 
   block: ContentBlock;
   components: React.ComponentProps<typeof PortableText>["components"];
-  vocabList?: unknown[];
-  kanjiList?: unknown[];
+  vocabList?: VocabLessonItem[];
+  kanjiList?: KanjiLessonItem[];
 }) {
-  const type = block.type || (block as Record<string, unknown>)._type || "text";
+  const rawBlock = block as unknown as Record<string, unknown>;
+  const type = block.type || rawBlock._type || "text";
 
-  const isPortableText = (block as Record<string, unknown>)._type === "block" || 
-                         (block as Record<string, unknown>)._type === "dialogueBlock" || 
-                         (block as Record<string, unknown>)._type === "grammarBlock" || 
-                         (block as Record<string, unknown>)._type === "calloutBlock" || 
-                         (block as Record<string, unknown>)._type === "imageBlock" ||
-                         (block as Record<string, unknown>)._type === "vocabBlock" ||
-                         (block as Record<string, unknown>)._type === "kanjiBlock";
+  const isPortableText = rawBlock._type === "block" || 
+                         rawBlock._type === "dialogueBlock" || 
+                         rawBlock._type === "grammarBlock" || 
+                         rawBlock._type === "calloutBlock" || 
+                         rawBlock._type === "imageBlock" ||
+                         rawBlock._type === "vocabBlock" ||
+                         rawBlock._type === "kanjiBlock";
 
   return (
     <div className="group relative">

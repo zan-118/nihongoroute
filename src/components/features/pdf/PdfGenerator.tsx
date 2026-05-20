@@ -50,14 +50,15 @@ export default function PdfGenerator({
 
    
   const getDocument = (): React.ReactElement => {
-    if (type === "lesson") return <LessonPdfTemplate lessonData={data} />;
+    if (type === "lesson")
+      return <LessonPdfTemplate lessonData={data as unknown as import("./templates/LessonPdfTemplate").PdfLessonData} />;
     if (type === "vocab")
-      return <VocabPdfTemplate data={data} level={level || "N5"} />;
+      return <VocabPdfTemplate data={data as unknown as import("./templates/LessonPdfTemplate").PdfVocabItem[]} level={level || "N5"} />;
     if (type === "certificate")
-      return <CertificatePdfTemplate data={data} />;
+      return <CertificatePdfTemplate data={data as unknown as { userName: string; examTitle: string; score: number; date: string; level?: string; }} />;
     if (type === "cheatsheet")
-      return <CheatsheetPdfTemplate data={data} title={title || "Cheatsheet"} category={category || "General"} />;
-    return <LessonPdfTemplate lessonData={data} />;
+      return <CheatsheetPdfTemplate data={data as unknown as { label: string; jp: string; romaji: string; }[]} title={title || "Cheatsheet"} category={category || "General"} />;
+    return <LessonPdfTemplate lessonData={data as unknown as import("./templates/LessonPdfTemplate").PdfLessonData} />;
   };
 
   if (!isClient || !data || (Array.isArray(data) && data.length === 0)) {
@@ -70,7 +71,7 @@ export default function PdfGenerator({
 
   return (
     <PDFDownloadLink
-      document={getDocument()}
+      document={getDocument() as unknown as React.ReactElement<import("@react-pdf/renderer").DocumentProps>}
       fileName={getFileName()}
       style={{ textDecoration: 'none' }}
     >

@@ -25,6 +25,35 @@ import { VocabConjugation } from "@/components/features/library/vocab/detail/Voc
 import { VocabExamples } from "@/components/features/library/vocab/detail/VocabExamples";
 import { VocabRelated } from "@/components/features/library/vocab/detail/VocabRelated";
 
+interface VocabExampleItem {
+  jp?: string;
+  japanese?: string;
+  id?: string;
+  indonesian?: string;
+  furigana?: string;
+  romaji?: string;
+  meaning?: string;
+}
+
+interface VocabKanjiRef {
+  id?: string;
+  _id?: string;
+  character: string;
+  meaning: string;
+  onyomi: string;
+  kunyomi: string;
+  slug: string;
+}
+
+interface VocabRef {
+  id?: string;
+  _id?: string;
+  word: string;
+  meaning: string;
+  romaji?: string;
+  slug?: string;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -41,9 +70,10 @@ export async function generateMetadata({
     };
   }
 
+  const romajiStr = typeof vocab.romaji === "string" ? vocab.romaji : "";
   return {
-    title: `${vocab.word} (${vocab.meaning}) | NihongoRoute Kosakata`,
-    description: `Pelajari arti, cara baca, dan penggunaan kata ${vocab.word} (${vocab.romaji}) dalam bahasa Jepang.`,
+    title: `${vocab.word || ""} (${vocab.meaning || ""}) | NihongoRoute Kosakata`,
+    description: `Pelajari arti, cara baca, dan penggunaan kata ${vocab.word || ""} (${romajiStr}) dalam bahasa Jepang.`,
   };
 }
 
@@ -101,40 +131,40 @@ export default async function VocabDetailPage({
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 auto-rows-[minmax(0,auto)]">
           {/* 1. Hero Bento (Fokus Utama) */}
           <VocabHero 
-            word={vocab.word} 
-            furigana={vocab.furigana} 
-            romaji={vocab.romaji} 
-            meaning={vocab.meaning} 
+            word={vocab.word || ""} 
+            furigana={typeof vocab.furigana === "string" ? vocab.furigana : undefined} 
+            romaji={typeof vocab.romaji === "string" ? vocab.romaji : undefined} 
+            meaning={vocab.meaning || ""} 
           />
 
           {/* 2. Meta Data Bento (Atribut Kata) */}
           <VocabDetails 
-            hinshi={vocab.hinshi} 
-            jlptLevel={vocab.jlptLevel} 
-            pitchAccent={vocab.pitchAccent} 
+            hinshi={typeof vocab.hinshi === "string" ? vocab.hinshi : undefined} 
+            jlptLevel={vocab.jlptLevel || undefined} 
+            pitchAccent={vocab.pitchAccent || undefined} 
           />
 
           {/* 3. Mnemonic & Notes Bento */}
           <VocabNotes 
-            mnemonic={vocab.mnemonic} 
-            usageNotes={vocab.usageNotes} 
+            mnemonic={typeof vocab.mnemonic === "string" ? vocab.mnemonic : undefined} 
+            usageNotes={vocab.usageNotes || undefined} 
           />
 
           {/* 4. Conjugation Bento (Jika Kata Sifat atau Kata Kerja) */}
           <VocabConjugation 
             isAdjective={isAdjective}
             isVerb={isVerb}
-            conjugations={vocab.conjugations}
+            conjugations={vocab.conjugations as Record<string, string> | null | undefined}
           />
 
           {/* 5. Examples Bento */}
-          <VocabExamples examples={vocab.examples} />
+          <VocabExamples examples={vocab.examples as VocabExampleItem[] | undefined} />
 
           {/* 6. Related Context Bento */}
           <VocabRelated 
-            relatedKanji={vocab.relatedKanji} 
-            synonyms={vocab.synonyms} 
-            antonyms={vocab.antonyms} 
+            relatedKanji={vocab.relatedKanji as VocabKanjiRef[] | undefined} 
+            synonyms={vocab.synonyms as VocabRef[] | undefined} 
+            antonyms={vocab.antonyms as VocabRef[] | undefined} 
           />
         </div>
 

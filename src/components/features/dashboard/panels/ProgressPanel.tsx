@@ -16,7 +16,18 @@ interface ProgressPanelProps {
   xpNeeded: number;
   xpProgress: number;
   itemVariants: Variants;
-  courseMetadata: unknown;
+  courseMetadata: Array<{
+    id?: string;
+    _id?: string;
+    title: string;
+    slug: string;
+    lessons: Array<{
+      id?: string;
+      _id?: string;
+      title: string;
+      slug: string;
+    }>;
+  }>;
 }
 
 export function ProgressPanel({
@@ -35,7 +46,16 @@ export function ProgressPanel({
         xpNeeded={xpNeeded} 
         xpProgress={xpProgress} 
         itemVariants={itemVariants} 
-        courseMetadata={courseMetadata}
+        courseMetadata={courseMetadata as unknown as Array<{
+          _id: string;
+          title: string;
+          slug: string;
+          lessons: Array<{
+            _id: string;
+            title: string;
+            slug: string;
+          }>;
+        }>}
       />
       
       <section className="space-y-[34px]">

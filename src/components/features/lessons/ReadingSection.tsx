@@ -56,7 +56,7 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
             {(r.imageUrl || r.videoUrl) && (
               <div className="mb-10">
                 <SanityMedia 
-                  url={r.videoUrl || r.imageUrl} 
+                  url={r.videoUrl || r.imageUrl || ""} 
                   type={r.videoUrl ? "video" : "image"}
                   className="shadow-2xl rounded-[2.5rem] overflow-hidden"
                 />

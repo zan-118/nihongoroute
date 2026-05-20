@@ -259,7 +259,7 @@ export const VocabPdfTemplate = ({ data, level }: VocabTemplateProps) => (
 
         {data.map((item, index) => (
           <View
-            key={item._id || index}
+            key={index}
             style={[
               styles.tableRow,
               index % 2 === 1 ? styles.tableRowZebra : {},

@@ -203,3 +203,25 @@ Aplikasi ini melarang penggunaan jargon teknis, metafora berlebih (misalnya nuan
 | **Algoritma Memori** | `Spaced Repetition (SRS)` | `pengulangan cerdas`, `Pengulangan Terjadwal` |
 
 Setiap pengembang yang menambahkan fitur baru wajib menggunakan padanan kata yang ramah pemula dari tabel di atas guna menjaga keberlanjutan pengalaman pengguna (*user experience*) yang konsisten.
+
+---
+
+## 10. Mekanisme Keamanan, Sanitasi Konten, & Penanganan Kueri Dinamis
+
+Untuk menjamin keandalan dan keamanan tingkat tinggi pada platform, NihongoRoute menerapkan protokol keamanan dan standar Next.js 16 di setiap tingkat aplikasi:
+
+### 10.1 Perlindungan XSS & Sanitasi HTML (`src/lib/sanitize.ts`)
+Aplikasi merender konten HTML dinamis (seperti ulasan kuis ujian dan konten tabel lembar contekan interaktif) secara aman menggunakan utilitas penyanitasi khusus:
+- **`sanitizeHtml`**: Fungsi penyanitasi berbasis regex berkinerja tinggi yang menyaring tag-tag berbahaya (seperti `<script>`, `<iframe>`, `<object>`) serta atribut pemicu JavaScript (seperti `onload`, `onerror`, `onclick`).
+- Integrasi visual dilakukan melalui pembungkusan React yang aman alih-alih merender mentah `dangerouslySetInnerHTML` secara langsung tanpa pembersihan.
+
+### 10.2 Pencegahan SQL Injection Wildcard (Server Actions)
+Setiap pemanggilan kueri teks pencarian dinamis (misalnya pencarian kamus kosakata pada `vocab.actions.ts`) wajib melewati pembersihan karakter khusus SQL:
+- Karakter wildcard SQL (`%` dan `_`) di-escape dengan aman menggunakan tanda backslash sebelum kueri dikirim ke basis data Supabase PostgreSQL. Hal ini mencegah pengguna mengeksploitasi pencarian teks untuk membebani kinerja basis data.
+
+### 10.3 Pembungkusan Suspense untuk Penanganan Kueri Dinamis (`useSearchParams`)
+Mengikuti aturan Next.js 16 App Router, setiap halaman yang mengonsumsi kueri pencarian parameter dinamis pada sisi klien via hook `useSearchParams` (seperti halaman masuk `/login` dan alat kana `/tools/kana`) wajib dibungkus di dalam komponen `<Suspense>`. 
+- Hal ini mencegah deoptimisasi build, sehingga Next.js tidak merender seluruh halaman secara dinamis di server saat build time yang dapat menghentikan pembuatan static pages.
+
+### 10.4 Penyegaran Sesi Supabase Auth (`src/proxy.ts`)
+Sesi autentikasi Supabase disinkronkan dan disegarkan secara berkala pada middleware perantara (Proxy) untuk memastikan akses token pengguna selalu valid di lingkungan SSR tanpa menimbulkan masalah *cookie mismatch* antar-tab.

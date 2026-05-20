@@ -9,8 +9,7 @@ export interface DialogueSpeakerItem {
   speakerName?: string;
   jp?: string;
   text?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  furigana?: any[];
+  furigana?: string | any[];
   translation?: string;
   id?: string;
 }
@@ -64,7 +63,7 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
             {(l.imageUrl || l.videoUrl) && (
               <div className="mb-10 max-w-2xl mx-auto">
                 <SanityMedia 
-                  url={l.videoUrl || l.imageUrl} 
+                  url={l.videoUrl || l.imageUrl || ""} 
                   type={l.videoUrl ? "video" : "image"}
                   className="shadow-2xl rounded-[2.5rem] overflow-hidden"
                 />
@@ -83,15 +82,15 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
                     <div className="p-4 md:p-6 rounded-2xl bg-secondary/5 border border-secondary/10 group-hover/dialogue:bg-secondary/10 transition-all relative overflow-hidden">
                        <div className="text-lg font-japanese font-bold text-foreground mb-2 leading-relaxed">
                          <SmartJapanese 
-                             word={item.jp || item.text} 
-                             furigana={item.furigana} 
+                             word={item.jp || item.text || ""} 
+                             furigana={typeof item.furigana === "string" ? item.furigana : undefined} 
                            />
                        </div>
                        <p className="text-sm text-muted-foreground font-medium italic border-t border-border/20 pt-3">
                          &quot;{item.translation || item.id}&quot;
                        </p>
                        <div className="absolute top-2 right-2 opacity-0 group-hover/dialogue:opacity-100 transition-opacity">
-                         <TTSReader text={item.jp || item.text} minimal={true} />
+                         <TTSReader text={item.jp || item.text || ""} minimal={true} />
                        </div>
                     </div>
                   </div>

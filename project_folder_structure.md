@@ -102,6 +102,7 @@ nihongoroute/
 │   │   ├── utils/           # Utilitas tambahan (lesson-utils.ts)
 │   │   ├── queries.ts       # Pemanggilan kueri data ke Sanity CMS
 │   │   ├── srs.ts           # Algoritma perhitungan jeda pengulangan memori
+│   │   ├── sanitize.ts      # Utilitas sanitasi HTML (pencegahan XSS)
 │   │   ├── routes.ts        # Peta navigasi rute aplikasi
 │   │   ├── level.ts         # Logika konversi XP ke Level pengguna
 │   │   ├── gamification.ts  # Logika streak, merge study days

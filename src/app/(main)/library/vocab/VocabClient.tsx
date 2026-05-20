@@ -81,7 +81,62 @@ export default function VocabClient({
     }, {})
   );
 
-  const vocabList = uniqueVocab;
+  const vocabList: import("@/components/features/library/vocab/types").VocabItem[] = uniqueVocab.map((item) => {
+    const relatedKanjiParsed = Array.isArray(item.related_kanji)
+      ? (item.related_kanji as unknown[]).map((rk) => {
+          if (typeof rk === "string") {
+            return { character: rk, meaning: "" };
+          }
+          if (rk && typeof rk === "object") {
+            const obj = rk as Record<string, unknown>;
+            return {
+              character: typeof obj.character === "string" ? obj.character : "",
+              meaning: typeof obj.meaning === "string" ? obj.meaning : "",
+            };
+          }
+          return { character: "", meaning: "" };
+        })
+      : null;
+
+    return {
+      id: item.id,
+      word: item.word,
+      furigana: item.furigana ?? null,
+      romaji: item.romaji ?? null,
+      meaning: item.meaning,
+      hinshi: item.hinshi ?? null,
+      slug: item.slug,
+      jlpt_level: item.jlpt_level ?? null,
+      pitch_accent: item.pitch_accent ?? null,
+      audio_url: item.audio_url ?? null,
+      usage_notes: item.usage_notes ?? null,
+      mnemonic: item.mnemonic ?? null,
+      is_common: item.is_common,
+      show_in_flashcard: item.show_in_flashcard,
+      examples: Array.isArray(item.examples)
+        ? (item.examples as unknown[]).map((ex) => {
+            if (ex && typeof ex === "object") {
+              const obj = ex as Record<string, unknown>;
+              return {
+                id: typeof obj.id === "string" ? obj.id : undefined,
+                jp: typeof obj.jp === "string" ? obj.jp : undefined,
+                romaji: typeof obj.romaji === "string" ? obj.romaji : undefined,
+                furigana: typeof obj.furigana === "string" ? obj.furigana : undefined,
+                meaning: typeof obj.meaning === "string" ? obj.meaning : undefined,
+                japanese: typeof obj.japanese === "string" ? obj.japanese : undefined,
+                indonesian: typeof obj.indonesian === "string" ? obj.indonesian : undefined,
+              };
+            }
+            return {};
+          })
+        : null,
+      synonyms: Array.isArray(item.synonyms) ? item.synonyms.map(String) : null,
+      antonyms: Array.isArray(item.antonyms) ? item.antonyms.map(String) : null,
+      related_kanji: relatedKanjiParsed,
+      conjugations: item.conjugations as Record<string, string> | null,
+      created_at: item.created_at,
+    };
+  });
   const totalItems = data?.total || 0;
   const totalPages = Math.ceil(totalItems / limit);
 
@@ -141,7 +196,7 @@ export default function VocabClient({
             >
               {vocabList.map((item, idx) => (
                 <VocabCard
-                  key={item.id || item._id}
+                  key={item.id}
                   item={item}
                   idx={idx}
                   showRomaji={showRomaji}

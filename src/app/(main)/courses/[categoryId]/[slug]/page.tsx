@@ -113,8 +113,8 @@ export default async function LessonPage({ params }: Props) {
               <section className="prose-custom">
                 <ContentBlockRenderer 
                   blocks={(lesson.articles || lesson.content_blocks) as import("@/types/database").ContentBlock[]} 
-                  vocabList={(lesson.vocabList || lesson.vocab_list || []) as unknown[]}
-                  kanjiList={(lesson.kanjiList || lesson.kanji_list || []) as unknown[]}
+                  vocabList={(lesson.vocabList || lesson.vocab_list || []) as import("@/components/features/lessons/VocabSection").VocabLessonItem[]}
+                  kanjiList={(lesson.kanjiList || lesson.kanji_list || []) as import("@/components/features/lessons/KanjiSection").KanjiLessonItem[]}
                 />
               </section>
             )}

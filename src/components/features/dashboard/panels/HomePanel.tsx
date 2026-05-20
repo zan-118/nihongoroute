@@ -16,7 +16,18 @@ interface HomePanelProps {
   dueCount: number;
   itemVariants: Variants;
   isAuthenticated: boolean;
-  courseMetadata: unknown;
+  courseMetadata: Array<{
+    id?: string;
+    _id?: string;
+    title: string;
+    slug: string;
+    lessons: Array<{
+      id?: string;
+      _id?: string;
+      title: string;
+      slug: string;
+    }>;
+  }>;
 }
 
 export function HomePanel({
@@ -36,7 +47,16 @@ export function HomePanel({
           dueCount={dueCount}
           itemVariants={itemVariants}
           isAuthenticated={isAuthenticated}
-          courseMetadata={courseMetadata}
+          courseMetadata={courseMetadata as unknown as Array<{
+            _id: string;
+            title: string;
+            slug: string;
+            lessons: Array<{
+              _id: string;
+              title: string;
+              slug: string;
+            }>;
+          }>}
         />
         
         <section className="space-y-[34px]">
