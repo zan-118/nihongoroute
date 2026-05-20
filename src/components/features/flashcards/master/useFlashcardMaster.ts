@@ -22,11 +22,15 @@ export function useFlashcardMaster({
   const [isClient, setIsClient] = useState(false);
   const [studyMode, setStudyMode] = useState<StudyMode>(initialMode);
 
-  const [sessionStats, setSessionStats] = useState({
+  const startTimeRef = useRef(0);
+  const [sessionStats, setSessionStats] = useState(() => ({
     known: 0,
     learning: 0,
     xpGained: 0,
-  });
+    maxCombo: 0,
+    accuracy: 0,
+    duration: 0,
+  }));
   const [isFinished, setIsFinished] = useState(false);
   const [isShaking, setIsShaking] = useState(false);
   const [mistakeIndices, setMistakeIndices] = useState<number[]>([]);
@@ -43,6 +47,7 @@ export function useFlashcardMaster({
   const router = useRouter();
 
   useEffect(() => {
+    startTimeRef.current = Date.now();
     const frame = requestAnimationFrame(() => setIsClient(true));
     return () => cancelAnimationFrame(frame);
   }, []);
@@ -69,6 +74,7 @@ export function useFlashcardMaster({
     }
 
     setSessionStats((prev) => ({
+      ...prev,
       known: prev.known + (isCorrect ? 1 : 0),
       learning: prev.learning + (isCorrect ? 0 : 1),
       xpGained: prev.xpGained + xpReward,
@@ -98,7 +104,14 @@ export function useFlashcardMaster({
 
     // Combo Logic
     if (isCorrect) {
-      setCombo(prev => prev + 1);
+      setCombo(prev => {
+        const nextCombo = prev + 1;
+        setSessionStats(stats => ({
+          ...stats,
+          maxCombo: Math.max(stats.maxCombo, nextCombo)
+        }));
+        return nextCombo;
+      });
       // Mastery Celebration
       if (newState.interval >= 30 && currentState.interval < 30) {
         confetti({
@@ -128,6 +141,14 @@ export function useFlashcardMaster({
         setCurrentIndex((prev) => prev + 1);
         setDirection(0);
       } else {
+        const durationSec = Math.floor((Date.now() - startTimeRef.current) / 1000);
+        setSessionStats(prev => {
+          return {
+            ...prev,
+            duration: durationSec,
+            accuracy: Math.round((prev.known / currentCards.length) * 100)
+          };
+        });
         setIsFinished(true);
       }
       isProcessing.current = false;
@@ -167,7 +188,16 @@ export function useFlashcardMaster({
     setIsFlipped(false);
     setIsFinished(false);
     setMistakeIndices([]);
-    setSessionStats({ known: 0, learning: 0, xpGained: 0 });
+    setCombo(0);
+    startTimeRef.current = Date.now();
+    setSessionStats({
+      known: 0,
+      learning: 0,
+      xpGained: 0,
+      maxCombo: 0,
+      accuracy: 0,
+      duration: 0,
+    });
   };
 
   const handleNav = useCallback((dir: 1 | -1) => {
@@ -224,7 +254,16 @@ export function useFlashcardMaster({
     setCurrentIndex(0);
     setIsFlipped(false);
     setIsFinished(false);
-    setSessionStats({ known: 0, learning: 0, xpGained: 0 });
+    setCombo(0);
+    startTimeRef.current = Date.now();
+    setSessionStats({
+      known: 0,
+      learning: 0,
+      xpGained: 0,
+      maxCombo: 0,
+      accuracy: 0,
+      duration: 0,
+    });
     setUserInput("");
     setIsAnswerChecked(false);
     setInputResult(null);

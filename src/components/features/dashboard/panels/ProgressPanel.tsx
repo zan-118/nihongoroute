@@ -10,6 +10,11 @@ const KanjiProgressGrid = dynamic(() => import("../KanjiProgressGrid"), {
   loading: () => <div className="h-[200px] w-full animate-pulse bg-muted rounded-2xl" />
 });
 
+const WeakPointPanel = dynamic(() => import("../WeakPointPanel"), {
+  ssr: false,
+  loading: () => <div className="h-[120px] w-full animate-pulse bg-muted rounded-[34px]" />
+});
+
 interface ProgressPanelProps {
   loading: boolean;
   progress: UserProgress;
@@ -73,6 +78,8 @@ export function ProgressPanel({
         <div className="p-[21px] rounded-[34px] bg-card/30 backdrop-blur-sm border border-border">
           <KanjiProgressGrid />
         </div>
+        
+        <WeakPointPanel />
       </section>
     </div>
   );

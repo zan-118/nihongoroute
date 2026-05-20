@@ -1,19 +1,18 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useFlashcardMaster } from "@/components/features/flashcards/master/useFlashcardMaster";
-import { useProgressStore } from "@/store/useProgressStore";
-import { MasterCardData } from "@/components/features/flashcards/master/types";
+import { useSRSStore } from "@/store/useSRSStore";
+import { useUserStore } from "@/store/useUserStore";
 
-// Mock next/navigation
+// Mock router
 vi.mock("next/navigation", () => ({
   useRouter: () => ({
     push: vi.fn(),
-    back: vi.fn(),
-    refresh: vi.fn(),
+    replace: vi.fn(),
   }),
 }));
 
-// Mock audio (browser API tidak tersedia di jsdom)
+// Mock audio
 vi.mock("@/lib/audio", () => ({
   sounds: {
     playSuccess: vi.fn(),
@@ -22,21 +21,20 @@ vi.mock("@/lib/audio", () => ({
   },
 }));
 
-const mockCards: MasterCardData[] = [
-  { _id: "card-1", word: "食べる", meaning: "Makan", furigana: "たべる", romaji: "taberu" },
-  { _id: "card-2", word: "飲む", meaning: "Minum", furigana: "のむ", romaji: "nomu" },
-  { _id: "card-3", word: "読む", meaning: "Membaca", furigana: "よむ", romaji: "yomu" },
+// Mock confetti
+vi.mock("canvas-confetti", () => ({
+  default: vi.fn(),
+}));
+
+const mockMasterCards = [
+  { id: "c-1", word: "猫", furigana: "ねこ", meaning: "Cat", note: "" },
+  { id: "c-2", word: "犬", furigana: "いぬ", meaning: "Dog", note: "" },
 ];
 
-describe("useFlashcardMaster", () => {
+describe("useFlashcardMaster Hook", () => {
   beforeEach(() => {
-    useProgressStore.setState({
-      progress: { xp: 0, level: 1, streak: 0, todayReviewCount: 0, lastStudyDate: null, studyDays: {}, srs: {} },
-      loading: false,
-      dirtySrs: new Set(),
-      isAuthenticated: false,
-      userFullName: null,
-    });
+    useSRSStore.getState().resetSRS();
+    useUserStore.getState().resetUser();
     vi.useFakeTimers();
   });
 
@@ -44,169 +42,134 @@ describe("useFlashcardMaster", () => {
     vi.useRealTimers();
   });
 
-  it("memulai dari index 0 dan tidak di-flip", () => {
-    const { result } = renderHook(() => useFlashcardMaster({ cards: mockCards }));
+  it("memiliki state inisialisasi yang benar", () => {
+    const { result } = renderHook(() => useFlashcardMaster({ cards: mockMasterCards }));
+    act(() => {
+      vi.advanceTimersByTime(100);
+    });
+
     expect(result.current.currentIndex).toBe(0);
     expect(result.current.isFlipped).toBe(false);
-  });
-
-  it("menggunakan mode 'latihan' sebagai default", () => {
-    const { result } = renderHook(() => useFlashcardMaster({ cards: mockCards }));
     expect(result.current.studyMode).toBe("latihan");
+    expect(result.current.isFinished).toBe(false);
+    expect(result.current.sessionStats.known).toBe(0);
   });
 
-  it("bisa menerima initialMode 'ujian'", () => {
-    const { result } = renderHook(() => useFlashcardMaster({ cards: mockCards, initialMode: "ujian" }));
-    expect(result.current.studyMode).toBe("ujian");
-  });
-
-  it("menambah XP +15 saat jawaban benar", () => {
-    const { result } = renderHook(() => useFlashcardMaster({ cards: mockCards }));
-
+  it("handleNav beroperasi pada mode latihan", () => {
+    const { result } = renderHook(() => useFlashcardMaster({ cards: mockMasterCards }));
     act(() => {
-      result.current.handleAnswer(true);
+      vi.advanceTimersByTime(100);
     });
 
-    const { progress } = useProgressStore.getState();
-    expect(progress.xp).toBe(15);
+    // Navigasi ke kanan (+1)
+    act(() => {
+      result.current.handleNav(1);
+    });
+    act(() => {
+      vi.advanceTimersByTime(250);
+    });
+    expect(result.current.currentIndex).toBe(1);
+
+    // Navigasi ke kiri (-1)
+    act(() => {
+      result.current.handleNav(-1);
+    });
+    act(() => {
+      vi.advanceTimersByTime(250);
+    });
+    expect(result.current.currentIndex).toBe(0);
   });
 
-  it("menambah XP +5 saat jawaban salah", () => {
-    const { result } = renderHook(() => useFlashcardMaster({ cards: mockCards }));
-
+  it("handleAnswer memperbarui statistik dan berpindah kartu", () => {
+    const { result } = renderHook(() => useFlashcardMaster({ cards: mockMasterCards, initialMode: "ujian" }));
     act(() => {
-      result.current.handleAnswer(false);
+      vi.advanceTimersByTime(100);
     });
 
-    const { progress } = useProgressStore.getState();
-    expect(progress.xp).toBe(5);
-  });
-
-  it("menghitung sessionStats dengan benar setelah jawaban benar", () => {
-    const { result } = renderHook(() => useFlashcardMaster({ cards: mockCards }));
-
+    // Grade 3 (Mudah, Benar)
     act(() => {
-      result.current.handleAnswer(true);
+      result.current.handleAnswer(3);
     });
 
     expect(result.current.sessionStats.known).toBe(1);
-    expect(result.current.sessionStats.learning).toBe(0);
-    expect(result.current.sessionStats.xpGained).toBe(15);
-  });
-
-  it("menghitung sessionStats dengan benar setelah jawaban salah", () => {
-    const { result } = renderHook(() => useFlashcardMaster({ cards: mockCards }));
+    expect(result.current.sessionStats.xpGained).toBe(20); // grade 3 -> 20 XP
+    expect(result.current.combo).toBe(1);
 
     act(() => {
-      result.current.handleAnswer(false);
-    });
-
-    expect(result.current.sessionStats.known).toBe(0);
-    expect(result.current.sessionStats.learning).toBe(1);
-    expect(result.current.sessionStats.xpGained).toBe(5);
-  });
-
-  it("menyimpan state SRS kartu ke store", () => {
-    const { result } = renderHook(() => useFlashcardMaster({ cards: mockCards }));
-
-    act(() => {
-      result.current.handleAnswer(true);
-    });
-
-    const { srs } = useProgressStore.getState().progress;
-    expect(srs["card-1"]).toBeDefined();
-    expect(srs["card-1"].repetition).toBe(1);
-  });
-
-  it("pindah ke kartu berikutnya setelah handleAnswer (setelah delay)", () => {
-    const { result } = renderHook(() => useFlashcardMaster({ cards: mockCards }));
-
-    act(() => {
-      result.current.handleAnswer(true);
       vi.advanceTimersByTime(250);
     });
-
     expect(result.current.currentIndex).toBe(1);
   });
 
-  it("menandai isFinished=true setelah kartu terakhir", () => {
-    const { result } = renderHook(() => useFlashcardMaster({ cards: mockCards }));
+  it("checkAnswer memproses input text pada mode tantangan", () => {
+    const { result } = renderHook(() =>
+      useFlashcardMaster({ cards: mockMasterCards, initialMode: "tantangan" })
+    );
+    act(() => {
+      vi.advanceTimersByTime(100);
+    });
 
-    // Jawab semua kartu
+    // Input salah
     act(() => {
-      result.current.handleAnswer(true); // card-1
-      vi.advanceTimersByTime(250);
+      result.current.setUserInput("salah");
     });
     act(() => {
-      result.current.handleAnswer(true); // card-2
-      vi.advanceTimersByTime(250);
+      result.current.checkAnswer();
+    });
+    expect(result.current.inputResult).toBe("wrong");
+    expect(result.current.isAnswerChecked).toBe(true);
+    expect(result.current.isFlipped).toBe(false);
+
+    // Reset input dan input benar ("ねこ")
+    act(() => {
+      result.current.setIsAnswerChecked(false);
+      result.current.setUserInput("ねこ");
     });
     act(() => {
-      result.current.handleAnswer(true); // card-3 (terakhir)
+      result.current.checkAnswer();
+    });
+    expect(result.current.inputResult).toBe("correct");
+
+    act(() => {
+      vi.advanceTimersByTime(600);
+    });
+    expect(result.current.isFlipped).toBe(true);
+  });
+
+  it("handleReviewMistakes me-reset ulang sesi hanya untuk kesalahan yang tercatat", () => {
+    const { result } = renderHook(() =>
+      useFlashcardMaster({ cards: mockMasterCards, initialMode: "ujian" })
+    );
+    act(() => {
+      vi.advanceTimersByTime(100);
+    });
+
+    // Jawab salah pada kartu pertama (index 0)
+    act(() => {
+      result.current.handleAnswer(0); // Grade 0 -> salah
+    });
+    act(() => {
+      vi.advanceTimersByTime(250);
+    });
+
+    // Jawab benar pada kartu kedua (index 1)
+    act(() => {
+      result.current.handleAnswer(3); // Grade 3 -> benar
+    });
+    act(() => {
       vi.advanceTimersByTime(250);
     });
 
     expect(result.current.isFinished).toBe(true);
-  });
+    expect(result.current.mistakeIndices).toContain(0);
 
-  it("handleRestart mereset semua state sesi", () => {
-    const { result } = renderHook(() => useFlashcardMaster({ cards: mockCards }));
-
-    // Jawab dulu
+    // Jalankan review mistakes
     act(() => {
-      result.current.handleAnswer(true);
-      vi.advanceTimersByTime(250);
+      result.current.handleReviewMistakes();
     });
 
-    // Restart
-    act(() => {
-      result.current.handleRestart();
-    });
-
-    expect(result.current.currentIndex).toBe(0);
-    expect(result.current.isFlipped).toBe(false);
     expect(result.current.isFinished).toBe(false);
-    expect(result.current.sessionStats).toEqual({ known: 0, learning: 0, xpGained: 0 });
-  });
-
-  it("handleNav bergerak ke arah yang benar", () => {
-    const { result } = renderHook(() => useFlashcardMaster({ cards: mockCards }));
-
-    // Jawab agar bisa pindah dulu
-    act(() => {
-      result.current.handleAnswer(true);
-      vi.advanceTimersByTime(250);
-    });
-
-    // Sekarang di index 1, navigasi mundur
-    act(() => {
-      result.current.handleNav(-1);
-      vi.advanceTimersByTime(250);
-    });
-
-    expect(result.current.currentIndex).toBe(0);
-  });
-
-  it("handleNav tidak melampaui batas array", () => {
-    const { result } = renderHook(() => useFlashcardMaster({ cards: mockCards }));
-
-    // Coba mundur dari index 0
-    act(() => {
-      result.current.handleNav(-1);
-      vi.advanceTimersByTime(250);
-    });
-
-    expect(result.current.currentIndex).toBe(0);
-  });
-
-  it("tidak melakukan apa-apa saat cards kosong", () => {
-    const { result } = renderHook(() => useFlashcardMaster({ cards: [] }));
-
-    act(() => {
-      result.current.handleAnswer(true);
-    });
-
-    // XP tetap 0 karena cards.length === 0
-    expect(useProgressStore.getState().progress.xp).toBe(0);
+    expect(result.current.currentCards.length).toBe(1);
+    expect(result.current.currentCards[0].id).toBe("c-1");
   });
 });

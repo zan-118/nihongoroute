@@ -1,14 +1,21 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Trophy, Flame, RotateCcw } from "lucide-react";
+import { Trophy, Flame, RotateCcw, Clock, Zap } from "lucide-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 interface SessionSummaryModalProps {
   isFinished: boolean;
   setIsFinished: (val: boolean) => void;
   cardsCount: number;
-  sessionStats: { known: number; learning: number; xpGained: number };
+  sessionStats: { 
+    known: number; 
+    learning: number; 
+    xpGained: number;
+    maxCombo: number;
+    accuracy: number;
+    duration: number;
+  };
   themeBgColor: string;
   themeShadow: string;
   handleRestart: () => void;
@@ -29,17 +36,31 @@ export function SessionSummaryModal({
   mistakeCount,
   router,
 }: SessionSummaryModalProps) {
+  const getRating = (accuracy: number) => {
+    if (accuracy >= 90) return { title: "Luar Biasa! 🎉", color: "text-success", bg: "bg-success/5 border-success/20 dark:shadow-[0_0_20px_rgba(var(--success-rgb),0.1)]" };
+    if (accuracy >= 70) return { title: "Bagus Sekali! 👍", color: "text-warning", bg: "bg-warning/5 border-warning/20 dark:shadow-[0_0_20px_rgba(var(--warning-rgb),0.1)]" };
+    return { title: "Mari Terus Latihan! 💪", color: "text-primary", bg: "bg-primary/5 border-primary/20 dark:shadow-[0_0_20px_rgba(var(--primary-rgb),0.1)]" };
+  };
+
+  const rating = getRating(sessionStats.accuracy || 0);
+
+  const formatDuration = (sec: number) => {
+    const mins = Math.floor(sec / 60);
+    const secs = sec % 60;
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
+
   return (
     <Dialog open={isFinished} onOpenChange={setIsFinished}>
       <DialogContent className="max-w-md w-[90%] md:w-full p-0 border-none bg-transparent shadow-none mx-auto transition-colors duration-300">
-        <Card className="w-full bg-card bg-card p-8 md:p-10 rounded-2xl border border-border text-center relative overflow-hidden shadow-2xl">
+        <Card className="w-full bg-card p-8 md:p-10 rounded-2xl border border-border text-center relative overflow-hidden shadow-2xl">
           <div className={`absolute top-0 left-0 right-0 h-1.5 ${themeBgColor} ${themeShadow}`} />
 
           <div className="w-16 h-16 md:w-20 md:h-20 mx-auto bg-[rgba(var(--muted-rgb),0.5)] dark:bg-[rgba(var(--background-rgb),0.04)] rounded-xl flex items-center justify-center border border-border mb-6 shadow-none">
             <Trophy
               size={32}
               aria-hidden="true"
-              className="text-warning text-warning drop-shadow-sm dark:drop-shadow-[0_0_15px_rgba(var(--warning-rgb),0.4)]"
+              className="text-warning drop-shadow-sm dark:drop-shadow-[0_0_15px_rgba(var(--warning-rgb),0.4)]"
             />
           </div>
 
@@ -48,16 +69,23 @@ export function SessionSummaryModal({
               Sesi Selesai
             </DialogTitle>
           </DialogHeader>
-          <p className="text-muted-foreground text-xs md:text-xs mb-8 uppercase font-bold tracking-widest">
+
+          <Card className={`py-4 rounded-xl border mb-6 flex justify-center items-center shadow-none ${rating.bg}`}>
+            <span className={`text-base md:text-lg font-black uppercase tracking-wider ${rating.color}`}>
+              {rating.title}
+            </span>
+          </Card>
+
+          <p className="text-muted-foreground text-xs md:text-xs mb-6 uppercase font-bold tracking-widest">
             {cardsCount} KARTU SELESAI DITINJAU
           </p>
 
-          <div className="grid grid-cols-2 gap-4 mb-8">
+          <div className="grid grid-cols-2 gap-4 mb-6">
             <Card className="bg-success/5 border border-success/20 p-5 rounded-xl flex flex-col items-center shadow-none">
-              <span className="text-2xl md:text-3xl font-black text-success text-success">
+              <span className="text-2xl md:text-3xl font-black text-success">
                 {sessionStats.known}
               </span>
-              <span className="text-xs font-bold text-success/80 text-success/80 uppercase tracking-widest mt-2">
+              <span className="text-[10px] font-bold text-success/80 uppercase tracking-widest mt-2">
                 Sudah Hafal
               </span>
             </Card>
@@ -65,15 +93,44 @@ export function SessionSummaryModal({
               <span className="text-2xl md:text-3xl font-black text-primary">
                 {sessionStats.learning}
               </span>
-              <span className="text-xs font-bold text-primary/80 uppercase tracking-widest mt-2">
+              <span className="text-[10px] font-bold text-primary/80 uppercase tracking-widest mt-2">
                 Masih Lupa
               </span>
             </Card>
           </div>
 
-          <Card className="bg-[rgba(var(--muted-rgb),0.5)] dark:bg-[rgba(var(--background-rgb),0.03)] py-4 rounded-xl border border-border mb-8 flex justify-center items-center gap-3 shadow-none">
+          <div className="grid grid-cols-3 gap-3 mb-6">
+            <Card className="bg-card border border-border p-4 rounded-xl flex flex-col items-center shadow-none">
+              <span className="text-lg md:text-xl font-black text-foreground">
+                {sessionStats.accuracy}%
+              </span>
+              <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider mt-1 text-center">
+                Akurasi
+              </span>
+            </Card>
+            <Card className="bg-card border border-border p-4 rounded-xl flex flex-col items-center shadow-none">
+              <span className="text-lg md:text-xl font-black text-foreground flex items-center gap-1">
+                <Zap size={14} className="text-warning fill-warning/30" />
+                {sessionStats.maxCombo}
+              </span>
+              <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider mt-1 text-center">
+                Maks Kombo
+              </span>
+            </Card>
+            <Card className="bg-card border border-border p-4 rounded-xl flex flex-col items-center shadow-none">
+              <span className="text-lg md:text-xl font-black text-foreground flex items-center gap-1">
+                <Clock size={14} className="text-primary" />
+                {formatDuration(sessionStats.duration)}
+              </span>
+              <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider mt-1 text-center">
+                Durasi
+              </span>
+            </Card>
+          </div>
+
+          <Card className="bg-[rgba(var(--muted-rgb),0.5)] dark:bg-[rgba(var(--background-rgb),0.03)] py-4 rounded-xl border border-border mb-6 flex justify-center items-center gap-3 shadow-none">
             <Flame size={18} aria-hidden="true" className="text-primary" />
-            <span className="text-foreground text-foreground font-mono font-black text-base md:text-lg">
+            <span className="text-foreground font-mono font-black text-base md:text-lg">
               +{sessionStats.xpGained} XP
             </span>
           </Card>

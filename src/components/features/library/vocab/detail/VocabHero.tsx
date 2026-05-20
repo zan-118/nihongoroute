@@ -4,6 +4,8 @@ import { Card } from "@/components/ui/card";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 
+import { AddToSRSButton } from "@/components/features/srs/button/AddToSRSButton";
+
 interface VocabHeroProps {
   word: string;
   furigana?: string;
@@ -14,7 +16,8 @@ interface VocabHeroProps {
 export function VocabHero({ word, furigana, romaji, meaning }: VocabHeroProps) {
   return (
     <Card className="p-8 md:p-12 bg-card/40 backdrop-blur-xl border-border rounded-[2rem] hover:border-primary/40 transition-all group overflow-hidden relative md:col-span-2 lg:col-span-2 md:row-span-2 flex flex-col items-center justify-center text-center shadow-2xl">
-      <div className="absolute top-4 right-4 z-10">
+      <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+        <AddToSRSButton wordId={word} />
         <TTSReader text={word} minimal={false} />
       </div>
       <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-foreground font-japanese leading-none tracking-tighter mb-4 drop-shadow-sm mt-8">

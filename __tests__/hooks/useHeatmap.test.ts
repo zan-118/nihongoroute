@@ -1,47 +1,46 @@
-import { describe, it, expect } from "vitest";
-import { getBoxStyle } from "@/components/features/dashboard/heatmap/useHeatmap";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { renderHook } from "@testing-library/react";
+import { useHeatmap, getBoxStyle } from "@/components/features/dashboard/heatmap/useHeatmap";
 
-describe("useHeatmap - getBoxStyle", () => {
-  it("mengembalikan style inactive untuk value 0", () => {
-    const style = getBoxStyle(0);
-    expect(style).toContain("opacity-30");
-    expect(style).toContain("bg-background/40");
+describe("useHeatmap and getBoxStyle", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-05-20T12:00:00Z").getTime());
   });
 
-  it("mengembalikan style inactive untuk value undefined/null", () => {
-     
-    const style = getBoxStyle(undefined as unknown as number);
-    expect(style).toContain("opacity-30");
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
-  it("mengembalikan style level rendah untuk value 1-9", () => {
-    const style = getBoxStyle(5);
-    expect(style).toContain("bg-primary/20");
+  describe("getBoxStyle", () => {
+    it("mengembalikan style redup untuk nilai 0", () => {
+      expect(getBoxStyle(0)).toContain("opacity-30");
+    });
+
+    it("mengembalikan style intensitas rendah untuk nilai < 10", () => {
+      expect(getBoxStyle(5)).toContain("bg-primary/20");
+    });
+
+    it("mengembalikan style intensitas sedang untuk nilai < 30", () => {
+      expect(getBoxStyle(20)).toContain("bg-primary/50");
+    });
+
+    it("mengembalikan style intensitas tinggi untuk nilai >= 30", () => {
+      expect(getBoxStyle(35)).toContain("bg-primary");
+      expect(getBoxStyle(35)).not.toContain("bg-primary/");
+    });
   });
 
-  it("mengembalikan style level sedang untuk value 10-29", () => {
-    const style = getBoxStyle(15);
-    expect(style).toContain("bg-primary/50");
-  });
-
-  it("mengembalikan style level tinggi untuk value >= 30", () => {
-    const style = getBoxStyle(50);
-    expect(style).toContain("bg-primary");
-    expect(style).toContain("border-border");
-  });
-
-  it("mengembalikan style level rendah untuk value tepat 1", () => {
-    const style = getBoxStyle(1);
-    expect(style).toContain("bg-primary/20");
-  });
-
-  it("mengembalikan style level sedang untuk value tepat 10", () => {
-    const style = getBoxStyle(10);
-    expect(style).toContain("bg-primary/50");
-  });
-
-  it("mengembalikan style level tinggi untuk value tepat 30", () => {
-    const style = getBoxStyle(30);
-    expect(style).toContain("bg-primary");
+  describe("useHeatmap Hook", () => {
+    it("mengembalikan daftar 35 hari terakhir dengan format YYYY-MM-DD", () => {
+      const { result } = renderHook(() => useHeatmap());
+      
+      expect(result.current.days.length).toBe(35);
+      
+      // Hari terakhir haruslah hari ini ("2026-05-20")
+      expect(result.current.days[34]).toBe("2026-05-20");
+      // Hari pertama haruslah 34 hari sebelum hari ini ("2026-04-16")
+      expect(result.current.days[0]).toBe("2026-04-16");
+    });
   });
 });

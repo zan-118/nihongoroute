@@ -3,8 +3,8 @@ import { useState, useEffect, useRef } from "react";
 /**
  * @file useTTSReader.ts
  * @description Hook untuk membacakan teks Jepang. 
- * Menggunakan strategi Hybrid: Mengutamakan High-Quality Online Browser Voices, 
- * lalu fallback ke Google Translate TTS API untuk kualitas tinggi tanpa beban storage/cost.
+ * Menggunakan strategi Hybrid & Caching: Mengutamakan High-Quality Online Browser Voices, 
+ * lalu fallback ke Google Translate TTS API dengan penyimpanan CacheStorage lokal untuk luring penuh.
  */
 
 export function useTTSReader(text: string) {
@@ -12,6 +12,14 @@ export function useTTSReader(text: string) {
   const [hasJapanese, setHasJapanese] = useState(true);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const objectUrlRef = useRef<string | null>(null);
+
+  const cleanupObjectUrl = () => {
+    if (objectUrlRef.current) {
+      URL.revokeObjectURL(objectUrlRef.current);
+      objectUrlRef.current = null;
+    }
+  };
 
   useEffect(() => {
     const jpRegex = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/;
@@ -36,6 +44,7 @@ export function useTTSReader(text: string) {
 
     return () => {
       window.speechSynthesis.onvoiceschanged = null;
+      cleanupObjectUrl();
     };
   }, []);
 
@@ -43,8 +52,8 @@ export function useTTSReader(text: string) {
    * Menjalankan pemutaran suara.
    * Strategi:
    * 1. Cek apakah ada suara "Google 日本語" atau "Microsoft Nanami" (Online & High Quality).
-   * 2. Jika tidak ada, gunakan Fallback URL (Google Translate TTS) via HTMLAudioElement.
-   * 3. Jika gagal, gunakan suara OS standar.
+   * 2. Jika tidak ada, gunakan Fallback URL (Google Translate TTS) via HTMLAudioElement dengan Cache Storage.
+   * 3. Jika gagal/offline tanpa cache, gunakan suara OS standar.
    */
   const speak = (forceProxy = false) => {
     if (typeof window === "undefined") return;
@@ -55,6 +64,7 @@ export function useTTSReader(text: string) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
       }
+      cleanupObjectUrl();
       setIsPlaying(false);
       return;
     }
@@ -79,22 +89,82 @@ export function useTTSReader(text: string) {
         audioRef.current = new Audio();
       }
       
-      audioRef.current.src = proxyUrl;
-      audioRef.current.onplay = () => setIsPlaying(true);
-      audioRef.current.onended = () => setIsPlaying(false);
-      audioRef.current.onerror = (e) => {
+      const audio = audioRef.current;
+      audio.onplay = () => setIsPlaying(true);
+      audio.onended = () => {
+        setIsPlaying(false);
+        cleanupObjectUrl();
+      };
+      audio.onerror = (e) => {
         console.error("Proxy TTS Error:", e);
         setIsPlaying(false);
+        cleanupObjectUrl();
         playNativeTTS(text, null); 
       };
-      
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(error => {
-          console.warn("Autoplay/Proxy blocked:", error);
+
+      const cacheName = "nihongoroute_tts_cache";
+
+      const playFromBlob = (blob: Blob) => {
+        cleanupObjectUrl();
+        const objUrl = URL.createObjectURL(blob);
+        objectUrlRef.current = objUrl;
+        audio.src = objUrl;
+        
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.warn("Cached audio playback blocked:", error);
+            playNativeTTS(text, null);
+          });
+        }
+      };
+
+      const fetchAndCache = async () => {
+        try {
+          const response = await fetch(proxyUrl);
+          if (!response.ok) throw new Error("Gagal mengambil audio");
+          
+          const clonedResponse = response.clone();
+          const blob = await response.blob();
+          
+          if ("caches" in window) {
+            caches.open(cacheName).then((cache) => {
+              cache.put(proxyUrl, clonedResponse).catch(err => {
+                console.warn("Gagal menyimpan ke cache:", err);
+              });
+            });
+          }
+          
+          playFromBlob(blob);
+        } catch (err) {
+          console.warn("Fetch online failed, trying native TTS fallback:", err);
           playNativeTTS(text, null);
+        }
+      };
+
+      // Cek apakah data audio sudah tersimpan di Cache Storage
+      if ("caches" in window) {
+        caches.open(cacheName).then((cache) => {
+          cache.match(proxyUrl).then((cachedResponse) => {
+            if (cachedResponse) {
+              cachedResponse.blob().then((blob) => {
+                playFromBlob(blob);
+              }).catch(() => {
+                fetchAndCache();
+              });
+            } else {
+              fetchAndCache();
+            }
+          }).catch(() => {
+            fetchAndCache();
+          });
+        }).catch(() => {
+          fetchAndCache();
         });
+      } else {
+        fetchAndCache();
       }
+
       return;
     }
 

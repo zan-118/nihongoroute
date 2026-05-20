@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Trash2, Eye, EyeOff, RotateCcw, Zap } from "lucide-react";
+import { Trash2, Eye, EyeOff, RotateCcw, Zap, CheckCircle } from "lucide-react";
 import AnimatedKanji from "@/components/features/tools/writing/AnimatedKanji";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -33,7 +33,11 @@ export default function WritingCanvas({
     clearCanvas,
     handleReplay,
     showXP,
-  } = useWritingCanvas({ strokeColor });
+    currentStrokeIndex,
+    totalStrokes,
+    strokeError,
+    isCompleted,
+  } = useWritingCanvas({ character, strokeColor });
 
   return (
     <div className={`flex flex-col gap-4 w-full ${className}`}>
@@ -50,10 +54,38 @@ export default function WritingCanvas({
         </div>
 
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-40">
-          <XPPop show={showXP} amount={2} />
+          <XPPop show={showXP} amount={10} />
         </div>
 
-        {showGuide && (
+        {/* Overlay Sukses Coretan Selesai */}
+        {isCompleted && (
+          <div className="absolute inset-0 bg-background/85 backdrop-blur-md flex flex-col items-center justify-center gap-4 z-30 transition-all duration-300 animate-in fade-in">
+            <div className="h-14 w-14 rounded-full bg-success/15 border border-success/30 flex items-center justify-center text-success shadow-[0_0_20px_rgba(34,197,94,0.3)]">
+              <CheckCircle size={28} className="animate-bounce" />
+            </div>
+            <div className="text-center space-y-1">
+              <h4 className="text-xs font-bold uppercase tracking-widest text-success">Latihan Selesai!</h4>
+              <p className="text-[9px] text-muted-foreground">Kanji "{character}" Berhasil Ditulis</p>
+            </div>
+            <Button 
+              size="sm"
+              variant="outline"
+              onClick={handleReplay}
+              className="mt-2 text-[8px] font-bold uppercase tracking-wider rounded-xl bg-success/10 border-success/30 text-success hover:bg-success/20 transition-all px-4 py-1.5"
+            >
+              Tulis Lagi
+            </Button>
+          </div>
+        )}
+
+        {/* Tooltip Deteksi Kesalahan Coretan */}
+        {strokeError && (
+          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl bg-destructive/10 border border-destructive/20 backdrop-blur-md text-[9px] font-bold uppercase tracking-wider text-destructive shadow-[0_0_15px_rgba(239,68,68,0.25)] animate-bounce z-30">
+            {strokeError === "reverse" ? "Arah guratan terbalik!" : "Guratan kurang tepat!"}
+          </div>
+        )}
+
+        {showGuide && character && (
           <div className="absolute inset-8 pointer-events-none z-0">
             <AnimatedKanji 
               character={character} 
@@ -74,7 +106,9 @@ export default function WritingCanvas({
 
         <div className="absolute top-3 left-3 flex items-center gap-2 z-20">
            <Zap size={10} className="text-destructive animate-pulse" />
-           <span className="text-[7px] font-bold uppercase tracking-widest text-destructive/40">WRITING_ACTIVE</span>
+           <span className="text-[7px] font-mono font-bold uppercase tracking-widest text-muted-foreground">
+             {totalStrokes > 0 ? `Guratan ${currentStrokeIndex + 1} / ${totalStrokes}` : "WRITING_ACTIVE"}
+           </span>
         </div>
       </Card>
 

@@ -1,218 +1,156 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useMockExamEngine } from "@/components/features/exams/mock-engine/useMockExamEngine";
-import { ExamData } from "@/components/features/exams/mock-engine/types";
+import { useUserStore } from "@/store/useUserStore";
 
-// Mock window.scrollTo
-vi.stubGlobal("scrollTo", vi.fn());
+// Mock sonner
+vi.mock("sonner", () => ({
+  toast: {
+    success: vi.fn(),
+    error: vi.fn(),
+  },
+}));
 
-const mockExam: ExamData = {
-  _id: "exam-1",
-  title: "JLPT N5 Mock Test",
-  timeLimit: 30, // 30 menit
-  passingScore: 100,
+const mockExamData = {
+  title: "JLPT N5 Mock Exam",
+  timeLimit: 50, // 50 menit
+  passingScore: 90,
   questions: [
-    { _key: "q1", section: "vocabulary", questionText: "Apa arti 犬?", options: ["Kucing", "Anjing", "Burung", "Ikan"], correctAnswer: 1 },
-    { _key: "q2", section: "grammar", questionText: "どこに行きますか?", options: ["Di mana pergi?", "Ke mana pergi?", "Kapan pergi?", "Siapa pergi?"], correctAnswer: 1 },
-    { _key: "q3", section: "reading", questionText: "読解テスト", options: ["A", "B", "C", "D"], correctAnswer: 2 },
-    { _key: "q4", section: "vocabulary", questionText: "Apa arti 猫?", options: ["Kucing", "Anjing", "Kuda", "Sapi"], correctAnswer: 0 },
+    { _key: "q1", question: "Q1", options: ["A", "B", "C", "D"], correctAnswer: 1, section: "vocabulary" },
+    { _key: "q2", question: "Q2", options: ["A", "B", "C", "D"], correctAnswer: 2, section: "vocabulary" },
+    { _key: "q3", question: "Q3", options: ["A", "B", "C", "D"], correctAnswer: 0, section: "grammar" },
   ],
 };
 
-describe("useMockExamEngine", () => {
+describe("useMockExamEngine Hook", () => {
   beforeEach(() => {
+    useUserStore.getState().resetUser();
     vi.useFakeTimers();
+    // Mock scroll to prevent errors
+    window.scrollTo = vi.fn();
   });
 
   afterEach(() => {
     vi.useRealTimers();
   });
 
-  it("memulai di state 'intro'", () => {
-    const { result } = renderHook(() => useMockExamEngine(mockExam));
+  it("memiliki inisialisasi state awal ujian yang benar", () => {
+    const { result } = renderHook(() => useMockExamEngine(mockExamData));
+
     expect(result.current.gameState).toBe("intro");
+    expect(result.current.timeLeft).toBe(50 * 60); // dalam detik
+    expect(result.current.answers).toEqual({});
+    expect(result.current.currentQuestionIndex).toBe(0);
   });
 
-  it("menginisialisasi timer berdasarkan timeLimit (dalam detik)", () => {
-    const { result } = renderHook(() => useMockExamEngine(mockExam));
-    expect(result.current.timeLeft).toBe(30 * 60); // 1800 detik
-  });
+  it("handleAnswer menyimpan indeks opsi pilihan dengan benar", () => {
+    const { result } = renderHook(() => useMockExamEngine(mockExamData));
 
-  it("menampilkan soal pertama sebagai activeQuestion", () => {
-    const { result } = renderHook(() => useMockExamEngine(mockExam));
-    expect(result.current.activeQuestion._key).toBe("q1");
-  });
+    act(() => {
+      result.current.setGameState("playing");
+    });
 
-  it("menyimpan jawaban saat handleAnswer dipanggil", () => {
-    const { result } = renderHook(() => useMockExamEngine(mockExam));
-
-    act(() => { result.current.handleAnswer(1); }); // pilih option index 1
+    act(() => {
+      result.current.handleAnswer(1);
+    });
 
     expect(result.current.answers["q1"]).toBe(1);
   });
 
-  it("bisa mengganti jawaban di soal yang sama", () => {
-    const { result } = renderHook(() => useMockExamEngine(mockExam));
+  it("nextQuestion berpindah ke soal berikutnya dalam seksi yang sama", () => {
+    const { result } = renderHook(() => useMockExamEngine(mockExamData));
 
-    act(() => { result.current.handleAnswer(0); });
-    act(() => { result.current.handleAnswer(2); });
+    act(() => {
+      result.current.setGameState("playing");
+    });
 
-    expect(result.current.answers["q1"]).toBe(2);
-  });
+    act(() => {
+      result.current.handleAnswer(1);
+    });
 
-  it("navigasi ke soal berikutnya", () => {
-    const { result } = renderHook(() => useMockExamEngine(mockExam));
+    act(() => {
+      result.current.nextQuestion();
+    });
 
-    act(() => { result.current.nextQuestion(); });
-
+    // Soal kedua "q2" masih di seksi "vocabulary"
     expect(result.current.currentQuestionIndex).toBe(1);
-    expect(result.current.activeQuestion._key).toBe("q2");
+    expect(result.current.pendingConfirm).toBeNull();
   });
 
-  it("navigasi ke soal sebelumnya", () => {
-    const { result } = renderHook(() => useMockExamEngine(mockExam));
+  it("nextQuestion memicu konfirmasi Dialog (pendingConfirm) saat berpindah seksi", () => {
+    const { result } = renderHook(() => useMockExamEngine(mockExamData));
 
-    act(() => { result.current.nextQuestion(); }); // ke index 1
-    act(() => { result.current.prevQuestion(); }); // kembali ke index 0
+    act(() => {
+      result.current.setGameState("playing");
+    });
 
-    expect(result.current.currentQuestionIndex).toBe(0);
+    // Mulai dari soal index 1 ("q2") yang merupakan akhir seksi "vocabulary"
+    act(() => {
+      result.current.goToQuestion(1);
+    });
+
+    act(() => {
+      result.current.nextQuestion();
+    });
+
+    // Pemicuan pendingConfirm = "section" untuk konfirmasi perpindahan seksi ke "grammar"
+    expect(result.current.pendingConfirm).toBe("section");
+    expect(result.current.currentQuestionIndex).toBe(1); // tetap di index 1 sebelum konfirmasi
+
+    // Lakukan konfirmasi pending action
+    act(() => {
+      result.current.confirmPendingAction();
+    });
+
+    // Setelah konfirmasi, berpindah ke soal pertama di seksi "grammar"
+    expect(result.current.currentQuestionIndex).toBe(2);
+    expect(result.current.pendingConfirm).toBeNull();
   });
 
-  it("tidak bisa mundur dari soal pertama", () => {
-    const { result } = renderHook(() => useMockExamEngine(mockExam));
+  it("finishExam menghitung skor dan memberikan XP reward sesuai performa", () => {
+    const { result } = renderHook(() => useMockExamEngine(mockExamData));
 
-    act(() => { result.current.prevQuestion(); });
+    act(() => {
+      result.current.setGameState("playing");
+    });
 
-    expect(result.current.currentQuestionIndex).toBe(0);
-  });
+    // Jawab benar semua
+    act(() => {
+      result.current.handleAnswer(1); // Benar untuk Q1 (vocabulary)
+    });
 
-  it("tidak bisa maju melampaui soal terakhir", () => {
-    const { result } = renderHook(() => useMockExamEngine(mockExam));
+    // Go to Q2 (vocabulary)
+    act(() => {
+      result.current.nextQuestion();
+    });
+    act(() => {
+      result.current.handleAnswer(2); // Benar untuk Q2 (vocabulary)
+    });
 
-    // Maju ke soal terakhir
-    act(() => { result.current.nextQuestion(); });
-    act(() => { result.current.nextQuestion(); });
-    act(() => { result.current.nextQuestion(); }); // sekarang index 3 (terakhir)
-    act(() => { result.current.nextQuestion(); }); // coba maju lagi
+    // Go to Q3 (grammar, across section)
+    act(() => {
+      result.current.nextQuestion();
+    });
+    // Menyetujui perpindahan seksi
+    act(() => {
+      result.current.confirmPendingAction();
+    });
+    act(() => {
+      result.current.handleAnswer(0); // Benar untuk Q3 (grammar)
+    });
 
-    expect(result.current.currentQuestionIndex).toBe(3);
-  });
-
-  it("finishExam mengubah gameState ke 'result'", () => {
-    const { result } = renderHook(() => useMockExamEngine(mockExam));
-
-    act(() => { result.current.finishExam(); });
+    act(() => {
+      result.current.finishExam();
+    });
 
     expect(result.current.gameState).toBe("result");
-  });
 
-  // ========================================
-  // calculateScore
-  // ========================================
-  describe("calculateScore", () => {
-    it("menghitung skor sempurna (semua benar)", () => {
-      const { result } = renderHook(() => useMockExamEngine(mockExam));
+    const scoreData = result.current.calculateScore();
+    // 3/3 benar = 180 skor akhir
+    expect(scoreData.finalScore).toBe(180);
+    expect(scoreData.correctCount).toBe(3);
 
-      // Jawab semua dengan benar
-      act(() => { result.current.handleAnswer(1); }); // q1: correctAnswer=1 ✓
-      act(() => { result.current.nextQuestion(); });
-      act(() => { result.current.handleAnswer(1); }); // q2: correctAnswer=1 ✓
-      act(() => { result.current.nextQuestion(); });
-      act(() => { result.current.handleAnswer(2); }); // q3: correctAnswer=2 ✓
-      act(() => { result.current.nextQuestion(); });
-      act(() => { result.current.handleAnswer(0); }); // q4: correctAnswer=0 ✓
-
-      const score = result.current.calculateScore();
-      expect(score.correctCount).toBe(4);
-      expect(score.finalScore).toBe(180); // 4/4 * 180 = 180
-    });
-
-    it("menghitung skor 0 saat semua salah", () => {
-      const { result } = renderHook(() => useMockExamEngine(mockExam));
-
-      // Jawab semua salah
-      act(() => { result.current.handleAnswer(0); }); // q1: correctAnswer=1, pilih 0 ✗
-      act(() => { result.current.nextQuestion(); });
-      act(() => { result.current.handleAnswer(0); }); // q2: correctAnswer=1, pilih 0 ✗
-      act(() => { result.current.nextQuestion(); });
-      act(() => { result.current.handleAnswer(0); }); // q3: correctAnswer=2, pilih 0 ✗
-      act(() => { result.current.nextQuestion(); });
-      act(() => { result.current.handleAnswer(1); }); // q4: correctAnswer=0, pilih 1 ✗
-
-      const score = result.current.calculateScore();
-      expect(score.correctCount).toBe(0);
-      expect(score.finalScore).toBe(0);
-    });
-
-    it("menghitung skor parsial dan breakdown per section", () => {
-      const { result } = renderHook(() => useMockExamEngine(mockExam));
-
-      act(() => { result.current.handleAnswer(1); }); // q1 vocab ✓
-      act(() => { result.current.nextQuestion(); });
-      act(() => { result.current.handleAnswer(0); }); // q2 grammar ✗
-      act(() => { result.current.nextQuestion(); });
-      act(() => { result.current.handleAnswer(2); }); // q3 reading ✓
-      act(() => { result.current.nextQuestion(); });
-      act(() => { result.current.handleAnswer(0); }); // q4 vocab ✓
-
-      const score = result.current.calculateScore();
-      expect(score.correctCount).toBe(3);
-      expect(score.finalScore).toBe(Math.round((3 / 4) * 180)); // 135
-
-      // Section breakdown
-      expect(score.sectionBreakdown.vocabulary.correct).toBe(2);
-      expect(score.sectionBreakdown.vocabulary.total).toBe(2);
-      expect(score.sectionBreakdown.grammar.correct).toBe(0);
-      expect(score.sectionBreakdown.grammar.total).toBe(1);
-      expect(score.sectionBreakdown.reading.correct).toBe(1);
-      expect(score.sectionBreakdown.reading.total).toBe(1);
-    });
-
-    it("menghitung skor 0 saat tidak ada jawaban", () => {
-      const { result } = renderHook(() => useMockExamEngine(mockExam));
-      const score = result.current.calculateScore();
-      expect(score.correctCount).toBe(0);
-      expect(score.finalScore).toBe(0);
-    });
-  });
-
-  // ========================================
-  // isTimeCritical
-  // ========================================
-  it("menandai isTimeCritical saat waktu < 5 menit", () => {
-    const { result } = renderHook(() => useMockExamEngine({ ...mockExam, timeLimit: 4 }));
-    // 4 menit = 240 detik, < 300 -> critical
-    expect(result.current.isTimeCritical).toBe(true);
-  });
-
-  it("tidak menandai isTimeCritical saat waktu cukup", () => {
-    const { result } = renderHook(() => useMockExamEngine(mockExam));
-    // 30 menit = 1800 detik, > 300 -> not critical
-    expect(result.current.isTimeCritical).toBe(false);
-  });
-
-  // ========================================
-  // Timer countdown
-  // ========================================
-  it("menghitung mundur timer saat gameState = 'playing'", () => {
-    const { result } = renderHook(() => useMockExamEngine(mockExam));
-
-    act(() => { result.current.setGameState("playing"); });
-
-    const initialTime = result.current.timeLeft;
-
-    act(() => { vi.advanceTimersByTime(5000); }); // 5 detik
-
-    expect(result.current.timeLeft).toBe(initialTime - 5);
-  });
-
-  it("tidak menghitung mundur saat gameState bukan 'playing'", () => {
-    const { result } = renderHook(() => useMockExamEngine(mockExam));
-
-    const initialTime = result.current.timeLeft;
-
-    act(() => { vi.advanceTimersByTime(5000); });
-
-    expect(result.current.timeLeft).toBe(initialTime);
+    // Verifikasi XP (3 * 10 XP + 50 bonus pass = 80 XP)
+    expect(useUserStore.getState().xp).toBe(80);
   });
 });

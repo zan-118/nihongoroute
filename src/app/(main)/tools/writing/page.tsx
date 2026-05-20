@@ -1,19 +1,23 @@
 /**
  * @file app/(main)/tools/writing/page.tsx
- * @description Halaman Kanvas Kosong untuk latihan menulis bebas.
+ * @description Halaman Kanvas Kosong untuk latihan menulis bebas dan terpandu dengan koreksi guratan.
  * @module FreeWritingPage
  */
 
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { ChevronLeft, Download, Share2 } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import WritingCanvas from "@/components/features/tools/writing/WritingCanvas";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
-export default function FreeWritingPage() {
+function FreeWritingContent() {
+  const searchParams = useSearchParams();
+  const character = searchParams.get("char") || "";
+
   return (
     <div className="w-full flex-1 relative overflow-hidden flex flex-col bg-background transition-colors duration-300 pt-12 pb-24 px-4 md:px-8">
       {/* Background Decor */}
@@ -36,17 +40,28 @@ export default function FreeWritingPage() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
             <div>
               <h1 className="text-4xl md:text-5xl font-black text-foreground uppercase tracking-tight italic">
-                Kanvas <span className="text-success">Bebas</span>
+                {character ? (
+                  <>
+                    Kanji <span className="text-success">{character}</span>
+                  </>
+                ) : (
+                  <>
+                    Kanvas <span className="text-success">Bebas</span>
+                  </>
+                )}
               </h1>
               <p className="text-muted-foreground text-sm mt-2 max-w-md font-medium leading-relaxed">
-                Ruang kosong untuk melatih guratan kanji, kana, atau sekadar coretan belajar. 
-                Gunakan jari atau stylus untuk hasil terbaik.
+                {character ? (
+                  `Latih menulis karakter "${character}". Sistem akan menganalisis arah dan urutan guratan secara real-time.`
+                ) : (
+                  "Ruang kosong untuk melatih guratan kanji, kana, atau sekadar coretan belajar. Gunakan jari atau stylus untuk hasil terbaik."
+                )}
               </p>
             </div>
             
             <div className="flex gap-2">
                <Badge variant="outline" className="bg-success/10 text-success border-success/20 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">
-                 Mode Bebas Aktif
+                 {character ? `Menulis: ${character}` : "Mode Bebas Aktif"}
                </Badge>
             </div>
           </div>
@@ -57,6 +72,7 @@ export default function FreeWritingPage() {
           <div className="lg:col-span-7 flex justify-center">
             <div className="w-full max-w-[500px]">
                <WritingCanvas 
+                 character={character}
                  strokeColor="rgb(var(--success-rgb))" // Emerald color
                  className="max-w-[400px] md:max-w-[450px] mx-auto"
                />
@@ -102,6 +118,18 @@ export default function FreeWritingPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function FreeWritingPage() {
+  return (
+    <Suspense fallback={
+      <div className="w-full flex-1 flex items-center justify-center bg-background">
+        <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest animate-pulse">Memuat Kanvas...</p>
+      </div>
+    }>
+      <FreeWritingContent />
+    </Suspense>
   );
 }
 
