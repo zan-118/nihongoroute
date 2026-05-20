@@ -110,7 +110,6 @@ export default {
               name: 'questionText',
               title: 'Pertanyaan',
               type: 'text',
-              validation: (Rule: import('sanity').Rule) => Rule.required(),
             },
             {
               name: 'options',

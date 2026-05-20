@@ -43,7 +43,7 @@ export default {
           { title: 'N1', value: 'N1' },
         ],
       },
-      validation: (Rule: import('sanity').Rule) => Rule.required(),
+      // validation: (Rule: import('sanity').Rule) => Rule.required(),
     },
     {
       name: 'difficulty',
