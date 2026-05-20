@@ -4,6 +4,9 @@ import { createClient } from "@/lib/supabase/server";
 import { slugify } from "@/lib/utils";
 import { getSanityLessonBySlug, getSanityReadingBySlug, getSanityListeningBySlug, getSanityExamBySlug } from "@/lib/queries";
 
+// Helper: detect apakah string adalah UUID yang valid
+const isUUID = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
+
 // --- Types ---
 export interface LibraryItem {
   id?: string;
@@ -193,7 +196,7 @@ export async function getLibraryItemBySlug(
       }
       if (bySlug) {
         data = bySlug;
-      } else {
+      } else if (isUUID(slugOrId)) {
         // Fallback: try by id
         const { data: byId, error: idErr } = await supabase.from("vocab").select("*").eq("id", slugOrId).single();
         if (idErr && idErr.code !== "PGRST116") console.error(`[getLibraryItemBySlug] vocab id error:`, idErr.message);
@@ -216,7 +219,7 @@ export async function getLibraryItemBySlug(
       }
       if (bySlug) {
         data = bySlug;
-      } else {
+      } else if (isUUID(slugOrId)) {
         const { data: byId, error: idErr } = await supabase.from(table).select("*").eq("id", slugOrId).single();
         if (idErr && idErr.code !== "PGRST116") console.error(`[getLibraryItemBySlug] ${table} id error:`, idErr.message);
         data = byId ?? null;
@@ -338,9 +341,6 @@ export async function getLibraryItemBySlug(
         listeningList: [],
         readingList: []
       };
-
-      // Helper: detect apakah item adalah UUID
-      const isUUID = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
 
       // Fetch relationships in parallel to avoid waterfalls
       const fetchVocab = async () => {
