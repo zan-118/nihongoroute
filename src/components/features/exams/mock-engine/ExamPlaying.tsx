@@ -48,30 +48,28 @@ interface ExamPlayingProps {
  * Komponen Opsi Jawaban yang di-memoize untuk menghindari re-render yang tidak perlu.
  * Tanpa memoize, tombol ini akan re-render setiap detik saat timer `timeLeft` diperbarui.
  */
-const OptionButton = memo(({ 
-  idx, 
-  text, 
-  isSelected, 
-  onSelect 
-}: { 
-  idx: number; 
-  text: string; 
-  isSelected: boolean; 
+const OptionButton = memo(({
+  idx,
+  text,
+  isSelected,
+  onSelect
+}: {
+  idx: number;
+  text: string;
+  isSelected: boolean;
   onSelect: (idx: number) => void;
 }) => {
   return (
     <button
       onClick={() => onSelect(idx)}
-      className={`p-4 rounded-xl text-left transition-all font-medium flex items-center gap-4 border ${
-        isSelected
-          ? "bg-destructive/10 border-destructive/30 text-destructive"
-          : "bg-background border-border text-muted-foreground hover:border-destructive/30"
-      }`}
-    >
-      <div 
-        className={`font-mono text-xs font-bold h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${
-          isSelected ? "bg-destructive text-destructive-foreground" : "bg-muted text-muted-foreground"
+      className={`p-4 rounded-xl text-left transition-all font-medium flex items-center gap-4 border ${isSelected
+        ? "bg-destructive/10 border-destructive/30 text-destructive"
+        : "bg-background border-border text-muted-foreground hover:border-destructive/30"
         }`}
+    >
+      <div
+        className={`font-mono text-xs font-bold h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${isSelected ? "bg-destructive text-destructive-foreground" : "bg-muted text-muted-foreground"
+          }`}
       >
         {idx + 1}
       </div>
@@ -128,13 +126,12 @@ export function ExamPlaying({
                       key={section}
                       disabled={isLocked}
                       onClick={() => !isLocked && goToQuestion(sections[section][0])}
-                      className={`whitespace-nowrap px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border ${
-                        isActive
-                          ? "bg-destructive text-destructive-foreground border-transparent shadow-sm"
-                          : isLocked
+                      className={`whitespace-nowrap px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border ${isActive
+                        ? "bg-destructive text-destructive-foreground border-transparent shadow-sm"
+                        : isLocked
                           ? "bg-transparent text-muted-foreground/30 border-border/50 cursor-not-allowed"
                           : "bg-background border-border hover:border-destructive/30"
-                      }`}
+                        }`}
                     >
                       {isLocked && <LockIcon size={10} className="inline mr-1" />}
                       {SECTION_LABELS[section].split(" ")[0]}
@@ -142,13 +139,12 @@ export function ExamPlaying({
                   );
                 })}
               </div>
-              
+
               <div className="flex items-center gap-3 shrink-0">
-                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors ${
-                  isTimeCritical 
-                    ? "bg-destructive/10 border-destructive/30 text-destructive animate-pulse" 
-                    : "bg-background border-border text-muted-foreground"
-                }`}>
+                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors ${isTimeCritical
+                  ? "bg-destructive/10 border-destructive/30 text-destructive animate-pulse"
+                  : "bg-background border-border text-muted-foreground"
+                  }`}>
                   <Clock size={14} aria-hidden="true" />
                   <span className="font-mono font-bold text-xs">{formatTime(timeLeft)}</span>
                 </div>
@@ -172,17 +168,16 @@ export function ExamPlaying({
                     <Button
                       onClick={handlePlayAudio}
                       disabled={
-                        exam.choukaiAudioUrl 
+                        exam.choukaiAudioUrl
                           ? (audioStatus.global === "playing" || audioStatus.global === "played")
                           : (audioStatus[activeQuestion._key] === "playing" || audioStatus[activeQuestion._key] === "played")
                       }
                       size="sm"
-                      className={`w-10 h-10 rounded-full shrink-0 ${
-                        (!exam.choukaiAudioUrl && (!audioStatus[activeQuestion._key] || audioStatus[activeQuestion._key] === "idle")) ||
+                      className={`w-10 h-10 rounded-full shrink-0 ${(!exam.choukaiAudioUrl && (!audioStatus[activeQuestion._key] || audioStatus[activeQuestion._key] === "idle")) ||
                         (exam.choukaiAudioUrl && (!audioStatus.global || audioStatus.global === "idle"))
-                          ? "bg-destructive text-destructive-foreground shadow-md hover:shadow-destructive/20 hover:scale-105 transition-all"
-                          : "bg-muted text-muted-foreground cursor-not-allowed"
-                      }`}
+                        ? "bg-destructive text-destructive-foreground shadow-md hover:shadow-destructive/20 hover:scale-105 transition-all"
+                        : "bg-muted text-muted-foreground cursor-not-allowed"
+                        }`}
                     >
                       <Volume2 size={18} aria-hidden="true" className={(exam.choukaiAudioUrl ? audioStatus.global === "playing" : audioStatus[activeQuestion._key] === "playing") ? "animate-pulse" : ""} />
                     </Button>
@@ -216,10 +211,10 @@ export function ExamPlaying({
                     </div>
                   )}
 
-                    <ExamQuestionText 
-                      questionText={activeQuestion.questionText}
-                      className="text-lg md:text-xl font-medium leading-relaxed mb-8 text-foreground"
-                    />
+                  <ExamQuestionText
+                    questionText={activeQuestion.questionText}
+                    className="text-lg md:text-xl font-medium leading-relaxed mb-8 text-foreground"
+                  />
 
                   <div className="grid grid-cols-1 gap-3">
                     {activeQuestion.options.map((opt, idx) => (
@@ -249,15 +244,14 @@ export function ExamPlaying({
                           key={qIdx}
                           disabled={isLocked}
                           onClick={() => !isLocked && goToQuestion(qIdx)}
-                          className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-mono font-bold transition-all border ${
-                            isActive
-                              ? "bg-destructive text-destructive-foreground border-transparent shadow-md scale-105"
-                              : isAnswered
+                          className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-mono font-bold transition-all border ${isActive
+                            ? "bg-destructive text-destructive-foreground border-transparent shadow-md scale-105"
+                            : isAnswered
                               ? "bg-success/10 text-success border-success/20"
                               : isLocked
-                              ? "bg-transparent text-muted-foreground/30 border-border/50 cursor-not-allowed"
-                              : "bg-background text-muted-foreground border-border"
-                          }`}
+                                ? "bg-transparent text-muted-foreground/30 border-border/50 cursor-not-allowed"
+                                : "bg-background text-muted-foreground border-border"
+                            }`}
                         >
                           {isLocked ? <LockIcon size={10} aria-hidden="true" /> : qIdx + 1}
                         </button>
@@ -375,9 +369,9 @@ export function ExamPlaying({
                     const isAnswered = answers[q._key] !== undefined;
                     const isCurrentSection = q.section === currentSection;
                     const isLocked = !isCurrentSection && availableSections.indexOf(q.section) < activeSectionIndex;
-                    
+
                     let cellClass = "";
-                    let onClickHandler = () => {};
+                    let onClickHandler = () => { };
 
                     if (isLocked) {
                       cellClass = "bg-muted/40 text-muted-foreground/30 border-border/50 cursor-not-allowed";

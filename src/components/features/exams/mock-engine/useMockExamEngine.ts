@@ -29,7 +29,7 @@ const performScoreCalculation = (questions: ExamQuestion[], answers: Record<stri
     if (!sectionBreakdown[section]) {
       sectionBreakdown[section] = { total: 0, correct: 0, passed: true };
     }
-    
+
     sectionBreakdown[section].total += 1;
     if (answers[q._key] === q.correctAnswer) {
       correctCount++;
@@ -81,14 +81,14 @@ export function useMockExamEngine(exam: ExamData) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Order of sections
-  const sectionOrder = ["vocabulary", "grammar", "listening", "reading"];
+  const sectionOrder = ["vocabulary", "grammar", "reading", "listening"];
   const availableSections = sectionOrder.filter(s => sections[s] && sections[s].length > 0);
 
   const activeQuestion = useMemo(() => exam.questions[currentQuestionIndex], [exam.questions, currentQuestionIndex]);
   const currentSection = activeQuestion?.section || "vocabulary";
   const isTimeCritical = useMemo(() => timeLeft < 300, [timeLeft]);
-  const isCurrentlyListening = useMemo(() => 
-    currentSection === "listening" || !!activeQuestion?.audioUrl, 
+  const isCurrentlyListening = useMemo(() =>
+    currentSection === "listening" || !!activeQuestion?.audioUrl,
     [currentSection, activeQuestion]
   );
   const hasGlobalChoukai = !!exam.choukaiAudioUrl;
@@ -189,15 +189,15 @@ export function useMockExamEngine(exam: ExamData) {
     try {
       const encodedData = btoa(encodeURIComponent(JSON.stringify(shareData)));
       const shareUrl = `${window.location.origin}/share?data=${encodedData}`;
-      
+
       if (navigator.share) {
         navigator.share({
           title: `Hasil Ujian NihongoRoute - ${exam.title}`,
           text: `Saya baru saja menyelesaikan ujian ${exam.title} di NihongoRoute dengan skor ${finalScore}/180!`,
           url: shareUrl,
         }).catch(() => {
-           navigator.clipboard.writeText(shareUrl);
-           toast.success("Link pencapaian disalin!");
+          navigator.clipboard.writeText(shareUrl);
+          toast.success("Link pencapaian disalin!");
         });
       } else {
         navigator.clipboard.writeText(shareUrl);
@@ -290,7 +290,7 @@ export function useMockExamEngine(exam: ExamData) {
     if (index >= 0 && index < exam.questions.length) {
       const targetQuestion = exam.questions[index];
       const targetSection = targetQuestion.section || "vocabulary";
-      
+
       // Block jumping in listening section (linear navigation only)
       if (currentSection === "listening" && !exam.choukaiAudioUrl) {
         if (index !== currentQuestionIndex) {
