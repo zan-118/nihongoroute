@@ -143,6 +143,12 @@ Setiap interaksi (XP bertambah, kartu SRS dijawab) akan langsung memperbarui sta
 2. **`useCloudMutation`**: Mengeksekusi prosedur RPC `sync_user_progress` di Supabase.
 3. **Konfirmasi**: Jika sukses, penanda *dirty* dihapus dan pesan `"SYNC_COMPLETE"` disiarkan melalui **BroadcastChannel** agar tab lain melakukan cache invalidation.
 
+### Langkah 5: Penyelarasan Integrasi Sanity & Resolusi Kategori Supabase Dinamis
+
+Untuk mendukung integrasi modul ujian (simulasi JLPT & JFT-Basic) yang dibuat melalui Sanity CMS ke dalam Next.js frontend, alur data mengimplementasikan dua mekanisme krusial:
+- **GROQ Asset Coalesce Expansion**: Konten multimedia asli dari pustaka media Sanity (tipe data `file` untuk audio soal/global chōkai dan `image` untuk gambar soal) di-coalesce secara dinamis di sisi server melalui query GROQ (`"audioUrl": coalesce(audioUrl.asset->url, audioUrl)`). Ini mengubah asset reference Sanity menjadi URL string bersih secara langsung sebelum dikirim ke UI.
+- **Resolusi UUID Kategori Dinamis**: Ujian di Sanity dihubungkan ke kategori pelajaran Supabase menggunakan field `category_id` (yang dapat berisi UUID Supabase atau string slug langsung). Jika UUID terdeteksi pada Server Action (`getExamByIdOrSlug`), sistem akan melakukan pencarian asinkron ke tabel `course_categories` Supabase untuk menerjemahkannya menjadi slug ramah SEO (seperti `"n5"`), mencegah kesalahan halaman 404 pada tautan kembali di client.
+
 ---
 
 ## 6. Batasan Arsitektur

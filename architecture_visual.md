@@ -184,3 +184,4 @@ graph TD
 > 3. **Suspense Guarding** pada penanganan `useSearchParams` untuk menjamin Next.js 16 berhasil melakukan pre-render halaman statis secara optimal.
 > 4. **Keamanan Hydration (React 19 / Next.js 16)** dengan mewajibkan direktif `"use client"` di sub-komponen interaktif yang menggunakan event listener agar hidrasi state berjalan lancar.
 > 5. **Kepatuhan Aksesibilitas (A11y)** dengan mewajibkan penulisan atribut `aria-label` deskriptif terlokalisasi di seluruh tombol ikon navigasi perpustakaan.
+> 6. **Sanity Asset Resolution & Dynamic Category Routing** dengan menggunakan ekspansi `coalesce` di query GROQ untuk media audio/gambar asli Sanity, serta resolusi dynamic category UUID dari Supabase di Server Actions untuk mencegah 404 pada client routing.
