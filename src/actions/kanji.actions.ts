@@ -19,7 +19,11 @@ export async function getPaginatedKanji(
     let query = supabase.from("kanji").select("*", { count: "exact" });
 
     if (search) {
-      const safeSearch = search.replace(/"/g, '');
+      const safeSearch = search
+        .replace(/\\/g, '\\\\')  // escape backslash first
+        .replace(/%/g, '\\%')    // escape SQL wildcard %
+        .replace(/_/g, '\\_')    // escape SQL wildcard _
+        .replace(/"/g, '');       // remove quotes for PostgREST syntax
       query = query.or(`character.ilike."%${safeSearch}%",meaning.ilike."%${safeSearch}%",onyomi.ilike."%${safeSearch}%",kunyomi.ilike."%${safeSearch}%",romaji.ilike."%${safeSearch}%"`);
     }
 

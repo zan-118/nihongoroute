@@ -37,7 +37,7 @@ export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps)
       }}
     >
       <Link href={ROUTES.LIBRARY.GRAMMAR(article.slug)} className="block h-full">
-        <Card className="h-full p-6 bg-[rgba(var(--card-rgb),0.4)] backdrop-blur-xl border border-border rounded-[2rem] transition-all duration-500 flex flex-col cursor-pointer hover:border-[rgba(var(--primary-rgb),0.5)] hover:bg-[rgba(var(--card-rgb),0.6)] shadow-2xl relative overflow-hidden">
+        <Card className="h-full p-4 sm:p-6 bg-[rgba(var(--card-rgb),0.4)] backdrop-blur-xl border border-border rounded-[2rem] transition-all duration-500 flex flex-col cursor-pointer hover:border-[rgba(var(--primary-rgb),0.5)] hover:bg-[rgba(var(--card-rgb),0.6)] shadow-2xl relative overflow-hidden">
           {/* Hover Glow Effect */}
           <div className="absolute inset-0 bg-gradient-to-br from-[rgba(var(--primary-rgb),0.05)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 

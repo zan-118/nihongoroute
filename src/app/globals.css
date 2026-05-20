@@ -5,7 +5,7 @@
 @layer base {
   :root {
     --background: 216 20% 98%;
-    --background-rgb: 249 250 251;
+    --background-rgb: 248 250 252;
     --foreground: 216 15% 5%; 
     --foreground-rgb: 10 12 15;
     --card: 0 0% 100%;
@@ -20,60 +20,60 @@
     --secondary-rgb: 68 31 173;
     --secondary-foreground: 0 0% 100%;
     --muted: 216 15% 94%;
-    --muted-rgb: 243 244 246;
+    --muted-rgb: 241 245 249;
     --muted-foreground: 216 15% 25%;
     --accent: 184 100% 95%;
     --accent-foreground: 184 100% 25%;
-    --destructive: 0 84.2% 50%;
-    --destructive-rgb: 239 68 68;
+    --destructive: 0 70% 35%;
+    --destructive-rgb: 153 27 27;
     --destructive-foreground: 210 40% 98%;
-    --success: 142 70% 35%;
+    --success: 142 70% 24%;
     --success-rgb: 22 101 52;
     --success-foreground: 210 20% 98%;
-    --warning: 38 92% 40%;
+    --warning: 38 92% 32%;
     --warning-rgb: 161 98 7;
     --warning-foreground: 210 20% 98%;
     --border: 216 15% 85%;
-    --border-rgb: 226 232 240;
+    --border-rgb: 209 213 219;
     --input: 216 15% 85%;
     --ring: 184 100% 24%;
-    --radius: 1rem;
+    --radius: 1.5rem;
     --border-opacity: 1;
   }
 
   .dark {
-    --background: 216 11% 9%;
-    --background-rgb: 20 23 28;
+    --background: 216 18% 5%;
+    --background-rgb: 10 12 16;
     --foreground: 0 0% 98%;
     --foreground-rgb: 250 250 250;
-    --card: 216 11% 12%;
-    --card-rgb: 26 31 38;
+    --card: 216 15% 9%;
+    --card-rgb: 18 21 27;
     --card-foreground: 0 0% 98%;
-    --popover: 216 11% 9%;
+    --popover: 216 18% 5%;
     --popover-foreground: 0 0% 98%;
     --primary: 184 100% 50%;
-    --primary-rgb: 0 238 255;
-    --primary-foreground: 216 11% 5%;
-    --secondary: 263 85% 70%;
-    --secondary-rgb: 185 154 248;
+    --primary-rgb: 0 242 254;
+    --primary-foreground: 216 18% 5%;
+    --secondary: 263 100% 70%;
+    --secondary-rgb: 153 102 255;
     --secondary-foreground: 210 20% 98%;
-    --muted: 216 11% 15%;
-    --muted-rgb: 31 37 46;
+    --muted: 216 12% 13%;
+    --muted-rgb: 27 30 36;
     --muted-foreground: 216 11% 70%;
     --accent: 184 100% 12%;
     --accent-foreground: 184 100% 80%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-rgb: 127 29 29;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-rgb: 239 68 68;
+    --destructive-foreground: 216 18% 5%;
     --success: 142 70% 45%;
     --success-rgb: 34 197 94;
-    --success-foreground: 216 11% 5%;
+    --success-foreground: 216 18% 5%;
     --warning: 38 92% 55%;
     --warning-rgb: 234 179 8;
-    --warning-foreground: 216 11% 5%;
-    --border: 216 11% 20%;
-    --border-rgb: 40 47 58;
-    --input: 216 11% 20%;
+    --warning-foreground: 216 18% 5%;
+    --border: 216 11% 18%;
+    --border-rgb: 30 36 44;
+    --input: 216 11% 18%;
     --ring: 184 100% 50%;
   }
 
@@ -104,27 +104,31 @@
 
 @layer components {
   .neo-card {
-    @apply bg-card border border-border shadow-sm transition-all duration-300 rounded-3xl;
+    @apply bg-card border border-border/80 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-300 rounded-[1.5rem] sm:rounded-[2.5rem];
   }
   
   .dark .neo-card {
-    @apply bg-card border-border shadow-[8px_8px_16px_rgba(var(--background-rgb),0.6),-4px_-4px_10px_rgba(var(--foreground-rgb),0.01)];
+    background-color: hsl(var(--card) / 0.7);
+    border-color: hsl(var(--border) / 0.85);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
   .neo-inset {
-    @apply bg-muted/50 border border-border shadow-inner rounded-2xl transition-all duration-300;
+    @apply bg-muted/40 border border-border/60 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] rounded-2xl transition-all duration-300;
   }
   
   .dark .neo-inset {
-    @apply bg-background/50 border-border shadow-[inset_4px_4px_10px_rgba(var(--background-rgb),0.6),inset_-2px_-2px_8px_rgba(var(--foreground-rgb),0.01)];
+    background-color: hsl(var(--background) / 0.65);
+    border-color: hsl(var(--border) / 0.5);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
   }
 
   .btn-cyber {
-    @apply px-6 py-3 bg-primary text-primary-foreground font-bold uppercase tracking-widest text-sm rounded-xl transition-all duration-300 hover:opacity-90 active:scale-95 shadow-lg;
+    @apply px-6 py-3.5 bg-primary text-primary-foreground font-black uppercase tracking-[0.2em] text-xs rounded-2xl transition-all duration-300 hover:opacity-90 active:scale-95 shadow-md active:shadow-sm flex items-center justify-center gap-2;
   }
 
   .dark .btn-cyber {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-[0_0_20px_var(--primary)];
+    @apply bg-primary text-primary-foreground hover:bg-primary/95 hover:shadow-[0_0_25px_rgba(0,242,254,0.35)];
   }
 
   .font-japanese {
@@ -135,15 +139,33 @@
   }
 
   .glass {
-    @apply backdrop-blur-xl bg-background/60 border border-border/50 shadow-2xl;
+    @apply backdrop-blur-xl bg-background/70 border border-border/80 shadow-xl;
   }
 
   .dark .glass {
-    @apply bg-background/40 border-border shadow-[0_8px_32px_0_rgba(var(--background-rgb),0.8)];
+    background-color: hsl(var(--card) / 0.45);
+    border-color: hsl(var(--border) / 0.7);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .glow-primary {
+    @apply transition-all duration-300;
+  }
+  .dark .glow-primary:hover {
+    box-shadow: 0 0 25px rgba(0, 242, 254, 0.2);
+    border-color: rgba(0, 242, 254, 0.45) !important;
+  }
+
+  .glow-secondary {
+    @apply transition-all duration-300;
+  }
+  .dark .glow-secondary:hover {
+    box-shadow: 0 0 25px rgba(153, 102, 255, 0.2);
+    border-color: rgba(153, 102, 255, 0.45) !important;
   }
 
   .neural-grid {
-    @apply absolute inset-0 pointer-events-none opacity-30 z-0;
+    @apply absolute inset-0 pointer-events-none opacity-[0.18] z-0;
     background-image: 
       linear-gradient(rgba(var(--foreground-rgb),0.05) 1px, transparent 1px),
       linear-gradient(90deg, rgba(var(--foreground-rgb),0.05) 1px, transparent 1px);
@@ -153,10 +175,10 @@
   }
 
   .dark .neural-grid {
-    @apply opacity-50;
+    @apply opacity-[0.25];
     background-image: 
-      linear-gradient(rgba(var(--foreground-rgb),0.01) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(var(--foreground-rgb),0.01) 1px, transparent 1px);
+      linear-gradient(rgba(var(--foreground-rgb),0.008) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(var(--foreground-rgb),0.008) 1px, transparent 1px);
   }
 }
 

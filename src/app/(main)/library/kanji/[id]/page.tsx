@@ -108,7 +108,10 @@ export default async function KanjiDetailPage({
           <KanjiRadicals radicals={kanji.radicals || undefined} />
 
           {/* 5. Mnemonic Bento (Jembatan Keledai) */}
-          <KanjiMnemonic mnemonics={kanji.mnemonics || undefined} />
+          <KanjiMnemonic 
+            mnemonics={kanji.mnemonics || undefined} 
+            wordId={kanji.character || ""}
+          />
 
           {/* 6. Related Context Bento (Kosakata Terkait) */}
           <KanjiRelatedVocab relatedVocab={kanji.relatedVocab || undefined} />

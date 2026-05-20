@@ -15,7 +15,8 @@ import {
   Search, 
   ChevronRight,
   Zap,
-  LayoutGrid
+  LayoutGrid,
+  Flame
 } from "lucide-react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
@@ -39,6 +40,15 @@ const tools = [
     color: "text-secondary",
     bgColor: "bg-secondary/10",
     border: "border-secondary/20"
+  },
+  {
+    title: "Mode Bertahan Hidup",
+    description: "Kuis kilat berbatas waktu. Tebak arti kata sebelum kehabisan nyawa dan waktu!",
+    icon: Flame,
+    href: "/tools/survival",
+    color: "text-destructive",
+    bgColor: "bg-destructive/10",
+    border: "border-destructive/20"
   },
   {
     title: "Kamus Global",

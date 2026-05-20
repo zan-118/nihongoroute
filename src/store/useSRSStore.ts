@@ -20,6 +20,7 @@ interface SRSStateStore {
   updateProgress: (newXp: number, srsUpdates: Record<string, SRSState>) => void;
   addToSRS: (wordId: string) => void;
   removeFromSRS: (wordId: string) => void;
+  updateCustomMnemonic: (wordId: string, text: string) => void;
   mergeProgress: (cloudData: UserProgress) => void;
   resetSRS: () => void;
 }
@@ -109,6 +110,19 @@ export const useSRSStore = create<SRSStateStore>()(
           isDeleted: true,
           updatedAt: Date.now()
         };
+        set({ srs: newSrs, dirtySrs: newDirty });
+      },
+
+      updateCustomMnemonic: (wordId, text) => {
+        const newSrs = { ...get().srs };
+        const existing = newSrs[wordId] || createNewCardState();
+        newSrs[wordId] = {
+          ...existing,
+          customMnemonic: text,
+          updatedAt: Date.now()
+        };
+        const newDirty = new Set(get().dirtySrs);
+        newDirty.add(wordId);
         set({ srs: newSrs, dirtySrs: newDirty });
       },
 

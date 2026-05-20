@@ -91,8 +91,8 @@ export function GeneralCategoryCard({ cat, variants }: GeneralCategoryCardProps)
       whileHover={{ y: -8 }}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
     >
-      <Card className={`flex flex-col h-full min-h-[480px] bg-card/30 backdrop-blur-xl border border-border rounded-[2.5rem] overflow-hidden group transition-all duration-500 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] ${theme.accentBorder} glass`}>
-        <div className="p-8 md:p-12 flex flex-col h-full relative">
+      <Card className={`flex flex-col h-full min-h-[400px] sm:min-h-[480px] bg-card/30 backdrop-blur-xl border border-border rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden group transition-all duration-500 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] ${theme.accentBorder} glass`}>
+        <div className="p-5 sm:p-8 md:p-12 flex flex-col h-full relative">
           
           {/* Cyber Glow Ambient Latar Belakang */}
           <div 
@@ -101,48 +101,48 @@ export function GeneralCategoryCard({ cat, variants }: GeneralCategoryCardProps)
           />
           
           {/* Header */}
-          <div className="flex justify-between items-start mb-12 relative z-10">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-[1px]" style={{ backgroundColor: `rgba(${theme.glowColor}, 0.4)` }} />
-                <span className={`text-[10px] font-black uppercase tracking-[0.3em] ${theme.accentText}`}>
+          <div className="flex justify-between items-start mb-6 sm:mb-12 relative z-10">
+            <div className="space-y-2 sm:space-y-4">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="w-6 sm:w-10 h-[1px]" style={{ backgroundColor: `rgba(${theme.glowColor}, 0.4)` }} />
+                <span className={`text-[8px] sm:text-[10px] font-black uppercase tracking-[0.3em] ${theme.accentText}`}>
                   {cat.lessonCount || 0} Lessons • {isJlpt ? "JLPT TRACK" : "SPECIALIZED"}
                 </span>
               </div>
-              <h4 className="text-5xl md:text-6xl font-black text-foreground tracking-tighter leading-[0.85] uppercase">
+              <h4 className="text-3xl sm:text-5xl md:text-6xl font-black text-foreground tracking-tighter leading-[0.85] uppercase">
                 {cat.title}
               </h4>
             </div>
             <div 
-              className={`w-16 h-16 rounded-2xl bg-background/50 border border-border flex items-center justify-center shadow-xl transition-all duration-500 ${theme.btnHoverBg} ${theme.iconBg}`}
+              className={`w-11 h-11 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-background/50 border border-border flex items-center justify-center shadow-xl transition-all duration-500 ${theme.btnHoverBg} ${theme.iconBg} shrink-0`}
               role="img"
               aria-label={`Ikon Kategori ${cat.title}`}
             >
-              <IconComponent size={32} />
+              <IconComponent className="w-5 h-5 sm:w-8 sm:h-8" />
             </div>
           </div>
 
           {/* Deskripsi */}
-          <p className="text-sm md:text-lg text-muted-foreground font-medium leading-relaxed mb-12 max-w-xl relative z-10 group-hover:text-foreground transition-colors">
+          <p className="text-xs sm:text-sm md:text-lg text-muted-foreground font-medium leading-relaxed mb-6 sm:mb-12 max-w-xl relative z-10 group-hover:text-foreground transition-colors">
             {cat.description || "Tingkatkan kompetensi penguasaan bahasa Jepang terarah melalui kurikulum premium kami."}
           </p>
 
           {/* Daftar Pelajaran (Previews) */}
           {cat.previews && cat.previews.length > 0 && (
-            <div className="grid gap-4 mb-12 relative z-10">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid gap-4 mb-6 sm:mb-12 relative z-10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 {cat.previews.map((preview) => (
                   <Link
                     key={preview._id}
                     href={ROUTES.COURSES.LESSON(cat.slug, preview.slug)}
-                    className={`flex items-center justify-between p-5 rounded-2xl bg-background/40 border border-border hover:bg-background/80 transition-all duration-300 group/item hover:shadow-[0_0_15px_rgba(${theme.glowColor},0.1)]`}
+                    className={`flex items-center justify-between p-3.5 sm:p-5 rounded-xl sm:rounded-2xl bg-background/40 border border-border hover:bg-background/80 transition-all duration-300 group/item hover:shadow-[0_0_15px_rgba(${theme.glowColor},0.1)]`}
                   >
-                    <span className="text-xs font-black text-muted-foreground group-hover/item:text-foreground transition-colors truncate pr-4">
+                    <span className="text-[11px] sm:text-xs font-black text-muted-foreground group-hover/item:text-foreground transition-colors truncate pr-4">
                       {preview.title}
                     </span>
                     <ArrowRight 
                       size={14} 
-                      className={`opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-1 transition-all ${theme.iconBg}`} 
+                      className={`opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-1 transition-all ${theme.iconBg} shrink-0`} 
                     />
                   </Link>
                 ))}
@@ -151,13 +151,13 @@ export function GeneralCategoryCard({ cat, variants }: GeneralCategoryCardProps)
           )}
 
           {/* Tombol Aksi di Bagian Bawah */}
-          <div className="mt-auto pt-10 border-t border-border relative z-10">
+          <div className="mt-auto pt-6 sm:pt-10 border-t border-border relative z-10">
             <Link
               href={ROUTES.COURSES.CATEGORY(cat.slug)}
-              className="inline-flex items-center gap-4 px-10 py-5 rounded-2xl bg-foreground text-background font-black uppercase tracking-widest text-[10px] transition-all duration-500 shadow-xl hover:scale-105 active:scale-95 group/btn"
+              className="inline-flex items-center gap-3 sm:gap-4 px-6 py-4 sm:px-10 sm:py-5 rounded-xl sm:rounded-2xl bg-foreground text-background font-black uppercase tracking-widest text-[9px] sm:text-[10px] transition-all duration-500 shadow-xl hover:scale-105 active:scale-95 group/btn"
             >
               <span>Jelajahi Rute</span>
-              <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
+              <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
             </Link>
           </div>
         </div>

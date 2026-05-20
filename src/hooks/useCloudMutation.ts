@@ -50,7 +50,8 @@ export function useCloudMutation(session: Session | null | undefined) {
             next_review: new Date(state.nextReview).toISOString(),
             updated_at: new Date(state.updatedAt).toISOString(),
             status: state.interval > 21 ? 'graduated' : (state.interval > 1 ? 'reviewing' : 'learning'),
-            is_deleted: !!state.isDeleted
+            is_deleted: !!state.isDeleted,
+            custom_mnemonic: state.customMnemonic || null
           };
         });
 

@@ -13,6 +13,7 @@ import { useSearchParams } from "next/navigation";
 import WritingCanvas from "@/components/features/tools/writing/WritingCanvas";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 function FreeWritingContent() {
   const searchParams = useSearchParams();
@@ -133,16 +134,3 @@ export default function FreeWritingPage() {
   );
 }
 
-interface BadgeProps {
-  children: React.ReactNode;
-  className?: string;
-  variant?: "default" | "outline" | "secondary" | "destructive";
-}
-
-function Badge({ children, className = "" }: BadgeProps) {
-  return (
-    <div className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${className}`}>
-      {children}
-    </div>
-  );
-}

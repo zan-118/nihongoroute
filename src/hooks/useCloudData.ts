@@ -38,7 +38,7 @@ export function useCloudData(session: Session | null | undefined, hasMounted: bo
           .single(),
         supabase
           .from("user_srs")
-          .select("word_id, interval, repetition, ease_factor, next_review, updated_at")
+          .select("word_id, interval, repetition, ease_factor, next_review, updated_at, custom_mnemonic")
           .eq("user_id", session.user.id),
         supabase
           .from("user_lessons")
@@ -59,6 +59,7 @@ export function useCloudData(session: Session | null | undefined, hasMounted: bo
             easeFactor: row.ease_factor,
             nextReview: new Date(row.next_review).getTime(),
             updatedAt: new Date(row.updated_at).getTime(),
+            customMnemonic: row.custom_mnemonic || undefined
           };
         });
       }

@@ -131,6 +131,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
                 isFlipped={engine.isFlipped}
                 onFlip={engine.toggleFlip}
                 isShaking={engine.isShaking}
+                mnemonic={engine.currentCard.mnemonic}
               />
             )}
           </motion.div>

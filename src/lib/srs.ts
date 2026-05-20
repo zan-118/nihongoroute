@@ -20,6 +20,7 @@ export interface SRSState {
   nextReview: number; // Timestamp (ms)
   updatedAt: number; // Timestamp (ms) update terakhir
   isDeleted?: boolean; // Flag untuk sinkronisasi penghapusan
+  customMnemonic?: string; // Jembatan keledai kustom
 }
 
 // ======================

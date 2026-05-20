@@ -7,6 +7,7 @@ import { FlashcardThemeContext } from "./types";
 import Link from "next/link";
 import * as wanakana from "wanakana";
 import { splitFurigana } from "@/components/ui/SmartJapanese";
+import { MnemonicEditor } from "@/components/features/srs/mnemonic/MnemonicEditor";
 
 interface FlashcardBackProps {
   id: string;
@@ -147,12 +148,17 @@ export function FlashcardBack({
                   {examples[0].meaning || examples[0].indonesian}
                 </p>
               </div>
-            ) : mnemonic && (
-              <div className="p-2.5 bg-warning/[0.03] border border-warning/10 rounded-xl text-left relative overflow-hidden">
-                <span className="text-[7px] font-black uppercase tracking-widest text-warning/60 block mb-0.5">Mnemonic</span>
-                <p className="text-[9px] md:text-[11px] font-medium text-muted-foreground italic leading-tight line-clamp-2">
-                  &quot;{mnemonic}&quot;
-                </p>
+            ) : (
+              <div className="space-y-2">
+                <MnemonicEditor wordId={id} compact={true} />
+                {mnemonic && (
+                  <div className="p-2.5 bg-warning/[0.03] border border-warning/10 rounded-xl text-left relative overflow-hidden">
+                    <span className="text-[7px] font-black uppercase tracking-widest text-warning/60 block mb-0.5">Mnemonic Resmi</span>
+                    <p className="text-[9px] md:text-[11px] font-medium text-muted-foreground italic leading-tight line-clamp-2">
+                      &quot;{mnemonic}&quot;
+                    </p>
+                  </div>
+                )}
               </div>
             )}
 

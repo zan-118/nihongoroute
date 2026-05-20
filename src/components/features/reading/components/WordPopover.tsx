@@ -10,6 +10,8 @@ import { ExternalLink, Plus, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
+import AddToSRSButton from "@/components/features/srs/actions/AddToSRSButton";
+
 interface WordPopoverProps {
   children: React.ReactNode;
   word: string;
@@ -117,9 +119,7 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
                            <ExternalLink size={12} /> Detail
                          </button>
                        </Link>
-                       <button className="flex items-center justify-center p-2.5 rounded-xl bg-muted/40 border border-border text-muted-foreground hover:bg-primary/10 hover:text-primary transition-all">
-                          <Plus size={16} />
-                       </button>
+                       <AddToSRSButton wordId={vocab._id} />
                     </div>
                   </div>
                 ) : (

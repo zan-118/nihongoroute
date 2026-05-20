@@ -146,6 +146,7 @@ export default async function VocabDetailPage({
 
           {/* 3. Mnemonic & Notes Bento */}
           <VocabNotes 
+            wordId={vocab.word || ""}
             mnemonic={typeof vocab.mnemonic === "string" ? vocab.mnemonic : undefined} 
             usageNotes={vocab.usageNotes || undefined} 
           />
