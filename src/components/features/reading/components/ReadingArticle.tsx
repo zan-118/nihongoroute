@@ -16,6 +16,7 @@ interface ReadingArticleProps {
   showTranslation: boolean;
   isZenMode: boolean;
   onComplete?: () => void;
+  isCompleted?: boolean;
 }
 
 export function ReadingArticle({
@@ -28,6 +29,7 @@ export function ReadingArticle({
   showTranslation,
   isZenMode,
   onComplete,
+  isCompleted = false,
 }: ReadingArticleProps) {
   const fontSizeClasses = {
     standard: "text-xl md:text-2xl",
@@ -85,12 +87,18 @@ export function ReadingArticle({
               <Sparkles size={20} className="text-warning animate-pulse" />
               <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Selesaikan Bacaan Untuk XP</span>
            </div>
-           <Button 
-             onClick={onComplete}
-             className="px-16 py-8 h-auto rounded-2xl text-xs font-black uppercase tracking-[0.3em] bg-primary text-primary-foreground shadow-[0_20px_50px_-10px_rgba(var(--primary-rgb),0.4)] hover:shadow-[0_20px_70px_-10px_rgba(var(--primary-rgb),0.6)] hover:scale-105 active:scale-95 transition-all"
-           >
-             Tandai Selesai
-           </Button>
+            <Button 
+              onClick={onComplete}
+              disabled={isCompleted}
+              className={cn(
+                "px-16 py-8 h-auto rounded-2xl text-xs font-black uppercase tracking-[0.3em] transition-all duration-300",
+                isCompleted 
+                  ? "bg-success/10 border border-success/30 text-success shadow-[0_0_25px_rgba(var(--success-rgb),0.1)] cursor-default"
+                  : "bg-primary text-primary-foreground shadow-[0_20px_50px_-10px_rgba(var(--primary-rgb),0.4)] hover:shadow-[0_20px_70px_-10px_rgba(var(--primary-rgb),0.6)] hover:scale-105 active:scale-95"
+              )}
+            >
+              {isCompleted ? "Sudah Selesai ✓" : "Tandai Selesai"}
+            </Button>
         </div>
       )}
     </motion.article>

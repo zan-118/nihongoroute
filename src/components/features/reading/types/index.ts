@@ -31,6 +31,8 @@ export interface PortableTextBlock {
 export type PortableTextContent = string | PortableTextBlock[];
 
 export interface ReadingData {
+  _id?: string;
+  id?: string;
   title: string;
   difficulty: string;
   audioUrl?: string;

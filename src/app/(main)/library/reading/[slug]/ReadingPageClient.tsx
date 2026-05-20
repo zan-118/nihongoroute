@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils";
 import { useReadingLogic } from "@/components/features/reading/hooks/useReadingLogic";
 import { ReadingData } from "@/components/features/reading/types";
 import { Button } from "@/components/ui/button";
+import { useUserStore } from "@/store/useUserStore";
+import { useUIStore } from "@/store/useUIStore";
 
 // Modular Components
 import { ReadingNavbar } from "@/components/features/reading/components/ReadingNavbar";
@@ -31,6 +33,27 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
     toggleTranslation,
     setMode,
   } = useReadingLogic(data);
+
+  const completeLesson = useUserStore((state) => state.completeLesson);
+  const addXP = useUserStore((state) => state.addXP);
+  const completedLessons = useUserStore((state) => state.completedLessons);
+  
+  const lessonId = data._id || data.id || "";
+  const [isLocallyCompleted, setIsLocallyCompleted] = useState(false);
+  const isCompleted = !!(lessonId && completedLessons[lessonId]) || isLocallyCompleted;
+
+  const handleComplete = () => {
+    if (!lessonId || isCompleted) return;
+    setIsLocallyCompleted(true);
+    addXP(100);
+    completeLesson(lessonId);
+    
+    useUIStore.getState().addNotification({
+      title: "Materi Selesai!",
+      message: "Selamat! Anda mendapatkan +100 XP dari membaca.",
+      type: "success"
+    });
+  };
 
   const [isZenMode, setIsZenMode] = useState(false);
   const [fontSize, setFontSize] = useState<"standard" | "large" | "extra">("large");
@@ -129,9 +152,8 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
             fontSize={fontSize}
             showTranslation={showTranslation}
             isZenMode={isZenMode}
-            onComplete={() => {
-              // Handle completion logic here
-            }}
+            onComplete={handleComplete}
+            isCompleted={isCompleted}
           />
         </div>
       </div>

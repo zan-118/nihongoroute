@@ -273,6 +273,26 @@ export async function getLibraryItemBySlug(
         }
         data.examples = Array.isArray(data.examples) ? data.examples : [];
 
+        // Fetch dynamic example sentences from the public.sentences table
+        try {
+          const { data: dbSentences } = await supabase
+            .from("sentences")
+            .select("japanese, indonesia, english")
+            .like("japanese", `%${data.word}%`)
+            .limit(3);
+
+          if (dbSentences && dbSentences.length > 0) {
+            const dynamicExamples = dbSentences.map((s) => ({
+              jp: s.japanese,
+              meaning: s.indonesia || s.english || "",
+              romaji: ""
+            }));
+            data.examples = [...(data.examples as Array<{ jp: string; meaning: string; romaji?: string }>), ...dynamicExamples];
+          }
+        } catch (sentenceErr) {
+          console.error(`[getLibraryItemBySlug] failed to fetch dynamic sentences for "${data.word}":`, sentenceErr);
+        }
+
         data.relatedKanji = ((data.relatedKanji as Array<{ id?: string; _id?: string }>) || []).map((k) => ({ ...k, _id: k.id || k._id }));
         data.synonyms = ((data.synonyms as Array<{ id?: string; _id?: string }>) || []).map((s) => ({ ...s, _id: s.id || s._id }));
         data.antonyms = ((data.antonyms as Array<{ id?: string; _id?: string }>) || []).map((a) => ({ ...a, _id: a.id || a._id }));
@@ -295,6 +315,18 @@ export async function getLibraryItemBySlug(
 
     if (type === "grammar" && data) {
       data._id = data.id;
+    }
+
+    if (type === "reading" && data) {
+      data.audioUrl = data.audio_url;
+      data.imageUrl = data.image_url;
+      data.videoUrl = data.video_url;
+    }
+
+    if (type === "listening" && data) {
+      data.audioUrl = data.audio_url;
+      data.imageUrl = data.image_url;
+      data.videoUrl = data.video_url;
     }
 
     if (type === "lessons" && data) {
