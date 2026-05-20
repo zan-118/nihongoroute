@@ -1,7 +1,9 @@
+import { ExamPortableTextBlock } from "./ExamQuestionText";
+
 export interface ExamQuestion {
   _key: string;
   section: "vocabulary" | "grammar" | "reading" | "listening";
-  questionText?: string;
+  questionText?: string | ExamPortableTextBlock[];
   imageUrl?: string | null;
   audioUrl?: string | null;
   options: string[];

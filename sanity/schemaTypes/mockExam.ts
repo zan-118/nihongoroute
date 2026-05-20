@@ -109,7 +109,24 @@ export default {
             {
               name: 'questionText',
               title: 'Pertanyaan',
-              type: 'text',
+              type: 'array',
+              of: [
+                {
+                  type: 'block',
+                  styles: [
+                    { title: 'Normal', value: 'normal' },
+                  ],
+                  lists: [],
+                  marks: {
+                    decorators: [
+                      { title: 'Tebal (Bold)', value: 'strong' },
+                      { title: 'Miring (Italic)', value: 'em' },
+                      { title: 'Garis Bawah (Underline)', value: 'underline' },
+                      { title: 'Coret (Strikethrough)', value: 'strike-through' }
+                    ]
+                  }
+                }
+              ]
             },
             {
               name: 'options',

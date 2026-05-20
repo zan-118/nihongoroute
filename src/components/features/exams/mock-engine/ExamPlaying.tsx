@@ -16,6 +16,7 @@ import { SECTION_LABELS } from "./constants";
 import { formatTime } from "@/lib/utils";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { toast } from "sonner";
+import { ExamQuestionText } from "./ExamQuestionText";
 
 interface ExamPlayingProps {
   exam: ExamData;
@@ -215,9 +216,9 @@ export function ExamPlaying({
                     </div>
                   )}
 
-                    <div 
+                    <ExamQuestionText 
+                      questionText={activeQuestion.questionText}
                       className="text-lg md:text-xl font-medium leading-relaxed mb-8 text-foreground"
-                      dangerouslySetInnerHTML={{ __html: sanitizeHtml(activeQuestion.questionText || "") }}
                     />
 
                   <div className="grid grid-cols-1 gap-3">

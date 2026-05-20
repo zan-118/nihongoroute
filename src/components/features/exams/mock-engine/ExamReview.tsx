@@ -9,6 +9,7 @@ import { useTheme } from "next-themes";
 import { ExamData, GameState } from "./types";
 import { SECTION_LABELS } from "./constants";
 import { sanitizeHtml } from "@/lib/sanitize";
+import { ExamQuestionText } from "./ExamQuestionText";
 
 interface ExamReviewProps {
   exam: ExamData;
@@ -75,9 +76,9 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                 </div>
 
                 {q.questionText && (
-                  <div
+                  <ExamQuestionText
+                    questionText={q.questionText}
                     className="text-lg md:text-2xl text-foreground font-medium leading-relaxed mb-10 font-japanese prose-custom bg-[rgba(var(--muted-rgb),0.3)] dark:bg-[rgba(var(--background-rgb),0.1)] p-6 rounded-2xl border border-border neo-inset"
-                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(q.questionText) }}
                   />
                 )}
 

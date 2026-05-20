@@ -22,10 +22,12 @@ interface SanityMockExamListItem {
   levelCode?: string;
 }
 
+import { ExamPortableTextBlock } from "@/components/features/exams/mock-engine/ExamQuestionText";
+
 interface SanityQuestionItem {
   _key: string;
   section: string;
-  questionText: string;
+  questionText: string | ExamPortableTextBlock[];
   imageUrl?: string;
   audioUrl?: string;
   options: string[];
