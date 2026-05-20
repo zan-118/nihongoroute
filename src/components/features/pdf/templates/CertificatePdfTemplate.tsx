@@ -14,12 +14,12 @@ import {
  * @description Template PDF untuk sertifikat kelulusan ujian simulasi NihongoRoute.
  */
 
-// Registrasi Font (Menggunakan font sistem sebagai fallback atau URL jika perlu)
+// Registrasi Font NotoSansJP (Lokal TTF untuk stabilitas rendering dan dukungan karakter Jepang)
 Font.register({
-  family: "Inter",
+  family: "NotoSansJP",
   fonts: [
-    { src: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2", fontWeight: 900 },
-    { src: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuI6fAZ9hiA.woff2", fontWeight: 700 },
+    { src: "/fonts/NotoSansJP-Regular.ttf" },
+    { src: "/fonts/NotoSansJP-Bold.ttf", fontWeight: "bold" },
   ],
 });
 
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   page: {
     backgroundColor: "#0a0c10",
     padding: 40,
-    fontFamily: "Inter",
+    fontFamily: "NotoSansJP",
     color: "#ffffff",
     display: "flex",
     flexDirection: "column",
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 42,
-    fontWeight: 900,
+    fontWeight: "bold",
     textTransform: "uppercase",
     letterSpacing: -2,
     color: "#22d3ee",
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   },
   userName: {
     fontSize: 32,
-    fontWeight: 700,
+    fontWeight: "bold",
     color: "#ffffff",
     marginBottom: 20,
     borderBottom: "1pt solid #22d3ee",
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   },
   scoreValue: {
     fontSize: 24,
-    fontWeight: 900,
+    fontWeight: "bold",
   },
   footer: {
     position: "absolute",
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     bottom: -50,
     right: -50,
     fontSize: 150,
-    fontWeight: 900,
+    fontWeight: "bold",
     color: "rgba(34, 211, 238, 0.03)",
     transform: "rotate(-30deg)",
   }
@@ -202,13 +202,13 @@ export const CertificatePdfTemplate = ({ data }: { data: CertificateData }) => (
 
       <View style={styles.footer}>
         <View style={styles.signatureBox}>
-          <Text style={{ fontSize: 12, fontWeight: 700, marginBottom: 5 }}>{data.date}</Text>
+          <Text style={{ fontSize: 12, fontWeight: "bold", marginBottom: 5 }}>{data.date}</Text>
           <View style={styles.signatureLine} />
           <Text style={styles.signatureLabel}>Date of Issue</Text>
         </View>
         
         <View style={styles.signatureBox}>
-          <Text style={{ fontSize: 12, fontWeight: 700, marginBottom: 5, color: "#22d3ee" }}>NIHONGO ROUTE</Text>
+          <Text style={{ fontSize: 12, fontWeight: "bold", marginBottom: 5, color: "#22d3ee" }}>NIHONGO ROUTE</Text>
           <View style={styles.signatureLine} />
           <Text style={styles.signatureLabel}>Official Learning Platform</Text>
         </View>
