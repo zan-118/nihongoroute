@@ -3,6 +3,7 @@ import { MessageSquare } from "lucide-react";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import SanityMedia from "@/components/ui/SanityMedia";
+import { OfflineAudio } from "@/components/ui/OfflineAudio";
 
 export interface DialogueSpeakerItem {
   speaker?: string;
@@ -53,9 +54,11 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
                 </p>
               </div>
               {(l.audioUrl || l.audio_url) && (
-                <audio controls className="w-full md:w-64 h-10 filter brightness-90 contrast-125">
-                  <source src={l.audioUrl || l.audio_url} type="audio/mpeg" />
-                </audio>
+                <OfflineAudio 
+                  controls 
+                  src={(l.audioUrl || l.audio_url)!} 
+                  className="w-full md:w-64 h-10 filter brightness-90 contrast-125" 
+                />
               )}
             </div>
 

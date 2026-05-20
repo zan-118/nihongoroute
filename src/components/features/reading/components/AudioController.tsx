@@ -5,6 +5,7 @@ import { Play, Pause, Square, AlertCircle, RotateCcw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useCachedAudio } from "@/hooks/useCachedAudio";
 
 interface AudioControllerProps {
   audioUrl?: string;
@@ -23,6 +24,7 @@ export default function AudioController({
   onTimeUpdate,
   externalSeek
 }: AudioControllerProps) {
+  const cachedAudioUrl = useCachedAudio(audioUrl);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isTTS, setIsTTS] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -264,7 +266,7 @@ export default function AudioController({
         {audioUrl && (
           <audio
             ref={audioRef}
-            src={audioUrl}
+            src={cachedAudioUrl}
             onDurationChange={(e) => setDuration(e.currentTarget.duration)}
             onTimeUpdate={(e) => {
               const time = e.currentTarget.currentTime;

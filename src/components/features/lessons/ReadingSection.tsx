@@ -2,6 +2,7 @@ import React from "react";
 import { BookOpen } from "lucide-react";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import SanityMedia from "@/components/ui/SanityMedia";
+import { OfflineAudio } from "@/components/ui/OfflineAudio";
 
 export interface ReadingLessonItem {
   _id?: string;
@@ -45,9 +46,11 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
                </div>
                {(r.audioUrl || r.audio_url) && (
                  <div className="flex items-center gap-4">
-                   <audio controls className="h-10 filter brightness-90 contrast-125">
-                     <source src={r.audioUrl || r.audio_url} type="audio/mpeg" />
-                   </audio>
+                   <OfflineAudio 
+                     controls 
+                     src={(r.audioUrl || r.audio_url)!} 
+                     className="h-10 filter brightness-90 contrast-125" 
+                   />
                  </div>
                )}
             </div>

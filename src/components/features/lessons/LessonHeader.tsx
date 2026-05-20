@@ -1,6 +1,7 @@
 import React from "react";
 import { renderSmartText } from "@/components/features/global/SmartText";
 import DownloadPdfButton from "@/components/features/pdf/components/DownloadPdfButton";
+import DownloadOfflineButton from "@/components/features/lessons/DownloadOfflineButton";
 
 interface LessonHeaderProps {
   title: string;
@@ -35,7 +36,8 @@ export const LessonHeader: React.FC<LessonHeaderProps> = ({
           </p>
         </div>
       )}
-      <div className="flex justify-start">
+      <div className="flex items-center flex-wrap gap-4 justify-start">
+        <DownloadOfflineButton lesson={lesson} />
         <DownloadPdfButton data={lesson} />
       </div>
     </header>
