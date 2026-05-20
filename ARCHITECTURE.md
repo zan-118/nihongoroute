@@ -35,14 +35,14 @@ src/app/
 │   ├── courses/            # Katalog materi & detail pelajaran
 │   ├── dashboard/          # Statistik pengguna & ringkasan kemajuan
 │   ├── exams/              # Simulasi ujian JLPT
-│   ├── library/            # Referensi tata bahasa & kamus
+│   ├── library/            # Referensi tata bahasa, kamus, & pustaka Kanji (Mendukung penambahan manual kartu SRS via UUID)
 │   ├── review/             # Mesin utama pengulangan berkala (SRS)
 │   ├── settings/           # Pengaturan profil & preferensi antarmuka
 │   ├── share/              # Halaman publik untuk membagikan kemajuan
 │   ├── social/             # Fitur sosial & papan peringkat
 │   ├── support/            # Pusat bantuan & pertanyaan umum (FAQ)
 │   └── tools/              # Alat bantu belajar tambahan
-│       ├── flashcards/     # Mesin kartu pengingat dinamis
+│       ├── flashcards/     # Mesin kartu pengingat dinamis (Mendukung pre-seleksi otomatis via parameter `?mode=kanji`)
 │       ├── kana/           # Latihan Hiragana & Katakana
 │       └── writing/        # Mesin latihan menulis Kanji
 ├── api/                    # Endpoints API internal (furigana, admin, webhooks)
@@ -78,7 +78,7 @@ Folder `src/components/features/` dikelompokkan berdasarkan area fungsional untu
 | `exams` | Logika pengatur waktu ujian, navigasi soal, dan penilaian otomatis JLPT. |
 | `gamification` | Komponen visual untuk bilah pengalaman (XP), lencana naik level, dan animasi rekor berturut-turut (*streak*). |
 | `grammar` | Menampilkan struktur tata bahasa beserta contoh kalimat dan penjelasan. |
-| `kanji` | Visualisasi urutan coretan, radikal, dan mnemonik. |
+| `kanji` | Visualisasi urutan coretan, radikal, mnemonik, serta integrasi tombol premium `AddToSRSButton` berbasis UUID untuk penambahan kartu belajar langsung ke SRS lokal & cloud. |
 | `listening` | Pemutar audio yang tersinkronisasi dengan transkrip interaktif. |
 | `pdf` | Pembuatan dan pengunduhan dokumen PDF (Sertifikat, *Cheatsheet*, Materi Pelajaran). |
 | `reading` | Mode membaca berdampingan (Jepang-Indonesia) dengan integrasi teks-ke-suara (TTS). |
@@ -225,3 +225,10 @@ Mengikuti aturan Next.js 16 App Router, setiap halaman yang mengonsumsi kueri pe
 
 ### 10.4 Penyegaran Sesi Supabase Auth (`src/proxy.ts`)
 Sesi autentikasi Supabase disinkronkan dan disegarkan secara berkala pada middleware perantara (Proxy) untuk memastikan akses token pengguna selalu valid di lingkungan SSR tanpa menimbulkan masalah *cookie mismatch* antar-tab.
+
+### 10.5 Kepatuhan Aksesibilitas Tombol Ikon (`aria-label`)
+Sesuai dengan pedoman aksesibilitas ramah penyandang disabilitas (*screen reader*), seluruh tombol interaktif yang hanya berisi ikon grafis tanpa teks visual (seperti tombol kontrol pemutar, navigasi chevron, dan tombol tutup modal) **WAJIB** menyertakan atribut `aria-label` yang deskriptif dan terlokalisasi (misalnya: `aria-label="Halaman berikutnya"` pada tombol pagination). Hal ini mencegah hilangnya konteks aksesibilitas bagi pengguna dengan alat bantu pembaca layar.
+
+### 10.6 Keamanan Hydration & Batasan Event Handlers Klien
+Dalam arsitektur Next.js 16 (Turbopack), komponen server (*Server Components*) dilarang menerima properti callback atau event handlers dari React (seperti `onMouseEnter`, `onMouseLeave`, `onClick`) secara langsung pada elemen HTML raw. 
+- Setiap sub-komponen visual yang membutuhkan animasi interaktif berbasis deteksi kursor mouse atau aksi klik klien **WAJIB** dikonversi menjadi komponen klien dengan menyematkan direktif `"use client";` di baris paling atas berkas (contoh: `LibraryCategoryCard.tsx`). Hal ini menjamin kelancaran siklus hidup hidrasi (*hydration*) dan mencegah kegagalan kompilasi Next.js.

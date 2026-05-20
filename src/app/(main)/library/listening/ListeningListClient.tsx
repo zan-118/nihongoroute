@@ -131,7 +131,8 @@ export default function ListeningListClient({ initialData }: ListeningListClient
           <div className="flex items-center gap-2">
             <Button
               variant="ghost"
-              size="icon" aria-label="Aksi"
+              size="icon"
+              aria-label="Halaman pertama"
               onClick={() => handlePageChange(1)}
               disabled={currentPage === 1}
               className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-foreground transition-all disabled:opacity-30"
@@ -140,7 +141,8 @@ export default function ListeningListClient({ initialData }: ListeningListClient
             </Button>
             <Button
               variant="ghost"
-              size="icon" aria-label="Aksi"
+              size="icon"
+              aria-label="Halaman sebelumnya"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
               className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-foreground transition-all disabled:opacity-30"
@@ -165,6 +167,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
                   <Button
                     key={pageNum}
                     variant={currentPage === pageNum ? "default" : "ghost"}
+                    aria-label={`Halaman ${pageNum}`}
                     onClick={() => handlePageChange(pageNum)}
                     className={`w-10 h-10 rounded-xl font-bold transition-all ${
                       currentPage === pageNum 
@@ -180,7 +183,8 @@ export default function ListeningListClient({ initialData }: ListeningListClient
 
             <Button
               variant="ghost"
-              size="icon" aria-label="Aksi"
+              size="icon"
+              aria-label="Halaman berikutnya"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
               className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-foreground transition-all disabled:opacity-30"
@@ -189,7 +193,8 @@ export default function ListeningListClient({ initialData }: ListeningListClient
             </Button>
             <Button
               variant="ghost"
-              size="icon" aria-label="Aksi"
+              size="icon"
+              aria-label="Halaman terakhir"
               onClick={() => handlePageChange(totalPages)}
               disabled={currentPage === totalPages}
               className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-foreground transition-all disabled:opacity-30"

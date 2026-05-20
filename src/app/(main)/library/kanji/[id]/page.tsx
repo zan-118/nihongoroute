@@ -91,6 +91,7 @@ export default async function KanjiDetailPage({
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-[minmax(0,auto)] animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out">
           {/* 1. Stroke & Visual Bento (Fokus Utama) */}
           <KanjiStrokeHero 
+            id={kanji.id || kanji._id || ""}
             character={kanji.character || ""} 
             strokeOrderSvg={kanji.strokeOrderSvg || undefined} 
             meaning={kanji.meaning || ""} 

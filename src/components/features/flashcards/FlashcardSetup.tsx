@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 interface FlashcardSetupProps {
   onStart: (level: string, mode: "vocab" | "kanji" | "survival", amount: number) => void;
   defaultLevel?: string | null;
+  defaultMode?: "vocab" | "kanji" | "survival" | null;
 }
 
 const JLPT_LEVELS = [
@@ -27,9 +28,9 @@ const MODES = [
 
 const AMOUNTS = [10, 20, 50, 100];
 
-export function FlashcardSetup({ onStart, defaultLevel }: FlashcardSetupProps) {
+export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: FlashcardSetupProps) {
   const [level, setLevel] = useState<string>(defaultLevel || "all");
-  const [mode, setMode] = useState<"vocab" | "kanji" | "survival">("vocab");
+  const [mode, setMode] = useState<"vocab" | "kanji" | "survival">(defaultMode || "vocab");
   const [amount, setAmount] = useState<number>(20);
 
   return (

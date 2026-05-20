@@ -1,6 +1,7 @@
 import DashboardClient from "./DashboardClient";
 import type { Metadata } from "next";
 import { getCourseCategories } from "@/actions/lessons.actions";
+import { getRandomExpression } from "@/actions/expressions.actions";
 
 export const metadata: Metadata = {
   title: "Dashboard | NihongoRoute",
@@ -8,8 +9,10 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardPage() {
-  const courseMetadata = await getCourseCategories();
-
+  const [courseMetadata, expression] = await Promise.all([
+    getCourseCategories(),
+    getRandomExpression(),
+  ]);
 
   return (
     <div className="w-full min-h-screen bg-background relative overflow-hidden pt-12 pb-24 px-4 md:px-8 transition-colors duration-300">
@@ -18,7 +21,7 @@ export default async function DashboardPage() {
       <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-primary/5 blur-[150px] rounded-full pointer-events-none" />
       <div className="neural-grid" />
 
-      <DashboardClient courseMetadata={courseMetadata} />
+      <DashboardClient courseMetadata={courseMetadata} expression={expression} />
     </div>
   );
 }

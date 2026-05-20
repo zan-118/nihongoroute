@@ -19,7 +19,7 @@ export function TrainingGround({ categoryId, themeColor, itemVariants }: Trainin
       icon: Layers,
       colorClass: "text-primary",
       rgb: "var(--primary-rgb)",
-      href: `/tools/flashcards?category=${categoryId}`,
+      href: `/tools/flashcards?category=${categoryId}&mode=vocab`,
     },
     {
       title: "Kanji Lab",
@@ -27,7 +27,7 @@ export function TrainingGround({ categoryId, themeColor, itemVariants }: Trainin
       icon: PenTool,
       colorClass: "text-secondary",
       rgb: "var(--secondary-rgb)",
-      href: `/tools/flashcards?category=${categoryId}`,
+      href: `/tools/flashcards?category=${categoryId}&mode=kanji`,
     },
     {
       title: "Survival",
@@ -35,7 +35,7 @@ export function TrainingGround({ categoryId, themeColor, itemVariants }: Trainin
       icon: Flame,
       colorClass: "text-destructive",
       rgb: "var(--destructive-rgb)",
-      href: `/tools/flashcards?category=${categoryId}`,
+      href: `/tools/flashcards?category=${categoryId}&mode=survival`,
     },
   ];
 

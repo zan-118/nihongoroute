@@ -33,6 +33,7 @@ export function VocabPagination({ currentPage, totalPages, loading, onPageChange
           variant="ghost"
           disabled={currentPage === 1 || loading}
           onClick={() => onPageChange(1)}
+          aria-label="Halaman pertama"
           className="w-10 h-10 md:w-12 md:h-12 p-0 rounded-xl bg-muted border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 disabled:opacity-30 transition-all"
         >
           <ChevronsLeft size={16} aria-hidden="true" />
@@ -42,6 +43,7 @@ export function VocabPagination({ currentPage, totalPages, loading, onPageChange
           variant="ghost"
           disabled={currentPage === 1 || loading}
           onClick={() => onPageChange(currentPage - 1)}
+          aria-label="Halaman sebelumnya"
           className="w-10 h-10 md:w-12 md:h-12 p-0 rounded-xl bg-muted border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 disabled:opacity-30 transition-all"
         >
           <ChevronLeft size={16} aria-hidden="true" />
@@ -53,6 +55,7 @@ export function VocabPagination({ currentPage, totalPages, loading, onPageChange
             variant="ghost"
             disabled={loading}
             onClick={() => onPageChange(page)}
+            aria-label={`Halaman ${page}`}
             className={`w-10 h-10 md:w-12 md:h-12 p-0 rounded-xl text-xs md:text-sm font-black transition-all ${
               page === currentPage
                 ? "bg-primary text-primary-foreground border-none shadow-lg"
@@ -67,6 +70,7 @@ export function VocabPagination({ currentPage, totalPages, loading, onPageChange
           variant="ghost"
           disabled={currentPage === totalPages || loading}
           onClick={() => onPageChange(currentPage + 1)}
+          aria-label="Halaman berikutnya"
           className="w-10 h-10 md:w-12 md:h-12 p-0 rounded-xl bg-muted border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 disabled:opacity-30 transition-all"
         >
           <ChevronRight size={16} aria-hidden="true" />
@@ -76,6 +80,7 @@ export function VocabPagination({ currentPage, totalPages, loading, onPageChange
           variant="ghost"
           disabled={currentPage === totalPages || loading}
           onClick={() => onPageChange(totalPages)}
+          aria-label="Halaman terakhir"
           className="w-10 h-10 md:w-12 md:h-12 p-0 rounded-xl bg-muted border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 disabled:opacity-30 transition-all"
         >
           <ChevronsRight size={16} aria-hidden="true" />

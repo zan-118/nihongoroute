@@ -17,6 +17,7 @@ import { UserProgress } from "@/store/types";
 import { SRSState } from "@/lib/srs";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { RandomExpression } from "@/actions/expressions.actions";
 
 // Domain Components
 import { DashboardTabs } from "@/components/features/dashboard/DashboardTabs";
@@ -49,6 +50,7 @@ const TABS = [
 ];
 
 interface DashboardClientProps {
+  expression: RandomExpression | null;
   courseMetadata: Array<{
     id?: string;
     _id?: string;
@@ -63,7 +65,7 @@ interface DashboardClientProps {
   }>;
 }
 
-export default function DashboardClient({ courseMetadata }: DashboardClientProps) {
+export default function DashboardClient({ courseMetadata, expression }: DashboardClientProps) {
   const isAuthenticated = useAuthStore(s => s.isAuthenticated);
   const resetAuth = useAuthStore(s => s.resetAuth);
 
@@ -249,6 +251,7 @@ export default function DashboardClient({ courseMetadata }: DashboardClientProps
             dueCount={dueCount}
             itemVariants={itemVariants}
             isAuthenticated={isAuthenticated}
+            expression={expression}
             courseMetadata={courseMetadata}
           />
         )}

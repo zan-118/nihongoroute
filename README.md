@@ -41,14 +41,15 @@ Dibangun dengan **Protokol Sinkronisasi 3-Tier**:
 2. **Lapis Orkestrasi (useSyncProgress)**: Pendeteksian perubahan otomatis dan *debouncing* di latar belakang.
 3. **Lapis Mutasi (Supabase RPC)**: Sinkronisasi paket data "dirty" ke cloud dengan integritas multi-tab melalui BroadcastChannel API.
 
-### 🔒 Keamanan Enterprise & Penanganan Kueri Dinamis
+### 🔒 Keamanan Enterprise, Aksesibilitas & Penanganan Kueri Dinamis
 - **Sanitasi HTML & Pelindung XSS**: Konten dinamis yang dimuat pengguna disaring secara ketat melalui fungsi `sanitizeHtml` (`src/lib/sanitize.ts`) untuk mencegah eksekusi skrip berbahaya.
 - **Pencegahan SQL Injection**: Pengamanan kueri teks pencarian dengan meng-escape karakter wildcard SQL (`%` dan `_`) secara otomatis di Server Actions.
 - **Next.js 16 Suspense Guards**: Membungkus penggunaan `useSearchParams` dengan `<Suspense>` di halaman-halaman dinamis klien guna menjamin kelancaran build statik di Next.js 16.
+- **Keamanan Hydration & Kepatuhan Aksesibilitas**: Melindungi interaksi event handler Next.js dengan membatasi hook/callback visual ke komponen klien (`"use client"`) secara ketat, serta menstandarisasi atribut `aria-label` deskriptif di seluruh tombol pagination ikonik perpustakaan untuk ramah pembaca layar (*screen reader*).
 
 ### 🎮 Perjalanan Pedagogis Tergamifikasi
 - **Sistem XP, Level & Streak**: Pembelajaran berbasis imbalan untuk menjaga motivasi belajar setiap hari.
-- **Penguasaan JLPT N5 - N2**: Pelajaran terstruktur, panduan tata bahasa komprehensif, serta simulasi ujian interaktif.
+- **Penguasaan JLPT N5 - N1**: Pelajaran terstruktur, panduan tata bahasa komprehensif, serta simulasi ujian interaktif.
 
 ---
 

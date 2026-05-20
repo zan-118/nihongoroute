@@ -157,3 +157,9 @@ Untuk memastikan kerapian struktur ini, seluruh tim pengembang wajib mematuhi at
 5. **Komponen Halaman vs Fitur**:
    * Kode di dalam folder `app/(main)/[page]/page.tsx` hanya bertindak sebagai orkestrator yang memanggil komponen fitur.
    * Logika antarmuka spesifik harus diletakkan di `components/features/[domain]`.
+
+6. **Direktif `"use client"` untuk Sub-Komponen Interaktif**:
+   * Sub-komponen visual yang memiliki event handlers (seperti `onMouseEnter`, `onMouseLeave`, `onClick`) wajib diletakkan di `components/features/[domain]/` dan disematkan direktif `"use client";` untuk mencegah error *hydration* Server Components di Next.js 16.
+
+7. **Wajib `aria-label` untuk Tombol Ikon**:
+   * Tombol-tombol navigasi/aksi yang hanya berisi ikon grafis tanpa teks visual (misal di komponen pagination) **WAJIB** memiliki atribut `aria-label` deskriptif yang terlokalisasi dalam Bahasa Indonesia.

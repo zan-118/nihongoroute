@@ -177,8 +177,10 @@ graph TD
 > Arsitektur ini dirancang untuk memastikan kenyamanan belajar maksimal bagi pengguna Indonesia tanpa adanya hambatan teknis (seperti paywall tersembunyi atau latensi jaringan yang mengganggu) dengan prinsip **Free Access Strategy** dan **Offline-First**.
 
 > [!IMPORTANT]
-> **Lapisan Keamanan & Validasi Build**: 
+> **Lapisan Keamanan, Aksesibilitas & Validasi Build**: 
 > Seluruh aliran data di atas diproteksi oleh:
 > 1. **Sanitasi HTML (XSS Shield)** di `src/lib/sanitize.ts` yang secara otomatis membersihkan konten HTML dinamis sebelum dirender di sisi Client maupun Server.
 > 2. **SQL Wildcard Escaping** pada Server Actions untuk menolak injeksi manipulasi kueri basis data.
 > 3. **Suspense Guarding** pada penanganan `useSearchParams` untuk menjamin Next.js 16 berhasil melakukan pre-render halaman statis secara optimal.
+> 4. **Keamanan Hydration (React 19 / Next.js 16)** dengan mewajibkan direktif `"use client"` di sub-komponen interaktif yang menggunakan event listener agar hidrasi state berjalan lancar.
+> 5. **Kepatuhan Aksesibilitas (A11y)** dengan mewajibkan penulisan atribut `aria-label` deskriptif terlokalisasi di seluruh tombol ikon navigasi perpustakaan.

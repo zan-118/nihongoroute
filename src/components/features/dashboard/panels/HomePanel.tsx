@@ -3,7 +3,9 @@
 import dynamic from "next/dynamic";
 import DashboardHero from "../DashboardHero";
 import DailyQuests from "../quests/DailyQuests";
+import DailyExpression from "../DailyExpression";
 import { Variants } from "framer-motion";
+import { RandomExpression } from "@/actions/expressions.actions";
 
 const KanjiProgressGrid = dynamic(() => import("../KanjiProgressGrid"), { 
   ssr: false,
@@ -16,6 +18,7 @@ interface HomePanelProps {
   dueCount: number;
   itemVariants: Variants;
   isAuthenticated: boolean;
+  expression: RandomExpression | null;
   courseMetadata: Array<{
     id?: string;
     _id?: string;
@@ -36,6 +39,7 @@ export function HomePanel({
   dueCount,
   itemVariants,
   isAuthenticated,
+  expression,
   courseMetadata,
 }: HomePanelProps) {
   return (
@@ -79,8 +83,9 @@ export function HomePanel({
       </div>
       
       <aside className="lg:col-span-4 space-y-[34px]">
-        <div className="sticky top-[100px]">
+        <div className="sticky top-[100px] space-y-[21px]">
           <DailyQuests />
+          <DailyExpression expression={expression} />
         </div>
       </aside>
     </div>

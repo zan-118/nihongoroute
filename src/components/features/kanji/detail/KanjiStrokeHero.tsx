@@ -4,16 +4,22 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import KanjiStrokePlayer from "@/components/features/kanji/components/KanjiStrokePlayer";
 
+import { AddToSRSButton } from "@/components/features/srs/button/AddToSRSButton";
+
 interface KanjiStrokeHeroProps {
+  id?: string;
   character: string;
   strokeOrderSvg?: string;
   meaning: string;
   jlpt?: string;
 }
 
-export function KanjiStrokeHero({ character, strokeOrderSvg, meaning, jlpt }: KanjiStrokeHeroProps) {
+export function KanjiStrokeHero({ id, character, strokeOrderSvg, meaning, jlpt }: KanjiStrokeHeroProps) {
   return (
     <Card className="p-6 sm:p-8 md:p-12 bg-card/20 backdrop-blur-xl border-border rounded-[2.5rem] hover:border-primary/40 transition-all flex flex-col items-center justify-center group relative overflow-hidden md:col-span-2 lg:col-span-2 md:row-span-2">
+      <div className="absolute top-4 right-4 z-20">
+        {id && <AddToSRSButton wordId={id} />}
+      </div>
       <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-bl-[4rem] -mr-8 -mt-8 blur-3xl group-hover:bg-primary/20 transition-all duration-700" />
       <div className="absolute bottom-0 left-0 w-32 h-32 bg-secondary/10 rounded-tr-[4rem] -ml-8 -mb-8 blur-3xl group-hover:bg-secondary/20 transition-all duration-700" />
       

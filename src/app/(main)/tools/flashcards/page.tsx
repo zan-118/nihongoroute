@@ -32,6 +32,7 @@ function FlashcardsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const categorySlug = searchParams.get("category");
+  const modeParam = searchParams.get("mode") as ModeLatihan | null;
 
   const [selectedLevel, setSelectedLevel] = useState<string | "all" | null>(null);
   const [selectedMode, setSelectedMode] = useState<ModeLatihan | null>(null);
@@ -137,6 +138,7 @@ function FlashcardsContent() {
       ) : !selectedMode ? (
         <FlashcardSetup 
           defaultLevel={categorySlug?.toUpperCase() || null}
+          defaultMode={modeParam}
           onStart={fetchCardsAndStart}
         />
       ) : (
