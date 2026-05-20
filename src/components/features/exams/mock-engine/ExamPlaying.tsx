@@ -15,6 +15,7 @@ import { ExamData, ExamQuestion, AudioState, PendingConfirmType } from "./types"
 import { SECTION_LABELS } from "./constants";
 import { formatTime } from "@/lib/utils";
 import { sanitizeHtml } from "@/lib/sanitize";
+import { toast } from "sonner";
 
 interface ExamPlayingProps {
   exam: ExamData;
@@ -171,14 +172,14 @@ export function ExamPlaying({
                       onClick={handlePlayAudio}
                       disabled={
                         exam.choukaiAudioUrl 
-                          ? (audioStatus.global === "playing")
-                          : (audioStatus[activeQuestion._key] !== "idle" && audioStatus[activeQuestion._key] !== undefined)
+                          ? (audioStatus.global === "playing" || audioStatus.global === "played")
+                          : (audioStatus[activeQuestion._key] === "playing" || audioStatus[activeQuestion._key] === "played")
                       }
                       size="sm"
                       className={`w-10 h-10 rounded-full shrink-0 ${
                         (!exam.choukaiAudioUrl && (!audioStatus[activeQuestion._key] || audioStatus[activeQuestion._key] === "idle")) ||
                         (exam.choukaiAudioUrl && (!audioStatus.global || audioStatus.global === "idle"))
-                          ? "bg-destructive text-destructive-foreground"
+                          ? "bg-destructive text-destructive-foreground shadow-md hover:shadow-destructive/20 hover:scale-105 transition-all"
                           : "bg-muted text-muted-foreground cursor-not-allowed"
                       }`}
                     >
@@ -189,7 +190,7 @@ export function ExamPlaying({
                         {exam.choukaiAudioUrl ? "Audio Sesi (Global)" : "Audio Per Soal"}
                       </p>
                       <p className="text-[10px] text-muted-foreground italic leading-tight">
-                        {exam.choukaiAudioUrl ? "Audio diputar terus menerus selama sesi berlangsung." : "Audio soal ini hanya dapat diputar SATU kali."}
+                        {exam.choukaiAudioUrl ? "Audio sesi global hanya dapat diputar SATU kali secara penuh." : "Audio soal ini hanya dapat diputar SATU kali."}
                       </p>
                     </div>
                   </div>
@@ -302,17 +303,146 @@ export function ExamPlaying({
         </div>
       </footer>
 
-      {/* Modal Konfirmasi — menggunakan ConfirmModal custom yang sudah ada */}
+      {/* Modal Konfirmasi Seksi */}
       <ConfirmModal
-        isOpen={!!pendingConfirm}
+        isOpen={pendingConfirm === "section"}
         onClose={() => setPendingConfirm(null)}
         onConfirm={confirmPendingAction}
         title={pendingConfirmLabel?.title || ""}
         description={pendingConfirmLabel?.description || ""}
         confirmText="Ya, Lanjutkan"
         cancelText="Batal"
-        isDestructive={pendingConfirm === "finish"}
+        isDestructive={false}
       />
+
+      {/* Lembar Jawaban & Konfirmasi Selesai Ujian (Answer Sheet Grid Overlay) */}
+      <AnimatePresence>
+        {pendingConfirm === "finish" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] bg-background/80 backdrop-blur-xl flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
+              className="w-full max-w-2xl bg-card border border-border rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] neo-card"
+            >
+              {/* Header */}
+              <div className="p-6 border-b border-border flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-black uppercase tracking-tight text-foreground">
+                    Tinjau Lembar Jawaban
+                  </h2>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Silakan periksa jawaban Anda sebelum menyelesaikan ujian.
+                  </p>
+                </div>
+                <div className="px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/20 text-destructive text-[10px] font-bold uppercase tracking-wider">
+                  Konfirmasi Akhir
+                </div>
+              </div>
+
+              {/* Stats Summary */}
+              <div className="px-6 py-4 bg-muted/30 border-b border-border grid grid-cols-2 gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 rounded-full bg-success shadow-[0_0_8px_rgba(var(--success-rgb),0.5)]" />
+                  <div>
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Dijawab</p>
+                    <p className="text-lg font-black font-mono text-foreground mt-1">
+                      {Object.keys(answers).length} <span className="text-xs text-muted-foreground/50">/ {exam.questions.length}</span>
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 rounded-full bg-warning animate-pulse shadow-[0_0_8px_rgba(var(--warning-rgb),0.5)]" />
+                  <div>
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Belum Dijawab</p>
+                    <p className="text-lg font-black font-mono text-foreground mt-1">
+                      {exam.questions.length - Object.keys(answers).length} <span className="text-xs text-muted-foreground/50">/ {exam.questions.length}</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Scrollable Grid of Questions */}
+              <div className="p-6 overflow-y-auto flex-1 space-y-6">
+                <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-2">
+                  {exam.questions.map((q, idx) => {
+                    const isAnswered = answers[q._key] !== undefined;
+                    const isCurrentSection = q.section === currentSection;
+                    const isLocked = !isCurrentSection && availableSections.indexOf(q.section) < activeSectionIndex;
+                    
+                    let cellClass = "";
+                    let onClickHandler = () => {};
+
+                    if (isLocked) {
+                      cellClass = "bg-muted/40 text-muted-foreground/30 border-border/50 cursor-not-allowed";
+                      onClickHandler = () => {
+                        toast.error(`Pertanyaan ${idx + 1} berada di bagian ${SECTION_LABELS[q.section]} yang sudah terkunci.`);
+                      };
+                    } else if (q.section === "listening" && !exam.choukaiAudioUrl && idx !== currentQuestionIndex) {
+                      cellClass = "bg-muted/40 text-muted-foreground/30 border-border/50 cursor-not-allowed";
+                      onClickHandler = () => {
+                        toast.error("Bagian Choukai (Mendengar) harus dikerjakan secara berurutan.");
+                      };
+                    } else {
+                      onClickHandler = () => {
+                        goToQuestion(idx);
+                        setPendingConfirm(null);
+                      };
+                      if (isAnswered) {
+                        cellClass = "bg-success/10 text-success border-success/20 hover:bg-success/20 hover:scale-105 active:scale-95 cursor-pointer shadow-[0_0_10px_rgba(var(--success-rgb),0.05)]";
+                      } else {
+                        cellClass = "bg-warning/10 text-warning border-warning/20 hover:bg-warning/20 hover:scale-105 active:scale-95 cursor-pointer animate-pulse";
+                      }
+                    }
+
+                    return (
+                      <button
+                        key={q._key}
+                        onClick={onClickHandler}
+                        className={`aspect-square rounded-xl border flex flex-col items-center justify-center text-xs font-bold font-mono transition-all relative ${cellClass}`}
+                      >
+                        <span>{idx + 1}</span>
+                        {isLocked && (
+                          <LockIcon size={8} className="absolute bottom-1 right-1 text-muted-foreground/30" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-2xl flex items-start gap-3">
+                  <span className="text-sm">⚠️</span>
+                  <p className="text-[11px] text-destructive font-medium leading-relaxed">
+                    Setelah mengumpulkan lembar jawaban ini, waktu akan dihentikan dan ujian Anda akan segera dihitung secara permanen. Anda tidak dapat kembali mengubah jawaban Anda.
+                  </p>
+                </div>
+              </div>
+
+              {/* Actions Footer */}
+              <div className="p-6 border-t border-border bg-muted/10 flex items-center justify-end gap-3">
+                <Button
+                  onClick={() => setPendingConfirm(null)}
+                  variant="ghost"
+                  className="rounded-xl border border-border hover:bg-muted text-xs font-bold uppercase tracking-wider py-5"
+                >
+                  Kembali
+                </Button>
+                <Button
+                  onClick={confirmPendingAction}
+                  className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase tracking-widest text-xs px-6 py-5 rounded-xl transition-all shadow-lg hover:shadow-destructive/20"
+                >
+                  Kumpulkan Ujian
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

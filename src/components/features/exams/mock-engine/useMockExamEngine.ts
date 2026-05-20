@@ -15,19 +15,19 @@ import { SECTION_LABELS } from "./constants";
 // PURE UTILITIES
 // ======================
 
-const performScoreCalculation = (questions: ExamQuestion[], answers: Record<string, number>) => {
+const performScoreCalculation = (questions: ExamQuestion[], answers: Record<string, number>, passingScore: number) => {
   let correctCount = 0;
-  const sectionBreakdown: Record<string, { total: number; correct: number }> = {
-    vocabulary: { total: 0, correct: 0 },
-    grammar: { total: 0, correct: 0 },
-    listening: { total: 0, correct: 0 },
-    reading: { total: 0, correct: 0 },
+  const sectionBreakdown: Record<string, { total: number; correct: number; passed: boolean }> = {
+    vocabulary: { total: 0, correct: 0, passed: true },
+    grammar: { total: 0, correct: 0, passed: true },
+    listening: { total: 0, correct: 0, passed: true },
+    reading: { total: 0, correct: 0, passed: true },
   };
 
   questions.forEach((q) => {
     const section = q.section || "vocabulary";
     if (!sectionBreakdown[section]) {
-      sectionBreakdown[section] = { total: 0, correct: 0 };
+      sectionBreakdown[section] = { total: 0, correct: 0, passed: true };
     }
     
     sectionBreakdown[section].total += 1;
@@ -38,7 +38,22 @@ const performScoreCalculation = (questions: ExamQuestion[], answers: Record<stri
   });
 
   const finalScore = Math.round((correctCount / Math.max(1, questions.length)) * 180);
-  return { correctCount, finalScore, sectionBreakdown };
+
+  // Enforce Sectional Pass Marks (Maiten) - at least 32% accuracy required per section
+  let failedSection = false;
+  Object.keys(sectionBreakdown).forEach((sec) => {
+    const data = sectionBreakdown[sec];
+    if (data.total > 0) {
+      const accuracy = data.correct / data.total;
+      if (accuracy < 0.32) {
+        data.passed = false;
+        failedSection = true;
+      }
+    }
+  });
+
+  const isPassed = finalScore >= passingScore && !failedSection;
+  return { correctCount, finalScore, sectionBreakdown, failedSection, isPassed };
 };
 
 export function useMockExamEngine(exam: ExamData) {
@@ -87,8 +102,7 @@ export function useMockExamEngine(exam: ExamData) {
   }, [currentQuestionIndex, isCurrentlyListening, exam.questions, hasGlobalChoukai]);
 
   const finishExam = useCallback(() => {
-    const { correctCount, finalScore } = performScoreCalculation(exam.questions, answers);
-    const isPassed = finalScore >= exam.passingScore;
+    const { correctCount, isPassed } = performScoreCalculation(exam.questions, answers, exam.passingScore);
     const xpGain = (correctCount * 10) + (isPassed ? 50 : 0);
     addXP(xpGain);
     setGameState("result");
@@ -148,8 +162,8 @@ export function useMockExamEngine(exam: ExamData) {
   }, [currentQuestionIndex, sections, currentSection]);
 
   const calculateScore = useCallback(() => {
-    return performScoreCalculation(exam.questions, answers);
-  }, [exam.questions, answers]);
+    return performScoreCalculation(exam.questions, answers, exam.passingScore);
+  }, [exam.questions, answers, exam.passingScore]);
 
   const handleShareResult = useCallback(() => {
     const { finalScore, sectionBreakdown } = calculateScore();
@@ -221,19 +235,30 @@ export function useMockExamEngine(exam: ExamData) {
     return () => clearInterval(timer);
   }, [gameState, finishExam]);
 
-  // Stop audio when switching questions (to prevent overlap)
+  // Stop audio and lock it (mark as played) when switching questions (to prevent replay and overlap)
+  const prevQuestionIndexRef = useRef(currentQuestionIndex);
   useEffect(() => {
-    if (audioRef.current && !exam.choukaiAudioUrl) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
+    const prevIdx = prevQuestionIndexRef.current;
+    if (prevIdx !== currentQuestionIndex) {
+      if (!exam.choukaiAudioUrl) {
+        const prevQ = exam.questions[prevIdx];
+        if (prevQ && audioStatus[prevQ._key] === "playing") {
+          setAudioStatus((prev) => ({ ...prev, [prevQ._key]: "played" }));
+        }
+        if (audioRef.current) {
+          audioRef.current.pause();
+          audioRef.current.currentTime = 0;
+        }
+      }
+      prevQuestionIndexRef.current = currentQuestionIndex;
     }
-  }, [currentQuestionIndex, exam.choukaiAudioUrl]);
+  }, [currentQuestionIndex, exam.questions, exam.choukaiAudioUrl, audioStatus]);
 
   const handlePlayAudio = useCallback(() => {
     if (exam.choukaiAudioUrl) {
       if (audioRef.current) {
-        // If already played, don't allow restart
-        if (audioStatus.global === "played") return;
+        // If already played or currently playing, don't allow restart
+        if (audioStatus.global === "played" || audioStatus.global === "playing") return;
 
         if (audioRef.current.paused && audioRef.current.currentTime === 0) {
           audioRef.current.src = exam.choukaiAudioUrl;
@@ -242,9 +267,6 @@ export function useMockExamEngine(exam: ExamData) {
           });
           setAudioStatus((prev) => ({ ...prev, global: "playing" }));
           audioRef.current.onended = () => setAudioStatus((prev) => ({ ...prev, global: "played" }));
-        } else if (audioRef.current.paused) {
-          audioRef.current.play();
-          setAudioStatus(prev => ({ ...prev, global: "playing" }));
         }
       }
       return;

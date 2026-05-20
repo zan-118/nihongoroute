@@ -134,8 +134,18 @@ export async function getSanityExamBySlug(slug: string) {
     description,
     time_limit,
     passing_score,
+    levelCode,
+    "choukaiAudioUrl": coalesce(choukaiAudio.asset->url, choukaiAudio),
     is_published,
-    questions
+    questions[] {
+      _key,
+      section,
+      questionText,
+      "imageUrl": coalesce(imageUrl.asset->url, imageUrl),
+      "audioUrl": coalesce(audioUrl.asset->url, audioUrl),
+      options,
+      correctAnswer
+    }
   }`;
   try {
     return await sanityClient.fetch(query, { slug });
