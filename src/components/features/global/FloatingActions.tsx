@@ -111,9 +111,10 @@ export default function FloatingActions() {
                   const nextIndex = (currentIndex + 1) % modes.length;
                   setReadingState({ mode: modes[nextIndex].id });
                 }}
+                aria-label={`Ubah mode membaca, mode aktif saat ini: ${modes.find(m => m.id === readingState.mode)?.label || "Kanji"}`}
                 className="bg-card/90 backdrop-blur-3xl hover:bg-primary hover:text-primary-foreground text-foreground border border-border shadow-2xl rounded-2xl px-4 py-4 flex items-center gap-3 transition-all h-auto group w-full justify-between"
               >
-                <span className="text-[10px] font-black uppercase tracking-widest hidden md:block">
+                <span className="text-[10px] font-black uppercase tracking-widest hidden md:block" aria-hidden="true">
                   {modes.find(m => m.id === readingState.mode)?.label || "Mode"}
                 </span>
                 {React.createElement(modes.find(m => m.id === readingState.mode)?.icon || Eye, { size: 20, className: "text-primary group-hover:text-current" })}
@@ -124,11 +125,12 @@ export default function FloatingActions() {
             <motion.div whileHover={{ x: -5 }}>
               <button
                 onClick={() => setReadingState({ showTranslation: !readingState.showTranslation })}
+                aria-label={readingState.showTranslation ? "Matikan terjemahan bahasa Indonesia" : "Aktifkan terjemahan bahasa Indonesia"}
                 className={`bg-card/90 backdrop-blur-3xl border border-border shadow-2xl rounded-2xl px-4 py-4 flex items-center gap-3 transition-all h-auto group w-full justify-between ${
                   readingState.showTranslation ? "hover:bg-success hover:text-success-foreground" : "hover:bg-success/20"
                 }`}
               >
-                <span className="text-[10px] font-black uppercase tracking-widest hidden md:block">
+                <span className="text-[10px] font-black uppercase tracking-widest hidden md:block" aria-hidden="true">
                   {readingState.showTranslation ? "Terjemahan ON" : "Terjemahan OFF"}
                 </span>
                 <Languages size={20} className={readingState.showTranslation ? "text-success group-hover:text-current" : "text-success"} />
@@ -165,9 +167,10 @@ export default function FloatingActions() {
                 onClick={() => setListeningState({ 
                   activeTab: listeningState.activeTab === "transcript" ? "quiz" : "transcript" 
                 })}
+                aria-label={listeningState.activeTab === "transcript" ? "Beralih ke latihan kuis komprehensif mendengarkan" : "Beralih ke teks transkrip audio mendengarkan"}
                 className="bg-card/90 backdrop-blur-3xl hover:bg-primary hover:text-primary-foreground text-foreground border border-border shadow-2xl rounded-2xl px-4 py-4 flex items-center gap-3 transition-all h-auto group w-full justify-between"
               >
-                <span className="text-[10px] font-black uppercase tracking-widest hidden md:block">
+                <span className="text-[10px] font-black uppercase tracking-widest hidden md:block" aria-hidden="true">
                   {listeningState.activeTab === "transcript" ? "Latihan Kuis" : "Lihat Transkrip"}
                 </span>
                 {listeningState.activeTab === "transcript" 
@@ -182,6 +185,7 @@ export default function FloatingActions() {
         {/* Main Toggle Button */}
         <Button
           onClick={() => setIsOpen(!isOpen)}
+          aria-label={isOpen ? "Tutup menu tindakan cepat" : "Buka menu tindakan cepat"}
           className={`w-14 h-14 md:w-16 md:h-16 rounded-full shadow-2xl transition-all duration-500 border-none flex items-center justify-center p-0 ${
             isOpen 
               ? "bg-foreground text-background rotate-0" 

@@ -96,8 +96,8 @@ function sanitizeTagAttributes(tagHtml: string, tagName: string): string {
     if (combined.has(attrName)) {
       // Untuk href, pastikan tidak javascript: atau data:
       if (attrName === 'href' || attrName === 'src') {
-        const trimmed = attrValue.trim().toLowerCase();
-        if (trimmed.startsWith('javascript:') || trimmed.startsWith('data:')) {
+        const cleanVal = attrValue.replace(/[\r\n\t\u0000-\u001F]/g, '').trim().toLowerCase();
+        if (cleanVal.startsWith('javascript:') || cleanVal.startsWith('data:')) {
           continue;
         }
       }

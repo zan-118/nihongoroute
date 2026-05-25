@@ -144,9 +144,6 @@ DROP POLICY IF EXISTS "Allow anyone to update grammar" ON public.grammar;
 DROP POLICY IF EXISTS "Allow anyone to delete grammar" ON public.grammar;
 
 CREATE POLICY "Allow public read access for library" ON public.grammar FOR SELECT USING (true);
-CREATE POLICY "Allow anyone to insert grammar" ON public.grammar FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow anyone to update grammar" ON public.grammar FOR UPDATE USING (true) WITH CHECK (true);
-CREATE POLICY "Allow anyone to delete grammar" ON public.grammar FOR DELETE USING (true);
 
 -- Table: public.kanji
 DROP POLICY IF EXISTS "Allow anyone to manage library" ON public.kanji;
@@ -156,9 +153,6 @@ DROP POLICY IF EXISTS "Allow anyone to update kanji" ON public.kanji;
 DROP POLICY IF EXISTS "Allow anyone to delete kanji" ON public.kanji;
 
 CREATE POLICY "Allow public read access for library" ON public.kanji FOR SELECT USING (true);
-CREATE POLICY "Allow anyone to insert kanji" ON public.kanji FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow anyone to update kanji" ON public.kanji FOR UPDATE USING (true) WITH CHECK (true);
-CREATE POLICY "Allow anyone to delete kanji" ON public.kanji FOR DELETE USING (true);
 
 -- Table: public.reading_material
 DROP POLICY IF EXISTS "Allow anyone to manage library" ON public.reading_material;
@@ -168,6 +162,3 @@ DROP POLICY IF EXISTS "Allow anyone to update reading_material" ON public.readin
 DROP POLICY IF EXISTS "Allow anyone to delete reading_material" ON public.reading_material;
 
 CREATE POLICY "Allow public read access for library" ON public.reading_material FOR SELECT USING (true);
-CREATE POLICY "Allow anyone to insert reading_material" ON public.reading_material FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow anyone to update reading_material" ON public.reading_material FOR UPDATE USING (true) WITH CHECK (true);
-CREATE POLICY "Allow anyone to delete reading_material" ON public.reading_material FOR DELETE USING (true);

@@ -76,8 +76,10 @@ export function useSyncProgress() {
     syncMutateRef.current = syncMutation.mutate;
   }, [syncMutation.mutate]);
 
+  const isPending = syncMutation.isPending;
+
   useEffect(() => {
-    if (isFetching || !session?.user || isGuest) return;
+    if (isFetching || isPending || !session?.user || isGuest) return;
 
     const currentProgressStr = JSON.stringify({
       name, xp, streak, studyDays, inventory, settings, lastStudyDate, todayReviewCount, completedLessons
@@ -93,7 +95,7 @@ export function useSyncProgress() {
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [name, xp, streak, studyDays, inventory, settings, lastStudyDate, todayReviewCount, srs, dirtySrs, dirtyLessons, session?.user, isFetching, isGuest, currentProgressData, completedLessons]);
+  }, [name, xp, streak, studyDays, inventory, settings, lastStudyDate, todayReviewCount, srs, dirtySrs, dirtyLessons, session?.user, isFetching, isPending, isGuest, currentProgressData, completedLessons]);
 
   return { isLoading: isFetching, syncNow: () => syncMutation.mutate({ progress: currentProgressData, dirtySrs, dirtyLessons }) };
 }
