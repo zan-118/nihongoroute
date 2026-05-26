@@ -122,11 +122,22 @@ DROP POLICY IF EXISTS "Users can manage own lesson progress" ON public.user_less
 CREATE POLICY "Users can manage own lesson progress" ON public.user_lessons FOR ALL USING ((select auth.uid()) = user_id);
 
 -- Table: public.listening_material
+ALTER TABLE public.listening_material ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Allow public read access" ON public.listening_material;
 DROP POLICY IF EXISTS "Allow authenticated full access" ON public.listening_material;
+DROP POLICY IF EXISTS "Allow public read access for library" ON public.listening_material;
 
-CREATE POLICY "Allow public read access" ON public.listening_material FOR SELECT USING (true);
-CREATE POLICY "Allow authenticated full access" ON public.listening_material FOR ALL USING ((select auth.role()) = 'authenticated');
+CREATE POLICY "Allow public read access for library" ON public.listening_material FOR SELECT USING (true);
+
+-- Table: public.vocab
+ALTER TABLE public.vocab ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow public read access for library" ON public.vocab;
+DROP POLICY IF EXISTS "Allow anyone to manage library" ON public.vocab;
+DROP POLICY IF EXISTS "Allow anyone to insert vocab" ON public.vocab;
+DROP POLICY IF EXISTS "Allow anyone to update vocab" ON public.vocab;
+DROP POLICY IF EXISTS "Allow anyone to delete vocab" ON public.vocab;
+
+CREATE POLICY "Allow public read access for library" ON public.vocab FOR SELECT USING (true);
 
 -- Table: public.user_feedback
 DROP POLICY IF EXISTS "Allow public inserts on user_feedback" ON public.user_feedback;

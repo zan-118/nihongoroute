@@ -22,6 +22,17 @@ const nextConfig: NextConfig = {
     position: 'top-right',
   },
   transpilePackages: ["@react-pdf/renderer"],
+  serverExternalPackages: ["kuroshiro", "kuroshiro-analyzer-kuromoji"],
+  experimental: {
+    optimizePackageImports: [
+      "lucide-react",
+      "@radix-ui/react-dialog",
+      "@radix-ui/react-dropdown-menu",
+      "@radix-ui/react-select",
+      "@radix-ui/react-switch",
+      "@radix-ui/react-progress",
+    ],
+  },
   logging: {
     fetches: {
       fullUrl: true,

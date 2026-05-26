@@ -3,6 +3,27 @@
 import { useState, useEffect } from "react";
 
 /**
+ * Helper function to limit the size of Web Cache Storage using native FIFO logic.
+ * Orders cached keys by insertion sequence and deletes the oldest items when exceeding maxItems.
+ */
+const limitCacheSize = async (cacheName: string, maxItems: number) => {
+  try {
+    if (typeof window === "undefined" || !("caches" in window)) return;
+    const cache = await caches.open(cacheName);
+    if (typeof cache.keys !== "function") return; // Defensive check for test environments with incomplete mocks
+    const keys = await cache.keys();
+    if (keys.length > maxItems) {
+      const excess = keys.length - maxItems;
+      for (let i = 0; i < excess; i++) {
+        await cache.delete(keys[i]);
+      }
+    }
+  } catch (err) {
+    console.warn("Gagal merampingkan cache audio:", err);
+  }
+};
+
+/**
  * @file useCachedAudio.ts
  * @description Hook untuk memuat audio secara offline-first dengan CacheStorage lokal.
  * Mengunduh berkas audio dari remote URL, menyimpannya di cache, dan merendernya via Blob URL.
@@ -33,6 +54,8 @@ export function useCachedAudio(src: string | undefined): string | undefined {
           try {
             const cache = await caches.open(cacheName);
             await cache.put(src, clonedResponse);
+            // Limit cache size to 50 items using native FIFO
+            await limitCacheSize(cacheName, 50);
           } catch (err) {
             console.warn("Gagal menyimpan audio ke CacheStorage:", err);
           }
