@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trophy, X, Zap } from "lucide-react";
 import { useUIStore } from "@/store/useUIStore";
@@ -15,7 +15,7 @@ interface AchievementNotification {
 
 export default function AchievementToast() {
   const notifications = useUIStore((state) => state.notifications);
-  const [shownIds, setShownIds] = useState<Set<string>>(() => new Set());
+  const shownIdsRef = useRef<Set<string>>(new Set());
   const [queue, setQueue] = useState<AchievementNotification[]>([]);
   const [activeToast, setActiveToast] = useState<AchievementNotification | null>(null);
 
@@ -24,21 +24,20 @@ export default function AchievementToast() {
     if (!notifications || notifications.length === 0) return;
 
     const newAchievements = notifications.filter(
-      (n) => n.type === "achievement" && !shownIds.has(n.id)
+      (n) => n.type === "achievement" && !shownIdsRef.current.has(n.id)
     ) as AchievementNotification[];
 
     if (newAchievements.length > 0) {
+      // Instantly mark them as shown in the synchronous Ref to block duplicate evaluations in the same render cycle
+      newAchievements.forEach((a) => shownIdsRef.current.add(a.id));
+
+      // Safely schedule queue push asynchronously using requestAnimationFrame
       requestAnimationFrame(() => {
-        setShownIds((prev) => {
-          const next = new Set(prev);
-          newAchievements.forEach((a) => next.add(a.id));
-          return next;
-        });
         // We reverse to process older achievements first if multiple came in at once
         setQueue((prev) => [...prev, ...[...newAchievements].reverse()]);
       });
     }
-  }, [notifications, shownIds]);
+  }, [notifications]);
 
   // Process the queue one by one
   useEffect(() => {
