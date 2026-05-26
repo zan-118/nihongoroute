@@ -155,3 +155,25 @@ export async function getSanityExamBySlug(slug: string) {
   }
 }
 
+/**
+ * Mengambil daftar pelajaran dari Sanity secara massal berdasarkan daftar ID/Slug kategori.
+ * @param categoryIds - Array berisi ID/Slug kategori
+ */
+export async function getSanityLessonsByCategories(categoryIds: string[]) {
+  const query = `*[_type == "lesson" && category_id in $ids] | order(order_number asc) {
+    _id,
+    title,
+    "slug": slug.current,
+    summary,
+    order_number,
+    category_id
+  }`;
+
+  try {
+    return await sanityClient.fetch(query, { ids: categoryIds });
+  } catch (error) {
+    console.error(`[getSanityLessonsByCategories] Error fetching lessons in bulk from Sanity:`, error);
+    return [];
+  }
+}
+

@@ -105,7 +105,9 @@ export function updateCardState(state: SRSState, grade: number): SRSState {
     }
   }
 
-  const newNextReview = Date.now() + interval * DAY;
+  const now = new Date();
+  const targetDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + interval);
+  const newNextReview = targetDate.getTime();
 
   return {
     repetition,

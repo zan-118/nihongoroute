@@ -25,15 +25,20 @@ DECLARE
   v_delta_xp INTEGER;
   v_active_srs_count INTEGER;
   v_active_lesson_count INTEGER;
-  v_max_plausible_xp INTEGER;
+  v_old_inventory JSONB;
+  v_accumulated_bonus_xp INTEGER;
+  v_remaining_bonus_xp INTEGER;
+  v_bonus_delta INTEGER;
+  v_today TEXT;
+  v_final_inventory JSONB;
 BEGIN
   v_user_id := auth.uid();
   IF v_user_id IS NULL THEN
     RAISE EXCEPTION 'Not authenticated';
   END IF;
 
-  -- Get current XP from DB
-  SELECT xp INTO v_old_xp FROM public.profiles WHERE id = v_user_id;
+  -- Get current XP and inventory from DB
+  SELECT xp, inventory INTO v_old_xp, v_old_inventory FROM public.profiles WHERE id = v_user_id;
   
   v_delta_xp := COALESCE(p_xp, 0) - COALESCE(v_old_xp, 0);
   
@@ -58,12 +63,39 @@ BEGIN
     v_active_lesson_count := 0;
   END IF;
 
-  -- Cap XP gain based on genuine active lessons & SRS reviews
-  v_max_plausible_xp := (v_active_srs_count * 15) + (v_active_lesson_count * 100) + 200;
+  -- Dynamic Daily Quest / Bonus XP Capping Logic:
+  -- 1. Extract daily_bonus_xp for today from old inventory
+  v_today := COALESCE(p_last_study_date, to_char(now(), 'YYYY-MM-DD'));
   
-  IF v_delta_xp > v_max_plausible_xp THEN
-    v_delta_xp := v_max_plausible_xp;
+  IF v_old_inventory IS NOT NULL AND v_old_inventory->'daily_bonus_xp' IS NOT NULL AND v_old_inventory->'daily_bonus_xp'->>'date' = v_today THEN
+    v_accumulated_bonus_xp := COALESCE((v_old_inventory->'daily_bonus_xp'->>'amount')::INTEGER, 0);
+  ELSE
+    v_accumulated_bonus_xp := 0;
   END IF;
+
+  -- Remaining allowed bonus XP for today (max 150 per day cumulative)
+  v_remaining_bonus_xp := 150 - v_accumulated_bonus_xp;
+  IF v_remaining_bonus_xp < 0 THEN v_remaining_bonus_xp := 0; END IF;
+
+  -- The part of delta XP that is bonus (not from SRS/lessons)
+  v_bonus_delta := v_delta_xp - ((v_active_srs_count * 15) + (v_active_lesson_count * 100));
+  IF v_bonus_delta < 0 THEN v_bonus_delta := 0; END IF;
+
+  -- Cap bonus delta to the remaining daily allowance
+  IF v_bonus_delta > v_remaining_bonus_xp THEN
+    v_bonus_delta := v_remaining_bonus_xp;
+  END IF;
+
+  -- Recompute accepted delta XP
+  v_delta_xp := (v_active_srs_count * 15) + (v_active_lesson_count * 100) + v_bonus_delta;
+
+  -- Update inventory JSONB with the new cumulative daily bonus amount
+  v_final_inventory := COALESCE(p_inventory, '{}'::jsonb);
+  v_final_inventory := jsonb_set(
+    v_final_inventory,
+    '{daily_bonus_xp}',
+    jsonb_build_object('date', v_today, 'amount', v_accumulated_bonus_xp + v_bonus_delta)
+  );
 
   -- 1. Update Profile
   UPDATE public.profiles
@@ -74,7 +106,7 @@ BEGIN
     today_review_count = p_today_review_count,
     last_study_date = p_last_study_date,
     study_days = p_study_days,
-    inventory = p_inventory,
+    inventory = v_final_inventory,
     settings = p_settings,
     updated_at = now()
   WHERE id = v_user_id;

@@ -60,6 +60,11 @@ export function useMockExamEngine(exam: ExamData) {
   const [gameState, setGameState] = useState<GameState>("intro");
   const [timeLeft, setTimeLeft] = useState(() => exam.timeLimit * 60);
   const [answers, setAnswers] = useState<Record<string, number>>({});
+  const answersRef = useRef(answers);
+  useEffect(() => {
+    answersRef.current = answers;
+  }, [answers]);
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
   const [audioStatus, setAudioStatus] = useState<Record<string, AudioState>>({});
@@ -102,13 +107,13 @@ export function useMockExamEngine(exam: ExamData) {
   }, [currentQuestionIndex, isCurrentlyListening, exam.questions, hasGlobalChoukai]);
 
   const finishExam = useCallback(() => {
-    const { correctCount, isPassed } = performScoreCalculation(exam.questions, answers, exam.passingScore);
+    const { correctCount, isPassed } = performScoreCalculation(exam.questions, answersRef.current, exam.passingScore);
     const xpGain = (correctCount * 10) + (isPassed ? 50 : 0);
     addXP(xpGain);
     setGameState("result");
     if (audioRef.current) audioRef.current.pause();
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [exam.questions, answers, exam.passingScore, addXP]);
+  }, [exam.questions, exam.passingScore, addXP]);
 
   const handleAnswer = useCallback((optionIndex: number) => {
     if (!activeQuestion) return;
@@ -162,8 +167,8 @@ export function useMockExamEngine(exam: ExamData) {
   }, [currentQuestionIndex, sections, currentSection]);
 
   const calculateScore = useCallback(() => {
-    return performScoreCalculation(exam.questions, answers, exam.passingScore);
-  }, [exam.questions, answers, exam.passingScore]);
+    return performScoreCalculation(exam.questions, answersRef.current, exam.passingScore);
+  }, [exam.questions, exam.passingScore]);
 
   const handleShareResult = useCallback(() => {
     const { finalScore, sectionBreakdown } = calculateScore();

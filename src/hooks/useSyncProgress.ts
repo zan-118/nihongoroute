@@ -9,9 +9,13 @@ import { useEffect, useRef, useMemo } from "react";
 import { useHasMounted } from "@/hooks/useHasMounted";
 import { useCloudData } from "./useCloudData";
 import { useCloudMutation } from "./useCloudMutation";
+import { useStoreHydration } from "./useStoreHydration";
 
 export function useSyncProgress() {
   const supabase = useMemo(() => createClient(), []);
+  
+  const userHydrated = useStoreHydration(useUserStore);
+  const srsHydrated = useStoreHydration(useSRSStore);
   
   // User Store Selectors
   const name = useUserStore((s) => s.name);
@@ -79,7 +83,7 @@ export function useSyncProgress() {
   const isPending = syncMutation.isPending;
 
   useEffect(() => {
-    if (isFetching || isPending || !session?.user || isGuest) return;
+    if (isFetching || isPending || !session?.user || isGuest || !userHydrated || !srsHydrated) return;
 
     const currentProgressStr = JSON.stringify({
       name, xp, streak, studyDays, inventory, settings, lastStudyDate, todayReviewCount, completedLessons
@@ -95,7 +99,7 @@ export function useSyncProgress() {
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [name, xp, streak, studyDays, inventory, settings, lastStudyDate, todayReviewCount, srs, dirtySrs, dirtyLessons, session?.user, isFetching, isPending, isGuest, currentProgressData, completedLessons]);
+  }, [name, xp, streak, studyDays, inventory, settings, lastStudyDate, todayReviewCount, srs, dirtySrs, dirtyLessons, session?.user, isFetching, isPending, isGuest, currentProgressData, completedLessons, userHydrated, srsHydrated]);
 
   return { isLoading: isFetching, syncNow: () => syncMutation.mutate({ progress: currentProgressData, dirtySrs, dirtyLessons }) };
 }

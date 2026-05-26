@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useSRSStore } from "@/store/useSRSStore";
+import { useUserStore } from "@/store/useUserStore";
 import { useUIStore } from "@/store/useUIStore";
 import { SRSState } from "@/lib/srs";
 import { calculateLevel } from "@/lib/level";
@@ -11,12 +12,16 @@ import { getLocalDateString } from "@/lib/utils";
 import { UserProgress, LessonProgress } from "@/store/types";
 import { handleLegacyMigration } from "@/lib/supabase/sync";
 import { Session } from "@supabase/supabase-js";
+import { useStoreHydration } from "./useStoreHydration";
 
 export function useCloudData(session: Session | null | undefined, hasMounted: boolean) {
   const supabase = useMemo(() => createClient(), []);
   const mergeProgress = useSRSStore((s) => s.mergeProgress);
   const setLoading = useUIStore((s) => s.setLoading);
   const initialLoadDone = useRef(false);
+
+  const userHydrated = useStoreHydration(useUserStore);
+  const srsHydrated = useStoreHydration(useSRSStore);
 
   const { data: cloudData, isLoading: isFetching } = useQuery({
     queryKey: ["user-progress", session?.user?.id],
@@ -105,7 +110,7 @@ export function useCloudData(session: Session | null | undefined, hasMounted: bo
         notifications: [],
       } as UserProgress;
     },
-    enabled: hasMounted && !!session?.user,
+    enabled: hasMounted && !!session?.user && userHydrated && srsHydrated,
   });
 
   // Sinkronkan Cloud Data ke Zustand jika ada perubahan

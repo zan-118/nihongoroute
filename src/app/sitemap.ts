@@ -1,53 +1,48 @@
 /**
  * @file sitemap.ts
  * @description Generator sitemap dinamis untuk SEO.
- * Memetakan semua rute statis dan dinamis (dari Sanity CMS) agar mudah diindeks.
+ * Memetakan semua rute statis dan dinamis (dari Sanity CMS & Supabase) agar mudah diindeks.
  * @module Sitemap
  */
 
-// ======================
-// IMPORTS
-// ======================
 import { MetadataRoute } from "next";
 import { createClient } from "@/lib/supabase/server";
+import { sanityClient } from "@/lib/sanity.client";
 
-interface SitemapLesson {
+interface SanitySitemapItem {
   slug: string;
-  created_at: string;
-  course_categories: {
-    slug: string;
-  } | null;
+  _updatedAt: string;
+  category_id?: string;
 }
-
-// ======================
-// MAIN EXECUTION
-// ======================
 
 /**
  * Membuat data sitemap untuk aplikasi.
- * Mengambil data level dan lesson dari Supabase untuk menghasilkan URL dinamis.
+ * Mengambil data level dari Supabase dan lessons/materials dari Sanity CMS.
  * 
  * @returns {Promise<MetadataRoute.Sitemap>} Daftar URL untuk sitemap.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.nihongoroute.my.id/";
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.nihongoroute.my.id";
   const urls: MetadataRoute.Sitemap = [];
   const supabase = await createClient();
 
-  // Rute Statis
+  // 1. Rute Statis Utama
   urls.push(
     { url: `${baseUrl}/`, lastModified: new Date() },
     { url: `${baseUrl}/courses`, lastModified: new Date() },
   );
 
-  // Ambil Data Kategori dari Supabase
+  // 2. Ambil Data Kategori dari Supabase (dan simpan untuk pemetaan UUID -> Slug)
   const { data: categories } = await supabase
     .from("course_categories")
-    .select("slug");
+    .select("id, slug");
+
+  const categoryMap = new Map<string, string>();
 
   if (categories) {
     for (const category of categories) {
+      categoryMap.set(category.id, category.slug);
       urls.push({
         url: `${baseUrl}/courses/${category.slug}`,
         lastModified: new Date(),
@@ -55,28 +50,72 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  // Ambil Data Lesson dari Supabase
-  const { data: lessons } = await (supabase
-    .from("lessons")
-    .select(`
-      slug,
-      created_at,
-      course_categories (
-        slug
-      )
-    `)
-    .eq("is_published", true) as unknown as Promise<{ data: SitemapLesson[] | null }>);
+  // 3. Ambil Data Pelajaran (Lessons) dari Sanity CMS
+  try {
+    const lessons = await sanityClient.fetch<SanitySitemapItem[]>(`
+      *[_type == "lesson" && is_published == true] {
+        "slug": slug.current,
+        _updatedAt,
+        category_id
+      }
+    `);
 
-  if (lessons) {
-    for (const lesson of lessons) {
-      const categorySlug = lesson.course_categories?.slug;
-      if (categorySlug) {
+    if (lessons) {
+      for (const lesson of lessons) {
+        if (lesson.category_id) {
+          // category_id bisa berupa UUID Supabase atau langsung slug kaku
+          const categorySlug = categoryMap.get(lesson.category_id) || lesson.category_id;
+          urls.push({
+            url: `${baseUrl}/courses/${categorySlug}/${lesson.slug}`,
+            lastModified: new Date(lesson._updatedAt),
+          });
+        }
+      }
+    }
+  } catch (err) {
+    console.error("[Sitemap] Gagal mengambil data pelajaran dari Sanity:", err);
+  }
+
+  // 4. Ambil Data Materi Membaca (Reading) dari Sanity CMS
+  try {
+    const readings = await sanityClient.fetch<SanitySitemapItem[]>(`
+      *[_type == "readingMaterial"] {
+        "slug": slug.current,
+        _updatedAt
+      }
+    `);
+
+    if (readings) {
+      for (const r of readings) {
         urls.push({
-          url: `${baseUrl}/courses/${categorySlug}/${lesson.slug}`,
-          lastModified: new Date(lesson.created_at),
+          url: `${baseUrl}/library/reading/${r.slug}`,
+          lastModified: new Date(r._updatedAt),
         });
       }
     }
+  } catch (err) {
+    console.error("[Sitemap] Gagal mengambil data bacaan dari Sanity:", err);
+  }
+
+  // 5. Ambil Data Materi Menyimak (Listening) dari Sanity CMS
+  try {
+    const listenings = await sanityClient.fetch<SanitySitemapItem[]>(`
+      *[_type == "listeningMaterial"] {
+        "slug": slug.current,
+        _updatedAt
+      }
+    `);
+
+    if (listenings) {
+      for (const l of listenings) {
+        urls.push({
+          url: `${baseUrl}/library/listening/${l.slug}`,
+          lastModified: new Date(l._updatedAt),
+        });
+      }
+    }
+  } catch (err) {
+    console.error("[Sitemap] Gagal mengambil data menyimak dari Sanity:", err);
   }
 
   return urls;

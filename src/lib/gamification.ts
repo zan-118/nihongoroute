@@ -70,6 +70,25 @@ export function mergeGamification(local: GamificationData, cloud: GamificationDa
     ? Math.max(local.todayReviewCount, cloud.todayReviewCount)
     : (local.lastStudyDate === today ? local.todayReviewCount : cloud.todayReviewCount);
 
+  // Robust claimedQuests merging logic:
+  // 1. Same date: merge quest arrays and deduplicate.
+  // 2. Different dates: choose latest date (Last-Write-Wins lexicographically).
+  const localClaimed = local.inventory?.claimedQuests || { date: "", quests: [] };
+  const cloudClaimed = cloud.inventory?.claimedQuests || { date: "", quests: [] };
+  let mergedQuests = { date: "", quests: [] as string[] };
+
+  if (localClaimed.date === cloudClaimed.date) {
+    mergedQuests = {
+      date: localClaimed.date || today,
+      quests: Array.from(new Set([
+        ...(localClaimed.quests || []),
+        ...(cloudClaimed.quests || [])
+      ]))
+    };
+  } else {
+    mergedQuests = localClaimed.date > cloudClaimed.date ? localClaimed : cloudClaimed;
+  }
+
   return {
     xp: mergedXP,
     level: calculateLevel(mergedXP),
@@ -77,8 +96,8 @@ export function mergeGamification(local: GamificationData, cloud: GamificationDa
     studyDays: mergedStudyDays,
     todayReviewCount,
     inventory: {
-      streakFreeze: Math.max(local.inventory.streakFreeze, cloud.inventory.streakFreeze),
-      claimedQuests: local.inventory.claimedQuests
+      streakFreeze: Math.max(local.inventory?.streakFreeze || 0, cloud.inventory?.streakFreeze || 0),
+      claimedQuests: mergedQuests
     }
   };
 }

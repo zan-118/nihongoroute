@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { getSanityLessonsByCategory } from "@/lib/queries";
+import { getSanityLessonsByCategory, getSanityLessonsByCategories } from "@/lib/queries";
 
 export async function getLessonDetail(slug: string) {
   const supabase = await createClient();
@@ -36,22 +36,31 @@ export async function getCourseCategories() {
     return [];
   }
 
-  const categoriesWithData = await Promise.all(
-    (categories || []).map(async (cat) => {
-      const lessons = await getSanityLessonsByCategory(cat.slug, cat.id);
+  if (!categories || categories.length === 0) return [];
 
-      return {
-        ...cat,
-        _id: cat.id,
-        lessonCount: (lessons || []).length,
-        previews: (lessons || []).slice(0, 4).map((l: SanityLessonListItem) => ({
-          _id: l._id,
-          title: l.title,
-          slug: l.slug
-        }))
-      };
-    })
-  );
+  // Gather all category slugs and UUIDs in one array
+  const categoryIds = categories.flatMap(cat => [cat.slug, cat.id]);
+
+  // Fetch all lessons for all categories in 1 query
+  const allLessons = await getSanityLessonsByCategories(categoryIds);
+
+  // Group lessons by category (either slug or id matches category_id)
+  const categoriesWithData = categories.map((cat) => {
+    const lessons = allLessons.filter(
+      (l: any) => l.category_id === cat.id || l.category_id === cat.slug
+    );
+
+    return {
+      ...cat,
+      _id: cat.id,
+      lessonCount: lessons.length,
+      previews: lessons.slice(0, 4).map((l: any) => ({
+        _id: l._id,
+        title: l.title,
+        slug: l.slug
+      }))
+    };
+  });
 
   return categoriesWithData;
 }
