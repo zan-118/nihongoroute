@@ -15,19 +15,39 @@ interface AchievementNotification {
 
 export default function AchievementToast() {
   const notifications = useUIStore((state) => state.notifications);
-  const latestNotification = notifications[0];
-  const [lastShownId, setLastShownId] = useState<string | null>(null);
+  const [shownIds, setShownIds] = useState<Set<string>>(() => new Set());
+  const [queue, setQueue] = useState<AchievementNotification[]>([]);
   const [activeToast, setActiveToast] = useState<AchievementNotification | null>(null);
 
+  // Monitor notifications and push newly discovered achievements to queue
   useEffect(() => {
-    if (
-      latestNotification &&
-      latestNotification.type === "achievement" &&
-      latestNotification.id !== lastShownId
-    ) {
+    if (!notifications || notifications.length === 0) return;
+
+    const newAchievements = notifications.filter(
+      (n) => n.type === "achievement" && !shownIds.has(n.id)
+    ) as AchievementNotification[];
+
+    if (newAchievements.length > 0) {
       requestAnimationFrame(() => {
-        setLastShownId(latestNotification.id);
-        setActiveToast(latestNotification as AchievementNotification);
+        setShownIds((prev) => {
+          const next = new Set(prev);
+          newAchievements.forEach((a) => next.add(a.id));
+          return next;
+        });
+        // We reverse to process older achievements first if multiple came in at once
+        setQueue((prev) => [...prev, ...[...newAchievements].reverse()]);
+      });
+    }
+  }, [notifications, shownIds]);
+
+  // Process the queue one by one
+  useEffect(() => {
+    if (!activeToast && queue.length > 0) {
+      const nextToast = queue[0];
+      
+      requestAnimationFrame(() => {
+        setActiveToast(nextToast);
+        setQueue((prev) => prev.slice(1));
       });
 
       // Play success audio PROCEDURALLY using SoundEngine
@@ -44,7 +64,7 @@ export default function AchievementToast() {
 
       return () => clearTimeout(timer);
     }
-  }, [latestNotification, lastShownId]);
+  }, [activeToast, queue]);
 
   if (!activeToast) return null;
 

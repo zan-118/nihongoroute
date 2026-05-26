@@ -11,6 +11,7 @@ import { useUIStore } from "@/store/useUIStore";
 export default function NotificationPopover({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const notifications = useUIStore(s => s.notifications);
   const markAsRead = useUIStore(s => s.markNotificationAsRead);
+  const markAllAsRead = useUIStore(s => s.markAllNotificationsAsRead);
   const clearAll = useUIStore(s => s.clearNotifications);
 
   const unreadCount = notifications?.filter(n => !n.read).length || 0;
@@ -21,6 +22,16 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
       case "success": return <Zap size={16} className="text-primary" />;
       case "warning": return <AlertTriangle size={16} className="text-destructive" />;
       default: return <Info size={16} className="text-primary" />;
+    }
+  };
+
+  const formatTimeSafely = (timestamp: unknown) => {
+    try {
+      const t = Number(timestamp);
+      if (isNaN(t) || t <= 0) return "Baru saja";
+      return formatDistanceToNow(t, { addSuffix: true, locale: id });
+    } catch (e) {
+      return "Baru saja";
     }
   };
 
@@ -91,7 +102,7 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
                                 {n.title}
                               </h4>
                               <span className="text-[7px] font-bold text-muted-foreground/60 uppercase tracking-widest whitespace-nowrap pt-0.5">
-                                {formatDistanceToNow(n.timestamp, { addSuffix: true, locale: id })}
+                                {formatTimeSafely(n.timestamp)}
                               </span>
                             </div>
                             <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-2 font-medium">
@@ -122,7 +133,7 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
                   <Button 
                     variant="ghost" 
                     className="w-full h-10 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:bg-primary hover:text-primary-foreground transition-all shadow-none border border-primary/20"
-                    onClick={() => notifications.forEach(n => markAsRead(n.id))}
+                    onClick={markAllAsRead}
                   >
                     Tandai Semua Selesai
                   </Button>

@@ -24,6 +24,7 @@ interface UIState {
   setSyncError: (hasError: boolean) => void;
   addNotification: (notification: Omit<Notification, "id" | "timestamp" | "read">) => void;
   markNotificationAsRead: (id: string) => void;
+  markAllNotificationsAsRead: () => void;
   clearNotifications: () => void;
   toggleNotifications: (enabled: boolean) => void;
   toggleFurigana: (enabled: boolean) => void;
@@ -88,6 +89,12 @@ export const useUIStore = create<UIState>()(
       markNotificationAsRead: (id) => set((state) => ({
         notifications: state.notifications.map(n => 
           n.id === id ? { ...n, read: true } : n
+        )
+      })),
+      
+      markAllNotificationsAsRead: () => set((state) => ({
+        notifications: state.notifications.map(n => 
+          n.read ? n : { ...n, read: true }
         )
       })),
 
