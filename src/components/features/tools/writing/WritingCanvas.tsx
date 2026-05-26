@@ -17,8 +17,8 @@ interface WritingCanvasProps {
 
 export default function WritingCanvas({ 
   character = "", 
-  strokeColor = "#ef4444", 
-  guideColor = "#a855f7",
+  strokeColor = "rgb(var(--primary-rgb))", 
+  guideColor = "rgb(var(--secondary-rgb))",
   className = "max-w-[280px] sm:max-w-sm mx-auto"
 }: WritingCanvasProps) {
   const {
@@ -39,11 +39,20 @@ export default function WritingCanvas({
     isCompleted,
   } = useWritingCanvas({ character, strokeColor });
 
+  // Dynamic glow ring and border color based on canvas state
+  const containerClass = `relative w-full aspect-square rounded-2xl overflow-hidden group touch-none transition-all duration-500 border ${
+    isCompleted
+      ? "border-success/40 shadow-[0_0_30px_rgba(var(--success-rgb),0.25)] bg-success/5"
+      : strokeError
+      ? "border-destructive/40 shadow-[0_0_30px_rgba(var(--destructive-rgb),0.3)] bg-destructive/5 animate-pulse"
+      : "border-border shadow-[0_0_20px_rgba(var(--primary-rgb),0.12)] bg-muted/40 dark:bg-card/30 glass"
+  }`;
+
   return (
     <div className={`flex flex-col gap-4 w-full ${className}`}>
       <Card
         ref={containerRef}
-        className="relative w-full aspect-square bg-muted/50 dark:bg-card/40 border border-border rounded-2xl overflow-hidden group touch-none shadow-none"
+        className={containerClass}
         style={{ touchAction: 'none' }}
       >
         <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--foreground-rgb),0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--foreground-rgb),0.01)_1px,transparent_1px)] bg-[size:25%_25%] opacity-40 pointer-events-none" />
@@ -60,7 +69,7 @@ export default function WritingCanvas({
         {/* Overlay Sukses Coretan Selesai */}
         {isCompleted && (
           <div className="absolute inset-0 bg-background/85 backdrop-blur-md flex flex-col items-center justify-center gap-4 z-30 transition-all duration-300 animate-in fade-in">
-            <div className="h-14 w-14 rounded-full bg-success/15 border border-success/30 flex items-center justify-center text-success shadow-[0_0_20px_rgba(34,197,94,0.3)]">
+            <div className="h-14 w-14 rounded-full bg-success/15 border border-success/30 flex items-center justify-center text-success shadow-[0_0_20px_rgba(var(--success-rgb),0.3)]">
               <CheckCircle size={28} className="animate-bounce" />
             </div>
             <div className="text-center space-y-1">
@@ -80,7 +89,7 @@ export default function WritingCanvas({
 
         {/* Tooltip Deteksi Kesalahan Coretan */}
         {strokeError && (
-          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl bg-destructive/10 border border-destructive/20 backdrop-blur-md text-[9px] font-bold uppercase tracking-wider text-destructive shadow-[0_0_15px_rgba(239,68,68,0.25)] animate-bounce z-30">
+          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl bg-destructive/10 border border-destructive/20 backdrop-blur-md text-[9px] font-bold uppercase tracking-wider text-destructive shadow-[0_0_15px_rgba(var(--destructive-rgb),0.25)] animate-bounce z-30">
             {strokeError === "reverse" ? "Arah guratan terbalik!" : "Guratan kurang tepat!"}
           </div>
         )}

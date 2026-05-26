@@ -8,6 +8,49 @@ interface UseWritingCanvasProps {
 }
 
 /**
+ * Helper to resolve CSS colors (HEX, RGB, HSL, CSS variables) to a valid Canvas shadowColor string.
+ */
+const getShadowColor = (colorStr: string, opacity: number): string => {
+  if (typeof window === "undefined") return colorStr;
+  let resolved = colorStr;
+  
+  if (colorStr.includes("var(")) {
+    try {
+      const temp = document.createElement("div");
+      temp.style.color = colorStr;
+      document.body.appendChild(temp);
+      resolved = getComputedStyle(temp).color;
+      document.body.removeChild(temp);
+    } catch (e) {
+      // Fallback safe defaults if getComputedStyle fails or in test env
+    }
+  }
+
+  // Handle rgb(r, g, b) format
+  if (resolved.startsWith("rgb(")) {
+    return resolved.replace("rgb(", "rgba(").replace(")", `, ${opacity})`);
+  }
+  // Handle rgba(r, g, b, a) format
+  if (resolved.startsWith("rgba(")) {
+    return resolved;
+  }
+  
+  // Handle HEX format
+  let hex = resolved.replace("#", "").trim();
+  if (hex.length === 3) {
+    hex = hex.split("").map((c) => c + c).join("");
+  }
+  if (hex.length === 6) {
+    const r = parseInt(hex.slice(0, 2), 16);
+    const g = parseInt(hex.slice(2, 4), 16);
+    const b = parseInt(hex.slice(4, 6), 16);
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+  }
+  
+  return resolved;
+};
+
+/**
  * @file useWritingCanvas.ts
  * @description Hook untuk mengelola kanvas latihan menulis dengan koreksi coretan Kanji interaktif secara offline-first.
  * Dioptimalkan dengan pencocokan vektor (Vector Matching) terhadap koordinat standar KanjiVG.
@@ -131,12 +174,12 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
       for (let i = 1; i < stroke.length; i++) {
         ctx.lineTo(stroke[i].x, stroke[i].y);
       }
-      ctx.strokeStyle = "#22c55e"; // Success green
+      ctx.strokeStyle = "rgb(var(--success-rgb))"; // Success green semantik
       ctx.lineWidth = 10;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
       ctx.shadowBlur = 8;
-      ctx.shadowColor = "rgba(34, 197, 94, 0.8)";
+      ctx.shadowColor = getShadowColor("rgb(var(--success-rgb))", 0.6);
       ctx.stroke();
     });
 
@@ -152,23 +195,23 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
       ctx.shadowBlur = activeColor ? 8 : 4;
-      ctx.shadowColor = activeColor ? `${activeColor}cc` : `${strokeColor}66`;
+      ctx.shadowColor = activeColor ? getShadowColor(activeColor, 0.6) : getShadowColor(strokeColor, 0.4);
       ctx.stroke();
     }
   }, [strokeColor]);
 
-  // Efek resize responsif kanvas
+  // Efek resize responsif kanvas dengan ResizeObserver
   useEffect(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
 
-    const resizeCanvas = () => {
+    const resizeCanvas = (width: number, height: number) => {
       const ratio = window.devicePixelRatio || 1;
-      canvas.width = container.clientWidth * ratio;
-      canvas.height = container.clientHeight * ratio;
-      canvas.style.width = `${container.clientWidth}px`;
-      canvas.style.height = `${container.clientHeight}px`;
+      canvas.width = width * ratio;
+      canvas.height = height * ratio;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
 
       const ctx = canvas.getContext("2d");
       if (ctx) {
@@ -177,16 +220,29 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
         ctx.lineJoin = "round";
         ctx.lineWidth = 10;
         ctx.strokeStyle = strokeColor;
-        ctx.shadowBlur = 4;
-        ctx.shadowColor = strokeColor + "66";
       }
       redrawCanvas();
     };
 
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
-    
-    return () => window.removeEventListener("resize", resizeCanvas);
+    if (typeof ResizeObserver !== "undefined") {
+      const observer = new ResizeObserver((entries) => {
+        const entry = entries[0];
+        if (entry) {
+          const { width, height } = entry.contentRect;
+          resizeCanvas(width, height);
+        }
+      });
+      observer.observe(container);
+      return () => observer.disconnect();
+    } else {
+      // Fallback untuk testing env
+      const handleResize = () => {
+        resizeCanvas(container.clientWidth, container.clientHeight);
+      };
+      handleResize();
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }
   }, [strokeColor, redrawCanvas]);
 
   const startDrawing = useCallback((e: React.PointerEvent) => {
