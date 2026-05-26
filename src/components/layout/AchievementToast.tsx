@@ -13,57 +13,79 @@ interface AchievementNotification {
   message: string;
 }
 
+/**
+ * AchievementToast Component
+ * 
+ * Komponen ini bertanggung jawab untuk menampilkan notifikasi pencapaian (lencana)
+ * secara antrean (queue) dengan animasi premium, efek suara sukses, dan penutupan otomatis.
+ * 
+ * @component
+ * @returns {JSX.Element | null} Elemen toast pencapaian yang aktif atau null jika antrean kosong.
+ * 
+ * @effects
+ * 1. Notification Watcher: Memantau Zustand `useUIStore.notifications` dan menyaring notifikasi
+ *    tipe "achievement" yang berumur kurang dari 15 detik, menghindari pemutaran ulang lencana lawas saat remounting.
+ * 2. Queue Consumer: Memindahkan item pertama dari antrean (`queue`) ke `activeToast` dan memotong antrean.
+ * 3. Toast Timer & Audio Player: Memutar suara sukses dan memulai timer auto-dismiss 6.5 detik untuk
+ *    menghapus `activeToast`. Efek ini terisolasi dari perubahan antrean untuk stabilitas timer.
+ * 
+ * @store
+ * - `useUIStore`: Mengakses state `notifications` untuk memantau lencana yang baru dibuka.
+ */
 export default function AchievementToast() {
   const notifications = useUIStore((state) => state.notifications);
   const shownIdsRef = useRef<Set<string>>(new Set());
   const [queue, setQueue] = useState<AchievementNotification[]>([]);
   const [activeToast, setActiveToast] = useState<AchievementNotification | null>(null);
 
-  // Monitor notifications and push newly discovered achievements to queue
+  // Efek 1: Notification Watcher - Menyaring notifikasi berumur < 15 detik dan memasukkannya ke queue
   useEffect(() => {
     if (!notifications || notifications.length === 0) return;
 
+    const now = Date.now();
     const newAchievements = notifications.filter(
-      (n) => n.type === "achievement" && !shownIdsRef.current.has(n.id)
+      (n) => n.type === "achievement" && !shownIdsRef.current.has(n.id) && now - n.timestamp < 15000
     ) as AchievementNotification[];
 
     if (newAchievements.length > 0) {
-      // Instantly mark them as shown in the synchronous Ref to block duplicate evaluations in the same render cycle
+      // Instan tandai di ref sinkron untuk mencegah evaluasi ganda di siklus render yang sama
       newAchievements.forEach((a) => shownIdsRef.current.add(a.id));
 
-      // Safely schedule queue push asynchronously using requestAnimationFrame
-      requestAnimationFrame(() => {
-        // We reverse to process older achievements first if multiple came in at once
-        setQueue((prev) => [...prev, ...[...newAchievements].reverse()]);
-      });
+      // Balik urutan jika ada beberapa lencana masuk bersamaan, agar yang terlama diproses lebih dulu
+      const toQueue = [...newAchievements].reverse();
+      setQueue((prev) => [...prev, ...toQueue]);
     }
   }, [notifications]);
 
-  // Process the queue one by one
+  // Efek 2: Queue Consumer - Mengambil item terdepan dari queue ke activeToast dan memotong antrean
   useEffect(() => {
     if (!activeToast && queue.length > 0) {
       const nextToast = queue[0];
-      
       requestAnimationFrame(() => {
         setActiveToast(nextToast);
         setQueue((prev) => prev.slice(1));
       });
-
-      // Play success audio PROCEDURALLY using SoundEngine
-      try {
-        sounds?.playSuccess();
-      } catch (err) {
-        console.warn("Gagal memutar audio lencana:", err);
-      }
-
-      // Auto-dismiss after 6.5 seconds
-      const timer = setTimeout(() => {
-        setActiveToast(null);
-      }, 6500);
-
-      return () => clearTimeout(timer);
     }
   }, [activeToast, queue]);
+
+  // Efek 3: Toast Timer & Audio Player - Memutar suara sukses dan timer auto-dismiss 6.5 detik secara stabil
+  useEffect(() => {
+    if (!activeToast) return;
+
+    // Putar audio sukses secara prosedural
+    try {
+      sounds?.playSuccess();
+    } catch (err) {
+      console.warn("Gagal memutar audio lencana:", err);
+    }
+
+    // Auto-dismiss setelah 6.5 detik secara stabil tanpa terganggu oleh perubahan queue
+    const timer = setTimeout(() => {
+      setActiveToast(null);
+    }, 6500);
+
+    return () => clearTimeout(timer);
+  }, [activeToast]);
 
   if (!activeToast) return null;
 
