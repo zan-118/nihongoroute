@@ -56,6 +56,29 @@ const getShadowColor = (colorStr: string, opacity: number): string => {
  * Dioptimalkan dengan pencocokan vektor (Vector Matching) terhadap koordinat standar KanjiVG.
  */
 
+/**
+ * Custom Hook: useWritingCanvas
+ * 
+ * Mengelola state dan interaksi kanvas interaktif untuk latihan menulis Kanji bahasa Jepang.
+ * Menangani penggambaran coretan pengguna, pencocokan ketepatan urutan coretan (stroke order) 
+ * secara asinkron berbasis koordinat vektor SVG, pemutaran suara feedback prosedural (sound effects),
+ * serta penambahan XP poin pengguna saat berhasil menulis karakter dengan benar.
+ * 
+ * @param {Object} props - Properti inisialisasi hook
+ * @param {string} props.character - Karakter Kanji target yang sedang dipelajari
+ * @param {string} props.strokeColor - Warna visual coretan kanvas
+ * @returns {Object} Ref kanvas, state penilaian coretan, dan callback interaksi
+ * @returns {React.RefObject<HTMLCanvasElement | null>} canvasRef - Ref elemen HTML5 Canvas
+ * @returns {number} currentStrokeIndex - Indeks coretan Kanji aktif saat ini
+ * @returns {number} totalStrokes - Total coretan dari karakter Kanji aktif
+ * @returns {boolean} isCompleted - Status apakah karakter selesai ditulis secara utuh
+ * @returns {boolean} isCorrect - Status ketepatan coretan yang baru saja digambar
+ * @returns {boolean} isLoadingSVG - Menandakan apakah pengambilan data vektor KanjiVG sedang berjalan
+ * @returns {Function} handleClear - Callback untuk membersihkan papan tulis kanvas
+ * @returns {Function} handleUndo - Callback untuk membatalkan coretan terakhir
+ * @returns {Function} handleRedo - Callback untuk memulihkan coretan yang dibatalkan
+ * @returns {number} score - Skor akurasi ketepatan penulisan coretan (persentase)
+ */
 export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -82,10 +105,12 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
   // Memuat data guratan KanjiVG dengan dukung Caching Offline-First
   useEffect(() => {
     if (!character) {
-      setStandardPaths([]);
-      setCurrentStrokeIndex(0);
+      requestAnimationFrame(() => {
+        setStandardPaths([]);
+        setCurrentStrokeIndex(0);
+        setIsCompleted(false);
+      });
       correctStrokesRef.current = [];
-      setIsCompleted(false);
       return;
     }
 
@@ -178,7 +203,7 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
       ctx.lineWidth = 10;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
-      ctx.shadowBlur = 8;
+      ctx.shadowBlur = 14;
       ctx.shadowColor = getShadowColor("rgb(var(--success-rgb))", 0.6);
       ctx.stroke();
     });
@@ -194,7 +219,7 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
       ctx.lineWidth = 10;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
-      ctx.shadowBlur = activeColor ? 8 : 4;
+      ctx.shadowBlur = activeColor ? 14 : 12;
       ctx.shadowColor = activeColor ? getShadowColor(activeColor, 0.6) : getShadowColor(strokeColor, 0.4);
       ctx.stroke();
     }

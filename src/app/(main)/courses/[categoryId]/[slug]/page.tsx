@@ -105,7 +105,7 @@ export default async function LessonPage({ params }: Props) {
             title={lesson.title || ""} 
             summary={lesson.summary || ""} 
             isSideQuest={isSideQuest} 
-            lesson={lesson} 
+            lesson={lesson as import("@/components/features/lessons/DownloadOfflineButton").LessonData} 
           />
 
           <div className="space-y-24 mb-24">

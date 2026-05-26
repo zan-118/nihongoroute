@@ -6,11 +6,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import XPPop from "@/components/features/gamification/XPPop";
 import Flashcard from "@/components/features/flashcards/card/Flashcard";
 import { sounds } from "@/lib/audio";
-import { MasterCardData } from "./types";
+import { MasterCardData, StudyMode } from "./types";
 import { useFlashcardMaster } from "./useFlashcardMaster";
 import { SessionSummaryModal } from "./SessionSummaryModal";
 import { FlashcardActions } from "./FlashcardActions";
 import { FlashcardHeader } from "./FlashcardHeader";
+import PronunciationPanel from "./PronunciationPanel";
 
 export default function FlashcardMaster({
   cards,
@@ -21,7 +22,7 @@ export default function FlashcardMaster({
 }: {
   cards: MasterCardData[];
   type?: "vocab" | "kanji";
-  mode?: "latihan" | "ujian" | "tantangan";
+  mode?: StudyMode;
   isFixedMode?: boolean;
   onFinish?: () => void;
 }) {
@@ -109,74 +110,87 @@ export default function FlashcardMaster({
       />
 
       {/* KARTU UTAMA SECTION */}
-      <div className="relative w-full mb-8 md:mb-10">
-        <AnimatePresence initial={false} mode="wait">
-          <motion.div
-            key={currentCards[currentIndex]?.id || currentIndex}
-            initial={{
-              x: direction === 1 ? 200 : direction === -1 ? -200 : 0,
-              opacity: 0,
-              scale: 0.95,
-            }}
-            animate={{ x: 0, opacity: 1, scale: 1 }}
-            exit={{
-              x: direction === 1 ? -200 : direction === -1 ? 200 : 0,
-              opacity: 0,
-              scale: 0.95,
-            }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          >
-            <Flashcard
-              id={cardId}
-              word={currentCards[currentIndex]?.word}
-              meaning={currentCards[currentIndex]?.meaning}
-              furigana={currentCards[currentIndex]?.furigana}
-              romaji={currentCards[currentIndex]?.romaji}
-              kanjiDetails={currentCards[currentIndex]?.kanjiDetails}
-              isFlipped={isFlipped}
-              onFlip={() => {
-                if ((studyMode === "ujian" || studyMode === "tantangan") && isFlipped) return;
-                if (studyMode === "tantangan" && !isFlipped) {
-                  return;
-                }
-                sounds?.playPop();
-                if (studyMode === "ujian") {
-                  setIsFlipped(true);
-                } else {
-                  setIsFlipped((prev) => !prev);
-                }
-              }}
-              type={type}
-              docType={card.docType}
-              slug={card.slug}
-              srsState={srsState}
-              isShaking={isShaking}
-              studyMode={studyMode}
-              userInput={userInput}
-              onUserInputChange={setUserInput}
-              isAnswerChecked={isAnswerChecked}
-              inputResult={inputResult}
-              mnemonic={card.mnemonic}
-              pitch_accent={card.pitch_accent}
-              hinshi={card.hinshi}
-              examples={card.examples}
-              related_kanji={card.related_kanji}
-            />
-          </motion.div>
-        </AnimatePresence>
-      </div>
+      {studyMode === "pelafalan" ? (
+        <div className="relative w-full mb-8 md:mb-10 animate-in fade-in duration-300">
+          <PronunciationPanel
+            card={currentCards[currentIndex]}
+            onNext={() => handleNav(1)}
+            currentIndex={currentIndex}
+            totalCards={currentCards.length}
+          />
+        </div>
+      ) : (
+        <>
+          <div className="relative w-full mb-8 md:mb-10">
+            <AnimatePresence initial={false} mode="wait">
+              <motion.div
+                key={currentCards[currentIndex]?.id || currentIndex}
+                initial={{
+                  x: direction === 1 ? 200 : direction === -1 ? -200 : 0,
+                  opacity: 0,
+                  scale: 0.95,
+                }}
+                animate={{ x: 0, opacity: 1, scale: 1 }}
+                exit={{
+                  x: direction === 1 ? -200 : direction === -1 ? 200 : 0,
+                  opacity: 0,
+                  scale: 0.95,
+                }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              >
+                <Flashcard
+                  id={cardId}
+                  word={currentCards[currentIndex]?.word}
+                  meaning={currentCards[currentIndex]?.meaning}
+                  furigana={currentCards[currentIndex]?.furigana}
+                  romaji={currentCards[currentIndex]?.romaji}
+                  kanjiDetails={currentCards[currentIndex]?.kanjiDetails}
+                  isFlipped={isFlipped}
+                  onFlip={() => {
+                    if ((studyMode === "ujian" || studyMode === "tantangan") && isFlipped) return;
+                    if (studyMode === "tantangan" && !isFlipped) {
+                      return;
+                    }
+                    sounds?.playPop();
+                    if (studyMode === "ujian") {
+                      setIsFlipped(true);
+                    } else {
+                      setIsFlipped((prev) => !prev);
+                    }
+                  }}
+                  type={type}
+                  docType={card.docType}
+                  slug={card.slug}
+                  srsState={srsState}
+                  isShaking={isShaking}
+                  studyMode={studyMode}
+                  userInput={userInput}
+                  onUserInputChange={setUserInput}
+                  isAnswerChecked={isAnswerChecked}
+                  inputResult={inputResult}
+                  mnemonic={card.mnemonic}
+                  pitch_accent={card.pitch_accent}
+                  hinshi={card.hinshi}
+                  examples={card.examples}
+                  related_kanji={card.related_kanji}
+                />
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-      <FlashcardActions
-        studyMode={studyMode}
-        isFlipped={isFlipped}
-        currentIndex={currentIndex}
-        totalCards={currentCards.length}
-        themeColor={themeColor}
-        handleNav={handleNav}
-        handleAnswer={handleAnswer}
-        isAnswerChecked={isAnswerChecked}
-        onCheckAnswer={checkAnswer}
-      />
+          <FlashcardActions
+            studyMode={studyMode}
+            isFlipped={isFlipped}
+            currentIndex={currentIndex}
+            totalCards={currentCards.length}
+            themeColor={themeColor}
+            handleNav={handleNav}
+            handleAnswer={handleAnswer}
+            isAnswerChecked={isAnswerChecked}
+            onCheckAnswer={checkAnswer}
+          />
+        </>
+      )}
       {isSyncing && (
         <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-[10px] text-muted-foreground animate-pulse text-center w-full">
           Menyinkronkan progres ke cloud...

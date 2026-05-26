@@ -1,12 +1,39 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Download, Loader2, CheckCircle2, CloudLightning } from "lucide-react";
 import { sounds } from "@/lib/audio";
 import { cn } from "@/lib/utils";
 
+interface LessonAudioItem {
+  audioUrl?: string;
+  audio_url?: string;
+}
+
+interface LessonVocabItem {
+  vocab?: string;
+  japanese?: string;
+  word?: string;
+}
+
+interface LessonKanjiItem {
+  kanji?: string;
+  character?: string;
+}
+
+export interface LessonData {
+  listeningList?: unknown[];
+  listening_list?: unknown[];
+  readingList?: unknown[];
+  reading_list?: unknown[];
+  vocabList?: unknown[];
+  vocab_list?: unknown[];
+  kanjiList?: unknown[];
+  kanji_list?: unknown[];
+}
+
 interface DownloadOfflineButtonProps {
-  lesson: any; // Flexible, as standard lesson objects can vary
+  lesson: LessonData;
 }
 
 /**
@@ -14,33 +41,44 @@ interface DownloadOfflineButtonProps {
  * @description Tombol interaktif berdesain Cyber-Glass untuk mengunduh seluruh aset pelajaran
  * (audio skenario, audio bacaan, TTS kosakata, dan SVG KanjiVG) ke cache lokal peramban secara offline-first.
  */
+/**
+ * Komponen: DownloadOfflineButton
+ * 
+ * Menyajikan tombol kontrol berestetika Cyber-Glass yang memungkinkan pengguna mengunduh secara lokal
+ * seluruh aset multimedia pelajaran (audio percakapan/bacaan, audio text-to-speech kosakata,
+ * dan berkas SVG karakter KanjiVG) langsung ke penyimpanan Cache Storage peramban.
+ * Menjamin pelajaran dapat diakses 100% secara luring (offline-first) tanpa latensi jaringan.
+ * 
+ * @param {Object} props - Properti komponen
+ * @param {LessonData} props.lesson - Objek data pelajaran lengkap yang mencakup daftar kosa kata, kanji, dialog, dan bacaan
+ */
 export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonProps) {
   const [status, setStatus] = useState<"idle" | "downloading" | "completed" | "error">("idle");
   const [progress, setProgress] = useState(0);
 
   // Cari aset yang bisa di-cache dalam lesson
-  const getAssetUrls = () => {
+  const getAssetUrls = useCallback(() => {
     const audioUrls: string[] = [];
     const ttsWords: string[] = [];
     const kanjiChars: string[] = [];
 
     // 1. Audio percakapan (listeningList / listening_list)
-    const listeningItems = lesson?.listeningList || lesson?.listening_list || [];
-    listeningItems.forEach((item: any) => {
+    const listeningItems = (lesson?.listeningList || lesson?.listening_list || []) as LessonAudioItem[];
+    listeningItems.forEach((item: LessonAudioItem) => {
       const url = item?.audioUrl || item?.audio_url;
       if (url && typeof url === "string") audioUrls.push(url);
     });
 
     // 2. Audio bacaan (readingList / reading_list)
-    const readingItems = lesson?.readingList || lesson?.reading_list || [];
-    readingItems.forEach((item: any) => {
+    const readingItems = (lesson?.readingList || lesson?.reading_list || []) as LessonAudioItem[];
+    readingItems.forEach((item: LessonAudioItem) => {
       const url = item?.audioUrl || item?.audio_url;
       if (url && typeof url === "string") audioUrls.push(url);
     });
 
     // 3. Kata kosa kata untuk TTS caching (vocabList / vocab_list)
-    const vocabItems = lesson?.vocabList || lesson?.vocab_list || [];
-    vocabItems.forEach((item: any) => {
+    const vocabItems = (lesson?.vocabList || lesson?.vocab_list || []) as LessonVocabItem[];
+    vocabItems.forEach((item: LessonVocabItem) => {
       const word = item?.vocab || item?.japanese || item?.word;
       if (word && typeof word === "string") {
         ttsWords.push(word);
@@ -48,8 +86,8 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
     });
 
     // 4. Huruf Kanji untuk latihan menulis canvas (kanjiList / kanji_list)
-    const kanjiItems = lesson?.kanjiList || lesson?.kanji_list || [];
-    kanjiItems.forEach((item: any) => {
+    const kanjiItems = (lesson?.kanjiList || lesson?.kanji_list || []) as LessonKanjiItem[];
+    kanjiItems.forEach((item: LessonKanjiItem) => {
       const char = item?.kanji || item?.character;
       if (char && typeof char === "string") {
         kanjiChars.push(char.charAt(0));
@@ -57,7 +95,7 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
     });
 
     return { audioUrls, ttsWords, kanjiChars };
-  };
+  }, [lesson]);
 
   // Cek pada mount apakah berkas utama sudah ada di cache
   useEffect(() => {
@@ -121,7 +159,7 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
     };
 
     checkCacheStatus();
-  }, [lesson]);
+  }, [lesson, getAssetUrls]);
 
   const handleDownload = async () => {
     if (status === "downloading" || status === "completed") return;

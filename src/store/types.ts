@@ -9,6 +9,11 @@ export interface Notification {
   read: boolean;
 }
 
+export interface UnlockedAchievement {
+  id: string;
+  unlockedAt: number;
+}
+
 export interface Inventory {
   streakFreeze: number;
   /** claimedQuests disimpan di client-side / local state, bukan kolom DB */
@@ -16,6 +21,7 @@ export interface Inventory {
     date: string;
     quests: string[];
   };
+  achievements?: UnlockedAchievement[];
 }
 
 export interface Settings {

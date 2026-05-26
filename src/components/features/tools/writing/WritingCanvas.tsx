@@ -95,13 +95,21 @@ export default function WritingCanvas({
         )}
 
         {showGuide && character && (
-          <div className="absolute inset-8 pointer-events-none z-0">
-            <AnimatedKanji 
-              character={character} 
-              triggerKey={replayKey} 
-              color={guideColor}
-            />
-          </div>
+          <>
+            {/* Tracing guide in the background */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 select-none">
+              <span className="text-[140px] sm:text-[180px] font-japanese text-foreground/10 font-bold leading-none animate-pulse">
+                {character}
+              </span>
+            </div>
+            <div className="absolute inset-8 pointer-events-none z-0">
+              <AnimatedKanji 
+                character={character} 
+                triggerKey={replayKey} 
+                color={guideColor}
+              />
+            </div>
+          </>
         )}
 
         <canvas

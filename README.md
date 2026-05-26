@@ -140,10 +140,12 @@ Untuk menjamin standar keamanan kelas enterprise, platform ini menerapkan protok
     Semua parameter pencarian dinamis (misalnya pencarian teks kamus) di-escape dari karakter wildcard database (`%` dan `_`) secara otomatis di tingkat Server Actions guna memblokir manipulasi kueri PostgreSQL.
 3.  **Next.js 16 Suspense Boundaries**:
     Setiap halaman klien yang menggunakan parameter kueri dinamis (`useSearchParams`) dibungkus dalam pembatas `<Suspense>` untuk mencegah deoptimisasi build Next.js dan memastikan kelancaran pembuatan halaman statik (*Static Site Generation*).
-4.  **Keamanan Hydration**:
-    Komponen server dilarang menerima event handler klien (seperti `onClick`, `onMouseEnter`) secara langsung. Seluruh interaksi visual yang membutuhkan interaktivitas dinamis wajib diekstraksi ke komponen klien terpisah dengan direktif `"use client";` demi kelancaran proses hidrasi.
+4.  **Keamanan Hydration & requestAnimationFrame**:
+    Komponen server dilarang menerima event handler klien (seperti `onClick`, `onMouseEnter`) secara langsung. Seluruh interaksi visual yang membutuhkan interaktivitas dinamis wajib diekstraksi ke komponen klien terpisah dengan direktif `"use client";`. Inisialisasi state klien otomatis wajib dibungkus `requestAnimationFrame` untuk menghindari ketidakcocokan DOM hasil pre-render.
 5.  **Aksesibilitas Tombol Ikonik (A11y)**:
     Setiap tombol navigasi visual yang hanya menggunakan simbol grafis tanpa teks visual diwajibkan menggunakan properti `aria-label` deskriptif terlokalisasi agar ramah bagi pembaca layar (*screen reader*).
+6.  **Pemisahan Logika Halaman (Zero God-Files)**:
+    Untuk menjaga kebersihan modularitas dan kemudahan pemeliharaan, berkas `page.tsx` di dalam `app/` dilarang memuat state logic kompleks. Seluruh logika tersebut diekstraksi ke dalam custom hook domain spesifik di dalam direktori `components/features/[domain]/`.
 
 ---
 

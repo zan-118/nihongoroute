@@ -2,13 +2,13 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Zap, Flame, PenTool, Hash, LayoutGrid, Layers, Play } from "lucide-react";
+import { Zap, Flame, PenTool, Hash, LayoutGrid, Layers, Play, Mic } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface FlashcardSetupProps {
-  onStart: (level: string, mode: "vocab" | "kanji" | "survival", amount: number) => void;
+  onStart: (level: string, mode: "vocab" | "kanji" | "survival" | "pronunciation", amount: number) => void;
   defaultLevel?: string | null;
-  defaultMode?: "vocab" | "kanji" | "survival" | null;
+  defaultMode?: "vocab" | "kanji" | "survival" | "pronunciation" | null;
 }
 
 const JLPT_LEVELS = [
@@ -23,14 +23,17 @@ const JLPT_LEVELS = [
 const MODES = [
   { id: "vocab" as const, label: "Kosakata", icon: <Zap size={18} />, desc: "Latihan bacaan & makna kata" },
   { id: "kanji" as const, label: "Kanji", icon: <PenTool size={18} />, desc: "Hafalkan bentuk & On/Kun" },
-  { id: "survival" as const, label: "Survival", icon: <Flame size={18} />, desc: "Tantangan berbatas waktu" }
+  { id: "survival" as const, label: "Survival", icon: <Flame size={18} />, desc: "Tantangan berbatas waktu" },
+  { id: "pronunciation" as const, label: "Pelafalan", icon: <Mic size={18} />, desc: "Uji akurasi bicara Anda" }
 ];
 
 const AMOUNTS = [10, 20, 50, 100];
 
 export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: FlashcardSetupProps) {
   const [level, setLevel] = useState<string>(defaultLevel || "all");
-  const [mode, setMode] = useState<"vocab" | "kanji" | "survival">(defaultMode || "vocab");
+  const [mode, setMode] = useState<"vocab" | "kanji" | "survival" | "pronunciation">(
+    defaultMode ?? "vocab"
+  );
   const [amount, setAmount] = useState<number>(20);
 
   return (

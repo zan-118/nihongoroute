@@ -35,7 +35,14 @@ interface SanityQuestionItem {
 }
 
 /**
- * Mengambil data kategori kursus beserta pelajaran dan ujian di dalamnya.
+ * Server Action: getCourseCategoryData
+ * 
+ * Mengambil data kategori kursus beserta pelajaran dan simulasi ujian JLPT yang terkait.
+ * Menghubungkan basis data Supabase (untuk metadata kategori) dengan Sanity CMS 
+ * (untuk konten pelajaran statis dan modul ujian) secara paralel menggunakan arsitektur split-source.
+ * 
+ * @param {string} slug - Slug unik kategori kursus (misal: "n5", "n4")
+ * @returns {Promise<Object>} Mengembalikan objek kategori, daftar pelajaran, dan daftar simulasi ujian
  */
 export async function getCourseCategoryData(slug: string) {
   const supabase = await createClient();
@@ -98,7 +105,11 @@ export async function getCourseCategoryData(slug: string) {
 }
 
 /**
- * Mengambil daftar seluruh ujian simulasi (Mock Exams) dari Sanity.
+ * Server Action: getExamsList
+ * 
+ * Mengambil daftar ringkas seluruh simulasi ujian (Mock Exams) aktif dari Sanity CMS.
+ * 
+ * @returns {Promise<Array>} Daftar simulasi ujian terformat
  */
 export async function getExamsList() {
   try {
@@ -131,7 +142,14 @@ export async function getExamsList() {
 }
 
 /**
- * Mengambil detail lengkap satu ujian simulasi berdasarkan Slug.
+ * Server Action: getExamByIdOrSlug
+ * 
+ * Mengambil detail konten lengkap untuk satu simulasi ujian JLPT/JFT dari Sanity CMS.
+ * Mengimplementasikan GROQ Asset Coalesce Expansion untuk mengambil file audio/gambar asli Sanity,
+ * serta Resolusi Dinamis UUID Kategori dari Supabase PostgreSQL untuk mencegah 404 client routing.
+ * 
+ * @param {string} idOrSlug - ID dokumen Sanity atau slug unik simulasi ujian
+ * @returns {Promise<Object | null>} Detail simulasi ujian terformat lengkap, atau null jika tidak ditemukan
  */
 export async function getExamByIdOrSlug(idOrSlug: string) {
   try {
@@ -181,7 +199,7 @@ export async function getExamByIdOrSlug(idOrSlug: string) {
       categorySlug,
       levelCode: exam.levelCode || "general",
       choukaiAudioUrl: exam.choukaiAudioUrl || null,
-      questions: (exam.questions || []).map((q: any) => ({
+      questions: (exam.questions || []).map((q: { _key: string; section: string; questionText: string; imageUrl?: string; audioUrl?: string; options?: string[]; correctAnswer?: number | string }) => ({
         _key: q._key,
         section: q.section,
         questionText: q.questionText,

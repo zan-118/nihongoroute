@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { CardData, SurvivalGameState } from "./types";
 import { shuffleArray } from "@/lib/utils";
+import { useUserStore } from "@/store/useUserStore";
 
 export function useSurvivalMode(cards: CardData[]) {
   const MAX_HP = 3;
@@ -19,9 +20,13 @@ export function useSurvivalMode(cards: CardData[]) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isCorrecting, setIsCorrecting] = useState(false);
 
+  const addXP = useUserStore((s) => s.addXP);
+
   const loadNextQuestion = useCallback((currentDeck: CardData[], index: number) => {
     if (index >= currentDeck.length) {
       setGameState("victory");
+      // Award XP: score * 2 + 10 Victory bonus
+      addXP(score * 2 + 10);
       return;
     }
 
@@ -43,7 +48,7 @@ export function useSurvivalMode(cards: CardData[]) {
 
     const selectedWrongOptions = shuffleArray(wrongOptions).slice(0, 3);
     setOptions(shuffleArray([targetCard, ...selectedWrongOptions]));
-  }, []);
+  }, [addXP, score]);
 
   const handleWrongAnswer = useCallback(() => {
     setIsShaking(true);
@@ -53,13 +58,17 @@ export function useSurvivalMode(cards: CardData[]) {
       const newHp = prevHp - 1;
       if (newHp <= 0) {
         setGameState("gameover");
+        // Award XP: score * 2
+        if (score > 0) {
+          addXP(score * 2);
+        }
       } else {
         const currentIndex = deck.findIndex((c) => c.id === currentCard?.id);
         loadNextQuestion(deck, currentIndex + 1);
       }
       return newHp;
     });
-  }, [deck, currentCard, loadNextQuestion]);
+  }, [deck, currentCard, loadNextQuestion, score, addXP]);
 
   const handleAnswer = useCallback((selectedOption: CardData) => {
     if (gameState !== "playing" || isCorrecting) return;
@@ -98,7 +107,7 @@ export function useSurvivalMode(cards: CardData[]) {
   }, [cards, loadNextQuestion]);
 
   useEffect(() => {
-    if (gameState !== "playing") return;
+    if (gameState !== "playing" || !currentCard) return;
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
@@ -111,7 +120,7 @@ export function useSurvivalMode(cards: CardData[]) {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [gameState, handleWrongAnswer]);
+  }, [gameState, currentCard, handleWrongAnswer]);
 
   return {
     gameState,

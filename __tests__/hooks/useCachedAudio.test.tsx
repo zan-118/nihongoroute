@@ -9,7 +9,7 @@ if (typeof window !== "undefined") {
       match: vi.fn().mockResolvedValue(null),
       put: vi.fn().mockResolvedValue(undefined),
     }),
-  } as any;
+  } as unknown as CacheStorage;
 }
 
 describe("useCachedAudio Hook", () => {
@@ -17,11 +17,11 @@ describe("useCachedAudio Hook", () => {
     // Mock global fetch
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
-      clone: vi.fn().mockImplementation(function (this: any) {
+      clone: vi.fn().mockImplementation(function (this: Response) {
         return this;
       }),
       blob: vi.fn().mockResolvedValue(new Blob(["mock-audio-data"], { type: "audio/mpeg" })),
-    } as any);
+    } as unknown as Response);
 
     // Mock URL.createObjectURL dan URL.revokeObjectURL
     global.URL.createObjectURL = vi.fn().mockReturnValue("blob:mock-audio-url");

@@ -1,24 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 import { motion, Variants } from "framer-motion";
 import { Settings as SettingsIcon, Layers, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
 import Link from "next/link";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import { useHasMounted } from "@/hooks/useHasMounted";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useUserStore } from "@/store/useUserStore";
-import { useSRSStore } from "@/store/useSRSStore";
-import { useUIStore } from "@/store/useUIStore";
-import { useAuthStore } from "@/store/useAuthStore";
 
-// Sub-components
+// Hook & Sub-components
+import { useSettingsActions } from "@/components/features/user/useSettingsActions";
 import ProfileSection from "./_components/ProfileSection";
 import DataManagementSection from "./_components/DataManagementSection";
 import SyncStatusSection from "./_components/SyncStatusSection";
@@ -37,138 +30,23 @@ const itemVariants: Variants = {
 };
 
 export default function SettingsPage() {
-  const updateProfileName = useUserStore((state) => state.updateProfileName);
-  const resetUser = useUserStore((state) => state.resetUser);
-  const id = useUserStore((state) => state.id);
-  const isGuest = useUserStore((state) => state.isGuest);
-  const name = useUserStore((state) => state.name);
-  const xp = useUserStore((state) => state.xp);
-  const level = useUserStore((state) => state.level);
-  const streak = useUserStore((state) => state.streak);
-  const todayReviewCount = useUserStore((state) => state.todayReviewCount);
-  const lastStudyDate = useUserStore((state) => state.lastStudyDate);
-  const studyDays = useUserStore((state) => state.studyDays);
-  const inventory = useUserStore((state) => state.inventory);
-  const completedLessons = useUserStore((state) => state.completedLessons);
-  
-  const dirtySrs = useSRSStore((state) => state.dirtySrs);
-  const clearDirtySrs = useSRSStore((state) => state.clearDirtySrs);
-  const resetSRS = useSRSStore((state) => state.resetSRS);
-  const srs = useSRSStore((state) => state.srs);
-  
-  const exportData = useUIStore((state) => state.exportData);
-  const importData = useUIStore((state) => state.importData);
-  const resetUI = useUIStore((state) => state.resetUI);
-  const notifications = useUIStore((state) => state.notifications);
-  const settings = useUIStore((state) => state.settings);
-  
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const resetAuth = useAuthStore((state) => state.resetAuth);
-  
-   const hasMounted = useHasMounted();
-  const [isSyncing, setIsSyncing] = useState(false);
-  const router = useRouter();
-  const supabase = createClient();
-
-  const progress = { id, isGuest, name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, completedLessons, srs, notifications, settings };
-
-  const [confirmModal, setConfirmModal] = useState({
-    isOpen: false,
-    title: "",
-    description: "",
-    confirmText: "",
-    isDestructive: false,
-    onConfirm: () => {},
-  });
-
-  const openConfirm = (title: string, description: string, confirmText: string, isDestructive: boolean, onConfirm: () => void) => {
-    setConfirmModal({ isOpen: true, title, description, confirmText, isDestructive, onConfirm });
-  };
-  const closeConfirm = () => setConfirmModal(prev => ({ ...prev, isOpen: false }));
-
-  const resetAll = () => {
-    resetAuth();
-    resetUser();
-    resetSRS();
-    resetUI();
-  };
-
-  const handleExportData = () => exportData();
-
-  const handleImportData = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = ".json";
-    input.onchange = (e: Event) => {
-      const target = e.target as HTMLInputElement;
-      const file = target.files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = async (event: ProgressEvent<FileReader>) => {
-        const result = event.target?.result as string;
-        if (await importData(result)) window.location.reload();
-        else alert("Format file data tidak valid atau rusak!");
-      };
-      reader.readAsText(file);
-    };
-    input.click();
-  };
-
-  const handleResetData = () => {
-    openConfirm(
-      "Hapus Seluruh Riwayat Belajar?",
-      "Peringatan: Seluruh progres belajar Anda akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.",
-      "Ya, Hapus Permanen",
-      true,
-      () => {
-        resetAll();
-        toast.success("Semua data progres telah direset.");
-      }
-    );
-  };
-
-  const handleLogout = () => {
-    openConfirm(
-      "Akhiri Sesi Belajar?",
-      "Sesi belajar Anda akan diakhiri. Pastikan data sudah tersinkronisasi ke Cloud untuk keamanan progres Anda.",
-      "Keluar Sekarang",
-      true,
-      async () => {
-        await supabase.auth.signOut();
-        resetAll();
-        router.push("/login");
-      }
-    );
-  };
-
-  const handleManualSync = async () => {
-    if (!isAuthenticated) {
-      toast.error("Silakan login untuk sinkronisasi cloud!");
-      return;
-    }
-    
-    setIsSyncing(true);
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        const { syncLocalToCloud } = await import("@/lib/supabase/sync");
-        const success = await syncLocalToCloud(session.user.id, progress);
-        if (success) {
-          clearDirtySrs();
-          toast.success("Data berhasil disinkronkan ke Cloud!");
-        } else {
-          toast.error("Sinkronisasi gagal. Coba lagi nanti.");
-        }
-      } else {
-        toast.error("Sesi tidak ditemukan. Silakan login ulang.");
-      }
-    } catch (err) {
-      console.error("Sync error:", err);
-      toast.error("Terjadi kesalahan saat sinkronisasi.");
-    } finally {
-      setIsSyncing(false);
-    }
-  };
+  const hasMounted = useHasMounted();
+  const {
+    name,
+    xp,
+    streak,
+    isAuthenticated,
+    updateProfileName,
+    dirtySrsCount,
+    isSyncing,
+    confirmModal,
+    closeConfirm,
+    handleExportData,
+    handleImportData,
+    handleResetData,
+    handleLogout,
+    handleManualSync,
+  } = useSettingsActions();
 
   if (!hasMounted) {
     return (
@@ -234,7 +112,7 @@ export default function SettingsPage() {
           />
 
           <SyncStatusSection 
-            dirtySrsCount={dirtySrs.size}
+            dirtySrsCount={dirtySrsCount}
             isSyncing={isSyncing}
             handleManualSync={handleManualSync}
             itemVariants={itemVariants}

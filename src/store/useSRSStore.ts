@@ -9,6 +9,12 @@ import { useUserStore } from "./useUserStore";
 import { useUIStore } from "./useUIStore";
 import { UserProgress } from "./types";
 
+/**
+ * Interface: SRSStateStore
+ * 
+ * Mendefinisikan struktur state dan aksi untuk Zustand store pengulangan cerdas (SRS).
+ * Mengelola kartu SRS lokal dan penandaan kartu yang belum tersinkronisasi ke cloud (dirty).
+ */
 interface SRSStateStore {
   srs: Record<string, SRSState>;
   dirtySrs: Set<string>;
@@ -27,7 +33,14 @@ interface SRSStateStore {
 
 // Custom storage handlers for IndexedDB persistence
 
-
+/**
+ * Zustand Store: useSRSStore
+ * 
+ * Mengelola basis data lokal untuk sistem Spaced Repetition (SRS) belajar bahasa Jepang.
+ * Di-persist otomatis ke IndexedDB peramban via `idb-keyval`.
+ * Menyimpan kartu lokal beserta metadata interval, kemudahan (e-factor), status repetisi,
+ * penandaan kartu kotor/belum tersinkronisasi (dirtySrs), serta aksi untuk modifikasi mnemonik kustom.
+ */
 export const useSRSStore = create<SRSStateStore>()(
   persist(
     (set, get) => ({
@@ -259,3 +272,8 @@ export const useSRSStore = create<SRSStateStore>()(
     }
   )
 );
+
+if (typeof window !== "undefined") {
+  (window as unknown as Record<string, typeof useSRSStore>).useSRSStore = useSRSStore;
+}
+

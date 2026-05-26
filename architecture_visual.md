@@ -182,6 +182,6 @@ graph TD
 > 1. **Sanitasi HTML (XSS Shield)** di `src/lib/sanitize.ts` yang secara otomatis membersihkan konten HTML dinamis sebelum dirender di sisi Client maupun Server.
 > 2. **SQL Wildcard Escaping** pada Server Actions untuk menolak injeksi manipulasi kueri basis data.
 > 3. **Suspense Guarding** pada penanganan `useSearchParams` untuk menjamin Next.js 16 berhasil melakukan pre-render halaman statis secara optimal.
-> 4. **Keamanan Hydration (React 19 / Next.js 16)** dengan mewajibkan direktif `"use client"` di sub-komponen interaktif yang menggunakan event listener agar hidrasi state berjalan lancar.
-> 5. **Kepatuhan Aksesibilitas (A11y)** dengan mewajibkan penulisan atribut `aria-label` deskriptif terlokalisasi di seluruh tombol ikon navigasi perpustakaan.
-> 6. **Sanity Asset Resolution & Dynamic Category Routing** dengan menggunakan ekspansi `coalesce` di query GROQ untuk media audio/gambar asli Sanity, serta resolusi dynamic category UUID dari Supabase di Server Actions untuk mencegah 404 pada client routing.
+> 4. **Keamanan Hydration (React 19 / Next.js 16) & requestAnimationFrame**: Kewajiban penggunaan direktif `"use client"` di sub-komponen interaktif yang menggunakan event listener agar hidrasi berjalan lancar, dikombinasikan dengan pembungkusan inisialisasi state klien dalam `requestAnimationFrame` untuk mencegah error hydration. Seluruh logika halaman didelegasikan ke custom hook domain spesifik di bawah folder fitur untuk mencegah pola "god files" di berkas `page.tsx`.
+> 5. **Kepatuhan Aksesibilitas (A11y)**: Kewajiban penulisan atribut `aria-label` deskriptif terlokalisasi di seluruh tombol ikon navigasi perpustakaan.
+> 6. **Sanity Asset Resolution & Dynamic Category Routing**: Penggunaan ekspansi `coalesce` di query GROQ untuk media audio/gambar asli Sanity, serta resolusi dynamic category UUID dari Supabase di Server Actions untuk mencegah 404 pada client routing.

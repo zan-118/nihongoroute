@@ -1,27 +1,41 @@
 import { useState, useEffect } from "react";
 
+/** Interface minimal untuk melacak Zustand store yang menggunakan middleware persist */
+interface ZustandPersistStore {
+  persist?: {
+    hasHydrated: () => boolean;
+    onFinishHydration: (fn: () => void) => () => void;
+  };
+}
+
 /**
- * Custom hook to monitor the asynchronous IndexedDB hydration of a Zustand persist store.
- * Prevents race conditions by ensuring local state is fully loaded before cloud sync begins.
+ * Custom Hook: useStoreHydration
+ * 
+ * Memantau proses hidrasi asinkron dari IndexedDB ke Zustand store via middleware persist.
+ * Mencegah kondisi balapan (race condition) dengan menjamin data lokal telah dimuat sepenuhnya
+ * di sisi klien sebelum inisialisasi sinkronisasi cloud atau interaksi visual dimulai.
+ * 
+ * @param {ZustandPersistStore} store - Zustand store yang ingin dipantau status hidrasinya
+ * @returns {boolean} hydrated - Status hidrasi store (true jika selesai hidrasi, false jika belum)
  */
-export function useStoreHydration(store: any) {
+export function useStoreHydration(store: ZustandPersistStore) {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     if (!store?.persist) {
-      setHydrated(true);
+      requestAnimationFrame(() => setHydrated(true));
       return;
     }
 
-    // If store already hydrated, set true immediately
+    // Jika store sudah terhidrasi, set true secara instan
     if (store.persist.hasHydrated()) {
-      setHydrated(true);
+      requestAnimationFrame(() => setHydrated(true));
       return;
     }
 
-    // Otherwise, subscribe to the finish hydration event
+    // Jika belum terhidrasi, daftarkan callback untuk mendengarkan selesainya hidrasi
     const unsub = store.persist.onFinishHydration(() => {
-      setHydrated(true);
+      requestAnimationFrame(() => setHydrated(true));
     });
 
     return unsub;

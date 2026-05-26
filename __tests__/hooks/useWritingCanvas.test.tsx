@@ -10,7 +10,7 @@ if (typeof window !== "undefined") {
       match: vi.fn().mockResolvedValue(null),
       put: vi.fn().mockResolvedValue(undefined),
     }),
-  } as any;
+   } as unknown as CacheStorage;
 
   // Mock navigator.vibrate
   navigator.vibrate = vi.fn().mockReturnValue(true);
@@ -31,7 +31,7 @@ describe("useWritingCanvas Hook", () => {
           <path d="M10,20 C30,40 50,60 70,80" />
         </svg>
       `),
-    } as any);
+    } as unknown as Response);
   });
 
   afterEach(() => {

@@ -1,101 +1,25 @@
 "use client";
 
-import React, { useState, Suspense } from "react";
-import { createClient } from "@/lib/supabase/client";
+import React, { Suspense } from "react";
 import { User, LogIn, ChevronRight, Sparkles, Mail, Lock, ArrowLeft } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { toast } from "sonner";
+import { useAuth } from "@/components/features/user/useAuth";
 
 function LoginContent() {
-  const [loading, setLoading] = useState(false);
-  const searchParams = useSearchParams();
-  const [isRegistering, setIsRegistering] = useState(() => searchParams.get("mode") === "signup");
-  const [email, setEmail] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [password, setPassword] = useState("");
-  
-  const router = useRouter();
-  const supabase = createClient();
-
-  const handleEmailAuth = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      if (isRegistering) {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              full_name: fullName,
-            },
-          },
-        });
-        if (error) throw error;
-        toast.success("Selamat Bergabung!", {
-          description: "Akunmu sudah siap. Silakan masuk untuk mulai petualangan belajarmu!",
-        });
-        setIsRegistering(false);
-      } else {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (error) throw error;
-        
-        toast.success(`Selamat Datang Kembali, ${data.user?.user_metadata?.full_name ? data.user.user_metadata.full_name.split(' ')[0] : 'Siswa'}!`, {
-          description: "Senang melihatmu kembali. Mari lanjut belajarnya!",
-        });
-
-        router.push("/");
-      }
-    } catch (error: unknown) {
-      const err = error as Error;
-      console.error("Gagal autentikasi email:", err);
-      toast.error("Ada sedikit kendala...", {
-        description: err.message || "Email atau kata sandi mungkin salah. Coba cek lagi ya!",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSocialLogin = async (provider: "google") => {
-    setLoading(true);
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
-      if (error) throw error;
-    } catch (error) {
-      console.error(`Gagal login dengan ${provider}:`, error);
-      toast.error(`Gagal login dengan ${provider}`, {
-        description: "Ada masalah saat menghubungkan ke akun sosmedmu. Coba lagi nanti ya!"
-      });
-      setLoading(false);
-    }
-  };
-
-  const handleAnonymousLogin = async () => {
-    setLoading(true);
-    try {
-      const { error } = await supabase.auth.signInAnonymously();
-      if (error) throw error;
-      
-      toast.success("Mode Tamu Aktif", {
-        description: "Kamu bisa belajar sekarang, tapi progresmu hanya tersimpan di perangkat ini.",
-      });
-      router.push("/");
-    } catch (error) {
-      console.error("Gagal login secara anonim:", error);
-      setLoading(false);
-    }
-  };
+  const {
+    loading,
+    isRegistering,
+    setIsRegistering,
+    email,
+    setEmail,
+    fullName,
+    setFullName,
+    password,
+    setPassword,
+    handleEmailAuth,
+    handleSocialLogin,
+    handleAnonymousLogin,
+  } = useAuth();
 
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-300">

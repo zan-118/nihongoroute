@@ -1,7 +1,8 @@
 "use client";
 
+import React, { useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, Trophy } from "lucide-react";
+import { Heart, Trophy, Volume2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -19,7 +20,7 @@ interface KanaQuizDialogProps {
   score: number;
   char: { char: string; romaji: string } | null;
   options: string[];
-  input: string; // Add this
+  input: string;
   feedback: "correct" | "incorrect" | null;
   gameOver: boolean;
   onOptionClick: (option: string) => void;
@@ -28,6 +29,9 @@ interface KanaQuizDialogProps {
   themeColor: string;
   themeBorder: string;
   themeAccent: string;
+  questionMode?: "classic" | "audio";
+  questionCount?: number;
+  isVictory?: boolean;
 }
 
 export function KanaQuizDialog({
@@ -37,7 +41,7 @@ export function KanaQuizDialog({
   score,
   char,
   options,
-  input, // Add this
+  input,
   feedback,
   gameOver,
   onOptionClick,
@@ -46,8 +50,37 @@ export function KanaQuizDialog({
   themeColor,
   themeBorder,
   themeAccent,
+  questionMode = "classic",
+  questionCount = 0,
+  isVictory = false,
 }: KanaQuizDialogProps) {
   const isHira = type === "hiragana";
+
+  const speakActiveKana = useCallback(() => {
+    if (typeof window === "undefined" || !window.speechSynthesis || !char?.char) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(char.char);
+    utterance.lang = "ja-JP";
+    utterance.rate = 0.85;
+
+    const voices = window.speechSynthesis.getVoices();
+    const jaVoice = voices.find((v) => v.lang.startsWith("ja"));
+    if (jaVoice) {
+      utterance.voice = jaVoice;
+    }
+
+    window.speechSynthesis.speak(utterance);
+  }, [char]);
+
+  // Autoplay voice in audio mode
+  useEffect(() => {
+    if (isActive && questionMode === "audio" && char?.char) {
+      const timer = setTimeout(() => {
+        speakActiveKana();
+      }, 120);
+      return () => clearTimeout(timer);
+    }
+  }, [isActive, char, questionMode, speakActiveKana]);
 
   return (
     <Dialog
@@ -76,9 +109,14 @@ export function KanaQuizDialog({
                       <Trophy size={16} className="fill-current" />
                       {score}
                     </div>
+                    {!gameOver && (
+                      <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted border border-border text-muted-foreground font-mono text-xs font-bold`}>
+                        {questionCount}/20
+                      </div>
+                    )}
                   </div>
-                  <div className={`px-3 py-1.5 rounded-lg bg-muted border border-border text-xs font-bold uppercase tracking-widest ${themeColor}`}>
-                    {isHira ? "Hiragana" : "Katakana"} Quiz
+                  <div className={`px-3 py-1.5 rounded-lg bg-muted border border-border text-[9px] font-bold uppercase tracking-widest ${themeColor}`}>
+                    {questionMode === "audio" ? "Mendengar" : isHira ? "Hiragana" : "Katakana"}
                   </div>
                 </header>
 
@@ -86,21 +124,38 @@ export function KanaQuizDialog({
                   <div className="flex flex-col items-center">
                     <div className={`w-full aspect-video bg-background rounded-2xl border ${feedback === 'correct' ? 'border-success shadow-lg' : feedback === 'incorrect' ? 'border-destructive shadow-lg' : 'border-border shadow-inner'} flex items-center justify-center mb-8 transition-all duration-300`}>
                       <AnimatePresence mode="wait">
-                        <motion.span
-                          key={char?.char}
-                          initial={{ opacity: 0, scale: 0.5 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.5 }}
-                          className="text-5xl sm:text-7xl font-black text-foreground font-japanese"
-                        >
-                          {char?.char}
-                        </motion.span>
+                        {questionMode === "audio" ? (
+                          <motion.button
+                            key="audio-speaker"
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.8 }}
+                            onClick={speakActiveKana}
+                            type="button"
+                            aria-label="Putar Suara Aksara"
+                            className="w-20 h-20 rounded-full flex items-center justify-center bg-warning/10 border border-warning/45 hover:bg-warning/20 shadow-[0_0_25px_rgba(var(--warning-rgb),0.25)] hover:shadow-[0_0_35px_rgba(var(--warning-rgb),0.4)] transition-all duration-300 text-warning"
+                          >
+                            <Volume2 size={36} className="animate-pulse" />
+                          </motion.button>
+                        ) : (
+                          <motion.span
+                            key={char?.char}
+                            initial={{ opacity: 0, scale: 0.5 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.5 }}
+                            className="text-5xl sm:text-7xl font-black text-foreground font-japanese"
+                          >
+                            {char?.char}
+                          </motion.span>
+                        )}
                       </AnimatePresence>
                     </div>
 
                     <div className="grid grid-cols-2 gap-3 w-full">
                       {options.map((option, i) => {
-                        const isCorrect = option === char?.romaji;
+                        const isCorrect = questionMode === "classic" 
+                          ? option === char?.romaji 
+                          : option === char?.char;
                         const isClicked = option === input;
                         let btnClass = "bg-muted border-border text-muted-foreground hover:bg-background hover:text-foreground";
                         
@@ -123,7 +178,7 @@ export function KanaQuizDialog({
                             onClick={() => onOptionClick(option)}
                             disabled={!!feedback}
                             variant="outline"
-                            className={`h-14 rounded-xl text-lg font-black uppercase tracking-widest transition-all duration-300 ${btnClass}`}
+                            className={`h-14 rounded-xl text-lg font-black uppercase tracking-wider transition-all duration-300 ${btnClass}`}
                           >
                             {option}
                           </Button>
@@ -131,15 +186,39 @@ export function KanaQuizDialog({
                       })}
                     </div>
                   </div>
+                ) : isVictory ? (
+                  <Card className="bg-success/5 p-8 md:p-10 rounded-2xl border border-success/30 text-center w-full relative overflow-hidden shadow-[0_0_30px_rgba(var(--success-rgb),0.15)] glass">
+                    <div className="w-16 h-16 bg-warning/10 rounded-xl flex items-center justify-center mx-auto mb-6 border border-warning/25 shadow-[0_0_20px_rgba(var(--warning-rgb),0.3)] text-warning">
+                      <Trophy size={32} className="fill-current" />
+                    </div>
+                    <h2 className="text-2xl font-black text-foreground uppercase tracking-tight mb-2">Kemenangan!</h2>
+                    <p className="text-success text-xs font-bold uppercase tracking-widest mb-4">Lulus Latihan Kana</p>
+                    <p className="text-muted-foreground text-xs mb-6 leading-relaxed">
+                      Luar biasa! Kamu menyelesaikan 20 soal latihan dengan sisa nyawa dan akurasi tinggi.
+                    </p>
+                    <p className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest mb-2">Skor akhir kamu:</p>
+                    <div className="text-5xl md:text-6xl font-black text-warning mb-6 drop-shadow-md">
+                      {score} <span className="text-xs text-muted-foreground font-mono">/ 20</span>
+                    </div>
+                    <div className="bg-success/10 border border-success/20 rounded-xl p-3 mb-8 flex items-center justify-center gap-2 text-success font-black text-xs uppercase tracking-wider">
+                      <span>+20 XP Bonus Kemenangan</span>
+                    </div>
+                    <Button
+                      onClick={() => startQuiz()}
+                      className={`w-full h-auto py-4 rounded-xl font-black uppercase tracking-widest ${themeAccent} text-foreground text-xs transition-all shadow-lg border-none hover:opacity-90`}
+                    >
+                      Latihan Lagi
+                    </Button>
+                  </Card>
                 ) : (
                   <Card className="bg-muted/20 p-8 md:p-10 rounded-2xl border border-border text-center w-full relative overflow-hidden shadow-2xl">
-                    <div className="w-16 h-16 bg-destructive/10 rounded-xl flex items-center justify-center mx-auto mb-6 border border-destructive/20">
-                      <Heart size={32} className="text-destructive" />
+                    <div className="w-16 h-16 bg-destructive/10 rounded-xl flex items-center justify-center mx-auto mb-6 border border-destructive/20 text-destructive">
+                      <Heart size={32} className="fill-current animate-pulse" />
                     </div>
                     <h2 className="text-2xl font-black text-foreground uppercase tracking-tight mb-2">Game Over!</h2>
                     <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mb-6">Skor akhir kamu:</p>
-                    <div className="text-5xl md:text-6xl font-black text-warning mb-8 drop-shadow-md">
-                      {score}
+                    <div className="text-5xl md:text-6xl font-black text-destructive mb-8 drop-shadow-md">
+                      {score} <span className="text-xs text-muted-foreground font-mono">/ 20</span>
                     </div>
                     <Button
                       onClick={() => startQuiz()}

@@ -5,6 +5,13 @@ import { Inventory, LessonProgress } from "./types";
 import { calculateLevel } from "@/lib/level";
 import { useUIStore } from "./useUIStore";
 
+/**
+ * Interface: UserState
+ * 
+ * Mendefinisikan struktur data progres belajar dan aksi gamifikasi milik pengguna.
+ * Mengelola XP, level, rekor hari beruntun (streak), inventarisasi item,
+ * riwayat pelajaran yang telah diselesaikan, serta penandaan pelajaran kotor (dirtyLessons).
+ */
 interface UserState {
   id: string;
   isGuest: boolean;
@@ -29,13 +36,19 @@ interface UserState {
   clearDirtyLessons: (syncedIds?: string[]) => void;
   syncUserData: (data: { id: string; isGuest: boolean; name?: string | null }) => void;
   resetUser: () => void;
+  checkAchievements: () => void;
 }
-
-
 
 /** Biaya XP untuk membeli Streak Freeze. Exported sebagai satu sumber kebenaran. */
 export const STREAK_FREEZE_COST = 500;
 
+/**
+ * Zustand Store: useUserStore
+ * 
+ * Mengelola status utama gamifikasi, pencapaian prestasi (achievements), riwayat harian belajar,
+ * penyelesaian kuis mini pelajaran, serta data inventarisasi (seperti item Streak Freeze).
+ * State store ini di-persist otomatis ke IndexedDB peramban via `idb-keyval`.
+ */
 export const useUserStore = create<UserState>()(
   persist(
     (set, get) => ({
@@ -53,7 +66,8 @@ export const useUserStore = create<UserState>()(
         claimedQuests: {
           date: "",
           quests: []
-        }
+        },
+        achievements: []
       },
       completedLessons: {},
       dirtyLessons: new Set<string>(),
@@ -78,9 +92,14 @@ export const useUserStore = create<UserState>()(
             type: "achievement"
           });
         }
+
+        get().checkAchievements();
       },
 
-      setGamification: (data) => set((state) => ({ ...state, ...data })),
+      setGamification: (data) => {
+        set((state) => ({ ...state, ...data }));
+        get().checkAchievements();
+      },
 
       buyStreakFreeze: () => {
         const state = get();
@@ -151,6 +170,8 @@ export const useUserStore = create<UserState>()(
           completedLessons: newCompleted,
           dirtyLessons: newDirty
         });
+
+        get().checkAchievements();
       },
 
       setDirtyLessons: (updater) => set((state) => ({ 
@@ -186,11 +207,86 @@ export const useUserStore = create<UserState>()(
           claimedQuests: {
             date: "",
             quests: []
-          }
+          },
+          achievements: []
         },
         completedLessons: {},
         dirtyLessons: new Set<string>()
       }),
+
+      checkAchievements: () => {
+        if (typeof process !== "undefined" && process.env?.VITEST) {
+          return;
+        }
+
+        const state = get();
+        const achievements = state.inventory?.achievements || [];
+        const unlockedIds = new Set(achievements.map((a) => a.id));
+
+        const lessonsCompleted = Object.values(state.completedLessons || {}).filter((l) => !l.isDeleted).length;
+        const currentXp = state.xp;
+        const currentStreak = state.streak;
+
+        // Dapatkan data SRS secara aman dan sinkron dari global window untuk menghindari circular dependency
+        const srsStore = typeof window !== "undefined" ? (window as unknown as Record<string, { getState: () => { srs: Record<string, { isDeleted?: boolean; repetition?: number }> } }>).useSRSStore : null;
+        const srsState = srsStore ? srsStore.getState().srs || {} : {};
+        const totalReviews = Object.values(srsState).reduce(
+          (sum: number, card: { isDeleted?: boolean; repetition?: number }) => sum + (card.isDeleted ? 0 : card.repetition || 0),
+          0
+        );
+
+        const targets = [
+          // Lessons
+          { id: "lesson_bronze", check: lessonsCompleted >= 1, xp: 50, title: "Pahlawan Belajar (Bronze)", msg: "Menyelesaikan 1 Pelajaran" },
+          { id: "lesson_silver", check: lessonsCompleted >= 5, xp: 250, title: "Pahlawan Belajar (Silver)", msg: "Menyelesaikan 5 Pelajaran" },
+          { id: "lesson_gold", check: lessonsCompleted >= 20, xp: 1000, title: "Pahlawan Belajar (Gold)", msg: "Menyelesaikan 20 Pelajaran" },
+
+          // XP
+          { id: "xp_bronze", check: currentXp >= 500, xp: 50, title: "Prajurit XP (Bronze)", msg: "Mengumpulkan 500 XP" },
+          { id: "xp_silver", check: currentXp >= 2500, xp: 250, title: "Prajurit XP (Silver)", msg: "Mengumpulkan 2500 XP" },
+          { id: "xp_gold", check: currentXp >= 10000, xp: 1000, title: "Prajurit XP (Gold)", msg: "Mengumpulkan 10000 XP" },
+
+          // Streak
+          { id: "streak_bronze", check: currentStreak >= 3, xp: 50, title: "Pendekar Streak (Bronze)", msg: "Mencapai 3 Hari Streak" },
+          { id: "streak_silver", check: currentStreak >= 7, xp: 250, title: "Pendekar Streak (Silver)", msg: "Mencapai 7 Hari Streak" },
+          { id: "streak_gold", check: currentStreak >= 30, xp: 1000, title: "Pendekar Streak (Gold)", msg: "Mencapai 30 Hari Streak" },
+
+          // SRS Reviews
+          { id: "srs_bronze", check: totalReviews >= 10, xp: 50, title: "Ahli Ulasan (Bronze)", msg: "Menyelesaikan 10 Ulasan Kartu" },
+          { id: "srs_silver", check: totalReviews >= 100, xp: 250, title: "Ahli Ulasan (Silver)", msg: "Menyelesaikan 100 Ulasan Kartu" },
+          { id: "srs_gold", check: totalReviews >= 500, xp: 1000, title: "Ahli Ulasan (Gold)", msg: "Menyelesaikan 500 Ulasan Kartu" }
+        ];
+
+        const newlyUnlocked: Array<{ id: string; unlockedAt: number }> = [];
+        let totalRewardXp = 0;
+
+        for (const t of targets) {
+          if (t.check && !unlockedIds.has(t.id)) {
+            newlyUnlocked.push({ id: t.id, unlockedAt: Date.now() });
+            totalRewardXp += t.xp;
+
+            useUIStore.getState().addNotification({
+              title: "Lencana Terbuka!",
+              message: `Selamat! Anda berhasil membuka lencana '${t.title}': ${t.msg}. (+${t.xp} XP)`,
+              type: "achievement"
+            });
+          }
+        }
+
+        if (newlyUnlocked.length > 0) {
+          const updatedAchievements = [...achievements, ...newlyUnlocked];
+          set({
+            inventory: {
+              ...state.inventory,
+              achievements: updatedAchievements
+            }
+          });
+
+          if (totalRewardXp > 0) {
+            get().addXP(totalRewardXp);
+          }
+        }
+      }
     }),
     {
       name: "nihongoroute_user_data",

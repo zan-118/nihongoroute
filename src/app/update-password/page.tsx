@@ -1,80 +1,20 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { createClient } from "@/lib/supabase/client";
+import React from "react";
 import { Lock, KeyRound, CheckCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { toast } from "sonner";
+import { usePasswordUpdate } from "@/components/features/user/usePasswordUpdate";
 
 export default function UpdatePasswordPage() {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  
-  const router = useRouter();
-  const supabase = createClient();
-
-  useEffect(() => {
-    // Memeriksa apakah user benar-benar masuk dengan status pemulihan
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        toast.error("Sesi Berakhir", {
-          description: "Tautan ini sudah tidak berlaku. Silakan minta tautan pemulihan yang baru ya.",
-        });
-      }
-    };
-    checkSession();
-  }, [supabase.auth]);
-
-  const handleUpdatePassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (password !== confirmPassword) {
-      toast.error("Wah, passwordnya beda...", {
-        description: "Pastikan kedua kolom kata sandi terisi dengan karakter yang sama persis.",
-      });
-      return;
-    }
-    
-    if (password.length < 6) {
-      toast.error("Password terlalu singkat", {
-        description: "Gunakan minimal 6 karakter agar akunmu tetap aman.",
-      });
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const { error } = await supabase.auth.updateUser({
-        password: password
-      });
-      
-      if (error) throw error;
-      
-      setIsSuccess(true);
-      toast.success("Berhasil Diperbarui!", {
-        description: "Kata sandi barumu sudah aktif. Yuk, lanjut belajar lagi!",
-      });
-      
-      // Redirect setelah 3 detik
-      setTimeout(() => {
-        router.push("/");
-      }, 3000);
-      
-    } catch (error: unknown) {
-      console.error("Gagal memperbarui kata sandi:", error);
-      const message = error instanceof Error ? error.message : "Terjadi kesalahan tidak dikenal";
-      toast.error("Gagal Memperbarui", {
-        description: message || "Terjadi kesalahan saat memperbarui kata sandi.",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    password,
+    setPassword,
+    confirmPassword,
+    setConfirmPassword,
+    loading,
+    isSuccess,
+    handleUpdatePassword,
+  } = usePasswordUpdate();
 
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-300">

@@ -5,6 +5,7 @@ import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import MobileNav from "./MobileNav";
 import FloatingActions from "@/components/features/global/FloatingActions";
+import AchievementToast from "./AchievementToast";
 
 interface NavWrapperProps {
   children: ReactNode;
@@ -92,6 +93,8 @@ export default function NavWrapper({ children }: NavWrapperProps) {
 
       {/* Navigasi Khusus Seluler */}
       {!isExamPage && <MobileNav />}
+
+      <AchievementToast />
     </div>
   );
 }

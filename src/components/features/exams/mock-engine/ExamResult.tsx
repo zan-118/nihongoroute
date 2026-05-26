@@ -47,9 +47,15 @@ export function ExamResult({
 
   const regNo = useMemo(() => {
     const prefix = exam.title.toLowerCase().includes("jft") ? "JFT" : "JLPT";
-    const rand = Math.floor(1000 + Math.random() * 9000);
+    // Pure deterministic hash of userFullName + exam.title to ensure pure rendering
+    const str = `${userFullName}-${exam.title}`;
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const rand = 1000 + Math.abs(hash % 9000);
     return `26-1A-${prefix}-${rand}`;
-  }, [exam.title]);
+  }, [exam.title, userFullName]);
 
   const testDateStr = useMemo(() => {
     return new Date().toLocaleDateString("ja-JP", {

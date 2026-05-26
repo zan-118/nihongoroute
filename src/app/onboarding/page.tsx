@@ -1,13 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { BookOpen, Briefcase, Plane, Tv, ChevronRight, CheckCircle2, Loader2, Sparkles, ArrowLeft } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
-import { useUIStore } from "@/store/useUIStore";
+import { useOnboardingWizard } from "@/components/features/onboarding/useOnboardingWizard";
 
 const JLPT_LEVELS = [
   { id: "N5", label: "Pemula (N5)" },
@@ -25,44 +22,16 @@ const MOTIVATIONS = [
 ];
 
 export default function OnboardingPage() {
-  const router = useRouter();
-  const [step, setStep] = useState(1);
-  const [targetLevel, setTargetLevel] = useState<string | null>(null);
-  const [motivation, setMotivation] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleComplete = async () => {
-    if (!targetLevel || !motivation) return;
-    
-    setIsSubmitting(true);
-    try {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-
-      if (user) {
-        const { error } = await supabase
-          .from("profiles")
-          .update({ 
-            jlpt_target: targetLevel, 
-            motivation: motivation 
-          })
-          .eq("id", user.id);
-
-        if (error) throw error;
-      }
-      
-      router.push("/dashboard");
-    } catch (error) {
-      console.error("Gagal menyimpan profil:", error);
-      useUIStore.getState().addNotification({
-        title: "Gagal Menyimpan",
-        message: "Terjadi kendala saat menyimpan profil Anda. Silakan coba lagi.",
-        type: "warning"
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const {
+    step,
+    setStep,
+    targetLevel,
+    setTargetLevel,
+    motivation,
+    setMotivation,
+    isSubmitting,
+    handleComplete,
+  } = useOnboardingWizard();
 
   // Variasi Animasi Framer Motion untuk transisi elegan
   const variants = {

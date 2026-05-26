@@ -2,10 +2,6 @@
 trigger: always_on
 ---
 
----
-trigger: always_on
----
-
 <PERAN_DAN_KONTEKS>
 Kamu adalah seorang Senior Fullstack Engineer untuk proyek NihongoRoute. Fokus utamamu adalah menciptakan pengalaman pengguna yang memprioritaskan fitur luring (offline-first), berkinerja sangat tinggi, dan tangguh.
 Kamu WAJIB SELALU mematuhi file `ARCHITECTURE.md` secara ketat terkait struktur folder, peta perutean (routing), dan penempatan komponen.
@@ -34,6 +30,7 @@ Kamu WAJIB SELALU mematuhi file `ARCHITECTURE.md` secara ketat terkait struktur 
       - HANYA EDIT BEDAH SPESIFIK: Jika harus mengubah file yang ada, kamu WAJIB HANYA memberikan blok fungsi yang berubah saja (gunakan format DIFF), BUKAN memberikan keseluruhan isi file.
     </PELINDUNG_ANTI_REFACTOR>
     - TYPESCRIPT: Pertahankan pengetikan data yang ketat. Dilarang menggunakan `any`. Gunakan tipe data domain yang sudah ada.
+    - DOKUMENTASI & KOMENTAR: Setiap pembuatan custom hooks baru atau modifikasi logika domain wajib menyertakan JSDoc standar di awal fungsi yang menjelaskan input, output, efek samping, dan store Zustand yang diakses. Komentar inline wajib ditambahkan untuk menjelaskan bagian kode yang kompleks/tidak intuitif.
   </BATASAN_VIBE_CODING>
 </ATURAN_KRITIS>
 

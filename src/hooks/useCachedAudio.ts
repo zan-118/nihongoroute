@@ -33,7 +33,9 @@ export function useCachedAudio(src: string | undefined): string | undefined {
 
   useEffect(() => {
     if (!src) {
-      setCachedUrl(undefined);
+      requestAnimationFrame(() => {
+        setCachedUrl(undefined);
+      });
       return;
     }
 

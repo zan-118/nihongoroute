@@ -13,9 +13,10 @@ interface SurvivalGameOverProps {
 
 export function SurvivalGameOver({ gameState, score, startGame }: SurvivalGameOverProps) {
   const isVictory = gameState === "victory";
-  const accentColor = isVictory ? "text-warning text-warning" : "text-primary";
-  const bgGlowColor = isVictory ? "bg-warning/10" : "bg-primary/10";
-  const borderColor = isVictory ? "border-warning/40" : "border-primary/40";
+  const earnedXp = isVictory ? (score * 2 + 10) : (score * 2);
+  const accentColor = isVictory ? "text-warning" : "text-destructive";
+  const bgGlowColor = isVictory ? "bg-warning/10" : "bg-destructive/10";
+  const borderColor = isVictory ? "border-warning/40" : "border-destructive/40";
 
   return (
     <motion.div
@@ -33,13 +34,13 @@ export function SurvivalGameOver({ gameState, score, startGame }: SurvivalGameOv
             <Trophy
               size={48}
               aria-hidden="true"
-              className="text-warning text-warning drop-shadow-sm dark:drop-shadow-[0_0_20px_rgba(var(--warning-rgb),0.7)] md:w-16 md:h-16"
+              className="text-warning drop-shadow-sm dark:drop-shadow-[0_0_20px_rgba(var(--warning-rgb),0.7)] md:w-16 md:h-16"
             />
           ) : (
             <ShieldAlert
               size={48}
               aria-hidden="true"
-              className="text-primary drop-shadow-sm dark:drop-shadow-[0_0_20px_rgba(var(--primary-rgb),0.7)] md:w-16 md:h-16"
+              className="text-destructive drop-shadow-sm dark:drop-shadow-[0_0_20px_rgba(var(--destructive-rgb),0.7)] md:w-16 md:h-16"
             />
           )}
         </Card>
@@ -55,6 +56,11 @@ export function SurvivalGameOver({ gameState, score, startGame }: SurvivalGameOv
           <div className="flex flex-col">
              <span className="text-foreground text-7xl md:text-7xl lg:text-7xl font-black drop-shadow-sm leading-none">{score}</span>
              <span className="text-muted-foreground font-bold text-xs md:text-xs uppercase tracking-widest mt-3 md:mt-4">KATA BERHASIL DITEBAK</span>
+             {earnedXp > 0 && (
+               <Badge className="bg-success/15 border border-success/30 text-success shadow-[0_0_15px_rgba(var(--success-rgb),0.2)] text-[10px] sm:text-xs font-black uppercase tracking-widest px-4 py-2 rounded-xl mt-6 w-fit mx-auto animate-bounce shrink-0">
+                 + {earnedXp} Poin XP Didapatkan
+               </Badge>
+             )}
           </div>
         </div>
 

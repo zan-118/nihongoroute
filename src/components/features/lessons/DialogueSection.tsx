@@ -10,7 +10,7 @@ export interface DialogueSpeakerItem {
   speakerName?: string;
   jp?: string;
   text?: string;
-  furigana?: string | any[];
+  furigana?: string | { text: string; rt?: string }[];
   translation?: string;
   id?: string;
 }
@@ -31,6 +31,17 @@ interface DialogueSectionProps {
   listeningList: DialogueItem[];
 }
 
+/**
+ * Komponen: DialogueSection
+ * 
+ * Menyajikan antarmuka transkrip percakapan interaktif (skenario percakapan) dalam modul pelajaran.
+ * Menampilkan nama pembicara, transkrip bahasa Jepang (yang dirender dengan SmartJapanese furigana),
+ * terjemahan bahasa Indonesia, serta menyediakan pemutar audio offline (OfflineAudio)
+ * dan pembaca text-to-speech (TTSReader) per kalimat dialog.
+ * 
+ * @param {Object} props - Properti komponen
+ * @param {DialogueItem[]} props.listeningList - Daftar skenario percakapan hasil query Sanity CMS
+ */
 export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList }) => {
   if (!listeningList || listeningList.length === 0) return null;
 

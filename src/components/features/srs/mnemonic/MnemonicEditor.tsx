@@ -14,6 +14,19 @@ interface MnemonicEditorProps {
   compact?: boolean;
 }
 
+/**
+ * Komponen: MnemonicEditor
+ * 
+ * Antarmuka editor interaktif untuk membuat, memperbarui, atau menghapus "jembatan keledai" (mnemonik)
+ * kustom milik pengguna untuk membantu mengingat kosakata bahasa Jepang.
+ * Terintegrasi langsung dengan `useSRSStore` untuk pembaruan instan (luring-pertama) dan 
+ * penanganan inisialisasi state aman menggunakan penundaan hidrasi peramban (isClient).
+ * 
+ * @param {Object} props - Properti komponen
+ * @param {string} props.wordId - ID kosakata terkait yang ingin ditambahkan mnemonik kustom
+ * @param {string} [props.className] - Kelas CSS opsional untuk kustomisasi gaya pembungkus
+ * @param {boolean} [props.compact=false] - Jika true, render dalam mode minimal ringkas (tampilan kartu flashcard)
+ */
 export function MnemonicEditor({ wordId, className, compact = false }: MnemonicEditorProps) {
   const srs = useSRSStore((s) => s.srs);
   const updateCustomMnemonic = useSRSStore((s) => s.updateCustomMnemonic);
@@ -27,13 +40,13 @@ export function MnemonicEditor({ wordId, className, compact = false }: MnemonicE
   const savedMnemonic = isClient ? (srs[wordId]?.customMnemonic ?? "") : "";
 
   useEffect(() => {
-    setIsClient(true);
+    requestAnimationFrame(() => setIsClient(true));
   }, []);
 
   // Sync draft when store updates or wordId changes
   useEffect(() => {
     if (isClient) {
-      setDraft(srs[wordId]?.customMnemonic ?? "");
+      requestAnimationFrame(() => setDraft(srs[wordId]?.customMnemonic ?? ""));
     }
   }, [isClient, wordId, srs]);
 

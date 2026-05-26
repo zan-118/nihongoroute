@@ -3,6 +3,15 @@
 import { createClient } from "@/lib/supabase/server";
 import { getSanityLessonsByCategory, getSanityLessonsByCategories } from "@/lib/queries";
 
+/**
+ * Server Action: getLessonDetail
+ * 
+ * Mengambil detail lengkap materi pelajaran bahasa Jepang berdasarkan slug teks.
+ * Menghubungkan data pelajaran dengan data kategori kursusnya (course_categories) dari Supabase.
+ * 
+ * @param {string} slug - Slug unik pelajaran
+ * @returns {Promise<Object | null>} Objek detail pelajaran, atau null jika gagal
+ */
 export async function getLessonDetail(slug: string) {
   const supabase = await createClient();
   const { data, error } = await supabase
@@ -24,6 +33,15 @@ interface SanityLessonListItem {
   slug: string;
 }
 
+/**
+ * Server Action: getCourseCategories
+ * 
+ * Mengambil seluruh daftar kategori kursus dari Supabase, lalu menggabungkannya secara paralel
+ * dengan mengambil daftar pelajaran dari Sanity CMS dalam satu kueri efisien.
+ * Mengelompokkan pelajaran berdasarkan kategori masing-masing untuk rendering katalog Dasbor.
+ * 
+ * @returns {Promise<Array>} Daftar kategori kursus terformat lengkap beserta daftar preview pelajarannya
+ */
 export async function getCourseCategories() {
   const supabase = await createClient();
   const { data: categories, error } = await supabase
@@ -47,14 +65,14 @@ export async function getCourseCategories() {
   // Group lessons by category (either slug or id matches category_id)
   const categoriesWithData = categories.map((cat) => {
     const lessons = allLessons.filter(
-      (l: any) => l.category_id === cat.id || l.category_id === cat.slug
+      (l: SanityLessonListItem & { category_id?: string }) => l.category_id === cat.id || l.category_id === cat.slug
     );
 
     return {
       ...cat,
       _id: cat.id,
       lessonCount: lessons.length,
-      previews: lessons.slice(0, 4).map((l: any) => ({
+      previews: lessons.slice(0, 4).map((l: SanityLessonListItem) => ({
         _id: l._id,
         title: l.title,
         slug: l.slug

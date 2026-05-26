@@ -1,15 +1,28 @@
 import React from "react";
 import { renderSmartText } from "@/components/features/global/SmartText";
 import DownloadPdfButton from "@/components/features/pdf/components/DownloadPdfButton";
-import DownloadOfflineButton from "@/components/features/lessons/DownloadOfflineButton";
+import DownloadOfflineButton, { type LessonData } from "@/components/features/lessons/DownloadOfflineButton";
 
 interface LessonHeaderProps {
   title: string;
   summary?: string;
   isSideQuest?: boolean;
-  lesson: unknown; // Keep it flexible for now, or use a proper type if available
+  lesson: LessonData;
 }
 
+/**
+ * Komponen: LessonHeader
+ * 
+ * Bagian header visual utama untuk modul pelajaran. Menampilkan judul pelajaran dalam tipografi neon 
+ * berukuran besar, kotak ringkasan bermarkup cerdas (renderSmartText), serta menyediakan barisan tombol 
+ * aksi utilitas termasuk unduhan offline (DownloadOfflineButton) dan pembuatan sertifikat/PDF (DownloadPdfButton).
+ * 
+ * @param {Object} props - Properti komponen
+ * @param {string} props.title - Judul pelajaran
+ * @param {string} [props.summary] - Ringkasan deskripsi pelajaran
+ * @param {boolean} [props.isSideQuest] - Menandakan apakah pelajaran ini adalah materi tambahan (side quest)
+ * @param {LessonData} props.lesson - Objek data pelajaran lengkap untuk diunduh/diekspor
+ */
 export const LessonHeader: React.FC<LessonHeaderProps> = ({ 
   title, 
   summary, 

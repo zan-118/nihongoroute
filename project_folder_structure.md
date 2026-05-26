@@ -75,7 +75,10 @@ nihongoroute/
 │   │   │   │   └── quiz-engine/      # Mesin kuis mini (di dalam pelajaran)
 │   │   │   ├── feedback/    # Widget umpan balik pengguna
 │   │   │   ├── flashcards/  # Mesin kartu pengingat dinamis
+│   │   │   │   └── useFlashcardSession.ts # Hook logika sesi flashcard dinamis
 │   │   │   ├── games/       # Mini-game edukasi interaktif
+│   │   │   │   └── survival/  # Permainan kelangsungan hidup (survival game)
+│   │   │   │       └── useSurvivalSetup.ts  # Hook pengaturan & status game survival
 │   │   │   ├── gamification/# Animasi XP, lencana level, rekor beruntun
 │   │   │   ├── global/      # Komponen fitur lintas-domain
 │   │   │   ├── grammar/     # Struktur tata bahasa & contoh kalimat
@@ -91,7 +94,13 @@ nihongoroute/
 │   │   │   ├── review/      # Ringkasan sesi latihan SRS
 │   │   │   ├── srs/         # Tombol evaluasi (Sulit/Mudah) & jeda waktu
 │   │   │   ├── tools/       # Alat bantu (audio, canvas, dictionary, kana, writing)
-│   │   │   └── user/        # Komponen profil pengguna
+│   │   │   │   └── kana/      # Modul kana (Hiragana/Katakana)
+│   │   │   │       └── useKanaQuiz.ts # Hook orkestrasi latihan & kuis kana
+│   │   │   └── user/        # Komponen profil & manajemen akun pengguna
+│   │   │       ├── useLoginPage.ts      # Hook logika masuk (login)
+│   │   │       ├── useOnboarding.ts     # Hook logika onboarding
+│   │   │       ├── usePasswordUpdate.ts # Hook logika pembaruan kata sandi
+│   │   │       └── useSettingsActions.ts # Hook logika manajemen profil & preferensi UI
 │   │   ├── layout/          # ═ Rangka Global Aplikasi ═
 │   │   │   ├── hooks/       # Hook terintegrasi khusus layout
 │   │   │   ├── navbar/      # Sub-komponen navigasi atas
@@ -217,3 +226,7 @@ Untuk memastikan kerapian struktur ini, seluruh tim pengembang wajib mematuhi at
 
 ### 9. Resolusi Dinamis UUID Kategori Supabase
    * Field `category_id` pada dokumen Sanity `mockExam` dapat berisi UUID Supabase atau slug teks. Server Action `getExamByIdOrSlug` wajib mendeteksi format UUID via regex dan melakukan pencarian slug asli ke tabel `course_categories` Supabase secara dinamis untuk mencegah rute 404 pada navigasi klien.
+
+### 10. Pemisahan Logika Halaman (No God Files di `app/`)
+   * Setiap berkas `page.tsx` di dalam folder `app/` **TIDAK BOLEH** mencampur logika pengelolaan state, effect, atau hook Zustand secara langsung jika logika tersebut kompleks.
+   - Seluruh logika tersebut **WAJIB** diekstraksi ke dalam custom hook domain spesifik di bawah folder fitur yang bersangkutan (`src/components/features/[domain]/use[Feature].ts`). Berkas `page.tsx` hanya bertindak sebagai orkestrator yang memanggil custom hook tersebut untuk merender UI murni.

@@ -26,4 +26,4 @@ export interface MasterCardData {
   show_in_flashcard?: boolean;
 }
 
-export type StudyMode = "latihan" | "ujian" | "tantangan";
+export type StudyMode = "latihan" | "ujian" | "tantangan" | "pelafalan";
