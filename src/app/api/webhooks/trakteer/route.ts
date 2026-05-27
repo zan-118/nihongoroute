@@ -17,16 +17,18 @@ export async function POST(request: Request) {
     const supporterName = body.supporter_name || "Anonim";
     const netAmount = Number(body.net_amount || body.price * (body.quantity || 1) || 0);
     const supportMessage = body.support_message || "";
-    const key = body.key;
-
-    // Validasi token webhook rahasia dari Trakteer
+    // Validasi token webhook rahasia dari Trakteer (mendukung header x-trakteer-token dan body key)
     const expectedKey = process.env.TRAKTEER_WEBHOOK_SECRET;
-    if (expectedKey && key !== expectedKey) {
+    const token = request.headers.get("x-trakteer-token") || body.key;
+
+    if (expectedKey && token !== expectedKey) {
       return NextResponse.json({ error: "Invalid webhook secret key" }, { status: 401 });
     }
 
-    if (!trId || netAmount <= 0) {
-      return NextResponse.json({ error: "Invalid payment payload data" }, { status: 400 });
+    // Jika ini adalah uji coba/ping test dari dashboard Trakteer, langsung return sukses tanpa simpan DB
+    const isTest = !trId || trId.toLowerCase().includes("test") || netAmount <= 0;
+    if (isTest) {
+      return NextResponse.json({ success: true, message: "Trakteer Webhook Test Successful" });
     }
 
     // Tentukan tingkatan lencana (tier) berdasarkan total kontribusi

@@ -165,6 +165,11 @@ export default function SupportPage() {
   // Hanya gunakan data donatur real-time dari database Supabase
   const allSupporters = dbSupporters;
 
+  // Hitung total donasi terkumpul dan persentase target secara dinamis
+  const totalDonations = allSupporters.reduce((sum, s) => sum + s.amount, 0);
+  const monthlyTarget = 450000;
+  const progressPercentage = Math.min(Math.round((totalDonations / monthlyTarget) * 100), 100);
+
   // Mengurutkan donatur berdasarkan filter aktif
   const sortedSupporters = [...allSupporters].sort((a, b) => {
     if (supporterFilter === "top") {
@@ -302,13 +307,13 @@ export default function SupportPage() {
           <div className="relative z-10 mb-8">
             <div className="flex justify-between items-end mb-3">
               <span className="text-sm font-bold text-foreground bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
-                Rp 288.000 <span className="text-muted-foreground text-xs font-semibold">Terkumpul</span>
+                Rp {totalDonations.toLocaleString("id-ID")} <span className="text-muted-foreground text-xs font-semibold">Terkumpul</span>
               </span>
               <span className="text-lg font-black text-primary animate-pulse">
-                64%
+                {progressPercentage}%
               </span>
               <span className="text-sm font-bold text-muted-foreground">
-                Target: Rp 450.000
+                Target: Rp {monthlyTarget.toLocaleString("id-ID")}
               </span>
             </div>
 
@@ -316,7 +321,7 @@ export default function SupportPage() {
             <div className="w-full h-5 bg-muted/60 rounded-full overflow-hidden relative border border-border/50 p-1">
               <motion.div
                 initial={{ width: 0 }}
-                animate={{ width: "64%" }}
+                animate={{ width: `${progressPercentage}%` }}
                 transition={{ duration: 1.5, ease: "easeOut" }}
                 className="h-full bg-gradient-to-r from-primary to-blue-500 rounded-full shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)] relative overflow-hidden"
               >
