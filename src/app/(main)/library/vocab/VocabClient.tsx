@@ -24,6 +24,8 @@ import { VocabFlashcardView } from "@/components/features/library/vocab/VocabFla
 import { VocabHeader } from "@/components/features/library/vocab/VocabHeader";
 import { VocabFilterPanel } from "@/components/features/library/vocab/VocabFilterPanel";
 import { VocabPagination } from "@/components/features/library/vocab/VocabPagination";
+import { useUIStore } from "@/store/useUIStore";
+import { SmartJapanese } from "@/components/ui/SmartJapanese";
 
 export default function VocabClient({
   initialData,
@@ -51,6 +53,7 @@ export default function VocabClient({
   const limit = 50;
 
   const isFirstMount = useRef(true);
+  const layoutPreference = useUIStore((s) => s.settings.layoutPreference) ?? "grid";
 
   const mapLevelToQuery = (lbl: string) => {
     if (lbl === "Semua") return "all";
@@ -86,7 +89,12 @@ export default function VocabClient({
       params.delete("page");
     }
 
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    const currentParamsString = searchParams.toString();
+    const newParamsString = params.toString();
+
+    if (currentParamsString !== newParamsString) {
+      router.replace(`${pathname}?${newParamsString}`, { scroll: false });
+    }
   }, [debouncedSearch, level, hinshi, currentPage, pathname, router, searchParams]);
 
   useEffect(() => {
@@ -97,6 +105,7 @@ export default function VocabClient({
       }
     }, 500);
     return () => clearTimeout(handler);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   useEffect(() => {
@@ -205,6 +214,7 @@ export default function VocabClient({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+
   return (
     <div className="w-full flex flex-col flex-1 pb-24 px-4 md:px-8 lg:px-12 pt-4 sm:pt-0">
       <VocabHeader 
@@ -240,7 +250,7 @@ export default function VocabClient({
                 Kosakata tidak ditemukan. Coba gunakan kriteria pencarian lain.
               </p>
             </div>
-          ) : (
+          ) : layoutPreference === "grid" ? (
             <div
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5 min-h-[400px]"
             >
@@ -251,6 +261,87 @@ export default function VocabClient({
                   idx={idx}
                   showRomaji={showRomaji}
                 />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2.5 min-h-[400px]">
+              {/* Table Header (hidden on mobile) */}
+              <div className="hidden md:grid md:grid-cols-12 gap-4 px-6 py-4 bg-muted/30 border border-border rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+                <div className="col-span-3">Kosakata</div>
+                <div className="col-span-4">Arti / Definisi</div>
+                <div className="col-span-2">Jenis Kata</div>
+                <div className="col-span-1 text-center">JLPT</div>
+                <div className="col-span-2 text-right">Aksi</div>
+              </div>
+
+              {vocabList.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex md:grid md:grid-cols-12 items-center justify-between gap-4 px-4 py-3 bg-[rgba(var(--card-rgb),0.3)] backdrop-blur-3xl border border-border hover:border-[rgba(var(--primary-rgb),0.5)] transition-all duration-300 rounded-2xl shadow-sm hover:shadow-[0_0_25px_rgba(var(--primary-rgb),0.08)] group"
+                >
+                  {/* Sisi Kiri: Kosakata & Arti (Flex di Mobile, Grid Col di Desktop) */}
+                  <div className="flex-1 md:col-span-7 flex flex-col md:grid md:grid-cols-7 md:gap-4 md:items-center min-w-0 pr-2">
+                    <div className="md:col-span-3 flex flex-col justify-center min-w-0">
+                      <span className="text-base md:text-lg font-black text-foreground truncate">
+                        <SmartJapanese word={item.word} furigana={item.furigana || undefined} />
+                      </span>
+                      {showRomaji && item.romaji && (
+                        <span className="text-[9px] md:text-xs text-muted-foreground/60 font-semibold tracking-wide uppercase mt-0.5 truncate">
+                          {item.romaji}
+                        </span>
+                      )}
+                    </div>
+                    <div className="md:col-span-4 text-[10px] md:text-sm text-muted-foreground md:text-foreground/90 font-medium line-clamp-1 mt-0.5 md:mt-0">
+                      {item.meaning}
+                    </div>
+                  </div>
+
+                  {/* Jenis Kata (Sembunyikan di Mobile, Tampilkan di Desktop) */}
+                  <div className="hidden md:block md:col-span-2">
+                    {item.hinshi && (
+                      <span className="text-[9px] md:text-[10px] font-black bg-muted px-2 py-0.5 rounded-md border border-border uppercase tracking-widest text-muted-foreground max-w-max">
+                        {item.hinshi}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* JLPT & Aksi */}
+                  <div className="flex items-center gap-2.5 shrink-0 md:col-span-3 md:justify-end">
+                    {item.jlpt_level && (
+                      <span className="text-[9px] md:text-[10px] font-black bg-[rgba(var(--primary-rgb),0.1)] text-primary px-2 py-0.5 rounded-full border border-[rgba(var(--primary-rgb),0.2)] uppercase shrink-0">
+                        {item.jlpt_level.toUpperCase()}
+                      </span>
+                    )}
+                    {item.audio_url && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="w-7 h-7 md:w-8 md:h-8 rounded-lg border border-border hover:bg-primary/10 hover:text-primary transition-all shrink-0"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          const audio = new Audio(item.audio_url || "");
+                          audio.play().catch((err) => console.error("Gagal memutar audio:", err));
+                        }}
+                        aria-label="Putar Audio"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-3.5 h-3.5">
+                          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                        </svg>
+                      </Button>
+                    )}
+                    <Link href={`/library/vocab/${item.slug}`} className="shrink-0">
+                      <Button
+                        variant="outline"
+                        className="px-3 h-8 text-[9px] md:text-[10px] font-black uppercase tracking-wider rounded-lg bg-muted border-border hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                      >
+                        Detail
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
               ))}
             </div>
           )}

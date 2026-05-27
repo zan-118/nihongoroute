@@ -1,10 +1,11 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Search, Grid3X3, LayoutList } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { LEVELS, HINSHI } from "./types";
+import { useUIStore } from "@/store/useUIStore";
 
 interface VocabFilterPanelProps {
   search: string;
@@ -27,6 +28,9 @@ export function VocabFilterPanel({
   showRomaji,
   setShowRomaji,
 }: VocabFilterPanelProps) {
+  const layoutPreference = useUIStore((s) => s.settings.layoutPreference) ?? "grid";
+  const setLayoutPreference = useUIStore((s) => s.setLayoutPreference);
+
   return (
     <div className="mb-10 md:mb-16 bg-card p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-border neo-card shadow-sm">
       <div className="flex flex-col gap-6 md:gap-8">
@@ -85,14 +89,53 @@ export function VocabFilterPanel({
           </div>
         </div>
 
-        <div className="w-full lg:w-auto flex items-center justify-between lg:justify-end gap-4 px-4 py-3 bg-muted/20 border border-border rounded-xl md:rounded-2xl neo-inset">
-          <div className="flex flex-col">
-            <span className="text-[10px] font-black uppercase tracking-widest text-foreground">Tampilkan Romaji</span>
-            <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-tight">
-              Pemandu bacaan Latin
-            </span>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+          <div className="w-full sm:w-auto flex items-center justify-between gap-4 px-4 py-3 bg-muted/20 border border-border rounded-xl md:rounded-2xl neo-inset">
+            <div className="flex flex-col pr-4">
+              <span className="text-[10px] font-black uppercase tracking-widest text-foreground">Tampilkan Romaji</span>
+              <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-tight">
+                Pemandu bacaan Latin
+              </span>
+            </div>
+            <Switch checked={showRomaji} onCheckedChange={setShowRomaji} className="data-[state=checked]:bg-primary" />
           </div>
-          <Switch checked={showRomaji} onCheckedChange={setShowRomaji} className="data-[state=checked]:bg-primary" />
+
+          <div className="w-full sm:w-auto flex items-center justify-between gap-4 px-4 py-3 bg-muted/20 border border-border rounded-xl md:rounded-2xl neo-inset">
+            <div className="flex flex-col pr-4">
+              <span className="text-[10px] font-black uppercase tracking-widest text-foreground">Tampilan Pustaka</span>
+              <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-tight">
+                Grid / Tabel Ringkas
+              </span>
+            </div>
+            <div className="flex p-1 bg-background/60 rounded-xl border border-border">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setLayoutPreference("grid")}
+                className={`p-2 h-8 w-8 rounded-lg transition-all ${
+                  layoutPreference === "grid"
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                aria-label="Tampilan Grid"
+              >
+                <Grid3X3 size={16} />
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setLayoutPreference("list")}
+                className={`p-2 h-8 w-8 rounded-lg transition-all ${
+                  layoutPreference === "list"
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                aria-label="Tampilan Tabel Ringkas"
+              >
+                <LayoutList size={16} />
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

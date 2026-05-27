@@ -27,7 +27,9 @@ export function VocabExamples({ examples }: VocabExamplesProps) {
       </div>
       <div className="space-y-4">
         {examples?.map((ex, i) => (
-          <div key={i} className="p-5 bg-[rgba(var(--card-rgb),0.3)] border border-border rounded-2xl">
+          <div key={i} className="p-5 pl-6 bg-[rgba(var(--card-rgb),0.3)] border border-border rounded-2xl relative overflow-hidden group/item hover:border-primary/30 transition-all duration-300 shadow-sm">
+            <div className="absolute top-0 left-0 w-1 h-full bg-primary/20 group-hover/item:bg-primary transition-all duration-300" />
+            
             <div className="mb-3 flex flex-col gap-1">
               <p className="text-lg md:text-xl font-bold text-foreground font-japanese leading-relaxed">
                 <SmartJapanese word={ex.jp || ex.japanese || ""} furigana={ex.furigana} />

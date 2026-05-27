@@ -298,12 +298,20 @@ export async function getLibraryItemBySlug(
         data.antonyms = ((data.antonyms as Array<{ id?: string; _id?: string }>) || []).map((a) => ({ ...a, _id: a.id || a._id }));
 
         // Handle conjugations
-        const conj = typeof data.conjugations === "object" && data.conjugations !== null ? data.conjugations : {};
-        data.negative = conj.negative;
-        data.past = conj.past;
-        data.pastNegative = conj.pastNegative;
-        data.teForm = conj.te;
-        data.adverbial = conj.adverb;
+        let conj = typeof data.conjugations === "object" && data.conjugations !== null ? data.conjugations : {};
+        if (conj.display_forms && typeof conj.display_forms === "object") {
+          conj = conj.display_forms;
+        } else if (conj.forms && typeof conj.forms === "object") {
+          conj = conj.forms;
+        } else if (conj.conjugations && typeof conj.conjugations === "object") {
+          conj = conj.conjugations;
+        }
+
+        data.negative = conj.negative || conj.negative_form || conj.polite_negative || conj.polite_negative_form;
+        data.past = conj.past || conj.past_form || conj.polite_past || conj.polite_past_form;
+        data.pastNegative = conj.pastNegative || conj.past_negative_form || conj.polite_past_negative || conj.polite_past_negative_form;
+        data.teForm = conj.te || conj.te_form || conj.teForm;
+        data.adverbial = conj.adverb || conj.adverbial || conj.adverb_form || conj.adverbial_form;
       } catch (normErr) {
         console.error(`[getLibraryItemBySlug] vocab normalization error:`, normErr);
         // Still return data even if normalization partially fails

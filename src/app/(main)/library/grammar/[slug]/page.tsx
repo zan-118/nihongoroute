@@ -15,6 +15,7 @@ import { notFound } from "next/navigation";
 import { ChevronLeft, Home, Library, BookOpen, BookText, Lightbulb } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { SmartJapanese } from "@/components/ui/SmartJapanese";
 
 // ======================
 // METADATA
@@ -152,14 +153,22 @@ export default async function GrammarDetailPage({
              </div>
           </div>
           <div className="space-y-12 md:space-y-16">
-            {/* Grammar examples rendered as plain text */}
+            {/* Grammar examples rendered with premium SmartJapanese component */}
             {article.examples && article.examples.length > 0 && (
               <div className="space-y-6">
                 {(article.examples as Array<{ jp: string; furigana?: string; id: string }>).map((ex, i: number) => (
-                  <div key={i} className="border border-border rounded-2xl p-6 space-y-2">
-                    <p className="text-xl font-japanese font-bold text-foreground">{ex.jp}</p>
-                    {ex.furigana && <p className="text-sm text-muted-foreground">{ex.furigana}</p>}
-                    <p className="text-sm text-muted-foreground italic">{ex.id}</p>
+                  <div key={i} className="border border-border rounded-2xl p-6 md:p-8 bg-[rgba(var(--card-rgb),0.2)] backdrop-blur-md hover:border-primary/30 transition-all duration-300 shadow-sm relative overflow-hidden group">
+                    <div className="absolute top-0 left-0 w-1 h-full bg-primary/20 group-hover:bg-primary transition-all duration-300" />
+                    
+                    <SmartJapanese 
+                      word={ex.jp} 
+                      furigana={ex.furigana} 
+                      className="text-xl md:text-2xl font-japanese font-bold text-foreground leading-relaxed block" 
+                    />
+                    
+                    <div className="mt-3 pl-4 border-l-2 border-primary/30 text-sm md:text-base text-muted-foreground/80 font-medium leading-relaxed">
+                      {ex.id}
+                    </div>
                   </div>
                 ))}
               </div>

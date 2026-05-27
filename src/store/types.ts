@@ -30,6 +30,7 @@ export interface Settings {
   dailyReviewGoal?: number;
   dailyLessonGoal?: number;
   showFurigana?: boolean;
+  layoutPreference?: "grid" | "list";
 }
 
 export interface LessonProgress {

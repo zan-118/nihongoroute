@@ -28,6 +28,7 @@ interface UIState {
   clearNotifications: () => void;
   toggleNotifications: (enabled: boolean) => void;
   toggleFurigana: (enabled: boolean) => void;
+  setLayoutPreference: (layout: "grid" | "list") => void;
   exportData: () => Promise<void>;
   importData: (jsonData: string) => Promise<boolean>;
   setReadingState: (state: Partial<UIState['readingState']>) => void;
@@ -54,6 +55,7 @@ export const useUIStore = create<UIState>()(
         dailyLessonGoal: 10,
         notificationsEnabled: false,
         showFurigana: true,
+        layoutPreference: "grid",
       },
 
       readingState: {
@@ -106,6 +108,10 @@ export const useUIStore = create<UIState>()(
 
       toggleFurigana: (enabled) => set((state) => ({
         settings: { ...state.settings, showFurigana: enabled }
+      })),
+
+      setLayoutPreference: (layout) => set((state) => ({
+        settings: { ...state.settings, layoutPreference: layout }
       })),
 
       exportData: async () => {
@@ -194,6 +200,7 @@ export const useUIStore = create<UIState>()(
           dailyLessonGoal: 10,
           notificationsEnabled: false,
           showFurigana: true,
+          layoutPreference: "grid",
         },
         readingState: { mode: "kanji", showTranslation: false }
       }),

@@ -32,7 +32,20 @@ const CONJUGATION_LABELS: Record<string, string> = {
   politePresent: "Sopan / Polite Present",
   politeNegative: "Sopan Negatif / Polite Negative",
   politePast: "Sopan Lampau / Polite Past",
-  politePastNegative: "Sopan Lampau Negatif"
+  politePastNegative: "Sopan Lampau Negatif",
+
+  // DB-specific Verb Keys
+  te_form: "Bentuk-Te / Te-Form",
+  ta_form: "Bentuk-Ta / Past",
+  nai_form: "Bentuk-Nai / Negatif",
+  nakatta_form: "Bentuk-Nakatta / Past Negatif",
+  conditional_ba: "Kondisional (~Ba)",
+  conditional_tara: "Kondisional (~Tara)",
+  polite_nonpast: "Sopan Biasa / Non-Past",
+  polite_negative: "Sopan Negatif / Polite Negative",
+  polite_past: "Sopan Lampau / Polite Past",
+  polite_past_negative: "Sopan Lampau Negatif",
+  dictionary: "Bentuk Kamus / Dictionary"
 };
 
 interface VocabConjugationProps {
@@ -48,15 +61,24 @@ export function VocabConjugation({
 }: VocabConjugationProps) {
   if (!isAdjective && !isVerb) return null;
 
-  const rawConjugations = typeof conjugations === "object" && conjugations !== null ? conjugations : {};
+  let rawConjugations = typeof conjugations === "object" && conjugations !== null ? conjugations : {};
+  
+  // Extract from display_forms or forms if nested (Supabase dynamic JSONB structure)
+  if (rawConjugations.display_forms && typeof rawConjugations.display_forms === "object") {
+    rawConjugations = rawConjugations.display_forms as Record<string, string>;
+  } else if (rawConjugations.forms && typeof rawConjugations.forms === "object") {
+    rawConjugations = rawConjugations.forms as Record<string, string>;
+  } else if (rawConjugations.conjugations && typeof rawConjugations.conjugations === "object") {
+    rawConjugations = rawConjugations.conjugations as Record<string, string>;
+  }
   
   // Order keys nicely to group logical conjugations together
   const orderedKeys = [
-    "present", "politePresent", "masu",
-    "negative", "politeNegative", "masen", "nai",
-    "past", "politePast", "mashita", "ta",
-    "pastNegative", "politePastNegative", "masendeshita", "nakatta",
-    "te", "teForm", "adverb", "adverbial", "ba",
+    "dictionary", "present", "politePresent", "polite_nonpast", "masu",
+    "negative", "politeNegative", "polite_negative", "masen", "nai", "nai_form",
+    "past", "politePast", "polite_past", "mashita", "ta", "ta_form",
+    "pastNegative", "politePastNegative", "polite_past_negative", "masendeshita", "nakatta", "nakatta_form",
+    "te", "te_form", "teForm", "adverb", "adverbial", "ba", "conditional_ba", "conditional_tara",
     "potential", "passive", "causative", "causativePassive", "volitional", "imperative"
   ];
 
@@ -66,11 +88,11 @@ export function VocabConjugation({
       label: CONJUGATION_LABELS[key] || key,
       value: rawConjugations[key]
     }))
-    .filter(item => item.value);
+    .filter(item => item.value && typeof item.value === "string");
 
   // Append any extra keys found in database
   Object.entries(rawConjugations).forEach(([key, val]) => {
-    if (val && !orderedKeys.includes(key)) {
+    if (val && typeof val === "string" && !orderedKeys.includes(key)) {
       renderedConjugations.push({
         key,
         label: CONJUGATION_LABELS[key] || key.replace(/_/g, " "),
