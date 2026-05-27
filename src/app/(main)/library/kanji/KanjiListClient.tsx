@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { getPaginatedKanji, PaginatedKanjiResponse } from "@/actions/library.actions";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 // Domain Components
 import { KanjiHeader } from "@/components/features/library/kanji/KanjiHeader";
@@ -16,19 +17,68 @@ interface KanjiListClientProps {
 const ITEMS_PER_PAGE = 24;
 
 export default function KanjiListClient({ initialData }: KanjiListClientProps) {
-  const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [levelFilter, setLevelFilter] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Membaca nilai filter awal dari URL jika ada (bookmark friendly)
+  const initialLevel = searchParams.get("level") || null;
+  const initialSearch = searchParams.get("search") || "";
+  const initialPage = Number(searchParams.get("page") || "1");
+
+  const [search, setSearch] = useState(initialSearch);
+  const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
+  const [levelFilter, setLevelFilter] = useState<string | null>(initialLevel);
+  const [currentPage, setCurrentPage] = useState(initialPage);
+
+  const isFirstMount = useRef(true);
+
+  // Sinkronisasikan state filter ke URL search parameters secara dinamis
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (debouncedSearch) {
+      params.set("search", debouncedSearch);
+    } else {
+      params.delete("search");
+    }
+
+    if (levelFilter) {
+      params.set("level", levelFilter);
+    } else {
+      params.delete("level");
+    }
+
+    if (currentPage > 1) {
+      params.set("page", String(currentPage));
+    } else {
+      params.delete("page");
+    }
+
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [debouncedSearch, levelFilter, currentPage, pathname, router, searchParams]);
 
   // Debounce search input
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(search);
-      setCurrentPage(1); // Reset page on new search
+      if (search !== initialSearch) {
+        setCurrentPage(1); // Reset page on new search
+      }
     }, 500);
     return () => clearTimeout(handler);
-  }, [search]);
+  }, [search, initialSearch]);
+
+  // Reset page when filter changes
+  useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
+    }
+    requestAnimationFrame(() => {
+      setCurrentPage(1);
+    });
+  }, [levelFilter]);
 
   const { data, isFetching } = useQuery({
     queryKey: ["kanji", currentPage, debouncedSearch, levelFilter],
@@ -44,13 +94,6 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  // Reset page when filter changes
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      setCurrentPage(1);
-    });
-  }, [levelFilter]);
 
   return (
     <div className="space-y-12">
