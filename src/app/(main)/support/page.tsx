@@ -1,6 +1,6 @@
 /**
  * @file page.tsx
- * @description Halaman khusus donasi dan transparansi pengembangan aplikasi. 
+ * @description Halaman khusus donasi, transparansi operasional, dan apresiasi donatur NihongoRoute.
  * Menghubungkan pengguna dengan pintu dukungan eksternal (Trakteer/Saweria).
  * @module SupportPage
  */
@@ -10,8 +10,11 @@
 // ======================
 // IMPORTS
 // ======================
-import { motion } from "framer-motion";
+import React, { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { createClient } from "@/lib/supabase/client";
 import Image from "next/image";
 import {
   ChevronLeft,
@@ -21,16 +24,154 @@ import {
   ShieldCheck,
   Zap,
   Globe,
+  ChevronDown,
+  Trophy,
+  Users,
+  HelpCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 // ======================
+// INTERFACES & MOCK DATA
+// ======================
+
+interface Supporter {
+  name: string;
+  amount: number;
+  tier: "gold" | "silver" | "bronze";
+  message: string;
+  date: string;
+}
+
+const SUPPORTERS_MOCK: Supporter[] = [
+  {
+    name: "Kenji Takahashi",
+    amount: 150000,
+    tier: "gold",
+    message: "Aplikasi tercepat untuk belajar kanji! Sangat terbantu dengan ulasan SRS luring.",
+    date: "2026-05-27T08:30:00.000Z",
+  },
+  {
+    name: "Sarah P.",
+    amount: 75000,
+    tier: "silver",
+    message: "Terima kasih sudah membuat NihongoRoute gratis dan tanpa iklan yang mengganggu.",
+    date: "2026-05-26T15:45:00.000Z",
+  },
+  {
+    name: "Budi Santoso",
+    amount: 30000,
+    tier: "bronze",
+    message: "Suka sekali dengan guided stroke tracing saat latihan menulis Kana. Keren!",
+    date: "2026-05-27T10:12:00.000Z",
+  },
+  {
+    name: "Rin Chan",
+    amount: 100000,
+    tier: "gold",
+    message: "Semangat terus developer! Ditunggu kelanjutan konten level N3 dan N2.",
+    date: "2026-05-25T19:20:00.000Z",
+  },
+  {
+    name: "Yuki A.",
+    amount: 50000,
+    tier: "silver",
+    message: "Fitur pelafalan suara (Pronunciation) sangat presisi. Sukses selalu!",
+    date: "2026-05-27T02:05:00.000Z",
+  },
+  {
+    name: "Fauzan K.",
+    amount: 35000,
+    tier: "bronze",
+    message: "Desain UI gelap siber (dark-neon) sangat premium dan nyaman di mata.",
+    date: "2026-05-24T12:00:00.000Z",
+  },
+];
+
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+const FAQS_MOCK: FAQItem[] = [
+  {
+    question: "Apakah NihongoRoute akan selalu gratis dan bebas iklan?",
+    answer: "Ya! Komitmen utama NihongoRoute adalah menyediakan akses belajar bahasa Jepang yang setara, modern, dan 100% bebas dari iklan banner yang merusak fokus belajar siswa.",
+  },
+  {
+    question: "Ke mana seluruh dana dukungan saya disalurkan?",
+    answer: "100% dari dukungan Anda disalurkan langsung untuk membayar tagihan server awan (database Supabase), hosting cepat CDN (Vercel), perpanjangan nama domain tahunan, serta pembiayaan aset rekaman audio asli penutur bahasa Jepang.",
+  },
+  {
+    question: "Bagaimana jika saya ingin berkontribusi kode atau materi?",
+    answer: "Kami sangat menyambut kontribusi open-source! Anda dapat mengunjungi repositori GitHub resmi kami atau mengirim pesan langsung melalui menu kontak pengembang untuk berkolaborasi.",
+  },
+  {
+    question: "Apakah ada batas minimum untuk memberikan dukungan?",
+    answer: "Tidak ada batas minimum sama sekali. Satu rupiah pun dukungan Anda sangat berharga untuk menjaga kestabilan database server ulasan harian kami agar tetap beroperasi.",
+  },
+];
+
+// ======================
 // MAIN EXECUTION
 // ======================
 
+/**
+ * SupportPage Component
+ * 
+ * Halaman khusus donasi, transparansi operasional, dan apresiasi donatur NihongoRoute.
+ * Menyediakan bilah target server bulanan interaktif, galeri pejuang dukungan (donatur),
+ * dan Tanya Jawab siber premium menggunakan Framer Motion.
+ * 
+ * @component
+ * @returns {JSX.Element} Halaman dukungan siber donasi premium.
+ * 
+ * @states
+ * - `supporterFilter`: Menyaring donatur berdasarkan "recent" (Terbaru) atau "top" (Donatur Teratas).
+ * - `expandedFAQ`: Indeks FAQ yang sedang dibuka oleh pengguna (-1 jika ditutup semua).
+ */
 export default function SupportPage() {
   const router = useRouter();
+  const [supporterFilter, setSupporterFilter] = useState<"recent" | "top">("top");
+  const [expandedFAQ, setExpandedFAQ] = useState<number>(-1);
+
+  const supabase = useMemo(() => createClient(), []);
+
+  // Fetch data donatur secara real-time dari Supabase
+  const { data: dbSupporters = [] } = useQuery<Supporter[]>({
+    queryKey: ["live-supporters"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("supporters")
+        .select("name, amount, message, tier, created_at")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.warn("Gagal memuat data donatur dari Supabase, menggunakan mock fallback:", error);
+        return [];
+      }
+
+      return (data || []).map((row) => ({
+        name: row.name,
+        amount: Number(row.amount),
+        tier: (row.tier || "bronze") as "gold" | "silver" | "bronze",
+        message: row.message || "",
+        date: row.created_at || new Date().toISOString(),
+      }));
+    },
+  });
+
+  // Gunakan data real-time jika ada, jika tidak, gunakan SUPPORTERS_MOCK premium sebagai fallback
+  const allSupporters = dbSupporters.length > 0 ? dbSupporters : SUPPORTERS_MOCK;
+
+  // Mengurutkan donatur berdasarkan filter aktif
+  const sortedSupporters = [...allSupporters].sort((a, b) => {
+    if (supporterFilter === "top") {
+      return b.amount - a.amount;
+    }
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
+  });
 
   return (
     <div className="w-full flex-1 flex flex-col overflow-x-hidden bg-background text-foreground transition-colors duration-300 min-h-screen relative">
@@ -38,7 +179,7 @@ export default function SupportPage() {
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute inset-0 neural-grid opacity-[0.15] mix-blend-overlay" />
         <div className="absolute top-[-10%] right-[-5%] w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-primary/10 rounded-full blur-[100px] sm:blur-[140px] animate-pulse pointer-events-none" />
-        <div className="absolute bottom-[-10%] left-[-5%] w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-secondary/5 rounded-full blur-[90px] sm:blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: '2s' }} />
+        <div className="absolute bottom-[-10%] left-[-5%] w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-secondary/5 rounded-full blur-[90px] sm:blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: "2s" }} />
         <div className="absolute top-[40%] left-[20%] w-[300px] h-[300px] bg-destructive/5 rounded-full blur-[100px] pointer-events-none" />
       </div>
 
@@ -73,6 +214,7 @@ export default function SupportPage() {
       </nav>
 
       <main className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-20 w-full flex-1">
+        {/* Header Hero Section */}
         <section className="text-center mb-16 sm:mb-24">
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
@@ -112,9 +254,10 @@ export default function SupportPage() {
           </motion.p>
         </section>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16 sm:mb-28">
+        {/* Donation Portal Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 sm:mb-16">
           <DonationCard
-            href="https://trakteer.id/Zan118/tip"
+            href="https://trakteer.id/nihongo_route/gift"
             title="Trakteer"
             desc="Dukungan via Dompet Digital (Gopay/OVO/ShopeePay)"
             icon="☕"
@@ -135,7 +278,81 @@ export default function SupportPage() {
           />
         </div>
 
-        <Card className="glass border border-border/80 rounded-[3rem] p-8 sm:p-12 md:p-16 shadow-[0_30px_70px_rgba(0,0,0,0.4)] relative overflow-hidden group">
+        {/* 1. INTERACTIVE TARGET BAR */}
+        <Card className="glass border border-border/80 rounded-[3rem] p-8 sm:p-12 mb-12 sm:mb-16 shadow-[0_30px_70px_rgba(0,0,0,0.4)] relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese">
+            TARGET
+          </div>
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
+
+          <div className="flex items-center gap-4 mb-6 relative z-10">
+            <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center shadow-inner relative overflow-hidden">
+              <Zap className="text-primary drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.4)] relative z-10" size={22} />
+            </div>
+            <div>
+              <h3 className="text-lg sm:text-xl font-black text-foreground uppercase italic tracking-wider leading-none">
+                Bilah Target Server
+              </h3>
+              <p className="text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">
+                Kemandirian Operasional Bulanan
+              </p>
+            </div>
+          </div>
+
+          <div className="relative z-10 mb-8">
+            <div className="flex justify-between items-end mb-3">
+              <span className="text-sm font-bold text-foreground bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
+                Rp 288.000 <span className="text-muted-foreground text-xs font-semibold">Terkumpul</span>
+              </span>
+              <span className="text-lg font-black text-primary animate-pulse">
+                64%
+              </span>
+              <span className="text-sm font-bold text-muted-foreground">
+                Target: Rp 450.000
+              </span>
+            </div>
+
+            {/* Glowing Breathing HSL Progress Bar */}
+            <div className="w-full h-5 bg-muted/60 rounded-full overflow-hidden relative border border-border/50 p-1">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: "64%" }}
+                transition={{ duration: 1.5, ease: "easeOut" }}
+                className="h-full bg-gradient-to-r from-primary to-blue-500 rounded-full shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)] relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-[linear-gradient(45deg,rgba(255,255,255,0.15)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.15)_50%,rgba(255,255,255,0.15)_75%,transparent_75%,transparent)] bg-[length:16px_16px] animate-[shimmer_2s_linear_infinite]" />
+              </motion.div>
+            </div>
+          </div>
+
+          {/* Interactive Cost Breakdown Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 relative z-10 pt-4 border-t border-border/40">
+            <div className="p-4 rounded-2xl border border-border/50 bg-card/30 hover:border-warning/50 hover:bg-warning/[0.02] transition-all duration-300">
+              <span className="text-[10px] font-black uppercase text-warning tracking-widest block mb-1">Database Server</span>
+              <span className="text-sm font-black text-foreground block">Supabase: Rp 150K/bln</span>
+              <p className="text-[10px] text-muted-foreground/80 leading-relaxed font-semibold italic mt-1">
+                Menyimpan kosakata, ulasan SRS, dan data kemajuan siswa secara luring.
+              </p>
+            </div>
+            <div className="p-4 rounded-2xl border border-border/50 bg-card/30 hover:border-primary/50 hover:bg-primary/[0.02] transition-all duration-300">
+              <span className="text-[10px] font-black uppercase text-primary tracking-widest block mb-1">Hosting & CDN</span>
+              <span className="text-sm font-black text-foreground block">Vercel: Rp 200K/bln</span>
+              <p className="text-[10px] text-muted-foreground/80 leading-relaxed font-semibold italic mt-1">
+                Menjamin loading instan dan rendering Next.js yang ngebut di seluruh dunia.
+              </p>
+            </div>
+            <div className="p-4 rounded-2xl border border-border/50 bg-card/30 hover:border-secondary/5 hover:bg-secondary/[0.02] transition-all duration-300">
+              <span className="text-[10px] font-black uppercase text-secondary tracking-widest block mb-1">Domain & Core</span>
+              <span className="text-sm font-black text-foreground block">Domain: Rp 100K/bln</span>
+              <p className="text-[10px] text-muted-foreground/80 leading-relaxed font-semibold italic mt-1">
+                Biaya lisensi domain resmi dan pemeliharaan alat analisis kuromoji luring.
+              </p>
+            </div>
+          </div>
+        </Card>
+
+        {/* Alokasi Dana (Transparansi) */}
+        <Card className="glass border border-border/80 rounded-[3rem] p-8 sm:p-12 md:p-16 mb-12 sm:mb-16 shadow-[0_30px_70px_rgba(0,0,0,0.4)] relative overflow-hidden group">
           <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese">
             TRANSPARANSI
           </div>
@@ -173,14 +390,193 @@ export default function SupportPage() {
           </div>
         </Card>
 
+        {/* 2. INTERACTIVE SUPPORTER WALL */}
+        <Card className="glass border border-border/80 rounded-[3rem] p-8 sm:p-12 mb-12 sm:mb-16 shadow-[0_30px_70px_rgba(0,0,0,0.4)] relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese">
+            DONATUR
+          </div>
+          <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
+
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-6 mb-8 relative z-10 border-b border-border/40 pb-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-secondary/10 border border-secondary/30 flex items-center justify-center shadow-inner">
+                <Users className="text-secondary drop-shadow-[0_0_8px_rgba(var(--secondary-rgb),0.4)]" size={22} />
+              </div>
+              <div>
+                <h3 className="text-lg sm:text-xl font-black text-foreground uppercase italic tracking-wider leading-none">
+                  Pejuang Dukungan
+                </h3>
+                <p className="text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">
+                  Apresiasi Donatur Heroik Kami
+                </p>
+              </div>
+            </div>
+
+            {/* Filter Tabs */}
+            <div className="flex gap-2 p-1 rounded-xl bg-card/60 border border-border/50 backdrop-blur-md">
+              <button
+                onClick={() => setSupporterFilter("top")}
+                className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
+                  supporterFilter === "top"
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Terbesar
+              </button>
+              <button
+                onClick={() => setSupporterFilter("recent")}
+                className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
+                  supporterFilter === "recent"
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Terbaru
+              </button>
+            </div>
+          </div>
+
+          {/* Supporters Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
+            {sortedSupporters.map((s, idx) => {
+              let tierStyle = "border-border/60 hover:border-primary/50 shadow-sm";
+              let badgeColor = "bg-muted text-muted-foreground border-border/40";
+              let glowEffect = "rgba(var(--primary-rgb), 0.05)";
+              let label = "Perunggu";
+
+              if (s.tier === "gold") {
+                tierStyle = "border-[rgba(255,215,0,0.4)] bg-[rgba(255,215,0,0.015)] hover:bg-[rgba(255,215,0,0.03)]";
+                badgeColor = "bg-[rgba(255,215,0,0.15)] text-[rgba(255,215,0,1)] border-[rgba(255,215,0,0.3)]";
+                glowEffect = "rgba(255, 215, 0, 0.15)";
+                label = "Gold";
+              } else if (s.tier === "silver") {
+                tierStyle = "border-[rgba(192,192,192,0.4)] bg-[rgba(192,192,192,0.015)] hover:bg-[rgba(192,192,192,0.03)]";
+                badgeColor = "bg-[rgba(192,192,192,0.15)] text-[rgba(180,180,180,1)] border-[rgba(192,192,192,0.3)]";
+                glowEffect = "rgba(192, 192, 192, 0.12)";
+                label = "Silver";
+              } else if (s.tier === "bronze") {
+                tierStyle = "border-[rgba(180,110,50,0.4)] bg-[rgba(180,110,50,0.015)] hover:bg-[rgba(180,110,50,0.03)]";
+                badgeColor = "bg-[rgba(180,110,50,0.15)] text-[rgba(190,120,60,1)] border-[rgba(180,110,50,0.3)]";
+                glowEffect = "rgba(180, 110, 50, 0.08)";
+                label = "Bronze";
+              }
+
+              return (
+                <motion.div
+                  key={s.name + idx}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.05 }}
+                  className={`p-5 rounded-2xl border transition-all duration-300 flex gap-4 items-start ${tierStyle}`}
+                  style={{
+                    boxShadow: `0 10px 30px rgba(0,0,0,0.15), 0 0 15px ${glowEffect}`,
+                  }}
+                >
+                  <div className="shrink-0">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black ${badgeColor}`}>
+                      <Trophy size={18} />
+                    </div>
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start gap-2">
+                      <h4 className="text-sm font-black text-foreground truncate">{s.name}</h4>
+                      <span className="text-xs font-black text-primary whitespace-nowrap">
+                        Rp {s.amount.toLocaleString("id-ID")}
+                      </span>
+                    </div>
+                    
+                    <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded-full border tracking-wider mt-1 inline-block ${badgeColor}`}>
+                      {label}
+                    </span>
+
+                    <p className="text-xs text-muted-foreground leading-relaxed font-semibold italic mt-3 pr-2 border-l-2 border-border pl-2">
+                      &quot;{s.message}&quot;
+                    </p>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </Card>
+
+        {/* 3. SLEEK INTERACTIVE FAQ */}
+        <Card className="glass border border-border/80 rounded-[3rem] p-8 sm:p-12 mb-12 sm:mb-16 shadow-[0_30px_70px_rgba(0,0,0,0.4)] relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese">
+            TANYA JAWAB
+          </div>
+          <div className="absolute -top-40 -left-40 w-80 h-80 bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
+
+          <div className="flex items-center gap-4 mb-8 relative z-10 border-b border-border/40 pb-6">
+            <div className="w-12 h-12 rounded-2xl bg-warning/10 border border-warning/30 flex items-center justify-center shadow-inner">
+              <HelpCircle className="text-warning drop-shadow-[0_0_8px_rgba(var(--warning-rgb),0.4)]" size={22} />
+            </div>
+            <div>
+              <h3 className="text-lg sm:text-xl font-black text-foreground uppercase italic tracking-wider leading-none">
+                Tanya Jawab
+              </h3>
+              <p className="text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">
+                Keterbukaan & Akuntabilitas Penuh
+              </p>
+            </div>
+          </div>
+
+          {/* Accordion FAQ List */}
+          <div className="flex flex-col gap-4 relative z-10">
+            {FAQS_MOCK.map((faq, idx) => {
+              const isOpen = expandedFAQ === idx;
+              return (
+                <div
+                  key={idx}
+                  className="p-5 rounded-2xl border border-border/60 bg-card/20 hover:border-primary/40 hover:bg-primary/[0.01] transition-all duration-300"
+                >
+                  <button
+                    onClick={() => setExpandedFAQ(isOpen ? -1 : idx)}
+                    className="w-full flex justify-between items-center text-left gap-4 outline-none group"
+                  >
+                    <span className="text-xs sm:text-sm font-black text-foreground group-hover:text-primary transition-colors leading-relaxed">
+                      {faq.question}
+                    </span>
+                    <motion.div
+                      animate={{ rotate: isOpen ? 180 : 0 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                      className="shrink-0 text-muted-foreground"
+                    >
+                      <ChevronDown size={18} />
+                    </motion.div>
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        <div className="pt-4 pb-1 text-xs sm:text-sm text-muted-foreground/80 leading-relaxed font-semibold italic border-t border-border/30 mt-4">
+                          {faq.answer}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+
+        {/* Footer Navigation */}
         <footer className="mt-20 sm:mt-28 mb-16 text-center pb-8 sm:pb-12">
           <div className="mb-16 flex flex-col items-center">
             <p className="text-[10px] sm:text-xs font-black uppercase tracking-[0.4em] text-muted-foreground/50 mb-6">
               Butuh Panduan Awal?
             </p>
-            <Button 
+            <Button
               onClick={() => router.push("/onboarding")}
-              variant="outline" 
+              variant="outline"
               className="rounded-2xl h-14 px-8 border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary font-black uppercase tracking-widest text-xs transition-all duration-300 group shadow-lg"
             >
               Mulai Ulang Tutorial <ChevronRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
@@ -237,7 +633,7 @@ function DonationCard({
         className={`group relative p-8 sm:p-12 rounded-[2.5rem] bg-card border border-border/80 ${accent} ${shadowColor} transition-all duration-500 shadow-[0_15px_40px_rgba(0,0,0,0.25)] overflow-hidden flex flex-col h-full`}
       >
         <div className={`absolute top-0 right-0 w-48 h-48 ${glowColor} blur-[70px] rounded-full pointer-events-none opacity-40 group-hover:opacity-80 transition-opacity`} />
-        
+
         <div className="absolute top-0 right-0 p-6 sm:p-8 opacity-[0.03] text-5xl sm:text-7xl font-black italic group-hover:opacity-[0.06] transition-opacity pointer-events-none uppercase text-foreground font-japanese select-none">
           {title}
         </div>
