@@ -41,7 +41,22 @@ export async function POST(request: Request) {
       body.key;
 
     if (expectedKey && token !== expectedKey) {
-      return NextResponse.json({ error: "Invalid webhook secret key" }, { status: 401 });
+      const headerKeys: string[] = [];
+      request.headers.forEach((_, key) => {
+        headerKeys.push(key);
+      });
+
+      return NextResponse.json({ 
+        error: "Invalid webhook secret key",
+        debug: {
+          hasExpectedKey: !!expectedKey,
+          expectedKeyLength: expectedKey.length,
+          tokenReceivedLength: token ? token.length : 0,
+          tokenReceivedMasked: token ? `${token.substring(0, 8)}...` : null,
+          headerKeys,
+          bodyKeys: Object.keys(body)
+        }
+      }, { status: 401 });
     }
 
     // Jika ini adalah uji coba/ping test dari dashboard Trakteer, langsung return sukses tanpa simpan DB
