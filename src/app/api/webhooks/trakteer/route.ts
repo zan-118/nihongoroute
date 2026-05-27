@@ -39,8 +39,10 @@ export async function POST(request: Request) {
       request.headers.get("x-webhook-token") || 
       request.headers.get("x-trakteer-token") || 
       body.key;
+    const cleanToken = (token || "").replace(/[\s\r\n]/g, "");
+    const cleanExpected = (expectedKey || "").replace(/[\s\r\n]/g, "");
 
-    if (expectedKey && token !== expectedKey) {
+    if (cleanExpected && cleanToken !== cleanExpected) {
       const headerKeys: string[] = [];
       request.headers.forEach((_, key) => {
         headerKeys.push(key);
@@ -50,9 +52,11 @@ export async function POST(request: Request) {
         error: "Invalid webhook secret key",
         debug: {
           hasExpectedKey: !!expectedKey,
-          expectedKeyLength: expectedKey.length,
+          expectedKeyLength: expectedKey ? expectedKey.length : 0,
           tokenReceivedLength: token ? token.length : 0,
           tokenReceivedMasked: token ? `${token.substring(0, 8)}...` : null,
+          isCleanMatch: cleanToken === cleanExpected,
+          charMatches: Array.from(cleanExpected).map((char, idx) => cleanToken[idx] === char),
           headerKeys,
           bodyKeys: Object.keys(body)
         }
