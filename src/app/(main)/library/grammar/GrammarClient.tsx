@@ -51,12 +51,18 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [mounted, setMounted] = useState(false);
+  const [layoutMode, setLayoutMode] = useState<"grid" | "list">("grid");
 
   const isFirstMount = useRef(true);
 
+  const layoutPreference = useUIStore((s) => s.settings.layoutPreference) ?? "grid";
+
   useEffect(() => {
     setMounted(true);
-  }, []);
+    if (layoutPreference) {
+      setLayoutMode(layoutPreference as "grid" | "list");
+    }
+  }, [layoutPreference]);
 
   // Sinkronisasikan state filter ke URL search parameters secara dinamis
   useEffect(() => {
@@ -141,10 +147,6 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
     }
   }, [searchTerm, initialSearch]);
 
-  const layoutPreference = useUIStore((s) => s.settings.layoutPreference) ?? "grid";
-
-  if (!mounted) return null;
-
   return (
     <div className="max-w-7xl mx-auto w-full relative z-10 pt-4 md:pt-10">
       <GrammarHeader 
@@ -166,7 +168,7 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
         )}
         
         {paginatedArticles.length > 0 ? (
-          layoutPreference === "grid" ? (
+          layoutMode === "grid" ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 items-stretch">
               {paginatedArticles.map((article, idx) => (
                 <GrammarCard
