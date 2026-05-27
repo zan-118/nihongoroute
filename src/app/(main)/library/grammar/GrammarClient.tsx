@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getGrammarArticles } from "@/actions/library.actions";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { BookOpen } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -32,18 +33,56 @@ interface GrammarClientProps {
 }
 
 export default function GrammarClient({ initialArticles = [] }: GrammarClientProps) {
-  const [selectedLevel, setSelectedLevel] = useState("n5");
-  const [searchTerm, setSearchTerm] = useState("");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Membaca filter awal dari URL jika ada (bookmark friendly)
+  const initialLevel = searchParams.get("level") || "n5";
+  const initialSearch = searchParams.get("search") || "";
+  const initialPage = Number(searchParams.get("page") || "1");
+
+  const [selectedLevel, setSelectedLevel] = useState(initialLevel);
+  const [searchTerm, setSearchTerm] = useState(initialSearch);
   const [articles, setArticles] = useState<GrammarArticle[]>(initialArticles);
   const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(initialPage);
   const [mounted, setMounted] = useState(false);
+
+  const isFirstMount = useRef(true);
 
   useEffect(() => {
     requestAnimationFrame(() => {
       setMounted(true);
     });
   }, []);
+
+  // Sinkronisasikan state filter ke URL search parameters secara dinamis
+  useEffect(() => {
+    if (!mounted) return;
+
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (searchTerm) {
+      params.set("search", searchTerm);
+    } else {
+      params.delete("search");
+    }
+
+    if (selectedLevel !== "n5") {
+      params.set("level", selectedLevel);
+    } else {
+      params.delete("level");
+    }
+
+    if (currentPage > 1) {
+      params.set("page", String(currentPage));
+    } else {
+      params.delete("page");
+    }
+
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [searchTerm, selectedLevel, currentPage, pathname, router, searchParams, mounted]);
 
   useEffect(() => {
     if (selectedLevel === "n5" && articles.length > 0 && articles.length === (initialArticles?.length || 0)) {
@@ -56,7 +95,11 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
         const data = await getGrammarArticles(selectedLevel);
         requestAnimationFrame(() => {
           setArticles(data);
-          setCurrentPage(1); 
+          if (isFirstMount.current) {
+            isFirstMount.current = false;
+          } else {
+            setCurrentPage(1);
+          }
         });
       } catch (error) {
         console.error("Gagal memuat tata bahasa:", error);
@@ -90,9 +133,11 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
 
   useEffect(() => {
     requestAnimationFrame(() => {
-      setCurrentPage(1);
+      if (searchTerm !== initialSearch) {
+        setCurrentPage(1);
+      }
     });
-  }, [searchTerm]);
+  }, [searchTerm, initialSearch]);
 
   if (!mounted) return null;
 
