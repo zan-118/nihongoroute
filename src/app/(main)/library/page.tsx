@@ -9,7 +9,7 @@ import { getLibraryCounts } from "@/actions/library.counts.actions";
 export default async function LibraryPage() {
   const counts = await getLibraryCounts();
 
-  const totalMateri = counts.vocab + counts.kanji + counts.grammar;
+  const totalMateri = counts.vocab + counts.kanji + counts.grammar + counts.reading + counts.listening + counts.exams;
 
   const categories = [
     {
@@ -44,6 +44,7 @@ export default async function LibraryPage() {
       desc: "Asah kemahiran membaca melalui teks interaktif yang dikategorikan sesuai standar level JLPT.",
       icon: <BookOpen size={24} />,
       label: "Bacaan Berjenjang",
+      count: counts.reading,
       isSanity: true,
       accentRgb: "168 85 247",
     },
@@ -53,6 +54,7 @@ export default async function LibraryPage() {
       desc: "Uji kesiapan Anda menghadapi ujian JLPT sesungguhnya dengan simulasi skor yang akurat.",
       icon: <Award size={24} />,
       label: "Latihan Ujian",
+      count: counts.exams,
       isSanity: true,
       accentRgb: "249 115 22",
     },
@@ -71,6 +73,7 @@ export default async function LibraryPage() {
       desc: "Tingkatkan kepekaan pendengaran melalui modul audio interaktif dan dukungan transkrip.",
       icon: <Headphones size={24} />,
       label: "Listening Lab",
+      count: counts.listening,
       isSanity: true,
       accentRgb: "6 182 212",
     }
