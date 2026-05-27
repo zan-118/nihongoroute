@@ -58,7 +58,21 @@ export function mergeStudyDays(localDays: Record<string, number>, cloudDays: Rec
 }
 
 /**
- * Menggabungkan progres gamifikasi secara keseluruhan.
+ * Menggabungkan progres gamifikasi secara keseluruhan antara data lokal dan data cloud.
+ * Menghasilkan satu objek terpadu yang memprioritaskan nilai tertinggi untuk XP/Streak,
+ * menggabungkan studyDays, melakukan deduplikasi pada quest harian yang diklaim, serta
+ * menyatukan pencapaian/lencana (achievements) secara aman dari kedua sumber.
+ * 
+ * @function mergeGamification
+ * @param {GamificationData} local - Progres gamifikasi aktif yang tersimpan di client-side store lokal.
+ * @param {GamificationData} cloud - Progres gamifikasi terbaru yang ditarik dari database Supabase cloud.
+ * @returns {object} Objek gamifikasi hasil penggabungan yang menyatukan XP, Level, Streak, Study Days,
+ *                   dan objek Inventory terdeduplikasi (streakFreeze, claimedQuests, achievements).
+ * 
+ * @effects
+ * - Mengembalikan koleksi achievements hasil gabungan dengan mempertahankan stempel waktu (timestamp)
+ *   unlockedAt yang paling awal untuk setiap ID pencapaian yang berhasil dipecahkan.
+ * - Mencegah terjadinya pengulangan pencapaian (infinite badge unlocking loop) di sisi client.
  */
 export function mergeGamification(local: GamificationData, cloud: GamificationData) {
   const mergedXP = Math.max(local.xp, cloud.xp);
@@ -89,6 +103,28 @@ export function mergeGamification(local: GamificationData, cloud: GamificationDa
     mergedQuests = localClaimed.date > cloudClaimed.date ? localClaimed : cloudClaimed;
   }
 
+  // Merge achievements from local and cloud by taking the union of their IDs,
+  // keeping the earliest unlockedAt timestamp for each.
+  const localAchievements = local.inventory?.achievements || [];
+  const cloudAchievements = cloud.inventory?.achievements || [];
+  const achievementMap = new Map<string, number>();
+
+  localAchievements.forEach((a) => {
+    achievementMap.set(a.id, a.unlockedAt);
+  });
+
+  cloudAchievements.forEach((a) => {
+    const existing = achievementMap.get(a.id);
+    if (existing === undefined || a.unlockedAt < existing) {
+      achievementMap.set(a.id, a.unlockedAt);
+    }
+  });
+
+  const mergedAchievements = Array.from(achievementMap.entries()).map(([id, unlockedAt]) => ({
+    id,
+    unlockedAt
+  }));
+
   return {
     xp: mergedXP,
     level: calculateLevel(mergedXP),
@@ -97,7 +133,8 @@ export function mergeGamification(local: GamificationData, cloud: GamificationDa
     todayReviewCount,
     inventory: {
       streakFreeze: Math.max(local.inventory?.streakFreeze || 0, cloud.inventory?.streakFreeze || 0),
-      claimedQuests: mergedQuests
+      claimedQuests: mergedQuests,
+      achievements: mergedAchievements
     }
   };
 }
