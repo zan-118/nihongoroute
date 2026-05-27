@@ -7,19 +7,38 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
+interface TrakteerPayload {
+  tr_id?: string;
+  transaction_id?: string;
+  supporter_name?: string;
+  net_amount?: number | string;
+  price?: number | string;
+  quantity?: number;
+  supporter_message?: string;
+  support_message?: string;
+  key?: string;
+}
+
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    const body = (await request.json()) as TrakteerPayload;
     
     // Trakteer payload fields:
-    // tr_id, supporter_name, quantity, price, net_amount, support_message, key, etc.
-    const trId = body.tr_id;
+    // transaction_id/tr_id, supporter_name, quantity, price, net_amount, supporter_message/support_message
+    const trId = body.transaction_id || body.tr_id;
     const supporterName = body.supporter_name || "Anonim";
-    const netAmount = Number(body.net_amount || body.price * (body.quantity || 1) || 0);
-    const supportMessage = body.support_message || "";
-    // Validasi token webhook rahasia dari Trakteer (mendukung header x-trakteer-token dan body key)
+    
+    const priceVal = Number(body.price || 0);
+    const quantityVal = Number(body.quantity || 1);
+    const netAmount = Number(body.net_amount || (priceVal * quantityVal) || 0);
+    
+    const supportMessage = body.supporter_message || body.support_message || "";
+    // Validasi token webhook rahasia dari Trakteer (mendukung header x-webhook-token, x-trakteer-token, dan body key)
     const expectedKey = process.env.TRAKTEER_WEBHOOK_SECRET;
-    const token = request.headers.get("x-trakteer-token") || body.key;
+    const token = 
+      request.headers.get("x-webhook-token") || 
+      request.headers.get("x-trakteer-token") || 
+      body.key;
 
     if (expectedKey && token !== expectedKey) {
       return NextResponse.json({ error: "Invalid webhook secret key" }, { status: 401 });
