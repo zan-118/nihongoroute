@@ -74,9 +74,8 @@ scripts/process-vocab-*.js
 scripts/clean-vocab.js
 
 # Migration & Scratch Scripts
-scripts/process-vocab*
-scripts/filter-n5.js
-scripts/clean-vocab.js
+scripts/
+
 data/
 *.ndjson
 vocab_*.json
