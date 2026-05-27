@@ -6,8 +6,9 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import {
   Search,
   ChevronLeft,
@@ -29,15 +30,27 @@ export default function VocabClient({
 }: {
   initialData: PaginatedVocabResponse;
 }) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Membaca nilai filter awal dari URL jika ada (bookmark friendly)
+  const initialLevel = searchParams.get("level") || "Semua";
+  const initialHinshi = searchParams.get("hinshi") || "all";
+  const initialSearch = searchParams.get("search") || "";
+  const initialPage = Number(searchParams.get("page") || "1");
+
   const [isFlashcardMode, setIsFlashcardMode] = useState(false);
   const [showRomaji, setShowRomaji] = useState(true);
 
-  const [level, setLevel] = useState<string>("Semua");
-  const [hinshi, setHinshi] = useState<string>("all");
-  const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [level, setLevel] = useState<string>(initialLevel);
+  const [hinshi, setHinshi] = useState<string>(initialHinshi);
+  const [search, setSearch] = useState(initialSearch);
+  const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
+  const [currentPage, setCurrentPage] = useState(initialPage);
   const limit = 50;
+
+  const isFirstMount = useRef(true);
 
   const mapLevelToQuery = (lbl: string) => {
     if (lbl === "Semua") return "all";
@@ -45,15 +58,52 @@ export default function VocabClient({
     return lbl;
   };
 
+  // Sinkronisasikan state filter ke URL search parameters secara dinamis
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (debouncedSearch) {
+      params.set("search", debouncedSearch);
+    } else {
+      params.delete("search");
+    }
+
+    if (level !== "Semua") {
+      params.set("level", level);
+    } else {
+      params.delete("level");
+    }
+
+    if (hinshi !== "all") {
+      params.set("hinshi", hinshi);
+    } else {
+      params.delete("hinshi");
+    }
+
+    if (currentPage > 1) {
+      params.set("page", String(currentPage));
+    } else {
+      params.delete("page");
+    }
+
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [debouncedSearch, level, hinshi, currentPage, pathname, router, searchParams]);
+
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(search);
-      setCurrentPage(1);
+      if (search !== initialSearch) {
+        setCurrentPage(1);
+      }
     }, 500);
     return () => clearTimeout(handler);
   }, [search]);
 
   useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
+    }
     requestAnimationFrame(() => {
       setCurrentPage(1);
     });
