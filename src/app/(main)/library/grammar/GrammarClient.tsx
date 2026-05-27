@@ -55,9 +55,7 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
   const isFirstMount = useRef(true);
 
   useEffect(() => {
-    requestAnimationFrame(() => {
-      setMounted(true);
-    });
+    setMounted(true);
   }, []);
 
   // Sinkronisasikan state filter ke URL search parameters secara dinamis
@@ -101,14 +99,12 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
       setLoading(true);
       try {
         const data = await getGrammarArticles(selectedLevel);
-        requestAnimationFrame(() => {
-          setArticles(data);
-          if (isFirstMount.current) {
-            isFirstMount.current = false;
-          } else {
-            setCurrentPage(1);
-          }
-        });
+        setArticles(data);
+        if (isFirstMount.current) {
+          isFirstMount.current = false;
+        } else {
+          setCurrentPage(1);
+        }
       } catch (error) {
         console.error("Gagal memuat tata bahasa:", error);
       } finally {
@@ -140,11 +136,9 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
   };
 
   useEffect(() => {
-    requestAnimationFrame(() => {
-      if (searchTerm !== initialSearch) {
-        setCurrentPage(1);
-      }
-    });
+    if (searchTerm !== initialSearch) {
+      setCurrentPage(1);
+    }
   }, [searchTerm, initialSearch]);
 
   const layoutPreference = useUIStore((s) => s.settings.layoutPreference) ?? "grid";
