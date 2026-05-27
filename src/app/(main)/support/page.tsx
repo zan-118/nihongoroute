@@ -162,8 +162,8 @@ export default function SupportPage() {
     },
   });
 
-  // Gunakan data real-time jika ada, jika tidak, gunakan SUPPORTERS_MOCK premium sebagai fallback
-  const allSupporters = dbSupporters.length > 0 ? dbSupporters : SUPPORTERS_MOCK;
+  // Hanya gunakan data donatur real-time dari database Supabase
+  const allSupporters = dbSupporters;
 
   // Mengurutkan donatur berdasarkan filter aktif
   const sortedSupporters = [...allSupporters].sort((a, b) => {
@@ -439,65 +439,80 @@ export default function SupportPage() {
 
           {/* Supporters Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
-            {sortedSupporters.map((s, idx) => {
-              let tierStyle = "border-border/60 hover:border-primary/50 shadow-sm";
-              let badgeColor = "bg-muted text-muted-foreground border-border/40";
-              let glowEffect = "rgba(var(--primary-rgb), 0.05)";
-              let label = "Perunggu";
+            {sortedSupporters.length === 0 ? (
+              <div className="col-span-1 md:col-span-2 p-10 rounded-[2rem] border border-dashed border-border/80 text-center bg-card/10 backdrop-blur-md relative overflow-hidden group shadow-inner">
+                <div className="text-4xl mb-4 animate-bounce">☕</div>
+                <h4 className="text-base font-black text-foreground uppercase tracking-wider mb-2">
+                  Belum Ada Pejuang Dukungan
+                </h4>
+                <p className="text-xs text-muted-foreground/80 leading-relaxed font-semibold italic max-w-sm mx-auto mb-6 px-4">
+                  Jadilah pejuang pertama yang menanam kebaikan untuk menjaga kelangsungan belajar bahasa Jepang gratis tanpa iklan!
+                </p>
+                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-primary animate-pulse">
+                  Klik tombol trakteer / saweria di atas untuk memulai
+                </div>
+              </div>
+            ) : (
+              sortedSupporters.map((s, idx) => {
+                let tierStyle = "border-border/60 hover:border-primary/50 shadow-sm";
+                let badgeColor = "bg-muted text-muted-foreground border-border/40";
+                let glowEffect = "rgba(var(--primary-rgb), 0.05)";
+                let label = "Perunggu";
 
-              if (s.tier === "gold") {
-                tierStyle = "border-[rgba(255,215,0,0.4)] bg-[rgba(255,215,0,0.015)] hover:bg-[rgba(255,215,0,0.03)]";
-                badgeColor = "bg-[rgba(255,215,0,0.15)] text-[rgba(255,215,0,1)] border-[rgba(255,215,0,0.3)]";
-                glowEffect = "rgba(255, 215, 0, 0.15)";
-                label = "Gold";
-              } else if (s.tier === "silver") {
-                tierStyle = "border-[rgba(192,192,192,0.4)] bg-[rgba(192,192,192,0.015)] hover:bg-[rgba(192,192,192,0.03)]";
-                badgeColor = "bg-[rgba(192,192,192,0.15)] text-[rgba(180,180,180,1)] border-[rgba(192,192,192,0.3)]";
-                glowEffect = "rgba(192, 192, 192, 0.12)";
-                label = "Silver";
-              } else if (s.tier === "bronze") {
-                tierStyle = "border-[rgba(180,110,50,0.4)] bg-[rgba(180,110,50,0.015)] hover:bg-[rgba(180,110,50,0.03)]";
-                badgeColor = "bg-[rgba(180,110,50,0.15)] text-[rgba(190,120,60,1)] border-[rgba(180,110,50,0.3)]";
-                glowEffect = "rgba(180, 110, 50, 0.08)";
-                label = "Bronze";
-              }
+                if (s.tier === "gold") {
+                  tierStyle = "border-[rgba(255,215,0,0.4)] bg-[rgba(255,215,0,0.015)] hover:bg-[rgba(255,215,0,0.03)]";
+                  badgeColor = "bg-[rgba(255,215,0,0.15)] text-[rgba(255,215,0,1)] border-[rgba(255,215,0,0.3)]";
+                  glowEffect = "rgba(255, 215, 0, 0.15)";
+                  label = "Gold";
+                } else if (s.tier === "silver") {
+                  tierStyle = "border-[rgba(192,192,192,0.4)] bg-[rgba(192,192,192,0.015)] hover:bg-[rgba(192,192,192,0.03)]";
+                  badgeColor = "bg-[rgba(192,192,192,0.15)] text-[rgba(180,180,180,1)] border-[rgba(192,192,192,0.3)]";
+                  glowEffect = "rgba(192, 192, 192, 0.12)";
+                  label = "Silver";
+                } else if (s.tier === "bronze") {
+                  tierStyle = "border-[rgba(180,110,50,0.4)] bg-[rgba(180,110,50,0.015)] hover:bg-[rgba(180,110,50,0.03)]";
+                  badgeColor = "bg-[rgba(180,110,50,0.15)] text-[rgba(190,120,60,1)] border-[rgba(180,110,50,0.3)]";
+                  glowEffect = "rgba(180, 110, 50, 0.08)";
+                  label = "Bronze";
+                }
 
-              return (
-                <motion.div
-                  key={s.name + idx}
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.05 }}
-                  className={`p-5 rounded-2xl border transition-all duration-300 flex gap-4 items-start ${tierStyle}`}
-                  style={{
-                    boxShadow: `0 10px 30px rgba(0,0,0,0.15), 0 0 15px ${glowEffect}`,
-                  }}
-                >
-                  <div className="shrink-0">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black ${badgeColor}`}>
-                      <Trophy size={18} />
+                return (
+                  <motion.div
+                    key={s.name + idx}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                    className={`p-5 rounded-2xl border transition-all duration-300 flex gap-4 items-start ${tierStyle}`}
+                    style={{
+                      boxShadow: `0 10px 30px rgba(0,0,0,0.15), 0 0 15px ${glowEffect}`,
+                    }}
+                  >
+                    <div className="shrink-0">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black ${badgeColor}`}>
+                        <Trophy size={18} />
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-start gap-2">
-                      <h4 className="text-sm font-black text-foreground truncate">{s.name}</h4>
-                      <span className="text-xs font-black text-primary whitespace-nowrap">
-                        Rp {s.amount.toLocaleString("id-ID")}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex justify-between items-start gap-2">
+                        <h4 className="text-sm font-black text-foreground truncate">{s.name}</h4>
+                        <span className="text-xs font-black text-primary whitespace-nowrap">
+                          Rp {s.amount.toLocaleString("id-ID")}
+                        </span>
+                      </div>
+                      
+                      <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded-full border tracking-wider mt-1 inline-block ${badgeColor}`}>
+                        {label}
                       </span>
-                    </div>
-                    
-                    <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded-full border tracking-wider mt-1 inline-block ${badgeColor}`}>
-                      {label}
-                    </span>
 
-                    <p className="text-xs text-muted-foreground leading-relaxed font-semibold italic mt-3 pr-2 border-l-2 border-border pl-2">
-                      &quot;{s.message}&quot;
-                    </p>
-                  </div>
-                </motion.div>
-              );
-            })}
+                      <p className="text-xs text-muted-foreground leading-relaxed font-semibold italic mt-3 pr-2 border-l-2 border-border pl-2">
+                        &quot;{s.message}&quot;
+                      </p>
+                    </div>
+                  </motion.div>
+                );
+              })
+            )}
           </div>
         </Card>
 
