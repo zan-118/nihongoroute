@@ -87,8 +87,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/og-image.png",
-        width: 1920,
-        height: 1080,
+        width: 1200,
+        height: 630,
         alt: "NihongoRoute Dashboard",
       },
     ],

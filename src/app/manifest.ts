@@ -27,7 +27,7 @@ export default function manifest(): MetadataRoute.Manifest {
     screenshots: [
       {
         src: "/og-image.png",
-        sizes: "1920x1080",
+        sizes: "1200x630",
         type: "image/png",
         form_factor: "wide",
         label: "NihongoRoute Dashboard",
