@@ -26,7 +26,7 @@ export function Hero() {
           >
             <Sparkles size={12} className="text-primary animate-pulse" />
             <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary">
-              Platform Belajar Bahasa Jepang
+              NihongoRoute | Platform Belajar Bahasa Jepang
             </span>
           </Badge>
         </m.div>
@@ -38,7 +38,7 @@ export function Hero() {
           className="text-6xl md:text-8xl lg:text-[100px] font-bold tracking-[-0.04em] leading-[0.95] text-foreground mb-[34px]"
         >
           Kuasai <br />
-          <m.span 
+          <m.span
             initial={{ filter: "blur(20px)", opacity: 0 }}
             animate={{ filter: "blur(0px)", opacity: 1 }}
             transition={{ delay: 0.3, duration: 1 }}
@@ -54,7 +54,7 @@ export function Hero() {
           transition={{ delay: 0.5 }}
           className="text-muted-foreground text-lg md:text-xl max-w-xl mb-[55px] leading-relaxed font-medium text-balance"
         >
-          Belajar bahasa Jepang jadi lebih seru dan mudah. Platform modern 
+          Belajar bahasa Jepang di NihongoRoute jadi lebih seru dan mudah. Platform modern
           yang didesain khusus untuk membantumu mahir lebih cepat.
         </m.p>
 
@@ -89,7 +89,7 @@ export function Hero() {
       </div>
 
       {/* RIGHT DECORATIVE AREA - ASYMMETRICAL BALANCE */}
-      <m.div 
+      <m.div
         initial={{ opacity: 0, scale: 0.9, rotate: -5 }}
         animate={{ opacity: 1, scale: 1, rotate: 0 }}
         transition={{ delay: 0.4, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
@@ -108,17 +108,17 @@ export function Hero() {
               日本語
             </div>
           </div>
-          
+
           {/* Floating Accents */}
-          <m.div 
+          <m.div
             animate={{ y: [0, -21, 0], x: [0, 8, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             className="absolute -top-8 right-8 size-21 p-4 bg-background border border-border rounded-2xl shadow-2xl backdrop-blur-md"
           >
             <Sparkles className="text-primary" size={24} />
           </m.div>
-          
-          <m.div 
+
+          <m.div
             animate={{ y: [0, 34, 0], x: [0, -13, 0] }}
             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
             className="absolute bottom-8 -left-8 p-6 bg-card/60 border border-border rounded-3xl shadow-2xl backdrop-blur-xl"
