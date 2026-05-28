@@ -21,11 +21,15 @@ export function useReviewSession(loading: boolean) {
   // Hitung jumlah kartu yang jatuh tempo (due)
   const dueItemIds = useMemo(() => {
     return Object.entries(srs || {})
-      .filter(([, state]) => state.nextReview <= now)
+      .filter(([, state]) => !state.isDeleted && state.nextReview <= now)
       .map(([id]) => id);
   }, [srs, now]);
 
-  const allItemIds = useMemo(() => Object.keys(srs || {}), [srs]);
+  const allItemIds = useMemo(() => {
+    return Object.entries(srs || {})
+      .filter(([, state]) => !state.isDeleted)
+      .map(([id]) => id);
+  }, [srs]);
 
   const startSession = async (selectedMode: SessionMode) => {
     if (!selectedMode) return;

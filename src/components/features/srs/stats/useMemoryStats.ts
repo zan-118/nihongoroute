@@ -2,7 +2,7 @@ import { useSRSStore } from "@/store/useSRSStore";
 
 export function useMemoryStats() {
   const srs = useSRSStore(s => s.srs);
-  const srsEntries = Object.values(srs || {});
+  const srsEntries = Object.values(srs || {}).filter((s) => !s.isDeleted);
 
   const stats = {
     master: srsEntries.filter((s) => s.interval >= 30).length,

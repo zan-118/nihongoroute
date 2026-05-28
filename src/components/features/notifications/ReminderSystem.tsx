@@ -21,7 +21,7 @@ export default function ReminderSystem() {
 
     const checkDueCards = () => {
       const now = Date.now();
-      const dueCount = Object.values(srs).filter((card) => card.nextReview <= now).length;
+      const dueCount = Object.values(srs).filter((card) => !card.isDeleted && card.nextReview <= now).length;
 
       // Only notify if there are cards due and we haven't notified in the last 1 hour
       if (dueCount > 0 && now - lastNotifiedRef.current > 3600000) {
