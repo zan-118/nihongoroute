@@ -24,7 +24,7 @@ export default function LessonSidebar({
         {/* Header Kategori */}
         <div className="p-6 rounded-[2rem] bg-card/30 backdrop-blur-md border border-border/50 shadow-sm">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+            <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
               <BookOpen size={16} />
             </div>
             <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">

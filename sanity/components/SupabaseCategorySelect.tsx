@@ -76,7 +76,7 @@ export function SupabaseCategorySelect(props: SupabaseCategorySelectProps) {
         </Text>
       )}
       {loading ? (
-        <Text size={1} muted>Memuat kategori dari Supabase...</Text>
+        <Text size={1} muted>Memuat kategori dari Supabase…</Text>
       ) : error ? (
         <Card tone="critical" padding={2} radius={2}>
           <Text size={1}>Error: {error}</Text>

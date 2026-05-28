@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 
 interface CategoryHeroProps {
   title: string;
@@ -45,7 +45,7 @@ export function CategoryHero({
 
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12">
         <div className="space-y-8 max-w-3xl">
-          <motion.div variants={itemVariants} className="flex items-center gap-4">
+          <m.div variants={itemVariants} className="flex items-center gap-4">
             <span
               className="px-4 py-1.5 rounded-full border text-[10px] font-black uppercase tracking-[0.2em] transition-all"
               style={badgeStyle}
@@ -53,29 +53,29 @@ export function CategoryHero({
               {isSideQuest ? "Practical competency" : "JLPT Mastery Track"}
             </span>
             <div className="h-[1px] w-12 bg-border" />
-          </motion.div>
+          </m.div>
 
           <div className="space-y-4">
-            <motion.h1
+            <m.h1
               variants={itemVariants}
               className={`text-6xl md:text-9xl font-black tracking-tighter leading-[0.85] uppercase ${themeColor}`}
             >
               {title}
-            </motion.h1>
+            </m.h1>
 
             {description && (
-              <motion.p
+              <m.p
                 variants={itemVariants}
                 className="text-lg md:text-xl text-muted-foreground font-medium leading-relaxed max-w-2xl"
               >
                 {description}
-              </motion.p>
+              </m.p>
             )}
           </div>
         </div>
 
         {/* Overall Progress Widget */}
-        <motion.div
+        <m.div
           variants={itemVariants}
           className="lg:mb-4 p-8 glass bg-card/30 rounded-[2.5rem] border border-border min-w-[280px] shadow-2xl relative overflow-hidden group"
         >
@@ -93,7 +93,7 @@ export function CategoryHero({
               className="h-3 rounded-full overflow-hidden border border-border/80"
               style={{ backgroundColor: "rgba(var(--background-rgb), 0.5)" }}
             >
-              <motion.div
+              <m.div
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercent}%` }}
                 className="h-full rounded-full transition-all duration-1000"
@@ -111,7 +111,7 @@ export function CategoryHero({
               <span>{totalLessons} Lessons</span>
             </div>
           </div>
-        </motion.div>
+        </m.div>
       </div>
     </header>
   );

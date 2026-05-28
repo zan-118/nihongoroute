@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -30,11 +30,11 @@ export default function ProfileSection({
   const [isSyncing, setIsSyncing] = useState(false);
   const supabase = createClient();
 
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      setNewName(name);
-    });
-  }, [name]);
+  const [prevName, setPrevName] = useState(name);
+  if (name !== prevName) {
+    setPrevName(name);
+    setNewName(name);
+  }
 
   const handleSave = async () => {
     if (!newName.trim()) {
@@ -67,11 +67,11 @@ export default function ProfileSection({
   };
 
   return (
-    <motion.div variants={itemVariants}>
+    <m.div variants={itemVariants}>
       <Card className="glass backdrop-blur-3xl border border-border/80 rounded-[2.5rem] p-8 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden relative group">
         {/* Pilot ID Card Decorative Elements */}
-        <div className="absolute top-0 right-0 w-80 h-80 bg-primary/10 blur-[120px] rounded-full -mr-32 -mt-32 animate-pulse pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-secondary/5 blur-[80px] rounded-full -ml-16 -mb-16 pointer-events-none" />
+        <div className="absolute top-0 right-0 size-80 bg-primary/10 blur-[120px] rounded-full -mr-32 -mt-32 animate-pulse pointer-events-none" />
+        <div className="absolute bottom-0 left-0 size-48 bg-secondary/5 blur-[80px] rounded-full -ml-16 -mb-16 pointer-events-none" />
         
         {/* ID Card Header Pattern */}
         <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary via-blue-500 to-emerald-500 opacity-80" />
@@ -83,17 +83,17 @@ export default function ProfileSection({
                 <div className="absolute -inset-1.5 bg-gradient-to-br from-primary to-blue-500 rounded-[2.5rem] blur-md opacity-30 group-hover/avatar:opacity-60 transition duration-1000 group-hover/avatar:duration-300" />
                 <div className="w-32 h-32 md:w-36 md:h-36 rounded-[2.2rem] bg-card border border-border flex items-center justify-center text-foreground relative z-10 overflow-hidden shadow-2xl">
                    <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent opacity-60" />
-                   <span className="text-6xl font-black italic text-transparent bg-clip-text bg-gradient-to-br from-primary to-blue-500 drop-shadow-md select-none font-japanese">
+                   <span className="text-6xl font-black italic text-primary drop-shadow-md select-none font-japanese">
                       {(newName || "S").charAt(0).toUpperCase()}
                    </span>
                 </div>
-                <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-card border border-border rounded-2xl flex items-center justify-center z-20 shadow-xl group-hover/avatar:scale-110 transition-transform">
+                <div className="absolute -bottom-2 -right-2 size-10 bg-card border border-border rounded-2xl flex items-center justify-center z-20 shadow-xl group-hover/avatar:scale-110 transition-transform">
                    <ShieldCheck size={20} className="text-success animate-pulse" />
                 </div>
              </div>
              <div className="flex flex-col items-center">
                 <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 mb-0.5">Level Belajar</span>
-                <span className="text-xs font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">Master Route</span>
+                <span className="text-xs font-black uppercase tracking-widest text-primary">Master Route</span>
              </div>
           </div>
           
@@ -113,7 +113,7 @@ export default function ProfileSection({
             {/* STATS COUNTERS */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                <div className="bg-background/20 backdrop-blur-md border border-border rounded-2xl p-5 flex items-center gap-4 group/stat hover:bg-background/35 hover:border-primary/20 transition-all duration-300 shadow-lg">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-inner">
+                  <div className="size-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-inner">
                      <Zap size={22} className="fill-current animate-pulse text-primary" />
                   </div>
                   <div>
@@ -124,8 +124,8 @@ export default function ProfileSection({
                   </div>
                </div>
                <div className="bg-background/20 backdrop-blur-md border border-border rounded-2xl p-5 flex items-center gap-4 group/stat hover:bg-background/35 hover:border-warning/20 transition-all duration-300 shadow-lg">
-                  <div className="w-12 h-12 rounded-xl bg-warning/10 border border-warning/20 flex items-center justify-center text-warning shadow-inner">
-                     <Flame size={22} className="fill-current text-warning animate-bounce" />
+                  <div className="size-12 rounded-xl bg-warning/10 border border-warning/20 flex items-center justify-center text-warning shadow-inner">
+                     <Flame size={22} className="fill-current text-warning animate-premium-bounce" />
                   </div>
                   <div>
                      <div className="text-2xl font-black tracking-tighter text-foreground font-mono">
@@ -141,7 +141,7 @@ export default function ProfileSection({
                 <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-muted-foreground/30 group-focus-within/input:text-primary transition-colors">
                    <User size={18} />
                 </div>
-                <input 
+                <input aria-label="Masukkan nama Anda" 
                   type="text" 
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
@@ -160,6 +160,6 @@ export default function ProfileSection({
           </div>
         </div>
       </Card>
-    </motion.div>
+    </m.div>
   );
 }

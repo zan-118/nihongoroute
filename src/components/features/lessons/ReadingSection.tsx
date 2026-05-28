@@ -69,9 +69,9 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
               <div className="prose-custom text-lg md:text-xl leading-[2] md:leading-[2.2] font-japanese bg-card/30 p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-border/50">
                 {typeof r.body === "string"
-                  ? r.body.split("\n").filter(Boolean).map((line: string, i: number) => (
-                      <div key={i} className="mb-4">
-                        <SmartJapanese word={line} furigana={r.hiragana?.split("\n")[i] || ""} />
+                  ? r.body.split("\n").filter(Boolean).map((line: string, pos: number) => (
+                      <div key={`body-${pos}`} className="mb-4">
+                        <SmartJapanese word={line} furigana={r.hiragana?.split("\n")[pos] || ""} />
                       </div>
                     ))
                   : null}
@@ -79,8 +79,8 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
               <div className="prose-custom opacity-70 italic text-sm md:text-base bg-muted/20 p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-border/30">
                  <h4 className="text-[10px] not-italic font-black text-muted-foreground uppercase tracking-[0.2em] mb-4 md:mb-6">Terjemahan</h4>
                  {typeof r.translation === "string"
-                   ? r.translation.split("\n").filter(Boolean).map((line: string, i: number) => (
-                       <p key={i} className="mb-2">{line}</p>
+                   ? r.translation.split("\n").filter(Boolean).map((line: string, pos: number) => (
+                       <p key={`trans-${pos}`} className="mb-2">{line}</p>
                      ))
                    : null}
               </div>

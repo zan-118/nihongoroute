@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Medal, Flame, Search, Crown, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { get as idbGet, set as idbSet } from "idb-keyval";
 import { useUserStore } from "@/store/useUserStore";
@@ -141,7 +141,7 @@ export default function LeaderboardClient() {
         </div>
         <div className="flex flex-col gap-4 mt-12">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-20 w-full bg-muted/20 animate-pulse rounded-2xl" />
+            <div key={`skeleton-row-${i}`} className="h-20 w-full bg-muted/20 animate-pulse rounded-2xl" />
           ))}
         </div>
       </div>
@@ -180,7 +180,7 @@ export default function LeaderboardClient() {
           <div className="pl-3.5 text-muted-foreground/60">
             <Search size={16} />
           </div>
-          <input
+          <input aria-label="Cari nama siswa"
             type="text"
             placeholder="Cari nama siswa..."
             value={searchQuery}
@@ -188,7 +188,7 @@ export default function LeaderboardClient() {
             className="flex-1 bg-transparent border-none outline-none py-2 px-3 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/50"
           />
           {searchQuery && (
-            <button
+            <button type="button"
               onClick={() => setSearchQuery("")}
               className="p-2 mr-1 rounded-xl text-muted-foreground/50 hover:text-foreground hover:bg-muted/40 transition-colors"
               aria-label="Bersihkan pencarian"
@@ -201,7 +201,7 @@ export default function LeaderboardClient() {
 
       <AnimatePresence mode="wait">
         {!isSearching && topThree.length > 0 && (
-          <motion.div
+          <m.div
             key="podium"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -212,7 +212,7 @@ export default function LeaderboardClient() {
             <div className="absolute inset-0 bg-gradient-to-t from-primary/[0.02] via-transparent to-transparent pointer-events-none" />
             
             {/* RANK 2 (Silver) */}
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: "spring", stiffness: 100, damping: 15, delay: 0.1 }}
@@ -236,10 +236,10 @@ export default function LeaderboardClient() {
                   {topThree[1]?.xp || 0} XP
                 </Badge>
               </div>
-            </motion.div>
+            </m.div>
 
             {/* RANK 1 (Gold - Champion) */}
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, y: 35 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: "spring", stiffness: 100, damping: 12 }}
@@ -250,7 +250,7 @@ export default function LeaderboardClient() {
                 <div className="w-16 h-16 sm:w-28 sm:h-28 rounded-full bg-card border-[3px] sm:border-4 border-warning flex items-center justify-center text-lg sm:text-4xl font-black text-warning shadow-[0_15px_35px_rgba(var(--warning-rgb),0.25)] relative z-10 select-none font-japanese">
                   {topThree[0]?.full_name?.charAt(0).toUpperCase() || "?"}
                 </div>
-                <div className="absolute -top-7 sm:-top-10 left-1/2 -translate-x-1/2 text-warning animate-bounce drop-shadow-[0_0_12px_rgba(var(--warning-rgb),0.5)] z-20">
+                <div className="absolute -top-7 sm:-top-10 left-1/2 -translate-x-1/2 text-warning animate-premium-bounce drop-shadow-[0_0_12px_rgba(var(--warning-rgb),0.5)] z-20">
                   <Trophy className="w-6 h-6 sm:w-9 sm:h-9" />
                 </div>
                 <div className="absolute -bottom-1.5 -right-1 w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-warning flex items-center justify-center text-warning-foreground border border-background shadow-xl z-20 animate-pulse">
@@ -267,10 +267,10 @@ export default function LeaderboardClient() {
                   {topThree[0]?.xp || 0} XP
                 </Badge>
               </div>
-            </motion.div>
+            </m.div>
 
             {/* RANK 3 (Bronze) */}
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: "spring", stiffness: 100, damping: 15, delay: 0.2 }}
@@ -294,8 +294,8 @@ export default function LeaderboardClient() {
                   {topThree[2]?.xp || 0} XP
                 </Badge>
               </div>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
 
@@ -312,26 +312,26 @@ export default function LeaderboardClient() {
 
         {/* Status Badge Luring */}
         {isOffline && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="p-3.5 rounded-2xl bg-warning/5 border border-warning/20 text-warning text-xs font-bold flex items-center gap-2.5 select-none"
           >
-            <div className="w-2 h-2 rounded-full bg-warning animate-pulse shrink-0" />
+            <div className="size-2 rounded-full bg-warning animate-pulse shrink-0" />
             <span>Mode Luring Aktif. Menampilkan peringkat dari cache lokal.</span>
-          </motion.div>
+          </m.div>
         )}
 
         {/* Status Badge Sinkronisasi */}
         {!isOffline && isFetching && !showSkeleton && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="p-3 rounded-xl bg-primary/5 border border-primary/10 text-primary text-[10px] uppercase font-black tracking-widest flex items-center gap-2 select-none"
           >
-            <div className="w-1.5 h-1.5 rounded-full bg-primary animate-ping shrink-0" />
-            <span>Menyinkronkan papan peringkat dengan server...</span>
-          </motion.div>
+            <div className="size-1.5 rounded-full bg-primary animate-ping shrink-0" />
+            <span>Menyinkronkan papan peringkat dengan server…</span>
+          </m.div>
         )}
         
         {othersList.map((user) => {
@@ -339,7 +339,7 @@ export default function LeaderboardClient() {
           const userRankNum = user.rank;
           
           return (
-            <motion.div
+            <m.div
               key={user.id}
               initial={{ opacity: 0, x: -15 }}
               animate={{ opacity: 1, x: 0 }}
@@ -389,7 +389,7 @@ export default function LeaderboardClient() {
                     <Badge variant="ghost" className="p-0 text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
                       Level {user.level}
                     </Badge>
-                    <div className="w-1 h-1 rounded-full bg-muted-foreground/30" />
+                    <div className="size-1 rounded-full bg-muted-foreground/30" />
                     <div className="flex items-center gap-1 text-[11px] sm:text-xs font-bold text-warning select-none">
                       <Flame size={12} className="drop-shadow-sm text-warning fill-current" /> 
                       {user.streak} <span className="hidden sm:inline text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-0.5">Hari Beruntun</span>
@@ -407,7 +407,7 @@ export default function LeaderboardClient() {
                   <p className="text-[7px] sm:text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">Poin XP</p>
                 </div>
               </Card>
-            </motion.div>
+            </m.div>
           );
         })}
 
@@ -423,7 +423,7 @@ export default function LeaderboardClient() {
 
       {/* 📱 FLOATING STICKY CARD (PERINGKAT SAYA DI LUAR TOP 20) */}
       {showFloatingOwnRank && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-4xl z-50 pointer-events-none"
@@ -467,7 +467,7 @@ export default function LeaderboardClient() {
               )}
             </div>
           </Card>
-        </motion.div>
+        </m.div>
       )}
       
     </div>

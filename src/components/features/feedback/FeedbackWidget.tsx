@@ -68,7 +68,7 @@ export default function FeedbackWidget({ forceOpen, onOpenChange }: FeedbackWidg
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground/80">Pesan</label>
-              <textarea
+              <textarea aria-label="Ceritakan detailnya di sini"
                value={message}
                onChange={(e) => setMessage(e.target.value)}
                placeholder="Ceritakan detailnya di sini..."
@@ -83,10 +83,10 @@ export default function FeedbackWidget({ forceOpen, onOpenChange }: FeedbackWidg
               className="w-full bg-primary hover:bg-primary/90 text-primary-foreground transition-all border-none"
             >
               {isSubmitting ? (
-                <Loader2 aria-hidden="true" className="w-5 h-5 animate-spin" />
+                <Loader2 aria-hidden="true" className="size-5 animate-spin" />
               ) : (
                 <>
-                  <Send aria-hidden="true" className="w-4 h-4 mr-2" />
+                  <Send aria-hidden="true" className="size-4 mr-2" />
                   Kirim Masukan
                 </>
               )}

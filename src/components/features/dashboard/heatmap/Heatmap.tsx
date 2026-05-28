@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Activity } from "lucide-react";
@@ -42,7 +42,7 @@ export default function Heatmap({ studyDays }: Props) {
           const value = studyDays?.[day] ?? 0;
 
           return (
-            <motion.div
+            <m.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.01, duration: 0.4 }}
@@ -52,7 +52,7 @@ export default function Heatmap({ studyDays }: Props) {
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 md:mb-3 w-max px-3 py-2 md:px-4 md:py-3 bg-popover/95 backdrop-blur-xl border border-border text-popover-foreground text-xs md:text-xs font-bold uppercase tracking-widest rounded-xl opacity-0 group-hover:opacity-100 transition-all pointer-events-none shadow-2xl z-30 neo-card scale-90 group-hover:scale-100 origin-bottom">
                 {day} <span className="text-muted-foreground/30 mx-2">|</span> <span className="text-primary">{value} KATA</span>
               </div>
-            </motion.div>
+            </m.div>
           );
         })}
       </div>

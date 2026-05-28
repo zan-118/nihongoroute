@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { ArrowRight, BookOpen, GraduationCap } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { ROUTES } from "../../../lib/routes";
@@ -85,7 +85,7 @@ export function GeneralCategoryCard({ cat, variants }: GeneralCategoryCardProps)
   const IconComponent = isJlpt ? GraduationCap : BookOpen;
 
   return (
-    <motion.div 
+    <m.div 
       variants={variants} 
       className="h-full"
       whileHover={{ y: -8 }}
@@ -96,7 +96,7 @@ export function GeneralCategoryCard({ cat, variants }: GeneralCategoryCardProps)
           
           {/* Cyber Glow Ambient Latar Belakang */}
           <div 
-            className="absolute top-0 right-0 w-[300px] h-[300px] blur-[120px] rounded-full -mr-20 -mt-20 pointer-events-none transition-all duration-700 opacity-20 group-hover:opacity-40"
+            className="absolute top-0 right-0 size-[300px] blur-[120px] rounded-full -mr-20 -mt-20 pointer-events-none transition-all duration-700 opacity-20 group-hover:opacity-40"
             style={{ backgroundColor: `rgba(${theme.glowColor}, 0.2)` }}
           />
           
@@ -162,6 +162,6 @@ export function GeneralCategoryCard({ cat, variants }: GeneralCategoryCardProps)
           </div>
         </div>
       </Card>
-    </motion.div>
+    </m.div>
   );
 }

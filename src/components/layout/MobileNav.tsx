@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useMobileNav } from "@/components/layout/hooks/useMobileNav";
 
 export default function MobileNav() {
@@ -25,14 +25,14 @@ export default function MobileNav() {
                 >
                   {/* Fluid Background Indicator */}
                   {isActive && (
-                    <motion.div
+                    <m.div
                       layoutId="mobile-nav-pill"
                       className="absolute inset-x-1 inset-y-1 bg-primary/10 border border-primary/20 rounded-2xl z-0 shadow-[0_0_20px_rgba(var(--primary-rgb),0.05)]"
                       transition={{ type: "spring", stiffness: 380, damping: 30 }}
                     />
                   )}
 
-                  <motion.div
+                  <m.div
                     animate={{
                       y: isActive ? -1 : 0,
                       scale: isActive ? 1.1 : 1,
@@ -49,7 +49,7 @@ export default function MobileNav() {
                       strokeWidth={isActive ? 2.5 : 2} 
                       className={isActive ? "drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.6)]" : ""} 
                     />
-                  </motion.div>
+                  </m.div>
                   
                   <span
                     className={`text-[7px] font-black uppercase tracking-[0.15em] mt-1 transition-all duration-300 relative z-10 ${

@@ -25,7 +25,7 @@ export default function SRSAnalytics() {
       
       <header className="flex items-center justify-between mb-10 relative z-10">
         <div className="flex items-center gap-4">
-          <Card className="w-12 h-12 rounded-xl bg-primary/10 border-primary/20 flex items-center justify-center neo-inset shadow-none">
+          <Card className="size-12 rounded-xl bg-primary/10 border-primary/20 flex items-center justify-center neo-inset shadow-none">
             <LineChart size={24} className="text-primary" />
           </Card>
           <div>
@@ -41,10 +41,10 @@ export default function SRSAnalytics() {
       {/* CUSTOM SVG CHART */}
       <div className="flex-1 flex flex-col justify-between gap-8 relative z-10">
         <div className="flex items-end justify-between gap-4 h-48 px-2">
-          {data.map((item, i) => {
+          {data.map((item) => {
             const height = (item.count / maxCount) * 100;
             return (
-              <div key={i} className="flex-1 flex flex-col items-center gap-4 group">
+              <div key={item.label} className="flex-1 flex flex-col items-center gap-4 group">
                 <div className="relative w-full flex flex-col items-center">
                   <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-foreground text-background text-xs font-black px-2 py-1 rounded uppercase tracking-tighter whitespace-nowrap z-20">
                     {item.count} Items
@@ -76,10 +76,10 @@ export default function SRSAnalytics() {
 
         {/* INSIGHT LIST */}
         <div className="grid grid-cols-1 gap-3 mt-4">
-          {data.map((item, i) => (
-            <div key={i} className="flex items-center justify-between p-3 rounded-2xl bg-muted/30 border border-border hover:bg-muted/50 transition-colors">
+          {data.map((item) => (
+            <div key={item.label} className="flex items-center justify-between p-3 rounded-2xl bg-muted/30 border border-border hover:bg-muted/50 transition-colors">
               <div className="flex items-center gap-3">
-                <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: item.color }} />
+                <div className="size-1.5 rounded-full" style={{ backgroundColor: item.color }} />
                 <div>
                   <p className="text-xs font-black text-foreground uppercase tracking-tight">{item.label}</p>
                   <p className="text-[8px] text-muted-foreground font-bold uppercase tracking-widest">{item.desc}</p>

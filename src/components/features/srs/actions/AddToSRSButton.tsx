@@ -7,11 +7,11 @@ export default function AddToSRSButton({ wordId }: { wordId: string }) {
   const { isLoaded, isAdded, handleAdd } = useAddToSRS(wordId);
 
   if (!isLoaded)
-    return <div className="w-10 h-10 animate-pulse bg-background/5 rounded-xl" />;
+    return <div className="size-10 animate-pulse bg-background/5 rounded-xl" />;
 
   if (isAdded) {
     return (
-      <button
+      <button type="button"
         disabled
         className="p-3 bg-success/10 border border-success/30 text-success rounded-xl transition-all cursor-default flex items-center justify-center relative group shadow-inner"
       >
@@ -24,7 +24,7 @@ export default function AddToSRSButton({ wordId }: { wordId: string }) {
   }
 
   return (
-    <button
+    <button type="button"
       onClick={handleAdd}
       className="p-3 bg-card border border-border hover:border-primary hover:bg-primary/10 text-muted-foreground hover:text-primary rounded-xl transition-all flex items-center justify-center active:scale-90 relative group"
     >

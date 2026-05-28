@@ -84,7 +84,7 @@ export default function CheatsheetClient({
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 md:gap-12">
           <div className="flex flex-col gap-4">
              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[rgba(var(--primary-rgb),0.1)] flex items-center justify-center text-primary border border-[rgba(var(--primary-rgb),0.2)]">
+                <div className="size-10 rounded-xl bg-[rgba(var(--primary-rgb),0.1)] flex items-center justify-center text-primary border border-[rgba(var(--primary-rgb),0.2)]">
                    <Activity size={20} className="animate-pulse" />
                 </div>
                 <span className="text-primary font-black text-xs uppercase tracking-[0.3em]">Quick Reference</span>
@@ -138,7 +138,7 @@ export default function CheatsheetClient({
                   </div>
 
                   <div className="flex items-center justify-between relative z-10">
-                    <div className="w-14 h-14 rounded-2xl bg-muted border border-border flex items-center justify-center text-muted-foreground group-hover:text-primary group-hover:bg-[rgba(var(--primary-rgb),0.1)] group-hover:border-[rgba(var(--primary-rgb),0.2)] transition-all duration-500">
+                    <div className="size-14 rounded-2xl bg-muted border border-border flex items-center justify-center text-muted-foreground group-hover:text-primary group-hover:bg-[rgba(var(--primary-rgb),0.1)] group-hover:border-[rgba(var(--primary-rgb),0.2)] transition-all duration-500">
                         {getIconForCategory(sheet.category)}
                     </div>
                     <Badge variant="outline" className="bg-[rgba(var(--muted-rgb),0.5)] text-[10px] font-black uppercase tracking-widest text-muted-foreground border-border">

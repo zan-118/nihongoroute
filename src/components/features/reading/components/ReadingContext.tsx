@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, use, useState } from "react";
 import { ReadingMode } from "../types";
 
 interface ReadingContextType {
@@ -24,7 +24,7 @@ export function ReadingProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useReading() {
-  const context = useContext(ReadingContext);
+  const context = use(ReadingContext);
   if (context === undefined) {
     throw new Error("useReading must be used within a ReadingProvider");
   }

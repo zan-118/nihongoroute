@@ -33,7 +33,7 @@ export function KanjiHeader({
 
       <div className="flex flex-col xl:flex-row gap-4 xl:items-center">
         <div className="relative flex-1">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" aria-hidden="true" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground size-5" aria-hidden="true" />
           <Input 
             placeholder="Cari kanji, arti, atau cara baca..." 
             className="pl-12 h-14 bg-card/40 backdrop-blur-xl border border-border rounded-2xl text-lg shadow-2xl focus:ring-primary/20"

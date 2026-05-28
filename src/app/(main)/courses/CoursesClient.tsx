@@ -8,7 +8,7 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { GeneralCategoryCard } from "@/components/features/course/GeneralCategoryCard";
 
 const containerVariants = {
@@ -56,11 +56,11 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
         
         {/* Animated Ambient Blobs menggunakan RGB CSS Variables */}
         <div 
-          className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full blur-[120px] animate-pulse" 
+          className="absolute top-[-10%] left-[-10%] size-[50%] rounded-full blur-[120px] animate-pulse" 
           style={{ backgroundColor: 'rgba(var(--primary-rgb), 0.08)' }}
         />
         <div 
-          className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full blur-[120px] animate-pulse" 
+          className="absolute bottom-[-10%] right-[-10%] size-[50%] rounded-full blur-[120px] animate-pulse" 
           style={{ backgroundColor: 'rgba(var(--secondary-rgb), 0.08)', animationDelay: '2s' }} 
         />
 
@@ -72,7 +72,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
         </div>
       </div>
 
-      <motion.div
+      <m.div
         className="max-w-7xl mx-auto px-6 md:px-12 relative z-10 pt-20 md:pt-32"
         initial="hidden"
         animate="visible"
@@ -82,11 +82,11 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
         <header className="mb-24 md:mb-32 text-center md:text-left">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12">
             <div className="space-y-6">
-              <motion.div variants={itemVariants} className="flex items-center gap-3 justify-center md:justify-start">
+              <m.div variants={itemVariants} className="flex items-center gap-3 justify-center md:justify-start">
                 <div className="w-12 h-[2px] bg-primary" />
                 <span className="text-xs font-black uppercase tracking-[0.3em] text-primary">Direktori Belajar</span>
-              </motion.div>
-              <motion.h1
+              </m.div>
+              <m.h1
                 variants={itemVariants}
                 className="text-6xl sm:text-7xl md:text-9xl font-black uppercase tracking-tighter leading-[0.85] text-foreground"
               >
@@ -94,10 +94,10 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
                 <span className="text-primary drop-shadow-[0_0_25px_rgba(var(--primary-rgb),0.3)]">
                   BELAJAR
                 </span>
-              </motion.h1>
+              </m.h1>
 
               {/* Quick Stats Bar */}
-              <motion.div 
+              <m.div 
                 variants={itemVariants}
                 className="flex items-center justify-center md:justify-start gap-8 pt-4"
               >
@@ -110,22 +110,22 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
                   <span className="text-3xl font-black text-foreground">{totalLessons}</span>
                   <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Materi Pelajaran</span>
                 </div>
-              </motion.div>
+              </m.div>
             </div>
             
-            <motion.p 
+            <m.p 
               variants={itemVariants}
               className="max-w-md text-muted-foreground text-sm md:text-lg font-medium leading-relaxed lg:mb-8"
             >
               Mulai petualangan bahasa Jepang Anda dengan kurikulum terstruktur yang dirancang untuk penguasaan cepat dan retensi jangka panjang.
-            </motion.p>
+            </m.p>
           </div>
         </header>
 
 
         {/* 3. SECTION: JLPT TRACKS (Rerendered with the gorgeous GeneralCategoryCard style) */}
         {jlptCategories.length > 0 && (
-          <motion.section variants={itemVariants} className="mb-32">
+          <m.section variants={itemVariants} className="mb-32">
             <div className="flex flex-col md:flex-row md:items-center gap-8 mb-16">
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
@@ -138,7 +138,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
               </div>
               <div className="h-[1px] flex-1 bg-gradient-to-r from-border/50 to-transparent" />
               <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/5 border border-primary/10">
-                <div className="w-1.5 h-1.5 rounded-full bg-primary animate-ping" />
+                <div className="size-1.5 rounded-full bg-primary animate-ping" />
                 <span className="text-[10px] font-black uppercase tracking-widest text-primary/80">Rute Terstruktur</span>
               </div>
             </div>
@@ -148,12 +148,12 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
                 <GeneralCategoryCard key={cat._id} cat={cat} variants={itemVariants} />
               ))}
             </div>
-          </motion.section>
+          </m.section>
         )}
 
         {/* 4. SECTION: GENERAL TOPICS */}
         {generalCategories.length > 0 && (
-          <motion.section variants={itemVariants}>
+          <m.section variants={itemVariants}>
             <div className="flex flex-col md:flex-row md:items-center gap-8 mb-16">
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
@@ -166,7 +166,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
               </div>
               <div className="h-[1px] flex-1 bg-gradient-to-r from-border/50 to-transparent" />
               <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl bg-warning/5 border border-warning/10">
-                <div className="w-1.5 h-1.5 rounded-full bg-warning animate-ping" />
+                <div className="size-1.5 rounded-full bg-warning animate-ping" />
                 <span className="text-[10px] font-black uppercase tracking-widest text-warning/80">Materi Tematik</span>
               </div>
             </div>
@@ -176,9 +176,9 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
                 <GeneralCategoryCard key={cat._id} cat={cat} variants={itemVariants} />
               ))}
             </div>
-          </motion.section>
+          </m.section>
         )}
-      </motion.div>
+      </m.div>
     </div>
   );
 }

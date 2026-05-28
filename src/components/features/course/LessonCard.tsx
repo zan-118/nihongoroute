@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -22,7 +22,7 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
   const themeRgb = isSideQuest ? "var(--warning-rgb)" : "var(--primary-rgb)";
 
   return (
-    <motion.div
+    <m.div
       whileHover={{ y: -8 }}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
       style={{ 
@@ -98,7 +98,7 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
             className="absolute bottom-0 left-0 right-0 h-1.5"
             style={{ backgroundColor: "rgba(var(--background-rgb), 0.1)" }}
           >
-            <motion.div 
+            <m.div 
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
               className="h-full rounded-full transition-all duration-1000"
@@ -112,6 +112,6 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
           </div>
         </Card>
       </Link>
-    </motion.div>
+    </m.div>
   );
 }

@@ -10,6 +10,21 @@ import { Badge } from "@/components/ui/badge";
 import { CheatsheetTable } from "./CheatsheetTable";
 import PdfGenerator from "@/components/features/pdf/PdfGenerator";
 import { getCheatsheetByIdOrSlug } from "@/actions/library.actions";
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const decodedId = decodeURIComponent(id);
+  const sheet = await getCheatsheetByIdOrSlug(decodedId);
+  return {
+    title: sheet ? `${sheet.title} | Cheatsheet NihongoRoute` : "Cheatsheet Referensi Cepat | NihongoRoute",
+    description: sheet ? `Unduh PDF dan pelajari cheatsheet tabel referensi cepat untuk ${sheet.title}.` : "Kumpulan tabel cheatsheet referensi cepat terlengkap untuk materi tata bahasa dan kosa kata Jepang.",
+  };
+}
 
 export default async function CheatsheetDetailPage({
   params,
@@ -60,7 +75,7 @@ export default async function CheatsheetDetailPage({
               <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">
                 {sheet.category}
               </Badge>
-              <div className="w-1 h-1 rounded-full bg-border" />
+              <div className="size-1 rounded-full bg-border" />
               <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
                 {allItems.length} Materi Terdaftar
               </span>

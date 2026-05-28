@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { CheckCircle2, XCircle, ChevronRight, CircleHelp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { QuizItem } from "../types";
@@ -45,12 +45,12 @@ export default function ListeningQuiz({ questions, onComplete }: ListeningQuizPr
 
   if (showFinished) {
     return (
-      <motion.div 
+      <m.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="p-8 rounded-3xl bg-muted/30 border border-border text-center flex flex-col items-center gap-4"
       >
-        <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-2">
+        <div className="size-16 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-2">
           <CheckCircle2 size={32} />
         </div>
         <h2 className="text-2xl font-black text-foreground uppercase tracking-tight">Listening Completed!</h2>
@@ -63,7 +63,7 @@ export default function ListeningQuiz({ questions, onComplete }: ListeningQuizPr
         >
           Retake Lesson
         </Button>
-      </motion.div>
+      </m.div>
     );
   }
 
@@ -72,7 +72,7 @@ export default function ListeningQuiz({ questions, onComplete }: ListeningQuizPr
       {/* Progress Header */}
       <div className="flex items-center justify-between px-2">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+          <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
             <CircleHelp size={18} />
           </div>
           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
@@ -82,7 +82,7 @@ export default function ListeningQuiz({ questions, onComplete }: ListeningQuizPr
         <div className="flex gap-1">
           {questions.map((_, idx) => (
             <div 
-              key={idx}
+              key={`qdot-${idx}`}
               className={cn(
                 "h-1 w-6 rounded-full transition-all duration-500",
                 idx === currentIndex ? "bg-primary" : idx < currentIndex ? "bg-primary/30" : "bg-background/10"
@@ -93,7 +93,7 @@ export default function ListeningQuiz({ questions, onComplete }: ListeningQuizPr
       </div>
 
       {/* Question Card */}
-      <motion.div
+      <m.div
         key={currentIndex}
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -101,7 +101,7 @@ export default function ListeningQuiz({ questions, onComplete }: ListeningQuizPr
         className="p-8 rounded-3xl bg-muted/20 border border-border backdrop-blur-xl relative overflow-hidden"
       >
         {/* Glow Effect */}
-        <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/5 blur-[80px] rounded-full" />
+        <div className="absolute -top-24 -right-24 size-48 bg-primary/5 blur-[80px] rounded-full" />
         
         <h3 className="text-xl font-bold text-foreground mb-8 leading-snug">
           {currentQuestion.question}
@@ -114,8 +114,8 @@ export default function ListeningQuiz({ questions, onComplete }: ListeningQuizPr
             const isCorrect = option.isCorrect;
             
             return (
-              <button
-                key={idx}
+              <button type="button"
+                key={option.text}
                 disabled={isLocked}
                 onClick={() => handleOptionClick(idx, isCorrect)}
                 className={cn(
@@ -145,7 +145,7 @@ export default function ListeningQuiz({ questions, onComplete }: ListeningQuizPr
         {/* Explanation & Next Button */}
         <AnimatePresence>
           {isLocked && (
-            <motion.div
+            <m.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               className="mt-8 pt-6 border-t border-border"
@@ -163,10 +163,10 @@ export default function ListeningQuiz({ questions, onComplete }: ListeningQuizPr
                 {currentIndex === questions.length - 1 ? "Finish Task" : "Next Question"}
                 <ChevronRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
-      </motion.div>
+      </m.div>
     </div>
   );
 }

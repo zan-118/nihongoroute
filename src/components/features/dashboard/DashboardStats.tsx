@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -45,12 +45,12 @@ export default function DashboardStats({
   return (
     <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 mb-20">
       {/* LEVEL & XP CARD (SPAN 8) */}
-      <motion.div variants={itemVariants} className="md:col-span-8">
+      <m.div variants={itemVariants} className="md:col-span-8">
         {loading ? (
           <Skeleton className="h-[250px] w-full rounded-2xl" />
         ) : (
           <Card className="h-full bg-card/40 backdrop-blur-xl border border-border rounded-[2rem] p-6 md:p-8 flex flex-col justify-center relative overflow-hidden group transition-all duration-300 hover:border-success/30 shadow-lg">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-success/10 blur-[80px] rounded-full pointer-events-none" />
+            <div className="absolute top-0 right-0 size-64 bg-success/10 blur-[80px] rounded-full pointer-events-none" />
             <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
               <div>
                 <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-xs md:text-xs mb-2">
@@ -88,10 +88,10 @@ export default function DashboardStats({
             </div>
           </Card>
         )}
-      </motion.div>
+      </m.div>
 
       {/* STATS HIGHLIGHT (SPAN 4) */}
-      <motion.div variants={itemVariants} className="md:col-span-4 flex flex-col gap-6">
+      <m.div variants={itemVariants} className="md:col-span-4 flex flex-col gap-6">
         {loading ? (
           <>
             <Skeleton className="h-[110px] w-full rounded-2xl" />
@@ -117,13 +117,13 @@ export default function DashboardStats({
             <StreakFreezeCard />
           </>
         )}
-      </motion.div>
+      </m.div>
 
       {/* CURRICULUM MASTERY SECTION */}
-      <motion.div variants={itemVariants} className="md:col-span-12">
+      <m.div variants={itemVariants} className="md:col-span-12">
         <div className="flex flex-col mb-8 mt-4">
           <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-[10px] mb-2 flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--primary-rgb),0.8)]" />
+            <div className="size-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--primary-rgb),0.8)]" />
             Pencapaian Silabus
           </h2>
           <h3 className="text-xl md:text-2xl font-black text-foreground uppercase tracking-tight">
@@ -141,7 +141,7 @@ export default function DashboardStats({
              return (
                <Card key={cat._id} className="bg-background/[0.03] backdrop-blur-xl border border-border p-6 rounded-[2rem] group hover:border-primary/40 transition-all duration-500">
                   <div className="flex items-center gap-4 mb-5">
-                    <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+                    <div className="size-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
                       {percentage === 100 ? <CheckCircle2 size={24} /> : <BookOpen size={24} />}
                     </div>
                     <div className="flex-1">
@@ -156,7 +156,7 @@ export default function DashboardStats({
                   </div>
                   
                   <div className="relative h-2 w-full bg-background/5 rounded-full overflow-hidden border border-border">
-                    <motion.div 
+                    <m.div 
                       initial={{ width: 0 }}
                       whileInView={{ width: `${percentage}%` }}
                       transition={{ duration: 1, ease: "easeOut" }}
@@ -172,25 +172,25 @@ export default function DashboardStats({
              );
           })}
         </div>
-      </motion.div>
+      </m.div>
 
       {/* DAILY QUESTS, MEMORY STATS, SRS ANALYTICS */}
-      <motion.div variants={itemVariants} className="md:col-span-4">
+      <m.div variants={itemVariants} className="md:col-span-4">
         {loading ? <Skeleton className="h-[400px] w-full rounded-2xl" /> : <DailyQuests />}
-      </motion.div>
+      </m.div>
       
-      <motion.div variants={itemVariants} className="md:col-span-4">
+      <m.div variants={itemVariants} className="md:col-span-4">
         {loading ? <Skeleton className="h-[400px] w-full rounded-2xl" /> : <MemoryStats />}
-      </motion.div>
+      </m.div>
 
-      <motion.div variants={itemVariants} className="md:col-span-4">
+      <m.div variants={itemVariants} className="md:col-span-4">
         {loading ? <Skeleton className="h-[400px] w-full rounded-2xl" /> : <SRSAnalytics />}
-      </motion.div>
+      </m.div>
 
       {/* HEATMAP */}
-      <motion.div variants={itemVariants} className="md:col-span-12">
+      <m.div variants={itemVariants} className="md:col-span-12">
         {loading ? <Skeleton className="h-[220px] w-full rounded-2xl" /> : <Heatmap studyDays={progress.studyDays} />}
-      </motion.div>
+      </m.div>
     </div>
   );
 }

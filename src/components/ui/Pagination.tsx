@@ -29,7 +29,7 @@ export function Pagination({
           size="icon" aria-label="Aksi"
           onClick={() => onPageChange(1)}
           disabled={currentPage === 1}
-          className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-primary transition-all disabled:opacity-30"
+          className="size-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-primary transition-all disabled:opacity-30"
         >
           <ChevronsLeft size={18} />
         </Button>
@@ -38,7 +38,7 @@ export function Pagination({
           size="icon" aria-label="Aksi"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-primary transition-all disabled:opacity-30"
+          className="size-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-primary transition-all disabled:opacity-30"
         >
           <ChevronLeft size={18} />
         </Button>
@@ -78,7 +78,7 @@ export function Pagination({
           size="icon" aria-label="Aksi"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-primary transition-all disabled:opacity-30"
+          className="size-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-primary transition-all disabled:opacity-30"
         >
           <ChevronRight size={18} />
         </Button>
@@ -87,7 +87,7 @@ export function Pagination({
           size="icon" aria-label="Aksi"
           onClick={() => onPageChange(totalPages)}
           disabled={currentPage === totalPages}
-          className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-primary transition-all disabled:opacity-30"
+          className="size-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-primary transition-all disabled:opacity-30"
         >
           <ChevronsRight size={18} />
         </Button>

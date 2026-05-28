@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
@@ -60,7 +60,7 @@ const OptionButton = memo(({
   onSelect: (idx: number) => void;
 }) => {
   return (
-    <button
+    <button type="button"
       onClick={() => onSelect(idx)}
       className={`p-4 rounded-xl text-left transition-all font-medium flex items-center gap-4 border ${isSelected
         ? "bg-destructive/10 border-destructive/30 text-destructive"
@@ -112,7 +112,7 @@ export function ExamPlaying({
 
   return (
     <div className="fixed inset-0 z-[100] bg-background text-foreground overflow-y-auto pb-32 font-sans selection:bg-destructive/30">
-      <audio ref={audioRef} className="hidden" />
+      <audio aria-label="Audio" ref={audioRef} className="hidden" />
       <div className="max-w-4xl mx-auto px-4 md:px-6">
         <header className="sticky top-0 z-50 pt-6 pb-4 bg-background/80 bg-card/80 backdrop-blur-md">
           <div className="flex flex-col gap-4">
@@ -122,7 +122,7 @@ export function ExamPlaying({
                   const isLocked = idx < activeSectionIndex;
                   const isActive = currentSection === section;
                   return (
-                    <button
+                    <button type="button"
                       key={section}
                       disabled={isLocked}
                       onClick={() => !isLocked && goToQuestion(sections[section][0])}
@@ -155,7 +155,7 @@ export function ExamPlaying({
 
         <main className="mt-4">
           <AnimatePresence mode="wait">
-            <motion.div
+            <m.div
               key={activeQuestion._key}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -219,7 +219,7 @@ export function ExamPlaying({
                   <div className="grid grid-cols-1 gap-3">
                     {activeQuestion.options.map((opt, idx) => (
                       <OptionButton
-                        key={idx}
+                        key={`${opt}-${idx}`}
                         idx={idx}
                         text={opt}
                         isSelected={answers[activeQuestion._key] === idx}
@@ -240,7 +240,7 @@ export function ExamPlaying({
                       const isLocked = currentSection === "listening" && !exam.choukaiAudioUrl && qIdx !== currentQuestionIndex;
 
                       return (
-                        <button
+                        <button type="button"
                           key={qIdx}
                           disabled={isLocked}
                           onClick={() => !isLocked && goToQuestion(qIdx)}
@@ -260,7 +260,7 @@ export function ExamPlaying({
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           </AnimatePresence>
         </main>
       </div>
@@ -313,13 +313,13 @@ export function ExamPlaying({
       {/* Lembar Jawaban & Konfirmasi Selesai Ujian (Answer Sheet Grid Overlay) */}
       <AnimatePresence>
         {pendingConfirm === "finish" && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[200] bg-background/80 backdrop-blur-xl flex items-center justify-center p-4"
           >
-            <motion.div
+            <m.div
               initial={{ scale: 0.95, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 20 }}
@@ -343,7 +343,7 @@ export function ExamPlaying({
               {/* Stats Summary */}
               <div className="px-6 py-4 bg-muted/30 border-b border-border grid grid-cols-2 gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full bg-success shadow-[0_0_8px_rgba(var(--success-rgb),0.5)]" />
+                  <div className="size-3 rounded-full bg-success shadow-[0_0_8px_rgba(var(--success-rgb),0.5)]" />
                   <div>
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Dijawab</p>
                     <p className="text-lg font-black font-mono text-foreground mt-1">
@@ -352,7 +352,7 @@ export function ExamPlaying({
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full bg-warning animate-pulse shadow-[0_0_8px_rgba(var(--warning-rgb),0.5)]" />
+                  <div className="size-3 rounded-full bg-warning animate-pulse shadow-[0_0_8px_rgba(var(--warning-rgb),0.5)]" />
                   <div>
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Belum Dijawab</p>
                     <p className="text-lg font-black font-mono text-foreground mt-1">
@@ -396,7 +396,7 @@ export function ExamPlaying({
                     }
 
                     return (
-                      <button
+                      <button type="button"
                         key={q._key}
                         onClick={onClickHandler}
                         className={`aspect-square rounded-xl border flex flex-col items-center justify-center text-xs font-bold font-mono transition-all relative ${cellClass}`}
@@ -434,8 +434,8 @@ export function ExamPlaying({
                   Kumpulkan Ujian
                 </Button>
               </div>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

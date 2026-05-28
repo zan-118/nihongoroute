@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { Layers, PenTool, Flame, Sparkles, ChevronRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
@@ -40,7 +40,7 @@ export function TrainingGround({ categoryId, themeColor, itemVariants }: Trainin
   ];
 
   return (
-    <motion.section variants={itemVariants} className="mb-24">
+    <m.section variants={itemVariants} className="mb-24">
       <div className="flex items-center gap-6 mb-12">
         <div className="space-y-1">
           <h3 className="text-2xl font-black uppercase tracking-tight text-foreground flex items-center gap-3">
@@ -54,8 +54,8 @@ export function TrainingGround({ categoryId, themeColor, itemVariants }: Trainin
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {trainingItems.map((item, i) => (
-          <Link key={i} href={item.href} className="group">
+        {trainingItems.map((item) => (
+          <Link key={item.title} href={item.href} className="group">
             <Card className="p-8 bg-card/30 backdrop-blur-xl border border-border rounded-[2.5rem] hover:border-foreground/10 transition-all duration-500 h-full relative overflow-hidden group shadow-xl hover:shadow-2xl glass">
               {/* Premium Glow Overlay */}
               <div
@@ -86,13 +86,13 @@ export function TrainingGround({ categoryId, themeColor, itemVariants }: Trainin
                 </div>
               </div>
               
-              <div className="absolute bottom-8 right-8 w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1">
+              <div className="absolute bottom-8 right-8 size-10 rounded-full bg-background border border-border flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1">
                 <ChevronRight className="text-foreground" size={18} />
               </div>
             </Card>
           </Link>
         ))}
       </div>
-    </motion.section>
+    </m.section>
   );
 }

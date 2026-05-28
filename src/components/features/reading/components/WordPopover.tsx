@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
@@ -71,7 +71,7 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
         {isOpen && (
           <>
             {/* Backdrop for mobile */}
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -79,7 +79,7 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
               className="fixed inset-0 z-[60] md:hidden bg-background/20 backdrop-blur-sm"
             />
             
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -115,7 +115,7 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
                         href={`/library/vocab/${vocab.slug}`}
                         className="flex-1"
                        >
-                         <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all">
+                         <button type="button" className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all">
                            <ExternalLink size={12} /> Detail
                          </button>
                        </Link>
@@ -130,9 +130,9 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
                 )}
                 
                 {/* Tail Decoration */}
-                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-card/80 border-r border-b border-border/60 rotate-45 transform" />
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 size-4 bg-card/80 border-r border-b border-border/60 rotate-45 transform" />
               </div>
-            </motion.div>
+            </m.div>
           </>
         )}
       </AnimatePresence>

@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -49,7 +49,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
           const isCorrect = userAnswer === q.correctAnswer;
 
           return (
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
@@ -100,7 +100,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                     <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest flex items-center gap-2">
                       <Volume2 size={16} aria-hidden="true" className="text-primary" /> Audio Track (Review)
                     </p>
-                    <audio
+                    <audio aria-label="Audio"
                       controls
                       className={`w-full h-12 outline-none opacity-90 transition-all ${resolvedTheme === 'dark' ? 'invert' : ''}`}
                       src={q.audioUrl}
@@ -119,7 +119,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
 
                     return (
                       <Card
-                        key={optIdx}
+                        key={`${opt}-${optIdx}`}
                         className={`p-6 flex items-center gap-5 transition-all rounded-2xl border neo-inset shadow-none ${variantStyle}`}
                       >
                         <Badge variant="outline" className={`font-mono font-black text-xs h-8 w-8 rounded-lg flex items-center justify-center border-none ${isCorrectAnswer ? "bg-success text-success-foreground" : isUserSelection ? "bg-destructive text-destructive-foreground" : "bg-muted text-muted-foreground"}`}>
@@ -147,7 +147,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                   })}
                 </div>
               </Card>
-            </motion.div>
+            </m.div>
           );
         })}
       </div>

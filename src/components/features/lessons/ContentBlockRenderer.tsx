@@ -155,19 +155,19 @@ function PedagogicalBadges({ block }: { block: ContentBlock }) {
     <div className="flex flex-wrap gap-2 mb-3.5 items-center">
       {role && (
         <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${role.className}`}>
-          <role.icon className="w-3.5 h-3.5" />
+          <role.icon className="size-3.5" />
           {role.label}
         </span>
       )}
       {stage && (
         <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${stage.className}`}>
-          <BarChart className="w-3 h-3 mr-1" />
+          <BarChart className="size-3 mr-1" />
           {stage.label}
         </span>
       )}
       {estimated_reading_time && (
         <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-muted/50 text-muted-foreground border border-border/60">
-          <Hourglass className="w-3 h-3 mr-1 text-muted-foreground/75" />
+          <Hourglass className="size-3 mr-1 text-muted-foreground/75" />
           {estimated_reading_time} menit baca
         </span>
       )}
@@ -253,11 +253,11 @@ function TextBlock({ block }: { block: ContentBlock }) {
       )}
       {block.content && (
         <div className="space-y-3">
-          {block.content.split("\n").filter(Boolean).map((line: string, i: number) => (
-            <div key={i} className="text-lg leading-relaxed text-foreground/90 font-japanese">
+          {block.content.split("\n").filter(Boolean).map((line: string, pos: number) => (
+            <div key={`text-${pos}`} className="text-lg leading-relaxed text-foreground/90 font-japanese">
               <SmartJapanese 
                 word={line} 
-                furigana={block.furigana?.split("\n")[i] || ""} 
+                furigana={block.furigana?.split("\n")[pos] || ""} 
               />
             </div>
           ))}
@@ -285,7 +285,7 @@ function TextBlock({ block }: { block: ContentBlock }) {
 function CalloutBlock({ block }: { block: ContentBlock }) {
   return (
     <div className="flex gap-4 p-5 rounded-xl bg-primary/5 border border-primary/20">
-      <Info className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+      <Info className="size-5 text-primary flex-shrink-0 mt-0.5" />
       <div className="space-y-2">
         {block.title && (
           <p className="text-sm font-bold text-primary">{block.title}</p>
@@ -359,8 +359,8 @@ function DialogueBlock({ block }: { block: ContentBlock }) {
         </h3>
       )}
       <div className="space-y-3 border border-border rounded-xl p-5 bg-muted/10">
-        {lines.map((line: { speaker: string; text: string; furigana?: string }, i: number) => (
-          <div key={i} className="flex gap-3 group">
+        {lines.map((line: { speaker: string; text: string; furigana?: string }, pos: number) => (
+          <div key={`dialogue-${pos}`} className="flex gap-3 group">
             <span className="text-[10px] font-bold text-secondary bg-secondary/10 px-2 py-1 rounded h-fit flex-shrink-0 mt-1">
               {line.speaker}
             </span>
@@ -414,8 +414,8 @@ function ExamplesSection({ examples }: { examples: ExampleSentence[] }) {
       <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
         Contoh Kalimat
       </p>
-      {examples.map((ex, i) => (
-        <div key={i} className="border border-border rounded-lg p-3 space-y-1 bg-background">
+      {examples.map((ex) => (
+        <div key={ex.jp} className="border border-border rounded-lg p-3 space-y-1 bg-background">
           <div className="flex items-center gap-2">
             <FuriganaDisplay
               text={ex.jp}

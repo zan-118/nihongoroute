@@ -19,7 +19,7 @@ export function GrammarEmptyState({ searchTerm, selectedLevel, onResetSearch }: 
     <Card className="col-span-full py-20 md:py-32 bg-[rgba(var(--card-rgb),0.2)] backdrop-blur-sm border border-dashed border-border rounded-[2.5rem] text-center px-6 relative overflow-hidden">
       <div className="relative z-10">
         <div className="flex justify-center mb-8">
-          <div className="w-20 h-20 rounded-[2rem] bg-primary/5 flex items-center justify-center border border-primary/10 shadow-[0_0_30px_rgba(var(--primary-rgb),0.1)]">
+          <div className="size-20 rounded-[2rem] bg-primary/5 flex items-center justify-center border border-primary/10 shadow-[0_0_30px_rgba(var(--primary-rgb),0.1)]">
             <BookText size={32} aria-hidden="true" className="text-primary/40" />
           </div>
         </div>
@@ -41,7 +41,7 @@ export function GrammarEmptyState({ searchTerm, selectedLevel, onResetSearch }: 
         )}
       </div>
       {/* Background Ambient Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/5 blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-64 bg-primary/5 blur-[100px] pointer-events-none" />
     </Card>
   );
 }

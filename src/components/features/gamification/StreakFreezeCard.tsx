@@ -34,7 +34,7 @@ export default function StreakFreezeCard() {
 
       <div className="relative z-10">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-secondary/20 flex items-center justify-center text-secondary">
+          <div className="size-10 rounded-xl bg-secondary/20 flex items-center justify-center text-secondary">
             <ShieldCheck size={20} />
           </div>
           <div>

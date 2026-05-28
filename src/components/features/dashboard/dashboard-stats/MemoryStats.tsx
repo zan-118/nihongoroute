@@ -66,9 +66,9 @@ export default function MemoryStats() {
       </header>
 
       <div className="space-y-6 md:space-y-8 mb-8 md:mb-10 relative z-10 flex-1">
-        {statConfig.map((stat, i) => (
+        {statConfig.map((stat) => (
           <StatBar
-            key={i}
+            key={stat.label}
             label={stat.label}
             count={stat.count}
             total={total}

@@ -16,19 +16,19 @@ export function ListeningSidebar({ quizLength }: ListeningSidebarProps) {
         </div>
         <ul className="flex flex-col gap-4">
           <li className="flex gap-4 items-start">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+            <div className="size-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
             <p className="text-xs text-muted-foreground leading-relaxed">
               Dengarkan audio secara menyeluruh sebelum mencoba menjawab kuis.
             </p>
           </li>
           <li className="flex gap-4 items-start">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+            <div className="size-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
             <p className="text-xs text-muted-foreground leading-relaxed">
               Klik pada baris transkrip untuk mengulangi bagian tertentu (Shadowing).
             </p>
           </li>
           <li className="flex gap-4 items-start">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+            <div className="size-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
             <p className="text-xs text-muted-foreground leading-relaxed">
               Gunakan tombol &quot;Translate&quot; jika kamu kesulitan memahami konteks kalimat.
             </p>

@@ -14,8 +14,8 @@ export default function PrivacyPage() {
       {/* Background Neural Overlays */}
       <div className="neural-grid" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(var(--primary-rgb),0.07)_0%,transparent_70%)] pointer-events-none z-0" />
-      <div className="absolute top-1/4 right-0 w-[300px] h-[300px] bg-[rgba(var(--primary-rgb),0.03)] rounded-full blur-[100px] pointer-events-none z-0" />
-      <div className="absolute bottom-1/4 left-0 w-[250px] h-[250px] bg-[rgba(var(--destructive-rgb),0.02)] rounded-full blur-[80px] pointer-events-none z-0" />
+      <div className="absolute top-1/4 right-0 size-[300px] bg-[rgba(var(--primary-rgb),0.03)] rounded-full blur-[100px] pointer-events-none z-0" />
+      <div className="absolute bottom-1/4 left-0 size-[250px] bg-[rgba(var(--destructive-rgb),0.02)] rounded-full blur-[80px] pointer-events-none z-0" />
 
       <div className="max-w-4xl w-full relative z-10 flex flex-col">
         {/* Breadcrumb / Top Navigation */}
@@ -39,7 +39,7 @@ export default function PrivacyPage() {
           {/* Header Jepang */}
           <header className="mb-12 border-b border-border/60 pb-8 relative">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]">
+              <div className="size-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]">
                 <Shield size={20} />
               </div>
               <span className="text-xs font-black tracking-widest text-primary uppercase bg-primary/5 border border-primary/10 px-3 py-1 rounded-full">
@@ -58,8 +58,8 @@ export default function PrivacyPage() {
           {/* Konten Tipografi Minimalis & Modern */}
           <article className="prose prose-slate dark:prose-invert max-w-none text-muted-foreground space-y-8">
             <div className="flex items-center gap-2 text-xs font-semibold text-primary/80 bg-primary/5 border border-primary/10 w-fit px-4 py-2 rounded-xl">
-              <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              <span>Terakhir diperbarui: {new Date().toLocaleDateString("id-ID", { month: "long", year: "numeric" })}</span>
+              <span className="size-2 rounded-full bg-primary animate-pulse" />
+              <span suppressHydrationWarning={true}>Terakhir diperbarui: {new Date().toLocaleDateString("id-ID", { month: "long", year: "numeric" })}</span>
             </div>
 
             <p className="lead text-base md:text-lg text-foreground/80 leading-relaxed font-medium border-l-2 border-primary/30 pl-4">
@@ -69,7 +69,7 @@ export default function PrivacyPage() {
             {/* Section 1 */}
             <div className="space-y-4 pt-4 border-t border-border/20">
               <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
-                <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 w-8 h-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgba(var(--primary-rgb),0.1)]">1</span>
+                <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgba(var(--primary-rgb),0.1)]">1</span>
                 Pendahuluan
               </h2>
               <p className="leading-relaxed">
@@ -80,7 +80,7 @@ export default function PrivacyPage() {
             {/* Section 2 */}
             <div className="space-y-4 pt-4 border-t border-border/20">
               <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
-                <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 w-8 h-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgba(var(--primary-rgb),0.1)]">2</span>
+                <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgba(var(--primary-rgb),0.1)]">2</span>
                 Data yang Kami Kumpulkan
               </h2>
               <p className="leading-relaxed">
@@ -89,7 +89,7 @@ export default function PrivacyPage() {
               
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 !list-none !pl-0">
                 <li className="glass border border-border/60 hover:border-primary/30 rounded-2xl p-5 transition-all duration-300 group flex items-start gap-4 shadow-sm hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
-                  <div className="w-8 h-8 rounded-lg bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300">
+                  <div className="size-8 rounded-lg bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300">
                     <Lock size={16} />
                   </div>
                   <div>
@@ -98,7 +98,7 @@ export default function PrivacyPage() {
                   </div>
                 </li>
                 <li className="glass border border-border/60 hover:border-primary/30 rounded-2xl p-5 transition-all duration-300 group flex items-start gap-4 shadow-sm hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
-                  <div className="w-8 h-8 rounded-lg bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300">
+                  <div className="size-8 rounded-lg bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300">
                     <FileText size={16} />
                   </div>
                   <div>
@@ -112,7 +112,7 @@ export default function PrivacyPage() {
             {/* Section 3 */}
             <div className="space-y-4 pt-4 border-t border-border/20">
               <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
-                <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 w-8 h-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgba(var(--primary-rgb),0.1)]">3</span>
+                <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgba(var(--primary-rgb),0.1)]">3</span>
                 Penggunaan Data
               </h2>
               <p className="leading-relaxed">
@@ -124,8 +124,8 @@ export default function PrivacyPage() {
                   "Menghitung algoritma pengulangan materi (SRS) secara akurat dan terpersonalisasi agar Anda bisa menguasai kosakata lebih efisien.",
                   "Mengidentifikasi area untuk meningkatkan kualitas konten NihongoRoute di masa depan."
                 ].map((text, idx) => (
-                  <li key={idx} className="flex items-start gap-3 text-sm leading-relaxed">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+                  <li key={`policy-item-${idx}`} className="flex items-start gap-3 text-sm leading-relaxed">
+                    <span className="size-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
                     <span>{text}</span>
                   </li>
                 ))}
@@ -135,7 +135,7 @@ export default function PrivacyPage() {
             {/* Section 4 */}
             <div className="space-y-4 pt-4 border-t border-border/20">
               <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
-                <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 w-8 h-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgba(var(--primary-rgb),0.1)]">4</span>
+                <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgba(var(--primary-rgb),0.1)]">4</span>
                 Berbagi Data dengan Pihak Ketiga
               </h2>
               <p className="leading-relaxed">
@@ -146,7 +146,7 @@ export default function PrivacyPage() {
             {/* Section 5 */}
             <div className="space-y-4 pt-4 border-t border-border/20">
               <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
-                <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 w-8 h-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgba(var(--primary-rgb),0.1)]">5</span>
+                <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgba(var(--primary-rgb),0.1)]">5</span>
                 Keamanan Data Anda
               </h2>
               <p className="leading-relaxed">
@@ -157,7 +157,7 @@ export default function PrivacyPage() {
             {/* Section 6 */}
             <div className="space-y-4 pt-4 border-t border-border/20">
               <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
-                <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 w-8 h-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgba(var(--primary-rgb),0.1)]">6</span>
+                <span className="text-sm font-bold bg-primary/10 text-primary border border-primary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgba(var(--primary-rgb),0.1)]">6</span>
                 Hubungi Kami
               </h2>
               <p className="leading-relaxed">
@@ -165,7 +165,7 @@ export default function PrivacyPage() {
               </p>
 
               <div className="glass border border-border/50 rounded-2xl p-4 w-full sm:w-fit flex items-center gap-3 hover:border-primary/30 transition-all duration-300">
-                <div className="w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center text-primary">
+                <div className="size-8 rounded-lg bg-primary/5 flex items-center justify-center text-primary">
                   <Mail size={16} />
                 </div>
                 <div className="flex flex-col">

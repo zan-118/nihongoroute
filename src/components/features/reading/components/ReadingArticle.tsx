@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import FuriganaDisplay from "@/components/ui/FuriganaDisplay";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -38,7 +38,7 @@ export function ReadingArticle({
   };
 
   return (
-    <motion.article
+    <m.article
       layout
       className={cn(
         "p-8 md:p-16 lg:p-24 rounded-[3rem] transition-all duration-700 relative",
@@ -51,7 +51,7 @@ export function ReadingArticle({
       
       <div className="space-y-16 relative z-10">
         {paragraphs.map((para, idx) => (
-          <div key={idx} className="group/para relative">
+          <div key={`para-${idx}`} className="group/para relative">
             <FuriganaDisplay 
               text={para} 
               furigana={hiraganaParagraphs[idx] || ""} 
@@ -67,14 +67,14 @@ export function ReadingArticle({
             
             <AnimatePresence>
               {showTranslation && (
-                <motion.p 
+                <m.p 
                   initial={{ opacity: 0, y: 5 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 5 }}
                   className="mt-6 text-base md:text-lg text-muted-foreground/80 italic font-medium leading-relaxed border-l-2 border-primary/20 pl-6"
                 >
                   {translationParagraphs[idx]}
-                </motion.p>
+                </m.p>
               )}
             </AnimatePresence>
           </div>
@@ -101,6 +101,6 @@ export function ReadingArticle({
             </Button>
         </div>
       )}
-    </motion.article>
+    </m.article>
   );
 }

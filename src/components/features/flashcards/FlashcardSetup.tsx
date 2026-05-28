@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Zap, Flame, PenTool, Hash, LayoutGrid, Layers, Play, Mic } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -37,7 +37,7 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
   const [amount, setAmount] = useState<number>(20);
 
   return (
-    <motion.div 
+    <m.div 
       key="flashcard-setup"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -63,7 +63,7 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {JLPT_LEVELS.map((lvl) => (
-              <button
+              <button type="button"
                 key={lvl.id}
                 onClick={() => setLevel(lvl.id)}
                 className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all duration-300
@@ -86,25 +86,25 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
             <h2>Mode Latihan</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {MODES.map((m) => (
-              <button
-                key={m.id}
-                onClick={() => setMode(m.id)}
+            {MODES.map((modeItem) => (
+              <button type="button"
+                key={modeItem.id}
+                onClick={() => setMode(modeItem.id)}
                 className={`relative flex flex-col items-center justify-center p-6 rounded-2xl border transition-all duration-300 overflow-hidden group
-                  ${mode === m.id 
+                  ${mode === modeItem.id 
                     ? "bg-primary/10 border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.15)] text-primary" 
                     : "bg-background/50 border-border hover:bg-muted text-muted-foreground"
                   }
                 `}
               >
-                {mode === m.id && (
-                  <motion.div layoutId="mode-active-bg" className="absolute inset-0 bg-primary/5 pointer-events-none" />
+                {mode === modeItem.id && (
+                  <m.div layoutId="mode-active-bg" className="absolute inset-0 bg-primary/5 pointer-events-none" />
                 )}
-                <div className={`p-3 rounded-full mb-3 ${mode === m.id ? 'bg-primary text-background' : 'bg-muted text-muted-foreground'}`}>
-                  {m.icon}
+                <div className={`p-3 rounded-full mb-3 ${mode === modeItem.id ? 'bg-primary text-background' : 'bg-muted text-muted-foreground'}`}>
+                  {modeItem.icon}
                 </div>
-                <span className={`font-black uppercase tracking-wider mb-1 ${mode === m.id ? 'text-primary' : 'text-foreground'}`}>{m.label}</span>
-                <span className="text-xs text-center opacity-80">{m.desc}</span>
+                <span className={`font-black uppercase tracking-wider mb-1 ${mode === modeItem.id ? 'text-primary' : 'text-foreground'}`}>{modeItem.label}</span>
+                <span className="text-xs text-center opacity-80">{modeItem.desc}</span>
               </button>
             ))}
           </div>
@@ -118,7 +118,7 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
           </div>
           <div className="flex flex-wrap gap-3">
             {AMOUNTS.map((amt) => (
-              <button
+              <button type="button"
                 key={amt}
                 onClick={() => setAmount(amt)}
                 className={`flex-1 min-w-[80px] py-3 px-4 rounded-2xl border font-bold transition-all duration-300
@@ -144,6 +144,6 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
         </div>
 
       </div>
-    </motion.div>
+    </m.div>
   );
 }

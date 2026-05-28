@@ -33,8 +33,8 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
       <span>
         {parts.map((part, i) =>
           pattern.test(part)
-            ? <strong key={i} className="text-primary font-bold">{part}</strong>
-            : <span key={i}>{part}</span>
+            ? <strong key={`${part}-${i}`} className="text-primary font-bold">{part}</strong>
+            : <span key={`${part}-${i}`}>{part}</span>
         )}
       </span>
     );
@@ -61,7 +61,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
         </thead>
         <tbody className="divide-y divide-border/30">
           {items.map((item, idx) => (
-            <tr key={idx} className="group hover:bg-primary/[0.01] transition-all duration-300">
+            <tr key={item.jp} className="group hover:bg-primary/[0.01] transition-all duration-300">
               <td className="px-4 md:px-8 py-6 md:py-10 text-center align-top">
                 <span className="text-xs md:text-sm font-black text-muted-foreground/20 italic group-hover:text-primary/30 transition-colors">
                   {String(idx + 1).padStart(2, '0')}
@@ -76,14 +76,14 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
                         const hiraReading = wanakana.toHiragana(item.romaji || "");
                         return splitFurigana(item.jp || "", hiraReading).map((chunk, i) => (
                           chunk.furi ? (
-                            <ruby key={i}>
+                            <ruby key={`${chunk.text}-${i}`}>
                               {chunk.text}
                               <rt className="text-[9px] md:text-xs text-primary font-bold tracking-widest mb-1 select-none">
                                 {chunk.furi}
                               </rt>
                             </ruby>
                           ) : (
-                            <span key={i}>{chunk.text}</span>
+                            <span key={`${chunk.text}-${i}`}>{chunk.text}</span>
                           )
                         ));
                       })()}

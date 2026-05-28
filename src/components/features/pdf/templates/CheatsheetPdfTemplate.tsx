@@ -234,17 +234,17 @@ export const CheatsheetPdfTemplate = ({ data, title, category }: CheatsheetTempl
           </View>
         </View>
 
-        {data.map((item, index) => (
+        {data.map((item, pos) => (
           <View
-            key={index}
+            key={`sheet-${pos}`}
             style={[
               styles.tableRow,
-              index % 2 === 1 ? styles.tableRowZebra : {},
+              pos % 2 === 1 ? styles.tableRowZebra : {},
             ]}
             wrap={false}
           >
             <View style={styles.cellNo}>
-              <Text style={{ fontSize: 9, color: "#cbd5e1" }}>{String(index + 1).padStart(2, '0')}</Text>
+              <Text style={{ fontSize: 9, color: "#cbd5e1" }}>{String(pos + 1).padStart(2, '0')}</Text>
             </View>
             <View style={styles.cellLabel}>
               <Text style={styles.labelTitle}>{item.label}</Text>
@@ -259,7 +259,8 @@ export const CheatsheetPdfTemplate = ({ data, title, category }: CheatsheetTempl
       </View>
 
       <View style={styles.footer} fixed>
-        <Text style={styles.footerText}>
+        {/* @ts-expect-error - suppressHydrationWarning is standard in React but not defined in react-pdf types */}
+        <Text style={styles.footerText} suppressHydrationWarning={true}>
           © {new Date().getFullYear()} NihongoRoute. Dicetak pada {new Date().toLocaleDateString('id-ID')}.
         </Text>
         <Link src="https://www.nihongoroute.my.id" style={styles.footerLink}>

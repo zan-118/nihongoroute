@@ -50,8 +50,8 @@ export default function UserNav() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-1 sm:gap-3 p-1 pr-1 sm:pr-3 rounded-2xl bg-muted/30 border border-border/50 hover:border-primary/30 transition-all group outline-none">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-primary-foreground text-xs font-black shadow-md group-hover:scale-105 transition-transform">
+        <button type="button" className="flex items-center gap-1 sm:gap-3 p-1 pr-1 sm:pr-3 rounded-2xl bg-muted/30 border border-border/50 hover:border-primary/30 transition-all group outline-none">
+          <div className="size-8 rounded-xl bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-primary-foreground text-xs font-black shadow-md group-hover:scale-105 transition-transform">
             {userFullName ? userFullName.charAt(0).toUpperCase() : "U"}
           </div>
           <div className="hidden md:flex flex-col items-start">

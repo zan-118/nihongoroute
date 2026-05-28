@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useUIStore } from "@/store/useUIStore";
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef, useMemo, useCallback } from "react";
 import { useHasMounted } from "@/hooks/useHasMounted";
 import { useCloudData } from "./useCloudData";
 import { useCloudMutation } from "./useCloudMutation";
@@ -69,11 +69,19 @@ export function useSyncProgress() {
   }, [queryClient]);
 
   // 5. DEBOUNCED AUTO-SYNC
-  const currentProgressData = useMemo(() => ({
-    name, xp, streak, todayReviewCount, lastStudyDate, studyDays, inventory, settings, srs, completedLessons
-  }), [name, xp, streak, todayReviewCount, lastStudyDate, studyDays, inventory, settings, srs, completedLessons]);
+  // Use refs for values that change references frequently (objects/Sets from Zustand)
+  // to prevent the auto-sync effect from firing on every mergeProgress call.
+  const srsRef = useRef(srs);
+  const dirtySrsRef = useRef(dirtySrs);
+  const dirtyLessonsRef = useRef(dirtyLessons);
+  const completedLessonsRef = useRef(completedLessons);
 
-  const lastSyncedProgress = useRef<string>(JSON.stringify(currentProgressData));
+  useEffect(() => { srsRef.current = srs; }, [srs]);
+  useEffect(() => { dirtySrsRef.current = dirtySrs; }, [dirtySrs]);
+  useEffect(() => { dirtyLessonsRef.current = dirtyLessons; }, [dirtyLessons]);
+  useEffect(() => { completedLessonsRef.current = completedLessons; }, [completedLessons]);
+
+  const lastSyncedProgress = useRef<string>("");
   const syncMutateRef = useRef(syncMutation.mutate);
   
   useEffect(() => {
@@ -82,24 +90,49 @@ export function useSyncProgress() {
 
   const isPending = syncMutation.isPending;
 
+  // Stable serialization key for profile data (excludes srs/dirtySrs which use refs)
+  const profileKey = useMemo(() => JSON.stringify({
+    name, xp, streak, studyDays, inventory, settings, lastStudyDate, todayReviewCount
+  }), [name, xp, streak, studyDays, inventory, settings, lastStudyDate, todayReviewCount]);
+
+  // Track dirtySrs.size and dirtyLessons.size as primitives to avoid Set reference instability
+  const dirtySrsSize = dirtySrs.size;
+  const dirtyLessonsSize = dirtyLessons.size;
+
   useEffect(() => {
     if (isFetching || isPending || !session?.user || isGuest || !userHydrated || !srsHydrated) return;
 
-    const currentProgressStr = JSON.stringify({
-      name, xp, streak, studyDays, inventory, settings, lastStudyDate, todayReviewCount, completedLessons
-    });
+    const isProfileChanged = profileKey !== lastSyncedProgress.current;
 
-    const isProfileChanged = currentProgressStr !== lastSyncedProgress.current;
-
-    if (!isProfileChanged && dirtySrs.size === 0 && dirtyLessons.size === 0) return;
+    if (!isProfileChanged && dirtySrsSize === 0 && dirtyLessonsSize === 0) return;
 
     const timer = setTimeout(() => {
-      syncMutateRef.current({ progress: currentProgressData, dirtySrs, dirtyLessons });
-      lastSyncedProgress.current = currentProgressStr;
+      const currentProgress = {
+        name, xp, streak, todayReviewCount, lastStudyDate, studyDays,
+        inventory, settings, srs: srsRef.current, completedLessons: completedLessonsRef.current
+      };
+      syncMutateRef.current({
+        progress: currentProgress,
+        dirtySrs: dirtySrsRef.current,
+        dirtyLessons: dirtyLessonsRef.current
+      });
+      lastSyncedProgress.current = profileKey;
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [name, xp, streak, studyDays, inventory, settings, lastStudyDate, todayReviewCount, srs, dirtySrs, dirtyLessons, session?.user, isFetching, isPending, isGuest, currentProgressData, completedLessons, userHydrated, srsHydrated]);
+  }, [profileKey, dirtySrsSize, dirtyLessonsSize, session?.user, isFetching, isPending, isGuest, userHydrated, srsHydrated, name, xp, streak, todayReviewCount, lastStudyDate, studyDays, inventory, settings]);
 
-  return { isLoading: isFetching, syncNow: () => syncMutation.mutate({ progress: currentProgressData, dirtySrs, dirtyLessons }) };
+  const syncNow = useCallback(() => {
+    const currentProgress = {
+      name, xp, streak, todayReviewCount, lastStudyDate, studyDays,
+      inventory, settings, srs: srsRef.current, completedLessons: completedLessonsRef.current
+    };
+    syncMutation.mutate({
+      progress: currentProgress,
+      dirtySrs: dirtySrsRef.current,
+      dirtyLessons: dirtyLessonsRef.current
+    });
+  }, [name, xp, streak, todayReviewCount, lastStudyDate, studyDays, inventory, settings, syncMutation]);
+
+  return { isLoading: isFetching, syncNow };
 }

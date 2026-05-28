@@ -43,6 +43,7 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.speechSynthesis) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSynth(window.speechSynthesis);
     }
   }, []);
@@ -163,7 +164,7 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
           >
             {isCopied ? (
               <>
-                <CheckCircle2 size={16} className="text-success animate-bounce" />
+                <CheckCircle2 size={16} className="text-success animate-premium-bounce" />
                 <span className="text-xs font-black uppercase tracking-wider text-success">Disalin!</span>
               </>
             ) : (
@@ -195,7 +196,7 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
               
               <div className="text-2xl md:text-3xl font-black text-foreground font-japanese leading-relaxed tracking-tight select-text selection:bg-primary/20">
                 {article.formation.split(" + ").map((part, index, arr) => (
-                  <React.Fragment key={index}>
+                  <React.Fragment key={`formation-${index}`}>
                     <span className={part.includes("kata") || part.includes("bentuk") ? "text-muted-foreground/90 font-medium text-xl md:text-2xl font-sans" : "text-primary drop-shadow-[0_0_12px_rgba(var(--primary-rgb),0.1)] font-bold font-japanese"}>
                       {part}
                     </span>
@@ -240,13 +241,13 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
               const isActive = playingIndex === i;
               return (
                 <div 
-                  key={i} 
+                  key={ex.id}
                   className="border border-border rounded-[1.8rem] p-6 md:p-8 bg-card/5 backdrop-blur-lg hover:border-primary/40 transition-all duration-300 shadow-sm relative overflow-hidden group flex items-start gap-4 md:gap-6"
                 >
                   {/* Left Cyber Aksen & Numbering */}
                   <div className="absolute top-0 left-0 w-1.5 h-full bg-primary/10 group-hover:bg-primary transition-all duration-300" />
                   
-                  <div className="hidden sm:flex flex-col items-center justify-center font-mono text-sm md:text-base font-black text-muted-foreground/30 group-hover:text-primary/40 transition-colors h-10 w-10 rounded-full border border-border/50 bg-card/10 select-none">
+                  <div className="hidden sm:flex flex-col items-center justify-center font-mono text-sm md:text-base font-black text-muted-foreground/30 group-hover:text-primary/40 transition-colors size-10 rounded-full border border-border/50 bg-card/10 select-none">
                     {String(i + 1).padStart(2, "0")}
                   </div>
 
@@ -265,7 +266,7 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
 
                   {/* Audio Synthesiser Trigger Button */}
                   <div className="flex-shrink-0 select-none">
-                    <button 
+                    <button type="button" 
                       onClick={() => speakJapanese(ex.jp, i)}
                       className={`h-12 w-12 rounded-[1.2rem] border flex items-center justify-center transition-all duration-300 relative group/btn ${
                         isActive 

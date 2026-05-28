@@ -37,7 +37,7 @@ export default function VocabClient({
   const pathname = usePathname();
 
   // Membaca nilai filter awal dari URL jika ada (bookmark friendly)
-  const initialLevel = searchParams.get("level") || "Semua";
+  const initialLevel = searchParams.get("level") || "n5";
   const initialHinshi = searchParams.get("hinshi") || "all";
   const initialSearch = searchParams.get("search") || "";
   const initialPage = Number(searchParams.get("page") || "1");
@@ -113,9 +113,7 @@ export default function VocabClient({
       isFirstMount.current = false;
       return;
     }
-    requestAnimationFrame(() => {
-      setCurrentPage(1);
-    });
+    setCurrentPage(1);
   }, [level, hinshi]);
 
   const { data, isFetching: loading } = useQuery({
@@ -126,7 +124,7 @@ export default function VocabClient({
   });
 
   const vocabListRaw = data?.data || [];
-  
+
   type VocabItemType = (typeof vocabListRaw)[number];
 
   // De-duplikasi Konten berdasarkan kata
@@ -143,18 +141,18 @@ export default function VocabClient({
   const vocabList: import("@/components/features/library/vocab/types").VocabItem[] = uniqueVocab.map((item) => {
     const relatedKanjiParsed = Array.isArray(item.related_kanji)
       ? (item.related_kanji as unknown[]).map((rk) => {
-          if (typeof rk === "string") {
-            return { character: rk, meaning: "" };
-          }
-          if (rk && typeof rk === "object") {
-            const obj = rk as Record<string, unknown>;
-            return {
-              character: typeof obj.character === "string" ? obj.character : "",
-              meaning: typeof obj.meaning === "string" ? obj.meaning : "",
-            };
-          }
-          return { character: "", meaning: "" };
-        })
+        if (typeof rk === "string") {
+          return { character: rk, meaning: "" };
+        }
+        if (rk && typeof rk === "object") {
+          const obj = rk as Record<string, unknown>;
+          return {
+            character: typeof obj.character === "string" ? obj.character : "",
+            meaning: typeof obj.meaning === "string" ? obj.meaning : "",
+          };
+        }
+        return { character: "", meaning: "" };
+      })
       : null;
 
     return {
@@ -174,20 +172,20 @@ export default function VocabClient({
       show_in_flashcard: item.show_in_flashcard,
       examples: Array.isArray(item.examples)
         ? (item.examples as unknown[]).map((ex) => {
-            if (ex && typeof ex === "object") {
-              const obj = ex as Record<string, unknown>;
-              return {
-                id: typeof obj.id === "string" ? obj.id : undefined,
-                jp: typeof obj.jp === "string" ? obj.jp : undefined,
-                romaji: typeof obj.romaji === "string" ? obj.romaji : undefined,
-                furigana: typeof obj.furigana === "string" ? obj.furigana : undefined,
-                meaning: typeof obj.meaning === "string" ? obj.meaning : undefined,
-                japanese: typeof obj.japanese === "string" ? obj.japanese : undefined,
-                indonesian: typeof obj.indonesian === "string" ? obj.indonesian : undefined,
-              };
-            }
-            return {};
-          })
+          if (ex && typeof ex === "object") {
+            const obj = ex as Record<string, unknown>;
+            return {
+              id: typeof obj.id === "string" ? obj.id : undefined,
+              jp: typeof obj.jp === "string" ? obj.jp : undefined,
+              romaji: typeof obj.romaji === "string" ? obj.romaji : undefined,
+              furigana: typeof obj.furigana === "string" ? obj.furigana : undefined,
+              meaning: typeof obj.meaning === "string" ? obj.meaning : undefined,
+              japanese: typeof obj.japanese === "string" ? obj.japanese : undefined,
+              indonesian: typeof obj.indonesian === "string" ? obj.indonesian : undefined,
+            };
+          }
+          return {};
+        })
         : null,
       synonyms: Array.isArray(item.synonyms) ? item.synonyms.map(String) : null,
       antonyms: Array.isArray(item.antonyms) ? item.antonyms.map(String) : null,
@@ -217,13 +215,13 @@ export default function VocabClient({
 
   return (
     <div className="w-full flex flex-col flex-1 pb-24 px-4 md:px-8 lg:px-12 pt-4 sm:pt-0">
-      <VocabHeader 
+      <VocabHeader
         totalItems={totalItems}
         onPracticeClick={() => setIsFlashcardMode(true)}
         isPracticeDisabled={vocabList.length === 0}
       />
 
-      <VocabFilterPanel 
+      <VocabFilterPanel
         search={search}
         setSearch={setSearch}
         level={level}
@@ -235,119 +233,119 @@ export default function VocabClient({
       />
 
       {/* Content Grid */}
-        <div className="relative">
-          {loading && (
-            <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-sm rounded-[2rem]">
-              <Loader2 className="w-10 h-10 animate-spin text-primary" />
+      <div className="relative">
+        {loading && (
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-sm rounded-[2rem]">
+            <Loader2 className="size-10 animate-spin text-primary" />
+          </div>
+        )}
+        {vocabList.length === 0 && !loading ? (
+          <div
+            className="py-24 text-center border border-dashed border-border rounded-3xl bg-muted/20 neo-inset px-6"
+          >
+            <Search className="mx-auto mb-6 text-muted-foreground/30" size={48} aria-hidden="true" />
+            <p className="text-muted-foreground font-bold text-xs md:text-sm uppercase tracking-widest">
+              Kosakata tidak ditemukan. Coba gunakan kriteria pencarian lain.
+            </p>
+          </div>
+        ) : layoutPreference === "grid" ? (
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5 min-h-[400px]"
+          >
+            {vocabList.map((item, idx) => (
+              <VocabCard
+                key={item.id}
+                item={item}
+                idx={idx}
+                showRomaji={showRomaji}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-2.5 min-h-[400px]">
+            {/* Table Header (hidden on mobile) */}
+            <div className="hidden md:grid md:grid-cols-12 gap-4 px-6 py-4 bg-muted/30 border border-border rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+              <div className="col-span-3">Kosakata</div>
+              <div className="col-span-4">Arti / Definisi</div>
+              <div className="col-span-2">Jenis Kata</div>
+              <div className="col-span-1 text-center">JLPT</div>
+              <div className="col-span-2 text-right">Aksi</div>
             </div>
-          )}
-          {vocabList.length === 0 && !loading ? (
-            <div
-              className="py-24 text-center border border-dashed border-border rounded-3xl bg-muted/20 neo-inset px-6"
-            >
-              <Search className="mx-auto mb-6 text-muted-foreground/30" size={48} aria-hidden="true" />
-              <p className="text-muted-foreground font-bold text-xs md:text-sm uppercase tracking-widest">
-                Kosakata tidak ditemukan. Coba gunakan kriteria pencarian lain.
-              </p>
-            </div>
-          ) : layoutPreference === "grid" ? (
-            <div
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5 min-h-[400px]"
-            >
-              {vocabList.map((item, idx) => (
-                <VocabCard
-                  key={item.id}
-                  item={item}
-                  idx={idx}
-                  showRomaji={showRomaji}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col gap-2.5 min-h-[400px]">
-              {/* Table Header (hidden on mobile) */}
-              <div className="hidden md:grid md:grid-cols-12 gap-4 px-6 py-4 bg-muted/30 border border-border rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
-                <div className="col-span-3">Kosakata</div>
-                <div className="col-span-4">Arti / Definisi</div>
-                <div className="col-span-2">Jenis Kata</div>
-                <div className="col-span-1 text-center">JLPT</div>
-                <div className="col-span-2 text-right">Aksi</div>
-              </div>
 
-              {vocabList.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex md:grid md:grid-cols-12 items-center justify-between gap-4 px-4 py-3 bg-[rgba(var(--card-rgb),0.3)] backdrop-blur-3xl border border-border hover:border-[rgba(var(--primary-rgb),0.5)] transition-all duration-300 rounded-2xl shadow-sm hover:shadow-[0_0_25px_rgba(var(--primary-rgb),0.08)] group"
-                >
-                  {/* Sisi Kiri: Kosakata & Arti (Flex di Mobile, Grid Col di Desktop) */}
-                  <div className="flex-1 md:col-span-7 flex flex-col md:grid md:grid-cols-7 md:gap-4 md:items-center min-w-0 pr-2">
-                    <div className="md:col-span-3 flex flex-col justify-center min-w-0">
-                      <span className="text-base md:text-lg font-black text-foreground truncate">
-                        <SmartJapanese word={item.word} furigana={item.furigana || undefined} />
-                      </span>
-                      {showRomaji && item.romaji && (
-                        <span className="text-[9px] md:text-xs text-muted-foreground/60 font-semibold tracking-wide uppercase mt-0.5 truncate">
-                          {item.romaji}
-                        </span>
-                      )}
-                    </div>
-                    <div className="md:col-span-4 text-[10px] md:text-sm text-muted-foreground md:text-foreground/90 font-medium line-clamp-1 mt-0.5 md:mt-0">
-                      {item.meaning}
-                    </div>
-                  </div>
-
-                  {/* Jenis Kata (Sembunyikan di Mobile, Tampilkan di Desktop) */}
-                  <div className="hidden md:block md:col-span-2">
-                    {item.hinshi && (
-                      <span className="text-[9px] md:text-[10px] font-black bg-muted px-2 py-0.5 rounded-md border border-border uppercase tracking-widest text-muted-foreground max-w-max">
-                        {item.hinshi}
+            {vocabList.map((item) => (
+              <div
+                key={item.id}
+                className="flex md:grid md:grid-cols-12 items-center justify-between gap-4 px-4 py-3 bg-[rgba(var(--card-rgb),0.3)] backdrop-blur-3xl border border-border hover:border-[rgba(var(--primary-rgb),0.5)] transition-all duration-300 rounded-2xl shadow-sm hover:shadow-[0_0_25px_rgba(var(--primary-rgb),0.08)] group"
+              >
+                {/* Sisi Kiri: Kosakata & Arti (Flex di Mobile, Grid Col di Desktop) */}
+                <div className="flex-1 md:col-span-7 flex flex-col md:grid md:grid-cols-7 md:gap-4 md:items-center min-w-0 pr-2">
+                  <div className="md:col-span-3 flex flex-col justify-center min-w-0">
+                    <span className="text-base md:text-lg font-black text-foreground truncate">
+                      <SmartJapanese word={item.word} furigana={item.furigana || undefined} />
+                    </span>
+                    {showRomaji && item.romaji && (
+                      <span className="text-[9px] md:text-xs text-muted-foreground/60 font-semibold tracking-wide uppercase mt-0.5 truncate">
+                        {item.romaji}
                       </span>
                     )}
                   </div>
-
-                  {/* JLPT & Aksi */}
-                  <div className="flex items-center gap-2.5 shrink-0 md:col-span-3 md:justify-end">
-                    {item.jlpt_level && (
-                      <span className="text-[9px] md:text-[10px] font-black bg-[rgba(var(--primary-rgb),0.1)] text-primary px-2 py-0.5 rounded-full border border-[rgba(var(--primary-rgb),0.2)] uppercase shrink-0">
-                        {item.jlpt_level.toUpperCase()}
-                      </span>
-                    )}
-                    {item.audio_url && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="w-7 h-7 md:w-8 md:h-8 rounded-lg border border-border hover:bg-primary/10 hover:text-primary transition-all shrink-0"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                          const audio = new Audio(item.audio_url || "");
-                          audio.play().catch((err) => console.error("Gagal memutar audio:", err));
-                        }}
-                        aria-label="Putar Audio"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-3.5 h-3.5">
-                          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-                        </svg>
-                      </Button>
-                    )}
-                    <Link href={`/library/vocab/${item.slug}`} className="shrink-0">
-                      <Button
-                        variant="outline"
-                        className="px-3 h-8 text-[9px] md:text-[10px] font-black uppercase tracking-wider rounded-lg bg-muted border-border hover:bg-primary hover:text-primary-foreground transition-all duration-300"
-                      >
-                        Detail
-                      </Button>
-                    </Link>
+                  <div className="md:col-span-4 text-[10px] md:text-sm text-muted-foreground md:text-foreground/90 font-medium line-clamp-1 mt-0.5 md:mt-0">
+                    {item.meaning}
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
 
-      <VocabPagination 
+                {/* Jenis Kata (Sembunyikan di Mobile, Tampilkan di Desktop) */}
+                <div className="hidden md:block md:col-span-2">
+                  {item.hinshi && (
+                    <span className="text-[9px] md:text-[10px] font-black bg-muted px-2 py-0.5 rounded-md border border-border uppercase tracking-widest text-muted-foreground max-w-max">
+                      {item.hinshi}
+                    </span>
+                  )}
+                </div>
+
+                {/* JLPT & Aksi */}
+                <div className="flex items-center gap-2.5 shrink-0 md:col-span-3 md:justify-end">
+                  {item.jlpt_level && (
+                    <span className="text-[9px] md:text-[10px] font-black bg-[rgba(var(--primary-rgb),0.1)] text-primary px-2 py-0.5 rounded-full border border-[rgba(var(--primary-rgb),0.2)] uppercase shrink-0">
+                      {item.jlpt_level.toUpperCase()}
+                    </span>
+                  )}
+                  {item.audio_url && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="w-7 h-7 md:w-8 md:h-8 rounded-lg border border-border hover:bg-primary/10 hover:text-primary transition-all shrink-0"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        const audio = new Audio(item.audio_url || "");
+                        audio.play().catch((err) => console.error("Gagal memutar audio:", err));
+                      }}
+                      aria-label="Putar Audio"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="size-3.5">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                      </svg>
+                    </Button>
+                  )}
+                  <Link href={`/library/vocab/${item.slug}`} className="shrink-0">
+                    <Button
+                      variant="outline"
+                      className="px-3 h-8 text-[9px] md:text-[10px] font-black uppercase tracking-wider rounded-lg bg-muted border-border hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                    >
+                      Detail
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <VocabPagination
         currentPage={currentPage}
         totalPages={totalPages}
         loading={loading}
@@ -356,15 +354,15 @@ export default function VocabClient({
 
       {/* Footer Navigation */}
       <footer className="mt-16 md:mt-24 pt-10 md:pt-16 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-6">
-         <div className="flex items-center gap-3">
-            <Loader2 size={16} className={`text-primary ${loading ? 'animate-spin' : ''}`} aria-hidden="true" />
-            <span className="text-muted-foreground font-black text-[10px] md:text-xs uppercase tracking-[0.2em]">Basis Data Real-time</span>
-         </div>
-         <Link href="/library" className="w-full sm:w-auto">
-            <Button variant="ghost" className="w-full px-8 py-6 md:px-10 md:py-7 h-auto text-xs md:text-xs font-bold uppercase tracking-widest rounded-2xl bg-muted border border-border neo-card shadow-none hover:bg-primary hover:text-primary-foreground transition-all gap-3 group">
-               <ChevronLeft size={16} className="group-hover:-translate-x-1.5 transition-transform duration-300" aria-hidden="true" /> Kembali ke Pustaka
-            </Button>
-         </Link>
+        <div className="flex items-center gap-3">
+          <Loader2 size={16} className={`text-primary ${loading ? 'animate-spin' : ''}`} aria-hidden="true" />
+          <span className="text-muted-foreground font-black text-[10px] md:text-xs uppercase tracking-[0.2em]">Basis Data Real-time</span>
+        </div>
+        <Link href="/library" className="w-full sm:w-auto">
+          <Button variant="ghost" className="w-full px-8 py-6 md:px-10 md:py-7 h-auto text-xs md:text-xs font-bold uppercase tracking-widest rounded-2xl bg-muted border border-border neo-card shadow-none hover:bg-primary hover:text-primary-foreground transition-all gap-3 group">
+            <ChevronLeft size={16} className="group-hover:-translate-x-1.5 transition-transform duration-300" aria-hidden="true" /> Kembali ke Pustaka
+          </Button>
+        </Link>
       </footer>
     </div>
   );

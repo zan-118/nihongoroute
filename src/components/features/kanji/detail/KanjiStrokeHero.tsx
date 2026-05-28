@@ -20,8 +20,8 @@ export function KanjiStrokeHero({ id, character, strokeOrderSvg, meaning, jlpt }
       <div className="absolute top-4 right-4 z-20">
         {id && <AddToSRSButton wordId={id} />}
       </div>
-      <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-bl-[4rem] -mr-8 -mt-8 blur-3xl group-hover:bg-primary/20 transition-all duration-700" />
-      <div className="absolute bottom-0 left-0 w-32 h-32 bg-secondary/10 rounded-tr-[4rem] -ml-8 -mb-8 blur-3xl group-hover:bg-secondary/20 transition-all duration-700" />
+      <div className="absolute top-0 right-0 size-32 bg-primary/10 rounded-bl-[4rem] -mr-8 -mt-8 blur-3xl group-hover:bg-primary/20 transition-all duration-700" />
+      <div className="absolute bottom-0 left-0 size-32 bg-secondary/10 rounded-tr-[4rem] -ml-8 -mb-8 blur-3xl group-hover:bg-secondary/20 transition-all duration-700" />
       
       <div className="w-full max-w-[180px] sm:max-w-[200px] md:max-w-[300px] relative z-10 flex justify-center">
         <KanjiStrokePlayer 

@@ -25,7 +25,7 @@ export function ReadingMobileToolbar({
         <Button
           variant="ghost"
           size="icon"
-          className="rounded-xl w-12 h-12"
+          className="rounded-xl size-12"
           onClick={onFontSizeToggle}
          aria-label="Aksi" >
           <Type size={22} />

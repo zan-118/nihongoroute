@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Plus, MessageSquarePlus, Coffee, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -47,13 +47,13 @@ export default function FloatingActions() {
         <AnimatePresence mode="wait">
           {/* Global Actions (Non-Reading) - Uses unmounting for AnimatePresence */}
           {!isReadingPage && isOpen && (
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20, scale: 0.8 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.8 }}
               className="flex flex-col gap-3 mb-2"
             >
-              <motion.div whileHover={{ x: -5 }}>
+              <m.div whileHover={{ x: -5 }}>
                 <Button
                   onClick={() => {
                     setShowFeedbackDialog(true);
@@ -64,9 +64,9 @@ export default function FloatingActions() {
                   <span className="text-xs font-black uppercase tracking-widest hidden md:block">Feedback</span>
                   <MessageSquarePlus size={20} className="text-primary group-hover:text-current" />
                 </Button>
-              </motion.div>
+              </m.div>
 
-              <motion.div whileHover={{ x: -5 }}>
+              <m.div whileHover={{ x: -5 }}>
                 <Link href="/support">
                   <Button
                     className="bg-card hover:bg-destructive hover:text-destructive-foreground text-foreground border border-border shadow-xl rounded-2xl px-4 py-6 flex items-center gap-3 transition-all h-auto group"
@@ -75,8 +75,8 @@ export default function FloatingActions() {
                     <Coffee size={20} className="text-destructive group-hover:text-current" />
                   </Button>
                 </Link>
-              </motion.div>
-            </motion.div>
+              </m.div>
+            </m.div>
           )}
         </AnimatePresence>
 
@@ -91,7 +91,7 @@ export default function FloatingActions() {
             )}
           >
             {/* Reading: Audio */}
-            <motion.div whileHover={{ x: -5 }}>
+            <m.div whileHover={{ x: -5 }}>
               <div className="bg-card/90 backdrop-blur-3xl hover:bg-primary/20 text-foreground border border-border shadow-2xl rounded-2xl px-4 py-3 flex items-center gap-3 transition-all h-auto group">
                  <AudioController 
                   audioUrl={readingState.audioUrl} 
@@ -101,11 +101,11 @@ export default function FloatingActions() {
                 />
                 <span className="text-[10px] font-black uppercase tracking-widest hidden md:block text-muted-foreground">Audio</span>
               </div>
-            </motion.div>
+            </m.div>
 
             {/* Reading: Mode Cycle */}
-            <motion.div whileHover={{ x: -5 }}>
-              <button
+            <m.div whileHover={{ x: -5 }}>
+              <button type="button"
                 onClick={() => {
                   const currentIndex = modes.findIndex(m => m.id === readingState.mode);
                   const nextIndex = (currentIndex + 1) % modes.length;
@@ -119,11 +119,11 @@ export default function FloatingActions() {
                 </span>
                 {React.createElement(modes.find(m => m.id === readingState.mode)?.icon || Eye, { size: 20, className: "text-primary group-hover:text-current" })}
               </button>
-            </motion.div>
+            </m.div>
 
             {/* Reading: Translation Toggle */}
-            <motion.div whileHover={{ x: -5 }}>
-              <button
+            <m.div whileHover={{ x: -5 }}>
+              <button type="button"
                 onClick={() => setReadingState({ showTranslation: !readingState.showTranslation })}
                 aria-label={readingState.showTranslation ? "Matikan terjemahan bahasa Indonesia" : "Aktifkan terjemahan bahasa Indonesia"}
                 className={`bg-card/90 backdrop-blur-3xl border border-border shadow-2xl rounded-2xl px-4 py-4 flex items-center gap-3 transition-all h-auto group w-full justify-between ${
@@ -135,7 +135,7 @@ export default function FloatingActions() {
                 </span>
                 <Languages size={20} className={readingState.showTranslation ? "text-success group-hover:text-current" : "text-success"} />
               </button>
-            </motion.div>
+            </m.div>
           </div>
         )}
 
@@ -150,7 +150,7 @@ export default function FloatingActions() {
             )}
           >
             {/* Listening: Audio Control */}
-            <motion.div whileHover={{ x: -5 }}>
+            <m.div whileHover={{ x: -5 }}>
               <div className="bg-card/90 backdrop-blur-3xl hover:bg-primary/20 text-foreground border border-border shadow-2xl rounded-2xl px-4 py-3 flex items-center gap-3 transition-all h-auto group">
                  <AudioController 
                   audioUrl={listeningState.audioUrl} 
@@ -159,11 +159,11 @@ export default function FloatingActions() {
                 />
                 <span className="text-[10px] font-black uppercase tracking-widest hidden md:block text-muted-foreground">Voice</span>
               </div>
-            </motion.div>
+            </m.div>
 
             {/* Listening: Tab Toggle (Transcript/Quiz) */}
-            <motion.div whileHover={{ x: -5 }}>
-              <button
+            <m.div whileHover={{ x: -5 }}>
+              <button type="button"
                 onClick={() => setListeningState({ 
                   activeTab: listeningState.activeTab === "transcript" ? "quiz" : "transcript" 
                 })}
@@ -178,7 +178,7 @@ export default function FloatingActions() {
                   : <FileText size={20} className="text-primary group-hover:text-current" />
                 }
               </button>
-            </motion.div>
+            </m.div>
           </div>
         )}
 

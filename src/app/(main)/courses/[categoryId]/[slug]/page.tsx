@@ -96,8 +96,8 @@ export default async function LessonPage({ params }: Props) {
   return (
     <div className="w-full text-foreground px-4 md:px-8 relative overflow-hidden flex flex-col flex-1 transition-colors duration-300">
       {/* Background Ambient Decor */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 blur-[150px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-secondary/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 right-0 size-[500px] bg-primary/5 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 left-0 size-[400px] bg-secondary/5 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="max-w-4xl mx-auto w-full relative z-10 flex flex-col flex-1">
         <article className="flex-1 min-w-0">
@@ -156,7 +156,7 @@ export default async function LessonPage({ params }: Props) {
           />
 
           <footer className="mt-20 pt-10 border-t border-border/50 text-center">
-            <p className="text-muted-foreground text-xs">
+            <p className="text-muted-foreground text-xs" suppressHydrationWarning={true}>
               &copy; {new Date().getFullYear()} NihongoRoute. All rights reserved.
             </p>
           </footer>

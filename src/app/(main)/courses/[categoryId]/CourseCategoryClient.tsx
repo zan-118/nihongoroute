@@ -7,7 +7,7 @@
 
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { useUserStore } from "@/store/useUserStore";
 import { useState } from "react";
 
@@ -97,13 +97,13 @@ export default function CourseCategoryClient({
         
         {/* Ambient Glow Blobs using premium custom HSL / RGB values */}
         <div 
-          className="absolute top-[-10%] left-[-5%] w-[600px] h-[600px] rounded-full blur-[160px] animate-pulse" 
+          className="absolute top-[-10%] left-[-5%] size-[600px] rounded-full blur-[160px] animate-pulse" 
           style={{
             backgroundColor: isSideQuest ? "rgba(var(--warning-rgb), 0.08)" : "rgba(var(--primary-rgb), 0.08)"
           }}
         />
         <div 
-          className="absolute bottom-[-5%] right-[-5%] w-[500px] h-[500px] rounded-full blur-[140px] animate-pulse" 
+          className="absolute bottom-[-5%] right-[-5%] size-[500px] rounded-full blur-[140px] animate-pulse" 
           style={{ 
             backgroundColor: "rgba(var(--secondary-rgb), 0.08)",
             animationDelay: '2s' 
@@ -117,7 +117,7 @@ export default function CourseCategoryClient({
         </div>
       </div>
 
-      <motion.div
+      <m.div
         className="max-w-7xl mx-auto px-6 md:px-12 relative z-10 pt-24 md:pt-32"
         initial="hidden"
         animate="visible"
@@ -158,7 +158,7 @@ export default function CourseCategoryClient({
           completedLessons={completedLessons as unknown as Record<string, { isDeleted?: boolean; [key: string]: unknown }>}
           itemVariants={itemVariants}
         />
-      </motion.div>
+      </m.div>
     </div>
   );
 }

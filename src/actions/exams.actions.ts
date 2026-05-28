@@ -46,6 +46,7 @@ interface SanityQuestionItem {
  */
 export async function getCourseCategoryData(slug: string) {
   const supabase = await createClient();
+  await supabase.auth.getSession();
   
   try {
     // 1. Ambil Kategori (Tetap dari Supabase karena course_categories ada di Supabase)
@@ -112,6 +113,8 @@ export async function getCourseCategoryData(slug: string) {
  * @returns {Promise<Array>} Daftar simulasi ujian terformat
  */
 export async function getExamsList() {
+  const supabase = await createClient();
+  await supabase.auth.getSession();
   try {
     const query = `*[_type == "mockExam" && is_published == true] | order(_createdAt desc) {
       _id,
@@ -152,6 +155,8 @@ export async function getExamsList() {
  * @returns {Promise<Object | null>} Detail simulasi ujian terformat lengkap, atau null jika tidak ditemukan
  */
 export async function getExamByIdOrSlug(idOrSlug: string) {
+  const supabase = await createClient();
+  await supabase.auth.getSession();
   try {
     const query = `*[_type == "mockExam" && (slug.current == $idOrSlug || _id == $idOrSlug)][0] {
       _id, 

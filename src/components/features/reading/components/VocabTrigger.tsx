@@ -39,7 +39,7 @@ export default function VocabTrigger({ text, vocabId, children }: VocabTriggerPr
           </span>
         </DialogTrigger>
         <DialogContent className="bg-[rgba(var(--card-rgb),0.6)] backdrop-blur-3xl border border-border shadow-[0_0_50px_rgba(var(--primary-rgb),0.15)] sm:max-w-[400px] overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[50px] rounded-full -mr-16 -mt-16" />
+          <div className="absolute top-0 right-0 size-32 bg-primary/10 blur-[50px] rounded-full -mr-16 -mt-16" />
           
           <DialogHeader className="relative z-10">
             <div className="flex items-center justify-between mb-4">
@@ -48,7 +48,7 @@ export default function VocabTrigger({ text, vocabId, children }: VocabTriggerPr
               </Badge>
               {srsInfo && (
                 <div className="flex items-center gap-1.5">
-                   <div className="w-2 h-2 rounded-full bg-success shadow-[0_0_8px_rgba(var(--success-rgb),0.5)]" />
+                   <div className="size-2 rounded-full bg-success shadow-[0_0_8px_rgba(var(--success-rgb),0.5)]" />
                    <span className="text-[10px] font-black uppercase tracking-tighter text-success/80">In SRS</span>
                 </div>
               )}

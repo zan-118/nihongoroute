@@ -8,6 +8,7 @@ export async function getFlashcardsByMode(
   amount: number = 20
 ) {
   const supabase = await createClient();
+  await supabase.auth.getSession();
   
   if (mode === "kanji") {
     let query = supabase

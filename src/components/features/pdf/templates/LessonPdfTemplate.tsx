@@ -386,7 +386,7 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
     if (!blocks || !Array.isArray(blocks)) return null;
     let h2Counter = 0;
      
-    return blocks.map((block: PdfContentBlock, index: number) => {
+    return blocks.map((block: PdfContentBlock, pos: number) => {
       const type = block._type || block.type || "text";
 
       if (type === "block") {
@@ -394,14 +394,14 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
         if (block.style === "h2") {
           h2Counter++;
           const sanitizedText = stripEmojisAndPrefixes(textContent);
-          return <Text key={index} style={styles.contentH2}>{h2Counter}. {sanitizedText}</Text>;
+          return <Text key={`h2-${pos}`} style={styles.contentH2}>{h2Counter}. {sanitizedText}</Text>;
         }
-        return <Text key={index} style={styles.contentParagraph}>{stripEmojisOnly(textContent)}</Text>;
+        return <Text key={`paragraph-${pos}`} style={styles.contentParagraph}>{stripEmojisOnly(textContent)}</Text>;
       }
 
       if (type === "exampleSentence") {
         return (
-          <View key={index} style={styles.exampleBox} wrap={false}>
+          <View key={`exSentence-${pos}`} style={styles.exampleBox} wrap={false}>
             <Text style={styles.exampleJp}>{block.jp}</Text>
             <Text style={[styles.exampleFurigana, { marginTop: 4, color: "#64748b" }]}>
               {block.romaji}
@@ -413,7 +413,7 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
 
       if (type === "callout" || type === "calloutBlock") {
         return (
-          <View key={index} style={styles.calloutBox} wrap={false}>
+          <View key={`callout-${pos}`} style={styles.calloutBox} wrap={false}>
             <Text style={styles.calloutTitle}>{stripEmojisOnly(block.title) || "Note"}</Text>
             <Text style={styles.calloutText}>{stripEmojisOnly(block.text || block.content)}</Text>
             {block.translation && (
@@ -427,15 +427,15 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
 
       if (type === "grammar" || type === "grammarBlock") {
         return (
-          <View key={index} style={{ marginBottom: 20, padding: 10, borderLeftWidth: 3, borderLeftColor: "#0891b2" }} wrap={false}>
+          <View key={`grammar-${pos}`} style={{ marginBottom: 20, padding: 10, borderLeftWidth: 3, borderLeftColor: "#0891b2" }} wrap={false}>
             <Text style={{ fontSize: 9, fontWeight: "bold", color: "#64748b", textTransform: "uppercase" }}>Grammar Point</Text>
             {block.title && <Text style={styles.contentH2}>{stripEmojisOnly(block.title)}</Text>}
             {block.content && <Text style={{ fontSize: 14, fontWeight: "bold", color: "#0f172a", marginBottom: 4 }}>{block.content}</Text>}
             {block.furigana && <Text style={{ fontSize: 10, color: "#64748b", marginBottom: 4 }}>{block.furigana}</Text>}
             {block.translation && <Text style={{ fontSize: 10, color: "#64748b", marginBottom: 8 }}>{stripEmojisOnly(block.translation)}</Text>}
             
-            {block.examples?.map((ex: { jp?: string; romaji?: string; id?: string }, exIdx: number) => (
-              <View key={`ex-${exIdx}`} style={styles.exampleBox} wrap={false}>
+            {block.examples?.map((ex: { jp?: string; romaji?: string; id?: string }, exPos: number) => (
+              <View key={`ex-${exPos}`} style={styles.exampleBox} wrap={false}>
                 <Text style={styles.exampleJp}>{ex.jp}</Text>
                 {ex.romaji && <Text style={[styles.exampleFurigana, { marginTop: 4, color: "#64748b" }]}>{ex.romaji}</Text>}
                 <Text style={styles.exampleId}>{stripEmojisOnly(ex.id)}</Text>
@@ -448,14 +448,14 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
       if (type === "dialogue" || type === "dialogueBlock") {
         const lines = block.content ? block.content.split("\n").filter(Boolean) : [];
         return (
-          <View key={index} style={{ marginBottom: 15, padding: 15, backgroundColor: "#f8fafc", borderRadius: 8, borderWidth: 1, borderColor: "#e2e8f0" }} wrap={false}>
+          <View key={`dialogue-${pos}`} style={{ marginBottom: 15, padding: 15, backgroundColor: "#f8fafc", borderRadius: 8, borderWidth: 1, borderColor: "#e2e8f0" }} wrap={false}>
             {block.title && <Text style={[styles.contentH2, { marginTop: 0 }]}>{stripEmojisOnly(block.title)}</Text>}
-            {lines.map((line: string, lIdx: number) => {
+            {lines.map((line: string, lPos: number) => {
               const parts = line.split(/[：:]/);
-              const speaker = parts.length > 1 ? parts[0].trim() : `Person ${lIdx + 1}`;
+              const speaker = parts.length > 1 ? parts[0].trim() : `Person ${lPos + 1}`;
               const text = parts.length > 1 ? parts.slice(1).join("：").trim() : line.trim();
               return (
-                <View key={`line-${lIdx}`} style={{ flexDirection: "row", marginBottom: 8 }}>
+                <View key={`line-${lPos}`} style={{ flexDirection: "row", marginBottom: 8 }}>
                   <Text style={{ width: "20%", fontSize: 9, fontWeight: "bold", color: "#0891b2" }}>{speaker}</Text>
                   <Text style={{ width: "80%", fontSize: 10, color: "#0f172a", lineHeight: 1.5 }}>{text}</Text>
                 </View>
@@ -471,19 +471,20 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
       }
 
       if (type === "text" || type === "article") {
+        const paragraphs = block.content ? block.content.split("\n").filter(Boolean) : [];
         return (
-          <View key={index} style={{ marginBottom: 15 }} wrap={false}>
+          <View key={`textArticle-${pos}`} style={{ marginBottom: 15 }} wrap={false}>
             {block.title && <Text style={styles.contentH2}>{stripEmojisOnly(block.title)}</Text>}
-            {block.content && block.content.split("\n").filter(Boolean).map((line: string, lIdx: number) => (
-              <Text key={`line-${lIdx}`} style={styles.contentParagraph}>{stripEmojisOnly(line)}</Text>
+            {paragraphs.map((line: string, lPos: number) => (
+              <Text key={`line-${lPos}`} style={styles.contentParagraph}>{stripEmojisOnly(line)}</Text>
             ))}
             {block.translation && (
               <Text style={[styles.contentParagraph, { color: "#64748b", borderLeftWidth: 2, borderLeftColor: "#e2e8f0", paddingLeft: 8 }]}>
                 {stripEmojisOnly(block.translation)}
               </Text>
             )}
-            {block.examples?.map((ex: { jp?: string; romaji?: string; id?: string }, exIdx: number) => (
-              <View key={`ex-${exIdx}`} style={styles.exampleBox} wrap={false}>
+            {block.examples?.map((ex: { jp?: string; romaji?: string; id?: string }, exPos: number) => (
+              <View key={`ex-${exPos}`} style={styles.exampleBox} wrap={false}>
                 <Text style={styles.exampleJp}>{ex.jp}</Text>
                 {ex.romaji && <Text style={[styles.exampleFurigana, { marginTop: 4, color: "#64748b" }]}>{ex.romaji}</Text>}
                 <Text style={styles.exampleId}>{stripEmojisOnly(ex.id)}</Text>
@@ -551,16 +552,16 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
                   <Text style={styles.headerText}>Arti / Makna</Text>
                 </View>
               </View>
-              {combinedVocabList.map((item: PdfVocabItem, idx: number) => (
+              {combinedVocabList.map((item: PdfVocabItem, pos: number) => (
                 <View
-                  key={idx}
+                  key={`vocab-${pos}`}
                   style={[
                     styles.tableRow,
-                    idx % 2 !== 0 ? styles.tableRowZebra : {},
+                    pos % 2 !== 0 ? styles.tableRowZebra : {},
                   ]}
                 >
                   <View style={styles.cellNo}>
-                    <Text style={styles.romajiText}>{idx + 1}</Text>
+                    <Text style={styles.romajiText}>{pos + 1}</Text>
                   </View>
                   <View style={styles.cellWord}>
                     <Text style={styles.kanjiText}>{item.word}</Text>
@@ -590,23 +591,23 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
         {quizzesList.length > 0 && (
           <View>
             <Text style={styles.sectionTitle}>Latihan Pemahaman</Text>
-            {quizzesList.map((quiz: PdfQuizItem, qIdx: number) => {
+            {quizzesList.map((quiz: PdfQuizItem, qPos: number) => {
               const alphabet = ["A", "B", "C", "D"];
               return (
-                <View key={qIdx} style={styles.quizBox} wrap={false}>
+                <View key={`quiz-${qPos}`} style={styles.quizBox} wrap={false}>
                   <Text style={styles.quizQuestion}>
-                    {qIdx + 1}. {stripEmojisOnly(quiz.question)}
+                    {qPos + 1}. {stripEmojisOnly(quiz.question)}
                   </Text>
-                  {quiz.options?.map((opt: string, oIdx: number) => {
+                  {quiz.options?.map((opt: string, oPos: number) => {
                     const isCorrect = opt === quiz.answer;
                     return (
                       <Text
-                        key={oIdx}
+                        key={`opt-${oPos}`}
                         style={
                           isCorrect ? styles.quizCorrect : styles.quizOption
                         }
                       >
-                        {alphabet[oIdx]}. {opt}
+                        {alphabet[oPos]}. {opt}
                         {isCorrect ? " (✓ Correct Answer)" : ""}
                       </Text>
                     );
@@ -624,7 +625,8 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
 
         {/* FOOTER SECTION */}
         <View style={styles.footer} fixed>
-          <Text style={styles.footerText}>
+          {/* @ts-expect-error - suppressHydrationWarning is standard in React but not defined in react-pdf types */}
+          <Text style={styles.footerText} suppressHydrationWarning={true}>
             © {new Date().getFullYear()} NihongoRoute. Dicetak pada {new Date().toLocaleDateString('id-ID')}.
           </Text>
           <Link style={styles.footerLink} src="https://www.nihongoroute.my.id">

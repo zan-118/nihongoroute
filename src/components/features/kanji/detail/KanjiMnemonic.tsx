@@ -20,14 +20,14 @@ export function KanjiMnemonic({ mnemonics, wordId }: KanjiMnemonicProps) {
           </div>
           <div className="prose dark:prose-invert prose-sm max-w-none prose-p:leading-relaxed prose-p:text-warning italic font-medium">
             {typeof mnemonics === "string"
-              ? mnemonics.split("\n").filter(Boolean).map((line: string, i: number) => (
-                  <p key={i} className="text-warning italic">{line}</p>
+              ? mnemonics.split("\n").filter(Boolean).map((line: string, pos: number) => (
+                  <p key={`mnemonic-${pos}`} className="text-warning italic">{line}</p>
                 ))
               : Array.isArray(mnemonics)
-                ? mnemonics.map((m: unknown, i: number) => {
+                ? mnemonics.map((m: unknown, pos: number) => {
                     const item = m as string | { text?: string; children?: { text?: string }[] };
                     return (
-                      <p key={i} className="text-warning italic">
+                      <p key={`mnemonic-${pos}`} className="text-warning italic">
                         {typeof item === "string" ? item : item?.text || item?.children?.[0]?.text || ""}
                       </p>
                     );

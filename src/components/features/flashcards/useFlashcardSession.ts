@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getFlashcardsByMode } from "@/actions/flashcard.actions";
 import { MasterCardData } from "./master/types";
@@ -32,11 +32,19 @@ export function useFlashcardSession() {
   const categorySlug = searchParams.get("category");
   const modeParam = searchParams.get("mode") as ModeLatihan | null;
 
-  const [selectedLevel, setSelectedLevel] = useState<string | "all" | null>(null);
+  const [selectedLevel, setSelectedLevel] = useState<string | "all" | null>(() => {
+    return categorySlug ? categorySlug.toUpperCase() : null;
+  });
   const [selectedMode, setSelectedMode] = useState<ModeLatihan | null>(null);
   const [cards, setCards] = useState<MasterCardData[]>([]);
   const [isFetchingCards, setIsFetchingCards] = useState(false);
-  const [hasAutoFetched, setHasAutoFetched] = useState(false);
+  const hasAutoFetchedRef = useRef(false);
+
+  const [prevCategorySlug, setPrevCategorySlug] = useState(categorySlug);
+  if (categorySlug !== prevCategorySlug) {
+    setPrevCategorySlug(categorySlug);
+    setSelectedLevel(categorySlug ? categorySlug.toUpperCase() : null);
+  }
 
   const fetchCardsAndStart = useCallback(async (level: string, mode: ModeLatihan, amount: number) => {
     setIsFetchingCards(true);
@@ -102,25 +110,23 @@ export function useFlashcardSession() {
 
   // Trigger otomatis jika masuk via URL ?category=slug
   useEffect(() => {
-    if (categorySlug && !hasAutoFetched) {
+    if (categorySlug && !hasAutoFetchedRef.current) {
       const modeParamLower = modeParam?.toLowerCase();
       const isValidMode = modeParamLower === "vocab" || modeParamLower === "kanji" || modeParamLower === "survival" || modeParamLower === "pronunciation";
       
       if (isValidMode && modeParam) {
-        requestAnimationFrame(() => setHasAutoFetched(true));
+        hasAutoFetchedRef.current = true;
         const amountParam = searchParams.get("amount");
         const amountVal = amountParam ? parseInt(amountParam, 10) : 20;
         const finalAmount = [10, 20, 50, 100].includes(amountVal) ? amountVal : 20;
         
-        requestAnimationFrame(() => fetchCardsAndStart(categorySlug.toUpperCase(), modeParam, finalAmount));
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        fetchCardsAndStart(categorySlug.toUpperCase(), modeParam, finalAmount);
       } else {
-        requestAnimationFrame(() => {
-          setHasAutoFetched(true);
-          setSelectedLevel(categorySlug.toUpperCase());
-        });
+        hasAutoFetchedRef.current = true;
       }
     }
-  }, [categorySlug, modeParam, searchParams, hasAutoFetched, fetchCardsAndStart]);
+  }, [categorySlug, modeParam, searchParams, fetchCardsAndStart]);
 
   const handleBackFromMode = useCallback(() => {
     if (categorySlug) {

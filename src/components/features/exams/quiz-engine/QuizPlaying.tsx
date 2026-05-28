@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Brain, AlertCircle, ArrowRight, CheckCircle2, XCircle } from "lucide-react";
@@ -29,8 +29,8 @@ export function QuizPlaying({
 
   return (
     <Card className="bg-card p-5 md:p-12 rounded-[2rem] md:rounded-[4rem] border-border shadow-none relative overflow-hidden neo-card">
-      <div className="absolute top-0 right-0 w-96 h-96 bg-destructive/5 blur-[100px] pointer-events-none" />
-      <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-destructive/5 blur-[80px] pointer-events-none" />
+      <div className="absolute top-0 right-0 size-96 bg-destructive/5 blur-[100px] pointer-events-none" />
+      <div className="absolute -bottom-10 -left-10 size-64 bg-destructive/5 blur-[80px] pointer-events-none" />
 
       <div className="relative z-10">
         <header className="flex justify-between items-center mb-4 md:mb-6">
@@ -62,7 +62,7 @@ export function QuizPlaying({
 
         <div className="mb-8 md:mb-14 min-h-[100px] md:min-h-[140px] flex items-center">
           <AnimatePresence mode="wait">
-            <motion.h3
+            <m.h3
               key={currentIndex}
               initial={{ x: 30, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
@@ -70,14 +70,14 @@ export function QuizPlaying({
               className="text-2xl md:text-5xl font-black text-foreground leading-tight tracking-tighter uppercase"
             >
               {currentQ.question}
-            </motion.h3>
+            </m.h3>
           </AnimatePresence>
         </div>
 
         {/* ─── Result Banner: BENAR / SALAH ─── */}
         <AnimatePresence>
           {isAnswered && (
-            <motion.div
+            <m.div
               initial={{ opacity: 0, scale: 0.9, y: -10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ type: "spring", stiffness: 400, damping: 25 }}
@@ -108,7 +108,7 @@ export function QuizPlaying({
                   }
                 </p>
               </div>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
 
@@ -134,8 +134,8 @@ export function QuizPlaying({
               }
 
               return (
-                <motion.button
-                  key={`${currentIndex}-${index}`}
+                <m.button
+                  key={`${currentIndex}-${option}`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
@@ -158,17 +158,17 @@ export function QuizPlaying({
                     <span className="flex-1 text-base md:text-2xl font-black uppercase tracking-tight leading-tight">{option}</span>
 
                     {statusIcon && (
-                      <motion.span
+                      <m.span
                         initial={{ scale: 0, rotate: -45 }}
                         animate={{ scale: 1, rotate: 0 }}
                         transition={{ type: "spring", stiffness: 500, damping: 20 }}
                         className="shrink-0"
                       >
                         {statusIcon}
-                      </motion.span>
+                      </m.span>
                     )}
                   </div>
-                </motion.button>
+                </m.button>
               );
             })}
           </AnimatePresence>
@@ -176,7 +176,7 @@ export function QuizPlaying({
 
         <AnimatePresence>
           {isAnswered && (
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="mt-6 md:mt-10 flex flex-col gap-6"
@@ -203,7 +203,7 @@ export function QuizPlaying({
               >
                 Lanjut Ke Soal Berikutnya <ArrowRight size={20} className="ml-3" />
               </Button>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       </div>

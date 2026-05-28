@@ -10,6 +10,7 @@ import { Pagination } from "@/components/ui/Pagination";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/store/useUIStore";
+import { useHasMounted } from "@/hooks/useHasMounted";
 
 // Domain Components
 import { GrammarCard } from "@/components/features/grammar/GrammarCard";
@@ -50,19 +51,24 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
   const [articles, setArticles] = useState<GrammarArticle[]>(initialArticles);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(initialPage);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHasMounted();
   const [layoutMode, setLayoutMode] = useState<"grid" | "list">("grid");
 
   const isFirstMount = useRef(true);
 
   const layoutPreference = useUIStore((s) => s.settings.layoutPreference) ?? "grid";
 
-  useEffect(() => {
-    setMounted(true);
-    if (layoutPreference) {
-      setLayoutMode(layoutPreference as "grid" | "list");
-    }
-  }, [layoutPreference]);
+  const [prevLayoutPreference, setPrevLayoutPreference] = useState(layoutPreference);
+  if (layoutPreference !== prevLayoutPreference) {
+    setPrevLayoutPreference(layoutPreference);
+    setLayoutMode(layoutPreference as "grid" | "list");
+  }
+
+  const [prevSearchTerm, setPrevSearchTerm] = useState(searchTerm);
+  if (searchTerm !== prevSearchTerm) {
+    setPrevSearchTerm(searchTerm);
+    setCurrentPage(1);
+  }
 
   // Sinkronisasikan state filter ke URL search parameters secara dinamis
   useEffect(() => {
@@ -141,11 +147,7 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  useEffect(() => {
-    if (searchTerm !== initialSearch) {
-      setCurrentPage(1);
-    }
-  }, [searchTerm, initialSearch]);
+
 
   return (
     <div className="max-w-7xl mx-auto w-full relative z-10 pt-4 md:pt-10">
@@ -163,7 +165,7 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
       <section className="relative min-h-[400px]">
         {loading && (
           <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-sm rounded-[2rem]">
-            <div className="w-10 h-10 animate-spin border-4 border-primary border-t-transparent rounded-full" />
+            <div className="size-10 animate-spin border-4 border-primary border-t-transparent rounded-full" />
           </div>
         )}
         

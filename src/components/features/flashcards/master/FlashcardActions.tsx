@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Check, X, Info, Search } from "lucide-react";
 import { StudyMode } from "./types";
 
@@ -52,7 +52,7 @@ export function FlashcardActions({
       ) : (
         <AnimatePresence mode="wait">
           {isFlipped ? (
-            <motion.nav
+            <m.nav
               key="flipped-actions"
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -107,9 +107,9 @@ export function FlashcardActions({
                 <span className="text-[10px] font-bold uppercase tracking-tight">Mudah</span>
                 <span className="text-[8px] opacity-60">Easy</span>
               </Button>
-            </motion.nav>
+            </m.nav>
           ) : isChallenge ? (
-            <motion.div
+            <m.div
               key="challenge-actions"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -123,9 +123,9 @@ export function FlashcardActions({
               >
                 <Search size={16} className="mr-2" /> Periksa Jawaban
               </Button>
-            </motion.div>
+            </m.div>
           ) : (
-            <motion.div
+            <m.div
               key="standard-actions"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -136,7 +136,7 @@ export function FlashcardActions({
               <span className="text-xs md:text-xs font-bold uppercase tracking-widest opacity-60">
                 Ketuk kartu untuk melihat jawaban
               </span>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       )}

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -65,7 +65,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
       {/* HEADER */}
       <header className="flex flex-col gap-6 mb-10">
         <div className="flex items-center gap-3">
-          <Card className="w-10 h-10 rounded-xl bg-[rgba(var(--destructive-rgb),0.1)] border border-destructive/20 flex items-center justify-center neo-inset shadow-none">
+          <Card className="size-10 rounded-xl bg-[rgba(var(--destructive-rgb),0.1)] border border-destructive/20 flex items-center justify-center neo-inset shadow-none">
             <BrainCircuit size={20} aria-hidden="true" className="text-destructive" />
           </Card>
           <div>
@@ -102,7 +102,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
         onClick={!engine.isFlipped ? engine.toggleFlip : undefined}
       >
         <AnimatePresence mode="wait">
-          <motion.div
+          <m.div
             key={engine.currentIndex}
             initial={{ x: engine.direction * 50, opacity: 0, scale: 0.95 }}
             animate={{ x: 0, opacity: 1, scale: 1 }}
@@ -134,7 +134,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
                 mnemonic={engine.currentCard.mnemonic}
               />
             )}
-          </motion.div>
+          </m.div>
         </AnimatePresence>
       </div>
 
@@ -158,7 +158,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
             </div>
           </div>
         ) : (
-          <motion.div
+          <m.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             className="grid grid-cols-2 gap-5"
@@ -199,10 +199,10 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
             
             {engine.isSyncing && (
                <div className="col-span-2 text-center text-xs text-muted-foreground animate-pulse mt-2">
-                 Menyinkronkan progres ke cloud...
+                 Menyinkronkan progres ke cloud…
                </div>
             )}
-          </motion.div>
+          </m.div>
         )}
       </footer>
     </section>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { Flame, ChevronRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
@@ -21,7 +21,7 @@ export function MockExams({ exams, itemVariants }: MockExamsProps) {
   if (!exams || exams.length === 0) return null;
 
   return (
-    <motion.section variants={itemVariants} className="mb-24">
+    <m.section variants={itemVariants} className="mb-24">
       <div className="flex items-center gap-6 mb-12">
         <div className="space-y-1">
           <h3 className="text-2xl font-black uppercase tracking-tight text-foreground flex items-center gap-3">
@@ -72,7 +72,7 @@ export function MockExams({ exams, itemVariants }: MockExamsProps) {
               
               <div className="mt-auto relative z-10 flex items-center justify-between pt-8 border-t border-border">
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Challenge Start</span>
-                <div className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-xl group-hover:translate-x-2 transition-transform">
+                <div className="size-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-xl group-hover:translate-x-2 transition-transform">
                   <ChevronRight size={20} />
                 </div>
               </div>
@@ -80,6 +80,6 @@ export function MockExams({ exams, itemVariants }: MockExamsProps) {
           </Link>
         ))}
       </div>
-    </motion.section>
+    </m.section>
   );
 }

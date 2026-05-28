@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -48,7 +48,7 @@ export function SurvivalPlaying({
         <div className="flex gap-1 md:gap-4 items-center">
           {[...Array(MAX_HP)].map((_, i) => (
             <BatteryMedium
-              key={i}
+              key={`hp-${i}`}
               size={18}
               aria-hidden="true"
               className={`transition-all duration-500 ${
@@ -75,7 +75,7 @@ export function SurvivalPlaying({
       </Card>
 
       <AnimatePresence mode="wait">
-        <motion.div
+        <m.div
           key={currentCard?.id}
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{
@@ -103,7 +103,7 @@ export function SurvivalPlaying({
             >
               {isDangerTime ? (
                 <span className="flex items-center gap-1">
-                  <AlertTriangle size={12} aria-hidden="true" className="animate-bounce md:w-4 md:h-4" /> KEJAR WAKTU!
+                  <AlertTriangle size={12} aria-hidden="true" className="animate-premium-bounce md:w-4 md:h-4" /> KEJAR WAKTU!
                 </span>
               ) : (
                 <span className="flex items-center gap-1">
@@ -124,21 +124,21 @@ export function SurvivalPlaying({
                    
                    return splitFurigana(word, hiraReading).map((chunk, i) => (
                      chunk.furi ? (
-                       <ruby key={i}>
+                       <ruby key={`${chunk.text}-${i}`}>
                          {chunk.text}
                          <rt className="text-xs md:text-sm lg:text-base text-primary/80 font-bold tracking-widest not-italic mb-1 md:mb-2">
                            {chunk.furi}
                          </rt>
                        </ruby>
                      ) : (
-                       <span key={i}>{chunk.text}</span>
+                       <span key={`${chunk.text}-${i}`}>{chunk.text}</span>
                      )
                    ));
                  })()}
                </h2>
             </div>
           </Card>
-        </motion.div>
+        </m.div>
       </AnimatePresence>
 
       <div className="mb-4 md:mb-10">
@@ -156,7 +156,7 @@ export function SurvivalPlaying({
           
           return (
             <Button
-              key={idx}
+              key={option.id}
               variant="ghost"
               onClick={() => handleAnswer(option)}
               disabled={isCorrecting}

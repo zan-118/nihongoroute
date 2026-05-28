@@ -70,7 +70,7 @@ export default function WritingCanvas({
         {isCompleted && (
           <div className="absolute inset-0 bg-background/85 backdrop-blur-md flex flex-col items-center justify-center gap-4 z-30 transition-all duration-300 animate-in fade-in">
             <div className="h-14 w-14 rounded-full bg-success/15 border border-success/30 flex items-center justify-center text-success shadow-[0_0_20px_rgba(var(--success-rgb),0.3)]">
-              <CheckCircle size={28} className="animate-bounce" />
+              <CheckCircle size={28} className="animate-premium-bounce" />
             </div>
             <div className="text-center space-y-1">
               <h4 className="text-xs font-bold uppercase tracking-widest text-success">Latihan Selesai!</h4>
@@ -89,7 +89,7 @@ export default function WritingCanvas({
 
         {/* Tooltip Deteksi Kesalahan Coretan */}
         {strokeError && (
-          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl bg-destructive/10 border border-destructive/20 backdrop-blur-md text-[9px] font-bold uppercase tracking-wider text-destructive shadow-[0_0_15px_rgba(var(--destructive-rgb),0.25)] animate-bounce z-30">
+          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl bg-destructive/10 border border-destructive/20 backdrop-blur-md text-[9px] font-bold uppercase tracking-wider text-destructive shadow-[0_0_15px_rgba(var(--destructive-rgb),0.25)] animate-premium-bounce z-30">
             {strokeError === "reverse" ? "Arah guratan terbalik!" : "Guratan kurang tepat!"}
           </div>
         )}

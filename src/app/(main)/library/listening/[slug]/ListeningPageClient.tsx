@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { ListeningTaskData } from "@/components/features/listening/types";
 import ListeningKaraoke from "@/components/features/listening/components/ListeningKaraoke";
 import ListeningQuiz from "@/components/features/listening/components/ListeningQuiz";
@@ -63,8 +63,8 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
       {/* Premium Ambient Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full" />
-        <div className="absolute top-1/2 -right-48 w-96 h-96 bg-primary/10 blur-[100px] rounded-full" />
+        <div className="absolute top-0 left-1/4 size-[500px] bg-primary/5 blur-[120px] rounded-full" />
+        <div className="absolute top-1/2 -right-48 size-96 bg-primary/10 blur-[100px] rounded-full" />
       </div>
 
       <ListeningHeader
@@ -96,13 +96,13 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
 
             <AnimatePresence>
               {activeTab === "quiz" && (
-                <motion.div
+                <m.div
                   initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
                   animate={{ opacity: 1, backdropFilter: "blur(4px)" }}
                   exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
                   className="absolute inset-0 z-50 flex items-center justify-center p-4"
                 >
-                  <motion.div
+                  <m.div
                     initial={{ scale: 0.9, y: 20, opacity: 0 }}
                     animate={{ scale: 1, y: 0, opacity: 1 }}
                     exit={{ scale: 0.9, y: 20, opacity: 0 }}
@@ -117,7 +117,7 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
                     ) : (
                       <div className="p-12 text-center bg-background/80 backdrop-blur-2xl border border-border rounded-3xl">
                         <p className="text-muted-foreground">No quiz available for this task.</p>
-                        <button 
+                        <button type="button" 
                           onClick={() => setListeningState({ activeTab: "transcript" })}
                           className="mt-4 text-xs font-black uppercase text-primary tracking-widest hover:underline"
                         >
@@ -125,8 +125,8 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
                         </button>
                       </div>
                     )}
-                  </motion.div>
-                </motion.div>
+                  </m.div>
+                </m.div>
               )}
             </AnimatePresence>
           </div>

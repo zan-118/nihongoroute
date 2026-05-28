@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { 
   Play, 
   Pause, 
@@ -82,7 +82,7 @@ export default function KanjiStrokePlayer({
 
   if (loading) return (
     <div className="flex items-center justify-center bg-[rgba(var(--card-rgb),0.2)] backdrop-blur-xl rounded-3xl border border-border" style={{ width: size, height: size }}>
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      <div className="animate-spin rounded-full size-8 border-b-2 border-primary" />
     </div>
   );
 
@@ -137,7 +137,7 @@ export default function KanjiStrokePlayer({
             const isAnimating = stroke.index === currentStroke && status === "playing";
 
             return (
-              <motion.path
+              <m.path
                 key={`anim-${stroke.index}-${stroke.index === currentStroke && status === "playing" ? `active-${strokeTrigger}` : 'static'}`}
                 d={stroke.path}
 
@@ -181,7 +181,7 @@ export default function KanjiStrokePlayer({
           <AnimatePresence>
             {showNumbers && data.numbers.map((num, i) => (
               (currentStroke === -1 || i <= currentStroke) && (
-                <motion.text
+                <m.text
                   key={`num-${i}`}
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 0.4, scale: 1 }}
@@ -196,7 +196,7 @@ export default function KanjiStrokePlayer({
 
                 >
                   {num.value}
-                </motion.text>
+                </m.text>
               )
             ))}
           </AnimatePresence>
@@ -268,7 +268,7 @@ export default function KanjiStrokePlayer({
         <div className="flex items-center justify-between px-2">
           <div className="flex gap-1">
             {[0.5, 1, 1.5, 2].map((s) => (
-              <button
+              <button type="button"
                 key={s}
                 onClick={() => setSpeed(s)}
                 className={`text-[10px] font-bold px-2 py-1 rounded-md transition-all ${

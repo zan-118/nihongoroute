@@ -86,8 +86,8 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
             
             {(l.transcript || l.body) && (
               <div className="space-y-8">
-                {(l.transcript || l.body)!.map((item: DialogueSpeakerItem, idx: number) => (
-                  <div key={idx} className="flex flex-col gap-2 group/dialogue">
+                {(l.transcript || l.body)!.map((item: DialogueSpeakerItem, pos: number) => (
+                  <div key={`dialogue-${pos}`} className="flex flex-col gap-2 group/dialogue">
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] font-black text-secondary uppercase tracking-[0.2em] bg-secondary/10 px-2 py-0.5 rounded">
                         {item.speaker || item.speakerName}

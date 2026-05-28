@@ -26,7 +26,7 @@ export const PracticeSection: React.FC<PracticeSectionProps> = ({ lesson }) => {
           <Award size={180} />
         </div>
         <div className="relative z-10 flex flex-col items-center text-center max-w-xl mx-auto">
-          <div className="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center text-primary mb-6">
+          <div className="size-16 rounded-2xl bg-primary/20 flex items-center justify-center text-primary mb-6">
             <Award size={32} />
           </div>
           <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter mb-4">

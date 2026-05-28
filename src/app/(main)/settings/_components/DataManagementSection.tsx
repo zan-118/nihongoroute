@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Save, Upload, Trash2, LogOut, Database } from "lucide-react";
@@ -23,13 +23,13 @@ export default function DataManagementSection({
   itemVariants
 }: DataManagementSectionProps) {
   return (
-    <motion.div variants={itemVariants}>
+    <m.div variants={itemVariants}>
       <Card className="glass backdrop-blur-3xl border border-border/80 rounded-[2.5rem] p-8 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] relative overflow-hidden group">
         {/* Background Accent */}
-        <div className="absolute top-0 right-0 w-48 h-48 bg-primary/10 blur-[100px] rounded-full -mr-16 -mt-16 pointer-events-none group-hover:bg-primary/15 transition-colors duration-500" />
+        <div className="absolute top-0 right-0 size-48 bg-primary/10 blur-[100px] rounded-full -mr-16 -mt-16 pointer-events-none group-hover:bg-primary/15 transition-colors duration-500" />
         
         <div className="flex items-center gap-4 mb-10 relative z-10">
-          <div className="w-12 h-12 rounded-2xl bg-background/30 flex items-center justify-center border border-border/80 shadow-2xl">
+          <div className="size-12 rounded-2xl bg-background/30 flex items-center justify-center border border-border/80 shadow-2xl">
             <Database size={22} className="text-primary drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.4)] animate-pulse" />
           </div>
           <div>
@@ -71,6 +71,6 @@ export default function DataManagementSection({
           )}
         </div>
       </Card>
-    </motion.div>
+    </m.div>
   );
 }

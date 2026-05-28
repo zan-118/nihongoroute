@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { Minimize2 } from "lucide-react";
 import { ReadingProvider } from "@/components/features/reading/components/ReadingContext";
 import { cn } from "@/lib/utils";
@@ -71,8 +71,8 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
     )}>
       {/* Immersive Background Glows */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-primary/5 blur-[150px] rounded-full animate-pulse" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-success/5 blur-[150px] rounded-full animate-pulse delay-1000" />
+        <div className="absolute top-[-20%] left-[-10%] size-[60%] bg-primary/5 blur-[150px] rounded-full animate-pulse" />
+        <div className="absolute bottom-[-20%] right-[-10%] size-[60%] bg-success/5 blur-[150px] rounded-full animate-pulse delay-1000" />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--foreground-rgb),0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--foreground-rgb),0.01)_1px,transparent_1px)] bg-[size:100px_100px] pointer-events-none opacity-20" />
       </div>
 
@@ -93,21 +93,21 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
       {/* Floating Mode Exit for Zen Mode */}
       <AnimatePresence>
         {isZenMode && (
-          <motion.div 
-            initial={{ scale: 0, opacity: 0 }}
+          <m.div 
+            initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
+            exit={{ scale: 0.95, opacity: 0 }}
             className="fixed top-8 right-8 z-[100]"
           >
             <Button 
               size="lg" 
-              className="rounded-full w-14 h-14 bg-background/80 backdrop-blur-xl border border-border shadow-2xl group hover:border-primary/40 transition-all"
+              className="rounded-full size-14 bg-background/80 backdrop-blur-xl border border-border shadow-2xl group hover:border-primary/40 transition-all"
               onClick={() => setIsZenMode(false)}
               aria-label="Keluar Mode Zen"
             >
               <Minimize2 size={24} className="text-muted-foreground group-hover:text-primary transition-colors" />
             </Button>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 
@@ -120,7 +120,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
         {!isZenMode && (
           <div className="flex flex-col items-center mb-24 md:mb-32 text-center">
             <div className="flex items-center gap-3 mb-8">
-               <div className="w-1.5 h-1.5 rounded-full bg-primary animate-ping" />
+               <div className="size-1.5 rounded-full bg-primary animate-ping" />
                <span className="text-primary font-black text-[10px] md:text-xs uppercase tracking-[0.4em]">Graded Reading Experience</span>
             </div>
             <h1 className="text-5xl md:text-7xl font-black text-foreground tracking-tighter leading-[0.9] mb-12 max-w-3xl drop-shadow-2xl">

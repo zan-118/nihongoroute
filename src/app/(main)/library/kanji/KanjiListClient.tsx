@@ -26,7 +26,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
   const pathname = usePathname();
 
   // Membaca nilai filter awal dari URL jika ada (bookmark friendly)
-  const initialLevel = searchParams.get("level") || null;
+  const initialLevel = searchParams.get("level") || "n5";
   const initialSearch = searchParams.get("search") || "";
   const initialPage = Number(searchParams.get("page") || "1");
 
@@ -76,7 +76,8 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
       }
     }, 500);
     return () => clearTimeout(handler);
-  }, [search, initialSearch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]);
 
   // Reset page when filter changes
   useEffect(() => {
@@ -84,9 +85,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
       isFirstMount.current = false;
       return;
     }
-    requestAnimationFrame(() => {
-      setCurrentPage(1);
-    });
+    setCurrentPage(1);
   }, [levelFilter]);
 
   const { data, isFetching } = useQuery({
@@ -108,7 +107,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
 
   return (
     <div className="space-y-12">
-      <KanjiHeader 
+      <KanjiHeader
         search={search}
         onSearchChange={setSearch}
         levelFilter={levelFilter}
@@ -116,7 +115,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
       />
 
       {layoutPreference === "grid" ? (
-        <KanjiGrid 
+        <KanjiGrid
           kanjis={kanjis}
           isFetching={isFetching}
         />
@@ -124,7 +123,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
         <div className="relative">
           {isFetching && (
             <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-sm rounded-[2rem]">
-              <Loader2 className="w-10 h-10 animate-spin text-primary" />
+              <Loader2 className="size-10 animate-spin text-primary" />
             </div>
           )}
 
@@ -173,7 +172,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
 
             {kanjis.length === 0 && !isFetching && (
               <div className="flex flex-col items-center justify-center py-24 text-center">
-                <div className="w-20 h-20 rounded-full bg-muted/20 flex items-center justify-center mb-6">
+                <div className="size-20 rounded-full bg-muted/20 flex items-center justify-center mb-6">
                   <Search size={32} className="text-muted-foreground/50" aria-hidden="true" />
                 </div>
                 <h3 className="text-xl font-bold text-foreground">Data Kanji tidak ditemukan</h3>
@@ -184,7 +183,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
         </div>
       )}
 
-      <Pagination 
+      <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={handlePageChange}

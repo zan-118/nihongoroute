@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { Sparkles, BrainCircuit, Target, BookMarked, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -49,7 +49,7 @@ export default function DashboardHero({
   const xpProgress = Math.round(getLevelProgressPercent(xp, level));
 
   return (
-    <motion.div variants={itemVariants} className="flex flex-col gap-[34px] items-start w-full">
+    <m.div variants={itemVariants} className="flex flex-col gap-[34px] items-start w-full">
       <div className="flex-1 w-full flex flex-col items-center lg:items-start text-center lg:text-left">
         {loading ? (
           <Skeleton className="h-6 w-32 rounded-full mb-6" />
@@ -85,7 +85,7 @@ export default function DashboardHero({
       {/* MAIN CALL TO ACTION - PREMIUM GLASS CARD */}
       <div className="w-full relative">
         {/* Background Decorative Glow */}
-        <div className="absolute -top-[55px] -right-[55px] w-[233px] h-[233px] bg-primary/5 rounded-full blur-[89px] pointer-events-none" />
+        <div className="absolute -top-[55px] -right-[55px] size-[233px] bg-primary/5 rounded-full blur-[89px] pointer-events-none" />
         
         {loading ? (
           <Skeleton className="h-[320px] w-full rounded-[34px]" />
@@ -95,7 +95,7 @@ export default function DashboardHero({
           
           <div className="relative z-10 flex flex-col items-center text-center">
             {/* Pulsing Icon */}
-            <motion.div 
+            <m.div 
               animate={dueCount > 0 ? {
                 scale: [1, 1.02, 1],
                 boxShadow: ["0 0 0px rgba(var(--primary-rgb),0)", "0 0 34px rgba(var(--primary-rgb),0.2)", "0 0 0px rgba(var(--primary-rgb),0)"]
@@ -112,7 +112,7 @@ export default function DashboardHero({
               ) : (
                 <Trophy size={40} className="drop-shadow-[0_0_8px_rgba(var(--success-rgb),0.3)]" />
               )}
-            </motion.div>
+            </m.div>
             
             <h3 className={`text-3xl md:text-5xl font-bold tracking-tight mb-[13px] text-balance ${dueCount > 0 ? 'text-foreground' : 'text-success'}`}>
               {dueCount > 0 ? `Siap review lagi, ${name || 'Pelajar'}?` : `Hafalanmu aman, ${name || 'Pelajar'}!`}
@@ -185,25 +185,25 @@ export default function DashboardHero({
         
         {/* CONTINUE LEARNING WIDGET */}
         {!loading && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
             className="mt-[55px]"
           >
             <ContinueLearning courseMetadata={courseMetadata} />
-          </motion.div>
+          </m.div>
         )}
         
         {/* SMART TIPS */}
         {!loading && (
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1 }}
             className="mt-[34px] p-[21px] rounded-[21px] bg-card/10 backdrop-blur-xl border border-border flex gap-[21px] items-center group hover:bg-card/20 transition-all duration-300"
           >
-            <div className="shrink-0 w-[34px] h-[34px] rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+            <div className="shrink-0 size-[34px] rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
               <Sparkles size={16} />
             </div>
             <div>
@@ -212,9 +212,9 @@ export default function DashboardHero({
                 Selesaikan review harian sebelum pukul 10 malam untuk menjaga bonus XP dan semangatmu!
               </p>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </div>
-    </motion.div>
+    </m.div>
   );
 }

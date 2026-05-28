@@ -62,7 +62,7 @@ export function ListeningHeader({
             />
 
             <div className="flex p-1 bg-muted/30 border border-border rounded-2xl backdrop-blur-md">
-              <button
+              <button type="button"
                 onClick={() => onTabChange("transcript")}
                 className={cn(
                   "px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all",
@@ -71,7 +71,7 @@ export function ListeningHeader({
               >
                 Transcript
               </button>
-              <button
+              <button type="button"
                 onClick={() => onTabChange("quiz")}
                 className={cn(
                   "px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2",

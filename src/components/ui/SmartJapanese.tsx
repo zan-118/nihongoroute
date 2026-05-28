@@ -170,16 +170,16 @@ export function SmartJapanese({
       className={className} 
       style={{ rubyPosition: 'over', rubyAlign: 'space-around' } as React.CSSProperties}
     >
-      {chunks.map((chunk, i) => (
+      {chunks.map((chunk, pos) => (
         chunk.furi ? (
-          <ruby key={i} className="font-japanese">
+          <ruby key={`${chunk.text}-${pos}`} className="font-japanese">
             {chunk.text}
             <rt className="text-[0.55em] font-bold leading-none select-none opacity-90 tracking-normal text-muted-foreground">
               {chunk.furi}
             </rt>
           </ruby>
         ) : (
-          <span key={i}>{chunk.text}</span>
+          <span key={`${chunk.text}-${pos}`}>{chunk.text}</span>
         )
       ))}
     </span>

@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import { RotateCw } from "lucide-react";
 import { getPaginatedKanji } from "@/actions/library.actions";
 import KanjiListClient from "@/app/(main)/library/kanji/KanjiListClient";
 import type { Metadata } from "next";
@@ -17,7 +19,14 @@ export default async function KanjiListPage() {
       <div className="neural-grid" />
 
       <div className="max-w-6xl mx-auto relative z-10">
-        <KanjiListClient initialData={initialData} />
+        <Suspense fallback={
+          <div className="h-40 flex flex-col items-center justify-center text-muted-foreground gap-2">
+            <RotateCw className="text-primary animate-spin" size={24} />
+            <p className="text-xs font-bold uppercase tracking-widest font-mono animate-pulse">Memuat pustaka kanji…</p>
+          </div>
+        }>
+          <KanjiListClient initialData={initialData} />
+        </Suspense>
       </div>
     </div>
   );

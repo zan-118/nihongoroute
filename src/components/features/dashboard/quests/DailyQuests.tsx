@@ -18,7 +18,7 @@ export default function DailyQuests() {
 
       <QuestHeader />
 
-      <div className="space-y-4 md:space-y-6 relative z-10 flex-1 flex flex-col justify-center">
+      <div className="gap-y-4 md:gap-y-6 relative z-10 flex-1 flex flex-col justify-center">
         {isAllClaimed ? (
           <QuestCompleted />
         ) : (

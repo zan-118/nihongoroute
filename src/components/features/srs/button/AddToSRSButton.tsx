@@ -25,7 +25,7 @@ export function AddToSRSButton({ wordId, className }: AddToSRSButtonProps) {
         )}
         aria-label="Memuat status SRS..."
       >
-        <span className="h-4 w-4 animate-pulse bg-muted rounded-full" />
+        <span className="size-4 animate-pulse bg-muted rounded-full" />
       </Button>
     );
   }
@@ -48,11 +48,11 @@ export function AddToSRSButton({ wordId, className }: AddToSRSButtonProps) {
     >
       {isAdded ? (
         <div className="relative flex items-center justify-center">
-          <Star className="h-5 w-5 fill-primary text-primary filter drop-shadow-[0_0_2px_rgba(var(--primary-rgb),0.5)] animate-[scaleIn_0.3s_ease-out]" />
-          <Check className="h-2.5 w-2.5 absolute text-background font-black stroke-[3]" />
+          <Star className="size-5 fill-primary text-primary filter drop-shadow-[0_0_2px_rgba(var(--primary-rgb),0.5)] animate-[scaleIn_0.3s_ease-out]" />
+          <Check className="size-2.5 absolute text-background font-black stroke-[3]" />
         </div>
       ) : (
-        <Star className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
+        <Star className="size-5 transition-transform duration-300 group-hover:scale-110" />
       )}
     </Button>
   );

@@ -11,7 +11,7 @@
 // IMPORTS
 // ======================
 import Link from "next/link";
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import {
   Activity,
   Clock,
@@ -64,10 +64,10 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
   return (
     <div className="w-full px-4 sm:px-6 relative overflow-hidden bg-background text-foreground transition-colors duration-300 min-h-screen pt-8 sm:pt-12 pb-24">
       {/* Background Ambient Decor */}
-      <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-destructive/5 rounded-full blur-[150px] pointer-events-none animate-pulse" />
-      <div className="absolute bottom-[10%] left-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-[-10%] right-[-5%] size-[600px] bg-destructive/5 rounded-full blur-[150px] pointer-events-none animate-pulse" />
+      <div className="absolute bottom-[10%] left-[-10%] size-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
 
-      <motion.div
+      <m.div
         className="max-w-5xl mx-auto relative z-10"
         initial="hidden"
         animate="visible"
@@ -75,20 +75,20 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
       >
         {/* HEADER SECTION */}
         <header className="mb-20">
-          <motion.div
+          <m.div
             variants={itemVariants}
             className="flex items-center gap-4 mb-8"
           >
-            <div className="w-3.5 h-3.5 rounded-full bg-destructive animate-pulse shadow-[0_0_15px_rgba(var(--destructive-rgb),0.5)]" />
+            <div className="size-3.5 rounded-full bg-destructive animate-pulse shadow-[0_0_15px_rgba(var(--destructive-rgb),0.5)]" />
             <Badge
               variant="outline"
               className="text-destructive text-destructive font-bold uppercase tracking-widest text-xs md:text-xs border-destructive/30 px-4 py-1.5 bg-destructive/5 backdrop-blur-md rounded-xl h-auto"
             >
               Simulasi JLPT Aktif
             </Badge>
-          </motion.div>
+          </m.div>
 
-          <motion.h1
+          <m.h1
             variants={itemVariants}
             className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-none mb-10 text-foreground drop-shadow-2xl"
           >
@@ -96,23 +96,23 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
             <span className="text-destructive drop-shadow-[0_0_30px_rgba(var(--destructive-rgb),0.5)]">
               Simulasi
             </span>
-          </motion.h1>
+          </m.h1>
 
-          <motion.div
+          <m.div
             variants={itemVariants}
-            className="p-6 md:p-8 rounded-2xl border-l-4 border-destructive bg-card border-border shadow-2xl relative overflow-hidden"
+            className="p-6 md:p-8 rounded-2xl border border-border/80 border-l-[3px] border-l-destructive/70 bg-card/60 glass shadow-xl relative overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-red-600/5 to-transparent pointer-events-none" />
             <p className="text-sm md:text-lg text-muted-foreground font-medium leading-relaxed relative z-10">
               Cek sejauh mana kemampuanmu dengan simulasi standar resmi. Jangan tegang, pasti bisa!
             </p>
-          </motion.div>
+          </m.div>
         </header>
 
         {/* WARNING SECTION */}
-        <motion.div variants={itemVariants} className="mb-12">
+        <m.div variants={itemVariants} className="mb-12">
           <Card className="p-5 md:p-6 border-warning/30 bg-warning/5 flex items-start gap-4 rounded-2xl shadow-lg">
-            <div className="w-10 h-10 rounded-xl bg-warning/10 border border-warning/20 flex items-center justify-center shrink-0">
+            <div className="size-10 rounded-xl bg-warning/10 border border-warning/20 flex items-center justify-center shrink-0">
                <AlertTriangle className="text-warning text-warning" size={20} />
             </div>
             <div>
@@ -124,13 +124,13 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
               </p>
             </div>
           </Card>
-        </motion.div>
+        </m.div>
 
         {/* EXAM LIST GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 pb-20">
           {exams.length > 0 ? (
             exams.map((exam) => (
-              <motion.div
+              <m.div
                 key={exam.id || exam._id}
                 variants={itemVariants}
                 className="h-full"
@@ -196,20 +196,20 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
                     </div>
                   </Card>
                 </Link>
-              </motion.div>
+              </m.div>
             ))
           ) : (
-            <motion.div variants={itemVariants} className="col-span-full">
+            <m.div variants={itemVariants} className="col-span-full">
               <Card className="p-16 md:p-24 text-center bg-muted/20 border border-dashed border-border rounded-2xl shadow-none">
                 <span className="text-5xl mb-6 block opacity-30">圦</span>
                 <p className="text-muted-foreground font-bold text-sm md:text-base uppercase tracking-widest">
                   Lagi Gak Ada Ujian Nih
                 </p>
               </Card>
-            </motion.div>
+            </m.div>
           )}
         </div>
-      </motion.div>
+      </m.div>
     </div>
   );
 }

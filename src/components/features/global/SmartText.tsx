@@ -43,7 +43,7 @@ export function renderSmartText(text: string) {
         if (subPart.toLowerCase() === keyword.toLowerCase()) {
           newParts.push(
             <Link 
-              key={`${keyword}-${i}`}
+              key={`${keyword}-link-${i}`}
               href={href}
               title={description}
               className="text-primary font-bold hover:underline decoration-primary/30 underline-offset-4 cursor-help"

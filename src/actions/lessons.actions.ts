@@ -14,6 +14,7 @@ import { getSanityLessonsByCategory, getSanityLessonsByCategories } from "@/lib/
  */
 export async function getLessonDetail(slug: string) {
   const supabase = await createClient();
+  await supabase.auth.getSession();
   const { data, error } = await supabase
     .from("lessons")
     .select("*, category:course_categories(*)")
@@ -44,6 +45,7 @@ interface SanityLessonListItem {
  */
 export async function getCourseCategories() {
   const supabase = await createClient();
+  await supabase.auth.getSession();
   const { data: categories, error } = await supabase
     .from("course_categories")
     .select("*")
@@ -85,6 +87,7 @@ export async function getCourseCategories() {
 
 export async function getExamsByCategory(categoryId: string) {
   const supabase = await createClient();
+  await supabase.auth.getSession();
   const { data, error } = await supabase
     .from("exams")
     .select("*")

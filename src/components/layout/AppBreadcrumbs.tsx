@@ -7,7 +7,7 @@
 
 import Link from "next/link";
 import { ChevronRight, Home } from "lucide-react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 interface BreadcrumbItem {
   label: string;
@@ -26,22 +26,22 @@ export default function AppBreadcrumbs({ items, className = "" }: AppBreadcrumbs
       aria-label="Breadcrumb" 
       className={`flex items-center flex-wrap gap-3 mb-10 ${className}`}
     >
-      <motion.div
+      <m.div
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.4 }}
       >
         <Link
           href="/dashboard"
-          className="flex items-center justify-center w-9 h-9 rounded-xl bg-card/30 backdrop-blur-md border border-border/50 hover:bg-primary/10 hover:border-primary/30 text-muted-foreground hover:text-primary transition-all shadow-lg group"
+          className="flex items-center justify-center size-9 rounded-xl bg-card/30 backdrop-blur-md border border-border/50 hover:bg-primary/10 hover:border-primary/30 text-muted-foreground hover:text-primary transition-all shadow-lg group"
         >
           <Home size={16} className="group-hover:scale-110 transition-transform" />
         </Link>
-      </motion.div>
+      </m.div>
 
       {items.map((item, index) => (
-        <motion.div 
-          key={index} 
+        <m.div 
+          key={item.label} 
           className="flex items-center gap-3"
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
@@ -64,7 +64,7 @@ export default function AppBreadcrumbs({ items, className = "" }: AppBreadcrumbs
               {item.label}
             </Link>
           )}
-        </motion.div>
+        </m.div>
       ))}
     </nav>
   );

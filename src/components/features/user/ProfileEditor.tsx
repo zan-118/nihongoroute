@@ -101,7 +101,7 @@ export default function ProfileEditor() {
               variant="ghost"
               onClick={handleSave}
               disabled={isLoading}
-              className="w-10 h-10 rounded-xl bg-success/10 text-success text-success hover:bg-success hover:text-success-foreground transition-all"
+              className="size-10 rounded-xl bg-success/10 text-success text-success hover:bg-success hover:text-success-foreground transition-all"
               aria-label="Simpan Nama"
             >
               {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Check size={18} />}
@@ -111,7 +111,7 @@ export default function ProfileEditor() {
               variant="ghost"
               onClick={() => setIsEditing(false)}
               disabled={isLoading}
-              className="w-10 h-10 rounded-xl bg-muted border border-border text-muted-foreground hover:bg-background hover:text-foreground transition-all"
+              className="size-10 rounded-xl bg-muted border border-border text-muted-foreground hover:bg-background hover:text-foreground transition-all"
               aria-label="Batal Edit"
             >
               <X size={18} />
@@ -121,10 +121,10 @@ export default function ProfileEditor() {
       ) : (
         <div className="flex items-center gap-4 group">
           <div className="relative">
-             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/10 to-blue-500/10 border border-border flex items-center justify-center text-primary shadow-sm group-hover:shadow-md transition-all">
+             <div className="size-16 rounded-2xl bg-gradient-to-br from-primary/10 to-blue-500/10 border border-border flex items-center justify-center text-primary shadow-sm group-hover:shadow-md transition-all">
                 <UserCircle size={32} />
              </div>
-             <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-success rounded-full border-2 border-background" />
+             <div className="absolute -bottom-1 -right-1 size-5 bg-success rounded-full border-2 border-background" />
           </div>
           
           <div className="flex-1">
@@ -132,7 +132,7 @@ export default function ProfileEditor() {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">
                 {progress.name || "Pelajar"}
               </span>
-              <button
+              <button type="button"
                 onClick={() => setIsEditing(true)}
                 className="opacity-0 group-hover:opacity-100 transition-opacity p-2 text-muted-foreground hover:text-primary outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg shrink-0"
                 aria-label="Edit Nama Profil"
@@ -141,7 +141,7 @@ export default function ProfileEditor() {
               </button>
             </h2>
             <p className="text-muted-foreground text-xs md:text-sm font-bold uppercase tracking-[0.2em] mt-2 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
+              <span className="size-1.5 rounded-full bg-success animate-pulse" />
               Siswa Aktif NihongoRoute
             </p>
           </div>

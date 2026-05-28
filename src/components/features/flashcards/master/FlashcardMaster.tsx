@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 
 import XPPop from "@/components/features/gamification/XPPop";
 import Flashcard from "@/components/features/flashcards/card/Flashcard";
@@ -123,7 +123,7 @@ export default function FlashcardMaster({
         <>
           <div className="relative w-full mb-8 md:mb-10">
             <AnimatePresence initial={false} mode="wait">
-              <motion.div
+              <m.div
                 key={currentCards[currentIndex]?.id || currentIndex}
                 initial={{
                   x: direction === 1 ? 200 : direction === -1 ? -200 : 0,
@@ -174,7 +174,7 @@ export default function FlashcardMaster({
                   examples={card.examples}
                   related_kanji={card.related_kanji}
                 />
-              </motion.div>
+              </m.div>
             </AnimatePresence>
           </div>
 
@@ -193,7 +193,7 @@ export default function FlashcardMaster({
       )}
       {isSyncing && (
         <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-[10px] text-muted-foreground animate-pulse text-center w-full">
-          Menyinkronkan progres ke cloud...
+          Menyinkronkan progres ke cloud…
         </div>
       )}
     </section>

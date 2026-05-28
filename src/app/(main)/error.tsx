@@ -22,15 +22,15 @@ export default function MainError({
       {/* Background Decor & Neural Grid */}
       <div className="neural-grid" />
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[550px] h-[550px] bg-destructive/10 rounded-full blur-[130px] opacity-35 absolute -top-12 -left-12" />
-        <div className="w-[450px] h-[450px] bg-warning/10 rounded-full blur-[100px] opacity-25 absolute -bottom-10 -right-10" />
+        <div className="size-[550px] bg-destructive/10 rounded-full blur-[130px] opacity-35 absolute -top-12 -left-12" />
+        <div className="size-[450px] bg-warning/10 rounded-full blur-[100px] opacity-25 absolute -bottom-10 -right-10" />
       </div>
       
       <Card className="p-8 md:p-12 border border-border/80 max-w-lg w-full relative z-10 rounded-[2.5rem] bg-card/85 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:shadow-[0_25px_60px_rgba(var(--destructive-rgb),0.1)] transition-all duration-500 glass">
         {/* Top corner glows */}
-        <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-destructive/10 to-transparent blur-md rounded-tr-[2.5rem] pointer-events-none" />
+        <div className="absolute top-0 right-0 size-24 bg-gradient-to-br from-destructive/10 to-transparent blur-md rounded-tr-[2.5rem] pointer-events-none" />
 
-        <div className="w-20 h-20 mx-auto bg-destructive/10 rounded-2xl flex items-center justify-center mb-6 border border-destructive/20 shadow-[0_0_20px_rgba(var(--destructive-rgb),0.15)] animate-pulse">
+        <div className="size-20 mx-auto bg-destructive/10 rounded-2xl flex items-center justify-center mb-6 border border-destructive/20 shadow-[0_0_20px_rgba(var(--destructive-rgb),0.15)] animate-pulse">
           <AlertTriangle className="text-destructive" size={36} />
         </div>
         

@@ -27,11 +27,11 @@ export default function ExamError({
   return (
     <div className="w-full flex-1 flex flex-col items-center justify-center px-6 text-center relative overflow-hidden py-12">
       {/* Efek Latar Belakang Cyber Glow */}
-      <div className="absolute top-0 left-1/4 w-[400px] h-[400px] bg-destructive/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-1/4 size-[400px] bg-destructive/10 blur-[120px] rounded-full pointer-events-none" />
       
       <Card className="p-10 md:p-14 border-destructive/30 max-w-lg w-full relative z-10 my-auto neo-card rounded-[2rem] bg-card">
         {/* Ikon Peringatan Neumorphic */}
-        <div className="w-20 h-20 mx-auto neo-inset text-destructive flex items-center justify-center rounded-full mb-8 shadow-inner bg-destructive/10">
+        <div className="size-20 mx-auto neo-inset text-destructive flex items-center justify-center rounded-full mb-8 shadow-inner bg-destructive/10">
           <span className="text-4xl block">⚠️</span>
         </div>
         

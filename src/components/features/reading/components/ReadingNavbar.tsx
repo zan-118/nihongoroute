@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { ChevronLeft, Maximize2 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,7 @@ export function ReadingNavbar({
   onZenModeToggle,
 }: ReadingNavbarProps) {
   return (
-    <motion.nav
+    <m.nav
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: -100, opacity: 0 }}
@@ -78,7 +78,7 @@ export function ReadingNavbar({
           ))}
         </div>
       </div>
-    </motion.nav>
+    </m.nav>
   );
 }
 

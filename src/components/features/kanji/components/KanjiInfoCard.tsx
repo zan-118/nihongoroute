@@ -32,9 +32,9 @@ export default function KanjiInfoCard({
              <span className="text-[10px] font-black uppercase tracking-widest text-primary/70">Radicals</span>
           </div>
           <div className="flex flex-wrap gap-2">
-            {radicals.map((radical, idx) => (
+            {radicals.map((radical) => (
               <div 
-                key={idx}
+                key={`radical-${radical}`}
                 className="px-3 py-1.5 rounded-xl bg-muted border border-border text-sm font-japanese font-bold text-foreground shadow-sm"
               >
                 {radical}

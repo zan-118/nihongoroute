@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,7 @@ export function SurvivalGameOver({ gameState, score, startGame }: SurvivalGameOv
   const borderColor = isVictory ? "border-warning/40" : "border-destructive/40";
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       className="w-full px-4 transition-colors duration-300"
@@ -57,7 +57,7 @@ export function SurvivalGameOver({ gameState, score, startGame }: SurvivalGameOv
              <span className="text-foreground text-7xl md:text-7xl lg:text-7xl font-black drop-shadow-sm leading-none">{score}</span>
              <span className="text-muted-foreground font-bold text-xs md:text-xs uppercase tracking-widest mt-3 md:mt-4">KATA BERHASIL DITEBAK</span>
              {earnedXp > 0 && (
-               <Badge className="bg-success/15 border border-success/30 text-success shadow-[0_0_15px_rgba(var(--success-rgb),0.2)] text-[10px] sm:text-xs font-black uppercase tracking-widest px-4 py-2 rounded-xl mt-6 w-fit mx-auto animate-bounce shrink-0">
+               <Badge className="bg-success/15 border border-success/30 text-success shadow-[0_0_15px_rgba(var(--success-rgb),0.2)] text-[10px] sm:text-xs font-black uppercase tracking-widest px-4 py-2 rounded-xl mt-6 w-fit mx-auto animate-premium-bounce shrink-0">
                  + {earnedXp} Poin XP Didapatkan
                </Badge>
              )}
@@ -72,6 +72,6 @@ export function SurvivalGameOver({ gameState, score, startGame }: SurvivalGameOv
           <RotateCcw size={20} aria-hidden="true" className="group-hover:-rotate-180 transition-transform duration-700 md:w-6 md:h-6" /> COBA LAGI
         </Button>
       </Card>
-    </motion.div>
+    </m.div>
   );
 }

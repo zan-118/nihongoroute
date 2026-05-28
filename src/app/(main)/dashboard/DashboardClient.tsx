@@ -6,7 +6,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useUIStore } from "@/store/useUIStore";
 
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import dynamic from "next/dynamic";
 import DashboardSettings from "@/components/features/dashboard/DashboardSettings";
 import LevelUpOverlay from "@/components/features/gamification/LevelUpOverlay";
@@ -234,7 +234,7 @@ export default function DashboardClient({ courseMetadata, expression }: Dashboar
         onTabChange={setActiveTab}
       />
 
-      <motion.div
+      <m.div
         key={activeTab}
         id={`${activeTab}-panel`}
         role="tabpanel"
@@ -294,7 +294,7 @@ export default function DashboardClient({ courseMetadata, expression }: Dashboar
             itemVariants={itemVariants}
           />
         )}
-      </motion.div>
+      </m.div>
     </div>
   );
 }

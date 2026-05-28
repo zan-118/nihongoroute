@@ -17,7 +17,7 @@ export function LibraryServerStatus() {
       </div>
       <div className="flex gap-2 md:gap-2.5">
          {[...Array(6)].map((_, i) => (
-           <div key={i} className="flex-1 h-8 md:h-12 bg-[rgba(var(--primary-rgb),0.1)] rounded-full overflow-hidden flex items-end">
+           <div key={`bar-${i}`} className="flex-1 h-8 md:h-12 bg-[rgba(var(--primary-rgb),0.1)] rounded-full overflow-hidden flex items-end">
               <div 
                 className="w-full bg-primary animate-pulse" 
                 style={{ 

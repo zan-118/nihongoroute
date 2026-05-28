@@ -54,8 +54,8 @@ export default function FuriganaDisplay({
       className={`font-noto-serif leading-relaxed tracking-normal inline-block w-full ${className}`}
       style={{ rubyPosition: 'over', rubyAlign: 'center' } as React.CSSProperties}
     >
-      {parts.map((part, i) => (
-        <React.Fragment key={i}>
+      {parts.map((part, pos) => (
+        <React.Fragment key={`furi-${part.text}-${pos}`}>
           {part.furi && currentMode === "furigana" ? (
             <ruby className="group">
               <span className={`${kanjiSize} font-medium transition-colors text-foreground`}>

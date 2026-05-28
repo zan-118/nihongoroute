@@ -12,10 +12,8 @@ export function useHasMounted() {
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
-    const frame = requestAnimationFrame(() => {
-      setHasMounted(true);
-    });
-    return () => cancelAnimationFrame(frame);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setHasMounted(true);
   }, []);
 
   return hasMounted;

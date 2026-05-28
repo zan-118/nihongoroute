@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 interface Tab {
   id: string;
@@ -27,7 +27,7 @@ export function DashboardTabs({ tabs, activeTab, onTabChange }: DashboardTabsPro
         className="bg-muted/50 dark:bg-background/[0.03] p-1.5 rounded-[2rem] border border-border/50 flex gap-1 shadow-sm max-w-full overflow-x-auto no-scrollbar"
       >
         {tabs.map((tab) => (
-          <motion.button
+          <m.button
             key={tab.id}
             role="tab"
             aria-selected={activeTab === tab.id}
@@ -42,7 +42,7 @@ export function DashboardTabs({ tabs, activeTab, onTabChange }: DashboardTabsPro
           >
             <span className="text-base" aria-hidden="true">{tab.icon}</span>
             <span className="hidden sm:inline">{tab.label}</span>
-          </motion.button>
+          </m.button>
         ))}
       </div>
     </div>

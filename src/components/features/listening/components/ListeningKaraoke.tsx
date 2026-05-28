@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Languages } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TranscriptLine } from "../types";
@@ -64,8 +64,8 @@ export default function ListeningKaraoke({
       <div className="relative bg-card rounded-[3rem] border border-border shadow-2xl overflow-hidden p-8 lg:p-12">
 
         {/* Decorative Background Glows */}
-        <div className="absolute -top-24 -left-24 w-64 h-64 bg-primary/5 blur-[100px] rounded-full pointer-events-none" />
-        <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-primary/5 blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute -top-24 -left-24 size-64 bg-primary/5 blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute -bottom-24 -right-24 size-64 bg-primary/5 blur-[100px] rounded-full pointer-events-none" />
         
         <div 
           ref={scrollContainerRef}
@@ -75,7 +75,7 @@ export default function ListeningKaraoke({
             const isActive = index === activeIndex;
             
             return (
-              <motion.div
+              <m.div
                 key={line._key || index}
                 ref={isActive ? activeLineRef : null}
                 initial={false}
@@ -131,7 +131,7 @@ export default function ListeningKaraoke({
                 {/* Translation (Optional) */}
                 <AnimatePresence initial={false}>
                   {(isActive || showTranslation) && (
-                    <motion.div
+                    <m.div
                       initial={{ height: 0, opacity: 0, marginTop: 0 }}
                       animate={{ height: "auto", opacity: 1, marginTop: 16 }}
                       exit={{ height: 0, opacity: 0, marginTop: 0 }}
@@ -143,18 +143,18 @@ export default function ListeningKaraoke({
                       )}>
                         {line.translation}
                       </p>
-                    </motion.div>
+                    </m.div>
                   )}
                 </AnimatePresence>
  
                 {/* Active Indicator Bar (Cyber Style) */}
                 {isActive && (
-                  <motion.div 
+                  <m.div 
                     layoutId="active-indicator"
                     className="absolute -left-[1px] top-8 bottom-8 w-[2px] bg-primary rounded-full shadow-[0_0_15px_rgba(var(--primary-rgb),1)]"
                   />
                 )}
-              </motion.div>
+              </m.div>
             );
           })}
         </div>

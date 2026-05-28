@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Lightbulb, Save, Check, Edit2, BrainCircuit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -111,7 +111,7 @@ export function MnemonicEditor({ wordId, className, compact = false }: MnemonicE
             size="icon"
             onClick={() => setIsEditing(true)}
             aria-label="Edit jembatan keledai"
-            className="h-7 w-7 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
+            className="size-7 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
           >
             <Edit2 size={12} />
           </Button>
@@ -121,7 +121,7 @@ export function MnemonicEditor({ wordId, className, compact = false }: MnemonicE
       {/* Display or Editor */}
       <AnimatePresence mode="wait">
         {isEditing ? (
-          <motion.div
+          <m.div
             key="editor"
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
@@ -174,9 +174,9 @@ export function MnemonicEditor({ wordId, className, compact = false }: MnemonicE
                 </Button>
               </div>
             </div>
-          </motion.div>
+          </m.div>
         ) : (
-          <motion.div
+          <m.div
             key="display"
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
@@ -200,7 +200,7 @@ export function MnemonicEditor({ wordId, className, compact = false }: MnemonicE
                 </span>
               </div>
             ) : (
-              <button
+              <button type="button"
                 onClick={() => setIsEditing(true)}
                 className={cn(
                   "w-full text-left p-4 rounded-xl border border-dashed border-primary/20",
@@ -211,17 +211,17 @@ export function MnemonicEditor({ wordId, className, compact = false }: MnemonicE
                 aria-label="Tambah jembatan keledai kustom"
               >
                 <Lightbulb size={13} className="shrink-0 text-primary/30" aria-hidden="true" />
-                Tambah jembatan keledai kustom untuk kata ini...
+                Tambah jembatan keledai kustom untuk kata ini…
               </button>
             )}
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 
       {/* Saved confirmation flash */}
       <AnimatePresence>
         {isSaved && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
@@ -230,7 +230,7 @@ export function MnemonicEditor({ wordId, className, compact = false }: MnemonicE
           >
             <Check size={12} aria-hidden="true" />
             Tersimpan secara lokal &amp; akan disinkronkan
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

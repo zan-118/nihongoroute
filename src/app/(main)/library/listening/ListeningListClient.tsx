@@ -48,7 +48,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
       {/* Header */}
       <div className="flex flex-col gap-6">
         <div className="flex items-center gap-4 mb-2">
-          <div className="w-12 h-12 rounded-2xl bg-[rgba(var(--primary-rgb),0.1)] flex items-center justify-center text-primary border border-[rgba(var(--primary-rgb),0.2)]">
+          <div className="size-12 rounded-2xl bg-[rgba(var(--primary-rgb),0.1)] flex items-center justify-center text-primary border border-[rgba(var(--primary-rgb),0.2)]">
             <Headphones size={24} />
           </div>
           <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight text-foreground">
@@ -60,7 +60,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
         </p>
 
         <div className="relative max-w-2xl">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground size-5" />
           <Input 
             placeholder="Cari materi listening..." 
             className="pl-12 h-14 bg-[rgba(var(--card-rgb),0.4)] backdrop-blur-xl border-[rgba(var(--border-rgb),0.4)] rounded-2xl text-lg shadow-2xl focus:ring-[rgba(var(--primary-rgb),0.2)]"
@@ -74,7 +74,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
       <div className="relative">
         {isFetching && (
           <div className="absolute inset-0 z-50 flex items-center justify-center bg-[rgba(var(--background-rgb),0.5)] backdrop-blur-sm rounded-[2rem]">
-            <Loader2 className="w-10 h-10 animate-spin text-primary" />
+            <Loader2 className="size-10 animate-spin text-primary" />
           </div>
         )}
         <div className="grid grid-cols-1 gap-4 min-h-[300px]">
@@ -135,7 +135,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
               aria-label="Halaman pertama"
               onClick={() => handlePageChange(1)}
               disabled={currentPage === 1}
-              className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-foreground transition-all disabled:opacity-30"
+              className="size-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-foreground transition-all disabled:opacity-30"
             >
               <ChevronsLeft size={18} />
             </Button>
@@ -145,7 +145,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
               aria-label="Halaman sebelumnya"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-foreground transition-all disabled:opacity-30"
+              className="size-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-foreground transition-all disabled:opacity-30"
             >
               <ChevronLeft size={18} />
             </Button>
@@ -187,7 +187,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
               aria-label="Halaman berikutnya"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-foreground transition-all disabled:opacity-30"
+              className="size-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-foreground transition-all disabled:opacity-30"
             >
               <ChevronRight size={18} />
             </Button>
@@ -197,7 +197,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
               aria-label="Halaman terakhir"
               onClick={() => handlePageChange(totalPages)}
               disabled={currentPage === totalPages}
-              className="w-10 h-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-foreground transition-all disabled:opacity-30"
+              className="size-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-foreground transition-all disabled:opacity-30"
             >
               <ChevronsRight size={18} />
             </Button>
@@ -207,7 +207,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
 
       {tasks.length === 0 && !isFetching && (
         <div className="flex flex-col items-center justify-center py-24 text-center">
-          <div className="w-20 h-20 rounded-full bg-[rgba(var(--muted-rgb),0.2)] flex items-center justify-center mb-6">
+          <div className="size-20 rounded-full bg-[rgba(var(--muted-rgb),0.2)] flex items-center justify-center mb-6">
              <Headphones size={32} className="text-muted-foreground/50" />
           </div>
           <h3 className="text-xl font-bold text-foreground">Materi tidak ditemukan</h3>

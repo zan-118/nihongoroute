@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Cloud, CheckCircle, RefreshCw } from "lucide-react";
@@ -19,7 +19,7 @@ export default function SyncStatusSection({
   itemVariants
 }: SyncStatusSectionProps) {
   return (
-    <motion.div variants={itemVariants}>
+    <m.div variants={itemVariants}>
       <Card className="glass backdrop-blur-3xl border border-border/80 rounded-[2.5rem] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.3)] relative overflow-hidden group">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/[0.02] to-transparent pointer-events-none" />
         
@@ -62,6 +62,6 @@ export default function SyncStatusSection({
           </Button>
         </div>
       </Card>
-    </motion.div>
+    </m.div>
   );
 }

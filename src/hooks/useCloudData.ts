@@ -114,9 +114,15 @@ export function useCloudData(session: Session | null | undefined, hasMounted: bo
   });
 
   // Sinkronkan Cloud Data ke Zustand jika ada perubahan
+  // Guard: hanya merge jika data cloud benar-benar berubah (cek XP + jumlah SRS + jumlah lessons)
+  const lastMergedKey = useRef<string>("");
   useEffect(() => {
     if (cloudData && hasMounted) {
-      mergeProgress(cloudData);
+      const mergeKey = `${cloudData.xp}-${Object.keys(cloudData.srs).length}-${Object.keys(cloudData.completedLessons).length}-${cloudData.streak}-${cloudData.lastStudyDate}`;
+      if (mergeKey !== lastMergedKey.current) {
+        lastMergedKey.current = mergeKey;
+        mergeProgress(cloudData);
+      }
     }
   }, [cloudData, mergeProgress, hasMounted]);
 

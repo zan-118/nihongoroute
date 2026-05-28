@@ -10,7 +10,7 @@ const PdfGenerator = dynamic(() => import("../PdfGenerator"), {
   loading: () => (
     <Button variant="ghost" disabled className="bg-[rgba(var(--background-rgb),0.4)] border border-border neo-inset shadow-none px-8 py-4 rounded-[1.5rem] text-muted-foreground text-xs font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 w-full sm:w-auto h-auto italic">
       <Loader2 size={16} aria-hidden="true" className="animate-spin text-destructive" />
-      Initializing Engine...
+      Initializing Engine…
     </Button>
   ),
 });
@@ -29,7 +29,7 @@ export default function DownloadPdfButton({
     return (
       <Button variant="ghost" disabled className="bg-[rgba(var(--background-rgb),0.4)] border border-border neo-inset shadow-none px-8 py-4 rounded-[1.5rem] text-muted-foreground text-xs font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 w-full sm:w-auto h-auto italic">
         <Loader2 size={16} aria-hidden="true" className="animate-spin text-destructive" />
-        Loading Payload...
+        Loading Payload…
       </Button>
     );
   }

@@ -43,7 +43,7 @@ export function FuriganaInput({
         <label className="block text-xs font-medium text-muted-foreground">{label}</label>
       )}
       <div className="flex items-center gap-1.5">
-        <input
+        <input aria-label="Input"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
@@ -57,9 +57,9 @@ export function FuriganaInput({
           className="flex-shrink-0 p-2 rounded-lg border border-border bg-muted hover:bg-secondary transition-all disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {isLoading ? (
-            <Loader2 className="w-3.5 h-3.5 animate-spin text-muted-foreground" />
+            <Loader2 className="size-3.5 animate-spin text-muted-foreground" />
           ) : (
-            <Wand2 className="w-3.5 h-3.5 text-muted-foreground" />
+            <Wand2 className="size-3.5 text-muted-foreground" />
           )}
         </button>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Trophy, Star, Zap, Flame, BookOpen, Crown, Target } from "lucide-react";
 import { UserProgress } from "@/store/types";
@@ -133,7 +133,7 @@ export default function AchievementsGrid() {
                 </p>
                 
                 <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden border border-border/50">
-                  <motion.div 
+                  <m.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${percent}%` }}
                     className={`h-full transition-all duration-1000 ${isUnlocked ? 'bg-primary' : 'bg-muted-foreground/30'}`}
@@ -144,7 +144,7 @@ export default function AchievementsGrid() {
                     {isUnlocked ? "Selesai" : `${Math.floor(percent)}% Progres`}
                   </span>
                   {isUnlocked && (
-                    <Trophy size={12} className="text-primary animate-bounce" />
+                    <Trophy size={12} className="text-primary animate-premium-bounce" />
                   )}
                 </div>
               </div>

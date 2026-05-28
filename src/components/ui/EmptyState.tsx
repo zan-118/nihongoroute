@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Coffee, LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -23,13 +23,13 @@ export default function EmptyState({
   onClick,
 }: EmptyStateProps) {
   return (
-    <motion.div 
+    <m.div 
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       className="flex flex-col items-center justify-center p-12 text-center bg-card/50 border border-border/50 rounded-[3rem] backdrop-blur-sm"
     >
-      <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-8 shadow-inner border border-primary/20">
-        <Icon size={48} className="animate-bounce" />
+      <div className="size-24 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-8 shadow-inner border border-primary/20">
+        <Icon size={48} className="animate-premium-bounce" />
       </div>
       
       <h3 className="text-xl md:text-3xl font-black text-foreground uppercase tracking-tight mb-3">
@@ -50,6 +50,6 @@ export default function EmptyState({
           </Button>
         )
       )}
-    </motion.div>
+    </m.div>
   );
 }

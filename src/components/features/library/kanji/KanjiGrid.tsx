@@ -22,7 +22,7 @@ export function KanjiGrid({ kanjis, isFetching }: KanjiGridProps) {
     <div className="relative">
       {isFetching && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-sm rounded-[2rem]">
-          <Loader2 className="w-10 h-10 animate-spin text-primary" />
+          <Loader2 className="size-10 animate-spin text-primary" />
         </div>
       )}
       
@@ -58,7 +58,7 @@ export function KanjiGrid({ kanjis, isFetching }: KanjiGridProps) {
 
       {kanjis.length === 0 && !isFetching && (
         <div className="flex flex-col items-center justify-center py-24 text-center">
-          <div className="w-20 h-20 rounded-full bg-muted/20 flex items-center justify-center mb-6">
+          <div className="size-20 rounded-full bg-muted/20 flex items-center justify-center mb-6">
              <Search size={32} className="text-muted-foreground/50" aria-hidden="true" />
           </div>
           <h3 className="text-xl font-bold text-foreground">Data Kanji tidak ditemukan</h3>

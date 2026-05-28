@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Bell, X, Trash2, Info, Trophy, AlertTriangle, Zap } from "lucide-react";
 
 import { formatDistanceToNow } from "date-fns";
@@ -44,7 +44,7 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
           
           {/* Main Popover Container */}
           <div className="fixed md:absolute top-20 md:top-full left-4 right-4 md:left-auto md:right-0 md:w-96 z-[110] flex justify-center md:justify-end">
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -52,7 +52,7 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
             >
               <div className="p-5 border-b border-border flex items-center justify-between bg-muted/50">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                  <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                     <Bell size={18} />
                   </div>
                   <div>
@@ -63,16 +63,16 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
                   </div>
                 </div>
                 <div className="flex gap-1">
-                  <button 
+                  <button type="button" 
                     onClick={clearAll}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all"
+                    className="size-8 flex items-center justify-center rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all"
                     title="Hapus Semua"
                   >
                     <Trash2 size={14} />
                   </button>
-                  <button 
+                  <button type="button" 
                     onClick={onClose}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-muted text-muted-foreground transition-all"
+                    className="size-8 flex items-center justify-center rounded-lg hover:bg-muted text-muted-foreground transition-all"
                   >
                     <X size={14} />
                   </button>
@@ -112,17 +112,17 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
                         </div>
                         
                         {!n.read && (
-                          <div className="absolute top-4 right-4 w-1.5 h-1.5 bg-primary rounded-full shadow-[0_0_8px_rgba(var(--primary-rgb),1)]" />
+                          <div className="absolute top-4 right-4 size-1.5 bg-primary rounded-full shadow-[0_0_8px_rgba(var(--primary-rgb),1)]" />
                         )}
                       </div>
                     ))}
                   </div>
                 ) : (
                   <div className="py-16 px-8 text-center">
-                    <div className="w-16 h-16 rounded-[2rem] bg-muted/50 flex items-center justify-center mx-auto mb-4 border border-border/50 rotate-6 group-hover:rotate-0 transition-transform">
+                    <div className="size-16 rounded-[2rem] bg-muted/50 flex items-center justify-center mx-auto mb-4 border border-border/50 rotate-6 group-hover:rotate-0 transition-transform">
                       <Bell className="text-muted-foreground/20" size={24} />
                     </div>
-                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60">Hening Sekali...</h4>
+                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60">Hening Sekali…</h4>
                     <p className="text-[9px] font-medium text-muted-foreground/40 mt-1 uppercase tracking-widest">Belum ada notifikasi untukmu</p>
                   </div>
                 )}
@@ -139,7 +139,7 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
                   </Button>
                 </div>
               )}
-            </motion.div>
+            </m.div>
           </div>
         </>
       )}

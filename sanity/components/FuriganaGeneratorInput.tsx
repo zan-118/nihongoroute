@@ -98,7 +98,7 @@ export function FuriganaGeneratorInput(props: FuriganaGeneratorInputProps) {
             {schemaType.title || 'Furigana'}
           </Text>
           {loading && <Spinner />}
-          {loading && <Text size={0} muted>Auto-generating...</Text>}
+          {loading && <Text size={0} muted>Auto-generating…</Text>}
         </Flex>
         <Button
           fontSize={0}

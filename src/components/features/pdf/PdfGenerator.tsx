@@ -22,7 +22,7 @@ const PDFDownloadLink = dynamic(
         className="bg-card border-border neo-inset shadow-none px-6 py-3 rounded-xl text-muted-foreground text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 w-full sm:w-auto h-auto"
       >
         <Loader2 size={14} aria-hidden="true" className="animate-spin text-primary" />
-        <span>Menyiapkan Engine...</span>
+        <span>Menyiapkan Engine…</span>
       </Button>
     ),
   }
@@ -64,7 +64,7 @@ export default function PdfGenerator({
   if (!isClient || !data || (Array.isArray(data) && data.length === 0)) {
     return (
       <Button variant="ghost" disabled className="bg-card border-border neo-inset shadow-none px-6 py-3 rounded-xl text-muted-foreground text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 w-full sm:w-auto h-auto">
-        Menunggu Data...
+        Menunggu Data…
       </Button>
     );
   }

@@ -23,19 +23,20 @@ export function useStoreHydration(store: ZustandPersistStore) {
 
   useEffect(() => {
     if (!store?.persist) {
-      requestAnimationFrame(() => setHydrated(true));
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setHydrated(true);
       return;
     }
 
     // Jika store sudah terhidrasi, set true secara instan
     if (store.persist.hasHydrated()) {
-      requestAnimationFrame(() => setHydrated(true));
+      setHydrated(true);
       return;
     }
 
     // Jika belum terhidrasi, daftarkan callback untuk mendengarkan selesainya hidrasi
     const unsub = store.persist.onFinishHydration(() => {
-      requestAnimationFrame(() => setHydrated(true));
+      setHydrated(true);
     });
 
     return unsub;

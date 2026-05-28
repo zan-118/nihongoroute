@@ -47,6 +47,7 @@ export async function getPaginatedVocab(
   type: "vocab" | "verb" | "adjective" | "phrase" = "vocab"
 ): Promise<PaginatedVocabResponse> {
   const supabase = await createClient();
+  await supabase.auth.getSession();
   const offset = (page - 1) * limit;
 
   try {

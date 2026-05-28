@@ -142,6 +142,7 @@ export async function checkExistingContent(
   type: "kanji" | "vocab" | "verb" | "adjective" | "grammar" | "phrase" | "reading" | "listening" | "lessons" | "exams"
 ): Promise<{ data?: unknown; error?: string }> {
   const supabase = await createClient();
+  await supabase.auth.getSession();
   const slug = slugify(keyword);
 
   try {
@@ -180,6 +181,7 @@ export async function getLibraryItemBySlug(
   slugOrId: string
 ): Promise<LibraryItem | null> {
   const supabase = await createClient();
+  await supabase.auth.getSession();
   
   try {
     let data: LibraryItem | null = null;
@@ -607,5 +609,7 @@ export async function getLibraryDetail(
   type: "kanji" | "vocab" | "grammar" | "reading" | "listening" | "lessons" | "exams" | "phrase",
   slugOrId: string
 ): Promise<LibraryItem | null> {
+  const supabase = await createClient();
+  await supabase.auth.getSession();
   return getLibraryItemBySlug(type, slugOrId);
 }

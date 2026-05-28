@@ -364,7 +364,7 @@ export default function PronunciationPanel({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               {inputResult === "correct" ? (
-                <CheckCircle2 size={16} className="text-success animate-bounce" />
+                <CheckCircle2 size={16} className="text-success animate-premium-bounce" />
               ) : (
                 <AlertCircle size={16} className="text-destructive animate-pulse" />
               )}

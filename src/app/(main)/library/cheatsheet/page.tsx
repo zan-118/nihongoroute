@@ -8,8 +8,14 @@
 // ======================
 // IMPORTS
 // ======================
+import type { Metadata } from "next";
 import CheatsheetClient from "./CheatsheetClient";
 import { getCheatsheets } from "@/actions/library.actions";
+
+export const metadata: Metadata = {
+  title: "Referensi Cepat & Cheatsheets | NihongoRoute",
+  description: "Akses cepat tabel angka, partikel dasar, tata bahasa, dan referensi kilat bahasa Jepang.",
+};
 
 /**
  * Komponen CheatsheetPage: Menarik data cheatsheet dan merender CheatsheetClient.

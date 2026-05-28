@@ -11,7 +11,7 @@ interface NavWrapperProps {
   children: ReactNode;
 }
 
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChevronRight, ChevronLeft, Home } from "lucide-react";
@@ -46,7 +46,7 @@ export default function NavWrapper({ children }: NavWrapperProps) {
       <div className={`flex-1 flex flex-col min-w-0 ${!isExamPage ? 'md:pl-72' : ''} transition-all duration-500`}>
         {!isExamPage && <Topbar onMenuClick={() => setIsMobileMenuOpen(true)} />}
         <AnimatePresence mode="wait">
-          <motion.main 
+          <m.main 
             key={pathname}
             id="main-content" 
             initial={{ opacity: 0 }}
@@ -60,7 +60,7 @@ export default function NavWrapper({ children }: NavWrapperProps) {
                 <Button 
                   onClick={() => router.back()}
                   variant="ghost" 
-                  className="w-10 h-10 p-0 shrink-0 rounded-xl bg-card/50 backdrop-blur-md border border-border/50 hover:bg-primary/10 hover:border-primary/30 text-muted-foreground hover:text-primary transition-all shadow-sm flex items-center justify-center"
+                  className="size-10 p-0 shrink-0 rounded-xl bg-card/50 backdrop-blur-md border border-border/50 hover:bg-primary/10 hover:border-primary/30 text-muted-foreground hover:text-primary transition-all shadow-sm flex items-center justify-center"
                   aria-label="Kembali"
                 >
                   <ChevronLeft size={16} />
@@ -71,7 +71,7 @@ export default function NavWrapper({ children }: NavWrapperProps) {
                     <Home size={13} className="mb-0.5" /> <span className="hidden sm:inline">Beranda</span>
                   </Link>
                   {pathSegments.map((segment, idx) => (
-                    <div key={idx} className="flex items-center gap-2">
+                    <div key={`seg-${segment}`} className="flex items-center gap-2">
                       <ChevronRight size={10} className="opacity-20" />
                       <Link 
                         href={`/${pathSegments.slice(0, idx + 1).join('/')}`}
@@ -85,7 +85,7 @@ export default function NavWrapper({ children }: NavWrapperProps) {
               </div>
             )}
             {children}
-          </motion.main>
+          </m.main>
         </AnimatePresence>
       </div>
 

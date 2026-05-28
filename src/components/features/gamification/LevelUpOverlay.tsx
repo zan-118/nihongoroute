@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -40,13 +40,13 @@ export default function LevelUpOverlay({ level }: { level: number }) {
   return (
     <AnimatePresence mode="wait">
       {show && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-2xl p-4 md:p-8"
         >
-          <motion.div
+          <m.div
             initial={{ scale: 0.95, y: 20, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 1.05, opacity: 0 }}
@@ -56,12 +56,12 @@ export default function LevelUpOverlay({ level }: { level: number }) {
             <Card className="text-center py-6 px-4 md:py-10 md:px-12 bg-background bg-card rounded-[2rem] md:rounded-[3rem] border border-primary/30 shadow-2xl neo-card relative overflow-hidden w-full h-auto flex flex-col items-center">
               <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--primary-rgb),0.03)_1px,transparent_1px)] bg-[size:100%_4px] pointer-events-none opacity-20 dark:opacity-40" />
               
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/10 blur-[120px] rounded-full animate-bloom pointer-events-none" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-primary/10 blur-[100px] rounded-full animate-pulse pointer-events-none" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[500px] bg-primary/10 blur-[120px] rounded-full animate-bloom pointer-events-none" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[300px] bg-primary/10 blur-[100px] rounded-full animate-pulse pointer-events-none" />
               
               <div className="absolute -top-16 -left-16 w-48 h-48 md:w-64 md:h-64 bg-primary/10 blur-[80px] md:blur-[100px] pointer-events-none" />
 
-              <motion.div
+              <m.div
                 animate={{ 
                   scale: [1, 1.05, 1],
                   rotate: [0, 3, -3, 0] 
@@ -74,7 +74,7 @@ export default function LevelUpOverlay({ level }: { level: number }) {
                 className="w-16 h-16 md:w-28 md:h-28 mx-auto bg-primary/10 rounded-2xl md:rounded-[2.5rem] flex items-center justify-center mb-6 md:mb-10 neo-inset shadow-none border border-primary/30"
               >
                 <Trophy size={40} className="text-primary drop-shadow-sm dark:drop-shadow-[0_0_20px_rgba(var(--primary-rgb),0.6)] md:w-14 md:h-14" />
-              </motion.div>
+              </m.div>
 
               <Badge variant="outline" className="text-primary text-xs md:text-xs font-bold uppercase tracking-widest mb-4 md:mb-6 h-auto neo-inset px-4 py-1.5 md:px-8 md:py-2.5 border-primary/30 bg-primary/5 rounded-xl">
                 Naik Level!
@@ -114,8 +114,8 @@ export default function LevelUpOverlay({ level }: { level: number }) {
                 <Star size={200} fill="currentColor" className="text-foreground md:w-[300px] md:h-[300px]" />
               </div>
             </Card>
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

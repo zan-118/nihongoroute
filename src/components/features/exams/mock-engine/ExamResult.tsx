@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -151,7 +151,7 @@ export function ExamResult({
     level: exam.levelCode?.toUpperCase() || (isJft ? "A2" : "JLPT"),
   };
   return (
-    <motion.div 
+    <m.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className="w-full max-w-4xl mx-auto px-4 py-8"
@@ -194,7 +194,7 @@ export function ExamResult({
           <Card className="p-6 md:p-12 text-[#2d2821] relative overflow-hidden bg-[#FAF8F5] border-4 border-double border-[#C8BFA7] rounded-[2rem] font-serif transition-all duration-500">
             {/* Subtle watermarked background logo / emblem */}
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none flex items-center justify-center select-none">
-              <svg className="w-[85%] h-[85%]" viewBox="0 0 100 100" fill="currentColor">
+              <svg className="size-[85%]" viewBox="0 0 100 100" fill="currentColor">
                 <path d="M50 5 L95 28 L95 72 L50 95 L5 72 L5 28 Z" />
               </svg>
             </div>
@@ -550,7 +550,7 @@ export function ExamResult({
           />
 
           <div className="relative z-10">
-            <motion.div
+            <m.div
               initial={{ scale: 0, rotate: -20 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ type: "spring", damping: 15 }}
@@ -561,7 +561,7 @@ export function ExamResult({
               ) : (
                 <Skull size={64} aria-hidden="true" className="drop-shadow-[0_0_15px_rgba(var(--destructive-rgb),0.5)]" />
               )}
-            </motion.div>
+            </m.div>
 
             <h1 className={`text-4xl md:text-6xl font-black uppercase tracking-tighter mb-4 leading-tight ${isPassed ? "text-success" : "text-destructive"}`}>
               {isPassed ? "OMEDETOU! Keren Banget!" : "WADUH! Belum Lulus..."}
@@ -632,7 +632,7 @@ export function ExamResult({
                              </span>
                           </div>
                           <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-                             <motion.div 
+                             <m.div 
                                initial={{ width: 0 }}
                                animate={{ width: `${percentage}%` }}
                                className={`h-full ${color} shadow-[0_0_10px_rgba(var(--background-rgb),0.1)]`}
@@ -653,7 +653,7 @@ export function ExamResult({
                   
                   {isPassed ? (
                     <div className="bg-[rgba(var(--warning-rgb),0.1)] border border-warning/30 rounded-[2.5rem] p-8 relative group overflow-hidden">
-                      <div className="absolute -top-10 -right-10 w-40 h-40 bg-[rgba(var(--warning-rgb),0.1)] blur-[60px] rounded-full group-hover:scale-150 transition-transform duration-700" />
+                      <div className="absolute -top-10 -right-10 size-40 bg-[rgba(var(--warning-rgb),0.1)] blur-[60px] rounded-full group-hover:scale-150 transition-transform duration-700" />
                       <Trophy aria-hidden="true" className="text-warning mb-6 group-hover:scale-110 transition-transform" size={40} />
                       <h4 className="text-lg font-black uppercase tracking-tight text-warning mb-2">Klaim Sertifikat Anda</h4>
                       <p className="text-xs font-medium text-muted-foreground mb-8 leading-relaxed">
@@ -717,6 +717,6 @@ export function ExamResult({
           </div>
         </Card>
       )}
-    </motion.div>
+    </m.div>
   );
 }

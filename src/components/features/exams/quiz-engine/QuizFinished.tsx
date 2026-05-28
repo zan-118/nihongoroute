@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useRouter } from "next/navigation";
 import XPPop from "@/components/features/gamification/XPPop";
 import { Card } from "@/components/ui/card";
@@ -31,7 +31,7 @@ export function QuizFinished({
         <XPPop show={showXP} amount={xpGained} />
       </div>
 
-      <motion.div
+      <m.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         className="relative z-10"
@@ -94,7 +94,7 @@ export function QuizFinished({
             Materi Berikutnya <ArrowRight size={18} className="ml-3" />
           </Button>
         </div>
-      </motion.div>
+      </m.div>
     </Card>
   );
 }

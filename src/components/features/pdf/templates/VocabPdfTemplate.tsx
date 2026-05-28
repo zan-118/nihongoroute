@@ -257,17 +257,17 @@ export const VocabPdfTemplate = ({ data, level }: VocabTemplateProps) => (
           </View>
         </View>
 
-        {data.map((item, index) => (
+        {data.map((item, pos) => (
           <View
-            key={index}
+            key={`vocab-${pos}`}
             style={[
               styles.tableRow,
-              index % 2 === 1 ? styles.tableRowZebra : {},
+              pos % 2 === 1 ? styles.tableRowZebra : {},
             ]}
             wrap={false}
           >
             <View style={styles.cellNo}>
-              <Text style={styles.romajiText}>{index + 1}</Text>
+              <Text style={styles.romajiText}>{pos + 1}</Text>
             </View>
             <View style={styles.cellWord}>
               <Text style={styles.kanjiText}>{item.word}</Text>
@@ -287,7 +287,8 @@ export const VocabPdfTemplate = ({ data, level }: VocabTemplateProps) => (
 
       {/* FOOTER SECTION */}
       <View style={styles.footer} fixed>
-        <Text style={styles.footerText}>
+        {/* @ts-expect-error - suppressHydrationWarning is standard in React but not defined in react-pdf types */}
+        <Text style={styles.footerText} suppressHydrationWarning={true}>
           © {new Date().getFullYear()} NihongoRoute. Dicetak pada {new Date().toLocaleDateString('id-ID')}.
         </Text>
         <Link src="https://www.nihongoroute.my.id" style={styles.footerLink}>

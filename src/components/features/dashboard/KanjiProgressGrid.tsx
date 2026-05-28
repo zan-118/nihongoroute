@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { createClient } from "@/lib/supabase/client";
@@ -59,12 +59,12 @@ export default function KanjiProgressGrid() {
 
   return (
     <Card className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-lg overflow-hidden relative">
-      <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl rounded-full" />
+      <div className="absolute top-0 right-0 size-32 bg-primary/5 blur-3xl rounded-full" />
       
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
           <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-xs mb-2 flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+            <div className="size-1.5 rounded-full bg-primary animate-pulse" />
             Peta Penguasaan Kanji N5
           </h2>
           <p className="text-sm font-black text-foreground uppercase tracking-tight">
@@ -89,7 +89,7 @@ export default function KanjiProgressGrid() {
             const isLearning = status && !isMastered;
 
             return (
-              <motion.div
+              <m.div
                 key={item._id}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -105,7 +105,7 @@ export default function KanjiProgressGrid() {
                 `}
               >
                 {item.kanji}
-              </motion.div>
+              </m.div>
             );
           })}
         </div>

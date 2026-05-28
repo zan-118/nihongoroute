@@ -1,14 +1,14 @@
-import { ReactNode } from "react";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "NihongoRoute Studio",
-  description: "Sanity CMS Content Studio for NihongoRoute",
+export const metadata: Metadata = {
+  title: "NihongoRoute Sanity Studio",
+  description: "Portal manajemen konten editorial CMS NihongoRoute.",
 };
 
-export default function StudioLayout({ children }: { children: ReactNode }) {
-  return (
-    <div className="w-full min-h-screen bg-[#0a0a0a]">
-      {children}
-    </div>
-  );
+export default function StudioLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <>{children}</>;
 }

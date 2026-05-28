@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { PenTool, X, Sparkles } from "lucide-react";
@@ -21,7 +21,7 @@ export function WritingPracticeModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md p-0 border-none bg-transparent shadow-none">
         <DialogTitle className="sr-only">Latihan Menulis Kanji</DialogTitle>
-        <motion.div
+        <m.div
           initial={{ scale: 0.95, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           className="relative bg-card p-6 md:p-8 rounded-2xl border border-border shadow-2xl max-w-md w-full flex flex-col"
@@ -29,7 +29,7 @@ export function WritingPracticeModal({
           <div className="relative z-10 flex flex-col">
             <header className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 shrink-0 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center">
+                <div className="size-10 shrink-0 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center">
                   <PenTool size={18} className="text-secondary" />
                 </div>
                 <div className="text-left">
@@ -40,7 +40,7 @@ export function WritingPracticeModal({
               <Button
                 variant="ghost"
                 onClick={onClose}
-                className="w-9 h-9 p-0 rounded-lg bg-muted/50 hover:bg-muted hover:text-foreground transition-all border border-border"
+                className="size-9 p-0 rounded-lg bg-muted/50 hover:bg-muted hover:text-foreground transition-all border border-border"
               >
                 <X size={18} />
               </Button>
@@ -73,7 +73,7 @@ export function WritingPracticeModal({
               Tulis goresan kanji di atas secara berurutan!
             </p>
           </div>
-        </motion.div>
+        </m.div>
       </DialogContent>
     </Dialog>
   );

@@ -8,8 +8,8 @@ export default function NotFound() {
       {/* Background Decor & Neural Grid */}
       <div className="neural-grid" />
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[500px] h-[500px] bg-destructive/10 rounded-full blur-[120px] opacity-30 absolute -top-12 -left-12" />
-        <div className="w-[450px] h-[450px] bg-primary/10 rounded-full blur-[100px] opacity-25 absolute -bottom-10 -right-10" />
+        <div className="size-[500px] bg-destructive/10 rounded-full blur-[120px] opacity-30 absolute -top-12 -left-12" />
+        <div className="size-[450px] bg-primary/10 rounded-full blur-[100px] opacity-25 absolute -bottom-10 -right-10" />
       </div>
       
       {/* Background Aesthetic Number */}
@@ -23,7 +23,7 @@ export default function NotFound() {
         {/* Japanese Thematic Element */}
         <div className="space-y-3 mb-6">
           <div className="flex justify-center mb-4">
-            <div className="w-20 h-20 bg-destructive/10 rounded-2xl flex items-center justify-center border border-destructive/20 shadow-[0_0_20px_rgba(var(--destructive-rgb),0.15)] animate-bounce">
+            <div className="size-20 bg-destructive/10 rounded-2xl flex items-center justify-center border border-destructive/20 shadow-[0_0_20px_rgba(var(--destructive-rgb),0.15)] animate-premium-bounce">
               <MapPinOff className="text-destructive animate-pulse" size={36} />
             </div>
           </div>

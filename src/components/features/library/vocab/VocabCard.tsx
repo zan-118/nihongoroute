@@ -32,7 +32,7 @@ export function VocabCard({ item, idx, showRomaji }: VocabCardProps) {
       <Link href={ROUTES.LIBRARY.VOCAB(item.slug)} className="block h-full">
         <Card className="p-4 sm:p-5 md:p-6 bg-card border border-border rounded-2xl hover:border-primary/40 transition-all duration-300 group shadow-sm flex flex-col gap-4 relative overflow-hidden h-full">
           {/* Subtle Hover Indicator */}
-          <div className="absolute top-0 right-0 w-12 h-12 bg-[rgba(var(--primary-rgb),0.05)] rounded-bl-[2rem] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity translate-x-4 translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 duration-500">
+          <div className="absolute top-0 right-0 size-12 bg-[rgba(var(--primary-rgb),0.05)] rounded-bl-[2rem] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity translate-x-4 translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 duration-500">
             <ExternalLink size={14} className="text-primary mr-2 mb-2" aria-hidden="true" />
           </div>
 
@@ -67,8 +67,8 @@ export function VocabCard({ item, idx, showRomaji }: VocabCardProps) {
             <div className="pt-3 border-t border-border flex flex-col gap-2">
               {item.related_kanji && item.related_kanji.length > 0 && (
                 <div className="flex flex-wrap gap-1">
-                  {item.related_kanji.map((kanji: { character: string; meaning: string }, kIdx: number) => (
-                    <span key={kIdx} className="text-[10px] px-1.5 py-0.5 rounded-md bg-muted text-muted-foreground border border-border font-japanese" title={kanji.meaning}>
+                  {item.related_kanji.map((kanji: { character: string; meaning: string }) => (
+                    <span key={kanji.character} className="text-[10px] px-1.5 py-0.5 rounded-md bg-muted text-muted-foreground border border-border font-japanese" title={kanji.meaning}>
                       {kanji.character}
                     </span>
                   ))}

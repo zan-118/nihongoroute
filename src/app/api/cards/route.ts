@@ -138,7 +138,7 @@ export async function GET(request: NextRequest) {
       romaji: v.romaji,
       furigana: v.furigana,
       jlptLevel: v.jlpt_level,
-      examples: Array.isArray(v.examples) ? v.examples.map((ex: any) => ({
+      examples: Array.isArray(v.examples) ? v.examples.map((ex: { japanese?: string; jp?: string; indonesian?: string; meaning?: string; id?: string }) => ({
         japanese: ex?.japanese || ex?.jp || "",
         indonesian: ex?.indonesian || ex?.meaning || ex?.id || ""
       })) : [],
@@ -176,7 +176,7 @@ export async function GET(request: NextRequest) {
             romaji: v.romaji,
             furigana: v.furigana,
             jlptLevel: v.jlpt_level,
-            examples: Array.isArray(v.examples) ? v.examples.map((ex: any) => ({
+            examples: Array.isArray(v.examples) ? v.examples.map((ex: { japanese?: string; jp?: string; indonesian?: string; meaning?: string; id?: string }) => ({
               japanese: ex?.japanese || ex?.jp || "",
               indonesian: ex?.indonesian || ex?.meaning || ex?.id || ""
             })) : [],
@@ -200,7 +200,7 @@ export async function GET(request: NextRequest) {
         formattedMnemonic = k.mnemonics;
       }
 
-      const formattedExamples = Array.isArray(k.examples) ? k.examples.map((ex: any) => ({
+      const formattedExamples = Array.isArray(k.examples) ? k.examples.map((ex: { japanese?: string; jp?: string; indonesian?: string; meaning?: string; id?: string }) => ({
         japanese: ex?.japanese || ex?.jp || "",
         indonesian: ex?.indonesian || ex?.meaning || ex?.id || ""
       })) : [];

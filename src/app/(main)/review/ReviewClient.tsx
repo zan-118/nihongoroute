@@ -46,7 +46,7 @@ export function ReviewClient() {
       <div className="flex-1 flex flex-col items-center justify-center px-4">
         <RotateCw className="text-primary animate-spin mb-4" size={32} />
         <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs animate-pulse font-bold">
-          Sinkronisasi data...
+          Sinkronisasi data…
         </p>
       </div>
     );

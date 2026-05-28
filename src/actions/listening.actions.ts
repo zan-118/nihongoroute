@@ -1,6 +1,7 @@
 "use server";
 
 import { sanityClient } from "@/lib/sanity.client";
+import { createClient } from "@/lib/supabase/server";
 import { PaginatedListeningResponse, ListeningTaskItem } from "@/types/library";
 
 interface SanityListeningItem {
@@ -22,6 +23,8 @@ export async function getPaginatedListening(
   limit: number,
   level: string = ""
 ): Promise<PaginatedListeningResponse> {
+  const supabase = await createClient();
+  await supabase.auth.getSession();
   const offset = (page - 1) * limit;
 
   try {
@@ -74,6 +77,8 @@ export async function getPaginatedListening(
  * Mengambil satu task listening acak berdasarkan JLPT level (Dipakai di Homepage).
  */
 export async function getRandomListeningTask(level: string = "N5"): Promise<ListeningTaskItem | null> {
+  const supabase = await createClient();
+  await supabase.auth.getSession();
   try {
     const query = `*[
       _type == "listeningMaterial" && jlpt_level == $level

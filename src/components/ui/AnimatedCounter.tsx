@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { animate, useMotionValue, useTransform, motion } from "framer-motion";
+import { animate, useMotionValue, useTransform, m } from "framer-motion";
 
 interface AnimatedCounterProps {
   value: number;
@@ -23,8 +23,8 @@ export default function AnimatedCounter({ value, className, duration = 1.5 }: An
   }, [value, count, duration]);
 
   return (
-    <motion.span className={className}>
+    <m.span className={className}>
       {rounded}
-    </motion.span>
+    </m.span>
   );
 }

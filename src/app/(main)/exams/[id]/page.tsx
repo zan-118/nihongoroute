@@ -13,8 +13,20 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { getExamByIdOrSlug } from "@/actions/library.actions";
+import type { Metadata } from "next";
+
 interface PageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const decodedId = decodeURIComponent(id);
+  const examData = await getExamByIdOrSlug(decodedId);
+  return {
+    title: examData ? `${examData.title} | Simulasi JLPT NihongoRoute` : "Simulasi Ujian JLPT | NihongoRoute",
+    description: examData ? `Ikuti simulasi ujian JLPT resmi untuk paket ${examData.title}. Sistem timer waktu nyata dan format penilaian akurat.` : "Ikuti simulasi ujian JLPT resmi dan terlengkap untuk level N5 hingga N1.",
+  };
 }
 
 export default async function StandaloneExamSessionPage({ params }: PageProps) {
@@ -35,9 +47,9 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
   if (!examData) {
     return (
       <div className="w-full flex-1 flex flex-col items-center justify-center px-6 text-center relative overflow-hidden py-12">
-        <div className="absolute top-0 right-1/4 w-[400px] h-[400px] bg-destructive/5 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 right-1/4 size-[400px] bg-destructive/5 blur-[120px] rounded-full pointer-events-none" />
         <Card className="p-10 md:p-14 border-destructive/30 max-w-lg w-full relative z-10 my-auto neo-card rounded-[2rem] bg-card">
-          <div className="w-20 h-20 mx-auto neo-inset text-destructive flex items-center justify-center rounded-full mb-8 shadow-inner bg-destructive/10">
+          <div className="size-20 mx-auto neo-inset text-destructive flex items-center justify-center rounded-full mb-8 shadow-inner bg-destructive/10">
             <span className="text-4xl block">🚫</span>
           </div>
           <h1 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tight mb-4">
@@ -64,9 +76,9 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
   if (!examData.questions || examData.questions.length === 0) {
     return (
       <div className="w-full flex-1 flex flex-col items-center justify-center px-6 text-center relative overflow-hidden py-12">
-        <div className="absolute top-0 left-1/4 w-[400px] h-[400px] bg-warning/5 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 left-1/4 size-[400px] bg-warning/5 blur-[120px] rounded-full pointer-events-none" />
         <Card className="p-10 md:p-14 border-warning/30 max-w-lg w-full relative z-10 my-auto neo-card rounded-[2rem] bg-card">
-          <div className="w-20 h-20 mx-auto neo-inset text-warning flex items-center justify-center rounded-full mb-8 shadow-inner bg-warning/10">
+          <div className="size-20 mx-auto neo-inset text-warning flex items-center justify-center rounded-full mb-8 shadow-inner bg-warning/10">
             <span className="text-4xl block">🚧</span>
           </div>
           <h1 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tight mb-4">
@@ -94,8 +106,8 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
   // 3. MAIN RENDER
   return (
     <div className="w-full flex-1 px-4 md:px-8 relative overflow-hidden flex flex-col mt-4 md:mt-8">
-      <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-destructive/5 blur-[150px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-[10%] left-[-5%] w-[500px] h-[500px] bg-warning/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-[-10%] right-[-5%] size-[600px] bg-destructive/5 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-[10%] left-[-5%] size-[500px] bg-warning/5 blur-[120px] rounded-full pointer-events-none" />
       <div className="w-full max-w-5xl mx-auto relative z-10 flex-1 flex flex-col">
         <MockExamEngine exam={examData} />
       </div>

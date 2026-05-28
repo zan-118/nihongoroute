@@ -111,8 +111,8 @@ export function FlashcardFront({
                 autoFocus
               />
               <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                {inputResult === "correct" && <CheckCircle2 className="text-success w-6 h-6" />}
-                {inputResult === "wrong" && <XCircle className="text-destructive w-6 h-6" />}
+                {inputResult === "correct" && <CheckCircle2 className="text-success size-6" />}
+                {inputResult === "wrong" && <XCircle className="text-destructive size-6" />}
               </div>
             </div>
             
@@ -125,7 +125,7 @@ export function FlashcardFront({
 
       {!isChallenge && (
         <div className="absolute bottom-6 md:bottom-8 flex flex-col items-center gap-1.5">
-           <MousePointer2 size={16} className={`${themeColor} opacity-40 animate-bounce`} />
+           <MousePointer2 size={16} className={`${themeColor} opacity-40 animate-premium-bounce`} />
            <p className={`${themeColor} opacity-40 text-xs font-bold uppercase tracking-widest`}>
              Ketuk untuk Melihat Arti
            </p>

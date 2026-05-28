@@ -202,6 +202,21 @@
   }
 }
 
+@keyframes premium-bounce {
+  0%, 100% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  50% {
+    transform: translateY(-6px);
+    animation-timing-function: cubic-bezier(0.55, 0.085, 0.68, 0.53);
+  }
+}
+
+.animate-premium-bounce {
+  animation: premium-bounce 2s infinite;
+}
+
 /* MOBILE PERFORMANCE OVERRIDES */
 @media (max-width: 768px) {
   /* Disable heavy backdrop filters on mobile for 60fps performance */
@@ -228,3 +243,17 @@
     backface-visibility: hidden;
   }
 }
+
+/* ACCESSIBILITY: PREFERS-REDUCED-MOTION (WCAG 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-delay: -1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
+}
+

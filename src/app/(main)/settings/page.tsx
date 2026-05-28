@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { Settings as SettingsIcon, Layers, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -67,8 +67,8 @@ export default function SettingsPage() {
       {/* Premium Ambient Background Grid & Glows */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute inset-0 neural-grid opacity-[0.12] mix-blend-overlay" />
-        <div className="absolute top-[10%] -left-[10%] w-[50%] h-[50%] bg-primary/10 blur-[130px] rounded-full animate-pulse pointer-events-none" />
-        <div className="absolute bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-secondary/5 blur-[130px] rounded-full animate-pulse pointer-events-none" style={{ animationDelay: '1.5s' }} />
+        <div className="absolute top-[10%] -left-[10%] size-[50%] bg-primary/10 blur-[130px] rounded-full animate-pulse pointer-events-none" />
+        <div className="absolute bottom-[10%] -right-[10%] size-[50%] bg-secondary/5 blur-[130px] rounded-full animate-pulse pointer-events-none" style={{ animationDelay: '1.5s' }} />
       </div>
 
       <ConfirmModal
@@ -81,24 +81,24 @@ export default function SettingsPage() {
         onConfirm={confirmModal.onConfirm}
       />
 
-      <motion.div 
+      <m.div 
         initial="hidden"
         animate="visible"
         variants={containerVariants}
         className="container max-w-4xl mx-auto py-12 md:py-20 relative z-10 px-4 md:px-6"
       >
         <header className="mb-12 px-1">
-          <motion.div variants={itemVariants}>
+          <m.div variants={itemVariants}>
             <Badge variant="outline" className="glass bg-background/20 text-primary border-primary/30 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6 flex items-center gap-2 w-fit shadow-[0_0_20px_rgba(var(--primary-rgb),0.1)]">
               <SettingsIcon size={14} className="animate-spin-slow" /> Konfigurasi Sistem
             </Badge>
-          </motion.div>
-          <motion.h1 variants={itemVariants} className="text-4xl md:text-5xl font-black text-foreground italic tracking-tighter uppercase mb-4 leading-none select-none">
+          </m.div>
+          <m.h1 variants={itemVariants} className="text-4xl md:text-5xl font-black text-foreground italic tracking-tighter uppercase mb-4 leading-none select-none">
             Pengaturan Akun
-          </motion.h1>
-          <motion.p variants={itemVariants} className="text-muted-foreground text-sm md:text-base font-semibold max-w-xl leading-relaxed opacity-70">
+          </m.h1>
+          <m.p variants={itemVariants} className="text-muted-foreground text-sm md:text-base font-semibold max-w-xl leading-relaxed opacity-70">
             Atur profil dan preferensi belajar Anda. Gunakan sinkronisasi Cloud untuk menjaga keamanan riwayat belajar Anda di berbagai perangkat.
-          </motion.p>
+          </m.p>
         </header>
 
         <div className="grid grid-cols-1 gap-8 px-1">
@@ -128,9 +128,9 @@ export default function SettingsPage() {
           />
 
           {/* DANGER ZONE INFO */}
-          <motion.div variants={itemVariants}>
+          <m.div variants={itemVariants}>
             <Card className="bg-destructive/[0.02] border border-destructive/10 rounded-[2rem] p-6 md:p-8 shadow-2xl flex flex-col md:flex-row items-center md:items-start gap-6 group hover:bg-destructive/[0.04] transition-all duration-500">
-              <div className="w-14 h-14 shrink-0 rounded-2xl bg-destructive/10 flex items-center justify-center border border-destructive/20 shadow-lg group-hover:scale-110 transition-transform">
+              <div className="size-14 shrink-0 rounded-2xl bg-destructive/10 flex items-center justify-center border border-destructive/20 shadow-lg group-hover:scale-110 transition-transform">
                 <ShieldAlert size={28} className="text-destructive" />
               </div>
               <div className="flex-1 text-center md:text-left">
@@ -140,10 +140,10 @@ export default function SettingsPage() {
                 </p>
               </div>
             </Card>
-          </motion.div>
+          </m.div>
 
           {/* MOBILE EXTRA NAV */}
-          <motion.div variants={itemVariants} className="md:hidden">
+          <m.div variants={itemVariants} className="md:hidden">
             <Card className="bg-background/[0.02] backdrop-blur-xl border border-border rounded-[2rem] p-6 shadow-2xl">
               <h3 className="text-primary font-black uppercase tracking-[0.2em] text-[10px] mb-4">Navigasi Lanjutan</h3>
               <Button asChild variant="ghost" className="w-full h-14 bg-background/[0.03] border border-border justify-start hover:bg-primary/10 hover:text-primary rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all">
@@ -152,9 +152,9 @@ export default function SettingsPage() {
                 </Link>
               </Button>
             </Card>
-          </motion.div>
+          </m.div>
         </div>
-      </motion.div>
+      </m.div>
     </div>
   );
 }

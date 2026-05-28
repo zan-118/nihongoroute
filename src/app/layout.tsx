@@ -19,6 +19,7 @@ import QueryProvider from "@/components/providers/QueryProvider";
 import { cn } from "@/lib/utils";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { LazyMotion, domAnimation } from "framer-motion";
 
 
 // ======================
@@ -52,7 +53,7 @@ export const viewport: Viewport = {
  * Mengatur judul, deskripsi, OpenGraph, dan verifikasi mesin pencari.
  */
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.nihongoroute.my.id"), 
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.nihongoroute.my.id"),
   title: "NihongoRoute | Belajar Bahasa Jepang Gratis",
   description:
     "Platform belajar bahasa Jepang dengan sistem terstruktur, gamifikasi, dan latihan interaktif.",
@@ -70,7 +71,7 @@ export const metadata: Metadata = {
     apple: "/logo-branding.png",
   },
   verification: {
-    google: "Niyl1z2v4hJgZZzRFLzMLOk4xlYNyvSNnEiCC-eK7N4", 
+    google: "Niyl1z2v4hJgZZzRFLzMLOk4xlYNyvSNnEiCC-eK7N4",
   },
   appleWebApp: {
     capable: true,
@@ -85,9 +86,9 @@ export const metadata: Metadata = {
     siteName: "NihongoRoute",
     images: [
       {
-        url: "/og-image.png", 
-        width: 1200,
-        height: 630,
+        url: "/og-image.png",
+        width: 1920,
+        height: 1080,
         alt: "NihongoRoute Dashboard",
       },
     ],
@@ -136,12 +137,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <QueryProvider>
-            {children}
-          </QueryProvider>
+          <LazyMotion features={domAnimation}>
+            <QueryProvider>
+              {children}
+            </QueryProvider>
+          </LazyMotion>
           <FeedbackWidget />
           <DictionaryPopup />
-          <Toaster 
+          <Toaster
             theme="dark"
             position="top-center"
             offset={80} // Offset to clear Topbar (64px + 16px)

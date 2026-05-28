@@ -4,6 +4,8 @@
  * @module Client Component
  */
 
+import { Suspense } from "react";
+import { RotateCw } from "lucide-react";
 import GrammarClient from "./GrammarClient";
 import { getGrammarArticles } from "@/actions/library.actions";
 
@@ -23,7 +25,14 @@ export default async function GrammarArticlesPage() {
       <div className="neural-grid" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(var(--primary-rgb),0.05)_0%,transparent_70%)] pointer-events-none z-0" />
 
-      <GrammarClient initialArticles={grammarData} />
+      <Suspense fallback={
+        <div className="h-40 flex flex-col items-center justify-center text-muted-foreground gap-2">
+          <RotateCw className="text-primary animate-spin" size={24} />
+          <p className="text-xs font-bold uppercase tracking-widest font-mono animate-pulse">Memuat tata bahasa…</p>
+        </div>
+      }>
+        <GrammarClient initialArticles={grammarData} />
+      </Suspense>
     </main>
   );
 }

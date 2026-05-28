@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Save, Upload, Trash2, LogOut } from "lucide-react";
@@ -24,19 +24,19 @@ export default function DashboardSettings({
   itemVariants
 }: DashboardSettingsProps) {
   return (
-    <motion.div variants={itemVariants} className="md:col-span-12">
+    <m.div variants={itemVariants} className="md:col-span-12">
       <Card className="bg-muted/30 border border-border rounded-2xl p-6 md:p-8 shadow-lg">
         <div className="flex flex-col lg:flex-row gap-8 mb-10">
           <div className="flex-1">
             <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-xs mb-6 flex items-center gap-3">
-              <div className="w-1 h-1 rounded-full bg-primary" />
+              <div className="size-1 rounded-full bg-primary" />
               Notifikasi & Retensi
             </h2>
             <NotificationManager />
           </div>
           <div className="flex-1">
             <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-xs mb-6 flex items-center gap-3">
-              <div className="w-1 h-1 rounded-full bg-border" />
+              <div className="size-1 rounded-full bg-border" />
               Data & Sinkronisasi
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -74,6 +74,6 @@ export default function DashboardSettings({
           </div>
         </div>
       </Card>
-    </motion.div>
+    </m.div>
   );
 }

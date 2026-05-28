@@ -6,7 +6,7 @@ export function QuestHeader() {
   return (
     <header className="flex items-center justify-between mb-8 relative z-10">
       <div className="flex items-center gap-3">
-        <Card className="w-10 h-10 rounded-xl bg-muted dark:bg-muted/50 border border-border flex items-center justify-center shadow-none shrink-0">
+        <Card className="size-10 rounded-xl bg-muted dark:bg-muted/50 border border-border flex items-center justify-center shadow-none shrink-0">
           <Target size={18} className="text-primary" />
         </Card>
         <div className="text-left">

@@ -44,7 +44,7 @@ export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps)
           <div className="relative z-10 flex flex-col h-full">
             {/* Top Row */}
             <div className="flex justify-between items-start mb-6">
-              <div className="w-10 h-10 rounded-2xl bg-[rgba(var(--muted-rgb),0.5)] border border-border flex items-center justify-center group-hover:border-[rgba(var(--primary-rgb),0.3)] group-hover:bg-[rgba(var(--primary-rgb),0.1)] transition-all duration-500">
+              <div className="size-10 rounded-2xl bg-[rgba(var(--muted-rgb),0.5)] border border-border flex items-center justify-center group-hover:border-[rgba(var(--primary-rgb),0.3)] group-hover:bg-[rgba(var(--primary-rgb),0.1)] transition-all duration-500">
                 <Bookmark
                   size={18}
                   className="text-muted-foreground group-hover:text-primary transition-colors duration-500"
@@ -64,7 +64,7 @@ export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps)
                 {article.title}
               </h2>
               <div className="flex items-center gap-2">
-                <div className="w-1 h-1 rounded-full bg-[rgba(var(--primary-rgb),0.4)]" />
+                <div className="size-1 rounded-full bg-[rgba(var(--primary-rgb),0.4)]" />
                 <span className="text-[10px] font-black text-muted-foreground/50 uppercase tracking-widest group-hover:text-primary/50 transition-colors">
                   Pola Kalimat
                 </span>
@@ -76,7 +76,7 @@ export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps)
               <span className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-[0.15em] group-hover:text-primary transition-colors">
                 Pelajari Modul
               </span>
-              <div className="w-9 h-9 rounded-xl bg-[rgba(var(--muted-rgb),0.5)] border border-border flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-transparent transition-all duration-500">
+              <div className="size-9 rounded-xl bg-[rgba(var(--muted-rgb),0.5)] border border-border flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-transparent transition-all duration-500">
                  <ArrowRight size={16} />
               </div>
             </div>

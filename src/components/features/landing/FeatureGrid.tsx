@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { 
   BrainCircuit, 
   Library, 
@@ -94,7 +94,7 @@ export function FeatureGrid() {
           </p>
         </div>
 
-        <motion.div
+        <m.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -102,9 +102,9 @@ export function FeatureGrid() {
           className="grid grid-cols-1 md:grid-cols-2 gap-[34px]"
         >
           {/* CARD 1: KANA INSTRUMENT */}
-          <motion.div variants={itemVariants}>
+          <m.div variants={itemVariants}>
             <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-primary/30 hover:bg-card/20 shadow-none">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-[40px] group-hover:bg-primary/10 transition-all duration-500" />
+              <div className="absolute top-0 right-0 size-32 bg-primary/5 rounded-full blur-[40px] group-hover:bg-primary/10 transition-all duration-500" />
               
               <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm text-primary">
                 <PenTool size={26} />
@@ -120,7 +120,7 @@ export function FeatureGrid() {
 
               {/* Visual Mockup inside Card */}
               <div className="p-4 bg-background/40 border border-border rounded-2xl flex items-center justify-between gap-4 glass mt-auto">
-                <div className="w-14 h-14 border-2 border-dashed border-primary/30 bg-background/80 rounded-xl flex items-center justify-center relative font-japanese font-bold text-2xl text-primary shadow-inner">
+                <div className="size-14 border-2 border-dashed border-primary/30 bg-background/80 rounded-xl flex items-center justify-center relative font-japanese font-bold text-2xl text-primary shadow-inner">
                   あ
                   <div className="absolute text-[8px] font-bold text-primary/50 top-1 left-1">1</div>
                   <div className="absolute text-[7px] font-bold text-muted-foreground/60 bottom-1 right-1">N5</div>
@@ -134,12 +134,12 @@ export function FeatureGrid() {
                 </div>
               </div>
             </Card>
-          </motion.div>
+          </m.div>
 
           {/* CARD 2: RICH DATABASE (VOCAB & GRAMMAR) */}
-          <motion.div variants={itemVariants}>
+          <m.div variants={itemVariants}>
             <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-secondary/30 hover:bg-card/20 shadow-none">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/5 rounded-full blur-[40px] group-hover:bg-secondary/10 transition-all duration-500" />
+              <div className="absolute top-0 right-0 size-32 bg-secondary/5 rounded-full blur-[40px] group-hover:bg-secondary/10 transition-all duration-500" />
               
               <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm text-secondary">
                 <Library size={26} />
@@ -172,12 +172,12 @@ export function FeatureGrid() {
                 </div>
               </div>
             </Card>
-          </motion.div>
+          </m.div>
 
           {/* CARD 3: FLASHCARDS WITH SRS */}
-          <motion.div variants={itemVariants}>
+          <m.div variants={itemVariants}>
             <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-primary/30 hover:bg-card/20 shadow-none">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-[40px] group-hover:bg-primary/10 transition-all duration-500" />
+              <div className="absolute top-0 right-0 size-32 bg-primary/5 rounded-full blur-[40px] group-hover:bg-primary/10 transition-all duration-500" />
               
               <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm text-primary">
                 <BrainCircuit size={26} />
@@ -195,12 +195,12 @@ export function FeatureGrid() {
               <div className="p-4 bg-background/40 border border-border rounded-2xl flex items-center gap-3.5 glass mt-auto">
                 <div className="relative w-11 h-14 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground rounded-lg flex items-center justify-center font-bold text-xl shadow-[0_4px_12px_rgba(var(--primary-rgb),0.3)] shrink-0">
                   猫
-                  <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-success rounded-full border border-background animate-pulse" />
+                  <div className="absolute -top-1 -right-1 size-2.5 bg-success rounded-full border border-background animate-pulse" />
                 </div>
                 <div className="flex-1 flex flex-col gap-1">
                   <span className="text-[11px] font-bold text-foreground">猫 (Neko) — Kucing</span>
                   <span className="text-[9px] text-muted-foreground flex items-center gap-1.5 font-bold">
-                    <span className="w-1.5 h-1.5 bg-success rounded-full" /> Interval: 3 Hari Lagi (Kotak 4)
+                    <span className="size-1.5 bg-success rounded-full" /> Interval: 3 Hari Lagi (Kotak 4)
                   </span>
                   <div className="w-full bg-muted h-1 rounded-full overflow-hidden mt-1">
                     <div className="bg-success h-full w-[80%]" />
@@ -208,12 +208,12 @@ export function FeatureGrid() {
                 </div>
               </div>
             </Card>
-          </motion.div>
+          </m.div>
 
           {/* CARD 4: JLPT EXAM SIMULATION */}
-          <motion.div variants={itemVariants}>
+          <m.div variants={itemVariants}>
             <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-secondary/30 hover:bg-card/20 shadow-none">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/5 rounded-full blur-[40px] group-hover:bg-secondary/10 transition-all duration-500" />
+              <div className="absolute top-0 right-0 size-32 bg-secondary/5 rounded-full blur-[40px] group-hover:bg-secondary/10 transition-all duration-500" />
               
               <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm text-secondary">
                 <Zap size={26} />
@@ -252,8 +252,8 @@ export function FeatureGrid() {
                 </div>
               </div>
             </Card>
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       </section>
 
       {/* SECTION 2: SMART LEARNING JOURNEY */}
@@ -277,8 +277,8 @@ export function FeatureGrid() {
           {/* STEP CONTROLS - LEFT COLUMN */}
           <div className="lg:col-span-5 flex flex-col gap-4 w-full">
             {learningSteps.map((step, idx) => (
-              <button
-                key={idx}
+              <button type="button"
+                key={step.title}
                 onClick={() => setActiveStep(idx)}
                 className={`w-full text-left p-6 rounded-[24px] border transition-all duration-300 flex items-center justify-between gap-4 group relative overflow-hidden ${
                   activeStep === idx 
@@ -320,7 +320,7 @@ export function FeatureGrid() {
           {/* ACTIVE STEP CONTENT DISPLAY - RIGHT COLUMN */}
           <div className="lg:col-span-7 h-full">
             <Card className="p-10 rounded-[34px] bg-card/10 backdrop-blur-xl border border-border shadow-none relative overflow-hidden min-h-[350px] flex flex-col justify-between">
-              <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-primary/5 rounded-full blur-[80px] pointer-events-none" />
+              <div className="absolute top-0 right-0 size-[200px] bg-primary/5 rounded-full blur-[80px] pointer-events-none" />
               
               <div className="space-y-6 relative z-10">
                 <Badge className="bg-primary/10 text-primary border border-primary/20 rounded-full font-bold uppercase tracking-widest text-[9px]">
@@ -362,8 +362,8 @@ export function FeatureGrid() {
       <section className="relative">
         <Card className="p-[55px] rounded-[42px] bg-card/10 backdrop-blur-xl border border-border shadow-none relative overflow-hidden group">
           {/* Glowing Accents */}
-          <div className="absolute -top-32 -left-32 w-89 h-89 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
-          <div className="absolute -bottom-32 -right-32 w-89 h-89 bg-secondary/5 rounded-full blur-[100px] pointer-events-none" />
+          <div className="absolute -top-32 -left-32 size-89 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
+          <div className="absolute -bottom-32 -right-32 size-89 bg-secondary/5 rounded-full blur-[100px] pointer-events-none" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
             {/* TEXT LEFT */}
@@ -381,13 +381,13 @@ export function FeatureGrid() {
               
               <div className="grid grid-cols-2 gap-4 pt-2">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-success/10 border border-success/20 flex items-center justify-center text-success">
+                  <div className="size-8 rounded-lg bg-success/10 border border-success/20 flex items-center justify-center text-success">
                     <Check size={16} />
                   </div>
                   <span className="text-xs font-bold text-foreground">Target Harian Jelas</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+                  <div className="size-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
                     <Target size={16} />
                   </div>
                   <span className="text-xs font-bold text-foreground">Lencana Prestasi</span>
@@ -401,18 +401,18 @@ export function FeatureGrid() {
               <Card className="p-6 bg-background/50 border border-border/80 rounded-[28px] glass flex flex-col justify-between h-48">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest">Belajar Harian</span>
-                  <Flame size={20} className="text-destructive fill-destructive animate-bounce" />
+                  <Flame size={20} className="text-destructive fill-destructive animate-premium-bounce" />
                 </div>
                 <div className="my-2">
                   <span className="text-4xl font-black text-foreground tracking-tight">7 HARI</span>
                   <p className="text-[10px] text-success font-bold mt-1 uppercase tracking-wider flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 bg-success rounded-full" /> Streak Aktif!
+                    <span className="size-1.5 bg-success rounded-full" /> Streak Aktif!
                   </p>
                 </div>
                 {/* Visual grid days */}
                 <div className="flex justify-between gap-1 mt-2">
                   {["S", "S", "R", "K", "J", "S", "M"].map((day, idx) => (
-                    <div key={idx} className="flex flex-col items-center gap-1">
+                    <div key={`day-${idx}`} className="flex flex-col items-center gap-1">
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold ${
                         idx < 5 
                           ? "bg-success text-success-foreground shadow-[0_2px_6px_rgba(var(--success-rgb),0.2)]" 
@@ -458,8 +458,8 @@ export function FeatureGrid() {
                     { label: "Kana Master", color: "text-primary bg-primary/10 border-primary/20" },
                     { label: "SRS Warrior", color: "text-secondary bg-secondary/10 border-secondary/20" },
                     { label: "JLPT Challenger", color: "text-warning bg-warning/10 border-warning/20" }
-                  ].map((badge, idx) => (
-                    <Badge key={idx} className={`px-3 py-1 rounded-lg border font-bold text-[9px] whitespace-nowrap ${badge.color}`}>
+                  ].map((badge) => (
+                    <Badge key={badge.label} className={`px-3 py-1 rounded-lg border font-bold text-[9px] whitespace-nowrap ${badge.color}`}>
                       <GraduationCap size={10} className="mr-1.5 shrink-0" />
                       {badge.label}
                     </Badge>

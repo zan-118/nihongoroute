@@ -26,8 +26,8 @@ export function VocabExamples({ examples }: VocabExamplesProps) {
         <h2 className="text-sm font-black uppercase tracking-[0.2em] text-foreground">Contoh Penggunaan</h2>
       </div>
       <div className="space-y-4">
-        {examples?.map((ex, i) => (
-          <div key={i} className="p-5 pl-6 bg-[rgba(var(--card-rgb),0.3)] border border-border rounded-2xl relative overflow-hidden group/item hover:border-primary/30 transition-all duration-300 shadow-sm">
+        {examples?.map((ex) => (
+          <div key={ex.jp || ex.japanese} className="p-5 pl-6 bg-[rgba(var(--card-rgb),0.3)] border border-border rounded-2xl relative overflow-hidden group/item hover:border-primary/30 transition-all duration-300 shadow-sm">
             <div className="absolute top-0 left-0 w-1 h-full bg-primary/20 group-hover/item:bg-primary transition-all duration-300" />
             
             <div className="mb-3 flex flex-col gap-1">
@@ -41,7 +41,7 @@ export function VocabExamples({ examples }: VocabExamplesProps) {
               )}
             </div>
             <div className="flex items-start gap-3 border-t border-border/50 pt-3">
-              <div className="w-1.5 h-1.5 rounded-full bg-primary/40 mt-1.5 shrink-0" />
+              <div className="size-1.5 rounded-full bg-primary/40 mt-1.5 shrink-0" />
               <p className="text-sm font-medium text-muted-foreground italic">
                 {ex.meaning || ex.id || ex.indonesian}
               </p>

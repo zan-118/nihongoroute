@@ -257,7 +257,7 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
   };
 
   return (
-    <button
+    <button type="button"
       onClick={handleDownload}
       disabled={status === "downloading"}
       aria-label={
@@ -286,7 +286,7 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
       {/* Render Ikon & Keterangan teks berdasarkan state */}
       {status === "idle" && (
         <>
-          <Download size={14} className="animate-bounce" />
+          <Download size={14} className="animate-premium-bounce" />
           <span>Simpan Bab Luring</span>
         </>
       )}
@@ -294,7 +294,7 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
       {status === "downloading" && (
         <>
           <Loader2 size={14} className="animate-spin text-primary" />
-          <span className="font-mono">{progress}% Mengunduh...</span>
+          <span className="font-mono">{progress}% Mengunduh…</span>
         </>
       )}
 

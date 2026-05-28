@@ -17,6 +17,7 @@ export interface LibraryCounts {
  */
 export async function getLibraryCounts(): Promise<LibraryCounts> {
   const supabase = await createClient();
+  await supabase.auth.getSession();
 
   const [
     vocabResult,

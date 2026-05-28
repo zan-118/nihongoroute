@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { FlashcardProps } from "./types";
 import { useFlashcard } from "./useFlashcard";
 import { FlashcardFront } from "./FlashcardFront";
@@ -40,7 +40,7 @@ export default function Flashcard({
 
   return (
     <>
-      <motion.div
+      <m.div
         className="relative w-full aspect-[4/5] md:aspect-square max-h-[550px] sm:max-h-[600px] cursor-pointer mx-auto"
         style={{ perspective: "1500px" }}
         onClick={handleClick}
@@ -49,7 +49,7 @@ export default function Flashcard({
           transition: { duration: 0.4 }
         } : {}}
       >
-        <motion.div
+        <m.div
           className="w-full h-full relative"
           style={{ transformStyle: "preserve-3d" }}
           initial={false}
@@ -84,8 +84,8 @@ export default function Flashcard({
             mnemonic={mnemonic}
             relatedKanji={related_kanji}
           />
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
 
       <WritingPracticeModal
         word={word}

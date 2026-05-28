@@ -173,7 +173,7 @@ export function KanaQuizDialog({
 
                         return (
                           <Button
-                            key={i}
+                            key={option}
                             type="button"
                             onClick={() => onOptionClick(option)}
                             disabled={!!feedback}

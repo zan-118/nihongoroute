@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { Sparkles, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LessonCard } from "./LessonCard";
@@ -34,7 +34,7 @@ export function LessonGrid({
   itemVariants,
 }: LessonGridProps) {
   return (
-    <motion.section variants={itemVariants} className="pb-32">
+    <m.section variants={itemVariants} className="pb-32">
       <div className="mb-8 flex items-center gap-5">
         <h3 className="text-sm font-bold uppercase tracking-[0.3em] text-muted-foreground">Daftar Pelajaran</h3>
         <div className="h-[1px] flex-1 bg-border" />
@@ -55,7 +55,7 @@ export function LessonGrid({
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center py-32 glass rounded-[2.5rem] text-center px-[55px] border-dashed border-2 border-border">
-          <div className="w-[89px] h-[89px] bg-background border border-border rounded-3xl flex items-center justify-center mb-8">
+          <div className="size-[89px] bg-background border border-border rounded-3xl flex items-center justify-center mb-8">
             <Sparkles size={40} className="text-muted-foreground/40" aria-hidden="true" />
           </div>
 
@@ -79,7 +79,7 @@ export function LessonGrid({
               size="icon" aria-label="Aksi"
               onClick={() => onPageChange(1)}
               disabled={currentPage === 1}
-              className="w-11 h-11 rounded-xl hover:bg-background transition-all disabled:opacity-20"
+              className="size-11 rounded-xl hover:bg-background transition-all disabled:opacity-20"
             >
               <ChevronsLeft size={18} />
             </Button>
@@ -88,7 +88,7 @@ export function LessonGrid({
               size="icon" aria-label="Aksi"
               onClick={() => onPageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="w-11 h-11 rounded-xl hover:bg-background transition-all disabled:opacity-20"
+              className="size-11 rounded-xl hover:bg-background transition-all disabled:opacity-20"
             >
               <ChevronLeft size={18} />
             </Button>
@@ -123,7 +123,7 @@ export function LessonGrid({
               size="icon" aria-label="Aksi"
               onClick={() => onPageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="w-11 h-11 rounded-xl hover:bg-background transition-all disabled:opacity-20"
+              className="size-11 rounded-xl hover:bg-background transition-all disabled:opacity-20"
             >
               <ChevronRight size={18} />
             </Button>
@@ -132,14 +132,14 @@ export function LessonGrid({
               size="icon" aria-label="Aksi"
               onClick={() => onPageChange(totalPages)}
               disabled={currentPage === totalPages}
-              className="w-11 h-11 rounded-xl hover:bg-background transition-all disabled:opacity-20"
+              className="size-11 rounded-xl hover:bg-background transition-all disabled:opacity-20"
             >
               <ChevronsRight size={18} />
             </Button>
           </div>
         </div>
       )}
-    </motion.section>
+    </m.section>
   );
 }
 

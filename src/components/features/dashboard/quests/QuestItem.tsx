@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -36,7 +36,7 @@ export function QuestItem({
     >
       <AnimatePresence mode="wait">
         {justClaimed && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.05 }}
@@ -45,7 +45,7 @@ export function QuestItem({
             <span className="text-success text-success font-black tracking-widest uppercase text-xs">
               BERHASIL! +{quest.rewardXP} XP
             </span>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 

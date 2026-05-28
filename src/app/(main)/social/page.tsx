@@ -21,7 +21,7 @@ export default function SocialPage() {
         
         {/* HEADER SECTION */}
         <div className="flex flex-col items-center text-center mb-16">
-          <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 border border-primary/20 shadow-lg">
+          <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 border border-primary/20 shadow-lg">
             <Users className="text-primary" size={32} />
           </div>
           

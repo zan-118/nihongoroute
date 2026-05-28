@@ -51,7 +51,7 @@ export function LibraryCategoryCard({
       >
         {/* Radial glow decoratif di pojok kiri atas */}
         <div
-          className="absolute -top-10 -left-10 w-40 h-40 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          className="absolute -top-10 -left-10 size-40 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
           style={{ background: `radial-gradient(circle, rgba(${accentRgb}, 0.12) 0%, transparent 70%)` }}
         />
 
@@ -125,7 +125,7 @@ export function LibraryCategoryCard({
               Akses Modul
             </span>
             <div
-              className="w-6 h-6 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+              className="size-6 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-110"
               style={{
                 background: `rgba(${accentRgb}, 0.12)`,
                 color: `rgb(${accentRgb})`,

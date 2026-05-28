@@ -19,11 +19,11 @@ export default function DailyExpression({ expression }: DailyExpressionProps) {
       <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--primary-rgb),0.02)_1px,transparent_1px)] bg-[size:100%_4px] opacity-40 pointer-events-none" />
 
       {/* Glow accent */}
-      <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-10 -right-10 size-40 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* Header */}
       <div className="relative z-10 flex items-center gap-2 mb-5">
-        <div className="flex items-center justify-center w-7 h-7 rounded-xl bg-primary/10">
+        <div className="flex items-center justify-center size-7 rounded-xl bg-primary/10">
           <Sparkles size={14} className="text-primary" />
         </div>
         <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-primary">

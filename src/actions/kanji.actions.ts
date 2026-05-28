@@ -13,6 +13,7 @@ export async function getPaginatedKanji(
   level: string = ""
 ): Promise<PaginatedKanjiResponse> {
   const supabase = await createClient();
+  await supabase.auth.getSession();
   const offset = (page - 1) * limit;
 
   try {

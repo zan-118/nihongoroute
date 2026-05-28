@@ -17,6 +17,7 @@ export interface RandomExpression {
  */
 export async function getRandomExpression(): Promise<RandomExpression | null> {
   const supabase = await createClient();
+  await supabase.auth.getSession();
 
   // Ambil jumlah total ungkapan umum untuk offset acak
   const { count } = await supabase

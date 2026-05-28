@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Trophy, X, Zap } from "lucide-react";
 import { useUIStore } from "@/store/useUIStore";
 import { sounds } from "@/lib/audio";
@@ -121,7 +121,7 @@ export default function AchievementToast() {
   return (
     <AnimatePresence>
       {activeToast && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 50, scale: 0.8, x: 100 }}
           animate={{ opacity: 1, y: 0, scale: 1, x: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: -20, transition: { duration: 0.2 } }}
@@ -138,7 +138,7 @@ export default function AchievementToast() {
             <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-primary/5 to-transparent pointer-events-none -translate-x-full animate-[shimmer_3s_infinite]" />
 
             {/* Close Button */}
-            <button
+            <button type="button"
               onClick={() => setActiveToast(null)}
               className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-all"
               aria-label="Tutup notifikasi"
@@ -148,14 +148,14 @@ export default function AchievementToast() {
 
             {/* Glowing Icon Holder */}
             <div className="flex flex-col items-center justify-center shrink-0">
-              <motion.div
+              <m.div
                 initial={{ rotate: -45, scale: 0.5 }}
                 animate={{ rotate: 0, scale: 1 }}
                 transition={{ delay: 0.15, type: "spring" }}
                 className={`w-14 h-14 rounded-2xl flex items-center justify-center border shadow-inner ${badgeColor}`}
               >
                 <Trophy size={28} className="animate-pulse" />
-              </motion.div>
+              </m.div>
               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground mt-2">
                 Lencana
               </span>
@@ -164,7 +164,7 @@ export default function AchievementToast() {
             {/* Content Details */}
             <div className="flex-1 pr-6 flex flex-col justify-center">
               <div className="flex items-center gap-2 mb-1">
-                <Zap size={10} className="text-warning animate-bounce" />
+                <Zap size={10} className="text-warning animate-premium-bounce" />
                 <span className="text-[8px] font-black uppercase tracking-[0.2em] text-warning animate-pulse">
                   Achievement Unlocked
                 </span>
@@ -183,7 +183,7 @@ export default function AchievementToast() {
               </div>
             </div>
           </div>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

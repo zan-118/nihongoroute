@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { useNavbar } from "@/components/layout/hooks/useNavbar";
@@ -20,7 +20,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
     <>
       {/* Mobile Backdrop */}
       {isOpen && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -36,7 +36,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
       {/* LOGO */}
       <div className="mb-10 flex items-center gap-4 relative z-10 px-2">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative w-8 h-8 group-hover:rotate-12 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.4)]">
+          <div className="relative size-8 group-hover:rotate-12 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.4)]">
             <Image
               src="/logo-branding.svg"
               alt="NihongoRoute"
@@ -51,7 +51,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
              </span>
              <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="text-[7px] font-bold text-primary/50 uppercase tracking-[0.2em]">Ecosystem</span>
-                <span className="w-0.5 h-0.5 rounded-full bg-border" />
+                <span className="size-0.5 rounded-full bg-border" />
                 <span className="text-[7px] font-black text-muted-foreground/40 uppercase tracking-[0.2em]">v2.0</span>
              </div>
           </div>
@@ -106,9 +106,9 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
       <div className="mt-6 pt-4 border-t border-border relative z-10">
         <div className="flex items-center justify-center gap-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/30">
           <Link href={ROUTES.PRIVACY} className="hover:text-primary transition-colors">Privacy</Link>
-          <span className="w-1 h-1 rounded-full bg-muted" />
+          <span className="size-1 rounded-full bg-muted" />
           <Link href={ROUTES.TERMS} className="hover:text-primary transition-colors">Terms</Link>
-          <span className="w-1 h-1 rounded-full bg-muted" />
+          <span className="size-1 rounded-full bg-muted" />
           <span className="opacity-50">© 2024</span>
         </div>
         <div className="md:hidden flex justify-center mt-4">

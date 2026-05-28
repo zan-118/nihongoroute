@@ -116,9 +116,9 @@ export default function WeakPointPanel() {
   if (weakItems.length === 0) {
     return (
       <Card className="relative overflow-hidden bg-card/30 backdrop-blur-xl border border-border rounded-[34px] p-6 md:p-8 transition-all duration-300 hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.05)]">
-        <div className="absolute top-0 right-0 w-24 h-24 bg-success/5 blur-3xl rounded-full" />
+        <div className="absolute top-0 right-0 size-24 bg-success/5 blur-3xl rounded-full" />
         <div className="flex items-center gap-4">
-          <div className="h-10 w-10 rounded-full bg-success/10 border border-success/20 flex items-center justify-center text-success shadow-[0_0_15px_rgba(var(--success-rgb),0.2)]">
+          <div className="size-10 rounded-full bg-success/10 border border-success/20 flex items-center justify-center text-success shadow-[0_0_15px_rgba(var(--success-rgb),0.2)]">
             <Sparkles size={20} className="animate-pulse" />
           </div>
           <div>
@@ -134,7 +134,7 @@ export default function WeakPointPanel() {
 
   return (
     <Card className="relative overflow-hidden bg-card/30 backdrop-blur-xl border border-border rounded-[34px] p-6 md:p-8 transition-all duration-300 hover:shadow-[0_0_35px_rgba(var(--primary-rgb),0.08)]">
-      <div className="absolute top-0 right-0 w-32 h-32 bg-destructive/5 blur-3xl rounded-full" />
+      <div className="absolute top-0 right-0 size-32 bg-destructive/5 blur-3xl rounded-full" />
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div>
@@ -197,7 +197,7 @@ export default function WeakPointPanel() {
                     <Button 
                       size="sm"
                       variant="outline"
-                      className="h-8 w-8 p-0 rounded-xl bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 transition-all"
+                      className="size-8 p-0 rounded-xl bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 transition-all"
                       title="Pelajari Kosakata"
                     >
                       <BookOpen size={14} />
@@ -208,7 +208,7 @@ export default function WeakPointPanel() {
                     <Button 
                       size="sm"
                       variant="outline"
-                      className="h-8 w-8 p-0 rounded-xl bg-secondary/10 border-secondary/20 text-secondary hover:bg-secondary/20 transition-all"
+                      className="size-8 p-0 rounded-xl bg-secondary/10 border-secondary/20 text-secondary hover:bg-secondary/20 transition-all"
                       title="Latih Menulis Kanji"
                     >
                       <PenTool size={14} />
@@ -218,7 +218,7 @@ export default function WeakPointPanel() {
                   <Button 
                     size="sm"
                     variant="outline"
-                    className="h-8 w-8 p-0 rounded-xl text-muted-foreground border-border bg-muted/40 hover:text-foreground hover:bg-muted/80 transition-all"
+                    className="size-8 p-0 rounded-xl text-muted-foreground border-border bg-muted/40 hover:text-foreground hover:bg-muted/80 transition-all"
                     disabled
                   >
                     <ArrowRight size={14} />

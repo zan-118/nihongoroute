@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Sparkles, ArrowRight, X, CheckCircle2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -67,7 +67,7 @@ export default function OnboardingTour() {
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-background/80 backdrop-blur-md">
-        <motion.div
+        <m.div
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -75,9 +75,9 @@ export default function OnboardingTour() {
         >
           <Card className="relative p-8 md:p-10 rounded-[2.5rem] bg-card border border-primary/20 shadow-2xl overflow-hidden">
             {/* Decor */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-3xl rounded-full -mr-16 -mt-16 pointer-events-none" />
+            <div className="absolute top-0 right-0 size-32 bg-primary/10 blur-3xl rounded-full -mr-16 -mt-16 pointer-events-none" />
             
-            <button 
+            <button type="button" 
               onClick={handleClose}
               className="absolute top-6 right-6 text-muted-foreground hover:text-foreground transition-colors"
             >
@@ -85,14 +85,14 @@ export default function OnboardingTour() {
             </button>
 
             <div className="relative z-10 flex flex-col items-center text-center">
-              <motion.div
+              <m.div
                 key={currentStep}
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 className="mb-8 p-6 bg-muted/50 rounded-3xl border border-border/50 shadow-inner"
               >
                 {step.icon}
-              </motion.div>
+              </m.div>
 
               <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-foreground mb-4 leading-none">
                 {step.title}
@@ -113,7 +113,7 @@ export default function OnboardingTour() {
                 <div className="flex justify-center gap-2">
                   {steps.map((_, i) => (
                     <div 
-                      key={i}
+                      key={`step-dot-${i}`}
                       className={`h-1.5 rounded-full transition-all duration-500 ${
                         i === currentStep ? "w-8 bg-primary" : "w-2 bg-muted-foreground/20"
                       }`}
@@ -123,7 +123,7 @@ export default function OnboardingTour() {
               </div>
             </div>
           </Card>
-        </motion.div>
+        </m.div>
       </div>
     </AnimatePresence>
   );

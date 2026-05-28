@@ -73,8 +73,8 @@ export default async function GrammarDetailPage({
   return (
     <main className="w-full bg-background px-4 md:px-8 lg:px-12 relative overflow-hidden flex flex-col justify-start min-h-screen pb-32 transition-colors duration-300">
       {/* Ambient Background Glows */}
-      <div className="absolute top-[10%] -left-[10%] w-[45%] h-[45%] bg-primary/10 blur-[130px] rounded-full pointer-events-none z-0 animate-pulse" />
-      <div className="absolute bottom-[10%] -right-[10%] w-[35%] h-[35%] bg-success/5 blur-[130px] rounded-full pointer-events-none z-0" />
+      <div className="absolute top-[10%] -left-[10%] size-[45%] bg-primary/10 blur-[130px] rounded-full pointer-events-none z-0 animate-pulse" />
+      <div className="absolute bottom-[10%] -right-[10%] size-[35%] bg-success/5 blur-[130px] rounded-full pointer-events-none z-0" />
       
       {/* Background Neural Overlays */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--foreground-rgb),0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--foreground-rgb),0.01)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none z-0" />

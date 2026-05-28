@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Play, ArrowRight, BookOpen, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 interface ContinueLearningProps {
   courseMetadata: Array<{
@@ -112,7 +112,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
         <div className="relative z-10 flex flex-col md:flex-row items-center gap-[34px] p-[34px]">
           {/* Icon/Thumbnail Area */}
           <div className="shrink-0 relative">
-            <div className="w-[89px] h-[89px] rounded-[21px] bg-card/40 border border-border flex items-center justify-center shadow-2xl overflow-hidden group-hover:border-primary/20 transition-colors">
+            <div className="size-[89px] rounded-[21px] bg-card/40 border border-border flex items-center justify-center shadow-2xl overflow-hidden group-hover:border-primary/20 transition-colors">
                {activeData.progress === 100 ? (
                  <CheckCircle2 size={34} className="text-success" />
                ) : (
@@ -141,7 +141,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
               <div className="flex items-center gap-2">
                 <div className="flex -space-x-1">
                   {[...Array(3)].map((_, i) => (
-                    <div key={i} className={`w-1.5 h-3 rounded-full border border-background ${i < Math.floor(activeData.progress / 33) ? 'bg-primary shadow-[0_0_8px_rgba(var(--primary-rgb),0.4)]' : 'bg-background/10'}`} />
+                    <div key={`progress-dot-${i}`} className={`w-1.5 h-3 rounded-full border border-background ${i < Math.floor(activeData.progress / 33) ? 'bg-primary shadow-[0_0_8px_rgba(var(--primary-rgb),0.4)]' : 'bg-background/10'}`} />
                   ))}
                 </div>
                 <span className="text-xs text-muted-foreground font-medium">
@@ -156,7 +156,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
             <Button asChild className="w-full md:w-auto h-[89px] px-10 rounded-[21px] bg-foreground text-background hover:bg-primary hover:text-primary-foreground font-bold uppercase tracking-widest transition-all duration-300 group shadow-2xl border-none">
               <Link href={`/courses/${activeData.courseSlug}/${activeData.lessonSlug}`}>
                 {activeData.isNew ? "Mulai" : "Lanjut"}
-                <div className="ml-3 w-[34px] h-[34px] rounded-full bg-background/20 flex items-center justify-center group-hover:bg-primary-foreground/20 transition-colors">
+                <div className="ml-3 size-[34px] rounded-full bg-background/20 flex items-center justify-center group-hover:bg-primary-foreground/20 transition-colors">
                   <Play size={14} fill="currentColor" />
                 </div>
               </Link>
@@ -166,7 +166,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
 
         {/* Bottom Progress Bar (Slim) */}
         <div className="absolute bottom-0 left-0 w-full h-[1px] bg-border">
-          <motion.div 
+          <m.div 
             initial={{ width: 0 }}
             animate={{ width: `${activeData.progress}%` }}
             transition={{ duration: 1.5, ease: "easeOut" }}

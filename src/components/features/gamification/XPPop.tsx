@@ -9,7 +9,7 @@
 // ======================
 // IMPORTS
 // ======================
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 
 // ======================
 // MAIN EXECUTION
@@ -33,19 +33,19 @@ export default function XPPop({
   return (
     <AnimatePresence>
       {show && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 0, scale: 0.5 }}
           animate={{ opacity: 1, y: -100, scale: 1.5 }}
           exit={{ opacity: 0, scale: 2 }}
           className="absolute pointer-events-none z-50 flex items-center justify-center"
         >
           {/* Bloom Effect Background */}
-          <div className="absolute w-24 h-24 bg-destructive/20 blur-3xl rounded-full animate-bloom" />
+          <div className="absolute size-24 bg-destructive/20 blur-3xl rounded-full animate-bloom" />
           
           <span className="relative text-destructive font-black italic text-4xl drop-shadow-[0_0_20px_rgba(var(--destructive-rgb),0.8)] tracking-tighter">
             +{amount} XP
           </span>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

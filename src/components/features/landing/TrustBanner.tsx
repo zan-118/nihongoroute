@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { 
   ShieldCheck, 
   ArrowRight, 
@@ -21,7 +21,7 @@ import { Badge } from "@/components/ui/badge";
  */
 export function TrustBanner() {
   return (
-    <motion.section
+    <m.section
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -30,8 +30,8 @@ export function TrustBanner() {
       <Card className="p-[55px] md:p-[65px] rounded-[42px] bg-card/15 backdrop-blur-3xl border border-border shadow-none relative overflow-hidden group transition-all duration-700 hover:border-primary/20">
         
         {/* Background Decorative Radial Glows using CSS variables */}
-        <div className="absolute -top-40 -left-40 w-96 h-96 bg-primary/10 rounded-full blur-[120px] group-hover:bg-primary/15 transition-all duration-700 pointer-events-none" />
-        <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-secondary/5 rounded-full blur-[120px] group-hover:bg-secondary/10 transition-all duration-700 pointer-events-none" />
+        <div className="absolute -top-40 -left-40 size-96 bg-primary/10 rounded-full blur-[120px] group-hover:bg-primary/15 transition-all duration-700 pointer-events-none" />
+        <div className="absolute -bottom-40 -right-40 size-96 bg-secondary/5 rounded-full blur-[120px] group-hover:bg-secondary/10 transition-all duration-700 pointer-events-none" />
         
         <div className="flex flex-col xl:flex-row items-center justify-between gap-[55px] relative z-10">
           {/* LEFT CONTENT AREA */}
@@ -53,7 +53,7 @@ export function TrustBanner() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
               {/* BENEFIT 1 */}
               <div className="space-y-2">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+                <div className="size-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
                   <ShieldCheck size={20} />
                 </div>
                 <h4 className="text-sm font-bold text-foreground">Tanpa Iklan / Biaya Tersembunyi</h4>
@@ -64,7 +64,7 @@ export function TrustBanner() {
 
               {/* BENEFIT 2 */}
               <div className="space-y-2">
-                <div className="w-10 h-10 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center text-secondary">
+                <div className="size-10 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center text-secondary">
                   <WifiOff size={20} />
                 </div>
                 <h4 className="text-sm font-bold text-foreground">Akses Luring Penuh</h4>
@@ -75,7 +75,7 @@ export function TrustBanner() {
 
               {/* BENEFIT 3 */}
               <div className="space-y-2">
-                <div className="w-10 h-10 rounded-xl bg-success/10 border border-success/20 flex items-center justify-center text-success">
+                <div className="size-10 rounded-xl bg-success/10 border border-success/20 flex items-center justify-center text-success">
                   <Heart size={20} />
                 </div>
                 <h4 className="text-sm font-bold text-foreground">Didukung Komunitas</h4>
@@ -116,6 +116,6 @@ export function TrustBanner() {
         </div>
 
       </Card>
-    </motion.section>
+    </m.section>
   );
 }

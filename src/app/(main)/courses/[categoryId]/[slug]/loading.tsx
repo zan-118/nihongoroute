@@ -5,15 +5,15 @@ export default function CourseDetailLoading() {
   return (
     <div className="w-full text-foreground px-4 md:px-8 relative overflow-hidden flex flex-col flex-1">
       {/* Background Ambient Decor Skeleton */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 right-0 size-[500px] bg-primary/5 blur-[150px] rounded-full pointer-events-none" />
       
       <article className="max-w-4xl mx-auto w-full relative z-10 flex-1">
         {/* Breadcrumb Skeleton */}
         <div className="flex items-center gap-2 mb-16 mt-4">
           <Skeleton className="h-4 w-20 rounded" />
-          <Skeleton className="h-3 w-3 rounded-full" />
+          <Skeleton className="size-3 rounded-full" />
           <Skeleton className="h-4 w-16 rounded" />
-          <Skeleton className="h-3 w-3 rounded-full" />
+          <Skeleton className="size-3 rounded-full" />
           <Skeleton className="h-4 w-32 rounded" />
         </div>
 

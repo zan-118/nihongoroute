@@ -13,12 +13,12 @@ interface UIState {
   syncError: boolean;
   notifications: Notification[];
   settings: Settings;
-  
+
   // Reading Session State (Synced for FAB access)
   readingState: ReadingState;
   listeningState: ListeningState & { audioUrl?: string; textToSpeak?: string };
 
-  
+
   setLoading: (loading: boolean) => void;
   setSyncing: (isSyncing: boolean) => void;
   setSyncError: (hasError: boolean) => void;
@@ -59,7 +59,7 @@ export const useUIStore = create<UIState>()(
       },
 
       readingState: {
-        mode: "kanji",
+        mode: "furigana",
         showTranslation: false,
       },
 
@@ -75,27 +75,27 @@ export const useUIStore = create<UIState>()(
       setLoading: (loading) => set({ loading }),
       setSyncing: (isSyncing) => set({ isSyncing }),
       setSyncError: (hasError) => set({ syncError: hasError }),
-      
+
       addNotification: (n) => set((state) => ({
         notifications: [
-          { 
-            ...n, 
-            id: Math.random().toString(36).substring(7), 
-            timestamp: Date.now(), 
-            read: false 
+          {
+            ...n,
+            id: Math.random().toString(36).substring(7),
+            timestamp: Date.now(),
+            read: false
           },
           ...state.notifications
         ].slice(0, 50)
       })),
 
       markNotificationAsRead: (id) => set((state) => ({
-        notifications: state.notifications.map(n => 
+        notifications: state.notifications.map(n =>
           n.id === id ? { ...n, read: true } : n
         )
       })),
-      
+
       markAllNotificationsAsRead: () => set((state) => ({
-        notifications: state.notifications.map(n => 
+        notifications: state.notifications.map(n =>
           n.read ? n : { ...n, read: true }
         )
       })),
@@ -118,7 +118,7 @@ export const useUIStore = create<UIState>()(
         if (typeof window === "undefined") return;
         const { useUserStore } = await import("./useUserStore");
         const { useSRSStore } = await import("./useSRSStore");
-        
+
         const user = useUserStore.getState();
         const srs = useSRSStore.getState();
         const ui = useUIStore.getState();
@@ -150,7 +150,7 @@ export const useUIStore = create<UIState>()(
         try {
           const parsed = JSON.parse(jsonData);
           if (typeof parsed !== 'object' || parsed === null) return false;
-          
+
           const { useUserStore } = await import("./useUserStore");
           const { useSRSStore } = await import("./useSRSStore");
 
@@ -169,7 +169,7 @@ export const useUIStore = create<UIState>()(
           });
 
           useSRSStore.getState().setSRS(parsed.srs);
-          
+
           set({
             notifications: parsed.notifications || [],
             settings: parsed.settings || { notificationsEnabled: false }
