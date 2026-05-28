@@ -26,14 +26,14 @@ export default function manifest(): MetadataRoute.Manifest {
     ],
     screenshots: [
       {
-        src: "/og-image.png",
+        src: "/opengraph-image.png",
         sizes: "1200x630",
         type: "image/png",
         form_factor: "wide",
         label: "NihongoRoute Dashboard",
       },
       {
-        src: "/og-image.jpeg",
+        src: "/opengraph-image-mobile.jpeg",
         sizes: "774x1600",
         type: "image/jpeg",
         form_factor: "narrow",
