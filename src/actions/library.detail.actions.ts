@@ -346,8 +346,37 @@ export async function getLibraryItemBySlug(
       };
 
       const contentBlocks = parseArray(data.content_blocks);
-      const vocabListRaw = parseArray(data.vocab_list);
-      const kanjiListRaw = parseArray(data.kanji_list);
+      
+      // Mengambil vocab_list & kanji_list secara dinamis dari tabel lessons di Supabase berdasarkan slug pelajaran
+      let vocabListRaw: string[] = [];
+      let kanjiListRaw: string[] = [];
+      try {
+        const lessonSlug = typeof data.slug === "object" && data.slug !== null 
+          ? (data.slug as { current?: string }).current || slugOrId 
+          : String(data.slug || slugOrId);
+
+        const { data: dbLesson, error: dbErr } = await supabase
+          .from("lessons")
+          .select("vocab_list, kanji_list")
+          .eq("slug", lessonSlug)
+          .single();
+
+        if (dbErr) {
+          if (dbErr.code !== "PGRST116") {
+            console.error(`[getLibraryItemBySlug] Failed to fetch lists from database for slug="${lessonSlug}":`, dbErr.message);
+          }
+        } else if (dbLesson) {
+          if (dbLesson.vocab_list) vocabListRaw = parseArray(dbLesson.vocab_list);
+          if (dbLesson.kanji_list) kanjiListRaw = parseArray(dbLesson.kanji_list);
+        }
+      } catch (err) {
+        console.error(`[getLibraryItemBySlug] Error fetching lists from database:`, err);
+      }
+
+      // Fallback ke data Sanity jika data di database kosong
+      if (!kanjiListRaw.length && data.kanji_list) {
+        kanjiListRaw = parseArray(data.kanji_list);
+      }
       const grammarListRaw = parseArray(data.grammar_list);
       const listeningListRaw = parseArray(data.listening_list);
       const readingListRaw = parseArray(data.reading_list);
