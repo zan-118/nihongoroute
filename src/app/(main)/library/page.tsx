@@ -41,15 +41,6 @@ export default async function LibraryPage() {
 
   const categories = [
     {
-      href: "/library/grammar",
-      title: "Panduan Tata Bahasa",
-      desc: "Bahas pola kalimat jadi lebih mudah dengan contoh audio dan penjelasan yang simpel.",
-      icon: <BookOpen size={24} />,
-      label: "Pola Kalimat",
-      count: counts.grammar,
-      accentRgb: "34 197 94",
-    },
-    {
       href: "/library/vocab",
       title: "Daftar Kosakata",
       desc: "Ribuan kosakata, kata kerja, dan kata sifat N5-N1 lengkap dengan audio dan fitur SRS.",
@@ -59,12 +50,22 @@ export default async function LibraryPage() {
       accentRgb: "59 130 246",
     },
     {
-      href: "/library/cheatsheet",
-      title: "Catatan Cepat",
-      desc: "Referensi cepat untuk angka, partikel, dan materi dasar lainnya sebagai penunjang belajar harian.",
-      icon: <BarChart2 size={24} />,
-      label: "Panduan Cepat",
-      accentRgb: "245 158 11",
+      href: "/library/kanji",
+      title: "Pustaka Kanji",
+      desc: "Dalami struktur ribuan kanji melalui visualisasi urutan goresan (stroke order) yang interaktif.",
+      icon: <Type size={24} />,
+      label: "Koleksi Kanji",
+      count: counts.kanji,
+      accentRgb: "239 68 68",
+    },
+    {
+      href: "/library/grammar",
+      title: "Panduan Tata Bahasa",
+      desc: "Bahas pola kalimat jadi lebih mudah dengan contoh audio dan penjelasan yang simpel.",
+      icon: <BookOpen size={24} />,
+      label: "Pola Kalimat",
+      count: counts.grammar,
+      accentRgb: "34 197 94",
     },
     {
       href: "/library/reading",
@@ -77,6 +78,16 @@ export default async function LibraryPage() {
       accentRgb: "168 85 247",
     },
     {
+      href: "/library/listening",
+      title: "Latihan Menyimak",
+      desc: "Tingkatkan kepekaan pendengaran melalui modul audio interaktif dan dukungan transkrip.",
+      icon: <Headphones size={24} />,
+      label: "Listening Lab",
+      count: counts.listening,
+      isSanity: true,
+      accentRgb: "6 182 212",
+    },
+    {
       href: "/exams",
       title: "Ujian & Sertifikasi",
       desc: "Uji kesiapan Anda menghadapi ujian JLPT sesungguhnya dengan simulasi skor yang akurat.",
@@ -87,23 +98,12 @@ export default async function LibraryPage() {
       accentRgb: "249 115 22",
     },
     {
-      href: "/library/kanji",
-      title: "Pustaka Kanji",
-      desc: "Dalami struktur ribuan kanji melalui visualisasi urutan goresan (stroke order) yang interaktif.",
-      icon: <Type size={24} />,
-      label: "Koleksi Kanji",
-      count: counts.kanji,
-      accentRgb: "239 68 68",
-    },
-    {
-      href: "/library/listening",
-      title: "Latihan Menyimak",
-      desc: "Tingkatkan kepekaan pendengaran melalui modul audio interaktif dan dukungan transkrip.",
-      icon: <Headphones size={24} />,
-      label: "Listening Lab",
-      count: counts.listening,
-      isSanity: true,
-      accentRgb: "6 182 212",
+      href: "/library/cheatsheet",
+      title: "Catatan Cepat",
+      desc: "Referensi cepat untuk angka, partikel, dan materi dasar lainnya sebagai penunjang belajar harian.",
+      icon: <BarChart2 size={24} />,
+      label: "Panduan Cepat",
+      accentRgb: "245 158 11",
     }
   ];
 
