@@ -16,6 +16,7 @@ import { Timer, Zap, ShieldAlert, AlertTriangle, Target, BatteryMedium } from "l
 import { CardData } from "./types";
 import * as wanakana from "wanakana";
 import { splitFurigana } from "@/components/ui/SmartJapanese";
+import { useMemo } from "react";
 
 // ======================
 // ANTARMUKA & TIPE
@@ -54,6 +55,15 @@ export function SurvivalPlaying({
 }: SurvivalPlayingProps) {
   const isDangerTime = timeLeft <= 3;
   const isCriticalHp = hp === 1;
+
+  const parsedChunks = useMemo(() => {
+    if (!currentCard) return [];
+    const word = currentCard.word || "";
+    const furi = currentCard.furigana || "";
+    const isRomaji = furi && /^[a-zA-Z\s.,?!'-]+$/.test(furi);
+    const hiraReading = isRomaji ? wanakana.toHiragana(furi) : furi;
+    return splitFurigana(word, hiraReading);
+  }, [currentCard]);
 
   return (
     <div className="w-full flex flex-col h-full min-h-[60vh] max-w-3xl mx-auto pb-6 px-4 md:px-0 transition-colors duration-300">
@@ -104,7 +114,7 @@ export function SurvivalPlaying({
           className="flex-1 flex flex-col mb-4 md:mb-10"
         >
           <Card
-            className={`relative bg-card bg-background rounded-[2rem] md:rounded-[4rem] p-6 md:p-20 border text-center shadow-2xl flex flex-col items-center justify-center flex-1 min-h-[220px] md:min-h-[400px] lg:min-h-[500px] neo-card transition-all duration-300 ${
+            className={`relative bg-card rounded-[2rem] md:rounded-[4rem] p-6 md:p-20 border text-center shadow-2xl flex flex-col items-center justify-center flex-1 min-h-[220px] md:min-h-[400px] lg:min-h-[500px] neo-card transition-all duration-300 ${
               isShaking
                 ? "border-primary shadow-xl"
                 : "border-border"
@@ -131,25 +141,18 @@ export function SurvivalPlaying({
                <h2
                 className={`${(currentCard?.word?.length || 0) > 4 ? "text-4xl sm:text-6xl md:text-7xl lg:text-8xl" : "text-6xl sm:text-7xl md:text-7xl lg:text-8xl"} font-black text-foreground tracking-tight drop-shadow-sm font-japanese leading-none transition-all duration-500`}
                >
-                 {(() => {
-                   const word = currentCard?.word || "";
-                   const furi = currentCard?.furigana || "";
-                   const isRomaji = furi && /^[a-zA-Z\s.,?!'-]+$/.test(furi);
-                   const hiraReading = isRomaji ? wanakana.toHiragana(furi) : furi;
-                   
-                   return splitFurigana(word, hiraReading).map((chunk, i) => (
-                     chunk.furi ? (
-                       <ruby key={`${chunk.text}-${i}`}>
-                         {chunk.text}
-                         <rt className="text-xs md:text-sm lg:text-base text-primary/80 font-bold tracking-widest not-italic mb-1 md:mb-2">
-                           {chunk.furi}
-                         </rt>
-                       </ruby>
-                     ) : (
-                       <span key={`${chunk.text}-${i}`}>{chunk.text}</span>
-                     )
-                   ));
-                 })()}
+                  {parsedChunks.map((chunk, i) => (
+                    chunk.furi ? (
+                      <ruby key={`${chunk.text}-${i}`}>
+                        {chunk.text}
+                        <rt className="text-xs md:text-sm lg:text-base text-primary/80 font-bold tracking-widest not-italic mb-1 md:mb-2">
+                          {chunk.furi}
+                        </rt>
+                      </ruby>
+                    ) : (
+                      <span key={`${chunk.text}-${i}`}>{chunk.text}</span>
+                    )
+                  ))}
                </h2>
             </div>
           </Card>
@@ -177,9 +180,9 @@ export function SurvivalPlaying({
               disabled={isCorrecting}
               className={`group flex h-full w-full p-0 overflow-hidden rounded-2xl md:rounded-[2.5rem] border transition-all duration-300 min-h-[64px] md:min-h-[100px] lg:min-h-[120px] shadow-none ${
                 isWrong 
-                  ? "bg-destructive/20 border-destructive shadow-lg text-destructive text-destructive" 
+                  ? "bg-destructive/20 border-destructive shadow-lg text-destructive" 
                   : isCorrect
-                  ? "bg-success/20 border-success shadow-lg text-success text-success"
+                  ? "bg-success/20 border-success shadow-lg text-success"
                   : "bg-[rgba(var(--muted-rgb),0.5)] dark:bg-[rgba(var(--background-rgb),0.4)] border-border md:hover:border-primary/50 md:hover:bg-primary md:hover:text-primary-foreground neo-card active:scale-[0.98] transition-transform"
               }`}
             >
@@ -192,7 +195,7 @@ export function SurvivalPlaying({
                  </p>
                  {isWrong && (
                    <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                      <ShieldAlert aria-hidden="true" className="text-destructive text-destructive animate-pulse" size={20} />
+                      <ShieldAlert aria-hidden="true" className="text-destructive animate-pulse" size={20} />
                    </div>
                  )}
               </div>

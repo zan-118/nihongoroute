@@ -10,7 +10,7 @@
 // ======================
 // IMPORTS
 // ======================
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createStaticClient } from "@/lib/supabase/server";
 import { slugify } from "@/lib/utils";
 import { getSanityLessonBySlug, getSanityReadingBySlug, getSanityListeningBySlug, getSanityExamBySlug } from "@/lib/queries";
 
@@ -200,7 +200,7 @@ export async function getLibraryItemBySlug(
   type: "kanji" | "vocab" | "verb" | "adjective" | "grammar" | "reading" | "listening" | "lessons" | "exams" | "phrase",
   slugOrId: string
 ): Promise<LibraryItem | null> {
-  const supabase = await createClient();
+  const supabase = createStaticClient();
   await supabase.auth.getSession();
   
   try {
@@ -629,7 +629,7 @@ export async function getLibraryDetail(
   type: "kanji" | "vocab" | "grammar" | "reading" | "listening" | "lessons" | "exams" | "phrase",
   slugOrId: string
 ): Promise<LibraryItem | null> {
-  const supabase = await createClient();
+  const supabase = createStaticClient();
   await supabase.auth.getSession();
   return getLibraryItemBySlug(type, slugOrId);
 }

@@ -9,7 +9,7 @@
 // IMPOR
 // ======================
 import { MetadataRoute } from "next";
-import { createClient } from "@/lib/supabase/server";
+import { createStaticClient } from "@/lib/supabase/server";
 import { sanityClient } from "@/lib/sanity.client";
 
 // ======================
@@ -35,7 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.nihongoroute.my.id";
   const urls: MetadataRoute.Sitemap = [];
-  const supabase = await createClient();
+  const supabase = createStaticClient();
 
   // 1. Rute Statis Utama
   urls.push(

@@ -16,9 +16,38 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheatsheetTable } from "./CheatsheetTable";
-import PdfGenerator from "@/components/features/pdf/PdfGenerator";
-import { getCheatsheetByIdOrSlug } from "@/actions/library.actions";
+import dynamic from "next/dynamic";
+import { getCheatsheetByIdOrSlug, getCheatsheets } from "@/actions/library.actions";
+
+// Memuat PDF Generator secara dinamis untuk membebaskan bundle awal dari @react-pdf/renderer
+const PdfGenerator = dynamic(() => import("@/components/features/pdf/PdfGenerator"));
 import type { Metadata } from "next";
+
+// ======================
+// KONFIGURASI PRE-RENDERING STATIS (SSG & ISR)
+// ======================
+// Izinkan Next.js membuat halaman statis baru secara asinkron di latar belakang jika belum di-render saat build
+export const dynamicParams = true;
+
+/**
+ * Menghasilkan parameter rute statis pada waktu build untuk semua cheatsheet terdaftar.
+ * Pre-render dengan slug maupun ID agar CDN melayani kedua format rute dengan zero latency.
+ */
+export async function generateStaticParams() {
+  const sheets = await getCheatsheets();
+  const params: { id: string }[] = [];
+
+  sheets.forEach((sheet) => {
+    if (sheet.slug) {
+      params.push({ id: encodeURIComponent(sheet.slug) });
+    }
+    if (sheet._id) {
+      params.push({ id: encodeURIComponent(sheet._id) });
+    }
+  });
+
+  return params;
+}
 
 // ======================
 // METADATA SEO

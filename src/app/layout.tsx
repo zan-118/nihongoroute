@@ -12,8 +12,6 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
-import FeedbackWidget from "@/components/features/feedback/FeedbackWidget";
-import DictionaryPopup from "@/components/features/tools/dictionary/DictionaryPopup";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import QueryProvider from "@/components/providers/QueryProvider";
 import { cn } from "@/lib/utils";
@@ -142,8 +140,6 @@ export default function RootLayout({
               {children}
             </QueryProvider>
           </LazyMotion>
-          <FeedbackWidget />
-          <DictionaryPopup />
           <Toaster
             theme="dark"
             position="top-center"

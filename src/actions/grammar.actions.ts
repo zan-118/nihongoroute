@@ -9,7 +9,7 @@
 // ======================
 // IMPORTS
 // ======================
-import { createClient } from "@/lib/supabase/server";
+import { createStaticClient } from "@/lib/supabase/server";
 import { GrammarTable } from "@/types/database";
 
 // ======================
@@ -24,8 +24,7 @@ export async function getPaginatedGrammar(
   limit: number,
   level: string = ""
 ): Promise<{ data: (GrammarTable & { _id: string; jlptLevel: string | null })[]; total: number }> {
-  const supabase = await createClient();
-  await supabase.auth.getSession();
+  const supabase = createStaticClient();
   const offset = (page - 1) * limit;
 
   try {
@@ -55,8 +54,7 @@ export async function getPaginatedGrammar(
  * Mengambil artikel Grammar acak berdasarkan JLPT level (Dipakai di Homepage).
  */
 export async function getRandomGrammarArticle(level: string = "N5") {
-  const supabase = await createClient();
-  await supabase.auth.getSession();
+  const supabase = createStaticClient();
   
   const { data, error } = await supabase
     .from("grammar")
@@ -79,8 +77,7 @@ export async function getRandomGrammarArticle(level: string = "N5") {
  * Mengambil semua artikel Grammar berdasarkan JLPT level (tanpa paginasi).
  */
 export async function getGrammarArticles(level: string = "") {
-  const supabase = await createClient();
-  await supabase.auth.getSession();
+  const supabase = createStaticClient();
   const { data } = await getPaginatedGrammar(1, 1000, level);
   return data;
 }

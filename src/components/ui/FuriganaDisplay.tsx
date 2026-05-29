@@ -8,7 +8,7 @@
 // ======================
 // IMPOR
 // ======================
-import React from "react";
+import React, { useMemo } from "react";
 import { splitFurigana } from "@/components/ui/SmartJapanese";
 import { useUIStore } from "@/store/useUIStore";
 import * as wanakana from "wanakana";
@@ -51,6 +51,11 @@ export default function FuriganaDisplay({
 
   const { furi: furiSize, kanji: kanjiSize } = sizeConfig[size];
 
+  const parts = useMemo(() => {
+    if (!text || !furigana) return [];
+    return splitFurigana(text, furigana);
+  }, [text, furigana]);
+
   // Mode Hiragana: Mengembalikan properti furigana secara langsung untuk memastikan 100% bebas Kanji dan berkinerja sangat tinggi
   if (currentMode === "hiragana" && furigana) {
     return (
@@ -59,8 +64,6 @@ export default function FuriganaDisplay({
       </span>
     );
   }
-
-  const parts = splitFurigana(text, furigana);
 
   const content = (
     <span 

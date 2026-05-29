@@ -12,6 +12,21 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
 // ======================
+// KONFIGURASI PRE-RENDERING STATIS (SSG & ISR)
+// ======================
+// Izinkan Next.js membuat halaman statis baru secara asinkron di latar belakang jika belum di-render saat build
+export const dynamicParams = true;
+
+/**
+ * Karena modul audio menyimak bertahap, kita kembalikan array kosong pada saat build
+ * agar durasi build Vercel tetap cepat. Halaman latihan menyimak akan di-pre-render secara statis (SSG)
+ * secara dinamis di latar belakang (on-demand) begitu pertama kali dikunjungi oleh pengguna.
+ */
+export async function generateStaticParams() {
+  return [];
+}
+
+// ======================
 // METADATA SEO
 // ======================
 

@@ -10,7 +10,7 @@
 // ======================
 // IMPORTS
 // ======================
-import { createClient } from "@/lib/supabase/server";
+import { createStaticClient } from "@/lib/supabase/server";
 import { sanityClient } from "@/lib/sanity.client";
 
 // ======================
@@ -33,8 +33,7 @@ export interface LibraryCounts {
  * Mengambil jumlah item nyata dari tabel leksikal Supabase dan konten editorial Sanity CMS secara paralel.
  */
 export async function getLibraryCounts(): Promise<LibraryCounts> {
-  const supabase = await createClient();
-  await supabase.auth.getSession();
+  const supabase = createStaticClient();
 
   const [
     vocabResult,

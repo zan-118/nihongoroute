@@ -10,7 +10,6 @@
 // IMPORTS
 // ======================
 import { sanityClient } from "@/lib/sanity.client";
-import { createClient } from "@/lib/supabase/server";
 import { PaginatedReadingResponse } from "@/types/library";
 
 // ======================
@@ -39,8 +38,6 @@ export async function getPaginatedReading(
   limit: number,
   level: string = ""
 ): Promise<PaginatedReadingResponse> {
-  const supabase = await createClient();
-  await supabase.auth.getSession();
   const offset = (page - 1) * limit;
 
   try {

@@ -45,13 +45,12 @@ export function useSyncProgress() {
   const lastStudyDate = useUserStore((s) => s.lastStudyDate);
   const studyDays = useUserStore((s) => s.studyDays);
   const inventory = useUserStore((s) => s.inventory);
-  const completedLessons = useUserStore((s) => s.completedLessons);
-  const dirtyLessons = useUserStore((s) => s.dirtyLessons);
   const isGuest = useUserStore((s) => s.isGuest);
 
-  // Mengambil state basis data kartu dan penanda kotor pengulangan berkala (SRS)
-  const srs = useSRSStore((s) => s.srs);
-  const dirtySrs = useSRSStore((s) => s.dirtySrs);
+  // Melacak ukuran Set data kotor menggunakan tipe primitif number demi menjaga kestabilan dependency array
+  // Menggunakan selektor atomik untuk menghindari langganan ke seluruh objek set
+  const dirtyLessonsSize = useUserStore((s) => s.dirtyLessons.size);
+  const dirtySrsSize = useSRSStore((s) => s.dirtySrs.size);
 
   // Mengambil preferensi antarmuka pengguna
   const settings = useUIStore((s) => s.settings);
@@ -73,7 +72,7 @@ export function useSyncProgress() {
   });
 
   // 2. Mengambil Data Awan: Menarik profil, SRS, dan data pelajaran dari database saat inisialisasi awal
-  const { isFetching } = useCloudData(session, hasMounted);
+  const { cloudData, isFetching } = useCloudData(session, hasMounted);
 
   // 3. Mutasi Awan: Mempersiapkan fungsi eksekusi RPC Supabase dengan strategi retry asinkron
   const syncMutation = useCloudMutation(session);
@@ -95,18 +94,6 @@ export function useSyncProgress() {
   }, [queryClient]);
 
   // 5. Orkestrator Sinkronisasi Latar Belakang (Debounced Auto-Sync):
-  // Menggunakan Referensi (Refs) untuk tipe data non-primitif (Zustand object/Set) agar perubahan
-  // alamat referensi memori tidak memicu efek samping auto-sync secara berlebihan.
-  const srsRef = useRef(srs);
-  const dirtySrsRef = useRef(dirtySrs);
-  const dirtyLessonsRef = useRef(dirtyLessons);
-  const completedLessonsRef = useRef(completedLessons);
-
-  useEffect(() => { srsRef.current = srs; }, [srs]);
-  useEffect(() => { dirtySrsRef.current = dirtySrs; }, [dirtySrs]);
-  useEffect(() => { dirtyLessonsRef.current = dirtyLessons; }, [dirtyLessons]);
-  useEffect(() => { completedLessonsRef.current = completedLessons; }, [completedLessons]);
-
   const lastSyncedProgress = useRef<string>("");
   const syncMutateRef = useRef(syncMutation.mutate);
   
@@ -121,9 +108,27 @@ export function useSyncProgress() {
     name, xp, streak, studyDays, inventory, settings, lastStudyDate, todayReviewCount
   }), [name, xp, streak, studyDays, inventory, settings, lastStudyDate, todayReviewCount]);
 
-  // Melacak ukuran Set data kotor menggunakan tipe primitif number demi menjaga kestabilan dependency array
-  const dirtySrsSize = dirtySrs.size;
-  const dirtyLessonsSize = dirtyLessons.size;
+  // Serialisasi data profil dari cloud untuk menyelaraskan status sinkronisasi pasca-merge
+  const cloudProfileKey = useMemo(() => {
+    if (!cloudData) return "";
+    return JSON.stringify({
+      name: cloudData.name,
+      xp: cloudData.xp,
+      streak: cloudData.streak,
+      studyDays: cloudData.studyDays,
+      inventory: cloudData.inventory,
+      settings: cloudData.settings,
+      lastStudyDate: cloudData.lastStudyDate,
+      todayReviewCount: cloudData.todayReviewCount
+    });
+  }, [cloudData]);
+
+  // Selaraskan lastSyncedProgress.current dengan profil cloud yang baru saja di-merge
+  useEffect(() => {
+    if (cloudProfileKey) {
+      lastSyncedProgress.current = cloudProfileKey;
+    }
+  }, [cloudProfileKey]);
 
   // Efek Samping Auto-Sync: Berjalan secara otomatis jika terdeteksi data kotor lokal atau perubahan profil.
   // Menerapkan debounce selama 2000ms untuk meredam pemanggilan berulang yang sia-sia.
@@ -137,14 +142,20 @@ export function useSyncProgress() {
     if (!isProfileChanged && dirtySrsSize === 0 && dirtyLessonsSize === 0) return;
 
     const timer = setTimeout(() => {
+      // Dapatkan data SRS & Pelajaran terbaru secara dinamis dari store tanpa berlangganan (anti-render)
+      const currentSrs = useSRSStore.getState().srs;
+      const currentCompletedLessons = useUserStore.getState().completedLessons;
+      const currentDirtySrs = useSRSStore.getState().dirtySrs;
+      const currentDirtyLessons = useUserStore.getState().dirtyLessons;
+
       const currentProgress = {
         name, xp, streak, todayReviewCount, lastStudyDate, studyDays,
-        inventory, settings, srs: srsRef.current, completedLessons: completedLessonsRef.current
+        inventory, settings, srs: currentSrs, completedLessons: currentCompletedLessons
       };
       syncMutateRef.current({
         progress: currentProgress,
-        dirtySrs: dirtySrsRef.current,
-        dirtyLessons: dirtyLessonsRef.current
+        dirtySrs: currentDirtySrs,
+        dirtyLessons: currentDirtyLessons
       });
       lastSyncedProgress.current = profileKey;
     }, 2000);
@@ -154,14 +165,19 @@ export function useSyncProgress() {
 
   // Fungsi sinkronisasi manual instan
   const syncNow = useCallback(() => {
+    const currentSrs = useSRSStore.getState().srs;
+    const currentCompletedLessons = useUserStore.getState().completedLessons;
+    const currentDirtySrs = useSRSStore.getState().dirtySrs;
+    const currentDirtyLessons = useUserStore.getState().dirtyLessons;
+
     const currentProgress = {
       name, xp, streak, todayReviewCount, lastStudyDate, studyDays,
-      inventory, settings, srs: srsRef.current, completedLessons: completedLessonsRef.current
+      inventory, settings, srs: currentSrs, completedLessons: currentCompletedLessons
     };
     syncMutation.mutate({
       progress: currentProgress,
-      dirtySrs: dirtySrsRef.current,
-      dirtyLessons: dirtyLessonsRef.current
+      dirtySrs: currentDirtySrs,
+      dirtyLessons: currentDirtyLessons
     });
   }, [name, xp, streak, todayReviewCount, lastStudyDate, studyDays, inventory, settings, syncMutation]);
 

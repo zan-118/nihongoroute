@@ -9,7 +9,7 @@
 // ======================
 // IMPORTS
 // ======================
-import { createClient } from "@/lib/supabase/server";
+import { createStaticClient } from "@/lib/supabase/server";
 import { PaginatedKanjiResponse } from "@/types/library";
 
 // ======================
@@ -25,8 +25,7 @@ export async function getPaginatedKanji(
   search: string = "",
   level: string = ""
 ): Promise<PaginatedKanjiResponse> {
-  const supabase = await createClient();
-  await supabase.auth.getSession();
+  const supabase = createStaticClient();
   const offset = (page - 1) * limit;
 
   try {

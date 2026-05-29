@@ -9,7 +9,7 @@
 // ======================
 // IMPORTS
 // ======================
-import { createClient } from "@/lib/supabase/server";
+import { createStaticClient } from "@/lib/supabase/server";
 
 // ======================
 // SERVER ACTIONS
@@ -19,7 +19,7 @@ import { createClient } from "@/lib/supabase/server";
  * Mengambil daftar referensi cepat (Cheatsheets).
  */
 export async function getCheatsheets() {
-  const supabase = await createClient();
+  const supabase = createStaticClient();
   await supabase.auth.getSession();
   
   try {
@@ -55,7 +55,7 @@ export async function getCheatsheets() {
  * Mengambil detail satu cheatsheet berdasarkan ID atau Slug.
  */
 export async function getCheatsheetByIdOrSlug(idOrSlug: string) {
-  const supabase = await createClient();
+  const supabase = createStaticClient();
   await supabase.auth.getSession();
   
   try {

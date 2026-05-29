@@ -8,6 +8,7 @@
 // ==========================================
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
 // ==========================================
 // INISIALISASI KLIEN SERVER SUPABASE
@@ -35,5 +36,16 @@ export async function createClient() {
         },
       },
     }
+  );
+}
+
+/**
+ * Klien Supabase statis bebas cookie untuk digunakan saat build time (generateStaticParams)
+ * atau operasi pembacaan data publik tanpa context request HTTP.
+ */
+export function createStaticClient() {
+  return createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 }

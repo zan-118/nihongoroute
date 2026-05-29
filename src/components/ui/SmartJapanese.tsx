@@ -6,8 +6,14 @@
 // ======================
 // IMPOR
 // ======================
-import React from "react";
+import React, { useMemo } from "react";
 import * as wanakana from "wanakana";
+
+// ======================
+// CACHE PENYIMPANAN SEMENTARA (MEMOIZATION)
+// ======================
+/** Cache global untuk performa tinggi pencarian splitFurigana */
+const furiganaCache = new Map<string, { text: string; furi?: string }[]>();
 
 // ======================
 // FUNGSI PEMBANTU
@@ -17,9 +23,14 @@ import * as wanakana from "wanakana";
  * Contoh: word="食べ物", reading="たべもの" 
  * Hasil: [{text: "食", furi: "た"}, {text: "べ"}, {text: "物", furi: "もの"}]
  */
-export function splitFurigana(word: string, reading: string) {
+export function splitFurigana(word: string, reading: string): { text: string; furi?: string }[] {
   if (!word) return [];
   if (!reading || word === reading) return [{ text: word }];
+
+  const cacheKey = `${word}|${reading}`;
+  if (furiganaCache.has(cacheKey)) {
+    return furiganaCache.get(cacheKey)!;
+  }
 
   const chunks: { text: string; furi?: string }[] = [];
   let wIdx = 0;
@@ -137,6 +148,15 @@ export function splitFurigana(word: string, reading: string) {
     }
   }
 
+  // Batasi ukuran cache maksimal 1000 item untuk mencegah memory leak
+  if (furiganaCache.size > 1000) {
+    const firstKey = furiganaCache.keys().next().value;
+    if (firstKey !== undefined) {
+      furiganaCache.delete(firstKey);
+    }
+  }
+  furiganaCache.set(cacheKey, chunks);
+
   return chunks;
 }
 
@@ -157,12 +177,17 @@ export function SmartJapanese({
   className?: string;
   mode?: "furigana" | "kanji" | "hiragana" | "romaji";
 }) {
+  const chunks = useMemo(() => {
+    if (!word || !furigana) return [];
+    return splitFurigana(word, furigana);
+  }, [word, furigana]);
+
   if (!word) return <span className={className}>{furigana}</span>;
   
   if (mode === "romaji") {
     return <span className={className}>{wanakana.toRomaji(furigana || word)}</span>;
   }
-
+ 
   if (!furigana || word === furigana || mode === "kanji") {
     return <span className={className}>{word}</span>;
   }
@@ -170,8 +195,6 @@ export function SmartJapanese({
   if (mode === "hiragana") {
     return <span className={className}>{furigana}</span>;
   }
-
-  const chunks = splitFurigana(word, furigana);
 
   return (
     <span 

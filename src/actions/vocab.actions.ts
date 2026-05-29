@@ -10,7 +10,7 @@
 // ======================
 // IMPORTS
 // ======================
-import { createClient } from "@/lib/supabase/server";
+import { createStaticClient } from "@/lib/supabase/server";
 import { PaginatedVocabResponse } from "@/types/library";
 
 // ======================
@@ -63,8 +63,7 @@ export async function getPaginatedVocab(
   hinshi: string = "",
   type: "vocab" | "verb" | "adjective" | "phrase" = "vocab"
 ): Promise<PaginatedVocabResponse> {
-  const supabase = await createClient();
-  await supabase.auth.getSession();
+  const supabase = createStaticClient();
   const offset = (page - 1) * limit;
 
   try {

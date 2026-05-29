@@ -16,6 +16,21 @@ import { Home, Library, BookOpen } from "lucide-react";
 import GrammarDetailClient from "@/components/features/grammar/GrammarDetailClient";
 
 // ======================
+// KONFIGURASI PRE-RENDERING STATIS (SSG & ISR)
+// ======================
+// Izinkan Next.js membuat halaman statis baru secara asinkron di latar belakang jika belum di-render saat build
+export const dynamicParams = true;
+
+/**
+ * Karena pola tata bahasa cukup banyak, kita kembalikan array kosong pada saat build
+ * agar durasi build Vercel tetap cepat. Halaman tata bahasa akan di-pre-render secara statis (SSG)
+ * secara dinamis di latar belakang (on-demand) begitu pertama kali dikunjungi oleh pengguna.
+ */
+export async function generateStaticParams() {
+  return [];
+}
+
+// ======================
 // METADATA SEO
 // ======================
 
