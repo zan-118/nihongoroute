@@ -258,12 +258,12 @@ export async function getLibraryItemBySlug(
       data.jlptLevel = data.jlpt_level;
       data.strokeOrderSvg = data.stroke_order_svg;
       
-      // Ambil kosakata terkait — gunakan pencarian teks pada array jsonb related_kanji
+      // Ambil kosakata terkait — cari kata yang mengandung karakter kanji ini
       try {
         const { data: related } = await supabase
           .from("vocab")
-          .select("*")
-          .ilike("related_kanji::text", `%"${data.character}"%`)
+          .select("id, word, furigana, meaning_id, slug")
+          .like("word", `%${data.character}%`)
           .limit(6);
         data.relatedVocab = (related || []).map((v: { id: string; word: string; furigana: string | null; meaning_id: string; slug: string }) => ({ ...v, _id: v.id, meaning: v.meaning_id, furigana: v.furigana || "" }));
       } catch {
