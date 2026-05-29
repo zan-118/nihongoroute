@@ -201,7 +201,6 @@ export async function getLibraryItemBySlug(
   slugOrId: string
 ): Promise<LibraryItem | null> {
   const supabase = createStaticClient();
-  await supabase.auth.getSession();
   
   try {
     let data: LibraryItem | null = null;
@@ -630,6 +629,5 @@ export async function getLibraryDetail(
   slugOrId: string
 ): Promise<LibraryItem | null> {
   const supabase = createStaticClient();
-  await supabase.auth.getSession();
   return getLibraryItemBySlug(type, slugOrId);
 }

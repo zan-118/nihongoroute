@@ -24,9 +24,9 @@ import { QuestItem } from "./QuestItem";
 // KOMPONEN UTAMA
 // ==========================================
 export default function DailyQuests() {
-  const { claimedQuests, justClaimed, handleClaim, getCurrentProgress } = useDailyQuests();
+  const { todayQuests, claimedQuests, justClaimed, handleClaim, getCurrentProgress } = useDailyQuests();
 
-  const isAllClaimed = Object.keys(claimedQuests).length === DAILY_QUESTS.length;
+  const isAllClaimed = todayQuests.length > 0 && todayQuests.every((quest) => !!claimedQuests[quest.id]);
 
   return (
     <Card className="bg-card p-6 md:p-8 lg:p-10 rounded-[2.5rem] md:rounded-[3rem] border-border h-full relative overflow-hidden neo-card shadow-none flex flex-col">
@@ -40,7 +40,7 @@ export default function DailyQuests() {
         {isAllClaimed ? (
           <QuestCompleted />
         ) : (
-          DAILY_QUESTS.map((quest) => (
+          todayQuests.map((quest) => (
             <QuestItem
               key={quest.id}
               quest={quest}

@@ -20,7 +20,6 @@ import { createStaticClient } from "@/lib/supabase/server";
  */
 export async function getCheatsheets() {
   const supabase = createStaticClient();
-  await supabase.auth.getSession();
   
   try {
     const { data, error } = await supabase
@@ -56,7 +55,6 @@ export async function getCheatsheets() {
  */
 export async function getCheatsheetByIdOrSlug(idOrSlug: string) {
   const supabase = createStaticClient();
-  await supabase.auth.getSession();
   
   try {
     const { data: sheet, error } = await supabase

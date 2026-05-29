@@ -120,7 +120,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
           <span className="size-1 rounded-full bg-muted" />
           <Link href={ROUTES.TERMS} className="hover:text-primary transition-colors">Terms</Link>
           <span className="size-1 rounded-full bg-muted" />
-          <span className="opacity-50">© 2024</span>
+          <span className="opacity-50">© 2026</span>
         </div>
         <div className="md:hidden flex justify-center mt-4">
            <ThemeToggle />

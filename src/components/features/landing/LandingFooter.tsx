@@ -107,7 +107,7 @@ export function LandingFooter() {
             Belajar
           </span>
           <div className="flex flex-col gap-3.5 text-xs font-semibold text-muted-foreground">
-            <Link href="/library/kana" className="hover:text-primary transition-colors">
+            <Link href="/tools/kana" className="hover:text-primary transition-colors">
               Hiragana & Katakana
             </Link>
             <Link href="/library/vocab" className="hover:text-primary transition-colors">

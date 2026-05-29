@@ -42,6 +42,7 @@ export function QuestItem({
 }: QuestItemProps) {
   const percent = Math.min((current / quest.target) * 100, 100);
   const isCompleted = current >= quest.target;
+  const IconComponent = quest.icon;
 
   return (
     <Card
@@ -49,7 +50,7 @@ export function QuestItem({
         isClaimed
           ? "bg-muted/30 border-border opacity-50 grayscale"
           : isCompleted
-            ? "bg-success/10 bg-success/[0.03] border-success/30"
+            ? "bg-success/10 border-success/30"
             : "bg-muted/50 dark:bg-background/[0.03] border-border hover:border-primary/30"
       }`}
     >
@@ -62,7 +63,7 @@ export function QuestItem({
             exit={{ opacity: 0, scale: 1.05 }}
             className="absolute inset-0 flex items-center justify-center bg-success/10 backdrop-blur-md rounded-2xl z-20"
           >
-            <span className="text-success text-success font-black tracking-widest uppercase text-xs">
+            <span className="text-success font-black tracking-widest uppercase text-xs">
               BERHASIL! +{quest.rewardXP} XP
             </span>
           </m.div>
@@ -74,19 +75,23 @@ export function QuestItem({
         {/* DETAIL MISI (KIRI) */}
         <div className="flex items-center gap-3">
           <Card className={`w-10 h-10 md:w-11 md:h-11 rounded-xl flex items-center justify-center shadow-none transition-all shrink-0 ${isCompleted && !isClaimed ? 'bg-success/10 border-success/20' : 'bg-background dark:bg-background/[0.04] border border-border'}`}>
-            {isClaimed ? <CheckCircle2 size={18} className="text-success text-success/60" /> : quest.icon}
+            {isClaimed ? (
+              <CheckCircle2 size={18} className="text-success/60" />
+            ) : (
+              <IconComponent size={18} className="text-primary" />
+            )}
           </Card>
           <div className="text-left">
             <h4
               className={`text-xs md:text-[13px] font-black uppercase tracking-tight transition-colors ${
                 isCompleted && !isClaimed
-                  ? "text-success text-success"
+                  ? "text-success"
                   : "text-foreground"
               }`}
             >
               {quest.title}
             </h4>
-            <p className={`text-xs font-bold uppercase tracking-widest mt-1 ${isCompleted ? 'text-success/70 text-success/70' : 'text-primary/60'}`}>
+            <p className={`text-xs font-bold uppercase tracking-widest mt-1 ${isCompleted ? 'text-success/70' : 'text-primary/60'}`}>
               +{quest.rewardXP} XP
             </p>
           </div>
@@ -119,7 +124,7 @@ export function QuestItem({
           isClaimed 
             ? "bg-muted" 
             : isCompleted
-              ? "bg-success bg-success"
+              ? "bg-success"
               : "bg-primary"
         }
       />

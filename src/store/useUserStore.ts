@@ -9,9 +9,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { get, set as idbSet, del } from "idb-keyval";
-import { Inventory, LessonProgress } from "./types";
+import { Inventory, LessonProgress, UserProgress } from "./types";
 import { calculateLevel } from "@/lib/level";
 import { useUIStore } from "./useUIStore";
+import { ACHIEVEMENTS_LIST } from "@/lib/constants/gamification";
 
 // ==========================================
 // ANTARMUKA STATE STORE
@@ -243,55 +244,79 @@ export const useUserStore = create<UserState>()(
         const achievements = state.inventory?.achievements || [];
         const unlockedIds = new Set(achievements.map((a) => a.id));
 
-        const lessonsCompleted = Object.values(state.completedLessons || {}).filter((l) => !l.isDeleted).length;
-        const currentXp = state.xp;
-        const currentStreak = state.streak;
-
         // Dapatkan data SRS secara aman dan sinkron dari global window untuk menghindari circular dependency antar-store
         const srsStore = typeof window !== "undefined" ? (window as unknown as Record<string, { getState: () => { srs: Record<string, { isDeleted?: boolean; repetition?: number }> } }>).useSRSStore : null;
         const srsState = srsStore ? srsStore.getState().srs || {} : {};
-        const totalReviews = Object.values(srsState).reduce(
-          (sum: number, card: { isDeleted?: boolean; repetition?: number }) => sum + (card.isDeleted ? 0 : card.repetition || 0),
-          0
-        );
 
-        // Kumpulan target lencana prestasi yang dapat dibuka secara offline
-        const targets = [
-          // Lencana Pelajaran Selesai
-          { id: "lesson_bronze", check: lessonsCompleted >= 1, xp: 50, title: "Pahlawan Belajar (Bronze)", msg: "Menyelesaikan 1 Pelajaran" },
-          { id: "lesson_silver", check: lessonsCompleted >= 5, xp: 250, title: "Pahlawan Belajar (Silver)", msg: "Menyelesaikan 5 Pelajaran" },
-          { id: "lesson_gold", check: lessonsCompleted >= 20, xp: 1000, title: "Pahlawan Belajar (Gold)", msg: "Menyelesaikan 20 Pelajaran" },
+        // Konstruksi progress payload yang kompatibel dengan tipe UserProgress untuk dicocokkan dengan pencapaian prestasi
+        const progressPayload = {
+          id: state.id,
+          isGuest: state.isGuest,
+          name: state.name,
+          xp: state.xp,
+          level: state.level,
+          streak: state.streak,
+          todayReviewCount: state.todayReviewCount,
+          lastStudyDate: state.lastStudyDate,
+          studyDays: state.studyDays,
+          inventory: state.inventory,
+          completedLessons: Object.fromEntries(
+            Object.entries(state.completedLessons || {}).filter(([_, l]) => !l.isDeleted)
+          ),
+          srs: Object.fromEntries(
+            Object.entries(srsState).filter(([_, card]) => !card.isDeleted)
+          ),
+          notifications: [],
+          settings: {}
+        } as unknown as UserProgress;
 
-          // Lencana Total Poin XP
-          { id: "xp_bronze", check: currentXp >= 500, xp: 50, title: "Prajurit XP (Bronze)", msg: "Mengumpulkan 500 XP" },
-          { id: "xp_silver", check: currentXp >= 2500, xp: 250, title: "Prajurit XP (Silver)", msg: "Mengumpulkan 2500 XP" },
-          { id: "xp_gold", check: currentXp >= 10000, xp: 1000, title: "Prajurit XP (Gold)", msg: "Mengumpulkan 10000 XP" },
-
-          // Lencana Rekor Hari Berturut-turut (Streak)
-          { id: "streak_bronze", check: currentStreak >= 3, xp: 50, title: "Pendekar Streak (Bronze)", msg: "Mencapai 3 Hari Streak" },
-          { id: "streak_silver", check: currentStreak >= 7, xp: 250, title: "Pendekar Streak (Silver)", msg: "Mencapai 7 Hari Streak" },
-          { id: "streak_gold", check: currentStreak >= 30, xp: 1000, title: "Pendekar Streak (Gold)", msg: "Mencapai 30 Hari Streak" },
-
-          // Lencana Total Ulasan Pengulangan Kartu (SRS)
-          { id: "srs_bronze", check: totalReviews >= 10, xp: 50, title: "Ahli Ulasan (Bronze)", msg: "Menyelesaikan 10 Ulasan Kartu" },
-          { id: "srs_silver", check: totalReviews >= 100, xp: 250, title: "Ahli Ulasan (Silver)", msg: "Menyelesaikan 100 Ulasan Kartu" },
-          { id: "srs_gold", check: totalReviews >= 500, xp: 1000, title: "Ahli Ulasan (Gold)", msg: "Menyelesaikan 500 Ulasan Kartu" }
-        ];
+        // Peta XP reward dinamis untuk 20 pencapaian prestasi terpusat
+        const ACHIEVEMENT_XP_REWARDS: Record<string, number> = {
+          first_steps: 50,
+          lesson_bronze: 50,
+          xp_bronze: 50,
+          streak_bronze: 50,
+          vocab_explorer: 150,
+          vocab_collector: 300,
+          vocab_master: 500,
+          streak_silver: 500,
+          vocab_titan: 1000,
+          streak_gold: 1000,
+          lesson_gold: 1000,
+          xp_gold: 1000,
+          level_25: 1000,
+          vocab_legend: 2000,
+          streak_warrior: 250,
+          lesson_silver: 250,
+          xp_silver: 250,
+          xp_master: 500,
+          level_10: 500,
+          perfect_review: 500,
+        };
 
         const newlyUnlocked: Array<{ id: string; unlockedAt: number }> = [];
         let totalRewardXp = 0;
 
-        // Picu notifikasi visual dan akumulasikan Poin XP jika ada lencana baru yang terbuka luring
-        for (const t of targets) {
-          if (t.check && !unlockedIds.has(t.id)) {
-            newlyUnlocked.push({ id: t.id, unlockedAt: Date.now() });
-            totalRewardXp += t.xp;
+        // Evaluasi 20 lencana prestasi secara dinamis dari list terpusat
+        for (const ach of ACHIEVEMENTS_LIST) {
+          // Lewati jika sudah terbuka
+          if (unlockedIds.has(ach.id)) continue;
 
-            useUIStore.getState().addNotification({
-              title: "Lencana Terbuka!",
-              message: `Selamat! Anda berhasil membuka lencana '${t.title}': ${t.msg}. (+${t.xp} XP)`,
-              type: "achievement"
-            });
+          try {
+            const pct = ach.condition(progressPayload);
+            if (pct >= 100) {
+              const rewardXp = ACHIEVEMENT_XP_REWARDS[ach.id] || 50;
+              newlyUnlocked.push({ id: ach.id, unlockedAt: Date.now() });
+              totalRewardXp += rewardXp;
+
+              useUIStore.getState().addNotification({
+                title: "Lencana Terbuka!",
+                message: `Selamat! Anda berhasil membuka lencana '${ach.title}': ${ach.description}. (+${rewardXp} XP)`,
+                type: "achievement"
+              });
+            }
+          } catch (err) {
+            console.error(`Gagal memverifikasi pencapaian ${ach.id}:`, err);
           }
         }
 

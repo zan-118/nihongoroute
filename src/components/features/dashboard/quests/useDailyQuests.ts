@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { Quest } from "./types";
 import { getTodayDateString } from "@/lib/utils";
 import { useUserStore } from "@/store/useUserStore";
+import { DAILY_QUESTS_POOL, getTodayQuests } from "@/lib/constants/gamification";
 
 // ==========================================
 // HOOK UTAMA: useDailyQuests
@@ -20,6 +21,7 @@ import { useUserStore } from "@/store/useUserStore";
  * Hook kustom untuk memantau kemajuan serta mengeksekusi klaim hadiah misi harian.
  * 
  * @returns {Object} State dan aksi interaksi misi harian pengguna:
+ *  - `todayQuests`: Daftar 3 misi harian yang dipilih secara seeded random untuk hari ini.
  *  - `claimedQuests`: Rekaman misi harian yang sudah diklaim pada hari ini.
  *  - `justClaimed`: ID misi yang baru saja diklaim (berguna untuk efek visual/animasi).
  *  - `handleClaim`: Fungsi untuk mengeksekusi klaim imbalan misi harian.
@@ -36,6 +38,11 @@ export function useDailyQuests() {
   const [justClaimed, setJustClaimed] = useState<string | null>(null);
 
   const today = getTodayDateString();
+
+  // Memilih 3 misi harian secara acak dan deterministik untuk hari ini
+  const todayQuests = useMemo(() => {
+    return getTodayQuests(DAILY_QUESTS_POOL, today);
+  }, [today]);
   
   // Memetakan daftar misi harian yang sudah diklaim pengguna pada hari aktif ini
   const claimedQuests = useMemo(() => {
@@ -76,6 +83,7 @@ export function useDailyQuests() {
   };
 
   return {
+    todayQuests,
     claimedQuests,
     justClaimed,
     handleClaim,

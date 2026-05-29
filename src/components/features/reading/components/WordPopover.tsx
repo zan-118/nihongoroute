@@ -41,6 +41,7 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
   const { data: vocab, isLoading } = useQuery({
     queryKey: ["vocab-lookup", word, reading],
     queryFn: async () => {
+      if (!word || word.length > 30) return null;
       const supabase = createClient();
       const { data, error } = await supabase
         .from("vocab")
