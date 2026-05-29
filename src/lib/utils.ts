@@ -73,3 +73,21 @@ export function slugify(text: string): string {
     .replace(/[^\w\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf-]+/g, '') // Simpan karakter Jepang & alphanumeric
     .replace(/--+/g, '-');    // Hapus double dash
 }
+
+/**
+ * Mendekode string URL secara rekursif hingga bersih sepenuhnya (menghindari double URL-encoding atau malformed URI di tingkat produksi).
+ */
+export function fullyDecode(str: string): string {
+  if (!str) return "";
+  let current = str;
+  try {
+    while (true) {
+      const decoded = decodeURIComponent(current);
+      if (decoded === current) break;
+      current = decoded;
+    }
+  } catch {
+    // Abaikan jika terdapat error karakter persen tunggal
+  }
+  return current;
+}

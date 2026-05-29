@@ -30,7 +30,7 @@ export default function NotFound() {
         </span>
       </div>
 
-      <div className="z-10 flex flex-col items-center text-center max-w-md w-full glass border border-border/80 rounded-[2rem] p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
+      <div className="z-10 flex flex-col items-center text-center max-w-md w-full glass border border-border rounded-[2rem] p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
         {/* Elemen Tematik Jepang */}
         <div className="space-y-3 mb-6">
           <div className="flex justify-center mb-4">
@@ -63,7 +63,7 @@ export default function NotFound() {
               Dashboard
             </Link>
           </Button>
-          <Button asChild variant="outline" size="lg" className="w-full font-black uppercase tracking-widest text-xs h-12 rounded-xl border border-border/80 hover:bg-muted text-muted-foreground hover:text-foreground duration-300">
+          <Button asChild variant="outline" size="lg" className="w-full font-black uppercase tracking-widest text-xs h-12 rounded-xl border border-border hover:bg-muted text-muted-foreground hover:text-foreground duration-300">
             <Link href="/" className="flex items-center justify-center gap-2">
               <ArrowLeft size={16} />
               Beranda

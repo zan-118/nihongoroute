@@ -12,6 +12,7 @@ import { Metadata } from "next";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { fullyDecode } from "@/lib/utils";
 import { 
   ChevronLeft, 
   Home,
@@ -55,7 +56,7 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const decodedId = decodeURIComponent(id);
+  const decodedId = fullyDecode(id);
   const kanji = await getLibraryItemBySlug("kanji", decodedId);
 
   if (!kanji) {
@@ -84,7 +85,7 @@ export default async function KanjiDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const decodedId = decodeURIComponent(id);
+  const decodedId = fullyDecode(id);
   const kanji = await getLibraryItemBySlug("kanji", decodedId);
 
   if (!kanji) notFound();

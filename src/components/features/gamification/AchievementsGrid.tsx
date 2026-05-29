@@ -71,7 +71,7 @@ export default function AchievementsGrid() {
             className={`p-6 rounded-2xl border transition-all duration-500 relative overflow-hidden group ${
               isUnlocked 
                 ? 'bg-primary/5 border-primary/30 shadow-[0_0_20px_rgba(var(--primary-rgb),0.05)]' 
-                : 'bg-muted/30 border-border/50 grayscale opacity-70'
+                : 'bg-muted/30 border-border grayscale opacity-70'
             }`}
           >
             <div className="flex items-start gap-4">
@@ -88,7 +88,7 @@ export default function AchievementsGrid() {
                   {ach.description}
                 </p>
                 
-                <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden border border-border/50">
+                <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden border border-border">
                   <m.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${percent}%` }}
