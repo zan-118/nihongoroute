@@ -1,10 +1,22 @@
 "use client";
 
+/**
+ * @file VocabRelated.tsx
+ * @description Komponen penampil referensi kanji/kosakata terkait (Vocab Related).
+ * Menampilkan tautan ke kanji pembentuk kosakata, sinonim, antonim, beserta arti singkatnya.
+ */
+
+// ==========================================
+// IMPOR UTAMA
+// ==========================================
 import { Card } from "@/components/ui/card";
 import { Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 
+// ==========================================
+// ANTARMUKA & TIPE DATA
+// ==========================================
 interface KanjiRef {
   id?: string;
   _id?: string;
@@ -30,12 +42,21 @@ interface VocabRelatedProps {
   antonyms?: VocabRef[];
 }
 
+// ==========================================
+// KOMPONEN UTAMA: VocabRelated
+// ==========================================
+/**
+ * Komponen panel visualisasi referensi leksikal terkait.
+ * 
+ * @param {VocabRelatedProps} props Properti komponen relasi leksikal.
+ */
 export function VocabRelated({ relatedKanji, synonyms, antonyms }: VocabRelatedProps) {
   const hasContent = (relatedKanji?.length || 0) > 0 || (synonyms?.length || 0) > 0 || (antonyms?.length || 0) > 0;
 
   return (
-    <Card className="p-6 md:p-8 bg-card/20 backdrop-blur-xl border-border rounded-[2rem] hover:border-primary/40 transition-all group overflow-hidden relative md:col-span-full lg:col-span-2 space-y-8">
-      {/* Related Kanji */}
+    <Card className="p-6 md:p-8 bg-card/20 backdrop-blur-xl border-border rounded-[2rem] hover:border-primary/40 transition-all group overflow-hidden relative md:col-span-full lg:col-span-2 space-y-8 font-sans">
+      
+      {/* Tampilan Karakter Kanji Terkait */}
       {relatedKanji && relatedKanji.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-center gap-3">
@@ -60,7 +81,7 @@ export function VocabRelated({ relatedKanji, synonyms, antonyms }: VocabRelatedP
         </div>
       )}
 
-      {/* Synonyms */}
+      {/* Tampilan Sinonim (Kata Searti) */}
       {synonyms && synonyms.length > 0 && (
         <div className="space-y-3">
           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground block">Sinonim</span>
@@ -77,7 +98,7 @@ export function VocabRelated({ relatedKanji, synonyms, antonyms }: VocabRelatedP
         </div>
       )}
 
-      {/* Antonyms */}
+      {/* Tampilan Antonim (Lawan Kata) */}
       {antonyms && antonyms.length > 0 && (
         <div className="space-y-3">
           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground block">Antonim</span>
@@ -100,3 +121,4 @@ export function VocabRelated({ relatedKanji, synonyms, antonyms }: VocabRelatedP
     </Card>
   );
 }
+

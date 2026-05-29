@@ -1,6 +1,17 @@
+/**
+ * @file KanjiSection.tsx
+ * @description Komponen seksi Kanji (KanjiSection) dalam halaman pelajaran. Menampilkan daftar karakter Kanji pelajaran dengan link ke detail pustaka Kanji.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import Link from "next/link";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 export interface KanjiLessonItem {
   _id?: string;
   id?: string;
@@ -12,6 +23,9 @@ interface KanjiSectionProps {
   kanjiList: KanjiLessonItem[];
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export const KanjiSection: React.FC<KanjiSectionProps> = ({ kanjiList }) => {
   if (!kanjiList || kanjiList.length === 0) return null;
 

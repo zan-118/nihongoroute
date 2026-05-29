@@ -1,22 +1,43 @@
 "use client";
 
+/**
+ * @file Heatmap.tsx
+ * @description Komponen peta aktivitas belajar (Heatmap) pengguna di NihongoRoute.
+ * Menampilkan grid riwayat 35 hari aktivitas belajar kosa kata/Kanji dengan indikator tingkat keaktifan
+ * berbasis kode warna gradasi (Sedikit s.d Banyak) dan animasi hover tooltip Framer Motion.
+ *
+ * @package components/features/dashboard/heatmap
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import { m } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Activity } from "lucide-react";
 import { useHeatmap, getBoxStyle } from "./useHeatmap";
 
+// ==========================================
+// ANTARMUKA & PROPS (INTERFACES)
+// ==========================================
 interface Props {
   studyDays: Record<string, number>;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 export default function Heatmap({ studyDays }: Props) {
   const { days } = useHeatmap();
 
   return (
     <Card className="bg-card p-6 md:p-8 lg:p-10 rounded-[2.5rem] md:rounded-[3rem] border border-border relative overflow-hidden neo-card shadow-lg transition-colors duration-300">
+      {/* Pola Kisi Halus Latar Belakang */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--primary-rgb),0.01)_1px,transparent_1px)] bg-[size:100%_4px] opacity-20 dark:opacity-50 pointer-events-none" />
 
+      {/* Bagian Header */}
       <header className="flex items-center justify-between mb-8 md:mb-10 relative z-10">
         <div className="flex items-center gap-3 md:gap-4">
           <Card className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center neo-inset shadow-none shrink-0">
@@ -37,6 +58,7 @@ export default function Heatmap({ studyDays }: Props) {
         </Badge>
       </header>
 
+      {/* Grid Peta Kontribusi/Aktivitas */}
       <div className="flex flex-wrap gap-2 md:gap-3 lg:gap-4 relative z-10 justify-start">
         {days.map((day, index) => {
           const value = studyDays?.[day] ?? 0;
@@ -49,6 +71,7 @@ export default function Heatmap({ studyDays }: Props) {
               key={day}
               className={`w-6 h-6 md:w-8 md:h-8 lg:w-9 lg:h-9 rounded-lg md:rounded-xl border transition-all duration-300 hover:scale-125 hover:z-20 cursor-help group relative ${getBoxStyle(value)}`}
             >
+              {/* Tooltip Keterangan Detail Aktivitas */}
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 md:mb-3 w-max px-3 py-2 md:px-4 md:py-3 bg-popover/95 backdrop-blur-xl border border-border text-popover-foreground text-xs md:text-xs font-bold uppercase tracking-widest rounded-xl opacity-0 group-hover:opacity-100 transition-all pointer-events-none shadow-2xl z-30 neo-card scale-90 group-hover:scale-100 origin-bottom">
                 {day} <span className="text-muted-foreground/30 mx-2">|</span> <span className="text-primary">{value} KATA</span>
               </div>
@@ -57,6 +80,7 @@ export default function Heatmap({ studyDays }: Props) {
         })}
       </div>
 
+      {/* Legenda Keterangan Gradasi Warna */}
       <div className="flex items-center gap-3 md:gap-4 mt-8 md:mt-10 justify-end relative z-10">
         <span className="text-xs md:text-xs font-bold uppercase tracking-widest text-muted-foreground">
           Sedikit
@@ -74,3 +98,4 @@ export default function Heatmap({ studyDays }: Props) {
     </Card>
   );
 }
+

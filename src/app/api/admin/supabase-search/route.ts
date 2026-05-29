@@ -1,6 +1,18 @@
+/**
+ * @file route.ts
+ * @description API Route Handler untuk pencarian data Supabase dari Sanity Studio (Admin).
+ * Menyediakan endpoint pencarian lintas tabel (vocab, kanji, grammar) dengan CORS yang dikonfigurasi.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
+// ======================
+// KONSTANTA CORS
+// ======================
 const ALLOWED_ORIGINS = [
   "http://localhost:3000",
   "http://localhost:3001",
@@ -41,7 +53,7 @@ export async function GET(req: Request) {
     const query = searchParams.get("query") || "";
     const secret = searchParams.get("secret");
 
-    // Authenticate using the secret token
+    // Otentikasi menggunakan token rahasia
     if (secret !== "d5a7a32586755e828a338457a2524288") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401, headers: corsHeaders });
     }

@@ -1,12 +1,14 @@
 /**
- * LOKASI FILE: app/(main)/library/cheatsheet/CheatsheetClient.tsx
- * KONSEP: Category-First Dashboard (Catatan Referensi Cepat)
- * RE-DESAIN: Category Cards -> Detail Modal
- * Dioptimalkan tanpa Framer Motion untuk performa ekstrem.
+ * @file CheatsheetClient.tsx
+ * @description Antarmuka klien interaktif untuk halaman daftar cheatsheet (referensi cepat).
+ * Menampilkan kategori cheatsheet dalam format kartu, lalu membuka detail melalui modal.
  */
 
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { useState } from "react";
 import {
   Search,
@@ -64,7 +66,7 @@ export default function CheatsheetClient({
 
   return (
     <div className="relative w-full max-w-[1600px] mx-auto z-10 flex flex-col flex-1 pb-32 md:pb-24 px-4 md:px-8 lg:px-12 transition-colors duration-300">
-      {/* Breadcrumb */}
+      {/* Breadcrumb / Navigasi Atas */}
       <nav className="mb-8 md:mb-10 flex flex-wrap items-center gap-2 md:gap-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">
         <Link href="/dashboard" className="hover:text-primary transition-colors flex items-center gap-1.5 md:gap-2">
           <Home size={14} /> Beranda
@@ -79,7 +81,7 @@ export default function CheatsheetClient({
         </span>
       </nav>
 
-      {/* Hero Header */}
+      {/* Tajuk Utama (Hero Header) */}
       <header className="mb-12 md:mb-16">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 md:gap-12">
           <div className="flex flex-col gap-4">
@@ -110,7 +112,7 @@ export default function CheatsheetClient({
         </div>
       </header>
 
-      {/* Category Grid */}
+      {/* Kisi Kategori (Category Grid) */}
       <section className="flex flex-col gap-10">
         <div className="flex items-center justify-between border-b border-border pb-6">
            <h2 className="text-xs font-black uppercase tracking-[0.4em] text-muted-foreground flex items-center gap-2">
@@ -132,7 +134,7 @@ export default function CheatsheetClient({
                 <Card 
                   className="group relative h-full bg-card hover:bg-[rgba(var(--primary-rgb),0.02)] border border-[rgba(var(--border-rgb),0.5)] hover:border-[rgba(var(--primary-rgb),0.4)] rounded-[2.5rem] p-8 cursor-pointer transition-all duration-500 shadow-sm hover:shadow-[0_20px_50px_rgba(var(--background-rgb),0.1)] dark:hover:shadow-[0_20px_50px_rgba(var(--background-rgb),0.3)] flex flex-col gap-6 overflow-hidden"
                 >
-                  {/* Background decoration */}
+                  {/* Dekorasi Latar Belakang */}
                   <div className="absolute -bottom-6 -right-6 text-[8rem] font-black text-[rgba(var(--foreground-rgb),0.03)] group-hover:text-[rgba(var(--primary-rgb),0.05)] transition-colors pointer-events-none italic">
                     {idx + 1}
                   </div>

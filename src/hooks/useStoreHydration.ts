@@ -1,5 +1,16 @@
+/**
+ * @file useStoreHydration.ts
+ * @description Hook kustom offline-first pengontrol pelacakan proses pemulihan (hydration) data lokal Zustand dari IndexedDB peramban ke memori aktif. Mencegah kondisi balapan (race condition) pengambilan data awan sebelum data lokal termuat seutuhnya.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { useState, useEffect } from "react";
 
+// ==========================================
+// ANTARMUKA INTERNAL
+// ==========================================
 /** Interface minimal untuk melacak Zustand store yang menggunakan middleware persist */
 interface ZustandPersistStore {
   persist?: {
@@ -8,15 +19,14 @@ interface ZustandPersistStore {
   };
 }
 
+// ==========================================
+// CUSTOM HOOK UTAMA
+// ==========================================
 /**
- * Custom Hook: useStoreHydration
+ * Hook kustom untuk mengamati status hidrasi state persisten Zustand.
  * 
- * Memantau proses hidrasi asinkron dari IndexedDB ke Zustand store via middleware persist.
- * Mencegah kondisi balapan (race condition) dengan menjamin data lokal telah dimuat sepenuhnya
- * di sisi klien sebelum inisialisasi sinkronisasi cloud atau interaksi visual dimulai.
- * 
- * @param {ZustandPersistStore} store - Zustand store yang ingin dipantau status hidrasinya
- * @returns {boolean} hydrated - Status hidrasi store (true jika selesai hidrasi, false jika belum)
+ * @param {ZustandPersistStore} store - Zustand store persisten yang akan dipantau
+ * @returns {boolean} True jika store persisten telah selesai dimuat dari IndexedDB
  */
 export function useStoreHydration(store: ZustandPersistStore) {
   const [hydrated, setHydrated] = useState(false);

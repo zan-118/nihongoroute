@@ -1,5 +1,14 @@
 "use client";
 
+/**
+ * @file MockExamEngine.tsx
+ * @description Komponen pembungkus utama (Controller/Orchestrator) untuk simulasi ujian (Mock Exam).
+ * Mengatur alur status pengerjaan ujian dari perkenalan (Intro), pengerjaan soal (Playing), hasil analisis (Result), hingga peninjauan (Review).
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { ExamData } from "./types";
 import { useMockExamEngine } from "./useMockExamEngine";
 import { ExamIntro } from "./ExamIntro";
@@ -7,10 +16,16 @@ import { ExamResult } from "./ExamResult";
 import { ExamReview } from "./ExamReview";
 import { ExamPlaying } from "./ExamPlaying";
 
+// ======================
+// ANTARMUKA & TIPE
+// ======================
 interface MockExamEngineProps {
   exam: ExamData;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function MockExamEngine({ exam }: MockExamEngineProps) {
   const engine = useMockExamEngine(exam);
 

@@ -1,24 +1,35 @@
+/**
+ * @file Sidebar.tsx
+ * @description Komponen panel navigasi samping desktop (Cyber-glass design) untuk mengarahkan pengguna ke berbagai fitur.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { m } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { useNavbar } from "@/components/layout/hooks/useNavbar";
 import { useHasMounted } from "@/hooks/useHasMounted";
 
-// Domain Components
+// Komponen Domain
 import { SidebarItem } from "./sidebar/SidebarItem";
 import { UserStatusSection } from "./sidebar/UserStatusSection";
 import { ThemeToggle } from "./ThemeToggle";
 import { ROUTES } from "@/lib/routes";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const hasMounted = useHasMounted();
   const { pathname, isAuthenticated, userFullName, handleLogout, links } = useNavbar();
 
   return (
     <>
-      {/* Mobile Backdrop */}
+      {/* Backdrop Seluler */}
       {isOpen && (
         <m.div
           initial={{ opacity: 0 }}
@@ -30,7 +41,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
       )}
 
       <aside className={`fixed top-0 left-0 h-screen bg-background/60 backdrop-blur-3xl border-r border-border p-6 z-[60] flex flex-col w-72 transition-transform duration-500 md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-      {/* Background Neural Overlays */}
+      {/* Overlay Saraf Latar Belakang */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(var(--primary-rgb),0.02)_0%,transparent_50%)] pointer-events-none" />
       
       {/* LOGO */}
@@ -58,7 +69,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
         </Link>
       </div>
 
-      {/* NAVIGATION */}
+      {/* NAVIGASI */}
       <nav className="flex-1 space-y-8 relative z-10 overflow-y-auto pr-2 custom-scrollbar">
         {/* Utama */}
         <div className="space-y-1">
@@ -92,7 +103,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
 
       </nav>
 
-      {/* FOOTER ACTIONS */}
+      {/* AKSI FOOTER */}
       <div className="mt-auto space-y-4 relative z-10 pt-6 border-t border-border">
          <UserStatusSection 
             hasMounted={hasMounted}
@@ -102,7 +113,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
          />
       </div>
 
-      {/* MINI FOOTER - LEGAL & INFO */}
+      {/* FOOTER MINI - LEGAL & INFO */}
       <div className="mt-6 pt-4 border-t border-border relative z-10">
         <div className="flex items-center justify-center gap-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/30">
           <Link href={ROUTES.PRIVACY} className="hover:text-primary transition-colors">Privacy</Link>

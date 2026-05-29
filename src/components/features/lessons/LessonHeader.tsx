@@ -1,8 +1,19 @@
+/**
+ * @file LessonHeader.tsx
+ * @description Komponen header pelajaran (LessonHeader) untuk menampilkan judul premium, ringkasan markup cerdas, serta tombol aksi utilitas (PDF & offline download).
+ */
+
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import { renderSmartText } from "@/components/features/global/SmartText";
 import DownloadPdfButton from "@/components/features/pdf/components/DownloadPdfButton";
 import DownloadOfflineButton, { type LessonData } from "@/components/features/lessons/DownloadOfflineButton";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface LessonHeaderProps {
   title: string;
   summary?: string;
@@ -10,20 +21,10 @@ interface LessonHeaderProps {
   lesson: LessonData;
 }
 
-/**
- * Komponen: LessonHeader
- * 
- * Bagian header visual utama untuk modul pelajaran. Menampilkan judul pelajaran dalam tipografi neon 
- * berukuran besar, kotak ringkasan bermarkup cerdas (renderSmartText), serta menyediakan barisan tombol 
- * aksi utilitas termasuk unduhan offline (DownloadOfflineButton) dan pembuatan sertifikat/PDF (DownloadPdfButton).
- * 
- * @param {Object} props - Properti komponen
- * @param {string} props.title - Judul pelajaran
- * @param {string} [props.summary] - Ringkasan deskripsi pelajaran
- * @param {boolean} [props.isSideQuest] - Menandakan apakah pelajaran ini adalah materi tambahan (side quest)
- * @param {LessonData} props.lesson - Objek data pelajaran lengkap untuk diunduh/diekspor
- */
-export const LessonHeader: React.FC<LessonHeaderProps> = ({ 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+export const LessonHeader: React.FC<LessonHeaderProps> = ({
   title, 
   summary, 
   isSideQuest, 

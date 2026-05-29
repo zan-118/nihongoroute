@@ -1,5 +1,14 @@
+/**
+ * @file page.tsx
+ * @description Halaman pengaturan (Settings) NihongoRoute.
+ * Mengelola profil pengguna, manajemen data, status sinkronisasi, dan preferensi akun.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { m, Variants } from "framer-motion";
 import { Settings as SettingsIcon, Layers, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,7 +19,7 @@ import ConfirmModal from "@/components/ui/ConfirmModal";
 import { useHasMounted } from "@/hooks/useHasMounted";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Hook & Sub-components
+// Hook & Sub-komponen
 import { useSettingsActions } from "@/components/features/user/useSettingsActions";
 import ProfileSection from "./_components/ProfileSection";
 import DataManagementSection from "./_components/DataManagementSection";

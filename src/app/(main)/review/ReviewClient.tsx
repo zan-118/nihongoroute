@@ -19,7 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { useUIStore } from "@/store/useUIStore";
 import { useReviewSession } from "@/components/features/review/hooks/useReviewSession";
 
-// Domain Components
+// Komponen Domain
 import { ReviewModeCard } from "@/components/features/review/ReviewModeCard";
 import { ReviewCompletionState } from "@/components/features/review/ReviewCompletionState";
 
@@ -38,7 +38,7 @@ export function ReviewClient() {
   } = useReviewSession(loading);
 
   // ======================
-  // RENDER LOGIC
+  // LOGIKA RENDER
   // ======================
 
   if (loading) {
@@ -84,7 +84,7 @@ export function ReviewClient() {
             onClick={() => startSession("quick")}
             isEnabled={allItemIds.length > 0}
             icon={Zap}
-            badgeLabel="Random Challenge"
+            badgeLabel="Tantangan Acak"
             title="Latihan Cepat"
             description="Sesi singkat 10 kartu acak dari seluruh koleksimu. Cocok untuk mengisi waktu luang kapan saja."
             actionLabel="Mulai Latihan"

@@ -1,11 +1,23 @@
 "use client";
 
+/**
+ * @file QuizEngine.tsx
+ * @description Komponen pengendali utama (Controller) untuk pengerjaan kuis interaktif (Quiz Engine).
+ * Mengatur pergeseran status antara pengerjaan soal kuis (QuizPlaying) dan ringkasan skor kelulusan (QuizFinished).
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { useState, useEffect } from "react";
 import { QuizProps } from "./types";
 import { useQuizEngine } from "./useQuizEngine";
 import { QuizFinished } from "./QuizFinished";
 import { QuizPlaying } from "./QuizPlaying";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function QuizEngine({ questions, lessonId }: QuizProps) {
   const [isClient, setIsClient] = useState(false);
   const engine = useQuizEngine(questions, lessonId);

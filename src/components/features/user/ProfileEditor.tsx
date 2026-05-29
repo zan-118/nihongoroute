@@ -1,5 +1,8 @@
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +22,9 @@ import { UserProgress } from "@/store/types";
  * Terintegrasi dengan sistem store lokal dan sinkronisasi Supabase.
  */
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function ProfileEditor() {
   const name = useUserStore(s => s.name);
   const xp = useUserStore(s => s.xp);

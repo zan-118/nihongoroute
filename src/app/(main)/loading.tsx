@@ -1,32 +1,44 @@
-"use client";
-
-import { m } from "framer-motion";
-
 /**
  * @file loading.tsx
- * @description State loading global untuk Route Group (main).
- * Memberikan feedback visual premium saat transisi antar halaman atau fetching data dari Supabase.
+ * @description Komponen pemuat (Loading Skeleton) premium untuk grup rute utama (main) NihongoRoute.
  */
 
+"use client";
+
+// ======================
+// IMPOR
+// ======================
+import { m } from "framer-motion";
+
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
+/**
+ * Komponen loading global untuk grup rute utama.
+ * Menyediakan animasi transisi premium saat perpindahan halaman atau pengambilan data.
+ * 
+ * @returns {JSX.Element} Antarmuka indikator pemuatan visual.
+ */
 export default function MainLoading() {
   return (
     <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background overflow-hidden transition-colors duration-300">
-      {/* Background Decor */}
+      {/* Dekorasi Latar Belakang */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[600px] bg-primary/10 blur-[150px] rounded-full animate-pulse" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[400px] bg-destructive/5 blur-[120px] rounded-full animate-pulse delay-700" />
 
       <div className="relative flex flex-col items-center">
-        {/* Animated Logo / Icon Shell */}
+        {/* Logo Animasi / Kerangka Ikon */}
         <m.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
           className="relative size-24 mb-8"
         >
-          {/* Inner Glow Ring */}
+          {/* Cincin Kilau Bagian Dalam */}
           <div className="absolute inset-0 rounded-full border-2 border-primary/30 animate-[ping_2s_infinite]" />
           
-          {/* Main Visual */}
+          {/* Visual Utama */}
           <div className="absolute inset-0 neo-card flex items-center justify-center rounded-full bg-card border border-border shadow-xl">
             <m.div
               animate={{ 
@@ -44,7 +56,7 @@ export default function MainLoading() {
           </div>
         </m.div>
 
-        {/* Textual Feedback */}
+        {/* Umpan Balik Tekstual */}
         <m.div
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -62,7 +74,7 @@ export default function MainLoading() {
         </m.div>
       </div>
 
-      {/* Progress Line at bottom */}
+      {/* Garis Progres di Bagian Bawah */}
       <div className="fixed bottom-0 left-0 w-full h-1 bg-muted">
         <m.div
           initial={{ x: "-100%" }}

@@ -1,11 +1,27 @@
 "use client";
 
+/**
+ * @file DashboardSettings.tsx
+ * @description Komponen panel pengaturan dashboard untuk NihongoRoute.
+ * Menyediakan antarmuka untuk manajemen notifikasi belajar harian serta fitur pengelolaan data
+ * seperti pencadangan (backup), pemulihan (restore), setel ulang data lokal, dan fungsi keluar (logout).
+ *
+ * @package components/features/dashboard
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import { m, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Save, Upload, Trash2, LogOut } from "lucide-react";
 import NotificationManager from "@/components/features/notifications/NotificationManager";
 
+// ==========================================
+// ANTARMUKA & PROPS (INTERFACES)
+// ==========================================
 interface DashboardSettingsProps {
   isAuthenticated: boolean;
   handleExportData: () => void;
@@ -15,6 +31,9 @@ interface DashboardSettingsProps {
   itemVariants: Variants;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 export default function DashboardSettings({ 
   isAuthenticated, 
   handleExportData, 
@@ -27,6 +46,8 @@ export default function DashboardSettings({
     <m.div variants={itemVariants} className="md:col-span-12">
       <Card className="bg-muted/30 border border-border rounded-2xl p-6 md:p-8 shadow-lg">
         <div className="flex flex-col lg:flex-row gap-8 mb-10">
+          
+          {/* PANEL KIRI: MANAJEMEN NOTIFIKASI */}
           <div className="flex-1">
             <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-xs mb-6 flex items-center gap-3">
               <div className="size-1 rounded-full bg-primary" />
@@ -34,6 +55,8 @@ export default function DashboardSettings({
             </h2>
             <NotificationManager />
           </div>
+
+          {/* PANEL KANAN: DATA & SINKRONISASI */}
           <div className="flex-1">
             <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-xs mb-6 flex items-center gap-3">
               <div className="size-1 rounded-full bg-border" />
@@ -72,8 +95,10 @@ export default function DashboardSettings({
               )}
             </div>
           </div>
+
         </div>
       </Card>
     </m.div>
   );
 }
+

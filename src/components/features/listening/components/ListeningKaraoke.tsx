@@ -1,5 +1,15 @@
 "use client";
 
+/**
+ * @file ListeningKaraoke.tsx
+ * @description Komponen transkrip interaktif dengan efek sinkronisasi waktu karaoke.
+ * Menggulirkan transkrip secara otomatis ke baris aktif berdasarkan audio yang diputar,
+ * serta menampilkan terjemahan bahasa Indonesia secara premium.
+ */
+
+// ==========================================
+// IMPOR UTAMA
+// ==========================================
 import React, { useRef, useEffect, useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { Languages } from "lucide-react";
@@ -7,6 +17,9 @@ import { Button } from "@/components/ui/button";
 import { TranscriptLine } from "../types";
 import { cn } from "@/lib/utils";
 
+// ==========================================
+// ANTARMUKA & TIPE DATA
+// ==========================================
 interface PortableTextNode {
   text?: string;
   children?: { text?: string }[];
@@ -18,6 +31,14 @@ interface ListeningKaraokeProps {
   seekToLine: (startTime: number) => void;
 }
 
+// ==========================================
+// KOMPONEN UTAMA: ListeningKaraoke
+// ==========================================
+/**
+ * Komponen transkrip interaktif yang tersinkronisasi dengan pemutaran audio.
+ * 
+ * @param {ListeningKaraokeProps} props Properti untuk komponen karaoke menyimak.
+ */
 export default function ListeningKaraoke({ 
   transcript, 
   activeIndex, 
@@ -27,7 +48,7 @@ export default function ListeningKaraoke({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const activeLineRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to active line
+  // Gulir otomatis secara halus ke posisi baris transkrip yang sedang aktif
   useEffect(() => {
     if (activeLineRef.current && scrollContainerRef.current) {
       activeLineRef.current.scrollIntoView({
@@ -39,10 +60,10 @@ export default function ListeningKaraoke({
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto p-4 lg:p-8">
-      {/* Header Controls */}
+      {/* Kontrol Header Transkrip */}
       <div className="flex items-center justify-between px-2">
         <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50">
-          Interactive Transcript
+          Transkrip Interaktif
         </h3>
         <Button
           variant="ghost"
@@ -55,15 +76,15 @@ export default function ListeningKaraoke({
         >
           <Languages size={14} />
           <span className="text-[10px] font-bold uppercase tracking-widest">
-            {showTranslation ? "Hide Translation" : "Show Translation"}
+            {showTranslation ? "Sembunyikan Terjemahan" : "Tampilkan Terjemahan"}
           </span>
         </Button>
       </div>
 
-      {/* Transcript Area */}
+      {/* Area Tampilan Transkrip */}
       <div className="relative bg-card rounded-[3rem] border border-border shadow-2xl overflow-hidden p-8 lg:p-12">
 
-        {/* Decorative Background Glows */}
+        {/* Pendar Latar Belakang Dekoratif (Gaya Siber) */}
         <div className="absolute -top-24 -left-24 size-64 bg-primary/5 blur-[100px] rounded-full pointer-events-none" />
         <div className="absolute -bottom-24 -right-24 size-64 bg-primary/5 blur-[100px] rounded-full pointer-events-none" />
         
@@ -90,10 +111,9 @@ export default function ListeningKaraoke({
                   isActive 
                     ? "bg-primary/10 border-primary/30 shadow-[0_0_40px_-10px_rgba(var(--primary-rgb),0.2)]" 
                     : "bg-muted/30 border-border hover:bg-muted/50"
-
                 )}
               >
-                {/* Speaker Tag */}
+                {/* Penanda Pembicara */}
                 {line.speaker && (
                   <div className="flex items-center gap-2 mb-3">
                     <div className={cn(
@@ -109,12 +129,11 @@ export default function ListeningKaraoke({
                   </div>
                 )}
  
-                {/* Text Content */}
+                {/* Konten Teks Bahasa Jepang */}
                 <div className={cn(
                   "text-xl lg:text-2xl font-japanese font-medium leading-[1.6] transition-all",
                   isActive ? "text-foreground" : "text-foreground/40 group-hover:text-foreground/70"
                 )}>
-
                   {typeof line.text === "string"
                     ? line.text
                     : Array.isArray(line.text)
@@ -128,7 +147,7 @@ export default function ListeningKaraoke({
                       : String(line.text || "")}
                 </div>
  
-                {/* Translation (Optional) */}
+                {/* Terjemahan Dinamis (Opsional) */}
                 <AnimatePresence initial={false}>
                   {(isActive || showTranslation) && (
                     <m.div
@@ -147,7 +166,7 @@ export default function ListeningKaraoke({
                   )}
                 </AnimatePresence>
  
-                {/* Active Indicator Bar (Cyber Style) */}
+                {/* Bilah Indikator Garis Aktif (Gaya Siber) */}
                 {isActive && (
                   <m.div 
                     layoutId="active-indicator"
@@ -159,11 +178,11 @@ export default function ListeningKaraoke({
           })}
         </div>
  
-        {/* Top & Bottom Mask Fades */}
+        {/* Efek Pudar Gradasi Masking Atas & Bawah */}
         <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-card/80 via-card/20 to-transparent z-20 pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-card/80 via-card/20 to-transparent z-20 pointer-events-none" />
       </div>
-
     </div>
   );
 }
+

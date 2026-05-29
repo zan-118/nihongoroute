@@ -1,9 +1,21 @@
+/**
+ * @file reading.actions.ts
+ * @description Server Actions untuk mengambil data materi membaca (reading) dari Sanity CMS.
+ * Menyediakan fungsi paginasi dengan filter level JLPT untuk halaman pustaka membaca.
+ */
+
 "use server";
 
+// ======================
+// IMPORTS
+// ======================
 import { sanityClient } from "@/lib/sanity.client";
 import { createClient } from "@/lib/supabase/server";
 import { PaginatedReadingResponse } from "@/types/library";
 
+// ======================
+// TYPES
+// ======================
 interface SanityReadingItem {
   _id: string;
   title: string;
@@ -14,6 +26,10 @@ interface SanityReadingItem {
   body?: unknown;
   _createdAt: string;
 }
+
+// ======================
+// SERVER ACTIONS
+// ======================
 
 /**
  * Mengambil materi membaca (reading) dengan paginasi dan filter level dari Sanity.
@@ -68,7 +84,7 @@ export async function getPaginatedReading(
       total: result.total || 0,
     };
   } catch (error) {
-    console.error("Failed to fetch paginated reading from Sanity:", error);
+    console.error("Gagal mengambil data paginasi bacaan dari Sanity:", error);
     return { data: [], total: 0 };
   }
 }

@@ -1,11 +1,24 @@
 "use client";
 
+/**
+ * @file StreakFreezeCard.tsx
+ * @description Komponen visual kartu pembekuan beruntun (Streak Freeze Card).
+ * Menampilkan kuantitas pelindung streak milik pengguna, opsi pembelian menggunakan XP, 
+ * serta melakukan sinkronisasi transaksi langsung ke Zustand store (`useUserStore`).
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, Zap, Info } from "lucide-react";
 import { toast } from "sonner";
 import { useUserStore, STREAK_FREEZE_COST } from "@/store/useUserStore";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function StreakFreezeCard() {
   const xp = useUserStore(s => s.xp);
   const freezeCount = useUserStore(s => s.inventory.streakFreeze || 0);

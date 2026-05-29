@@ -1,16 +1,20 @@
 /**
  * @file routes.ts
- * @description Single Source of Truth untuk semua URL di NihongoRoute.
- * Memastikan perutean yang rapi, konsisten, dan mudah dikelola.
- * @module lib/routes
+ * @description Single Source of Truth luring-ready untuk pemetaan seluruh URI internal aplikasi NihongoRoute guna menjamin perutean yang rapi, konsisten, dan mudah dipelihara.
  */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { slugify } from "./utils";
 
+// ==========================================
+// DAFTAR KONSTANTA RUTE (ROUTES)
+// ==========================================
 export const ROUTES = {
-  // ======================
+  // ==========================================
   // GLOBAL & DASHBOARD
-  // ======================
+  // ==========================================
   HOME: "/",
   DASHBOARD: "/dashboard",
   SUPPORT: "/support",

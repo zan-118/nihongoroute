@@ -5,6 +5,9 @@
  * @module KanjiDetailPage
  */
 
+// ======================
+// IMPOR
+// ======================
 import { Metadata } from "next";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
 import { notFound } from "next/navigation";
@@ -17,13 +20,20 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-// Feature Components
+// Komponen Pendukung
 import { KanjiStrokeHero } from "@/components/features/kanji/detail/KanjiStrokeHero";
 import { KanjiReadings } from "@/components/features/kanji/detail/KanjiReadings";
 import { KanjiRadicals } from "@/components/features/kanji/detail/KanjiRadicals";
 import { KanjiMnemonic } from "@/components/features/kanji/detail/KanjiMnemonic";
 import { KanjiRelatedVocab } from "@/components/features/kanji/detail/KanjiRelatedVocab";
 
+// ======================
+// METADATA SEO
+// ======================
+
+/**
+ * Menghasilkan metadata SEO dinamis untuk halaman detail karakter Kanji.
+ */
 export async function generateMetadata({
   params,
 }: {
@@ -45,6 +55,14 @@ export async function generateMetadata({
   };
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
+/**
+ * Halaman detail karakter kanji (RSC) untuk mengambil data kanji dari database, 
+ * kemudian merender hero goresan, readings Onyomi/Kunyomi, radikal, mnemonic, dan kosakata terkait.
+ */
 export default async function KanjiDetailPage({
   params,
 }: {

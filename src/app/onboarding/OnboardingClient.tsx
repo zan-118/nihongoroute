@@ -1,11 +1,22 @@
+/**
+ * @file OnboardingClient.tsx
+ * @description Komponen utama pemandu onboarding (Onboarding Wizard) interaktif untuk profil awal pengguna.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { m, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { BookOpen, Briefcase, Plane, Tv, ChevronRight, CheckCircle2, Loader2, Sparkles, ArrowLeft } from "lucide-react";
 import { useOnboardingWizard } from "@/components/features/onboarding/useOnboardingWizard";
 
+// ======================
+// KONSTANTA
+// ======================
 const JLPT_LEVELS = [
   { id: "N5", label: "Pemula (N5)" },
   { id: "N4", label: "Dasar (N4)" },
@@ -42,7 +53,7 @@ export default function OnboardingClient() {
 
   return (
     <main className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-6 md:p-12 relative overflow-hidden transition-colors duration-300">
-      {/* Background Decor & Neural Grid */}
+      {/* Dekorasi Latar Belakang & Kisi Neural */}
       <div className="neural-grid" />
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
         <div className="size-[500px] bg-primary/10 rounded-full blur-[120px] opacity-40 absolute -top-12 -left-12" />

@@ -1,5 +1,16 @@
+/**
+ * @file readingMaterial.ts
+ * @description Skema dokumen Sanity Studio untuk Materi Bacaan (Reading). Mengonfigurasi teks bacaan utama, integrasi otomatis Furigana generator, audio/video pendukung, kuis pemahaman dokkai, dan optimasi SEO.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { FuriganaGeneratorInput } from '../components/FuriganaGeneratorInput';
 
+// ==========================================
+// DEFINISI SKEMA DOKUMEN SANITY CMS
+// ==========================================
 export default {
   name: 'readingMaterial',
   title: 'Materi Bacaan (Reading)',

@@ -1,25 +1,22 @@
 "use client";
 
+/**
+ * @file usePasswordUpdate.ts
+ * @description Hook kustom (Custom Hook) untuk mengelola form pembaruan kata sandi baru (Password Update).
+ * Memvalidasi kesamaan dan kekuatan kata sandi, serta mengeksekusi operasi pembaruan akun di Supabase Auth.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 
-/**
- * Custom Hook: usePasswordUpdate
- * 
- * Mengelola logika interaksi pengguna untuk formulir pembaruan kata sandi
- * setelah pengguna melakukan alur reset password melalui email.
- * 
- * @returns {Object} State dan callback form pembaruan kata sandi
- * @returns {string} password - Input kata sandi baru
- * @returns {Function} setPassword - Setter kata sandi baru
- * @returns {string} confirmPassword - Input konfirmasi kata sandi baru
- * @returns {Function} setConfirmPassword - Setter konfirmasi kata sandi baru
- * @returns {boolean} loading - Status memproses pengiriman data ke Supabase Auth
- * @returns {boolean} isSuccess - Menandakan apakah pembaruan berhasil dilakukan
- * @returns {Function} handleUpdatePassword - Callback onSubmit untuk mengeksekusi pembaruan
- */
+// ======================
+// HOOK UTAMA
+// ======================
 export function usePasswordUpdate() {
   const router = useRouter();
   const supabase = createClient();

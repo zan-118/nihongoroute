@@ -1,5 +1,14 @@
+/**
+ * @file ReadingListClient.tsx
+ * @description Komponen klien interaktif untuk halaman daftar materi membaca (Dokkai List).
+ * Menyediakan filter level JLPT, pencarian judul, dan paginasi berbasis state klien.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { BookOpen, ChevronRight, GraduationCap, ChevronLeft, ChevronsLeft, ChevronsRight, Search, Loader2 } from "lucide-react";
@@ -10,22 +19,36 @@ import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { ROUTES } from "@/lib/routes";
 import { getPaginatedReading, PaginatedReadingResponse } from "@/actions/library.actions";
 
+// ======================
+// TIPE DATA
+// ======================
 interface ReadingListClientProps {
   initialData: PaginatedReadingResponse;
 }
 
 const ITEMS_PER_PAGE = 9;
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
+/**
+ * Komponen ReadingListClient: Menyediakan antarmuka interaktif untuk menyaring, mencari,
+ * dan mempaginasi pustaka graded reading dengan React Query.
+ * 
+ * @param {ReadingListClientProps} props Properti komponen.
+ * @returns {JSX.Element} Antarmuka direktori graded reading interaktif.
+ */
 export default function ReadingListClient({ initialData }: ReadingListClientProps) {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Debounce search input
+  // Melakukan debounce pada input pencarian
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(search);
-      setCurrentPage(1); // Reset page on new search
+      setCurrentPage(1); // Reset halaman jika kata kunci pencarian baru diinputkan
     }, 500);
     return () => clearTimeout(handler);
   }, [search]);
@@ -90,7 +113,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
             >
               <Link href={ROUTES.LIBRARY.READING(material.slug)}>
                 <div className="group h-full p-8 rounded-[2.5rem] bg-[rgba(var(--card-rgb),0.4)] backdrop-blur-3xl border border-border hover:border-[rgba(var(--primary-rgb),0.4)] transition-all duration-500 relative overflow-hidden flex flex-col justify-between">
-                  {/* Hover Glow */}
+                  {/* Efek Kilau saat Melayang */}
                   <div className="absolute top-0 right-0 size-32 bg-[rgba(var(--primary-rgb),0.05)] blur-[50px] rounded-full -mr-16 -mt-16 group-hover:bg-[rgba(var(--primary-rgb),0.1)] transition-all" />
                   
                   <div className="space-y-6 relative z-10">

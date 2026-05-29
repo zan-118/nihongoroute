@@ -6,6 +6,9 @@
 
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React, { useState, useMemo } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -28,6 +31,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
+// ======================
+// TIPE DATA
+// ======================
 interface Supporter {
   name: string;
   amount: number;

@@ -1,9 +1,20 @@
+/**
+ * @file FuriganaInput.tsx
+ * @description Komponen input teks bahasa Jepang yang dilengkapi tombol pintasan pembuatan Furigana otomatis via API.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React, { useState } from "react";
 import { Loader2, Wand2 } from "lucide-react";
 import { useFurigana } from "@/components/ui/useFurigana";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface FuriganaInputProps {
   /** Nilai furigana saat ini */
   value: string;
@@ -15,6 +26,9 @@ interface FuriganaInputProps {
   label?: string;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function FuriganaInput({
   value,
   onChange,
@@ -53,7 +67,7 @@ export function FuriganaInput({
           type="button"
           onClick={handleAutoFill}
           disabled={isLoading || !sourceText.trim()}
-          title="Auto-generate furigana"
+          title="Buat furigana otomatis"
           className="flex-shrink-0 p-2 rounded-lg border border-border bg-muted hover:bg-secondary transition-all disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {isLoading ? (

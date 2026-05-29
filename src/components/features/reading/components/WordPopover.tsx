@@ -1,5 +1,11 @@
-"use client";
+/**
+ * @file WordPopover.tsx
+ * @description Komponen popover kata (tooltip interaktif) yang memicu pencarian waktu-nyata (real-time query) data kosakata dari Supabase saat kata dalam artikel diklik.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import React, { useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
@@ -9,23 +15,29 @@ import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import { ExternalLink, Plus, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-
 import AddToSRSButton from "@/components/features/srs/actions/AddToSRSButton";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface WordPopoverProps {
   children: React.ReactNode;
   word: string;
   reading?: string;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 /**
- * WordPopover: Menampilkan popup informasi kosakata saat teks diklik.
- * Mengambil data secara real-time dari Supabase.
+ * Komponen popover kosakata dinamis.
  */
 export default function WordPopover({ children, word, reading }: WordPopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Query untuk mencari data kosakata yang cocok
+  // ==========================================
+  // QUERY & FETCH DATA (REAL-TIME)
+  // ==========================================
   const { data: vocab, isLoading } = useQuery({
     queryKey: ["vocab-lookup", word, reading],
     queryFn: async () => {
@@ -52,9 +64,12 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
       };
     },
     enabled: isOpen,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5, // 5 menit
   });
 
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <div className="relative inline-block group/popover">
       <span 
@@ -70,7 +85,7 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* Backdrop for mobile */}
+            {/* Latar Belakang untuk ponsel (Backdrop) */}
             <m.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -129,7 +144,7 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
                   </div>
                 )}
                 
-                {/* Tail Decoration */}
+                {/* Dekorasi Ekor Popover */}
                 <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 size-4 bg-card/80 border-r border-b border-border/60 rotate-45 transform" />
               </div>
             </m.div>

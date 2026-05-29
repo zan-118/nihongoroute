@@ -1,10 +1,21 @@
+/**
+ * @file MockExams.tsx
+ * @description Komponen daftar simulasi ujian CBT JLPT (MockExams) untuk kategori belajar. Menampilkan kartu ujian premium lengkap dengan waktu pengerjaan dan skor kelulusan.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import Link from "next/link";
 import { m, Variants } from "framer-motion";
 import { Flame, ChevronRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface MockExam {
   id: string;
   title: string;
@@ -17,6 +28,9 @@ interface MockExamsProps {
   itemVariants: Variants;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function MockExams({ exams, itemVariants }: MockExamsProps) {
   if (!exams || exams.length === 0) return null;
 

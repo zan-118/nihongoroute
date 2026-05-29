@@ -1,18 +1,25 @@
+/**
+ * @file useFurigana.ts
+ * @description Hook kustom (useFurigana) untuk mengotomatisasi pembuatan Furigana dari teks Kanji Jepang menggunakan API eksternal dengan caching memori.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { useCallback, useRef } from "react";
 
-/**
- * Hook untuk auto-generate furigana dari teks Jepang
- * menggunakan API /api/furigana yang sudah ada (Kuroshiro).
- */
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function useFurigana() {
   const cacheRef = useRef<Record<string, string>>({});
 
   const getFurigana = useCallback(async (text: string): Promise<string> => {
     if (!text.trim()) return "";
 
-    // Return from cache if available
+    // Kembalikan dari cache jika tersedia
     if (cacheRef.current[text]) return cacheRef.current[text];
 
     try {

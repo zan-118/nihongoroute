@@ -1,14 +1,29 @@
-"use client";
+/**
+ * @file AnimatedKanji.tsx
+ * @description Komponen visual untuk menampilkan kanji yang sedang digambar secara teranimasi (stroke order animation) di dalam kanvas latihan menulis.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import React from "react";
 import { useAnimatedKanji } from "../kanji/useAnimatedKanji";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface AnimatedKanjiProps {
   character: string;
   triggerKey: number;
   color?: string;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen animasi coretan kanji di dalam kanvas.
+ */
 export default function AnimatedKanji({
   character,
   triggerKey,
@@ -16,6 +31,9 @@ export default function AnimatedKanji({
 }: AnimatedKanjiProps) {
   const { containerRef, error } = useAnimatedKanji(character, triggerKey, color);
 
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   if (error) {
     return (
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">

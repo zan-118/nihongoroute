@@ -1,5 +1,13 @@
 "use client";
 
+/**
+ * @file KanjiStrokePlayer.tsx
+ * @description Komponen pemutar animasi urutan goresan (stroke order) Kanji dengan kontrol playback interaktif (play, pause, speed, step-by-step).
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import React, { useState, useEffect, useCallback } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { 
@@ -15,6 +23,9 @@ import { Button } from "@/components/ui/button";
 import { useKanjiSvg } from "../hooks/useKanjiSvg";
 import { PlaybackStatus } from "../types";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface KanjiStrokePlayerProps {
   character: string;
   strokeOrderSvg?: string;
@@ -22,27 +33,36 @@ interface KanjiStrokePlayerProps {
   size?: number;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen interaktif pengendali pemutaran goresan kanji.
+ */
 export default function KanjiStrokePlayer({
   character,
   strokeOrderSvg,
   strokeColor = "#a855f7",
   size = 250,
 }: KanjiStrokePlayerProps) {
+  // ==========================================
+  // STATUS & STATE & HOOKS
+  // ==========================================
   const { data, loading, error } = useKanjiSvg(character, strokeOrderSvg);
   
-  // Playback State
   const [status, setStatus] = useState<PlaybackStatus>("paused");
   const [speed, setSpeed] = useState(1);
-  const [currentStroke, setCurrentStroke] = useState(-1); // -1 means show nothing/static
+  const [currentStroke, setCurrentStroke] = useState(-1); // -1 berarti tidak menampilkan apa-apa/statis
   const [showNumbers, setShowNumbers] = useState(true);
   const [resetKey, setResetKey] = useState(0);
   const [strokeTrigger, setStrokeTrigger] = useState(0);
 
-
-
-  // Constants
+  // Konstanta durasi animasi dasar (detik)
   const BASE_STROKE_DURATION = 0.8;
 
+  // ==========================================
+  // FUNGSI PENGENDALI PEMUTARAN
+  // ==========================================
   const handleNext = useCallback(() => {
     if (!data) return;
     setCurrentStroke((prev) => {
@@ -80,6 +100,9 @@ export default function KanjiStrokePlayer({
   };
 
 
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   if (loading) return (
     <div className="flex items-center justify-center bg-[rgba(var(--card-rgb),0.2)] backdrop-blur-xl rounded-3xl border border-border" style={{ width: size, height: size }}>
       <div className="animate-spin rounded-full size-8 border-b-2 border-primary" />
@@ -94,7 +117,7 @@ export default function KanjiStrokePlayer({
 
   return (
     <div className="flex flex-col items-center gap-6">
-      {/* CYBER-GLASS PLAYER CONTAINER */}
+      {/* WADAH PEMUTAR CYBER-GLASS */}
       <div 
         className="relative bg-[rgba(var(--card-rgb),0.4)] backdrop-blur-2xl rounded-[2.5rem] border border-border shadow-2xl overflow-hidden group p-6 md:p-8 flex items-center justify-center"
         style={{ 
@@ -103,10 +126,10 @@ export default function KanjiStrokePlayer({
           aspectRatio: '1/1'
         }}
       >
-        {/* Neon Glow Border */}
+        {/* Batas Pendar Neon */}
         <div className="absolute inset-0 rounded-[2.5rem] ring-1 ring-border group-hover:ring-primary/30 transition-all duration-500" />
         
-        {/* Grid Pattern Background */}
+        {/* Latar Belakang Pola Grid */}
         <div className="absolute inset-0 bg-[radial-gradient(#ffffff05_1px,transparent_1px)] [background-size:20px_20px] opacity-50" />
 
         <svg
@@ -115,7 +138,7 @@ export default function KanjiStrokePlayer({
           className="relative w-full h-full z-10"
         >
 
-          {/* Static Background Strokes (Light Gray) */}
+          {/* Goresan Latar Belakang Statis (Abu-abu Terang) */}
           {data.strokes.map((stroke) => (
             <path
               key={`bg-${stroke.index}`}
@@ -131,7 +154,7 @@ export default function KanjiStrokePlayer({
             />
           ))}
 
-          {/* Animated Strokes */}
+          {/* Goresan Teranimasi */}
           {data.strokes.map((stroke) => {
             const isVisible = stroke.index <= currentStroke;
             const isAnimating = stroke.index === currentStroke && status === "playing";
@@ -177,7 +200,7 @@ export default function KanjiStrokePlayer({
             );
           })}
 
-          {/* Stroke Numbers */}
+          {/* Angka Goresan */}
           <AnimatePresence>
             {showNumbers && data.numbers.map((num, i) => (
               (currentStroke === -1 || i <= currentStroke) && (
@@ -202,15 +225,15 @@ export default function KanjiStrokePlayer({
           </AnimatePresence>
         </svg>
 
-        {/* Speed Indicator Badge */}
+        {/* Lencana Indikator Kecepatan */}
         <div className="absolute top-6 right-8 z-20">
           <div className="px-2 py-1 rounded-md bg-[rgba(var(--background-rgb),0.05)] border border-border text-[8px] font-bold uppercase tracking-widest text-primary flex items-center gap-1">
-            <Zap size={8} aria-hidden="true" /> {speed}x SPEED
+            <Zap size={8} aria-hidden="true" /> {speed}x KECEPATAN
           </div>
         </div>
       </div>
 
-      {/* PLAYBACK CONTROLS */}
+      {/* KONTROL PEMUTARAN */}
       <div className="flex flex-col gap-4 w-full max-w-[320px]">
         <div className="grid grid-cols-5 gap-2 bg-[rgba(var(--background-rgb),0.05)] p-2 rounded-2xl border border-border">
           <Button
@@ -264,7 +287,7 @@ export default function KanjiStrokePlayer({
           </Button>
         </div>
 
-        {/* Speed & Progress Info */}
+        {/* Info Kecepatan & Progres */}
         <div className="flex items-center justify-between px-2">
           <div className="flex gap-1">
             {[0.5, 1, 1.5, 2].map((s) => (
@@ -280,7 +303,7 @@ export default function KanjiStrokePlayer({
             ))}
           </div>
           <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
-            Stroke {currentStroke + 1} / {data.strokes.length}
+            Goresan {currentStroke + 1} / {data.strokes.length}
           </span>
         </div>
       </div>

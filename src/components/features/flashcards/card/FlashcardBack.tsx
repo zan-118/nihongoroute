@@ -1,3 +1,11 @@
+/**
+ * @file FlashcardBack.tsx
+ * @description Komponen sisi belakang kartu flashcard (jawaban), menampilkan arti kata, furigana/romaji, contoh kalimat, status memori SRS, dan opsi pintas seperti latihan menulis.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,6 +17,9 @@ import * as wanakana from "wanakana";
 import { splitFurigana } from "@/components/ui/SmartJapanese";
 import { MnemonicEditor } from "@/components/features/srs/mnemonic/MnemonicEditor";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface FlashcardBackProps {
   id: string;
   docType?: string;
@@ -38,6 +49,12 @@ interface FlashcardBackProps {
   relatedKanji?: unknown[] | null;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen sisi belakang kartu flashcard.
+ */
 export function FlashcardBack({
   id,
   docType,
@@ -54,6 +71,9 @@ export function FlashcardBack({
   hinshi,
   examples,
 }: FlashcardBackProps) {
+  // ==========================================
+  // METODE PENGENDALI & HELPERS
+  // ==========================================
   const { isKanji, themeColor, themeBorder, themeShadow } = themeContext;
 
   const isRomaji = furigana && /^[a-zA-Z\s.,?!'-]+$/.test(furigana);
@@ -70,6 +90,9 @@ export function FlashcardBack({
 
   const memory = srsState ? getMemoryLevel(srsState.interval) : { label: "Baru", color: "text-primary bg-primary/10" };
 
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <Card
       className={`absolute inset-0 w-full h-full border ${themeBorder} rounded-2xl ${themeShadow} flex flex-col p-4 md:p-6 transition-all duration-500 shadow-none overflow-hidden bg-card`}

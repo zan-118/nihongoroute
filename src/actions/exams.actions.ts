@@ -1,9 +1,21 @@
+/**
+ * @file exams.actions.ts
+ * @description Server Actions untuk mengambil data kategori kursus, daftar simulasi ujian (Mock Exam),
+ * dan detail soal ujian dari Sanity CMS serta Supabase (arsitektur split-source).
+ */
+
 "use server";
 
+// ======================
+// IMPORTS
+// ======================
 import { createClient } from "@/lib/supabase/server";
 import { sanityClient } from "@/lib/sanity.client";
 import { getSanityLessonsByCategory } from "@/lib/queries";
 
+// ======================
+// TYPES
+// ======================
 interface SanityLessonListItem {
   _id: string;
   title: string;
@@ -33,6 +45,10 @@ interface SanityQuestionItem {
   options: string[];
   correctAnswer: number | string;
 }
+
+// ======================
+// SERVER ACTIONS
+// ======================
 
 /**
  * Server Action: getCourseCategoryData
@@ -100,7 +116,7 @@ export async function getCourseCategoryData(slug: string) {
       }))
     };
   } catch (error) {
-    console.error("Failed to fetch course category data:", error);
+    console.error("Gagal mengambil data kategori kursus:", error);
     return { category: null, lessons: [], mockExams: [] };
   }
 }
@@ -139,7 +155,7 @@ export async function getExamsList() {
       passingScore: e.passing_score ?? 90
     }));
   } catch (error) {
-    console.error("Failed to fetch exams list from Sanity:", error);
+    console.error("Gagal mengambil daftar simulasi ujian dari Sanity:", error);
     return [];
   }
 }
@@ -182,7 +198,7 @@ export async function getExamByIdOrSlug(idOrSlug: string) {
 
     if (!exam) return null;
 
-    // Resolve categorySlug if it's a UUID from Supabase, or use it directly if it's a slug
+    // Selesaikan categorySlug jika berupa UUID dari Supabase, atau gunakan langsung jika berupa slug
     let categorySlug = exam.category_id || "general";
     if (categorySlug && categorySlug.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
       const supabase = await createClient();
@@ -215,7 +231,7 @@ export async function getExamByIdOrSlug(idOrSlug: string) {
       }))
     };
   } catch (error) {
-    console.error("Failed to fetch exam detail from Sanity:", error);
+    console.error("Gagal mengambil detail simulasi ujian dari Sanity:", error);
     return null;
   }
 }

@@ -4,9 +4,15 @@
  * @module TrakteerWebhook
  */
 
+// ======================
+// IMPOR
+// ======================
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface TrakteerPayload {
   tr_id?: string;
   transaction_id?: string;
@@ -19,11 +25,14 @@ interface TrakteerPayload {
   key?: string;
 }
 
+// ======================
+// HANDLER UTAMA (POST)
+// ======================
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as TrakteerPayload;
     
-    // Trakteer payload fields:
+    // Field payload Trakteer:
     // transaction_id/tr_id, supporter_name, quantity, price, net_amount, supporter_message/support_message
     const trId = body.transaction_id || body.tr_id;
     const supporterName = body.supporter_name || "Anonim";

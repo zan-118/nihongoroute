@@ -1,8 +1,23 @@
+/**
+ * @file page.tsx
+ * @description Halaman detail graded reading (Dokkai) dinamis untuk meresolusi materi membaca berdasarkan slug.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { getLibraryItemBySlug } from "@/actions/library.actions";
 import ReadingPageClient from "./ReadingPageClient";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
+// ======================
+// METADATA SEO
+// ======================
+
+/**
+ * Menghasilkan metadata SEO dinamis untuk halaman graded reading tertentu.
+ */
 export async function generateMetadata({
   params,
 }: {
@@ -17,6 +32,13 @@ export async function generateMetadata({
   };
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
+/**
+ * Halaman detail graded reading (RSC) untuk memuat artikel membaca dari Sanity CMS, kemudian merender reader ReadingPageClient.
+ */
 export default async function ReadingPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const decodedSlug = decodeURIComponent(slug);

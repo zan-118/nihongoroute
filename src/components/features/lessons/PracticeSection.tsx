@@ -1,7 +1,18 @@
+/**
+ * @file PracticeSection.tsx
+ * @description Komponen seksi latihan/ujian akhir pelajaran (PracticeSection) untuk mengarahkan pengguna ke ujian komprehensif bab tersebut.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import Link from "next/link";
 import { Award } from "lucide-react";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 export interface PracticeLessonItem {
   slug: string;
   title: string;
@@ -16,6 +27,9 @@ interface PracticeSectionProps {
   lesson: LessonPracticeData;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export const PracticeSection: React.FC<PracticeSectionProps> = ({ lesson }) => {
   if (!lesson.finalPractice) return null;
 

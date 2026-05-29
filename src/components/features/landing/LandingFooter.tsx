@@ -1,21 +1,37 @@
 "use client";
 
+/**
+ * @file LandingFooter.tsx
+ * @description Komponen Footer multi-kolom premium untuk Landing Page NihongoRoute.
+ * Menyediakan pintasan navigasi belajar (Kana, Kosakata, Kanji, Tata Bahasa, Ujian),
+ * tautan legalitas/dukungan, serta integrasi ikon media sosial resmi platform.
+ *
+ * @package components/features/landing
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 /**
- * Komponen LandingFooter yang telah dirombak total menjadi 
- * footer multi-kolom premium dengan integrasi tautan media sosial resmi.
+ * Komponen LandingFooter
+ * Bagian kaki halaman yang terstruktur dan responsif untuk Landing Page.
  */
 export function LandingFooter() {
   return (
     <footer className="mt-[120px] pt-[80px] border-t border-border/80 pb-[55px] relative z-10 w-full">
-      {/* Decorative Blur Background behind Footer */}
+      {/* Latar Belakang Kilau Dekoratif */}
       <div className="absolute bottom-0 right-0 w-[400px] h-[300px] bg-primary/5 rounded-full blur-[100px] pointer-events-none -z-10" />
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-[55px] mb-[80px]">
-        {/* COLUMN 1: BRANDING & SOSIAL MEDIA */}
+        {/* KOLOM 1: BRANDING & MEDIA SOSIAL */}
         <div className="lg:col-span-4 flex flex-col gap-6">
           <div className="flex items-center gap-[13px]">
             <div className="relative size-10 dark:drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]">
@@ -40,7 +56,7 @@ export function LandingFooter() {
             Platform modern bebas biaya yang didesain khusus untuk membantu Anda menguasai bahasa Jepang secara mandiri, interaktif, dan tanpa hambatan offline.
           </p>
 
-          {/* SOCIAL MEDIA LINKS */}
+          {/* TAUTAN MEDIA SOSIAL */}
           <div className="flex items-center gap-3.5 pt-2">
             {/* Facebook */}
             <a
@@ -85,7 +101,7 @@ export function LandingFooter() {
           </div>
         </div>
 
-        {/* COLUMN 2: BELAJAR */}
+        {/* KOLOM 2: NAVIGASI BELAJAR */}
         <div className="lg:col-span-2 lg:col-start-6 flex flex-col gap-5">
           <span className="text-xs font-black uppercase tracking-widest text-foreground">
             Belajar
@@ -109,7 +125,7 @@ export function LandingFooter() {
           </div>
         </div>
 
-        {/* COLUMN 3: EKOSISTEM */}
+        {/* KOLOM 3: EKOSISTEM & FITUR */}
         <div className="lg:col-span-2 flex flex-col gap-5">
           <span className="text-xs font-black uppercase tracking-widest text-foreground">
             Fitur Utama
@@ -135,7 +151,7 @@ export function LandingFooter() {
           </div>
         </div>
 
-        {/* COLUMN 4: DUKUNGAN */}
+        {/* KOLOM 4: DUKUNGAN & HUKUM */}
         <div className="lg:col-span-2 flex flex-col gap-5">
           <span className="text-xs font-black uppercase tracking-widest text-foreground">
             Dukungan & Legal
@@ -154,7 +170,7 @@ export function LandingFooter() {
         </div>
       </div>
 
-      {/* BOTTOM SECTION: COPYRIGHT */}
+      {/* SEKSI BAWAH: HAK CIPTA */}
       <div className="pt-8 border-t border-border/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
         <span suppressHydrationWarning={true}>
           © {new Date().getFullYear()} NihongoRoute. All Rights Reserved.
@@ -166,3 +182,4 @@ export function LandingFooter() {
     </footer>
   );
 }
+

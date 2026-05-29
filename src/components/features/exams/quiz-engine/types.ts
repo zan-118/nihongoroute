@@ -1,3 +1,11 @@
+/**
+ * @file types.ts
+ * @description Definisi tipe data (interfaces) untuk kuis (Quiz Engine) NihongoRoute.
+ */
+
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 export interface QuizQuestion {
   question: string;
   options: string[];

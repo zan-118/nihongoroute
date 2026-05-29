@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * @file DashboardHero.tsx
+ * @description Komponen Hero utama pada halaman dashboard NihongoRoute.
+ * Menyajikan sapaan personal kepada pengguna, rangkuman status review hafalan (Spaced Repetition System),
+ * indikator level/XP, info streak harian, serta tombol pintas review kilat dan lanjut belajar.
+ *
+ * @package components/features/dashboard
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import { m, Variants } from "framer-motion";
 import { Sparkles, BrainCircuit, Target, BookMarked, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +27,9 @@ import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import ContinueLearning from "./ContinueLearning";
 import { getLevelProgressPercent } from "@/lib/level";
 
+// ==========================================
+// ANTARMUKA & PROPS (INTERFACES)
+// ==========================================
 interface DashboardHeroProps {
   guestId: string;
   itemVariants: Variants;
@@ -32,6 +48,9 @@ interface DashboardHeroProps {
   isAuthenticated: boolean;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 export default function DashboardHero({ 
   guestId, 
   itemVariants, 
@@ -40,7 +59,7 @@ export default function DashboardHero({
   dueCount,
   isAuthenticated
 }: DashboardHeroProps) {
-  // ATOMIC SELECTORS (Strictly no destructuring)
+  // SELEKTOR ATOMIK (Sangat dilarang melakukan destrukturisasi untuk menjaga reaktivitas store)
   const name = useUserStore(s => s.name);
   const xp = useUserStore(s => s.xp);
   const level = useUserStore(s => s.level);
@@ -50,6 +69,8 @@ export default function DashboardHero({
 
   return (
     <m.div variants={itemVariants} className="flex flex-col gap-[34px] items-start w-full">
+      
+      {/* AREA SAPAAN PENGGUNA */}
       <div className="flex-1 w-full flex flex-col items-center lg:items-start text-center lg:text-left">
         {loading ? (
           <Skeleton className="h-6 w-32 rounded-full mb-6" />
@@ -82,9 +103,9 @@ export default function DashboardHero({
         )}
       </div>
 
-      {/* MAIN CALL TO ACTION - PREMIUM GLASS CARD */}
+      {/* KARTU PINTAS PREMIUM (CALL TO ACTION) */}
       <div className="w-full relative">
-        {/* Background Decorative Glow */}
+        {/* Glow Latar Belakang Dekoratif */}
         <div className="absolute -top-[55px] -right-[55px] size-[233px] bg-primary/5 rounded-full blur-[89px] pointer-events-none" />
         
         {loading ? (
@@ -94,7 +115,8 @@ export default function DashboardHero({
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
           
           <div className="relative z-10 flex flex-col items-center text-center">
-            {/* Pulsing Icon */}
+            
+            {/* Ikon Berdenyut Interaktif (Pulsing Icon) */}
             <m.div 
               animate={dueCount > 0 ? {
                 scale: [1, 1.02, 1],
@@ -123,7 +145,7 @@ export default function DashboardHero({
                 : "Hebat! Semua ingatanmu masih segar. Siap lanjut ke materi baru?"}
             </p>
 
-            {/* QUICK STATS INSIDE HERO - Space Optimized for Mobile */}
+            {/* RINGKASAN STATUS DI DALAM HERO (Mobile-Optimized) */}
             <div className="grid grid-cols-3 gap-2 md:gap-[21px] mb-[34px] md:mb-[55px] w-full max-w-sm">
               <div className="flex flex-col items-center gap-1 md:gap-2">
                 <div className="flex items-center gap-1 md:gap-1.5 text-warning">
@@ -183,7 +205,7 @@ export default function DashboardHero({
         </Card>
         )}
         
-        {/* CONTINUE LEARNING WIDGET */}
+        {/* WIDGET LANJUT BELAJAR */}
         {!loading && (
           <m.div
             initial={{ opacity: 0, y: 20 }}
@@ -195,13 +217,13 @@ export default function DashboardHero({
           </m.div>
         )}
         
-        {/* SMART TIPS */}
+        {/* TIPS BELAJAR CERDAS */}
         {!loading && (
           <m.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1 }}
-            className="mt-[34px] p-[21px] rounded-[21px] bg-card/10 backdrop-blur-xl border border-border flex gap-[21px] items-center group hover:bg-card/20 transition-all duration-300"
+            className="mt-[34px] p-[21px] rounded-[21px] bg-card/10 backdrop-blur-xl border border-border flex gap-[21px] items-center group hover:bg-card/20 transition-all duration-300 shadow-none"
           >
             <div className="shrink-0 size-[34px] rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
               <Sparkles size={16} />
@@ -218,3 +240,4 @@ export default function DashboardHero({
     </m.div>
   );
 }
+

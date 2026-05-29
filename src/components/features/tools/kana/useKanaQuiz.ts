@@ -1,44 +1,28 @@
-"use client";
+/**
+ * @file useKanaQuiz.ts
+ * @description Hook kustom untuk mengelola seluruh status dan logika interaksi kuis latihan membaca dan menulis huruf Hiragana & Katakana.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { KANA_DATA, KanaType, KanaCategory } from "./kana-data";
 
+// ==========================================
+// HOOK UTAMA
+// ==========================================
 /**
- * Custom Hook: useKanaQuiz
+ * Hook khusus pengendali logika kuis kana.
  * 
- * Mengelola state dan logika interaksi kuis serta latihan menulis karakter Hiragana dan Katakana (Kana).
- * Mendeteksi mode penulisan dari parameter URL peramban, mengelola alur pertanyaan kuis acak,
- * penilaian akurasi jawaban, nyawa (lives), skor akhir, serta penambahan poin XP pengguna.
- * 
- * @returns {Object} State matriks kana, status kuis, dan callback handler interaksi
- * @returns {KanaType} type - Jenis kana aktif ("hiragana" | "katakana")
- * @returns {Function} setType - Setter jenis kana
- * @returns {KanaCategory} category - Kategori bunyi aktif ("seion", "dakuon", "yoon")
- * @returns {Function} setCategory - Setter kategori bunyi kana
- * @returns {Object | null} selectedChar - Karakter kana terpilih untuk latihan menulis (char, romaji)
- * @returns {Function} setSelectedChar - Setter karakter kana terpilih
- * @returns {boolean} isQuizActive - Status aktif dialog layar kuis kana
- * @returns {number} quizScore - Jumlah skor/jawaban benar pada sesi kuis aktif
- * @returns {number} quizLives - Jumlah sisa nyawa sesi kuis aktif (maksimal 3)
- * @returns {Object | null} quizChar - Karakter target soal aktif (char, romaji)
- * @returns {string[]} quizOptions - Daftar 4 pilihan jawaban romaji/karakter acak
- * @returns {string} quizInput - Pilihan jawaban yang di-klik pengguna
- * @returns {string | null} quizFeedback - Umpan balik jawaban ("correct" | "incorrect")
- * @returns {boolean} gameOver - Status kuis berakhir (selesai 20 soal atau nyawa habis)
- * @returns {string} questionMode - Mode soal aktif ("classic" romaji-to-char vs "audio" audio-to-char)
- * @returns {number} questionCount - Jumlah soal yang telah dijawab (maksimal 20)
- * @returns {boolean} isVictory - Menandakan apakah pengguna lulus kuis dengan skor >= 15
- * @returns {Function} startQuiz - Callback untuk memulai sesi kuis baru dan mengatur ulang state
- * @returns {Function} handleOptionClick - Callback saat salah satu pilihan jawaban di-klik
- * @returns {Function} handleCloseQuiz - Callback untuk menutup modal dialog sesi kuis
- * @returns {string} themeColor - Kode kelas warna teks visual tema ("text-primary" | "text-secondary")
- * @returns {string} themeBorder - Kode kelas warna border tema ("border-primary/30" | "border-secondary/30")
- * @returns {string} themeBgHover - Kode kelas warna hover latar belakang tema ("hover:bg-primary/10" | "hover:bg-secondary/10")
- * @returns {string} themeAccent - Kode kelas warna latar belakang tombol tema ("bg-primary" | "bg-secondary")
+ * @returns State kuis kana, score, sisa nyawa, opsi, dan method handler.
  */
 export function useKanaQuiz() {
+  // ==========================================
+  // STATUS & STATE & HOOKS
+  // ==========================================
   const searchParams = useSearchParams();
   const [type, setType] = useState<KanaType>("hiragana");
   const [category, setCategory] = useState<KanaCategory>("seion");
@@ -47,6 +31,9 @@ export function useKanaQuiz() {
     romaji: string;
   } | null>(null);
 
+  // ==========================================
+  // EFEK SAMPING (EFFECTS)
+  // ==========================================
   // Auto-open writing dialog if mode=writing is present
   useEffect(() => {
     const mode = searchParams.get("mode");
@@ -71,6 +58,10 @@ export function useKanaQuiz() {
 
   const addXP = useUserStore((state) => state.addXP);
 
+  // ==========================================
+  // FUNGSI PEMBANTU (HELPERS)
+  // ==========================================
+
   const getAllKanaForType = useCallback((currentType: KanaType, currentCategory: KanaCategory) => {
     const pairs: { char: string; romaji: string }[] = [];
     const data = KANA_DATA[currentCategory];
@@ -87,6 +78,9 @@ export function useKanaQuiz() {
     return pairs;
   }, []);
 
+  // ==========================================
+  // LOGIKA PENGENDALI & METODE (HANDLERS)
+  // ==========================================
   const nextQuizQuestion = useCallback((currentType: KanaType = type, currentCategory: KanaCategory = category) => {
     const pairs = getAllKanaForType(currentType, currentCategory);
     if (pairs.length === 0) return;
@@ -190,6 +184,9 @@ export function useKanaQuiz() {
   const themeBgHover = isHira ? "hover:bg-primary/10" : "hover:bg-secondary/10";
   const themeAccent = isHira ? "bg-primary" : "bg-secondary";
 
+  // ==========================================
+  // HASIL HOOK (RETURN VALUE)
+  // ==========================================
   return {
     type,
     setType,

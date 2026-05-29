@@ -5,7 +5,7 @@
  */
 
 // ======================
-// IMPORTS
+// IMPOR
 // ======================
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -18,7 +18,7 @@ interface PageProps {
 }
 
 // ======================
-// METADATA
+// METADATA SEO
 // ======================
 
 /**
@@ -43,7 +43,7 @@ export async function generateMetadata({
 }
 
 // ======================
-// MAIN EXECUTION
+// EKSEKUSI UTAMA
 // ======================
 
 /**

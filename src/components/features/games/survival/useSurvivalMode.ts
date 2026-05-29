@@ -1,8 +1,21 @@
+/**
+ * @file useSurvivalMode.ts
+ * @description Hook kustom (Custom Hook) untuk mengelola kondisi dan logika permainan bertema kelangsungan hidup (Survival Mode).
+ * Mengontrol pengurangan nyawa (HP), hitung mundur pewaktu, pengacakan opsi jawaban pengecoh, 
+ * pelacakan skor, serta sinkronisasi perolehan XP ke Zustand store (`useUserStore`).
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { useState, useEffect, useCallback } from "react";
 import { CardData, SurvivalGameState } from "./types";
 import { shuffleArray } from "@/lib/utils";
 import { useUserStore } from "@/store/useUserStore";
 
+// ======================
+// HOOK UTAMA
+// ======================
 export function useSurvivalMode(cards: CardData[]) {
   const MAX_HP = 3;
   const TIME_PER_QUESTION = 10;

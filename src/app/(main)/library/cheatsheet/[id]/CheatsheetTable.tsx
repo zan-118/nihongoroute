@@ -1,11 +1,22 @@
+/**
+ * @file CheatsheetTable.tsx
+ * @description Komponen tabel interaktif untuk menampilkan item cheatsheet dalam format grid premium yang dapat diekspor ke PDF.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import * as wanakana from "wanakana";
 import { splitFurigana } from "@/components/ui/SmartJapanese";
 
+// ======================
+// TIPE DATA
+// ======================
 interface SheetItem {
   label: string;
   jp: string;
@@ -16,6 +27,16 @@ interface CheatsheetTableProps {
   items: SheetItem[];
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
+/**
+ * Komponen tabel interaktif untuk merender daftar materi cheatsheet dengan furigana dan opsi penyalinan.
+ * 
+ * @param {CheatsheetTableProps} props Properti komponen tabel cheatsheet.
+ * @returns {JSX.Element} Tabel cheatsheet interaktif.
+ */
 export function CheatsheetTable({ items }: CheatsheetTableProps) {
   const formatLabel = (text: string) => {
     if (!text) return text;
@@ -25,7 +46,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
       "Pengecualian penting", "Batas", "Fakta budaya", "Nuansa sosial"
     ];
     
-    // Buat regex gabungan dari semua keyword
+    // Membuat ekspresi reguler gabungan dari seluruh kata kunci
     const pattern = new RegExp(`(${keywords.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')}:)`, 'g');
     const parts = text.split(pattern);
 
@@ -69,7 +90,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
               </td>
               <td className="px-4 md:px-8 py-6 md:py-10">
                 <div className="flex flex-col gap-4 md:gap-6">
-                  {/* Expression Section */}
+                  {/* Bagian Ekspresi Jepang */}
                   <div className="flex flex-col gap-1.5">
                     <div className="text-2xl md:text-4xl font-japanese font-black text-foreground tracking-tighter leading-tight">
                       {(() => {
@@ -93,7 +114,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
                     </div>
                   </div>
 
-                  {/* Label Section */}
+                  {/* Bagian Label Penjelas */}
                   <div className="space-y-1">
                     <div className="text-sm md:text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors">
                       {formatLabel(item.label)}

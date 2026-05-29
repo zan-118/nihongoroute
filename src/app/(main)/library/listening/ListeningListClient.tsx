@@ -1,5 +1,13 @@
+/**
+ * @file ListeningListClient.tsx
+ * @description Komponen klien interaktif untuk memetakan, menyaring, dan mempaginasi daftar audio choukai.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React, { useState, useEffect } from "react";
 import { Search, Headphones, Play, ArrowRight, Clock, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -9,12 +17,26 @@ import Link from "next/link";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { getPaginatedListening, PaginatedListeningResponse, ListeningTaskItem } from "@/actions/library.actions";
 
+// ======================
+// TIPE DATA
+// ======================
 interface ListeningListClientProps {
   initialData: PaginatedListeningResponse;
 }
 
 const ITEMS_PER_PAGE = 10;
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
+/**
+ * Komponen ListeningListClient: Menyediakan antarmuka interaktif untuk menyaring, mencari,
+ * dan mempaginasi pustaka latihan menyimak (Listening Lab) dengan React Query.
+ * 
+ * @param {ListeningListClientProps} props Properti komponen.
+ * @returns {JSX.Element} Antarmuka direktori menyimak interaktif.
+ */
 export default function ListeningListClient({ initialData }: ListeningListClientProps) {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -45,7 +67,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
 
   return (
     <div className="space-y-12">
-      {/* Header */}
+      {/* Bagian Tajuk */}
       <div className="flex flex-col gap-6">
         <div className="flex items-center gap-4 mb-2">
           <div className="size-12 rounded-2xl bg-[rgba(var(--primary-rgb),0.1)] flex items-center justify-center text-primary border border-[rgba(var(--primary-rgb),0.2)]">
@@ -70,7 +92,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
         </div>
       </div>
 
-      {/* List */}
+      {/* Daftar Konten */}
       <div className="relative">
         {isFetching && (
           <div className="absolute inset-0 z-50 flex items-center justify-center bg-[rgba(var(--background-rgb),0.5)] backdrop-blur-sm rounded-[2rem]">
@@ -89,7 +111,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
             >
               <Link href={`/library/listening/${task.slug}`}>
                 <Card className="group relative flex items-center gap-6 p-6 bg-[rgba(var(--card-rgb),0.3)] backdrop-blur-3xl border-[rgba(var(--border-rgb),0.4)] hover:border-[rgba(var(--primary-rgb),0.5)] transition-all duration-500 rounded-3xl overflow-hidden hover:shadow-[0_0_40px_rgba(var(--primary-rgb),0.1)] cursor-pointer">
-                  {/* Play Button Background */}
+                  {/* Latar Belakang Tombol Putar */}
                   <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-[rgba(var(--primary-rgb),0.1)] flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500 shrink-0 shadow-inner">
                     <Play size={24} className="ml-1" />
                   </div>
@@ -97,7 +119,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
                   <div className="flex-1 flex flex-col gap-1">
                     <div className="flex items-center gap-3">
                        <span className="text-lg md:text-2xl font-black text-foreground group-hover:text-primary transition-colors duration-300">
-                        {task.title}
+                         {task.title}
                        </span>
                     </div>
                     <div className="flex items-center gap-4 text-xs font-medium text-muted-foreground">
@@ -122,7 +144,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
         </div>
       </div>
 
-      {/* Pagination Controls */}
+      {/* Kontrol Paginasi */}
       {totalPages > 1 && (
         <div className="flex flex-col items-center gap-6 pt-8">
           <div className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">

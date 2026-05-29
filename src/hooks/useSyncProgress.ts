@@ -1,5 +1,13 @@
 "use client";
 
+/**
+ * @file useSyncProgress.ts
+ * @description Hook kustom offline-first selaku orkestrator utama sinkronisasi data progres belajar pengguna (Zustand & Supabase). Mengamati perubahan state lokal, mengonsolidasi data kotor (dirty), melakukan debouncing asinkron selama 2000ms, lalu mengeksekusi mutasi batch terenkripsi ke Supabase.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 import { useUserStore } from "@/store/useUserStore";
@@ -11,13 +19,25 @@ import { useCloudData } from "./useCloudData";
 import { useCloudMutation } from "./useCloudMutation";
 import { useStoreHydration } from "./useStoreHydration";
 
+// ==========================================
+// CUSTOM HOOK UTAMA
+// ==========================================
+/**
+ * Hook kustom untuk menyinkronkan data gamifikasi, target belajar, dan status SRS luring ke database awan Supabase.
+ * 
+ * @returns {Object} Aksi pemantau sinkronisasi (isLoading, syncNow)
+ */
 export function useSyncProgress() {
   const supabase = useMemo(() => createClient(), []);
   
   const userHydrated = useStoreHydration(useUserStore);
   const srsHydrated = useStoreHydration(useSRSStore);
   
-  // User Store Selectors
+  // ==========================================
+  // SELEKTOR STATE LOKAL (ZUSTAND STORES)
+  // ==========================================
+  
+  // Mengambil properti profil atomik dari useUserStore untuk mencegah pemicuan rendering tak terbatas (infinite render)
   const name = useUserStore((s) => s.name);
   const xp = useUserStore((s) => s.xp);
   const streak = useUserStore((s) => s.streak);
@@ -29,16 +49,20 @@ export function useSyncProgress() {
   const dirtyLessons = useUserStore((s) => s.dirtyLessons);
   const isGuest = useUserStore((s) => s.isGuest);
 
-  // SRS Store Selectors
+  // Mengambil state basis data kartu dan penanda kotor pengulangan berkala (SRS)
   const srs = useSRSStore((s) => s.srs);
   const dirtySrs = useSRSStore((s) => s.dirtySrs);
 
-  // UI Store Selectors
+  // Mengambil preferensi antarmuka pengguna
   const settings = useUIStore((s) => s.settings);
 
   const hasMounted = useHasMounted();
 
-  // 1. SESSION QUERY
+  // ==========================================
+  // TIER 2 & TIER 3: ALUR ALIRAN DATA SINKRONISASI
+  // ==========================================
+
+  // 1. Kueri Sesi Pengguna: Mendapatkan status login aktif secara aman dari klien Supabase
   const { data: session } = useQuery({
     queryKey: ["session"],
     queryFn: async () => {
@@ -48,13 +72,15 @@ export function useSyncProgress() {
     enabled: hasMounted,
   });
 
-  // 2. CLOUD DATA FETCHING (Extracted)
+  // 2. Mengambil Data Awan: Menarik profil, SRS, dan data pelajaran dari database saat inisialisasi awal
   const { isFetching } = useCloudData(session, hasMounted);
 
-  // 3. CLOUD MUTATION (Extracted)
+  // 3. Mutasi Awan: Mempersiapkan fungsi eksekusi RPC Supabase dengan strategi retry asinkron
   const syncMutation = useCloudMutation(session);
 
-  // 4. BROADCAST SYNC
+  // 4. Sinkronisasi Lintas Tab (Multi-Tab Integrity):
+  // Mendengarkan saluran penyiaran lokal. Jika tab lain sukses melakukan sinkronisasi awan,
+  // tab aktif ini akan membuang cache React Query untuk menyelaraskan data secara instan.
   const queryClient = useQueryClient();
   useEffect(() => {
     if (typeof window === "undefined" || !("BroadcastChannel" in window)) return;
@@ -68,9 +94,9 @@ export function useSyncProgress() {
     return () => channel.close();
   }, [queryClient]);
 
-  // 5. DEBOUNCED AUTO-SYNC
-  // Use refs for values that change references frequently (objects/Sets from Zustand)
-  // to prevent the auto-sync effect from firing on every mergeProgress call.
+  // 5. Orkestrator Sinkronisasi Latar Belakang (Debounced Auto-Sync):
+  // Menggunakan Referensi (Refs) untuk tipe data non-primitif (Zustand object/Set) agar perubahan
+  // alamat referensi memori tidak memicu efek samping auto-sync secara berlebihan.
   const srsRef = useRef(srs);
   const dirtySrsRef = useRef(dirtySrs);
   const dirtyLessonsRef = useRef(dirtyLessons);
@@ -90,20 +116,24 @@ export function useSyncProgress() {
 
   const isPending = syncMutation.isPending;
 
-  // Stable serialization key for profile data (excludes srs/dirtySrs which use refs)
+  // Serialisasi data profil menjadi string stabil untuk mendeteksi perubahan properti secara presisi
   const profileKey = useMemo(() => JSON.stringify({
     name, xp, streak, studyDays, inventory, settings, lastStudyDate, todayReviewCount
   }), [name, xp, streak, studyDays, inventory, settings, lastStudyDate, todayReviewCount]);
 
-  // Track dirtySrs.size and dirtyLessons.size as primitives to avoid Set reference instability
+  // Melacak ukuran Set data kotor menggunakan tipe primitif number demi menjaga kestabilan dependency array
   const dirtySrsSize = dirtySrs.size;
   const dirtyLessonsSize = dirtyLessons.size;
 
+  // Efek Samping Auto-Sync: Berjalan secara otomatis jika terdeteksi data kotor lokal atau perubahan profil.
+  // Menerapkan debounce selama 2000ms untuk meredam pemanggilan berulang yang sia-sia.
   useEffect(() => {
+    // Penjaga: Jangan sinkronisasi jika data sedang dimuat, sedang dikirim, pengguna tamu, atau belum terhidrasi
     if (isFetching || isPending || !session?.user || isGuest || !userHydrated || !srsHydrated) return;
 
     const isProfileChanged = profileKey !== lastSyncedProgress.current;
 
+    // Jika profil tidak berubah dan tidak ada item kotor lokal, batalkan sinkronisasi
     if (!isProfileChanged && dirtySrsSize === 0 && dirtyLessonsSize === 0) return;
 
     const timer = setTimeout(() => {
@@ -122,6 +152,7 @@ export function useSyncProgress() {
     return () => clearTimeout(timer);
   }, [profileKey, dirtySrsSize, dirtyLessonsSize, session?.user, isFetching, isPending, isGuest, userHydrated, srsHydrated, name, xp, streak, todayReviewCount, lastStudyDate, studyDays, inventory, settings]);
 
+  // Fungsi sinkronisasi manual instan
   const syncNow = useCallback(() => {
     const currentProgress = {
       name, xp, streak, todayReviewCount, lastStudyDate, studyDays,

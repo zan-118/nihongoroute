@@ -1,17 +1,29 @@
 "use client";
 
+/**
+ * @file ReviewCompletionState.tsx
+ * @description Komponen visual layar selesai ulasan (Review Completion State).
+ * Menampilkan ilustrasi lencana/piala, ucapan selamat bertema Bahasa Indonesia premium, serta tombol navigasi kembali ke beranda.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import { Sparkles, Trophy } from "lucide-react";
 import EmptyState from "@/components/ui/EmptyState";
 
+// ======================
+// ANTARMUKA & TIPE
+// ======================
 interface ReviewCompletionStateProps {
   mode: "srs" | "quick";
   onBack: () => void;
 }
 
-/**
- * Tampilan saat sesi review selesai atau tidak ada kartu yang perlu direview.
- */
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function ReviewCompletionState({ mode, onBack }: ReviewCompletionStateProps) {
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-4 w-full">

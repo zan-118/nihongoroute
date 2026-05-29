@@ -1,5 +1,13 @@
 "use client";
 
+/**
+ * @file DictionaryPopup.tsx
+ * @description Komponen popup kamus pintar (Smart Jisho) yang mendeteksi seleksi (highlight) teks bahasa Jepang secara real-time dan menampilkan definisi kosakata serta status SRS.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
@@ -9,12 +17,9 @@ import TTSReader from "@/components/features/tools/tts/TTSReader";
 import AddToSRSButton from "@/components/features/srs/actions/AddToSRSButton";
 import { createClient } from "@/lib/supabase/client";
 
-/**
- * @file DictionaryPopup.tsx
- * @description Pop-up kamus pintar yang muncul saat pengguna menyorot (select) teks Jepang.
- * Mendukung pencarian otomatis di database internal (Supabase/Sanity).
- */
-
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface DictionaryResult {
   word: string;
   furigana?: string;
@@ -23,12 +28,21 @@ interface DictionaryResult {
   id?: string;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen popup kamus pintar melayang.
+ */
 export default function DictionaryPopup() {
   const [selection, setSelection] = useState<{ text: string; x: number; y: number } | null>(null);
   const [result, setResult] = useState<DictionaryResult | null>(null);
   const [loading, setLoading] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
 
+  // ==========================================
+  // METODE PENCARIAN KATA (LOOKUP)
+  // ==========================================
   const lookupWord = async (text: string) => {
     setLoading(true);
     try {
@@ -85,6 +99,9 @@ export default function DictionaryPopup() {
     }
   };
 
+  // ==========================================
+  // EFEK SAMPING (EFFECTS)
+  // ==========================================
   useEffect(() => {
     const handleMouseUp = () => {
       const selected = window.getSelection();
@@ -120,6 +137,9 @@ export default function DictionaryPopup() {
     };
   }, []);
 
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <AnimatePresence>
       {selection && (

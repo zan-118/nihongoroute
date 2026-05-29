@@ -1,11 +1,21 @@
+/**
+ * @file dropdown-menu.tsx
+ * @description Komponen Menu Dropdown (Dropdown Menu) atomik berbasis Radix UI dengan estetika Cyber-glass.
+ */
+
 "use client"
 
+// ======================
+// IMPOR
+// ======================
 import * as React from "react"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
 import { Check, ChevronRight, Circle } from "lucide-react"
-
 import { cn } from "@/lib/utils"
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 const DropdownMenu = DropdownMenuPrimitive.Root
 
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger

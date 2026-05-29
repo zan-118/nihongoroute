@@ -1,5 +1,11 @@
-"use client";
+/**
+ * @file KanaQuizDialog.tsx
+ * @description Komponen dialog kuis interaktif untuk latihan Hiragana & Katakana. Menyediakan umpan balik visual instan (benar/salah), sistem nyawa, dan suara pengucapan aksara.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import React, { useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart, Trophy, Volume2 } from "lucide-react";
@@ -13,6 +19,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { KanaType } from "./kana-data";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface KanaQuizDialogProps {
   isActive: boolean;
   onClose: (open: boolean) => void;
@@ -34,6 +43,12 @@ interface KanaQuizDialogProps {
   isVictory?: boolean;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen modal dialog kuis latihan kana.
+ */
 export function KanaQuizDialog({
   isActive,
   onClose,
@@ -56,6 +71,9 @@ export function KanaQuizDialog({
 }: KanaQuizDialogProps) {
   const isHira = type === "hiragana";
 
+  // ==========================================
+  // METODE & EFEK SAMPING (EFFECTS)
+  // ==========================================
   const speakActiveKana = useCallback(() => {
     if (typeof window === "undefined" || !window.speechSynthesis || !char?.char) return;
     window.speechSynthesis.cancel();
@@ -82,6 +100,9 @@ export function KanaQuizDialog({
     }
   }, [isActive, char, questionMode, speakActiveKana]);
 
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <Dialog
       open={isActive}

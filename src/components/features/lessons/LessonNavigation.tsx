@@ -1,7 +1,18 @@
+/**
+ * @file LessonNavigation.tsx
+ * @description Komponen navigasi footer pelajaran (LessonNavigation) untuk beralih antara materi sebelumnya, materi selanjutnya, atau kembali ke daftar silabus.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 export interface MinimalLessonData {
   slug: string;
   title: string;
@@ -14,6 +25,9 @@ interface LessonNavigationProps {
   categoryId: string;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export const LessonNavigation: React.FC<LessonNavigationProps> = ({ 
   prevLesson, 
   nextLesson, 

@@ -1,6 +1,19 @@
+/**
+ * @file flashcard.actions.ts
+ * @description Server Actions untuk mengambil data kartu flash (flashcards) berdasarkan mode,
+ * level JLPT, dan jumlah yang diminta. Mendukung mode kosakata, kanji, maupun survival.
+ */
+
 "use server";
 
+// ======================
+// IMPORTS
+// ======================
 import { createClient } from "@/lib/supabase/server";
+
+// ======================
+// SERVER ACTIONS
+// ======================
 
 export async function getFlashcardsByMode(
   mode: "vocab" | "kanji" | "survival", 
@@ -15,7 +28,7 @@ export async function getFlashcardsByMode(
       .from("kanji")
       .select("id, character, meaning, onyomi, kunyomi, examples")
       .neq("show_in_flashcard", false)
-      .limit(amount); // Fetch exactly the amount requested by the user
+      .limit(amount); // Ambil tepat sejumlah kuantitas yang diminta oleh pengguna
 
     if (level && level !== "all") {
       query = query.eq("jlpt_level", level.toUpperCase());
@@ -23,7 +36,7 @@ export async function getFlashcardsByMode(
 
     const { data, error } = await query;
     if (error) {
-      console.error("Error fetching kanji flashcards:", error);
+      console.error("Gagal mengambil kartu flash kanji:", error);
       return [];
     }
     
@@ -34,7 +47,7 @@ export async function getFlashcardsByMode(
       .from("vocab")
       .select("id, word, meaning_id, romaji, furigana, slug")
       .neq("show_in_flashcard", false)
-      .limit(amount); // Fetch exactly the amount requested by the user
+      .limit(amount); // Ambil tepat sejumlah kuantitas yang diminta oleh pengguna
 
     if (level && level !== "all") {
       query = query.eq("jlpt_level", level.toUpperCase());
@@ -42,7 +55,7 @@ export async function getFlashcardsByMode(
 
     const { data, error } = await query;
     if (error) {
-      console.error("Error fetching vocab flashcards:", error);
+      console.error("Gagal mengambil kartu flash kosakata:", error);
       return [];
     }
     return data || [];

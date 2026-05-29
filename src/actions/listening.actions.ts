@@ -1,9 +1,21 @@
+/**
+ * @file listening.actions.ts
+ * @description Server Actions untuk mengambil data materi menyimak (listening) dari Sanity CMS.
+ * Menyediakan fungsi paginasi dengan filter level JLPT serta pengambilan satu tugas menyimak acak.
+ */
+
 "use server";
 
+// ======================
+// IMPORTS
+// ======================
 import { sanityClient } from "@/lib/sanity.client";
 import { createClient } from "@/lib/supabase/server";
 import { PaginatedListeningResponse, ListeningTaskItem } from "@/types/library";
 
+// ======================
+// TYPES
+// ======================
 interface SanityListeningItem {
   _id: string;
   title: string;
@@ -14,6 +26,10 @@ interface SanityListeningItem {
   body?: unknown;
   _createdAt: string;
 }
+
+// ======================
+// SERVER ACTIONS
+// ======================
 
 /**
  * Mengambil materi mendengarkan (listening) dengan paginasi dan filter level dari Sanity.
@@ -68,7 +84,7 @@ export async function getPaginatedListening(
       total: result.total || 0,
     };
   } catch (error) {
-    console.error("Failed to fetch paginated listening from Sanity:", error);
+    console.error("Gagal mengambil data paginasi menyimak dari Sanity:", error);
     return { data: [], total: 0 };
   }
 }
@@ -99,7 +115,7 @@ export async function getRandomListeningTask(level: string = "N5"): Promise<List
       transcript: randomItem.body ? JSON.stringify(randomItem.body) : ''
     };
   } catch (error) {
-    console.error("Failed to fetch random listening task from Sanity:", error);
+    console.error("Gagal mengambil tugas menyimak acak dari Sanity:", error);
     return null;
   }
 }

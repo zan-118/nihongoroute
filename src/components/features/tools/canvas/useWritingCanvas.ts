@@ -1,11 +1,26 @@
+/**
+ * @file useWritingCanvas.ts
+ * @description Hook kustom untuk mengelola kanvas coretan (canvas drawing) interaktif untuk melatih penulisan Hiragana, Katakana, dan Kanji, terintegrasi dengan sensor akurasi goresan.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { useRef, useState, useEffect, useCallback } from "react";
 import { useUserStore } from "@/store/useUserStore";
 import { sounds } from "@/lib/audio";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface UseWritingCanvasProps {
   character: string;
   strokeColor: string;
 }
+
+// ==========================================
+// FUNGSI PEMBANTU INTERNAL (HELPERS)
+// ==========================================
 
 /**
  * Helper to resolve CSS colors (HEX, RGB, HSL, CSS variables) to a valid Canvas shadowColor string.
@@ -22,20 +37,20 @@ const getShadowColor = (colorStr: string, opacity: number): string => {
       resolved = getComputedStyle(temp).color;
       document.body.removeChild(temp);
     } catch (e) {
-      // Fallback safe defaults if getComputedStyle fails or in test env
+      // Default aman cadangan jika getComputedStyle gagal atau di lingkungan pengujian
     }
   }
 
-  // Handle rgb(r, g, b) format
+  // Tangani format rgb(r, g, b)
   if (resolved.startsWith("rgb(")) {
     return resolved.replace("rgb(", "rgba(").replace(")", `, ${opacity})`);
   }
-  // Handle rgba(r, g, b, a) format
+  // Tangani format rgba(r, g, b, a)
   if (resolved.startsWith("rgba(")) {
     return resolved;
   }
   
-  // Handle HEX format
+  // Tangani format HEX
   let hex = resolved.replace("#", "").trim();
   if (hex.length === 3) {
     hex = hex.split("").map((c) => c + c).join("");
@@ -50,36 +65,16 @@ const getShadowColor = (colorStr: string, opacity: number): string => {
   return resolved;
 };
 
+// ==========================================
+// HOOK UTAMA
+// ==========================================
 /**
- * @file useWritingCanvas.ts
- * @description Hook untuk mengelola kanvas latihan menulis dengan koreksi coretan Kanji interaktif secara offline-first.
- * Dioptimalkan dengan pencocokan vektor (Vector Matching) terhadap koordinat standar KanjiVG.
- */
-
-/**
- * Custom Hook: useWritingCanvas
- * 
- * Mengelola state dan interaksi kanvas interaktif untuk latihan menulis Kanji bahasa Jepang.
- * Menangani penggambaran coretan pengguna, pencocokan ketepatan urutan coretan (stroke order) 
- * secara asinkron berbasis koordinat vektor SVG, pemutaran suara feedback prosedural (sound effects),
- * serta penambahan XP poin pengguna saat berhasil menulis karakter dengan benar.
- * 
- * @param {Object} props - Properti inisialisasi hook
- * @param {string} props.character - Karakter Kanji target yang sedang dipelajari
- * @param {string} props.strokeColor - Warna visual coretan kanvas
- * @returns {Object} Ref kanvas, state penilaian coretan, dan callback interaksi
- * @returns {React.RefObject<HTMLCanvasElement | null>} canvasRef - Ref elemen HTML5 Canvas
- * @returns {number} currentStrokeIndex - Indeks coretan Kanji aktif saat ini
- * @returns {number} totalStrokes - Total coretan dari karakter Kanji aktif
- * @returns {boolean} isCompleted - Status apakah karakter selesai ditulis secara utuh
- * @returns {boolean} isCorrect - Status ketepatan coretan yang baru saja digambar
- * @returns {boolean} isLoadingSVG - Menandakan apakah pengambilan data vektor KanjiVG sedang berjalan
- * @returns {Function} handleClear - Callback untuk membersihkan papan tulis kanvas
- * @returns {Function} handleUndo - Callback untuk membatalkan coretan terakhir
- * @returns {Function} handleRedo - Callback untuk memulihkan coretan yang dibatalkan
- * @returns {number} score - Skor akurasi ketepatan penulisan coretan (persentase)
+ * Hook khusus pengendali coretan kanvas menulis kana/kanji.
  */
 export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasProps) {
+  // ==========================================
+  // STATUS & STATE & REFS
+  // ==========================================
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -102,6 +97,9 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
 
   const addXP = useUserStore((state) => state.addXP);
 
+  // ==========================================
+  // EFEK SAMPING (EFFECTS)
+  // ==========================================
   // Memuat data guratan KanjiVG dengan dukung Caching Offline-First
   useEffect(() => {
     if (!character) {
@@ -171,7 +169,7 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
       pathEl.setAttribute("d", d);
 
       const length = pathEl.getTotalLength ? pathEl.getTotalLength() : 100;
-      const sampleCount = 5; // Start, Mid x3, End
+      const sampleCount = 5; // Awal, Tengah x3, Akhir
       for (let i = 0; i < sampleCount; i++) {
         const dist = (i / (sampleCount - 1)) * length;
         const pt = pathEl.getPointAtLength ? pathEl.getPointAtLength(dist) : { x: 54, y: 54 };
@@ -270,6 +268,9 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
     }
   }, [strokeColor, redrawCanvas]);
 
+  // ==========================================
+  // LOGIKA PENGENDALI & KOREKSI CORETAN (CORE)
+  // ==========================================
   const startDrawing = useCallback((e: React.PointerEvent) => {
     if (isLocked || isCompleted) return;
     if (e.button !== 0 && e.pointerType === "mouse") return;
@@ -368,7 +369,7 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
         addXP(10);
         setShowXP(true);
         setTimeout(() => setShowXP(false), 2000);
-        // Play triumph melody
+        // Mainkan melodi kemenangan
         setTimeout(() => {
           sounds?.playSuccess();
           setTimeout(() => sounds?.playPop(), 80);
@@ -422,6 +423,9 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
     setReplayKey((prev) => prev + 1);
   };
 
+  // ==========================================
+  // HASIL HOOK (RETURN VALUE)
+  // ==========================================
   return {
     canvasRef,
     containerRef,

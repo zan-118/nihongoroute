@@ -1,14 +1,34 @@
 "use client";
 
+/**
+ * @file KanjiPagination.tsx
+ * @description Komponen pagination interaktif untuk daftar karakter Kanji di NihongoRoute.
+ * Membantu navigasi berpindah halaman secara dinamis dengan tata letak visual premium.
+ */
+
+// ==========================================
+// IMPOR UTAMA
+// ==========================================
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+// ==========================================
+// ANTARMUKA & TIPE DATA
+// ==========================================
 interface KanjiPaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
 }
 
+// ==========================================
+// KOMPONEN UTAMA: KanjiPagination
+// ==========================================
+/**
+ * Komponen navigasi pagination dengan nomor halaman dinamis.
+ * 
+ * @param {KanjiPaginationProps} props Properti komponen pagination.
+ */
 export function KanjiPagination({
   currentPage,
   totalPages,
@@ -17,23 +37,31 @@ export function KanjiPagination({
   if (totalPages <= 1) return null;
 
   return (
-    <div className="flex flex-col items-center gap-6 mt-12 pb-12">
+    <div className="flex flex-col items-center gap-6 mt-12 pb-12 font-sans">
+      {/* Keterangan Halaman Aktif */}
       <div className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">
         Halaman <span className="text-primary">{currentPage}</span> dari {totalPages}
       </div>
+      
+      {/* Kontrol Navigasi Halaman */}
       <div className="flex items-center gap-2">
+        {/* Tombol ke Halaman Pertama */}
         <Button
           variant="ghost"
-          size="icon" aria-label="Aksi"
+          size="icon" 
+          aria-label="Kembali ke halaman pertama"
           onClick={() => onPageChange(1)}
           disabled={currentPage === 1}
           className="size-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-primary transition-all disabled:opacity-30"
         >
           <ChevronsLeft size={18} />
         </Button>
+        
+        {/* Tombol ke Halaman Sebelumnya */}
         <Button
           variant="ghost"
-          size="icon" aria-label="Aksi"
+          size="icon" 
+          aria-label="Kembali ke halaman sebelumnya"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
           className="size-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-primary transition-all disabled:opacity-30"
@@ -41,6 +69,7 @@ export function KanjiPagination({
           <ChevronLeft size={18} />
         </Button>
 
+        {/* Nomor Urut Halaman Pintas */}
         <div className="flex items-center gap-2">
           {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
             let pageNum;
@@ -64,6 +93,7 @@ export function KanjiPagination({
                     ? "bg-primary text-primary-foreground shadow-lg" 
                     : "bg-card border border-border text-muted-foreground hover:border-primary/40"
                 }`}
+                aria-label={`Buka halaman ${pageNum}`}
               >
                 {pageNum}
               </Button>
@@ -71,18 +101,23 @@ export function KanjiPagination({
           })}
         </div>
 
+        {/* Tombol ke Halaman Berikutnya */}
         <Button
           variant="ghost"
-          size="icon" aria-label="Aksi"
+          size="icon" 
+          aria-label="Lanjut ke halaman berikutnya"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
           className="size-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-primary transition-all disabled:opacity-30"
         >
           <ChevronRight size={18} />
         </Button>
+        
+        {/* Tombol ke Halaman Terakhir */}
         <Button
           variant="ghost"
-          size="icon" aria-label="Aksi"
+          size="icon" 
+          aria-label="Lanjut ke halaman terakhir"
           onClick={() => onPageChange(totalPages)}
           disabled={currentPage === totalPages}
           className="size-10 rounded-xl bg-card border border-border text-muted-foreground hover:text-primary transition-all disabled:opacity-30"
@@ -93,5 +128,3 @@ export function KanjiPagination({
     </div>
   );
 }
-
-

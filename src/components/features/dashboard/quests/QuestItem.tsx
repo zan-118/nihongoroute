@@ -1,3 +1,16 @@
+/**
+ * @file QuestItem.tsx
+ * @description Komponen UI item misi individual pada panel Misi Harian (Daily Quests).
+ * Menampilkan nama misi, progres kemajuan, indikator reward XP, status lock/diambil (claimed),
+ * serta tombol aksi klaim reward XP interaktif dengan efek transisi Framer Motion.
+ *
+ * @package components/features/dashboard/quests
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,6 +19,9 @@ import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, Lock } from "lucide-react";
 import { Quest } from "./types";
 
+// ==========================================
+// ANTARMUKA & PROPS (INTERFACES)
+// ==========================================
 interface QuestItemProps {
   quest: Quest;
   current: number;
@@ -14,6 +30,9 @@ interface QuestItemProps {
   onClaim: (quest: Quest) => void;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 export function QuestItem({
   quest,
   current,
@@ -34,6 +53,7 @@ export function QuestItem({
             : "bg-muted/50 dark:bg-background/[0.03] border-border hover:border-primary/30"
       }`}
     >
+      {/* Animasi Transisi Saat Berhasil Diklaim */}
       <AnimatePresence mode="wait">
         {justClaimed && (
           <m.div
@@ -50,6 +70,8 @@ export function QuestItem({
       </AnimatePresence>
 
       <div className="flex justify-between items-center mb-4">
+        
+        {/* DETAIL MISI (KIRI) */}
         <div className="flex items-center gap-3">
           <Card className={`w-10 h-10 md:w-11 md:h-11 rounded-xl flex items-center justify-center shadow-none transition-all shrink-0 ${isCompleted && !isClaimed ? 'bg-success/10 border-success/20' : 'bg-background dark:bg-background/[0.04] border border-border'}`}>
             {isClaimed ? <CheckCircle2 size={18} className="text-success text-success/60" /> : quest.icon}
@@ -70,6 +92,7 @@ export function QuestItem({
           </div>
         </div>
 
+        {/* STATUS & CTA KLAIM (KANAN) */}
         {isClaimed ? (
           <div className="text-muted-foreground font-bold text-xs uppercase tracking-widest flex items-center gap-1.5 shrink-0">
             <Lock size={12} /> Diambil
@@ -88,6 +111,7 @@ export function QuestItem({
         )}
       </div>
 
+      {/* INDIKATOR BATANG PROGRESS */}
       <Progress
         value={percent}
         className="h-1 bg-muted dark:bg-background/40 border-none overflow-hidden rounded-full"
@@ -102,3 +126,4 @@ export function QuestItem({
     </Card>
   );
 }
+

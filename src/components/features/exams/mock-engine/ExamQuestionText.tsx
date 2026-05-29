@@ -1,7 +1,18 @@
+/**
+ * @file ExamQuestionText.tsx
+ * @description Komponen parser teks pertanyaan ujian yang mendukung string HTML murni maupun format PortableText dari Sanity CMS.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import { PortableText } from "next-sanity";
 import { sanitizeHtml } from "@/lib/sanitize";
 
+// ======================
+// ANTARMUKA & TIPE
+// ======================
 export interface ExamPortableTextBlock {
   _type: string;
   _key?: string;
@@ -13,6 +24,9 @@ interface ExamQuestionTextProps {
   className?: string;
 }
 
+// ======================
+// KONSTANTA & ATURAN
+// ======================
 const examPortableTextComponents = {
   block: {
     normal: ({ children }: { children?: React.ReactNode }) => (
@@ -28,6 +42,9 @@ const examPortableTextComponents = {
   }
 };
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function ExamQuestionText({ questionText, className }: ExamQuestionTextProps) {
   if (!questionText) return null;
 

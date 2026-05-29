@@ -1,5 +1,14 @@
+/**
+ * @file LeaderboardClient.tsx
+ * @description Komponen klien interaktif untuk papan peringkat global (Global Leaderboard).
+ * Mengambil data peringkat secara real-time dari Supabase dan menampilkan dalam antarmuka sosial premium.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/card";
@@ -10,11 +19,9 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { get as idbGet, set as idbSet } from "idb-keyval";
 import { useUserStore } from "@/store/useUserStore";
 
-/**
- * @file LeaderboardClient.tsx
- * @description Komponen utama fitur sosial (Papan Peringkat).
- */
-
+// ======================
+// TIPE DATA
+// ======================
 interface LeaderboardUser {
   id: string;
   full_name: string;
@@ -31,7 +38,7 @@ export default function LeaderboardClient() {
   const supabase = createClient();
   const queryClient = useQueryClient();
 
-  // Get active user state
+  // Dapatkan state pengguna aktif
   const currentUserId = useUserStore((s) => s.id);
   const currentUserXp = useUserStore((s) => s.xp);
   const currentUserLevel = useUserStore((s) => s.level);
@@ -39,7 +46,7 @@ export default function LeaderboardClient() {
   const currentUserName = useUserStore((s) => s.name);
   const isGuest = useUserStore((s) => s.isGuest);
 
-  // 1. Detect Offline Status
+  // 1. Deteksi Status Luring (Offline)
   useEffect(() => {
     if (typeof window === "undefined") return;
     const updateStatus = () => setIsOffline(!navigator.onLine);
@@ -52,7 +59,7 @@ export default function LeaderboardClient() {
     };
   }, []);
 
-  // 2. BroadcastChannel for cross-tab sync
+  // 2. BroadcastChannel untuk sinkronisasi lintas-tab
   useEffect(() => {
     if (typeof window === "undefined") return;
     const channel = new BroadcastChannel("nihongoroute_sync");
@@ -64,7 +71,7 @@ export default function LeaderboardClient() {
     return () => channel.close();
   }, [queryClient]);
 
-  // 3. Load cached leaderboard data instantly on mount (<16ms)
+  // 3. Muat data papan peringkat dari cache secara instan saat pemasangan (<16ms)
   useEffect(() => {
     const loadCache = async () => {
       try {
@@ -79,7 +86,7 @@ export default function LeaderboardClient() {
     loadCache();
   }, []);
 
-  // 4. React Query for background fetching, SWR caching, and own rank calculation
+  // 4. React Query untuk pengambilan data latar belakang, caching SWR, dan kalkulasi peringkat sendiri
   const { data, isLoading, isFetching } = useQuery<{ users: LeaderboardUser[]; ownRank: number | null }>({
     queryKey: ["leaderboard"],
     queryFn: async () => {
@@ -93,14 +100,14 @@ export default function LeaderboardClient() {
       
       const freshUsers = (topUsers || []) as LeaderboardUser[];
       
-      // Persist to IndexedDB
+      // Simpan ke IndexedDB
       try {
         await idbSet("nihongoroute_ui_data_leaderboard", freshUsers);
       } catch (err) {
         console.error("Gagal menyimpan cache leaderboard:", err);
       }
 
-      // Calculate absolute rank if authenticated
+      // Hitung peringkat absolut jika terautentikasi
       let ownRank: number | null = null;
       const currentUserState = useUserStore.getState();
       const userId = currentUserState.id;
@@ -123,7 +130,7 @@ export default function LeaderboardClient() {
         ownRank,
       };
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes cache fresh
+    staleTime: 5 * 60 * 1000, // Cache segar selama 5 menit
     refetchOnWindowFocus: false,
   });
 
@@ -150,12 +157,12 @@ export default function LeaderboardClient() {
 
   const isSearching = searchQuery.trim().length > 0;
 
-  // Filter users based on search
+  // Saring pengguna berdasarkan pencarian
   const filteredUsers = usersList.filter((u) =>
     u.full_name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Map users with original ranks
+  // Petakan pengguna dengan peringkat asli
   const rankedUsers = filteredUsers.map((u) => {
     const originalRank = usersList.findIndex((x) => x.id === u.id) + 1;
     return {
@@ -429,7 +436,7 @@ export default function LeaderboardClient() {
           className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-4xl z-50 pointer-events-none"
         >
           <Card className="glass border-primary/45 p-4 flex items-center gap-3 sm:gap-6 bg-card/85 backdrop-blur-xl shadow-[0_-15px_40px_rgba(0,0,0,0.3),0_0_35px_rgba(var(--primary-rgb),0.2)] rounded-3xl pointer-events-auto border-2 hover:border-primary/60 transition-colors">
-            {/* Rank */}
+            {/* Peringkat */}
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 border border-primary/30 flex flex-col items-center justify-center shrink-0 shadow-[0_0_12px_rgba(var(--primary-rgb),0.25)]">
               <span className="text-[10px] font-black uppercase text-primary tracking-widest leading-none">Rank</span>
               <span className="text-sm sm:text-base font-mono font-black text-primary leading-none mt-0.5">#{ownRank}</span>
@@ -440,7 +447,7 @@ export default function LeaderboardClient() {
               {currentUserName?.charAt(0).toUpperCase() || "?"}
             </div>
 
-            {/* Name */}
+            {/* Nama */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <h4 className="text-xs sm:text-base font-black text-foreground truncate">
@@ -455,7 +462,7 @@ export default function LeaderboardClient() {
               </p>
             </div>
 
-            {/* XP and motivation */}
+            {/* XP dan motivasi */}
             <div className="text-right shrink-0">
               <p className="text-xs sm:text-lg font-black font-mono text-primary drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.35)]">
                 {currentUserXp.toLocaleString()} XP

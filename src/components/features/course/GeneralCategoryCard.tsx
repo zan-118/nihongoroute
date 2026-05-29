@@ -1,5 +1,13 @@
+/**
+ * @file GeneralCategoryCard.tsx
+ * @description Komponen kartu kategori kursus adaptif (GeneralCategoryCard) untuk merender tingkat JLPT atau modul kompetensi khusus.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import Link from "next/link";
 import { m, Variants } from "framer-motion";
@@ -7,6 +15,9 @@ import { ArrowRight, BookOpen, GraduationCap } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { ROUTES } from "../../../lib/routes";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface GeneralCategoryCardProps {
   cat: {
     _id: string;
@@ -19,6 +30,10 @@ interface GeneralCategoryCardProps {
   };
   variants: Variants;
 }
+
+// ======================
+// KONSTANTA / COLORMAP
+// ======================
 
 // Map level JLPT ke variabel warna CSS Semantik (RGB)
 const colorMap: Record<string, {
@@ -72,10 +87,9 @@ const colorMap: Record<string, {
   }
 };
 
-/**
- * Komponen kartu kategori adaptif dengan visual premium Cyber-glass.
- * Digunakan baik untuk Kategori Utama JLPT maupun Kategori Tematik Umum.
- */
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function GeneralCategoryCard({ cat, variants }: GeneralCategoryCardProps) {
   // Tentukan kunci warna berdasarkan judul (misal: "N5 Course" -> "N5")
   const jlptLevelKey = Object.keys(colorMap).find(key => cat.title.toUpperCase().includes(key));

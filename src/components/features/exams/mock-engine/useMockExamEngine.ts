@@ -12,7 +12,7 @@ import { SECTION_LABELS } from "./constants";
  */
 
 // ======================
-// PURE UTILITIES
+// UTILITAS MURNI
 // ======================
 
 const performScoreCalculation = (questions: ExamQuestion[], answers: Record<string, number>, passingScore: number) => {
@@ -39,7 +39,7 @@ const performScoreCalculation = (questions: ExamQuestion[], answers: Record<stri
 
   const finalScore = Math.round((correctCount / Math.max(1, questions.length)) * 180);
 
-  // Enforce Sectional Pass Marks (Maiten) - at least 32% accuracy required per section
+  // Terapkan Batas Kelulusan Bagian (Maiten) - setidaknya 32% akurasi diperlukan per bagian
   let failedSection = false;
   Object.keys(sectionBreakdown).forEach((sec) => {
     const data = sectionBreakdown[sec];
@@ -71,7 +71,7 @@ export function useMockExamEngine(exam: ExamData) {
   const [cheatWarnings, setCheatWarnings] = useState(0);
   const [pendingConfirm, setPendingConfirm] = useState<PendingConfirmType>(null);
 
-  // Group questions by section
+  // Kelompokkan pertanyaan berdasarkan bagian
   const sections = useMemo(() => {
     const groups: Record<string, number[]> = {};
     exam.questions.forEach((q, idx) => {
@@ -85,7 +85,7 @@ export function useMockExamEngine(exam: ExamData) {
   const addXP = useUserStore((state) => state.addXP);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Order of sections
+  // Urutan bagian
   const sectionOrder = ["vocabulary", "grammar", "reading", "listening"];
   const availableSections = sectionOrder.filter(s => sections[s] && sections[s].length > 0);
 
@@ -132,7 +132,7 @@ export function useMockExamEngine(exam: ExamData) {
         // Tidak langsung pindah — minta konfirmasi via Dialog (bukan confirm())
         setPendingConfirm("section");
       } else {
-        // Soal terakhir dari seksi terakhir — minta konfirmasi submit
+        // Soal terakhir dari seksi terakhir — minta konfirmasi pengumpulan
         setPendingConfirm("finish");
       }
     } else {
@@ -159,7 +159,7 @@ export function useMockExamEngine(exam: ExamData) {
     const sectionQuestions = sections[currentSection];
     const isFirstInSection = sectionQuestions[0] === currentQuestionIndex;
 
-    // Only allow previous if it's NOT the first question of the current section
+    // Hanya izinkan kembali jika BUKAN soal pertama di bagian saat ini
     if (!isFirstInSection) {
       setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0));
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -240,7 +240,7 @@ export function useMockExamEngine(exam: ExamData) {
     return () => clearInterval(timer);
   }, [gameState, finishExam]);
 
-  // Stop audio and lock it (mark as played) when switching questions (to prevent replay and overlap)
+  // Hentikan audio dan kunci (tandai sebagai telah diputar) saat berganti pertanyaan (untuk mencegah pemutaran ulang dan tumpang tindih)
   const prevQuestionIndexRef = useRef(currentQuestionIndex);
   useEffect(() => {
     const prevIdx = prevQuestionIndexRef.current;
@@ -262,7 +262,7 @@ export function useMockExamEngine(exam: ExamData) {
   const handlePlayAudio = useCallback(() => {
     if (exam.choukaiAudioUrl) {
       if (audioRef.current) {
-        // If already played or currently playing, don't allow restart
+        // Jika sudah pernah diputar atau sedang diputar, jangan izinkan untuk memutar ulang
         if (audioStatus.global === "played" || audioStatus.global === "playing") return;
 
         if (audioRef.current.paused && audioRef.current.currentTime === 0) {
@@ -296,7 +296,7 @@ export function useMockExamEngine(exam: ExamData) {
       const targetQuestion = exam.questions[index];
       const targetSection = targetQuestion.section || "vocabulary";
 
-      // Block jumping in listening section (linear navigation only)
+      // Batasi lompatan pada bagian menyimak (hanya navigasi linear saja)
       if (currentSection === "listening" && !exam.choukaiAudioUrl) {
         if (index !== currentQuestionIndex) {
           toast.error("Bagian Mendengar (Choukai) harus dikerjakan secara berurutan.");
@@ -304,7 +304,7 @@ export function useMockExamEngine(exam: ExamData) {
         }
       }
 
-      // Only allow jumping if the target question is in the CURRENT active section
+      // Hanya izinkan melompat jika soal target berada di bagian aktif saat ini
       if (targetSection === currentSection) {
         setCurrentQuestionIndex(index);
         window.scrollTo({ top: 0, behavior: "smooth" });

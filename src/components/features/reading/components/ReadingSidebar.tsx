@@ -1,11 +1,20 @@
-"use client";
+/**
+ * @file ReadingSidebar.tsx
+ * @description Komponen bilah samping (sidebar sticky) halaman membaca artikel di layar lebar, menyediakan akses cepat ke pemutar audio, ukuran font, dan toggle terjemahan.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { Type, Languages } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import AudioController from "./AudioController";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface ReadingSidebarProps {
   audioUrl?: string;
   textToSpeak: string;
@@ -16,6 +25,12 @@ interface ReadingSidebarProps {
   onTranslationToggle: () => void;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen bilah samping artikel membaca.
+ */
 export function ReadingSidebar({
   audioUrl,
   textToSpeak,
@@ -25,6 +40,9 @@ export function ReadingSidebar({
   showTranslation,
   onTranslationToggle,
 }: ReadingSidebarProps) {
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <div className="hidden xl:block absolute -left-32 top-0 h-full">
       <div className="sticky top-40 flex flex-col items-center gap-6">

@@ -1,9 +1,32 @@
+/**
+ * @file useDailyQuests.ts
+ * @description Hook kustom untuk memantau kemajuan serta menangani proses klaim hadiah misi harian pengguna.
+ * Menghubungkan statistik pengguna dari useUserStore dengan sistem misi luring-first NihongoRoute.
+ */
+
+// ==========================================
+// IMPOR UTAMA
+// ==========================================
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import { Quest } from "./types";
 import { getTodayDateString } from "@/lib/utils";
 import { useUserStore } from "@/store/useUserStore";
 
+// ==========================================
+// HOOK UTAMA: useDailyQuests
+// ==========================================
+/**
+ * Hook kustom untuk memantau kemajuan serta mengeksekusi klaim hadiah misi harian.
+ * 
+ * @returns {Object} State dan aksi interaksi misi harian pengguna:
+ *  - `claimedQuests`: Rekaman misi harian yang sudah diklaim pada hari ini.
+ *  - `justClaimed`: ID misi yang baru saja diklaim (berguna untuk efek visual/animasi).
+ *  - `handleClaim`: Fungsi untuk mengeksekusi klaim imbalan misi harian.
+ *  - `getCurrentProgress`: Fungsi untuk mendapatkan progres terkini berdasarkan tipe misi.
+ * 
+ * @stores Mengakses `useUserStore` secara atomik untuk mengambil data kemajuan dan aksi mutasi lokal.
+ */
 export function useDailyQuests() {
   const xp = useUserStore(s => s.xp);
   const streak = useUserStore(s => s.streak);
@@ -14,6 +37,7 @@ export function useDailyQuests() {
 
   const today = getTodayDateString();
   
+  // Memetakan daftar misi harian yang sudah diklaim pengguna pada hari aktif ini
   const claimedQuests = useMemo(() => {
     if (inventory.claimedQuests?.date === today) {
       const record: Record<string, boolean> = {};
@@ -23,6 +47,7 @@ export function useDailyQuests() {
     return {};
   }, [inventory.claimedQuests, today]);
 
+  // Menangani proses klaim misi harian dan memberikan imbalan XP
   const handleClaim = (quest: Quest) => {
     if (claimedQuests[quest.id]) return;
 
@@ -36,6 +61,7 @@ export function useDailyQuests() {
     setTimeout(() => setJustClaimed(null), 2000);
   };
 
+  // Mengambil progres aktual pengguna berdasarkan tipe metrik misi harian
   const getCurrentProgress = (type: Quest["type"]) => {
     switch (type) {
       case "review":
@@ -56,3 +82,4 @@ export function useDailyQuests() {
     getCurrentProgress,
   };
 }
+

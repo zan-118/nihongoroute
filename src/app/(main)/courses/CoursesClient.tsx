@@ -7,10 +7,16 @@
 
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import { m } from "framer-motion";
 import { GeneralCategoryCard } from "@/components/features/course/GeneralCategoryCard";
 
+// ======================
+// KONSTANTA ANIMASI
+// ======================
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
@@ -43,7 +49,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
 
   return (
     <div className="w-full relative overflow-hidden bg-background text-foreground transition-colors duration-300 min-h-screen pb-32">
-      {/* 1. ADVANCED BACKGROUND DECOR */}
+      {/* 1. DEKORASI LATAR BELAKANG TINGKAT LANJUT */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Cyber Grid */}
         <div 
@@ -78,7 +84,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
         animate="visible"
         variants={containerVariants}
       >
-        {/* 2. DRAMATIC HERO HEADER */}
+        {/* 2. TAJUK HERO DRAMATIS */}
         <header className="mb-24 md:mb-32 text-center md:text-left">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12">
             <div className="space-y-6">
@@ -123,7 +129,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
         </header>
 
 
-        {/* 3. SECTION: JLPT TRACKS (Rerendered with the gorgeous GeneralCategoryCard style) */}
+        {/* 3. SEKSI: RUTE JLPT (Dirender ulang dengan gaya GeneralCategoryCard yang menawan) */}
         {jlptCategories.length > 0 && (
           <m.section variants={itemVariants} className="mb-32">
             <div className="flex flex-col md:flex-row md:items-center gap-8 mb-16">
@@ -151,7 +157,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
           </m.section>
         )}
 
-        {/* 4. SECTION: GENERAL TOPICS */}
+        {/* 4. SEKSI: TOPIK UMUM */}
         {generalCategories.length > 0 && (
           <m.section variants={itemVariants}>
             <div className="flex flex-col md:flex-row md:items-center gap-8 mb-16">

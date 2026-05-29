@@ -1,5 +1,13 @@
 "use client";
 
+/**
+ * @file FloatingActions.tsx
+ * @description Komponen tombol aksi melayang (Unified Floating Action Button / FAB) global untuk akses cepat donasi/support, pengiriman feedback, kontrol pemutar audio pemahaman bacaan/mendengarkan, serta penyesuaian layout translasi bahasa Jepang.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { Plus, MessageSquarePlus, Coffee, X } from "lucide-react";
@@ -15,11 +23,11 @@ import { Eye, Languages, BookOpen as BookIcon, GraduationCap, FileText, Headphon
 import React from "react";
 import { cn } from "@/lib/utils";
 
-
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 /**
- * @file FloatingActions.tsx
- * @description Unified Floating Action Button (FAB) that combines Support and Feedback
- * into a single, space-saving expandable widget.
+ * Komponen FAB global yang menyesuaikan diri secara adaptif berdasarkan pathname aktif (mode membaca, mode mendengarkan, atau halaman umum).
  */
 
 export default function FloatingActions() {

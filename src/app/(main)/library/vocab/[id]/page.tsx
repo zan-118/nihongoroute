@@ -5,6 +5,9 @@
  * @module VocabDetailPage
  */
 
+// ======================
+// IMPOR
+// ======================
 import { Metadata } from "next";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
 import { notFound } from "next/navigation";
@@ -17,7 +20,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-// Feature Components
+// Komponen Pendukung
 import { VocabHero } from "@/components/features/library/vocab/detail/VocabHero";
 import { VocabDetails } from "@/components/features/library/vocab/detail/VocabDetails";
 import { VocabNotes } from "@/components/features/library/vocab/detail/VocabNotes";
@@ -25,6 +28,9 @@ import { VocabConjugation } from "@/components/features/library/vocab/detail/Voc
 import { VocabExamples } from "@/components/features/library/vocab/detail/VocabExamples";
 import { VocabRelated } from "@/components/features/library/vocab/detail/VocabRelated";
 
+// ======================
+// ANTARMUKA
+// ======================
 interface VocabExampleItem {
   jp?: string;
   japanese?: string;
@@ -54,6 +60,13 @@ interface VocabRef {
   slug?: string;
 }
 
+// ======================
+// METADATA SEO
+// ======================
+
+/**
+ * Menghasilkan metadata SEO dinamis untuk halaman detail kosakata bahasa Jepang.
+ */
 export async function generateMetadata({
   params,
 }: {
@@ -77,6 +90,14 @@ export async function generateMetadata({
   };
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
+/**
+ * Halaman detail kosakata (RSC) untuk mengambil informasi detail leksem dari database,
+ * kemudian merender modul bento hero kosakata, radikal, mnemonic, konjugasi, dan contoh kalimat.
+ */
 export default async function VocabDetailPage({
   params,
 }: {

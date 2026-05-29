@@ -1,16 +1,27 @@
+/**
+ * @file MobileNav.tsx
+ * @description Komponen navigasi bawah premium khusus perangkat seluler (Cyber-glass design).
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import Link from "next/link";
 import { m } from "framer-motion";
 import { useMobileNav } from "@/components/layout/hooks/useMobileNav";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function MobileNav() {
   const { pathname, navItems } = useMobileNav();
 
   return (
     <div className="md:hidden fixed bottom-5 left-1/2 -translate-x-1/2 w-[92%] max-w-md z-50">
       <nav className="glass rounded-[2rem] p-1.5 shadow-2xl transition-all duration-500 overflow-hidden relative">
-        {/* Ambient Glow */}
+        {/* Pendar Ambient */}
         <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent pointer-events-none" />
         
         <ul className="flex justify-between items-center relative z-10 gap-1 px-1">
@@ -23,7 +34,7 @@ export default function MobileNav() {
                   href={item.href}
                   className="flex flex-col items-center justify-center py-2 relative group"
                 >
-                  {/* Fluid Background Indicator */}
+                  {/* Indikator Latar Belakang Fluid */}
                   {isActive && (
                     <m.div
                       layoutId="mobile-nav-pill"

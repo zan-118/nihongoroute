@@ -1,10 +1,19 @@
-"use client";
+/**
+ * @file KanaMatrix.tsx
+ * @description Komponen visualizer matriks grid Hiragana dan Katakana yang interaktif. Pengguna dapat memilih karakter untuk melihat detail coretan.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { KANA_DATA, KanaType, KanaCategory } from "./kana-data";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface KanaMatrixProps {
   type: KanaType;
   category: KanaCategory;
@@ -12,9 +21,18 @@ interface KanaMatrixProps {
   themeBgHover: string;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen matriks grid huruf kana.
+ */
 export function KanaMatrix({ type, category, onSelectChar, themeBgHover }: KanaMatrixProps) {
   const currentData = KANA_DATA[category];
 
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <Card className="p-4 md:p-8 rounded-2xl border border-border bg-card shadow-2xl relative flex-1 min-h-[400px] md:min-h-[450px] overflow-hidden">
       <div

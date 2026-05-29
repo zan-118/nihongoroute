@@ -1,20 +1,37 @@
 "use client";
 
+/**
+ * @file GrammarLevelNav.tsx
+ * @description Komponen selektor navigasi level JLPT untuk tata bahasa (Grammar Level Navigation).
+ * Menampilkan tab tingkat kesulitan JLPT dengan transisi pegas (spring) Framer Motion premium.
+ */
+
+// ==========================================
+// IMPOR UTAMA
+// ==========================================
 import React from "react";
 import { m } from "framer-motion";
 
+// ==========================================
+// ANTARMUKA & TIPE DATA
+// ==========================================
 interface GrammarLevelNavProps {
   levels: string[];
   selectedLevel: string;
   onLevelChange: (level: string) => void;
 }
 
+// ==========================================
+// KOMPONEN UTAMA: GrammarLevelNav
+// ==========================================
 /**
- * Komponen navigasi level JLPT untuk tata bahasa.
+ * Komponen navigasi level JLPT dengan transisi penyorotan aktif yang dinamis.
+ * 
+ * @param {GrammarLevelNavProps} props Properti untuk navigasi level tata bahasa.
  */
 export function GrammarLevelNav({ levels, selectedLevel, onLevelChange }: GrammarLevelNavProps) {
   return (
-    <nav className="inline-flex p-1.5 bg-[rgba(var(--muted-rgb),0.5)] dark:bg-[rgba(var(--background-rgb),0.4)] backdrop-blur-md rounded-2xl md:rounded-[2rem] border border-border shadow-2xl overflow-x-auto w-full xl:w-auto no-scrollbar relative">
+    <nav className="inline-flex p-1.5 bg-[rgba(var(--muted-rgb),0.5)] dark:bg-[rgba(var(--background-rgb),0.4)] backdrop-blur-md rounded-2xl md:rounded-[2rem] border border-border shadow-2xl overflow-x-auto w-full xl:w-auto no-scrollbar relative font-sans">
       {levels.map((lvl) => (
         <button type="button"
           key={lvl}
@@ -25,6 +42,7 @@ export function GrammarLevelNav({ levels, selectedLevel, onLevelChange }: Gramma
               : "text-muted-foreground hover:text-foreground"
           }`}
         >
+          {/* Latar Belakang Aktif Dinamis dengan Efek Pegas */}
           {selectedLevel === lvl && (
             <m.div
               layoutId="activeTab"
@@ -38,3 +56,4 @@ export function GrammarLevelNav({ levels, selectedLevel, onLevelChange }: Gramma
     </nav>
   );
 }
+

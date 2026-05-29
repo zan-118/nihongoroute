@@ -4,16 +4,22 @@
  * @module SaweriaWebhook
  */
 
+// ======================
+// IMPOR
+// ======================
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import crypto from "crypto";
 
+// ======================
+// HANDLER
+// ======================
 export async function POST(request: Request) {
   try {
     const rawBody = await request.text();
     const body = JSON.parse(rawBody);
     
-    // Saweria payload fields:
+    // Field payload Saweria:
     // id, donator_name, amount_raw, message, created_at, signature/etc.
     const donatorId = body.id;
     const donatorName = body.donator_name || "Anonim";
@@ -31,7 +37,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Invalid Saweria signature" }, { status: 401 });
       }
     } else if (expectedSecret) {
-      // Fallback: check secret parameter in URL query or body parameter if signature header not present
+      // Cadangan: periksa parameter rahasia di URL query atau parameter body jika header signature tidak ada
       const { searchParams } = new URL(request.url);
       const secretQuery = searchParams.get("secret") || body.secret;
       if (secretQuery !== expectedSecret) {

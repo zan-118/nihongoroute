@@ -5,6 +5,9 @@
  * @module LessonPage
  */
 
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -12,7 +15,7 @@ import type { Metadata } from "next";
 import QuizEngine from "@/components/features/exams/quiz-engine/QuizEngine";
 import ContentBlockRenderer from "@/components/features/lessons/ContentBlockRenderer";
 
-// Extracted Components
+// Komponen Modular
 import { LessonHeader } from "@/components/features/lessons/LessonHeader";
 import { VocabSection } from "@/components/features/lessons/VocabSection";
 import { KanjiSection } from "@/components/features/lessons/KanjiSection";
@@ -23,23 +26,33 @@ import { PracticeSection } from "@/components/features/lessons/PracticeSection";
 import { LessonNavigation } from "@/components/features/lessons/LessonNavigation";
 import { MarkCompleteButton } from "@/components/features/lessons/MarkCompleteButton";
 
-// Database & Utils
+// Integrasi Database & Utilitas
 import { createClient } from "@/lib/supabase/server";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
 import { formatQuizzes, getLessonNavigation } from "@/lib/utils/lesson-utils";
 import { getSanityLessonsByCategory } from "@/lib/queries";
 
+// ======================
+// TIPE DATA
+// ======================
 interface Props {
   params: Promise<{ categoryId: string; slug: string }>;
 }
 
+// ======================
+// FUNGSI PEMBANTU
+// ======================
+
 /**
- * Menarik data materi lengkap secara paralel.
+ * Menarik data materi lengkap secara paralel dari Supabase dan Sanity CMS.
+ * 
+ * @param {string} categoryId Slug ID kategori kursus.
+ * @param {string} slug Slug materi pelajaran.
  */
 async function getLessonData(categoryId: string, slug: string) {
   const supabase = await createClient();
   
-  // 1. Fetch Category & Lesson in parallel
+  // 1. Ambil Kategori & Pelajaran secara paralel
   const [categoryRes, lesson] = await Promise.all([
     supabase
       .from("course_categories")
@@ -58,12 +71,19 @@ async function getLessonData(categoryId: string, slug: string) {
     lesson.levelCode = categoryId;
   }
 
-  // 2. Get Navigation (depends on category.id)
+  // 2. Dapatkan Navigasi (tergantung pada category.id)
   const nav = await getSanityLessonsByCategory(categoryId, category.id);
 
   return { lesson, nav };
 }
 
+// ======================
+// METADATA SEO
+// ======================
+
+/**
+ * Menghasilkan metadata SEO dinamis untuk halaman detail materi pelajaran.
+ */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { categoryId, slug } = await params;
   const decodedCategoryId = decodeURIComponent(categoryId);
@@ -78,6 +98,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
+/**
+ * Halaman utama ruang kelas pelajaran untuk menyajikan Portable Text materi, dialog menyimak, bacaan, dan kuis uji pemahaman.
+ */
 export default async function LessonPage({ params }: Props) {
   const { categoryId, slug } = await params;
   const decodedCategoryId = decodeURIComponent(categoryId);
@@ -95,7 +122,7 @@ export default async function LessonPage({ params }: Props) {
 
   return (
     <div className="w-full text-foreground px-4 md:px-8 relative overflow-hidden flex flex-col flex-1 transition-colors duration-300">
-      {/* Background Ambient Decor */}
+      {/* Dekorasi Ambient Latar Belakang */}
       <div className="absolute top-0 right-0 size-[500px] bg-primary/5 blur-[150px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 left-0 size-[400px] bg-secondary/5 blur-[120px] rounded-full pointer-events-none" />
 

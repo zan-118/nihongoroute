@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * @file PdfGenerator.tsx
+ * @description Komponen pembuat dokumen PDF berbasis React PDF renderer.
+ * Memanfaatkan impor dinamis untuk PDFDownloadLink untuk meminimalkan beban bundle JavaScript awal,
+ * serta menyajikan pilihan template PDF (Lesson, Vocab, Certificate, Cheatsheet).
+ *
+ * @package components/features/pdf
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import React from "react";
 import dynamic from "next/dynamic";
 import { Download, Loader2 } from "lucide-react";
@@ -10,7 +23,10 @@ import { VocabPdfTemplate } from "./templates/VocabPdfTemplate";
 import { CertificatePdfTemplate } from "./templates/CertificatePdfTemplate";
 import { CheatsheetPdfTemplate } from "./templates/CheatsheetPdfTemplate";
 
-// Dynamic import for PDFDownloadLink to reduce initial bundle size
+// ==========================================
+// IMPOR DINAMIS & KONFIGURASI
+// ==========================================
+// Impor dinamis untuk PDFDownloadLink guna memperkecil ukuran bundel awal
 const PDFDownloadLink = dynamic(
   () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
   {
@@ -28,6 +44,9 @@ const PDFDownloadLink = dynamic(
   }
 );
 
+// ==========================================
+// TIPE & ANTARMUKA (TYPES & INTERFACES)
+// ==========================================
 export type TemplateType = "lesson" | "vocab" | "certificate" | "cheatsheet";
 
 interface PdfGeneratorProps {
@@ -39,6 +58,9 @@ interface PdfGeneratorProps {
   category?: string;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 export default function PdfGenerator({
   data,
   type,
@@ -48,7 +70,7 @@ export default function PdfGenerator({
 }: PdfGeneratorProps) {
   const { isClient, getFileName } = usePdfGenerator({ type, title, level });
 
-   
+  // Memilih template dokumen PDF yang sesuai dengan jenis yang ditentukan
   const getDocument = (): React.ReactElement => {
     if (type === "lesson")
       return <LessonPdfTemplate lessonData={data as unknown as import("./templates/LessonPdfTemplate").PdfLessonData} />;
@@ -96,3 +118,4 @@ export default function PdfGenerator({
     </PDFDownloadLink>
   );
 }
+

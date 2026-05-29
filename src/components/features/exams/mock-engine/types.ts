@@ -1,5 +1,16 @@
+/**
+ * @file types.ts
+ * @description Definisi tipe data (interfaces & types) untuk domain simulasi ujian Mock Exam Engine NihongoRoute.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { ExamPortableTextBlock } from "./ExamQuestionText";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 export interface ExamQuestion {
   _key: string;
   section: "vocabulary" | "grammar" | "reading" | "listening";

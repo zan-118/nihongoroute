@@ -1,5 +1,14 @@
 "use client";
 
+/**
+ * @file UserNav.tsx
+ * @description Komponen visual navigasi pengguna (User Navigation Dropdown) yang tampil di header utama.
+ * Mengelola tampilan tombol masuk/daftar untuk tamu, dan avatar bergradasi dengan menu dropdown profil/pengaturan bagi pengguna terotentikasi.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { useNavbar } from "@/components/layout/hooks/useNavbar";
 import { 
   User, 
@@ -20,6 +29,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function UserNav() {
   const { isAuthenticated, userFullName, handleLogout } = useNavbar();
   const level = useUserStore(s => s.level);

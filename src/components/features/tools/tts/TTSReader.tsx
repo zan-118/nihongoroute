@@ -1,19 +1,40 @@
-"use client";
+/**
+ * @file TTSReader.tsx
+ * @description Komponen tombol suara AI (Text-to-Speech) minimal/reguler untuk memicu pengucapan audio bahasa Jepang secara waktu-nyata.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { Button } from "@/components/ui/button";
 import { Volume2, AudioLines } from "lucide-react";
 import { useTTSReader } from "../audio/useTTSReader";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface Props {
   text: string;
   minimal?: boolean;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen pembaca suara teks Jepang (TTS).
+ */
 export default function TTSReader({ text, minimal = false }: Props) {
+  // ==========================================
+  // HOOKS & STATUS
+  // ==========================================
   const { isPlaying, hasJapanese, speak } = useTTSReader(text);
 
   if (!hasJapanese || !text) return null;
 
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <Button
       variant="ghost"

@@ -1,7 +1,13 @@
-// This file acts as a hub for all library-related actions.
-// "use server" is removed to allow exporting types/interfaces from library.ts.
-// The individual action files (e.g., vocab.actions.ts) already have "use server" at their tops.
+/**
+ * @file library.actions.ts
+ * @description Berkas penghubung (barrel/hub) untuk semua Server Actions yang berkaitan dengan pustaka (library).
+ * Pernyataan "use server" tidak disertakan di sini agar ekspor tipe data antarmuka tetap bisa dilakukan.
+ * Masing-masing berkas aksi individu sudah memiliki deklarasi "use server" di baris paling atas.
+ */
 
+// ======================
+// RE-EXPORTS
+// ======================
 
 export * from "@/types/library";
 export * from "./kanji.actions";

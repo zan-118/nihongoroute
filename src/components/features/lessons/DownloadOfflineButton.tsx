@@ -1,10 +1,21 @@
+/**
+ * @file DownloadOfflineButton.tsx
+ * @description Tombol interaktif berdesain Cyber-Glass untuk mengunduh seluruh aset pelajaran (audio skenario, audio bacaan, TTS kosakata, dan SVG KanjiVG) ke cache lokal peramban secara offline-first.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React, { useState, useEffect, useCallback } from "react";
 import { Download, Loader2, CheckCircle2, CloudLightning } from "lucide-react";
 import { sounds } from "@/lib/audio";
 import { cn } from "@/lib/utils";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface LessonAudioItem {
   audioUrl?: string;
   audio_url?: string;
@@ -36,22 +47,9 @@ interface DownloadOfflineButtonProps {
   lesson: LessonData;
 }
 
-/**
- * @file DownloadOfflineButton.tsx
- * @description Tombol interaktif berdesain Cyber-Glass untuk mengunduh seluruh aset pelajaran
- * (audio skenario, audio bacaan, TTS kosakata, dan SVG KanjiVG) ke cache lokal peramban secara offline-first.
- */
-/**
- * Komponen: DownloadOfflineButton
- * 
- * Menyajikan tombol kontrol berestetika Cyber-Glass yang memungkinkan pengguna mengunduh secara lokal
- * seluruh aset multimedia pelajaran (audio percakapan/bacaan, audio text-to-speech kosakata,
- * dan berkas SVG karakter KanjiVG) langsung ke penyimpanan Cache Storage peramban.
- * Menjamin pelajaran dapat diakses 100% secara luring (offline-first) tanpa latensi jaringan.
- * 
- * @param {Object} props - Properti komponen
- * @param {LessonData} props.lesson - Objek data pelajaran lengkap yang mencakup daftar kosa kata, kanji, dialog, dan bacaan
- */
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonProps) {
   const [status, setStatus] = useState<"idle" | "downloading" | "completed" | "error">("idle");
   const [progress, setProgress] = useState(0);
@@ -275,7 +273,7 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
         status === "error" && "border-destructive/30 text-destructive bg-destructive/5 hover:bg-destructive/10"
       )}
     >
-      {/* Visual background loader glow */}
+      {/* Efek Pendar Latar Belakang Pemuat Visual */}
       {status === "downloading" && (
         <div 
           className="absolute inset-0 bg-primary/5 transition-all duration-300 self-start h-full" 

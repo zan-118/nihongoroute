@@ -1,5 +1,11 @@
-"use client";
+/**
+ * @file KanaWritingDialog.tsx
+ * @description Komponen dialog latihan menulis coretan aksara kana (Hiragana/Katakana) interaktif menggunakan kanvas coretan yang terintegrasi luring-first.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { motion, AnimatePresence } from "framer-motion";
 import { PenTool, Sparkles } from "lucide-react";
 import {
@@ -11,6 +17,9 @@ import {
 import WritingCanvas from "@/components/features/tools/writing/WritingCanvas";
 import { KanaType } from "./kana-data";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface KanaWritingDialogProps {
   selectedChar: { char: string; romaji: string } | null;
   setSelectedChar: (char: { char: string; romaji: string } | null) => void;
@@ -19,6 +28,12 @@ interface KanaWritingDialogProps {
   themeBorder: string;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen modal latihan menulis kana.
+ */
 export function KanaWritingDialog({
   selectedChar,
   setSelectedChar,
@@ -28,6 +43,9 @@ export function KanaWritingDialog({
 }: KanaWritingDialogProps) {
   const isHira = type === "hiragana";
 
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <Dialog
       open={!!selectedChar}

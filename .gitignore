@@ -66,12 +66,7 @@ desktop.ini
 *.swp
 *.swo
 
-# Vocabulary Migration Files
-vocab.ndjson
-vocab_pass1.json
-vocab_n5_to_process.json
-scripts/process-vocab-*.js
-scripts/clean-vocab.js
+
 
 # Migration & Scratch Scripts
 scripts/

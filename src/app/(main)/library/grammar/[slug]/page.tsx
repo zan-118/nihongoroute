@@ -6,7 +6,7 @@
  */
 
 // ======================
-// IMPORTS
+// IMPOR
 // ======================
 import { Metadata } from "next";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
@@ -16,8 +16,12 @@ import { Home, Library, BookOpen } from "lucide-react";
 import GrammarDetailClient from "@/components/features/grammar/GrammarDetailClient";
 
 // ======================
-// METADATA
+// METADATA SEO
 // ======================
+
+/**
+ * Menghasilkan metadata SEO dinamis untuk halaman detail tata bahasa Jepang (Bunpou).
+ */
 export async function generateMetadata({
   params,
 }: {
@@ -44,13 +48,11 @@ export async function generateMetadata({
 }
 
 // ======================
-// MAIN EXECUTION
+// EKSEKUSI UTAMA
 // ======================
 
 /**
- * Komponen GrammarDetailPage: Mengambil data artikel dan merender konten.
- * 
- * @returns {JSX.Element} Halaman detail tata bahasa.
+ * Halaman detail tata bahasa Jepang (RSC) untuk mengambil data satu materi grammar dan menyajikan detail penjelasannya.
  */
 export default async function GrammarDetailPage({
   params,
@@ -61,14 +63,14 @@ export default async function GrammarDetailPage({
   const decodedSlug = decodeURIComponent(slug);
 
   // ======================
-  // DATABASE OPERATIONS
+  // OPERASI DATABASE
   // ======================
   const article = await getLibraryItemBySlug("grammar", decodedSlug);
   if (!article) notFound();
 
 
   // ======================
-  // RENDER
+  // RENDER UTAMA
   // ======================
   return (
     <main className="w-full bg-background px-4 md:px-8 lg:px-12 relative overflow-hidden flex flex-col justify-start min-h-screen pb-32 transition-colors duration-300">

@@ -1,13 +1,28 @@
+/**
+ * @file QuizProgress.tsx
+ * @description Komponen progress bar kustom (QuizProgress) untuk melacak kemajuan pengerjaan kuis/ujian dengan animasi pegas yang fluid.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { m } from "framer-motion";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface QuizProgressProps {
   current: number;
   total: number;
   color?: string;
   indicatorClassName?: string;
 }
+
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 
 export function QuizProgress({ current, total, color = "bg-primary", indicatorClassName = "" }: QuizProgressProps) {
   const percentage = Math.min(100, Math.max(0, (current / total) * 100));

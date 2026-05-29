@@ -7,12 +7,12 @@
 "use client";
 
 // ======================
-// IMPORTS
+// IMPOR
 // ======================
 import { m, AnimatePresence } from "framer-motion";
 
 // ======================
-// MAIN EXECUTION
+// EKSEKUSI UTAMA
 // ======================
 
 /**
@@ -39,7 +39,7 @@ export default function XPPop({
           exit={{ opacity: 0, scale: 2 }}
           className="absolute pointer-events-none z-50 flex items-center justify-center"
         >
-          {/* Bloom Effect Background */}
+          {/* Latar Belakang Efek Bloom */}
           <div className="absolute size-24 bg-destructive/20 blur-3xl rounded-full animate-bloom" />
           
           <span className="relative text-destructive font-black italic text-4xl drop-shadow-[0_0_20px_rgba(var(--destructive-rgb),0.8)] tracking-tighter">

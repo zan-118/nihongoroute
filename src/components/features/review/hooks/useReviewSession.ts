@@ -1,14 +1,29 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+/**
+ * @file useReviewSession.ts
+ * @description Hook kustom (Custom Hook) untuk mengelola inisialisasi sesi ulasan (Review Session).
+ * Memilah kartu jatuh tempo (SRS Mode) versus kartu acak (Quick Mode) dari Zustand Store (`useSRSStore`)
+ * dan memuat datanya secara asinkron dari API internal.
+ */
 
+// ======================
+// IMPOR
+// ======================
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { MasterCardData } from "@/components/features/flashcards/master/types";
 import { useSRSStore } from "@/store/useSRSStore";
 
+// ======================
+// ANTARMUKA & TIPE
+// ======================
 export type SessionMode = "srs" | "quick" | null;
 
+// ======================
+// HOOK UTAMA
+// ======================
 export function useReviewSession(loading: boolean) {
   const srs = useSRSStore((state) => state.srs);
   const [mode, setMode] = useState<SessionMode>(null);

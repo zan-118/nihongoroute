@@ -1,10 +1,20 @@
+/**
+ * @file progress.tsx
+ * @description Komponen Bilang Kemajuan (Progress Bar) atomik berbasis Radix UI dengan dukungan gaya kustom.
+ */
+
 "use client"
 
+// ======================
+// IMPOR
+// ======================
 import * as React from "react"
 import * as ProgressPrimitive from "@radix-ui/react-progress"
-
 import { cn } from "@/lib/utils"
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 const Progress = React.forwardRef<
   React.ElementRef<typeof ProgressPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> & {

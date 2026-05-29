@@ -1,16 +1,19 @@
+/**
+ * @file NavWrapper.tsx
+ * @description Komponen pembungkus navigasi utama di sisi klien (Desktop Sidebar, Topbar, MobileNav, breadcrumbs).
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { ReactNode, useState } from "react";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import MobileNav from "./MobileNav";
 import FloatingActions from "@/components/features/global/FloatingActions";
 import AchievementToast from "./AchievementToast";
-
-interface NavWrapperProps {
-  children: ReactNode;
-}
-
 import { m, AnimatePresence } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -18,10 +21,16 @@ import { ChevronRight, ChevronLeft, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ROUTES, getRouteLabel } from "@/lib/routes";
 
-/**
- * NavWrapper: Komponen pembungkus navigasi sisi client.
- * Menangani state menu mobile agar layout utama bisa menjadi Server Component.
- */
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
+interface NavWrapperProps {
+  children: ReactNode;
+}
+
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function NavWrapper({ children }: NavWrapperProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();

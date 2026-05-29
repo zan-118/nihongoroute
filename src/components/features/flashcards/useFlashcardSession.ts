@@ -1,12 +1,27 @@
 "use client";
 
+/**
+ * @file useFlashcardSession.ts
+ * @description Custom Hook pengelola inisialisasi sesi flashcard JLPT dari parameter query URL (?category=...&mode=...), serta penarikan data kartu kosakata/kanji secara asinkron dari Server Actions.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getFlashcardsByMode } from "@/actions/flashcard.actions";
 import { MasterCardData } from "./master/types";
 import { toast } from "sonner";
 
+// ==========================================
+// DEKLARASI TIPE
+// ==========================================
 export type ModeLatihan = "vocab" | "kanji" | "survival" | "pronunciation";
+
+// ==========================================
+// CUSTOM HOOK UTAMA
+// ==========================================
 
 /**
  * Custom Hook: useFlashcardSession

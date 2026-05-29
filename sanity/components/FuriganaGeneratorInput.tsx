@@ -1,9 +1,19 @@
+/**
+ * @file FuriganaGeneratorInput.tsx
+ * @description Komponen kustom input Sanity Studio yang mendeteksi perubahan teks bahasa Jepang pada field saudara (content, jp, body) lalu secara otomatis melakukan panggilan debounced ke API backend untuk menghasilkan aksen Furigana (Hiragana) secara dinamis.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Stack, Flex, Text, Button, TextArea, TextInput, Spinner, Box } from '@sanity/ui';
 import { set, unset, useFormValue } from 'sanity';
-
 import { getApiUrl } from './api';
 
+// ==========================================
+// ANTARMUKA PROPS
+// ==========================================
 interface FuriganaGeneratorInputProps {
   onChange: (patch: unknown) => void;
   value?: string;
@@ -18,6 +28,14 @@ interface FuriganaGeneratorInputProps {
   elementProps: Record<string, unknown>;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen input generator Furigana otomatis untuk mempermudah pengisian aksara hiragana di atas kanji secara real-time.
+ * 
+ * @param {FuriganaGeneratorInputProps} props - Properti masukan form Sanity
+ */
 export function FuriganaGeneratorInput(props: FuriganaGeneratorInputProps) {
   const { onChange, value = '', schemaType, path, elementProps } = props;
   const [loading, setLoading] = useState(false);

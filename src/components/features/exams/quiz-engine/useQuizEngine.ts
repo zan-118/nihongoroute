@@ -1,9 +1,22 @@
+/**
+ * @file useQuizEngine.ts
+ * @description Hook kustom (Custom Hook) untuk mengelola logika mesin kuis (Quiz Engine).
+ * Menangani indeks pertanyaan berjalan, opsi terpilih, skor, efek suara kelulusan, 
+ * serta sinkronisasi penambahan XP dan status kelulusan pelajaran ke Zustand Store (`useUserStore` & `useSRSStore`).
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { useState, useCallback } from "react";
 import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
 import { sounds } from "@/lib/audio";
 import { QuizQuestion } from "./types";
 
+// ======================
+// HOOK UTAMA
+// ======================
 export function useQuizEngine(questions: QuizQuestion[], lessonId?: string) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -29,7 +42,7 @@ export function useQuizEngine(questions: QuizQuestion[], lessonId?: string) {
       const currentXp = useUserStore.getState().xp;
       updateProgress(currentXp + totalXP, {});
       
-      // Mark lesson as completed if score is at least 70%
+      // Tandai pelajaran sebagai selesai jika skor setidaknya mencapai 70%
       if (lessonId && finalScore / questions.length >= 0.7) {
         completeLesson(lessonId);
       }

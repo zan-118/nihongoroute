@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * @file Hero.tsx
+ * @description Komponen Hero utama untuk Landing Page NihongoRoute.
+ * Menampilkan slogan menarik, ajakan bertindak (CTA), serta elemen dekoratif interaktif
+ * menggunakan Framer Motion dengan efek cyber-aesthetic modern.
+ *
+ * @package components/features/landing
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import React from "react";
 import Link from "next/link";
 import { m } from "framer-motion";
@@ -7,13 +20,18 @@ import { Sparkles, ArrowRight, PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 /**
- * Komponen Hero untuk Landing Page.
+ * Komponen Hero
+ * Area sambutan utama di bagian paling atas Landing Page.
  */
 export function Hero() {
   return (
     <section className="min-h-[85vh] flex flex-col lg:flex-row items-center justify-between gap-[89px] mb-[89px] py-[55px]">
-      {/* LEFT CONTENT AREA */}
+      
+      {/* AREA KONTEN KIRI (TEXT & CTA) */}
       <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left max-w-2xl">
         <m.div
           initial={{ y: -20, opacity: 0 }}
@@ -88,7 +106,7 @@ export function Hero() {
         </m.div>
       </div>
 
-      {/* RIGHT DECORATIVE AREA - ASYMMETRICAL BALANCE */}
+      {/* AREA DEKORATIF KANAN - KESEIMBANGAN ASIMETRIS */}
       <m.div
         initial={{ opacity: 0, scale: 0.9, rotate: -5 }}
         animate={{ opacity: 1, scale: 1, rotate: 0 }}
@@ -96,7 +114,7 @@ export function Hero() {
         className="hidden lg:flex flex-1 justify-end relative"
       >
         <div className="relative size-[500px]">
-          {/* Abstract Cyber Shape */}
+          {/* Efek Cahaya Latar Belakang */}
           <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 via-secondary/10 to-transparent rounded-[89px] blur-3xl animate-pulse" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[300px] border border-primary/20 rounded-[55px] rotate-12 backdrop-blur-3xl shadow-2xl overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent" />
@@ -109,7 +127,7 @@ export function Hero() {
             </div>
           </div>
 
-          {/* Floating Accents */}
+          {/* Elemen Dekoratif Mengambang */}
           <m.div
             animate={{ y: [0, -21, 0], x: [0, 8, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
@@ -133,3 +151,4 @@ export function Hero() {
     </section>
   );
 }
+

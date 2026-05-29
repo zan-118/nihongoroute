@@ -1,10 +1,20 @@
+/**
+ * @file switch.tsx
+ * @description Komponen Sakelar (Switch) atomik berbasis Radix UI dengan gaya premium.
+ */
+
 "use client"
 
+// ======================
+// IMPOR
+// ======================
 import * as React from "react"
 import * as SwitchPrimitives from "@radix-ui/react-switch"
-
 import { cn } from "@/lib/utils"
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 const Switch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
   React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>

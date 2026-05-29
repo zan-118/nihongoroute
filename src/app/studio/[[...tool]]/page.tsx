@@ -1,6 +1,18 @@
+/**
+ * @file page.tsx
+ * @description Halaman portal CMS Sanity Studio untuk manajemen konten editorial NihongoRoute.
+ * Dikonfigurasi agar tidak diindeks oleh mesin pencari (robots: noindex).
+ */
+
+// ======================
+// IMPOR
+// ======================
 import type { Metadata, Viewport } from "next";
 import StudioClient from "./StudioClient";
 
+// ======================
+// METADATA & VIEWPORT
+// ======================
 export const metadata: Metadata = {
   title: "NihongoRoute Sanity Studio",
   description: "CMS NihongoRoute Studio untuk mengelola kurikulum, ujian, cheatsheet, pelajaran membaca (dokkai), dan mendengarkan (choukai).",
@@ -17,6 +29,9 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function StudioPage() {
   return <StudioClient />;
 }

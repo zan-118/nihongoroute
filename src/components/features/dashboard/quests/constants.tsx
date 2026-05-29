@@ -1,6 +1,21 @@
+/**
+ * @file constants.tsx
+ * @description Konstanta daftar misi harian (Daily Quests) untuk gamifikasi NihongoRoute.
+ * Menyediakan definisi ID misi, judul, tipe (review/XP), target kuantitas, hadiah XP, serta ikon Lucide.
+ *
+ * @package components/features/dashboard/quests
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import { Brain, Flame, Zap } from "lucide-react";
 import { Quest } from "./types";
 
+// ==========================================
+// KONSTANTA DAFTAR MISI
+// ==========================================
 export const DAILY_QUESTS: Quest[] = [
   {
     id: "q_review_10",
@@ -27,3 +42,4 @@ export const DAILY_QUESTS: Quest[] = [
     icon: <Zap size={18} className="text-primary" />,
   },
 ];
+

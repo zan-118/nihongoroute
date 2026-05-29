@@ -1,10 +1,19 @@
-"use client";
+/**
+ * @file KanjiRelatedVocab.tsx
+ * @description Komponen panel untuk menampilkan daftar kosakata (vocabulary) yang berhubungan atau menggunakan karakter Kanji tersebut.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { Card } from "@/components/ui/card";
 import { Link as LinkIcon, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface VocabRef {
   id: string;
   _id?: string;
@@ -19,7 +28,16 @@ interface KanjiRelatedVocabProps {
   relatedVocab?: VocabRef[];
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen panel kosakata terkait kanji.
+ */
 export function KanjiRelatedVocab({ relatedVocab }: KanjiRelatedVocabProps) {
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <Card className="p-6 md:p-10 bg-card/20 backdrop-blur-xl border-border rounded-[2.5rem] hover:border-primary/40 transition-all md:col-span-full lg:col-span-2">
       <div className="flex items-center gap-3 mb-6">

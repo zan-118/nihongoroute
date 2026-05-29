@@ -1,5 +1,14 @@
 "use client";
 
+/**
+ * @file useSettingsActions.ts
+ * @description Hook kustom (Custom Hook) untuk mengelola seluruh interaksi pada halaman Pengaturan Akun.
+ * Menyediakan fungsionalitas ekspor/impor data JSON, reset progres belajar, logout, serta sinkronisasi progres manual ke cloud Supabase.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -9,29 +18,9 @@ import { useUIStore } from "@/store/useUIStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "sonner";
 
-/**
- * Custom Hook: useSettingsActions
- * 
- * Mengelola interaksi menu pengaturan, meliputi sinkronisasi data manual lokal ke cloud Supabase,
- * ekspor/impor data progres sebagai file JSON, hapus permanen seluruh data progres (reset data),
- * pembaruan profil pengguna, dan keluar akun (logout) dengan dialog konfirmasi khusus.
- * 
- * @returns {Object} Kumpulan properti data profil dan callback aksi pengaturan
- * @returns {string} name - Nama profil pengguna saat ini
- * @returns {number} xp - Jumlah poin XP pengguna saat ini
- * @returns {number} streak - Jumlah hari beruntun (streak) belajar
- * @returns {boolean} isAuthenticated - Menunjukkan apakah pengguna masuk via akun cloud
- * @returns {Function} updateProfileName - Callback untuk memperbarui nama profil
- * @returns {number} dirtySrsCount - Jumlah kartu SRS yang belum tersinkronisasi
- * @returns {boolean} isSyncing - Menandakan apakah sinkronisasi manual sedang berjalan
- * @returns {Object} confirmModal - State dialog konfirmasi (isOpen, title, description, dll.)
- * @returns {Function} closeConfirm - Callback untuk menutup modal konfirmasi
- * @returns {Function} handleExportData - Callback untuk mengekspor progres belajar ke berkas JSON
- * @returns {Function} handleImportData - Callback untuk mengimpor berkas JSON progres belajar
- * @returns {Function} handleResetData - Callback untuk menghapus seluruh progres belajar lokal
- * @returns {Function} handleLogout - Callback untuk mengakhiri sesi login pengguna
- * @returns {Function} handleManualSync - Callback untuk memaksa sinkronisasi local data ke cloud Supabase
- */
+// ======================
+// HOOK UTAMA
+// ======================
 export function useSettingsActions() {
   const router = useRouter();
   const supabase = createClient();

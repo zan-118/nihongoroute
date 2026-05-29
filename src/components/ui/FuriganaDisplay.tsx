@@ -1,12 +1,22 @@
+/**
+ * @file FuriganaDisplay.tsx
+ * @description Komponen untuk merender teks bahasa Jepang dengan Furigana (ruby text) secara dinamis dan responsif (mendukung mode Kanji, Furigana, Hiragana, Romaji).
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import { splitFurigana } from "@/components/ui/SmartJapanese";
 import { useUIStore } from "@/store/useUIStore";
 import * as wanakana from "wanakana";
-
 import WordPopover from "@/components/features/reading/components/WordPopover";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface FuriganaDisplayProps {
   text: string;
   furigana: string;
@@ -17,6 +27,9 @@ interface FuriganaDisplayProps {
   romaji?: string;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function FuriganaDisplay({ 
   text, 
   furigana, 
@@ -38,7 +51,7 @@ export default function FuriganaDisplay({
 
   const { furi: furiSize, kanji: kanjiSize } = sizeConfig[size];
 
-  // Hiragana Mode: Direct return of furigana prop to ensure 100% no Kanji and high performance
+  // Mode Hiragana: Mengembalikan properti furigana secara langsung untuk memastikan 100% bebas Kanji dan berkinerja sangat tinggi
   if (currentMode === "hiragana" && furigana) {
     return (
       <span className={`font-noto-serif leading-relaxed tracking-normal inline-block w-full text-foreground ${kanjiSize} ${className}`}>

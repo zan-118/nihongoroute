@@ -1,11 +1,14 @@
 /**
  * @file index.ts
- * @description Tipe data untuk fitur Listening Comprehension (Karaoke-Style).
+ * @description Tipe data dan antarmuka untuk aktivitas latihan Menyimak (Listening Comprehension).
  */
 
+// ==========================================
+// ANTARMUKA & TIPE DATA UTAMA
+// ==========================================
 export interface TranscriptLine {
   _key: string;
-  text: string | unknown[]; // Bisa text biasa atau Portable Text (VocabTrigger)
+  text: string | unknown[]; // Bisa berupa teks mentah atau Portable Text (VocabTrigger)
   startTime: number; // Dalam detik
   endTime: number; // Dalam detik
   speaker?: string;
@@ -40,4 +43,3 @@ export interface ListeningState {
   isScrolling: boolean;
   activeTab: "transcript" | "quiz";
 }
-

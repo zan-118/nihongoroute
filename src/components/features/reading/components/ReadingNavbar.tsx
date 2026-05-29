@@ -1,11 +1,20 @@
-"use client";
+/**
+ * @file ReadingNavbar.tsx
+ * @description Komponen bilah navigasi atas (top bar) halaman membaca artikel dengan opsi kembali ke perpustakaan, status level JLPT, dan tombol kontrol tampilan (Mode Zen).
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { m } from "framer-motion";
 import { ChevronLeft, Maximize2 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface ReadingNavbarProps {
   title: string;
   difficulty: string;
@@ -15,6 +24,12 @@ interface ReadingNavbarProps {
   onZenModeToggle: () => void;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen bilah navigasi artikel membaca.
+ */
 export function ReadingNavbar({
   title,
   difficulty,
@@ -23,6 +38,9 @@ export function ReadingNavbar({
   onModeChange,
   onZenModeToggle,
 }: ReadingNavbarProps) {
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <m.nav
       initial={{ y: -100, opacity: 0 }}

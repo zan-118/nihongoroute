@@ -1,5 +1,19 @@
 "use client";
 
+/**
+ * @file ContinueLearning.tsx
+ * @description Komponen dashboard untuk menyajikan jalan pintas "Lanjut Belajar".
+ * Secara dinamis menganalisis riwayat penyelesaian pelajaran pengguna dari Zustand store,
+ * mendeteksi kursus aktif, memilih pelajaran berikutnya yang belum selesai,
+ * serta menampilkan kemajuan belajar dalam bentuk visual bar dan persentase.
+ *
+ * @package components/features/dashboard
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import { useUserStore } from "@/store/useUserStore";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,6 +22,9 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { m } from "framer-motion";
 
+// ==========================================
+// ANTARMUKA & PROPS (INTERFACES)
+// ==========================================
 interface ContinueLearningProps {
   courseMetadata: Array<{
     _id: string;
@@ -21,14 +38,17 @@ interface ContinueLearningProps {
   }>;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 export default function ContinueLearning({ courseMetadata }: ContinueLearningProps) {
   const completedLessons = useUserStore(s => s.completedLessons);
 
-  // Logic to find active course and next lesson
+  // Logika untuk menemukan kursus aktif dan pelajaran berikutnya berdasarkan riwayat penyelesaian
   const activeData = useMemo(() => {
     if (!courseMetadata || courseMetadata.length === 0) return null;
 
-    // 1. Calculate progress for each category
+    // 1. Hitung progres untuk setiap kategori/kursus
     const stats = courseMetadata.map(cat => {
       const lessons = cat.lessons || [];
       const completedInCat = lessons.filter(lesson => {
@@ -41,7 +61,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
         ? (completedInCat.length / totalLessons) * 100 
         : 0;
       
-      // Find last updated lesson in this category
+      // Temukan waktu pelajaran terakhir yang diperbarui di kategori ini
       const lastUpdate = lessons.reduce((max, lesson) => {
         const ts = completedLessons[lesson._id]?.updatedAt || 0;
         return ts > max ? ts : max;
@@ -50,20 +70,20 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
       return { ...cat, lessons, progress, lastUpdate, completedCount: completedInCat.length, totalLessons };
     });
 
-    // 2. Find "Active" course (has progress but not 100%, and most recently updated)
-    // If none has progress, pick the first category (usually N5)
+    // 2. Temukan kursus "Aktif" (memiliki progres tetapi belum 100%, dan paling baru diperbarui)
+    // Jika tidak ada yang memiliki progres, pilih kategori pertama (biasanya N5)
     let active = stats
       .filter(s => s.progress > 0 && s.progress < 100)
       .sort((a, b) => b.lastUpdate - a.lastUpdate)[0] as typeof stats[number] | undefined;
 
     if (!active) {
-       // If no partially completed course, check if any course is not 100%
+       // Jika tidak ada kursus yang selesai sebagian, cari kursus pertama yang belum 100%
        active = stats.find(s => s.progress < 100);
     }
 
     if (!active || !active.lessons || active.lessons.length === 0) return null;
 
-    // 3. Find next lesson in active course
+    // 3. Temukan pelajaran berikutnya dalam urutan kursus aktif yang belum diselesaikan
     const nextLessonIndex = active.lessons.findIndex(l => !completedLessons[l._id]?.completedAt);
     const nextLesson = active.lessons[nextLessonIndex] || active.lessons[0];
 
@@ -102,15 +122,15 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
         </div>
       </div>
 
-      <Card className="group relative overflow-hidden border-border bg-card/10 backdrop-blur-xl p-0 rounded-[34px] transition-all duration-500 hover:border-primary/30">
-        {/* Progress Background Glow */}
+      <Card className="group relative overflow-hidden border-border bg-card/10 backdrop-blur-xl p-0 rounded-[34px] transition-all duration-500 hover:border-primary/30 shadow-none">
+        {/* Glow Latar Belakang Kemajuan Belajar */}
         <div 
           className="absolute left-0 top-0 bottom-0 bg-primary/5 transition-all duration-1000 ease-out" 
           style={{ width: `${activeData.progress}%` }}
         />
 
         <div className="relative z-10 flex flex-col md:flex-row items-center gap-[34px] p-[34px]">
-          {/* Icon/Thumbnail Area */}
+          {/* Area Ikon / Miniatur */}
           <div className="shrink-0 relative">
             <div className="size-[89px] rounded-[21px] bg-card/40 border border-border flex items-center justify-center shadow-2xl overflow-hidden group-hover:border-primary/20 transition-colors">
                {activeData.progress === 100 ? (
@@ -120,13 +140,13 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
                )}
             </div>
             
-            {/* Percentage Badge */}
+            {/* Lencana Persentase Progres */}
             <div className="absolute -bottom-2 -right-2 bg-foreground text-background text-[10px] font-bold px-3 py-1 rounded-full border border-border shadow-xl">
               {Math.round(activeData.progress)}%
             </div>
           </div>
 
-          {/* Info Area */}
+          {/* Area Informasi Judul & Progres */}
           <div className="flex-1 text-center md:text-left">
             <div className="flex flex-col gap-1 mb-[13px]">
               <span className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] opacity-80">
@@ -151,7 +171,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
             </div>
           </div>
 
-          {/* Action Area */}
+          {/* Area Tombol Aksi */}
           <div className="w-full md:w-auto shrink-0">
             <Button asChild className="w-full md:w-auto h-[89px] px-10 rounded-[21px] bg-foreground text-background hover:bg-primary hover:text-primary-foreground font-bold uppercase tracking-widest transition-all duration-300 group shadow-2xl border-none">
               <Link href={`/courses/${activeData.courseSlug}/${activeData.lessonSlug}`}>
@@ -164,7 +184,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
           </div>
         </div>
 
-        {/* Bottom Progress Bar (Slim) */}
+        {/* Batang Progres Tipis di Sisi Bawah Card */}
         <div className="absolute bottom-0 left-0 w-full h-[1px] bg-border">
           <m.div 
             initial={{ width: 0 }}

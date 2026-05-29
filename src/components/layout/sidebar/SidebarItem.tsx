@@ -1,10 +1,21 @@
+/**
+ * @file SidebarItem.tsx
+ * @description Komponen item menu navigasi individu pada sidebar desktop.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import { m } from "framer-motion";
 import Link from "next/link";
 import { ChevronRight, LucideIcon } from "lucide-react";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface SidebarItemProps {
   item: {
     href: string;
@@ -15,9 +26,9 @@ interface SidebarItemProps {
   onClick?: () => void;
 }
 
-/**
- * Komponen item navigasi individu dalam sidebar.
- */
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function SidebarItem({ item, pathname, onClick }: SidebarItemProps) {
   const isActive = pathname.startsWith(item.href);
   return (
@@ -31,7 +42,7 @@ export function SidebarItem({ item, pathname, onClick }: SidebarItemProps) {
             : "text-muted-foreground hover:bg-background/5 hover:text-foreground border border-transparent"
         }`}
       >
-        {/* Active Side Glow */}
+        {/* Pendar Samping Aktif */}
         {isActive && (
           <m.div 
             layoutId="active-side-glow"

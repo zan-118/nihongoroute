@@ -1,10 +1,26 @@
 "use client";
 
+/**
+ * @file DownloadPdfButton.tsx
+ * @description Komponen tombol untuk mengunduh dokumen PDF secara dinamis.
+ * Menggunakan pemuatan malas (lazy loading) via next/dynamic untuk merender mesin pembuat PDF (PdfGenerator)
+ * hanya di sisi klien guna optimalisasi kinerja rendering.
+ *
+ * @package components/features/pdf/components
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { useDownloadPdfButton } from "../useDownloadPdfButton";
 
+// ==========================================
+// ELEMEN DINAMIS
+// ==========================================
 const PdfGenerator = dynamic(() => import("../PdfGenerator"), {
   ssr: false,
   loading: () => (
@@ -15,6 +31,9 @@ const PdfGenerator = dynamic(() => import("../PdfGenerator"), {
   ),
 });
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 export default function DownloadPdfButton({
   data,
   type = "lesson",
@@ -36,3 +55,4 @@ export default function DownloadPdfButton({
 
   return <PdfGenerator data={data} type={type} />;
 }
+

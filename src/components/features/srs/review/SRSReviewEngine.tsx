@@ -1,5 +1,15 @@
 "use client";
 
+/**
+ * @file SRSReviewEngine.tsx
+ * @description Komponen pengendali utama pengerjaan sesi ulasan hafalan (SRS Review Engine).
+ * Menyajikan visualisasi progres, fluktuasi XP saat jawaban benar/salah, 
+ * animasi transisi kartu, serta selebrasi perolehan total XP di akhir sesi.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,6 +20,9 @@ import XPPop from "@/components/features/gamification/XPPop";
 import { FlashcardType } from "./types";
 import { useSRSReview } from "./useSRSReview";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
   const engine = useSRSReview(cards);
 

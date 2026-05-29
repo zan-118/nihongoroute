@@ -1,6 +1,19 @@
+/**
+ * @file cheatsheets.actions.ts
+ * @description Server Actions untuk mengambil data referensi cepat (Cheatsheets) dari Supabase.
+ * Menyediakan fungsi untuk mengambil daftar lengkap maupun detail satu cheatsheet berdasarkan ID atau slug.
+ */
+
 "use server";
 
+// ======================
+// IMPORTS
+// ======================
 import { createClient } from "@/lib/supabase/server";
+
+// ======================
+// SERVER ACTIONS
+// ======================
 
 /**
  * Mengambil daftar referensi cepat (Cheatsheets).
@@ -33,7 +46,7 @@ export async function getCheatsheets() {
       linkedVocab: []
     }));
   } catch (error) {
-    console.error("Failed to fetch cheatsheets:", error);
+    console.error("Gagal mengambil daftar cheatsheet:", error);
     return [];
   }
 }
@@ -69,7 +82,7 @@ export async function getCheatsheetByIdOrSlug(idOrSlug: string) {
       linkedVocab: []
     };
   } catch (error) {
-    console.error("Failed to fetch cheatsheet detail:", error);
+    console.error("Gagal mengambil detail cheatsheet:", error);
     return null;
   }
 }

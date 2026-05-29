@@ -8,7 +8,7 @@
 "use client";
 
 // ======================
-// IMPORTS
+// IMPOR
 // ======================
 import Link from "next/link";
 import { m, Variants } from "framer-motion";
@@ -24,7 +24,7 @@ import { Badge } from "@/components/ui/badge";
 import { ROUTES } from "@/lib/routes";
 
 // ======================
-// CONFIG / CONSTANTS
+// KONFIGURASI / KONSTANTA
 // ======================
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -40,7 +40,7 @@ const itemVariants: Variants = {
 };
 
 // ======================
-// INTERFACES
+// ANTARMUKA
 // ======================
 export interface ExamData {
   id?: string;
@@ -54,16 +54,23 @@ export interface ExamData {
 }
 
 // ======================
-// MAIN EXECUTION
+// EKSEKUSI UTAMA
 // ======================
 
+/**
+ * Komponen ExamsClient: Merender antarmuka daftar ujian JLPT interaktif dengan animasi stagger Framer Motion.
+ * 
+ * @param {Object} props Properti komponen.
+ * @param {ExamData[]} props.exams Daftar data ujian dari CMS Sanity.
+ * @returns {JSX.Element} Antarmuka daftar simulasi ujian.
+ */
 export default function ExamsClient({ exams }: { exams: ExamData[] }) {
   // ======================
-  // RENDER
+  // RENDER UTAMA
   // ======================
   return (
     <div className="w-full px-4 sm:px-6 relative overflow-hidden bg-background text-foreground transition-colors duration-300 min-h-screen pt-8 sm:pt-12 pb-24">
-      {/* Background Ambient Decor */}
+      {/* Dekorasi Ambient Latar Belakang */}
       <div className="absolute top-[-10%] right-[-5%] size-[600px] bg-destructive/5 rounded-full blur-[150px] pointer-events-none animate-pulse" />
       <div className="absolute bottom-[10%] left-[-10%] size-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
 
@@ -73,7 +80,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
         animate="visible"
         variants={containerVariants}
       >
-        {/* HEADER SECTION */}
+        {/* BAGIAN TAJUK UTAMA (HEADER) */}
         <header className="mb-20">
           <m.div
             variants={itemVariants}
@@ -109,7 +116,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
           </m.div>
         </header>
 
-        {/* WARNING SECTION */}
+        {/* BAGIAN PERINGATAN */}
         <m.div variants={itemVariants} className="mb-12">
           <Card className="p-5 md:p-6 border-warning/30 bg-warning/5 flex items-start gap-4 rounded-2xl shadow-lg">
             <div className="size-10 rounded-xl bg-warning/10 border border-warning/20 flex items-center justify-center shrink-0">
@@ -126,7 +133,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
           </Card>
         </m.div>
 
-        {/* EXAM LIST GRID */}
+        {/* KISI DAFTAR UJIAN */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 pb-20">
           {exams.length > 0 ? (
             exams.map((exam) => (

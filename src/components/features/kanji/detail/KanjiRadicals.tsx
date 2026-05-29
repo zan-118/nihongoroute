@@ -1,13 +1,31 @@
-"use client";
+/**
+ * @file KanjiRadicals.tsx
+ * @description Komponen bento untuk menampilkan daftar radikal utama penyusun karakter Kanji.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface KanjiRadicalsProps {
   radicals?: string[];
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen panel radikal kanji.
+ */
 export function KanjiRadicals({ radicals }: KanjiRadicalsProps) {
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <Card className="p-8 bg-card/20 backdrop-blur-xl border-border rounded-[2.5rem] hover:border-primary/40 transition-all md:col-span-3 lg:col-span-2 flex flex-col justify-center">
       <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground block mb-4">Radikal Utama</span>

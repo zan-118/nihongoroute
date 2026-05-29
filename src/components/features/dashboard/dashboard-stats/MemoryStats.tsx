@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * @file MemoryStats.tsx
+ * @description Komponen widget dashboard untuk menampilkan visualisasi kemajuan status hafalan pengguna (SRS).
+ * Menyajikan persentase distribusi memori dalam empat tingkat (Master, Stabil, Fase Belajar, Baru)
+ * dengan grafik progres beranimasi, serta tombol navigasi cepat ke kamus kosakata dan daftar kanji.
+ *
+ * @package components/features/dashboard/dashboard-stats
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,9 +20,13 @@ import { Progress } from "@/components/ui/progress";
 import { Trophy, TrendingUp, Flame, Sprout, BookOpen, PenTool, Database } from "lucide-react";
 import { useMemoryStats } from "@/components/features/srs/stats/useMemoryStats";
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 export default function MemoryStats() {
   const { srsEntries, stats, total } = useMemoryStats();
 
+  // Konfigurasi visual untuk masing-masing tingkatan penguasaan memori
   const statConfig = [
     {
       label: "Tingkat Master",
@@ -43,8 +60,10 @@ export default function MemoryStats() {
 
   return (
     <Card className="bg-card p-6 md:p-8 lg:p-10 rounded-[2.5rem] md:rounded-[3rem] border-border relative overflow-hidden h-full flex flex-col neo-card shadow-none">
+      {/* Pola Kisi Latar Belakang */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--primary-rgb),0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--primary-rgb),0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none opacity-50" />
 
+      {/* Bagian Header */}
       <header className="flex items-center justify-between mb-8 md:mb-10 relative z-10">
         <div className="flex items-center gap-3 md:gap-4">
           <Card className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center neo-inset shadow-none shrink-0">
@@ -65,6 +84,7 @@ export default function MemoryStats() {
         </Badge>
       </header>
 
+      {/* Kontainer Grafik Progres Batang */}
       <div className="space-y-6 md:space-y-8 mb-8 md:mb-10 relative z-10 flex-1">
         {statConfig.map((stat) => (
           <StatBar
@@ -79,6 +99,7 @@ export default function MemoryStats() {
         ))}
       </div>
 
+      {/* Tombol Pintas Belajar (Footer Card) */}
       <div className="pt-6 md:pt-8 border-t border-border grid grid-cols-2 gap-4 md:gap-5 relative z-10 mt-auto">
         <Link
           href="/library/vocab"
@@ -103,6 +124,9 @@ export default function MemoryStats() {
   );
 }
 
+// ==========================================
+// ELEMEN SUB-KOMPONEN (STATBAR)
+// ==========================================
 interface StatBarProps {
   label: string;
   count: number;
@@ -113,7 +137,7 @@ interface StatBarProps {
 }
 
 function StatBar({ label, count, total, indicatorColor, icon, colorClass }: StatBarProps) {
-  // Guard: total > 0 mencegah NaN (divisi by zero) dan Infinity (count > 0 tapi total = 0)
+  // Pelindung: total > 0 mencegah pembagian dengan nol (NaN / Infinity)
   const percent = total > 0 ? (count / total) * 100 : 0;
 
   return (
@@ -138,3 +162,4 @@ function StatBar({ label, count, total, indicatorColor, icon, colorClass }: Stat
     </div>
   );
 }
+

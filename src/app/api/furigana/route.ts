@@ -1,3 +1,12 @@
+/**
+ * @file route.ts
+ * @description API Route Handler untuk konversi teks Jepang menjadi furigana Hiragana menggunakan Kuroshiro.
+ * Digunakan oleh komponen SmartJapanese untuk menghasilkan annotasi bacaan secara dinamis.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { NextResponse } from "next/server";
 import path from "path";
 // @ts-ignore
@@ -5,12 +14,9 @@ import Kuroshiro from "kuroshiro";
 // @ts-ignore
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
 
-/**
- * @file route.ts
- * @description API endpoint untuk mengonversi teks Jepang (Kanji) menjadi Hiragana menggunakan Kuroshiro.
- * Menggunakan singleton pattern untuk menghindari inisialisasi ulang kamus Kuromoji yang berat.
- */
-
+// ======================
+// TIPE DATA
+// ======================
 interface KuroshiroInstance {
   init(analyzer: unknown): Promise<void>;
   convert(text: string, options: { to: string; mode: string }): Promise<string>;
@@ -23,7 +29,7 @@ async function getKuroshiro(): Promise<KuroshiroInstance> {
   if (kuroshiro) return kuroshiro;
   
   if (isInitializing) {
-    if (process.env.NODE_ENV === 'development') console.log("Kuroshiro is already initializing, waiting...");
+    if (process.env.NODE_ENV === 'development') console.log("Kuroshiro sedang diinisialisasi, menunggu...");
     while (isInitializing) {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
@@ -31,23 +37,23 @@ async function getKuroshiro(): Promise<KuroshiroInstance> {
   }
 
   isInitializing = true;
-  if (process.env.NODE_ENV === 'development') console.log("Initializing Kuroshiro for the first time...");
+  if (process.env.NODE_ENV === 'development') console.log("Menginisialisasi Kuroshiro untuk pertama kalinya...");
   try {
-    // Handle potential CJS/ESM interop issues
+    // Tangani kemungkinan masalah interop CJS/ESM
     const KConstructor = (Kuroshiro as { default?: new () => KuroshiroInstance }).default || (Kuroshiro as new () => KuroshiroInstance);
     const AConstructor = (KuromojiAnalyzer as { default?: unknown }).default || KuromojiAnalyzer;
 
     const instance = new KConstructor();
-    if (process.env.NODE_ENV === 'development') console.log("Loading Kuromoji Analyzer with explicit dict path...");
+    if (process.env.NODE_ENV === 'development') console.log("Memuat Kuromoji Analyzer dengan jalur kamus (dict path) eksplisit...");
     // Menunjuk langsung ke folder dict di node_modules/kuromoji
     const dictPath = path.join(process.cwd(), "node_modules", "kuromoji", "dict");
     
     await instance.init(new AConstructor({ dictPath }));
     kuroshiro = instance;
-    if (process.env.NODE_ENV === 'development') console.log("Kuroshiro Initialization Successful!");
+    if (process.env.NODE_ENV === 'development') console.log("Inisialisasi Kuroshiro Berhasil!");
     return kuroshiro;
   } catch (error) {
-    console.error("Kuroshiro Init Error:", error);
+    console.error("Kesalahan Inisialisasi Kuroshiro:", error);
     throw error;
   } finally {
     isInitializing = false;
@@ -97,7 +103,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ hiragana: result }, { headers: corsHeaders });
   } catch (error) {
-    console.error("Furigana API Error:", error);
+    console.error("Kesalahan API Furigana:", error);
     return NextResponse.json(
       { error: "Gagal mengonversi teks ke Hiragana", details: error instanceof Error ? error.message : "Unknown error" },
       { 

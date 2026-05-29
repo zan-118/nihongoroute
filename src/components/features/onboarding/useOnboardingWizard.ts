@@ -1,26 +1,22 @@
 "use client";
 
+/**
+ * @file useOnboardingWizard.ts
+ * @description Hook kustom (Custom Hook) untuk mengelola state dan langkah-langkah pengisian form (wizard) onboarding bagi pengguna baru.
+ * Menyimpan data target level JLPT dan motivasi belajar pengguna langsung ke tabel profiles di Supabase.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useUIStore } from "@/store/useUIStore";
 
-/**
- * Custom Hook: useOnboardingWizard
- * 
- * Mengelola state langkah demi langkah (wizard) selama proses onboarding pengguna baru,
- * menyimpan target tingkat JLPT dan motivasi belajar pengguna ke database Supabase.
- * 
- * @returns {Object} State dan callback handler wizard onboarding
- * @returns {number} step - Indeks langkah aktif (1, 2, dst.)
- * @returns {Function} setStep - Setter indeks langkah
- * @returns {string | null} targetLevel - Target level JLPT yang dipilih (misal: "N5", "N4")
- * @returns {Function} setTargetLevel - Setter target level JLPT
- * @returns {string | null} motivation - Motivasi utama pengguna belajar bahasa Jepang
- * @returns {Function} setMotivation - Setter motivasi pengguna
- * @returns {boolean} isSubmitting - Status pengiriman payload data onboarding ke Supabase
- * @returns {Function} handleComplete - Callback untuk menyimpan data onboarding dan mengarahkan ke Dasbor
- */
+// ======================
+// HOOK UTAMA
+// ======================
 export function useOnboardingWizard() {
   const router = useRouter();
   const [step, setStep] = useState(1);

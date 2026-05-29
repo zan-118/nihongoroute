@@ -1,3 +1,12 @@
+/**
+ * @file ExamPlaying.tsx
+ * @description Komponen antarmuka utama saat pengguna sedang mengerjakan simulasi ujian (Mock Exam).
+ * Mengelola tampilan soal, pemutaran audio choukai, pewaktuan, navigasi soal, dan lembar jawaban konfirmasi akhir.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { memo } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import Image from "next/image";
@@ -18,6 +27,9 @@ import { sanitizeHtml } from "@/lib/sanitize";
 import { toast } from "sonner";
 import { ExamQuestionText } from "./ExamQuestionText";
 
+// ======================
+// ANTARMUKA & TIPE
+// ======================
 interface ExamPlayingProps {
   exam: ExamData;
   activeQuestion: ExamQuestion;
@@ -44,6 +56,9 @@ interface ExamPlayingProps {
   pendingConfirmLabel: { title: string; description: string } | null;
 }
 
+// ======================
+// KOMPONEN PEMBANTU
+// ======================
 /**
  * Komponen Opsi Jawaban yang di-memoize untuk menghindari re-render yang tidak perlu.
  * Tanpa memoize, tombol ini akan re-render setiap detik saat timer `timeLeft` diperbarui.
@@ -83,6 +98,9 @@ const OptionButton = memo(({
 
 OptionButton.displayName = "OptionButton";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function ExamPlaying({
   exam,
   activeQuestion,
@@ -298,7 +316,11 @@ export function ExamPlaying({
         </div>
       </footer>
 
-      {/* Modal Konfirmasi Seksi */}
+      {/* ======================
+      {/* DIALOG & OVERLAY KONFIRMASI */}
+      {/* ====================== */}
+
+      {/* Modal Konfirmasi Bagian Ujian */}
       <ConfirmModal
         isOpen={pendingConfirm === "section"}
         onClose={() => setPendingConfirm(null)}
@@ -325,7 +347,7 @@ export function ExamPlaying({
               exit={{ scale: 0.95, y: 20 }}
               className="w-full max-w-2xl bg-card border border-border rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] neo-card"
             >
-              {/* Header */}
+              {/* Kepala Lembar Jawaban */}
               <div className="p-6 border-b border-border flex items-center justify-between">
                 <div>
                   <h2 className="text-xl font-black uppercase tracking-tight text-foreground">
@@ -340,7 +362,7 @@ export function ExamPlaying({
                 </div>
               </div>
 
-              {/* Stats Summary */}
+              {/* Ringkasan Statistik Jawaban */}
               <div className="px-6 py-4 bg-muted/30 border-b border-border grid grid-cols-2 gap-4">
                 <div className="flex items-center gap-3">
                   <div className="size-3 rounded-full bg-success shadow-[0_0_8px_rgba(var(--success-rgb),0.5)]" />
@@ -362,7 +384,7 @@ export function ExamPlaying({
                 </div>
               </div>
 
-              {/* Scrollable Grid of Questions */}
+              {/* Kisi Soal yang Dapat Digulir */}
               <div className="p-6 overflow-y-auto flex-1 space-y-6">
                 <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-2">
                   {exam.questions.map((q, idx) => {
@@ -418,7 +440,7 @@ export function ExamPlaying({
                 </div>
               </div>
 
-              {/* Actions Footer */}
+              {/* Tombol Aksi */}
               <div className="p-6 border-t border-border bg-muted/10 flex items-center justify-end gap-3">
                 <Button
                   onClick={() => setPendingConfirm(null)}

@@ -1,3 +1,11 @@
+/**
+ * @file types.ts
+ * @description Definisi tipe data (TypeScript) untuk komponen kartu Flashcard dan tema visualisasi kartu.
+ */
+
+// ==========================================
+// TIPE DATA PROPS FLASHCARD
+// ==========================================
 export interface FlashcardProps {
   id: string;
   docType?: "vocab" | "kanji";
@@ -45,6 +53,9 @@ export interface FlashcardProps {
   }> | null;
 }
 
+// ==========================================
+// TIPE DATA TEMA VISUAL (THEME CONTEXT)
+// ==========================================
 export interface FlashcardThemeContext {
   isKanji: boolean;
   themeColor: string;

@@ -1,14 +1,20 @@
 /**
  * @file queries.ts
- * @description Kueri GROQ universal untuk mengambil konten edukasi statis dari Sanity.
- * @module SanityQueries
+ * @description Kueri GROQ universal luring-ready untuk menarik konten edukasi statis (Lesson, Reading, Listening, Mock Exam) dari Sanity CMS. Bertindak sebagai split-source data editorial statis NihongoRoute.
  */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { sanityClient } from "./sanity.client";
 
+// ==========================================
+// KUERI GROQ SANITY CMS
+// ==========================================
 /**
  * Mengambil satu dokumen pelajaran (lesson) dari Sanity berdasarkan slug.
- * @param slug - Slug unik pelajaran.
+ * 
+ * @param {string} slug - Slug unik pelajaran target
  */
 export async function getSanityLessonBySlug(slug: string) {
   const query = `*[_type == "lesson" && slug.current == $slug][0] {
@@ -34,7 +40,7 @@ export async function getSanityLessonBySlug(slug: string) {
   try {
     return await sanityClient.fetch(query, { slug });
   } catch (error) {
-    console.error(`[getSanityLessonBySlug] Error fetching lesson from Sanity:`, error);
+    console.error(`[getSanityLessonBySlug] Gagal mengambil data pelajaran dari Sanity:`, error);
     return null;
   }
 }
@@ -59,7 +65,7 @@ export async function getSanityLessonsByCategory(categoryIdOrSlug: string, categ
       idUuid: categoryIdUuid || categoryIdOrSlug
     });
   } catch (error) {
-    console.error(`[getSanityLessonsByCategory] Error fetching lessons from Sanity:`, error);
+    console.error(`[getSanityLessonsByCategory] Gagal mengambil daftar pelajaran dari Sanity:`, error);
     return [];
   }
 }
@@ -91,7 +97,7 @@ export async function getSanityReadingBySlug(slug: string) {
   try {
     return await sanityClient.fetch(query, { slug });
   } catch (error) {
-    console.error(`[getSanityReadingBySlug] Error fetching reading from Sanity:`, error);
+    console.error(`[getSanityReadingBySlug] Gagal mengambil data bacaan dari Sanity:`, error);
     return null;
   }
 }
@@ -118,7 +124,7 @@ export async function getSanityListeningBySlug(slug: string) {
   try {
     return await sanityClient.fetch(query, { slug });
   } catch (error) {
-    console.error(`[getSanityListeningBySlug] Error fetching listening from Sanity:`, error);
+    console.error(`[getSanityListeningBySlug] Gagal mengambil data menyimak dari Sanity:`, error);
     return null;
   }
 }
@@ -150,7 +156,7 @@ export async function getSanityExamBySlug(slug: string) {
   try {
     return await sanityClient.fetch(query, { slug });
   } catch (error) {
-    console.error(`[getSanityExamBySlug] Error fetching exam from Sanity:`, error);
+    console.error(`[getSanityExamBySlug] Gagal mengambil data ujian dari Sanity:`, error);
     return null;
   }
 }
@@ -172,7 +178,7 @@ export async function getSanityLessonsByCategories(categoryIds: string[]) {
   try {
     return await sanityClient.fetch(query, { ids: categoryIds });
   } catch (error) {
-    console.error(`[getSanityLessonsByCategories] Error fetching lessons in bulk from Sanity:`, error);
+    console.error(`[getSanityLessonsByCategories] Gagal mengambil daftar pelajaran massal dari Sanity:`, error);
     return [];
   }
 }

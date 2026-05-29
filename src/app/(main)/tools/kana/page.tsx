@@ -1,8 +1,15 @@
+/**
+ * @file page.tsx
+ * @description Halaman utama Kana Master — alat latihan penguasaan aksara Hiragana dan Katakana.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React, { Suspense } from "react";
 
-// Hook & Feature Components
 import { useKanaQuiz } from "@/components/features/tools/kana/useKanaQuiz";
 import { KanaHeader } from "@/components/features/tools/kana/KanaHeader";
 import { KanaControls } from "@/components/features/tools/kana/KanaControls";

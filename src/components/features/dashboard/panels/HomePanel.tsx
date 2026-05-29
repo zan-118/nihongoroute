@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * @file HomePanel.tsx
+ * @description Komponen panel Beranda (Home Panel) pada dashboard NihongoRoute.
+ * Menyusun struktur layout utama dashboard yang menggabungkan DashboardHero, peta penguasaan Kanji,
+ * modul Misi Harian (Daily Quests), serta widget Ungkapan Harian (Daily Expression).
+ *
+ * @package components/features/dashboard/panels
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import dynamic from "next/dynamic";
 import DashboardHero from "../DashboardHero";
 import DailyQuests from "../quests/DailyQuests";
@@ -7,11 +20,17 @@ import DailyExpression from "../DailyExpression";
 import { Variants } from "framer-motion";
 import { RandomExpression } from "@/actions/expressions.actions";
 
+// ==========================================
+// ELEMEN DINAMIS (LAZY LOADING)
+// ==========================================
 const KanjiProgressGrid = dynamic(() => import("../KanjiProgressGrid"), { 
   ssr: false,
   loading: () => <div className="h-[200px] w-full animate-pulse bg-muted rounded-2xl" />
 });
 
+// ==========================================
+// ANTARMUKA & PROPS (INTERFACES)
+// ==========================================
 interface HomePanelProps {
   loading: boolean;
   guestId: string;
@@ -33,6 +52,9 @@ interface HomePanelProps {
   }>;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 export function HomePanel({
   loading,
   guestId,
@@ -44,6 +66,8 @@ export function HomePanel({
 }: HomePanelProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-[55px]">
+      
+      {/* KOLOM UTAMA (SISI KIRI) */}
       <div className="lg:col-span-8 space-y-[89px]">
         <DashboardHero 
           loading={loading} 
@@ -82,12 +106,15 @@ export function HomePanel({
         </section>
       </div>
       
+      {/* PANEL SAMPING (SISI KANAN - STICKY) */}
       <aside className="lg:col-span-4 space-y-[34px]">
         <div className="sticky top-[100px] space-y-[21px]">
           <DailyQuests />
           <DailyExpression expression={expression} />
         </div>
       </aside>
+
     </div>
   );
 }
+

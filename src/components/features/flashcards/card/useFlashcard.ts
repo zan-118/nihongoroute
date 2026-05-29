@@ -1,7 +1,26 @@
+/**
+ * @file useFlashcard.ts
+ * @description Hook kustom untuk mengelola visualisasi tema (warna primer/sekunder sistem) dan fungsi flipping 3D di kartu flashcard.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { useState, useCallback } from "react";
 import { FlashcardProps } from "./types";
 
+// ==========================================
+// HOOK UTAMA
+// ==========================================
+/**
+ * Hook khusus pengendali interaksi kartu flashcard.
+ * 
+ * @returns State modal coretan, context tema kartu, dan handler flip/draw.
+ */
 export function useFlashcard({ type, onFlip }: Pick<FlashcardProps, 'type' | 'onFlip'>) {
+  // ==========================================
+  // STATUS & STATE & HOOKS
+  // ==========================================
   const [showWritingModal, setShowWritingModal] = useState(false);
 
   const isKanji = type === "kanji";
@@ -22,6 +41,9 @@ export function useFlashcard({ type, onFlip }: Pick<FlashcardProps, 'type' | 'on
     glowClass,
   };
 
+  // ==========================================
+  // METODE PENGENDALI UTAMA (HANDLERS)
+  // ==========================================
   const handleClick = useCallback(() => {
     onFlip();
   }, [onFlip]);
@@ -31,6 +53,9 @@ export function useFlashcard({ type, onFlip }: Pick<FlashcardProps, 'type' | 'on
     setShowWritingModal(true);
   }, []);
 
+  // ==========================================
+  // HASIL HOOK (RETURN VALUE)
+  // ==========================================
   return {
     showWritingModal,
     setShowWritingModal,

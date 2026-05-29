@@ -1,5 +1,11 @@
-"use client";
+/**
+ * @file WritingCanvas.tsx
+ * @description Komponen kanvas coretan (canvas drawing) interaktif untuk melatih penulisan Hiragana, Katakana, dan Kanji, terintegrasi dengan sensor akurasi goresan.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import React from "react";
 import { Trash2, Eye, EyeOff, RotateCcw, Zap, CheckCircle } from "lucide-react";
 import AnimatedKanji from "@/components/features/tools/writing/AnimatedKanji";
@@ -8,6 +14,9 @@ import { Button } from "@/components/ui/button";
 import XPPop from "@/components/features/gamification/XPPop";
 import { useWritingCanvas } from "../canvas/useWritingCanvas";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface WritingCanvasProps {
   character?: string;
   strokeColor?: string;
@@ -15,6 +24,12 @@ interface WritingCanvasProps {
   className?: string;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen kanvas latihan coretan tulisan Jepang.
+ */
 export default function WritingCanvas({ 
   character = "", 
   strokeColor = "rgb(var(--primary-rgb))", 
@@ -48,6 +63,9 @@ export default function WritingCanvas({
       : "border-border shadow-[0_0_20px_rgba(var(--primary-rgb),0.12)] bg-muted/40 dark:bg-card/30 glass"
   }`;
 
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <div className={`flex flex-col gap-4 w-full ${className}`}>
       <Card

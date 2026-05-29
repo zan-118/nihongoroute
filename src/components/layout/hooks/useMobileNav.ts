@@ -1,8 +1,19 @@
+/**
+ * @file useMobileNav.ts
+ * @description Hook kustom untuk navigasi bawah pada perangkat seluler.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { usePathname } from "next/navigation";
 import { Home, BookOpen, BrainCircuit, Library, LogIn, User } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
 import { useAuthStore } from "@/store/useAuthStore";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function useMobileNav() {
   const pathname = usePathname();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);

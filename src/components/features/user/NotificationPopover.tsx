@@ -1,13 +1,25 @@
 "use client";
 
+/**
+ * @file NotificationPopover.tsx
+ * @description Komponen visual popover daftar notifikasi (Notification Popover) yang tampil di header aplikasi.
+ * Terintegrasi ke Zustand Store (`useUIStore`) untuk menandai notifikasi telah dibaca, menghapus notifikasi, 
+ * dan menyelaraskan penanda unread.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { m, AnimatePresence } from "framer-motion";
 import { Bell, X, Trash2, Info, Trophy, AlertTriangle, Zap } from "lucide-react";
-
 import { formatDistanceToNow } from "date-fns";
 import { id } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/store/useUIStore";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function NotificationPopover({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const notifications = useUIStore(s => s.notifications);
   const markAsRead = useUIStore(s => s.markNotificationAsRead);
@@ -39,10 +51,10 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop for mobile - Dimmed background to focus on notification */}
+          {/* Latar Belakang Redup untuk Seluler - Memfokuskan tampilan pada notifikasi */}
           <div className="fixed inset-0 z-[100] md:hidden bg-background/40 backdrop-blur-sm" onClick={onClose} />
           
-          {/* Main Popover Container */}
+          {/* Wadah Utama Popover */}
           <div className="fixed md:absolute top-20 md:top-full left-4 right-4 md:left-auto md:right-0 md:w-96 z-[110] flex justify-center md:justify-end">
             <m.div
               initial={{ opacity: 0, y: 10, scale: 0.95 }}

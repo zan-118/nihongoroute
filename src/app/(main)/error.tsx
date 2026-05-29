@@ -1,11 +1,32 @@
+/**
+ * @file app/(main)/error.tsx
+ * @description Halaman penanganan kesalahan runtime tingkat grup rute (Route Group Error Boundary) NihongoRoute.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { useEffect } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, RefreshCw, LayoutDashboard } from "lucide-react";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
+/**
+ * Komponen pembatas kesalahan (Error Boundary) untuk grup rute utama.
+ * Menampilkan pesan ramah pengguna dan opsi untuk memuat ulang sesi atau kembali ke dashboard.
+ * 
+ * @param {Object} props Properti komponen.
+ * @param {Error & { digest?: string }} props.error Objek kesalahan runtime yang ditangkap.
+ * @param {function} props.reset Fungsi callback untuk mereset dan memuat ulang sesi yang rusak.
+ * @returns {JSX.Element} Antarmuka penanganan kesalahan visual.
+ */
 export default function MainError({
   error,
   reset,
@@ -14,12 +35,12 @@ export default function MainError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("Main Application Error:", error);
+    console.error("Kesalahan Aplikasi Utama (Main Application Error):", error);
   }, [error]);
 
   return (
     <div className="w-full min-h-[85vh] flex flex-col items-center justify-center px-4 py-12 text-center relative overflow-hidden transition-colors duration-300">
-      {/* Background Decor & Neural Grid */}
+      {/* Dekorasi Latar Belakang & Kisi Neural */}
       <div className="neural-grid" />
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
         <div className="size-[550px] bg-destructive/10 rounded-full blur-[130px] opacity-35 absolute -top-12 -left-12" />
@@ -27,7 +48,7 @@ export default function MainError({
       </div>
       
       <Card className="p-8 md:p-12 border border-border/80 max-w-lg w-full relative z-10 rounded-[2.5rem] bg-card/85 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:shadow-[0_25px_60px_rgba(var(--destructive-rgb),0.1)] transition-all duration-500 glass">
-        {/* Top corner glows */}
+        {/* Kilau Sudut Atas */}
         <div className="absolute top-0 right-0 size-24 bg-gradient-to-br from-destructive/10 to-transparent blur-md rounded-tr-[2.5rem] pointer-events-none" />
 
         <div className="size-20 mx-auto bg-destructive/10 rounded-2xl flex items-center justify-center mb-6 border border-destructive/20 shadow-[0_0_20px_rgba(var(--destructive-rgb),0.15)] animate-pulse">

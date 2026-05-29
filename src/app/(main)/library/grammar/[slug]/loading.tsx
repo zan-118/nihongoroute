@@ -1,5 +1,23 @@
+/**
+ * @file loading.tsx
+ * @description Komponen pemuat (Loading Skeleton) premium untuk halaman detail tata bahasa (Grammar Detail).
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { Skeleton } from "@/components/ui/skeleton";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
+/**
+ * Komponen kerangka pemuatan (Skeleton) untuk halaman detail tata bahasa.
+ * Menampilkan animasi pemuatan struktur artikel grammar dengan mulus.
+ * 
+ * @returns {JSX.Element} Antarmuka kerangka pemuatan detail tata bahasa.
+ */
 export default function GrammarLoading() {
   return (
     <main className="w-full bg-background px-4 md:px-8 lg:px-12 relative overflow-hidden flex flex-col justify-start min-h-screen pb-24 transition-colors duration-300">

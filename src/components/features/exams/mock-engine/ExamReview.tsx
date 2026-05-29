@@ -1,4 +1,14 @@
 "use client";
+
+/**
+ * @file ExamReview.tsx
+ * @description Komponen antarmuka peninjauan soal (Review) setelah simulasi ujian (Mock Exam) selesai.
+ * Menampilkan status jawaban benar/salah, opsi jawaban yang dipilih vs jawaban yang benar, pemutar audio, serta gambar pendukung.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { m } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,12 +21,18 @@ import { SECTION_LABELS } from "./constants";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { ExamQuestionText } from "./ExamQuestionText";
 
+// ======================
+// ANTARMUKA & TIPE
+// ======================
 interface ExamReviewProps {
   exam: ExamData;
   answers: Record<string, number>;
   setGameState: (state: GameState) => void;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
   // Gunakan useTheme agar reactive terhadap perubahan tema dan SSR-safe
   const { resolvedTheme } = useTheme();

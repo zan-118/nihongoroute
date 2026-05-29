@@ -1,14 +1,32 @@
-"use client";
+/**
+ * @file KanaHeader.tsx
+ * @description Komponen header untuk halaman Master Kana, menyediakan tombol navigasi kembali dan penjelasan ringkas mengenai Hiragana/Katakana.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, LayoutGrid } from "lucide-react";
 import Link from "next/link";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface KanaHeaderProps {
   themeColor: string;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen header modul kana.
+ */
 export function KanaHeader({ themeColor }: KanaHeaderProps) {
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <header className="mb-8">
       <nav className="mb-4">

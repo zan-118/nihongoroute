@@ -1,9 +1,20 @@
+/**
+ * @file ConfirmModal.tsx
+ * @description Komponen dialog konfirmasi premium (ConfirmModal) untuk tindakan penting/destruktif (misal: keluar kuis, hapus data).
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface ConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -15,6 +26,9 @@ interface ConfirmModalProps {
   isDestructive?: boolean;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function ConfirmModal({
   isOpen,
   onClose,
@@ -28,12 +42,12 @@ export default function ConfirmModal({
   return (
     <DialogPrimitive.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogPrimitive.Portal>
-        {/* Backdrop overlay with z-[200] to sit above all gameplay canvases */}
+        {/* Lapisan overlay latar belakang dengan z-[200] agar berada di atas seluruh kanvas permainan */}
         <DialogPrimitive.Overlay className="fixed inset-0 z-[200] bg-background/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
         
-        {/* Modal Container with focus trap and custom spring-inspired ease-out transitions */}
+        {/* Kontainer Modal dengan perangkap fokus dan transisi ease-out kustom yang terinspirasi pegas */}
         <DialogPrimitive.Content className="fixed left-[50%] top-[50%] z-[200] w-[calc(100%-2rem)] max-w-md translate-x-[-50%] translate-y-[-50%] bg-card border border-border p-5 md:p-8 rounded-[2rem] shadow-2xl overflow-hidden focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200">
-          {/* Accent top border bar */}
+          {/* Batang batas atas aksen */}
           <div className={`absolute top-0 left-0 w-full h-1 ${isDestructive ? 'bg-destructive' : 'bg-primary'} shadow-sm`} />
           
           <div className="flex flex-col items-center text-center pt-2">

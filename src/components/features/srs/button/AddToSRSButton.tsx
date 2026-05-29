@@ -1,15 +1,30 @@
 "use client";
 
+/**
+ * @file AddToSRSButton.tsx
+ * @description Komponen visual tombol ikon tambah SRS (Add to SRS Star Button).
+ * Menampilkan ikon bintang bergradasi emas PWA premium jika kosakata tersebut sudah tersimpan di dalam memori ulasan SRS.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { useAddToSRS } from "./useAddToSRS";
 import { Star, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
+// ======================
+// ANTARMUKA & TIPE
+// ======================
 interface AddToSRSButtonProps {
   wordId: string;
   className?: string;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function AddToSRSButton({ wordId, className }: AddToSRSButtonProps) {
   const { isLoaded, isAdded, handleAdd } = useAddToSRS(wordId);
 

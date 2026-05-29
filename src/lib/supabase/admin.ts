@@ -1,9 +1,16 @@
+/**
+ * @file admin.ts
+ * @description Klien inisiasi Supabase Administrator bypass RLS menggunakan SERVICE_ROLE_KEY. HANYA BOLEH DIJALANKAN DI LINGKUNGAN SERVER (Server Actions/API Routes) dan tidak boleh diekspos ke klien/browser.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
-/**
- * Admin client using SERVICE_ROLE_KEY for privileged operations.
- * USE ONLY IN SERVER ACTIONS OR API ROUTES.
- */
+// ==========================================
+// INISIALISASI KLIEN ADMIN SUPABASE
+// ==========================================
 export function createAdminClient() {
   return createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

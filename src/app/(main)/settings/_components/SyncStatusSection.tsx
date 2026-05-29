@@ -1,10 +1,22 @@
+/**
+ * @file SyncStatusSection.tsx
+ * @description Komponen seksi status sinkronisasi pada halaman pengaturan.
+ * Menampilkan jumlah data SRS yang belum disinkronkan dan tombol sinkronisasi manual.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { m, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Cloud, CheckCircle, RefreshCw } from "lucide-react";
 
+// ======================
+// TIPE DATA
+// ======================
 interface SyncStatusSectionProps {
   dirtySrsCount: number;
   isSyncing: boolean;

@@ -1,11 +1,26 @@
+/**
+ * @file SurvivalIntro.tsx
+ * @description Komponen visual layar awal (perkenalan) untuk mode bertahan hidup (Survival Mode).
+ * Menjelaskan aturan dasar permainan dan menyediakan tombol untuk memulai permainan.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { Activity } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+// ======================
+// ANTARMUKA & TIPE
+// ======================
 interface SurvivalIntroProps {
   startGame: () => void;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function SurvivalIntro({ startGame }: SurvivalIntroProps) {
   return (
     <Card className="p-8 md:p-16 lg:p-20 rounded-[3rem] md:rounded-[4rem] border border-border bg-card bg-background text-center relative overflow-hidden group max-w-2xl mx-auto my-8 md:my-10 neo-card shadow-2xl transition-colors duration-300">

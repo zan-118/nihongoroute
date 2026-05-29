@@ -1,10 +1,22 @@
+/**
+ * @file DataManagementSection.tsx
+ * @description Komponen seksi manajemen data pada halaman pengaturan.
+ * Menyediakan tombol ekspor, impor, hapus data, dan logout.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { m, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Save, Upload, Trash2, LogOut, Database } from "lucide-react";
 
+// ======================
+// TIPE DATA
+// ======================
 interface DataManagementSectionProps {
   isAuthenticated: boolean;
   handleExportData: () => void;

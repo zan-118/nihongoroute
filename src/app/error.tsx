@@ -1,9 +1,30 @@
+/**
+ * @file error.tsx
+ * @description Halaman penanganan kesalahan runtime tingkat akar (Root Error Boundary) NihongoRoute.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { AlertOctagon } from "lucide-react";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
+/**
+ * Komponen pembatas kesalahan tingkat akar (Root Error Boundary) aplikasi.
+ * Menangani crash kritis pada rute utama dan menyediakan opsi pemulihan.
+ * 
+ * @param {Object} props Properti komponen.
+ * @param {Error & { digest?: string }} props.error Objek kesalahan runtime yang ditangkap.
+ * @param {function} props.reset Fungsi callback untuk memicu pemuatan ulang halaman.
+ * @returns {JSX.Element} Antarmuka penanganan kesalahan kritis.
+ */
 export default function RootError({
   error,
   reset,
@@ -12,12 +33,12 @@ export default function RootError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("Root Level Error:", error);
+    console.error("Kesalahan Tingkat Akar (Root Level Error):", error);
   }, [error]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-6 text-center relative overflow-hidden transition-colors duration-300">
-      {/* Background Decor & Neural Grid */}
+      {/* Dekorasi Latar Belakang & Kisi Neural */}
       <div className="neural-grid" />
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
         <div className="size-[500px] bg-destructive/10 rounded-full blur-[120px] opacity-35 absolute -top-12 -left-12" />

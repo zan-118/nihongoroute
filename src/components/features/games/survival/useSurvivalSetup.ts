@@ -1,29 +1,24 @@
 "use client";
 
+/**
+ * @file useSurvivalSetup.ts
+ * @description Hook kustom (Custom Hook) untuk inisialisasi pengaturan permainan (Setup) pada Survival Mode.
+ * Mengambil parameter pencarian URL, memanggil Server Action `getFlashcardsByMode` untuk memuat data kosakata, 
+ * dan memformat kartu kosakata sebelum permainan dimulai.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { getFlashcardsByMode } from "@/actions/flashcard.actions";
 import { CardData } from "./types";
 import { toast } from "sonner";
 
-/**
- * Custom Hook: useSurvivalSetup
- * 
- * Mengelola state inisialisasi dan pengaturan permainan mini-game "Survival" (Kelangsungan Hidup).
- * Hook ini mendeteksi kategori rute dinamis dari URL, memanggil Server Action `getFlashcardsByMode`
- * untuk mengambil kosakata tantangan, serta mengontrol pergantian status layar bermain (playing vs setup).
- * 
- * @returns {Object} State pengaturan game dan callback pengendali
- * @returns {string} level - Tingkat JLPT terpilih ("all", "N5", "N4", dsb.)
- * @returns {Function} setLevel - Setter level JLPT
- * @returns {number} amount - Jumlah soal/kosakata yang akan dimainkan
- * @returns {Function} setAmount - Setter jumlah kosakata
- * @returns {CardData[]} cards - Daftar kosakata terformat yang siap dimainkan
- * @returns {boolean} isFetchingCards - Menandakan apakah pemanggilan API kosakata sedang berjalan
- * @returns {boolean} isPlaying - Menunjukkan apakah mode bermain game survival sedang aktif
- * @returns {Function} handleStartGame - Callback asinkron untuk mengambil kosakata dan memulai game
- * @returns {Function} handleExitGame - Callback untuk keluar dari game dan mereset state kartu
- */
+// ======================
+// HOOK UTAMA
+// ======================
 export function useSurvivalSetup() {
   const searchParams = useSearchParams();
   const categorySlug = searchParams.get("category");

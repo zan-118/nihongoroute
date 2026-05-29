@@ -1,8 +1,11 @@
 /**
- * @file types/index.ts
- * @description Definisi tipe data untuk fitur Reading.
+ * @file index.ts
+ * @description Definisi tipe data (TypeScript) untuk fitur membaca mandiri dan visualisasi terjemahan artikel.
  */
 
+// ==========================================
+// TIPE DATA MODE & STATUS MEMBACA
+// ==========================================
 export type ReadingMode = "kanji" | "furigana" | "hiragana" | "romaji";
 
 export interface ReadingState {
@@ -13,6 +16,9 @@ export interface ReadingState {
   isTTSDisabled?: boolean;
 }
 
+// ==========================================
+// TIPE DATA PORTABLE TEXT (SANITY CMS)
+// ==========================================
 export interface PortableTextChild {
   _key: string;
   _type: string;
@@ -30,6 +36,9 @@ export interface PortableTextBlock {
 
 export type PortableTextContent = string | PortableTextBlock[];
 
+// ==========================================
+// INTERFACE ARTIKEL BACAAN (READING DATA)
+// ==========================================
 export interface ReadingData {
   _id?: string;
   id?: string;

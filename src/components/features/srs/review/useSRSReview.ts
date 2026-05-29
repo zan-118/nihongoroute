@@ -1,3 +1,16 @@
+/**
+ * @file useSRSReview.ts
+ * @description Hook kustom untuk mengelola logika sesi ulasan SRS (Spaced Repetition System).
+ * Mengatur urutan kartu, status balik kartu (flip), penanganan jawaban pengguna,
+ * kalkulasi perolehan XP, efek audio, serta pintasan papan ketik (keyboard shortcuts).
+ *
+ * @package components/features/srs/review
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
@@ -8,6 +21,16 @@ import { FlashcardType } from "./types";
 import { shuffleArray } from "@/lib/utils";
 import { sounds } from "@/lib/audio";
 
+// ==========================================
+// HOOK UTAMA
+// ==========================================
+/**
+ * Hook useSRSReview
+ * Mengelola alur permainan dan status dari sesi ulasan kartu flash SRS.
+ *
+ * @param cards Daftar kartu flash yang akan diulas
+ * @returns Berbagai status sesi ulasan, fungsi pembalik kartu, dan fungsi penjawab
+ */
 export function useSRSReview(cards: FlashcardType[]) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
@@ -18,19 +41,21 @@ export function useSRSReview(cards: FlashcardType[]) {
     return shuffleArray([...cards]);
   }, [cards]);
   
-  // Feedback states
+  // Status umpan balik (feedback states)
   const [isFinished, setIsFinished] = useState(false);
   const [showXP, setShowXP] = useState(false);
   const [isShaking, setIsShaking] = useState(false);
   const [flash, setFlash] = useState<"correct" | "wrong" | null>(null);
   const [earnedXP, setEarnedXP] = useState(0);
 
+  // Akses ke Zustand stores
   const srs = useSRSStore((state) => state.srs);
   const updateProgress = useSRSStore((state) => state.updateProgress);
   const xp = useUserStore((state) => state.xp);
   const isSyncing = useUIStore((state) => state.isSyncing);
   const router = useRouter();
 
+  // Memastikan rendering di sisi klien (hydration-safe)
   useEffect(() => {
     const frame = requestAnimationFrame(() => setIsClient(true));
     return () => cancelAnimationFrame(frame);
@@ -38,6 +63,9 @@ export function useSRSReview(cards: FlashcardType[]) {
 
   const currentCard = shuffledCards[currentIndex];
 
+  // ==========================================
+  // FUNGSI NAVIGASI & PENANGANAN
+  // ==========================================
   const goToNext = useCallback(() => {
     setDirection(1);
     setIsFlipped(false);
@@ -51,6 +79,10 @@ export function useSRSReview(cards: FlashcardType[]) {
 
   const isProcessing = useRef(false);
 
+  /**
+   * Menangani jawaban pengguna berdasarkan tingkat kemudahan (grade).
+   * @param grade Angka 0 (salah) atau 2 (benar/mudah)
+   */
   const handleAnswer = useCallback(
     (grade: number) => {
       if (!currentCard || isProcessing.current) return;
@@ -92,8 +124,12 @@ export function useSRSReview(cards: FlashcardType[]) {
     setIsFlipped((prev) => !prev);
   }, []);
 
+  // ==========================================
+  // PINTASAN PAPAN KETIK (KEYBOARD SHORTCUTS)
+  // ==========================================
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Abaikan jika pengguna sedang fokus pada input atau textarea
       if (
         document.activeElement?.tagName === "INPUT" ||
         document.activeElement?.tagName === "TEXTAREA"
@@ -101,11 +137,13 @@ export function useSRSReview(cards: FlashcardType[]) {
         return;
 
       if (!isFlipped) {
+        // Tekan Spasi atau Enter untuk membalik kartu
         if (e.key === " " || e.key === "Enter") {
           e.preventDefault();
           toggleFlip();
         }
       } else {
+        // Tekan 1 atau Panah Kiri untuk Salah, Tekan 2 atau Panah Kanan untuk Benar
         if (e.key === "1" || e.key === "ArrowLeft") {
           e.preventDefault();
           handleAnswer(0);
@@ -138,3 +176,4 @@ export function useSRSReview(cards: FlashcardType[]) {
     router,
   };
 }
+

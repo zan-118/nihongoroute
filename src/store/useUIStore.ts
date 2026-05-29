@@ -1,3 +1,11 @@
+/**
+ * @file useUIStore.ts
+ * @description Zustand Store luring pengelola preferensi antarmuka pengguna (UI), sistem notifikasi in-app, status pemuatan data global, preferensi furigana, serta koordinasi state pemahaman membaca (reading) dan mendengarkan (listening).
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { create } from "zustand";
 import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
 import { get, set as idbSet, del } from "idb-keyval";
@@ -6,7 +14,12 @@ import { Notification, Settings } from "./types";
 import { ReadingState } from "@/components/features/reading/types";
 import { ListeningState } from "@/components/features/listening/types";
 
-
+// ==========================================
+// ANTARMUKA STATE
+// ==========================================
+/**
+ * Mengelola status antarmuka pengguna global, preferensi tampilan, dan state sesi belajar terpadu.
+ */
 interface UIState {
   loading: boolean;
   isSyncing: boolean;
@@ -14,10 +27,10 @@ interface UIState {
   notifications: Notification[];
   settings: Settings;
 
-  // Reading Session State (Synced for FAB access)
+  // State Sesi Membaca (Disinkronkan untuk akses tombol aksi melayang / FAB)
   readingState: ReadingState;
+  // State Sesi Menyimak (Menyimpan posisi audio aktif dan teks bacaan bersuara)
   listeningState: ListeningState & { audioUrl?: string; textToSpeak?: string };
-
 
   setLoading: (loading: boolean) => void;
   setSyncing: (isSyncing: boolean) => void;
@@ -37,12 +50,20 @@ interface UIState {
   resetUI: () => void;
 }
 
+/** Adapter penyimpanan StateStorage khusus untuk IndexedDB menggunakan idb-keyval */
 const idbStorage: StateStorage = {
   getItem: async (name: string) => (await get(name)) || null,
   setItem: async (name: string, value: string) => await idbSet(name, value),
   removeItem: async (name: string) => await del(name),
 };
 
+/**
+ * Zustand Store: useUIStore
+ * 
+ * Store global untuk mengelola visual UI, notifikasi in-app, setting pengguna,
+ * serta koordinasi status pemuatan (loading) dan sinkronisasi cloud.
+ * State di-persist secara luring menggunakan IndexedDB.
+ */
 export const useUIStore = create<UIState>()(
   persist(
     (set) => ({
@@ -116,6 +137,7 @@ export const useUIStore = create<UIState>()(
 
       exportData: async () => {
         if (typeof window === "undefined") return;
+        // Impor store lainnya secara dinamis untuk mencegah circular dependencies
         const { useUserStore } = await import("./useUserStore");
         const { useSRSStore } = await import("./useSRSStore");
 
@@ -123,6 +145,7 @@ export const useUIStore = create<UIState>()(
         const srs = useSRSStore.getState();
         const ui = useUIStore.getState();
 
+        // 1. Kumpulkan seluruh status data progres belajar untuk dipaketkan ke berkas JSON
         const data = {
           name: user.name,
           xp: user.xp,
@@ -137,6 +160,7 @@ export const useUIStore = create<UIState>()(
           settings: ui.settings,
         };
 
+        // 2. Buat elemen jangkar luring buatan untuk memicu pengunduhan berkas JSON otomatis di browser
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
         const downloadAnchorNode = document.createElement("a");
         downloadAnchorNode.setAttribute("href", dataStr);
@@ -154,9 +178,10 @@ export const useUIStore = create<UIState>()(
           const { useUserStore } = await import("./useUserStore");
           const { useSRSStore } = await import("./useSRSStore");
 
-          // Basic validation
+          // 1. Validasi struktur berkas data untuk memastikan integritas
           if (typeof parsed.xp !== 'number' || typeof parsed.srs !== 'object') return false;
 
+          // 2. Masukkan data cadangan profil dan XP ke dalam UserStore
           useUserStore.getState().setGamification({
             name: parsed.name,
             xp: parsed.xp,
@@ -168,8 +193,10 @@ export const useUIStore = create<UIState>()(
             inventory: parsed.inventory,
           });
 
+          // 3. Masukkan basis data kartu SRS luring ke dalam SRSStore
           useSRSStore.getState().setSRS(parsed.srs);
 
+          // 4. Perbarui status preferensi antarmuka pengguna
           set({
             notifications: parsed.notifications || [],
             settings: parsed.settings || { notificationsEnabled: false }
@@ -177,7 +204,7 @@ export const useUIStore = create<UIState>()(
 
           return true;
         } catch (e) {
-          console.error("Import error:", e);
+          console.error("Gagal mengimpor berkas cadangan data:", e);
           return false;
         }
       },

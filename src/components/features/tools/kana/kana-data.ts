@@ -1,3 +1,11 @@
+/**
+ * @file kana-data.ts
+ * @description Dataset static tabel karakter Jepang Hiragana dan Katakana (terbagi menjadi Seion, Dakuon, dan Yoon) beserta transliterasi Romaji.
+ */
+
+// ==========================================
+// DATA UTAMA TABEL KANA (HIRAGANA & KATAKANA)
+// ==========================================
 export const KANA_DATA = {
   seion: {
     hiragana: [
@@ -106,5 +114,8 @@ export const KANA_DATA = {
   },
 };
 
+// ==========================================
+// DEFINISI TIPE DATA (TYPES)
+// ==========================================
 export type KanaType = "hiragana" | "katakana";
 export type KanaCategory = "seion" | "dakuon" | "yoon";

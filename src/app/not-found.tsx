@@ -1,18 +1,29 @@
+/**
+ * @file not-found.tsx
+ * @description Halaman penanganan kesalahan 404 (Rute Tidak Ditemukan) dengan tema siber premium khas NihongoRoute.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { MapPinOff, ArrowLeft, Home } from "lucide-react";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function NotFound() {
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center bg-background p-6 relative overflow-hidden transition-colors duration-300">
-      {/* Background Decor & Neural Grid */}
+      {/* Dekorasi Latar Belakang & Kisi Neural */}
       <div className="neural-grid" />
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
         <div className="size-[500px] bg-destructive/10 rounded-full blur-[120px] opacity-30 absolute -top-12 -left-12" />
         <div className="size-[450px] bg-primary/10 rounded-full blur-[100px] opacity-25 absolute -bottom-10 -right-10" />
       </div>
       
-      {/* Background Aesthetic Number */}
+      {/* Angka Estetika Latar Belakang */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.02] z-0">
         <span className="text-[30vw] font-black text-foreground tracking-tighter">
           404
@@ -20,7 +31,7 @@ export default function NotFound() {
       </div>
 
       <div className="z-10 flex flex-col items-center text-center max-w-md w-full glass border border-border/80 rounded-[2rem] p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
-        {/* Japanese Thematic Element */}
+        {/* Elemen Tematik Jepang */}
         <div className="space-y-3 mb-6">
           <div className="flex justify-center mb-4">
             <div className="size-20 bg-destructive/10 rounded-2xl flex items-center justify-center border border-destructive/20 shadow-[0_0_20px_rgba(var(--destructive-rgb),0.15)] animate-premium-bounce">
@@ -44,7 +55,7 @@ export default function NotFound() {
           </p>
         </div>
 
-        {/* Call to Actions */}
+        {/* Tombol Tindakan (Call to Actions) */}
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
           <Button asChild size="lg" className="w-full font-black uppercase tracking-widest text-xs h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_15px_rgba(var(--primary-rgb),0.15)] hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] duration-300">
             <Link href="/dashboard" className="flex items-center justify-center gap-2">

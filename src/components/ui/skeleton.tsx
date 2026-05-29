@@ -1,5 +1,16 @@
+/**
+ * @file skeleton.tsx
+ * @description Komponen Pemuat Sementara (Skeleton Loader) atomik untuk efek loading ambient.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { cn } from "@/lib/utils";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 function Skeleton({
   className,
   ...props

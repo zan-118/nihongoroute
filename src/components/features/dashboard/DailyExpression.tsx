@@ -1,10 +1,29 @@
+/**
+ * @file DailyExpression.tsx
+ * @description Komponen dashboard untuk menampilkan "Ungkapan Hari Ini" secara interaktif.
+ * Menerima data ungkapan acak dari Sanity CMS, menampilkan teks Jepang, cara baca (Romaji/Kana),
+ * serta arti terjemahan dalam Bahasa Indonesia.
+ *
+ * @package components/features/dashboard
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import { RandomExpression } from "@/actions/expressions.actions";
 import { Sparkles } from "lucide-react";
 
+// ==========================================
+// ANTARMUKA & PROPS (INTERFACES)
+// ==========================================
 interface DailyExpressionProps {
   expression: RandomExpression | null;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 export default function DailyExpression({ expression }: DailyExpressionProps) {
   if (!expression) return null;
 
@@ -15,13 +34,13 @@ export default function DailyExpression({ expression }: DailyExpressionProps) {
       aria-label="Ungkapan Hari Ini"
       className="rounded-[2.5rem] md:rounded-[3rem] border border-border bg-card/40 backdrop-blur-md p-6 md:p-8 relative overflow-hidden shadow-[0_0_40px_-10px_rgba(var(--primary-rgb),0.08)]"
     >
-      {/* Subtle grid pattern */}
+      {/* Pola kisi halus di latar belakang */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--primary-rgb),0.02)_1px,transparent_1px)] bg-[size:100%_4px] opacity-40 pointer-events-none" />
 
-      {/* Glow accent */}
+      {/* Kilau gradasi di sudut kanan atas */}
       <div className="absolute -top-10 -right-10 size-40 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Header */}
+      {/* Bagian Header */}
       <div className="relative z-10 flex items-center gap-2 mb-5">
         <div className="flex items-center justify-center size-7 rounded-xl bg-primary/10">
           <Sparkles size={14} className="text-primary" />
@@ -53,13 +72,14 @@ export default function DailyExpression({ expression }: DailyExpressionProps) {
         </p>
       </div>
 
-      {/* Divider */}
+      {/* Pembatas Visual */}
       <div className="relative z-10 my-4 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
-      {/* Arti Indonesia */}
+      {/* Arti Bahasa Indonesia */}
       <p className="relative z-10 text-center text-sm text-foreground/80 leading-relaxed font-medium">
         {meaningId}
       </p>
     </section>
   );
 }
+

@@ -1,3 +1,12 @@
+/**
+ * @file SurvivalGameOver.tsx
+ * @description Komponen visual layar akhir permainan (Game Over) untuk mode bertahan hidup (Survival Mode).
+ * Menampilkan pesan kemenangan/kekalahan, detail perolehan skor akhir, perolehan XP, serta tombol untuk mencoba kembali.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { m } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -5,12 +14,18 @@ import { Button } from "@/components/ui/button";
 import { Trophy, ShieldAlert, RotateCcw } from "lucide-react";
 import { SurvivalGameState } from "./types";
 
+// ======================
+// ANTARMUKA & TIPE
+// ======================
 interface SurvivalGameOverProps {
   gameState: SurvivalGameState;
   score: number;
   startGame: () => void;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function SurvivalGameOver({ gameState, score, startGame }: SurvivalGameOverProps) {
   const isVictory = gameState === "victory";
   const earnedXp = isVictory ? (score * 2 + 10) : (score * 2);

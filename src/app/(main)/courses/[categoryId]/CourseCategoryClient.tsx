@@ -7,6 +7,9 @@
 
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { m, Variants } from "framer-motion";
 import { useUserStore } from "@/store/useUserStore";
 import { useState } from "react";
@@ -17,6 +20,9 @@ import { TrainingGround } from "@/components/features/course/TrainingGround";
 import { MockExams } from "@/components/features/course/MockExams";
 import { LessonGrid } from "@/components/features/course/LessonGrid";
 
+// ======================
+// KONSTANTA ANIMASI
+// ======================
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -85,7 +91,7 @@ export default function CourseCategoryClient({
 
   return (
     <div className="w-full relative overflow-hidden bg-background text-foreground transition-colors duration-500 min-h-screen pb-32">
-      {/* 1. PREMIUM BACKGROUND DECOR */}
+      {/* 1. DEKORASI LATAR BELAKANG PREMIUM */}
       <div className="absolute inset-0 pointer-events-none">
         <div 
           className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]" 
@@ -95,7 +101,7 @@ export default function CourseCategoryClient({
           }}
         />
         
-        {/* Ambient Glow Blobs using premium custom HSL / RGB values */}
+        {/* Gumpalan Kilau Ambient menggunakan nilai HSL / RGB kustom premium */}
         <div 
           className="absolute top-[-10%] left-[-5%] size-[600px] rounded-full blur-[160px] animate-pulse" 
           style={{

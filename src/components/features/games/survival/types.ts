@@ -1,3 +1,11 @@
+/**
+ * @file types.ts
+ * @description Deklarasi tipe data dan antarmuka untuk data kartu kosakata dan status permainan bertema kelangsungan hidup (Survival Mode).
+ */
+
+// ======================
+// ANTARMUKA & TIPE
+// ======================
 export interface CardData {
   id: string;
   word: string;

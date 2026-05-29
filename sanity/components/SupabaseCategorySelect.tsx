@@ -1,9 +1,19 @@
+/**
+ * @file SupabaseCategorySelect.tsx
+ * @description Komponen dropdown input kustom Sanity Studio yang menarik secara asinkron daftar kategori kursus JLPT dari database Supabase (lewat endpoint Search Bridge) agar data relasional kategori tetap sinkron secara realtime.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import React, { useState, useEffect, useCallback } from 'react';
 import { Stack, Card, Text, Select } from '@sanity/ui';
 import { set, unset } from 'sanity';
-
 import { getApiUrl, SECRET_TOKEN } from './api';
 
+// ==========================================
+// ANTARMUKA PROPS
+// ==========================================
 interface SupabaseCategory {
   id: string | number;
   title: string;
@@ -19,6 +29,14 @@ interface SupabaseCategorySelectProps {
   };
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen input dropdown pemilih kategori Supabase untuk mengikat skema data pelajaran statis Sanity ke id/slug kategori Supabase.
+ * 
+ * @param {SupabaseCategorySelectProps} props - Properti masukan form Sanity
+ */
 export function SupabaseCategorySelect(props: SupabaseCategorySelectProps) {
   const { onChange, value = '', schemaType } = props;
   const [categories, setCategories] = useState<SupabaseCategory[]>([]);

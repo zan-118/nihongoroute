@@ -1,9 +1,20 @@
+/**
+ * @file SessionSummaryModal.tsx
+ * @description Komponen modal dialog ringkasan hasil belajar sesi kartu pengingat (flashcard). Menampilkan statistika akurasi hafalan, kombo maksimal, durasi belajar, perolehan XP total, serta kontrol ulas kesalahan atau ulangi sesi.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Trophy, Flame, RotateCcw, Clock, Zap } from "lucide-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
+// ==========================================
+// ANTARMUKA PROPS
+// ==========================================
 interface SessionSummaryModalProps {
   isFinished: boolean;
   setIsFinished: (val: boolean) => void;
@@ -24,6 +35,14 @@ interface SessionSummaryModalProps {
   router: AppRouterInstance;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen modal dialog ringkasan yang muncul setelah semua kartu selesai diulas.
+ * 
+ * @param {SessionSummaryModalProps} props - Properti untuk mengatur dialog hasil sesi flashcard
+ */
 export function SessionSummaryModal({
   isFinished,
   setIsFinished,

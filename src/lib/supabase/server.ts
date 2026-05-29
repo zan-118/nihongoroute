@@ -1,6 +1,17 @@
+/**
+ * @file server.ts
+ * @description Klien inisiasi Supabase Server-Side untuk Server Components, Route Handlers, dan Server Actions di Next.js dengan penanganan otomatis pembacaan/penulisan cookies.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
+// ==========================================
+// INISIALISASI KLIEN SERVER SUPABASE
+// ==========================================
 export async function createClient() {
   const cookieStore = await cookies();
 
@@ -18,8 +29,8 @@ export async function createClient() {
               cookieStore.set(name, value, options);
             });
           } catch {
-            // The `set` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing user sessions.
+            // Metode `set` dipanggil dari Server Component.
+            // Hal ini dapat diabaikan jika Anda memiliki middleware yang menyegarkan sesi pengguna.
           }
         },
       },

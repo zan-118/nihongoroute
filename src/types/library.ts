@@ -1,3 +1,11 @@
+/**
+ * @file library.ts
+ * @description Deklarasi tipe data TypeScript untuk modul perpustakaan luring-ready (pembagian paginasi data kosakata, kanji, materi menyimak, dan bacaan) guna menjamin integrasi antarmuka (UI) NihongoRoute.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { 
   VocabTable, 
   KanjiTable, 
@@ -8,6 +16,10 @@ import {
   ExamTable,
   LibraryContentAIResponse
 } from "@/types/database";
+
+// ==========================================
+// DEKLARASI TIPE DATA PAGINASI & ITEM
+// ==========================================
 
 export interface PaginatedVocabResponse {
   data: (VocabTable & { id: string; meaning: string })[];

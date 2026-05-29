@@ -1,14 +1,32 @@
 "use client";
 
+/**
+ * @file useVocabList.ts
+ * @description Hook kustom untuk mengelola pemuatan data, pencarian, pemfilteran,
+ * dan pagination daftar kosakata (Vocabulary List) dari database Supabase secara luring-first.
+ */
+
+// ==========================================
+// IMPOR UTAMA
+// ==========================================
 import { useState, useEffect, useCallback } from "react";
 import * as wanakana from "wanakana";
 import { createClient } from "@/lib/supabase/client";
 import { VocabItem } from "./types";
 
+// ==========================================
+// KONSTRUKTOR / INDEKS KONSTANTA
+// ==========================================
 const ITEMS_PER_PAGE = 50;
 
+// ==========================================
+// HOOK UTAMA: useVocabList
+// ==========================================
 /**
- * Hook untuk menangani data fetching, filter, dan pagination kosakata dari Supabase.
+ * Hook kustom untuk orkestrasi pemuatan data kosakata lengkap dengan fitur pencarian dan filter kelas kata.
+ * 
+ * @param {VocabItem[]} initialData Data awal penampung kosakata untuk rendering pertama luring.
+ * @returns {Object} State dan handler pemrosesan data kosakata.
  */
 export function useVocabList(initialData: VocabItem[] = []) {
   const [level, setLevel] = useState("N5");
@@ -20,12 +38,13 @@ export function useVocabList(initialData: VocabItem[] = []) {
   const [totalItems, setTotalItems] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  // Debounce search input
+  // Berikan jeda (debounce) sebesar 500ms pada input pencarian untuk menghemat beban kueri database
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(search), 500);
     return () => clearTimeout(timer);
   }, [search]);
 
+  // Mengambil data kosakata halaman tertentu secara asinkron dari Supabase
   const fetchData = useCallback(async (page: number) => {
     setLoading(true);
     const supabase = createClient();
@@ -39,7 +58,7 @@ export function useVocabList(initialData: VocabItem[] = []) {
         .select("id, word, furigana, romaji, meaning_id, hinshi, mnemonic, slug, related_kanji, jlpt_level", { count: "exact" })
         .eq("jlpt_level", levelFilter);
 
-      // Apply search filter
+      // Menerapkan kueri pencarian multi-bahasa (Jepang Kanji/Kana, Romaji, Indonesia arti)
       if (trimmed !== "") {
         const kanaSearch = wanakana.toHiragana(trimmed);
         const kataSearch = wanakana.toKatakana(trimmed);
@@ -48,7 +67,7 @@ export function useVocabList(initialData: VocabItem[] = []) {
         );
       }
 
-      // Apply hinshi filter
+      // Menerapkan filter jenis kelas kata (hinshi)
       if (hinshi !== "all") {
         query = query.contains("hinshi", JSON.stringify([hinshi]));
       }
@@ -59,6 +78,7 @@ export function useVocabList(initialData: VocabItem[] = []) {
 
       if (error) throw error;
 
+      // Normalisasi properti data dari Supabase ke dalam format VocabItem pustaka
       const mapped: VocabItem[] = (data || []).map(v => ({
         id: v.id,
         word: v.word,
@@ -74,12 +94,13 @@ export function useVocabList(initialData: VocabItem[] = []) {
       setVocabList(mapped);
       setTotalItems(count || 0);
     } catch (error) {
-      console.error("Gagal mengambil data:", error);
+      console.error("Gagal mengambil data kosakata dari awan:", error);
     } finally {
       setLoading(false);
     }
   }, [level, hinshi, debouncedSearch]);
 
+  // Mengambil total item tanpa mengambil data baris secara asinkron (head-only query)
   const fetchTotalCount = useCallback(async () => {
     const supabase = createClient();
     const levelFilter = level.toUpperCase();
@@ -107,15 +128,15 @@ export function useVocabList(initialData: VocabItem[] = []) {
       if (error) throw error;
       setTotalItems(count || 0);
     } catch (error) {
-      console.error("Gagal mengambil count:", error);
+      console.error("Gagal memuat kalkulasi jumlah kosakata:", error);
     }
   }, [level, hinshi, debouncedSearch]);
 
-  // Handle filter changes
+  // Menangani pemantauan perubahan filter dan memicu pemuatan ulang data asinkron
   useEffect(() => {
     const isDefaultFilter = level === "N5" && hinshi === "all" && debouncedSearch === "";
     
-    // On first render with default filters, use initial data but fetch count
+    // Pada rendering pertama dengan filter default, gunakan data awal tetapi ambil jumlah totalnya secara asinkron
     if (isDefaultFilter && initialData.length > 0 && totalItems === 0) {
       requestAnimationFrame(() => fetchTotalCount());
       return;
@@ -127,6 +148,7 @@ export function useVocabList(initialData: VocabItem[] = []) {
     });
   }, [level, hinshi, debouncedSearch, fetchData, fetchTotalCount, initialData.length, totalItems]);
 
+  // Handler berpindah halaman visual
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
     fetchData(newPage);
@@ -148,3 +170,4 @@ export function useVocabList(initialData: VocabItem[] = []) {
     handlePageChange,
   };
 }
+

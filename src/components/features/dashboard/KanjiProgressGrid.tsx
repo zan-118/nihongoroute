@@ -1,20 +1,38 @@
 "use client";
 
+/**
+ * @file KanjiProgressGrid.tsx
+ * @description Komponen grid visual kemajuan belajar Kanji (khusus tingkat N5) untuk NihongoRoute.
+ * Mengambil data kosakata aksara Kanji dari Supabase, mencocokkannya dengan data repetisi SRS (Spaced Repetition System)
+ * di Zustand store, dan menampilkannya sebagai peta visual interaktif berkode warna (Belum, Latihan, Mahir).
+ *
+ * @package components/features/dashboard
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import { useState, useEffect } from "react";
 import { m } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { createClient } from "@/lib/supabase/client";
-
 import { Loader2, Info } from "lucide-react";
 import { useSRSStore } from "@/store/useSRSStore";
 
+// ==========================================
+// ANTARMUKA & PROPS (INTERFACES)
+// ==========================================
 interface KanjiItem {
   _id: string;
   kanji: string;
   meaning: string;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 export default function KanjiProgressGrid() {
   const [kanjis, setKanjis] = useState<KanjiItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,6 +72,7 @@ export default function KanjiProgressGrid() {
     );
   }
 
+  // Hitung jumlah kanji berstatus Mahir (interval > 21 hari) dan Sedang Belajar (interval <= 21 hari)
   const masteredCount = kanjis.filter(k => (srs?.[k._id]?.interval || 0) > 21).length;
   const learningCount = kanjis.filter(k => srs?.[k._id] && srs[k._id].interval <= 21).length;
 
@@ -61,6 +80,7 @@ export default function KanjiProgressGrid() {
     <Card className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-lg overflow-hidden relative">
       <div className="absolute top-0 right-0 size-32 bg-primary/5 blur-3xl rounded-full" />
       
+      {/* BAGIAN HEADER GRID */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
           <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-xs mb-2 flex items-center gap-2">
@@ -82,34 +102,36 @@ export default function KanjiProgressGrid() {
         </div>
       </div>
 
-        <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-2">
-          {kanjis.map((item, idx) => {
-            const status = srs?.[item._id];
-            const isMastered = (status?.interval || 0) > 21;
-            const isLearning = status && !isMastered;
+      {/* GRID VISUAL KANJI */}
+      <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-2">
+        {kanjis.map((item, idx) => {
+          const status = srs?.[item._id];
+          const isMastered = (status?.interval || 0) > 21;
+          const isLearning = status && !isMastered;
 
-            return (
-              <m.div
-                key={item._id}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: idx * 0.01 }}
-                title={`${item.kanji}: ${item.meaning} (${isMastered ? "Mahir" : isLearning ? "Latihan" : "Belum"})`}
-                className={`
-                  aspect-square rounded-lg flex items-center justify-center text-lg font-japanese font-bold transition-all duration-300 border cursor-default
-                  ${isMastered 
-                    ? 'bg-success border-success text-success-foreground' 
-                    : isLearning 
-                    ? 'bg-primary/20 border-primary/40 text-primary' 
-                    : 'bg-muted/50 border-border/50 text-muted-foreground/30 hover:border-muted-foreground/50'}
-                `}
-              >
-                {item.kanji}
-              </m.div>
-            );
-          })}
-        </div>
+          return (
+            <m.div
+              key={item._id}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: idx * 0.01 }}
+              title={`${item.kanji}: ${item.meaning} (${isMastered ? "Mahir" : isLearning ? "Latihan" : "Belum"})`}
+              className={`
+                aspect-square rounded-lg flex items-center justify-center text-lg font-japanese font-bold transition-all duration-300 border cursor-default
+                ${isMastered 
+                  ? 'bg-success border-success text-success-foreground' 
+                  : isLearning 
+                  ? 'bg-primary/20 border-primary/40 text-primary' 
+                  : 'bg-muted/50 border-border/50 text-muted-foreground/30 hover:border-muted-foreground/50'}
+              `}
+            >
+              {item.kanji}
+            </m.div>
+          );
+        })}
+      </div>
 
+      {/* TIPS HARI INI */}
       <div className="mt-8 flex items-center gap-2 text-muted-foreground">
         <Info size={12} />
         <p className="text-xs font-bold uppercase tracking-widest">
@@ -119,3 +141,4 @@ export default function KanjiProgressGrid() {
     </Card>
   );
 }
+

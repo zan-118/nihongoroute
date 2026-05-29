@@ -1,10 +1,28 @@
+/**
+ * @file loading.tsx
+ * @description Komponen pemuat (Loading Skeleton) untuk halaman dasbor pengguna NihongoRoute.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { Skeleton } from "@/components/ui/skeleton";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
+/**
+ * Komponen kerangka pemuatan (Skeleton) untuk halaman Dasbor.
+ * Menampilkan tata letak penampung data visual saat proses memuat data dari Supabase/Sanity.
+ * 
+ * @returns {JSX.Element} Antarmuka kerangka dasbor yang sedang memuat.
+ */
 export default function DashboardLoading() {
   return (
     <div className="w-full min-h-screen bg-background relative overflow-hidden pt-12 pb-24 px-4 md:px-8">
       <div className="max-w-7xl mx-auto pt-16 space-y-12">
-        {/* Header Hero Skeleton */}
+        {/* Kerangka Pemuatan Header Hero */}
         <div className="flex flex-col lg:flex-row gap-12 items-center">
           <div className="flex-1 space-y-4 w-full">
             <Skeleton className="h-6 w-32 rounded-full" />
@@ -14,7 +32,7 @@ export default function DashboardLoading() {
           <Skeleton className="h-[280px] w-full lg:w-[400px] rounded-2xl" />
         </div>
 
-        {/* Bento Grid Skeleton */}
+        {/* Kerangka Pemuatan Grid Bento */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           <div className="md:col-span-8">
             <Skeleton className="h-[250px] w-full rounded-2xl" />
@@ -24,7 +42,7 @@ export default function DashboardLoading() {
             <Skeleton className="h-[110px] w-full rounded-2xl" />
           </div>
 
-          {/* Sub-components Skeletons */}
+          {/* Kerangka Pemuatan Sub-Komponen */}
           <div className="md:col-span-4">
             <Skeleton className="h-[400px] w-full rounded-2xl" />
           </div>

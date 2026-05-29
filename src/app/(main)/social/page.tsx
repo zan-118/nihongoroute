@@ -1,13 +1,16 @@
+/**
+ * @file page.tsx
+ * @description Halaman Hub Sosial NihongoRoute. Fokus utama: Global Leaderboard untuk memacu kompetisi antar siswa.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { Metadata } from "next";
 import LeaderboardClient from "./LeaderboardClient";
 import { Badge } from "@/components/ui/badge";
 import { Users } from "lucide-react";
 
-/**
- * @file page.tsx (Social)
- * @description Halaman Hub Sosial NihongoRoute.
- * Fokus utama saat ini adalah Global Leaderboard untuk memacu kompetisi antar siswa.
- */
 
 export const metadata: Metadata = {
   title: "Sosial & Papan Peringkat | NihongoRoute",

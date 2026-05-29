@@ -3,11 +3,14 @@
 /**
  * @file GrammarDetailClient.tsx
  * @description Komponen Client-side interaktif untuk Halaman Detail Tata Bahasa (Grammar Detail).
- * Menyajikan visualisasi premium siber-glass neon, badge level JLPT bersinar dinamis,
+ * Menyajikan visualisasi premium siber-glass neon, lencana level JLPT bersinar dinamis,
  * bento grid untuk Struktur & Catatan, serta text-to-speech (TTS) offline untuk contoh kalimat.
  * @module GrammarDetailClient
  */
 
+// ==========================================
+// IMPOR UTAMA
+// ==========================================
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { 
@@ -26,14 +29,20 @@ import { Button } from "@/components/ui/button";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import { LibraryItem } from "@/actions/library.actions";
 
+// ==========================================
+// ANTARMUKA & TIPE DATA
+// ==========================================
 interface GrammarDetailClientProps {
   article: LibraryItem;
 }
 
+// ==========================================
+// KOMPONEN UTAMA: GrammarDetailClient
+// ==========================================
 /**
  * Komponen GrammarDetailClient: Mengendalikan logika interaktif client-side detail grammar.
  * 
- * @param {GrammarDetailClientProps} props - Properti komponen.
+ * @param {GrammarDetailClientProps} props Properti komponen detail tata bahasa.
  * @returns {JSX.Element} Komponen detail grammar yang interaktif dan premium.
  */
 export default function GrammarDetailClient({ article }: GrammarDetailClientProps) {
@@ -41,6 +50,7 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
   const [synth, setSynth] = useState<SpeechSynthesis | null>(null);
   const [isCopied, setIsCopied] = useState(false);
 
+  // Menginisialisasi SpeechSynthesis API secara aman di lingkungan peramban
   useEffect(() => {
     if (typeof window !== "undefined" && window.speechSynthesis) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -97,7 +107,7 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
     }
   };
 
-  // Bersihkan ucapan jika komponen unmount
+  // Bersihkan ucapan audio jika komponen mengalami unmount
   useEffect(() => {
     return () => {
       if (synth) {
@@ -110,36 +120,37 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
 
   /**
    * Mendapatkan kelas style spesifik siber-neon untuk setiap level JLPT.
+   * Menggunakan variabel CSS semantik dinamis seutuhnya sesuai pedoman desain proyek.
    * 
    * @param {string} level - Level JLPT (N1 - N5).
    */
   const getJLPTBadgeStyle = (level: string) => {
     const lvl = level.toUpperCase();
     if (lvl.includes("N1")) {
-      return "border-destructive/30 text-destructive bg-destructive/5 shadow-[0_0_15px_rgba(var(--destructive-rgb),0.15)]";
+      return "border-[rgba(var(--destructive-rgb),0.3)] text-destructive bg-[rgba(var(--destructive-rgb),0.05)] shadow-[0_0_15px_rgba(var(--destructive-rgb),0.15)]";
     }
     if (lvl.includes("N2")) {
-      return "border-purple-500/30 text-purple-400 bg-purple-500/5 shadow-[0_0_15px_rgba(168,85,247,0.15)]";
+      return "border-[rgba(var(--warning-rgb),0.3)] text-warning bg-[rgba(var(--warning-rgb),0.05)] shadow-[0_0_15px_rgba(var(--warning-rgb),0.15)]";
     }
     if (lvl.includes("N3")) {
-      return "border-cyan-500/30 text-cyan-400 bg-cyan-500/5 shadow-[0_0_15px_rgba(6,182,212,0.15)]";
+      return "border-[rgba(var(--secondary-rgb),0.3)] text-secondary bg-[rgba(var(--secondary-rgb),0.05)] shadow-[0_0_15px_rgba(var(--secondary-rgb),0.15)]";
     }
     if (lvl.includes("N4")) {
-      return "border-amber-500/30 text-amber-400 bg-amber-500/5 shadow-[0_0_15px_rgba(245,158,11,0.15)]";
+      return "border-[rgba(var(--primary-rgb),0.3)] text-primary bg-[rgba(var(--primary-rgb),0.05)] shadow-[0_0_15px_rgba(var(--primary-rgb),0.15)]";
     }
-    return "border-success/30 text-success bg-success/5 shadow-[0_0_15px_rgba(var(--success-rgb),0.15)]";
+    return "border-[rgba(var(--success-rgb),0.3)] text-success bg-[rgba(var(--success-rgb),0.05)] shadow-[0_0_15px_rgba(var(--success-rgb),0.15)]";
   };
 
   return (
-    <div className="w-full relative z-10">
-      {/* Dynamic Header Section */}
+    <div className="w-full relative z-10 font-sans">
+      {/* Bagian Header Dinamis */}
       <div className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <div className="flex flex-wrap items-center gap-3 mb-4">
             <span className={`px-4 py-1.5 rounded-full border text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 ${getJLPTBadgeStyle(jlptLevel)}`}>
               JLPT {jlptLevel}
             </span>
-            <div className="flex items-center gap-2 text-muted-foreground/60 text-xs tracking-wider">
+            <div className="flex items-center gap-2 text-muted-foreground/60 text-xs tracking-wider font-semibold">
               <Sparkles size={12} className="text-primary animate-pulse" />
               <span>Modul Tata Bahasa Resmi</span>
             </div>
@@ -148,13 +159,13 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
             {article.title}
           </h1>
           {article.meaning && (
-            <p className="mt-4 text-lg md:text-xl font-bold text-primary leading-relaxed drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
+            <p className="mt-4 text-lg md:text-xl font-black text-primary leading-relaxed drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
               {article.meaning}
             </p>
           )}
         </div>
 
-        {/* Share/Actions Button Group */}
+        {/* Grup Tombol Bagikan/Aksi */}
         <div className="flex items-center gap-3">
           <Button 
             onClick={handleShare}
@@ -179,10 +190,10 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
 
       <div className="w-full h-px bg-gradient-to-r from-border/50 via-border to-border/50 mb-12 shadow-[0_0_20px_rgba(var(--primary-rgb),0.1)]" />
 
-      {/* Bento Grid: Formation & Notes */}
+      {/* Kisi Bento: Struktur & Catatan */}
       {(article.formation || article.notes) && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          {/* Formation Bento (2 Columns wide on medium screens) */}
+          {/* Bento Struktur (Lebar 2 Kolom pada layar sedang) */}
           {article.formation && (
             <Card className="md:col-span-2 p-8 md:p-10 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-xl border border-border rounded-[2rem] relative overflow-hidden group hover:border-primary/40 shadow-[0_0_30px_rgba(var(--primary-rgb),0.02)] transition-all duration-500 select-none">
               <div className="absolute -top-12 -right-12 p-8 opacity-[0.02] group-hover:opacity-[0.05] group-hover:scale-110 transition-all duration-700 pointer-events-none text-primary">
@@ -207,7 +218,7 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
             </Card>
           )}
 
-          {/* Notes Bento (1 Column wide) */}
+          {/* Bento Catatan (Lebar 1 Kolom) */}
           {article.notes && (
             <Card className="p-8 md:p-10 bg-gradient-to-br from-card/30 to-card/5 backdrop-blur-xl border border-border rounded-[2rem] relative overflow-hidden group hover:border-border transition-all duration-500 shadow-sm select-none">
               <div className="absolute -top-12 -right-12 p-8 opacity-[0.02] group-hover:opacity-[0.05] group-hover:scale-110 transition-all duration-700 pointer-events-none text-muted-foreground">
@@ -226,7 +237,7 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
         </div>
       )}
 
-      {/* Examples Section */}
+      {/* Bagian Contoh Kalimat */}
       {article.examples && article.examples.length > 0 && (
         <section className="mb-20">
           <div className="flex items-center gap-3 mb-8">
@@ -244,14 +255,14 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
                   key={ex.id}
                   className="border border-border rounded-[1.8rem] p-6 md:p-8 bg-card/5 backdrop-blur-lg hover:border-primary/40 transition-all duration-300 shadow-sm relative overflow-hidden group flex items-start gap-4 md:gap-6"
                 >
-                  {/* Left Cyber Aksen & Numbering */}
+                  {/* Aksen Siber Kiri & Penomoran */}
                   <div className="absolute top-0 left-0 w-1.5 h-full bg-primary/10 group-hover:bg-primary transition-all duration-300" />
                   
                   <div className="hidden sm:flex flex-col items-center justify-center font-mono text-sm md:text-base font-black text-muted-foreground/30 group-hover:text-primary/40 transition-colors size-10 rounded-full border border-border/50 bg-card/10 select-none">
                     {String(i + 1).padStart(2, "0")}
                   </div>
 
-                  {/* Main sentence content */}
+                  {/* Konten Kalimat Utama Jepang & Terjemahan */}
                   <div className="flex-1 min-w-0">
                     <SmartJapanese 
                       word={ex.jp} 
@@ -259,12 +270,12 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
                       className="text-xl md:text-2xl font-japanese font-bold text-foreground leading-relaxed block tracking-wide select-text" 
                     />
                     
-                    <div className="mt-4 pl-4 border-l-2 border-primary/30 text-sm md:text-base text-muted-foreground/80 font-medium leading-relaxed select-text">
+                    <div className="mt-4 pl-4 border-l-2 border-primary/30 text-sm md:text-base text-muted-foreground/80 font-semibold leading-relaxed select-text">
                       {ex.id}
                     </div>
                   </div>
 
-                  {/* Audio Synthesiser Trigger Button */}
+                  {/* Tombol Pemicu Pengucapan Suara (TTS) */}
                   <div className="flex-shrink-0 select-none">
                     <button type="button" 
                       onClick={() => speakJapanese(ex.jp, i)}
@@ -289,7 +300,7 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
         </section>
       )}
 
-      {/* Navigation Footer */}
+      {/* Footer Navigasi Modul */}
       <footer className="pt-12 border-t border-border/60 flex flex-col md:flex-row items-center justify-between gap-6 select-none">
         <Link href="/library/grammar" className="w-full md:w-auto">
           <Button 
@@ -313,3 +324,4 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
     </div>
   );
 }
+

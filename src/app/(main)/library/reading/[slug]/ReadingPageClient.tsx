@@ -1,5 +1,14 @@
+/**
+ * @file ReadingPageClient.tsx
+ * @description Komponen klien interaktif untuk sesi membaca artikel (Dokkai Session).
+ * Menampilkan teks bacaan dengan furigana interaktif, kosakata terkait, dan kuis pemahaman.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React, { useState } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import { Minimize2 } from "lucide-react";
@@ -11,15 +20,22 @@ import { Button } from "@/components/ui/button";
 import { useUserStore } from "@/store/useUserStore";
 import { useUIStore } from "@/store/useUIStore";
 
-// Modular Components
+// Komponen Pendukung
 import { ReadingNavbar } from "@/components/features/reading/components/ReadingNavbar";
 import { ReadingSidebar } from "@/components/features/reading/components/ReadingSidebar";
 import { ReadingArticle } from "@/components/features/reading/components/ReadingArticle";
 import { ReadingMobileToolbar } from "@/components/features/reading/components/ReadingMobileToolbar";
 
+// ======================
+// TIPE DATA
+// ======================
 interface ReadingPageClientProps {
   data: ReadingData;
 }
+
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 
 function ReadingPageContent({ data }: ReadingPageClientProps) {
   const {
@@ -69,14 +85,14 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
       "min-h-screen transition-all duration-700 relative",
       isZenMode ? "bg-background pb-20" : "bg-background/95 pb-40"
     )}>
-      {/* Immersive Background Glows */}
+      {/* Pancaran Latar Belakang Imersif */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-[-20%] left-[-10%] size-[60%] bg-primary/5 blur-[150px] rounded-full animate-pulse" />
         <div className="absolute bottom-[-20%] right-[-10%] size-[60%] bg-success/5 blur-[150px] rounded-full animate-pulse delay-1000" />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--foreground-rgb),0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--foreground-rgb),0.01)_1px,transparent_1px)] bg-[size:100px_100px] pointer-events-none opacity-20" />
       </div>
 
-      {/* Top Navbar */}
+      {/* Bilah Navigasi Atas */}
       <AnimatePresence>
         {!isZenMode && (
           <ReadingNavbar
@@ -90,7 +106,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
         )}
       </AnimatePresence>
 
-      {/* Floating Mode Exit for Zen Mode */}
+      {/* Tombol Melayang Keluar untuk Mode Zen */}
       <AnimatePresence>
         {isZenMode && (
           <m.div 
@@ -111,12 +127,12 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
         )}
       </AnimatePresence>
 
-      {/* Main Reading Container */}
+      {/* Kontainer Membaca Utama */}
       <div className={cn(
         "max-w-4xl mx-auto px-6 relative z-10 transition-all duration-1000",
         isZenMode ? "pt-24 md:pt-40" : "pt-32 md:pt-48"
       )}>
-        {/* Immersive Header Decoration */}
+        {/* Dekorasi Header Imersif */}
         {!isZenMode && (
           <div className="flex flex-col items-center mb-24 md:mb-32 text-center">
             <div className="flex items-center gap-3 mb-8">
@@ -131,7 +147,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
         )}
 
         <div className="relative">
-          {/* Audio & Settings Floating Sidebar (Desktop) */}
+          {/* Bilah Samping Melayang untuk Audio & Pengaturan (Desktop) */}
           <ReadingSidebar
             audioUrl={data.audioUrl}
             textToSpeak={data.body as string}
@@ -142,7 +158,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
             onTranslationToggle={toggleTranslation}
           />
 
-          {/* Body Content */}
+          {/* Konten Utama Bacaan */}
           <ReadingArticle
             paragraphs={paragraphs}
             hiraganaParagraphs={hiraganaParagraphs}
@@ -158,15 +174,15 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
         </div>
       </div>
 
-      {/* Mobile Toolbar */}
+      {/* Bilah Alat Seluler */}
       <AnimatePresence>
         {!isZenMode && (
           <ReadingMobileToolbar
             onFontSizeToggle={toggleFontSize}
             showTranslation={showTranslation}
             onTranslationToggle={toggleTranslation}
-            showAudio={false} // Adjust based on state if needed
-            onAudioToggle={() => {}} // Handle mobile audio toggle
+            showAudio={false} // Sesuaikan berdasarkan state jika diperlukan
+            onAudioToggle={() => {}} // Tangani sakelar audio seluler
           />
         )}
       </AnimatePresence>
@@ -174,6 +190,13 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
   );
 }
 
+/**
+ * Komponen utama ReadingPageClient: Menyediakan modul pembaca graded reading interaktif 
+ * dengan fitur Furigana/Romaji switcher, popup kamus klik-kata, audio sinkronisasi, dan mode Zen.
+ * 
+ * @param {ReadingPageClientProps} props Properti komponen graded reading.
+ * @returns {JSX.Element} Antarmuka graded reading terbungkus provider konteks.
+ */
 export default function ReadingPageClient({ data }: ReadingPageClientProps) {
   return (
     <ReadingProvider>

@@ -1,3 +1,11 @@
+/**
+ * @file lesson-utils.ts
+ * @description Modul utilitas pembantu normalisasi data kuis pelajaran dari berbagai schema (Sanity / Supabase) ke bentuk format seragam luring-ready, serta kalkulasi navigasi urutan belajar.
+ */
+
+// ==========================================
+// DEKLARASI ANTARMUKA KUIS
+// ==========================================
 export interface RawQuizItem {
   options?: unknown[] | { text?: string; isCorrect?: boolean }[];
   choices?: { text?: string; isCorrect?: boolean }[];
@@ -17,8 +25,14 @@ export interface FormattedQuizItem {
   explanation: string;
 }
 
+// ==========================================
+// FUNGSI LOGIKA NORMALISASI KUIS
+// ==========================================
 /**
- * Normalizes quiz data from various formats (Sanity/Supabase) to a unified format.
+ * Menormalisasi data kuis dari berbagai format (Sanity/Supabase) ke dalam satu format yang seragam.
+ * 
+ * @param {RawQuizItem[]} quizzesRaw - Array mentah item kuis dari CMS atau DB
+ * @returns {FormattedQuizItem[]} Array terformat kuis normalisasi
  */
 export function formatQuizzes(quizzesRaw: RawQuizItem[]): FormattedQuizItem[] {
   if (!quizzesRaw) return [];
@@ -27,8 +41,8 @@ export function formatQuizzes(quizzesRaw: RawQuizItem[]): FormattedQuizItem[] {
     .map((quiz: RawQuizItem) => {
       if (!quiz) return null;
       
-      // Handle format baru (Supabase): options adalah string[], correct_answer adalah index
-      // Handle format lama (Sanity): options adalah { text, isCorrect }[]
+      // Tangani format baru (Supabase): options berupa string[], correct_answer berupa index
+      // Tangani format lama (Sanity): options berupa { text, isCorrect }[]
       const isNewFormat = Array.isArray(quiz.options) && (quiz.options.length === 0 || typeof quiz.options[0] === "string");
       
       let options: string[] = [];
@@ -36,7 +50,7 @@ export function formatQuizzes(quizzesRaw: RawQuizItem[]): FormattedQuizItem[] {
 
       if (isNewFormat) {
         options = (quiz.options || []) as string[];
-        // Handle correct_answer sebagai index (number) ATAU teks jawaban langsung (string)
+        // Tangani correct_answer sebagai index (number) ATAU teks jawaban langsung (string)
         if (typeof quiz.correct_answer === 'number') {
           answer = options[quiz.correct_answer] || "";
         } else if (typeof quiz.correctAnswer === 'number') {
@@ -66,7 +80,7 @@ export function formatQuizzes(quizzesRaw: RawQuizItem[]): FormattedQuizItem[] {
 }
 
 /**
- * Calculates navigation (prev/next) for a lesson within a category.
+ * Menghitung navigasi (sebelumnya/berikutnya) untuk sebuah pelajaran di dalam kategori tertentu.
  */
 export interface NavLessonItem {
   slug: string;

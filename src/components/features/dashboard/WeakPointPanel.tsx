@@ -1,5 +1,19 @@
 "use client";
 
+/**
+ * @file WeakPointPanel.tsx
+ * @description Komponen panel diagnosis titik lemah (leech items detector) pada dashboard NihongoRoute.
+ * Menyaring kartu memori bermasalah dengan easeFactor < 2.2 dari SRS store secara reaktif,
+ * mengambil detil leksikal kosakata/kanji dari database Supabase, serta menyediakan tindakan cepat
+ * seperti melihat detail materi kosakata atau melatih guratan menulis Kanji.
+ *
+ * @package components/features/dashboard
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import React, { useState, useEffect } from "react";
 import { useSRSStore } from "@/store/useSRSStore";
 import { createClient } from "@/lib/supabase/client";
@@ -9,15 +23,21 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
+// ==========================================
+// ANTARMUKA & PROPS (INTERFACES)
+// ==========================================
 interface WeakItem {
   id: string;
   type: "vocab" | "kanji";
-  display: string; // word atau character
-  detail: string; // meaning atau romaji
+  display: string; // kata atau karakter kanji
+  detail: string; // arti atau romaji/cara baca
   easeFactor: number;
   slug?: string;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 export default function WeakPointPanel() {
   const [weakItems, setWeakItems] = useState<WeakItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,8 +54,8 @@ export default function WeakPointPanel() {
       const dirtyLeeches = Object.entries(srs)
         .filter(([_, state]) => !state.isDeleted && state.easeFactor < 2.2)
         .map(([id, state]) => ({ id, easeFactor: state.easeFactor }))
-        .sort((a, b) => a.easeFactor - b.easeFactor) // Kesulitan tertinggi (easeFactor terendah) di atas
-        .slice(0, 4); // Ambil top 4 saja
+        .sort((a, b) => a.easeFactor - b.easeFactor) // Kesulitan tertinggi (easeFactor terendah) di urutan teratas
+        .slice(0, 4); // Ambil top 4 saja untuk optimasi tata letak
 
       if (dirtyLeeches.length === 0) {
         setWeakItems([]);
@@ -48,13 +68,13 @@ export default function WeakPointPanel() {
       try {
         const supabase = createClient();
         
-        // 2. Query dari tabel 'vocab'
+        // 2. Ambil data pelengkap dari tabel 'vocab'
         const { data: vocabData, error: vocabErr } = await supabase
           .from("vocab")
           .select("id, word, romaji, furigana, slug")
           .in("id", leechesIds);
 
-        // 3. Query dari tabel 'kanji'
+        // 3. Ambil data pelengkap dari tabel 'kanji'
         const { data: kanjiData, error: kanjiErr } = await supabase
           .from("kanji")
           .select("id, character, meaning")
@@ -63,11 +83,11 @@ export default function WeakPointPanel() {
         if (vocabErr) console.error("Error fetching weak vocab:", vocabErr);
         if (kanjiErr) console.error("Error fetching weak kanji:", kanjiErr);
 
-        // 4. Gabungkan data
+        // 4. Gabungkan data dari kedua tabel
         const mergedList: WeakItem[] = [];
 
         dirtyLeeches.forEach((leech) => {
-          // Cari di vocab
+          // Cari kecocokan di vocab
           const vocabItem = vocabData?.find((v) => v.id === leech.id);
           if (vocabItem) {
             mergedList.push({
@@ -81,7 +101,7 @@ export default function WeakPointPanel() {
             return;
           }
 
-          // Cari di kanji
+          // Cari kecocokan di kanji
           const kanjiItem = kanjiData?.find((k) => k.id === leech.id);
           if (kanjiItem) {
             mergedList.push({
@@ -113,9 +133,10 @@ export default function WeakPointPanel() {
     );
   }
 
+  // Tampilan jika tidak ada titik lemah terdeteksi (semua aman)
   if (weakItems.length === 0) {
     return (
-      <Card className="relative overflow-hidden bg-card/30 backdrop-blur-xl border border-border rounded-[34px] p-6 md:p-8 transition-all duration-300 hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.05)]">
+      <Card className="relative overflow-hidden bg-card/30 backdrop-blur-xl border border-border rounded-[34px] p-6 md:p-8 transition-all duration-300 hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.05)] shadow-none">
         <div className="absolute top-0 right-0 size-24 bg-success/5 blur-3xl rounded-full" />
         <div className="flex items-center gap-4">
           <div className="size-10 rounded-full bg-success/10 border border-success/20 flex items-center justify-center text-success shadow-[0_0_15px_rgba(var(--success-rgb),0.2)]">
@@ -133,9 +154,10 @@ export default function WeakPointPanel() {
   }
 
   return (
-    <Card className="relative overflow-hidden bg-card/30 backdrop-blur-xl border border-border rounded-[34px] p-6 md:p-8 transition-all duration-300 hover:shadow-[0_0_35px_rgba(var(--primary-rgb),0.08)]">
+    <Card className="relative overflow-hidden bg-card/30 backdrop-blur-xl border border-border rounded-[34px] p-6 md:p-8 transition-all duration-300 hover:shadow-[0_0_35px_rgba(var(--primary-rgb),0.08)] shadow-none">
       <div className="absolute top-0 right-0 size-32 bg-destructive/5 blur-3xl rounded-full" />
 
+      {/* Bagian Header diagnosis */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div>
           <h2 className="text-destructive font-bold uppercase tracking-widest text-xs mb-2 flex items-center gap-2">
@@ -151,6 +173,7 @@ export default function WeakPointPanel() {
         </Badge>
       </div>
 
+      {/* Daftar Item Titik Lemah */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {weakItems.map((item) => {
           // Normalisasi persentase kesulitan dari easeFactor (semakin kecil, semakin sulit).
@@ -175,7 +198,7 @@ export default function WeakPointPanel() {
                   {item.detail}
                 </div>
                 
-                {/* Visual Difficulty Indicator Bar */}
+                {/* Indikator Kesulitan Visual */}
                 <div className="space-y-1">
                   <div className="flex justify-between text-[6px] font-bold uppercase tracking-wider text-destructive/60 font-mono">
                     <span>Tingkat Kegagalan</span>
@@ -190,7 +213,7 @@ export default function WeakPointPanel() {
                 </div>
               </div>
 
-              {/* Quick Action Links */}
+              {/* Tautan Tindakan Cepat (Quick Action) */}
               <div>
                 {item.type === "vocab" && item.slug ? (
                   <Link href={`/library/vocab/${item.slug}`}>
@@ -232,3 +255,4 @@ export default function WeakPointPanel() {
     </Card>
   );
 }
+

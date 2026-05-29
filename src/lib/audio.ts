@@ -1,14 +1,11 @@
 /**
  * @file audio.ts
- * @description Mesin audio sintetik (SoundEngine) untuk menghasilkan efek suara UI menggunakan Web Audio API.
- * Menghasilkan nada prosedural tanpa memerlukan file audio eksternal.
- * @module lib/audio
+ * @description Mesin audio sintetik (SoundEngine) untuk menghasilkan efek suara UI menggunakan Web Audio API. Menghasilkan nada prosedural tanpa memerlukan berkas audio eksternal untuk zero-latency feedback.
  */
 
-// ======================
-// TYPES / INTERFACES
-// ======================
-
+// ==========================================
+// DEKLARASI ANTARMUKA & TYPE
+// ==========================================
 /**
  * Deklarasi fallback untuk browser lama berbasis WebKit (Safari).
  */
@@ -16,9 +13,9 @@ interface CustomWindow extends Window {
   webkitAudioContext?: typeof AudioContext;
 }
 
-// ======================
-// MAIN EXECUTION
-// ======================
+// ==========================================
+// KELAS UTAMA SOUND ENGINE
+// ==========================================
 
 /**
  * SoundEngine: Kelas pengelola audio context dan pembuatan nada oscillator.
@@ -84,13 +81,13 @@ class SoundEngine {
       osc.start();
       osc.stop(this.ctx.currentTime + duration);
     } catch (error) {
-      console.warn("Audio playback failed:", error);
+      console.warn("Pemutaran audio gagal:", error);
     }
   }
 
-  // ======================
-  // PUBLIC API
-  // ======================
+// ==========================================
+  // API PUBLIK / METHODS
+  // ==========================================
 
   /**
    * Memainkan nada tinggi berurutan untuk menandakan keberhasilan.

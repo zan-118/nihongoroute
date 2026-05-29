@@ -1,5 +1,25 @@
+/**
+ * @file useHeatmap.ts
+ * @description Hook kustom untuk menghasilkan urutan tanggal 35 hari terakhir secara lokal,
+ * serta fungsi utilitas untuk menentukan style warna kotak heatmap berdasarkan intensitas kata yang dipelajari.
+ *
+ * @package components/features/dashboard/heatmap
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import { useMemo } from "react";
 
+// ==========================================
+// FUNGSI UTILITAS LOKAL
+// ==========================================
+/**
+ * Memformat objek Date ke dalam format string ISO lokal YYYY-MM-DD.
+ * @param date Objek waktu yang akan diformat
+ * @returns Tanggal dalam bentuk string
+ */
 function formatLocalDate(date: Date): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -7,6 +27,11 @@ function formatLocalDate(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
+/**
+ * Menghasilkan daftar tanggal 35 hari terakhir hingga hari ini.
+ * @param n Jumlah hari ke belakang
+ * @returns Array berisi string tanggal YYYY-MM-DD
+ */
 function generateLastNDays(n: number): string[] {
   const days: string[] = [];
   const today = new Date();
@@ -19,6 +44,14 @@ function generateLastNDays(n: number): string[] {
   return days;
 }
 
+// ==========================================
+// EKSPOR UTAS (UTILITIES & HOOKS)
+// ==========================================
+/**
+ * Menentukan kelas gaya visual CSS (warna & bayangan) kotak berdasarkan intensitas belajar.
+ * @param value Jumlah kata yang dipelajari pada hari tersebut
+ * @returns Daftar kelas gaya Tailwind CSS
+ */
 export function getBoxStyle(value: number): string {
   if (!value)
     return "bg-background/40 border-border neo-inset shadow-none opacity-30";
@@ -29,7 +62,12 @@ export function getBoxStyle(value: number): string {
   return "bg-primary border-border shadow-[0_0_25px_rgba(var(--primary-rgb),0.7)] neo-card shadow-none";
 }
 
+/**
+ * Hook useHeatmap
+ * Membungkus hasil generate tanggal agar stabil antar render (memoized).
+ */
 export function useHeatmap() {
   const days = useMemo(() => generateLastNDays(35), []);
   return { days };
 }
+

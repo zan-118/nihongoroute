@@ -1,5 +1,13 @@
 "use client";
 
+/**
+ * @file FlashcardMaster.tsx
+ * @description Komponen pengendali utama (orchestrator) sesi belajar kartu pengingat (flashcard). Mengelola perpindahan kartu, integrasi audio pelafalan lisan, pemberian feedback visual XP, pop-up ringkasan sesi, dan sinkronisasi ke Zustand.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { useEffect } from "react";
 import { m, AnimatePresence } from "framer-motion";
 
@@ -13,6 +21,19 @@ import { FlashcardActions } from "./FlashcardActions";
 import { FlashcardHeader } from "./FlashcardHeader";
 import PronunciationPanel from "./PronunciationPanel";
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen pembungkus utama untuk melatih kosakata atau kanji melalui kartu flashcard interaktif.
+ * 
+ * @param {Object} props - Properti komponen
+ * @param {MasterCardData[]} props.cards - Koleksi data kartu pengingat
+ * @param {"vocab" | "kanji"} props.type - Kategori pembelajaran kartu
+ * @param {StudyMode} props.mode - Mode belajar awal
+ * @param {boolean} props.isFixedMode - Kunci mode belajar agar tidak dapat diganti manual
+ * @param {Function} props.onFinish - Callback ketika sesi belajar selesai sepenuhnya
+ */
 export default function FlashcardMaster({
   cards,
   type = "vocab",

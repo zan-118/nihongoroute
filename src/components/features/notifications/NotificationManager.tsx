@@ -1,5 +1,14 @@
 "use client";
 
+/**
+ * @file NotificationManager.tsx
+ * @description Komponen visual untuk mengelola izin notifikasi web peramban (Web Notification API) di NihongoRoute.
+ * Menyediakan sakelar pengaktifan pengingat SRS dan pengujian pengiriman notifikasi instan melalui Service Worker.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { useState, useEffect } from "react";
 import { Bell, BellOff, BellRing, Settings2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,6 +17,9 @@ import { Switch } from "../../ui/switch";
 import { toast } from "sonner";
 import { useUIStore } from "@/store/useUIStore";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function NotificationManager() {
   const settings = useUIStore((state) => state.settings);
   const toggleNotifications = useUIStore((state) => state.toggleNotifications);
@@ -39,7 +51,7 @@ export default function NotificationManager() {
           description: "Anda akan menerima pengingat untuk sesi review berikutnya."
         });
         
-        // Test notification using Service Worker if available (Better for Mobile)
+        // Uji notifikasi menggunakan Service Worker jika tersedia (lebih baik untuk perangkat Mobile)
         if ("serviceWorker" in navigator) {
           navigator.serviceWorker.ready.then((registration) => {
             registration.showNotification("NihongoRoute", {

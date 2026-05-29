@@ -1,8 +1,19 @@
+/**
+ * @file Pagination.tsx
+ * @description Komponen Kontrol Halaman (Pagination) premium teranimasi dengan gaya siber.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
@@ -10,6 +21,9 @@ interface PaginationProps {
   className?: string;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function Pagination({
   currentPage,
   totalPages,

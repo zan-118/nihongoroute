@@ -1,8 +1,11 @@
 /**
  * @file index.ts
- * @description Tipe data untuk fitur Kanji Stroke & Information.
+ * @description Definisi tipe data (TypeScript) untuk fitur visualisasi coretan dan informasi detail Kanji.
  */
 
+// ==========================================
+// TIPE DATA GORESAN & SVG KANJI
+// ==========================================
 export interface StrokeData {
   path: string;
   index: number;
@@ -15,6 +18,9 @@ export interface KanjiSvgData {
   viewBox: string;
 }
 
+// ==========================================
+// TIPE DATA PENGENDALI PEMUTARAN (PLAYBACK)
+// ==========================================
 export type PlaybackStatus = "playing" | "paused" | "finished";
 
 export interface KanjiPlaybackControl {
@@ -24,6 +30,9 @@ export interface KanjiPlaybackControl {
   showNumbers: boolean;
 }
 
+// ==========================================
+// TIPE DATA DETAIL KANJI
+// ==========================================
 export interface KanjiDetail {
   _id: string;
   character: string;

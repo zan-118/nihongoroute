@@ -6,7 +6,7 @@
  */
 
 // ======================
-// IMPORTS
+// IMPOR
 // ======================
 import { Suspense } from "react";
 import { RotateCw } from "lucide-react";
@@ -14,7 +14,7 @@ import VocabClient from "./VocabClient";
 import { getPaginatedVocab } from "@/actions/library.actions";
 
 // ======================
-// CONFIG / CONSTANTS
+// METADATA SEO
 // ======================
 export const metadata = {
   title: "Kamus Kosakata | NihongoRoute",
@@ -22,9 +22,15 @@ export const metadata = {
 };
 
 // ======================
-// MAIN EXECUTION
+// EKSEKUSI UTAMA
 // ======================
 
+/**
+ * Halaman utama Kamus Kosakata (RSC).
+ * Melakukan pra-ambil data halaman pertama daftar kosakata sebelum merender VocabClient dalam Suspense.
+ * 
+ * @returns {JSX.Element} Halaman direktori pustaka kosakata.
+ */
 export default async function VocabLibraryPage() {
   const initialData = await getPaginatedVocab(1, 50, "", "all", "all");
 

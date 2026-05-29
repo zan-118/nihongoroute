@@ -1,7 +1,22 @@
+/**
+ * @file QuestHeader.tsx
+ * @description Komponen UI untuk menampilkan bagian Header dari panel Misi Harian (Daily Quests).
+ * Menyajikan judul seksi, ikon Target, serta badge penanda waktu reset otomatis di tengah malam (Reset 00:00).
+ *
+ * @package components/features/dashboard/quests
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Target } from "lucide-react";
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 export function QuestHeader() {
   return (
     <header className="flex items-center justify-between mb-8 relative z-10">
@@ -27,3 +42,4 @@ export function QuestHeader() {
     </header>
   );
 }
+

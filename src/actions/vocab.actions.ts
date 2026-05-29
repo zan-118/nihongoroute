@@ -1,8 +1,21 @@
+/**
+ * @file vocab.actions.ts
+ * @description Server Actions untuk mengambil data kosakata (vocab) dari Supabase.
+ * Menyediakan paginasi dengan pencarian teks, filter level JLPT, filter part-of-speech (hinshi),
+ * serta dukungan tipe routing: vocab, verb, adjective, dan phrase.
+ */
+
 "use server";
 
+// ======================
+// IMPORTS
+// ======================
 import { createClient } from "@/lib/supabase/server";
 import { PaginatedVocabResponse } from "@/types/library";
 
+// ======================
+// HELPERS
+// ======================
 function getHinshiFilters(hinshi: string): string[] {
   const lower = hinshi.toLowerCase();
   if (lower === "noun" || lower === "n") {
@@ -35,6 +48,10 @@ function getHinshiFilters(hinshi: string): string[] {
   return [hinshi];
 }
 
+// ======================
+// SERVER ACTIONS
+// ======================
+
 /**
  * Mengambil kosakata dengan paginasi, pencarian, filter level, dan part of speech.
  */
@@ -55,10 +72,10 @@ export async function getPaginatedVocab(
 
     if (search) {
       const safeSearch = search
-        .replace(/\\/g, '\\\\')  // escape backslash first
-        .replace(/%/g, '\\%')    // escape SQL wildcard %
-        .replace(/_/g, '\\_')    // escape SQL wildcard _
-        .replace(/"/g, '');       // remove quotes for PostgREST syntax
+        .replace(/\\/g, '\\\\')  // hindari backslash terlebih dahulu
+        .replace(/%/g, '\\%')    // hindari SQL wildcard %
+        .replace(/_/g, '\\_')    // hindari SQL wildcard _
+        .replace(/"/g, '');       // hapus tanda kutip untuk sintaks PostgREST
       query = query.or(`word.ilike."%${safeSearch}%",meaning_id.ilike."%${safeSearch}%",furigana.ilike."%${safeSearch}%",romaji.ilike."%${safeSearch}%"`);
     }
 
@@ -108,7 +125,7 @@ export async function getPaginatedVocab(
       total: count || 0,
     };
   } catch (error) {
-    console.error(`Failed to fetch paginated ${type}:`, error);
+    console.error(`Gagal mengambil data paginasi ${type}:`, error);
     return { data: [], total: 0 };
   }
 }

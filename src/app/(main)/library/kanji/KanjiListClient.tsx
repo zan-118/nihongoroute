@@ -1,5 +1,14 @@
+/**
+ * @file KanjiListClient.tsx
+ * @description Komponen klien interaktif untuk halaman daftar katalog Kanji.
+ * Menyediakan pencarian, filter JLPT, dan paginasi berbasis state klien.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React, { useState, useEffect, useRef } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { getPaginatedKanji, PaginatedKanjiResponse } from "@/actions/library.actions";
@@ -9,23 +18,37 @@ import { Search, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/store/useUIStore";
 
-// Domain Components
+// Komponen Pendukung
 import { KanjiHeader } from "@/components/features/library/kanji/KanjiHeader";
 import { KanjiGrid } from "@/components/features/library/kanji/KanjiGrid";
 import { Pagination } from "@/components/ui/Pagination";
 
+// ======================
+// TIPE DATA
+// ======================
 interface KanjiListClientProps {
   initialData: PaginatedKanjiResponse;
 }
 
 const ITEMS_PER_PAGE = 24;
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
+/**
+ * Komponen KanjiListClient: Menyediakan antarmuka interaktif untuk menyaring, mencari,
+ * dan mempaginasi pustaka kanji dengan React Query dan state parameter URL.
+ * 
+ * @param {KanjiListClientProps} props Properti komponen.
+ * @returns {JSX.Element} Antarmuka direktori kanji interaktif.
+ */
 export default function KanjiListClient({ initialData }: KanjiListClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
 
-  // Membaca nilai filter awal dari URL jika ada (bookmark friendly)
+  // Membaca nilai filter awal dari URL jika ada (kompatibel dengan bookmark)
   const initialLevel = searchParams.get("level") || "n5";
   const initialSearch = searchParams.get("search") || "";
   const initialPage = Number(searchParams.get("page") || "1");
@@ -37,7 +60,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
 
   const isFirstMount = useRef(true);
 
-  // Sinkronisasikan state filter ke URL search parameters secara dinamis
+  // Menyinkronkan status filter dengan parameter pencarian URL secara reaktif
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
 
@@ -67,19 +90,19 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
     }
   }, [debouncedSearch, levelFilter, currentPage, pathname, router, searchParams]);
 
-  // Debounce search input
+  // Melakukan debounce pada input pencarian
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(search);
       if (search !== initialSearch) {
-        setCurrentPage(1); // Reset page on new search
+        setCurrentPage(1); // Reset halaman jika kata kunci berubah
       }
     }, 500);
     return () => clearTimeout(handler);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
-  // Reset page when filter changes
+  // Mereset halaman ke 1 saat filter level berubah
   useEffect(() => {
     if (isFirstMount.current) {
       isFirstMount.current = false;
@@ -128,7 +151,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
           )}
 
           <div className="flex flex-col gap-2.5 min-h-[400px]">
-            {/* Table Header (hidden on mobile) */}
+            {/* Kepala Tabel (Disembunyikan di Ponsel / Responsif) */}
             <div className="hidden md:grid md:grid-cols-12 gap-4 px-6 py-4 bg-muted/30 border border-border rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
               <div className="col-span-2">Kanji</div>
               <div className="col-span-6">Arti / Definisi</div>
@@ -141,7 +164,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
                 key={kanji.id}
                 className="flex md:grid md:grid-cols-12 items-center justify-between gap-4 px-4 py-3 bg-[rgba(var(--card-rgb),0.3)] backdrop-blur-3xl border border-border hover:border-[rgba(var(--primary-rgb),0.5)] transition-all duration-300 rounded-2xl shadow-sm hover:shadow-[0_0_25px_rgba(var(--primary-rgb),0.08)] group"
               >
-                {/* Sisi Kiri: Kanji & Arti (Flex di Mobile, Grid Col di Desktop) */}
+                {/* Sisi Kiri: Kanji & Arti (Flex di Seluler, Kolom Grid di Desktop) */}
                 <div className="flex-1 md:col-span-8 flex flex-col md:grid md:grid-cols-8 md:gap-4 md:items-center min-w-0 pr-2">
                   <div className="md:col-span-2 font-black text-2xl md:text-3xl text-foreground font-japanese select-all leading-none">
                     {kanji.character}
@@ -151,7 +174,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
                   </div>
                 </div>
 
-                {/* Sisi Kanan: Level JLPT & Tombol Aksi */}
+                {/* Sisi Kanan: Level JLPT & Tombol Tindakan */}
                 <div className="flex items-center gap-2.5 shrink-0 md:col-span-4 md:justify-end">
                   {kanji.jlptLevel && (
                     <span className="text-[9px] md:text-[10px] font-black bg-[rgba(var(--primary-rgb),0.1)] text-primary px-2 py-0.5 rounded-full border border-[rgba(var(--primary-rgb),0.2)] uppercase shrink-0">

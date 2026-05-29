@@ -1,7 +1,20 @@
+/**
+ * @file lessons.actions.ts
+ * @description Server Actions untuk mengambil data pelajaran (lessons) dan kategori kursus.
+ * Menggabungkan data dari Supabase (metadata kategori) dan Sanity CMS (konten pelajaran) secara paralel.
+ */
+
 "use server";
 
+// ======================
+// IMPORTS
+// ======================
 import { createClient } from "@/lib/supabase/server";
 import { getSanityLessonsByCategory, getSanityLessonsByCategories } from "@/lib/queries";
+
+// ======================
+// SERVER ACTIONS
+// ======================
 
 /**
  * Server Action: getLessonDetail
@@ -22,12 +35,15 @@ export async function getLessonDetail(slug: string) {
     .single();
 
   if (error) {
-    console.error("Failed to fetch lesson detail:", error);
+    console.error("Gagal mengambil detail pelajaran:", error);
     return null;
   }
   return data;
 }
 
+// ======================
+// TYPES
+// ======================
 interface SanityLessonListItem {
   _id: string;
   title: string;
@@ -52,19 +68,19 @@ export async function getCourseCategories() {
     .order("order_number", { ascending: true });
 
   if (error) {
-    console.error("Failed to fetch course categories:", error);
+    console.error("Gagal mengambil kategori kursus:", error);
     return [];
   }
 
   if (!categories || categories.length === 0) return [];
 
-  // Gather all category slugs and UUIDs in one array
+  // Kumpulkan seluruh slug kategori dan UUID ke dalam satu array
   const categoryIds = categories.flatMap(cat => [cat.slug, cat.id]);
 
-  // Fetch all lessons for all categories in 1 query
+  // Ambil semua data pelajaran untuk seluruh kategori dalam 1 kueri
   const allLessons = await getSanityLessonsByCategories(categoryIds);
 
-  // Group lessons by category (either slug or id matches category_id)
+  // Kelompokkan pelajaran berdasarkan kategori (yang cocok dengan slug atau id di category_id)
   const categoriesWithData = categories.map((cat) => {
     const lessons = allLessons.filter(
       (l: SanityLessonListItem & { category_id?: string }) => l.category_id === cat.id || l.category_id === cat.slug
@@ -95,7 +111,7 @@ export async function getExamsByCategory(categoryId: string) {
     .order("created_at", { ascending: true });
 
   if (error) {
-    console.error("Failed to fetch exams:", error);
+    console.error("Gagal mengambil daftar ujian:", error);
     return [];
   }
   return data || [];

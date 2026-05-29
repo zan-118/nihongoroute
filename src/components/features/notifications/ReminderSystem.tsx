@@ -1,9 +1,21 @@
 "use client";
 
+/**
+ * @file ReminderSystem.tsx
+ * @description Komponen sistem pengingat latar belakang (Reminder System) tanpa visual (renderless).
+ * Secara periodik memeriksa ketersediaan kartu SRS yang telah jatuh tempo dan memicu notifikasi peramban.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { useEffect, useRef } from "react";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useUIStore } from "@/store/useUIStore";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function ReminderSystem() {
   const srs = useSRSStore((state) => state.srs);
   const settings = useUIStore((state) => state.settings);
@@ -23,27 +35,24 @@ export default function ReminderSystem() {
       const now = Date.now();
       const dueCount = Object.values(srs).filter((card) => !card.isDeleted && card.nextReview <= now).length;
 
-      // Only notify if there are cards due and we haven't notified in the last 1 hour
+      // Hanya beri notifikasi jika ada kartu yang jatuh tempo dan kita belum memberitahu dalam 1 jam terakhir
       if (dueCount > 0 && now - lastNotifiedRef.current > 3600000) {
         const title = "NihongoRoute";
         const options = {
           body: `Okaeri! Ada ${dueCount} kartu yang butuh kamu review sekarang. Jangan sampai lupa ya!`,
           icon: "/logo-branding.png",
           badge: "/logo-branding.png",
-          tag: "srs-reminder", // Avoid duplicates
+          tag: "srs-reminder", // Hindari duplikasi
           vibrate: [100, 50, 100],
         };
 
         if ("serviceWorker" in navigator) {
           navigator.serviceWorker.ready.then((registration) => {
-             
             registration.showNotification(title, options as NotificationOptions);
           }).catch(() => {
-             
             new Notification(title, options as NotificationOptions);
           });
         } else {
-           
           new Notification(title, options as NotificationOptions);
         }
         
@@ -51,12 +60,12 @@ export default function ReminderSystem() {
       }
     };
 
-    // Check immediately and then every 15 minutes
+    // Periksa segera dan kemudian setiap 15 menit
     checkDueCards();
     const interval = setInterval(checkDueCards, 15 * 60 * 1000);
 
     return () => clearInterval(interval);
   }, [srs, settings.notificationsEnabled]);
 
-  return null; // This is a logic-only component
+  return null; // Komponen ini hanya berisi logika
 }

@@ -1,10 +1,11 @@
 /**
  * @file sanitize.ts
- * @description Utilitas sanitasi HTML untuk mencegah XSS.
- * Hanya mengizinkan tag dan atribut yang aman untuk konten editorial.
- * @module Sanitize
+ * @description Modul utilitas sanitasi HTML luring-ready untuk melindungi aplikasi dari kerentanan Cross-Site Scripting (XSS). Membatasi tag HTML dan atribut yang diizinkan untuk keperluan rendering teks deskriptif atau aksen furigana.
  */
 
+// ==========================================
+// KONFIGURASI DAFTAR PUTIH (WHITELIST)
+// ==========================================
 /** Tag HTML yang diizinkan untuk konten editorial CMS */
 const ALLOWED_TAGS = new Set([
   'b', 'i', 'em', 'strong', 'u', 's', 'br', 'p', 'span',
@@ -24,6 +25,10 @@ const ALLOWED_ATTRS: Record<string, Set<string>> = {
   'td': new Set(['colspan', 'rowspan']),
   'th': new Set(['colspan', 'rowspan', 'scope']),
 };
+
+// ==========================================
+// FUNGSI UTAMA SANITASI
+// ==========================================
 
 /**
  * Sanitasi string HTML dengan menghapus tag dan atribut berbahaya.

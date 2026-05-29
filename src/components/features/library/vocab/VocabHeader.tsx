@@ -1,18 +1,39 @@
 "use client";
 
+/**
+ * @file VocabHeader.tsx
+ * @description Komponen tajuk untuk halaman Pustaka Kosakata (Vocabulary Library).
+ * Menampilkan judul halaman, statistik jumlah kata yang ditemukan, serta tombol latihan interaktif.
+ */
+
+// ==========================================
+// IMPOR UTAMA
+// ==========================================
 import { Book } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+// ==========================================
+// ANTARMUKA & TIPE DATA
+// ==========================================
 interface VocabHeaderProps {
   totalItems: number;
   onPracticeClick: () => void;
   isPracticeDisabled: boolean;
 }
 
+// ==========================================
+// KOMPONEN UTAMA: VocabHeader
+// ==========================================
+/**
+ * Komponen tajuk Pustaka Kosakata interaktif dengan visualisasi status kesiapan dan aksi latihan.
+ * 
+ * @param {VocabHeaderProps} props Properti komponen tajuk kosakata.
+ */
 export function VocabHeader({ totalItems, onPracticeClick, isPracticeDisabled }: VocabHeaderProps) {
   return (
-    <header className="mb-10 md:mb-16">
+    <header className="mb-10 md:mb-16 font-sans">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-10 border-b border-border pb-6 md:pb-12">
+        {/* Sisi Kiri: Judul Halaman */}
         <div className="flex items-center gap-5 md:gap-6">
           <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-2xl bg-primary/10 border-primary/20 flex items-center justify-center neo-inset shadow-none">
             <Book size={28} className="text-primary md:w-8 md:h-8" aria-hidden="true" />
@@ -26,15 +47,17 @@ export function VocabHeader({ totalItems, onPracticeClick, isPracticeDisabled }:
             </span>
           </div>
         </div>
+
+        {/* Sisi Kanan: Statistik Jumlah & Aksi Latihan Pintas */}
         <div className="flex items-center justify-between md:justify-end gap-6 w-full md:w-auto">
           <div className="flex flex-col items-start md:items-end gap-1">
-            <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Total Ditemukan</span>
+            <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">Total Ditemukan</span>
             <span className="text-xs md:text-xs font-black text-foreground">{totalItems} Kata</span>
           </div>
           <Button
             onClick={onPracticeClick}
             disabled={isPracticeDisabled}
-            className="h-auto py-4 px-6 md:py-5 md:px-8 rounded-xl md:rounded-2xl bg-primary hover:bg-foreground text-primary-foreground font-bold uppercase tracking-widest transition-all shadow-lg border-none text-xs md:text-sm disabled:opacity-50"
+            className="h-auto py-4 px-6 md:py-5 md:px-8 rounded-xl md:rounded-2xl bg-primary hover:bg-foreground text-primary-foreground font-black uppercase tracking-widest transition-all shadow-lg border-none text-xs md:text-sm disabled:opacity-50"
           >
             Latih Halaman Ini
           </Button>
@@ -43,3 +66,4 @@ export function VocabHeader({ totalItems, onPracticeClick, isPracticeDisabled }:
     </header>
   );
 }
+

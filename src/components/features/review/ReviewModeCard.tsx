@@ -1,10 +1,22 @@
 "use client";
 
+/**
+ * @file ReviewModeCard.tsx
+ * @description Komponen visual kartu pemilih mode ulasan (Review Mode Card).
+ * Menyediakan tampilan adaptif berdasarkan status ketersediaan kartu review (aktif/dinonaktifkan) dan skema warna semantik.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import { ArrowRight, LucideIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+// ======================
+// ANTARMUKA & TIPE
+// ======================
 interface ReviewModeCardProps {
   onClick: () => void;
   isEnabled: boolean;
@@ -18,9 +30,9 @@ interface ReviewModeCardProps {
   accentColor: "primary" | "amber";
 }
 
-/**
- * Komponen kartu pilihan mode review.
- */
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function ReviewModeCard({
   onClick,
   isEnabled,

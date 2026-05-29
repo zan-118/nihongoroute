@@ -1,5 +1,14 @@
 "use client";
 
+/**
+ * @file ListeningQuiz.tsx
+ * @description Komponen kuis interaktif untuk mengukur pemahaman menyimak (Listening Quiz).
+ * Menampilkan pertanyaan pilihan ganda secara linear lengkap dengan penjelasan dan navigasi progres.
+ */
+
+// ==========================================
+// IMPOR UTAMA
+// ==========================================
 import React, { useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { CheckCircle2, XCircle, ChevronRight, CircleHelp } from "lucide-react";
@@ -7,11 +16,22 @@ import { Button } from "@/components/ui/button";
 import { QuizItem } from "../types";
 import { cn } from "@/lib/utils";
 
+// ==========================================
+// ANTARMUKA & TIPE DATA
+// ==========================================
 interface ListeningQuizProps {
   questions: QuizItem[];
   onComplete: (score: number) => void;
 }
 
+// ==========================================
+// KOMPONEN UTAMA: ListeningQuiz
+// ==========================================
+/**
+ * Komponen interaktif kuis menyimak dengan animasi transisi yang mulus.
+ * 
+ * @param {ListeningQuizProps} props Properti untuk komponen kuis menyimak.
+ */
 export default function ListeningQuiz({ questions, onComplete }: ListeningQuizProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
@@ -21,6 +41,7 @@ export default function ListeningQuiz({ questions, onComplete }: ListeningQuizPr
 
   const currentQuestion = questions[currentIndex];
 
+  // Menangani penekanan opsi jawaban kuis
   const handleOptionClick = (optionIndex: number, isCorrect: boolean) => {
     if (isLocked) return;
     
@@ -32,6 +53,7 @@ export default function ListeningQuiz({ questions, onComplete }: ListeningQuizPr
     }
   };
 
+  // Menavigasi ke pertanyaan berikutnya atau menyelesaikan kuis
   const handleNext = () => {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex(c => c + 1);
@@ -43,6 +65,7 @@ export default function ListeningQuiz({ questions, onComplete }: ListeningQuizPr
     }
   };
 
+  // Tampilan Akhir: Kuis Selesai
   if (showFinished) {
     return (
       <m.div 
@@ -53,15 +76,17 @@ export default function ListeningQuiz({ questions, onComplete }: ListeningQuizPr
         <div className="size-16 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-2">
           <CheckCircle2 size={32} />
         </div>
-        <h2 className="text-2xl font-black text-foreground uppercase tracking-tight">Listening Completed!</h2>
+        <h2 className="text-2xl font-black text-foreground uppercase tracking-tight">
+          Latihan Menyimak Selesai!
+        </h2>
         <p className="text-muted-foreground text-sm">
-          You answered <span className="text-primary font-bold">{score}/{questions.length}</span> questions correctly.
+          Kamu menjawab <span className="text-primary font-bold">{score}/{questions.length}</span> pertanyaan dengan benar.
         </p>
         <Button 
           className="mt-4 rounded-full px-8 font-bold uppercase tracking-widest"
           onClick={() => window.location.reload()}
         >
-          Retake Lesson
+          Ulangi Pelajaran
         </Button>
       </m.div>
     );
@@ -69,14 +94,14 @@ export default function ListeningQuiz({ questions, onComplete }: ListeningQuizPr
 
   return (
     <div className="w-full flex flex-col gap-6">
-      {/* Progress Header */}
+      {/* Header Progres Kuis */}
       <div className="flex items-center justify-between px-2">
         <div className="flex items-center gap-3">
           <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
             <CircleHelp size={18} />
           </div>
           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
-            Question {currentIndex + 1} of {questions.length}
+            Soal {currentIndex + 1} dari {questions.length}
           </span>
         </div>
         <div className="flex gap-1">
@@ -92,7 +117,7 @@ export default function ListeningQuiz({ questions, onComplete }: ListeningQuizPr
         </div>
       </div>
 
-      {/* Question Card */}
+      {/* Kartu Soal Kuis Aktif */}
       <m.div
         key={currentIndex}
         initial={{ opacity: 0, x: 20 }}
@@ -100,13 +125,14 @@ export default function ListeningQuiz({ questions, onComplete }: ListeningQuizPr
         exit={{ opacity: 0, x: -20 }}
         className="p-8 rounded-3xl bg-muted/20 border border-border backdrop-blur-xl relative overflow-hidden"
       >
-        {/* Glow Effect */}
+        {/* Efek Pendar Ambient (Glow) */}
         <div className="absolute -top-24 -right-24 size-48 bg-primary/5 blur-[80px] rounded-full" />
         
-        <h3 className="text-xl font-bold text-foreground mb-8 leading-snug">
+        <h3 className="text-xl font-bold text-foreground mb-8 leading-snug font-sans">
           {currentQuestion.question}
         </h3>
 
+        {/* Daftar Opsi Jawaban */}
         <div className="grid gap-3">
           {currentQuestion.options.map((option, idx) => {
             const isSelected = selectedOption === idx;
@@ -142,7 +168,7 @@ export default function ListeningQuiz({ questions, onComplete }: ListeningQuizPr
           })}
         </div>
 
-        {/* Explanation & Next Button */}
+        {/* Penjelasan Jawaban & Tombol Lanjut */}
         <AnimatePresence>
           {isLocked && (
             <m.div
@@ -151,7 +177,7 @@ export default function ListeningQuiz({ questions, onComplete }: ListeningQuizPr
               className="mt-8 pt-6 border-t border-border"
             >
               {currentQuestion.explanation && (
-                <p className="text-sm text-muted-foreground leading-relaxed mb-6 italic">
+                <p className="text-sm text-muted-foreground leading-relaxed mb-6 italic font-medium">
                   {currentQuestion.explanation}
                 </p>
               )}
@@ -160,7 +186,7 @@ export default function ListeningQuiz({ questions, onComplete }: ListeningQuizPr
                 onClick={handleNext}
                 className="w-full rounded-2xl py-6 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-[0.2em] group"
               >
-                {currentIndex === questions.length - 1 ? "Finish Task" : "Next Question"}
+                {currentIndex === questions.length - 1 ? "Selesaikan Tugas" : "Pertanyaan Berikutnya"}
                 <ChevronRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </m.div>
@@ -170,3 +196,4 @@ export default function ListeningQuiz({ questions, onComplete }: ListeningQuizPr
     </div>
   );
 }
+

@@ -1,7 +1,18 @@
+/**
+ * @file CategoryHero.tsx
+ * @description Komponen hero (CategoryHero) untuk halaman detail kategori kursus. Menampilkan judul besar, deskripsi, progres penyelesaian, dan indikator JLPT.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { m, Variants } from "framer-motion";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface CategoryHeroProps {
   title: string;
   description?: string;
@@ -14,6 +25,9 @@ interface CategoryHeroProps {
   itemVariants: Variants;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function CategoryHero({
   title,
   description,

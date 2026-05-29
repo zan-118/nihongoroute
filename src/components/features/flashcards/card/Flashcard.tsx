@@ -1,5 +1,11 @@
-"use client";
+/**
+ * @file Flashcard.tsx
+ * @description Komponen utama kartu Flashcard interaktif dengan efek flip 3D menggunakan Framer Motion. Mengintegrasikan sisi depan (pertanyaan) dan belakang (jawaban).
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { m } from "framer-motion";
 import { FlashcardProps } from "./types";
 import { useFlashcard } from "./useFlashcard";
@@ -7,6 +13,12 @@ import { FlashcardFront } from "./FlashcardFront";
 import { FlashcardBack } from "./FlashcardBack";
 import { WritingPracticeModal } from "./WritingPracticeModal";
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen kartu flashcard 3D flip.
+ */
 export default function Flashcard({
   id,
   docType,
@@ -29,6 +41,9 @@ export default function Flashcard({
   mnemonic,
   related_kanji,
 }: FlashcardProps) {
+  // ==========================================
+  // STATUS & STATE & HOOKS
+  // ==========================================
   const {
     showWritingModal,
     setShowWritingModal,
@@ -37,7 +52,9 @@ export default function Flashcard({
     handleDrawClick,
   } = useFlashcard({ type, onFlip });
 
-
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <>
       <m.div

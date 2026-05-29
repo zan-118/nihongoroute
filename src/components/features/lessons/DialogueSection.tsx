@@ -1,3 +1,11 @@
+/**
+ * @file DialogueSection.tsx
+ * @description Komponen seksi dialog/skenario percakapan (DialogueSection) dalam pelajaran. Dilengkapi pembaca dialog per kalimat, audio, dan gambar/video rujukan.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import { MessageSquare } from "lucide-react";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
@@ -5,6 +13,9 @@ import TTSReader from "@/components/features/tools/tts/TTSReader";
 import SanityMedia from "@/components/ui/SanityMedia";
 import { OfflineAudio } from "@/components/ui/OfflineAudio";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 export interface DialogueSpeakerItem {
   speaker?: string;
   speakerName?: string;
@@ -30,6 +41,10 @@ export interface DialogueItem {
 interface DialogueSectionProps {
   listeningList: DialogueItem[];
 }
+
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 
 /**
  * Komponen: DialogueSection
@@ -73,7 +88,7 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
               )}
             </div>
 
-            {/* HERO MEDIA FOR LISTENING (SANITY) */}
+            {/* MEDIA HERO MENYIMAK (SANITY) */}
             {(l.imageUrl || l.videoUrl) && (
               <div className="mb-10 max-w-2xl mx-auto">
                 <SanityMedia 

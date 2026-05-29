@@ -1,5 +1,14 @@
+/**
+ * @file ListeningPageClient.tsx
+ * @description Komponen klien interaktif untuk sesi latihan menyimak (Choukai Session).
+ * Mengelola pemutar audio, kontrol pemutaran, transkrip, dan kuis pemahaman.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React, { useState, useEffect } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { ListeningTaskData } from "@/components/features/listening/types";
@@ -10,21 +19,35 @@ import { useUserStore } from "@/store/useUserStore";
 import { useUIStore } from "@/store/useUIStore";
 import { cn } from "@/lib/utils";
 
-// Modular Components
+// Komponen Pendukung
 import { ListeningHeader } from "@/components/features/listening/components/ListeningHeader";
 import { ListeningSidebar } from "@/components/features/listening/components/ListeningSidebar";
 
+// ======================
+// TIPE DATA
+// ======================
 interface ListeningPageClientProps {
   data: ListeningTaskData;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
+/**
+ * Komponen ListeningPageClient: Menyediakan antarmuka interaktif pemutar audio choukai 
+ * dengan sinkronisasi transkrip baris per baris (Karaoke) dan kuis pemahaman materi.
+ * 
+ * @param {ListeningPageClientProps} props Properti komponen klien latihan menyimak.
+ * @returns {JSX.Element} Antarmuka player menyimak interaktif.
+ */
 export default function ListeningPageClient({ data }: ListeningPageClientProps) {
   const listeningState = useUIStore(state => state.listeningState);
   const setListeningState = useUIStore(state => state.setListeningState);
   const { activeTab } = listeningState;
   const [isCompleted, setIsCompleted] = useState(false);
   
-  // Sync data to global store on mount for FAB access
+  // Sinkronisasi data ke store global saat mounting untuk akses tombol melayang (FAB)
   useEffect(() => {
     const textToSpeak = data.transcript.map(t => {
       if (typeof t.text === "string") return t.text;
@@ -61,7 +84,7 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
-      {/* Premium Ambient Background */}
+      {/* Latar Belakang Ambient Premium */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-0 left-1/4 size-[500px] bg-primary/5 blur-[120px] rounded-full" />
         <div className="absolute top-1/2 -right-48 size-96 bg-primary/10 blur-[100px] rounded-full" />
@@ -81,7 +104,7 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
 
       <main className="max-w-7xl mx-auto px-4 lg:px-6 mt-12 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          {/* Left Column: Interactive Area */}
+          {/* Kolom Kiri: Area Interaktif */}
           <div className="lg:col-span-8 relative min-h-[600px]">
             <div className={cn(
               "transition-all duration-700",

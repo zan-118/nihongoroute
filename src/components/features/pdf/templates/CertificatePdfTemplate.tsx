@@ -1,4 +1,15 @@
- 
+/**
+ * @file CertificatePdfTemplate.tsx
+ * @description Templat dokumen PDF untuk sertifikat kelulusan ujian simulasi NihongoRoute.
+ * Menggunakan registrasi font lokal NotoSansJP untuk stabilitas rendering karakter multibahasa (Jepang & Latin).
+ *
+ * @package components/features/pdf/templates
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import React from "react";
 import {
   Page,
@@ -9,11 +20,9 @@ import {
   Font,
 } from "@react-pdf/renderer";
 
-/**
- * @file CertificatePdfTemplate.tsx
- * @description Template PDF untuk sertifikat kelulusan ujian simulasi NihongoRoute.
- */
-
+// ==========================================
+// REGISTRASI FONT
+// ==========================================
 // Registrasi Font NotoSansJP (Lokal TTF untuk stabilitas rendering dan dukungan karakter Jepang)
 Font.register({
   family: "NotoSansJP",
@@ -23,6 +32,9 @@ Font.register({
   ],
 });
 
+// ==========================================
+// GAYA VISUAL (STYLESHEET)
+// ==========================================
 const styles = StyleSheet.create({
   page: {
     backgroundColor: "#0a0c10",
@@ -160,6 +172,9 @@ const styles = StyleSheet.create({
   }
 });
 
+// ==========================================
+// ANTARMUKA & DATA
+// ==========================================
 interface CertificateData {
   userName: string;
   examTitle: string;
@@ -168,6 +183,9 @@ interface CertificateData {
   level?: string;
 }
 
+// ==========================================
+// KOMPONEN UTAMA (TEMPLAT EKSPOR)
+// ==========================================
 export const CertificatePdfTemplate = ({ data }: { data: CertificateData }) => (
   <Document>
     <Page size="A4" orientation="landscape" style={styles.page}>
@@ -216,3 +234,4 @@ export const CertificatePdfTemplate = ({ data }: { data: CertificateData }) => (
     </Page>
   </Document>
 );
+

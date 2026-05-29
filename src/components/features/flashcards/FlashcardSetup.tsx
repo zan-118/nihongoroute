@@ -1,16 +1,28 @@
-"use client";
+/**
+ * @file FlashcardSetup.tsx
+ * @description Komponen panel konfigurasi sebelum memulai kuis Flashcard. Memungkinkan pengguna memilih tingkat JLPT, mode belajar (kosakata/kanji/survival/pelafalan), dan jumlah kartu.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import React, { useState } from "react";
 import { m } from "framer-motion";
 import { Zap, Flame, PenTool, Hash, LayoutGrid, Layers, Play, Mic } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface FlashcardSetupProps {
   onStart: (level: string, mode: "vocab" | "kanji" | "survival" | "pronunciation", amount: number) => void;
   defaultLevel?: string | null;
   defaultMode?: "vocab" | "kanji" | "survival" | "pronunciation" | null;
 }
 
+// ==========================================
+// DATA STATIS KONFIGURASI SESI
+// ==========================================
 const JLPT_LEVELS = [
   { id: "all", label: "Campur (Semua)", color: "bg-muted text-muted-foreground border-border" },
   { id: "N5", label: "N5", color: "bg-[rgba(var(--primary-rgb),0.1)] text-primary border-[rgba(var(--primary-rgb),0.2)]" },
@@ -29,6 +41,12 @@ const MODES = [
 
 const AMOUNTS = [10, 20, 50, 100];
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen penyetelan konfigurasi flashcard.
+ */
 export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: FlashcardSetupProps) {
   const [level, setLevel] = useState<string>(defaultLevel || "all");
   const [mode, setMode] = useState<"vocab" | "kanji" | "survival" | "pronunciation">(
@@ -36,6 +54,9 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
   );
   const [amount, setAmount] = useState<number>(20);
 
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <m.div 
       key="flashcard-setup"

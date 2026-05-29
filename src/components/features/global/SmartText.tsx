@@ -1,6 +1,17 @@
+/**
+ * @file SmartText.tsx
+ * @description Perkakas (utility) global untuk mendeteksi kata kunci tata bahasa atau istilah bahasa Jepang dalam teks mentah, lalu membungkus kata kunci tersebut dengan tautan cerdas (Smart Links) interaktif dan tooltip deskriptif.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import React from "react";
 import Link from "next/link";
 
+// ==========================================
+// ANTARMUKA & KATA KUNCI
+// ==========================================
 interface KeywordLink {
   keyword: string;
   href: string;
@@ -18,9 +29,14 @@ const COMMON_KEYWORDS: KeywordLink[] = [
   { keyword: "Katakana", href: "/tools/kana#katakana", description: "Suku kata untuk kata serapan asing." },
 ];
 
+// ==========================================
+// FUNGSI UTAMA UTILITY
+// ==========================================
 /**
- * SmartText Utility
- * Scans a string and wraps keywords with Links and optional tooltips.
+ * Memindai string teks mentah dan membungkus kata kunci tata bahasa secara dinamis menggunakan komponen Link Next.js dan tooltip penjelasan.
+ * 
+ * @param {string} text - Teks mentah bahasa Indonesia / Jepang yang akan dipindai
+ * @returns {React.ReactNode[] | null} Elemen teks yang sudah diformat dengan tautan cerdas
  */
 export function renderSmartText(text: string) {
   if (!text) return null;

@@ -1,5 +1,14 @@
+/**
+ * @file ProfileSection.tsx
+ * @description Komponen seksi profil pada halaman pengaturan.
+ * Menampilkan dan mengelola avatar, nama tampilan, dan preferensi belajar pengguna.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { m, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,6 +18,9 @@ import { useState, useEffect } from "react";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import { Zap, Flame, Award, ShieldCheck, User } from "lucide-react";
 
+// ======================
+// TIPE DATA
+// ======================
 interface ProfileSectionProps {
   name: string;
   xp: number;
@@ -69,15 +81,15 @@ export default function ProfileSection({
   return (
     <m.div variants={itemVariants}>
       <Card className="glass backdrop-blur-3xl border border-border/80 rounded-[2.5rem] p-8 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden relative group">
-        {/* Pilot ID Card Decorative Elements */}
+        {/* Elemen Dekoratif Kartu ID Pilot */}
         <div className="absolute top-0 right-0 size-80 bg-primary/10 blur-[120px] rounded-full -mr-32 -mt-32 animate-pulse pointer-events-none" />
         <div className="absolute bottom-0 left-0 size-48 bg-secondary/5 blur-[80px] rounded-full -ml-16 -mb-16 pointer-events-none" />
         
-        {/* ID Card Header Pattern */}
+        {/* Pola Header Kartu ID */}
         <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary via-blue-500 to-emerald-500 opacity-80" />
 
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 relative z-10">
-          {/* AVATAR / PILOT ID */}
+          {/* AVATAR / IDENTITAS PILOT */}
           <div className="flex flex-col items-center gap-4 shrink-0">
              <div className="relative group/avatar">
                 <div className="absolute -inset-1.5 bg-gradient-to-br from-primary to-blue-500 rounded-[2.5rem] blur-md opacity-30 group-hover/avatar:opacity-60 transition duration-1000 group-hover/avatar:duration-300" />
@@ -110,7 +122,7 @@ export default function ProfileSection({
               <p className="text-[10px] sm:text-xs text-muted-foreground/60 font-semibold uppercase tracking-widest">Sesuaikan nama tampilan Anda di NihongoRoute</p>
             </div>
 
-            {/* STATS COUNTERS */}
+            {/* PENGHITUNG STATISTIK */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                <div className="bg-background/20 backdrop-blur-md border border-border rounded-2xl p-5 flex items-center gap-4 group/stat hover:bg-background/35 hover:border-primary/20 transition-all duration-300 shadow-lg">
                   <div className="size-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-inner">

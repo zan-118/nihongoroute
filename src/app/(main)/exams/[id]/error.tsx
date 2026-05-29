@@ -1,15 +1,30 @@
+/**
+ * @file error.tsx
+ * @description Halaman penanganan kesalahan runtime pada sesi simulasi ujian (Exam Error Boundary).
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { useEffect } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
 /**
- * @file error.tsx
- * @description React Error Boundary untuk rute sesi ujian. 
- * Menangani runtime errors yang mungkin terjadi selama eksekusi client-side logic di MockExamEngine.
- * @module ExamError
+ * Komponen pembatas kesalahan (Error Boundary) rute sesi ujian.
+ * Menangani crash logika di sisi klien selama simulasi ujian berlangsung.
+ * 
+ * @param {Object} props Properti komponen.
+ * @param {Error & { digest?: string }} props.error Objek kesalahan runtime yang ditangkap.
+ * @param {function} props.reset Fungsi callback untuk mereset komponen dan memuat ulang sesi ujian.
+ * @returns {JSX.Element} Antarmuka penanganan kesalahan sesi ujian.
  */
 
 export default function ExamError({

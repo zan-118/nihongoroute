@@ -1,11 +1,19 @@
-"use client";
+/**
+ * @file KanjiStrokeHero.tsx
+ * @description Komponen hero bento utama untuk menampilkan visualisasi pemutar coretan Kanji, definisi, level JLPT, dan tombol add-to-SRS.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import KanjiStrokePlayer from "@/components/features/kanji/components/KanjiStrokePlayer";
-
 import { AddToSRSButton } from "@/components/features/srs/button/AddToSRSButton";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface KanjiStrokeHeroProps {
   id?: string;
   character: string;
@@ -14,7 +22,16 @@ interface KanjiStrokeHeroProps {
   jlpt?: string;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen hero panel kanji.
+ */
 export function KanjiStrokeHero({ id, character, strokeOrderSvg, meaning, jlpt }: KanjiStrokeHeroProps) {
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <Card className="p-6 sm:p-8 md:p-12 bg-card/20 backdrop-blur-xl border-border rounded-[2.5rem] hover:border-primary/40 transition-all flex flex-col items-center justify-center group relative overflow-hidden md:col-span-2 lg:col-span-2 md:row-span-2">
       <div className="absolute top-4 right-4 z-20">

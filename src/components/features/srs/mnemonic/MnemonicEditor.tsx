@@ -1,5 +1,14 @@
 "use client";
 
+/**
+ * @file MnemonicEditor.tsx
+ * @description Komponen visual penyunting jembatan keledai kustom (Mnemonic Editor).
+ * Menyediakan antarmuka interaktif bagi pengguna untuk menulis, memperbarui, atau menghapus catatan pengingat asosiatif kosakata mereka sendiri.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { useState, useEffect, useCallback } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { Lightbulb, Save, Check, Edit2, BrainCircuit } from "lucide-react";
@@ -7,6 +16,9 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useSRSStore } from "@/store/useSRSStore";
 
+// ======================
+// ANTARMUKA & TIPE
+// ======================
 interface MnemonicEditorProps {
   wordId: string;
   className?: string;
@@ -27,6 +39,9 @@ interface MnemonicEditorProps {
  * @param {string} [props.className] - Kelas CSS opsional untuk kustomisasi gaya pembungkus
  * @param {boolean} [props.compact=false] - Jika true, render dalam mode minimal ringkas (tampilan kartu flashcard)
  */
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function MnemonicEditor({ wordId, className, compact = false }: MnemonicEditorProps) {
   const srs = useSRSStore((s) => s.srs);
   const updateCustomMnemonic = useSRSStore((s) => s.updateCustomMnemonic);

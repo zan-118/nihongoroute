@@ -1,10 +1,21 @@
+/**
+ * @file LessonCard.tsx
+ * @description Komponen kartu pelajaran individu (LessonCard) untuk silabus kursus. Dilengkapi indikator indeks numerik, progress bar siber, dan interaksi visual premium.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { m } from "framer-motion";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface LessonCardProps {
   lesson: {
     _id: string;
@@ -18,6 +29,9 @@ interface LessonCardProps {
   progress?: number; // 0 to 100
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 0 }: LessonCardProps) {
   const themeRgb = isSideQuest ? "var(--warning-rgb)" : "var(--primary-rgb)";
 

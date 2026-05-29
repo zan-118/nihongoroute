@@ -1,5 +1,11 @@
-"use client";
+/**
+ * @file SearchModal.tsx
+ * @description Komponen modal pencarian global (global search overlay) dengan pencarian statis lokal (navigasi) dan pencarian dinamis real-time ke Supabase untuk kosakata, tata bahasa, dan kanji.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, Command, BookOpen, Trophy, Layers, BrainCircuit, Heart, Settings, Share2, ArrowRight, Zap, Loader2, FileText, Hash } from "lucide-react";
@@ -7,6 +13,9 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import * as wanakana from "wanakana";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface SearchItem {
   id: string;
   title: string;
@@ -16,6 +25,9 @@ interface SearchItem {
   category: "Platform" | "Belajar" | "Sistem" | "Aksi Cepat" | "Kosakata" | "Tata Bahasa" | "Kanji";
 }
 
+// ==========================================
+// DATA STATIS NAVIGASI PLATFORM
+// ==========================================
 const SEARCH_ITEMS: SearchItem[] = [
   { id: "dash", title: "Dasbor", description: "Ringkasan progres dan statistik Anda", href: "/dashboard", icon: Zap, category: "Platform" },
   { id: "materi", title: "Materi", description: "Jalur belajar JLPT dan Topik Umum", href: "/courses", icon: BookOpen, category: "Platform" },
@@ -30,6 +42,9 @@ const SEARCH_ITEMS: SearchItem[] = [
   { id: "quick-kana", title: "Belajar Kana", description: "Latihan dasar Hiragana & Katakana", href: "/tools/kana", icon: BookOpen, category: "Aksi Cepat" },
 ];
 
+// ==========================================
+// FUNGSI PENCARIAN DATABASE (SUPABASE)
+// ==========================================
 async function searchSupabase(query: string): Promise<SearchItem[]> {
   const supabase = createClient();
   const kanaQuery = wanakana.toHiragana(query);
@@ -56,6 +71,12 @@ async function searchSupabase(query: string): Promise<SearchItem[]> {
   return mapped;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen modal pencarian global.
+ */
 export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchItem[]>([]);
@@ -114,6 +135,9 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
     return () => cancelAnimationFrame(frame);
   }, [query]);
 
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <AnimatePresence>
       {isOpen && (

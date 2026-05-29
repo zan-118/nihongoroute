@@ -1,5 +1,15 @@
 "use client";
 
+/**
+ * @file LevelUpOverlay.tsx
+ * @description Komponen visual overlay animasi perayaan kenaikan level (Level Up).
+ * Menampilkan partikel konfeti ceria (confetti), lencana piala tropi, detail peningkatan status level, 
+ * serta pesan penyemangat bagi pelajar.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,6 +19,9 @@ import { useLevelUpOverlay } from "./levelup/useLevelUpOverlay";
 import confetti from "canvas-confetti";
 import { useEffect } from "react";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function LevelUpOverlay({ level }: { level: number }) {
   const { show, setShow } = useLevelUpOverlay(level);
 

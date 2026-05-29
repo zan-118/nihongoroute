@@ -1,9 +1,24 @@
+/**
+ * @file route.ts
+ * @description API Route Handler untuk mengambil data kartu flashcard (vocab & kanji) dari Supabase.
+ * Mendukung resolusi ID berupa UUID, slug, romaji (ID legacy Sanity), dan karakter kanji tunggal.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
+// ======================
+// KONSTANTA VALIDASI
+// ======================
 // UUID v4 validation regex
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+// ======================
+// TIPE DATA
+// ======================
 interface FormattedCard {
   _id: string;
   id: string;

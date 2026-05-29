@@ -1,9 +1,19 @@
+/**
+ * @file SupabaseSelector.tsx
+ * @description Komponen pemilih kustom Sanity Studio yang memfasilitasi pencarian asinkron (debounced) dan scan konten AI dari database Supabase (kanji, kosakata, tata bahasa). Mengikat data pelajaran statis Sanity ke basis data dinamis Supabase secara terintegrasi.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import React, { useState, useEffect, useCallback } from 'react';
 import { Stack, Card, Text, TextInput, Button, Flex, Box, Spinner, Badge } from '@sanity/ui';
 import { set, unset, useFormValue } from 'sanity';
-
 import { getApiUrl, SECRET_TOKEN } from './api';
 
+// ==========================================
+// ANTARMUKA PROPS & BLOK KONTEN
+// ==========================================
 interface ContentBlock {
   _type: string;
   title?: string;
@@ -45,6 +55,14 @@ interface SupabaseSelectorProps {
   };
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen input pemilih relasional Supabase untuk mengikat item pelajaran statis ke id/slug Supabase dengan antarmuka pencarian dan pemindaian konten otomatis.
+ * 
+ * @param {SupabaseSelectorProps} props - Properti masukan form Sanity
+ */
 export function SupabaseSelector(props: SupabaseSelectorProps) {
   const { onChange, value = [], schemaType } = props;
   const supabaseType = schemaType.options?.supabaseType || 'vocab';

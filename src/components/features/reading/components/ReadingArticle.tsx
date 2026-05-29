@@ -1,11 +1,20 @@
-"use client";
+/**
+ * @file ReadingArticle.tsx
+ * @description Komponen untuk menampilkan isi artikel bacaan terpandu dengan dukungan furigana, terjemahan paragraf, dan tombol penyelesaian artikel.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { m, AnimatePresence } from "framer-motion";
 import FuriganaDisplay from "@/components/ui/FuriganaDisplay";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface ReadingArticleProps {
   paragraphs: string[];
   hiraganaParagraphs: string[];
@@ -19,6 +28,12 @@ interface ReadingArticleProps {
   isCompleted?: boolean;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen penayang artikel membaca.
+ */
 export function ReadingArticle({
   paragraphs,
   hiraganaParagraphs,
@@ -37,6 +52,9 @@ export function ReadingArticle({
     extra: "text-4xl md:text-5xl",
   };
 
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <m.article
       layout

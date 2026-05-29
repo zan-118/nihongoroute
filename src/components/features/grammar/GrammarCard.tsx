@@ -1,11 +1,23 @@
 "use client";
 
+/**
+ * @file GrammarCard.tsx
+ * @description Komponen kartu tampilan ringkas untuk tata bahasa (Grammar Card).
+ * Menampilkan ringkasan pola kalimat, label level JLPT, dan link ke halaman detail tata bahasa.
+ */
+
+// ==========================================
+// IMPOR UTAMA
+// ==========================================
 import Link from "next/link";
 import { Bookmark, ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ROUTES } from "@/lib/routes";
 
+// ==========================================
+// ANTARMUKA & TIPE DATA
+// ==========================================
 interface GrammarCardProps {
   article: {
     _id: string;
@@ -16,8 +28,16 @@ interface GrammarCardProps {
   selectedLevel: string;
 }
 
+// ==========================================
+// KOMPONEN UTAMA: GrammarCard
+// ==========================================
+/**
+ * Komponen kartu tata bahasa interaktif dengan efek transisi premium.
+ * 
+ * @param {GrammarCardProps} props Properti untuk komponen kartu tata bahasa.
+ */
 export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps) {
-  // Determine badge color based on level
+  // Tentukan warna lencana berdasarkan level JLPT (Menggunakan variabel CSS semantik)
   const levelColors: Record<string, string> = {
     n5: "text-success border-[rgba(var(--success-rgb),0.2)] bg-[rgba(var(--success-rgb),0.05)]",
     n4: "text-primary border-[rgba(var(--primary-rgb),0.2)] bg-[rgba(var(--primary-rgb),0.05)]",
@@ -38,11 +58,11 @@ export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps)
     >
       <Link href={ROUTES.LIBRARY.GRAMMAR(article.slug)} className="block h-full">
         <Card className="h-full p-4 sm:p-6 bg-[rgba(var(--card-rgb),0.4)] backdrop-blur-xl border border-border rounded-[2rem] transition-all duration-500 flex flex-col cursor-pointer hover:border-[rgba(var(--primary-rgb),0.5)] hover:bg-[rgba(var(--card-rgb),0.6)] shadow-2xl relative overflow-hidden">
-          {/* Hover Glow Effect */}
+          {/* Efek Pendar Saat Kursor Di Atas (Glow Effect) */}
           <div className="absolute inset-0 bg-gradient-to-br from-[rgba(var(--primary-rgb),0.05)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
           <div className="relative z-10 flex flex-col h-full">
-            {/* Top Row */}
+            {/* Baris Atas: Ikon Penanda & Level */}
             <div className="flex justify-between items-start mb-6">
               <div className="size-10 rounded-2xl bg-[rgba(var(--muted-rgb),0.5)] border border-border flex items-center justify-center group-hover:border-[rgba(var(--primary-rgb),0.3)] group-hover:bg-[rgba(var(--primary-rgb),0.1)] transition-all duration-500">
                 <Bookmark
@@ -58,9 +78,9 @@ export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps)
               </Badge>
             </div>
             
-            {/* Title Section */}
+            {/* Bagian Judul Tata Bahasa */}
             <div className="flex-1">
-              <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight leading-tight group-hover:text-primary transition-colors duration-300 mb-3 line-clamp-3">
+              <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight leading-tight group-hover:text-primary transition-colors duration-300 mb-3 line-clamp-3 font-japanese">
                 {article.title}
               </h2>
               <div className="flex items-center gap-2">
@@ -71,7 +91,7 @@ export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps)
               </div>
             </div>
 
-            {/* Bottom Section */}
+            {/* Bagian Bawah: Navigasi Aksi */}
             <div className="mt-8 pt-5 border-t border-border flex items-center justify-between">
               <span className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-[0.15em] group-hover:text-primary transition-colors">
                 Pelajari Modul
@@ -86,3 +106,4 @@ export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps)
     </div>
   );
 }
+

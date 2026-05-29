@@ -1,9 +1,34 @@
+/**
+ * @file useAnimatedKanji.ts
+ * @description Hook khusus untuk memuat SVG KanjiVG dan menganimasikan penulisan stroke order kanji menggunakan manipulasi DOM SVG secara luring-first.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { useEffect, useRef, useState } from "react";
 
+// ==========================================
+// HOOK UTAMA
+// ==========================================
+/**
+ * Hook untuk menganimasikan SVG kanji.
+ * 
+ * @param character Karakter kanji.
+ * @param triggerKey Kunci pemicu reset animasi.
+ * @param color Warna goresan teranimasi.
+ * @returns Ref kontainer kontainer SVG dan status error.
+ */
 export function useAnimatedKanji(character: string, triggerKey: number, color: string) {
+  // ==========================================
+  // STATUS & STATE & REFS
+  // ==========================================
   const containerRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState(false);
 
+  // ==========================================
+  // EFEK SAMPING & LOGIKA ANIMASI DOM (EFFECTS)
+  // ==========================================
   useEffect(() => {
     if (!containerRef.current) return;
     setError(false);
@@ -57,5 +82,8 @@ export function useAnimatedKanji(character: string, triggerKey: number, color: s
       });
   }, [character, triggerKey, color]);
 
+  // ==========================================
+  // HASIL HOOK (RETURN VALUE)
+  // ==========================================
   return { containerRef, error };
 }

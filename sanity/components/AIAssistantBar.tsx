@@ -1,8 +1,19 @@
+/**
+ * @file AIAssistantBar.tsx
+ * @description Komponen panel Command Center asisten kecerdasan buatan (AI) terpadu di dalam Sanity Studio. Memfasilitasi pembuatan materi pelajaran utuh dari Gemini AI secara otomatis, pemindaian teks untuk mengikat kosakata/kanji/tata bahasa dari Supabase secara instan, serta pelengkap aksen Furigana otomatis.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import React, { useState } from 'react';
 import { Stack, Card, Text, TextInput, Button, Flex, Box, Spinner, Select, Label } from '@sanity/ui';
 import { set, useFormValue } from 'sanity';
 import { getApiUrl } from './api';
 
+// ==========================================
+// ANTARMUKA PROPS & BLOK KONTEN
+// ==========================================
 interface ContentBlock {
   _type: string;
   title?: string;
@@ -24,6 +35,14 @@ interface AIAssistantBarProps {
   onChange: (patches: unknown[]) => void;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen panel visual AI Assistant Command Center untuk memfasilitasi pembuatan dan sinkronisasi materi pelajaran di dalam CMS.
+ * 
+ * @param {AIAssistantBarProps} props - Properti masukan form Sanity
+ */
 export function AIAssistantBar(props: AIAssistantBarProps) {
   const { onChange } = props;
 

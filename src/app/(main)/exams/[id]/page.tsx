@@ -6,7 +6,7 @@
  */
 
 // ======================
-// IMPORTS
+// IMPOR
 // ======================
 import MockExamEngine from "@/components/features/exams/mock-engine/MockExamEngine";
 import Link from "next/link";
@@ -15,10 +15,20 @@ import { Button } from "@/components/ui/button";
 import { getExamByIdOrSlug } from "@/actions/library.actions";
 import type { Metadata } from "next";
 
+// ======================
+// ANTARMUKA
+// ======================
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
+// ======================
+// METADATA SEO
+// ======================
+
+/**
+ * Menghasilkan metadata SEO dinamis untuk halaman sesi ujian JLPT spesifik.
+ */
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const decodedId = decodeURIComponent(id);
@@ -29,6 +39,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
+/**
+ * Halaman sesi ujian mandiri (RSC) untuk mengambil data paket ujian dan butir soal, kemudian merender engine ujian interaktif.
+ */
 export default async function StandaloneExamSessionPage({ params }: PageProps) {
   const { id } = await params;
   const decodedId = decodeURIComponent(id);
@@ -40,10 +57,10 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
 
 
   // ======================
-  // RENDER (Error Handling & Engine)
+  // RENDER UTAMA (Penanganan Kesalahan & Engine)
   // ======================
 
-  // 1. HANDLING: DATA TIDAK DITEMUKAN
+  // 1. PENANGANAN: DATA TIDAK DITEMUKAN
   if (!examData) {
     return (
       <div className="w-full flex-1 flex flex-col items-center justify-center px-6 text-center relative overflow-hidden py-12">
@@ -72,7 +89,7 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
     );
   }
 
-  // 2. HANDLING: SOAL MASIH KOSONG
+  // 2. PENANGANAN: SOAL MASIH KOSONG
   if (!examData.questions || examData.questions.length === 0) {
     return (
       <div className="w-full flex-1 flex flex-col items-center justify-center px-6 text-center relative overflow-hidden py-12">
@@ -103,7 +120,7 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
     );
   }
 
-  // 3. MAIN RENDER
+  // 3. RENDER UTAMA ENGINE
   return (
     <div className="w-full flex-1 px-4 md:px-8 relative overflow-hidden flex flex-col mt-4 md:mt-8">
       <div className="absolute top-[-10%] right-[-5%] size-[600px] bg-destructive/5 blur-[150px] rounded-full pointer-events-none" />

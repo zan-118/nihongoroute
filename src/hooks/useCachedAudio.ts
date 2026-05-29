@@ -1,16 +1,31 @@
 "use client";
 
+/**
+ * @file useCachedAudio.ts
+ * @description Hook kustom offline-first untuk memuat berkas audio dari CacheStorage lokal peramban. Mengunduh berkas audio dari remote URL, menyimpannya di cache peramban dengan kapasitas FIFO terbatas, dan merendernya via Blob URL untuk performa tanpa latensi.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { useState, useEffect } from "react";
 
+// ==========================================
+// FUNGSI PEMBANTU (HELPERS)
+// ==========================================
 /**
- * Helper function to limit the size of Web Cache Storage using native FIFO logic.
- * Orders cached keys by insertion sequence and deletes the oldest items when exceeding maxItems.
+ * Membatasi ukuran Web Cache Storage menggunakan logika native FIFO (First-In, First-Out).
+ * Mengurutkan kunci cache berdasarkan urutan penyisipan dan menghapus item tertua saat melebihi batas maksimum.
+ * 
+ * @param {string} cacheName - Nama storage cache tujuan
+ * @param {number} maxItems - Jumlah maksimal berkas audio yang boleh disimpan
  */
 const limitCacheSize = async (cacheName: string, maxItems: number) => {
   try {
     if (typeof window === "undefined" || !("caches" in window)) return;
     const cache = await caches.open(cacheName);
-    if (typeof cache.keys !== "function") return; // Defensive check for test environments with incomplete mocks
+    // Pemeriksaan defensif untuk lingkungan pengujian unit (mocks) dengan implementasi API tidak lengkap
+    if (typeof cache.keys !== "function") return; 
     const keys = await cache.keys();
     if (keys.length > maxItems) {
       const excess = keys.length - maxItems;
@@ -23,10 +38,14 @@ const limitCacheSize = async (cacheName: string, maxItems: number) => {
   }
 };
 
+// ==========================================
+// CUSTOM HOOK UTAMA
+// ==========================================
 /**
- * @file useCachedAudio.ts
- * @description Hook untuk memuat audio secara offline-first dengan CacheStorage lokal.
- * Mengunduh berkas audio dari remote URL, menyimpannya di cache, dan merendernya via Blob URL.
+ * Hook kustom untuk memuat dan meng-cache audio lokal agar bisa diakses secara luring.
+ * 
+ * @param {string | undefined} src - Sumber URL berkas audio jarak jauh
+ * @returns {string | undefined} Tautan berkas audio lokal ter-cache (blob URL) atau remote URL asli sebagai fallback
  */
 export function useCachedAudio(src: string | undefined): string | undefined {
   const [cachedUrl, setCachedUrl] = useState<string | undefined>(src);
@@ -56,7 +75,7 @@ export function useCachedAudio(src: string | undefined): string | undefined {
           try {
             const cache = await caches.open(cacheName);
             await cache.put(src, clonedResponse);
-            // Limit cache size to 50 items using native FIFO
+            // Batasi ukuran cache maksimal 50 item menggunakan logika native FIFO
             await limitCacheSize(cacheName, 50);
           } catch (err) {
             console.warn("Gagal menyimpan audio ke CacheStorage:", err);

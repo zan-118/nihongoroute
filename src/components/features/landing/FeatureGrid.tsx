@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * @file FeatureGrid.tsx
+ * @description Komponen grid fitur utama interaktif untuk Landing Page NihongoRoute.
+ * Menampilkan ringkasan ekosistem pembelajaran (Kana, Kamus, SRS, Simulasi JLPT),
+ * langkah-langkah belajar terstruktur, dan fitur gamifikasi (Streaks, XP, Lencana).
+ *
+ * @package components/features/landing
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import React, { useState } from "react";
 import { m, Variants } from "framer-motion";
 import { 
@@ -22,6 +35,9 @@ import {
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+// ==========================================
+// VARIASI ANIMASI FRAMER MOTION
+// ==========================================
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -39,13 +55,17 @@ const itemVariants: Variants = {
   },
 };
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 /**
- * Komponen FeatureGrid yang telah dirombak total menjadi 
- * pusat eksplorasi fitur premium dan interaktif NihongoRoute.
+ * Komponen FeatureGrid
+ * Pusat eksplorasi fitur premium dan interaktif NihongoRoute.
  */
 export function FeatureGrid() {
   const [activeStep, setActiveStep] = useState<number>(0);
 
+  // Langkah-langkah metode belajar terpadu NihongoRoute
   const learningSteps = [
     {
       title: "Langkah 1: Kenali Huruf (Kana)",
@@ -80,7 +100,7 @@ export function FeatureGrid() {
   return (
     <div className="w-full space-y-[120px] mb-[120px]">
       
-      {/* SECTION 1: CORE FEATURES SHOWCASE */}
+      {/* SEKSI 1: SHOWCASE FITUR UTAMA */}
       <section className="relative">
         <div className="text-center max-w-3xl mx-auto mb-[65px]">
           <Badge className="bg-primary/10 text-primary border border-primary/20 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
@@ -101,7 +121,7 @@ export function FeatureGrid() {
           viewport={{ once: true, margin: "-100px" }}
           className="grid grid-cols-1 md:grid-cols-2 gap-[34px]"
         >
-          {/* CARD 1: KANA INSTRUMENT */}
+          {/* KARTU 1: ALAT BANTU KANA INTERAKTIF */}
           <m.div variants={itemVariants}>
             <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-primary/30 hover:bg-card/20 shadow-none">
               <div className="absolute top-0 right-0 size-32 bg-primary/5 rounded-full blur-[40px] group-hover:bg-primary/10 transition-all duration-500" />
@@ -118,7 +138,7 @@ export function FeatureGrid() {
                 Kuasai sistem penulisan Hiragana & Katakana melalui matriks kana interaktif, panduan langkah-demi-langkah urutan guratan (Stroke Order), serta kanvas latihan menulis langsung di layar gadget Anda.
               </p>
 
-              {/* Visual Mockup inside Card */}
+              {/* Tampilan Visual Mockup di Dalam Kartu */}
               <div className="p-4 bg-background/40 border border-border rounded-2xl flex items-center justify-between gap-4 glass mt-auto">
                 <div className="size-14 border-2 border-dashed border-primary/30 bg-background/80 rounded-xl flex items-center justify-center relative font-japanese font-bold text-2xl text-primary shadow-inner">
                   あ
@@ -136,7 +156,7 @@ export function FeatureGrid() {
             </Card>
           </m.div>
 
-          {/* CARD 2: RICH DATABASE (VOCAB & GRAMMAR) */}
+          {/* KARTU 2: DATABASE PERPUSTAKAAN KOSAKATA & TATA BAHASA */}
           <m.div variants={itemVariants}>
             <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-secondary/30 hover:bg-card/20 shadow-none">
               <div className="absolute top-0 right-0 size-32 bg-secondary/5 rounded-full blur-[40px] group-hover:bg-secondary/10 transition-all duration-500" />
@@ -153,7 +173,7 @@ export function FeatureGrid() {
                 Akses ribuan kosakata terstruktur, kamus Kanji komprehensif, dan pustaka rumus tata bahasa praktis. Semuanya dilengkapi dengan sistem audio pengucapan penutur asli dan fungsionalitas furigana cerdas.
               </p>
 
-              {/* Visual Mockup inside Card */}
+              {/* Tampilan Visual Mockup di Dalam Kartu */}
               <div className="p-4 bg-background/40 border border-border rounded-2xl flex flex-col gap-2 glass mt-auto">
                 <div className="flex items-center justify-between">
                   <span className="text-[9px] font-extrabold uppercase tracking-widest text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full">Kosakata Utama</span>
@@ -167,14 +187,14 @@ export function FeatureGrid() {
                 </div>
                 <div className="h-px bg-border/60" />
                 <div className="text-[9px] text-muted-foreground leading-relaxed">
-                  <strong>Contoh:</strong> 日本語の勉強が大好きです。<br />
+                  <strong>Contoh:</strong> 日本語の勉強gadaisukiです。<br />
                   <span className="opacity-80">Saya sangat suka belajar bahasa Jepang.</span>
                 </div>
               </div>
             </Card>
           </m.div>
 
-          {/* CARD 3: FLASHCARDS WITH SRS */}
+          {/* KARTU 3: FLASHCARDS DENGAN SYSTEM SRS */}
           <m.div variants={itemVariants}>
             <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-primary/30 hover:bg-card/20 shadow-none">
               <div className="absolute top-0 right-0 size-32 bg-primary/5 rounded-full blur-[40px] group-hover:bg-primary/10 transition-all duration-500" />
@@ -191,7 +211,7 @@ export function FeatureGrid() {
                 Latih daya ingat Anda secara optimal. Sistem pengulangan cerdas kami secara otomatis menghitung dan menjadwalkan ulang kartu flashcard kosa kata yang perlu di-review persis sebelum Anda melupakannya.
               </p>
 
-              {/* Visual Mockup inside Card */}
+              {/* Tampilan Visual Mockup di Dalam Kartu */}
               <div className="p-4 bg-background/40 border border-border rounded-2xl flex items-center gap-3.5 glass mt-auto">
                 <div className="relative w-11 h-14 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground rounded-lg flex items-center justify-center font-bold text-xl shadow-[0_4px_12px_rgba(var(--primary-rgb),0.3)] shrink-0">
                   猫
@@ -210,7 +230,7 @@ export function FeatureGrid() {
             </Card>
           </m.div>
 
-          {/* CARD 4: JLPT EXAM SIMULATION */}
+          {/* KARTU 4: SIMULASI UJIAN JLPT REAL-TIME */}
           <m.div variants={itemVariants}>
             <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-secondary/30 hover:bg-card/20 shadow-none">
               <div className="absolute top-0 right-0 size-32 bg-secondary/5 rounded-full blur-[40px] group-hover:bg-secondary/10 transition-all duration-500" />
@@ -227,7 +247,7 @@ export function FeatureGrid() {
                 Uji kesiapan kelulusan Anda dengan simulasi ujian JLPT interaktif. Lengkap dengan sistem timer mundur yang presisi, pembagian sesi materi ujian, lembar jawaban digital, dan laporan hasil kelulusan yang rinci.
               </p>
 
-              {/* Visual Mockup inside Card */}
+              {/* Tampilan Visual Mockup di Dalam Kartu */}
               <div className="p-4 bg-background/40 border border-border rounded-2xl flex flex-col gap-2 glass mt-auto">
                 <div className="flex items-center justify-between text-[9px] font-bold text-muted-foreground">
                   <span className="flex items-center gap-1"><Timer size={10} className="text-secondary" /> Ujian JLPT N3: Sesi Choukai</span>
@@ -256,9 +276,9 @@ export function FeatureGrid() {
         </m.div>
       </section>
 
-      {/* SECTION 2: SMART LEARNING JOURNEY */}
+      {/* SEKSI 2: LANGKAH PERJALANAN BELAJAR TERPADU */}
       <section className="relative">
-        {/* Background ambient glow */}
+        {/* Glow latar belakang redup */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-secondary/5 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="text-center max-w-3xl mx-auto mb-[65px]">
@@ -274,7 +294,7 @@ export function FeatureGrid() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-[55px] items-start">
-          {/* STEP CONTROLS - LEFT COLUMN */}
+          {/* TOMBOL NAVIGASI LANGKAH - KOLOM KIRI */}
           <div className="lg:col-span-5 flex flex-col gap-4 w-full">
             {learningSteps.map((step, idx) => (
               <button type="button"
@@ -317,7 +337,7 @@ export function FeatureGrid() {
             ))}
           </div>
 
-          {/* ACTIVE STEP CONTENT DISPLAY - RIGHT COLUMN */}
+          {/* TAMPILAN DETIL LANGKAH AKTIF - KOLOM KANAN */}
           <div className="lg:col-span-7 h-full">
             <Card className="p-10 rounded-[34px] bg-card/10 backdrop-blur-xl border border-border shadow-none relative overflow-hidden min-h-[350px] flex flex-col justify-between">
               <div className="absolute top-0 right-0 size-[200px] bg-primary/5 rounded-full blur-[80px] pointer-events-none" />
@@ -358,15 +378,15 @@ export function FeatureGrid() {
         </div>
       </section>
 
-      {/* SECTION 3: LEARNING PROGRESS GAMIFICATION PREVIEW */}
+      {/* SEKSI 3: PRATINJAU GAMIFIKASI KEMAJUAN BELAJAR */}
       <section className="relative">
         <Card className="p-[55px] rounded-[42px] bg-card/10 backdrop-blur-xl border border-border shadow-none relative overflow-hidden group">
-          {/* Glowing Accents */}
+          {/* Aksen Kilau Latar Belakang */}
           <div className="absolute -top-32 -left-32 size-89 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
           <div className="absolute -bottom-32 -right-32 size-89 bg-secondary/5 rounded-full blur-[100px] pointer-events-none" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
-            {/* TEXT LEFT */}
+            {/* PENJELASAN SEBELAH KIRI */}
             <div className="lg:col-span-6 space-y-6">
               <Badge className="bg-primary/10 text-primary border border-primary/20 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest">
                 Sistem Kemajuan Belajar
@@ -395,9 +415,9 @@ export function FeatureGrid() {
               </div>
             </div>
 
-            {/* GAMIFICATION WIDGETS RIGHT */}
+            {/* WIDGET GAMIFIKASI SEBELAH KANAN */}
             <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
-              {/* STREAK CARD */}
+              {/* KARTU STREAK (HARI AKTIF) */}
               <Card className="p-6 bg-background/50 border border-border/80 rounded-[28px] glass flex flex-col justify-between h-48">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest">Belajar Harian</span>
@@ -409,7 +429,7 @@ export function FeatureGrid() {
                     <span className="size-1.5 bg-success rounded-full" /> Streak Aktif!
                   </p>
                 </div>
-                {/* Visual grid days */}
+                {/* Grid Visual Hari Belajar */}
                 <div className="flex justify-between gap-1 mt-2">
                   {["S", "S", "R", "K", "J", "S", "M"].map((day, idx) => (
                     <div key={`day-${idx}`} className="flex flex-col items-center gap-1">
@@ -427,7 +447,7 @@ export function FeatureGrid() {
                 </div>
               </Card>
 
-              {/* XP LEVEL CARD */}
+              {/* KARTU LEVEL DAN XP */}
               <Card className="p-6 bg-background/50 border border-border/80 rounded-[28px] glass flex flex-col justify-between h-48">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest">Tingkatan Level</span>
@@ -450,7 +470,7 @@ export function FeatureGrid() {
                 </div>
               </Card>
 
-              {/* BADGES ROW */}
+              {/* BARIS LENCANA TERBARU */}
               <Card className="p-5 bg-background/50 border border-border/80 rounded-[28px] glass sm:col-span-2 flex items-center justify-between gap-4">
                 <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest shrink-0">Lencana Baru:</span>
                 <div className="flex gap-3 overflow-x-auto py-1">
@@ -474,3 +494,4 @@ export function FeatureGrid() {
     </div>
   );
 }
+

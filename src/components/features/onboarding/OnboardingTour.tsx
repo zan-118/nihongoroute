@@ -1,17 +1,32 @@
 "use client";
 
+/**
+ * @file OnboardingTour.tsx
+ * @description Komponen modal panduan interaktif awal (onboarding tour wizard) bagi pengguna baru.
+ * Menyediakan empat langkah pengenalan fitur utama NihongoRoute dengan indikator langkah belajar yang halus.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { useState, useEffect } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Sparkles, ArrowRight, X, CheckCircle2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
+// ======================
+// ANTARMUKA & TIPE
+// ======================
 interface Step {
   title: string;
   description: string;
   icon: React.ReactNode;
 }
 
+// ======================
+// KONSTANTA & ATURAN
+// ======================
 const steps: Step[] = [
   {
     title: "Selamat Datang!",
@@ -35,6 +50,9 @@ const steps: Step[] = [
   },
 ];
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function OnboardingTour() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isOpen, setIsOpen] = useState(false);

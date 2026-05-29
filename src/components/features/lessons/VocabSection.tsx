@@ -1,9 +1,20 @@
+/**
+ * @file VocabSection.tsx
+ * @description Komponen seksi kosakata (VocabSection) dalam halaman pelajaran. Menampilkan detail kata, romaji, jenis kata, tombol tambah ke SRS, dan pemutar TTS.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import * as wanakana from "wanakana";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import AddToSRSButton from "@/components/features/srs/actions/AddToSRSButton";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 export interface VocabLessonItem {
   _id?: string;
   id?: string;
@@ -22,6 +33,9 @@ interface VocabSectionProps {
   vocabList: VocabLessonItem[];
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export const VocabSection: React.FC<VocabSectionProps> = ({ vocabList }) => {
   if (!vocabList || vocabList.length === 0) return null;
 

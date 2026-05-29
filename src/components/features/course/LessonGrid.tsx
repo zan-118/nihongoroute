@@ -1,10 +1,21 @@
+/**
+ * @file LessonGrid.tsx
+ * @description Komponen grid daftar pelajaran (LessonGrid) dengan pembagian halaman (pagination) dan status penyelesaian yang sinkron dengan Supabase.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { m, Variants } from "framer-motion";
 import { Sparkles, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LessonCard } from "./LessonCard";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface Lesson {
   _id: string;
   title: string;
@@ -23,6 +34,9 @@ interface LessonGridProps {
   itemVariants: Variants;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function LessonGrid({
   lessons,
   currentPage,

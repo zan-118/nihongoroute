@@ -1,18 +1,17 @@
 /**
  * @file utils.ts
- * @description Koleksi fungsi utilitas umum untuk pengembangan antarmuka.
- * @module lib/utils
+ * @description Koleksi fungsi utilitas global (formatting tanggal lokal, pengacakan array, tailwind merging, slugify aksara Jepang) untuk antarmuka NihongoRoute.
  */
 
-// ======================
-// IMPORTS
-// ======================
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
-// ======================
-// MAIN EXECUTION
-// ======================
+// ==========================================
+// FUNGSI UTILITAS GLOBAL (EXPORTS)
+// ==========================================
 
 /**
  * Menggabungkan class Tailwind CSS dengan cerdas, menangani konflik class secara otomatis.

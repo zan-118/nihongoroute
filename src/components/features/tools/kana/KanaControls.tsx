@@ -1,9 +1,18 @@
-"use client";
+/**
+ * @file KanaControls.tsx
+ * @description Komponen panel kontrol untuk memilih jenis huruf Jepang (Hiragana/Katakana), kategori karakter (Utama/Turunan/Gabungan), dan memulai latihan kuis kana.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { Button } from "@/components/ui/button";
 import { Swords } from "lucide-react";
 import { KanaType, KanaCategory } from "./kana-data";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface KanaControlsProps {
   type: KanaType;
   setType: (type: KanaType) => void;
@@ -15,6 +24,12 @@ interface KanaControlsProps {
   themeAccent: string;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen panel kontrol pemilihan kana.
+ */
 export function KanaControls({
   type,
   setType,
@@ -27,6 +42,9 @@ export function KanaControls({
 }: KanaControlsProps) {
   const isHira = type === "hiragana";
 
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <div className="mb-6 md:mb-8 space-y-4 md:space-y-6">
       <div className="bg-muted p-1 rounded-2xl border border-border flex gap-1 shadow-inner relative max-w-sm">

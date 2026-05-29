@@ -1,7 +1,20 @@
+/**
+ * @file grammar.actions.ts
+ * @description Server Actions untuk mengambil data tata bahasa (grammar) dari Supabase.
+ * Menyediakan fungsi paginasi, filter JLPT level, pengambilan artikel acak, serta daftar lengkap grammar.
+ */
+
 "use server";
 
+// ======================
+// IMPORTS
+// ======================
 import { createClient } from "@/lib/supabase/server";
 import { GrammarTable } from "@/types/database";
+
+// ======================
+// SERVER ACTIONS
+// ======================
 
 /**
  * Mengambil daftar tata bahasa dengan paginasi dan filter level.
@@ -33,7 +46,7 @@ export async function getPaginatedGrammar(
       total: count || 0,
     };
   } catch (error) {
-    console.error("Failed to fetch paginated grammar:", error);
+    console.error("Gagal mengambil data paginasi tata bahasa:", error);
     return { data: [], total: 0 };
   }
 }

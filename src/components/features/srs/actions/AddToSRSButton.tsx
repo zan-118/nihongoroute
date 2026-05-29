@@ -1,8 +1,20 @@
 "use client";
 
+/**
+ * @file AddToSRSButton.tsx
+ * @description Komponen visual tombol aksi cepat tambah SRS (Add to SRS Action Button).
+ * Menampilkan status apakah kosakata tertentu telah tersimpan di dalam hafalan SRS pengguna.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { Plus, Check } from "lucide-react";
 import { useAddToSRS } from "../button/useAddToSRS";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function AddToSRSButton({ wordId }: { wordId: string }) {
   const { isLoaded, isAdded, handleAdd } = useAddToSRS(wordId);
 

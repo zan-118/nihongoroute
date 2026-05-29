@@ -1,17 +1,35 @@
-"use client";
+/**
+ * @file KanjiReadings.tsx
+ * @description Komponen bento untuk menampilkan cara baca Onyomi (cara baca Cina) dan Kunyomi (cara baca Jepang asli) dari sebuah Kanji.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { Card } from "@/components/ui/card";
 import { Play } from "lucide-react";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface KanjiReadingsProps {
   onyomi?: string;
   kunyomi?: string;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen panel cara baca kanji.
+ */
 export function KanjiReadings({ onyomi, kunyomi }: KanjiReadingsProps) {
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <>
-      {/* Onyomi Bento */}
+      {/* Bento Onyomi */}
       <Card className="p-6 md:p-8 bg-card/20 backdrop-blur-xl border-border rounded-[2.5rem] hover:border-primary/40 transition-all relative overflow-hidden flex flex-col justify-center col-span-1 group">
         <div className="absolute top-4 right-6 opacity-[0.05] group-hover:scale-110 transition-transform text-primary">
           <Play size={40} aria-hidden="true" />
@@ -22,7 +40,7 @@ export function KanjiReadings({ onyomi, kunyomi }: KanjiReadingsProps) {
         </span>
       </Card>
 
-      {/* Kunyomi Bento */}
+      {/* Bento Kunyomi */}
       <Card className="p-6 md:p-8 bg-card/20 backdrop-blur-xl border-border rounded-[2.5rem] hover:border-primary/40 transition-all relative overflow-hidden flex flex-col justify-center col-span-1 group">
         <div className="absolute top-4 right-6 opacity-[0.05] group-hover:scale-110 transition-transform text-success">
           <Play size={40} aria-hidden="true" />

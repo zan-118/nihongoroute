@@ -6,9 +6,12 @@
  * @module LandingPage
  */
 
+// ======================
+// IMPOR
+// ======================
 import type { Metadata } from "next";
 
-// Domain Components (all "use client" internally)
+// Komponen Domain (seluruhnya "use client" secara internal)
 import { Hero } from "@/components/features/landing/Hero";
 import { FeatureGrid } from "@/components/features/landing/FeatureGrid";
 import { TrustBanner } from "@/components/features/landing/TrustBanner";
@@ -22,7 +25,7 @@ export const metadata: Metadata = {
 export default function LandingPage() {
   return (
     <main className="bg-background text-foreground selection:bg-primary/30 overflow-x-hidden w-full relative transition-colors duration-500">
-      {/* BACKGROUND AMBIENT - Premium SaaS Glows */}
+      {/* CAHAYA AMBIENT LATAR BELAKANG - Pendaran Premium */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-[-10%] right-[-5%] size-[800px] bg-primary/5 rounded-full blur-[120px] animate-pulse" />
         <div className="absolute bottom-[-10%] left-[-5%] size-[600px] bg-secondary/5 rounded-full blur-[100px]" />
@@ -30,16 +33,16 @@ export default function LandingPage() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-[34px] md:px-[55px] pt-[89px] pb-[55px]">
-        {/* HERO SECTION */}
+        {/* SEKSI HERO UTAMA */}
         <Hero />
 
-        {/* FEATURES GRID */}
+        {/* KISI FITUR UNGGULAN */}
         <FeatureGrid />
 
-        {/* TRUST BANNER */}
+        {/* BANNER KEPERCAYAAN */}
         <TrustBanner />
 
-        {/* FOOTER */}
+        {/* KAKI HALAMAN */}
         <LandingFooter />
       </div>
     </main>

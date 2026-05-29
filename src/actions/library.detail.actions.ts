@@ -1,13 +1,29 @@
+/**
+ * @file library.detail.actions.ts
+ * @description Server Actions untuk mengambil detail item pustaka (library) secara individual.
+ * Mendukung berbagai tipe konten: kanji, vocab, grammar, reading, listening, lessons, dan exams.
+ * Mengintegrasikan data dari Supabase (leksikal) dan Sanity CMS (editorial) sesuai arsitektur split-source.
+ */
+
 "use server";
 
+// ======================
+// IMPORTS
+// ======================
 import { createClient } from "@/lib/supabase/server";
 import { slugify } from "@/lib/utils";
 import { getSanityLessonBySlug, getSanityReadingBySlug, getSanityListeningBySlug, getSanityExamBySlug } from "@/lib/queries";
 
+// ======================
+// HELPERS
+// ======================
+
 // Helper: detect apakah string adalah UUID yang valid
 const isUUID = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
 
-// --- Types ---
+// ======================
+// TYPES
+// ======================
 export interface LibraryItem {
   id?: string;
   _id?: string;
@@ -137,6 +153,10 @@ interface ReadingMaterialRow {
   [key: string]: unknown;
 }
 
+// ======================
+// SERVER ACTIONS
+// ======================
+
 export async function checkExistingContent(
   keyword: string,
   type: "kanji" | "vocab" | "verb" | "adjective" | "grammar" | "phrase" | "reading" | "listening" | "lessons" | "exams"
@@ -164,12 +184,12 @@ export async function checkExistingContent(
     }
 
     const { data, error } = await query!;
-    if (error && error.code !== "PGRST116") throw error; // Ignore not found error
+    if (error && error.code !== "PGRST116") throw error; // Abaikan galat jika data tidak ditemukan (PGRST116)
     
     return { data: data || null };
   } catch (error) {
-    console.error("Check existing error:", error);
-    return { error: error instanceof Error ? error.message : "Unknown error" };
+    console.error("Gagal memeriksa konten yang sudah ada:", error);
+    return { error: error instanceof Error ? error.message : "Terjadi kesalahan yang tidak diketahui" };
   }
 }
 
@@ -188,20 +208,20 @@ export async function getLibraryItemBySlug(
 
     if (type === "kanji") {
       const { data: d, error } = await supabase.from("kanji").select("*").eq("character", slugOrId).single();
-      if (error && error.code !== "PGRST116") console.error(`[getLibraryItemBySlug] kanji error:`, error.message, error.code);
+      if (error && error.code !== "PGRST116") console.error(`[getLibraryItemBySlug] Galat pengambilan data kanji:`, error.message, error.code);
       data = d ?? null;
     } else if (type === "vocab" || type === "verb" || type === "adjective" || type === "phrase") {
-      // Try slug first, then fallback to id
+      // Coba slug terlebih dahulu, lalu kembali ke id sebagai fallback
       const { data: bySlug, error: slugErr } = await supabase.from("vocab").select("*").eq("slug", slugOrId).single();
       if (slugErr && slugErr.code !== "PGRST116") {
-        console.error(`[getLibraryItemBySlug] vocab slug error:`, slugErr.message, slugErr.code);
+        console.error(`[getLibraryItemBySlug] Galat pengambilan slug kosakata:`, slugErr.message, slugErr.code);
       }
       if (bySlug) {
         data = bySlug;
       } else if (isUUID(slugOrId)) {
-        // Fallback: try by id
+        // Fallback: coba berdasarkan id
         const { data: byId, error: idErr } = await supabase.from("vocab").select("*").eq("id", slugOrId).single();
-        if (idErr && idErr.code !== "PGRST116") console.error(`[getLibraryItemBySlug] vocab id error:`, idErr.message);
+        if (idErr && idErr.code !== "PGRST116") console.error(`[getLibraryItemBySlug] Galat pengambilan ID kosakata:`, idErr.message);
         data = byId ?? null;
       }
     } else if (type === "lessons") {
@@ -214,32 +234,32 @@ export async function getLibraryItemBySlug(
       data = await getSanityExamBySlug(slugOrId);
     } else {
       const table = type;
-      // Try slug first, then fallback to id
+      // Coba slug terlebih dahulu, lalu kembali ke id sebagai fallback
       const { data: bySlug, error: slugErr } = await supabase.from(table).select("*").eq("slug", slugOrId).single();
       if (slugErr && slugErr.code !== "PGRST116") {
-        console.error(`[getLibraryItemBySlug] ${table} slug error:`, slugErr.message, slugErr.code);
+        console.error(`[getLibraryItemBySlug] Galat pengambilan slug ${table}:`, slugErr.message, slugErr.code);
       }
       if (bySlug) {
         data = bySlug;
       } else if (isUUID(slugOrId)) {
         const { data: byId, error: idErr } = await supabase.from(table).select("*").eq("id", slugOrId).single();
-        if (idErr && idErr.code !== "PGRST116") console.error(`[getLibraryItemBySlug] ${table} id error:`, idErr.message);
+        if (idErr && idErr.code !== "PGRST116") console.error(`[getLibraryItemBySlug] Galat pengambilan ID ${table}:`, idErr.message);
         data = byId ?? null;
       }
     }
 
     if (!data) {
-      console.warn(`[getLibraryItemBySlug] No data found for type="${type}" slugOrId="${slugOrId}"`);
+      console.warn(`[getLibraryItemBySlug] Data tidak ditemukan untuk type="${type}" slugOrId="${slugOrId}"`);
       return null;
     }
 
-    // Additional data fetching (e.g. related items) can be added here if needed
+    // Pengambilan data tambahan (misalnya item terkait) dapat ditambahkan di sini jika diperlukan
     if (type === "kanji" && data) {
-      // Normalize fields for frontend
+      // Normalisasi bidang properti untuk frontend
       data.jlptLevel = data.jlpt_level;
       data.strokeOrderSvg = data.stroke_order_svg;
       
-      // Fetch related vocab — use text search on related_kanji jsonb array
+      // Ambil kosakata terkait — gunakan pencarian teks pada array jsonb related_kanji
       try {
         const { data: related } = await supabase
           .from("vocab")
@@ -254,7 +274,7 @@ export async function getLibraryItemBySlug(
 
     if ((type === "vocab" || type === "verb") && data) {
       try {
-        // Normalize fields for frontend
+        // Normalisasi bidang properti untuk frontend
         data.pitchAccent = data.pitch_accent;
         data.jlptLevel = data.jlpt_level;
         data.usageNotes = data.usage_notes;
@@ -265,7 +285,7 @@ export async function getLibraryItemBySlug(
         data.synonyms = Array.isArray(data.synonyms) ? data.synonyms : [];
         data.antonyms = Array.isArray(data.antonyms) ? data.antonyms : [];
         
-        // Handle examples safely
+        // Tangani contoh kalimat secara aman
         if (typeof data.examples === "string") {
           try {
             data.examples = JSON.parse(data.examples);
@@ -275,7 +295,7 @@ export async function getLibraryItemBySlug(
         }
         data.examples = Array.isArray(data.examples) ? data.examples : [];
 
-        // Fetch dynamic example sentences from the public.sentences table
+        // Ambil kalimat contoh dinamis dari tabel public.sentences
         try {
           const { data: dbSentences } = await supabase
             .from("sentences")
@@ -292,14 +312,14 @@ export async function getLibraryItemBySlug(
             data.examples = [...(data.examples as Array<{ jp: string; meaning: string; romaji?: string }>), ...dynamicExamples];
           }
         } catch (sentenceErr) {
-          console.error(`[getLibraryItemBySlug] failed to fetch dynamic sentences for "${data.word}":`, sentenceErr);
+          console.error(`[getLibraryItemBySlug] gagal mengambil data kalimat dinamis untuk "${data.word}":`, sentenceErr);
         }
 
         data.relatedKanji = ((data.relatedKanji as Array<{ id?: string; _id?: string }>) || []).map((k) => ({ ...k, _id: k.id || k._id }));
         data.synonyms = ((data.synonyms as Array<{ id?: string; _id?: string }>) || []).map((s) => ({ ...s, _id: s.id || s._id }));
         data.antonyms = ((data.antonyms as Array<{ id?: string; _id?: string }>) || []).map((a) => ({ ...a, _id: a.id || a._id }));
 
-        // Handle conjugations
+        // Tangani konjugasi kata
         let conj = typeof data.conjugations === "object" && data.conjugations !== null ? data.conjugations : {};
         if (conj.display_forms && typeof conj.display_forms === "object") {
           conj = conj.display_forms;
@@ -315,8 +335,8 @@ export async function getLibraryItemBySlug(
         data.teForm = conj.te || conj.te_form || conj.teForm;
         data.adverbial = conj.adverb || conj.adverbial || conj.adverb_form || conj.adverbial_form;
       } catch (normErr) {
-        console.error(`[getLibraryItemBySlug] vocab normalization error:`, normErr);
-        // Still return data even if normalization partially fails
+        console.error(`[getLibraryItemBySlug] Galat normalisasi kosakata:`, normErr);
+        // Tetap kembalikan data meskipun normalisasi sebagian gagal
         data.relatedKanji = data.relatedKanji || [];
         data.synonyms = data.synonyms || [];
         data.antonyms = data.antonyms || [];
@@ -340,7 +360,7 @@ export async function getLibraryItemBySlug(
     }
 
     if (type === "lessons" && data) {
-      // Ensure arrays are actual arrays (handle potential stringified JSON)
+      // Pastikan array berupa array sungguhan (tangani kemungkinan JSON berbentuk string)
       const parseArray = (val: unknown) => {
         if (!val) return [];
         if (Array.isArray(val)) return val;
@@ -365,14 +385,14 @@ export async function getLibraryItemBySlug(
 
         if (dbErr) {
           if (dbErr.code !== "PGRST116") {
-            console.error(`[getLibraryItemBySlug] Failed to fetch lists from database for slug="${lessonSlug}":`, dbErr.message);
+            console.error(`[getLibraryItemBySlug] Gagal mengambil daftar dari database untuk slug="${lessonSlug}":`, dbErr.message);
           }
         } else if (dbLesson) {
           if (dbLesson.vocab_list) vocabListRaw = parseArray(dbLesson.vocab_list);
           if (dbLesson.kanji_list) kanjiListRaw = parseArray(dbLesson.kanji_list);
         }
       } catch (err) {
-        console.error(`[getLibraryItemBySlug] Error fetching lists from database:`, err);
+        console.error(`[getLibraryItemBySlug] Gagal mengambil daftar dari database:`, err);
       }
 
       // Fallback ke data Sanity jika data di database kosong
@@ -383,7 +403,7 @@ export async function getLibraryItemBySlug(
       const listeningListRaw = parseArray(data.listening_list);
       const readingListRaw = parseArray(data.reading_list);
 
-      // Normalize blocks to ensure they have _type (handling legacy data with 'type' key)
+      // Normalisasi blok untuk memastikan mereka memiliki _type (menangani data lama dengan kunci 'type')
       const articles = contentBlocks.map((block: ContentBlock | Record<string, unknown>) => {
         if (!block) return block;
         const normalized = { ...block };
@@ -396,7 +416,7 @@ export async function getLibraryItemBySlug(
         return normalized;
       });
 
-      // Create a clean result object with initial data
+      // Buat objek hasil yang bersih dengan data awal
       const result: LibraryItem = {
         ...data,
         _id: data.id || data._id,
@@ -413,7 +433,7 @@ export async function getLibraryItemBySlug(
         readingList: []
       };
 
-      // Fetch relationships in parallel to avoid waterfalls
+      // Ambil data relasi secara paralel untuk menghindari penumpukan latensi (waterfall)
       const fetchVocab = async () => {
         if (!vocabListRaw.length) return;
         const cleanList = vocabListRaw.map((s: unknown) => String(s).trim());
@@ -494,7 +514,7 @@ export async function getLibraryItemBySlug(
         
         if (lItems && lItems.length > 0) {
           result.listeningList = lItems.map((l: ListeningTable) => {
-            // Robust Parser for Raw Text Dialogue
+            // Parser yang kuat untuk Teks Dialog Mentah
             let dialogue: Record<string, unknown>[] = [];
             if (typeof l.body === 'string') {
               const lines = l.body.split('\n').filter((line: string) => line.trim());
@@ -506,13 +526,13 @@ export async function getLibraryItemBySlug(
                 const speaker = parts.length > 1 ? parts[0].trim() : "???";
                 const text = parts.length > 1 ? parts.slice(1).join("：").trim() : line.trim();
                 
-                // Try to find matching translation
+                // Coba temukan terjemahan yang cocok
                 let translation = translations[idx] || "";
                 if (translation.includes("：") || translation.includes(":")) {
                    translation = translation.split(/[：:]/).slice(1).join("：").trim();
                 }
 
-                // Try to find matching reading (hiragana)
+                // Coba temukan bacaan (hiragana) yang cocok
                 let furigana = "";
                 if (readings[idx]) {
                   const rLine = readings[idx];
@@ -587,7 +607,7 @@ export async function getLibraryItemBySlug(
         fetchReading()
       ]);
 
-      // Add final check for articles
+      // Tambahkan pemeriksaan akhir untuk artikel
       if (!result.articles || (result.articles as unknown[]).length === 0) {
         result.articles = articles.length > 0 ? articles : contentBlocks;
       }
@@ -597,7 +617,7 @@ export async function getLibraryItemBySlug(
 
     return data;
   } catch (error) {
-    console.error(`Error fetching detail:`, error);
+    console.error(`Gagal mengambil detail:`, error);
     return null;
   }
 }

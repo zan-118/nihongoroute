@@ -1,6 +1,21 @@
+/**
+ * @file QuestCompleted.tsx
+ * @description Komponen UI mini untuk menampilkan status sukses ketika semua Misi Harian (Daily Quests)
+ * telah berhasil diselesaikan oleh pengguna pada hari tersebut.
+ *
+ * @package components/features/dashboard/quests
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import { m } from "framer-motion";
 import { Sparkles } from "lucide-react";
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 export function QuestCompleted() {
   return (
     <m.div
@@ -8,6 +23,7 @@ export function QuestCompleted() {
       animate={{ opacity: 1, scale: 1 }}
       className="flex-1 flex flex-col items-center justify-center text-center p-8 relative transition-colors duration-300"
     >
+      {/* Glow Latar Belakang Keberhasilan */}
       <div className="absolute inset-0 bg-success/5 blur-3xl rounded-full pointer-events-none" />
       <div className="size-16 bg-success/10 rounded-2xl flex items-center justify-center mb-6 border border-success/20 relative z-10">
         <Sparkles size={32} className="text-success text-success drop-shadow-sm dark:drop-shadow-[0_0_15px_rgba(var(--success-rgb),0.3)]" />
@@ -21,3 +37,4 @@ export function QuestCompleted() {
     </m.div>
   );
 }
+

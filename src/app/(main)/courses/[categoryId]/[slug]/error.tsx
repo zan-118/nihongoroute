@@ -1,9 +1,30 @@
+/**
+ * @file error.tsx
+ * @description Halaman penanganan kesalahan runtime pada rute detail pelajaran kursus (Lesson Error Boundary).
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, RefreshCcw } from "lucide-react";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
+/**
+ * Komponen pembatas kesalahan (Error Boundary) granular untuk halaman detail materi kursus.
+ * Menangani crash lokal saat gagal memuat Portable Text, audio, kuis, atau material CMS Sanity.
+ * 
+ * @param {Object} props Properti komponen.
+ * @param {Error & { digest?: string }} props.error Objek kesalahan runtime yang ditangkap.
+ * @param {function} props.reset Fungsi callback untuk mereset komponen dan memuat ulang data.
+ * @returns {JSX.Element} Antarmuka penanganan kesalahan materi kursus.
+ */
 export default function CourseDetailError({
   error,
   reset,

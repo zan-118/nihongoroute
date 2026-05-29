@@ -4,16 +4,32 @@
  * @module Client Component
  */
 
+// ======================
+// IMPOR
+// ======================
 import { Suspense } from "react";
 import { RotateCw } from "lucide-react";
 import GrammarClient from "./GrammarClient";
 import { getGrammarArticles } from "@/actions/library.actions";
 
+// ======================
+// METADATA SEO
+// ======================
 export const metadata = {
   title: "Tata Bahasa Jepang | NihongoRoute",
   description: "Katalog lengkap tata bahasa Jepang (Bunpou) untuk level N5 hingga N1. Penjelasan mendalam dengan contoh kalimat dan audio.",
 };
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
+/**
+ * Halaman utama Katalog Panduan Tata Bahasa (Bunpou) (RSC).
+ * Melakukan pra-ambil data tata bahasa level N5 di sisi server sebelum dirender oleh GrammarClient.
+ * 
+ * @returns {JSX.Element} Halaman daftar tata bahasa Jepang.
+ */
 export default async function GrammarArticlesPage() {
   // Pre-fetch artikel di sisi server
   const grammarData = await getGrammarArticles("n5");

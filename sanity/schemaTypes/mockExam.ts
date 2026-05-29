@@ -1,5 +1,16 @@
+/**
+ * @file mockExam.ts
+ * @description Skema dokumen Sanity Studio untuk Simulasi Ujian (Mock Exam). Mengonfigurasi batas waktu ujian, batas kelulusan, penyesuaian sertifikat, choukai audio global, dan array pertanyaan tes komprehensif.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { SupabaseCategorySelect } from '../components/SupabaseCategorySelect';
 
+// ==========================================
+// DEFINISI SKEMA DOKUMEN SANITY CMS
+// ==========================================
 export default {
   name: 'mockExam',
   title: 'Simulasi Ujian (Mock Exam)',

@@ -1,8 +1,20 @@
+/**
+ * @file useAddToSRS.ts
+ * @description Hook kustom (Custom Hook) untuk mengelola penyimpanan kosakata baru ke sistem SRS (Spaced Repetition System).
+ * Mendeteksi secara asinkron apakah kosakata tertentu sudah terdaftar di dalam store `useSRSStore`.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { useState, useEffect, useCallback } from "react";
 import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useUIStore } from "@/store/useUIStore";
 
+// ======================
+// HOOK UTAMA
+// ======================
 export function useAddToSRS(wordId: string) {
   const addToSRS = useSRSStore((state) => state.addToSRS);
   const name = useUserStore((state) => state.name);

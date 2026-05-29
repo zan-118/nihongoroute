@@ -1,5 +1,13 @@
+/**
+ * @file UserStatusSection.tsx
+ * @description Komponen status pengguna dan navigasi logout/pengaturan tema pada bagian bawah sidebar.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import Link from "next/link";
 import { m } from "framer-motion";
@@ -8,6 +16,9 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface UserStatusSectionProps {
   hasMounted: boolean;
   isAuthenticated: boolean;
@@ -15,9 +26,9 @@ interface UserStatusSectionProps {
   handleLogout: () => void;
 }
 
-/**
- * Komponen status pengguna dan aksi (Login/Logout, Theme) di bawah sidebar.
- */
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function UserStatusSection({
   hasMounted,
   isAuthenticated,
@@ -40,7 +51,7 @@ export function UserStatusSection({
     return (
       <div className="space-y-4">
         <div className="flex items-center gap-3 p-3 bg-background/[0.03] backdrop-blur-md rounded-2xl border border-border group hover:border-primary/30 transition-all duration-500">
-          {/* Animated Gradient Avatar Border */}
+          {/* Batas Avatar Gradien Teranimasi */}
           <div className="relative size-12 shrink-0">
             <m.div 
               animate={{ rotate: 360 }}
@@ -52,7 +63,7 @@ export function UserStatusSection({
                 {userFullName ? userFullName.charAt(0).toUpperCase() : "U"}
               </div>
             </div>
-            {/* Level Badge Overlay */}
+            {/* Overlay Lencana Level */}
             <div className="absolute -bottom-1 -right-1 size-5 bg-foreground text-background text-[8px] font-black rounded-full border-2 border-background flex items-center justify-center z-20 shadow-lg">
               L
             </div>

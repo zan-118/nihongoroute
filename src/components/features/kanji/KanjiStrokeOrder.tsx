@@ -1,15 +1,30 @@
-"use client";
+/**
+ * @file KanjiStrokeOrder.tsx
+ * @description Komponen untuk menampilkan urutan goresan (stroke order) Kanji menggunakan SVG eksternal dari KanjiVG.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { useState, useEffect } from "react";
 import { RotateCcw, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface KanjiStrokeOrderProps {
   kanji: string;
   minimal?: boolean;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen visualizer urutan goresan kanji.
+ */
 export default function KanjiStrokeOrder({ kanji, minimal = false }: KanjiStrokeOrderProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -18,6 +33,9 @@ export default function KanjiStrokeOrder({ kanji, minimal = false }: KanjiStroke
   const codePoint = kanji ? kanji.charCodeAt(0).toString(16).padStart(5, '0') : "";
   const svgUrl = codePoint ? `https://raw.githubusercontent.com/KanjiVG/kanjivg/master/kanji/${codePoint}.svg` : "";
 
+  // ==========================================
+  // EFEK SAMPING (EFFECTS)
+  // ==========================================
   useEffect(() => {
     if (svgUrl) {
       requestAnimationFrame(() => {
@@ -29,6 +47,9 @@ export default function KanjiStrokeOrder({ kanji, minimal = false }: KanjiStroke
     });
   }, [kanji, svgUrl]);
 
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <div className={`flex flex-col ${minimal ? 'gap-2' : 'gap-4'}`}>
       <div className={`relative aspect-square w-full mx-auto bg-background dark:bg-background/5 rounded-2xl border border-border ${minimal ? 'p-2' : 'p-4'} flex items-center justify-center group overflow-hidden`}>

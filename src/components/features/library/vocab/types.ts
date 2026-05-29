@@ -1,3 +1,11 @@
+/**
+ * @file types.ts
+ * @description Defini tipe data, antarmuka, serta daftar konstanta kategori level/kelas kata untuk pustaka kosakata.
+ */
+
+// ==========================================
+// ANTARMUKA & TIPE DATA KOSAKATA
+// ==========================================
 export interface VocabMeaning {
   glosses: string[];
   part_of_speech?: string[];
@@ -11,7 +19,7 @@ export interface VocabItem {
   furigana?: string | null;
   romaji?: string | null;
   meanings_jmdict?: VocabMeaning[];
-  /** Shorthand meaning (diambil dari meanings_jmdict[0].glosses[0]) */
+  /** Arti ringkas bahasa Indonesia (Shorthand meaning) */
   meaning?: string;
   hinshi?: string[] | null;
   transitivity?: string | null;
@@ -42,6 +50,9 @@ export interface VocabItem {
   created_at?: string;
 }
 
+// ==========================================
+// DAFTAR KONSTANTA DAN PRESET FILTER
+// ==========================================
 export const LEVELS = ["Semua", "Umum", "N5", "N4", "N3", "N2", "N1"];
 
 export const HINSHI = [
@@ -56,3 +67,4 @@ export const HINSHI = [
   { label: "Kata Ganti (Daimeishi)", value: "pronoun" },
   { label: "Ungkapan (Hyougen)", value: "expression" },
 ];
+

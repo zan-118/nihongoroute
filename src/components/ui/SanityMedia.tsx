@@ -1,9 +1,20 @@
+/**
+ * @file SanityMedia.tsx
+ * @description Komponen pemutar/penampil media universal (SanityMedia) untuk merender gambar, video, dan lampiran dokumen dari Sanity CMS.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import Image from "next/image";
 import { Play, FileIcon } from "lucide-react";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface SanityMediaProps {
   url: string;
   alt?: string;
@@ -13,6 +24,9 @@ interface SanityMediaProps {
   height?: number;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function SanityMedia({
   url,
   alt = "NihongoRoute Asset",

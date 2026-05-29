@@ -1,5 +1,15 @@
 "use client";
 
+/**
+ * @file ExamResult.tsx
+ * @description Komponen penayangan skor dan hasil analisis simulasi ujian (Mock Exam).
+ * Menyediakan dua visualisasi: model dokumen sertifikat resmi (Official Notice/Certificate)
+ * dan model analisis grafis modern yang mendalam (Modern Breakdown).
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { m } from "framer-motion";
 import { useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
@@ -15,6 +25,9 @@ const PdfGenerator = dynamic(() => import("@/components/features/pdf/PdfGenerato
   loading: () => <Loader2 className="animate-spin text-primary" size={20} />
 });
 
+// ======================
+// ANTARMUKA & TIPE
+// ======================
 interface ExamResultProps {
   exam: ExamData;
   setGameState: (state: GameState) => void;
@@ -29,6 +42,9 @@ interface ExamResultProps {
   handleShareResult: () => void;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function ExamResult({
   exam,
   setGameState,
@@ -47,7 +63,7 @@ export function ExamResult({
 
   const regNo = useMemo(() => {
     const prefix = exam.title.toLowerCase().includes("jft") ? "JFT" : "JLPT";
-    // Pure deterministic hash of userFullName + exam.title to ensure pure rendering
+    // Hash deterministik murni dari userFullName + exam.title untuk memastikan rendering yang murni
     const str = `${userFullName}-${exam.title}`;
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
@@ -71,7 +87,7 @@ export function ExamResult({
            exam.levelCode?.toLowerCase() === "a2";
   }, [exam.title, exam.categorySlug, exam.levelCode]);
 
-  // JLPT Section Mapping (max 60 points per section, total 180)
+  // Pemetaan Bagian JLPT (maksimal 60 poin per bagian, total 180)
   const jlptScores = useMemo(() => {
     const vocab = sectionBreakdown.vocabulary || { correct: 0, total: 0, passed: true };
     const grammar = sectionBreakdown.grammar || { correct: 0, total: 0, passed: true };
@@ -88,13 +104,13 @@ export function ExamResult({
     let scoreList = 0;
 
     if (isN4N5) {
-      // 120 points for Lang Knowledge & Reading
+      // 120 poin untuk Pengetahuan Bahasa & Membaca
       const langReadCorrect = langCorrect + reading.correct;
       const langReadTotal = langTotal + reading.total;
       scoreLang = langReadTotal > 0 ? Math.round((langReadCorrect / langReadTotal) * 120) : 0;
       scoreList = listening.total > 0 ? Math.round((listening.correct / listening.total) * 60) : 0;
     } else {
-      // 60 points each
+      // Masing-masing 60 poin
       scoreLang = langTotal > 0 ? Math.round((langCorrect / langTotal) * 60) : 0;
       scoreRead = reading.total > 0 ? Math.round((reading.correct / reading.total) * 60) : 0;
       scoreList = listening.total > 0 ? Math.round((listening.correct / listening.total) * 60) : 0;
@@ -119,7 +135,7 @@ export function ExamResult({
     };
   }, [sectionBreakdown, exam.levelCode]);
 
-  // JFT scoring (ranges from 10 to 250, passing is 200)
+  // Penilaian JFT (berkisar antara 10 hingga 250, nilai kelulusan adalah 200)
   const jftScores = useMemo(() => {
     const vocab = sectionBreakdown.vocabulary || { correct: 0, total: 0, passed: true };
     const grammar = sectionBreakdown.grammar || { correct: 0, total: 0, passed: true };
@@ -156,7 +172,7 @@ export function ExamResult({
       animate={{ opacity: 1, y: 0 }}
       className="w-full max-w-4xl mx-auto px-4 py-8"
     >
-      {/* Premium Toggle Switch */}
+      {/* Sakelar Tampilan Premium */}
       <div className="flex justify-center mb-8">
         <div className="bg-muted/80 backdrop-blur-md p-1.5 rounded-2xl flex gap-2 border border-border shadow-lg z-20 relative">
           <Button
@@ -189,10 +205,10 @@ export function ExamResult({
       </div>
 
       {viewMode === "official" ? (
-        /* Authentic Parchment Certificate Layout */
+        /* Tata Letak Sertifikat Kertas Kulit Autentik */
         <div className="p-1 md:p-1.5 rounded-[2.2rem] bg-gradient-to-br from-amber-500/20 via-yellow-600/10 to-amber-700/20 shadow-2xl">
           <Card className="p-6 md:p-12 text-[#2d2821] relative overflow-hidden bg-[#FAF8F5] border-4 border-double border-[#C8BFA7] rounded-[2rem] font-serif transition-all duration-500">
-            {/* Subtle watermarked background logo / emblem */}
+            {/* Logo / Lambang Latar Belakang Tanda Air Halus */}
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none flex items-center justify-center select-none">
               <svg className="size-[85%]" viewBox="0 0 100 100" fill="currentColor">
                 <path d="M50 5 L95 28 L95 72 L50 95 L5 72 L5 28 Z" />
@@ -200,7 +216,7 @@ export function ExamResult({
             </div>
 
             <div className="relative z-10 space-y-6 md:space-y-8">
-              {/* Header Logos & Titles */}
+              {/* Logo & Judul Kepala Dokumen */}
               <div className="text-center border-b border-[#E3DEC3] pb-6 space-y-2">
                 <span className="text-[10px] font-sans tracking-[0.25em] font-black text-emerald-800 uppercase block mb-1">
                   Official Result Notice & Transcript
@@ -232,7 +248,7 @@ export function ExamResult({
                 )}
               </div>
 
-              {/* Examinee Identification Table */}
+              {/* Tabel Identitas Peserta Ujian */}
               <div className="overflow-x-auto">
                 <table className="w-full text-[11px] md:text-[13px] font-sans border-collapse border border-[#C8BFA7] bg-[#FCFBF8]/60">
                   <tbody>
@@ -272,12 +288,12 @@ export function ExamResult({
                 </table>
               </div>
 
-              {/* Score Grid & Result Section */}
+              {/* Kisi Skor & Bagian Hasil */}
               {isJft ? (
-                /* JFT-Basic Authentic CBT Score Breakdown */
+                /* Rincian Skor CBT Otentik JFT-Basic */
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Scaled Score Card */}
+                    {/* Kartu Skor Berskala */}
                     <div className="border border-[#C8BFA7] bg-[#FCFBF8] p-5 flex flex-col items-center justify-center relative rounded-lg">
                       <span className="text-xs font-sans font-bold text-[#554d3d] uppercase tracking-wide">
                         Scaled Score (総合評価点)
@@ -293,7 +309,7 @@ export function ExamResult({
                       </span>
                     </div>
 
-                    {/* Result Status Seal Card */}
+                    {/* Kartu Segel Status Hasil */}
                     <div className="border border-[#C8BFA7] bg-[#FCFBF8] p-5 flex flex-col items-center justify-center relative rounded-lg overflow-hidden">
                       <span className="text-xs font-sans font-bold text-[#554d3d] uppercase tracking-wide">
                         Test Result (合否結果)
@@ -311,7 +327,7 @@ export function ExamResult({
                           </div>
                         )}
                       </div>
-                      {/* SVG Hanko Stamp */}
+                      {/* Stempel Hanko SVG */}
                       <div className="absolute right-2 -bottom-2 opacity-90 pointer-events-none rotate-[-15deg] select-none">
                         <svg className={`w-20 h-20 ${isPassed ? 'text-[#c23b22]' : 'text-stone-500'}`} viewBox="0 0 100 100">
                           <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" strokeWidth="3" />
@@ -324,7 +340,7 @@ export function ExamResult({
                     </div>
                   </div>
 
-                  {/* CBT Areas Rate */}
+                  {/* Tingkat Area CBT */}
                   <div className="border border-[#C8BFA7] rounded-lg overflow-hidden">
                     <div className="bg-[#F3EFE3] p-2 text-center text-xs font-bold text-[#554d3d] uppercase tracking-wider border-b border-[#C8BFA7]">
                       Section Performance Rates (セクション別正答率)
@@ -349,7 +365,7 @@ export function ExamResult({
                     </div>
                   </div>
 
-                  {/* CEFR Level Box */}
+                  {/* Kotak Level CEFR */}
                   <div className="border border-[#C8BFA7] bg-[#FCFBF8]/40 p-4 rounded-lg text-left text-xs space-y-2">
                     <p className="font-bold text-[#554d3d] uppercase border-b border-[#E3DEC3] pb-1.5 flex items-center gap-2">
                       <Award size={14} className="text-emerald-700" />
@@ -364,17 +380,17 @@ export function ExamResult({
                   </div>
                 </div>
               ) : (
-                /* JLPT Authentic Score Breakdown */
+                /* Rincian Skor Otentik JLPT */
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* Box 1: Scores Table */}
+                    {/* Kotak 1: Tabel Skor */}
                     <div className="md:col-span-2 border border-[#C8BFA7] rounded-lg overflow-hidden bg-[#FCFBF8]">
                       <div className="bg-[#F3EFE3] p-2.5 text-center text-xs font-bold text-[#554d3d] uppercase tracking-wider border-b border-[#C8BFA7]">
                         Scores by Test Section (得点区分別得点)
                       </div>
                       
                       {jlptScores.isN4N5 ? (
-                        /* N4/N5 2 Sections Breakdown */
+                        /* Rincian 2 Bagian N4/N5 */
                         <div className="grid grid-cols-2 divide-x divide-[#C8BFA7]">
                           <div className="p-4 text-center">
                             <p className="text-[10px] text-stone-500 font-semibold uppercase leading-tight">Language Knowledge & Reading</p>
@@ -392,7 +408,7 @@ export function ExamResult({
                           </div>
                         </div>
                       ) : (
-                        /* N1-N3 3 Sections Breakdown */
+                        /* Rincian 3 Bagian N1-N3 */
                         <div className="grid grid-cols-3 divide-x divide-[#C8BFA7]">
                           <div className="p-4 text-center">
                             <p className="text-[10px] text-stone-500 font-semibold uppercase leading-tight">Language Knowledge</p>
@@ -419,7 +435,7 @@ export function ExamResult({
                       )}
                     </div>
 
-                    {/* Box 2: Total Score & Status Stamp */}
+                    {/* Kotak 2: Total Skor & Stempel Status */}
                     <div className="border border-[#C8BFA7] bg-[#FCFBF8] p-4 flex flex-col items-center justify-center relative rounded-lg overflow-hidden">
                       <span className="text-xs font-sans font-bold text-[#554d3d] uppercase tracking-wide">
                         Total Score (総合得点)
@@ -439,7 +455,7 @@ export function ExamResult({
                         )}
                       </div>
 
-                      {/* SVG Hanko Stamp */}
+                      {/* Stempel Hanko SVG */}
                       <div className="absolute right-2 -bottom-2 opacity-95 pointer-events-none rotate-[-12deg] select-none">
                         <svg className={`w-20 h-20 ${isPassed ? 'text-[#c23b22]' : 'text-stone-500'}`} viewBox="0 0 100 100">
                           <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" strokeWidth="3" />
@@ -452,7 +468,7 @@ export function ExamResult({
                     </div>
                   </div>
 
-                  {/* Reference Information Table: Grades (A/B/C) */}
+                  {/* Tabel Informasi Referensi: Nilai Huruf (A/B/C) */}
                   <div className="border border-[#C8BFA7] rounded-lg overflow-hidden bg-[#FCFBF8]">
                     <div className="bg-[#F3EFE3] p-2 text-center text-xs font-bold text-[#554d3d] uppercase tracking-wider border-b border-[#C8BFA7]">
                       Reference Information (参考情報)
@@ -486,7 +502,7 @@ export function ExamResult({
                 </div>
               )}
 
-              {/* Warning regarding Maiten Fail */}
+              {/* Peringatan mengenai Kegagalan Maiten */}
               {failedSection && finalScore >= exam.passingScore && (
                 <div className="p-4 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-[11px] font-sans font-bold flex items-center justify-center gap-2">
                   <AlertCircle size={16} className="text-rose-700" />
@@ -494,7 +510,7 @@ export function ExamResult({
                 </div>
               )}
 
-              {/* Official Signatures & Seal Box */}
+              {/* Tanda Tangan Resmi & Kotak Segel */}
               <div className="border-t border-[#E3DEC3] pt-6 flex flex-col md:flex-row items-center justify-between gap-6 text-[10px] md:text-[11px] text-stone-500 font-sans">
                 <div className="text-left space-y-1">
                   <p className="font-bold text-stone-700">ORGANIZED BY:</p>
@@ -502,7 +518,7 @@ export function ExamResult({
                   <p>Japan Educational Exchanges and Services (日本国際教育支援協会)</p>
                 </div>
 
-                {/* Download & PDF Actions */}
+                {/* Aksi Unduhan & PDF */}
                 <div className="flex flex-col sm:flex-row gap-3 items-center z-20">
                   <PdfGenerator 
                     type="certificate" 
@@ -523,7 +539,7 @@ export function ExamResult({
             </div>
           </Card>
 
-          {/* Action Row Underneath the Official Certificate */}
+          {/* Baris Aksi di Bawah Sertifikat Resmi */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6 pb-2">
             <Button
               asChild
@@ -543,7 +559,7 @@ export function ExamResult({
           </div>
         </div>
       ) : (
-        /* Modern Cybersecurity Glassmorphism Dashboard */
+        /* Dasbor Glassmorphism Keamanan Siber Modern */
         <Card className="p-8 md:p-16 text-center relative overflow-hidden neo-card rounded-[3rem] border border-border bg-card shadow-2xl transition-all duration-500">
           <div
             className={`absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] blur-[150px] rounded-full pointer-events-none opacity-20 ${isPassed ? "bg-success" : "bg-destructive"}`}
@@ -603,7 +619,7 @@ export function ExamResult({
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-               {/* Breakdown Section */}
+               {/* Bagian Breakdown */}
                <div className="space-y-6 text-left">
                   <h3 className="text-xs font-black uppercase tracking-[0.2em] text-foreground mb-6 flex items-center gap-3">
                      <div className="w-1.5 h-6 bg-primary rounded-full shadow-[0_0_10px_rgba(var(--primary-rgb),1)]" />
@@ -644,7 +660,7 @@ export function ExamResult({
                   </div>
                </div>
 
-               {/* Certificate/Action Section */}
+               {/* Bagian Sertifikat/Aksi */}
                <div className="space-y-6 text-left">
                   <h3 className="text-xs font-black uppercase tracking-[0.2em] text-foreground mb-6 flex items-center gap-3">
                      <div className="w-1.5 h-6 bg-warning rounded-full shadow-[0_0_10px_rgba(var(--warning-rgb),1)]" />

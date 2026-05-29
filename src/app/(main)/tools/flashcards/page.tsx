@@ -6,6 +6,9 @@
 
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React, { Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
@@ -20,7 +23,7 @@ import FlashcardMaster from "@/components/features/flashcards/master/FlashcardMa
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-// Hook & Modular Components
+// Hook & Komponen Modular
 import { useFlashcardSession } from "@/components/features/flashcards/useFlashcardSession";
 import { FlashcardSetup } from "@/components/features/flashcards/FlashcardSetup";
 

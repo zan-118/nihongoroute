@@ -1,15 +1,33 @@
-"use client";
+/**
+ * @file KanjiMnemonic.tsx
+ * @description Komponen untuk menampilkan jembatan keledai (mnemonic) memori Kanji bawaan dan menyediakan editor mnemonic kustom offline-first.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { Card } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
 import { MnemonicEditor } from "@/components/features/srs/mnemonic/MnemonicEditor";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface KanjiMnemonicProps {
   mnemonics?: string | unknown[];
   wordId: string;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen panel mnemonic pembelajaran kanji.
+ */
 export function KanjiMnemonic({ mnemonics, wordId }: KanjiMnemonicProps) {
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <Card className="p-8 md:p-10 bg-card/20 backdrop-blur-xl border-border rounded-[2.5rem] hover:border-primary/40 transition-all md:col-span-full lg:col-span-2 relative overflow-hidden group">
       {mnemonics && (

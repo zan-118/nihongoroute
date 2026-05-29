@@ -1,8 +1,19 @@
+/**
+ * @file FlashcardActions.tsx
+ * @description Komponen aksi kontrol interaktif untuk kartu pengingat (flashcard), mendukung navigasi, pemberian nilai SRS (Again, Hard, Good, Easy), dan tombol periksa jawaban.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { Button } from "@/components/ui/button";
 import { m, AnimatePresence } from "framer-motion";
 import { Check, X, Info, Search } from "lucide-react";
 import { StudyMode } from "./types";
 
+// ==========================================
+// ANTARMUKA PROPS
+// ==========================================
 interface FlashcardActionsProps {
   studyMode: StudyMode;
   isFlipped: boolean;
@@ -15,6 +26,14 @@ interface FlashcardActionsProps {
   onCheckAnswer?: () => void;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen panel aksi bawah untuk menavigasi sesi flashcard dan mengevaluasi hafalan.
+ * 
+ * @param {FlashcardActionsProps} props - Properti untuk mengatur status sesi dan navigasi kartu
+ */
 export function FlashcardActions({
   studyMode,
   isFlipped,

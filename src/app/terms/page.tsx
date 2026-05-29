@@ -1,8 +1,19 @@
+/**
+ * @file terms/page.tsx
+ * @description Halaman statis yang memuat Syarat dan Ketentuan layanan (Terms of Service) NihongoRoute.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, BookOpen, Compass, ShieldCheck, HelpCircle } from "lucide-react";
 
+// ======================
+// KONFIGURASI METADATA
+// ======================
 export const metadata = {
   title: "Syarat & Ketentuan | NihongoRoute",
   description: "Syarat dan Ketentuan penggunaan platform NihongoRoute.",
@@ -11,14 +22,14 @@ export const metadata = {
 export default function TermsPage() {
   return (
     <main className="min-h-screen bg-background text-foreground py-24 px-4 sm:px-6 md:px-12 relative overflow-hidden flex flex-col items-center justify-start transition-colors duration-300">
-      {/* Background Neural Overlays */}
+      {/* Hamparan Neural Latar Belakang */}
       <div className="neural-grid" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(var(--secondary-rgb),0.07)_0%,transparent_70%)] pointer-events-none z-0" />
       <div className="absolute top-1/4 left-0 size-[300px] bg-[rgba(var(--secondary-rgb),0.03)] rounded-full blur-[100px] pointer-events-none z-0" />
       <div className="absolute bottom-1/4 right-0 size-[250px] bg-[rgba(var(--primary-rgb),0.02)] rounded-full blur-[80px] pointer-events-none z-0" />
 
       <div className="max-w-4xl w-full relative z-10 flex flex-col">
-        {/* Breadcrumb / Top Navigation */}
+        {/* Breadcrumb / Navigasi Atas */}
         <div className="mb-8 flex items-center justify-start animate-fade-in">
           <Link href="/dashboard">
             <Button variant="ghost" className="rounded-2xl px-4 py-2 hover:bg-muted text-xs font-bold tracking-wider uppercase flex items-center gap-2 border border-border/40 hover:border-secondary/20 transition-all duration-300">
@@ -28,9 +39,9 @@ export default function TermsPage() {
           </Link>
         </div>
 
-        {/* Outer Premium Cyber-glass Card */}
+        {/* Kartu Cyber-glass Premium Luar */}
         <div className="glass border border-border/60 rounded-3xl p-6 sm:p-10 md:p-14 shadow-[0_0_50px_rgba(var(--secondary-rgb),0.05)] relative overflow-hidden backdrop-blur-xl">
-          {/* Subtle Corner Accents */}
+          {/* Aksen Sudut Halus */}
           <div className="absolute top-0 right-0 w-8 h-[2px] bg-gradient-to-l from-secondary to-transparent" />
           <div className="absolute top-0 right-0 w-[2px] h-8 bg-gradient-to-b from-secondary to-transparent" />
           <div className="absolute bottom-0 left-0 w-8 h-[2px] bg-gradient-to-r from-secondary to-transparent" />
@@ -66,7 +77,7 @@ export default function TermsPage() {
               Dengan mengakses dan menggunakan platform <strong className="text-foreground font-semibold">NihongoRoute</strong>, Anda secara sadar menyetujui untuk terikat oleh Syarat dan Ketentuan ini. Jika Anda tidak menyetujui sebagian atau seluruh ketentuan ini, Anda dilarang menggunakan platform kami.
             </p>
 
-            {/* Section 1 */}
+            {/* Seksi 1 */}
             <div className="space-y-4 pt-4 border-t border-border/20">
               <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
                 <span className="text-sm font-bold bg-secondary/10 text-secondary border border-secondary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgba(var(--secondary-rgb),0.1)]">1</span>
@@ -77,7 +88,7 @@ export default function TermsPage() {
               </p>
             </div>
 
-            {/* Section 2 */}
+            {/* Seksi 2 */}
             <div className="space-y-4 pt-4 border-t border-border/20">
               <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
                 <span className="text-sm font-bold bg-secondary/10 text-secondary border border-secondary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgba(var(--secondary-rgb),0.1)]">2</span>
@@ -109,7 +120,7 @@ export default function TermsPage() {
               </ul>
             </div>
 
-            {/* Section 3 */}
+            {/* Seksi 3 */}
             <div className="space-y-4 pt-4 border-t border-border/20">
               <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
                 <span className="text-sm font-bold bg-secondary/10 text-secondary border border-secondary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgba(var(--secondary-rgb),0.1)]">3</span>
@@ -120,7 +131,7 @@ export default function TermsPage() {
               </p>
             </div>
 
-            {/* Section 4 */}
+            {/* Seksi 4 */}
             <div className="space-y-4 pt-4 border-t border-border/20">
               <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
                 <span className="text-sm font-bold bg-secondary/10 text-secondary border border-secondary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgba(var(--secondary-rgb),0.1)]">4</span>
@@ -131,7 +142,7 @@ export default function TermsPage() {
               </p>
             </div>
 
-            {/* Section 5 */}
+            {/* Seksi 5 */}
             <div className="space-y-4 pt-4 border-t border-border/20">
               <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
                 <span className="text-sm font-bold bg-secondary/10 text-secondary border border-secondary/20 size-8 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgba(var(--secondary-rgb),0.1)]">5</span>
@@ -143,7 +154,7 @@ export default function TermsPage() {
             </div>
           </article>
 
-          {/* Footer Back Button */}
+          {/* Tombol Kembali Kaki Halaman */}
           <div className="pt-10 mt-14 border-t border-border/60 flex justify-start">
             <Link href="/dashboard">
               <Button variant="outline" className="rounded-2xl px-6 h-12 shadow-sm font-bold tracking-widest uppercase text-xs flex items-center gap-2 hover:bg-muted border border-border hover:border-secondary/30 transition-all duration-300">

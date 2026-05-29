@@ -1,9 +1,21 @@
 "use client";
 
+/**
+ * @file LibraryCategoryCard.tsx
+ * @description Komponen kartu tampilan horizontal untuk kategori pustaka belajar NihongoRoute.
+ * Menampilkan ikon, judul kategori, jumlah item dinamis/statis, serta navigasi akses cepat.
+ */
+
+// ==========================================
+// IMPOR UTAMA
+// ==========================================
 import React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
+// ==========================================
+// ANTARMUKA & TIPE DATA
+// ==========================================
 interface LibraryCategoryCardProps {
   href: string;
   title: string;
@@ -13,14 +25,17 @@ interface LibraryCategoryCardProps {
   index: number;
   count?: number;
   isSanity?: boolean;
-  /** RGB triplet untuk aksen warna unik per kartu, misal "59 130 246" */
+  /** Aksen warna unik berbasis RGB triplet (contoh: "59 130 246") */
   accentRgb?: string;
 }
 
+// ==========================================
+// KOMPONEN UTAMA: LibraryCategoryCard
+// ==========================================
 /**
- * Komponen kartu kategori untuk halaman pustaka.
- * Layout horizontal premium: icon kiri + konten kanan + angka besar.
- * Dioptimalkan tanpa JavaScript animation untuk performa ekstrem.
+ * Komponen kartu kategori interaktif dengan efek transisi pendar warna dinamis.
+ * 
+ * @param {LibraryCategoryCardProps} props Properti untuk komponen kartu kategori.
  */
 export function LibraryCategoryCard({
   href,
@@ -34,7 +49,7 @@ export function LibraryCategoryCard({
   accentRgb = "0 122 124",
 }: LibraryCategoryCardProps) {
   return (
-    <Link href={href} className="group flex h-full" aria-label={`Buka modul ${title}`}>
+    <Link href={href} className="group flex h-full font-sans" aria-label={`Buka modul ${title}`}>
       <div className="w-full h-full rounded-[2rem] border border-border bg-card/60 backdrop-blur-sm flex flex-row gap-5 p-6 md:p-7 transition-all duration-300 relative overflow-hidden hover:-translate-y-0.5"
         style={{
           boxShadow: `0 0 0 1px rgba(${accentRgb}, 0)`,
@@ -49,13 +64,13 @@ export function LibraryCategoryCard({
           (e.currentTarget as HTMLDivElement).style.background = "";
         }}
       >
-        {/* Radial glow decoratif di pojok kiri atas */}
+        {/* Radial glow dekoratif di pojok kiri atas saat hover */}
         <div
           className="absolute -top-10 -left-10 size-40 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
           style={{ background: `radial-gradient(circle, rgba(${accentRgb}, 0.12) 0%, transparent 70%)` }}
         />
 
-        {/* Kolom Kiri — Ikon + Nomor Urut */}
+        {/* Kolom Kiri — Ikon & Nomor Urut */}
         <div className="shrink-0 flex flex-col justify-between items-center py-1">
           <div
             className="w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-105"
@@ -78,9 +93,9 @@ export function LibraryCategoryCard({
           </span>
         </div>
 
-        {/* Kolom Kanan — Konten */}
+        {/* Kolom Kanan — Konten Informasi */}
         <div className="flex-1 flex flex-col min-w-0">
-          {/* Label kategori */}
+          {/* Label sub-kategori */}
           <span
             className="text-[9px] font-black uppercase tracking-[0.3em] mb-1 transition-opacity opacity-70 group-hover:opacity-100"
             style={{ color: `rgb(${accentRgb})` }}
@@ -88,12 +103,12 @@ export function LibraryCategoryCard({
             {label}
           </span>
 
-          {/* Judul */}
+          {/* Judul Kategori */}
           <h2 className="text-lg md:text-xl font-black text-foreground tracking-tight leading-tight mb-2 group-hover:text-primary transition-colors duration-300">
             {title}
           </h2>
 
-          {/* Angka besar atau label Sanity CMS */}
+          {/* Jumlah item data dinamis (Supabase) atau statis (Sanity CMS) */}
           {count !== undefined ? (
             <div className="flex items-baseline gap-1.5 mb-2">
               <span
@@ -103,7 +118,7 @@ export function LibraryCategoryCard({
                 {count.toLocaleString("id-ID")}
               </span>
               <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                item
+                materi
               </span>
             </div>
           ) : isSanity ? (
@@ -114,12 +129,12 @@ export function LibraryCategoryCard({
             <div className="mb-2" />
           )}
 
-          {/* Deskripsi */}
+          {/* Deskripsi Singkat */}
           <p className="text-xs text-muted-foreground leading-relaxed font-medium group-hover:text-foreground/80 transition-colors line-clamp-2 flex-1">
             {desc}
           </p>
 
-          {/* Footer CTA */}
+          {/* Akses CTA */}
           <div className="mt-4 flex items-center gap-2">
             <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] group-hover:text-primary transition-colors">
               Akses Modul
@@ -139,3 +154,4 @@ export function LibraryCategoryCard({
     </Link>
   );
 }
+

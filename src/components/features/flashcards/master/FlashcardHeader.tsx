@@ -1,3 +1,11 @@
+/**
+ * @file FlashcardHeader.tsx
+ * @description Komponen header sesi kartu pengingat (flashcard) yang menampilkan bilah kemajuan (progress bar), pemilih mode belajar (Pemanasan, Uji Hafalan, Tantangan), combo rantai hafalan, dan tombol navigasi kembali.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -6,6 +14,9 @@ import { Brain, Check, X, Search } from "lucide-react";
 import { StudyMode } from "./types";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
+// ==========================================
+// ANTARMUKA PROPS
+// ==========================================
 interface FlashcardHeaderProps {
   isFixedMode: boolean;
   studyMode: StudyMode;
@@ -19,6 +30,14 @@ interface FlashcardHeaderProps {
   router: AppRouterInstance;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen header untuk menavigasi mode belajar sesi flashcard dan menampilkan status kemajuan visual.
+ * 
+ * @param {FlashcardHeaderProps & { combo?: number }} props - Properti status sesi belajar aktif dan combo hafalan
+ */
 export function FlashcardHeader({
   isFixedMode,
   studyMode,
@@ -45,7 +64,7 @@ export function FlashcardHeader({
               }}
               className={`flex-1 rounded-lg md:rounded-xl h-10 md:h-12 text-xs md:text-xs font-bold uppercase tracking-widest transition-all ${
                 studyMode === "latihan"
-                  ? "bg-background dark:bg-background/10 text-foreground text-foreground shadow-sm"
+                  ? "bg-background dark:bg-background/10 text-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >

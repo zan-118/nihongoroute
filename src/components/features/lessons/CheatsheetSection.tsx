@@ -1,6 +1,17 @@
+/**
+ * @file CheatsheetSection.tsx
+ * @description Komponen seksi materi tabel rujukan cepat (CheatsheetSection) untuk menampilkan daftar kosakata, ungkapan, hirarki JLPT, dan istilah terkait.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import { Zap } from "lucide-react";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface CheatsheetItem {
   jp: string;
   romaji: string;
@@ -27,6 +38,9 @@ interface CheatsheetSectionProps {
   cheatsheets: CheatsheetData[];
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export const CheatsheetSection: React.FC<CheatsheetSectionProps> = ({ cheatsheets }) => {
   if (!cheatsheets || cheatsheets.length === 0) return null;
 

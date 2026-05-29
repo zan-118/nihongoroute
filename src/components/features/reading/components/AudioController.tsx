@@ -1,12 +1,20 @@
-"use client";
+/**
+ * @file AudioController.tsx
+ * @description Komponen pengendali pemutaran audio native (berkas suara) dan AI Voice (Text-to-Speech) dengan dukungan caching luring.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import React, { useState, useEffect, useRef } from "react";
 import { Play, Pause, Square, AlertCircle, RotateCcw } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useCachedAudio } from "@/hooks/useCachedAudio";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface AudioControllerProps {
   audioUrl?: string;
   textToSpeak?: string;
@@ -16,6 +24,12 @@ interface AudioControllerProps {
   externalSeek?: number;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen kontrol pemutar audio artikel.
+ */
 export default function AudioController({ 
   audioUrl, 
   textToSpeak, 
@@ -24,6 +38,9 @@ export default function AudioController({
   onTimeUpdate,
   externalSeek
 }: AudioControllerProps) {
+  // ==========================================
+  // STATUS & STATE & HOOKS
+  // ==========================================
   const cachedAudioUrl = useCachedAudio(audioUrl);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isTTS, setIsTTS] = useState(false);
@@ -34,13 +51,20 @@ export default function AudioController({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const ttsRef = useRef<SpeechSynthesisUtterance | null>(null);
 
-  // Sync external seek
+  // ==========================================
+  // EFEK SAMPING (EFFECTS)
+  // ==========================================
+  // Sinkronkan pemutaran eksternal (seek)
   useEffect(() => {
     if (externalSeek !== undefined && audioRef.current) {
       audioRef.current.currentTime = externalSeek;
       setCurrentTime(externalSeek);
     }
   }, [externalSeek]);
+
+  // ==========================================
+  // FUNGSI PENGENDALI UTAMA (HANDLERS)
+  // ==========================================
 
   const cleanTextForTTS = (text: string) => {
     if (!text) return "";
@@ -64,7 +88,7 @@ export default function AudioController({
     setCurrentTime(0);
   };
 
-  // Stop everything on unmount
+  // Hentikan semuanya saat komponen unmount
   useEffect(() => {
     return () => {
       stopAll();
@@ -159,6 +183,9 @@ export default function AudioController({
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <div className={cn(
       "flex items-center gap-4 transition-all duration-500",
@@ -178,7 +205,7 @@ export default function AudioController({
         "bg-card/40 backdrop-blur-3xl border border-border/50 shadow-2xl ring-1 ring-white/5",
         compact && "p-1 bg-transparent border-none ring-0 shadow-none"
       )}>
-        {/* Play/Pause Button */}
+        {/* Tombol Putar/Jeda */}
         <Button
           variant="ghost"
           size="icon" 
@@ -192,7 +219,7 @@ export default function AudioController({
           {isPlaying ? <Pause size={compact ? 20 : 28} fill="currentColor" /> : <Play size={compact ? 20 : 28} fill="currentColor" className={compact ? "ml-0.5" : "ml-1"} />}
         </Button>
 
-        {/* Progress Section (Only if not compact or if native audio) */}
+        {/* Bagian Progres (Hanya jika tidak ringkas atau jika menggunakan audio bawaan) */}
         {!compact && audioUrl && (
           <div className="flex-1 flex flex-col gap-1 px-2">
             <div className="flex justify-between items-center px-1">
@@ -220,7 +247,7 @@ export default function AudioController({
           </div>
         )}
 
-        {/* Status Info (Compact or No Audio) */}
+        {/* Info Status (Ringkas atau Tanpa Audio) */}
         {(compact || !audioUrl) && (
           <div className="flex flex-col pr-4 pl-2">
             <span className="text-[10px] font-black uppercase tracking-widest text-primary/70 mb-0.5">
@@ -232,7 +259,7 @@ export default function AudioController({
           </div>
         )}
 
-        {/* Secondary Actions */}
+        {/* Aksi Sekunder */}
         {!compact && (
           <div className="flex items-center gap-1 pr-2">
             <Button
@@ -262,7 +289,7 @@ export default function AudioController({
           </div>
         )}
 
-        {/* Native Audio Element */}
+        {/* Elemen Audio Bawaan */}
         {audioUrl && (
           <audio aria-label="Audio"
             ref={audioRef}

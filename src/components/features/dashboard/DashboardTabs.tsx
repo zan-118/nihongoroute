@@ -1,8 +1,23 @@
 "use client";
 
+/**
+ * @file DashboardTabs.tsx
+ * @description Komponen navigasi tab (tabs bar) untuk antarmuka dashboard NihongoRoute.
+ * Menyediakan tombol navigasi beranimasi menggunakan Framer Motion untuk berpindah antar panel konten (Home, Progress, Settings).
+ *
+ * @package components/features/dashboard
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import React from "react";
 import { m } from "framer-motion";
 
+// ==========================================
+// ANTARMUKA & PROPS (INTERFACES)
+// ==========================================
 interface Tab {
   id: string;
   label: string;
@@ -15,8 +30,12 @@ interface DashboardTabsProps {
   onTabChange: (id: string) => void;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 /**
- * Komponen navigasi tab untuk Dashboard.
+ * Komponen DashboardTabs
+ * Navigasi tab bar interaktif untuk dashboard.
  */
 export function DashboardTabs({ tabs, activeTab, onTabChange }: DashboardTabsProps) {
   return (
@@ -48,3 +67,4 @@ export function DashboardTabs({ tabs, activeTab, onTabChange }: DashboardTabsPro
     </div>
   );
 }
+

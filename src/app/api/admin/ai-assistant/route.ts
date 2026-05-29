@@ -1,3 +1,13 @@
+/**
+ * @file route.ts
+ * @description API Route Handler untuk Asisten AI NihongoRoute.
+ * Menyediakan tiga aksi: generate-furigana (Kuroshiro), scan-supabase (pencocokan DB),
+ * dan generate-lesson (pembuatan modul pelajaran via Gemini AI).
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -7,6 +17,9 @@ import Kuroshiro from "kuroshiro";
 // @ts-ignore
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
 
+// ======================
+// KONSTANTA CORS
+// ======================
 const ALLOWED_ORIGINS = [
   "http://localhost:3000",
   "http://localhost:3001",

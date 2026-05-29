@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * @file TrustBanner.tsx
+ * @description Komponen spanduk kepercayaan (Trust Banner) untuk Landing Page NihongoRoute.
+ * Menegaskan tiga nilai utama platform: 100% Gratis Tanpa Iklan, Akses Luring Penuh (Offline),
+ * serta didukung penuh oleh kontribusi komunitas secara Terbuka (Open Source).
+ *
+ * @package components/features/landing
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import React from "react";
 import Link from "next/link";
 import { m } from "framer-motion";
@@ -15,9 +28,12 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 /**
- * Komponen TrustBanner yang telah dirombak total menjadi 
- * pusat kepercayaan pembelajar NihongoRoute (100% Gratis, Offline, Open Source).
+ * Komponen TrustBanner
+ * Menyajikan pilar kepercayaan NihongoRoute kepada calon pengguna.
  */
 export function TrustBanner() {
   return (
@@ -29,12 +45,13 @@ export function TrustBanner() {
     >
       <Card className="p-[55px] md:p-[65px] rounded-[42px] bg-card/15 backdrop-blur-3xl border border-border shadow-none relative overflow-hidden group transition-all duration-700 hover:border-primary/20">
         
-        {/* Background Decorative Radial Glows using CSS variables */}
+        {/* Latar Belakang Kilau Dekoratif menggunakan variabel warna CSS */}
         <div className="absolute -top-40 -left-40 size-96 bg-primary/10 rounded-full blur-[120px] group-hover:bg-primary/15 transition-all duration-700 pointer-events-none" />
         <div className="absolute -bottom-40 -right-40 size-96 bg-secondary/5 rounded-full blur-[120px] group-hover:bg-secondary/10 transition-all duration-700 pointer-events-none" />
         
         <div className="flex flex-col xl:flex-row items-center justify-between gap-[55px] relative z-10">
-          {/* LEFT CONTENT AREA */}
+          
+          {/* AREA KONTEN KIRI (TEXT & MANFAAT UTAMA) */}
           <div className="flex-1 space-y-6">
             <Badge className="bg-success/10 text-success border border-success/20 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest">
               Akses Edukasi Terbuka
@@ -49,9 +66,10 @@ export function TrustBanner() {
               NihongoRoute adalah platform belajar nirlaba yang didesain secara transparan untuk mempermudah siapa saja menguasai bahasa Jepang secara mandiri tanpa terhalang kendala biaya.
             </p>
 
-            {/* THREE CORE BENEFITS ROW */}
+            {/* BARIS TIGA MANFAAT UTAMA */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-              {/* BENEFIT 1 */}
+              
+              {/* MANFAAT 1: BEBAS BIAYA */}
               <div className="space-y-2">
                 <div className="size-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
                   <ShieldCheck size={20} />
@@ -62,7 +80,7 @@ export function TrustBanner() {
                 </p>
               </div>
 
-              {/* BENEFIT 2 */}
+              {/* MANFAAT 2: OFFLINE */}
               <div className="space-y-2">
                 <div className="size-10 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center text-secondary">
                   <WifiOff size={20} />
@@ -73,7 +91,7 @@ export function TrustBanner() {
                 </p>
               </div>
 
-              {/* BENEFIT 3 */}
+              {/* MANFAAT 3: OPEN SOURCE */}
               <div className="space-y-2">
                 <div className="size-10 rounded-xl bg-success/10 border border-success/20 flex items-center justify-center text-success">
                   <Heart size={20} />
@@ -86,7 +104,7 @@ export function TrustBanner() {
             </div>
           </div>
 
-          {/* RIGHT ACTION COLUMN */}
+          {/* KOLOM AKSI KANAN (CTA & REPOSITORY) */}
           <div className="flex flex-col sm:flex-row xl:flex-col gap-4 w-full sm:w-auto xl:w-[260px] shrink-0 justify-center">
             <Button
               asChild
@@ -119,3 +137,4 @@ export function TrustBanner() {
     </m.section>
   );
 }
+

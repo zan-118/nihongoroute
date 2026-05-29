@@ -1,17 +1,39 @@
+/**
+ * @file page.tsx
+ * @description Halaman utama Pustaka (Library Hub) NihongoRoute.
+ * Menyediakan navigasi ke semua kategori konten: Kosakata, Kanji, Tata Bahasa, Membaca, Menyimak, dan Ujian.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import type { Metadata } from "next";
 import { BookOpen, BarChart2, Library, Database, Activity, Award, Headphones, Type } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
-// Domain Components
+// Komponen Pendukung
 import { LibraryCategoryCard } from "@/components/features/library/LibraryCategoryCard";
 import { LibraryServerStatus } from "@/components/features/library/LibraryServerStatus";
 import { getLibraryCounts } from "@/actions/library.counts.actions";
 
+// ======================
+// METADATA SEO
+// ======================
 export const metadata: Metadata = {
   title: "Pustaka Belajar | NihongoRoute",
   description: "Cari semua materi belajar bahasa Jepang terlengkap: kosakata, tata bahasa, kanji, graded reading, listening lab, dan simulasi ujian JLPT.",
 };
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
+/**
+ * Halaman utama Pustaka (RSC).
+ * Mengambil data statistik agregat jumlah kosakata, kanji, pola kalimat, dll., lalu menyajikan grid navigasi kategori.
+ * 
+ * @returns {JSX.Element} Halaman direktori pustaka materi belajar.
+ */
 export default async function LibraryPage() {
   const counts = await getLibraryCounts();
 

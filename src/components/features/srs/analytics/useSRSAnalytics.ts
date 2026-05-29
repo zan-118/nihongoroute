@@ -1,7 +1,19 @@
+/**
+ * @file useSRSAnalytics.ts
+ * @description Hook kustom (Custom Hook) untuk kalkulasi performa ingatan (SRS Ease Factor Analytics).
+ * Mengelompokkan item kosakata berdasarkan bobot kemudahan mengingat (Ease Factor: Kritis, Rentan, Stabil, Mahir).
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useUIStore } from "@/store/useUIStore";
 
+// ======================
+// HOOK UTAMA
+// ======================
 export function useSRSAnalytics() {
   const name = useUserStore((state) => state.name);
   const xp = useUserStore((state) => state.xp);

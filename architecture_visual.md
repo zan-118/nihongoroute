@@ -1,187 +1,184 @@
-# 🌀 Visualisasi Arsitektur Proyek NihongoRoute
+# 🌀 Peta Visual Arsitektur Sistem NihongoRoute
+Representasi Aliran Data, Sinkronisasi 3-Tingkat, dan Pipeline Rendering Visual
 
-Dokumen ini menyajikan representasi visual dari arsitektur proyek NihongoRoute yang memprioritaskan fitur luring (*offline-first*), performa tinggi (< 16ms untuk interaksi lokal), dan sinkronisasi awan yang aman. Seluruh kode sumber berada di dalam direktori `src/`.
+Dokumen ini menyajikan pemetaan visual arsitektur NihongoRoute menggunakan diagram Mermaid untuk menggambarkan interaksi antar-lapisan, protokol sinkronisasi luring-pertama (*offline-first*), serta pipeline rendering visual interaktif.
 
 ---
 
-## 1. Arsitektur Umum & Alur Data Split-Source
+## 💎 1. Arsitektur Umum & Alur Data Split-Source
 
-NihongoRoute menggunakan pendekatan **Split-Source** untuk memisahkan data editorial statis dengan data dinamis dan data leksikal terstruktur pengguna.
+NihongoRoute memisahkan dengan tegas konten editorial statis (dikelola via CMS) dari kemajuan belajar pengguna dan basis data kamus terstruktur (Supabase).
 
 ```mermaid
 graph TD
-    %% Nodes
-    subgraph CMS ["Content Management System (Static/Editorial)"]
-        Sanity["Sanity CMS<br/>(Lessons, Reading, Listening, Exams)"]
+    %% Subgraphs
+    subgraph CMS ["Content Management (Static/Editorial)"]
+        Sanity["Sanity CMS CDN<br/>(Lessons, Reading, Listening, MockExams)"]
     end
 
-    subgraph CloudDB ["Cloud Database (Dynamic/Lexical)"]
-        Supabase["Supabase Database & Auth<br/>(Kanji, Vocab, Grammar, XP, SRS)"]
-    end
-
-    subgraph Server ["Next.js Server Side"]
+    subgraph Server ["Next.js Server Side (RSC)"]
+        Queries["GROQ Query Engine<br/>(src/lib/queries.ts)"]
         Actions["Server Actions<br/>(src/actions/*)"]
-        Queries["Sanity Queries<br/>(src/lib/queries.ts)"]
     end
 
-    subgraph Client ["Client Side (src/)"]
-        Zustand["Zustand Stores<br/>(src/store/*)"]
-        RQ["React Query<br/>(src/hooks/useCloudData & useCloudMutation)"]
-        IDB["IndexedDB<br/>(Persist via idb-keyval)"]
-        UI["Visual UI Components<br/>(< 16ms Interactive)"]
+    subgraph CloudDB ["Cloud Persistence (Dynamic/Transactional)"]
+        Supabase["Supabase Cloud Database<br/>(Kanji, Vocab, Grammar, Profiles, SRS)"]
     end
 
-    %% Flows
-    Sanity -->|Fetched via| Queries
-    Supabase -->|Accessed via| Actions
-    
-    Queries -->|Promise.all / Paralel| Actions
-    Actions -->|Initial Cloud Load| RQ
-    RQ -->|Hydrate / Merge| Zustand
-    Zustand <-->|Local Persist| IDB
-    Zustand <-->|Reactive Selectors| UI
-    
-    %% Styling
+    subgraph Client ["Client Side Browser (Offline-First)"]
+        UI["Interactive UI Components<br/>(Latency &lt; 16ms)"]
+        Zustand["Zustand State Stores<br/>(useUserStore, useSRSStore)"]
+        RQ["React Query Hooks<br/>(useCloudData & useCloudMutation)"]
+        IDB["IndexedDB Storage<br/>(Persist via idb-keyval)"]
+    end
+
+    %% Relations
+    Sanity -->|Asset Coalesce Expansion| Queries
+    Queries -->|Promise.all Parallel Fetch| Actions
+    Supabase -->|Secure Row Level Security| Actions
+    Actions -->|Initial Hydration| RQ
+    RQ -->|Local Hydrate & Merge| Zustand
+    Zustand <-->|Fast Reactive Selectors| UI
+    Zustand <-->|Async Local Storage| IDB
+
+    %% Visual Themes
     classDef sanity fill:#f03e3e,stroke:#333,stroke-width:2px,color:#fff;
     classDef supabase fill:#3ecf8e,stroke:#333,stroke-width:2px,color:#fff;
-    classDef server fill:#228be6,stroke:#333,stroke-width:2px,color:#fff;
-    classDef client fill:#15aabf,stroke:#333,stroke-width:2px,color:#fff;
+    classDef server fill:#1c7ed6,stroke:#333,stroke-width:2px,color:#fff;
+    classDef client fill:#7048e8,stroke:#333,stroke-width:2px,color:#fff;
     
     class Sanity sanity;
     class Supabase supabase;
-    class Actions,Queries server;
-    class Zustand,RQ,IDB,UI client;
+    class Queries,Actions server;
+    class UI,Zustand,RQ,IDB client;
 ```
 
 ---
 
-## 2. Protokol Sinkronisasi 3-Tingkat (3-Tier Sync) & Keamanan Multi-Tab
+## 🔄 2. Protokol Sinkronisasi 3-Tingkat (3-Tier Sync) & Keamanan Multi-Tab
 
-Untuk menjamin performa *zero-latency* dan keandalan data luring, NihongoRoute menerapkan protokol 3-tingkat dengan sinkronisasi latar belakang yang ter-debound secara otomatis.
+Untuk menjaga zero-latency pada antarmuka visual, mutasi data dilakukan pada keadaan lokal terlebih dahulu, lalu di-debounce asinkron untuk disinkronkan ke awan secara berkelompok.
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor User as Pengguna (UI)
+    actor Pengguna as Siswa (UI)
     participant Zustand as Tier 1: Zustand Store
     participant IDB as IndexedDB (Lokal)
-    participant Sync as Tier 2: useSyncProgress (src/hooks)
+    participant Sync as Tier 2: useSyncProgress (Hook)
     participant Mutation as Tier 3: useCloudMutation (React Query)
     participant Cloud as Supabase (Cloud RPC)
-    participant BC as BroadcastChannel (nihongoroute_sync)
-    participant Tabs as Tab Peramban Lain
+    participant BC as BroadcastChannel (Sinyal Lokal)
+    participant Tabs as Tab Aktif Lainnya
 
-    User->>Zustand: Berinteraksi (e.g. Jawab Kartu SRS, XP bertambah)
-    Note over Zustand: Pembaruan Instan (< 16ms)<br/>Tandai data sebagai "Dirty" (dirtySrs / dirtyLessons)
-    Zustand->>IDB: Simpan otomatis asinkron
-    Zustand-->>User: Tampilan UI langsung ter-update (Mulus)
+    Pengguna->>Zustand: Menyelesaikan kuis / memperoleh XP
+    Note over Zustand: Pembaruan instan (< 16ms)<br/>Tambahkan ID kata ke data kotor (Dirty Set)
+    Zustand->>IDB: Tulis asinkron via idb-keyval
+    Zustand-->>Pengguna: Animasi XP & Lencana langsung aktif (Mulus)
 
-    Note over Sync: Memantau Zustand secara berkala & melakukan Debounce (2 detik)
-    Sync->>Mutation: Kirim paket data "Dirty"
-    Mutation->>Cloud: Eksekusi RPC "sync_user_progress"
+    Note over Sync: Memantau status "Dirty" & memulai Debounce 2000ms
+    Sync->>Mutation: Kirim paket data ter-batch (Dirty payload)
+    Mutation->>Cloud: Panggil RPC "sync_user_progress" (Enkripsi HTTPS)
     
-    alt Sinkronisasi Sukses
-        Cloud-->>Mutation: Respon OK (Data Tersimpan di Awan)
-        Mutation->>Zustand: Hapus penanda "Dirty" (clearDirtySrs / clearDirtyLessons)
+    alt Sinkronisasi Berhasil
+        Cloud-->>Mutation: Respon OK (Accepted XP)
+        Mutation->>Zustand: Bersihkan data kotor (clearDirtySrs)
         Mutation->>BC: Siarkan pesan "SYNC_COMPLETE"
         BC-->>Tabs: Terima pesan & Invalidate Cache React Query
-        Note over Tabs: Data di tab lain tersinkronisasi tanpa muat ulang halaman
-    else Terjadi Masalah Jaringan (Luring)
-        Cloud--xMutation: Gagal / Timeout
-        Note over Mutation,Zustand: Data tetap ditandai "Dirty" di Zustand & IndexedDB<br/>Retry otomatis 3x (exponential backoff)
+        Note over Tabs: Tab lain memperbarui profil tanpa muat ulang halaman
+    else Gangguan Jaringan (Offline Mode)
+        Cloud--xMutation: Timeout / Gangguan Koneksi
+        Note over Mutation,Zustand: Data tetap ditandai "Dirty" di lokal<br/>Retry otomatis 3x (Exponential Backoff)
     end
 ```
 
 ---
 
-## 3. Jalur Rendering & Interaksi Furigana
+## 🧠 3. Pipeline Rendering Furigana & Kamus Popover
 
-Sistem rendering teks bahasa Jepang dikelola secara cerdas dan interaktif berdasarkan pengaturan global di `useUIStore`.
+Sistem visualisasi teks Jepang NihongoRoute berjalan secara interaktif berdasarkan setelan preferensi furigana global pembelajar.
 
 ```mermaid
 graph TD
-    subgraph UIStore ["useUIStore (src/store)"]
-        ReadingState["readingState<br/>(Kanji / Furigana / Hiragana)"]
+    %% Nodes
+    subgraph Store ["UI State Manager"]
+        Prefs["readingState Prefs<br/>(Kanji / Furigana / Hiragana)"]
     end
 
-    subgraph Rendering ["Smart Rendering System (src/components/ui)"]
-        SmartJapanese["SmartJapanese<br/>(Mendeteksi teks Jepang)"]
-        FuriganaDisplay["FuriganaDisplay<br/>(Visual Ruby 0.55em)"]
+    subgraph Parser ["Smart Parser Engine"]
+        SmartJapanese["SmartJapanese Component<br/>(Parser Kanji & Kana)"]
+        SplitFurigana["splitFurigana Utility<br/>(Segmentasi Teks Cerdas)"]
     end
 
-    subgraph Interaction ["Interactive Dictionary"]
-        WordPopover["WordPopover<br/>(Pop-up detail kata)"]
-        DictionaryQuery["Pencarian Leksikal<br/>(Supabase / IndexedDB)"]
+    subgraph Visual ["DOM Renderer"]
+        Ruby["Ruby DOM Wrapper<br/>(Visual Scale 0.55em rt)"]
     end
 
-    %% Flows
-    ReadingState -->|Mengontrol perilaku| SmartJapanese
-    SmartJapanese -->|Membungkus teks| FuriganaDisplay
-    FuriganaDisplay -->|Jika diklik| WordPopover
-    WordPopover -->|Mencari arti & audio TTS| DictionaryQuery
-    
+    subgraph Interact ["Interactive Lexical Reader"]
+        Click["Aksi Klik Pengguna"]
+        Popover["WordPopover Component<br/>(Definisi & Audio TTS Luring)"]
+        SRSButton["AddToSRSButton<br/>(Mining ke Antrean SRS)"]
+    end
+
+    %% Relations
+    Prefs -->|Reactive Selector| SmartJapanese
+    SmartJapanese -->|Segmentasikan Teks| SplitFurigana
+    SplitFurigana -->|Bungkus Ruby & rt| Ruby
+    Ruby -->|Deteksi Interaksi| Click
+    Click -->|Tampilkan Dialog Detail| Popover
+    Popover -->|Tambah ke Flashcard| SRSButton
+
     %% Styling
-    classDef store fill:#7950f2,stroke:#333,stroke-width:2px,color:#fff;
-    classDef render fill:#ae3ec9,stroke:#333,stroke-width:2px,color:#fff;
-    classDef interact fill:#f76707,stroke:#333,stroke-width:2px,color:#fff;
-    
-    class ReadingState store;
-    class SmartJapanese,FuriganaDisplay render;
-    class WordPopover,DictionaryQuery interact;
+    classDef store fill:#ae3ec9,stroke:#333,stroke-width:2px,color:#fff;
+    classDef parser fill:#e8590c,stroke:#333,stroke-width:2px,color:#fff;
+    classDef visual fill:#0c8599,stroke:#333,stroke-width:2px,color:#fff;
+    classDef interact fill:#1098ad,stroke:#333,stroke-width:2px,color:#fff;
+
+    class Prefs store;
+    class SmartJapanese,SplitFurigana parser;
+    class Ruby visual;
+    class Click,Popover,SRSButton interact;
 ```
 
 ---
 
-## 4. Arsitektur Direktori & Struktur Peta Rute (`src/app/`)
+## 📂 4. Arsitektur Modular Direktori Utama (`src/`)
 
-Struktur folder NihongoRoute yang diatur secara modular di dalam `src/` untuk memudahkan pemeliharaan dan skalabilitas.
+Peta rute visual dan pembagian domain kode sumber yang diisolasi secara ketat demi kemudahan pengembangan tim (*separation of concerns*).
 
 ```mermaid
 graph TD
     Root["src/"] --> Actions["actions/<br/>(Server Actions)"]
-    Root --> App["app/<br/>(App Router)"]
-    Root --> Components["components/<br/>(Fitur & UI)"]
-    Root --> Hooks["hooks/<br/>(Hooks Global)"]
-    Root --> Lib["lib/<br/>(Utilitas Murni)"]
-    Root --> Store["store/<br/>(Zustand Stores)"]
-    Root --> Types["types/<br/>(Definisi Tipe)"]
+    Root --> App["app/<br/>(App Router Rute)"]
+    Root --> Components["components/<br/>(Komponen Visual UI)"]
+    Root --> Hooks["hooks/<br/>(React Hooks Infrastruktur)"]
+    Root --> Lib["lib/<br/>(Utilitas Murni Bebas JSX)"]
+    Root --> Store["store/<br/>(Zustand Stores Luring)"]
+    Root --> Types["types/<br/>(Tipe Data TypeScript)"]
 
-    App --> Main["(main)/<br/>(Navigasi Samping & Atas)"]
-    App --> Auth["auth/<br/>(Autentikasi)"]
-    App --> Onboarding["onboarding/<br/>(Onboarding)"]
-    App --> Studio["studio/<br/>(Sanity CMS)"]
-    App --> API["api/<br/>(Internal API)"]
+    App --> Main["(main)/<br/>(Bilah Samping & Atas)"]
+    App --> API["api/<br/>(API Internal)"]
+    App --> Auth["auth/<br/>(Auth Callback)"]
+    App --> Studio["studio/<br/>(Sanity CMS Studio)"]
 
-    Main --> Courses["courses/<br/>(Katalog)"]
-    Main --> Dashboard["dashboard/<br/>(Statistik)"]
-    Main --> Exams["exams/<br/>(Ujian JLPT)"]
-    Main --> Review["review/<br/>(SRS Review)"]
-    Main --> Library["library/<br/>(Perpustakaan)"]
-    Main --> Tools["tools/<br/>(Alat Belajar)"]
-    Main --> Settings["settings/<br/>(Pengaturan)"]
-    Main --> Social["social/<br/>(Papan Peringkat)"]
-    
+    Main --> Dashboard["dashboard/<br/>(Statistik & Grafik XP)"]
+    Main --> Courses["courses/<br/>(Pelajaran & Kuis)"]
+    Main --> Exams["exams/<br/>(Simulasi JLPT & JFT)"]
+    Main --> Library["library/<br/>(Kamus & Anotasi)"]
+    Main --> Review["review/<br/>(Evaluasi SRS)"]
+    Main --> Tools["tools/<br/>(Alat Tulis & Canvas)"]
+
     %% Styling
-    classDef root fill:#339af0,stroke:#333,stroke-width:2px,color:#fff;
-    classDef folder fill:#20c997,stroke:#333,stroke-width:2px,color:#fff;
-    classDef subfolder fill:#fab005,stroke:#333,stroke-width:2px,color:#111;
-    
+    classDef root fill:#1971c2,stroke:#333,stroke-width:2px,color:#fff;
+    classDef folder fill:#0ca678,stroke:#333,stroke-width:2px,color:#fff;
+    classDef route fill:#f59f00,stroke:#333,stroke-width:2px,color:#111;
+
     class Root root;
-    class Actions,App,Components,Hooks,Lib,Store,Types,Main,Auth,Onboarding,Studio,API folder;
-    class Courses,Dashboard,Exams,Review,Library,Tools,Settings,Social subfolder;
+    class Actions,App,Components,Hooks,Lib,Store,Types,Main,API,Auth,Studio folder;
+    class Dashboard,Courses,Exams,Library,Review,Tools route;
 ```
 
 ---
 
 > [!NOTE]
-> Arsitektur ini dirancang untuk memastikan kenyamanan belajar maksimal bagi pengguna Indonesia tanpa adanya hambatan teknis (seperti paywall tersembunyi atau latensi jaringan yang mengganggu) dengan prinsip **Free Access Strategy** dan **Offline-First**.
-
-> [!IMPORTANT]
-> **Lapisan Keamanan, Aksesibilitas & Validasi Build**: 
-> Seluruh aliran data di atas diproteksi oleh:
-> 1. **Sanitasi HTML (XSS Shield)** di `src/lib/sanitize.ts` yang secara otomatis membersihkan konten HTML dinamis sebelum dirender di sisi Client maupun Server.
-> 2. **SQL Wildcard Escaping** pada Server Actions untuk menolak injeksi manipulasi kueri basis data.
-> 3. **Suspense Guarding** pada penanganan `useSearchParams` untuk menjamin Next.js 16 berhasil melakukan pre-render halaman statis secara optimal.
-> 4. **Keamanan Hydration (React 19 / Next.js 16) & requestAnimationFrame**: Kewajiban penggunaan direktif `"use client"` di sub-komponen interaktif yang menggunakan event listener agar hidrasi berjalan lancar, dikombinasikan dengan pembungkusan inisialisasi state klien dalam `requestAnimationFrame` untuk mencegah error hydration. Seluruh logika halaman didelegasikan ke custom hook domain spesifik di bawah folder fitur untuk mencegah pola "god files" di berkas `page.tsx`.
-> 5. **Kepatuhan Aksesibilitas (A11y)**: Kewajiban penulisan atribut `aria-label` deskriptif terlokalisasi di seluruh tombol ikon navigasi perpustakaan.
-> 6. **Sanity Asset Resolution & Dynamic Category Routing**: Penggunaan ekspansi `coalesce` di query GROQ untuk media audio/gambar asli Sanity, serta resolusi dynamic category UUID dari Supabase di Server Actions untuk mencegah 404 pada client routing.
+> Pemetaan visual arsitektur ini disusun agar setiap rekayasawan baru dapat memahami siklus hidup hidrasi data luring-pertama, mekanisme sanitasi keamanan, serta integrasi pemrosesan furigana dalam waktu kurang dari 5 menit.

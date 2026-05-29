@@ -5,10 +5,16 @@
 
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import Link from "next/link";
 import { ChevronRight, Home } from "lucide-react";
 import { m } from "framer-motion";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface BreadcrumbItem {
   label: string;
   href?: string;
@@ -20,6 +26,9 @@ interface AppBreadcrumbsProps {
   className?: string;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function AppBreadcrumbs({ items, className = "" }: AppBreadcrumbsProps) {
   return (
     <nav 

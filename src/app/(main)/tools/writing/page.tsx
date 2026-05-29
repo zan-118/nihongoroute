@@ -6,6 +6,9 @@
 
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React, { Suspense } from "react";
 import { ChevronLeft, Download, Share2 } from "lucide-react";
 import Link from "next/link";
@@ -21,7 +24,7 @@ function FreeWritingContent() {
 
   return (
     <div className="w-full flex-1 relative overflow-hidden flex flex-col bg-background transition-colors duration-300 pt-12 pb-24 px-4 md:px-8">
-      {/* Background Decor */}
+      {/* Dekorasi Latar Belakang */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[800px] h-[400px] bg-success/5 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="max-w-4xl mx-auto w-full relative z-10 flex flex-col h-full">
@@ -69,18 +72,18 @@ function FreeWritingContent() {
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Main Canvas Area */}
+          {/* Area Kanvas Utama */}
           <div className="lg:col-span-7 flex justify-center">
             <div className="w-full max-w-[500px]">
                <WritingCanvas 
                  character={character}
-                 strokeColor="rgb(var(--success-rgb))" // Emerald color
+                 strokeColor="rgb(var(--success-rgb))" // Warna Emerald
                  className="max-w-[400px] md:max-w-[450px] mx-auto"
                />
             </div>
           </div>
 
-          {/* Tips & Info Area */}
+          {/* Area Tips & Informasi */}
           <div className="lg:col-span-5 space-y-6">
             <Card className="p-8 rounded-[2rem] border border-border bg-card/50 backdrop-blur-sm shadow-xl">
               <h3 className="text-lg font-black uppercase tracking-tight text-foreground mb-4">Tips Menulis</h3>

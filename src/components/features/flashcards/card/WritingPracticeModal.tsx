@@ -1,15 +1,32 @@
+/**
+ * @file WritingPracticeModal.tsx
+ * @description Komponen modal latihan menulis Kanji di dalam modul flashcard, menyematkan canvas coretan tak-taktil interaktif dengan validasi sensor arah goresan.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { m } from "framer-motion";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { PenTool, X, Sparkles } from "lucide-react";
 import WritingCanvas from "@/components/features/tools/writing/WritingCanvas";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface WritingPracticeModalProps {
   word: string;
   isOpen: boolean;
   onClose: () => void;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen modal dialog kanvas latihan menulis kanji flashcard.
+ */
 export function WritingPracticeModal({
   word,
   isOpen,
@@ -17,6 +34,9 @@ export function WritingPracticeModal({
 }: WritingPracticeModalProps) {
   const kanjiChar = word.charAt(0);
 
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md p-0 border-none bg-transparent shadow-none">

@@ -1,5 +1,13 @@
 "use client";
 
+/**
+ * @file PronunciationPanel.tsx
+ * @description Komponen panel evaluasi pelafalan lisan untuk melatih pengucapan kata bahasa Jepang menggunakan Web Speech API, dilengkapi visualisasi gelombang audio dan pencocokan tingkat kemiripan lafal Levenshtein Distance.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Mic, MicOff, RefreshCw, ChevronRight, Zap, CheckCircle2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,6 +15,9 @@ import { toast } from "sonner";
 import { useUserStore } from "@/store/useUserStore";
 import { sounds } from "@/lib/audio";
 
+// ==========================================
+// ANTARMUKA PROPS & KONTAK
+// ==========================================
 interface PronunciationPanelProps {
   card: {
     word: string;
@@ -18,7 +29,9 @@ interface PronunciationPanelProps {
   totalCards: number;
 }
 
-// Helpers for Levenshtein and Kana normalization
+// ==========================================
+// FUNGSI PEMBANTU (HELPERS)
+// ==========================================
 function toHiragana(str: string): string {
   return str.replace(/[\u30a1-\u30f6]/g, (match) => {
     return String.fromCharCode(match.charCodeAt(0) - 0x60);
@@ -53,19 +66,16 @@ function getSimilarityScore(target: string, input: string): number {
   return Math.round((1 - distance / maxLength) * 100);
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 /**
- * Komponen: PronunciationPanel
- * 
- * Panel interaktif untuk melatih pengucapan (pronunciation) kosakata bahasa Jepang menggunakan Web Speech API.
+ * Komponen panel interaktif untuk melatih pengucapan (pronunciation) kosakata bahasa Jepang menggunakan Web Speech API.
  * Komponen ini mengaktifkan mikrofon pengguna, menangkap transkrip audio ucapan klien, menormalisasi
  * teks Hiragana/Katakana, lalu menghitung tingkat kemiripan lafal menggunakan algoritma Levenshtein Distance
  * untuk memberikan skor akurasi (0-100%). Keberhasilan melafalkan kata dengan akurasi tinggi memberikan reward XP.
  * 
- * @param {Object} props - Properti komponen
- * @param {Object} props.card - Data kosakata target yang diucapkan (word, furigana, meaning)
- * @param {Function} props.onNext - Callback untuk berlanjut ke kartu berikutnya
- * @param {number} props.currentIndex - Indeks urutan kartu yang aktif saat ini
- * @param {number} props.totalCards - Total jumlah kartu dalam sesi latihan aktif
+ * @param {PronunciationPanelProps} props - Properti komponen panel pelafalan
  */
 export default function PronunciationPanel({
   card,

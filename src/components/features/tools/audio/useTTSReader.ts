@@ -1,13 +1,28 @@
-import { useState, useEffect, useRef } from "react";
+"use client";
 
 /**
  * @file useTTSReader.ts
- * @description Hook untuk membacakan teks Jepang. 
- * Menggunakan strategi Hybrid & Caching: Mengutamakan High-Quality Online Browser Voices, 
- * lalu fallback ke Google Translate TTS API dengan penyimpanan CacheStorage lokal untuk luring penuh.
+ * @description Hook kustom untuk membacakan teks bahasa Jepang menggunakan strategi Hybrid & Caching. Mengutamakan High-Quality Online Voices, kemudian fallback ke Google Translate TTS API dengan Cache Storage lokal untuk luring penuh.
  */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
+import { useState, useEffect, useRef } from "react";
+
+// ==========================================
+// HOOK UTAMA
+// ==========================================
+/**
+ * Hook khusus pembaca teks Jepang (TTS).
+ * 
+ * @param text Teks bahasa Jepang yang akan dibacakan.
+ * @returns Status pemutaran, keberadaan karakter Jepang, dan fungsi speak.
+ */
 export function useTTSReader(text: string) {
+  // ==========================================
+  // STATUS & STATE & REFS
+  // ==========================================
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasJapanese, setHasJapanese] = useState(true);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
@@ -21,6 +36,9 @@ export function useTTSReader(text: string) {
     }
   };
 
+  // ==========================================
+  // EFEK SAMPING (EFFECTS)
+  // ==========================================
   useEffect(() => {
     const jpRegex = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/;
     const frame = requestAnimationFrame(() => {
@@ -48,6 +66,9 @@ export function useTTSReader(text: string) {
     };
   }, []);
 
+  // ==========================================
+  // LOGIKA PENGENDALI & PEMUTARAN AUDIO
+  // ==========================================
   /**
    * Menjalankan pemutaran suara.
    * Strategi:
@@ -194,6 +215,9 @@ export function useTTSReader(text: string) {
     window.speechSynthesis.speak(utterance);
   };
 
+  // ==========================================
+  // HASIL HOOK (RETURN VALUE)
+  // ==========================================
   return { isPlaying, hasJapanese, speak };
 }
 

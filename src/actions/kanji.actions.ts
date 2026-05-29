@@ -1,7 +1,20 @@
+/**
+ * @file kanji.actions.ts
+ * @description Server Actions untuk mengambil data kanji dengan paginasi, pencarian teks,
+ * dan filter berdasarkan level JLPT dari Supabase.
+ */
+
 "use server";
 
+// ======================
+// IMPORTS
+// ======================
 import { createClient } from "@/lib/supabase/server";
 import { PaginatedKanjiResponse } from "@/types/library";
+
+// ======================
+// SERVER ACTIONS
+// ======================
 
 /**
  * Mengambil kanji dengan paginasi, pencarian, dan filter level.
@@ -21,10 +34,10 @@ export async function getPaginatedKanji(
 
     if (search) {
       const safeSearch = search
-        .replace(/\\/g, '\\\\')  // escape backslash first
-        .replace(/%/g, '\\%')    // escape SQL wildcard %
-        .replace(/_/g, '\\_')    // escape SQL wildcard _
-        .replace(/"/g, '');       // remove quotes for PostgREST syntax
+        .replace(/\\/g, '\\\\')  // hindari backslash terlebih dahulu
+        .replace(/%/g, '\\%')    // hindari SQL wildcard %
+        .replace(/_/g, '\\_')    // hindari SQL wildcard _
+        .replace(/"/g, '');       // hapus tanda kutip untuk sintaks PostgREST
       query = query.or(`character.ilike."%${safeSearch}%",meaning.ilike."%${safeSearch}%",onyomi.ilike."%${safeSearch}%",kunyomi.ilike."%${safeSearch}%",romaji.ilike."%${safeSearch}%"`);
     }
 
@@ -43,7 +56,7 @@ export async function getPaginatedKanji(
       total: count || 0,
     };
   } catch (error) {
-    console.error("Failed to fetch paginated kanji:", error);
+    console.error("Gagal mengambil data paginasi kanji:", error);
     return { data: [], total: 0 };
   }
 }

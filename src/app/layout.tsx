@@ -6,7 +6,7 @@
  */
 
 // ======================
-// IMPORTS
+// IMPOR
 // ======================
 import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
@@ -23,7 +23,7 @@ import { LazyMotion, domAnimation } from "framer-motion";
 
 
 // ======================
-// CONFIG / CONSTANTS
+// KONFIGURASI / KONSTANTA
 // ======================
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const notoJsonJP = Noto_Sans_JP({
@@ -105,7 +105,7 @@ export const metadata: Metadata = {
 };
 
 // ======================
-// MAIN EXECUTION
+// EKSEKUSI UTAMA
 // ======================
 
 /**
@@ -147,7 +147,7 @@ export default function RootLayout({
           <Toaster
             theme="dark"
             position="top-center"
-            offset={80} // Offset to clear Topbar (64px + 16px)
+            offset={80} // Ofset untuk membersihkan Topbar (64px + 16px)
             toastOptions={{
               style: {
                 background: 'rgba(var(--background-rgb), 0.9)',

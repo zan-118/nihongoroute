@@ -1,3 +1,9 @@
+/**
+ * @file DashboardClient.tsx
+ * @description Komponen klien interaktif untuk halaman dasbor utama pengguna.
+ * Menampilkan streak belajar, statistik XP, dan ringkasan kemajuan SRS secara real-time.
+ */
+
 "use client";
 
 import { useEffect, useState } from "react";

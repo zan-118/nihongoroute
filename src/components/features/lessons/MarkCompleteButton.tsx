@@ -1,5 +1,13 @@
+/**
+ * @file MarkCompleteButton.tsx
+ * @description Komponen tombol "Tandai Selesai" (MarkCompleteButton) untuk menyimpan progres belajar, menambah XP pengguna, dan berpindah ke materi selanjutnya.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
@@ -7,12 +15,18 @@ import { useUserStore } from "@/store/useUserStore";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface MarkCompleteButtonProps {
   lessonId: string;
   nextLessonSlug?: string;
   categoryId?: string;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export const MarkCompleteButton: React.FC<MarkCompleteButtonProps> = ({ lessonId, nextLessonSlug, categoryId }) => {
   const router = useRouter();
   const [marked, setMarked] = useState(false);

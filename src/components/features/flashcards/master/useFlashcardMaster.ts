@@ -1,3 +1,11 @@
+/**
+ * @file useFlashcardMaster.ts
+ * @description Custom Hook pengelola logika state dan kendali interaksi utama sesi kartu pengingat (flashcard), mencakup sistem SRS, navigasi kartu, keyboard handler (Enter, Space, Arrow), kalkulasi kombo, dan sinkronisasi status ke awan.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
@@ -8,6 +16,17 @@ import { sounds } from "@/lib/audio";
 import confetti from "canvas-confetti";
 import { MasterCardData, StudyMode } from "./types";
 
+// ==========================================
+// CUSTOM HOOK UTAMA
+// ==========================================
+/**
+ * Custom hook yang mengontrol alur state pembelajaran, kombo, navigasi keyboard, feedback kesalahan, dan reward XP.
+ * 
+ * @param {Object} params - Parameter inisialisasi hook
+ * @param {MasterCardData[]} params.cards - Daftar kartu aktif dalam sesi
+ * @param {StudyMode} params.initialMode - Mode belajar aktif awal
+ * @returns {Object} State dan aksi interaksi sesi flashcard
+ */
 export function useFlashcardMaster({
   cards,
   initialMode = "latihan"

@@ -1,5 +1,11 @@
-"use client";
+/**
+ * @file VocabTrigger.tsx
+ * @description Komponen interaktif yang bertindak sebagai pembungkus kata di dalam artikel membaca. Saat diklik, komponen ini memicu popup dialog kamus cepat dan status SRS.
+ */
 
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import React, { useState } from "react";
 import { useSRSStore } from "@/store/useSRSStore";
 import {
@@ -12,21 +18,32 @@ import {
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import { Badge } from "@/components/ui/badge";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface VocabTriggerProps {
   text: string;
   vocabId?: string;
   children: React.ReactNode;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen pemicu popup info kosakata.
+ */
 export default function VocabTrigger({ text, vocabId, children }: VocabTriggerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const srsData = useSRSStore((state) => state.srs);
 
-  // Simple lookup if no vocabId is provided (Auto-Lookup)
+  // Pencarian sederhana jika tidak ada vocabId yang disediakan (Pencarian Otomatis)
   const lookupId = vocabId || text;
   const srsInfo = srsData[lookupId];
 
-
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -34,7 +51,7 @@ export default function VocabTrigger({ text, vocabId, children }: VocabTriggerPr
             className="cursor-help border-b-2 border-dashed border-primary/40 hover:border-primary transition-all duration-300 relative group"
           >
             {children}
-            {/* Subtle Glow Underline */}
+            {/* Garis Bawah Pendar Halus */}
             <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary blur-[4px] opacity-0 group-hover:opacity-60 transition-opacity" />
           </span>
         </DialogTrigger>
@@ -44,12 +61,12 @@ export default function VocabTrigger({ text, vocabId, children }: VocabTriggerPr
           <DialogHeader className="relative z-10">
             <div className="flex items-center justify-between mb-4">
               <Badge variant="outline" className="border-primary/30 text-primary bg-primary/5">
-                Quick Dictionary
+                Kamus Cepat
               </Badge>
               {srsInfo && (
                 <div className="flex items-center gap-1.5">
                    <div className="size-2 rounded-full bg-success shadow-[0_0_8px_rgba(var(--success-rgb),0.5)]" />
-                   <span className="text-[10px] font-black uppercase tracking-tighter text-success/80">In SRS</span>
+                   <span className="text-[10px] font-black uppercase tracking-tighter text-success/80">Dalam SRS</span>
                 </div>
               )}
             </div>
@@ -64,7 +81,7 @@ export default function VocabTrigger({ text, vocabId, children }: VocabTriggerPr
             <div className="p-4 rounded-2xl bg-[rgba(var(--background-rgb),0.05)] border border-border space-y-2">
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">Makna</span>
               <p className="text-lg font-medium text-foreground/90">
-                {/* Fallback mock text if not in SRS */}
+                {/* Teks tiruan cadangan jika tidak ada di SRS */}
                 {srsInfo ? "Detail kosakata dari progres belajar Anda." : "Klik 'Detail' untuk melihat arti selengkapnya di perpustakaan."}
               </p>
             </div>

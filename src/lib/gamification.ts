@@ -1,7 +1,18 @@
+/**
+ * @file gamification.ts
+ * @description Modul utilitas pengelola status gamifikasi offline-first (streak, poin XP, quest harian, dan lencana/achievements). Mengandung logika pertambahan streak serta algoritma rekonsiliasi integrasi data gamifikasi awan dan luring.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { calculateLevel } from "./level";
 import { getLocalDateString } from "./utils";
 import { Inventory } from "@/store/types";
 
+// ==========================================
+// ANTARMUKA DATA GAMIFIKASI
+// ==========================================
 export interface GamificationData {
   xp: number;
   streak: number;
@@ -11,9 +22,18 @@ export interface GamificationData {
   inventory: Inventory;
 }
 
+// ==========================================
+// FUNGSI UTILITAS & LOGIKA BISNIS
+// ==========================================
 /**
  * Menghitung streak baru berdasarkan tanggal belajar terakhir.
  * Mempertimbangkan penggunaan Streak Freeze jika tersedia.
+ * 
+ * @param {number} currentStreak - Nilai streak pengguna aktif saat ini
+ * @param {string | null} lastStudyDate - Tanggal aktivitas belajar terakhir kali
+ * @param {Inventory} inventory - Status inventaris item milik pengguna
+ * @param {Function} addNotification - Callback pemicu in-app notification
+ * @returns {Object} Nilai streak baru dan status penggunaan item Streak Freeze
  */
 export function calculateNewStreak(
   currentStreak: number,
@@ -84,9 +104,9 @@ export function mergeGamification(local: GamificationData, cloud: GamificationDa
     ? Math.max(local.todayReviewCount, cloud.todayReviewCount)
     : (local.lastStudyDate === today ? local.todayReviewCount : cloud.todayReviewCount);
 
-  // Robust claimedQuests merging logic:
-  // 1. Same date: merge quest arrays and deduplicate.
-  // 2. Different dates: choose latest date (Last-Write-Wins lexicographically).
+  // Logika penggabungan claimedQuests yang kokoh:
+  // 1. Tanggal sama: gabungkan array quest dan lakukan deduplikasi.
+  // 2. Tanggal berbeda: pilih tanggal terbaru (Last-Write-Wins secara leksikografis).
   const localClaimed = local.inventory?.claimedQuests || { date: "", quests: [] };
   const cloudClaimed = cloud.inventory?.claimedQuests || { date: "", quests: [] };
   let mergedQuests = { date: "", quests: [] as string[] };
@@ -103,8 +123,8 @@ export function mergeGamification(local: GamificationData, cloud: GamificationDa
     mergedQuests = localClaimed.date > cloudClaimed.date ? localClaimed : cloudClaimed;
   }
 
-  // Merge achievements from local and cloud by taking the union of their IDs,
-  // keeping the earliest unlockedAt timestamp for each.
+  // Gabungkan achievements dari lokal dan awan dengan mengambil gabungan ID mereka,
+  // serta mempertahankan stempel waktu unlockedAt yang paling awal untuk masing-masing.
   const localAchievements = local.inventory?.achievements || [];
   const cloudAchievements = cloud.inventory?.achievements || [];
   const achievementMap = new Map<string, number>();

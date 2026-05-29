@@ -1,30 +1,22 @@
 "use client";
 
+/**
+ * @file useAuth.ts
+ * @description Hook kustom (Custom Hook) untuk menangani proses otentikasi di NihongoRoute.
+ * Menyediakan metode masuk/daftar berbasis email, OAuth Google, dan masuk instan sebagai tamu anonim menggunakan Supabase Auth.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import React, { useState, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 
-/**
- * Custom Hook: useAuth
- * 
- * Mengelola state dan logika operasi autentikasi (masuk, daftar, OAuth, dan tamu/anonim)
- * yang memisahkan logika auth Supabase dengan UI visual halaman masuk (login).
- * 
- * @returns {Object} State dan callback handler autentikasi
- * @returns {boolean} loading - Status tunggu pemanggilan API Supabase Auth
- * @returns {boolean} isRegistering - Mode antarmuka (registrasi vs login)
- * @returns {Function} setIsRegistering - Setter mode antarmuka
- * @returns {string} email - Input email
- * @returns {Function} setEmail - Setter email
- * @returns {string} fullName - Input nama lengkap (untuk registrasi)
- * @returns {Function} setFullName - Setter nama lengkap
- * @returns {string} password - Input kata sandi
- * @returns {Function} setPassword - Setter kata sandi
- * @returns {Function} handleEmailAuth - Handler login/registrasi berbasis email & password
- * @returns {Function} handleSocialLogin - Handler login pihak ketiga (OAuth Google)
- * @returns {Function} handleAnonymousLogin - Handler masuk instan sebagai tamu (offline-first)
- */
+// ======================
+// HOOK UTAMA
+// ======================
 export function useAuth() {
   const searchParams = useSearchParams();
   const router = useRouter();

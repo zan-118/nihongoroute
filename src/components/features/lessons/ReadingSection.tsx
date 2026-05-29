@@ -1,9 +1,20 @@
+/**
+ * @file ReadingSection.tsx
+ * @description Komponen seksi membaca (ReadingSection) dalam halaman pelajaran. Menampilkan teks bacaan terformat Kanji/Furigana/Hiragana, terjemahan, dan pemutar audio offline.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import { BookOpen } from "lucide-react";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import SanityMedia from "@/components/ui/SanityMedia";
 import { OfflineAudio } from "@/components/ui/OfflineAudio";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 export interface ReadingLessonItem {
   _id?: string;
   id?: string;
@@ -23,6 +34,9 @@ interface ReadingSectionProps {
   readingList: ReadingLessonItem[];
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) => {
   if (!readingList || readingList.length === 0) return null;
 
@@ -55,7 +69,7 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
                )}
             </div>
 
-            {/* HERO MEDIA FOR READING (SANITY) */}
+            {/* MEDIA HERO BACAAN (SANITY) */}
             {(r.imageUrl || r.videoUrl) && (
               <div className="mb-10">
                 <SanityMedia 

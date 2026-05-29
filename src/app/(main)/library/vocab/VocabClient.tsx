@@ -1,11 +1,14 @@
 /**
- * LOKASI FILE: app/(main)/library/vocab/VocabClient.tsx
- * KONSEP: Mobile-First Neumorphic (Kamus Kosakata)
- * POLA: Server-Client Hybrid (Initial data from server, then client-side filtering/pagination via Sanity client)
+ * @file VocabClient.tsx
+ * @description Komponen klien interaktif untuk halaman Kamus Kosakata (Vocab Dictionary).
+ * Mendukung pencarian, filter level JLPT, filter part-of-speech, dan paginasi berbasis state klien.
  */
 
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
@@ -18,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { getPaginatedVocab, PaginatedVocabResponse } from "@/actions/library.actions";
 
-// Domain Components & Hooks
+// Komponen Pendukung
 import { VocabCard } from "@/components/features/library/vocab/VocabCard";
 import { VocabFlashcardView } from "@/components/features/library/vocab/VocabFlashcardView";
 import { VocabHeader } from "@/components/features/library/vocab/VocabHeader";
@@ -27,6 +30,18 @@ import { VocabPagination } from "@/components/features/library/vocab/VocabPagina
 import { useUIStore } from "@/store/useUIStore";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
+/**
+ * Komponen VocabClient: Menyediakan antarmuka direktori kamus kosakata interaktif 
+ * dengan penyaringan level JLPT, jenis kata (Hinshi), pencarian instan, dan mode latihan flashcard.
+ * 
+ * @param {Object} props Properti komponen.
+ * @param {PaginatedVocabResponse} props.initialData Data kosakata inisial dari server (RSC).
+ * @returns {JSX.Element} Antarmuka direktori kosakata interaktif.
+ */
 export default function VocabClient({
   initialData,
 }: {
@@ -36,7 +51,7 @@ export default function VocabClient({
   const router = useRouter();
   const pathname = usePathname();
 
-  // Membaca nilai filter awal dari URL jika ada (bookmark friendly)
+  // Membaca nilai filter awal dari URL jika ada (kompatibel dengan bookmark)
   const initialLevel = searchParams.get("level") || "n5";
   const initialHinshi = searchParams.get("hinshi") || "all";
   const initialSearch = searchParams.get("search") || "";
@@ -61,7 +76,7 @@ export default function VocabClient({
     return lbl;
   };
 
-  // Sinkronisasikan state filter ke URL search parameters secara dinamis
+  // Menyinkronkan status filter dengan parameter pencarian URL secara reaktif
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
 
@@ -127,7 +142,7 @@ export default function VocabClient({
 
   type VocabItemType = (typeof vocabListRaw)[number];
 
-  // De-duplikasi Konten berdasarkan kata
+  // Melakukan de-duplikasi konten berdasarkan kata kunci unik
   const uniqueVocab = Object.values(
     vocabListRaw.reduce((acc: Record<string, VocabItemType>, item: VocabItemType) => {
       const key = item.word || "";
@@ -197,7 +212,7 @@ export default function VocabClient({
   const totalItems = data?.total || 0;
   const totalPages = Math.ceil(totalItems / limit);
 
-  // Practice Mode View
+  // Mode Latihan Flashcard
   if (isFlashcardMode && vocabList.length > 0) {
     return (
       <VocabFlashcardView
@@ -232,7 +247,7 @@ export default function VocabClient({
         setShowRomaji={setShowRomaji}
       />
 
-      {/* Content Grid */}
+      {/* Grid Konten */}
       <div className="relative">
         {loading && (
           <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-sm rounded-[2rem]">
@@ -263,7 +278,7 @@ export default function VocabClient({
           </div>
         ) : (
           <div className="flex flex-col gap-2.5 min-h-[400px]">
-            {/* Table Header (hidden on mobile) */}
+            {/* Kepala Tabel (Disembunyikan di Ponsel / Responsif) */}
             <div className="hidden md:grid md:grid-cols-12 gap-4 px-6 py-4 bg-muted/30 border border-border rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
               <div className="col-span-3">Kosakata</div>
               <div className="col-span-4">Arti / Definisi</div>
@@ -277,7 +292,7 @@ export default function VocabClient({
                 key={item.id}
                 className="flex md:grid md:grid-cols-12 items-center justify-between gap-4 px-4 py-3 bg-[rgba(var(--card-rgb),0.3)] backdrop-blur-3xl border border-border hover:border-[rgba(var(--primary-rgb),0.5)] transition-all duration-300 rounded-2xl shadow-sm hover:shadow-[0_0_25px_rgba(var(--primary-rgb),0.08)] group"
               >
-                {/* Sisi Kiri: Kosakata & Arti (Flex di Mobile, Grid Col di Desktop) */}
+                {/* Sisi Kiri: Kosakata & Arti (Flex di Seluler, Kolom Grid di Desktop) */}
                 <div className="flex-1 md:col-span-7 flex flex-col md:grid md:grid-cols-7 md:gap-4 md:items-center min-w-0 pr-2">
                   <div className="md:col-span-3 flex flex-col justify-center min-w-0">
                     <span className="text-base md:text-lg font-black text-foreground truncate">
@@ -294,7 +309,7 @@ export default function VocabClient({
                   </div>
                 </div>
 
-                {/* Jenis Kata (Sembunyikan di Mobile, Tampilkan di Desktop) */}
+                {/* Jenis Kata (Sembunyikan di Seluler, Tampilkan di Desktop) */}
                 <div className="hidden md:block md:col-span-2">
                   {item.hinshi && (
                     <span className="text-[9px] md:text-[10px] font-black bg-muted px-2 py-0.5 rounded-md border border-border uppercase tracking-widest text-muted-foreground max-w-max">
@@ -303,7 +318,7 @@ export default function VocabClient({
                   )}
                 </div>
 
-                {/* JLPT & Aksi */}
+                {/* Sisi Kanan: Level JLPT & Tombol Tindakan */}
                 <div className="flex items-center gap-2.5 shrink-0 md:col-span-3 md:justify-end">
                   {item.jlpt_level && (
                     <span className="text-[9px] md:text-[10px] font-black bg-[rgba(var(--primary-rgb),0.1)] text-primary px-2 py-0.5 rounded-full border border-[rgba(var(--primary-rgb),0.2)] uppercase shrink-0">

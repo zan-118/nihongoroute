@@ -1,3 +1,11 @@
+/**
+ * @file ExamIntro.tsx
+ * @description Komponen intro simulasi ujian (ExamIntro) untuk memberikan detail jumlah soal, batas waktu, target kelulusan, dan petunjuk kepatuhan ujian CBT.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -5,12 +13,18 @@ import { AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { ExamData, GameState } from "./types";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface ExamIntroProps {
   exam: ExamData;
   setGameState: (state: GameState) => void;
   backLink: string;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function ExamIntro({ exam, setGameState, backLink }: ExamIntroProps) {
   return (
     <Card className="w-full max-w-2xl mx-auto p-8 md:p-12 text-center mt-6 md:mt-12 relative overflow-hidden neo-card rounded-[3rem] border border-border bg-card shadow-2xl transition-colors duration-300">

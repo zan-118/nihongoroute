@@ -1,245 +1,169 @@
-# 🌀 Ringkasan Arsitektur NihongoRoute
-
-Dokumen ini menyajikan audit struktural yang komprehensif dari proyek NihongoRoute, merinci tumpukan teknologi, hubungan antar lapisan aplikasi, serta arsitektur alur data. File ini berfungsi sebagai rujukan teknis utama bagi para pengembang.
-
-> **Catatan:** Seluruh kode sumber aplikasi berada di dalam direktori `src/`. Alias path `@/*` merujuk ke `./src/*` (dikonfigurasi di `tsconfig.json`).
+# 🌀 Spesifikasi Arsitektur Sistem NihongoRoute
+Dokumen Rujukan Rekayasa Perangkat Lunak | Versi 1.1 (Mei 2026)
 
 ---
 
-## 1. Tumpukan Teknologi Utama
+## 🧭 1. Executive Summary & Visi Teknologi
 
-NihongoRoute dibangun menggunakan arsitektur modern yang berfokus pada sisi antarmuka (*frontend-heavy*) dan mudah diskalakan. Fokus utamanya adalah memberikan pengalaman yang dikendalikan oleh klien dengan kemampuan penggunaan luring (*offline-first*), didukung oleh sinkronisasi awan (*cloud*).
+**NihongoRoute** dikembangkan sebagai ekosistem pembelajaran bahasa Jepang luring-pertama (*offline-first*) berskala enterprise yang tangguh untuk masyarakat Indonesia. Filosofi rekayasa kami berfokus pada penyajian performa zero-latency tanpa hambatan biaya (*zero gatekeeping*) dan terminologi (*language-gap elimination*). 
 
-- **Kerangka Kerja (Framework):** Next.js 16 (App Router)
-- **Bahasa Pemrograman:** TypeScript (Pengetikan ketat untuk keandalan)
-- **Gaya Visual (Styling):** Tailwind CSS & Radix UI (Estetika *Cyber-Glass*: `backdrop-blur`, *glassmorphism*, dan aksen neon)
-- **Manajemen Status (State Management):** Zustand (Penyimpanan tersegmentasi dengan persistensi IndexedDB melalui `idb-keyval`)
-- **Status Server:** React Query (`@tanstack/react-query`) untuk pencadangan cerdas (*caching*) dan orkestrasi sinkronisasi awan.
-- **Sisi Server & Autentikasi:** Supabase (PostgreSQL, RPC, Auth)
-- **Manajemen Konten (Split-Source):** 
-  - **Sanity CMS**: Sumber kebenaran utama untuk konten editorial (*Lessons*, *Reading*, *Listening*, *Exams*).
-  - **Supabase**: Basis data terstruktur untuk entitas leksikal (*Kanji*, *Vocab*, *Grammar*) dan progres dinamis pengguna (*XP*, *SRS*).
-- **Animasi:** Framer Motion (Transisi berbasis pegas yang sangat mulus)
-- **Sinkronisasi Antar-Tab:** BroadcastChannel API (Memastikan konsistensi data di berbagai tab peramban)
+Dokumen ini merinci arsitektur teknis lengkap, penataan state terdistribusi, protokol sinkronisasi awan, integrasi multi-tab, serta standar keamanan tersemat yang melindungi integritas platform.
 
----
-
-## 2. Peta Rute & Tata Letak (`src/app/`)
-
-Sistem perutean menggunakan App Router dari Next.js 16 dengan pemisahan tegas antara area utama aplikasi dan area yang terisolasi.
-
-### Struktur Pohon Rute
 ```text
-src/app/
-├── (main)/                 # Grup Rute: Memerlukan Navigasi Samping & Atas
-│   ├── courses/            # Katalog materi & detail pelajaran
-│   ├── dashboard/          # Statistik pengguna & ringkasan kemajuan
-│   ├── exams/              # Simulasi ujian JLPT
-│   ├── library/            # Referensi tata bahasa, kamus, & pustaka Kanji (Mendukung penambahan manual kartu SRS via UUID)
-│   ├── review/             # Mesin utama pengulangan berkala (SRS)
-│   ├── settings/           # Pengaturan profil & preferensi antarmuka
-│   ├── share/              # Halaman publik untuk membagikan kemajuan
-│   ├── social/             # Fitur sosial & papan peringkat
-│   ├── support/            # Pusat bantuan & pertanyaan umum (FAQ)
-│   └── tools/              # Alat bantu belajar tambahan
-│       ├── flashcards/     # Mesin kartu pengingat dinamis (Mendukung pre-seleksi otomatis via parameter `?mode=kanji`)
-│       ├── kana/           # Latihan Hiragana & Katakana
-│       └── writing/        # Mesin latihan menulis Kanji
-├── api/                    # Endpoints API internal (furigana, admin, webhooks)
-├── auth/                   # Alur masuk, daftar, & panggilan balik
-├── login/                  # Halaman login
-├── forgot-password/        # Pemulihan kata sandi
-├── update-password/        # Pembaruan kata sandi
-├── onboarding/             # Pengenalan bertahap (Terisolasi dari Tata Letak Utama)
-├── privacy/                # Kebijakan privasi
-├── terms/                  # Syarat & ketentuan
-├── studio/                 # Sanity Studio (Embedded CMS)
-├── globals.css             # Gaya dasar (Tailwind + Token Cyber-Glass)
-├── layout.tsx              # Penyedia Utama (Autentikasi, Kueri, Tema)
-└── page.tsx                # Halaman Utama (Pemasaran)
+               +-------------------------------------------------+
+               |                   Visual UI                     |
+               |       (Estetika Cyber-Glass, Latency < 16ms)    |
+               +-----------------------+-------------------------+
+                                       |
+                                       v
+               +-------------------------------------------------+
+               |            Zustand Store (InMemory)             |
+               |      (useUserStore, useSRSStore, useUIStore)    |
+               +-----------------------+-------------------------+
+                                       |
+                                       v
+               +-------------------------------------------------+
+               |             IndexedDB (Local Disk)              |
+               |            (idb-keyval Storage Key)             |
+               +-----------------------+-------------------------+
+                                       | (Debounce & Batching 2s)
+                                       v
+               +-------------------------------------------------+
+               |         useSyncProgress (Sync Orchestrator)     |
+               +-----------------------+-------------------------+
+                                       |
+                                       v
+               +-------------------------------------------------+
+               |       useCloudMutation (React Query Hook)       |
+               +-----------------------+-------------------------+
+                                       | (Secure HTTPS POST)
+                                       v
+               +-------------------------------------------------+
+               |      Supabase RPC (sync_user_progress Call)      |
+               +-------------------------------------------------+
 ```
 
-### Tujuan Tata Letak Khusus
+---
 
-* **`src/app/layout.tsx`**: Membungkus seluruh aplikasi dengan penyedia tema (`ThemeProvider`), kueri (`QueryClientProvider`), dan autentikasi (`AuthProvider`).
-* **`src/app/(main)/layout.tsx`**: Menyediakan kerangka navigasi (Navigasi Samping, Navigasi Atas) yang seragam untuk pengalaman belajar.
-* **`src/app/onboarding/`**: Menggunakan tata letak kosong (layar penuh) untuk meminimalkan gangguan saat pengguna pertama kali mengatur akun.
+## ⚡ 2. Analisis Performa & Matriks Latensi
+
+Untuk mewujudkan kenyamanan belajar berkecepatan tinggi, NihongoRoute mengadopsi taktik **Optimistic-UI** yang sepenuhnya dikendalikan oleh local state. 
+
+Berikut perbandingan analitik performa aliran data lokal vs interaksi awan langsung:
+
+| Tipe Operasi | Lapis Data | Latensi Rata-Rata | Jaminan Ketersediaan | Deskripsi Dampak UI |
+| :--- | :--- | :--- | :--- | :--- |
+| **Baca/Tulis Instan** | Zustand (In-Memory) | **< 1ms** | 100% (Selalu Tersedia) | Pembaruan instan pada bilah XP, status tombol, dan dialog kuis. |
+| **Persistensi Disk** | IndexedDB via `idb-keyval` | **5ms - 15ms** | 99.9% (Browser Storage) | Menjaga progres belajar tetap aman saat peramban ditutup paksa. |
+| **Sinkronisasi Awan** | Supabase HTTPS RPC | **150ms - 800ms** | Bergantung pada Sinyal | Berjalan asinkron di latar belakang tanpa memblokir interaksi pengguna. |
 
 ---
 
-## 3. Anatomi Komponen & Fitur Domain (`src/components/`)
+## 🔄 3. Arsitektur Sinkronisasi 3-Tingkat (3-Tier Sync Protocol)
 
-Folder `src/components/features/` dikelompokkan berdasarkan area fungsional untuk menghindari ketergantungan yang rumit.
+Protokol sinkronisasi 3-Tingkat dirancang secara matematis untuk menangani perubahan data masif secara efisien dan mencegah *network flooding*.
 
-| Folder Fitur | Tanggung Jawab |
-| --- | --- |
-| `course` | Menangani tampilan halaman materi pelajaran dan navigasi antar bab. |
-| `dashboard` | Ekstensi statistik, grafik pengalaman (XP), dan cincin kemajuan untuk ringkasan belajar. |
-| `exams` | Logika pengatur waktu ujian, navigasi soal, dan penilaian otomatis JLPT. |
-| `gamification` | Komponen visual untuk bilah pengalaman (XP), lencana naik level, dan animasi rekor berturut-turut (*streak*). |
-| `grammar` | Menampilkan struktur tata bahasa beserta contoh kalimat dan penjelasan. |
-| `kanji` | Visualisasi urutan coretan, radikal, mnemonik, serta integrasi tombol premium `AddToSRSButton` berbasis UUID untuk penambahan kartu belajar langsung ke SRS lokal & cloud. |
-| `listening` | Pemutar audio yang tersinkronisasi dengan transkrip interaktif. |
-| `pdf` | Pembuatan dan pengunduhan dokumen PDF (Sertifikat, *Cheatsheet*, Materi Pelajaran). |
-| `reading` | Mode membaca berdampingan (Jepang-Indonesia) dengan integrasi teks-ke-suara (TTS). |
-| `review` | Ringkasan sesi setelah menyelesaikan latihan pengulangan berkala (SRS). |
-| `srs` | Tombol evaluasi (Sulit/Mudah) dan perhitungan jeda waktu. |
+```text
+[Zustand Store]  -- (1. Local Mutation) --> [IndexedDB Storage]
+       |
+       |  (2. Observasi State Kotor / "Dirty" Marking)
+       v
+[useSyncProgress]  -- (3. Debounce 2000ms & Batching Payload)
+       |
+       v
+[useCloudMutation]  -- (4. React Query Retries) --> [Supabase RPC Function]
+                                                           |
+                                                (5. Broadcast SYNC_COMPLETE)
+                                                           v
+                                                [Semua Tab Ter-invalidate]
+```
 
-### Komponen Kerangka Global (`src/components/layout/`)
-
-* **`Sidebar.tsx`**: Navigasi utama (Desktop) dengan integrasi tautan legal di bagian bawah.
-* **`Topbar.tsx`**: Pusat kendali pengguna (XP, Level, Rekor) dan menu profil.
-* **`MobileNav.tsx`**: Navigasi bawah (Bilah tab) untuk perangkat seluler.
-* **`NavWrapper.tsx`**: Pembungkus navigasi responsif yang menggabungkan Sidebar, Topbar, dan MobileNav.
-* **`AppBreadcrumbs.tsx`**: Jejak navigasi kontekstual.
-* **`ThemeToggle.tsx`**: Tombol pengalih tema terang/gelap.
-
----
-
-## 4. Analisis Manajemen Status (`src/store/`)
-
-NihongoRoute menggunakan Zustand yang dipadukan dengan persistensi IndexedDB untuk menjamin performa tinggi dan fungsionalitas luring (*offline*).
-
-### Penyimpanan Utama & Logika
-
-1. **`useAuthStore`**: Mengelola status autentikasi dan sesi pengguna.
-2. **`useUserStore`**: Mengelola data gamifikasi (XP, Rekor), level, inventaris, serta daftar pelajaran yang diselesaikan dan yang belum tersinkronisasi (*dirty*).
-3. **`useSRSStore`**: Mengelola basis data kartu pengulangan berkala (*srs*) dan melacak perubahan lokal yang belum tersinkronisasi (*dirtySrs*).
-4. **`useUIStore`**: Mengelola status sementara seperti proses memuat, status sinkronisasi, notifikasi, serta pengaturan visual (Furigana, Target harian).
-
-### Persistensi IndexedDB (`idb-keyval`)
-
-Aplikasi menyimpan status ke peramban secara asinkron menggunakan kunci berikut:
-
-* `nihongoroute_user_data`: Data profil dan riwayat belajar.
-* `nihongoroute_srs_data`: Seluruh basis data pengulangan berkala (SRS) lokal.
-* `nihongoroute_ui_data`: Pengaturan tema, furigana, dan status antarmuka sesi.
+### Penjelasan Detak Alur Kerja:
+1.  **Lapis UI & Lokal (Zustand + IndexedDB)**: 
+    Setiap kali pengguna menyelesaikan pelajaran atau menjawab kartu SRS, Zustand store memperbarui datanya seketika dan menambahkan ID kata ke dalam `dirtySrs` atau `dirtyLessons` Set. Keadaan ini langsung disimpan di IndexedDB secara asinkron.
+2.  **Lapis Orkestrasi (`useSyncProgress.ts`)**: 
+    Hook ini memantau perubahan data profil dan status *dirty* secara pasif. Jika terdeteksi perubahan, ia akan memulai timer *debounce* selama **2000ms**. Jika terjadi perubahan baru sebelum timer habis, timer akan di-reset. Hal ini menghemat bandwidth dan memaketkan (*batching*) puluhan pembaruan menjadi satu paket kiriman tunggal.
+3.  **Lapis Mutasi Awan (`useCloudMutation.ts` & RPC)**: 
+    Setelah timer debounce matang, data dikirim ke TanStack Query yang bertindak sebagai eksekutor mutasi. React Query mengendalikan percobaan ulang otomatis (*3x automatic retries*) dengan jeda *exponential backoff* apabila koneksi terputus.
 
 ---
 
-## 5. Alur Data & Sinkronisasi Awan
+## 🔒 4. Keamanan Multi-Tab & BroadcastChannel API
 
-Sistem menggunakan arsitektur terpadu berbasis Supabase untuk semua jenis data, menggabungkan konten statis dengan kemajuan pengguna secara real-time.
+Ketika pengguna membuka NihongoRoute di beberapa tab peramban secara bersamaan (misalnya tab 1 belajar Kanji, tab 2 membuka kosakata), rentan terjadi balapan data (*data racing*).
 
-### Langkah 1: Pengambilan Konten Paralel (Promise.all & Server Actions)
+```text
++-----------------------+                    +-----------------------+
+|        TAB A          |                    |        TAB B          |
+| (Eksekusi Cloud Sync) |                    | (Dengar Sinyal Lokal) |
++-----------+-----------+                    +-----------+-----------+
+            |                                            ^
+   (Mutasi Berhasil)                              (Sinyal Diterima)
+            |                                            |
+            v                                            |
+   [BroadcastChannel] -- (Kirim "SYNC_COMPLETE") --------+
+            |
+            v
+   [Invalidate Query Cache] ------> [Ambil Data Cloud Terbaru & Hydrate]
+```
 
-Data edukasi diambil secara paralel menggunakan arsitektur *Split-Source* melalui Server Actions yang berada di `src/actions/`. 
-- **Sanity CMS** melayani pemanggilan konten editorial yang kaya (mis. `lessons.actions.ts`, `reading.actions.ts`).
-- **Supabase** melayani pengambilan data kamus leksikal yang kaku (mis. `library.actions.ts`, `vocab.actions.ts`).
-Proses pengambilan data ini secara ketat mengimplementasikan pola `Promise.all` untuk menghindari *waterfall latency*, memanfaatkan *fetch caching* bawaan Next.js alih-alih invalidasi waktu kaku.
-
-### Langkah 2: Sinkronisasi Awan ke Lokal (Supabase → Zustand)
-
-1. Saat aplikasi dimuat, `useCloudData` mengambil salinan data dari Supabase (profil, data SRS, status pelajaran).
-2. Data digabungkan ke Zustand menggunakan strategi **Offline-First**. Penyelesaian konflik data didasarkan pada `updated_at` terbaru.
-
-### Langkah 3: Interaksi Lokal & Dirty Marking
-
-Setiap interaksi (XP bertambah, kartu SRS dijawab) akan langsung memperbarui status lokal di Zustand dan menandai ID tersebut sebagai "dirty". UI memberikan umpan balik instan (< 16ms) tanpa menunggu respon jaringan.
-
-### Langkah 4: Penyimpanan Latar Belakang (3-Tier Sync)
-
-1. **`useSyncProgress`**: Mengamati perubahan store dan melakukan debouncing paket data "dirty".
-2. **`useCloudMutation`**: Mengeksekusi prosedur RPC `sync_user_progress` di Supabase.
-3. **Konfirmasi**: Jika sukses, penanda *dirty* dihapus dan pesan `"SYNC_COMPLETE"` disiarkan melalui **BroadcastChannel** agar tab lain melakukan cache invalidation.
-
-### Langkah 5: Penyelarasan Integrasi Sanity & Resolusi Kategori Supabase Dinamis
-
-Untuk mendukung integrasi modul ujian (simulasi JLPT & JFT-Basic) yang dibuat melalui Sanity CMS ke dalam Next.js frontend, alur data mengimplementasikan dua mekanisme krusial:
-- **GROQ Asset Coalesce Expansion**: Konten multimedia asli dari pustaka media Sanity (tipe data `file` untuk audio soal/global chōkai dan `image` untuk gambar soal) di-coalesce secara dinamis di sisi server melalui query GROQ (`"audioUrl": coalesce(audioUrl.asset->url, audioUrl)`). Ini mengubah asset reference Sanity menjadi URL string bersih secara langsung sebelum dikirim ke UI.
-- **Resolusi UUID Kategori Dinamis**: Ujian di Sanity dihubungkan ke kategori pelajaran Supabase menggunakan field `category_id` (yang dapat berisi UUID Supabase atau string slug langsung). Jika UUID terdeteksi pada Server Action (`getExamByIdOrSlug`), sistem akan melakukan pencarian asinkron ke tabel `course_categories` Supabase untuk menerjemahkannya menjadi slug ramah SEO (seperti `"n5"`), mencegah kesalahan halaman 404 pada tautan kembali di client.
-
----
-
-## 6. Batasan Arsitektur
-
-1. **Akses Bebas 100% (Free Access Strategy):** Pengguna dapat menikmati seluruh konten dan fitur secara gratis tanpa harus membuat akun (*login*). *Middleware Auth* bekerja secara pasif (hanya mengelola penyegaran token jika ada), dan profil lokal diamankan di *IndexedDB* secara penuh. Pembuatan akun sepenuhnya bersifat opsional demi keperluan pencadangan ke *cloud*.
-2. **Pemilihan Terperinci (*Atomic Selectors*):** Komponen WAJIB mengambil bagian data secara spesifik (contoh: `useUserStore(s => s.xp)`) untuk mencegah pemuatan ulang (*re-render*) yang tidak perlu.
-3. **Keamanan Multi-Tab:** Ketidakkonsistenan data antar-tab dicegah dengan membatalkan memori sementara kueri (*Query Cache*) yang dipicu oleh BroadcastChannel API.
-4. **Ketahanan Luring:** Semua penyimpanan utama dipertahankan di IndexedDB, memungkinkan pengguna belajar di area tanpa sinyal dan tersinkronisasi otomatis saat terhubung kembali.
+### Alur Kerja Selaras Tanpa Refresh:
+1.  Setelah `useCloudMutation` menerima respon sukses dari Supabase RPC, ia akan menginisialisasi saluran penyiaran lokal:
+    ```typescript
+    const channel = new BroadcastChannel("nihongoroute_sync");
+    channel.postMessage("SYNC_COMPLETE");
+    ```
+2.  Semua tab aktif lainnya yang sedang berjalan mendengarkan saluran `"nihongoroute_sync"`. Begitu pesan `"SYNC_COMPLETE"` diterima, tab tersebut seketika memicu pembersihan memori sementara kueri (*query cache invalidation*):
+    ```typescript
+    queryClient.invalidateQueries({ queryKey: ["user-progress"] });
+    ```
+3.  React Query di tab pasif kemudian memperbarui data profil terbaru dari cloud secara transparan dan melakukan hidrasi/merge ke Zustand store lokal. Siklus ini menjamin data tetap selaras di seluruh tab tanpa menimbulkan tabrakan tulis (*dirty conflict*).
 
 ---
 
-## 7. Jalur Rendering Furigana & Interaksi
+## 💎 5. Mesin Ujian & Logika Evaluasi JLPT/JFT-Basic
 
-NihongoRoute menerapkan sistem rendering teks Jepang yang canggih dengan kontrol global dan interaksi kata yang cerdas.
+Seksi ujian (`src/components/features/exams/mock-engine/`) dirancang secara saksama untuk mereplikasi kondisi pengujian riil yang ketat dan menyajikan visual analitik yang presisi.
 
-### 7.1 Kontrol Mode Global (`useUIStore`)
-Status pembacaan dikendalikan secara terpusat melalui `readingState`:
-- **Kanji**: Hanya menampilkan Kanji asli.
-- **Furigana**: Menampilkan Kanji dengan anotasi Ruby di atasnya.
-- **Hiragana**: Mengonversi seluruh teks Jepang menjadi Hiragana.
+### 5.1 Lembar Jawaban Interaktif (Answer Sheet Grid)
+Answer grid menyajikan ikhtisar navigasi visual interaktif 2D:
+*   **Hijau (Active/Filled)**: Soal telah dijawab secara valid.
+*   **Amber Berkedip (Warning/Unfilled)**: Soal yang terlewatkan dan memerlukan perhatian.
+*   **Abu-abu Gembok (Locked)**: Bagian ujian yang belum dapat diakses sebelum bagian sebelumnya selesai diselesaikan.
 
-### 7.2 Komponen Rendering Cerdas
-- **`SmartJapanese`** (`src/components/ui/SmartJapanese.tsx`): Komponen utama yang mendeteksi teks Jepang dan membungkusnya dengan logika interaksi.
-- **`FuriganaDisplay`** (`src/components/ui/FuriganaDisplay.tsx`): Mengelola tampilan visual (Ruby) berdasarkan mode yang aktif. Menggunakan `0.55em` untuk proporsi yang optimal.
-- **`WordPopover`**: Muncul saat teks diklik, melakukan pencarian kosakata secara dinamis di Supabase/IDB untuk memberikan definisi, contoh, dan audio TTS.
+### 5.2 Batas Keras Audio Pemahaman Menyimak (Chōkai)
+Untuk mencegah kecurangan dan menjaga kepatuhan regulasi ujian internasional:
+*   Berkas audio pemahaman menyimak (Chōkai) dibatasi keras hanya dapat diputar **1 (satu) kali**.
+*   Sistem melacak status pemutaran secara persisten. Ketika audio selesai diputar atau pengguna sengaja berpindah soal di tengah-tengah pemutaran audio, sistem akan menghentikan pemutaran audio latar belakang secara fisik dan mengunci status audio soal tersebut menjadi `'played'` secara permanen di local state, mencegah pemutaran ulang.
 
----
-
-## 8. Protokol Sinkronisasi 3-Tingkat (3-Tier Sync)
-
-Untuk menjamin performa luring (*offline-first*) yang tangguh, NihongoRoute mengikuti protokol sinkronisasi tiga lapis:
-
-1.  **Lapis UI (Zustand)**: Interaksi pengguna langsung memperbarui Zustand store di `src/store/` (`useUserStore`, `useSRSStore`) untuk umpan balik instan (< 16ms).
-2.  **Lapis Orkestrasi (`useSyncProgress`)**: Hook di `src/hooks/useSyncProgress.ts` memantau perubahan store, melakukan *debouncing*, dan menyiapkan paket data untuk dikirim ke awan.
-3.  **Lapis Persistensi Awan (`useCloudMutation`)**: Hook di `src/hooks/useCloudMutation.ts` menggunakan React Query untuk mengeksekusi mutasi ke Supabase RPC. Jika sukses, ia akan menyiarkan `"SYNC_COMPLETE"` melalui `BroadcastChannel` untuk sinkronisasi antar-tab.
+### 5.3 Penilaian Sectional Passing Marks (Maiten)
+Sistem penilaian kami tidak hanya mengandalkan akumulasi nilai total, melainkan menerapkan kalkulasi kelulusan sektoral (*Maiten Rule*):
+$$\text{Status Kelulusan} = (\text{Skor Total} \ge \text{Batas Lulus Global}) \land \left( \forall s \in \text{Seksi}, \frac{\text{Skor}_s}{\text{Total}_s} \ge 32\% \right)$$
+Jika akurasi salah satu bagian materi (Kosa Kata, Tata Bahasa, Membaca, atau Menyimak) berada di bawah ambang batas sektoral $32\%$, pengguna dinyatakan **tidak lulus (FAILED)** demi menjaga standar kualitas kelulusan riil.
 
 ---
 
-## 9. Standardisasi Copywriting & Pedoman Antarmuka Ramah Pengguna (Language-Gap Elimination)
+## 🔌 6. Resolusi Dinamis UUID Kategori & GROQ Asset Coalesce Expansion
 
-Untuk menjamin NihongoRoute dapat diakses dan dipahami dengan mudah oleh seluruh pembelajar dari berbagai latar belakang di Indonesia, seluruh komponen antarmuka wajib mematuhi panduan penulisan teks berikut:
+Integrasi antara Next.js frontend (Supabase) dan editorial content (Sanity CMS) disokong oleh dua teknologi penanganan data dinamis:
 
-### 9.1 Eliminasi Kesenjangan Bahasa & Istilah Teknis
-Aplikasi ini melarang penggunaan jargon teknis, metafora berlebih (misalnya nuansa penerbangan *"Pilot's Cabin"* yang membingungkan), kata singkatan asing kaku, dan slang/jargon SaaS yang tidak ramah pemula.
-
-### 9.2 Tabel Padanan Istilah Wajib (Kanonik)
-
-| Konteks / Fitur | Hindari (Language Gap / Jargon) | Wajib Menggunakan (Bahasa Indonesia Ramah) |
-| :--- | :--- | :--- |
-| **Pengaturan Akun** | `The Pilot's Cabin`, `Identitas Belajar` | `Pengaturan Akun`, `Profil Pengguna` |
-| **Halaman Utama / Buku** | `Buka Pustaka`, `Pustaka Data` | `Buka Perpustakaan`, `Perpustakaan` |
-| **Pencegahan Biaya** | `Paywall` | `Biaya Tersembunyi`, `Langganan Tersembunyi` |
-| **Rekor Belajar** | `Streak`, `Hari Streak` | `Hari Beruntun`, `Hari Berturut-turut` |
-| **Progres Sinkronisasi** | `data tertahan di buffer lokal`, `Purge Database` | `data belum disinkronkan`, `Hapus Semua Data` |
-| **Pusat Bantuan** | `E-Wallet`, `coding fitur / membasmi bug` | `Dompet Digital`, `mengembangkan fitur / memperbaiki masalah teknis` |
-| **Gamifikasi** | `XP Points` | `Poin XP` |
-| **Sertifikat & Tes** | `Evaluasi kompetensi`, `Tingkat akurasi` | `Ujian`, `Akurasi Jawaban` |
-| **Algoritma Memori** | `Spaced Repetition (SRS)` | `pengulangan cerdas`, `Pengulangan Terjadwal` |
-
-Setiap pengembang yang menambahkan fitur baru wajib menggunakan padanan kata yang ramah pemula dari tabel di atas guna menjaga keberlanjutan pengalaman pengguna (*user experience*) yang konsisten.
+1.  **Resolusi Dinamis UUID Kategori**:
+    Sanity CMS menyimpan referensi kategori dalam format UUID Supabase atau string slug (misalnya `"n5"`). Saat melakukan routing detail kuis atau ujian, Server Action `getExamByIdOrSlug` secara cerdas memindai payload kategori. Jika terdeteksi format UUID melalui validasi regex, sistem akan melakukan resolusi asinkron ke tabel `course_categories` Supabase untuk mencari slug-nya terlebih dahulu, mencegah rute putus atau error 404 pada routing klien.
+2.  **GROQ Asset Coalesce Expansion**:
+    Untuk memastikan komponen pemutar audio luring (`AudioPlayer`) dan visualisasi gambar dapat merender aset multimedia secara instan, kueri GROQ universal kami di `src/lib/queries.ts` melakukan perluasan properti CDN secara dinamis:
+    ```groovy
+    "audioUrl": coalesce(audioUrl.asset->url, audioUrl),
+    "imageUrl": coalesce(imageUrl.asset->url, imageUrl)
+    ```
+    Mekanisme `coalesce` ini menjamin URL string absolut siap pakai selalu terkirim ke klien, baik saat aset di-host di CDN Sanity maupun referensi eksternal.
 
 ---
 
-## 10. Mekanisme Keamanan, Sanitasi Konten, & Penanganan Kueri Dinamis
+## 🔒 7. Audit Keamanan & Sanitasi Tersemat
 
-Untuk menjamin keandalan dan keamanan tingkat tinggi pada platform, NihongoRoute menerapkan protokol keamanan dan standar Next.js 16 di setiap tingkat aplikasi:
+NihongoRoute menerapkan sistem pertahanan berlapis di setiap tingkat aplikasi guna meminimalkan risiko eksploitasi:
 
-### 10.1 Perlindungan XSS & Sanitasi HTML (`src/lib/sanitize.ts`)
-Aplikasi merender konten HTML dinamis (seperti ulasan kuis ujian dan konten tabel lembar contekan interaktif) secara aman menggunakan utilitas penyanitasi khusus:
-- **`sanitizeHtml`**: Fungsi penyanitasi berbasis regex berkinerja tinggi yang menyaring tag-tag berbahaya (seperti `<script>`, `<iframe>`, `<object>`) serta atribut pemicu JavaScript (seperti `onload`, `onerror`, `onclick`).
-- Integrasi visual dilakukan melalui pembungkusan React yang aman alih-alih merender mentah `dangerouslySetInnerHTML` secara langsung tanpa pembersihan.
-
-### 10.2 Pencegahan SQL Injection Wildcard (Server Actions)
-Setiap pemanggilan kueri teks pencarian dinamis (misalnya pencarian kamus kosakata pada `vocab.actions.ts`) wajib melewati pembersihan karakter khusus SQL:
-- Karakter wildcard SQL (`%` dan `_`) di-escape dengan aman menggunakan tanda backslash sebelum kueri dikirim ke basis data Supabase PostgreSQL. Hal ini mencegah pengguna mengeksploitasi pencarian teks untuk membebani kinerja basis data.
-
-### 10.3 Pembungkusan Suspense untuk Penanganan Kueri Dinamis (`useSearchParams`)
-Mengikuti aturan Next.js 16 App Router, setiap halaman yang mengonsumsi kueri pencarian parameter dinamis pada sisi klien via hook `useSearchParams` (seperti halaman masuk `/login` dan alat kana `/tools/kana`) wajib dibungkus di dalam komponen `<Suspense>`. 
-- Hal ini mencegah deoptimisasi build, sehingga Next.js tidak merender seluruh halaman secara dinamis di server saat build time yang dapat menghentikan pembuatan static pages.
-
-### 10.4 Penyegaran Sesi Supabase Auth (`src/proxy.ts`)
-Sesi autentikasi Supabase disinkronkan dan disegarkan secara berkala pada middleware perantara (Proxy) untuk memastikan akses token pengguna selalu valid di lingkungan SSR tanpa menimbulkan masalah *cookie mismatch* antar-tab.
-
-### 10.5 Kepatuhan Aksesibilitas Tombol Ikon (`aria-label`)
-Sesuai dengan pedoman aksesibilitas ramah penyandang disabilitas (*screen reader*), seluruh tombol interaktif yang hanya berisi ikon grafis tanpa teks visual (seperti tombol kontrol pemutar, navigasi chevron, dan tombol tutup modal) **WAJIB** menyertakan atribut `aria-label` yang deskriptif dan terlokalisasi (misalnya: `aria-label="Halaman berikutnya"` pada tombol pagination). Hal ini mencegah hilangnya konteks aksesibilitas bagi pengguna dengan alat bantu pembaca layar.
-
-### 10.6 Keamanan Hydration & Batasan Event Handlers Klien
-Dalam arsitektur Next.js 16 (Turbopack), komponen server (*Server Components*) dilarang menerima properti callback atau event handlers dari React (seperti `onMouseEnter`, `onMouseLeave`, `onClick`) secara langsung pada elemen HTML raw. 
-- Setiap sub-komponen visual yang membutuhkan animasi interaktif berbasis deteksi kursor mouse atau aksi klik klien **WAJIB** dikonversi menjadi komponen klien dengan menyematkan direktif `"use client";` di baris paling atas berkas (contoh: `LibraryCategoryCard.tsx`). Hal ini menjamin kelancaran siklus hidup hidrasi (*hydration*) dan mencegah kegagalan kompilasi Next.js.
-
-### 10.7 Pemisahan Logika Halaman (No God Files) & Pencegahan Error Hidrasi (requestAnimationFrame)
-Untuk menjaga modularitas, kepatuhan arsitektur, dan meminimalkan masalah rendering Next.js 16:
-- **Pemisahan Logika Halaman**: Berkas `page.tsx` di folder `app/` dilarang keras menjadi "god files" yang memuat state, effect, dan Zustand store secara kompleks. Seluruh logika interaksi dan orkestrasi Zustand wajib dipindahkan ke custom hook domain spesifik di bawah folder fitur masing-masing (contoh: `useKanaQuiz` di `src/components/features/tools/kana/useKanaQuiz.ts`, `usePasswordUpdate` di `src/components/features/user/usePasswordUpdate.ts`, dll.).
-- **Penyelesaian Masalah Hidrasi Sisi Klien**: Untuk state-state klien yang di-set di dalam `useEffect` saat inisialisasi awal (seperti membuka modal dialog secara otomatis jika ada parameter kueri tertentu), perubahan state tersebut **WAJIB** dibungkus di dalam `requestAnimationFrame` (contoh: `requestAnimationFrame(() => { setSelectedChar(...) })`). Hal ini memastikan browser telah menyelesaikan siklus hidrasi layout sebelum state diubah, menghindari ketidakcocokan DOM (*DOM mismatch*) antara Server-Rendered HTML dan Client-Hydrated DOM.
+*   **Penyaring Serangan Injeksi XSS (`src/lib/sanitize.ts`)**: Seluruh rendering HTML dinamis (misalnya ulasan kuis ujian dan konten tabel contekan interaktif) disaring secara ketat lewat fungsi penyanitasi khusus berbasis ekspresi reguler sebelum disajikan ke komponen visual klien guna menyaring tag berbahaya seperti `<script>`, `<iframe>`, dan event handler pemicu js (`onload`, `onerror`).
+*   **Escape SQL Wildcard**: Parameter pencarian teks dinamis (seperti pencarian kamus) di-escape secara otomatis dari karakter database khusus (`%` dan `_`) di tingkat Server Actions guna memblokir eksploitasi beban pencarian PostgreSQL.
+*   **Next.js Suspense Boundaries**: Semua halaman klien yang mengonsumsi parameter kueri dinamis via hook `useSearchParams` dibungkus dalam pembatas `<Suspense>` untuk mencegah deoptimisasi build Next.js dan memastikan kelancaran pembuatan halaman statik (*Static Site Generation*).
+*   **Keamanan Hidrasi & Penanganan State Klien**: Komponen server dilarang menerima event handler klien (seperti `onClick`) secara langsung pada elemen HTML raw. Seluruh komponen interaktif diekstraksi ke komponen klien terpisah dengan direktif `"use client";`. Inisialisasi state otomatis klien di dalam efek samping wajib dibungkus `requestAnimationFrame` guna menghindari ketidakcocokan DOM hasil pre-render.

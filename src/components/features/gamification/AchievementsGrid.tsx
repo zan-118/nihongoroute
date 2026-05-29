@@ -1,5 +1,15 @@
 "use client";
 
+/**
+ * @file AchievementsGrid.tsx
+ * @description Komponen penampil kisi pencapaian lencana (Achievements Grid) bagi pengguna.
+ * Membaca data status dan riwayat belajar pengguna dari Zustand Store (`useUserStore` & `useSRSStore`)
+ * untuk mengevaluasi syarat pembukaan lencana secara dinamis.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { m } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Trophy, Star, Zap, Flame, BookOpen, Crown, Target } from "lucide-react";
@@ -8,15 +18,21 @@ import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useUIStore } from "@/store/useUIStore";
 
+// ======================
+// ANTARMUKA & TIPE
+// ======================
 interface Achievement {
   id: string;
   title: string;
   description: string;
   icon: React.ElementType;
-  condition: (progress: UserProgress) => number; // Returns progress percentage 0-100
+  condition: (progress: UserProgress) => number; // Mengembalikan persentase progres 0-100
   threshold: number;
 }
 
+// ======================
+// KONSTANTA & ATURAN
+// ======================
 const ACHIEVEMENTS: Achievement[] = [
   {
     id: "first_steps",
@@ -68,6 +84,9 @@ const ACHIEVEMENTS: Achievement[] = [
   }
 ];
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function AchievementsGrid() {
   const name = useUserStore(s => s.name);
   const xp = useUserStore(s => s.xp);
@@ -150,7 +169,7 @@ export default function AchievementsGrid() {
               </div>
             </div>
             
-            {/* Background Decoration for unlocked */}
+            {/* Dekorasi Latar Belakang untuk pencapaian yang telah terbuka */}
             {isUnlocked && (
               <div className="absolute -bottom-4 -right-4 text-primary/10 rotate-12 pointer-events-none group-hover:scale-125 transition-transform duration-700">
                 <ach.icon size={80} />

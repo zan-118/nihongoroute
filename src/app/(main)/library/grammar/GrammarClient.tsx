@@ -1,5 +1,14 @@
+/**
+ * @file GrammarClient.tsx
+ * @description Komponen klien interaktif untuk halaman daftar panduan tata bahasa (Grammar List).
+ * Menyediakan filter JLPT, pencarian, dan paginasi berbasis state klien.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { useState, useEffect, useRef } from "react";
 import { getGrammarArticles } from "@/actions/library.actions";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
@@ -12,15 +21,21 @@ import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/store/useUIStore";
 import { useHasMounted } from "@/hooks/useHasMounted";
 
-// Domain Components
+// Komponen Pendukung
 import { GrammarCard } from "@/components/features/grammar/GrammarCard";
 import { GrammarSearch } from "@/components/features/grammar/GrammarSearch";
 import { GrammarEmptyState } from "@/components/features/grammar/GrammarEmptyState";
 import { GrammarHeader } from "@/components/features/grammar/GrammarHeader";
 
+// ======================
+// KONFIGURASI / KONSTANTA
+// ======================
 const LEVELS = ["n5", "n4", "n3", "n2", "n1"];
 const ITEMS_PER_PAGE = 12;
 
+// ======================
+// TIPE DATA
+// ======================
 interface GrammarArticle {
   id?: string;
   _id: string;
@@ -36,6 +51,17 @@ interface GrammarClientProps {
   initialArticles?: GrammarArticle[];
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
+/**
+ * Komponen GrammarClient: Menyediakan antarmuka interaktif untuk menyaring, mencari, 
+ * dan mempaginasi materi tata bahasa Jepang (Bunpou) dengan status sinkronisasi URL.
+ * 
+ * @param {GrammarClientProps} props Properti komponen.
+ * @returns {JSX.Element} Antarmuka direktori tata bahasa interaktif.
+ */
 export default function GrammarClient({ initialArticles = [] }: GrammarClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -56,6 +82,7 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
 
   const isFirstMount = useRef(true);
 
+  // Membaca preferensi tata letak awal dari Zustand
   const layoutPreference = useUIStore((s) => s.settings.layoutPreference) ?? "grid";
 
   const [prevLayoutPreference, setPrevLayoutPreference] = useState(layoutPreference);
@@ -70,7 +97,7 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
     setCurrentPage(1);
   }
 
-  // Sinkronisasikan state filter ke URL search parameters secara dinamis
+  // Menyinkronkan status filter dengan parameter pencarian URL secara reaktif
   useEffect(() => {
     if (!mounted) return;
 
@@ -183,7 +210,7 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
             </div>
           ) : (
             <div className="flex flex-col gap-2.5">
-              {/* Table Header (hidden on mobile) */}
+              {/* Kepala Tabel (Disembunyikan di Ponsel / Responsif) */}
               <div className="hidden md:grid md:grid-cols-12 gap-4 px-6 py-4 bg-muted/30 border border-border rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
                 <div className="col-span-3">Pola Kalimat</div>
                 <div className="col-span-4">Arti / Penggunaan</div>
@@ -197,7 +224,7 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
                   key={article.id || article._id}
                   className="flex md:grid md:grid-cols-12 items-center justify-between gap-4 px-4 py-3 bg-[rgba(var(--card-rgb),0.3)] backdrop-blur-3xl border border-border hover:border-[rgba(var(--primary-rgb),0.5)] transition-all duration-300 rounded-2xl shadow-sm hover:shadow-[0_0_25px_rgba(var(--primary-rgb),0.08)] group"
                 >
-                  {/* Sisi Kiri: Pola Kalimat & Arti (Flex di Mobile, Grid Col di Desktop) */}
+                  {/* Sisi Kiri: Pola Kalimat & Arti (Flex di Seluler, Kolom Grid di Desktop) */}
                   <div className="flex-1 md:col-span-7 flex flex-col md:grid md:grid-cols-7 md:gap-4 md:items-center min-w-0 pr-2">
                     <div className="md:col-span-3 font-black text-sm md:text-base text-foreground leading-snug truncate select-all">
                       {article.title}
@@ -207,12 +234,12 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
                     </div>
                   </div>
 
-                  {/* Pembentukan (Sembunyikan di Mobile, Tampilkan di Desktop) */}
+                  {/* Bagian Pembentukan (Sembunyikan di Seluler, Tampilkan di Desktop) */}
                   <div className="hidden md:block md:col-span-2 text-xs text-muted-foreground font-mono truncate">
                     {article.formation || "-"}
                   </div>
 
-                  {/* Sisi Kanan: Level & Tombol Aksi */}
+                  {/* Sisi Kanan: Level & Tombol Tindakan */}
                   <div className="flex items-center gap-2.5 shrink-0 md:col-span-3 md:justify-end">
                     <span className="text-[9px] md:text-[10px] font-black bg-[rgba(var(--primary-rgb),0.1)] text-primary px-2 py-0.5 rounded-full border border-[rgba(var(--primary-rgb),0.2)] uppercase shrink-0">
                       {article.jlptLevel || selectedLevel}

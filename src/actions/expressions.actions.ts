@@ -1,7 +1,19 @@
+/**
+ * @file expressions.actions.ts
+ * @description Server Actions untuk mengambil data ungkapan (expressions) acak dari Supabase.
+ * Digunakan untuk menampilkan ungkapan harian pada halaman beranda.
+ */
+
 "use server";
 
+// ======================
+// IMPORTS
+// ======================
 import { createClient } from "@/lib/supabase/server";
 
+// ======================
+// TYPES
+// ======================
 export interface RandomExpression {
   id: string;
   text: string;
@@ -10,6 +22,10 @@ export interface RandomExpression {
   indonesia: string[];
   jlpt_level: string | null;
 }
+
+// ======================
+// SERVER ACTIONS
+// ======================
 
 /**
  * Mengambil satu ungkapan acak dari tabel `expressions`

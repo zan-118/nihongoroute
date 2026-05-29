@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * @file DashboardStats.tsx
+ * @description Komponen utama yang merangkum berbagai widget statistik kemajuan belajar pengguna di dashboard.
+ * Menampilkan progress level & XP, statistik streak harian, penguasaan kurikulum/silabus per level JLPT,
+ * modul Misi Harian (Daily Quests), status memori SRS (Memory Stats & SRS Analytics), serta visualisasi Heatmap kontribusi belajar.
+ *
+ * @package components/features/dashboard
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import { m, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +27,9 @@ import StreakFreezeCard from "../gamification/StreakFreezeCard";
 import { UserProgress } from "@/store/types";
 import { useUserStore } from "@/store/useUserStore";
 
+// ==========================================
+// ANTARMUKA & PROPS (INTERFACES)
+// ==========================================
 interface DashboardStatsProps {
   loading: boolean;
   progress: UserProgress;
@@ -32,6 +48,9 @@ interface DashboardStatsProps {
   }>;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 export default function DashboardStats({ 
   loading, 
   progress, 
@@ -44,7 +63,8 @@ export default function DashboardStats({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 mb-20">
-      {/* LEVEL & XP CARD (SPAN 8) */}
+      
+      {/* SEKSI 1: LEVEL & XP CARD (SPAN 8) */}
       <m.div variants={itemVariants} className="md:col-span-8">
         {loading ? (
           <Skeleton className="h-[250px] w-full rounded-2xl" />
@@ -90,7 +110,7 @@ export default function DashboardStats({
         )}
       </m.div>
 
-      {/* STATS HIGHLIGHT (SPAN 4) */}
+      {/* SEKSI 2: SOROTAN HARI AKTIF & PEMBEKU STREAK (SPAN 4) */}
       <m.div variants={itemVariants} className="md:col-span-4 flex flex-col gap-6">
         {loading ? (
           <>
@@ -119,7 +139,7 @@ export default function DashboardStats({
         )}
       </m.div>
 
-      {/* CURRICULUM MASTERY SECTION */}
+      {/* SEKSI 3: TINGKAT PENGUASAAN KURIKULUM */}
       <m.div variants={itemVariants} className="md:col-span-12">
         <div className="flex flex-col mb-8 mt-4">
           <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-[10px] mb-2 flex items-center gap-2">
@@ -139,7 +159,7 @@ export default function DashboardStats({
              const percentage = total > 0 ? (completed / total) * 100 : 0;
              
              return (
-               <Card key={cat._id} className="bg-background/[0.03] backdrop-blur-xl border border-border p-6 rounded-[2rem] group hover:border-primary/40 transition-all duration-500">
+               <Card key={cat._id} className="bg-background/[0.03] backdrop-blur-xl border border-border p-6 rounded-[2rem] group hover:border-primary/40 transition-all duration-500 shadow-none">
                   <div className="flex items-center gap-4 mb-5">
                     <div className="size-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
                       {percentage === 100 ? <CheckCircle2 size={24} /> : <BookOpen size={24} />}
@@ -174,7 +194,7 @@ export default function DashboardStats({
         </div>
       </m.div>
 
-      {/* DAILY QUESTS, MEMORY STATS, SRS ANALYTICS */}
+      {/* SEKSI 4: MISI HARIAN, STATS MEMORI, DAN ANALISIS SRS */}
       <m.div variants={itemVariants} className="md:col-span-4">
         {loading ? <Skeleton className="h-[400px] w-full rounded-2xl" /> : <DailyQuests />}
       </m.div>
@@ -187,10 +207,11 @@ export default function DashboardStats({
         {loading ? <Skeleton className="h-[400px] w-full rounded-2xl" /> : <SRSAnalytics />}
       </m.div>
 
-      {/* HEATMAP */}
+      {/* SEKSI 5: PETA KONTRIBUSI BELAJAR (HEATMAP) */}
       <m.div variants={itemVariants} className="md:col-span-12">
         {loading ? <Skeleton className="h-[220px] w-full rounded-2xl" /> : <Heatmap studyDays={progress.studyDays} />}
       </m.div>
     </div>
   );
 }
+

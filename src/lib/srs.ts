@@ -1,18 +1,19 @@
 /**
  * @file srs.ts
- * @description Implementasi algoritma Spaced Repetition System (SRS) berbasis modifikasi SM-2.
- * Digunakan untuk menghitung interval peninjauan kartu berikutnya berdasarkan performa user.
- * @module SRS
+ * @description Modul orkestrator sistem pengulangan cerdas (Spaced Repetition System / SRS) berbasis modifikasi algoritma SM-2 dengan Modern Halving untuk penalti dan Due-Date Guard untuk mencegah inflasi interval belajar luring.
  */
 
-// ======================
-// CONSTANTS / CONFIG
-// ======================
+// ==========================================
+// KONFIGURASI & KONSTANTA
+// ==========================================
 const DAY = 24 * 60 * 60 * 1000;
 const MIN_EASE_FACTOR = 1.3;
 const MAX_EASE_FACTOR = 5.0; // Batas maksimal ease factor
 const MAX_INTERVAL = 3650;   // Maksimal interval 10 tahun
 
+// ==========================================
+// ANTARMUKA STATE SRS
+// ==========================================
 export interface SRSState {
   interval: number; // Dalam satuan hari (days)
   repetition: number;
@@ -23,9 +24,9 @@ export interface SRSState {
   customMnemonic?: string; // Jembatan keledai kustom
 }
 
-// ======================
-// HELPER FUNCTIONS
-// ======================
+// ==========================================
+// FUNGSI PEMBANTU (HELPERS)
+// ==========================================
 
 /**
  * Membuat state awal untuk kartu baru.
@@ -42,9 +43,9 @@ export function createNewCardState(): SRSState {
   };
 }
 
-// ======================
-// BUSINESS LOGIC
-// ======================
+// ==========================================
+// LOGIKA BISNIS UTAMA SRS
+// ==========================================
 
 /**
  * Menghitung status SRS baru berdasarkan kualitas jawaban user (grade 0-3).

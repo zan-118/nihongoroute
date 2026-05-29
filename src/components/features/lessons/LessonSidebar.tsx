@@ -1,10 +1,21 @@
+/**
+ * @file LessonSidebar.tsx
+ * @description Komponen panel samping daftar materi pelajaran (LessonSidebar) untuk memudahkan navigasi beralih sub-materi pelajaran dalam bab yang sama.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import Link from "next/link";
 import { BookOpen, ChevronRight, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface LessonSidebarProps {
   nav: { slug: string; title: string }[];
   currentSlug: string;
@@ -12,6 +23,9 @@ interface LessonSidebarProps {
   categoryTitle: string;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function LessonSidebar({ 
   nav, 
   currentSlug, 
@@ -77,7 +91,7 @@ export default function LessonSidebar({
           </div>
         </nav>
 
-        {/* Progress Card (Placeholder for now) */}
+        {/* Kartu Progres (Penampung Sementara) */}
         <div className="p-6 rounded-[2rem] bg-primary/5 border border-primary/10 relative overflow-hidden group">
           <div className="relative z-10">
             <p className="text-[9px] font-black text-primary uppercase tracking-widest mb-2">Statistik Kamu</p>

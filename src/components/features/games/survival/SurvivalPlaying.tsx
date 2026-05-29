@@ -1,3 +1,12 @@
+/**
+ * @file SurvivalPlaying.tsx
+ * @description Komponen visual area bermain aktif untuk mode bertahan hidup (Survival Mode).
+ * Menampilkan status nyawa (HP), hitung mundur waktu yang berjalan, kata kosakata target (Kanji/Furigana), bilah progres waktu, serta empat opsi pilihan arti kosakata.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +17,9 @@ import { CardData } from "./types";
 import * as wanakana from "wanakana";
 import { splitFurigana } from "@/components/ui/SmartJapanese";
 
+// ======================
+// ANTARMUKA & TIPE
+// ======================
 interface SurvivalPlayingProps {
   hp: number;
   MAX_HP: number;
@@ -23,6 +35,9 @@ interface SurvivalPlayingProps {
   handleAnswer: (option: CardData) => void;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function SurvivalPlaying({
   hp,
   MAX_HP,

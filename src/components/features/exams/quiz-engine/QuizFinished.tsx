@@ -1,3 +1,11 @@
+/**
+ * @file QuizFinished.tsx
+ * @description Komponen tampilan ringkasan hasil penyelesaian kuis (QuizFinished) Lengkap dengan skor, persentase kelulusan, penambahan XP pengguna, tombol pengulangan, dan tombol lanjut.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { m } from "framer-motion";
 import { useRouter } from "next/navigation";
 import XPPop from "@/components/features/gamification/XPPop";
@@ -6,6 +14,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Target, RefreshCw, ArrowRight } from "lucide-react";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface QuizFinishedProps {
   score: number;
   totalQuestions: number;
@@ -13,6 +24,10 @@ interface QuizFinishedProps {
   xpGained: number;
   resetQuiz: () => void;
 }
+
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 
 export function QuizFinished({
   score,

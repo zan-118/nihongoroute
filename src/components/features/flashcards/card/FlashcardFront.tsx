@@ -1,3 +1,11 @@
+/**
+ * @file FlashcardFront.tsx
+ * @description Komponen sisi depan kartu flashcard (pertanyaan). Menampilkan visualisasi huruf Kanji/kana utama beserta input tantangan ejaan jika dalam mode tantangan.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MousePointer2, CheckCircle2, XCircle } from "lucide-react";
@@ -5,6 +13,9 @@ import { FlashcardThemeContext } from "./types";
 import { Input } from "@/components/ui/input";
 import * as wanakana from "wanakana";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface FlashcardFrontProps {
   word: string;
   themeContext: FlashcardThemeContext;
@@ -21,6 +32,12 @@ interface FlashcardFrontProps {
   };
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen sisi depan kartu flashcard.
+ */
 export function FlashcardFront({ 
   word, 
   themeContext, 
@@ -31,6 +48,9 @@ export function FlashcardFront({
   inputResult,
   srsState,
 }: FlashcardFrontProps) {
+  // ==========================================
+  // METODE PENGENDALI & HELPERS
+  // ==========================================
   const { isKanji, themeColor, themeBorder, themeShadow } = themeContext;
 
   const isChallenge = studyMode === "tantangan";
@@ -51,9 +71,12 @@ export function FlashcardFront({
     onUserInputChange?.(converted);
   };
 
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <Card
-      className={`absolute inset-0 w-full h-full border rounded-2xl flex flex-col items-center justify-center p-6 md:p-8 transition-all duration-500 shadow-none overflow-hidden bg-card bg-card ${
+      className={`absolute inset-0 w-full h-full border rounded-2xl flex flex-col items-center justify-center p-6 md:p-8 transition-all duration-500 shadow-none overflow-hidden bg-card ${
         inputResult === "correct" 
           ? "border-success/50 shadow-[0_0_40px_rgba(var(--success-rgb),0.2)] bg-success/[0.02]" 
           : inputResult === "wrong"

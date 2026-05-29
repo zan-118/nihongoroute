@@ -1,18 +1,35 @@
 "use client";
 
+/**
+ * @file GrammarEmptyState.tsx
+ * @description Komponen tampilan ketika pola kalimat tata bahasa tidak ditemukan
+ * atau materi level tertentu belum tersedia di basis data.
+ */
+
+// ==========================================
+// IMPOR UTAMA
+// ==========================================
 import React from "react";
 import { BookText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
+// ==========================================
+// ANTARMUKA & TIPE DATA
+// ==========================================
 interface GrammarEmptyStateProps {
   searchTerm: string;
   selectedLevel: string;
   onResetSearch: () => void;
 }
 
+// ==========================================
+// KOMPONEN UTAMA: GrammarEmptyState
+// ==========================================
 /**
- * Tampilan kosong saat pola kalimat tidak ditemukan atau belum tersedia.
+ * Komponen pembawa pesan ambient kosong saat data pola kalimat nihil.
+ * 
+ * @param {GrammarEmptyStateProps} props Properti untuk komponen empty state tata bahasa.
  */
 export function GrammarEmptyState({ searchTerm, selectedLevel, onResetSearch }: GrammarEmptyStateProps) {
   return (
@@ -23,10 +40,10 @@ export function GrammarEmptyState({ searchTerm, selectedLevel, onResetSearch }: 
             <BookText size={32} aria-hidden="true" className="text-primary/40" />
           </div>
         </div>
-        <h3 className="text-xl md:text-2xl font-black text-foreground uppercase tracking-tight mb-4">
+        <h3 className="text-xl md:text-2xl font-black text-foreground uppercase tracking-tight mb-4 font-sans">
           {searchTerm ? "Pola Kalimat Tidak Ditemukan" : "Materi Belum Tersedia"}
         </h3>
-        <p className="text-muted-foreground font-medium text-sm md:text-base max-w-md mx-auto mb-10 leading-relaxed">
+        <p className="text-muted-foreground font-medium text-sm md:text-base max-w-md mx-auto mb-10 leading-relaxed font-sans">
           {searchTerm 
             ? `Waduh, hasil buat "${searchTerm}" gak ketemu nih. Coba cari kata kunci lain atau periksa ejaanmu.` 
             : `Sabar ya, Sensei kami lagi ngeracik materi buat level ${selectedLevel.toUpperCase()}. Pantau terus!`}
@@ -40,8 +57,9 @@ export function GrammarEmptyState({ searchTerm, selectedLevel, onResetSearch }: 
           </Button>
         )}
       </div>
-      {/* Background Ambient Glow */}
+      {/* Pendar Ambient Latar Belakang */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-64 bg-primary/5 blur-[100px] pointer-events-none" />
     </Card>
   );
 }
+

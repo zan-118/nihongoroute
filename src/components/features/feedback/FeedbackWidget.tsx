@@ -1,15 +1,30 @@
 "use client";
 
+/**
+ * @file FeedbackWidget.tsx
+ * @description Komponen modal dialog bagi pengguna untuk mengirimkan masukan (feedback).
+ * Menyediakan opsi jenis masukan berupa laporan Bug (kutu), Saran, atau Pujian, serta form pengiriman teks pesan masukan.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { MessageSquarePlus, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useFeedbackWidget } from "./useFeedbackWidget";
 
+// ======================
+// ANTARMUKA & TIPE
+// ======================
 interface FeedbackWidgetProps {
   forceOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function FeedbackWidget({ forceOpen, onOpenChange }: FeedbackWidgetProps) {
   const {
     isOpen,

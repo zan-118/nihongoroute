@@ -1,3 +1,11 @@
+/**
+ * @file types.ts
+ * @description Deklarasi tipe data dan antarmuka kartu flashcard untuk kebutuhan ulasan hafalan (SRS Review Session).
+ */
+
+// ======================
+// ANTARMUKA & TIPE
+// ======================
 export interface FlashcardType {
   id: string;
   word: string;

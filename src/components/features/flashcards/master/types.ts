@@ -1,3 +1,14 @@
+/**
+ * @file types.ts
+ * @description Deklarasi tipe data dan antarmuka untuk modul kartu pengingat (flashcard) master, memetakan format internal data kartu kosakata/kanji JLPT serta mode belajar aktif.
+ */
+
+// ==========================================
+// DEKLARASI TIPE & ANTARMUKA
+// ==========================================
+/**
+ * Antarmuka MasterCardData memetakan seluruh data kosakata, kanji, arti, furigana, romaji, mnemonic, dan contoh kalimat.
+ */
 export interface MasterCardData {
   /** ID dari Supabase (uuid) */
   id: string;

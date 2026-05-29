@@ -1,10 +1,26 @@
 "use client";
 
+/**
+ * @file ProgressPanel.tsx
+ * @description Komponen panel Kemajuan (Progress Panel) pada dashboard NihongoRoute.
+ * Menyusun data statistik menyeluruh dari DashboardStats, peta penguasaan Kanji,
+ * serta panel deteksi titik lemah belajar (WeakPointPanel) dengan loading state yang dioptimasi.
+ *
+ * @package components/features/dashboard/panels
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import dynamic from "next/dynamic";
 import DashboardStats from "../DashboardStats";
 import { Variants } from "framer-motion";
 import { UserProgress } from "@/store/types";
 
+// ==========================================
+// ELEMEN DINAMIS (LAZY LOADING)
+// ==========================================
 const KanjiProgressGrid = dynamic(() => import("../KanjiProgressGrid"), { 
   ssr: false,
   loading: () => <div className="h-[200px] w-full animate-pulse bg-muted rounded-2xl" />
@@ -15,6 +31,9 @@ const WeakPointPanel = dynamic(() => import("../WeakPointPanel"), {
   loading: () => <div className="h-[120px] w-full animate-pulse bg-muted rounded-[34px]" />
 });
 
+// ==========================================
+// ANTARMUKA & PROPS (INTERFACES)
+// ==========================================
 interface ProgressPanelProps {
   loading: boolean;
   progress: UserProgress;
@@ -35,6 +54,9 @@ interface ProgressPanelProps {
   }>;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 export function ProgressPanel({
   loading,
   progress,
@@ -84,3 +106,4 @@ export function ProgressPanel({
     </div>
   );
 }
+

@@ -5,21 +5,31 @@
  * @module Sitemap
  */
 
+// ======================
+// IMPOR
+// ======================
 import { MetadataRoute } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { sanityClient } from "@/lib/sanity.client";
 
+// ======================
+// TIPE DATA
+// ======================
 interface SanitySitemapItem {
   slug: string;
   _updatedAt: string;
   category_id?: string;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
 /**
- * Membuat data sitemap untuk aplikasi.
+ * Membuat data sitemap dinamis untuk aplikasi.
  * Mengambil data level dari Supabase dan lessons/materials dari Sanity CMS.
  * 
- * @returns {Promise<MetadataRoute.Sitemap>} Daftar URL untuk sitemap.
+ * @returns {Promise<MetadataRoute.Sitemap>} Daftar URL terdaftar untuk sitemap SEO.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl =

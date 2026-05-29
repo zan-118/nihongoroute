@@ -1,5 +1,16 @@
+/**
+ * @file listeningMaterial.ts
+ * @description Skema dokumen Sanity Studio untuk Materi Menyimak (Listening). Menyediakan field transkrip audio, auto-generator Furigana, video/audio CDN, kuis evaluasi khusus choukai, dan metadata tingkat kesulitan.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { FuriganaGeneratorInput } from '../components/FuriganaGeneratorInput';
 
+// ==========================================
+// DEFINISI SKEMA DOKUMEN SANITY CMS
+// ==========================================
 export default {
   name: 'listeningMaterial',
   title: 'Materi Menyimak (Listening)',

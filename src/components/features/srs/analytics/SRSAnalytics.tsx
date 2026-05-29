@@ -1,10 +1,22 @@
 "use client";
 
+/**
+ * @file SRSAnalytics.tsx
+ * @description Komponen visual bagan analisis stabilitas memori (SRS Memory Ease Analytics).
+ * Menggunakan visualisasi diagram SVG kustom adaptif untuk memetakan pembagian kartu SRS (Fragile, Stable, Master) berdasarkan ease factor.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { LineChart, BarChart2, AlertTriangle, Zap, ShieldCheck } from "lucide-react";
 import { useSRSAnalytics } from "./useSRSAnalytics";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function SRSAnalytics() {
   const { total, rawData, maxCount } = useSRSAnalytics();
 

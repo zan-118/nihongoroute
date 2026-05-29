@@ -1,3 +1,11 @@
+/**
+ * @file useNavbar.ts
+ * @description Hook kustom untuk mengelola data menu dan fungsi navigasi panel samping/navigasi utama.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { useMemo } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -18,6 +26,9 @@ import { useUserStore } from "@/store/useUserStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { ROUTES } from "@/lib/routes";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface NavLink {
   href: string;
   label: string;
@@ -30,6 +41,9 @@ interface NavLinks {
   system: NavLink[];
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function useNavbar() {
   const pathname = usePathname();
   const router = useRouter();

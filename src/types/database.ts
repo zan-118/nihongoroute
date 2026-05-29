@@ -1,8 +1,11 @@
 /**
  * @file database.ts
- * @description Definisi tipe data TypeScript untuk skema basis data PostgreSQL (Supabase).
- * Mencakup interface untuk kolom JSONB guna menjamin integritas data library.
+ * @description Definisi tipe data TypeScript untuk skema tabel basis data PostgreSQL (Supabase) relasional. Menstandarkan tipe kolom JSONB untuk data kosakata, kanji, tata bahasa, materi bacaan, dan kuis mini guna menjamin type safety.
  */
+
+// ==========================================
+// DEKLARASI ANTARMUKA & TIPE DATA DATABASE
+// ==========================================
 
 export interface ExampleSentence {
   jp: string;

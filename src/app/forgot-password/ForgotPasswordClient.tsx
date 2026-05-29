@@ -1,11 +1,22 @@
+/**
+ * @file ForgotPasswordClient.tsx
+ * @description Komponen formulir pemulihan kata sandi (lupa kata sandi) NihongoRoute.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React, { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Mail, ArrowLeft, KeyRound } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function ForgotPasswordClient() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -41,7 +52,7 @@ export default function ForgotPasswordClient() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-300">
-      {/* Background Decor & Neural Grid */}
+      {/* Dekorasi Latar Belakang & Kisi Neural */}
       <div className="neural-grid" />
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
         <div className="size-[500px] bg-destructive/10 rounded-full blur-[120px] opacity-40 absolute -top-12 -left-12" />
@@ -49,7 +60,7 @@ export default function ForgotPasswordClient() {
       </div>
 
       <div className="w-full max-w-md bg-card/85 backdrop-blur-xl border border-border/80 rounded-[2rem] p-8 z-10 shadow-[0_15px_50px_rgba(0,0,0,0.3)] hover:shadow-[0_20px_60px_rgba(var(--destructive-rgb),0.1)] transition-all duration-500 relative glass">
-        {/* Decorative corner glows */}
+        {/* Kilau Sudut Dekoratif */}
         <div className="absolute top-0 right-0 size-24 bg-gradient-to-br from-destructive/10 to-transparent blur-md rounded-tr-[2rem] pointer-events-none" />
 
         <Link 

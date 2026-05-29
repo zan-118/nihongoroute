@@ -1,35 +1,55 @@
+/**
+ * @file KanjiInfoCard.tsx
+ * @description Komponen untuk menampilkan kartu informasi detail Kanji, mencakup definisi, radikal utama, dan jembatan keledai (mnemonic) studi.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import React from "react";
 import { BookOpen, Sparkles } from "lucide-react";
 
+// ==========================================
+// TIPE DATA / INTERFACE
+// ==========================================
 interface KanjiInfoCardProps {
   radicals?: string[];
-  mnemonics?: string | unknown[]; // Portable Text content
+  mnemonics?: string | unknown[]; // Konten Portable Text editor/sanity
   meaning?: string;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
+/**
+ * Komponen kartu informasi kanji.
+ */
 export default function KanjiInfoCard({
   radicals = [],
   mnemonics,
   meaning,
 }: KanjiInfoCardProps) {
+  // ==========================================
+  // RENDER KOMPONEN
+  // ==========================================
   return (
     <div className="flex flex-col gap-6 w-full max-w-[400px]">
-      {/* Meaning Section */}
+      {/* Bagian Arti */}
       {meaning && (
         <div className="flex flex-col gap-2">
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">Definition</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">Definisi</span>
           <h2 className="text-2xl font-black text-foreground tracking-tight uppercase">
             {meaning}
           </h2>
         </div>
       )}
 
-      {/* Radicals Section */}
+      {/* Bagian Radikal */}
       {radicals.length > 0 && (
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2">
              <BookOpen size={14} className="text-primary/50" />
-             <span className="text-[10px] font-black uppercase tracking-widest text-primary/70">Radicals</span>
+             <span className="text-[10px] font-black uppercase tracking-widest text-primary/70">Radikal</span>
           </div>
           <div className="flex flex-wrap gap-2">
             {radicals.map((radical) => (
@@ -44,12 +64,12 @@ export default function KanjiInfoCard({
         </div>
       )}
 
-      {/* Mnemonics Section */}
+      {/* Bagian Jembatan Keledai (Mnemonic) */}
       {mnemonics && (
         <div className="flex flex-col gap-3">
            <div className="flex items-center gap-2">
              <Sparkles size={14} className="text-primary/50" />
-             <span className="text-[10px] font-black uppercase tracking-widest text-primary/70">Mnemonic Study</span>
+             <span className="text-[10px] font-black uppercase tracking-widest text-primary/70">Studi Mnemonic</span>
           </div>
           <div className="bg-muted/50 border border-border rounded-2xl p-5 text-[13px] text-foreground/70 leading-relaxed font-medium italic shadow-inner">
             {typeof mnemonics === "string"

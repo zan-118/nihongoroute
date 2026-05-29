@@ -1,11 +1,22 @@
+/**
+ * @file AchievementToast.tsx
+ * @description Komponen notifikasi toast premium untuk menampilkan lencana pencapaian pengguna.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React, { useState, useEffect, useRef } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { Trophy, X, Zap } from "lucide-react";
 import { useUIStore } from "@/store/useUIStore";
 import { sounds } from "@/lib/audio";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface AchievementNotification {
   id: string;
   type: string;
@@ -32,6 +43,9 @@ interface AchievementNotification {
  * @store
  * - `useUIStore`: Mengakses state `notifications` untuk memantau lencana yang baru dibuka.
  */
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function AchievementToast() {
   const notifications = useUIStore((state) => state.notifications);
   const shownIdsRef = useRef<Set<string>>(new Set());
@@ -89,7 +103,7 @@ export default function AchievementToast() {
 
   if (!activeToast) return null;
 
-  // Determine rarity level (Gold, Silver, Bronze) based on title or message
+  // Tentukan tingkat kelangkaan (Gold, Silver, Bronze) berdasarkan judul atau pesan
   const msgLower = (activeToast.message || "").toLowerCase();
   const titleLower = (activeToast.title || "").toLowerCase();
   const isGold = msgLower.includes("gold") || titleLower.includes("gold");
@@ -134,10 +148,10 @@ export default function AchievementToast() {
               boxShadow: `0 20px 50px rgba(0, 0, 0, 0.3), 0 0 30px ${glowColor}`,
             }}
           >
-            {/* Animated neon spotlight beam inside */}
+            {/* Efek sorotan lampu neon teranimasi di bagian dalam */}
             <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-primary/5 to-transparent pointer-events-none -translate-x-full animate-[shimmer_3s_infinite]" />
 
-            {/* Close Button */}
+            {/* Tombol Tutup */}
             <button type="button"
               onClick={() => setActiveToast(null)}
               className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-all"
@@ -146,7 +160,7 @@ export default function AchievementToast() {
               <X size={14} />
             </button>
 
-            {/* Glowing Icon Holder */}
+            {/* Wadah Ikon Berpendar */}
             <div className="flex flex-col items-center justify-center shrink-0">
               <m.div
                 initial={{ rotate: -45, scale: 0.5 }}
@@ -161,7 +175,7 @@ export default function AchievementToast() {
               </span>
             </div>
 
-            {/* Content Details */}
+            {/* Detail Konten */}
             <div className="flex-1 pr-6 flex flex-col justify-center">
               <div className="flex items-center gap-2 mb-1">
                 <Zap size={10} className="text-warning animate-premium-bounce" />

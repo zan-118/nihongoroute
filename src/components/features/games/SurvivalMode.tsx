@@ -1,15 +1,30 @@
 "use client";
 
+/**
+ * @file SurvivalMode.tsx
+ * @description Komponen pembungkus utama (Controller/Orchestrator) untuk mode permainan bertahan hidup (Survival Mode).
+ * Mengelola transisi status permainan antara layar perkenalan (Intro), area permainan aktif (Playing), dan layar kekalahan/kemenangan (GameOver).
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { useSurvivalMode } from "./survival/useSurvivalMode";
 import { CardData } from "./survival/types";
 import { SurvivalIntro } from "./survival/SurvivalIntro";
 import { SurvivalGameOver } from "./survival/SurvivalGameOver";
 import { SurvivalPlaying } from "./survival/SurvivalPlaying";
 
+// ======================
+// ANTARMUKA & TIPE
+// ======================
 interface SurvivalModeProps {
   cards: CardData[];
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function SurvivalMode({ cards }: SurvivalModeProps) {
   const engine = useSurvivalMode(cards);
 

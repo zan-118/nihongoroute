@@ -1,15 +1,26 @@
+/**
+ * @file sync.ts
+ * @description Modul orkestrator sinkronisasi data progres belajar pengguna dari penyimpanan lokal (guest) ke awan Supabase saat login sukses, dilengkapi integrasi migrasi data tamu lokal (handleLegacyMigration).
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { createClient } from "./client";
 import { calculateLevel } from "@/lib/level";
 import { UserProgress } from "@/store/types";
 import { SupabaseClient } from "@supabase/supabase-js";
 
+// ==========================================
+// LOGIKA SINKRONISASI & RESOLUSI KONFLIK
+// ==========================================
 /**
- * Sinkronisasi data progres dari LocalStorage (guest) ke Supabase (cloud)
- * saat user berhasil login.
+ * Menyinkronkan kemajuan belajar lokal (tamu) ke awan Supabase saat pengguna beralih dari akun tamu ke akun terdaftar.
  * 
- * @param {string} userId - ID Supabase user yang sedang login.
- * @param {UserProgress} localData - Data dari localStorage.
- * @returns {Promise<boolean>} Status keberhasilan sinkronisasi.
+ * @param {string} userId - ID Supabase pengguna terautentikasi
+ * @param {UserProgress} localData - Objek kemajuan belajar luring dari Zustand
+ * @param {SupabaseClient} [supabaseClient] - Klien penyuplai API Supabase
+ * @returns {Promise<boolean>} True jika sinkronisasi berhasil seutuhnya
  */
 export async function syncLocalToCloud(userId: string, localData: UserProgress, supabaseClient?: SupabaseClient): Promise<boolean> {
   const supabase = supabaseClient || createClient();
@@ -38,7 +49,7 @@ export async function syncLocalToCloud(userId: string, localData: UserProgress, 
     const mergedXP = Math.max(localData.xp || 0, cloudProfile?.xp || 0);
     const mergedStreak = Math.max(localData.streak || 0, cloudProfile?.streak || 0);
     
-    // Merge Inventory (Streak Freeze)
+    // Gabungkan Inventaris (Streak Freeze)
     const localFreeze = localData.inventory?.streakFreeze || 0;
     const cloudFreeze = cloudProfile?.inventory?.streakFreeze || 0;
     const mergedInventory = {
@@ -46,7 +57,7 @@ export async function syncLocalToCloud(userId: string, localData: UserProgress, 
       streakFreeze: Math.max(localFreeze, cloudFreeze)
     };
 
-    // Merge Settings
+    // Gabungkan Pengaturan
     const mergedSettings = {
       ...(cloudProfile?.settings || {}),
       ...(localData.settings || {})
@@ -140,7 +151,7 @@ export async function syncLocalToCloud(userId: string, localData: UserProgress, 
  * @returns {Promise<boolean>} Status keberhasilan migrasi.
  */
 export async function handleLegacyMigration(userId: string, supabase: SupabaseClient): Promise<boolean> {
-  // Guard: localStorage is only available on the client
+  // Penjaga: localStorage hanya tersedia di sisi klien
   if (typeof window === "undefined") return false;
 
   const STATS_STORAGE_KEY = "nihongo-progress";

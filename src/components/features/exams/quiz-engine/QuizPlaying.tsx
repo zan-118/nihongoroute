@@ -1,3 +1,12 @@
+/**
+ * @file QuizPlaying.tsx
+ * @description Komponen visual pengerjaan soal kuis (Quiz Playing) interaktif.
+ * Menyediakan tampilan teks pertanyaan, bilah progres, opsi jawaban interaktif, umpan balik jawaban benar/salah secara instan, serta pembahasan soal.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -6,6 +15,9 @@ import { QuizQuestion } from "./types";
 import { Button } from "@/components/ui/button";
 import { QuizProgress } from "./QuizProgress";
 
+// ======================
+// ANTARMUKA & TIPE
+// ======================
 interface QuizPlayingProps {
   currentQ: QuizQuestion;
   currentIndex: number;
@@ -16,6 +28,9 @@ interface QuizPlayingProps {
   nextQuestion: () => void;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function QuizPlaying({
   currentQ,
   currentIndex,
@@ -74,7 +89,7 @@ export function QuizPlaying({
           </AnimatePresence>
         </div>
 
-        {/* ─── Result Banner: BENAR / SALAH ─── */}
+        {/* Banner Hasil Umpan Balik: BENAR / SALAH */}
         <AnimatePresence>
           {isAnswered && (
             <m.div

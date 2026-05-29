@@ -1,12 +1,17 @@
 /**
- * @file furigana.tsx
- * @description Utilitas cerdas untuk memisahkan Kanji dan Hiragana agar Furigana 
- * hanya muncul di atas Kanji saja.
+ * @file SmartJapanese.tsx
+ * @description Utilitas cerdas untuk memisahkan Kanji dan Hiragana agar Furigana hanya muncul di atas Kanji saja.
  */
 
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import * as wanakana from "wanakana";
 
+// ======================
+// FUNGSI PEMBANTU
+// ======================
 /**
  * Membedah kata menjadi potongan-potongan (chunks) yang memisahkan Kanji dan Hiragana.
  * Contoh: word="食べ物", reading="たべもの" 
@@ -135,6 +140,9 @@ export function splitFurigana(word: string, reading: string) {
   return chunks;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 /**
  * Komponen untuk merender teks Jepang dengan Furigana yang hanya muncul di atas Kanji.
  */

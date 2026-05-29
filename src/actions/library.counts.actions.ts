@@ -1,8 +1,21 @@
+/**
+ * @file library.counts.actions.ts
+ * @description Server Actions untuk mengambil jumlah item aktual dari seluruh kategori pustaka.
+ * Mengambil data leksikal (vocab, kanji, grammar) dari Supabase dan konten editorial
+ * (reading, listening, exams) dari Sanity CMS secara paralel.
+ */
+
 "use server";
 
+// ======================
+// IMPORTS
+// ======================
 import { createClient } from "@/lib/supabase/server";
 import { sanityClient } from "@/lib/sanity.client";
 
+// ======================
+// TYPES
+// ======================
 export interface LibraryCounts {
   vocab: number;
   kanji: number;
@@ -11,6 +24,10 @@ export interface LibraryCounts {
   listening: number;
   exams: number;
 }
+
+// ======================
+// SERVER ACTIONS
+// ======================
 
 /**
  * Mengambil jumlah item nyata dari tabel leksikal Supabase dan konten editorial Sanity CMS secara paralel.

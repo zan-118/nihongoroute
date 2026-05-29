@@ -6,6 +6,9 @@
 
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React from "react";
 import { motion } from "framer-motion";
 import { 
@@ -22,6 +25,9 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 
 
+// ======================
+// KONSTANTA
+// ======================
 const tools = [
   {
     title: "Kana Master",
@@ -54,9 +60,9 @@ const tools = [
     title: "Kamus Global",
     description: "Cari kosakata, tata bahasa, dan kanji dalam satu tempat.",
     icon: Search,
-    href: "#", // Opens search modal ideally
+    href: "#", // Idealnya membuka modal pencarian global
     onClick: () => {
-      // Logic to open search modal if possible, or just link to search page if exists
+      // Logika untuk membuka modal pencarian jika memungkinkan, atau arahkan langsung ke halaman pencari jika tersedia
       if (typeof window !== 'undefined') {
         const event = new KeyboardEvent('keydown', {
           key: 'k',
@@ -84,7 +90,7 @@ const tools = [
 export default function ToolsPage() {
   return (
     <div className="w-full flex-1 relative overflow-hidden flex flex-col bg-background transition-colors duration-300 pt-12 pb-24 px-4 md:px-8">
-      {/* Background Effect */}
+      {/* Efek Latar Belakang */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent pointer-events-none" />
       
       <div className="max-w-5xl mx-auto w-full relative z-10 flex flex-col h-full">
@@ -118,7 +124,7 @@ export default function ToolsPage() {
             >
               <Link href={tool.href} onClick={tool.onClick}>
                 <Card className={`group relative p-8 rounded-[2rem] border ${tool.border} bg-card/50 backdrop-blur-sm hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 overflow-hidden`}>
-                  {/* Hover Glow */}
+                  {/* Pendaran Hover */}
                   <div className={`absolute -right-10 -top-10 w-40 h-40 ${tool.bgColor} rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
                   
                   <div className="relative z-10 flex flex-col gap-6">
@@ -153,7 +159,7 @@ export default function ToolsPage() {
           ))}
         </div>
 
-        {/* Footer Info */}
+        {/* Informasi Kaki Halaman */}
         <div className="mt-16 p-8 rounded-3xl bg-muted/30 border border-border/50 text-center relative overflow-hidden">
            <div className="absolute inset-0 bg-grid-foreground/5 [mask-image:radial-gradient(hsl(var(--foreground)),transparent)]" />
            <p className="relative z-10 text-xs font-bold text-muted-foreground uppercase tracking-[0.2em]">

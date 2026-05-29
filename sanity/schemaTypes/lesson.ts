@@ -1,7 +1,18 @@
+/**
+ * @file lesson.ts
+ * @description Skema dokumen Sanity Studio untuk Pelajaran (Lesson). Mengintegrasikan field metadata pelajaran, blok editor kaya (rich text) dialog, tata bahasa, catatan penting, kuis evaluasi, dan pemilih Supabase.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { SupabaseSelector } from '../components/SupabaseSelector';
 import { FuriganaGeneratorInput } from '../components/FuriganaGeneratorInput';
 import { SupabaseCategorySelect } from '../components/SupabaseCategorySelect';
 
+// ==========================================
+// DEFINISI SKEMA DOKUMEN SANITY CMS
+// ==========================================
 export default {
   name: 'lesson',
   title: 'Pelajaran (Lesson)',

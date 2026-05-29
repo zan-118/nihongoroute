@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * @file ContentBlockRenderer.tsx
+ * @description Komponen perender blok konten pelajaran untuk NihongoRoute.
+ * Menangani rendering teks kaya (Rich Text) dari Sanity Portable Text serta berbagai blok kustom seperti
+ * tata bahasa (grammar), percakapan (dialogue), sorotan (callout), gambar (image), kosakata (vocab), dan kanji.
+ *
+ * @package components/features/lessons
+ * @project NihongoRoute
+ */
+
+// ==========================================
+// IMPOR
+// ==========================================
 import React from "react";
 import Image from "next/image";
 import { AlertCircle, Info, BookOpen, AlertTriangle, Globe, Hourglass, BarChart } from "lucide-react";
@@ -11,6 +24,9 @@ import { PortableText } from "next-sanity";
 import { VocabSection, VocabLessonItem } from "./VocabSection";
 import { KanjiSection, KanjiLessonItem } from "./KanjiSection";
 
+// ==========================================
+// ANTARMUKA & PROPS (INTERFACES)
+// ==========================================
 interface ContentBlockRendererProps {
   blocks: ContentBlock[];
   vocabList?: VocabLessonItem[];
@@ -34,6 +50,9 @@ interface PortableTextChildrenProps {
   children?: React.ReactNode;
 }
 
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 export default function ContentBlockRenderer({ 
   blocks,
   vocabList = [],
@@ -41,7 +60,7 @@ export default function ContentBlockRenderer({
 }: ContentBlockRendererProps) {
   if (!blocks?.length) return null;
 
-  // Define components dynamically to close over vocabList and kanjiList
+  // Definisikan komponen secara dinamis untuk menutup (closure) vocabList dan kanjiList
   const components = {
     types: {
       dialogueBlock: ({ value }: PortableTextValueProps) => <DialogueBlock block={value as unknown as ContentBlock} />,
@@ -87,7 +106,7 @@ export default function ContentBlockRenderer({
     }
   };
 
-  // Sort by order if available
+  // Urutkan berdasarkan kolom order jika tersedia
   const sorted = [...blocks].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
   return (
@@ -105,6 +124,9 @@ export default function ContentBlockRenderer({
   );
 }
 
+// ==========================================
+// LENCANA PEDAGOGIS (PEDAGOGICAL BADGES)
+// ==========================================
 function PedagogicalBadges({ block }: { block: ContentBlock }) {
   const { pedagogical_role, difficulty_stage, estimated_reading_time } = block;
 
@@ -175,6 +197,9 @@ function PedagogicalBadges({ block }: { block: ContentBlock }) {
   );
 }
 
+// ==========================================
+// PORTABLE TEXT BLOCK RENDERER
+// ==========================================
 function PortableTextBlockRenderer({ block, components }: { block: SanityPortableTextBlock; components: React.ComponentProps<typeof PortableText>["components"] }) {
   return (
     <div className="prose-custom max-w-none">
@@ -186,6 +211,9 @@ function PortableTextBlockRenderer({ block, components }: { block: SanityPortabl
   );
 }
 
+// ==========================================
+// RENDERER ITEM BLOK (BLOCK ITEM)
+// ==========================================
 function BlockItem({ 
   block,
   components,
@@ -241,8 +269,9 @@ function BlockItem({
   );
 }
 
-// ─── Text Block ───────────────────────────────────────────────────────────────
-
+// ==========================================
+// BLOK TEKS
+// ==========================================
 function TextBlock({ block }: { block: ContentBlock }) {
   return (
     <div className="space-y-4">
@@ -280,8 +309,9 @@ function TextBlock({ block }: { block: ContentBlock }) {
   );
 }
 
-// ─── Callout Block ────────────────────────────────────────────────────────────
-
+// ==========================================
+// BLOK CALLOUT
+// ==========================================
 function CalloutBlock({ block }: { block: ContentBlock }) {
   return (
     <div className="flex gap-4 p-5 rounded-xl bg-primary/5 border border-primary/20">
@@ -301,8 +331,9 @@ function CalloutBlock({ block }: { block: ContentBlock }) {
   );
 }
 
-// ─── Grammar Block ────────────────────────────────────────────────────────────
-
+// ==========================================
+// BLOK TATA BAHASA
+// ==========================================
 function GrammarBlock({ block }: { block: ContentBlock }) {
   return (
     <div className="space-y-4 border border-border rounded-xl overflow-hidden">
@@ -334,8 +365,9 @@ function GrammarBlock({ block }: { block: ContentBlock }) {
   );
 }
 
-// ─── Dialogue Block ───────────────────────────────────────────────────────────
-
+// ==========================================
+// BLOK PERCAKAPAN
+// ==========================================
 function DialogueBlock({ block }: { block: ContentBlock }) {
   const lines = block.content
     ? block.content.split("\n").filter(Boolean).map((line: string, i: number) => {
@@ -380,8 +412,9 @@ function DialogueBlock({ block }: { block: ContentBlock }) {
   );
 }
 
-// ─── Image Block ──────────────────────────────────────────────────────────────
-
+// ==========================================
+// BLOK GAMBAR
+// ==========================================
 function ImageBlock({ block }: { block: ContentBlock }) {
   if (!block.content) return null;
   return (
@@ -405,8 +438,9 @@ function ImageBlock({ block }: { block: ContentBlock }) {
   );
 }
 
-// ─── Examples Section ─────────────────────────────────────────────────────────
-
+// ==========================================
+// BAGIAN CONTOH
+// ==========================================
 function ExamplesSection({ examples }: { examples: ExampleSentence[] }) {
   if (!examples?.length) return null;
   return (
@@ -434,3 +468,4 @@ function ExamplesSection({ examples }: { examples: ExampleSentence[] }) {
     </div>
   );
 }
+

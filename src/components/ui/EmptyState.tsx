@@ -1,10 +1,21 @@
+/**
+ * @file EmptyState.tsx
+ * @description Komponen Tampilan Kosong (Empty State) premium teranimasi dengan dukungan ikon, tombol aksi, dan tema siber.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { m } from "framer-motion";
 import { Coffee, LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface EmptyStateProps {
   icon?: LucideIcon;
   title: string;
@@ -14,6 +25,9 @@ interface EmptyStateProps {
   onClick?: () => void;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export default function EmptyState({
   icon: Icon = Coffee,
   title,

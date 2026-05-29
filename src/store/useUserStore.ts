@@ -1,3 +1,11 @@
+/**
+ * @file useUserStore.ts
+ * @description Zustand Store luring pengelola profil pengguna, data progres gamifikasi (XP, level, streak), data transaksi inventaris item virtual (Streak Freeze), log hari aktif belajar, serta riwayat penyelesaian pelajaran. Terhubung dengan IndexedDB via idb-keyval.
+ */
+
+// ==========================================
+// IMPORT & DEPENDENSI
+// ==========================================
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { get, set as idbSet, del } from "idb-keyval";
@@ -5,9 +13,10 @@ import { Inventory, LessonProgress } from "./types";
 import { calculateLevel } from "@/lib/level";
 import { useUIStore } from "./useUIStore";
 
+// ==========================================
+// ANTARMUKA STATE STORE
+// ==========================================
 /**
- * Interface: UserState
- * 
  * Mendefinisikan struktur data progres belajar dan aksi gamifikasi milik pengguna.
  * Mengelola XP, level, rekor hari beruntun (streak), inventarisasi item,
  * riwayat pelajaran yang telah diselesaikan, serta penandaan pelajaran kotor (dirtyLessons).
@@ -39,6 +48,9 @@ interface UserState {
   checkAchievements: () => void;
 }
 
+// ==========================================
+// BIAYA ITEM & KONSTANTA
+// ==========================================
 /** Biaya XP untuk membeli Streak Freeze. Exported sebagai satu sumber kebenaran. */
 export const STREAK_FREEZE_COST = 500;
 
@@ -85,6 +97,7 @@ export const useUserStore = create<UserState>()(
           level: newLevel,
         });
 
+        // 1. Kirim notifikasi "Naik Level" jika level pengguna bertambah
         if (newLevel > currentLevel) {
           useUIStore.getState().addNotification({
             title: "Level Up!",
@@ -93,6 +106,7 @@ export const useUserStore = create<UserState>()(
           });
         }
 
+        // 2. Evaluasi apakah penambahan XP membuka lencana pencapaian (achievements) baru
         get().checkAchievements();
       },
 
@@ -103,8 +117,10 @@ export const useUserStore = create<UserState>()(
 
       buyStreakFreeze: () => {
         const state = get();
+        // Cek kecukupan koin XP pengguna untuk pembelian
         if (state.xp < STREAK_FREEZE_COST) return false;
 
+        // Potong XP dan tambahkan kuantitas streakFreeze di dalam inventaris luring
         set({
           xp: state.xp - STREAK_FREEZE_COST,
           inventory: {
@@ -128,11 +144,12 @@ export const useUserStore = create<UserState>()(
         
         let newQuests = [...(currentClaimed?.quests || [])];
         
-        // Reset if date is different
+        // Reset daftar quest jika berganti hari kalender belajar
         if (currentClaimed?.date !== date) {
           newQuests = [];
         }
         
+        // Jika quest belum pernah diklaim hari ini, masukkan ke daftar klaim luring
         if (!newQuests.includes(questId)) {
           newQuests.push(questId);
           
@@ -146,13 +163,14 @@ export const useUserStore = create<UserState>()(
             }
           });
           
-          // Add the XP reward locally (will be validated and synced by backend)
+          // Tambahkan reward XP lokal (akan diverifikasi ulang oleh backend anticheat Supabase saat sinkronisasi)
           state.addXP(rewardXP);
         }
       },
 
       completeLesson: (lessonId) => {
         const state = get();
+        // Jangan selesaikan ulang jika pelajaran sudah selesai dan tidak dihapus
         if (state.completedLessons[lessonId] && !state.completedLessons[lessonId].isDeleted) return;
 
         const now = Date.now();
@@ -163,6 +181,7 @@ export const useUserStore = create<UserState>()(
           isDeleted: false
         };
 
+        // Tandai pelajaran ini kotor (dirtyLessons) agar disinkronkan ke cloud
         const newDirty = new Set(state.dirtyLessons);
         newDirty.add(lessonId);
 
@@ -215,6 +234,7 @@ export const useUserStore = create<UserState>()(
       }),
 
       checkAchievements: () => {
+        // Jangan jalankan verifikasi lencana jika sedang berada di dalam lingkungan pengetesan unit (Vitest)
         if (typeof process !== "undefined" && process.env?.VITEST) {
           return;
         }
@@ -227,7 +247,7 @@ export const useUserStore = create<UserState>()(
         const currentXp = state.xp;
         const currentStreak = state.streak;
 
-        // Dapatkan data SRS secara aman dan sinkron dari global window untuk menghindari circular dependency
+        // Dapatkan data SRS secara aman dan sinkron dari global window untuk menghindari circular dependency antar-store
         const srsStore = typeof window !== "undefined" ? (window as unknown as Record<string, { getState: () => { srs: Record<string, { isDeleted?: boolean; repetition?: number }> } }>).useSRSStore : null;
         const srsState = srsStore ? srsStore.getState().srs || {} : {};
         const totalReviews = Object.values(srsState).reduce(
@@ -235,23 +255,24 @@ export const useUserStore = create<UserState>()(
           0
         );
 
+        // Kumpulan target lencana prestasi yang dapat dibuka secara offline
         const targets = [
-          // Lessons
+          // Lencana Pelajaran Selesai
           { id: "lesson_bronze", check: lessonsCompleted >= 1, xp: 50, title: "Pahlawan Belajar (Bronze)", msg: "Menyelesaikan 1 Pelajaran" },
           { id: "lesson_silver", check: lessonsCompleted >= 5, xp: 250, title: "Pahlawan Belajar (Silver)", msg: "Menyelesaikan 5 Pelajaran" },
           { id: "lesson_gold", check: lessonsCompleted >= 20, xp: 1000, title: "Pahlawan Belajar (Gold)", msg: "Menyelesaikan 20 Pelajaran" },
 
-          // XP
+          // Lencana Total Poin XP
           { id: "xp_bronze", check: currentXp >= 500, xp: 50, title: "Prajurit XP (Bronze)", msg: "Mengumpulkan 500 XP" },
           { id: "xp_silver", check: currentXp >= 2500, xp: 250, title: "Prajurit XP (Silver)", msg: "Mengumpulkan 2500 XP" },
           { id: "xp_gold", check: currentXp >= 10000, xp: 1000, title: "Prajurit XP (Gold)", msg: "Mengumpulkan 10000 XP" },
 
-          // Streak
+          // Lencana Rekor Hari Berturut-turut (Streak)
           { id: "streak_bronze", check: currentStreak >= 3, xp: 50, title: "Pendekar Streak (Bronze)", msg: "Mencapai 3 Hari Streak" },
           { id: "streak_silver", check: currentStreak >= 7, xp: 250, title: "Pendekar Streak (Silver)", msg: "Mencapai 7 Hari Streak" },
           { id: "streak_gold", check: currentStreak >= 30, xp: 1000, title: "Pendekar Streak (Gold)", msg: "Mencapai 30 Hari Streak" },
 
-          // SRS Reviews
+          // Lencana Total Ulasan Pengulangan Kartu (SRS)
           { id: "srs_bronze", check: totalReviews >= 10, xp: 50, title: "Ahli Ulasan (Bronze)", msg: "Menyelesaikan 10 Ulasan Kartu" },
           { id: "srs_silver", check: totalReviews >= 100, xp: 250, title: "Ahli Ulasan (Silver)", msg: "Menyelesaikan 100 Ulasan Kartu" },
           { id: "srs_gold", check: totalReviews >= 500, xp: 1000, title: "Ahli Ulasan (Gold)", msg: "Menyelesaikan 500 Ulasan Kartu" }
@@ -260,6 +281,7 @@ export const useUserStore = create<UserState>()(
         const newlyUnlocked: Array<{ id: string; unlockedAt: number }> = [];
         let totalRewardXp = 0;
 
+        // Picu notifikasi visual dan akumulasikan Poin XP jika ada lencana baru yang terbuka luring
         for (const t of targets) {
           if (t.check && !unlockedIds.has(t.id)) {
             newlyUnlocked.push({ id: t.id, unlockedAt: Date.now() });
@@ -273,6 +295,7 @@ export const useUserStore = create<UserState>()(
           }
         }
 
+        // Simpan data lencana baru ke inventaris lokal dan tambahkan total XP reward
         if (newlyUnlocked.length > 0) {
           const updatedAchievements = [...achievements, ...newlyUnlocked];
           set({
@@ -291,12 +314,14 @@ export const useUserStore = create<UserState>()(
     {
       name: "nihongoroute_user_data",
       storage: {
+        // Mengambil dan merekonstruksi data pengguna dari IndexedDB
         getItem: async (name) => {
           const data = await get(name);
           if (!data) return null;
           
           try {
             const parsed = JSON.parse(data, (key, value) => {
+              // Rekonstruksi struktur data Set untuk pelajaran kotor (dirty lessons)
               if (key === 'dirtyLessons' && Array.isArray(value)) {
                 return new Set(value);
               }
@@ -304,13 +329,15 @@ export const useUserStore = create<UserState>()(
             });
             return { state: parsed.state, version: parsed.version };
           } catch (e) {
-            console.error("Failed to parse user store data:", e);
+            console.error("Gagal mengurai data user store:", e);
             return null;
           }
         },
+        // Melakukan serialisasi dan menyimpan data pengguna ke IndexedDB
         setItem: async (name, value) => {
           try {
             const stringified = JSON.stringify(value, (key, val) => {
+              // Konversi struktur data Set menjadi Array agar dapat diserialisasi ke format JSON
               if (val instanceof Set) {
                 return Array.from(val);
               }
@@ -318,9 +345,10 @@ export const useUserStore = create<UserState>()(
             });
             await idbSet(name, stringified);
           } catch (e) {
-            console.error("Failed to save user store data:", e);
+            console.error("Gagal menyimpan data user store:", e);
           }
         },
+        // Menghapus data pengguna dari IndexedDB
         removeItem: async (name) => await del(name),
       },
     }

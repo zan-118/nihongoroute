@@ -1,5 +1,23 @@
+/**
+ * @file manifest.ts
+ * @description Pembuatan manifes PWA (Progressive Web App) NihongoRoute untuk integrasi seluler dan mode luring.
+ */
+
+// ======================
+// IMPOR
+// ======================
 import type { MetadataRoute } from "next";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
+
+/**
+ * Pembuatan manifes aplikasi web progresif (PWA) untuk NihongoRoute.
+ * Mengatur nama aplikasi, warna tema, ikon, dan tangkapan layar responsif.
+ * 
+ * @returns {MetadataRoute.Manifest} Objek konfigurasi manifes PWA.
+ */
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "NihongoRoute",

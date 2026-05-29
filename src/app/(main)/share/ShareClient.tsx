@@ -1,5 +1,14 @@
+/**
+ * @file ShareClient.tsx
+ * @description Komponen klien untuk menampilkan dan berbagi sertifikat kelulusan ujian simulasi JLPT.
+ * Mendekode data sertifikat dari parameter URL dan menampilkan tampilan sertifikat premium.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { m } from "framer-motion";
@@ -10,6 +19,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { toast } from "sonner";
 
+// ======================
+// TIPE DATA
+// ======================
 interface SharedData {
   guestId: string;
   examTitle: string;

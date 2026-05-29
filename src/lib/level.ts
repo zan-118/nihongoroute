@@ -1,19 +1,17 @@
 /**
  * @file level.ts
- * @description Modul perhitungan sistem level dan XP pengguna menggunakan algoritma scaling kuadratik.
- * @module lib/level
+ * @description Modul perhitungan sistem level dan scaling XP pengguna menggunakan algoritma scaling kuadratik offline-first untuk visualisasi linear progress bar.
  */
 
-// ======================
-// CONFIGURATION
-// ======================
+// ==========================================
+// KONFIGURASI & KONSTANTA
+// ==========================================
 const BASE_XP = 50;   // Faktor penskalaan XP
 const MAX_LEVEL = 100; // Level maksimal yang bisa dicapai
 
-// ======================
-// BUSINESS LOGIC
-// ======================
-
+// ==========================================
+// LOGIKA BISNIS & SISTEM LEVEL
+// ==========================================
 /**
  * Menghitung Level saat ini berdasarkan total XP pengguna menggunakan akar kuadrat.
  * 

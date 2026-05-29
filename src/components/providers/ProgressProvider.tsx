@@ -1,5 +1,13 @@
+/**
+ * @file ProgressProvider.tsx
+ * @description Komponen penyedia status (Zustand auth/progress sync orchestrator) untuk menyimak autentikasi Supabase dan sinkronisasi kemajuan belajar pengguna.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import React, { useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
@@ -10,6 +18,9 @@ import { useSyncProgress } from "@/hooks/useSyncProgress";
 import { useHasMounted } from "@/hooks/useHasMounted";
 import ReminderSystem from "@/components/features/notifications/ReminderSystem";
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export const ProgressProvider = ({
   children,
 }: {

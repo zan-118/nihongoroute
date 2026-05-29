@@ -1,16 +1,30 @@
+/**
+ * @file TrainingGround.tsx
+ * @description Komponen hub menu latihan mandiri (TrainingGround) untuk vocabulary, kanji lab, dan survival game.
+ */
+
 "use client";
 
+// ======================
+// IMPOR
+// ======================
 import Link from "next/link";
 import { m, Variants } from "framer-motion";
 import { Layers, PenTool, Flame, Sparkles, ChevronRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
+// ======================
+// ANTARMUKA / TIPE DATA
+// ======================
 interface TrainingGroundProps {
   categoryId: string;
   themeColor: string;
   itemVariants: Variants;
 }
 
+// ======================
+// EKSEKUSI UTAMA
+// ======================
 export function TrainingGround({ categoryId, themeColor, itemVariants }: TrainingGroundProps) {
   const trainingItems = [
     {
