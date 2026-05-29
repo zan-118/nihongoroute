@@ -34,11 +34,11 @@
 ### 1. Sistem Desain Semantik Cyber-Glass
 Mengusung estetika visual futuristik bergaya *Neo-Tokyo Cyber-Glass* (`backdrop-blur` tebal, border visual transisi, efek glow neon halus). Seluruh sistem styling diatur melalui variabel CSS semantik terpusat (`bg-background`, `text-foreground`, `primary`, `success`, dll.), memastikan antarmuka adaptif yang sangat nyaman di mata untuk penggunaan larut malam maupun luar ruangan.
 
-### 2. Protokol Sinkronisasi Awan 3-Tier
+### 2. Protokol Sinkronisasi Awan 3-Tier & Multi-Tab
 Aliran data offline-first yang andal diatur melalui pembagian tiga lapisan sinkronisasi:
-1.  **Lapis UI & Keadaan Lokal (Zustand + IndexedDB)**: Memperbarui Zustand store (`useUserStore`, `useSRSStore`) secara instan demi *instant feedback* kepada pengguna, lalu otomatis dipersistensikan ke IndexedDB via `idb-keyval`.
-2.  **Lapis Orkestrasi (`useSyncProgress`)**: Melakukan pemantauan perubahan store secara pasif dan menerapkan strategi *debouncing* asinkron (2 detik) guna memaketkan modifikasi lokal (*dirty data*).
-3.  **Lapis Persistensi Awan (`useCloudMutation`)**: Menggunakan TanStack Query untuk mengeksekusi sinkronisasi terkompresi langsung ke prosedur Supabase RPC (`sync_user_progress`) dengan mekanisme ketahanan *3x automatic retries*.
+1.  **Lapis UI & Keadaan Lokal (Zustand + IndexedDB)**: Memperbarui Zustand store (`useUserStore`, `useSRSStore`) secara instan demi *instant feedback* kepada pengguna dengan latensi < 1ms, lalu otomatis dipersistensikan ke IndexedDB via `idb-keyval`.
+2.  **Lapis Orkestrasi (`useSyncProgress`)**: Menggunakan selektor atomik (`dirtySrs.size`, `dirtyLessons.size`) untuk menghindari rendering cascades global pada UI. Memantau perubahan secara pasif dan menerapkan strategi *debouncing* asinkron (2 detik) guna memaketkan modifikasi lokal (*dirty data*).
+3.  **Lapis Persistensi Awan (`useCloudMutation`)**: Menggunakan TanStack Query untuk mengeksekusi sinkronisasi terkompresi langsung ke prosedur Supabase RPC (`sync_user_progress`) dengan mekanisme ketahanan *3x automatic retries* dan sinkronisasi `cloudProfileKey` multi-tab yang aman.
 
 ### 3. Mesin Simulasi JLPT & JFT-Basic Terkemuka
 *   **Answer Sheet Grid**: Navigasi visual mutakhir berbentuk grid interaktif guna melacak pengerjaan soal ujian secara real-time (Hijau: Terisi, Amber Berkedip: Kosong, Abu-abu Gembok: Bagian Soal Terkunci).
@@ -46,9 +46,14 @@ Aliran data offline-first yang andal diatur melalui pembagian tiga lapisan sinkr
 *   **Penilaian Ambang Batas Kelulusan (Maiten)**: Evaluasi ujian yang menerapkan sistem batas nilai minimal $32\%$ di setiap seksi materi. Peserta dinyatakan tidak lulus apabila ada satu kategori yang berada di bawah ambang batas, meskipun total nilai akumulatif melampaui batas kelulusan global.
 *   **Visualisasi Sertifikat Realistis**: Dasbor laporan hasil dual-view interaktif yang dapat beralih secara instan antara visualisasi analitik modern dan sertifikat fisik otentik (JLPT vintage parchment lengkap dengan cap hanko merah berputar, serta JFT-Basic CBT CEFR A2 bilingual).
 
-### 4. Smart Japanese Parser & Smart Rendering
-*   **SmartJapanese Engine**: Komponen rendering cerdas yang mendeteksi teks Jepang secara dinamis untuk menyisipkan anotasi Furigana di atas Kanji secara presisi menggunakan skala relatif `0.55em` pada tag `<rt>`.
+### 4. Smart Japanese Parser & Smart Rendering (FIFO Cached)
+*   **SmartJapanese Engine & Bounded FIFO Cache**: Komponen rendering cerdas yang mendeteksi teks Jepang secara dinamis untuk menyisipkan anotasi Furigana di atas Kanji secara presisi menggunakan skala relatif `0.55em` pada tag `<rt>`. Performa parsing didongkrak secara drastis melalui penyimpanan *in-memory* FIFO Cache dengan batas maksimal **1000 entri** untuk mencegah memory leak.
 *   **Word Popover Dinamis**: Pengguna cukup mengeklik kosakata apa pun di dalam teks materi pelajaran untuk memicu popover kamus interaktif (definisi kata, pengucapan teks-ke-suara/TTS luring, dan tombol pintas `AddToSRSButton` untuk memasukkan kartu ke antrean SRS lokal & cloud).
+*   **Kepatuhan ESLint Rules-of-Hooks**: Seluruh penanganan hook internal (`useMemo`) diatur secara disiplin di baris teratas file komponen tanpa percabangan kondisional awal untuk memastikan stabilitas hidrasi saat pre-rendering halaman statis (SSG/ISR).
+
+### 5. Cookie-Free Static Client (`createStaticClient`) & Optimasi SSG/ISR
+*   **Optimalisasi CDN Edge (SSG/ISR)**: Semua rute pustaka indeks (`/library`, `/library/vocab`, `/library/kanji`, `/library/grammar`, `/library/reading`, `/library/listening`) dan sitemap (`/sitemap.xml`) kini menggunakan `createStaticClient()` bebas-cookie dari Supabase.
+*   **Nol Beban Database**: Halaman-halaman statis tersebut sepenuhnya ter-cache di CDN Edge, mengeliminasi panggilan runtime database saat diakses khalayak umum dan menjamin kepatuhan batas kuota paket gratisan.
 
 ---
 

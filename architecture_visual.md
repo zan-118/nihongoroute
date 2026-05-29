@@ -106,7 +106,8 @@ graph TD
     end
 
     subgraph Parser ["Smart Parser Engine"]
-        SmartJapanese["SmartJapanese Component<br/>(Parser Kanji & Kana)"]
+        SmartJapanese["SmartJapanese Component<br/>(useMemo Teratur & Bebas XSS)"]
+        FuriCache["Bounded FIFO Cache<br/>(Maksimal 1000 entri)"]
         SplitFurigana["splitFurigana Utility<br/>(Segmentasi Teks Cerdas)"]
     end
 
@@ -122,8 +123,9 @@ graph TD
 
     %% Relations
     Prefs -->|Reactive Selector| SmartJapanese
-    SmartJapanese -->|Segmentasikan Teks| SplitFurigana
-    SplitFurigana -->|Bungkus Ruby & rt| Ruby
+    SmartJapanese -->|Cek Cache Hit| FuriCache
+    FuriCache -->|Miss: Segmentasikan Teks| SplitFurigana
+    SplitFurigana -->|Simpan & Bungkus Ruby| Ruby
     Ruby -->|Deteksi Interaksi| Click
     Click -->|Tampilkan Dialog Detail| Popover
     Popover -->|Tambah ke Flashcard| SRSButton

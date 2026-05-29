@@ -167,3 +167,26 @@ NihongoRoute menerapkan sistem pertahanan berlapis di setiap tingkat aplikasi gu
 *   **Escape SQL Wildcard**: Parameter pencarian teks dinamis (seperti pencarian kamus) di-escape secara otomatis dari karakter database khusus (`%` dan `_`) di tingkat Server Actions guna memblokir eksploitasi beban pencarian PostgreSQL.
 *   **Next.js Suspense Boundaries**: Semua halaman klien yang mengonsumsi parameter kueri dinamis via hook `useSearchParams` dibungkus dalam pembatas `<Suspense>` untuk mencegah deoptimisasi build Next.js dan memastikan kelancaran pembuatan halaman statik (*Static Site Generation*).
 *   **Keamanan Hidrasi & Penanganan State Klien**: Komponen server dilarang menerima event handler klien (seperti `onClick`) secara langsung pada elemen HTML raw. Seluruh komponen interaktif diekstraksi ke komponen klien terpisah dengan direktif `"use client";`. Inisialisasi state otomatis klien di dalam efek samping wajib dibungkus `requestAnimationFrame` guna menghindari ketidakcocokan DOM hasil pre-render.
+
+---
+
+## 🚀 8. Optimalisasi Performa Tinggi & Resolusi DYNAMIC_SERVER_USAGE
+
+Untuk mewujudkan ekosistem berkinerja tinggi yang memenuhi batasan *free-tier* Vercel dan Supabase, NihongoRoute menerapkan arsitektur khusus untuk kompilasi statis (SSG/ISR) dan caching tingkat lanjut:
+
+### 8.1 Pemisahan Klien Supabase Statis (`createStaticClient`)
+Next.js melempar pengecualian `DYNAMIC_SERVER_USAGE` jika memanggil API dinamis seperti `cookies()` di rute yang diharapkan statis pada saat build time. Kami memisahkan klien Supabase menjadi dua varian terisolasi di `src/lib/supabase/server.ts`:
+1.  **`createClient()` (Dynamic/Cookie-Based)**: Mengonsumsi `cookies()` Next.js. Digunakan secara eksklusif untuk data dinamis sensitif pengguna (seperti auth, profil user, dan interval SRS) di dalam sesi masuk.
+2.  **`createStaticClient()` (Static/Cookie-Free)**: Menggunakan instansiasi klien murni `@supabase/supabase-js` tanpa ketergantungan pada *request context* peramban. Digunakan untuk seluruh aksi publik non-autentikasi (seperti statistik kamus, daftar kosakata terpaginasi, rute sitemap, dsb.).
+
+Dengan pemisahan ini, seluruh halaman direktori utama pustaka (`/library`, `/library/vocab`, `/library/kanji`, `/library/grammar`, `/library/reading`, `/library/listening`) dan sitemap (`/sitemap.xml`) berhasil dikompilasi Next.js sebagai halaman statis **`○ (Static)`** yang sepenuhnya ter-cache di CDN Edge dengan nol beban panggilan database saat dikunjungi oleh pengguna biasa.
+
+### 8.2 Memori FIFO Furigana Cache & Kepatuhan Aturan React Hooks
+Proses parsing Furigana yang kompleks menggunakan ekspresi reguler dan konversi wanakana merupakan beban komputasi CPU intensif. Kami menyematkan optimasi performa tinggi di sisi visual komponen:
+*   ** FIFO Cache Berbatas**: Komponen `SmartJapanese` mengimplementasikan penyimpanan *in-memory* FIFO (`Map`) berbatas keras maksimal **1000 entri** untuk menyimpan hasil kalkulasi segmen furigana terpecah. Begitu batas terlampaui, entri terlama dihapus secara otomatis demi mencegah kebocoran memori peramban (*memory leak*).
+*   **Kepatuhan Aturan React Hooks (*rules-of-hooks*)**: Untuk memastikan fungsionalitas rendering stabil di produksi, deklarasi hook `useMemo` di dalam `SmartJapanese.tsx` dan `FuriganaDisplay.tsx` diletakkan di baris teratas komponen, di atas seluruh percabangan *early return* komponen. Evaluasi *parts* dan *chunks* dijaga aman melalui selektor parameter `if (!word || !furigana)` yang mengembalikan array kosong `[]` secara instan apabila parameter pemrosesan kosong.
+
+### 8.3 Optimasi Zustand Sync Loop & Multi-Tab Broadcast
+Pembaruan status kotor yang memicu rendering ulang global (*render cascade*) pada `ProgressProvider` direduksi secara signifikan:
+*   **Selector Atomik**: Hook `useSyncProgress.ts` hanya memantau panjang item kotor (`dirtySrs.size` & `dirtyLessons.size`) alih-alih melakukan *deep subscription* ke seluruh data objek state kartu SRS, menjaga performa rendering antarmuka tetap berjalan pada target **60 FPS / < 16ms**.
+*   **Sinkronisasi cloudProfileKey**: Mengintegrasikan sinkronisasi kunci dinamis awan (`cloudProfileKey`) untuk menjamin semua tab pasif mendeteksi perubahan profil eksternal tanpa masuk ke dalam loop sinkronisasi melingkar (*infinite ping-pong sync loop*).
