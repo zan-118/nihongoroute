@@ -28,6 +28,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import { LibraryItem } from "@/actions/library.actions";
+import PdfGenerator from "@/components/features/pdf/PdfGenerator";
 
 // ==========================================
 // ANTARMUKA & TIPE DATA
@@ -174,8 +175,8 @@ function parseNotesToJSX(notes: string): React.ReactNode {
     // Jika bukan baris tabel, flush tabel aktif yang ada
     flushTable(`table-interrupt-other-${index}`);
 
-    // Item daftar tidak berurutan
-    if (trimmed.startsWith("*") || trimmed.startsWith("-")) {
+    // Item daftar tidak berurutan (hanya jika dimulai dengan single * atau -)
+    if ((trimmed.startsWith("*") && !trimmed.startsWith("**")) || trimmed.startsWith("-")) {
       const itemText = trimmed.substring(1).trim();
       if (!currentList || currentList.type !== "ul") {
         flushList(`list-interrupt-other-${index}`);
@@ -361,6 +362,12 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
 
         {/* Grup Tombol Bagikan/Aksi */}
         <div className="flex items-center gap-3">
+          <PdfGenerator 
+            type="grammar" 
+            data={article} 
+            title={article.title || undefined} 
+            level={jlptLevel} 
+          />
           <Button 
             onClick={handleShare}
             variant="ghost" 

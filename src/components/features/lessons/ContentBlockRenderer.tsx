@@ -25,6 +25,68 @@ import { VocabSection, VocabLessonItem } from "./VocabSection";
 import { KanjiSection, KanjiLessonItem } from "./KanjiSection";
 
 // ==========================================
+// PENDUKUNG DESAIN & MARKDOWN PARSER
+// ==========================================
+function parseInlineStyles(text: string): React.ReactNode[] {
+  const parts = text.split(/(\*\*.*?\*\*|`.*?`|\*.*?\*)/g);
+  return parts.map((part, index) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return (
+        <strong key={index} className="text-foreground font-black">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    if (part.startsWith("`") && part.endsWith("`")) {
+      return (
+        <code key={index} className="px-1.5 py-0.5 rounded bg-primary/5 border border-primary/10 text-primary font-mono text-xs md:text-sm font-bold mx-0.5">
+          {part.slice(1, -1)}
+        </code>
+      );
+    }
+    if (part.startsWith("*") && part.endsWith("*")) {
+      return (
+        <em key={index} className="italic text-muted-foreground/90 font-medium">
+          {part.slice(1, -1)}
+        </em>
+      );
+    }
+    return part;
+  });
+}
+
+function renderWithMarkdown(children: React.ReactNode): React.ReactNode {
+  if (!children) return children;
+
+  if (typeof children === "string") {
+    return parseInlineStyles(children);
+  }
+
+  if (Array.isArray(children)) {
+    return children.map((child, i) => {
+      const parsed = renderWithMarkdown(child);
+      if (React.isValidElement(parsed)) {
+        return React.cloneElement(parsed, { key: parsed.key ?? i });
+      }
+      return parsed;
+    });
+  }
+
+  if (React.isValidElement(children)) {
+    const props = children.props as { children?: React.ReactNode; [key: string]: unknown };
+    if (props && "children" in props) {
+      return React.cloneElement(
+        children,
+        { key: children.key },
+        renderWithMarkdown(props.children)
+      );
+    }
+  }
+
+  return children;
+}
+
+// ==========================================
 // ANTARMUKA & PROPS (INTERFACES)
 // ==========================================
 interface ContentBlockRendererProps {
@@ -73,22 +135,22 @@ export default function ContentBlockRenderer({
     block: {
       h2: ({ children }: PortableTextChildrenProps) => (
         <h2 className="text-2xl font-black uppercase tracking-tight text-foreground mt-8 mb-4 border-b border-border pb-2 font-japanese">
-          {children}
+          {renderWithMarkdown(children)}
         </h2>
       ),
       h3: ({ children }: PortableTextChildrenProps) => (
         <h3 className="text-xl font-black uppercase tracking-tight text-foreground mt-6 mb-3 font-japanese">
-          {children}
+          {renderWithMarkdown(children)}
         </h3>
       ),
       normal: ({ children }: PortableTextChildrenProps) => (
         <p className="text-lg leading-relaxed text-foreground/90 font-japanese mb-4">
-          {children}
+          {renderWithMarkdown(children)}
         </p>
       ),
       blockquote: ({ children }: PortableTextChildrenProps) => (
         <blockquote className="border-l-4 border-primary pl-4 italic my-4 text-muted-foreground">
-          {children}
+          {renderWithMarkdown(children)}
         </blockquote>
       )
     },
@@ -102,6 +164,18 @@ export default function ContentBlockRenderer({
         <ol className="list-decimal pl-6 mb-4 space-y-2 text-lg text-foreground/90 font-japanese">
           {children}
         </ol>
+      )
+    },
+    listItem: {
+      bullet: ({ children }: PortableTextChildrenProps) => (
+        <li className="leading-relaxed">
+          {renderWithMarkdown(children)}
+        </li>
+      ),
+      number: ({ children }: PortableTextChildrenProps) => (
+        <li className="leading-relaxed">
+          {renderWithMarkdown(children)}
+        </li>
       )
     }
   };
@@ -298,8 +372,8 @@ function TextBlock({ block }: { block: ContentBlock }) {
         </div>
       )}
       {block.translation && (
-        <p className="text-sm text-muted-foreground italic border-l-2 border-border pl-4">
-          {block.translation}
+        <p className="text-sm text-muted-foreground italic border-l-2 border-border pl-4 whitespace-pre-wrap">
+          {parseInlineStyles(block.translation)}
         </p>
       )}
       {block.examples && block.examples.length > 0 && (
@@ -314,17 +388,18 @@ function TextBlock({ block }: { block: ContentBlock }) {
 // ==========================================
 function CalloutBlock({ block }: { block: ContentBlock }) {
   return (
-    <div className="flex gap-4 p-5 rounded-xl bg-primary/5 border border-primary/20">
+    <div className="flex gap-4 p-6 rounded-[2rem] border border-border bg-card/45 backdrop-blur-md shadow-[0_8px_30px_rgba(var(--primary-rgb),0.03)] glass relative overflow-hidden group hover:border-primary/30 transition-all duration-300">
+      <div className="absolute top-0 left-0 w-1.5 h-full bg-primary" />
       <Info className="size-5 text-primary flex-shrink-0 mt-0.5" />
       <div className="space-y-2">
         {block.title && (
-          <p className="text-sm font-bold text-primary">{block.title}</p>
+          <p className="text-xs font-black uppercase tracking-wider text-primary">{block.title}</p>
         )}
         {block.content && (
-          <p className="text-sm text-foreground/80 leading-relaxed">{block.content}</p>
+          <p className="text-[15px] text-foreground/90 leading-relaxed font-medium">{parseInlineStyles(block.content)}</p>
         )}
         {block.translation && (
-          <p className="text-xs text-muted-foreground italic">{block.translation}</p>
+          <p className="text-xs text-muted-foreground italic border-t border-border/50 pt-2.5 mt-2.5 whitespace-pre-wrap">{parseInlineStyles(block.translation)}</p>
         )}
       </div>
     </div>
@@ -336,26 +411,27 @@ function CalloutBlock({ block }: { block: ContentBlock }) {
 // ==========================================
 function GrammarBlock({ block }: { block: ContentBlock }) {
   return (
-    <div className="space-y-4 border border-border rounded-xl overflow-hidden">
-      <div className="bg-muted/30 px-5 py-3 border-b border-border">
-        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-          Grammar Point
-        </span>
-        {block.title && (
-          <h3 className="text-lg font-black text-foreground mt-0.5">{block.title}</h3>
-        )}
+    <div className="space-y-5 border border-border rounded-[2.5rem] bg-card/20 backdrop-blur-xl shadow-[0_15px_35px_rgba(var(--primary-rgb),0.02)] glass overflow-hidden group hover:border-primary/35 transition-all duration-500">
+      <div className="bg-primary/5 px-6 py-4 border-b border-border flex justify-between items-center">
+        <div>
+          <span className="text-[9px] font-black text-primary uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded">
+            Pola Kalimat (Grammar)
+          </span>
+          {block.title && (
+            <h3 className="text-lg font-black text-foreground mt-1.5 tracking-tight">{block.title}</h3>
+          )}
+        </div>
       </div>
-      <div className="px-5 pb-5 space-y-3">
-        {block.content && (
-          <div className="font-japanese text-xl leading-relaxed">
+      <div className="px-6 pb-6 space-y-4">
+        {block.content && block.content !== block.title && (
+          <div className="font-japanese text-2xl font-black text-foreground tracking-wide leading-relaxed">
             <SmartJapanese word={block.content} furigana={block.furigana} />
           </div>
         )}
-        {block.furigana && (
-          <div className="text-sm text-muted-foreground font-japanese">{block.furigana}</div>
-        )}
         {block.translation && (
-          <p className="text-sm text-muted-foreground italic">{block.translation}</p>
+          <p className="text-sm text-muted-foreground font-medium leading-relaxed bg-muted/10 border-l-4 border-secondary/60 pl-4 py-2.5 rounded-r-xl whitespace-pre-wrap">
+            {parseInlineStyles(block.translation)}
+          </p>
         )}
         {block.examples && block.examples.length > 0 && (
           <ExamplesSection examples={block.examples} />
@@ -384,29 +460,31 @@ function DialogueBlock({ block }: { block: ContentBlock }) {
     : [];
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {block.title && (
-        <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest">
+        <h3 className="text-xs font-black text-muted-foreground uppercase tracking-widest">
           {block.title}
         </h3>
       )}
-      <div className="space-y-3 border border-border rounded-xl p-5 bg-muted/10">
+      <div className="space-y-4 border border-border rounded-[2rem] p-6 bg-card/10 backdrop-blur-lg shadow-[0_10px_35px_rgba(0,0,0,0.01)] glass">
         {lines.map((line: { speaker: string; text: string; furigana?: string }, pos: number) => (
-          <div key={`dialogue-${pos}`} className="flex gap-3 group">
-            <span className="text-[10px] font-bold text-secondary bg-secondary/10 px-2 py-1 rounded h-fit flex-shrink-0 mt-1">
+          <div key={`dialogue-${pos}`} className="flex gap-4 items-start group">
+            <span className="text-[10px] font-black text-secondary uppercase tracking-widest bg-secondary/15 border border-secondary/25 px-2.5 py-1 rounded-xl h-fit flex-shrink-0 mt-1">
               {line.speaker}
             </span>
-            <div className="flex-1">
-              <div className="text-lg font-japanese font-medium text-foreground leading-relaxed flex items-center gap-3">
+            <div className="flex-1 min-w-0">
+              <div className="text-xl font-japanese font-medium text-foreground leading-relaxed flex items-center gap-3 flex-wrap">
                 <SmartJapanese word={line.text} furigana={line.furigana} />
-                <TTSReader text={line.text} minimal />
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 shrink-0">
+                  <TTSReader text={line.text} minimal />
+                </div>
               </div>
             </div>
           </div>
         ))}
       </div>
       {block.translation && (
-        <p className="text-sm text-muted-foreground italic px-2">{block.translation}</p>
+        <p className="text-sm text-muted-foreground italic px-4 border-l-2 border-border/70 whitespace-pre-wrap">{parseInlineStyles(block.translation)}</p>
       )}
     </div>
   );
@@ -419,7 +497,7 @@ function ImageBlock({ block }: { block: ContentBlock }) {
   if (!block.content) return null;
   return (
     <figure className="space-y-2">
-      <div className="relative rounded-xl overflow-hidden border border-border">
+      <div className="relative rounded-2xl overflow-hidden border border-border">
         <Image
           src={block.content}
           alt={block.title || "Gambar pelajaran"}
@@ -444,27 +522,33 @@ function ImageBlock({ block }: { block: ContentBlock }) {
 function ExamplesSection({ examples }: { examples: ExampleSentence[] }) {
   if (!examples?.length) return null;
   return (
-    <div className="space-y-2 mt-3">
-      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-        Contoh Kalimat
+    <div className="space-y-3 mt-4">
+      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
+        Contoh Kalimat (Examples)
       </p>
-      {examples.map((ex) => (
-        <div key={ex.jp} className="border border-border rounded-lg p-3 space-y-1 bg-background">
-          <div className="flex items-center gap-2">
-            <FuriganaDisplay
-              text={ex.jp}
-              furigana={ex.furigana || ""}
-              size="medium"
-              interactive
-            />
-            <TTSReader text={ex.jp} minimal />
+      <div className="space-y-3">
+        {examples.map((ex) => (
+          <div key={ex.jp} className="border border-border rounded-2xl p-4 space-y-2 bg-card/10 hover:bg-card/20 hover:border-primary/20 transition-all duration-300 group">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                <FuriganaDisplay
+                  text={ex.jp}
+                  furigana={ex.furigana || ""}
+                  size="medium"
+                  interactive
+                />
+              </div>
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 shrink-0">
+                <TTSReader text={ex.jp} minimal />
+              </div>
+            </div>
+            {ex.romaji && (
+              <p className="text-xs text-primary/80 font-mono tracking-wide">{ex.romaji}</p>
+            )}
+            <p className="text-sm text-muted-foreground font-medium">{parseInlineStyles(ex.id)}</p>
           </div>
-          {ex.romaji && (
-            <p className="text-xs text-muted-foreground font-mono">{ex.romaji}</p>
-          )}
-          <p className="text-sm text-muted-foreground italic">{ex.id}</p>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

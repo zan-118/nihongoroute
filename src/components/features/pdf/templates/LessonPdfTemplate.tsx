@@ -127,11 +127,12 @@ const styles = StyleSheet.create({
   // EXAMPLE BOX
   exampleBox: {
     backgroundColor: "#f8fafc",
-    padding: 15,
-    marginTop: 15,
-    marginBottom: 15,
+    padding: 12,
+    marginTop: 10,
+    marginBottom: 10,
     borderLeftWidth: 3,
-    borderLeftColor: "#0f172a",
+    borderLeftColor: "#0891b2",
+    borderRadius: 4,
     display: "flex",
     flexDirection: "column",
   },
@@ -154,17 +155,18 @@ const styles = StyleSheet.create({
 
   // CALLOUT BOX
   calloutBox: {
-    backgroundColor: "#f0f9ff",
-    padding: 15,
-    marginTop: 15,
-    marginBottom: 15,
+    backgroundColor: "#ecfeff",
+    padding: 12,
+    marginTop: 12,
+    marginBottom: 12,
     borderLeftWidth: 3,
-    borderLeftColor: "#0369a1",
+    borderLeftColor: "#06b6d4",
+    borderRadius: 4,
   },
   calloutTitle: {
     fontSize: 9,
     fontWeight: "bold",
-    color: "#0369a1",
+    color: "#0891b2",
     marginBottom: 4,
     textTransform: "uppercase",
   },
@@ -382,6 +384,39 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
     return parts.length > 2 ? `${parts.slice(0, 2).join(", ")}, dll.` : text;
   };
 
+  const parseInlineStylesPdf = (text: string, baseStyle: React.ComponentProps<typeof View>["style"] = {}, key?: string) => {
+    if (!text) return null;
+    const parts = text.split(/(\*\*.*?\*\*|`.*?`|\*.*?\*)/g);
+    return (
+      <Text key={key} style={baseStyle}>
+        {parts.map((part, index) => {
+          if (part.startsWith("**") && part.endsWith("**")) {
+            return (
+              <Text key={index} style={{ fontWeight: "bold", color: "#0f172a" }}>
+                {part.slice(2, -2)}
+              </Text>
+            );
+          }
+          if (part.startsWith("`") && part.endsWith("`")) {
+            return (
+              <Text key={index} style={{ backgroundColor: "#f1f5f9", color: "#0891b2" }}>
+                {part.slice(1, -1)}
+              </Text>
+            );
+          }
+          if (part.startsWith("*") && part.endsWith("*")) {
+            return (
+              <Text key={index} style={{ color: "#64748b" }}>
+                {part.slice(1, -1)}
+              </Text>
+            );
+          }
+          return part;
+        })}
+      </Text>
+    );
+  };
+
   const renderRichText = (blocks: PdfContentBlock[]) => {
     if (!blocks || !Array.isArray(blocks)) return null;
     let h2Counter = 0;
@@ -394,9 +429,9 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
         if (block.style === "h2") {
           h2Counter++;
           const sanitizedText = stripEmojisAndPrefixes(textContent);
-          return <Text key={`h2-${pos}`} style={styles.contentH2}>{h2Counter}. {sanitizedText}</Text>;
+          return parseInlineStylesPdf(`${h2Counter}. ${sanitizedText}`, styles.contentH2, `h2-${pos}`);
         }
-        return <Text key={`paragraph-${pos}`} style={styles.contentParagraph}>{stripEmojisOnly(textContent)}</Text>;
+        return parseInlineStylesPdf(stripEmojisOnly(textContent), styles.contentParagraph, `paragraph-${pos}`);
       }
 
       if (type === "exampleSentence") {
@@ -406,7 +441,7 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
             <Text style={[styles.exampleFurigana, { marginTop: 4, color: "#64748b" }]}>
               {block.romaji}
             </Text>
-            <Text style={styles.exampleId}>{stripEmojisOnly(block.id)}</Text>
+            {parseInlineStylesPdf(stripEmojisOnly(block.id), styles.exampleId, `exSentenceId-${pos}`)}
           </View>
         );
       }
@@ -414,13 +449,9 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
       if (type === "callout" || type === "calloutBlock") {
         return (
           <View key={`callout-${pos}`} style={styles.calloutBox} wrap={false}>
-            <Text style={styles.calloutTitle}>{stripEmojisOnly(block.title) || "Note"}</Text>
-            <Text style={styles.calloutText}>{stripEmojisOnly(block.text || block.content)}</Text>
-            {block.translation && (
-              <Text style={[styles.calloutText, { color: "#64748b", marginTop: 4 }]}>
-                {stripEmojisOnly(block.translation)}
-              </Text>
-            )}
+            {block.title && <Text style={styles.calloutTitle}>{stripEmojisOnly(block.title)}</Text>}
+            {parseInlineStylesPdf(stripEmojisOnly(block.text || block.content), styles.calloutText, `calloutText-${pos}`)}
+            {block.translation && parseInlineStylesPdf(stripEmojisOnly(block.translation), [styles.calloutText, { color: "#64748b", marginTop: 4 }], `calloutTranslation-${pos}`)}
           </View>
         );
       }
@@ -432,13 +463,13 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
             {block.title && <Text style={styles.contentH2}>{stripEmojisOnly(block.title)}</Text>}
             {block.content && <Text style={{ fontSize: 14, fontWeight: "bold", color: "#0f172a", marginBottom: 4 }}>{block.content}</Text>}
             {block.furigana && <Text style={{ fontSize: 10, color: "#64748b", marginBottom: 4 }}>{block.furigana}</Text>}
-            {block.translation && <Text style={{ fontSize: 10, color: "#64748b", marginBottom: 8 }}>{stripEmojisOnly(block.translation)}</Text>}
+            {block.translation && parseInlineStylesPdf(stripEmojisOnly(block.translation), { fontSize: 10, color: "#64748b", marginBottom: 8 }, `grammarTranslation-${pos}`)}
             
             {block.examples?.map((ex: { jp?: string; romaji?: string; id?: string }, exPos: number) => (
               <View key={`ex-${exPos}`} style={styles.exampleBox} wrap={false}>
                 <Text style={styles.exampleJp}>{ex.jp}</Text>
                 {ex.romaji && <Text style={[styles.exampleFurigana, { marginTop: 4, color: "#64748b" }]}>{ex.romaji}</Text>}
-                <Text style={styles.exampleId}>{stripEmojisOnly(ex.id)}</Text>
+                {parseInlineStylesPdf(stripEmojisOnly(ex.id), styles.exampleId, `grammarExId-${exPos}`)}
               </View>
             ))}
           </View>
@@ -461,11 +492,7 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
                 </View>
               );
             })}
-            {block.translation && (
-              <Text style={{ fontSize: 9, color: "#64748b", marginTop: 8, paddingTop: 8, borderTopWidth: 1, borderTopColor: "#e2e8f0" }}>
-                {stripEmojisOnly(block.translation)}
-              </Text>
-            )}
+            {block.translation && parseInlineStylesPdf(stripEmojisOnly(block.translation), { fontSize: 9, color: "#64748b", marginTop: 8, paddingTop: 8, borderTopWidth: 1, borderTopColor: "#e2e8f0" }, `dialogueTranslation-${pos}`)}
           </View>
         );
       }
@@ -476,18 +503,16 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
           <View key={`textArticle-${pos}`} style={{ marginBottom: 15 }} wrap={false}>
             {block.title && <Text style={styles.contentH2}>{stripEmojisOnly(block.title)}</Text>}
             {paragraphs.map((line: string, lPos: number) => (
-              <Text key={`line-${lPos}`} style={styles.contentParagraph}>{stripEmojisOnly(line)}</Text>
+              <React.Fragment key={`line-${lPos}`}>
+                {parseInlineStylesPdf(stripEmojisOnly(line), styles.contentParagraph, `lineText-${lPos}`)}
+              </React.Fragment>
             ))}
-            {block.translation && (
-              <Text style={[styles.contentParagraph, { color: "#64748b", borderLeftWidth: 2, borderLeftColor: "#e2e8f0", paddingLeft: 8 }]}>
-                {stripEmojisOnly(block.translation)}
-              </Text>
-            )}
+            {block.translation && parseInlineStylesPdf(stripEmojisOnly(block.translation), [styles.contentParagraph, { color: "#64748b", borderLeftWidth: 2, borderLeftColor: "#e2e8f0", paddingLeft: 8 }], `translationText-${pos}`)}
             {block.examples?.map((ex: { jp?: string; romaji?: string; id?: string }, exPos: number) => (
               <View key={`ex-${exPos}`} style={styles.exampleBox} wrap={false}>
                 <Text style={styles.exampleJp}>{ex.jp}</Text>
                 {ex.romaji && <Text style={[styles.exampleFurigana, { marginTop: 4, color: "#64748b" }]}>{ex.romaji}</Text>}
-                <Text style={styles.exampleId}>{stripEmojisOnly(ex.id)}</Text>
+                {parseInlineStylesPdf(stripEmojisOnly(ex.id), styles.exampleId, `articleExId-${exPos}`)}
               </View>
             ))}
           </View>

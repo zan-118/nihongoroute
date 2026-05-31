@@ -22,6 +22,7 @@ import { LessonPdfTemplate } from "./templates/LessonPdfTemplate";
 import { VocabPdfTemplate } from "./templates/VocabPdfTemplate";
 import { CertificatePdfTemplate } from "./templates/CertificatePdfTemplate";
 import { CheatsheetPdfTemplate } from "./templates/CheatsheetPdfTemplate";
+import { GrammarPdfTemplate } from "./templates/GrammarPdfTemplate";
 
 // ==========================================
 // IMPOR DINAMIS & KONFIGURASI
@@ -47,7 +48,7 @@ const PDFDownloadLink = dynamic(
 // ==========================================
 // TIPE & ANTARMUKA (TYPES & INTERFACES)
 // ==========================================
-export type TemplateType = "lesson" | "vocab" | "certificate" | "cheatsheet";
+export type TemplateType = "lesson" | "vocab" | "certificate" | "cheatsheet" | "grammar";
 
 interface PdfGeneratorProps {
    
@@ -80,6 +81,8 @@ export default function PdfGenerator({
       return <CertificatePdfTemplate data={data as unknown as { userName: string; examTitle: string; score: number; date: string; level?: string; }} />;
     if (type === "cheatsheet")
       return <CheatsheetPdfTemplate data={data as unknown as { label: string; jp: string; romaji: string; }[]} title={title || "Cheatsheet"} category={category || "General"} />;
+    if (type === "grammar")
+      return <GrammarPdfTemplate data={data as unknown as import("./templates/GrammarPdfTemplate").PdfGrammarItem} />;
     return <LessonPdfTemplate lessonData={data as unknown as import("./templates/LessonPdfTemplate").PdfLessonData} />;
   };
 
