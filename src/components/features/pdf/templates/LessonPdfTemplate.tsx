@@ -461,8 +461,8 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
           <View key={`grammar-${pos}`} style={{ marginBottom: 20, padding: 10, borderLeftWidth: 3, borderLeftColor: "#0891b2" }} wrap={false}>
             <Text style={{ fontSize: 9, fontWeight: "bold", color: "#64748b", textTransform: "uppercase" }}>Grammar Point</Text>
             {block.title && <Text style={styles.contentH2}>{stripEmojisOnly(block.title)}</Text>}
-            {block.content && <Text style={{ fontSize: 14, fontWeight: "bold", color: "#0f172a", marginBottom: 4 }}>{block.content}</Text>}
-            {block.furigana && <Text style={{ fontSize: 10, color: "#64748b", marginBottom: 4 }}>{block.furigana}</Text>}
+            {block.content && block.content !== block.title && <Text style={{ fontSize: 14, fontWeight: "bold", color: "#0f172a", marginBottom: 4 }}>{block.content}</Text>}
+            {block.furigana && block.furigana !== block.title && block.furigana !== block.content && <Text style={{ fontSize: 10, color: "#64748b", marginBottom: 4 }}>{block.furigana}</Text>}
             {block.translation && parseInlineStylesPdf(stripEmojisOnly(block.translation), { fontSize: 10, color: "#64748b", marginBottom: 8 }, `grammarTranslation-${pos}`)}
             
             {block.examples?.map((ex: { jp?: string; romaji?: string; id?: string }, exPos: number) => (
