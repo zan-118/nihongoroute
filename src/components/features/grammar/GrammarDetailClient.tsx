@@ -37,6 +37,200 @@ interface GrammarDetailClientProps {
 }
 
 // ==========================================
+// PENDUKUNG DESAIN & MARKDOWN PARSER
+// ==========================================
+/**
+ * Mem-parsing gaya inline markdown sederhana seperti bold (**), italic (*), dan inline code (`) menjadi JSX.
+ * 
+ * @param {string} text - Teks mentah dengan tag markdown.
+ * @returns {React.ReactNode[]} Array berisi elemen JSX hasil parsing.
+ */
+function parseInlineStyles(text: string): React.ReactNode[] {
+  const parts = text.split(/(\*\*.*?\*\*|`.*?`|\*.*?\*)/g);
+  return parts.map((part, index) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return (
+        <strong key={index} className="text-foreground font-black">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    if (part.startsWith("`") && part.endsWith("`")) {
+      return (
+        <code key={index} className="px-1.5 py-0.5 rounded bg-primary/5 border border-primary/10 text-primary font-mono text-xs md:text-sm font-bold mx-0.5">
+          {part.slice(1, -1)}
+        </code>
+      );
+    }
+    if (part.startsWith("*") && part.endsWith("*")) {
+      return (
+        <em key={index} className="italic text-muted-foreground/90 font-medium">
+          {part.slice(1, -1)}
+        </em>
+      );
+    }
+    return part;
+  });
+}
+
+/**
+ * Mem-parsing seluruh isi catatan tata bahasa (grammar notes) menjadi struktur JSX yang tertata rapi.
+ * Mengelompokkan item daftar berurutan/tidak berurutan yang berturut-turut ke dalam satu tag kontainer tunggal.
+ * Juga mengelompokkan baris tabel Markdown (|...|...|) menjadi tabel HTML yang dinamis dan ber-style premium.
+ * 
+ * @param {string} notes - Catatan teks mentah dari database.
+ * @returns {React.ReactNode} Elemen JSX terstruktur.
+ */
+function parseNotesToJSX(notes: string): React.ReactNode {
+  const lines = notes.split("\n");
+  const elements: React.ReactNode[] = [];
+  let currentList: { type: "ul" | "ol"; items: string[] } | null = null;
+  let currentTable: string[] | null = null;
+
+  const flushList = (key: string) => {
+    if (!currentList) return;
+    const ListTag = currentList.type;
+    elements.push(
+      <ListTag 
+        key={key} 
+        className={
+          currentList.type === "ul" 
+            ? "list-disc pl-6 my-4 space-y-2 select-text" 
+            : "list-decimal pl-6 my-4 space-y-2 select-text"
+        }
+      >
+        {currentList.items.map((item, idx) => (
+          <li key={idx} className="text-muted-foreground/80 font-medium leading-relaxed">
+            {parseInlineStyles(item)}
+          </li>
+        ))}
+      </ListTag>
+    );
+    currentList = null;
+  };
+
+  const flushTable = (key: string) => {
+    if (!currentTable || currentTable.length < 2) return;
+    
+    // Parse header and rows
+    const headerLine = currentTable[0];
+    const headerCols = headerLine.split("|").slice(1, -1).map(c => c.trim());
+    
+    const rowLines = currentTable.slice(2); // Skip header line and alignment separator line
+    const rows = rowLines.map(line => line.split("|").slice(1, -1).map(c => c.trim()));
+
+    elements.push(
+      <div key={key} className="my-6 overflow-x-auto rounded-2xl border border-border bg-card/5 backdrop-blur-md shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)] select-text">
+        <table className="w-full text-left border-collapse text-xs md:text-sm">
+          <thead>
+            <tr className="border-b border-border bg-primary/5">
+              {headerCols.map((col, idx) => (
+                <th key={`th-${idx}`} className="px-4 py-3 font-black text-primary uppercase tracking-wider select-none">
+                  {parseInlineStyles(col)}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border/40">
+            {rows.map((row, rowIdx) => (
+              <tr key={`tr-${rowIdx}`} className="hover:bg-card/10 transition-colors">
+                {row.map((col, colIdx) => (
+                  <td key={`td-${colIdx}`} className="px-4 py-3.5 font-semibold text-muted-foreground leading-relaxed">
+                    {parseInlineStyles(col)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+    currentTable = null;
+  };
+
+  const flushAll = (key: string) => {
+    flushList(`${key}-list`);
+    flushTable(`${key}-table`);
+  };
+
+  lines.forEach((line, index) => {
+    const trimmed = line.trim();
+    if (!trimmed) {
+      flushAll(`flush-${index}`);
+      return;
+    }
+
+    // Pendeteksian Tabel Markdown
+    if (trimmed.startsWith("|")) {
+      flushList(`table-interrupt-list-${index}`);
+      if (!currentTable) {
+        currentTable = [trimmed];
+      } else {
+        currentTable.push(trimmed);
+      }
+      return;
+    }
+
+    // Jika bukan baris tabel, flush tabel aktif yang ada
+    flushTable(`table-interrupt-other-${index}`);
+
+    // Item daftar tidak berurutan
+    if (trimmed.startsWith("*") || trimmed.startsWith("-")) {
+      const itemText = trimmed.substring(1).trim();
+      if (!currentList || currentList.type !== "ul") {
+        flushList(`list-interrupt-other-${index}`);
+        currentList = { type: "ul", items: [itemText] };
+      } else {
+        currentList.items.push(itemText);
+      }
+      return;
+    }
+
+    // Item daftar berurutan
+    const matchOrdered = trimmed.match(/^(\d+)\.\s(.*)/);
+    if (matchOrdered) {
+      const itemText = matchOrdered[2].trim();
+      if (!currentList || currentList.type !== "ol") {
+        flushList(`list-interrupt-other-${index}`);
+        currentList = { type: "ol", items: [itemText] };
+      } else {
+        currentList.items.push(itemText);
+      }
+      return;
+    }
+
+    // Jika bukan item daftar, bersihkan daftar aktif yang tersimpan
+    flushList(`list-flush-${index}`);
+
+    // Box peringatan bahaya/perangkap
+    if (trimmed.startsWith("⚠️")) {
+      elements.push(
+        <div 
+          key={`warning-${index}`} 
+          className="p-4 md:p-5 rounded-[1.2rem] border border-destructive/20 bg-[rgba(var(--destructive-rgb),0.05)] text-foreground/90 font-semibold my-5 text-xs md:text-sm flex gap-3 items-start shadow-[0_0_20px_rgba(var(--destructive-rgb),0.05)] select-text"
+        >
+          <span className="text-destructive text-base mt-0.5 select-none">⚠️</span>
+          <div className="flex-1 leading-relaxed">
+            {parseInlineStyles(trimmed.substring(2).trim())}
+          </div>
+        </div>
+      );
+      return;
+    }
+
+    // Paragraf biasa
+    elements.push(
+      <p key={`para-${index}`} className="font-semibold text-muted-foreground/85 leading-relaxed">
+        {parseInlineStyles(trimmed)}
+      </p>
+    );
+  });
+
+  flushAll("final");
+  return <div className="space-y-4">{elements}</div>;
+}
+
+// ==========================================
 // KOMPONEN UTAMA: GrammarDetailClient
 // ==========================================
 /**
@@ -190,115 +384,131 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
 
       <div className="w-full h-px bg-gradient-to-r from-border/50 via-border to-border/50 mb-12 shadow-[0_0_20px_rgba(var(--primary-rgb),0.1)]" />
 
-      {/* Kisi Bento: Struktur & Catatan */}
-      {(article.formation || article.notes) && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          {/* Bento Struktur (Lebar 2 Kolom pada layar sedang) */}
-          {article.formation && (
-            <Card className="md:col-span-2 p-8 md:p-10 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-xl border border-border rounded-[2rem] relative overflow-hidden group hover:border-primary/40 shadow-[0_0_30px_rgba(var(--primary-rgb),0.02)] transition-all duration-500 select-none">
-              <div className="absolute -top-12 -right-12 p-8 opacity-[0.02] group-hover:opacity-[0.05] group-hover:scale-110 transition-all duration-700 pointer-events-none text-primary">
-                <BookText size={180} />
-              </div>
-              <div className="absolute top-0 left-0 w-1.5 h-full bg-primary/30 group-hover:bg-primary transition-all duration-300" />
-              
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary block mb-6 opacity-80 flex items-center gap-2">
-                <Sparkles size={12} className="animate-spin-slow" /> Struktur Kalimat (Formation)
-              </span>
-              
-              <div className="text-2xl md:text-3xl font-black text-foreground font-japanese leading-relaxed tracking-tight select-text selection:bg-primary/20">
-                {article.formation.split(" + ").map((part, index, arr) => (
+      {/* Tata Letak Konten Responsif: Tumpukan Vertikal Kolom Tunggal */}
+      <div className="space-y-12">
+        {/* Bento Struktur */}
+        {article.formation && (
+          <Card className="p-8 md:p-10 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-xl border border-border rounded-[2rem] relative overflow-hidden group hover:border-primary/40 shadow-[0_0_30px_rgba(var(--primary-rgb),0.02)] transition-all duration-500 select-none">
+            <div className="absolute -top-12 -right-12 p-8 opacity-[0.02] group-hover:opacity-[0.05] group-hover:scale-110 transition-all duration-700 pointer-events-none text-primary">
+              <BookText size={180} />
+            </div>
+            <div className="absolute top-0 left-0 w-1.5 h-full bg-primary/30 group-hover:bg-primary transition-all duration-300" />
+            
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-6 opacity-80 flex items-center gap-2">
+              <Sparkles size={12} className="animate-spin-slow" /> Struktur Kalimat (Formation)
+            </span>
+            
+            <div className="text-2xl md:text-3xl font-black text-foreground font-japanese leading-relaxed tracking-tight select-text selection:bg-primary/20 flex flex-wrap items-center gap-y-3">
+              {article.formation.split(" + ").map((part, index, arr) => {
+                const isBracketed = part.startsWith("[") && part.endsWith("]");
+                const cleanPart = isBracketed ? part.slice(1, -1) : part;
+                return (
                   <React.Fragment key={`formation-${index}`}>
-                    <span className={part.includes("kata") || part.includes("bentuk") ? "text-muted-foreground/90 font-medium text-xl md:text-2xl font-sans" : "text-primary drop-shadow-[0_0_12px_rgba(var(--primary-rgb),0.1)] font-bold font-japanese"}>
-                      {part}
-                    </span>
+                    {isBracketed ? (
+                      <span className="inline-block px-3.5 py-1 text-sm md:text-base font-black rounded-xl bg-primary/10 border border-primary/20 text-primary font-sans mx-1 shadow-[0_0_15px_rgba(var(--primary-rgb),0.08)] backdrop-blur-md">
+                        {cleanPart}
+                      </span>
+                    ) : (
+                      <span className={part.includes("kata") || part.includes("bentuk") ? "text-muted-foreground/90 font-medium text-xl md:text-2xl font-sans" : "text-primary drop-shadow-[0_0_12px_rgba(var(--primary-rgb),0.1)] font-bold font-japanese"}>
+                        {part}
+                      </span>
+                    )}
                     {index < arr.length - 1 && <span className="text-muted-foreground/30 px-2 font-light font-sans">+</span>}
                   </React.Fragment>
-                ))}
-              </div>
-            </Card>
-          )}
+                );
+              })}
+            </div>
+          </Card>
+        )}
 
-          {/* Bento Catatan (Lebar 1 Kolom) */}
-          {article.notes && (
-            <Card className="p-8 md:p-10 bg-gradient-to-br from-card/30 to-card/5 backdrop-blur-xl border border-border rounded-[2rem] relative overflow-hidden group hover:border-border transition-all duration-500 shadow-sm select-none">
-              <div className="absolute -top-12 -right-12 p-8 opacity-[0.02] group-hover:opacity-[0.05] group-hover:scale-110 transition-all duration-700 pointer-events-none text-muted-foreground">
-                <Lightbulb size={180} />
-              </div>
-              
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/80 block mb-6 opacity-80 flex items-center gap-2">
-                <Lightbulb size={12} /> Catatan Tambahan
-              </span>
-              
-              <p className="text-sm md:text-base font-semibold text-muted-foreground leading-relaxed tracking-wide select-text selection:bg-primary/10">
-                {article.notes}
-              </p>
-            </Card>
-          )}
-        </div>
-      )}
+        {/* Bento Catatan Tambahan (Spacious Full Width) */}
+        {article.notes && (
+          <Card className="p-8 md:p-10 bg-gradient-to-br from-card/30 to-card/5 backdrop-blur-xl border border-border rounded-[2rem] relative overflow-hidden group hover:border-border transition-all duration-500 shadow-sm select-none">
+            <div className="absolute -top-12 -right-12 p-8 opacity-[0.02] group-hover:opacity-[0.05] group-hover:scale-110 transition-all duration-700 pointer-events-none text-muted-foreground">
+              <Lightbulb size={180} />
+            </div>
+            
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/80 mb-6 opacity-80 flex items-center gap-2">
+              <Lightbulb size={12} /> Catatan Tambahan & Tabel Penjelasan
+            </span>
+            
+            <div className="text-sm md:text-base font-semibold text-muted-foreground leading-relaxed tracking-wide select-text selection:bg-primary/10">
+              {parseNotesToJSX(article.notes)}
+            </div>
+          </Card>
+        )}
 
-      {/* Bagian Contoh Kalimat */}
-      {article.examples && article.examples.length > 0 && (
-        <section className="mb-20">
-          <div className="flex items-center gap-3 mb-8">
-            <span className="w-1.5 h-6 rounded-full bg-primary" />
-            <h2 className="text-xl md:text-2xl font-black tracking-tight text-foreground uppercase tracking-widest text-[13px] md:text-sm">
-              Contoh Kalimat (例文)
-            </h2>
-          </div>
+        {/* Bagian Contoh Kalimat */}
+        {article.examples && article.examples.length > 0 && (
+          <section className="mb-8">
+            <div className="flex items-center gap-3 mb-8">
+              <span className="w-1.5 h-6 rounded-full bg-primary" />
+              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground select-none">
+                Contoh Kalimat (例文)
+              </h2>
+            </div>
 
-          <div className="space-y-6">
-            {(article.examples as Array<{ jp: string; furigana?: string; id: string }>).map((ex, i: number) => {
-              const isActive = playingIndex === i;
-              return (
-                <div 
-                  key={ex.id}
-                  className="border border-border rounded-[1.8rem] p-6 md:p-8 bg-card/5 backdrop-blur-lg hover:border-primary/40 transition-all duration-300 shadow-sm relative overflow-hidden group flex items-start gap-4 md:gap-6"
-                >
-                  {/* Aksen Siber Kiri & Penomoran */}
-                  <div className="absolute top-0 left-0 w-1.5 h-full bg-primary/10 group-hover:bg-primary transition-all duration-300" />
-                  
-                  <div className="hidden sm:flex flex-col items-center justify-center font-mono text-sm md:text-base font-black text-muted-foreground/30 group-hover:text-primary/40 transition-colors size-10 rounded-full border border-border/50 bg-card/10 select-none">
-                    {String(i + 1).padStart(2, "0")}
-                  </div>
-
-                  {/* Konten Kalimat Utama Jepang & Terjemahan */}
-                  <div className="flex-1 min-w-0">
-                    <SmartJapanese 
-                      word={ex.jp} 
-                      furigana={ex.furigana} 
-                      className="text-xl md:text-2xl font-japanese font-bold text-foreground leading-relaxed block tracking-wide select-text" 
-                    />
+            <div className="space-y-6">
+              {(article.examples as Array<{ jp: string; furigana?: string; romaji?: string; id: string }>).map((ex, i: number) => {
+                const isActive = playingIndex === i;
+                return (
+                  <div 
+                    key={ex.id}
+                    className="border border-border rounded-[1.8rem] p-6 md:p-8 bg-card/5 backdrop-blur-lg hover:border-primary/40 transition-all duration-300 shadow-sm relative overflow-hidden group flex items-start gap-4 md:gap-6"
+                  >
+                    {/* Aksen Siber Kiri & Penomoran */}
+                    <div className="absolute top-0 left-0 w-1.5 h-full bg-primary/10 group-hover:bg-primary transition-all duration-300" />
                     
-                    <div className="mt-4 pl-4 border-l-2 border-primary/30 text-sm md:text-base text-muted-foreground/80 font-semibold leading-relaxed select-text">
-                      {ex.id}
+                    <div className="hidden sm:flex flex-col items-center justify-center font-mono text-sm md:text-base font-black text-muted-foreground/30 group-hover:text-primary/40 transition-colors size-10 rounded-full border border-border/50 bg-card/10 select-none">
+                      {String(i + 1).padStart(2, "0")}
+                    </div>
+
+                    {/* Konten Kalimat Utama Jepang & Terjemahan */}
+                    <div className="flex-1 min-w-0">
+                      <SmartJapanese 
+                        word={ex.jp} 
+                        furigana={ex.furigana} 
+                        className="text-xl md:text-2xl font-japanese font-bold text-foreground leading-relaxed block tracking-wide select-text" 
+                      />
+
+                      {ex.romaji && (
+                        <div className="mt-2 text-xs md:text-sm text-muted-foreground/50 font-mono tracking-wider select-text italic">
+                          {ex.romaji}
+                        </div>
+                      )}
+                      
+                      <div className="mt-4 pl-4 border-l-2 border-primary/30 text-sm md:text-base text-muted-foreground/80 font-semibold leading-relaxed select-text">
+                        {ex.id}
+                      </div>
+                    </div>
+
+                    {/* Tombol Pemicu Pengucapan Suara (TTS) */}
+                    <div className="flex-shrink-0 select-none">
+                      <button type="button" 
+                        onClick={() => speakJapanese(ex.jp, i)}
+                        className={`h-12 w-12 rounded-[1.2rem] border flex items-center justify-center transition-all duration-300 relative group/btn ${
+                          isActive 
+                            ? "border-primary bg-primary/10 text-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.35)] animate-pulse" 
+                            : "border-border bg-card/20 text-muted-foreground hover:border-primary/40 hover:text-primary hover:bg-primary/5 hover:shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]"
+                        }`}
+                        aria-label={isActive ? "Hentikan pengucapan kalimat" : "Dengarkan pengucapan kalimat"}
+                      >
+                        {isActive ? (
+                          <VolumeX size={20} className="scale-110" />
+                        ) : (
+                          <Volume2 size={20} className="group-hover/btn:scale-110 transition-transform" />
+                        )}
+                      </button>
                     </div>
                   </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
+      </div>
 
-                  {/* Tombol Pemicu Pengucapan Suara (TTS) */}
-                  <div className="flex-shrink-0 select-none">
-                    <button type="button" 
-                      onClick={() => speakJapanese(ex.jp, i)}
-                      className={`h-12 w-12 rounded-[1.2rem] border flex items-center justify-center transition-all duration-300 relative group/btn ${
-                        isActive 
-                          ? "border-primary bg-primary/10 text-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.35)] animate-pulse" 
-                          : "border-border bg-card/20 text-muted-foreground hover:border-primary/40 hover:text-primary hover:bg-primary/5 hover:shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]"
-                      }`}
-                      aria-label={isActive ? "Hentikan pengucapan kalimat" : "Dengarkan pengucapan kalimat"}
-                    >
-                      {isActive ? (
-                        <VolumeX size={20} className="scale-110" />
-                      ) : (
-                        <Volume2 size={20} className="group-hover/btn:scale-110 transition-transform" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-      )}
+
 
       {/* Footer Navigasi Modul */}
       <footer className="pt-12 border-t border-border/60 flex flex-col md:flex-row items-center justify-between gap-6 select-none">
