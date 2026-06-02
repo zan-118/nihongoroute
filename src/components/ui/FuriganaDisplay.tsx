@@ -56,11 +56,25 @@ export default function FuriganaDisplay({
     return splitFurigana(text, furigana);
   }, [text, furigana]);
 
-  // Mode Hiragana: Mengembalikan properti furigana secara langsung untuk memastikan 100% bebas Kanji dan berkinerja sangat tinggi
+  // Mode Hiragana: tampilkan furigana langsung tanpa kanji
   if (currentMode === "hiragana" && furigana) {
     return (
       <span className={`font-noto-serif leading-relaxed tracking-normal inline-block w-full text-foreground ${kanjiSize} ${className}`}>
         {furigana}
+      </span>
+    );
+  }
+
+  // Mode Romaji: tampilkan teks romaji jika tersedia, fallback ke konversi wanakana
+  if (currentMode === "romaji") {
+    const romajiText = romaji
+      ? romaji
+      : furigana
+        ? wanakana.toRomaji(furigana)
+        : wanakana.toRomaji(text);
+    return (
+      <span className={`font-sans leading-relaxed tracking-wide inline-block w-full text-foreground ${kanjiSize} ${className}`}>
+        {romajiText}
       </span>
     );
   }

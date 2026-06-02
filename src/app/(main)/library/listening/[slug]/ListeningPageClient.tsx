@@ -16,10 +16,10 @@ import ListeningQuiz from "@/components/features/listening/components/ListeningQ
 import { useListeningSync } from "@/components/features/listening/hooks/useListeningSync";
 import { useUserStore } from "@/store/useUserStore";
 import { useUIStore } from "@/store/useUIStore";
+import AudioController from "@/components/features/reading/components/AudioController";
 
 // Komponen Pendukung
 import { ListeningHeader } from "@/components/features/listening/components/ListeningHeader";
-import { ListeningSidebar } from "@/components/features/listening/components/ListeningSidebar";
 
 // ======================
 // TIPE DATA
@@ -90,48 +90,44 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
       <ListeningHeader
         title={data.title}
         description={data.description}
+        jlptLevel={data.jlpt_level}
+        difficulty={data.difficulty}
+      />
+
+      <main className="max-w-4xl mx-auto px-4 lg:px-6 mt-6 md:mt-12 relative z-10">
+        <div className="flex flex-col gap-6 md:gap-10">
+          <ListeningKaraoke 
+            transcript={data.transcript} 
+            activeIndex={activeIndex}
+            seekToLine={seekToLine}
+          />
+
+          {hasQuiz && (
+            <div className="px-4 lg:px-8" data-section="quiz">
+              {/* Divider menuju kuis */}
+              <div className="flex items-center gap-4 mb-8">
+                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50 shrink-0">
+                  Kuis Pemahaman
+                </span>
+                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+              </div>
+              <ListeningQuiz 
+                questions={data.quiz!} 
+                onComplete={handleQuizComplete} 
+              />
+            </div>
+          )}
+        </div>
+      </main>
+
+      {/* Floating Bottom Audio Player (Mobile-First Spotify Style) */}
+      <AudioController
         audioUrl={data.audioUrl}
         textToSpeak={listeningState.textToSpeak || ""}
         onTimeUpdate={handleTimeUpdate}
         externalSeek={externalSeek || 0}
       />
-
-      <main className="max-w-7xl mx-auto px-4 lg:px-6 mt-12 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          {/* Kolom Kiri: Transkrip + Kuis inline */}
-          <div className="lg:col-span-8 flex flex-col gap-10">
-            <ListeningKaraoke 
-              transcript={data.transcript} 
-              activeIndex={activeIndex}
-              seekToLine={seekToLine}
-            />
-
-            {hasQuiz && (
-              <div className="px-4 lg:px-8" data-section="quiz">
-                {/* Divider menuju kuis */}
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="flex-1 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50 shrink-0">
-                    Kuis Pemahaman
-                  </span>
-                  <div className="flex-1 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-                </div>
-                <ListeningQuiz 
-                  questions={data.quiz!} 
-                  onComplete={handleQuizComplete} 
-                />
-              </div>
-            )}
-          </div>
-
-          <ListeningSidebar
-            quizLength={data.quiz?.length || 0}
-            transcriptLength={data.transcript?.length || 0}
-            jlptLevel={data.jlpt_level}
-            difficulty={data.difficulty}
-          />
-        </div>
-      </main>
     </div>
   );
 }

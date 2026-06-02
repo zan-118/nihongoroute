@@ -1,9 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Serif+JP:wght@400;500;700;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
+    --font-inter: 'Inter', sans-serif;
+    --font-noto-jp: 'Noto Sans JP', sans-serif;
+    --font-noto-serif-jp: 'Noto Serif JP', serif;
     --background: 216 20% 98%;
     --background-rgb: 248 250 252;
     --foreground: 216 15% 5%; 

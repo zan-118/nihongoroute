@@ -9,12 +9,10 @@
 // IMPOR
 // ======================
 import type { Metadata, Viewport } from "next";
-import { Inter, Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import QueryProvider from "@/components/providers/QueryProvider";
-import { cn } from "@/lib/utils";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { LazyMotion, domAnimation } from "framer-motion";
@@ -23,17 +21,6 @@ import { LazyMotion, domAnimation } from "framer-motion";
 // ======================
 // KONFIGURASI / KONSTANTA
 // ======================
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const notoJsonJP = Noto_Sans_JP({
-  subsets: ["latin"],
-  weight: ["400", "500", "700", "900"],
-  variable: "--font-noto-jp",
-});
-const notoSerifJP = Noto_Serif_JP({
-  subsets: ["latin"],
-  weight: ["400", "500", "700", "900"],
-  variable: "--font-noto-serif-jp",
-});
 
 /**
  * Konfigurasi viewport untuk mengoptimalkan tampilan di perangkat seluler.
@@ -122,12 +109,7 @@ export default function RootLayout({
     <html lang="id" suppressHydrationWarning>
       <body
         suppressHydrationWarning
-        className={cn(
-          inter.variable,
-          notoJsonJP.variable,
-          notoSerifJP.variable,
-          "font-sans antialiased text-foreground selection:bg-destructive selection:text-destructive-foreground transition-colors duration-300"
-        )}
+        className="font-sans antialiased text-foreground selection:bg-destructive selection:text-destructive-foreground transition-colors duration-300"
       >
         <ThemeProvider
           attribute="class"

@@ -99,43 +99,52 @@ export default function ListeningListClient({ initialData }: ListeningListClient
             <Loader2 className="size-10 animate-spin text-primary" />
           </div>
         )}
-        <div className="grid grid-cols-1 gap-4 min-h-[300px]">
-          {tasks.map((task: ListeningTaskItem, idx: number) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[300px]">
+          {tasks.map((task, idx: number) => (
             <div
               key={task.id}
               className="transform hover:-translate-y-1 transition-all duration-300"
               style={{ 
                 contentVisibility: 'auto', 
-                containIntrinsicSize: '0 100px',
+                containIntrinsicSize: '0 200px',
               }}
             >
               <Link href={`/library/listening/${task.slug}`}>
-                <Card className="group relative flex items-center gap-6 p-6 bg-[rgba(var(--card-rgb),0.3)] backdrop-blur-3xl border-[rgba(var(--border-rgb),0.4)] hover:border-[rgba(var(--primary-rgb),0.5)] transition-all duration-500 rounded-3xl overflow-hidden hover:shadow-[0_0_40px_rgba(var(--primary-rgb),0.1)] cursor-pointer">
-                  {/* Latar Belakang Tombol Putar */}
-                  <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-[rgba(var(--primary-rgb),0.1)] flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500 shrink-0 shadow-inner">
-                    <Play size={24} className="ml-1" />
+                <Card className="group h-full p-8 rounded-[2.5rem] bg-card/30 backdrop-blur-xl border border-border hover:border-primary/40 shadow-xl hover:shadow-[0_20px_50px_rgba(var(--primary-rgb),0.1)] transition-all duration-500 relative overflow-hidden flex flex-col justify-between cursor-pointer">
+                  {/* Efek Kilau / Pendar Ambient */}
+                  <div className="absolute top-0 right-0 size-32 bg-primary/5 blur-[50px] rounded-full -mr-16 -mt-16 group-hover:bg-primary/10 transition-all duration-500" />
+                  
+                  <div className="space-y-6 relative z-10 flex-1 flex flex-col justify-between">
+                    <div className="flex items-center justify-between">
+                      {task.jlpt_level && (
+                        <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
+                          {task.jlpt_level}
+                        </span>
+                      )}
+                      <div className="p-2 rounded-xl bg-background/5 border border-border group-hover:bg-primary/10 group-hover:border-primary/20 transition-all duration-300">
+                        <Headphones size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      {task.difficulty && (
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                          Level {task.difficulty}
+                        </span>
+                      )}
+                      <h3 className="text-2xl font-black text-foreground leading-tight group-hover:text-primary transition-colors line-clamp-2">
+                        {task.title}
+                      </h3>
+                    </div>
                   </div>
 
-                  <div className="flex-1 flex flex-col gap-1">
-                    <div className="flex items-center gap-3">
-                       <span className="text-lg md:text-2xl font-black text-foreground group-hover:text-primary transition-colors duration-300">
-                         {task.title}
-                       </span>
+                  <div className="mt-8 flex items-center justify-between relative z-10">
+                    <span className="text-xs font-bold text-muted-foreground group-hover:text-foreground transition-colors">
+                      Mulai Menyimak
+                    </span>
+                    <div className="size-10 rounded-full flex items-center justify-center bg-background/5 border border-border group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-transparent transition-all duration-300">
+                      <Play size={16} className="ml-0.5 fill-current" />
                     </div>
-                    <div className="flex items-center gap-4 text-xs font-medium text-muted-foreground">
-                      <span className="flex items-center gap-1.5 bg-[rgba(var(--background-rgb),0.05)] px-2 py-1 rounded-md">
-                        <Clock size={12} />
-                        Auto-Duration
-                      </span>
-                      <span className="flex items-center gap-1.5 bg-[rgba(var(--background-rgb),0.05)] px-2 py-1 rounded-md">
-                        <Headphones size={12} />
-                        Native/TTS Supported
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="hidden md:flex items-center gap-2 text-primary font-bold uppercase tracking-widest text-[10px] opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-300">
-                    Mulai Belajar <ArrowRight size={14} />
                   </div>
                 </Card>
               </Link>

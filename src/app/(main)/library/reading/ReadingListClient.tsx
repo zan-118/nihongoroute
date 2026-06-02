@@ -101,7 +101,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
             <Loader2 className="size-10 animate-spin text-primary" />
           </div>
         )}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[300px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[300px]">
           {materials.map((material, index) => (
             <div
               key={material.slug}
@@ -112,16 +112,18 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
               }}
             >
               <Link href={ROUTES.LIBRARY.READING(material.slug)}>
-                <div className="group h-full p-8 rounded-[2.5rem] bg-[rgba(var(--card-rgb),0.4)] backdrop-blur-3xl border border-border hover:border-[rgba(var(--primary-rgb),0.4)] transition-all duration-500 relative overflow-hidden flex flex-col justify-between">
+                <div className="group h-full p-8 rounded-[2.5rem] bg-card/30 backdrop-blur-xl border border-border hover:border-primary/40 shadow-xl hover:shadow-[0_20px_50px_rgba(var(--primary-rgb),0.1)] transition-all duration-500 relative overflow-hidden flex flex-col justify-between cursor-pointer">
                   {/* Efek Kilau saat Melayang */}
-                  <div className="absolute top-0 right-0 size-32 bg-[rgba(var(--primary-rgb),0.05)] blur-[50px] rounded-full -mr-16 -mt-16 group-hover:bg-[rgba(var(--primary-rgb),0.1)] transition-all" />
+                  <div className="absolute top-0 right-0 size-32 bg-primary/5 blur-[50px] rounded-full -mr-16 -mt-16 group-hover:bg-primary/10 transition-all duration-500" />
                   
-                  <div className="space-y-6 relative z-10">
+                  <div className="space-y-6 relative z-10 flex-1 flex flex-col justify-between">
                     <div className="flex items-center justify-between">
-                      <Badge variant="outline" className="border-[rgba(var(--primary-rgb),0.3)] text-primary bg-[rgba(var(--primary-rgb),0.05)] uppercase font-black tracking-widest px-3 py-1">
-                        {material.difficulty}
-                      </Badge>
-                      <div className="p-2 rounded-xl bg-[rgba(var(--background-rgb),0.05)] group-hover:bg-[rgba(var(--primary-rgb),0.1)] border border-border group-hover:border-[rgba(var(--primary-rgb),0.2)] transition-all">
+                      {material.difficulty && (
+                        <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
+                          {material.difficulty}
+                        </span>
+                      )}
+                      <div className="p-2 rounded-xl bg-background/5 border border-border group-hover:bg-primary/10 group-hover:border-primary/20 transition-all duration-300">
                         <GraduationCap size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
                       </div>
                     </div>
@@ -130,7 +132,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
                       <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                         {material.category || "General Reading"}
                       </span>
-                      <h3 className="text-2xl font-black text-foreground leading-tight group-hover:text-primary transition-colors">
+                      <h3 className="text-2xl font-black text-foreground leading-tight group-hover:text-primary transition-colors line-clamp-2">
                         {material.title}
                       </h3>
                     </div>
@@ -140,7 +142,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
                     <span className="text-xs font-bold text-muted-foreground group-hover:text-foreground transition-colors">
                       Mulai Membaca
                     </span>
-                    <div className="size-10 rounded-full flex items-center justify-center bg-[rgba(var(--background-rgb),0.05)] group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                    <div className="size-10 rounded-full flex items-center justify-center bg-background/5 border border-border group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-transparent transition-all duration-300">
                       <ChevronRight size={20} />
                     </div>
                   </div>

@@ -81,6 +81,7 @@ export function ReadingNavbar({
           <Maximize2 size={20} />
         </Button>
         <div className="h-6 w-px bg-border mx-1" />
+        {/* Desktop: tampilkan semua mode sebagai button */}
         <div className="hidden lg:flex items-center gap-1 p-1 rounded-xl bg-muted/30 border border-border">
           {modes.map((m) => (
             <Button
@@ -98,6 +99,23 @@ export function ReadingNavbar({
             </Button>
           ))}
         </div>
+        {/* Mobile: cycle button */}
+        <button
+          type="button"
+          onClick={() => {
+            const idx  = modes.findIndex(m => m.id === mode);
+            const next = modes[(idx + 1) % modes.length];
+            onModeChange(next.id);
+          }}
+          aria-label={`Mode ${mode} — ketuk untuk ganti`}
+          className="lg:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-muted/30 border border-border text-[10px] font-black uppercase tracking-wider text-foreground hover:bg-primary/10 hover:text-primary hover:border-primary/30 transition-all"
+        >
+          {(() => {
+            const current = modes.find(m => m.id === mode);
+            return current ? <current.icon size={14} /> : null;
+          })()}
+          <span>{mode}</span>
+        </button>
       </div>
     </m.nav>
   );

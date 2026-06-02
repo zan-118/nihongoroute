@@ -1,12 +1,4 @@
-/**
- * @file ReadingMobileToolbar.tsx
- * @description Komponen toolbar bawah (floating bottom bar) khusus untuk perangkat seluler untuk memudahkan akses kontrol ukuran font, terjemahan, dan audio.
- */
-
-// ==========================================
-// IMPORT & DEPENDENSI
-// ==========================================
-import { Type, Languages, Headphones, X } from "lucide-react";
+import { Type, Languages } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import AudioController from "./AudioController";
@@ -43,39 +35,45 @@ export function ReadingMobileToolbar({
   // RENDER KOMPONEN
   // ==========================================
   return (
-    <div className="xl:hidden fixed bottom-8 inset-x-4 z-50 flex flex-col items-center gap-3">
-      {/* Toolbar kontrol utama */}
-      <div className="flex items-center gap-2 p-2 rounded-2xl glass border border-border/50 shadow-2xl shadow-primary/20">
+    <div className="fixed bottom-6 inset-x-4 z-50 flex flex-col items-center gap-2">
+      {/* Baris Atas: Kontrol Teks (Font Size & Translation) */}
+      <div className="flex items-center gap-2 p-1 px-2 rounded-full bg-card/90 backdrop-blur-md border border-border shadow-lg">
         <Button
           variant="ghost"
           size="icon"
-          className="rounded-xl size-12"
+          className="rounded-full size-9 text-muted-foreground hover:text-primary transition-colors"
           onClick={onFontSizeToggle}
           aria-label="Ubah ukuran huruf teks bacaan"
         >
-          <Type size={22} />
+          <Type size={16} />
         </Button>
+        <div className="w-px h-4 bg-border" />
         <Button
           variant={showTranslation ? "default" : "ghost"}
           size="icon"
-          className={cn("rounded-xl w-12 h-12 transition-all", showTranslation && "shadow-lg shadow-primary/30")}
+          className={cn(
+            "rounded-full size-9 transition-all text-muted-foreground",
+            showTranslation ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" : "hover:text-primary"
+          )}
           onClick={onTranslationToggle}
           aria-label="Tampilkan atau sembunyikan terjemahan paragraf"
         >
-          <Languages size={22} />
+          <Languages size={16} />
         </Button>
-        {hasAudio && (
-          <div className="flex items-center">
-            <div className="w-px h-6 bg-border mx-1" />
-            <AudioController
-              audioUrl={audioUrl}
-              textToSpeak={textToSpeak}
-              isTTSDisabled={isTTSDisabled}
-              compact={true}
-            />
-          </div>
-        )}
       </div>
+
+      {/* Baris Bawah: Pengendali Audio Lengkap */}
+      {hasAudio && (
+        <div className="w-full max-w-md">
+          <AudioController
+            audioUrl={audioUrl}
+            textToSpeak={textToSpeak}
+            isTTSDisabled={isTTSDisabled}
+            compact={false}
+            header={true} // Menggunakan mode header untuk tampilan horizontal compact dengan seek bar
+          />
+        </div>
+      )}
     </div>
   );
 }

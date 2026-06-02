@@ -24,7 +24,6 @@ import QuizEngine from "@/components/features/exams/quiz-engine/QuizEngine";
 
 // Komponen Pendukung
 import { ReadingNavbar } from "@/components/features/reading/components/ReadingNavbar";
-import { ReadingSidebar } from "@/components/features/reading/components/ReadingSidebar";
 import { ReadingArticle } from "@/components/features/reading/components/ReadingArticle";
 import { ReadingMobileToolbar } from "@/components/features/reading/components/ReadingMobileToolbar";
 
@@ -144,35 +143,26 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
       <div
         className={cn(
           "max-w-4xl mx-auto px-6 relative z-10 transition-all duration-1000",
-          isZenMode ? "pt-24 md:pt-40" : "pt-32 md:pt-48"
+          isZenMode ? "pt-12 sm:pt-24 md:pt-40" : "pt-20 sm:pt-32 md:pt-48"
         )}
       >
         {/* Dekorasi Header Imersif */}
         {!isZenMode && (
-          <div className="flex flex-col items-center mb-24 md:mb-32 text-center">
-            <div className="flex items-center gap-3 mb-8">
+          <div className="flex flex-col items-center mb-12 md:mb-24 text-center">
+            <div className="flex items-center gap-3 mb-6">
               <div className="size-1.5 rounded-full bg-primary animate-ping" />
               <span className="text-primary font-black text-[10px] md:text-xs uppercase tracking-[0.4em]">
                 Graded Reading Experience
               </span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-black text-foreground tracking-tighter leading-[0.9] mb-12 max-w-3xl drop-shadow-2xl">
+            <h1 className="text-3xl sm:text-5xl md:text-7xl font-black text-foreground tracking-tighter leading-[1.1] md:leading-[0.9] mb-8 max-w-3xl drop-shadow-2xl">
               {data.title}
             </h1>
             <div className="h-1.5 w-32 bg-gradient-to-r from-primary/0 via-primary to-primary/0 rounded-full" />
           </div>
         )}
 
-        {/* Bilah Samping Melayang untuk Audio & Pengaturan (Desktop) */}
-        <ReadingSidebar
-          audioUrl={data.audioUrl}
-          textToSpeak={data.body as string}
-          isTTSDisabled={data.isTTSDisabled}
-          fontSize={fontSize}
-          onFontSizeToggle={toggleFontSize}
-          showTranslation={showTranslation}
-          onTranslationToggle={toggleTranslation}
-        />
+
 
         {/* Artikel */}
         <ReadingArticle

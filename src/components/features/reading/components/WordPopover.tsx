@@ -6,13 +6,13 @@
 // ==========================================
 // IMPORT & DEPENDENSI
 // ==========================================
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
-import { ExternalLink, Plus, Loader2 } from "lucide-react";
+import { ExternalLink, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import AddToSRSButton from "@/components/features/srs/actions/AddToSRSButton";
@@ -34,6 +34,14 @@ interface WordPopoverProps {
  */
 export default function WordPopover({ children, word, reading }: WordPopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // ==========================================
   // QUERY & FETCH DATA (REAL-TIME)
@@ -68,6 +76,18 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
     staleTime: 1000 * 60 * 5, // 5 menit
   });
 
+  const variants = isMobile
+    ? {
+        initial: { y: "100%", opacity: 0 },
+        animate: { y: 0, opacity: 1 },
+        exit: { y: "100%", opacity: 0 },
+      }
+    : {
+        initial: { opacity: 0, y: 10, scale: 0.95 },
+        animate: { opacity: 1, y: 0, scale: 1 },
+        exit: { opacity: 0, y: 10, scale: 0.95 },
+      };
+
   // ==========================================
   // RENDER KOMPONEN
   // ==========================================
@@ -86,22 +106,33 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* Latar Belakang untuk ponsel (Backdrop) */}
+            {/* Latar Belakang (Backdrop) */}
             <m.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 z-[60] md:hidden bg-background/20 backdrop-blur-sm"
+              className="fixed inset-0 z-[60] bg-background/60 backdrop-blur-sm"
             />
             
             <m.div
-              initial={{ opacity: 0, y: 10, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 10, scale: 0.95 }}
-              className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-72 z-[70] pointer-events-auto"
+              variants={variants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={isMobile ? { type: "spring", damping: 25, stiffness: 220 } : { duration: 0.2 }}
+              className={cn(
+                isMobile 
+                  ? "fixed bottom-0 inset-x-0 w-full z-[70] pointer-events-auto"
+                  : "absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-72 z-[70] pointer-events-auto"
+              )}
             >
-              <div className="p-5 rounded-3xl glass border border-border/60 shadow-[0_20px_50px_-15px_rgba(var(--background-rgb),0.3)] bg-card/80 backdrop-blur-2xl">
+              <div className={cn(
+                "p-5 border border-border/60 shadow-2xl bg-card",
+                isMobile 
+                  ? "rounded-t-[2.5rem] pb-8" 
+                  : "rounded-3xl glass bg-card/80 backdrop-blur-2xl"
+              )}>
                 {isLoading ? (
                   <div className="flex items-center justify-center py-8">
                     <Loader2 size={24} className="animate-spin text-primary" />
@@ -141,12 +172,13 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
                 ) : (
                   <div className="text-center py-6 space-y-3">
                     <p className="text-xs text-muted-foreground font-medium italic">Kosakata tidak ditemukan di database NihongoRoute.</p>
-                    <div className="flex flex-col gap-1 items-center" />
                   </div>
                 )}
                 
-                {/* Dekorasi Ekor Popover */}
-                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 size-4 bg-card/80 border-r border-b border-border/60 rotate-45 transform" />
+                {/* Dekorasi Ekor Popover (Hanya Desktop) */}
+                {!isMobile && (
+                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 size-4 bg-card border-r border-b border-border/60 rotate-45 transform" />
+                )}
               </div>
             </m.div>
           </>

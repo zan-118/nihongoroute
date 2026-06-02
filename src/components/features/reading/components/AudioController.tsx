@@ -1,25 +1,26 @@
 /**
  * @file AudioController.tsx
- * @description Komponen pengendali pemutaran audio native (berkas suara) dan AI Voice (Text-to-Speech) dengan dukungan caching luring, loading state, dan kontrol kecepatan putar.
+ * @description Komponen pengendali audio — native file + Edge TTS AI Voice.
+ * Native audio: pakai elemen <audio> HTML dengan CacheStorage offline.
+ * TTS: pakai Edge TTS (neural, natural) via /api/tts, fallback ke Web Speech API.
+ * Dua sumber audio dipisah dengan ref terpisah agar tidak konflik.
  */
 
-// ==========================================
-// IMPORT & DEPENDENSI
-// ==========================================
 import React, { useState, useEffect, useRef } from "react";
 import { Play, Pause, Square, AlertCircle, RotateCcw, Loader2, Gauge } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useCachedAudio } from "@/hooks/useCachedAudio";
+import { fetchTTSAudio, speakWithWebSpeech, TTS_VOICES } from "@/lib/tts";
 
-// ==========================================
-// TIPE DATA / INTERFACE
-// ==========================================
+// ============================================================
+// TIPE DATA
+// ============================================================
 interface AudioControllerProps {
   audioUrl?: string;
   textToSpeak?: string;
   isTTSDisabled?: boolean;
-  /** compact: ikon + label kecil saja (sidebar). header: player penuh tapi horizontal. default: floating bottom bar */
+  /** compact: ikon + label saja (sidebar). header: player horizontal. default: floating bar */
   compact?: boolean;
   header?: boolean;
   onTimeUpdate?: (time: number) => void;
@@ -29,49 +30,64 @@ interface AudioControllerProps {
 const SPEED_OPTIONS = [0.5, 0.75, 1, 1.25, 1.5] as const;
 type SpeedOption = typeof SPEED_OPTIONS[number];
 
-// ==========================================
+// ============================================================
 // KOMPONEN UTAMA
-// ==========================================
-/**
- * Komponen kontrol pemutar audio artikel.
- */
-export default function AudioController({ 
-  audioUrl, 
-  textToSpeak, 
+// ============================================================
+export default function AudioController({
+  audioUrl,
+  textToSpeak,
   isTTSDisabled,
   compact = false,
   header = false,
   onTimeUpdate,
-  externalSeek
+  externalSeek,
 }: AudioControllerProps) {
-  // ==========================================
-  // STATUS & STATE & HOOKS
-  // ==========================================
+
+  // ── State ──────────────────────────────────────────────
   const cachedAudioUrl = useCachedAudio(audioUrl);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isTTS, setIsTTS] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [duration, setDuration] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
+
+  const [isPlaying,     setIsPlaying]     = useState(false);
+  const [isTTS,         setIsTTS]         = useState(false);
+  const [isLoading,     setIsLoading]     = useState(false);
+  const [error,         setError]         = useState<string | null>(null);
+  const [duration,      setDuration]      = useState(0);
+  const [currentTime,   setCurrentTime]   = useState(0);
   const [playbackSpeed, setPlaybackSpeed] = useState<SpeedOption>(1);
   const [showSpeedMenu, setShowSpeedMenu] = useState(false);
 
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const ttsRef = useRef<SpeechSynthesisUtterance | null>(null);
-  // Ref untuk melacak seek yang sedang diproses agar tidak double-trigger
-  const lastSeekRef = useRef<number | undefined>(undefined);
+  // ── Refs ───────────────────────────────────────────────
+  /** Elemen <audio> untuk native file */
+  const nativeAudioRef = useRef<HTMLAudioElement | null>(null);
+  /** Elemen Audio() untuk TTS — terpisah dari native */
+  const ttsAudioRef    = useRef<HTMLAudioElement | null>(null);
+  /** Fungsi stop untuk Web Speech API fallback */
+  const stopSpeechRef  = useRef<(() => void) | null>(null);
+  /** Tracking seek agar tidak double-trigger */
+  const lastSeekRef    = useRef<number | undefined>(undefined);
 
-  // ==========================================
-  // FUNGSI PENGENDALI UTAMA (HANDLERS)
-  // ==========================================
+  // ── Helpers ────────────────────────────────────────────
+  const cleanText = (text: string) =>
+    text.replace(/\[.*?\]/g, "").replace(/[\[\]]/g, "").replace(/\s+/g, " ").trim();
 
-  // Hentikan semua pemutaran — didefinisikan sebelum useEffect agar cleanup unmount bisa mengaksesnya
+  const formatTime = (t: number) => {
+    const m = Math.floor(t / 60);
+    const s = Math.floor(t % 60);
+    return `${m}:${s.toString().padStart(2, "0")}`;
+  };
+
+  // ── Stop semua ─────────────────────────────────────────
   const stopAll = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
+    if (nativeAudioRef.current) {
+      nativeAudioRef.current.pause();
+      nativeAudioRef.current.currentTime = 0;
     }
+    if (ttsAudioRef.current) {
+      ttsAudioRef.current.pause();
+      ttsAudioRef.current.src = "";
+      ttsAudioRef.current = null;
+    }
+    stopSpeechRef.current?.();
+    stopSpeechRef.current = null;
     if (typeof window !== "undefined" && window.speechSynthesis) {
       window.speechSynthesis.cancel();
     }
@@ -81,143 +97,144 @@ export default function AudioController({
     setCurrentTime(0);
   };
 
-  // ==========================================
-  // EFEK SAMPING (EFFECTS)
-  // ==========================================
-
-  // Terapkan playback speed ke elemen audio saat berubah
+  // ── Effects ────────────────────────────────────────────
+  // Playback speed → native audio
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.playbackRate = playbackSpeed;
-    }
+    if (nativeAudioRef.current) nativeAudioRef.current.playbackRate = playbackSpeed;
+    if (ttsAudioRef.current)    ttsAudioRef.current.playbackRate    = playbackSpeed;
   }, [playbackSpeed]);
 
-  // Sinkronkan pemutaran eksternal (seek dari klik baris transkrip)
+  // External seek dari klik baris karaoke → native audio
   useEffect(() => {
     if (
       externalSeek !== undefined &&
       externalSeek !== lastSeekRef.current &&
-      audioRef.current
+      nativeAudioRef.current
     ) {
       lastSeekRef.current = externalSeek;
-      audioRef.current.currentTime = externalSeek;
+      nativeAudioRef.current.currentTime = externalSeek;
       setCurrentTime(externalSeek);
     }
   }, [externalSeek]);
 
-  // Hentikan semuanya saat komponen unmount
+  // Cleanup saat unmount
   useEffect(() => {
-    const audio = audioRef.current;
+    const native = nativeAudioRef.current;
+    const tts    = ttsAudioRef.current;
     return () => {
-      if (audio) {
-        audio.pause();
-      }
+      native?.pause();
+      tts?.pause();
+      stopSpeechRef.current?.();
       if (typeof window !== "undefined" && window.speechSynthesis) {
         window.speechSynthesis.cancel();
       }
     };
   }, []);
 
-  // Tutup speed menu saat klik di luar
+  // Tutup speed menu klik di luar
   useEffect(() => {
     if (!showSpeedMenu) return;
-    const handler = () => setShowSpeedMenu(false);
-    document.addEventListener("click", handler);
-    return () => document.removeEventListener("click", handler);
+    const h = () => setShowSpeedMenu(false);
+    document.addEventListener("click", h);
+    return () => document.removeEventListener("click", h);
   }, [showSpeedMenu]);
 
-  const cleanTextForTTS = (text: string) => {
-    if (!text) return "";
-    return text
-      .replace(/\[.*?\]/g, "") 
-      .replace(/[\[\]]/g, "")  
-      .replace(/\s+/g, " ")    
-      .trim();
-  };
-
+  // ── Native audio toggle ────────────────────────────────
   const toggleNativeAudio = () => {
-    if (!audioRef.current) return;
+    const el = nativeAudioRef.current;
+    if (!el) return;
 
     if (isPlaying && !isTTS) {
-      audioRef.current.pause();
+      el.pause();
       setIsPlaying(false);
-    } else {
-      if (isTTS) stopAll();
-      setIsLoading(true);
-      audioRef.current.play().then(() => {
-        setIsPlaying(true);
-        setIsTTS(false);
-        setIsLoading(false);
-      }).catch(err => {
-        console.error("Audio playback error:", err);
-        setError("Gagal memutar audio.");
-        setIsPlaying(false);
-        setIsLoading(false);
-      });
-    }
-  };
-
-  const toggleTTS = () => {
-    const textToPlay = cleanTextForTTS(textToSpeak || "");
-    if (!textToPlay) {
-      setError("Tidak ada teks untuk dibaca.");
       return;
     }
 
-    if (isPlaying && isTTS) {
-      window.speechSynthesis.pause();
-      setIsPlaying(false);
-    } else if (!isPlaying && isTTS) {
-      window.speechSynthesis.resume();
-      setIsPlaying(true);
-    } else {
-      stopAll();
-      const utterance = new SpeechSynthesisUtterance(textToPlay);
-      utterance.lang = "ja-JP";
-      utterance.rate = playbackSpeed * 0.85;
-      
-      utterance.onstart = () => {
+    if (isTTS) stopAll();
+
+    setIsLoading(true);
+    el.play()
+      .then(() => { setIsPlaying(true); setIsTTS(false); setIsLoading(false); })
+      .catch(() => { setError("Gagal memutar audio."); setIsLoading(false); });
+  };
+
+  // ── TTS toggle (Edge TTS → Web Speech fallback) ────────
+  const toggleTTS = async () => {
+    const text = cleanText(textToSpeak || "");
+    if (!text) { setError("Tidak ada teks untuk dibaca."); return; }
+
+    // Pause / resume TTS audio yang sudah ada
+    if (isTTS && ttsAudioRef.current) {
+      if (isPlaying) { ttsAudioRef.current.pause(); setIsPlaying(false); }
+      else           { ttsAudioRef.current.play().then(() => setIsPlaying(true)).catch(() => {}); }
+      return;
+    }
+
+    // Mulai TTS baru
+    stopAll();
+    setIsLoading(true);
+
+    // fetchTTSAudio mengembalikan URL API route — bukan blob URL
+    const ttsUrl = await fetchTTSAudio(text, TTS_VOICES.NANAMI, "medium");
+
+    if (ttsUrl) {
+      const ttsEl = new Audio(ttsUrl);
+      ttsEl.playbackRate = playbackSpeed;
+      ttsAudioRef.current = ttsEl;
+
+      ttsEl.oncanplay = () => {
+        setIsLoading(false);
         setIsPlaying(true);
         setIsTTS(true);
         setError(null);
       };
 
-      utterance.onend = () => {
+      ttsEl.onended = () => {
         setIsPlaying(false);
         setIsTTS(false);
+        ttsAudioRef.current = null;
       };
 
-      utterance.onerror = (e) => {
-        if (e.error !== "interrupted") {
-          setError("Gagal menjalankan AI Voice.");
-        }
-        setIsPlaying(false);
-        setIsTTS(false);
+      ttsEl.onerror = () => {
+        ttsAudioRef.current = null;
+        setIsLoading(false);
+        setIsPlaying(true);
+        setIsTTS(true);
+        stopSpeechRef.current = speakWithWebSpeech(
+          text, TTS_VOICES.NANAMI, playbackSpeed,
+          () => { setIsPlaying(false); setIsTTS(false); },
+          () => { setError("Gagal AI Voice."); setIsPlaying(false); setIsTTS(false); }
+        );
       };
 
-      ttsRef.current = utterance;
-      window.speechSynthesis.speak(utterance);
+      ttsEl.play().catch(() => { setIsLoading(false); setError("Gagal memutar AI Voice."); });
+    } else {
+      // Edge TTS tidak tersedia — fallback ke Web Speech API
+      setIsLoading(false);
+      setIsPlaying(true);
+      setIsTTS(true);
+      stopSpeechRef.current = speakWithWebSpeech(
+        text, TTS_VOICES.NANAMI, playbackSpeed,
+        () => { setIsPlaying(false); setIsTTS(false); },
+        () => { setError("Gagal AI Voice."); setIsPlaying(false); setIsTTS(false); }
+      );
     }
   };
 
+  // ── Play/Pause dispatch ────────────────────────────────
   const handlePlayPause = () => {
-    const hasNative = audioUrl && audioUrl.trim().length > 0;
-    if (hasNative) {
-      toggleNativeAudio();
-    } else if (!isTTSDisabled) {
-      toggleTTS();
-    } else {
-      setError("Audio dan AI Voice dinonaktifkan.");
-    }
+    if (audioUrl?.trim()) toggleNativeAudio();
+    else if (!isTTSDisabled) toggleTTS();
+    else setError("Audio dinonaktifkan.");
   };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const time = parseFloat(e.target.value);
-    if (audioRef.current) {
-      audioRef.current.currentTime = time;
-      setCurrentTime(time);
-      lastSeekRef.current = time;
+    const t = parseFloat(e.target.value);
+    if (nativeAudioRef.current) {
+      nativeAudioRef.current.currentTime = t;
+      lastSeekRef.current = t;
     }
+    setCurrentTime(t);
   };
 
   const handleSpeedChange = (speed: SpeedOption, e: React.MouseEvent) => {
@@ -226,33 +243,27 @@ export default function AudioController({
     setShowSpeedMenu(false);
   };
 
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-  };
-
-  // Ikon tombol play — loading spinner saat buffering
+  // ── Icon ───────────────────────────────────────────────
+  const iconSize = compact ? 20 : header ? 20 : 28;
   const PlayIcon = isLoading
-    ? <Loader2 size={compact ? 18 : 26} className="animate-spin" />
+    ? <Loader2 size={compact ? 18 : 24} className="animate-spin" />
     : isPlaying
-      ? <Pause size={compact ? 20 : 28} fill="currentColor" />
-      : <Play size={compact ? 20 : 28} fill="currentColor" className={compact ? "ml-0.5" : "ml-1"} />;
+      ? <Pause size={iconSize} fill="currentColor" />
+      : <Play  size={iconSize} fill="currentColor" className={!compact ? "ml-1" : undefined} />;
 
-  // ==========================================
-  // RENDER KOMPONEN
-  // ==========================================
+  // ============================================================
+  // RENDER
+  // ============================================================
   return (
     <div className={cn(
       "flex items-center gap-4 transition-all duration-500",
-      compact 
-        ? "relative" 
-        : header
-          ? "relative w-full max-w-sm"
-          : "fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-2xl"
+      compact ? "relative"
+        : header ? "relative w-full max-w-sm"
+        : "fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-2xl"
     )}>
+      {/* Error toast */}
       {error && (
-        <div className="absolute bottom-full mb-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 rounded-full bg-destructive/10 border border-destructive/20 text-destructive text-xs animate-in fade-in slide-in-from-bottom-2 whitespace-nowrap">
+        <div className="absolute bottom-full mb-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 rounded-full bg-destructive/10 border border-destructive/20 text-destructive text-xs whitespace-nowrap animate-in fade-in slide-in-from-bottom-2">
           <AlertCircle size={14} />
           {error}
         </div>
@@ -262,25 +273,25 @@ export default function AudioController({
         "w-full flex items-center gap-4 rounded-full p-2 transition-all duration-500",
         "bg-card/40 backdrop-blur-3xl border border-border/50 shadow-2xl ring-1 ring-white/5",
         compact && "p-1 bg-transparent border-none ring-0 shadow-none",
-        header && "rounded-2xl px-4 py-3 gap-3"
+        header  && "rounded-2xl px-4 py-3 gap-3"
       )}>
-        {/* Tombol Putar/Jeda */}
+        {/* Play / Pause */}
         <Button
           variant="ghost"
-          size="icon" 
+          size="icon"
+          disabled={isLoading}
+          onClick={handlePlayPause}
+          aria-label={isLoading ? "Memuat..." : isPlaying ? "Pause" : "Putar"}
           className={cn(
             "rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-all duration-300 active:scale-90 shrink-0",
             compact ? "w-10 h-10" : header ? "w-10 h-10" : "w-14 h-14",
             isLoading && "cursor-wait"
           )}
-          onClick={handlePlayPause}
-          disabled={isLoading}
-          aria-label={isLoading ? "Memuat audio..." : isPlaying ? "Pause Audio" : "Putar Audio"}
         >
           {PlayIcon}
         </Button>
 
-        {/* Header mode: selalu tampilkan progress bar */}
+        {/* ── Header mode: progress bar ── */}
         {header && audioUrl && (
           <div className="flex-1 flex flex-col gap-1">
             <div className="flex justify-between items-center">
@@ -292,23 +303,21 @@ export default function AudioController({
               </span>
             </div>
             <div className="relative group h-5 flex items-center">
-              <input aria-label="Posisi audio"
-                type="range"
-                min="0"
-                max={duration || 100}
-                value={currentTime}
+              <input
+                aria-label="Posisi audio"
+                type="range" min="0" max={duration || 100} value={currentTime}
                 onChange={handleSeek}
                 className="absolute inset-0 w-full h-1 bg-primary/10 rounded-full appearance-none cursor-pointer accent-primary group-hover:h-1.5 transition-all"
               />
-              <div 
-                className="h-1 bg-primary rounded-full pointer-events-none group-hover:h-1.5 transition-all" 
+              <div
+                className="h-1 bg-primary rounded-full pointer-events-none group-hover:h-1.5 transition-all"
                 style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
               />
             </div>
           </div>
         )}
 
-        {/* Header mode tanpa audio: label status */}
+        {/* Header tanpa audio */}
         {header && !audioUrl && (
           <div className="flex flex-col flex-1">
             <span className="text-[10px] font-black uppercase tracking-widest text-primary/70">AI Smart Voice</span>
@@ -318,7 +327,7 @@ export default function AudioController({
           </div>
         )}
 
-        {/* Bagian Progres — mode floating bottom bar */}
+        {/* ── Floating bar mode: progress bar ── */}
         {!compact && !header && audioUrl && (
           <div className="flex-1 flex flex-col gap-1 px-2">
             <div className="flex justify-between items-center px-1">
@@ -330,23 +339,21 @@ export default function AudioController({
               </span>
             </div>
             <div className="relative group h-6 flex items-center">
-              <input aria-label="Posisi audio"
-                type="range"
-                min="0"
-                max={duration || 100}
-                value={currentTime}
+              <input
+                aria-label="Posisi audio"
+                type="range" min="0" max={duration || 100} value={currentTime}
                 onChange={handleSeek}
                 className="absolute inset-0 w-full h-1 bg-primary/10 rounded-full appearance-none cursor-pointer accent-primary group-hover:h-1.5 transition-all"
               />
-              <div 
-                className="h-1 bg-primary rounded-full pointer-events-none group-hover:h-1.5 transition-all" 
+              <div
+                className="h-1 bg-primary rounded-full pointer-events-none group-hover:h-1.5 transition-all"
                 style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
               />
             </div>
           </div>
         )}
 
-        {/* Info Status (Ringkas atau Tanpa Audio — compact/floating tanpa audio) */}
+        {/* ── Compact / tanpa audio: status label ── */}
         {(compact || (!audioUrl && !header)) && (
           <div className="flex flex-col pr-2 pl-2">
             <span className="text-[10px] font-black uppercase tracking-widest text-primary/70 mb-0.5">
@@ -358,24 +365,23 @@ export default function AudioController({
           </div>
         )}
 
-        {/* Aksi Sekunder — hanya di floating bar dan header */}
-        {(!compact) && (
+        {/* ── Aksi sekunder (floating & header) ── */}
+        {!compact && (
           <div className="flex items-center gap-1 pr-2">
-            {/* Kontrol Kecepatan Putar */}
+            {/* Speed */}
             <div className="relative">
               <Button
-                variant="ghost"
-                size="icon"
-                className="size-10 rounded-full hover:bg-background/5 text-muted-foreground/60 transition-all hover:text-primary font-bold text-xs"
+                variant="ghost" size="icon"
                 onClick={(e) => { e.stopPropagation(); setShowSpeedMenu(v => !v); }}
-                aria-label="Kecepatan Putar"
-                title="Kecepatan Putar"
+                aria-label="Kecepatan putar"
+                title={`Kecepatan: ${playbackSpeed}×`}
+                className="size-10 rounded-full hover:bg-background/5 text-muted-foreground/60 hover:text-primary transition-all"
               >
                 <Gauge size={16} />
               </Button>
               {showSpeedMenu && (
                 <div className="absolute bottom-full mb-2 right-0 flex flex-col gap-1 p-2 rounded-2xl bg-card border border-border shadow-2xl z-50 min-w-[80px]">
-                  {SPEED_OPTIONS.map((speed) => (
+                  {SPEED_OPTIONS.map(speed => (
                     <button
                       key={speed}
                       type="button"
@@ -394,57 +400,51 @@ export default function AudioController({
               )}
             </div>
 
+            {/* Ulangi */}
             <Button
-              variant="ghost"
-              size="icon" 
-              className="size-10 rounded-full hover:bg-background/5 text-muted-foreground/60 transition-all hover:text-primary"
+              variant="ghost" size="icon"
               onClick={() => {
-                if (audioRef.current) {
-                   audioRef.current.currentTime = 0;
-                   lastSeekRef.current = 0;
-                   if (!isPlaying) handlePlayPause();
+                if (nativeAudioRef.current) {
+                  nativeAudioRef.current.currentTime = 0;
+                  lastSeekRef.current = 0;
+                  if (!isPlaying) handlePlayPause();
                 }
               }}
-              aria-label="Ulangi Audio"
+              aria-label="Ulangi dari awal"
+              className="size-10 rounded-full hover:bg-background/5 text-muted-foreground/60 hover:text-primary transition-all"
             >
               <RotateCcw size={18} />
             </Button>
+
+            {/* Stop */}
             <Button
-              variant="ghost"
-              size="icon" 
-              className="size-10 rounded-full hover:bg-background/5 text-muted-foreground/60 transition-all hover:text-destructive"
+              variant="ghost" size="icon"
               onClick={stopAll}
               disabled={!isPlaying && currentTime === 0}
-              aria-label="Stop Audio"
+              aria-label="Stop"
+              className="size-10 rounded-full hover:bg-background/5 text-muted-foreground/60 hover:text-destructive transition-all"
             >
               <Square size={18} fill="currentColor" />
             </Button>
           </div>
         )}
 
-        {/* Elemen Audio Bawaan */}
+        {/* Elemen audio native — tersembunyi, hanya untuk file audio URL */}
         {audioUrl && (
-          <audio aria-label="Audio"
-            ref={audioRef}
+          <audio
+            ref={nativeAudioRef}
             src={cachedAudioUrl}
+            aria-label="Native audio player"
             onWaiting={() => setIsLoading(true)}
             onCanPlay={() => setIsLoading(false)}
             onDurationChange={(e) => setDuration(e.currentTarget.duration)}
             onTimeUpdate={(e) => {
-              const time = e.currentTarget.currentTime;
-              setCurrentTime(time);
-              onTimeUpdate?.(time);
+              const t = e.currentTarget.currentTime;
+              setCurrentTime(t);
+              onTimeUpdate?.(t);
             }}
-            onEnded={() => {
-              setIsPlaying(false);
-              setCurrentTime(0);
-              setIsLoading(false);
-            }}
-            onError={() => {
-              setError("Gagal memuat file audio.");
-              setIsLoading(false);
-              setIsPlaying(false);
-            }}
+            onEnded={() => { setIsPlaying(false); setCurrentTime(0); setIsLoading(false); }}
+            onError={() => { setError("Gagal memuat file audio."); setIsLoading(false); setIsPlaying(false); }}
           />
         )}
       </div>
