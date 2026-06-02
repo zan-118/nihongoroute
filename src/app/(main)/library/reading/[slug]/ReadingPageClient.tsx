@@ -19,6 +19,8 @@ import { ReadingData } from "@/components/features/reading/types";
 import { Button } from "@/components/ui/button";
 import { useUserStore } from "@/store/useUserStore";
 import { useUIStore } from "@/store/useUIStore";
+import { formatQuizzes } from "@/lib/utils/lesson-utils";
+import QuizEngine from "@/components/features/exams/quiz-engine/QuizEngine";
 
 // Komponen Pendukung
 import { ReadingNavbar } from "@/components/features/reading/components/ReadingNavbar";
@@ -57,6 +59,10 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
   const lessonId = data._id || data.id || "";
   const [isLocallyCompleted, setIsLocallyCompleted] = useState(false);
   const isCompleted = !!(lessonId && completedLessons[lessonId]) || isLocallyCompleted;
+
+  const [activeTab, setActiveTab] = useState<"article" | "quiz">("article");
+  const formattedQuizzes = data.quizzes ? formatQuizzes(data.quizzes as any) : [];
+  const hasQuiz = formattedQuizzes.length > 0;
 
   const handleComplete = () => {
     if (!lessonId || isCompleted) return;
@@ -102,6 +108,9 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
             modes={modes}
             onModeChange={(id) => setMode(id as "kanji" | "furigana" | "romaji" | "hiragana")}
             onZenModeToggle={() => setIsZenMode(true)}
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            hasQuiz={hasQuiz}
           />
         )}
       </AnimatePresence>
@@ -146,37 +155,66 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
           </div>
         )}
 
-        <div className="relative">
+        <div className="relative min-h-[400px]">
           {/* Bilah Samping Melayang untuk Audio & Pengaturan (Desktop) */}
-          <ReadingSidebar
-            audioUrl={data.audioUrl}
-            textToSpeak={data.body as string}
-            isTTSDisabled={data.isTTSDisabled}
-            fontSize={fontSize}
-            onFontSizeToggle={toggleFontSize}
-            showTranslation={showTranslation}
-            onTranslationToggle={toggleTranslation}
-          />
+          <div className={cn("transition-all duration-500", activeTab === "quiz" && "opacity-0 pointer-events-none")}>
+            <ReadingSidebar
+              audioUrl={data.audioUrl}
+              textToSpeak={data.body as string}
+              isTTSDisabled={data.isTTSDisabled}
+              fontSize={fontSize}
+              onFontSizeToggle={toggleFontSize}
+              showTranslation={showTranslation}
+              onTranslationToggle={toggleTranslation}
+            />
+          </div>
 
           {/* Konten Utama Bacaan */}
-          <ReadingArticle
-            paragraphs={paragraphs}
-            hiraganaParagraphs={hiraganaParagraphs}
-            romajiParagraphs={romajiParagraphs}
-            translationParagraphs={translationParagraphs}
-            mode={mode}
-            fontSize={fontSize}
-            showTranslation={showTranslation}
-            isZenMode={isZenMode}
-            onComplete={handleComplete}
-            isCompleted={isCompleted}
-          />
+          <div className={cn(
+            "transition-all duration-700",
+            activeTab === "quiz" ? "blur-md scale-[0.98] opacity-20 pointer-events-none" : "blur-0 scale-100 opacity-100"
+          )}>
+            <ReadingArticle
+              paragraphs={paragraphs}
+              hiraganaParagraphs={hiraganaParagraphs}
+              romajiParagraphs={romajiParagraphs}
+              translationParagraphs={translationParagraphs}
+              mode={mode}
+              fontSize={fontSize}
+              showTranslation={showTranslation}
+              isZenMode={isZenMode}
+              onComplete={handleComplete}
+              isCompleted={isCompleted}
+            />
+          </div>
+
+          {/* Kuis Membaca Interaktif */}
+          <AnimatePresence>
+            {activeTab === "quiz" && hasQuiz && (
+              <m.div
+                initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
+                animate={{ opacity: 1, backdropFilter: "blur(4px)" }}
+                exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
+                className="absolute inset-0 z-50 flex items-center justify-center p-4"
+              >
+                <m.div
+                  initial={{ scale: 0.9, y: 20, opacity: 0 }}
+                  animate={{ scale: 1, y: 0, opacity: 1 }}
+                  exit={{ scale: 0.9, y: 20, opacity: 0 }}
+                  transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                  className="w-full max-w-2xl bg-[rgba(var(--card-rgb),0.6)] border border-border/80 backdrop-blur-3xl rounded-[2.5rem] p-6 shadow-2xl"
+                >
+                  <QuizEngine questions={formattedQuizzes} lessonId={lessonId} />
+                </m.div>
+              </m.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
       {/* Bilah Alat Seluler */}
       <AnimatePresence>
-        {!isZenMode && (
+        {!isZenMode && activeTab === "article" && (
           <ReadingMobileToolbar
             onFontSizeToggle={toggleFontSize}
             showTranslation={showTranslation}

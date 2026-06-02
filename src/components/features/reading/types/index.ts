@@ -50,4 +50,5 @@ export interface ReadingData {
   hiragana: PortableTextContent;
   romaji?: PortableTextContent;
   translation: PortableTextContent;
+  quizzes?: unknown[];
 }

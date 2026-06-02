@@ -22,6 +22,9 @@ interface ReadingNavbarProps {
   modes: { id: string; icon: React.ElementType; label: string }[];
   onModeChange: (id: string) => void;
   onZenModeToggle: () => void;
+  activeTab?: "article" | "quiz";
+  onTabChange?: (tab: "article" | "quiz") => void;
+  hasQuiz?: boolean;
 }
 
 // ==========================================
@@ -37,6 +40,9 @@ export function ReadingNavbar({
   modes,
   onModeChange,
   onZenModeToggle,
+  activeTab = "article",
+  onTabChange,
+  hasQuiz = false,
 }: ReadingNavbarProps) {
   // ==========================================
   // RENDER KOMPONEN
@@ -66,6 +72,31 @@ export function ReadingNavbar({
           <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Level {difficulty}</span>
         </div>
       </div>
+
+      {hasQuiz && onTabChange && (
+        <div className="flex p-1 bg-muted/30 border border-border rounded-2xl backdrop-blur-md">
+          <button
+            type="button"
+            onClick={() => onTabChange("article")}
+            className={cn(
+              "px-5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
+              activeTab === "article" ? "bg-primary text-primary-foreground shadow-lg shadow-[rgba(var(--primary-rgb),0.2)]" : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Artikel
+          </button>
+          <button
+            type="button"
+            onClick={() => onTabChange("quiz")}
+            className={cn(
+              "px-5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
+              activeTab === "quiz" ? "bg-primary text-primary-foreground shadow-lg shadow-[rgba(var(--primary-rgb),0.2)]" : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Kuis
+          </button>
+        </div>
+      )}
 
       <div className="flex items-center gap-2 md:gap-4">
         <Button
