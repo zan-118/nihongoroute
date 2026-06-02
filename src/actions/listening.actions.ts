@@ -31,17 +31,21 @@ interface SanityListeningItem {
 // ======================
 
 /**
- * Mengambil materi mendengarkan (listening) dengan paginasi dan filter level dari Sanity.
+ * Mengambil materi mendengarkan (listening) dengan paginasi, pencarian, dan filter level dari Sanity.
  */
 export async function getPaginatedListening(
   page: number,
   limit: number,
+  search: string = "",
   level: string = ""
 ): Promise<PaginatedListeningResponse> {
   const offset = (page - 1) * limit;
 
   try {
     let filter = `_type == "listeningMaterial"`;
+    if (search) {
+      filter += ` && (title match $search || body match $search || difficulty match $search)`;
+    }
     if (level && level !== "all") {
       filter += ` && jlpt_level == $level`;
     }
@@ -65,6 +69,9 @@ export async function getPaginatedListening(
       limit: offset + limit
     };
 
+    if (search) {
+      params.search = `${search}*`;
+    }
     if (level && level !== "all") {
       params.level = level.toUpperCase();
     }

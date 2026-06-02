@@ -80,3 +80,5 @@ vocab_*.json
 .claude/
 .cursor/
 .vscode/
+
+scratch/

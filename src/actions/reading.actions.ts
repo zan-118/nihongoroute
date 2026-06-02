@@ -31,17 +31,21 @@ interface SanityReadingItem {
 // ======================
 
 /**
- * Mengambil materi membaca (reading) dengan paginasi dan filter level dari Sanity.
+ * Mengambil materi membaca (reading) dengan paginasi, pencarian, dan filter level dari Sanity.
  */
 export async function getPaginatedReading(
   page: number,
   limit: number,
+  search: string = "",
   level: string = ""
 ): Promise<PaginatedReadingResponse> {
   const offset = (page - 1) * limit;
 
   try {
     let filter = `_type == "readingMaterial"`;
+    if (search) {
+      filter += ` && (title match $search || body match $search || difficulty match $search)`;
+    }
     if (level && level !== "all") {
       filter += ` && jlpt_level == $level`;
     }
@@ -65,6 +69,9 @@ export async function getPaginatedReading(
       limit: offset + limit
     };
 
+    if (search) {
+      params.search = `${search}*`;
+    }
     if (level && level !== "all") {
       params.level = level.toUpperCase();
     }
