@@ -35,11 +35,13 @@ export interface ListeningTaskData {
   transcript: TranscriptLine[];
   description?: string;
   quiz?: QuizItem[];
+  jlpt_level?: string;
+  difficulty?: string;
 }
 
 export interface ListeningState {
   currentTime: number;
   activeIndex: number;
   isScrolling: boolean;
-  activeTab: "transcript" | "quiz";
+  activeTab: "transcript"; // tab quiz dihapus, kuis kini inline di bawah transkrip
 }

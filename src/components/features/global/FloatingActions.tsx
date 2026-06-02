@@ -18,7 +18,7 @@ import FeedbackWidget from "../feedback/FeedbackWidget";
 import { useUIStore } from "@/store/useUIStore";
 import { ReadingMode } from "@/components/features/reading/types";
 import AudioController from "@/components/features/reading/components/AudioController";
-import { Eye, Languages, BookOpen as BookIcon, GraduationCap, FileText, Headphones } from "lucide-react";
+import { Eye, Languages, BookOpen as BookIcon, GraduationCap, Headphones } from "lucide-react";
 
 import React from "react";
 import { cn } from "@/lib/utils";
@@ -169,22 +169,20 @@ export default function FloatingActions() {
               </div>
             </m.div>
 
-            {/* Listening: Tab Toggle (Transcript/Quiz) */}
+            {/* Listening: Scroll to Quiz */}
             <m.div whileHover={{ x: -5 }}>
               <button type="button"
-                onClick={() => setListeningState({ 
-                  activeTab: listeningState.activeTab === "transcript" ? "quiz" : "transcript" 
-                })}
-                aria-label={listeningState.activeTab === "transcript" ? "Beralih ke latihan kuis komprehensif mendengarkan" : "Beralih ke teks transkrip audio mendengarkan"}
+                onClick={() => {
+                  document.querySelector("[data-section='quiz']")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  setIsOpen(false);
+                }}
+                aria-label="Gulir ke bagian kuis pemahaman"
                 className="bg-card/90 backdrop-blur-3xl hover:bg-primary hover:text-primary-foreground text-foreground border border-border shadow-2xl rounded-2xl px-4 py-4 flex items-center gap-3 transition-all h-auto group w-full justify-between"
               >
                 <span className="text-[10px] font-black uppercase tracking-widest hidden md:block" aria-hidden="true">
-                  {listeningState.activeTab === "transcript" ? "Latihan Kuis" : "Lihat Transkrip"}
+                  Ke Kuis
                 </span>
-                {listeningState.activeTab === "transcript" 
-                  ? <GraduationCap size={20} className="text-primary group-hover:text-current" />
-                  : <FileText size={20} className="text-primary group-hover:text-current" />
-                }
+                <GraduationCap size={20} className="text-primary group-hover:text-current" />
               </button>
             </m.div>
           </div>

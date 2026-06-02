@@ -1,6 +1,6 @@
 /**
  * @file ReadingNavbar.tsx
- * @description Komponen bilah navigasi atas (top bar) halaman membaca artikel dengan opsi kembali ke perpustakaan, status level JLPT, dan tombol kontrol tampilan (Mode Zen).
+ * @description Komponen bilah navigasi atas (top bar) halaman membaca artikel dengan opsi kembali ke perpustakaan, status level JLPT, mode switcher, dan tombol Mode Zen.
  */
 
 // ==========================================
@@ -22,9 +22,6 @@ interface ReadingNavbarProps {
   modes: { id: string; icon: React.ElementType; label: string }[];
   onModeChange: (id: string) => void;
   onZenModeToggle: () => void;
-  activeTab?: "article" | "quiz";
-  onTabChange?: (tab: "article" | "quiz") => void;
-  hasQuiz?: boolean;
 }
 
 // ==========================================
@@ -40,13 +37,7 @@ export function ReadingNavbar({
   modes,
   onModeChange,
   onZenModeToggle,
-  activeTab = "article",
-  onTabChange,
-  hasQuiz = false,
 }: ReadingNavbarProps) {
-  // ==========================================
-  // RENDER KOMPONEN
-  // ==========================================
   return (
     <m.nav
       initial={{ y: -100, opacity: 0 }}
@@ -54,6 +45,7 @@ export function ReadingNavbar({
       exit={{ y: -100, opacity: 0 }}
       className="fixed top-0 inset-x-0 h-20 z-50 border-b border-border/40 glass flex items-center px-6 justify-between"
     >
+      {/* Kiri: Navigasi balik + info judul */}
       <div className="flex items-center gap-6">
         <Link
           href="/library"
@@ -62,42 +54,22 @@ export function ReadingNavbar({
           <div className="p-2 rounded-xl bg-muted/30 group-hover:bg-primary/10 border border-border group-hover:border-primary/30 transition-all">
             <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
           </div>
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] hidden md:block">Pustaka</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] hidden md:block">
+            Pustaka
+          </span>
         </Link>
         <div className="h-6 w-px bg-border mx-2 hidden md:block" />
         <div className="flex flex-col">
           <h2 className="text-sm font-black text-foreground truncate max-w-[200px] md:max-w-[400px]">
             {title}
           </h2>
-          <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Level {difficulty}</span>
+          <span className="text-[10px] font-bold text-primary uppercase tracking-widest">
+            Level {difficulty}
+          </span>
         </div>
       </div>
 
-      {hasQuiz && onTabChange && (
-        <div className="flex p-1 bg-muted/30 border border-border rounded-2xl backdrop-blur-md">
-          <button
-            type="button"
-            onClick={() => onTabChange("article")}
-            className={cn(
-              "px-5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
-              activeTab === "article" ? "bg-primary text-primary-foreground shadow-lg shadow-[rgba(var(--primary-rgb),0.2)]" : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            Artikel
-          </button>
-          <button
-            type="button"
-            onClick={() => onTabChange("quiz")}
-            className={cn(
-              "px-5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
-              activeTab === "quiz" ? "bg-primary text-primary-foreground shadow-lg shadow-[rgba(var(--primary-rgb),0.2)]" : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            Kuis
-          </button>
-        </div>
-      )}
-
+      {/* Kanan: Mode switcher + Zen */}
       <div className="flex items-center gap-2 md:gap-4">
         <Button
           variant="ghost"
@@ -130,4 +102,3 @@ export function ReadingNavbar({
     </m.nav>
   );
 }
-

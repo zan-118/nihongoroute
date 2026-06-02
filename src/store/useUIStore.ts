@@ -88,7 +88,7 @@ export const useUIStore = create<UIState>()(
         currentTime: 0,
         activeIndex: -1,
         isScrolling: false,
-        activeTab: "transcript",
+        activeTab: "transcript" as const,
       },
 
 
@@ -235,6 +235,24 @@ export const useUIStore = create<UIState>()(
     {
       name: "nihongoroute_ui_data",
       storage: createJSONStorage(() => idbStorage),
+      // Hanya persist preferensi user — session state (audioUrl, textToSpeak, activeTab, dsb.)
+      // tidak disimpan karena bersifat sementara dan spesifik per halaman
+      partialize: (state) => ({
+        notifications: state.notifications,
+        settings: state.settings,
+        // Dari readingState: hanya mode dan showTranslation yang perlu diingat
+        readingState: {
+          mode: state.readingState.mode,
+          showTranslation: state.readingState.showTranslation,
+        },
+        // Dari listeningState: hanya tab terakhir yang perlu diingat
+        listeningState: {
+          currentTime: 0,
+          activeIndex: -1,
+          isScrolling: false,
+          activeTab: "transcript" as const,
+        },
+      }),
     }
   )
 );

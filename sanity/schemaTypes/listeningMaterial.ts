@@ -69,7 +69,15 @@ export default {
       title: 'Transkrip / Teks Utama',
       type: 'text',
       group: 'content',
+      description: 'Satu baris per ucapan. Format: "Pembicara: Teks" atau "Teks" saja.',
       validation: (Rule: import('sanity').Rule) => Rule.required(),
+    },
+    {
+      name: 'timestamps',
+      title: 'Timestamps Transkrip (Opsional)',
+      type: 'text',
+      group: 'content',
+      description: 'Opsional. Satu timestamp per baris, sesuai urutan body. Format: "startDetik,endDetik" — contoh: "0,4\\n4,9\\n9,15". Jika kosong, sistem akan membagi waktu audio secara merata.',
     },
     {
       name: 'hiragana',

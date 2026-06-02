@@ -9,15 +9,13 @@
 // ======================
 // IMPOR
 // ======================
-import React, { useState, useEffect } from "react";
-import { m, AnimatePresence } from "framer-motion";
+import React, { useEffect } from "react";
 import { ListeningTaskData } from "@/components/features/listening/types";
 import ListeningKaraoke from "@/components/features/listening/components/ListeningKaraoke";
 import ListeningQuiz from "@/components/features/listening/components/ListeningQuiz";
 import { useListeningSync } from "@/components/features/listening/hooks/useListeningSync";
 import { useUserStore } from "@/store/useUserStore";
 import { useUIStore } from "@/store/useUIStore";
-import { cn } from "@/lib/utils";
 
 // Komponen Pendukung
 import { ListeningHeader } from "@/components/features/listening/components/ListeningHeader";
@@ -42,11 +40,8 @@ interface ListeningPageClientProps {
  * @returns {JSX.Element} Antarmuka player menyimak interaktif.
  */
 export default function ListeningPageClient({ data }: ListeningPageClientProps) {
-  const listeningState = useUIStore(state => state.listeningState);
   const setListeningState = useUIStore(state => state.setListeningState);
-  const { activeTab } = listeningState;
-  const [isCompleted, setIsCompleted] = useState(false);
-  
+
   // Sinkronisasi data ke store global saat mounting untuk akses tombol melayang (FAB)
   useEffect(() => {
     const textToSpeak = data.transcript.map(t => {
@@ -74,13 +69,15 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
 
   const completeLesson = useUserStore(state => state.completeLesson);
   const addXP = useUserStore(state => state.addXP);
+  const listeningState = useUIStore(state => state.listeningState);
 
   const handleQuizComplete = (score: number) => {
-    setIsCompleted(true);
     const reward = score * 50;
     addXP(reward);
     completeLesson(data._id || data.id || "");
   };
+
+  const hasQuiz = (data.quiz?.length ?? 0) > 0;
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
@@ -95,66 +92,44 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
         description={data.description}
         audioUrl={data.audioUrl}
         textToSpeak={listeningState.textToSpeak || ""}
-        activeTab={activeTab as "transcript" | "quiz"}
-        onTabChange={(tab) => setListeningState({ activeTab: tab })}
-        isCompleted={isCompleted}
         onTimeUpdate={handleTimeUpdate}
         externalSeek={externalSeek || 0}
       />
 
       <main className="max-w-7xl mx-auto px-4 lg:px-6 mt-12 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          {/* Kolom Kiri: Area Interaktif */}
-          <div className="lg:col-span-8 relative min-h-[600px]">
-            <div className={cn(
-              "transition-all duration-700",
-              activeTab === "quiz" ? "blur-md scale-[0.98] opacity-30 pointer-events-none" : "blur-0 scale-100 opacity-100"
-            )}>
-              <ListeningKaraoke 
-                transcript={data.transcript} 
-                activeIndex={activeIndex}
-                seekToLine={seekToLine}
-              />
-            </div>
+          {/* Kolom Kiri: Transkrip + Kuis inline */}
+          <div className="lg:col-span-8 flex flex-col gap-10">
+            <ListeningKaraoke 
+              transcript={data.transcript} 
+              activeIndex={activeIndex}
+              seekToLine={seekToLine}
+            />
 
-            <AnimatePresence>
-              {activeTab === "quiz" && (
-                <m.div
-                  initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
-                  animate={{ opacity: 1, backdropFilter: "blur(4px)" }}
-                  exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
-                  className="absolute inset-0 z-50 flex items-center justify-center p-4"
-                >
-                  <m.div
-                    initial={{ scale: 0.9, y: 20, opacity: 0 }}
-                    animate={{ scale: 1, y: 0, opacity: 1 }}
-                    exit={{ scale: 0.9, y: 20, opacity: 0 }}
-                    transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                    className="w-full max-w-2xl"
-                  >
-                    {data.quiz && data.quiz.length > 0 ? (
-                      <ListeningQuiz 
-                        questions={data.quiz} 
-                        onComplete={handleQuizComplete} 
-                      />
-                    ) : (
-                      <div className="p-12 text-center bg-background/80 backdrop-blur-2xl border border-border rounded-3xl">
-                        <p className="text-muted-foreground">No quiz available for this task.</p>
-                        <button type="button" 
-                          onClick={() => setListeningState({ activeTab: "transcript" })}
-                          className="mt-4 text-xs font-black uppercase text-primary tracking-widest hover:underline"
-                        >
-                          Back to Transcript
-                        </button>
-                      </div>
-                    )}
-                  </m.div>
-                </m.div>
-              )}
-            </AnimatePresence>
+            {hasQuiz && (
+              <div className="px-4 lg:px-8" data-section="quiz">
+                {/* Divider menuju kuis */}
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="flex-1 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50 shrink-0">
+                    Kuis Pemahaman
+                  </span>
+                  <div className="flex-1 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+                </div>
+                <ListeningQuiz 
+                  questions={data.quiz!} 
+                  onComplete={handleQuizComplete} 
+                />
+              </div>
+            )}
           </div>
 
-          <ListeningSidebar quizLength={data.quiz?.length || 0} />
+          <ListeningSidebar
+            quizLength={data.quiz?.length || 0}
+            transcriptLength={data.transcript?.length || 0}
+            jlptLevel={data.jlpt_level}
+            difficulty={data.difficulty}
+          />
         </div>
       </main>
     </div>

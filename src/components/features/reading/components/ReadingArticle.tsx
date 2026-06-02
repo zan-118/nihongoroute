@@ -60,9 +60,9 @@ export function ReadingArticle({
       layout
       className={cn(
         "p-8 md:p-16 lg:p-24 rounded-[3rem] transition-all duration-700 relative",
-        isZenMode 
-          ? "bg-transparent shadow-none border-none" 
-          : "bg-card/10 backdrop-blur-3xl border border-border/40 shadow-[0_40px_100px_-20px_rgba(var(--background-rgb),0.2)]"
+        isZenMode
+          ? "bg-transparent shadow-none border-none"
+          : "bg-card/60 backdrop-blur-3xl border border-border/60 shadow-[0_40px_100px_-20px_rgba(var(--background-rgb),0.2)]"
       )}
     >
       <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-50" />
@@ -89,7 +89,7 @@ export function ReadingArticle({
                   initial={{ opacity: 0, y: 5 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 5 }}
-                  className="mt-6 text-base md:text-lg text-muted-foreground/80 italic font-medium leading-relaxed border-l-2 border-primary/20 pl-6"
+                  className="mt-6 text-base md:text-lg text-muted-foreground italic font-medium leading-relaxed border-l-2 border-primary/30 pl-6"
                 >
                   {translationParagraphs[idx]}
                 </m.p>
@@ -101,22 +101,30 @@ export function ReadingArticle({
 
       {!isZenMode && (
         <div className="mt-24 pt-12 border-t border-border/40 flex flex-col items-center gap-8">
-           <div className="flex items-center gap-4">
-              <Sparkles size={20} className="text-warning animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Selesaikan Bacaan Untuk XP</span>
-           </div>
-            <Button 
-              onClick={onComplete}
-              disabled={isCompleted}
-              className={cn(
-                "px-16 py-8 h-auto rounded-2xl text-xs font-black uppercase tracking-[0.3em] transition-all duration-300",
-                isCompleted 
-                  ? "bg-success/10 border border-success/30 text-success shadow-[0_0_25px_rgba(var(--success-rgb),0.1)] cursor-default"
-                  : "bg-primary text-primary-foreground shadow-[0_20px_50px_-10px_rgba(var(--primary-rgb),0.4)] hover:shadow-[0_20px_70px_-10px_rgba(var(--primary-rgb),0.6)] hover:scale-105 active:scale-95"
-              )}
-            >
-              {isCompleted ? "Sudah Selesai ✓" : "Tandai Selesai"}
-            </Button>
+          {/* Penanda akhir artikel */}
+          <div className="flex items-center gap-4 w-full max-w-xs">
+            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/30 shrink-0">
+              終わり
+            </span>
+            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+          </div>
+          <div className="flex items-center gap-4">
+            <Sparkles size={20} className="text-warning animate-pulse" />
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Selesaikan Bacaan Untuk XP</span>
+          </div>
+          <Button 
+            onClick={onComplete}
+            disabled={isCompleted}
+            className={cn(
+              "px-16 py-8 h-auto rounded-2xl text-xs font-black uppercase tracking-[0.3em] transition-all duration-300",
+              isCompleted 
+                ? "bg-success/10 border border-success/30 text-success shadow-[0_0_25px_rgba(var(--success-rgb),0.1)] cursor-default"
+                : "bg-primary text-primary-foreground shadow-[0_20px_50px_-10px_rgba(var(--primary-rgb),0.4)] hover:shadow-[0_20px_70px_-10px_rgba(var(--primary-rgb),0.6)] hover:scale-105 active:scale-95"
+            )}
+          >
+            {isCompleted ? "Sudah Selesai ✓" : "Tandai Selesai"}
+          </Button>
         </div>
       )}
     </m.article>
