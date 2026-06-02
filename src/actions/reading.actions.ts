@@ -76,7 +76,7 @@ export async function getPaginatedReading(
       params.level = level.toUpperCase();
     }
 
-    const result = await sanityClient.fetch(query, params);
+    const result = await sanityClient.fetch(query, params, { cache: "no-store" });
 
     return {
       data: (result.data || []).map((r: SanityReadingItem) => ({

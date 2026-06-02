@@ -46,9 +46,9 @@ export async function getLibraryCounts(): Promise<LibraryCounts> {
     supabase.from("vocab").select("*", { count: "exact", head: true }),
     supabase.from("kanji").select("*", { count: "exact", head: true }),
     supabase.from("grammar").select("*", { count: "exact", head: true }),
-    sanityClient.fetch<number>('count(*[_type == "readingMaterial"])').catch(() => 0),
-    sanityClient.fetch<number>('count(*[_type == "listeningMaterial"])').catch(() => 0),
-    sanityClient.fetch<number>('count(*[_type == "mockExam" && is_published == true])').catch(() => 0),
+    sanityClient.fetch<number>('count(*[_type == "readingMaterial"])', {}, { cache: "no-store" }).catch(() => 0),
+    sanityClient.fetch<number>('count(*[_type == "listeningMaterial"])', {}, { cache: "no-store" }).catch(() => 0),
+    sanityClient.fetch<number>('count(*[_type == "mockExam" && is_published == true])', {}, { cache: "no-store" }).catch(() => 0),
   ]);
 
   return {

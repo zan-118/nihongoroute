@@ -90,7 +90,7 @@ export async function getCourseCategoryData(slug: string) {
     const mockExams = await sanityClient.fetch(mockExamsQuery, { 
       categoryId: category.id,
       categorySlug: category.slug
-    });
+    }, { cache: "no-store" });
 
     return {
       category: {
@@ -143,7 +143,7 @@ export async function getExamsList() {
       levelCode
     }`;
 
-    const data = await sanityClient.fetch(query);
+    const data = await sanityClient.fetch(query, {}, { cache: "no-store" });
 
     return (data || []).map((e: SanityMockExamListItem) => ({
       id: e._id,
@@ -194,7 +194,7 @@ export async function getExamByIdOrSlug(idOrSlug: string) {
       }
     }`;
 
-    const exam = await sanityClient.fetch(query, { idOrSlug });
+    const exam = await sanityClient.fetch(query, { idOrSlug }, { cache: "no-store" });
 
     if (!exam) return null;
 
