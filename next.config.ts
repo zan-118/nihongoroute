@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
     position: 'top-right',
   },
   transpilePackages: ["@react-pdf/renderer"],
-  serverExternalPackages: ["kuroshiro", "kuroshiro-analyzer-kuromoji"],
+  serverExternalPackages: ["kuroshiro", "kuroshiro-analyzer-kuromoji", "msedge-tts", "isomorphic-ws", "ws"],
   experimental: {
     optimizePackageImports: [
       "lucide-react",

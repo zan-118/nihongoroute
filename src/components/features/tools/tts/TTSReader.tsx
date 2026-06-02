@@ -16,6 +16,7 @@ import { useTTSReader } from "../audio/useTTSReader";
 interface Props {
   text: string;
   minimal?: boolean;
+  speaker?: string;
 }
 
 // ==========================================
@@ -24,11 +25,11 @@ interface Props {
 /**
  * Komponen pembaca suara teks Jepang (TTS).
  */
-export default function TTSReader({ text, minimal = false }: Props) {
+export default function TTSReader({ text, minimal = false, speaker }: Props) {
   // ==========================================
   // HOOKS & STATUS
   // ==========================================
-  const { isPlaying, hasJapanese, speak } = useTTSReader(text);
+  const { isPlaying, hasJapanese, speak } = useTTSReader(text, speaker);
 
   if (!hasJapanese || !text) return null;
 
@@ -49,7 +50,7 @@ export default function TTSReader({ text, minimal = false }: Props) {
           : "px-6 py-2.5 rounded-xl w-max text-xs"
       } ${
         isPlaying
-          ? "bg-destructive/10 border-destructive/40 text-destructive shadow-[0_0_20px_rgba(var(--destructive-rgb),0.2)] neo-card shadow-none"
+          ? "bg-destructive/10 border-destructive/40 text-destructive shadow-[0_0_20px_rgba(var(--destructive-rgb),0.2)] neo-card"
           : "bg-muted/50 border-border text-muted-foreground hover:text-destructive hover:border-destructive/30 neo-inset shadow-none"
       }`}
       title="Vocal_Synthesis_Execution"

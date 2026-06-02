@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
       </voice>
     </speak>`;
 
-    const { audioStream } = await tts.toStream(ssml);
+    const { audioStream } = await tts.rawToStream(ssml);
 
     // Kumpulkan semua chunk stream ke buffer
     const chunks: Buffer[] = [];
@@ -69,7 +69,7 @@ export async function GET(req: NextRequest) {
     }
     const audioBuffer = Buffer.concat(chunks);
 
-    return new Response(audioBuffer, {
+    return new Response(new Uint8Array(audioBuffer), {
       headers: {
         "Content-Type": "audio/mpeg",
         // Cache 7 hari di browser & CDN — konten audio statis

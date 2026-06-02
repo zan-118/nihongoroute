@@ -30,7 +30,7 @@ const FEMALE_KEYWORDS = [
   // Kanji/karakter gender
   "女", "母", "姉", "妹", "奥", "彼女", "娘",
   // Suffix umum nama wanita
-  "さん", "ちゃん", "様",
+  "さん", "ちゃん", "様", "chan", "sama",
   // Profesi sering wanita dalam konteks N5-N3
   "先生",
   // Nama wanita umum dalam materi JLPT
@@ -44,7 +44,7 @@ const MALE_KEYWORDS = [
   // Kanji/karakter gender
   "男", "父", "兄", "弟", "夫", "彼",
   // Suffix umum nama pria
-  "くん", "君",
+  "くん", "君", "kun",
   // Nama pria umum dalam materi JLPT
   "たろう", "けんじ", "ひろし", "けん", "しんじ", "だいち",
   "Taro", "Kenji", "Hiroshi", "Ken", "Shinji", "Daichi",
@@ -60,21 +60,35 @@ const MALE_KEYWORDS = [
  * @param fallbackIndex - Index baris (dipakai untuk rotasi default pria/wanita)
  */
 export function detectVoice(speaker?: string, fallbackIndex = 0): TtsVoice {
-  if (!speaker || speaker === "???") {
-    // Rotasi antara Nanami (wanita) dan Keita (pria) untuk dialog tanpa nama
-    return fallbackIndex % 2 === 0 ? TTS_VOICES.NANAMI : TTS_VOICES.KEITA;
+  const femaleVoices = [TTS_VOICES.NANAMI, TTS_VOICES.MAYU, TTS_VOICES.SHIORI];
+  const maleVoices = [TTS_VOICES.KEITA, TTS_VOICES.DAICHI, TTS_VOICES.NAOKI];
+  const allVoices = [...femaleVoices, ...maleVoices];
+
+  if (!speaker || speaker === "???" || speaker.trim() === "") {
+    // Rotasi dinamis melintasi seluruh 6 suara untuk dialog tanpa nama pembicara yang jelas
+    return allVoices[fallbackIndex % allVoices.length];
   }
 
   const speakerLower = speaker.toLowerCase();
-
   const isFemale = FEMALE_KEYWORDS.some(k => speaker.includes(k) || speakerLower.includes(k.toLowerCase()));
   const isMale   = MALE_KEYWORDS.some(k => speaker.includes(k) || speakerLower.includes(k.toLowerCase()));
 
-  if (isFemale && !isMale) return TTS_VOICES.NANAMI;
-  if (isMale && !isFemale) return TTS_VOICES.KEITA;
+  // Hitung hash deterministik sederhana dari nama speaker untuk pilihan suara yang konsisten
+  let hash = 0;
+  for (let i = 0; i < speaker.length; i++) {
+    hash = speaker.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash);
 
-  // Tidak bisa ditentukan — fallback ke Nanami
-  return TTS_VOICES.NANAMI;
+  if (isFemale && !isMale) {
+    return femaleVoices[index % femaleVoices.length];
+  }
+  if (isMale && !isFemale) {
+    return maleVoices[index % maleVoices.length];
+  }
+
+  // Jika gender tidak terdeteksi secara spesifik, petakan secara deterministik ke seluruh 6 pilihan suara
+  return allVoices[index % allVoices.length];
 }
 
 // ============================================
@@ -107,11 +121,11 @@ export async function fetchTTSAudio(
   if (!text.trim()) return null;
 
   // Bangun URL API route — ini yang dikembalikan sebagai src
-  const params = new URLSearchParams({ text, voice, rate });
+  const params = new URLSearchParams({ text, voice, rate, v: "3" });
   const apiUrl = `/api/tts?${params.toString()}`;
 
   const cacheKey = buildCacheKey(text, voice, rate);
-  const cacheName = "nihongoroute_tts_cache";
+  const cacheName = "nihongoroute_tts_cache_v3";
 
   // 1. Prefetch ke CacheStorage di background (non-blocking)
   //    Ini memastikan audio tersedia offline setelah pertama kali diputar

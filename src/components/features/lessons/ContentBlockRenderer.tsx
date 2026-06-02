@@ -476,7 +476,7 @@ function DialogueBlock({ block }: { block: ContentBlock }) {
               <div className="text-xl font-japanese font-medium text-foreground leading-relaxed flex items-center gap-3 flex-wrap">
                 <SmartJapanese word={line.text} furigana={line.furigana} />
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 shrink-0">
-                  <TTSReader text={line.text} minimal />
+                  <TTSReader text={line.text} speaker={line.speaker} minimal />
                 </div>
               </div>
             </div>

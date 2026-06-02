@@ -119,7 +119,11 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
                          &quot;{item.translation || item.id}&quot;
                        </p>
                        <div className="absolute top-2 right-2 opacity-0 group-hover/dialogue:opacity-100 transition-opacity">
-                         <TTSReader text={item.jp || item.text || ""} minimal={true} />
+                         <TTSReader 
+                           text={item.jp || item.text || ""} 
+                           minimal={true} 
+                           speaker={item.speaker || item.speakerName} 
+                         />
                        </div>
                     </div>
                   </div>

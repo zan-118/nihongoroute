@@ -9,18 +9,22 @@
 // IMPORT & DEPENDENSI
 // ==========================================
 import { useState, useEffect, useRef } from "react";
-import { fetchTTSAudio, speakWithWebSpeech, TTS_VOICES } from "@/lib/tts";
+import { fetchTTSAudio, speakWithWebSpeech, detectVoice, TTS_VOICES } from "@/lib/tts";
 
 // ==========================================
 // HOOK UTAMA
 // ==========================================
 /**
- * Hook khusus pembaca teks Jepang (TTS).
+ * Hook kustom untuk membacakan teks bahasa Jepang (TTS) menggunakan strategi Hybrid & Caching.
+ * Mengutamakan Edge TTS API dan mendeteksi suara pria/wanita otomatis berdasarkan nama pembicara,
+ * fallback ke Web Speech API jika Edge TTS tidak tersedia.
  * 
- * @param text Teks bahasa Jepang yang akan dibacakan.
- * @returns Status pemutaran, keberadaan karakter Jepang, dan fungsi speak.
+ * @param {string} text - Teks bahasa Jepang yang akan dibacakan.
+ * @param {string} [speaker] - Nama pembicara untuk penentuan gender suara dinamis.
+ * @returns {{ isPlaying: boolean; hasJapanese: boolean; speak: () => Promise<void> }} Status pemutaran, keberadaan karakter Jepang, dan fungsi pemicu speak.
+ * @effects Memutar audio di browser, memprefetch data ke CacheStorage, memanipulasi window.speechSynthesis.
  */
-export function useTTSReader(text: string) {
+export function useTTSReader(text: string, speaker?: string) {
   // ==========================================
   // STATUS & STATE & REFS
   // ==========================================
@@ -85,6 +89,8 @@ export function useTTSReader(text: string) {
       return;
     }
 
+    const voice = detectVoice(speaker);
+
     const playFallback = () => {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -92,7 +98,7 @@ export function useTTSReader(text: string) {
       setIsPlaying(true);
       const cancel = speakWithWebSpeech(
         text,
-        TTS_VOICES.NANAMI,
+        voice,
         1,
         () => setIsPlaying(false),
         () => setIsPlaying(false)
@@ -101,7 +107,7 @@ export function useTTSReader(text: string) {
     };
 
     try {
-      const audioUrl = await fetchTTSAudio(text, TTS_VOICES.NANAMI);
+      const audioUrl = await fetchTTSAudio(text, voice);
       if (!audioUrl) {
         playFallback();
         return;
