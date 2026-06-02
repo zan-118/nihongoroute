@@ -356,6 +356,69 @@ export async function getLibraryItemBySlug(
       data.audioUrl = data.audio_url;
       data.imageUrl = data.image_url;
       data.videoUrl = data.video_url;
+
+      // Parser yang kuat untuk Teks Dialog Mentah (Transcript)
+      let dialogue: import("@/components/features/listening/types").TranscriptLine[] = [];
+      if (typeof data.body === "string") {
+        const lines = data.body.split("\n").filter((line: string) => line.trim());
+        const translations = typeof data.translation === "string" ? data.translation.split("\n").filter((line: string) => line.trim()) : [];
+        const readings = typeof data.hiragana === "string" ? data.hiragana.split("\n").filter((line: string) => line.trim()) : [];
+        
+        dialogue = lines.map((line: string, idx: number) => {
+          const parts = line.split(/[：:]/);
+          const speaker = parts.length > 1 ? parts[0].trim() : "???";
+          const text = parts.length > 1 ? parts.slice(1).join("：").trim() : line.trim();
+          
+          // Coba temukan terjemahan yang cocok
+          let translation = translations[idx] || "";
+          if (translation.includes("：") || translation.includes(":")) {
+             translation = translation.split(/[：:]/).slice(1).join("：").trim();
+          }
+
+          // Coba temukan bacaan (hiragana) yang cocok
+          let furigana = "";
+          if (readings[idx]) {
+            const rLine = readings[idx];
+            if (rLine.includes("：") || rLine.includes(":")) {
+              furigana = rLine.split(/[：:]/).slice(1).join("：").trim();
+            } else {
+              furigana = rLine.trim();
+            }
+          }
+
+          return {
+            _key: `line-${idx}`,
+            speaker,
+            text,
+            jp: text,
+            furigana: furigana,
+            translation: translation || text,
+            startTime: idx * 5,
+            endTime: (idx + 1) * 5,
+            id: idx
+          };
+        });
+      } else if (Array.isArray(data.body)) {
+        dialogue = data.body as import("@/components/features/listening/types").TranscriptLine[];
+      }
+      data.transcript = dialogue;
+
+      const rawQuizzes = data.quizzes || [];
+      data.quiz = rawQuizzes.map((q, idx: number) => {
+        const correctAns = q.correct_answer ?? q.correctAnswer ?? "";
+        return {
+          _id: q._key || q.id || `q-${idx}`,
+          question: q.question || "",
+          options: ((q.options || []) as unknown[]).map((opt) => {
+            const optStr = typeof opt === "string" ? opt : String(opt || "");
+            return {
+              text: optStr,
+              isCorrect: optStr === String(correctAns)
+            };
+          }),
+          explanation: q.explanation || ""
+        };
+      });
     }
 
     if (type === "lessons" && data) {
