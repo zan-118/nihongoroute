@@ -9,7 +9,7 @@
 
 import React, { useRef, useEffect, useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { Languages, Repeat, Volume2, VolumeX, Loader2, Gauge } from "lucide-react";
+import { Languages, Repeat, Volume2, VolumeX, Loader2, Gauge, Play, Pause } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TranscriptLine } from "../types";
 import { useLineTTS } from "../hooks/useLineTTS";
@@ -57,14 +57,20 @@ export default function ListeningKaraoke({
     toggleLineTTS,
     rate,
     setRate,
+    isPlayingPlaylist,
+    playlistIndex,
+    playPlaylist,
+    pausePlaylist,
   } = useLineTTS({ rate: "medium" });
+
+  const currentActiveIndex = isPlayingPlaylist ? playlistIndex : activeIndex;
 
   // Auto-scroll ke baris aktif
   useEffect(() => {
     if (activeLineRef.current && scrollContainerRef.current) {
       activeLineRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
     }
-  }, [activeIndex]);
+  }, [currentActiveIndex]);
 
   // Loop: kembalikan audio ke awal baris saat keluar dari baris yang di-loop
   useEffect(() => {
@@ -141,6 +147,31 @@ export default function ListeningKaraoke({
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Putar seluruh percakapan via TTS */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              if (isPlayingPlaylist) {
+                pausePlaylist();
+              } else {
+                playPlaylist(transcript, 0);
+              }
+            }}
+            title={isPlayingPlaylist ? "Hentikan Suara AI" : "Putar Suara AI (Semua)"}
+            className={cn(
+              "rounded-full gap-2 transition-all",
+              isPlayingPlaylist
+                ? "bg-success/10 text-success border border-success/20"
+                : "text-muted-foreground hover:bg-background/5"
+            )}
+          >
+            {isPlayingPlaylist ? <Pause size={13} className="animate-pulse" /> : <Play size={13} />}
+            <span className="text-[10px] font-bold uppercase tracking-widest">
+              {isPlayingPlaylist ? "Jeda AI" : "Putar AI"}
+            </span>
+          </Button>
+
           {/* Toggle TTS per baris */}
           <Button
             variant="ghost"
@@ -211,7 +242,7 @@ export default function ListeningKaraoke({
           className="relative max-h-[600px] overflow-y-auto pr-2 custom-scrollbar flex flex-col gap-4 z-10"
         >
           {transcript.map((line, index) => {
-            const isActive   = index === activeIndex;
+            const isActive   = index === currentActiveIndex;
             const isLooping  = loopingIndex === index;
             const isSpeaking = speakingIndex === index;
             const isLoading  = loadingIndex === index;
@@ -271,7 +302,13 @@ export default function ListeningKaraoke({
                     scale: isActive ? 1.01 : 1,
                     opacity: isActive ? 1 : 0.8,
                   }}
-                  onClick={() => seekToLine(line.startTime)}
+                  onClick={() => {
+                    if (isPlayingPlaylist) {
+                      playPlaylist(transcript, index);
+                    } else {
+                      seekToLine(line.startTime);
+                    }
+                  }}
                   className={cn(
                     "group relative p-4 sm:p-5 md:p-6 cursor-pointer transition-all duration-300 border",
                     bubbleClass,

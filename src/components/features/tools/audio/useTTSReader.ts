@@ -33,6 +33,7 @@ export function useTTSReader(text: string, speaker?: string) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const stopNativeRef = useRef<(() => void) | null>(null);
   const objectUrlRef = useRef<string | null>(null);
+  const isSelfPlayingRef = useRef(false);
 
   const cleanupObjectUrl = () => {
     if (objectUrlRef.current) {
@@ -53,7 +54,28 @@ export function useTTSReader(text: string, speaker?: string) {
   }, [text]);
 
   useEffect(() => {
+    const handlePause = () => {
+      if (isSelfPlayingRef.current) {
+        isSelfPlayingRef.current = false;
+        return;
+      }
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      if (stopNativeRef.current) {
+        stopNativeRef.current();
+        stopNativeRef.current = null;
+      }
+      if (typeof window !== "undefined" && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+      setIsPlaying(false);
+    };
+    window.addEventListener("nihongoroute_pause_line_tts", handlePause);
+
     return () => {
+      window.removeEventListener("nihongoroute_pause_line_tts", handlePause);
       if (stopNativeRef.current) {
         stopNativeRef.current();
       }
@@ -88,6 +110,11 @@ export function useTTSReader(text: string, speaker?: string) {
       setIsPlaying(false);
       return;
     }
+
+    // Pemicu pause audio lain di halaman
+    isSelfPlayingRef.current = true;
+    window.dispatchEvent(new CustomEvent("nihongoroute_pause_line_tts"));
+    window.dispatchEvent(new CustomEvent("nihongoroute_pause_native_audio"));
 
     const voice = detectVoice(speaker);
 

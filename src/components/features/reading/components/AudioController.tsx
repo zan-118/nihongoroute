@@ -117,6 +117,17 @@ export default function AudioController({
     }
   }, [externalSeek]);
 
+  // Listen to pause event from line TTS
+  useEffect(() => {
+    const handlePauseAll = () => {
+      stopAll();
+    };
+    window.addEventListener("nihongoroute_pause_native_audio", handlePauseAll);
+    return () => {
+      window.removeEventListener("nihongoroute_pause_native_audio", handlePauseAll);
+    };
+  }, []);
+
   // Cleanup saat unmount
   useEffect(() => {
     const native = nativeAudioRef.current;
@@ -153,6 +164,7 @@ export default function AudioController({
     if (isTTS) stopAll();
 
     setIsLoading(true);
+    window.dispatchEvent(new CustomEvent("nihongoroute_pause_line_tts"));
     el.play()
       .then(() => { setIsPlaying(true); setIsTTS(false); setIsLoading(false); })
       .catch(() => { setError("Gagal memutar audio."); setIsLoading(false); });
@@ -173,6 +185,7 @@ export default function AudioController({
     // Mulai TTS baru
     stopAll();
     setIsLoading(true);
+    window.dispatchEvent(new CustomEvent("nihongoroute_pause_line_tts"));
 
     // fetchTTSAudio mengembalikan URL API route — bukan blob URL
     const ttsUrl = await fetchTTSAudio(text, TTS_VOICES.NANAMI, "medium");

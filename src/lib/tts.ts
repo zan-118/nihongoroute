@@ -11,12 +11,12 @@
 export const TTS_VOICES = {
   // Wanita
   NANAMI:  "ja-JP-NanamiNeural",  // Default wanita — hangat, natural
-  MAYU:    "ja-JP-MayuNeural",    // Wanita muda, lembut
-  SHIORI:  "ja-JP-ShioriNeural",  // Wanita alternatif
+  MAYU:    "ja-JP-NanamiNeural",    // Map ke Nanami (Mayu tidak didukung Edge TTS)
+  SHIORI:  "ja-JP-NanamiNeural",  // Map ke Nanami (Shiori tidak didukung Edge TTS)
   // Pria
   KEITA:   "ja-JP-KeitaNeural",   // Default pria — dewasa, natural
-  DAICHI:  "ja-JP-DaichiNeural",  // Pria muda, casual
-  NAOKI:   "ja-JP-NaokiNeural",   // Pria alternatif
+  DAICHI:  "ja-JP-KeitaNeural",  // Map ke Keita (Daichi tidak didukung Edge TTS)
+  NAOKI:   "ja-JP-KeitaNeural",   // Map ke Keita (Naoki tidak didukung Edge TTS)
 } as const;
 
 export type TtsVoice = typeof TTS_VOICES[keyof typeof TTS_VOICES];
@@ -28,27 +28,21 @@ export type TtsVoice = typeof TTS_VOICES[keyof typeof TTS_VOICES];
 // Kata kunci yang mengindikasikan pembicara wanita
 const FEMALE_KEYWORDS = [
   // Kanji/karakter gender
-  "女", "母", "姉", "妹", "奥", "彼女", "娘",
-  // Suffix umum nama wanita
-  "さん", "ちゃん", "様", "chan", "sama",
+  "女", "母", "姉", "妹", "奥", "彼女", "娘", "ちゃん", "chan",
   // Profesi sering wanita dalam konteks N5-N3
   "先生",
   // Nama wanita umum dalam materi JLPT
   "ゆき", "はな", "さき", "あおい", "みく", "ゆみ", "けいこ", "みさ",
   "Yuki", "Hana", "Saki", "Aoi", "Miku", "Yumi", "Keiko", "Misa",
-  "田中", // Bisa wanita/pria tapi default ke wanita sebagai narrator
 ];
 
 // Kata kunci yang mengindikasikan pembicara pria
 const MALE_KEYWORDS = [
   // Kanji/karakter gender
-  "男", "父", "兄", "弟", "夫", "彼",
-  // Suffix umum nama pria
-  "くん", "君", "kun",
+  "男", "父", "兄", "弟", "夫", "彼", "くん", "君", "kun",
   // Nama pria umum dalam materi JLPT
-  "たろう", "けんじ", "ひろし", "けん", "しんじ", "だいち",
+  "たろう", "けんじ", "ひろし", "けん", "しんじ", "だいち", "ケン",
   "Taro", "Kenji", "Hiroshi", "Ken", "Shinji", "Daichi",
-  "山田", "鈴木",
 ];
 
 /**
@@ -60,36 +54,47 @@ const MALE_KEYWORDS = [
  * @param fallbackIndex - Index baris (dipakai untuk rotasi default pria/wanita)
  */
 export function detectVoice(speaker?: string, fallbackIndex = 0): TtsVoice {
-  const femaleVoices = [TTS_VOICES.NANAMI, TTS_VOICES.MAYU, TTS_VOICES.SHIORI];
-  const maleVoices = [TTS_VOICES.KEITA, TTS_VOICES.DAICHI, TTS_VOICES.NAOKI];
+  const femaleVoices = [TTS_VOICES.NANAMI];
+  const maleVoices = [TTS_VOICES.KEITA];
   const allVoices = [...femaleVoices, ...maleVoices];
 
   if (!speaker || speaker === "???" || speaker.trim() === "") {
-    // Rotasi dinamis melintasi seluruh 6 suara untuk dialog tanpa nama pembicara yang jelas
+    // Rotasi dinamis melintasi suara yang didukung
     return allVoices[fallbackIndex % allVoices.length];
   }
 
+  // Bersihkan gelar kehormatan Jepang/Romaji agar tidak mengganggu pencocokan gender (misal: "渡辺さん" -> "渡辺")
+  const cleanSpeaker = speaker.replace(/[- ]?(さん|くん|ちゃん|様|君|sama|san|kun|chan)$/i, "").trim();
+
   // Hitung hash deterministik sederhana dari nama speaker untuk pilihan suara yang konsisten
   let hash = 0;
-  for (let i = 0; i < speaker.length; i++) {
-    hash = speaker.charCodeAt(i) + ((hash << 5) - hash);
+  for (let i = 0; i < cleanSpeaker.length; i++) {
+    hash = cleanSpeaker.charCodeAt(i) + ((hash << 5) - hash);
   }
   const index = Math.abs(hash);
 
   // Daftar nama tokoh dengan gender pasti (Katakana & Romaji dari lessons/listening)
-  const EXACT_FEMALE = ["アユ", "さくら", "サクラ", "リン", "ミサキ", "アカリ", "ナナ", "ハナ", "ユイ", "コトネ", "ヒナ", "サヤ", "Sakura", "Rin", "Misaki", "Akari", "Nana", "Hana", "Yui", "Kotone", "Hina", "Saya"];
-  const EXACT_MALE = ["ブディ", "ケン", "ミラー", "アキラ", "ハルト", "ケイタ", "リョウ", "タクミ", "ダイキ", "ユウキ", "ソウタ", "カイト", "ケンジ", "田中部長", "山田部長", "Budi", "Ken", "Kenji", "Akira", "Haruto", "Keita", "Ryou", "Takumi", "Daiki", "Yuuki", "Souta", "Kaito"];
+  const EXACT_FEMALE = [
+    "Ayu", "Siti", "Dewi", "Rara", "Indah", "Sato", "Kimura", "Hayashi", "Kobayashi", "Sakura",
+    "アユ", "シティ", "デウィ", "ララ", "インダ", "佐藤", "木村", "林", "小林", "さくら", "サクラ",
+    "さとう", "きむら", "はやし", "こばやし"
+  ];
+  const EXACT_MALE = [
+    "Budi", "Faisal", "Andi", "Dito", "Adit", "Tanaka", "Suzuki", "Takahashi", "Watanabe", "Yamada", "Ken",
+    "ブディ", "ファイサル", "アンディ", "ディト", "アディット", "田中", "鈴木", "高橋", "渡辺", "山田", "ケン",
+    "たなか", "すずき", "たかはし", "わたなべ", "やまだ", "田中部長", "山田部長"
+  ];
 
-  if (EXACT_FEMALE.includes(speaker)) {
+  if (EXACT_FEMALE.includes(cleanSpeaker)) {
     return femaleVoices[index % femaleVoices.length];
   }
-  if (EXACT_MALE.includes(speaker)) {
+  if (EXACT_MALE.includes(cleanSpeaker)) {
     return maleVoices[index % maleVoices.length];
   }
 
-  const speakerLower = speaker.toLowerCase();
-  const isFemale = FEMALE_KEYWORDS.some(k => speaker.includes(k) || speakerLower.includes(k.toLowerCase()));
-  const isMale   = MALE_KEYWORDS.some(k => speaker.includes(k) || speakerLower.includes(k.toLowerCase()));
+  const speakerLower = cleanSpeaker.toLowerCase();
+  const isFemale = FEMALE_KEYWORDS.some(k => cleanSpeaker.includes(k) || speakerLower.includes(k.toLowerCase()));
+  const isMale   = MALE_KEYWORDS.some(k => cleanSpeaker.includes(k) || speakerLower.includes(k.toLowerCase()));
 
   if (isFemale && !isMale) {
     return femaleVoices[index % femaleVoices.length];
@@ -98,7 +103,7 @@ export function detectVoice(speaker?: string, fallbackIndex = 0): TtsVoice {
     return maleVoices[index % maleVoices.length];
   }
 
-  // Jika gender tidak terdeteksi secara spesifik, petakan secara deterministik ke seluruh 6 pilihan suara
+  // Jika gender tidak terdeteksi secara spesifik, petakan secara deterministik ke seluruh pilihan suara
   return allVoices[index % allVoices.length];
 }
 

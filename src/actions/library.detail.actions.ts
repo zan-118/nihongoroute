@@ -114,6 +114,7 @@ interface VocabRow {
   pitch_accent: string | null;
   usage_notes: string | null;
   mnemonic: string | null;
+  slug: string | null;
 }
 
 interface GrammarRow {
@@ -476,12 +477,15 @@ export async function getLibraryItemBySlug(
       }
 
       // Fallback ke data Sanity jika data di database kosong
-      if (!kanjiListRaw.length && data.kanji_list) {
-        kanjiListRaw = parseArray(data.kanji_list);
+      if (!vocabListRaw.length && (data.vocab_list || data.vocabList)) {
+        vocabListRaw = parseArray(data.vocab_list || data.vocabList);
       }
-      const grammarListRaw = parseArray(data.grammar_list);
-      const listeningListRaw = parseArray(data.listening_list);
-      const readingListRaw = parseArray(data.reading_list);
+      if (!kanjiListRaw.length && (data.kanji_list || data.kanjiList)) {
+        kanjiListRaw = parseArray(data.kanji_list || data.kanjiList);
+      }
+      const grammarListRaw = parseArray(data.grammar_list || data.grammarList);
+      const listeningListRaw = parseArray(data.listening_list || data.listeningList);
+      const readingListRaw = parseArray(data.reading_list || data.readingList);
 
       // Normalisasi blok untuk memastikan mereka memiliki _type (menangani data lama dengan kunci 'type')
       const articles = contentBlocks.map((block: ContentBlock | Record<string, unknown>) => {
@@ -521,20 +525,51 @@ export async function getLibraryItemBySlug(
         
         let vItems: VocabRow[] = [];
         if (hasUUIDs) {
-          const { data } = await supabase.from("vocab").select("id, word, furigana, romaji, meaning_id, hinshi, pitch_accent, usage_notes, mnemonic").in("id", cleanList);
+          const { data } = await supabase.from("vocab").select("id, word, furigana, romaji, meaning_id, hinshi, pitch_accent, usage_notes, mnemonic, slug").in("id", cleanList);
           vItems = data || [];
         } else {
           const [byWord, bySlug] = await Promise.all([
-            supabase.from("vocab").select("id, word, furigana, romaji, meaning_id, hinshi, pitch_accent, usage_notes, mnemonic").in("word", cleanList),
-            supabase.from("vocab").select("id, word, furigana, romaji, meaning_id, hinshi, pitch_accent, usage_notes, mnemonic").in("slug", cleanList)
+            supabase.from("vocab").select("id, word, furigana, romaji, meaning_id, hinshi, pitch_accent, usage_notes, mnemonic, slug").in("word", cleanList),
+            supabase.from("vocab").select("id, word, furigana, romaji, meaning_id, hinshi, pitch_accent, usage_notes, mnemonic, slug").in("slug", cleanList)
           ]);
           vItems = [...(byWord.data || []), ...(bySlug.data || [])];
           vItems = Array.from(new Map(vItems.map(item => [item.id, item])).values());
         }
         
-        result.vocabList = (vItems && vItems.length > 0) 
-          ? vItems.map((v: { id: string; meaning_id: string }) => ({ ...v, _id: v.id, meaning: v.meaning_id }))
-          : cleanList.map((w: string) => ({ _id: `temp-${w}`, word: w, meaning: "Detail pending..." }));
+        result.vocabList = cleanList.map((item: string, idx: number) => {
+          let wordPart = item;
+          let furiganaPart = "";
+          if (item.includes("-")) {
+            const parts = item.split("-");
+            if (!isUUID(item)) {
+              wordPart = parts[0];
+              furiganaPart = parts[1];
+            }
+          }
+
+          const matched = vItems.find(v => 
+            v.id === item || 
+            v.word === item || 
+            v.slug === item || 
+            v.word === wordPart || 
+            v.slug === `${wordPart}-${furiganaPart}`
+          );
+
+          if (matched) {
+            return {
+              ...matched,
+              _id: matched.id,
+              meaning: matched.meaning_id
+            };
+          }
+
+          return {
+            _id: `temp-${item}-${idx}`,
+            word: wordPart,
+            furigana: furiganaPart || undefined,
+            meaning: "Detail pending..."
+          };
+        });
       };
 
       const fetchKanji = async () => {
@@ -546,9 +581,21 @@ export async function getLibraryItemBySlug(
           .select("id, character, meaning, onyomi, kunyomi, jlpt_level, stroke_order_svg")
           .in(hasUUIDs ? "id" : "character", cleanList);
         
-        result.kanjiList = (kItems && kItems.length > 0)
-          ? kItems.map((k: { id: string; jlpt_level: string | null }) => ({ ...k, _id: k.id, jlptLevel: k.jlpt_level }))
-          : cleanList.map((c: string) => ({ _id: `temp-${c}`, character: c, meaning: "Detail pending..." }));
+        result.kanjiList = cleanList.map((item: string, idx: number) => {
+          const matched = (kItems || []).find(k => k.id === item || k.character === item);
+          if (matched) {
+            return {
+              ...matched,
+              _id: matched.id,
+              jlptLevel: matched.jlpt_level
+            };
+          }
+          return {
+            _id: `temp-${item}-${idx}`,
+            character: item,
+            meaning: "Detail pending..."
+          };
+        });
       };
 
       const fetchGrammar = async () => {
@@ -569,9 +616,22 @@ export async function getLibraryItemBySlug(
           gItems = Array.from(new Map(gItems.map(item => [item.id, item])).values());
         }
         
-        result.grammarList = (gItems && gItems.length > 0)
-          ? gItems.map((g: { id: string; jlpt_level: string | null; examples: unknown }) => ({ ...g, _id: g.id, jlptLevel: g.jlpt_level, exampleSentences: g.examples }))
-          : cleanList.map((t: string) => ({ _id: `temp-${t}`, title: t, meaning: "Detail pending..." }));
+        result.grammarList = cleanList.map((item: string, idx: number) => {
+          const matched = gItems.find(g => g.id === item || g.title === item || g.slug === item);
+          if (matched) {
+            return {
+              ...matched,
+              _id: matched.id,
+              jlptLevel: matched.jlpt_level,
+              exampleSentences: matched.examples
+            };
+          }
+          return {
+            _id: `temp-${item}-${idx}`,
+            title: item,
+            meaning: "Detail pending..."
+          };
+        });
       };
 
       const fetchListening = async () => {

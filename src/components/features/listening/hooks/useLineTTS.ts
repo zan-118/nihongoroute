@@ -2,6 +2,7 @@
  * @file useLineTTS.ts
  * @description Hook untuk memutar TTS per baris transkrip menggunakan Edge TTS
  * dengan deteksi suara pria/wanita otomatis berdasarkan nama pembicara.
+ * Mendukung pemutaran berurutan (playlist) untuk seluruh percakapan.
  * Fallback ke Web Speech API jika Edge TTS gagal.
  */
 
@@ -9,7 +10,6 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import { fetchTTSAudio, speakWithWebSpeech, detectVoice, TtsVoice } from "@/lib/tts";
-import { TranscriptLine } from "../types";
 
 // ── Tipe ─────────────────────────────────────────────────────
 export type TTSRate = "slow" | "medium" | "fast";
@@ -21,12 +21,18 @@ interface UseLineTTSOptions {
 interface UseLineTTSReturn {
   speakingIndex: number;
   loadingIndex: number;
-  speakLine: (line: TranscriptLine, index: number) => Promise<void>;
+  speakLine: (line: any, index: number) => Promise<void>;
   stopLineTTS: () => void;
   lineTTSEnabled: boolean;
   toggleLineTTS: () => void;
   rate: TTSRate;
   setRate: (r: TTSRate) => void;
+  
+  // Fitur playlist sequential
+  isPlayingPlaylist: boolean;
+  playlistIndex: number;
+  playPlaylist: (lines: any[], startIndex?: number) => void;
+  pausePlaylist: () => void;
 }
 
 // ── Helper: konversi rate string ke playbackRate number ──────
@@ -41,17 +47,15 @@ export function useLineTTS({ rate: initialRate = "medium" }: UseLineTTSOptions =
   const [lineTTSEnabled,  setLineTTSEnabled]   = useState(false);
   const [rate,            setRate]             = useState<TTSRate>(initialRate);
 
+  // State & Ref untuk Playlist
+  const [playlistIndex, setPlaylistIndex] = useState<number>(-1);
+  const [isPlayingPlaylist, setIsPlayingPlaylist] = useState<boolean>(false);
+  const playlistLinesRef = useRef<any[]>([]);
+  const isPlayingPlaylistRef = useRef<boolean>(false);
+
   const audioRef         = useRef<HTMLAudioElement | null>(null);
   const stopWebSpeechRef = useRef<(() => void) | null>(null);
-
-  // Cleanup saat unmount
-  useEffect(() => {
-    const audio = audioRef.current;
-    return () => {
-      if (audio) audio.pause();
-      stopWebSpeechRef.current?.();
-    };
-  }, []);
+  const isSelfPlayingRef = useRef<boolean>(false);
 
   const stopLineTTS = useCallback(() => {
     if (audioRef.current) {
@@ -62,28 +66,88 @@ export function useLineTTS({ rate: initialRate = "medium" }: UseLineTTSOptions =
     stopWebSpeechRef.current = null;
     setSpeakingIndex(-1);
     setLoadingIndex(-1);
+
+    if (isPlayingPlaylistRef.current) {
+      isPlayingPlaylistRef.current = false;
+      setIsPlayingPlaylist(false);
+      setPlaylistIndex(-1);
+    }
   }, []);
 
-  const speakLine = useCallback(async (line: TranscriptLine, index: number) => {
-    if (!lineTTSEnabled) return;
+  // Event listener untuk mematikan TTS jika audio lain mulai diputar
+  useEffect(() => {
+    const handlePause = () => {
+      if (isSelfPlayingRef.current) {
+        isSelfPlayingRef.current = false;
+        return;
+      }
+      stopLineTTS();
+    };
+    window.addEventListener("nihongoroute_pause_line_tts", handlePause);
+    return () => {
+      window.removeEventListener("nihongoroute_pause_line_tts", handlePause);
+    };
+  }, [stopLineTTS]);
 
-    stopLineTTS();
+  // Cleanup saat unmount
+  useEffect(() => {
+    const audio = audioRef.current;
+    return () => {
+      if (audio) audio.pause();
+      stopWebSpeechRef.current?.();
+    };
+  }, []);
 
-    // Ekstrak teks dari baris
-    const text = typeof line.text === "string"
-      ? line.text
-      : Array.isArray(line.text)
-        ? (line.text as { text?: string; children?: { text?: string }[] }[])
+  const speakLineRaw = useCallback(async (line: any, index: number, forcePlay = false) => {
+    if (!lineTTSEnabled && !forcePlay) return;
+
+    // Matikan audio utama & TTS lain terlebih dahulu
+    window.dispatchEvent(new CustomEvent("nihongoroute_pause_native_audio"));
+    isSelfPlayingRef.current = true;
+    window.dispatchEvent(new CustomEvent("nihongoroute_pause_line_tts"));
+
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = "";
+    }
+    stopWebSpeechRef.current?.();
+    stopWebSpeechRef.current = null;
+    setSpeakingIndex(-1);
+    setLoadingIndex(-1);
+
+    // Ekstrak teks (dukung field .text dan .jp)
+    const rawText = line.jp || line.text || "";
+    const text = typeof rawText === "string"
+      ? rawText
+      : Array.isArray(rawText)
+        ? (rawText as { text?: string; children?: { text?: string }[] }[])
             .map(b => b?.children?.map(c => c?.text || "").join("") || b?.text || "")
             .join("")
-        : String(line.text || "");
+        : String(rawText || "");
 
     if (!text.trim()) return;
 
-    const voice: TtsVoice = detectVoice(line.speaker, index);
+    const speakerName = line.speaker || line.speakerName || "";
+    const voice: TtsVoice = detectVoice(speakerName, index);
     const playbackRate = rateToNumber(rate);
 
     setLoadingIndex(index);
+
+    const onAudioEnded = () => {
+      setSpeakingIndex(-1);
+      if (isPlayingPlaylistRef.current) {
+        setPlaylistIndex(prev => {
+          const next = prev + 1;
+          if (next < playlistLinesRef.current.length) {
+            return next;
+          } else {
+            setIsPlayingPlaylist(false);
+            isPlayingPlaylistRef.current = false;
+            return -1;
+          }
+        });
+      }
+    };
 
     try {
       const ttsUrl = await fetchTTSAudio(text, voice, rate);
@@ -96,14 +160,14 @@ export function useLineTTS({ rate: initialRate = "medium" }: UseLineTTSOptions =
         audio.playbackRate = playbackRate;
 
         audio.oncanplay = () => { setLoadingIndex(-1); setSpeakingIndex(index); };
-        audio.onended   = () => { setSpeakingIndex(-1); };
+        audio.onended   = onAudioEnded;
         audio.onerror   = () => {
           setLoadingIndex(-1);
           setSpeakingIndex(index);
           stopWebSpeechRef.current = speakWithWebSpeech(
             text, voice, playbackRate,
-            () => setSpeakingIndex(-1),
-            () => setSpeakingIndex(-1)
+            onAudioEnded,
+            onAudioEnded
           );
         };
 
@@ -114,15 +178,19 @@ export function useLineTTS({ rate: initialRate = "medium" }: UseLineTTSOptions =
         setSpeakingIndex(index);
         stopWebSpeechRef.current = speakWithWebSpeech(
           text, voice, playbackRate,
-          () => setSpeakingIndex(-1),
-          () => setSpeakingIndex(-1)
+          onAudioEnded,
+          onAudioEnded
         );
       }
     } catch {
       setLoadingIndex(-1);
       setSpeakingIndex(-1);
     }
-  }, [lineTTSEnabled, rate, stopLineTTS]);
+  }, [lineTTSEnabled, rate]);
+
+  const speakLine = useCallback(async (line: any, index: number) => {
+    await speakLineRaw(line, index, false);
+  }, [speakLineRaw]);
 
   const toggleLineTTS = useCallback(() => {
     setLineTTSEnabled(prev => {
@@ -131,5 +199,40 @@ export function useLineTTS({ rate: initialRate = "medium" }: UseLineTTSOptions =
     });
   }, [stopLineTTS]);
 
-  return { speakingIndex, loadingIndex, speakLine, stopLineTTS, lineTTSEnabled, toggleLineTTS, rate, setRate };
+  // Playlist handlers
+  const playPlaylist = useCallback((lines: any[], startIndex = 0) => {
+    playlistLinesRef.current = lines;
+    isPlayingPlaylistRef.current = true;
+    setIsPlayingPlaylist(true);
+    setPlaylistIndex(startIndex);
+  }, []);
+
+  const pausePlaylist = useCallback(() => {
+    isPlayingPlaylistRef.current = false;
+    setIsPlayingPlaylist(false);
+    stopLineTTS();
+  }, [stopLineTTS]);
+
+  // Efek pemicu putar baris berikutnya dalam playlist
+  useEffect(() => {
+    if (isPlayingPlaylist && playlistIndex >= 0 && playlistIndex < playlistLinesRef.current.length) {
+      const line = playlistLinesRef.current[playlistIndex];
+      speakLineRaw(line, playlistIndex, true);
+    }
+  }, [playlistIndex, isPlayingPlaylist, speakLineRaw]);
+
+  return {
+    speakingIndex,
+    loadingIndex,
+    speakLine,
+    stopLineTTS,
+    lineTTSEnabled,
+    toggleLineTTS,
+    rate,
+    setRate,
+    isPlayingPlaylist,
+    playlistIndex,
+    playPlaylist,
+    pausePlaylist
+  };
 }

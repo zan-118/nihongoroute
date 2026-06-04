@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * @file DialogueSection.tsx
  * @description Komponen seksi dialog/skenario percakapan (DialogueSection) dalam pelajaran. Dilengkapi pembaca dialog per kalimat, audio, dan gambar/video rujukan.
@@ -7,11 +9,14 @@
 // IMPOR
 // ======================
 import React from "react";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Play, Pause } from "lucide-react";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import SanityMedia from "@/components/ui/SanityMedia";
 import { OfflineAudio } from "@/components/ui/OfflineAudio";
+import { Button } from "@/components/ui/button";
+import { useLineTTS } from "@/components/features/listening/hooks/useLineTTS";
+import { cn } from "@/lib/utils";
 
 // ======================
 // ANTARMUKA / TIPE DATA
@@ -58,6 +63,25 @@ interface DialogueSectionProps {
  * @param {DialogueItem[]} props.listeningList - Daftar skenario percakapan hasil query Sanity CMS
  */
 export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList }) => {
+  const {
+    speakingIndex,
+    loadingIndex,
+    isPlayingPlaylist,
+    playlistIndex,
+    playPlaylist,
+    pausePlaylist,
+  } = useLineTTS({ rate: "medium" });
+
+  const [activeDialogId, setActiveDialogId] = React.useState<string | null>(null);
+  const activeLineRef = React.useRef<HTMLDivElement | null>(null);
+
+  // Auto-scroll baris aktif saat memutar playlist TTS
+  React.useEffect(() => {
+    if (activeLineRef.current && isPlayingPlaylist) {
+      activeLineRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [playlistIndex, isPlayingPlaylist]);
+
   if (!listeningList || listeningList.length === 0) return null;
 
   return (
@@ -70,23 +94,62 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
       </div>
       
       <div className="space-y-10">
-        {listeningList.map((l: DialogueItem) => (
-          <div key={l._id || l.id} className="neo-card p-5 md:p-10 border-l-4 border-l-secondary">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 border-b border-border/50 pb-8">
-              <div>
-                <h3 className="text-xl font-black uppercase tracking-tight mb-2">{l.title}</h3>
-                <p className="text-xs text-muted-foreground font-medium flex items-center gap-2">
-                   <MessageSquare size={12} className="text-secondary" /> Dengarkan dan pelajari percakapan di bawah ini
-                </p>
+        {listeningList.map((l: DialogueItem) => {
+          const dialogId = l._id || l.id || "";
+          const isCurrentPlaying = activeDialogId === dialogId && isPlayingPlaylist;
+
+          return (
+            <div key={dialogId} className="neo-card p-5 md:p-10 border-l-4 border-l-secondary">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 border-b border-border/50 pb-8">
+                <div>
+                  <h3 className="text-xl font-black uppercase tracking-tight mb-2">{l.title}</h3>
+                  <p className="text-xs text-muted-foreground font-medium flex items-center gap-2">
+                     <MessageSquare size={12} className="text-secondary" /> Dengarkan dan pelajari percakapan di bawah ini
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
+                  {/* Playlist TTS Button */}
+                  {(l.transcript || l.body) && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        const lines = l.transcript || l.body || [];
+                        if (isCurrentPlaying) {
+                          pausePlaylist();
+                        } else {
+                          setActiveDialogId(dialogId);
+                          playPlaylist(lines, 0);
+                        }
+                      }}
+                      title={isCurrentPlaying ? "Hentikan Suara AI" : "Putar Suara AI (Semua)"}
+                      className={cn(
+                        "rounded-full gap-2 transition-all border shrink-0 text-xs font-bold uppercase tracking-widest px-4 py-2 h-10",
+                        isCurrentPlaying
+                          ? "bg-success/15 border-success/30 text-success"
+                          : "bg-muted/50 border-border text-muted-foreground hover:text-success hover:bg-success/5 hover:border-success/20"
+                      )}
+                    >
+                      {isCurrentPlaying ? (
+                        <Pause size={13} className="animate-pulse" />
+                      ) : (
+                        <Play size={13} />
+                      )}
+                      <span>
+                        {isCurrentPlaying ? "Jeda AI" : "Putar AI"}
+                      </span>
+                    </Button>
+                  )}
+
+                  {(l.audioUrl || l.audio_url) && (
+                    <OfflineAudio 
+                      controls 
+                      src={(l.audioUrl || l.audio_url)!} 
+                      className="w-full md:w-64 h-10 filter brightness-90 contrast-125" 
+                    />
+                  )}
+                </div>
               </div>
-              {(l.audioUrl || l.audio_url) && (
-                <OfflineAudio 
-                  controls 
-                  src={(l.audioUrl || l.audio_url)!} 
-                  className="w-full md:w-64 h-10 filter brightness-90 contrast-125" 
-                />
-              )}
-            </div>
 
             {/* MEDIA HERO MENYIMAK (SANITY) */}
             {(l.imageUrl || l.videoUrl) && (
@@ -98,59 +161,95 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
                 />
               </div>
             )}
-            
-            {(l.transcript || l.body) && (
+                      {(l.transcript || l.body) && (
               <div className="space-y-8">
-                {(l.transcript || l.body)!.map((item: DialogueSpeakerItem, pos: number) => (
-                  <div key={`dialogue-${pos}`} className="flex flex-col gap-2 group/dialogue">
-                    <div className="flex items-center gap-2">
-                      <span 
-                        className="text-[10px] font-black text-secondary uppercase tracking-[0.2em] px-2 py-0.5 rounded"
-                        style={{ backgroundColor: "rgba(var(--secondary-rgb), 0.1)" }}
+                {(l.transcript || l.body)!.map((item: DialogueSpeakerItem, pos: number) => {
+                  const isLineActive = activeDialogId === dialogId && isPlayingPlaylist && playlistIndex === pos;
+                  const bubbleBg = isLineActive ? "rgba(var(--secondary-rgb), 0.12)" : "rgba(var(--secondary-rgb), 0.05)";
+                  const bubbleBorder = isLineActive ? "rgba(var(--secondary-rgb), 0.45)" : "rgba(var(--secondary-rgb), 0.1)";
+                  const bubbleShadow = isLineActive ? "0 0 20px rgba(var(--secondary-rgb), 0.15)" : "none";
+                  const bubbleScale = isLineActive ? "scale-[1.01]" : "scale-100";
+
+                  return (
+                    <div key={`dialogue-${pos}`} className="flex flex-col gap-2 group/dialogue">
+                      <div className="flex items-center gap-2">
+                        <span 
+                          className="text-[10px] font-black text-secondary uppercase tracking-[0.2em] px-2 py-0.5 rounded"
+                          style={{ backgroundColor: "rgba(var(--secondary-rgb), 0.1)" }}
+                        >
+                          {item.speaker || item.speakerName}
+                        </span>
+                        {isLineActive && (
+                          <span className="flex items-center gap-0.5">
+                            {[0, 1, 2].map(i => (
+                              <span
+                                key={i}
+                                className="inline-block w-0.5 bg-secondary rounded-full"
+                                style={{
+                                  height: `${6 + i * 3}px`,
+                                  animation: "pulse 1.2s infinite ease-in-out",
+                                  animationDelay: `${i * 0.15}s`
+                                }}
+                              />
+                            ))}
+                          </span>
+                        )}
+                      </div>
+                      <div 
+                        ref={isLineActive ? activeLineRef : null}
+                        className={cn(
+                          "p-4 md:p-6 rounded-2xl border transition-all duration-300 relative overflow-hidden cursor-pointer",
+                          bubbleScale
+                        )}
+                        style={{ 
+                          backgroundColor: bubbleBg, 
+                          borderColor: bubbleBorder,
+                          boxShadow: bubbleShadow
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isLineActive) {
+                            e.currentTarget.style.backgroundColor = "rgba(var(--secondary-rgb), 0.1)";
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isLineActive) {
+                            e.currentTarget.style.backgroundColor = "rgba(var(--secondary-rgb), 0.05)";
+                          }
+                        }}
+                        onClick={() => {
+                          if (isCurrentPlaying) {
+                            playPlaylist(l.transcript || l.body || [], pos);
+                          }
+                        }}
                       >
-                        {item.speaker || item.speakerName}
-                      </span>
-                    </div>
-                    <div 
-                      className="p-4 md:p-6 rounded-2xl border transition-all relative overflow-hidden"
-                      style={{ 
-                        backgroundColor: "rgba(var(--secondary-rgb), 0.05)", 
-                        borderColor: "rgba(var(--secondary-rgb), 0.1)" 
-                      }}
-                      // Apply hover dynamic background inline style to follow the protocol
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = "rgba(var(--secondary-rgb), 0.1)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = "rgba(var(--secondary-rgb), 0.05)";
-                      }}
-                    >
-                       <div className="text-lg font-japanese font-bold text-foreground mb-2 leading-relaxed">
-                         <SmartJapanese 
-                             word={item.jp || item.text || ""} 
-                             furigana={typeof item.furigana === "string" ? item.furigana : undefined} 
+                         <div className="text-lg font-japanese font-bold text-foreground mb-2 leading-relaxed">
+                           <SmartJapanese 
+                               word={item.jp || item.text || ""} 
+                               furigana={typeof item.furigana === "string" ? item.furigana : undefined} 
+                             />
+                         </div>
+                         <p 
+                           className="text-sm text-muted-foreground font-medium italic border-t pt-3"
+                           style={{ borderColor: "rgba(var(--border-rgb), 0.2)" }}
+                         >
+                           &quot;{item.translation || item.id}&quot;
+                         </p>
+                         <div className="absolute top-2 right-2 opacity-0 group-hover/dialogue:opacity-100 transition-opacity">
+                           <TTSReader 
+                             text={item.jp || item.text || ""} 
+                             minimal={true} 
+                             speaker={item.speaker || item.speakerName} 
                            />
-                       </div>
-                       <p 
-                         className="text-sm text-muted-foreground font-medium italic border-t pt-3"
-                         style={{ borderColor: "rgba(var(--border-rgb), 0.2)" }}
-                       >
-                         &quot;{item.translation || item.id}&quot;
-                       </p>
-                       <div className="absolute top-2 right-2 opacity-0 group-hover/dialogue:opacity-100 transition-opacity">
-                         <TTSReader 
-                           text={item.jp || item.text || ""} 
-                           minimal={true} 
-                           speaker={item.speaker || item.speakerName} 
-                         />
-                       </div>
+                         </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
-        ))}
+        );
+      })}
       </div>
     </section>
   );
