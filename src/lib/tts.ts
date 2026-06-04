@@ -69,16 +69,27 @@ export function detectVoice(speaker?: string, fallbackIndex = 0): TtsVoice {
     return allVoices[fallbackIndex % allVoices.length];
   }
 
-  const speakerLower = speaker.toLowerCase();
-  const isFemale = FEMALE_KEYWORDS.some(k => speaker.includes(k) || speakerLower.includes(k.toLowerCase()));
-  const isMale   = MALE_KEYWORDS.some(k => speaker.includes(k) || speakerLower.includes(k.toLowerCase()));
-
   // Hitung hash deterministik sederhana dari nama speaker untuk pilihan suara yang konsisten
   let hash = 0;
   for (let i = 0; i < speaker.length; i++) {
     hash = speaker.charCodeAt(i) + ((hash << 5) - hash);
   }
   const index = Math.abs(hash);
+
+  // Daftar nama tokoh dengan gender pasti (Katakana & Romaji dari lessons/listening)
+  const EXACT_FEMALE = ["アユ", "さくら", "サクラ", "リン", "ミサキ", "アカリ", "ナナ", "ハナ", "ユイ", "コトネ", "ヒナ", "サヤ", "Sakura", "Rin", "Misaki", "Akari", "Nana", "Hana", "Yui", "Kotone", "Hina", "Saya"];
+  const EXACT_MALE = ["ブディ", "ケン", "ミラー", "アキラ", "ハルト", "ケイタ", "リョウ", "タクミ", "ダイキ", "ユウキ", "ソウタ", "カイト", "ケンジ", "田中部長", "山田部長", "Budi", "Ken", "Kenji", "Akira", "Haruto", "Keita", "Ryou", "Takumi", "Daiki", "Yuuki", "Souta", "Kaito"];
+
+  if (EXACT_FEMALE.includes(speaker)) {
+    return femaleVoices[index % femaleVoices.length];
+  }
+  if (EXACT_MALE.includes(speaker)) {
+    return maleVoices[index % maleVoices.length];
+  }
+
+  const speakerLower = speaker.toLowerCase();
+  const isFemale = FEMALE_KEYWORDS.some(k => speaker.includes(k) || speakerLower.includes(k.toLowerCase()));
+  const isMale   = MALE_KEYWORDS.some(k => speaker.includes(k) || speakerLower.includes(k.toLowerCase()));
 
   if (isFemale && !isMale) {
     return femaleVoices[index % femaleVoices.length];
