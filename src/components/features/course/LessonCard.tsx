@@ -8,6 +8,7 @@
 // ======================
 // IMPOR
 // ======================
+import React, { useState } from "react";
 import { m } from "framer-motion";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
@@ -33,83 +34,119 @@ interface LessonCardProps {
 // EKSEKUSI UTAMA
 // ======================
 export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 0 }: LessonCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
   const themeRgb = isSideQuest ? "var(--warning-rgb)" : "var(--primary-rgb)";
 
   return (
     <m.div
-      whileHover={{ y: -8 }}
+      whileHover={{ y: -4 }}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
       style={{ 
         contentVisibility: 'auto', 
-        containIntrinsicSize: '0 300px',
+        containIntrinsicSize: '0 220px',
         willChange: 'transform'
       }}
     >
-      <Link href={`/courses/${categoryId}/${lesson.slug}`} className="group flex flex-col h-full relative">
+      <Link 
+        href={`/courses/${categoryId}/${lesson.slug}`} 
+        className="group flex flex-col h-full relative"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
         {/* Animated Glow Backdrop */}
         <div 
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-700 -z-10 scale-105" 
+          className="absolute inset-0 blur-xl transition-opacity duration-500 -z-10 scale-105" 
           style={{
-            background: `linear-gradient(135deg, rgba(${themeRgb}, 0.1) 0%, transparent 100%)`
+            background: `linear-gradient(135deg, rgba(${themeRgb}, 0.1) 0%, transparent 100%)`,
+            opacity: isHovered ? 1 : 0
           }}
         />
 
-        <Card className="p-5 sm:p-8 bg-card/30 backdrop-blur-xl glass rounded-[1.5rem] sm:rounded-[2.5rem] group transition-all duration-500 flex flex-col items-start gap-4 sm:gap-8 cursor-pointer border border-border hover:border-foreground/10 h-full shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.2)] relative overflow-hidden">
+        <Card 
+          className="p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl transition-all duration-500 flex flex-col items-start gap-3 sm:gap-4 md:gap-5 cursor-pointer h-full relative overflow-hidden glass"
+          style={{
+            borderColor: isHovered ? `rgba(${themeRgb}, 0.3)` : `rgba(var(--border-rgb), 0.4)`,
+            boxShadow: isHovered ? `0 12px 36px rgba(${themeRgb}, 0.08), 0 0 20px rgba(${themeRgb}, 0.04)` : 'none'
+          }}
+        >
           {/* Shine Effect */}
-          <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-foreground/[0.03] to-transparent skew-x-12 pointer-events-none" />
+          <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-foreground/[0.02] to-transparent skew-x-12 pointer-events-none" />
           
           <div className="flex justify-between items-start w-full relative z-10">
             <div
-              className={`w-10 h-10 sm:w-12 sm:h-12 shrink-0 rounded-xl sm:rounded-2xl flex items-center justify-center font-black text-xs font-mono bg-background border border-border transition-all duration-500 shadow-2xl ${
-                isSideQuest 
-                  ? "text-warning group-hover:bg-warning group-hover:text-warning-foreground group-hover:border-none group-hover:rotate-6" 
-                  : "text-primary group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-none group-hover:rotate-6"
-              }`}
+              className="w-8 h-8 sm:w-10 sm:h-10 shrink-0 rounded-lg sm:rounded-xl flex items-center justify-center font-black text-[10px] sm:text-xs font-mono transition-all duration-500 border"
+              style={{
+                backgroundColor: isHovered ? `rgb(${themeRgb})` : `rgba(var(--background-rgb), 0.5)`,
+                borderColor: isHovered ? `rgb(${themeRgb})` : `rgba(var(--border-rgb), 0.5)`,
+                color: isHovered ? `var(--background)` : `rgb(${themeRgb})`,
+                transform: isHovered ? 'rotate(4deg) scale(1.05)' : 'none',
+                boxShadow: isHovered ? `0 6px 16px rgba(${themeRgb}, 0.2)` : 'none'
+              }}
             >
               {(index + 1).toString().padStart(2, "0")}
             </div>
             
             {progress > 0 && (
               <div 
-                className="px-3 py-1 sm:px-4 sm:py-1.5 rounded-full border text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground group-hover:text-foreground transition-colors shadow-sm"
-                style={{ backgroundColor: "rgba(var(--background-rgb), 0.5)", borderColor: "var(--border)" }}
+                className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-full border text-[8px] sm:text-[9px] font-black uppercase tracking-[0.15em] transition-all duration-300 shadow-sm"
+                style={{ 
+                  backgroundColor: isHovered ? `rgba(${themeRgb}, 0.08)` : `rgba(var(--background-rgb), 0.5)`, 
+                  borderColor: isHovered ? `rgba(${themeRgb}, 0.3)` : `rgba(var(--border-rgb), 0.5)`,
+                  color: isHovered ? `rgb(${themeRgb})` : 'var(--muted-foreground)'
+                }}
               >
                 {progress}% Complete
               </div>
             )}
           </div>
 
-          <div className="flex-1 relative z-10 w-full space-y-3">
-            <h4 className={`text-xl sm:text-2xl md:text-3xl font-black text-foreground transition-colors tracking-tighter leading-none text-balance ${
-              isSideQuest ? "group-hover:text-warning" : "group-hover:text-primary"
-            }`}>
+          <div className="flex-1 relative z-10 w-full space-y-1.5 sm:space-y-2">
+            <h4 
+              className="text-base sm:text-lg md:text-xl font-black text-foreground transition-colors tracking-tight leading-snug text-balance"
+              style={{
+                color: isHovered ? `rgb(${themeRgb})` : 'var(--foreground)'
+              }}
+            >
               {lesson.title}
             </h4>
             {lesson.summary && (
-              <p className="text-muted-foreground text-xs sm:text-sm font-medium line-clamp-3 opacity-70 group-hover:opacity-100 transition-opacity leading-relaxed">
+              <p className="text-muted-foreground text-[11px] sm:text-xs font-medium line-clamp-2 opacity-70 group-hover:opacity-100 transition-opacity leading-relaxed">
                 {lesson.summary}
               </p>
             )}
           </div>
 
-          <div className="mt-auto pt-4 sm:pt-8 w-full flex items-center justify-between border-t border-border relative z-10">
-            <span className={`text-[10px] font-black uppercase tracking-[0.2em] transition-colors ${
-              isSideQuest ? "text-warning/40 group-hover:text-warning" : "text-primary/40 group-hover:text-primary"
-            }`}>
+          <div className="mt-auto pt-3 sm:pt-4 w-full flex items-center justify-between border-t border-border relative z-10">
+            <span 
+              className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-colors"
+              style={{
+                color: isHovered ? `rgb(${themeRgb})` : `rgba(${themeRgb}, 0.4)`
+              }}
+            >
               Start Learning
             </span>
             <div
-              className={`w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl border border-border flex items-center justify-center transition-all duration-500 bg-background shadow-xl ${
-                isSideQuest ? "group-hover:bg-warning group-hover:text-warning-foreground" : "group-hover:bg-primary group-hover:text-primary-foreground"
-              }`}
+              className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-md sm:rounded-lg border flex items-center justify-center transition-all duration-500 shadow-lg"
+              style={{
+                backgroundColor: isHovered ? `rgb(${themeRgb})` : `rgba(var(--background-rgb), 0.5)`,
+                borderColor: isHovered ? `rgb(${themeRgb})` : `rgba(var(--border-rgb), 0.5)`,
+                color: isHovered ? `var(--background)` : 'var(--foreground)'
+              }}
             >
-              <ChevronRight size={16} aria-hidden="true" className="group-hover:translate-x-1 transition-transform" />
+              <ChevronRight 
+                size={14} 
+                aria-hidden="true" 
+                className="transition-transform duration-300" 
+                style={{
+                  transform: isHovered ? 'translateX(2px)' : 'none'
+                }}
+              />
             </div>
           </div>
 
-          {/* Bottom Progress Bar - Cyber Style */}
+          {/* Bottom Progress Bar — Cyber Style */}
           <div 
-            className="absolute bottom-0 left-0 right-0 h-1.5"
+            className="absolute bottom-0 left-0 right-0 h-1"
             style={{ backgroundColor: "rgba(var(--background-rgb), 0.1)" }}
           >
             <m.div 
@@ -120,7 +157,7 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
                 background: isSideQuest
                   ? "linear-gradient(90deg, var(--warning) 0%, rgba(var(--warning-rgb), 0.6) 100%)"
                   : "linear-gradient(90deg, var(--primary) 0%, rgba(var(--primary-rgb), 0.6) 100%)",
-                boxShadow: `0 0 10px rgba(${themeRgb}, 0.5)`,
+                boxShadow: `0 0 8px rgba(${themeRgb}, 0.4)`,
               }}
             />
           </div>

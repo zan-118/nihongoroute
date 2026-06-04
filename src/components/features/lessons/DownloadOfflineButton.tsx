@@ -268,16 +268,16 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
       className={cn(
         "relative overflow-hidden flex items-center justify-center gap-3 px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-500",
         "border backdrop-blur-md bg-card/40 border-border shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)] active:scale-95",
-        status === "completed" && "bg-success/10 border-success/30 text-success shadow-[0_0_25px_rgba(var(--success-rgb),0.1)] cursor-default active:scale-100",
-        status === "downloading" && "border-primary/40 text-primary cursor-default shadow-[0_0_25px_rgba(var(--primary-rgb),0.15)]",
-        status === "error" && "border-destructive/30 text-destructive bg-destructive/5 hover:bg-destructive/10"
+        status === "completed" && "bg-[rgba(var(--success-rgb),0.1)] border-[rgba(var(--success-rgb),0.3)] text-success shadow-[0_0_25px_rgba(var(--success-rgb),0.1)] cursor-default active:scale-100",
+        status === "downloading" && "border-[rgba(var(--primary-rgb),0.4)] text-primary cursor-default shadow-[0_0_25px_rgba(var(--primary-rgb),0.15)]",
+        status === "error" && "border-[rgba(var(--destructive-rgb),0.3)] text-destructive bg-[rgba(var(--destructive-rgb),0.05)] hover:bg-[rgba(var(--destructive-rgb),0.1)]"
       )}
     >
       {/* Efek Pendar Latar Belakang Pemuat Visual */}
       {status === "downloading" && (
         <div 
-          className="absolute inset-0 bg-primary/5 transition-all duration-300 self-start h-full" 
-          style={{ width: `${progress}%` }}
+          className="absolute inset-0 transition-all duration-300 self-start h-full" 
+          style={{ width: `${progress}%`, backgroundColor: "rgba(var(--primary-rgb), 0.05)" }}
         />
       )}
 

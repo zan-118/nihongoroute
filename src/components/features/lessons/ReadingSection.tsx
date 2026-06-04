@@ -53,7 +53,10 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
           <div key={r._id || r.id} className="relative">
             <div className="flex items-center justify-between mb-8">
                <div>
-                 <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em] bg-primary/10 px-3 py-1 rounded-full mb-3 inline-block">
+                 <span 
+                   className="text-[10px] font-black text-primary uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-3 inline-block"
+                   style={{ backgroundColor: "rgba(var(--primary-rgb), 0.1)" }}
+                 >
                    {r.difficulty || r.level || "N/A"} Reading
                  </span>
                  <h3 className="text-3xl font-black tracking-tighter uppercase">{r.title}</h3>
@@ -81,7 +84,10 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
             )}
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-              <div className="prose-custom text-lg md:text-xl leading-[2] md:leading-[2.2] font-japanese bg-card/30 p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-border/50">
+              <div 
+                className="prose-custom text-lg md:text-xl leading-[2] md:leading-[2.2] font-japanese p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border"
+                style={{ backgroundColor: "rgba(var(--card-rgb), 0.3)", borderColor: "rgba(var(--border-rgb), 0.5)" }}
+              >
                 {typeof r.body === "string"
                   ? r.body.split("\n").filter(Boolean).map((line: string, pos: number) => (
                       <div key={`body-${pos}`} className="mb-4">
@@ -90,7 +96,10 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
                     ))
                   : null}
               </div>
-              <div className="prose-custom opacity-70 italic text-sm md:text-base bg-muted/20 p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-border/30">
+              <div 
+                className="prose-custom opacity-70 italic text-sm md:text-base p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border"
+                style={{ backgroundColor: "rgba(var(--muted-rgb), 0.2)", borderColor: "rgba(var(--border-rgb), 0.3)" }}
+              >
                  <h4 className="text-[10px] not-italic font-black text-muted-foreground uppercase tracking-[0.2em] mb-4 md:mb-6">Terjemahan</h4>
                  {typeof r.translation === "string"
                    ? r.translation.split("\n").filter(Boolean).map((line: string, pos: number) => (

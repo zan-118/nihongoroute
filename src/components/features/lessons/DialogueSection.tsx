@@ -104,18 +104,37 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
                 {(l.transcript || l.body)!.map((item: DialogueSpeakerItem, pos: number) => (
                   <div key={`dialogue-${pos}`} className="flex flex-col gap-2 group/dialogue">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-black text-secondary uppercase tracking-[0.2em] bg-secondary/10 px-2 py-0.5 rounded">
+                      <span 
+                        className="text-[10px] font-black text-secondary uppercase tracking-[0.2em] px-2 py-0.5 rounded"
+                        style={{ backgroundColor: "rgba(var(--secondary-rgb), 0.1)" }}
+                      >
                         {item.speaker || item.speakerName}
                       </span>
                     </div>
-                    <div className="p-4 md:p-6 rounded-2xl bg-secondary/5 border border-secondary/10 group-hover/dialogue:bg-secondary/10 transition-all relative overflow-hidden">
+                    <div 
+                      className="p-4 md:p-6 rounded-2xl border transition-all relative overflow-hidden"
+                      style={{ 
+                        backgroundColor: "rgba(var(--secondary-rgb), 0.05)", 
+                        borderColor: "rgba(var(--secondary-rgb), 0.1)" 
+                      }}
+                      // Apply hover dynamic background inline style to follow the protocol
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = "rgba(var(--secondary-rgb), 0.1)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = "rgba(var(--secondary-rgb), 0.05)";
+                      }}
+                    >
                        <div className="text-lg font-japanese font-bold text-foreground mb-2 leading-relaxed">
                          <SmartJapanese 
                              word={item.jp || item.text || ""} 
                              furigana={typeof item.furigana === "string" ? item.furigana : undefined} 
                            />
                        </div>
-                       <p className="text-sm text-muted-foreground font-medium italic border-t border-border/20 pt-3">
+                       <p 
+                         className="text-sm text-muted-foreground font-medium italic border-t pt-3"
+                         style={{ borderColor: "rgba(var(--border-rgb), 0.2)" }}
+                       >
                          &quot;{item.translation || item.id}&quot;
                        </p>
                        <div className="absolute top-2 right-2 opacity-0 group-hover/dialogue:opacity-100 transition-opacity">

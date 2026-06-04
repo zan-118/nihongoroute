@@ -35,12 +35,21 @@ export const PracticeSection: React.FC<PracticeSectionProps> = ({ lesson }) => {
 
   return (
     <section>
-      <div className="neo-card p-10 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 border-primary/20 relative overflow-hidden">
+      <div 
+        className="neo-card p-10 relative overflow-hidden"
+        style={{ 
+          backgroundImage: "linear-gradient(135deg, rgba(var(--primary-rgb), 0.1), transparent, rgba(var(--secondary-rgb), 0.1))",
+          borderColor: "rgba(var(--primary-rgb), 0.2)"
+        }}
+      >
         <div className="absolute top-0 right-0 p-12 opacity-5 rotate-12">
           <Award size={180} />
         </div>
         <div className="relative z-10 flex flex-col items-center text-center max-w-xl mx-auto">
-          <div className="size-16 rounded-2xl bg-primary/20 flex items-center justify-center text-primary mb-6">
+          <div 
+            className="size-16 rounded-2xl flex items-center justify-center text-primary mb-6"
+            style={{ backgroundColor: "rgba(var(--primary-rgb), 0.2)" }}
+          >
             <Award size={32} />
           </div>
           <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter mb-4">

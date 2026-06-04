@@ -185,6 +185,15 @@
       linear-gradient(rgba(var(--foreground-rgb),0.008) 1px, transparent 1px),
       linear-gradient(90deg, rgba(var(--foreground-rgb),0.008) 1px, transparent 1px);
   }
+
+  /* Utility: Hide scrollbar for horizontal scroll containers */
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 ::-webkit-scrollbar {

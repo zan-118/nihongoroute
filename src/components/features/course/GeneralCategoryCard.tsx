@@ -88,9 +88,48 @@ const colorMap: Record<string, {
 };
 
 // ======================
+// KOMPONEN PEMBANTU MIKRO
+// ======================
+function PreviewItem({ 
+  preview, 
+  catSlug, 
+  glowColor 
+}: { 
+  preview: { _id: string; title: string; slug: string }; 
+  catSlug: string; 
+  glowColor: string;
+}) {
+  const [hovered, setHovered] = React.useState(false);
+  return (
+    <Link
+      href={ROUTES.COURSES.LESSON(catSlug, preview.slug)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="flex items-center justify-between p-2.5 sm:p-3.5 rounded-lg sm:rounded-xl border transition-all duration-300 group/item shrink-0 min-w-0"
+      style={{
+        backgroundColor: hovered ? `rgba(${glowColor}, 0.08)` : `rgba(var(--background-rgb), 0.3)`,
+        borderColor: hovered ? `rgba(${glowColor}, 0.4)` : `rgba(var(--border-rgb), 0.4)`,
+        boxShadow: hovered ? `0 4px 16px rgba(${glowColor}, 0.08)` : 'none'
+      }}
+    >
+      <span className="text-[10px] sm:text-xs font-bold text-muted-foreground group-hover/item:text-foreground transition-colors truncate pr-3">
+        {preview.title}
+      </span>
+      <ArrowRight 
+        size={12} 
+        className="opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-1 transition-all shrink-0" 
+        style={{ color: `rgb(${glowColor})` }}
+      />
+    </Link>
+  );
+}
+
+// ======================
 // EKSEKUSI UTAMA
 // ======================
 export function GeneralCategoryCard({ cat, variants }: GeneralCategoryCardProps) {
+  const [isHovered, setIsHovered] = React.useState(false);
+  
   // Tentukan kunci warna berdasarkan judul (misal: "N5 Course" -> "N5")
   const jlptLevelKey = Object.keys(colorMap).find(key => cat.title.toUpperCase().includes(key));
   const theme = colorMap[jlptLevelKey || "general"];
@@ -102,76 +141,89 @@ export function GeneralCategoryCard({ cat, variants }: GeneralCategoryCardProps)
     <m.div 
       variants={variants} 
       className="h-full"
-      whileHover={{ y: -8 }}
+      whileHover={{ y: -4 }}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
     >
-      <Card className={`flex flex-col h-full min-h-[400px] sm:min-h-[480px] bg-card/30 backdrop-blur-xl border border-border rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden group transition-all duration-500 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] ${theme.accentBorder} glass`}>
-        <div className="p-5 sm:p-8 md:p-12 flex flex-col h-full relative">
+      <Card 
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className="flex flex-col h-full rounded-2xl sm:rounded-3xl overflow-hidden group transition-all duration-500 glass"
+        style={{
+          borderColor: isHovered ? `rgba(${theme.glowColor}, 0.3)` : `rgba(var(--border-rgb), 0.4)`,
+          boxShadow: isHovered ? `0 16px 40px rgba(${theme.glowColor}, 0.1), 0 0 20px rgba(${theme.glowColor}, 0.05)` : 'none'
+        }}
+      >
+        <div className="p-4 sm:p-6 md:p-8 lg:p-10 flex flex-col h-full relative">
           
-          {/* Cyber Glow Ambient Latar Belakang */}
+          {/* Cyber Glow Ambient Latar Belakang — Compact */}
           <div 
-            className="absolute top-0 right-0 size-[300px] blur-[120px] rounded-full -mr-20 -mt-20 pointer-events-none transition-all duration-700 opacity-20 group-hover:opacity-40"
+            className="absolute top-0 right-0 size-[150px] md:size-[250px] blur-[80px] md:blur-[100px] rounded-full -mr-12 -mt-12 pointer-events-none transition-all duration-700 opacity-15 group-hover:opacity-30"
             style={{ backgroundColor: `rgba(${theme.glowColor}, 0.2)` }}
           />
           
           {/* Header */}
-          <div className="flex justify-between items-start mb-6 sm:mb-12 relative z-10">
-            <div className="space-y-2 sm:space-y-4">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-6 sm:w-10 h-[1px]" style={{ backgroundColor: `rgba(${theme.glowColor}, 0.4)` }} />
-                <span className={`text-[8px] sm:text-[10px] font-black uppercase tracking-[0.3em] ${theme.accentText}`}>
-                  {cat.lessonCount || 0} Lessons • {isJlpt ? "JLPT TRACK" : "SPECIALIZED"}
+          <div className="flex justify-between items-start mb-3 sm:mb-6 relative z-10">
+            <div className="space-y-1 sm:space-y-2 min-w-0 flex-1">
+              <div className="flex items-center gap-2">
+                <div className="w-5 sm:w-8 h-[1px]" style={{ backgroundColor: `rgba(${theme.glowColor}, 0.4)` }} />
+                <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] ${theme.accentText}`}>
+                  {cat.lessonCount || 0} Lessons • {isJlpt ? "JLPT" : "SPECIALIZED"}
                 </span>
               </div>
-              <h4 className="text-3xl sm:text-5xl md:text-6xl font-black text-foreground tracking-tighter leading-[0.85] uppercase">
+              <h4 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-foreground tracking-tighter leading-[0.9] uppercase">
                 {cat.title}
               </h4>
             </div>
             <div 
-              className={`w-11 h-11 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-background/50 border border-border flex items-center justify-center shadow-xl transition-all duration-500 ${theme.btnHoverBg} ${theme.iconBg} shrink-0`}
+              className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg transition-all duration-500 shrink-0 border ml-3"
+              style={{
+                backgroundColor: isHovered ? `rgba(${theme.glowColor}, 0.1)` : `rgba(var(--background-rgb), 0.5)`,
+                borderColor: isHovered ? `rgba(${theme.glowColor}, 0.4)` : `rgba(var(--border-rgb), 0.6)`,
+                color: `rgb(${theme.glowColor})`
+              }}
               role="img"
               aria-label={`Ikon Kategori ${cat.title}`}
             >
-              <IconComponent className="w-5 h-5 sm:w-8 sm:h-8" />
+              <IconComponent className="w-4 h-4 sm:w-6 sm:h-6 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110" />
             </div>
           </div>
 
           {/* Deskripsi */}
-          <p className="text-xs sm:text-sm md:text-lg text-muted-foreground font-medium leading-relaxed mb-6 sm:mb-12 max-w-xl relative z-10 group-hover:text-foreground transition-colors">
+          <p className="text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed mb-4 sm:mb-6 max-w-xl relative z-10 group-hover:text-foreground transition-colors line-clamp-2 sm:line-clamp-3">
             {cat.description || "Tingkatkan kompetensi penguasaan bahasa Jepang terarah melalui kurikulum premium kami."}
           </p>
 
-          {/* Daftar Pelajaran (Previews) */}
+          {/* Daftar Pelajaran (Previews) — Compact */}
           {cat.previews && cat.previews.length > 0 && (
-            <div className="grid gap-4 mb-6 sm:mb-12 relative z-10">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <div className="mb-4 sm:mb-6 relative z-10">
+              {/* Mobile: horizontal scroll, Desktop: 2-col grid */}
+              <div className="flex sm:grid sm:grid-cols-2 gap-2 sm:gap-3 overflow-x-auto sm:overflow-visible pb-1 sm:pb-0 -mx-1 px-1 sm:mx-0 sm:px-0 scrollbar-none">
                 {cat.previews.map((preview) => (
-                  <Link
+                  <PreviewItem 
                     key={preview._id}
-                    href={ROUTES.COURSES.LESSON(cat.slug, preview.slug)}
-                    className={`flex items-center justify-between p-3.5 sm:p-5 rounded-xl sm:rounded-2xl bg-background/40 border border-border hover:bg-background/80 transition-all duration-300 group/item hover:shadow-[0_0_15px_rgba(${theme.glowColor},0.1)]`}
-                  >
-                    <span className="text-[11px] sm:text-xs font-black text-muted-foreground group-hover/item:text-foreground transition-colors truncate pr-4">
-                      {preview.title}
-                    </span>
-                    <ArrowRight 
-                      size={14} 
-                      className={`opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-1 transition-all ${theme.iconBg} shrink-0`} 
-                    />
-                  </Link>
+                    preview={preview}
+                    catSlug={cat.slug}
+                    glowColor={theme.glowColor}
+                  />
                 ))}
               </div>
             </div>
           )}
 
           {/* Tombol Aksi di Bagian Bawah */}
-          <div className="mt-auto pt-6 sm:pt-10 border-t border-border relative z-10">
+          <div className="mt-auto pt-4 sm:pt-6 border-t border-border relative z-10">
             <Link
               href={ROUTES.COURSES.CATEGORY(cat.slug)}
-              className="inline-flex items-center gap-3 sm:gap-4 px-6 py-4 sm:px-10 sm:py-5 rounded-xl sm:rounded-2xl bg-foreground text-background font-black uppercase tracking-widest text-[9px] sm:text-[10px] transition-all duration-500 shadow-xl hover:scale-105 active:scale-95 group/btn"
+              className="inline-flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-6 sm:py-3.5 rounded-lg sm:rounded-xl font-black uppercase tracking-widest text-[9px] sm:text-[10px] transition-all duration-500 active:scale-95 group/btn border"
+              style={{
+                backgroundColor: isHovered ? `rgb(${theme.glowColor})` : 'var(--foreground)',
+                color: isHovered ? 'var(--primary-foreground)' : 'var(--background)',
+                borderColor: isHovered ? `rgb(${theme.glowColor})` : 'transparent',
+                boxShadow: isHovered ? `0 8px 24px rgba(${theme.glowColor}, 0.2)` : 'none'
+              }}
             >
               <span>Jelajahi Rute</span>
-              <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
+              <ArrowRight size={12} className="group-hover/btn:translate-x-1 transition-transform duration-300" />
             </Link>
           </div>
         </div>

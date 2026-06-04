@@ -27,13 +27,13 @@ const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.1 },
+    transition: { staggerChildren: 0.08, delayChildren: 0.05 },
   },
 };
 
 const itemVariants: Variants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100 } },
+  hidden: { y: 16, opacity: 0 },
+  visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 120, damping: 20 } },
 };
 
 const ITEMS_PER_PAGE = 12;
@@ -90,41 +90,27 @@ export default function CourseCategoryClient({
   };
 
   return (
-    <div className="w-full relative overflow-hidden bg-background text-foreground transition-colors duration-500 min-h-screen pb-32">
-      {/* 1. DEKORASI LATAR BELAKANG PREMIUM */}
+    <div className="w-full relative overflow-hidden bg-background text-foreground transition-colors duration-500 min-h-screen pb-24 md:pb-32">
+      {/* 1. DEKORASI LATAR BELAKANG — Subtle Only */}
       <div className="absolute inset-0 pointer-events-none">
+        {/* Top gradient accent */}
         <div 
-          className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]" 
-          style={{ 
-            backgroundImage: `linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px)`,
-            backgroundSize: '80px 80px'
-          }}
-        />
-        
-        {/* Gumpalan Kilau Ambient menggunakan nilai HSL / RGB kustom premium */}
-        <div 
-          className="absolute top-[-10%] left-[-5%] size-[600px] rounded-full blur-[160px] animate-pulse" 
+          className="absolute top-0 left-0 w-full h-[250px] md:h-[350px]"
           style={{
-            backgroundColor: isSideQuest ? "rgba(var(--warning-rgb), 0.08)" : "rgba(var(--primary-rgb), 0.08)"
+            background: isSideQuest 
+              ? 'linear-gradient(180deg, rgba(var(--warning-rgb), 0.04) 0%, transparent 100%)'
+              : 'linear-gradient(180deg, rgba(var(--primary-rgb), 0.04) 0%, transparent 100%)'
           }}
         />
+        {/* Corner accent blob — small */}
         <div 
-          className="absolute bottom-[-5%] right-[-5%] size-[500px] rounded-full blur-[140px] animate-pulse" 
-          style={{ 
-            backgroundColor: "rgba(var(--secondary-rgb), 0.08)",
-            animationDelay: '2s' 
-          }} 
+          className="absolute bottom-0 right-0 w-[200px] md:w-[300px] h-[200px] md:h-[300px] rounded-full blur-[80px] md:blur-[100px]" 
+          style={{ backgroundColor: 'rgba(var(--secondary-rgb), 0.05)' }}
         />
-        
-        <div className="absolute top-40 left-0 w-full flex justify-center select-none overflow-hidden h-[500px]">
-          <span className="text-[25vw] font-black uppercase tracking-[-0.05em] text-foreground/[0.02] dark:text-foreground/[0.03] leading-none whitespace-nowrap italic font-japanese">
-            {data.category.title.split(' ')[0]}
-          </span>
-        </div>
       </div>
 
       <m.div
-        className="max-w-7xl mx-auto px-6 md:px-12 relative z-10 pt-24 md:pt-32"
+        className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 relative z-10 pt-4 md:pt-8"
         initial="hidden"
         animate="visible"
         variants={containerVariants}

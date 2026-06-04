@@ -39,7 +39,11 @@ function parseInlineStyles(text: string): React.ReactNode[] {
     }
     if (part.startsWith("`") && part.endsWith("`")) {
       return (
-        <code key={index} className="px-1.5 py-0.5 rounded bg-primary/5 border border-primary/10 text-primary font-mono text-xs md:text-sm font-bold mx-0.5">
+        <code 
+          key={index} 
+          className="px-1.5 py-0.5 rounded text-primary font-mono text-xs md:text-sm font-bold mx-0.5"
+          style={{ backgroundColor: "rgba(var(--primary-rgb), 0.05)", borderColor: "rgba(var(--primary-rgb), 0.1)", borderWidth: "1px" }}
+        >
           {part.slice(1, -1)}
         </code>
       );
@@ -210,37 +214,44 @@ function PedagogicalBadges({ block }: { block: ContentBlock }) {
     core_explanation: {
       label: "Penjelasan Utama",
       icon: BookOpen,
-      className: "bg-primary/10 text-primary border border-primary/20",
+      className: "text-primary",
+      style: { backgroundColor: "rgba(var(--primary-rgb), 0.1)", borderColor: "rgba(var(--primary-rgb), 0.2)", borderWidth: "1px" },
     },
     practical_scenario: {
       label: "Skenario Praktis",
       icon: Globe,
-      className: "bg-success/10 text-success border border-success/20",
+      className: "text-success",
+      style: { backgroundColor: "rgba(var(--success-rgb), 0.1)", borderColor: "rgba(var(--success-rgb), 0.2)", borderWidth: "1px" },
     },
     pitfall_alert: {
       label: "Tips & Perangkap",
       icon: AlertTriangle,
-      className: "bg-destructive/10 text-destructive border border-destructive/20",
+      className: "text-destructive",
+      style: { backgroundColor: "rgba(var(--destructive-rgb), 0.1)", borderColor: "rgba(var(--destructive-rgb), 0.2)", borderWidth: "1px" },
     },
     cultural_note: {
       label: "Catatan Budaya",
       icon: Info,
-      className: "bg-warning/10 text-warning border border-warning/20",
+      className: "text-warning",
+      style: { backgroundColor: "rgba(var(--warning-rgb), 0.1)", borderColor: "rgba(var(--warning-rgb), 0.2)", borderWidth: "1px" },
     },
   };
 
   const stageMeta = {
     introducing: {
       label: "Tahap: Pengenalan",
-      className: "bg-muted text-muted-foreground border border-border",
+      className: "text-muted-foreground border border-border bg-muted/50",
+      style: {},
     },
     guided: {
       label: "Tahap: Terbimbing",
-      className: "bg-secondary/15 text-secondary border border-secondary/20",
+      className: "text-secondary",
+      style: { backgroundColor: "rgba(var(--secondary-rgb), 0.15)", borderColor: "rgba(var(--secondary-rgb), 0.2)", borderWidth: "1px" },
     },
     autonomous: {
       label: "Tahap: Mandiri",
-      className: "bg-success/15 text-success border border-success/20",
+      className: "text-success",
+      style: { backgroundColor: "rgba(var(--success-rgb), 0.15)", borderColor: "rgba(var(--success-rgb), 0.2)", borderWidth: "1px" },
     },
   };
 
@@ -250,13 +261,19 @@ function PedagogicalBadges({ block }: { block: ContentBlock }) {
   return (
     <div className="flex flex-wrap gap-2 mb-3.5 items-center">
       {role && (
-        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${role.className}`}>
+        <span 
+          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${role.className}`}
+          style={role.style}
+        >
           <role.icon className="size-3.5" />
           {role.label}
         </span>
       )}
       {stage && (
-        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${stage.className}`}>
+        <span 
+          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${stage.className}`}
+          style={stage.style}
+        >
           <BarChart className="size-3 mr-1" />
           {stage.label}
         </span>
@@ -388,7 +405,7 @@ function TextBlock({ block }: { block: ContentBlock }) {
 // ==========================================
 function CalloutBlock({ block }: { block: ContentBlock }) {
   return (
-    <div className="flex gap-4 p-6 rounded-[2rem] border border-border bg-card/45 backdrop-blur-md shadow-[0_8px_30px_rgba(var(--primary-rgb),0.03)] glass relative overflow-hidden group hover:border-primary/30 transition-all duration-300">
+    <div className="flex gap-4 p-6 rounded-[2rem] shadow-[0_8px_30px_rgba(var(--primary-rgb),0.03)] glass relative overflow-hidden group hover:border-primary/30 transition-all duration-300">
       <div className="absolute top-0 left-0 w-1.5 h-full bg-primary" />
       <Info className="size-5 text-primary flex-shrink-0 mt-0.5" />
       <div className="space-y-2">
@@ -411,10 +428,16 @@ function CalloutBlock({ block }: { block: ContentBlock }) {
 // ==========================================
 function GrammarBlock({ block }: { block: ContentBlock }) {
   return (
-    <div className="space-y-5 border border-border rounded-[2.5rem] bg-card/20 backdrop-blur-xl shadow-[0_15px_35px_rgba(var(--primary-rgb),0.02)] glass overflow-hidden group hover:border-primary/35 transition-all duration-500">
-      <div className="bg-primary/5 px-6 py-4 border-b border-border flex justify-between items-center">
+    <div className="space-y-5 rounded-[2.5rem] shadow-[0_15px_35px_rgba(var(--primary-rgb),0.02)] glass overflow-hidden group hover:border-[rgba(var(--primary-rgb),0.35)] transition-all duration-500">
+      <div 
+        className="px-6 py-4 border-b border-border flex justify-between items-center"
+        style={{ backgroundColor: "rgba(var(--primary-rgb), 0.05)" }}
+      >
         <div>
-          <span className="text-[9px] font-black text-primary uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded">
+          <span 
+            className="text-[9px] font-black text-primary uppercase tracking-widest px-2 py-0.5 rounded"
+            style={{ backgroundColor: "rgba(var(--primary-rgb), 0.1)" }}
+          >
             Pola Kalimat (Grammar)
           </span>
           {block.title && (
@@ -429,7 +452,13 @@ function GrammarBlock({ block }: { block: ContentBlock }) {
           </div>
         )}
         {block.translation && (
-          <p className="text-sm text-muted-foreground font-medium leading-relaxed bg-muted/10 border-l-4 border-secondary/60 pl-4 py-2.5 rounded-r-xl whitespace-pre-wrap">
+          <p 
+            className="text-sm text-muted-foreground font-medium leading-relaxed pl-4 py-2.5 rounded-r-xl whitespace-pre-wrap border-l-4"
+            style={{ 
+              backgroundColor: "rgba(var(--muted-rgb), 0.1)", 
+              borderLeftColor: "rgba(var(--secondary-rgb), 0.6)" 
+            }}
+          >
             {parseInlineStyles(block.translation)}
           </p>
         )}
@@ -466,10 +495,13 @@ function DialogueBlock({ block }: { block: ContentBlock }) {
           {block.title}
         </h3>
       )}
-      <div className="space-y-4 border border-border rounded-[2rem] p-6 bg-card/10 backdrop-blur-lg shadow-[0_10px_35px_rgba(0,0,0,0.01)] glass">
+      <div className="space-y-4 rounded-[2rem] p-6 shadow-[0_10px_35px_rgba(var(--foreground-rgb),0.01)] glass">
         {lines.map((line: { speaker: string; text: string; furigana?: string }, pos: number) => (
           <div key={`dialogue-${pos}`} className="flex gap-4 items-start group">
-            <span className="text-[10px] font-black text-secondary uppercase tracking-widest bg-secondary/15 border border-secondary/25 px-2.5 py-1 rounded-xl h-fit flex-shrink-0 mt-1">
+            <span 
+              className="text-[10px] font-black text-secondary uppercase tracking-widest px-2.5 py-1 rounded-xl h-fit flex-shrink-0 mt-1 border"
+              style={{ backgroundColor: "rgba(var(--secondary-rgb), 0.15)", borderColor: "rgba(var(--secondary-rgb), 0.25)" }}
+            >
               {line.speaker}
             </span>
             <div className="flex-1 min-w-0">
@@ -528,7 +560,19 @@ function ExamplesSection({ examples }: { examples: ExampleSentence[] }) {
       </p>
       <div className="space-y-3">
         {examples.map((ex) => (
-          <div key={ex.jp} className="border border-border rounded-2xl p-4 space-y-2 bg-card/10 hover:bg-card/20 hover:border-primary/20 transition-all duration-300 group">
+          <div 
+            key={ex.jp} 
+            className="border border-border rounded-2xl p-4 space-y-2 transition-all duration-300 group"
+            style={{ backgroundColor: "rgba(var(--card-rgb), 0.1)" }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "rgba(var(--card-rgb), 0.2)";
+              e.currentTarget.style.borderColor = "rgba(var(--primary-rgb), 0.2)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "rgba(var(--card-rgb), 0.1)";
+              e.currentTarget.style.borderColor = "";
+            }}
+          >
             <div className="flex items-center justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <FuriganaDisplay

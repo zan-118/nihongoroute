@@ -55,7 +55,10 @@ export const CheatsheetSection: React.FC<CheatsheetSectionProps> = ({ cheatsheet
       <div className="space-y-12">
         {cheatsheets.map((c: CheatsheetData) => (
           <div key={c._id || c.id} className="neo-card overflow-hidden">
-            <div className="bg-warning/5 p-6 border-b border-warning/10">
+            <div 
+              className="p-6 border-b"
+              style={{ backgroundColor: "rgba(var(--warning-rgb), 0.05)", borderColor: "rgba(var(--warning-rgb), 0.1)" }}
+            >
                <p className="text-[10px] font-black text-warning uppercase tracking-widest mb-1">{c.category}</p>
                <h3 className="text-xl font-black uppercase tracking-tight">{c.title}</h3>
             </div>
@@ -63,7 +66,17 @@ export const CheatsheetSection: React.FC<CheatsheetSectionProps> = ({ cheatsheet
               {c.items && c.items.length > 0 && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
                   {c.items.map((item: CheatsheetItem) => (
-                    <div key={item.jp} className="p-5 rounded-2xl neo-inset hover:bg-warning/5 transition-all flex flex-col items-center text-center">
+                    <div 
+                      key={item.jp} 
+                      className="p-5 rounded-2xl neo-inset transition-all flex flex-col items-center text-center"
+                      // Apply hover styles inline to match rules
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = "rgba(var(--warning-rgb), 0.05)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = "";
+                      }}
+                    >
                       <span className="text-2xl font-japanese font-black mb-1">{item.jp}</span>
                       <span className="text-[10px] font-bold text-warning/80 uppercase tracking-widest mb-2">{item.romaji}</span>
                       <span className="text-xs font-medium text-muted-foreground">{item.label}</span>
