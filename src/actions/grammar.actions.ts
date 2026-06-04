@@ -35,6 +35,7 @@ export async function getPaginatedGrammar(
     }
 
     const { data, count, error } = await query
+      .order("order_number", { ascending: true, nullsFirst: false })
       .order("created_at", { ascending: false })
       .range(offset, offset + limit - 1);
 

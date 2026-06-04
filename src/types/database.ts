@@ -278,6 +278,7 @@ export interface GrammarTable {
   notes?: string;
   jlpt_level?: string;
   slug: string;
+  order_number?: number;
   examples: ExampleSentence[];
   created_at: string;
 }
