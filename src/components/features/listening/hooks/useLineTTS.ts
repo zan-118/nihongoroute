@@ -56,12 +56,21 @@ export function useLineTTS({ rate: initialRate = "medium" }: UseLineTTSOptions =
   const audioRef         = useRef<HTMLAudioElement | null>(null);
   const stopWebSpeechRef = useRef<(() => void) | null>(null);
   const isSelfPlayingRef = useRef<boolean>(false);
+  const objectUrlRef     = useRef<string | null>(null);
+
+  const cleanupObjectUrl = useCallback(() => {
+    if (objectUrlRef.current) {
+      URL.revokeObjectURL(objectUrlRef.current);
+      objectUrlRef.current = null;
+    }
+  }, []);
 
   const stopLineTTS = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.src = "";
     }
+    cleanupObjectUrl();
     stopWebSpeechRef.current?.();
     stopWebSpeechRef.current = null;
     setSpeakingIndex(-1);
@@ -94,9 +103,10 @@ export function useLineTTS({ rate: initialRate = "medium" }: UseLineTTSOptions =
     const audio = audioRef.current;
     return () => {
       if (audio) audio.pause();
+      cleanupObjectUrl();
       stopWebSpeechRef.current?.();
     };
-  }, []);
+  }, [cleanupObjectUrl]);
 
   const speakLineRaw = useCallback(async (line: any, index: number, forcePlay = false) => {
     if (!lineTTSEnabled && !forcePlay) return;
@@ -135,6 +145,7 @@ export function useLineTTS({ rate: initialRate = "medium" }: UseLineTTSOptions =
 
     const onAudioEnded = () => {
       setSpeakingIndex(-1);
+      cleanupObjectUrl();
       if (isPlayingPlaylistRef.current) {
         setPlaylistIndex(prev => {
           const next = prev + 1;
@@ -156,6 +167,10 @@ export function useLineTTS({ rate: initialRate = "medium" }: UseLineTTSOptions =
         if (!audioRef.current) audioRef.current = new Audio();
 
         const audio = audioRef.current;
+        cleanupObjectUrl();
+        if (ttsUrl.startsWith("blob:")) {
+          objectUrlRef.current = ttsUrl;
+        }
         audio.src = ttsUrl;
         audio.playbackRate = playbackRate;
 

@@ -145,6 +145,12 @@ export function useTTSReader(text: string, speaker?: string) {
       }
 
       const audio = audioRef.current;
+
+      cleanupObjectUrl();
+      if (audioUrl.startsWith("blob:")) {
+        objectUrlRef.current = audioUrl;
+      }
+
       audio.src = audioUrl;
 
       audio.onplay = () => setIsPlaying(true);

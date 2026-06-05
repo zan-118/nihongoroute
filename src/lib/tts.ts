@@ -6,17 +6,31 @@
  */
 
 // ============================================
-// DAFTAR SUARA YANG TERSEDIA
+// DAFTAR TOKOH / SUARA YANG TERSEDIA
 // ============================================
 export const TTS_VOICES = {
-  // Wanita
-  NANAMI:  "ja-JP-NanamiNeural",  // Default wanita — hangat, natural
-  MAYU:    "ja-JP-NanamiNeural",    // Map ke Nanami (Mayu tidak didukung Edge TTS)
-  SHIORI:  "ja-JP-NanamiNeural",  // Map ke Nanami (Shiori tidak didukung Edge TTS)
-  // Pria
-  KEITA:   "ja-JP-KeitaNeural",   // Default pria — dewasa, natural
-  DAICHI:  "ja-JP-KeitaNeural",  // Map ke Keita (Daichi tidak didukung Edge TTS)
-  NAOKI:   "ja-JP-KeitaNeural",   // Map ke Keita (Naoki tidak didukung Edge TTS)
+  // Wanita (VOICEVOX)
+  LARA: "lara",
+  INDAH: "indah",
+  SITI: "siti",
+  DEWI: "dewi",
+  HAYASHI: "hayashi",
+  SATO: "sato",
+  AYU: "ayu",
+  ZUNDAMON: "zundamon",
+  
+  // Pria (VOICEVOX)
+  DITO: "dito",
+  BUDI: "budi",
+  SUZUKI: "suzuki",
+  TANAKA: "tanaka",
+  YAMADA: "yamada",
+  KIMURA: "kimura",
+  ANDI: "andi",
+  FAISAL: "faisal",
+  TAKAHASHI: "takahashi",
+  KOBAYASHI: "kobayashi",
+  NAMONASHI: "namonashi",
 } as const;
 
 export type TtsVoice = typeof TTS_VOICES[keyof typeof TTS_VOICES];
@@ -27,20 +41,15 @@ export type TtsVoice = typeof TTS_VOICES[keyof typeof TTS_VOICES];
 
 // Kata kunci yang mengindikasikan pembicara wanita
 const FEMALE_KEYWORDS = [
-  // Kanji/karakter gender
   "女", "母", "姉", "妹", "奥", "彼女", "娘", "ちゃん", "chan",
-  // Profesi sering wanita dalam konteks N5-N3
   "先生",
-  // Nama wanita umum dalam materi JLPT
   "ゆき", "はな", "さき", "あおい", "みく", "ゆみ", "けいこ", "みさ",
   "Yuki", "Hana", "Saki", "Aoi", "Miku", "Yumi", "Keiko", "Misa",
 ];
 
 // Kata kunci yang mengindikasikan pembicara pria
 const MALE_KEYWORDS = [
-  // Kanji/karakter gender
   "男", "父", "兄", "弟", "夫", "彼", "くん", "君", "kun",
-  // Nama pria umum dalam materi JLPT
   "たろう", "けんじ", "ひろし", "けん", "しんじ", "だいち", "ケン",
   "Taro", "Kenji", "Hiroshi", "Ken", "Shinji", "Daichi",
 ];
@@ -54,17 +63,61 @@ const MALE_KEYWORDS = [
  * @param fallbackIndex - Index baris (dipakai untuk rotasi default pria/wanita)
  */
 export function detectVoice(speaker?: string, fallbackIndex = 0): TtsVoice {
-  const femaleVoices = [TTS_VOICES.NANAMI];
-  const maleVoices = [TTS_VOICES.KEITA];
+  const femaleVoices = [
+    TTS_VOICES.ZUNDAMON,
+    TTS_VOICES.LARA,
+    TTS_VOICES.INDAH,
+    TTS_VOICES.SITI,
+    TTS_VOICES.DEWI,
+    TTS_VOICES.HAYASHI,
+    TTS_VOICES.SATO,
+    TTS_VOICES.AYU,
+  ];
+  const maleVoices = [
+    TTS_VOICES.NAMONASHI,
+    TTS_VOICES.DITO,
+    TTS_VOICES.BUDI,
+    TTS_VOICES.SUZUKI,
+    TTS_VOICES.TANAKA,
+    TTS_VOICES.YAMADA,
+    TTS_VOICES.KIMURA,
+    TTS_VOICES.ANDI,
+    TTS_VOICES.FAISAL,
+    TTS_VOICES.TAKAHASHI,
+    TTS_VOICES.KOBAYASHI,
+  ];
   const allVoices = [...femaleVoices, ...maleVoices];
 
   if (!speaker || speaker === "???" || speaker.trim() === "") {
-    // Rotasi dinamis melintasi suara yang didukung
+    // Rotasi dinamis melintasi seluruh suara
     return allVoices[fallbackIndex % allVoices.length];
   }
 
-  // Bersihkan gelar kehormatan Jepang/Romaji agar tidak mengganggu pencocokan gender (misal: "渡辺さん" -> "渡辺")
-  const cleanSpeaker = speaker.replace(/[- ]?(さん|くん|ちゃん|様|君|sama|san|kun|chan)$/i, "").trim();
+  // 1. Bersihkan gelar kehormatan Jepang/Romaji agar tidak mengganggu pencocokan
+  const cleanSpeaker = speaker.replace(/[- ]?(さん|くん|ちゃん|様|君|sama|san|kun|chan)$/i, "").trim().toLowerCase();
+
+  // 2. Jika nama pembicara cocok langsung dengan salah satu tokoh yang didaftarkan, gunakan suara tokoh tersebut!
+  const voiceValues = Object.values(TTS_VOICES) as string[];
+  if (voiceValues.includes(cleanSpeaker)) {
+    return cleanSpeaker as TtsVoice;
+  }
+
+  // 3. Deteksi gender berdasarkan suffix/honorific asli jika tidak cocok nama langsung
+  const speakerLowerOriginal = speaker.toLowerCase().trim();
+  let preDetectedGender: "female" | "male" | null = null;
+
+  if (
+    speakerLowerOriginal.endsWith("ちゃん") ||
+    speakerLowerOriginal.endsWith("chan")
+  ) {
+    preDetectedGender = "female";
+  } else if (
+    speakerLowerOriginal.endsWith("くん") ||
+    speakerLowerOriginal.endsWith("kun") ||
+    speakerLowerOriginal.endsWith("君")
+  ) {
+    preDetectedGender = "male";
+  }
 
   // Hitung hash deterministik sederhana dari nama speaker untuk pilihan suara yang konsisten
   let hash = 0;
@@ -73,16 +126,22 @@ export function detectVoice(speaker?: string, fallbackIndex = 0): TtsVoice {
   }
   const index = Math.abs(hash);
 
-  // Daftar nama tokoh dengan gender pasti (Katakana & Romaji dari lessons/listening)
+  // Jika terdeteksi via suffix, langsung return pilihan suara ter-hash sesuai gendernya
+  if (preDetectedGender === "female") {
+    return femaleVoices[index % femaleVoices.length];
+  }
+  if (preDetectedGender === "male") {
+    return maleVoices[index % maleVoices.length];
+  }
+
+  // Daftar nama tokoh dengan gender pasti
   const EXACT_FEMALE = [
-    "Ayu", "Siti", "Dewi", "Rara", "Indah", "Sato", "Kimura", "Hayashi", "Kobayashi", "Sakura",
-    "アユ", "シティ", "デウィ", "ララ", "インダ", "佐藤", "木村", "林", "小林", "さくら", "サクラ",
-    "さとう", "きむら", "はやし", "こばやし"
+    "ayu", "siti", "dewi", "rara", "indah", "sakura", "lara", "sato", "hayashi",
+    "アユ", "シティ", "デウィ", "ララ", "インダ", "さくら", "サクラ", "さとう", "はやし"
   ];
   const EXACT_MALE = [
-    "Budi", "Faisal", "Andi", "Dito", "Adit", "Tanaka", "Suzuki", "Takahashi", "Watanabe", "Yamada", "Ken",
-    "ブディ", "ファイサル", "アンディ", "ディト", "アディット", "田中", "鈴木", "高橋", "渡辺", "山田", "ケン",
-    "たなか", "すずき", "たかはし", "わたなべ", "やまだ", "田中部長", "山田部長"
+    "budi", "faisal", "andi", "dito", "adit", "ken", "suzuki", "tanaka", "yamada", "kimura", "takahashi", "kobayashi",
+    "ブディ", "ファイサル", "アンディ", "ディト", "アディット", "ケン", "すずき", "たなか", "やまだ", "きむら", "たかはし", "こばやし"
   ];
 
   if (EXACT_FEMALE.includes(cleanSpeaker)) {
@@ -92,9 +151,8 @@ export function detectVoice(speaker?: string, fallbackIndex = 0): TtsVoice {
     return maleVoices[index % maleVoices.length];
   }
 
-  const speakerLower = cleanSpeaker.toLowerCase();
-  const isFemale = FEMALE_KEYWORDS.some(k => cleanSpeaker.includes(k) || speakerLower.includes(k.toLowerCase()));
-  const isMale   = MALE_KEYWORDS.some(k => cleanSpeaker.includes(k) || speakerLower.includes(k.toLowerCase()));
+  const isFemale = FEMALE_KEYWORDS.some(k => cleanSpeaker.includes(k));
+  const isMale   = MALE_KEYWORDS.some(k => cleanSpeaker.includes(k));
 
   if (isFemale && !isMale) {
     return femaleVoices[index % femaleVoices.length];
@@ -111,7 +169,6 @@ export function detectVoice(speaker?: string, fallbackIndex = 0): TtsVoice {
 // CACHE KEY UNTUK INDEXEDDB
 // ============================================
 function buildCacheKey(text: string, voice: TtsVoice, rate: string): string {
-  // Key deterministik agar audio yang sama tidak di-fetch ulang
   return `tts:${voice}:${rate}:${text}`;
 }
 
@@ -119,15 +176,11 @@ function buildCacheKey(text: string, voice: TtsVoice, rate: string): string {
 // FETCH AUDIO DARI API ROUTE + CACHE
 // ============================================
 
-// Map in-memory untuk de-duplikasi request yang sedang berjalan
-const pendingRequests = new Map<string, Promise<string>>();
-
 /**
  * Mengambil URL audio TTS yang bisa diputar oleh elemen <audio>.
- * Menyimpan audio ke CacheStorage, mengembalikan URL API route asli
- * (bukan blob URL) agar Range requests tetap berfungsi.
+ * Mengembalikan Blob URL lokal agar berfungsi sepenuhnya offline.
  *
- * @returns URL string yang siap dipakai sebagai src audio, atau null jika gagal
+ * @returns URL string (Blob URL / API URL) yang siap dipakai sebagai src audio, atau null jika gagal
  */
 export async function fetchTTSAudio(
   text: string,
@@ -136,47 +189,48 @@ export async function fetchTTSAudio(
 ): Promise<string | null> {
   if (!text.trim()) return null;
 
-  // Bangun URL API route — ini yang dikembalikan sebagai src
   const params = new URLSearchParams({ text, voice, rate, v: "3" });
   const apiUrl = `/api/tts?${params.toString()}`;
-
-  const cacheKey = buildCacheKey(text, voice, rate);
   const cacheName = "nihongoroute_tts_cache_v3";
 
-  // 1. Prefetch ke CacheStorage di background (non-blocking)
-  //    Ini memastikan audio tersedia offline setelah pertama kali diputar
-  if (!pendingRequests.has(cacheKey)) {
-    const prefetchPromise = (async () => {
-      try {
-        if (typeof window === "undefined" || !("caches" in window)) return;
-        const cache = await caches.open(cacheName);
-        const existing = await cache.match(apiUrl);
-        if (existing) return; // Sudah ada
+  if (typeof window === "undefined") return null;
 
-        const res = await fetch(apiUrl);
-        if (!res.ok) return;
-        await cache.put(apiUrl, res);
+  try {
+    if ("caches" in window) {
+      const cache = await caches.open(cacheName);
+      const cachedResponse = await cache.match(apiUrl);
 
-        // Batasi cache TTS maks 200 item
-        const keys = await cache.keys();
-        if (keys.length > 200) {
-          for (let i = 0; i < keys.length - 200; i++) {
-            await cache.delete(keys[i]);
-          }
-        }
-      } catch {
-        // Prefetch gagal — audio masih bisa diputar dari network
-      } finally {
-        pendingRequests.delete(cacheKey);
+      // 1. Jika ada di CacheStorage, buat Blob URL lokal
+      if (cachedResponse) {
+        const blob = await cachedResponse.blob();
+        return URL.createObjectURL(blob);
       }
-    })();
 
-    pendingRequests.set(cacheKey, prefetchPromise.then(() => apiUrl));
+      // 2. Jika tidak ada dan online, fetch dari API Route
+      if (navigator.onLine) {
+        const res = await fetch(apiUrl);
+        if (res.ok) {
+          await cache.put(apiUrl, res.clone());
+          const blob = await res.blob();
+
+          // Batasi cache TTS maks 200 item
+          const keys = await cache.keys();
+          if (keys.length > 200) {
+            for (let i = 0; i < keys.length - 200; i++) {
+              await cache.delete(keys[i]);
+            }
+          }
+
+          return URL.createObjectURL(blob);
+        }
+      }
+    }
+  } catch (err) {
+    console.warn("[TTS fetch] CacheStorage error, fallback ke URL direct:", err);
   }
 
-  // 2. Kembalikan URL API route — bukan blob URL
-  //    Browser/CacheStorage akan serve dari cache jika tersedia
-  return apiUrl;
+  // 3. Fallback jika offline dan tidak tercache, kembalikan null untuk memicu Web Speech API
+  return navigator.onLine ? apiUrl : null;
 }
 
 // ============================================
@@ -203,18 +257,30 @@ export function speakWithWebSpeech(
 
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = "ja-JP";
-  // Sesuaikan rate — suara pria sedikit lebih lambat agar terdengar lebih natural
-  utterance.rate = voice.includes("Keita") || voice.includes("Daichi") || voice.includes("Naoki")
-    ? rate * 0.9
-    : rate * 0.95;
+  
+  // Tentukan apakah suara target bergender pria
+  const maleVoices = [
+    TTS_VOICES.NAMONASHI,
+    TTS_VOICES.DITO,
+    TTS_VOICES.BUDI,
+    TTS_VOICES.SUZUKI,
+    TTS_VOICES.TANAKA,
+    TTS_VOICES.YAMADA,
+    TTS_VOICES.KIMURA,
+    TTS_VOICES.ANDI,
+    TTS_VOICES.FAISAL,
+    TTS_VOICES.TAKAHASHI,
+    TTS_VOICES.KOBAYASHI,
+  ] as string[];
+  
+  const isMaleVoice = maleVoices.includes(voice);
+  utterance.rate = isMaleVoice ? rate * 0.9 : rate * 0.95;
 
   // Pilih suara sistem yang paling mendekati gender yang diminta
   const voices = window.speechSynthesis.getVoices();
-  const isMaleVoice = [TTS_VOICES.KEITA, TTS_VOICES.DAICHI, TTS_VOICES.NAOKI].includes(voice as typeof TTS_VOICES.KEITA);
   const japaneseVoices = voices.filter(v => v.lang.startsWith("ja"));
 
   if (japaneseVoices.length > 0) {
-    // Coba temukan suara yang sesuai gender
     const genderMatch = japaneseVoices.find(v => {
       const name = v.name.toLowerCase();
       return isMaleVoice ? name.includes("male") || name.includes("otoko") : name.includes("female") || name.includes("onna");

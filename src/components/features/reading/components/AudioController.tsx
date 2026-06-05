@@ -64,6 +64,14 @@ export default function AudioController({
   const stopSpeechRef  = useRef<(() => void) | null>(null);
   /** Tracking seek agar tidak double-trigger */
   const lastSeekRef    = useRef<number | undefined>(undefined);
+  
+  const ttsObjectUrlRef = useRef<string | null>(null);
+  const cleanupTTSObjectUrl = () => {
+    if (ttsObjectUrlRef.current) {
+      URL.revokeObjectURL(ttsObjectUrlRef.current);
+      ttsObjectUrlRef.current = null;
+    }
+  };
 
   // ── Helpers ────────────────────────────────────────────
   const cleanText = (text: string) =>
@@ -86,6 +94,7 @@ export default function AudioController({
       ttsAudioRef.current.src = "";
       ttsAudioRef.current = null;
     }
+    cleanupTTSObjectUrl();
     stopSpeechRef.current?.();
     stopSpeechRef.current = null;
     if (typeof window !== "undefined" && window.speechSynthesis) {
@@ -135,6 +144,7 @@ export default function AudioController({
     return () => {
       native?.pause();
       tts?.pause();
+      cleanupTTSObjectUrl();
       stopSpeechRef.current?.();
       if (typeof window !== "undefined" && window.speechSynthesis) {
         window.speechSynthesis.cancel();
@@ -191,6 +201,10 @@ export default function AudioController({
     const ttsUrl = await fetchTTSAudio(text, TTS_VOICES.NANAMI, "medium");
 
     if (ttsUrl) {
+      cleanupTTSObjectUrl();
+      if (ttsUrl.startsWith("blob:")) {
+        ttsObjectUrlRef.current = ttsUrl;
+      }
       const ttsEl = new Audio(ttsUrl);
       ttsEl.playbackRate = playbackSpeed;
       ttsAudioRef.current = ttsEl;
@@ -206,10 +220,12 @@ export default function AudioController({
         setIsPlaying(false);
         setIsTTS(false);
         ttsAudioRef.current = null;
+        cleanupTTSObjectUrl();
       };
 
       ttsEl.onerror = () => {
         ttsAudioRef.current = null;
+        cleanupTTSObjectUrl();
         setIsLoading(false);
         setIsPlaying(true);
         setIsTTS(true);

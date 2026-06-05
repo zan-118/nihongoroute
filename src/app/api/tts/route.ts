@@ -1,27 +1,35 @@
-/**
- * @file route.ts
- * @description API Route untuk Text-to-Speech menggunakan Microsoft Edge TTS.
- * Menghasilkan audio MP3 berkualitas neural (natural, bukan robotic) dengan dukungan
- * berbagai suara Jepang pria/wanita. Gratis, tanpa API key.
- *
- * Query params:
- *   text  — teks Jepang yang akan diucapkan (maks 500 karakter)
- *   voice — nama suara Edge TTS (default: ja-JP-NanamiNeural)
- *   rate  — kecepatan: slow | medium | fast (default: medium)
- */
-
 import { MsEdgeTTS, OUTPUT_FORMAT } from "msedge-tts";
 import { NextRequest } from "next/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import crypto from "crypto";
 
 const MAX_TEXT_LENGTH = 500;
 
 const ALLOWED_VOICES = new Set([
-  "ja-JP-NanamiNeural",
-  "ja-JP-KeitaNeural",
-  "ja-JP-MayuNeural",
-  "ja-JP-DaichiNeural",
-  "ja-JP-NaokiNeural",
-  "ja-JP-ShioriNeural",
+  // Wanita
+  "lara",
+  "indah",
+  "siti",
+  "dewi",
+  "hayashi",
+  "sato",
+  "ayu",
+  "zundamon",
+  
+  // Pria
+  "dito",
+  "budi",
+  "suzuki",
+  "tanaka",
+  "yamada",
+  "kimura",
+  "andi",
+  "faisal",
+  "takahashi",
+  "kobayashi",
+  "namonashi",
+  "ritsu",
+  "ooba",
 ]);
 
 // Peta rate string ke nilai SSML yang dimengerti Edge TTS
@@ -31,10 +39,26 @@ const RATE_MAP: Record<string, string> = {
   fast:   "+20%",
 };
 
+async function generateTtsBuffer(tts: MsEdgeTTS, voice: string, ssmlRate: string, text: string): Promise<Buffer> {
+  const ssml = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="ja-JP">
+    <voice name="${voice}">
+      <prosody rate="${ssmlRate}">${text}</prosody>
+    </voice>
+  </speak>`;
+
+  const { audioStream } = await tts.rawToStream(ssml);
+
+  const chunks: Buffer[] = [];
+  for await (const chunk of audioStream) {
+    chunks.push(Buffer.from(chunk));
+  }
+  return Buffer.concat(chunks);
+}
+
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
   const text  = (searchParams.get("text") || "").trim();
-  const voice = searchParams.get("voice") || "ja-JP-NanamiNeural";
+  const voice = searchParams.get("voice") || "zundamon";
   const rate  = searchParams.get("rate")  || "medium";
 
   if (!text) {
@@ -49,30 +73,99 @@ export async function GET(req: NextRequest) {
 
   const ssmlRate = RATE_MAP[rate] ?? "0%";
 
+  // 1. Hitung hash MD5 unik untuk kombinasi text + voice + rate
+  const hash = crypto
+    .createHash("md5")
+    .update(`${text}_${voice}_${rate}`)
+    .digest("hex");
+
+  const supabase = createAdminClient();
+
+  try {
+    // 2. Cek apakah metadata cache ada di Database
+    const { data: cached } = await supabase
+      .from("tts_cache")
+      .select("audio_url")
+      .eq("id", hash)
+      .maybeSingle();
+
+    if (cached?.audio_url) {
+      // Coba download file audio dari Storage
+      const { data: fileData, error: downloadError } = await supabase
+        .storage
+        .from("tts-cache")
+        .download(`${hash}.mp3`);
+
+      if (!downloadError && fileData) {
+        const audioBuffer = await fileData.arrayBuffer();
+        return new Response(new Uint8Array(audioBuffer), {
+          headers: {
+            "Content-Type": "audio/mpeg",
+            "Cache-Control": "public, max-age=604800, immutable",
+          },
+        });
+      }
+    }
+  } catch (err) {
+    console.error("[TTS API] Gagal membaca cache dari database/storage:", err);
+  }
+
+  // 3. Cache miss: generate baru via 2 suara Edge TTS yang gratis & berfungsi
   try {
     const tts = new MsEdgeTTS();
-    await tts.setMetadata(voice, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
+    // Petakan suara tokoh VOICEVOX asli ke suara Edge gratis yang didukung (Keita untuk pria, Nanami untuk wanita)
+    const maleVoices = new Set([
+      "dito", "budi", "suzuki", "tanaka", "yamada", "kimura", "andi", "faisal", "takahashi", "kobayashi", "namonashi", "ritsu", "ooba"
+    ]);
+    const edgeVoice = maleVoices.has(voice) ? "ja-JP-KeitaNeural" : "ja-JP-NanamiNeural";
 
-    // Bungkus teks dengan SSML prosody agar kecepatan bisa dikontrol
-    const ssml = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="ja-JP">
-      <voice name="${voice}">
-        <prosody rate="${ssmlRate}">${text}</prosody>
-      </voice>
-    </speak>`;
+    await tts.setMetadata(edgeVoice, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
 
-    const { audioStream } = await tts.rawToStream(ssml);
-
-    // Kumpulkan semua chunk stream ke buffer
-    const chunks: Buffer[] = [];
-    for await (const chunk of audioStream) {
-      chunks.push(Buffer.from(chunk));
+    let audioBuffer: Buffer;
+    try {
+      audioBuffer = await generateTtsBuffer(tts, edgeVoice, ssmlRate, text);
+    } catch (err) {
+      console.error(`[TTS API] Gagal generate via Edge TTS dengan suara ${edgeVoice}:`, err);
+      throw err;
     }
-    const audioBuffer = Buffer.concat(chunks);
+
+    // 4. Unggah hasil generate ke Supabase Storage (non-blocking agar client tidak menunggu)
+    //    dan daftarkan metadata di DB cache
+    (async () => {
+      try {
+        const { error: uploadError } = await supabase
+          .storage
+          .from("tts-cache")
+          .upload(`${hash}.mp3`, audioBuffer, {
+            contentType: "audio/mpeg",
+            cacheControl: "604800",
+            upsert: true,
+          });
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase
+          .storage
+          .from("tts-cache")
+          .getPublicUrl(`${hash}.mp3`);
+
+        await supabase
+          .from("tts_cache")
+          .upsert({
+            id: hash,
+            text,
+            voice,
+            rate,
+            audio_url: publicUrl,
+          });
+      } catch (uploadErr) {
+        console.error("[TTS API] Gagal menyimpan cache baru ke Supabase:", uploadErr);
+      }
+    })();
 
     return new Response(new Uint8Array(audioBuffer), {
       headers: {
         "Content-Type": "audio/mpeg",
-        // Cache 7 hari di browser & CDN — konten audio statis
         "Cache-Control": "public, max-age=604800, immutable",
       },
     });
