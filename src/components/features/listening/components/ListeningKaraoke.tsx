@@ -9,11 +9,13 @@
 
 import React, { useRef, useEffect, useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { Languages, Repeat, Volume2, VolumeX, Loader2, Gauge, Play, Pause } from "lucide-react";
+import { Languages, Repeat, Volume2, VolumeX, Loader2, Gauge, Play, Pause, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TranscriptLine } from "../types";
 import { useLineTTS } from "../hooks/useLineTTS";
 import { cn } from "@/lib/utils";
+import { useUIStore } from "@/store/useUIStore";
+import AudioController from "@/components/features/reading/components/AudioController";
 
 interface PortableTextNode {
   text?: string;
@@ -24,6 +26,9 @@ interface ListeningKaraokeProps {
   transcript: TranscriptLine[];
   activeIndex: number;
   seekToLine: (startTime: number) => void;
+  audioUrl?: string;
+  onTimeUpdate?: (currentTime: number) => void;
+  externalSeek?: number;
 }
 
 function extractLineText(text: TranscriptLine["text"]): string {
@@ -42,7 +47,11 @@ export default function ListeningKaraoke({
   transcript,
   activeIndex,
   seekToLine,
+  audioUrl,
+  onTimeUpdate,
+  externalSeek,
 }: ListeningKaraokeProps) {
+  const listeningState = useUIStore(state => state.listeningState);
   const [showTranslation, setShowTranslation] = useState(false);
   const [loopingIndex, setLoopingIndex] = useState<number>(-1);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -65,10 +74,22 @@ export default function ListeningKaraoke({
 
   const currentActiveIndex = isPlayingPlaylist ? playlistIndex : activeIndex;
 
-  // Auto-scroll ke baris aktif
+  // Auto-scroll ke baris aktif tanpa menggeser window utama (anti-jumping)
   useEffect(() => {
     if (activeLineRef.current && scrollContainerRef.current) {
-      activeLineRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      const parent = scrollContainerRef.current;
+      const child = activeLineRef.current;
+      
+      const parentRect = parent.getBoundingClientRect();
+      const childRect = child.getBoundingClientRect();
+      
+      const relativeTop = childRect.top - parentRect.top + parent.scrollTop;
+      const targetScrollTop = relativeTop - (parentRect.height / 2) + (childRect.height / 2);
+      
+      parent.scrollTo({
+        top: targetScrollTop,
+        behavior: "smooth"
+      });
     }
   }, [currentActiveIndex]);
 
@@ -117,90 +138,53 @@ export default function ListeningKaraoke({
     return sides;
   }, [transcript]);
 
-  const isIdle = activeIndex === -1;
+  const isIdle = activeIndex === -1 && !isPlayingPlaylist && speakingIndex === -1;
+  const isMonologue = React.useMemo(() => {
+    return Object.keys(speakerSides).length <= 1;
+  }, [speakerSides]);
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto p-2 sm:p-4 md:p-6">
-      {/* Header Kontrol Transkrip */}
-      <div className="flex items-center justify-between px-2">
-        <div className="flex items-center gap-3">
-          <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50">
-            Transkrip Interaktif
-          </h3>
+      {/* Panel Kontrol Premium (Cyber-glass Control Card) */}
+      <div className="border border-border/80 bg-card/45 backdrop-blur-xl rounded-[2.5rem] p-6 shadow-[0_0_50px_rgba(var(--primary-rgb),0.03)] flex flex-col gap-6 relative overflow-hidden">
+        {/* Background Accent */}
+        <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full pointer-events-none" />
 
-          {/* Indikator idle */}
-          <AnimatePresence>
-            {isIdle && (
-              <m.span
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-muted/50 border border-border"
-              >
-                <span className="size-1.5 rounded-full bg-muted-foreground/40 animate-pulse" />
-                <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground/40">
-                  Menunggu...
-                </span>
-              </m.span>
-            )}
-          </AnimatePresence>
-        </div>
-
-        <div className="flex items-center gap-2">
-          {/* Putar seluruh percakapan via TTS */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              if (isPlayingPlaylist) {
-                pausePlaylist();
-              } else {
-                playPlaylist(transcript, 0);
-              }
-            }}
-            title={isPlayingPlaylist ? "Hentikan Suara AI" : "Putar Suara AI (Semua)"}
-            className={cn(
-              "rounded-full gap-2 transition-all",
-              isPlayingPlaylist
-                ? "bg-success/10 text-success border border-success/20"
-                : "text-muted-foreground hover:bg-background/5"
-            )}
-          >
-            {isPlayingPlaylist ? <Pause size={13} className="animate-pulse" /> : <Play size={13} />}
-            <span className="text-[10px] font-bold uppercase tracking-widest">
-              {isPlayingPlaylist ? "Jeda AI" : "Putar AI"}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/60 pb-4">
+          <div className="flex items-center gap-3">
+            <Sparkles size={16} className="text-primary animate-pulse" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
+              Pengaturan & Transkrip
             </span>
-          </Button>
 
-          {/* Toggle TTS per baris */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleLineTTS}
-            title={lineTTSEnabled ? "Nonaktifkan AI Voice per baris" : "Aktifkan AI Voice per baris"}
-            className={cn(
-              "rounded-full gap-2 transition-all",
-              lineTTSEnabled
-                ? "bg-primary/10 text-primary border border-primary/20"
-                : "text-muted-foreground hover:bg-background/5"
-            )}
-          >
-            {lineTTSEnabled ? <Volume2 size={13} /> : <VolumeX size={13} />}
-            <span className="text-[10px] font-bold uppercase tracking-widest">
-              {lineTTSEnabled ? "AI Voice ON" : "AI Voice"}
-            </span>
-          </Button>
+            {/* Indikator idle */}
+            <AnimatePresence>
+              {isIdle && (
+                <m.span
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-muted/50 border border-border"
+                >
+                  <span className="size-1.5 rounded-full bg-muted-foreground/40 animate-pulse" />
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground/40">
+                    Menunggu...
+                  </span>
+                </m.span>
+              )}
+            </AnimatePresence>
+          </div>
 
-          {/* Speed selector — hanya tampil saat AI Voice aktif */}
-          {lineTTSEnabled && (
-            <div className="flex items-center gap-1 p-1 rounded-full bg-muted/30 border border-border">
+          <div className="flex flex-wrap items-center gap-2 justify-start md:justify-end">
+            {/* Speed selector — langsung aktif untuk AI Voice */}
+            <div className="flex items-center gap-1 p-1 rounded-xl bg-muted/20 border border-border h-9">
               {(["slow", "medium", "fast"] as const).map(r => (
                 <button
                   key={r}
                   type="button"
                   onClick={() => setRate(r)}
                   className={cn(
-                    "px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider transition-all",
+                    "px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider transition-all h-full flex items-center",
                     rate === r
                       ? "bg-primary text-primary-foreground shadow-sm"
                       : "text-muted-foreground hover:text-foreground"
@@ -210,25 +194,51 @@ export default function ListeningKaraoke({
                 </button>
               ))}
             </div>
-          )}
 
-          {/* Toggle terjemahan */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowTranslation(!showTranslation)}
-            className={cn(
-              "rounded-full gap-2 transition-all",
-              showTranslation
-                ? "bg-primary/10 text-primary border border-primary/20"
-                : "text-muted-foreground hover:bg-background/5"
-            )}
-          >
-            <Languages size={13} />
-            <span className="text-[10px] font-bold uppercase tracking-widest">
-              {showTranslation ? "Sembunyikan" : "Terjemahan"}
-            </span>
-          </Button>
+            {/* Toggle terjemahan */}
+            <Button
+              variant={showTranslation ? "default" : "outline"}
+              size="sm"
+              onClick={() => setShowTranslation(!showTranslation)}
+              className={cn(
+                "rounded-xl gap-1.5 h-9 text-[10px] font-black uppercase tracking-wider transition-all border border-border/85",
+                showTranslation
+                  ? "bg-success hover:bg-success/90 text-success-foreground shadow-md shadow-success/20 border-transparent"
+                  : "bg-muted/10 text-muted-foreground hover:text-foreground hover:bg-muted/20"
+              )}
+            >
+              <Languages size={13} />
+              <span>{showTranslation ? "Terjemahan: ON" : "Terjemahan: OFF"}</span>
+            </Button>
+          </div>
+        </div>
+
+        {/* Audio Player Section */}
+        <div className="w-full flex flex-col gap-2">
+          <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground mb-1">
+            {audioUrl ? "Pemutar Audio Utama" : "Pemutar Percakapan AI"}
+          </span>
+          <div className="w-full rounded-2xl bg-muted/10 border border-border/40 p-1">
+            <AudioController
+              audioUrl={audioUrl}
+              textToSpeak={listeningState.textToSpeak || ""}
+              onTimeUpdate={onTimeUpdate}
+              externalSeek={externalSeek}
+              compact={false}
+              header={true}
+              isPlayingOverride={!audioUrl ? isPlayingPlaylist : undefined}
+              onPlayPause={() => {
+                if (!audioUrl) {
+                  if (isPlayingPlaylist) {
+                    pausePlaylist();
+                  } else {
+                    playPlaylist(transcript, 0);
+                  }
+                  return true;
+                }
+              }}
+            />
+          </div>
         </div>
       </div>
 
@@ -241,6 +251,9 @@ export default function ListeningKaraoke({
           ref={scrollContainerRef}
           className="relative max-h-[600px] overflow-y-auto pr-2 custom-scrollbar flex flex-col gap-4 z-10"
         >
+          {/* Spacer atas agar baris pertama tidak terhalang gradient mask */}
+          <div className="h-20 shrink-0" />
+
           {transcript.map((line, index) => {
             const isActive   = index === currentActiveIndex;
             const isLooping  = loopingIndex === index;
@@ -256,7 +269,18 @@ export default function ListeningKaraoke({
             let isLeft = false;
             let isRight = false;
 
-            if (speaker) {
+            if (isMonologue) {
+              // Layout untuk Monolog (Satu pembicara / Tanpa speaker): terpusat dan melebar rapi (seperti paragraf bacaan)
+              align = "self-center items-center text-left";
+              bubbleClass = cn(
+                "rounded-2xl w-full max-w-[95%] md:max-w-[90%]",
+                "bg-muted/10 border-border/80 hover:bg-muted/20 hover:border-border",
+                isActive && "bg-[rgba(var(--primary-rgb),0.03)] border-[rgba(var(--primary-rgb),0.3)] shadow-[0_0_20px_rgba(var(--primary-rgb),0.03)] scale-[1.002]"
+              );
+              speakerAccent = isActive ? "bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.8)]" : "bg-muted-foreground/30";
+              speakerTextColor = isActive ? "text-primary" : "text-muted-foreground/60";
+            } else if (speaker) {
+              // Layout untuk Dialog (Dua atau lebih pembicara): berselang-seling kiri dan kanan
               const side = speakerSides[speaker];
               if (side === "left") {
                 isLeft = true;
@@ -283,7 +307,7 @@ export default function ListeningKaraoke({
               }
             }
 
-            if (!isLeft && !isRight) {
+            if (!isMonologue && !isLeft && !isRight) {
               bubbleClass = cn(
                 "rounded-2xl max-w-[90%]",
                 "bg-muted/30 border-border hover:bg-muted/50",
@@ -310,7 +334,7 @@ export default function ListeningKaraoke({
                     }
                   }}
                   className={cn(
-                    "group relative p-4 sm:p-5 md:p-6 cursor-pointer transition-all duration-300 border",
+                    "group relative p-4 pr-16 sm:p-5 sm:pr-20 md:p-6 md:pr-24 cursor-pointer transition-all duration-300 border",
                     bubbleClass,
                     isLooping  && "ring-2 ring-primary/40 ring-offset-2 ring-offset-card",
                     isSpeaking && "ring-2 ring-success/50 ring-offset-2 ring-offset-card"
@@ -444,6 +468,8 @@ export default function ListeningKaraoke({
               </div>
             );
           })}
+          {/* Spacer bawah agar baris terakhir tidak terhalang gradient mask */}
+          <div className="h-28 shrink-0" />
         </div>
 
         {/* Gradient masking atas & bawah */}

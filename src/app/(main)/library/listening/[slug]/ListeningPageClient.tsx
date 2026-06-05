@@ -16,7 +16,6 @@ import ListeningQuiz from "@/components/features/listening/components/ListeningQ
 import { useListeningSync } from "@/components/features/listening/hooks/useListeningSync";
 import { useUserStore } from "@/store/useUserStore";
 import { useUIStore } from "@/store/useUIStore";
-import AudioController from "@/components/features/reading/components/AudioController";
 
 // Komponen Pendukung
 import { ListeningHeader } from "@/components/features/listening/components/ListeningHeader";
@@ -80,7 +79,7 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
   const hasQuiz = (data.quiz?.length ?? 0) > 0;
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
+    <div className="min-h-screen bg-background text-foreground pb-20 relative overflow-hidden">
       {/* Latar Belakang Ambient Premium */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-0 left-1/4 size-[500px] bg-primary/5 blur-[120px] rounded-full" />
@@ -100,6 +99,9 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
             transcript={data.transcript} 
             activeIndex={activeIndex}
             seekToLine={seekToLine}
+            audioUrl={data.audioUrl}
+            onTimeUpdate={handleTimeUpdate}
+            externalSeek={externalSeek || 0}
           />
 
           {hasQuiz && (
@@ -120,14 +122,6 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
           )}
         </div>
       </main>
-
-      {/* Floating Bottom Audio Player (Mobile-First Spotify Style) */}
-      <AudioController
-        audioUrl={data.audioUrl}
-        textToSpeak={listeningState.textToSpeak || ""}
-        onTimeUpdate={handleTimeUpdate}
-        externalSeek={externalSeek || 0}
-      />
     </div>
   );
 }

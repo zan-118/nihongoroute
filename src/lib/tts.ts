@@ -33,6 +33,52 @@ export const TTS_VOICES = {
   NAMONASHI: "namonashi",
 } as const;
 
+export const SPEAKER_MAP: Record<string, TtsVoice> = {
+  // Katakana / Kanji -> VOICEVOX Voice Name
+  "ディト": TTS_VOICES.DITO,
+  "dito": TTS_VOICES.DITO,
+  "小林": TTS_VOICES.KOBAYASHI,
+  "kobayashi": TTS_VOICES.KOBAYASHI,
+  "こばやし": TTS_VOICES.KOBAYASHI,
+  "ララ": TTS_VOICES.LARA,
+  "lara": TTS_VOICES.LARA,
+  "鈴木": TTS_VOICES.SUZUKI,
+  "suzuki": TTS_VOICES.SUZUKI,
+  "すずき": TTS_VOICES.SUZUKI,
+  "田中": TTS_VOICES.TANAKA,
+  "tanaka": TTS_VOICES.TANAKA,
+  "たなか": TTS_VOICES.TANAKA,
+  "インダ": TTS_VOICES.INDAH,
+  "indah": TTS_VOICES.INDAH,
+  "山田": TTS_VOICES.YAMADA,
+  "yamada": TTS_VOICES.YAMADA,
+  "やまだ": TTS_VOICES.YAMADA,
+  "佐藤": TTS_VOICES.SATO,
+  "sato": TTS_VOICES.SATO,
+  "さとう": TTS_VOICES.SATO,
+  "木村": TTS_VOICES.KIMURA,
+  "kimura": TTS_VOICES.KIMURA,
+  "きむら": TTS_VOICES.KIMURA,
+  "ブディ": TTS_VOICES.BUDI,
+  "budi": TTS_VOICES.BUDI,
+  "アンディ": TTS_VOICES.ANDI,
+  "andi": TTS_VOICES.ANDI,
+  "シティ": TTS_VOICES.SITI,
+  "siti": TTS_VOICES.SITI,
+  "デウィ": TTS_VOICES.DEWI,
+  "dewi": TTS_VOICES.DEWI,
+  "ファイサル": TTS_VOICES.FAISAL,
+  "faisal": TTS_VOICES.FAISAL,
+  "林": TTS_VOICES.HAYASHI,
+  "hayashi": TTS_VOICES.HAYASHI,
+  "はやし": TTS_VOICES.HAYASHI,
+  "高橋": TTS_VOICES.TAKAHASHI,
+  "takahashi": TTS_VOICES.TAKAHASHI,
+  "たかはし": TTS_VOICES.TAKAHASHI,
+  "アユ": TTS_VOICES.AYU,
+  "ayu": TTS_VOICES.AYU,
+};
+
 export type TtsVoice = typeof TTS_VOICES[keyof typeof TTS_VOICES];
 
 // ============================================
@@ -95,6 +141,11 @@ export function detectVoice(speaker?: string, fallbackIndex = 0): TtsVoice {
 
   // 1. Bersihkan gelar kehormatan Jepang/Romaji agar tidak mengganggu pencocokan
   const cleanSpeaker = speaker.replace(/[- ]?(さん|くん|ちゃん|様|君|sama|san|kun|chan)$/i, "").trim().toLowerCase();
+
+  // 1b. Cek kamus pemetaan eksplisit
+  if (SPEAKER_MAP[cleanSpeaker]) {
+    return SPEAKER_MAP[cleanSpeaker];
+  }
 
   // 2. Jika nama pembicara cocok langsung dengan salah satu tokoh yang didaftarkan, gunakan suara tokoh tersebut!
   const voiceValues = Object.values(TTS_VOICES) as string[];

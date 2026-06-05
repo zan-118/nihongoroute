@@ -11,7 +11,7 @@
 // ======================
 import React, { useState } from "react";
 import { AnimatePresence, m } from "framer-motion";
-import { Minimize2 } from "lucide-react";
+import { Minimize2, Sparkles, Type, Languages } from "lucide-react";
 import { ReadingProvider } from "@/components/features/reading/components/ReadingContext";
 import { cn } from "@/lib/utils";
 import { useReadingLogic } from "@/components/features/reading/hooks/useReadingLogic";
@@ -21,11 +21,11 @@ import { useUserStore } from "@/store/useUserStore";
 import { useUIStore } from "@/store/useUIStore";
 import { formatQuizzes } from "@/lib/utils/lesson-utils";
 import QuizEngine from "@/components/features/exams/quiz-engine/QuizEngine";
+import AudioController from "@/components/features/reading/components/AudioController";
 
 // Komponen Pendukung
 import { ReadingNavbar } from "@/components/features/reading/components/ReadingNavbar";
 import { ReadingArticle } from "@/components/features/reading/components/ReadingArticle";
-import { ReadingMobileToolbar } from "@/components/features/reading/components/ReadingMobileToolbar";
 
 // ======================
 // TIPE DATA
@@ -164,6 +164,98 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
 
 
 
+        {/* Panel Kontrol Premium (Notion/Medium Reader style) */}
+        {!isZenMode && (
+          <div className="border border-border/80 bg-card/40 backdrop-blur-xl rounded-[2rem] p-6 shadow-[0_0_50px_rgba(var(--primary-rgb),0.03)] mb-8 flex flex-col gap-6 relative overflow-hidden">
+            {/* Background Accent */}
+            <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full pointer-events-none" />
+            
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/60 pb-4">
+              <div className="flex items-center gap-2">
+                <Sparkles size={16} className="text-primary animate-pulse" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
+                  Pengaturan Membaca
+                </span>
+              </div>
+              
+              {/* Pill buttons for Text & Translation Settings */}
+              <div className="flex flex-wrap items-center gap-3">
+                {/* Mode Selector */}
+                <div className="flex flex-wrap items-center gap-1 p-1 rounded-xl bg-muted/20 border border-border">
+                  {modes.map((m) => (
+                    <Button
+                      key={m.id}
+                      variant={mode === m.id ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => setMode(m.id as "kanji" | "furigana" | "romaji" | "hiragana")}
+                      className={cn(
+                        "rounded-lg px-2.5 py-1.5 h-auto text-[10px] font-black uppercase tracking-wider transition-all",
+                        mode === m.id && "shadow-md shadow-primary/20 text-primary-foreground bg-primary"
+                      )}
+                    >
+                      {React.createElement(m.icon, { size: 12, className: "mr-1" })}
+                      {m.label}
+                    </Button>
+                  ))}
+                </div>
+
+                {/* Font Size Selector */}
+                <div className="flex items-center gap-1 p-1 rounded-xl bg-muted/20 border border-border">
+                  {(["standard", "large", "extra"] as const).map((sz) => (
+                    <Button
+                      key={sz}
+                      variant={fontSize === sz ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => setFontSize(sz)}
+                      className={cn(
+                        "rounded-lg px-3 py-1.5 h-auto text-[10px] font-black uppercase tracking-wider transition-all",
+                        fontSize === sz && "shadow-md shadow-primary/20 text-primary-foreground bg-primary"
+                      )}
+                    >
+                      <Type size={12} className="mr-1" />
+                      {sz === "standard" ? "Standard" : sz === "large" ? "Besar" : "Ekstra"}
+                    </Button>
+                  ))}
+                </div>
+
+                {/* Translation Toggle */}
+                <Button
+                  variant={showTranslation ? "default" : "outline"}
+                  size="sm"
+                  onClick={toggleTranslation}
+                  className={cn(
+                    "rounded-xl px-4 py-1.5 h-9 text-[10px] font-black uppercase tracking-wider transition-all gap-1.5 border border-border/85",
+                    showTranslation 
+                      ? "bg-success hover:bg-success/90 text-success-foreground shadow-md shadow-success/20 border-transparent" 
+                      : "bg-muted/10 text-muted-foreground hover:text-foreground hover:bg-muted/20"
+                  )}
+                >
+                  <Languages size={14} />
+                  <span>Terjemahan: {showTranslation ? "ON" : "OFF"}</span>
+                </Button>
+              </div>
+            </div>
+
+            {/* Audio Section */}
+            {!!(data.audioUrl || (!data.isTTSDisabled && typeof data.body === "string" ? data.body : undefined)) && (
+              <div className="w-full flex flex-col gap-2">
+                <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground mb-1">
+                  Audio & Pengisi Suara (TTS)
+                </span>
+                <div className="w-full rounded-2xl bg-muted/10 border border-border/40 p-1">
+                  <AudioController
+                    audioUrl={data.audioUrl}
+                    textToSpeak={typeof data.body === "string" ? data.body : undefined}
+                    isTTSDisabled={data.isTTSDisabled}
+                    compact={false}
+                    header={true}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Artikel */}
         <ReadingArticle
           paragraphs={paragraphs}
@@ -194,20 +286,6 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
           </div>
         )}
       </div>
-
-      {/* Bilah Alat Seluler */}
-      <AnimatePresence>
-        {!isZenMode && (
-          <ReadingMobileToolbar
-            onFontSizeToggle={toggleFontSize}
-            showTranslation={showTranslation}
-            onTranslationToggle={toggleTranslation}
-            audioUrl={data.audioUrl}
-            textToSpeak={typeof data.body === "string" ? data.body : undefined}
-            isTTSDisabled={data.isTTSDisabled}
-          />
-        )}
-      </AnimatePresence>
     </div>
   );
 }

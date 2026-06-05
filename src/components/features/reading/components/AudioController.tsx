@@ -6,7 +6,7 @@
  * Dua sumber audio dipisah dengan ref terpisah agar tidak konflik.
  */
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Play, Pause, Square, AlertCircle, RotateCcw, Loader2, Gauge } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -25,6 +25,8 @@ interface AudioControllerProps {
   header?: boolean;
   onTimeUpdate?: (time: number) => void;
   externalSeek?: number;
+  onPlayPause?: () => boolean | void;
+  isPlayingOverride?: boolean;
 }
 
 const SPEED_OPTIONS = [0.5, 0.75, 1, 1.25, 1.5] as const;
@@ -41,6 +43,8 @@ export default function AudioController({
   header = false,
   onTimeUpdate,
   externalSeek,
+  onPlayPause,
+  isPlayingOverride,
 }: AudioControllerProps) {
 
   // ── State ──────────────────────────────────────────────
@@ -64,6 +68,7 @@ export default function AudioController({
   const stopSpeechRef  = useRef<(() => void) | null>(null);
   /** Tracking seek agar tidak double-trigger */
   const lastSeekRef    = useRef<number | undefined>(undefined);
+  const ttsRequestIdRef = useRef(0);
   
   const ttsObjectUrlRef = useRef<string | null>(null);
   const cleanupTTSObjectUrl = () => {
@@ -84,7 +89,8 @@ export default function AudioController({
   };
 
   // ── Stop semua ─────────────────────────────────────────
-  const stopAll = () => {
+  const stopAll = useCallback(() => {
+    ttsRequestIdRef.current++;
     if (nativeAudioRef.current) {
       nativeAudioRef.current.pause();
       nativeAudioRef.current.currentTime = 0;
@@ -104,7 +110,7 @@ export default function AudioController({
     setIsTTS(false);
     setIsLoading(false);
     setCurrentTime(0);
-  };
+  }, []);
 
   // ── Effects ────────────────────────────────────────────
   // Playback speed → native audio
@@ -135,7 +141,7 @@ export default function AudioController({
     return () => {
       window.removeEventListener("nihongoroute_pause_native_audio", handlePauseAll);
     };
-  }, []);
+  }, [stopAll]);
 
   // Cleanup saat unmount
   useEffect(() => {
@@ -195,10 +201,14 @@ export default function AudioController({
     // Mulai TTS baru
     stopAll();
     setIsLoading(true);
+    ttsRequestIdRef.current++;
+    const myRequestId = ttsRequestIdRef.current;
     window.dispatchEvent(new CustomEvent("nihongoroute_pause_line_tts"));
 
     // fetchTTSAudio mengembalikan URL API route — bukan blob URL
-    const ttsUrl = await fetchTTSAudio(text, TTS_VOICES.NANAMI, "medium");
+    const ttsUrl = await fetchTTSAudio(text, TTS_VOICES.ZUNDAMON, "medium");
+
+    if (myRequestId !== ttsRequestIdRef.current) return;
 
     if (ttsUrl) {
       cleanupTTSObjectUrl();
@@ -230,7 +240,7 @@ export default function AudioController({
         setIsPlaying(true);
         setIsTTS(true);
         stopSpeechRef.current = speakWithWebSpeech(
-          text, TTS_VOICES.NANAMI, playbackSpeed,
+          text, TTS_VOICES.ZUNDAMON, playbackSpeed,
           () => { setIsPlaying(false); setIsTTS(false); },
           () => { setError("Gagal AI Voice."); setIsPlaying(false); setIsTTS(false); }
         );
@@ -243,7 +253,7 @@ export default function AudioController({
       setIsPlaying(true);
       setIsTTS(true);
       stopSpeechRef.current = speakWithWebSpeech(
-        text, TTS_VOICES.NANAMI, playbackSpeed,
+        text, TTS_VOICES.ZUNDAMON, playbackSpeed,
         () => { setIsPlaying(false); setIsTTS(false); },
         () => { setError("Gagal AI Voice."); setIsPlaying(false); setIsTTS(false); }
       );
@@ -252,6 +262,11 @@ export default function AudioController({
 
   // ── Play/Pause dispatch ────────────────────────────────
   const handlePlayPause = () => {
+    if (onPlayPause) {
+      const preventDefault = onPlayPause();
+      if (preventDefault) return;
+    }
+
     if (audioUrl?.trim()) toggleNativeAudio();
     else if (!isTTSDisabled) toggleTTS();
     else setError("Audio dinonaktifkan.");
@@ -273,10 +288,11 @@ export default function AudioController({
   };
 
   // ── Icon ───────────────────────────────────────────────
+  const isPlayingActive = isPlayingOverride !== undefined ? isPlayingOverride : isPlaying;
   const iconSize = compact ? 20 : header ? 20 : 28;
   const PlayIcon = isLoading
     ? <Loader2 size={compact ? 18 : 24} className="animate-spin" />
-    : isPlaying
+    : isPlayingActive
       ? <Pause size={iconSize} fill="currentColor" />
       : <Play  size={iconSize} fill="currentColor" className={!compact ? "ml-1" : undefined} />;
 
@@ -310,7 +326,7 @@ export default function AudioController({
           size="icon"
           disabled={isLoading}
           onClick={handlePlayPause}
-          aria-label={isLoading ? "Memuat..." : isPlaying ? "Pause" : "Putar"}
+          aria-label={isLoading ? "Memuat..." : isPlayingActive ? "Pause" : "Putar"}
           className={cn(
             "rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-all duration-300 active:scale-90 shrink-0",
             compact ? "w-10 h-10" : header ? "w-10 h-10" : "w-14 h-14",
@@ -351,7 +367,7 @@ export default function AudioController({
           <div className="flex flex-col flex-1">
             <span className="text-[10px] font-black uppercase tracking-widest text-primary/70">AI Smart Voice</span>
             <span className="text-xs font-bold text-foreground">
-              {isLoading ? "Memuat..." : isPlaying ? "Membaca..." : "Siap"}
+              {isLoading ? "Memuat..." : isPlayingActive ? "Membaca..." : "Siap"}
             </span>
           </div>
         )}
@@ -389,7 +405,7 @@ export default function AudioController({
               {audioUrl ? "Native" : "AI Smart Voice"}
             </span>
             <span className="text-xs font-bold text-foreground line-clamp-1">
-              {isLoading ? "Memuat..." : isPlaying ? (isTTS ? "Membaca..." : "Memutar...") : "Siap?"}
+              {isLoading ? "Memuat..." : isPlayingActive ? (isTTS ? "Membaca..." : "Memutar...") : "Siap?"}
             </span>
           </div>
         )}
@@ -436,7 +452,7 @@ export default function AudioController({
                 if (nativeAudioRef.current) {
                   nativeAudioRef.current.currentTime = 0;
                   lastSeekRef.current = 0;
-                  if (!isPlaying) handlePlayPause();
+                  if (!isPlayingActive) handlePlayPause();
                 }
               }}
               aria-label="Ulangi dari awal"
@@ -449,7 +465,7 @@ export default function AudioController({
             <Button
               variant="ghost" size="icon"
               onClick={stopAll}
-              disabled={!isPlaying && currentTime === 0}
+              disabled={!isPlayingActive && currentTime === 0}
               aria-label="Stop"
               className="size-10 rounded-full hover:bg-background/5 text-muted-foreground/60 hover:text-destructive transition-all"
             >

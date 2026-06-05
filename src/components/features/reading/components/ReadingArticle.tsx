@@ -5,7 +5,7 @@
  */
 
 import { m, AnimatePresence, useScroll, useSpring } from "framer-motion";
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import FuriganaDisplay from "@/components/ui/FuriganaDisplay";
 import { Sparkles, Volume2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -26,26 +26,68 @@ interface ReadingArticleProps {
   isCompleted?: boolean;
 }
 
-// ── Hook internal: TTS per paragraf ──────────────────────────
+/**
+ * Hook internal untuk mengelola TTS (Text to Speech) per paragraf.
+ * Mengkoordinasikan pemutaran agar tidak terjadi collision (pemutaran ganda)
+ * dengan pemutar audio utama atau pemutar TTS lainnya di aplikasi.
+ */
 function useParagraphTTS() {
   const [speakingIdx, setSpeakingIdx] = useState(-1);
   const [loadingIdx,  setLoadingIdx]  = useState(-1);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const isSelfPlayingRef = useRef(false);
 
   const stop = useCallback(() => {
-    if (audioRef.current) { audioRef.current.pause(); audioRef.current.src = ""; }
+    if (audioRef.current) { 
+      audioRef.current.pause(); 
+      audioRef.current.src = ""; 
+    }
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
     setSpeakingIdx(-1);
     setLoadingIdx(-1);
   }, []);
 
+  // Sinkronisasi event-driven: matikan audio jika pemutar audio lain aktif
+  useEffect(() => {
+    const handlePause = () => {
+      if (isSelfPlayingRef.current) {
+        isSelfPlayingRef.current = false;
+        return;
+      }
+      stop();
+    };
+    window.addEventListener("nihongoroute_pause_line_tts", handlePause);
+    return () => {
+      window.removeEventListener("nihongoroute_pause_line_tts", handlePause);
+    };
+  }, [stop]);
+
+  // Efek pembersihan saat komponen unmount
+  useEffect(() => {
+    const audio = audioRef.current;
+    return () => {
+      audio?.pause();
+      if (typeof window !== "undefined" && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
   const speak = useCallback(async (text: string, idx: number) => {
-    // Toggle stop kalau baris yang sama diklik ulang
+    // Toggle stop jika baris/paragraf yang sama diklik ulang
     if (speakingIdx === idx || loadingIdx === idx) { stop(); return; }
+
+    // Hentikan pemutar audio utama (native) & infokan pemutar lain
+    window.dispatchEvent(new CustomEvent("nihongoroute_pause_native_audio"));
+    isSelfPlayingRef.current = true;
+    window.dispatchEvent(new CustomEvent("nihongoroute_pause_line_tts"));
 
     stop();
     setLoadingIdx(idx);
 
-    const url = await fetchTTSAudio(text, TTS_VOICES.NANAMI, "medium");
+    const url = await fetchTTSAudio(text, TTS_VOICES.ZUNDAMON, "medium");
 
     if (url) {
       if (!audioRef.current) audioRef.current = new Audio();

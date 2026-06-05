@@ -42,6 +42,8 @@ export default function FloatingActions() {
   const listeningState = useUIStore((state) => state.listeningState);
   const setListeningState = useUIStore((state) => state.setListeningState);
 
+  if (isReadingPage || isListeningPage) return null;
+
 
   const modes: { id: ReadingMode; label: string; icon: React.ElementType }[] = [
     { id: "kanji", label: "Kanji", icon: BookIcon },

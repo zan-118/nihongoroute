@@ -44,7 +44,7 @@ function rateToNumber(rate: TTSRate): number {
 export function useLineTTS({ rate: initialRate = "medium" }: UseLineTTSOptions = {}): UseLineTTSReturn {
   const [speakingIndex,   setSpeakingIndex]   = useState(-1);
   const [loadingIndex,    setLoadingIndex]     = useState(-1);
-  const [lineTTSEnabled,  setLineTTSEnabled]   = useState(false);
+  const [lineTTSEnabled,  setLineTTSEnabled]   = useState(true);
   const [rate,            setRate]             = useState<TTSRate>(initialRate);
 
   // State & Ref untuk Playlist
@@ -57,6 +57,7 @@ export function useLineTTS({ rate: initialRate = "medium" }: UseLineTTSOptions =
   const stopWebSpeechRef = useRef<(() => void) | null>(null);
   const isSelfPlayingRef = useRef<boolean>(false);
   const objectUrlRef     = useRef<string | null>(null);
+  const requestIdRef     = useRef(0);
 
   const cleanupObjectUrl = useCallback(() => {
     if (objectUrlRef.current) {
@@ -66,6 +67,7 @@ export function useLineTTS({ rate: initialRate = "medium" }: UseLineTTSOptions =
   }, []);
 
   const stopLineTTS = useCallback(() => {
+    requestIdRef.current++;
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.src = "";
@@ -110,6 +112,9 @@ export function useLineTTS({ rate: initialRate = "medium" }: UseLineTTSOptions =
 
   const speakLineRaw = useCallback(async (line: any, index: number, forcePlay = false) => {
     if (!lineTTSEnabled && !forcePlay) return;
+
+    requestIdRef.current++;
+    const myRequestId = requestIdRef.current;
 
     // Matikan audio utama & TTS lain terlebih dahulu
     window.dispatchEvent(new CustomEvent("nihongoroute_pause_native_audio"));
@@ -163,6 +168,8 @@ export function useLineTTS({ rate: initialRate = "medium" }: UseLineTTSOptions =
     try {
       const ttsUrl = await fetchTTSAudio(text, voice, rate);
 
+      if (myRequestId !== requestIdRef.current) return;
+
       if (ttsUrl) {
         if (!audioRef.current) audioRef.current = new Audio();
 
@@ -174,32 +181,61 @@ export function useLineTTS({ rate: initialRate = "medium" }: UseLineTTSOptions =
         audio.src = ttsUrl;
         audio.playbackRate = playbackRate;
 
-        audio.oncanplay = () => { setLoadingIndex(-1); setSpeakingIndex(index); };
-        audio.onended   = onAudioEnded;
-        audio.onerror   = () => {
+        audio.oncanplay = () => {
+          if (myRequestId !== requestIdRef.current) return;
+          setLoadingIndex(-1);
+          setSpeakingIndex(index);
+        };
+
+        audio.onended = () => {
+          if (myRequestId !== requestIdRef.current) return;
+          onAudioEnded();
+        };
+
+        audio.onerror = () => {
+          if (myRequestId !== requestIdRef.current) return;
           setLoadingIndex(-1);
           setSpeakingIndex(index);
           stopWebSpeechRef.current = speakWithWebSpeech(
-            text, voice, playbackRate,
-            onAudioEnded,
-            onAudioEnded
+            text,
+            voice,
+            playbackRate,
+            () => {
+              if (myRequestId !== requestIdRef.current) return;
+              onAudioEnded();
+            },
+            () => {
+              if (myRequestId !== requestIdRef.current) return;
+              onAudioEnded();
+            }
           );
         };
 
         await audio.play();
       } else {
         // Edge TTS tidak tersedia — fallback Web Speech
+        if (myRequestId !== requestIdRef.current) return;
         setLoadingIndex(-1);
         setSpeakingIndex(index);
         stopWebSpeechRef.current = speakWithWebSpeech(
-          text, voice, playbackRate,
-          onAudioEnded,
-          onAudioEnded
+          text,
+          voice,
+          playbackRate,
+          () => {
+            if (myRequestId !== requestIdRef.current) return;
+            onAudioEnded();
+          },
+          () => {
+            if (myRequestId !== requestIdRef.current) return;
+            onAudioEnded();
+          }
         );
       }
     } catch {
-      setLoadingIndex(-1);
-      setSpeakingIndex(-1);
+      if (myRequestId === requestIdRef.current) {
+        setLoadingIndex(-1);
+        setSpeakingIndex(-1);
+      }
     }
   }, [lineTTSEnabled, rate]);
 
