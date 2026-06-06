@@ -70,7 +70,7 @@ export default function ListeningKaraoke({
     playlistIndex,
     playPlaylist,
     pausePlaylist,
-  } = useLineTTS({ rate: "medium" });
+  } = useLineTTS({ rate: "medium", lines: transcript });
 
   const currentActiveIndex = isPlayingPlaylist ? playlistIndex : activeIndex;
 

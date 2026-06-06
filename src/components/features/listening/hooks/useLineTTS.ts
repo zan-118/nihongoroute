@@ -16,6 +16,7 @@ export type TTSRate = "slow" | "medium" | "fast";
 
 interface UseLineTTSOptions {
   rate?: TTSRate;
+  lines?: any[];
 }
 
 interface UseLineTTSReturn {
@@ -41,7 +42,7 @@ function rateToNumber(rate: TTSRate): number {
 }
 
 // ── Hook utama ────────────────────────────────────────────────
-export function useLineTTS({ rate: initialRate = "medium" }: UseLineTTSOptions = {}): UseLineTTSReturn {
+export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOptions = {}): UseLineTTSReturn {
   const [speakingIndex,   setSpeakingIndex]   = useState(-1);
   const [loadingIndex,    setLoadingIndex]     = useState(-1);
   const [lineTTSEnabled,  setLineTTSEnabled]   = useState(true);
@@ -109,6 +110,59 @@ export function useLineTTS({ rate: initialRate = "medium" }: UseLineTTSOptions =
       stopWebSpeechRef.current?.();
     };
   }, [cleanupObjectUrl]);
+
+  // Prefetch lines for offline-first zero-latency playback
+  useEffect(() => {
+    if (!lines || lines.length === 0) return;
+
+    let cancelled = false;
+    const prefetch = async () => {
+      // Limit caching concurrency to avoid browser throttling
+      for (let i = 0; i < lines.length; i++) {
+        if (cancelled) break;
+        const line = lines[i];
+        const rawText = line.jp || line.text || "";
+        const text = typeof rawText === "string"
+          ? rawText
+          : Array.isArray(rawText)
+            ? (rawText as { text?: string; children?: { text?: string }[] }[])
+                .map(b => b?.children?.map(c => c?.text || "").join("") || b?.text || "")
+                .join("")
+            : String(rawText || "");
+
+        if (!text.trim()) continue;
+
+        const speakerName = line.speaker || line.speakerName || "";
+        const voice = detectVoice(speakerName, i);
+        
+        try {
+          await fetchTTSAudio(text, voice, rate);
+        } catch {
+          // ignore prefetch errors
+        }
+      }
+    };
+
+    let timerId: any;
+    if (typeof window !== "undefined") {
+      if ("requestIdleCallback" in window) {
+        timerId = (window as any).requestIdleCallback(() => prefetch(), { timeout: 10000 });
+      } else {
+        timerId = setTimeout(prefetch, 1500);
+      }
+    }
+
+    return () => {
+      cancelled = true;
+      if (typeof window !== "undefined" && timerId) {
+        if ("cancelIdleCallback" in window) {
+          (window as any).cancelIdleCallback(timerId);
+        } else {
+          clearTimeout(timerId);
+        }
+      }
+    };
+  }, [lines, rate]);
 
   const speakLineRaw = useCallback(async (line: any, index: number, forcePlay = false) => {
     if (!lineTTSEnabled && !forcePlay) return;
