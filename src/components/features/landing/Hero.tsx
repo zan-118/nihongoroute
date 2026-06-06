@@ -111,39 +111,53 @@ export function Hero() {
         initial={{ opacity: 0, scale: 0.9, rotate: -5 }}
         animate={{ opacity: 1, scale: 1, rotate: 0 }}
         transition={{ delay: 0.4, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-        className="hidden lg:flex flex-1 justify-end relative"
+        className="hidden lg:flex flex-1 justify-end relative pointer-events-none"
       >
         <div className="relative size-[500px]">
           {/* Efek Cahaya Latar Belakang */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 via-secondary/10 to-transparent rounded-[89px] blur-3xl animate-pulse" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[300px] border border-primary/20 rounded-[55px] rotate-12 backdrop-blur-3xl shadow-2xl overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-primary/25 via-secondary/15 to-transparent rounded-[89px] blur-3xl animate-pulse" />
+          
+          {/* Glowing Ring 1 */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[340px] border border-primary/20 rounded-[65px] rotate-6 animate-[spin_20s_infinite_linear] opacity-60" />
+          
+          {/* Glowing Ring 2 */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[380px] border border-dashed border-secondary/20 rounded-[75px] -rotate-6 animate-[spin_30s_infinite_linear] opacity-40" />
+
+          {/* Card Utama Glassmorphic */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[300px] border border-border rounded-[55px] rotate-12 backdrop-blur-3xl shadow-[0_20px_50px_rgba(var(--primary-rgb),0.15)] overflow-hidden group glass">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/5" />
             <div className="absolute top-8 left-8">
-              <div className="w-12 h-1 bg-primary/40 rounded-full mb-3" />
-              <div className="w-20 h-1 bg-primary/20 rounded-full" />
+              <div className="w-12 h-1 bg-primary/50 rounded-full mb-3 shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]" />
+              <div className="w-20 h-1 bg-primary/25 rounded-full" />
             </div>
-            <div className="absolute bottom-8 right-8 text-primary/40 font-black text-6xl select-none">
+            
+            {/* Teks Bahasa Jepang dengan Font Serif Cantik */}
+            <div 
+              className="absolute bottom-8 right-8 text-primary/50 font-black text-6xl select-none tracking-wider font-japanese"
+              style={{ fontFamily: "var(--font-noto-serif-jp)", textShadow: "0 0 15px rgba(var(--primary-rgb),0.2)" }}
+            >
               日本語
             </div>
           </div>
 
-          {/* Elemen Dekoratif Mengambang */}
+          {/* Elemen Dekoratif Mengambang 1 */}
           <m.div
-            animate={{ y: [0, -21, 0], x: [0, 8, 0] }}
+            animate={{ y: [0, -15, 0], x: [0, 5, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -top-8 right-8 size-21 p-4 bg-background border border-border rounded-2xl shadow-2xl backdrop-blur-md"
+            className="absolute -top-8 right-8 p-5 bg-background/60 border border-border rounded-2xl shadow-2xl backdrop-blur-md flex items-center justify-center glass hover:border-primary/40 transition-colors pointer-events-auto"
           >
-            <Sparkles className="text-primary" size={24} />
+            <Sparkles className="text-primary drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]" size={24} />
           </m.div>
 
+          {/* Elemen Dekoratif Mengambang 2 */}
           <m.div
-            animate={{ y: [0, 34, 0], x: [0, -13, 0] }}
+            animate={{ y: [0, 20, 0], x: [0, -8, 0] }}
             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-            className="absolute bottom-8 -left-8 p-6 bg-card/60 border border-border rounded-3xl shadow-2xl backdrop-blur-xl"
+            className="absolute bottom-8 -left-8 p-6 bg-card/45 border border-border rounded-3xl shadow-2xl backdrop-blur-xl flex items-center justify-center glass hover:border-success/40 transition-colors pointer-events-auto"
           >
             <div className="flex items-center gap-3">
-              <div className="size-3 bg-success rounded-full animate-pulse" />
-              <span className="text-xs font-bold text-foreground">Sinkronisasi Cloud Aktif</span>
+              <div className="size-3 bg-success rounded-full animate-pulse shadow-[0_0_10px_rgba(var(--success-rgb),0.8)]" />
+              <span className="text-xs font-black text-foreground uppercase tracking-widest">Sinkronisasi Cloud Aktif</span>
             </div>
           </m.div>
         </div>

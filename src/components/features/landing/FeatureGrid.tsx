@@ -123,65 +123,78 @@ export function FeatureGrid() {
         >
           {/* KARTU 1: ALAT BANTU KANA INTERAKTIF */}
           <m.div variants={itemVariants}>
-            <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-primary/30 hover:bg-card/20 shadow-none">
+            <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-primary/40 hover:shadow-[0_0_50px_rgba(var(--primary-rgb),0.12)] shadow-none glass">
               <div className="absolute top-0 right-0 size-32 bg-primary/5 rounded-full blur-[40px] group-hover:bg-primary/10 transition-all duration-500" />
               
               <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm text-primary">
-                <PenTool size={26} />
+                <PenTool size={26} className="drop-shadow-[0_0_6px_rgba(var(--primary-rgb),0.3)]" />
               </div>
               
-              <h3 className="text-2xl font-bold tracking-tight mb-[13px] text-foreground group-hover:text-primary transition-colors">
+              <h3 className="text-2xl font-black tracking-tight mb-[13px] text-foreground group-hover:text-primary transition-colors">
                 Alat Bantu Kana Interaktif
               </h3>
               
               <p className="text-muted-foreground text-sm leading-relaxed flex-1 font-medium mb-6">
                 Kuasai sistem penulisan Hiragana & Katakana melalui matriks kana interaktif, panduan langkah-demi-langkah urutan guratan (Stroke Order), serta kanvas latihan menulis langsung di layar gadget Anda.
               </p>
-
+ 
               {/* Tampilan Visual Mockup di Dalam Kartu */}
-              <div className="p-4 bg-background/40 border border-border rounded-2xl flex items-center justify-between gap-4 glass mt-auto">
-                <div className="size-14 border-2 border-dashed border-primary/30 bg-background/80 rounded-xl flex items-center justify-center relative font-japanese font-bold text-2xl text-primary shadow-inner">
+              <div className="p-4 bg-background/40 border border-border rounded-2xl flex items-center justify-between gap-4 glass mt-auto transition-all duration-300 group-hover:border-primary/20">
+                <div className="size-14 border-2 border-dashed border-primary/30 bg-background/80 rounded-xl flex items-center justify-center relative font-japanese font-bold text-2xl text-primary shadow-inner transition-transform group-hover:scale-105">
                   あ
                   <div className="absolute text-[8px] font-bold text-primary/50 top-1 left-1">1</div>
                   <div className="absolute text-[7px] font-bold text-muted-foreground/60 bottom-1 right-1">N5</div>
                 </div>
                 <div className="flex-1 flex flex-col gap-1.5">
                   <span className="text-[11px] font-bold text-foreground">Hiragana "A" (Guratan 1/3)</span>
-                  <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                    <div className="h-full bg-primary rounded-full w-[33%]" />
+                  <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden relative">
+                    <div className="h-full bg-primary rounded-full w-[33%] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent" />
                   </div>
                   <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Arah guratan: Melengkung ke kanan</span>
                 </div>
               </div>
             </Card>
           </m.div>
-
+ 
           {/* KARTU 2: DATABASE PERPUSTAKAAN KOSAKATA & TATA BAHASA */}
           <m.div variants={itemVariants}>
-            <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-secondary/30 hover:bg-card/20 shadow-none">
+            <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-secondary/40 hover:shadow-[0_0_50px_rgba(var(--secondary-rgb),0.12)] shadow-none glass">
               <div className="absolute top-0 right-0 size-32 bg-secondary/5 rounded-full blur-[40px] group-hover:bg-secondary/10 transition-all duration-500" />
               
               <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm text-secondary">
-                <Library size={26} />
+                <Library size={26} className="drop-shadow-[0_0_6px_rgba(var(--secondary-rgb),0.3)]" />
               </div>
               
-              <h3 className="text-2xl font-bold tracking-tight mb-[13px] text-foreground group-hover:text-secondary transition-colors">
+              <h3 className="text-2xl font-black tracking-tight mb-[13px] text-foreground group-hover:text-secondary transition-colors">
                 Perpustakaan Kosakata, Kanji & Tata Bahasa
               </h3>
               
-              <p className="text-muted-foreground text-sm leading-relaxed flex-1 font-medium mb-6">
+              <p className="text-muted-foreground text-sm leading-relaxed flex-1 font-medium mb-4">
                 Akses ribuan kosakata terstruktur, kamus Kanji komprehensif, dan pustaka rumus tata bahasa praktis. Semuanya dilengkapi dengan sistem audio pengucapan penutur asli dan fungsionalitas furigana cerdas.
               </p>
 
+              {/* STATISTIK NYATA DARIPADA SUPABASE */}
+              <div className="flex gap-2 flex-wrap mb-6">
+                <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 transition-transform hover:scale-105 shadow-none">
+                  22K+ Kosakata
+                </Badge>
+                <Badge variant="outline" className="bg-secondary/5 text-secondary border-secondary/20 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 transition-transform hover:scale-105 shadow-none">
+                  13K+ Kanji
+                </Badge>
+                <Badge variant="outline" className="bg-success/5 text-success border-success/20 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 transition-transform hover:scale-105 shadow-none">
+                  800+ Tata Bahasa
+                </Badge>
+              </div>
+ 
               {/* Tampilan Visual Mockup di Dalam Kartu */}
-              <div className="p-4 bg-background/40 border border-border rounded-2xl flex flex-col gap-2 glass mt-auto">
+              <div className="p-4 bg-background/40 border border-border rounded-2xl flex flex-col gap-2 glass mt-auto transition-all duration-300 group-hover:border-secondary/20">
                 <div className="flex items-center justify-between">
                   <span className="text-[9px] font-extrabold uppercase tracking-widest text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full">Kosakata Utama</span>
                   <span className="text-[9px] font-extrabold bg-secondary/10 text-secondary border border-secondary/20 px-2 py-0.5 rounded-full">N5</span>
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col transition-transform group-hover:translate-x-1 duration-300">
                   <ruby className="text-xl font-bold font-japanese tracking-wider text-foreground">
-                    日本語 <rt className="text-[0.55em] font-normal text-muted-foreground">にほんご</rt>
+                    日本語 <rt className="text-[0.55em] font-bold text-muted-foreground transition-colors group-hover:text-primary">にほんご</rt>
                   </ruby>
                   <span className="text-[11px] text-muted-foreground font-semibold mt-0.5">Nihongo — Bahasa Jepang</span>
                 </div>
@@ -193,27 +206,27 @@ export function FeatureGrid() {
               </div>
             </Card>
           </m.div>
-
+ 
           {/* KARTU 3: FLASHCARDS DENGAN SYSTEM SRS */}
           <m.div variants={itemVariants}>
-            <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-primary/30 hover:bg-card/20 shadow-none">
+            <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-primary/40 hover:shadow-[0_0_50px_rgba(var(--primary-rgb),0.12)] shadow-none glass">
               <div className="absolute top-0 right-0 size-32 bg-primary/5 rounded-full blur-[40px] group-hover:bg-primary/10 transition-all duration-500" />
               
               <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm text-primary">
-                <BrainCircuit size={26} />
+                <BrainCircuit size={26} className="drop-shadow-[0_0_6px_rgba(var(--primary-rgb),0.3)]" />
               </div>
               
-              <h3 className="text-2xl font-bold tracking-tight mb-[13px] text-foreground group-hover:text-primary transition-colors">
+              <h3 className="text-2xl font-black tracking-tight mb-[13px] text-foreground group-hover:text-primary transition-colors">
                 Flashcard Cerdas & Pengulangan Terjadwal
               </h3>
               
               <p className="text-muted-foreground text-sm leading-relaxed flex-1 font-medium mb-6">
                 Latih daya ingat Anda secara optimal. Sistem pengulangan cerdas kami secara otomatis menghitung dan menjadwalkan ulang kartu flashcard kosa kata yang perlu di-review persis sebelum Anda melupakannya.
               </p>
-
+ 
               {/* Tampilan Visual Mockup di Dalam Kartu */}
-              <div className="p-4 bg-background/40 border border-border rounded-2xl flex items-center gap-3.5 glass mt-auto">
-                <div className="relative w-11 h-14 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground rounded-lg flex items-center justify-center font-bold text-xl shadow-[0_4px_12px_rgba(var(--primary-rgb),0.3)] shrink-0">
+              <div className="p-4 bg-background/40 border border-border rounded-2xl flex items-center gap-3.5 glass mt-auto transition-all duration-300 group-hover:border-primary/20">
+                <div className="relative w-11 h-14 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground rounded-lg flex items-center justify-center font-bold text-xl shadow-[0_4px_12px_rgba(var(--primary-rgb),0.3)] shrink-0 transition-transform group-hover:scale-105">
                   猫
                   <div className="absolute -top-1 -right-1 size-2.5 bg-success rounded-full border border-background animate-pulse" />
                 </div>
@@ -222,39 +235,39 @@ export function FeatureGrid() {
                   <span className="text-[9px] text-muted-foreground flex items-center gap-1.5 font-bold">
                     <span className="size-1.5 bg-success rounded-full" /> Interval: 3 Hari Lagi (Kotak 4)
                   </span>
-                  <div className="w-full bg-muted h-1 rounded-full overflow-hidden mt-1">
-                    <div className="bg-success h-full w-[80%]" />
+                  <div className="w-full bg-muted h-1 rounded-full overflow-hidden mt-1 relative">
+                    <div className="bg-success h-full w-[80%] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent" />
                   </div>
                 </div>
               </div>
             </Card>
           </m.div>
-
+ 
           {/* KARTU 4: SIMULASI UJIAN JLPT REAL-TIME */}
           <m.div variants={itemVariants}>
-            <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-secondary/30 hover:bg-card/20 shadow-none">
+            <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-secondary/40 hover:shadow-[0_0_50px_rgba(var(--secondary-rgb),0.12)] shadow-none glass">
               <div className="absolute top-0 right-0 size-32 bg-secondary/5 rounded-full blur-[40px] group-hover:bg-secondary/10 transition-all duration-500" />
               
               <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm text-secondary">
-                <Zap size={26} />
+                <Zap size={26} className="drop-shadow-[0_0_6px_rgba(var(--secondary-rgb),0.3)]" />
               </div>
               
-              <h3 className="text-2xl font-bold tracking-tight mb-[13px] text-foreground group-hover:text-secondary transition-colors">
+              <h3 className="text-2xl font-black tracking-tight mb-[13px] text-foreground group-hover:text-secondary transition-colors">
                 Simulasi Ujian JLPT Real-Time
               </h3>
               
               <p className="text-muted-foreground text-sm leading-relaxed flex-1 font-medium mb-6">
                 Uji kesiapan kelulusan Anda dengan simulasi ujian JLPT interaktif. Lengkap dengan sistem timer mundur yang presisi, pembagian sesi materi ujian, lembar jawaban digital, dan laporan hasil kelulusan yang rinci.
               </p>
-
+ 
               {/* Tampilan Visual Mockup di Dalam Kartu */}
-              <div className="p-4 bg-background/40 border border-border rounded-2xl flex flex-col gap-2 glass mt-auto">
+              <div className="p-4 bg-background/40 border border-border rounded-2xl flex flex-col gap-2 glass mt-auto transition-all duration-300 group-hover:border-secondary/20">
                 <div className="flex items-center justify-between text-[9px] font-bold text-muted-foreground">
                   <span className="flex items-center gap-1"><Timer size={10} className="text-secondary" /> Ujian JLPT N3: Sesi Choukai</span>
                   <span className="text-destructive font-mono font-bold animate-pulse">00:42:15</span>
                 </div>
-                <div className="w-full bg-muted h-1 rounded-full overflow-hidden">
-                  <div className="bg-secondary h-full w-[70%]" />
+                <div className="w-full bg-muted h-1 rounded-full overflow-hidden relative">
+                  <div className="bg-secondary h-full w-[70%] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent" />
                 </div>
                 <div className="flex justify-between gap-1.5 mt-0.5">
                   {[1, 2, 3, 4].map((num) => (
@@ -263,7 +276,7 @@ export function FeatureGrid() {
                       className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-[10px] border transition-all duration-300 ${
                         num === 3 
                           ? "bg-secondary text-secondary-foreground border-secondary shadow-[0_2px_8px_rgba(var(--secondary-rgb),0.3)]" 
-                          : "border-border bg-background text-muted-foreground"
+                          : "border-border bg-background text-muted-foreground hover:border-secondary/30"
                       }`}
                     >
                       {num}
