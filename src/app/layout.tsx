@@ -125,9 +125,9 @@ export default function RootLayout({
                     if ('caches' in window) {
                       caches.keys().then(function(names) {
                         names.forEach(function(name) {
-                          if (name.startsWith('nihongoroute_tts_cache_') && name !== 'nihongoroute_tts_cache_v7') {
+                          if (name.startsWith('nihongoroute_tts_cache_v')) {
                             caches.delete(name).then(function() {
-                              console.log('[TTS Cache Revocation] Deleted old cache:', name);
+                              console.log('[TTS Cache Revocation] Deleted old versioned cache:', name);
                             });
                           }
                         });
