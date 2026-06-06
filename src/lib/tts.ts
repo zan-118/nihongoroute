@@ -102,11 +102,11 @@ export const VOICE_CHARACTERS: Record<string, VoiceCharacter> = {
   },
   ayu: {
     name: "ayu",
-    voicevoxName: "Zundamon",
-    speakerId: 3,
+    voicevoxName: "WhiteCUL",
+    speakerId: 23,
     gender: "female",
-    role: "Maskot Cilik / Anak-anak",
-    description: "Nada sangat tinggi, kekanak-kanakan, energetik.",
+    role: "Remaja Santai / Teman Wanita",
+    description: "Intonasi tenang, suara jernih, modern.",
   },
   zundamon: {
     name: "zundamon",
@@ -115,6 +115,14 @@ export const VOICE_CHARACTERS: Record<string, VoiceCharacter> = {
     gender: "female",
     role: "Maskot Cilik / Anak-anak",
     description: "Nada sangat tinggi, kekanak-kanakan, energetik.",
+  },
+  ritsu: {
+    name: "ritsu",
+    voicevoxName: "Namine Ritsu",
+    speakerId: 9,
+    gender: "female",
+    role: "Wanita Misterius / Bernada Khas",
+    description: "Unik, ekspresif, bernada khas.",
   },
   // Pria
   budi: {
@@ -167,43 +175,51 @@ export const VOICE_CHARACTERS: Record<string, VoiceCharacter> = {
   },
   andi: {
     name: "andi",
-    voicevoxName: "Kuronou Takehiro",
-    speakerId: 11,
+    voicevoxName: "Holy Knight Red Sakura",
+    speakerId: 51,
     gender: "male",
-    role: "Remaja / Siswa SMA (Alias)",
-    description: "Tenang, kasual, ramah.",
+    role: "Pemuda Keren / Nada Dramatis",
+    description: "Suara khas pemuda, bernada dramatis & penuh semangat.",
   },
   faisal: {
     name: "faisal",
-    voicevoxName: "Aoyama Ryuusei",
-    speakerId: 13,
+    voicevoxName: "Nakae Tsurugi",
+    speakerId: 94,
     gender: "male",
-    role: "Narator Utama Pria / Guru Pria (Alias)",
-    description: "Suara bariton, tenang, berwibawa, intonasi mantap & formal.",
+    role: "Pria Dewasa / Kalem",
+    description: "Tenang, bijaksana, intonasi seimbang.",
   },
   takahashi: {
     name: "takahashi",
-    voicevoxName: "Kenzaki Mesu",
-    speakerId: 21,
+    voicevoxName: "Kurosawa Kohaku",
+    speakerId: 100,
     gender: "male",
-    role: "Pekerja Kantor / Pegawai Stasiun (Alias)",
-    description: "Formal, tegas, intonasi profesional.",
+    role: "Pekerja Kantoran Muda / Sopan",
+    description: "Ramah, sopan, intonasi profesional santai.",
   },
   kobayashi: {
     name: "kobayashi",
-    voicevoxName: "Sakamatsuri Shuji",
-    speakerId: 52,
+    voicevoxName: "Rito",
+    speakerId: 99,
     gender: "male",
-    role: "Ayah / Pria Paruh Baya (Alias)",
-    description: "Berat, tenang, berwibawa.",
+    role: "Pria Dewasa / Suara Serius",
+    description: "Dalam, berwibawa, bernada serius.",
   },
   namonashi: {
     name: "namonashi",
-    voicevoxName: "Aoyama Ryuusei",
-    speakerId: 13,
+    voicevoxName: "Ankomon",
+    speakerId: 113,
     gender: "male",
-    role: "Pria Anonim",
-    description: "Suara bariton, tenang, berwibawa.",
+    role: "Pria Anonim / Kasual",
+    description: "Santai, bersahabat, suara paruh baya natural.",
+  },
+  ooba: {
+    name: "ooba",
+    voicevoxName: "Chibi Shikiji",
+    speakerId: 42,
+    gender: "male",
+    role: "Pria Tua Cilik / Suara Klasik",
+    description: "Suara khas pria berumur dengan karakter unik.",
   },
 };
 
@@ -217,6 +233,7 @@ export const TTS_VOICES = {
   SATO: "sato",
   AYU: "ayu",
   ZUNDAMON: "zundamon",
+  RITSU: "ritsu",
   
   // Pria (VOICEVOX)
   DITO: "dito",
@@ -230,6 +247,7 @@ export const TTS_VOICES = {
   TAKAHASHI: "takahashi",
   KOBAYASHI: "kobayashi",
   NAMONASHI: "namonashi",
+  OOBA: "ooba",
 } as const;
 
 export const SPEAKER_MAP: Record<string, TtsVoice> = {
@@ -276,6 +294,11 @@ export const SPEAKER_MAP: Record<string, TtsVoice> = {
   "たかはし": TTS_VOICES.TAKAHASHI,
   "アユ": TTS_VOICES.AYU,
   "ayu": TTS_VOICES.AYU,
+  "りつ": TTS_VOICES.RITSU,
+  "ritsu": TTS_VOICES.RITSU,
+  "大庭": TTS_VOICES.OOBA,
+  "ooba": TTS_VOICES.OOBA,
+  "おおば": TTS_VOICES.OOBA,
 };
 
 export type TtsVoice = typeof TTS_VOICES[keyof typeof TTS_VOICES];
@@ -317,6 +340,7 @@ export function detectVoice(speaker?: string, fallbackIndex = 0): TtsVoice {
     TTS_VOICES.HAYASHI,
     TTS_VOICES.SATO,
     TTS_VOICES.AYU,
+    TTS_VOICES.RITSU,
   ];
   const maleVoices = [
     TTS_VOICES.NAMONASHI,
@@ -330,6 +354,7 @@ export function detectVoice(speaker?: string, fallbackIndex = 0): TtsVoice {
     TTS_VOICES.FAISAL,
     TTS_VOICES.TAKAHASHI,
     TTS_VOICES.KOBAYASHI,
+    TTS_VOICES.OOBA,
   ];
   const allVoices = [...femaleVoices, ...maleVoices];
 
