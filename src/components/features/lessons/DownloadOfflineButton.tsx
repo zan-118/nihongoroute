@@ -107,7 +107,7 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
         }
 
         const audioCache = await caches.open("nihongoroute_audio_cache");
-        const ttsCache = await caches.open("nihongoroute_tts_cache");
+        const ttsCache = await caches.open("nihongoroute_tts_cache_v6");
         const kanjiCache = await caches.open("nihongoroute_kanjivg_cache");
 
         let allCached = true;
@@ -123,9 +123,9 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
 
         // Cek TTS jika audio masih penuh
         if (allCached) {
-          const GOOGLE_TTS_URL = "https://translate.google.com/translate_tts?ie=UTF-8&tl=ja&client=tw-ob&q=";
           for (const word of ttsWords) {
-            const ttsUrl = `${GOOGLE_TTS_URL}${encodeURIComponent(word)}`;
+            const params = new URLSearchParams({ text: word, voice: "zundamon", rate: "medium", v: "6" });
+            const ttsUrl = `/api/tts?${params.toString()}`;
             const match = await ttsCache.match(ttsUrl);
             if (!match) {
               allCached = false;
@@ -185,7 +185,7 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
 
       // 1. Buka seluruh cache storage
       const audioCache = await caches.open("nihongoroute_audio_cache");
-      const ttsCache = await caches.open("nihongoroute_tts_cache");
+      const ttsCache = await caches.open("nihongoroute_tts_cache_v6");
       const kanjiCache = await caches.open("nihongoroute_kanjivg_cache");
 
       // 2. Unduh dan cache audio asli
@@ -204,9 +204,9 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
       });
 
       // 3. Unduh dan cache TTS pelafalan
-      const GOOGLE_TTS_URL = "https://translate.google.com/translate_tts?ie=UTF-8&tl=ja&client=tw-ob&q=";
       const ttsPromises = ttsWords.map(async (word) => {
-        const ttsUrl = `${GOOGLE_TTS_URL}${encodeURIComponent(word)}`;
+        const params = new URLSearchParams({ text: word, voice: "zundamon", rate: "medium", v: "6" });
+        const ttsUrl = `/api/tts?${params.toString()}`;
         try {
           const match = await ttsCache.match(ttsUrl);
           if (!match) {
