@@ -1,4 +1,3 @@
-import { MsEdgeTTS, OUTPUT_FORMAT } from "msedge-tts";
 import { NextRequest } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import crypto from "crypto";
@@ -39,22 +38,6 @@ const RATE_MAP: Record<string, string> = {
   fast:   "+20%",
 };
 
-async function generateTtsBuffer(tts: MsEdgeTTS, voice: string, ssmlRate: string, text: string): Promise<Buffer> {
-  const ssml = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="ja-JP">
-    <voice name="${voice}">
-      <prosody rate="${ssmlRate}">${text}</prosody>
-    </voice>
-  </speak>`;
-
-  const { audioStream } = await tts.rawToStream(ssml);
-
-  const chunks: Buffer[] = [];
-  for await (const chunk of audioStream) {
-    chunks.push(Buffer.from(chunk));
-  }
-  return Buffer.concat(chunks);
-}
-
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
   const text  = (searchParams.get("text") || "").trim();
@@ -70,8 +53,6 @@ export async function GET(req: NextRequest) {
   if (!ALLOWED_VOICES.has(voice)) {
     return new Response("Invalid voice", { status: 400 });
   }
-
-  const ssmlRate = RATE_MAP[rate] ?? "0%";
 
   // 1. Hitung hash MD5 unik untuk kombinasi text + voice + rate
   const hash = crypto
@@ -110,33 +91,6 @@ export async function GET(req: NextRequest) {
     console.error("[TTS API] Gagal membaca cache dari database/storage:", err);
   }
 
-  // 3. Cache miss: generate baru via 2 suara Edge TTS yang gratis & berfungsi
-  try {
-    const tts = new MsEdgeTTS();
-    // Petakan suara tokoh VOICEVOX asli ke suara Edge gratis yang didukung (Keita untuk pria, Nanami untuk wanita)
-    const maleVoices = new Set([
-      "dito", "budi", "suzuki", "tanaka", "yamada", "kimura", "andi", "faisal", "takahashi", "kobayashi", "namonashi", "ritsu", "ooba"
-    ]);
-    const edgeVoice = maleVoices.has(voice) ? "ja-JP-KeitaNeural" : "ja-JP-NanamiNeural";
-
-    await tts.setMetadata(edgeVoice, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
-
-    let audioBuffer: Buffer;
-    try {
-      audioBuffer = await generateTtsBuffer(tts, edgeVoice, ssmlRate, text);
-    } catch (err) {
-      console.error(`[TTS API] Gagal generate via Edge TTS dengan suara ${edgeVoice}:`, err);
-      throw err;
-    }
-
-    return new Response(new Uint8Array(audioBuffer), {
-      headers: {
-        "Content-Type": "audio/mpeg",
-        "Cache-Control": "public, max-age=604800, immutable",
-      },
-    });
-  } catch (err) {
-    console.error("[TTS API] Gagal generate audio:", err);
-    return new Response("TTS generation failed", { status: 500 });
-  }
+  // 3. Cache miss: Berikan respons 404 untuk memicu fallback Web Speech API di sisi klien
+  return new Response("Audio not found in cache", { status: 404 });
 }
