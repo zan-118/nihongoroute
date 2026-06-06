@@ -29,6 +29,7 @@ import { VocabFilterPanel } from "@/components/features/library/vocab/VocabFilte
 import { VocabPagination } from "@/components/features/library/vocab/VocabPagination";
 import { useUIStore } from "@/store/useUIStore";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
+import TTSReader from "@/components/features/tools/tts/TTSReader";
 
 // ======================
 // EKSEKUSI UTAMA
@@ -325,26 +326,7 @@ export default function VocabClient({
                       {item.jlpt_level.toUpperCase()}
                     </span>
                   )}
-                  {item.audio_url && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="w-7 h-7 md:w-8 md:h-8 rounded-lg border border-border hover:bg-primary/10 hover:text-primary transition-all shrink-0"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        const audio = new Audio(item.audio_url || "");
-                        audio.play().catch((err) => console.error("Gagal memutar audio:", err));
-                      }}
-                      aria-label="Putar Audio"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="size-3.5">
-                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-                      </svg>
-                    </Button>
-                  )}
+                  <TTSReader text={item.word} small={true} />
                   <Link href={`/library/vocab/${item.slug}`} className="shrink-0">
                     <Button
                       variant="outline"
