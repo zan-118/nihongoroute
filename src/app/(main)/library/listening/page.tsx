@@ -10,6 +10,8 @@ import { getPaginatedListening } from "@/actions/library.actions";
 import ListeningListClient from "@/app/(main)/library/listening/ListeningListClient";
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 // ======================
 // METADATA SEO
 // ======================

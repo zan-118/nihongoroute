@@ -11,6 +11,8 @@ import { getPaginatedReading } from "@/actions/library.actions";
 import ReadingListClient from "./ReadingListClient";
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 // ======================
 // METADATA SEO
 // ======================
