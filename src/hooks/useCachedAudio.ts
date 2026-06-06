@@ -1,17 +1,17 @@
 "use client";
 
 /**
- * @file useCachedAudio.ts
- * @description Hook offline-first untuk audio.
+ * Hook kustom untuk memuat dan meng-cache audio secara luring (offline-first).
+ * Mengunduh berkas audio dari remote URL, menyimpannya di CacheStorage peramban,
+ * dan merendernya via Blob URL untuk performa pemutaran audio tanpa latensi.
  *
- * Strategi:
- * - Kembalikan URL asli agar <audio> bisa pakai HTTP Range requests
- *   (blob URL tidak support Range → ERR_REQUEST_RANGE_NOT_SATISFIABLE)
- * - Prefetch ke CacheStorage dijadwalkan saat window idle / setelah load
- *   agar tidak memicu "preloaded but not used" browser warning
+ * @param {string | undefined} src - Sumber URL berkas audio jarak jauh.
+ * @returns {string | undefined} Tautan berkas audio lokal ter-cache (Blob URL) atau remote URL asli sebagai fallback.
+ * @sideEffects Mengakses CacheStorage dan URL.createObjectURL/revokeObjectURL.
+ * @zustandStores Tidak mengakses store Zustand global.
  */
 
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 // requestIdleCallback tidak ada di semua env TypeScript — deklarasi manual
 const idleCb: ((cb: () => void, opts?: { timeout: number }) => number) | undefined =
@@ -37,43 +37,76 @@ const limitCacheSize = async (cacheName: string, maxItems: number) => {
 
 // ── Hook utama ───────────────────────────────────────────────
 export function useCachedAudio(src: string | undefined): string | undefined {
+  const [prevSrc, setPrevSrc] = useState<string | undefined>(src);
+  const [cachedUrl, setCachedUrl] = useState<string | undefined>(src);
+
+  if (src !== prevSrc) {
+    setPrevSrc(src);
+    setCachedUrl(src);
+  }
+
   useEffect(() => {
-    if (!src || typeof window === "undefined" || !("caches" in window)) return;
+    if (!src || typeof window === "undefined") {
+      return;
+    }
 
     let cancelled = false;
+    let localBlobUrl: string | null = null;
     const cacheName = "nihongoroute_audio_cache";
 
-    const prefetch = async () => {
-      if (cancelled) return;
+    const loadAudio = async () => {
       try {
+        if (!("caches" in window)) {
+          if (!cancelled) setCachedUrl(src);
+          return;
+        }
+
         const cache = await caches.open(cacheName);
-        if (await cache.match(src)) return; // Sudah ada
-        const res = await fetch(src, { credentials: "omit" });
-        if (!res.ok || cancelled) return;
-        await cache.put(src, res);
-        await limitCacheSize(cacheName, 50);
-      } catch { /* prefetch gagal — audio tetap diputar dari remote */ }
-    };
+        const cachedResponse = await cache.match(src);
 
-    let timerId: ReturnType<typeof setTimeout> | number | undefined;
+        if (cachedResponse) {
+          const blob = await cachedResponse.blob();
+          if (!cancelled) {
+            localBlobUrl = URL.createObjectURL(blob);
+            setCachedUrl(localBlobUrl);
+          }
+          return;
+        }
 
-    if (document.readyState === "complete") {
-      // Sudah loaded — jadwalkan saat idle
-      if (idleCb) {
-        timerId = idleCb(() => prefetch(), { timeout: 5000 });
-        return () => { cancelled = true; cancelIdleCb?.(timerId as number); };
-      } else {
-        timerId = setTimeout(prefetch, 2000);
-        return () => { cancelled = true; clearTimeout(timerId as ReturnType<typeof setTimeout>); };
+        // Jika tidak ada di cache, fetch dari remote
+        const res = await fetch(src);
+        if (!res.ok) throw new Error("Gagal mengunduh berkas audio");
+
+        const resClone = res.clone();
+        const blob = await res.blob();
+
+        try {
+          await cache.put(src, resClone);
+          await limitCacheSize(cacheName, 50);
+        } catch (err) {
+          console.warn("Gagal menyimpan audio ke CacheStorage:", err);
+        }
+
+        if (!cancelled) {
+          localBlobUrl = URL.createObjectURL(blob);
+          setCachedUrl(localBlobUrl);
+        }
+      } catch (err) {
+        console.warn("Gagal memuat cached audio, fallback ke URL asli:", err);
+        if (!cancelled) {
+          setCachedUrl(src);
+        }
       }
-    } else {
-      // Tunggu window load
-      const onLoad = () => prefetch();
-      window.addEventListener("load", onLoad, { once: true });
-      return () => { cancelled = true; window.removeEventListener("load", onLoad); };
-    }
+    };
+    loadAudio();
+
+    return () => {
+      cancelled = true;
+      if (localBlobUrl) {
+        URL.revokeObjectURL(localBlobUrl);
+      }
+    };
   }, [src]);
 
-  // Kembalikan URL asli — bukan blob URL
-  return src;
+  return cachedUrl;
 }
