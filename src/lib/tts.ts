@@ -299,6 +299,29 @@ export const SPEAKER_MAP: Record<string, TtsVoice> = {
   "大庭": TTS_VOICES.OOBA,
   "ooba": TTS_VOICES.OOBA,
   "おおば": TTS_VOICES.OOBA,
+
+  // New Japanese name mappings
+  "ケンジ": TTS_VOICES.KIMURA,
+  "kenji": TTS_VOICES.KIMURA,
+  "リナ": TTS_VOICES.LARA,
+  "rina": TTS_VOICES.LARA,
+  "アハマド": TTS_VOICES.FAISAL,
+  "ahmad": TTS_VOICES.FAISAL,
+  "名無し": TTS_VOICES.NAMONASHI,
+  "namonashi": TTS_VOICES.NAMONASHI,
+  "amonashi": TTS_VOICES.NAMONASHI,
+
+  // Full-width character aliases
+  "ａ": TTS_VOICES.BUDI,
+  "a": TTS_VOICES.BUDI,
+  "ｂ": TTS_VOICES.AYU,
+  "b": TTS_VOICES.AYU,
+  "登場人物ａ": TTS_VOICES.BUDI,
+  "登場人物ｂ": TTS_VOICES.AYU,
+  "同僚ａ": TTS_VOICES.KIMURA,
+  "同僚ｂ": TTS_VOICES.DITO,
+  "学生ａ": TTS_VOICES.KIMURA,
+  "エンジニアａ": TTS_VOICES.KIMURA,
 };
 
 export type TtsVoice = typeof TTS_VOICES[keyof typeof TTS_VOICES];
