@@ -116,7 +116,7 @@ export function useTTSReader(text: string, speaker?: string) {
     window.dispatchEvent(new CustomEvent("nihongoroute_pause_line_tts"));
     window.dispatchEvent(new CustomEvent("nihongoroute_pause_native_audio"));
 
-    const voice = speaker ? detectVoice(speaker) : TTS_VOICES.ZUNDAMON;
+    const voice = speaker ? detectVoice(speaker) : TTS_VOICES.INDAH;
 
     const playFallback = () => {
       if (audioRef.current) {

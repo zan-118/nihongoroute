@@ -3,11 +3,210 @@
  * @description Utilitas Text-to-Speech via Edge TTS API Route.
  * Menangani deteksi suara pria/wanita berdasarkan nama pembicara,
  * caching audio di IndexedDB, dan fallback ke Web Speech API.
+ * 
+ * ============================================================================
+ * DAFTAR TOKOH / KARAKTER PERMANEN & PERAN SUARA (TTS_VOICES CASTING SHEET)
+ * ============================================================================
+ * 
+ * TOKOH WANITA:
+ * 1. INDAH    -> VOICEVOX: Shikoku Metan (ID 2). Peran: Narator Utama / Guru Wanita. 
+ *                Karakteristik: Tenang, dewasa, artikulasi sangat jelas, intonasi formal & natural.
+ *                *Digunakan sebagai default pengucapan seluruh kosakata (vocab)*.
+ * 2. LARA     -> VOICEVOX: Kasukabe Tsumugi (ID 8). Peran: Siswi SMA / Remaja.
+ *                Karakteristik: Ceria, ramah, riang, bernada cerah.
+ * 3. SITI     -> VOICEVOX: Amehare Hau (ID 10). Peran: Teman Sekolah / Wanita Muda.
+ *                Karakteristik: Lembut, ramah, jernih.
+ * 4. DEWI     -> VOICEVOX: Meimei Himari (ID 14). Peran: Gadis Kecil / Karakter Imut.
+ *                Karakteristik: Manja, energetik, ekspresif.
+ * 5. HAYASHI  -> VOICEVOX: Kyushu Sora (ID 16). Peran: Ibu Rumah Tangga / Wanita Karir.
+ *                Karakteristik: Dewasa, bijaksana, berwibawa.
+ * 6. SATO     -> VOICEVOX: Mochiko-san (ID 20). Peran: Petugas Toko / Resepsionis.
+ *                Karakteristik: Sopan, intonasi formal, ramah.
+ * 7. AYU      -> VOICEVOX: Zundamon (ID 3). Peran: Maskot Cilik / Anak-anak.
+ *                Karakteristik: Nada sangat tinggi, kekanak-kanakan, energetik.
+ * 
+ * TOKOH PRIA:
+ * 1. BUDI     -> VOICEVOX: Aoyama Ryuusei (ID 13). Peran: Narator Utama Pria / Guru Pria.
+ *                Karakteristik: Suara bariton, tenang, berwibawa, intonasi mantap & formal.
+ * 2. DITO     -> VOICEVOX: Kuronou Takehiro (ID 11). Peran: Siswa SMA / Pemuda.
+ *                Karakteristik: Tenang, kasual, ramah.
+ * 3. SUZUKI   -> VOICEVOX: Kenzaki Mesu (ID 21). Peran: Pekerja Kantor / Pegawai Kereta.
+ *                Karakteristik: Formal, tegas, intonasi profesional.
+ * 4. TANAKA   -> VOICEVOX: Sakamatsuri Shuji (ID 52). Peran: Ayah / Pria Paruh Baya.
+ *                Karakteristik: Berat, tenang, berwibawa.
+ * 5. YAMADA   -> VOICEVOX: Kigasajima Sourin (ID 53). Peran: Kakek / Orang Lanjut Usia.
+ *                Karakteristik: Berat, serak, berwibawa.
+ * 6. KIMURA   -> VOICEVOX: Shirakami Koutarou (ID 12). Peran: Pemuda Gaul / Sahabat Laki-laki.
+ *                Karakteristik: Cepat, energetik, sangat santai.
+ * ============================================================================
  */
 
-// ============================================
-// DAFTAR TOKOH / SUARA YANG TERSEDIA
-// ============================================
+export interface VoiceCharacter {
+  readonly name: string;
+  readonly voicevoxName: string;
+  readonly speakerId: number;
+  readonly gender: "female" | "male";
+  readonly role: string;
+  readonly description: string;
+}
+
+export const VOICE_CHARACTERS: Record<string, VoiceCharacter> = {
+  // Wanita
+  indah: {
+    name: "indah",
+    voicevoxName: "Shikoku Metan",
+    speakerId: 2,
+    gender: "female",
+    role: "Narator Utama / Guru Wanita",
+    description: "Tenang, dewasa, artikulasi sangat jelas, intonasi formal & natural. Default pengucapan kosakata.",
+  },
+  lara: {
+    name: "lara",
+    voicevoxName: "Kasukabe Tsumugi",
+    speakerId: 8,
+    gender: "female",
+    role: "Remaja / Siswi SMA",
+    description: "Ceria, ramah, riang, bernada cerah.",
+  },
+  siti: {
+    name: "siti",
+    voicevoxName: "Amehare Hau",
+    speakerId: 10,
+    gender: "female",
+    role: "Teman Sekolah / Wanita Muda",
+    description: "Lembut, ramah, jernih.",
+  },
+  dewi: {
+    name: "dewi",
+    voicevoxName: "Meimei Himari",
+    speakerId: 14,
+    gender: "female",
+    role: "Gadis Kecil / Karakter Imut",
+    description: "Manja, energetik, ekspresif.",
+  },
+  hayashi: {
+    name: "hayashi",
+    voicevoxName: "Kyushu Sora",
+    speakerId: 16,
+    gender: "female",
+    role: "Ibu Rumah Tangga / Wanita Karir",
+    description: "Dewasa, bijaksana, berwibawa.",
+  },
+  sato: {
+    name: "sato",
+    voicevoxName: "Mochiko-san",
+    speakerId: 20,
+    gender: "female",
+    role: "Petugas Toko / Resepsionis",
+    description: "Sopan, intonasi formal, ramah.",
+  },
+  ayu: {
+    name: "ayu",
+    voicevoxName: "Zundamon",
+    speakerId: 3,
+    gender: "female",
+    role: "Maskot Cilik / Anak-anak",
+    description: "Nada sangat tinggi, kekanak-kanakan, energetik.",
+  },
+  zundamon: {
+    name: "zundamon",
+    voicevoxName: "Zundamon",
+    speakerId: 3,
+    gender: "female",
+    role: "Maskot Cilik / Anak-anak",
+    description: "Nada sangat tinggi, kekanak-kanakan, energetik.",
+  },
+  // Pria
+  budi: {
+    name: "budi",
+    voicevoxName: "Aoyama Ryuusei",
+    speakerId: 13,
+    gender: "male",
+    role: "Narator Utama Pria / Guru Pria",
+    description: "Suara bariton, tenang, berwibawa, intonasi mantap & formal.",
+  },
+  dito: {
+    name: "dito",
+    voicevoxName: "Kuronou Takehiro",
+    speakerId: 11,
+    gender: "male",
+    role: "Remaja / Siswa SMA",
+    description: "Tenang, kasual, ramah.",
+  },
+  suzuki: {
+    name: "suzuki",
+    voicevoxName: "Kenzaki Mesu",
+    speakerId: 21,
+    gender: "male",
+    role: "Pekerja Kantor / Pegawai Stasiun",
+    description: "Formal, tegas, intonasi profesional.",
+  },
+  tanaka: {
+    name: "tanaka",
+    voicevoxName: "Sakamatsuri Shuji",
+    speakerId: 52,
+    gender: "male",
+    role: "Ayah / Pria Paruh Baya",
+    description: "Berat, tenang, berwibawa.",
+  },
+  yamada: {
+    name: "yamada",
+    voicevoxName: "Kigasajima Sourin",
+    speakerId: 53,
+    gender: "male",
+    role: "Kakek / Pria Lanjut Usia",
+    description: "Berat, serak, berwibawa.",
+  },
+  kimura: {
+    name: "kimura",
+    voicevoxName: "Shirakami Koutarou",
+    speakerId: 12,
+    gender: "male",
+    role: "Pemuda Gaul / Sahabat Dekat",
+    description: "Cepat, energetik, sangat santai.",
+  },
+  andi: {
+    name: "andi",
+    voicevoxName: "Kuronou Takehiro",
+    speakerId: 11,
+    gender: "male",
+    role: "Remaja / Siswa SMA (Alias)",
+    description: "Tenang, kasual, ramah.",
+  },
+  faisal: {
+    name: "faisal",
+    voicevoxName: "Aoyama Ryuusei",
+    speakerId: 13,
+    gender: "male",
+    role: "Narator Utama Pria / Guru Pria (Alias)",
+    description: "Suara bariton, tenang, berwibawa, intonasi mantap & formal.",
+  },
+  takahashi: {
+    name: "takahashi",
+    voicevoxName: "Kenzaki Mesu",
+    speakerId: 21,
+    gender: "male",
+    role: "Pekerja Kantor / Pegawai Stasiun (Alias)",
+    description: "Formal, tegas, intonasi profesional.",
+  },
+  kobayashi: {
+    name: "kobayashi",
+    voicevoxName: "Sakamatsuri Shuji",
+    speakerId: 52,
+    gender: "male",
+    role: "Ayah / Pria Paruh Baya (Alias)",
+    description: "Berat, tenang, berwibawa.",
+  },
+  namonashi: {
+    name: "namonashi",
+    voicevoxName: "Aoyama Ryuusei",
+    speakerId: 13,
+    gender: "male",
+    role: "Pria Anonim",
+    description: "Suara bariton, tenang, berwibawa.",
+  },
+};
+
 export const TTS_VOICES = {
   // Wanita (VOICEVOX)
   LARA: "lara",

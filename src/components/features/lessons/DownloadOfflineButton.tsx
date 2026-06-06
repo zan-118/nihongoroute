@@ -124,7 +124,7 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
         // Cek TTS jika audio masih penuh
         if (allCached) {
           for (const word of ttsWords) {
-            const params = new URLSearchParams({ text: word, voice: "zundamon", rate: "medium", v: "7" });
+            const params = new URLSearchParams({ text: word, voice: "indah", rate: "medium", v: "7" });
             const ttsUrl = `/api/tts?${params.toString()}`;
             const match = await ttsCache.match(ttsUrl);
             if (!match) {
@@ -205,7 +205,7 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
 
       // 3. Unduh dan cache TTS pelafalan
       const ttsPromises = ttsWords.map(async (word) => {
-        const params = new URLSearchParams({ text: word, voice: "zundamon", rate: "medium", v: "7" });
+        const params = new URLSearchParams({ text: word, voice: "indah", rate: "medium", v: "7" });
         const ttsUrl = `/api/tts?${params.toString()}`;
         try {
           const match = await ttsCache.match(ttsUrl);
