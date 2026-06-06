@@ -107,7 +107,7 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
         }
 
         const audioCache = await caches.open("nihongoroute_audio_cache");
-        const ttsCache = await caches.open("nihongoroute_tts_cache_v6");
+        const ttsCache = await caches.open("nihongoroute_tts_cache_v7");
         const kanjiCache = await caches.open("nihongoroute_kanjivg_cache");
 
         let allCached = true;
@@ -124,7 +124,7 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
         // Cek TTS jika audio masih penuh
         if (allCached) {
           for (const word of ttsWords) {
-            const params = new URLSearchParams({ text: word, voice: "zundamon", rate: "medium", v: "6" });
+            const params = new URLSearchParams({ text: word, voice: "zundamon", rate: "medium", v: "7" });
             const ttsUrl = `/api/tts?${params.toString()}`;
             const match = await ttsCache.match(ttsUrl);
             if (!match) {
@@ -185,7 +185,7 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
 
       // 1. Buka seluruh cache storage
       const audioCache = await caches.open("nihongoroute_audio_cache");
-      const ttsCache = await caches.open("nihongoroute_tts_cache_v6");
+      const ttsCache = await caches.open("nihongoroute_tts_cache_v7");
       const kanjiCache = await caches.open("nihongoroute_kanjivg_cache");
 
       // 2. Unduh dan cache audio asli
@@ -205,7 +205,7 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
 
       // 3. Unduh dan cache TTS pelafalan
       const ttsPromises = ttsWords.map(async (word) => {
-        const params = new URLSearchParams({ text: word, voice: "zundamon", rate: "medium", v: "6" });
+        const params = new URLSearchParams({ text: word, voice: "zundamon", rate: "medium", v: "7" });
         const ttsUrl = `/api/tts?${params.toString()}`;
         try {
           const match = await ttsCache.match(ttsUrl);

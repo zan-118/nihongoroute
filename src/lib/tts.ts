@@ -240,9 +240,9 @@ export async function fetchTTSAudio(
 ): Promise<string | null> {
   if (!text.trim()) return null;
 
-  const params = new URLSearchParams({ text, voice, rate, v: "6" });
+  const params = new URLSearchParams({ text, voice, rate, v: "7" });
   const apiUrl = `/api/tts?${params.toString()}`;
-  const cacheName = "nihongoroute_tts_cache_v6";
+  const cacheName = "nihongoroute_tts_cache_v7";
 
   if (typeof window === "undefined") return null;
 

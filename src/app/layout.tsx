@@ -117,6 +117,29 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function() {
+                  try {
+                    if ('caches' in window) {
+                      caches.keys().then(function(names) {
+                        names.forEach(function(name) {
+                          if (name.startsWith('nihongoroute_tts_cache_') && name !== 'nihongoroute_tts_cache_v7') {
+                            caches.delete(name).then(function() {
+                              console.log('[TTS Cache Revocation] Deleted old cache:', name);
+                            });
+                          }
+                        });
+                      });
+                    }
+                  } catch (e) {
+                    console.warn('[TTS Cache Revocation] Error:', e);
+                  }
+                })();
+              `
+            }}
+          />
           <LazyMotion features={domAnimation}>
             <QueryProvider>
               {children}
