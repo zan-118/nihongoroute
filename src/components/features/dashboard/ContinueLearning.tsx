@@ -122,26 +122,26 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
         </div>
       </div>
 
-      <Card className="group relative overflow-hidden border-border bg-card/10 backdrop-blur-xl p-0 rounded-[34px] transition-all duration-500 hover:border-primary/30 shadow-none">
+      <Card className="group relative overflow-hidden border-border bg-card/10 backdrop-blur-xl p-0 rounded-[34px] transition-all duration-500 hover:border-primary/40 hover:shadow-[0_0_40px_rgba(var(--primary-rgb),0.1)] shadow-none glass">
         {/* Glow Latar Belakang Kemajuan Belajar */}
         <div 
-          className="absolute left-0 top-0 bottom-0 bg-primary/5 transition-all duration-1000 ease-out" 
+          className="absolute left-0 top-0 bottom-0 bg-primary/5 transition-all duration-1000 ease-out pointer-events-none" 
           style={{ width: `${activeData.progress}%` }}
         />
 
         <div className="relative z-10 flex flex-col md:flex-row items-center gap-[34px] p-[34px]">
           {/* Area Ikon / Miniatur */}
-          <div className="shrink-0 relative">
-            <div className="size-[89px] rounded-[21px] bg-card/40 border border-border flex items-center justify-center shadow-2xl overflow-hidden group-hover:border-primary/20 transition-colors">
+          <div className="shrink-0 relative transition-transform duration-300 group-hover:scale-105">
+            <div className="size-[89px] rounded-[21px] bg-card/40 border border-border flex items-center justify-center shadow-2xl overflow-hidden group-hover:border-primary/30 transition-colors">
                {activeData.progress === 100 ? (
-                 <CheckCircle2 size={34} className="text-success" />
+                 <CheckCircle2 size={34} className="text-success drop-shadow-[0_0_8px_rgba(var(--success-rgb),0.4)]" />
                ) : (
-                 <BookOpen size={34} className="text-primary group-hover:scale-110 transition-transform duration-500" />
+                 <BookOpen size={34} className="text-primary group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.3)]" />
                )}
             </div>
             
             {/* Lencana Persentase Progres */}
-            <div className="absolute -bottom-2 -right-2 bg-foreground text-background text-[10px] font-bold px-3 py-1 rounded-full border border-border shadow-xl">
+            <div className={`absolute -bottom-2 -right-2 text-background text-[10px] font-black px-3 py-1 rounded-full border border-border shadow-xl transition-colors ${activeData.progress === 100 ? 'bg-success text-success-foreground border-success/30' : 'bg-foreground'}`}>
               {Math.round(activeData.progress)}%
             </div>
           </div>
@@ -149,10 +149,10 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
           {/* Area Informasi Judul & Progres */}
           <div className="flex-1 text-center md:text-left">
             <div className="flex flex-col gap-1 mb-[13px]">
-              <span className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] opacity-80">
+              <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em] opacity-80">
                 {activeData.courseTitle}
               </span>
-              <h4 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight line-clamp-1">
+              <h4 className="text-2xl md:text-3xl font-black text-foreground tracking-tight line-clamp-1 transition-colors group-hover:text-primary">
                 {activeData.lessonTitle}
               </h4>
             </div>
@@ -160,11 +160,23 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
             <div className="flex items-center justify-center md:justify-start gap-4">
               <div className="flex items-center gap-2">
                 <div className="flex -space-x-1">
-                  {[...Array(3)].map((_, i) => (
-                    <div key={`progress-dot-${i}`} className={`w-1.5 h-3 rounded-full border border-background ${i < Math.floor(activeData.progress / 33) ? 'bg-primary shadow-[0_0_8px_rgba(var(--primary-rgb),0.4)]' : 'bg-background/10'}`} />
-                  ))}
+                  {[...Array(3)].map((_, i) => {
+                    const isDotActive = i < Math.floor(activeData.progress / 33);
+                    return (
+                      <div 
+                        key={`progress-dot-${i}`} 
+                        className={`w-1.5 h-3 rounded-full border border-background transition-all duration-500 ${
+                          isDotActive 
+                            ? activeData.progress === 100
+                              ? 'bg-success shadow-[0_0_8px_rgba(var(--success-rgb),0.5)]'
+                              : 'bg-primary shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]' 
+                            : 'bg-background/10'
+                        }`} 
+                      />
+                    );
+                  })}
                 </div>
-                <span className="text-xs text-muted-foreground font-medium">
+                <span className="text-xs text-muted-foreground font-bold uppercase tracking-wider">
                   {activeData.completedCount} / {activeData.totalLessons} Pelajaran
                 </span>
               </div>
@@ -172,11 +184,11 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
           </div>
 
           {/* Area Tombol Aksi */}
-          <div className="w-full md:w-auto shrink-0">
-            <Button asChild className="w-full md:w-auto h-[89px] px-10 rounded-[21px] bg-foreground text-background hover:bg-primary hover:text-primary-foreground font-bold uppercase tracking-widest transition-all duration-300 group shadow-2xl border-none">
+          <div className="w-full md:w-auto shrink-0 transition-transform active:scale-[0.98]">
+            <Button asChild className="w-full md:w-auto h-[89px] px-10 rounded-[21px] bg-foreground text-background hover:bg-primary hover:text-primary-foreground font-black uppercase tracking-widest transition-all duration-300 group shadow-2xl border-none">
               <Link href={`/courses/${activeData.courseSlug}/${activeData.lessonSlug}`}>
                 {activeData.isNew ? "Mulai" : "Lanjut"}
-                <div className="ml-3 size-[34px] rounded-full bg-background/20 flex items-center justify-center group-hover:bg-primary-foreground/20 transition-colors">
+                <div className="ml-3 size-[34px] rounded-full bg-background/20 flex items-center justify-center group-hover:bg-primary-foreground/20 transition-all duration-300 group-hover:rotate-12">
                   <Play size={14} fill="currentColor" />
                 </div>
               </Link>
@@ -185,12 +197,16 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
         </div>
 
         {/* Batang Progres Tipis di Sisi Bawah Card */}
-        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-border">
+        <div className="absolute bottom-0 left-0 w-full h-[2px] bg-border/50">
           <m.div 
             initial={{ width: 0 }}
             animate={{ width: `${activeData.progress}%` }}
             transition={{ duration: 1.5, ease: "easeOut" }}
-            className="h-full bg-primary shadow-[0_0_13px_rgba(var(--primary-rgb),0.5)]"
+            className={`h-full relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent ${
+              activeData.progress === 100
+                ? "bg-success shadow-[0_0_15px_rgba(var(--success-rgb),0.6)]"
+                : "bg-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.6)]"
+            }`}
           />
         </div>
       </Card>

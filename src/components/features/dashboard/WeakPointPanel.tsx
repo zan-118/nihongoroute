@@ -154,21 +154,21 @@ export default function WeakPointPanel() {
   }
 
   return (
-    <Card className="relative overflow-hidden bg-card/30 backdrop-blur-xl border border-border rounded-[34px] p-6 md:p-8 transition-all duration-300 hover:shadow-[0_0_35px_rgba(var(--primary-rgb),0.08)] shadow-none">
-      <div className="absolute top-0 right-0 size-32 bg-destructive/5 blur-3xl rounded-full" />
+    <Card className="relative overflow-hidden bg-card/30 backdrop-blur-xl border border-border rounded-[34px] p-6 md:p-8 transition-all duration-500 hover:border-destructive/20 hover:shadow-[0_0_40px_rgba(var(--destructive-rgb),0.08)] shadow-none">
+      <div className="absolute top-0 right-0 size-32 bg-destructive/5 blur-3xl rounded-full pointer-events-none" />
 
       {/* Bagian Header diagnosis */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
-          <h2 className="text-destructive font-bold uppercase tracking-widest text-xs mb-2 flex items-center gap-2">
+          <h2 className="text-destructive font-black uppercase tracking-widest text-xs mb-2 flex items-center gap-2">
             <AlertTriangle size={14} className="text-destructive animate-pulse" />
             Diagnosis Titik Lemah (Leech Detected)
           </h2>
-          <p className="text-xs text-muted-foreground font-medium uppercase tracking-tight">
-            Item memori berikut memiliki tingkat pengulangan gagal yang tinggi.
+          <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">
+            Item memori berikut memiliki tingkat kegagalan yang tinggi.
           </p>
         </div>
-        <Badge variant="outline" className="bg-destructive/10 border-destructive/20 text-destructive text-[8px] font-bold uppercase tracking-widest px-3">
+        <Badge variant="outline" className="bg-destructive/10 border-destructive/20 text-destructive text-[8px] font-black uppercase tracking-widest px-3 py-1.5 h-auto">
           {weakItems.length} Titik Lemah
         </Badge>
       </div>
@@ -179,11 +179,16 @@ export default function WeakPointPanel() {
           // Normalisasi persentase kesulitan dari easeFactor (semakin kecil, semakin sulit).
           // Default awal = 2.5. Sangat lemah jika < 2.2. Rentang: 1.3 - 2.2.
           const difficultyPercent = Math.min(100, Math.max(10, Math.floor(((2.2 - item.easeFactor) / (2.2 - 1.3)) * 100)));
+          const isCritical = difficultyPercent > 70;
           
           return (
             <div 
               key={item.id}
-              className="flex items-center justify-between p-4 rounded-2xl border border-border bg-card/50 hover:bg-card/80 transition-all duration-200"
+              className={`flex items-center justify-between p-4 rounded-2xl border transition-all duration-300 ${
+                isCritical
+                  ? "bg-destructive/[0.03] border-destructive/20 hover:bg-destructive/[0.06] hover:border-destructive/35 hover:shadow-[0_0_20px_rgba(var(--destructive-rgb),0.08)] animate-[pulse_5s_infinite]"
+                  : "bg-card/50 border-border hover:bg-card/80 hover:border-primary/20"
+              }`}
             >
               <div className="space-y-1.5 flex-1 pr-4">
                 <div className="flex items-center gap-2">
@@ -200,13 +205,13 @@ export default function WeakPointPanel() {
                 
                 {/* Indikator Kesulitan Visual */}
                 <div className="space-y-1">
-                  <div className="flex justify-between text-[6px] font-bold uppercase tracking-wider text-destructive/60 font-mono">
+                  <div className="flex justify-between text-[6px] font-black uppercase tracking-widest text-destructive/70 font-mono">
                     <span>Tingkat Kegagalan</span>
                     <span>{difficultyPercent}%</span>
                   </div>
                   <div className="w-full bg-muted/50 h-1.5 rounded-full overflow-hidden border border-border/50">
                     <div 
-                      className="bg-destructive h-full rounded-full shadow-[0_0_8px_rgba(var(--destructive-rgb),0.6)]" 
+                      className="bg-destructive h-full rounded-full shadow-[0_0_10px_rgba(var(--destructive-rgb),0.6)] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent" 
                       style={{ width: `${difficultyPercent}%` }}
                     />
                   </div>
@@ -214,16 +219,17 @@ export default function WeakPointPanel() {
               </div>
 
               {/* Tautan Tindakan Cepat (Quick Action) */}
-              <div>
+              <div className="shrink-0 transition-transform active:scale-95 hover:scale-105">
                 {item.type === "vocab" && item.slug ? (
                   <Link href={`/library/vocab/${item.slug}`}>
                     <Button 
                       size="sm"
                       variant="outline"
-                      className="size-8 p-0 rounded-xl bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 transition-all"
+                      className="size-9 p-0 rounded-xl bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 transition-all shadow-none"
                       title="Pelajari Kosakata"
+                      aria-label={`Pelajari Kosakata: ${item.display}`}
                     >
-                      <BookOpen size={14} />
+                      <BookOpen size={16} />
                     </Button>
                   </Link>
                 ) : item.type === "kanji" ? (
@@ -231,20 +237,22 @@ export default function WeakPointPanel() {
                     <Button 
                       size="sm"
                       variant="outline"
-                      className="size-8 p-0 rounded-xl bg-secondary/10 border-secondary/20 text-secondary hover:bg-secondary/20 transition-all"
+                      className="size-9 p-0 rounded-xl bg-secondary/10 border-secondary/20 text-secondary hover:bg-secondary/20 transition-all shadow-none"
                       title="Latih Menulis Kanji"
+                      aria-label={`Latih Menulis Kanji: ${item.display}`}
                     >
-                      <PenTool size={14} />
+                      <PenTool size={16} />
                     </Button>
                   </Link>
                 ) : (
                   <Button 
                     size="sm"
                     variant="outline"
-                    className="size-8 p-0 rounded-xl text-muted-foreground border-border bg-muted/40 hover:text-foreground hover:bg-muted/80 transition-all"
+                    className="size-9 p-0 rounded-xl text-muted-foreground border-border bg-muted/40 hover:text-foreground hover:bg-muted/80 transition-all"
                     disabled
+                    aria-label="Tindakan tidak tersedia"
                   >
-                    <ArrowRight size={14} />
+                    <ArrowRight size={16} />
                   </Button>
                 )}
               </div>

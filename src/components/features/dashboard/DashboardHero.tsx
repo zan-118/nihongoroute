@@ -111,76 +111,87 @@ export default function DashboardHero({
         {loading ? (
           <Skeleton className="h-[320px] w-full rounded-[34px]" />
         ) : (
-        <Card className="p-[34px] md:p-[55px] rounded-[34px] bg-card/20 backdrop-blur-xl border border-border shadow-2xl relative overflow-hidden group transition-all duration-500 hover:border-primary/30">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+        <Card className="p-[34px] md:p-[55px] rounded-[34px] bg-card/20 backdrop-blur-xl border border-border shadow-2xl relative overflow-hidden group transition-all duration-500 hover:border-primary/40 hover:shadow-[0_0_50px_rgba(var(--primary-rgb),0.15)]">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-750" />
           
           <div className="relative z-10 flex flex-col items-center text-center">
             
             {/* Ikon Berdenyut Interaktif (Pulsing Icon) */}
             <m.div 
               animate={dueCount > 0 ? {
-                scale: [1, 1.02, 1],
-                boxShadow: ["0 0 0px rgba(var(--primary-rgb),0)", "0 0 34px rgba(var(--primary-rgb),0.2)", "0 0 0px rgba(var(--primary-rgb),0)"]
-              } : {}}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                scale: [1, 1.05, 1],
+                boxShadow: [
+                  "0 0 0px rgba(var(--primary-rgb),0)", 
+                  "0 0 30px rgba(var(--primary-rgb),0.3)", 
+                  "0 0 0px rgba(var(--primary-rgb),0)"
+                ]
+              } : {
+                scale: [1, 1.05, 1],
+                boxShadow: [
+                  "0 0 0px rgba(var(--success-rgb),0)", 
+                  "0 0 30px rgba(var(--success-rgb),0.3)", 
+                  "0 0 0px rgba(var(--success-rgb),0)"
+                ]
+              }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               className={`w-[89px] h-[89px] rounded-[34px] flex items-center justify-center mb-[34px] border transition-all duration-500 ${
                 dueCount > 0 
-                  ? 'bg-primary/10 border-primary/20 text-primary' 
-                  : 'bg-success/10 border-success/20 text-success'
+                  ? 'bg-primary/15 border-primary/30 text-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.1)]' 
+                  : 'bg-success/15 border-success/30 text-success shadow-[0_0_20px_rgba(var(--success-rgb),0.1)]'
               }`}
             >
               {dueCount > 0 ? (
-                <BrainCircuit size={40} className="drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.3)]" />
+                <BrainCircuit size={40} className="drop-shadow-[0_0_12px_rgba(var(--primary-rgb),0.4)]" />
               ) : (
-                <Trophy size={40} className="drop-shadow-[0_0_8px_rgba(var(--success-rgb),0.3)]" />
+                <Trophy size={40} className="drop-shadow-[0_0_12px_rgba(var(--success-rgb),0.4)]" />
               )}
             </m.div>
             
-            <h3 className={`text-3xl md:text-5xl font-bold tracking-tight mb-[13px] text-balance ${dueCount > 0 ? 'text-foreground' : 'text-success'}`}>
+            <h3 className={`text-3xl md:text-5xl font-black tracking-tight mb-[13px] text-balance transition-colors ${dueCount > 0 ? 'text-foreground' : 'text-success'}`}>
               {dueCount > 0 ? `Siap review lagi, ${name || 'Pelajar'}?` : `Hafalanmu aman, ${name || 'Pelajar'}!`}
             </h3>
-            <p className="text-muted-foreground text-base md:text-lg mb-[34px] font-medium max-w-md leading-relaxed text-balance">
+            <p className="text-muted-foreground text-sm md:text-base mb-[34px] font-medium max-w-md leading-relaxed text-balance">
               {dueCount > 0 
                 ? `Ada ${dueCount} kata yang perlu di-review. Yuk, jaga semangat belajarmu!` 
                 : "Hebat! Semua ingatanmu masih segar. Siap lanjut ke materi baru?"}
             </p>
-
+ 
             {/* RINGKASAN STATUS DI DALAM HERO (Mobile-Optimized) */}
             <div className="grid grid-cols-3 gap-2 md:gap-[21px] mb-[34px] md:mb-[55px] w-full max-w-sm">
               <div className="flex flex-col items-center gap-1 md:gap-2">
-                <div className="flex items-center gap-1 md:gap-1.5 text-warning">
-                  <Flame size={12} className="fill-current md:w-3.5 md:h-3.5" />
-                  <span className="text-sm md:text-base font-bold">
+                <div className="flex items-center gap-1 md:gap-1.5 text-warning transition-transform hover:scale-105">
+                  <Flame size={14} className="fill-current md:w-4 md:h-4 drop-shadow-[0_0_6px_rgba(var(--warning-rgb),0.3)]" />
+                  <span className="text-sm md:text-lg font-black font-mono">
                     <AnimatedCounter value={streak} />
                   </span>
                 </div>
-                <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-[0.15em] md:tracking-widest text-muted-foreground/60">Streak</span>
+                <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">Streak</span>
               </div>
               <div className="flex flex-col items-center gap-1 md:gap-2 border-x border-border/60">
-                <div className="flex items-center gap-1 md:gap-1.5 text-primary">
-                  <Star size={12} className="fill-current md:w-3.5 md:h-3.5" />
-                  <span className="text-sm md:text-base font-bold">Lvl {level}</span>
+                <div className="flex items-center gap-1 md:gap-1.5 text-primary transition-transform hover:scale-105">
+                  <Star size={14} className="fill-current md:w-4 md:h-4 drop-shadow-[0_0_6px_rgba(var(--primary-rgb),0.3)]" />
+                  <span className="text-sm md:text-lg font-black font-mono">Lvl {level}</span>
                 </div>
-                <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-[0.15em] md:tracking-widest text-muted-foreground/60">Level</span>
+                <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">Level</span>
               </div>
               <div className="flex flex-col items-center gap-1 md:gap-2">
-                <div className="flex items-center gap-1 md:gap-1.5 text-primary">
-                  <Target size={12} className="md:w-3.5 md:h-3.5" />
-                  <span className="text-sm md:text-base font-bold">{Math.floor(xpProgress)}%</span>
+                <div className="flex items-center gap-1 md:gap-1.5 text-primary transition-transform hover:scale-105">
+                  <Target size={14} className="md:w-4 md:h-4 drop-shadow-[0_0_6px_rgba(var(--primary-rgb),0.3)]" />
+                  <span className="text-sm md:text-lg font-black font-mono">{Math.floor(xpProgress)}%</span>
                 </div>
-                <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-[0.15em] md:tracking-widest text-muted-foreground/60">Progres</span>
+                <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">Progres</span>
               </div>
             </div>
-
+ 
             <div className="flex flex-col sm:flex-row gap-[13px] w-full max-w-md">
               {dueCount > 0 ? (
                 <>
-                  <Button asChild className="flex-1 h-[55px] bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-wider rounded-2xl text-[10px] transition-all shadow-lg shadow-primary/20">
+                  <Button asChild className="flex-1 h-[55px] bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-[0.15em] rounded-2xl text-[10px] transition-all shadow-lg shadow-primary/20 hover:shadow-primary/30 active:scale-[0.98]">
                     <Link href="/review">
                       Mulai Review <ArrowRight size={14} className="ml-2" />
                     </Link>
                   </Button>
-                  <Button asChild variant="outline" className="flex-1 h-[55px] bg-card/50 backdrop-blur-md border-border hover:bg-card rounded-2xl text-[10px] font-bold uppercase tracking-wider transition-all">
+                  <Button asChild variant="outline" className="flex-1 h-[55px] bg-card/50 backdrop-blur-md border-border hover:bg-card hover:border-primary/30 rounded-2xl text-[10px] font-black uppercase tracking-[0.15em] transition-all active:scale-[0.98]">
                     <Link href="/review?mode=quick">
                       <Zap size={14} className="mr-2 text-primary" /> Kuis Kilat
                     </Link>
@@ -188,12 +199,12 @@ export default function DashboardHero({
                 </>
               ) : (
                 <>
-                  <Button asChild className="flex-1 h-[55px] bg-foreground text-background hover:bg-foreground/90 font-bold uppercase tracking-wider rounded-2xl text-[10px] transition-all shadow-xl">
+                  <Button asChild className="flex-1 h-[55px] bg-foreground text-background hover:bg-foreground/90 font-black uppercase tracking-[0.15em] rounded-2xl text-[10px] transition-all shadow-xl active:scale-[0.98]">
                     <Link href="/courses">
                       Mulai Pelajaran <BookMarked size={14} className="ml-2" />
                     </Link>
                   </Button>
-                  <Button asChild variant="outline" className="flex-1 h-[55px] bg-card/50 backdrop-blur-md border-border hover:bg-card rounded-2xl text-[10px] font-bold uppercase tracking-wider transition-all">
+                  <Button asChild variant="outline" className="flex-1 h-[55px] bg-card/50 backdrop-blur-md border-border hover:bg-card hover:border-primary/30 rounded-2xl text-[10px] font-black uppercase tracking-[0.15em] transition-all active:scale-[0.98]">
                     <Link href="/review?mode=quick">
                       <Zap size={14} className="mr-2 text-primary" /> Kuis Kilat
                     </Link>

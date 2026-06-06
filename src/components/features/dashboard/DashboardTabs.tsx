@@ -43,28 +43,40 @@ export function DashboardTabs({ tabs, activeTab, onTabChange }: DashboardTabsPro
       <div 
         role="tablist" 
         aria-label="Dashboard Navigation" 
-        className="bg-muted/50 dark:bg-background/[0.03] p-1.5 rounded-[2rem] border border-border/50 flex gap-1 shadow-sm max-w-full overflow-x-auto no-scrollbar"
+        className="bg-muted/50 dark:bg-background/[0.03] p-1.5 rounded-[2rem] border border-border/50 flex gap-1 shadow-sm max-w-full overflow-x-auto scrollbar-none"
       >
-        {tabs.map((tab) => (
-          <m.button
-            key={tab.id}
-            role="tab"
-            aria-selected={activeTab === tab.id}
-            aria-controls={`${tab.id}-panel`}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => onTabChange(tab.id)}
-            className={`px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 flex items-center gap-2 ${
-              activeTab === tab.id
-                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105"
-                : "text-muted-foreground hover:text-foreground hover:bg-background/5"
-            }`}
-          >
-            <span className="text-base" aria-hidden="true">{tab.icon}</span>
-            <span className="hidden sm:inline">{tab.label}</span>
-          </m.button>
-        ))}
+        {tabs.map((tab) => {
+          const isActive = activeTab === tab.id;
+          return (
+            <m.button
+              key={tab.id}
+              role="tab"
+              aria-selected={isActive}
+              aria-controls={`${tab.id}-panel`}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => onTabChange(tab.id)}
+              className={`relative px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-colors duration-300 flex items-center gap-2 outline-none select-none min-h-[44px] ${
+                isActive
+                  ? "text-primary-foreground font-black"
+                  : "text-muted-foreground hover:text-foreground hover:bg-background/5"
+              }`}
+            >
+              {isActive && (
+                <m.div
+                  layoutId="active-dashboard-tab"
+                  className="absolute inset-0 bg-primary rounded-full shadow-lg shadow-primary/20"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  style={{ originY: "0px" }}
+                />
+              )}
+              <span className="text-base relative z-10" aria-hidden="true">{tab.icon}</span>
+              <span className="hidden sm:inline relative z-10">{tab.label}</span>
+            </m.button>
+          );
+        })}
       </div>
     </div>
   );
 }
+
 

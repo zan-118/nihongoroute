@@ -32,7 +32,7 @@ export default function DailyExpression({ expression }: DailyExpressionProps) {
   return (
     <section
       aria-label="Ungkapan Hari Ini"
-      className="rounded-[2.5rem] md:rounded-[3rem] border border-border bg-card/40 backdrop-blur-md p-6 md:p-8 relative overflow-hidden shadow-[0_0_40px_-10px_rgba(var(--primary-rgb),0.08)]"
+      className="rounded-[2.5rem] md:rounded-[3rem] border border-border bg-card/40 backdrop-blur-md p-6 md:p-8 relative overflow-hidden shadow-[0_0_40px_-10px_rgba(var(--primary-rgb),0.08)] hover:border-primary/30 hover:shadow-[0_0_45px_rgba(var(--primary-rgb),0.12)] transition-all duration-500"
     >
       {/* Pola kisi halus di latar belakang */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--primary-rgb),0.02)_1px,transparent_1px)] bg-[size:100%_4px] opacity-40 pointer-events-none" />
@@ -56,16 +56,17 @@ export default function DailyExpression({ expression }: DailyExpressionProps) {
       </div>
 
       {/* Teks Ungkapan Utama */}
-      <div className="relative z-10 space-y-2 text-center py-4">
+      <div className="relative z-10 space-y-3 text-center py-4 transition-transform duration-300 hover:scale-[1.02]">
         <p
-          className="text-4xl md:text-5xl font-bold tracking-tight text-foreground leading-tight"
+          className="text-4xl md:text-5xl font-black tracking-tight text-foreground leading-tight"
           lang="ja"
+          style={{ fontFamily: "var(--font-noto-serif-jp)" }}
           aria-label={`Ungkapan: ${expression.text}`}
         >
           {expression.text}
         </p>
         <p
-          className="text-sm md:text-base text-muted-foreground font-medium tracking-widest"
+          className="text-xs md:text-sm text-primary/80 font-black tracking-widest font-mono uppercase"
           lang="ja"
         >
           {expression.reading}
@@ -73,11 +74,11 @@ export default function DailyExpression({ expression }: DailyExpressionProps) {
       </div>
 
       {/* Pembatas Visual */}
-      <div className="relative z-10 my-4 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+      <div className="relative z-10 my-4 h-[1px] bg-gradient-to-r from-transparent via-border/80 to-transparent" />
 
       {/* Arti Bahasa Indonesia */}
-      <p className="relative z-10 text-center text-sm text-foreground/80 leading-relaxed font-medium">
-        {meaningId}
+      <p className="relative z-10 text-center text-sm text-foreground/80 leading-relaxed font-bold tracking-wide italic">
+        "{meaningId}"
       </p>
     </section>
   );
