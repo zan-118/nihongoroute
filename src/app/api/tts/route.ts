@@ -129,40 +129,6 @@ export async function GET(req: NextRequest) {
       throw err;
     }
 
-    // 4. Unggah hasil generate ke Supabase Storage (non-blocking agar client tidak menunggu)
-    //    dan daftarkan metadata di DB cache
-    (async () => {
-      try {
-        const { error: uploadError } = await supabase
-          .storage
-          .from("tts-cache")
-          .upload(`${hash}.mp3`, audioBuffer, {
-            contentType: "audio/mpeg",
-            cacheControl: "604800",
-            upsert: true,
-          });
-
-        if (uploadError) throw uploadError;
-
-        const { data: { publicUrl } } = supabase
-          .storage
-          .from("tts-cache")
-          .getPublicUrl(`${hash}.mp3`);
-
-        await supabase
-          .from("tts_cache")
-          .upsert({
-            id: hash,
-            text,
-            voice,
-            rate,
-            audio_url: publicUrl,
-          });
-      } catch (uploadErr) {
-        console.error("[TTS API] Gagal menyimpan cache baru ke Supabase:", uploadErr);
-      }
-    })();
-
     return new Response(new Uint8Array(audioBuffer), {
       headers: {
         "Content-Type": "audio/mpeg",
