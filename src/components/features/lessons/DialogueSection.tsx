@@ -63,6 +63,15 @@ interface DialogueSectionProps {
  * @param {DialogueItem[]} props.listeningList - Daftar skenario percakapan hasil query Sanity CMS
  */
 export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList }) => {
+  const allLines = React.useMemo(() => {
+    const lines: DialogueSpeakerItem[] = [];
+    listeningList?.forEach((l) => {
+      const dialogueLines = l.transcript || l.body || [];
+      lines.push(...dialogueLines);
+    });
+    return lines;
+  }, [listeningList]);
+
   const {
     speakingIndex,
     loadingIndex,
@@ -70,7 +79,7 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
     playlistIndex,
     playPlaylist,
     pausePlaylist,
-  } = useLineTTS({ rate: "medium" });
+  } = useLineTTS({ rate: "medium", lines: allLines });
 
   const [activeDialogId, setActiveDialogId] = React.useState<string | null>(null);
   const activeLineRef = React.useRef<HTMLDivElement | null>(null);
