@@ -122,7 +122,10 @@ export function useTTSReader(text: string, speaker?: string) {
     if (speaker) {
       voice = detectVoice(speaker);
     } else {
+      // Pool 19 voices — HARUS identik dengan VOICES_ROTATION di generate_example_sentences.js
+      // agar hash deterministik menghasilkan voice yang sama (cache hit)
       const voices = [
+        // Wanita
         TTS_VOICES.LARA,
         TTS_VOICES.INDAH,
         TTS_VOICES.SITI,
@@ -132,18 +135,17 @@ export function useTTSReader(text: string, speaker?: string) {
         TTS_VOICES.AYU,
         TTS_VOICES.ZUNDAMON,
         TTS_VOICES.RITSU,
+        // Pria (yamada & ooba dikeluarkan — kakek tidak cocok untuk contoh kalimat)
         TTS_VOICES.DITO,
         TTS_VOICES.BUDI,
         TTS_VOICES.SUZUKI,
         TTS_VOICES.TANAKA,
-        TTS_VOICES.YAMADA,
         TTS_VOICES.KIMURA,
         TTS_VOICES.ANDI,
         TTS_VOICES.FAISAL,
         TTS_VOICES.TAKAHASHI,
         TTS_VOICES.KOBAYASHI,
         TTS_VOICES.NAMONASHI,
-        TTS_VOICES.OOBA,
       ];
       let hash = 0;
       for (let i = 0; i < text.length; i++) {
