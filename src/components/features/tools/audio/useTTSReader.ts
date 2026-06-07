@@ -9,7 +9,7 @@
 // IMPORT & DEPENDENSI
 // ==========================================
 import { useState, useEffect, useRef } from "react";
-import { fetchTTSAudio, speakWithWebSpeech, detectVoice, TTS_VOICES } from "@/lib/tts";
+import { fetchTTSAudio, speakWithWebSpeech, detectVoice, TTS_VOICES, type TtsVoice } from "@/lib/tts";
 
 // ==========================================
 // HOOK UTAMA
@@ -118,7 +118,7 @@ export function useTTSReader(text: string, speaker?: string) {
 
     // Tentukan suara: jika ada speaker gunakan speaker, 
     // jika tidak (seperti pada contoh kalimat), gunakan suara secara acak-deterministik berdasarkan hash teks
-    let voice = TTS_VOICES.INDAH;
+    let voice: TtsVoice = TTS_VOICES.INDAH;
     if (speaker) {
       voice = detectVoice(speaker);
     } else {
