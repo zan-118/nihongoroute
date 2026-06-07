@@ -127,7 +127,7 @@ const VocabCard: React.FC<{ v: VocabLessonItem; idx: number }> = ({ v, idx }) =>
       </div>
       <div className="flex flex-row sm:flex-col gap-3 shrink-0 w-full sm:w-auto justify-end">
         {(v._id || v.id) && <AddToSRSButton wordId={v._id || v.id || ""} />}
-        {v.word && <TTSReader text={v.word} minimal={true} />}
+        {v.word && <TTSReader text={v.word} minimal={true} speaker="indah" />}
       </div>
     </div>
   );

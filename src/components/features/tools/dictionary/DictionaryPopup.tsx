@@ -188,7 +188,7 @@ export default function DictionaryPopup() {
 
                 <div className="flex items-center gap-2 pt-2">
                   <div className="flex-1">
-                     <TTSReader text={result.word} minimal={true} />
+                     <TTSReader text={result.word} minimal={true} speaker="indah" />
                   </div>
                   {result.id && (
                     <div className="flex-1 flex justify-end">

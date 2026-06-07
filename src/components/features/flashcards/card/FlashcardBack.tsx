@@ -118,7 +118,7 @@ export function FlashcardBack({
                 PITCH: {pitchAccent}
               </span>
             )}
-            <TTSReader text={word} minimal={true} />
+            <TTSReader text={word} minimal={true} speaker="indah" />
           </div>
         </div>
 

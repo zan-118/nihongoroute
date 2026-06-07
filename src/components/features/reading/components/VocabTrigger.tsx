@@ -73,7 +73,7 @@ export default function VocabTrigger({ text, vocabId, children }: VocabTriggerPr
             
             <DialogTitle className="text-3xl font-black tracking-tighter flex items-center gap-4">
               {text}
-              <TTSReader text={text} minimal />
+              <TTSReader text={text} minimal speaker="indah" />
             </DialogTitle>
           </DialogHeader>
 

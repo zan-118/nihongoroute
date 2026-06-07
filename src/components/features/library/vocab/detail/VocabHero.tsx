@@ -38,7 +38,7 @@ export function VocabHero({ word, furigana, romaji, meaning }: VocabHeroProps) {
       {/* Grup Tombol Aksi Pojok Kanan Atas */}
       <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
         <AddToSRSButton wordId={word} />
-        <TTSReader text={word} minimal={false} />
+        <TTSReader text={word} minimal={false} speaker="indah" />
       </div>
 
       {/* Karakter Ejaan Utama (Furigana Presisi 0.55em) */}

@@ -60,7 +60,7 @@ export function VocabCard({ item, idx, showRomaji }: VocabCardProps) {
             </div>
             {/* Tombol TTS Offline (Mencegah navigasi Link saat ditekan) */}
             <div onClick={(e) => e.preventDefault()} className="relative z-10">
-              <TTSReader text={item.word} minimal={true} />
+              <TTSReader text={item.word} minimal={true} speaker="indah" />
             </div>
           </div>
 

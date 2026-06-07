@@ -326,7 +326,7 @@ export default function VocabClient({
                       {item.jlpt_level.toUpperCase()}
                     </span>
                   )}
-                  <TTSReader text={item.word} small={true} />
+                  <TTSReader text={item.word} small={true} speaker="indah" />
                   <Link href={`/library/vocab/${item.slug}`} className="shrink-0">
                     <Button
                       variant="outline"
