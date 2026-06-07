@@ -254,6 +254,7 @@ export const SPEAKER_MAP: Record<string, TtsVoice> = {
   // === INDAH (四国めたん / Shikoku Metan) — Narator Wanita ===
   "indah": TTS_VOICES.INDAH,
   "インダ": TTS_VOICES.INDAH,
+  "インダハ": TTS_VOICES.INDAH,
 
   // === LARA (春日部つむぎ / Kasukabe Tsumugi) — Siswi SMA ===
   "lara": TTS_VOICES.LARA,
