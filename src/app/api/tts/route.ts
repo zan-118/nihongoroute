@@ -156,42 +156,12 @@ export async function GET(req: NextRequest) {
       }
       const audioBuffer = Buffer.concat(chunks);
 
-      // Upload ke Supabase Storage
-      const { error: uploadError } = await supabase.storage
-        .from("tts-cache")
-        .upload(`${hash}.mp3`, audioBuffer, {
-          contentType: "audio/mpeg",
-          upsert: true,
-        });
-
-      if (uploadError) {
-        console.error("[TTS API] Gagal mengunggah audio hasil sintesis ke storage:", uploadError.message);
-      } else {
-        const { data: { publicUrl } } = supabase.storage
-          .from("tts-cache")
-          .getPublicUrl(`${hash}.mp3`);
-
-        // Simpan metadata cache ke database tts_cache
-        const { error: dbError } = await supabase
-          .from("tts_cache")
-          .upsert({
-            id: hash,
-            text: text,
-            voice,
-            rate,
-            audio_url: publicUrl,
-          });
-
-        if (dbError) {
-          console.error("[TTS API] Gagal menyimpan metadata cache ke database:", dbError.message);
-        }
-      }
-
-      // Kembalikan audio buffer langsung sebagai respon
+      // Cache miss: kembalikan audio langsung tanpa menyimpan ke DB/Storage
+      // (entry sudah di-generate via script, penyimpanan otomatis dinonaktifkan untuk menghindari konflik)
       return new Response(new Uint8Array(audioBuffer), {
         headers: {
           "Content-Type": "audio/mpeg",
-          "Cache-Control": "public, max-age=604800, immutable",
+          "Cache-Control": "no-store",
         },
       });
 
