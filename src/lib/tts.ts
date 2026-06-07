@@ -251,77 +251,99 @@ export const TTS_VOICES = {
 } as const;
 
 export const SPEAKER_MAP: Record<string, TtsVoice> = {
-  // Katakana / Kanji -> VOICEVOX Voice Name
-  "ディト": TTS_VOICES.DITO,
-  "dito": TTS_VOICES.DITO,
-  "小林": TTS_VOICES.KOBAYASHI,
-  "kobayashi": TTS_VOICES.KOBAYASHI,
-  "こばやし": TTS_VOICES.KOBAYASHI,
-  "ララ": TTS_VOICES.LARA,
-  "lara": TTS_VOICES.LARA,
-  "鈴木": TTS_VOICES.SUZUKI,
-  "suzuki": TTS_VOICES.SUZUKI,
-  "すずき": TTS_VOICES.SUZUKI,
-  "田中": TTS_VOICES.TANAKA,
-  "tanaka": TTS_VOICES.TANAKA,
-  "たなか": TTS_VOICES.TANAKA,
-  "インダ": TTS_VOICES.INDAH,
+  // === INDAH (四国めたん / Shikoku Metan) — Narator Wanita ===
   "indah": TTS_VOICES.INDAH,
-  "山田": TTS_VOICES.YAMADA,
-  "yamada": TTS_VOICES.YAMADA,
-  "やまだ": TTS_VOICES.YAMADA,
-  "佐藤": TTS_VOICES.SATO,
-  "sato": TTS_VOICES.SATO,
-  "さとう": TTS_VOICES.SATO,
-  "木村": TTS_VOICES.KIMURA,
-  "kimura": TTS_VOICES.KIMURA,
-  "きむら": TTS_VOICES.KIMURA,
-  "ブディ": TTS_VOICES.BUDI,
-  "budi": TTS_VOICES.BUDI,
-  "アンディ": TTS_VOICES.ANDI,
-  "andi": TTS_VOICES.ANDI,
-  "シティ": TTS_VOICES.SITI,
+  "インダ": TTS_VOICES.INDAH,
+
+  // === LARA (春日部つむぎ / Kasukabe Tsumugi) — Siswi SMA ===
+  "lara": TTS_VOICES.LARA,
+  "ララ": TTS_VOICES.LARA,
+
+  // === SITI (雨晴はう / Amehare Hau) — Wanita Muda ===
   "siti": TTS_VOICES.SITI,
-  "デウィ": TTS_VOICES.DEWI,
+  "シティ": TTS_VOICES.SITI,
+
+  // === DEWI (冥鳴ひまり / Meimei Himari) — Gadis Kecil ===
   "dewi": TTS_VOICES.DEWI,
-  "ファイサル": TTS_VOICES.FAISAL,
-  "faisal": TTS_VOICES.FAISAL,
-  "林": TTS_VOICES.HAYASHI,
+  "デウィ": TTS_VOICES.DEWI,
+
+  // === HAYASHI (九州そら / Kyushu Sora) — Ibu / Wanita Karir ===
   "hayashi": TTS_VOICES.HAYASHI,
+  "林": TTS_VOICES.HAYASHI,
   "はやし": TTS_VOICES.HAYASHI,
-  "高橋": TTS_VOICES.TAKAHASHI,
-  "takahashi": TTS_VOICES.TAKAHASHI,
-  "たかはし": TTS_VOICES.TAKAHASHI,
-  "アユ": TTS_VOICES.AYU,
+
+  // === SATO (もち子さん / Mochiko-san) — Resepsionis ===
+  "sato": TTS_VOICES.SATO,
+  "佐藤": TTS_VOICES.SATO,
+  "さとう": TTS_VOICES.SATO,
+
+  // === AYU (WhiteCUL) — Remaja Santai ===
   "ayu": TTS_VOICES.AYU,
-  "りつ": TTS_VOICES.RITSU,
+  "アユ": TTS_VOICES.AYU,
+
+  // === ZUNDAMON (ずんだもん) — Maskot Cilik ===
+  "zundamon": TTS_VOICES.ZUNDAMON,
+  "ずんだもん": TTS_VOICES.ZUNDAMON,
+
+  // === RITSU (波音リツ / Namine Ritsu) — Wanita Misterius ===
   "ritsu": TTS_VOICES.RITSU,
-  "大庭": TTS_VOICES.OOBA,
-  "ooba": TTS_VOICES.OOBA,
-  "おおば": TTS_VOICES.OOBA,
+  "リツ": TTS_VOICES.RITSU,
+  "りつ": TTS_VOICES.RITSU,
 
-  // New Japanese name mappings
-  "ケンジ": TTS_VOICES.KIMURA,
-  "kenji": TTS_VOICES.KIMURA,
-  "リナ": TTS_VOICES.LARA,
-  "rina": TTS_VOICES.LARA,
-  "アハマド": TTS_VOICES.FAISAL,
-  "ahmad": TTS_VOICES.FAISAL,
-  "名無し": TTS_VOICES.NAMONASHI,
+  // === BUDI (青山龍星 / Aoyama Ryuusei) — Narator Pria ===
+  "budi": TTS_VOICES.BUDI,
+  "ブディ": TTS_VOICES.BUDI,
+
+  // === DITO (玄野武宏 / Kuronou Takehiro) — Siswa SMA ===
+  "dito": TTS_VOICES.DITO,
+  "ディト": TTS_VOICES.DITO,
+
+  // === SUZUKI (剣崎雌雄 / Kenzaki Mesu) — Pekerja Kantor ===
+  "suzuki": TTS_VOICES.SUZUKI,
+  "鈴木": TTS_VOICES.SUZUKI,
+  "すずき": TTS_VOICES.SUZUKI,
+
+  // === TANAKA (雀松朱司 / Sakamatsuri Shuji) — Ayah / Pria Paruh Baya ===
+  "tanaka": TTS_VOICES.TANAKA,
+  "田中": TTS_VOICES.TANAKA,
+  "たなか": TTS_VOICES.TANAKA,
+
+  // === YAMADA (麒ヶ島宗麟 / Kigasajima Sourin) — Kakek ===
+  "yamada": TTS_VOICES.YAMADA,
+  "山田": TTS_VOICES.YAMADA,
+  "やまだ": TTS_VOICES.YAMADA,
+
+  // === KIMURA (白上虎太郎 / Shirakami Koutarou) — Pemuda Gaul ===
+  "kimura": TTS_VOICES.KIMURA,
+  "木村": TTS_VOICES.KIMURA,
+  "きむら": TTS_VOICES.KIMURA,
+
+  // === ANDI (†聖騎士 紅桜† / Holy Knight Red Sakura) — Pemuda Dramatis ===
+  "andi": TTS_VOICES.ANDI,
+  "アンディ": TTS_VOICES.ANDI,
+
+  // === FAISAL (中部つるぎ / Nakae Tsurugi) — Pria Dewasa Kalem ===
+  "faisal": TTS_VOICES.FAISAL,
+  "ファイサル": TTS_VOICES.FAISAL,
+
+  // === TAKAHASHI (黒沢冴白 / Kurosawa Kohaku) — Pekerja Kantoran Muda ===
+  "takahashi": TTS_VOICES.TAKAHASHI,
+  "高橋": TTS_VOICES.TAKAHASHI,
+  "たかはし": TTS_VOICES.TAKAHASHI,
+
+  // === KOBAYASHI (離途 / Rito) — Pria Serius ===
+  "kobayashi": TTS_VOICES.KOBAYASHI,
+  "小林": TTS_VOICES.KOBAYASHI,
+  "こばやし": TTS_VOICES.KOBAYASHI,
+
+  // === NAMONASHI (あんこもん / Ankomon) — Pria Anonim ===
   "namonashi": TTS_VOICES.NAMONASHI,
-  "amonashi": TTS_VOICES.NAMONASHI,
+  "名無し": TTS_VOICES.NAMONASHI,
 
-  // Full-width character aliases
-  "ａ": TTS_VOICES.BUDI,
-  "a": TTS_VOICES.BUDI,
-  "ｂ": TTS_VOICES.AYU,
-  "b": TTS_VOICES.AYU,
-  "登場人物ａ": TTS_VOICES.BUDI,
-  "登場人物ｂ": TTS_VOICES.AYU,
-  "同僚ａ": TTS_VOICES.KIMURA,
-  "同僚ｂ": TTS_VOICES.DITO,
-  "学生ａ": TTS_VOICES.KIMURA,
-  "エンジニアａ": TTS_VOICES.KIMURA,
+  // === OOBA (ちび式じい / Chibi Shikiji) — Pria Tua ===
+  "ooba": TTS_VOICES.OOBA,
+  "大庭": TTS_VOICES.OOBA,
+  "おおば": TTS_VOICES.OOBA,
 };
 
 export type TtsVoice = typeof TTS_VOICES[keyof typeof TTS_VOICES];
