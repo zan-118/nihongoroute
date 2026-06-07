@@ -116,7 +116,42 @@ export function useTTSReader(text: string, speaker?: string) {
     window.dispatchEvent(new CustomEvent("nihongoroute_pause_line_tts"));
     window.dispatchEvent(new CustomEvent("nihongoroute_pause_native_audio"));
 
-    const voice = speaker ? detectVoice(speaker) : TTS_VOICES.INDAH;
+    // Tentukan suara: jika ada speaker gunakan speaker, 
+    // jika tidak (seperti pada contoh kalimat), gunakan suara secara acak-deterministik berdasarkan hash teks
+    let voice = TTS_VOICES.INDAH;
+    if (speaker) {
+      voice = detectVoice(speaker);
+    } else {
+      const voices = [
+        TTS_VOICES.LARA,
+        TTS_VOICES.INDAH,
+        TTS_VOICES.SITI,
+        TTS_VOICES.DEWI,
+        TTS_VOICES.HAYASHI,
+        TTS_VOICES.SATO,
+        TTS_VOICES.AYU,
+        TTS_VOICES.ZUNDAMON,
+        TTS_VOICES.RITSU,
+        TTS_VOICES.DITO,
+        TTS_VOICES.BUDI,
+        TTS_VOICES.SUZUKI,
+        TTS_VOICES.TANAKA,
+        TTS_VOICES.YAMADA,
+        TTS_VOICES.KIMURA,
+        TTS_VOICES.ANDI,
+        TTS_VOICES.FAISAL,
+        TTS_VOICES.TAKAHASHI,
+        TTS_VOICES.KOBAYASHI,
+        TTS_VOICES.NAMONASHI,
+        TTS_VOICES.OOBA,
+      ];
+      let hash = 0;
+      for (let i = 0; i < text.length; i++) {
+        hash = text.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      const voiceIndex = Math.abs(hash) % voices.length;
+      voice = voices[voiceIndex];
+    }
 
     const playFallback = () => {
       if (audioRef.current) {
