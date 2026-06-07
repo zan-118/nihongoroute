@@ -202,7 +202,7 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
 
     // Ekstrak teks (dukung field .text dan .jp)
     const rawText = line.jp || line.text || "";
-    const text = typeof rawText === "string"
+    const extractedText = typeof rawText === "string"
       ? rawText
       : Array.isArray(rawText)
         ? (rawText as { text?: string; children?: { text?: string }[] }[])
@@ -210,7 +210,8 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
             .join("")
         : String(rawText || "");
 
-    if (!text.trim()) return;
+    const cleanText = extractedText.trim();
+    if (!cleanText) return;
 
     const speakerName = line.speaker || line.speakerName || "";
     const localIndex = typeof line.localIndex === "number" ? line.localIndex : index;
@@ -237,7 +238,7 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
     };
 
     try {
-      const ttsUrl = await fetchTTSAudio(text, voice, rate);
+      const ttsUrl = await fetchTTSAudio(cleanText, voice, rate);
 
       if (myRequestId !== requestIdRef.current) return;
 
@@ -268,7 +269,7 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
           setLoadingIndex(-1);
           setSpeakingIndex(index);
           stopWebSpeechRef.current = speakWithWebSpeech(
-            text,
+            cleanText,
             voice,
             playbackRate,
             () => {
@@ -289,25 +290,25 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
         setLoadingIndex(-1);
         setSpeakingIndex(index);
         stopWebSpeechRef.current = speakWithWebSpeech(
-          text,
+          cleanText,
           voice,
           playbackRate,
           () => {
             if (myRequestId !== requestIdRef.current) return;
             onAudioEnded();
           },
-          () => {
-            if (myRequestId !== requestIdRef.current) return;
-            onAudioEnded();
-          }
-        );
+            () => {
+              if (myRequestId !== requestIdRef.current) return;
+              onAudioEnded();
+            }
+          );
+        }
+      } catch {
+        if (myRequestId === requestIdRef.current) {
+          setLoadingIndex(-1);
+          setSpeakingIndex(-1);
+        }
       }
-    } catch {
-      if (myRequestId === requestIdRef.current) {
-        setLoadingIndex(-1);
-        setSpeakingIndex(-1);
-      }
-    }
   }, [lineTTSEnabled, rate, cleanupObjectUrl]);
 
   const speakLine = useCallback(async (line: TTSLineItem, index: number) => {

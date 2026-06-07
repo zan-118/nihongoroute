@@ -118,6 +118,9 @@ export function useTTSReader(text: string, speaker?: string) {
 
     // Tentukan suara: jika ada speaker gunakan speaker, 
     // jika tidak (seperti pada contoh kalimat), gunakan suara secara acak-deterministik berdasarkan hash teks
+    const cleanText = text.trim();
+    if (!cleanText) return;
+
     let voice: TtsVoice = TTS_VOICES.INDAH;
     if (speaker) {
       voice = detectVoice(speaker);
@@ -148,8 +151,8 @@ export function useTTSReader(text: string, speaker?: string) {
         TTS_VOICES.NAMONASHI,
       ];
       let hash = 0;
-      for (let i = 0; i < text.length; i++) {
-        hash = text.charCodeAt(i) + ((hash << 5) - hash);
+      for (let i = 0; i < cleanText.length; i++) {
+        hash = cleanText.charCodeAt(i) + ((hash << 5) - hash);
       }
       const voiceIndex = Math.abs(hash) % voices.length;
       voice = voices[voiceIndex];
@@ -161,7 +164,7 @@ export function useTTSReader(text: string, speaker?: string) {
       }
       setIsPlaying(true);
       const cancel = speakWithWebSpeech(
-        text,
+        cleanText,
         voice,
         1,
         () => setIsPlaying(false),
@@ -171,7 +174,7 @@ export function useTTSReader(text: string, speaker?: string) {
     };
 
     try {
-      const audioUrl = await fetchTTSAudio(text, voice);
+      const audioUrl = await fetchTTSAudio(cleanText, voice);
       if (!audioUrl) {
         playFallback();
         return;

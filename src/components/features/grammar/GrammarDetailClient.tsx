@@ -11,7 +11,7 @@
 // ==========================================
 // IMPOR UTAMA
 // ==========================================
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { 
   ChevronLeft, 
@@ -28,6 +28,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import { LibraryItem } from "@/actions/library.actions";
+import { fetchTTSAudio, speakWithWebSpeech, TTS_VOICES, type TtsVoice } from "@/lib/tts";
 import PdfGenerator from "@/components/features/pdf/PdfGenerator";
 
 // ==========================================
@@ -242,54 +243,88 @@ function parseNotesToJSX(notes: string): React.ReactNode {
  */
 export default function GrammarDetailClient({ article }: GrammarDetailClientProps) {
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
-  const [synth, setSynth] = useState<SpeechSynthesis | null>(null);
   const [isCopied, setIsCopied] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const objectUrlRef = useRef<string | null>(null);
 
-  // Menginisialisasi SpeechSynthesis API secara aman di lingkungan peramban
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.speechSynthesis) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setSynth(window.speechSynthesis);
+  const cleanupObjectUrl = useCallback(() => {
+    if (objectUrlRef.current) {
+      URL.revokeObjectURL(objectUrlRef.current);
+      objectUrlRef.current = null;
     }
   }, []);
 
-  /**
-   * Mengucapkan contoh kalimat Jepang menggunakan Web Speech API ja-JP secara offline.
-   * 
-   * @param {string} text - Teks bahasa Jepang yang akan diucapkan.
-   * @param {number} index - Indeks contoh kalimat untuk efek visual aktif.
-   */
-  const speakJapanese = (text: string, index: number) => {
-    if (!synth) return;
+  // Hitung voice deterministik dari teks — selaras dengan generate_example_sentences.js
+  const VOICES_ROTATION: TtsVoice[] = [
+    TTS_VOICES.LARA, TTS_VOICES.INDAH, TTS_VOICES.SITI, TTS_VOICES.DEWI,
+    TTS_VOICES.HAYASHI, TTS_VOICES.SATO, TTS_VOICES.AYU, TTS_VOICES.ZUNDAMON,
+    TTS_VOICES.RITSU, TTS_VOICES.DITO, TTS_VOICES.BUDI, TTS_VOICES.SUZUKI,
+    TTS_VOICES.TANAKA, TTS_VOICES.KIMURA, TTS_VOICES.ANDI, TTS_VOICES.FAISAL,
+    TTS_VOICES.TAKAHASHI, TTS_VOICES.KOBAYASHI, TTS_VOICES.NAMONASHI,
+  ];
+  const getDeterministicVoice = (text: string): TtsVoice => {
+    let hash = 0;
+    for (let i = 0; i < text.length; i++) hash = text.charCodeAt(i) + ((hash << 5) - hash);
+    return VOICES_ROTATION[Math.abs(hash) % VOICES_ROTATION.length];
+  };
 
-    // Jika sedang memutar kalimat yang sama, hentikan
+  /**
+   * Mengucapkan contoh kalimat Jepang menggunakan cache DB (VoiceVox) dengan fallback Web Speech API.
+   */
+  const speakJapanese = async (text: string, index: number) => {
+    // Toggle stop jika kalimat yang sama diklik lagi
     if (playingIndex === index) {
-      synth.cancel();
+      audioRef.current?.pause();
+      cleanupObjectUrl();
+      if (typeof window !== "undefined") window.speechSynthesis.cancel();
       setPlayingIndex(null);
       return;
     }
 
-    // Hentikan suara yang sedang aktif
-    synth.cancel();
+    // Hentikan yang sedang berjalan
+    audioRef.current?.pause();
+    cleanupObjectUrl();
+    if (typeof window !== "undefined") window.speechSynthesis.cancel();
 
-    // Buat utterance baru
-    // Hapus furigana atau karakter kurung jika ada agar pengucapan lancar
-    const cleanText = text.replace(/[\u3040-\u309F\u30A0-\u30FF]+\s*\|/g, "").trim();
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.lang = "ja-JP";
-    utterance.rate = 0.85; // Sedikit diperlambat agar lebih jelas bagi pembelajar
-
-    utterance.onend = () => {
-      setPlayingIndex(null);
-    };
-
-    utterance.onerror = () => {
-      setPlayingIndex(null);
-    };
+    const cleanText = text.trim();
+    if (!cleanText) return;
 
     setPlayingIndex(index);
-    synth.speak(utterance);
+    const voice = getDeterministicVoice(cleanText);
+
+    try {
+      const audioUrl = await fetchTTSAudio(cleanText, voice);
+      if (audioUrl) {
+        if (!audioRef.current) audioRef.current = new Audio();
+        const audio = audioRef.current;
+        cleanupObjectUrl();
+        if (audioUrl.startsWith("blob:")) objectUrlRef.current = audioUrl;
+        audio.src = audioUrl;
+        audio.onended = () => { setPlayingIndex(null); cleanupObjectUrl(); };
+        audio.onerror = () => {
+          cleanupObjectUrl();
+          speakWithWebSpeech(cleanText, voice, 1, () => setPlayingIndex(null), () => setPlayingIndex(null));
+        };
+        audio.play().catch(() => {
+          speakWithWebSpeech(cleanText, voice, 1, () => setPlayingIndex(null), () => setPlayingIndex(null));
+        });
+      } else {
+        // Fallback Web Speech API
+        speakWithWebSpeech(cleanText, voice, 1, () => setPlayingIndex(null), () => setPlayingIndex(null));
+      }
+    } catch {
+      speakWithWebSpeech(cleanText, voice, 1, () => setPlayingIndex(null), () => setPlayingIndex(null));
+    }
   };
+
+  // Bersihkan audio saat unmount
+  useEffect(() => {
+    return () => {
+      audioRef.current?.pause();
+      cleanupObjectUrl();
+      if (typeof window !== "undefined") window.speechSynthesis.cancel();
+    };
+  }, [cleanupObjectUrl]);
 
   /**
    * Menyalin tautan halaman detail grammar aktif ke clipboard.
@@ -301,15 +336,6 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
       setTimeout(() => setIsCopied(false), 2000);
     }
   };
-
-  // Bersihkan ucapan audio jika komponen mengalami unmount
-  useEffect(() => {
-    return () => {
-      if (synth) {
-        synth.cancel();
-      }
-    };
-  }, [synth]);
 
   const jlptLevel = article.jlpt_level || article.jlptLevel || "N/A";
 

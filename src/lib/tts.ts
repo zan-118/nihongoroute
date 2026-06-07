@@ -507,9 +507,10 @@ export async function fetchTTSAudio(
   voice: TtsVoice,
   rate = "medium"
 ): Promise<string | null> {
-  if (!text.trim()) return null;
+  const cleanText = text.trim();
+  if (!cleanText) return null;
 
-  const params = new URLSearchParams({ text, voice, rate });
+  const params = new URLSearchParams({ text: cleanText, voice, rate });
   const apiUrl = `/api/tts?${params.toString()}`;
   const cacheName = "nihongoroute_tts_cache";
 
@@ -526,12 +527,21 @@ export async function fetchTTSAudio(
         return URL.createObjectURL(blob);
       }
 
-      // 2. Jika tidak ada dan online, fetch dari API Route
-      if (navigator.onLine) {
+      // 2. Selalu coba fetch dari API Route — tidak menggunakan navigator.onLine
+      // karena browser di Windows sering salah mendeteksi localhost sebagai "offline",
+      // yang menyebabkan fetch tidak pernah dipanggil dan audio fallback ke Web Speech API.
+      // Kegagalan fetch nyata (jaringan mati) sudah ditangani oleh blok try/catch di bawah.
+      try {
         const res = await fetch(apiUrl);
         if (res.ok) {
-          await cache.put(apiUrl, res.clone());
+          // 1. Ekstrak Blob terlebih dahulu sampai selesai
           const blob = await res.blob();
+          
+          // 2. Bungkus ke Response baru dan simpan ke Cache
+          const responseToCache = new Response(blob, {
+            headers: { "Content-Type": "audio/mpeg" }
+          });
+          await cache.put(apiUrl, responseToCache);
 
           // Batasi cache TTS maks 200 item
           const keys = await cache.keys();
@@ -543,14 +553,15 @@ export async function fetchTTSAudio(
 
           return URL.createObjectURL(blob);
         }
+      } catch {
+        // Fetch gagal (misal: server down atau offline total) — lanjut ke fallback null
       }
     }
   } catch (err) {
-    console.warn("[TTS fetch] CacheStorage error, fallback ke URL direct:", err);
+    console.warn("[TTS fetch] CacheStorage error:", err);
   }
 
-  // 3. Fallback jika offline dan tidak tercache, kembalikan null untuk memicu Web Speech API
-  return navigator.onLine ? apiUrl : null;
+  return null;
 }
 
 // ============================================

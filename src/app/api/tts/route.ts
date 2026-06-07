@@ -1,7 +1,6 @@
 import { NextRequest } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import crypto from "crypto";
-import { MsEdgeTTS, OUTPUT_FORMAT } from "msedge-tts";
 
 export const dynamic = "force-dynamic";
 
@@ -34,13 +33,6 @@ const ALLOWED_VOICES = new Set([
   "ooba",
 ]);
 
-// Peta rate string ke nilai SSML yang dimengerti Edge TTS
-const RATE_MAP: Record<string, string> = {
-  slow:   "-20%",
-  medium: "0%",
-  fast:   "+20%",
-};
-
 const CANONICAL_TO_JAPANESE: Record<string, string> = {
   suzuki: "鈴木",
   tanaka: "田中",
@@ -68,13 +60,21 @@ export async function GET(req: NextRequest) {
   const voice = searchParams.get("voice") || "zundamon";
   const rate  = searchParams.get("rate")  || "medium";
 
+  console.log(`\n--- [TTS API REQUEST] ---`);
+  console.log(`Text:  "${text}"`);
+  console.log(`Voice: "${voice}"`);
+  console.log(`Rate:  "${rate}"`);
+
   if (!text) {
+    console.log(`[TTS API] Gagal: parameter teks kosong.`);
     return new Response("Missing text parameter", { status: 400 });
   }
   if (text.length > MAX_TEXT_LENGTH) {
+    console.log(`[TTS API] Gagal: teks terlalu panjang (${text.length} chars).`);
     return new Response("Text too long (max 500 chars)", { status: 400 });
   }
   if (!ALLOWED_VOICES.has(voice)) {
+    console.log(`[TTS API] Gagal: pengisi suara "${voice}" tidak terdaftar.`);
     return new Response("Invalid voice", { status: 400 });
   }
 
@@ -83,6 +83,8 @@ export async function GET(req: NextRequest) {
     .createHash("md5")
     .update(`${text}_${voice}_${rate}`)
     .digest("hex");
+
+  console.log(`Calculated Hash: "${hash}"`);
 
   const supabase = createAdminClient();
 
@@ -102,6 +104,8 @@ export async function GET(req: NextRequest) {
         .update(`${text}_${jpVoice}_${rate}`)
         .digest("hex");
 
+      console.log(`Cache miss untuk "${voice}". Mencoba fallback Jepang "${jpVoice}" dengan hash: "${fallbackHash}"`);
+
       const { data: fallbackCached } = await supabase
         .from("tts_cache")
         .select("audio_url")
@@ -109,67 +113,54 @@ export async function GET(req: NextRequest) {
         .maybeSingle();
 
       if (fallbackCached?.audio_url) {
+        console.log(`Fallback Jepang HIT!`);
         cached = fallbackCached;
         hash = fallbackHash;
       }
     }
 
     if (cached?.audio_url) {
+      console.log(`CACHE HIT di Database! Audio URL: ${cached.audio_url}`);
+      console.log(`Mencoba download "${hash}.mp3" dari Storage tts-cache...`);
+
       // Coba download file audio dari Storage
       const { data: fileData, error: downloadError } = await supabase
         .storage
         .from("tts-cache")
         .download(`${hash}.mp3`);
 
-      if (!downloadError && fileData) {
+      if (!downloadError && fileData && fileData.size > 0) {
+        console.log(`SUKSES download file dari Storage! Ukuran: ${fileData.size} bytes. Memulangkan berkas biner.`);
         const audioBuffer = await fileData.arrayBuffer();
         return new Response(new Uint8Array(audioBuffer), {
           headers: {
             "Content-Type": "audio/mpeg",
+            "Content-Length": fileData.size.toString(),
             "Cache-Control": "public, max-age=604800, immutable",
           },
         });
+      } else {
+        // DB record ada tapi file di Storage hilang/rusak — hapus record DB agar hash bisa di-generate ulang
+        console.warn(`GAGAL download file dari Storage atau file kosong. Error:`, downloadError?.message);
+        console.warn(`Menghapus record DB "${hash}" yang menunjuk ke file Storage yang tidak valid...`);
+        try {
+          await supabase.from("tts_cache").delete().eq("id", hash);
+          console.log(`Record DB "${hash}" berhasil dihapus. Generate ulang audio via script VoiceVox.`);
+        } catch (cleanupErr) {
+          console.error(`Gagal hapus record DB "${hash}":`, cleanupErr);
+        }
       }
+    } else {
+      console.log(`CACHE MISS di Database (Tidak ada data untuk hash "${hash}").`);
     }
   } catch (err) {
     console.error("[TTS API] Gagal membaca cache dari database/storage:", err);
   }
 
-  // 3. Cache miss: Jika voice adalah "indah" atau "budi", lakukan real-time synthesis
-  if (voice === "indah" || voice === "budi") {
-    try {
-      const edgeVoice = voice === "budi" ? "ja-JP-KeitaNeural" : "ja-JP-NanamiNeural";
-      const tts = new MsEdgeTTS();
-      const ssmlRate = RATE_MAP[rate] || "0%";
-      await tts.setMetadata(edgeVoice, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
-
-      const ssml = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="ja-JP">
-        <voice name="${edgeVoice}">
-          <prosody rate="${ssmlRate}">${text}</prosody>
-        </voice>
-      </speak>`;
-
-      const { audioStream } = await tts.rawToStream(ssml);
-      const chunks: Buffer[] = [];
-      for await (const chunk of audioStream) {
-        chunks.push(Buffer.from(chunk));
-      }
-      const audioBuffer = Buffer.concat(chunks);
-
-      // Cache miss: kembalikan audio langsung tanpa menyimpan ke DB/Storage
-      // (entry sudah di-generate via script, penyimpanan otomatis dinonaktifkan untuk menghindari konflik)
-      return new Response(new Uint8Array(audioBuffer), {
-        headers: {
-          "Content-Type": "audio/mpeg",
-          "Cache-Control": "no-store",
-        },
-      });
-
-    } catch (err) {
-      console.error("[TTS API] Gagal mensintesis audio real-time dengan Edge TTS:", err);
-    }
-  }
-
-  // 4. Cache miss selain "indah"/"budi": Berikan respons 404 untuk memicu fallback Web Speech API di sisi klien
+  // 3. Cache miss — tidak ada synthesis real-time dari API route.
+  // Semua audio harus di-generate terlebih dahulu via script generate_voicevox.js / generate_example_sentences.js
+  // menggunakan VOICEVOX lokal, kemudian disimpan ke Supabase Storage & DB.
+  // Kembalikan 404 agar client fallback ke Web Speech API (browser).
+  console.log(`Cache miss untuk hash "${hash}". Mengembalikan 404 — audio harus di-generate offline via VoiceVox.`);
   return new Response("Audio not found in cache", { status: 404 });
 }
