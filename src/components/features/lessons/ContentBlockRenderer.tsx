@@ -483,9 +483,9 @@ function DialogueBlock({ block }: { block: ContentBlock }) {
           const furiLine = block.furigana?.split("\n")[i] || "";
           const furiParts = furiLine.split(/[：:]/);
           
-          // Speaker null (bukan string fallback) agar detectVoice pakai rotasi fallbackIndex
+          // Speaker undefined (bukan string fallback) agar detectVoice pakai rotasi fallbackIndex
           // — selaras dengan generate_sanity_dialogs.js yang juga set speaker = null untuk baris tanpa label
-          const rawSpeaker = parts.length > 1 ? parts[0].trim() : null;
+          const rawSpeaker = parts.length > 1 ? parts[0].trim() : undefined;
           
           return {
             speaker: rawSpeaker,
