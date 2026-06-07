@@ -285,6 +285,7 @@ export const SPEAKER_MAP: Record<string, TtsVoice> = {
   // === ZUNDAMON (ずんだもん) — Maskot Cilik ===
   "zundamon": TTS_VOICES.ZUNDAMON,
   "ずんだもん": TTS_VOICES.ZUNDAMON,
+  "ズンダモン": TTS_VOICES.ZUNDAMON,
 
   // === RITSU (波音リツ / Namine Ritsu) — Wanita Misterius ===
   "ritsu": TTS_VOICES.RITSU,
