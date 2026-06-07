@@ -639,7 +639,7 @@ function DialogueBlock({ block }: { block: ContentBlock }) {
       </div>
 
       <div className="space-y-4 rounded-[2rem] p-6 shadow-[0_10px_35px_rgba(var(--foreground-rgb),0.01)] glass">
-        {lines.map((line: { speaker: string; text: string; furigana?: string }, pos: number) => {
+        {lines.map((line: { speaker: string | undefined; text: string; furigana?: string }, pos: number) => {
           const isLinePlaying = playingIndex === pos;
           return (
             <div 
