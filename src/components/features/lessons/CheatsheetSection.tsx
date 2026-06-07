@@ -45,7 +45,7 @@ export const CheatsheetSection: React.FC<CheatsheetSectionProps> = ({ cheatsheet
   if (!cheatsheets || cheatsheets.length === 0) return null;
 
   return (
-    <section>
+    <section id="cheatsheet">
       <div className="flex items-center gap-4 mb-10">
         <h2 className="text-xl font-black uppercase tracking-tight text-foreground flex items-center gap-3">
           <Zap size={24} className="text-warning fill-warning/20" /> Referensi Cepat

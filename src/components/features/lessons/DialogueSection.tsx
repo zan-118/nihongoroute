@@ -64,10 +64,15 @@ interface DialogueSectionProps {
  */
 export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList }) => {
   const allLines = React.useMemo(() => {
-    const lines: DialogueSpeakerItem[] = [];
+    const lines: (DialogueSpeakerItem & { localIndex: number })[] = [];
     listeningList?.forEach((l) => {
       const dialogueLines = l.transcript || l.body || [];
-      lines.push(...dialogueLines);
+      dialogueLines.forEach((item, idx) => {
+        lines.push({
+          ...item,
+          localIndex: idx,
+        });
+      });
     });
     return lines;
   }, [listeningList]);
@@ -79,6 +84,7 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
     playlistIndex,
     playPlaylist,
     pausePlaylist,
+    speakLine,
   } = useLineTTS({ rate: "medium", lines: allLines });
 
   const [activeDialogId, setActiveDialogId] = React.useState<string | null>(null);
@@ -131,7 +137,7 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
                           playPlaylist(lines, 0);
                         }
                       }}
-                      title={isCurrentPlaying ? "Hentikan Suara AI" : "Putar Suara AI (Semua)"}
+                      title={isCurrentPlaying ? "Jeda Dialog AI" : "Putar Semua Dialog AI"}
                       className={cn(
                         "rounded-full gap-2 transition-all border shrink-0 text-xs font-bold uppercase tracking-widest px-4 py-2 h-10",
                         isCurrentPlaying
@@ -145,7 +151,7 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
                         <Play size={13} />
                       )}
                       <span>
-                        {isCurrentPlaying ? "Jeda AI" : "Putar AI"}
+                        {isCurrentPlaying ? "Jeda Dialog (AI)" : "Putar Dialog (AI)"}
                       </span>
                     </Button>
                   )}
@@ -207,7 +213,7 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
                       <div 
                         ref={isLineActive ? activeLineRef : null}
                         className={cn(
-                          "p-4 md:p-6 rounded-2xl border transition-all duration-300 relative overflow-hidden cursor-pointer",
+                          "p-4 md:p-6 rounded-2xl border transition-all duration-300 overflow-hidden cursor-pointer flex items-center justify-between gap-4",
                           bubbleScale
                         )}
                         style={{ 
@@ -226,24 +232,35 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
                           }
                         }}
                         onClick={() => {
+                          const lines = l.transcript || l.body || [];
+                          const localLine = {
+                            ...item,
+                            localIndex: pos,
+                          };
+                          
                           if (isCurrentPlaying) {
-                            playPlaylist(l.transcript || l.body || [], pos);
+                            playPlaylist(lines, pos);
+                          } else {
+                            setActiveDialogId(dialogId);
+                            speakLine(localLine, pos);
                           }
                         }}
                       >
-                         <div className="text-lg font-japanese font-bold text-foreground mb-2 leading-relaxed">
-                           <SmartJapanese 
-                               word={item.jp || item.text || ""} 
-                               furigana={typeof item.furigana === "string" ? item.furigana : undefined} 
-                             />
+                         <div className="flex-1 min-w-0">
+                           <div className="text-lg font-japanese font-bold text-foreground mb-2 leading-relaxed">
+                             <SmartJapanese 
+                                 word={item.jp || item.text || ""} 
+                                 furigana={typeof item.furigana === "string" ? item.furigana : undefined} 
+                               />
+                           </div>
+                           <p 
+                             className="text-sm text-muted-foreground font-medium italic border-t pt-3"
+                             style={{ borderColor: "rgba(var(--border-rgb), 0.2)" }}
+                           >
+                             &quot;{item.translation || item.id}&quot;
+                           </p>
                          </div>
-                         <p 
-                           className="text-sm text-muted-foreground font-medium italic border-t pt-3"
-                           style={{ borderColor: "rgba(var(--border-rgb), 0.2)" }}
-                         >
-                           &quot;{item.translation || item.id}&quot;
-                         </p>
-                         <div className="absolute top-2 right-2 opacity-0 group-hover/dialogue:opacity-100 transition-opacity">
+                         <div className="opacity-100 md:opacity-0 md:group-hover/dialogue:opacity-100 transition-opacity shrink-0 self-center">
                            <TTSReader 
                              text={item.jp || item.text || ""} 
                              minimal={true} 

@@ -41,6 +41,27 @@ const RATE_MAP: Record<string, string> = {
   fast:   "+20%",
 };
 
+const CANONICAL_TO_JAPANESE: Record<string, string> = {
+  suzuki: "鈴木",
+  tanaka: "田中",
+  sato: "佐藤",
+  yamada: "山田",
+  kimura: "木村",
+  kobayashi: "小林",
+  takahashi: "高橋",
+  hayashi: "林",
+  budi: "ブディ",
+  ayu: "アユ",
+  indah: "インダ",
+  lara: "ララ",
+  siti: "シティ",
+  dewi: "デウィ",
+  dito: "ディト",
+  andi: "アンディ",
+  faisal: "ファイサル",
+  ritsu: "リツ",
+};
+
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
   const text  = (searchParams.get("text") || "").trim();
@@ -58,7 +79,7 @@ export async function GET(req: NextRequest) {
   }
 
   // 1. Hitung hash MD5 unik untuk kombinasi text + voice + rate
-  const hash = crypto
+  let hash = crypto
     .createHash("md5")
     .update(`${text}_${voice}_${rate}`)
     .digest("hex");
@@ -67,11 +88,31 @@ export async function GET(req: NextRequest) {
 
   try {
     // 2. Cek apakah metadata cache ada di Database
-    const { data: cached } = await supabase
+    let { data: cached } = await supabase
       .from("tts_cache")
       .select("audio_url")
       .eq("id", hash)
       .maybeSingle();
+
+    // Fallback pencarian dengan nama bahasa Jepang jika tidak ditemukan
+    if (!cached?.audio_url && CANONICAL_TO_JAPANESE[voice]) {
+      const jpVoice = CANONICAL_TO_JAPANESE[voice];
+      const fallbackHash = crypto
+        .createHash("md5")
+        .update(`${text}_${jpVoice}_${rate}`)
+        .digest("hex");
+
+      const { data: fallbackCached } = await supabase
+        .from("tts_cache")
+        .select("audio_url")
+        .eq("id", fallbackHash)
+        .maybeSingle();
+
+      if (fallbackCached?.audio_url) {
+        cached = fallbackCached;
+        hash = fallbackHash;
+      }
+    }
 
     if (cached?.audio_url) {
       // Coba download file audio dari Storage
@@ -99,7 +140,7 @@ export async function GET(req: NextRequest) {
     try {
       const edgeVoice = voice === "budi" ? "ja-JP-KeitaNeural" : "ja-JP-NanamiNeural";
       const tts = new MsEdgeTTS();
-      const ssmlRate = rate === "slow" ? "-20%" : rate === "fast" ? "+20%" : "0%";
+      const ssmlRate = RATE_MAP[rate] || "0%";
       await tts.setMetadata(edgeVoice, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
 
       const ssml = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="ja-JP">

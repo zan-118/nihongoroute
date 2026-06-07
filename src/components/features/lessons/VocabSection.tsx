@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * @file VocabSection.tsx
  * @description Komponen seksi kosakata (VocabSection) dalam halaman pelajaran. Menampilkan detail kata, romaji, jenis kata, tombol tambah ke SRS, dan pemutar TTS.
@@ -11,6 +13,7 @@ import * as wanakana from "wanakana";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import AddToSRSButton from "@/components/features/srs/actions/AddToSRSButton";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 // ======================
 // ANTARMUKA / TIPE DATA
@@ -134,7 +137,11 @@ const VocabCard: React.FC<{ v: VocabLessonItem; idx: number }> = ({ v, idx }) =>
 // EKSEKUSI UTAMA
 // ======================
 export const VocabSection: React.FC<VocabSectionProps> = ({ vocabList }) => {
+  const [showAll, setShowAll] = useState(false);
   if (!vocabList || vocabList.length === 0) return null;
+
+  const hasMoreThanTen = vocabList.length > 10;
+  const visibleVocabs = showAll ? vocabList : vocabList.slice(0, 10);
 
   return (
     <section id="vocabulary">
@@ -145,11 +152,23 @@ export const VocabSection: React.FC<VocabSectionProps> = ({ vocabList }) => {
         <div className="h-[1px] flex-1 bg-border" />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {vocabList.map((v: VocabLessonItem, idx: number) => {
+        {visibleVocabs.map((v: VocabLessonItem, idx: number) => {
           if (!v) return null;
           return <VocabCard key={v._id || v.id || idx} v={v} idx={idx} />;
         })}
       </div>
+      {hasMoreThanTen && (
+        <div className="flex justify-center pt-8">
+          <button
+            onClick={() => setShowAll(!showAll)}
+            className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-black uppercase tracking-widest text-[9px] sm:text-[10px] border shadow-md transition-all duration-300 bg-card hover:bg-primary/5 hover:border-primary/30 text-muted-foreground hover:text-primary active:scale-95"
+            aria-label={showAll ? "Sembunyikan kosakata tambahan" : "Tampilkan semua kosakata"}
+          >
+            <span>{showAll ? "Sembunyikan" : `Lihat Selanjutnya (${vocabList.length - 10} lainnya)`}</span>
+            {showAll ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+          </button>
+        </div>
+      )}
     </section>
   );
 };

@@ -120,6 +120,12 @@ export default async function LessonPage({ params }: Props) {
   const isSideQuest = lesson.categoryType === "general";
   const formattedQuizzes = formatQuizzes(lesson.quizzes || lesson.questions || []);
 
+  const vocabList = (lesson.vocabList || lesson.vocab_list || []) as unknown[];
+  const kanjiList = (lesson.kanjiList || lesson.kanji_list || []) as unknown[];
+  const listeningList = (lesson.listeningList || lesson.listening_list || []) as unknown[];
+  const readingList = (lesson.readingList || lesson.reading_list || []) as unknown[];
+  const cheatsheets = (lesson.cheatsheets || []) as unknown[];
+
   return (
     <div className="w-full text-foreground px-4 md:px-8 relative overflow-hidden flex flex-col flex-1 transition-colors duration-300">
       {/* Dekorasi Ambient Latar Belakang */}
@@ -135,9 +141,70 @@ export default async function LessonPage({ params }: Props) {
             lesson={lesson as import("@/components/features/lessons/DownloadOfflineButton").LessonData} 
           />
 
+          {/* JUMP LINKS SHORTCUT MENU */}
+          <nav className="mb-12 p-3 sm:p-4 rounded-2xl bg-card/30 backdrop-blur-md border border-border/60 shadow-sm flex flex-wrap gap-2.5 items-center justify-start relative z-20 glass">
+            <span className="text-[9px] font-black uppercase tracking-wider text-muted-foreground mr-1.5 hidden sm:inline-block">Pintasan Sesi:</span>
+            {!!(lesson.articles || lesson.content_blocks) && (
+              <a 
+                href="#article-content" 
+                className="px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm flex items-center gap-1.5"
+              >
+                <span>Artikel</span>
+              </a>
+            )}
+            {vocabList.length > 0 && (
+              <a 
+                href="#vocabulary" 
+                className="px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm flex items-center gap-1.5"
+              >
+                <span>単語 Kosakata</span>
+              </a>
+            )}
+            {kanjiList.length > 0 && (
+              <a 
+                href="#kanji" 
+                className="px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm flex items-center gap-1.5"
+              >
+                <span>漢字 Kanji</span>
+              </a>
+            )}
+            {listeningList.length > 0 && (
+              <a 
+                href="#scenario" 
+                className="px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm flex items-center gap-1.5"
+              >
+                <span>場面 Dialog</span>
+              </a>
+            )}
+            {readingList.length > 0 && (
+              <a 
+                href="#reading" 
+                className="px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm flex items-center gap-1.5"
+              >
+                <span>読解 Bacaan</span>
+              </a>
+            )}
+            {cheatsheets.length > 0 && (
+              <a 
+                href="#cheatsheet" 
+                className="px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm flex items-center gap-1.5"
+              >
+                <span>参考 Referensi</span>
+              </a>
+            )}
+            {formattedQuizzes.length > 0 && (
+              <a 
+                href="#quiz" 
+                className="px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm flex items-center gap-1.5"
+              >
+                <span>答え Kuis</span>
+              </a>
+            )}
+          </nav>
+
           <div className="space-y-24 mb-24">
             {!!(lesson.articles || lesson.content_blocks) && (
-              <section className="prose-custom">
+              <section id="article-content" className="prose-custom">
                 <ContentBlockRenderer 
                   blocks={(lesson.articles || lesson.content_blocks) as import("@/types/database").ContentBlock[]} 
                   vocabList={(lesson.vocabList || lesson.vocab_list || []) as import("@/components/features/lessons/VocabSection").VocabLessonItem[]}
@@ -155,7 +222,7 @@ export default async function LessonPage({ params }: Props) {
             <PracticeSection lesson={lesson as import("@/components/features/lessons/PracticeSection").LessonPracticeData} />
 
             {formattedQuizzes.length > 0 ? (
-              <section>
+              <section id="quiz">
                 <div className="flex items-center gap-4 mb-10">
                   <h2 className="text-xl font-black uppercase tracking-tight text-foreground flex items-center gap-3">
                     <span className="text-2xl">答え</span> Uji Pemahaman

@@ -14,15 +14,23 @@ import { fetchTTSAudio, speakWithWebSpeech, detectVoice, TtsVoice } from "@/lib/
 // ── Tipe ─────────────────────────────────────────────────────
 export type TTSRate = "slow" | "medium" | "fast";
 
+export interface TTSLineItem {
+  jp?: string | unknown[];
+  text?: string | unknown[];
+  speaker?: string;
+  speakerName?: string;
+  localIndex?: number;
+}
+
 interface UseLineTTSOptions {
   rate?: TTSRate;
-  lines?: any[];
+  lines?: TTSLineItem[];
 }
 
 interface UseLineTTSReturn {
   speakingIndex: number;
   loadingIndex: number;
-  speakLine: (line: any, index: number) => Promise<void>;
+  speakLine: (line: TTSLineItem, index: number) => Promise<void>;
   stopLineTTS: () => void;
   lineTTSEnabled: boolean;
   toggleLineTTS: () => void;
@@ -32,8 +40,13 @@ interface UseLineTTSReturn {
   // Fitur playlist sequential
   isPlayingPlaylist: boolean;
   playlistIndex: number;
-  playPlaylist: (lines: any[], startIndex?: number) => void;
+  playPlaylist: (lines: TTSLineItem[], startIndex?: number) => void;
   pausePlaylist: () => void;
+}
+
+interface WindowWithIdle {
+  requestIdleCallback: (callback: () => void, options?: { timeout: number }) => number;
+  cancelIdleCallback: (id: number) => void;
 }
 
 // ── Helper: konversi rate string ke playbackRate number ──────
@@ -51,7 +64,7 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
   // State & Ref untuk Playlist
   const [playlistIndex, setPlaylistIndex] = useState<number>(-1);
   const [isPlayingPlaylist, setIsPlayingPlaylist] = useState<boolean>(false);
-  const playlistLinesRef = useRef<any[]>([]);
+  const playlistLinesRef = useRef<TTSLineItem[]>([]);
   const isPlayingPlaylistRef = useRef<boolean>(false);
 
   const audioRef         = useRef<HTMLAudioElement | null>(null);
@@ -84,7 +97,7 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
       setIsPlayingPlaylist(false);
       setPlaylistIndex(-1);
     }
-  }, []);
+  }, [cleanupObjectUrl]);
 
   // Event listener untuk mematikan TTS jika audio lain mulai diputar
   useEffect(() => {
@@ -133,7 +146,8 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
         if (!text.trim()) continue;
 
         const speakerName = line.speaker || line.speakerName || "";
-        const voice = detectVoice(speakerName, i);
+        const localIndex = typeof line.localIndex === "number" ? line.localIndex : i;
+        const voice = detectVoice(speakerName, localIndex);
         
         try {
           await fetchTTSAudio(text, voice, rate);
@@ -143,10 +157,11 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
       }
     };
 
-    let timerId: any;
+    let timerId: number | ReturnType<typeof setTimeout> | null = null;
     if (typeof window !== "undefined") {
+      const win = window as unknown as WindowWithIdle;
       if ("requestIdleCallback" in window) {
-        timerId = (window as any).requestIdleCallback(() => prefetch(), { timeout: 10000 });
+        timerId = win.requestIdleCallback(() => prefetch(), { timeout: 10000 });
       } else {
         timerId = setTimeout(prefetch, 1500);
       }
@@ -154,17 +169,18 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
 
     return () => {
       cancelled = true;
-      if (typeof window !== "undefined" && timerId) {
+      if (typeof window !== "undefined" && timerId !== null) {
+        const win = window as unknown as WindowWithIdle;
         if ("cancelIdleCallback" in window) {
-          (window as any).cancelIdleCallback(timerId);
+          win.cancelIdleCallback(timerId as number);
         } else {
-          clearTimeout(timerId);
+          clearTimeout(timerId as ReturnType<typeof setTimeout>);
         }
       }
     };
   }, [lines, rate]);
 
-  const speakLineRaw = useCallback(async (line: any, index: number, forcePlay = false) => {
+  const speakLineRaw = useCallback(async (line: TTSLineItem, index: number, forcePlay = false) => {
     if (!lineTTSEnabled && !forcePlay) return;
 
     requestIdRef.current++;
@@ -197,7 +213,8 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
     if (!text.trim()) return;
 
     const speakerName = line.speaker || line.speakerName || "";
-    const voice: TtsVoice = detectVoice(speakerName, index);
+    const localIndex = typeof line.localIndex === "number" ? line.localIndex : index;
+    const voice: TtsVoice = detectVoice(speakerName, localIndex);
     const playbackRate = rateToNumber(rate);
 
     setLoadingIndex(index);
@@ -291,9 +308,9 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
         setSpeakingIndex(-1);
       }
     }
-  }, [lineTTSEnabled, rate]);
+  }, [lineTTSEnabled, rate, cleanupObjectUrl]);
 
-  const speakLine = useCallback(async (line: any, index: number) => {
+  const speakLine = useCallback(async (line: TTSLineItem, index: number) => {
     await speakLineRaw(line, index, false);
   }, [speakLineRaw]);
 
@@ -305,7 +322,7 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
   }, [stopLineTTS]);
 
   // Playlist handlers
-  const playPlaylist = useCallback((lines: any[], startIndex = 0) => {
+  const playPlaylist = useCallback((lines: TTSLineItem[], startIndex = 0) => {
     playlistLinesRef.current = lines;
     isPlayingPlaylistRef.current = true;
     setIsPlayingPlaylist(true);

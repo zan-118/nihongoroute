@@ -214,6 +214,8 @@ export interface ContentBlock {
   pedagogical_role?: "core_explanation" | "practical_scenario" | "pitfall_alert" | "cultural_note";
   difficulty_stage?: "introducing" | "guided" | "autonomous";
   estimated_reading_time?: number;
+  audio_url?: string;
+  audioUrl?: string;
 }
 
 export interface Quiz {
