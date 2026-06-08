@@ -41,14 +41,14 @@ export function CategoryHero({
 }: CategoryHeroProps) {
   const badgeStyle = isSideQuest
     ? {
-        backgroundColor: "rgba(var(--warning-rgb), 0.1)",
-        color: "var(--warning)",
-        borderColor: "rgba(var(--warning-rgb), 0.2)",
+        backgroundColor: "rgb(var(--warning-rgb)/0.1)",
+        color: "hsl(var(--warning))",
+        borderColor: "rgb(var(--warning-rgb)/0.2)",
       }
     : {
-        backgroundColor: "rgba(var(--primary-rgb), 0.1)",
-        color: "var(--primary)",
-        borderColor: "rgba(var(--primary-rgb), 0.2)",
+        backgroundColor: "rgb(var(--primary-rgb)/0.1)",
+        color: "hsl(var(--primary))",
+        borderColor: "rgb(var(--primary-rgb)/0.2)",
       };
 
   return (
@@ -89,8 +89,8 @@ export function CategoryHero({
           variants={itemVariants}
           className="w-full lg:w-auto lg:min-w-[240px] lg:max-w-[280px] p-4 sm:p-5 md:p-6 glass rounded-xl sm:rounded-2xl border relative overflow-hidden group transition-all duration-500 shrink-0"
           style={{
-            backgroundColor: "rgba(var(--card-rgb), 0.3)",
-            borderColor: "rgba(var(--border-rgb), 0.5)",
+            backgroundColor: "rgb(var(--card-rgb)/0.3)",
+            borderColor: "rgb(var(--border-rgb)/0.5)",
           }}
         >
           {/* Subtle Ambient Accent */}
@@ -109,7 +109,7 @@ export function CategoryHero({
             
             <div 
               className="h-2 sm:h-2.5 rounded-full overflow-hidden border border-border/80"
-              style={{ backgroundColor: "rgba(var(--background-rgb), 0.5)" }}
+              style={{ backgroundColor: "rgb(var(--background-rgb)/0.5)" }}
             >
               <m.div
                 initial={{ width: 0 }}
@@ -117,8 +117,8 @@ export function CategoryHero({
                 className="h-full rounded-full transition-all duration-1000"
                 style={{
                   background: isSideQuest
-                    ? "linear-gradient(90deg, var(--warning) 0%, rgba(var(--warning-rgb), 0.6) 100%)"
-                    : "linear-gradient(90deg, var(--primary) 0%, rgba(var(--primary-rgb), 0.6) 100%)",
+                    ? "linear-gradient(90deg, hsl(var(--warning)) 0%, rgb(var(--warning-rgb)/0.6) 100%)"
+                    : "linear-gradient(90deg, hsl(var(--primary)) 0%, rgb(var(--primary-rgb)/0.6) 100%)",
                   boxShadow: `0 0 10px rgba(${themeRgb}, 0.3)`,
                 }}
               />

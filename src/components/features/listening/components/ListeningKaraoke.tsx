@@ -146,7 +146,7 @@ export default function ListeningKaraoke({
   return (
     <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto p-2 sm:p-4 md:p-6">
       {/* Panel Kontrol Premium (Cyber-glass Control Card) */}
-      <div className="border border-border/80 bg-card/45 backdrop-blur-xl rounded-[2.5rem] p-6 shadow-[0_0_50px_rgba(var(--primary-rgb),0.03)] flex flex-col gap-6 relative overflow-hidden">
+      <div className="border border-border/80 bg-card/45 backdrop-blur-xl rounded-[2.5rem] p-6 shadow-[0_0_50px_rgb(var(--primary-rgb)/0.03)] flex flex-col gap-6 relative overflow-hidden">
         {/* Background Accent */}
         <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full pointer-events-none" />
 
@@ -275,9 +275,9 @@ export default function ListeningKaraoke({
               bubbleClass = cn(
                 "rounded-2xl w-full max-w-[95%] md:max-w-[90%]",
                 "bg-muted/10 border-border/80 hover:bg-muted/20 hover:border-border",
-                isActive && "bg-[rgba(var(--primary-rgb),0.03)] border-[rgba(var(--primary-rgb),0.3)] shadow-[0_0_20px_rgba(var(--primary-rgb),0.03)] scale-[1.002]"
+                isActive && "bg-[rgb(var(--primary-rgb)/0.03)] border-[rgb(var(--primary-rgb)/0.3)] shadow-[0_0_20px_rgb(var(--primary-rgb)/0.03)] scale-[1.002]"
               );
-              speakerAccent = isActive ? "bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.8)]" : "bg-muted-foreground/30";
+              speakerAccent = isActive ? "bg-primary shadow-[0_0_10px_rgb(var(--primary-rgb)/0.8)]" : "bg-muted-foreground/30";
               speakerTextColor = isActive ? "text-primary" : "text-muted-foreground/60";
             } else if (speaker) {
               // Layout untuk Dialog (Dua atau lebih pembicara): berselang-seling kiri dan kanan
@@ -287,22 +287,22 @@ export default function ListeningKaraoke({
                 align = "self-start items-start text-left";
                 bubbleClass = cn(
                   "rounded-2xl rounded-tl-none max-w-[85%] sm:max-w-[75%]",
-                  "bg-[rgba(var(--primary-rgb),0.03)] border-[rgba(var(--primary-rgb),0.15)]",
-                  "hover:bg-[rgba(var(--primary-rgb),0.06)] hover:border-[rgba(var(--primary-rgb),0.25)]",
-                  isActive && "bg-[rgba(var(--primary-rgb),0.08)] border-[rgba(var(--primary-rgb),0.4)] shadow-[0_0_20px_rgba(var(--primary-rgb),0.15)] scale-[1.01]"
+                  "bg-[rgb(var(--primary-rgb)/0.03)] border-[rgb(var(--primary-rgb)/0.15)]",
+                  "hover:bg-[rgb(var(--primary-rgb)/0.06)] hover:border-[rgb(var(--primary-rgb)/0.25)]",
+                  isActive && "bg-[rgb(var(--primary-rgb)/0.08)] border-[rgb(var(--primary-rgb)/0.4)] shadow-[0_0_20px_rgb(var(--primary-rgb)/0.15)] scale-[1.01]"
                 );
-                speakerAccent = "bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.8)]";
+                speakerAccent = "bg-primary shadow-[0_0_10px_rgb(var(--primary-rgb)/0.8)]";
                 speakerTextColor = "text-primary";
               } else if (side === "right") {
                 isRight = true;
                 align = "self-end items-end text-left";
                 bubbleClass = cn(
                   "rounded-2xl rounded-tr-none max-w-[85%] sm:max-w-[75%]",
-                  "bg-[rgba(var(--secondary-rgb),0.03)] border-[rgba(var(--secondary-rgb),0.15)]",
-                  "hover:bg-[rgba(var(--secondary-rgb),0.06)] hover:border-[rgba(var(--secondary-rgb),0.25)]",
-                  isActive && "bg-[rgba(var(--secondary-rgb),0.08)] border-[rgba(var(--secondary-rgb),0.4)] shadow-[0_0_20px_rgba(var(--secondary-rgb),0.15)] scale-[1.01]"
+                  "bg-[rgb(var(--secondary-rgb)/0.03)] border-[rgb(var(--secondary-rgb)/0.15)]",
+                  "hover:bg-[rgb(var(--secondary-rgb)/0.06)] hover:border-[rgb(var(--secondary-rgb)/0.25)]",
+                  isActive && "bg-[rgb(var(--secondary-rgb)/0.08)] border-[rgb(var(--secondary-rgb)/0.4)] shadow-[0_0_20px_rgb(var(--secondary-rgb)/0.15)] scale-[1.01]"
                 );
-                speakerAccent = "bg-secondary shadow-[0_0_10px_rgba(var(--secondary-rgb),0.8)]";
+                speakerAccent = "bg-secondary shadow-[0_0_10px_rgb(var(--secondary-rgb)/0.8)]";
                 speakerTextColor = "text-secondary";
               }
             }
@@ -311,9 +311,9 @@ export default function ListeningKaraoke({
               bubbleClass = cn(
                 "rounded-2xl max-w-[90%]",
                 "bg-muted/30 border-border hover:bg-muted/50",
-                isActive && "bg-primary/10 border-primary/30 shadow-[0_0_20px_rgba(var(--primary-rgb),0.15)] scale-[1.01]"
+                isActive && "bg-primary/10 border-primary/30 shadow-[0_0_20px_rgb(var(--primary-rgb)/0.15)] scale-[1.01]"
               );
-              speakerAccent = isActive ? "bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.8)]" : "bg-muted-foreground/30";
+              speakerAccent = isActive ? "bg-primary shadow-[0_0_10px_rgb(var(--primary-rgb)/0.8)]" : "bg-muted-foreground/30";
               speakerTextColor = isActive ? "text-primary" : "text-muted-foreground/60";
             }
 
@@ -452,7 +452,7 @@ export default function ListeningKaraoke({
                   {isActive && (
                     <m.div
                       layoutId="active-indicator"
-                      className="absolute -left-[1px] top-6 bottom-6 w-[2px] bg-primary rounded-full shadow-[0_0_15px_rgba(var(--primary-rgb),1)]"
+                      className="absolute -left-[1px] top-6 bottom-6 w-[2px] bg-primary rounded-full shadow-[0_0_15px_rgb(var(--primary-rgb)/1)]"
                     />
                   )}
 

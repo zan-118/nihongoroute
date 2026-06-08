@@ -49,7 +49,7 @@ export function VocabExamples({ examples }: VocabExamplesProps) {
       {/* Daftar Contoh Kalimat */}
       <div className="space-y-4">
         {examples?.map((ex) => (
-          <div key={ex.jp || ex.japanese} className="p-5 pl-6 bg-[rgba(var(--card-rgb),0.3)] border border-border rounded-2xl relative overflow-hidden group/item hover:border-primary/30 transition-all duration-300 shadow-sm">
+          <div key={ex.jp || ex.japanese} className="p-5 pl-6 bg-[rgb(var(--card-rgb)/0.3)] border border-border rounded-2xl relative overflow-hidden group/item hover:border-primary/30 transition-all duration-300 shadow-sm">
             {/* Aksen Batang Warna Kiri */}
             <div className="absolute top-0 left-0 w-1 h-full bg-primary/20 group-hover/item:bg-primary transition-all duration-300" />
             

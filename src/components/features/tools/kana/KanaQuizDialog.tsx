@@ -154,7 +154,7 @@ export function KanaQuizDialog({
                             onClick={speakActiveKana}
                             type="button"
                             aria-label="Putar Suara Aksara"
-                            className="w-20 h-20 rounded-full flex items-center justify-center bg-warning/10 border border-warning/45 hover:bg-warning/20 shadow-[0_0_25px_rgba(var(--warning-rgb),0.25)] hover:shadow-[0_0_35px_rgba(var(--warning-rgb),0.4)] transition-all duration-300 text-warning"
+                            className="w-20 h-20 rounded-full flex items-center justify-center bg-warning/10 border border-warning/45 hover:bg-warning/20 shadow-[0_0_25px_rgb(var(--warning-rgb)/0.25)] hover:shadow-[0_0_35px_rgb(var(--warning-rgb)/0.4)] transition-all duration-300 text-warning"
                           >
                             <Volume2 size={36} className="animate-pulse" />
                           </motion.button>
@@ -208,8 +208,8 @@ export function KanaQuizDialog({
                     </div>
                   </div>
                 ) : isVictory ? (
-                  <Card className="bg-success/5 p-8 md:p-10 rounded-2xl border border-success/30 text-center w-full relative overflow-hidden shadow-[0_0_30px_rgba(var(--success-rgb),0.15)] glass">
-                    <div className="w-16 h-16 bg-warning/10 rounded-xl flex items-center justify-center mx-auto mb-6 border border-warning/25 shadow-[0_0_20px_rgba(var(--warning-rgb),0.3)] text-warning">
+                  <Card className="bg-success/5 p-8 md:p-10 rounded-2xl border border-success/30 text-center w-full relative overflow-hidden shadow-[0_0_30px_rgb(var(--success-rgb)/0.15)] glass">
+                    <div className="w-16 h-16 bg-warning/10 rounded-xl flex items-center justify-center mx-auto mb-6 border border-warning/25 shadow-[0_0_20px_rgb(var(--warning-rgb)/0.3)] text-warning">
                       <Trophy size={32} className="fill-current" />
                     </div>
                     <h2 className="text-2xl font-black text-foreground uppercase tracking-tight mb-2">Kemenangan!</h2>

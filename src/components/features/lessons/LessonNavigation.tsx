@@ -39,7 +39,7 @@ export const LessonNavigation: React.FC<LessonNavigationProps> = ({
       {prevLesson ? (
         <Link
           href={`/courses/${levelCode || categoryId}/${prevLesson.slug}`}
-          className="neo-card h-full p-8 group flex flex-col justify-center items-start hover:bg-[rgba(var(--primary-rgb),0.05)] hover:border-[rgba(var(--primary-rgb),0.3)] transition-all duration-300"
+          className="neo-card h-full p-8 group flex flex-col justify-center items-start hover:bg-[rgb(var(--primary-rgb)/0.05)] hover:border-[rgb(var(--primary-rgb)/0.3)] transition-all duration-300"
         >
           <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground group-hover:text-primary mb-3 flex items-center gap-2 transition-colors">
             <ChevronLeft size={14} aria-hidden="true" /> Materi Sebelumnya
@@ -54,7 +54,7 @@ export const LessonNavigation: React.FC<LessonNavigationProps> = ({
       {nextLesson ? (
         <Link
           href={`/courses/${levelCode || categoryId}/${nextLesson.slug}`}
-          className="neo-card h-full p-8 group flex flex-col justify-center items-end text-right hover:bg-[rgba(var(--primary-rgb),0.05)] hover:border-[rgba(var(--primary-rgb),0.3)] transition-all duration-300"
+          className="neo-card h-full p-8 group flex flex-col justify-center items-end text-right hover:bg-[rgb(var(--primary-rgb)/0.05)] hover:border-[rgb(var(--primary-rgb)/0.3)] transition-all duration-300"
         >
           <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground group-hover:text-primary mb-3 flex items-center gap-2 transition-colors">
             Materi Selanjutnya <ChevronRight size={14} aria-hidden="true" />
@@ -67,12 +67,12 @@ export const LessonNavigation: React.FC<LessonNavigationProps> = ({
         <Link
           href={`/courses/${levelCode || categoryId}`}
           className="neo-card h-full p-8 flex flex-col items-center justify-center text-center group hover:border-primary transition-all duration-300"
-          style={{ backgroundColor: "rgba(var(--primary-rgb), 0.05)", borderColor: "rgba(var(--primary-rgb), 0.2)" }}
+          style={{ backgroundColor: "rgb(var(--primary-rgb)/0.05)", borderColor: "rgb(var(--primary-rgb)/0.2)" }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "rgba(var(--primary-rgb), 0.1)";
+            e.currentTarget.style.backgroundColor = "rgb(var(--primary-rgb)/0.1)";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "rgba(var(--primary-rgb), 0.05)";
+            e.currentTarget.style.backgroundColor = "rgb(var(--primary-rgb)/0.05)";
           }}
         >
           <span className="text-4xl mb-3 group-hover:scale-110 transition-transform">

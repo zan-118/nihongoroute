@@ -62,21 +62,21 @@ export default function LessonSidebar({
                   className={cn(
                     "flex items-center gap-3 p-4 rounded-2xl transition-all duration-300 group relative overflow-hidden",
                     isActive 
-                      ? "bg-primary text-primary-foreground shadow-[0_10px_20px_rgba(var(--primary-rgb),0.2)]" 
-                      : "hover:bg-[rgba(var(--primary-rgb),0.05)] text-muted-foreground hover:text-foreground"
+                      ? "bg-primary text-primary-foreground shadow-[0_10px_20px_rgb(var(--primary-rgb)/0.2)]" 
+                      : "hover:bg-[rgb(var(--primary-rgb)/0.05)] text-muted-foreground hover:text-foreground"
                   )}
                 >
                   {isActive && (
                     <div 
                       className="absolute inset-0 pointer-events-none" 
-                      style={{ backgroundImage: "linear-gradient(90deg, rgba(var(--primary-rgb), 0.1), transparent)" }}
+                      style={{ backgroundImage: "linear-gradient(90deg, rgb(var(--primary-rgb)/0.1), transparent)" }}
                     />
                   )}
                   <span className={cn(
                     "text-[10px] font-black w-6 h-6 rounded-lg flex items-center justify-center shrink-0 border transition-colors",
                     isActive 
-                      ? "bg-[rgba(var(--primary-rgb),0.2)] border-[rgba(var(--primary-rgb),0.2)] text-primary-foreground" 
-                      : "bg-muted/30 border-border group-hover:border-[rgba(var(--primary-rgb),0.3)] text-muted-foreground"
+                      ? "bg-[rgb(var(--primary-rgb)/0.2)] border-[rgb(var(--primary-rgb)/0.2)] text-primary-foreground" 
+                      : "bg-muted/30 border-border group-hover:border-[rgb(var(--primary-rgb)/0.3)] text-muted-foreground"
                   )}>
                     {idx + 1}
                   </span>
@@ -97,7 +97,7 @@ export default function LessonSidebar({
         {/* Kartu Progres (Penampung Sementara) */}
         <div 
           className="p-6 rounded-[2rem] border relative overflow-hidden group"
-          style={{ backgroundColor: "rgba(var(--primary-rgb), 0.05)", borderColor: "rgba(var(--primary-rgb), 0.1)" }}
+          style={{ backgroundColor: "rgb(var(--primary-rgb)/0.05)", borderColor: "rgb(var(--primary-rgb)/0.1)" }}
         >
           <div className="relative z-10">
             <p className="text-[9px] font-black text-primary uppercase tracking-widest mb-2">Statistik Kamu</p>
@@ -116,7 +116,7 @@ export default function LessonSidebar({
           </div>
           <div 
             className="absolute -bottom-4 -right-4 group-hover:scale-110 transition-transform duration-700"
-            style={{ color: "rgba(var(--primary-rgb), 0.05)" }}
+            style={{ color: "rgb(var(--primary-rgb)/0.05)" }}
           >
             <BookOpen size={100} />
           </div>

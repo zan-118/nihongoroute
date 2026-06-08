@@ -27,11 +27,11 @@ export function useFlashcard({ type, onFlip }: Pick<FlashcardProps, 'type' | 'on
   const themeColor = isKanji ? "text-secondary" : "text-primary";
   const themeBorder = isKanji ? "border-secondary/30" : "border-primary/30";
   const themeShadow = isKanji 
-    ? "shadow-lg dark:shadow-[0_0_30px_rgba(var(--secondary-rgb),0.1)]" 
-    : "shadow-lg dark:shadow-[0_0_30px_rgba(var(--primary-rgb),0.1)]";
+    ? "shadow-lg dark:shadow-[0_0_30px_rgb(var(--secondary-rgb)/0.1)]" 
+    : "shadow-lg dark:shadow-[0_0_30px_rgb(var(--primary-rgb)/0.1)]";
   const glowClass = isKanji 
-    ? "drop-shadow-sm dark:drop-shadow-[0_0_15px_rgba(var(--secondary-rgb),0.5)]" 
-    : "drop-shadow-sm dark:drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]";
+    ? "drop-shadow-sm dark:drop-shadow-[0_0_15px_rgb(var(--secondary-rgb)/0.5)]" 
+    : "drop-shadow-sm dark:drop-shadow-[0_0_15px_rgb(var(--primary-rgb)/0.5)]";
 
   const themeContext = {
     isKanji,

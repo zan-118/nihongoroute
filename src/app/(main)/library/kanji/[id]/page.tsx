@@ -90,7 +90,7 @@ export default async function KanjiDetailPage({
       <div className="absolute bottom-[20%] -right-[15%] size-[35%] bg-primary/5 blur-[130px] rounded-full pointer-events-none z-0" />
       
       {/* Background Grid Overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--foreground-rgb),0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--foreground-rgb),0.01)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none z-0" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none z-0" />
 
       <div className="max-w-6xl mx-auto w-full relative z-10 pt-8 md:pt-16">
         {/* Breadcrumbs */}
@@ -110,7 +110,7 @@ export default async function KanjiDetailPage({
             <span className="hidden sm:inline">Kanji</span>
           </Link>
           <span className="opacity-20">/</span>
-          <span className="text-primary flex items-center gap-1.5 md:gap-2 drop-shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)]">
+          <span className="text-primary flex items-center gap-1.5 md:gap-2 drop-shadow-[0_0_10px_rgb(var(--primary-rgb)/0.3)]">
             {kanji.character}
           </span>
         </nav>

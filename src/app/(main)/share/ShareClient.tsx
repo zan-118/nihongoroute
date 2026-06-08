@@ -54,9 +54,9 @@ function ShareContent() {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 text-center bg-background relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-tr from-destructive/[0.03] to-transparent pointer-events-none" />
-        <Card className="p-8 sm:p-12 max-w-md w-full glass border-destructive/25 rounded-[3rem] shadow-[0_20px_50px_rgba(var(--destructive-rgb),0.15)] relative z-10">
+        <Card className="p-8 sm:p-12 max-w-md w-full glass border-destructive/25 rounded-[3rem] shadow-[0_20px_50px_rgb(var(--destructive-rgb)/0.15)] relative z-10">
           <div className="size-20 mx-auto rounded-3xl bg-destructive/10 border border-destructive/25 flex items-center justify-center mb-6">
-            <Skull size={40} className="text-destructive drop-shadow-[0_0_8px_rgba(var(--destructive-rgb),0.4)]" />
+            <Skull size={40} className="text-destructive drop-shadow-[0_0_8px_rgb(var(--destructive-rgb)/0.4)]" />
           </div>
           <h1 className="text-2xl font-black uppercase tracking-wide mb-3">Tautan Tidak Valid</h1>
           <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
@@ -108,8 +108,8 @@ function ShareContent() {
               transition={{ type: "spring", damping: 12, delay: 0.2 }}
               className={`w-24 h-24 mx-auto rounded-[2.5rem] flex items-center justify-center mb-8 border shadow-xl relative z-10 ${
                 data.passed 
-                  ? 'bg-success/10 border-success/35 text-success shadow-[0_15px_30px_rgba(var(--success-rgb),0.2)]' 
-                  : 'bg-destructive/10 border-destructive/35 text-destructive shadow-[0_15px_30px_rgba(var(--destructive-rgb),0.15)]'
+                  ? 'bg-success/10 border-success/35 text-success shadow-[0_15px_30px_rgb(var(--success-rgb)/0.2)]' 
+                  : 'bg-destructive/10 border-destructive/35 text-destructive shadow-[0_15px_30px_rgb(var(--destructive-rgb)/0.15)]'
               }`}
             >
               {data.passed ? <Trophy size={48} className="animate-pulse" /> : <Skull size={48} />}
@@ -139,7 +139,7 @@ function ShareContent() {
               </div>
               <div>
                 <span className="text-[9px] font-black text-muted-foreground/60 uppercase tracking-widest block mb-1">Skor yang Diperoleh</span>
-                <span className={`text-2xl sm:text-3xl font-black font-mono tracking-tight ${data.passed ? 'text-success drop-shadow-[0_0_8px_rgba(var(--success-rgb),0.2)]' : 'text-destructive'}`}>
+                <span className={`text-2xl sm:text-3xl font-black font-mono tracking-tight ${data.passed ? 'text-success drop-shadow-[0_0_8px_rgb(var(--success-rgb)/0.2)]' : 'text-destructive'}`}>
                   {data.score} <span className="text-xs font-black text-muted-foreground/50">/ 180 XP</span>
                 </span>
               </div>

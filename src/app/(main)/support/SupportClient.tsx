@@ -113,7 +113,7 @@ function DonationCard({
           {desc}
         </p>
         <div className="mt-auto flex items-center gap-3 text-primary font-black uppercase text-xs tracking-[0.2em] group-hover:text-primary/90 transition-colors">
-          <div className="h-[2px] w-8 bg-primary group-hover:w-14 transition-all shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]" />
+          <div className="h-[2px] w-8 bg-primary group-hover:w-14 transition-all shadow-[0_0_8px_rgb(var(--primary-rgb)/0.5)]" />
           {label}
         </div>
       </Card>
@@ -217,7 +217,7 @@ export default function SupportClient() {
           </Button>
 
           <div className="flex items-center gap-2">
-            <div className="relative size-8 shrink-0 drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.3)]">
+            <div className="relative size-8 shrink-0 drop-shadow-[0_0_8px_rgb(var(--primary-rgb)/0.3)]">
               <Image
                 src="/logo-branding.svg"
                 alt="Logo NihongoRoute"
@@ -243,7 +243,7 @@ export default function SupportClient() {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-destructive/10 to-transparent opacity-60" />
             <Heart
-              className="text-destructive fill-red-500 animate-pulse relative z-10 drop-shadow-[0_0_12px_rgba(var(--destructive-rgb),0.6)]"
+              className="text-destructive fill-red-500 animate-pulse relative z-10 drop-shadow-[0_0_12px_rgb(var(--destructive-rgb)/0.6)]"
               size={32}
             />
             <div className="absolute inset-0 bg-destructive blur-2xl opacity-30" />
@@ -282,7 +282,7 @@ export default function SupportClient() {
             icon="☕"
             accent="border-destructive/30 hover:border-destructive/80"
             label="Traktir Kami Kopi"
-            shadowColor="hover:shadow-[0_0_35px_rgba(var(--destructive-rgb),0.15)] hover:bg-destructive/[0.02]"
+            shadowColor="hover:shadow-[0_0_35px_rgb(var(--destructive-rgb)/0.15)] hover:bg-destructive/[0.02]"
             glowColor="bg-destructive/5"
           />
           <DonationCard
@@ -292,7 +292,7 @@ export default function SupportClient() {
             icon="💸"
             accent="border-warning/30 hover:border-warning/80"
             label="Kirim Dukungan"
-            shadowColor="hover:shadow-[0_0_35px_rgba(var(--warning-rgb),0.15)] hover:bg-warning/[0.02]"
+            shadowColor="hover:shadow-[0_0_35px_rgb(var(--warning-rgb)/0.15)] hover:bg-warning/[0.02]"
             glowColor="bg-warning/5"
           />
         </div>
@@ -306,7 +306,7 @@ export default function SupportClient() {
 
           <div className="flex items-center gap-4 mb-6 relative z-10">
             <div className="size-12 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center shadow-inner relative overflow-hidden">
-              <Zap className="text-primary drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.4)] relative z-10" size={22} />
+              <Zap className="text-primary drop-shadow-[0_0_8px_rgb(var(--primary-rgb)/0.4)] relative z-10" size={22} />
             </div>
             <div>
               <h3 className="text-lg sm:text-xl font-black text-foreground uppercase italic tracking-wider leading-none">
@@ -337,7 +337,7 @@ export default function SupportClient() {
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercentage}%` }}
                 transition={{ duration: 1.5, ease: "easeOut" }}
-                className="h-full bg-gradient-to-r from-primary to-blue-500 rounded-full shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)] relative overflow-hidden"
+                className="h-full bg-gradient-to-r from-primary to-blue-500 rounded-full shadow-[0_0_20px_rgb(var(--primary-rgb)/0.5)] relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-[linear-gradient(45deg,rgba(255,255,255,0.15)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.15)_50%,rgba(255,255,255,0.15)_75%,transparent_75%,transparent)] bg-[length:16px_16px] animate-[shimmer_2s_linear_infinite]" />
               </m.div>
@@ -380,7 +380,7 @@ export default function SupportClient() {
           <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-4 mb-12 relative z-10 text-center sm:text-left">
             <div className="size-14 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center shadow-inner relative overflow-hidden">
               <div className="absolute inset-0 bg-primary/10 animate-pulse" />
-              <ShieldCheck className="text-primary drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.4)] relative z-10" size={26} />
+              <ShieldCheck className="text-primary drop-shadow-[0_0_8px_rgb(var(--primary-rgb)/0.4)] relative z-10" size={26} />
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-foreground uppercase italic tracking-widest leading-none pt-1">
               Alokasi Dana
@@ -389,19 +389,19 @@ export default function SupportClient() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-10 relative z-10">
             <StatItem
-              icon={<Zap className="text-warning drop-shadow-[0_0_8px_rgba(var(--warning-rgb),0.4)]" size={22} />}
+              icon={<Zap className="text-warning drop-shadow-[0_0_8px_rgb(var(--warning-rgb)/0.4)]" size={22} />}
               title="Infrastruktur"
               desc="Biaya server database (Supabase), hosting (Vercel), dan domain agar aplikasi tetap ngebut dan stabil."
               color="bg-warning/10 border-warning/30"
             />
             <StatItem
-              icon={<Globe className="text-primary drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.4)]" size={22} />}
+              icon={<Globe className="text-primary drop-shadow-[0_0_8px_rgb(var(--primary-rgb)/0.4)]" size={22} />}
               title="Konten Baru"
               desc="Pengembangan silabus, rekaman audio, dan ekspansi materi JLPT dari level N4 hingga N1 secara bertahap."
               color="bg-primary/10 border-primary/30"
             />
             <StatItem
-              icon={<Coffee className="text-secondary drop-shadow-[0_0_8px_rgba(var(--secondary-rgb),0.4)]" size={22} />}
+              icon={<Coffee className="text-secondary drop-shadow-[0_0_8px_rgb(var(--secondary-rgb)/0.4)]" size={22} />}
               title="Pengembangan"
               desc="Menjaga saya (Developer) tetap terjaga untuk mengembangkan fitur baru dan memperbaiki masalah teknis di malam hari."
               color="bg-secondary/10 border-secondary/30"
@@ -419,7 +419,7 @@ export default function SupportClient() {
           <div className="flex flex-col sm:flex-row justify-between items-center gap-6 mb-8 relative z-10 border-b border-border/40 pb-6">
             <div className="flex items-center gap-4">
               <div className="size-12 rounded-2xl bg-secondary/10 border border-secondary/30 flex items-center justify-center shadow-inner">
-                <Users className="text-secondary drop-shadow-[0_0_8px_rgba(var(--secondary-rgb),0.4)]" size={22} />
+                <Users className="text-secondary drop-shadow-[0_0_8px_rgb(var(--secondary-rgb)/0.4)]" size={22} />
               </div>
               <div>
                 <h3 className="text-lg sm:text-xl font-black text-foreground uppercase italic tracking-wider leading-none">
@@ -475,7 +475,7 @@ export default function SupportClient() {
               sortedSupporters.map((s, idx) => {
                 let tierStyle = "border-border/60 hover:border-primary/50 shadow-sm";
                 let badgeColor = "bg-muted text-muted-foreground border-border/40";
-                let glowEffect = "rgba(var(--primary-rgb), 0.05)";
+                let glowEffect = "rgb(var(--primary-rgb)/0.05)";
                 let label = "Perunggu";
 
                 if (s.tier === "gold") {
@@ -544,7 +544,7 @@ export default function SupportClient() {
 
           <div className="flex items-center gap-4 mb-8 relative z-10 border-b border-border/40 pb-6">
             <div className="size-12 rounded-2xl bg-warning/10 border border-warning/30 flex items-center justify-center shadow-inner">
-              <HelpCircle className="text-warning drop-shadow-[0_0_8px_rgba(var(--warning-rgb),0.4)]" size={22} />
+              <HelpCircle className="text-warning drop-shadow-[0_0_8px_rgb(var(--warning-rgb)/0.4)]" size={22} />
             </div>
             <div>
               <h3 className="text-lg sm:text-xl font-black text-foreground uppercase italic tracking-wider leading-none">
@@ -617,7 +617,7 @@ export default function SupportClient() {
             </Button>
           </div>
 
-          <p className="text-[10px] sm:text-xs font-black uppercase tracking-[0.5em] text-primary/70 mb-4 bg-primary/10 w-max mx-auto px-5 py-2 rounded-full border border-primary/30 shadow-[0_0_15px_rgba(var(--primary-rgb),0.08)]">
+          <p className="text-[10px] sm:text-xs font-black uppercase tracking-[0.5em] text-primary/70 mb-4 bg-primary/10 w-max mx-auto px-5 py-2 rounded-full border border-primary/30 shadow-[0_0_15px_rgb(var(--primary-rgb)/0.08)]">
             Kontribusi Langsung
           </p>
           <p className="text-xs sm:text-sm text-muted-foreground/70 italic max-w-md mx-auto leading-relaxed font-semibold">

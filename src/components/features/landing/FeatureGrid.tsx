@@ -107,7 +107,7 @@ export function FeatureGrid() {
             Ekosistem Pembelajaran
           </Badge>
           <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-5">
-            Apa Saja yang <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">NihongoRoute Sediakan?</span>
+            Apa Saja yang <span className="brand-text-gradient">NihongoRoute Sediakan?</span>
           </h2>
           <p className="text-muted-foreground text-base md:text-lg font-medium leading-relaxed">
             Semua modul pembelajaran bahasa Jepang yang Anda butuhkan untuk melangkah dari pemula total hingga mahir, dirancang dalam satu platform modern tanpa hambatan.
@@ -123,11 +123,11 @@ export function FeatureGrid() {
         >
           {/* KARTU 1: ALAT BANTU KANA INTERAKTIF */}
           <m.div variants={itemVariants}>
-            <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-primary/40 hover:shadow-[0_0_50px_rgba(var(--primary-rgb),0.12)] shadow-none glass">
+            <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-primary/40 hover:shadow-[0_0_50px_rgb(var(--primary-rgb)_/_0.12)] shadow-none glass">
               <div className="absolute top-0 right-0 size-32 bg-primary/5 rounded-full blur-[40px] group-hover:bg-primary/10 transition-all duration-500" />
               
               <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm text-primary">
-                <PenTool size={26} className="drop-shadow-[0_0_6px_rgba(var(--primary-rgb),0.3)]" />
+                <PenTool size={26} className="drop-shadow-[0_0_6px_rgb(var(--primary-rgb)_/_0.3)]" />
               </div>
               
               <h3 className="text-2xl font-black tracking-tight mb-[13px] text-foreground group-hover:text-primary transition-colors">
@@ -158,11 +158,11 @@ export function FeatureGrid() {
  
           {/* KARTU 2: DATABASE PERPUSTAKAAN KOSAKATA & TATA BAHASA */}
           <m.div variants={itemVariants}>
-            <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-secondary/40 hover:shadow-[0_0_50px_rgba(var(--secondary-rgb),0.12)] shadow-none glass">
+            <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-secondary/40 hover:shadow-[0_0_50px_rgb(var(--secondary-rgb)_/_0.12)] shadow-none glass">
               <div className="absolute top-0 right-0 size-32 bg-secondary/5 rounded-full blur-[40px] group-hover:bg-secondary/10 transition-all duration-500" />
               
               <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm text-secondary">
-                <Library size={26} className="drop-shadow-[0_0_6px_rgba(var(--secondary-rgb),0.3)]" />
+                <Library size={26} className="drop-shadow-[0_0_6px_rgb(var(--secondary-rgb)_/_0.3)]" />
               </div>
               
               <h3 className="text-2xl font-black tracking-tight mb-[13px] text-foreground group-hover:text-secondary transition-colors">
@@ -209,11 +209,11 @@ export function FeatureGrid() {
  
           {/* KARTU 3: FLASHCARDS DENGAN SYSTEM SRS */}
           <m.div variants={itemVariants}>
-            <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-primary/40 hover:shadow-[0_0_50px_rgba(var(--primary-rgb),0.12)] shadow-none glass">
+            <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-primary/40 hover:shadow-[0_0_50px_rgb(var(--primary-rgb)_/_0.12)] shadow-none glass">
               <div className="absolute top-0 right-0 size-32 bg-primary/5 rounded-full blur-[40px] group-hover:bg-primary/10 transition-all duration-500" />
               
               <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm text-primary">
-                <BrainCircuit size={26} className="drop-shadow-[0_0_6px_rgba(var(--primary-rgb),0.3)]" />
+                <BrainCircuit size={26} className="drop-shadow-[0_0_6px_rgb(var(--primary-rgb)_/_0.3)]" />
               </div>
               
               <h3 className="text-2xl font-black tracking-tight mb-[13px] text-foreground group-hover:text-primary transition-colors">
@@ -226,7 +226,7 @@ export function FeatureGrid() {
  
               {/* Tampilan Visual Mockup di Dalam Kartu */}
               <div className="p-4 bg-background/40 border border-border rounded-2xl flex items-center gap-3.5 glass mt-auto transition-all duration-300 group-hover:border-primary/20">
-                <div className="relative w-11 h-14 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground rounded-lg flex items-center justify-center font-bold text-xl shadow-[0_4px_12px_rgba(var(--primary-rgb),0.3)] shrink-0 transition-transform group-hover:scale-105">
+                <div className="relative w-11 h-14 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground rounded-lg flex items-center justify-center font-bold text-xl shadow-[0_4px_12px_rgb(var(--primary-rgb)_/_0.3)] shrink-0 transition-transform group-hover:scale-105">
                   猫
                   <div className="absolute -top-1 -right-1 size-2.5 bg-success rounded-full border border-background animate-pulse" />
                 </div>
@@ -245,11 +245,11 @@ export function FeatureGrid() {
  
           {/* KARTU 4: SIMULASI UJIAN JLPT REAL-TIME */}
           <m.div variants={itemVariants}>
-            <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-secondary/40 hover:shadow-[0_0_50px_rgba(var(--secondary-rgb),0.12)] shadow-none glass">
+            <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-secondary/40 hover:shadow-[0_0_50px_rgb(var(--secondary-rgb)_/_0.12)] shadow-none glass">
               <div className="absolute top-0 right-0 size-32 bg-secondary/5 rounded-full blur-[40px] group-hover:bg-secondary/10 transition-all duration-500" />
               
               <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm text-secondary">
-                <Zap size={26} className="drop-shadow-[0_0_6px_rgba(var(--secondary-rgb),0.3)]" />
+                <Zap size={26} className="drop-shadow-[0_0_6px_rgb(var(--secondary-rgb)_/_0.3)]" />
               </div>
               
               <h3 className="text-2xl font-black tracking-tight mb-[13px] text-foreground group-hover:text-secondary transition-colors">
@@ -275,7 +275,7 @@ export function FeatureGrid() {
                       key={num} 
                       className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-[10px] border transition-all duration-300 ${
                         num === 3 
-                          ? "bg-secondary text-secondary-foreground border-secondary shadow-[0_2px_8px_rgba(var(--secondary-rgb),0.3)]" 
+                          ? "bg-secondary text-secondary-foreground border-secondary shadow-[0_2px_8px_rgb(var(--secondary-rgb)_/_0.3)]" 
                           : "border-border bg-background text-muted-foreground hover:border-secondary/30"
                       }`}
                     >
@@ -315,14 +315,14 @@ export function FeatureGrid() {
                 onClick={() => setActiveStep(idx)}
                 className={`w-full text-left p-6 rounded-[24px] border transition-all duration-300 flex items-center justify-between gap-4 group relative overflow-hidden ${
                   activeStep === idx 
-                    ? "bg-card border-primary/40 shadow-[0_10px_30px_rgba(var(--primary-rgb),0.05)] glass" 
+                    ? "bg-card border-primary/40 shadow-[0_10px_30px_rgb(var(--primary-rgb)_/_0.05)] glass" 
                     : "bg-transparent border-border hover:border-foreground/10 hover:bg-card/5"
                 }`}
               >
                 <div className="flex items-center gap-4 relative z-10">
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-base transition-all duration-300 ${
                     activeStep === idx 
-                      ? "bg-primary text-primary-foreground shadow-[0_4px_12px_rgba(var(--primary-rgb),0.3)]" 
+                      ? "bg-primary text-primary-foreground shadow-[0_4px_12px_rgb(var(--primary-rgb)_/_0.3)]" 
                       : "bg-muted text-muted-foreground"
                   }`}>
                     0{idx + 1}
@@ -406,7 +406,7 @@ export function FeatureGrid() {
               </Badge>
               <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">
                 Tetap Konsisten dengan <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Sistem Belajar Interaktif</span>
+                <span className="brand-text-gradient">Sistem Belajar Interaktif</span>
               </h2>
               <p className="text-muted-foreground text-sm md:text-base leading-relaxed font-medium">
                 NihongoRoute merancang fitur pelacakan konsistensi belajar harian (Streaks) dan poin pengalaman (XP) yang membuat rutinitas belajar bahasa Jepang Anda terasa seperti memainkan game petualangan yang menyenangkan.
@@ -448,7 +448,7 @@ export function FeatureGrid() {
                     <div key={`day-${idx}`} className="flex flex-col items-center gap-1">
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold ${
                         idx < 5 
-                          ? "bg-success text-success-foreground shadow-[0_2px_6px_rgba(var(--success-rgb),0.2)]" 
+                          ? "bg-success text-success-foreground shadow-[0_2px_6px_rgb(var(--success-rgb)_/_0.2)]" 
                           : idx === 5 
                           ? "bg-primary text-primary-foreground animate-pulse" 
                           : "bg-muted text-muted-foreground border border-border"

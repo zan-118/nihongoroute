@@ -138,7 +138,7 @@ export function VocabConjugation({
       {/* Grid Item Konjugasi */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {renderedConjugations.map((conj) => (
-          <div key={conj.key} className="p-4 bg-[rgba(var(--muted-rgb),0.2)] border border-border rounded-xl">
+          <div key={conj.key} className="p-4 bg-[rgb(var(--muted-rgb)/0.2)] border border-border rounded-xl">
             <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block mb-1">{conj.label}</span>
             <span className="text-base font-bold text-foreground font-japanese">{conj.value}</span>
           </div>

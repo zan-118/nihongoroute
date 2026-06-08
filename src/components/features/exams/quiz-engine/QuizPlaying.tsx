@@ -61,7 +61,7 @@ export function QuizPlaying({
               </div>
           </div>
           <div className="flex items-center gap-2 md:gap-3 font-black text-sm italic">
-            <span className="text-destructive text-destructive text-xl md:text-2xl drop-shadow-[0_0_8px_rgba(var(--destructive-rgb),0.5)]">{currentIndex + 1}</span>
+            <span className="text-destructive text-destructive text-xl md:text-2xl drop-shadow-[0_0_8px_rgb(var(--destructive-rgb)/0.5)]">{currentIndex + 1}</span>
             <span className="text-muted-foreground/10 text-lg md:text-xl">/</span>
             <span className="text-muted-foreground/40">{totalQuestions}</span>
           </div>
@@ -71,7 +71,7 @@ export function QuizPlaying({
           current={currentIndex + 1}
           total={totalQuestions}
           color="bg-destructive"
-          indicatorClassName="shadow-[0_0_15px_rgba(var(--destructive-rgb),0.8)]"
+          indicatorClassName="shadow-[0_0_15px_rgb(var(--destructive-rgb)/0.8)]"
         />
         <div className="mb-8 md:mb-12" />
 
@@ -98,8 +98,8 @@ export function QuizPlaying({
               transition={{ type: "spring", stiffness: 400, damping: 25 }}
               className={`mb-6 md:mb-8 p-4 md:p-5 rounded-2xl md:rounded-3xl flex items-center gap-3 md:gap-4 border ${
                 isCorrectAnswer 
-                  ? 'bg-success/10 border-success/30 shadow-[0_0_40px_rgba(var(--success-rgb),0.15)]' 
-                  : 'bg-destructive/10 border-destructive/30 shadow-[0_0_40px_rgba(var(--destructive-rgb),0.15)]'
+                  ? 'bg-success/10 border-success/30 shadow-[0_0_40px_rgb(var(--success-rgb)/0.15)]' 
+                  : 'bg-destructive/10 border-destructive/30 shadow-[0_0_40px_rgb(var(--destructive-rgb)/0.15)]'
               }`}
             >
               <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shrink-0 ${
@@ -138,10 +138,10 @@ export function QuizPlaying({
 
               if (isAnswered) {
                 if (isCorrect) {
-                  buttonStyle = "bg-success/15 border-success/60 text-success shadow-[0_0_30px_rgba(var(--success-rgb),0.2)] neo-card scale-[1.03] z-10 ring-2 ring-success/30";
+                  buttonStyle = "bg-success/15 border-success/60 text-success shadow-[0_0_30px_rgb(var(--success-rgb)/0.2)] neo-card scale-[1.03] z-10 ring-2 ring-success/30";
                   statusIcon = <CheckCircle2 className="w-6 h-6 md:w-7 md:h-7 text-success" />;
                 } else if (isSelected && !isCorrect) {
-                  buttonStyle = "bg-destructive/15 border-destructive/60 text-destructive shadow-[0_0_30px_rgba(var(--destructive-rgb),0.2)] neo-card z-10 ring-2 ring-destructive/30";
+                  buttonStyle = "bg-destructive/15 border-destructive/60 text-destructive shadow-[0_0_30px_rgb(var(--destructive-rgb)/0.2)] neo-card z-10 ring-2 ring-destructive/30";
                   statusIcon = <XCircle className="w-6 h-6 md:w-7 md:h-7 text-destructive" />;
                 } else {
                   buttonStyle = "bg-muted/20 border-transparent text-muted-foreground/20 scale-95 opacity-40 neo-card grayscale";

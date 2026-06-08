@@ -54,7 +54,7 @@ export function VocabHero({ word, furigana, romaji, meaning }: VocabHeroProps) {
       )}
       
       {/* Aksen Batang Pendar Siber */}
-      <div className="h-1.5 w-16 bg-primary rounded-full mb-6 shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)] mx-auto" />
+      <div className="h-1.5 w-16 bg-primary rounded-full mb-6 shadow-[0_0_15px_rgb(var(--primary-rgb)/0.5)] mx-auto" />
       
       {/* Arti Utama Bahasa Indonesia */}
       <p className="text-2xl md:text-3xl font-black text-foreground leading-tight">

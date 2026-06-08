@@ -122,7 +122,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
         </div>
       </div>
 
-      <Card className="group relative overflow-hidden border-border bg-card/10 backdrop-blur-xl p-0 rounded-[34px] transition-all duration-500 hover:border-primary/40 hover:shadow-[0_0_40px_rgba(var(--primary-rgb),0.1)] shadow-none glass">
+      <Card className="group relative overflow-hidden border-border bg-card/10 backdrop-blur-xl p-0 rounded-[34px] transition-all duration-500 hover:border-primary/40 hover:shadow-[0_0_40px_rgb(var(--primary-rgb)/0.1)] shadow-none glass">
         {/* Glow Latar Belakang Kemajuan Belajar */}
         <div 
           className="absolute left-0 top-0 bottom-0 bg-primary/5 transition-all duration-1000 ease-out pointer-events-none" 
@@ -134,9 +134,9 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
           <div className="shrink-0 relative transition-transform duration-300 group-hover:scale-105">
             <div className="size-[89px] rounded-[21px] bg-card/40 border border-border flex items-center justify-center shadow-2xl overflow-hidden group-hover:border-primary/30 transition-colors">
                {activeData.progress === 100 ? (
-                 <CheckCircle2 size={34} className="text-success drop-shadow-[0_0_8px_rgba(var(--success-rgb),0.4)]" />
+                 <CheckCircle2 size={34} className="text-success drop-shadow-[0_0_8px_rgb(var(--success-rgb)/0.4)]" />
                ) : (
-                 <BookOpen size={34} className="text-primary group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.3)]" />
+                 <BookOpen size={34} className="text-primary group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_8px_rgb(var(--primary-rgb)/0.3)]" />
                )}
             </div>
             
@@ -168,8 +168,8 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
                         className={`w-1.5 h-3 rounded-full border border-background transition-all duration-500 ${
                           isDotActive 
                             ? activeData.progress === 100
-                              ? 'bg-success shadow-[0_0_8px_rgba(var(--success-rgb),0.5)]'
-                              : 'bg-primary shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]' 
+                              ? 'bg-success shadow-[0_0_8px_rgb(var(--success-rgb)/0.5)]'
+                              : 'bg-primary shadow-[0_0_8px_rgb(var(--primary-rgb)/0.5)]' 
                             : 'bg-background/10'
                         }`} 
                       />
@@ -204,8 +204,8 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
             transition={{ duration: 1.5, ease: "easeOut" }}
             className={`h-full relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent ${
               activeData.progress === 100
-                ? "bg-success shadow-[0_0_15px_rgba(var(--success-rgb),0.6)]"
-                : "bg-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.6)]"
+                ? "bg-success shadow-[0_0_15px_rgb(var(--success-rgb)/0.6)]"
+                : "bg-primary shadow-[0_0_15px_rgb(var(--primary-rgb)/0.6)]"
             }`}
           />
         </div>

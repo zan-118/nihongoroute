@@ -42,7 +42,7 @@ export default function DataManagementSection({
         
         <div className="flex items-center gap-4 mb-10 relative z-10">
           <div className="size-12 rounded-2xl bg-background/30 flex items-center justify-center border border-border/80 shadow-2xl">
-            <Database size={22} className="text-primary drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.4)] animate-pulse" />
+            <Database size={22} className="text-primary drop-shadow-[0_0_8px_rgb(var(--primary-rgb)/0.4)] animate-pulse" />
           </div>
           <div>
             <h2 className="text-xl font-black uppercase italic tracking-tighter text-foreground">Manajemen Data</h2>

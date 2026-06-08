@@ -55,7 +55,7 @@ export function QuizFinished({
           <Card
             className={`w-28 h-28 rounded-[2.5rem] border flex items-center justify-center text-4xl neo-inset shadow-none ${
               isPerfect
-                ? "bg-destructive/10 border-destructive/30 shadow-lg dark:shadow-[0_0_40px_rgba(var(--destructive-rgb),0.2)]"
+                ? "bg-destructive/10 border-destructive/30 shadow-lg dark:shadow-[0_0_40px_rgb(var(--destructive-rgb)/0.2)]"
                 : "bg-warning/10 border-warning/30"
             }`}
           >
@@ -85,7 +85,7 @@ export function QuizFinished({
             <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mb-2">
               Persentase
             </p>
-            <p className={`text-5xl font-black tracking-tight ${isPerfect ? "text-destructive text-destructive drop-shadow-sm dark:drop-shadow-[0_0_15px_rgba(var(--destructive-rgb),0.4)]" : "text-warning text-warning"}`}>
+            <p className={`text-5xl font-black tracking-tight ${isPerfect ? "text-destructive text-destructive drop-shadow-sm dark:drop-shadow-[0_0_15px_rgb(var(--destructive-rgb)/0.4)]" : "text-warning text-warning"}`}>
               {percentage}%
             </p>
           </div>

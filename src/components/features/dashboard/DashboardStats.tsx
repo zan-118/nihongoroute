@@ -119,7 +119,7 @@ export default function DashboardStats({
           </>
         ) : (
           <>
-            <Card className="h-[140px] bg-card/40 backdrop-blur-xl border border-border rounded-[1.5rem] p-5 flex flex-col justify-between group overflow-hidden relative transition-all duration-300 hover:border-warning/30 hover:shadow-[0_0_30px_rgba(var(--warning-rgb),0.1)] shadow-lg">
+            <Card className="h-[140px] bg-card/40 backdrop-blur-xl border border-border rounded-[1.5rem] p-5 flex flex-col justify-between group overflow-hidden relative transition-all duration-300 hover:border-warning/30 hover:shadow-[0_0_30px_rgb(var(--warning-rgb)/0.1)] shadow-lg">
               <h3 className="text-warning/60 font-bold uppercase tracking-widest text-xs">
                 Semangat Belajar
               </h3>
@@ -143,7 +143,7 @@ export default function DashboardStats({
       <m.div variants={itemVariants} className="md:col-span-12">
         <div className="flex flex-col mb-8 mt-4">
           <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-[10px] mb-2 flex items-center gap-2">
-            <div className="size-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--primary-rgb),0.8)]" />
+            <div className="size-1.5 rounded-full bg-primary shadow-[0_0_8px_rgb(var(--primary-rgb)/0.8)]" />
             Pencapaian Silabus
           </h2>
           <h3 className="text-xl md:text-2xl font-black text-foreground uppercase tracking-tight">
@@ -159,7 +159,7 @@ export default function DashboardStats({
              const percentage = total > 0 ? (completed / total) * 100 : 0;
              
              return (
-               <Card key={cat._id} className="bg-background/[0.03] backdrop-blur-xl border border-border p-6 rounded-[2rem] group hover:border-primary/40 hover:shadow-[0_0_25px_rgba(var(--primary-rgb),0.05)] transition-all duration-500 shadow-none">
+               <Card key={cat._id} className="bg-background/[0.03] backdrop-blur-xl border border-border p-6 rounded-[2rem] group hover:border-primary/40 hover:shadow-[0_0_25px_rgb(var(--primary-rgb)/0.05)] transition-all duration-500 shadow-none">
                   <div className="flex items-center gap-4 mb-5">
                     <div className="size-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
                       {percentage === 100 ? <CheckCircle2 size={24} /> : <BookOpen size={24} />}
@@ -183,8 +183,8 @@ export default function DashboardStats({
                       viewport={{ once: true }}
                       className={`h-full rounded-full relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent ${
                         percentage === 100 
-                          ? 'bg-success shadow-[0_0_10px_rgba(var(--success-rgb),0.5)]' 
-                          : 'bg-gradient-to-r from-primary to-blue-500 shadow-[0_0_10px_rgba(var(--primary-rgb),0.4)]'
+                          ? 'bg-success shadow-[0_0_10px_rgb(var(--success-rgb)/0.5)]' 
+                          : 'bg-gradient-to-r from-primary to-blue-500 shadow-[0_0_10px_rgb(var(--primary-rgb)/0.4)]'
                       }`}
                     />
                   </div>

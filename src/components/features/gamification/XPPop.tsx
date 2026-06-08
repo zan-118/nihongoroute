@@ -42,7 +42,7 @@ export default function XPPop({
           {/* Latar Belakang Efek Bloom */}
           <div className="absolute size-24 bg-destructive/20 blur-3xl rounded-full animate-bloom" />
           
-          <span className="relative text-destructive font-black italic text-4xl drop-shadow-[0_0_20px_rgba(var(--destructive-rgb),0.8)] tracking-tighter">
+          <span className="relative text-destructive font-black italic text-4xl drop-shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.8)] tracking-tighter">
             +{amount} XP
           </span>
         </m.div>

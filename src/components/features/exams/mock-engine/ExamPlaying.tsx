@@ -182,7 +182,7 @@ export function ExamPlaying({
             >
               <div className="space-y-6">
                 {isCurrentlyListening && (
-                  <div className="bg-background dark:bg-[rgba(var(--background-rgb),0.05)] border border-border rounded-2xl p-4 flex items-center gap-4 shadow-sm">
+                  <div className="bg-background dark:bg-[rgb(var(--background-rgb)/0.05)] border border-border rounded-2xl p-4 flex items-center gap-4 shadow-sm">
                     <Button
                       onClick={handlePlayAudio}
                       disabled={
@@ -210,9 +210,9 @@ export function ExamPlaying({
                   </div>
                 )}
 
-                <div className="bg-background dark:bg-[rgba(var(--background-rgb),0.05)] border border-border rounded-3xl p-6 md:p-8 shadow-sm">
+                <div className="bg-background dark:bg-[rgb(var(--background-rgb)/0.05)] border border-border rounded-3xl p-6 md:p-8 shadow-sm">
                   <div className="flex items-start justify-between gap-4 mb-6">
-                    <div className="px-3 py-1 bg-muted dark:bg-[rgba(var(--background-rgb),0.1)] rounded-lg text-[10px] font-mono font-bold text-muted-foreground">
+                    <div className="px-3 py-1 bg-muted dark:bg-[rgb(var(--background-rgb)/0.1)] rounded-lg text-[10px] font-mono font-bold text-muted-foreground">
                       PERTANYAAN {currentQuestionIndex + 1}
                     </div>
                   </div>
@@ -247,7 +247,7 @@ export function ExamPlaying({
                   </div>
                 </div>
 
-                <div className="bg-background/50 dark:bg-[rgba(var(--background-rgb),0.05)] border border-border rounded-2xl p-4">
+                <div className="bg-background/50 dark:bg-[rgb(var(--background-rgb)/0.05)] border border-border rounded-2xl p-4">
                   <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4 flex items-center gap-2">
                     NAVIGASI {SECTION_LABELS[currentSection].split(" ")[0]}
                   </p>
@@ -365,7 +365,7 @@ export function ExamPlaying({
               {/* Ringkasan Statistik Jawaban */}
               <div className="px-6 py-4 bg-muted/30 border-b border-border grid grid-cols-2 gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="size-3 rounded-full bg-success shadow-[0_0_8px_rgba(var(--success-rgb),0.5)]" />
+                  <div className="size-3 rounded-full bg-success shadow-[0_0_8px_rgb(var(--success-rgb)/0.5)]" />
                   <div>
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Dijawab</p>
                     <p className="text-lg font-black font-mono text-foreground mt-1">
@@ -374,7 +374,7 @@ export function ExamPlaying({
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="size-3 rounded-full bg-warning animate-pulse shadow-[0_0_8px_rgba(var(--warning-rgb),0.5)]" />
+                  <div className="size-3 rounded-full bg-warning animate-pulse shadow-[0_0_8px_rgb(var(--warning-rgb)/0.5)]" />
                   <div>
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Belum Dijawab</p>
                     <p className="text-lg font-black font-mono text-foreground mt-1">
@@ -411,7 +411,7 @@ export function ExamPlaying({
                         setPendingConfirm(null);
                       };
                       if (isAnswered) {
-                        cellClass = "bg-success/10 text-success border-success/20 hover:bg-success/20 hover:scale-105 active:scale-95 cursor-pointer shadow-[0_0_10px_rgba(var(--success-rgb),0.05)]";
+                        cellClass = "bg-success/10 text-success border-success/20 hover:bg-success/20 hover:scale-105 active:scale-95 cursor-pointer shadow-[0_0_10px_rgb(var(--success-rgb)/0.05)]";
                       } else {
                         cellClass = "bg-warning/10 text-warning border-warning/20 hover:bg-warning/20 hover:scale-105 active:scale-95 cursor-pointer animate-pulse";
                       }

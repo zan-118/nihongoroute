@@ -33,7 +33,7 @@ export default function SRSAnalytics() {
 
   return (
     <Card className="bg-card p-8 rounded-[3rem] border-border relative overflow-hidden neo-card shadow-none flex flex-col h-full">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(var(--primary-rgb),0.05),transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgb(var(--primary-rgb)/0.05),transparent_50%)]" />
       
       <header className="flex items-center justify-between mb-10 relative z-10">
         <div className="flex items-center gap-4">

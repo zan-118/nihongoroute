@@ -55,7 +55,7 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
                <div>
                  <span 
                    className="text-[10px] font-black text-primary uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-3 inline-block"
-                   style={{ backgroundColor: "rgba(var(--primary-rgb), 0.1)" }}
+                   style={{ backgroundColor: "rgb(var(--primary-rgb)/0.1)" }}
                  >
                    {r.difficulty || r.level || "N/A"} Reading
                  </span>
@@ -86,7 +86,7 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
               <div 
                 className="prose-custom text-lg md:text-xl leading-[2] md:leading-[2.2] font-japanese p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border"
-                style={{ backgroundColor: "rgba(var(--card-rgb), 0.3)", borderColor: "rgba(var(--border-rgb), 0.5)" }}
+                style={{ backgroundColor: "rgb(var(--card-rgb)/0.3)", borderColor: "rgb(var(--border-rgb)/0.5)" }}
               >
                 {typeof r.body === "string"
                   ? r.body.split("\n").filter(Boolean).map((line: string, pos: number) => (
@@ -98,7 +98,7 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
               </div>
               <div 
                 className="prose-custom opacity-70 italic text-sm md:text-base p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border"
-                style={{ backgroundColor: "rgba(var(--muted-rgb), 0.2)", borderColor: "rgba(var(--border-rgb), 0.3)" }}
+                style={{ backgroundColor: "rgb(var(--muted-rgb)/0.2)", borderColor: "rgb(var(--border-rgb)/0.3)" }}
               >
                  <h4 className="text-[10px] not-italic font-black text-muted-foreground uppercase tracking-[0.2em] mb-4 md:mb-6">Terjemahan</h4>
                  {typeof r.translation === "string"

@@ -133,7 +133,7 @@ export default async function VocabDetailPage({
       <div className="absolute bottom-[10%] -right-[10%] size-[30%] bg-secondary/5 blur-[120px] rounded-full pointer-events-none z-0" />
       
       {/* Background Grid Overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--foreground-rgb),0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--foreground-rgb),0.01)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none z-0" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none z-0" />
 
       <div className="max-w-5xl mx-auto w-full relative z-10 pt-8 md:pt-16">
         {/* Breadcrumbs */}
@@ -153,7 +153,7 @@ export default async function VocabDetailPage({
             <span className="hidden sm:inline">Kosakata</span>
           </Link>
           <span className="opacity-20">/</span>
-          <span className="text-primary flex items-center gap-1.5 md:gap-2 drop-shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)]">
+          <span className="text-primary flex items-center gap-1.5 md:gap-2 drop-shadow-[0_0_10px_rgb(var(--primary-rgb)/0.3)]">
             {vocab.word}
           </span>
         </nav>
@@ -202,7 +202,7 @@ export default async function VocabDetailPage({
         {/* Action Footer */}
         <footer className="mt-20 pt-16 border-t border-border flex flex-col md:flex-row items-center justify-between gap-8">
           <Link href="/library/vocab" className="w-full md:w-auto">
-            <Button variant="ghost" className="w-full px-10 py-8 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-2xl bg-[rgba(var(--muted-rgb),0.3)] border border-border hover:bg-[rgba(var(--muted-rgb),0.5)] hover:border-primary/30 transition-all gap-4 group">
+            <Button variant="ghost" className="w-full px-10 py-8 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-2xl bg-[rgb(var(--muted-rgb)/0.3)] border border-border hover:bg-[rgb(var(--muted-rgb)/0.5)] hover:border-primary/30 transition-all gap-4 group">
               <ChevronLeft size={20} aria-hidden="true" className="group-hover:-translate-x-2 transition-transform" /> Kembali ke Daftar Kosakata
             </Button>
           </Link>

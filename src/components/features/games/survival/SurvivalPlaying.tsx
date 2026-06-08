@@ -68,7 +68,7 @@ export function SurvivalPlaying({
   return (
     <div className="w-full flex flex-col h-full min-h-[60vh] max-w-3xl mx-auto pb-6 px-4 md:px-0 transition-colors duration-300">
       <Card
-        className={`flex justify-between items-center mb-4 md:mb-10 p-4 md:p-10 rounded-[1.5rem] md:rounded-[3rem] border transition-all duration-500 neo-card shadow-lg ${isCriticalHp ? "border-destructive/60 bg-destructive/5 shadow-[0_0_30px_rgba(var(--destructive-rgb),0.15)] animate-pulse" : "bg-card border-border"}`}
+        className={`flex justify-between items-center mb-4 md:mb-10 p-4 md:p-10 rounded-[1.5rem] md:rounded-[3rem] border transition-all duration-500 neo-card shadow-lg ${isCriticalHp ? "border-destructive/60 bg-destructive/5 shadow-[0_0_30px_rgb(var(--destructive-rgb)/0.15)] animate-pulse" : "bg-card border-border"}`}
       >
         <div className="flex gap-1 md:gap-4 items-center">
           {[...Array(MAX_HP)].map((_, i) => (
@@ -79,8 +79,8 @@ export function SurvivalPlaying({
               className={`transition-all duration-500 ${
                 i < hp
                   ? isCriticalHp
-                    ? "text-destructive drop-shadow-sm dark:drop-shadow-[0_0_10px_rgba(var(--destructive-rgb),0.8)] animate-pulse"
-                    : "text-primary drop-shadow-sm dark:drop-shadow-[0_0_10px_rgba(var(--primary-rgb),0.8)]"
+                    ? "text-destructive drop-shadow-sm dark:drop-shadow-[0_0_10px_rgb(var(--destructive-rgb)/0.8)] animate-pulse"
+                    : "text-primary drop-shadow-sm dark:drop-shadow-[0_0_10px_rgb(var(--primary-rgb)/0.8)]"
                   : "text-muted-foreground/20 scale-75 opacity-30"
               } md:w-8 md:h-8`}
             />
@@ -88,7 +88,7 @@ export function SurvivalPlaying({
         </div>
 
         <div
-          className={`flex items-center gap-1.5 md:gap-4 font-mono text-xl md:text-4xl lg:text-5xl font-black tracking-tight transition-all ${isDangerTime ? "text-destructive animate-pulse drop-shadow-sm dark:drop-shadow-[0_0_15px_rgba(var(--destructive-rgb),0.8)]" : "text-foreground opacity-80"}`}
+          className={`flex items-center gap-1.5 md:gap-4 font-mono text-xl md:text-4xl lg:text-5xl font-black tracking-tight transition-all ${isDangerTime ? "text-destructive animate-pulse drop-shadow-sm dark:drop-shadow-[0_0_15px_rgb(var(--destructive-rgb)/0.8)]" : "text-foreground opacity-80"}`}
         >
           <Timer size={18} aria-hidden="true" className="md:w-8 md:h-8 lg:w-10 lg:h-10" /> 
           {timeLeft.toString().padStart(2, "0")}s
@@ -120,11 +120,11 @@ export function SurvivalPlaying({
                 : "border-border"
             }`}
           >
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--primary-rgb),0.03)_1px,transparent_1px)] bg-[size:100%_4px] md:bg-[size:100%_6px] pointer-events-none opacity-40 rounded-[2rem] md:rounded-[4rem]" />
+            <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--primary-rgb)/0.03)_1px,transparent_1px)] bg-[size:100%_4px] md:bg-[size:100%_6px] pointer-events-none opacity-40 rounded-[2rem] md:rounded-[4rem]" />
 
             <Badge
               variant="outline"
-              className={`absolute top-4 md:top-10 left-1/2 -translate-x-1/2 text-[10px] md:text-xs font-bold uppercase tracking-widest border px-4 py-1 md:px-8 md:py-3 rounded-lg md:rounded-2xl neo-inset h-auto transition-all duration-300 ${isDangerTime ? "text-destructive border-destructive/50 bg-destructive/10 shadow-sm" : "text-muted-foreground border-border bg-muted/50 dark:bg-[rgba(var(--background-rgb),0.3)]"}`}
+              className={`absolute top-4 md:top-10 left-1/2 -translate-x-1/2 text-[10px] md:text-xs font-bold uppercase tracking-widest border px-4 py-1 md:px-8 md:py-3 rounded-lg md:rounded-2xl neo-inset h-auto transition-all duration-300 ${isDangerTime ? "text-destructive border-destructive/50 bg-destructive/10 shadow-sm" : "text-muted-foreground border-border bg-muted/50 dark:bg-[rgb(var(--background-rgb)/0.3)]"}`}
             >
               {isDangerTime ? (
                 <span className="flex items-center gap-1">
@@ -183,7 +183,7 @@ export function SurvivalPlaying({
                   ? "bg-destructive/20 border-destructive shadow-lg text-destructive" 
                   : isCorrect
                   ? "bg-success/20 border-success shadow-lg text-success"
-                  : "bg-[rgba(var(--muted-rgb),0.5)] dark:bg-[rgba(var(--background-rgb),0.4)] border-border md:hover:border-primary/50 md:hover:bg-primary md:hover:text-primary-foreground neo-card active:scale-[0.98] transition-transform"
+                  : "bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.4)] border-border md:hover:border-primary/50 md:hover:bg-primary md:hover:text-primary-foreground neo-card active:scale-[0.98] transition-transform"
               }`}
             >
               <div className="flex items-center justify-center w-full h-full p-4 md:p-8 relative">

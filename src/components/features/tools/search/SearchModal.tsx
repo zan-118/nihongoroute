@@ -155,7 +155,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
                 <div className="space-y-2">
                   {results.map((item, index) => (
                     <div key={item.id + index} onMouseEnter={() => setActiveIndex(index)} onClick={() => handleSelect(item.href)}
-                      className={`flex items-center gap-4 p-4 rounded-2xl cursor-pointer transition-all duration-300 relative group ${index === activeIndex ? 'bg-primary/10 border border-primary/20 shadow-[0_0_20px_rgba(var(--primary-rgb),0.05)]' : 'hover:bg-muted/50 border border-transparent'}`}>
+                      className={`flex items-center gap-4 p-4 rounded-2xl cursor-pointer transition-all duration-300 relative group ${index === activeIndex ? 'bg-primary/10 border border-primary/20 shadow-[0_0_20px_rgb(var(--primary-rgb)/0.05)]' : 'hover:bg-muted/50 border border-transparent'}`}>
                       <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 ${index === activeIndex ? 'bg-primary text-primary-foreground shadow-lg scale-110' : 'bg-muted text-muted-foreground'}`}><item.icon size={24} /></div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-3">

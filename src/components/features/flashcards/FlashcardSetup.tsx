@@ -25,11 +25,11 @@ interface FlashcardSetupProps {
 // ==========================================
 const JLPT_LEVELS = [
   { id: "all", label: "Campur (Semua)", color: "bg-muted text-muted-foreground border-border" },
-  { id: "N5", label: "N5", color: "bg-[rgba(var(--primary-rgb),0.1)] text-primary border-[rgba(var(--primary-rgb),0.2)]" },
-  { id: "N4", label: "N4", color: "bg-[rgba(var(--success-rgb),0.1)] text-success border-[rgba(var(--success-rgb),0.2)]" },
-  { id: "N3", label: "N3", color: "bg-[rgba(var(--warning-rgb),0.1)] text-warning border-[rgba(var(--warning-rgb),0.2)]" },
-  { id: "N2", label: "N2", color: "bg-[rgba(var(--secondary-rgb),0.1)] text-secondary border-[rgba(var(--secondary-rgb),0.2)]" },
-  { id: "N1", label: "N1", color: "bg-[rgba(var(--destructive-rgb),0.1)] text-destructive border-[rgba(var(--destructive-rgb),0.2)]" }
+  { id: "N5", label: "N5", color: "bg-[rgb(var(--primary-rgb)/0.1)] text-primary border-[rgb(var(--primary-rgb)/0.2)]" },
+  { id: "N4", label: "N4", color: "bg-[rgb(var(--success-rgb)/0.1)] text-success border-[rgb(var(--success-rgb)/0.2)]" },
+  { id: "N3", label: "N3", color: "bg-[rgb(var(--warning-rgb)/0.1)] text-warning border-[rgb(var(--warning-rgb)/0.2)]" },
+  { id: "N2", label: "N2", color: "bg-[rgb(var(--secondary-rgb)/0.1)] text-secondary border-[rgb(var(--secondary-rgb)/0.2)]" },
+  { id: "N1", label: "N1", color: "bg-[rgb(var(--destructive-rgb)/0.1)] text-destructive border-[rgb(var(--destructive-rgb)/0.2)]" }
 ];
 
 const MODES = [
@@ -74,7 +74,7 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
         </p>
       </div>
 
-      <div className="space-y-8 glass p-6 md:p-8 rounded-3xl border border-border shadow-[0_0_40px_rgba(var(--primary-rgb),0.05)]">
+      <div className="space-y-8 glass p-6 md:p-8 rounded-3xl border border-border shadow-[0_0_40px_rgb(var(--primary-rgb)/0.05)]">
         
         {/* Level Selection */}
         <div className="space-y-4">
@@ -89,7 +89,7 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
                 onClick={() => setLevel(lvl.id)}
                 className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all duration-300
                   ${level === lvl.id 
-                    ? `shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)] ${lvl.color.replace('text-', 'bg-').replace('/10', '/20')} border-primary` 
+                    ? `shadow-[0_0_20px_rgb(var(--primary-rgb)/0.2)] ${lvl.color.replace('text-', 'bg-').replace('/10', '/20')} border-primary` 
                     : "bg-background/50 border-border hover:bg-muted"
                   }
                 `}
@@ -113,7 +113,7 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
                 onClick={() => setMode(modeItem.id)}
                 className={`relative flex flex-col items-center justify-center p-6 rounded-2xl border transition-all duration-300 overflow-hidden group
                   ${mode === modeItem.id 
-                    ? "bg-primary/10 border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.15)] text-primary" 
+                    ? "bg-primary/10 border-primary shadow-[0_0_20px_rgb(var(--primary-rgb)/0.15)] text-primary" 
                     : "bg-background/50 border-border hover:bg-muted text-muted-foreground"
                   }
                 `}
@@ -144,7 +144,7 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
                 onClick={() => setAmount(amt)}
                 className={`flex-1 min-w-[80px] py-3 px-4 rounded-2xl border font-bold transition-all duration-300
                   ${amount === amt 
-                    ? "bg-secondary text-secondary-foreground border-secondary shadow-[0_0_20px_rgba(var(--secondary-rgb),0.2)]" 
+                    ? "bg-secondary text-secondary-foreground border-secondary shadow-[0_0_20px_rgb(var(--secondary-rgb)/0.2)]" 
                     : "bg-background/50 text-muted-foreground border-border hover:bg-muted"
                   }
                 `}
@@ -158,7 +158,7 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
         <div className="pt-6 border-t border-border mt-8">
           <Button 
             onClick={() => onStart(level, mode, amount)}
-            className="w-full py-6 rounded-2xl text-lg font-black uppercase tracking-widest bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)] group transition-all"
+            className="w-full py-6 rounded-2xl text-lg font-black uppercase tracking-widest bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_30px_rgb(var(--primary-rgb)/0.3)] group transition-all"
           >
             Mulai Sesi <Play size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>

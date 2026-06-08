@@ -180,7 +180,7 @@ export function MnemonicEditor({ wordId, className, compact = false }: MnemonicE
                   className={cn(
                     "h-7 px-4 text-[10px] font-black uppercase tracking-wider rounded-lg",
                     "bg-primary/90 hover:bg-primary text-primary-foreground",
-                    "transition-all duration-200 shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]",
+                    "transition-all duration-200 shadow-[0_0_15px_rgb(var(--primary-rgb)/0.3)]",
                     "disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none"
                   )}
                 >

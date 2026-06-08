@@ -104,13 +104,13 @@ export default function KanjiStrokePlayer({
   // RENDER KOMPONEN
   // ==========================================
   if (loading) return (
-    <div className="flex items-center justify-center bg-[rgba(var(--card-rgb),0.2)] backdrop-blur-xl rounded-3xl border border-border" style={{ width: size, height: size }}>
+    <div className="flex items-center justify-center bg-[rgb(var(--card-rgb)/0.2)] backdrop-blur-xl rounded-3xl border border-border" style={{ width: size, height: size }}>
       <div className="animate-spin rounded-full size-8 border-b-2 border-primary" />
     </div>
   );
 
   if (error || !data) return (
-    <div className="flex items-center justify-center bg-[rgba(var(--card-rgb),0.2)] backdrop-blur-xl rounded-3xl border border-border text-destructive text-xs p-4 text-center" style={{ width: size, height: size }}>
+    <div className="flex items-center justify-center bg-[rgb(var(--card-rgb)/0.2)] backdrop-blur-xl rounded-3xl border border-border text-destructive text-xs p-4 text-center" style={{ width: size, height: size }}>
       Gagal memuat animasi kanji.
     </div>
   );
@@ -119,7 +119,7 @@ export default function KanjiStrokePlayer({
     <div className="flex flex-col items-center gap-6">
       {/* WADAH PEMUTAR CYBER-GLASS */}
       <div 
-        className="relative bg-[rgba(var(--card-rgb),0.4)] backdrop-blur-2xl rounded-[2.5rem] border border-border shadow-2xl overflow-hidden group p-6 md:p-8 flex items-center justify-center"
+        className="relative bg-[rgb(var(--card-rgb)/0.4)] backdrop-blur-2xl rounded-[2.5rem] border border-border shadow-2xl overflow-hidden group p-6 md:p-8 flex items-center justify-center"
         style={{ 
           width: '100%',
           maxWidth: size + 64, 
@@ -227,7 +227,7 @@ export default function KanjiStrokePlayer({
 
         {/* Lencana Indikator Kecepatan */}
         <div className="absolute top-6 right-8 z-20">
-          <div className="px-2 py-1 rounded-md bg-[rgba(var(--background-rgb),0.05)] border border-border text-[8px] font-bold uppercase tracking-widest text-primary flex items-center gap-1">
+          <div className="px-2 py-1 rounded-md bg-[rgb(var(--background-rgb)/0.05)] border border-border text-[8px] font-bold uppercase tracking-widest text-primary flex items-center gap-1">
             <Zap size={8} aria-hidden="true" /> {speed}x KECEPATAN
           </div>
         </div>
@@ -235,7 +235,7 @@ export default function KanjiStrokePlayer({
 
       {/* KONTROL PEMUTARAN */}
       <div className="flex flex-col gap-4 w-full max-w-[320px]">
-        <div className="grid grid-cols-5 gap-2 bg-[rgba(var(--background-rgb),0.05)] p-2 rounded-2xl border border-border">
+        <div className="grid grid-cols-5 gap-2 bg-[rgb(var(--background-rgb)/0.05)] p-2 rounded-2xl border border-border">
           <Button
             variant="ghost"
             size="icon" 

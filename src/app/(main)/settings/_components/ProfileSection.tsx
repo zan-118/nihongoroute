@@ -114,7 +114,7 @@ export default function ProfileSection({
               <h2 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter text-foreground flex flex-col lg:flex-row lg:items-center gap-3">
                  Profil Pengguna
                  {isAuthenticated && (
-                   <span className="text-[9px] not-italic font-black bg-success/15 text-success border border-success/30 px-3 py-1 rounded-full uppercase tracking-widest w-fit mx-auto lg:mx-0 shadow-[0_0_15px_rgba(var(--success-rgb),0.1)]">
+                   <span className="text-[9px] not-italic font-black bg-success/15 text-success border border-success/30 px-3 py-1 rounded-full uppercase tracking-widest w-fit mx-auto lg:mx-0 shadow-[0_0_15px_rgb(var(--success-rgb)/0.1)]">
                       Akun Terhubung
                    </span>
                  )}

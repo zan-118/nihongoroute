@@ -67,7 +67,7 @@ export default function LevelUpOverlay({ level }: { level: number }) {
             className="w-full max-w-lg h-auto max-h-[90vh] flex items-center justify-center"
           >
             <Card className="text-center py-6 px-4 md:py-10 md:px-12 bg-background bg-card rounded-[2rem] md:rounded-[3rem] border border-primary/30 shadow-2xl neo-card relative overflow-hidden w-full h-auto flex flex-col items-center">
-              <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--primary-rgb),0.03)_1px,transparent_1px)] bg-[size:100%_4px] pointer-events-none opacity-20 dark:opacity-40" />
+              <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--primary-rgb)/0.03)_1px,transparent_1px)] bg-[size:100%_4px] pointer-events-none opacity-20 dark:opacity-40" />
               
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[500px] bg-primary/10 blur-[120px] rounded-full animate-bloom pointer-events-none" />
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[300px] bg-primary/10 blur-[100px] rounded-full animate-pulse pointer-events-none" />
@@ -86,15 +86,15 @@ export default function LevelUpOverlay({ level }: { level: number }) {
                 }}
                 className="w-16 h-16 md:w-28 md:h-28 mx-auto bg-primary/10 rounded-2xl md:rounded-[2.5rem] flex items-center justify-center mb-6 md:mb-10 neo-inset shadow-none border border-primary/30"
               >
-                <Trophy size={40} className="text-primary drop-shadow-sm dark:drop-shadow-[0_0_20px_rgba(var(--primary-rgb),0.6)] md:w-14 md:h-14" />
+                <Trophy size={40} className="text-primary drop-shadow-sm dark:drop-shadow-[0_0_20px_rgb(var(--primary-rgb)/0.6)] md:w-14 md:h-14" />
               </m.div>
 
               <Badge variant="outline" className="text-primary text-xs md:text-xs font-bold uppercase tracking-widest mb-4 md:mb-6 h-auto neo-inset px-4 py-1.5 md:px-8 md:py-2.5 border-primary/30 bg-primary/5 rounded-xl">
                 Naik Level!
               </Badge>
               
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-foreground uppercase tracking-tighter mb-4 md:mb-6 drop-shadow-sm dark:drop-shadow-[0_0_20px_rgba(var(--foreground-rgb),0.2)]">
-                LEVEL <span className="text-primary drop-shadow-sm dark:drop-shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)]">{level}</span>
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-foreground uppercase tracking-tighter mb-4 md:mb-6 drop-shadow-sm dark:drop-shadow-[0_0_20px_rgb(var(--foreground-rgb)/0.2)]">
+                LEVEL <span className="text-primary drop-shadow-sm dark:drop-shadow-[0_0_20px_rgb(var(--primary-rgb)/0.4)]">{level}</span>
               </h1>
               
               <div className="flex items-center justify-center gap-4 md:gap-8 mb-6 md:mb-12">

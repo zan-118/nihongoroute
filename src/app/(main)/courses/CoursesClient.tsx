@@ -75,11 +75,11 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
       <div className="absolute inset-0 pointer-events-none">
         <div 
           className="absolute top-0 left-0 w-full h-[300px] md:h-[400px]" 
-          style={{ background: 'linear-gradient(180deg, rgba(var(--primary-rgb), 0.05) 0%, transparent 100%)' }}
+          style={{ background: 'linear-gradient(180deg, rgb(var(--primary-rgb)/0.05) 0%, transparent 100%)' }}
         />
         <div 
           className="absolute bottom-0 right-0 w-[300px] h-[300px] rounded-full blur-[100px] opacity-20" 
-          style={{ backgroundColor: 'rgba(var(--secondary-rgb), 0.06)' }}
+          style={{ backgroundColor: 'rgb(var(--secondary-rgb)/0.06)' }}
         />
       </div>
 
@@ -95,7 +95,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
           {/* BENTO CARD 1: JUMBO HEADER & GLOBAL STATS (SPAN 3) */}
           <m.div 
             variants={itemVariants} 
-            className="lg:col-span-3 p-6 sm:p-10 md:p-12 rounded-[2.5rem] bg-card/10 backdrop-blur-xl border border-border shadow-2xl relative overflow-hidden group transition-all duration-500 hover:border-primary/30 hover:shadow-[0_0_50px_rgba(var(--primary-rgb),0.08)] glass"
+            className="lg:col-span-3 p-6 sm:p-10 md:p-12 rounded-[2.5rem] bg-card/10 backdrop-blur-xl border border-border shadow-2xl relative overflow-hidden group transition-all duration-500 hover:border-primary/30 hover:shadow-[0_0_50px_rgb(var(--primary-rgb)/0.08)] glass"
           >
             <div className="absolute top-0 right-0 size-64 bg-primary/5 rounded-full blur-[80px] pointer-events-none group-hover:bg-primary/10 transition-all duration-700" />
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-50 pointer-events-none" />
@@ -109,7 +109,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
                 </div>
                 <h1 className="text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-tighter leading-[0.9] text-foreground">
                   PILIH RUTE <br />
-                  <span className="text-primary drop-shadow-[0_0_20px_rgba(var(--primary-rgb),0.25)]">
+                  <span className="text-primary drop-shadow-[0_0_20px_rgb(var(--primary-rgb)/0.25)]">
                     BELAJAR
                   </span>
                 </h1>

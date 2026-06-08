@@ -180,9 +180,9 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
               <div className="space-y-8">
                 {(l.transcript || l.body)!.map((item: DialogueSpeakerItem, pos: number) => {
                   const isLineActive = activeDialogId === dialogId && isPlayingPlaylist && playlistIndex === pos;
-                  const bubbleBg = isLineActive ? "rgba(var(--secondary-rgb), 0.12)" : "rgba(var(--secondary-rgb), 0.05)";
-                  const bubbleBorder = isLineActive ? "rgba(var(--secondary-rgb), 0.45)" : "rgba(var(--secondary-rgb), 0.1)";
-                  const bubbleShadow = isLineActive ? "0 0 20px rgba(var(--secondary-rgb), 0.15)" : "none";
+                  const bubbleBg = isLineActive ? "rgb(var(--secondary-rgb)/0.12)" : "rgb(var(--secondary-rgb)/0.05)";
+                  const bubbleBorder = isLineActive ? "rgb(var(--secondary-rgb)/0.45)" : "rgb(var(--secondary-rgb)/0.1)";
+                  const bubbleShadow = isLineActive ? "0 0 20px rgb(var(--secondary-rgb)/0.15)" : "none";
                   const bubbleScale = isLineActive ? "scale-[1.01]" : "scale-100";
 
                   return (
@@ -190,7 +190,7 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
                       <div className="flex items-center gap-2">
                         <span 
                           className="text-[10px] font-black text-secondary uppercase tracking-[0.2em] px-2 py-0.5 rounded"
-                          style={{ backgroundColor: "rgba(var(--secondary-rgb), 0.1)" }}
+                          style={{ backgroundColor: "rgb(var(--secondary-rgb)/0.1)" }}
                         >
                           {item.speaker || item.speakerName}
                         </span>
@@ -223,12 +223,12 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
                         }}
                         onMouseEnter={(e) => {
                           if (!isLineActive) {
-                            e.currentTarget.style.backgroundColor = "rgba(var(--secondary-rgb), 0.1)";
+                            e.currentTarget.style.backgroundColor = "rgb(var(--secondary-rgb)/0.1)";
                           }
                         }}
                         onMouseLeave={(e) => {
                           if (!isLineActive) {
-                            e.currentTarget.style.backgroundColor = "rgba(var(--secondary-rgb), 0.05)";
+                            e.currentTarget.style.backgroundColor = "rgb(var(--secondary-rgb)/0.05)";
                           }
                         }}
                         onClick={() => {
@@ -255,7 +255,7 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
                            </div>
                            <p 
                              className="text-sm text-muted-foreground font-medium italic border-t pt-3"
-                             style={{ borderColor: "rgba(var(--border-rgb), 0.2)" }}
+                             style={{ borderColor: "rgb(var(--border-rgb)/0.2)" }}
                            >
                              &quot;{item.translation || item.id}&quot;
                            </p>

@@ -44,7 +44,7 @@ function parseInlineStyles(text: string): React.ReactNode[] {
         <code 
           key={index} 
           className="px-1.5 py-0.5 rounded text-primary font-mono text-xs md:text-sm font-bold mx-0.5"
-          style={{ backgroundColor: "rgba(var(--primary-rgb), 0.05)", borderColor: "rgba(var(--primary-rgb), 0.1)", borderWidth: "1px" }}
+          style={{ backgroundColor: "rgb(var(--primary-rgb)/0.05)", borderColor: "rgb(var(--primary-rgb)/0.1)", borderWidth: "1px" }}
         >
           {part.slice(1, -1)}
         </code>
@@ -217,25 +217,25 @@ function PedagogicalBadges({ block }: { block: ContentBlock }) {
       label: "Penjelasan Utama",
       icon: BookOpen,
       className: "text-primary",
-      style: { backgroundColor: "rgba(var(--primary-rgb), 0.1)", borderColor: "rgba(var(--primary-rgb), 0.2)", borderWidth: "1px" },
+      style: { backgroundColor: "rgb(var(--primary-rgb)/0.1)", borderColor: "rgb(var(--primary-rgb)/0.2)", borderWidth: "1px" },
     },
     practical_scenario: {
       label: "Skenario Praktis",
       icon: Globe,
       className: "text-success",
-      style: { backgroundColor: "rgba(var(--success-rgb), 0.1)", borderColor: "rgba(var(--success-rgb), 0.2)", borderWidth: "1px" },
+      style: { backgroundColor: "rgb(var(--success-rgb)/0.1)", borderColor: "rgb(var(--success-rgb)/0.2)", borderWidth: "1px" },
     },
     pitfall_alert: {
       label: "Tips & Perangkap",
       icon: AlertTriangle,
       className: "text-destructive",
-      style: { backgroundColor: "rgba(var(--destructive-rgb), 0.1)", borderColor: "rgba(var(--destructive-rgb), 0.2)", borderWidth: "1px" },
+      style: { backgroundColor: "rgb(var(--destructive-rgb)/0.1)", borderColor: "rgb(var(--destructive-rgb)/0.2)", borderWidth: "1px" },
     },
     cultural_note: {
       label: "Catatan Budaya",
       icon: Info,
       className: "text-warning",
-      style: { backgroundColor: "rgba(var(--warning-rgb), 0.1)", borderColor: "rgba(var(--warning-rgb), 0.2)", borderWidth: "1px" },
+      style: { backgroundColor: "rgb(var(--warning-rgb)/0.1)", borderColor: "rgb(var(--warning-rgb)/0.2)", borderWidth: "1px" },
     },
   };
 
@@ -248,12 +248,12 @@ function PedagogicalBadges({ block }: { block: ContentBlock }) {
     guided: {
       label: "Tahap: Terbimbing",
       className: "text-secondary",
-      style: { backgroundColor: "rgba(var(--secondary-rgb), 0.15)", borderColor: "rgba(var(--secondary-rgb), 0.2)", borderWidth: "1px" },
+      style: { backgroundColor: "rgb(var(--secondary-rgb)/0.15)", borderColor: "rgb(var(--secondary-rgb)/0.2)", borderWidth: "1px" },
     },
     autonomous: {
       label: "Tahap: Mandiri",
       className: "text-success",
-      style: { backgroundColor: "rgba(var(--success-rgb), 0.15)", borderColor: "rgba(var(--success-rgb), 0.2)", borderWidth: "1px" },
+      style: { backgroundColor: "rgb(var(--success-rgb)/0.15)", borderColor: "rgb(var(--success-rgb)/0.2)", borderWidth: "1px" },
     },
   };
 
@@ -407,7 +407,7 @@ function TextBlock({ block }: { block: ContentBlock }) {
 // ==========================================
 function CalloutBlock({ block }: { block: ContentBlock }) {
   return (
-    <div className="flex gap-4 p-6 rounded-[2rem] shadow-[0_8px_30px_rgba(var(--primary-rgb),0.03)] glass relative overflow-hidden group hover:border-primary/30 transition-all duration-300">
+    <div className="flex gap-4 p-6 rounded-[2rem] shadow-[0_8px_30px_rgb(var(--primary-rgb)/0.03)] glass relative overflow-hidden group hover:border-primary/30 transition-all duration-300">
       <div className="absolute top-0 left-0 w-1.5 h-full bg-primary" />
       <Info className="size-5 text-primary flex-shrink-0 mt-0.5" />
       <div className="space-y-2">
@@ -430,15 +430,15 @@ function CalloutBlock({ block }: { block: ContentBlock }) {
 // ==========================================
 function GrammarBlock({ block }: { block: ContentBlock }) {
   return (
-    <div className="space-y-5 rounded-[2.5rem] shadow-[0_15px_35px_rgba(var(--primary-rgb),0.02)] glass overflow-hidden group hover:border-[rgba(var(--primary-rgb),0.35)] transition-all duration-500">
+    <div className="space-y-5 rounded-[2.5rem] shadow-[0_15px_35px_rgb(var(--primary-rgb)/0.02)] glass overflow-hidden group hover:border-[rgb(var(--primary-rgb)/0.35)] transition-all duration-500">
       <div 
         className="px-6 py-4 border-b border-border flex justify-between items-center"
-        style={{ backgroundColor: "rgba(var(--primary-rgb), 0.05)" }}
+        style={{ backgroundColor: "rgb(var(--primary-rgb)/0.05)" }}
       >
         <div>
           <span 
             className="text-[9px] font-black text-primary uppercase tracking-widest px-2 py-0.5 rounded"
-            style={{ backgroundColor: "rgba(var(--primary-rgb), 0.1)" }}
+            style={{ backgroundColor: "rgb(var(--primary-rgb)/0.1)" }}
           >
             Pola Kalimat (Grammar)
           </span>
@@ -457,8 +457,8 @@ function GrammarBlock({ block }: { block: ContentBlock }) {
           <p 
             className="text-sm text-muted-foreground font-medium leading-relaxed pl-4 py-2.5 rounded-r-xl whitespace-pre-wrap border-l-4"
             style={{ 
-              backgroundColor: "rgba(var(--muted-rgb), 0.1)", 
-              borderLeftColor: "rgba(var(--secondary-rgb), 0.6)" 
+              backgroundColor: "rgb(var(--muted-rgb)/0.1)", 
+              borderLeftColor: "rgb(var(--secondary-rgb)/0.6)" 
             }}
           >
             {parseInlineStyles(block.translation)}
@@ -638,7 +638,7 @@ function DialogueBlock({ block }: { block: ContentBlock }) {
         </div>
       </div>
 
-      <div className="space-y-4 rounded-[2rem] p-6 shadow-[0_10px_35px_rgba(var(--foreground-rgb),0.01)] glass">
+      <div className="space-y-4 rounded-[2rem] p-6 shadow-[0_10px_35px_rgb(var(--foreground-rgb)/0.01)] glass">
         {lines.map((line: { speaker: string | undefined; text: string; furigana?: string }, pos: number) => {
           const isLinePlaying = playingIndex === pos;
           return (
@@ -646,13 +646,13 @@ function DialogueBlock({ block }: { block: ContentBlock }) {
               key={`dialogue-${pos}`} 
               className={`flex gap-4 items-start group p-2.5 rounded-2xl transition-all duration-300 ${
                 isLinePlaying 
-                  ? "bg-secondary/10 border-l-4 border-l-secondary pl-3.5 shadow-[0_0_15px_rgba(var(--secondary-rgb),0.05)]" 
+                  ? "bg-secondary/10 border-l-4 border-l-secondary pl-3.5 shadow-[0_0_15px_rgb(var(--secondary-rgb)/0.05)]" 
                   : "hover:bg-muted/10"
               }`}
             >
               <span 
                 className="text-[10px] font-black text-secondary uppercase tracking-widest px-2.5 py-1 rounded-xl h-fit flex-shrink-0 mt-1 border"
-                style={{ backgroundColor: "rgba(var(--secondary-rgb), 0.15)", borderColor: "rgba(var(--secondary-rgb), 0.25)" }}
+                style={{ backgroundColor: "rgb(var(--secondary-rgb)/0.15)", borderColor: "rgb(var(--secondary-rgb)/0.25)" }}
               >
                 {line.speaker}
               </span>
@@ -741,13 +741,13 @@ function ExamplesSection({ examples }: { examples: ExampleSentence[] }) {
           <div 
             key={ex.jp} 
             className="border border-border rounded-2xl p-4 space-y-2 transition-all duration-300 group"
-            style={{ backgroundColor: "rgba(var(--card-rgb), 0.1)" }}
+            style={{ backgroundColor: "rgb(var(--card-rgb)/0.1)" }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "rgba(var(--card-rgb), 0.2)";
-              e.currentTarget.style.borderColor = "rgba(var(--primary-rgb), 0.2)";
+              e.currentTarget.style.backgroundColor = "rgb(var(--card-rgb)/0.2)";
+              e.currentTarget.style.borderColor = "rgb(var(--primary-rgb)/0.2)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "rgba(var(--card-rgb), 0.1)";
+              e.currentTarget.style.backgroundColor = "rgb(var(--card-rgb)/0.1)";
               e.currentTarget.style.borderColor = "";
             }}
           >

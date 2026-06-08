@@ -56,7 +56,7 @@ export function UserStatusSection({
             <m.div 
               animate={{ rotate: 360 }}
               transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-              className="absolute inset-0 rounded-xl bg-gradient-to-tr from-primary via-success to-secondary opacity-35 blur-[2px]"
+              className="absolute inset-0 rounded-xl bg-gradient-to-tr from-primary via-primary to-secondary opacity-35 blur-[2px]"
             />
             <div className="absolute inset-[2px] rounded-xl bg-background flex items-center justify-center text-primary-foreground text-sm font-black shadow-lg overflow-hidden z-10">
               <div className="w-full h-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">

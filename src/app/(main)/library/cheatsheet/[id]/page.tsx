@@ -80,7 +80,7 @@ export default async function CheatsheetDetailPage({
     <main className="w-full bg-background min-h-screen pb-24 relative overflow-hidden">
       {/* Dekorasi Latar Belakang */}
       <div className="neural-grid" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(var(--destructive-rgb),0.03)_0%,transparent_70%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgb(var(--destructive-rgb)/0.03)_0%,transparent_70%)] pointer-events-none" />
 
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 relative z-10 pt-10">
         {/* Navigasi */}

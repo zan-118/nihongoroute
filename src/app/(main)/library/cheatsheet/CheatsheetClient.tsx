@@ -86,7 +86,7 @@ export default function CheatsheetClient({
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 md:gap-12">
           <div className="flex flex-col gap-4">
              <div className="flex items-center gap-3">
-                <div className="size-10 rounded-xl bg-[rgba(var(--primary-rgb),0.1)] flex items-center justify-center text-primary border border-[rgba(var(--primary-rgb),0.2)]">
+                <div className="size-10 rounded-xl bg-[rgb(var(--primary-rgb)/0.1)] flex items-center justify-center text-primary border border-[rgb(var(--primary-rgb)/0.2)]">
                    <Activity size={20} className="animate-pulse" />
                 </div>
                 <span className="text-primary font-black text-xs uppercase tracking-[0.3em]">Quick Reference</span>
@@ -104,7 +104,7 @@ export default function CheatsheetClient({
             <Input
               type="text"
               placeholder="Cari materi referensi..."
-              className="w-full bg-[rgba(var(--muted-rgb),0.2)] border border-[rgba(var(--border-rgb),0.5)] pl-14 pr-6 py-7 h-auto rounded-[2rem] text-foreground font-medium text-base neo-inset shadow-none placeholder:text-[rgba(var(--muted-foreground-rgb),0.3)] focus-visible:ring-[rgba(var(--primary-rgb),0.2)]"
+              className="w-full bg-[rgb(var(--muted-rgb)/0.2)] border border-[rgb(var(--border-rgb)/0.5)] pl-14 pr-6 py-7 h-auto rounded-[2rem] text-foreground font-medium text-base neo-inset shadow-none placeholder:text-[rgb(var(--muted-foreground-rgb)/0.3)] focus-visible:ring-[rgb(var(--primary-rgb)/0.2)]"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -132,18 +132,18 @@ export default function CheatsheetClient({
             >
               <Link href={`/library/cheatsheet/${sheet.slug || sheet.id || sheet._id}`}>
                 <Card 
-                  className="group relative h-full bg-card hover:bg-[rgba(var(--primary-rgb),0.02)] border border-[rgba(var(--border-rgb),0.5)] hover:border-[rgba(var(--primary-rgb),0.4)] rounded-[2.5rem] p-8 cursor-pointer transition-all duration-500 shadow-sm hover:shadow-[0_20px_50px_rgba(var(--background-rgb),0.1)] dark:hover:shadow-[0_20px_50px_rgba(var(--background-rgb),0.3)] flex flex-col gap-6 overflow-hidden"
+                  className="group relative h-full bg-card hover:bg-[rgb(var(--primary-rgb)/0.02)] border border-[rgb(var(--border-rgb)/0.5)] hover:border-[rgb(var(--primary-rgb)/0.4)] rounded-[2.5rem] p-8 cursor-pointer transition-all duration-500 shadow-sm hover:shadow-[0_20px_50px_rgb(var(--background-rgb)/0.1)] dark:hover:shadow-[0_20px_50px_rgb(var(--background-rgb)/0.3)] flex flex-col gap-6 overflow-hidden"
                 >
                   {/* Dekorasi Latar Belakang */}
-                  <div className="absolute -bottom-6 -right-6 text-[8rem] font-black text-[rgba(var(--foreground-rgb),0.03)] group-hover:text-[rgba(var(--primary-rgb),0.05)] transition-colors pointer-events-none italic">
+                  <div className="absolute -bottom-6 -right-6 text-[8rem] font-black text-[rgb(var(--foreground-rgb)/0.03)] group-hover:text-[rgb(var(--primary-rgb)/0.05)] transition-colors pointer-events-none italic">
                     {idx + 1}
                   </div>
 
                   <div className="flex items-center justify-between relative z-10">
-                    <div className="size-14 rounded-2xl bg-muted border border-border flex items-center justify-center text-muted-foreground group-hover:text-primary group-hover:bg-[rgba(var(--primary-rgb),0.1)] group-hover:border-[rgba(var(--primary-rgb),0.2)] transition-all duration-500">
+                    <div className="size-14 rounded-2xl bg-muted border border-border flex items-center justify-center text-muted-foreground group-hover:text-primary group-hover:bg-[rgb(var(--primary-rgb)/0.1)] group-hover:border-[rgb(var(--primary-rgb)/0.2)] transition-all duration-500">
                         {getIconForCategory(sheet.category)}
                     </div>
-                    <Badge variant="outline" className="bg-[rgba(var(--muted-rgb),0.5)] text-[10px] font-black uppercase tracking-widest text-muted-foreground border-border">
+                    <Badge variant="outline" className="bg-[rgb(var(--muted-rgb)/0.5)] text-[10px] font-black uppercase tracking-widest text-muted-foreground border-border">
                         {sheet.category}
                     </Badge>
                   </div>
@@ -157,11 +157,11 @@ export default function CheatsheetClient({
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-between pt-6 border-t border-[rgba(var(--border-rgb),0.3)] relative z-10">
+                  <div className="flex items-center justify-between pt-6 border-t border-[rgb(var(--border-rgb)/0.3)] relative z-10">
                     <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary">
                         Buka Tabel <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
                     </div>
-                    <div className="text-[10px] font-bold text-[rgba(var(--muted-foreground-rgb),0.4)] italic">
+                    <div className="text-[10px] font-bold text-[rgb(var(--muted-foreground-rgb)/0.4)] italic">
                         Full Detail View
                     </div>
                   </div>

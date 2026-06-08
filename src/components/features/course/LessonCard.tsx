@@ -65,7 +65,7 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
         <Card 
           className="p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl transition-all duration-500 flex flex-col items-start gap-3 sm:gap-4 md:gap-5 cursor-pointer h-full relative overflow-hidden glass"
           style={{
-            borderColor: isHovered ? `rgba(${themeRgb}, 0.3)` : `rgba(var(--border-rgb), 0.4)`,
+            borderColor: isHovered ? `rgba(${themeRgb}, 0.3)` : `rgb(var(--border-rgb)/0.4)`,
             boxShadow: isHovered ? `0 12px 36px rgba(${themeRgb}, 0.08), 0 0 20px rgba(${themeRgb}, 0.04)` : 'none'
           }}
         >
@@ -76,9 +76,9 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
             <div
               className="w-8 h-8 sm:w-10 sm:h-10 shrink-0 rounded-lg sm:rounded-xl flex items-center justify-center font-black text-[10px] sm:text-xs font-mono transition-all duration-500 border"
               style={{
-                backgroundColor: isHovered ? `rgb(${themeRgb})` : `rgba(var(--background-rgb), 0.5)`,
-                borderColor: isHovered ? `rgb(${themeRgb})` : `rgba(var(--border-rgb), 0.5)`,
-                color: isHovered ? `var(--background)` : `rgb(${themeRgb})`,
+                backgroundColor: isHovered ? `rgb(${themeRgb})` : `rgb(var(--background-rgb)/0.5)`,
+                borderColor: isHovered ? `rgb(${themeRgb})` : `rgb(var(--border-rgb)/0.5)`,
+                color: isHovered ? `hsl(var(--background))` : `rgb(${themeRgb})`,
                 transform: isHovered ? 'rotate(4deg) scale(1.05)' : 'none',
                 boxShadow: isHovered ? `0 6px 16px rgba(${themeRgb}, 0.2)` : 'none'
               }}
@@ -90,9 +90,9 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
               <div 
                 className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-full border text-[8px] sm:text-[9px] font-black uppercase tracking-[0.15em] transition-all duration-300 shadow-sm"
                 style={{ 
-                  backgroundColor: isHovered ? `rgba(${themeRgb}, 0.08)` : `rgba(var(--background-rgb), 0.5)`, 
-                  borderColor: isHovered ? `rgba(${themeRgb}, 0.3)` : `rgba(var(--border-rgb), 0.5)`,
-                  color: isHovered ? `rgb(${themeRgb})` : 'var(--muted-foreground)'
+                  backgroundColor: isHovered ? `rgba(${themeRgb}, 0.08)` : `rgb(var(--background-rgb)/0.5)`, 
+                  borderColor: isHovered ? `rgba(${themeRgb}, 0.3)` : `rgb(var(--border-rgb)/0.5)`,
+                  color: isHovered ? `rgb(${themeRgb})` : 'hsl(var(--muted-foreground))'
                 }}
               >
                 {progress}% Complete
@@ -104,7 +104,7 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
             <h4 
               className="text-base sm:text-lg md:text-xl font-black text-foreground transition-colors tracking-tight leading-snug text-balance"
               style={{
-                color: isHovered ? `rgb(${themeRgb})` : 'var(--foreground)'
+                color: isHovered ? `rgb(${themeRgb})` : 'hsl(var(--foreground))'
               }}
             >
               {lesson.title}
@@ -128,9 +128,9 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
             <div
               className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-md sm:rounded-lg border flex items-center justify-center transition-all duration-500 shadow-lg"
               style={{
-                backgroundColor: isHovered ? `rgb(${themeRgb})` : `rgba(var(--background-rgb), 0.5)`,
-                borderColor: isHovered ? `rgb(${themeRgb})` : `rgba(var(--border-rgb), 0.5)`,
-                color: isHovered ? `var(--background)` : 'var(--foreground)'
+                backgroundColor: isHovered ? `rgb(${themeRgb})` : `rgb(var(--background-rgb)/0.5)`,
+                borderColor: isHovered ? `rgb(${themeRgb})` : `rgb(var(--border-rgb)/0.5)`,
+                color: isHovered ? `hsl(var(--background))` : 'hsl(var(--foreground))'
               }}
             >
               <ChevronRight 
@@ -147,7 +147,7 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
           {/* Bottom Progress Bar — Cyber Style */}
           <div 
             className="absolute bottom-0 left-0 right-0 h-1"
-            style={{ backgroundColor: "rgba(var(--background-rgb), 0.1)" }}
+            style={{ backgroundColor: "rgb(var(--background-rgb)/0.1)" }}
           >
             <m.div 
               initial={{ width: 0 }}
@@ -155,8 +155,8 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
               className="h-full rounded-full transition-all duration-1000"
               style={{
                 background: isSideQuest
-                  ? "linear-gradient(90deg, var(--warning) 0%, rgba(var(--warning-rgb), 0.6) 100%)"
-                  : "linear-gradient(90deg, var(--primary) 0%, rgba(var(--primary-rgb), 0.6) 100%)",
+                  ? "linear-gradient(90deg, hsl(var(--warning)) 0%, rgb(var(--warning-rgb)/0.6) 100%)"
+                  : "linear-gradient(90deg, hsl(var(--primary)) 0%, rgb(var(--primary-rgb)/0.6) 100%)",
                 boxShadow: `0 0 8px rgba(${themeRgb}, 0.4)`,
               }}
             />

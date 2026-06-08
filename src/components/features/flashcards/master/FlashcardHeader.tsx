@@ -137,7 +137,7 @@ export function FlashcardHeader({
         <Progress
           value={((currentIndex + 1) / totalCards) * 100}
           className="h-1.5 md:h-2 bg-muted/50 border-none"
-          indicatorClassName={`${themeBgColor} shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]`}
+          indicatorClassName={`${themeBgColor} shadow-[0_0_10px_rgb(var(--primary-rgb)/0.5)]`}
         />
       </div>
     </header>

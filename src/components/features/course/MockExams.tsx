@@ -40,15 +40,15 @@ function ExamCard({ exam }: { exam: MockExam }) {
       onMouseLeave={() => setIsHovered(false)}
       className="p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl md:rounded-3xl transition-all duration-500 flex flex-col gap-4 sm:gap-6 h-full relative overflow-hidden glass"
       style={{
-        borderColor: isHovered ? "rgba(var(--primary-rgb), 0.4)" : "rgba(var(--border-rgb), 0.4)",
-        boxShadow: isHovered ? "0 16px 40px rgba(var(--primary-rgb), 0.1), 0 0 20px rgba(var(--primary-rgb), 0.06)" : "none"
+        borderColor: isHovered ? "rgb(var(--primary-rgb)/0.4)" : "rgb(var(--border-rgb)/0.4)",
+        boxShadow: isHovered ? "0 16px 40px rgb(var(--primary-rgb)/0.1), 0 0 20px rgb(var(--primary-rgb)/0.06)" : "none"
       }}
     >
       {/* Premium Glow Overlay */}
       <div
         className="absolute inset-0 transition-opacity duration-700 pointer-events-none"
         style={{
-          background: "linear-gradient(135deg, rgba(var(--primary-rgb), 0.04) 0%, transparent 100%)",
+          background: "linear-gradient(135deg, rgb(var(--primary-rgb)/0.04) 0%, transparent 100%)",
           opacity: isHovered ? 1 : 0
         }}
       />
@@ -68,7 +68,7 @@ function ExamCard({ exam }: { exam: MockExam }) {
         <h4 
           className="text-xl sm:text-2xl md:text-3xl font-black transition-colors tracking-tighter uppercase leading-none"
           style={{
-            color: isHovered ? "var(--primary)" : "var(--foreground)"
+            color: isHovered ? "hsl(var(--primary))" : "hsl(var(--foreground))"
           }}
         >
           {exam.title}
@@ -77,9 +77,9 @@ function ExamCard({ exam }: { exam: MockExam }) {
           <span 
             className="px-2.5 py-1 rounded-md sm:rounded-lg border text-[9px] sm:text-[10px] font-black uppercase tracking-wider sm:tracking-widest transition-colors duration-300"
             style={{ 
-              backgroundColor: isHovered ? "rgba(var(--primary-rgb), 0.06)" : "rgba(var(--background-rgb), 0.5)", 
-              borderColor: isHovered ? "rgba(var(--primary-rgb), 0.3)" : "rgba(var(--border-rgb), 0.5)",
-              color: isHovered ? "var(--primary)" : "var(--muted-foreground)"
+              backgroundColor: isHovered ? "rgb(var(--primary-rgb)/0.06)" : "rgb(var(--background-rgb)/0.5)", 
+              borderColor: isHovered ? "rgb(var(--primary-rgb)/0.3)" : "rgb(var(--border-rgb)/0.5)",
+              color: isHovered ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"
             }}
           >
             ⏱️ {exam.timeLimit} Mins
@@ -87,9 +87,9 @@ function ExamCard({ exam }: { exam: MockExam }) {
           <span 
             className="px-2.5 py-1 rounded-md sm:rounded-lg border text-[9px] sm:text-[10px] font-black uppercase tracking-wider sm:tracking-widest transition-colors duration-300"
             style={{ 
-              backgroundColor: isHovered ? "rgba(var(--primary-rgb), 0.06)" : "rgba(var(--background-rgb), 0.5)", 
-              borderColor: isHovered ? "rgba(var(--primary-rgb), 0.3)" : "rgba(var(--border-rgb), 0.5)",
-              color: isHovered ? "var(--primary)" : "var(--muted-foreground)"
+              backgroundColor: isHovered ? "rgb(var(--primary-rgb)/0.06)" : "rgb(var(--background-rgb)/0.5)", 
+              borderColor: isHovered ? "rgb(var(--primary-rgb)/0.3)" : "rgb(var(--border-rgb)/0.5)",
+              color: isHovered ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"
             }}
           >
             🎯 {exam.passingScore}% Pass
@@ -101,7 +101,7 @@ function ExamCard({ exam }: { exam: MockExam }) {
         <span 
           className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-colors"
           style={{
-            color: isHovered ? "var(--primary)" : "rgba(var(--primary-rgb), 0.6)"
+            color: isHovered ? "hsl(var(--primary))" : "rgb(var(--primary-rgb)/0.6)"
           }}
         >
           Challenge Start
@@ -109,8 +109,8 @@ function ExamCard({ exam }: { exam: MockExam }) {
         <div 
           className="size-8 sm:size-9 rounded-lg text-primary-foreground flex items-center justify-center shadow-lg transition-all duration-500"
           style={{
-            backgroundColor: "var(--primary)",
-            boxShadow: isHovered ? "0 6px 18px rgba(var(--primary-rgb), 0.25)" : "none",
+            backgroundColor: "hsl(var(--primary))",
+            boxShadow: isHovered ? "0 6px 18px rgb(var(--primary-rgb)/0.25)" : "none",
             transform: isHovered ? "translateX(4px)" : "none"
           }}
         >

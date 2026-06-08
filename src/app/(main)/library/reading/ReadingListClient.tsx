@@ -88,7 +88,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground size-5" aria-hidden="true" />
           <Input 
             placeholder="Cari judul atau kategori bacaan..." 
-            className="pl-12 h-14 bg-[rgba(var(--card-rgb),0.4)] backdrop-blur-xl border border-border rounded-2xl text-lg shadow-2xl focus:ring-[rgba(var(--primary-rgb),0.2)]"
+            className="pl-12 h-14 bg-[rgb(var(--card-rgb)/0.4)] backdrop-blur-xl border border-border rounded-2xl text-lg shadow-2xl focus:ring-[rgb(var(--primary-rgb)/0.2)]"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -97,7 +97,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
 
       <div className="relative">
         {isFetching && (
-          <div className="absolute inset-0 z-50 flex items-center justify-center bg-[rgba(var(--background-rgb),0.5)] backdrop-blur-sm rounded-[2rem]">
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-[rgb(var(--background-rgb)/0.5)] backdrop-blur-sm rounded-[2rem]">
             <Loader2 className="size-10 animate-spin text-primary" />
           </div>
         )}
@@ -112,7 +112,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
               }}
             >
               <Link href={ROUTES.LIBRARY.READING(material.slug)}>
-                <div className="group h-full p-8 rounded-[2.5rem] bg-card/30 backdrop-blur-xl border border-border hover:border-primary/40 shadow-xl hover:shadow-[0_20px_50px_rgba(var(--primary-rgb),0.1)] transition-all duration-500 relative overflow-hidden flex flex-col justify-between cursor-pointer">
+                <div className="group h-full p-8 rounded-[2.5rem] bg-card/30 backdrop-blur-xl border border-border hover:border-primary/40 shadow-xl hover:shadow-[0_20px_50px_rgb(var(--primary-rgb)/0.1)] transition-all duration-500 relative overflow-hidden flex flex-col justify-between cursor-pointer">
                   {/* Efek Kilau saat Melayang */}
                   <div className="absolute top-0 right-0 size-32 bg-primary/5 blur-[50px] rounded-full -mr-16 -mt-16 group-hover:bg-primary/10 transition-all duration-500" />
                   
@@ -154,7 +154,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
 
         {materials.length === 0 && !isFetching && (
           <div className="col-span-full py-20 text-center space-y-4">
-             <div className="size-20 rounded-full bg-[rgba(var(--background-rgb),0.05)] border border-dashed border-border flex items-center justify-center mx-auto">
+             <div className="size-20 rounded-full bg-[rgb(var(--background-rgb)/0.05)] border border-dashed border-border flex items-center justify-center mx-auto">
                 <BookOpen size={32} className="text-muted-foreground opacity-30" />
              </div>
              <p className="text-muted-foreground font-medium">Materi bacaan tidak ditemukan.</p>
@@ -211,8 +211,8 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
                     onClick={() => handlePageChange(pageNum)}
                     className={`w-10 h-10 rounded-xl font-bold transition-all ${
                       currentPage === pageNum 
-                        ? "bg-primary text-primary-foreground shadow-lg shadow-[rgba(var(--primary-rgb),0.2)]" 
-                        : "bg-card border border-border text-muted-foreground hover:border-[rgba(var(--primary-rgb),0.4)]"
+                        ? "bg-primary text-primary-foreground shadow-lg shadow-[rgb(var(--primary-rgb)/0.2)]" 
+                        : "bg-card border border-border text-muted-foreground hover:border-[rgb(var(--primary-rgb)/0.4)]"
                     }`}
                   >
                     {pageNum}

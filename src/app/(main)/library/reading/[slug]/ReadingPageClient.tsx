@@ -96,7 +96,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-[-20%] left-[-10%] size-[60%] bg-primary/5 blur-[150px] rounded-full animate-pulse" />
         <div className="absolute bottom-[-20%] right-[-10%] size-[60%] bg-success/5 blur-[150px] rounded-full animate-pulse delay-1000" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--foreground-rgb),0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--foreground-rgb),0.01)_1px,transparent_1px)] bg-[size:100px_100px] pointer-events-none opacity-20" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px)] bg-[size:100px_100px] pointer-events-none opacity-20" />
       </div>
 
       {/* Bilah Navigasi Atas */}
@@ -166,7 +166,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
 
         {/* Panel Kontrol Premium (Notion/Medium Reader style) */}
         {!isZenMode && (
-          <div className="border border-border/80 bg-card/40 backdrop-blur-xl rounded-[2rem] p-6 shadow-[0_0_50px_rgba(var(--primary-rgb),0.03)] mb-8 flex flex-col gap-6 relative overflow-hidden">
+          <div className="border border-border/80 bg-card/40 backdrop-blur-xl rounded-[2rem] p-6 shadow-[0_0_50px_rgb(var(--primary-rgb)/0.03)] mb-8 flex flex-col gap-6 relative overflow-hidden">
             {/* Background Accent */}
             <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full pointer-events-none" />
             

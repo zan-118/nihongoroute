@@ -57,7 +57,7 @@ export const CheatsheetSection: React.FC<CheatsheetSectionProps> = ({ cheatsheet
           <div key={c._id || c.id} className="neo-card overflow-hidden">
             <div 
               className="p-6 border-b"
-              style={{ backgroundColor: "rgba(var(--warning-rgb), 0.05)", borderColor: "rgba(var(--warning-rgb), 0.1)" }}
+              style={{ backgroundColor: "rgb(var(--warning-rgb)/0.05)", borderColor: "rgb(var(--warning-rgb)/0.1)" }}
             >
                <p className="text-[10px] font-black text-warning uppercase tracking-widest mb-1">{c.category}</p>
                <h3 className="text-xl font-black uppercase tracking-tight">{c.title}</h3>
@@ -71,7 +71,7 @@ export const CheatsheetSection: React.FC<CheatsheetSectionProps> = ({ cheatsheet
                       className="p-5 rounded-2xl neo-inset transition-all flex flex-col items-center text-center"
                       // Apply hover styles inline to match rules
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = "rgba(var(--warning-rgb), 0.05)";
+                        e.currentTarget.style.backgroundColor = "rgb(var(--warning-rgb)/0.05)";
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.backgroundColor = "";

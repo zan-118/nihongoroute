@@ -39,13 +39,13 @@ export default function SyncStatusSection({
           <div className="flex items-center gap-6">
             <div className={`w-16 h-16 rounded-2xl flex items-center justify-center border transition-all duration-500 shadow-2xl ${
               dirtySrsCount > 0 
-                ? 'bg-warning/10 border-warning/30 text-warning shadow-[0_0_20px_rgba(var(--warning-rgb),0.15)]' 
-                : 'bg-success/10 border-success/30 text-success shadow-[0_0_20px_rgba(var(--success-rgb),0.15)]'
+                ? 'bg-warning/10 border-warning/30 text-warning shadow-[0_0_20px_rgb(var(--warning-rgb)/0.15)]' 
+                : 'bg-success/10 border-success/30 text-success shadow-[0_0_20px_rgb(var(--success-rgb)/0.15)]'
             }`}>
               {dirtySrsCount > 0 ? (
                 <Cloud size={32} className="animate-pulse" />
               ) : (
-                <CheckCircle size={32} className="drop-shadow-[0_0_8px_rgba(var(--success-rgb),0.4)]" />
+                <CheckCircle size={32} className="drop-shadow-[0_0_8px_rgb(var(--success-rgb)/0.4)]" />
               )}
             </div>
             <div className="space-y-1">

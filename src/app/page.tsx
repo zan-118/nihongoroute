@@ -25,8 +25,8 @@ export const metadata: Metadata = {
 export default function LandingPage() {
   return (
     <main className="premium-shell text-foreground selection:bg-primary/30 overflow-x-hidden w-full relative transition-colors duration-500">
-      <div className="fixed inset-0 pointer-events-none z-0 bg-[linear-gradient(135deg,rgba(var(--primary-rgb),0.06),transparent_28%,rgba(var(--secondary-rgb),0.045)_72%,transparent)]" />
-      <div className="fixed inset-0 pointer-events-none z-0 opacity-[0.08] bg-[linear-gradient(90deg,rgba(var(--foreground-rgb),0.1)_1px,transparent_1px),linear-gradient(rgba(var(--foreground-rgb),0.1)_1px,transparent_1px)] bg-[size:72px_72px]" />
+      <div className="fixed inset-0 pointer-events-none z-0 bg-[radial-gradient(circle_at_18%_8%,rgb(var(--brand-cyan-rgb)_/_0.16),transparent_34rem),radial-gradient(circle_at_82%_12%,rgb(var(--brand-violet-rgb)_/_0.11),transparent_32rem)]" />
+      <div className="fixed inset-0 pointer-events-none z-0 opacity-[0.12] bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)_/_0.08)_1px,transparent_1px),linear-gradient(rgb(var(--brand-violet-rgb)_/_0.06)_1px,transparent_1px)] bg-[size:72px_72px]" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-10 md:pt-14 pb-14">
         {/* SEKSI HERO UTAMA */}

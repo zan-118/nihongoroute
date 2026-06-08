@@ -145,15 +145,15 @@ export default function RootLayout({
             offset={80} // Ofset untuk membersihkan Topbar (64px + 16px)
             toastOptions={{
               style: {
-                background: 'rgba(var(--background-rgb), 0.9)',
-                border: '1px solid rgba(var(--foreground-rgb), 0.1)',
+                background: 'rgb(var(--background-rgb)/0.9)',
+                border: '1px solid rgb(var(--foreground-rgb)/0.1)',
                 backdropFilter: 'blur(16px)',
-                color: 'var(--foreground)',
+                color: 'hsl(var(--foreground))',
                 borderRadius: '16px',
               },
               classNames: {
-                success: "border-primary/50 shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]",
-                error: "border-destructive/50 shadow-[0_0_20px_rgba(var(--destructive-rgb),0.2)]",
+                success: "border-primary/50 shadow-[0_0_20px_rgb(var(--primary-rgb)/0.2)]",
+                error: "border-destructive/50 shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.2)]",
               },
               duration: 4000,
             }}

@@ -71,7 +71,7 @@ export function LessonGrid({
         <div 
           className="flex flex-col items-center justify-center py-16 sm:py-24 md:py-32 glass rounded-2xl sm:rounded-3xl text-center px-6 sm:px-10 border border-dashed border-border relative overflow-hidden"
           style={{
-            backgroundColor: "rgba(var(--card-rgb), 0.2)",
+            backgroundColor: "rgb(var(--card-rgb)/0.2)",
             boxShadow: "0 10px 30px rgba(0, 0, 0, 0.04)"
           }}
         >
@@ -81,7 +81,7 @@ export function LessonGrid({
           <div 
             className="size-14 sm:size-16 bg-background/50 border border-border rounded-2xl flex items-center justify-center mb-5 sm:mb-6 shadow-lg relative z-10 transition-transform duration-500 hover:scale-105"
             style={{
-              backgroundColor: "rgba(var(--background-rgb), 0.5)"
+              backgroundColor: "rgb(var(--background-rgb)/0.5)"
             }}
           >
             <Sparkles size={28} className="text-muted-foreground/60 animate-pulse" aria-hidden="true" />
@@ -105,8 +105,8 @@ export function LessonGrid({
           <div 
             className="flex items-center gap-1 sm:gap-1.5 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border"
             style={{
-              backgroundColor: "rgba(var(--card-rgb), 0.3)",
-              borderColor: "rgba(var(--border-rgb), 0.4)",
+              backgroundColor: "rgb(var(--card-rgb)/0.3)",
+              borderColor: "rgb(var(--border-rgb)/0.4)",
               boxShadow: "0 8px 24px rgba(0,0,0,0.08)"
             }}
           >
@@ -148,9 +148,9 @@ export function LessonGrid({
                     onClick={() => onPageChange(pageNum)}
                     className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl font-bold transition-all border text-xs"
                     style={{
-                      backgroundColor: isCurrent ? 'var(--foreground)' : 'transparent',
-                      color: isCurrent ? 'var(--background)' : 'var(--muted-foreground)',
-                      borderColor: isCurrent ? 'var(--foreground)' : 'rgba(var(--border-rgb), 0.3)'
+                      backgroundColor: isCurrent ? 'hsl(var(--foreground))' : 'transparent',
+                      color: isCurrent ? 'hsl(var(--background))' : 'hsl(var(--muted-foreground))',
+                      borderColor: isCurrent ? 'hsl(var(--foreground))' : 'rgb(var(--border-rgb)/0.3)'
                     }}
                   >
                     {pageNum}

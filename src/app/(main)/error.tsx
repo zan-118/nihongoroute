@@ -47,11 +47,11 @@ export default function MainError({
         <div className="size-[450px] bg-warning/10 rounded-full blur-[100px] opacity-25 absolute -bottom-10 -right-10" />
       </div>
       
-      <Card className="p-8 md:p-12 border border-border/80 max-w-lg w-full relative z-10 rounded-[2.5rem] bg-card/85 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:shadow-[0_25px_60px_rgba(var(--destructive-rgb),0.1)] transition-all duration-500 glass">
+      <Card className="p-8 md:p-12 border border-border/80 max-w-lg w-full relative z-10 rounded-[2.5rem] bg-card/85 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:shadow-[0_25px_60px_rgb(var(--destructive-rgb)/0.1)] transition-all duration-500 glass">
         {/* Kilau Sudut Atas */}
         <div className="absolute top-0 right-0 size-24 bg-gradient-to-br from-destructive/10 to-transparent blur-md rounded-tr-[2.5rem] pointer-events-none" />
 
-        <div className="size-20 mx-auto bg-destructive/10 rounded-2xl flex items-center justify-center mb-6 border border-destructive/20 shadow-[0_0_20px_rgba(var(--destructive-rgb),0.15)] animate-pulse">
+        <div className="size-20 mx-auto bg-destructive/10 rounded-2xl flex items-center justify-center mb-6 border border-destructive/20 shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.15)] animate-pulse">
           <AlertTriangle className="text-destructive" size={36} />
         </div>
         
@@ -75,7 +75,7 @@ export default function MainError({
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Button
             onClick={() => reset()}
-            className="rounded-xl h-12 px-6 bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase tracking-widest text-xs duration-300 shadow-[0_0_15px_rgba(var(--destructive-rgb),0.15)] active:scale-[0.98] w-full sm:w-auto"
+            className="rounded-xl h-12 px-6 bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase tracking-widest text-xs duration-300 shadow-[0_0_15px_rgb(var(--destructive-rgb)/0.15)] active:scale-[0.98] w-full sm:w-auto"
           >
             <RefreshCw size={14} className="mr-2 animate-spin-slow" /> Segarkan Sesi
           </Button>

@@ -75,7 +75,7 @@ export function KanjiHeader({
                 variant={levelFilter === lvl ? "default" : "outline"}
                 className={`h-14 px-6 rounded-2xl font-bold transition-all duration-300 ${
                   levelFilter === lvl 
-                    ? "bg-primary text-primary-foreground shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]" 
+                    ? "bg-primary text-primary-foreground shadow-[0_0_20px_rgb(var(--primary-rgb)/0.3)]" 
                     : "bg-card/40 border border-border hover:bg-muted"
                 }`}
                 onClick={() => onLevelFilterChange(levelFilter === lvl ? null : lvl)}
@@ -93,7 +93,7 @@ export function KanjiHeader({
               onClick={() => setLayoutPreference("grid")}
               className={`p-2 h-10 w-10 rounded-xl transition-all ${
                 layoutPreference === "grid"
-                  ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]"
+                  ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_15px_rgb(var(--primary-rgb)/0.3)]"
                   : "text-muted-foreground hover:text-foreground"
               }`}
               aria-label="Tampilan Grid"
@@ -106,7 +106,7 @@ export function KanjiHeader({
               onClick={() => setLayoutPreference("list")}
               className={`p-2 h-10 w-10 rounded-xl transition-all ${
                 layoutPreference === "list"
-                  ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]"
+                  ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_15px_rgb(var(--primary-rgb)/0.3)]"
                   : "text-muted-foreground hover:text-foreground"
               }`}
               aria-label="Tampilan Tabel Ringkas"

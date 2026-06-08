@@ -73,7 +73,7 @@ export default function OnboardingClient() {
               className="text-center space-y-10"
             >
               <div className="space-y-4">
-                <div className="size-20 bg-primary/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-primary/20 shadow-[0_0_20px_rgba(var(--primary-rgb),0.15)] animate-pulse">
+                <div className="size-20 bg-primary/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-primary/20 shadow-[0_0_20px_rgb(var(--primary-rgb)/0.15)] animate-pulse">
                   <Sparkles className="text-primary" size={40} />
                 </div>
                 <h1 className="text-6xl md:text-8xl font-black text-primary font-japanese tracking-tight">
@@ -96,7 +96,7 @@ export default function OnboardingClient() {
               <div className="pt-8">
                 <Button 
                   onClick={() => setStep(2)}
-                  className="rounded-2xl px-10 h-14 text-base font-black uppercase tracking-widest bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_20px_rgba(var(--primary-rgb),0.15)] hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)] duration-300 active:scale-[0.97]"
+                  className="rounded-2xl px-10 h-14 text-base font-black uppercase tracking-widest bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_20px_rgb(var(--primary-rgb)/0.15)] hover:shadow-[0_0_30px_rgb(var(--primary-rgb)/0.3)] duration-300 active:scale-[0.97]"
                 >
                   Mulai Perjalanan <ChevronRight className="ml-2" />
                 </Button>
@@ -130,7 +130,7 @@ export default function OnboardingClient() {
                     onClick={() => setTargetLevel(level.id)}
                     className={`cursor-pointer p-6 border transition-all duration-300 rounded-[1.5rem] flex flex-col items-center justify-center text-center group shadow-none glass ${
                       targetLevel === level.id 
-                        ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)] scale-[1.03]" 
+                        ? "border-primary bg-primary/10 shadow-[0_0_20px_rgb(var(--primary-rgb)/0.2)] scale-[1.03]" 
                         : "border-border/80 hover:border-primary/50 hover:bg-muted/30"
                     }`}
                   >
@@ -191,13 +191,13 @@ export default function OnboardingClient() {
                     onClick={() => setMotivation(item.id)}
                     className={`cursor-pointer p-6 border transition-all duration-300 rounded-[1.5rem] flex items-center gap-5 group shadow-none glass ${
                       motivation === item.id 
-                        ? "border-secondary bg-secondary/10 shadow-[0_0_20px_rgba(var(--secondary-rgb),0.2)] scale-[1.03]" 
+                        ? "border-secondary bg-secondary/10 shadow-[0_0_20px_rgb(var(--secondary-rgb)/0.2)] scale-[1.03]" 
                         : "border-border/80 hover:border-secondary/50 hover:bg-muted/30"
                     }`}
                   >
                     <div className={`p-4 rounded-2xl transition-colors duration-300 ${
                       motivation === item.id 
-                        ? "bg-secondary text-secondary-foreground shadow-[0_0_15px_rgba(var(--secondary-rgb),0.2)]" 
+                        ? "bg-secondary text-secondary-foreground shadow-[0_0_15px_rgb(var(--secondary-rgb)/0.2)]" 
                         : "bg-muted text-muted-foreground group-hover:text-secondary group-hover:bg-secondary/5"
                     }`}>
                       <item.icon size={24} />
@@ -222,7 +222,7 @@ export default function OnboardingClient() {
                 <Button 
                   onClick={handleComplete}
                   disabled={!motivation || isSubmitting}
-                  className="rounded-xl px-8 h-12 font-black uppercase tracking-widest bg-secondary hover:bg-secondary/90 text-secondary-foreground shadow-[0_0_20px_rgba(var(--secondary-rgb),0.15)] hover:shadow-[0_0_30px_rgba(var(--secondary-rgb),0.3)] duration-300 active:scale-[0.97]"
+                  className="rounded-xl px-8 h-12 font-black uppercase tracking-widest bg-secondary hover:bg-secondary/90 text-secondary-foreground shadow-[0_0_20px_rgb(var(--secondary-rgb)/0.15)] hover:shadow-[0_0_30px_rgb(var(--secondary-rgb)/0.3)] duration-300 active:scale-[0.97]"
                 >
                   {isSubmitting ? (
                     <>
@@ -246,7 +246,7 @@ export default function OnboardingClient() {
               key={i} 
               className={`h-1.5 rounded-full transition-all duration-500 ${
                 step === i 
-                  ? "w-12 bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]" 
+                  ? "w-12 bg-primary shadow-[0_0_10px_rgb(var(--primary-rgb)/0.5)]" 
                   : step > i 
                     ? "w-6 bg-primary/30" 
                     : "w-6 bg-border/80"

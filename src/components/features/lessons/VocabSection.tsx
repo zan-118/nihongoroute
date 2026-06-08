@@ -51,20 +51,20 @@ const VocabCard: React.FC<{ v: VocabLessonItem; idx: number }> = ({ v, idx }) =>
 
   return (
     <div
-      className="neo-card p-4 md:p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 md:gap-6 group hover:border-[rgba(var(--primary-rgb),0.3)] transition-colors duration-300"
+      className="neo-card p-4 md:p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 md:gap-6 group hover:border-[rgb(var(--primary-rgb)/0.3)] transition-colors duration-300"
     >
       <div className="flex-1 w-full">
         <div className="flex items-center gap-2 mb-3">
           <span 
             className="text-[10px] font-bold text-primary uppercase tracking-widest px-2 py-0.5 rounded"
-            style={{ backgroundColor: "rgba(var(--primary-rgb), 0.1)" }}
+            style={{ backgroundColor: "rgb(var(--primary-rgb)/0.1)" }}
           >
             {v.romaji || (v.furigana ? wanakana.toRomaji(v.furigana) : "-")}
           </span>
           {v.hinshi && (
             <span 
               className="text-[9px] font-mono font-black text-secondary uppercase tracking-widest px-2 py-0.5 rounded border"
-              style={{ backgroundColor: "rgba(var(--secondary-rgb), 0.1)", borderColor: "rgba(var(--secondary-rgb), 0.2)" }}
+              style={{ backgroundColor: "rgb(var(--secondary-rgb)/0.1)", borderColor: "rgb(var(--secondary-rgb)/0.2)" }}
             >
               {Array.isArray(v.hinshi) ? v.hinshi.join(", ") : (
                 v.hinshi === "Meishi" ? "Kata Benda" :
@@ -78,8 +78,8 @@ const VocabCard: React.FC<{ v: VocabLessonItem; idx: number }> = ({ v, idx }) =>
             <span 
               className="text-[9px] font-mono font-black uppercase tracking-widest px-2 py-0.5 rounded border"
               style={v.transitivity === "transitive" 
-                ? { color: "var(--warning)", backgroundColor: "rgba(var(--warning-rgb), 0.1)", borderColor: "rgba(var(--warning-rgb), 0.2)" }
-                : { color: "var(--primary)", backgroundColor: "rgba(var(--primary-rgb), 0.1)", borderColor: "rgba(var(--primary-rgb), 0.2)" }
+                ? { color: "hsl(var(--warning))", backgroundColor: "rgb(var(--warning-rgb)/0.1)", borderColor: "rgb(var(--warning-rgb)/0.2)" }
+                : { color: "hsl(var(--primary))", backgroundColor: "rgb(var(--primary-rgb)/0.1)", borderColor: "rgb(var(--primary-rgb)/0.2)" }
               }
             >
               {v.transitivity === "transitive" ? "Transitif" : "Intransitif"}
@@ -97,7 +97,7 @@ const VocabCard: React.FC<{ v: VocabLessonItem; idx: number }> = ({ v, idx }) =>
             {v.onyomi && (
               <span 
                 className="text-[10px] font-bold text-secondary border px-2 py-0.5 rounded-lg"
-                style={{ backgroundColor: "rgba(var(--secondary-rgb), 0.05)", borderColor: "rgba(var(--secondary-rgb), 0.2)" }}
+                style={{ backgroundColor: "rgb(var(--secondary-rgb)/0.05)", borderColor: "rgb(var(--secondary-rgb)/0.2)" }}
               >
                 ON: {v.onyomi}
               </span>
@@ -105,7 +105,7 @@ const VocabCard: React.FC<{ v: VocabLessonItem; idx: number }> = ({ v, idx }) =>
             {v.kunyomi && (
               <span 
                 className="text-[10px] font-bold text-success border px-2 py-0.5 rounded-lg"
-                style={{ backgroundColor: "rgba(var(--success-rgb), 0.05)", borderColor: "rgba(var(--success-rgb), 0.2)" }}
+                style={{ backgroundColor: "rgb(var(--success-rgb)/0.05)", borderColor: "rgb(var(--success-rgb)/0.2)" }}
               >
                 KUN: {v.kunyomi}
               </span>

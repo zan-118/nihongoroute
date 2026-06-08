@@ -39,11 +39,11 @@ interface GrammarCardProps {
 export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps) {
   // Tentukan warna lencana berdasarkan level JLPT (Menggunakan variabel CSS semantik)
   const levelColors: Record<string, string> = {
-    n5: "text-success border-[rgba(var(--success-rgb),0.2)] bg-[rgba(var(--success-rgb),0.05)]",
-    n4: "text-primary border-[rgba(var(--primary-rgb),0.2)] bg-[rgba(var(--primary-rgb),0.05)]",
-    n3: "text-secondary border-[rgba(var(--secondary-rgb),0.2)] bg-[rgba(var(--secondary-rgb),0.05)]",
-    n2: "text-warning border-[rgba(var(--warning-rgb),0.2)] bg-[rgba(var(--warning-rgb),0.05)]",
-    n1: "text-destructive border-[rgba(var(--destructive-rgb),0.2)] bg-[rgba(var(--destructive-rgb),0.05)]",
+    n5: "text-success border-[rgb(var(--success-rgb)/0.2)] bg-[rgb(var(--success-rgb)/0.05)]",
+    n4: "text-primary border-[rgb(var(--primary-rgb)/0.2)] bg-[rgb(var(--primary-rgb)/0.05)]",
+    n3: "text-secondary border-[rgb(var(--secondary-rgb)/0.2)] bg-[rgb(var(--secondary-rgb)/0.05)]",
+    n2: "text-warning border-[rgb(var(--warning-rgb)/0.2)] bg-[rgb(var(--warning-rgb)/0.05)]",
+    n1: "text-destructive border-[rgb(var(--destructive-rgb)/0.2)] bg-[rgb(var(--destructive-rgb)/0.05)]",
   };
 
   const currentLevelColor = levelColors[selectedLevel.toLowerCase()] || levelColors.n5;
@@ -57,14 +57,14 @@ export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps)
       }}
     >
       <Link href={ROUTES.LIBRARY.GRAMMAR(article.slug)} className="block h-full">
-        <Card className="h-full p-4 sm:p-6 bg-[rgba(var(--card-rgb),0.4)] backdrop-blur-xl border border-border rounded-[2rem] transition-all duration-500 flex flex-col cursor-pointer hover:border-[rgba(var(--primary-rgb),0.5)] hover:bg-[rgba(var(--card-rgb),0.6)] shadow-2xl relative overflow-hidden">
+        <Card className="h-full p-4 sm:p-6 bg-[rgb(var(--card-rgb)/0.4)] backdrop-blur-xl border border-border rounded-[2rem] transition-all duration-500 flex flex-col cursor-pointer hover:border-[rgb(var(--primary-rgb)/0.5)] hover:bg-[rgb(var(--card-rgb)/0.6)] shadow-2xl relative overflow-hidden">
           {/* Efek Pendar Saat Kursor Di Atas (Glow Effect) */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[rgba(var(--primary-rgb),0.05)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[rgb(var(--primary-rgb)/0.05)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
           <div className="relative z-10 flex flex-col h-full">
             {/* Baris Atas: Ikon Penanda & Level */}
             <div className="flex justify-between items-start mb-6">
-              <div className="size-10 rounded-2xl bg-[rgba(var(--muted-rgb),0.5)] border border-border flex items-center justify-center group-hover:border-[rgba(var(--primary-rgb),0.3)] group-hover:bg-[rgba(var(--primary-rgb),0.1)] transition-all duration-500">
+              <div className="size-10 rounded-2xl bg-[rgb(var(--muted-rgb)/0.5)] border border-border flex items-center justify-center group-hover:border-[rgb(var(--primary-rgb)/0.3)] group-hover:bg-[rgb(var(--primary-rgb)/0.1)] transition-all duration-500">
                 <Bookmark
                   size={18}
                   className="text-muted-foreground group-hover:text-primary transition-colors duration-500"
@@ -84,7 +84,7 @@ export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps)
                 {article.title}
               </h2>
               <div className="flex items-center gap-2">
-                <div className="size-1 rounded-full bg-[rgba(var(--primary-rgb),0.4)]" />
+                <div className="size-1 rounded-full bg-[rgb(var(--primary-rgb)/0.4)]" />
                 <span className="text-[10px] font-black text-muted-foreground/50 uppercase tracking-widest group-hover:text-primary/50 transition-colors">
                   Pola Kalimat
                 </span>
@@ -96,7 +96,7 @@ export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps)
               <span className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-[0.15em] group-hover:text-primary transition-colors">
                 Pelajari Modul
               </span>
-              <div className="size-9 rounded-xl bg-[rgba(var(--muted-rgb),0.5)] border border-border flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-transparent transition-all duration-500">
+              <div className="size-9 rounded-xl bg-[rgb(var(--muted-rgb)/0.5)] border border-border flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-transparent transition-all duration-500">
                  <ArrowRight size={16} />
               </div>
             </div>

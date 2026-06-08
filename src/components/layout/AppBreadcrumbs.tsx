@@ -61,7 +61,7 @@ export default function AppBreadcrumbs({ items, className = "" }: AppBreadcrumbs
           {item.active ? (
             <div className="relative group">
               <div className="absolute -inset-1 bg-primary/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity rounded-xl" />
-              <span className="relative text-[10px] font-black uppercase tracking-[0.2em] text-foreground bg-primary/10 border border-primary/20 px-4 py-2 rounded-xl shadow-[0_0_20px_rgba(var(--primary-rgb),0.1)]">
+              <span className="relative text-[10px] font-black uppercase tracking-[0.2em] text-foreground bg-primary/10 border border-primary/20 px-4 py-2 rounded-xl shadow-[0_0_20px_rgb(var(--primary-rgb)/0.1)]">
                 {item.label}
               </span>
             </div>

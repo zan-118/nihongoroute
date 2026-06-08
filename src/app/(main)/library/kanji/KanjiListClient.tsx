@@ -162,7 +162,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
             {kanjis.map((kanji) => (
               <div
                 key={kanji.id}
-                className="flex md:grid md:grid-cols-12 items-center justify-between gap-4 px-4 py-3 bg-[rgba(var(--card-rgb),0.3)] backdrop-blur-3xl border border-border hover:border-[rgba(var(--primary-rgb),0.5)] transition-all duration-300 rounded-2xl shadow-sm hover:shadow-[0_0_25px_rgba(var(--primary-rgb),0.08)] group"
+                className="flex md:grid md:grid-cols-12 items-center justify-between gap-4 px-4 py-3 bg-[rgb(var(--card-rgb)/0.3)] backdrop-blur-3xl border border-border hover:border-[rgb(var(--primary-rgb)/0.5)] transition-all duration-300 rounded-2xl shadow-sm hover:shadow-[0_0_25px_rgb(var(--primary-rgb)/0.08)] group"
               >
                 {/* Sisi Kiri: Kanji & Arti (Flex di Seluler, Kolom Grid di Desktop) */}
                 <div className="flex-1 md:col-span-8 flex flex-col md:grid md:grid-cols-8 md:gap-4 md:items-center min-w-0 pr-2">
@@ -177,7 +177,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
                 {/* Sisi Kanan: Level JLPT & Tombol Tindakan */}
                 <div className="flex items-center gap-2.5 shrink-0 md:col-span-4 md:justify-end">
                   {kanji.jlptLevel && (
-                    <span className="text-[9px] md:text-[10px] font-black bg-[rgba(var(--primary-rgb),0.1)] text-primary px-2 py-0.5 rounded-full border border-[rgba(var(--primary-rgb),0.2)] uppercase shrink-0">
+                    <span className="text-[9px] md:text-[10px] font-black bg-[rgb(var(--primary-rgb)/0.1)] text-primary px-2 py-0.5 rounded-full border border-[rgb(var(--primary-rgb)/0.2)] uppercase shrink-0">
                       {kanji.jlptLevel}
                     </span>
                   )}

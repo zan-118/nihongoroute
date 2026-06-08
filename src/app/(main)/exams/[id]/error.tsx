@@ -72,7 +72,7 @@ export default function ExamError({
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button
             onClick={() => reset()}
-            className="bg-destructive hover:bg-destructive text-destructive-foreground font-black uppercase tracking-widest h-auto py-4 px-8 rounded-xl text-[10px] transition-all shadow-[0_0_20px_rgba(var(--destructive-rgb),0.3)]"
+            className="bg-destructive hover:bg-destructive text-destructive-foreground font-black uppercase tracking-widest h-auto py-4 px-8 rounded-xl text-[10px] transition-all shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.3)]"
           >
             Coba Segarkan
           </Button>

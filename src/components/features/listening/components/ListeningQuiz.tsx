@@ -186,8 +186,8 @@ export default function ListeningQuiz({ questions, onComplete }: ListeningQuizPr
                   className={cn(
                     "group relative w-full p-5 rounded-2xl text-left transition-all duration-300 border",
                     !showResult && "bg-muted/40 border-border hover:bg-muted hover:border-primary/30 disabled:cursor-not-allowed",
-                    showResult && isCorrect && "bg-success/10 border-success/40 shadow-[0_0_20px_-10px_rgba(var(--success-rgb),0.5)]",
-                    showResult && isSelected && !isCorrect && "bg-destructive/10 border-destructive/40 shadow-[0_0_20px_-10px_rgba(var(--destructive-rgb),0.5)]",
+                    showResult && isCorrect && "bg-success/10 border-success/40 shadow-[0_0_20px_-10px_rgb(var(--success-rgb)/0.5)]",
+                    showResult && isSelected && !isCorrect && "bg-destructive/10 border-destructive/40 shadow-[0_0_20px_-10px_rgb(var(--destructive-rgb)/0.5)]",
                     showResult && !isSelected && !isCorrect && "opacity-50 grayscale"
                   )}
                 >

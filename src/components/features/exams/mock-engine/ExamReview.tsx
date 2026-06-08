@@ -52,7 +52,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
               setGameState("result");
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            className="text-xs sm:text-xs neo-inset hover:bg-background text-muted-foreground hover:text-foreground px-5 py-3 h-auto font-black uppercase tracking-widest transition-all border border-border bg-[rgba(var(--muted-rgb),0.5)] dark:bg-[rgba(var(--background-rgb),0.2)] shadow-none rounded-xl"
+            className="text-xs sm:text-xs neo-inset hover:bg-background text-muted-foreground hover:text-foreground px-5 py-3 h-auto font-black uppercase tracking-widest transition-all border border-border bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.2)] shadow-none rounded-xl"
           >
             ← Kembali
           </Button>
@@ -76,7 +76,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-10 border-b border-border pb-8">
                   <Badge
                     variant="outline"
-                    className="text-xs font-bold uppercase tracking-widest neo-inset px-4 py-2 text-muted-foreground w-fit rounded-xl bg-[rgba(var(--muted-rgb),0.5)] dark:bg-[rgba(var(--background-rgb),0.2)] border border-border h-auto"
+                    className="text-xs font-bold uppercase tracking-widest neo-inset px-4 py-2 text-muted-foreground w-fit rounded-xl bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.2)] border border-border h-auto"
                   >
                     SOAL {idx + 1} • {SECTION_LABELS[q.section]}
                   </Badge>
@@ -94,12 +94,12 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                 {q.questionText && (
                   <ExamQuestionText
                     questionText={q.questionText}
-                    className="text-lg md:text-2xl text-foreground font-medium leading-relaxed mb-10 font-japanese prose-custom bg-[rgba(var(--muted-rgb),0.3)] dark:bg-[rgba(var(--background-rgb),0.1)] p-6 rounded-2xl border border-border neo-inset"
+                    className="text-lg md:text-2xl text-foreground font-medium leading-relaxed mb-10 font-japanese prose-custom bg-[rgb(var(--muted-rgb)/0.3)] dark:bg-[rgb(var(--background-rgb)/0.1)] p-6 rounded-2xl border border-border neo-inset"
                   />
                 )}
 
                 {q.imageUrl && (
-                  <div className="mb-10 rounded-3xl overflow-hidden neo-inset p-3 bg-[rgba(var(--muted-rgb),0.2)] dark:bg-[rgba(var(--background-rgb),0.2)] border border-border">
+                  <div className="mb-10 rounded-3xl overflow-hidden neo-inset p-3 bg-[rgb(var(--muted-rgb)/0.2)] dark:bg-[rgb(var(--background-rgb)/0.2)] border border-border">
                     <Image
                       src={q.imageUrl}
                       alt="Gambar Pendukung"
@@ -112,7 +112,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                 )}
 
                 {q.audioUrl && (
-                  <Card className="mb-10 p-6 neo-inset border border-border bg-[rgba(var(--muted-rgb),0.2)] dark:bg-[rgba(var(--background-rgb),0.3)] flex flex-col gap-4 shadow-none rounded-2xl">
+                  <Card className="mb-10 p-6 neo-inset border border-border bg-[rgb(var(--muted-rgb)/0.2)] dark:bg-[rgb(var(--background-rgb)/0.3)] flex flex-col gap-4 shadow-none rounded-2xl">
                     <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest flex items-center gap-2">
                       <Volume2 size={16} aria-hidden="true" className="text-primary" /> Audio Track (Review)
                     </p>
@@ -129,7 +129,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                     const isCorrectAnswer = optIdx === q.correctAnswer;
                     const isUserSelection = optIdx === userAnswer;
                     
-                    let variantStyle = "bg-[rgba(var(--muted-rgb),0.5)] dark:bg-[rgba(var(--background-rgb),0.1)] border-border opacity-60";
+                    let variantStyle = "bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.1)] border-border opacity-60";
                     if (isCorrectAnswer) variantStyle = "bg-success/10 border-success/30 text-foreground text-foreground opacity-100 shadow-sm";
                     else if (isUserSelection) variantStyle = "bg-destructive/10 border-destructive/30 text-foreground text-foreground opacity-100 shadow-sm";
 

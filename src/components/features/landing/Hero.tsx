@@ -9,21 +9,19 @@ import { Button } from "@/components/ui/button";
 
 export function Hero() {
   return (
-    <section className="min-h-[560px] md:min-h-[600px] lg:min-h-[620px] flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16 mb-12 md:mb-16 py-8 md:py-10">
-      <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left max-w-2xl">
+    <section className="relative min-h-[560px] md:min-h-[600px] lg:min-h-[640px] flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16 mb-12 md:mb-16 py-8 md:py-10">
+      <div className="pointer-events-none absolute -left-28 top-10 size-72 rounded-full bg-primary/20 blur-[110px] dark:bg-primary/15" />
+      <div className="pointer-events-none absolute left-1/3 bottom-6 size-64 rounded-full bg-secondary/10 blur-[120px] dark:bg-secondary/12" />
+
+      <div className="relative z-10 flex-1 flex flex-col items-center lg:items-start text-center lg:text-left max-w-2xl">
         <m.div
           initial={{ y: -16, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="mb-7"
         >
-          <Badge
-            variant="outline"
-            className="bg-primary/[0.08] border-primary/20 px-4 py-2 rounded-full flex items-center gap-2 shadow-none"
-          >
+          <Badge variant="outline" className="brand-pill shadow-none">
             <Sparkles size={12} className="text-primary" />
-            <span className="text-[10px] font-black uppercase tracking-[0.24em] text-primary">
-              NihongoRoute | Platform Belajar Bahasa Jepang
-            </span>
+            <span>NihongoRoute | Platform Belajar Bahasa Jepang</span>
           </Badge>
         </m.div>
 
@@ -46,14 +44,14 @@ export function Hero() {
           initial={{ y: 28, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
-          className="text-[3.25rem] sm:text-6xl md:text-7xl lg:text-[5.8rem] font-black tracking-tight leading-[0.95] text-foreground mb-7"
+          className="text-[3.35rem] sm:text-6xl md:text-7xl lg:text-[5.95rem] font-black tracking-[-0.07em] leading-[0.92] text-foreground mb-7"
         >
           Kuasai <br />
           <m.span
             initial={{ filter: "blur(14px)", opacity: 0 }}
             animate={{ filter: "blur(0px)", opacity: 1 }}
             transition={{ delay: 0.25, duration: 0.8 }}
-            className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-success to-secondary dark:drop-shadow-[0_0_26px_rgba(var(--primary-rgb),0.22)]"
+            className="brand-text-gradient inline-block"
           >
             Bahasa Jepang.
           </m.span>
@@ -63,7 +61,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.42 }}
-          className="text-muted-foreground text-base md:text-lg max-w-xl mb-10 leading-relaxed font-medium text-balance"
+          className="text-muted-foreground text-base md:text-lg max-w-xl mb-10 leading-relaxed font-semibold text-balance"
         >
           Belajar bahasa Jepang di NihongoRoute dengan jalur yang rapi: kana,
           kosakata, tata bahasa, SRS, dan simulasi ujian dalam satu pengalaman
@@ -78,7 +76,7 @@ export function Hero() {
         >
           <Button
             asChild
-            className="h-14 px-7 sm:px-9 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-[0.14em] text-xs rounded-xl shadow-[0_18px_34px_rgba(var(--primary-rgb),0.2)] hover:shadow-[0_22px_44px_rgba(var(--primary-rgb),0.26)] transition-all duration-500 group border-none"
+            className="brand-button h-14 px-7 sm:px-9 text-xs group"
           >
             <Link href="/dashboard">
               Mulai Belajar Sekarang
@@ -91,7 +89,7 @@ export function Hero() {
           <Button
             asChild
             variant="ghost"
-            className="h-14 px-7 sm:px-9 premium-surface hover:bg-card transition-all text-foreground font-black uppercase tracking-[0.14em] text-xs rounded-xl"
+            className="brand-button-ghost h-14 px-7 sm:px-9 text-xs group"
           >
             <Link href="/courses">
               <PlayCircle size={18} className="mr-2 text-primary" />
@@ -107,21 +105,22 @@ export function Hero() {
         transition={{ delay: 0.35, duration: 1, ease: [0.16, 1, 0.3, 1] }}
         className="hidden lg:flex flex-1 justify-end relative pointer-events-none"
       >
-        <div className="relative size-[470px]">
-          <div className="absolute inset-8 rounded-[36px] border border-border/70 bg-card/35 rotate-3" />
-          <div className="absolute inset-14 rounded-[28px] border border-dashed border-primary/30 -rotate-6" />
+        <div className="relative size-[490px]">
+          <div className="absolute -inset-8 rounded-[52px] bg-[radial-gradient(circle_at_35%_30%,rgb(var(--brand-cyan-rgb)_/_0.22),transparent_35%),radial-gradient(circle_at_72%_70%,rgb(var(--brand-violet-rgb)_/_0.16),transparent_38%)] blur-3xl" />
+          <div className="absolute inset-7 rounded-[40px] border border-border/70 bg-card/32 rotate-3 shadow-[0_30px_90px_rgb(var(--foreground-rgb)_/_0.08)] dark:shadow-[0_30px_90px_rgb(0_0_0_/_0.45)]" />
+          <div className="absolute inset-13 rounded-[30px] border border-dashed border-primary/35 -rotate-6" />
 
-          <div className="premium-surface absolute top-1/2 left-1/2 size-[300px] -translate-x-1/2 -translate-y-1/2 rotate-6 rounded-[28px] overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10" />
+          <div className="premium-surface absolute top-1/2 left-1/2 size-[316px] -translate-x-1/2 -translate-y-1/2 rotate-6 rounded-[30px] overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_24%,rgb(var(--brand-cyan-rgb)_/_0.2),transparent_34%),linear-gradient(135deg,rgb(var(--brand-cyan-rgb)_/_0.1),transparent_45%,rgb(var(--brand-violet-rgb)_/_0.12))]" />
             <div className="absolute top-7 left-7 flex items-center gap-2">
-              <span className="size-2 rounded-full bg-primary" />
+              <span className="size-2 rounded-full bg-primary shadow-[0_0_16px_rgb(var(--brand-cyan-rgb)_/_0.55)]" />
               <span className="text-[9px] font-black uppercase tracking-[0.22em] text-muted-foreground">
                 Learning Route
               </span>
             </div>
 
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="relative size-32 drop-shadow-[0_18px_40px_rgba(var(--primary-rgb),0.22)]">
+              <div className="relative size-32 drop-shadow-[0_18px_42px_rgb(var(--brand-cyan-rgb)_/_0.28)] dark:drop-shadow-[0_0_42px_rgb(var(--brand-cyan-rgb)_/_0.24)]">
                 <Image
                   src="/logo-branding.svg"
                   alt="NihongoRoute"
@@ -134,7 +133,7 @@ export function Hero() {
 
             <div className="absolute bottom-7 right-7 text-right">
               <div
-                className="text-primary/75 font-black text-5xl select-none tracking-wider font-japanese"
+                className="text-primary/80 font-black text-5xl select-none tracking-wider font-japanese dark:text-primary/75"
                 style={{ fontFamily: "var(--font-noto-serif-jp)" }}
               >
                 日本語
@@ -150,7 +149,7 @@ export function Hero() {
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             className="absolute -top-4 right-8 p-4 premium-surface rounded-xl flex items-center justify-center hover:border-primary/40 transition-colors pointer-events-auto"
           >
-            <Sparkles className="text-primary" size={24} />
+            <Sparkles className="text-primary drop-shadow-[0_0_16px_rgb(var(--brand-cyan-rgb)_/_0.45)]" size={24} />
           </m.div>
 
           <m.div
@@ -161,10 +160,10 @@ export function Hero() {
               ease: "easeInOut",
               delay: 1,
             }}
-            className="absolute bottom-8 -left-8 p-5 premium-surface rounded-xl flex items-center justify-center hover:border-success/40 transition-colors pointer-events-auto"
+            className="absolute bottom-8 -left-8 p-5 premium-surface rounded-xl flex items-center justify-center hover:border-primary/40 transition-colors pointer-events-auto"
           >
             <div className="flex items-center gap-3">
-              <div className="size-3 bg-success rounded-full animate-pulse" />
+              <div className="size-3 bg-primary rounded-full animate-pulse shadow-[0_0_14px_rgb(var(--brand-cyan-rgb)_/_0.65)]" />
               <span className="text-xs font-black text-foreground uppercase tracking-widest">
                 Sinkronisasi Cloud Aktif
               </span>

@@ -46,7 +46,7 @@ export default function RootError({
       </div>
 
       <div className="z-10 max-w-md w-full glass border border-border/85 rounded-[2rem] p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.35)] relative overflow-hidden">
-        <div className="size-20 mx-auto bg-destructive/10 rounded-2xl flex items-center justify-center mb-6 border border-destructive/20 shadow-[0_0_20px_rgba(var(--destructive-rgb),0.15)] animate-pulse">
+        <div className="size-20 mx-auto bg-destructive/10 rounded-2xl flex items-center justify-center mb-6 border border-destructive/20 shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.15)] animate-pulse">
           <AlertOctagon className="text-destructive" size={36} />
         </div>
         
@@ -60,7 +60,7 @@ export default function RootError({
 
         <Button
           onClick={() => reset()}
-          className="w-full h-12 bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase tracking-widest text-xs rounded-xl duration-300 shadow-[0_0_15px_rgba(var(--destructive-rgb),0.15)] hover:shadow-[0_0_25px_rgba(var(--destructive-rgb),0.3)] active:scale-[0.98]"
+          className="w-full h-12 bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase tracking-widest text-xs rounded-xl duration-300 shadow-[0_0_15px_rgb(var(--destructive-rgb)/0.15)] hover:shadow-[0_0_25px_rgb(var(--destructive-rgb)/0.3)] active:scale-[0.98]"
         >
           Coba Hubungkan Ulang
         </Button>

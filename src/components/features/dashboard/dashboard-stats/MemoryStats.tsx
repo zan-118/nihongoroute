@@ -32,21 +32,21 @@ export default function MemoryStats() {
       label: "Tingkat Master",
       count: stats.master,
       color: "text-success",
-      indicatorColor: "bg-success shadow-[0_0_15px_rgba(var(--success-rgb),0.5)]",
+      indicatorColor: "bg-success shadow-[0_0_15px_rgb(var(--success-rgb)/0.5)]",
       icon: <Trophy size={16} />,
     },
     {
       label: "Memori Stabil",
       count: stats.intermediate,
       color: "text-primary",
-      indicatorColor: "bg-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]",
+      indicatorColor: "bg-primary shadow-[0_0_15px_rgb(var(--primary-rgb)/0.5)]",
       icon: <TrendingUp size={16} />,
     },
     {
       label: "Fase Belajar",
       count: stats.learning,
       color: "text-warning",
-      indicatorColor: "bg-warning shadow-[0_0_15px_rgba(var(--warning-rgb),0.5)]",
+      indicatorColor: "bg-warning shadow-[0_0_15px_rgb(var(--warning-rgb)/0.5)]",
       icon: <Flame size={16} />,
     },
     {
@@ -61,7 +61,7 @@ export default function MemoryStats() {
   return (
     <Card className="bg-card p-6 md:p-8 lg:p-10 rounded-[2.5rem] md:rounded-[3rem] border-border relative overflow-hidden h-full flex flex-col neo-card shadow-none">
       {/* Pola Kisi Latar Belakang */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--primary-rgb),0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--primary-rgb),0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none opacity-50" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--primary-rgb)/0.02)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--primary-rgb)/0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none opacity-50" />
 
       {/* Bagian Header */}
       <header className="flex items-center justify-between mb-8 md:mb-10 relative z-10">

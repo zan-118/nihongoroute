@@ -156,7 +156,7 @@ export function ReadingArticle({
         "p-4 sm:p-8 md:p-16 lg:p-24 rounded-2xl sm:rounded-[2.5rem] md:rounded-[3rem] transition-all duration-700 relative",
         isZenMode
           ? "bg-transparent shadow-none border-none"
-          : "bg-card/60 backdrop-blur-3xl border border-border/60 shadow-[0_40px_100px_-20px_rgba(var(--background-rgb),0.2)]"
+          : "bg-card/60 backdrop-blur-3xl border border-border/60 shadow-[0_40px_100px_-20px_rgb(var(--background-rgb)/0.2)]"
       )}
     >
       {/* Scroll progress bar */}
@@ -249,7 +249,7 @@ export function ReadingArticle({
               "px-16 py-8 h-auto rounded-2xl text-xs font-black uppercase tracking-[0.3em] transition-all duration-300",
               isCompleted
                 ? "bg-success/10 border border-success/30 text-success cursor-default"
-                : "bg-primary text-primary-foreground shadow-[0_20px_50px_-10px_rgba(var(--primary-rgb),0.4)] hover:shadow-[0_20px_70px_-10px_rgba(var(--primary-rgb),0.6)] hover:scale-105 active:scale-95"
+                : "bg-primary text-primary-foreground shadow-[0_20px_50px_-10px_rgb(var(--primary-rgb)/0.4)] hover:shadow-[0_20px_70px_-10px_rgb(var(--primary-rgb)/0.6)] hover:scale-105 active:scale-95"
             )}
           >
             {isCompleted ? "Sudah Selesai ✓" : "Tandai Selesai"}

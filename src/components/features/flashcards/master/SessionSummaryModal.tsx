@@ -56,9 +56,9 @@ export function SessionSummaryModal({
   router,
 }: SessionSummaryModalProps) {
   const getRating = (accuracy: number) => {
-    if (accuracy >= 90) return { title: "Luar Biasa! 🎉", color: "text-success", bg: "bg-success/5 border-success/20 dark:shadow-[0_0_20px_rgba(var(--success-rgb),0.1)]" };
-    if (accuracy >= 70) return { title: "Bagus Sekali! 👍", color: "text-warning", bg: "bg-warning/5 border-warning/20 dark:shadow-[0_0_20px_rgba(var(--warning-rgb),0.1)]" };
-    return { title: "Mari Terus Latihan! 💪", color: "text-primary", bg: "bg-primary/5 border-primary/20 dark:shadow-[0_0_20px_rgba(var(--primary-rgb),0.1)]" };
+    if (accuracy >= 90) return { title: "Luar Biasa! 🎉", color: "text-success", bg: "bg-success/5 border-success/20 dark:shadow-[0_0_20px_rgb(var(--success-rgb)/0.1)]" };
+    if (accuracy >= 70) return { title: "Bagus Sekali! 👍", color: "text-warning", bg: "bg-warning/5 border-warning/20 dark:shadow-[0_0_20px_rgb(var(--warning-rgb)/0.1)]" };
+    return { title: "Mari Terus Latihan! 💪", color: "text-primary", bg: "bg-primary/5 border-primary/20 dark:shadow-[0_0_20px_rgb(var(--primary-rgb)/0.1)]" };
   };
 
   const rating = getRating(sessionStats.accuracy || 0);
@@ -75,11 +75,11 @@ export function SessionSummaryModal({
         <Card className="w-full bg-card p-8 md:p-10 rounded-2xl border border-border text-center relative overflow-hidden shadow-2xl">
           <div className={`absolute top-0 left-0 right-0 h-1.5 ${themeBgColor} ${themeShadow}`} />
 
-          <div className="w-16 h-16 md:w-20 md:h-20 mx-auto bg-[rgba(var(--muted-rgb),0.5)] dark:bg-[rgba(var(--background-rgb),0.04)] rounded-xl flex items-center justify-center border border-border mb-6 shadow-none">
+          <div className="w-16 h-16 md:w-20 md:h-20 mx-auto bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.04)] rounded-xl flex items-center justify-center border border-border mb-6 shadow-none">
             <Trophy
               size={32}
               aria-hidden="true"
-              className="text-warning drop-shadow-sm dark:drop-shadow-[0_0_15px_rgba(var(--warning-rgb),0.4)]"
+              className="text-warning drop-shadow-sm dark:drop-shadow-[0_0_15px_rgb(var(--warning-rgb)/0.4)]"
             />
           </div>
 
@@ -147,7 +147,7 @@ export function SessionSummaryModal({
             </Card>
           </div>
 
-          <Card className="bg-[rgba(var(--muted-rgb),0.5)] dark:bg-[rgba(var(--background-rgb),0.03)] py-4 rounded-xl border border-border mb-6 flex justify-center items-center gap-3 shadow-none">
+          <Card className="bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.03)] py-4 rounded-xl border border-border mb-6 flex justify-center items-center gap-3 shadow-none">
             <Flame size={18} aria-hidden="true" className="text-primary" />
             <span className="text-foreground font-mono font-black text-base md:text-lg">
               +{sessionStats.xpGained} XP
@@ -172,7 +172,7 @@ export function SessionSummaryModal({
             <Button
               variant="ghost"
               onClick={() => router.push("/dashboard")}
-              className="w-full h-auto py-4 text-muted-foreground hover:text-foreground font-bold uppercase tracking-widest text-xs md:text-xs border border-border bg-muted dark:bg-[rgba(var(--background-rgb),0.03)] rounded-xl transition-all"
+              className="w-full h-auto py-4 text-muted-foreground hover:text-foreground font-bold uppercase tracking-widest text-xs md:text-xs border border-border bg-muted dark:bg-[rgb(var(--background-rgb)/0.03)] rounded-xl transition-all"
             >
               Kembali ke Dashboard
             </Button>

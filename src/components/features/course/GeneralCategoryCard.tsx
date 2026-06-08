@@ -108,8 +108,8 @@ function PreviewItem({
       onMouseLeave={() => setHovered(false)}
       className="flex items-center justify-between p-3 rounded-xl border transition-all duration-300 group/item shrink-0 min-w-[200px] sm:min-w-0 glass relative overflow-hidden pl-4"
       style={{
-        backgroundColor: hovered ? `rgba(${glowColor}, 0.08)` : `rgba(var(--background-rgb), 0.35)`,
-        borderColor: hovered ? `rgba(${glowColor}, 0.45)` : `rgba(var(--border-rgb), 0.45)`,
+        backgroundColor: hovered ? `rgba(${glowColor}, 0.08)` : `rgb(var(--background-rgb)/0.35)`,
+        borderColor: hovered ? `rgba(${glowColor}, 0.45)` : `rgb(var(--border-rgb)/0.45)`,
         boxShadow: hovered ? `0 6px 20px rgba(${glowColor}, 0.08)` : 'none'
       }}
       aria-label={`Materi pelajaran: ${preview.title}`}
@@ -160,7 +160,7 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
         onMouseLeave={() => setIsHovered(false)}
         className="flex flex-col h-full rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden group transition-all duration-500 glass"
         style={{
-          borderColor: isHovered ? `rgba(${theme.glowColor}, 0.45)` : `rgba(var(--border-rgb), 0.45)`,
+          borderColor: isHovered ? `rgba(${theme.glowColor}, 0.45)` : `rgb(var(--border-rgb)/0.45)`,
           boxShadow: isHovered 
             ? `0 20px 50px rgba(${theme.glowColor}, 0.15), 0 0 25px rgba(${theme.glowColor}, 0.08)` 
             : isFeatured 
@@ -196,7 +196,7 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
             <div 
               className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shadow-lg transition-all duration-500 shrink-0 border ml-3 bg-background/50"
               style={{
-                borderColor: isHovered ? `rgba(${theme.glowColor}, 0.45)` : `rgba(var(--border-rgb), 0.55)`,
+                borderColor: isHovered ? `rgba(${theme.glowColor}, 0.45)` : `rgb(var(--border-rgb)/0.55)`,
                 color: `rgb(${theme.glowColor})`
               }}
               role="img"
@@ -236,8 +236,8 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
               href={ROUTES.COURSES.CATEGORY(cat.slug)}
               className="inline-flex items-center gap-2.5 sm:gap-3 px-5 py-3 sm:px-7 sm:py-4 rounded-xl font-black uppercase tracking-widest text-[9px] sm:text-[10px] transition-all duration-500 active:scale-95 group/btn border shadow-md"
               style={{
-                backgroundColor: isHovered ? `rgb(${theme.glowColor})` : 'var(--foreground)',
-                color: isHovered ? 'var(--primary-foreground)' : 'var(--background)',
+                backgroundColor: isHovered ? `rgb(${theme.glowColor})` : 'hsl(var(--foreground))',
+                color: isHovered ? 'hsl(var(--primary-foreground))' : 'hsl(var(--background))',
                 borderColor: isHovered ? `rgb(${theme.glowColor})` : 'transparent',
                 boxShadow: isHovered ? `0 8px 24px rgba(${theme.glowColor}, 0.25)` : 'none'
               }}

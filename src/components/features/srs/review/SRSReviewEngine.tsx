@@ -34,7 +34,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
         <Card className="w-full bg-card p-8 md:p-10 rounded-2xl border border-border text-center relative overflow-hidden shadow-2xl">
           <div className="absolute top-0 left-0 right-0 h-1.5 bg-destructive shadow-lg" />
           
-          <div className="w-16 h-16 md:w-20 md:h-20 mx-auto bg-[rgba(var(--muted-rgb),0.5)] dark:bg-[rgba(var(--background-rgb),0.04)] rounded-xl flex items-center justify-center border border-border mb-6 shadow-none">
+          <div className="w-16 h-16 md:w-20 md:h-20 mx-auto bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.04)] rounded-xl flex items-center justify-center border border-border mb-6 shadow-none">
             <Trophy size={32} aria-hidden="true" className="text-warning drop-shadow-sm" />
           </div>
 
@@ -45,7 +45,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
             {engine.shuffledCards.length} KARTU TELAH DIPERBARUI
           </p>
 
-          <Card className="bg-[rgba(var(--muted-rgb),0.5)] dark:bg-[rgba(var(--background-rgb),0.03)] py-4 rounded-xl border border-border mb-8 flex justify-center items-center gap-3 shadow-none">
+          <Card className="bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.03)] py-4 rounded-xl border border-border mb-8 flex justify-center items-center gap-3 shadow-none">
             <Flame size={18} aria-hidden="true" className="text-destructive" />
             <span className="text-foreground font-mono font-black text-base md:text-lg">
               +{engine.earnedXP} XP
@@ -78,7 +78,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
       {/* HEADER */}
       <header className="flex flex-col gap-6 mb-10">
         <div className="flex items-center gap-3">
-          <Card className="size-10 rounded-xl bg-[rgba(var(--destructive-rgb),0.1)] border border-destructive/20 flex items-center justify-center neo-inset shadow-none">
+          <Card className="size-10 rounded-xl bg-[rgb(var(--destructive-rgb)/0.1)] border border-destructive/20 flex items-center justify-center neo-inset shadow-none">
             <BrainCircuit size={20} aria-hidden="true" className="text-destructive" />
           </Card>
           <div>
@@ -94,7 +94,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
           </div>
         </div>
 
-        <Card className="bg-[rgba(var(--destructive-rgb),0.05)] border-destructive/10 p-4 rounded-[1.5rem] neo-inset shadow-none border-dashed">
+        <Card className="bg-[rgb(var(--destructive-rgb)/0.05)] border-destructive/10 p-4 rounded-[1.5rem] neo-inset shadow-none border-dashed">
           <div className="flex items-start gap-3">
             <ShieldCheck size={16} aria-hidden="true" className="shrink-0 text-destructive mt-0.5" />
             <div className="space-y-1">
@@ -164,7 +164,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
             </div>
 
             <div className="hidden md:flex justify-center mt-2">
-              <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold bg-[rgba(var(--muted-rgb),0.5)] dark:bg-card/40 px-4 py-2 rounded-xl neo-inset border border-border">
+              <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-card/40 px-4 py-2 rounded-xl neo-inset border border-border">
                 Tekan <kbd className="font-mono text-destructive">Spasi</kbd> untuk
                 melihat jawaban
               </p>
@@ -196,7 +196,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
             <Button
               variant="ghost"
               onClick={() => engine.handleAnswer(2)}
-              className="relative h-auto py-8 bg-success/5 border border-success/20 rounded-[2.5rem] text-success font-black uppercase tracking-[0.2em] text-xs md:text-xs neo-card hover:bg-success hover:text-success-foreground transition-all group shadow-sm dark:shadow-[0_0_20px_rgba(var(--success-rgb),0.1)] overflow-hidden"
+              className="relative h-auto py-8 bg-success/5 border border-success/20 rounded-[2.5rem] text-success font-black uppercase tracking-[0.2em] text-xs md:text-xs neo-card hover:bg-success hover:text-success-foreground transition-all group shadow-sm dark:shadow-[0_0_20px_rgb(var(--success-rgb)/0.1)] overflow-hidden"
             >
               <div className="relative z-10 flex items-center gap-2">
                 <Check

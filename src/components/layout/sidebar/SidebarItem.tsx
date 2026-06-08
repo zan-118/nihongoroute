@@ -38,7 +38,7 @@ export function SidebarItem({ item, pathname, onClick }: SidebarItemProps) {
         whileTap={{ scale: 0.985 }}
         className={`flex items-center gap-3.5 px-3.5 py-3 rounded-xl transition-all duration-300 relative group overflow-hidden ${
           isActive 
-            ? "bg-primary/[0.11] text-primary border border-primary/25 shadow-[0_10px_26px_rgba(var(--primary-rgb),0.08)]"
+            ? "bg-primary/[0.11] text-primary border border-primary/25 shadow-[0_10px_26px_rgb(var(--primary-rgb)/0.08)]"
             : "text-muted-foreground hover:bg-card/55 hover:text-foreground border border-transparent"
         }`}
       >

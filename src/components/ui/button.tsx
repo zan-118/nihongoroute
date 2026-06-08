@@ -21,11 +21,11 @@ const buttonVariants = cva(
       variant: {
         default: "btn-cyber",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-[0_12px_24px_rgba(var(--destructive-rgb),0.18)]",
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-[0_12px_24px_rgb(var(--destructive-rgb)/0.18)]",
         outline:
           "border border-border bg-card/65 text-foreground hover:bg-accent hover:text-accent-foreground hover:border-primary/30 shadow-sm",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-[0_12px_24px_rgba(var(--secondary-rgb),0.16)]",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-[0_12px_24px_rgb(var(--secondary-rgb)/0.16)]",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
       },

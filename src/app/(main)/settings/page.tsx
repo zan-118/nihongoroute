@@ -98,7 +98,7 @@ export default function SettingsPage() {
       >
         <header className="mb-12 px-1">
           <m.div variants={itemVariants}>
-            <Badge variant="outline" className="glass bg-background/20 text-primary border-primary/30 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6 flex items-center gap-2 w-fit shadow-[0_0_20px_rgba(var(--primary-rgb),0.1)]">
+            <Badge variant="outline" className="glass bg-background/20 text-primary border-primary/30 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6 flex items-center gap-2 w-fit shadow-[0_0_20px_rgb(var(--primary-rgb)/0.1)]">
               <SettingsIcon size={14} className="animate-spin-slow" /> Konfigurasi Sistem
             </Badge>
           </m.div>

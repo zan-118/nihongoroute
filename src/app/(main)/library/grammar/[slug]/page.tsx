@@ -87,7 +87,7 @@ export default async function GrammarDetailPage({
       <div className="absolute bottom-[10%] -right-[10%] size-[35%] bg-success/5 blur-[130px] rounded-full pointer-events-none z-0" />
       
       {/* Background Neural Overlays */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--foreground-rgb),0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--foreground-rgb),0.01)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none z-0" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none z-0" />
 
       <div className="max-w-4xl mx-auto w-full relative z-10 pt-8 md:pt-16">
         {/* Semantic Breadcrumbs */}
@@ -104,7 +104,7 @@ export default async function GrammarDetailPage({
             <BookOpen size={14} className="group-hover:scale-110 transition-transform" /> Tata Bahasa
           </Link>
           <span className="opacity-25">/</span>
-          <span className="text-primary flex items-center gap-1.5 md:gap-2 drop-shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)] truncate max-w-[150px] md:max-w-none">
+          <span className="text-primary flex items-center gap-1.5 md:gap-2 drop-shadow-[0_0_10px_rgb(var(--primary-rgb)/0.3)] truncate max-w-[150px] md:max-w-none">
             {article.title}
           </span>
         </nav>

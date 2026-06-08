@@ -59,7 +59,7 @@ export default function ForgotPasswordClient() {
         <div className="size-[400px] bg-warning/10 rounded-full blur-[100px] opacity-35 absolute -bottom-10 -right-10" />
       </div>
 
-      <div className="w-full max-w-md bg-card/85 backdrop-blur-xl border border-border/80 rounded-[2rem] p-8 z-10 shadow-[0_15px_50px_rgba(0,0,0,0.3)] hover:shadow-[0_20px_60px_rgba(var(--destructive-rgb),0.1)] transition-all duration-500 relative glass">
+      <div className="w-full max-w-md bg-card/85 backdrop-blur-xl border border-border/80 rounded-[2rem] p-8 z-10 shadow-[0_15px_50px_rgba(0,0,0,0.3)] hover:shadow-[0_20px_60px_rgb(var(--destructive-rgb)/0.1)] transition-all duration-500 relative glass">
         {/* Kilau Sudut Dekoratif */}
         <div className="absolute top-0 right-0 size-24 bg-gradient-to-br from-destructive/10 to-transparent blur-md rounded-tr-[2rem] pointer-events-none" />
 
@@ -74,7 +74,7 @@ export default function ForgotPasswordClient() {
         </Link>
 
         <div className="text-center mb-6">
-          <div className="size-16 bg-destructive/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-destructive/20 shadow-[0_0_20px_rgba(var(--destructive-rgb),0.15)] animate-pulse">
+          <div className="size-16 bg-destructive/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-destructive/20 shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.15)] animate-pulse">
             <KeyRound className="text-destructive" size={32} />
           </div>
           <h1 className="text-2xl md:text-3xl font-black text-foreground mb-2 uppercase tracking-tight font-japanese">
@@ -96,14 +96,14 @@ export default function ForgotPasswordClient() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full bg-muted/50 border border-border/80 rounded-xl py-3 pl-10 pr-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-destructive focus:ring-1 focus:ring-destructive/40 focus:shadow-[0_0_15px_rgba(var(--destructive-rgb),0.1)] transition-all duration-300"
+              className="w-full bg-muted/50 border border-border/80 rounded-xl py-3 pl-10 pr-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-destructive focus:ring-1 focus:ring-destructive/40 focus:shadow-[0_0_15px_rgb(var(--destructive-rgb)/0.1)] transition-all duration-300"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading || !email}
-            className="w-full py-3.5 px-4 bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl font-bold uppercase tracking-widest text-xs transition-all disabled:opacity-50 shadow-[0_0_20px_rgba(var(--destructive-rgb),0.15)] hover:shadow-[0_0_25px_rgba(var(--destructive-rgb),0.3)] active:scale-[0.98] duration-300"
+            className="w-full py-3.5 px-4 bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl font-bold uppercase tracking-widest text-xs transition-all disabled:opacity-50 shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.15)] hover:shadow-[0_0_25px_rgb(var(--destructive-rgb)/0.3)] active:scale-[0.98] duration-300"
           >
             {loading ? "Lagi dikirim..." : "Kirim Link Pemulihan"}
           </button>

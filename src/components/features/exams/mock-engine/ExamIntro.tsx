@@ -30,11 +30,11 @@ export function ExamIntro({ exam, setGameState, backLink }: ExamIntroProps) {
     <Card className="w-full max-w-2xl mx-auto p-8 md:p-12 text-center mt-6 md:mt-12 relative overflow-hidden neo-card rounded-[3rem] border border-border bg-card shadow-2xl transition-colors duration-300">
       <div className="absolute top-0 right-0 size-[300px] bg-destructive/5 blur-[100px] rounded-full pointer-events-none" />
 
-      <Card className="size-24 mx-auto neo-inset flex items-center justify-center rounded-[2rem] mb-8 bg-[rgba(var(--muted-rgb),0.5)] border border-border shadow-none">
+      <Card className="size-24 mx-auto neo-inset flex items-center justify-center rounded-[2rem] mb-8 bg-[rgb(var(--muted-rgb)/0.5)] border border-border shadow-none">
         <AlertCircle
           size={40}
           aria-hidden="true"
-          className="text-warning drop-shadow-sm dark:drop-shadow-[0_0_15px_rgba(var(--warning-rgb),0.5)]"
+          className="text-warning drop-shadow-sm dark:drop-shadow-[0_0_15px_rgb(var(--warning-rgb)/0.5)]"
         />
       </Card>
 

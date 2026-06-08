@@ -78,9 +78,9 @@ export function FlashcardFront({
     <Card
       className={`absolute inset-0 w-full h-full border rounded-2xl flex flex-col items-center justify-center p-6 md:p-8 transition-all duration-500 shadow-none overflow-hidden bg-card ${
         inputResult === "correct" 
-          ? "border-success/50 shadow-[0_0_40px_rgba(var(--success-rgb),0.2)] bg-success/[0.02]" 
+          ? "border-success/50 shadow-[0_0_40px_rgb(var(--success-rgb)/0.2)] bg-success/[0.02]" 
           : inputResult === "wrong"
-          ? "border-destructive/50 shadow-[0_0_40px_rgba(var(--destructive-rgb),0.2)] bg-destructive/[0.02]"
+          ? "border-destructive/50 shadow-[0_0_40px_rgb(var(--destructive-rgb)/0.2)] bg-destructive/[0.02]"
           : `${themeBorder} ${themeShadow}`
       }`}
       style={{
@@ -111,7 +111,7 @@ export function FlashcardFront({
 
       <div className="flex flex-col items-center justify-center flex-1 w-full space-y-8">
         <h2
-          className={`${word.length > 4 ? "text-4xl sm:text-5xl md:text-6xl lg:text-7xl" : "text-5xl sm:text-6xl md:text-7xl lg:text-8xl"} font-black text-foreground tracking-tight font-japanese leading-tight transition-all duration-300 drop-shadow-sm dark:drop-shadow-[0_0_20px_rgba(var(--foreground-rgb),0.1)]`}
+          className={`${word.length > 4 ? "text-4xl sm:text-5xl md:text-6xl lg:text-7xl" : "text-5xl sm:text-6xl md:text-7xl lg:text-8xl"} font-black text-foreground tracking-tight font-japanese leading-tight transition-all duration-300 drop-shadow-sm dark:drop-shadow-[0_0_20px_rgb(var(--foreground-rgb)/0.1)]`}
         >
           {word}
         </h2>

@@ -122,7 +122,7 @@ function parseNotesToJSX(notes: string): React.ReactNode {
     const rows = rowLines.map(line => line.split("|").slice(1, -1).map(c => c.trim()));
 
     elements.push(
-      <div key={key} className="my-6 overflow-x-auto rounded-2xl border border-border bg-card/5 backdrop-blur-md shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)] select-text">
+      <div key={key} className="my-6 overflow-x-auto rounded-2xl border border-border bg-card/5 backdrop-blur-md shadow-[0_0_20px_rgb(var(--primary-rgb)/0.02)] select-text">
         <table className="w-full text-left border-collapse text-xs md:text-sm">
           <thead>
             <tr className="border-b border-border bg-primary/5">
@@ -209,7 +209,7 @@ function parseNotesToJSX(notes: string): React.ReactNode {
       elements.push(
         <div 
           key={`warning-${index}`} 
-          className="p-4 md:p-5 rounded-[1.2rem] border border-destructive/20 bg-[rgba(var(--destructive-rgb),0.05)] text-foreground/90 font-semibold my-5 text-xs md:text-sm flex gap-3 items-start shadow-[0_0_20px_rgba(var(--destructive-rgb),0.05)] select-text"
+          className="p-4 md:p-5 rounded-[1.2rem] border border-destructive/20 bg-[rgb(var(--destructive-rgb)/0.05)] text-foreground/90 font-semibold my-5 text-xs md:text-sm flex gap-3 items-start shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.05)] select-text"
         >
           <span className="text-destructive text-base mt-0.5 select-none">⚠️</span>
           <div className="flex-1 leading-relaxed">
@@ -348,18 +348,18 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
   const getJLPTBadgeStyle = (level: string) => {
     const lvl = level.toUpperCase();
     if (lvl.includes("N1")) {
-      return "border-[rgba(var(--destructive-rgb),0.3)] text-destructive bg-[rgba(var(--destructive-rgb),0.05)] shadow-[0_0_15px_rgba(var(--destructive-rgb),0.15)]";
+      return "border-[rgb(var(--destructive-rgb)/0.3)] text-destructive bg-[rgb(var(--destructive-rgb)/0.05)] shadow-[0_0_15px_rgb(var(--destructive-rgb)/0.15)]";
     }
     if (lvl.includes("N2")) {
-      return "border-[rgba(var(--warning-rgb),0.3)] text-warning bg-[rgba(var(--warning-rgb),0.05)] shadow-[0_0_15px_rgba(var(--warning-rgb),0.15)]";
+      return "border-[rgb(var(--warning-rgb)/0.3)] text-warning bg-[rgb(var(--warning-rgb)/0.05)] shadow-[0_0_15px_rgb(var(--warning-rgb)/0.15)]";
     }
     if (lvl.includes("N3")) {
-      return "border-[rgba(var(--secondary-rgb),0.3)] text-secondary bg-[rgba(var(--secondary-rgb),0.05)] shadow-[0_0_15px_rgba(var(--secondary-rgb),0.15)]";
+      return "border-[rgb(var(--secondary-rgb)/0.3)] text-secondary bg-[rgb(var(--secondary-rgb)/0.05)] shadow-[0_0_15px_rgb(var(--secondary-rgb)/0.15)]";
     }
     if (lvl.includes("N4")) {
-      return "border-[rgba(var(--primary-rgb),0.3)] text-primary bg-[rgba(var(--primary-rgb),0.05)] shadow-[0_0_15px_rgba(var(--primary-rgb),0.15)]";
+      return "border-[rgb(var(--primary-rgb)/0.3)] text-primary bg-[rgb(var(--primary-rgb)/0.05)] shadow-[0_0_15px_rgb(var(--primary-rgb)/0.15)]";
     }
-    return "border-[rgba(var(--success-rgb),0.3)] text-success bg-[rgba(var(--success-rgb),0.05)] shadow-[0_0_15px_rgba(var(--success-rgb),0.15)]";
+    return "border-[rgb(var(--success-rgb)/0.3)] text-success bg-[rgb(var(--success-rgb)/0.05)] shadow-[0_0_15px_rgb(var(--success-rgb)/0.15)]";
   };
 
   return (
@@ -376,11 +376,11 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
               <span>Modul Tata Bahasa Resmi</span>
             </div>
           </div>
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-foreground tracking-tight drop-shadow-[0_0_30px_rgba(var(--foreground-rgb),0.05)] font-japanese">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-foreground tracking-tight drop-shadow-[0_0_30px_rgb(var(--foreground-rgb)/0.05)] font-japanese">
             {article.title}
           </h1>
           {article.meaning && (
-            <p className="mt-4 text-lg md:text-xl font-black text-primary leading-relaxed drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
+            <p className="mt-4 text-lg md:text-xl font-black text-primary leading-relaxed drop-shadow-[0_0_15px_rgb(var(--primary-rgb)/0.1)]">
               {article.meaning}
             </p>
           )}
@@ -415,13 +415,13 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
         </div>
       </div>
 
-      <div className="w-full h-px bg-gradient-to-r from-border/50 via-border to-border/50 mb-12 shadow-[0_0_20px_rgba(var(--primary-rgb),0.1)]" />
+      <div className="w-full h-px bg-gradient-to-r from-border/50 via-border to-border/50 mb-12 shadow-[0_0_20px_rgb(var(--primary-rgb)/0.1)]" />
 
       {/* Tata Letak Konten Responsif: Tumpukan Vertikal Kolom Tunggal */}
       <div className="space-y-12">
         {/* Bento Struktur */}
         {article.formation && (
-          <Card className="p-8 md:p-10 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-xl border border-border rounded-[2rem] relative overflow-hidden group hover:border-primary/40 shadow-[0_0_30px_rgba(var(--primary-rgb),0.02)] transition-all duration-500 select-none">
+          <Card className="p-8 md:p-10 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-xl border border-border rounded-[2rem] relative overflow-hidden group hover:border-primary/40 shadow-[0_0_30px_rgb(var(--primary-rgb)/0.02)] transition-all duration-500 select-none">
             <div className="absolute -top-12 -right-12 p-8 opacity-[0.02] group-hover:opacity-[0.05] group-hover:scale-110 transition-all duration-700 pointer-events-none text-primary">
               <BookText size={180} />
             </div>
@@ -438,11 +438,11 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
                 return (
                   <React.Fragment key={`formation-${index}`}>
                     {isBracketed ? (
-                      <span className="inline-block px-3.5 py-1 text-sm md:text-base font-black rounded-xl bg-primary/10 border border-primary/20 text-primary font-sans mx-1 shadow-[0_0_15px_rgba(var(--primary-rgb),0.08)] backdrop-blur-md">
+                      <span className="inline-block px-3.5 py-1 text-sm md:text-base font-black rounded-xl bg-primary/10 border border-primary/20 text-primary font-sans mx-1 shadow-[0_0_15px_rgb(var(--primary-rgb)/0.08)] backdrop-blur-md">
                         {cleanPart}
                       </span>
                     ) : (
-                      <span className={part.includes("kata") || part.includes("bentuk") ? "text-muted-foreground/90 font-medium text-xl md:text-2xl font-sans" : "text-primary drop-shadow-[0_0_12px_rgba(var(--primary-rgb),0.1)] font-bold font-japanese"}>
+                      <span className={part.includes("kata") || part.includes("bentuk") ? "text-muted-foreground/90 font-medium text-xl md:text-2xl font-sans" : "text-primary drop-shadow-[0_0_12px_rgb(var(--primary-rgb)/0.1)] font-bold font-japanese"}>
                         {part}
                       </span>
                     )}
@@ -521,8 +521,8 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
                         onClick={() => speakJapanese(ex.jp, i)}
                         className={`h-12 w-12 rounded-[1.2rem] border flex items-center justify-center transition-all duration-300 relative group/btn ${
                           isActive 
-                            ? "border-primary bg-primary/10 text-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.35)] animate-pulse" 
-                            : "border-border bg-card/20 text-muted-foreground hover:border-primary/40 hover:text-primary hover:bg-primary/5 hover:shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]"
+                            ? "border-primary bg-primary/10 text-primary shadow-[0_0_20px_rgb(var(--primary-rgb)/0.35)] animate-pulse" 
+                            : "border-border bg-card/20 text-muted-foreground hover:border-primary/40 hover:text-primary hover:bg-primary/5 hover:shadow-[0_0_15px_rgb(var(--primary-rgb)/0.1)]"
                         }`}
                         aria-label={isActive ? "Hentikan pengucapan kalimat" : "Dengarkan pengucapan kalimat"}
                       >
@@ -557,7 +557,7 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
 
         <Link href="/library/grammar" className="w-full md:w-auto">
           <Button 
-            className="w-full md:w-auto px-10 py-6 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-2xl bg-primary text-primary-foreground hover:bg-primary/95 transition-all shadow-[0_0_25px_rgba(var(--primary-rgb),0.25)] hover:shadow-[0_0_40px_rgba(var(--primary-rgb),0.4)] active:scale-95 flex items-center gap-2 group"
+            className="w-full md:w-auto px-10 py-6 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-2xl bg-primary text-primary-foreground hover:bg-primary/95 transition-all shadow-[0_0_25px_rgb(var(--primary-rgb)/0.25)] hover:shadow-[0_0_40px_rgb(var(--primary-rgb)/0.4)] active:scale-95 flex items-center gap-2 group"
             aria-label="Tandai materi ini selesai dan kembali"
           >
             Selesai & Lanjut <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />

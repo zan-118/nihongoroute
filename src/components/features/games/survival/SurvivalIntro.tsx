@@ -25,15 +25,15 @@ export function SurvivalIntro({ startGame }: SurvivalIntroProps) {
   return (
     <Card className="p-8 md:p-16 lg:p-20 rounded-[3rem] md:rounded-[4rem] border border-border bg-card bg-background text-center relative overflow-hidden group max-w-2xl mx-auto my-8 md:my-10 neo-card shadow-2xl transition-colors duration-300">
       <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-all duration-1000 pointer-events-none" />
-      <Card className="w-20 h-20 md:w-28 md:h-28 mx-auto bg-[rgba(var(--muted-rgb),0.5)] dark:bg-[rgba(var(--background-rgb),0.4)] border border-border dark:border-primary/20 rounded-[2rem] md:rounded-[2.5rem] flex items-center justify-center mb-8 md:mb-12 neo-inset shadow-none group-hover:border-primary/40 transition-all duration-500">
+      <Card className="w-20 h-20 md:w-28 md:h-28 mx-auto bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.4)] border border-border dark:border-primary/20 rounded-[2rem] md:rounded-[2.5rem] flex items-center justify-center mb-8 md:mb-12 neo-inset shadow-none group-hover:border-primary/40 transition-all duration-500">
         <Activity
           size={40}
           aria-hidden="true"
-          className="text-primary drop-shadow-sm dark:drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.6)] animate-pulse md:w-12 md:h-12"
+          className="text-primary drop-shadow-sm dark:drop-shadow-[0_0_15px_rgb(var(--primary-rgb)/0.6)] animate-pulse md:w-12 md:h-12"
         />
       </Card>
       <h2 className="text-4xl md:text-6xl lg:text-7xl font-black text-foreground tracking-tight mb-6 md:mb-8 leading-none">
-        Mode <span className="text-primary drop-shadow-sm dark:drop-shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)]">Evaluasi</span>
+        Mode <span className="text-primary drop-shadow-sm dark:drop-shadow-[0_0_20px_rgb(var(--primary-rgb)/0.4)]">Evaluasi</span>
       </h2>
       <p className="text-muted-foreground mb-10 md:mb-14 max-w-md mx-auto text-xs md:text-sm leading-relaxed font-bold tracking-wide">
         Uji kecepatan dan ingatan Anda. Jawab sebelum waktu habis. 3 kesempatan. Buktikan penguasaan kosakata Anda.

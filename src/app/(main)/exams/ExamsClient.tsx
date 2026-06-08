@@ -86,7 +86,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
             variants={itemVariants}
             className="flex items-center gap-4 mb-8"
           >
-            <div className="size-3.5 rounded-full bg-destructive animate-pulse shadow-[0_0_15px_rgba(var(--destructive-rgb),0.5)]" />
+            <div className="size-3.5 rounded-full bg-destructive animate-pulse shadow-[0_0_15px_rgb(var(--destructive-rgb)/0.5)]" />
             <Badge
               variant="outline"
               className="text-destructive text-destructive font-bold uppercase tracking-widest text-xs md:text-xs border-destructive/30 px-4 py-1.5 bg-destructive/5 backdrop-blur-md rounded-xl h-auto"
@@ -100,7 +100,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
             className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-none mb-10 text-foreground drop-shadow-2xl"
           >
             Pusat <br />{" "}
-            <span className="text-destructive drop-shadow-[0_0_30px_rgba(var(--destructive-rgb),0.5)]">
+            <span className="text-destructive drop-shadow-[0_0_30px_rgb(var(--destructive-rgb)/0.5)]">
               Simulasi
             </span>
           </m.h1>
@@ -146,7 +146,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
                   href={ROUTES.EXAMS.SESSION(exam.slug || exam.id || "")}
                   className="block h-full"
                 >
-                  <Card className="p-6 md:p-8 group hover:border-destructive/40 hover:bg-destructive/[0.02] transition-all duration-300 flex flex-col h-full relative overflow-hidden cursor-pointer bg-card rounded-2xl border-border hover:shadow-[0_0_40px_rgba(var(--destructive-rgb),0.06)]">
+                  <Card className="p-6 md:p-8 group hover:border-destructive/40 hover:bg-destructive/[0.02] transition-all duration-300 flex flex-col h-full relative overflow-hidden cursor-pointer bg-card rounded-2xl border-border hover:shadow-[0_0_40px_rgb(var(--destructive-rgb)/0.06)]">
                     
                     <div className="flex justify-between items-start mb-8 md:mb-10 relative z-10">
                       <Badge

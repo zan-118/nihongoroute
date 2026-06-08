@@ -35,7 +35,7 @@ export default function Heatmap({ studyDays }: Props) {
   return (
     <Card className="bg-card p-6 md:p-8 lg:p-10 rounded-[2.5rem] md:rounded-[3rem] border border-border relative overflow-hidden neo-card shadow-lg transition-colors duration-300">
       {/* Pola Kisi Halus Latar Belakang */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--primary-rgb),0.01)_1px,transparent_1px)] bg-[size:100%_4px] opacity-20 dark:opacity-50 pointer-events-none" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--primary-rgb)/0.01)_1px,transparent_1px)] bg-[size:100%_4px] opacity-20 dark:opacity-50 pointer-events-none" />
 
       {/* Bagian Header */}
       <header className="flex items-center justify-between mb-8 md:mb-10 relative z-10">
@@ -91,7 +91,7 @@ export default function Heatmap({ studyDays }: Props) {
           <div className="w-4 h-4 md:w-5 md:h-5 rounded-[6px] bg-primary/50 border border-primary/60 neo-card"></div>
           <div className="w-4 h-4 md:w-5 md:h-5 rounded-[6px] bg-primary border-border neo-card"></div>
         </div>
-        <span className="text-xs md:text-xs font-bold uppercase tracking-widest text-primary drop-shadow-sm dark:drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]">
+        <span className="text-xs md:text-xs font-bold uppercase tracking-widest text-primary drop-shadow-sm dark:drop-shadow-[0_0_8px_rgb(var(--primary-rgb)/0.5)]">
           Banyak
         </span>
       </div>

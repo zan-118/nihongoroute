@@ -70,7 +70,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
       {/* Bagian Tajuk */}
       <div className="flex flex-col gap-6">
         <div className="flex items-center gap-4 mb-2">
-          <div className="size-12 rounded-2xl bg-[rgba(var(--primary-rgb),0.1)] flex items-center justify-center text-primary border border-[rgba(var(--primary-rgb),0.2)]">
+          <div className="size-12 rounded-2xl bg-[rgb(var(--primary-rgb)/0.1)] flex items-center justify-center text-primary border border-[rgb(var(--primary-rgb)/0.2)]">
             <Headphones size={24} />
           </div>
           <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight text-foreground">
@@ -85,7 +85,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground size-5" />
           <Input 
             placeholder="Cari materi listening..." 
-            className="pl-12 h-14 bg-[rgba(var(--card-rgb),0.4)] backdrop-blur-xl border-[rgba(var(--border-rgb),0.4)] rounded-2xl text-lg shadow-2xl focus:ring-[rgba(var(--primary-rgb),0.2)]"
+            className="pl-12 h-14 bg-[rgb(var(--card-rgb)/0.4)] backdrop-blur-xl border-[rgb(var(--border-rgb)/0.4)] rounded-2xl text-lg shadow-2xl focus:ring-[rgb(var(--primary-rgb)/0.2)]"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -95,7 +95,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
       {/* Daftar Konten */}
       <div className="relative">
         {isFetching && (
-          <div className="absolute inset-0 z-50 flex items-center justify-center bg-[rgba(var(--background-rgb),0.5)] backdrop-blur-sm rounded-[2rem]">
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-[rgb(var(--background-rgb)/0.5)] backdrop-blur-sm rounded-[2rem]">
             <Loader2 className="size-10 animate-spin text-primary" />
           </div>
         )}
@@ -110,7 +110,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
               }}
             >
               <Link href={`/library/listening/${task.slug}`}>
-                <Card className="group h-full p-8 rounded-[2.5rem] bg-card/30 backdrop-blur-xl border border-border hover:border-primary/40 shadow-xl hover:shadow-[0_20px_50px_rgba(var(--primary-rgb),0.1)] transition-all duration-500 relative overflow-hidden flex flex-col justify-between cursor-pointer">
+                <Card className="group h-full p-8 rounded-[2.5rem] bg-card/30 backdrop-blur-xl border border-border hover:border-primary/40 shadow-xl hover:shadow-[0_20px_50px_rgb(var(--primary-rgb)/0.1)] transition-all duration-500 relative overflow-hidden flex flex-col justify-between cursor-pointer">
                   {/* Efek Kilau / Pendar Ambient */}
                   <div className="absolute top-0 right-0 size-32 bg-primary/5 blur-[50px] rounded-full -mr-16 -mt-16 group-hover:bg-primary/10 transition-all duration-500" />
                   
@@ -202,8 +202,8 @@ export default function ListeningListClient({ initialData }: ListeningListClient
                     onClick={() => handlePageChange(pageNum)}
                     className={`w-10 h-10 rounded-xl font-bold transition-all ${
                       currentPage === pageNum 
-                        ? "bg-primary text-primary-foreground shadow-lg shadow-[rgba(var(--primary-rgb),0.2)]" 
-                        : "bg-card border border-border text-muted-foreground hover:border-[rgba(var(--primary-rgb),0.4)]"
+                        ? "bg-primary text-primary-foreground shadow-lg shadow-[rgb(var(--primary-rgb)/0.2)]" 
+                        : "bg-card border border-border text-muted-foreground hover:border-[rgb(var(--primary-rgb)/0.4)]"
                     }`}
                   >
                     {pageNum}
@@ -238,7 +238,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
 
       {tasks.length === 0 && !isFetching && (
         <div className="flex flex-col items-center justify-center py-24 text-center">
-          <div className="size-20 rounded-full bg-[rgba(var(--muted-rgb),0.2)] flex items-center justify-center mb-6">
+          <div className="size-20 rounded-full bg-[rgb(var(--muted-rgb)/0.2)] flex items-center justify-center mb-6">
              <Headphones size={32} className="text-muted-foreground/50" />
           </div>
           <h3 className="text-xl font-bold text-foreground">Materi tidak ditemukan</h3>

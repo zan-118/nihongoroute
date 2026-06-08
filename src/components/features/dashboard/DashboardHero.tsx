@@ -111,7 +111,7 @@ export default function DashboardHero({
         {loading ? (
           <Skeleton className="h-[320px] w-full rounded-[34px]" />
         ) : (
-        <Card className="p-[34px] md:p-[55px] rounded-[34px] bg-card/20 backdrop-blur-xl border border-border shadow-2xl relative overflow-hidden group transition-all duration-500 hover:border-primary/40 hover:shadow-[0_0_50px_rgba(var(--primary-rgb),0.15)]">
+        <Card className="p-[34px] md:p-[55px] rounded-[34px] bg-card/20 backdrop-blur-xl border border-border shadow-2xl relative overflow-hidden group transition-all duration-500 hover:border-primary/40 hover:shadow-[0_0_50px_rgb(var(--primary-rgb)/0.15)]">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-750" />
           
           <div className="relative z-10 flex flex-col items-center text-center">
@@ -121,29 +121,29 @@ export default function DashboardHero({
               animate={dueCount > 0 ? {
                 scale: [1, 1.05, 1],
                 boxShadow: [
-                  "0 0 0px rgba(var(--primary-rgb),0)", 
-                  "0 0 30px rgba(var(--primary-rgb),0.3)", 
-                  "0 0 0px rgba(var(--primary-rgb),0)"
+                  "0 0 0px rgb(var(--primary-rgb)/0)", 
+                  "0 0 30px rgb(var(--primary-rgb)/0.3)", 
+                  "0 0 0px rgb(var(--primary-rgb)/0)"
                 ]
               } : {
                 scale: [1, 1.05, 1],
                 boxShadow: [
-                  "0 0 0px rgba(var(--success-rgb),0)", 
-                  "0 0 30px rgba(var(--success-rgb),0.3)", 
-                  "0 0 0px rgba(var(--success-rgb),0)"
+                  "0 0 0px rgb(var(--success-rgb)/0)", 
+                  "0 0 30px rgb(var(--success-rgb)/0.3)", 
+                  "0 0 0px rgb(var(--success-rgb)/0)"
                 ]
               }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               className={`w-[89px] h-[89px] rounded-[34px] flex items-center justify-center mb-[34px] border transition-all duration-500 ${
                 dueCount > 0 
-                  ? 'bg-primary/15 border-primary/30 text-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.1)]' 
-                  : 'bg-success/15 border-success/30 text-success shadow-[0_0_20px_rgba(var(--success-rgb),0.1)]'
+                  ? 'bg-primary/15 border-primary/30 text-primary shadow-[0_0_20px_rgb(var(--primary-rgb)/0.1)]' 
+                  : 'bg-success/15 border-success/30 text-success shadow-[0_0_20px_rgb(var(--success-rgb)/0.1)]'
               }`}
             >
               {dueCount > 0 ? (
-                <BrainCircuit size={40} className="drop-shadow-[0_0_12px_rgba(var(--primary-rgb),0.4)]" />
+                <BrainCircuit size={40} className="drop-shadow-[0_0_12px_rgb(var(--primary-rgb)/0.4)]" />
               ) : (
-                <Trophy size={40} className="drop-shadow-[0_0_12px_rgba(var(--success-rgb),0.4)]" />
+                <Trophy size={40} className="drop-shadow-[0_0_12px_rgb(var(--success-rgb)/0.4)]" />
               )}
             </m.div>
             
@@ -160,7 +160,7 @@ export default function DashboardHero({
             <div className="grid grid-cols-3 gap-2 md:gap-[21px] mb-[34px] md:mb-[55px] w-full max-w-sm">
               <div className="flex flex-col items-center gap-1 md:gap-2">
                 <div className="flex items-center gap-1 md:gap-1.5 text-warning transition-transform hover:scale-105">
-                  <Flame size={14} className="fill-current md:w-4 md:h-4 drop-shadow-[0_0_6px_rgba(var(--warning-rgb),0.3)]" />
+                  <Flame size={14} className="fill-current md:w-4 md:h-4 drop-shadow-[0_0_6px_rgb(var(--warning-rgb)/0.3)]" />
                   <span className="text-sm md:text-lg font-black font-mono">
                     <AnimatedCounter value={streak} />
                   </span>
@@ -169,14 +169,14 @@ export default function DashboardHero({
               </div>
               <div className="flex flex-col items-center gap-1 md:gap-2 border-x border-border/60">
                 <div className="flex items-center gap-1 md:gap-1.5 text-primary transition-transform hover:scale-105">
-                  <Star size={14} className="fill-current md:w-4 md:h-4 drop-shadow-[0_0_6px_rgba(var(--primary-rgb),0.3)]" />
+                  <Star size={14} className="fill-current md:w-4 md:h-4 drop-shadow-[0_0_6px_rgb(var(--primary-rgb)/0.3)]" />
                   <span className="text-sm md:text-lg font-black font-mono">Lvl {level}</span>
                 </div>
                 <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">Level</span>
               </div>
               <div className="flex flex-col items-center gap-1 md:gap-2">
                 <div className="flex items-center gap-1 md:gap-1.5 text-primary transition-transform hover:scale-105">
-                  <Target size={14} className="md:w-4 md:h-4 drop-shadow-[0_0_6px_rgba(var(--primary-rgb),0.3)]" />
+                  <Target size={14} className="md:w-4 md:h-4 drop-shadow-[0_0_6px_rgb(var(--primary-rgb)/0.3)]" />
                   <span className="text-sm md:text-lg font-black font-mono">{Math.floor(xpProgress)}%</span>
                 </div>
                 <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">Progres</span>

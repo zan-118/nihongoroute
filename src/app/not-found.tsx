@@ -34,7 +34,7 @@ export default function NotFound() {
         {/* Elemen Tematik Jepang */}
         <div className="space-y-3 mb-6">
           <div className="flex justify-center mb-4">
-            <div className="size-20 bg-destructive/10 rounded-2xl flex items-center justify-center border border-destructive/20 shadow-[0_0_20px_rgba(var(--destructive-rgb),0.15)] animate-premium-bounce">
+            <div className="size-20 bg-destructive/10 rounded-2xl flex items-center justify-center border border-destructive/20 shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.15)] animate-premium-bounce">
               <MapPinOff className="text-destructive animate-pulse" size={36} />
             </div>
           </div>
@@ -57,7 +57,7 @@ export default function NotFound() {
 
         {/* Tombol Tindakan (Call to Actions) */}
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
-          <Button asChild size="lg" className="w-full font-black uppercase tracking-widest text-xs h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_15px_rgba(var(--primary-rgb),0.15)] hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] duration-300">
+          <Button asChild size="lg" className="w-full font-black uppercase tracking-widest text-xs h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_15px_rgb(var(--primary-rgb)/0.15)] hover:shadow-[0_0_20px_rgb(var(--primary-rgb)/0.3)] duration-300">
             <Link href="/dashboard" className="flex items-center justify-center gap-2">
               <Home size={16} />
               Dashboard

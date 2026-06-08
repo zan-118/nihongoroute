@@ -68,7 +68,7 @@ export const MarkCompleteButton: React.FC<MarkCompleteButtonProps> = ({ lessonId
       className={cn(
         "w-full sm:w-auto flex items-center justify-center gap-3 py-8 px-10 rounded-2xl",
         "bg-primary text-primary-foreground font-black uppercase tracking-widest text-sm",
-        "shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.5)]",
+        "shadow-[0_0_20px_rgb(var(--primary-rgb)/0.3)] hover:shadow-[0_0_30px_rgb(var(--primary-rgb)/0.5)]",
         "hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 border-none"
       )}
     >

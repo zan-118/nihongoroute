@@ -267,9 +267,9 @@ export default function PronunciationPanel({
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.lineWidth = 3;
-      ctx.strokeStyle = "rgba(var(--primary-rgb), 0.85)";
+      ctx.strokeStyle = "rgb(var(--primary-rgb)/0.85)";
       ctx.shadowBlur = 12;
-      ctx.shadowColor = "rgba(var(--primary-rgb), 0.6)";
+      ctx.shadowColor = "rgb(var(--primary-rgb)/0.6)";
       ctx.beginPath();
 
       const sliceWidth = canvas.width / bufferLength;
@@ -315,11 +315,11 @@ export default function PronunciationPanel({
   }, []);
 
   // Determine neon glow colors based on evaluation result
-  let borderGlow = "border-border/50 shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]";
+  let borderGlow = "border-border/50 shadow-[0_0_20px_rgb(var(--primary-rgb)/0.02)]";
   if (inputResult === "correct") {
-    borderGlow = "border-success/60 bg-success/5 shadow-[0_0_30px_rgba(var(--success-rgb),0.15)]";
+    borderGlow = "border-success/60 bg-success/5 shadow-[0_0_30px_rgb(var(--success-rgb)/0.15)]";
   } else if (inputResult === "wrong") {
-    borderGlow = "border-destructive/60 bg-destructive/5 shadow-[0_0_30px_rgba(var(--destructive-rgb),0.15)]";
+    borderGlow = "border-destructive/60 bg-destructive/5 shadow-[0_0_30px_rgb(var(--destructive-rgb)/0.15)]";
   }
 
   return (
@@ -404,8 +404,8 @@ export default function PronunciationPanel({
           variant="outline"
           className={`flex-1 py-6 rounded-2xl text-xs font-black uppercase tracking-widest group relative overflow-hidden transition-all duration-300 ${
             isRecording 
-              ? "bg-destructive text-destructive-foreground hover:bg-destructive/95 border-none shadow-[0_0_20px_rgba(var(--destructive-rgb),0.3)] animate-pulse" 
-              : "bg-primary text-primary-foreground hover:bg-primary/95 border-none shadow-[0_0_25px_rgba(var(--primary-rgb),0.3)]"
+              ? "bg-destructive text-destructive-foreground hover:bg-destructive/95 border-none shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.3)] animate-pulse" 
+              : "bg-primary text-primary-foreground hover:bg-primary/95 border-none shadow-[0_0_25px_rgb(var(--primary-rgb)/0.3)]"
           }`}
         >
           {isRecording ? (

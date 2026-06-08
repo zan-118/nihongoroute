@@ -116,7 +116,7 @@ export default async function LibraryPage() {
   return (
     <div className="w-full px-4 md:px-8 lg:px-12 relative overflow-hidden pb-24 bg-background text-foreground transition-colors duration-300 min-h-screen pt-8 md:pt-12">
       {/* Background Neural Overlays */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(var(--primary-rgb),0.05)_0%,transparent_50%)] pointer-events-none z-0" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgb(var(--primary-rgb)/0.05)_0%,transparent_50%)] pointer-events-none z-0" />
       <div className="neural-grid" />
 
       <div className="max-w-7xl mx-auto relative z-10">
@@ -124,11 +124,11 @@ export default async function LibraryPage() {
         {/* ── HEADER ── */}
         <header className="mb-10 md:mb-16">
           <div className="flex items-center gap-4 md:gap-6 mb-8 md:mb-10">
-            <Card className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-2xl bg-[rgba(var(--primary-rgb),0.1)] border-[rgba(var(--primary-rgb),0.2)] flex items-center justify-center neo-inset shadow-none">
+            <Card className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-2xl bg-[rgb(var(--primary-rgb)/0.1)] border-[rgb(var(--primary-rgb)/0.2)] flex items-center justify-center neo-inset shadow-none">
               <Library size={28} className="text-primary md:w-8 md:h-8" />
             </Card>
             <div className="flex flex-col">
-              <span className="text-xs font-bold uppercase tracking-widest text-[rgba(var(--primary-rgb),0.5)]">
+              <span className="text-xs font-bold uppercase tracking-widest text-[rgb(var(--primary-rgb)/0.5)]">
                 Pusat Sumber Belajar
               </span>
               <div className="flex items-center gap-2 mt-1">
@@ -175,7 +175,7 @@ export default async function LibraryPage() {
             {/* Total strip */}
             <div
               className="px-6 py-2.5 border-t border-border flex items-center justify-center gap-2"
-              style={{ background: "rgba(var(--primary-rgb), 0.03)" }}
+              style={{ background: "rgb(var(--primary-rgb)/0.03)" }}
             >
               <Activity size={10} className="text-primary animate-pulse" />
               <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.25em]">

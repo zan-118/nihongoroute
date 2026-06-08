@@ -110,8 +110,8 @@ export default function AchievementToast() {
   const isSilver = msgLower.includes("silver") || titleLower.includes("silver");
   const isBronze = msgLower.includes("bronze") || titleLower.includes("bronze");
 
-  let borderStyle = "border-primary/50 shadow-[0_0_30px_rgba(var(--primary-rgb),0.15)]";
-  let glowColor = "rgba(var(--primary-rgb), 0.3)";
+  let borderStyle = "border-primary/50 shadow-[0_0_30px_rgb(var(--primary-rgb)/0.15)]";
+  let glowColor = "rgb(var(--primary-rgb)/0.3)";
   let badgeColor = "bg-primary/20 text-primary border-primary/30";
   let rarityLabel = "Bronze";
 

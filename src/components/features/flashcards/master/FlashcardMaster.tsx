@@ -93,8 +93,8 @@ export default function FlashcardMaster({
   const themeColor = isKanji ? "text-secondary" : "text-primary";
   const themeBgColor = isKanji ? "bg-secondary" : "bg-primary";
   const themeShadow = isKanji
-    ? "shadow-lg dark:shadow-[0_0_20px_rgba(var(--secondary-rgb),0.3)]"
-    : "shadow-lg dark:shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]";
+    ? "shadow-lg dark:shadow-[0_0_20px_rgb(var(--secondary-rgb)/0.3)]"
+    : "shadow-lg dark:shadow-[0_0_20px_rgb(var(--primary-rgb)/0.3)]";
 
   return (
     <section className="w-full max-w-2xl mx-auto relative px-4 md:px-0 transition-colors duration-300">

@@ -60,7 +60,7 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
               initial={{ opacity: 0, y: 10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
-              className="w-full bg-card border border-border shadow-[0_30px_60px_-15px_rgba(var(--background-rgb),0.8)] rounded-[2rem] overflow-hidden"
+              className="w-full bg-card border border-border shadow-[0_30px_60px_-15px_rgb(var(--background-rgb)/0.8)] rounded-[2rem] overflow-hidden"
             >
               <div className="p-5 border-b border-border flex items-center justify-between bg-muted/50">
                 <div className="flex items-center gap-3">
@@ -124,7 +124,7 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
                         </div>
                         
                         {!n.read && (
-                          <div className="absolute top-4 right-4 size-1.5 bg-primary rounded-full shadow-[0_0_8px_rgba(var(--primary-rgb),1)]" />
+                          <div className="absolute top-4 right-4 size-1.5 bg-primary rounded-full shadow-[0_0_8px_rgb(var(--primary-rgb)/1)]" />
                         )}
                       </div>
                     ))}

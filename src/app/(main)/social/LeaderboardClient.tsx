@@ -183,7 +183,7 @@ export default function LeaderboardClient() {
       {/* 🔍 PREMIUM SEARCH INPUT */}
       <div className="relative w-full max-w-md mx-auto z-20">
         <div className="absolute inset-0 bg-primary/5 blur-xl rounded-full pointer-events-none" />
-        <Card className="glass border-border/80 p-1 flex items-center bg-card/65 backdrop-blur-md rounded-2xl shadow-lg relative z-10 transition-all duration-300 focus-within:border-primary/45 focus-within:shadow-[0_0_20px_rgba(var(--primary-rgb),0.15)]">
+        <Card className="glass border-border/80 p-1 flex items-center bg-card/65 backdrop-blur-md rounded-2xl shadow-lg relative z-10 transition-all duration-300 focus-within:border-primary/45 focus-within:shadow-[0_0_20px_rgb(var(--primary-rgb)/0.15)]">
           <div className="pl-3.5 text-muted-foreground/60">
             <Search size={16} />
           </div>
@@ -227,7 +227,7 @@ export default function LeaderboardClient() {
             >
               <div className="relative mb-3 sm:mb-6">
                 <div className="absolute -inset-1 bg-gradient-to-br from-secondary to-transparent rounded-full blur-md opacity-40 group-hover/podium:opacity-85 transition duration-500" />
-                <div className="w-12 h-12 sm:w-24 sm:h-24 rounded-full bg-card border-2 border-secondary/60 flex items-center justify-center text-sm sm:text-2xl font-black text-secondary shadow-[0_10px_25px_rgba(var(--secondary-rgb),0.1)] relative z-10 select-none font-japanese">
+                <div className="w-12 h-12 sm:w-24 sm:h-24 rounded-full bg-card border-2 border-secondary/60 flex items-center justify-center text-sm sm:text-2xl font-black text-secondary shadow-[0_10px_25px_rgb(var(--secondary-rgb)/0.1)] relative z-10 select-none font-japanese">
                   {topThree[1]?.full_name?.charAt(0).toUpperCase() || "?"}
                 </div>
                 <div className="absolute -bottom-1.5 -right-1.5 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-secondary flex items-center justify-center text-secondary-foreground border border-background shadow-xl z-20">
@@ -254,10 +254,10 @@ export default function LeaderboardClient() {
             >
               <div className="relative mb-5 sm:mb-8">
                 <div className="absolute -inset-2 bg-gradient-to-br from-warning via-amber-500 to-transparent rounded-full blur-lg opacity-40 group-hover/champ:opacity-90 transition duration-700 animate-pulse pointer-events-none" />
-                <div className="w-16 h-16 sm:w-28 sm:h-28 rounded-full bg-card border-[3px] sm:border-4 border-warning flex items-center justify-center text-lg sm:text-4xl font-black text-warning shadow-[0_15px_35px_rgba(var(--warning-rgb),0.25)] relative z-10 select-none font-japanese">
+                <div className="w-16 h-16 sm:w-28 sm:h-28 rounded-full bg-card border-[3px] sm:border-4 border-warning flex items-center justify-center text-lg sm:text-4xl font-black text-warning shadow-[0_15px_35px_rgb(var(--warning-rgb)/0.25)] relative z-10 select-none font-japanese">
                   {topThree[0]?.full_name?.charAt(0).toUpperCase() || "?"}
                 </div>
-                <div className="absolute -top-7 sm:-top-10 left-1/2 -translate-x-1/2 text-warning animate-premium-bounce drop-shadow-[0_0_12px_rgba(var(--warning-rgb),0.5)] z-20">
+                <div className="absolute -top-7 sm:-top-10 left-1/2 -translate-x-1/2 text-warning animate-premium-bounce drop-shadow-[0_0_12px_rgb(var(--warning-rgb)/0.5)] z-20">
                   <Trophy className="w-6 h-6 sm:w-9 sm:h-9" />
                 </div>
                 <div className="absolute -bottom-1.5 -right-1 w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-warning flex items-center justify-center text-warning-foreground border border-background shadow-xl z-20 animate-pulse">
@@ -270,7 +270,7 @@ export default function LeaderboardClient() {
                   <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.25em] text-warning mb-0.5 sm:mb-1 animate-pulse">Champion</p>
                   <p className="text-xs sm:text-base font-black text-foreground truncate max-w-full px-0.5">{topThree[0]?.full_name || "Sang Juara"}</p>
                 </div>
-                <Badge variant="outline" className="font-mono text-[9px] sm:text-xs border-warning/45 text-warning bg-warning/10 w-fit mx-auto px-2 sm:px-4 py-0.5 shadow-[0_0_10px_rgba(var(--warning-rgb),0.1)] truncate max-w-full">
+                <Badge variant="outline" className="font-mono text-[9px] sm:text-xs border-warning/45 text-warning bg-warning/10 w-fit mx-auto px-2 sm:px-4 py-0.5 shadow-[0_0_10px_rgb(var(--warning-rgb)/0.1)] truncate max-w-full">
                   {topThree[0]?.xp || 0} XP
                 </Badge>
               </div>
@@ -285,7 +285,7 @@ export default function LeaderboardClient() {
             >
               <div className="relative mb-3 sm:mb-6">
                 <div className="absolute -inset-1 bg-gradient-to-br from-destructive to-transparent rounded-full blur-md opacity-35 group-hover/third:opacity-80 transition duration-500" />
-                <div className="w-12 h-12 sm:w-24 sm:h-24 rounded-full bg-card border-2 border-destructive/60 flex items-center justify-center text-sm sm:text-2xl font-black text-destructive shadow-[0_10px_25px_rgba(var(--destructive-rgb),0.1)] relative z-10 select-none font-japanese">
+                <div className="w-12 h-12 sm:w-24 sm:h-24 rounded-full bg-card border-2 border-destructive/60 flex items-center justify-center text-sm sm:text-2xl font-black text-destructive shadow-[0_10px_25px_rgb(var(--destructive-rgb)/0.1)] relative z-10 select-none font-japanese">
                   {topThree[2]?.full_name?.charAt(0).toUpperCase() || "?"}
                 </div>
                 <div className="absolute -bottom-1.5 -right-1.5 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-destructive flex items-center justify-center text-destructive-foreground border border-background shadow-xl z-20">
@@ -355,7 +355,7 @@ export default function LeaderboardClient() {
               <Card 
                 className={`glass border p-3.5 sm:p-5 flex items-center gap-3 sm:gap-6 backdrop-blur-md shadow-lg group transition-all duration-300 hover:-translate-y-0.5 cursor-pointer ${
                   isOwnCard 
-                    ? "border-primary/50 bg-primary/[0.03] shadow-[0_0_15px_rgba(var(--primary-rgb),0.15)]" 
+                    ? "border-primary/50 bg-primary/[0.03] shadow-[0_0_15px_rgb(var(--primary-rgb)/0.15)]" 
                     : "border-border/80 bg-card/60 hover:border-primary/45 hover:bg-primary/[0.01]"
                 }`}
               >
@@ -363,7 +363,7 @@ export default function LeaderboardClient() {
                 {/* RANK # */}
                 <div className={`w-8 h-8 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center text-xs font-mono font-black border transition-all shrink-0 ${
                   isOwnCard
-                    ? "bg-primary/20 text-primary border-primary/30 shadow-[0_0_8px_rgba(var(--primary-rgb),0.2)]"
+                    ? "bg-primary/20 text-primary border-primary/30 shadow-[0_0_8px_rgb(var(--primary-rgb)/0.2)]"
                     : "bg-background/30 text-muted-foreground/60 border-border/60 group-hover:text-primary group-hover:border-primary/25"
                 }`}>
                   #{userRankNum}
@@ -406,7 +406,7 @@ export default function LeaderboardClient() {
                 
                 {/* XP SCORE */}
                 <div className="text-right shrink-0">
-                  <p className={`text-sm sm:text-xl font-black font-mono drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.3)] ${
+                  <p className={`text-sm sm:text-xl font-black font-mono drop-shadow-[0_0_8px_rgb(var(--primary-rgb)/0.3)] ${
                     isOwnCard ? "text-primary scale-105" : "text-primary"
                   }`}>
                     {user.xp.toLocaleString()}
@@ -435,9 +435,9 @@ export default function LeaderboardClient() {
           animate={{ opacity: 1, y: 0 }}
           className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-4xl z-50 pointer-events-none"
         >
-          <Card className="glass border-primary/45 p-4 flex items-center gap-3 sm:gap-6 bg-card/85 backdrop-blur-xl shadow-[0_-15px_40px_rgba(0,0,0,0.3),0_0_35px_rgba(var(--primary-rgb),0.2)] rounded-3xl pointer-events-auto border-2 hover:border-primary/60 transition-colors">
+          <Card className="glass border-primary/45 p-4 flex items-center gap-3 sm:gap-6 bg-card/85 backdrop-blur-xl shadow-[0_-15px_40px_rgba(0,0,0,0.3),0_0_35px_rgb(var(--primary-rgb)/0.2)] rounded-3xl pointer-events-auto border-2 hover:border-primary/60 transition-colors">
             {/* Peringkat */}
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 border border-primary/30 flex flex-col items-center justify-center shrink-0 shadow-[0_0_12px_rgba(var(--primary-rgb),0.25)]">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 border border-primary/30 flex flex-col items-center justify-center shrink-0 shadow-[0_0_12px_rgb(var(--primary-rgb)/0.25)]">
               <span className="text-[10px] font-black uppercase text-primary tracking-widest leading-none">Rank</span>
               <span className="text-sm sm:text-base font-mono font-black text-primary leading-none mt-0.5">#{ownRank}</span>
             </div>
@@ -464,7 +464,7 @@ export default function LeaderboardClient() {
 
             {/* XP dan motivasi */}
             <div className="text-right shrink-0">
-              <p className="text-xs sm:text-lg font-black font-mono text-primary drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.35)]">
+              <p className="text-xs sm:text-lg font-black font-mono text-primary drop-shadow-[0_0_8px_rgb(var(--primary-rgb)/0.35)]">
                 {currentUserXp.toLocaleString()} XP
               </p>
               {usersList.length > 0 && (

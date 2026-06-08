@@ -45,7 +45,7 @@ function TrainingCard({ item }: { item: TrainingItem }) {
       onMouseLeave={() => setIsHovered(false)}
       className="p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl transition-all duration-500 h-full relative overflow-hidden glass"
       style={{
-        borderColor: isHovered ? `rgba(${item.rgb}, 0.3)` : "rgba(var(--border-rgb), 0.4)",
+        borderColor: isHovered ? `rgba(${item.rgb}, 0.3)` : "rgb(var(--border-rgb)/0.4)",
         boxShadow: isHovered ? `0 12px 30px rgba(${item.rgb}, 0.08), 0 0 20px rgba(${item.rgb}, 0.04)` : "none"
       }}
     >
@@ -62,8 +62,8 @@ function TrainingCard({ item }: { item: TrainingItem }) {
         <div
           className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center transition-all duration-500 shadow-lg border"
           style={{
-            backgroundColor: isHovered ? `rgba(${item.rgb}, 0.1)` : "rgba(var(--background-rgb), 0.5)",
-            borderColor: isHovered ? `rgba(${item.rgb}, 0.4)` : "rgba(var(--border-rgb), 0.5)",
+            backgroundColor: isHovered ? `rgba(${item.rgb}, 0.1)` : "rgb(var(--background-rgb)/0.5)",
+            borderColor: isHovered ? `rgba(${item.rgb}, 0.4)` : "rgb(var(--border-rgb)/0.5)",
             color: `rgb(${item.rgb})`,
             transform: isHovered ? "scale(1.05) rotate(4deg)" : "none"
           }}
@@ -77,7 +77,7 @@ function TrainingCard({ item }: { item: TrainingItem }) {
           <h4 
             className="text-base sm:text-lg md:text-xl font-black text-foreground tracking-tight uppercase transition-colors"
             style={{
-              color: isHovered ? `rgb(${item.rgb})` : "var(--foreground)"
+              color: isHovered ? `rgb(${item.rgb})` : "hsl(var(--foreground))"
             }}
           >
             {item.title}
@@ -91,9 +91,9 @@ function TrainingCard({ item }: { item: TrainingItem }) {
       <div 
         className="absolute bottom-4 right-4 sm:bottom-5 sm:right-5 size-8 sm:size-9 rounded-full border flex items-center justify-center transition-all duration-500"
         style={{
-          backgroundColor: isHovered ? `rgb(${item.rgb})` : "rgba(var(--background-rgb), 0.5)",
-          borderColor: isHovered ? `rgb(${item.rgb})` : "rgba(var(--border-rgb), 0.5)",
-          color: isHovered ? "var(--background)" : "var(--foreground)",
+          backgroundColor: isHovered ? `rgb(${item.rgb})` : "rgb(var(--background-rgb)/0.5)",
+          borderColor: isHovered ? `rgb(${item.rgb})` : "rgb(var(--border-rgb)/0.5)",
+          color: isHovered ? "hsl(var(--background))" : "hsl(var(--foreground))",
           opacity: isHovered ? 1 : 0,
           transform: isHovered ? "translateX(0)" : "translateX(-4px)"
         }}

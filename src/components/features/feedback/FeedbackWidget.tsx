@@ -71,8 +71,8 @@ export default function FeedbackWidget({ forceOpen, onOpenChange }: FeedbackWidg
                     onClick={() => setType(t)}
                     className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium border transition-all ${
                       type === t 
-                        ? 'bg-[rgba(var(--primary-rgb),0.2)] border-primary text-primary text-primary' 
-                        : 'bg-[rgba(var(--muted-rgb),0.5)] dark:bg-[rgba(var(--background-rgb),0.2)] border border-border text-muted-foreground hover:bg-muted dark:hover:bg-[rgba(var(--background-rgb),0.05)]'
+                        ? 'bg-[rgb(var(--primary-rgb)/0.2)] border-primary text-primary text-primary' 
+                        : 'bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.2)] border border-border text-muted-foreground hover:bg-muted dark:hover:bg-[rgb(var(--background-rgb)/0.05)]'
                     }`}
                   >
                     {t === 'bug' ? '🐛 Bug' : t === 'suggestion' ? '💡 Saran' : '💖 Pujian'}

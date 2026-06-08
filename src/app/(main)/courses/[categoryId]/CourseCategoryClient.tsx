@@ -98,14 +98,14 @@ export default function CourseCategoryClient({
           className="absolute top-0 left-0 w-full h-[250px] md:h-[350px]"
           style={{
             background: isSideQuest 
-              ? 'linear-gradient(180deg, rgba(var(--warning-rgb), 0.04) 0%, transparent 100%)'
-              : 'linear-gradient(180deg, rgba(var(--primary-rgb), 0.04) 0%, transparent 100%)'
+              ? 'linear-gradient(180deg, rgb(var(--warning-rgb)/0.04) 0%, transparent 100%)'
+              : 'linear-gradient(180deg, rgb(var(--primary-rgb)/0.04) 0%, transparent 100%)'
           }}
         />
         {/* Corner accent blob — small */}
         <div 
           className="absolute bottom-0 right-0 w-[200px] md:w-[300px] h-[200px] md:h-[300px] rounded-full blur-[80px] md:blur-[100px]" 
-          style={{ backgroundColor: 'rgba(var(--secondary-rgb), 0.05)' }}
+          style={{ backgroundColor: 'rgb(var(--secondary-rgb)/0.05)' }}
         />
       </div>
 

@@ -54,7 +54,7 @@ export function AddToSRSButton({ wordId, className }: AddToSRSButtonProps) {
       className={cn(
         "h-10 w-10 rounded-xl transition-all duration-300 backdrop-blur-md",
         isAdded
-          ? "bg-primary/20 border-primary text-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.35)] cursor-default"
+          ? "bg-primary/20 border-primary text-primary shadow-[0_0_15px_rgb(var(--primary-rgb)/0.35)] cursor-default"
           : "bg-card/40 border-border hover:border-primary/50 text-muted-foreground hover:text-primary hover:scale-105 active:scale-95 shadow-[0_0_10px_rgba(0,0,0,0.05)]",
         className
       )}
@@ -63,7 +63,7 @@ export function AddToSRSButton({ wordId, className }: AddToSRSButtonProps) {
     >
       {isAdded ? (
         <div className="relative flex items-center justify-center">
-          <Star className="size-5 fill-primary text-primary filter drop-shadow-[0_0_2px_rgba(var(--primary-rgb),0.5)] animate-[scaleIn_0.3s_ease-out]" />
+          <Star className="size-5 fill-primary text-primary filter drop-shadow-[0_0_2px_rgb(var(--primary-rgb)/0.5)] animate-[scaleIn_0.3s_ease-out]" />
           <Check className="size-2.5 absolute text-background font-black stroke-[3]" />
         </div>
       ) : (

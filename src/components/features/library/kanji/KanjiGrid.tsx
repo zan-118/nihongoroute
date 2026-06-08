@@ -55,12 +55,12 @@ export function KanjiGrid({ kanjis, isFetching }: KanjiGridProps) {
             className="transform hover:-translate-y-1 transition-all duration-300"
           >
             <Link href={`/library/kanji/${kanji.character}`}>
-              <Card className="group relative aspect-square flex flex-col items-center justify-center p-4 bg-[rgba(var(--card-rgb),0.3)] backdrop-blur-3xl border border-border hover:border-[rgba(var(--primary-rgb),0.5)] transition-all duration-500 rounded-[2rem] overflow-hidden hover:shadow-[0_0_40px_rgba(var(--primary-rgb),0.15)] cursor-pointer">
+              <Card className="group relative aspect-square flex flex-col items-center justify-center p-4 bg-[rgb(var(--card-rgb)/0.3)] backdrop-blur-3xl border border-border hover:border-[rgb(var(--primary-rgb)/0.5)] transition-all duration-500 rounded-[2rem] overflow-hidden hover:shadow-[0_0_40px_rgb(var(--primary-rgb)/0.15)] cursor-pointer">
                 {/* Efek Pendar Latar Belakang (Neon Glow Effect) */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[rgba(var(--primary-rgb),0.05)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[rgb(var(--primary-rgb)/0.05)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 
                 {/* Lencana Tingkat JLPT */}
-                <div className="absolute top-4 right-4 text-[10px] font-black bg-[rgba(var(--primary-rgb),0.1)] text-primary px-2 py-0.5 rounded-full border border-[rgba(var(--primary-rgb),0.2)]">
+                <div className="absolute top-4 right-4 text-[10px] font-black bg-[rgb(var(--primary-rgb)/0.1)] text-primary px-2 py-0.5 rounded-full border border-[rgb(var(--primary-rgb)/0.2)]">
                   {kanji.jlpt}
                 </div>
 
