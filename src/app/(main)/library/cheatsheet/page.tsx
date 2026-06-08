@@ -12,6 +12,8 @@ import type { Metadata } from "next";
 import CheatsheetClient from "./CheatsheetClient";
 import { getCheatsheets } from "@/actions/library.actions";
 
+export const dynamic = "force-dynamic";
+
 // ======================
 // METADATA SEO
 // ======================

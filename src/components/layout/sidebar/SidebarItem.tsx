@@ -34,37 +34,37 @@ export function SidebarItem({ item, pathname, onClick }: SidebarItemProps) {
   return (
     <Link href={item.href} onClick={onClick}>
       <m.div
-        whileHover={{ x: 4 }}
-        whileTap={{ scale: 0.98 }}
-        className={`flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-500 relative group overflow-hidden ${
+        whileHover={{ x: 3 }}
+        whileTap={{ scale: 0.985 }}
+        className={`flex items-center gap-3.5 px-3.5 py-3 rounded-xl transition-all duration-300 relative group overflow-hidden ${
           isActive 
-            ? "bg-primary/10 text-primary border border-primary/30 shadow-[0_0_25px_rgba(var(--primary-rgb),0.1)]" 
-            : "text-muted-foreground hover:bg-background/5 hover:text-foreground border border-transparent"
+            ? "bg-primary/[0.11] text-primary border border-primary/25 shadow-[0_10px_26px_rgba(var(--primary-rgb),0.08)]"
+            : "text-muted-foreground hover:bg-card/55 hover:text-foreground border border-transparent"
         }`}
       >
         {/* Pendar Samping Aktif */}
         {isActive && (
           <m.div 
             layoutId="active-side-glow"
-            className="absolute left-0 top-1/4 bottom-1/4 w-[3px] bg-primary shadow-[0_0_15px_rgba(var(--primary-rgb),1)] rounded-full"
-            animate={{ 
-              boxShadow: ["0 0 10px rgba(var(--primary-rgb),0.6)", "0 0 20px rgba(var(--primary-rgb),0.9)", "0 0 10px rgba(var(--primary-rgb),0.6)"] 
-            }}
-            transition={{ duration: 2, repeat: Infinity }}
+            className="absolute left-0 top-2 bottom-2 w-[3px] bg-primary rounded-full"
           />
         )}
 
-        <item.icon size={16} className={`${isActive ? "text-primary drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.6)]" : "text-muted-foreground"} group-hover:scale-110 transition-all duration-300`} />
-        <span className={`text-[10px] font-black uppercase tracking-[0.2em] flex-1 transition-colors duration-300 ${isActive ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground'}`}>
+        <div className={`size-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
+          isActive ? "bg-primary/[0.12] text-primary" : "bg-transparent text-muted-foreground group-hover:bg-muted/70 group-hover:text-foreground"
+        }`}>
+          <item.icon size={16} strokeWidth={2.1} />
+        </div>
+        <span className={`text-[10px] font-black uppercase tracking-[0.16em] flex-1 transition-colors duration-300 ${isActive ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground'}`}>
           {item.label}
         </span>
         {isActive && (
           <m.div 
             layoutId="sidebar-active-indicator"
-            className="size-1 rounded-full bg-primary shadow-[0_0_12px_rgba(var(--primary-rgb),1)]" 
+            className="size-1.5 rounded-full bg-primary"
           />
         )}
-        <ChevronRight size={14} className={`opacity-0 group-hover:opacity-100 transition-all ${isActive ? 'text-primary' : 'text-muted-foreground'} group-hover:translate-x-1`} />
+        <ChevronRight size={14} className={`opacity-0 group-hover:opacity-100 transition-all ${isActive ? 'text-primary' : 'text-muted-foreground'} group-hover:translate-x-0.5`} />
       </m.div>
     </Link>
   );

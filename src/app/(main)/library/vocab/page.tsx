@@ -13,6 +13,8 @@ import { RotateCw } from "lucide-react";
 import VocabClient from "./VocabClient";
 import { getPaginatedVocab } from "@/actions/library.actions";
 
+export const dynamic = "force-dynamic";
+
 // ======================
 // METADATA SEO
 // ======================

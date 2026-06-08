@@ -9,7 +9,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Stack, Card, Text, Select } from '@sanity/ui';
 import { set, unset } from 'sanity';
-import { getApiUrl, SECRET_TOKEN } from './api';
+import { getAdminAuthHeaders, getApiUrl } from './api';
 
 // ==========================================
 // ANTARMUKA PROPS
@@ -50,7 +50,8 @@ export function SupabaseCategorySelect(props: SupabaseCategorySelectProps) {
       setError(null);
       try {
         const response = await fetch(
-          getApiUrl(`/api/admin/supabase-search?type=category&secret=${SECRET_TOKEN}`)
+          getApiUrl('/api/admin/supabase-search?type=category'),
+          { headers: getAdminAuthHeaders() }
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

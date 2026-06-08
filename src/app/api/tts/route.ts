@@ -5,6 +5,13 @@ import crypto from "crypto";
 export const dynamic = "force-dynamic";
 
 const MAX_TEXT_LENGTH = 500;
+const isDevelopment = process.env.NODE_ENV === "development";
+
+function debugLog(...args: unknown[]) {
+  if (isDevelopment) {
+    console.log(...args);
+  }
+}
 
 const ALLOWED_VOICES = new Set([
   // Wanita
@@ -60,21 +67,21 @@ export async function GET(req: NextRequest) {
   const voice = searchParams.get("voice") || "zundamon";
   const rate  = searchParams.get("rate")  || "medium";
 
-  console.log(`\n--- [TTS API REQUEST] ---`);
-  console.log(`Text:  "${text}"`);
-  console.log(`Voice: "${voice}"`);
-  console.log(`Rate:  "${rate}"`);
+  debugLog(`\n--- [TTS API REQUEST] ---`);
+  debugLog(`Text:  "${text}"`);
+  debugLog(`Voice: "${voice}"`);
+  debugLog(`Rate:  "${rate}"`);
 
   if (!text) {
-    console.log(`[TTS API] Gagal: parameter teks kosong.`);
+    debugLog(`[TTS API] Gagal: parameter teks kosong.`);
     return new Response("Missing text parameter", { status: 400 });
   }
   if (text.length > MAX_TEXT_LENGTH) {
-    console.log(`[TTS API] Gagal: teks terlalu panjang (${text.length} chars).`);
+    debugLog(`[TTS API] Gagal: teks terlalu panjang (${text.length} chars).`);
     return new Response("Text too long (max 500 chars)", { status: 400 });
   }
   if (!ALLOWED_VOICES.has(voice)) {
-    console.log(`[TTS API] Gagal: pengisi suara "${voice}" tidak terdaftar.`);
+    debugLog(`[TTS API] Gagal: pengisi suara "${voice}" tidak terdaftar.`);
     return new Response("Invalid voice", { status: 400 });
   }
 
@@ -84,7 +91,7 @@ export async function GET(req: NextRequest) {
     .update(`${text}_${voice}_${rate}`)
     .digest("hex");
 
-  console.log(`Calculated Hash: "${hash}"`);
+  debugLog(`Calculated Hash: "${hash}"`);
 
   const supabase = createAdminClient();
 
@@ -104,7 +111,7 @@ export async function GET(req: NextRequest) {
         .update(`${text}_${jpVoice}_${rate}`)
         .digest("hex");
 
-      console.log(`Cache miss untuk "${voice}". Mencoba fallback Jepang "${jpVoice}" dengan hash: "${fallbackHash}"`);
+      debugLog(`Cache miss untuk "${voice}". Mencoba fallback Jepang "${jpVoice}" dengan hash: "${fallbackHash}"`);
 
       const { data: fallbackCached } = await supabase
         .from("tts_cache")
@@ -113,15 +120,15 @@ export async function GET(req: NextRequest) {
         .maybeSingle();
 
       if (fallbackCached?.audio_url) {
-        console.log(`Fallback Jepang HIT!`);
+        debugLog(`Fallback Jepang HIT!`);
         cached = fallbackCached;
         hash = fallbackHash;
       }
     }
 
     if (cached?.audio_url) {
-      console.log(`CACHE HIT di Database! Audio URL: ${cached.audio_url}`);
-      console.log(`Mencoba download "${hash}.mp3" dari Storage tts-cache...`);
+      debugLog(`CACHE HIT di Database! Audio URL: ${cached.audio_url}`);
+      debugLog(`Mencoba download "${hash}.mp3" dari Storage tts-cache...`);
 
       // Coba download file audio dari Storage
       const { data: fileData, error: downloadError } = await supabase
@@ -130,7 +137,7 @@ export async function GET(req: NextRequest) {
         .download(`${hash}.mp3`);
 
       if (!downloadError && fileData && fileData.size > 0) {
-        console.log(`SUKSES download file dari Storage! Ukuran: ${fileData.size} bytes. Memulangkan berkas biner.`);
+        debugLog(`SUKSES download file dari Storage! Ukuran: ${fileData.size} bytes. Memulangkan berkas biner.`);
         const audioBuffer = await fileData.arrayBuffer();
         return new Response(new Uint8Array(audioBuffer), {
           headers: {
@@ -145,13 +152,13 @@ export async function GET(req: NextRequest) {
         console.warn(`Menghapus record DB "${hash}" yang menunjuk ke file Storage yang tidak valid...`);
         try {
           await supabase.from("tts_cache").delete().eq("id", hash);
-          console.log(`Record DB "${hash}" berhasil dihapus. Generate ulang audio via script VoiceVox.`);
+          debugLog(`Record DB "${hash}" berhasil dihapus. Generate ulang audio via script VoiceVox.`);
         } catch (cleanupErr) {
           console.error(`Gagal hapus record DB "${hash}":`, cleanupErr);
         }
       }
     } else {
-      console.log(`CACHE MISS di Database (Tidak ada data untuk hash "${hash}").`);
+      debugLog(`CACHE MISS di Database (Tidak ada data untuk hash "${hash}").`);
     }
   } catch (err) {
     console.error("[TTS API] Gagal membaca cache dari database/storage:", err);
@@ -161,6 +168,6 @@ export async function GET(req: NextRequest) {
   // Semua audio harus di-generate terlebih dahulu via script generate_voicevox.js / generate_example_sentences.js
   // menggunakan VOICEVOX lokal, kemudian disimpan ke Supabase Storage & DB.
   // Kembalikan 404 agar client fallback ke Web Speech API (browser).
-  console.log(`Cache miss untuk hash "${hash}". Mengembalikan 404 — audio harus di-generate offline via VoiceVox.`);
+  debugLog(`Cache miss untuk hash "${hash}". Mengembalikan 404 — audio harus di-generate offline via VoiceVox.`);
   return new Response("Audio not found in cache", { status: 404 });
 }

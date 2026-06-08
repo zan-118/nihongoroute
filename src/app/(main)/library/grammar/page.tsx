@@ -12,6 +12,8 @@ import { RotateCw } from "lucide-react";
 import GrammarClient from "./GrammarClient";
 import { getGrammarArticles } from "@/actions/library.actions";
 
+export const dynamic = "force-dynamic";
+
 // ======================
 // METADATA SEO
 // ======================

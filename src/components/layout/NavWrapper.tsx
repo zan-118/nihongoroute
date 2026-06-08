@@ -39,7 +39,7 @@ export default function NavWrapper({ children }: NavWrapperProps) {
   const pathSegments = pathname?.split('/').filter(Boolean) || [];
 
   return (
-    <div className="relative min-h-screen bg-background text-foreground flex flex-col md:flex-row overflow-x-hidden w-full transition-colors duration-300">
+    <div className="premium-shell relative min-h-dvh text-foreground flex flex-col md:flex-row overflow-x-hidden w-full transition-colors duration-300">
       {/* Aksesibilitas: Skip to Content */}
       <a 
         href="#main-content" 
@@ -62,21 +62,21 @@ export default function NavWrapper({ children }: NavWrapperProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: "linear" }}
-            className={`flex-1 w-full flex flex-col ${!isExamPage ? 'pb-40 md:pb-12' : 'pb-12'} outline-none relative`}
+            className={`flex-1 w-full flex flex-col ${!isExamPage ? 'pb-[7.5rem] md:pb-12' : 'pb-12'} outline-none relative`}
           >
             {!isExamPage && (
-              <div className="hidden md:flex w-full px-6 md:px-12 pt-8 items-center gap-4 z-20 relative animate-in fade-in slide-in-from-top-4 duration-500">
+              <div className="hidden md:flex w-full px-6 lg:px-10 xl:px-12 pt-6 items-center gap-3 z-20 relative animate-in fade-in slide-in-from-top-4 duration-500">
                 <Button 
                   onClick={() => router.back()}
                   variant="ghost" 
-                  className="size-10 p-0 shrink-0 rounded-xl bg-card/50 backdrop-blur-md border border-border/50 hover:bg-primary/10 hover:border-primary/30 text-muted-foreground hover:text-primary transition-all shadow-sm flex items-center justify-center"
+                  className="size-10 p-0 shrink-0 rounded-xl premium-surface hover:bg-primary/10 hover:border-primary/30 text-muted-foreground hover:text-primary transition-all shadow-sm flex items-center justify-center"
                   aria-label="Kembali"
                 >
                   <ChevronLeft size={16} />
                 </Button>
                 
-                <nav className="flex items-center flex-wrap gap-2 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-muted-foreground bg-card/30 backdrop-blur-md px-5 py-2.5 rounded-xl border border-border/40 shadow-sm transition-all hover:border-border/60">
-                  <Link href={ROUTES.DASHBOARD} className="flex items-center gap-1.5 hover:text-primary transition-colors">
+                <nav className="premium-surface flex items-center flex-wrap gap-2 text-[10px] md:text-xs font-black uppercase tracking-[0.16em] text-muted-foreground px-4 py-2.5 rounded-xl transition-all hover:border-border">
+                  <Link href={ROUTES.DASHBOARD} className="inline-flex min-h-8 items-center gap-1.5 rounded-lg px-1.5 hover:text-primary transition-colors">
                     <Home size={13} className="mb-0.5" /> <span className="hidden sm:inline">Beranda</span>
                   </Link>
                   {pathSegments.map((segment, idx) => (
@@ -84,7 +84,7 @@ export default function NavWrapper({ children }: NavWrapperProps) {
                       <ChevronRight size={10} className="opacity-20" />
                       <Link 
                         href={`/${pathSegments.slice(0, idx + 1).join('/')}`}
-                        className={`hover:text-primary transition-colors ${idx === pathSegments.length - 1 ? 'text-primary pointer-events-none' : ''}`}
+                        className={`inline-flex min-h-8 items-center rounded-lg px-1.5 hover:text-primary transition-colors ${idx === pathSegments.length - 1 ? 'text-primary pointer-events-none' : ''}`}
                       >
                         {getRouteLabel(segment)}
                       </Link>

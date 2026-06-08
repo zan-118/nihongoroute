@@ -1,40 +1,84 @@
 "use client";
 
-/**
- * @file LandingFooter.tsx
- * @description Komponen Footer multi-kolom premium untuk Landing Page NihongoRoute.
- * Menyediakan pintasan navigasi belajar (Kana, Kosakata, Kanji, Tata Bahasa, Ujian),
- * tautan legalitas/dukungan, serta integrasi ikon media sosial resmi platform.
- *
- * @package components/features/landing
- * @project NihongoRoute
- */
-
-// ==========================================
-// IMPOR
-// ==========================================
-import React from "react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import { Github, Instagram, MessageCircle } from "lucide-react";
 
-// ==========================================
-// KOMPONEN UTAMA
-// ==========================================
-/**
- * Komponen LandingFooter
- * Bagian kaki halaman yang terstruktur dan responsif untuk Landing Page.
- */
+const learningLinks = [
+  { href: "/tools/kana", label: "Hiragana & Katakana" },
+  { href: "/library/vocab", label: "Kosakata Utama" },
+  { href: "/library/kanji", label: "Kamus Kanji" },
+  { href: "/library/grammar", label: "Tata Bahasa" },
+  { href: "/exams", label: "Simulasi JLPT" },
+];
+
+const featureLinks = [
+  { href: "/review", label: "Flashcard SRS" },
+  { href: "/dashboard", label: "Papan Kemajuan" },
+  { href: "/tools", label: "Pusat Peralatan" },
+  { href: "https://github.com/zan-118/nihongoroute", label: "Kontribusi GitHub", external: true },
+];
+
+const supportLinks = [
+  { href: "/support", label: "Dukung Kami" },
+  { href: "/privacy", label: "Kebijakan Privasi" },
+  { href: "/terms", label: "Syarat & Ketentuan" },
+];
+
+const socialLinks = [
+  { href: "https://www.instagram.com/nihongoroute", label: "Instagram", icon: Instagram },
+  { href: "https://www.threads.com/nihongoroute", label: "Threads", icon: MessageCircle },
+  { href: "https://github.com/zan-118/nihongoroute", label: "GitHub", icon: Github },
+];
+
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: Array<{ href: string; label: string; external?: boolean }>;
+}) {
+  return (
+    <div className="flex flex-col gap-5">
+      <span className="text-xs font-black uppercase tracking-[0.18em] text-foreground">
+        {title}
+      </span>
+      <div className="flex flex-col gap-2 text-xs font-semibold text-muted-foreground">
+        {links.map((link) =>
+          link.external ? (
+            <a
+              key={link.href}
+              href={link.href}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex min-h-8 items-center hover:text-primary transition-colors"
+            >
+              {link.label}
+            </a>
+          ) : (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="inline-flex min-h-8 items-center hover:text-primary transition-colors"
+            >
+              {link.label}
+            </Link>
+          )
+        )}
+      </div>
+    </div>
+  );
+}
+
 export function LandingFooter() {
   return (
-    <footer className="mt-[120px] pt-[80px] border-t border-border/80 pb-[55px] relative z-10 w-full">
-      {/* Latar Belakang Kilau Dekoratif */}
-      <div className="absolute bottom-0 right-0 w-[400px] h-[300px] bg-primary/5 rounded-full blur-[100px] pointer-events-none -z-10" />
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-[55px] mb-[80px]">
-        {/* KOLOM 1: BRANDING & MEDIA SOSIAL */}
+    <footer className="mt-24 md:mt-28 pt-16 md:pt-20 border-t border-border/80 pb-14 relative z-10 w-full">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent pointer-events-none" />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12 mb-16">
         <div className="lg:col-span-4 flex flex-col gap-6">
-          <div className="flex items-center gap-[13px]">
-            <div className="relative size-10 dark:drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]">
+          <div className="flex items-center gap-3">
+            <div className="relative size-10 dark:drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.25)]">
               <Image
                 src="/logo-branding.svg"
                 alt="NihongoRoute Logo"
@@ -43,143 +87,55 @@ export function LandingFooter() {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-foreground text-xl font-bold tracking-tight">
+              <span className="text-foreground text-xl font-black tracking-tight">
                 Nihongo<span className="text-primary">Route</span>
               </span>
-              <span className="text-[8px] text-muted-foreground font-extrabold uppercase tracking-widest opacity-60">
+              <span className="text-[8px] text-muted-foreground font-extrabold uppercase tracking-widest">
                 Platform Belajar Modern
               </span>
             </div>
           </div>
-          
+
           <p className="text-muted-foreground text-xs font-semibold leading-relaxed max-w-sm">
-            Platform modern bebas biaya yang didesain khusus untuk membantu Anda menguasai bahasa Jepang secara mandiri, interaktif, dan tanpa hambatan offline.
+            Platform belajar bahasa Jepang bebas biaya yang dirancang agar rutinitas
+            belajar terasa rapi, cepat, dan nyaman dipakai setiap hari.
           </p>
 
-          {/* TAUTAN MEDIA SOSIAL */}
-          <div className="flex items-center gap-3.5 pt-2">
-            {/* Facebook */}
-            <a
-              href="https://www.facebook.com/nihongoroute"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Kunjungi Facebook NihongoRoute"
-              className="size-10 rounded-xl bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/30 transition-all duration-300 hover:-translate-y-1 shadow-sm"
-            >
-              <svg className="size-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-              </svg>
-            </a>
-
-            {/* Instagram */}
-            <a
-              href="https://www.instagram.com/nihongoroute"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Kunjungi Instagram NihongoRoute"
-              className="size-10 rounded-xl bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/30 transition-all duration-300 hover:-translate-y-1 shadow-sm"
-            >
-              <svg className="size-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-              </svg>
-            </a>
-
-            {/* Threads */}
-            <a
-              href="https://www.threads.com/nihongoroute"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Kunjungi Threads NihongoRoute"
-              className="size-10 rounded-xl bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/30 transition-all duration-300 hover:-translate-y-1 shadow-sm"
-            >
-              <svg className="size-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 24c-6.617 0-12-5.383-12-12s5.383-12 12-12 12 5.383 12 12-5.383 12-12 12zm0-22c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10-4.486-10-10-10zm.116 12.78c-.287.69-.97 1.155-1.748 1.155-1.02 0-1.848-.828-1.848-1.848 0-1.02.828-1.848 1.848-1.848.74 0 1.394.428 1.706 1.054h2.247c-.432-1.79-2.036-3.12-3.953-3.12-2.253 0-4.088 1.835-4.088 4.088s1.835 4.088 4.088 4.088c1.884 0 3.473-1.275 3.93-3.003h-2.402zm3.884-2.888h-2.18c.038.35.059.71.059 1.08 0 2.22-1.776 4.02-3.985 4.02-2.209 0-3.985-1.8-3.985-4.02s1.776-4.02 3.985-4.02c1.785 0 3.3 1.17 3.81 2.76h2.24c-.54-2.73-2.95-4.81-5.85-4.81-3.3 0-5.98 2.68-5.98 5.98s2.68 5.98 5.98 5.98c2.94 0 5.34-2.05 5.86-4.75-.02-.4-.05-.8-.09-1.2z"/>
-              </svg>
-            </a>
+          <div className="flex items-center gap-3 pt-2">
+            {socialLinks.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`Kunjungi ${item.label} NihongoRoute`}
+                className="size-11 rounded-xl premium-surface flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/30 transition-all duration-300 hover:-translate-y-0.5"
+              >
+                <item.icon size={18} />
+              </a>
+            ))}
           </div>
         </div>
 
-        {/* KOLOM 2: NAVIGASI BELAJAR */}
-        <div className="lg:col-span-2 lg:col-start-6 flex flex-col gap-5">
-          <span className="text-xs font-black uppercase tracking-widest text-foreground">
-            Belajar
-          </span>
-          <div className="flex flex-col gap-3.5 text-xs font-semibold text-muted-foreground">
-            <Link href="/tools/kana" className="hover:text-primary transition-colors">
-              Hiragana & Katakana
-            </Link>
-            <Link href="/library/vocab" className="hover:text-primary transition-colors">
-              Kosakata Utama
-            </Link>
-            <Link href="/library/kanji" className="hover:text-primary transition-colors">
-              Kamus Kanji
-            </Link>
-            <Link href="/library/grammar" className="hover:text-primary transition-colors">
-              Tata Bahasa
-            </Link>
-            <Link href="/exams" className="hover:text-primary transition-colors">
-              Simulasi JLPT
-            </Link>
-          </div>
+        <div className="lg:col-span-2 lg:col-start-6">
+          <FooterColumn title="Belajar" links={learningLinks} />
         </div>
-
-        {/* KOLOM 3: EKOSISTEM & FITUR */}
-        <div className="lg:col-span-2 flex flex-col gap-5">
-          <span className="text-xs font-black uppercase tracking-widest text-foreground">
-            Fitur Utama
-          </span>
-          <div className="flex flex-col gap-3.5 text-xs font-semibold text-muted-foreground">
-            <Link href="/review" className="hover:text-primary transition-colors">
-              Flashcard SRS
-            </Link>
-            <Link href="/dashboard" className="hover:text-primary transition-colors">
-              Papan Kemajuan
-            </Link>
-            <span className="text-muted-foreground/60 flex items-center gap-1.5 cursor-not-allowed">
-              Modul Offline PWA
-            </span>
-            <a 
-              href="https://github.com/zan-118/nihongoroute" 
-              target="_blank" 
-              rel="noreferrer" 
-              className="hover:text-primary transition-colors"
-            >
-              Kontribusi GitHub
-            </a>
-          </div>
+        <div className="lg:col-span-2">
+          <FooterColumn title="Fitur Utama" links={featureLinks} />
         </div>
-
-        {/* KOLOM 4: DUKUNGAN & HUKUM */}
-        <div className="lg:col-span-2 flex flex-col gap-5">
-          <span className="text-xs font-black uppercase tracking-widest text-foreground">
-            Dukungan & Legal
-          </span>
-          <div className="flex flex-col gap-3.5 text-xs font-semibold text-muted-foreground">
-            <Link href="/support" className="hover:text-primary transition-colors">
-              Dukung Kami
-            </Link>
-            <Link href="/privacy" className="hover:text-primary transition-colors">
-              Kebijakan Privasi
-            </Link>
-            <Link href="/terms" className="hover:text-primary transition-colors">
-              Syarat & Ketentuan
-            </Link>
-          </div>
+        <div className="lg:col-span-2">
+          <FooterColumn title="Dukungan & Legal" links={supportLinks} />
         </div>
       </div>
 
-      {/* SEKSI BAWAH: HAK CIPTA */}
       <div className="pt-8 border-t border-border/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
-        <span suppressHydrationWarning={true}>
-          © {new Date().getFullYear()} NihongoRoute. All Rights Reserved.
+        <span suppressHydrationWarning>
+          &copy; {new Date().getFullYear()} NihongoRoute. All Rights Reserved.
         </span>
-        <span className="text-muted-foreground/60 font-semibold normal-case tracking-normal">
-          Dibuat dengan 💖 untuk seluruh pembelajar bahasa Jepang di Indonesia.
+        <span className="text-muted-foreground/70 font-semibold normal-case tracking-normal text-center sm:text-right">
+          Dibuat untuk seluruh pembelajar bahasa Jepang di Indonesia.
         </span>
       </div>
     </footer>
   );
 }
-

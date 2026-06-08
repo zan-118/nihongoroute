@@ -54,8 +54,8 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
 
   return (
     <>
-    <header className="sticky top-0 z-40 w-full bg-background/60 backdrop-blur-xl border-b border-border/50 px-4 md:px-10 py-4 flex items-center justify-between transition-all">
-      <div className="flex items-center gap-6">
+    <header className="sticky top-0 z-40 w-full bg-[hsl(var(--background)/0.86)] backdrop-blur-xl border-b border-border/70 px-3 sm:px-4 md:px-8 lg:px-10 py-3 flex items-center justify-between transition-all supports-[backdrop-filter]:bg-[hsl(var(--background)/0.72)]">
+      <div className="flex items-center gap-3 sm:gap-5 min-w-0">
         {/* Menu Seluler atau Pengalih Kembali */}
         <div className="md:hidden flex items-center gap-2">
           {pathSegments.length > 1 ? (
@@ -64,7 +64,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
                 whileTap={{ scale: 0.9 }}
                 onClick={() => router.back()}
                 aria-label="Kembali ke Halaman Sebelumnya"
-                className="size-10 flex items-center justify-center rounded-xl bg-muted/50 border border-border/50 text-muted-foreground hover:text-primary transition-all"
+                className="size-11 flex items-center justify-center rounded-xl premium-surface text-muted-foreground hover:text-primary transition-all"
               >
                  <ChevronLeft size={20} />
               </m.button>
@@ -72,7 +72,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
                 whileTap={{ scale: 0.9 }}
                 onClick={onMenuClick}
                 aria-label="Buka Menu Navigasi"
-                className="size-10 flex items-center justify-center rounded-xl bg-muted/50 border border-border/50 text-muted-foreground hover:text-primary transition-all"
+                className="size-11 flex items-center justify-center rounded-xl premium-surface text-muted-foreground hover:text-primary transition-all"
               >
                  <Menu size={18} />
               </m.button>
@@ -82,31 +82,31 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
               whileTap={{ scale: 0.9 }}
               onClick={onMenuClick}
               aria-label="Buka Menu Navigasi"
-              className="size-10 flex items-center justify-center rounded-xl bg-muted/50 border border-border/50 text-muted-foreground hover:text-primary transition-all"
+              className="size-11 flex items-center justify-center rounded-xl premium-surface text-muted-foreground hover:text-primary transition-all"
             >
                <Menu size={20} />
             </m.button>
           )}
         </div>
 
-        <div className="flex flex-col min-w-0 max-w-[180px] sm:max-w-[240px] md:max-w-none">
+        <div className="flex flex-col min-w-0 max-w-[150px] sm:max-w-[240px] md:max-w-none">
           <h1 className="text-sm md:text-lg font-black text-foreground tracking-tight truncate leading-none uppercase">
             {pathSegments.length > 0 ? getRouteLabel(pathSegments[pathSegments.length - 1]) : "Beranda"}
           </h1>
           {pathSegments.length > 1 && (
-             <span className="text-[10px] font-bold text-muted-foreground/40 uppercase tracking-widest mt-1 truncate">
+             <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.16em] mt-1 truncate">
                {getRouteLabel(pathSegments[pathSegments.length - 2])}
              </span>
           )}
         </div>
       </div>
 
-      <div className="flex items-center gap-1 sm:gap-2 md:gap-5">
+      <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4">
         {/* Indikator Status Sinkronisasi */}
         <div 
           aria-live="polite"
           aria-atomic="true"
-          className="hidden sm:flex items-center gap-2 px-2 md:px-3 py-1.5 rounded-lg bg-muted/30 border border-border/50 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 transition-all overflow-hidden min-w-fit md:min-w-[100px]"
+          className="hidden sm:flex items-center gap-2 px-2.5 md:px-3 py-2 rounded-xl premium-surface text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground transition-all overflow-hidden min-w-fit md:min-w-[108px]"
         >
           <AnimatePresence mode="wait">
             {isSyncing ? (
@@ -159,12 +159,12 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
         {/* Tombol Pencarian Global - Lebar Disesuaikan */}
         <div 
           onClick={() => setIsSearchOpen(true)}
-          className="hidden lg:flex relative w-40 xl:w-56 group cursor-pointer"
+          className="hidden lg:flex relative w-44 xl:w-64 group cursor-pointer"
         >
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-hover:text-primary transition-colors" size={14} />
-          <div className="w-full h-9 pl-9 pr-4 bg-muted/30 border border-border/50 rounded-xl text-[10px] uppercase font-bold tracking-widest text-muted-foreground/60 flex items-center justify-between hover:border-primary/30 transition-all">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground group-hover:text-primary transition-colors" size={15} />
+          <div className="w-full h-10 pl-10 pr-3 premium-surface rounded-xl text-[10px] uppercase font-bold tracking-[0.16em] text-muted-foreground flex items-center justify-between hover:border-primary/30 transition-all">
             Cari…
-            <kbd className="hidden xl:inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
+            <kbd className="hidden xl:inline-flex h-5 select-none items-center gap-1 rounded-md border border-border bg-muted/70 px-1.5 font-mono text-[10px] font-medium opacity-100">
               <span className="text-[10px]">⌘</span>K
             </kbd>
           </div>
@@ -174,14 +174,14 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
         <button type="button" 
           onClick={() => setIsSearchOpen(true)}
           aria-label="Buka Pencarian"
-          className="lg:hidden size-10 flex items-center justify-center rounded-xl bg-muted/50 border border-border/50 text-muted-foreground hover:text-primary transition-all"
+          className="lg:hidden size-11 flex items-center justify-center rounded-xl premium-surface text-muted-foreground hover:text-primary transition-all"
         >
           <Search size={18} />
         </button>
 
-        <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4 sm:border-l sm:border-border/50 sm:pl-2 md:pl-5">
+        <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 sm:border-l sm:border-border/60 sm:pl-2 md:pl-4">
           {/* Pengalih Mode Tampilan Bahasa Jepang */}
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-muted/30 border border-border/50">
+          <div className="flex items-center gap-1 p-1 rounded-xl premium-surface">
             {[
               { id: "kanji", icon: BookOpen, label: "Kanji" },
               { id: "furigana", icon: Eye, label: "Furi" },
@@ -198,7 +198,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
                     useUIStore.getState().setReadingState({ mode: disp.id as "kanji" | "furigana" | "hiragana" });
                   }
                 }}
-                className={`w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-lg transition-all ${
+                className={`size-8 flex items-center justify-center rounded-lg transition-all ${
                   readingMode === disp.id
                     ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
                     : "text-muted-foreground hover:bg-primary/10 hover:text-primary"
@@ -220,10 +220,10 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
               onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
               aria-label={`Notifikasi (${unreadNotifications} belum dibaca)`}
               aria-expanded={isNotificationsOpen}
-              className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all relative ${
+              className={`size-11 flex items-center justify-center rounded-xl transition-all relative ${
                 isNotificationsOpen 
-                  ? 'bg-primary text-primary-foreground shadow-[0_0_15px_rgba(var(--primary-rgb),0.4)]' 
-                  : 'bg-muted/50 border border-border/50 text-muted-foreground hover:text-primary'
+                  ? 'bg-primary text-primary-foreground shadow-[0_12px_24px_rgba(var(--primary-rgb),0.22)]'
+                  : 'premium-surface text-muted-foreground hover:text-primary'
               }`}
              >
                 <Bell size={18} />

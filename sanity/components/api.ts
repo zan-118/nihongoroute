@@ -4,9 +4,17 @@
  */
 
 // ==========================================
-// KONSTANTA & TOKEN RAHASIA
+// KONFIGURASI ADMIN API
 // ==========================================
-export const SECRET_TOKEN = 'd5a7a32586755e828a338457a2524288';
+const ADMIN_API_SECRET = process.env.SANITY_STUDIO_ADMIN_API_SECRET;
+
+export function getAdminAuthHeaders(): HeadersInit {
+  if (!ADMIN_API_SECRET) return {};
+
+  return {
+    Authorization: `Bearer ${ADMIN_API_SECRET}`,
+  };
+}
 
 // ==========================================
 // FUNGSI LOGIKA DETEKSI ENDPOINT

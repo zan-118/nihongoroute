@@ -8,7 +8,7 @@
 // ======================
 // IMPOR
 // ======================
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -29,16 +29,16 @@ export const ProgressProvider = ({
   const hasMounted = useHasMounted();
   const setAuth = useAuthStore((state) => state.setAuth);
   const syncUserData = useUserStore((state) => state.syncUserData);
-  const dirtySrs = useSRSStore((state) => state.dirtySrs);
+  const dirtySrsSize = useSRSStore((state) => state.dirtySrs.size);
   
-  const supabaseRef = useRef(createClient());
+  const [supabase] = useState(() => createClient());
 
   // Inisialisasi Sinkronisasi via React Query Hook
   useSyncProgress();
 
   // AUTHENTICATION LISTENER
   useEffect(() => {
-    supabaseRef.current.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
       const userFullName = session?.user?.user_metadata?.full_name || session?.user?.email?.split('@')[0] || "Siswa";
       setAuth(!!session?.user);
       if (session?.user) {
@@ -50,7 +50,7 @@ export const ProgressProvider = ({
 
     const {
       data: { subscription },
-    } = supabaseRef.current.auth.onAuthStateChange((event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       const userFullName = session?.user?.user_metadata?.full_name || session?.user?.email?.split('@')[0] || "Siswa";
       setAuth(!!session?.user);
       if (session?.user) {
@@ -74,12 +74,12 @@ export const ProgressProvider = ({
     });
 
     return () => subscription.unsubscribe();
-  }, [setAuth, syncUserData]);
+  }, [setAuth, supabase, syncUserData]);
   
   // UNSYNCED DATA WARNING (beforeunload)
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (dirtySrs.size > 0 && hasMounted) {
+      if (dirtySrsSize > 0 && hasMounted) {
         const message = "Ada data belajar yang belum tersinkron ke Cloud. Yakin ingin keluar?";
         e.preventDefault();
         e.returnValue = message;
@@ -89,7 +89,7 @@ export const ProgressProvider = ({
 
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [dirtySrs, hasMounted]);
+  }, [dirtySrsSize, hasMounted]);
 
   // Always render children to avoid white screen flicker during hydration
   // Components should handle their own internal loading states if needed

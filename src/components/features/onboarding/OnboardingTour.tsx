@@ -95,9 +95,11 @@ export default function OnboardingTour() {
             {/* Decor */}
             <div className="absolute top-0 right-0 size-32 bg-primary/10 blur-3xl rounded-full -mr-16 -mt-16 pointer-events-none" />
             
-            <button type="button" 
+            <button
+              type="button"
               onClick={handleClose}
-              className="absolute top-6 right-6 text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Tutup onboarding"
+              className="absolute top-5 right-5 size-10 inline-flex items-center justify-center rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/70 transition-colors"
             >
               <X size={20} />
             </button>

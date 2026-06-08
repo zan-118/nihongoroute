@@ -12,6 +12,8 @@ import { getPaginatedKanji } from "@/actions/library.actions";
 import KanjiListClient from "@/app/(main)/library/kanji/KanjiListClient";
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 // ======================
 // METADATA SEO
 // ======================

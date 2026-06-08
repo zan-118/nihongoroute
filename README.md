@@ -97,6 +97,15 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 NEXT_PUBLIC_SANITY_PROJECT_ID=your-sanity-project-id
 NEXT_PUBLIC_SANITY_DATASET=production
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+# Server-only secrets
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+ADMIN_API_SECRET=generate-a-long-random-secret
+GEMINI_API_KEY=your-gemini-api-key
+SANITY_API_READ_TOKEN=your-sanity-read-token
+
+# Sanity Studio client env. Must match ADMIN_API_SECRET.
+SANITY_STUDIO_ADMIN_API_SECRET=generate-a-long-random-secret
 ```
 
 ### 4. Menjalankan Server Pengembangan Lokal

@@ -9,6 +9,7 @@
 // ======================
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { validateAdminApiRequest } from "@/lib/admin-api-auth";
 
 // ======================
 // KONSTANTA CORS
@@ -20,6 +21,19 @@ const ALLOWED_ORIGINS = [
   "https://www.nihongoroute.my.id",
   process.env.NEXT_PUBLIC_SITE_URL
 ].filter(Boolean) as string[];
+
+const MAX_QUERY_LENGTH = 80;
+
+function escapePostgrestSearchTerm(term: string) {
+  return term
+    .trim()
+    .slice(0, MAX_QUERY_LENGTH)
+    .replace(/\\/g, "\\\\")
+    .replace(/%/g, "\\%")
+    .replace(/_/g, "\\_")
+    .replace(/"/g, "")
+    .replace(/,/g, " ");
+}
 
 function getCorsHeaders(req: Request) {
   const origin = req.headers.get("origin");
@@ -34,6 +48,8 @@ function getCorsHeaders(req: Request) {
     "Access-Control-Allow-Methods": "GET, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Allow-Credentials": "true",
+    "Vary": "Origin",
+    "Cache-Control": "no-store",
   };
 }
 
@@ -48,15 +64,17 @@ export async function GET(req: Request) {
   const corsHeaders = getCorsHeaders(req);
   
   try {
+    const auth = validateAdminApiRequest(req);
+    if (!auth.ok) {
+      return NextResponse.json(
+        { error: auth.error },
+        { status: auth.status, headers: corsHeaders }
+      );
+    }
+
     const { searchParams } = new URL(req.url);
     const type = searchParams.get("type");
-    const query = searchParams.get("query") || "";
-    const secret = searchParams.get("secret");
-
-    // Otentikasi menggunakan token rahasia
-    if (secret !== "d5a7a32586755e828a338457a2524288") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401, headers: corsHeaders });
-    }
+    const query = escapePostgrestSearchTerm(searchParams.get("query") || "");
 
     const supabase = createAdminClient();
 
@@ -75,9 +93,9 @@ export async function GET(req: Request) {
         .from("vocab")
         .select("id, word, furigana, meaning_id, jlpt_level, slug");
 
-      if (query.trim()) {
+      if (query) {
         queryBuilder = queryBuilder.or(
-          `word.ilike.%${query}%,furigana.ilike.%${query}%,meaning_id.ilike.%${query}%,romaji.ilike.%${query}%`
+          `word.ilike."%${query}%",furigana.ilike."%${query}%",meaning_id.ilike."%${query}%",romaji.ilike."%${query}%"`
         );
       }
 
@@ -91,9 +109,9 @@ export async function GET(req: Request) {
         .from("kanji")
         .select("id, character, meaning, jlpt_level");
 
-      if (query.trim()) {
+      if (query) {
         queryBuilder = queryBuilder.or(
-          `character.ilike.%${query}%,meaning.ilike.%${query}%,onyomi.ilike.%${query}%,kunyomi.ilike.%${query}%,romaji.ilike.%${query}%`
+          `character.ilike."%${query}%",meaning.ilike."%${query}%",onyomi.ilike."%${query}%",kunyomi.ilike."%${query}%",romaji.ilike."%${query}%"`
         );
       }
 
@@ -107,9 +125,9 @@ export async function GET(req: Request) {
         .from("grammar")
         .select("id, title, meaning, jlpt_level, slug");
 
-      if (query.trim()) {
+      if (query) {
         queryBuilder = queryBuilder.or(
-          `title.ilike.%${query}%,meaning.ilike.%${query}%,slug.ilike.%${query}%`
+          `title.ilike."%${query}%",meaning.ilike."%${query}%",slug.ilike."%${query}%"`
         );
       }
 

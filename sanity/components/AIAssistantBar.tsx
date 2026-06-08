@@ -9,7 +9,7 @@
 import React, { useState } from 'react';
 import { Stack, Card, Text, TextInput, Button, Flex, Box, Spinner, Select, Label } from '@sanity/ui';
 import { set, useFormValue } from 'sanity';
-import { getApiUrl } from './api';
+import { getAdminAuthHeaders, getApiUrl } from './api';
 
 // ==========================================
 // ANTARMUKA PROPS & BLOK KONTEN
@@ -69,7 +69,7 @@ export function AIAssistantBar(props: AIAssistantBarProps) {
     try {
       const response = await fetch(getApiUrl('/api/admin/ai-assistant'), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAdminAuthHeaders() },
         body: JSON.stringify({
           action: 'generate-lesson',
           topic: topic.trim(),
@@ -139,7 +139,7 @@ export function AIAssistantBar(props: AIAssistantBarProps) {
 
       const response = await fetch(getApiUrl('/api/admin/ai-assistant'), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAdminAuthHeaders() },
         body: JSON.stringify({
           action: 'scan-supabase',
           text: allText,
@@ -192,7 +192,7 @@ export function AIAssistantBar(props: AIAssistantBarProps) {
 
       const response = await fetch(getApiUrl('/api/admin/ai-assistant'), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAdminAuthHeaders() },
         body: JSON.stringify({
           action: 'generate-furigana',
           text: textToConvert,

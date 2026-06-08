@@ -50,16 +50,16 @@ export function UserStatusSection({
   if (isAuthenticated) {
     return (
       <div className="space-y-4">
-        <div className="flex items-center gap-3 p-3 bg-background/[0.03] backdrop-blur-md rounded-2xl border border-border group hover:border-primary/30 transition-all duration-500">
+        <div className="flex items-center gap-3 p-3 premium-surface rounded-xl group hover:border-primary/30 transition-all duration-500">
           {/* Batas Avatar Gradien Teranimasi */}
           <div className="relative size-12 shrink-0">
             <m.div 
               animate={{ rotate: 360 }}
               transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-              className="absolute inset-0 rounded-xl bg-gradient-to-tr from-primary via-blue-500 to-cyan-400 opacity-40 blur-[2px]"
+              className="absolute inset-0 rounded-xl bg-gradient-to-tr from-primary via-success to-secondary opacity-35 blur-[2px]"
             />
             <div className="absolute inset-[2px] rounded-xl bg-background flex items-center justify-center text-primary-foreground text-sm font-black shadow-lg overflow-hidden z-10">
-              <div className="w-full h-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center">
+              <div className="w-full h-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
                 {userFullName ? userFullName.charAt(0).toUpperCase() : "U"}
               </div>
             </div>
@@ -88,7 +88,7 @@ export function UserStatusSection({
              <Button
                variant="ghost"
                onClick={handleLogout}
-               className="w-full h-10 rounded-xl bg-destructive/5 hover:bg-destructive hover:text-destructive-foreground text-destructive text-xs font-black uppercase tracking-widest transition-all border border-destructive/10"
+               className="w-full h-11 rounded-xl bg-destructive/5 hover:bg-destructive hover:text-destructive-foreground text-destructive text-xs font-black uppercase tracking-widest transition-all border border-destructive/10"
              >
                <LogOut size={16} className="mr-2" /> Keluar
              </Button>
@@ -104,7 +104,7 @@ export function UserStatusSection({
         <m.div whileTap={{ scale: 0.95 }}>
           <Button
             asChild
-            className="w-full h-11 bg-primary text-primary-foreground font-black text-[10px] uppercase tracking-[0.2em] rounded-xl shadow-lg border-none hover:opacity-90 hover:shadow-primary/20 transition-all"
+            className="w-full h-11 bg-primary text-primary-foreground font-black text-[10px] uppercase tracking-[0.16em] rounded-xl shadow-lg border-none hover:opacity-95 hover:shadow-primary/20 transition-all"
           >
             <Link href="/login">Masuk atau Daftar</Link>
           </Button>

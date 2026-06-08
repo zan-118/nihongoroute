@@ -43,11 +43,10 @@ export function TrustBanner() {
       viewport={{ once: true }}
       className="w-full mb-[120px]"
     >
-      <Card className="p-[34px] sm:p-[55px] md:p-[65px] rounded-[42px] bg-card/10 backdrop-blur-xl border border-border shadow-2xl relative overflow-hidden group transition-all duration-700 hover:border-primary/30 hover:shadow-[0_0_50px_rgba(var(--primary-rgb),0.1)] glass">
+      <Card className="p-6 sm:p-10 md:p-12 rounded-2xl premium-surface relative overflow-hidden group transition-all duration-700 hover:border-primary/30">
         
         {/* Latar Belakang Kilau Dekoratif menggunakan variabel warna CSS */}
-        <div className="absolute -top-40 -left-40 size-96 bg-primary/10 rounded-full blur-[120px] group-hover:bg-primary/15 transition-all duration-700 pointer-events-none" />
-        <div className="absolute -bottom-40 -right-40 size-96 bg-secondary/5 rounded-full blur-[120px] group-hover:bg-secondary/10 transition-all duration-700 pointer-events-none" />
+        <div className="absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent pointer-events-none" />
         
         <div className="flex flex-col xl:flex-row items-center justify-between gap-[55px] relative z-10">
           
@@ -111,10 +110,10 @@ export function TrustBanner() {
           </div>
  
           {/* KOLOM AKSI KANAN (CTA & REPOSITORY) */}
-          <div className="flex flex-col sm:flex-row xl:flex-col gap-4 w-full sm:w-auto xl:w-[260px] shrink-0 justify-center">
+          <div className="flex flex-col sm:flex-row xl:flex-col gap-3.5 w-full sm:w-auto xl:w-[260px] shrink-0 justify-center">
             <Button
               asChild
-              className="h-[55px] px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-widest text-xs rounded-2xl shadow-[0_15px_30px_rgba(var(--primary-rgb),0.15)] hover:shadow-[0_20px_40px_rgba(var(--primary-rgb),0.25)] transition-all duration-500 group border-none active:scale-[0.98]"
+              className="h-12 px-7 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-[0.14em] text-xs rounded-xl shadow-[0_15px_30px_rgba(var(--primary-rgb),0.15)] hover:shadow-[0_20px_40px_rgba(var(--primary-rgb),0.25)] transition-all duration-500 group border-none active:scale-[0.98]"
             >
               <Link href="/support">
                 Dukung Kami <Heart size={14} className="ml-3 text-primary-foreground fill-primary-foreground animate-pulse" />
@@ -124,7 +123,7 @@ export function TrustBanner() {
             <Button
               asChild
               variant="ghost"
-              className="h-[55px] px-8 bg-foreground/5 hover:bg-foreground hover:text-background transition-all text-xs font-black uppercase tracking-widest rounded-2xl border border-border active:scale-[0.98]"
+              className="h-12 px-7 bg-foreground/5 hover:bg-foreground hover:text-background transition-all text-xs font-black uppercase tracking-[0.14em] rounded-xl border border-border active:scale-[0.98]"
             >
               <a 
                 href="https://github.com/zan-118/nihongoroute" 
@@ -143,4 +142,3 @@ export function TrustBanner() {
     </m.section>
   );
 }
-

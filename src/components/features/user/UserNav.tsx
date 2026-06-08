@@ -42,13 +42,13 @@ export default function UserNav() {
         <Button 
           asChild 
           variant="ghost" 
-          className="hidden sm:flex h-9 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-muted"
+          className="hidden sm:flex h-10 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-muted"
         >
           <Link href="/login">Masuk</Link>
         </Button>
         <Button 
           asChild 
-          className="h-9 px-3 sm:px-4 rounded-xl bg-primary text-primary-foreground text-[10px] sm:text-xs font-black uppercase tracking-widest shadow-lg shadow-primary/20"
+          className="h-10 px-3 sm:px-4 rounded-xl bg-primary text-primary-foreground text-[10px] sm:text-xs font-black uppercase tracking-widest shadow-lg shadow-primary/20"
         >
           <Link href="/login?mode=signup">
             <span className="sm:hidden">Mulai</span>
@@ -62,7 +62,7 @@ export default function UserNav() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button type="button" className="flex items-center gap-1 sm:gap-3 p-1 pr-1 sm:pr-3 rounded-2xl bg-muted/30 border border-border/50 hover:border-primary/30 transition-all group outline-none">
+        <button type="button" className="min-h-11 flex items-center gap-1 sm:gap-3 p-1 pr-1 sm:pr-3 rounded-xl premium-surface hover:border-primary/30 transition-all group outline-none">
           <div className="size-8 rounded-xl bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-primary-foreground text-xs font-black shadow-md group-hover:scale-105 transition-transform">
             {userFullName ? userFullName.charAt(0).toUpperCase() : "U"}
           </div>

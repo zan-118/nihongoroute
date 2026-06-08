@@ -10,12 +10,16 @@
 // ======================
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { validateAdminApiRequest } from "@/lib/admin-api-auth";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import path from "path";
 // @ts-ignore
 import Kuroshiro from "kuroshiro";
 // @ts-ignore
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 // ======================
 // KONSTANTA CORS
@@ -27,6 +31,10 @@ const ALLOWED_ORIGINS = [
   "https://www.nihongoroute.my.id",
   process.env.NEXT_PUBLIC_SITE_URL
 ].filter(Boolean) as string[];
+
+const MAX_TEXT_LENGTH = 20000;
+const MAX_TOPIC_LENGTH = 160;
+const ALLOWED_LEVELS = new Set(["N5", "N4", "N3", "N2", "N1"]);
 
 function getCorsHeaders(req: Request) {
   const origin = req.headers.get("origin");
@@ -41,6 +49,8 @@ function getCorsHeaders(req: Request) {
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Allow-Credentials": "true",
+    "Vary": "Origin",
+    "Cache-Control": "no-store",
   };
 }
 
@@ -161,11 +171,25 @@ export async function POST(req: Request) {
   const corsHeaders = getCorsHeaders(req);
   
   try {
+    const auth = validateAdminApiRequest(req);
+    if (!auth.ok) {
+      return NextResponse.json(
+        { error: auth.error },
+        { status: auth.status, headers: corsHeaders }
+      );
+    }
+
     const { action, text, topic, level } = await req.json();
 
     if (action === "scan-supabase") {
       if (!text) {
         return NextResponse.json({ data: { vocab: [], kanji: [], grammar: [] } }, { headers: corsHeaders });
+      }
+      if (typeof text !== "string" || text.length > MAX_TEXT_LENGTH) {
+        return NextResponse.json(
+          { error: `Teks terlalu panjang. Maksimal ${MAX_TEXT_LENGTH} karakter.` },
+          { status: 413, headers: corsHeaders }
+        );
       }
       const scanned = await performDatabaseScan(text);
       return NextResponse.json({ data: scanned }, { headers: corsHeaders });
@@ -174,6 +198,12 @@ export async function POST(req: Request) {
     if (action === "generate-furigana") {
       if (!text) {
         return NextResponse.json({ data: "" }, { headers: corsHeaders });
+      }
+      if (typeof text !== "string" || text.length > MAX_TEXT_LENGTH) {
+        return NextResponse.json(
+          { error: `Teks terlalu panjang. Maksimal ${MAX_TEXT_LENGTH} karakter.` },
+          { status: 413, headers: corsHeaders }
+        );
       }
       const engine = await getKuroshiro();
       const lines = text.split("\n");
@@ -195,8 +225,17 @@ export async function POST(req: Request) {
     }
 
     if (action === "generate-lesson") {
-      if (!topic || !level) {
+      if (typeof topic !== "string" || typeof level !== "string" || !topic.trim() || !level.trim()) {
         return NextResponse.json({ error: "Topik dan level wajib disertakan" }, { status: 400, headers: corsHeaders });
+      }
+      if (topic.length > MAX_TOPIC_LENGTH) {
+        return NextResponse.json(
+          { error: `Topik terlalu panjang. Maksimal ${MAX_TOPIC_LENGTH} karakter.` },
+          { status: 413, headers: corsHeaders }
+        );
+      }
+      if (!ALLOWED_LEVELS.has(level.toUpperCase())) {
+        return NextResponse.json({ error: "Level JLPT tidak valid" }, { status: 400, headers: corsHeaders });
       }
 
       if (!process.env.GEMINI_API_KEY) {
@@ -206,7 +245,10 @@ export async function POST(req: Request) {
       const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-      const prompt = `Buatlah modul pelajaran Bahasa Jepang terstruktur lengkap untuk tingkat JLPT ${level} dengan topik "${topic}".
+      const safeLevel = level.toUpperCase();
+      const safeTopic = topic.trim();
+
+      const prompt = `Buatlah modul pelajaran Bahasa Jepang terstruktur lengkap untuk tingkat JLPT ${safeLevel} dengan topik "${safeTopic}".
 Respon Anda harus berupa format JSON murni tanpa markdown, tanpa penjelasan di luar JSON. Format JSON harus memiliki struktur persis seperti ini:
 {
   "title": "Judul Pelajaran Menarik",

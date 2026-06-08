@@ -9,7 +9,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Stack, Card, Text, TextInput, Button, Flex, Box, Spinner, Badge } from '@sanity/ui';
 import { set, unset, useFormValue } from 'sanity';
-import { getApiUrl, SECRET_TOKEN } from './api';
+import { getAdminAuthHeaders, getApiUrl } from './api';
 
 // ==========================================
 // ANTARMUKA PROPS & BLOK KONTEN
@@ -85,7 +85,8 @@ export function SupabaseSelector(props: SupabaseSelectorProps) {
       setLoading(true);
       try {
         const response = await fetch(
-          getApiUrl(`/api/admin/supabase-search?type=${supabaseType}&query=${encodeURIComponent(query)}&secret=${SECRET_TOKEN}`)
+          getApiUrl(`/api/admin/supabase-search?type=${supabaseType}&query=${encodeURIComponent(query)}`),
+          { headers: getAdminAuthHeaders() }
         );
         const json = await response.json();
         if (json.data) {
@@ -149,7 +150,7 @@ export function SupabaseSelector(props: SupabaseSelectorProps) {
 
       const response = await fetch(getApiUrl('/api/admin/ai-assistant'), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAdminAuthHeaders() },
         body: JSON.stringify({
           action: 'scan-supabase',
           text: allText,

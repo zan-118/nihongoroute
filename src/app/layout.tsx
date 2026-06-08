@@ -16,6 +16,7 @@ import QueryProvider from "@/components/providers/QueryProvider";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { LazyMotion, domAnimation } from "framer-motion";
+import Script from "next/script";
 
 
 // ======================
@@ -117,29 +118,22 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-                (function() {
-                  try {
-                    if ('caches' in window) {
-                      caches.keys().then(function(names) {
-                        names.forEach(function(name) {
-                          if (name.startsWith('nihongoroute_tts_cache_v')) {
-                            caches.delete(name).then(function() {
-                              console.log('[TTS Cache Revocation] Deleted old versioned cache:', name);
-                            });
-                          }
-                        });
-                      });
-                    }
-                  } catch (e) {
-                    console.warn('[TTS Cache Revocation] Error:', e);
-                  }
-                })();
-              `
-            }}
-          />
+          <Script id="tts-cache-revocation" strategy="lazyOnload">
+            {`
+              (function() {
+                try {
+                  if (!('caches' in window)) return;
+                  caches.keys().then(function(names) {
+                    names.forEach(function(name) {
+                      if (name.startsWith('nihongoroute_tts_cache_v')) {
+                        caches.delete(name);
+                      }
+                    });
+                  });
+                } catch (_) {}
+              })();
+            `}
+          </Script>
           <LazyMotion features={domAnimation}>
             <QueryProvider>
               {children}
