@@ -20,7 +20,7 @@ import { Skeleton } from "@/components/ui/skeleton";
  */
 export default function DashboardLoading() {
   return (
-    <div className="w-full min-h-screen bg-background relative overflow-hidden pt-12 pb-24 px-4 md:px-8">
+    <div className="w-full min-h-screen bg-transparent relative overflow-hidden pt-12 pb-24 px-4 md:px-8">
       <div className="max-w-7xl mx-auto pt-16 space-y-12">
         {/* Kerangka Pemuatan Header Hero */}
         <div className="flex flex-col lg:flex-row gap-12 items-center">

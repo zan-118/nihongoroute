@@ -114,7 +114,7 @@ export default async function LibraryPage() {
   ];
 
   return (
-    <div className="w-full px-4 md:px-8 lg:px-12 relative overflow-hidden pb-24 bg-background text-foreground transition-colors duration-300 min-h-screen pt-8 md:pt-12">
+    <div className="w-full px-4 md:px-8 lg:px-12 relative overflow-hidden pb-24 bg-transparent text-foreground transition-colors duration-300 min-h-screen pt-8 md:pt-12">
       {/* Background Neural Overlays */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgb(var(--primary-rgb)/0.05)_0%,transparent_50%)] pointer-events-none z-0" />
       <div className="neural-grid" />

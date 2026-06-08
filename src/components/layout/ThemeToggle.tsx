@@ -28,7 +28,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <div className="size-11 rounded-xl bg-muted animate-pulse" />
+      <div className="skeleton-brand size-11 rounded-xl" />
     );
   }
 
@@ -43,7 +43,7 @@ export function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={toggleTheme}
-      className="size-11 rounded-xl premium-surface hover:bg-muted text-muted-foreground hover:text-foreground transition-all shadow-none focus-visible:ring-primary/50 focus-visible:ring-offset-0"
+      className="action-icon size-11 shadow-none focus-visible:ring-primary/50 focus-visible:ring-offset-0"
       aria-label={`Ganti Tema (Sekarang: ${theme})`}
       title="Ganti Tema"
     >

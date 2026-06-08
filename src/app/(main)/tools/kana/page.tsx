@@ -46,7 +46,7 @@ function KanaContent() {
   } = useKanaQuiz();
 
   return (
-    <div className="w-full flex-1 relative overflow-hidden flex flex-col bg-background transition-colors duration-300 pt-12 pb-24 px-4 md:px-8">
+    <div className="w-full flex-1 relative overflow-hidden flex flex-col bg-transparent transition-colors duration-300 pt-12 pb-24 px-4 md:px-8">
       <div className="neural-grid" />
 
       <div className="max-w-4xl mx-auto w-full relative z-10 flex flex-col h-full">
@@ -106,7 +106,7 @@ function KanaContent() {
 export default function KanaPage() {
   return (
     <Suspense fallback={
-      <div className="w-full flex-1 flex items-center justify-center bg-background">
+      <div className="w-full flex-1 flex items-center justify-center bg-transparent">
         <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest animate-pulse">Memuat Kana...</p>
       </div>
     }>

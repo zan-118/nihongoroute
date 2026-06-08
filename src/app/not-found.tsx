@@ -15,7 +15,7 @@ import { MapPinOff, ArrowLeft, Home } from "lucide-react";
 // ======================
 export default function NotFound() {
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-background p-6 relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-screen w-full flex flex-col items-center justify-center premium-shell p-6 relative overflow-hidden transition-colors duration-300">
       {/* Dekorasi Latar Belakang & Kisi Neural */}
       <div className="neural-grid" />
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">

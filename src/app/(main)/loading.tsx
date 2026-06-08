@@ -22,7 +22,7 @@ import { m } from "framer-motion";
  */
 export default function MainLoading() {
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background overflow-hidden transition-colors duration-300">
+    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center premium-shell overflow-hidden transition-colors duration-300">
       {/* Dekorasi Latar Belakang */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[600px] bg-primary/10 blur-[150px] rounded-full animate-pulse" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[400px] bg-destructive/5 blur-[120px] rounded-full animate-pulse delay-700" />

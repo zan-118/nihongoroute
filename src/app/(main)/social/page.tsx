@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function SocialPage() {
   return (
-    <main className="min-h-screen bg-background pt-12 px-4 sm:px-6 transition-colors duration-300">
+    <main className="min-h-screen bg-transparent pt-12 px-4 sm:px-6 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         
         {/* HEADER SECTION */}

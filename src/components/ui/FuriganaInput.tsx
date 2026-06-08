@@ -61,7 +61,7 @@ export function FuriganaInput({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className={`flex-1 px-3 py-2 bg-background border border-border rounded-lg text-sm outline-none focus:border-primary transition-all ${className}`}
+          className={`control-surface flex-1 px-3 py-2 rounded-lg text-sm outline-none transition-all ${className}`}
         />
         <button
           type="button"

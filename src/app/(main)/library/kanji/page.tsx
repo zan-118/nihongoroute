@@ -36,7 +36,7 @@ export default async function KanjiListPage() {
   const initialData = await getPaginatedKanji(1, 24, "", "");
 
   return (
-    <div className="w-full min-h-screen bg-background relative overflow-hidden pt-12 pb-24 px-4 md:px-8">
+    <div className="w-full min-h-screen bg-transparent relative overflow-hidden pt-12 pb-24 px-4 md:px-8">
       {/* Efek Latar Belakang */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[500px] bg-primary/10 blur-[120px] rounded-[100%] pointer-events-none opacity-50" />
       <div className="neural-grid" />

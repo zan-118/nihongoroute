@@ -43,12 +43,12 @@ export default function ConfirmModal({
     <DialogPrimitive.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogPrimitive.Portal>
         {/* Lapisan overlay latar belakang dengan z-[200] agar berada di atas seluruh kanvas permainan */}
-        <DialogPrimitive.Overlay className="fixed inset-0 z-[200] bg-background/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+        <DialogPrimitive.Overlay className="fixed inset-0 z-[200] bg-background/72 backdrop-blur-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
         
         {/* Kontainer Modal dengan perangkap fokus dan transisi ease-out kustom yang terinspirasi pegas */}
-        <DialogPrimitive.Content className="fixed left-[50%] top-[50%] z-[200] w-[calc(100%-2rem)] max-w-md translate-x-[-50%] translate-y-[-50%] bg-card border border-border p-5 md:p-8 rounded-[2rem] shadow-2xl overflow-hidden focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200">
+        <DialogPrimitive.Content className="premium-surface fixed left-[50%] top-[50%] z-[200] w-[calc(100%-2rem)] max-w-md translate-x-[-50%] translate-y-[-50%] p-5 md:p-8 rounded-[2rem] shadow-2xl overflow-hidden focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200">
           {/* Batang batas atas aksen */}
-          <div className={`absolute top-0 left-0 w-full h-1 ${isDestructive ? 'bg-destructive' : 'bg-primary'} shadow-sm`} />
+          <div className={`absolute top-0 left-0 w-full h-1 ${isDestructive ? 'bg-destructive' : 'bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-violet-rgb)))]'} shadow-sm`} />
           
           <div className="flex flex-col items-center text-center pt-2">
             <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-6 border ${
@@ -70,7 +70,7 @@ export default function ConfirmModal({
               <Button
                 variant="outline"
                 onClick={onClose}
-                className="flex-1 h-12 rounded-xl bg-muted border border-border hover:bg-background text-muted-foreground font-bold uppercase tracking-widest text-xs"
+                className="flex-1 h-12 rounded-xl font-black uppercase tracking-widest text-xs"
               >
                 {cancelText}
               </Button>
@@ -81,8 +81,8 @@ export default function ConfirmModal({
                 }}
                 className={`flex-1 h-12 rounded-xl font-bold uppercase tracking-widest text-xs shadow-lg border-none ${
                   isDestructive
-                    ? 'bg-destructive hover:opacity-90 text-destructive-foreground transition-all'
-                    : 'bg-primary hover:bg-foreground text-primary-foreground dark:text-foreground transition-all'
+                    ? 'button-danger-premium hover:opacity-90 transition-all'
+                    : 'btn-cyber transition-all'
                 }`}
               >
                 {confirmText}

@@ -69,7 +69,7 @@ export default function FloatingActions() {
                     setShowFeedbackDialog(true);
                     setIsOpen(false);
                   }}
-                  className="bg-card hover:bg-primary hover:text-primary-foreground text-foreground border border-border shadow-xl rounded-2xl px-4 py-6 flex items-center gap-3 transition-all h-auto group"
+                  className="button-outline-premium rounded-2xl px-4 py-6 flex items-center gap-3 h-auto group"
                 >
                   <span className="text-xs font-black uppercase tracking-widest hidden md:block">Feedback</span>
                   <MessageSquarePlus size={20} className="text-primary group-hover:text-current" />
@@ -79,7 +79,7 @@ export default function FloatingActions() {
               <m.div whileHover={{ x: -5 }}>
                 <Link href="/support">
                   <Button
-                    className="bg-card hover:bg-destructive hover:text-destructive-foreground text-foreground border border-border shadow-xl rounded-2xl px-4 py-6 flex items-center gap-3 transition-all h-auto group"
+                    className="rounded-2xl px-4 py-6 flex items-center gap-3 h-auto group border border-destructive/20 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground"
                   >
                     <span className="text-xs font-black uppercase tracking-widest hidden md:block">Donasi</span>
                     <Coffee size={20} className="text-destructive group-hover:text-current" />
@@ -102,7 +102,7 @@ export default function FloatingActions() {
           >
             {/* Reading: Audio */}
             <m.div whileHover={{ x: -5 }}>
-              <div className="bg-card/90 backdrop-blur-3xl hover:bg-primary/20 text-foreground border border-border shadow-2xl rounded-2xl px-4 py-3 flex items-center gap-3 transition-all h-auto group">
+              <div className="control-surface rounded-2xl px-4 py-3 flex items-center gap-3 transition-all h-auto group">
                  <AudioController 
                   audioUrl={readingState.audioUrl} 
                   textToSpeak={readingState.textToSpeak}
@@ -122,7 +122,7 @@ export default function FloatingActions() {
                   setReadingState({ mode: modes[nextIndex].id });
                 }}
                 aria-label={`Ubah mode membaca, mode aktif saat ini: ${modes.find(m => m.id === readingState.mode)?.label || "Kanji"}`}
-                className="bg-card/90 backdrop-blur-3xl hover:bg-primary hover:text-primary-foreground text-foreground border border-border shadow-2xl rounded-2xl px-4 py-4 flex items-center gap-3 transition-all h-auto group w-full justify-between"
+                className="control-surface hover:text-primary rounded-2xl px-4 py-4 flex items-center gap-3 transition-all h-auto group w-full justify-between"
               >
                 <span className="text-[10px] font-black uppercase tracking-widest hidden md:block" aria-hidden="true">
                   {modes.find(m => m.id === readingState.mode)?.label || "Mode"}
@@ -136,7 +136,7 @@ export default function FloatingActions() {
               <button type="button"
                 onClick={() => setReadingState({ showTranslation: !readingState.showTranslation })}
                 aria-label={readingState.showTranslation ? "Matikan terjemahan bahasa Indonesia" : "Aktifkan terjemahan bahasa Indonesia"}
-                className={`bg-card/90 backdrop-blur-3xl border border-border shadow-2xl rounded-2xl px-4 py-4 flex items-center gap-3 transition-all h-auto group w-full justify-between ${
+                className={`control-surface rounded-2xl px-4 py-4 flex items-center gap-3 transition-all h-auto group w-full justify-between ${
                   readingState.showTranslation ? "hover:bg-success hover:text-success-foreground" : "hover:bg-success/20"
                 }`}
               >
@@ -161,7 +161,7 @@ export default function FloatingActions() {
           >
             {/* Listening: Audio Control */}
             <m.div whileHover={{ x: -5 }}>
-              <div className="bg-card/90 backdrop-blur-3xl hover:bg-primary/20 text-foreground border border-border shadow-2xl rounded-2xl px-4 py-3 flex items-center gap-3 transition-all h-auto group">
+              <div className="control-surface rounded-2xl px-4 py-3 flex items-center gap-3 transition-all h-auto group">
                  <AudioController 
                   audioUrl={listeningState.audioUrl} 
                   textToSpeak={listeningState.textToSpeak}
@@ -179,7 +179,7 @@ export default function FloatingActions() {
                   setIsOpen(false);
                 }}
                 aria-label="Gulir ke bagian kuis pemahaman"
-                className="bg-card/90 backdrop-blur-3xl hover:bg-primary hover:text-primary-foreground text-foreground border border-border shadow-2xl rounded-2xl px-4 py-4 flex items-center gap-3 transition-all h-auto group w-full justify-between"
+                className="control-surface hover:text-primary rounded-2xl px-4 py-4 flex items-center gap-3 transition-all h-auto group w-full justify-between"
               >
                 <span className="text-[10px] font-black uppercase tracking-widest hidden md:block" aria-hidden="true">
                   Ke Kuis
@@ -197,7 +197,7 @@ export default function FloatingActions() {
           className={`w-14 h-14 md:w-16 md:h-16 rounded-full shadow-2xl transition-all duration-500 border-none flex items-center justify-center p-0 ${
             isOpen 
               ? "bg-foreground text-background rotate-0" 
-              : "bg-primary text-primary-foreground hover:scale-110 shadow-primary/20"
+              : "brand-button hover:scale-110"
           }`}
         >
           {isOpen ? <X size={28} /> : (

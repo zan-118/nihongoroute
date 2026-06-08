@@ -1,23 +1,17 @@
 /**
  * @file skeleton.tsx
- * @description Komponen Pemuat Sementara (Skeleton Loader) atomik untuk efek loading ambient.
+ * @description Komponen pemuat sementara dengan animasi brand shimmer.
  */
 
-// ======================
-// IMPOR
-// ======================
 import { cn } from "@/lib/utils";
 
-// ======================
-// EKSEKUSI UTAMA
-// ======================
 function Skeleton({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("animate-pulse rounded-md bg-background/5", className)}
+      className={cn("skeleton-brand rounded-xl", className)}
       {...props}
     />
   );

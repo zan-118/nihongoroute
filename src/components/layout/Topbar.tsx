@@ -54,7 +54,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
 
   return (
     <>
-    <header className="sticky top-0 z-40 w-full bg-[hsl(var(--background)/0.86)] backdrop-blur-xl border-b border-border/70 px-3 sm:px-4 md:px-8 lg:px-10 py-3 flex items-center justify-between transition-all supports-[backdrop-filter]:bg-[hsl(var(--background)/0.72)]">
+    <header className="topbar-shell sticky top-0 z-40 w-full px-3 sm:px-4 md:px-8 lg:px-10 py-3 flex items-center justify-between transition-all">
       <div className="flex items-center gap-3 sm:gap-5 min-w-0">
         {/* Menu Seluler atau Pengalih Kembali */}
         <div className="md:hidden flex items-center gap-2">
@@ -64,7 +64,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
                 whileTap={{ scale: 0.9 }}
                 onClick={() => router.back()}
                 aria-label="Kembali ke Halaman Sebelumnya"
-                className="size-11 flex items-center justify-center rounded-xl premium-surface text-muted-foreground hover:text-primary transition-all"
+                className="action-icon size-11"
               >
                  <ChevronLeft size={20} />
               </m.button>
@@ -72,7 +72,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
                 whileTap={{ scale: 0.9 }}
                 onClick={onMenuClick}
                 aria-label="Buka Menu Navigasi"
-                className="size-11 flex items-center justify-center rounded-xl premium-surface text-muted-foreground hover:text-primary transition-all"
+                className="action-icon size-11"
               >
                  <Menu size={18} />
               </m.button>
@@ -82,15 +82,15 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
               whileTap={{ scale: 0.9 }}
               onClick={onMenuClick}
               aria-label="Buka Menu Navigasi"
-              className="size-11 flex items-center justify-center rounded-xl premium-surface text-muted-foreground hover:text-primary transition-all"
+              className="action-icon size-11"
             >
                <Menu size={20} />
             </m.button>
           )}
         </div>
 
-        <div className="flex flex-col min-w-0 max-w-[150px] sm:max-w-[240px] md:max-w-none">
-          <h1 className="text-sm md:text-lg font-black text-foreground tracking-tight truncate leading-none uppercase">
+        <div className="flex flex-col min-w-0 max-w-[190px] sm:max-w-[280px] md:max-w-[360px] lg:max-w-none">
+          <h1 className="text-sm md:text-lg font-black text-foreground tracking-tight truncate leading-none uppercase md:max-w-[18rem] lg:max-w-none">
             {pathSegments.length > 0 ? getRouteLabel(pathSegments[pathSegments.length - 1]) : "Beranda"}
           </h1>
           {pathSegments.length > 1 && (
@@ -106,7 +106,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
         <div 
           aria-live="polite"
           aria-atomic="true"
-          className="hidden sm:flex items-center gap-2 px-2.5 md:px-3 py-2 rounded-xl premium-surface text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground transition-all overflow-hidden min-w-fit md:min-w-[108px]"
+          className="status-pill hidden sm:flex items-center gap-2 px-2.5 md:px-3 py-2 text-[10px] font-bold uppercase tracking-[0.14em] transition-all overflow-hidden min-w-fit md:min-w-[108px]"
         >
           <AnimatePresence mode="wait">
             {isSyncing ? (
@@ -162,7 +162,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
           className="hidden lg:flex relative w-44 xl:w-64 group cursor-pointer"
         >
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground group-hover:text-primary transition-colors" size={15} />
-          <div className="w-full h-10 pl-10 pr-3 premium-surface rounded-xl text-[10px] uppercase font-bold tracking-[0.16em] text-muted-foreground flex items-center justify-between hover:border-primary/30 transition-all">
+          <div className="control-surface w-full h-10 pl-10 pr-3 rounded-xl text-[10px] uppercase font-bold tracking-[0.16em] text-muted-foreground flex items-center justify-between transition-all">
             Cari…
             <kbd className="hidden xl:inline-flex h-5 select-none items-center gap-1 rounded-md border border-border bg-muted/70 px-1.5 font-mono text-[10px] font-medium opacity-100">
               <span className="text-[10px]">⌘</span>K
@@ -174,14 +174,14 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
         <button type="button" 
           onClick={() => setIsSearchOpen(true)}
           aria-label="Buka Pencarian"
-          className="lg:hidden size-11 flex items-center justify-center rounded-xl premium-surface text-muted-foreground hover:text-primary transition-all"
+          className="action-icon lg:hidden size-11"
         >
           <Search size={18} />
         </button>
 
         <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 sm:border-l sm:border-border/60 sm:pl-2 md:pl-4">
           {/* Pengalih Mode Tampilan Bahasa Jepang */}
-          <div className="flex items-center gap-1 p-1 rounded-xl premium-surface">
+          <div className="flex items-center gap-1 p-1 rounded-xl control-surface">
             {[
               { id: "kanji", icon: BookOpen, label: "Kanji" },
               { id: "furigana", icon: Eye, label: "Furi" },
@@ -200,7 +200,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
                 }}
                 className={`size-8 flex items-center justify-center rounded-lg transition-all ${
                   readingMode === disp.id
-                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                    ? "brand-button shadow-none text-primary-foreground"
                     : "text-muted-foreground hover:bg-primary/10 hover:text-primary"
                 } ${readingMode !== disp.id ? 'hidden sm:flex' : 'flex'}`}
                 aria-label={`Mode ${disp.label}`}
@@ -222,8 +222,8 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
               aria-expanded={isNotificationsOpen}
               className={`size-11 flex items-center justify-center rounded-xl transition-all relative ${
                 isNotificationsOpen 
-                  ? 'bg-primary text-primary-foreground shadow-[0_12px_24px_rgb(var(--primary-rgb)/0.22)]'
-                  : 'premium-surface text-muted-foreground hover:text-primary'
+                  ? 'brand-button shadow-none'
+                  : 'action-icon text-muted-foreground hover:text-primary'
               }`}
              >
                 <Bell size={18} />

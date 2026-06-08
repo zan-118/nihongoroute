@@ -33,7 +33,7 @@ function LoginContent() {
   } = useAuth();
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-screen premium-shell text-foreground flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-300">
       {/* Dekorasi Latar Belakang & Kisi Neural */}
       <div className="neural-grid" />
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
@@ -82,7 +82,7 @@ function LoginContent() {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required={isRegistering}
-                  className="w-full bg-muted/50 border border-border/80 rounded-xl py-3 pl-10 pr-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/40 focus:shadow-[0_0_15px_rgb(var(--primary-rgb)/0.1)] transition-all duration-300"
+                  className="control-surface w-full rounded-xl py-3 pl-10 pr-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all duration-300"
                 />
               </div>
             )}
@@ -94,7 +94,7 @@ function LoginContent() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full bg-muted/50 border border-border/80 rounded-xl py-3 pl-10 pr-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/40 focus:shadow-[0_0_15px_rgb(var(--primary-rgb)/0.1)] transition-all duration-300"
+                className="control-surface w-full rounded-xl py-3 pl-10 pr-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all duration-300"
               />
             </div>
             <div className="relative">
@@ -106,7 +106,7 @@ function LoginContent() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="w-full bg-muted/50 border border-border/80 rounded-xl py-3 pl-10 pr-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/40 focus:shadow-[0_0_15px_rgb(var(--primary-rgb)/0.1)] transition-all duration-300"
+                className="control-surface w-full rounded-xl py-3 pl-10 pr-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all duration-300"
               />
             </div>
             {!isRegistering && (
@@ -124,7 +124,7 @@ function LoginContent() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 px-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-bold uppercase tracking-widest text-xs transition-all disabled:opacity-50 shadow-[0_0_20px_rgb(var(--primary-rgb)/0.15)] hover:shadow-[0_0_25px_rgb(var(--primary-rgb)/0.3)] active:scale-[0.98] duration-300"
+            className="w-full py-3.5 px-4 brand-button rounded-xl text-xs disabled:opacity-50"
           >
             {loading ? "Sedang memproses..." : (isRegistering ? "Daftar Sekarang" : "Masuk Sekarang")}
           </button>
@@ -195,7 +195,7 @@ function LoginContent() {
 export default function LoginClient() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen premium-shell flex items-center justify-center">
         <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest animate-pulse">Memuat…</p>
       </div>
     }>

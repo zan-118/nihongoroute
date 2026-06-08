@@ -197,12 +197,12 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
       for (let i = 1; i < stroke.length; i++) {
         ctx.lineTo(stroke[i].x, stroke[i].y);
       }
-      ctx.strokeStyle = "rgb(var(--success-rgb))"; // Success green semantik
+      ctx.strokeStyle = "rgb(var(--brand-cyan-rgb))";
       ctx.lineWidth = 10;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
       ctx.shadowBlur = 14;
-      ctx.shadowColor = getShadowColor("rgb(var(--success-rgb))", 0.6);
+      ctx.shadowColor = getShadowColor("rgb(var(--brand-cyan-rgb))", 0.6);
       ctx.stroke();
     });
 

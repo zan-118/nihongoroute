@@ -218,7 +218,7 @@ export function ExamResult({
             <div className="relative z-10 space-y-6 md:space-y-8">
               {/* Logo & Judul Kepala Dokumen */}
               <div className="text-center border-b border-[#E3DEC3] pb-6 space-y-2">
-                <span className="text-[10px] font-sans tracking-[0.25em] font-black text-emerald-800 uppercase block mb-1">
+                <span className="text-[10px] font-sans tracking-[0.25em] font-black text-success uppercase block mb-1">
                   Official Result Notice & Transcript
                 </span>
                 {isJft ? (
@@ -280,7 +280,7 @@ export function ExamResult({
                         Level <br className="hidden md:inline" />
                         <span className="text-[10px] font-normal font-serif">(レベル)</span>
                       </td>
-                      <td className="p-2.5 font-serif font-bold text-emerald-800 text-left pl-4 uppercase">
+                      <td className="p-2.5 font-serif font-bold text-success text-left pl-4 uppercase">
                         {exam.levelCode || (isJft ? "A2" : "JLPT")}
                       </td>
                     </tr>
@@ -299,7 +299,7 @@ export function ExamResult({
                         Scaled Score (総合評価点)
                       </span>
                       <div className="mt-2 flex items-baseline gap-1">
-                        <span className={`text-4xl md:text-5xl font-black font-mono ${isPassed ? 'text-emerald-700' : 'text-rose-700'}`}>
+                        <span className={`text-4xl md:text-5xl font-black font-mono ${isPassed ? 'text-success' : 'text-destructive'}`}>
                           {jftScores.score}
                         </span>
                         <span className="text-xs font-sans font-semibold text-stone-400">/ 250</span>
@@ -316,12 +316,12 @@ export function ExamResult({
                       </span>
                       <div className="mt-2 flex items-center justify-center gap-2">
                         {isPassed ? (
-                          <div className="flex items-center gap-1.5 text-emerald-700 font-extrabold text-2xl tracking-wider">
+                          <div className="flex items-center gap-1.5 text-success font-extrabold text-2xl tracking-wider">
                             <CheckCircle2 size={24} />
                             合格 (PASS)
                           </div>
                         ) : (
-                          <div className="flex items-center gap-1.5 text-rose-700 font-extrabold text-2xl tracking-wider">
+                          <div className="flex items-center gap-1.5 text-destructive font-extrabold text-2xl tracking-wider">
                             <AlertCircle size={24} />
                             不合格 (FAIL)
                           </div>
@@ -368,7 +368,7 @@ export function ExamResult({
                   {/* Kotak Level CEFR */}
                   <div className="border border-[#C8BFA7] bg-[#FCFBF8]/40 p-4 rounded-lg text-left text-xs space-y-2">
                     <p className="font-bold text-[#554d3d] uppercase border-b border-[#E3DEC3] pb-1.5 flex items-center gap-2">
-                      <Award size={14} className="text-emerald-700" />
+                      <Award size={14} className="text-success" />
                       CEFR A2 Qualification Standard Remarks
                     </p>
                     <p className="text-stone-700 leading-relaxed font-serif text-[11px] md:text-xs">
@@ -441,7 +441,7 @@ export function ExamResult({
                         Total Score (総合得点)
                       </span>
                       <div className="mt-2 flex items-baseline gap-1 z-10">
-                        <span className={`text-4xl md:text-5xl font-black font-mono ${isPassed ? 'text-emerald-700' : 'text-rose-700'}`}>
+                        <span className={`text-4xl md:text-5xl font-black font-mono ${isPassed ? 'text-success' : 'text-destructive'}`}>
                           {finalScore}
                         </span>
                         <span className="text-xs font-sans font-semibold text-stone-400">/ 180</span>
@@ -449,9 +449,9 @@ export function ExamResult({
                       
                       <div className="mt-1.5 z-10 text-[10px] font-sans font-bold flex items-center gap-1 text-[#554d3d]">
                         Result: {isPassed ? (
-                          <span className="text-emerald-700 uppercase">合格 (Passed)</span>
+                          <span className="text-success uppercase">合格 (Passed)</span>
                         ) : (
-                          <span className="text-rose-700 uppercase">不合格 (Failed)</span>
+                          <span className="text-destructive uppercase">不合格 (Failed)</span>
                         )}
                       </div>
 
@@ -485,14 +485,14 @@ export function ExamResult({
                         <tbody>
                           <tr className="font-mono text-stone-800 font-bold">
                             <td className="p-3 border-r border-[#C8BFA7] text-left pl-4 font-sans">
-                              Grade <span className="font-mono text-emerald-800 text-sm font-black">{jlptScores.vocabGrade}</span>
+                              Grade <span className="font-mono text-success text-sm font-black">{jlptScores.vocabGrade}</span>
                               <span className="text-[9px] font-normal text-stone-400 block mt-0.5">(A: 67%+ | B: 34-66% | C: &lt;34%)</span>
                             </td>
                             <td className="p-3 border-r border-[#C8BFA7] font-sans">
-                              Grade <span className="font-mono text-emerald-800 text-sm font-black">{jlptScores.grammarGrade}</span>
+                              Grade <span className="font-mono text-success text-sm font-black">{jlptScores.grammarGrade}</span>
                             </td>
                             <td className="p-3 font-sans">
-                              Grade <span className="font-mono text-emerald-800 text-sm font-black">{jlptScores.readingGrade}</span>
+                              Grade <span className="font-mono text-success text-sm font-black">{jlptScores.readingGrade}</span>
                             </td>
                           </tr>
                         </tbody>
@@ -504,8 +504,8 @@ export function ExamResult({
 
               {/* Peringatan mengenai Kegagalan Maiten */}
               {failedSection && finalScore >= exam.passingScore && (
-                <div className="p-4 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-[11px] font-sans font-bold flex items-center justify-center gap-2">
-                  <AlertCircle size={16} className="text-rose-700" />
+                <div className="p-4 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-[11px] font-sans font-bold flex items-center justify-center gap-2">
+                  <AlertCircle size={16} className="text-destructive" />
                   <span>Total score meets passing bar, but candidate did not satisfy sectional minimum score criteria (Maiten failed).</span>
                 </div>
               )}

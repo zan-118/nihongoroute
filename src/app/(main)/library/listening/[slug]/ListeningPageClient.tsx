@@ -79,7 +79,7 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
   const hasQuiz = (data.quiz?.length ?? 0) > 0;
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-20 relative overflow-hidden">
+    <div className="min-h-screen bg-transparent text-foreground pb-20 relative overflow-hidden">
       {/* Latar Belakang Ambient Premium */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-0 left-1/4 size-[500px] bg-primary/5 blur-[120px] rounded-full" />

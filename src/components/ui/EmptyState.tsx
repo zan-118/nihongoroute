@@ -40,9 +40,9 @@ export default function EmptyState({
     <m.div 
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="flex flex-col items-center justify-center p-12 text-center bg-card/50 border border-border/50 rounded-[3rem] backdrop-blur-sm"
+      className="premium-surface flex flex-col items-center justify-center p-8 md:p-12 text-center rounded-[2.5rem]"
     >
-      <div className="size-24 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-8 shadow-inner border border-primary/20">
+      <div className="brand-icon-soft size-24 rounded-[2rem] mb-8">
         <Icon size={48} className="animate-premium-bounce" />
       </div>
       
@@ -55,11 +55,11 @@ export default function EmptyState({
 
       {actionText && (
         actionHref ? (
-          <Button asChild className="h-14 px-10 bg-primary hover:bg-foreground text-primary-foreground font-black uppercase tracking-widest rounded-2xl shadow-lg transition-all">
+          <Button asChild className="h-14 px-10 brand-button rounded-2xl">
             <Link href={actionHref}>{actionText}</Link>
           </Button>
         ) : (
-          <Button onClick={onClick} className="h-14 px-10 bg-primary hover:bg-foreground text-primary-foreground font-black uppercase tracking-widest rounded-2xl shadow-lg transition-all">
+          <Button onClick={onClick} className="h-14 px-10 brand-button rounded-2xl">
             {actionText}
           </Button>
         )

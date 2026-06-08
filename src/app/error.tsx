@@ -37,7 +37,7 @@ export default function RootError({
   }, [error]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-6 text-center relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-screen flex items-center justify-center premium-shell p-6 text-center relative overflow-hidden transition-colors duration-300">
       {/* Dekorasi Latar Belakang & Kisi Neural */}
       <div className="neural-grid" />
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">

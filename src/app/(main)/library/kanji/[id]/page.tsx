@@ -84,7 +84,7 @@ export default async function KanjiDetailPage({
   if (!kanji) notFound();
 
   return (
-    <main className="w-full bg-background px-4 md:px-8 lg:px-12 relative overflow-hidden flex flex-col justify-start min-h-screen pb-32 transition-colors duration-300">
+    <main className="w-full bg-transparent px-4 md:px-8 lg:px-12 relative overflow-hidden flex flex-col justify-start min-h-screen pb-32 transition-colors duration-300">
       {/* Ambient Background Glows */}
       <div className="absolute top-[5%] -left-[10%] size-[45%] bg-secondary/10 blur-[130px] rounded-full pointer-events-none z-0 animate-pulse" />
       <div className="absolute bottom-[20%] -right-[15%] size-[35%] bg-primary/5 blur-[130px] rounded-full pointer-events-none z-0" />

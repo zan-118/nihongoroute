@@ -1,31 +1,22 @@
 /**
  * @file badge.tsx
- * @description Komponen Lencana (Badge) atomik dengan variasi gaya cyber-glass.
+ * @description Komponen lencana atomik dengan gaya glass/cyan-first yang konsisten.
  */
 
-// ======================
-// IMPOR
-// ======================
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
-// ======================
-// VARIANTS GAYA
-// ======================
 const badgeVariants = cva(
-  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-black uppercase tracking-[0.14em] transition-all focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
     variants: {
       variant: {
-        default:
-          "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
-        secondary:
-          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        destructive:
-          "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
-        outline: "text-foreground",
-        ghost: "border-transparent bg-transparent text-foreground",
+        default: "badge-premium",
+        secondary: "border-secondary/25 bg-secondary/10 text-secondary hover:bg-secondary/15",
+        destructive: "border-destructive/25 bg-destructive/10 text-destructive hover:bg-destructive/15",
+        outline: "border-border/70 bg-card/45 text-foreground hover:border-primary/30 hover:text-primary",
+        ghost: "border-transparent bg-transparent text-muted-foreground hover:text-primary hover:bg-primary/10",
       },
     },
     defaultVariants: {
@@ -34,20 +25,12 @@ const badgeVariants = cva(
   }
 )
 
-// ======================
-// ANTARMUKA / TIPE DATA
-// ======================
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof badgeVariants> {}
 
-// ======================
-// EKSEKUSI UTAMA
-// ======================
 function Badge({ className, variant, ...props }: BadgeProps) {
-  return (
-    <div className={cn(badgeVariants({ variant }), className)} {...props} />
-  )
+  return <div className={cn(badgeVariants({ variant }), className)} {...props} />
 }
 
 export { Badge, badgeVariants }

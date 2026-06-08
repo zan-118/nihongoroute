@@ -52,7 +52,7 @@ function ShareContent() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6 text-center bg-background relative overflow-hidden">
+      <div className="min-h-screen flex items-center justify-center p-6 text-center bg-transparent relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-tr from-destructive/[0.03] to-transparent pointer-events-none" />
         <Card className="p-8 sm:p-12 max-w-md w-full glass border-destructive/25 rounded-[3rem] shadow-[0_20px_50px_rgb(var(--destructive-rgb)/0.15)] relative z-10">
           <div className="size-20 mx-auto rounded-3xl bg-destructive/10 border border-destructive/25 flex items-center justify-center mb-6">
@@ -62,7 +62,7 @@ function ShareContent() {
           <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
             Maaf, data sertifikat kelulusan ini tidak ditemukan atau format tautan telah kedaluwarsa.
           </p>
-          <Button asChild className="w-full h-13 bg-primary hover:bg-secondary text-primary-foreground rounded-2xl font-black uppercase tracking-widest text-xs transition-all hover:scale-[1.02]">
+          <Button asChild className="w-full h-14 bg-primary hover:bg-secondary text-primary-foreground rounded-2xl font-black uppercase tracking-widest text-xs transition-all hover:scale-[1.02]">
             <Link href="/" className="flex items-center justify-center gap-2">
               <ArrowLeft size={14} /> Kembali ke Beranda
             </Link>
@@ -79,13 +79,13 @@ function ShareContent() {
     : "-";
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4 md:p-12 relative overflow-hidden">
+    <div className="min-h-screen bg-transparent flex items-center justify-center p-4 md:p-12 relative overflow-hidden">
       {/* Dynamic Background Glow */}
       <div 
         className={`absolute top-0 left-1/2 -translate-x-1/2 w-[600px] sm:w-[900px] h-[600px] sm:h-[900px] blur-[150px] rounded-full pointer-events-none opacity-20 transition-all duration-700 ${
           data.passed 
-            ? 'bg-gradient-to-tr from-success via-emerald-500 to-transparent' 
-            : 'bg-gradient-to-tr from-destructive via-rose-500 to-transparent'
+            ? 'bg-gradient-to-tr from-success via-primary to-transparent' 
+            : 'bg-gradient-to-tr from-destructive via-destructive to-transparent'
         }`} 
       />
 
@@ -202,7 +202,7 @@ function ShareContent() {
 
 export default function ShareClient() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-xs font-black uppercase tracking-widest text-muted-foreground animate-pulse bg-background">Memuat Sertifikat…</div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-xs font-black uppercase tracking-widest text-muted-foreground animate-pulse bg-transparent">Memuat Sertifikat…</div>}>
       <ShareContent />
     </Suspense>
   );

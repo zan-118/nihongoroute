@@ -52,7 +52,7 @@ export default function OnboardingClient() {
   };
 
   return (
-    <main className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-6 md:p-12 relative overflow-hidden transition-colors duration-300">
+    <main className="min-h-screen premium-shell text-foreground flex flex-col items-center justify-center p-6 md:p-12 relative overflow-hidden transition-colors duration-300">
       {/* Dekorasi Latar Belakang & Kisi Neural */}
       <div className="neural-grid" />
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
@@ -96,7 +96,7 @@ export default function OnboardingClient() {
               <div className="pt-8">
                 <Button 
                   onClick={() => setStep(2)}
-                  className="rounded-2xl px-10 h-14 text-base font-black uppercase tracking-widest bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_20px_rgb(var(--primary-rgb)/0.15)] hover:shadow-[0_0_30px_rgb(var(--primary-rgb)/0.3)] duration-300 active:scale-[0.97]"
+                  className="brand-button rounded-2xl px-10 h-14 text-base"
                 >
                   Mulai Perjalanan <ChevronRight className="ml-2" />
                 </Button>
@@ -222,7 +222,7 @@ export default function OnboardingClient() {
                 <Button 
                   onClick={handleComplete}
                   disabled={!motivation || isSubmitting}
-                  className="rounded-xl px-8 h-12 font-black uppercase tracking-widest bg-secondary hover:bg-secondary/90 text-secondary-foreground shadow-[0_0_20px_rgb(var(--secondary-rgb)/0.15)] hover:shadow-[0_0_30px_rgb(var(--secondary-rgb)/0.3)] duration-300 active:scale-[0.97]"
+                  className="brand-button rounded-xl px-8 h-12"
                 >
                   {isSubmitting ? (
                     <>

@@ -69,7 +69,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
   // RENDER UTAMA
   // ======================
   return (
-    <div className="w-full px-4 sm:px-6 relative overflow-hidden bg-background text-foreground transition-colors duration-300 min-h-screen pt-8 sm:pt-12 pb-24">
+    <div className="w-full px-4 sm:px-6 relative overflow-hidden bg-transparent text-foreground transition-colors duration-300 min-h-screen pt-8 sm:pt-12 pb-24">
       {/* Dekorasi Ambient Latar Belakang */}
       <div className="absolute top-[-10%] right-[-5%] size-[600px] bg-destructive/5 rounded-full blur-[150px] pointer-events-none animate-pulse" />
       <div className="absolute bottom-[10%] left-[-10%] size-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />

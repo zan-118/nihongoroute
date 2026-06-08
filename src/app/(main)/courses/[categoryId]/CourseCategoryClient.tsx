@@ -90,7 +90,7 @@ export default function CourseCategoryClient({
   };
 
   return (
-    <div className="w-full relative overflow-hidden bg-background text-foreground transition-colors duration-500 min-h-screen pb-24 md:pb-32">
+    <div className="w-full relative overflow-hidden bg-transparent text-foreground transition-colors duration-500 min-h-screen pb-24 md:pb-32">
       {/* 1. DEKORASI LATAR BELAKANG — Subtle Only */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Top gradient accent */}

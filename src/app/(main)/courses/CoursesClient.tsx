@@ -70,7 +70,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
   const generalCategories = categories.filter((cat) => cat.type === "general");
 
   return (
-    <div className="w-full relative overflow-hidden bg-background text-foreground transition-colors duration-300 min-h-screen pb-24 md:pb-32">
+    <div className="w-full relative overflow-hidden bg-transparent text-foreground transition-colors duration-300 min-h-screen pb-24 md:pb-32">
       {/* 1. DEKORASI LATAR BELAKANG — Subtle Only */}
       <div className="absolute inset-0 pointer-events-none">
         <div 
@@ -131,7 +131,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
                   <Progress
                     value={globalProgress}
                     className="h-2.5 bg-muted border border-border relative overflow-hidden"
-                    indicatorClassName="bg-gradient-to-r from-emerald-400 via-primary to-blue-500 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent"
+                    indicatorClassName="bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)),rgb(var(--brand-violet-rgb)))] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent"
                   />
 
                   <div className="flex justify-between items-center gap-4 pt-1">

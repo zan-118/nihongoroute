@@ -193,7 +193,7 @@ export default function SupportClient() {
   });
 
   return (
-    <div className="w-full flex-1 flex flex-col overflow-x-hidden bg-background text-foreground transition-colors duration-300 min-h-screen relative">
+    <div className="w-full flex-1 flex flex-col overflow-x-hidden bg-transparent text-foreground transition-colors duration-300 min-h-screen relative">
       {/* Dynamic Galactic Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute inset-0 neural-grid opacity-[0.15] mix-blend-overlay" />
@@ -337,7 +337,7 @@ export default function SupportClient() {
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercentage}%` }}
                 transition={{ duration: 1.5, ease: "easeOut" }}
-                className="h-full bg-gradient-to-r from-primary to-blue-500 rounded-full shadow-[0_0_20px_rgb(var(--primary-rgb)/0.5)] relative overflow-hidden"
+                className="h-full bg-gradient-to-r from-primary to-secondary rounded-full shadow-[0_0_20px_rgb(var(--primary-rgb)/0.5)] relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-[linear-gradient(45deg,rgba(255,255,255,0.15)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.15)_50%,rgba(255,255,255,0.15)_75%,transparent_75%,transparent)] bg-[length:16px_16px] animate-[shimmer_2s_linear_infinite]" />
               </m.div>

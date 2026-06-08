@@ -15,7 +15,7 @@ import { m } from "framer-motion";
 // ======================
 export default function RootLoading() {
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-background transition-colors duration-300">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center premium-shell transition-colors duration-300">
       {/* Dekorasi Latar Belakang & Kisi Neural */}
       <div className="neural-grid" />
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">

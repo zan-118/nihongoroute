@@ -86,13 +86,13 @@ export default function ProfileSection({
         <div className="absolute bottom-0 left-0 size-48 bg-secondary/5 blur-[80px] rounded-full -ml-16 -mb-16 pointer-events-none" />
         
         {/* Pola Header Kartu ID */}
-        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary via-blue-500 to-emerald-500 opacity-80" />
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)),rgb(var(--brand-violet-rgb)))] opacity-80" />
 
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 relative z-10">
           {/* AVATAR / IDENTITAS PILOT */}
           <div className="flex flex-col items-center gap-4 shrink-0">
              <div className="relative group/avatar">
-                <div className="absolute -inset-1.5 bg-gradient-to-br from-primary to-blue-500 rounded-[2.5rem] blur-md opacity-30 group-hover/avatar:opacity-60 transition duration-1000 group-hover/avatar:duration-300" />
+                <div className="absolute -inset-1.5 bg-gradient-to-br from-primary to-secondary rounded-[2.5rem] blur-md opacity-30 group-hover/avatar:opacity-60 transition duration-1000 group-hover/avatar:duration-300" />
                 <div className="w-32 h-32 md:w-36 md:h-36 rounded-[2.2rem] bg-card border border-border flex items-center justify-center text-foreground relative z-10 overflow-hidden shadow-2xl">
                    <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent opacity-60" />
                    <span className="text-6xl font-black italic text-primary drop-shadow-md select-none font-japanese">
@@ -158,7 +158,7 @@ export default function ProfileSection({
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
                   placeholder="Masukkan nama Anda..."
-                  className="w-full h-14 bg-background/25 border border-border rounded-2xl pl-12 pr-4 text-sm font-black text-foreground uppercase tracking-tight focus:ring-2 focus:ring-primary/25 focus:border-primary outline-none transition-all placeholder:text-muted-foreground/30"
+                  className="control-surface w-full h-14 rounded-2xl pl-12 pr-4 text-sm font-black text-foreground uppercase tracking-tight focus:ring-2 focus:ring-primary/35 outline-none transition-all placeholder:text-muted-foreground/40"
                 />
               </div>
               <Button 

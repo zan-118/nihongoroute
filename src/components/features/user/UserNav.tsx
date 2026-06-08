@@ -48,7 +48,7 @@ export default function UserNav() {
         </Button>
         <Button 
           asChild 
-          className="h-10 px-3 sm:px-4 rounded-xl bg-primary text-primary-foreground text-[10px] sm:text-xs font-black uppercase tracking-widest shadow-lg shadow-primary/20"
+          className="h-10 px-3 sm:px-4 rounded-xl brand-button text-[10px] sm:text-xs"
         >
           <Link href="/login?mode=signup">
             <span className="sm:hidden">Mulai</span>
@@ -63,7 +63,7 @@ export default function UserNav() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button type="button" className="min-h-11 flex items-center gap-1 sm:gap-3 p-1 pr-1 sm:pr-3 rounded-xl premium-surface hover:border-primary/30 transition-all group outline-none">
-          <div className="size-8 rounded-xl bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-primary-foreground text-xs font-black shadow-md group-hover:scale-105 transition-transform">
+          <div className="size-8 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-primary-foreground text-xs font-black shadow-md group-hover:scale-105 transition-transform">
             {userFullName ? userFullName.charAt(0).toUpperCase() : "U"}
           </div>
           <div className="hidden md:flex flex-col items-start">

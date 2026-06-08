@@ -62,20 +62,20 @@ export default function NavWrapper({ children }: NavWrapperProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: "linear" }}
-            className={`flex-1 w-full flex flex-col ${!isExamPage ? 'pb-[7.5rem] md:pb-12' : 'pb-12'} outline-none relative`}
+            className={`app-main-frame flex-1 w-full flex flex-col ${!isExamPage ? 'pb-[7.5rem] md:pb-12' : 'pb-12'} outline-none relative`}
           >
             {!isExamPage && (
               <div className="hidden md:flex w-full px-6 lg:px-10 xl:px-12 pt-6 items-center gap-3 z-20 relative animate-in fade-in slide-in-from-top-4 duration-500">
                 <Button 
                   onClick={() => router.back()}
                   variant="ghost" 
-                  className="size-10 p-0 shrink-0 rounded-xl premium-surface hover:bg-primary/10 hover:border-primary/30 text-muted-foreground hover:text-primary transition-all shadow-sm flex items-center justify-center"
+                  className="action-icon size-10 p-0 shrink-0"
                   aria-label="Kembali"
                 >
                   <ChevronLeft size={16} />
                 </Button>
                 
-                <nav className="premium-surface flex items-center flex-wrap gap-2 text-[10px] md:text-xs font-black uppercase tracking-[0.16em] text-muted-foreground px-4 py-2.5 rounded-xl transition-all hover:border-border">
+                <nav className="status-pill flex items-center flex-wrap gap-2 text-[10px] md:text-xs font-black uppercase tracking-[0.16em] px-4 py-2.5 transition-all">
                   <Link href={ROUTES.DASHBOARD} className="inline-flex min-h-8 items-center gap-1.5 rounded-lg px-1.5 hover:text-primary transition-colors">
                     <Home size={13} className="mb-0.5" /> <span className="hidden sm:inline">Beranda</span>
                   </Link>

@@ -23,9 +23,9 @@ function FreeWritingContent() {
   const character = searchParams.get("char") || "";
 
   return (
-    <div className="w-full flex-1 relative overflow-hidden flex flex-col bg-background transition-colors duration-300 pt-12 pb-24 px-4 md:px-8">
+    <div className="w-full flex-1 relative overflow-hidden flex flex-col bg-transparent transition-colors duration-300 pt-12 pb-24 px-4 md:px-8">
       {/* Dekorasi Latar Belakang */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[800px] h-[400px] bg-success/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[800px] h-[400px] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="max-w-4xl mx-auto w-full relative z-10 flex flex-col h-full">
         <header className="mb-12">
@@ -46,11 +46,11 @@ function FreeWritingContent() {
               <h1 className="text-4xl md:text-5xl font-black text-foreground uppercase tracking-tight italic">
                 {character ? (
                   <>
-                    Kanji <span className="text-success">{character}</span>
+                    Kanji <span className="brand-text-gradient">{character}</span>
                   </>
                 ) : (
                   <>
-                    Kanvas <span className="text-success">Bebas</span>
+                    Kanvas <span className="brand-text-gradient">Bebas</span>
                   </>
                 )}
               </h1>
@@ -64,7 +64,7 @@ function FreeWritingContent() {
             </div>
             
             <div className="flex gap-2">
-               <Badge variant="outline" className="bg-success/10 text-success border-success/20 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">
+               <Badge variant="outline" className="bg-primary/10 text-primary border-primary/25 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">
                  {character ? `Menulis: ${character}` : "Mode Bebas Aktif"}
                </Badge>
             </div>
@@ -77,7 +77,7 @@ function FreeWritingContent() {
             <div className="w-full max-w-[500px]">
                <WritingCanvas 
                  character={character}
-                 strokeColor="rgb(var(--success-rgb))" // Warna Emerald
+                 strokeColor="rgb(var(--brand-cyan-rgb))"
                  className="max-w-[400px] md:max-w-[450px] mx-auto"
                />
             </div>
@@ -95,7 +95,7 @@ function FreeWritingContent() {
                   "Tarik garis dengan tegas untuk hasil guratan yang rapi."
                 ].map((tip, i) => (
                   <li key={`tip-${i}`} className="flex gap-3 text-xs font-medium text-muted-foreground leading-relaxed">
-                    <div className="w-5 h-5 shrink-0 rounded-full bg-success/10 flex items-center justify-center text-success font-bold">
+                    <div className="w-5 h-5 shrink-0 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
                       {i + 1}
                     </div>
                     {tip}
@@ -128,7 +128,7 @@ function FreeWritingContent() {
 export default function FreeWritingPage() {
   return (
     <Suspense fallback={
-      <div className="w-full flex-1 flex items-center justify-center bg-background">
+      <div className="w-full flex-1 flex items-center justify-center bg-transparent">
         <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest animate-pulse">Memuat Kanvas...</p>
       </div>
     }>
