@@ -82,3 +82,5 @@ vocab_*.json
 .vscode/
 
 scratch/
+
+.tmp-ui-screens

@@ -65,9 +65,9 @@ export function Hero() {
           transition={{ delay: 0.42 }}
           className="text-muted-foreground text-base md:text-lg max-w-xl mb-10 leading-relaxed font-medium text-balance"
         >
-          Belajar bahasa Jepang dengan jalur yang rapi: kana, kosakata, tata bahasa,
-          SRS, dan simulasi ujian dalam satu pengalaman yang cepat, nyaman, dan siap
-          dipakai harian.
+          Belajar bahasa Jepang di NihongoRoute dengan jalur yang rapi: kana,
+          kosakata, tata bahasa, SRS, dan simulasi ujian dalam satu pengalaman
+          yang cepat, nyaman, dan siap dipakai harian.
         </m.p>
 
         <m.div
@@ -155,7 +155,12 @@ export function Hero() {
 
           <m.div
             animate={{ y: [0, 16, 0], x: [0, -6, 0] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1,
+            }}
             className="absolute bottom-8 -left-8 p-5 premium-surface rounded-xl flex items-center justify-center hover:border-success/40 transition-colors pointer-events-auto"
           >
             <div className="flex items-center gap-3">
