@@ -22,7 +22,10 @@ import {
   Flame,
   Target,
   FileText,
-  GraduationCap
+  GraduationCap,
+  Puzzle,
+  GitCompare,
+  MessageSquareText
 } from "lucide-react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
@@ -55,6 +58,33 @@ const tools = [
     description: "Latih perubahan verba ke bentuk masu, te, nai, ta, pasif, potensial, dan lainnya.",
     icon: GraduationCap,
     href: "/tools/conjugation",
+    color: "text-success",
+    bgColor: "bg-success/10",
+    border: "border-success/20"
+  },
+  {
+    title: "Particle Trainer",
+    description: "Latihan memilih partikel は, が, を, に, で, と, から, dan lainnya dari kalimat rumpang.",
+    icon: Puzzle,
+    href: "/tools/particles",
+    color: "text-primary",
+    bgColor: "bg-primary/10",
+    border: "border-primary/20"
+  },
+  {
+    title: "Kanji Similarity Tool",
+    description: "Bandingkan kanji mirip seperti 未/末, 日/目, 土/士 dengan cue visual dan contoh vocab.",
+    icon: GitCompare,
+    href: "/tools/kanji-similarity",
+    color: "text-warning",
+    bgColor: "bg-warning/10",
+    border: "border-warning/20"
+  },
+  {
+    title: "Sentence Builder",
+    description: "Susun token menjadi kalimat Jepang yang benar untuk melatih grammar pattern.",
+    icon: MessageSquareText,
+    href: "/tools/sentence-builder",
     color: "text-success",
     bgColor: "bg-success/10",
     border: "border-success/20"

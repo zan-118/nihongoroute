@@ -1,0 +1,238 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import Link from "next/link";
+import { ArrowDown, CheckCircle2, RotateCcw, Shuffle, Sparkles, XCircle } from "lucide-react";
+import {
+  isBuiltSentenceCorrect,
+  SENTENCE_BUILDER_PROMPTS,
+  shuffleSentenceTokens,
+} from "@/lib/sentence-builder";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+
+export default function SentenceBuilderClient() {
+  const [promptIndex, setPromptIndex] = useState(0);
+  const [selectedTokens, setSelectedTokens] = useState<string[]>([]);
+  const [shuffleRound, setShuffleRound] = useState(0);
+  const [hasChecked, setHasChecked] = useState(false);
+
+  const prompt = SENTENCE_BUILDER_PROMPTS[promptIndex];
+  const shuffledTokens = useMemo(
+    () => shuffleSentenceTokens(prompt.tokens, `${prompt.id}-${shuffleRound}`),
+    [prompt.id, prompt.tokens, shuffleRound]
+  );
+  const availableTokens = shuffledTokens.filter((token, index) => {
+    const usedCount = selectedTokens.filter((selected) => selected === token).length;
+    const seenSoFar = shuffledTokens.slice(0, index + 1).filter((item) => item === token).length;
+    return usedCount < seenSoFar;
+  });
+  const isCorrect = hasChecked && isBuiltSentenceCorrect(prompt.tokens, selectedTokens);
+
+  const handlePromptChange = (nextIndex: number) => {
+    setPromptIndex(nextIndex);
+    setSelectedTokens([]);
+    setShuffleRound((prev) => prev + 1);
+    setHasChecked(false);
+  };
+
+  const handleReset = () => {
+    setSelectedTokens([]);
+    setHasChecked(false);
+  };
+
+  const handleShuffle = () => {
+    setShuffleRound((prev) => prev + 1);
+    setSelectedTokens([]);
+    setHasChecked(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-background/95 px-4 py-12 md:px-8">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
+        <header className="flex flex-col gap-5">
+          <Button variant="outline" asChild className="w-fit rounded-xl">
+            <Link href="/tools">Kembali ke Peralatan</Link>
+          </Button>
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-3">
+              <div className="flex size-12 items-center justify-center rounded-2xl border border-success/20 bg-success/10 text-success">
+                <Sparkles size={24} aria-hidden="true" />
+              </div>
+              <Badge className="w-fit rounded-xl px-3 py-1">Sentence Builder</Badge>
+            </div>
+            <h1 className="max-w-3xl text-4xl font-black uppercase tracking-tight text-foreground md:text-6xl">
+              Susun Kalimat
+            </h1>
+            <p className="max-w-2xl text-sm font-medium leading-relaxed text-muted-foreground">
+              Susun token menjadi kalimat Jepang yang benar. Cocok untuk melatih grammar pattern tanpa harus menulis dari nol.
+            </p>
+          </div>
+        </header>
+
+        <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
+          <Card className="rounded-[2rem] border border-border bg-card/45 p-4 shadow-xl">
+            <div className="mb-4 flex items-center gap-2 px-2">
+              <ArrowDown size={16} className="text-primary" aria-hidden="true" />
+              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground">
+                Prompt
+              </h2>
+            </div>
+            <div className="flex flex-col gap-2">
+              {SENTENCE_BUILDER_PROMPTS.map((item, index) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => handlePromptChange(index)}
+                  className={cn(
+                    "rounded-2xl border p-4 text-left transition-all",
+                    prompt.id === item.id
+                      ? "border-primary/40 bg-primary/10 text-primary"
+                      : "border-border bg-background/35 text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  <span className="block text-sm font-black uppercase tracking-widest">
+                    {item.level}
+                  </span>
+                  <span className="mt-1 block text-sm font-bold leading-relaxed">
+                    {item.translation}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </Card>
+
+          <div className="flex flex-col gap-6">
+            <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-2xl md:p-6">
+              <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <Badge variant="outline" className="mb-3 rounded-xl">
+                    {prompt.level} · {prompt.pattern}
+                  </Badge>
+                  <h2 className="text-2xl font-black text-foreground">{prompt.translation}</h2>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Button type="button" variant="outline" onClick={handleShuffle} className="rounded-xl">
+                    <Shuffle data-icon="inline-start" />
+                    Acak
+                  </Button>
+                  <Button type="button" variant="ghost" onClick={handleReset} className="rounded-xl">
+                    <RotateCcw data-icon="inline-start" />
+                    Reset
+                  </Button>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-dashed border-primary/30 bg-primary/10 p-4">
+                <p className="mb-3 text-[10px] font-black uppercase tracking-widest text-primary">
+                  Susunan Kamu
+                </p>
+                <div className="flex min-h-20 flex-wrap gap-2">
+                  {selectedTokens.length > 0 ? (
+                    selectedTokens.map((token, index) => (
+                      <button
+                        key={`${token}-${index}`}
+                        type="button"
+                        onClick={() => {
+                          setSelectedTokens((prev) => prev.filter((_, itemIndex) => itemIndex !== index));
+                          setHasChecked(false);
+                        }}
+                        className="rounded-xl border border-primary/25 bg-background/70 px-4 py-2 font-japanese text-lg font-black text-foreground transition-all hover:border-destructive/40 hover:text-destructive"
+                      >
+                        {token}
+                      </button>
+                    ))
+                  ) : (
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Pilih token di bawah untuk mulai menyusun.
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="mt-5">
+                <p className="mb-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                  Token
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {availableTokens.map((token, index) => (
+                    <button
+                      key={`${token}-${index}`}
+                      type="button"
+                      onClick={() => {
+                        setSelectedTokens((prev) => [...prev, token]);
+                        setHasChecked(false);
+                      }}
+                      className="rounded-xl border border-border bg-background/45 px-4 py-2 font-japanese text-lg font-black text-foreground transition-all hover:border-primary/40 hover:bg-primary/10"
+                    >
+                      {token}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-sm font-medium italic text-muted-foreground">
+                  {prompt.explanation}
+                </p>
+                <Button
+                  type="button"
+                  onClick={() => setHasChecked(true)}
+                  disabled={selectedTokens.length === 0}
+                  className="rounded-xl"
+                >
+                  Cek Kalimat
+                </Button>
+              </div>
+            </Card>
+
+            <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-xl">
+              <div className="mb-4 flex items-center gap-2">
+                {hasChecked ? (
+                  isCorrect ? (
+                    <CheckCircle2 size={16} className="text-success" />
+                  ) : (
+                    <XCircle size={16} className="text-warning" />
+                  )
+                ) : (
+                  <Sparkles size={16} className="text-primary" />
+                )}
+                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground">
+                  Feedback
+                </h2>
+              </div>
+              {hasChecked ? (
+                <div
+                  className={cn(
+                    "rounded-2xl border p-5",
+                    isCorrect
+                      ? "border-success/25 bg-success/10"
+                      : "border-warning/25 bg-warning/10"
+                  )}
+                >
+                  <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+                    {isCorrect ? "Benar" : "Kalimat Target"}
+                  </p>
+                  <p className="mt-2 font-japanese text-2xl font-black text-foreground">
+                    {prompt.target}
+                  </p>
+                  <p className="mt-2 text-sm font-medium leading-relaxed text-muted-foreground">
+                    {isCorrect
+                      ? "Urutannya sudah tepat."
+                      : "Bandingkan urutan partikel, objek, dan predikatnya."}
+                  </p>
+                </div>
+              ) : (
+                <p className="rounded-2xl border border-dashed border-border bg-muted/15 p-5 text-sm font-medium text-muted-foreground">
+                  Susun token lalu cek untuk melihat jawaban target.
+                </p>
+              )}
+            </Card>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

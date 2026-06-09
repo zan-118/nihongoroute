@@ -82,6 +82,9 @@ export function getRouteLabel(segment: string): string {
     "text-analyzer": "Text Analyzer",
     conjugation: "Konjugasi",
     dictionary: "Kamus Terpadu",
+    particles: "Particle Trainer",
+    "kanji-similarity": "Kanji Mirip",
+    "sentence-builder": "Sentence Builder",
   };
 
   if (labels[segment.toLowerCase()]) {
