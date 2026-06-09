@@ -31,7 +31,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
         />
       )}
 
-      <aside className={`sidebar-shell fixed top-0 left-0 h-dvh p-4 sm:p-5 z-[60] flex flex-col w-[18rem] transition-transform duration-500 md:translate-x-0 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}>
+      <aside data-tour="sidebar" className={`sidebar-shell fixed top-0 left-0 h-dvh p-4 sm:p-5 z-[60] flex flex-col w-[18rem] transition-transform duration-500 md:translate-x-0 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(var(--brand-cyan-rgb)/0.055),transparent_28%,rgb(var(--brand-violet-rgb)/0.035))] pointer-events-none" />
 
         <div className="mb-7 flex items-center gap-4 relative z-10 px-1">
@@ -62,7 +62,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
           </Link>
         </div>
 
-        <nav className="flex-1 space-y-7 relative z-10 overflow-y-auto pr-1 custom-scrollbar">
+        <nav data-tour="sidebar-nav" className="flex-1 space-y-7 relative z-10 overflow-y-auto pr-1 custom-scrollbar">
           <div className="space-y-1">
             <div className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.28em] mb-3 ml-3 opacity-70">
               Platform

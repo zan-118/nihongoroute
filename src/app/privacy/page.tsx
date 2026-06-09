@@ -10,7 +10,9 @@ import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Shield, Lock, FileText, Mail } from "lucide-react";
+import AppBreadcrumbs from "@/components/layout/AppBreadcrumbs";
 import { createPageMetadata } from "@/lib/seo";
+import { getBreadcrumbItems } from "@/lib/routes";
 
 // ======================
 // KONFIGURASI METADATA
@@ -35,13 +37,11 @@ export default function PrivacyPage() {
 
       <div className="max-w-4xl w-full relative z-10 flex flex-col">
         {/* Breadcrumb / Navigasi Atas */}
-        <div className="mb-8 flex items-center justify-start animate-fade-in">
-          <Link href="/dashboard">
-            <Button variant="ghost" className="rounded-2xl px-4 py-2 hover:bg-muted text-xs font-bold tracking-wider uppercase flex items-center gap-2 border border-border/40 hover:border-primary/20 transition-all duration-300">
-              <ArrowLeft size={14} className="text-primary" />
-              <span>Dashboard</span>
-            </Button>
-          </Link>
+        <div className="mb-8 animate-fade-in">
+          <AppBreadcrumbs
+            items={getBreadcrumbItems("/privacy")}
+            className="w-fit max-w-full"
+          />
         </div>
 
         {/* Kartu Cyber-glass Premium Luar */}

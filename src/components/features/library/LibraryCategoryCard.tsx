@@ -49,7 +49,7 @@ export function LibraryCategoryCard({
   accentRgb = "0 122 124",
 }: LibraryCategoryCardProps) {
   return (
-    <Link href={href} className="group flex h-full font-sans" aria-label={`Buka modul ${title}`}>
+    <Link data-tour="library-category-card" href={href} className="group flex h-full font-sans" aria-label={`Buka modul ${title}`}>
       <div className="w-full h-full rounded-[2rem] border border-border bg-card/60 backdrop-blur-sm flex flex-row gap-5 p-6 md:p-7 transition-all duration-300 relative overflow-hidden hover:-translate-y-0.5"
         style={{
           boxShadow: `0 0 0 1px rgba(${accentRgb}, 0)`,
@@ -154,4 +154,3 @@ export function LibraryCategoryCard({
     </Link>
   );
 }
-

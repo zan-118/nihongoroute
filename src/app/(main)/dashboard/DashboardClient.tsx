@@ -17,7 +17,6 @@ import dynamic from "next/dynamic";
 import DashboardSettings from "@/components/features/dashboard/DashboardSettings";
 import LevelUpOverlay from "@/components/features/gamification/LevelUpOverlay";
 import ConfirmModal from "@/components/ui/ConfirmModal";
-import OnboardingTour from "@/components/features/onboarding/OnboardingTour";
 import { toast } from "sonner";
 import { summarizeSrs } from "@/lib/srs-summary";
 import { useRouter } from "next/navigation";
@@ -221,7 +220,6 @@ export default function DashboardClient({ courseMetadata, expression }: Dashboar
 
   return (
     <div className="max-w-7xl mx-auto relative z-10">
-      <OnboardingTour />
       <LevelUpOverlay level={progress.level} />
       <ConfirmModal
         isOpen={confirmModal.isOpen}

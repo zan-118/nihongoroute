@@ -15,11 +15,8 @@ import {
   Hash,
   Clock,
   BookOpen,
-  Home,
   Activity,
-  FileText,
   Database,
-  Library,
   Users,
   MessageSquare,
   Sparkles,
@@ -66,21 +63,6 @@ export default function CheatsheetClient({
 
   return (
     <div className="relative w-full max-w-[1600px] mx-auto z-10 flex flex-col flex-1 pb-32 md:pb-24 px-4 md:px-8 lg:px-12 transition-colors duration-300">
-      {/* Breadcrumb / Navigasi Atas */}
-      <nav className="mb-8 md:mb-10 flex flex-wrap items-center gap-2 md:gap-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">
-        <Link href="/dashboard" className="hover:text-primary transition-colors flex items-center gap-1.5 md:gap-2">
-          <Home size={14} /> Beranda
-        </Link>
-        <span className="text-border">/</span>
-        <Link href="/library" className="hover:text-primary transition-colors flex items-center gap-1.5 md:gap-2">
-          <Library size={14} /> Pustaka
-        </Link>
-        <span className="text-border">/</span>
-        <span className="text-primary flex items-center gap-1.5 md:gap-2">
-          <FileText size={14} /> Cheatsheet
-        </span>
-      </nav>
-
       {/* Tajuk Utama (Hero Header) */}
       <header className="mb-12 md:mb-16">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 md:gap-12">

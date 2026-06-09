@@ -31,8 +31,10 @@ interface SidebarItemProps {
 // ======================
 export function SidebarItem({ item, pathname, onClick }: SidebarItemProps) {
   const isActive = pathname.startsWith(item.href);
+  const tourId = item.href.replace(/^\/+/, "").replace(/[^a-z0-9]+/gi, "-") || "home";
+
   return (
-    <Link href={item.href} onClick={onClick}>
+    <Link data-tour={`nav-${tourId}`} href={item.href} onClick={onClick}>
       <m.div
         whileHover={{ x: 3 }}
         whileTap={{ scale: 0.985 }}

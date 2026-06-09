@@ -11,8 +11,6 @@ import Link from "next/link";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { 
   ChevronLeft, 
-  Home,
-  Library,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -116,23 +114,6 @@ export default async function CheatsheetDetailPage({
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgb(var(--destructive-rgb)/0.03)_0%,transparent_70%)] pointer-events-none" />
 
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 relative z-10 pt-10">
-        {/* Navigasi */}
-        <nav className="mb-12 flex items-center gap-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">
-          <Link href="/dashboard" className="hover:text-primary transition-colors flex items-center gap-2">
-            <Home size={14} /> Beranda
-          </Link>
-          <span className="text-border">/</span>
-          <Link href="/library" className="hover:text-primary transition-colors flex items-center gap-2">
-            <Library size={14} /> Pustaka
-          </Link>
-          <span className="text-border">/</span>
-          <Link href="/library/cheatsheet" className="hover:text-primary transition-colors flex items-center gap-2">
-             Cheatsheet
-          </Link>
-          <span className="text-border">/</span>
-          <span className="text-primary">{sheet.title}</span>
-        </nav>
-
         {/* Bagian Tajuk Halaman (Header) */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 mb-16">
           <div className="flex flex-col gap-6 max-w-3xl">

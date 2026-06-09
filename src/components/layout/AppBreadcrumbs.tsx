@@ -11,16 +11,12 @@
 import Link from "next/link";
 import { ChevronRight, Home } from "lucide-react";
 import { m } from "framer-motion";
+import { cn } from "@/lib/utils";
+import type { BreadcrumbItem } from "@/lib/routes";
 
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
-interface BreadcrumbItem {
-  label: string;
-  href?: string;
-  active?: boolean;
-}
-
 interface AppBreadcrumbsProps {
   items: BreadcrumbItem[];
   className?: string;
@@ -33,44 +29,41 @@ export default function AppBreadcrumbs({ items, className = "" }: AppBreadcrumbs
   return (
     <nav 
       aria-label="Breadcrumb" 
-      className={`flex items-center flex-wrap gap-3 mb-10 ${className}`}
+      data-tour="breadcrumbs"
+      className={cn(
+        "status-pill flex max-w-full items-center gap-1 overflow-x-auto px-3 py-2 text-[10px] font-black uppercase tracking-[0.16em] scrollbar-none md:text-xs",
+        className
+      )}
     >
-      <m.div
-        initial={{ opacity: 0, x: -10 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.4 }}
-      >
-        <Link
-          href="/dashboard"
-          className="flex items-center justify-center size-9 rounded-xl bg-card/30 backdrop-blur-md border border-border/50 hover:bg-primary/10 hover:border-primary/30 text-muted-foreground hover:text-primary transition-all shadow-lg group"
-        >
-          <Home size={16} className="group-hover:scale-110 transition-transform" />
-        </Link>
-      </m.div>
-
       {items.map((item, index) => (
         <m.div 
-          key={item.label} 
-          className="flex items-center gap-3"
+          key={`${item.label}-${index}`} 
+          className="flex shrink-0 items-center gap-1.5"
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.4, delay: index * 0.1 + 0.1 }}
+          transition={{ duration: 0.25, delay: index * 0.03 }}
         >
-          <ChevronRight size={14} className="text-muted-foreground/20 shrink-0" />
+          {index > 0 && <ChevronRight size={12} className="shrink-0 text-muted-foreground/25" />}
           
           {item.active ? (
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-primary/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity rounded-xl" />
-              <span className="relative text-[10px] font-black uppercase tracking-[0.2em] text-foreground bg-primary/10 border border-primary/20 px-4 py-2 rounded-xl shadow-[0_0_20px_rgb(var(--primary-rgb)/0.1)]">
+            <span
+              aria-current="page"
+              className="inline-flex min-h-8 max-w-[13rem] items-center gap-1.5 rounded-lg bg-primary/10 px-2.5 text-primary shadow-[0_0_18px_rgb(var(--primary-rgb)/0.08)] md:max-w-[18rem]"
+              title={item.label}
+            >
+              {index === 0 && <Home size={13} className="mb-0.5 shrink-0" />}
+              <span className="truncate">
                 {item.label}
               </span>
-            </div>
+            </span>
           ) : (
             <Link
               href={item.href || "#"}
-              className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-all hover:translate-x-0.5"
+              className="inline-flex min-h-8 max-w-[11rem] items-center gap-1.5 rounded-lg px-2 text-muted-foreground transition-colors hover:text-foreground md:max-w-[16rem]"
+              title={item.label}
             >
-              {item.label}
+              {index === 0 && <Home size={13} className="mb-0.5 shrink-0" />}
+              <span className="truncate">{item.label}</span>
             </Link>
           )}
         </m.div>

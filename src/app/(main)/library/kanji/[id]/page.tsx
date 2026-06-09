@@ -16,9 +16,6 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { fullyDecode } from "@/lib/utils";
 import { 
   ChevronLeft, 
-  Home,
-  Library,
-  Languages,
   Layers,
   ListChecks,
   PenTool
@@ -133,28 +130,6 @@ export default async function KanjiDetailPage({
       <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none z-0" />
 
       <div className="max-w-6xl mx-auto w-full relative z-10 pt-8 md:pt-16">
-        {/* Breadcrumbs */}
-        <nav className="mb-10 md:mb-16 flex flex-wrap items-center gap-2 md:gap-4 text-[10px] md:text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">
-          <Link href="/dashboard" className="hover:text-primary transition-all flex items-center gap-1.5 md:gap-2 group">
-            <Home size={14} aria-hidden="true" className="group-hover:scale-110 transition-transform" /> 
-            <span className="hidden sm:inline">Beranda</span>
-          </Link>
-          <span className="opacity-20">/</span>
-          <Link href="/library" className="hover:text-primary transition-all flex items-center gap-1.5 md:gap-2 group">
-            <Library size={14} aria-hidden="true" className="group-hover:scale-110 transition-transform" /> 
-            <span className="hidden sm:inline">Pustaka</span>
-          </Link>
-          <span className="opacity-20">/</span>
-          <Link href="/library/kanji" className="hover:text-primary transition-all flex items-center gap-1.5 md:gap-2 group">
-            <Languages size={14} aria-hidden="true" className="group-hover:scale-110 transition-transform" /> 
-            <span className="hidden sm:inline">Kanji</span>
-          </Link>
-          <span className="opacity-20">/</span>
-          <span className="text-primary flex items-center gap-1.5 md:gap-2 drop-shadow-[0_0_10px_rgb(var(--primary-rgb)/0.3)]">
-            {kanji.character}
-          </span>
-        </nav>
-
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-[minmax(0,auto)] animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out">
           {/* 1. Stroke & Visual Bento (Fokus Utama) */}
           <KanjiStrokeHero 

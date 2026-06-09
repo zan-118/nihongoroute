@@ -8,7 +8,7 @@
 // ======================
 // IMPOR
 // ======================
-import { ReactNode, useState } from "react";
+import { ReactNode, useMemo, useState } from "react";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import MobileNav from "./MobileNav";
@@ -16,10 +16,10 @@ import FloatingActions from "@/components/features/global/FloatingActions";
 import AchievementToast from "./AchievementToast";
 import { m, AnimatePresence } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
-import Link from "next/link";
-import { ChevronRight, ChevronLeft, Home } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ROUTES, getRouteLabel } from "@/lib/routes";
+import { getBreadcrumbItems } from "@/lib/routes";
+import AppBreadcrumbs from "./AppBreadcrumbs";
 
 // ======================
 // ANTARMUKA / TIPE DATA
@@ -36,7 +36,7 @@ export default function NavWrapper({ children }: NavWrapperProps) {
   const pathname = usePathname();
   const router = useRouter();
   const isExamPage = pathname?.includes("/exams/");
-  const pathSegments = pathname?.split('/').filter(Boolean) || [];
+  const breadcrumbItems = useMemo(() => getBreadcrumbItems(pathname), [pathname]);
 
   return (
     <div className="premium-shell relative min-h-dvh text-foreground flex flex-col md:flex-row overflow-x-hidden w-full transition-colors duration-300">
@@ -58,6 +58,7 @@ export default function NavWrapper({ children }: NavWrapperProps) {
           <m.main 
             key={pathname}
             id="main-content" 
+            data-tour="main-content"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -65,32 +66,17 @@ export default function NavWrapper({ children }: NavWrapperProps) {
             className={`app-main-frame flex-1 w-full flex flex-col ${!isExamPage ? 'pb-[7.5rem] md:pb-12' : 'pb-12'} outline-none relative`}
           >
             {!isExamPage && (
-              <div className="hidden md:flex w-full px-6 lg:px-10 xl:px-12 pt-6 items-center gap-3 z-20 relative animate-in fade-in slide-in-from-top-4 duration-500">
+              <div className="relative z-20 flex w-full animate-in items-center gap-2 px-4 pt-4 duration-500 fade-in slide-in-from-top-4 sm:px-6 md:px-8 md:pt-6 lg:px-10 xl:px-12">
                 <Button 
                   onClick={() => router.back()}
                   variant="ghost" 
-                  className="action-icon size-10 p-0 shrink-0"
+                  className="action-icon hidden size-10 shrink-0 p-0 md:inline-flex"
                   aria-label="Kembali"
                 >
                   <ChevronLeft size={16} />
                 </Button>
-                
-                <nav className="status-pill flex items-center flex-wrap gap-2 text-[10px] md:text-xs font-black uppercase tracking-[0.16em] px-4 py-2.5 transition-all">
-                  <Link href={ROUTES.DASHBOARD} className="inline-flex min-h-8 items-center gap-1.5 rounded-lg px-1.5 hover:text-primary transition-colors">
-                    <Home size={13} className="mb-0.5" /> <span className="hidden sm:inline">Beranda</span>
-                  </Link>
-                  {pathSegments.map((segment, idx) => (
-                    <div key={`seg-${segment}`} className="flex items-center gap-2">
-                      <ChevronRight size={10} className="opacity-20" />
-                      <Link 
-                        href={`/${pathSegments.slice(0, idx + 1).join('/')}`}
-                        className={`inline-flex min-h-8 items-center rounded-lg px-1.5 hover:text-primary transition-colors ${idx === pathSegments.length - 1 ? 'text-primary pointer-events-none' : ''}`}
-                      >
-                        {getRouteLabel(segment)}
-                      </Link>
-                    </div>
-                  ))}
-                </nav>
+
+                <AppBreadcrumbs items={breadcrumbItems} className="min-w-0 flex-1" />
               </div>
             )}
             {children}

@@ -68,18 +68,27 @@ export const ROUTES = {
  */
 export function getRouteLabel(segment: string): string {
   const labels: Record<string, string> = {
+    dashboard: "Beranda",
     library: "Pustaka",
     vocab: "Kosakata",
     kanji: "Kanji",
     grammar: "Tata Bahasa",
     reading: "Bacaan",
+    listening: "Listening",
     courses: "Kursus",
     exams: "Ujian",
-    dashboard: "Dasbor",
     "learning-hub": "Learning Hub",
     cheatsheet: "Referensi Kilat",
     support: "Bantuan",
+    settings: "Pengaturan",
+    review: "Hafalan",
+    share: "Bagikan",
+    social: "Komunitas",
     tools: "Peralatan",
+    kana: "Kana Master",
+    flashcards: "Flashcards",
+    survival: "Mode Bertahan",
+    writing: "Latihan Menulis",
     "weak-points": "Weak Point Trainer",
     "text-analyzer": "Text Analyzer",
     conjugation: "Konjugasi",
@@ -90,6 +99,10 @@ export function getRouteLabel(segment: string): string {
     "jlpt-drill": "JLPT Mini Drill",
     "counter-trainer": "Counter Trainer",
     shadowing: "Shadowing Recorder",
+    "forgot-password": "Lupa Password",
+    "update-password": "Ubah Password",
+    privacy: "Kebijakan Privasi",
+    terms: "Syarat & Ketentuan",
   };
 
   if (labels[segment.toLowerCase()]) {
@@ -102,4 +115,44 @@ export function getRouteLabel(segment: string): string {
   // Jika terlalu panjang, ringkas (untuk kerapihan di mobile)
   const formatted = decoded.toLowerCase().replace(/\b\w/g, (l) => l.toUpperCase());
   return formatted.length > 30 ? formatted.substring(0, 27) + "..." : formatted;
+}
+
+export interface BreadcrumbItem {
+  label: string;
+  href?: string;
+  active?: boolean;
+}
+
+export function getBreadcrumbItems(pathname: string | null | undefined): BreadcrumbItem[] {
+  const normalizedPathname = pathname?.split("?")[0]?.replace(/\/+$/, "") || "/";
+  const segments = normalizedPathname.split("/").filter(Boolean);
+
+  if (segments.length === 0 || segments[0] === "dashboard") {
+    return [{ active: true, label: "Beranda" }];
+  }
+
+  const items: BreadcrumbItem[] = [{ href: ROUTES.DASHBOARD, label: "Beranda" }];
+
+  segments.forEach((segment, index) => {
+    const href = `/${segments.slice(0, index + 1).join("/")}`;
+    const isLast = index === segments.length - 1;
+
+    items.push({
+      active: isLast,
+      href: isLast ? undefined : href,
+      label: getRouteLabel(segment),
+    });
+  });
+
+  return items;
+}
+
+export function getCurrentRouteLabel(pathname: string | null | undefined): string {
+  const breadcrumbs = getBreadcrumbItems(pathname);
+  return breadcrumbs[breadcrumbs.length - 1]?.label || "Beranda";
+}
+
+export function getParentRouteLabel(pathname: string | null | undefined): string | null {
+  const breadcrumbs = getBreadcrumbItems(pathname);
+  return breadcrumbs.length > 1 ? breadcrumbs[breadcrumbs.length - 2]?.label || null : null;
 }

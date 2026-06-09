@@ -25,18 +25,7 @@ export default function GrammarLoading() {
       <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none z-0" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgb(var(--primary-rgb)/0.05)_0%,transparent_70%)] pointer-events-none z-0" />
 
-      <div className="max-w-4xl mx-auto w-full relative z-10 pt-8 md:pt-10">
-        {/* Nav Breadcrumbs Skeleton */}
-        <nav className="mb-8 md:mb-12 flex flex-wrap items-center gap-2 md:gap-4">
-          <Skeleton className="h-4 w-16" />
-          <span className="text-border">/</span>
-          <Skeleton className="h-4 w-20" />
-          <span className="text-border">/</span>
-          <Skeleton className="h-4 w-24" />
-          <span className="text-border">/</span>
-          <Skeleton className="h-4 w-32 md:w-48 bg-primary/20" />
-        </nav>
-
+      <div className="max-w-4xl mx-auto w-full relative z-10 pt-8 md:pt-12">
         {/* Header Skeleton */}
         <header className="mb-16 md:mb-20">
           <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">

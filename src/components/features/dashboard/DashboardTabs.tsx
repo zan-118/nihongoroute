@@ -43,6 +43,7 @@ export function DashboardTabs({ tabs, activeTab, onTabChange }: DashboardTabsPro
       <div 
         role="tablist" 
         aria-label="Dashboard Navigation" 
+        data-tour="dashboard-tabs"
         className="bg-muted/50 dark:bg-background/[0.03] p-1.5 rounded-[2rem] border border-border/50 flex gap-1 shadow-sm max-w-full overflow-x-auto scrollbar-none"
       >
         {tabs.map((tab) => {
@@ -51,6 +52,7 @@ export function DashboardTabs({ tabs, activeTab, onTabChange }: DashboardTabsPro
             <m.button
               key={tab.id}
               role="tab"
+              data-tour={`dashboard-tab-${tab.id}`}
               aria-selected={isActive}
               aria-controls={`${tab.id}-panel`}
               whileTap={{ scale: 0.95 }}
@@ -78,5 +80,4 @@ export function DashboardTabs({ tabs, activeTab, onTabChange }: DashboardTabsPro
     </div>
   );
 }
-
 

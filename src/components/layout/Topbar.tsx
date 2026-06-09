@@ -19,7 +19,7 @@ import NotificationPopover from "@/components/features/user/NotificationPopover"
 import SearchModal from "@/components/features/tools/search/SearchModal";
 import UserNav from "@/components/features/user/UserNav";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
-import { getRouteLabel } from "@/lib/routes";
+import { getBreadcrumbItems, getCurrentRouteLabel, getParentRouteLabel } from "@/lib/routes";
 
 // ======================
 // EKSEKUSI UTAMA
@@ -35,8 +35,9 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const unreadNotifications = notifications?.filter((n: { read: boolean }) => !n.read).length || 0;
 
-  // Logika breadcrumb
-  const pathSegments = pathname.split('/').filter(Boolean);
+  const breadcrumbItems = getBreadcrumbItems(pathname);
+  const currentRouteLabel = getCurrentRouteLabel(pathname);
+  const parentRouteLabel = getParentRouteLabel(pathname);
 
   // Pintasan global CMD+K
   useEffect(() => {
@@ -54,11 +55,11 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
 
   return (
     <>
-    <header className="topbar-shell sticky top-0 z-40 w-full px-3 sm:px-4 md:px-8 lg:px-10 py-3 flex items-center justify-between transition-all">
+    <header data-tour="topbar" className="topbar-shell sticky top-0 z-40 w-full px-3 sm:px-4 md:px-8 lg:px-10 py-3 flex items-center justify-between transition-all">
       <div className="flex items-center gap-3 sm:gap-5 min-w-0">
         {/* Menu Seluler atau Pengalih Kembali */}
         <div className="md:hidden flex items-center gap-2">
-          {pathSegments.length > 1 ? (
+          {breadcrumbItems.length > 1 ? (
             <div className="flex items-center gap-1">
               <m.button 
                 whileTap={{ scale: 0.9 }}
@@ -91,11 +92,11 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
 
         <div className="flex flex-col min-w-0 max-w-[190px] sm:max-w-[280px] md:max-w-[360px] lg:max-w-none">
           <h1 className="text-sm md:text-lg font-black text-foreground tracking-tight truncate leading-none uppercase md:max-w-[18rem] lg:max-w-none">
-            {pathSegments.length > 0 ? getRouteLabel(pathSegments[pathSegments.length - 1]) : "Beranda"}
+            {currentRouteLabel}
           </h1>
-          {pathSegments.length > 1 && (
+          {parentRouteLabel && (
              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.16em] mt-1 truncate">
-               {getRouteLabel(pathSegments[pathSegments.length - 2])}
+               {parentRouteLabel}
              </span>
           )}
         </div>
@@ -158,6 +159,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
         </div>
         {/* Tombol Pencarian Global - Lebar Disesuaikan */}
         <div 
+          data-tour="topbar-search"
           onClick={() => setIsSearchOpen(true)}
           className="hidden lg:flex relative w-44 xl:w-64 group cursor-pointer"
         >
@@ -172,6 +174,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
 
         {/* Ikon Pencarian Seluler/Desktop Kecil */}
         <button type="button" 
+          data-tour="topbar-search-mobile"
           onClick={() => setIsSearchOpen(true)}
           aria-label="Buka Pencarian"
           className="action-icon lg:hidden size-11"
@@ -181,7 +184,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
 
         <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 sm:border-l sm:border-border/60 sm:pl-2 md:pl-4">
           {/* Pengalih Mode Tampilan Bahasa Jepang */}
-          <div className="flex items-center gap-1 p-1 rounded-xl control-surface">
+          <div data-tour="reading-mode" className="flex items-center gap-1 p-1 rounded-xl control-surface">
             {[
               { id: "kanji", icon: BookOpen, label: "Kanji" },
               { id: "furigana", icon: Eye, label: "Furi" },
@@ -216,6 +219,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
 
           <div className="flex items-center gap-2 relative">
              <m.button 
+              data-tour="notifications"
               whileTap={{ scale: 0.9 }}
               onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
               aria-label={`Notifikasi (${unreadNotifications} belum dibaca)`}

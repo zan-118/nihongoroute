@@ -19,7 +19,7 @@ export default function MobileNav() {
   const { pathname, navItems } = useMobileNav();
 
   return (
-    <div className="md:hidden fixed bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] left-1/2 -translate-x-1/2 w-[min(94vw,28rem)] z-50">
+    <div data-tour="mobile-nav" className="md:hidden fixed bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] left-1/2 -translate-x-1/2 w-[min(94vw,28rem)] z-50">
       <nav className="mobile-nav-shell rounded-2xl p-1.5 transition-all duration-500 overflow-hidden relative">
         <div className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent pointer-events-none" />
         

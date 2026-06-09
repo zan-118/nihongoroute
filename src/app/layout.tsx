@@ -18,6 +18,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { LazyMotion, domAnimation } from "framer-motion";
 import Script from "next/script";
 import { JsonLd } from "@/components/seo/JsonLd";
+import OnboardingTour from "@/components/features/onboarding/OnboardingTour";
 import {
   DEFAULT_DESCRIPTION,
   DEFAULT_OG_IMAGE,
@@ -148,6 +149,7 @@ export default function RootLayout({
           <LazyMotion features={domAnimation}>
             <QueryProvider>
               {children}
+              <OnboardingTour />
             </QueryProvider>
           </LazyMotion>
           <Toaster

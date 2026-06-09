@@ -18,16 +18,7 @@ export default function CourseDetailLoading() {
       {/* Kerangka Dekorasi Ambient Latar Belakang */}
       <div className="absolute top-0 right-0 size-[360px] bg-primary/5 blur-[65px] rounded-full pointer-events-none" />
 
-      <article className="max-w-4xl mx-auto w-full relative z-10 flex-1">
-        {/* Kerangka Breadcrumb */}
-        <div className="flex items-center gap-2 mb-16 mt-4">
-          <Skeleton className="h-4 w-20 rounded" />
-          <Skeleton className="size-3 rounded-full" />
-          <Skeleton className="h-4 w-16 rounded" />
-          <Skeleton className="size-3 rounded-full" />
-          <Skeleton className="h-4 w-32 rounded" />
-        </div>
-
+      <article className="max-w-4xl mx-auto w-full relative z-10 flex-1 pt-10 md:pt-14">
         <header className="mb-20">
           {/* Kerangka Judul */}
           <div className="space-y-4 mb-8">
