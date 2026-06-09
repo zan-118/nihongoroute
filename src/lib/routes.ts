@@ -85,6 +85,9 @@ export function getRouteLabel(segment: string): string {
     particles: "Particle Trainer",
     "kanji-similarity": "Kanji Mirip",
     "sentence-builder": "Sentence Builder",
+    "jlpt-drill": "JLPT Mini Drill",
+    "counter-trainer": "Counter Trainer",
+    shadowing: "Shadowing Recorder",
   };
 
   if (labels[segment.toLowerCase()]) {

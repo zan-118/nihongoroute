@@ -25,7 +25,10 @@ import {
   GraduationCap,
   Puzzle,
   GitCompare,
-  MessageSquareText
+  MessageSquareText,
+  ListChecks,
+  Hash,
+  Mic
 } from "lucide-react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
@@ -85,6 +88,33 @@ const tools = [
     description: "Susun token menjadi kalimat Jepang yang benar untuk melatih grammar pattern.",
     icon: MessageSquareText,
     href: "/tools/sentence-builder",
+    color: "text-success",
+    bgColor: "bg-success/10",
+    border: "border-success/20"
+  },
+  {
+    title: "JLPT Mini Drill",
+    description: "Generate sesi cepat vocab, kanji, dan grammar dari N5 sampai N1.",
+    icon: ListChecks,
+    href: "/tools/jlpt-drill",
+    color: "text-primary",
+    bgColor: "bg-primary/10",
+    border: "border-primary/20"
+  },
+  {
+    title: "Counter Trainer",
+    description: "Latih counter 人, 本, 枚, 匹, 台, 冊, 杯, 個, 階, dan 歳 dari konteks benda.",
+    icon: Hash,
+    href: "/tools/counter-trainer",
+    color: "text-warning",
+    bgColor: "bg-warning/10",
+    border: "border-warning/20"
+  },
+  {
+    title: "Shadowing Recorder",
+    description: "Putar kalimat target, rekam suara sendiri, lalu bandingkan tempo playback.",
+    icon: Mic,
+    href: "/tools/shadowing",
     color: "text-success",
     bgColor: "bg-success/10",
     border: "border-success/20"
