@@ -48,6 +48,7 @@ export interface ReadingData {
   slug?: string;
   title: string;
   difficulty: string;
+  jlpt_level?: string;
   audioUrl?: string;
   isTTSDisabled?: boolean;
   body: PortableTextContent;

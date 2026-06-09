@@ -30,6 +30,7 @@ export interface QuizItem {
 export interface ListeningTaskData {
   id?: string;
   _id?: string;
+  slug?: string;
   title: string;
   audioUrl: string;
   transcript: TranscriptLine[];

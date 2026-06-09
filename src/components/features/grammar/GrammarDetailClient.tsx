@@ -22,7 +22,8 @@ import {
   Sparkles,
   ArrowRight,
   Share2,
-  CheckCircle2
+  CheckCircle2,
+  ListChecks
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -387,7 +388,13 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
         </div>
 
         {/* Grup Tombol Bagikan/Aksi */}
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <Button asChild variant="outline" className="rounded-2xl py-6 gap-2">
+            <Link href={`/tools/jlpt-drill?level=${encodeURIComponent(jlptLevel)}&kind=grammar&source=grammar&slug=${encodeURIComponent(String(article.slug || article.id || article._id || ""))}`}>
+              <ListChecks size={16} aria-hidden="true" />
+              <span className="text-xs font-black uppercase tracking-wider">Latih</span>
+            </Link>
+          </Button>
           <PdfGenerator 
             type="grammar" 
             data={article} 
@@ -567,4 +574,3 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
     </div>
   );
 }
-

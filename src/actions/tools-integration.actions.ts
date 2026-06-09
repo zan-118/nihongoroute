@@ -4,6 +4,7 @@ import { createStaticClient } from "@/lib/supabase/server";
 import { sanityClient } from "@/lib/sanity.client";
 import {
   MINI_DRILL_BANK,
+  type DrillKind,
   type DrillLevel,
   type MiniDrillQuestion,
 } from "@/lib/jlpt-mini-drill";
@@ -49,14 +50,29 @@ interface GrammarToolRow {
   jlpt_level: string | null;
 }
 
+type ToolsSource = "vocab" | "kanji" | "grammar" | "reading" | "listening";
+
+export interface ToolsIntegrationContext {
+  level?: string;
+  kind?: DrillKind | "mixed" | string;
+  source?: ToolsSource | string;
+  slug?: string;
+}
+
+export interface ToolSourceText {
+  title?: string;
+  text: string;
+  sourceHref?: string;
+}
+
 interface SanityLineSource {
   _id: string;
   title?: string;
   slug?: string;
   jlpt_level?: string;
   difficulty?: string;
-  body?: string;
-  translation?: string;
+  body?: unknown;
+  translation?: unknown;
 }
 
 export interface ToolsIntegrationData {
@@ -73,6 +89,25 @@ export interface ToolsIntegrationData {
 function asDrillLevel(value: string | null | undefined): DrillLevel {
   const upper = String(value || "N5").toUpperCase();
   return JLPT_LEVELS.includes(upper as DrillLevel) ? (upper as DrillLevel) : "N5";
+}
+
+function getDrillLevelFilter(value: string | null | undefined): DrillLevel | undefined {
+  const upper = String(value || "").toUpperCase();
+  return JLPT_LEVELS.includes(upper as DrillLevel) ? (upper as DrillLevel) : undefined;
+}
+
+function getDrillKindFilter(value: string | null | undefined): DrillKind | undefined {
+  const normalized = String(value || "").toLowerCase();
+  return ["vocab", "kanji", "grammar"].includes(normalized)
+    ? (normalized as DrillKind)
+    : undefined;
+}
+
+function getToolsSource(value: string | null | undefined): ToolsSource | undefined {
+  const normalized = String(value || "").toLowerCase();
+  return ["vocab", "kanji", "grammar", "reading", "listening"].includes(normalized)
+    ? (normalized as ToolsSource)
+    : undefined;
 }
 
 function asCounterLevel(value: string | null | undefined): "N5" | "N4" {
@@ -93,8 +128,80 @@ function compactText(value: unknown) {
     .trim();
 }
 
+function textFromPortable(value: unknown): string {
+  if (!value) return "";
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) {
+    return value
+      .map((block) => {
+        if (typeof block === "string") return block;
+        if (!block || typeof block !== "object") return "";
+        const record = block as { text?: unknown; children?: unknown[] };
+        if (typeof record.text === "string") return record.text;
+        if (!Array.isArray(record.children)) return "";
+        return record.children
+          .map((child) => {
+            if (typeof child === "string") return child;
+            if (!child || typeof child !== "object") return "";
+            return typeof (child as { text?: unknown }).text === "string"
+              ? String((child as { text?: unknown }).text)
+              : "";
+          })
+          .join("");
+      })
+      .filter(Boolean)
+      .join("\n");
+  }
+
+  if (typeof value === "object" && typeof (value as { text?: unknown }).text === "string") {
+    return String((value as { text?: unknown }).text);
+  }
+
+  return "";
+}
+
 function uniqueValues(values: string[]) {
   return Array.from(new Set(values.map((value) => compactText(value)).filter(Boolean)));
+}
+
+function uniqueRowsById<T extends { id: string }>(rows: T[]) {
+  return Array.from(new Map(rows.map((row) => [row.id, row])).values());
+}
+
+function safeDecodeHref(value: string | undefined) {
+  if (!value) return "";
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
+function sourceHrefMatches(sourceHref: string | undefined, slug: string | undefined) {
+  const target = compactText(slug);
+  if (!sourceHref || !target) return false;
+  return safeDecodeHref(sourceHref).endsWith(`/${target}`);
+}
+
+function sortMiniDrillByContext(
+  questions: MiniDrillQuestion[],
+  context: ToolsIntegrationContext
+) {
+  const levelFilter = getDrillLevelFilter(context.level);
+  const kindFilter = getDrillKindFilter(context.kind);
+  const slug = compactText(context.slug);
+
+  return [...questions].sort((a, b) => {
+    const aRank =
+      (sourceHrefMatches(a.sourceHref, slug) ? 0 : 8) +
+      (kindFilter && a.kind === kindFilter ? 0 : 2) +
+      (levelFilter && a.level === levelFilter ? 0 : 1);
+    const bRank =
+      (sourceHrefMatches(b.sourceHref, slug) ? 0 : 8) +
+      (kindFilter && b.kind === kindFilter ? 0 : 2) +
+      (levelFilter && b.level === levelFilter ? 0 : 1);
+    return aRank - bRank;
+  });
 }
 
 function buildOptions(answer: string, candidates: string[], seed: string) {
@@ -143,6 +250,32 @@ function createShadowingChunks(text: string) {
 
   const midpoint = Math.ceil(text.length / 2);
   return [text.slice(0, midpoint), text.slice(midpoint)].map((chunk) => chunk.trim()).filter(Boolean);
+}
+
+function pushShadowingPresetsFromSource(
+  presets: ShadowingPreset[],
+  item: SanityLineSource,
+  sourceType: "reading" | "listening",
+  maxLines = 2
+) {
+  const lines = splitJapaneseLines(textFromPortable(item.body));
+  const translations = splitTranslationLines(textFromPortable(item.translation));
+
+  lines.slice(0, maxLines).forEach((line, index) => {
+    presets.push({
+      id: `library-${sourceType}-${item._id}-${index}`,
+      level: asShadowingLevel(item.jlpt_level),
+      title: item.title ? `${item.title} #${index + 1}` : `${sourceType} #${index + 1}`,
+      text: line,
+      translation: translations[index] || item.title || `Dari materi ${sourceType} library.`,
+      focus: sourceType === "listening" ? "listening line" : "reading aloud",
+      targetSeconds: estimateTargetSeconds(line),
+      chunks: createShadowingChunks(line),
+      sourceHref: item.slug ? `/library/${sourceType}/${item.slug}` : undefined,
+      sourceTitle: item.title,
+      sourceType,
+    });
+  });
 }
 
 function estimateTargetSeconds(text: string) {
@@ -210,26 +343,69 @@ function detectCounter(word: string): { answer: CounterWord; category: string; h
   return null;
 }
 
-export async function getIntegratedMiniDrillQuestions(): Promise<MiniDrillQuestion[]> {
+export async function getIntegratedMiniDrillQuestions(
+  context: ToolsIntegrationContext = {}
+): Promise<MiniDrillQuestion[]> {
   const supabase = createStaticClient();
+  const levelFilter = getDrillLevelFilter(context.level);
+  const kindFilter = getDrillKindFilter(context.kind);
+  const source = getToolsSource(context.source);
+  const slug = compactText(context.slug);
 
   try {
+    const vocabQuery = supabase
+      .from("vocab")
+      .select("id, word, furigana, meaning_id, jlpt_level, slug, hinshi")
+      .not("word", "is", null);
+    const kanjiQuery = supabase
+      .from("kanji")
+      .select("id, character, meaning, onyomi, kunyomi, jlpt_level")
+      .not("character", "is", null);
+    const grammarQuery = supabase
+      .from("grammar")
+      .select("id, title, meaning, formation, slug, jlpt_level")
+      .not("title", "is", null);
+
     const [vocabResult, kanjiResult, grammarResult] = await Promise.allSettled([
-      supabase
-        .from("vocab")
-        .select("id, word, furigana, meaning_id, jlpt_level, slug, hinshi")
-        .not("word", "is", null)
-        .limit(60),
-      supabase
-        .from("kanji")
-        .select("id, character, meaning, onyomi, kunyomi, jlpt_level")
-        .not("character", "is", null)
-        .limit(60),
-      supabase
-        .from("grammar")
-        .select("id, title, meaning, formation, slug, jlpt_level")
-        .not("title", "is", null)
-        .limit(60),
+      kindFilter && kindFilter !== "vocab"
+        ? Promise.resolve({ data: [], error: null })
+        : levelFilter
+          ? vocabQuery.eq("jlpt_level", levelFilter).limit(60)
+          : vocabQuery.limit(60),
+      kindFilter && kindFilter !== "kanji"
+        ? Promise.resolve({ data: [], error: null })
+        : levelFilter
+          ? kanjiQuery.eq("jlpt_level", levelFilter).limit(60)
+          : kanjiQuery.limit(60),
+      kindFilter && kindFilter !== "grammar"
+        ? Promise.resolve({ data: [], error: null })
+        : levelFilter
+          ? grammarQuery.eq("jlpt_level", levelFilter).limit(60)
+          : grammarQuery.limit(60),
+    ]);
+
+    const [exactVocabResult, exactKanjiResult, exactGrammarResult] = await Promise.allSettled([
+      source === "vocab" && slug
+        ? supabase
+            .from("vocab")
+            .select("id, word, furigana, meaning_id, jlpt_level, slug, hinshi")
+            .eq("slug", slug)
+            .limit(1)
+        : Promise.resolve({ data: [], error: null }),
+      source === "kanji" && slug
+        ? supabase
+            .from("kanji")
+            .select("id, character, meaning, onyomi, kunyomi, jlpt_level")
+            .eq("character", slug)
+            .limit(1)
+        : Promise.resolve({ data: [], error: null }),
+      source === "grammar" && slug
+        ? supabase
+            .from("grammar")
+            .select("id, title, meaning, formation, slug, jlpt_level")
+            .eq("slug", slug)
+            .limit(1)
+        : Promise.resolve({ data: [], error: null }),
     ]);
 
     const vocabRows =
@@ -244,12 +420,28 @@ export async function getIntegratedMiniDrillQuestions(): Promise<MiniDrillQuesti
       grammarResult.status === "fulfilled" && !grammarResult.value.error
         ? ((grammarResult.value.data || []) as GrammarToolRow[])
         : [];
+    const exactVocabRows =
+      exactVocabResult.status === "fulfilled" && !exactVocabResult.value.error
+        ? ((exactVocabResult.value.data || []) as VocabToolRow[])
+        : [];
+    const exactKanjiRows =
+      exactKanjiResult.status === "fulfilled" && !exactKanjiResult.value.error
+        ? ((exactKanjiResult.value.data || []) as KanjiToolRow[])
+        : [];
+    const exactGrammarRows =
+      exactGrammarResult.status === "fulfilled" && !exactGrammarResult.value.error
+        ? ((exactGrammarResult.value.data || []) as GrammarToolRow[])
+        : [];
 
-    const vocabMeanings = vocabRows.map((row) => compactText(row.meaning_id)).filter(Boolean);
-    const kanjiMeanings = kanjiRows.map((row) => compactText(row.meaning)).filter(Boolean);
-    const grammarMeanings = grammarRows.map((row) => compactText(row.meaning)).filter(Boolean);
+    const mergedVocabRows = uniqueRowsById([...exactVocabRows, ...vocabRows]);
+    const mergedKanjiRows = uniqueRowsById([...exactKanjiRows, ...kanjiRows]);
+    const mergedGrammarRows = uniqueRowsById([...exactGrammarRows, ...grammarRows]);
 
-    const vocabQuestions: MiniDrillQuestion[] = vocabRows
+    const vocabMeanings = mergedVocabRows.map((row) => compactText(row.meaning_id)).filter(Boolean);
+    const kanjiMeanings = mergedKanjiRows.map((row) => compactText(row.meaning)).filter(Boolean);
+    const grammarMeanings = mergedGrammarRows.map((row) => compactText(row.meaning)).filter(Boolean);
+
+    const vocabQuestions: MiniDrillQuestion[] = mergedVocabRows
       .filter((row) => row.word && row.meaning_id)
       .map((row) => {
         const answer = compactText(row.meaning_id);
@@ -268,7 +460,7 @@ export async function getIntegratedMiniDrillQuestions(): Promise<MiniDrillQuesti
         };
       });
 
-    const kanjiQuestions: MiniDrillQuestion[] = kanjiRows
+    const kanjiQuestions: MiniDrillQuestion[] = mergedKanjiRows
       .filter((row) => row.character && row.meaning)
       .map((row) => {
         const answer = compactText(row.meaning);
@@ -288,7 +480,7 @@ export async function getIntegratedMiniDrillQuestions(): Promise<MiniDrillQuesti
         };
       });
 
-    const grammarQuestions: MiniDrillQuestion[] = grammarRows
+    const grammarQuestions: MiniDrillQuestion[] = mergedGrammarRows
       .filter((row) => row.title && row.meaning)
       .map((row) => {
         const answer = compactText(row.meaning);
@@ -307,8 +499,11 @@ export async function getIntegratedMiniDrillQuestions(): Promise<MiniDrillQuesti
         };
       });
 
-    return [...vocabQuestions, ...kanjiQuestions, ...grammarQuestions].filter(
-      (question) => question.options.length >= 2
+    return sortMiniDrillByContext(
+      [...vocabQuestions, ...kanjiQuestions, ...grammarQuestions].filter(
+        (question) => question.options.length >= 2
+      ),
+      context
     );
   } catch (error) {
     console.error("[tools integration] Gagal mengambil bank mini drill:", error);
@@ -316,20 +511,36 @@ export async function getIntegratedMiniDrillQuestions(): Promise<MiniDrillQuesti
   }
 }
 
-export async function getIntegratedCounterQuestions(): Promise<CounterQuestion[]> {
+export async function getIntegratedCounterQuestions(
+  context: ToolsIntegrationContext = {}
+): Promise<CounterQuestion[]> {
   const supabase = createStaticClient();
+  const levelFilter = getDrillLevelFilter(context.level);
+  const source = getToolsSource(context.source);
+  const slug = compactText(context.slug);
 
   try {
-    const { data, error } = await supabase
+    const query = supabase
       .from("vocab")
       .select("id, word, furigana, meaning_id, jlpt_level, slug")
-      .not("word", "is", null)
-      .limit(120);
+      .not("word", "is", null);
+    const { data, error } = levelFilter
+      ? await query.eq("jlpt_level", levelFilter).limit(120)
+      : await query.limit(120);
 
     if (error) throw error;
 
-    const rows = (data || []) as VocabToolRow[];
-    return rows
+    const { data: exactData } =
+      source === "vocab" && slug
+        ? await supabase
+            .from("vocab")
+            .select("id, word, furigana, meaning_id, jlpt_level, slug")
+            .eq("slug", slug)
+            .limit(1)
+        : { data: [] };
+
+    const rows = uniqueRowsById([...(exactData || []), ...(data || [])] as VocabToolRow[]);
+    const questions = rows
       .map((row, index): CounterQuestion | null => {
         const word = compactText(row.word);
         const counter = detectCounter(word);
@@ -358,14 +569,44 @@ export async function getIntegratedCounterQuestions(): Promise<CounterQuestion[]
       })
       .filter((question): question is CounterQuestion => Boolean(question))
       .slice(0, 30);
+    return questions.sort((a, b) => {
+      const aRank = sourceHrefMatches(a.sourceHref, slug) ? 0 : 1;
+      const bRank = sourceHrefMatches(b.sourceHref, slug) ? 0 : 1;
+      return aRank - bRank;
+    });
   } catch (error) {
     console.error("[tools integration] Gagal mengambil soal counter:", error);
     return [];
   }
 }
 
-export async function getIntegratedShadowingPresets(): Promise<ShadowingPreset[]> {
+export async function getIntegratedShadowingPresets(
+  context: ToolsIntegrationContext = {}
+): Promise<ShadowingPreset[]> {
+  const source = getToolsSource(context.source);
+  const slug = compactText(context.slug);
+  const levelFilter = getDrillLevelFilter(context.level);
+
   try {
+    const exactType =
+      source === "reading" ? "readingMaterial" : source === "listening" ? "listeningMaterial" : "";
+    const exactItem =
+      exactType && slug
+        ? await sanityClient.fetch<SanityLineSource | null>(
+            /* groq */ `*[_type == $type && slug.current == $slug][0] {
+              _id,
+              title,
+              "slug": slug.current,
+              jlpt_level,
+              difficulty,
+              body,
+              translation
+            }`,
+            { type: exactType, slug },
+            { cache: "no-store" }
+          )
+        : null;
+
     const query = /* groq */ `{
       "listenings": *[_type == "listeningMaterial" && defined(body)] | order(_createdAt desc)[0...8] {
         _id,
@@ -394,50 +635,62 @@ export async function getIntegratedShadowingPresets(): Promise<ShadowingPreset[]
 
     const presets: ShadowingPreset[] = [];
 
+    if (exactItem && (source === "reading" || source === "listening")) {
+      pushShadowingPresetsFromSource(presets, exactItem, source, 4);
+    }
+
     for (const item of result.listenings || []) {
-      const lines = splitJapaneseLines(item.body || "");
-      const translations = splitTranslationLines(item.translation);
-      lines.slice(0, 2).forEach((line, index) => {
-        presets.push({
-          id: `library-listening-${item._id}-${index}`,
-          level: asShadowingLevel(item.jlpt_level),
-          title: item.title ? `${item.title} #${index + 1}` : `Listening #${index + 1}`,
-          text: line,
-          translation: translations[index] || item.title || "Dari materi listening library.",
-          focus: "listening line",
-          targetSeconds: estimateTargetSeconds(line),
-          chunks: createShadowingChunks(line),
-          sourceHref: item.slug ? `/library/listening/${item.slug}` : undefined,
-          sourceTitle: item.title,
-          sourceType: "listening",
-        });
-      });
+      if (source === "reading") continue;
+      if (levelFilter && asShadowingLevel(item.jlpt_level) !== levelFilter) continue;
+      pushShadowingPresetsFromSource(presets, item, "listening");
     }
 
     for (const item of result.readings || []) {
-      const lines = splitJapaneseLines(item.body || "");
-      const translations = splitTranslationLines(item.translation);
-      lines.slice(0, 2).forEach((line, index) => {
-        presets.push({
-          id: `library-reading-${item._id}-${index}`,
-          level: asShadowingLevel(item.jlpt_level),
-          title: item.title ? `${item.title} #${index + 1}` : `Reading #${index + 1}`,
-          text: line,
-          translation: translations[index] || item.title || "Dari materi reading library.",
-          focus: "reading aloud",
-          targetSeconds: estimateTargetSeconds(line),
-          chunks: createShadowingChunks(line),
-          sourceHref: item.slug ? `/library/reading/${item.slug}` : undefined,
-          sourceTitle: item.title,
-          sourceType: "reading",
-        });
-      });
+      if (source === "listening") continue;
+      if (levelFilter && asShadowingLevel(item.jlpt_level) !== levelFilter) continue;
+      pushShadowingPresetsFromSource(presets, item, "reading");
     }
 
-    return presets.slice(0, 16);
+    return Array.from(new Map(presets.map((preset) => [preset.id, preset])).values()).slice(0, 16);
   } catch (error) {
     console.error("[tools integration] Gagal mengambil preset shadowing:", error);
     return [];
+  }
+}
+
+export async function getLibraryTextForTool(
+  context: ToolsIntegrationContext = {}
+): Promise<ToolSourceText | null> {
+  const source = getToolsSource(context.source);
+  const slug = compactText(context.slug);
+  if (!slug || (source !== "reading" && source !== "listening")) return null;
+
+  const type = source === "reading" ? "readingMaterial" : "listeningMaterial";
+
+  try {
+    const item = await sanityClient.fetch<SanityLineSource | null>(
+      /* groq */ `*[_type == $type && slug.current == $slug][0] {
+        _id,
+        title,
+        "slug": slug.current,
+        body,
+        translation
+      }`,
+      { type, slug },
+      { cache: "no-store" }
+    );
+
+    if (!item) return null;
+
+    const text = splitJapaneseLines(textFromPortable(item.body)).join("\n");
+    return {
+      title: item.title,
+      text: text || textFromPortable(item.body),
+      sourceHref: item.slug ? `/library/${source}/${item.slug}` : undefined,
+    };
+  } catch (error) {
+    console.error("[tools integration] Gagal mengambil teks sumber:", error);
+    return null;
   }
 }
 

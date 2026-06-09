@@ -17,7 +17,10 @@ import {
   ChevronLeft, 
   Home,
   Library,
-  Languages
+  Languages,
+  Layers,
+  ListChecks,
+  PenTool
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -82,6 +85,8 @@ export default async function KanjiDetailPage({
   const kanji = await getLibraryItemBySlug("kanji", decodedId);
 
   if (!kanji) notFound();
+  const kanjiCharacter = String(kanji.character || decodedId);
+  const kanjiLevel = String(kanji.jlpt_level || kanji.jlptLevel || "").toUpperCase();
 
   return (
     <main className="w-full bg-transparent px-4 md:px-8 lg:px-12 relative overflow-hidden flex flex-col justify-start min-h-screen pb-32 transition-colors duration-300">
@@ -145,12 +150,39 @@ export default async function KanjiDetailPage({
         </div>
 
         {/* Footer Actions */}
-        <footer className="mt-20 pt-16 border-t border-border flex flex-col md:flex-row items-center justify-between gap-8">
+        <footer className="mt-20 pt-16 border-t border-border flex flex-col gap-8">
+          <div className="flex flex-col gap-3">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+              Latihan Terkait
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <Button asChild variant="outline" className="rounded-2xl gap-2">
+                <Link href={`/tools/jlpt-drill?level=${encodeURIComponent(kanjiLevel)}&kind=kanji&source=kanji&slug=${encodeURIComponent(kanjiCharacter)}`}>
+                  <ListChecks size={16} aria-hidden="true" />
+                  JLPT Drill
+                </Link>
+              </Button>
+              <Button asChild variant="outline" className="rounded-2xl gap-2">
+                <Link href={`/tools/writing?char=${encodeURIComponent(kanjiCharacter)}`}>
+                  <PenTool size={16} aria-hidden="true" />
+                  Menulis
+                </Link>
+              </Button>
+              <Button asChild variant="outline" className="rounded-2xl gap-2">
+                <Link href={`/tools/flashcards?category=${encodeURIComponent(kanjiLevel.toLowerCase())}&mode=kanji&amount=10`}>
+                  <Layers size={16} aria-hidden="true" />
+                  Flashcard
+                </Link>
+              </Button>
+            </div>
+          </div>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           <Link href="/library/kanji" className="w-full md:w-auto">
             <Button variant="ghost" className="w-full px-10 py-8 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-2xl bg-muted/30 border border-border hover:bg-muted/50 hover:border-primary/30 transition-all gap-4 group shadow-none">
               <ChevronLeft size={20} className="group-hover:-translate-x-2 transition-transform" aria-hidden="true" /> Kembali ke Daftar Kanji
             </Button>
           </Link>
+          </div>
         </footer>
       </div>
     </main>

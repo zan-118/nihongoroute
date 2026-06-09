@@ -11,7 +11,8 @@
 // ======================
 import React, { useState } from "react";
 import { AnimatePresence, m } from "framer-motion";
-import { BookmarkCheck, Clock, Gauge, Languages, MapPin, Minimize2, Sparkles, Type } from "lucide-react";
+import Link from "next/link";
+import { BookmarkCheck, Clock, Gauge, Languages, MapPin, Mic, Minimize2, ScanText, Sparkles, Type } from "lucide-react";
 import { ReadingProvider } from "@/components/features/reading/components/ReadingContext";
 import { cn } from "@/lib/utils";
 import { useReadingLogic } from "@/components/features/reading/hooks/useReadingLogic";
@@ -168,6 +169,15 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
 
   const [isZenMode, setIsZenMode] = useState(false);
   const [fontSize, setFontSize] = useState<"standard" | "large" | "extra">("large");
+  const toolParams = React.useMemo(() => {
+    const params = new URLSearchParams({
+      source: "reading",
+      slug: data.slug || data._id || data.id || "",
+    });
+    const level = data.jlpt_level || data.difficulty;
+    if (level) params.set("level", level.toUpperCase());
+    return params.toString();
+  }, [data._id, data.difficulty, data.id, data.jlpt_level, data.slug]);
 
   const toggleFontSize = () => {
     setFontSize((prev) =>
@@ -274,6 +284,20 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
                     </span>
                   )}
                 </div>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <Button asChild variant="outline" size="sm" className="rounded-xl">
+                  <Link href={`/tools/shadowing?${toolParams}`}>
+                    <Mic size={14} aria-hidden="true" />
+                    Shadowing
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="sm" className="rounded-xl">
+                  <Link href={`/tools/text-analyzer?${toolParams}`}>
+                    <ScanText size={14} aria-hidden="true" />
+                    Analyzer
+                  </Link>
+                </Button>
               </div>
               
               {/* Pill buttons for Text & Translation Settings */}

@@ -49,14 +49,20 @@ const AMOUNT_OPTIONS = [5, 8, 12, 16] as const;
 interface JlptMiniDrillClientProps {
   initialQuestions?: MiniDrillQuestion[];
   databaseQuestionCount?: number;
+  initialLevel?: DrillLevel | "all";
+  initialKind?: DrillKind | "mixed";
+  contextLabel?: string;
 }
 
 export default function JlptMiniDrillClient({
   initialQuestions = [],
   databaseQuestionCount = 0,
+  initialLevel = "all",
+  initialKind = "mixed",
+  contextLabel,
 }: JlptMiniDrillClientProps) {
-  const [level, setLevel] = useState<DrillLevel | "all">("all");
-  const [kind, setKind] = useState<DrillKind | "mixed">("mixed");
+  const [level, setLevel] = useState<DrillLevel | "all">(initialLevel);
+  const [kind, setKind] = useState<DrillKind | "mixed">(initialKind);
   const [amount, setAmount] = useState<number>(8);
   const [seed, setSeed] = useState(1);
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -139,6 +145,11 @@ export default function JlptMiniDrillClient({
                 ? `${databaseQuestionCount} soal aktif dari database library.`
                 : "Memakai bank soal lokal karena data library belum tersedia."}
             </p>
+            {contextLabel ? (
+              <Badge variant="outline" className="w-fit rounded-xl px-3 py-1 text-[10px]">
+                {contextLabel}
+              </Badge>
+            ) : null}
           </div>
         </header>
 

@@ -39,9 +39,21 @@ const GROUPS: Array<{ id: VerbGroup; label: string; hint: string }> = [
   { id: "irregular", label: "Irregular", hint: "する / 来る" },
 ];
 
-export default function ConjugationTrainerClient() {
-  const [verb, setVerb] = useState("書く");
-  const [group, setGroup] = useState<VerbGroup>("godan");
+interface ConjugationTrainerClientProps {
+  initialVerb?: string;
+  initialGroup?: VerbGroup;
+  sourceTitle?: string;
+  sourceHref?: string;
+}
+
+export default function ConjugationTrainerClient({
+  initialVerb,
+  initialGroup = "godan",
+  sourceTitle,
+  sourceHref,
+}: ConjugationTrainerClientProps) {
+  const [verb, setVerb] = useState(initialVerb || "書く");
+  const [group, setGroup] = useState<VerbGroup>(initialGroup);
   const [targetForm, setTargetForm] = useState<VerbFormId>("te");
   const [answer, setAnswer] = useState("");
   const [hasChecked, setHasChecked] = useState(false);
@@ -95,6 +107,18 @@ export default function ConjugationTrainerClient() {
             <p className="max-w-2xl text-sm font-medium leading-relaxed text-muted-foreground">
               Masukkan verba bentuk kamus, pilih grup dan target bentuk, lalu latih jawaban tanpa membuka tabel terlebih dulu.
             </p>
+            {sourceTitle ? (
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="outline" className="w-fit rounded-xl px-3 py-1 text-[10px]">
+                  Sumber: {sourceTitle}
+                </Badge>
+                {sourceHref ? (
+                  <Button variant="outline" size="sm" asChild className="rounded-xl">
+                    <Link href={sourceHref}>Buka Vocab</Link>
+                  </Button>
+                ) : null}
+              </div>
+            ) : null}
           </div>
         </header>
 

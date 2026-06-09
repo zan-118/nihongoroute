@@ -9,13 +9,34 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function CounterTrainerPage() {
-  const questions = await getIntegratedCounterQuestions();
+type ToolSearchParams = Record<string, string | string[] | undefined>;
+
+function firstParam(value: string | string[] | undefined) {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+function buildContextLabel(source?: string, slug?: string) {
+  if (!source && !slug) return undefined;
+  const sourceLabel = source ? source.charAt(0).toUpperCase() + source.slice(1) : "Library";
+  return slug ? `Konteks dari ${sourceLabel}: ${decodeURIComponent(slug)}` : `Konteks dari ${sourceLabel}`;
+}
+
+export default async function CounterTrainerPage({
+  searchParams,
+}: {
+  searchParams?: Promise<ToolSearchParams>;
+}) {
+  const params = searchParams ? await searchParams : {};
+  const source = firstParam(params.source);
+  const slug = firstParam(params.slug);
+  const level = firstParam(params.level);
+  const questions = await getIntegratedCounterQuestions({ source, slug, level });
 
   return (
     <CounterTrainerClient
       initialQuestions={questions}
       databaseQuestionCount={questions.length}
+      contextLabel={buildContextLabel(source, slug)}
     />
   );
 }

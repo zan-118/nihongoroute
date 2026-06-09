@@ -32,11 +32,13 @@ const PLAYBACK_RATES = [
 interface ShadowingRecorderClientProps {
   initialPresets?: ShadowingPreset[];
   libraryPresetCount?: number;
+  contextLabel?: string;
 }
 
 export default function ShadowingRecorderClient({
   initialPresets = [],
   libraryPresetCount = 0,
+  contextLabel,
 }: ShadowingRecorderClientProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [playbackRate, setPlaybackRate] = useState<(typeof PLAYBACK_RATES)[number]["value"]>(0.95);
@@ -247,6 +249,11 @@ export default function ShadowingRecorderClient({
                 ? `${libraryPresetCount} preset aktif dari reading/listening library.`
                 : "Memakai preset lokal karena materi library belum tersedia."}
             </p>
+            {contextLabel ? (
+              <Badge variant="outline" className="w-fit rounded-xl px-3 py-1 text-[10px]">
+                {contextLabel}
+              </Badge>
+            ) : null}
           </div>
         </header>
 

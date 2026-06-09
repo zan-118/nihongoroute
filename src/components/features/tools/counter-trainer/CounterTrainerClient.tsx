@@ -29,11 +29,13 @@ import { cn } from "@/lib/utils";
 interface CounterTrainerClientProps {
   initialQuestions?: CounterQuestion[];
   databaseQuestionCount?: number;
+  contextLabel?: string;
 }
 
 export default function CounterTrainerClient({
   initialQuestions = [],
   databaseQuestionCount = 0,
+  contextLabel,
 }: CounterTrainerClientProps) {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [selectedCounter, setSelectedCounter] = useState<CounterWord | null>(null);
@@ -101,6 +103,11 @@ export default function CounterTrainerClient({
                 ? `${databaseQuestionCount} soal aktif dari kosakata database.`
                 : "Memakai bank soal lokal karena data vocab belum cocok untuk counter."}
             </p>
+            {contextLabel ? (
+              <Badge variant="outline" className="w-fit rounded-xl px-3 py-1 text-[10px]">
+                {contextLabel}
+              </Badge>
+            ) : null}
           </div>
         </header>
 

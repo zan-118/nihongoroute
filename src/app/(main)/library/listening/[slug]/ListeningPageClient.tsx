@@ -10,6 +10,8 @@
 // IMPOR
 // ======================
 import React, { useEffect } from "react";
+import Link from "next/link";
+import { Mic, ScanText } from "lucide-react";
 import { ListeningTaskData } from "@/components/features/listening/types";
 import ListeningKaraoke from "@/components/features/listening/components/ListeningKaraoke";
 import ListeningQuiz from "@/components/features/listening/components/ListeningQuiz";
@@ -20,6 +22,7 @@ import { useUIStore } from "@/store/useUIStore";
 
 // Komponen Pendukung
 import { ListeningHeader } from "@/components/features/listening/components/ListeningHeader";
+import { Button } from "@/components/ui/button";
 
 // ======================
 // TIPE DATA
@@ -41,6 +44,14 @@ interface ListeningPageClientProps {
  */
 export default function ListeningPageClient({ data }: ListeningPageClientProps) {
   const setListeningState = useUIStore(state => state.setListeningState);
+  const toolParams = React.useMemo(() => {
+    const params = new URLSearchParams({
+      source: "listening",
+      slug: data.slug || data._id || data.id || "",
+    });
+    if (data.jlpt_level) params.set("level", data.jlpt_level.toUpperCase());
+    return params.toString();
+  }, [data._id, data.id, data.jlpt_level, data.slug]);
 
   // Sinkronisasi data ke store global saat mounting untuk akses tombol melayang (FAB)
   useEffect(() => {
@@ -95,6 +106,20 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
       />
 
       <main className="max-w-4xl mx-auto px-4 lg:px-6 mt-6 md:mt-12 relative z-10">
+        <div className="mb-6 flex flex-wrap gap-2">
+          <Button asChild variant="outline" className="rounded-xl">
+            <Link href={`/tools/shadowing?${toolParams}`}>
+              <Mic size={14} aria-hidden="true" />
+              Shadowing
+            </Link>
+          </Button>
+          <Button asChild variant="outline" className="rounded-xl">
+            <Link href={`/tools/text-analyzer?${toolParams}`}>
+              <ScanText size={14} aria-hidden="true" />
+              Analyzer
+            </Link>
+          </Button>
+        </div>
         <div className="flex flex-col gap-6 md:gap-10">
           <ListeningKaraoke 
             transcript={data.transcript} 

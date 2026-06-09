@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import {
   BookOpen,
@@ -131,8 +131,18 @@ function ResultPanel({
   );
 }
 
-export default function TextAnalyzerClient() {
-  const [text, setText] = useState(SAMPLE_TEXT);
+interface TextAnalyzerClientProps {
+  initialText?: string;
+  initialSourceTitle?: string;
+  initialSourceHref?: string;
+}
+
+export default function TextAnalyzerClient({
+  initialText,
+  initialSourceTitle,
+  initialSourceHref,
+}: TextAnalyzerClientProps) {
+  const [text, setText] = useState(initialText || SAMPLE_TEXT);
   const [analysis, setAnalysis] = useState<AnalyzerState | null>(null);
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -157,6 +167,19 @@ export default function TextAnalyzerClient() {
     });
   };
 
+  useEffect(() => {
+    if (!initialText?.trim()) return;
+    startTransition(async () => {
+      try {
+        const nextAnalysis = await analyzeTextWithDictionary(initialText.trim());
+        setAnalysis(nextAnalysis);
+      } catch (err) {
+        console.error("Gagal menganalisis teks sumber:", err);
+        setError("Analisis teks sumber gagal dimuat. Coba jalankan ulang.");
+      }
+    });
+  }, [initialText]);
+
   return (
     <div className="min-h-screen bg-background/95 px-4 py-12 md:px-8">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
@@ -177,6 +200,18 @@ export default function TextAnalyzerClient() {
             <p className="max-w-2xl text-sm font-medium leading-relaxed text-muted-foreground">
               Tempel kalimat atau paragraf Jepang, lalu temukan kosakata, kanji, dan pola grammar yang bisa langsung dipelajari.
             </p>
+            {initialSourceTitle ? (
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="outline" className="w-fit rounded-xl px-3 py-1 text-[10px]">
+                  Sumber: {initialSourceTitle}
+                </Badge>
+                {initialSourceHref ? (
+                  <Button variant="outline" size="sm" asChild className="rounded-xl">
+                    <Link href={initialSourceHref}>Buka Sumber</Link>
+                  </Button>
+                ) : null}
+              </div>
+            ) : null}
           </div>
         </header>
 
