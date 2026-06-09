@@ -75,11 +75,17 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
   const completedLessons = useUserStore((state) => state.completedLessons);
 
   const lessonId = data._id || data.id || "";
-  const readingSourceId = data._id || data.id || data.slug || data.title;
-  const savedProgress = useUIStore((state) =>
-    readingSourceId ? state.readingProgressMap[readingSourceId] : undefined
-  );
+  const legacyReadingSourceId = data._id || data.id || data.title;
+  const readingSourceId = data.slug || legacyReadingSourceId;
+  const savedProgress = useUIStore((state) => {
+    if (!readingSourceId) return undefined;
+    return (
+      state.readingProgressMap[readingSourceId] ||
+      (legacyReadingSourceId ? state.readingProgressMap[legacyReadingSourceId] : undefined)
+    );
+  });
   const updateReadingProgress = useUIStore((state) => state.updateReadingProgress);
+  const recordLearningEvent = useUIStore((state) => state.recordLearningEvent);
   const [isLocallyCompleted, setIsLocallyCompleted] = useState(false);
   const isCompleted = !!(lessonId && completedLessons[lessonId]) || isLocallyCompleted;
   const [readingSnapshot, setReadingSnapshot] = useState<ReadingProgressSnapshot>(() => ({
@@ -95,6 +101,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
     elapsedSeconds: savedProgress?.elapsedSeconds || 0,
     paragraphIndex: savedProgress?.lastParagraphIndex || 0,
   });
+  const hasRecordedStartRef = React.useRef(false);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formattedQuizzes = data.quizzes ? formatQuizzes(data.quizzes as any) : [];
@@ -103,6 +110,22 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
   React.useEffect(() => {
     readingSnapshotRef.current = readingSnapshot;
   }, [readingSnapshot]);
+
+  React.useEffect(() => {
+    if (!readingSourceId || hasRecordedStartRef.current) return;
+    hasRecordedStartRef.current = true;
+    recordLearningEvent({
+      type: "reading_started",
+      source: {
+        type: "reading",
+        id: readingSourceId,
+        slug: data.slug || readingSourceId,
+        title: data.title,
+        href: data.slug ? `/library/reading/${data.slug}` : undefined,
+        level: data.jlpt_level || data.difficulty,
+      },
+    });
+  }, [data.difficulty, data.jlpt_level, data.slug, data.title, readingSourceId, recordLearningEvent]);
 
   const readingCharacterCount = React.useMemo(
     () => paragraphs.join("").replace(/\s/g, "").length,
@@ -164,6 +187,20 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
       title: "Materi Selesai!",
       message: "Selamat! Anda mendapatkan +100 XP dari membaca.",
       type: "success",
+    });
+    recordLearningEvent({
+      type: "reading_completed",
+      source: {
+        type: "reading",
+        id: readingSourceId,
+        slug: data.slug || readingSourceId,
+        title: data.title,
+        href: data.slug ? `/library/reading/${data.slug}` : undefined,
+        level: data.jlpt_level || data.difficulty,
+      },
+      metrics: {
+        elapsedSeconds: currentProgress.elapsedSeconds,
+      },
     });
   };
 

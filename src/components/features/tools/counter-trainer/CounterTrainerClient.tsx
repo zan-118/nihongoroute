@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -24,6 +24,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import NextActionPanel from "@/components/features/ecosystem/NextActionPanel";
+import { useUIStore } from "@/store/useUIStore";
 import { cn } from "@/lib/utils";
 
 interface CounterTrainerClientProps {
@@ -42,6 +44,8 @@ export default function CounterTrainerClient({
   const [showHint, setShowHint] = useState(false);
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [answeredIds, setAnsweredIds] = useState<Set<string>>(() => new Set());
+  const completedBankRef = useRef(false);
+  const recordLearningEvent = useUIStore((state) => state.recordLearningEvent);
   const questionBank = initialQuestions.length > 0 ? initialQuestions : COUNTER_QUESTIONS;
 
   const question = getCounterQuestion(questionIndex, questionBank);
@@ -61,7 +65,48 @@ export default function CounterTrainerClient({
       correct: prev.correct + (correct ? 1 : 0),
       total: prev.total + 1,
     }));
-    setAnsweredIds((prev) => new Set(prev).add(question.id));
+    setAnsweredIds((prev) => {
+      const next = new Set(prev).add(question.id);
+      if (next.size >= questionBank.length && !completedBankRef.current) {
+        completedBankRef.current = true;
+        recordLearningEvent({
+          type: "counter_completed",
+          source: {
+            type: "tool",
+            id: "counter-trainer",
+            title: "Counter Trainer",
+            href: "/tools/counter-trainer",
+            level: question.level,
+          },
+          metrics: {
+            correct: score.correct + (correct ? 1 : 0),
+            total: score.total + 1,
+            accuracy: Math.round(((score.correct + (correct ? 1 : 0)) / (score.total + 1)) * 100),
+          },
+          details: {
+            kind: "counter",
+          },
+        });
+      }
+      return next;
+    });
+    recordLearningEvent({
+      type: "counter_answered",
+      source: {
+        type: question.sourceHref ? "vocab" : "tool",
+        id: question.id,
+        slug: question.sourceHref?.split("/").pop(),
+        title: question.sourceTitle || question.noun,
+        href: question.sourceHref,
+        level: question.level,
+      },
+      details: {
+        kind: "counter",
+        prompt: question.noun,
+        answer: counter,
+        isCorrect: correct,
+      },
+    });
   };
 
   const handleNext = () => {
@@ -76,6 +121,7 @@ export default function CounterTrainerClient({
     setShowHint(false);
     setScore({ correct: 0, total: 0 });
     setAnsweredIds(new Set());
+    completedBankRef.current = false;
   };
 
   return (
@@ -260,6 +306,8 @@ export default function CounterTrainerClient({
                 {answeredIds.size}/{questionBank.length}
               </p>
             </Card>
+
+            <NextActionPanel compact />
           </div>
         </div>
       </div>

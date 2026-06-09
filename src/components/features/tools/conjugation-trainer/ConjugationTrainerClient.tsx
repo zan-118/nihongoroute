@@ -22,6 +22,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import NextActionPanel from "@/components/features/ecosystem/NextActionPanel";
+import { useUIStore } from "@/store/useUIStore";
 import { cn } from "@/lib/utils";
 
 const SAMPLE_VERBS: Array<{ word: string; group: VerbGroup; label: string }> = [
@@ -42,6 +44,7 @@ const GROUPS: Array<{ id: VerbGroup; label: string; hint: string }> = [
 interface ConjugationTrainerClientProps {
   initialVerb?: string;
   initialGroup?: VerbGroup;
+  initialForm?: VerbFormId;
   sourceTitle?: string;
   sourceHref?: string;
 }
@@ -49,14 +52,16 @@ interface ConjugationTrainerClientProps {
 export default function ConjugationTrainerClient({
   initialVerb,
   initialGroup = "godan",
+  initialForm = "te",
   sourceTitle,
   sourceHref,
 }: ConjugationTrainerClientProps) {
   const [verb, setVerb] = useState(initialVerb || "書く");
   const [group, setGroup] = useState<VerbGroup>(initialGroup);
-  const [targetForm, setTargetForm] = useState<VerbFormId>("te");
+  const [targetForm, setTargetForm] = useState<VerbFormId>(initialForm);
   const [answer, setAnswer] = useState("");
   const [hasChecked, setHasChecked] = useState(false);
+  const recordLearningEvent = useUIStore((state) => state.recordLearningEvent);
 
   const conjugation = useMemo(() => {
     try {
@@ -74,6 +79,7 @@ export default function ConjugationTrainerClient({
     ? isConjugationAnswerCorrect(expected, answer)
     : false;
   const targetMeta = VERB_FORMS.find((item) => item.id === targetForm);
+  const sourceSlug = sourceHref?.split("?")[0].split("/").filter(Boolean).pop();
 
   const handleSample = (sample: (typeof SAMPLE_VERBS)[number]) => {
     setVerb(sample.word);
@@ -85,6 +91,36 @@ export default function ConjugationTrainerClient({
   const handleReset = () => {
     setAnswer("");
     setHasChecked(false);
+  };
+
+  const handleCheck = () => {
+    if (!conjugation.result || !answer.trim()) return;
+
+    const correct = isConjugationAnswerCorrect(expected, answer);
+    setHasChecked(true);
+    recordLearningEvent({
+      type: "conjugation_checked",
+      source: {
+        type: sourceHref ? "vocab" : "tool",
+        id: sourceSlug || verb,
+        slug: sourceSlug,
+        title: sourceTitle || verb,
+        href: sourceHref || "/tools/conjugation",
+      },
+      metrics: {
+        correct: correct ? 1 : 0,
+        total: 1,
+        accuracy: correct ? 100 : 0,
+      },
+      details: {
+        kind: "conjugation",
+        prompt: verb,
+        answer,
+        isCorrect: correct,
+        focus: group,
+        text: targetForm,
+      },
+    });
   };
 
   return (
@@ -259,7 +295,7 @@ export default function ConjugationTrainerClient({
                 />
                 <Button
                   type="button"
-                  onClick={() => setHasChecked(true)}
+                  onClick={handleCheck}
                   disabled={!answer.trim() || !conjugation.result}
                   className="rounded-xl"
                 >
@@ -347,6 +383,8 @@ export default function ConjugationTrainerClient({
                 </p>
               )}
             </Card>
+
+            {hasChecked ? <NextActionPanel compact /> : null}
           </div>
         </div>
       </div>

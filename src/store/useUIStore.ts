@@ -13,6 +13,11 @@ import { Notification, Settings } from "./types";
 
 import { ReadingState } from "@/components/features/reading/types";
 import { ListeningState } from "@/components/features/listening/types";
+import {
+  createLearningEvent,
+  type LearningEvent,
+  type LearningEventInput,
+} from "@/lib/learning-ecosystem";
 
 export interface ReadingVocabularyBankEntry {
   id: string;
@@ -74,6 +79,8 @@ interface UIState {
   readingProgressMap: Record<string, ReadingProgressEntry>;
   // State Sesi Menyimak (Menyimpan posisi audio aktif dan teks bacaan bersuara)
   listeningState: ListeningState & { audioUrl?: string; textToSpeak?: string };
+  // Timeline aktivitas lintas-library/tools untuk membentuk rekomendasi ekosistem.
+  learningEvents: LearningEvent[];
 
   setLoading: (loading: boolean) => void;
   setSyncing: (isSyncing: boolean) => void;
@@ -97,6 +104,8 @@ interface UIState {
   ) => void;
   clearReadingProgress: (sourceId?: string) => void;
   setListeningState: (state: Partial<UIState['listeningState']>) => void;
+  recordLearningEvent: (event: LearningEventInput) => string;
+  clearLearningEvents: () => void;
 
   resetUI: () => void;
 }
@@ -144,6 +153,8 @@ export const useUIStore = create<UIState>()(
         isScrolling: false,
         activeTab: "transcript" as const,
       },
+
+      learningEvents: [],
 
 
 
@@ -214,6 +225,7 @@ export const useUIStore = create<UIState>()(
           settings: ui.settings,
           readingVocabularyBank: ui.readingVocabularyBank,
           readingProgressMap: ui.readingProgressMap,
+          learningEvents: ui.learningEvents,
         };
 
         // 2. Buat elemen jangkar luring buatan untuk memicu pengunduhan berkas JSON otomatis di browser
@@ -258,6 +270,7 @@ export const useUIStore = create<UIState>()(
             settings: parsed.settings || { notificationsEnabled: false },
             readingVocabularyBank: parsed.readingVocabularyBank || {},
             readingProgressMap: parsed.readingProgressMap || {},
+            learningEvents: parsed.learningEvents || [],
           });
 
           return true;
@@ -347,6 +360,15 @@ export const useUIStore = create<UIState>()(
         listeningState: { ...state.listeningState, ...newState }
       })),
 
+      recordLearningEvent: (input) => {
+        const event = createLearningEvent(input);
+        set((state) => ({
+          learningEvents: [event, ...state.learningEvents].slice(0, 100),
+        }));
+        return event.id;
+      },
+
+      clearLearningEvents: () => set({ learningEvents: [] }),
 
       resetUI: () => set({
         loading: false,
@@ -362,6 +384,7 @@ export const useUIStore = create<UIState>()(
         readingState: { mode: "kanji", showTranslation: false },
         readingVocabularyBank: {},
         readingProgressMap: {},
+        learningEvents: [],
         listeningState: {
           currentTime: 0,
           activeIndex: -1,
@@ -385,6 +408,7 @@ export const useUIStore = create<UIState>()(
         },
         readingVocabularyBank: state.readingVocabularyBank,
         readingProgressMap: state.readingProgressMap,
+        learningEvents: state.learningEvents,
         // Dari listeningState: hanya tab terakhir yang perlu diingat
         listeningState: {
           currentTime: 0,

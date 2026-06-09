@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -26,6 +26,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import NextActionPanel from "@/components/features/ecosystem/NextActionPanel";
+import { useUIStore } from "@/store/useUIStore";
 import { cn } from "@/lib/utils";
 
 const LEVEL_LABELS: Record<DrillLevel | "all", string> = {
@@ -69,6 +71,8 @@ export default function JlptMiniDrillClient({
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [isFinished, setIsFinished] = useState(false);
+  const hasRecordedFinishRef = useRef(false);
+  const recordLearningEvent = useUIStore((state) => state.recordLearningEvent);
   const questionBank = useMemo(
     () => (initialQuestions.length > 0 ? initialQuestions : undefined),
     [initialQuestions]
@@ -92,6 +96,7 @@ export default function JlptMiniDrillClient({
     setSelectedAnswer(null);
     setScore({ correct: 0, total: 0 });
     setIsFinished(false);
+    hasRecordedFinishRef.current = false;
   };
 
   const handleSelect = (answer: string) => {
@@ -103,11 +108,49 @@ export default function JlptMiniDrillClient({
       correct: prev.correct + (correct ? 1 : 0),
       total: prev.total + 1,
     }));
+    recordLearningEvent({
+      type: "jlpt_drill_answered",
+      source: {
+        type: question.kind,
+        id: question.id,
+        slug: question.sourceHref?.split("/").pop(),
+        title: question.sourceTitle || question.prompt,
+        href: question.sourceHref,
+        level: question.level,
+      },
+      details: {
+        kind: question.kind,
+        prompt: question.prompt,
+        answer,
+        isCorrect: correct,
+      },
+    });
   };
 
   const handleNext = () => {
     if (questionIndex >= questions.length - 1) {
       setIsFinished(true);
+      if (!hasRecordedFinishRef.current) {
+        hasRecordedFinishRef.current = true;
+        recordLearningEvent({
+          type: "jlpt_drill_completed",
+          source: {
+            type: "tool",
+            id: "jlpt-drill",
+            title: "JLPT Mini Drill",
+            href: "/tools/jlpt-drill",
+            level: level === "all" ? undefined : level,
+          },
+          metrics: {
+            correct: score.correct,
+            total: score.total,
+            accuracy: score.total > 0 ? Math.round((score.correct / score.total) * 100) : 0,
+          },
+          details: {
+            kind,
+          },
+        });
+      }
       return;
     }
 
@@ -268,17 +311,20 @@ export default function JlptMiniDrillClient({
               </div>
 
               {isFinished ? (
-                <div className="rounded-2xl border border-success/25 bg-success/10 p-6">
-                  <div className="flex items-center gap-2 text-success">
-                    <Trophy size={20} aria-hidden="true" />
-                    <p className="text-xs font-black uppercase tracking-widest">Sesi Selesai</p>
+                <div className="flex flex-col gap-5">
+                  <div className="rounded-2xl border border-success/25 bg-success/10 p-6">
+                    <div className="flex items-center gap-2 text-success">
+                      <Trophy size={20} aria-hidden="true" />
+                      <p className="text-xs font-black uppercase tracking-widest">Sesi Selesai</p>
+                    </div>
+                    <p className="mt-3 font-mono text-4xl font-black text-foreground">
+                      {score.correct}/{questions.length}
+                    </p>
+                    <p className="mt-2 text-sm font-medium leading-relaxed text-muted-foreground">
+                      Sesi kecil sudah selesai. Generate ulang untuk set baru atau ubah level untuk pemanasan yang berbeda.
+                    </p>
                   </div>
-                  <p className="mt-3 font-mono text-4xl font-black text-foreground">
-                    {score.correct}/{questions.length}
-                  </p>
-                  <p className="mt-2 text-sm font-medium leading-relaxed text-muted-foreground">
-                    Sesi kecil sudah selesai. Generate ulang untuk set baru atau ubah level untuk pemanasan yang berbeda.
-                  </p>
+                  <NextActionPanel compact />
                 </div>
               ) : (
                 <>

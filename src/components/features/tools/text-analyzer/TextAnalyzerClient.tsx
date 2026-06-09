@@ -17,6 +17,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { AddToSRSButton } from "@/components/features/srs/button/AddToSRSButton";
+import NextActionPanel from "@/components/features/ecosystem/NextActionPanel";
+import { useUIStore } from "@/store/useUIStore";
 import { cn } from "@/lib/utils";
 
 const SAMPLE_TEXT =
@@ -146,6 +148,7 @@ export default function TextAnalyzerClient({
   const [analysis, setAnalysis] = useState<AnalyzerState | null>(null);
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
+  const recordLearningEvent = useUIStore((state) => state.recordLearningEvent);
 
   const trimmedText = text.trim();
   const textPreview = useMemo(
@@ -160,6 +163,26 @@ export default function TextAnalyzerClient({
       try {
         const nextAnalysis = await analyzeTextWithDictionary(trimmedText);
         setAnalysis(nextAnalysis);
+        recordLearningEvent({
+          type: "text_analyzed",
+          source: {
+            type: initialSourceHref?.includes("/library/listening")
+              ? "listening"
+              : initialSourceHref?.includes("/library/reading")
+                ? "reading"
+                : "tool",
+            id: initialSourceHref?.split("/").pop() || "text-analyzer",
+            slug: initialSourceHref?.split("/").pop(),
+            title: initialSourceTitle || "Text Analyzer",
+            href: initialSourceHref || "/tools/text-analyzer",
+          },
+          metrics: {
+            total:
+              nextAnalysis.results.vocab.length +
+              nextAnalysis.results.grammar.length +
+              nextAnalysis.results.kanji.length,
+          },
+        });
       } catch (err) {
         console.error("Gagal menganalisis teks:", err);
         setError("Analisis gagal dimuat. Coba lagi sebentar lagi.");
@@ -173,12 +196,32 @@ export default function TextAnalyzerClient({
       try {
         const nextAnalysis = await analyzeTextWithDictionary(initialText.trim());
         setAnalysis(nextAnalysis);
+        recordLearningEvent({
+          type: "text_analyzed",
+          source: {
+            type: initialSourceHref?.includes("/library/listening")
+              ? "listening"
+              : initialSourceHref?.includes("/library/reading")
+                ? "reading"
+                : "tool",
+            id: initialSourceHref?.split("/").pop() || "text-analyzer",
+            slug: initialSourceHref?.split("/").pop(),
+            title: initialSourceTitle || "Text Analyzer",
+            href: initialSourceHref || "/tools/text-analyzer",
+          },
+          metrics: {
+            total:
+              nextAnalysis.results.vocab.length +
+              nextAnalysis.results.grammar.length +
+              nextAnalysis.results.kanji.length,
+          },
+        });
       } catch (err) {
         console.error("Gagal menganalisis teks sumber:", err);
         setError("Analisis teks sumber gagal dimuat. Coba jalankan ulang.");
       }
     });
-  }, [initialText]);
+  }, [initialSourceHref, initialSourceTitle, initialText, recordLearningEvent]);
 
   return (
     <div className="min-h-screen bg-background/95 px-4 py-12 md:px-8">
@@ -310,6 +353,8 @@ export default function TextAnalyzerClient({
                 Tips: hasil analyzer memakai pencarian database per token dan kanji. Untuk parsing morfologi sempurna, tahap berikutnya bisa ditambah tokenizer Kuromoji.
               </p>
             </Card>
+
+            {analysis ? <NextActionPanel compact /> : null}
           </div>
         </div>
 

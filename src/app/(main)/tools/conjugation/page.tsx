@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import ConjugationTrainerClient from "@/components/features/tools/conjugation-trainer/ConjugationTrainerClient";
-import type { VerbGroup } from "@/lib/verb-conjugation";
+import type { VerbFormId, VerbGroup } from "@/lib/verb-conjugation";
 
 export const metadata: Metadata = {
   title: "Verb Conjugation Trainer | NihongoRoute",
@@ -20,6 +20,24 @@ function normalizeGroup(value: string | undefined): VerbGroup {
     : "godan";
 }
 
+function normalizeForm(value: string | undefined): VerbFormId {
+  const normalized = String(value || "").toLowerCase();
+  return [
+    "masu",
+    "nai",
+    "te",
+    "ta",
+    "potential",
+    "passive",
+    "causative",
+    "volitional",
+    "conditional",
+    "imperative",
+  ].includes(normalized)
+    ? (normalized as VerbFormId)
+    : "te";
+}
+
 export default async function ConjugationTrainerPage({
   searchParams,
 }: {
@@ -28,6 +46,7 @@ export default async function ConjugationTrainerPage({
   const params = searchParams ? await searchParams : {};
   const verb = firstParam(params.verb);
   const group = firstParam(params.group);
+  const form = firstParam(params.form);
   const sourceTitle = firstParam(params.sourceTitle);
   const sourceHref = firstParam(params.sourceHref);
 
@@ -35,6 +54,7 @@ export default async function ConjugationTrainerPage({
     <ConjugationTrainerClient
       initialVerb={verb}
       initialGroup={normalizeGroup(group)}
+      initialForm={normalizeForm(form)}
       sourceTitle={sourceTitle}
       sourceHref={sourceHref}
     />

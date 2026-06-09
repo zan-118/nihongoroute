@@ -15,6 +15,8 @@
 // ==========================================
 import dynamic from "next/dynamic";
 import DashboardStats from "../DashboardStats";
+import LearningTimelinePanel from "@/components/features/ecosystem/LearningTimelinePanel";
+import NextActionPanel from "@/components/features/ecosystem/NextActionPanel";
 import { Variants } from "framer-motion";
 import type { ReadinessCourseCategory } from "@/lib/readiness";
 
@@ -81,6 +83,10 @@ export function ProgressPanel({
         loading={loading}
         courseMetadata={courseMetadata as ReadinessCourseCategory[]}
       />
+
+      <NextActionPanel />
+
+      <LearningTimelinePanel />
 
       <DashboardStats 
         loading={loading} 

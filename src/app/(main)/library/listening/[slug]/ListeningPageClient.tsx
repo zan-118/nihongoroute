@@ -44,6 +44,8 @@ interface ListeningPageClientProps {
  */
 export default function ListeningPageClient({ data }: ListeningPageClientProps) {
   const setListeningState = useUIStore(state => state.setListeningState);
+  const recordLearningEvent = useUIStore(state => state.recordLearningEvent);
+  const hasRecordedStartRef = React.useRef(false);
   const toolParams = React.useMemo(() => {
     const params = new URLSearchParams({
       source: "listening",
@@ -55,6 +57,21 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
 
   // Sinkronisasi data ke store global saat mounting untuk akses tombol melayang (FAB)
   useEffect(() => {
+    if (!hasRecordedStartRef.current) {
+      hasRecordedStartRef.current = true;
+      recordLearningEvent({
+        type: "listening_started",
+        source: {
+          type: "listening",
+          id: data._id || data.id || data.slug,
+          slug: data.slug || data._id || data.id,
+          title: data.title,
+          href: data.slug ? `/library/listening/${data.slug}` : undefined,
+          level: data.jlpt_level || data.difficulty,
+        },
+      });
+    }
+
     const textToSpeak = data.transcript.map(t => {
       if (typeof t.text === "string") return t.text;
       if (Array.isArray(t.text)) {
@@ -69,7 +86,7 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
       audioUrl: data.audioUrl,
       textToSpeak: textToSpeak,
     });
-  }, [data, setListeningState]);
+  }, [data, recordLearningEvent, setListeningState]);
 
   const { 
     activeIndex, 
@@ -86,6 +103,22 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
     const reward = score * 50;
     addXP(reward);
     completeLesson(data._id || data.id || "");
+    recordLearningEvent({
+      type: "listening_completed",
+      source: {
+        type: "listening",
+        id: data._id || data.id || data.slug,
+        slug: data.slug || data._id || data.id,
+        title: data.title,
+        href: data.slug ? `/library/listening/${data.slug}` : undefined,
+        level: data.jlpt_level || data.difficulty,
+      },
+      metrics: {
+        correct: score,
+        total: data.quiz?.length || 0,
+        accuracy: data.quiz?.length ? Math.round((score / data.quiz.length) * 100) : undefined,
+      },
+    });
   };
 
   const hasQuiz = (data.quiz?.length ?? 0) > 0;

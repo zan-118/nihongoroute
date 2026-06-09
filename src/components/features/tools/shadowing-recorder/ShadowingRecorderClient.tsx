@@ -21,6 +21,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import NextActionPanel from "@/components/features/ecosystem/NextActionPanel";
+import { useUIStore } from "@/store/useUIStore";
 import { cn } from "@/lib/utils";
 
 const PLAYBACK_RATES = [
@@ -55,7 +57,9 @@ export default function ShadowingRecorderClient({
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startedAtRef = useRef<number | null>(null);
+  const finalElapsedRef = useRef(0);
   const audioUrlRef = useRef<string | null>(null);
+  const recordLearningEvent = useUIStore((state) => state.recordLearningEvent);
 
   const presets = initialPresets.length > 0 ? initialPresets : SHADOWING_PRESETS;
   const preset = presets[selectedIndex] ?? presets[0];
@@ -193,6 +197,26 @@ export default function ShadowingRecorderClient({
           const url = URL.createObjectURL(blob);
           audioUrlRef.current = url;
           setAudioUrl(url);
+          recordLearningEvent({
+            type: "shadowing_recorded",
+            source: {
+              type: preset.sourceType === "static" ? "tool" : preset.sourceType || "tool",
+              id: preset.id,
+              slug: preset.sourceHref?.split("/").pop(),
+              title: preset.sourceTitle || preset.title,
+              href: preset.sourceHref,
+              level: preset.level,
+            },
+            metrics: {
+              elapsedSeconds: finalElapsedRef.current || elapsedSeconds,
+              targetSeconds: preset.targetSeconds,
+            },
+            details: {
+              kind: "shadowing",
+              focus: preset.focus,
+              text: preset.text,
+            },
+          });
         }
       };
 
@@ -219,7 +243,9 @@ export default function ShadowingRecorderClient({
       recorder.stop();
     }
     if (startedAtRef.current) {
-      setElapsedSeconds(Math.floor((Date.now() - startedAtRef.current) / 1000));
+      const finalElapsed = Math.floor((Date.now() - startedAtRef.current) / 1000);
+      finalElapsedRef.current = finalElapsed;
+      setElapsedSeconds(finalElapsed);
     }
     startedAtRef.current = null;
   };
@@ -458,6 +484,8 @@ export default function ShadowingRecorderClient({
                 </p>
               ) : null}
             </Card>
+
+            <NextActionPanel compact />
           </div>
         </div>
       </div>
