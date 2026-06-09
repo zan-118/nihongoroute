@@ -10,13 +10,18 @@ import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Shield, Lock, FileText, Mail } from "lucide-react";
+import { createPageMetadata } from "@/lib/seo";
 
 // ======================
 // KONFIGURASI METADATA
 // ======================
 export const metadata = {
-  title: "Kebijakan Privasi | NihongoRoute",
-  description: "Kebijakan Privasi pengguna platform NihongoRoute.",
+  ...createPageMetadata({
+    title: "Kebijakan Privasi | NihongoRoute",
+    description:
+      "Kebijakan Privasi NihongoRoute: cara platform mengumpulkan, menggunakan, dan melindungi data pengguna.",
+    path: "/privacy",
+  }),
 };
 
 export default function PrivacyPage() {

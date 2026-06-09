@@ -14,6 +14,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { getExamByIdOrSlug } from "@/actions/library.actions";
 import type { Metadata } from "next";
+import { createPageMetadata, encodeRouteSegment } from "@/lib/seo";
 
 // ======================
 // ANTARMUKA
@@ -33,10 +34,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { id } = await params;
   const decodedId = decodeURIComponent(id);
   const examData = await getExamByIdOrSlug(decodedId);
-  return {
+  return createPageMetadata({
     title: examData ? `${examData.title} | Simulasi JLPT NihongoRoute` : "Simulasi Ujian JLPT | NihongoRoute",
-    description: examData ? `Ikuti simulasi ujian JLPT resmi untuk paket ${examData.title}. Sistem timer waktu nyata dan format penilaian akurat.` : "Ikuti simulasi ujian JLPT resmi dan terlengkap untuk level N5 hingga N1.",
-  };
+    description: examData
+      ? `Ikuti simulasi ujian JLPT untuk paket ${examData.title}. Sistem timer waktu nyata dan format penilaian akurat.`
+      : "Ikuti simulasi ujian JLPT untuk level N5 hingga N1.",
+    path: `/exams/${encodeRouteSegment(decodedId)}`,
+    noIndex: true,
+  });
 }
 
 // ======================

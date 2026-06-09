@@ -8,13 +8,18 @@
 // ======================
 import type { Metadata } from "next";
 import LoginClient from "./LoginClient";
+import { createPageMetadata } from "@/lib/seo";
 
 // ======================
 // KONFIGURASI METADATA
 // ======================
 export const metadata: Metadata = {
-  title: "Masuk & Daftar | NihongoRoute",
-  description: "Masuk ke akun NihongoRoute Anda untuk melanjutkan petualangan belajar bahasa Jepang.",
+  ...createPageMetadata({
+    title: "Masuk & Daftar | NihongoRoute",
+    description: "Masuk ke akun NihongoRoute Anda untuk melanjutkan petualangan belajar bahasa Jepang.",
+    path: "/login",
+    noIndex: true,
+  }),
 };
 
 // ======================

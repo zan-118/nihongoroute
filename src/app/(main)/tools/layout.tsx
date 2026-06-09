@@ -12,8 +12,9 @@ import type { Metadata } from "next";
 // KONFIGURASI METADATA
 // ======================
 export const metadata: Metadata = {
-  title: "Pusat Peralatan | NihongoRoute",
-  description: "Kumpulan alat bantu belajar bahasa Jepang: Kana Master, Flashcards, latihan menulis, dan kamus.",
+  title: "Pusat Peralatan Bahasa Jepang | NihongoRoute",
+  description:
+    "Kumpulan alat bantu belajar bahasa Jepang: Kana Master, kamus terpadu, text analyzer, latihan menulis, konjugasi, partikel, dan flashcards.",
 };
 
 // ======================

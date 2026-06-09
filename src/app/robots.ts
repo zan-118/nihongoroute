@@ -15,6 +15,8 @@
  * @returns {Object} Konfigurasi rules dan sitemap.
  */
 export default function robots() {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.nihongoroute.my.id";
+
   return {
     rules: [
       {
@@ -22,14 +24,11 @@ export default function robots() {
         allow: "/",
         disallow: [
           "/api/",
-          "/settings/",
-          "/onboarding/",
-          "/login",
-          "/signup"
+          "/studio/",
+          "/_next/",
         ],
       },
     ],
-    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.nihongoroute.my.id"}/sitemap.xml`,
+    sitemap: `${siteUrl.replace(/\/+$/, "")}/sitemap.xml`,
   };
 }
-

@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
 import ConjugationTrainerClient from "@/components/features/tools/conjugation-trainer/ConjugationTrainerClient";
 import type { VerbFormId, VerbGroup } from "@/lib/verb-conjugation";
+import { createPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Verb Conjugation Trainer | NihongoRoute",
-  description: "Latihan konjugasi verba Jepang untuk bentuk masu, te, nai, ta, dan lainnya.",
+  ...createPageMetadata({
+    title: "Verb Conjugation Trainer Jepang | NihongoRoute",
+    description: "Latihan konjugasi verba Jepang untuk bentuk masu, te, nai, ta, potensial, pasif, kausatif, dan lainnya.",
+    path: "/tools/conjugation",
+    keywords: ["konjugasi verba Jepang", "verb conjugation Japanese", "latihan te form", "masu form"],
+  }),
 };
 
 type ToolSearchParams = Record<string, string | string[] | undefined>;

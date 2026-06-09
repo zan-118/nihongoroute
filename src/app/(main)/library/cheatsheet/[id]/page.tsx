@@ -8,6 +8,7 @@
 // ======================
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { 
   ChevronLeft, 
   Home,
@@ -22,6 +23,12 @@ import { getCheatsheetByIdOrSlug, getCheatsheets } from "@/actions/library.actio
 // Memuat PDF Generator secara dinamis untuk membebaskan bundle awal dari @react-pdf/renderer
 const PdfGenerator = dynamicImport(() => import("@/components/features/pdf/PdfGenerator"));
 import type { Metadata } from "next";
+import {
+  breadcrumbJsonLd,
+  createPageMetadata,
+  encodeRouteSegment,
+  learningResourceJsonLd,
+} from "@/lib/seo";
 
 // KONFIGURASI RENDERING DINAMIS
 // ======================
@@ -45,10 +52,19 @@ export async function generateMetadata({
   const { id } = await params;
   const decodedId = decodeURIComponent(id);
   const sheet = await getCheatsheetByIdOrSlug(decodedId);
-  return {
+  return createPageMetadata({
     title: sheet ? `${sheet.title} | Cheatsheet NihongoRoute` : "Cheatsheet Referensi Cepat | NihongoRoute",
-    description: sheet ? `Unduh PDF dan pelajari cheatsheet tabel referensi cepat untuk ${sheet.title}.` : "Kumpulan tabel cheatsheet referensi cepat terlengkap untuk materi tata bahasa dan kosa kata Jepang.",
-  };
+    description: sheet
+      ? `Pelajari cheatsheet tabel referensi cepat untuk ${sheet.title}, lengkap dengan versi PDF untuk belajar offline.`
+      : "Kumpulan tabel cheatsheet referensi cepat untuk materi tata bahasa, angka, partikel, dan kosakata Jepang.",
+    path: `/library/cheatsheet/${encodeRouteSegment(decodedId)}`,
+    keywords: [
+      String(sheet?.title || ""),
+      String(sheet?.category || ""),
+      "cheatsheet bahasa Jepang",
+      "referensi cepat Jepang",
+    ].filter(Boolean),
+  });
 }
 
 // ======================
@@ -70,6 +86,7 @@ export default async function CheatsheetDetailPage({
 
 
   if (!sheet) notFound();
+  const sheetPath = `/library/cheatsheet/${encodeRouteSegment(String(sheet.slug || decodedId))}`;
 
   const allItems = [
     ...(sheet.linkedVocab || []),
@@ -78,6 +95,22 @@ export default async function CheatsheetDetailPage({
 
   return (
     <main className="w-full bg-transparent min-h-screen pb-24 relative overflow-hidden">
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: "Beranda", path: "/" },
+            { name: "Pustaka", path: "/library" },
+            { name: "Cheatsheet", path: "/library/cheatsheet" },
+            { name: sheet.title, path: sheetPath },
+          ]),
+          learningResourceJsonLd({
+            name: sheet.title,
+            description: `Cheatsheet referensi cepat bahasa Jepang untuk ${sheet.title}.`,
+            path: sheetPath,
+            teaches: sheet.category || sheet.title,
+          }),
+        ]}
+      />
       {/* Dekorasi Latar Belakang */}
       <div className="neural-grid" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgb(var(--destructive-rgb)/0.03)_0%,transparent_70%)] pointer-events-none" />

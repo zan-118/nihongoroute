@@ -12,6 +12,7 @@ import { Metadata } from "next";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { fullyDecode } from "@/lib/utils";
 import { 
   ChevronLeft, 
@@ -30,6 +31,12 @@ import { KanjiReadings } from "@/components/features/kanji/detail/KanjiReadings"
 import { KanjiRadicals } from "@/components/features/kanji/detail/KanjiRadicals";
 import { KanjiMnemonic } from "@/components/features/kanji/detail/KanjiMnemonic";
 import { KanjiRelatedVocab } from "@/components/features/kanji/detail/KanjiRelatedVocab";
+import {
+  breadcrumbJsonLd,
+  createPageMetadata,
+  definedTermJsonLd,
+  encodeRouteSegment,
+} from "@/lib/seo";
 
 // ======================
 // KONFIGURASI RENDERING DINAMIS
@@ -61,10 +68,19 @@ export async function generateMetadata({
     };
   }
 
-  return {
-    title: `${kanji.character} (${kanji.meaning}) | NihongoRoute`,
-    description: `Pelajari cara menulis, cara baca, dan mnemonic untuk kanji ${kanji.character}.`,
-  };
+  return createPageMetadata({
+    title: `${kanji.character} (${kanji.meaning}) | Kanji Jepang`,
+    description: `Pelajari arti, onyomi, kunyomi, mnemonic, kosakata terkait, dan cara menulis kanji ${kanji.character}.`,
+    path: `/library/kanji/${encodeRouteSegment(String(kanji.character || decodedId))}`,
+    keywords: [
+      String(kanji.character || ""),
+      String(kanji.meaning || ""),
+      String(kanji.onyomi || ""),
+      String(kanji.kunyomi || ""),
+      "kanji Jepang",
+      "stroke order kanji",
+    ].filter(Boolean),
+  });
 }
 
 // ======================
@@ -87,9 +103,28 @@ export default async function KanjiDetailPage({
   if (!kanji) notFound();
   const kanjiCharacter = String(kanji.character || decodedId);
   const kanjiLevel = String(kanji.jlpt_level || kanji.jlptLevel || "").toUpperCase();
+  const kanjiPath = `/library/kanji/${encodeRouteSegment(kanjiCharacter)}`;
 
   return (
     <main className="w-full bg-transparent px-4 md:px-8 lg:px-12 relative overflow-hidden flex flex-col justify-start min-h-screen pb-32 transition-colors duration-300">
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: "Beranda", path: "/" },
+            { name: "Pustaka", path: "/library" },
+            { name: "Kanji", path: "/library/kanji" },
+            { name: kanjiCharacter, path: kanjiPath },
+          ]),
+          definedTermJsonLd({
+            name: kanjiCharacter,
+            description: `Kanji ${kanjiCharacter} berarti ${String(kanji.meaning || "")}.`,
+            path: kanjiPath,
+            termCode: kanjiLevel || null,
+            termSetName: "Pustaka Kanji NihongoRoute",
+            termSetPath: "/library/kanji",
+          }),
+        ]}
+      />
       {/* Ambient Background Glows */}
       <div className="absolute top-[5%] -left-[10%] size-[45%] bg-secondary/10 blur-[130px] rounded-full pointer-events-none z-0 animate-pulse" />
       <div className="absolute bottom-[20%] -right-[15%] size-[35%] bg-primary/5 blur-[130px] rounded-full pointer-events-none z-0" />

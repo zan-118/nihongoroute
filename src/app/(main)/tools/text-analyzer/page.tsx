@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
 import { getLibraryTextForTool } from "@/actions/tools-integration.actions";
 import TextAnalyzerClient from "@/components/features/tools/text-analyzer/TextAnalyzerClient";
+import { createPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Text Analyzer | NihongoRoute",
-  description: "Analisis teks Jepang untuk menemukan kosakata, kanji, dan pola tata bahasa.",
+  ...createPageMetadata({
+    title: "Japanese Text Analyzer | NihongoRoute",
+    description: "Analisis teks Jepang untuk menemukan kosakata, kanji, dan pola tata bahasa penting.",
+    path: "/tools/text-analyzer",
+    keywords: ["text analyzer Jepang", "analisis teks Jepang", "kanji parser", "grammar parser Jepang"],
+  }),
 };
 
 export const dynamic = "force-dynamic";

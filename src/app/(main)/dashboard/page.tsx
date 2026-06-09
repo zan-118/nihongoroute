@@ -11,13 +11,18 @@ import DashboardClient from "./DashboardClient";
 import type { Metadata } from "next";
 import { getCourseCategories } from "@/actions/lessons.actions";
 import { getRandomExpression } from "@/actions/expressions.actions";
+import { createPageMetadata } from "@/lib/seo";
 
 // ======================
 // METADATA SEO
 // ======================
 export const metadata: Metadata = {
-  title: "Dashboard | NihongoRoute",
-  description: "Pantau progres belajar bahasa Jepang Anda, kelola jadwal SRS, dan taklukkan quest harian.",
+  ...createPageMetadata({
+    title: "Dashboard | NihongoRoute",
+    description: "Pantau progres belajar bahasa Jepang Anda, kelola jadwal SRS, dan taklukkan quest harian.",
+    path: "/dashboard",
+    noIndex: true,
+  }),
 };
 
 // ======================

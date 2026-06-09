@@ -8,13 +8,18 @@
 // ======================
 import type { Metadata } from "next";
 import ShareClient from "./ShareClient";
+import { createPageMetadata } from "@/lib/seo";
 
 // ======================
 // KONFIGURASI METADATA
 // ======================
 export const metadata: Metadata = {
-  title: "Berbagi Progres | NihongoRoute",
-  description: "Lihat dan bagikan pencapaian serta progres belajar bahasa Jepang Anda di NihongoRoute.",
+  ...createPageMetadata({
+    title: "Berbagi Progres | NihongoRoute",
+    description: "Lihat dan bagikan pencapaian serta progres belajar bahasa Jepang Anda di NihongoRoute.",
+    path: "/share",
+    noIndex: true,
+  }),
 };
 
 // ======================

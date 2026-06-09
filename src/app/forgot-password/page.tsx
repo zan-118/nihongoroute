@@ -8,13 +8,18 @@
 // ======================
 import type { Metadata } from "next";
 import ForgotPasswordClient from "./ForgotPasswordClient";
+import { createPageMetadata } from "@/lib/seo";
 
 // ======================
 // KONFIGURASI METADATA
 // ======================
 export const metadata: Metadata = {
-  title: "Lupa Kata Sandi | NihongoRoute",
-  description: "Lupa kata sandi Anda? Kirim tautan pemulihan kata sandi ke email terdaftar Anda untuk membuat kata sandi baru.",
+  ...createPageMetadata({
+    title: "Lupa Kata Sandi | NihongoRoute",
+    description: "Kirim tautan pemulihan kata sandi ke email terdaftar Anda.",
+    path: "/forgot-password",
+    noIndex: true,
+  }),
 };
 
 // ======================

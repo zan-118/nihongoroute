@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
 import { getIntegratedShadowingPresets } from "@/actions/tools-integration.actions";
 import ShadowingRecorderClient from "@/components/features/tools/shadowing-recorder/ShadowingRecorderClient";
+import { createPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Shadowing Recorder | NihongoRoute",
-  description: "Latihan shadowing bahasa Jepang dengan playback target dan rekaman mikrofon.",
+  ...createPageMetadata({
+    title: "Shadowing Recorder Jepang | NihongoRoute",
+    description: "Latihan shadowing bahasa Jepang dengan playback target, rekaman mikrofon, dan preset dari materi listening.",
+    path: "/tools/shadowing",
+    keywords: ["shadowing bahasa Jepang", "latihan speaking Jepang", "rekaman pronunciation Jepang"],
+  }),
 };
 
 export const dynamic = "force-dynamic";

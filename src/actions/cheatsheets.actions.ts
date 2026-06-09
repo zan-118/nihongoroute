@@ -74,6 +74,7 @@ export async function getCheatsheetByIdOrSlug(idOrSlug: string) {
 
     return {
       _id: sheet.id,
+      slug: sheet.slug,
       title: sheet.title,
       category: sheet.category,
       items: sheet.items || [],

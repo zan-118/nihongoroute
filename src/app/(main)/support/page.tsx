@@ -8,13 +8,19 @@
 // ======================
 import type { Metadata } from "next";
 import SupportClient from "./SupportClient";
+import { createPageMetadata } from "@/lib/seo";
 
 // ======================
 // KONFIGURASI METADATA
 // ======================
 export const metadata: Metadata = {
-  title: "Dukung Kami | NihongoRoute",
-  description: "Dukungan Anda sangat berarti agar NihongoRoute tetap berjalan, gratis, terus berkembang, dan tanpa iklan yang mengganggu bagi para pejuang bahasa Jepang.",
+  ...createPageMetadata({
+    title: "Dukung Kami | NihongoRoute",
+    description:
+      "Dukung NihongoRoute agar tetap berjalan, gratis, terus berkembang, dan tanpa iklan yang mengganggu bagi pelajar bahasa Jepang.",
+    path: "/support",
+    keywords: ["dukung NihongoRoute", "donasi belajar bahasa Jepang", "platform Jepang gratis"],
+  }),
 };
 
 // ======================

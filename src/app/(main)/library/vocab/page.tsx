@@ -10,8 +10,14 @@
 // ======================
 import { Suspense } from "react";
 import { RotateCw } from "lucide-react";
+import { JsonLd } from "@/components/seo/JsonLd";
 import VocabClient from "./VocabClient";
 import { getPaginatedVocab } from "@/actions/library.actions";
+import {
+  breadcrumbJsonLd,
+  createPageMetadata,
+  learningResourceJsonLd,
+} from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -19,8 +25,13 @@ export const dynamic = "force-dynamic";
 // METADATA SEO
 // ======================
 export const metadata = {
-  title: "Kamus Kosakata | NihongoRoute",
-  description: "Ribuan kosakata bahasa Jepang N5-N2, dilengkapi dengan furigana, fitur pengucapan audio, dan opsi penambahan ke jadwal SRS.",
+  ...createPageMetadata({
+    title: "Kamus Kosakata Bahasa Jepang | NihongoRoute",
+    description:
+      "Ribuan kosakata bahasa Jepang JLPT N5-N1 dilengkapi furigana, romaji, arti Indonesia, audio, contoh kalimat, dan latihan SRS.",
+    path: "/library/vocab",
+    keywords: ["kosakata bahasa Jepang", "vocab JLPT", "kamus Jepang Indonesia", "furigana"],
+  }),
 };
 
 // ======================
@@ -38,6 +49,22 @@ export default async function VocabLibraryPage() {
 
   return (
     <main className="w-full bg-transparent px-6 md:px-12 relative overflow-hidden flex flex-col justify-start min-h-screen pt-24 pb-20 transition-colors duration-300">
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: "Beranda", path: "/" },
+            { name: "Pustaka", path: "/library" },
+            { name: "Kosakata", path: "/library/vocab" },
+          ]),
+          learningResourceJsonLd({
+            name: "Kamus Kosakata Bahasa Jepang",
+            description: metadata.description as string,
+            path: "/library/vocab",
+            educationalLevel: "JLPT N5-N1",
+            teaches: "Kosakata bahasa Jepang",
+          }),
+        ]}
+      />
       {/* Background Neural Overlays */}
       <div className="neural-grid" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgb(var(--destructive-rgb)/0.05)_0%,transparent_70%)] pointer-events-none z-0" />

@@ -9,8 +9,10 @@
 // IMPOR
 // ======================
 import React from "react";
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 import QuizEngine from "@/components/features/exams/quiz-engine/QuizEngine";
 import ContentBlockRenderer from "@/components/features/lessons/ContentBlockRenderer";
@@ -31,6 +33,12 @@ import { createClient } from "@/lib/supabase/server";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
 import { formatQuizzes, getLessonNavigation } from "@/lib/utils/lesson-utils";
 import { getSanityLessonsByCategory } from "@/lib/queries";
+import {
+  breadcrumbJsonLd,
+  createPageMetadata,
+  encodeRouteSegment,
+  learningResourceJsonLd,
+} from "@/lib/seo";
 
 // ======================
 // TIPE DATA
@@ -49,7 +57,7 @@ interface Props {
  * @param {string} categoryId Slug ID kategori kursus.
  * @param {string} slug Slug materi pelajaran.
  */
-async function getLessonData(categoryId: string, slug: string) {
+const getLessonData = cache(async (categoryId: string, slug: string) => {
   const supabase = await createClient();
 
   // 1. Ambil Kategori & Pelajaran secara paralel
@@ -75,7 +83,7 @@ async function getLessonData(categoryId: string, slug: string) {
   const nav = await getSanityLessonsByCategory(categoryId, category.id);
 
   return { lesson, nav };
-}
+});
 
 // ======================
 // METADATA SEO
@@ -92,10 +100,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const data = await getLessonData(decodedCategoryId, decodedSlug);
   const lesson = data?.lesson;
   if (!lesson) return { title: "Pelajaran Tidak Ditemukan | NihongoRoute" };
-  return {
+
+  return createPageMetadata({
     title: lesson.seoTitle ?? `${lesson.title} | NihongoRoute`,
-    description: lesson.seoDescription ?? lesson.summary,
-  };
+    description:
+      lesson.seoDescription ??
+      lesson.summary ??
+      `Pelajari materi bahasa Jepang ${lesson.title} di NihongoRoute.`,
+    path: `/courses/${encodeRouteSegment(decodedCategoryId)}/${encodeRouteSegment(decodedSlug)}`,
+    type: "article",
+    keywords: [
+      String(lesson.title || ""),
+      String(lesson.levelTitle || decodedCategoryId).toUpperCase(),
+      "materi bahasa Jepang",
+      "belajar JLPT",
+    ].filter(Boolean),
+  });
 }
 
 // ======================
@@ -119,6 +139,7 @@ export default async function LessonPage({ params }: Props) {
   const { prevLesson, nextLesson } = getLessonNavigation(nav, slug);
   const isSideQuest = lesson.categoryType === "general";
   const formattedQuizzes = formatQuizzes(lesson.quizzes || lesson.questions || []);
+  const lessonPath = `/courses/${encodeRouteSegment(decodedCategoryId)}/${encodeRouteSegment(decodedSlug)}`;
 
   const vocabList = (lesson.vocabList || lesson.vocab_list || []) as unknown[];
   const kanjiList = (lesson.kanjiList || lesson.kanji_list || []) as unknown[];
@@ -127,6 +148,34 @@ export default async function LessonPage({ params }: Props) {
   const cheatsheets = (lesson.cheatsheets || []) as unknown[];
 
   return (
+    <>
+    <JsonLd
+      data={[
+        breadcrumbJsonLd([
+          { name: "Beranda", path: "/" },
+          { name: "Rute Belajar", path: "/courses" },
+          { name: String(lesson.levelTitle || decodedCategoryId), path: `/courses/${encodeRouteSegment(decodedCategoryId)}` },
+          { name: String(lesson.title || "Pelajaran"), path: lessonPath },
+        ]),
+        learningResourceJsonLd({
+          name: String(lesson.title || "Pelajaran NihongoRoute"),
+          description:
+            String(lesson.summary || lesson.seoDescription || `Materi belajar bahasa Jepang ${lesson.title}.`),
+          path: lessonPath,
+          educationalLevel: String(lesson.levelTitle || decodedCategoryId).toUpperCase(),
+          teaches: [
+            ...(vocabList.length ? ["Kosakata bahasa Jepang"] : []),
+            ...(kanjiList.length ? ["Kanji"] : []),
+            ...(readingList.length ? ["Membaca bahasa Jepang"] : []),
+            ...(listeningList.length ? ["Menyimak bahasa Jepang"] : []),
+          ],
+          timeRequired:
+            typeof lesson.estimated_minutes === "number"
+              ? `PT${lesson.estimated_minutes}M`
+              : null,
+        }),
+      ]}
+    />
     <div className="w-full text-foreground px-4 md:px-8 relative overflow-hidden flex flex-col flex-1 transition-colors duration-300">
       {/* Dekorasi Ambient Latar Belakang */}
       <div className="absolute top-0 right-0 size-[360px] bg-primary/5 blur-[65px] rounded-full pointer-events-none" />
@@ -257,5 +306,6 @@ export default async function LessonPage({ params }: Props) {
         </article>
       </div>
     </div>
+    </>
   );
 }

@@ -2,10 +2,15 @@ import type { Metadata } from "next";
 import { getIntegratedMiniDrillQuestions } from "@/actions/tools-integration.actions";
 import JlptMiniDrillClient from "@/components/features/tools/jlpt-mini-drill/JlptMiniDrillClient";
 import type { DrillKind, DrillLevel } from "@/lib/jlpt-mini-drill";
+import { createPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "JLPT Mini Drill | NihongoRoute",
-  description: "Generator latihan cepat JLPT untuk vocab, kanji, dan grammar.",
+  ...createPageMetadata({
+    title: "JLPT Mini Drill | NihongoRoute",
+    description: "Generator latihan cepat JLPT untuk kosakata, kanji, dan grammar dari level N5 sampai N1.",
+    path: "/tools/jlpt-drill",
+    keywords: ["JLPT drill", "latihan JLPT", "quiz JLPT", "vocab kanji grammar JLPT"],
+  }),
 };
 
 export const dynamic = "force-dynamic";

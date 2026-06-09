@@ -12,6 +12,7 @@ import { Metadata } from "next";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { fullyDecode } from "@/lib/utils";
 import { 
   ChevronLeft, 
@@ -32,6 +33,12 @@ import { VocabNotes } from "@/components/features/library/vocab/detail/VocabNote
 import { VocabConjugation } from "@/components/features/library/vocab/detail/VocabConjugation";
 import { VocabExamples } from "@/components/features/library/vocab/detail/VocabExamples";
 import { VocabRelated } from "@/components/features/library/vocab/detail/VocabRelated";
+import {
+  breadcrumbJsonLd,
+  createPageMetadata,
+  definedTermJsonLd,
+  encodeRouteSegment,
+} from "@/lib/seo";
 
 // ======================
 // ANTARMUKA
@@ -97,10 +104,19 @@ export async function generateMetadata({
   }
 
   const romajiStr = typeof vocab.romaji === "string" ? vocab.romaji : "";
-  return {
-    title: `${vocab.word || ""} (${vocab.meaning || ""}) | NihongoRoute Kosakata`,
-    description: `Pelajari arti, cara baca, dan penggunaan kata ${vocab.word || ""} (${romajiStr}) dalam bahasa Jepang.`,
-  };
+  const vocabSlug = String(vocab.slug || decodedId);
+  return createPageMetadata({
+    title: `${vocab.word || ""} (${vocab.meaning || ""}) | Kosakata Jepang`,
+    description: `Pelajari arti, cara baca, romaji, contoh kalimat, dan penggunaan kata ${vocab.word || ""}${romajiStr ? ` (${romajiStr})` : ""} dalam bahasa Jepang.`,
+    path: `/library/vocab/${encodeRouteSegment(vocabSlug)}`,
+    keywords: [
+      String(vocab.word || ""),
+      String(vocab.furigana || ""),
+      String(vocab.romaji || ""),
+      String(vocab.meaning || ""),
+      "kosakata bahasa Jepang",
+    ].filter(Boolean),
+  });
 }
 
 // ======================
@@ -130,6 +146,7 @@ export default async function VocabDetailPage({
   const isAdjective = hinshiList.some((h: string) => h.includes("adjective"));
   const isVerb = hinshiList.some((h: string) => h.includes("verb"));
   const vocabSlug = String(vocab.slug || vocab.id || decodedId);
+  const vocabPath = `/library/vocab/${encodeRouteSegment(vocabSlug)}`;
   const vocabLevel = String(vocab.jlptLevel || vocab.jlpt_level || "").toUpperCase();
   const vocabWord = String(vocab.word || "");
   const verbGroup = hinshiList.some((h: string) => h.includes("ichidan"))
@@ -140,6 +157,24 @@ export default async function VocabDetailPage({
 
   return (
     <main className="w-full bg-transparent px-4 md:px-8 lg:px-12 relative overflow-hidden flex flex-col justify-start min-h-screen pb-32 transition-colors duration-300">
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: "Beranda", path: "/" },
+            { name: "Pustaka", path: "/library" },
+            { name: "Kosakata", path: "/library/vocab" },
+            { name: vocabWord, path: vocabPath },
+          ]),
+          definedTermJsonLd({
+            name: vocabWord,
+            description: `Kosakata bahasa Jepang ${vocabWord} berarti ${String(vocab.meaning || vocab.meaning_id || "")}.`,
+            path: vocabPath,
+            termCode: vocabLevel || null,
+            termSetName: "Kamus Kosakata Bahasa Jepang NihongoRoute",
+            termSetPath: "/library/vocab",
+          }),
+        ]}
+      />
       {/* Ambient Background Glows */}
       <div className="absolute top-[10%] -left-[10%] size-[40%] bg-primary/10 blur-[120px] rounded-full pointer-events-none z-0 animate-pulse" />
       <div className="absolute bottom-[10%] -right-[10%] size-[30%] bg-secondary/5 blur-[120px] rounded-full pointer-events-none z-0" />

@@ -8,9 +8,15 @@
 // ======================
 import { Suspense } from "react";
 import { RotateCw } from "lucide-react";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getPaginatedKanji } from "@/actions/library.actions";
 import KanjiListClient from "@/app/(main)/library/kanji/KanjiListClient";
 import type { Metadata } from "next";
+import {
+  breadcrumbJsonLd,
+  createPageMetadata,
+  learningResourceJsonLd,
+} from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -18,8 +24,13 @@ export const dynamic = "force-dynamic";
 // METADATA SEO
 // ======================
 export const metadata: Metadata = {
-  title: "Pustaka Kanji | NihongoRoute",
-  description: "Kuasai ribuan kanji dengan visualisasi stroke order yang interaktif dan mudah diingat.",
+  ...createPageMetadata({
+    title: "Pustaka Kanji JLPT | NihongoRoute",
+    description:
+      "Kuasai ribuan kanji JLPT dengan arti, onyomi, kunyomi, mnemonic, kosakata terkait, dan visualisasi stroke order interaktif.",
+    path: "/library/kanji",
+    keywords: ["kanji JLPT", "belajar kanji", "stroke order kanji", "onyomi kunyomi"],
+  }),
 };
 
 // ======================
@@ -37,6 +48,22 @@ export default async function KanjiListPage() {
 
   return (
     <div className="w-full min-h-screen bg-transparent relative overflow-hidden pt-12 pb-24 px-4 md:px-8">
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: "Beranda", path: "/" },
+            { name: "Pustaka", path: "/library" },
+            { name: "Kanji", path: "/library/kanji" },
+          ]),
+          learningResourceJsonLd({
+            name: "Pustaka Kanji JLPT",
+            description: metadata.description as string,
+            path: "/library/kanji",
+            educationalLevel: "JLPT N5-N1",
+            teaches: "Kanji",
+          }),
+        ]}
+      />
       {/* Efek Latar Belakang */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[500px] bg-primary/10 blur-[120px] rounded-[100%] pointer-events-none opacity-50" />
       <div className="neural-grid" />

@@ -9,8 +9,14 @@
 // ======================
 import { Suspense } from "react";
 import { RotateCw } from "lucide-react";
+import { JsonLd } from "@/components/seo/JsonLd";
 import GrammarClient from "./GrammarClient";
 import { getGrammarArticles } from "@/actions/library.actions";
+import {
+  breadcrumbJsonLd,
+  createPageMetadata,
+  learningResourceJsonLd,
+} from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -18,8 +24,13 @@ export const dynamic = "force-dynamic";
 // METADATA SEO
 // ======================
 export const metadata = {
-  title: "Tata Bahasa Jepang | NihongoRoute",
-  description: "Katalog lengkap tata bahasa Jepang (Bunpou) untuk level N5 hingga N1. Penjelasan mendalam dengan contoh kalimat dan audio.",
+  ...createPageMetadata({
+    title: "Tata Bahasa Jepang JLPT | NihongoRoute",
+    description:
+      "Katalog tata bahasa Jepang JLPT N5 hingga N1 dengan rumus, arti, catatan penggunaan, contoh kalimat, dan latihan terkait.",
+    path: "/library/grammar",
+    keywords: ["grammar Jepang", "tata bahasa Jepang", "bunpou JLPT", "pola kalimat Jepang"],
+  }),
 };
 
 // ======================
@@ -39,6 +50,22 @@ export default async function GrammarArticlesPage() {
 
   return (
     <main className="w-full relative overflow-hidden flex flex-1 flex-col pb-24 px-4 md:px-8 lg:px-12 bg-transparent text-foreground transition-colors duration-300">
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: "Beranda", path: "/" },
+            { name: "Pustaka", path: "/library" },
+            { name: "Tata Bahasa", path: "/library/grammar" },
+          ]),
+          learningResourceJsonLd({
+            name: "Tata Bahasa Jepang JLPT",
+            description: metadata.description as string,
+            path: "/library/grammar",
+            educationalLevel: "JLPT N5-N1",
+            teaches: "Tata bahasa Jepang",
+          }),
+        ]}
+      />
       {/* Background Neural Overlays */}
       <div className="neural-grid" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgb(var(--primary-rgb)/0.05)_0%,transparent_70%)] pointer-events-none z-0" />

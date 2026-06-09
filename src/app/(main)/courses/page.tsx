@@ -11,14 +11,25 @@
 import React from "react";
 import CoursesClient from "./CoursesClient";
 import type { Metadata } from "next";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getCourseCategories } from "@/actions/lessons.actions";
+import {
+  breadcrumbJsonLd,
+  createPageMetadata,
+  learningResourceJsonLd,
+} from "@/lib/seo";
 
 // ======================
 // METADATA SEO
 // ======================
 export const metadata: Metadata = {
-  title: "Pusat Belajar - Pilih Rute Kamu | NihongoRoute",
-  description: "Pilih jalur belajar bahasa Jepangmu, mulai dari dasar Kana hingga persiapan JLPT N2.",
+  ...createPageMetadata({
+    title: "Pusat Belajar - Pilih Rute Kamu | NihongoRoute",
+    description:
+      "Pilih jalur belajar bahasa Jepang dari dasar Kana hingga persiapan JLPT N5 sampai N1.",
+    path: "/courses",
+    keywords: ["rute belajar bahasa Jepang", "kurikulum JLPT", "belajar JLPT online"],
+  }),
 };
 
 // ======================
@@ -33,6 +44,24 @@ export const metadata: Metadata = {
 export default async function CoursesLandingPage() {
   const categories = await getCourseCategories();
 
-  return <CoursesClient categories={categories} />;
+  return (
+    <>
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: "Beranda", path: "/" },
+            { name: "Rute Belajar", path: "/courses" },
+          ]),
+          learningResourceJsonLd({
+            name: "Pusat Belajar NihongoRoute",
+            description: metadata.description as string,
+            path: "/courses",
+            educationalLevel: "JLPT N5-N1",
+            teaches: categories.map((category) => category.title).filter(Boolean),
+          }),
+        ]}
+      />
+      <CoursesClient categories={categories} />
+    </>
+  );
 }
-

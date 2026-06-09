@@ -8,6 +8,7 @@
 // IMPOR
 // ======================
 import type { Metadata } from "next";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { BookOpen, BarChart2, Library, Database, Activity, Award, Headphones, Type } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
@@ -15,13 +16,30 @@ import { Card } from "@/components/ui/card";
 import { LibraryCategoryCard } from "@/components/features/library/LibraryCategoryCard";
 import { LibraryServerStatus } from "@/components/features/library/LibraryServerStatus";
 import { getLibraryCounts } from "@/actions/library.counts.actions";
+import {
+  breadcrumbJsonLd,
+  createPageMetadata,
+  learningResourceJsonLd,
+  webPageJsonLd,
+} from "@/lib/seo";
 
 // ======================
 // METADATA SEO
 // ======================
 export const metadata: Metadata = {
-  title: "Pustaka Belajar | NihongoRoute",
-  description: "Cari semua materi belajar bahasa Jepang terlengkap: kosakata, tata bahasa, kanji, graded reading, listening lab, dan simulasi ujian JLPT.",
+  ...createPageMetadata({
+    title: "Pustaka Belajar | NihongoRoute",
+    description:
+      "Cari semua materi belajar bahasa Jepang: kosakata, tata bahasa, kanji, graded reading, listening lab, cheatsheet, dan simulasi ujian JLPT.",
+    path: "/library",
+    keywords: [
+      "pustaka bahasa Jepang",
+      "kamus kosakata Jepang",
+      "kanji JLPT",
+      "grammar bahasa Jepang",
+      "graded reading Jepang",
+    ],
+  }),
 };
 
 // ======================
@@ -115,6 +133,26 @@ export default async function LibraryPage() {
 
   return (
     <div className="w-full px-4 md:px-8 lg:px-12 relative overflow-hidden pb-24 bg-transparent text-foreground transition-colors duration-300 min-h-screen pt-8 md:pt-12">
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: "Beranda", path: "/" },
+            { name: "Pustaka", path: "/library" },
+          ]),
+          webPageJsonLd({
+            name: "Pustaka Belajar NihongoRoute",
+            description: metadata.description as string,
+            path: "/library",
+          }),
+          learningResourceJsonLd({
+            name: "Pustaka Belajar NihongoRoute",
+            description: metadata.description as string,
+            path: "/library",
+            educationalLevel: "JLPT N5-N1",
+            teaches: categories.map((category) => category.title),
+          }),
+        ]}
+      />
       {/* Background Neural Overlays */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgb(var(--primary-rgb)/0.05)_0%,transparent_50%)] pointer-events-none z-0" />
       <div className="neural-grid" />

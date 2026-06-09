@@ -6,10 +6,18 @@
 // ======================
 // IMPOR
 // ======================
+import { cache } from "react";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
 import ListeningPageClient from "./ListeningPageClient";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { JsonLd } from "@/components/seo/JsonLd";
+import {
+  breadcrumbJsonLd,
+  createPageMetadata,
+  encodeRouteSegment,
+  learningResourceJsonLd,
+} from "@/lib/seo";
 
 // ======================
 // KONFIGURASI RENDERING DINAMIS
@@ -18,6 +26,19 @@ import type { Metadata } from "next";
 // di mana karakter Unicode (Jepang) dalam parameter rute menyebabkan crash pada
 // header HTTP x-next-cache-tags (ERR_INVALID_CHAR) saat menggunakan ISR/SSG.
 export const dynamic = "force-dynamic";
+
+const getListeningBySlug = cache((slug: string) => getLibraryItemBySlug("listening", slug));
+
+function getCmsSeo(data: unknown) {
+  const seo = data && typeof data === "object" && "seo" in data
+    ? (data as { seo?: { title?: string; description?: string } }).seo
+    : undefined;
+
+  return {
+    description: seo?.description,
+    title: seo?.title,
+  };
+}
 
 // ======================
 // METADATA SEO
@@ -33,11 +54,23 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const decodedSlug = decodeURIComponent(slug);
-  const data = await getLibraryItemBySlug("listening", decodedSlug);
-  return {
-    title: data ? `${data.title} | Laboratorium Listening NihongoRoute` : "Latihan Listening Choukai | NihongoRoute",
-    description: data ? `Latih choukai / pendengaran bahasa Jepang Anda dengan materi percakapan dan kuis interaktif untuk ${data.title}.` : "Laboratorium choukai interaktif dengan klip audio percakapan asli penutur Jepang dan kuis pemahaman.",
-  };
+  const data = await getListeningBySlug(decodedSlug);
+  const seo = getCmsSeo(data);
+  return createPageMetadata({
+    title: data
+      ? seo.title || `${data.title} | Laboratorium Listening NihongoRoute`
+      : "Latihan Listening Choukai | NihongoRoute",
+    description: data
+      ? seo.description || `Latih choukai atau pendengaran bahasa Jepang dengan materi percakapan dan kuis interaktif untuk ${data.title}.`
+      : "Laboratorium choukai interaktif dengan audio percakapan, transkrip, dan kuis pemahaman.",
+    path: `/library/listening/${encodeRouteSegment(decodedSlug)}`,
+    keywords: [
+      String(data?.title || ""),
+      String(data?.jlpt_level || ""),
+      "choukai JLPT",
+      "listening bahasa Jepang",
+    ].filter(Boolean),
+  });
 }
 
 // ======================
@@ -51,12 +84,40 @@ export default async function ListeningPage({ params }: { params: Promise<{ slug
   const { slug } = await params;
   const decodedSlug = decodeURIComponent(slug);
 
-  const data = await getLibraryItemBySlug("listening", decodedSlug);
+  const data = await getListeningBySlug(decodedSlug);
 
 
   if (!data) {
     notFound();
   }
 
-  return <ListeningPageClient data={data as unknown as import("@/components/features/listening/types").ListeningTaskData} />;
+  const seo = getCmsSeo(data);
+  const listeningPath = `/library/listening/${encodeRouteSegment(String(data.slug || decodedSlug))}`;
+  const description =
+    seo.description ||
+    `Latih choukai atau pendengaran bahasa Jepang dengan materi percakapan dan kuis interaktif untuk ${data.title}.`;
+
+  return (
+    <>
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: "Beranda", path: "/" },
+            { name: "Pustaka", path: "/library" },
+            { name: "Listening", path: "/library/listening" },
+            { name: String(data.title || "Listening"), path: listeningPath },
+          ]),
+          learningResourceJsonLd({
+            name: String(data.title || "Listening NihongoRoute"),
+            description,
+            path: listeningPath,
+            educationalLevel: String(data.jlpt_level || data.difficulty || ""),
+            image: typeof data.image_url === "string" ? data.image_url : null,
+            teaches: "Menyimak bahasa Jepang",
+          }),
+        ]}
+      />
+      <ListeningPageClient data={data as unknown as import("@/components/features/listening/types").ListeningTaskData} />
+    </>
+  );
 }

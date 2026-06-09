@@ -12,8 +12,15 @@ import { Metadata } from "next";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { Home, Library, BookOpen } from "lucide-react";
 import GrammarDetailClient from "@/components/features/grammar/GrammarDetailClient";
+import {
+  articleJsonLd,
+  breadcrumbJsonLd,
+  createPageMetadata,
+  encodeRouteSegment,
+} from "@/lib/seo";
 
 // ======================
 // KONFIGURASI RENDERING DINAMIS
@@ -47,12 +54,21 @@ export async function generateMetadata({
     };
   }
 
-  return {
+  return createPageMetadata({
     title: `Belajar Grammar ${article.title} | NihongoRoute`,
     description: article.notes 
-      ? article.notes.slice(0, 150) + "..."
+      ? `${String(article.notes).slice(0, 150)}...`
       : `Pelajari rumus dan cara penggunaan tata bahasa ${article.title} secara mendalam beserta contoh kalimatnya.`,
-  };
+    path: `/library/grammar/${encodeRouteSegment(String(article.slug || decodedSlug))}`,
+    type: "article",
+    keywords: [
+      String(article.title || ""),
+      String(article.jlptLevel || article.jlpt_level || ""),
+      "grammar Jepang",
+      "tata bahasa Jepang",
+      "bunpou JLPT",
+    ].filter(Boolean),
+  });
 }
 
 // ======================
@@ -80,8 +96,31 @@ export default async function GrammarDetailPage({
   // ======================
   // RENDER UTAMA
   // ======================
+  const articlePath = `/library/grammar/${encodeRouteSegment(String(article.slug || decodedSlug))}`;
+  const articleDescription =
+    article.notes
+      ? `${String(article.notes).slice(0, 150)}...`
+      : `Pelajari rumus dan cara penggunaan tata bahasa ${article.title} secara mendalam beserta contoh kalimatnya.`;
+
   return (
     <main className="w-full bg-transparent px-4 md:px-8 lg:px-12 relative overflow-hidden flex flex-col justify-start min-h-screen pb-32 transition-colors duration-300">
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: "Beranda", path: "/" },
+            { name: "Pustaka", path: "/library" },
+            { name: "Tata Bahasa", path: "/library/grammar" },
+            { name: String(article.title || "Grammar"), path: articlePath },
+          ]),
+          articleJsonLd({
+            headline: `Belajar Grammar ${article.title}`,
+            description: articleDescription,
+            path: articlePath,
+            datePublished: typeof article.created_at === "string" ? article.created_at : null,
+            educationalLevel: String(article.jlptLevel || article.jlpt_level || ""),
+          }),
+        ]}
+      />
       {/* Ambient Background Glows */}
       <div className="absolute top-[10%] -left-[10%] size-[45%] bg-primary/10 blur-[130px] rounded-full pointer-events-none z-0 animate-pulse" />
       <div className="absolute bottom-[10%] -right-[10%] size-[35%] bg-success/5 blur-[130px] rounded-full pointer-events-none z-0" />

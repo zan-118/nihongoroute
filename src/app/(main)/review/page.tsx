@@ -11,13 +11,18 @@ import { Suspense } from "react";
 import { ReviewClient } from "@/app/(main)/review/ReviewClient";
 import { RotateCw } from "lucide-react";
 import type { Metadata } from "next";
+import { createPageMetadata } from "@/lib/seo";
 
 // ======================
 // KONFIGURASI METADATA
 // ======================
 export const metadata: Metadata = {
-  title: "Review SRS | NihongoRoute",
-  description: "Sesi ulangan spasi repetisi (SRS) untuk memperkuat hafalan kosakata dan kanji bahasa Jepang.",
+  ...createPageMetadata({
+    title: "Review SRS | NihongoRoute",
+    description: "Sesi ulangan spasi repetisi (SRS) untuk memperkuat hafalan kosakata dan kanji bahasa Jepang.",
+    path: "/review",
+    noIndex: true,
+  }),
 };
 
 // ======================

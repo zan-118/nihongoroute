@@ -10,13 +10,18 @@ import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, BookOpen, Compass, ShieldCheck, HelpCircle } from "lucide-react";
+import { createPageMetadata } from "@/lib/seo";
 
 // ======================
 // KONFIGURASI METADATA
 // ======================
 export const metadata = {
-  title: "Syarat & Ketentuan | NihongoRoute",
-  description: "Syarat dan Ketentuan penggunaan platform NihongoRoute.",
+  ...createPageMetadata({
+    title: "Syarat & Ketentuan | NihongoRoute",
+    description:
+      "Syarat dan Ketentuan penggunaan platform belajar bahasa Jepang NihongoRoute.",
+    path: "/terms",
+  }),
 };
 
 export default function TermsPage() {

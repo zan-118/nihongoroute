@@ -10,11 +10,16 @@ import { Metadata } from "next";
 import LeaderboardClient from "./LeaderboardClient";
 import { Badge } from "@/components/ui/badge";
 import { Users } from "lucide-react";
+import { createPageMetadata } from "@/lib/seo";
 
 
 export const metadata: Metadata = {
-  title: "Sosial & Papan Peringkat | NihongoRoute",
-  description: "Lihat siapa yang berada di posisi teratas dan bandingkan kemajuan belajarmu dengan siswa lain di seluruh dunia.",
+  ...createPageMetadata({
+    title: "Sosial & Papan Peringkat | NihongoRoute",
+    description: "Lihat siapa yang berada di posisi teratas dan bandingkan kemajuan belajarmu dengan siswa lain.",
+    path: "/social",
+    noIndex: true,
+  }),
 };
 
 export default function SocialPage() {

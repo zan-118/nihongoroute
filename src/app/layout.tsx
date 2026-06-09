@@ -17,6 +17,16 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { LazyMotion, domAnimation } from "framer-motion";
 import Script from "next/script";
+import { JsonLd } from "@/components/seo/JsonLd";
+import {
+  DEFAULT_DESCRIPTION,
+  DEFAULT_OG_IMAGE,
+  DEFAULT_TITLE,
+  SITE_NAME,
+  absoluteUrl,
+  organizationJsonLd,
+  websiteJsonLd,
+} from "@/lib/seo";
 
 
 // ======================
@@ -39,13 +49,14 @@ export const viewport: Viewport = {
  * Mengatur judul, deskripsi, OpenGraph, dan verifikasi mesin pencari.
  */
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.nihongoroute.my.id"),
-  title: "NihongoRoute | Belajar Bahasa Jepang Gratis",
-  description:
-    "Platform belajar bahasa Jepang dengan sistem terstruktur, gamifikasi, dan latihan interaktif.",
+  title: DEFAULT_TITLE,
+  description: DEFAULT_DESCRIPTION,
+  metadataBase: new URL(absoluteUrl("/")),
   keywords: [
     "belajar bahasa jepang",
     "JLPT N5",
+    "JLPT N4",
+    "JLPT N3",
     "hiragana",
     "katakana",
     "kanji",
@@ -64,29 +75,28 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
     title: "NihongoRoute",
   },
+  manifest: "/manifest.webmanifest",
   openGraph: {
-    title: "NihongoRoute | Misi Menguasai Bahasa Jepang",
-    description:
-      "Tingkatkan level bahasa Jepangmu! Belajar JLPT N5 dengan sistem Flashcard SRS, Quiz interaktif, dan kamus pintar.",
-    url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.nihongoroute.my.id",
-    siteName: "NihongoRoute",
+    description: DEFAULT_DESCRIPTION,
     images: [
       {
-        url: "/opengraph-image.png",
-        width: 1200,
+        alt: `${SITE_NAME} preview`,
         height: 630,
-        alt: "NihongoRoute Dashboard",
+        url: absoluteUrl(DEFAULT_OG_IMAGE),
+        width: 1200,
       },
     ],
     locale: "id_ID",
+    siteName: SITE_NAME,
+    title: "NihongoRoute | Misi Menguasai Bahasa Jepang",
     type: "website",
+    url: absoluteUrl("/"),
   },
   twitter: {
     card: "summary_large_image",
-    title: "NihongoRoute | Belajar Bahasa Jepang Gratis",
-    description:
-      "Platform e-learning bahasa Jepang gratis dengan gaya UI interaktif.",
-    images: ["/opengraph-image.png"],
+    description: DEFAULT_DESCRIPTION,
+    images: [absoluteUrl(DEFAULT_OG_IMAGE)],
+    title: DEFAULT_TITLE,
   },
 };
 
@@ -112,6 +122,7 @@ export default function RootLayout({
         suppressHydrationWarning
         className="font-sans antialiased text-foreground selection:bg-destructive selection:text-destructive-foreground transition-colors duration-300"
       >
+        <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

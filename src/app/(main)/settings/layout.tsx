@@ -7,13 +7,18 @@
 // IMPOR
 // ======================
 import type { Metadata } from "next";
+import { createPageMetadata } from "@/lib/seo";
 
 // ======================
 // KONFIGURASI METADATA
 // ======================
 export const metadata: Metadata = {
-  title: "Pengaturan | NihongoRoute",
-  description: "Atur profil, tema tampilan, dan preferensi belajar di NihongoRoute.",
+  ...createPageMetadata({
+    title: "Pengaturan | NihongoRoute",
+    description: "Atur profil, tema tampilan, dan preferensi belajar di NihongoRoute.",
+    path: "/settings",
+    noIndex: true,
+  }),
 };
 
 // ======================

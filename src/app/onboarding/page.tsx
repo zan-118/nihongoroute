@@ -8,13 +8,18 @@
 // ======================
 import type { Metadata } from "next";
 import OnboardingClient from "./OnboardingClient";
+import { createPageMetadata } from "@/lib/seo";
 
 // ======================
 // KONFIGURASI METADATA
 // ======================
 export const metadata: Metadata = {
-  title: "Selamat Datang | NihongoRoute",
-  description: "Selamat datang di NihongoRoute! Tentukan jalur belajar dan target JLPT Anda agar kami dapat merekomendasikan kurikulum terbaik.",
+  ...createPageMetadata({
+    title: "Selamat Datang | NihongoRoute",
+    description: "Tentukan jalur belajar dan target JLPT Anda di NihongoRoute.",
+    path: "/onboarding",
+    noIndex: true,
+  }),
 };
 
 // ======================

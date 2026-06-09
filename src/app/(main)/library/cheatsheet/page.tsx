@@ -9,8 +9,14 @@
 // IMPOR
 // ======================
 import type { Metadata } from "next";
+import { JsonLd } from "@/components/seo/JsonLd";
 import CheatsheetClient from "./CheatsheetClient";
 import { getCheatsheets } from "@/actions/library.actions";
+import {
+  breadcrumbJsonLd,
+  createPageMetadata,
+  learningResourceJsonLd,
+} from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -18,8 +24,13 @@ export const dynamic = "force-dynamic";
 // METADATA SEO
 // ======================
 export const metadata: Metadata = {
-  title: "Referensi Cepat & Cheatsheets | NihongoRoute",
-  description: "Akses cepat tabel angka, partikel dasar, tata bahasa, dan referensi kilat bahasa Jepang.",
+  ...createPageMetadata({
+    title: "Cheatsheet Bahasa Jepang | NihongoRoute",
+    description:
+      "Akses cepat tabel angka, partikel, pola tata bahasa, dan referensi kilat bahasa Jepang untuk dipelajari online atau diunduh sebagai PDF.",
+    path: "/library/cheatsheet",
+    keywords: ["cheatsheet bahasa Jepang", "referensi Jepang", "partikel Jepang", "tabel JLPT"],
+  }),
 };
 
 // ======================
@@ -43,6 +54,21 @@ export default async function CheatsheetPage() {
   // ======================
   return (
     <main className="w-full bg-transparent px-6 md:px-12 relative overflow-hidden flex flex-col justify-start min-h-screen">
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: "Beranda", path: "/" },
+            { name: "Pustaka", path: "/library" },
+            { name: "Cheatsheet", path: "/library/cheatsheet" },
+          ]),
+          learningResourceJsonLd({
+            name: "Cheatsheet Bahasa Jepang",
+            description: metadata.description as string,
+            path: "/library/cheatsheet",
+            teaches: sheets.map((sheet) => sheet.title).filter(Boolean),
+          }),
+        ]}
+      />
       {/* Background Neural Overlays */}
       <div className="neural-grid" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgb(var(--destructive-rgb)/0.05)_0%,transparent_70%)] pointer-events-none z-0" />

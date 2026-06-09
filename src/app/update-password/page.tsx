@@ -8,13 +8,18 @@
 // ======================
 import type { Metadata } from "next";
 import UpdatePasswordClient from "./UpdatePasswordClient";
+import { createPageMetadata } from "@/lib/seo";
 
 // ======================
 // KONFIGURASI METADATA
 // ======================
 export const metadata: Metadata = {
-  title: "Perbarui Kata Sandi | NihongoRoute",
-  description: "Perbarui kata sandi akun NihongoRoute Anda untuk menjaga keamanan akun belajar bahasa Jepang Anda.",
+  ...createPageMetadata({
+    title: "Perbarui Kata Sandi | NihongoRoute",
+    description: "Perbarui kata sandi akun NihongoRoute Anda.",
+    path: "/update-password",
+    noIndex: true,
+  }),
 };
 
 // ======================
