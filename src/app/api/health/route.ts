@@ -20,26 +20,34 @@ function getHealthPayload() {
   const missingRequired = REQUIRED_ENV.filter((key) => !process.env[key]);
   const missingFeature = FEATURE_ENV.filter((key) => !process.env[key]);
   const healthy = missingRequired.length === 0;
+  const envCheck = {
+    ok: healthy,
+    missingRequired,
+    missingFeature,
+  };
 
   return {
     status: healthy ? "ok" : "degraded",
     time: new Date().toISOString(),
     uptimeSeconds: Math.round(process.uptime()),
     checks: {
-      env: {
-        ok: healthy,
-        missingRequired,
-        missingFeature,
-      },
+      env: process.env.NODE_ENV === "production"
+        ? {
+            ok: healthy,
+            missingRequiredCount: missingRequired.length,
+            missingFeatureCount: missingFeature.length,
+          }
+        : envCheck,
     },
   };
 }
 
 export function GET() {
   const payload = getHealthPayload();
+  const envOk = payload.status === "ok";
 
   return Response.json(payload, {
-    status: payload.checks.env.ok ? 200 : 503,
+    status: envOk ? 200 : 503,
     headers: {
       "Cache-Control": "no-store",
     },
@@ -48,12 +56,12 @@ export function GET() {
 
 export function HEAD() {
   const payload = getHealthPayload();
+  const envOk = payload.status === "ok";
 
   return new Response(null, {
-    status: payload.checks.env.ok ? 200 : 503,
+    status: envOk ? 200 : 503,
     headers: {
       "Cache-Control": "no-store",
     },
   });
 }
-

@@ -1,0 +1,86 @@
+name: Quality Gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  app:
+    name: App Quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co"
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: "ci-anon-key"
+      NEXT_PUBLIC_SANITY_PROJECT_ID: "qoczxvvo"
+      NEXT_PUBLIC_SANITY_DATASET: "production"
+      NEXT_PUBLIC_SITE_URL: "http://localhost:3000"
+      ADMIN_API_SECRET: "ci-admin-secret"
+      SUPABASE_SERVICE_ROLE_KEY: "ci-service-role-key"
+      GEMINI_API_KEY: "ci-gemini-key"
+      SANITY_API_READ_TOKEN: "ci-sanity-read-token"
+      SANITY_API_WRITE_TOKEN: "ci-sanity-write-token"
+      TRAKTEER_WEBHOOK_SECRET: "ci-trakteer-secret"
+      SAWERIA_WEBHOOK_SECRET: "ci-saweria-secret"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm run test:unit
+
+      - name: Build
+        run: npm run build
+
+  database:
+    name: Database Guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check migration filenames and ordering
+        run: npm run db:migrations:check
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v2
+        with:
+          version: latest
+
+      - name: Show Supabase CLI version
+        run: supabase --version

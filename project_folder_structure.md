@@ -12,6 +12,7 @@ nihongoroute/
 |-- .antigravitycli/             Local CLI/tooling state.
 |-- .claude/                     Local assistant/tooling state.
 |-- .continue/                   Local assistant/tooling state.
+|-- .github/                     GitHub Actions quality gate workflow.
 |-- .git/                        Git repository metadata.
 |-- .husky/                      Husky hook installation target.
 |-- .kiro/                       Local assistant/tooling state.
@@ -20,6 +21,7 @@ nihongoroute/
 |-- .tmp-ui-screens/             Temporary UI screenshots.
 |-- .vscode/                     Workspace editor settings.
 |-- dist/                        Generated distribution/output directory.
+|-- docs/                        Enterprise readiness and operations runbook.
 |-- e2e/                         Playwright end-to-end tests.
 |-- node_modules/                Installed npm dependencies.
 |-- public/                      Static public assets and fonts.
@@ -29,6 +31,7 @@ nihongoroute/
 |-- src/                         Main Next.js application source.
 |-- supabase/                    Supabase SQL migrations.
 |-- __tests__/                   Vitest unit/component/hook tests.
+|-- .env.example                 Committed environment variable contract.
 |-- .env.local                   Local environment values; do not commit.
 |-- .gitignore                   Git ignore rules.
 |-- ARCHITECTURE.md              Current architecture documentation.
@@ -43,6 +46,7 @@ nihongoroute/
 |-- postcss.config.js            PostCSS configuration.
 |-- project_folder_structure.md  This file.
 |-- README.md                    Project overview and setup guide.
+|-- SECURITY.md                  Security policy and review checklist.
 |-- sanity.cli.ts                Sanity CLI deployment config.
 |-- sanity.config.ts             Embedded Sanity Studio config.
 |-- schema.json                  Generated/exported schema artifact.
@@ -294,6 +298,7 @@ src/store/
 src/lib/
 |-- admin-api-auth.ts       Constant-time admin secret validation.
 |-- audio.ts                Client sound effects engine.
+|-- cloud-sync-payload.ts   Pure dirty SRS/lesson RPC payload builders.
 |-- gamification.ts         Streak, quest, achievement merge helpers.
 |-- level.ts                XP/level math.
 |-- queries.ts              Sanity GROQ queries.
@@ -451,6 +456,7 @@ scripts/
 |-- align_sanity_lessons.js
 |-- audit_dialogs.js
 |-- audit_lesson_titles.js
+|-- check-migrations.mjs
 |-- check_n5.js
 |-- check_n5_storage.js
 |-- check_tts_cache.js
@@ -490,13 +496,17 @@ scripts/
 |-- test_query.js
 ```
 
-Most scripts are operational tools for content generation, content cleanup, Sanity/Supabase alignment, TTS cache maintenance, and JLPT syllabus/data work. Many require `.env.local`, Supabase service role access, Sanity write tokens, Gemini or AI gateway credentials, and sometimes local VoiceVox output.
+Most scripts are operational tools for content generation, content cleanup, Sanity/Supabase alignment, TTS cache maintenance, and JLPT syllabus/data work. Many require `.env.local`, Supabase service role access, Sanity write tokens, Gemini or AI gateway credentials, and sometimes local VoiceVox output. `check-migrations.mjs` is the committed quality-gate script for Supabase migration filename/timestamp validation.
 
 ## Configuration Files
 
 ```text
 package.json              npm scripts, dependencies, overrides, lint-staged.
 package-lock.json         Locked dependency graph.
+.env.example              Safe env contract for local/CI/deployment setup.
+.github/workflows/        GitHub Actions automation.
+docs/                     Enterprise readiness and operations documentation.
+SECURITY.md               Security policy and release checklist.
 next.config.ts            Standalone build, security headers, images, external packages.
 tsconfig.json             Strict TS, Next plugin, bundler resolution, @ alias.
 eslint.config.mjs         Next, hooks, a11y, TS linting, Zustand destructuring warning.

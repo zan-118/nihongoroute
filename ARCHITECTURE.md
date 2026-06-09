@@ -16,6 +16,7 @@ The runtime is split into these major layers:
 - Zustand stores keep offline-first client state in IndexedDB through `idb-keyval`.
 - TanStack Query coordinates client-side session/progress fetching and background synchronization.
 - Route Handlers provide TTS cache reads, furigana generation, flashcard card resolution, health checks, admin bridge APIs, OAuth callback, and payment webhooks.
+- Enterprise hardening now includes a GitHub Actions quality gate, migration filename/order checks, sync payload regression tests, a security policy, and an operations runbook.
 
 ## Technology Stack
 
@@ -481,9 +482,12 @@ Package scripts:
 - `npm run start`: start production server after build.
 - `npm run lint`: run ESLint.
 - `npm run lint:fix`: run ESLint with fixes.
+- `npm run typecheck`: run strict TypeScript without emit.
 - `npm run test`: run Vitest once.
+- `npm run test:unit`: run the unit-test quality gate.
 - `npm run test:watch`: run Vitest in watch mode.
 - `npm run test:e2e`: run Playwright E2E.
+- `npm run db:migrations:check`: validate Supabase migration filenames and duplicate timestamps.
 - `npm run prepare`: install Husky hooks.
 
 Repository scripts under `scripts/` support content/data operations such as:
@@ -502,7 +506,7 @@ These scripts often require `.env.local`, Supabase service role access, Sanity w
 Vitest tests live under `__tests__`:
 
 - hooks: SRS hooks, cached audio, quiz/mock exam engines, flashcard master, heatmap, daily quests, writing canvas, add-to-SRS.
-- libs: `utils`, `srs`, `level`.
+- libs: `utils`, `srs`, `level`, cloud sync payload builders, admin API auth.
 - stores: `useSRSStore`, `useUserStore`.
 
 Playwright E2E tests live under `e2e`:
@@ -514,12 +518,26 @@ Playwright E2E tests live under `e2e`:
 
 `playwright.config.ts` starts `npm run dev` at `http://localhost:3000` and runs Chromium, Firefox, WebKit, Mobile Chrome, and Mobile Safari projects.
 
+## Enterprise Controls
+
+Quality and operational guardrails added to the repository:
+
+- `.github/workflows/quality.yml` runs app quality checks on pushes and pull requests to `main`.
+- `scripts/check-migrations.mjs` validates Supabase migration naming and timestamp uniqueness.
+- `.env.example` documents the committed environment contract without real secrets.
+- `SECURITY.md` defines secret handling, admin auth expectations, and release security checks.
+- `docs/enterprise-readiness.md` records current controls and remaining enterprise work.
+- `docs/operations-runbook.md` documents health checks, incident response, and backup/restore drills.
+- `/api/health` returns only missing env counts in production, avoiding secret-name disclosure.
+- Admin bridge authentication accepts bearer/header secrets and no longer accepts query-string secrets.
+- `src/lib/cloud-sync-payload.ts` converts dirty SRS/lesson progress into pure RPC payloads with regression tests.
+
 ## Known Architectural Boundaries
 
 - Sanity content is editorial/static; Supabase remains the source for auth, progress, core lexical data, categories, supporters, and several operational/cache tables.
 - Service-role Supabase access belongs only in server route handlers/actions/scripts.
 - Offline-first state is local-first and later reconciled with Supabase.
-- Destructive local deletes for SRS/lesson progress are represented by dirty deleted states before cloud sync removes rows.
+- Destructive local deletes for SRS/lesson progress are represented by dirty deleted states before cloud sync removes rows. SRS tombstones are preserved through merge when cloud still has the card, and pure payload builders keep delete requests testable.
 - TTS audio is generated offline by scripts, not in `/api/tts`.
 - The live database had drifted ahead of the earlier migration set. `20260609080000_sync_live_schema_drift.sql` captures `tts_cache`, `expressions`, `sentences`, `radicals`, the `tts-cache` bucket, user SRS uniqueness, auth-owned FK cleanup, and live editorial columns.
 

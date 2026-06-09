@@ -42,6 +42,9 @@ The application uses a split-source architecture:
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Full technical architecture and data-flow audit |
 | [architecture_visual.md](architecture_visual.md) | Mermaid diagrams for runtime, data, sync, and APIs |
 | [project_folder_structure.md](project_folder_structure.md) | Repository tree and folder responsibilities |
+| [SECURITY.md](SECURITY.md) | Security policy, secret handling, and review checklist |
+| [docs/enterprise-readiness.md](docs/enterprise-readiness.md) | Enterprise controls, remaining work, CI, deployment, rollback |
+| [docs/operations-runbook.md](docs/operations-runbook.md) | Health checks, incidents, backup, and restore operations |
 | [src/app/api/health/route.ts](src/app/api/health/route.ts) | Runtime health and env readiness endpoint |
 | [sanity.config.ts](sanity.config.ts) | Embedded Sanity Studio configuration |
 
@@ -125,9 +128,12 @@ npm run start
 | `npm run start` | Start the production server |
 | `npm run lint` | Run ESLint |
 | `npm run lint:fix` | Run ESLint with fixes |
+| `npm run typecheck` | Run strict TypeScript checks without emitting files |
 | `npm run test` | Run Vitest once |
+| `npm run test:unit` | Run the unit-test quality gate |
 | `npm run test:watch` | Run Vitest in watch mode |
 | `npm run test:e2e` | Run Playwright E2E tests |
+| `npm run db:migrations:check` | Validate Supabase migration names and duplicate timestamps |
 | `npm run prepare` | Install Husky hooks |
 
 ## Environment

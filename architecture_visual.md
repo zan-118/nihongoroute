@@ -224,6 +224,23 @@ flowchart TB
   Callback["/auth/callback"] --> Session["exchange code for Supabase session"]
 ```
 
+## Quality And Operations Gate
+
+```mermaid
+flowchart LR
+  PR["Push / pull request"] --> CI[".github/workflows/quality.yml"]
+  CI --> Install["npm ci"]
+  Install --> Typecheck["npm run typecheck"]
+  Typecheck --> Lint["npm run lint"]
+  Lint --> Unit["npm run test:unit"]
+  Unit --> Build["npm run build"]
+  CI --> Migrations["npm run db:migrations:check"]
+  Migrations --> SupabaseCLI["supabase/setup-cli@v2"]
+  Runtime["Production runtime"] --> Health["/api/health"]
+  Health --> Ops["docs/operations-runbook.md"]
+  Security["SECURITY.md"] --> AdminAuth["Bearer/header admin secret only"]
+```
+
 ## Sanity Studio Bridge
 
 ```mermaid

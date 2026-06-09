@@ -15,6 +15,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useUIStore } from "@/store/useUIStore";
 import { SRSState } from "@/lib/srs";
+import { buildLessonUpdates, buildSrsUpdates } from "@/lib/cloud-sync-payload";
 import { Inventory, Settings, LessonProgress } from "@/store/types";
 import { Session } from "@supabase/supabase-js";
 
@@ -64,52 +65,10 @@ export function useCloudMutation(session: Session | null | undefined) {
       const { progress, dirtySrs, dirtyLessons } = data;
 
       // 1. Konversi data kartu SRS kotor (dirtySrs Set) menjadi array objek baris relasional
-      const srsUpdates = Array.from(dirtySrs)
-        .map(id => {
-          const state = progress.srs[id];
-
-          if (!state) {
-            const now = new Date().toISOString();
-            return {
-              word_id: id,
-              repetition: 0,
-              interval: 1,
-              ease_factor: 2.5,
-              next_review: now,
-              updated_at: now,
-              status: 'learning',
-              is_deleted: true,
-              custom_mnemonic: null
-            };
-          }
-
-          return {
-            word_id: id,
-            repetition: state.repetition,
-            interval: state.interval,
-            ease_factor: state.easeFactor,
-            next_review: new Date(state.nextReview).toISOString(),
-            updated_at: new Date(state.updatedAt).toISOString(),
-            // Konversi klasifikasi status kartu berdasarkan panjang interval (SM-2)
-            status: state.interval > 21 ? 'graduated' : (state.interval > 1 ? 'reviewing' : 'learning'),
-            is_deleted: !!state.isDeleted,
-            custom_mnemonic: state.customMnemonic || null
-          };
-        });
+      const srsUpdates = buildSrsUpdates(progress.srs, dirtySrs);
 
       // 2. Konversi data progres pelajaran kotor (dirtyLessons Set) menjadi array objek baris relasional
-      const lessonUpdates = Array.from(dirtyLessons)
-        .filter(id => progress.completedLessons[id])
-        .map(id => {
-          const state = progress.completedLessons[id];
-          return {
-            lesson_id: id,
-            is_completed: !state.isDeleted,
-            completed_at: new Date(state.completedAt).toISOString(),
-            updated_at: new Date(state.updatedAt).toISOString(),
-            is_deleted: !!state.isDeleted
-          };
-        });
+      const lessonUpdates = buildLessonUpdates(progress.completedLessons, dirtyLessons);
 
       // 3. Eksekusi RPC Supabase: Panggil 'sync_user_progress' secara terpadu di server database
       const { data: rpcData, error: rpcError } = await supabase.rpc('sync_user_progress', {

@@ -8,9 +8,12 @@
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:unit": "vitest run",
     "test:e2e": "playwright test",
+    "db:migrations:check": "node scripts/check-migrations.mjs",
     "prepare": "husky"
   },
   "dependencies": {

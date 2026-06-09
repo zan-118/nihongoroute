@@ -38,11 +38,9 @@ export function validateAdminApiRequest(req: Request): AdminAuthResult {
     };
   }
 
-  const url = new URL(req.url);
   const candidates = [
     readBearerToken(req),
     req.headers.get("x-admin-api-secret")?.trim(),
-    url.searchParams.get("secret")?.trim(),
   ].filter((candidate): candidate is string => Boolean(candidate));
 
   const isAuthorized = candidates.some((candidate) =>
@@ -59,4 +57,3 @@ export function validateAdminApiRequest(req: Request): AdminAuthResult {
 
   return { ok: true, status: 200 };
 }
-
