@@ -19,7 +19,8 @@ import {
   ChevronRight,
   Zap,
   LayoutGrid,
-  Flame
+  Flame,
+  Target
 } from "lucide-react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
@@ -52,6 +53,15 @@ const tools = [
     description: "Kuis kilat berbatas waktu. Tebak arti kata sebelum kehabisan nyawa dan waktu!",
     icon: Flame,
     href: "/tools/survival",
+    color: "text-destructive",
+    bgColor: "bg-destructive/10",
+    border: "border-destructive/20"
+  },
+  {
+    title: "Weak Point Trainer",
+    description: "Latihan terarah untuk kartu SRS yang paling rapuh, overdue, dan sering gagal.",
+    icon: Target,
+    href: "/tools/weak-points",
     color: "text-destructive",
     bgColor: "bg-destructive/10",
     border: "border-destructive/20"

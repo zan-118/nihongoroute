@@ -17,11 +17,12 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useSRSStore } from "@/store/useSRSStore";
 import { createClient } from "@/lib/supabase/client";
-import { AlertTriangle, PenTool, ArrowRight, Loader2, Sparkles, BookOpen } from "lucide-react";
+import { AlertTriangle, PenTool, ArrowRight, Loader2, Sparkles, BookOpen, Target } from "lucide-react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { selectWeakPointCandidates } from "@/lib/weak-points";
 
 // ==========================================
 // ANTARMUKA & PROPS (INTERFACES)
@@ -41,17 +42,10 @@ interface WeakCandidate {
 }
 
 function getTopWeakCandidates(srs: ReturnType<typeof useSRSStore.getState>["srs"]) {
-  const candidates: WeakCandidate[] = [];
-
-  for (const [id, state] of Object.entries(srs || {})) {
-    if (state.isDeleted || state.easeFactor >= 2.2) continue;
-
-    candidates.push({ id, easeFactor: state.easeFactor });
-    candidates.sort((a, b) => a.easeFactor - b.easeFactor);
-    if (candidates.length > 4) candidates.pop();
-  }
-
-  return candidates;
+  return selectWeakPointCandidates(srs, { limit: 4 }).map((candidate) => ({
+    id: candidate.id,
+    easeFactor: candidate.easeFactor,
+  }));
 }
 
 function getWeakCandidatesSignature(srs: ReturnType<typeof useSRSStore.getState>["srs"]) {
@@ -208,9 +202,17 @@ export default function WeakPointPanel() {
             Item memori berikut memiliki tingkat kegagalan yang tinggi.
           </p>
         </div>
-        <Badge variant="outline" className="bg-destructive/10 border-destructive/20 text-destructive text-[8px] font-black uppercase tracking-widest px-3 py-1.5 h-auto">
-          {weakItems.length} Titik Lemah
-        </Badge>
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="outline" className="bg-destructive/10 border-destructive/20 text-destructive text-[8px] font-black uppercase tracking-widest px-3 py-1.5 h-auto">
+            {weakItems.length} Titik Lemah
+          </Badge>
+          <Button asChild size="sm" className="h-8 rounded-xl px-3 text-[8px] font-black uppercase tracking-widest">
+            <Link href="/tools/weak-points">
+              <Target size={12} />
+              Latih Fokus
+            </Link>
+          </Button>
+        </div>
       </div>
 
       {/* Daftar Item Titik Lemah */}

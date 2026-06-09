@@ -86,10 +86,10 @@ export default function FlashcardMaster({
 
   if (!isClient || !cards || cards.length === 0) return null;
 
-  const card = cards[currentIndex];
+  const card = currentCards[currentIndex];
   const cardId = card.id || "";
   const srsState = srs[cardId];
-  const isKanji = type === "kanji";
+  const isKanji = card.docType === "kanji" || type === "kanji";
   const themeColor = isKanji ? "text-secondary" : "text-primary";
   const themeBgColor = isKanji ? "bg-secondary" : "bg-primary";
   const themeShadow = isKanji
@@ -179,7 +179,7 @@ export default function FlashcardMaster({
                       setIsFlipped((prev) => !prev);
                     }
                   }}
-                  type={type}
+                  type={isKanji ? "kanji" : "vocab"}
                   docType={card.docType}
                   slug={card.slug}
                   srsState={srsState}

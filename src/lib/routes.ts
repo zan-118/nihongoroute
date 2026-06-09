@@ -77,6 +77,8 @@ export function getRouteLabel(segment: string): string {
     dashboard: "Dasbor",
     cheatsheet: "Referensi Kilat",
     support: "Bantuan",
+    tools: "Peralatan",
+    "weak-points": "Weak Point Trainer",
   };
 
   if (labels[segment.toLowerCase()]) {
