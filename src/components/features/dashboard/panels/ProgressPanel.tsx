@@ -16,6 +16,7 @@
 import dynamic from "next/dynamic";
 import DashboardStats from "../DashboardStats";
 import { Variants } from "framer-motion";
+import type { ReadinessCourseCategory } from "@/lib/readiness";
 
 // ==========================================
 // ELEMEN DINAMIS (LAZY LOADING)
@@ -28,6 +29,11 @@ const KanjiProgressGrid = dynamic(() => import("../KanjiProgressGrid"), {
 const WeakPointPanel = dynamic(() => import("../WeakPointPanel"), {
   ssr: false,
   loading: () => <div className="h-[120px] w-full animate-pulse bg-muted rounded-[34px]" />
+});
+
+const JLPTReadinessCard = dynamic(() => import("../JLPTReadinessCard"), {
+  ssr: false,
+  loading: () => <div className="h-[460px] w-full animate-pulse bg-muted rounded-[34px]" />
 });
 
 // ==========================================
@@ -71,6 +77,11 @@ export function ProgressPanel({
 }: ProgressPanelProps) {
   return (
     <div className="space-y-[89px]">
+      <JLPTReadinessCard
+        loading={loading}
+        courseMetadata={courseMetadata as ReadinessCourseCategory[]}
+      />
+
       <DashboardStats 
         loading={loading} 
         progress={progress} 
