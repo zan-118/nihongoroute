@@ -52,7 +52,7 @@ function KanaContent() {
       <div className="max-w-4xl mx-auto w-full relative z-10 flex flex-col h-full">
         <KanaHeader themeColor={themeColor} />
 
-        <KanaControls 
+        <KanaControls
           type={type}
           setType={setType}
           category={category}
@@ -63,7 +63,7 @@ function KanaContent() {
           themeAccent={themeAccent}
         />
 
-        <KanaMatrix 
+        <KanaMatrix
           type={type}
           category={category}
           onSelectChar={(char, romaji) => setSelectedChar({ char, romaji })}
@@ -71,7 +71,7 @@ function KanaContent() {
         />
       </div>
 
-      <KanaWritingDialog 
+      <KanaWritingDialog
         selectedChar={selectedChar}
         setSelectedChar={setSelectedChar}
         type={type}
@@ -79,7 +79,7 @@ function KanaContent() {
         themeBorder={themeBorder}
       />
 
-      <KanaQuizDialog 
+      <KanaQuizDialog
         isActive={isQuizActive}
         onClose={handleCloseQuiz}
         lives={quizLives}
@@ -107,7 +107,7 @@ export default function KanaPage() {
   return (
     <Suspense fallback={
       <div className="w-full flex-1 flex items-center justify-center bg-transparent">
-        <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest animate-pulse">Memuat Kana...</p>
+        <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest">Memuat Kana...</p>
       </div>
     }>
       <KanaContent />

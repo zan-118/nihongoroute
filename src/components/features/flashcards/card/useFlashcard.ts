@@ -14,7 +14,7 @@ import { FlashcardProps } from "./types";
 // ==========================================
 /**
  * Hook khusus pengendali interaksi kartu flashcard.
- * 
+ *
  * @returns State modal coretan, context tema kartu, dan handler flip/draw.
  */
 export function useFlashcard({ type, onFlip }: Pick<FlashcardProps, 'type' | 'onFlip'>) {
@@ -26,12 +26,12 @@ export function useFlashcard({ type, onFlip }: Pick<FlashcardProps, 'type' | 'on
   const isKanji = type === "kanji";
   const themeColor = isKanji ? "text-secondary" : "text-primary";
   const themeBorder = isKanji ? "border-secondary/30" : "border-primary/30";
-  const themeShadow = isKanji 
-    ? "shadow-lg dark:shadow-[0_0_30px_rgb(var(--secondary-rgb)/0.1)]" 
-    : "shadow-lg dark:shadow-[0_0_30px_rgb(var(--primary-rgb)/0.1)]";
-  const glowClass = isKanji 
-    ? "drop-shadow-sm dark:drop-shadow-[0_0_15px_rgb(var(--secondary-rgb)/0.5)]" 
-    : "drop-shadow-sm dark:drop-shadow-[0_0_15px_rgb(var(--primary-rgb)/0.5)]";
+  const themeShadow = isKanji
+    ? "shadow-md dark:shadow-[0_0_14px_rgb(var(--secondary-rgb)/0.08)]"
+    : "shadow-md dark:shadow-[0_0_14px_rgb(var(--primary-rgb)/0.08)]";
+  const glowClass = isKanji
+    ? "drop-shadow-sm dark:drop-shadow-[0_0_8px_rgb(var(--secondary-rgb)/0.35)]"
+    : "drop-shadow-sm dark:drop-shadow-[0_0_8px_rgb(var(--primary-rgb)/0.35)]";
 
   const themeContext = {
     isKanji,

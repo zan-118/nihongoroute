@@ -91,14 +91,14 @@ function DonationCard({
     <m.a
       href={href}
       target="_blank"
-      whileHover={{ y: -8 }}
+      whileHover={{ y: -4 }}
       whileTap={{ scale: 0.98 }}
       className="block h-full cursor-pointer"
     >
       <Card
-        className={`group relative p-8 sm:p-12 rounded-[2.5rem] bg-card border border-border/80 ${accent} ${shadowColor} transition-all duration-500 shadow-[0_15px_40px_rgba(0,0,0,0.25)] overflow-hidden flex flex-col h-full`}
+        className={`group relative p-8 sm:p-12 rounded-[2.5rem] bg-card border border-border/80 ${accent} ${shadowColor} transition-all duration-300 shadow-lg overflow-hidden flex flex-col h-full`}
       >
-        <div className={`absolute top-0 right-0 w-48 h-48 ${glowColor} blur-[70px] rounded-full pointer-events-none opacity-40 group-hover:opacity-80 transition-opacity`} />
+        <div className={`absolute top-0 right-0 w-40 h-40 ${glowColor} blur-[36px] rounded-full pointer-events-none opacity-30 group-hover:opacity-50 transition-opacity`} />
 
         <div className="absolute top-0 right-0 p-6 sm:p-8 opacity-[0.03] text-5xl sm:text-7xl font-black italic group-hover:opacity-[0.06] transition-opacity pointer-events-none uppercase text-foreground font-japanese select-none">
           {title}
@@ -132,7 +132,7 @@ function StatItem({ icon, title, desc, color }: StatItemProps) {
   return (
     <div className="group text-center sm:text-left flex flex-col items-center sm:items-start">
       <div
-        className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 border transition-all duration-500 shadow-xl ${color} group-hover:scale-110`}
+        className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 border transition-all duration-200 shadow-md ${color} group-hover:scale-105`}
       >
         {icon}
       </div>
@@ -180,29 +180,34 @@ export default function SupportClient() {
   const allSupporters = dbSupporters;
 
   // Hitung total donasi terkumpul dan persentase target secara dinamis
-  const totalDonations = allSupporters.reduce((sum, s) => sum + s.amount, 0);
   const monthlyTarget = 450000;
+  const totalDonations = useMemo(
+    () => allSupporters.reduce((sum, supporter) => sum + supporter.amount, 0),
+    [allSupporters]
+  );
   const progressPercentage = Math.min(Math.round((totalDonations / monthlyTarget) * 100), 100);
 
   // Mengurutkan donatur berdasarkan filter aktif
-  const sortedSupporters = [...allSupporters].sort((a, b) => {
-    if (supporterFilter === "top") {
-      return b.amount - a.amount;
-    }
-    return new Date(b.date).getTime() - new Date(a.date).getTime();
-  });
+  const sortedSupporters = useMemo(() => Array.from(allSupporters).sort((a, b) => {
+      if (supporterFilter === "top") {
+        return b.amount - a.amount;
+      }
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    }),
+    [allSupporters, supporterFilter]
+  );
 
   return (
     <div className="w-full flex-1 flex flex-col overflow-x-hidden bg-transparent text-foreground transition-colors duration-300 min-h-screen relative">
       {/* Dynamic Galactic Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute inset-0 neural-grid opacity-[0.15] mix-blend-overlay" />
-        <div className="absolute top-[-10%] right-[-5%] w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-primary/10 rounded-full blur-[100px] sm:blur-[140px] animate-pulse pointer-events-none" />
-        <div className="absolute bottom-[-10%] left-[-5%] w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-secondary/5 rounded-full blur-[90px] sm:blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: "2s" }} />
-        <div className="absolute top-[40%] left-[20%] size-[300px] bg-destructive/5 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute top-[-10%] right-[-5%] w-[320px] sm:w-[460px] h-[320px] sm:h-[460px] bg-primary/8 rounded-full blur-[70px] sm:blur-[90px] pointer-events-none" />
+        <div className="absolute bottom-[-10%] left-[-5%] w-[300px] sm:w-[420px] h-[300px] sm:h-[420px] bg-secondary/5 rounded-full blur-[60px] sm:blur-[80px] pointer-events-none" />
+        <div className="absolute top-[40%] left-[20%] size-[240px] bg-destructive/5 rounded-full blur-[60px] pointer-events-none" />
       </div>
 
-      <nav className="p-4 sm:p-6 sticky top-0 bg-background/60 backdrop-blur-2xl z-50 border-b border-border/80 transition-all">
+      <nav className="p-4 sm:p-6 sticky top-0 bg-background/80 backdrop-blur-md z-50 border-b border-border/80 transition-all">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
           <Button
             onClick={() => back()}
@@ -239,14 +244,14 @@ export default function SupportClient() {
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: "spring", stiffness: 120, damping: 15 }}
-            className="size-20 bg-card border border-border/80 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-[0_20px_40px_rgba(0,0,0,0.3)] relative group overflow-hidden"
+            className="size-20 bg-card border border-border/80 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-lg relative group overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-destructive/10 to-transparent opacity-60" />
             <Heart
-              className="text-destructive fill-red-500 animate-pulse relative z-10 drop-shadow-[0_0_12px_rgb(var(--destructive-rgb)/0.6)]"
+              className="text-destructive fill-red-500 relative z-10 drop-shadow-[0_0_6px_rgb(var(--destructive-rgb)/0.35)]"
               size={32}
             />
-            <div className="absolute inset-0 bg-destructive blur-2xl opacity-30" />
+            <div className="absolute inset-0 bg-destructive blur-md opacity-20" />
           </m.div>
 
           <m.h1
@@ -298,11 +303,11 @@ export default function SupportClient() {
         </div>
 
         {/* 1. INTERACTIVE TARGET BAR */}
-        <Card className="glass border border-border/80 rounded-[3rem] p-8 sm:p-12 mb-12 sm:mb-16 shadow-[0_30px_70px_rgba(0,0,0,0.4)] relative overflow-hidden group">
+        <Card className="glass border border-border/80 rounded-[3rem] p-8 sm:p-12 mb-12 sm:mb-16 shadow-xl relative overflow-hidden group">
           <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese pointer-events-none text-foreground font-japanese select-none">
             TARGET
           </div>
-          <div className="absolute -top-40 -right-40 size-80 bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
+          <div className="absolute -top-28 -right-28 size-56 bg-primary/5 blur-[55px] rounded-full pointer-events-none" />
 
           <div className="flex items-center gap-4 mb-6 relative z-10">
             <div className="size-12 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center shadow-inner relative overflow-hidden">
@@ -323,7 +328,7 @@ export default function SupportClient() {
               <span className="text-sm font-bold text-foreground bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
                 Rp {totalDonations.toLocaleString("id-ID")} <span className="text-muted-foreground text-xs font-semibold">Terkumpul</span>
               </span>
-              <span className="text-lg font-black text-primary animate-pulse">
+              <span className="text-lg font-black text-primary">
                 {progressPercentage}%
               </span>
               <span className="text-sm font-bold text-muted-foreground">
@@ -336,31 +341,31 @@ export default function SupportClient() {
               <m.div
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercentage}%` }}
-                transition={{ duration: 1.5, ease: "easeOut" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
                 className="h-full bg-gradient-to-r from-primary to-secondary rounded-full shadow-[0_0_20px_rgb(var(--primary-rgb)/0.5)] relative overflow-hidden"
               >
-                <div className="absolute inset-0 bg-[linear-gradient(45deg,rgba(255,255,255,0.15)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.15)_50%,rgba(255,255,255,0.15)_75%,transparent_75%,transparent)] bg-[length:16px_16px] animate-[shimmer_2s_linear_infinite]" />
+                <div className="absolute inset-0 bg-[linear-gradient(45deg,rgba(255,255,255,0.12)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.12)_50%,rgba(255,255,255,0.12)_75%,transparent_75%,transparent)] bg-[length:16px_16px]" />
               </m.div>
             </div>
           </div>
 
           {/* Interactive Cost Breakdown Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 relative z-10 pt-4 border-t border-border/40">
-            <div className="p-4 rounded-2xl border border-border/50 bg-card/30 hover:border-warning/50 hover:bg-warning/[0.02] transition-all duration-300">
+            <div className="p-4 rounded-2xl border border-border/50 bg-card/30 hover:border-warning/50 hover:bg-warning/[0.02] transition-all duration-200">
               <span className="text-[10px] font-black uppercase text-warning tracking-widest block mb-1">Database Server</span>
               <span className="text-sm font-black text-foreground block">Supabase: Rp 150K/bln</span>
               <p className="text-[10px] text-muted-foreground/80 leading-relaxed font-semibold italic mt-1">
                 Menyimpan kosakata, ulasan SRS, dan data kemajuan siswa secara luring.
               </p>
             </div>
-            <div className="p-4 rounded-2xl border border-border/50 bg-card/30 hover:border-primary/50 hover:bg-primary/[0.02] transition-all duration-300">
+            <div className="p-4 rounded-2xl border border-border/50 bg-card/30 hover:border-primary/50 hover:bg-primary/[0.02] transition-all duration-200">
               <span className="text-[10px] font-black uppercase text-primary tracking-widest block mb-1">Hosting & CDN</span>
               <span className="text-sm font-black text-foreground block">Vercel: Rp 200K/bln</span>
               <p className="text-[10px] text-muted-foreground/80 leading-relaxed font-semibold italic mt-1">
                 Menjamin loading instan dan rendering Next.js yang ngebut di seluruh dunia.
               </p>
             </div>
-            <div className="p-4 rounded-2xl border border-border/50 bg-card/30 hover:border-secondary/5 hover:bg-secondary/[0.02] transition-all duration-300">
+            <div className="p-4 rounded-2xl border border-border/50 bg-card/30 hover:border-secondary/5 hover:bg-secondary/[0.02] transition-all duration-200">
               <span className="text-[10px] font-black uppercase text-secondary tracking-widest block mb-1">Domain & Core</span>
               <span className="text-sm font-black text-foreground block">Domain: Rp 100K/bln</span>
               <p className="text-[10px] text-muted-foreground/80 leading-relaxed font-semibold italic mt-1">
@@ -371,15 +376,15 @@ export default function SupportClient() {
         </Card>
 
         {/* Alokasi Dana (Transparansi) */}
-        <Card className="glass border border-border/80 rounded-[3rem] p-8 sm:p-12 md:p-16 mb-12 sm:mb-16 shadow-[0_30px_70px_rgba(0,0,0,0.4)] relative overflow-hidden group">
+        <Card className="glass border border-border/80 rounded-[3rem] p-8 sm:p-12 md:p-16 mb-12 sm:mb-16 shadow-xl relative overflow-hidden group">
           <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese">
             TRANSPARANSI
           </div>
-          <div className="absolute -bottom-40 -left-40 size-80 bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
+          <div className="absolute -bottom-28 -left-28 size-56 bg-primary/5 blur-[55px] rounded-full pointer-events-none" />
 
           <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-4 mb-12 relative z-10 text-center sm:text-left">
             <div className="size-14 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center shadow-inner relative overflow-hidden">
-              <div className="absolute inset-0 bg-primary/10 animate-pulse" />
+              <div className="absolute inset-0 bg-primary/10" />
               <ShieldCheck className="text-primary drop-shadow-[0_0_8px_rgb(var(--primary-rgb)/0.4)] relative z-10" size={26} />
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-foreground uppercase italic tracking-widest leading-none pt-1">
@@ -410,11 +415,11 @@ export default function SupportClient() {
         </Card>
 
         {/* 2. INTERACTIVE SUPPORTER WALL */}
-        <Card className="glass border border-border/80 rounded-[3rem] p-8 sm:p-12 mb-12 sm:mb-16 shadow-[0_30px_70px_rgba(0,0,0,0.4)] relative overflow-hidden group">
+        <Card className="glass border border-border/80 rounded-[3rem] p-8 sm:p-12 mb-12 sm:mb-16 shadow-xl relative overflow-hidden group">
           <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese">
             DONATUR
           </div>
-          <div className="absolute -bottom-40 -right-40 size-80 bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
+          <div className="absolute -bottom-28 -right-28 size-56 bg-primary/5 blur-[55px] rounded-full pointer-events-none" />
 
           <div className="flex flex-col sm:flex-row justify-between items-center gap-6 mb-8 relative z-10 border-b border-border/40 pb-6">
             <div className="flex items-center gap-4">
@@ -432,7 +437,7 @@ export default function SupportClient() {
             </div>
 
             {/* Filter Tabs */}
-            <div className="flex gap-2 p-1 rounded-xl bg-card/60 border border-border/50 backdrop-blur-md">
+            <div className="flex gap-2 p-1 rounded-xl bg-card/80 border border-border/50 backdrop-blur-sm">
               <button type="button"
                 onClick={() => setSupporterFilter("top")}
                 className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
@@ -459,15 +464,15 @@ export default function SupportClient() {
           {/* Supporters Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
             {sortedSupporters.length === 0 ? (
-              <div className="col-span-1 md:col-span-2 p-10 rounded-[2rem] border border-dashed border-border/80 text-center bg-card/10 backdrop-blur-md relative overflow-hidden group shadow-inner">
-                <div className="text-4xl mb-4 animate-premium-bounce">☕</div>
+              <div className="col-span-1 md:col-span-2 p-10 rounded-[2rem] border border-dashed border-border/80 text-center bg-card/20 backdrop-blur-sm relative overflow-hidden group shadow-inner">
+                <div className="text-4xl mb-4">☕</div>
                 <h4 className="text-base font-black text-foreground uppercase tracking-wider mb-2">
                   Belum Ada Pejuang Dukungan
                 </h4>
                 <p className="text-xs text-muted-foreground/80 leading-relaxed font-semibold italic max-w-sm mx-auto mb-6 px-4">
                   Jadilah pejuang pertama yang menanam kebaikan untuk menjaga kelangsungan belajar bahasa Jepang gratis tanpa iklan!
                 </p>
-                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-primary animate-pulse">
+                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
                   Klik tombol trakteer / saweria di atas untuk memulai
                 </div>
               </div>
@@ -500,10 +505,10 @@ export default function SupportClient() {
                     key={s.name + idx}
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.05 }}
-                    className={`p-5 rounded-2xl border transition-all duration-300 flex gap-4 items-start ${tierStyle}`}
+                    transition={{ delay: Math.min(idx * 0.03, 0.24) }}
+                    className={`p-5 rounded-2xl border transition-all duration-200 flex gap-4 items-start ${tierStyle}`}
                     style={{
-                      boxShadow: `0 10px 30px rgba(0,0,0,0.15), 0 0 15px ${glowEffect}`,
+                      boxShadow: `0 6px 18px rgba(0,0,0,0.12), 0 0 8px ${glowEffect}`,
                     }}
                   >
                     <div className="shrink-0">
@@ -519,7 +524,7 @@ export default function SupportClient() {
                           Rp {s.amount.toLocaleString("id-ID")}
                         </span>
                       </div>
-                      
+
                       <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded-full border tracking-wider mt-1 inline-block ${badgeColor}`}>
                         {label}
                       </span>
@@ -536,11 +541,11 @@ export default function SupportClient() {
         </Card>
 
         {/* 3. SLEEK INTERACTIVE FAQ */}
-        <Card className="glass border border-border/80 rounded-[3rem] p-8 sm:p-12 mb-12 sm:mb-16 shadow-[0_30px_70px_rgba(0,0,0,0.4)] relative overflow-hidden group">
+        <Card className="glass border border-border/80 rounded-[3rem] p-8 sm:p-12 mb-12 sm:mb-16 shadow-xl relative overflow-hidden group">
           <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese">
             TANYA JAWAB
           </div>
-          <div className="absolute -top-40 -left-40 size-80 bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
+          <div className="absolute -top-28 -left-28 size-56 bg-primary/5 blur-[55px] rounded-full pointer-events-none" />
 
           <div className="flex items-center gap-4 mb-8 relative z-10 border-b border-border/40 pb-6">
             <div className="size-12 rounded-2xl bg-warning/10 border border-warning/30 flex items-center justify-center shadow-inner">
@@ -563,7 +568,7 @@ export default function SupportClient() {
               return (
                 <div
                   key={faq.question}
-                  className="p-5 rounded-2xl border border-border/60 bg-card/20 hover:border-primary/40 hover:bg-primary/[0.01] transition-all duration-300"
+                  className="p-5 rounded-2xl border border-border/60 bg-card/20 hover:border-primary/40 hover:bg-primary/[0.01] transition-all duration-200"
                 >
                   <button type="button"
                     onClick={() => setExpandedFAQ(isOpen ? -1 : idx)}
@@ -587,7 +592,7 @@ export default function SupportClient() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        transition={{ duration: 0.2, ease: "easeInOut" }}
                         className="overflow-hidden"
                       >
                         <div className="pt-4 pb-1 text-xs sm:text-sm text-muted-foreground/80 leading-relaxed font-semibold italic border-t border-border/30 mt-4">
@@ -611,7 +616,7 @@ export default function SupportClient() {
             <Button
               onClick={() => push("/onboarding")}
               variant="outline"
-              className="rounded-2xl h-14 px-8 border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary font-black uppercase tracking-widest text-xs transition-all duration-300 group shadow-lg"
+              className="rounded-2xl h-14 px-8 border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary font-black uppercase tracking-widest text-xs transition-all duration-200 group shadow-sm"
             >
               Mulai Ulang Tutorial <ChevronRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>

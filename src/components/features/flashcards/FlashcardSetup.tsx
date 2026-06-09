@@ -58,7 +58,7 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
   // RENDER KOMPONEN
   // ==========================================
   return (
-    <m.div 
+    <m.div
       key="flashcard-setup"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -74,8 +74,8 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
         </p>
       </div>
 
-      <div className="space-y-8 glass p-6 md:p-8 rounded-3xl border border-border shadow-[0_0_40px_rgb(var(--primary-rgb)/0.05)]">
-        
+      <div className="space-y-8 glass p-6 md:p-8 rounded-3xl border border-border shadow-lg">
+
         {/* Level Selection */}
         <div className="space-y-4">
           <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-muted-foreground mb-2">
@@ -87,9 +87,9 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
               <button type="button"
                 key={lvl.id}
                 onClick={() => setLevel(lvl.id)}
-                className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all duration-300
-                  ${level === lvl.id 
-                    ? `shadow-[0_0_20px_rgb(var(--primary-rgb)/0.2)] ${lvl.color.replace('text-', 'bg-').replace('/10', '/20')} border-primary` 
+                className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all duration-200
+                  ${level === lvl.id
+                    ? `shadow-md ${lvl.color.replace('text-', 'bg-').replace('/10', '/20')} border-primary`
                     : "bg-background/50 border-border hover:bg-muted"
                   }
                 `}
@@ -111,9 +111,9 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
               <button type="button"
                 key={modeItem.id}
                 onClick={() => setMode(modeItem.id)}
-                className={`relative flex flex-col items-center justify-center p-6 rounded-2xl border transition-all duration-300 overflow-hidden group
-                  ${mode === modeItem.id 
-                    ? "bg-primary/10 border-primary shadow-[0_0_20px_rgb(var(--primary-rgb)/0.15)] text-primary" 
+                className={`relative flex flex-col items-center justify-center p-6 rounded-2xl border transition-all duration-200 overflow-hidden group
+                  ${mode === modeItem.id
+                    ? "bg-primary/10 border-primary shadow-md text-primary"
                     : "bg-background/50 border-border hover:bg-muted text-muted-foreground"
                   }
                 `}
@@ -142,9 +142,9 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
               <button type="button"
                 key={amt}
                 onClick={() => setAmount(amt)}
-                className={`flex-1 min-w-[80px] py-3 px-4 rounded-2xl border font-bold transition-all duration-300
-                  ${amount === amt 
-                    ? "bg-secondary text-secondary-foreground border-secondary shadow-[0_0_20px_rgb(var(--secondary-rgb)/0.2)]" 
+                className={`flex-1 min-w-[80px] py-3 px-4 rounded-2xl border font-bold transition-all duration-200
+                  ${amount === amt
+                    ? "bg-secondary text-secondary-foreground border-secondary shadow-md"
                     : "bg-background/50 text-muted-foreground border-border hover:bg-muted"
                   }
                 `}
@@ -156,9 +156,9 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
         </div>
 
         <div className="pt-6 border-t border-border mt-8">
-          <Button 
+          <Button
             onClick={() => onStart(level, mode, amount)}
-            className="w-full py-6 rounded-2xl text-lg font-black uppercase tracking-widest bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_30px_rgb(var(--primary-rgb)/0.3)] group transition-all"
+            className="w-full py-6 rounded-2xl text-lg font-black uppercase tracking-widest bg-primary hover:bg-primary/90 text-primary-foreground shadow-md group transition-all"
           >
             Mulai Sesi <Play size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>

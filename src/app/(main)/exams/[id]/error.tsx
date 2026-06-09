@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 /**
  * Komponen pembatas kesalahan (Error Boundary) rute sesi ujian.
  * Menangani crash logika di sisi klien selama simulasi ujian berlangsung.
- * 
+ *
  * @param {Object} props Properti komponen.
  * @param {Error & { digest?: string }} props.error Objek kesalahan runtime yang ditangkap.
  * @param {function} props.reset Fungsi callback untuk mereset komponen dan memuat ulang sesi ujian.
@@ -42,20 +42,20 @@ export default function ExamError({
   return (
     <div className="w-full flex-1 flex flex-col items-center justify-center px-6 text-center relative overflow-hidden py-12">
       {/* Efek Latar Belakang Cyber Glow */}
-      <div className="absolute top-0 left-1/4 size-[400px] bg-destructive/10 blur-[120px] rounded-full pointer-events-none" />
-      
+      <div className="absolute top-0 left-1/4 size-[300px] bg-destructive/10 blur-[55px] rounded-full pointer-events-none" />
+
       <Card className="p-10 md:p-14 border-destructive/30 max-w-lg w-full relative z-10 my-auto neo-card rounded-[2rem] bg-card">
         {/* Ikon Peringatan Neumorphic */}
         <div className="size-20 mx-auto neo-inset text-destructive flex items-center justify-center rounded-full mb-8 shadow-inner bg-destructive/10">
           <span className="text-4xl block">⚠️</span>
         </div>
-        
+
         <h1 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tight mb-4">
           Gagal Memuat Ujian
         </h1>
-        
+
         <p className="text-muted-foreground mb-8 text-sm leading-relaxed">
-          Mohon maaf, terjadi kesalahan teknis saat memproses sesi ujian ini. 
+          Mohon maaf, terjadi kesalahan teknis saat memproses sesi ujian ini.
           Ini mungkin disebabkan oleh data konten yang tidak lengkap atau gangguan koneksi.
         </p>
 
@@ -72,11 +72,11 @@ export default function ExamError({
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button
             onClick={() => reset()}
-            className="bg-destructive hover:bg-destructive text-destructive-foreground font-black uppercase tracking-widest h-auto py-4 px-8 rounded-xl text-[10px] transition-all shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.3)]"
+            className="bg-destructive hover:bg-destructive text-destructive-foreground font-black uppercase tracking-widest h-auto py-4 px-8 rounded-xl text-[10px] transition-all shadow-md"
           >
             Coba Segarkan
           </Button>
-          
+
           <Button
             asChild
             variant="ghost"
@@ -88,7 +88,7 @@ export default function ExamError({
           </Button>
         </div>
       </Card>
-      
+
       {/* Branding Footer Sederhana */}
       <p className="mt-12 text-muted-foreground text-[10px] uppercase tracking-[0.2em] font-bold">
         NihongoRoute System Protection

@@ -1,6 +1,6 @@
 /**
  * @file page.tsx
- * @description Halaman Sesi Ujian Dinamis (Standalone Exam Session). 
+ * @description Halaman Sesi Ujian Dinamis (Standalone Exam Session).
  * Bertanggung jawab meresolusi ID rute URL dan menarik struktur soal dari Supabase.
  * @module StandaloneExamSessionPage
  */
@@ -64,7 +64,7 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
   if (!examData) {
     return (
       <div className="w-full flex-1 flex flex-col items-center justify-center px-6 text-center relative overflow-hidden py-12">
-        <div className="absolute top-0 right-1/4 size-[400px] bg-destructive/5 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 right-1/4 size-[300px] bg-destructive/5 blur-[55px] rounded-full pointer-events-none" />
         <Card className="p-10 md:p-14 border-destructive/30 max-w-lg w-full relative z-10 my-auto neo-card rounded-[2rem] bg-card">
           <div className="size-20 mx-auto neo-inset text-destructive flex items-center justify-center rounded-full mb-8 shadow-inner bg-destructive/10">
             <span className="text-4xl block">🚫</span>
@@ -93,7 +93,7 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
   if (!examData.questions || examData.questions.length === 0) {
     return (
       <div className="w-full flex-1 flex flex-col items-center justify-center px-6 text-center relative overflow-hidden py-12">
-        <div className="absolute top-0 left-1/4 size-[400px] bg-warning/5 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 left-1/4 size-[300px] bg-warning/5 blur-[55px] rounded-full pointer-events-none" />
         <Card className="p-10 md:p-14 border-warning/30 max-w-lg w-full relative z-10 my-auto neo-card rounded-[2rem] bg-card">
           <div className="size-20 mx-auto neo-inset text-warning flex items-center justify-center rounded-full mb-8 shadow-inner bg-warning/10">
             <span className="text-4xl block">🚧</span>
@@ -123,8 +123,8 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
   // 3. RENDER UTAMA ENGINE
   return (
     <div className="w-full flex-1 px-4 md:px-8 relative overflow-hidden flex flex-col mt-4 md:mt-8">
-      <div className="absolute top-[-10%] right-[-5%] size-[600px] bg-destructive/5 blur-[150px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-[10%] left-[-5%] size-[500px] bg-warning/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-[-8%] right-[-5%] size-[420px] bg-destructive/5 blur-[70px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-[10%] left-[-5%] size-[360px] bg-warning/5 blur-[60px] rounded-full pointer-events-none" />
       <div className="w-full max-w-5xl mx-auto relative z-10 flex-1 flex flex-col">
         <MockExamEngine exam={examData} />
       </div>

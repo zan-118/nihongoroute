@@ -39,8 +39,8 @@ interface FlashcardBackProps {
   mnemonic?: string | null;
   pitchAccent?: string | null;
   hinshi?: string | null;
-  examples?: Array<{ 
-    japanese?: string; 
+  examples?: Array<{
+    japanese?: string;
     indonesian?: string;
     jp?: string;
     meaning?: string;
@@ -95,7 +95,7 @@ export function FlashcardBack({
   // ==========================================
   return (
     <Card
-      className={`absolute inset-0 w-full h-full border ${themeBorder} rounded-2xl ${themeShadow} flex flex-col p-4 md:p-6 transition-all duration-500 shadow-none overflow-hidden bg-card`}
+      className={`absolute inset-0 w-full h-full border ${themeBorder} rounded-2xl ${themeShadow} flex flex-col p-4 md:p-6 transition-all duration-200 shadow-none overflow-hidden bg-card`}
       style={{
         transform: "rotateY(180deg)",
         backfaceVisibility: "hidden",
@@ -202,11 +202,11 @@ export function FlashcardBack({
                 variant="outline"
                 className="flex-1 h-7 bg-background border-border hover:bg-muted text-[8px] md:text-[10px] font-black uppercase tracking-widest rounded-lg px-2 shadow-none"
               >
-                <Link 
+                <Link
                   href={`/library/${
-                    docType === 'verb_dictionary' ? 'verbs' : 
+                    docType === 'verb_dictionary' ? 'verbs' :
                     isKanji ? 'kanji' : 'vocab'
-                  }/${slug || id}`} 
+                  }/${slug || id}`}
                   aria-label="Lihat detail kata ini"
                 >
                   <ExternalLink size={10} className="mr-1" aria-hidden="true" /> Detail
@@ -235,4 +235,3 @@ export function FlashcardBack({
     </Card>
   );
 }
-

@@ -38,9 +38,9 @@ interface FlashcardFrontProps {
 /**
  * Komponen sisi depan kartu flashcard.
  */
-export function FlashcardFront({ 
-  word, 
-  themeContext, 
+export function FlashcardFront({
+  word,
+  themeContext,
   studyMode,
   userInput = "",
   onUserInputChange,
@@ -76,11 +76,11 @@ export function FlashcardFront({
   // ==========================================
   return (
     <Card
-      className={`absolute inset-0 w-full h-full border rounded-2xl flex flex-col items-center justify-center p-6 md:p-8 transition-all duration-500 shadow-none overflow-hidden bg-card ${
-        inputResult === "correct" 
-          ? "border-success/50 shadow-[0_0_40px_rgb(var(--success-rgb)/0.2)] bg-success/[0.02]" 
+      className={`absolute inset-0 w-full h-full border rounded-2xl flex flex-col items-center justify-center p-6 md:p-8 transition-all duration-200 shadow-none overflow-hidden bg-card ${
+        inputResult === "correct"
+          ? "border-success/50 shadow-md bg-success/[0.02]"
           : inputResult === "wrong"
-          ? "border-destructive/50 shadow-[0_0_40px_rgb(var(--destructive-rgb)/0.2)] bg-destructive/[0.02]"
+          ? "border-destructive/50 shadow-md bg-destructive/[0.02]"
           : `${themeBorder} ${themeShadow}`
       }`}
       style={{
@@ -89,13 +89,13 @@ export function FlashcardFront({
       }}
     >
       {/* Dynamic Glow Layer */}
-      <div 
-        className={`absolute inset-0 transition-opacity duration-1000 pointer-events-none opacity-20 ${
-          inputResult === "correct" ? "bg-success blur-[120px]" : inputResult === "wrong" ? "bg-destructive blur-[120px]" : "opacity-0"
-        }`} 
+      <div
+        className={`absolute inset-0 transition-opacity duration-300 pointer-events-none opacity-15 ${
+          inputResult === "correct" ? "bg-success blur-[45px]" : inputResult === "wrong" ? "bg-destructive blur-[45px]" : "opacity-0"
+        }`}
       />
 
-      <div className={`absolute top-0 right-0 w-48 h-48 md:w-64 md:h-64 blur-[80px] md:blur-[100px] rounded-full opacity-10 pointer-events-none ${isKanji ? 'bg-secondary' : 'bg-primary'}`} />
+      <div className={`absolute top-0 right-0 w-40 h-40 md:w-52 md:h-52 blur-[45px] md:blur-[55px] rounded-full opacity-10 pointer-events-none ${isKanji ? 'bg-secondary' : 'bg-primary'}`} />
 
       <Badge
         variant="outline"
@@ -117,7 +117,7 @@ export function FlashcardFront({
         </h2>
 
         {isChallenge && (
-          <div className="w-full max-w-[280px] space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="w-full max-w-[280px] space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
             <div className="relative">
               <Input
                 value={userInput}
@@ -125,8 +125,8 @@ export function FlashcardFront({
                 disabled={isAnswerChecked && inputResult === "correct"}
                 placeholder="Ketik bacaan..."
                 className={`h-14 bg-muted/50 border-2 text-center text-lg font-bold rounded-xl transition-all ${
-                  inputResult === "correct" 
-                    ? "border-success bg-success/10 text-success" 
+                  inputResult === "correct"
+                    ? "border-success bg-success/10 text-success"
                     : inputResult === "wrong"
                     ? "border-destructive bg-destructive/10 text-destructive"
                     : "border-border focus:border-primary focus:ring-primary/20"
@@ -138,7 +138,7 @@ export function FlashcardFront({
                 {inputResult === "wrong" && <XCircle className="text-destructive size-6" />}
               </div>
             </div>
-            
+
             <p className="text-[10px] text-center font-bold text-muted-foreground uppercase tracking-widest opacity-60">
               {isAnswerChecked && inputResult === "wrong" ? "Coba lagi atau tekan Periksa" : "Tekan Enter untuk memeriksa"}
             </p>

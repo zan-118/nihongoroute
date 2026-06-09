@@ -9,7 +9,7 @@
 // ======================
 // IMPOR
 // ======================
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import { m, Variants } from "framer-motion";
 import { Layers, PenTool, Flame, Sparkles, ChevronRight } from "lucide-react";
@@ -36,31 +36,31 @@ interface TrainingItem {
 // ======================
 // KOMPONEN PEMBANTU KARTU — Compact
 // ======================
-function TrainingCard({ item }: { item: TrainingItem }) {
+const TrainingCard = React.memo(function TrainingCard({ item }: { item: TrainingItem }) {
   const [isHovered, setIsHovered] = useState(false);
   const IconComponent = item.icon;
   return (
-    <Card 
+    <Card
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl transition-all duration-500 h-full relative overflow-hidden glass"
+      className="p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl transition-all duration-200 h-full relative overflow-hidden glass"
       style={{
         borderColor: isHovered ? `rgba(${item.rgb}, 0.3)` : "rgb(var(--border-rgb)/0.4)",
-        boxShadow: isHovered ? `0 12px 30px rgba(${item.rgb}, 0.08), 0 0 20px rgba(${item.rgb}, 0.04)` : "none"
+        boxShadow: isHovered ? `0 8px 22px rgba(${item.rgb}, 0.06), 0 0 12px rgba(${item.rgb}, 0.03)` : "none"
       }}
     >
       {/* Premium Glow Overlay */}
       <div
-        className="absolute inset-0 transition-opacity duration-700 pointer-events-none"
+        className="absolute inset-0 transition-opacity duration-200 pointer-events-none"
         style={{
           background: `linear-gradient(135deg, rgba(${item.rgb}, 0.04) 0%, transparent 100%)`,
           opacity: isHovered ? 1 : 0
         }}
       />
-      
+
       <div className="relative z-10 flex flex-col gap-4 sm:gap-5">
         <div
-          className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center transition-all duration-500 shadow-lg border"
+          className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center transition-all duration-200 shadow-md border"
           style={{
             backgroundColor: isHovered ? `rgba(${item.rgb}, 0.1)` : "rgb(var(--background-rgb)/0.5)",
             borderColor: isHovered ? `rgba(${item.rgb}, 0.4)` : "rgb(var(--border-rgb)/0.5)",
@@ -72,9 +72,9 @@ function TrainingCard({ item }: { item: TrainingItem }) {
         >
           <IconComponent size={20} />
         </div>
-        
+
         <div className="space-y-1">
-          <h4 
+          <h4
             className="text-base sm:text-lg md:text-xl font-black text-foreground tracking-tight uppercase transition-colors"
             style={{
               color: isHovered ? `rgb(${item.rgb})` : "hsl(var(--foreground))"
@@ -87,9 +87,9 @@ function TrainingCard({ item }: { item: TrainingItem }) {
           </p>
         </div>
       </div>
-      
-      <div 
-        className="absolute bottom-4 right-4 sm:bottom-5 sm:right-5 size-8 sm:size-9 rounded-full border flex items-center justify-center transition-all duration-500"
+
+      <div
+        className="absolute bottom-4 right-4 sm:bottom-5 sm:right-5 size-8 sm:size-9 rounded-full border flex items-center justify-center transition-all duration-200"
         style={{
           backgroundColor: isHovered ? `rgb(${item.rgb})` : "rgb(var(--background-rgb)/0.5)",
           borderColor: isHovered ? `rgb(${item.rgb})` : "rgb(var(--border-rgb)/0.5)",
@@ -102,13 +102,13 @@ function TrainingCard({ item }: { item: TrainingItem }) {
       </div>
     </Card>
   );
-}
+});
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
 export function TrainingGround({ categoryId, themeColor, itemVariants }: TrainingGroundProps) {
-  const trainingItems: TrainingItem[] = [
+  const trainingItems = useMemo<TrainingItem[]>(() => [
     {
       title: "Vocabulary",
       desc: "Flashcard & Spaced Repetition",
@@ -133,7 +133,7 @@ export function TrainingGround({ categoryId, themeColor, itemVariants }: Trainin
       rgb: "var(--destructive-rgb)",
       href: `/tools/flashcards?category=${categoryId}&mode=survival`,
     },
-  ];
+  ], [categoryId]);
 
   return (
     <m.section variants={itemVariants} className="mb-10 md:mb-16">

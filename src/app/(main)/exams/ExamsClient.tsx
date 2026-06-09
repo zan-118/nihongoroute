@@ -1,6 +1,6 @@
 /**
  * @file ExamsClient.tsx
- * @description Antarmuka Daftar Ujian interaktif. 
+ * @description Antarmuka Daftar Ujian interaktif.
  * Menerima data mentah dari server dan membungkusnya dengan transisi Framer Motion.
  * @module ExamsClient
  */
@@ -59,7 +59,7 @@ export interface ExamData {
 
 /**
  * Komponen ExamsClient: Merender antarmuka daftar ujian JLPT interaktif dengan animasi stagger Framer Motion.
- * 
+ *
  * @param {Object} props Properti komponen.
  * @param {ExamData[]} props.exams Daftar data ujian dari CMS Sanity.
  * @returns {JSX.Element} Antarmuka daftar simulasi ujian.
@@ -71,8 +71,8 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
   return (
     <div className="w-full px-4 sm:px-6 relative overflow-hidden bg-transparent text-foreground transition-colors duration-300 min-h-screen pt-8 sm:pt-12 pb-24">
       {/* Dekorasi Ambient Latar Belakang */}
-      <div className="absolute top-[-10%] right-[-5%] size-[600px] bg-destructive/5 rounded-full blur-[150px] pointer-events-none animate-pulse" />
-      <div className="absolute bottom-[10%] left-[-10%] size-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-[-8%] right-[-5%] size-[420px] bg-destructive/5 rounded-full blur-[70px] pointer-events-none" />
+      <div className="absolute bottom-[10%] left-[-10%] size-[360px] bg-primary/5 rounded-full blur-[60px] pointer-events-none" />
 
       <m.div
         className="max-w-5xl mx-auto relative z-10"
@@ -86,7 +86,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
             variants={itemVariants}
             className="flex items-center gap-4 mb-8"
           >
-            <div className="size-3.5 rounded-full bg-destructive animate-pulse shadow-[0_0_15px_rgb(var(--destructive-rgb)/0.5)]" />
+            <div className="size-3.5 rounded-full bg-destructive shadow-[0_0_8px_rgb(var(--destructive-rgb)/0.35)]" />
             <Badge
               variant="outline"
               className="text-destructive text-destructive font-bold uppercase tracking-widest text-xs md:text-xs border-destructive/30 px-4 py-1.5 bg-destructive/5 backdrop-blur-md rounded-xl h-auto"
@@ -97,10 +97,10 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
 
           <m.h1
             variants={itemVariants}
-            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-none mb-10 text-foreground drop-shadow-2xl"
+            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-none mb-10 text-foreground drop-shadow-lg"
           >
             Pusat <br />{" "}
-            <span className="text-destructive drop-shadow-[0_0_30px_rgb(var(--destructive-rgb)/0.5)]">
+            <span className="text-destructive drop-shadow-[0_0_14px_rgb(var(--destructive-rgb)/0.3)]">
               Simulasi
             </span>
           </m.h1>
@@ -146,8 +146,8 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
                   href={ROUTES.EXAMS.SESSION(exam.slug || exam.id || "")}
                   className="block h-full"
                 >
-                  <Card className="p-6 md:p-8 group hover:border-destructive/40 hover:bg-destructive/[0.02] transition-all duration-300 flex flex-col h-full relative overflow-hidden cursor-pointer bg-card rounded-2xl border-border hover:shadow-[0_0_40px_rgb(var(--destructive-rgb)/0.06)]">
-                    
+                  <Card className="p-6 md:p-8 group hover:border-destructive/40 hover:bg-destructive/[0.02] transition-all duration-200 flex flex-col h-full relative overflow-hidden cursor-pointer bg-card rounded-2xl border-border hover:shadow-lg">
+
                     <div className="flex justify-between items-start mb-8 md:mb-10 relative z-10">
                       <Badge
                         variant="outline"

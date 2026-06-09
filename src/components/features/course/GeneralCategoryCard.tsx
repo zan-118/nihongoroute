@@ -91,13 +91,13 @@ const colorMap: Record<string, {
 // ======================
 // KOMPONEN PEMBANTU MIKRO
 // ======================
-function PreviewItem({ 
-  preview, 
-  catSlug, 
-  glowColor 
-}: { 
-  preview: { _id: string; title: string; slug: string }; 
-  catSlug: string; 
+function PreviewItem({
+  preview,
+  catSlug,
+  glowColor
+}: {
+  preview: { _id: string; title: string; slug: string };
+  catSlug: string;
   glowColor: string;
 }) {
   const [hovered, setHovered] = React.useState(false);
@@ -106,17 +106,17 @@ function PreviewItem({
       href={ROUTES.COURSES.LESSON(catSlug, preview.slug)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="flex items-center justify-between p-3 rounded-xl border transition-all duration-300 group/item shrink-0 min-w-[200px] sm:min-w-0 glass relative overflow-hidden pl-4"
+      className="flex items-center justify-between p-3 rounded-xl border transition-all duration-200 group/item shrink-0 min-w-[200px] sm:min-w-0 glass relative overflow-hidden pl-4"
       style={{
         backgroundColor: hovered ? `rgba(${glowColor}, 0.08)` : `rgb(var(--background-rgb)/0.35)`,
         borderColor: hovered ? `rgba(${glowColor}, 0.45)` : `rgb(var(--border-rgb)/0.45)`,
-        boxShadow: hovered ? `0 6px 20px rgba(${glowColor}, 0.08)` : 'none'
+        boxShadow: hovered ? `0 4px 14px rgba(${glowColor}, 0.06)` : 'none'
       }}
       aria-label={`Materi pelajaran: ${preview.title}`}
     >
       {/* Decorative Interactive Left Border Accent */}
-      <div 
-        className="absolute left-0 top-0 bottom-0 w-[3px] transition-all duration-300"
+      <div
+        className="absolute left-0 top-0 bottom-0 w-[3px] transition-all duration-200"
         style={{
           backgroundColor: `rgb(${glowColor})`,
           opacity: hovered ? 1 : 0.4,
@@ -127,9 +127,9 @@ function PreviewItem({
       <span className="text-xs font-black text-muted-foreground group-hover/item:text-foreground transition-colors truncate pr-3">
         {preview.title}
       </span>
-      <ArrowRight 
-        size={12} 
-        className="opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-1 transition-all shrink-0" 
+      <ArrowRight
+        size={12}
+        className="opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-1 transition-all shrink-0"
         style={{ color: `rgb(${glowColor})` }}
       />
     </Link>
@@ -141,7 +141,7 @@ function PreviewItem({
 // ======================
 export function GeneralCategoryCard({ cat, variants, isFeatured = false }: GeneralCategoryCardProps) {
   const [isHovered, setIsHovered] = React.useState(false);
-  
+
   const jlptLevelKey = Object.keys(colorMap).find(key => cat.title.toUpperCase().includes(key));
   const theme = colorMap[jlptLevelKey || "general"];
   const isJlpt = cat.type === "jlpt" || !!jlptLevelKey;
@@ -149,35 +149,35 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
   const IconComponent = isJlpt ? GraduationCap : BookOpen;
 
   return (
-    <m.div 
-      variants={variants} 
+    <m.div
+      variants={variants}
       className="h-full"
       whileHover={{ y: -4 }}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
     >
-      <Card 
+      <Card
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className="flex flex-col h-full rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden group transition-all duration-500 glass"
+        className="flex flex-col h-full rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden group transition-all duration-200 glass"
         style={{
           borderColor: isHovered ? `rgba(${theme.glowColor}, 0.45)` : `rgb(var(--border-rgb)/0.45)`,
-          boxShadow: isHovered 
-            ? `0 20px 50px rgba(${theme.glowColor}, 0.15), 0 0 25px rgba(${theme.glowColor}, 0.08)` 
-            : isFeatured 
-            ? `0 10px 30px rgba(${theme.glowColor}, 0.05)`
+          boxShadow: isHovered
+            ? `0 12px 32px rgba(${theme.glowColor}, 0.1), 0 0 14px rgba(${theme.glowColor}, 0.05)`
+            : isFeatured
+            ? `0 8px 20px rgba(${theme.glowColor}, 0.04)`
             : 'none'
         }}
       >
         <div className={`p-6 sm:p-8 flex flex-col h-full relative ${isFeatured ? 'md:p-10 lg:p-12' : ''}`}>
-          
+
           {/* Cyber Glow Ambient Latar Belakang — Adaptive size */}
-          <div 
-            className={`absolute top-0 right-0 blur-[80px] md:blur-[100px] rounded-full -mr-12 -mt-12 pointer-events-none transition-all duration-750 opacity-20 group-hover:opacity-40 ${
-              isFeatured ? 'size-[250px] md:size-[350px]' : 'size-[150px] md:size-[250px]'
+          <div
+            className={`absolute top-0 right-0 blur-[45px] md:blur-[55px] rounded-full -mr-10 -mt-10 pointer-events-none transition-all duration-300 opacity-20 group-hover:opacity-35 ${
+              isFeatured ? 'size-[220px] md:size-[280px]' : 'size-[140px] md:size-[200px]'
             }`}
             style={{ backgroundColor: `rgba(${theme.glowColor}, 0.25)` }}
           />
-          
+
           {/* Header */}
           <div className="flex justify-between items-start mb-5 sm:mb-8 relative z-10">
             <div className="space-y-1 sm:space-y-2.5 min-w-0 flex-1">
@@ -193,8 +193,8 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
                 {cat.title}
               </h4>
             </div>
-            <div 
-              className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shadow-lg transition-all duration-500 shrink-0 border ml-3 bg-background/50"
+            <div
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shadow-md transition-all duration-200 shrink-0 border ml-3 bg-background/50"
               style={{
                 borderColor: isHovered ? `rgba(${theme.glowColor}, 0.45)` : `rgb(var(--border-rgb)/0.55)`,
                 color: `rgb(${theme.glowColor})`
@@ -202,7 +202,7 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
               role="img"
               aria-label={`Ikon Kategori ${cat.title}`}
             >
-              <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110" />
+              <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-200 group-hover:rotate-6 group-hover:scale-105" />
             </div>
           </div>
 
@@ -219,7 +219,7 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
                 isFeatured ? 'sm:grid sm:grid-cols-2 lg:grid-cols-3' : 'sm:grid sm:grid-cols-2'
               }`}>
                 {cat.previews.map((preview) => (
-                  <PreviewItem 
+                  <PreviewItem
                     key={preview._id}
                     preview={preview}
                     catSlug={cat.slug}
@@ -234,12 +234,12 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
           <div className="mt-auto pt-6 border-t border-border/80 relative z-10">
             <Link
               href={ROUTES.COURSES.CATEGORY(cat.slug)}
-              className="inline-flex items-center gap-2.5 sm:gap-3 px-5 py-3 sm:px-7 sm:py-4 rounded-xl font-black uppercase tracking-widest text-[9px] sm:text-[10px] transition-all duration-500 active:scale-95 group/btn border shadow-md"
+              className="inline-flex items-center gap-2.5 sm:gap-3 px-5 py-3 sm:px-7 sm:py-4 rounded-xl font-black uppercase tracking-widest text-[9px] sm:text-[10px] transition-all duration-200 active:scale-95 group/btn border shadow-sm"
               style={{
                 backgroundColor: isHovered ? `rgb(${theme.glowColor})` : 'hsl(var(--foreground))',
                 color: isHovered ? 'hsl(var(--primary-foreground))' : 'hsl(var(--background))',
                 borderColor: isHovered ? `rgb(${theme.glowColor})` : 'transparent',
-                boxShadow: isHovered ? `0 8px 24px rgba(${theme.glowColor}, 0.25)` : 'none'
+                boxShadow: isHovered ? `0 6px 18px rgba(${theme.glowColor}, 0.18)` : 'none'
               }}
               aria-label={`Jelajahi Rute Kursus ${cat.title}`}
             >

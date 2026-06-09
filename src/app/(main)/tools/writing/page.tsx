@@ -25,7 +25,7 @@ function FreeWritingContent() {
   return (
     <div className="w-full flex-1 relative overflow-hidden flex flex-col bg-transparent transition-colors duration-300 pt-12 pb-24 px-4 md:px-8">
       {/* Dekorasi Latar Belakang */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[800px] h-[400px] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[640px] h-[320px] bg-primary/10 blur-[55px] rounded-full pointer-events-none" />
 
       <div className="max-w-4xl mx-auto w-full relative z-10 flex flex-col h-full">
         <header className="mb-12">
@@ -62,7 +62,7 @@ function FreeWritingContent() {
                 )}
               </p>
             </div>
-            
+
             <div className="flex gap-2">
                <Badge variant="outline" className="bg-primary/10 text-primary border-primary/25 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">
                  {character ? `Menulis: ${character}` : "Mode Bebas Aktif"}
@@ -75,7 +75,7 @@ function FreeWritingContent() {
           {/* Area Kanvas Utama */}
           <div className="lg:col-span-7 flex justify-center">
             <div className="w-full max-w-[500px]">
-               <WritingCanvas 
+               <WritingCanvas
                  character={character}
                  strokeColor="rgb(var(--brand-cyan-rgb))"
                  className="max-w-[400px] md:max-w-[450px] mx-auto"
@@ -129,11 +129,10 @@ export default function FreeWritingPage() {
   return (
     <Suspense fallback={
       <div className="w-full flex-1 flex items-center justify-center bg-transparent">
-        <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest animate-pulse">Memuat Kanvas...</p>
+        <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest">Memuat Kanvas...</p>
       </div>
     }>
       <FreeWritingContent />
     </Suspense>
   );
 }
-

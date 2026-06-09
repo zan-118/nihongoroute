@@ -58,27 +58,47 @@ interface CoursesClientProps {
 
 export default function CoursesClient({ categories }: CoursesClientProps) {
   const completedLessons = useUserStore((s) => s.completedLessons);
-  
-  const totalLessons = categories.reduce((acc, cat) => acc + (cat.lessonCount || 0), 0);
-  const lessonsDoneCount = Object.values(completedLessons).filter(
-    (record) => record && record.completedAt && !record.isDeleted
-  ).length;
-  
-  const globalProgress = totalLessons > 0 ? Math.min(100, Math.round((lessonsDoneCount / totalLessons) * 100)) : 0;
 
-  const jlptCategories = categories.filter((cat) => cat.type === "jlpt");
-  const generalCategories = categories.filter((cat) => cat.type === "general");
+  const { totalLessons, lessonsDoneCount, globalProgress, jlptCategories, generalCategories } =
+    React.useMemo(() => {
+      let lessonsTotal = 0;
+      const jlpt: Category[] = [];
+      const general: Category[] = [];
+
+      for (const category of categories) {
+        lessonsTotal += category.lessonCount || 0;
+
+        if (category.type === "jlpt") {
+          jlpt.push(category);
+        } else if (category.type === "general") {
+          general.push(category);
+        }
+      }
+
+      const doneCount = Object.values(completedLessons).filter(
+        (record) => record && record.completedAt && !record.isDeleted
+      ).length;
+
+      return {
+        generalCategories: general,
+        globalProgress:
+          lessonsTotal > 0 ? Math.min(100, Math.round((doneCount / lessonsTotal) * 100)) : 0,
+        jlptCategories: jlpt,
+        lessonsDoneCount: doneCount,
+        totalLessons: lessonsTotal,
+      };
+    }, [categories, completedLessons]);
 
   return (
     <div className="w-full relative overflow-hidden bg-transparent text-foreground transition-colors duration-300 min-h-screen pb-24 md:pb-32">
       {/* 1. DEKORASI LATAR BELAKANG — Subtle Only */}
       <div className="absolute inset-0 pointer-events-none">
-        <div 
-          className="absolute top-0 left-0 w-full h-[300px] md:h-[400px]" 
+        <div
+          className="absolute top-0 left-0 w-full h-[300px] md:h-[400px]"
           style={{ background: 'linear-gradient(180deg, rgb(var(--primary-rgb)/0.05) 0%, transparent 100%)' }}
         />
-        <div 
-          className="absolute bottom-0 right-0 w-[300px] h-[300px] rounded-full blur-[100px] opacity-20" 
+        <div
+          className="absolute bottom-0 right-0 w-[260px] h-[260px] rounded-full blur-[55px] opacity-15"
           style={{ backgroundColor: 'rgb(var(--secondary-rgb)/0.06)' }}
         />
       </div>
@@ -91,20 +111,20 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
       >
         {/* BENTO GRID CONTAINER */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-          
+
           {/* BENTO CARD 1: JUMBO HEADER & GLOBAL STATS (SPAN 3) */}
-          <m.div 
-            variants={itemVariants} 
-            className="lg:col-span-3 p-6 sm:p-10 md:p-12 rounded-[2.5rem] bg-card/10 backdrop-blur-xl border border-border shadow-2xl relative overflow-hidden group transition-all duration-500 hover:border-primary/30 hover:shadow-[0_0_50px_rgb(var(--primary-rgb)/0.08)] glass"
+          <m.div
+            variants={itemVariants}
+            className="lg:col-span-3 p-6 sm:p-10 md:p-12 rounded-[2.5rem] bg-card/20 backdrop-blur-md border border-border shadow-xl relative overflow-hidden group transition-all duration-200 hover:border-primary/30 hover:shadow-lg glass"
           >
-            <div className="absolute top-0 right-0 size-64 bg-primary/5 rounded-full blur-[80px] pointer-events-none group-hover:bg-primary/10 transition-all duration-700" />
+            <div className="absolute top-0 right-0 size-56 bg-primary/5 rounded-full blur-[45px] pointer-events-none group-hover:bg-primary/8 transition-all duration-300" />
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-50 pointer-events-none" />
 
             <div className="relative z-10 flex flex-col xl:flex-row xl:items-center justify-between gap-8 md:gap-12">
               <div className="space-y-4 max-w-2xl">
                 <div className="flex items-center gap-3">
                   <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-3.5 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.2em] shadow-none">
-                    <Sparkles size={10} className="mr-1.5 animate-pulse text-primary" /> Direktori Belajar
+                    <Sparkles size={10} className="mr-1.5 text-primary" /> Direktori Belajar
                   </Badge>
                 </div>
                 <h1 className="text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-tighter leading-[0.9] text-foreground">
@@ -119,7 +139,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
               </div>
 
               {/* GLOBAL PROGRESS MODULE */}
-              <div className="w-full xl:w-auto xl:min-w-[320px] p-6 rounded-3xl bg-background/40 border border-border/80 glass relative overflow-hidden transition-all duration-500 hover:border-primary/25">
+              <div className="w-full xl:w-auto xl:min-w-[320px] p-6 rounded-3xl bg-background/50 border border-border/80 glass relative overflow-hidden transition-all duration-200 hover:border-primary/25">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
@@ -131,7 +151,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
                   <Progress
                     value={globalProgress}
                     className="h-2.5 bg-muted border border-border relative overflow-hidden"
-                    indicatorClassName="bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)),rgb(var(--brand-violet-rgb)))] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent"
+                    indicatorClassName="bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)),rgb(var(--brand-violet-rgb)))]"
                   />
 
                   <div className="flex justify-between items-center gap-4 pt-1">

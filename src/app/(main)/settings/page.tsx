@@ -76,8 +76,8 @@ export default function SettingsPage() {
       {/* Premium Ambient Background Grid & Glows */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute inset-0 neural-grid opacity-[0.12] mix-blend-overlay" />
-        <div className="absolute top-[10%] -left-[10%] size-[50%] bg-primary/10 blur-[130px] rounded-full animate-pulse pointer-events-none" />
-        <div className="absolute bottom-[10%] -right-[10%] size-[50%] bg-secondary/5 blur-[130px] rounded-full animate-pulse pointer-events-none" style={{ animationDelay: '1.5s' }} />
+        <div className="absolute top-[10%] -left-[10%] size-[42%] bg-primary/8 blur-[80px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-[10%] -right-[10%] size-[42%] bg-secondary/5 blur-[80px] rounded-full pointer-events-none" />
       </div>
 
       <ConfirmModal
@@ -90,7 +90,7 @@ export default function SettingsPage() {
         onConfirm={confirmModal.onConfirm}
       />
 
-      <m.div 
+      <m.div
         initial="hidden"
         animate="visible"
         variants={containerVariants}
@@ -111,23 +111,23 @@ export default function SettingsPage() {
         </header>
 
         <div className="grid grid-cols-1 gap-8 px-1">
-          <ProfileSection 
-            name={name || ""} 
+          <ProfileSection
+            name={name || ""}
             xp={xp}
             streak={streak}
-            isAuthenticated={isAuthenticated} 
-            updateProfileName={updateProfileName} 
-            itemVariants={itemVariants} 
+            isAuthenticated={isAuthenticated}
+            updateProfileName={updateProfileName}
+            itemVariants={itemVariants}
           />
 
-          <SyncStatusSection 
+          <SyncStatusSection
             dirtySrsCount={dirtySrsCount}
             isSyncing={isSyncing}
             handleManualSync={handleManualSync}
             itemVariants={itemVariants}
           />
 
-          <DataManagementSection 
+          <DataManagementSection
             isAuthenticated={isAuthenticated}
             handleExportData={handleExportData}
             handleImportData={handleImportData}
@@ -138,7 +138,7 @@ export default function SettingsPage() {
 
           {/* DANGER ZONE INFO */}
           <m.div variants={itemVariants}>
-            <Card className="bg-destructive/[0.02] border border-destructive/10 rounded-[2rem] p-6 md:p-8 shadow-2xl flex flex-col md:flex-row items-center md:items-start gap-6 group hover:bg-destructive/[0.04] transition-all duration-500">
+            <Card className="bg-destructive/[0.02] border border-destructive/10 rounded-[2rem] p-6 md:p-8 shadow-lg flex flex-col md:flex-row items-center md:items-start gap-6 group hover:bg-destructive/[0.04] transition-all duration-300">
               <div className="size-14 shrink-0 rounded-2xl bg-destructive/10 flex items-center justify-center border border-destructive/20 shadow-lg group-hover:scale-110 transition-transform">
                 <ShieldAlert size={28} className="text-destructive" />
               </div>
@@ -153,7 +153,7 @@ export default function SettingsPage() {
 
           {/* MOBILE EXTRA NAV */}
           <m.div variants={itemVariants} className="md:hidden">
-            <Card className="bg-background/[0.02] backdrop-blur-xl border border-border rounded-[2rem] p-6 shadow-2xl">
+            <Card className="bg-background/[0.04] backdrop-blur-sm border border-border rounded-[2rem] p-6 shadow-lg">
               <h3 className="text-primary font-black uppercase tracking-[0.2em] text-[10px] mb-4">Navigasi Lanjutan</h3>
               <Button asChild variant="ghost" className="w-full h-14 bg-background/[0.03] border border-border justify-start hover:bg-primary/10 hover:text-primary rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all">
                 <Link href="/library">

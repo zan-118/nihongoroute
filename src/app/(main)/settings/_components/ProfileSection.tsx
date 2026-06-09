@@ -30,13 +30,13 @@ interface ProfileSectionProps {
   itemVariants: Variants;
 }
 
-export default function ProfileSection({ 
-  name, 
+export default function ProfileSection({
+  name,
   xp,
   streak,
-  isAuthenticated, 
-  updateProfileName, 
-  itemVariants 
+  isAuthenticated,
+  updateProfileName,
+  itemVariants
 }: ProfileSectionProps) {
   const [newName, setNewName] = useState(name);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -53,11 +53,11 @@ export default function ProfileSection({
       toast.error("Nama tidak boleh kosong!");
       return;
     }
-    
+
     setIsSyncing(true);
     try {
       updateProfileName(newName);
-      
+
       if (isAuthenticated) {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
@@ -65,7 +65,7 @@ export default function ProfileSection({
             .from("profiles")
             .update({ full_name: newName.trim() })
             .eq("id", user.id);
-          
+
           if (error) throw error;
         }
       }
@@ -80,11 +80,11 @@ export default function ProfileSection({
 
   return (
     <m.div variants={itemVariants}>
-      <Card className="glass backdrop-blur-3xl border border-border/80 rounded-[2.5rem] p-8 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden relative group">
+      <Card className="glass backdrop-blur-md border border-border/80 rounded-[2.5rem] p-8 md:p-10 shadow-xl overflow-hidden relative group">
         {/* Elemen Dekoratif Kartu ID Pilot */}
-        <div className="absolute top-0 right-0 size-80 bg-primary/10 blur-[120px] rounded-full -mr-32 -mt-32 animate-pulse pointer-events-none" />
-        <div className="absolute bottom-0 left-0 size-48 bg-secondary/5 blur-[80px] rounded-full -ml-16 -mb-16 pointer-events-none" />
-        
+        <div className="absolute top-0 right-0 size-64 bg-primary/8 blur-[70px] rounded-full -mr-28 -mt-28 pointer-events-none" />
+        <div className="absolute bottom-0 left-0 size-40 bg-secondary/5 blur-[50px] rounded-full -ml-14 -mb-14 pointer-events-none" />
+
         {/* Pola Header Kartu ID */}
         <div className="absolute top-0 left-0 right-0 h-1.5 bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)),rgb(var(--brand-violet-rgb)))] opacity-80" />
 
@@ -92,15 +92,15 @@ export default function ProfileSection({
           {/* AVATAR / IDENTITAS PILOT */}
           <div className="flex flex-col items-center gap-4 shrink-0">
              <div className="relative group/avatar">
-                <div className="absolute -inset-1.5 bg-gradient-to-br from-primary to-secondary rounded-[2.5rem] blur-md opacity-30 group-hover/avatar:opacity-60 transition duration-1000 group-hover/avatar:duration-300" />
-                <div className="w-32 h-32 md:w-36 md:h-36 rounded-[2.2rem] bg-card border border-border flex items-center justify-center text-foreground relative z-10 overflow-hidden shadow-2xl">
+                <div className="absolute -inset-1.5 bg-gradient-to-br from-primary to-secondary rounded-[2.5rem] blur-sm opacity-25 group-hover/avatar:opacity-45 transition duration-300" />
+                <div className="w-32 h-32 md:w-36 md:h-36 rounded-[2.2rem] bg-card border border-border flex items-center justify-center text-foreground relative z-10 overflow-hidden shadow-xl">
                    <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent opacity-60" />
                    <span className="text-6xl font-black italic text-primary drop-shadow-md select-none font-japanese">
                       {(newName || "S").charAt(0).toUpperCase()}
                    </span>
                 </div>
                 <div className="absolute -bottom-2 -right-2 size-10 bg-card border border-border rounded-2xl flex items-center justify-center z-20 shadow-xl group-hover/avatar:scale-110 transition-transform">
-                   <ShieldCheck size={20} className="text-success animate-pulse" />
+                   <ShieldCheck size={20} className="text-success" />
                 </div>
              </div>
              <div className="flex flex-col items-center">
@@ -108,7 +108,7 @@ export default function ProfileSection({
                 <span className="text-xs font-black uppercase tracking-widest text-primary">Master Route</span>
              </div>
           </div>
-          
+
           <div className="flex-1 space-y-8">
             <div className="text-center lg:text-left space-y-2">
               <h2 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter text-foreground flex flex-col lg:flex-row lg:items-center gap-3">
@@ -124,9 +124,9 @@ export default function ProfileSection({
 
             {/* PENGHITUNG STATISTIK */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-               <div className="bg-background/20 backdrop-blur-md border border-border rounded-2xl p-5 flex items-center gap-4 group/stat hover:bg-background/35 hover:border-primary/20 transition-all duration-300 shadow-lg">
+               <div className="bg-background/25 backdrop-blur-sm border border-border rounded-2xl p-5 flex items-center gap-4 group/stat hover:bg-background/35 hover:border-primary/20 transition-all duration-200 shadow-sm">
                   <div className="size-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-inner">
-                     <Zap size={22} className="fill-current animate-pulse text-primary" />
+                     <Zap size={22} className="fill-current text-primary" />
                   </div>
                   <div>
                      <div className="text-2xl font-black tracking-tighter text-foreground font-mono">
@@ -135,7 +135,7 @@ export default function ProfileSection({
                      <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">Total XP</p>
                   </div>
                </div>
-               <div className="bg-background/20 backdrop-blur-md border border-border rounded-2xl p-5 flex items-center gap-4 group/stat hover:bg-background/35 hover:border-warning/20 transition-all duration-300 shadow-lg">
+               <div className="bg-background/25 backdrop-blur-sm border border-border rounded-2xl p-5 flex items-center gap-4 group/stat hover:bg-background/35 hover:border-warning/20 transition-all duration-200 shadow-sm">
                   <div className="size-12 rounded-xl bg-warning/10 border border-warning/20 flex items-center justify-center text-warning shadow-inner">
                      <Flame size={22} className="fill-current text-warning animate-premium-bounce" />
                   </div>
@@ -147,24 +147,24 @@ export default function ProfileSection({
                   </div>
                </div>
             </div>
-            
+
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="relative flex-1 group/input">
                 <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-muted-foreground/30 group-focus-within/input:text-primary transition-colors">
                    <User size={18} />
                 </div>
-                <input aria-label="Masukkan nama Anda" 
-                  type="text" 
+                <input aria-label="Masukkan nama Anda"
+                  type="text"
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
                   placeholder="Masukkan nama Anda..."
                   className="control-surface w-full h-14 rounded-2xl pl-12 pr-4 text-sm font-black text-foreground uppercase tracking-tight focus:ring-2 focus:ring-primary/35 outline-none transition-all placeholder:text-muted-foreground/40"
                 />
               </div>
-              <Button 
+              <Button
                 onClick={handleSave}
                 disabled={isSyncing}
-                className="h-14 bg-primary hover:bg-primary/95 text-primary-foreground font-black uppercase tracking-widest text-xs rounded-2xl px-8 shadow-xl shadow-primary/20 hover:shadow-primary/45 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50"
+                className="h-14 bg-primary hover:bg-primary/95 text-primary-foreground font-black uppercase tracking-widest text-xs rounded-2xl px-8 shadow-lg shadow-primary/15 hover:shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50"
               >
                 {isSyncing ? "Menyimpan..." : "Simpan Nama"}
               </Button>

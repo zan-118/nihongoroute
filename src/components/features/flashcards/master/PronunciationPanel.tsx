@@ -74,7 +74,7 @@ function getSimilarityScore(target: string, input: string): number {
  * Komponen ini mengaktifkan mikrofon pengguna, menangkap transkrip audio ucapan klien, menormalisasi
  * teks Hiragana/Katakana, lalu menghitung tingkat kemiripan lafal menggunakan algoritma Levenshtein Distance
  * untuk memberikan skor akurasi (0-100%). Keberhasilan melafalkan kata dengan akurasi tinggi memberikan reward XP.
- * 
+ *
  * @param {PronunciationPanelProps} props - Properti komponen panel pelafalan
  */
 export default function PronunciationPanel({
@@ -135,7 +135,7 @@ export default function PronunciationPanel({
 
   const stopRecording = useCallback(() => {
     setIsRecording(false);
-    
+
     // Stop recognition
     try {
       recognitionRef.current?.stop();
@@ -173,11 +173,11 @@ export default function PronunciationPanel({
       // Access Audio for Canvas wave
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaStreamRef.current = stream;
-      
+
       const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       const audioCtx = new AudioContextClass();
       audioContextRef.current = audioCtx;
-      
+
       const source = audioCtx.createMediaStreamSource(stream);
       const analyser = audioCtx.createAnalyser();
       analyser.fftSize = 256;
@@ -268,8 +268,8 @@ export default function PronunciationPanel({
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.lineWidth = 3;
       ctx.strokeStyle = "rgb(var(--primary-rgb)/0.85)";
-      ctx.shadowBlur = 12;
-      ctx.shadowColor = "rgb(var(--primary-rgb)/0.6)";
+      ctx.shadowBlur = 4;
+      ctx.shadowColor = "rgb(var(--primary-rgb)/0.35)";
       ctx.beginPath();
 
       const sliceWidth = canvas.width / bufferLength;
@@ -315,15 +315,15 @@ export default function PronunciationPanel({
   }, []);
 
   // Determine neon glow colors based on evaluation result
-  let borderGlow = "border-border/50 shadow-[0_0_20px_rgb(var(--primary-rgb)/0.02)]";
+  let borderGlow = "border-border/50 shadow-sm";
   if (inputResult === "correct") {
-    borderGlow = "border-success/60 bg-success/5 shadow-[0_0_30px_rgb(var(--success-rgb)/0.15)]";
+    borderGlow = "border-success/60 bg-success/5 shadow-md";
   } else if (inputResult === "wrong") {
-    borderGlow = "border-destructive/60 bg-destructive/5 shadow-[0_0_30px_rgb(var(--destructive-rgb)/0.15)]";
+    borderGlow = "border-destructive/60 bg-destructive/5 shadow-md";
   }
 
   return (
-    <div className={`w-full glass rounded-3xl p-6 border transition-all duration-500 flex flex-col gap-6 ${borderGlow}`}>
+    <div className={`w-full glass rounded-3xl p-6 border transition-all duration-200 flex flex-col gap-6 ${borderGlow}`}>
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
@@ -335,7 +335,7 @@ export default function PronunciationPanel({
         </div>
 
         {combo > 0 && (
-          <div className="flex items-center gap-1 bg-warning/15 border border-warning/30 text-warning px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider animate-pulse">
+          <div className="flex items-center gap-1 bg-warning/15 border border-warning/30 text-warning px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider">
             <Zap size={10} className="fill-current" />
             <span>Combo: {combo}x</span>
           </div>
@@ -374,9 +374,9 @@ export default function PronunciationPanel({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               {inputResult === "correct" ? (
-                <CheckCircle2 size={16} className="text-success animate-premium-bounce" />
+                <CheckCircle2 size={16} className="text-success" />
               ) : (
-                <AlertCircle size={16} className="text-destructive animate-pulse" />
+                <AlertCircle size={16} className="text-destructive" />
               )}
               <span className={`text-[10px] font-black uppercase tracking-widest ${inputResult === "correct" ? 'text-success' : 'text-destructive'}`}>
                 {inputResult === "correct" ? "Pelafalan Bagus!" : "Coba Ucapkan Lagi"}
@@ -402,10 +402,10 @@ export default function PronunciationPanel({
         <Button
           onClick={isRecording ? stopRecording : startRecording}
           variant="outline"
-          className={`flex-1 py-6 rounded-2xl text-xs font-black uppercase tracking-widest group relative overflow-hidden transition-all duration-300 ${
-            isRecording 
-              ? "bg-destructive text-destructive-foreground hover:bg-destructive/95 border-none shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.3)] animate-pulse" 
-              : "bg-primary text-primary-foreground hover:bg-primary/95 border-none shadow-[0_0_25px_rgb(var(--primary-rgb)/0.3)]"
+          className={`flex-1 py-6 rounded-2xl text-xs font-black uppercase tracking-widest group relative overflow-hidden transition-all duration-200 ${
+            isRecording
+              ? "bg-destructive text-destructive-foreground hover:bg-destructive/95 border-none shadow-md"
+              : "bg-primary text-primary-foreground hover:bg-primary/95 border-none shadow-md"
           }`}
         >
           {isRecording ? (
@@ -423,7 +423,7 @@ export default function PronunciationPanel({
           <Button
             onClick={onNext}
             variant="outline"
-            className="w-14 py-6 rounded-2xl border-border bg-card/60 backdrop-blur-md hover:bg-muted text-foreground flex items-center justify-center shrink-0"
+            className="w-14 py-6 rounded-2xl border-border bg-card/80 backdrop-blur-sm hover:bg-muted text-foreground flex items-center justify-center shrink-0"
             aria-label="Kata Selanjutnya"
           >
             <ChevronRight size={18} />

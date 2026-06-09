@@ -68,7 +68,7 @@ export function SurvivalPlaying({
   return (
     <div className="w-full flex flex-col h-full min-h-[60vh] max-w-3xl mx-auto pb-6 px-4 md:px-0 transition-colors duration-300">
       <Card
-        className={`flex justify-between items-center mb-4 md:mb-10 p-4 md:p-10 rounded-[1.5rem] md:rounded-[3rem] border transition-all duration-500 neo-card shadow-lg ${isCriticalHp ? "border-destructive/60 bg-destructive/5 shadow-[0_0_30px_rgb(var(--destructive-rgb)/0.15)] animate-pulse" : "bg-card border-border"}`}
+        className={`flex justify-between items-center mb-4 md:mb-10 p-4 md:p-10 rounded-[1.5rem] md:rounded-[3rem] border transition-all duration-200 neo-card shadow-lg ${isCriticalHp ? "border-destructive/60 bg-destructive/5 shadow-md" : "bg-card border-border"}`}
       >
         <div className="flex gap-1 md:gap-4 items-center">
           {[...Array(MAX_HP)].map((_, i) => (
@@ -76,11 +76,11 @@ export function SurvivalPlaying({
               key={`hp-${i}`}
               size={18}
               aria-hidden="true"
-              className={`transition-all duration-500 ${
+              className={`transition-all duration-200 ${
                 i < hp
                   ? isCriticalHp
-                    ? "text-destructive drop-shadow-sm dark:drop-shadow-[0_0_10px_rgb(var(--destructive-rgb)/0.8)] animate-pulse"
-                    : "text-primary drop-shadow-sm dark:drop-shadow-[0_0_10px_rgb(var(--primary-rgb)/0.8)]"
+                    ? "text-destructive drop-shadow-sm dark:drop-shadow-[0_0_6px_rgb(var(--destructive-rgb)/0.45)]"
+                    : "text-primary drop-shadow-sm dark:drop-shadow-[0_0_6px_rgb(var(--primary-rgb)/0.45)]"
                   : "text-muted-foreground/20 scale-75 opacity-30"
               } md:w-8 md:h-8`}
             />
@@ -88,9 +88,9 @@ export function SurvivalPlaying({
         </div>
 
         <div
-          className={`flex items-center gap-1.5 md:gap-4 font-mono text-xl md:text-4xl lg:text-5xl font-black tracking-tight transition-all ${isDangerTime ? "text-destructive animate-pulse drop-shadow-sm dark:drop-shadow-[0_0_15px_rgb(var(--destructive-rgb)/0.8)]" : "text-foreground opacity-80"}`}
+          className={`flex items-center gap-1.5 md:gap-4 font-mono text-xl md:text-4xl lg:text-5xl font-black tracking-tight transition-all ${isDangerTime ? "text-destructive drop-shadow-sm dark:drop-shadow-[0_0_8px_rgb(var(--destructive-rgb)/0.5)]" : "text-foreground opacity-80"}`}
         >
-          <Timer size={18} aria-hidden="true" className="md:w-8 md:h-8 lg:w-10 lg:h-10" /> 
+          <Timer size={18} aria-hidden="true" className="md:w-8 md:h-8 lg:w-10 lg:h-10" />
           {timeLeft.toString().padStart(2, "0")}s
         </div>
 
@@ -114,7 +114,7 @@ export function SurvivalPlaying({
           className="flex-1 flex flex-col mb-4 md:mb-10"
         >
           <Card
-            className={`relative bg-card rounded-[2rem] md:rounded-[4rem] p-6 md:p-20 border text-center shadow-2xl flex flex-col items-center justify-center flex-1 min-h-[220px] md:min-h-[400px] lg:min-h-[500px] neo-card transition-all duration-300 ${
+            className={`relative bg-card rounded-[2rem] md:rounded-[4rem] p-6 md:p-20 border text-center shadow-xl flex flex-col items-center justify-center flex-1 min-h-[220px] md:min-h-[400px] lg:min-h-[500px] neo-card transition-all duration-200 ${
               isShaking
                 ? "border-primary shadow-xl"
                 : "border-border"
@@ -132,14 +132,14 @@ export function SurvivalPlaying({
                 </span>
               ) : (
                 <span className="flex items-center gap-1">
-                  <Target size={12} aria-hidden="true" className="animate-pulse md:w-4 md:h-4" /> APA ARTINYA?
+                  <Target size={12} aria-hidden="true" className="md:w-4 md:h-4" /> APA ARTINYA?
                 </span>
               )}
             </Badge>
 
             <div className="flex flex-col items-center justify-center w-full min-h-[100px] md:min-h-[200px]">
                <h2
-                className={`${(currentCard?.word?.length || 0) > 4 ? "text-4xl sm:text-6xl md:text-7xl lg:text-8xl" : "text-6xl sm:text-7xl md:text-7xl lg:text-8xl"} font-black text-foreground tracking-tight drop-shadow-sm font-japanese leading-none transition-all duration-500`}
+                className={`${(currentCard?.word?.length || 0) > 4 ? "text-4xl sm:text-6xl md:text-7xl lg:text-8xl" : "text-6xl sm:text-7xl md:text-7xl lg:text-8xl"} font-black text-foreground tracking-tight drop-shadow-sm font-japanese leading-none transition-all duration-200`}
                >
                   {parsedChunks.map((chunk, i) => (
                     chunk.furi ? (
@@ -160,10 +160,10 @@ export function SurvivalPlaying({
       </AnimatePresence>
 
       <div className="mb-4 md:mb-10">
-         <Progress 
-           value={(timeLeft / TIME_PER_QUESTION) * 100} 
+         <Progress
+           value={(timeLeft / TIME_PER_QUESTION) * 100}
            className="h-1.5 md:h-3 bg-muted border border-border rounded-full overflow-hidden"
-           indicatorClassName={isDangerTime ? "bg-destructive shadow-sm transition-all duration-1000" : "bg-primary transition-all duration-1000"}
+           indicatorClassName={isDangerTime ? "bg-destructive shadow-sm transition-all duration-700" : "bg-primary transition-all duration-700"}
          />
       </div>
 
@@ -171,7 +171,7 @@ export function SurvivalPlaying({
         {options.map((option, idx) => {
           const isCorrect = selectedId === option.id && option.id === currentCard?.id;
           const isWrong = selectedWrongId === option.id;
-          
+
           return (
             <Button
               key={option.id}
@@ -179,8 +179,8 @@ export function SurvivalPlaying({
               onClick={() => handleAnswer(option)}
               disabled={isCorrecting}
               className={`group flex h-full w-full p-0 overflow-hidden rounded-2xl md:rounded-[2.5rem] border transition-all duration-300 min-h-[64px] md:min-h-[100px] lg:min-h-[120px] shadow-none ${
-                isWrong 
-                  ? "bg-destructive/20 border-destructive shadow-lg text-destructive" 
+                isWrong
+                  ? "bg-destructive/20 border-destructive shadow-lg text-destructive"
                   : isCorrect
                   ? "bg-success/20 border-success shadow-lg text-success"
                   : "bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.4)] border-border md:hover:border-primary/50 md:hover:bg-primary md:hover:text-primary-foreground neo-card active:scale-[0.98] transition-transform"
@@ -195,7 +195,7 @@ export function SurvivalPlaying({
                  </p>
                  {isWrong && (
                    <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                      <ShieldAlert aria-hidden="true" className="text-destructive animate-pulse" size={20} />
+                      <ShieldAlert aria-hidden="true" className="text-destructive" size={20} />
                    </div>
                  )}
               </div>

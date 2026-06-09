@@ -87,15 +87,15 @@ export function CategoryHero({
         {/* Progress Widget — Compact, Inline */}
         <m.div
           variants={itemVariants}
-          className="w-full lg:w-auto lg:min-w-[240px] lg:max-w-[280px] p-4 sm:p-5 md:p-6 glass rounded-xl sm:rounded-2xl border relative overflow-hidden group transition-all duration-500 shrink-0"
+          className="w-full lg:w-auto lg:min-w-[240px] lg:max-w-[280px] p-4 sm:p-5 md:p-6 glass rounded-xl sm:rounded-2xl border relative overflow-hidden group transition-all duration-200 shrink-0"
           style={{
             backgroundColor: "rgb(var(--card-rgb)/0.3)",
             borderColor: "rgb(var(--border-rgb)/0.5)",
           }}
         >
           {/* Subtle Ambient Accent */}
-          <div 
-            className="absolute top-0 right-0 size-16 blur-2xl rounded-full opacity-25 pointer-events-none transition-all duration-500 group-hover:scale-150"
+          <div
+            className="absolute top-0 right-0 size-16 blur-md rounded-full opacity-20 pointer-events-none transition-all duration-200 group-hover:scale-125"
             style={{ backgroundColor: `rgb(${themeRgb})` }}
           />
 
@@ -106,15 +106,15 @@ export function CategoryHero({
               </span>
               <span className={`text-sm font-black ${themeColor}`}>{progressPercent}%</span>
             </div>
-            
-            <div 
+
+            <div
               className="h-2 sm:h-2.5 rounded-full overflow-hidden border border-border/80"
               style={{ backgroundColor: "rgb(var(--background-rgb)/0.5)" }}
             >
               <m.div
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercent}%` }}
-                className="h-full rounded-full transition-all duration-1000"
+                className="h-full rounded-full transition-all duration-500"
                 style={{
                   background: isSideQuest
                     ? "linear-gradient(90deg, hsl(var(--warning)) 0%, rgb(var(--warning-rgb)/0.6) 100%)"
@@ -123,7 +123,7 @@ export function CategoryHero({
                 }}
               />
             </div>
-            
+
             <div className="flex justify-between text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
               <span>{lessonsDone} Selesai</span>
               <span>{totalLessons} Pelajaran</span>

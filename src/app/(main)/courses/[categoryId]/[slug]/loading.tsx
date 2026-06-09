@@ -16,8 +16,8 @@ export default function CourseDetailLoading() {
   return (
     <div className="w-full text-foreground px-4 md:px-8 relative overflow-hidden flex flex-col flex-1">
       {/* Kerangka Dekorasi Ambient Latar Belakang */}
-      <div className="absolute top-0 right-0 size-[500px] bg-primary/5 blur-[150px] rounded-full pointer-events-none" />
-      
+      <div className="absolute top-0 right-0 size-[360px] bg-primary/5 blur-[65px] rounded-full pointer-events-none" />
+
       <article className="max-w-4xl mx-auto w-full relative z-10 flex-1">
         {/* Kerangka Breadcrumb */}
         <div className="flex items-center gap-2 mb-16 mt-4">
@@ -34,7 +34,7 @@ export default function CourseDetailLoading() {
             <Skeleton className="h-16 md:h-20 lg:h-24 w-3/4 rounded-xl" />
             <Skeleton className="h-16 md:h-20 lg:h-24 w-1/2 rounded-xl" />
           </div>
-          
+
           {/* Kerangka Kotak Ringkasan */}
           <Skeleton className="h-32 w-full rounded-[2rem] neo-inset border-l-8 border-transparent" />
         </header>
@@ -46,7 +46,7 @@ export default function CourseDetailLoading() {
               <Skeleton className="h-8 w-48 rounded-lg" />
               <div className="h-[1px] flex-1 bg-border" />
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="neo-card p-6 flex flex-col justify-between items-start gap-6 h-48 rounded-2xl">

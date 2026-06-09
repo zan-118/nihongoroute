@@ -68,7 +68,7 @@ export function LessonGrid({
           ))}
         </div>
       ) : (
-        <div 
+        <div
           className="flex flex-col items-center justify-center py-16 sm:py-24 md:py-32 glass rounded-2xl sm:rounded-3xl text-center px-6 sm:px-10 border border-dashed border-border relative overflow-hidden"
           style={{
             backgroundColor: "rgb(var(--card-rgb)/0.2)",
@@ -76,15 +76,15 @@ export function LessonGrid({
           }}
         >
           {/* Accent light glow */}
-          <div className="absolute size-32 rounded-full bg-primary/5 blur-3xl pointer-events-none" />
+          <div className="absolute size-28 rounded-full bg-primary/5 blur-lg pointer-events-none" />
 
-          <div 
-            className="size-14 sm:size-16 bg-background/50 border border-border rounded-2xl flex items-center justify-center mb-5 sm:mb-6 shadow-lg relative z-10 transition-transform duration-500 hover:scale-105"
+          <div
+            className="size-14 sm:size-16 bg-background/50 border border-border rounded-2xl flex items-center justify-center mb-5 sm:mb-6 shadow-md relative z-10 transition-transform duration-200 hover:scale-105"
             style={{
               backgroundColor: "rgb(var(--background-rgb)/0.5)"
             }}
           >
-            <Sparkles size={28} className="text-muted-foreground/60 animate-pulse" aria-hidden="true" />
+            <Sparkles size={28} className="text-muted-foreground/60" aria-hidden="true" />
           </div>
 
           <h4 className="text-lg sm:text-xl md:text-2xl font-black text-foreground tracking-tight mb-2 sm:mb-3 uppercase relative z-10">
@@ -102,7 +102,7 @@ export function LessonGrid({
           <div className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] sm:tracking-[0.3em]">
             Halaman <span className="text-foreground">{currentPage}</span> dari {totalPages}
           </div>
-          <div 
+          <div
             className="flex items-center gap-1 sm:gap-1.5 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border"
             style={{
               backgroundColor: "rgb(var(--card-rgb)/0.3)",
@@ -112,7 +112,7 @@ export function LessonGrid({
           >
             <Button
               variant="ghost"
-              size="icon" 
+              size="icon"
               aria-label="Halaman pertama"
               onClick={() => onPageChange(1)}
               disabled={currentPage === 1}
@@ -122,7 +122,7 @@ export function LessonGrid({
             </Button>
             <Button
               variant="ghost"
-              size="icon" 
+              size="icon"
               aria-label="Halaman sebelumnya"
               onClick={() => onPageChange(currentPage - 1)}
               disabled={currentPage === 1}
@@ -161,7 +161,7 @@ export function LessonGrid({
 
             <Button
               variant="ghost"
-              size="icon" 
+              size="icon"
               aria-label="Halaman berikutnya"
               onClick={() => onPageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
@@ -171,7 +171,7 @@ export function LessonGrid({
             </Button>
             <Button
               variant="ghost"
-              size="icon" 
+              size="icon"
               aria-label="Halaman terakhir"
               onClick={() => onPageChange(totalPages)}
               disabled={currentPage === totalPages}

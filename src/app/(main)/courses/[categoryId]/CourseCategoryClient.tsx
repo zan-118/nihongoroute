@@ -1,6 +1,6 @@
 /**
  * @file CourseCategoryClient.tsx
- * @description Antarmuka Daftar Materi untuk level spesifik. 
+ * @description Antarmuka Daftar Materi untuk level spesifik.
  * Menampilkan pilihan latihan (flashcard, kanji, survival), simulasi ujian, dan daftar pelajaran.
  * @module CourseCategoryClient
  */
@@ -12,7 +12,7 @@
 // ======================
 import { m, Variants } from "framer-motion";
 import { useUserStore } from "@/store/useUserStore";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 // Feature Components
 import { CategoryHero } from "@/components/features/course/CategoryHero";
@@ -74,37 +74,51 @@ export default function CourseCategoryClient({
   const completedLessons = useUserStore((s) => s.completedLessons);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const totalLessons = data.lessons?.length || 0;
-  const lessonsDone = data.lessons?.filter(l => completedLessons[l._id] && !completedLessons[l._id].isDeleted).length || 0;
-  const progressPercent = totalLessons > 0 ? Math.round((lessonsDone / totalLessons) * 100) : 0;
+  const { lessonsDone, progressPercent, totalLessons, totalPages, paginatedLessons } = useMemo(() => {
+    const lessons = data.lessons || [];
+    const lessonsTotal = lessons.length;
+    let doneCount = 0;
 
-  const totalPages = Math.ceil(totalLessons / ITEMS_PER_PAGE);
-  const paginatedLessons = (data.lessons || []).slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
+    for (const lesson of lessons) {
+      if (completedLessons[lesson._id] && !completedLessons[lesson._id].isDeleted) {
+        doneCount += 1;
+      }
+    }
 
-  const handlePageChange = (page: number) => {
+    return {
+      lessonsDone: doneCount,
+      paginatedLessons: lessons.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+      ),
+      progressPercent:
+        lessonsTotal > 0 ? Math.round((doneCount / lessonsTotal) * 100) : 0,
+      totalLessons: lessonsTotal,
+      totalPages: Math.ceil(lessonsTotal / ITEMS_PER_PAGE),
+    };
+  }, [completedLessons, currentPage, data.lessons]);
+
+  const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, []);
 
   return (
-    <div className="w-full relative overflow-hidden bg-transparent text-foreground transition-colors duration-500 min-h-screen pb-24 md:pb-32">
+    <div className="w-full relative overflow-hidden bg-transparent text-foreground transition-colors duration-300 min-h-screen pb-24 md:pb-32">
       {/* 1. DEKORASI LATAR BELAKANG — Subtle Only */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Top gradient accent */}
-        <div 
+        <div
           className="absolute top-0 left-0 w-full h-[250px] md:h-[350px]"
           style={{
-            background: isSideQuest 
+            background: isSideQuest
               ? 'linear-gradient(180deg, rgb(var(--warning-rgb)/0.04) 0%, transparent 100%)'
               : 'linear-gradient(180deg, rgb(var(--primary-rgb)/0.04) 0%, transparent 100%)'
           }}
         />
         {/* Corner accent blob — small */}
-        <div 
-          className="absolute bottom-0 right-0 w-[200px] md:w-[300px] h-[200px] md:h-[300px] rounded-full blur-[80px] md:blur-[100px]" 
+        <div
+          className="absolute bottom-0 right-0 w-[180px] md:w-[260px] h-[180px] md:h-[260px] rounded-full blur-[45px] md:blur-[55px]"
           style={{ backgroundColor: 'rgb(var(--secondary-rgb)/0.05)' }}
         />
       </div>
@@ -115,7 +129,7 @@ export default function CourseCategoryClient({
         animate="visible"
         variants={containerVariants}
       >
-        <CategoryHero 
+        <CategoryHero
           title={data.category.title}
           description={data.category.description}
           isSideQuest={isSideQuest}
@@ -128,19 +142,19 @@ export default function CourseCategoryClient({
         />
 
         {!isSideQuest && (
-          <TrainingGround 
+          <TrainingGround
             categoryId={categoryId}
             themeColor={themeColor}
             itemVariants={itemVariants}
           />
         )}
 
-        <MockExams 
+        <MockExams
           exams={data.mockExams || []}
           itemVariants={itemVariants}
         />
 
-        <LessonGrid 
+        <LessonGrid
           lessons={paginatedLessons}
           currentPage={currentPage}
           totalPages={totalPages}

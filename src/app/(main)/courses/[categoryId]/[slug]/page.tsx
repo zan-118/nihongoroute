@@ -45,13 +45,13 @@ interface Props {
 
 /**
  * Menarik data materi lengkap secara paralel dari Supabase dan Sanity CMS.
- * 
+ *
  * @param {string} categoryId Slug ID kategori kursus.
  * @param {string} slug Slug materi pelajaran.
  */
 async function getLessonData(categoryId: string, slug: string) {
   const supabase = await createClient();
-  
+
   // 1. Ambil Kategori & Pelajaran secara paralel
   const [categoryRes, lesson] = await Promise.all([
     supabase
@@ -129,72 +129,72 @@ export default async function LessonPage({ params }: Props) {
   return (
     <div className="w-full text-foreground px-4 md:px-8 relative overflow-hidden flex flex-col flex-1 transition-colors duration-300">
       {/* Dekorasi Ambient Latar Belakang */}
-      <div className="absolute top-0 right-0 size-[500px] bg-primary/5 blur-[150px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 left-0 size-[400px] bg-secondary/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 right-0 size-[360px] bg-primary/5 blur-[65px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 left-0 size-[300px] bg-secondary/5 blur-[55px] rounded-full pointer-events-none" />
 
       <div className="max-w-4xl mx-auto w-full relative z-10 flex flex-col flex-1">
         <article className="flex-1 min-w-0">
-          <LessonHeader 
-            title={lesson.title || ""} 
-            summary={lesson.summary || ""} 
-            isSideQuest={isSideQuest} 
-            lesson={lesson as import("@/components/features/lessons/DownloadOfflineButton").LessonData} 
+          <LessonHeader
+            title={lesson.title || ""}
+            summary={lesson.summary || ""}
+            isSideQuest={isSideQuest}
+            lesson={lesson as import("@/components/features/lessons/DownloadOfflineButton").LessonData}
           />
 
           {/* JUMP LINKS SHORTCUT MENU */}
-          <nav className="mb-12 p-3 sm:p-4 rounded-2xl bg-card/30 backdrop-blur-md border border-border/60 shadow-sm flex flex-wrap gap-2.5 items-center justify-start relative z-20 glass">
+          <nav className="mb-12 p-3 sm:p-4 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/60 shadow-sm flex flex-wrap gap-2.5 items-center justify-start relative z-20 glass">
             <span className="text-[9px] font-black uppercase tracking-wider text-muted-foreground mr-1.5 hidden sm:inline-block">Pintasan Sesi:</span>
             {!!(lesson.articles || lesson.content_blocks) && (
-              <a 
-                href="#article-content" 
+              <a
+                href="#article-content"
                 className="px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm flex items-center gap-1.5"
               >
                 <span>Artikel</span>
               </a>
             )}
             {vocabList.length > 0 && (
-              <a 
-                href="#vocabulary" 
+              <a
+                href="#vocabulary"
                 className="px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm flex items-center gap-1.5"
               >
                 <span>単語 Kosakata</span>
               </a>
             )}
             {kanjiList.length > 0 && (
-              <a 
-                href="#kanji" 
+              <a
+                href="#kanji"
                 className="px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm flex items-center gap-1.5"
               >
                 <span>漢字 Kanji</span>
               </a>
             )}
             {listeningList.length > 0 && (
-              <a 
-                href="#scenario" 
+              <a
+                href="#scenario"
                 className="px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm flex items-center gap-1.5"
               >
                 <span>場面 Dialog</span>
               </a>
             )}
             {readingList.length > 0 && (
-              <a 
-                href="#reading" 
+              <a
+                href="#reading"
                 className="px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm flex items-center gap-1.5"
               >
                 <span>読解 Bacaan</span>
               </a>
             )}
             {cheatsheets.length > 0 && (
-              <a 
-                href="#cheatsheet" 
+              <a
+                href="#cheatsheet"
                 className="px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm flex items-center gap-1.5"
               >
                 <span>参考 Referensi</span>
               </a>
             )}
             {formattedQuizzes.length > 0 && (
-              <a 
-                href="#quiz" 
+              <a
+                href="#quiz"
                 className="px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm flex items-center gap-1.5"
               >
                 <span>答え Kuis</span>
@@ -205,8 +205,8 @@ export default async function LessonPage({ params }: Props) {
           <div className="space-y-24 mb-24">
             {!!(lesson.articles || lesson.content_blocks) && (
               <section id="article-content" className="prose-custom">
-                <ContentBlockRenderer 
-                  blocks={(lesson.articles || lesson.content_blocks) as import("@/types/database").ContentBlock[]} 
+                <ContentBlockRenderer
+                  blocks={(lesson.articles || lesson.content_blocks) as import("@/types/database").ContentBlock[]}
                   vocabList={(lesson.vocabList || lesson.vocab_list || []) as import("@/components/features/lessons/VocabSection").VocabLessonItem[]}
                   kanjiList={(lesson.kanjiList || lesson.kanji_list || []) as import("@/components/features/lessons/KanjiSection").KanjiLessonItem[]}
                 />
@@ -233,8 +233,8 @@ export default async function LessonPage({ params }: Props) {
               </section>
             ) : (
               <section className="flex justify-center my-12">
-                <MarkCompleteButton 
-                  lessonId={lesson._id || lesson.id || ""} 
+                <MarkCompleteButton
+                  lessonId={lesson._id || lesson.id || ""}
                   nextLessonSlug={nextLesson?.slug}
                   categoryId={categoryId}
                 />
@@ -242,11 +242,11 @@ export default async function LessonPage({ params }: Props) {
             )}
           </div>
 
-          <LessonNavigation 
-            prevLesson={prevLesson} 
-            nextLesson={nextLesson} 
-            levelCode={lesson.levelCode || ""} 
-            categoryId={categoryId} 
+          <LessonNavigation
+            prevLesson={prevLesson}
+            nextLesson={nextLesson}
+            levelCode={lesson.levelCode || ""}
+            categoryId={categoryId}
           />
 
           <footer className="mt-20 pt-10 border-t border-border/50 text-center">

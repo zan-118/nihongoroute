@@ -11,11 +11,11 @@
 // ======================
 import React from "react";
 import { motion } from "framer-motion";
-import { 
-  Wrench, 
-  PenTool, 
-  BrainCircuit, 
-  Search, 
+import {
+  Wrench,
+  PenTool,
+  BrainCircuit,
+  Search,
   ChevronRight,
   Zap,
   LayoutGrid,
@@ -92,7 +92,7 @@ export default function ToolsPage() {
     <div className="w-full flex-1 relative overflow-hidden flex flex-col bg-transparent transition-colors duration-300 pt-12 pb-24 px-4 md:px-8">
       {/* Efek Latar Belakang */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent pointer-events-none" />
-      
+
       <div className="max-w-5xl mx-auto w-full relative z-10 flex flex-col h-full">
         <header className="mb-12">
           <div className="flex items-center gap-3 mb-4">
@@ -123,16 +123,16 @@ export default function ToolsPage() {
               transition={{ delay: idx * 0.1 }}
             >
               <Link href={tool.href} onClick={tool.onClick}>
-                <Card className={`group relative p-8 rounded-[2rem] border ${tool.border} bg-card/50 backdrop-blur-sm hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 overflow-hidden`}>
+                <Card className={`group relative p-8 rounded-[2rem] border ${tool.border} bg-card/50 backdrop-blur-sm hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 overflow-hidden`}>
                   {/* Pendaran Hover */}
-                  <div className={`absolute -right-10 -top-10 w-40 h-40 ${tool.bgColor} rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
-                  
+                  <div className={`absolute -right-8 -top-8 w-32 h-32 ${tool.bgColor} rounded-full blur-lg opacity-0 group-hover:opacity-80 transition-opacity duration-200`} />
+
                   <div className="relative z-10 flex flex-col gap-6">
                     <div className="flex justify-between items-start">
-                      <div className={`w-14 h-14 rounded-2xl ${tool.bgColor} border ${tool.border} flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-500`}>
+                      <div className={`w-14 h-14 rounded-2xl ${tool.bgColor} border ${tool.border} flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform duration-200`}>
                         <tool.icon className={tool.color} size={28} />
                       </div>
-                      <div className="p-2 rounded-full bg-muted border border-border opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0">
+                      <div className="p-2 rounded-full bg-muted border border-border opacity-0 group-hover:opacity-100 transition-all duration-200 translate-x-4 group-hover:translate-x-0">
                         <ChevronRight size={20} className="text-muted-foreground" />
                       </div>
                     </div>
@@ -147,7 +147,7 @@ export default function ToolsPage() {
                     </div>
 
                     <div className="flex items-center gap-2 pt-2">
-                       <Zap size={14} className="text-primary animate-pulse" />
+                       <Zap size={14} className="text-primary" />
                        <span className="text-[10px] font-black uppercase tracking-widest text-primary/70">
                          Mulai Latihan
                        </span>

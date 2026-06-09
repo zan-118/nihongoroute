@@ -11,10 +11,10 @@
 // ======================
 import React, { Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Zap, 
-  RotateCw, 
-  ChevronLeft, 
+import {
+  Zap,
+  RotateCw,
+  ChevronLeft,
   Flame,
   PenTool,
   Mic
@@ -41,31 +41,31 @@ function FlashcardsContent() {
   return (
     <AnimatePresence mode="wait">
       {isFetchingCards ? (
-        <motion.div 
+        <motion.div
           key="loading-cards"
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }} 
-          exit={{ opacity: 0 }} 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           className="flex-1 flex flex-col items-center justify-center px-4"
         >
           <RotateCw className="text-primary animate-spin mb-4" size={32} />
-          <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs animate-pulse font-bold">
+          <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs font-bold">
             Mengumpulkan kartu...
           </p>
         </motion.div>
       ) : !selectedMode ? (
-        <FlashcardSetup 
+        <FlashcardSetup
           defaultLevel={categorySlug?.toUpperCase() || null}
           defaultMode={modeParam}
           onStart={fetchCardsAndStart}
         />
       ) : (
-        <motion.div 
-          key="session" 
-          initial={{ opacity: 0, y: 20 }} 
-          animate={{ opacity: 1, y: 0 }} 
-          exit={{ opacity: 0, y: -20 }} 
-          transition={{ duration: 0.3 }} 
+        <motion.div
+          key="session"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
           className="flex-1 w-full px-4 md:px-8 relative overflow-hidden flex flex-col items-center"
         >
           <div className="relative z-10 w-full max-w-2xl mt-4 sm:mt-8">
@@ -74,13 +74,13 @@ function FlashcardsContent() {
                 <ChevronLeft size={14} className="mr-2" /> Ganti Mode
               </Button>
               <Badge variant="outline" className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center gap-2 h-auto ${
-                selectedMode === "kanji" ? "bg-secondary/10 border-secondary/30 text-secondary" : 
-                selectedMode === "survival" ? "bg-destructive/10 border-destructive/30 text-destructive" : 
+                selectedMode === "kanji" ? "bg-secondary/10 border-secondary/30 text-secondary" :
+                selectedMode === "survival" ? "bg-destructive/10 border-destructive/30 text-destructive" :
                 selectedMode === "pronunciation" ? "bg-warning/10 border-warning/30 text-warning" :
                 "bg-primary/10 border-primary/30 text-primary"
               }`}>
-                {selectedMode === "survival" ? <Flame size={16} /> : 
-                 selectedMode === "kanji" ? <PenTool size={16} /> : 
+                {selectedMode === "survival" ? <Flame size={16} /> :
+                 selectedMode === "kanji" ? <PenTool size={16} /> :
                  selectedMode === "pronunciation" ? <Mic size={16} /> :
                  <Zap size={16} />}
                 <span>Mode {selectedMode === "pronunciation" ? "pelafalan" : selectedMode}</span>
@@ -106,7 +106,7 @@ export default function FlashcardsPage() {
     <Suspense fallback={
       <div className="flex-1 flex flex-col items-center justify-center px-4">
         <RotateCw className="text-primary animate-spin mb-4" size={32} />
-        <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs animate-pulse font-bold">
+        <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs font-bold">
           Memuat Modul...
         </p>
       </div>
