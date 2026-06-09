@@ -17,6 +17,7 @@ import {
   formatCounterPrompt,
   getCounterQuestion,
   isCounterAnswerCorrect,
+  type CounterQuestion,
   type CounterWord,
 } from "@/lib/counter-trainer";
 import { Badge } from "@/components/ui/badge";
@@ -25,19 +26,28 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 
-export default function CounterTrainerClient() {
+interface CounterTrainerClientProps {
+  initialQuestions?: CounterQuestion[];
+  databaseQuestionCount?: number;
+}
+
+export default function CounterTrainerClient({
+  initialQuestions = [],
+  databaseQuestionCount = 0,
+}: CounterTrainerClientProps) {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [selectedCounter, setSelectedCounter] = useState<CounterWord | null>(null);
   const [showHint, setShowHint] = useState(false);
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [answeredIds, setAnsweredIds] = useState<Set<string>>(() => new Set());
+  const questionBank = initialQuestions.length > 0 ? initialQuestions : COUNTER_QUESTIONS;
 
-  const question = getCounterQuestion(questionIndex);
+  const question = getCounterQuestion(questionIndex, questionBank);
   const hasAnswered = selectedCounter !== null;
   const isCorrect = selectedCounter
     ? isCounterAnswerCorrect(question.answer, selectedCounter)
     : false;
-  const progressPercent = Math.round((answeredIds.size / COUNTER_QUESTIONS.length) * 100);
+  const progressPercent = Math.round((answeredIds.size / questionBank.length) * 100);
   const accuracy = score.total > 0 ? Math.round((score.correct / score.total) * 100) : 0;
 
   const handleSelect = (counter: CounterWord) => {
@@ -53,7 +63,7 @@ export default function CounterTrainerClient() {
   };
 
   const handleNext = () => {
-    setQuestionIndex((prev) => (prev + 1) % COUNTER_QUESTIONS.length);
+    setQuestionIndex((prev) => (prev + 1) % questionBank.length);
     setSelectedCounter(null);
     setShowHint(false);
   };
@@ -86,6 +96,11 @@ export default function CounterTrainerClient() {
             <p className="max-w-2xl text-sm font-medium leading-relaxed text-muted-foreground">
               Pilih kata bantu bilangan yang tepat untuk orang, benda panjang, lembaran, hewan kecil, minuman, umur, dan lantai.
             </p>
+            <p className="text-xs font-bold text-muted-foreground">
+              {databaseQuestionCount > 0
+                ? `${databaseQuestionCount} soal aktif dari kosakata database.`
+                : "Memakai bank soal lokal karena data vocab belum cocok untuk counter."}
+            </p>
           </div>
         </header>
 
@@ -94,7 +109,7 @@ export default function CounterTrainerClient() {
             <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <Badge variant="outline" className="mb-3 rounded-xl">
-                  {question.level} · {question.category} · Soal {questionIndex + 1}/{COUNTER_QUESTIONS.length}
+                  {question.level} · {question.category} · Soal {questionIndex + 1}/{questionBank.length}
                 </Badge>
                 <p className="font-japanese text-4xl font-black leading-relaxed text-foreground md:text-6xl">
                   {formatCounterPrompt(question)}
@@ -196,6 +211,11 @@ export default function CounterTrainerClient() {
                   <p className="mt-3 text-sm font-medium leading-relaxed text-muted-foreground">
                     {question.explanation}
                   </p>
+                  {question.sourceHref ? (
+                    <Button asChild variant="outline" size="sm" className="mt-4 rounded-xl">
+                      <Link href={question.sourceHref}>Buka Vocab</Link>
+                    </Button>
+                  ) : null}
                 </div>
               ) : (
                 <p className="rounded-2xl border border-dashed border-border bg-muted/15 p-5 text-sm font-medium text-muted-foreground">
@@ -230,7 +250,7 @@ export default function CounterTrainerClient() {
                 ))}
               </div>
               <p className="mt-4 font-mono text-2xl font-black text-foreground">
-                {answeredIds.size}/{COUNTER_QUESTIONS.length}
+                {answeredIds.size}/{questionBank.length}
               </p>
             </Card>
           </div>

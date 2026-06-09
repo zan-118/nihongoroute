@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getIntegratedCounterQuestions } from "@/actions/tools-integration.actions";
 import CounterTrainerClient from "@/components/features/tools/counter-trainer/CounterTrainerClient";
 
 export const metadata: Metadata = {
@@ -6,6 +7,15 @@ export const metadata: Metadata = {
   description: "Latihan memilih counter bahasa Jepang untuk orang, benda, umur, lantai, dan kategori umum lainnya.",
 };
 
-export default function CounterTrainerPage() {
-  return <CounterTrainerClient />;
+export const dynamic = "force-dynamic";
+
+export default async function CounterTrainerPage() {
+  const questions = await getIntegratedCounterQuestions();
+
+  return (
+    <CounterTrainerClient
+      initialQuestions={questions}
+      databaseQuestionCount={questions.length}
+    />
+  );
 }

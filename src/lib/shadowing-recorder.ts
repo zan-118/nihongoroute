@@ -9,6 +9,9 @@ export interface ShadowingPreset {
   focus: string;
   targetSeconds: number;
   chunks: string[];
+  sourceHref?: string;
+  sourceTitle?: string;
+  sourceType?: "reading" | "listening" | "static";
 }
 
 export const SHADOWING_PRESETS: ShadowingPreset[] = [

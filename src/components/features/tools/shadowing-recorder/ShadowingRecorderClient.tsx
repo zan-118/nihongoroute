@@ -15,6 +15,7 @@ import {
   formatShadowingDuration,
   getShadowingPaceLabel,
   SHADOWING_PRESETS,
+  type ShadowingPreset,
 } from "@/lib/shadowing-recorder";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,7 +29,15 @@ const PLAYBACK_RATES = [
   { label: "Fast", value: 1.12 },
 ] as const;
 
-export default function ShadowingRecorderClient() {
+interface ShadowingRecorderClientProps {
+  initialPresets?: ShadowingPreset[];
+  libraryPresetCount?: number;
+}
+
+export default function ShadowingRecorderClient({
+  initialPresets = [],
+  libraryPresetCount = 0,
+}: ShadowingRecorderClientProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [playbackRate, setPlaybackRate] = useState<(typeof PLAYBACK_RATES)[number]["value"]>(0.95);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -46,7 +55,8 @@ export default function ShadowingRecorderClient() {
   const startedAtRef = useRef<number | null>(null);
   const audioUrlRef = useRef<string | null>(null);
 
-  const preset = SHADOWING_PRESETS[selectedIndex];
+  const presets = initialPresets.length > 0 ? initialPresets : SHADOWING_PRESETS;
+  const preset = presets[selectedIndex] ?? presets[0];
   const paceLabel = getShadowingPaceLabel(elapsedSeconds, preset.targetSeconds);
   const pacePercent = Math.min(100, Math.round((elapsedSeconds / Math.max(preset.targetSeconds, 1)) * 100));
 
@@ -232,6 +242,11 @@ export default function ShadowingRecorderClient() {
             <p className="max-w-2xl text-sm font-medium leading-relaxed text-muted-foreground">
               Putar kalimat target, rekam suara sendiri, lalu bandingkan tempo dan artikulasi dari hasil playback.
             </p>
+            <p className="text-xs font-bold text-muted-foreground">
+              {libraryPresetCount > 0
+                ? `${libraryPresetCount} preset aktif dari reading/listening library.`
+                : "Memakai preset lokal karena materi library belum tersedia."}
+            </p>
           </div>
         </header>
 
@@ -244,7 +259,7 @@ export default function ShadowingRecorderClient() {
               </h2>
             </div>
             <div className="flex flex-col gap-2">
-              {SHADOWING_PRESETS.map((item, index) => (
+              {presets.map((item, index) => (
                 <button
                   key={item.id}
                   type="button"
@@ -266,6 +281,11 @@ export default function ShadowingRecorderClient() {
                   <span className="mt-2 block font-japanese text-sm font-bold leading-relaxed">
                     {item.text}
                   </span>
+                  {item.sourceTitle ? (
+                    <span className="mt-2 block text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                      {item.sourceType}: {item.sourceTitle}
+                    </span>
+                  ) : null}
                 </button>
               ))}
             </div>
@@ -284,6 +304,11 @@ export default function ShadowingRecorderClient() {
                   <p className="mt-3 text-sm font-medium leading-relaxed text-muted-foreground">
                     {preset.translation}
                   </p>
+                  {preset.sourceHref ? (
+                    <Button asChild variant="outline" size="sm" className="mt-4 rounded-xl">
+                      <Link href={preset.sourceHref}>Buka Sumber Library</Link>
+                    </Button>
+                  ) : null}
                 </div>
                 <div className="w-full rounded-2xl border border-border bg-muted/15 p-4 sm:w-44">
                   <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">

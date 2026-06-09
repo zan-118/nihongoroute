@@ -20,6 +20,7 @@ import {
   isMiniDrillAnswerCorrect,
   type DrillKind,
   type DrillLevel,
+  type MiniDrillQuestion,
 } from "@/lib/jlpt-mini-drill";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -45,7 +46,15 @@ const KIND_LABELS: Record<DrillKind | "mixed", string> = {
 
 const AMOUNT_OPTIONS = [5, 8, 12, 16] as const;
 
-export default function JlptMiniDrillClient() {
+interface JlptMiniDrillClientProps {
+  initialQuestions?: MiniDrillQuestion[];
+  databaseQuestionCount?: number;
+}
+
+export default function JlptMiniDrillClient({
+  initialQuestions = [],
+  databaseQuestionCount = 0,
+}: JlptMiniDrillClientProps) {
   const [level, setLevel] = useState<DrillLevel | "all">("all");
   const [kind, setKind] = useState<DrillKind | "mixed">("mixed");
   const [amount, setAmount] = useState<number>(8);
@@ -54,10 +63,14 @@ export default function JlptMiniDrillClient() {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [isFinished, setIsFinished] = useState(false);
+  const questionBank = useMemo(
+    () => (initialQuestions.length > 0 ? initialQuestions : undefined),
+    [initialQuestions]
+  );
 
   const questions = useMemo(
-    () => createMiniDrill({ level, kind, amount, seed: String(seed) }),
-    [amount, kind, level, seed]
+    () => createMiniDrill({ level, kind, amount, seed: String(seed), bank: questionBank }),
+    [amount, kind, level, questionBank, seed]
   );
   const question = questions[questionIndex] ?? questions[0];
   const hasAnswered = selectedAnswer !== null;
@@ -120,6 +133,11 @@ export default function JlptMiniDrillClient() {
             </h1>
             <p className="max-w-2xl text-sm font-medium leading-relaxed text-muted-foreground">
               Buat sesi kecil berisi vocab, kanji, dan grammar dari N5 sampai N1 untuk pemanasan sebelum masuk library atau exam.
+            </p>
+            <p className="text-xs font-bold text-muted-foreground">
+              {databaseQuestionCount > 0
+                ? `${databaseQuestionCount} soal aktif dari database library.`
+                : "Memakai bank soal lokal karena data library belum tersedia."}
             </p>
           </div>
         </header>
@@ -321,6 +339,11 @@ export default function JlptMiniDrillClient() {
                   <p className="mt-2 text-sm font-medium leading-relaxed text-muted-foreground">
                     {question.explanation}
                   </p>
+                  {question.sourceHref ? (
+                    <Button asChild variant="outline" size="sm" className="mt-4 rounded-xl">
+                      <Link href={question.sourceHref}>Buka di Library</Link>
+                    </Button>
+                  ) : null}
                 </div>
               ) : (
                 <p className="rounded-2xl border border-dashed border-border bg-muted/15 p-5 text-sm font-medium text-muted-foreground">

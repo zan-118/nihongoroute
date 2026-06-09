@@ -16,6 +16,9 @@ export interface CounterQuestion {
   translation: string;
   hint: string;
   explanation: string;
+  sourceHref?: string;
+  sourceTitle?: string;
+  sourceType?: "database" | "static";
 }
 
 export const COUNTER_QUESTIONS: CounterQuestion[] = [
@@ -169,9 +172,10 @@ export function isCounterAnswerCorrect(expected: string, answer: string) {
   return normalizeCounterAnswer(expected) === normalizeCounterAnswer(answer);
 }
 
-export function getCounterQuestion(index: number) {
-  const normalizedIndex = ((index % COUNTER_QUESTIONS.length) + COUNTER_QUESTIONS.length) % COUNTER_QUESTIONS.length;
-  return COUNTER_QUESTIONS[normalizedIndex];
+export function getCounterQuestion(index: number, questions: CounterQuestion[] = COUNTER_QUESTIONS) {
+  const questionBank = questions.length > 0 ? questions : COUNTER_QUESTIONS;
+  const normalizedIndex = ((index % questionBank.length) + questionBank.length) % questionBank.length;
+  return questionBank[normalizedIndex];
 }
 
 export function formatCounterPrompt(question: CounterQuestion) {

@@ -10,6 +10,9 @@ export interface MiniDrillQuestion {
   answer: string;
   explanation: string;
   reading?: string;
+  sourceHref?: string;
+  sourceTitle?: string;
+  sourceType?: "database" | "static";
 }
 
 export interface MiniDrillConfig {
@@ -17,6 +20,7 @@ export interface MiniDrillConfig {
   kind: DrillKind | "mixed";
   amount: number;
   seed?: string;
+  bank?: MiniDrillQuestion[];
 }
 
 export const DRILL_LEVELS: Array<DrillLevel | "all"> = ["all", "N5", "N4", "N3", "N2", "N1"];
@@ -193,12 +197,13 @@ function shuffleBySeed<T>(items: T[], seed: string) {
 }
 
 export function createMiniDrill(config: MiniDrillConfig) {
-  const pool = MINI_DRILL_BANK.filter((question) => {
+  const questionBank = config.bank && config.bank.length > 0 ? config.bank : MINI_DRILL_BANK;
+  const pool = questionBank.filter((question) => {
     const levelMatch = config.level === "all" || question.level === config.level;
     const kindMatch = config.kind === "mixed" || question.kind === config.kind;
     return levelMatch && kindMatch;
   });
-  const fallbackPool = pool.length > 0 ? pool : MINI_DRILL_BANK;
+  const fallbackPool = pool.length > 0 ? pool : questionBank;
   const shuffled = shuffleBySeed(
     fallbackPool,
     `${config.level}-${config.kind}-${config.amount}-${config.seed ?? "default"}`

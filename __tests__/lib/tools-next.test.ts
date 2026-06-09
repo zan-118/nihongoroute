@@ -39,6 +39,31 @@ describe("jlpt mini drill", () => {
     expect(isMiniDrillAnswerCorrect("Air", " air ")).toBe(true);
     expect(MINI_DRILL_BANK.length).toBeGreaterThan(10);
   });
+
+  it("bisa memakai bank soal eksternal dari database", () => {
+    const drill = createMiniDrill({
+      level: "N5",
+      kind: "vocab",
+      amount: 1,
+      bank: [
+        {
+          id: "db-vocab-test",
+          level: "N5",
+          kind: "vocab",
+          prompt: "水",
+          reading: "みず",
+          answer: "air",
+          options: ["air", "api"],
+          explanation: "水 berarti air.",
+          sourceHref: "/library/vocab/mizu",
+          sourceType: "database",
+        },
+      ],
+    });
+
+    expect(drill[0].id).toBe("db-vocab-test");
+    expect(drill[0].sourceHref).toBe("/library/vocab/mizu");
+  });
 });
 
 describe("counter trainer", () => {
@@ -53,6 +78,18 @@ describe("counter trainer", () => {
     expect(normalizeCounterAnswer(" 人 ")).toBe("人");
     expect(isCounterAnswerCorrect("人", " 人 ")).toBe(true);
     expect(formatCounterPrompt(question)).toContain("___");
+  });
+
+  it("bisa mengambil soal counter dari bank eksternal", () => {
+    const custom = {
+      ...COUNTER_QUESTIONS[0],
+      id: "db-counter-test",
+      sourceHref: "/library/vocab/tomodachi",
+      sourceType: "database" as const,
+    };
+
+    expect(getCounterQuestion(0, [custom]).id).toBe("db-counter-test");
+    expect(getCounterQuestion(1, [custom]).sourceHref).toBe("/library/vocab/tomodachi");
   });
 });
 
