@@ -79,6 +79,9 @@ export function getRouteLabel(segment: string): string {
     support: "Bantuan",
     tools: "Peralatan",
     "weak-points": "Weak Point Trainer",
+    "text-analyzer": "Text Analyzer",
+    conjugation: "Konjugasi",
+    dictionary: "Kamus Terpadu",
   };
 
   if (labels[segment.toLowerCase()]) {

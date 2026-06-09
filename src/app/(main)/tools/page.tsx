@@ -20,7 +20,9 @@ import {
   Zap,
   LayoutGrid,
   Flame,
-  Target
+  Target,
+  FileText,
+  GraduationCap
 } from "lucide-react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
@@ -38,6 +40,24 @@ const tools = [
     color: "text-primary",
     bgColor: "bg-primary/10",
     border: "border-primary/20"
+  },
+  {
+    title: "Text Analyzer",
+    description: "Tempel teks Jepang untuk menemukan kosakata, kanji, dan pola grammar penting.",
+    icon: FileText,
+    href: "/tools/text-analyzer",
+    color: "text-primary",
+    bgColor: "bg-primary/10",
+    border: "border-primary/20"
+  },
+  {
+    title: "Verb Conjugation Trainer",
+    description: "Latih perubahan verba ke bentuk masu, te, nai, ta, pasif, potensial, dan lainnya.",
+    icon: GraduationCap,
+    href: "/tools/conjugation",
+    color: "text-success",
+    bgColor: "bg-success/10",
+    border: "border-success/20"
   },
   {
     title: "Flashcards",
@@ -67,21 +87,10 @@ const tools = [
     border: "border-destructive/20"
   },
   {
-    title: "Kamus Global",
-    description: "Cari kosakata, tata bahasa, dan kanji dalam satu tempat.",
+    title: "Kamus Terpadu",
+    description: "Cari kosakata, tata bahasa, dan kanji lengkap dengan history dan tombol SRS.",
     icon: Search,
-    href: "#", // Idealnya membuka modal pencarian global
-    onClick: () => {
-      // Logika untuk membuka modal pencarian jika memungkinkan, atau arahkan langsung ke halaman pencari jika tersedia
-      if (typeof window !== 'undefined') {
-        const event = new KeyboardEvent('keydown', {
-          key: 'k',
-          ctrlKey: true,
-          bubbles: true
-        });
-        document.dispatchEvent(event);
-      }
-    },
+    href: "/tools/dictionary",
     color: "text-warning",
     bgColor: "bg-warning/10",
     border: "border-warning/20"
@@ -132,7 +141,7 @@ export default function ToolsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1 }}
             >
-              <Link href={tool.href} onClick={tool.onClick}>
+              <Link href={tool.href}>
                 <Card className={`group relative p-8 rounded-[2rem] border ${tool.border} bg-card/50 backdrop-blur-sm hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 overflow-hidden`}>
                   {/* Pendaran Hover */}
                   <div className={`absolute -right-8 -top-8 w-32 h-32 ${tool.bgColor} rounded-full blur-lg opacity-0 group-hover:opacity-80 transition-opacity duration-200`} />
