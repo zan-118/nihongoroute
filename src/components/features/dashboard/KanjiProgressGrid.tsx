@@ -13,8 +13,8 @@
 // ==========================================
 // IMPOR
 // ==========================================
-import { useState, useEffect } from "react";
-import { m } from "framer-motion";
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { createClient } from "@/lib/supabase/client";
@@ -30,51 +30,114 @@ interface KanjiItem {
   meaning: string;
 }
 
+interface KanjiStatus {
+  interval: number;
+}
+
+let n5KanjiPromise: Promise<KanjiItem[]> | null = null;
+
+function getN5Kanjis() {
+  if (!n5KanjiPromise) {
+    n5KanjiPromise = (async () => {
+      const { data, error } = await createClient()
+      .from("kanji")
+      .select("id, character, meaning")
+      .eq("jlpt_level", "N5")
+      .order("character", { ascending: true });
+
+      if (error) {
+        n5KanjiPromise = null;
+        throw error;
+      }
+
+      return (data || []).map((k) => ({
+        _id: k.id,
+        kanji: k.character,
+        meaning: k.meaning,
+      }));
+    })();
+  }
+
+  return n5KanjiPromise;
+}
+
+function getKanjiSrsSignature(
+  srs: ReturnType<typeof useSRSStore.getState>["srs"],
+  kanjiIdsSignature: string
+) {
+  if (!kanjiIdsSignature) return "";
+
+  const signatures: string[] = [];
+
+  for (const id of kanjiIdsSignature.split("|")) {
+    const status = srs[id];
+    if (!status || status.isDeleted) continue;
+    signatures.push(`${id}:${status.interval}`);
+  }
+
+  return signatures.join("|");
+}
+
+function parseKanjiSrsSignature(signature: string) {
+  const statuses = new Map<string, KanjiStatus>();
+  if (!signature) return statuses;
+
+  signature.split("|").forEach((entry) => {
+    const separatorIndex = entry.lastIndexOf(":");
+    statuses.set(entry.slice(0, separatorIndex), {
+      interval: Number(entry.slice(separatorIndex + 1)),
+    });
+  });
+
+  return statuses;
+}
+
 // ==========================================
 // KOMPONEN UTAMA
 // ==========================================
 export default function KanjiProgressGrid() {
-  const [kanjis, setKanjis] = useState<KanjiItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const srs = useSRSStore(s => s.srs);
+  const { data: kanjis = [], isLoading } = useQuery({
+    queryKey: ["dashboard", "n5-kanji-progress"],
+    queryFn: getN5Kanjis,
+    staleTime: 30 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
+  });
+  const kanjiIdsSignature = useMemo(
+    () => kanjis.map((item) => item._id).join("|"),
+    [kanjis]
+  );
+  const kanjiSrsSignature = useSRSStore((state) =>
+    getKanjiSrsSignature(state.srs, kanjiIdsSignature)
+  );
+  const kanjiStatuses = useMemo(
+    () => parseKanjiSrsSignature(kanjiSrsSignature),
+    [kanjiSrsSignature]
+  );
 
-  useEffect(() => {
-    const fetchKanjis = async () => {
-      try {
-        const supabase = createClient();
-        const { data, error } = await supabase
-          .from("kanji")
-          .select("id, character, meaning")
-          .eq("jlpt_level", "N5")
-          .order("character", { ascending: true });
+  const kanjiProgress = useMemo(() => {
+    const counts = { masteredCount: 0, learningCount: 0 };
 
-        if (error) throw error;
+    const items = kanjis.map((item) => {
+      const status = kanjiStatuses.get(item._id);
+      const isMastered = (status?.interval || 0) > 21;
+      const isLearning = !!status && !isMastered;
 
-        setKanjis((data || []).map(k => ({
-          _id: k.id,
-          kanji: k.character,
-          meaning: k.meaning,
-        })));
-      } catch (err) {
-        console.error("Gagal memuat kanji:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchKanjis();
-  }, []);
+      if (isMastered) counts.masteredCount += 1;
+      if (isLearning) counts.learningCount += 1;
 
-  if (loading) {
+      return { ...item, isMastered, isLearning };
+    });
+
+    return { items, ...counts };
+  }, [kanjis, kanjiStatuses]);
+
+  if (isLoading) {
     return (
       <Card className="p-8 flex items-center justify-center bg-card/50 border-border">
         <Loader2 className="animate-spin text-primary" size={24} />
       </Card>
     );
   }
-
-  // Hitung jumlah kanji berstatus Mahir (interval > 21 hari) dan Sedang Belajar (interval <= 21 hari)
-  const masteredCount = kanjis.filter(k => (srs?.[k._id]?.interval || 0) > 21).length;
-  const learningCount = kanjis.filter(k => srs?.[k._id] && srs[k._id].interval <= 21).length;
 
   return (
     <Card className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-lg overflow-hidden relative">
@@ -88,45 +151,38 @@ export default function KanjiProgressGrid() {
             Peta Penguasaan Kanji N5
           </h2>
           <p className="text-sm font-black text-foreground uppercase tracking-tight">
-            {masteredCount} <span className="text-muted-foreground font-medium text-xs">Dikuasai</span> / {kanjis.length} <span className="text-muted-foreground font-medium text-xs">Total</span>
+            {kanjiProgress.masteredCount} <span className="text-muted-foreground font-medium text-xs">Dikuasai</span> / {kanjis.length} <span className="text-muted-foreground font-medium text-xs">Total</span>
           </p>
         </div>
         
         <div className="flex gap-3">
           <Badge variant="outline" className="bg-primary/10 border-primary/20 text-primary text-[8px] font-bold uppercase tracking-widest px-3">
-            {learningCount} Belajar
+            {kanjiProgress.learningCount} Belajar
           </Badge>
           <Badge variant="outline" className="bg-success/10 border-success/20 text-success text-[8px] font-bold uppercase tracking-widest px-3">
-            {masteredCount} Mahir
+            {kanjiProgress.masteredCount} Mahir
           </Badge>
         </div>
       </div>
 
       {/* GRID VISUAL KANJI */}
       <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-2">
-        {kanjis.map((item, idx) => {
-          const status = srs?.[item._id];
-          const isMastered = (status?.interval || 0) > 21;
-          const isLearning = status && !isMastered;
-
+        {kanjiProgress.items.map((item) => {
           return (
-            <m.div
+            <div
               key={item._id}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: idx * 0.01 }}
-              title={`${item.kanji}: ${item.meaning} (${isMastered ? "Mahir" : isLearning ? "Latihan" : "Belum"})`}
+              title={`${item.kanji}: ${item.meaning} (${item.isMastered ? "Mahir" : item.isLearning ? "Latihan" : "Belum"})`}
               className={`
                 aspect-square rounded-lg flex items-center justify-center text-lg font-japanese font-bold transition-all duration-300 border cursor-default
-                ${isMastered 
+                ${item.isMastered
                   ? 'bg-success border-success text-success-foreground' 
-                  : isLearning 
+                  : item.isLearning
                   ? 'bg-primary/20 border-primary/40 text-primary' 
                   : 'bg-muted/50 border-border/50 text-muted-foreground/30 hover:border-muted-foreground/50'}
               `}
             >
               {item.kanji}
-            </m.div>
+            </div>
           );
         })}
       </div>
@@ -141,4 +197,3 @@ export default function KanjiProgressGrid() {
     </Card>
   );
 }
-

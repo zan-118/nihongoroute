@@ -24,7 +24,6 @@ import MemoryStats from "./dashboard-stats/MemoryStats";
 import SRSAnalytics from "../srs/analytics/SRSAnalytics";
 import Heatmap from "./heatmap/Heatmap";
 import StreakFreezeCard from "../gamification/StreakFreezeCard";
-import { UserProgress } from "@/store/types";
 import { useUserStore } from "@/store/useUserStore";
 
 // ==========================================
@@ -32,7 +31,12 @@ import { useUserStore } from "@/store/useUserStore";
 // ==========================================
 interface DashboardStatsProps {
   loading: boolean;
-  progress: UserProgress;
+  progress: {
+    xp: number;
+    level: number;
+    streak: number;
+    studyDays: Record<string, number>;
+  };
   xpNeeded: number;
   xpProgress: number;
   itemVariants: Variants;
@@ -214,4 +218,3 @@ export default function DashboardStats({
     </div>
   );
 }
-

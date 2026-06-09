@@ -10,43 +10,69 @@
 // ======================
 // IMPOR
 // ======================
-import { useState, useMemo, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { MasterCardData } from "@/components/features/flashcards/master/types";
 import { useSRSStore } from "@/store/useSRSStore";
+import { summarizeSrs } from "@/lib/srs-summary";
 
 // ======================
 // ANTARMUKA & TIPE
 // ======================
 export type SessionMode = "srs" | "quick" | null;
 
+function getReviewIds(selectedMode: Exclude<SessionMode, null>, now: number) {
+  const srs = useSRSStore.getState().srs || {};
+
+  if (selectedMode === "quick") {
+    const sample: string[] = [];
+    let seenActiveItems = 0;
+
+    for (const id in srs) {
+      const state = srs[id];
+      if (state.isDeleted) continue;
+
+      seenActiveItems += 1;
+      if (sample.length < 10) {
+        sample.push(id);
+        continue;
+      }
+
+      const replacementIndex = Math.floor(Math.random() * seenActiveItems);
+      if (replacementIndex < 10) sample[replacementIndex] = id;
+    }
+
+    return sample;
+  }
+
+  const ids: string[] = [];
+  for (const id in srs) {
+    const state = srs[id];
+    if (state.isDeleted || state.nextReview > now) continue;
+    ids.push(id);
+  }
+
+  return ids;
+}
+
 // ======================
 // HOOK UTAMA
 // ======================
 export function useReviewSession(loading: boolean) {
-  const srs = useSRSStore((state) => state.srs);
   const [mode, setMode] = useState<SessionMode>(null);
   const [cards, setCards] = useState<MasterCardData[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
 
   const [now] = useState(() => Date.now());
+  const reviewCountsSignature = useSRSStore((state) => {
+    const { active, due } = summarizeSrs(state.srs, now);
+    return `${due}:${active}`;
+  });
+  const [dueCount, allCount] = reviewCountsSignature.split(":").map(Number);
 
-  // Hitung jumlah kartu yang jatuh tempo (due)
-  const dueItemIds = useMemo(() => {
-    return Object.entries(srs || {})
-      .filter(([, state]) => !state.isDeleted && state.nextReview <= now)
-      .map(([id]) => id);
-  }, [srs, now]);
-
-  const allItemIds = useMemo(() => {
-    return Object.entries(srs || {})
-      .filter(([, state]) => !state.isDeleted)
-      .map(([id]) => id);
-  }, [srs]);
-
-  const startSession = async (selectedMode: SessionMode) => {
+  const startSession = useCallback(async (selectedMode: SessionMode) => {
     if (!selectedMode) return;
     
     try {
@@ -54,14 +80,7 @@ export function useReviewSession(loading: boolean) {
       setMode(selectedMode);
       setIsFinished(false);
 
-      let targetIds: string[] = [];
-      
-      if (selectedMode === "srs") {
-        targetIds = dueItemIds;
-      } else {
-        // Quick mode: ambil 10 kartu acak dari koleksi
-        targetIds = [...allItemIds].sort(() => Math.random() - 0.5).slice(0, 10);
-      }
+      const targetIds = getReviewIds(selectedMode, now);
 
       if (targetIds.length === 0) {
         setCards([]);
@@ -87,7 +106,7 @@ export function useReviewSession(loading: boolean) {
     } finally {
       setIsFetching(false);
     }
-  };
+  }, [now]);
 
   // Auto-start berdasarkan query params
   const searchParams = useSearchParams();
@@ -101,8 +120,7 @@ export function useReviewSession(loading: boolean) {
       };
       void trigger();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialMode, loading]);
+  }, [initialMode, loading, mode, startSession]);
 
   return {
     mode,
@@ -111,8 +129,8 @@ export function useReviewSession(loading: boolean) {
     isFetching,
     isFinished,
     setIsFinished,
-    dueItemIds,
-    allItemIds,
+    dueCount,
+    allCount,
     startSession
   };
 }

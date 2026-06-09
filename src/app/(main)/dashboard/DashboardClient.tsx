@@ -6,7 +6,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
@@ -19,8 +19,7 @@ import LevelUpOverlay from "@/components/features/gamification/LevelUpOverlay";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import OnboardingTour from "@/components/features/onboarding/OnboardingTour";
 import { toast } from "sonner";
-import { UserProgress } from "@/store/types";
-import { SRSState } from "@/lib/srs";
+import { summarizeSrs } from "@/lib/srs-summary";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { RandomExpression } from "@/actions/expressions.actions";
@@ -39,11 +38,10 @@ const AchievementsGrid = dynamic(() => import("@/components/features/gamificatio
 // CONFIG / CONSTANTS
 // ======================
 const itemVariants: Variants = {
-  hidden: { y: 20, opacity: 0, filter: "blur(10px)" },
+  hidden: { y: 16, opacity: 0 },
   visible: {
     y: 0,
     opacity: 1,
-    filter: "blur(0px)",
     transition: { type: "spring", stiffness: 100, damping: 20 },
   },
 };
@@ -87,8 +85,8 @@ export default function DashboardClient({ courseMetadata, expression }: Dashboar
   const inventory = useUserStore(s => s.inventory);
   const resetUser = useUserStore(s => s.resetUser);
 
-  const srs = useSRSStore(s => s.srs);
   const resetSRS = useSRSStore(s => s.resetSRS);
+  const dueCount = useSRSStore(s => summarizeSrs(s.srs).due);
 
   const loading = useUIStore(s => s.loading);
   const resetUI = useUIStore(s => s.resetUI);
@@ -104,7 +102,7 @@ export default function DashboardClient({ courseMetadata, expression }: Dashboar
     resetUI();
   };
 
-  const progress: UserProgress = {
+  const progress = useMemo(() => ({
     id: id || "guest", 
     isGuest: !!isGuest, 
     name: name || "Pelajar", 
@@ -114,12 +112,22 @@ export default function DashboardClient({ courseMetadata, expression }: Dashboar
     todayReviewCount: todayReviewCount || 0, 
     lastStudyDate: lastStudyDate || null, 
     studyDays: studyDays || {}, 
-    inventory: inventory || { streakFreeze: 0, claimedQuests: { date: "", quests: [] } }, 
-    srs: srs || {}, 
-    notifications: notifications || [], 
+    inventory: inventory || { streakFreeze: 0, claimedQuests: { date: "", quests: [] } },
     settings: settings || { notificationsEnabled: true },
     completedLessons: {}
-  };
+  }), [
+    id,
+    isGuest,
+    name,
+    xp,
+    level,
+    streak,
+    todayReviewCount,
+    lastStudyDate,
+    studyDays,
+    inventory,
+    settings,
+  ]);
 
   const [guestId, setGuestId] = useState<string>("MENYIAPKAN...");
   const [confirmModal, setConfirmModal] = useState({
@@ -206,17 +214,8 @@ export default function DashboardClient({ courseMetadata, expression }: Dashboar
     );
   };
 
-  const [dueCount, setDueCount] = useState(0);
   const xpNeeded = 1000 - (progress.xp % 1000);
   const xpProgress = (progress.xp % 1000) / 10;
-
-  useEffect(() => {
-    const now = Date.now();
-    const count = Object.values(progress.srs as Record<string, SRSState>).filter((card: SRSState) => card.nextReview <= now).length;
-    requestAnimationFrame(() => {
-      setDueCount(count);
-    });
-  }, [progress.srs]);
 
   const [activeTab, setActiveTab] = useState("beranda");
 

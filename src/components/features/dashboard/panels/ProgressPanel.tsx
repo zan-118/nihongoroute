@@ -16,7 +16,6 @@
 import dynamic from "next/dynamic";
 import DashboardStats from "../DashboardStats";
 import { Variants } from "framer-motion";
-import { UserProgress } from "@/store/types";
 
 // ==========================================
 // ELEMEN DINAMIS (LAZY LOADING)
@@ -36,7 +35,12 @@ const WeakPointPanel = dynamic(() => import("../WeakPointPanel"), {
 // ==========================================
 interface ProgressPanelProps {
   loading: boolean;
-  progress: UserProgress;
+  progress: {
+    xp: number;
+    level: number;
+    streak: number;
+    studyDays: Record<string, number>;
+  };
   xpNeeded: number;
   xpProgress: number;
   itemVariants: Variants;
@@ -106,4 +110,3 @@ export function ProgressPanel({
     </div>
   );
 }
-

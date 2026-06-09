@@ -32,8 +32,8 @@ export function ReviewClient() {
     isFetching,
     isFinished,
     setIsFinished,
-    dueItemIds,
-    allItemIds,
+    dueCount,
+    allCount,
     startSession
   } = useReviewSession(loading);
 
@@ -69,9 +69,9 @@ export function ReviewClient() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <ReviewModeCard
             onClick={() => startSession("srs")}
-            isEnabled={dueItemIds.length > 0}
+            isEnabled={dueCount > 0}
             icon={BrainCircuit}
-            count={dueItemIds.length}
+            count={dueCount}
             badgeLabel="Item Menunggu"
             title="Tinjauan Berkala"
             description="Ulangi kosakata yang sudah masuk masa tenggang (SRS) untuk memindahkan ingatan ke memori jangka panjang."
@@ -82,7 +82,7 @@ export function ReviewClient() {
 
           <ReviewModeCard
             onClick={() => startSession("quick")}
-            isEnabled={allItemIds.length > 0}
+            isEnabled={allCount > 0}
             icon={Zap}
             badgeLabel="Tantangan Acak"
             title="Latihan Cepat"

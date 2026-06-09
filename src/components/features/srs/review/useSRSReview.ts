@@ -49,7 +49,6 @@ export function useSRSReview(cards: FlashcardType[]) {
   const [earnedXP, setEarnedXP] = useState(0);
 
   // Akses ke Zustand stores
-  const srs = useSRSStore((state) => state.srs);
   const updateProgress = useSRSStore((state) => state.updateProgress);
   const xp = useUserStore((state) => state.xp);
   const isSyncing = useUIStore((state) => state.isSyncing);
@@ -89,6 +88,7 @@ export function useSRSReview(cards: FlashcardType[]) {
       isProcessing.current = true;
 
       const cardId = currentCard.id;
+      const srs = useSRSStore.getState().srs;
       const currentState = srs[cardId] || createNewCardState();
       const newState = updateCardState(currentState, grade);
 
@@ -116,7 +116,7 @@ export function useSRSReview(cards: FlashcardType[]) {
         isProcessing.current = false;
       }, 300);
     },
-    [currentCard, srs, xp, updateProgress, goToNext],
+    [currentCard, xp, updateProgress, goToNext],
   );
 
   const toggleFlip = useCallback(() => {
@@ -176,4 +176,3 @@ export function useSRSReview(cards: FlashcardType[]) {
     router,
   };
 }
-

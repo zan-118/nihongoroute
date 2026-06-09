@@ -11,6 +11,7 @@
 // IMPOR
 // ==========================================
 import { useSRSStore } from "@/store/useSRSStore";
+import { summarizeSrs } from "@/lib/srs-summary";
 
 // ==========================================
 // HOOK UTAMA
@@ -23,24 +24,21 @@ import { useSRSStore } from "@/store/useSRSStore";
  */
 export function useMemoryStats() {
   const srs = useSRSStore(s => s.srs);
-  const srsEntries = Object.values(srs || {}).filter((s) => !s.isDeleted);
+  const summary = summarizeSrs(srs);
 
   // Mengelompokkan entri SRS berdasarkan kriteria interval hari dan repetisi
   const stats = {
     // Mahir (Master): interval >= 30 hari
-    master: srsEntries.filter((s) => s.interval >= 30).length,
+    master: summary.master,
     // Menengah (Intermediate): interval 7 s.d 29 hari dan sudah diulang > 1 kali
-    intermediate: srsEntries.filter(
-      (s) => s.repetition > 1 && s.interval >= 7 && s.interval < 30
-    ).length,
+    intermediate: summary.intermediate,
     // Sedang Dipelajari (Learning): interval < 7 hari dan sudah diulang > 1 kali
-    learning: srsEntries.filter((s) => s.repetition > 1 && s.interval < 7).length,
+    learning: summary.learning,
     // Baru (New): baru diulang <= 1 kali
-    new: srsEntries.filter((s) => s.repetition <= 1).length,
+    new: summary.new,
   };
 
-  const total = srsEntries.length || 1;
+  const total = summary.active || 1;
 
-  return { srsEntries, stats, total };
+  return { activeCount: summary.active, stats, total };
 }
-

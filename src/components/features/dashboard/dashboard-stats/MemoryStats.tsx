@@ -24,7 +24,7 @@ import { useMemoryStats } from "@/components/features/srs/stats/useMemoryStats";
 // KOMPONEN UTAMA
 // ==========================================
 export default function MemoryStats() {
-  const { srsEntries, stats, total } = useMemoryStats();
+  const { activeCount, stats, total } = useMemoryStats();
 
   // Konfigurasi visual untuk masing-masing tingkatan penguasaan memori
   const statConfig = [
@@ -80,7 +80,7 @@ export default function MemoryStats() {
           variant="outline"
           className="bg-muted border-border text-primary px-3 py-1.5 md:px-4 md:py-2 rounded-xl text-xs md:text-xs font-bold tracking-widest uppercase neo-inset h-auto"
         >
-          {srsEntries.length} Unit
+          {activeCount} Unit
         </Badge>
       </header>
 
@@ -162,4 +162,3 @@ function StatBar({ label, count, total, indicatorColor, icon, colorClass }: Stat
     </div>
   );
 }
-

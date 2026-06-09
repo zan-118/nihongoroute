@@ -14,7 +14,7 @@
 // ==========================================
 // IMPOR
 // ==========================================
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useSRSStore } from "@/store/useSRSStore";
 import { createClient } from "@/lib/supabase/client";
 import { AlertTriangle, PenTool, ArrowRight, Loader2, Sparkles, BookOpen } from "lucide-react";
@@ -35,35 +35,68 @@ interface WeakItem {
   slug?: string;
 }
 
+interface WeakCandidate {
+  id: string;
+  easeFactor: number;
+}
+
+function getTopWeakCandidates(srs: ReturnType<typeof useSRSStore.getState>["srs"]) {
+  const candidates: WeakCandidate[] = [];
+
+  for (const [id, state] of Object.entries(srs || {})) {
+    if (state.isDeleted || state.easeFactor >= 2.2) continue;
+
+    candidates.push({ id, easeFactor: state.easeFactor });
+    candidates.sort((a, b) => a.easeFactor - b.easeFactor);
+    if (candidates.length > 4) candidates.pop();
+  }
+
+  return candidates;
+}
+
+function getWeakCandidatesSignature(srs: ReturnType<typeof useSRSStore.getState>["srs"]) {
+  return getTopWeakCandidates(srs)
+    .map((item) => `${item.id}:${item.easeFactor}`)
+    .join("|");
+}
+
+function parseWeakCandidatesSignature(signature: string): WeakCandidate[] {
+  if (!signature) return [];
+
+  return signature.split("|").map((entry) => {
+    const separatorIndex = entry.lastIndexOf(":");
+    return {
+      id: entry.slice(0, separatorIndex),
+      easeFactor: Number(entry.slice(separatorIndex + 1)),
+    };
+  });
+}
+
 // ==========================================
 // KOMPONEN UTAMA
 // ==========================================
 export default function WeakPointPanel() {
   const [weakItems, setWeakItems] = useState<WeakItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const srs = useSRSStore((state) => state.srs);
+  const weakCandidatesSignature = useSRSStore((state) => getWeakCandidatesSignature(state.srs));
+  const weakCandidates = useMemo(
+    () => parseWeakCandidatesSignature(weakCandidatesSignature),
+    [weakCandidatesSignature]
+  );
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchDetails = async () => {
-      if (!srs) {
-        setLoading(false);
-        return;
-      }
-
-      // 1. Dapatkan daftar ID kartu bermasalah (easeFactor < 2.2 dan aktif)
-      const dirtyLeeches = Object.entries(srs)
-        .filter(([_, state]) => !state.isDeleted && state.easeFactor < 2.2)
-        .map(([id, state]) => ({ id, easeFactor: state.easeFactor }))
-        .sort((a, b) => a.easeFactor - b.easeFactor) // Kesulitan tertinggi (easeFactor terendah) di urutan teratas
-        .slice(0, 4); // Ambil top 4 saja untuk optimasi tata letak
-
-      if (dirtyLeeches.length === 0) {
+      if (weakCandidates.length === 0) {
+        if (!isMounted) return;
         setWeakItems([]);
         setLoading(false);
         return;
       }
 
-      const leechesIds = dirtyLeeches.map((item) => item.id);
+      const leechesIds = weakCandidates.map((item) => item.id);
+      setLoading(true);
 
       try {
         const supabase = createClient();
@@ -86,9 +119,12 @@ export default function WeakPointPanel() {
         // 4. Gabungkan data dari kedua tabel
         const mergedList: WeakItem[] = [];
 
-        dirtyLeeches.forEach((leech) => {
+        const vocabMap = new Map(vocabData?.map((v) => [v.id, v]) ?? []);
+        const kanjiMap = new Map(kanjiData?.map((k) => [k.id, k]) ?? []);
+
+        weakCandidates.forEach((leech) => {
           // Cari kecocokan di vocab
-          const vocabItem = vocabData?.find((v) => v.id === leech.id);
+          const vocabItem = vocabMap.get(leech.id);
           if (vocabItem) {
             mergedList.push({
               id: leech.id,
@@ -102,7 +138,7 @@ export default function WeakPointPanel() {
           }
 
           // Cari kecocokan di kanji
-          const kanjiItem = kanjiData?.find((k) => k.id === leech.id);
+          const kanjiItem = kanjiMap.get(leech.id);
           if (kanjiItem) {
             mergedList.push({
               id: leech.id,
@@ -114,16 +150,20 @@ export default function WeakPointPanel() {
           }
         });
 
-        setWeakItems(mergedList);
+        if (isMounted) setWeakItems(mergedList);
       } catch (err) {
         console.error("Gagal mendiagnosis titik lemah:", err);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
     fetchDetails();
-  }, [srs]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [weakCandidates]);
 
   if (loading) {
     return (
@@ -263,4 +303,3 @@ export default function WeakPointPanel() {
     </Card>
   );
 }
-
