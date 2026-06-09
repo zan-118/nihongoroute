@@ -1,140 +1,240 @@
-# 🌀 NihongoRoute (日本語ルート)
+<p align="center">
+  <img src="public/logo-branding.svg" alt="NihongoRoute" width="92" />
+</p>
 
-<div align="center">
-  <img src="./public/logo-branding.svg" alt="Logo NihongoRoute" width="140" height="140" style="margin-bottom: 16px;" />
-  <h2><b>Platform Pembelajaran Bahasa Jepang Tingkat Enterprise Berbasis Offline-First</b></h2>
-  <p align="center">
-    Ekosistem pembelajaran mandiri berkinerja tinggi dengan latensi super rendah (&lt; 16ms), dirancang menggunakan visual modern <strong>Cyber-Glass</strong>, sistem data terdistribusi <strong>3-Tier Sync</strong>, serta bebas hambatan terminologi.
-  </p>
+<h1 align="center">NihongoRoute</h1>
 
-  <p align="center">
-    <a href="https://nextjs.org/"><img src="https://img.shields.io/badge/Next.js-16_App_Router-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" /></a>
-    <a href="https://react.dev/"><img src="https://img.shields.io/badge/React-19.0-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" /></a>
-    <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-Strict_Type-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" /></a>
-    <a href="https://supabase.com/"><img src="https://img.shields.io/badge/Supabase-Backend_RPC-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase" /></a>
-    <a href="https://sanity.io/"><img src="https://img.shields.io/badge/Sanity.io-Editorial_CMS-F03E3E?style=for-the-badge&logo=sanity&logoColor=white" alt="Sanity" /></a>
-  </p>
-</div>
+<p align="center">
+  A Japanese-learning platform for Indonesian learners, built with an offline-first study loop, SRS review, gamification, Sanity editorial content, and Supabase-backed progress sync.
+</p>
 
----
-
-## 🌌 Filosofi & Visi Utama Ekosistem
-
-**NihongoRoute** mendefinisikan ulang batas-batas media pembelajaran bahasa asing secara mandiri di Indonesia. Kami mengeliminasi seluruh hambatan finansial, teknologi, dan bahasa melalui empat pilar dasar:
-
-*   **⚡ Zero Latency & Offline-First (< 16ms)**: Seluruh pencatatan progres, penyelesaian kuis kosakata, perolehan Poin XP, dan kalkulasi interval memori pengulangan cerdas (SRS) diproses secara instan di sisi peramban klien. Interaksi berjalan lancar tanpa terhalang ketidakstabilan jaringan internet.
-*   **🔓 Zero Gatekeeping (Akses Tanpa Batas)**: Pengguna memiliki hak akses penuh 100% untuk menikmati seluruh modul pelajaran dan simulasi ujian tanpa kewajiban pendaftaran akun. Akun pengguna bersifat opsional, murni digunakan untuk melakukan pencadangan otomatis ke awan (*cloud storage*).
-*   **🌐 Zero Language-Gap (Terminologi Intuitif)**: Semua jargon teknologi SaaS yang membingungkan, singkatan asing yang kaku, atau istilah penerbangan yang tidak relevan dieliminasi seutuhnya dari antarmuka visual. Seluruh copywriting dirancang dalam Bahasa Indonesia yang santun, presisi, dan ramah pemula.
-*   **🔄 Sinkronisasi Tab Instan**: Memanfaatkan API `BroadcastChannel` lokal untuk menyelaraskan status belajar di seluruh tab aktif peramban secara real-time tanpa membutuhkan muat ulang halaman (*zero-refresh caching*).
+<p align="center">
+  <img alt="Next.js" src="https://img.shields.io/badge/Next.js-16.2.2-black?style=flat-square&logo=nextdotjs" />
+  <img alt="React" src="https://img.shields.io/badge/React-19.2.2-149eca?style=flat-square&logo=react&logoColor=white" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-strict-3178c6?style=flat-square&logo=typescript&logoColor=white" />
+  <img alt="Supabase" src="https://img.shields.io/badge/Supabase-auth%20%7C%20db%20%7C%20storage-3fcf8e?style=flat-square&logo=supabase&logoColor=white" />
+  <img alt="Sanity" src="https://img.shields.io/badge/Sanity-CMS-f03e2f?style=flat-square&logo=sanity&logoColor=white" />
+  <img alt="Vitest" src="https://img.shields.io/badge/Vitest-unit-6e9f18?style=flat-square&logo=vitest&logoColor=white" />
+  <img alt="Playwright" src="https://img.shields.io/badge/Playwright-E2E-2ead33?style=flat-square&logo=playwright&logoColor=white" />
+</p>
 
 ---
 
-## 💎 Empat Pilar Arsitektur Sistem Utama
+## Overview
 
-### 1. Sistem Desain Semantik Cyber-Glass
-Mengusung estetika visual futuristik bergaya *Neo-Tokyo Cyber-Glass* (`backdrop-blur` tebal, border visual transisi, efek glow neon halus). Seluruh sistem styling diatur melalui variabel CSS semantik terpusat (`bg-background`, `text-foreground`, `primary`, `success`, dll.), memastikan antarmuka adaptif yang sangat nyaman di mata untuk penggunaan larut malam maupun luar ruangan.
+NihongoRoute combines course lessons, vocab/kanji/grammar libraries, reading and listening material, flashcards, SRS review, mock exams, dashboard gamification, support/donation display, furigana generation, cached TTS playback, and an embedded Sanity Studio.
 
-### 2. Protokol Sinkronisasi Awan 3-Tier & Multi-Tab
-Aliran data offline-first yang andal diatur melalui pembagian tiga lapisan sinkronisasi:
-1.  **Lapis UI & Keadaan Lokal (Zustand + IndexedDB)**: Memperbarui Zustand store (`useUserStore`, `useSRSStore`) secara instan demi *instant feedback* kepada pengguna dengan latensi < 1ms, lalu otomatis dipersistensikan ke IndexedDB via `idb-keyval`.
-2.  **Lapis Orkestrasi (`useSyncProgress`)**: Menggunakan selektor atomik (`dirtySrs.size`, `dirtyLessons.size`) untuk menghindari rendering cascades global pada UI. Memantau perubahan secara pasif dan menerapkan strategi *debouncing* asinkron (2 detik) guna memaketkan modifikasi lokal (*dirty data*).
-3.  **Lapis Persistensi Awan (`useCloudMutation`)**: Menggunakan TanStack Query untuk mengeksekusi sinkronisasi terkompresi langsung ke prosedur Supabase RPC (`sync_user_progress`) dengan mekanisme ketahanan *3x automatic retries* dan sinkronisasi `cloudProfileKey` multi-tab yang aman.
+The application uses a split-source architecture:
 
-### 3. Mesin Simulasi JLPT & JFT-Basic Terkemuka
-*   **Answer Sheet Grid**: Navigasi visual mutakhir berbentuk grid interaktif guna melacak pengerjaan soal ujian secara real-time (Hijau: Terisi, Amber Berkedip: Kosong, Abu-abu Gembok: Bagian Soal Terkunci).
-*   **Batas Keras Audio 1-Kali Putar**: Simulasi ketat sesuai regulasi ujian resmi. Jika pengguna berpindah soal saat mendengarkan audio, sistem secara fisik mematikan audio latar belakang dan langsung mengunci statusnya menjadi `'played'` secara permanen.
-*   **Penilaian Ambang Batas Kelulusan (Maiten)**: Evaluasi ujian yang menerapkan sistem batas nilai minimal $32\%$ di setiap seksi materi. Peserta dinyatakan tidak lulus apabila ada satu kategori yang berada di bawah ambang batas, meskipun total nilai akumulatif melampaui batas kelulusan global.
-*   **Visualisasi Sertifikat Realistis**: Dasbor laporan hasil dual-view interaktif yang dapat beralih secara instan antara visualisasi analitik modern dan sertifikat fisik otentik (JLPT vintage parchment lengkap dengan cap hanko merah berputar, serta JFT-Basic CBT CEFR A2 bilingual).
+| Layer | Responsibility |
+| --- | --- |
+| Next.js App Router | Pages, layouts, metadata routes, route handlers, embedded Studio route |
+| Supabase | Auth, Postgres data, user progress, SRS, support records, TTS cache metadata/storage, sync RPC |
+| Sanity | Editorial learning content: lessons, reading, listening, mock exams |
+| Zustand | Offline-first browser state persisted to IndexedDB |
+| TanStack Query | Session/progress fetching, cloud merge, background sync |
+| Kuroshiro/Kuromoji | Furigana conversion in Node route handlers |
 
-### 4. Smart Japanese Parser & Smart Rendering (FIFO Cached)
-*   **SmartJapanese Engine & Bounded FIFO Cache**: Komponen rendering cerdas yang mendeteksi teks Jepang secara dinamis untuk menyisipkan anotasi Furigana di atas Kanji secara presisi menggunakan skala relatif `0.55em` pada tag `<rt>`. Performa parsing didongkrak secara drastis melalui penyimpanan *in-memory* FIFO Cache dengan batas maksimal **1000 entri** untuk mencegah memory leak.
-*   **Word Popover Dinamis**: Pengguna cukup mengeklik kosakata apa pun di dalam teks materi pelajaran untuk memicu popover kamus interaktif (definisi kata, pengucapan teks-ke-suara/TTS luring, dan tombol pintas `AddToSRSButton` untuk memasukkan kartu ke antrean SRS lokal & cloud).
-*   **Kepatuhan ESLint Rules-of-Hooks**: Seluruh penanganan hook internal (`useMemo`) diatur secara disiplin di baris teratas file komponen tanpa percabangan kondisional awal untuk memastikan stabilitas hidrasi saat pre-rendering halaman statis (SSG/ISR).
+## Quick Links
 
-### 5. Cookie-Free Static Client (`createStaticClient`) & Optimasi SSG/ISR
-*   **Optimalisasi CDN Edge (SSG/ISR)**: Semua rute pustaka indeks (`/library`, `/library/vocab`, `/library/kanji`, `/library/grammar`, `/library/reading`, `/library/listening`) dan sitemap (`/sitemap.xml`) kini menggunakan `createStaticClient()` bebas-cookie dari Supabase.
-*   **Nol Beban Database**: Halaman-halaman statis tersebut sepenuhnya ter-cache di CDN Edge, mengeliminasi panggilan runtime database saat diakses khalayak umum dan menjamin kepatuhan batas kuota paket gratisan.
+| Document | Purpose |
+| --- | --- |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Full technical architecture and data-flow audit |
+| [architecture_visual.md](architecture_visual.md) | Mermaid diagrams for runtime, data, sync, and APIs |
+| [project_folder_structure.md](project_folder_structure.md) | Repository tree and folder responsibilities |
+| [src/app/api/health/route.ts](src/app/api/health/route.ts) | Runtime health and env readiness endpoint |
+| [sanity.config.ts](sanity.config.ts) | Embedded Sanity Studio configuration |
 
----
+## Feature Surface
 
-## 🛠️ Tumpukan Teknologi Proyek
+| Area | Routes / Modules |
+| --- | --- |
+| Landing | `/` |
+| Auth | `/login`, `/forgot-password`, `/update-password`, `/auth/callback` |
+| Dashboard | `/dashboard` |
+| Courses | `/courses`, `/courses/[categoryId]`, `/courses/[categoryId]/[slug]` |
+| Library | `/library`, vocab, kanji, grammar, reading, listening, cheatsheet |
+| Exams | `/exams`, `/exams/[id]` |
+| Review | `/review` |
+| Tools | `/tools`, flashcards, kana, survival, writing |
+| Account | `/settings`, `/onboarding` |
+| Social/support | `/share`, `/social`, `/support` |
+| Studio | `/studio/[[...tool]]` |
 
-| Lapisan Sistem | Teknologi | Deskripsi Fungsi |
-| :--- | :--- | :--- |
-| **Kerangka Kerja Core** | Next.js 16 (App Router) & React 19 | Server-side rendering (RSC), hidrasi asinkron, tipe data statis via TypeScript. |
-| **Visual & Estetika** | Tailwind CSS v3 & Framer Motion | Desain semantik siber-glass neon, animasi pegas fisik super mulus. |
-| **Manajemen State Awan** | TanStack Query v5 (React Query) | Sinkronisasi asinkron latar belakang, caching data dinamis, retry otomatis. |
-| **Manajemen State Lokal** | Zustand v5 & `idb-keyval` (IndexedDB) | Tier-1 offline storage, sinkronisasi luring tanpa hambatan latensi jaringan. |
-| **Integritas Transaksi** | Supabase (PostgreSQL, Auth, RPC) | Autentikasi sesi aman, validasi logika anti-cheat level database. |
-| **Manajemen Konten** | Sanity CMS (Studio v3 Tersemat) | Sumber kebenaran modular untuk konten edukasi editorial statis. |
-| **Efek Suara & Audio** | Web Audio API & HTML5 Audio | Orkestrasi SoundEngine untuk audio prosedural dan pemutar audio linear ujian. |
+## Architecture Snapshot
 
----
+```mermaid
+flowchart LR
+  Browser["Browser"] --> Next["Next.js App Router"]
+  Next --> Supabase["Supabase Auth/Postgres/Storage"]
+  Next --> Sanity["Sanity Content Lake"]
+  Next --> Zustand["Zustand + IndexedDB"]
+  Next --> API["Route Handlers"]
+  API --> Kuroshiro["Kuroshiro/Kuromoji"]
+  API --> Gemini["Gemini API"]
+  API --> Webhooks["Saweria/Trakteer"]
+  Studio["Sanity Studio"] --> API
+  Studio --> Sanity
+```
 
-## ⚙️ Memulai Pengembangan Lokal
+Primary sync path:
 
-### 1. Prasyarat Sistem
-*   Node.js v18.x atau versi lebih tinggi
-*   NPM (bawaan Node) atau PNPM
+```mermaid
+sequenceDiagram
+  participant UI as Browser UI
+  participant Store as Zustand Stores
+  participant Query as TanStack Query
+  participant DB as Supabase
 
-### 2. Langkah Instalasi Proyek
+  UI->>Store: study, review, complete lesson
+  Store->>Store: mark dirty SRS/lesson data
+  Query->>DB: fetch profiles + user_srs + user_lessons
+  DB-->>Query: cloud progress
+  Query->>Store: merge local and cloud state
+  Query->>DB: rpc sync_user_progress
+  DB-->>Query: accepted_xp
+  Query->>Store: clear dirty IDs and align XP
+```
+
+## Getting Started
+
 ```bash
-# Klon repositori NihongoRoute
-git clone https://github.com/zan-118/nihongoroute.git
-
-# Masuk ke folder proyek
-cd nihongoroute
-
-# Pasang seluruh dependensi
 npm install
-```
-
-### 3. Pengaturan Kunci Lingkungan (`.env.local`)
-Buat berkas `.env.local` pada direktori root proyek, lalu isi variabel lingkungan berikut:
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
-NEXT_PUBLIC_SANITY_PROJECT_ID=your-sanity-project-id
-NEXT_PUBLIC_SANITY_DATASET=production
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
-
-# Server-only secrets
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-ADMIN_API_SECRET=generate-a-long-random-secret
-GEMINI_API_KEY=your-gemini-api-key
-SANITY_API_READ_TOKEN=your-sanity-read-token
-
-# Sanity Studio client env. Must match ADMIN_API_SECRET.
-SANITY_STUDIO_ADMIN_API_SECRET=generate-a-long-random-secret
-```
-
-### 4. Menjalankan Server Pengembangan Lokal
-```bash
-# Jalankan server Next.js lokal
 npm run dev
 ```
-Aplikasi kini dapat diakses secara lokal pada alamat [http://localhost:3000](http://localhost:3000).
 
----
+Open:
 
-## 🔒 Protokol Keamanan & Sanitasi Kueri Dinamis
+```text
+http://localhost:3000
+```
 
-Untuk memenuhi standar keamanan dan keandalan rekayasa enterprise, NihongoRoute mengimplementasikan proteksi berlapis:
+Production build:
 
-1.  **Tameng XSS Konten Dinamis (`src/lib/sanitize.ts`)**: Seluruh visualisasi HTML dinamis (misalnya ulasan jawaban ujian atau tabel lembar contekan interaktif) disaring secara ketat melalui fungsi penyanitasi khusus berbasis ekspresi reguler sebelum dirender untuk mencegah injeksi skrip jahat.
-2.  **Pemberhentian Injeksi SQL Wildcard**: Seluruh parameter pencarian dinamis (seperti pencarian teks pada kamus kosakata) di-escape secara otomatis dari karakter database khusus (`%` dan `_`) di tingkat Server Actions sebelum dieksekusi di database Supabase.
-3.  **Next.js Suspense Boundaries**: Semua halaman klien yang mengonsumsi parameter kueri dinamis via hook `useSearchParams` dibungkus secara disiplin di dalam komponen `<Suspense>` untuk mencegah terjadinya deoptimisasi build Next.js saat kompilasi static pages.
-4.  **Keamanan Hidrasi & Penanganan State Klien**: Komponen server dilarang menerima event handler klien (seperti `onClick`) secara langsung pada elemen mentah HTML. Seluruh komponen interaktif diekstraksi ke komponen klien terpisah dengan direktif `"use client";`. Inisialisasi state otomatis klien di dalam efek samping wajib dibungkus `requestAnimationFrame` guna menghindari ketidakcocokan DOM hasil pre-render.
+```bash
+npm run build
+npm run start
+```
 
----
+## Scripts
 
-## 👨‍💻 Kontributor & Pemelihara Proyek
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the Next.js dev server |
+| `npm run build` | Build production output |
+| `npm run start` | Start the production server |
+| `npm run lint` | Run ESLint |
+| `npm run lint:fix` | Run ESLint with fixes |
+| `npm run test` | Run Vitest once |
+| `npm run test:watch` | Run Vitest in watch mode |
+| `npm run test:e2e` | Run Playwright E2E tests |
+| `npm run prepare` | Install Husky hooks |
 
-*   **Fauzan Abdul Basith** - Pemimpin Rekayasa Teknologi
-    *   GitHub: [@zan-118](https://github.com/zan-118)
-    *   Website: [fauzanabdulbasith.com](https://www.fauzanabdulbasith.com)
+## Environment
 
----
-<p align="center">
-  Dibuat dengan dedikasi penuh untuk menghadirkan media pembelajaran bahasa Jepang gratis berkualitas tinggi, berkinerja tinggi, dan andal bagi seluruh generasi pembelajar di Indonesia. 🇯🇵💙
-</p>
+Required by `/api/health`:
+
+| Variable | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Public Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public Supabase anon key |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Sanity project ID |
+| `NEXT_PUBLIC_SANITY_DATASET` | Sanity dataset |
+| `NEXT_PUBLIC_SITE_URL` | Canonical site URL for metadata, sitemap, CORS |
+
+Feature/server variables:
+
+| Variable | Purpose |
+| --- | --- |
+| `ADMIN_API_SECRET` | Protects admin bridge APIs used by Studio tooling |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-only Supabase admin access |
+| `GEMINI_API_KEY` | AI lesson/admin assistant generation |
+| `SANITY_API_READ_TOKEN` | Draft/non-CDN Sanity reads |
+| `SANITY_API_WRITE_TOKEN` | Sanity write/script access |
+| `SAWERIA_WEBHOOK_SECRET` | Saweria webhook validation |
+| `TRAKTEER_WEBHOOK_SECRET` | Trakteer webhook validation |
+| `SANITY_STUDIO_ADMIN_API_SECRET` | Studio-side admin bridge secret |
+
+Optional script/AI gateway variables:
+
+| Variable | Purpose |
+| --- | --- |
+| `AI_BASE_URL` | OpenAI-compatible gateway base URL used by scripts |
+| `AI_API_KEY` | Script AI gateway key |
+| `AI_MODEL` | Script AI model override |
+
+Security rule: never expose `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_API_SECRET`, webhook secrets, or Sanity write tokens through `NEXT_PUBLIC_*`.
+
+## Data Model Notes
+
+Checked-in Supabase migrations create:
+
+| Domain | Tables |
+| --- | --- |
+| Public library | `course_categories`, `kanji`, `vocab`, `grammar`, `lessons`, `reading_material`, `listening_material`, `exams`, `cheatsheets` |
+| User progress | `profiles`, `user_srs`, `user_lessons` |
+| Feedback/support | `user_feedback`, `supporters` |
+
+Current code and scripts also reference resources that are not created by the checked-in migration set:
+
+| Resource | Used for |
+| --- | --- |
+| `tts_cache` | TTS audio metadata read by `/api/tts` and maintenance scripts |
+| `expressions` | Random daily expression data |
+| `sentences` | Example sentence/TTS generation scripts |
+| storage bucket `tts-cache` | Pre-generated MP3 files |
+
+Sanity schemas:
+
+| Schema | Content |
+| --- | --- |
+| `lesson` | Course lesson content, quizzes, related vocab/kanji/grammar |
+| `readingMaterial` | Reading content, translation, media, quizzes |
+| `listeningMaterial` | Transcript, timestamps, media, quizzes |
+| `mockExam` | Timed exam metadata and question sets |
+
+## Testing
+
+```bash
+npm run test
+npm run test:e2e
+```
+
+Vitest covers hooks, stores, and core libraries under `__tests__`.
+
+Playwright covers auth, dashboard, navigation, and study flows under `e2e`. The Playwright config starts `npm run dev` at `http://localhost:3000` and runs desktop plus mobile browser projects.
+
+## Project Conventions
+
+| Convention | Rule |
+| --- | --- |
+| Zustand selectors | Use atomic selectors such as `useUserStore((s) => s.xp)` |
+| Store destructuring | Do not destructure `useUserStore`, `useSRSStore`, `useUIStore`, or `useAuthStore` results |
+| Service role | Keep `createAdminClient()` usage server-only |
+| Sanity changes | Update `sanity/schemaTypes`, `src/lib/queries.ts`, actions, and page clients together |
+| Sync payloads | Keep `useCloudData`, `useCloudMutation`, `useSRSStore.mergeProgress`, and `sync_user_progress` aligned |
+| TTS | Generate audio offline; `/api/tts` only serves cached audio and returns 404 on cache miss |
+
+## Repository Map
+
+```text
+src/app         App Router pages, layouts, route handlers, metadata routes
+src/actions     Server Actions for Supabase/Sanity reads
+src/components  UI primitives, layout shell, providers, feature modules
+src/hooks       Cloud sync, hydration, cached audio, mounted-state helpers
+src/lib         Supabase/Sanity clients, SRS, gamification, TTS, utilities
+src/store       Zustand offline-first stores
+src/types       Shared database and library types
+sanity          Studio components and schema types
+supabase        SQL migrations
+scripts         Content, TTS, Sanity, Supabase maintenance scripts
+__tests__       Vitest tests
+e2e             Playwright tests
+public          Static images, logos, fonts, Open Graph assets
+```
+
+## Operational Notes
+
+`/api/tts` serves pre-generated audio from Supabase `tts_cache` and storage bucket `tts-cache`. It does not synthesize audio in real time; cache misses intentionally fall back to browser Web Speech behavior on the client.
+
+Scripts under `scripts/` are operational tools for content generation, Sanity/Supabase alignment, TTS cache work, grammar ordering, and data cleanup. Many require `.env.local`, service-role access, Sanity write tokens, Gemini or AI gateway credentials, and local audio-generation prerequisites.

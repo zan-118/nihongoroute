@@ -1,186 +1,287 @@
-# 🌀 Peta Visual Arsitektur Sistem NihongoRoute
-Representasi Aliran Data, Sinkronisasi 3-Tingkat, dan Pipeline Rendering Visual
+# NihongoRoute Architecture Visuals
 
-Dokumen ini menyajikan pemetaan visual arsitektur NihongoRoute menggunakan diagram Mermaid untuk menggambarkan interaksi antar-lapisan, protokol sinkronisasi luring-pertama (*offline-first*), serta pipeline rendering visual interaktif.
+Audit snapshot: 2026-06-09
 
----
+The diagrams below mirror the current codebase. They use Mermaid so they can be rendered by GitHub, many Markdown viewers, and documentation tools.
 
-## 💎 1. Arsitektur Umum & Alur Data Split-Source
-
-NihongoRoute memisahkan dengan tegas konten editorial statis (dikelola via CMS) dari kemajuan belajar pengguna dan basis data kamus terstruktur (Supabase).
+## System Context
 
 ```mermaid
-graph TD
-    %% Subgraphs
-    subgraph CMS ["Content Management (Static/Editorial)"]
-        Sanity["Sanity CMS CDN<br/>(Lessons, Reading, Listening, MockExams)"]
-    end
+flowchart LR
+  User["Learner / browser"] --> Next["Next.js 16 App Router"]
+  Editor["Content editor"] --> Studio["Embedded Sanity Studio /studio"]
+  Studio --> AdminAPI["Admin bridge APIs"]
 
-    subgraph Server ["Next.js Server Side (RSC)"]
-        Queries["GROQ Query Engine<br/>(src/lib/queries.ts)"]
-        Actions["Server Actions<br/>(src/actions/*)"]
-    end
+  Next --> SupabaseAuth["Supabase Auth"]
+  Next --> SupabaseDB["Supabase Postgres"]
+  Next --> SupabaseStorage["Supabase Storage"]
+  Next --> Sanity["Sanity Content Lake"]
 
-    subgraph CloudDB ["Cloud Persistence (Dynamic/Transactional)"]
-        Supabase["Supabase Cloud Database<br/>(Kanji, Vocab, Grammar, Profiles, SRS)"]
-    end
+  AdminAPI --> SupabaseDB
+  AdminAPI --> Gemini["Gemini API"]
+  Studio --> Sanity
 
-    subgraph Client ["Client Side Browser (Offline-First)"]
-        UI["Interactive UI Components<br/>(Latency &lt; 16ms)"]
-        Zustand["Zustand State Stores<br/>(useUserStore, useSRSStore)"]
-        RQ["React Query Hooks<br/>(useCloudData & useCloudMutation)"]
-        IDB["IndexedDB Storage<br/>(Persist via idb-keyval)"]
-    end
-
-    %% Relations
-    Sanity -->|Asset Coalesce Expansion| Queries
-    Queries -->|Promise.all Parallel Fetch| Actions
-    Supabase -->|Secure Row Level Security| Actions
-    Actions -->|Initial Hydration| RQ
-    RQ -->|Local Hydrate & Merge| Zustand
-    Zustand <-->|Fast Reactive Selectors| UI
-    Zustand <-->|Async Local Storage| IDB
-
-    %% Visual Themes
-    classDef sanity fill:#f03e3e,stroke:#333,stroke-width:2px,color:#fff;
-    classDef supabase fill:#3ecf8e,stroke:#333,stroke-width:2px,color:#fff;
-    classDef server fill:#1c7ed6,stroke:#333,stroke-width:2px,color:#fff;
-    classDef client fill:#7048e8,stroke:#333,stroke-width:2px,color:#fff;
-    
-    class Sanity sanity;
-    class Supabase supabase;
-    class Queries,Actions server;
-    class UI,Zustand,RQ,IDB client;
+  Webhooks["Saweria / Trakteer"] --> WebhookRoutes["Payment webhook route handlers"]
+  WebhookRoutes --> SupabaseDB
 ```
 
----
+## Runtime Layers
 
-## 🔄 2. Protokol Sinkronisasi 3-Tingkat (3-Tier Sync) & Keamanan Multi-Tab
+```mermaid
+flowchart TB
+  subgraph App["src/app"]
+    RootLayout["Root layout: metadata, theme, query, motion, toaster"]
+    MainLayout["(main) layout: progress sync, nav shell, addons"]
+    Pages["Pages and route groups"]
+    Routes["Route handlers"]
+    Metadata["robots, sitemap, manifest"]
+  end
 
-Untuk menjaga zero-latency pada antarmuka visual, mutasi data dilakukan pada keadaan lokal terlebih dahulu, lalu di-debounce asinkron untuk disinkronkan ke awan secara berkelompok.
+  subgraph UI["src/components"]
+    Providers["providers"]
+    Layout["layout chrome"]
+    UIPrimitives["ui primitives"]
+    Features["feature modules"]
+  end
+
+  subgraph Logic["src/lib + src/hooks + src/store + src/actions"]
+    ServerActions["server actions"]
+    Hooks["sync/data/media hooks"]
+    Stores["Zustand stores"]
+    Lib["Supabase, Sanity, SRS, gamification, TTS, utils"]
+  end
+
+  RootLayout --> MainLayout
+  MainLayout --> Pages
+  Pages --> Features
+  Features --> UIPrimitives
+  Features --> Hooks
+  Hooks --> Stores
+  Hooks --> Lib
+  Pages --> ServerActions
+  ServerActions --> Lib
+  Routes --> Lib
+```
+
+## Data Source Split
+
+```mermaid
+flowchart LR
+  subgraph Supabase["Supabase"]
+    Auth["Auth"]
+    PublicTables["course_categories, vocab, kanji, grammar, cheatsheets"]
+    UserTables["profiles, user_srs, user_lessons"]
+    Supporters["supporters"]
+    OpsTables["tts_cache, expressions, sentences"]
+    Storage["storage bucket: tts-cache"]
+    RPC["sync_user_progress RPC"]
+  end
+
+  subgraph Sanity["Sanity CMS"]
+    Lesson["lesson"]
+    Reading["readingMaterial"]
+    Listening["listeningMaterial"]
+    MockExam["mockExam"]
+  end
+
+  subgraph NextApp["Next.js app"]
+    Courses["courses pages"]
+    Library["library pages"]
+    Exams["exam pages"]
+    Dashboard["dashboard"]
+    Tools["tools/review/flashcards"]
+    StudioBridge["admin bridge APIs"]
+  end
+
+  Courses --> PublicTables
+  Courses --> Lesson
+  Library --> PublicTables
+  Library --> Reading
+  Library --> Listening
+  Exams --> MockExam
+  Exams --> PublicTables
+  Dashboard --> UserTables
+  Dashboard --> PublicTables
+  Tools --> PublicTables
+  Tools --> UserTables
+  Tools --> Storage
+  Tools --> OpsTables
+  StudioBridge --> PublicTables
+  StudioBridge --> Sanity
+  UserTables --> RPC
+```
+
+Note: `tts_cache`, `expressions`, `sentences`, and the `tts-cache` bucket are referenced by current code/scripts but are not created by the checked-in Supabase migrations.
+
+## Request Flow for Normal Pages
 
 ```mermaid
 sequenceDiagram
-    autonumber
-    actor Pengguna as Siswa (UI)
-    participant Zustand as Tier 1: Zustand Store
-    participant IDB as IndexedDB (Lokal)
-    participant Sync as Tier 2: useSyncProgress (Hook)
-    participant Mutation as Tier 3: useCloudMutation (React Query)
-    participant Cloud as Supabase (Cloud RPC)
-    participant BC as BroadcastChannel (Sinyal Lokal)
-    participant Tabs as Tab Aktif Lainnya
+  participant Browser
+  participant Proxy as src/proxy.ts
+  participant Next as Next Page/Layout
+  participant Action as Server Action
+  participant Supabase
+  participant Sanity
 
-    Pengguna->>Zustand: Menyelesaikan kuis / memperoleh XP
-    Note over Zustand: Pembaruan instan (< 16ms)<br/>Tambahkan ID kata ke data kotor (Dirty Set)
-    Zustand->>IDB: Tulis asinkron via idb-keyval
-    Zustand-->>Pengguna: Animasi XP & Lencana langsung aktif (Mulus)
-
-    Note over Sync: Memantau status "Dirty" & memulai Debounce 2000ms
-    Sync->>Mutation: Kirim paket data ter-batch (Dirty payload)
-    Mutation->>Cloud: Panggil RPC "sync_user_progress" (Enkripsi HTTPS)
-    
-    alt Sinkronisasi Berhasil
-        Cloud-->>Mutation: Respon OK (Accepted XP)
-        Mutation->>Zustand: Bersihkan data kotor (clearDirtySrs)
-        Mutation->>BC: Siarkan pesan "SYNC_COMPLETE"
-        BC-->>Tabs: Terima pesan & Invalidate Cache React Query
-        Note over Tabs: Tab lain memperbarui profil tanpa muat ulang halaman
-    else Gangguan Jaringan (Offline Mode)
-        Cloud--xMutation: Timeout / Gangguan Koneksi
-        Note over Mutation,Zustand: Data tetap ditandai "Dirty" di lokal<br/>Retry otomatis 3x (Exponential Backoff)
-    end
+  Browser->>Proxy: Request page
+  Proxy->>Supabase: refresh auth via getUser()
+  Proxy-->>Browser: response cookies updated when needed
+  Proxy->>Next: continue request
+  Next->>Action: fetch page data
+  par Structured/public/user data
+    Action->>Supabase: select/rpc
+  and Editorial content
+    Action->>Sanity: GROQ fetch
+  end
+  Action-->>Next: normalized data
+  Next-->>Browser: HTML/RSC payload
 ```
 
----
-
-## 🧠 3. Pipeline Rendering Furigana & Kamus Popover
-
-Sistem visualisasi teks Jepang NihongoRoute berjalan secara interaktif berdasarkan setelan preferensi furigana global pembelajar.
+## Auth and Progress Sync
 
 ```mermaid
-graph TD
-    %% Nodes
-    subgraph Store ["UI State Manager"]
-        Prefs["readingState Prefs<br/>(Kanji / Furigana / Hiragana)"]
-    end
+sequenceDiagram
+  participant Browser
+  participant ProgressProvider
+  participant AuthStore
+  participant UserStore
+  participant SRSStore
+  participant UIStore
+  participant Query as TanStack Query
+  participant Supabase
 
-    subgraph Parser ["Smart Parser Engine"]
-        SmartJapanese["SmartJapanese Component<br/>(useMemo Teratur & Bebas XSS)"]
-        FuriCache["Bounded FIFO Cache<br/>(Maksimal 1000 entri)"]
-        SplitFurigana["splitFurigana Utility<br/>(Segmentasi Teks Cerdas)"]
-    end
-
-    subgraph Visual ["DOM Renderer"]
-        Ruby["Ruby DOM Wrapper<br/>(Visual Scale 0.55em rt)"]
-    end
-
-    subgraph Interact ["Interactive Lexical Reader"]
-        Click["Aksi Klik Pengguna"]
-        Popover["WordPopover Component<br/>(Definisi & Audio TTS Luring)"]
-        SRSButton["AddToSRSButton<br/>(Mining ke Antrean SRS)"]
-    end
-
-    %% Relations
-    Prefs -->|Reactive Selector| SmartJapanese
-    SmartJapanese -->|Cek Cache Hit| FuriCache
-    FuriCache -->|Miss: Segmentasikan Teks| SplitFurigana
-    SplitFurigana -->|Simpan & Bungkus Ruby| Ruby
-    Ruby -->|Deteksi Interaksi| Click
-    Click -->|Tampilkan Dialog Detail| Popover
-    Popover -->|Tambah ke Flashcard| SRSButton
-
-    %% Styling
-    classDef store fill:#ae3ec9,stroke:#333,stroke-width:2px,color:#fff;
-    classDef parser fill:#e8590c,stroke:#333,stroke-width:2px,color:#fff;
-    classDef visual fill:#0c8599,stroke:#333,stroke-width:2px,color:#fff;
-    classDef interact fill:#1098ad,stroke:#333,stroke-width:2px,color:#fff;
-
-    class Prefs store;
-    class SmartJapanese,SplitFurigana parser;
-    class Ruby visual;
-    class Click,Popover,SRSButton interact;
+  Browser->>ProgressProvider: main layout mounts
+  ProgressProvider->>Supabase: auth.getSession()
+  Supabase-->>ProgressProvider: session or null
+  ProgressProvider->>AuthStore: setAuth()
+  ProgressProvider->>UserStore: syncUserData()
+  ProgressProvider->>Query: useSyncProgress()
+  Query->>Supabase: fetch profiles + user_srs + user_lessons
+  Supabase-->>Query: cloud progress
+  Query->>SRSStore: mergeProgress(cloudData)
+  SRSStore->>UserStore: setGamification() and dirty lessons
+  SRSStore->>UIStore: sync settings flags
+  Browser->>SRSStore: user reviews/adds/removes cards
+  SRSStore->>UserStore: update XP, streak, study days
+  Query->>Supabase: debounced rpc sync_user_progress
+  Supabase-->>Query: accepted_xp
+  Query->>SRSStore: clear dirty SRS IDs
+  Query->>UserStore: clear dirty lesson IDs, align XP
 ```
 
----
-
-## 📂 4. Arsitektur Modular Direktori Utama (`src/`)
-
-Peta rute visual dan pembagian domain kode sumber yang diisolasi secara ketat demi kemudahan pengembangan tim (*separation of concerns*).
+## Zustand Store Responsibilities
 
 ```mermaid
-graph TD
-    Root["src/"] --> Actions["actions/<br/>(Server Actions)"]
-    Root --> App["app/<br/>(App Router Rute)"]
-    Root --> Components["components/<br/>(Komponen Visual UI)"]
-    Root --> Hooks["hooks/<br/>(React Hooks Infrastruktur)"]
-    Root --> Lib["lib/<br/>(Utilitas Murni Bebas JSX)"]
-    Root --> Store["store/<br/>(Zustand Stores Luring)"]
-    Root --> Types["types/<br/>(Tipe Data TypeScript)"]
+flowchart TB
+  subgraph IndexedDB["IndexedDB via idb-keyval"]
+    AuthPersist["nihongoroute_auth_data"]
+    UserPersist["nihongoroute_user_data"]
+    SRSPersist["nihongoroute_srs_data"]
+    UIPersist["nihongoroute_ui_data"]
+  end
 
-    App --> Main["(main)/<br/>(Bilah Samping & Atas)"]
-    App --> API["api/<br/>(API Internal)"]
-    App --> Auth["auth/<br/>(Auth Callback)"]
-    App --> Studio["studio/<br/>(Sanity CMS Studio)"]
+  AuthStore["useAuthStore\nisAuthenticated"] --> AuthPersist
+  UserStore["useUserStore\nidentity, XP, level, streak,\nstudy days, inventory,\nachievements, lessons"] --> UserPersist
+  SRSStore["useSRSStore\nSRS cards, dirtySrs,\ncustom mnemonics"] --> SRSPersist
+  UIStore["useUIStore\nnotifications, settings,\nreading/listening UI"] --> UIPersist
 
-    Main --> Dashboard["dashboard/<br/>(Statistik & Grafik XP)"]
-    Main --> Courses["courses/<br/>(Pelajaran & Kuis)"]
-    Main --> Exams["exams/<br/>(Simulasi JLPT & JFT)"]
-    Main --> Library["library/<br/>(Kamus & Anotasi)"]
-    Main --> Review["review/<br/>(Evaluasi SRS)"]
-    Main --> Tools["tools/<br/>(Alat Tulis & Canvas)"]
-
-    %% Styling
-    classDef root fill:#1971c2,stroke:#333,stroke-width:2px,color:#fff;
-    classDef folder fill:#0ca678,stroke:#333,stroke-width:2px,color:#fff;
-    classDef route fill:#f59f00,stroke:#333,stroke-width:2px,color:#111;
-
-    class Root root;
-    class Actions,App,Components,Hooks,Lib,Store,Types,Main,API,Auth,Studio folder;
-    class Dashboard,Courses,Exams,Library,Review,Tools route;
+  SRSStore --> UserStore
+  UserStore --> UIStore
+  SRSStore --> UIStore
 ```
 
----
+## Supabase Sync RPC Shape
 
-> [!NOTE]
-> Pemetaan visual arsitektur ini disusun agar setiap rekayasawan baru dapat memahami siklus hidup hidrasi data luring-pertama, mekanisme sanitasi keamanan, serta integrasi pemrosesan furigana dalam waktu kurang dari 5 menit.
+```mermaid
+flowchart LR
+  Client["useCloudMutation"] --> Payload["progress + dirtySrs + dirtyLessons"]
+  Payload --> RPC["public.sync_user_progress"]
+  RPC --> Profile["profiles"]
+  RPC --> SRS["user_srs"]
+  RPC --> Lessons["user_lessons"]
+  RPC --> AntiCheat["XP validation:\nSRS count, lesson count,\ndaily bonus cap,\nachievement bonus"]
+  AntiCheat --> Result["{ success, accepted_xp }"]
+  Result --> Client
+```
+
+## API Route Handlers
+
+```mermaid
+flowchart TB
+  Health["/api/health"] --> Env["env readiness report"]
+  Cards["/api/cards"] --> CardDB["vocab + kanji"]
+  Furigana["/api/furigana"] --> Kuroshiro["Kuroshiro + Kuromoji"]
+  TTS["/api/tts"] --> TTSDB["tts_cache"]
+  TTS --> TTSStorage["Supabase Storage tts-cache"]
+  AdminSearch["/api/admin/supabase-search"] --> AdminAuth["ADMIN_API_SECRET"]
+  AdminAI["/api/admin/ai-assistant"] --> AdminAuth
+  AdminAI --> Kuroshiro
+  AdminAI --> Gemini["Gemini API"]
+  AdminAI --> AdminDB["Supabase service role"]
+  Saweria["/api/webhooks/saweria"] --> Supporters["supporters"]
+  Trakteer["/api/webhooks/trakteer"] --> Supporters
+  Callback["/auth/callback"] --> Session["exchange code for Supabase session"]
+```
+
+## Sanity Studio Bridge
+
+```mermaid
+flowchart LR
+  Studio["Sanity Studio /studio"] --> Schema["lesson, readingMaterial,\nlisteningMaterial, mockExam"]
+  Schema --> Inputs["custom inputs"]
+  Inputs --> Selector["SupabaseSelector"]
+  Inputs --> Category["SupabaseCategorySelect"]
+  Inputs --> FuriganaInput["FuriganaGeneratorInput"]
+  Inputs --> Assistant["AIAssistantBar"]
+  Selector --> SearchAPI["/api/admin/supabase-search"]
+  Category --> SearchAPI
+  FuriganaInput --> AIAPI["/api/admin/ai-assistant"]
+  Assistant --> AIAPI
+  SearchAPI --> Supabase["Supabase service role"]
+  AIAPI --> Supabase
+  AIAPI --> Gemini["Gemini API"]
+```
+
+## Content Delivery by Feature
+
+```mermaid
+flowchart TB
+  Dashboard["Dashboard"] --> Expressions["expressions"]
+  Dashboard --> UserProgress["profiles/user_srs/user_lessons"]
+  Courses["Courses"] --> Categories["course_categories"]
+  Courses --> Lessons["Sanity lesson"]
+  LibraryVocab["Library vocab"] --> Vocab["vocab"]
+  LibraryKanji["Library kanji"] --> Kanji["kanji"]
+  LibraryGrammar["Library grammar"] --> Grammar["grammar"]
+  LibraryReading["Library reading"] --> Reading["Sanity readingMaterial"]
+  LibraryListening["Library listening"] --> Listening["Sanity listeningMaterial"]
+  Exams["Exams"] --> MockExam["Sanity mockExam"]
+  Review["Review/SRS"] --> UserSRS["user_srs + local SRS store"]
+  Support["Support"] --> Supporters["supporters"]
+```
+
+## Test Coverage Map
+
+```mermaid
+flowchart LR
+  Vitest["Vitest"] --> LibTests["lib: utils, srs, level"]
+  Vitest --> StoreTests["store: useUserStore, useSRSStore"]
+  Vitest --> HookTests["hooks and feature engines"]
+  Playwright["Playwright"] --> Auth["auth.spec.ts"]
+  Playwright --> Dashboard["dashboard.spec.ts"]
+  Playwright --> Navigation["navigation.spec.ts"]
+  Playwright --> Study["study.spec.ts"]
+```
+
+## Deployment Shape
+
+```mermaid
+flowchart TB
+  Build["npm run build"] --> NextBuild["Next standalone output"]
+  NextBuild --> Server["npm run start / hosted Node runtime"]
+  Server --> Headers["security headers from next.config.ts"]
+  Server --> Images["Next image optimization\nSupabase, Cloudinary, Sanity CDN"]
+  Server --> Fonts["/fonts immutable cache"]
+  Server --> Analytics["Vercel Analytics + Speed Insights\nproduction VERCEL=1 only"]
+```
