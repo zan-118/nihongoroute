@@ -14,6 +14,35 @@ import { Notification, Settings } from "./types";
 import { ReadingState } from "@/components/features/reading/types";
 import { ListeningState } from "@/components/features/listening/types";
 
+export interface ReadingVocabularyBankEntry {
+  id: string;
+  word: string;
+  reading?: string;
+  meaning?: string;
+  slug?: string;
+  jlpt?: string;
+  sourceId?: string;
+  sourceTitle?: string;
+  sourceHref?: string;
+  addedAt: number;
+  hitCount: number;
+}
+
+export type ReadingVocabularyBankInput = Omit<
+  ReadingVocabularyBankEntry,
+  "id" | "addedAt" | "hitCount"
+>;
+
+function createVocabularyBankId(entry: ReadingVocabularyBankInput) {
+  return [
+    entry.sourceId || "reading",
+    entry.word,
+    entry.reading || "",
+  ]
+    .join("|")
+    .toLowerCase();
+}
+
 // ==========================================
 // ANTARMUKA STATE
 // ==========================================
@@ -29,6 +58,8 @@ interface UIState {
 
   // State Sesi Membaca (Disinkronkan untuk akses tombol aksi melayang / FAB)
   readingState: ReadingState;
+  // Bank kosakata yang dikoleksi dari sesi membaca.
+  readingVocabularyBank: Record<string, ReadingVocabularyBankEntry>;
   // State Sesi Menyimak (Menyimpan posisi audio aktif dan teks bacaan bersuara)
   listeningState: ListeningState & { audioUrl?: string; textToSpeak?: string };
 
@@ -45,6 +76,9 @@ interface UIState {
   exportData: () => Promise<void>;
   importData: (jsonData: string) => Promise<boolean>;
   setReadingState: (state: Partial<UIState['readingState']>) => void;
+  addReadingVocabulary: (entry: ReadingVocabularyBankInput) => string;
+  removeReadingVocabulary: (id: string) => void;
+  clearReadingVocabulary: (sourceId?: string) => void;
   setListeningState: (state: Partial<UIState['listeningState']>) => void;
 
   resetUI: () => void;
@@ -83,6 +117,8 @@ export const useUIStore = create<UIState>()(
         mode: "furigana",
         showTranslation: false,
       },
+
+      readingVocabularyBank: {},
 
       listeningState: {
         currentTime: 0,
@@ -158,6 +194,7 @@ export const useUIStore = create<UIState>()(
           srs: srs.srs,
           notifications: ui.notifications,
           settings: ui.settings,
+          readingVocabularyBank: ui.readingVocabularyBank,
         };
 
         // 2. Buat elemen jangkar luring buatan untuk memicu pengunduhan berkas JSON otomatis di browser
@@ -199,7 +236,8 @@ export const useUIStore = create<UIState>()(
           // 4. Perbarui status preferensi antarmuka pengguna
           set({
             notifications: parsed.notifications || [],
-            settings: parsed.settings || { notificationsEnabled: false }
+            settings: parsed.settings || { notificationsEnabled: false },
+            readingVocabularyBank: parsed.readingVocabularyBank || {},
           });
 
           return true;
@@ -212,6 +250,44 @@ export const useUIStore = create<UIState>()(
       setReadingState: (newState) => set((state) => ({
         readingState: { ...state.readingState, ...newState }
       })),
+
+      addReadingVocabulary: (entry) => {
+        const id = createVocabularyBankId(entry);
+        set((state) => {
+          const existing = state.readingVocabularyBank[id];
+          return {
+            readingVocabularyBank: {
+              ...state.readingVocabularyBank,
+              [id]: {
+                ...existing,
+                ...entry,
+                id,
+                addedAt: existing?.addedAt || Date.now(),
+                hitCount: (existing?.hitCount || 0) + 1,
+              },
+            },
+          };
+        });
+        return id;
+      },
+
+      removeReadingVocabulary: (id) => set((state) => {
+        const nextBank = { ...state.readingVocabularyBank };
+        delete nextBank[id];
+        return { readingVocabularyBank: nextBank };
+      }),
+
+      clearReadingVocabulary: (sourceId) => set((state) => {
+        if (!sourceId) return { readingVocabularyBank: {} };
+
+        return {
+          readingVocabularyBank: Object.fromEntries(
+            Object.entries(state.readingVocabularyBank).filter(
+              ([_, entry]) => entry.sourceId !== sourceId
+            )
+          ),
+        };
+      }),
 
       setListeningState: (newState) => set((state) => ({
         listeningState: { ...state.listeningState, ...newState }
@@ -229,7 +305,8 @@ export const useUIStore = create<UIState>()(
           showFurigana: true,
           layoutPreference: "grid",
         },
-        readingState: { mode: "kanji", showTranslation: false }
+        readingState: { mode: "kanji", showTranslation: false },
+        readingVocabularyBank: {},
       }),
     }),
     {
@@ -245,6 +322,7 @@ export const useUIStore = create<UIState>()(
           mode: state.readingState.mode,
           showTranslation: state.readingState.showTranslation,
         },
+        readingVocabularyBank: state.readingVocabularyBank,
         // Dari listeningState: hanya tab terakhir yang perlu diingat
         listeningState: {
           currentTime: 0,
@@ -256,4 +334,3 @@ export const useUIStore = create<UIState>()(
     }
   )
 );
-

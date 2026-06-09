@@ -26,6 +26,7 @@ import AudioController from "@/components/features/reading/components/AudioContr
 // Komponen Pendukung
 import { ReadingNavbar } from "@/components/features/reading/components/ReadingNavbar";
 import { ReadingArticle } from "@/components/features/reading/components/ReadingArticle";
+import { ReadingVocabularyCollector } from "@/components/features/reading/components/ReadingVocabularyCollector";
 
 // ======================
 // TIPE DATA
@@ -269,6 +270,10 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
           onComplete={handleComplete}
           isCompleted={isCompleted}
         />
+
+        {!isZenMode && lessonId && (
+          <ReadingVocabularyCollector sourceId={lessonId} />
+        )}
 
         {/* Kuis Membaca Inline — tampil setelah artikel, tanpa overlay */}
         {hasQuiz && !isZenMode && (

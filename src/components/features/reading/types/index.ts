@@ -14,6 +14,9 @@ export interface ReadingState {
   audioUrl?: string;
   textToSpeak?: string;
   isTTSDisabled?: boolean;
+  sourceId?: string;
+  sourceTitle?: string;
+  sourceHref?: string;
 }
 
 // ==========================================
@@ -42,6 +45,7 @@ export type PortableTextContent = string | PortableTextBlock[];
 export interface ReadingData {
   _id?: string;
   id?: string;
+  slug?: string;
   title: string;
   difficulty: string;
   audioUrl?: string;

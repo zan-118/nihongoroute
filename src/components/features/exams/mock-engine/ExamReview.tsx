@@ -2,49 +2,156 @@
 
 /**
  * @file ExamReview.tsx
- * @description Komponen antarmuka peninjauan soal (Review) setelah simulasi ujian (Mock Exam) selesai.
- * Menampilkan status jawaban benar/salah, opsi jawaban yang dipilih vs jawaban yang benar, pemutar audio, serta gambar pendukung.
+ * @description Review jawaban setelah mock exam selesai, lengkap dengan ringkasan kesalahan dan rekomendasi latihan.
  */
 
-// ======================
-// IMPOR
-// ======================
+import { useMemo, useState } from "react";
 import { m } from "framer-motion";
-import { Card } from "@/components/ui/card";
+import Image from "next/image";
+import Link from "next/link";
+import { useTheme } from "next-themes";
+import {
+  AlertTriangle,
+  ArrowLeft,
+  ArrowRight,
+  BookOpen,
+  BrainCircuit,
+  CheckCircle,
+  CheckCircle2,
+  ClipboardList,
+  Filter,
+  Target,
+  Volume2,
+  XCircle,
+  type LucideIcon,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, XCircle, Volume2 } from "lucide-react";
-import Image from "next/image";
-import { useTheme } from "next-themes";
+import { Card } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import {
+  analyzeExamReview,
+  type ExamReviewAction,
+  type ExamReviewQuestionInsight,
+} from "@/lib/exam-review-analysis";
+import { cn } from "@/lib/utils";
 import { ExamData, GameState } from "./types";
 import { SECTION_LABELS } from "./constants";
-import { sanitizeHtml } from "@/lib/sanitize";
 import { ExamQuestionText } from "./ExamQuestionText";
 
-// ======================
-// ANTARMUKA & TIPE
-// ======================
 interface ExamReviewProps {
   exam: ExamData;
   answers: Record<string, number>;
   setGameState: (state: GameState) => void;
 }
 
-// ======================
-// EKSEKUSI UTAMA
-// ======================
+type ReviewFilter = "mistakes" | "all";
+
+const ACTION_ICONS: Record<ExamReviewAction["id"], LucideIcon> = {
+  "weak-points": Target,
+  flashcards: ClipboardList,
+  listening: Volume2,
+  reading: BookOpen,
+  grammar: BrainCircuit,
+  vocab: BookOpen,
+};
+
+function getAccuracyTone(accuracy: number) {
+  if (accuracy >= 70) return "text-success border-success/25 bg-success/10";
+  if (accuracy >= 45) return "text-warning border-warning/25 bg-warning/10";
+  return "text-destructive border-destructive/25 bg-destructive/10";
+}
+
+function getQuestionBorderClass(insight: ExamReviewQuestionInsight) {
+  if (insight.isCorrect) return "border-success/25";
+  if (!insight.isAnswered) return "border-warning/30";
+  return "border-destructive/25";
+}
+
+function getQuestionStatus(insight: ExamReviewQuestionInsight) {
+  if (insight.isCorrect) {
+    return {
+      label: "Benar",
+      icon: CheckCircle,
+      className: "bg-success/10 text-success border-success/20",
+    };
+  }
+
+  if (!insight.isAnswered) {
+    return {
+      label: "Kosong",
+      icon: AlertTriangle,
+      className: "bg-warning/10 text-warning border-warning/20",
+    };
+  }
+
+  return {
+    label: "Salah",
+    icon: XCircle,
+    className: "bg-destructive/10 text-destructive border-destructive/20",
+  };
+}
+
 export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
-  // Gunakan useTheme agar reactive terhadap perubahan tema dan SSR-safe
   const { resolvedTheme } = useTheme();
+  const analysis = useMemo(() => analyzeExamReview(exam, answers), [exam, answers]);
+  const [filter, setFilter] = useState<ReviewFilter>("mistakes");
+
+  const effectiveFilter = analysis.mistakes.length === 0 ? "all" : filter;
+  const visibleInsights =
+    effectiveFilter === "mistakes" ? analysis.mistakes : analysis.insights;
+  const weakestLabel = analysis.weakestSection
+    ? SECTION_LABELS[analysis.weakestSection.section]
+    : "Belum ada data";
+  const weakestMistakes = analysis.weakestSection
+    ? analysis.weakestSection.wrong + analysis.weakestSection.unanswered
+    : 0;
+
+  const stats = [
+    {
+      label: "Akurasi",
+      value: `${analysis.accuracy}%`,
+      detail: `${analysis.correctCount}/${analysis.totalQuestions} benar`,
+      icon: Target,
+      className: getAccuracyTone(analysis.accuracy),
+    },
+    {
+      label: "Benar",
+      value: analysis.correctCount,
+      detail: "jawaban tepat",
+      icon: CheckCircle2,
+      className: "text-success border-success/25 bg-success/10",
+    },
+    {
+      label: "Salah",
+      value: analysis.wrongCount,
+      detail: "perlu ditinjau",
+      icon: XCircle,
+      className: "text-destructive border-destructive/25 bg-destructive/10",
+    },
+    {
+      label: "Kosong",
+      value: analysis.unansweredCount,
+      detail: "belum dijawab",
+      icon: AlertTriangle,
+      className: "text-warning border-warning/25 bg-warning/10",
+    },
+  ];
+
   return (
-    <div className="w-full pb-20 max-w-4xl mx-auto transition-colors duration-300">
-      <header className="relative z-20 flex justify-between items-center mb-10">
-        <Card className="flex-1 flex justify-between items-center p-5 sm:p-8 mt-6 md:mt-10 border border-border bg-card bg-background rounded-3xl neo-card shadow-lg">
-          <div>
-            <h2 className="text-xl sm:text-2xl font-black text-foreground uppercase tracking-tight leading-none">
-              Tinjau <span className="text-warning text-warning">Jawaban</span>
+    <div className="w-full max-w-5xl mx-auto pb-20 transition-colors duration-300">
+      <header className="relative z-20 mb-8">
+        <Card className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between p-5 sm:p-8 mt-6 md:mt-10 border border-border bg-card bg-background rounded-3xl shadow-lg">
+          <div className="flex flex-col gap-2">
+            <Badge variant="outline" className="w-fit rounded-xl px-3 py-1">
+              Mock Exam Review
+            </Badge>
+            <h2 className="text-xl sm:text-2xl font-black text-foreground uppercase leading-none">
+              Tinjau <span className="text-warning">Jawaban</span>
             </h2>
-            <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-1">Yuk, cek detail jawabannya!</p>
+            <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">
+              Fokus ke kesalahan, section lemah, dan langkah latihan berikutnya.
+            </p>
           </div>
           <Button
             variant="ghost"
@@ -52,120 +159,380 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
               setGameState("result");
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            className="text-xs sm:text-xs neo-inset hover:bg-background text-muted-foreground hover:text-foreground px-5 py-3 h-auto font-black uppercase tracking-widest transition-all border border-border bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.2)] shadow-none rounded-xl"
+            className="w-full sm:w-auto text-xs neo-inset hover:bg-background text-muted-foreground hover:text-foreground px-5 py-3 h-auto font-black uppercase tracking-widest border border-border bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.2)] shadow-none rounded-xl"
           >
-            ← Kembali
+            <ArrowLeft data-icon="inline-start" />
+            Kembali
           </Button>
         </Card>
       </header>
 
-      <div className="space-y-10 md:space-y-16">
-        {exam.questions.map((q, idx) => {
-          const userAnswer = answers[q._key];
-          const isCorrect = userAnswer === q.correctAnswer;
+      <section className="mb-10">
+        <Card className="p-6 md:p-8 border border-border bg-card bg-background rounded-[2rem] shadow-xl">
+          <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+              <div className="max-w-2xl flex flex-col gap-3">
+                <Badge className="w-fit rounded-xl px-3 py-1">
+                  Mistake Review
+                </Badge>
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-2xl md:text-3xl font-black uppercase leading-tight text-foreground">
+                    Analisis Kesalahan
+                  </h3>
+                  <p className="text-sm font-medium leading-relaxed text-muted-foreground">
+                    {analysis.mistakes.length > 0
+                      ? `${analysis.mistakes.length} soal perlu ditinjau ulang dari ${analysis.totalQuestions} soal.`
+                      : "Semua soal terjawab benar. Review tetap tersedia untuk penguatan materi."}
+                  </p>
+                </div>
+              </div>
 
-          return (
-            <m.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              key={q._key}
-              className="w-full"
-            >
-              <Card className={`p-8 md:p-12 neo-card rounded-[3rem] border border-border bg-card bg-background shadow-2xl transition-colors ${isCorrect ? "border-success/20" : "border-destructive/20"}`}>
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-10 border-b border-border pb-8">
+              <div className="min-w-full rounded-2xl border border-border bg-muted/20 p-5 sm:min-w-[280px] lg:min-w-[320px]">
+                <div className="mb-4 flex items-center justify-between gap-4">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                      Section Terlemah
+                    </span>
+                    <span className="text-sm font-black text-foreground">
+                      {weakestLabel}
+                    </span>
+                  </div>
                   <Badge
                     variant="outline"
-                    className="text-xs font-bold uppercase tracking-widest neo-inset px-4 py-2 text-muted-foreground w-fit rounded-xl bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.2)] border border-border h-auto"
+                    className={cn(
+                      "rounded-xl px-3 py-1 font-mono",
+                      analysis.weakestSection
+                        ? getAccuracyTone(analysis.weakestSection.accuracy)
+                        : "text-muted-foreground"
+                    )}
                   >
-                    SOAL {idx + 1} • {SECTION_LABELS[q.section]}
+                    {analysis.weakestSection
+                      ? `${analysis.weakestSection.accuracy}%`
+                      : "0%"}
                   </Badge>
-                  {isCorrect ? (
-                    <Badge className="bg-success/10 text-success text-success border-success/20 px-4 py-2 neo-inset rounded-xl h-auto font-bold uppercase text-xs tracking-widest">
-                      <CheckCircle size={14} aria-hidden="true" className="mr-2" /> Benar
-                    </Badge>
-                  ) : (
-                    <Badge className="bg-destructive/10 text-destructive text-destructive border-destructive/20 px-4 py-2 neo-inset rounded-xl h-auto font-bold uppercase text-xs tracking-widest">
-                      <XCircle size={14} aria-hidden="true" className="mr-2" /> Salah
-                    </Badge>
-                  )}
+                </div>
+                <Progress
+                  value={analysis.weakestSection?.accuracy ?? 0}
+                  className="h-3"
+                />
+                <p className="mt-3 text-xs font-bold text-muted-foreground">
+                  {analysis.weakestSection
+                    ? `${weakestMistakes} soal perlu dibuka ulang di section ini.`
+                    : "Belum ada section untuk dianalisis."}
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+              {stats.map((stat) => {
+                const StatIcon = stat.icon;
+
+                return (
+                  <div
+                    key={stat.label}
+                    className={cn(
+                      "rounded-2xl border p-4 flex flex-col gap-3 bg-muted/20",
+                      stat.className
+                    )}
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                        {stat.label}
+                      </span>
+                      <StatIcon size={18} aria-hidden="true" />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="font-mono text-3xl font-black leading-none">
+                        {stat.value}
+                      </span>
+                      <span className="text-[11px] font-bold text-muted-foreground">
+                        {stat.detail}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_0.9fr]">
+              <div className="rounded-2xl border border-border bg-muted/20 p-5">
+                <div className="mb-5 flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-2">
+                    <BrainCircuit size={18} aria-hidden="true" className="text-primary" />
+                    <span className="text-xs font-black uppercase tracking-widest text-foreground">
+                      Performa Section
+                    </span>
+                  </div>
+                  <Badge variant="outline" className="rounded-xl px-3 py-1">
+                    {analysis.sections.length} section
+                  </Badge>
                 </div>
 
-                {q.questionText && (
-                  <ExamQuestionText
-                    questionText={q.questionText}
-                    className="text-lg md:text-2xl text-foreground font-medium leading-relaxed mb-10 font-japanese prose-custom bg-[rgb(var(--muted-rgb)/0.3)] dark:bg-[rgb(var(--background-rgb)/0.1)] p-6 rounded-2xl border border-border neo-inset"
-                  />
-                )}
+                <div className="flex flex-col gap-5">
+                  {analysis.sections.map((section) => (
+                    <div key={section.section} className="flex flex-col gap-2">
+                      <div className="flex items-end justify-between gap-4">
+                        <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+                          {SECTION_LABELS[section.section]}
+                        </span>
+                        <span className="font-mono text-xs font-black text-foreground">
+                          {section.correct}/{section.total} ({section.accuracy}%)
+                        </span>
+                      </div>
+                      <Progress value={section.accuracy} className="h-2.5" />
+                      <p className="text-[11px] font-bold text-muted-foreground">
+                        Salah {section.wrong} - kosong {section.unanswered}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-                {q.imageUrl && (
-                  <div className="mb-10 rounded-3xl overflow-hidden neo-inset p-3 bg-[rgb(var(--muted-rgb)/0.2)] dark:bg-[rgb(var(--background-rgb)/0.2)] border border-border">
-                    <Image
-                      src={q.imageUrl}
-                      alt="Gambar Pendukung"
-                      width={800}
-                      height={400}
-                      unoptimized
-                      className="w-full max-h-[400px] object-contain opacity-90 rounded-2xl"
-                    />
-                  </div>
-                )}
+              <div className="rounded-2xl border border-border bg-muted/20 p-5">
+                <div className="mb-5 flex items-center gap-2">
+                  <Target size={18} aria-hidden="true" className="text-primary" />
+                  <span className="text-xs font-black uppercase tracking-widest text-foreground">
+                    Rekomendasi Latihan
+                  </span>
+                </div>
 
-                {q.audioUrl && (
-                  <Card className="mb-10 p-6 neo-inset border border-border bg-[rgb(var(--muted-rgb)/0.2)] dark:bg-[rgb(var(--background-rgb)/0.3)] flex flex-col gap-4 shadow-none rounded-2xl">
-                    <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest flex items-center gap-2">
-                      <Volume2 size={16} aria-hidden="true" className="text-primary" /> Audio Track (Review)
-                    </p>
-                    <audio aria-label="Audio"
-                      controls
-                      className={`w-full h-12 outline-none opacity-90 transition-all ${resolvedTheme === 'dark' ? 'invert' : ''}`}
-                      src={q.audioUrl}
-                    />
-                  </Card>
-                )}
-
-                <div className="grid grid-cols-1 gap-4">
-                  {q.options.map((opt, optIdx) => {
-                    const isCorrectAnswer = optIdx === q.correctAnswer;
-                    const isUserSelection = optIdx === userAnswer;
-                    
-                    let variantStyle = "bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.1)] border-border opacity-60";
-                    if (isCorrectAnswer) variantStyle = "bg-success/10 border-success/30 text-foreground text-foreground opacity-100 shadow-sm";
-                    else if (isUserSelection) variantStyle = "bg-destructive/10 border-destructive/30 text-foreground text-foreground opacity-100 shadow-sm";
+                <div className="flex flex-col gap-4">
+                  {analysis.actions.map((action) => {
+                    const ActionIcon = ACTION_ICONS[action.id];
 
                     return (
-                      <Card
-                        key={`${opt}-${optIdx}`}
-                        className={`p-6 flex items-center gap-5 transition-all rounded-2xl border neo-inset shadow-none ${variantStyle}`}
+                      <div
+                        key={action.id}
+                        className="rounded-2xl border border-border bg-background/55 p-4 flex flex-col gap-4"
                       >
-                        <Badge variant="outline" className={`font-mono font-black text-xs h-8 w-8 rounded-lg flex items-center justify-center border-none ${isCorrectAnswer ? "bg-success text-success-foreground" : isUserSelection ? "bg-destructive text-destructive-foreground" : "bg-muted text-muted-foreground"}`}>
-                          {optIdx + 1}
-                        </Badge>
-                        <span className="text-base md:text-xl font-japanese font-medium leading-tight flex-1">
-                          {opt}
-                        </span>
-                        {isCorrectAnswer && (
-                          <CheckCircle
-                            size={24}
-                            aria-hidden="true"
-                            className="text-success text-success drop-shadow-sm"
-                          />
-                        )}
-                        {isUserSelection && !isCorrectAnswer && (
-                          <XCircle
-                            size={24}
-                            aria-hidden="true"
-                            className="text-destructive text-destructive drop-shadow-sm"
-                          />
-                        )}
-                      </Card>
+                        <div className="flex items-start gap-3">
+                          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary">
+                            <ActionIcon size={18} aria-hidden="true" />
+                          </div>
+                          <div className="flex min-w-0 flex-col gap-1">
+                            <span className="text-sm font-black text-foreground">
+                              {action.label}
+                            </span>
+                            <span className="text-xs font-medium leading-relaxed text-muted-foreground">
+                              {action.reason}
+                            </span>
+                          </div>
+                        </div>
+                        <Button
+                          asChild
+                          variant="outline"
+                          size="sm"
+                          className="w-full justify-between rounded-xl"
+                        >
+                          <Link href={action.href}>
+                            Buka Latihan
+                            <ArrowRight data-icon="inline-end" />
+                          </Link>
+                        </Button>
+                      </div>
                     );
                   })}
                 </div>
-              </Card>
-            </m.div>
-          );
-        })}
+              </div>
+            </div>
+          </div>
+        </Card>
+      </section>
+
+      <section className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2">
+          <Filter size={18} aria-hidden="true" className="text-primary" />
+          <span className="text-xs font-black uppercase tracking-widest text-foreground">
+            Daftar Review
+          </span>
+        </div>
+
+        <div className="flex rounded-2xl border border-border bg-muted/40 p-1.5">
+          <Button
+            type="button"
+            variant={effectiveFilter === "mistakes" ? "default" : "ghost"}
+            size="sm"
+            disabled={analysis.mistakes.length === 0}
+            aria-pressed={effectiveFilter === "mistakes"}
+            onClick={() => setFilter("mistakes")}
+            className="rounded-xl px-4"
+          >
+            Soal Salah ({analysis.mistakes.length})
+          </Button>
+          <Button
+            type="button"
+            variant={effectiveFilter === "all" ? "default" : "ghost"}
+            size="sm"
+            aria-pressed={effectiveFilter === "all"}
+            onClick={() => setFilter("all")}
+            className="rounded-xl px-4"
+          >
+            Semua Soal ({analysis.totalQuestions})
+          </Button>
+        </div>
+      </section>
+
+      <div className="flex flex-col gap-10 md:gap-16">
+        {visibleInsights.length === 0 ? (
+          <Card className="p-8 text-center rounded-[2rem] border border-border bg-card">
+            <CheckCircle2
+              size={44}
+              aria-hidden="true"
+              className="mx-auto mb-4 text-success"
+            />
+            <p className="text-sm font-black uppercase tracking-widest text-foreground">
+              Tidak ada soal untuk filter ini.
+            </p>
+          </Card>
+        ) : (
+          visibleInsights.map((insight) => {
+            const q = insight.question;
+            const userAnswer = insight.userAnswer;
+            const status = getQuestionStatus(insight);
+            const StatusIcon = status.icon;
+
+            return (
+              <m.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.25 }}
+                key={q._key}
+                className="w-full"
+              >
+                <Card
+                  className={cn(
+                    "p-6 md:p-10 rounded-[2rem] border bg-card bg-background shadow-2xl transition-colors",
+                    getQuestionBorderClass(insight)
+                  )}
+                >
+                  <div className="mb-8 flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-start sm:justify-between">
+                    <Badge
+                      variant="outline"
+                      className="w-fit rounded-xl border border-border bg-[rgb(var(--muted-rgb)/0.5)] px-4 py-2 text-xs font-bold uppercase tracking-widest text-muted-foreground dark:bg-[rgb(var(--background-rgb)/0.2)]"
+                    >
+                      SOAL {insight.index + 1} - {SECTION_LABELS[q.section]}
+                    </Badge>
+                    <Badge
+                      className={cn(
+                        "w-fit rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-widest",
+                        status.className
+                      )}
+                    >
+                      <StatusIcon size={14} aria-hidden="true" className="mr-2" />
+                      {status.label}
+                    </Badge>
+                  </div>
+
+                  {q.questionText && (
+                    <ExamQuestionText
+                      questionText={q.questionText}
+                      className="mb-8 rounded-2xl border border-border bg-[rgb(var(--muted-rgb)/0.3)] p-5 text-lg font-medium leading-relaxed text-foreground dark:bg-[rgb(var(--background-rgb)/0.1)] md:text-2xl font-japanese prose-custom"
+                    />
+                  )}
+
+                  {q.imageUrl && (
+                    <div className="mb-8 overflow-hidden rounded-3xl border border-border bg-[rgb(var(--muted-rgb)/0.2)] p-3 dark:bg-[rgb(var(--background-rgb)/0.2)]">
+                      <Image
+                        src={q.imageUrl}
+                        alt="Gambar pendukung"
+                        width={800}
+                        height={400}
+                        unoptimized
+                        className="max-h-[400px] w-full rounded-2xl object-contain opacity-90"
+                      />
+                    </div>
+                  )}
+
+                  {q.audioUrl && (
+                    <div className="mb-8 flex flex-col gap-4 rounded-2xl border border-border bg-[rgb(var(--muted-rgb)/0.2)] p-5 shadow-none dark:bg-[rgb(var(--background-rgb)/0.3)]">
+                      <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                        <Volume2 size={16} aria-hidden="true" className="text-primary" />
+                        Audio Track (Review)
+                      </p>
+                      <audio
+                        aria-label="Audio"
+                        controls
+                        className={cn(
+                          "h-12 w-full opacity-90 outline-none transition-all",
+                          resolvedTheme === "dark" && "invert"
+                        )}
+                        src={q.audioUrl}
+                      />
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 gap-4">
+                    {q.options.map((opt, optIdx) => {
+                      const isCorrectAnswer = optIdx === q.correctAnswer;
+                      const isUserSelection = optIdx === userAnswer;
+
+                      let optionClass =
+                        "border-border bg-[rgb(var(--muted-rgb)/0.5)] opacity-65 dark:bg-[rgb(var(--background-rgb)/0.1)]";
+                      if (isCorrectAnswer) {
+                        optionClass =
+                          "border-success/30 bg-success/10 text-foreground opacity-100 shadow-sm";
+                      } else if (isUserSelection) {
+                        optionClass =
+                          "border-destructive/30 bg-destructive/10 text-foreground opacity-100 shadow-sm";
+                      }
+
+                      return (
+                        <div
+                          key={`${opt}-${optIdx}`}
+                          className={cn(
+                            "flex items-center gap-4 rounded-2xl border p-5 transition-all",
+                            optionClass
+                          )}
+                        >
+                          <Badge
+                            variant="outline"
+                            className={cn(
+                              "flex size-8 items-center justify-center rounded-lg border-none p-0 font-mono text-xs font-black",
+                              isCorrectAnswer
+                                ? "bg-success text-success-foreground"
+                                : isUserSelection
+                                  ? "bg-destructive text-destructive-foreground"
+                                  : "bg-muted text-muted-foreground"
+                            )}
+                          >
+                            {optIdx + 1}
+                          </Badge>
+                          <span className="min-w-0 flex-1 text-base font-medium leading-tight md:text-xl font-japanese">
+                            {opt}
+                          </span>
+                          {isCorrectAnswer && (
+                            <CheckCircle
+                              size={24}
+                              aria-hidden="true"
+                              className="shrink-0 text-success"
+                            />
+                          )}
+                          {isUserSelection && !isCorrectAnswer && (
+                            <XCircle
+                              size={24}
+                              aria-hidden="true"
+                              className="shrink-0 text-destructive"
+                            />
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {!insight.isAnswered && (
+                    <div className="mt-6 flex items-start gap-3 rounded-2xl border border-warning/20 bg-warning/10 p-4 text-warning">
+                      <AlertTriangle size={18} aria-hidden="true" className="mt-0.5 shrink-0" />
+                      <p className="text-xs font-bold leading-relaxed">
+                        Soal ini belum dijawab saat ujian, jadi dihitung sebagai bagian dari review kesalahan.
+                      </p>
+                    </div>
+                  )}
+                </Card>
+              </m.div>
+            );
+          })
+        )}
       </div>
     </div>
   );

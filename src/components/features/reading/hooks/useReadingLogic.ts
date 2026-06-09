@@ -37,6 +37,9 @@ export function useReadingLogic(data: ReadingData) {
       audioUrl: data.audioUrl,
       textToSpeak: typeof data.body === 'string' ? data.body : undefined,
       isTTSDisabled: data.isTTSDisabled,
+      sourceId: data._id || data.id || data.title,
+      sourceTitle: data.title,
+      sourceHref: data.slug ? `/library/reading/${data.slug}` : undefined,
     });
   }, [data, setReadingState]);
 

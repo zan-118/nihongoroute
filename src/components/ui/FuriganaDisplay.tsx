@@ -27,6 +27,14 @@ interface FuriganaDisplayProps {
   romaji?: string;
 }
 
+function isUsefulInteractivePart(text: string) {
+  const trimmed = text.trim();
+  if (!trimmed || trimmed.length > 24) return false;
+  if (!wanakana.isJapanese(trimmed)) return false;
+  if (/^[\u3040-\u309f]{1,2}$/.test(trimmed)) return false;
+  return /[\u30a0-\u30ff\u4e00-\u9faf]/.test(trimmed);
+}
+
 // ======================
 // EKSEKUSI UTAMA
 // ======================
@@ -79,41 +87,45 @@ export default function FuriganaDisplay({
     );
   }
 
-  const content = (
+  const renderPart = (part: { text: string; furi?: string }, pos: number) => {
+    const partContent = part.furi && currentMode === "furigana" ? (
+      <ruby className="group">
+        <span className={`${kanjiSize} font-medium transition-colors text-foreground`}>
+          {part.text}
+        </span>
+        <rt className={`${furiSize} text-primary/60 font-medium tracking-normal select-none`}>
+          {part.furi}
+        </rt>
+      </ruby>
+    ) : (
+      <span className={`${kanjiSize} font-medium transition-colors ${
+        wanakana.isKanji(part.text.charAt(0)) ? "text-foreground" : "text-foreground/90"
+      }`}>
+        {part.text}
+      </span>
+    );
+
+    if (interactive && isUsefulInteractivePart(part.text)) {
+      return (
+        <WordPopover key={`furi-${part.text}-${pos}`} word={part.text} reading={part.furi}>
+          {partContent}
+        </WordPopover>
+      );
+    }
+
+    return (
+      <React.Fragment key={`furi-${part.text}-${pos}`}>
+        {partContent}
+      </React.Fragment>
+    );
+  };
+
+  return (
     <span 
       className={`font-noto-serif leading-relaxed tracking-normal inline-block w-full ${className}`}
       style={{ rubyPosition: 'over', rubyAlign: 'center' } as React.CSSProperties}
     >
-      {parts.map((part, pos) => (
-        <React.Fragment key={`furi-${part.text}-${pos}`}>
-          {part.furi && currentMode === "furigana" ? (
-            <ruby className="group">
-              <span className={`${kanjiSize} font-medium transition-colors text-foreground`}>
-                {part.text}
-              </span>
-              <rt className={`${furiSize} text-primary/60 font-medium tracking-normal select-none`}>
-                {part.furi}
-              </rt>
-            </ruby>
-          ) : (
-            <span className={`${kanjiSize} font-medium transition-colors ${
-              wanakana.isKanji(part.text.charAt(0)) ? "text-foreground" : "text-foreground/90"
-            }`}>
-              {part.text}
-            </span>
-          )}
-        </React.Fragment>
-      ))}
+      {parts.map(renderPart)}
     </span>
   );
-
-  if (interactive && text) {
-    return (
-      <WordPopover word={text} reading={furigana}>
-        {content}
-      </WordPopover>
-    );
-  }
-
-  return content;
 }

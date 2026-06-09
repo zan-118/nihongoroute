@@ -554,7 +554,7 @@ export function ExamResult({
               variant="outline"
               className="w-full sm:w-auto px-12 h-14 bg-background/5 hover:bg-background/15 text-xs font-black uppercase tracking-widest rounded-2xl transition-all border border-white/10 text-white/80 backdrop-blur-md"
             >
-              Review Test Questions
+              Analisis Kesalahan
             </Button>
           </div>
         </div>
@@ -726,7 +726,7 @@ export function ExamResult({
                     variant="ghost"
                     className="w-full sm:w-auto px-12 h-14 border border-border hover:bg-muted text-xs font-black uppercase tracking-widest rounded-2xl transition-all"
                  >
-                   Tinjau Ujian
+                   Analisis Kesalahan
                  </Button>
                )}
             </div>

@@ -11,13 +11,15 @@
 // ======================
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { BookOpen, ChevronRight, GraduationCap, ChevronLeft, ChevronsLeft, ChevronsRight, Search, Loader2 } from "lucide-react";
+import { BookOpen, ChevronRight, GraduationCap, ChevronLeft, ChevronsLeft, ChevronsRight, Search, Loader2, Clock, CheckCircle2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { ROUTES } from "@/lib/routes";
 import { getPaginatedReading, PaginatedReadingResponse } from "@/actions/library.actions";
+import { useUserStore } from "@/store/useUserStore";
+import { cn } from "@/lib/utils";
 
 // ======================
 // TIPE DATA
@@ -27,6 +29,8 @@ interface ReadingListClientProps {
 }
 
 const ITEMS_PER_PAGE = 9;
+const JLPT_FILTERS = ["all", "N5", "N4", "N3", "N2", "N1"] as const;
+type JlptFilter = (typeof JLPT_FILTERS)[number];
 
 // ======================
 // EKSEKUSI UTAMA
@@ -43,6 +47,8 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [level, setLevel] = useState<JlptFilter>("all");
+  const completedLessons = useUserStore((state) => state.completedLessons);
 
   // Melakukan debounce pada input pencarian
   useEffect(() => {
@@ -54,10 +60,10 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
   }, [search]);
 
   const { data, isFetching } = useQuery({
-    queryKey: ["reading", currentPage, debouncedSearch],
-    queryFn: () => getPaginatedReading(currentPage, ITEMS_PER_PAGE, debouncedSearch),
+    queryKey: ["reading", currentPage, debouncedSearch, level],
+    queryFn: () => getPaginatedReading(currentPage, ITEMS_PER_PAGE, debouncedSearch, level),
     placeholderData: keepPreviousData,
-    initialData: currentPage === 1 && debouncedSearch === "" ? initialData : undefined,
+    initialData: currentPage === 1 && debouncedSearch === "" && level === "all" ? initialData : undefined,
   });
 
   const materials = data?.data || [];
@@ -66,6 +72,11 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleLevelChange = (nextLevel: JlptFilter) => {
+    setLevel(nextLevel);
+    setCurrentPage(1);
   };
 
   return (
@@ -84,14 +95,32 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
           </p>
         </div>
 
-        <div className="relative max-w-2xl">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground size-5" aria-hidden="true" />
-          <Input 
-            placeholder="Cari judul atau kategori bacaan..." 
-            className="pl-12 h-14 bg-[rgb(var(--card-rgb)/0.4)] backdrop-blur-xl border border-border rounded-2xl text-lg shadow-2xl focus:ring-[rgb(var(--primary-rgb)/0.2)]"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+        <div className="flex flex-col gap-4">
+          <div className="relative max-w-2xl">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground size-5" aria-hidden="true" />
+            <Input 
+              placeholder="Cari judul atau kategori bacaan..." 
+              className="pl-12 h-14 bg-[rgb(var(--card-rgb)/0.4)] backdrop-blur-xl border border-border rounded-2xl text-lg shadow-2xl focus:ring-[rgb(var(--primary-rgb)/0.2)]"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-border bg-card/35 p-2 backdrop-blur-xl w-fit max-w-full">
+            {JLPT_FILTERS.map((item) => (
+              <Button
+                key={item}
+                type="button"
+                variant={level === item ? "default" : "ghost"}
+                size="sm"
+                aria-pressed={level === item}
+                onClick={() => handleLevelChange(item)}
+                className="rounded-xl px-4"
+              >
+                {item === "all" ? "Semua" : item}
+              </Button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -102,7 +131,14 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
           </div>
         )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[300px]">
-          {materials.map((material, index) => (
+          {materials.map((material) => {
+            const isCompleted = !!(
+              material.id &&
+              completedLessons[material.id] &&
+              !completedLessons[material.id].isDeleted
+            );
+
+            return (
             <div
               key={material.slug}
               className="transform hover:-translate-y-1 transition-all duration-300"
@@ -118,11 +154,27 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
                   
                   <div className="space-y-6 relative z-10 flex-1 flex flex-col justify-between">
                     <div className="flex items-center justify-between">
-                      {material.difficulty && (
-                        <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
-                          {material.difficulty}
-                        </span>
-                      )}
+                      <div className="flex flex-wrap items-center gap-2">
+                        {(material.jlpt_level || material.difficulty) && (
+                          <Badge variant="outline" className="rounded-full border-primary/20 bg-primary/10 text-primary">
+                            {material.jlpt_level || material.difficulty}
+                          </Badge>
+                        )}
+                        <Badge
+                          variant="outline"
+                          className={cn(
+                            "rounded-full",
+                            isCompleted
+                              ? "border-success/25 bg-success/10 text-success"
+                              : "border-border bg-muted/30 text-muted-foreground"
+                          )}
+                        >
+                          {isCompleted ? (
+                            <CheckCircle2 size={12} aria-hidden="true" className="mr-1.5" />
+                          ) : null}
+                          {isCompleted ? "Selesai" : "Belum mulai"}
+                        </Badge>
+                      </div>
                       <div className="p-2 rounded-xl bg-background/5 border border-border group-hover:bg-primary/10 group-hover:border-primary/20 transition-all duration-300">
                         <GraduationCap size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
                       </div>
@@ -139,9 +191,17 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
                   </div>
 
                   <div className="mt-8 flex items-center justify-between relative z-10">
-                    <span className="text-xs font-bold text-muted-foreground group-hover:text-foreground transition-colors">
-                      Mulai Membaca
-                    </span>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-xs font-bold text-muted-foreground group-hover:text-foreground transition-colors">
+                        {isCompleted ? "Baca Ulang" : "Mulai Membaca"}
+                      </span>
+                      {material.estimated_minutes ? (
+                        <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+                          <Clock size={12} aria-hidden="true" />
+                          {material.estimated_minutes} menit
+                        </span>
+                      ) : null}
+                    </div>
                     <div className="size-10 rounded-full flex items-center justify-center bg-background/5 border border-border group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-transparent transition-all duration-300">
                       <ChevronRight size={20} />
                     </div>
@@ -149,7 +209,8 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
                 </div>
               </Link>
             </div>
-          ))}
+            );
+          })}
         </div>
 
         {materials.length === 0 && !isFetching && (
@@ -247,5 +308,4 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
     </div>
   );
 }
-
 

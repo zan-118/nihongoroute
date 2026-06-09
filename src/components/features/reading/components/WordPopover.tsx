@@ -11,11 +11,13 @@ import { m, AnimatePresence } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
-import { ExternalLink, Loader2 } from "lucide-react";
+import { BookmarkCheck, BookmarkPlus, ExternalLink, Loader2, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import AddToSRSButton from "@/components/features/srs/actions/AddToSRSButton";
+import { useUIStore } from "@/store/useUIStore";
 
 // ==========================================
 // TIPE DATA / INTERFACE
@@ -35,6 +37,11 @@ interface WordPopoverProps {
 export default function WordPopover({ children, word, reading }: WordPopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const readingState = useUIStore((state) => state.readingState);
+  const vocabularyBank = useUIStore((state) => state.readingVocabularyBank);
+  const addReadingVocabulary = useUIStore((state) => state.addReadingVocabulary);
+  const removeReadingVocabulary = useUIStore((state) => state.removeReadingVocabulary);
+  const addNotification = useUIStore((state) => state.addNotification);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -75,6 +82,43 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
     enabled: isOpen,
     staleTime: 1000 * 60 * 5, // 5 menit
   });
+
+  const collectibleWord = vocab?.word || word;
+  const collectibleReading = vocab?.furigana || reading;
+  const bankId = [
+    readingState.sourceId || "reading",
+    collectibleWord,
+    collectibleReading || "",
+  ]
+    .join("|")
+    .toLowerCase();
+  const isCollected = !!vocabularyBank[bankId];
+
+  const handleToggleCollection = () => {
+    if (!collectibleWord.trim()) return;
+
+    if (isCollected) {
+      removeReadingVocabulary(bankId);
+      return;
+    }
+
+    addReadingVocabulary({
+      word: collectibleWord,
+      reading: collectibleReading,
+      meaning: vocab?.meaning || undefined,
+      slug: vocab?.slug || undefined,
+      jlpt: vocab?.jlpt || undefined,
+      sourceId: readingState.sourceId,
+      sourceTitle: readingState.sourceTitle,
+      sourceHref: readingState.sourceHref,
+    });
+
+    addNotification({
+      title: "Kosakata Disimpan",
+      message: `${collectibleWord} masuk ke bank kosakata bacaan.`,
+      type: "success",
+    });
+  };
 
   const variants = isMobile
     ? {
@@ -158,20 +202,46 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
                     </p>
 
                     <div className="pt-4 border-t border-border/40 flex items-center justify-between gap-2">
-                       <Link 
-                        href={`/library/vocab/${vocab.slug}`}
-                        className="flex-1"
+                       <Button asChild variant="outline" size="sm" className="flex-1 rounded-xl">
+                         <Link href={`/library/vocab/${vocab.slug}`}>
+                           <ExternalLink data-icon="inline-start" />
+                           Detail
+                         </Link>
+                       </Button>
+                       <Button
+                         type="button"
+                         variant={isCollected ? "secondary" : "outline"}
+                         size="sm"
+                         onClick={handleToggleCollection}
+                         className="rounded-xl"
                        >
-                         <button type="button" className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all">
-                           <ExternalLink size={12} /> Detail
-                         </button>
-                       </Link>
+                         {isCollected ? (
+                           <BookmarkCheck data-icon="inline-start" />
+                         ) : (
+                           <BookmarkPlus data-icon="inline-start" />
+                         )}
+                         {isCollected ? "Tersimpan" : "Simpan"}
+                       </Button>
                        <AddToSRSButton wordId={vocab._id} />
                     </div>
                   </div>
                 ) : (
                   <div className="text-center py-6 space-y-3">
                     <p className="text-xs text-muted-foreground font-medium italic">Kosakata tidak ditemukan di database NihongoRoute.</p>
+                    <Button
+                      type="button"
+                      variant={isCollected ? "secondary" : "outline"}
+                      size="sm"
+                      onClick={handleToggleCollection}
+                      className="rounded-xl"
+                    >
+                      {isCollected ? (
+                        <Trash2 data-icon="inline-start" />
+                      ) : (
+                        <BookmarkPlus data-icon="inline-start" />
+                      )}
+                      {isCollected ? "Hapus" : "Simpan Kata"}
+                    </Button>
                   </div>
                 )}
                 

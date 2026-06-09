@@ -13,6 +13,7 @@ import React, { useEffect } from "react";
 import { ListeningTaskData } from "@/components/features/listening/types";
 import ListeningKaraoke from "@/components/features/listening/components/ListeningKaraoke";
 import ListeningQuiz from "@/components/features/listening/components/ListeningQuiz";
+import ListeningDictation from "@/components/features/listening/components/ListeningDictation";
 import { useListeningSync } from "@/components/features/listening/hooks/useListeningSync";
 import { useUserStore } from "@/store/useUserStore";
 import { useUIStore } from "@/store/useUIStore";
@@ -102,6 +103,11 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
             audioUrl={data.audioUrl}
             onTimeUpdate={handleTimeUpdate}
             externalSeek={externalSeek || 0}
+          />
+
+          <ListeningDictation
+            transcript={data.transcript}
+            seekToLine={seekToLine}
           />
 
           {hasQuiz && (
