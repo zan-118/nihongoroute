@@ -33,6 +33,16 @@ export type ReadingVocabularyBankInput = Omit<
   "id" | "addedAt" | "hitCount"
 >;
 
+export interface ReadingProgressEntry {
+  sourceId: string;
+  sourceTitle?: string;
+  lastParagraphIndex: number;
+  totalParagraphs: number;
+  elapsedSeconds: number;
+  completedAt?: number;
+  updatedAt: number;
+}
+
 function createVocabularyBankId(entry: ReadingVocabularyBankInput) {
   return [
     entry.sourceId || "reading",
@@ -60,6 +70,8 @@ interface UIState {
   readingState: ReadingState;
   // Bank kosakata yang dikoleksi dari sesi membaca.
   readingVocabularyBank: Record<string, ReadingVocabularyBankEntry>;
+  // Progres baca lokal per artikel untuk timer dan lanjut posisi terakhir.
+  readingProgressMap: Record<string, ReadingProgressEntry>;
   // State Sesi Menyimak (Menyimpan posisi audio aktif dan teks bacaan bersuara)
   listeningState: ListeningState & { audioUrl?: string; textToSpeak?: string };
 
@@ -79,6 +91,11 @@ interface UIState {
   addReadingVocabulary: (entry: ReadingVocabularyBankInput) => string;
   removeReadingVocabulary: (id: string) => void;
   clearReadingVocabulary: (sourceId?: string) => void;
+  updateReadingProgress: (
+    sourceId: string,
+    progress: Partial<Omit<ReadingProgressEntry, "sourceId" | "updatedAt">>
+  ) => void;
+  clearReadingProgress: (sourceId?: string) => void;
   setListeningState: (state: Partial<UIState['listeningState']>) => void;
 
   resetUI: () => void;
@@ -119,6 +136,7 @@ export const useUIStore = create<UIState>()(
       },
 
       readingVocabularyBank: {},
+      readingProgressMap: {},
 
       listeningState: {
         currentTime: 0,
@@ -195,6 +213,7 @@ export const useUIStore = create<UIState>()(
           notifications: ui.notifications,
           settings: ui.settings,
           readingVocabularyBank: ui.readingVocabularyBank,
+          readingProgressMap: ui.readingProgressMap,
         };
 
         // 2. Buat elemen jangkar luring buatan untuk memicu pengunduhan berkas JSON otomatis di browser
@@ -238,6 +257,7 @@ export const useUIStore = create<UIState>()(
             notifications: parsed.notifications || [],
             settings: parsed.settings || { notificationsEnabled: false },
             readingVocabularyBank: parsed.readingVocabularyBank || {},
+            readingProgressMap: parsed.readingProgressMap || {},
           });
 
           return true;
@@ -289,6 +309,40 @@ export const useUIStore = create<UIState>()(
         };
       }),
 
+      updateReadingProgress: (sourceId, progress) => set((state) => {
+        if (!sourceId) return {};
+
+        const existing = state.readingProgressMap[sourceId];
+        const elapsedSeconds = Math.max(
+          progress.elapsedSeconds ?? existing?.elapsedSeconds ?? 0,
+          existing?.elapsedSeconds ?? 0
+        );
+
+        return {
+          readingProgressMap: {
+            ...state.readingProgressMap,
+            [sourceId]: {
+              sourceId,
+              sourceTitle: progress.sourceTitle ?? existing?.sourceTitle,
+              lastParagraphIndex:
+                progress.lastParagraphIndex ?? existing?.lastParagraphIndex ?? 0,
+              totalParagraphs: progress.totalParagraphs ?? existing?.totalParagraphs ?? 0,
+              elapsedSeconds,
+              completedAt: progress.completedAt ?? existing?.completedAt,
+              updatedAt: Date.now(),
+            },
+          },
+        };
+      }),
+
+      clearReadingProgress: (sourceId) => set((state) => {
+        if (!sourceId) return { readingProgressMap: {} };
+
+        const nextProgress = { ...state.readingProgressMap };
+        delete nextProgress[sourceId];
+        return { readingProgressMap: nextProgress };
+      }),
+
       setListeningState: (newState) => set((state) => ({
         listeningState: { ...state.listeningState, ...newState }
       })),
@@ -307,6 +361,13 @@ export const useUIStore = create<UIState>()(
         },
         readingState: { mode: "kanji", showTranslation: false },
         readingVocabularyBank: {},
+        readingProgressMap: {},
+        listeningState: {
+          currentTime: 0,
+          activeIndex: -1,
+          isScrolling: false,
+          activeTab: "transcript" as const,
+        },
       }),
     }),
     {
@@ -323,6 +384,7 @@ export const useUIStore = create<UIState>()(
           showTranslation: state.readingState.showTranslation,
         },
         readingVocabularyBank: state.readingVocabularyBank,
+        readingProgressMap: state.readingProgressMap,
         // Dari listeningState: hanya tab terakhir yang perlu diingat
         listeningState: {
           currentTime: 0,

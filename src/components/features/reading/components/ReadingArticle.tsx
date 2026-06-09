@@ -10,6 +10,14 @@ import { Loader2, Sparkles, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { fetchTTSAudio, TTS_VOICES } from "@/lib/tts";
+import type { ReadingProgressEntry } from "@/store/useUIStore";
+
+export interface ReadingProgressSnapshot {
+  activeParagraphIndex: number;
+  elapsedSeconds: number;
+  totalParagraphs: number;
+  hasResumed: boolean;
+}
 
 interface ReadingArticleProps {
   paragraphs: string[];
@@ -22,6 +30,10 @@ interface ReadingArticleProps {
   isZenMode: boolean;
   onComplete?: () => void;
   isCompleted?: boolean;
+  sourceId?: string;
+  sourceTitle?: string;
+  savedProgress?: ReadingProgressEntry;
+  onProgressChange?: (progress: ReadingProgressSnapshot) => void;
 }
 
 const FONT_SIZE_CLASSES = {
@@ -234,14 +246,137 @@ export function ReadingArticle({
   isZenMode,
   onComplete,
   isCompleted = false,
+  sourceId,
+  sourceTitle,
+  savedProgress,
+  onProgressChange,
 }: ReadingArticleProps) {
   const articleRef = useRef<HTMLElement>(null);
+  const paragraphRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const restoredProgressRef = useRef<{ restoredSaved: boolean; sourceId?: string }>({
+    restoredSaved: false,
+  });
+  const scrolledSourceRef = useRef<string | undefined>(undefined);
+  const [activeParagraphIndex, setActiveParagraphIndex] = useState(0);
+  const [elapsedSeconds, setElapsedSeconds] = useState(savedProgress?.elapsedSeconds || 0);
+  const [hasResumed, setHasResumed] = useState(false);
   const { scrollYProgress } = useScroll({
     target: articleRef,
     offset: ["start start", "end end"],
   });
   const scaleX = useSpring(scrollYProgress, { damping: 30, stiffness: 200 });
   const { speakingIdx, loadingIdx, speak } = useParagraphTTS();
+  const totalParagraphs = paragraphs.length;
+
+  useEffect(() => {
+    paragraphRefs.current = paragraphRefs.current.slice(0, totalParagraphs);
+  }, [totalParagraphs]);
+
+  useEffect(() => {
+    if (!sourceId) return;
+
+    const hasSavedProgress = !!savedProgress;
+    const alreadyRestoredSource = restoredProgressRef.current.sourceId === sourceId;
+    if (
+      alreadyRestoredSource &&
+      (restoredProgressRef.current.restoredSaved || !hasSavedProgress)
+    ) {
+      return;
+    }
+
+    const lastParagraphIndex = Math.min(
+      Math.max(savedProgress?.lastParagraphIndex || 0, 0),
+      Math.max(totalParagraphs - 1, 0)
+    );
+    const savedElapsedSeconds = savedProgress?.elapsedSeconds || 0;
+
+    setActiveParagraphIndex(lastParagraphIndex);
+    setElapsedSeconds(savedElapsedSeconds);
+    setHasResumed(lastParagraphIndex > 0 || savedElapsedSeconds > 0);
+    restoredProgressRef.current = { restoredSaved: hasSavedProgress, sourceId };
+  }, [savedProgress, sourceId, totalParagraphs]);
+
+  useEffect(() => {
+    if (!sourceId || !savedProgress || scrolledSourceRef.current === sourceId) return;
+
+    const lastParagraphIndex = Math.min(
+      Math.max(savedProgress.lastParagraphIndex, 0),
+      Math.max(totalParagraphs - 1, 0)
+    );
+    if (lastParagraphIndex <= 0) {
+      scrolledSourceRef.current = sourceId;
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      paragraphRefs.current[lastParagraphIndex]?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      scrolledSourceRef.current = sourceId;
+    }, 450);
+
+    return () => window.clearTimeout(timer);
+  }, [savedProgress, sourceId, totalParagraphs]);
+
+  useEffect(() => {
+    if (isCompleted) return;
+
+    const timer = window.setInterval(() => {
+      if (typeof document !== "undefined" && document.hidden) return;
+      setElapsedSeconds((value) => value + 1);
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [isCompleted, sourceId]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !("IntersectionObserver" in window)) return;
+
+    const visibleParagraphs = new Map<number, number>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const index = Number((entry.target as HTMLElement).dataset.readingParagraphIndex);
+          if (Number.isNaN(index)) return;
+
+          if (entry.isIntersecting) {
+            visibleParagraphs.set(index, entry.intersectionRatio);
+          } else {
+            visibleParagraphs.delete(index);
+          }
+        });
+
+        const bestVisible = [...visibleParagraphs.entries()].sort(
+          ([leftIndex, leftRatio], [rightIndex, rightRatio]) =>
+            rightRatio - leftRatio || leftIndex - rightIndex
+        )[0];
+
+        if (bestVisible) {
+          setActiveParagraphIndex(bestVisible[0]);
+        }
+      },
+      {
+        root: null,
+        rootMargin: "-25% 0px -45% 0px",
+        threshold: [0, 0.25, 0.5, 0.75, 1],
+      }
+    );
+
+    const observedNodes = paragraphRefs.current.filter(Boolean) as HTMLDivElement[];
+    observedNodes.forEach((node) => observer.observe(node));
+
+    return () => observer.disconnect();
+  }, [totalParagraphs]);
+
+  useEffect(() => {
+    onProgressChange?.({
+      activeParagraphIndex,
+      elapsedSeconds,
+      totalParagraphs,
+      hasResumed,
+    });
+  }, [activeParagraphIndex, elapsedSeconds, hasResumed, onProgressChange, totalParagraphs]);
 
   return (
     <m.article
@@ -263,20 +398,33 @@ export function ReadingArticle({
 
       <div className="space-y-16 relative z-10">
         {paragraphs.map((para, idx) => (
-          <ReadingParagraph
+          <div
             key={`para-${idx}-${para.slice(0, 16)}`}
-            idx={idx}
-            para={para}
-            hiragana={hiraganaParagraphs[idx] || ""}
-            romaji={romajiParagraphs[idx]}
-            translation={translationParagraphs[idx]}
-            mode={mode}
-            fontSize={fontSize}
-            showTranslation={showTranslation}
-            isSpeaking={speakingIdx === idx}
-            isLoading={loadingIdx === idx}
-            onSpeak={speak}
-          />
+            ref={(node) => {
+              paragraphRefs.current[idx] = node;
+            }}
+            data-reading-paragraph-index={idx}
+            data-reading-source-id={sourceId}
+            data-reading-source-title={sourceTitle}
+            className={cn(
+              "relative scroll-mt-36 transition-all duration-300",
+              activeParagraphIndex === idx && !isZenMode && "rounded-2xl"
+            )}
+          >
+            <ReadingParagraph
+              idx={idx}
+              para={para}
+              hiragana={hiraganaParagraphs[idx] || ""}
+              romaji={romajiParagraphs[idx]}
+              translation={translationParagraphs[idx]}
+              mode={mode}
+              fontSize={fontSize}
+              showTranslation={showTranslation}
+              isSpeaking={speakingIdx === idx}
+              isLoading={loadingIdx === idx}
+              onSpeak={speak}
+            />
+          </div>
         ))}
       </div>
 

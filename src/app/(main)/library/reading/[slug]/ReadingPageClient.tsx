@@ -11,7 +11,7 @@
 // ======================
 import React, { useState } from "react";
 import { AnimatePresence, m } from "framer-motion";
-import { Minimize2, Sparkles, Type, Languages } from "lucide-react";
+import { BookmarkCheck, Clock, Gauge, Languages, MapPin, Minimize2, Sparkles, Type } from "lucide-react";
 import { ReadingProvider } from "@/components/features/reading/components/ReadingContext";
 import { cn } from "@/lib/utils";
 import { useReadingLogic } from "@/components/features/reading/hooks/useReadingLogic";
@@ -25,7 +25,10 @@ import AudioController from "@/components/features/reading/components/AudioContr
 
 // Komponen Pendukung
 import { ReadingNavbar } from "@/components/features/reading/components/ReadingNavbar";
-import { ReadingArticle } from "@/components/features/reading/components/ReadingArticle";
+import {
+  ReadingArticle,
+  type ReadingProgressSnapshot,
+} from "@/components/features/reading/components/ReadingArticle";
 import { ReadingVocabularyCollector } from "@/components/features/reading/components/ReadingVocabularyCollector";
 
 // ======================
@@ -33,6 +36,20 @@ import { ReadingVocabularyCollector } from "@/components/features/reading/compon
 // ======================
 interface ReadingPageClientProps {
   data: ReadingData;
+}
+
+function formatReadingDuration(seconds: number) {
+  const safeSeconds = Math.max(0, Math.floor(seconds));
+  const minutes = Math.floor(safeSeconds / 60);
+  const remainingSeconds = safeSeconds % 60;
+
+  if (minutes < 60) {
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+  }
+
+  const hours = Math.floor(minutes / 60);
+  const leftoverMinutes = minutes % 60;
+  return `${hours}j ${leftoverMinutes}m`;
 }
 
 // ======================
@@ -57,18 +74,90 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
   const completedLessons = useUserStore((state) => state.completedLessons);
 
   const lessonId = data._id || data.id || "";
+  const readingSourceId = data._id || data.id || data.slug || data.title;
+  const savedProgress = useUIStore((state) =>
+    readingSourceId ? state.readingProgressMap[readingSourceId] : undefined
+  );
+  const updateReadingProgress = useUIStore((state) => state.updateReadingProgress);
   const [isLocallyCompleted, setIsLocallyCompleted] = useState(false);
   const isCompleted = !!(lessonId && completedLessons[lessonId]) || isLocallyCompleted;
+  const [readingSnapshot, setReadingSnapshot] = useState<ReadingProgressSnapshot>(() => ({
+    activeParagraphIndex: savedProgress?.lastParagraphIndex || 0,
+    elapsedSeconds: savedProgress?.elapsedSeconds || 0,
+    totalParagraphs: paragraphs.length,
+    hasResumed: !!savedProgress && (
+      savedProgress.lastParagraphIndex > 0 || savedProgress.elapsedSeconds > 0
+    ),
+  }));
+  const readingSnapshotRef = React.useRef(readingSnapshot);
+  const lastPersistedReadingRef = React.useRef({
+    elapsedSeconds: savedProgress?.elapsedSeconds || 0,
+    paragraphIndex: savedProgress?.lastParagraphIndex || 0,
+  });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formattedQuizzes = data.quizzes ? formatQuizzes(data.quizzes as any) : [];
   const hasQuiz = formattedQuizzes.length > 0;
 
+  React.useEffect(() => {
+    readingSnapshotRef.current = readingSnapshot;
+  }, [readingSnapshot]);
+
+  const readingCharacterCount = React.useMemo(
+    () => paragraphs.join("").replace(/\s/g, "").length,
+    [paragraphs]
+  );
+
+  const estimatedReadingUnits = Math.max(1, Math.round(readingCharacterCount / 5));
+  const elapsedMinutes = readingSnapshot.elapsedSeconds / 60;
+  const readingPace =
+    elapsedMinutes >= 0.25 ? Math.round(estimatedReadingUnits / elapsedMinutes) : 0;
+  const currentParagraph = Math.min(
+    readingSnapshot.activeParagraphIndex + 1,
+    Math.max(readingSnapshot.totalParagraphs || paragraphs.length, 1)
+  );
+  const totalParagraphs = readingSnapshot.totalParagraphs || paragraphs.length;
+  const readingCompletionPercent =
+    totalParagraphs > 0 ? Math.round((currentParagraph / totalParagraphs) * 100) : 0;
+
+  const handleReadingProgressChange = React.useCallback(
+    (progress: ReadingProgressSnapshot) => {
+      setReadingSnapshot(progress);
+      if (!readingSourceId) return;
+
+      const lastPersisted = lastPersistedReadingRef.current;
+      const movedParagraph = progress.activeParagraphIndex !== lastPersisted.paragraphIndex;
+      const elapsedDelta = progress.elapsedSeconds - lastPersisted.elapsedSeconds;
+
+      if (!movedParagraph && elapsedDelta < 5) return;
+
+      updateReadingProgress(readingSourceId, {
+        elapsedSeconds: progress.elapsedSeconds,
+        lastParagraphIndex: progress.activeParagraphIndex,
+        sourceTitle: data.title,
+        totalParagraphs: progress.totalParagraphs,
+      });
+      lastPersistedReadingRef.current = {
+        elapsedSeconds: progress.elapsedSeconds,
+        paragraphIndex: progress.activeParagraphIndex,
+      };
+    },
+    [data.title, readingSourceId, updateReadingProgress]
+  );
+
   const handleComplete = () => {
     if (!lessonId || isCompleted) return;
+    const currentProgress = readingSnapshotRef.current;
     setIsLocallyCompleted(true);
     addXP(100);
     completeLesson(lessonId);
+    updateReadingProgress(readingSourceId, {
+      completedAt: Date.now(),
+      elapsedSeconds: currentProgress.elapsedSeconds,
+      lastParagraphIndex: currentProgress.activeParagraphIndex,
+      sourceTitle: data.title,
+      totalParagraphs: currentProgress.totalParagraphs || paragraphs.length,
+    });
 
     useUIStore.getState().addNotification({
       title: "Materi Selesai!",
@@ -174,9 +263,17 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/60 pb-4">
               <div className="flex items-center gap-2">
                 <Sparkles size={16} className="text-primary animate-pulse" />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
-                  Pengaturan Membaca
-                </span>
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
+                    Pengaturan Membaca
+                  </span>
+                  {readingSnapshot.hasResumed && (
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/10 px-2.5 py-1 text-[9px] font-black uppercase tracking-widest text-primary">
+                      <MapPin size={10} aria-hidden="true" />
+                      Lanjut Paragraf {currentParagraph}
+                    </span>
+                  )}
+                </div>
               </div>
               
               {/* Pill buttons for Text & Translation Settings */}
@@ -237,6 +334,54 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
               </div>
             </div>
 
+            <div className="grid overflow-hidden rounded-2xl border border-border/60 bg-muted/10 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="flex items-center gap-3 border-b border-border/50 p-4 sm:border-r lg:border-b-0">
+                <Clock size={17} className="text-primary" aria-hidden="true" />
+                <div>
+                  <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                    Waktu
+                  </p>
+                  <p className="font-mono text-lg font-black text-foreground">
+                    {formatReadingDuration(readingSnapshot.elapsedSeconds)}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 border-b border-border/50 p-4 lg:border-b-0 lg:border-r">
+                <BookmarkCheck size={17} className="text-success" aria-hidden="true" />
+                <div>
+                  <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                    Posisi
+                  </p>
+                  <p className="font-mono text-lg font-black text-foreground">
+                    {currentParagraph}/{totalParagraphs}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 border-b border-border/50 p-4 sm:border-b-0 sm:border-r">
+                <Gauge size={17} className="text-warning" aria-hidden="true" />
+                <div>
+                  <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                    Pace
+                  </p>
+                  <p className="font-mono text-lg font-black text-foreground">
+                    {readingPace || "-"}
+                    <span className="ml-1 text-[10px] text-muted-foreground">unit/mnt</span>
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-4">
+                <MapPin size={17} className="text-secondary" aria-hidden="true" />
+                <div>
+                  <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                    Progress
+                  </p>
+                  <p className="font-mono text-lg font-black text-foreground">
+                    {readingCompletionPercent}%
+                  </p>
+                </div>
+              </div>
+            </div>
+
             {/* Audio Section */}
             {!!(data.audioUrl || (!data.isTTSDisabled && typeof data.body === "string" ? data.body : undefined)) && (
               <div className="w-full flex flex-col gap-2">
@@ -269,6 +414,10 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
           isZenMode={isZenMode}
           onComplete={handleComplete}
           isCompleted={isCompleted}
+          sourceId={readingSourceId}
+          sourceTitle={data.title}
+          savedProgress={savedProgress}
+          onProgressChange={handleReadingProgressChange}
         />
 
         {!isZenMode && lessonId && (

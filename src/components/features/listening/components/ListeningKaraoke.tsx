@@ -9,7 +9,7 @@
 
 import React, { useRef, useEffect, useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { Languages, Repeat, Volume2, VolumeX, Loader2, Gauge, Play, Pause, Sparkles } from "lucide-react";
+import { Eye, EyeOff, Languages, Loader2, Repeat, Sparkles, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TranscriptLine } from "../types";
 import { useLineTTS } from "../hooks/useLineTTS";
@@ -53,6 +53,7 @@ export default function ListeningKaraoke({
 }: ListeningKaraokeProps) {
   const listeningState = useUIStore(state => state.listeningState);
   const [showTranslation, setShowTranslation] = useState(false);
+  const [isTranscriptHidden, setIsTranscriptHidden] = useState(false);
   const [loopingIndex, setLoopingIndex] = useState<number>(-1);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const activeLineRef = useRef<HTMLDivElement>(null);
@@ -63,7 +64,6 @@ export default function ListeningKaraoke({
     speakLine,
     stopLineTTS,
     lineTTSEnabled,
-    toggleLineTTS,
     rate,
     setRate,
     isPlayingPlaylist,
@@ -209,6 +209,21 @@ export default function ListeningKaraoke({
             >
               <Languages size={13} />
               <span>{showTranslation ? "Terjemahan: ON" : "Terjemahan: OFF"}</span>
+            </Button>
+
+            <Button
+              variant={isTranscriptHidden ? "default" : "outline"}
+              size="sm"
+              onClick={() => setIsTranscriptHidden((prev) => !prev)}
+              className={cn(
+                "rounded-xl gap-1.5 h-9 text-[10px] font-black uppercase tracking-wider transition-all border border-border/85",
+                isTranscriptHidden
+                  ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 border-transparent"
+                  : "bg-muted/10 text-muted-foreground hover:text-foreground hover:bg-muted/20"
+              )}
+            >
+              {isTranscriptHidden ? <EyeOff size={13} /> : <Eye size={13} />}
+              <span>{isTranscriptHidden ? "Transkrip: Hidden" : "Transkrip: Open"}</span>
             </Button>
           </div>
         </div>
@@ -372,16 +387,42 @@ export default function ListeningKaraoke({
                   )}
 
                   {/* Teks Jepang */}
-                  <div className={cn(
-                    "text-lg sm:text-xl font-japanese font-medium leading-[1.6] transition-all",
-                    isActive ? "text-foreground" : "text-foreground/75 group-hover:text-foreground/90"
-                  )}>
-                    {extractLineText(line.text)}
-                  </div>
+                  {isTranscriptHidden ? (
+                    <div
+                      className={cn(
+                        "flex flex-col gap-2 rounded-xl border border-dashed p-3 transition-all",
+                        isActive
+                          ? "border-primary/35 bg-primary/10 text-primary"
+                          : "border-border/70 bg-muted/15 text-muted-foreground"
+                      )}
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="text-[10px] font-black uppercase tracking-widest">
+                          Baris {index + 1}
+                        </span>
+                        <span className="font-mono text-[10px] font-bold text-muted-foreground">
+                          {Math.floor(line.startTime / 60)}:
+                          {Math.floor(line.startTime % 60).toString().padStart(2, "0")}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-[1fr_0.65fr_0.35fr] gap-2" aria-hidden="true">
+                        <span className="h-2 rounded-full bg-current/25" />
+                        <span className="h-2 rounded-full bg-current/15" />
+                        <span className="h-2 rounded-full bg-current/10" />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className={cn(
+                      "text-lg sm:text-xl font-japanese font-medium leading-[1.6] transition-all",
+                      isActive ? "text-foreground" : "text-foreground/75 group-hover:text-foreground/90"
+                    )}>
+                      {extractLineText(line.text)}
+                    </div>
+                  )}
 
                   {/* Terjemahan */}
                   <AnimatePresence initial={false}>
-                    {(isActive || showTranslation) && (
+                    {!isTranscriptHidden && (isActive || showTranslation) && (
                       <m.div
                         initial={{ height: 0, opacity: 0, marginTop: 0 }}
                         animate={{ height: "auto", opacity: 1, marginTop: 12 }}

@@ -7,7 +7,17 @@
 
 import { useMemo, useState } from "react";
 import { AnimatePresence, m } from "framer-motion";
-import { CheckCircle2, ClipboardPenLine, Eye, EyeOff, RotateCcw, Volume2, XCircle } from "lucide-react";
+import {
+  CheckCircle2,
+  ClipboardPenLine,
+  Eye,
+  EyeOff,
+  RotateCcw,
+  Sparkles,
+  Target,
+  Volume2,
+  XCircle,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -47,6 +57,36 @@ export default function ListeningDictation({ transcript, seekToLine }: Listening
   const completedCount = Object.keys(attempts).length;
   const passedCount = Object.values(attempts).filter((item) => item.evaluation.isPassed).length;
   const score = completedCount > 0 ? Math.round((passedCount / completedCount) * 100) : 0;
+  const resultSummary = useMemo(() => {
+    const attemptList = Object.values(attempts);
+    const averageAccuracy =
+      attemptList.length > 0
+        ? Math.round(
+            attemptList.reduce((total, item) => total + item.evaluation.accuracy, 0) /
+              attemptList.length
+          )
+        : 0;
+    const weakAttempts = attemptList
+      .filter((item) => !item.evaluation.isPassed)
+      .sort((left, right) => left.evaluation.accuracy - right.evaluation.accuracy)
+      .slice(0, 3)
+      .map((item) => {
+        const lineIndex = dictationLines.findIndex((line) => line._key === item.lineKey);
+        return {
+          ...item,
+          line: lineIndex >= 0 ? dictationLines[lineIndex] : undefined,
+          lineIndex,
+        };
+      })
+      .filter((item) => item.line);
+
+    return {
+      averageAccuracy,
+      attemptedCount: attemptList.length,
+      passRate: attemptList.length > 0 ? Math.round((passedCount / attemptList.length) * 100) : 0,
+      weakAttempts,
+    };
+  }, [attempts, dictationLines, passedCount]);
 
   if (dictationLines.length === 0) return null;
 
@@ -270,6 +310,99 @@ export default function ListeningDictation({ transcript, seekToLine }: Listening
                     </p>
                   ) : null}
                 </div>
+              </m.div>
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>
+            {resultSummary.attemptedCount > 0 && (
+              <m.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 8 }}
+                className="rounded-2xl border border-border bg-muted/15 p-5"
+              >
+                <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-center gap-2">
+                    <Sparkles size={16} className="text-primary" aria-hidden="true" />
+                    <span className="text-xs font-black uppercase tracking-widest text-foreground">
+                      Ringkasan Hasil
+                    </span>
+                  </div>
+                  <Badge variant={score >= 80 ? "default" : "outline"} className="w-fit">
+                    {resultSummary.attemptedCount}/{dictationLines.length} dicoba
+                  </Badge>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-3">
+                  <div className="rounded-xl border border-border bg-background/40 p-3">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                      Rata-rata
+                    </p>
+                    <p className="font-mono text-2xl font-black text-foreground">
+                      {resultSummary.averageAccuracy}%
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-border bg-background/40 p-3">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                      Lulus
+                    </p>
+                    <p className="font-mono text-2xl font-black text-success">
+                      {passedCount}
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-border bg-background/40 p-3">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                      Pass Rate
+                    </p>
+                    <p className="font-mono text-2xl font-black text-foreground">
+                      {resultSummary.passRate}%
+                    </p>
+                  </div>
+                </div>
+
+                {resultSummary.weakAttempts.length > 0 ? (
+                  <div className="mt-4 flex flex-col gap-2">
+                    <div className="flex items-center gap-2 text-warning">
+                      <Target size={14} aria-hidden="true" />
+                      <span className="text-[10px] font-black uppercase tracking-widest">
+                        Baris Prioritas
+                      </span>
+                    </div>
+                    {resultSummary.weakAttempts.map((item) => {
+                      const line = item.line;
+                      if (!line) return null;
+
+                      return (
+                        <button
+                          key={item.lineKey}
+                          type="button"
+                          onClick={() => handleSelectLine(item.lineIndex)}
+                          className="rounded-xl border border-warning/25 bg-warning/10 p-3 text-left transition-all hover:border-warning/45 hover:bg-warning/15"
+                        >
+                          <div className="mb-2 flex items-center justify-between gap-3">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-warning">
+                              Baris {item.lineIndex + 1}
+                            </span>
+                            <span className="font-mono text-sm font-black text-warning">
+                              {item.evaluation.accuracy}%
+                            </span>
+                          </div>
+                          <p className="line-clamp-1 text-sm font-bold text-foreground font-japanese">
+                            {item.evaluation.expected}
+                          </p>
+                          <p className="mt-1 line-clamp-1 text-xs font-medium text-muted-foreground font-japanese">
+                            Kamu: {item.evaluation.attempt}
+                          </p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="mt-4 rounded-xl border border-success/20 bg-success/10 p-3 text-sm font-bold text-success">
+                    Semua baris yang dicoba sudah lolos.
+                  </p>
+                )}
               </m.div>
             )}
           </AnimatePresence>
