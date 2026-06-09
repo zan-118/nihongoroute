@@ -52,10 +52,14 @@ export function KanjiGrid({ kanjis, isFetching }: KanjiGridProps) {
         {kanjis.map((kanji, idx) => (
           <div
             key={kanji.id || kanji._id}
-            className="transform hover:-translate-y-1 transition-all duration-300"
+            className="transform hover:-translate-y-1 transition-all duration-200"
+            style={{
+              contentVisibility: "auto",
+              containIntrinsicSize: "0 180px",
+            }}
           >
             <Link href={`/library/kanji/${kanji.character}`}>
-              <Card className="group relative aspect-square flex flex-col items-center justify-center p-4 bg-[rgb(var(--card-rgb)/0.3)] backdrop-blur-3xl border border-border hover:border-[rgb(var(--primary-rgb)/0.5)] transition-all duration-500 rounded-[2rem] overflow-hidden hover:shadow-[0_0_40px_rgb(var(--primary-rgb)/0.15)] cursor-pointer">
+              <Card className="group relative aspect-square flex flex-col items-center justify-center p-4 bg-card/75 border border-border hover:border-[rgb(var(--primary-rgb)/0.5)] transition-all duration-200 rounded-[2rem] overflow-hidden cursor-pointer">
                 {/* Efek Pendar Latar Belakang (Neon Glow Effect) */}
                 <div className="absolute inset-0 bg-gradient-to-br from-[rgb(var(--primary-rgb)/0.05)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 
@@ -97,4 +101,3 @@ export function KanjiGrid({ kanjis, isFetching }: KanjiGridProps) {
     </div>
   );
 }
-

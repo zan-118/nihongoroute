@@ -32,6 +32,15 @@ interface AudioControllerProps {
 const SPEED_OPTIONS = [0.5, 0.75, 1, 1.25, 1.5] as const;
 type SpeedOption = typeof SPEED_OPTIONS[number];
 
+const cleanText = (text: string) =>
+  text.replace(/\[.*?\]/g, "").replace(/[\[\]]/g, "").replace(/\s+/g, " ").trim();
+
+const formatTime = (t: number) => {
+  const m = Math.floor(t / 60);
+  const s = Math.floor(t % 60);
+  return `${m}:${s.toString().padStart(2, "0")}`;
+};
+
 // ============================================================
 // KOMPONEN UTAMA
 // ============================================================
@@ -69,28 +78,64 @@ export default function AudioController({
   /** Tracking seek agar tidak double-trigger */
   const lastSeekRef    = useRef<number | undefined>(undefined);
   const ttsRequestIdRef = useRef(0);
+  const lastRenderedTimeRef = useRef(0);
+  const pendingTimeRef = useRef<number | null>(null);
+  const timeUpdateFrameRef = useRef<number | null>(null);
+  const onTimeUpdateRef = useRef(onTimeUpdate);
   
   const ttsObjectUrlRef = useRef<string | null>(null);
-  const cleanupTTSObjectUrl = () => {
+  const cleanupTTSObjectUrl = useCallback(() => {
     if (ttsObjectUrlRef.current) {
       URL.revokeObjectURL(ttsObjectUrlRef.current);
       ttsObjectUrlRef.current = null;
     }
-  };
+  }, []);
+
 
   // ── Helpers ────────────────────────────────────────────
-  const cleanText = (text: string) =>
-    text.replace(/\[.*?\]/g, "").replace(/[\[\]]/g, "").replace(/\s+/g, " ").trim();
+  const cancelTimeUpdateFrame = useCallback(() => {
+    if (timeUpdateFrameRef.current !== null) {
+      cancelAnimationFrame(timeUpdateFrameRef.current);
+      timeUpdateFrameRef.current = null;
+    }
+    pendingTimeRef.current = null;
+  }, []);
 
-  const formatTime = (t: number) => {
-    const m = Math.floor(t / 60);
-    const s = Math.floor(t % 60);
-    return `${m}:${s.toString().padStart(2, "0")}`;
-  };
+  const publishCurrentTime = useCallback((time: number, force = false) => {
+    if (!force && Math.abs(time - lastRenderedTimeRef.current) < 0.2) {
+      return;
+    }
+
+    lastRenderedTimeRef.current = time;
+    setCurrentTime(time);
+    onTimeUpdateRef.current?.(time);
+  }, []);
+
+  const scheduleCurrentTime = useCallback((time: number, force = false) => {
+    if (force) {
+      cancelTimeUpdateFrame();
+      publishCurrentTime(time, true);
+      return;
+    }
+
+    pendingTimeRef.current = time;
+    if (timeUpdateFrameRef.current !== null) return;
+
+    timeUpdateFrameRef.current = requestAnimationFrame(() => {
+      timeUpdateFrameRef.current = null;
+      const nextTime = pendingTimeRef.current;
+      pendingTimeRef.current = null;
+
+      if (nextTime !== null) {
+        publishCurrentTime(nextTime);
+      }
+    });
+  }, [cancelTimeUpdateFrame, publishCurrentTime]);
 
   // ── Stop semua ─────────────────────────────────────────
   const stopAll = useCallback(() => {
     ttsRequestIdRef.current++;
+    cancelTimeUpdateFrame();
     if (nativeAudioRef.current) {
       nativeAudioRef.current.pause();
       nativeAudioRef.current.currentTime = 0;
@@ -109,11 +154,15 @@ export default function AudioController({
     setIsPlaying(false);
     setIsTTS(false);
     setIsLoading(false);
-    setCurrentTime(0);
-  }, []);
+    publishCurrentTime(0, true);
+  }, [cancelTimeUpdateFrame, cleanupTTSObjectUrl, publishCurrentTime]);
 
   // ── Effects ────────────────────────────────────────────
   // Playback speed → native audio
+  useEffect(() => {
+    onTimeUpdateRef.current = onTimeUpdate;
+  }, [onTimeUpdate]);
+
   useEffect(() => {
     if (nativeAudioRef.current) nativeAudioRef.current.playbackRate = playbackSpeed;
     if (ttsAudioRef.current)    ttsAudioRef.current.playbackRate    = playbackSpeed;
@@ -128,9 +177,9 @@ export default function AudioController({
     ) {
       lastSeekRef.current = externalSeek;
       nativeAudioRef.current.currentTime = externalSeek;
-      setCurrentTime(externalSeek);
+      scheduleCurrentTime(externalSeek, true);
     }
-  }, [externalSeek]);
+  }, [externalSeek, scheduleCurrentTime]);
 
   // Listen to pause event from line TTS
   useEffect(() => {
@@ -155,8 +204,9 @@ export default function AudioController({
       if (typeof window !== "undefined" && window.speechSynthesis) {
         window.speechSynthesis.cancel();
       }
+      cancelTimeUpdateFrame();
     };
-  }, []);
+  }, [cancelTimeUpdateFrame, cleanupTTSObjectUrl]);
 
   // Tutup speed menu klik di luar
   useEffect(() => {
@@ -278,7 +328,7 @@ export default function AudioController({
       nativeAudioRef.current.currentTime = t;
       lastSeekRef.current = t;
     }
-    setCurrentTime(t);
+    scheduleCurrentTime(t, true);
   };
 
   const handleSpeedChange = (speed: SpeedOption, e: React.MouseEvent) => {
@@ -316,7 +366,7 @@ export default function AudioController({
 
       <div className={cn(
         "w-full flex items-center gap-4 rounded-full p-2 transition-all duration-500",
-        "bg-card/40 backdrop-blur-3xl border border-border/50 shadow-2xl ring-1 ring-white/5",
+        "bg-card/55 backdrop-blur-md border border-border/50 shadow-xl ring-1 ring-white/5",
         compact && "p-1 bg-transparent border-none ring-0 shadow-none",
         header  && "rounded-2xl px-4 py-3 gap-3"
       )}>
@@ -484,11 +534,9 @@ export default function AudioController({
             onCanPlay={() => setIsLoading(false)}
             onDurationChange={(e) => setDuration(e.currentTarget.duration)}
             onTimeUpdate={(e) => {
-              const t = e.currentTarget.currentTime;
-              setCurrentTime(t);
-              onTimeUpdate?.(t);
+              scheduleCurrentTime(e.currentTarget.currentTime);
             }}
-            onEnded={() => { setIsPlaying(false); setCurrentTime(0); setIsLoading(false); }}
+            onEnded={() => { setIsPlaying(false); scheduleCurrentTime(0, true); setIsLoading(false); }}
             onError={() => { setError("Gagal memuat file audio."); setIsLoading(false); setIsPlaying(false); }}
           />
         )}

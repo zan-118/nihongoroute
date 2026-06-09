@@ -7,7 +7,7 @@
 // ==========================================
 // IMPOR UTAMA
 // ==========================================
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useRef } from "react";
 import { TranscriptLine } from "../types";
 
 // ==========================================
@@ -25,27 +25,43 @@ import { TranscriptLine } from "../types";
  *  - `seekToLine`: Fungsi lompat pemutaran audio ke awal baris transkrip tertentu.
  */
 export function useListeningSync(transcript: TranscriptLine[]) {
+  const currentTimeRef = useRef(0);
+  const activeIndexRef = useRef(-1);
   const [currentTime, setCurrentTime] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const [externalSeek, setExternalSeek] = useState<number | undefined>(undefined);
 
-  // Mencari baris yang sedang aktif secara efisien berdasarkan detik pemutaran audio saat ini
-  const activeIndex = useMemo(() => {
-    return transcript.findIndex(
-      (line) => currentTime >= line.startTime && currentTime <= line.endTime
+  const syncActiveIndex = useCallback((time: number, forceTimeUpdate = false) => {
+    const nextIndex = transcript.findIndex(
+      (line) => time >= line.startTime && time <= line.endTime
     );
-  }, [currentTime, transcript]);
+
+    if (forceTimeUpdate) {
+      setCurrentTime(time);
+    }
+
+    if (nextIndex !== activeIndexRef.current) {
+      activeIndexRef.current = nextIndex;
+      if (!forceTimeUpdate) {
+        setCurrentTime(time);
+      }
+      setActiveIndex(nextIndex);
+    }
+  }, [transcript]);
 
   // Memperbarui waktu aktif pemutaran audio dan mereset lompatan eksternal
   const handleTimeUpdate = useCallback((time: number) => {
-    setCurrentTime(time);
-    setExternalSeek(undefined);
-  }, []);
+    currentTimeRef.current = time;
+    syncActiveIndex(time);
+    setExternalSeek((current) => current === undefined ? current : undefined);
+  }, [syncActiveIndex]);
 
   // Melompat ke baris tertentu berdasarkan waktu mulai baris transkrip tersebut
   const seekToLine = useCallback((startTime: number) => {
     setExternalSeek(startTime);
-    setCurrentTime(startTime);
-  }, []);
+    currentTimeRef.current = startTime;
+    syncActiveIndex(startTime, true);
+  }, [syncActiveIndex]);
 
   return {
     currentTime,
@@ -55,4 +71,3 @@ export function useListeningSync(transcript: TranscriptLine[]) {
     seekToLine,
   };
 }
-

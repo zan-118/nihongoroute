@@ -9,7 +9,7 @@
 // ======================
 // IMPOR
 // ======================
-import { useEffect, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -31,11 +31,14 @@ interface LeaderboardUser {
   avatar_url?: string;
 }
 
+type RankedLeaderboardUser = LeaderboardUser & { rank: number | null };
+
 export default function LeaderboardClient() {
   const [cachedUsers, setCachedUsers] = useState<LeaderboardUser[]>([]);
   const [isOffline, setIsOffline] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const supabase = createClient();
+  const deferredSearchQuery = useDeferredValue(searchQuery);
+  const supabase = useMemo(() => createClient(), []);
   const queryClient = useQueryClient();
 
   // Dapatkan state pengguna aktif
@@ -134,9 +137,46 @@ export default function LeaderboardClient() {
     refetchOnWindowFocus: false,
   });
 
-  const usersList = data?.users || cachedUsers;
+  const usersList = useMemo(() => data?.users || cachedUsers, [cachedUsers, data?.users]);
   const ownRank = data?.ownRank || null;
   const showSkeleton = isLoading && usersList.length === 0;
+
+  const searchTerm = deferredSearchQuery.trim().toLowerCase();
+  const isSearching = searchTerm.length > 0;
+
+  const rankByUserId = useMemo(() => {
+    const rankMap = new Map<string, number>();
+    usersList.forEach((user, index) => {
+      rankMap.set(user.id, index + 1);
+    });
+    return rankMap;
+  }, [usersList]);
+
+  const rankedUsers = useMemo<RankedLeaderboardUser[]>(() => {
+    const result: RankedLeaderboardUser[] = [];
+
+    for (const user of usersList) {
+      if (searchTerm && !user.full_name?.toLowerCase().includes(searchTerm)) {
+        continue;
+      }
+
+      result.push({
+        ...user,
+        rank: rankByUserId.get(user.id) ?? null,
+      });
+    }
+
+    return result;
+  }, [rankByUserId, searchTerm, usersList]);
+
+  const topThree = useMemo(() => isSearching ? [] : rankedUsers.slice(0, 3), [isSearching, rankedUsers]);
+  const othersList = useMemo(() => isSearching ? rankedUsers : rankedUsers.slice(3), [isSearching, rankedUsers]);
+
+  const isOwnUserInTop20 = useMemo(
+    () => usersList.some((x) => x.id === currentUserId),
+    [currentUserId, usersList]
+  );
+  const showFloatingOwnRank = !isGuest && currentUserId !== "guest" && ownRank !== null && !isOwnUserInTop20;
 
   if (showSkeleton) {
     return (
@@ -155,35 +195,12 @@ export default function LeaderboardClient() {
     );
   }
 
-  const isSearching = searchQuery.trim().length > 0;
-
-  // Saring pengguna berdasarkan pencarian
-  const filteredUsers = usersList.filter((u) =>
-    u.full_name?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  // Petakan pengguna dengan peringkat asli
-  const rankedUsers = filteredUsers.map((u) => {
-    const originalRank = usersList.findIndex((x) => x.id === u.id) + 1;
-    return {
-      ...u,
-      rank: originalRank > 0 ? originalRank : null,
-    };
-  });
-
-  const topThree = isSearching ? [] : rankedUsers.slice(0, 3);
-  const othersList = isSearching ? rankedUsers : rankedUsers.slice(3);
-
-  const isOwnUserInTop20 = usersList.slice(0, 20).some((x) => x.id === currentUserId);
-  const showFloatingOwnRank = !isGuest && currentUserId !== "guest" && ownRank !== null && !isOwnUserInTop20;
-
   return (
     <div className="w-full max-w-4xl mx-auto flex flex-col gap-8 sm:gap-12 pb-32 px-4 relative">
       
       {/* 🔍 PREMIUM SEARCH INPUT */}
       <div className="relative w-full max-w-md mx-auto z-20">
-        <div className="absolute inset-0 bg-primary/5 blur-xl rounded-full pointer-events-none" />
-        <Card className="glass border-border/80 p-1 flex items-center bg-card/65 backdrop-blur-md rounded-2xl shadow-lg relative z-10 transition-all duration-300 focus-within:border-primary/45 focus-within:shadow-[0_0_20px_rgb(var(--primary-rgb)/0.15)]">
+        <Card className="glass border-border/80 p-1 flex items-center bg-card/80 rounded-2xl shadow-sm relative z-10 transition-all duration-200 focus-within:border-primary/45 focus-within:shadow-[0_0_14px_rgb(var(--primary-rgb)/0.12)]">
           <div className="pl-3.5 text-muted-foreground/60">
             <Search size={16} />
           </div>
@@ -214,7 +231,7 @@ export default function LeaderboardClient() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="grid grid-cols-3 gap-2 sm:gap-8 items-end mt-6 bg-background/25 glass border border-border/80 rounded-[2rem] sm:rounded-[3rem] p-3 sm:p-12 shadow-[0_25px_60px_rgba(0,0,0,0.35)] relative overflow-hidden"
+            className="grid grid-cols-3 gap-2 sm:gap-8 items-end mt-6 bg-background/55 glass border border-border/80 rounded-[2rem] sm:rounded-[3rem] p-3 sm:p-12 shadow-xl relative overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-t from-primary/[0.02] via-transparent to-transparent pointer-events-none" />
             
@@ -253,21 +270,21 @@ export default function LeaderboardClient() {
               className="order-2 flex flex-col items-center relative z-10 scale-105 sm:scale-115 group/champ"
             >
               <div className="relative mb-5 sm:mb-8">
-                <div className="absolute -inset-2 bg-gradient-to-br from-warning via-amber-500 to-transparent rounded-full blur-lg opacity-40 group-hover/champ:opacity-90 transition duration-700 animate-pulse pointer-events-none" />
+                <div className="absolute -inset-2 bg-gradient-to-br from-warning via-amber-500 to-transparent rounded-full blur-md opacity-35 group-hover/champ:opacity-75 transition duration-500 pointer-events-none" />
                 <div className="w-16 h-16 sm:w-28 sm:h-28 rounded-full bg-card border-[3px] sm:border-4 border-warning flex items-center justify-center text-lg sm:text-4xl font-black text-warning shadow-[0_15px_35px_rgb(var(--warning-rgb)/0.25)] relative z-10 select-none font-japanese">
                   {topThree[0]?.full_name?.charAt(0).toUpperCase() || "?"}
                 </div>
                 <div className="absolute -top-7 sm:-top-10 left-1/2 -translate-x-1/2 text-warning animate-premium-bounce drop-shadow-[0_0_12px_rgb(var(--warning-rgb)/0.5)] z-20">
                   <Trophy className="w-6 h-6 sm:w-9 sm:h-9" />
                 </div>
-                <div className="absolute -bottom-1.5 -right-1 w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-warning flex items-center justify-center text-warning-foreground border border-background shadow-xl z-20 animate-pulse">
+                <div className="absolute -bottom-1.5 -right-1 w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-warning flex items-center justify-center text-warning-foreground border border-background shadow-lg z-20">
                   <Crown className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
               </div>
               <div className="bg-background/30 backdrop-blur-md p-2 sm:p-6 rounded-t-[1.5rem] sm:rounded-t-3xl w-full text-center border-x border-t border-warning/30 h-30 sm:h-44 flex flex-col justify-between group-hover/champ:border-warning/50 transition-colors shadow-2xl relative overflow-hidden">
                 <div className="absolute inset-x-0 top-0 h-0.5 sm:h-1 bg-gradient-to-r from-warning/60 to-transparent" />
                 <div className="min-w-0">
-                  <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.25em] text-warning mb-0.5 sm:mb-1 animate-pulse">Champion</p>
+                  <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.25em] text-warning mb-0.5 sm:mb-1">Champion</p>
                   <p className="text-xs sm:text-base font-black text-foreground truncate max-w-full px-0.5">{topThree[0]?.full_name || "Sang Juara"}</p>
                 </div>
                 <Badge variant="outline" className="font-mono text-[9px] sm:text-xs border-warning/45 text-warning bg-warning/10 w-fit mx-auto px-2 sm:px-4 py-0.5 shadow-[0_0_10px_rgb(var(--warning-rgb)/0.1)] truncate max-w-full">
@@ -350,12 +367,11 @@ export default function LeaderboardClient() {
               key={user.id}
               initial={{ opacity: 0, x: -15 }}
               animate={{ opacity: 1, x: 0 }}
-              layout
             >
               <Card 
-                className={`glass border p-3.5 sm:p-5 flex items-center gap-3 sm:gap-6 backdrop-blur-md shadow-lg group transition-all duration-300 hover:-translate-y-0.5 cursor-pointer ${
+                className={`glass border p-3.5 sm:p-5 flex items-center gap-3 sm:gap-6 shadow-sm group transition-all duration-200 hover:-translate-y-0.5 cursor-pointer ${
                   isOwnCard 
-                    ? "border-primary/50 bg-primary/[0.03] shadow-[0_0_15px_rgb(var(--primary-rgb)/0.15)]" 
+                    ? "border-primary/50 bg-primary/[0.03] shadow-[0_0_12px_rgb(var(--primary-rgb)/0.12)]"
                     : "border-border/80 bg-card/60 hover:border-primary/45 hover:bg-primary/[0.01]"
                 }`}
               >
@@ -435,7 +451,7 @@ export default function LeaderboardClient() {
           animate={{ opacity: 1, y: 0 }}
           className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-4xl z-50 pointer-events-none"
         >
-          <Card className="glass border-primary/45 p-4 flex items-center gap-3 sm:gap-6 bg-card/85 backdrop-blur-xl shadow-[0_-15px_40px_rgba(0,0,0,0.3),0_0_35px_rgb(var(--primary-rgb)/0.2)] rounded-3xl pointer-events-auto border-2 hover:border-primary/60 transition-colors">
+          <Card className="glass border-primary/45 p-4 flex items-center gap-3 sm:gap-6 bg-card/90 backdrop-blur-sm shadow-[0_-10px_28px_rgba(0,0,0,0.24),0_0_22px_rgb(var(--primary-rgb)/0.14)] rounded-3xl pointer-events-auto border-2 hover:border-primary/60 transition-colors">
             {/* Peringkat */}
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 border border-primary/30 flex flex-col items-center justify-center shrink-0 shadow-[0_0_12px_rgb(var(--primary-rgb)/0.25)]">
               <span className="text-[10px] font-black uppercase text-primary tracking-widest leading-none">Rank</span>

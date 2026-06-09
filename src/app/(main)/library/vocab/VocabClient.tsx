@@ -9,7 +9,7 @@
 // ======================
 // IMPOR
 // ======================
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import {
@@ -30,10 +30,30 @@ import { VocabPagination } from "@/components/features/library/vocab/VocabPagina
 import { useUIStore } from "@/store/useUIStore";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
+import type { VocabItem } from "@/components/features/library/vocab/types";
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+const VOCAB_PAGE_SIZE = 50;
+const DEFAULT_VOCAB_LEVEL = "N5";
+
+function normalizeLevelParam(value: string | null) {
+  if (!value) return DEFAULT_VOCAB_LEVEL;
+
+  const lower = value.toLowerCase();
+  if (lower === "all" || value === "Semua") return "Semua";
+  if (lower === "umum") return "Umum";
+  if (/^n[1-5]$/.test(lower)) return lower.toUpperCase();
+  return value;
+}
+
+function mapLevelToQuery(label: string) {
+  if (label === "Semua") return "all";
+  if (label === "Umum") return "umum";
+  return label;
+}
 
 /**
  * Komponen VocabClient: Menyediakan antarmuka direktori kamus kosakata interaktif 
@@ -53,7 +73,7 @@ export default function VocabClient({
   const pathname = usePathname();
 
   // Membaca nilai filter awal dari URL jika ada (kompatibel dengan bookmark)
-  const initialLevel = searchParams.get("level") || "n5";
+  const initialLevel = normalizeLevelParam(searchParams.get("level"));
   const initialHinshi = searchParams.get("hinshi") || "all";
   const initialSearch = searchParams.get("search") || "";
   const initialPage = Number(searchParams.get("page") || "1");
@@ -66,16 +86,9 @@ export default function VocabClient({
   const [search, setSearch] = useState(initialSearch);
   const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
   const [currentPage, setCurrentPage] = useState(initialPage);
-  const limit = 50;
 
   const isFirstMount = useRef(true);
   const layoutPreference = useUIStore((s) => s.settings.layoutPreference) ?? "grid";
-
-  const mapLevelToQuery = (lbl: string) => {
-    if (lbl === "Semua") return "all";
-    if (lbl === "Umum") return "umum";
-    return lbl;
-  };
 
   // Menyinkronkan status filter dengan parameter pencarian URL secara reaktif
   useEffect(() => {
@@ -134,84 +147,84 @@ export default function VocabClient({
 
   const { data, isFetching: loading } = useQuery({
     queryKey: ["vocab", currentPage, debouncedSearch, level, hinshi],
-    queryFn: () => getPaginatedVocab(currentPage, limit, debouncedSearch, mapLevelToQuery(level), hinshi),
+    queryFn: () => getPaginatedVocab(currentPage, VOCAB_PAGE_SIZE, debouncedSearch, mapLevelToQuery(level), hinshi),
     placeholderData: keepPreviousData,
-    initialData: currentPage === 1 && debouncedSearch === "" && level === "Semua" && hinshi === "all" ? initialData : undefined,
+    initialData: currentPage === 1 && debouncedSearch === "" && level === DEFAULT_VOCAB_LEVEL && hinshi === "all" ? initialData : undefined,
   });
 
-  const vocabListRaw = data?.data || [];
+  const vocabListRaw = useMemo(() => data?.data || [], [data?.data]);
 
   type VocabItemType = (typeof vocabListRaw)[number];
 
-  // Melakukan de-duplikasi konten berdasarkan kata kunci unik
-  const uniqueVocab = Object.values(
-    vocabListRaw.reduce((acc: Record<string, VocabItemType>, item: VocabItemType) => {
-      const key = item.word || "";
-      if (!acc[key]) {
-        acc[key] = item;
-      }
-      return acc;
-    }, {})
-  );
+  const vocabList = useMemo<VocabItem[]>(() => {
+    const seen = new Set<string>();
+    const mapped: VocabItem[] = [];
 
-  const vocabList: import("@/components/features/library/vocab/types").VocabItem[] = uniqueVocab.map((item) => {
-    const relatedKanjiParsed = Array.isArray(item.related_kanji)
-      ? (item.related_kanji as unknown[]).map((rk) => {
-        if (typeof rk === "string") {
-          return { character: rk, meaning: "" };
-        }
-        if (rk && typeof rk === "object") {
-          const obj = rk as Record<string, unknown>;
-          return {
-            character: typeof obj.character === "string" ? obj.character : "",
-            meaning: typeof obj.meaning === "string" ? obj.meaning : "",
-          };
-        }
-        return { character: "", meaning: "" };
-      })
-      : null;
+    for (const item of vocabListRaw as VocabItemType[]) {
+      const key = item.word || item.id;
+      if (seen.has(key)) continue;
+      seen.add(key);
 
-    return {
-      id: item.id,
-      word: item.word,
-      furigana: item.furigana ?? null,
-      romaji: item.romaji ?? null,
-      meaning: item.meaning,
-      hinshi: item.hinshi ?? null,
-      slug: item.slug,
-      jlpt_level: item.jlpt_level ?? null,
-      pitch_accent: item.pitch_accent ?? null,
-      audio_url: item.audio_url ?? null,
-      usage_notes: item.usage_notes ?? null,
-      mnemonic: item.mnemonic ?? null,
-      is_common: item.is_common,
-      show_in_flashcard: item.show_in_flashcard,
-      examples: Array.isArray(item.examples)
-        ? (item.examples as unknown[]).map((ex) => {
-          if (ex && typeof ex === "object") {
-            const obj = ex as Record<string, unknown>;
+      const relatedKanjiParsed = Array.isArray(item.related_kanji)
+        ? (item.related_kanji as unknown[]).map((rk) => {
+          if (typeof rk === "string") {
+            return { character: rk, meaning: "" };
+          }
+          if (rk && typeof rk === "object") {
+            const obj = rk as Record<string, unknown>;
             return {
-              id: typeof obj.id === "string" ? obj.id : undefined,
-              jp: typeof obj.jp === "string" ? obj.jp : undefined,
-              romaji: typeof obj.romaji === "string" ? obj.romaji : undefined,
-              furigana: typeof obj.furigana === "string" ? obj.furigana : undefined,
-              meaning: typeof obj.meaning === "string" ? obj.meaning : undefined,
-              japanese: typeof obj.japanese === "string" ? obj.japanese : undefined,
-              indonesian: typeof obj.indonesian === "string" ? obj.indonesian : undefined,
+              character: typeof obj.character === "string" ? obj.character : "",
+              meaning: typeof obj.meaning === "string" ? obj.meaning : "",
             };
           }
-          return {};
+          return { character: "", meaning: "" };
         })
-        : null,
-      synonyms: Array.isArray(item.synonyms) ? item.synonyms.map(String) : null,
-      antonyms: Array.isArray(item.antonyms) ? item.antonyms.map(String) : null,
-      related_kanji: relatedKanjiParsed,
-      conjugations: item.conjugations as Record<string, string> | null,
-      created_at: item.created_at,
-    };
-  });
+        : null;
+
+      mapped.push({
+        id: item.id,
+        word: item.word,
+        furigana: item.furigana ?? null,
+        romaji: item.romaji ?? null,
+        meaning: item.meaning,
+        hinshi: item.hinshi ?? null,
+        slug: item.slug,
+        jlpt_level: item.jlpt_level ?? null,
+        pitch_accent: item.pitch_accent ?? null,
+        audio_url: item.audio_url ?? null,
+        usage_notes: item.usage_notes ?? null,
+        mnemonic: item.mnemonic ?? null,
+        is_common: item.is_common,
+        show_in_flashcard: item.show_in_flashcard,
+        examples: Array.isArray(item.examples)
+          ? (item.examples as unknown[]).map((ex) => {
+            if (ex && typeof ex === "object") {
+              const obj = ex as Record<string, unknown>;
+              return {
+                id: typeof obj.id === "string" ? obj.id : undefined,
+                jp: typeof obj.jp === "string" ? obj.jp : undefined,
+                romaji: typeof obj.romaji === "string" ? obj.romaji : undefined,
+                furigana: typeof obj.furigana === "string" ? obj.furigana : undefined,
+                meaning: typeof obj.meaning === "string" ? obj.meaning : undefined,
+                japanese: typeof obj.japanese === "string" ? obj.japanese : undefined,
+                indonesian: typeof obj.indonesian === "string" ? obj.indonesian : undefined,
+              };
+            }
+            return {};
+          })
+          : null,
+        synonyms: Array.isArray(item.synonyms) ? item.synonyms.map(String) : null,
+        antonyms: Array.isArray(item.antonyms) ? item.antonyms.map(String) : null,
+        related_kanji: relatedKanjiParsed,
+        conjugations: item.conjugations as Record<string, string> | null,
+        created_at: item.created_at,
+      });
+    }
+
+    return mapped;
+  }, [vocabListRaw]);
   const totalItems = data?.total || 0;
-  const totalPages = Math.ceil(totalItems / limit);
+  const totalPages = Math.ceil(totalItems / VOCAB_PAGE_SIZE);
 
   // Mode Latihan Flashcard
   if (isFlashcardMode && vocabList.length > 0) {
@@ -291,7 +304,7 @@ export default function VocabClient({
             {vocabList.map((item) => (
               <div
                 key={item.id}
-                className="flex md:grid md:grid-cols-12 items-center justify-between gap-4 px-4 py-3 bg-[rgb(var(--card-rgb)/0.3)] backdrop-blur-3xl border border-border hover:border-[rgb(var(--primary-rgb)/0.5)] transition-all duration-300 rounded-2xl shadow-sm hover:shadow-[0_0_25px_rgb(var(--primary-rgb)/0.08)] group"
+                className="flex md:grid md:grid-cols-12 items-center justify-between gap-4 px-4 py-3 bg-card/70 border border-border hover:border-[rgb(var(--primary-rgb)/0.5)] transition-all duration-200 rounded-2xl shadow-sm group"
               >
                 {/* Sisi Kiri: Kosakata & Arti (Flex di Seluler, Kolom Grid di Desktop) */}
                 <div className="flex-1 md:col-span-7 flex flex-col md:grid md:grid-cols-7 md:gap-4 md:items-center min-w-0 pr-2">

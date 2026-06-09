@@ -9,17 +9,13 @@
 // ======================
 // IMPOR
 // ======================
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { getGrammarArticles } from "@/actions/library.actions";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { BookOpen, Search } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination } from "@/components/ui/Pagination";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/store/useUIStore";
-import { useHasMounted } from "@/hooks/useHasMounted";
 
 // Komponen Pendukung
 import { GrammarCard } from "@/components/features/grammar/GrammarCard";
@@ -32,6 +28,7 @@ import { GrammarHeader } from "@/components/features/grammar/GrammarHeader";
 // ======================
 const LEVELS = ["n5", "n4", "n3", "n2", "n1"];
 const ITEMS_PER_PAGE = 12;
+const EMPTY_GRAMMAR_ARTICLES: GrammarArticle[] = [];
 
 // ======================
 // TIPE DATA
@@ -62,7 +59,7 @@ interface GrammarClientProps {
  * @param {GrammarClientProps} props Properti komponen.
  * @returns {JSX.Element} Antarmuka direktori tata bahasa interaktif.
  */
-export default function GrammarClient({ initialArticles = [] }: GrammarClientProps) {
+export default function GrammarClient({ initialArticles = EMPTY_GRAMMAR_ARTICLES }: GrammarClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -77,30 +74,15 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
   const [articles, setArticles] = useState<GrammarArticle[]>(initialArticles);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(initialPage);
-  const mounted = useHasMounted();
-  const [layoutMode, setLayoutMode] = useState<"grid" | "list">("grid");
 
   const isFirstMount = useRef(true);
 
   // Membaca preferensi tata letak awal dari Zustand
   const layoutPreference = useUIStore((s) => s.settings.layoutPreference) ?? "grid";
-
-  const [prevLayoutPreference, setPrevLayoutPreference] = useState(layoutPreference);
-  if (layoutPreference !== prevLayoutPreference) {
-    setPrevLayoutPreference(layoutPreference);
-    setLayoutMode(layoutPreference as "grid" | "list");
-  }
-
-  const [prevSearchTerm, setPrevSearchTerm] = useState(searchTerm);
-  if (searchTerm !== prevSearchTerm) {
-    setPrevSearchTerm(searchTerm);
-    setCurrentPage(1);
-  }
+  const layoutMode = layoutPreference === "list" ? "list" : "grid";
 
   // Menyinkronkan status filter dengan parameter pencarian URL secara reaktif
   useEffect(() => {
-    if (!mounted) return;
-
     const params = new URLSearchParams(searchParams.toString());
 
     if (searchTerm) {
@@ -127,7 +109,7 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
     if (currentParamsString !== newParamsString) {
       router.replace(`${pathname}?${newParamsString}`, { scroll: false });
     }
-  }, [searchTerm, selectedLevel, currentPage, pathname, router, searchParams, mounted]);
+  }, [searchTerm, selectedLevel, currentPage, pathname, router, searchParams]);
 
   useEffect(() => {
     if (selectedLevel === "n5" && articles.length > 0 && articles.length === (initialArticles?.length || 0)) {
@@ -154,20 +136,24 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedLevel]);
 
-  const filteredArticles = articles.filter(art => {
-    const term = searchTerm.toLowerCase();
-    const titleMatch = art.title.toLowerCase().includes(term);
-    const meaningMatch = art.meaning?.toLowerCase().includes(term) || false;
-    const formationMatch = art.formation?.toLowerCase().includes(term) || false;
-    const notesMatch = art.notes?.toLowerCase().includes(term) || false;
-    return titleMatch || meaningMatch || formationMatch || notesMatch;
-  });
+  const filteredArticles = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return articles;
+
+    return articles.filter((art) => {
+      const titleMatch = art.title.toLowerCase().includes(term);
+      const meaningMatch = art.meaning?.toLowerCase().includes(term) || false;
+      const formationMatch = art.formation?.toLowerCase().includes(term) || false;
+      const notesMatch = art.notes?.toLowerCase().includes(term) || false;
+      return titleMatch || meaningMatch || formationMatch || notesMatch;
+    });
+  }, [articles, searchTerm]);
 
   const totalPages = Math.ceil(filteredArticles.length / ITEMS_PER_PAGE);
-  const paginatedArticles = filteredArticles.slice(
+  const paginatedArticles = useMemo(() => filteredArticles.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
-  );
+  ), [currentPage, filteredArticles]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -187,7 +173,13 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
         }}
       />
 
-      <GrammarSearch value={searchTerm} onChange={setSearchTerm} />
+      <GrammarSearch
+        value={searchTerm}
+        onChange={(value) => {
+          setSearchTerm(value);
+          setCurrentPage(1);
+        }}
+      />
 
       <section className="relative min-h-[400px]">
         {loading && (
@@ -222,7 +214,7 @@ export default function GrammarClient({ initialArticles = [] }: GrammarClientPro
               {paginatedArticles.map((article) => (
                 <div
                   key={article.id || article._id}
-                  className="flex md:grid md:grid-cols-12 items-center justify-between gap-4 px-4 py-3 bg-[rgb(var(--card-rgb)/0.3)] backdrop-blur-3xl border border-border hover:border-[rgb(var(--primary-rgb)/0.5)] transition-all duration-300 rounded-2xl shadow-sm hover:shadow-[0_0_25px_rgb(var(--primary-rgb)/0.08)] group"
+                  className="flex md:grid md:grid-cols-12 items-center justify-between gap-4 px-4 py-3 bg-card/70 border border-border hover:border-[rgb(var(--primary-rgb)/0.5)] transition-all duration-200 rounded-2xl shadow-sm group"
                 >
                   {/* Sisi Kiri: Pola Kalimat & Arti (Flex di Seluler, Kolom Grid di Desktop) */}
                   <div className="flex-1 md:col-span-7 flex flex-col md:grid md:grid-cols-7 md:gap-4 md:items-center min-w-0 pr-2">

@@ -33,7 +33,7 @@ export const metadata: Metadata = {
  * @returns {JSX.Element} Halaman direktori pustaka kanji.
  */
 export default async function KanjiListPage() {
-  const initialData = await getPaginatedKanji(1, 24, "", "");
+  const initialData = await getPaginatedKanji(1, 24, "", "N5");
 
   return (
     <div className="w-full min-h-screen bg-transparent relative overflow-hidden pt-12 pb-24 px-4 md:px-8">

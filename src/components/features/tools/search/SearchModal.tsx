@@ -6,12 +6,11 @@
 // ==========================================
 // IMPORT & DEPENDENSI
 // ==========================================
-import { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { m, AnimatePresence } from "framer-motion";
 import { Search, X, Command, BookOpen, Trophy, Layers, BrainCircuit, Heart, Settings, Share2, ArrowRight, Zap, Loader2, FileText, Hash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import * as wanakana from "wanakana";
 
 // ==========================================
 // TIPE DATA / INTERFACE
@@ -42,12 +41,20 @@ const SEARCH_ITEMS: SearchItem[] = [
   { id: "quick-kana", title: "Belajar Kana", description: "Latihan dasar Hiragana & Katakana", href: "/tools/kana", icon: BookOpen, category: "Aksi Cepat" },
 ];
 
+const QUICK_ACTIONS = SEARCH_ITEMS.filter((item) => item.category === "Aksi Cepat");
+const searchCache = new Map<string, SearchItem[]>();
+
 // ==========================================
 // FUNGSI PENCARIAN DATABASE (SUPABASE)
 // ==========================================
 async function searchSupabase(query: string): Promise<SearchItem[]> {
+  const normalizedQuery = query.trim().toLowerCase();
+  const cached = searchCache.get(normalizedQuery);
+  if (cached) return cached;
+
   const supabase = createClient();
-  const kanaQuery = wanakana.toHiragana(query);
+  const { toHiragana } = await import("wanakana");
+  const kanaQuery = toHiragana(query);
   const searchTerm = `%${query}%`;
   const kanaTerm = `%${kanaQuery}%`;
 
@@ -68,6 +75,7 @@ async function searchSupabase(query: string): Promise<SearchItem[]> {
     ...(grammarRes.data || []).map(g => ({ id: g.id, title: g.title, description: g.meaning || "Tata Bahasa", href: `/library/grammar/${g.slug || g.id}`, icon: BookOpen, category: "Tata Bahasa" as const })),
     ...(kanjiRes.data || []).map(k => ({ id: k.id, title: k.character, description: k.meaning || "Kanji", href: `/library/kanji/${k.character || k.id}`, icon: Hash, category: "Kanji" as const })),
   ];
+  searchCache.set(normalizedQuery, mapped);
   return mapped;
 }
 
@@ -79,34 +87,36 @@ async function searchSupabase(query: string): Promise<SearchItem[]> {
  */
 export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<SearchItem[]>([]);
+  const [results, setResults] = useState<SearchItem[]>(QUICK_ACTIONS);
   const [isSearching, setIsSearching] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const router = useRouter();
+  const requestIdRef = useRef(0);
 
   useEffect(() => {
     if (!isOpen) return;
-    if (query.trim() === "") {
-      const frame = requestAnimationFrame(() => {
-        setResults(SEARCH_ITEMS.filter(item => item.category === "Aksi Cepat"));
-        setIsSearching(false);
-      });
-      return () => cancelAnimationFrame(frame);
+    const trimmedQuery = query.trim();
+    const requestId = ++requestIdRef.current;
+
+    if (trimmedQuery === "") {
+      return;
     }
 
     const timer = setTimeout(async () => {
       setIsSearching(true);
       try {
         const localMatches = SEARCH_ITEMS.filter(item =>
-          item.title.toLowerCase().includes(query.toLowerCase()) ||
-          item.description.toLowerCase().includes(query.toLowerCase())
+          item.title.toLowerCase().includes(trimmedQuery.toLowerCase()) ||
+          item.description.toLowerCase().includes(trimmedQuery.toLowerCase())
         );
-        const dbResults = await searchSupabase(query);
+        const dbResults = await searchSupabase(trimmedQuery);
+        if (requestId !== requestIdRef.current) return;
         setResults([...localMatches, ...dbResults]);
       } catch (err) {
+        if (requestId !== requestIdRef.current) return;
         console.error("Gagal melakukan pencarian:", err);
       } finally {
-        setIsSearching(false);
+        if (requestId === requestIdRef.current) setIsSearching(false);
       }
     }, 400);
     return () => clearTimeout(timer);
@@ -117,23 +127,25 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
     onClose();
   }, [router, onClose]);
 
+  const trimmedQuery = query.trim();
+  const displayedResults = useMemo(
+    () => trimmedQuery === "" ? QUICK_ACTIONS : results,
+    [results, trimmedQuery]
+  );
+  const showSearching = trimmedQuery !== "" && isSearching;
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); if (isOpen) onClose(); }
       if (!isOpen) return;
       if (e.key === "Escape") onClose();
-      if (e.key === "ArrowDown") { e.preventDefault(); setActiveIndex(prev => (prev + 1) % results.length); }
-      if (e.key === "ArrowUp") { e.preventDefault(); setActiveIndex(prev => (prev - 1 + results.length) % results.length); }
-      if (e.key === "Enter") { e.preventDefault(); if (results[activeIndex]) handleSelect(results[activeIndex].href); }
+      if (e.key === "ArrowDown" && displayedResults.length > 0) { e.preventDefault(); setActiveIndex(prev => (prev + 1) % displayedResults.length); }
+      if (e.key === "ArrowUp" && displayedResults.length > 0) { e.preventDefault(); setActiveIndex(prev => (prev - 1 + displayedResults.length) % displayedResults.length); }
+      if (e.key === "Enter") { e.preventDefault(); if (displayedResults[activeIndex]) handleSelect(displayedResults[activeIndex].href); }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose, results, activeIndex, handleSelect]);
-
-  useEffect(() => {
-    const frame = requestAnimationFrame(() => setActiveIndex(0));
-    return () => cancelAnimationFrame(frame);
-  }, [query]);
+  }, [isOpen, onClose, displayedResults, activeIndex, handleSelect]);
 
   // ==========================================
   // RENDER KOMPONEN
@@ -142,18 +154,18 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-[200] flex items-start justify-center pt-20 px-4 md:pt-[15vh]">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-background/60 backdrop-blur-md" onClick={onClose} />
-          <motion.div initial={{ opacity: 0, scale: 0.95, y: -20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: -20 }} className="w-full max-w-2xl bg-card/80 backdrop-blur-3xl border border-border shadow-2xl rounded-[2.5rem] overflow-hidden relative z-10">
+          <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-background/60 backdrop-blur-md" onClick={onClose} />
+          <m.div initial={{ opacity: 0, scale: 0.95, y: -20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: -20 }} className="w-full max-w-2xl bg-card/85 backdrop-blur-md border border-border shadow-2xl rounded-[2rem] overflow-hidden relative z-10">
             <div className="p-6 border-b border-border flex items-center gap-4">
-              {isSearching ? <Loader2 className="text-primary animate-spin" size={24} /> : <Search className="text-primary animate-pulse" size={24} />}
-              <input autoFocus placeholder="Cari kosakata, tata bahasa, atau navigasi..." className="flex-1 bg-transparent border-none outline-none text-lg md:text-xl font-bold text-foreground placeholder:text-muted-foreground/40" value={query} onChange={e => setQuery(e.target.value)} />
+              {showSearching ? <Loader2 className="text-primary animate-spin" size={24} /> : <Search className="text-primary animate-pulse" size={24} />}
+              <input autoFocus placeholder="Cari kosakata, tata bahasa, atau navigasi..." className="flex-1 bg-transparent border-none outline-none text-lg md:text-xl font-bold text-foreground placeholder:text-muted-foreground/40" value={query} onChange={e => { setQuery(e.target.value); setActiveIndex(0); if (e.target.value.trim() === "") setIsSearching(false); }} />
               <div className="hidden md:flex items-center gap-1 px-2 py-1 bg-muted border border-border rounded-lg text-xs font-black text-muted-foreground uppercase tracking-widest"><Command size={10} /> K</div>
               <button onClick={onClose} aria-label="Tutup pencarian" className="p-2 hover:bg-muted rounded-xl text-muted-foreground transition-all"><X size={20} /></button>
             </div>
             <div className="max-h-[60vh] overflow-y-auto p-4 custom-scrollbar">
-              {results.length > 0 ? (
+              {displayedResults.length > 0 ? (
                 <div className="space-y-2">
-                  {results.map((item, index) => (
+                  {displayedResults.map((item, index) => (
                     <div key={item.id + index} onMouseEnter={() => setActiveIndex(index)} onClick={() => handleSelect(item.href)}
                       className={`flex items-center gap-4 p-4 rounded-2xl cursor-pointer transition-all duration-300 relative group ${index === activeIndex ? 'bg-primary/10 border border-primary/20 shadow-[0_0_20px_rgb(var(--primary-rgb)/0.05)]' : 'hover:bg-muted/50 border border-transparent'}`}>
                       <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 ${index === activeIndex ? 'bg-primary text-primary-foreground shadow-lg scale-110' : 'bg-muted text-muted-foreground'}`}><item.icon size={24} /></div>
@@ -183,7 +195,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
               </div>
               <span className="opacity-50">Pencarian Global v2.0</span>
             </div>
-          </motion.div>
+          </m.div>
         </div>
       )}
     </AnimatePresence>

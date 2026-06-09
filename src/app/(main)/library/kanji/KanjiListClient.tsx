@@ -31,6 +31,13 @@ interface KanjiListClientProps {
 }
 
 const ITEMS_PER_PAGE = 24;
+const DEFAULT_KANJI_LEVEL = "N5";
+
+function normalizeLevelParam(value: string | null) {
+  if (!value || value.toLowerCase() === "all") return DEFAULT_KANJI_LEVEL;
+  if (/^n[1-5]$/i.test(value)) return value.toUpperCase();
+  return value;
+}
 
 // ======================
 // EKSEKUSI UTAMA
@@ -49,7 +56,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
   const pathname = usePathname();
 
   // Membaca nilai filter awal dari URL jika ada (kompatibel dengan bookmark)
-  const initialLevel = searchParams.get("level") || "n5";
+  const initialLevel = normalizeLevelParam(searchParams.get("level"));
   const initialSearch = searchParams.get("search") || "";
   const initialPage = Number(searchParams.get("page") || "1");
 
@@ -115,7 +122,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
     queryKey: ["kanji", currentPage, debouncedSearch, levelFilter],
     queryFn: () => getPaginatedKanji(currentPage, ITEMS_PER_PAGE, debouncedSearch, levelFilter || ""),
     placeholderData: keepPreviousData,
-    initialData: currentPage === 1 && debouncedSearch === "" && levelFilter === null ? initialData : undefined,
+    initialData: currentPage === 1 && debouncedSearch === "" && levelFilter === DEFAULT_KANJI_LEVEL ? initialData : undefined,
   });
 
   const kanjis = data?.data || [];
@@ -162,7 +169,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
             {kanjis.map((kanji) => (
               <div
                 key={kanji.id}
-                className="flex md:grid md:grid-cols-12 items-center justify-between gap-4 px-4 py-3 bg-[rgb(var(--card-rgb)/0.3)] backdrop-blur-3xl border border-border hover:border-[rgb(var(--primary-rgb)/0.5)] transition-all duration-300 rounded-2xl shadow-sm hover:shadow-[0_0_25px_rgb(var(--primary-rgb)/0.08)] group"
+                className="flex md:grid md:grid-cols-12 items-center justify-between gap-4 px-4 py-3 bg-card/70 border border-border hover:border-[rgb(var(--primary-rgb)/0.5)] transition-all duration-200 rounded-2xl shadow-sm group"
               >
                 {/* Sisi Kiri: Kanji & Arti (Flex di Seluler, Kolom Grid di Desktop) */}
                 <div className="flex-1 md:col-span-8 flex flex-col md:grid md:grid-cols-8 md:gap-4 md:items-center min-w-0 pr-2">
