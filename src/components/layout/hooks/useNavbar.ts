@@ -11,6 +11,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { 
   LayoutDashboard, 
+  Compass,
   BookOpen, 
   Trophy, 
   Layers, 
@@ -60,6 +61,7 @@ export function useNavbar() {
   const links: NavLinks = useMemo(() => ({
     main: [
       { href: ROUTES.DASHBOARD, label: "Dasbor", icon: LayoutDashboard },
+      { href: ROUTES.LEARNING_HUB, label: "Learning Hub", icon: Compass },
       { href: ROUTES.COURSES.ROOT, label: "Materi", icon: BookOpen },
       { href: "/tools", label: "Peralatan", icon: Wrench },
       { href: ROUTES.EXAMS.ROOT, label: "Ujian", icon: Trophy },

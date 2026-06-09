@@ -17,6 +17,7 @@ import dynamic from "next/dynamic";
 import DashboardHero from "../DashboardHero";
 import DailyQuests from "../quests/DailyQuests";
 import DailyExpression from "../DailyExpression";
+import DailyRoutePanel from "@/components/features/ecosystem/DailyRoutePanel";
 import LearningTimelinePanel from "@/components/features/ecosystem/LearningTimelinePanel";
 import NextActionPanel from "@/components/features/ecosystem/NextActionPanel";
 import { Variants } from "framer-motion";
@@ -88,6 +89,8 @@ export function HomePanel({
             }>;
           }>}
         />
+
+        <DailyRoutePanel compact />
 
         <NextActionPanel />
         

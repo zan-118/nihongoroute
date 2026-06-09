@@ -7,7 +7,7 @@
 // IMPOR
 // ======================
 import { usePathname } from "next/navigation";
-import { Home, BookOpen, BrainCircuit, Library, LogIn, User } from "lucide-react";
+import { Compass, Home, BrainCircuit, Library, LogIn, User } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
 import { useAuthStore } from "@/store/useAuthStore";
 
@@ -21,7 +21,7 @@ export function useMobileNav() {
 
   const navItems = [
     { href: "/dashboard", icon: Home, label: "Beranda" },
-    { href: "/courses", icon: BookOpen, label: "Materi" },
+    { href: "/learning-hub", icon: Compass, label: "Hub" },
     { href: "/review", icon: BrainCircuit, label: "Hafalan" },
     { href: "/library", icon: Library, label: "Pustaka" },
     { 

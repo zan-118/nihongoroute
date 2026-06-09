@@ -85,6 +85,88 @@ export interface EcosystemVocabEntry {
   hitCount: number;
 }
 
+export type WeakPointCategory =
+  | "reading"
+  | "listening"
+  | "vocab"
+  | "kanji"
+  | "grammar"
+  | "counter"
+  | "conjugation"
+  | "mixed";
+
+export interface WeakPointInsight {
+  id: string;
+  category: WeakPointCategory;
+  label: string;
+  description: string;
+  href: string;
+  mistakes: number;
+  attempts: number;
+  score: number;
+  lastSeenAt: number;
+  sourceTitle?: string;
+}
+
+export type DailyRouteCategory = EcosystemRecommendation["category"] | "warmup";
+
+export interface DailyRouteStep {
+  id: string;
+  order: number;
+  title: string;
+  description: string;
+  href: string;
+  category: DailyRouteCategory;
+  reason: string;
+  priority: number;
+}
+
+const WEAK_POINT_META: Record<
+  WeakPointCategory,
+  { label: string; href: string; description: string }
+> = {
+  reading: {
+    label: "Reading",
+    href: "/library/reading",
+    description: "Pemahaman bacaan butuh penguatan konteks.",
+  },
+  listening: {
+    label: "Listening",
+    href: "/library/listening",
+    description: "Pemahaman audio butuh pengulangan aktif.",
+  },
+  vocab: {
+    label: "Kosakata",
+    href: "/tools/jlpt-drill?kind=vocab",
+    description: "Arti, bacaan, atau konteks kata masih rapuh.",
+  },
+  kanji: {
+    label: "Kanji",
+    href: "/tools/jlpt-drill?kind=kanji",
+    description: "Arti atau bacaan kanji perlu dilatih ulang.",
+  },
+  grammar: {
+    label: "Grammar",
+    href: "/tools/jlpt-drill?kind=grammar",
+    description: "Pola kalimat perlu dipakai lagi dalam soal singkat.",
+  },
+  counter: {
+    label: "Counter",
+    href: "/tools/counter-trainer",
+    description: "Pilihan kata bantu bilangan masih perlu pemanasan.",
+  },
+  conjugation: {
+    label: "Konjugasi",
+    href: "/tools/conjugation",
+    description: "Bentuk verba perlu dicek ulang.",
+  },
+  mixed: {
+    label: "Campuran",
+    href: "/tools/jlpt-drill",
+    description: "Ada beberapa area kecil yang perlu distabilkan.",
+  },
+};
+
 function safeQuery(value: string | undefined) {
   return encodeURIComponent(value || "");
 }
@@ -399,6 +481,221 @@ export function buildEcosystemRecommendations({
   return recommendations
     .sort((a, b) => b.priority - a.priority)
     .slice(0, limit);
+}
+
+function weakPointCategory(event: LearningEvent): WeakPointCategory {
+  const detailKind = event.details?.kind;
+  if (detailKind === "counter" || detailKind === "conjugation") return detailKind;
+  if (detailKind === "vocab" || detailKind === "kanji" || detailKind === "grammar") {
+    return detailKind;
+  }
+  if (event.source.type === "vocab" || event.source.type === "kanji" || event.source.type === "grammar") {
+    return event.source.type;
+  }
+  if (event.source.type === "reading" || event.source.type === "listening") {
+    return event.source.type;
+  }
+  return "mixed";
+}
+
+function categoryHref(category: WeakPointCategory, event?: LearningEvent) {
+  if (category === "counter") return "/tools/counter-trainer";
+  if (category === "conjugation") {
+    const params = new URLSearchParams();
+    if (event?.details?.prompt) params.set("verb", event.details.prompt);
+    if (event?.details?.focus) params.set("group", event.details.focus);
+    if (event?.details?.text) params.set("form", event.details.text);
+    return params.size > 0 ? `/tools/conjugation?${params.toString()}` : "/tools/conjugation";
+  }
+  if (category === "vocab" || category === "kanji" || category === "grammar") {
+    return drillHref(event?.source || { type: category }, category);
+  }
+  return WEAK_POINT_META[category].href;
+}
+
+export function buildWeakPointInsights({
+  events,
+  limit = 5,
+}: {
+  events: LearningEvent[];
+  limit?: number;
+}): WeakPointInsight[] {
+  const buckets = new Map<
+    WeakPointCategory,
+    {
+      attempts: number;
+      mistakes: number;
+      lastEvent?: LearningEvent;
+      lastSeenAt: number;
+      sourceTitle?: string;
+    }
+  >();
+
+  latestEvents(events).slice(0, 40).forEach((event) => {
+    const isAnswerEvent =
+      event.type === "jlpt_drill_answered" ||
+      event.type === "counter_answered" ||
+      event.type === "conjugation_checked";
+    const lowAccuracy =
+      event.type === "jlpt_drill_completed" &&
+      typeof event.metrics?.accuracy === "number" &&
+      event.metrics.accuracy < 80;
+
+    if (!isAnswerEvent && !lowAccuracy) return;
+
+    const category = weakPointCategory(event);
+    const existing = buckets.get(category) || {
+      attempts: 0,
+      mistakes: 0,
+      lastSeenAt: 0,
+    };
+    const isMistake = event.details?.isCorrect === false || lowAccuracy;
+
+    buckets.set(category, {
+      attempts: existing.attempts + 1,
+      mistakes: existing.mistakes + (isMistake ? 1 : 0),
+      lastEvent: event.createdAt >= existing.lastSeenAt ? event : existing.lastEvent,
+      lastSeenAt: Math.max(existing.lastSeenAt, event.createdAt),
+      sourceTitle: event.source.title || existing.sourceTitle,
+    });
+  });
+
+  return Array.from(buckets.entries())
+    .filter(([, bucket]) => bucket.mistakes > 0)
+    .map(([category, bucket]) => {
+      const meta = WEAK_POINT_META[category];
+      const score = bucket.mistakes * 10 + Math.min(bucket.attempts, 6) * 2 + bucket.lastSeenAt / 1_000_000_000_000;
+      return {
+        id: `weak-${category}`,
+        category,
+        label: meta.label,
+        description:
+          bucket.mistakes > 1
+            ? `${bucket.mistakes} sinyal salah terakhir muncul di area ini.`
+            : meta.description,
+        href: categoryHref(category, bucket.lastEvent),
+        mistakes: bucket.mistakes,
+        attempts: bucket.attempts,
+        score,
+        lastSeenAt: bucket.lastSeenAt,
+        sourceTitle: bucket.sourceTitle,
+      };
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit);
+}
+
+function pushRouteStep(steps: DailyRouteStep[], step: Omit<DailyRouteStep, "order">) {
+  const existingIndex = steps.findIndex((item) => item.href === step.href || item.id === step.id);
+  if (existingIndex >= 0) {
+    if (step.priority > steps[existingIndex].priority) {
+      steps[existingIndex] = { ...step, order: steps[existingIndex].order };
+    }
+    return;
+  }
+  steps.push({ ...step, order: steps.length + 1 });
+}
+
+export function buildDailyRoute({
+  events,
+  readingProgressMap,
+  readingVocabularyBank,
+  limit = 5,
+}: {
+  events: LearningEvent[];
+  readingProgressMap?: Record<string, EcosystemReadingProgress>;
+  readingVocabularyBank?: Record<string, EcosystemVocabEntry>;
+  limit?: number;
+}): DailyRouteStep[] {
+  const steps: DailyRouteStep[] = [];
+  const recommendations = buildEcosystemRecommendations({
+    events,
+    readingProgressMap,
+    readingVocabularyBank,
+    limit: 8,
+  });
+  const weakPoints = buildWeakPointInsights({ events, limit: 3 });
+  const unfinishedReading = Object.values(readingProgressMap || {})
+    .filter((entry) => !entry.completedAt && entry.totalParagraphs > 0)
+    .sort((a, b) => b.updatedAt - a.updatedAt)[0];
+
+  if (unfinishedReading) {
+    pushRouteStep(steps, {
+      id: `daily-continue-${unfinishedReading.sourceId}`,
+      title: "Lanjutkan Bacaan Aktif",
+      description: `Mulai dari paragraf ${unfinishedReading.lastParagraphIndex + 1}/${unfinishedReading.totalParagraphs}.`,
+      href: `/library/reading/${safeQuery(unfinishedReading.sourceId)}`,
+      category: "continue",
+      reason: "Ada sesi reading yang belum selesai.",
+      priority: 120,
+    });
+  } else {
+    pushRouteStep(steps, {
+      id: "daily-warmup-library",
+      title: "Mulai dari Library",
+      description: "Pilih satu reading atau listening pendek sebagai pemanasan.",
+      href: "/library",
+      category: "warmup",
+      reason: "Belum ada sesi terbuka hari ini.",
+      priority: 68,
+    });
+  }
+
+  weakPoints.forEach((weakPoint, index) => {
+    pushRouteStep(steps, {
+      id: `daily-weak-${weakPoint.category}`,
+      title: `Stabilkan ${weakPoint.label}`,
+      description: weakPoint.sourceTitle
+        ? `Review konteks terakhir: ${weakPoint.sourceTitle}.`
+        : weakPoint.description,
+      href: weakPoint.href,
+      category: "review",
+      reason: `${weakPoint.mistakes} sinyal salah dari ${weakPoint.attempts} aktivitas terkait.`,
+      priority: 112 - index,
+    });
+  });
+
+  recommendations.forEach((recommendation, index) => {
+    pushRouteStep(steps, {
+      id: `daily-${recommendation.id}`,
+      title: recommendation.title,
+      description: recommendation.description,
+      href: recommendation.href,
+      category: recommendation.category,
+      reason:
+        recommendation.category === "review"
+          ? "Direkomendasikan dari kesalahan terbaru."
+          : "Direkomendasikan dari aktivitas library dan tools.",
+      priority: recommendation.priority - index,
+    });
+  });
+
+  if (Object.keys(readingVocabularyBank || {}).length > 0) {
+    pushRouteStep(steps, {
+      id: "daily-vocab-bank",
+      title: "Ubah Bank Kata Jadi Drill",
+      description: "Ambil kosakata yang sering muncul dari reading kamu.",
+      href: "/tools/jlpt-drill?kind=vocab&source=reading",
+      category: "tool",
+      reason: "Bank vocab reading sudah punya bahan latihan.",
+      priority: 72,
+    });
+  }
+
+  pushRouteStep(steps, {
+    id: "daily-finish-shadowing",
+    title: "Tutup dengan Shadowing",
+    description: "Rekam satu kalimat untuk mengunci bunyi dan ritme.",
+    href: "/tools/shadowing",
+    category: "tool",
+    reason: "Sesi singkat berbasis output menjaga learning loop tetap aktif.",
+    priority: 58,
+  });
+
+  return steps
+    .sort((a, b) => b.priority - a.priority)
+    .slice(0, limit)
+    .map((step, index) => ({ ...step, order: index + 1 }));
 }
 
 export function createLearningEvent(input: LearningEventInput): LearningEvent {
