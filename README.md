@@ -172,16 +172,18 @@ Checked-in Supabase migrations create:
 | Domain | Tables |
 | --- | --- |
 | Public library | `course_categories`, `kanji`, `vocab`, `grammar`, `lessons`, `reading_material`, `listening_material`, `exams`, `cheatsheets` |
+| Auxiliary content | `expressions`, `radicals`, `sentences` |
 | User progress | `profiles`, `user_srs`, `user_lessons` |
-| Feedback/support | `user_feedback`, `supporters` |
+| Feedback/support/cache | `user_feedback`, `supporters`, `tts_cache` |
 
-Current code and scripts also reference resources that are not created by the checked-in migration set:
+The live database also includes resources that were previously missing from the migration history. They are now captured by `supabase/migrations/20260609080000_sync_live_schema_drift.sql`:
 
 | Resource | Used for |
 | --- | --- |
 | `tts_cache` | TTS audio metadata read by `/api/tts` and maintenance scripts |
 | `expressions` | Random daily expression data |
 | `sentences` | Example sentence/TTS generation scripts |
+| `radicals` | Radical lookup data related to kanji content |
 | storage bucket `tts-cache` | Pre-generated MP3 files |
 
 Sanity schemas:

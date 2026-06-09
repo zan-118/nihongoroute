@@ -65,9 +65,24 @@ export function useCloudMutation(session: Session | null | undefined) {
 
       // 1. Konversi data kartu SRS kotor (dirtySrs Set) menjadi array objek baris relasional
       const srsUpdates = Array.from(dirtySrs)
-        .filter(id => progress.srs[id])
         .map(id => {
           const state = progress.srs[id];
+
+          if (!state) {
+            const now = new Date().toISOString();
+            return {
+              word_id: id,
+              repetition: 0,
+              interval: 1,
+              ease_factor: 2.5,
+              next_review: now,
+              updated_at: now,
+              status: 'learning',
+              is_deleted: true,
+              custom_mnemonic: null
+            };
+          }
+
           return {
             word_id: id,
             repetition: state.repetition,

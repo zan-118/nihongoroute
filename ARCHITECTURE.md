@@ -157,9 +157,9 @@ Supabase is used for:
 - Supporter records: `supporters`.
 - TTS cache metadata: `tts_cache` as referenced by code and scripts.
 - TTS audio storage bucket: `tts-cache` as referenced by code and scripts.
-- Extra content tables referenced by code/scripts: `expressions`, `sentences`.
+- Extra content tables referenced by code/scripts: `expressions`, `sentences`, `radicals`.
 
-The migration set currently declares the main public/user tables and `supporters`. Some referenced assets such as `tts_cache`, `expressions`, `sentences`, and the `tts-cache` storage bucket are used by the application/scripts but are not created in the checked-in migration files.
+The live database includes `tts_cache`, `expressions`, `sentences`, `radicals`, and the `tts-cache` storage bucket. These live resources are now captured in the migration drift fix `supabase/migrations/20260609080000_sync_live_schema_drift.sql`.
 
 ### Sanity
 
@@ -208,6 +208,10 @@ Main database objects from migrations:
 - `cheatsheets`
 - `user_feedback`
 - `supporters`
+- `expressions`
+- `radicals`
+- `sentences`
+- `tts_cache`
 
 Main functions/triggers:
 
@@ -517,7 +521,7 @@ Playwright E2E tests live under `e2e`:
 - Offline-first state is local-first and later reconciled with Supabase.
 - Destructive local deletes for SRS/lesson progress are represented by dirty deleted states before cloud sync removes rows.
 - TTS audio is generated offline by scripts, not in `/api/tts`.
-- Some code paths depend on database/storage resources not declared in checked-in migrations: `tts_cache`, `expressions`, `sentences`, and storage bucket `tts-cache`.
+- The live database had drifted ahead of the earlier migration set. `20260609080000_sync_live_schema_drift.sql` captures `tts_cache`, `expressions`, `sentences`, `radicals`, the `tts-cache` bucket, user SRS uniqueness, auth-owned FK cleanup, and live editorial columns.
 
 ## Maintenance Checklist
 

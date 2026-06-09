@@ -184,10 +184,14 @@ export const useSRSStore = create<SRSStateStore>()(
         Object.entries(localSrs).forEach(([id, localState]) => {
           const cloudState = cloudData.srs[id];
           
-          // Jika kartu dihapus lokal, hapus dari daftar gabungan dan tandai kotor untuk awan
+          // Jika kartu dihapus lokal tetapi masih ada di awan, pertahankan tombstone
+          // sampai sinkronisasi berikutnya berhasil menghapus baris cloud.
           if (localState.isDeleted) {
             if (cloudState) {
               newDirty.add(id);
+              mergedSrs[id] = localState;
+            } else {
+              newDirty.delete(id);
               delete mergedSrs[id];
             }
             return;
@@ -300,4 +304,3 @@ export const useSRSStore = create<SRSStateStore>()(
 if (typeof window !== "undefined") {
   (window as unknown as Record<string, typeof useSRSStore>).useSRSStore = useSRSStore;
 }
-

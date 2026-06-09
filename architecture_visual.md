@@ -72,7 +72,7 @@ flowchart LR
     PublicTables["course_categories, vocab, kanji, grammar, cheatsheets"]
     UserTables["profiles, user_srs, user_lessons"]
     Supporters["supporters"]
-    OpsTables["tts_cache, expressions, sentences"]
+    OpsTables["tts_cache, expressions, sentences, radicals"]
     Storage["storage bucket: tts-cache"]
     RPC["sync_user_progress RPC"]
   end
@@ -111,7 +111,7 @@ flowchart LR
   UserTables --> RPC
 ```
 
-Note: `tts_cache`, `expressions`, `sentences`, and the `tts-cache` bucket are referenced by current code/scripts but are not created by the checked-in Supabase migrations.
+Note: `tts_cache`, `expressions`, `sentences`, `radicals`, and the `tts-cache` bucket exist in the live database and are captured by `supabase/migrations/20260609080000_sync_live_schema_drift.sql`.
 
 ## Request Flow for Normal Pages
 

@@ -151,5 +151,46 @@ describe("useSRSStore", () => {
       // Status dirty harus tetap ada agar nanti disinkronkan ke cloud
       expect(useSRSStore.getState().dirtySrs.has("word-1")).toBe(true);
     });
+
+    it("mergeProgress mempertahankan tombstone delete lokal jika kartu masih ada di awan", () => {
+      const localState = {
+        ...createNewCardState(),
+        isDeleted: true,
+        updatedAt: Date.now(),
+      };
+      useSRSStore.setState({
+        srs: { "word-1": localState },
+        dirtySrs: new Set(["word-1"]),
+      });
+
+      const cloudState = {
+        ...createNewCardState(),
+        interval: 7,
+        updatedAt: Date.now() - 50000,
+      };
+
+      const mockCloudData: UserProgress = {
+        id: "user-123",
+        isGuest: false,
+        name: "Ahmad Cloud",
+        xp: 1500,
+        level: 6,
+        streak: 12,
+        todayReviewCount: 5,
+        lastStudyDate: "2026-05-20",
+        studyDays: { "2026-05-20": 1 },
+        srs: { "word-1": cloudState },
+        completedLessons: {},
+        notifications: [],
+        inventory: { streakFreeze: 2 },
+        settings: { notificationsEnabled: true },
+      };
+
+      useSRSStore.getState().mergeProgress(mockCloudData);
+
+      const state = useSRSStore.getState();
+      expect(state.srs["word-1"].isDeleted).toBe(true);
+      expect(state.dirtySrs.has("word-1")).toBe(true);
+    });
   });
 });

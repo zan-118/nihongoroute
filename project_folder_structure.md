@@ -364,6 +364,7 @@ supabase/
 |   |-- 20260604001000_add_order_number_to_n3_grammar.sql
 |   |-- 20260604002000_add_order_number_to_n2_grammar.sql
 |   |-- 20260604003000_add_order_number_to_n1_grammar.sql
+|   |-- 20260609080000_sync_live_schema_drift.sql
 ```
 
 Declared tables in migrations:
@@ -382,12 +383,10 @@ Declared tables in migrations:
 - `cheatsheets`
 - `user_feedback`
 - `supporters`
-
-Referenced by code/scripts but not declared in the checked-in migration set:
-
 - `tts_cache`
 - `expressions`
 - `sentences`
+- `radicals`
 - storage bucket `tts-cache`
 
 ## Public Assets

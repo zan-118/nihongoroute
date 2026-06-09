@@ -10,6 +10,9 @@
 export interface ExampleSentence {
   jp: string;
   id: string;
+  japanese?: string;
+  english?: string;
+  indonesian?: string;
   furigana?: string;
   romaji?: string;
 }
@@ -232,6 +235,7 @@ export interface Quiz {
 export interface KanjiTable {
   id: string;
   character: string;
+  english: string;
   meaning: string;
   onyomi?: string;
   kunyomi?: string;
@@ -239,6 +243,7 @@ export interface KanjiTable {
   jlpt_level?: string;
   grade_level?: string;
   stroke_order_svg?: string;
+  frequency_rank?: number;
   radicals: string[];
   mnemonics: MnemonicBlock[];
   examples: ExampleSentence[];
@@ -299,6 +304,11 @@ export interface ReadingMaterialTable {
   video_url?: string;
   seo?: SEOMetadata;
   jlpt_level?: string;
+  status: ContentStatus;
+  warnings?: EditorialWarning[];
+  audit_log?: AuditEntry[];
+  confidence?: EditorialConfidence;
+  generation_context?: GenerationContext;
   created_at: string;
 }
 
@@ -315,6 +325,12 @@ export interface ListeningMaterialTable {
   translation?: string;
   seo?: SEOMetadata;
   jlpt_level?: string;
+  estimated_minutes?: number;
+  status: ContentStatus;
+  warnings?: EditorialWarning[];
+  audit_log?: AuditEntry[];
+  confidence?: EditorialConfidence;
+  generation_context?: GenerationContext;
   created_at: string;
 }
 
@@ -340,6 +356,7 @@ export interface LessonTable {
   warnings?: EditorialWarning[];
   audit_log?: AuditEntry[];
   confidence?: EditorialConfidence;
+  generation_context?: GenerationContext;
   created_at: string;
 }
 
@@ -359,7 +376,116 @@ export interface ExamTable {
   slug: string;
   time_limit: number;
   passing_score: number;
+  description?: string;
   questions: ExamQuestion[];
   is_published: boolean;
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface ProfileTable {
+  id: string;
+  xp: number;
+  level: number;
+  created_at: string;
+  updated_at: string;
+  streak: number;
+  today_review_count: number;
+  last_study_date?: string | null;
+  study_days: Record<string, number | boolean>;
+  full_name?: string | null;
+  avatar_url?: string | null;
+  inventory: Record<string, unknown>;
+  settings: Record<string, unknown>;
+}
+
+export interface UserSRSTable {
+  id: string;
+  user_id: string;
+  word_id: string;
+  interval: number;
+  repetition: number;
+  ease_factor: number;
+  next_review?: string | null;
+  created_at: string;
+  updated_at: string;
+  status: "learning" | "reviewing" | "graduated" | string;
+  custom_mnemonic?: string | null;
+}
+
+export interface UserLessonTable {
+  user_id: string;
+  lesson_id: string;
+  is_completed: boolean;
+  completed_at: string;
+  updated_at: string;
+}
+
+export interface CourseCategoryTable {
+  id: string;
+  title: string;
+  slug: string;
+  order_number?: number;
+  created_at: string;
+  type?: string | null;
+  description?: string | null;
+}
+
+export interface CheatsheetTable {
+  id: string;
+  slug: string;
+  title: string;
+  category?: string | null;
+  items: Record<string, unknown>[];
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface ExpressionTable {
+  id: string;
+  text: string;
+  reading: string;
+  meanings?: string[] | Record<string, unknown>[] | null;
+  common?: boolean;
+  misc?: Record<string, unknown> | unknown[] | null;
+  jlpt_level?: string | null;
+  created_at?: string;
+  indonesia?: string[] | Record<string, unknown>[] | null;
+}
+
+export interface RadicalTable {
+  id: string;
+  character: string;
+  stroke_count?: number | null;
+  kangxi_number?: number | null;
+  meaning?: string | null;
+  kanji_list: string[];
+  created_at?: string;
+}
+
+export interface SentenceTable {
+  id: string;
+  japanese: string;
+  english?: string | null;
+  created_at?: string;
+  indonesia?: string | null;
+}
+
+export interface SupporterTable {
+  id: string;
+  name: string;
+  amount: number;
+  message?: string | null;
+  tier?: "bronze" | "silver" | "gold" | string;
+  source: "saweria" | "trakteer" | string;
+  created_at?: string;
+}
+
+export interface TTSCacheTable {
+  id: string;
+  text: string;
+  voice: string;
+  rate: string;
+  audio_url: string;
   created_at: string;
 }
