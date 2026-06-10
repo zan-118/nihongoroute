@@ -613,10 +613,10 @@ Status:
 - [x] Intermediate JSON format dibuat dan didokumentasikan di `docs/jlpt-import-format.md`.
 - [x] Contoh package import tersedia di `docs/jlpt-import-sample.json`.
 - [x] Validator lokal dibuat di `src/lib/exams/import-pipeline.ts`.
-- [x] CLI dry-run tersedia lewat `npm run exam:import:validate -- <file.json>`.
-- [x] Unit test validator ditambahkan di `__tests__/lib/jlpt-import-pipeline.test.ts`.
-- [ ] Uploader asset ke bucket `exam-assets` belum dibuat.
-- [ ] Importer insert/update passages, questions, template, dan template positions ke Supabase belum dibuat.
+- [x] CLI dry-run/plan tersedia lewat `npm run exam:import:validate -- <file.json>`.
+- [x] Unit test validator dan import planner ditambahkan di `__tests__/lib/jlpt-import-pipeline.test.ts`.
+- [x] Uploader asset ke bucket `exam-assets` tersedia di CLI `--apply`.
+- [x] Importer insert/update passages, questions, template, dan template positions ke Supabase tersedia di CLI `--apply`.
 - [ ] Belum ada satu paket soal real yang masuk lewat pipeline ini.
 
 ### Task 6.1: Import Format [DONE]
@@ -667,22 +667,28 @@ Opsi:
 - `--require-declared-assets` untuk mewajibkan setiap asset reference ada di `assets`.
 - `--asset-root <dir>` untuk mengecek keberadaan file asset lokal.
 - `--json` untuk output report lengkap yang bisa dipakai CI/tooling.
+- `--plan` untuk melihat row Supabase, asset, dan key map yang akan digunakan.
+- `--apply` untuk upload asset dan upsert row ke Supabase memakai service role key.
+- `--skip-assets` untuk apply database tanpa upload asset.
 
-### Task 6.3: Import Strategy [PLANNED]
+### Task 6.3: Import Strategy [CORE DONE]
 
 Urutan aman:
 
-1. upload asset ke `exam-assets`;
-2. insert/update passages;
-3. insert/update questions;
-4. insert template;
-5. insert template question positions;
-6. set `is_published = true` setelah validasi lulus.
+1. [x] upload asset ke `exam-assets`;
+2. [x] insert/update passages;
+3. [x] insert/update questions;
+4. [x] insert template;
+5. [x] insert template question positions;
+6. [ ] set `is_published = true` setelah validasi lulus dan review manual.
 
 Catatan:
 
 - Validator sudah menjadi gate pertama sebelum strategi import ini dijalankan.
-- Importer database sebaiknya tetap dry-run by default sampai satu paket real sudah lolos validasi.
+- Importer database tetap dry-run/plan by default; perubahan Supabase hanya terjadi dengan `--apply`.
+- ID template, passage, dan question dibuat deterministik dari `template.slug` + key agar re-run import menargetkan row yang sama.
+- Template positions untuk fixed template di-reset dan diinsert ulang per template supaya perubahan urutan tidak meninggalkan row lama.
+- Apply membutuhkan `NEXT_PUBLIC_SUPABASE_URL` dan `SUPABASE_SERVICE_ROLE_KEY` di `.env.local`.
 
 ---
 
@@ -698,7 +704,7 @@ Tambahkan test untuk:
 - score calculation server-side;
 - quota generator;
 - SRS mapping;
-- import package validation;
+- import package validation and import planner;
 - review analysis dengan passage/choices baru.
 
 ### Integration Tests

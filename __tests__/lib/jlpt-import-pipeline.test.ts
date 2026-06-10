@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildJlptImportPlan,
+  createDeterministicUuid,
   validateJlptImportPackage,
   type JlptImportPackage,
 } from "@/lib/exams/import-pipeline";
@@ -146,5 +148,63 @@ describe("validateJlptImportPackage", () => {
         path: "template.quotaConfig.vocabulary.total",
       })
     );
+  });
+
+  it("builds deterministic Supabase rows for a validated package", () => {
+    const plan = buildJlptImportPlan(validPackage);
+    const templateId = createDeterministicUuid(
+      "jlpt-template",
+      "jlpt-n5-import-sample"
+    );
+
+    expect(plan.keyMap.templateId).toBe(templateId);
+    expect(plan.rows.template).toMatchObject({
+      id: templateId,
+      slug: "jlpt-n5-import-sample",
+      jlpt_level: "N5",
+      generation_mode: "fixed",
+      is_published: false,
+    });
+    expect(plan.rows.passages).toHaveLength(1);
+    expect(plan.rows.passages[0]).toMatchObject({
+      audio_path: "passages/n5/listening-1.mp3",
+      session_type: "listening",
+    });
+    expect(plan.rows.questions).toHaveLength(2);
+    expect(plan.rows.questions[1]).toMatchObject({
+      visual_path: "questions/n5/q2.webp",
+      passage_id: plan.keyMap.passageIds["listen-p1"],
+      source_type: "listening",
+    });
+    expect(plan.rows.templateQuestions).toEqual([
+      {
+        template_id: templateId,
+        question_id: plan.keyMap.questionIds["q-vocab-1"],
+        position: 1,
+        section_order: 0,
+      },
+      {
+        template_id: templateId,
+        question_id: plan.keyMap.questionIds["q-listening-1"],
+        position: 2,
+        section_order: 3,
+      },
+    ]);
+    expect(plan.assets).toEqual([
+      {
+        path: "passages/n5/listening-1.mp3",
+        localPath: null,
+        mimeType: null,
+        referenced: true,
+        usages: ["passage_audio"],
+      },
+      {
+        path: "questions/n5/q2.webp",
+        localPath: null,
+        mimeType: null,
+        referenced: true,
+        usages: ["question_visual"],
+      },
+    ]);
   });
 });

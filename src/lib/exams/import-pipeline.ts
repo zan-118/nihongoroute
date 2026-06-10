@@ -1,3 +1,5 @@
+import type { Json, TablesInsert } from "@/types/supabase.generated";
+
 export const JLPT_IMPORT_LEVELS = ["N5", "N4", "N3", "N2", "N1"] as const;
 export const JLPT_IMPORT_SECTIONS = [
   "vocabulary",
@@ -129,6 +131,32 @@ export interface JlptImportValidationReport {
   summary: JlptImportValidationSummary;
 }
 
+export interface JlptImportPlanAsset {
+  path: string;
+  localPath?: string | null;
+  mimeType?: string | null;
+  referenced: boolean;
+  usages: JlptImportAssetReference["usage"][];
+}
+
+export interface JlptImportRows {
+  template: TablesInsert<"jlpt_exam_templates">;
+  passages: TablesInsert<"jlpt_passages">[];
+  questions: TablesInsert<"jlpt_questions">[];
+  templateQuestions: TablesInsert<"jlpt_exam_template_questions">[];
+}
+
+export interface JlptImportPlan {
+  validation: JlptImportValidationReport;
+  rows: JlptImportRows;
+  assets: JlptImportPlanAsset[];
+  keyMap: {
+    templateId: string;
+    passageIds: Record<string, string>;
+    questionIds: Record<string, string>;
+  };
+}
+
 export interface ValidateJlptImportOptions {
   assetExists?: (assetPath: string) => boolean;
   requireDeclaredAssets?: boolean;
@@ -138,6 +166,12 @@ const LEVEL_SET = new Set<string>(JLPT_IMPORT_LEVELS);
 const SECTION_SET = new Set<string>(JLPT_IMPORT_SECTIONS);
 const SOURCE_TYPE_SET = new Set<string>(JLPT_IMPORT_SOURCE_TYPES);
 const GENERATION_MODE_SET = new Set<string>(JLPT_IMPORT_GENERATION_MODES);
+const SECTION_ORDER: Record<JlptImportSection, number> = {
+  vocabulary: 0,
+  grammar: 1,
+  reading: 2,
+  listening: 3,
+};
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -162,6 +196,37 @@ function addIssue(
   message: string
 ) {
   target.push({ code, path, message });
+}
+
+function stableHash32(value: string, seed: number) {
+  let hash = seed >>> 0;
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash >>> 0).toString(16).padStart(8, "0");
+}
+
+export function createDeterministicUuid(scope: string, key: string) {
+  const input = `${scope}:${key}`;
+  const hex = [
+    stableHash32(input, 0x811c9dc5),
+    stableHash32(input, 0x9e3779b9),
+    stableHash32(input, 0x85ebca6b),
+    stableHash32(input, 0xc2b2ae35),
+  ].join("");
+  const chars = hex.split("");
+
+  chars[12] = "5";
+  chars[16] = ((Number.parseInt(chars[16], 16) & 0x3) | 0x8).toString(16);
+
+  return [
+    chars.slice(0, 8).join(""),
+    chars.slice(8, 12).join(""),
+    chars.slice(12, 16).join(""),
+    chars.slice(16, 20).join(""),
+    chars.slice(20, 32).join(""),
+  ].join("-");
 }
 
 function normalizeLevel(value: unknown): JlptImportLevel | null {
@@ -245,6 +310,34 @@ function declaredAssetPaths(value: unknown) {
   });
 
   return paths;
+}
+
+function declaredAssetRecords(value: unknown) {
+  const assets = new Map<string, Pick<JlptImportPlanAsset, "path" | "localPath" | "mimeType">>();
+  if (!Array.isArray(value)) return assets;
+
+  value.forEach((asset) => {
+    if (typeof asset === "string") {
+      const normalized = normalizeExamAssetPath(asset);
+      if (normalized) assets.set(normalized, { path: normalized });
+      return;
+    }
+
+    if (!isRecord(asset)) return;
+
+    const normalized = normalizeExamAssetPath(
+      typeof asset.path === "string" ? asset.path : null
+    );
+    if (!normalized) return;
+
+    assets.set(normalized, {
+      path: normalized,
+      localPath: typeof asset.localPath === "string" ? asset.localPath : null,
+      mimeType: typeof asset.mimeType === "string" ? asset.mimeType : null,
+    });
+  });
+
+  return assets;
 }
 
 function questionOrderFromTemplate(input: {
@@ -723,5 +816,196 @@ export function validateJlptImportPackage(
     errors,
     warnings,
     summary,
+  };
+}
+
+function compactNullableString(value: string | null | undefined) {
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : null;
+}
+
+function assetPathOrOriginal(value: string | null | undefined) {
+  return normalizeExamAssetPath(value) ?? compactNullableString(value);
+}
+
+function buildTemplateQuestions(
+  inputPackage: JlptImportPackage,
+  templateId: string,
+  questionIds: Record<string, string>
+): TablesInsert<"jlpt_exam_template_questions">[] {
+  if (inputPackage.template.generationMode === "random_by_quota") return [];
+
+  if (inputPackage.templateQuestions?.length) {
+    return inputPackage.templateQuestions.map((item) => ({
+      template_id: templateId,
+      question_id: questionIds[item.questionKey],
+      position: item.position,
+      section_order: item.sectionOrder ?? 0,
+    }));
+  }
+
+  return inputPackage.questions.map((question, index) => ({
+    template_id: templateId,
+    question_id: questionIds[question.key],
+    position: index + 1,
+    section_order: SECTION_ORDER[question.sessionType],
+  }));
+}
+
+function buildPlanAssets(
+  inputPackage: JlptImportPackage,
+  validation: JlptImportValidationReport
+): JlptImportPlanAsset[] {
+  const assets = declaredAssetRecords(inputPackage.assets);
+
+  for (const reference of validation.summary.assetReferences) {
+    const existing = assets.get(reference.path);
+    if (existing) continue;
+
+    assets.set(reference.path, {
+      path: reference.path,
+      localPath: null,
+      mimeType: null,
+    });
+  }
+
+  return Array.from(assets.values())
+    .map((asset) => {
+      const usages = Array.from(
+        new Set(
+          validation.summary.assetReferences
+            .filter((reference) => reference.path === asset.path)
+            .map((reference) => reference.usage)
+        )
+      );
+
+      return {
+        path: asset.path,
+        localPath: asset.localPath ?? null,
+        mimeType: asset.mimeType ?? null,
+        referenced: usages.length > 0,
+        usages,
+      };
+    })
+    .sort((a, b) => a.path.localeCompare(b.path));
+}
+
+export function buildJlptImportPlan(
+  inputPackage: JlptImportPackage,
+  options: ValidateJlptImportOptions = {}
+): JlptImportPlan {
+  const validation = validateJlptImportPackage(inputPackage, options);
+
+  if (!validation.ok) {
+    throw new Error(
+      `JLPT import package is invalid: ${validation.errors
+        .map((error) => `${error.path} ${error.message}`)
+        .join("; ")}`
+    );
+  }
+
+  const templateId = createDeterministicUuid(
+    "jlpt-template",
+    inputPackage.template.slug
+  );
+  const templateLevel = validation.summary.jlptLevel ?? inputPackage.template.jlptLevel;
+  const generationMode =
+    validation.summary.generationMode ??
+    inputPackage.template.generationMode ??
+    "fixed";
+  const passageIds = Object.fromEntries(
+    (inputPackage.passages ?? []).map((passage) => [
+      passage.key,
+      createDeterministicUuid(
+        `jlpt-passage:${inputPackage.template.slug}`,
+        passage.key
+      ),
+    ])
+  );
+  const questionIds = Object.fromEntries(
+    inputPackage.questions.map((question) => [
+      question.key,
+      createDeterministicUuid(
+        `jlpt-question:${inputPackage.template.slug}`,
+        question.key
+      ),
+    ])
+  );
+
+  const template: TablesInsert<"jlpt_exam_templates"> = {
+    id: templateId,
+    slug: inputPackage.template.slug,
+    title: inputPackage.template.title,
+    description: inputPackage.template.description ?? null,
+    jlpt_level: templateLevel,
+    time_limit_minutes: inputPackage.template.timeLimitMinutes,
+    passing_score: inputPackage.template.passingScore ?? 90,
+    is_published: inputPackage.template.isPublished ?? false,
+    generation_mode: generationMode,
+    quota_config: (inputPackage.template.quotaConfig ?? {}) as Json,
+    category_id: inputPackage.template.categoryId ?? null,
+    legacy_sanity_id: inputPackage.template.legacySanityId ?? null,
+  };
+
+  const passages: TablesInsert<"jlpt_passages">[] = (inputPackage.passages ?? []).map(
+    (passage) => ({
+      id: passageIds[passage.key],
+      jlpt_level: passage.jlptLevel ?? templateLevel,
+      session_type: passage.sessionType,
+      mondai_number: passage.mondaiNumber ?? null,
+      title: passage.title ?? null,
+      content_html: passage.contentHtml ?? null,
+      transcript_html: passage.transcriptHtml ?? null,
+      audio_path: assetPathOrOriginal(passage.audioPath),
+      visual_path: assetPathOrOriginal(passage.visualPath),
+      source_label: passage.sourceLabel ?? null,
+      is_published: passage.isPublished ?? inputPackage.template.isPublished ?? false,
+    })
+  );
+
+  const questions: TablesInsert<"jlpt_questions">[] = inputPackage.questions.map(
+    (question) => ({
+      id: questionIds[question.key],
+      jlpt_level: question.jlptLevel ?? templateLevel,
+      session_type: question.sessionType,
+      mondai_number: question.mondaiNumber,
+      question_number: question.questionNumber ?? null,
+      passage_id: question.passageKey ? passageIds[question.passageKey] : null,
+      prompt_html: question.promptHtml ?? null,
+      visual_path: assetPathOrOriginal(question.visualPath),
+      audio_path: assetPathOrOriginal(question.audioPath),
+      choices: question.choices.map((choice) => ({
+        type: choice.type,
+        value:
+          choice.type === "image"
+            ? (assetPathOrOriginal(choice.value) ?? choice.value)
+            : choice.value,
+        ...(choice.alt !== undefined ? { alt: choice.alt } : {}),
+      })) as Json,
+      correct_choice_index: question.correctChoiceIndex,
+      explanation_html: question.explanationHtml ?? null,
+      difficulty: question.difficulty ?? null,
+      source_type: question.sourceType ?? null,
+      source_id: question.sourceId ?? null,
+      source_reference: question.sourceReference ?? null,
+      is_published: question.isPublished ?? inputPackage.template.isPublished ?? false,
+    })
+  );
+
+  return {
+    validation,
+    rows: {
+      template,
+      passages,
+      questions,
+      templateQuestions: buildTemplateQuestions(inputPackage, templateId, questionIds),
+    },
+    assets: buildPlanAssets(inputPackage, validation),
+    keyMap: {
+      templateId,
+      passageIds,
+      questionIds,
+    },
   };
 }
