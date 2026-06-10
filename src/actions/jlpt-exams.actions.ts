@@ -5,6 +5,7 @@ import type { PostgrestError } from "@supabase/supabase-js";
 import type { ExamData } from "@/components/features/exams/mock-engine/types";
 import {
   EXAM_ASSETS_BUCKET,
+  buildJlptSrsUpsertRows,
   buildSupabaseExamPackage,
   calculateJlptExamSubmission,
   normalizeJlptLevel,
@@ -355,7 +356,7 @@ export async function submitJlptMockSession(input: {
   sessionId: string;
   answers: Record<string, number | null>;
 }): Promise<ExamSubmitResult> {
-  const { supabase } = await requireAuthenticatedUser();
+  const { supabase, user } = await requireAuthenticatedUser();
   const { data: session, error: sessionError } = await supabase
     .from("user_exam_sessions")
     .select(
@@ -400,6 +401,21 @@ export async function submitJlptMockSession(input: {
     });
 
   if (answersError) throw new Error(getSupabaseErrorMessage(answersError));
+
+  const srsRows = buildJlptSrsUpsertRows({
+    userId: user.id,
+    candidates: score.srsCandidates,
+    completedAt,
+  });
+
+  if (srsRows.length > 0) {
+    const { error: srsError } = await supabase.from("user_srs").upsert(srsRows, {
+      onConflict: "user_id,word_id",
+      ignoreDuplicates: true,
+    });
+
+    if (srsError) throw new Error(getSupabaseErrorMessage(srsError));
+  }
 
   const { error: updateError } = await supabase
     .from("user_exam_sessions")

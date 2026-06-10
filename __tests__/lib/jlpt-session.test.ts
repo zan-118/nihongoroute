@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildJlptSrsUpsertRows,
   buildSupabaseExamPackage,
   calculateJlptExamSubmission,
   packageSnapshotToLegacyExam,
   storedScoreSnapshotToResult,
+  toJlptSrsWordId,
   toScoreBreakdownSnapshot,
   type JlptExamTemplateRow,
   type JlptQuestionRow,
@@ -212,6 +214,86 @@ describe("JLPT Supabase session helpers", () => {
     expect(result.srsCandidates.map((item) => item.questionId)).toEqual([
       "q-grammar",
       "q-reading",
+    ]);
+  });
+
+  it("maps SRS candidates into conservative new-card upsert rows", () => {
+    expect(toJlptSrsWordId({ sourceType: "vocab", sourceId: "word-1" })).toBe(
+      "word-1"
+    );
+    expect(
+      toJlptSrsWordId({ sourceType: "grammar", sourceId: "te-form" })
+    ).toBe("grammar:te-form");
+    expect(
+      toJlptSrsWordId({ sourceType: "reading", sourceId: "reading:essay-1" })
+    ).toBe("reading:essay-1");
+    expect(
+      toJlptSrsWordId({ sourceType: "unsupported", sourceId: "source-1" })
+    ).toBeNull();
+
+    const rows = buildJlptSrsUpsertRows({
+      userId: "user-1",
+      completedAt: now,
+      candidates: [
+        {
+          questionId: "q-vocab",
+          sourceType: "vocab",
+          sourceId: "word-1",
+        },
+        {
+          questionId: "q-grammar",
+          sourceType: "grammar",
+          sourceId: "te-form",
+        },
+        {
+          questionId: "q-grammar-duplicate",
+          sourceType: "grammar",
+          sourceId: "grammar:te-form",
+        },
+        {
+          questionId: "q-reading",
+          sourceType: "reading",
+          sourceId: "reading-1",
+        },
+        {
+          questionId: "q-empty",
+          sourceType: "custom",
+          sourceId: "  ",
+        },
+      ],
+    });
+
+    expect(rows).toEqual([
+      {
+        user_id: "user-1",
+        word_id: "word-1",
+        interval: 1,
+        repetition: 0,
+        ease_factor: 2.5,
+        next_review: "2026-06-11T09:00:00.000Z",
+        status: "learning",
+        updated_at: now,
+      },
+      {
+        user_id: "user-1",
+        word_id: "grammar:te-form",
+        interval: 1,
+        repetition: 0,
+        ease_factor: 2.5,
+        next_review: "2026-06-11T09:00:00.000Z",
+        status: "learning",
+        updated_at: now,
+      },
+      {
+        user_id: "user-1",
+        word_id: "reading:reading-1",
+        interval: 1,
+        repetition: 0,
+        ease_factor: 2.5,
+        next_review: "2026-06-11T09:00:00.000Z",
+        status: "learning",
+        updated_at: now,
+      },
     ]);
   });
 

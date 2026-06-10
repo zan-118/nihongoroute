@@ -17,8 +17,8 @@ Membangun **bank soal JLPT di Supabase/PostgreSQL** sebagai sumber data dinamis 
 - [x] Phase 2 foundation guardrails: RLS, public read policies, user-owned policies, and initial indexes.
 - [ ] Phase 3: Backend generator and session flow. Core fixed-template slice is implemented.
 - [x] Phase 4: Frontend integration for fixed-template Supabase exams.
-- [ ] Phase 5: SRS and weak point integration.
-- [ ] Phase 6: Data import pipeline.
+- [ ] Phase 5: SRS and weak point integration. Core SRS insert slice is implemented.
+- [ ] Phase 6: Data import pipeline. Import format and local validator are implemented.
 - [ ] Phase 7: Testing and verification hardening.
 
 Applied migrations:
@@ -357,7 +357,7 @@ Status:
 - [x] `submitJlptMockSession` dibuat untuk upsert answers, hitung skor server-side, dan complete session.
 - [x] Unit test helper package/scoring ditambahkan di `__tests__/lib/jlpt-session.test.ts`.
 - [ ] Random generator `random_by_quota` belum dibuat.
-- [ ] SRS update dari jawaban salah belum dieksekusi, baru menghasilkan `srsCandidates` di score snapshot.
+- [x] SRS update dari jawaban salah/kosong dieksekusi untuk item source-mapped; `srsCandidates` tetap disimpan di score snapshot untuk audit/review.
 - [x] Frontend fixed-template sudah memakai action Phase 3 untuk start session dan submit server-side.
 
 ### Task 3.1: Start Session Server Action [FIXED TEMPLATE DONE]
@@ -550,7 +550,15 @@ Implementasi saat ini:
 
 **Target:** kesalahan mock test otomatis menjadi bahan latihan.
 
-### Task 5.1: Source Mapping
+Status:
+
+- [x] Helper mapping `source_type/source_id` ke `user_srs.word_id` dibuat di `src/lib/exams/jlpt-session.ts`.
+- [x] Submit exam memasukkan kartu SRS baru dari jawaban salah/kosong melalui `submitJlptMockSession`.
+- [x] Unit test mapping/dedupe SRS ditambahkan.
+- [ ] Review UI belum menampilkan indikator apakah item sudah masuk SRS.
+- [ ] Weak-point/review API untuk source non-vocab/non-kanji prefixed belum dibuat.
+
+### Task 5.1: Source Mapping [CORE DONE]
 
 Gunakan mapping:
 
@@ -559,30 +567,40 @@ Gunakan mapping:
 - `source_type = kanji` + `source_id = kanji id/literal`
 - `source_type = custom` untuk soal yang belum punya materi library
 
-### Task 5.2: SRS Upsert Rule
+Implementasi saat ini:
+
+- `vocab` disimpan sebagai `word_id = source_id` agar kompatibel dengan SRS/review existing.
+- `grammar`, `kanji`, `listening`, `reading`, dan `custom` disimpan dengan prefix, misalnya `grammar:te-form` atau `reading:reading-1`.
+- Kandidat dengan source kosong/unsupported diabaikan.
+- Duplikat kandidat dalam satu submit dideduplikasi berdasarkan `word_id`.
+
+### Task 5.2: SRS Upsert Rule [CORE DONE]
 
 Saat session completed:
 
-- ambil jawaban salah/kosong;
-- pilih soal yang punya `source_type/source_id`;
-- upsert ke `user_srs`;
-- set `next_review` menjadi besok atau sekarang + interval singkat;
-- jangan menimpa progress user secara agresif jika item sudah matang kecuali rule-nya jelas.
+- [x] ambil jawaban salah/kosong;
+- [x] pilih soal yang punya `source_type/source_id`;
+- [x] upsert ke `user_srs`;
+- [x] set `next_review` menjadi besok atau sekarang + interval singkat;
+- [x] jangan menimpa progress user secara agresif jika item sudah matang kecuali rule-nya jelas.
 
 Catatan:
 
-- Karena `user_srs` saat ini memakai `word_id`, adapter SRS harus menentukan format `word_id`, misalnya `vocab:<id>` atau existing vocab key.
-- Hindari trigger database yang terlalu sulit diaudit di fase awal. Lebih aman mulai dari server action `submitJlptMockSession`, lalu baru pindahkan ke RPC/trigger setelah behavior stabil.
+- Karena `user_srs` saat ini memakai `word_id`, adapter SRS memakai existing vocab key untuk `vocab` dan prefix untuk source lain.
+- Insert memakai `upsert(..., { onConflict: "user_id,word_id", ignoreDuplicates: true })`, sehingga kartu yang sudah ada tidak di-reset.
+- Kartu baru memakai default `interval = 1`, `repetition = 0`, `ease_factor = 2.5`, `status = learning`, dan `next_review = completed_at + 1 hari`.
+- Hindari trigger database yang terlalu sulit diaudit di fase awal. Implementasi saat ini tetap di server action `submitJlptMockSession`; RPC/trigger bisa dipertimbangkan setelah behavior stabil.
 
-### Task 5.3: Review UI
+### Task 5.3: Review UI [PARTIAL]
 
 Update `ExamReview` agar bisa menampilkan:
 
-- passage;
-- transcript listening;
-- explanation;
-- source link ke vocab/grammar/reading/listening;
-- status apakah item sudah masuk SRS.
+- [x] passage;
+- [x] transcript listening;
+- [x] explanation;
+- [x] source metadata;
+- [ ] source link ke vocab/grammar/reading/listening;
+- [ ] status apakah item sudah masuk SRS.
 
 ---
 
@@ -590,7 +608,18 @@ Update `ExamReview` agar bisa menampilkan:
 
 **Target:** memasukkan bank soal dari file mentah secara konsisten dan bisa diaudit.
 
-### Task 6.1: Import Format
+Status:
+
+- [x] Intermediate JSON format dibuat dan didokumentasikan di `docs/jlpt-import-format.md`.
+- [x] Contoh package import tersedia di `docs/jlpt-import-sample.json`.
+- [x] Validator lokal dibuat di `src/lib/exams/import-pipeline.ts`.
+- [x] CLI dry-run tersedia lewat `npm run exam:import:validate -- <file.json>`.
+- [x] Unit test validator ditambahkan di `__tests__/lib/jlpt-import-pipeline.test.ts`.
+- [ ] Uploader asset ke bucket `exam-assets` belum dibuat.
+- [ ] Importer insert/update passages, questions, template, dan template positions ke Supabase belum dibuat.
+- [ ] Belum ada satu paket soal real yang masuk lewat pipeline ini.
+
+### Task 6.1: Import Format [DONE]
 
 Buat format intermediate JSON sebelum insert SQL:
 
@@ -599,25 +628,47 @@ Buat format intermediate JSON sebelum insert SQL:
   "template": {
     "slug": "jlpt-n4-paket-2",
     "title": "JLPT N4 Paket 2",
-    "jlpt_level": "N4"
+    "jlptLevel": "N4",
+    "timeLimitMinutes": 125,
+    "generationMode": "fixed"
   },
   "passages": [],
-  "questions": []
+  "questions": [],
+  "templateQuestions": [],
+  "assets": []
 }
 ```
 
-### Task 6.2: Validation Script
+Catatan implementasi:
+
+- Format memakai key camelCase di level aplikasi, lalu nanti importer yang memetakan ke kolom snake_case Supabase.
+- Asset path dinormalisasi relatif terhadap bucket `exam-assets`; prefix `exam-assets/` boleh ada di input.
+- `correctChoiceIndex` memakai index 0-based agar sama dengan schema Supabase dan scoring server.
+
+### Task 6.2: Validation Script [DONE]
 
 Buat script validasi:
 
-- semua question punya level/section/mondai;
-- `choices` array minimal 2;
-- `correct_choice_index` valid;
-- passage references valid;
-- asset paths ada;
-- jumlah soal sesuai quota template.
+- [x] semua question punya level/section/mondai;
+- [x] `choices` array minimal 2;
+- [x] `correctChoiceIndex` valid;
+- [x] passage references valid;
+- [x] asset paths bisa dicek via manifest atau `--asset-root`;
+- [x] jumlah soal sesuai quota template untuk `random_by_quota`.
 
-### Task 6.3: Import Strategy
+Command:
+
+```bash
+npm run exam:import:validate -- docs/jlpt-import-sample.json
+```
+
+Opsi:
+
+- `--require-declared-assets` untuk mewajibkan setiap asset reference ada di `assets`.
+- `--asset-root <dir>` untuk mengecek keberadaan file asset lokal.
+- `--json` untuk output report lengkap yang bisa dipakai CI/tooling.
+
+### Task 6.3: Import Strategy [PLANNED]
 
 Urutan aman:
 
@@ -627,6 +678,11 @@ Urutan aman:
 4. insert template;
 5. insert template question positions;
 6. set `is_published = true` setelah validasi lulus.
+
+Catatan:
+
+- Validator sudah menjadi gate pertama sebelum strategi import ini dijalankan.
+- Importer database sebaiknya tetap dry-run by default sampai satu paket real sudah lolos validasi.
 
 ---
 
@@ -642,6 +698,7 @@ Tambahkan test untuk:
 - score calculation server-side;
 - quota generator;
 - SRS mapping;
+- import package validation;
 - review analysis dengan passage/choices baru.
 
 ### Integration Tests
@@ -698,15 +755,17 @@ Setelah migration:
 
 ### Milestone D: Bank Soal Import
 
-- satu paket N4/N5 berhasil masuk dari pipeline import;
-- validasi quota lulus;
-- review bisa menampilkan passage/transcript.
+- [x] format intermediate dan validator import tersedia.
+- [x] validasi quota tersedia untuk package `random_by_quota`.
+- [ ] satu paket N4/N5 berhasil masuk dari pipeline import.
+- [ ] review bisa menampilkan passage/transcript dari paket hasil import real.
 
 ### Milestone E: SRS Integration
 
-- jawaban salah masuk weak point/SRS;
-- format `word_id` disepakati;
-- tidak merusak SRS existing.
+- [x] jawaban salah/kosong masuk SRS untuk item source-mapped.
+- [x] format `word_id` disepakati untuk fase awal: `vocab` memakai ID asli, source lain memakai prefix.
+- [x] tidak merusak SRS existing karena kartu existing diabaikan saat conflict.
+- [ ] review UI menampilkan status/link SRS.
 
 ### Milestone F: Gradual Migration
 
@@ -723,7 +782,7 @@ Sebelum implementasi penuh, perlu keputusan:
 1. Apakah template fixed akan memakai soal yang sama persis setiap paket, atau selalu random by quota?
 2. Apakah `correct_choice_index` boleh dikirim ke client selama ujian, atau harus hanya tersedia server-side?
 3. Apakah asset exam public, atau perlu signed URL?
-4. Format final `word_id` untuk SRS: existing id langsung, atau prefixed seperti `vocab:<id>`?
+4. Format final `word_id` untuk SRS: diputuskan untuk fase awal, `vocab` memakai existing id langsung; source lain memakai prefix seperti `grammar:<id>`, `reading:<id>`, `listening:<id>`, `kanji:<id>`, atau `custom:<id>`. [DECIDED FOR PHASE 5 CORE]
 5. Apakah satu passage bisa dipakai lintas banyak soal dan lintas template?
 6. Apakah session yang belum selesai bisa dilanjutkan setelah refresh/browser close?
 

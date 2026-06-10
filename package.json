@@ -14,6 +14,7 @@
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
     "db:migrations:check": "node scripts/check-migrations.mjs",
+    "exam:import:validate": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/validate-jlpt-import.mjs",
     "prepare": "husky"
   },
   "dependencies": {

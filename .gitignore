@@ -73,6 +73,7 @@ desktop.ini
 !scripts/
 scripts/*
 !scripts/check-migrations.mjs
+!scripts/validate-jlpt-import.mjs
 
 data/
 *.ndjson

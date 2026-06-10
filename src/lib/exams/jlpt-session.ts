@@ -7,7 +7,7 @@ import {
   type SupabaseExamQuestion,
   type SupabaseExamSection,
 } from "@/lib/exams/supabase-adapter";
-import type { Json, Tables } from "@/types/supabase.generated";
+import type { Json, Tables, TablesInsert } from "@/types/supabase.generated";
 
 export const EXAM_ASSETS_BUCKET = "exam-assets";
 export const JLPT_LEVELS = ["N5", "N4", "N3", "N2", "N1"] as const;
@@ -53,6 +53,8 @@ export interface JlptSrsCandidate {
   sourceReference?: string | null;
 }
 
+export type JlptSrsUpsertRow = TablesInsert<"user_srs">;
+
 export interface JlptExamSubmissionScore {
   totalQuestions: number;
   correctCount: number;
@@ -84,6 +86,17 @@ const EXAM_SECTIONS: SupabaseExamSection[] = [
 
 const SECTION_MIN_ACCURACY = 0.32;
 const MAX_EXAM_SCORE = 180;
+const DEFAULT_SRS_INTERVAL_DAYS = 1;
+const DEFAULT_SRS_EASE_FACTOR = 2.5;
+const SRS_REVIEW_DELAY_DAYS = 1;
+const DAY_MS = 24 * 60 * 60 * 1000;
+const PREFIXED_SRS_SOURCE_TYPES = new Set([
+  "grammar",
+  "kanji",
+  "listening",
+  "reading",
+  "custom",
+]);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -368,6 +381,57 @@ export function calculateJlptExamSubmission(
     answerRows,
     srsCandidates,
   };
+}
+
+export function toJlptSrsWordId(
+  candidate: Pick<JlptSrsCandidate, "sourceType" | "sourceId">
+) {
+  const sourceType = candidate.sourceType.trim().toLowerCase();
+  const sourceId = candidate.sourceId.trim();
+
+  if (!sourceType || !sourceId) return null;
+  if (sourceType === "vocab") return sourceId;
+
+  if (PREFIXED_SRS_SOURCE_TYPES.has(sourceType)) {
+    const prefix = `${sourceType}:`;
+    return sourceId.startsWith(prefix) ? sourceId : `${prefix}${sourceId}`;
+  }
+
+  return null;
+}
+
+export function buildJlptSrsUpsertRows(input: {
+  userId: string;
+  candidates: JlptSrsCandidate[];
+  completedAt?: string | Date;
+}): JlptSrsUpsertRow[] {
+  const completedAt =
+    input.completedAt instanceof Date
+      ? input.completedAt
+      : new Date(input.completedAt ?? Date.now());
+  const updatedAt = completedAt.toISOString();
+  const nextReview = new Date(
+    completedAt.getTime() + SRS_REVIEW_DELAY_DAYS * DAY_MS
+  ).toISOString();
+  const rowsByWordId = new Map<string, JlptSrsUpsertRow>();
+
+  for (const candidate of input.candidates) {
+    const wordId = toJlptSrsWordId(candidate);
+    if (!wordId || rowsByWordId.has(wordId)) continue;
+
+    rowsByWordId.set(wordId, {
+      user_id: input.userId,
+      word_id: wordId,
+      interval: DEFAULT_SRS_INTERVAL_DAYS,
+      repetition: 0,
+      ease_factor: DEFAULT_SRS_EASE_FACTOR,
+      next_review: nextReview,
+      status: "learning",
+      updated_at: updatedAt,
+    });
+  }
+
+  return Array.from(rowsByWordId.values());
 }
 
 export function toExamSubmitResult(
