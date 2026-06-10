@@ -12,6 +12,14 @@
 import { createStaticClient } from "@/lib/supabase/server";
 import { sanityClient, sanityPublicFetchOptions } from "@/lib/sanity.client";
 import { getSanityLessonsByCategory } from "@/lib/queries";
+import {
+  getSupabaseExamTemplateBySlug,
+  getSupabaseExamTemplatesList,
+} from "./jlpt-exams.actions";
+import type {
+  ExamData,
+  ExamQuestion,
+} from "@/components/features/exams/mock-engine/types";
 
 // ======================
 // TYPES
@@ -34,6 +42,17 @@ interface SanityMockExamListItem {
   levelCode?: string;
 }
 
+interface MockExamListItem {
+  id: string;
+  slug: string;
+  title: string;
+  description?: string | null;
+  levelCode: string;
+  timeLimit: number;
+  passingScore: number;
+  source?: "sanity" | "supabase";
+}
+
 import { ExamPortableTextBlock } from "@/components/features/exams/mock-engine/ExamQuestionText";
 
 interface SanityQuestionItem {
@@ -44,6 +63,19 @@ interface SanityQuestionItem {
   audioUrl?: string;
   options: string[];
   correctAnswer: number | string;
+}
+
+function normalizeExamSection(section: string): ExamQuestion["section"] {
+  if (
+    section === "vocabulary" ||
+    section === "grammar" ||
+    section === "reading" ||
+    section === "listening"
+  ) {
+    return section;
+  }
+
+  return "vocabulary";
 }
 
 // ======================
@@ -91,6 +123,29 @@ export async function getCourseCategoryData(slug: string) {
       categorySlug: category.slug
     }, sanityPublicFetchOptions);
 
+    const sanityMockExams: MockExamListItem[] = (mockExams || []).map((e: SanityMockExamListItem) => ({
+      id: e._id,
+      title: e.title,
+      timeLimit: e.time_limit ?? 30,
+      passingScore: e.passing_score ?? 70,
+      slug: e.slug || "",
+      levelCode: e.levelCode || "general",
+      source: "sanity"
+    }));
+    const supabaseMockExams = await getSupabaseExamTemplatesList({
+      categoryId: category.id,
+      jlptLevel: category.slug,
+    });
+    const legacyKeys = new Set(
+      sanityMockExams.map((exam) => exam.slug || exam.id).filter(Boolean)
+    );
+    const mergedMockExams = [
+      ...sanityMockExams,
+      ...supabaseMockExams.filter(
+        (exam) => !legacyKeys.has(exam.slug || exam.id)
+      ),
+    ];
+
     return {
       category: {
         _id: category.id,
@@ -105,14 +160,7 @@ export async function getCourseCategoryData(slug: string) {
         summary: l.summary || "",
         slug: l.slug
       })),
-      mockExams: (mockExams || []).map((e: SanityMockExamListItem) => ({
-        id: e._id,
-        title: e.title,
-        timeLimit: e.time_limit ?? 30,
-        passingScore: e.passing_score ?? 70,
-        slug: e.slug || "",
-        levelCode: e.levelCode || "general"
-      }))
+      mockExams: mergedMockExams
     };
   } catch (error) {
     console.error("Gagal mengambil data kategori kursus:", error);
@@ -141,16 +189,25 @@ export async function getExamsList() {
     }`;
 
     const data = await sanityClient.fetch(query, {}, sanityPublicFetchOptions);
-
-    return (data || []).map((e: SanityMockExamListItem) => ({
+    const sanityExams: MockExamListItem[] = (data || []).map((e: SanityMockExamListItem) => ({
       id: e._id,
       slug: e.slug,
       title: e.title,
       description: e.description,
       levelCode: e.levelCode || e.category_id || "general",
       timeLimit: e.time_limit ?? 60,
-      passingScore: e.passing_score ?? 90
+      passingScore: e.passing_score ?? 90,
+      source: "sanity"
     }));
+    const supabaseExams = await getSupabaseExamTemplatesList();
+    const legacyKeys = new Set(
+      sanityExams.map((exam) => exam.slug || exam.id).filter(Boolean)
+    );
+
+    return [
+      ...sanityExams,
+      ...supabaseExams.filter((exam) => !legacyKeys.has(exam.slug || exam.id)),
+    ];
   } catch (error) {
     console.error("Gagal mengambil daftar simulasi ujian dari Sanity:", error);
     return [];
@@ -167,7 +224,7 @@ export async function getExamsList() {
  * @param {string} idOrSlug - ID dokumen Sanity atau slug unik simulasi ujian
  * @returns {Promise<Object | null>} Detail simulasi ujian terformat lengkap, atau null jika tidak ditemukan
  */
-export async function getExamByIdOrSlug(idOrSlug: string) {
+export async function getExamByIdOrSlug(idOrSlug: string): Promise<ExamData | null> {
   const supabase = createStaticClient();
   try {
     const query = `*[_type == "mockExam" && (slug.current == $idOrSlug || _id == $idOrSlug)][0] {
@@ -192,7 +249,7 @@ export async function getExamByIdOrSlug(idOrSlug: string) {
 
     const exam = await sanityClient.fetch(query, { idOrSlug }, sanityPublicFetchOptions);
 
-    if (!exam) return null;
+    if (!exam) return getSupabaseExamTemplateBySlug(idOrSlug);
 
     // Selesaikan categorySlug jika berupa UUID dari Supabase, atau gunakan langsung jika berupa slug
     let categorySlug = exam.category_id || "general";
@@ -212,12 +269,14 @@ export async function getExamByIdOrSlug(idOrSlug: string) {
       title: exam.title,
       timeLimit: exam.time_limit ?? 60,
       passingScore: exam.passing_score ?? 90,
+      source: "sanity",
+      slug: exam.slug || null,
       categorySlug,
       levelCode: exam.levelCode || "general",
       choukaiAudioUrl: exam.choukaiAudioUrl || null,
       questions: (exam.questions || []).map((q: { _key: string; section: string; questionText: string; imageUrl?: string; audioUrl?: string; options?: string[]; correctAnswer?: number | string }) => ({
         _key: q._key,
-        section: q.section,
+        section: normalizeExamSection(q.section),
         questionText: q.questionText,
         imageUrl: q.imageUrl || null,
         audioUrl: q.audioUrl || null,

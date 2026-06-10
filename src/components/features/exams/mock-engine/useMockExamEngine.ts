@@ -3,6 +3,10 @@ import { ExamData, GameState, AudioState, ExamQuestion, PendingConfirmType } fro
 import { toast } from "sonner";
 import { useUserStore } from "@/store/useUserStore";
 import { SECTION_LABELS } from "./constants";
+import {
+  startJlptMockSession,
+  submitJlptMockSession,
+} from "@/actions/jlpt-exams.actions";
 
 
 /**
@@ -56,11 +60,21 @@ const performScoreCalculation = (questions: ExamQuestion[], answers: Record<stri
   return { correctCount, finalScore, sectionBreakdown, failedSection, isPassed };
 };
 
-export function useMockExamEngine(exam: ExamData) {
+function getErrorMessage(error: unknown, fallback: string) {
+  return error instanceof Error ? error.message : fallback;
+}
+
+export function useMockExamEngine(initialExam: ExamData) {
+  const [exam, setExam] = useState<ExamData>(initialExam);
   const [gameState, setGameState] = useState<GameState>("intro");
   const [timeLeft, setTimeLeft] = useState(() => exam.timeLimit * 60);
   const [answers, setAnswers] = useState<Record<string, number>>({});
+  const [serverResult, setServerResult] = useState(() => exam.serverResult ?? null);
+  const [isStartingSession, setIsStartingSession] = useState(false);
+  const [isSubmittingSession, setIsSubmittingSession] = useState(false);
   const answersRef = useRef(answers);
+  const isStartingRef = useRef(false);
+  const isFinishingRef = useRef(false);
   useEffect(() => {
     answersRef.current = answers;
   }, [answers]);
@@ -106,14 +120,94 @@ export function useMockExamEngine(exam: ExamData) {
     return prevQ?.section === "listening" || !!prevQ?.audioUrl;
   }, [currentQuestionIndex, isCurrentlyListening, exam.questions, hasGlobalChoukai]);
 
-  const finishExam = useCallback(() => {
+  const startExam = useCallback(async () => {
+    if (isStartingRef.current) return;
+
+    if (exam.source !== "supabase" || exam.sessionId) {
+      setGameState("playing");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    const templateSlug = exam.templateSlug || exam.slug || exam.id;
+    if (!templateSlug) {
+      toast.error("Template mock test Supabase tidak memiliki slug.");
+      return;
+    }
+
+    isStartingRef.current = true;
+    setIsStartingSession(true);
+
+    try {
+      const result = await startJlptMockSession({ templateSlug });
+      setExam(result.exam);
+      setTimeLeft(result.exam.timeLimit * 60);
+      setAnswers({});
+      answersRef.current = {};
+      setServerResult(null);
+      setCurrentQuestionIndex(0);
+      setActiveSectionIndex(0);
+      setAudioStatus({});
+      setPendingConfirm(null);
+      setGameState("playing");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (error) {
+      toast.error(
+        getErrorMessage(error, "Gagal memulai sesi mock test Supabase.")
+      );
+    } finally {
+      isStartingRef.current = false;
+      setIsStartingSession(false);
+    }
+  }, [exam.id, exam.sessionId, exam.slug, exam.source, exam.templateSlug]);
+
+  const finishExam = useCallback(async () => {
+    if (isFinishingRef.current) return;
+    isFinishingRef.current = true;
+
+    if (audioRef.current) audioRef.current.pause();
+
+    if (exam.source === "supabase") {
+      if (!exam.sessionId) {
+        toast.error("Sesi mock test Supabase belum dimulai.");
+        isFinishingRef.current = false;
+        return;
+      }
+
+      setIsSubmittingSession(true);
+
+      try {
+        const result = await submitJlptMockSession({
+          sessionId: exam.sessionId,
+          answers: answersRef.current,
+        });
+        setServerResult(result);
+        setExam((prev) => ({ ...prev, serverResult: result }));
+        const xpGain = (result.correctCount * 10) + (result.isPassed ? 50 : 0);
+        addXP(xpGain);
+        setGameState("result");
+        setPendingConfirm(null);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } catch (error) {
+        toast.error(
+          getErrorMessage(error, "Gagal mengirim hasil mock test Supabase.")
+        );
+      } finally {
+        setIsSubmittingSession(false);
+        isFinishingRef.current = false;
+      }
+
+      return;
+    }
+
     const { correctCount, isPassed } = performScoreCalculation(exam.questions, answersRef.current, exam.passingScore);
     const xpGain = (correctCount * 10) + (isPassed ? 50 : 0);
     addXP(xpGain);
     setGameState("result");
-    if (audioRef.current) audioRef.current.pause();
+    setPendingConfirm(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [exam.questions, exam.passingScore, addXP]);
+    isFinishingRef.current = false;
+  }, [exam.source, exam.sessionId, exam.questions, exam.passingScore, addXP]);
 
   const handleAnswer = useCallback((optionIndex: number) => {
     if (!activeQuestion) return;
@@ -150,9 +244,11 @@ export function useMockExamEngine(exam: ExamData) {
       setCurrentQuestionIndex(firstQuestionOfNextSection);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else if (pendingConfirm === "finish") {
-      finishExam();
+      void finishExam();
     }
-    setPendingConfirm(null);
+    if (pendingConfirm !== "finish") {
+      setPendingConfirm(null);
+    }
   }, [pendingConfirm, activeSectionIndex, sections, availableSections, finishExam]);
 
   const prevQuestion = useCallback(() => {
@@ -167,12 +263,22 @@ export function useMockExamEngine(exam: ExamData) {
   }, [currentQuestionIndex, sections, currentSection]);
 
   const calculateScore = useCallback(() => {
+    const result = serverResult ?? exam.serverResult;
+    if (result) {
+      return {
+        correctCount: result.correctCount,
+        finalScore: result.totalScore,
+        sectionBreakdown: result.sectionBreakdown,
+        failedSection: result.failedSection,
+        isPassed: result.isPassed,
+      };
+    }
+
     return performScoreCalculation(exam.questions, answersRef.current, exam.passingScore);
-  }, [exam.questions, exam.passingScore]);
+  }, [serverResult, exam.serverResult, exam.questions, exam.passingScore]);
 
   const handleShareResult = useCallback(() => {
-    const { finalScore, sectionBreakdown } = calculateScore();
-    const isPassed = finalScore >= exam.passingScore;
+    const { finalScore, sectionBreakdown, isPassed } = calculateScore();
     const userFullName = useUserStore.getState().name;
     const guestId = userFullName || "Pelajar NihongoRoute";
 
@@ -212,7 +318,7 @@ export function useMockExamEngine(exam: ExamData) {
       console.error("Gagal membuat share link", err);
       toast.error("Gagal membuat link berbagi.");
     }
-  }, [calculateScore, exam.passingScore, exam.title, exam.questions.length]);
+  }, [calculateScore, exam.title, exam.questions.length]);
 
   useEffect(() => {
     if (gameState !== "playing") return;
@@ -231,7 +337,7 @@ export function useMockExamEngine(exam: ExamData) {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          finishExam();
+          void finishExam();
           return 0;
         }
         return prev - 1;
@@ -331,11 +437,12 @@ export function useMockExamEngine(exam: ExamData) {
   }, [pendingConfirm, availableSections, activeSectionIndex]);
 
   return {
-    gameState, setGameState, timeLeft, answers, currentQuestionIndex, audioStatus,
+    exam, gameState, setGameState, timeLeft, answers, currentQuestionIndex, audioStatus,
     cheatWarnings, audioRef, activeQuestion, isTimeCritical, isCurrentlyListening,
-    disablePreviousButton, handlePlayAudio, finishExam, handleAnswer, nextQuestion,
+    disablePreviousButton, handlePlayAudio, startExam, finishExam, handleAnswer, nextQuestion,
     prevQuestion, calculateScore, handleShareResult,
     sections, availableSections, currentSection, goToQuestion, activeSectionIndex,
     pendingConfirm, setPendingConfirm, confirmPendingAction, pendingConfirmLabel,
+    isStartingSession, isSubmittingSession, serverResult,
   };
 }

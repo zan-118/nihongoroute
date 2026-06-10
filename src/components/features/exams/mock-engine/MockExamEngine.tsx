@@ -27,15 +27,23 @@ interface MockExamEngineProps {
 // EKSEKUSI UTAMA
 // ======================
 export default function MockExamEngine({ exam }: MockExamEngineProps) {
-  const engine = useMockExamEngine(exam);
+  const engineKey = exam.sessionId || exam.templateId || exam.slug || exam.id;
 
-  const backLink = exam.categorySlug ? `/courses/${exam.categorySlug}` : "/courses";
+  return <MockExamEngineSession key={engineKey} exam={exam} />;
+}
+
+function MockExamEngineSession({ exam }: MockExamEngineProps) {
+  const engine = useMockExamEngine(exam);
+  const activeExam = engine.exam;
+
+  const backLink = activeExam.categorySlug ? `/courses/${activeExam.categorySlug}` : "/courses";
 
   if (engine.gameState === "intro") {
     return (
       <ExamIntro
-        exam={exam}
-        setGameState={engine.setGameState}
+        exam={activeExam}
+        onStartExam={engine.startExam}
+        isStarting={engine.isStartingSession}
         backLink={backLink}
       />
     );
@@ -44,7 +52,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
   if (engine.gameState === "result") {
     return (
       <ExamResult
-        exam={exam}
+        exam={activeExam}
         setGameState={engine.setGameState}
         backLink={backLink}
         calculateScore={engine.calculateScore}
@@ -56,7 +64,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
   if (engine.gameState === "review") {
     return (
       <ExamReview
-        exam={exam}
+        exam={activeExam}
         answers={engine.answers}
         setGameState={engine.setGameState}
       />
@@ -65,7 +73,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
 
   return (
     <ExamPlaying
-      exam={exam}
+      exam={activeExam}
       activeQuestion={engine.activeQuestion}
       currentQuestionIndex={engine.currentQuestionIndex}
       timeLeft={engine.timeLeft}
@@ -88,6 +96,7 @@ export default function MockExamEngine({ exam }: MockExamEngineProps) {
       setPendingConfirm={engine.setPendingConfirm}
       confirmPendingAction={engine.confirmPendingAction}
       pendingConfirmLabel={engine.pendingConfirmLabel}
+      isSubmitting={engine.isSubmittingSession}
     />
   );
 }

@@ -1431,6 +1431,11 @@ function getTooltipLayout(rect: SpotlightRect | null, size: TooltipSize): Toolti
 export default function OnboardingTour() {
   const pathname = usePathname();
   const tour = useMemo(() => resolveTour(pathname), [pathname]);
+
+  return <OnboardingTourSession key={tour?.id ?? "no-tour"} tour={tour} />;
+}
+
+function OnboardingTourSession({ tour }: { tour: PageTour | null }) {
   const tourId = tour?.id;
   const tooltipRef = useRef<HTMLDivElement | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
@@ -1442,11 +1447,6 @@ export default function OnboardingTour() {
   });
 
   useEffect(() => {
-    setCurrentStep(0);
-    setIsOpen(false);
-    setSpotlightRect(null);
-    setTooltipSize({ height: TOOLTIP_HEIGHT_ESTIMATE, width: TOOLTIP_WIDTH });
-
     if (!tourId) return;
     if (readStorage(TOUR_SKIP_ALL_KEY) === "true") return;
     if (readStorage(getSeenKey(tourId)) === "true") return;

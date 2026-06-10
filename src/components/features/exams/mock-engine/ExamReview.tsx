@@ -35,7 +35,8 @@ import {
   type ExamReviewQuestionInsight,
 } from "@/lib/exam-review-analysis";
 import { cn } from "@/lib/utils";
-import { ExamData, GameState } from "./types";
+import { sanitizeHtml } from "@/lib/sanitize";
+import { ExamChoice, ExamData, ExamPassage, GameState } from "./types";
 import { SECTION_LABELS } from "./constants";
 import { ExamQuestionText } from "./ExamQuestionText";
 
@@ -90,6 +91,90 @@ function getQuestionStatus(insight: ExamReviewQuestionInsight) {
     icon: XCircle,
     className: "bg-destructive/10 text-destructive border-destructive/20",
   };
+}
+
+function ReviewPassageBlock({ passage }: { passage?: ExamPassage | null }) {
+  if (!passage) return null;
+
+  const hasContent = Boolean(
+    passage.contentHtml ||
+      passage.visualUrl ||
+      passage.transcriptHtml
+  );
+
+  if (!hasContent) return null;
+
+  return (
+    <div className="mb-8 rounded-2xl border border-border bg-[rgb(var(--muted-rgb)/0.25)] p-5 dark:bg-[rgb(var(--background-rgb)/0.12)]">
+      {passage.visualUrl && (
+        <div className="mb-5 overflow-hidden rounded-2xl border border-border bg-background/60">
+          <Image
+            src={passage.visualUrl}
+            alt="Visual bacaan"
+            width={900}
+            height={500}
+            unoptimized
+            className="max-h-[420px] w-full object-contain"
+          />
+        </div>
+      )}
+
+      {passage.contentHtml && (
+        <div
+          className="prose-custom font-japanese text-base leading-relaxed text-foreground md:text-lg"
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(passage.contentHtml) }}
+        />
+      )}
+
+      {passage.transcriptHtml && (
+        <details className="mt-5 rounded-xl border border-border bg-background/60 p-4">
+          <summary className="cursor-pointer text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+            Transkrip Listening
+          </summary>
+          <div
+            className="prose-custom mt-4 font-japanese text-sm leading-relaxed text-foreground"
+            dangerouslySetInnerHTML={{
+              __html: sanitizeHtml(passage.transcriptHtml),
+            }}
+          />
+        </details>
+      )}
+    </div>
+  );
+}
+
+function ReviewChoiceContent({
+  choice,
+  text,
+}: {
+  choice?: ExamChoice;
+  text: string;
+}) {
+  if (choice?.type !== "image") {
+    return (
+      <span className="min-w-0 flex-1 text-base font-medium leading-tight md:text-xl font-japanese">
+        {choice?.type === "text" ? choice.value : text}
+      </span>
+    );
+  }
+
+  return (
+    <span className="flex min-w-0 flex-1 flex-col gap-3">
+      <span className="relative block aspect-[16/9] w-full overflow-hidden rounded-xl border border-border bg-muted/30">
+        <Image
+          src={choice.value}
+          alt={choice.alt || text}
+          fill
+          sizes="(max-width: 768px) 72vw, 560px"
+          unoptimized
+          className="object-contain"
+        />
+      </span>
+      <span className="text-sm font-medium leading-tight text-muted-foreground md:text-base font-japanese">
+        {choice.alt || text}
+      </span>
+    </span>
+  );
 }
 
 export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
@@ -431,6 +516,8 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                     />
                   )}
 
+                  <ReviewPassageBlock passage={q.passage} />
+
                   {q.imageUrl && (
                     <div className="mb-8 overflow-hidden rounded-3xl border border-border bg-[rgb(var(--muted-rgb)/0.2)] p-3 dark:bg-[rgb(var(--background-rgb)/0.2)]">
                       <Image
@@ -466,6 +553,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                     {q.options.map((opt, optIdx) => {
                       const isCorrectAnswer = optIdx === q.correctAnswer;
                       const isUserSelection = optIdx === userAnswer;
+                      const choice = q.choices?.[optIdx];
 
                       let optionClass =
                         "border-border bg-[rgb(var(--muted-rgb)/0.5)] opacity-65 dark:bg-[rgb(var(--background-rgb)/0.1)]";
@@ -498,9 +586,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                           >
                             {optIdx + 1}
                           </Badge>
-                          <span className="min-w-0 flex-1 text-base font-medium leading-tight md:text-xl font-japanese">
-                            {opt}
-                          </span>
+                          <ReviewChoiceContent choice={choice} text={opt} />
                           {isCorrectAnswer && (
                             <CheckCircle
                               size={24}
@@ -526,6 +612,25 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                       <p className="text-xs font-bold leading-relaxed">
                         Soal ini belum dijawab saat ujian, jadi dihitung sebagai bagian dari review kesalahan.
                       </p>
+                    </div>
+                  )}
+
+                  {(q.explanationHtml || q.sourceReference || q.sourceId) && (
+                    <div className="mt-6 rounded-2xl border border-border bg-muted/20 p-5">
+                      {q.explanationHtml && (
+                        <div
+                          className="prose-custom font-japanese text-sm leading-relaxed text-foreground"
+                          dangerouslySetInnerHTML={{
+                            __html: sanitizeHtml(q.explanationHtml),
+                          }}
+                        />
+                      )}
+                      {(q.sourceReference || q.sourceId) && (
+                        <p className="mt-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                          Source: {q.sourceReference || q.sourceId}
+                          {q.sourceType ? ` (${q.sourceType})` : ""}
+                        </p>
+                      )}
                     </div>
                   )}
                 </Card>

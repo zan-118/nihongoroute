@@ -9,23 +9,29 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { ExamData, GameState } from "./types";
+import { ExamData } from "./types";
 
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
 interface ExamIntroProps {
   exam: ExamData;
-  setGameState: (state: GameState) => void;
+  onStartExam: () => void | Promise<void>;
+  isStarting?: boolean;
   backLink: string;
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
-export function ExamIntro({ exam, setGameState, backLink }: ExamIntroProps) {
+export function ExamIntro({
+  exam,
+  onStartExam,
+  isStarting = false,
+  backLink,
+}: ExamIntroProps) {
   return (
     <Card className="w-full max-w-2xl mx-auto p-8 md:p-12 text-center mt-6 md:mt-12 relative overflow-hidden neo-card rounded-[3rem] border border-border bg-card shadow-2xl transition-colors duration-300">
       <div className="absolute top-0 right-0 size-[300px] bg-destructive/5 blur-[100px] rounded-full pointer-events-none" />
@@ -84,10 +90,12 @@ export function ExamIntro({ exam, setGameState, backLink }: ExamIntroProps) {
           </Link>
         </Button>
         <Button
-          onClick={() => setGameState("playing")}
+          onClick={() => void onStartExam()}
+          disabled={isStarting}
           className="w-full bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase tracking-widest h-auto py-5 px-10 rounded-xl transition-all shadow-lg active:scale-95 text-xs sm:text-xs border-none"
         >
-          Mulai Sekarang
+          {isStarting && <Loader2 size={16} aria-hidden="true" className="mr-2 animate-spin" />}
+          {isStarting ? "Menyiapkan Sesi" : "Mulai Sekarang"}
         </Button>
       </div>
     </Card>

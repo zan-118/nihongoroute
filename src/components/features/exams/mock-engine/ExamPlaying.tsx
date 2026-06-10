@@ -17,10 +17,18 @@ import {
   ArrowLeft,
   Volume2,
   CheckCircle,
+  Loader2,
   Lock as LockIcon,
 } from "lucide-react";
 import ConfirmModal from "@/components/ui/ConfirmModal";
-import { ExamData, ExamQuestion, AudioState, PendingConfirmType } from "./types";
+import {
+  ExamData,
+  ExamQuestion,
+  AudioState,
+  PendingConfirmType,
+  ExamChoice,
+  ExamPassage,
+} from "./types";
 import { SECTION_LABELS } from "./constants";
 import { formatTime } from "@/lib/utils";
 import { sanitizeHtml } from "@/lib/sanitize";
@@ -54,6 +62,7 @@ interface ExamPlayingProps {
   setPendingConfirm: (v: PendingConfirmType) => void;
   confirmPendingAction: () => void;
   pendingConfirmLabel: { title: string; description: string } | null;
+  isSubmitting?: boolean;
 }
 
 // ======================
@@ -66,11 +75,13 @@ interface ExamPlayingProps {
 const OptionButton = memo(({
   idx,
   text,
+  choice,
   isSelected,
   onSelect
 }: {
   idx: number;
   text: string;
+  choice?: ExamChoice;
   isSelected: boolean;
   onSelect: (idx: number) => void;
 }) => {
@@ -88,7 +99,27 @@ const OptionButton = memo(({
       >
         {idx + 1}
       </div>
-      <span className="leading-tight font-japanese text-base md:text-lg flex-1">{text}</span>
+      {choice?.type === "image" ? (
+        <span className="flex min-w-0 flex-1 flex-col gap-3">
+          <span className="relative block aspect-[16/9] w-full overflow-hidden rounded-xl border border-border bg-muted/40">
+            <Image
+              src={choice.value}
+              alt={choice.alt || text}
+              fill
+              sizes="(max-width: 768px) 70vw, 520px"
+              unoptimized
+              className="object-contain"
+            />
+          </span>
+          <span className="leading-tight font-japanese text-sm md:text-base">
+            {choice.alt || text}
+          </span>
+        </span>
+      ) : (
+        <span className="leading-tight font-japanese text-base md:text-lg flex-1">
+          {choice?.type === "text" ? choice.value : text}
+        </span>
+      )}
       {isSelected && (
         <CheckCircle size={16} aria-hidden="true" className="text-destructive text-destructive" />
       )}
@@ -97,6 +128,41 @@ const OptionButton = memo(({
 });
 
 OptionButton.displayName = "OptionButton";
+
+function ExamPassageBlock({ passage }: { passage?: ExamPassage | null }) {
+  if (!passage) return null;
+
+  const hasContent = Boolean(
+    passage.contentHtml ||
+      passage.visualUrl
+  );
+
+  if (!hasContent) return null;
+
+  return (
+    <div className="mb-8 rounded-2xl border border-border bg-muted/20 p-4 md:p-5">
+      {passage.visualUrl && (
+        <div className="mb-5 overflow-hidden rounded-xl border border-border bg-background/60">
+          <Image
+            src={passage.visualUrl}
+            alt="Passage visual"
+            width={900}
+            height={500}
+            unoptimized
+            className="max-h-[420px] w-full object-contain"
+          />
+        </div>
+      )}
+
+      {passage.contentHtml && (
+        <div
+          className="prose-custom font-japanese text-base leading-relaxed text-foreground md:text-lg"
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(passage.contentHtml) }}
+        />
+      )}
+    </div>
+  );
+}
 
 // ======================
 // EKSEKUSI UTAMA
@@ -125,6 +191,7 @@ export function ExamPlaying({
   setPendingConfirm,
   confirmPendingAction,
   pendingConfirmLabel,
+  isSubmitting = false,
 }: ExamPlayingProps) {
   if (!activeQuestion) return null;
 
@@ -217,6 +284,8 @@ export function ExamPlaying({
                     </div>
                   </div>
 
+                  <ExamPassageBlock passage={activeQuestion.passage} />
+
                   {activeQuestion.imageUrl && (
                     <div className="mb-8 rounded-2xl overflow-hidden border border-border bg-muted/30">
                       <Image
@@ -240,6 +309,7 @@ export function ExamPlaying({
                         key={`${opt}-${idx}`}
                         idx={idx}
                         text={opt}
+                        choice={activeQuestion.choices?.[idx]}
                         isSelected={answers[activeQuestion._key] === idx}
                         onSelect={handleAnswer}
                       />
@@ -288,7 +358,7 @@ export function ExamPlaying({
           <Button
             onClick={prevQuestion}
             variant="ghost"
-            disabled={disablePreviousButton}
+            disabled={disablePreviousButton || isSubmitting}
             className="flex-1 sm:flex-none py-6 rounded-xl border border-border hover:bg-muted font-bold uppercase tracking-wider text-[10px] transition-all"
           >
             <ArrowLeft size={16} aria-hidden="true" className="mr-2" /> Sebelumnya
@@ -297,6 +367,7 @@ export function ExamPlaying({
           {currentQuestionIndex === exam.questions.length - 1 ? (
             <Button
               onClick={() => setPendingConfirm("finish")}
+              disabled={isSubmitting}
               className="flex-1 sm:flex-none bg-warning hover:bg-warning/90 text-warning-foreground px-8 py-6 rounded-xl font-bold uppercase tracking-wider text-[10px] transition-all shadow-md"
             >
               <CheckCircle size={16} aria-hidden="true" className="mr-2" /> Selesai
@@ -304,6 +375,7 @@ export function ExamPlaying({
           ) : (
             <Button
               onClick={nextQuestion}
+              disabled={isSubmitting}
               className="flex-1 sm:flex-none bg-destructive hover:bg-destructive/90 text-destructive-foreground px-8 py-6 rounded-xl font-bold uppercase tracking-wider text-[10px] transition-all shadow-md"
             >
               {sections[currentSection][sections[currentSection].length - 1] === currentQuestionIndex ? (
@@ -445,15 +517,20 @@ export function ExamPlaying({
                 <Button
                   onClick={() => setPendingConfirm(null)}
                   variant="ghost"
+                  disabled={isSubmitting}
                   className="rounded-xl border border-border hover:bg-muted text-xs font-bold uppercase tracking-wider py-5"
                 >
                   Kembali
                 </Button>
                 <Button
                   onClick={confirmPendingAction}
+                  disabled={isSubmitting}
                   className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase tracking-widest text-xs px-6 py-5 rounded-xl transition-all shadow-lg hover:shadow-destructive/20"
                 >
-                  Kumpulkan Ujian
+                  {isSubmitting && (
+                    <Loader2 size={16} aria-hidden="true" className="mr-2 animate-spin" />
+                  )}
+                  {isSubmitting ? "Mengirim Jawaban" : "Kumpulkan Ujian"}
                 </Button>
               </div>
             </m.div>

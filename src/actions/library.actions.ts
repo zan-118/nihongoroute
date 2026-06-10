@@ -17,5 +17,6 @@ export * from "./reading.actions";
 export * from "./listening.actions";
 export * from "./lessons.actions";
 export * from "./exams.actions";
+export * from "./jlpt-exams.actions";
 export * from "./cheatsheets.actions";
 export * from "./library.detail.actions";

@@ -46,9 +46,9 @@ export interface ExamData {
   id?: string;
   _id?: string;
   title: string;
-  description?: string;
+  description?: string | null;
   levelCode?: string;
-  slug?: string;
+  slug?: string | null;
   timeLimit: number;
   passingScore: number;
 }
