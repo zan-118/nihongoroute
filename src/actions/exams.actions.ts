@@ -9,8 +9,8 @@
 // ======================
 // IMPORTS
 // ======================
-import { createClient } from "@/lib/supabase/server";
-import { sanityClient } from "@/lib/sanity.client";
+import { createStaticClient } from "@/lib/supabase/server";
+import { sanityClient, sanityPublicFetchOptions } from "@/lib/sanity.client";
 import { getSanityLessonsByCategory } from "@/lib/queries";
 
 // ======================
@@ -61,8 +61,7 @@ interface SanityQuestionItem {
  * @returns {Promise<Object>} Mengembalikan objek kategori, daftar pelajaran, dan daftar simulasi ujian
  */
 export async function getCourseCategoryData(slug: string) {
-  const supabase = await createClient();
-  await supabase.auth.getSession();
+  const supabase = createStaticClient();
   
   try {
     // 1. Ambil Kategori (Tetap dari Supabase karena course_categories ada di Supabase)
@@ -90,7 +89,7 @@ export async function getCourseCategoryData(slug: string) {
     const mockExams = await sanityClient.fetch(mockExamsQuery, { 
       categoryId: category.id,
       categorySlug: category.slug
-    }, { cache: "no-store" });
+    }, sanityPublicFetchOptions);
 
     return {
       category: {
@@ -129,8 +128,6 @@ export async function getCourseCategoryData(slug: string) {
  * @returns {Promise<Array>} Daftar simulasi ujian terformat
  */
 export async function getExamsList() {
-  const supabase = await createClient();
-  await supabase.auth.getSession();
   try {
     const query = `*[_type == "mockExam" && is_published == true] | order(_createdAt desc) {
       _id,
@@ -143,7 +140,7 @@ export async function getExamsList() {
       levelCode
     }`;
 
-    const data = await sanityClient.fetch(query, {}, { cache: "no-store" });
+    const data = await sanityClient.fetch(query, {}, sanityPublicFetchOptions);
 
     return (data || []).map((e: SanityMockExamListItem) => ({
       id: e._id,
@@ -171,8 +168,7 @@ export async function getExamsList() {
  * @returns {Promise<Object | null>} Detail simulasi ujian terformat lengkap, atau null jika tidak ditemukan
  */
 export async function getExamByIdOrSlug(idOrSlug: string) {
-  const supabase = await createClient();
-  await supabase.auth.getSession();
+  const supabase = createStaticClient();
   try {
     const query = `*[_type == "mockExam" && (slug.current == $idOrSlug || _id == $idOrSlug)][0] {
       _id, 
@@ -194,14 +190,13 @@ export async function getExamByIdOrSlug(idOrSlug: string) {
       }
     }`;
 
-    const exam = await sanityClient.fetch(query, { idOrSlug }, { cache: "no-store" });
+    const exam = await sanityClient.fetch(query, { idOrSlug }, sanityPublicFetchOptions);
 
     if (!exam) return null;
 
     // Selesaikan categorySlug jika berupa UUID dari Supabase, atau gunakan langsung jika berupa slug
     let categorySlug = exam.category_id || "general";
     if (categorySlug && categorySlug.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
-      const supabase = await createClient();
       const { data, error } = await supabase
         .from("course_categories")
         .select("slug")

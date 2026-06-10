@@ -9,7 +9,7 @@
 // ======================
 // IMPORTS
 // ======================
-import { createClient } from "@/lib/supabase/server";
+import { createStaticClient } from "@/lib/supabase/server";
 import { getSanityLessonsByCategory, getSanityLessonsByCategories } from "@/lib/queries";
 
 // ======================
@@ -26,8 +26,7 @@ import { getSanityLessonsByCategory, getSanityLessonsByCategories } from "@/lib/
  * @returns {Promise<Object | null>} Objek detail pelajaran, atau null jika gagal
  */
 export async function getLessonDetail(slug: string) {
-  const supabase = await createClient();
-  await supabase.auth.getSession();
+  const supabase = createStaticClient();
   const { data, error } = await supabase
     .from("lessons")
     .select("*, category:course_categories(*)")
@@ -60,8 +59,7 @@ interface SanityLessonListItem {
  * @returns {Promise<Array>} Daftar kategori kursus terformat lengkap beserta daftar preview pelajarannya
  */
 export async function getCourseCategories() {
-  const supabase = await createClient();
-  await supabase.auth.getSession();
+  const supabase = createStaticClient();
   const { data: categories, error } = await supabase
     .from("course_categories")
     .select("*")
@@ -102,8 +100,7 @@ export async function getCourseCategories() {
 }
 
 export async function getExamsByCategory(categoryId: string) {
-  const supabase = await createClient();
-  await supabase.auth.getSession();
+  const supabase = createStaticClient();
   const { data, error } = await supabase
     .from("exams")
     .select("*")

@@ -9,7 +9,7 @@
 // ======================
 // IMPORTS
 // ======================
-import { createClient } from "@/lib/supabase/server";
+import { createStaticClient } from "@/lib/supabase/server";
 
 // ======================
 // TYPES
@@ -32,8 +32,7 @@ export interface RandomExpression {
  * dengan filter `common = true` untuk menjamin kualitas ungkapan.
  */
 export async function getRandomExpression(): Promise<RandomExpression | null> {
-  const supabase = await createClient();
-  await supabase.auth.getSession();
+  const supabase = createStaticClient();
 
   // Ambil jumlah total ungkapan umum untuk offset acak
   const { count } = await supabase

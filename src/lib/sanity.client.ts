@@ -19,8 +19,15 @@ export const sanityClient = createClient({
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
   apiVersion: '2026-05-17',
   useCdn: true,
-  token: process.env.SANITY_API_WRITE_TOKEN,
 });
+
+export const SANITY_PUBLIC_REVALIDATE_SECONDS = 60 * 60;
+
+export const sanityPublicFetchOptions = {
+  next: {
+    revalidate: SANITY_PUBLIC_REVALIDATE_SECONDS,
+  },
+} as const;
 
 /**
  * Mengembalikan client Sanity yang dikonfigurasi secara dinamis berdasarkan status draftMode saat ini.

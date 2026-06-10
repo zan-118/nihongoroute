@@ -1,87 +1,40 @@
 /**
  * @file loading.tsx
- * @description Komponen pemuat (Loading Skeleton) premium untuk grup rute utama (main) NihongoRoute.
+ * @description Komponen pemuat ringan untuk grup rute utama.
  */
 
-"use client";
-
-// ======================
-// IMPOR
-// ======================
-import { m } from "framer-motion";
-
-// ======================
-// EKSEKUSI UTAMA
-// ======================
+import { Skeleton } from "@/components/ui/skeleton";
 
 /**
  * Komponen loading global untuk grup rute utama.
- * Menyediakan animasi transisi premium saat perpindahan halaman atau pengambilan data.
- * 
- * @returns {JSX.Element} Antarmuka indikator pemuatan visual.
+ * Menggunakan skeleton in-place supaya navigasi tidak terasa seperti aplikasi dimuat ulang.
  */
 export default function MainLoading() {
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center premium-shell overflow-hidden transition-colors duration-300">
-      {/* Dekorasi Latar Belakang */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[600px] bg-primary/10 blur-[150px] rounded-full animate-pulse" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[400px] bg-destructive/5 blur-[120px] rounded-full animate-pulse delay-700" />
+    <div className="w-full flex-1 px-4 py-8 md:px-8 lg:px-12">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
+        <div className="space-y-4">
+          <Skeleton className="h-5 w-36 rounded-full" />
+          <Skeleton className="h-12 w-full max-w-xl rounded-2xl" />
+          <Skeleton className="h-4 w-full max-w-2xl rounded-full" />
+        </div>
 
-      <div className="relative flex flex-col items-center">
-        {/* Logo Animasi / Kerangka Ikon */}
-        <m.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="relative size-24 mb-8"
-        >
-          {/* Cincin Kilau Bagian Dalam */}
-          <div className="absolute inset-0 rounded-full border-2 border-primary/30 animate-[ping_2s_infinite]" />
-          
-          {/* Visual Utama */}
-          <div className="absolute inset-0 neo-card flex items-center justify-center rounded-full bg-card border border-border shadow-xl">
-            <m.div
-              animate={{ 
-                rotate: 360,
-                scale: [1, 1.1, 1]
-              }}
-              transition={{ 
-                rotate: { duration: 3, repeat: Infinity, ease: "linear" },
-                scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
-              }}
-              className="text-3xl"
-            >
-              🌀
-            </m.div>
+        <div className="grid gap-4 md:grid-cols-3">
+          <Skeleton className="h-36 rounded-2xl" />
+          <Skeleton className="h-36 rounded-2xl" />
+          <Skeleton className="h-36 rounded-2xl" />
+        </div>
+
+        <div className="grid gap-4 lg:grid-cols-[1.4fr_0.8fr]">
+          <div className="space-y-4">
+            <Skeleton className="h-64 rounded-2xl" />
+            <Skeleton className="h-40 rounded-2xl" />
           </div>
-        </m.div>
-
-        {/* Umpan Balik Tekstual */}
-        <m.div
-          initial={{ y: 10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="text-center"
-        >
-          <h2 className="text-sm font-black uppercase tracking-[0.3em] text-foreground mb-2">
-            NihongoRoute
-          </h2>
-          <div className="flex items-center gap-1.5 justify-center">
-            <span className="size-1 rounded-full bg-primary animate-premium-bounce [animation-delay:-0.3s]" />
-            <span className="size-1 rounded-full bg-primary animate-premium-bounce [animation-delay:-0.15s]" />
-            <span className="size-1 rounded-full bg-primary animate-premium-bounce" />
+          <div className="space-y-4">
+            <Skeleton className="h-32 rounded-2xl" />
+            <Skeleton className="h-48 rounded-2xl" />
           </div>
-        </m.div>
-      </div>
-
-      {/* Garis Progres di Bagian Bawah */}
-      <div className="fixed bottom-0 left-0 w-full h-1 bg-muted">
-        <m.div
-          initial={{ x: "-100%" }}
-          animate={{ x: "100%" }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          className="w-1/3 h-full bg-gradient-to-r from-transparent via-primary to-transparent shadow-lg"
-        />
+        </div>
       </div>
     </div>
   );

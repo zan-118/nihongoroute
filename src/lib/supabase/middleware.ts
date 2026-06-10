@@ -31,7 +31,7 @@ export async function updateSession(request: NextRequest) {
         getAll() {
           return request.cookies.getAll();
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet, headersToSet) {
           cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value));
           supabaseResponse = NextResponse.next({
             request,
@@ -39,17 +39,21 @@ export async function updateSession(request: NextRequest) {
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           );
+          Object.entries(headersToSet).forEach(([key, value]) =>
+            supabaseResponse.headers.set(key, value)
+          );
         },
       },
     }
   );
 
   // PENTING: Hindari menulis logika apa pun di antara createServerClient dan
-  // supabase.auth.getUser(). Kesalahan kecil dapat menyulitkan pelacakan (debugging)
+  // supabase.auth.getClaims(). Kesalahan kecil dapat menyulitkan pelacakan (debugging)
   // masalah cookie lintas browser, misalnya di Safari.
   
-  // Segarkan token autentikasi dengan memanggil getUser()
-  await supabase.auth.getUser();
+  // Segarkan token dan validasi JWT. getClaims() dapat memanfaatkan JWKS cache,
+  // sehingga lebih ringan daripada getUser() yang selalu memanggil Auth server.
+  await supabase.auth.getClaims();
 
   return supabaseResponse;
 }

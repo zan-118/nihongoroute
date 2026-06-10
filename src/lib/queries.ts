@@ -6,7 +6,7 @@
 // ==========================================
 // IMPORT & DEPENDENSI
 // ==========================================
-import { sanityClient } from "./sanity.client";
+import { sanityClient, sanityPublicFetchOptions } from "./sanity.client";
 
 // ==========================================
 // KUERI GROQ SANITY CMS
@@ -38,7 +38,7 @@ export async function getSanityLessonBySlug(slug: string) {
   }`;
 
   try {
-    return await sanityClient.fetch(query, { slug }, { cache: "no-store" });
+    return await sanityClient.fetch(query, { slug }, sanityPublicFetchOptions);
   } catch (error) {
     console.error(`[getSanityLessonBySlug] Gagal mengambil data pelajaran dari Sanity:`, error);
     return null;
@@ -63,7 +63,7 @@ export async function getSanityLessonsByCategory(categoryIdOrSlug: string, categ
     return await sanityClient.fetch(query, {
       idOrSlug: categoryIdOrSlug,
       idUuid: categoryIdUuid || categoryIdOrSlug
-    }, { cache: "no-store" });
+    }, sanityPublicFetchOptions);
   } catch (error) {
     console.error(`[getSanityLessonsByCategory] Gagal mengambil daftar pelajaran dari Sanity:`, error);
     return [];
@@ -95,7 +95,7 @@ export async function getSanityReadingBySlug(slug: string) {
     seo
   }`;
   try {
-    return await sanityClient.fetch(query, { slug }, { cache: "no-store" });
+    return await sanityClient.fetch(query, { slug }, sanityPublicFetchOptions);
   } catch (error) {
     console.error(`[getSanityReadingBySlug] Gagal mengambil data bacaan dari Sanity:`, error);
     return null;
@@ -127,7 +127,7 @@ export async function getSanityListeningBySlug(slug: string) {
     seo
   }`;
   try {
-    return await sanityClient.fetch(query, { slug }, { cache: "no-store" });
+    return await sanityClient.fetch(query, { slug }, sanityPublicFetchOptions);
   } catch (error) {
     console.error(`[getSanityListeningBySlug] Gagal mengambil data menyimak dari Sanity:`, error);
     return null;
@@ -159,7 +159,7 @@ export async function getSanityExamBySlug(slug: string) {
     }
   }`;
   try {
-    return await sanityClient.fetch(query, { slug }, { cache: "no-store" });
+    return await sanityClient.fetch(query, { slug }, sanityPublicFetchOptions);
   } catch (error) {
     console.error(`[getSanityExamBySlug] Gagal mengambil data ujian dari Sanity:`, error);
     return null;
@@ -181,10 +181,9 @@ export async function getSanityLessonsByCategories(categoryIds: string[]) {
   }`;
 
   try {
-    return await sanityClient.fetch(query, { ids: categoryIds }, { cache: "no-store" });
+    return await sanityClient.fetch(query, { ids: categoryIds }, sanityPublicFetchOptions);
   } catch (error) {
     console.error(`[getSanityLessonsByCategories] Gagal mengambil daftar pelajaran massal dari Sanity:`, error);
     return [];
   }
 }
-

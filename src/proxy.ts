@@ -12,8 +12,9 @@ export const config = {
      * - _next/static (berkas statis)
      * - _next/image (berkas optimasi gambar)
      * - favicon.ico (berkas favicon)
+     * - asset publik dan font
      * Silakan ubah pola ini untuk menyertakan lebih banyak jalur jika diperlukan.
      */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|robots.txt|sitemap.xml|.*\\.(?:avif|css|gif|ico|jpeg|jpg|js|json|map|mjs|otf|png|svg|ttf|txt|webp|woff|woff2|xml)$).*)",
   ],
 };

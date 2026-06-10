@@ -1,6 +1,6 @@
 /**
  * @file layout.tsx
- * @description Kerangka utama aplikasi (Root Layout) yang mengatur struktur dasar HTML, konfigurasi SEO global, 
+ * @description Kerangka utama aplikasi (Root Layout) yang mengatur struktur dasar HTML, konfigurasi SEO global,
  * inisialisasi font, dan pembungkusan context provider untuk seluruh aplikasi.
  * @module AppLayout
  */
@@ -13,12 +13,12 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import QueryProvider from "@/components/providers/QueryProvider";
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { LazyMotion, domAnimation } from "framer-motion";
 import Script from "next/script";
 import { JsonLd } from "@/components/seo/JsonLd";
-import OnboardingTour from "@/components/features/onboarding/OnboardingTour";
+import DeferredOnboardingTour from "@/components/providers/DeferredOnboardingTour";
 import {
   DEFAULT_DESCRIPTION,
   DEFAULT_OG_IMAGE,
@@ -28,7 +28,6 @@ import {
   organizationJsonLd,
   websiteJsonLd,
 } from "@/lib/seo";
-
 
 // ======================
 // KONFIGURASI / KONSTANTA
@@ -89,7 +88,7 @@ export const metadata: Metadata = {
     ],
     locale: "id_ID",
     siteName: SITE_NAME,
-    title: "NihongoRoute | Misi Menguasai Bahasa Jepang",
+    title: "NihongoRoute | Platform Belajar Bahasa Jepang",
     type: "website",
     url: absoluteUrl("/"),
   },
@@ -107,7 +106,7 @@ export const metadata: Metadata = {
 
 /**
  * RootLayout: Komponen pembungkus utama aplikasi.
- * 
+ *
  * @param {Object} props - Properti komponen.
  * @param {ReactNode} props.children - Konten halaman yang akan dirender.
  * @returns {JSX.Element} Struktur dasar HTML aplikasi.
@@ -149,7 +148,7 @@ export default function RootLayout({
           <LazyMotion features={domAnimation}>
             <QueryProvider>
               {children}
-              <OnboardingTour />
+              <DeferredOnboardingTour />
             </QueryProvider>
           </LazyMotion>
           <Toaster
@@ -158,28 +157,30 @@ export default function RootLayout({
             offset={80} // Ofset untuk membersihkan Topbar (64px + 16px)
             toastOptions={{
               style: {
-                background: 'rgb(var(--background-rgb)/0.9)',
-                border: '1px solid rgb(var(--foreground-rgb)/0.1)',
-                backdropFilter: 'blur(16px)',
-                color: 'hsl(var(--foreground))',
-                borderRadius: '16px',
+                background: "rgb(var(--background-rgb)/0.9)",
+                border: "1px solid rgb(var(--foreground-rgb)/0.1)",
+                backdropFilter: "blur(16px)",
+                color: "hsl(var(--foreground))",
+                borderRadius: "16px",
               },
               classNames: {
-                success: "border-primary/50 shadow-[0_0_20px_rgb(var(--primary-rgb)/0.2)]",
-                error: "border-destructive/50 shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.2)]",
+                success:
+                  "border-primary/50 shadow-[0_0_20px_rgb(var(--primary-rgb)/0.2)]",
+                error:
+                  "border-destructive/50 shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.2)]",
               },
               duration: 4000,
             }}
           />
-          {process.env.NODE_ENV === 'production' && process.env.VERCEL === '1' && (
-            <>
-              <Analytics />
-              <SpeedInsights />
-            </>
-          )}
+          {process.env.NODE_ENV === "production" &&
+            process.env.VERCEL === "1" && (
+              <>
+                <Analytics />
+                <SpeedInsights />
+              </>
+            )}
         </ThemeProvider>
       </body>
-
     </html>
   );
 }

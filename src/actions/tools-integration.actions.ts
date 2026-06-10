@@ -1,7 +1,7 @@
 "use server";
 
 import { createStaticClient } from "@/lib/supabase/server";
-import { sanityClient } from "@/lib/sanity.client";
+import { sanityClient, sanityPublicFetchOptions } from "@/lib/sanity.client";
 import {
   MINI_DRILL_BANK,
   type DrillKind,
@@ -603,7 +603,7 @@ export async function getIntegratedShadowingPresets(
               translation
             }`,
             { type: exactType, slug },
-            { cache: "no-store" }
+            sanityPublicFetchOptions
           )
         : null;
 
@@ -631,7 +631,7 @@ export async function getIntegratedShadowingPresets(
     const result = await sanityClient.fetch<{
       listenings?: SanityLineSource[];
       readings?: SanityLineSource[];
-    }>(query, {}, { cache: "no-store" });
+    }>(query, {}, sanityPublicFetchOptions);
 
     const presets: ShadowingPreset[] = [];
 
@@ -677,7 +677,7 @@ export async function getLibraryTextForTool(
         translation
       }`,
       { type, slug },
-      { cache: "no-store" }
+      sanityPublicFetchOptions
     );
 
     if (!item) return null;

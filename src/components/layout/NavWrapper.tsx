@@ -14,7 +14,6 @@ import Topbar from "./Topbar";
 import MobileNav from "./MobileNav";
 import FloatingActions from "@/components/features/global/FloatingActions";
 import AchievementToast from "./AchievementToast";
-import { m, AnimatePresence } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -54,34 +53,27 @@ export default function NavWrapper({ children }: NavWrapperProps) {
       {/* Area Konten Utama */}
       <div className={`flex-1 flex flex-col min-w-0 ${!isExamPage ? 'md:pl-72' : ''} transition-all duration-500`}>
         {!isExamPage && <Topbar onMenuClick={() => setIsMobileMenuOpen(true)} />}
-        <AnimatePresence mode="wait">
-          <m.main 
-            key={pathname}
-            id="main-content" 
-            data-tour="main-content"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2, ease: "linear" }}
-            className={`app-main-frame flex-1 w-full flex flex-col ${!isExamPage ? 'pb-[7.5rem] md:pb-12' : 'pb-12'} outline-none relative`}
-          >
-            {!isExamPage && (
-              <div className="relative z-20 flex w-full animate-in items-center gap-2 px-4 pt-4 duration-500 fade-in slide-in-from-top-4 sm:px-6 md:px-8 md:pt-6 lg:px-10 xl:px-12">
-                <Button 
-                  onClick={() => router.back()}
-                  variant="ghost" 
-                  className="action-icon hidden size-10 shrink-0 p-0 md:inline-flex"
-                  aria-label="Kembali"
-                >
-                  <ChevronLeft size={16} />
-                </Button>
+        <main
+          id="main-content" 
+          data-tour="main-content"
+          className={`app-main-frame flex-1 w-full flex flex-col ${!isExamPage ? 'pb-[7.5rem] md:pb-12' : 'pb-12'} outline-none relative`}
+        >
+          {!isExamPage && (
+            <div className="relative z-20 flex w-full animate-in items-center gap-2 px-4 pt-4 duration-500 fade-in slide-in-from-top-4 sm:px-6 md:px-8 md:pt-6 lg:px-10 xl:px-12">
+              <Button 
+                onClick={() => router.back()}
+                variant="ghost" 
+                className="action-icon hidden size-10 shrink-0 p-0 md:inline-flex"
+                aria-label="Kembali"
+              >
+                <ChevronLeft size={16} />
+              </Button>
 
-                <AppBreadcrumbs items={breadcrumbItems} className="min-w-0 flex-1" />
-              </div>
-            )}
-            {children}
-          </m.main>
-        </AnimatePresence>
+              <AppBreadcrumbs items={breadcrumbItems} className="min-w-0 flex-1" />
+            </div>
+          )}
+          {children}
+        </main>
       </div>
 
       {!isExamPage && <FloatingActions />}

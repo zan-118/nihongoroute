@@ -1,44 +1,19 @@
 /**
  * @file loading.tsx
- * @description Komponen pemuat awal global (Root Loading) dengan visualisasi pemutar futuristik premium.
+ * @description Komponen pemuat awal global yang ringan tanpa JavaScript client tambahan.
  */
-
-"use client";
-
-// ======================
-// IMPOR
-// ======================
-import { m } from "framer-motion";
-
-// ======================
-// EKSEKUSI UTAMA
-// ======================
 export default function RootLoading() {
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center premium-shell transition-colors duration-300">
-      {/* Dekorasi Latar Belakang & Kisi Neural */}
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-background text-foreground">
       <div className="neural-grid" />
-      <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
-        <div className="size-[450px] bg-primary/5 rounded-full blur-[100px] opacity-30 absolute -top-10 -left-10" />
-        <div className="size-[400px] bg-secondary/5 rounded-full blur-[90px] opacity-25 absolute -bottom-10 -right-10" />
-      </div>
-
-      <div className="relative flex flex-col items-center z-10">
-        {/* Pemutar Futuristik (Futuristic Spinner) */}
-        <div className="relative size-20 mb-8">
-          <div className="absolute inset-0 border-t-2 border-r-2 border-primary rounded-full animate-spin [animation-duration:1.2s]" />
-          <div className="absolute inset-2 border-b-2 border-l-2 border-secondary rounded-full animate-spin [animation-duration:0.8s] [animation-direction:reverse]" />
-          <div className="absolute inset-4 border-t-2 border-border rounded-full animate-spin [animation-duration:1.6s]" />
+      <div className="relative z-10 flex flex-col items-center gap-6">
+        <div className="relative size-16">
+          <div className="absolute inset-0 rounded-full border-2 border-primary/20" />
+          <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-primary animate-spin" />
         </div>
-        
-        <m.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0.4, 1, 0.4] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="text-xs font-black uppercase tracking-[0.4em] text-muted-foreground select-none"
-        >
+        <p className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground">
           Menginisialisasi NihongoRoute
-        </m.p>
+        </p>
       </div>
     </div>
   );

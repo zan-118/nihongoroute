@@ -9,7 +9,7 @@
 // ======================
 // IMPORTS
 // ======================
-import { sanityClient } from "@/lib/sanity.client";
+import { sanityClient, sanityPublicFetchOptions } from "@/lib/sanity.client";
 import { PaginatedReadingResponse } from "@/types/library";
 
 // ======================
@@ -76,7 +76,7 @@ export async function getPaginatedReading(
       params.level = level.toUpperCase();
     }
 
-    const result = await sanityClient.fetch(query, params, { cache: "no-store" });
+    const result = await sanityClient.fetch(query, params, sanityPublicFetchOptions);
 
     return {
       data: (result.data || []).map((r: SanityReadingItem) => ({

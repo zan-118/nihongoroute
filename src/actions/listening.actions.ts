@@ -9,7 +9,7 @@
 // ======================
 // IMPORTS
 // ======================
-import { sanityClient } from "@/lib/sanity.client";
+import { sanityClient, sanityPublicFetchOptions } from "@/lib/sanity.client";
 import { PaginatedListeningResponse, ListeningTaskItem } from "@/types/library";
 
 // ======================
@@ -76,7 +76,7 @@ export async function getPaginatedListening(
       params.level = level.toUpperCase();
     }
 
-    const result = await sanityClient.fetch(query, params, { cache: "no-store" });
+    const result = await sanityClient.fetch(query, params, sanityPublicFetchOptions);
 
     return {
       data: (result.data || []).map((l: SanityListeningItem) => ({
@@ -104,7 +104,7 @@ export async function getRandomListeningTask(level: string = "N5"): Promise<List
       _id, title, "slug": slug.current, audio_url, body
     }`;
     
-    const data = await sanityClient.fetch(query, { level }, { cache: "no-store" });
+    const data = await sanityClient.fetch(query, { level }, sanityPublicFetchOptions);
 
     if (!data || data.length === 0) return null;
 
