@@ -15,11 +15,17 @@ Membangun **bank soal JLPT di Supabase/PostgreSQL** sebagai sumber data dinamis 
 - [x] Phase 0: Compatibility audit and adapter boundary.
 - [x] Phase 1: Database and storage foundation.
 - [x] Phase 2 foundation guardrails: RLS, public read policies, user-owned policies, and initial indexes.
-- [ ] Phase 3: Backend generator and session flow. Core fixed-template slice is implemented.
-- [x] Phase 4: Frontend integration for fixed-template Supabase exams.
-- [ ] Phase 5: SRS and weak point integration. Core SRS insert slice is implemented.
-- [ ] Phase 6: Data import pipeline. Import format and local validator are implemented.
-- [ ] Phase 7: Testing and verification hardening.
+- [x] Phase 3: Backend generator and session flow for fixed templates and `random_by_quota`.
+- [x] Phase 4: Frontend integration, server submit, and explicit session resume route.
+- [x] Phase 5: Core SRS insert plus review source links/status indicators.
+- [ ] Phase 6: Data import pipeline tooling is implemented; real package import is still pending.
+- [ ] Phase 7: Unit/local verification is in place; E2E, advisors, and manual RLS checks remain pending.
+
+Deliberately still open:
+
+- DB/API-level anti-scraping hardening for `correct_choice_index`; app payload is masked before completion, but published question rows still expose the column if queried directly through the public Data API.
+- Importing and publishing at least one real JLPT package through the pipeline.
+- Playwright E2E and manual Supabase security/performance advisor review. MCP advisors currently require OAuth and Supabase CLI is not installed in this environment.
 
 Applied migrations:
 
@@ -308,7 +314,8 @@ Status:
 - [x] Public read policies dibuat untuk published bank soal.
 - [x] User-owned policies dibuat untuk session dan answer.
 - [x] Initial indexes dibuat.
-- [ ] Hardening lanjutan: putuskan apakah `correct_choice_index` tetap boleh terlihat dari public Data API atau harus hanya server-side.
+- [x] App payload hardening: template preview dan sesi `in_progress` memask `correctAnswer` di payload `MockExamEngine`; snapshot completed diambil ulang setelah submit untuk review.
+- [ ] DB/API hardening lanjutan: `correct_choice_index` masih ada di published table read policy jika ada akses langsung ke Supabase Data API.
 
 ### Task 2.1: Enable RLS [DONE]
 
@@ -322,7 +329,7 @@ Untuk bank soal:
 - `jlpt_passages`: public/authenticated read hanya `is_published = true`
 - `jlpt_questions`: public/authenticated read hanya `is_published = true`
 
-Jika nanti ingin mencegah scraping jawaban benar, jangan expose `correct_choice_index` langsung ke client. Dalam mode itu, payload client harus dibuat server-side dan jawaban benar hanya dipakai saat submit.
+App sekarang tidak mengirim jawaban benar ke client saat template preview atau sesi ujian masih berjalan. Jika nanti ingin mencegah scraping lewat Supabase Data API, jangan expose `correct_choice_index` dari tabel published secara langsung; gunakan RPC/view server-side atau private schema khusus jawaban.
 
 ### Task 2.3: User-Owned Policies [DONE]
 
@@ -344,23 +351,24 @@ Tambahkan index:
 
 ---
 
-## 6. Phase 3: Backend Generator & Session Flow [CORE SLICE DONE]
+## 6. Phase 3: Backend Generator & Session Flow [DONE]
 
 **Target:** membuat paket ujian dari bank soal dan menyimpan session secara server-side.
 
 Status:
 
 - [x] Helper package builder dan scoring server-side dibuat di `src/lib/exams/jlpt-session.ts`.
-- [x] `getSupabaseExamTemplateBySlug` dibuat untuk membaca template fixed published.
-- [x] `startJlptMockSession` dibuat untuk user login, template fixed, `payload_snapshot`, dan insert session.
+- [x] `getSupabaseExamTemplateBySlug` dibuat untuk membaca template published dan memask jawaban benar sebelum completion.
+- [x] `startJlptMockSession` dibuat untuk user login, template fixed/random, `payload_snapshot`, dan insert session.
 - [x] `getExamSessionPackage` dibuat untuk resume/review session dari snapshot.
+- [x] `saveJlptMockSessionAnswers` dibuat untuk autosave jawaban sementara sesi `in_progress`.
 - [x] `submitJlptMockSession` dibuat untuk upsert answers, hitung skor server-side, dan complete session.
-- [x] Unit test helper package/scoring ditambahkan di `__tests__/lib/jlpt-session.test.ts`.
-- [ ] Random generator `random_by_quota` belum dibuat.
+- [x] Unit test helper package/scoring/quota generator ditambahkan di `__tests__/lib/jlpt-session.test.ts`.
+- [x] Random generator `random_by_quota` dibuat untuk kuota per section.
 - [x] SRS update dari jawaban salah/kosong dieksekusi untuk item source-mapped; `srsCandidates` tetap disimpan di score snapshot untuk audit/review.
-- [x] Frontend fixed-template sudah memakai action Phase 3 untuk start session dan submit server-side.
+- [x] Frontend fixed/random-template sudah memakai action Phase 3 untuk start session, autosave, dan submit server-side.
 
-### Task 3.1: Start Session Server Action [FIXED TEMPLATE DONE]
+### Task 3.1: Start Session Server Action [DONE]
 
 Buat server action:
 
@@ -376,7 +384,7 @@ Flow:
 1. Validasi user dari Supabase server client.
 2. Ambil template published.
 3. Jika `generation_mode = fixed`, ambil soal dari `jlpt_exam_template_questions`.
-4. Jika `generation_mode = random_by_quota`, generate berdasarkan `quota_config`. [TODO]
+4. Jika `generation_mode = random_by_quota`, generate berdasarkan `quota_config`.
 5. Join passage jika ada.
 6. Resolve asset URL/path.
 7. Buat `payload_snapshot`.
@@ -386,20 +394,22 @@ Flow:
 Implementasi saat ini:
 
 - Fixed template mengambil soal dari `jlpt_exam_template_questions`.
+- Random template mengambil kandidat published per section lalu memilih sesuai `quota_config`.
 - Soal disortir dengan `section_order` lalu `position`.
 - Asset storage path di-resolve dari bucket `exam-assets`.
 - `payload_snapshot` menyimpan package lengkap agar review tetap stabil.
+- Payload client untuk template/sesi berjalan memask `correctAnswer`; jawaban benar tetap ada di server snapshot untuk scoring dan completed review.
 
-### Task 3.2: Question Selection Rules [TODO]
+### Task 3.2: Question Selection Rules [CORE DONE]
 
 Untuk random generator:
 
-- filter `is_published = true`;
-- filter by `jlpt_level`;
-- group by `session_type` dan/atau `mondai_number`;
-- gunakan random ordering server-side;
-- pastikan question order stabil setelah session dibuat;
-- jika kuota tidak terpenuhi, return error yang jelas untuk admin.
+- [x] filter `is_published = true`;
+- [x] filter by `jlpt_level`;
+- [x] quota per `session_type`;
+- [x] pilih soal secara acak di server action dan simpan urutan stabil di `payload_snapshot`/`question_order`;
+- [x] jika kuota tidak terpenuhi, return error yang jelas untuk admin;
+- [ ] quota per `mondai_number` dan random ordering database/RPC-level masih future optimization untuk bank soal sangat besar.
 
 ### Task 3.3: Submit Session Server Action [CORE DONE]
 
@@ -420,14 +430,20 @@ Flow:
 4. Upsert `user_exam_answers`.
 5. Hitung `score_breakdown` server-side.
 6. Update `user_exam_sessions.status = completed`.
-7. Trigger/update SRS untuk jawaban salah. [TODO]
+7. Trigger/update SRS untuk jawaban salah. [DONE]
 8. Return result untuk UI.
 
 Catatan implementasi:
 
 - Submit yang sudah completed bersifat idempotent dan mengembalikan stored result.
 - Invalid/out-of-range answer dinormalisasi menjadi kosong/null.
-- `srsCandidates` disimpan di score snapshot sebagai persiapan Phase 5.
+- `srsCandidates` disimpan di score snapshot untuk audit/review.
+
+### Task 3.5: In-Progress Answer Persistence [DONE]
+
+- `saveJlptMockSessionAnswers` menyimpan jawaban sementara ke `user_exam_sessions.answers_snapshot`.
+- Jawaban sementara dinormalisasi agar hanya question id dari snapshot dan choice index valid yang disimpan.
+- `answers_snapshot` dipakai lagi saat membuka `/exams/session/[sessionId]`.
 
 ### Task 3.4: Do Not Trust Client Scoring [DONE]
 
@@ -435,7 +451,7 @@ Scoring di `useMockExamEngine` boleh tetap ada untuk feedback UI, tetapi hasil f
 
 ---
 
-## 7. Phase 4: Frontend Integration [FIXED TEMPLATE DONE]
+## 7. Phase 4: Frontend Integration [DONE]
 
 **Target:** memakai ulang UI existing sambil menambah kemampuan render data bank soal.
 
@@ -444,11 +460,14 @@ Status:
 - [x] Daftar exam dan detail exam menggabungkan Sanity legacy + template Supabase published.
 - [x] `/exams/[id]` tetap mencoba Sanity dulu, lalu fallback ke Supabase template.
 - [x] `MockExamEngine` membuat session Supabase saat user klik mulai, bukan saat page render.
+- [x] Setelah session dibuat, URL diganti ke `/exams/session/[sessionId]` agar refresh kembali ke sesi yang sama.
 - [x] Submit exam Supabase memakai `submitJlptMockSession` dan result UI memakai skor server.
+- [x] Jawaban sementara sesi `in_progress` dihydrate dari `answers_snapshot` dan diautosave saat berubah.
 - [x] `ExamPlaying` mendukung passage HTML/visual dan choice text/image.
 - [x] `ExamReview` mendukung passage, transcript listening, explanation, dan source metadata.
-- [ ] Route eksplisit `/exams/session/[sessionId]` untuk resume session belum dibuat.
-- [ ] Hardening agar `correct_choice_index` tidak pernah sampai ke client masih mengikuti open decision Phase 2.
+- [x] Route eksplisit `/exams/session/[sessionId]` untuk resume/review session dibuat.
+- [x] Payload engine untuk template preview dan sesi berjalan memask jawaban benar; completed session mengambil ulang snapshot untuk review.
+- [ ] Hardening DB/Data API untuk `correct_choice_index` masih mengikuti open decision Phase 2.
 
 ### Task 4.1: Add Supabase Exam Entry Route [DONE]
 
@@ -464,6 +483,8 @@ Implementasi saat ini:
 - `getExamsList` dan `getCourseCategoryData` menambahkan template Supabase published ke daftar ujian.
 - `getExamByIdOrSlug` mempertahankan prioritas Sanity dan fallback ke `getSupabaseExamTemplateBySlug`.
 - Slug/id yang bentrok dimenangkan oleh Sanity agar legacy flow tidak berubah.
+- `/exams/session/[sessionId]` membuka snapshot sesi milik user untuk melanjutkan atau meninjau completed session.
+- Sesi baru melakukan `window.history.replaceState` ke URL session agar refresh/browser close tetap mengarah ke session snapshot.
 
 ### Task 4.2: Extend Exam Types [DONE]
 
@@ -490,8 +511,9 @@ Tetap isi field lama `options` dan `correctAnswer` di adapter sampai semua kompo
 Implementasi saat ini:
 
 - `ExamChoice`, `ExamPassage`, dan `ExamServerResult` ditambahkan ke kontrak engine.
-- `ExamData` punya metadata sumber (`source`, `slug`, `templateId`, `templateSlug`, `sessionId`, `serverResult`).
+- `ExamData` punya metadata sumber (`source`, `slug`, `templateId`, `templateSlug`, `sessionId`, `serverResult`, `savedAnswers`, `remainingTimeSeconds`).
 - Adapter Supabase tetap mengisi `options`/`correctAnswer` untuk kompatibilitas, sambil meneruskan `choices`, `passage`, explanation, dan source metadata.
+- Server action memask `correctAnswer` menjadi nilai sentinel sebelum payload ujian berjalan sampai session completed.
 
 ### Task 4.3: Universal Question Rendering [DONE]
 
@@ -541,12 +563,14 @@ Implementasi saat ini:
 
 - Supabase exam tanpa `sessionId` memanggil `startJlptMockSession` saat tombol mulai diklik.
 - Supabase exam dengan `sessionId` mengirim jawaban ke `submitJlptMockSession`.
+- Sesi Supabase berjalan melakukan autosave `answers_snapshot`; route session menghydrate jawaban tersebut.
+- Completed session mengambil ulang snapshot completed agar review punya jawaban benar dan server result.
 - Sanity legacy tetap memakai local scoring lama.
 - Double submit dicegah dengan `isSubmittingSession`.
 
 ---
 
-## 8. Phase 5: SRS & Weak Point Integration
+## 8. Phase 5: SRS & Weak Point Integration [CORE DONE]
 
 **Target:** kesalahan mock test otomatis menjadi bahan latihan.
 
@@ -555,8 +579,8 @@ Status:
 - [x] Helper mapping `source_type/source_id` ke `user_srs.word_id` dibuat di `src/lib/exams/jlpt-session.ts`.
 - [x] Submit exam memasukkan kartu SRS baru dari jawaban salah/kosong melalui `submitJlptMockSession`.
 - [x] Unit test mapping/dedupe SRS ditambahkan.
-- [ ] Review UI belum menampilkan indikator apakah item sudah masuk SRS.
-- [ ] Weak-point/review API untuk source non-vocab/non-kanji prefixed belum dibuat.
+- [x] Review UI menampilkan source link dan status SRS/weak point untuk item yang salah/kosong.
+- [ ] Integrasi materi non-vocab prefixed ke detail/review API masih perlu diperdalam jika ingin pengalaman non-vocab setara vocab.
 
 ### Task 5.1: Source Mapping [CORE DONE]
 
@@ -591,7 +615,7 @@ Catatan:
 - Kartu baru memakai default `interval = 1`, `repetition = 0`, `ease_factor = 2.5`, `status = learning`, dan `next_review = completed_at + 1 hari`.
 - Hindari trigger database yang terlalu sulit diaudit di fase awal. Implementasi saat ini tetap di server action `submitJlptMockSession`; RPC/trigger bisa dipertimbangkan setelah behavior stabil.
 
-### Task 5.3: Review UI [PARTIAL]
+### Task 5.3: Review UI [DONE]
 
 Update `ExamReview` agar bisa menampilkan:
 
@@ -599,8 +623,14 @@ Update `ExamReview` agar bisa menampilkan:
 - [x] transcript listening;
 - [x] explanation;
 - [x] source metadata;
-- [ ] source link ke vocab/grammar/reading/listening;
-- [ ] status apakah item sudah masuk SRS.
+- [x] source link ke vocab/grammar/reading/listening/kanji;
+- [x] status apakah item masuk SRS otomatis atau weak point.
+
+Catatan:
+
+- `vocab` yang salah/kosong ditandai “Masuk SRS otomatis”.
+- Source lain yang punya mapping ditandai “Masuk weak point”.
+- Link materi mengikuti route library yang sudah ada (`/library/vocab/[id]`, `/library/grammar/[slug]`, `/library/reading/[slug]`, `/library/listening/[slug]`, `/library/kanji/[id]`).
 
 ---
 
@@ -696,45 +726,56 @@ Catatan:
 
 **Target:** migrasi aman secara behavior, bukan hanya schema berhasil dibuat.
 
+Status:
+
+- [x] Unit/local tests untuk adapter, scoring, quota generator, SRS mapping, import planner, dan review analysis.
+- [x] `npm run lint` hijau.
+- [x] `npm run typecheck` hijau.
+- [x] `npm run exam:import:validate -- docs/jlpt-import-sample.json --plan` hijau.
+- [x] `npm run db:migrations:check` hijau.
+- [ ] Integration test terhadap Supabase project/live DB belum dibuat.
+- [ ] Playwright E2E flow belum dibuat.
+- [ ] Supabase advisors dan manual RLS check belum dijalankan; MCP membutuhkan OAuth dan Supabase CLI tidak tersedia di environment ini.
+
 ### Unit Tests
 
 Tambahkan test untuk:
 
-- adapter Supabase payload ke `ExamData`;
-- score calculation server-side;
-- quota generator;
-- SRS mapping;
-- import package validation and import planner;
-- review analysis dengan passage/choices baru.
+- [x] adapter Supabase payload ke `ExamData`;
+- [x] score calculation server-side;
+- [x] quota generator;
+- [x] SRS mapping;
+- [x] import package validation and import planner;
+- [x] review analysis dengan passage/choices baru.
 
 ### Integration Tests
 
 Tambahkan test untuk:
 
-- start session creates `user_exam_sessions`;
-- submit session writes `user_exam_answers`;
-- completed session stores `score_breakdown`;
-- wrong answers generate SRS candidates.
+- [ ] start session creates `user_exam_sessions`;
+- [ ] submit session writes `user_exam_answers`;
+- [ ] completed session stores `score_breakdown`;
+- [ ] wrong answers generate SRS candidates.
 
 ### E2E Tests
 
 Tambahkan Playwright flow:
 
-- user membuka exam v2;
-- mulai ujian;
-- menjawab beberapa soal;
-- submit;
-- melihat result;
-- membuka review.
+- [ ] user membuka exam v2;
+- [ ] mulai ujian;
+- [ ] menjawab beberapa soal;
+- [ ] submit;
+- [ ] melihat result;
+- [ ] membuka review.
 
 ### Supabase Verification
 
 Setelah migration:
 
-- run migration check;
-- regenerate database types;
-- run security/performance advisors;
-- cek RLS manual dengan user authenticated.
+- [x] run migration check;
+- [x] regenerate database types;
+- [ ] run security/performance advisors; pending OAuth MCP atau Supabase CLI yang terpasang/link ke project.
+- [ ] cek RLS manual dengan user authenticated.
 
 ---
 
@@ -752,17 +793,18 @@ Setelah migration:
 - [x] Supabase template bisa dirender oleh `MockExamEngine`.
 - [x] Legacy Sanity exam tetap berjalan.
 
-### Milestone C: Session Persistence [FIXED TEMPLATE DONE]
+### Milestone C: Session Persistence [DONE]
 
-- [x] Start/submit session aktif untuk template fixed.
+- [x] Start/submit session aktif untuk template fixed dan `random_by_quota`.
 - [x] Scoring final server-side.
 - [x] Result memakai server result untuk exam v2.
-- [ ] Resume session setelah refresh/browser close belum dibuat.
+- [x] Resume session setelah refresh/browser close dibuat lewat `/exams/session/[sessionId]`, autosave `answers_snapshot`, URL session replace, dan `remainingTimeSeconds`.
 
 ### Milestone D: Bank Soal Import
 
 - [x] format intermediate dan validator import tersedia.
 - [x] validasi quota tersedia untuk package `random_by_quota`.
+- [x] importer `--apply` tersedia untuk asset upload dan upsert row Supabase.
 - [ ] satu paket N4/N5 berhasil masuk dari pipeline import.
 - [ ] review bisa menampilkan passage/transcript dari paket hasil import real.
 
@@ -771,7 +813,7 @@ Setelah migration:
 - [x] jawaban salah/kosong masuk SRS untuk item source-mapped.
 - [x] format `word_id` disepakati untuk fase awal: `vocab` memakai ID asli, source lain memakai prefix.
 - [x] tidak merusak SRS existing karena kartu existing diabaikan saat conflict.
-- [ ] review UI menampilkan status/link SRS.
+- [x] review UI menampilkan status/link SRS/weak point.
 
 ### Milestone F: Gradual Migration
 
@@ -783,14 +825,14 @@ Setelah migration:
 
 ## 12. Open Decisions
 
-Sebelum implementasi penuh, perlu keputusan:
+Keputusan/status arsitektur saat ini:
 
-1. Apakah template fixed akan memakai soal yang sama persis setiap paket, atau selalu random by quota?
-2. Apakah `correct_choice_index` boleh dikirim ke client selama ujian, atau harus hanya tersedia server-side?
-3. Apakah asset exam public, atau perlu signed URL?
+1. Template fixed dan `random_by_quota` sama-sama didukung. [DECIDED/IMPLEMENTED]
+2. `correct_choice_index` tidak dikirim sebagai jawaban benar di payload template preview atau sesi berjalan; payload dimask sampai session completed. DB/Data API-level anti-scraping masih perlu keputusan lanjutan. [APP-LEVEL DECIDED/IMPLEMENTED]
+3. Apakah asset exam public, atau perlu signed URL? Bucket `exam-assets` saat ini public untuk fase awal; signed URL bisa dipilih jika paket real butuh proteksi asset.
 4. Format final `word_id` untuk SRS: diputuskan untuk fase awal, `vocab` memakai existing id langsung; source lain memakai prefix seperti `grammar:<id>`, `reading:<id>`, `listening:<id>`, `kanji:<id>`, atau `custom:<id>`. [DECIDED FOR PHASE 5 CORE]
-5. Apakah satu passage bisa dipakai lintas banyak soal dan lintas template?
-6. Apakah session yang belum selesai bisa dilanjutkan setelah refresh/browser close?
+5. Satu passage bisa dipakai banyak soal lewat `passage_id`; lintas template tetap aman selama row passage tidak dihapus. [SUPPORTED]
+6. Session yang belum selesai bisa dilanjutkan setelah refresh/browser close lewat `/exams/session/[sessionId]`, autosave answer snapshot, dan remaining time dari `started_at`. [DECIDED/IMPLEMENTED]
 
 ---
 

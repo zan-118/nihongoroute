@@ -85,6 +85,8 @@ export interface ExamData {
   choukaiAudioUrl?: string;
   questions: ExamQuestion[];
   serverResult?: ExamServerResult | null;
+  savedAnswers?: Record<string, number>;
+  remainingTimeSeconds?: number;
   created_at?: string | null;
   updated_at?: string | null;
 }

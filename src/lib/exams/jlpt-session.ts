@@ -77,12 +77,21 @@ export interface ExamSubmitResult
   completedAt: string;
 }
 
-const EXAM_SECTIONS: SupabaseExamSection[] = [
+export const JLPT_EXAM_SECTIONS: SupabaseExamSection[] = [
   "vocabulary",
   "grammar",
   "reading",
   "listening",
 ];
+
+export interface JlptQuotaRequest {
+  section: SupabaseExamSection;
+  total: number;
+}
+
+export type JlptQuotaConfig = Partial<
+  Record<SupabaseExamSection, { total?: unknown }>
+>;
 
 const SECTION_MIN_ACCURACY = 0.32;
 const MAX_EXAM_SCORE = 180;
@@ -108,7 +117,7 @@ function firstOrNull<T>(value: T | T[] | null | undefined): T | null {
 }
 
 function isExamSection(value: string): value is SupabaseExamSection {
-  return EXAM_SECTIONS.includes(value as SupabaseExamSection);
+  return JLPT_EXAM_SECTIONS.includes(value as SupabaseExamSection);
 }
 
 function isAbsoluteOrAppAssetUrl(value: string) {
@@ -121,6 +130,101 @@ export function normalizeJlptLevel(value?: string | null): JlptLevel | null {
   return JLPT_LEVELS.includes(normalized as JlptLevel)
     ? (normalized as JlptLevel)
     : null;
+}
+
+export function getJlptQuotaRequests(
+  value: Json,
+  templateSlug = "template"
+): JlptQuotaRequest[] {
+  if (!isRecord(value)) {
+    throw new Error(`quota_config ${templateSlug} tidak valid.`);
+  }
+
+  const requests: JlptQuotaRequest[] = [];
+
+  for (const [section, rawQuota] of Object.entries(value)) {
+    if (!isExamSection(section)) {
+      throw new Error(
+        `quota_config ${templateSlug} memiliki section tidak dikenal: ${section}.`
+      );
+    }
+
+    if (!isRecord(rawQuota) || !Number.isInteger(rawQuota.total)) {
+      throw new Error(
+        `quota_config ${templateSlug}.${section}.total harus integer positif.`
+      );
+    }
+
+    const total = rawQuota.total as number;
+    if (total <= 0) {
+      throw new Error(
+        `quota_config ${templateSlug}.${section}.total harus integer positif.`
+      );
+    }
+
+    requests.push({ section, total });
+  }
+
+  if (requests.length === 0) {
+    throw new Error(
+      `quota_config ${templateSlug} belum memiliki total soal.`
+    );
+  }
+
+  return requests.sort(
+    (a, b) =>
+      JLPT_EXAM_SECTIONS.indexOf(a.section) -
+      JLPT_EXAM_SECTIONS.indexOf(b.section)
+  );
+}
+
+function shuffleRows<T>(rows: T[]) {
+  const copy = [...rows];
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
+  }
+  return copy;
+}
+
+export function buildRandomTemplateQuestionRows(input: {
+  quotaRequests: JlptQuotaRequest[];
+  questionsBySection: Partial<Record<SupabaseExamSection, JlptQuestionRow[]>>;
+  templateSlug?: string;
+  shuffleQuestions?: <T>(rows: T[]) => T[];
+}): JlptTemplateQuestionRow[] {
+  const templateSlug = input.templateSlug ?? "template";
+  const shuffleQuestions = input.shuffleQuestions ?? shuffleRows;
+  const selectedRows: JlptTemplateQuestionRow[] = [];
+
+  for (const { section, total } of input.quotaRequests) {
+    const sectionOrder = JLPT_EXAM_SECTIONS.indexOf(section);
+    const candidates = input.questionsBySection[section] ?? [];
+
+    if (candidates.length < total) {
+      throw new Error(
+        `Template ${templateSlug} membutuhkan ${total} soal ${section}, tetapi hanya ${candidates.length} soal published tersedia.`
+      );
+    }
+
+    shuffleQuestions(candidates)
+      .slice(0, total)
+      .forEach((question) => {
+        selectedRows.push({
+          position: selectedRows.length + 1,
+          section_order: sectionOrder,
+          question,
+        });
+      });
+  }
+
+  if (selectedRows.length === 0) {
+    throw new Error(
+      `quota_config ${templateSlug} belum memiliki total soal.`
+    );
+  }
+
+  return selectedRows;
 }
 
 export function normalizeStorageObjectPath(value?: string | null) {
@@ -275,7 +379,7 @@ export function buildSupabaseExamPackage(
 }
 
 function createEmptySectionBreakdown() {
-  return EXAM_SECTIONS.reduce(
+  return JLPT_EXAM_SECTIONS.reduce(
     (breakdown, section) => {
       breakdown[section] = {
         total: 0,
@@ -349,7 +453,7 @@ export function calculateJlptExamSubmission(
   }
 
   let failedSection = false;
-  for (const section of EXAM_SECTIONS) {
+  for (const section of JLPT_EXAM_SECTIONS) {
     const score = sectionBreakdown[section];
     if (score.total === 0) continue;
 

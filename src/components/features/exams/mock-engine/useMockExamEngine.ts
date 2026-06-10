@@ -4,6 +4,8 @@ import { toast } from "sonner";
 import { useUserStore } from "@/store/useUserStore";
 import { SECTION_LABELS } from "./constants";
 import {
+  getCompletedJlptMockSessionExam,
+  saveJlptMockSessionAnswers,
   startJlptMockSession,
   submitJlptMockSession,
 } from "@/actions/jlpt-exams.actions";
@@ -66,15 +68,28 @@ function getErrorMessage(error: unknown, fallback: string) {
 
 export function useMockExamEngine(initialExam: ExamData) {
   const [exam, setExam] = useState<ExamData>(initialExam);
-  const [gameState, setGameState] = useState<GameState>("intro");
-  const [timeLeft, setTimeLeft] = useState(() => exam.timeLimit * 60);
-  const [answers, setAnswers] = useState<Record<string, number>>({});
+  const [gameState, setGameState] = useState<GameState>(() =>
+    initialExam.serverResult ? "result" : initialExam.sessionId ? "playing" : "intro"
+  );
+  const [timeLeft, setTimeLeft] = useState(
+    () => initialExam.remainingTimeSeconds ?? exam.timeLimit * 60
+  );
+  const [answers, setAnswers] = useState<Record<string, number>>(() =>
+    Object.fromEntries(
+      Object.entries(
+        initialExam.serverResult?.answers ?? initialExam.savedAnswers ?? {}
+      ).filter(
+        (entry): entry is [string, number] => typeof entry[1] === "number"
+      )
+    )
+  );
   const [serverResult, setServerResult] = useState(() => exam.serverResult ?? null);
   const [isStartingSession, setIsStartingSession] = useState(false);
   const [isSubmittingSession, setIsSubmittingSession] = useState(false);
   const answersRef = useRef(answers);
   const isStartingRef = useRef(false);
   const isFinishingRef = useRef(false);
+  const hasHydratedSavedAnswersRef = useRef(Boolean(initialExam.savedAnswers));
   useEffect(() => {
     answersRef.current = answers;
   }, [answers]);
@@ -120,6 +135,33 @@ export function useMockExamEngine(initialExam: ExamData) {
     return prevQ?.section === "listening" || !!prevQ?.audioUrl;
   }, [currentQuestionIndex, isCurrentlyListening, exam.questions, hasGlobalChoukai]);
 
+  useEffect(() => {
+    if (
+      exam.source !== "supabase" ||
+      !exam.sessionId ||
+      serverResult ||
+      gameState !== "playing"
+    ) {
+      return;
+    }
+
+    if (hasHydratedSavedAnswersRef.current) {
+      hasHydratedSavedAnswersRef.current = false;
+      return;
+    }
+
+    const saveTimer = window.setTimeout(() => {
+      saveJlptMockSessionAnswers({
+        sessionId: exam.sessionId!,
+        answers: answersRef.current,
+      }).catch((error) => {
+        console.error("Gagal menyimpan jawaban sementara mock test:", error);
+      });
+    }, 1200);
+
+    return () => window.clearTimeout(saveTimer);
+  }, [answers, exam.sessionId, exam.source, gameState, serverResult]);
+
   const startExam = useCallback(async () => {
     if (isStartingRef.current) return;
 
@@ -150,6 +192,11 @@ export function useMockExamEngine(initialExam: ExamData) {
       setAudioStatus({});
       setPendingConfirm(null);
       setGameState("playing");
+      window.history.replaceState(
+        null,
+        "",
+        `/exams/session/${encodeURIComponent(result.sessionId)}`
+      );
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
       toast.error(
@@ -181,8 +228,9 @@ export function useMockExamEngine(initialExam: ExamData) {
           sessionId: exam.sessionId,
           answers: answersRef.current,
         });
+        const completedExam = await getCompletedJlptMockSessionExam(exam.sessionId);
         setServerResult(result);
-        setExam((prev) => ({ ...prev, serverResult: result }));
+        setExam((prev) => ({ ...(completedExam ?? prev), serverResult: result }));
         const xpGain = (result.correctCount * 10) + (result.isPassed ? 50 : 0);
         addXP(xpGain);
         setGameState("result");

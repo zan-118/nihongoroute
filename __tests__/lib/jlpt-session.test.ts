@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildRandomTemplateQuestionRows,
   buildJlptSrsUpsertRows,
   buildSupabaseExamPackage,
   calculateJlptExamSubmission,
+  getJlptQuotaRequests,
   packageSnapshotToLegacyExam,
   storedScoreSnapshotToResult,
   toJlptSrsWordId,
@@ -77,6 +79,63 @@ function templateQuestionFixture(
 }
 
 describe("JLPT Supabase session helpers", () => {
+  it("builds random-by-quota rows with stable section ordering and quota errors", () => {
+    const quotaRequests = getJlptQuotaRequests(
+      {
+        listening: { total: 1 },
+        vocabulary: { total: 2 },
+      },
+      "jlpt-n4-random"
+    );
+
+    expect(quotaRequests).toEqual([
+      { section: "vocabulary", total: 2 },
+      { section: "listening", total: 1 },
+    ]);
+
+    const rows = buildRandomTemplateQuestionRows({
+      quotaRequests,
+      templateSlug: "jlpt-n4-random",
+      shuffleQuestions: (items) => [...items].reverse(),
+      questionsBySection: {
+        vocabulary: [
+          questionFixture({ id: "q-vocab-1", session_type: "vocabulary" }),
+          questionFixture({ id: "q-vocab-2", session_type: "vocabulary" }),
+          questionFixture({ id: "q-vocab-3", session_type: "vocabulary" }),
+        ],
+        listening: [
+          questionFixture({ id: "q-listening-1", session_type: "listening" }),
+        ],
+      },
+    });
+
+    expect(
+      rows.map((item) => ({
+        position: item.position,
+        sectionOrder: item.section_order,
+        questionId: (item.question as JlptQuestionRow).id,
+      }))
+    ).toEqual([
+      { position: 1, sectionOrder: 0, questionId: "q-vocab-3" },
+      { position: 2, sectionOrder: 0, questionId: "q-vocab-2" },
+      { position: 3, sectionOrder: 3, questionId: "q-listening-1" },
+    ]);
+
+    expect(() =>
+      buildRandomTemplateQuestionRows({
+        quotaRequests,
+        templateSlug: "jlpt-n4-random",
+        questionsBySection: {
+          vocabulary: [
+            questionFixture({ id: "q-vocab-1", session_type: "vocabulary" }),
+          ],
+        },
+      })
+    ).toThrow(
+      "Template jlpt-n4-random membutuhkan 2 soal vocabulary, tetapi hanya 1 soal published tersedia."
+    );
+  });
+
   it("builds a fixed template package with stable ordering and resolved asset URLs", () => {
     const packageData = buildSupabaseExamPackage(
       templateFixture,

@@ -6,8 +6,10 @@ import type { ExamData } from "@/components/features/exams/mock-engine/types";
 import {
   EXAM_ASSETS_BUCKET,
   buildJlptSrsUpsertRows,
+  buildRandomTemplateQuestionRows,
   buildSupabaseExamPackage,
   calculateJlptExamSubmission,
+  getJlptQuotaRequests,
   normalizeJlptLevel,
   packageSnapshotToLegacyExam,
   packageSnapshotToSupabasePackage,
@@ -17,9 +19,10 @@ import {
   type ExamSubmitResult,
   type JlptExamTemplateRow,
   type JlptLevel,
+  type JlptQuestionRow,
   type JlptTemplateQuestionRow,
 } from "@/lib/exams/jlpt-session";
-import { toLegacyExamData } from "@/lib/exams/supabase-adapter";
+import { toLegacyExamData, type SupabaseExamSection } from "@/lib/exams/supabase-adapter";
 import { createClient, createStaticClient } from "@/lib/supabase/server";
 import type { Json } from "@/types/supabase.generated";
 
@@ -38,6 +41,10 @@ type ExamSessionPackageResult = {
   status: string;
   exam: ExamData;
   result: ExamSubmitResult | null;
+};
+
+type SaveJlptMockSessionAnswersResult = {
+  saved: boolean;
 };
 
 type SupabaseExamListItem = {
@@ -110,6 +117,43 @@ const TEMPLATE_QUESTION_SELECT = `
   )
 `;
 
+const RANDOM_QUESTION_SELECT = `
+  id,
+  jlpt_level,
+  session_type,
+  mondai_number,
+  question_number,
+  passage_id,
+  prompt_html,
+  visual_path,
+  audio_path,
+  choices,
+  correct_choice_index,
+  explanation_html,
+  difficulty,
+  source_type,
+  source_id,
+  source_reference,
+  is_published,
+  created_at,
+  updated_at,
+  passage:jlpt_passages(
+    id,
+    jlpt_level,
+    session_type,
+    mondai_number,
+    title,
+    content_html,
+    transcript_html,
+    audio_path,
+    visual_path,
+    source_label,
+    is_published,
+    created_at,
+    updated_at
+  )
+`;
+
 function getSupabaseErrorMessage(error: PostgrestError | null) {
   return error?.message || "Terjadi kesalahan saat mengakses Supabase.";
 }
@@ -133,6 +177,74 @@ function toSupabaseExamListItem(
     passingScore: template.passing_score,
     source: "supabase",
   };
+}
+
+function maskLegacyExamAnswers(exam: ExamData): ExamData {
+  return {
+    ...exam,
+    questions: exam.questions.map((question) => ({
+      ...question,
+      correctAnswer: -1,
+    })),
+  };
+}
+
+function isJsonRecord(value: Json): value is Record<string, Json> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function normalizeSavedAnswers(value: Json): Record<string, number> {
+  if (!isJsonRecord(value)) return {};
+
+  return Object.entries(value).reduce<Record<string, number>>(
+    (answers, [questionId, selectedChoiceIndex]) => {
+      if (Number.isInteger(selectedChoiceIndex)) {
+        answers[questionId] = selectedChoiceIndex as number;
+      }
+
+      return answers;
+    },
+    {}
+  );
+}
+
+function normalizePartialAnswers(
+  examPackage: ReturnType<typeof packageSnapshotToSupabasePackage>,
+  submittedAnswers: Record<string, number | null>
+) {
+  return examPackage.questions.reduce<Record<string, number>>((answers, question) => {
+    const selectedChoiceIndex = submittedAnswers[question.id];
+
+    if (!Number.isInteger(selectedChoiceIndex)) {
+      return answers;
+    }
+
+    const answerIndex = selectedChoiceIndex as number;
+    if (answerIndex >= 0 && answerIndex < question.choices.length) {
+      answers[question.id] = answerIndex;
+    }
+
+    return answers;
+  }, {});
+}
+
+function getRemainingTimeSeconds(input: {
+  startedAt: string | null;
+  timeLimitMinutes: number;
+  hasCompletedResult: boolean;
+}) {
+  if (input.hasCompletedResult || !input.startedAt) return undefined;
+
+  const startedAtMs = new Date(input.startedAt).getTime();
+  if (!Number.isFinite(startedAtMs)) return undefined;
+
+  const totalSeconds = input.timeLimitMinutes * 60;
+  const elapsedSeconds = Math.max(
+    0,
+    Math.floor((Date.now() - startedAtMs) / 1000)
+  );
+
+  return Math.max(0, totalSeconds - elapsedSeconds);
 }
 
 async function requireAuthenticatedUser() {
@@ -211,22 +323,42 @@ async function getFixedTemplateQuestions(
   return data as unknown as JlptTemplateQuestionRow[];
 }
 
-async function buildPublishedFixedPackage(
+async function getRandomTemplateQuestions(
+  supabase: Awaited<ReturnType<typeof createClient>> | ReturnType<typeof createStaticClient>,
+  template: JlptExamTemplateRow
+) {
+  const quotaRequests = getJlptQuotaRequests(template.quota_config, template.slug);
+  const questionsBySection: Partial<Record<SupabaseExamSection, JlptQuestionRow[]>> = {};
+
+  for (const { section } of quotaRequests) {
+    const { data, error } = await supabase
+      .from("jlpt_questions")
+      .select(RANDOM_QUESTION_SELECT)
+      .eq("is_published", true)
+      .eq("jlpt_level", template.jlpt_level)
+      .eq("session_type", section);
+
+    if (error) throw new Error(getSupabaseErrorMessage(error));
+
+    questionsBySection[section] = (data || []) as unknown as JlptQuestionRow[];
+  }
+
+  return buildRandomTemplateQuestionRows({
+    quotaRequests,
+    questionsBySection,
+    templateSlug: template.slug,
+  });
+}
+
+async function buildPublishedPackage(
   supabase: Awaited<ReturnType<typeof createClient>> | ReturnType<typeof createStaticClient>,
   input: StartJlptMockSessionInput
 ) {
   const template = await getPublishedTemplate(supabase, input);
-
-  if (template.generation_mode !== "fixed") {
-    throw new Error(
-      "Template random_by_quota belum diaktifkan di Phase 3 slice ini."
-    );
-  }
-
-  const templateQuestions = await getFixedTemplateQuestions(
-    supabase,
-    template.id
-  );
+  const templateQuestions =
+    template.generation_mode === "random_by_quota"
+      ? await getRandomTemplateQuestions(supabase, template)
+      : await getFixedTemplateQuestions(supabase, template.id);
 
   return buildSupabaseExamPackage(
     template,
@@ -242,11 +374,11 @@ export async function getSupabaseExamTemplateBySlug(
 
   try {
     const supabase = createStaticClient();
-    const examPackage = await buildPublishedFixedPackage(supabase, {
+    const examPackage = await buildPublishedPackage(supabase, {
       templateSlug: templateSlug.trim(),
     });
 
-    return toLegacyExamData(examPackage);
+    return maskLegacyExamAnswers(toLegacyExamData(examPackage));
   } catch (error) {
     console.error("Gagal mengambil template mock test Supabase:", error);
     return null;
@@ -292,7 +424,7 @@ export async function startJlptMockSession(
   input: StartJlptMockSessionInput
 ): Promise<StartJlptMockSessionResult> {
   const { supabase, user } = await requireAuthenticatedUser();
-  const examPackage = await buildPublishedFixedPackage(supabase, input);
+  const examPackage = await buildPublishedPackage(supabase, input);
   const sessionId = randomUUID();
   const payloadSnapshot = {
     ...examPackage,
@@ -318,7 +450,7 @@ export async function startJlptMockSession(
 
   return {
     sessionId: data.id,
-    exam: toLegacyExamData(payloadSnapshot),
+    exam: maskLegacyExamAnswers(toLegacyExamData(payloadSnapshot)),
   };
 }
 
@@ -331,25 +463,72 @@ export async function getExamSessionPackage(
   const { data, error } = await supabase
     .from("user_exam_sessions")
     .select(
-      "id, status, payload_snapshot, answers_snapshot, score_breakdown, completed_at"
+      "id, status, payload_snapshot, answers_snapshot, score_breakdown, started_at, completed_at"
     )
     .eq("id", sessionId)
     .maybeSingle();
 
   if (error) throw new Error(getSupabaseErrorMessage(error));
   if (!data) return null;
+  const result = storedScoreSnapshotToResult({
+    sessionId: data.id,
+    completedAt: data.completed_at,
+    scoreBreakdown: data.score_breakdown,
+    answersSnapshot: data.answers_snapshot,
+  });
+  const exam = packageSnapshotToLegacyExam(data.payload_snapshot, data.id);
+  const publicExam = result ? exam : maskLegacyExamAnswers(exam);
 
   return {
     sessionId: data.id,
     status: data.status,
-    exam: packageSnapshotToLegacyExam(data.payload_snapshot, data.id),
-    result: storedScoreSnapshotToResult({
-      sessionId: data.id,
-      completedAt: data.completed_at,
-      scoreBreakdown: data.score_breakdown,
-      answersSnapshot: data.answers_snapshot,
-    }),
+    exam: {
+      ...publicExam,
+      savedAnswers: normalizeSavedAnswers(data.answers_snapshot),
+      remainingTimeSeconds: getRemainingTimeSeconds({
+        startedAt: data.started_at,
+        timeLimitMinutes: publicExam.timeLimit,
+        hasCompletedResult: Boolean(result),
+      }),
+    },
+    result,
   };
+}
+
+export async function saveJlptMockSessionAnswers(input: {
+  sessionId: string;
+  answers: Record<string, number | null>;
+}): Promise<SaveJlptMockSessionAnswersResult> {
+  if (!input.sessionId.trim()) return { saved: false };
+
+  const { supabase } = await requireAuthenticatedUser();
+  const { data: session, error: sessionError } = await supabase
+    .from("user_exam_sessions")
+    .select("id, status, payload_snapshot")
+    .eq("id", input.sessionId)
+    .maybeSingle();
+
+  if (sessionError) throw new Error(getSupabaseErrorMessage(sessionError));
+  if (!session) throw new Error("Session mock test tidak ditemukan.");
+  if (session.status !== "in_progress") return { saved: false };
+
+  const examPackage = packageSnapshotToSupabasePackage(
+    session.payload_snapshot,
+    session.id
+  );
+  const normalizedAnswers = normalizePartialAnswers(examPackage, input.answers);
+
+  const { error: updateError } = await supabase
+    .from("user_exam_sessions")
+    .update({
+      answers_snapshot: normalizedAnswers as unknown as Json,
+    })
+    .eq("id", session.id)
+    .eq("status", "in_progress");
+
+  if (updateError) throw new Error(getSupabaseErrorMessage(updateError));
+
+  return { saved: true };
 }
 
 export async function submitJlptMockSession(input: {
@@ -431,4 +610,16 @@ export async function submitJlptMockSession(input: {
   if (updateError) throw new Error(getSupabaseErrorMessage(updateError));
 
   return toExamSubmitResult(session.id, score, completedAt);
+}
+
+export async function getCompletedJlptMockSessionExam(
+  sessionId: string
+): Promise<ExamData | null> {
+  const session = await getExamSessionPackage(sessionId);
+  if (!session?.result) return null;
+
+  return {
+    ...session.exam,
+    serverResult: session.result,
+  };
 }

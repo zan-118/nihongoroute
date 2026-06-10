@@ -23,6 +23,7 @@ import {
   Target,
   Volume2,
   XCircle,
+  Star,
   type LucideIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -91,6 +92,28 @@ function getQuestionStatus(insight: ExamReviewQuestionInsight) {
     icon: XCircle,
     className: "bg-destructive/10 text-destructive border-destructive/20",
   };
+}
+
+function getSourceHref(sourceType?: string | null, sourceId?: string | null) {
+  if (!sourceType || !sourceId) return null;
+  const encodedId = encodeURIComponent(sourceId);
+
+  if (sourceType === "vocab") return `/library/vocab/${encodedId}`;
+  if (sourceType === "kanji") return `/library/kanji/${encodedId}`;
+  if (sourceType === "reading") return `/library/reading/${encodedId}`;
+  if (sourceType === "listening") return `/library/listening/${encodedId}`;
+  if (sourceType === "grammar") return `/library/grammar/${encodedId}`;
+
+  return null;
+}
+
+function getSrsStatusLabel(insight: ExamReviewQuestionInsight) {
+  const hasSource = Boolean(insight.question.sourceType && insight.question.sourceId);
+  if (insight.isCorrect || !hasSource) return null;
+
+  return insight.question.sourceType === "vocab"
+    ? "Masuk SRS otomatis"
+    : "Masuk weak point";
 }
 
 function ReviewPassageBlock({ passage }: { passage?: ExamPassage | null }) {
@@ -474,6 +497,8 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
             const q = insight.question;
             const userAnswer = insight.userAnswer;
             const status = getQuestionStatus(insight);
+            const sourceHref = getSourceHref(q.sourceType, q.sourceId);
+            const srsStatusLabel = getSrsStatusLabel(insight);
             const StatusIcon = status.icon;
 
             return (
@@ -626,10 +651,33 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                         />
                       )}
                       {(q.sourceReference || q.sourceId) && (
-                        <p className="mt-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                          Source: {q.sourceReference || q.sourceId}
-                          {q.sourceType ? ` (${q.sourceType})` : ""}
-                        </p>
+                        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                            Source: {q.sourceReference || q.sourceId}
+                            {q.sourceType ? ` (${q.sourceType})` : ""}
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {srsStatusLabel && (
+                              <Badge
+                                variant="outline"
+                                className="rounded-xl border-primary/20 bg-primary/10 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary"
+                              >
+                                <Star size={12} aria-hidden="true" className="mr-1" />
+                                {srsStatusLabel}
+                              </Badge>
+                            )}
+                            {sourceHref && (
+                              <Button
+                                asChild
+                                variant="outline"
+                                size="sm"
+                                className="h-auto rounded-xl px-3 py-1 text-[10px] font-black uppercase tracking-widest"
+                              >
+                                <Link href={sourceHref}>Buka Materi</Link>
+                              </Button>
+                            )}
+                          </div>
+                        </div>
                       )}
                     </div>
                   )}
