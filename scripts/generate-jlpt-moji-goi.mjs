@@ -49,6 +49,7 @@ function printUsage() {
       "  --template-slug <slug>           Import template slug. Default: jlpt-<level>-moji-goi-draft",
       "  --title <title>                  Template title. Default: JLPT <level> Moji/Goi Draft",
       "  --common-only                    Fetch only vocab rows marked is_common=true",
+      "  --randomize                      Randomize candidates from database pool",
       "",
       "Type examples:",
       "  --types official",
@@ -107,6 +108,7 @@ function parseArgs(args) {
     title: null,
     description: null,
     commonOnly: false,
+    randomize: false,
   };
 
   for (let index = 0; index < args.length; index += 1) {
@@ -213,6 +215,11 @@ function parseArgs(args) {
 
     if (arg === "--common-only") {
       options.commonOnly = true;
+      continue;
+    }
+
+    if (arg === "--randomize") {
+      options.randomize = true;
       continue;
     }
 
@@ -374,11 +381,21 @@ function collectGeminiKeys() {
 async function createAiClient() {
   loadEnvFile();
 
-  if (process.env.AI_BASE_URL && process.env.AI_API_KEY) {
+  const geminiKeys = collectGeminiKeys();
+  const hasOpenAi = !!(process.env.AI_BASE_URL && process.env.AI_API_KEY);
+  const hasGemini = geminiKeys.length > 0;
+
+  if (!hasOpenAi && !hasGemini) {
+    throw new Error(
+      "--llm-enhance membutuhkan AI_BASE_URL/AI_API_KEY atau GEMINI_API_KEY."
+    );
+  }
+
+  let openAiClient = null;
+  if (hasOpenAi) {
     const fetchFn =
       globalThis.fetch ?? (await import("node-fetch")).default;
-    return {
-      provider: `OpenAI-compatible ${process.env.AI_MODEL ?? "ag/gemini-3-flash"}`,
+    openAiClient = {
       async generateText(prompt) {
         const response = await fetchFn(
           `${process.env.AI_BASE_URL}/chat/completions`,
@@ -404,52 +421,86 @@ async function createAiClient() {
           );
         }
 
-        const data = await response.json();
-        return data.choices?.[0]?.message?.content ?? "";
+        const responseText = await response.text();
+        try {
+          const data = JSON.parse(responseText);
+          return data.choices?.[0]?.message?.content ?? "";
+        } catch {
+          const lines = responseText.split("\n");
+          let content = "";
+          for (const line of lines) {
+            const trimmed = line.trim();
+            if (trimmed.startsWith("data: ") && trimmed !== "data: [DONE]") {
+              try {
+                const chunk = JSON.parse(trimmed.slice(6));
+                const delta = chunk.choices?.[0]?.delta?.content ?? chunk.choices?.[0]?.text ?? "";
+                content += delta;
+              } catch {
+                // Ignore parse errors
+              }
+            }
+          }
+          return content;
+        }
       },
     };
   }
 
-  const geminiKeys = collectGeminiKeys();
-  if (geminiKeys.length === 0) {
-    throw new Error(
-      "--llm-enhance membutuhkan AI_BASE_URL/AI_API_KEY atau GEMINI_API_KEY."
-    );
+  let geminiClient = null;
+  if (hasGemini) {
+    const { GoogleGenerativeAI } = await import("@google/generative-ai");
+    let currentKeyIndex = 0;
+    let genAI = new GoogleGenerativeAI(geminiKeys[currentKeyIndex]);
+    let model = genAI.getGenerativeModel({
+      model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
+      generationConfig: { responseMimeType: "application/json" },
+    });
+
+    geminiClient = {
+      async generateText(prompt) {
+        for (let attempt = 0; attempt < geminiKeys.length; attempt += 1) {
+          try {
+            const result = await model.generateContent(prompt);
+            return result.response.text();
+          } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            const quotaLike =
+              message.includes("429") ||
+              message.toLowerCase().includes("quota") ||
+              message.toLowerCase().includes("limit");
+            if (!quotaLike || geminiKeys.length <= 1) throw error;
+
+            currentKeyIndex = (currentKeyIndex + 1) % geminiKeys.length;
+            genAI = new GoogleGenerativeAI(geminiKeys[currentKeyIndex]);
+            model = genAI.getGenerativeModel({
+              model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
+              generationConfig: { responseMimeType: "application/json" },
+            });
+          }
+        }
+
+        throw new Error("Gemini key rotation exhausted.");
+      },
+    };
   }
 
-  const { GoogleGenerativeAI } = await import("@google/generative-ai");
-  let currentKeyIndex = 0;
-  let genAI = new GoogleGenerativeAI(geminiKeys[currentKeyIndex]);
-  let model = genAI.getGenerativeModel({
-    model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
-    generationConfig: { responseMimeType: "application/json" },
-  });
-
   return {
-    provider: `Gemini ${process.env.GEMINI_MODEL || "gemini-2.5-flash"}`,
+    provider: openAiClient
+      ? `OpenAI-compatible ${process.env.AI_MODEL ?? "ag/gemini-3-flash"} (dengan fallback Gemini)`
+      : `Gemini ${process.env.GEMINI_MODEL || "gemini-2.5-flash"}`,
     async generateText(prompt) {
-      for (let attempt = 0; attempt < geminiKeys.length; attempt += 1) {
+      if (openAiClient) {
         try {
-          const result = await model.generateContent(prompt);
-          return result.response.text();
+          return await openAiClient.generateText(prompt);
         } catch (error) {
-          const message = error instanceof Error ? error.message : String(error);
-          const quotaLike =
-            message.includes("429") ||
-            message.toLowerCase().includes("quota") ||
-            message.toLowerCase().includes("limit");
-          if (!quotaLike || geminiKeys.length <= 1) throw error;
-
-          currentKeyIndex = (currentKeyIndex + 1) % geminiKeys.length;
-          genAI = new GoogleGenerativeAI(geminiKeys[currentKeyIndex]);
-          model = genAI.getGenerativeModel({
-            model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
-            generationConfig: { responseMimeType: "application/json" },
-          });
+          console.warn(`OpenAI provider gagal, mencoba fallback Gemini: ${error.message}`);
+          if (geminiClient) {
+            return await geminiClient.generateText(prompt);
+          }
+          throw error;
         }
       }
-
-      throw new Error("Gemini key rotation exhausted.");
+      return await geminiClient.generateText(prompt);
     },
   };
 }
@@ -662,6 +713,12 @@ function assertLlmCoverage(input) {
     return;
   }
 
+  if (input.candidateRowsLength === 0) {
+    throw new Error(
+      `Gagal menghasilkan soal: Tidak ada data vocab yang terpilih (candidateRows kosong). Offset (${input.offset}) mungkin melebihi jumlah total data vocab untuk level ${input.level}.`
+    );
+  }
+
   if (input.enhancedQuestions.length === 0) {
     throw new Error(
       `LLM enhancement gagal menghasilkan soal untuk tipe: ${input.questionTypes.join(", ")}. Periksa AI_BASE_URL/AI_API_KEY atau GEMINI_API_KEY, atau pakai --allow-partial-llm untuk menyimpan output rule-based sementara.`
@@ -726,10 +783,12 @@ try {
   );
   const supabase = await createSupabaseReadClient();
   const vocabRows = await fetchVocabRows(supabase, options);
-  const candidateRows = vocabRows.slice(
-    options.offset,
-    options.offset + (options.candidateLimit ?? vocabRows.length)
-  );
+  const candidateRows = options.randomize
+    ? stableShuffle(vocabRows, seed).slice(0, options.candidateLimit ?? options.limit)
+    : vocabRows.slice(
+        options.offset,
+        options.offset + (options.candidateLimit ?? vocabRows.length)
+      );
   const estimatedLlmQuota =
     questionTypes.length > 0
       ? Math.ceil(options.limit / questionTypes.length) * llmQuestionTypes.length
@@ -755,6 +814,9 @@ try {
     questionTypes: llmQuestionTypes,
     maxQuestions: llmLimit,
     enhancedQuestions,
+    candidateRowsLength: candidateRows.length,
+    offset: options.offset,
+    level: options.level,
   });
 
   const { importPackage, stats } = buildMojiGoiImportPackage({
