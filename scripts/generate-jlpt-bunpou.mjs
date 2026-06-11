@@ -100,6 +100,7 @@ function parseArgs(args) {
     output: null,
     templateSlug: null,
     title: null,
+    description: null,
   };
 
   for (let index = 0; index < args.length; index += 1) {
@@ -194,6 +195,12 @@ function parseArgs(args) {
 
     if (arg === "--title") {
       options.title = readFlagValue(args, index, arg);
+      index += 1;
+      continue;
+    }
+
+    if (arg === "--description") {
+      options.description = readFlagValue(args, index, arg);
       index += 1;
       continue;
     }
@@ -768,6 +775,7 @@ try {
     jlptLevel: options.level,
     templateSlug,
     title: options.title ?? `JLPT ${options.level} Bunpou Draft`,
+    description: options.description,
     questionTypes,
     maxQuestions: options.limit,
     enhancedQuestions,

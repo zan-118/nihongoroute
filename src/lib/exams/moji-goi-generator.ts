@@ -857,7 +857,7 @@ export function buildMojiGoiImportPackage(
       title: input.title ?? `JLPT ${input.jlptLevel} Moji/Goi Draft`,
       description:
         input.description ??
-        "Draft generated from existing vocab rows. Review manually before publishing.",
+        `Latihan soal JLPT ${input.jlptLevel} Moji/Goi (Kosakata & Kanji) untuk menguji pemahaman kosakata dan cara baca.`,
       jlptLevel: input.jlptLevel,
       timeLimitMinutes,
       passingScore: input.passingScore ?? 60,

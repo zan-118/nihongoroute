@@ -194,7 +194,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
                     <div className="flex justify-between items-start mb-8 md:mb-10 relative z-10">
                       <Badge
                         variant="outline"
-                        className="px-3 py-1.5 text-xs md:text-xs font-bold uppercase tracking-widest text-destructive text-destructive border-destructive/30 bg-muted rounded-lg h-auto"
+                        className="px-3 py-1.5 text-xs md:text-xs font-bold uppercase tracking-widest text-destructive border-destructive/30 bg-muted rounded-lg h-auto"
                       >
                         {exam.levelCode || "GENERAL"}
                       </Badge>
@@ -229,7 +229,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
                           <span className="text-[8px] md:text-xs font-bold uppercase tracking-widest text-muted-foreground">
                             Passing
                           </span>
-                          <span className="font-bold text-success text-success text-base md:text-xl">
+                          <span className="font-bold text-success text-base md:text-xl">
                             {exam.passingScore}p
                           </span>
                         </div>

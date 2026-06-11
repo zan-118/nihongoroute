@@ -257,7 +257,7 @@ export function ExamPlaying({
       
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Sticky Header Navigasi Seksi */}
-        <header className="sticky top-0 z-50 pt-6 pb-4 bg-background/80 bg-card/80 backdrop-blur-md">
+        <header className="sticky top-0 z-50 pt-6 pb-4 bg-background/80 backdrop-blur-md">
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar flex-1">
@@ -585,7 +585,7 @@ export function ExamPlaying({
       </div>
 
       {/* Footer Navigasi Mobile */}
-      <footer className="fixed bottom-0 left-0 right-0 z-[110] bg-background/80 bg-card/80 backdrop-blur-md border-t border-border p-4 pb-safe lg:hidden">
+      <footer className="fixed bottom-0 left-0 right-0 z-[110] bg-background/80 backdrop-blur-md border-t border-border p-4 pb-safe lg:hidden">
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
           <Button
             onClick={prevQuestion}

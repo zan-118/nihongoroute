@@ -669,7 +669,7 @@ export function buildBunpouImportPackage(
       title: input.title ?? `JLPT ${input.jlptLevel} Bunpou Draft`,
       description:
         input.description ??
-        "Draft generated from existing grammar rows. Review manually before publishing.",
+        `Latihan soal JLPT ${input.jlptLevel} Bunpou (Tata Bahasa) untuk menguji struktur kalimat dan tata bahasa Jepang.`,
       jlptLevel: input.jlptLevel,
       timeLimitMinutes,
       passingScore: input.passingScore ?? 60,
