@@ -18,7 +18,7 @@ Membangun **bank soal JLPT di Supabase/PostgreSQL** sebagai sumber data dinamis 
 - [x] Phase 3: Backend generator and session flow for fixed templates and `random_by_quota`.
 - [x] Phase 4: Frontend integration, server submit, and explicit session resume route.
 - [x] Phase 5: Core SRS insert plus review source links/status indicators.
-- [ ] Phase 6: Data import pipeline tooling is implemented; real package import is still pending.
+- [ ] Phase 6: Data import pipeline tooling and Moji/Goi draft generator are implemented; real package import is still pending.
 - [ ] Phase 7: Unit/local verification is in place; E2E, advisors, and manual RLS checks remain pending.
 
 Deliberately still open:
@@ -647,6 +647,16 @@ Status:
 - [x] Unit test validator dan import planner ditambahkan di `__tests__/lib/jlpt-import-pipeline.test.ts`.
 - [x] Uploader asset ke bucket `exam-assets` tersedia di CLI `--apply`.
 - [x] Importer insert/update passages, questions, template, dan template positions ke Supabase tersedia di CLI `--apply`.
+- [x] Generator draft Moji/Goi dari tabel `vocab` tersedia di `src/lib/exams/moji-goi-generator.ts`.
+- [x] CLI generator Moji/Goi tersedia lewat `npm run exam:generate:moji-goi -- --level N5 --limit 100`.
+- [x] Dokumentasi generator tersedia di `docs/jlpt-moji-goi-generator.md`.
+- [x] Unit test generator Moji/Goi tersedia di `__tests__/lib/moji-goi-generator.test.ts`.
+- [x] Generator Moji/Goi mendukung matrix mondai official per level serta LLM enhancement opt-in.
+- [x] Generator draft Bunpou dari tabel `grammar` tersedia di `src/lib/exams/bunpou-generator.ts`.
+- [x] CLI generator Bunpou tersedia lewat `npm run exam:generate:bunpou -- --level N5 --limit 100`.
+- [x] Dokumentasi generator Bunpou tersedia di `docs/jlpt-bunpou-generator.md`.
+- [x] Unit test generator Bunpou tersedia di `__tests__/lib/bunpou-generator.test.ts`.
+- [x] Generator Bunpou mendukung semua mondai grammar official dengan `sentential_grammar_1` rule-based dan `sentential_grammar_2`/`text_grammar` via LLM enhancement opt-in.
 - [ ] Belum ada satu paket soal real yang masuk lewat pipeline ini.
 
 ### Task 6.1: Import Format [DONE]
@@ -719,6 +729,71 @@ Catatan:
 - ID template, passage, dan question dibuat deterministik dari `template.slug` + key agar re-run import menargetkan row yang sama.
 - Template positions untuk fixed template di-reset dan diinsert ulang per template supaya perubahan urutan tidak meninggalkan row lama.
 - Apply membutuhkan `NEXT_PUBLIC_SUPABASE_URL` dan `SUPABASE_SERVICE_ROLE_KEY` di `.env.local`.
+
+### Task 6.4: Moji/Goi Draft Generator [DONE]
+
+Generator vocabulary:
+
+- [x] mengambil data dari tabel `vocab` Supabase;
+- [x] membuat soal `kanji_reading` untuk kata berkanji;
+- [x] membuat soal `orthography` dari `furigana` ke bentuk kata/kanji;
+- [x] membuat soal `paraphrase` dari `meaning_id`;
+- [x] mendukung tipe official LLM-only: `context`, `usage`, dan `word_formation`;
+- [x] memilih distractor dari level JLPT yang sama, dengan prioritas `hinshi` yang sama untuk soal `paraphrase`;
+- [x] menghasilkan intermediate JSON import dengan `sourceType: "vocab"`, `sourceId`, dan `isPublished: false`;
+- [x] menjaga output deterministik lewat seed agar review/import bisa diulang;
+- [x] mencegah duplikasi soal identik lewat signature prompt + jawaban benar.
+
+Catatan coverage:
+
+- `--types official` mengikuti matrix vocabulary JLPT per level.
+- Rule-based mencakup `kanji_reading`, `orthography`, dan `paraphrase`.
+- `--llm-enhance` dipakai untuk full coverage tipe yang butuh generasi kalimat/konteks: `context`, `usage`, dan N2 `word_formation`.
+- Matrix saat ini: N5 = 4 mondai; N4/N3 = 5 mondai; N2 = 6 mondai; N1 = 4 mondai.
+
+Command:
+
+```bash
+npm run exam:generate:moji-goi -- --level N5 --limit 100 --types official --llm-enhance
+```
+
+Output default ditulis ke `data/imports/jlpt-n5-moji-goi-draft.json`, lalu tetap divalidasi dengan:
+
+```bash
+npm run exam:import:validate -- data/imports/jlpt-n5-moji-goi-draft.json --plan
+```
+
+### Task 6.5: Bunpou Draft Generator [DONE]
+
+Generator grammar:
+
+- [x] mengambil data dari tabel `grammar` Supabase;
+- [x] membuat soal `sentential_grammar_1` rule-based dari `title`, `meaning`, dan `formation`;
+- [x] mendukung tipe official LLM-only: `sentential_grammar_2` dan `text_grammar`;
+- [x] membuat `passages` dan relasi `passageKey` untuk `text_grammar`;
+- [x] memilih distractor dari level JLPT yang sama;
+- [x] menghasilkan intermediate JSON import dengan `sourceType: "grammar"`, `sourceId`, dan `isPublished: false`;
+- [x] menjaga output deterministik lewat seed agar review/import bisa diulang;
+- [x] mencegah duplikasi soal identik lewat signature prompt + passage + jawaban benar.
+
+Catatan coverage:
+
+- `--types official` mengikuti matrix grammar JLPT: `sentential_grammar_1`, `sentential_grammar_2`, dan `text_grammar`.
+- Rule-based mencakup `sentential_grammar_1`.
+- `--llm-enhance` dipakai untuk full coverage tipe yang butuh susun kalimat atau konteks bacaan: `sentential_grammar_2` dan `text_grammar`.
+- Matrix grammar official saat ini sama untuk N5 sampai N1: 3 mondai.
+
+Command:
+
+```bash
+npm run exam:generate:bunpou -- --level N5 --limit 100 --types official --llm-enhance
+```
+
+Output default ditulis ke `data/imports/jlpt-n5-bunpou-draft.json`, lalu tetap divalidasi dengan:
+
+```bash
+npm run exam:import:validate -- data/imports/jlpt-n5-bunpou-draft.json --plan
+```
 
 ---
 

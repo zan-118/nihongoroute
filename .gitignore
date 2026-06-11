@@ -74,6 +74,8 @@ desktop.ini
 scripts/*
 !scripts/check-migrations.mjs
 !scripts/validate-jlpt-import.mjs
+!scripts/generate-jlpt-moji-goi.mjs
+!scripts/generate-jlpt-bunpou.mjs
 
 data/
 *.ndjson
