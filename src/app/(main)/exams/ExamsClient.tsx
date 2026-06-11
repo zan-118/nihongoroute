@@ -67,17 +67,48 @@ export interface ExamData {
  */
 export default function ExamsClient({ exams }: { exams: ExamData[] }) {
   const [activeFilter, setActiveFilter] = useState<string>("all");
+  const [activeMode, setActiveMode] = useState<"all" | "simulasi" | "latihan">("all");
+
+  const checkIsPractice = (exam: ExamData) => {
+    const slug = (exam.slug || "").toLowerCase();
+    const title = (exam.title || "").toLowerCase();
+    return (
+      slug.includes("moji-goi") ||
+      slug.includes("bunpou") ||
+      slug.includes("reading") ||
+      slug.includes("listening") ||
+      title.includes("moji/goi") ||
+      title.includes("moji-goi") ||
+      title.includes("bunpou") ||
+      title.includes("tata bahasa") ||
+      title.includes("kosakata") ||
+      title.includes("reading") ||
+      title.includes("listening")
+    );
+  };
 
   const filteredExams = useMemo(() => {
-    if (activeFilter === "all") return exams;
     return exams.filter((exam) => {
       const level = (exam.levelCode || "").toLowerCase().trim();
-      if (activeFilter === "general") {
-        return !["n1", "n2", "n3", "n4", "n5"].includes(level);
+      let matchLevel = true;
+      if (activeFilter !== "all") {
+        if (activeFilter === "general") {
+          matchLevel = !["n1", "n2", "n3", "n4", "n5"].includes(level);
+        } else {
+          matchLevel = level === activeFilter;
+        }
       }
-      return level === activeFilter;
+
+      let matchMode = true;
+      if (activeMode !== "all") {
+        const isPractice = checkIsPractice(exam);
+        const mode = isPractice ? "latihan" : "simulasi";
+        matchMode = mode === activeMode;
+      }
+
+      return matchLevel && matchMode;
     });
-  }, [exams, activeFilter]);
+  }, [exams, activeFilter, activeMode]);
 
   // ======================
   // RENDER UTAMA
@@ -176,6 +207,31 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
           })}
         </m.div>
 
+        {/* TAB FILTER MODE */}
+        <m.div variants={itemVariants} className="mb-10 flex flex-wrap gap-2 overflow-x-auto pb-2 no-scrollbar border-t border-border/40 pt-4">
+          {[
+            { id: "all", label: "Semua Tipe" },
+            { id: "simulasi", label: "Simulasi Lengkap" },
+            { id: "latihan", label: "Latihan Sesi" },
+          ].map((tab) => {
+            const isActive = activeMode === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveMode(tab.id as any)}
+                className={`px-4 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border ${
+                  isActive
+                    ? "bg-primary text-primary-foreground border-transparent shadow-[0_0_12px_rgba(var(--primary-rgb),0.25)] scale-105"
+                    : "bg-card border-border hover:border-primary/30 text-muted-foreground"
+                }`}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
+        </m.div>
+
         {/* KISI DAFTAR UJIAN */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 pb-20">
           {filteredExams.length > 0 ? (
@@ -192,12 +248,22 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
                   <Card className="p-6 md:p-8 group hover:border-destructive/40 hover:bg-destructive/[0.02] transition-all duration-200 flex flex-col h-full relative overflow-hidden cursor-pointer bg-card rounded-2xl border-border hover:shadow-lg">
 
                     <div className="flex justify-between items-start mb-8 md:mb-10 relative z-10">
-                      <Badge
-                        variant="outline"
-                        className="px-3 py-1.5 text-xs md:text-xs font-bold uppercase tracking-widest text-destructive border-destructive/30 bg-muted rounded-lg h-auto"
-                      >
-                        {exam.levelCode || "GENERAL"}
-                      </Badge>
+                      <div className="flex flex-wrap gap-2">
+                        <Badge
+                          variant="outline"
+                          className="px-3 py-1.5 text-xs md:text-xs font-bold uppercase tracking-widest text-destructive border-destructive/30 bg-muted rounded-lg h-auto"
+                        >
+                          {exam.levelCode || "GENERAL"}
+                        </Badge>
+                        <Badge
+                          variant="outline"
+                          className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-lg h-auto border-border bg-background ${
+                            checkIsPractice(exam) ? "text-primary" : "text-success"
+                          }`}
+                        >
+                          {checkIsPractice(exam) ? "Latihan" : "Simulasi"}
+                        </Badge>
+                      </div>
                       <div className="w-10 h-10 md:w-11 md:h-11 bg-muted border border-border rounded-xl flex items-center justify-center text-muted-foreground group-hover:bg-destructive group-hover:text-destructive-foreground group-hover:border-none transition-all duration-300">
                         <Activity size={18} />
                       </div>
