@@ -473,6 +473,12 @@ function normalizeLlmRow(row) {
 
 function buildLlmPrompt(input) {
   const typeGuidance = {
+    kanji_reading:
+      "Buat soal 漢字読み: satu kalimat Jepang yang mengandung kata target; kata target harus diberi garis bawah dengan tag <u> (misal: <u>漢字</u>); choices berisi 4 cara baca kata target tersebut dalam hiragana/katakana, hanya satu yang benar.",
+    orthography:
+      "Buat soal 表記: satu kalimat Jepang dengan kata target ditulis dalam hiragana/katakana dan diberi garis bawah (misal: <u>かんじ</u>); choices berisi 4 penulisan Kanji/katakana kata target tersebut, hanya satu yang benar.",
+    paraphrase:
+      "Buat soal 類義表現: satu kalimat Jepang dengan kata target diberi garis bawah (misal: <u>昨日</u>); choices berisi 4 frasa/kosakata Jepang pengganti yang maknanya paling dekat, hanya satu yang benar.",
     context:
       "Buat soal 文脈規定: satu kalimat Jepang dengan blank '____'; pilihan berupa kosakata Jepang; jawaban benar adalah kata target atau bentuk yang natural.",
     usage:
@@ -502,7 +508,7 @@ Kembalikan JSON murni dengan struktur persis:
 {
   "questions": [
     {
-      "type": "context | usage | word_formation",
+      "type": "kanji_reading | orthography | paraphrase | context | usage | word_formation",
       "sourceId": "id dari targetRows",
       "promptHtml": "<p>...</p>",
       "choices": ["...", "...", "...", "..."],
@@ -705,9 +711,7 @@ try {
   const options = parseArgs(process.argv.slice(2));
   const seed = options.seed ?? `${options.level}:moji-goi:v2`;
   const questionTypes = resolveQuestionTypes(options);
-  const llmQuestionTypes = questionTypes.filter((type) =>
-    requiresMojiGoiLlm(type)
-  );
+  const llmQuestionTypes = options.llmEnhance ? questionTypes : [];
   const templateSlug =
     options.templateSlug ?? `jlpt-${options.level.toLowerCase()}-moji-goi-draft`;
   const outputPath = path.resolve(

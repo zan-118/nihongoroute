@@ -97,6 +97,8 @@ function MockExamEngineSession({ exam }: MockExamEngineProps) {
       confirmPendingAction={engine.confirmPendingAction}
       pendingConfirmLabel={engine.pendingConfirmLabel}
       isSubmitting={engine.isSubmittingSession}
+      flaggedQuestions={engine.flaggedQuestions}
+      toggleFlag={engine.toggleFlag}
     />
   );
 }

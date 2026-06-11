@@ -10,6 +10,7 @@
 // ======================
 // IMPOR
 // ======================
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { m, Variants } from "framer-motion";
 import {
@@ -65,6 +66,19 @@ export interface ExamData {
  * @returns {JSX.Element} Antarmuka daftar simulasi ujian.
  */
 export default function ExamsClient({ exams }: { exams: ExamData[] }) {
+  const [activeFilter, setActiveFilter] = useState<string>("all");
+
+  const filteredExams = useMemo(() => {
+    if (activeFilter === "all") return exams;
+    return exams.filter((exam) => {
+      const level = (exam.levelCode || "").toLowerCase().trim();
+      if (activeFilter === "general") {
+        return !["n1", "n2", "n3", "n4", "n5"].includes(level);
+      }
+      return level === activeFilter;
+    });
+  }, [exams, activeFilter]);
+
   // ======================
   // RENDER UTAMA
   // ======================
@@ -89,7 +103,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
             <div className="size-3.5 rounded-full bg-destructive shadow-[0_0_8px_rgb(var(--destructive-rgb)/0.35)]" />
             <Badge
               variant="outline"
-              className="text-destructive text-destructive font-bold uppercase tracking-widest text-xs md:text-xs border-destructive/30 px-4 py-1.5 bg-destructive/5 backdrop-blur-md rounded-xl h-auto"
+              className="text-destructive font-bold uppercase tracking-widest text-xs md:text-xs border-destructive/30 px-4 py-1.5 bg-destructive/5 backdrop-blur-md rounded-xl h-auto"
             >
               Simulasi JLPT Aktif
             </Badge>
@@ -120,10 +134,10 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
         <m.div variants={itemVariants} className="mb-12">
           <Card className="p-5 md:p-6 border-warning/30 bg-warning/5 flex items-start gap-4 rounded-2xl shadow-lg">
             <div className="size-10 rounded-xl bg-warning/10 border border-warning/20 flex items-center justify-center shrink-0">
-               <AlertTriangle className="text-warning text-warning" size={20} />
+               <AlertTriangle className="text-warning" size={20} />
             </div>
             <div>
-              <h4 className="text-warning text-warning font-bold uppercase tracking-widest text-xs md:text-xs mb-1">
+              <h4 className="text-warning font-bold uppercase tracking-widest text-xs md:text-xs mb-1">
                 Catatan Penting
               </h4>
               <p className="text-muted-foreground text-xs md:text-sm font-medium leading-relaxed">
@@ -133,10 +147,39 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
           </Card>
         </m.div>
 
+        {/* TAB FILTER LEVEL */}
+        <m.div variants={itemVariants} className="mb-10 flex flex-wrap gap-2 overflow-x-auto pb-2 no-scrollbar">
+          {[
+            { id: "all", label: "Semua" },
+            { id: "n5", label: "JLPT N5" },
+            { id: "n4", label: "JLPT N4" },
+            { id: "n3", label: "JLPT N3" },
+            { id: "n2", label: "JLPT N2" },
+            { id: "n1", label: "JLPT N1" },
+            { id: "general", label: "Lainnya" },
+          ].map((tab) => {
+            const isActive = activeFilter === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveFilter(tab.id)}
+                className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all border ${
+                  isActive
+                    ? "bg-destructive text-destructive-foreground border-transparent shadow-[0_0_12px_rgba(var(--destructive-rgb),0.25)] scale-105"
+                    : "bg-card border-border hover:border-destructive/30 text-muted-foreground"
+                }`}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
+        </m.div>
+
         {/* KISI DAFTAR UJIAN */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 pb-20">
-          {exams.length > 0 ? (
-            exams.map((exam) => (
+          {filteredExams.length > 0 ? (
+            filteredExams.map((exam) => (
               <m.div
                 key={exam.id || exam._id}
                 variants={itemVariants}

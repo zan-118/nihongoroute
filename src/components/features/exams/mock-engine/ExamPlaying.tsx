@@ -1,13 +1,13 @@
 /**
  * @file ExamPlaying.tsx
  * @description Komponen antarmuka utama saat pengguna sedang mengerjakan simulasi ujian (Mock Exam).
- * Mengelola tampilan soal, pemutaran audio choukai, pewaktuan, navigasi soal, dan lembar jawaban konfirmasi akhir.
+ * Menyediakan tata letak 2-kolom modern (CBT standard) dengan sticky sidebar untuk pemantauan status & navigasi soal.
  */
 
 // ======================
 // IMPOR
 // ======================
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ import {
   CheckCircle,
   Loader2,
   Lock as LockIcon,
+  Flag,
 } from "lucide-react";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import {
@@ -63,14 +64,65 @@ interface ExamPlayingProps {
   confirmPendingAction: () => void;
   pendingConfirmLabel: { title: string; description: string } | null;
   isSubmitting?: boolean;
+  flaggedQuestions: Record<string, boolean>;
+  toggleFlag: (key: string) => void;
 }
+
+// ======================
+// FUNGSI PEMBANTU
+// ======================
+/**
+ * Mengembalikan instruksi standar ujian bahasa Jepang untuk Mondai tertentu berdasarkan seksi.
+ */
+const getMondaiInstruction = (section: string, mondaiNumber: number | null | undefined): string | null => {
+  if (!mondaiNumber) return null;
+  if (section === "vocabulary") {
+    switch (mondaiNumber) {
+      case 1: return "［　］の言葉の読み方として最もよいものを、1・2・3・4から一つ選びなさい。";
+      case 2: return "［　］の言葉を漢字で書くとき、最もよいものを、1・2・3・4から一つ選びなさい。";
+      case 3: return "（　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。";
+      case 4: return "［　］の言葉に意味が最も近いものを、1・2・3・4から一つ選びなさい。";
+      case 5: return "次の言葉の使い方として最もよいものを、1・2・3・4から一つ選びなさい。";
+      default: return "最もよいものを、1・2・3・4から一つ選びなさい。";
+    }
+  }
+  if (section === "grammar") {
+    switch (mondaiNumber) {
+      case 1: return "（　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。";
+      case 2: return "次の文の ★ に入る最もよいものを、1・2・3・4から一つ選びなさい。";
+      case 3: return "文章の空欄に入る最もよいものを、1・2・3・4から一つ選びなさい。";
+      default: return "最もよいものを、1・2・3・4から一つ選びなさい。";
+    }
+  }
+  if (section === "reading") {
+    switch (mondaiNumber) {
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+      case 5:
+      case 6:
+        return "内容に関する質問に対して、最もよいものを、1・2・3・4から一つ選びなさい。";
+      default: return "質問に対して、最もよいものを、1・2・3・4から一つ選びなさい。";
+    }
+  }
+  if (section === "listening") {
+    switch (mondaiNumber) {
+      case 1: return "質問を聞いて、最もよいものを、1・2・3・4から一つ選びなさい。";
+      case 2: return "まず質問を聞いてください。そのあと、話を聞いて、最もよいものを一つ選びなさい。";
+      case 3: return "絵を見ながら質問を聞いてください。矢印の人は何と言いますか。最もよいものを一つ選びなさい。";
+      case 4: return "文を聞いて、最もよい返事を、1・2・3から一つ選びなさい。";
+      default: return "質問を聞いて、最もよいものを一つ選びなさい。";
+    }
+  }
+  return null;
+};
 
 // ======================
 // KOMPONEN PEMBANTU
 // ======================
 /**
  * Komponen Opsi Jawaban yang di-memoize untuk menghindari re-render yang tidak perlu.
- * Tanpa memoize, tombol ini akan re-render setiap detik saat timer `timeLeft` diperbarui.
  */
 const OptionButton = memo(({
   idx,
@@ -86,16 +138,19 @@ const OptionButton = memo(({
   onSelect: (idx: number) => void;
 }) => {
   return (
-    <button type="button"
+    <button
+      type="button"
       onClick={() => onSelect(idx)}
-      className={`p-4 rounded-xl text-left transition-all font-medium flex items-center gap-4 border ${isSelected
-        ? "bg-destructive/10 border-destructive/30 text-destructive"
-        : "bg-background border-border text-muted-foreground hover:border-destructive/30"
-        }`}
+      className={`p-4 rounded-xl text-left transition-all font-medium flex items-center gap-4 border [&_rt]:text-[0.55em] [&_rt]:leading-none ${
+        isSelected
+          ? "bg-destructive/10 border-destructive text-destructive shadow-[0_0_12px_rgba(var(--destructive-rgb),0.1)]"
+          : "bg-card border-border text-muted-foreground hover:border-destructive/30"
+      }`}
     >
       <div
-        className={`font-mono text-xs font-bold h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${isSelected ? "bg-destructive text-destructive-foreground" : "bg-muted text-muted-foreground"
-          }`}
+        className={`font-mono text-xs font-bold h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${
+          isSelected ? "bg-destructive text-destructive-foreground" : "bg-muted text-muted-foreground"
+        }`}
       >
         {idx + 1}
       </div>
@@ -121,7 +176,7 @@ const OptionButton = memo(({
         </span>
       )}
       {isSelected && (
-        <CheckCircle size={16} aria-hidden="true" className="text-destructive text-destructive" />
+        <CheckCircle size={16} aria-hidden="true" className="text-destructive shrink-0" />
       )}
     </button>
   );
@@ -132,15 +187,12 @@ OptionButton.displayName = "OptionButton";
 function ExamPassageBlock({ passage }: { passage?: ExamPassage | null }) {
   if (!passage) return null;
 
-  const hasContent = Boolean(
-    passage.contentHtml ||
-      passage.visualUrl
-  );
+  const hasContent = Boolean(passage.contentHtml || passage.visualUrl);
 
   if (!hasContent) return null;
 
   return (
-    <div className="mb-8 rounded-2xl border border-border bg-muted/20 p-4 md:p-5">
+    <div className="mb-8 rounded-2xl border border-border bg-muted/20 p-4 md:p-5 [&_rt]:text-[0.55em] [&_rt]:leading-none">
       {passage.visualUrl && (
         <div className="mb-5 overflow-hidden rounded-xl border border-border bg-background/60">
           <Image
@@ -192,13 +244,19 @@ export function ExamPlaying({
   confirmPendingAction,
   pendingConfirmLabel,
   isSubmitting = false,
+  flaggedQuestions,
+  toggleFlag,
 }: ExamPlayingProps) {
   if (!activeQuestion) return null;
+
+  const isCurrentFlagged = flaggedQuestions[activeQuestion._key] || false;
 
   return (
     <div className="fixed inset-0 z-[100] bg-background text-foreground overflow-y-auto pb-32 font-sans selection:bg-destructive/30">
       <audio aria-label="Audio" ref={audioRef} className="hidden" />
-      <div className="max-w-4xl mx-auto px-4 md:px-6">
+      
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
+        {/* Sticky Header Navigasi Seksi */}
         <header className="sticky top-0 z-50 pt-6 pb-4 bg-background/80 bg-card/80 backdrop-blur-md">
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between gap-4">
@@ -207,16 +265,18 @@ export function ExamPlaying({
                   const isLocked = idx < activeSectionIndex;
                   const isActive = currentSection === section;
                   return (
-                    <button type="button"
+                    <button
+                      type="button"
                       key={section}
                       disabled={isLocked}
                       onClick={() => !isLocked && goToQuestion(sections[section][0])}
-                      className={`whitespace-nowrap px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border ${isActive
-                        ? "bg-destructive text-destructive-foreground border-transparent shadow-sm"
-                        : isLocked
-                          ? "bg-transparent text-muted-foreground/30 border-border/50 cursor-not-allowed"
-                          : "bg-background border-border hover:border-destructive/30"
-                        }`}
+                      className={`whitespace-nowrap px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border ${
+                        isActive
+                          ? "bg-destructive text-destructive-foreground border-transparent shadow-sm"
+                          : isLocked
+                            ? "bg-transparent text-muted-foreground/30 border-border/50 cursor-not-allowed"
+                            : "bg-background border-border hover:border-destructive/30"
+                      }`}
                     >
                       {isLocked && <LockIcon size={10} className="inline mr-1" />}
                       {SECTION_LABELS[section].split(" ")[0]}
@@ -225,11 +285,15 @@ export function ExamPlaying({
                 })}
               </div>
 
-              <div className="flex items-center gap-3 shrink-0">
-                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors ${isTimeCritical
-                  ? "bg-destructive/10 border-destructive/30 text-destructive animate-pulse"
-                  : "bg-background border-border text-muted-foreground"
-                  }`}>
+              {/* Timer Mobile */}
+              <div className="flex items-center gap-3 shrink-0 lg:hidden">
+                <div
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors ${
+                    isTimeCritical
+                      ? "bg-destructive/10 border-destructive/30 text-destructive animate-pulse"
+                      : "bg-background border-border text-muted-foreground"
+                  }`}
+                >
                   <Clock size={14} aria-hidden="true" />
                   <span className="font-mono font-bold text-xs">{formatTime(timeLeft)}</span>
                 </div>
@@ -238,123 +302,291 @@ export function ExamPlaying({
           </div>
         </header>
 
-        <main className="mt-4">
-          <AnimatePresence mode="wait">
-            <m.div
-              key={activeQuestion._key}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
-            >
-              <div className="space-y-6">
-                {isCurrentlyListening && (
-                  <div className="bg-background dark:bg-[rgb(var(--background-rgb)/0.05)] border border-border rounded-2xl p-4 flex items-center gap-4 shadow-sm">
-                    <Button
-                      onClick={handlePlayAudio}
-                      disabled={
-                        exam.choukaiAudioUrl
-                          ? (audioStatus.global === "playing" || audioStatus.global === "played")
-                          : (audioStatus[activeQuestion._key] === "playing" || audioStatus[activeQuestion._key] === "played")
-                      }
-                      size="sm"
-                      className={`w-10 h-10 rounded-full shrink-0 ${(!exam.choukaiAudioUrl && (!audioStatus[activeQuestion._key] || audioStatus[activeQuestion._key] === "idle")) ||
-                        (exam.choukaiAudioUrl && (!audioStatus.global || audioStatus.global === "idle"))
-                        ? "bg-destructive text-destructive-foreground shadow-md hover:shadow-destructive/20 hover:scale-105 transition-all"
-                        : "bg-muted text-muted-foreground cursor-not-allowed"
-                        }`}
-                    >
-                      <Volume2 size={18} aria-hidden="true" className={(exam.choukaiAudioUrl ? audioStatus.global === "playing" : audioStatus[activeQuestion._key] === "playing") ? "animate-pulse" : ""} />
-                    </Button>
-                    <div className="flex-1">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-0.5">
-                        {exam.choukaiAudioUrl ? "Audio Sesi (Global)" : "Audio Per Soal"}
-                      </p>
-                      <p className="text-[10px] text-muted-foreground italic leading-tight">
-                        {exam.choukaiAudioUrl ? "Audio sesi global hanya dapat diputar SATU kali secara penuh." : "Audio soal ini hanya dapat diputar SATU kali."}
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                <div className="bg-background dark:bg-[rgb(var(--background-rgb)/0.05)] border border-border rounded-3xl p-6 md:p-8 shadow-sm">
-                  <div className="flex items-start justify-between gap-4 mb-6">
-                    <div className="px-3 py-1 bg-muted dark:bg-[rgb(var(--background-rgb)/0.1)] rounded-lg text-[10px] font-mono font-bold text-muted-foreground">
-                      PERTANYAAN {currentQuestionIndex + 1}
-                    </div>
-                  </div>
-
-                  <ExamPassageBlock passage={activeQuestion.passage} />
-
-                  {activeQuestion.imageUrl && (
-                    <div className="mb-8 rounded-2xl overflow-hidden border border-border bg-muted/30">
-                      <Image
-                        src={activeQuestion.imageUrl}
-                        alt="Question Image"
-                        width={800}
-                        height={400}
-                        className="w-full h-auto object-contain"
-                      />
+        {/* Tata Letak Utama Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8 items-start my-6">
+          
+          {/* Kolom Soal (Kiri) */}
+          <main className="lg:col-span-3 space-y-6">
+            <AnimatePresence mode="wait">
+              <m.div
+                key={activeQuestion._key}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="space-y-6">
+                  {/* Mondai Instruction Header Banner */}
+                  {activeQuestion.mondaiNumber && (
+                    <div className="bg-muted/30 border border-border rounded-2xl p-4 flex items-start gap-3 glass">
+                      <div className="bg-destructive/10 text-destructive font-black text-[10px] px-2.5 py-1 rounded-lg uppercase tracking-wider shrink-0">
+                        問題 {activeQuestion.mondaiNumber}
+                      </div>
+                      <div className="text-xs font-semibold text-foreground/80 leading-normal font-japanese">
+                        {getMondaiInstruction(currentSection, activeQuestion.mondaiNumber)}
+                      </div>
                     </div>
                   )}
 
-                  <ExamQuestionText
-                    questionText={activeQuestion.questionText}
-                    className="text-lg md:text-xl font-medium leading-relaxed mb-8 text-foreground"
-                  />
+                  {/* Audio Player Soal */}
+                  {isCurrentlyListening && (
+                    <div className="bg-card border border-border rounded-2xl p-4 flex items-center gap-4 shadow-sm glass">
+                      <Button
+                        onClick={handlePlayAudio}
+                        disabled={
+                          exam.choukaiAudioUrl
+                            ? (audioStatus.global === "playing" || audioStatus.global === "played")
+                            : (audioStatus[activeQuestion._key] === "playing" || audioStatus[activeQuestion._key] === "played")
+                        }
+                        size="sm"
+                        className={`w-10 h-10 rounded-full shrink-0 ${
+                          (!exam.choukaiAudioUrl && (!audioStatus[activeQuestion._key] || audioStatus[activeQuestion._key] === "idle")) ||
+                          (exam.choukaiAudioUrl && (!audioStatus.global || audioStatus.global === "idle"))
+                            ? "bg-destructive text-destructive-foreground shadow-md hover:shadow-destructive/20 hover:scale-105 transition-all"
+                            : "bg-muted text-muted-foreground cursor-not-allowed"
+                        }`}
+                        aria-label="Putar Audio Choukai"
+                      >
+                        <Volume2
+                          size={18}
+                          aria-hidden="true"
+                          className={
+                            (exam.choukaiAudioUrl ? audioStatus.global === "playing" : audioStatus[activeQuestion._key] === "playing")
+                              ? "animate-pulse"
+                              : ""
+                          }
+                        />
+                      </Button>
+                      <div className="flex-1">
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-0.5">
+                          {exam.choukaiAudioUrl ? "Audio Sesi (Global)" : "Audio Per Soal"}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground italic leading-tight">
+                          {exam.choukaiAudioUrl
+                            ? "Audio sesi global hanya dapat diputar SATU kali secara penuh."
+                            : "Audio soal ini hanya dapat diputar SATU kali."}
+                        </p>
+                      </div>
+                    </div>
+                  )}
 
-                  <div className="grid grid-cols-1 gap-3">
-                    {activeQuestion.options.map((opt, idx) => (
-                      <OptionButton
-                        key={`${opt}-${idx}`}
-                        idx={idx}
-                        text={opt}
-                        choice={activeQuestion.choices?.[idx]}
-                        isSelected={answers[activeQuestion._key] === idx}
-                        onSelect={handleAnswer}
-                      />
-                    ))}
+                  {/* Kartu Soal */}
+                  <div className="bg-card border border-border rounded-3xl p-6 md:p-8 shadow-sm glass">
+                    <div className="flex items-start justify-between gap-4 mb-6">
+                      <div className="px-3 py-1 bg-muted dark:bg-[rgb(var(--background-rgb)/0.1)] rounded-lg text-[10px] font-mono font-bold text-muted-foreground">
+                        SOAL {currentQuestionIndex + 1}
+                      </div>
+                    </div>
+
+                    <ExamPassageBlock passage={activeQuestion.passage} />
+
+                    {activeQuestion.imageUrl && (
+                      <div className="mb-8 rounded-2xl overflow-hidden border border-border bg-muted/30">
+                        <Image
+                          src={activeQuestion.imageUrl}
+                          alt="Question Visual"
+                          width={800}
+                          height={400}
+                          className="w-full h-auto object-contain"
+                        />
+                      </div>
+                    )}
+
+                    <ExamQuestionText
+                      questionText={activeQuestion.questionText}
+                      className="text-lg md:text-xl font-medium leading-relaxed mb-8 text-foreground font-japanese [&_rt]:text-[0.55em] [&_rt]:leading-none"
+                    />
+
+                    <div className="grid grid-cols-1 gap-3">
+                      {activeQuestion.options.map((opt, idx) => (
+                        <OptionButton
+                          key={`${opt}-${idx}`}
+                          idx={idx}
+                          text={opt}
+                          choice={activeQuestion.choices?.[idx]}
+                          isSelected={answers[activeQuestion._key] === idx}
+                          onSelect={handleAnswer}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Navigator untuk Mobile */}
+                  <div className="bg-card border border-border rounded-2xl p-4 lg:hidden glass">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4">
+                      NAVIGASI {SECTION_LABELS[currentSection].split(" ")[0]}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {sections[currentSection]?.map((qIdx) => {
+                        const q = exam.questions[qIdx];
+                        const isAnswered = answers[q._key] !== undefined;
+                        const isFlagged = flaggedQuestions[q._key];
+                        const isActive = qIdx === currentQuestionIndex;
+                        const isLocked = currentSection === "listening" && !exam.choukaiAudioUrl && qIdx !== currentQuestionIndex;
+
+                        let btnClass = "bg-background text-muted-foreground border-border";
+                        if (isActive) {
+                          btnClass = "bg-destructive text-destructive-foreground border-transparent shadow-md scale-105";
+                        } else if (isLocked) {
+                          btnClass = "bg-transparent text-muted-foreground/30 border-border/50 cursor-not-allowed";
+                        } else if (isFlagged) {
+                          btnClass = "bg-warning/20 text-warning border-warning/30";
+                        } else if (isAnswered) {
+                          btnClass = "bg-success/10 text-success border-success/20";
+                        }
+
+                        return (
+                          <button
+                            type="button"
+                            key={qIdx}
+                            disabled={isLocked}
+                            onClick={() => !isLocked && goToQuestion(qIdx)}
+                            className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-mono font-bold transition-all border ${btnClass}`}
+                            aria-label={`Pindah ke Soal Nomor ${qIdx + 1}`}
+                          >
+                            {isLocked ? <LockIcon size={10} aria-hidden="true" /> : qIdx + 1}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
+              </m.div>
+            </AnimatePresence>
+          </main>
 
-                <div className="bg-background/50 dark:bg-[rgb(var(--background-rgb)/0.05)] border border-border rounded-2xl p-4">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4 flex items-center gap-2">
-                    NAVIGASI {SECTION_LABELS[currentSection].split(" ")[0]}
+          {/* Sidebar CBT untuk Desktop (Kanan) */}
+          <aside className="hidden lg:block lg:col-span-1 lg:sticky lg:top-24 space-y-6">
+            
+            {/* Timer Card */}
+            <div
+              className={`p-5 rounded-2xl border transition-all glass ${
+                isTimeCritical
+                  ? "bg-destructive/10 border-destructive/30 text-destructive animate-pulse"
+                  : "bg-card border-border text-card-foreground shadow-sm"
+              }`}
+            >
+              <div className="flex items-center gap-2 mb-2 text-muted-foreground">
+                <Clock size={16} />
+                <span className="text-[10px] font-bold uppercase tracking-wider">Sisa Waktu</span>
+              </div>
+              <div className="text-3xl font-black font-mono tracking-tight text-foreground">
+                {formatTime(timeLeft)}
+              </div>
+              <div className="w-full bg-muted h-1.5 rounded-full mt-4 overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all duration-1000 ${
+                    isTimeCritical ? "bg-destructive" : "bg-destructive"
+                  }`}
+                  style={{ width: `${Math.max(0, Math.min(100, (timeLeft / (exam.timeLimit * 60)) * 100))}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Statistik Jawaban */}
+            <div className="bg-card border border-border rounded-2xl p-5 shadow-sm glass">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Dijawab</p>
+                  <p className="text-xl font-black font-mono text-foreground mt-2">
+                    {Object.keys(answers).length} <span className="text-xs text-muted-foreground/50">/ {exam.questions.length}</span>
                   </p>
-                  <div className="flex flex-wrap gap-2">
-                    {sections[currentSection]?.map((qIdx) => {
-                      const isAnswered = answers[exam.questions[qIdx]._key] !== undefined;
-                      const isActive = qIdx === currentQuestionIndex;
-                      const isLocked = currentSection === "listening" && !exam.choukaiAudioUrl && qIdx !== currentQuestionIndex;
-
-                      return (
-                        <button type="button"
-                          key={qIdx}
-                          disabled={isLocked}
-                          onClick={() => !isLocked && goToQuestion(qIdx)}
-                          className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-mono font-bold transition-all border ${isActive
-                            ? "bg-destructive text-destructive-foreground border-transparent shadow-md scale-105"
-                            : isAnswered
-                              ? "bg-success/10 text-success border-success/20"
-                              : isLocked
-                                ? "bg-transparent text-muted-foreground/30 border-border/50 cursor-not-allowed"
-                                : "bg-background text-muted-foreground border-border"
-                            }`}
-                        >
-                          {isLocked ? <LockIcon size={10} aria-hidden="true" /> : qIdx + 1}
-                        </button>
-                      );
-                    })}
-                  </div>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Ragu-ragu</p>
+                  <p className="text-xl font-black font-mono text-warning mt-2">
+                    {Object.keys(flaggedQuestions).filter((k) => flaggedQuestions[k]).length}
+                  </p>
                 </div>
               </div>
-            </m.div>
-          </AnimatePresence>
-        </main>
+            </div>
+
+            {/* Tombol Ragu-ragu */}
+            <Button
+              type="button"
+              onClick={() => toggleFlag(activeQuestion._key)}
+              variant="outline"
+              className={`w-full py-5 rounded-xl border flex items-center justify-center gap-2 font-bold uppercase tracking-wider text-[10px] transition-all ${
+                isCurrentFlagged
+                  ? "bg-warning/10 border-warning text-warning shadow-[0_0_12px_rgba(var(--warning-rgb),0.15)]"
+                  : "border-border hover:border-warning/30 hover:bg-warning/5 text-muted-foreground"
+              }`}
+            >
+              <Flag size={14} className={isCurrentFlagged ? "fill-warning" : ""} />
+              {isCurrentFlagged ? "Ragu-ragu (Tersimpan)" : "Tandai Ragu-ragu"}
+            </Button>
+
+            {/* Grid Navigasi CBT Persisten (Seluruh Seksi) */}
+            <div className="bg-card border border-border rounded-2xl p-5 shadow-sm space-y-6 glass">
+              <p className="text-[10px] font-extrabold uppercase tracking-widest text-muted-foreground">
+                Lembar Navigasi Soal
+              </p>
+              
+              <div className="space-y-4 max-h-[35vh] overflow-y-auto pr-1 no-scrollbar">
+                {availableSections.map((secKey) => (
+                  <div key={secKey} className="space-y-2">
+                    <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                      <span>{SECTION_LABELS[secKey].split(" ")[0]}</span>
+                      <span className="font-mono text-xs font-semibold">
+                        {sections[secKey].filter((qIdx) => answers[exam.questions[qIdx]._key] !== undefined).length} / {sections[secKey].length}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-5 gap-1.5">
+                      {sections[secKey].map((qIdx) => {
+                        const q = exam.questions[qIdx];
+                        const isAnswered = answers[q._key] !== undefined;
+                        const isFlagged = flaggedQuestions[q._key];
+                        const isActive = qIdx === currentQuestionIndex;
+                        const isSectionLocked = availableSections.indexOf(secKey) < activeSectionIndex;
+                        const isListeningLocked = secKey === "listening" && !exam.choukaiAudioUrl && qIdx !== currentQuestionIndex;
+                        const isLocked = isSectionLocked || isListeningLocked;
+
+                        let btnClass = "bg-muted/10 border-border text-muted-foreground hover:border-destructive/30";
+                        if (isActive) {
+                          btnClass = "bg-destructive/10 text-destructive border-destructive shadow-[0_0_8px_rgba(var(--destructive-rgb),0.35)] scale-105 ring-2 ring-destructive/20";
+                        } else if (isLocked) {
+                          btnClass = "bg-muted/20 text-muted-foreground/30 border-border/50 cursor-not-allowed opacity-55";
+                        } else if (isFlagged) {
+                          btnClass = "bg-warning/10 text-warning border-warning hover:bg-warning/20 shadow-[0_0_8px_rgba(var(--warning-rgb),0.2)]";
+                        } else if (isAnswered) {
+                          btnClass = "bg-success/10 text-success border-success hover:bg-success/20 shadow-[0_0_8px_rgba(var(--success-rgb),0.2)]";
+                        }
+
+                        return (
+                          <button
+                            type="button"
+                            key={q._key}
+                            disabled={isLocked}
+                            onClick={() => goToQuestion(qIdx)}
+                            className={`h-8 rounded-lg flex items-center justify-center text-[10px] font-mono font-bold transition-all border ${btnClass}`}
+                            aria-label={`Pindah ke Soal Nomor ${qIdx + 1}`}
+                          >
+                            {isLocked ? <LockIcon size={10} /> : qIdx + 1}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Tombol Kirim Instan */}
+            <Button
+              onClick={() => setPendingConfirm("finish")}
+              disabled={isSubmitting}
+              className="w-full bg-destructive hover:bg-destructive/90 text-destructive-foreground py-6 rounded-xl font-bold uppercase tracking-wider text-[10px] transition-all shadow-md"
+            >
+              <CheckCircle size={14} aria-hidden="true" className="mr-2" /> Kumpulkan Ujian
+            </Button>
+          </aside>
+        </div>
       </div>
 
-      <footer className="fixed bottom-0 left-0 right-0 z-[110] bg-background/80 bg-card/80 backdrop-blur-md border-t border-border p-4 pb-safe">
-        <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
+      {/* Footer Navigasi Mobile */}
+      <footer className="fixed bottom-0 left-0 right-0 z-[110] bg-background/80 bg-card/80 backdrop-blur-md border-t border-border p-4 pb-safe lg:hidden">
+        <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
           <Button
             onClick={prevQuestion}
             variant="ghost"
@@ -362,6 +594,20 @@ export function ExamPlaying({
             className="flex-1 sm:flex-none py-6 rounded-xl border border-border hover:bg-muted font-bold uppercase tracking-wider text-[10px] transition-all"
           >
             <ArrowLeft size={16} aria-hidden="true" className="mr-2" /> Sebelumnya
+          </Button>
+
+          {/* Tombol Ragu-ragu Mobile */}
+          <Button
+            onClick={() => toggleFlag(activeQuestion._key)}
+            variant="outline"
+            className={`px-4 py-6 rounded-xl border transition-all ${
+              isCurrentFlagged
+                ? "bg-warning/10 border-warning text-warning"
+                : "border-border text-muted-foreground"
+            }`}
+            aria-label="Tandai Ragu-ragu"
+          >
+            <Flag size={16} aria-hidden="true" className={isCurrentFlagged ? "fill-warning" : ""} />
           </Button>
 
           {currentQuestionIndex === exam.questions.length - 1 ? (
@@ -417,7 +663,7 @@ export function ExamPlaying({
               initial={{ scale: 0.95, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 20 }}
-              className="w-full max-w-2xl bg-card border border-border rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] neo-card"
+              className="w-full max-w-2xl bg-card border border-border rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] neo-card glass"
             >
               {/* Kepala Lembar Jawaban */}
               <div className="p-6 border-b border-border flex items-center justify-between">
@@ -435,7 +681,7 @@ export function ExamPlaying({
               </div>
 
               {/* Ringkasan Statistik Jawaban */}
-              <div className="px-6 py-4 bg-muted/30 border-b border-border grid grid-cols-2 gap-4">
+              <div className="px-6 py-4 bg-muted/30 border-b border-border grid grid-cols-3 gap-4">
                 <div className="flex items-center gap-3">
                   <div className="size-3 rounded-full bg-success shadow-[0_0_8px_rgb(var(--success-rgb)/0.5)]" />
                   <div>
@@ -446,9 +692,18 @@ export function ExamPlaying({
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="size-3 rounded-full bg-warning animate-pulse shadow-[0_0_8px_rgb(var(--warning-rgb)/0.5)]" />
+                  <div className="size-3 rounded-full bg-warning shadow-[0_0_8px_rgb(var(--warning-rgb)/0.5)]" />
                   <div>
-                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Belum Dijawab</p>
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Ragu-ragu</p>
+                    <p className="text-lg font-black font-mono text-foreground mt-1">
+                      {Object.keys(flaggedQuestions).filter((k) => flaggedQuestions[k]).length}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="size-3 rounded-full bg-muted shadow-[0_0_8px_rgba(0,0,0,0.1)]" />
+                  <div>
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none font-sans">Belum Dijawab</p>
                     <p className="text-lg font-black font-mono text-foreground mt-1">
                       {exam.questions.length - Object.keys(answers).length} <span className="text-xs text-muted-foreground/50">/ {exam.questions.length}</span>
                     </p>
@@ -461,6 +716,7 @@ export function ExamPlaying({
                 <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-2">
                   {exam.questions.map((q, idx) => {
                     const isAnswered = answers[q._key] !== undefined;
+                    const isFlagged = flaggedQuestions[q._key];
                     const isCurrentSection = q.section === currentSection;
                     const isLocked = !isCurrentSection && availableSections.indexOf(q.section) < activeSectionIndex;
 
@@ -482,18 +738,22 @@ export function ExamPlaying({
                         goToQuestion(idx);
                         setPendingConfirm(null);
                       };
-                      if (isAnswered) {
+                      if (isFlagged) {
+                        cellClass = "bg-warning/10 text-warning border-warning/20 hover:bg-warning/20 hover:scale-105 active:scale-95 cursor-pointer shadow-[0_0_10px_rgb(var(--warning-rgb)/0.05)]";
+                      } else if (isAnswered) {
                         cellClass = "bg-success/10 text-success border-success/20 hover:bg-success/20 hover:scale-105 active:scale-95 cursor-pointer shadow-[0_0_10px_rgb(var(--success-rgb)/0.05)]";
                       } else {
-                        cellClass = "bg-warning/10 text-warning border-warning/20 hover:bg-warning/20 hover:scale-105 active:scale-95 cursor-pointer animate-pulse";
+                        cellClass = "bg-muted/10 text-muted-foreground border-border hover:bg-muted/20 hover:scale-105 active:scale-95 cursor-pointer";
                       }
                     }
 
                     return (
-                      <button type="button"
+                      <button
+                        type="button"
                         key={q._key}
                         onClick={onClickHandler}
                         className={`aspect-square rounded-xl border flex flex-col items-center justify-center text-xs font-bold font-mono transition-all relative ${cellClass}`}
+                        aria-label={`Lihat Soal Nomor ${idx + 1}`}
                       >
                         <span>{idx + 1}</span>
                         {isLocked && (

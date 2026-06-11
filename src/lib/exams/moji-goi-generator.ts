@@ -237,9 +237,10 @@ function slugToken(value: string) {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
-    .slice(0, 80);
+    .slice(0, 50);
 
-  return normalized || hash32(value).toString(16);
+  const hash = hash32(value).toString(16);
+  return normalized ? `${normalized}-${hash}` : hash;
 }
 
 function sortRow(a: NormalizedVocabRow, b: NormalizedVocabRow) {
@@ -776,6 +777,23 @@ export function buildMojiGoiImportPackage(
     questionGroups[type].push(question);
   };
 
+  const hasEnhanced = (rowId: string, qType: string) => {
+    return (input.enhancedQuestions ?? []).some(
+      (eq) => eq.sourceId === rowId && canonicalQuestionType(eq.type) === qType
+    );
+  };
+
+  for (const enhancedQuestion of input.enhancedQuestions ?? []) {
+    addQuestion(
+      buildEnhancedQuestion({
+        enhancedQuestion,
+        rowById,
+        jlptLevel: input.jlptLevel,
+        skippedByReason,
+      })
+    );
+  }
+
   for (const type of questionTypes) {
     if (requiresMojiGoiLlm(type)) continue;
 
@@ -785,6 +803,10 @@ export function buildMojiGoiImportPackage(
     );
 
     for (const row of orderedCandidateRows) {
+      if (hasEnhanced(row.id, type)) {
+        continue;
+      }
+
       addQuestion(
         buildRuleBasedQuestion({
           type,
@@ -796,17 +818,6 @@ export function buildMojiGoiImportPackage(
         })
       );
     }
-  }
-
-  for (const enhancedQuestion of input.enhancedQuestions ?? []) {
-    addQuestion(
-      buildEnhancedQuestion({
-        enhancedQuestion,
-        rowById,
-        jlptLevel: input.jlptLevel,
-        skippedByReason,
-      })
-    );
   }
 
   for (const type of questionTypes) {

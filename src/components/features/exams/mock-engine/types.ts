@@ -46,6 +46,8 @@ export interface ExamQuestion {
   sourceType?: string | null;
   sourceId?: string | null;
   sourceReference?: string | null;
+  mondaiNumber?: number | null;
+  questionNumber?: number | null;
 }
 
 export interface ExamServerResult {

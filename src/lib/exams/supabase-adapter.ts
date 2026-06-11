@@ -100,6 +100,8 @@ function questionToLegacyQuestion(
     sourceType: question.sourceType,
     sourceId: question.sourceId,
     sourceReference: question.sourceReference,
+    mondaiNumber: question.mondaiNumber,
+    questionNumber: question.questionNumber,
   };
 }
 

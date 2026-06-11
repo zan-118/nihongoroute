@@ -99,6 +99,14 @@ export function useMockExamEngine(initialExam: ExamData) {
   const [audioStatus, setAudioStatus] = useState<Record<string, AudioState>>({});
   const [cheatWarnings, setCheatWarnings] = useState(0);
   const [pendingConfirm, setPendingConfirm] = useState<PendingConfirmType>(null);
+  const [flaggedQuestions, setFlaggedQuestions] = useState<Record<string, boolean>>({});
+
+  const toggleFlag = useCallback((questionKey: string) => {
+    setFlaggedQuestions((prev) => ({
+      ...prev,
+      [questionKey]: !prev[questionKey],
+    }));
+  }, []);
 
   // Kelompokkan pertanyaan berdasarkan bagian
   const sections = useMemo(() => {
@@ -257,6 +265,7 @@ export function useMockExamEngine(initialExam: ExamData) {
     isFinishingRef.current = false;
   }, [exam.source, exam.sessionId, exam.questions, exam.passingScore, addXP]);
 
+
   const handleAnswer = useCallback((optionIndex: number) => {
     if (!activeQuestion) return;
     setAnswers((prev) => {
@@ -392,9 +401,8 @@ export function useMockExamEngine(initialExam: ExamData) {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [gameState, finishExam]);
+  }, [gameState, finishExam]);  // Hentikan audio dan kunci (tandai sebagai telah diputar) saat berganti pertanyaan (untuk mencegah pemutaran ulang dan tumpang tindih)
 
-  // Hentikan audio dan kunci (tandai sebagai telah diputar) saat berganti pertanyaan (untuk mencegah pemutaran ulang dan tumpang tindih)
   const prevQuestionIndexRef = useRef(currentQuestionIndex);
   useEffect(() => {
     const prevIdx = prevQuestionIndexRef.current;
@@ -492,5 +500,6 @@ export function useMockExamEngine(initialExam: ExamData) {
     sections, availableSections, currentSection, goToQuestion, activeSectionIndex,
     pendingConfirm, setPendingConfirm, confirmPendingAction, pendingConfirmLabel,
     isStartingSession, isSubmittingSession, serverResult,
+    flaggedQuestions, toggleFlag,
   };
 }

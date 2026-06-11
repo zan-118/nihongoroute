@@ -17,7 +17,7 @@ import { useCallback, useMemo, useState } from "react";
 // Feature Components
 import { CategoryHero } from "@/components/features/course/CategoryHero";
 import { TrainingGround } from "@/components/features/course/TrainingGround";
-import { MockExams } from "@/components/features/course/MockExams";
+
 import { LessonGrid } from "@/components/features/course/LessonGrid";
 
 // ======================
@@ -149,10 +149,6 @@ export default function CourseCategoryClient({
           />
         )}
 
-        <MockExams
-          exams={data.mockExams || []}
-          itemVariants={itemVariants}
-        />
 
         <LessonGrid
           lessons={paginatedLessons}

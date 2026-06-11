@@ -177,9 +177,10 @@ function slugToken(value: string) {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
-    .slice(0, 80);
+    .slice(0, 50);
 
-  return normalized || hash32(value).toString(16);
+  const hash = hash32(value).toString(16);
+  return normalized ? `${normalized}-${hash}` : hash;
 }
 
 function sortRow(a: NormalizedGrammarRow, b: NormalizedGrammarRow) {
@@ -587,6 +588,24 @@ export function buildBunpouImportPackage(
     questionGroups[type].push(question);
   };
 
+  for (const enhancedQuestion of input.enhancedQuestions ?? []) {
+    addQuestion(
+      buildEnhancedQuestion({
+        enhancedQuestion,
+        rowById,
+        jlptLevel: input.jlptLevel,
+        passageKeys: new Set(passages.keys()),
+        skippedByReason,
+      })
+    );
+  }
+
+  const hasEnhanced = (rowId: string, qType: string) => {
+    return (input.enhancedQuestions ?? []).some(
+      (eq) => eq.sourceId === rowId && eq.type === qType
+    );
+  };
+
   for (const type of questionTypes) {
     if (requiresBunpouLlm(type)) continue;
 
@@ -596,6 +615,10 @@ export function buildBunpouImportPackage(
     );
 
     for (const row of orderedCandidateRows) {
+      if (hasEnhanced(row.id, type)) {
+        continue;
+      }
+
       addQuestion(
         buildRuleBasedQuestion({
           type,
@@ -607,18 +630,6 @@ export function buildBunpouImportPackage(
         })
       );
     }
-  }
-
-  for (const enhancedQuestion of input.enhancedQuestions ?? []) {
-    addQuestion(
-      buildEnhancedQuestion({
-        enhancedQuestion,
-        rowById,
-        jlptLevel: input.jlptLevel,
-        passageKeys: new Set(passages.keys()),
-        skippedByReason,
-      })
-    );
   }
 
   for (const type of questionTypes) {

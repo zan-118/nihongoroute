@@ -458,6 +458,8 @@ function normalizeLlmRow(row) {
 
 function buildLlmPrompt(input) {
   const typeGuidance = {
+    sentential_grammar_1:
+      "Buat soal 空欄埋め: satu kalimat Jepang dengan blank '____'; pilihan berupa kosakata, tata bahasa Jepang, atau bentuk konjugasi untuk melengkapi kalimat tersebut secara tatabahasa yang tepat; hanya satu yang benar.",
     sentential_grammar_2:
       "Buat soal 文の組み立て: prompt berisi satu kalimat Jepang dengan empat blank bernomor atau '____'; choices berisi 4 fragmen Jepang yang harus disusun. correctChoiceIndex menunjuk pilihan yang biasanya menjadi jawaban pada posisi target, bukan seluruh urutan.",
     text_grammar:
@@ -486,7 +488,7 @@ Kembalikan JSON murni dengan struktur persis:
 {
   "questions": [
     {
-      "type": "sentential_grammar_2 | text_grammar",
+      "type": "sentential_grammar_1 | sentential_grammar_2 | text_grammar",
       "sourceId": "id dari targetRows",
       "promptHtml": "<p>...</p>",
       "passage": {
@@ -721,9 +723,7 @@ try {
   const options = parseArgs(process.argv.slice(2));
   const seed = options.seed ?? `${options.level}:bunpou:v1`;
   const questionTypes = resolveQuestionTypes(options);
-  const llmQuestionTypes = questionTypes.filter((type) =>
-    requiresBunpouLlm(type)
-  );
+  const llmQuestionTypes = options.llmEnhance ? questionTypes : [];
   const templateSlug =
     options.templateSlug ?? `jlpt-${options.level.toLowerCase()}-bunpou-draft`;
   const outputPath = path.resolve(
