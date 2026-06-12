@@ -175,9 +175,10 @@ function ReviewChoiceContent({
 }) {
   if (choice?.type !== "image") {
     return (
-      <span className="min-w-0 flex-1 text-base font-medium leading-tight md:text-xl font-japanese">
-        {choice?.type === "text" ? choice.value : text}
-      </span>
+      <span 
+        className="min-w-0 flex-1 text-base font-medium leading-tight md:text-xl font-japanese [&_rt]:text-[0.55em] [&_rt]:leading-none"
+        dangerouslySetInnerHTML={{ __html: sanitizeHtml(choice?.type === "text" ? choice.value : text) }}
+      />
     );
   }
 
@@ -249,7 +250,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
   return (
     <div className="w-full max-w-5xl mx-auto pb-20 transition-colors duration-300">
       <header className="relative z-20 mb-8">
-        <Card className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between p-5 sm:p-8 mt-6 md:mt-10 border border-border bg-card bg-background rounded-3xl shadow-lg">
+        <Card className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between p-5 sm:p-8 mt-6 md:mt-10 border border-border bg-card rounded-3xl shadow-lg">
           <div className="flex flex-col gap-2">
             <Badge variant="outline" className="w-fit rounded-xl px-3 py-1">
               Mock Exam Review
@@ -276,7 +277,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
       </header>
 
       <section className="mb-10">
-        <Card className="p-6 md:p-8 border border-border bg-card bg-background rounded-[2rem] shadow-xl">
+        <Card className="p-6 md:p-8 border border-border bg-card rounded-[2rem] shadow-xl">
           <div className="flex flex-col gap-8">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
               <div className="max-w-2xl flex flex-col gap-3">
@@ -512,7 +513,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
               >
                 <Card
                   className={cn(
-                    "p-6 md:p-10 rounded-[2rem] border bg-card bg-background shadow-2xl transition-colors",
+                    "p-6 md:p-10 rounded-[2rem] border bg-card shadow-2xl transition-colors",
                     getQuestionBorderClass(insight)
                   )}
                 >

@@ -17,6 +17,8 @@
     "exam:import:validate": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/validate-jlpt-import.mjs",
     "exam:generate:moji-goi": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-jlpt-moji-goi.mjs",
     "exam:generate:bunpou": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-jlpt-bunpou.mjs",
+    "exam:generate:dokkai": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-jlpt-dokkai.mjs",
+    "exam:generate:choukai": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-jlpt-choukai.mjs",
     "prepare": "husky"
   },
   "dependencies": {

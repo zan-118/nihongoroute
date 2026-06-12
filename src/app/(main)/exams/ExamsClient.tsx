@@ -65,26 +65,65 @@ export interface ExamData {
  * @param {ExamData[]} props.exams Daftar data ujian dari CMS Sanity.
  * @returns {JSX.Element} Antarmuka daftar simulasi ujian.
  */
+/**
+ * Menentukan tipe seksi ujian berdasarkan slug dan title.
+ * 
+ * @param {ExamData} exam Data ujian yang akan diuji
+ * @returns {"moji-goi" | "bunpou" | "reading" | "listening" | "simulasi"} Tipe seksi ujian
+ */
+const getExamSectionType = (exam: ExamData): "moji-goi" | "bunpou" | "reading" | "listening" | "simulasi" => {
+  const slug = (exam.slug || "").toLowerCase();
+  const title = (exam.title || "").toLowerCase();
+  
+  if (
+    slug.includes("moji-goi") || 
+    title.includes("moji/goi") || 
+    title.includes("moji-goi") || 
+    title.includes("kosakata")
+  ) {
+    return "moji-goi";
+  }
+  if (
+    slug.includes("bunpou") || 
+    title.includes("bunpou") || 
+    title.includes("tata bahasa")
+  ) {
+    return "bunpou";
+  }
+  if (
+    slug.includes("reading") || 
+    title.includes("reading") || 
+    title.includes("membaca") || 
+    slug.includes("dokkai") || 
+    title.includes("dokkai")
+  ) {
+    return "reading";
+  }
+  if (
+    slug.includes("listening") || 
+    title.includes("listening") || 
+    title.includes("mendengar") || 
+    slug.includes("choukai") || 
+    title.includes("choukai")
+  ) {
+    return "listening";
+  }
+  
+  return "simulasi";
+};
+
 export default function ExamsClient({ exams }: { exams: ExamData[] }) {
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [activeMode, setActiveMode] = useState<"all" | "simulasi" | "latihan">("all");
+  const [activeSubFilter, setActiveSubFilter] = useState<"all" | "moji-goi" | "bunpou" | "reading" | "listening">("all");
 
   const checkIsPractice = (exam: ExamData) => {
-    const slug = (exam.slug || "").toLowerCase();
-    const title = (exam.title || "").toLowerCase();
-    return (
-      slug.includes("moji-goi") ||
-      slug.includes("bunpou") ||
-      slug.includes("reading") ||
-      slug.includes("listening") ||
-      title.includes("moji/goi") ||
-      title.includes("moji-goi") ||
-      title.includes("bunpou") ||
-      title.includes("tata bahasa") ||
-      title.includes("kosakata") ||
-      title.includes("reading") ||
-      title.includes("listening")
-    );
+    return getExamSectionType(exam) !== "simulasi";
+  };
+
+  const handleModeChange = (mode: "all" | "simulasi" | "latihan") => {
+    setActiveMode(mode);
+    setActiveSubFilter("all");
   };
 
   const filteredExams = useMemo(() => {
@@ -100,15 +139,22 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
       }
 
       let matchMode = true;
+      const sectionType = getExamSectionType(exam);
+      const isPractice = sectionType !== "simulasi";
+
       if (activeMode !== "all") {
-        const isPractice = checkIsPractice(exam);
         const mode = isPractice ? "latihan" : "simulasi";
         matchMode = mode === activeMode;
       }
 
-      return matchLevel && matchMode;
+      let matchSubFilter = true;
+      if (activeMode === "latihan" && activeSubFilter !== "all") {
+        matchSubFilter = sectionType === activeSubFilter;
+      }
+
+      return matchLevel && matchMode && matchSubFilter;
     });
-  }, [exams, activeFilter, activeMode]);
+  }, [exams, activeFilter, activeMode, activeSubFilter]);
 
   // ======================
   // RENDER UTAMA
@@ -219,7 +265,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
               <button
                 key={tab.id}
                 type="button"
-                onClick={() => setActiveMode(tab.id as any)}
+                onClick={() => handleModeChange(tab.id as any)}
                 className={`px-4 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border ${
                   isActive
                     ? "bg-primary text-primary-foreground border-transparent shadow-[0_0_12px_rgba(var(--primary-rgb),0.25)] scale-105"
@@ -231,6 +277,40 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
             );
           })}
         </m.div>
+
+        {/* TAB SUB-FILTER SEKSI LATIHAN */}
+        {activeMode === "latihan" && (
+          <m.div 
+            variants={itemVariants} 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-10 flex flex-wrap gap-2 overflow-x-auto pb-2 no-scrollbar border-t border-border/30 pt-4"
+          >
+            {[
+              { id: "all", label: "Semua Latihan" },
+              { id: "moji-goi", label: "Kosakata (Moji-Goi)" },
+              { id: "bunpou", label: "Tata Bahasa (Bunpou)" },
+              { id: "reading", label: "Membaca (Dokkai)" },
+              { id: "listening", label: "Mendengar (Choukai)" },
+            ].map((subTab) => {
+              const isActive = activeSubFilter === subTab.id;
+              return (
+                <button
+                  key={subTab.id}
+                  type="button"
+                  onClick={() => setActiveSubFilter(subTab.id as any)}
+                  className={`px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border ${
+                    isActive
+                      ? "bg-secondary text-secondary-foreground border-transparent shadow-[0_0_10px_rgba(var(--secondary-rgb),0.2)] scale-105"
+                      : "bg-card border-border hover:border-secondary/40 text-muted-foreground"
+                  }`}
+                >
+                  {subTab.label}
+                </button>
+              );
+            })}
+          </m.div>
+        )}
 
         {/* KISI DAFTAR UJIAN */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 pb-20">
@@ -255,14 +335,34 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
                         >
                           {exam.levelCode || "GENERAL"}
                         </Badge>
-                        <Badge
-                          variant="outline"
-                          className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-lg h-auto border-border bg-background ${
-                            checkIsPractice(exam) ? "text-primary" : "text-success"
-                          }`}
-                        >
-                          {checkIsPractice(exam) ? "Latihan" : "Simulasi"}
-                        </Badge>
+                        {(() => {
+                          const sectionType = getExamSectionType(exam);
+                          let badgeText = "Simulasi";
+                          let badgeColorClass = "text-destructive border-destructive/30 bg-destructive/5";
+
+                          if (sectionType === "moji-goi") {
+                            badgeText = "Moji-Goi";
+                            badgeColorClass = "text-warning border-warning/30 bg-warning/5";
+                          } else if (sectionType === "bunpou") {
+                            badgeText = "Bunpou";
+                            badgeColorClass = "text-secondary border-secondary/30 bg-secondary/5";
+                          } else if (sectionType === "reading") {
+                            badgeText = "Dokkai";
+                            badgeColorClass = "text-success border-success/30 bg-success/5";
+                          } else if (sectionType === "listening") {
+                            badgeText = "Choukai";
+                            badgeColorClass = "text-primary border-primary/30 bg-primary/5";
+                          }
+
+                          return (
+                            <Badge
+                              variant="outline"
+                              className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-lg h-auto ${badgeColorClass}`}
+                            >
+                              {badgeText}
+                            </Badge>
+                          );
+                        })()}
                       </div>
                       <div className="w-10 h-10 md:w-11 md:h-11 bg-muted border border-border rounded-xl flex items-center justify-center text-muted-foreground group-hover:bg-destructive group-hover:text-destructive-foreground group-hover:border-none transition-all duration-300">
                         <Activity size={18} />

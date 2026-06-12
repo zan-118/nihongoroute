@@ -171,9 +171,10 @@ const OptionButton = memo(({
           </span>
         </span>
       ) : (
-        <span className="leading-tight font-japanese text-base md:text-lg flex-1">
-          {choice?.type === "text" ? choice.value : text}
-        </span>
+        <span 
+          className="leading-tight font-japanese text-base md:text-lg flex-1 [&_rt]:text-[0.55em] [&_rt]:leading-none"
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(choice?.type === "text" ? choice.value : text) }}
+        />
       )}
       {isSelected && (
         <CheckCircle size={16} aria-hidden="true" className="text-destructive shrink-0" />

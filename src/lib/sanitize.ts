@@ -19,7 +19,7 @@ const ALLOWED_TAGS = new Set([
 
 /** Atribut yang diizinkan per tag */
 const ALLOWED_ATTRS: Record<string, Set<string>> = {
-  '*': new Set(['class', 'id', 'lang', 'dir']),
+  '*': new Set(['class', 'id', 'lang', 'dir', 'style']),
   'a': new Set(['href', 'target', 'rel', 'title']),
   'img': new Set(['src', 'alt', 'width', 'height', 'loading']),
   'td': new Set(['colspan', 'rowspan']),
