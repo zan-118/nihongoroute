@@ -586,8 +586,8 @@ export function ExamPlaying({
       </div>
 
       {/* Footer Navigasi Mobile */}
-      <footer className="fixed bottom-0 left-0 right-0 z-[110] bg-background/80 backdrop-blur-md border-t border-border p-4 pb-safe lg:hidden">
-        <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
+      <footer className="fixed bottom-0 left-0 right-0 z-[110] bg-background/80 backdrop-blur-md border-t border-border p-4 pb-safe">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 px-4 md:px-6">
           <Button
             onClick={prevQuestion}
             variant="ghost"
