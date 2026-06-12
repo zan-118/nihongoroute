@@ -17,7 +17,8 @@ import {
   ChevronLeft,
   Flame,
   PenTool,
-  Mic
+  Mic,
+  BookOpen
 } from "lucide-react";
 import FlashcardMaster from "@/components/features/flashcards/master/FlashcardMaster";
 import { Button } from "@/components/ui/button";
@@ -77,13 +78,15 @@ function FlashcardsContent() {
                 selectedMode === "kanji" ? "bg-secondary/10 border-secondary/30 text-secondary" :
                 selectedMode === "survival" ? "bg-destructive/10 border-destructive/30 text-destructive" :
                 selectedMode === "pronunciation" ? "bg-warning/10 border-warning/30 text-warning" :
+                selectedMode === "sentence" ? "bg-success/10 border-success/30 text-success" :
                 "bg-primary/10 border-primary/30 text-primary"
               }`}>
                 {selectedMode === "survival" ? <Flame size={16} /> :
                  selectedMode === "kanji" ? <PenTool size={16} /> :
                  selectedMode === "pronunciation" ? <Mic size={16} /> :
+                 selectedMode === "sentence" ? <BookOpen size={16} /> :
                  <Zap size={16} />}
-                <span>Mode {selectedMode === "pronunciation" ? "pelafalan" : selectedMode}</span>
+                <span>Mode {selectedMode === "pronunciation" ? "pelafalan" : selectedMode === "sentence" ? "kalimat" : selectedMode}</span>
               </Badge>
             </header>
 

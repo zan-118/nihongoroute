@@ -17,6 +17,7 @@ export type LearningSourceType =
   | "vocab"
   | "kanji"
   | "grammar"
+  | "sentence"
   | "tool";
 
 export interface LearningEventSource {
@@ -43,7 +44,7 @@ export interface LearningEvent {
   createdAt: number;
   metrics?: LearningEventMetrics;
   details?: {
-    kind?: "vocab" | "kanji" | "grammar" | "mixed" | "counter" | "shadowing" | "conjugation";
+    kind?: "vocab" | "kanji" | "grammar" | "mixed" | "counter" | "shadowing" | "conjugation" | "sentence";
     prompt?: string;
     answer?: string;
     isCorrect?: boolean;
@@ -93,6 +94,7 @@ export type WeakPointCategory =
   | "grammar"
   | "counter"
   | "conjugation"
+  | "sentence"
   | "mixed";
 
 export interface WeakPointInsight {
@@ -159,6 +161,11 @@ const WEAK_POINT_META: Record<
     label: "Konjugasi",
     href: "/tools/conjugation",
     description: "Bentuk verba perlu dicek ulang.",
+  },
+  sentence: {
+    label: "Kalimat",
+    href: "/tools/jlpt-drill?kind=sentence",
+    description: "Pemahaman kalimat contoh perlu dilatih lagi.",
   },
   mixed: {
     label: "Campuran",

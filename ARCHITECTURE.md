@@ -120,6 +120,7 @@ Main learning routes:
 - `/tools/kana`
 - `/tools/survival`
 - `/tools/writing`
+- `/tools/dictation`
 - `/settings`
 - `/share`
 - `/social`
@@ -262,6 +263,7 @@ Supabase-focused actions:
 - `cheatsheets.actions.ts`: list/detail for cheatsheets.
 - `flashcard.actions.ts`: flashcard pools from vocab/kanji.
 - `expressions.actions.ts`: random daily expression from `expressions`.
+- `sentences.actions.ts`: random sentence selection for dictation and kanji detail pages.
 
 Split-source actions:
 
@@ -490,16 +492,18 @@ Package scripts:
 - `npm run db:migrations:check`: validate Supabase migration filenames and duplicate timestamps.
 - `npm run prepare`: install Husky hooks.
 
-Repository scripts under `scripts/` support content/data operations such as:
+Repository scripts under `scripts/` support content/data operations. The directory is structured as:
 
-- auditing and aligning Sanity lessons/dialogues
-- generating/enriching lessons, grammar, kanji, examples, listening dialogues
-- generating and cleaning VoiceVox/TTS cache data
-- checking vocab/TTS storage
-- mapping grammar order numbers
-- slug cleanup
+- **Core scripts** at `scripts/` root (referenced in `package.json` for validation and generation):
+  - `check-migrations.mjs`: validates Supabase migration naming and order.
+  - `validate-jlpt-import.mjs`: validates JLPT exam import files.
+  - `generate-jlpt-moji-goi.mjs` & `generate-jlpt-bunpou.mjs`: generators for JLPT exams.
+- **TTS utility scripts** grouped in `scripts/tts/` (run manually for VoiceVox cache generation and cleanup):
+  - `generate_voicevox.js`: main offline generation engine.
+  - `check_voicevox_speakers.js`: lists speaker IDs.
+  - `check_tts_cache.js`, `clean_tts_cache.js`, `cleanup_non_vocab_tts.js`, `cleanup_vocab_cache.js`: utilities to audit and clean cache in database/storage.
 
-These scripts often require `.env.local`, Supabase service role access, Sanity write tokens, Gemini or AI gateway credentials, and sometimes local VoiceVox/audio prerequisites.
+These scripts often require `.env.local`, Supabase service role access, or local VoiceVox/audio prerequisites.
 
 ## Tests
 

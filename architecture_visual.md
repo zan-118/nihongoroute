@@ -89,7 +89,7 @@ flowchart LR
     Library["library pages"]
     Exams["exam pages"]
     Dashboard["dashboard"]
-    Tools["tools/review/flashcards"]
+    Tools["tools/review/flashcards/dictation"]
     StudioBridge["admin bridge APIs"]
   end
 

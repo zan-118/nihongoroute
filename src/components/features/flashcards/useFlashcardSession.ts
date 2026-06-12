@@ -17,7 +17,7 @@ import { toast } from "sonner";
 // ==========================================
 // DEKLARASI TIPE
 // ==========================================
-export type ModeLatihan = "vocab" | "kanji" | "survival" | "pronunciation";
+export type ModeLatihan = "vocab" | "kanji" | "survival" | "pronunciation" | "sentence";
 
 // ==========================================
 // CUSTOM HOOK UTAMA
@@ -86,6 +86,21 @@ export function useFlashcardSession() {
           details: { onyomi: k.onyomi || undefined, kunyomi: k.kunyomi || undefined },
           slug: k.character,
         }));
+      } else if (mode === "sentence") {
+        const sentenceData = data as unknown as Array<{
+          id: string;
+          japanese: string;
+          english?: string | null;
+          indonesia?: string | null;
+          jlpt_level?: string | null;
+        }>;
+        combined = sentenceData.map((s) => ({
+          id: s.id,
+          docType: "sentence" as const,
+          word: s.japanese,
+          meaning: s.indonesia || s.english || "",
+          slug: s.id,
+        }));
       } else {
         const vocabData = data as unknown as Array<{
           id: string;
@@ -127,7 +142,7 @@ export function useFlashcardSession() {
   useEffect(() => {
     if (categorySlug && !hasAutoFetchedRef.current) {
       const modeParamLower = modeParam?.toLowerCase();
-      const isValidMode = modeParamLower === "vocab" || modeParamLower === "kanji" || modeParamLower === "survival" || modeParamLower === "pronunciation";
+      const isValidMode = modeParamLower === "vocab" || modeParamLower === "kanji" || modeParamLower === "survival" || modeParamLower === "pronunciation" || modeParamLower === "sentence";
       
       if (isValidMode && modeParam) {
         hasAutoFetchedRef.current = true;

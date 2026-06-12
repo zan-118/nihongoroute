@@ -28,7 +28,8 @@ import {
   MessageSquareText,
   ListChecks,
   Hash,
-  Mic
+  Mic,
+  BookOpen
 } from "lucide-react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
@@ -115,6 +116,15 @@ const tools = [
     description: "Putar kalimat target, rekam suara sendiri, lalu bandingkan tempo playback.",
     icon: Mic,
     href: "/tools/shadowing",
+    color: "text-success",
+    bgColor: "bg-success/10",
+    border: "border-success/20"
+  },
+  {
+    title: "Dikte Kalimat (Dictation)",
+    description: "Dengarkan kalimat contoh audio asli lalu ketik ejaannya untuk melatih pendengaran.",
+    icon: BookOpen,
+    href: "/tools/dictation",
     color: "text-success",
     bgColor: "bg-success/10",
     border: "border-success/20"

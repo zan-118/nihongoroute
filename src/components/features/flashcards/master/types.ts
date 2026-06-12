@@ -13,7 +13,7 @@ export interface MasterCardData {
   /** ID dari Supabase (uuid) */
   id: string;
   /** "vocab" | "kanji" — ditentukan dari konteks, bukan kolom DB */
-  docType?: "vocab" | "kanji";
+  docType?: "vocab" | "kanji" | "sentence";
   slug?: string;
   word: string;
   /** Shorthand meaning */

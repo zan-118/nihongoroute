@@ -44,6 +44,7 @@ const KIND_LABELS: Record<DrillKind | "mixed", string> = {
   vocab: "Vocab",
   kanji: "Kanji",
   grammar: "Grammar",
+  sentence: "Kalimat",
 };
 
 const AMOUNT_OPTIONS = [5, 8, 12, 16] as const;

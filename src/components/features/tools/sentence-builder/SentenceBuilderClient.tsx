@@ -7,11 +7,15 @@ import {
   isBuiltSentenceCorrect,
   SENTENCE_BUILDER_PROMPTS,
   shuffleSentenceTokens,
+  tokenizeSentence,
+  type SentenceBuilderPrompt,
 } from "@/lib/sentence-builder";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { getRandomSentencesForDrill } from "@/actions/sentences.actions";
 
 export default function SentenceBuilderClient() {
   const [promptIndex, setPromptIndex] = useState(0);
@@ -19,7 +23,15 @@ export default function SentenceBuilderClient() {
   const [shuffleRound, setShuffleRound] = useState(0);
   const [hasChecked, setHasChecked] = useState(false);
 
-  const prompt = SENTENCE_BUILDER_PROMPTS[promptIndex];
+  // DB Mode States
+  const [isDbMode, setIsDbMode] = useState(false);
+  const [dbLevel, setDbLevel] = useState("all");
+  const [dbPrompts, setDbPrompts] = useState<SentenceBuilderPrompt[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const activePrompts = isDbMode && dbPrompts.length > 0 ? dbPrompts : SENTENCE_BUILDER_PROMPTS;
+  const prompt = activePrompts[promptIndex] || activePrompts[0] || SENTENCE_BUILDER_PROMPTS[0];
+
   const shuffledTokens = useMemo(
     () => shuffleSentenceTokens(prompt.tokens, `${prompt.id}-${shuffleRound}`),
     [prompt.id, prompt.tokens, shuffleRound]
@@ -30,6 +42,38 @@ export default function SentenceBuilderClient() {
     return usedCount < seenSoFar;
   });
   const isCorrect = hasChecked && isBuiltSentenceCorrect(prompt.tokens, selectedTokens);
+
+  const fetchDbSentences = async (lvl: string) => {
+    setLoading(true);
+    try {
+      const data = await getRandomSentencesForDrill(lvl === "all" ? "" : lvl, 10);
+      if (data.length === 0) {
+        toast.error("Tidak ada kalimat contoh ditemukan di database.");
+        return;
+      }
+      const mapped: SentenceBuilderPrompt[] = data.map((s, i) => ({
+        id: `db-${s.id}-${i}`,
+        level: s.jlpt_level || lvl.toUpperCase(),
+        target: s.japanese,
+        translation: s.translation,
+        tokens: tokenizeSentence(s.japanese),
+        explanation: "Kalimat contoh dari database.",
+        pattern: "Konteks Kalimat"
+      }));
+      setDbPrompts(mapped);
+      setPromptIndex(0);
+      setSelectedTokens([]);
+      setShuffleRound((prev) => prev + 1);
+      setHasChecked(false);
+      setIsDbMode(true);
+      toast.success("Kalimat contoh berhasil dimuat dari database!");
+    } catch (e) {
+      console.error(e);
+      toast.error("Gagal mengambil kalimat dari database.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handlePromptChange = (nextIndex: number) => {
     setPromptIndex(nextIndex);
@@ -80,8 +124,79 @@ export default function SentenceBuilderClient() {
                 Prompt
               </h2>
             </div>
-            <div className="flex flex-col gap-2">
-              {SENTENCE_BUILDER_PROMPTS.map((item, index) => (
+            <div className="flex gap-2 mb-4 p-1 bg-muted rounded-xl">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsDbMode(false);
+                  setPromptIndex(0);
+                  setSelectedTokens([]);
+                  setHasChecked(false);
+                }}
+                className={cn(
+                  "flex-1 py-2 text-xs font-bold rounded-lg transition-all",
+                  !isDbMode ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                Bawaan
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (dbPrompts.length === 0) {
+                    fetchDbSentences(dbLevel);
+                  } else {
+                    setIsDbMode(true);
+                    setPromptIndex(0);
+                    setSelectedTokens([]);
+                    setHasChecked(false);
+                  }
+                }}
+                className={cn(
+                  "flex-1 py-2 text-xs font-bold rounded-lg transition-all",
+                  isDbMode ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                Database (DB)
+              </button>
+            </div>
+
+            {isDbMode && (
+              <div className="mb-4 space-y-2 p-2.5 border border-border/60 rounded-2xl bg-background/25">
+                <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block">JLPT Level</span>
+                <div className="grid grid-cols-3 gap-1.5">
+                  {["all", "N5", "N4", "N3", "N2", "N1"].map((l) => (
+                    <button
+                      key={l}
+                      type="button"
+                      onClick={() => {
+                        setDbLevel(l);
+                        fetchDbSentences(l);
+                      }}
+                      className={cn(
+                        "py-1.5 text-[9px] font-black uppercase rounded-lg border transition-all",
+                        dbLevel === l
+                          ? "border-success bg-success/15 text-success font-bold"
+                          : "border-border bg-background/50 hover:bg-muted text-muted-foreground"
+                      )}
+                    >
+                      {l}
+                    </button>
+                  ))}
+                </div>
+                <Button
+                  onClick={() => fetchDbSentences(dbLevel)}
+                  disabled={loading}
+                  size="sm"
+                  className="w-full text-[9px] font-black uppercase tracking-widest py-2 h-auto rounded-lg bg-success text-success-foreground hover:bg-success/90"
+                >
+                  {loading ? "Loading..." : "Ambil Baru"}
+                </Button>
+              </div>
+            )}
+
+            <div className="flex flex-col gap-2 max-h-[300px] lg:max-h-[500px] overflow-y-auto pr-1">
+              {activePrompts.map((item, index) => (
                 <button
                   key={item.id}
                   type="button"
@@ -93,10 +208,15 @@ export default function SentenceBuilderClient() {
                       : "border-border bg-background/35 text-muted-foreground hover:text-foreground"
                   )}
                 >
-                  <span className="block text-sm font-black uppercase tracking-widest">
-                    {item.level}
-                  </span>
-                  <span className="mt-1 block text-sm font-bold leading-relaxed">
+                  <div className="flex items-center justify-between">
+                    <span className="block text-sm font-black uppercase tracking-widest">
+                      {item.level}
+                    </span>
+                    {isDbMode && (
+                      <span className="text-[9px] font-mono opacity-50">#{index + 1}</span>
+                    )}
+                  </div>
+                  <span className="mt-1 block text-sm font-bold leading-relaxed line-clamp-2">
                     {item.translation}
                   </span>
                 </button>

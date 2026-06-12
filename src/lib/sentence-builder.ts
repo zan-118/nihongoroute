@@ -1,11 +1,21 @@
 export interface SentenceBuilderPrompt {
   id: string;
-  level: "N5" | "N4" | "N3";
+  level: string;
   target: string;
   translation: string;
   tokens: string[];
-  explanation: string;
-  pattern: string;
+  explanation?: string;
+  pattern?: string;
+}
+
+export function tokenizeSentence(japanese: string): string[] {
+  const regex = /(でした|です|ました|ます|から|まで|[はがをにでとへも])|([。、！？!?])|([^\u3001\u3002\uFF01\uFF1F!?\sはがをにでとへも]+)/g;
+  const matches: string[] = [];
+  let match;
+  while ((match = regex.exec(japanese)) !== null) {
+    matches.push(match[0]);
+  }
+  return matches.filter(Boolean);
 }
 
 export const SENTENCE_BUILDER_PROMPTS: SentenceBuilderPrompt[] = [

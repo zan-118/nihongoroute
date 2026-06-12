@@ -28,6 +28,8 @@ import { KanjiReadings } from "@/components/features/kanji/detail/KanjiReadings"
 import { KanjiRadicals } from "@/components/features/kanji/detail/KanjiRadicals";
 import { KanjiMnemonic } from "@/components/features/kanji/detail/KanjiMnemonic";
 import { KanjiRelatedVocab } from "@/components/features/kanji/detail/KanjiRelatedVocab";
+import { KanjiSentences } from "@/components/features/kanji/detail/KanjiSentences";
+import { getSentencesByKanji } from "@/actions/sentences.actions";
 import {
   breadcrumbJsonLd,
   createPageMetadata,
@@ -99,6 +101,7 @@ export default async function KanjiDetailPage({
 
   if (!kanji) notFound();
   const kanjiCharacter = String(kanji.character || decodedId);
+  const sentences = await getSentencesByKanji(kanjiCharacter, 5);
   const kanjiLevel = String(kanji.jlpt_level || kanji.jlptLevel || "").toUpperCase();
   const kanjiPath = `/library/kanji/${encodeRouteSegment(kanjiCharacter)}`;
 
@@ -130,33 +133,46 @@ export default async function KanjiDetailPage({
       <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none z-0" />
 
       <div className="max-w-6xl mx-auto w-full relative z-10 pt-8 md:pt-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-[minmax(0,auto)] animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out">
-          {/* 1. Stroke & Visual Bento (Fokus Utama) */}
-          <KanjiStrokeHero 
-            id={kanji.id || kanji._id || ""}
-            character={kanji.character || ""} 
-            strokeOrderSvg={kanji.strokeOrderSvg || undefined} 
-            meaning={kanji.meaning || ""} 
-            jlpt={kanji.jlpt_level || undefined} 
-          />
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-8 animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out">
+          
+          {/* Kolom Kiri: Visual & Detail Leksikal */}
+          <div className="flex flex-col gap-6">
+            {/* 1. Stroke & Visual Bento (Fokus Utama) */}
+            <KanjiStrokeHero 
+              id={kanji.id || kanji._id || ""}
+              character={kanji.character || ""} 
+              strokeOrderSvg={kanji.strokeOrderSvg || undefined} 
+              meaning={kanji.meaning || ""} 
+              jlpt={kanji.jlpt_level || undefined} 
+            />
 
-          {/* 2 & 3. Onyomi & Kunyomi */}
-          <KanjiReadings 
-            onyomi={kanji.onyomi || undefined} 
-            kunyomi={kanji.kunyomi || undefined} 
-          />
+            {/* 2 & 3. Onyomi & Kunyomi */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <KanjiReadings 
+                onyomi={kanji.onyomi || undefined} 
+                kunyomi={kanji.kunyomi || undefined} 
+              />
+            </div>
 
-          {/* 4. Radicals Bento (Akar Kata) */}
-          <KanjiRadicals radicals={kanji.radicals || undefined} />
+            {/* 4. Radicals Bento (Akar Kata) */}
+            <KanjiRadicals radicals={kanji.radicals || undefined} />
+          </div>
 
-          {/* 5. Mnemonic Bento (Jembatan Keledai) */}
-          <KanjiMnemonic 
-            mnemonics={kanji.mnemonics || undefined} 
-            wordId={kanji.character || ""}
-          />
+          {/* Kolom Kanan: Penggunaan & Contoh Konteks */}
+          <div className="flex flex-col gap-6">
+            {/* 5. Mnemonic Bento (Jembatan Keledai) */}
+            <KanjiMnemonic 
+              mnemonics={kanji.mnemonics || undefined} 
+              wordId={kanji.character || ""}
+            />
 
-          {/* 6. Related Context Bento (Kosakata Terkait) */}
-          <KanjiRelatedVocab relatedVocab={kanji.relatedVocab || undefined} />
+            {/* 6. Related Context Bento (Kosakata Terkait) */}
+            <KanjiRelatedVocab relatedVocab={kanji.relatedVocab || undefined} />
+
+            {/* 7. Example Sentences Bento (Kalimat Contoh Dinamis) */}
+            <KanjiSentences sentences={sentences} character={kanjiCharacter} />
+          </div>
+
         </div>
 
         {/* Footer Actions */}

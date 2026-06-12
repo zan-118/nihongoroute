@@ -8,16 +8,16 @@
 // ==========================================
 import React, { useState } from "react";
 import { m } from "framer-motion";
-import { Zap, Flame, PenTool, Hash, LayoutGrid, Layers, Play, Mic } from "lucide-react";
+import { Zap, Flame, PenTool, Hash, LayoutGrid, Layers, Play, Mic, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
 interface FlashcardSetupProps {
-  onStart: (level: string, mode: "vocab" | "kanji" | "survival" | "pronunciation", amount: number) => void;
+  onStart: (level: string, mode: "vocab" | "kanji" | "survival" | "pronunciation" | "sentence", amount: number) => void;
   defaultLevel?: string | null;
-  defaultMode?: "vocab" | "kanji" | "survival" | "pronunciation" | null;
+  defaultMode?: "vocab" | "kanji" | "survival" | "pronunciation" | "sentence" | null;
 }
 
 // ==========================================
@@ -35,6 +35,7 @@ const JLPT_LEVELS = [
 const MODES = [
   { id: "vocab" as const, label: "Kosakata", icon: <Zap size={18} />, desc: "Latihan bacaan & makna kata" },
   { id: "kanji" as const, label: "Kanji", icon: <PenTool size={18} />, desc: "Hafalkan bentuk & On/Kun" },
+  { id: "sentence" as const, label: "Kalimat", icon: <BookOpen size={18} />, desc: "Pahami kalimat contoh" },
   { id: "survival" as const, label: "Survival", icon: <Flame size={18} />, desc: "Tantangan berbatas waktu" },
   { id: "pronunciation" as const, label: "Pelafalan", icon: <Mic size={18} />, desc: "Uji akurasi bicara Anda" }
 ];
@@ -49,7 +50,7 @@ const AMOUNTS = [10, 20, 50, 100];
  */
 export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: FlashcardSetupProps) {
   const [level, setLevel] = useState<string>(defaultLevel || "all");
-  const [mode, setMode] = useState<"vocab" | "kanji" | "survival" | "pronunciation">(
+  const [mode, setMode] = useState<"vocab" | "kanji" | "survival" | "pronunciation" | "sentence">(
     defaultMode ?? "vocab"
   );
   const [amount, setAmount] = useState<number>(20);
@@ -106,7 +107,7 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
             <LayoutGrid size={16} />
             <h2>Mode Latihan</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {MODES.map((modeItem) => (
               <button type="button"
                 key={modeItem.id}

@@ -126,9 +126,9 @@ export function FlashcardBack({
           {/* WORD DISPLAY - Tighter sizing */}
           <div className="flex flex-col items-center relative group/kanji shrink-0">
             <h2
-              className={`${isKanji ? "text-5xl md:text-7xl" : word.length > 5 ? "text-2xl md:text-5xl" : "text-4xl md:text-7xl"} font-black text-foreground tracking-tight font-japanese leading-none drop-shadow-sm`}
+              className={`${isKanji ? "text-5xl md:text-7xl" : docType === "sentence" ? "text-lg md:text-2xl px-4 text-center leading-relaxed font-semibold" : word.length > 5 ? "text-2xl md:text-5xl" : "text-4xl md:text-7xl"} font-black text-foreground tracking-tight font-japanese leading-none drop-shadow-sm`}
             >
-              {isKanji ? word : (
+              {isKanji ? word : docType === "sentence" ? word : (
                 splitFurigana(word, hiraReading).map((chunk, i) => (
                   chunk.furi ? (
                     <ruby key={`${chunk.text}-${i}`}>
@@ -143,7 +143,7 @@ export function FlashcardBack({
                 ))
               )}
             </h2>
-            {!isKanji && displayRomaji && (
+            {docType !== "sentence" && !isKanji && displayRomaji && (
               <p className="text-[7px] md:text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] opacity-40 mt-1">
                 {displayRomaji}
               </p>
@@ -161,7 +161,7 @@ export function FlashcardBack({
 
           {/* CONTENT SECTION (Example OR Mnemonic) - Tighter constraints */}
           <div className="w-full px-1 space-y-2">
-            {examples && examples.length > 0 ? (
+            {docType !== "sentence" && examples && examples.length > 0 ? (
               <div className="p-2.5 bg-primary/[0.03] border border-primary/10 rounded-xl text-left">
                 <span className="text-[7px] font-black uppercase tracking-widest text-primary/60 block mb-0.5">Contoh</span>
                 <p className="text-[10px] md:text-[12px] font-bold text-foreground font-japanese leading-tight line-clamp-1">
@@ -171,7 +171,7 @@ export function FlashcardBack({
                   {examples[0].meaning || examples[0].indonesian}
                 </p>
               </div>
-            ) : (
+            ) : docType !== "sentence" ? (
               <div className="space-y-2">
                 <MnemonicEditor wordId={id} compact={true} />
                 {mnemonic && (
@@ -183,7 +183,7 @@ export function FlashcardBack({
                   </div>
                 )}
               </div>
-            )}
+            ) : null}
 
             {/* QUICK ACTIONS - Lower height */}
             <div className="flex gap-2 w-full">
@@ -197,21 +197,23 @@ export function FlashcardBack({
                   <span>Tulis</span>
                 </Button>
               )}
-              <Button
-                asChild
-                variant="outline"
-                className="flex-1 h-7 bg-background border-border hover:bg-muted text-[8px] md:text-[10px] font-black uppercase tracking-widest rounded-lg px-2 shadow-none"
-              >
-                <Link
-                  href={`/library/${
-                    docType === 'verb_dictionary' ? 'verbs' :
-                    isKanji ? 'kanji' : 'vocab'
-                  }/${slug || id}`}
-                  aria-label="Lihat detail kata ini"
+              {docType !== "sentence" && (
+                <Button
+                  asChild
+                  variant="outline"
+                  className="flex-1 h-7 bg-background border-border hover:bg-muted text-[8px] md:text-[10px] font-black uppercase tracking-widest rounded-lg px-2 shadow-none"
                 >
-                  <ExternalLink size={10} className="mr-1" aria-hidden="true" /> Detail
-                </Link>
-              </Button>
+                  <Link
+                    href={`/library/${
+                      docType === 'verb_dictionary' ? 'verbs' :
+                      isKanji ? 'kanji' : 'vocab'
+                    }/${slug || id}`}
+                    aria-label="Lihat detail kata ini"
+                  >
+                    <ExternalLink size={10} className="mr-1" aria-hidden="true" /> Detail
+                  </Link>
+                </Button>
+              )}
             </div>
           </div>
         </div>

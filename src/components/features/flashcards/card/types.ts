@@ -8,7 +8,7 @@
 // ==========================================
 export interface FlashcardProps {
   id: string;
-  docType?: "vocab" | "kanji";
+  docType?: "vocab" | "kanji" | "sentence";
   slug?: string;
   word: string;
   meaning: string;

@@ -16,7 +16,7 @@ import { createClient } from "@/lib/supabase/server";
 // ======================
 
 export async function getFlashcardsByMode(
-  mode: "vocab" | "kanji" | "survival", 
+  mode: "vocab" | "kanji" | "survival" | "sentence", 
   level: string | "all", 
   amount: number = 20
 ) {
@@ -40,6 +40,24 @@ export async function getFlashcardsByMode(
       return [];
     }
     
+    return data || [];
+  } else if (mode === "sentence") {
+    let query = supabase
+      .from("sentences")
+      .select("id, japanese, english, indonesia, jlpt_level")
+      .not("japanese", "is", null)
+      .or("indonesia.neq.null,english.neq.null")
+      .limit(amount);
+
+    if (level && level !== "all") {
+      query = query.eq("jlpt_level", level.toUpperCase());
+    }
+
+    const { data, error } = await query;
+    if (error) {
+      console.error("Gagal mengambil kartu flash kalimat:", error);
+      return [];
+    }
     return data || [];
   } else {
     // vocab atau survival

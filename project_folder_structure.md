@@ -152,6 +152,7 @@ src/app/
 |   |-- tools/
 |   |   |-- layout.tsx
 |   |   |-- page.tsx
+|   |   |-- dictation/page.tsx
 |   |   |-- flashcards/page.tsx
 |   |   |-- kana/page.tsx
 |   |   |-- survival/page.tsx
@@ -208,6 +209,7 @@ src/actions/
 |-- library.detail.actions.ts       Detail and related-content resolution.
 |-- listening.actions.ts            Sanity listening pagination/random task.
 |-- reading.actions.ts              Sanity reading pagination.
+|-- sentences.actions.ts            Random sentence queries for dictation and kanji details.
 |-- vocab.actions.ts                Vocab pagination/search/filter.
 ```
 
@@ -225,7 +227,7 @@ src/components/
 |   |-- gamification/               XP pop, overlays, achievements, streak cards.
 |   |-- global/                     Floating actions and smart text.
 |   |-- grammar/                    Grammar list/detail/search UI.
-|   |-- kanji/                      Kanji stroke order/detail components and hooks.
+|   |-- kanji/                      Kanji stroke order/detail components, detail sentences, and hooks.
 |   |-- landing/                    Landing page sections.
 |   |-- lessons/                    Lesson renderer, sections, navigation, completion.
 |   |-- library/                    Library category cards, vocab, kanji UI.
@@ -236,7 +238,7 @@ src/components/
 |   |-- reading/                    Reading page article, nav, audio, word popover.
 |   |-- review/                     Review mode cards, completion state, review hook.
 |   |-- srs/                        SRS buttons, review engine, analytics, stats, mnemonic.
-|   |-- tools/                      Kana, writing canvas, TTS, search, dictionary, kanji tools.
+|   |-- tools/                      Kana, writing canvas, TTS, dictation, search, dictionary, kanji tools.
 |   |-- user/                       Auth/settings/profile/user navigation.
 |-- layout/
 |   |-- AchievementToast.tsx
@@ -370,6 +372,7 @@ supabase/
 |   |-- 20260604002000_add_order_number_to_n2_grammar.sql
 |   |-- 20260604003000_add_order_number_to_n1_grammar.sql
 |   |-- 20260609080000_sync_live_schema_drift.sql
+|   |-- 20260612000000_expand_sentences_table.sql
 ```
 
 Declared tables in migrations:
@@ -452,51 +455,20 @@ e2e/
 
 ```text
 scripts/
-|-- _audit_speakers.js
-|-- align_sanity_lessons.js
-|-- audit_dialogs.js
-|-- audit_lesson_titles.js
 |-- check-migrations.mjs
-|-- check_n5.js
-|-- check_n5_storage.js
-|-- check_tts_cache.js
-|-- check_voicevox_speakers.js
-|-- clean_tts_cache.js
-|-- cleanup_non_vocab_tts.js
-|-- cleanup_vocab_cache.js
-|-- count_vocab.js
-|-- debug_word.js
-|-- design_n1_syllabus.js
-|-- design_n2_syllabus.js
-|-- design_n3_syllabus.js
-|-- design_n4_syllabus.js
-|-- dump_dialogues.js
-|-- dump_messy_blocks.js
-|-- enrich_grammar.js
-|-- enrich_kanji.js
-|-- enrich_lesson_content.js
-|-- enrich_lessons.js
-|-- enrich_listening_dialogues.js
-|-- fix_grammar_slugs.js
-|-- generate_example_sentences.js
-|-- generate_new_lessons.js
-|-- generate_new_lessons_n1.js
-|-- generate_new_lessons_n2.js
-|-- generate_new_lessons_n3.js
-|-- generate_sanity_dialogs.js
-|-- generate_voicevox.js
-|-- get_sanity_history.js
-|-- history_bab16.json
-|-- map_n1_grammar_order.js
-|-- map_n2_grammar_order.js
-|-- map_n3_grammar_order.js
-|-- migrate_sanity_speakers.js
-|-- sanitize_slugs.js
-|-- search_whisper.js
-|-- test_query.js
+|-- generate-jlpt-bunpou.mjs
+|-- generate-jlpt-moji-goi.mjs
+|-- validate-jlpt-import.mjs
+|-- tts/
+|   |-- check_tts_cache.js
+|   |-- check_voicevox_speakers.js
+|   |-- clean_tts_cache.js
+|   |-- cleanup_non_vocab_tts.js
+|   |-- cleanup_vocab_cache.js
+|   |-- generate_voicevox.js
 ```
 
-Most scripts are operational tools for content generation, content cleanup, Sanity/Supabase alignment, TTS cache maintenance, and JLPT syllabus/data work. Many require `.env.local`, Supabase service role access, Sanity write tokens, Gemini or AI gateway credentials, and sometimes local VoiceVox output. `check-migrations.mjs` is the committed quality-gate script for Supabase migration filename/timestamp validation.
+Most scripts are operational tools for mock exam generation, Supabase migration checks, and TTS cache management. The core validation/generation scripts are located at the root of `scripts/` (referenced in `package.json`). TTS maintenance scripts are grouped under `scripts/tts/`. Many require `.env.local`, Supabase service role access, or a local VoiceVox installation. `check-migrations.mjs` is the committed quality-gate script for Supabase migration filename/timestamp validation.
 
 ## Configuration Files
 

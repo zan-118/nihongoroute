@@ -98,7 +98,7 @@ function getDrillLevelFilter(value: string | null | undefined): DrillLevel | und
 
 function getDrillKindFilter(value: string | null | undefined): DrillKind | undefined {
   const normalized = String(value || "").toLowerCase();
-  return ["vocab", "kanji", "grammar"].includes(normalized)
+  return ["vocab", "kanji", "grammar", "sentence"].includes(normalized)
     ? (normalized as DrillKind)
     : undefined;
 }
@@ -499,8 +499,53 @@ export async function getIntegratedMiniDrillQuestions(
         };
       });
 
+    // --- Sentence-based questions ---
+    let sentenceQuestions: MiniDrillQuestion[] = [];
+    if (!kindFilter || kindFilter === "sentence") {
+      try {
+        let sentenceQuery = supabase
+          .from("sentences")
+          .select("id, japanese, english, indonesia, jlpt_level")
+          .not("japanese", "is", null)
+          .or("indonesia.neq.null,english.neq.null");
+
+        if (levelFilter) {
+          sentenceQuery = sentenceQuery.eq("jlpt_level", levelFilter);
+        }
+
+        const { data: sentenceRows, error: sentenceError } = await sentenceQuery.limit(40);
+
+        if (!sentenceError && sentenceRows && sentenceRows.length > 0) {
+          const sentenceTranslations = sentenceRows
+            .map((row) => compactText((row.indonesia as string | null) || (row.english as string | null) || ""))
+            .filter(Boolean);
+
+          sentenceQuestions = sentenceRows
+            .filter((row) => {
+              const translation = compactText((row.indonesia as string | null) || (row.english as string | null) || "");
+              return row.japanese && translation;
+            })
+            .map((row) => {
+              const answer = compactText((row.indonesia as string | null) || (row.english as string | null) || "");
+              return {
+                id: `db-sentence-${row.id}`,
+                level: asDrillLevel(row.jlpt_level as string | null),
+                kind: "sentence" as const,
+                prompt: row.japanese,
+                answer,
+                options: buildOptions(answer, sentenceTranslations, `sentence-${row.id}`),
+                explanation: `Kalimat ini berarti: ${answer}.`,
+                sourceType: "database" as const,
+              };
+            });
+        }
+      } catch (sentenceErr) {
+        console.error("[tools integration] Gagal mengambil soal kalimat:", sentenceErr);
+      }
+    }
+
     return sortMiniDrillByContext(
-      [...vocabQuestions, ...kanjiQuestions, ...grammarQuestions].filter(
+      [...vocabQuestions, ...kanjiQuestions, ...grammarQuestions, ...sentenceQuestions].filter(
         (question) => question.options.length >= 2
       ),
       context

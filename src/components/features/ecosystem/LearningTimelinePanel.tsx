@@ -108,6 +108,7 @@ const SOURCE_LABELS: Record<LearningSourceType, string> = {
   vocab: "Vocab",
   kanji: "Kanji",
   grammar: "Grammar",
+  sentence: "Kalimat",
   tool: "Tool",
 };
 

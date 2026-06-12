@@ -469,6 +469,7 @@ export interface SentenceTable {
   english?: string | null;
   created_at?: string;
   indonesia?: string | null;
+  jlpt_level?: string | null;
 }
 
 export interface SupporterTable {

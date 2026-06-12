@@ -1,5 +1,5 @@
 export type DrillLevel = "N5" | "N4" | "N3" | "N2" | "N1";
-export type DrillKind = "vocab" | "kanji" | "grammar";
+export type DrillKind = "vocab" | "kanji" | "grammar" | "sentence";
 
 export interface MiniDrillQuestion {
   id: string;
@@ -24,7 +24,7 @@ export interface MiniDrillConfig {
 }
 
 export const DRILL_LEVELS: Array<DrillLevel | "all"> = ["all", "N5", "N4", "N3", "N2", "N1"];
-export const DRILL_KINDS: Array<DrillKind | "mixed"> = ["mixed", "vocab", "kanji", "grammar"];
+export const DRILL_KINDS: Array<DrillKind | "mixed"> = ["mixed", "vocab", "kanji", "grammar", "sentence"];
 
 export const MINI_DRILL_BANK: MiniDrillQuestion[] = [
   {

@@ -31,12 +31,14 @@ import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import { LibraryItem } from "@/actions/library.actions";
 import { fetchTTSAudio, speakWithWebSpeech, TTS_VOICES, type TtsVoice } from "@/lib/tts";
 import PdfGenerator from "@/components/features/pdf/PdfGenerator";
+import type { SentenceRow } from "@/actions/sentences.actions";
 
 // ==========================================
 // ANTARMUKA & TIPE DATA
 // ==========================================
 interface GrammarDetailClientProps {
   article: LibraryItem;
+  dynamicSentences?: SentenceRow[];
 }
 
 // ==========================================
@@ -242,7 +244,7 @@ function parseNotesToJSX(notes: string): React.ReactNode {
  * @param {GrammarDetailClientProps} props Properti komponen detail tata bahasa.
  * @returns {JSX.Element} Komponen detail grammar yang interaktif dan premium.
  */
-export default function GrammarDetailClient({ article }: GrammarDetailClientProps) {
+export default function GrammarDetailClient({ article, dynamicSentences = [] }: GrammarDetailClientProps) {
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const [isCopied, setIsCopied] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -543,6 +545,63 @@ export default function GrammarDetailClient({ article }: GrammarDetailClientProp
                   </div>
                 );
               })}
+            </div>
+          </section>
+        )}
+
+        {/* Kalimat Contoh Dinamis dari Database Sentences */}
+        {dynamicSentences.length > 0 && (
+          <section className="mb-8">
+            <div className="flex items-center gap-3 mb-8">
+              <span className="w-1.5 h-6 rounded-full bg-success" />
+              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground select-none">
+                Contoh dalam Konteks (文脈例)
+              </h2>
+            </div>
+
+            <div className="space-y-4">
+              {dynamicSentences.map((sentence, i) => (
+                <div
+                  key={sentence.id}
+                  className="border border-border rounded-[1.8rem] p-5 md:p-6 bg-card/5 backdrop-blur-lg hover:border-success/40 transition-all duration-300 shadow-sm relative overflow-hidden group flex items-start gap-4 md:gap-5"
+                >
+                  <div className="absolute top-0 left-0 w-1.5 h-full bg-success/10 group-hover:bg-success transition-all duration-300" />
+
+                  <div className="hidden sm:flex flex-col items-center justify-center font-mono text-sm font-black text-muted-foreground/30 group-hover:text-success/40 transition-colors size-10 rounded-full border border-border/50 bg-card/10 select-none">
+                    {String(i + 1).padStart(2, "0")}
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <p className="text-lg md:text-xl font-japanese font-bold text-foreground leading-relaxed tracking-wide select-text">
+                      {sentence.japanese}
+                    </p>
+                    {(sentence.indonesia || sentence.english) && (
+                      <div className="mt-3 pl-4 border-l-2 border-success/30 text-sm md:text-base text-muted-foreground/80 font-semibold leading-relaxed select-text">
+                        {sentence.indonesia || sentence.english}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex-shrink-0 select-none">
+                    <button
+                      type="button"
+                      onClick={() => speakJapanese(sentence.japanese, 1000 + i)}
+                      className={`h-12 w-12 rounded-[1.2rem] border flex items-center justify-center transition-all duration-300 relative ${
+                        playingIndex === 1000 + i
+                          ? "border-success bg-success/10 text-success shadow-[0_0_20px_rgb(var(--success-rgb)/0.35)] animate-pulse"
+                          : "border-border bg-card/20 text-muted-foreground hover:border-success/40 hover:text-success hover:bg-success/5"
+                      }`}
+                      aria-label={playingIndex === 1000 + i ? "Hentikan pengucapan" : "Dengarkan pengucapan"}
+                    >
+                      {playingIndex === 1000 + i ? (
+                        <VolumeX size={20} className="scale-110" />
+                      ) : (
+                        <Volume2 size={20} />
+                      )}
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           </section>
         )}

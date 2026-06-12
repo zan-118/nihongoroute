@@ -10,6 +10,7 @@
 // ======================
 import { Metadata } from "next";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
+import { getSentencesByGrammarPattern } from "@/actions/sentences.actions";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/seo/JsonLd";
 import GrammarDetailClient from "@/components/features/grammar/GrammarDetailClient";
@@ -90,6 +91,10 @@ export default async function GrammarDetailPage({
   const article = await getLibraryItemBySlug("grammar", decodedSlug);
   if (!article) notFound();
 
+  // Ambil kalimat contoh dinamis dari tabel sentences berdasarkan pola grammar
+  const grammarPattern = String(article.title || "");
+  const dynamicSentences = grammarPattern ? await getSentencesByGrammarPattern(grammarPattern, 4) : [];
+
 
   // ======================
   // RENDER UTAMA
@@ -128,7 +133,7 @@ export default async function GrammarDetailPage({
 
       <div className="max-w-4xl mx-auto w-full relative z-10 pt-8 md:pt-16">
         {/* Client Side Detail & TTS Interactions */}
-        <GrammarDetailClient article={article} />
+        <GrammarDetailClient article={article} dynamicSentences={dynamicSentences} />
       </div>
     </main>
   );

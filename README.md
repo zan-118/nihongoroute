@@ -59,7 +59,7 @@ The application uses a split-source architecture:
 | Library | `/library`, vocab, kanji, grammar, reading, listening, cheatsheet |
 | Exams | `/exams`, `/exams/[id]` |
 | Review | `/review` |
-| Tools | `/tools`, flashcards, kana, survival, writing |
+| Tools | `/tools`, flashcards, kana, survival, writing, dictation |
 | Account | `/settings`, `/onboarding` |
 | Social/support | `/share`, `/social`, `/support` |
 | Studio | `/studio/[[...tool]]` |
