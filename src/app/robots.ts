@@ -25,7 +25,6 @@ export default function robots() {
         disallow: [
           "/api/",
           "/studio/",
-          "/_next/",
         ],
       },
     ],
