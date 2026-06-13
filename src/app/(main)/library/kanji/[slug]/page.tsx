@@ -38,12 +38,11 @@ import {
 } from "@/lib/seo";
 
 // ======================
-// KONFIGURASI RENDERING DINAMIS
+// KONFIGURASI STATIC GENERATION (ISR/SSG)
 // ======================
-// Halaman detail kanji di-render secara dinamis untuk menghindari bug platform Vercel
-// di mana karakter Unicode (Jepang) dalam parameter rute menyebabkan crash pada
-// header HTTP x-next-cache-tags (ERR_INVALID_CHAR) saat menggunakan ISR/SSG.
-export const dynamic = "force-dynamic";
+export async function generateStaticParams() {
+  return []; // Halaman detail di-generate secara statis on-demand (ISR) menggunakan slug ASCII
+}
 
 // ======================
 // METADATA SEO
@@ -55,11 +54,11 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { id } = await params;
-  const decodedId = fullyDecode(id);
-  const kanji = await getLibraryItemBySlug("kanji", decodedId);
+  const { slug } = await params;
+  const decodedSlug = fullyDecode(slug);
+  const kanji = await getLibraryItemBySlug("kanji", decodedSlug);
 
   if (!kanji) {
     return {
@@ -67,10 +66,11 @@ export async function generateMetadata({
     };
   }
 
+  const kanjiSlug = String(kanji.slug || decodedSlug);
   return createPageMetadata({
     title: `${kanji.character} (${kanji.meaning}) | Kanji Jepang`,
     description: `Pelajari arti, onyomi, kunyomi, mnemonic, kosakata terkait, dan cara menulis kanji ${kanji.character}.`,
-    path: `/library/kanji/${encodeRouteSegment(String(kanji.character || decodedId))}`,
+    path: `/library/kanji/${encodeRouteSegment(kanjiSlug)}`,
     keywords: [
       String(kanji.character || ""),
       String(kanji.meaning || ""),
@@ -93,17 +93,18 @@ export async function generateMetadata({
 export default async function KanjiDetailPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }) {
-  const { id } = await params;
-  const decodedId = fullyDecode(id);
-  const kanji = await getLibraryItemBySlug("kanji", decodedId);
+  const { slug } = await params;
+  const decodedSlug = fullyDecode(slug);
+  const kanji = await getLibraryItemBySlug("kanji", decodedSlug);
 
   if (!kanji) notFound();
-  const kanjiCharacter = String(kanji.character || decodedId);
+  const kanjiCharacter = String(kanji.character || "");
   const sentences = await getSentencesByKanji(kanjiCharacter, 5);
   const kanjiLevel = String(kanji.jlpt_level || kanji.jlptLevel || "").toUpperCase();
-  const kanjiPath = `/library/kanji/${encodeRouteSegment(kanjiCharacter)}`;
+  const kanjiSlug = String(kanji.slug || decodedSlug);
+  const kanjiPath = `/library/kanji/${encodeRouteSegment(kanjiSlug)}`;
 
   return (
     <main className="w-full bg-transparent px-4 md:px-8 lg:px-12 relative overflow-hidden flex flex-col justify-start min-h-screen pb-32 transition-colors duration-300">

@@ -83,6 +83,10 @@ export interface LibraryItem {
   seoTitle?: string | null;
   seoDescription?: string | null;
   levelCode?: string | null;
+  grammar_family?: string | null;
+  related_grammar?: string[] | null;
+  familyGrammarList?: any[] | null;
+  relatedGrammarList?: any[] | null;
   [key: string]: unknown;
 }
 
@@ -207,9 +211,22 @@ export async function getLibraryItemBySlug(
     let data: LibraryItem | null = null;
 
     if (type === "kanji") {
-      const { data: d, error } = await supabase.from("kanji").select("*").eq("character", slugOrId).single();
-      if (error && error.code !== "PGRST116") console.error(`[getLibraryItemBySlug] Galat pengambilan data kanji:`, error.message, error.code);
-      data = d ?? null;
+      if (isUUID(slugOrId)) {
+        const { data: d, error } = await supabase.from("kanji").select("*").eq("id", slugOrId).single();
+        if (error && error.code !== "PGRST116") console.error(`[getLibraryItemBySlug] Galat pengambilan data kanji ID:`, error.message, error.code);
+        data = d ?? null;
+      } else {
+        // Coba cari berdasarkan kolom slug ASCII terlebih dahulu
+        const { data: bySlug, error: slugErr } = await supabase.from("kanji").select("*").eq("slug", slugOrId).single();
+        if (bySlug) {
+          data = bySlug;
+        } else {
+          // Fallback ke kolom character untuk backward compatibility
+          const { data: d, error } = await supabase.from("kanji").select("*").eq("character", slugOrId).single();
+          if (error && error.code !== "PGRST116") console.error(`[getLibraryItemBySlug] Galat pengambilan data kanji:`, error.message, error.code);
+          data = d ?? null;
+        }
+      }
     } else if (type === "vocab" || type === "verb" || type === "adjective" || type === "phrase") {
       // Coba slug terlebih dahulu, lalu kembali ke id sebagai fallback
       const { data: bySlug, error: slugErr } = await supabase.from("vocab").select("*").eq("slug", slugOrId).single();
@@ -345,6 +362,39 @@ export async function getLibraryItemBySlug(
 
     if (type === "grammar" && data) {
       data._id = data.id;
+
+      // Tangani contoh kalimat secara aman
+      if (typeof data.examples === "string") {
+        try {
+          data.examples = JSON.parse(data.examples);
+        } catch {
+          data.examples = [];
+        }
+      }
+      data.examples = Array.isArray(data.examples) ? data.examples : [];
+      
+      // Ambil daftar grammar terkait jika ada
+      if (Array.isArray(data.related_grammar) && data.related_grammar.length > 0) {
+        const { data: related } = await supabase
+          .from("grammar")
+          .select("id, title, slug, jlpt_level, meaning")
+          .in("slug", data.related_grammar);
+        data.relatedGrammarList = related || [];
+      } else {
+        data.relatedGrammarList = [];
+      }
+
+      // Ambil anggota keluarga grammar jika ada
+      if (data.grammar_family) {
+        const { data: family } = await supabase
+          .from("grammar")
+          .select("id, title, slug, jlpt_level, meaning")
+          .eq("grammar_family", data.grammar_family)
+          .neq("id", data.id); // Kecualikan item saat ini
+        data.familyGrammarList = family || [];
+      } else {
+        data.familyGrammarList = [];
+      }
     }
 
     if (type === "reading" && data) {

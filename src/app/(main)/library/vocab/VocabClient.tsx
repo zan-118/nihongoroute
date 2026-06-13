@@ -340,7 +340,7 @@ export default function VocabClient({
                     </span>
                   )}
                   <TTSReader text={item.word} small={true} speaker="indah" />
-                  <Link href={`/library/vocab/${item.slug}`} className="shrink-0">
+                  <Link href={`/library/vocab/${item.slug || item.id}`} className="shrink-0">
                     <Button
                       variant="outline"
                       className="px-3 h-8 text-[9px] md:text-[10px] font-black uppercase tracking-wider rounded-lg bg-muted border-border hover:bg-primary hover:text-primary-foreground transition-all duration-300"

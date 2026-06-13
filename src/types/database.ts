@@ -237,6 +237,7 @@ export interface KanjiTable {
   character: string;
   english: string;
   meaning: string;
+  slug?: string;
   onyomi?: string;
   kunyomi?: string;
   romaji?: string;
@@ -288,6 +289,8 @@ export interface GrammarTable {
   order_number?: number;
   examples: ExampleSentence[];
   created_at: string;
+  related_grammar?: string[] | null;
+  grammar_family?: string | null;
 }
 
 export interface ReadingMaterialTable {

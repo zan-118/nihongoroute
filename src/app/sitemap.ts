@@ -20,6 +20,7 @@ interface SanitySitemapItem {
 }
 
 interface SupabaseSitemapItem {
+  id?: string | null;
   slug?: string | null;
   character?: string | null;
   created_at?: string | null;
@@ -221,7 +222,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const [vocabRows, kanjiRows, grammarRows, cheatsheetRows] = await Promise.all([
     fetchAllSupabaseRows("vocab", "slug, created_at", "created_at"),
-    fetchAllSupabaseRows("kanji", "character, created_at", "created_at"),
+    fetchAllSupabaseRows("kanji", "slug, created_at", "created_at"),
     fetchAllSupabaseRows("grammar", "slug, created_at", "created_at"),
     fetchAllSupabaseRows("cheatsheets", "slug, created_at, updated_at", "updated_at"),
   ]);
@@ -230,18 +231,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     if (!item.slug) continue;
     addUniqueEntry(urls, seen, {
       changeFrequency: "monthly",
-      lastModified: item.updated_at || item.created_at,
+      lastModified: item.created_at,
       path: `/library/vocab/${encodeRouteSegment(item.slug)}`,
       priority: 0.62,
     });
   }
 
   for (const item of kanjiRows) {
-    if (!item.character) continue;
+    if (!item.slug) continue;
     addUniqueEntry(urls, seen, {
       changeFrequency: "monthly",
-      lastModified: item.updated_at || item.created_at,
-      path: `/library/kanji/${encodeRouteSegment(item.character)}`,
+      lastModified: item.created_at,
+      path: `/library/kanji/${encodeRouteSegment(item.slug)}`,
       priority: 0.62,
     });
   }
@@ -250,7 +251,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     if (!item.slug) continue;
     addUniqueEntry(urls, seen, {
       changeFrequency: "monthly",
-      lastModified: item.updated_at || item.created_at,
+      lastModified: item.created_at,
       path: `/library/grammar/${encodeRouteSegment(item.slug)}`,
       priority: 0.66,
     });

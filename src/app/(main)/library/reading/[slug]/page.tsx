@@ -20,12 +20,11 @@ import {
 } from "@/lib/seo";
 
 // ======================
-// KONFIGURASI RENDERING DINAMIS
+// KONFIGURASI STATIC GENERATION (ISR/SSG)
 // ======================
-// Halaman detail bacaan di-render secara dinamis untuk menghindari bug platform Vercel
-// di mana karakter Unicode (Jepang) dalam parameter rute menyebabkan crash pada
-// header HTTP x-next-cache-tags (ERR_INVALID_CHAR) saat menggunakan ISR/SSG.
-export const dynamic = "force-dynamic";
+export async function generateStaticParams() {
+  return []; // Halaman detail di-generate secara statis on-demand (ISR) menggunakan ID ASCII (UUID/Slug)
+}
 
 const getReadingBySlug = cache((slug: string) => getLibraryItemBySlug("reading", slug));
 

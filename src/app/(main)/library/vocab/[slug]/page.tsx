@@ -70,12 +70,11 @@ interface VocabRef {
 }
 
 // ======================
-// KONFIGURASI RENDERING DINAMIS
+// KONFIGURASI STATIC GENERATION (ISR/SSG)
 // ======================
-// Halaman detail kosakata di-render secara dinamis untuk menghindari bug platform Vercel
-// di mana karakter Unicode (Jepang) dalam parameter rute menyebabkan crash pada
-// header HTTP x-next-cache-tags (ERR_INVALID_CHAR) saat menggunakan ISR/SSG.
-export const dynamic = "force-dynamic";
+export async function generateStaticParams() {
+  return []; // Halaman detail di-generate secara statis on-demand (ISR) menggunakan slug ASCII
+}
 
 // ======================
 // METADATA SEO
@@ -87,12 +86,12 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { id } = await params;
-  const decodedId = fullyDecode(id);
+  const { slug } = await params;
+  const decodedSlug = fullyDecode(slug);
 
-  const vocab = await getLibraryItemBySlug("vocab", decodedId);
+  const vocab = await getLibraryItemBySlug("vocab", decodedSlug);
 
   if (!vocab) {
     return {
@@ -101,7 +100,7 @@ export async function generateMetadata({
   }
 
   const romajiStr = typeof vocab.romaji === "string" ? vocab.romaji : "";
-  const vocabSlug = String(vocab.slug || decodedId);
+  const vocabSlug = String(vocab.slug || decodedSlug);
   return createPageMetadata({
     title: `${vocab.word || ""} (${vocab.meaning || ""}) | Kosakata Jepang`,
     description: `Pelajari arti, cara baca, romaji, contoh kalimat, dan penggunaan kata ${vocab.word || ""}${romajiStr ? ` (${romajiStr})` : ""} dalam bahasa Jepang.`,
@@ -127,12 +126,12 @@ export async function generateMetadata({
 export default async function VocabDetailPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }) {
-  const { id } = await params;
-  const decodedId = fullyDecode(id);
+  const { slug } = await params;
+  const decodedSlug = fullyDecode(slug);
 
-  const vocab = await getLibraryItemBySlug("vocab", decodedId);
+  const vocab = await getLibraryItemBySlug("vocab", decodedSlug);
 
   if (!vocab) return notFound();
 
@@ -142,7 +141,7 @@ export default async function VocabDetailPage({
 
   const isAdjective = hinshiList.some((h: string) => h.includes("adjective"));
   const isVerb = hinshiList.some((h: string) => h.includes("verb"));
-  const vocabSlug = String(vocab.slug || vocab.id || decodedId);
+  const vocabSlug = String(vocab.slug || vocab.id || decodedSlug);
   const vocabPath = `/library/vocab/${encodeRouteSegment(vocabSlug)}`;
   const vocabLevel = String(vocab.jlptLevel || vocab.jlpt_level || "").toUpperCase();
   const vocabWord = String(vocab.word || "");

@@ -236,7 +236,7 @@ export default function GrammarClient({ initialArticles = EMPTY_GRAMMAR_ARTICLES
                     <span className="text-[9px] md:text-[10px] font-black bg-[rgb(var(--primary-rgb)/0.1)] text-primary px-2 py-0.5 rounded-full border border-[rgb(var(--primary-rgb)/0.2)] uppercase shrink-0">
                       {article.jlptLevel || selectedLevel}
                     </span>
-                    <Link href={`/library/grammar/${article.slug}`} className="shrink-0">
+                    <Link href={`/library/grammar/${article.slug || article.id || article._id}`} className="shrink-0">
                       <Button
                         variant="outline"
                         className="px-3 h-8 text-[9px] md:text-[10px] font-black uppercase tracking-wider rounded-lg bg-muted border-border hover:bg-primary hover:text-primary-foreground transition-all duration-300"

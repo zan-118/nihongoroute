@@ -188,7 +188,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
                       {kanji.jlptLevel}
                     </span>
                   )}
-                  <Link href={`/library/kanji/${kanji.character}`} className="shrink-0">
+                  <Link href={`/library/kanji/${kanji.slug || kanji.id}`} className="shrink-0">
                     <Button
                       variant="outline"
                       className="px-3 h-8 text-[9px] md:text-[10px] font-black uppercase tracking-wider rounded-lg bg-muted border-border hover:bg-primary hover:text-primary-foreground transition-all duration-300"

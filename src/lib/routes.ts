@@ -28,9 +28,9 @@ export const ROUTES = {
   // ======================
   LIBRARY: {
     ROOT: "/library",
-    VOCAB: (slug: string) => `/library/vocab/${slugify(slug)}`,
-    KANJI: (character: string) => `/library/kanji/${character}`, // Kanji biasanya pake karakter tunggal
-    GRAMMAR: (slug: string) => `/library/grammar/${slugify(slug)}`,
+    VOCAB: (slug: string) => `/library/vocab/${slug}`,
+    KANJI: (slug: string) => `/library/kanji/${slug}`, // Menggunakan slug ASCII untuk stabilitas static
+    GRAMMAR: (slug: string) => `/library/grammar/${slug}`,
     READING: (slug: string) => `/library/reading/${slugify(slug)}`,
     CHEATSHEET: "/library/cheatsheet",
   },

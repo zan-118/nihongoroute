@@ -605,6 +605,68 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
             </div>
           </section>
         )}
+
+        {/* Kelompok Tata Bahasa (Grammar Family) */}
+        {Array.isArray(article.familyGrammarList) && article.familyGrammarList.length > 0 && (
+          <section className="mt-8">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="w-1.5 h-6 rounded-full bg-primary" />
+              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground select-none">
+                Kelompok Tata Bahasa (Keluarga {article.grammar_family})
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {article.familyGrammarList.map((item: any) => (
+                <Link key={item.id} href={`/library/grammar/${item.slug}`} className="block group">
+                  <Card className="p-5 bg-card/5 backdrop-blur-md border border-border group-hover:border-primary/40 rounded-[1.2rem] transition-all duration-300 shadow-[0_0_15px_rgba(var(--primary-rgb),0.02)] group-hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.05)]">
+                    <div className="flex justify-between items-center mb-2">
+                      <h3 className="font-bold text-foreground group-hover:text-primary transition-colors font-japanese">
+                        {item.title}
+                      </h3>
+                      <span className="text-[10px] font-black px-2 py-0.5 rounded border border-muted/30 text-muted-foreground uppercase tracking-wider">
+                        {item.jlpt_level}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground font-semibold line-clamp-2 leading-relaxed">
+                      {item.meaning}
+                    </p>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Tata Bahasa Terkait (Related Grammar) */}
+        {Array.isArray(article.relatedGrammarList) && article.relatedGrammarList.length > 0 && (
+          <section className="mt-8">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="w-1.5 h-6 rounded-full bg-secondary" />
+              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground select-none">
+                Tata Bahasa Terkait (Related Grammar)
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {article.relatedGrammarList.map((item: any) => (
+                <Link key={item.id} href={`/library/grammar/${item.slug}`} className="block group">
+                  <Card className="p-5 bg-card/5 backdrop-blur-md border border-border group-hover:border-secondary/40 rounded-[1.2rem] transition-all duration-300 shadow-[0_0_15px_rgba(var(--secondary-rgb),0.02)] group-hover:shadow-[0_0_20px_rgba(var(--secondary-rgb),0.05)]">
+                    <div className="flex justify-between items-center mb-2">
+                      <h3 className="font-bold text-foreground group-hover:text-secondary transition-colors font-japanese">
+                        {item.title}
+                      </h3>
+                      <span className="text-[10px] font-black px-2 py-0.5 rounded border border-muted/30 text-muted-foreground uppercase tracking-wider">
+                        {item.jlpt_level}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground font-semibold line-clamp-2 leading-relaxed">
+                      {item.meaning}
+                    </p>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
 
 

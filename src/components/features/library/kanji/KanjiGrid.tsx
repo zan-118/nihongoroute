@@ -22,6 +22,7 @@ export interface KanjiGridItem {
   character: string;
   jlpt?: string;
   meaning?: string;
+  slug?: string;
 }
 
 interface KanjiGridProps {
@@ -58,7 +59,7 @@ export function KanjiGrid({ kanjis, isFetching }: KanjiGridProps) {
               containIntrinsicSize: "0 180px",
             }}
           >
-            <Link href={`/library/kanji/${kanji.character}`}>
+            <Link href={`/library/kanji/${kanji.slug || kanji.id || kanji._id}`}>
               <Card className="group relative aspect-square flex flex-col items-center justify-center p-4 bg-card/75 border border-border hover:border-[rgb(var(--primary-rgb)/0.5)] transition-all duration-200 rounded-[2rem] overflow-hidden cursor-pointer">
                 {/* Efek Pendar Latar Belakang (Neon Glow Effect) */}
                 <div className="absolute inset-0 bg-gradient-to-br from-[rgb(var(--primary-rgb)/0.05)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
