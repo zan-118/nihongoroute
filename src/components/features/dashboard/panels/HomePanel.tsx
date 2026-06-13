@@ -17,9 +17,6 @@ import dynamic from "next/dynamic";
 import DashboardHero from "../DashboardHero";
 import DailyQuests from "../quests/DailyQuests";
 import DailyExpression from "../DailyExpression";
-import DailyRoutePanel from "@/components/features/ecosystem/DailyRoutePanel";
-import LearningTimelinePanel from "@/components/features/ecosystem/LearningTimelinePanel";
-import NextActionPanel from "@/components/features/ecosystem/NextActionPanel";
 import { Variants } from "framer-motion";
 import { RandomExpression } from "@/actions/expressions.actions";
 
@@ -89,10 +86,6 @@ export function HomePanel({
             }>;
           }>}
         />
-
-        <DailyRoutePanel compact />
-
-        <NextActionPanel />
         
         <section className="space-y-[34px]">
           <div className="flex flex-col gap-2">
@@ -118,7 +111,6 @@ export function HomePanel({
         <div className="sticky top-[100px] space-y-[21px]">
           <DailyQuests />
           <DailyExpression expression={expression} />
-          <LearningTimelinePanel compact />
         </div>
       </aside>
 

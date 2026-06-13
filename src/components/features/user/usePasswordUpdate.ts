@@ -72,7 +72,7 @@ export function usePasswordUpdate() {
       
       // Redirect setelah 3 detik
       setTimeout(() => {
-        router.push("/");
+        router.push("/dashboard");
       }, 3000);
       
     } catch (error: unknown) {

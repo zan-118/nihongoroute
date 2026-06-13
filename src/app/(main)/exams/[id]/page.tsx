@@ -56,9 +56,7 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
   const decodedId = decodeURIComponent(id);
   const examData = await getExamByIdOrSlug(decodedId);
 
-  const backLink = examData?.categorySlug
-    ? `/courses/${examData.categorySlug}`
-    : "/courses";
+  const backLink = "/exams";
 
 
   // ======================

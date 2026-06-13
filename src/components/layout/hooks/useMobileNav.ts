@@ -25,7 +25,7 @@ export function useMobileNav() {
     { href: "/review", icon: BrainCircuit, label: "Hafalan" },
     { href: "/library", icon: Library, label: "Pustaka" },
     { 
-      href: isAuthenticated ? "/dashboard" : "/login", 
+      href: isAuthenticated ? "/settings" : "/login", 
       icon: isAuthenticated ? User : LogIn, 
       label: isAuthenticated ? (userFullName ? userFullName.split(' ')[0].substring(0, 7) : "Profil") : "Masuk" 
     },

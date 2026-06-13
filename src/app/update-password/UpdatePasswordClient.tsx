@@ -94,7 +94,7 @@ export default function UpdatePasswordClient() {
           </form>
         ) : (
           <Link
-            href="/"
+            href="/dashboard"
             className="block text-center w-full py-3.5 px-4 bg-muted/60 hover:bg-muted/80 text-foreground border border-border/80 rounded-xl font-bold uppercase tracking-widest text-xs transition-colors duration-300 active:scale-[0.98]"
           >
             Lanjutkan ke Dashboard

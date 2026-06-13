@@ -9,6 +9,7 @@
 // IMPOR
 // ======================
 import type { Metadata, Viewport } from "next";
+import { Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
@@ -19,6 +20,13 @@ import { LazyMotion, domAnimation } from "framer-motion";
 import Script from "next/script";
 import { JsonLd } from "@/components/seo/JsonLd";
 import DeferredOnboardingTour from "@/components/providers/DeferredOnboardingTour";
+
+const notoSansJp = Noto_Sans_JP({
+  subsets: ["latin"],
+  weight: ["400", "700", "900"],
+  variable: "--font-noto-jp",
+  display: "swap",
+});
 import {
   DEFAULT_DESCRIPTION,
   DEFAULT_OG_IMAGE,
@@ -117,7 +125,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" suppressHydrationWarning>
+    <html lang="id" className={notoSansJp.variable} suppressHydrationWarning>
       <body
         suppressHydrationWarning
         className="font-sans antialiased text-foreground selection:bg-destructive selection:text-destructive-foreground transition-colors duration-300"

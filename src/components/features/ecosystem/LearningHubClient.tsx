@@ -45,10 +45,10 @@ const QUICK_LINKS = [
     className: "border-success/25 bg-success/10 text-success",
   },
   {
-    title: "Library",
-    description: "Cari sumber baru untuk memulai sesi belajar.",
-    href: "/library",
-    icon: Library,
+    title: "Materi",
+    description: "Ikuti kurikulum pelajaran terstruktur tingkat JLPT.",
+    href: "/courses",
+    icon: BookOpen,
     className: "border-warning/25 bg-warning/10 text-warning",
   },
 ];

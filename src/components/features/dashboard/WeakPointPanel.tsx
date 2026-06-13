@@ -92,29 +92,66 @@ export default function WeakPointPanel() {
       const leechesIds = weakCandidates.map((item) => item.id);
       setLoading(true);
 
+      const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      const uuids = leechesIds.filter(id => UUID_REGEX.test(id));
+      const nonUuids = leechesIds.filter(id => !UUID_REGEX.test(id));
+
       try {
         const supabase = createClient();
-        
+        let vocabData: any[] = [];
+        let kanjiData: any[] = [];
+
         // 2. Ambil data pelengkap dari tabel 'vocab'
-        const { data: vocabData, error: vocabErr } = await supabase
-          .from("vocab")
-          .select("id, word, romaji, furigana, slug")
-          .in("id", leechesIds);
+        if (uuids.length > 0 || nonUuids.length > 0) {
+          let vocabQuery = supabase.from("vocab").select("id, word, romaji, furigana, slug");
+          if (uuids.length > 0 && nonUuids.length > 0) {
+            vocabQuery = vocabQuery.or(`id.in.(${uuids.map(id => `"${id}"`).join(",")}),slug.in.(${nonUuids.map(slug => `"${slug}"`).join(",")})`);
+          } else if (uuids.length > 0) {
+            vocabQuery = vocabQuery.in("id", uuids);
+          } else {
+            vocabQuery = vocabQuery.in("slug", nonUuids);
+          }
+          const { data, error: vocabErr } = await vocabQuery;
+          if (vocabErr) {
+            console.error("Error fetching weak vocab:", vocabErr);
+          } else {
+            vocabData = data || [];
+          }
+        }
 
         // 3. Ambil data pelengkap dari tabel 'kanji'
-        const { data: kanjiData, error: kanjiErr } = await supabase
-          .from("kanji")
-          .select("id, character, meaning")
-          .in("id", leechesIds);
-
-        if (vocabErr) console.error("Error fetching weak vocab:", vocabErr);
-        if (kanjiErr) console.error("Error fetching weak kanji:", kanjiErr);
+        if (uuids.length > 0 || nonUuids.length > 0) {
+          let kanjiQuery = supabase.from("kanji").select("id, character, meaning");
+          if (uuids.length > 0 && nonUuids.length > 0) {
+            kanjiQuery = kanjiQuery.or(`id.in.(${uuids.map(id => `"${id}"`).join(",")}),character.in.(${nonUuids.map(char => `"${char}"`).join(",")})`);
+          } else if (uuids.length > 0) {
+            kanjiQuery = kanjiQuery.in("id", uuids);
+          } else {
+            kanjiQuery = kanjiQuery.in("character", nonUuids);
+          }
+          const { data, error: kanjiErr } = await kanjiQuery;
+          if (kanjiErr) {
+            console.error("Error fetching weak kanji:", kanjiErr);
+          } else {
+            kanjiData = data || [];
+          }
+        }
 
         // 4. Gabungkan data dari kedua tabel
         const mergedList: WeakItem[] = [];
 
-        const vocabMap = new Map(vocabData?.map((v) => [v.id, v]) ?? []);
-        const kanjiMap = new Map(kanjiData?.map((k) => [k.id, k]) ?? []);
+        const vocabMap = new Map<string, any>();
+        vocabData.forEach((v) => {
+          vocabMap.set(v.id, v);
+          if (v.slug) vocabMap.set(v.slug, v);
+          if (v.word) vocabMap.set(v.word, v);
+        });
+
+        const kanjiMap = new Map<string, any>();
+        kanjiData.forEach((k) => {
+          kanjiMap.set(k.id, k);
+          if (k.character) kanjiMap.set(k.character, k);
+        });
 
         weakCandidates.forEach((leech) => {
           // Cari kecocokan di vocab

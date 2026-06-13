@@ -95,6 +95,60 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        source: "/library/vocab/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=3600, stale-while-revalidate=59",
+          },
+        ],
+      },
+      {
+        source: "/library/kanji/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=3600, stale-while-revalidate=59",
+          },
+        ],
+      },
+      {
+        source: "/library/grammar/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=3600, stale-while-revalidate=59",
+          },
+        ],
+      },
+      {
+        source: "/library/reading/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=3600, stale-while-revalidate=59",
+          },
+        ],
+      },
+      {
+        source: "/library/listening/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=3600, stale-while-revalidate=59",
+          },
+        ],
+      },
+      {
+        source: "/library/cheatsheet/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=3600, stale-while-revalidate=59",
+          },
+        ],
+      },
     ];
   },
 };
