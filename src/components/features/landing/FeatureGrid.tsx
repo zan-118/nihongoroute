@@ -47,11 +47,10 @@ const containerVariants: Variants = {
 };
 
 const itemVariants: Variants = {
-  hidden: { y: 30, opacity: 0 },
+  hidden: { opacity: 0 },
   visible: {
-    y: 0,
     opacity: 1,
-    transition: { type: "spring", stiffness: 80, damping: 15 },
+    transition: { duration: 0.4, ease: "easeOut" },
   },
 };
 

@@ -15,8 +15,8 @@ export function Hero() {
 
       <div className="relative z-10 flex-1 flex flex-col items-center lg:items-start text-center lg:text-left max-w-2xl">
         <m.div
-          initial={{ y: -16, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           className="mb-7"
         >
           <Badge variant="outline" className="brand-pill shadow-none">
@@ -41,9 +41,9 @@ export function Hero() {
         </m.div>
 
         <m.h1
-          initial={{ y: 28, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
           className="text-[3.35rem] sm:text-6xl md:text-7xl lg:text-[5.95rem] font-black tracking-[-0.07em] leading-[0.92] text-foreground mb-7"
         >
           Kuasai <br />
@@ -58,9 +58,9 @@ export function Hero() {
         </m.h1>
 
         <m.p
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.42 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.35 }}
           className="text-muted-foreground text-base md:text-lg max-w-xl mb-10 leading-relaxed font-semibold text-balance"
         >
           Belajar bahasa Jepang di NihongoRoute dengan jalur yang rapi: kana,
@@ -69,9 +69,9 @@ export function Hero() {
         </m.p>
 
         <m.div
-          initial={{ y: 18, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.58 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.45 }}
           className="flex flex-col sm:flex-row gap-3.5 w-full sm:w-auto"
         >
           <Button

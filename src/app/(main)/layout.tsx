@@ -12,6 +12,7 @@ import { ReactNode } from "react";
 import { ProgressProvider } from "@/components/providers/ProgressProvider";
 import NavWrapper from "@/components/layout/NavWrapper";
 import AppClientAddons from "@/components/providers/AppClientAddons";
+import DeferredOnboardingTour from "@/components/providers/DeferredOnboardingTour";
 
 // ======================
 // EKSEKUSI UTAMA
@@ -23,6 +24,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
         {children}
       </NavWrapper>
       <AppClientAddons />
+      <DeferredOnboardingTour />
     </ProgressProvider>
   );
 }

@@ -19,7 +19,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { LazyMotion, domAnimation } from "framer-motion";
 import Script from "next/script";
 import { JsonLd } from "@/components/seo/JsonLd";
-import DeferredOnboardingTour from "@/components/providers/DeferredOnboardingTour";
 
 const notoSansJp = Noto_Sans_JP({
   subsets: ["latin"],
@@ -156,7 +155,6 @@ export default function RootLayout({
           <LazyMotion features={domAnimation}>
             <QueryProvider>
               {children}
-              <DeferredOnboardingTour />
             </QueryProvider>
           </LazyMotion>
           <Toaster

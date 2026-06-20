@@ -1,5 +1,3 @@
-"use client";
-
 /**
  * @file TrustBanner.tsx
  * @description Komponen spanduk kepercayaan (Trust Banner) untuk Landing Page NihongoRoute.
@@ -15,7 +13,6 @@
 // ==========================================
 import React from "react";
 import Link from "next/link";
-import { m } from "framer-motion";
 import { 
   ShieldCheck, 
   ArrowRight, 
@@ -37,12 +34,7 @@ import { Badge } from "@/components/ui/badge";
  */
 export function TrustBanner() {
   return (
-    <m.section
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="w-full mb-[120px]"
-    >
+    <section className="w-full mb-[120px]">
       <Card className="p-6 sm:p-10 md:p-12 rounded-2xl premium-surface relative overflow-hidden group transition-all duration-700 hover:border-primary/30">
         
         {/* Latar Belakang Kilau Dekoratif menggunakan variabel warna CSS */}
@@ -139,6 +131,6 @@ export function TrustBanner() {
         </div>
  
       </Card>
-    </m.section>
+    </section>
   );
 }
