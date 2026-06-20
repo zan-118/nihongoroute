@@ -220,32 +220,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("[Sitemap] Gagal mengambil data editorial dari Sanity:", err);
   }
 
-  const [vocabRows, kanjiRows, grammarRows, cheatsheetRows] = await Promise.all([
-    fetchAllSupabaseRows("vocab", "slug, created_at", "created_at"),
-    fetchAllSupabaseRows("kanji", "slug, created_at", "created_at"),
+  const [grammarRows, cheatsheetRows] = await Promise.all([
     fetchAllSupabaseRows("grammar", "slug, created_at", "created_at"),
     fetchAllSupabaseRows("cheatsheets", "slug, created_at, updated_at", "updated_at"),
   ]);
-
-  for (const item of vocabRows) {
-    if (!item.slug) continue;
-    addUniqueEntry(urls, seen, {
-      changeFrequency: "monthly",
-      lastModified: item.created_at,
-      path: `/library/vocab/${encodeRouteSegment(item.slug)}`,
-      priority: 0.62,
-    });
-  }
-
-  for (const item of kanjiRows) {
-    if (!item.slug) continue;
-    addUniqueEntry(urls, seen, {
-      changeFrequency: "monthly",
-      lastModified: item.created_at,
-      path: `/library/kanji/${encodeRouteSegment(item.slug)}`,
-      priority: 0.62,
-    });
-  }
 
   for (const item of grammarRows) {
     if (!item.slug) continue;

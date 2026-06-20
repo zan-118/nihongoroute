@@ -55,7 +55,7 @@ export async function generateMetadata({
     description: sheet
       ? `Pelajari cheatsheet tabel referensi cepat untuk ${sheet.title}, lengkap dengan versi PDF untuk belajar offline.`
       : "Kumpulan tabel cheatsheet referensi cepat untuk materi tata bahasa, angka, partikel, dan kosakata Jepang.",
-    path: `/library/cheatsheet/${encodeRouteSegment(decodedId)}`,
+    path: `/library/cheatsheet/${encodeRouteSegment(sheet?.slug || decodedId)}`,
     keywords: [
       String(sheet?.title || ""),
       String(sheet?.category || ""),
