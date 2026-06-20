@@ -50,7 +50,7 @@ interface FAQItem {
 const FAQS_MOCK: FAQItem[] = [
   {
     question: "Apakah NihongoRoute akan selalu gratis dan bebas iklan?",
-    answer: "Ya! Komitmen utama NihongoRoute adalah menyediakan akses belajar bahasa Jepang yang setara, modern, dan 100% bebas dari iklan banner yang merusak fokus belajar siswa.",
+    answer: "Ya! Komitmen utama NihongoRoute adalah menyediakan akses belajar bahasa Jepang yang setara, modern, dan 100% bebas dari iklan banner yang merusak fokus belajar member.",
   },
   {
     question: "Ke mana seluruh dana dukungan saya disalurkan?",
@@ -355,7 +355,7 @@ export default function SupportClient() {
               <span className="text-[10px] font-black uppercase text-warning tracking-widest block mb-1">Database Server</span>
               <span className="text-sm font-black text-foreground block">Supabase: Rp 150K/bln</span>
               <p className="text-[10px] text-muted-foreground/80 leading-relaxed font-semibold italic mt-1">
-                Menyimpan kosakata, ulasan SRS, dan data kemajuan siswa secara luring.
+                Menyimpan kosakata, ulasan SRS, dan data kemajuan member secara luring.
               </p>
             </div>
             <div className="p-4 rounded-2xl border border-border/50 bg-card/30 hover:border-primary/50 hover:bg-primary/[0.02] transition-all duration-200">

@@ -1,6 +1,6 @@
 # NihongoRoute Architecture
 
-Audit snapshot: 2026-06-09
+Audit snapshot: 2026-06-20
 
 This document describes the codebase as it exists now. It is based on the local repository structure, application routes, Supabase migrations, Sanity schemas, server actions, stores, hooks, tests, and configuration files.
 
@@ -153,15 +153,19 @@ The codebase intentionally uses a split-source model.
 Supabase is used for:
 
 - Auth sessions and OAuth/email/anonymous login.
-- Public structured library data: `course_categories`, `kanji`, `vocab`, `grammar`, `cheatsheets`, and legacy/public tables for `lessons`, `reading_material`, `listening_material`, `exams`.
+- Public structured library data: `course_categories`, `kanji`, `vocab`, `grammar`, `lessons`, `cheatsheets`.
+- JLPT exam bank: `jlpt_exam_templates`, `jlpt_passages`, `jlpt_questions`, `jlpt_exam_template_questions`.
 - User-owned progress: `profiles`, `user_srs`, `user_lessons`.
+- User exam sessions: `user_exam_sessions`, `user_exam_answers`.
+- Community: `community_posts`, `community_comments`.
 - Feedback: `user_feedback`.
 - Supporter records: `supporters`.
 - TTS cache metadata: `tts_cache` as referenced by code and scripts.
 - TTS audio storage bucket: `tts-cache` as referenced by code and scripts.
-- Extra content tables referenced by code/scripts: `expressions`, `sentences`, `radicals`.
+- Exam assets storage bucket: `exam-assets`.
+- Auxiliary content tables: `expressions`, `sentences`, `radicals`.
 
-The live database includes `tts_cache`, `expressions`, `sentences`, `radicals`, and the `tts-cache` storage bucket. These live resources are now captured in the migration drift fix `supabase/migrations/20260609080000_sync_live_schema_drift.sql`.
+All database objects are captured in a single consolidated migration: `supabase/migrations/20260620130000_initial_schema.sql`.
 
 ### Sanity
 
@@ -194,7 +198,7 @@ Client helpers:
 - `src/lib/supabase/middleware.ts`: session refresh in proxy.
 - `src/lib/supabase/sync.ts`: local-to-cloud migration and merge support.
 
-Main database objects from migrations:
+Main database objects from migration (`20260620130000_initial_schema.sql`):
 
 - `course_categories`
 - `profiles`
@@ -202,18 +206,23 @@ Main database objects from migrations:
 - `vocab`
 - `grammar`
 - `lessons`
-- `reading_material`
-- `listening_material`
-- `user_srs`
-- `user_lessons`
-- `exams`
 - `cheatsheets`
-- `user_feedback`
-- `supporters`
 - `expressions`
 - `radicals`
 - `sentences`
 - `tts_cache`
+- `supporters`
+- `user_srs`
+- `user_lessons`
+- `user_feedback`
+- `jlpt_exam_templates`
+- `jlpt_passages`
+- `jlpt_questions`
+- `jlpt_exam_template_questions`
+- `user_exam_sessions`
+- `user_exam_answers`
+- `community_posts`
+- `community_comments`
 
 Main functions/triggers:
 
@@ -222,8 +231,9 @@ Main functions/triggers:
 - `validate_profile_integrity`
 - `protect_srs_logic`
 - `handle_new_user`
-- `sync_user_progress`
+- `sync_user_progress` (10-arg version with anti-cheat, daily bonus cap, achievement bonus)
 - `update_vocab_examples`
+- `update_community_post_comments_count`
 
 RLS model:
 
@@ -538,12 +548,13 @@ Quality and operational guardrails added to the repository:
 
 ## Known Architectural Boundaries
 
-- Sanity content is editorial/static; Supabase remains the source for auth, progress, core lexical data, categories, supporters, and several operational/cache tables.
+- Sanity content is editorial/static; Supabase remains the source for auth, progress, core lexical data, categories, JLPT exam bank, community, supporters, and several operational/cache tables.
+- Legacy tables (`reading_material`, `listening_material`, `exams`) have been dropped; that content is now fully served from Sanity.
 - Service-role Supabase access belongs only in server route handlers/actions/scripts.
 - Offline-first state is local-first and later reconciled with Supabase.
 - Destructive local deletes for SRS/lesson progress are represented by dirty deleted states before cloud sync removes rows. SRS tombstones are preserved through merge when cloud still has the card, and pure payload builders keep delete requests testable.
 - TTS audio is generated offline by scripts, not in `/api/tts`.
-- The live database had drifted ahead of the earlier migration set. `20260609080000_sync_live_schema_drift.sql` captures `tts_cache`, `expressions`, `sentences`, `radicals`, the `tts-cache` bucket, user SRS uniqueness, auth-owned FK cleanup, and live editorial columns.
+- All database objects are consolidated in a single migration: `supabase/migrations/20260620130000_initial_schema.sql`.
 
 ## Maintenance Checklist
 

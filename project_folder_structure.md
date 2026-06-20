@@ -1,6 +1,6 @@
 # NihongoRoute Project Folder Structure
 
-Audit snapshot: 2026-06-09
+Audit snapshot: 2026-06-20
 
 This document maps the repository as it exists now. It focuses on source code, configuration, data schema, tests, and maintenance scripts. Generated directories such as `.next`, `node_modules`, and `dist` are intentionally called out but not expanded.
 
@@ -145,7 +145,10 @@ src/app/
 |   |   |-- ShareClient.tsx
 |   |-- social/
 |   |   |-- page.tsx
+|   |   |-- SocialClient.tsx
 |   |   |-- LeaderboardClient.tsx
+|   |   |-- CommunityFeed.tsx
+|   |   |-- hooks/
 |   |-- support/
 |   |   |-- page.tsx
 |   |   |-- SupportClient.tsx
@@ -361,21 +364,10 @@ The custom Studio components call app API routes for Supabase search, category s
 ```text
 supabase/
 |-- migrations/
-|   |-- 20260517000000_initial_schema.sql
-|   |-- 20260520183000_db_performance_security_optimization.sql
-|   |-- 20260521000000_add_custom_mnemonic.sql
-|   |-- 20260521001000_fix_sync_user_progress_return_xp.sql
-|   |-- 20260527033500_add_achievements_xp_to_sync_user_progress.sql
-|   |-- 20260527041500_create_supporters_table.sql
-|   |-- 20260604000000_add_order_number_to_grammar.sql
-|   |-- 20260604001000_add_order_number_to_n3_grammar.sql
-|   |-- 20260604002000_add_order_number_to_n2_grammar.sql
-|   |-- 20260604003000_add_order_number_to_n1_grammar.sql
-|   |-- 20260609080000_sync_live_schema_drift.sql
-|   |-- 20260612000000_expand_sentences_table.sql
+|   |-- 20260620130000_initial_schema.sql    Consolidated initial schema (all tables, functions, triggers, indexes, RLS, storage)
 ```
 
-Declared tables in migrations:
+Declared tables in migration:
 
 - `course_categories`
 - `profiles`
@@ -383,19 +375,25 @@ Declared tables in migrations:
 - `vocab`
 - `grammar`
 - `lessons`
-- `reading_material`
-- `listening_material`
+- `cheatsheets`
+- `expressions`
+- `radicals`
+- `sentences`
+- `tts_cache`
+- `supporters`
 - `user_srs`
 - `user_lessons`
-- `exams`
-- `cheatsheets`
 - `user_feedback`
-- `supporters`
-- `tts_cache`
-- `expressions`
-- `sentences`
-- `radicals`
+- `jlpt_exam_templates`
+- `jlpt_passages`
+- `jlpt_questions`
+- `jlpt_exam_template_questions`
+- `user_exam_sessions`
+- `user_exam_answers`
+- `community_posts`
+- `community_comments`
 - storage bucket `tts-cache`
+- storage bucket `exam-assets`
 
 ## Public Assets
 

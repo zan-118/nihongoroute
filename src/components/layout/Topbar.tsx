@@ -9,9 +9,10 @@
 // IMPOR
 // ======================
 import { useState, useEffect } from "react";
-import { Search, Bell, Menu, Cloud, RefreshCw, CloudOff, CloudUpload, ChevronLeft, BookOpen, Eye, EyeOff } from "lucide-react";
+import { Search, Bell, Menu, Cloud, RefreshCw, CloudOff, CloudUpload, ChevronLeft, BookOpen, Eye, EyeOff, Share2 } from "lucide-react";
 import { m, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { useUIStore } from "@/store/useUIStore";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useNavbar } from "@/components/layout/hooks/useNavbar";
@@ -38,6 +39,28 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
   const breadcrumbItems = getBreadcrumbItems(pathname);
   const currentRouteLabel = getCurrentRouteLabel(pathname);
   const parentRouteLabel = getParentRouteLabel(pathname);
+  const handleSharePage = async () => {
+    const shareData = {
+      title: document.title || "NihongoRoute",
+      text: "Ayo belajar Bahasa Jepang di NihongoRoute!",
+      url: window.location.origin + pathname,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.log("Batal/Gagal share:", err);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(window.location.origin + pathname);
+        toast.success("Tautan halaman berhasil disalin!");
+      } catch (err) {
+        console.error("Gagal menyalin tautan:", err);
+      }
+    }
+  };
 
   // Pintasan global CMD+K
   useEffect(() => {
@@ -216,6 +239,15 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
           <div className="hidden sm:flex">
             <ThemeToggle />
           </div>
+
+          <m.button
+            whileTap={{ scale: 0.9 }}
+            onClick={handleSharePage}
+            aria-label="Bagikan Halaman Ini"
+            className="size-11 flex items-center justify-center rounded-xl action-icon text-muted-foreground hover:text-primary transition-all"
+          >
+            <Share2 size={18} />
+          </m.button>
 
           <div className="flex items-center gap-2 relative">
              <m.button 

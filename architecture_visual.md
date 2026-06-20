@@ -1,6 +1,6 @@
 # NihongoRoute Architecture Visuals
 
-Audit snapshot: 2026-06-09
+Audit snapshot: 2026-06-20
 
 The diagrams below mirror the current codebase. They use Mermaid so they can be rendered by GitHub, many Markdown viewers, and documentation tools.
 
@@ -69,11 +69,14 @@ flowchart TB
 flowchart LR
   subgraph Supabase["Supabase"]
     Auth["Auth"]
-    PublicTables["course_categories, vocab, kanji, grammar, cheatsheets"]
+    PublicTables["course_categories, vocab, kanji, grammar, cheatsheets, lessons"]
     UserTables["profiles, user_srs, user_lessons"]
+    ExamBank["jlpt_exam_templates, jlpt_passages,\njlpt_questions, jlpt_exam_template_questions"]
+    ExamProgress["user_exam_sessions, user_exam_answers"]
+    Community["community_posts, community_comments"]
     Supporters["supporters"]
     OpsTables["tts_cache, expressions, sentences, radicals"]
-    Storage["storage bucket: tts-cache"]
+    Storage["storage: tts-cache, exam-assets"]
     RPC["sync_user_progress RPC"]
   end
 
@@ -90,6 +93,7 @@ flowchart LR
     Exams["exam pages"]
     Dashboard["dashboard"]
     Tools["tools/review/flashcards/dictation"]
+    Social["social/community"]
     StudioBridge["admin bridge APIs"]
   end
 
@@ -98,20 +102,22 @@ flowchart LR
   Library --> PublicTables
   Library --> Reading
   Library --> Listening
-  Exams --> MockExam
-  Exams --> PublicTables
+  Exams --> ExamBank
+  Exams --> ExamProgress
   Dashboard --> UserTables
   Dashboard --> PublicTables
   Tools --> PublicTables
   Tools --> UserTables
   Tools --> Storage
   Tools --> OpsTables
+  Social --> Community
+  Social --> UserTables
   StudioBridge --> PublicTables
   StudioBridge --> Sanity
   UserTables --> RPC
 ```
 
-Note: `tts_cache`, `expressions`, `sentences`, `radicals`, and the `tts-cache` bucket exist in the live database and are captured by `supabase/migrations/20260609080000_sync_live_schema_drift.sql`.
+All database objects are consolidated in `supabase/migrations/20260620130000_initial_schema.sql`.
 
 ## Request Flow for Normal Pages
 
@@ -273,8 +279,10 @@ flowchart TB
   LibraryGrammar["Library grammar"] --> Grammar["grammar"]
   LibraryReading["Library reading"] --> Reading["Sanity readingMaterial"]
   LibraryListening["Library listening"] --> Listening["Sanity listeningMaterial"]
-  Exams["Exams"] --> MockExam["Sanity mockExam"]
+  ExamsPage["Exams"] --> ExamBank["jlpt_exam_templates + questions"]
+  ExamsPage --> ExamSessions["user_exam_sessions + answers"]
   Review["Review/SRS"] --> UserSRS["user_srs + local SRS store"]
+  Social["Social"] --> Community["community_posts + comments"]
   Support["Support"] --> Supporters["supporters"]
 ```
 

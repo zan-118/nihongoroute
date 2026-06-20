@@ -28,7 +28,7 @@
  * TOKOH PRIA:
  * 1. BUDI     -> VOICEVOX: Aoyama Ryuusei (ID 13). Peran: Narator Utama Pria / Guru Pria.
  *                Karakteristik: Suara bariton, tenang, berwibawa, intonasi mantap & formal.
- * 2. DITO     -> VOICEVOX: Kuronou Takehiro (ID 11). Peran: Siswa SMA / Pemuda.
+ * 2. DITO     -> VOICEVOX: Kuronou Takehiro (ID 11). Peran: Member SMA / Pemuda.
  *                Karakteristik: Tenang, kasual, ramah.
  * 3. SUZUKI   -> VOICEVOX: Kenzaki Mesu (ID 21). Peran: Pekerja Kantor / Pegawai Kereta.
  *                Karakteristik: Formal, tegas, intonasi profesional.
@@ -138,7 +138,7 @@ export const VOICE_CHARACTERS: Record<string, VoiceCharacter> = {
     voicevoxName: "Kuronou Takehiro",
     speakerId: 11,
     gender: "male",
-    role: "Remaja / Siswa SMA",
+    role: "Remaja / Member SMA",
     description: "Tenang, kasual, ramah.",
   },
   suzuki: {
@@ -296,7 +296,7 @@ export const SPEAKER_MAP: Record<string, TtsVoice> = {
   "budi": TTS_VOICES.BUDI,
   "ブディ": TTS_VOICES.BUDI,
 
-  // === DITO (玄野武宏 / Kuronou Takehiro) — Siswa SMA ===
+  // === DITO (玄野武宏 / Kuronou Takehiro) — Member SMA ===
   "dito": TTS_VOICES.DITO,
   "ディト": TTS_VOICES.DITO,
 

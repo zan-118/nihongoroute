@@ -59,7 +59,7 @@ export function ExamResult({
     () => calculateScore(),
     [calculateScore]
   );
-  const userFullName = useUserStore(s => s.name) || "Siswa NihongoRoute";
+  const userFullName = useUserStore(s => s.name) || "Member NihongoRoute";
 
   const regNo = useMemo(() => {
     const prefix = exam.title.toLowerCase().includes("jft") ? "JFT" : "JLPT";

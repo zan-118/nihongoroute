@@ -13,11 +13,20 @@ import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, Medal, Flame, Search, Crown, X } from "lucide-react";
+import { Trophy, Medal, Flame, Search, Crown, X, Lock, Target, Calendar } from "lucide-react";
 import { m, AnimatePresence } from "framer-motion";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { get as idbGet, set as idbSet } from "idb-keyval";
 import { useUserStore } from "@/store/useUserStore";
+import confetti from "canvas-confetti";
+import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 // ======================
 // TIPE DATA
@@ -29,6 +38,7 @@ interface LeaderboardUser {
   level: number;
   streak: number;
   avatar_url?: string;
+  study_days?: Record<string, number>;
 }
 
 type RankedLeaderboardUser = LeaderboardUser & { rank: number | null };
@@ -38,6 +48,8 @@ export default function LeaderboardClient() {
   const [isOffline, setIsOffline] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const deferredSearchQuery = useDeferredValue(searchQuery);
+  const [activeTab, setActiveTab] = useState<"top_global" | "around_me">("top_global");
+  const [selectedUser, setSelectedUser] = useState<LeaderboardUser | null>(null);
   const supabase = useMemo(() => createClient(), []);
   const queryClient = useQueryClient();
 
@@ -90,48 +102,114 @@ export default function LeaderboardClient() {
   }, []);
 
   // 4. React Query untuk pengambilan data latar belakang, caching SWR, dan kalkulasi peringkat sendiri
-  const { data, isLoading, isFetching } = useQuery<{ users: LeaderboardUser[]; ownRank: number | null }>({
-    queryKey: ["leaderboard"],
+  const { data, isLoading, isFetching } = useQuery<{ users: LeaderboardUser[]; ownRank: number | null; customRanks?: Record<string, number> }>({
+    queryKey: ["leaderboard", activeTab],
     queryFn: async () => {
-      const { data: topUsers, error } = await supabase
-        .from("profiles")
-        .select("id, full_name, xp, level, streak, avatar_url")
-        .order("xp", { ascending: false })
-        .limit(20);
-
-      if (error) throw error;
-      
-      const freshUsers = (topUsers || []) as LeaderboardUser[];
-      
-      // Simpan ke IndexedDB
-      try {
-        await idbSet("nihongoroute_ui_data_leaderboard", freshUsers);
-      } catch (err) {
-        console.error("Gagal menyimpan cache leaderboard:", err);
-      }
-
-      // Hitung peringkat absolut jika terautentikasi
-      let ownRank: number | null = null;
       const currentUserState = useUserStore.getState();
       const userId = currentUserState.id;
       const userXp = currentUserState.xp;
       const userIsGuest = currentUserState.isGuest;
 
-      if (!userIsGuest && userId && userId !== "guest") {
-        const { count, error: rankError } = await supabase
+      if (activeTab === "top_global") {
+        const { data: topUsers, error } = await supabase
           .from("profiles")
-          .select("id", { count: "exact", head: true })
-          .gt("xp", userXp);
+          .select("id, full_name, xp, level, streak, avatar_url, study_days")
+          .order("xp", { ascending: false })
+          .limit(20);
 
-        if (!rankError && count !== null) {
-          ownRank = count + 1;
+        if (error) throw error;
+        
+        const freshUsers = (topUsers || []) as LeaderboardUser[];
+        
+        // Simpan ke IndexedDB
+        try {
+          await idbSet("nihongoroute_ui_data_leaderboard", freshUsers);
+        } catch (err) {
+          console.error("Gagal menyimpan cache leaderboard:", err);
         }
-      }
 
-      return {
-        users: freshUsers,
-        ownRank,
-      };
+        // Hitung peringkat absolut jika terautentikasi
+        let ownRank: number | null = null;
+
+        if (!userIsGuest && userId && userId !== "guest") {
+          const { count, error: rankError } = await supabase
+            .from("profiles")
+            .select("id", { count: "exact", head: true })
+            .gt("xp", userXp);
+
+          if (!rankError && count !== null) {
+            ownRank = count + 1;
+          }
+        }
+
+        return {
+          users: freshUsers,
+          ownRank,
+        };
+      } else {
+        // Tab "around_me"
+        if (userIsGuest || !userId || userId === "guest") {
+          return { users: [], ownRank: null };
+        }
+
+        // Ambil 3 user di atas user aktif
+        const { data: aboveUsers, error: errorAbove } = await supabase
+          .from("profiles")
+          .select("id, full_name, xp, level, streak, avatar_url, study_days")
+          .gt("xp", userXp)
+          .order("xp", { ascending: true })
+          .limit(3);
+
+        if (errorAbove) throw errorAbove;
+
+        // Ambil 3 user di bawah user aktif
+        const { data: belowUsers, error: errorBelow } = await supabase
+          .from("profiles")
+          .select("id, full_name, xp, level, streak, avatar_url, study_days")
+          .lt("xp", userXp)
+          .order("xp", { ascending: false })
+          .limit(3);
+
+        if (errorBelow) throw errorBelow;
+
+        // Ambil data user aktif secara fresh
+        const { data: ownProfile, error: errorOwn } = await supabase
+          .from("profiles")
+          .select("id, full_name, xp, level, streak, avatar_url, study_days")
+          .eq("id", userId)
+          .single();
+
+        if (errorOwn) throw errorOwn;
+
+        // Gabungkan: Di atas (dibalik agar urutan menurun), Sendiri, Di bawah
+        const combined = [
+          ...[...(aboveUsers || [])].reverse(),
+          ownProfile,
+          ...(belowUsers || [])
+        ] as LeaderboardUser[];
+
+        // Hitung rank absolut untuk masing-masing user secara paralel
+        const customRanks: Record<string, number> = {};
+        await Promise.all(
+          combined.map(async (u) => {
+            const { count, error: rankErr } = await supabase
+              .from("profiles")
+              .select("id", { count: "exact", head: true })
+              .gt("xp", u.xp);
+            if (!rankErr && count !== null) {
+              customRanks[u.id] = count + 1;
+            } else {
+              customRanks[u.id] = 1;
+            }
+          })
+        );
+
+        return {
+          users: combined,
+          ownRank: customRanks[userId] || null,
+          customRanks,
+        };
+      }
     },
     staleTime: 5 * 60 * 1000, // Cache segar selama 5 menit
     refetchOnWindowFocus: false,
@@ -146,11 +224,17 @@ export default function LeaderboardClient() {
 
   const rankByUserId = useMemo(() => {
     const rankMap = new Map<string, number>();
-    usersList.forEach((user, index) => {
-      rankMap.set(user.id, index + 1);
-    });
+    if (activeTab === "around_me" && data?.customRanks) {
+      Object.entries(data.customRanks).forEach(([uid, rank]) => {
+        rankMap.set(uid, rank);
+      });
+    } else {
+      usersList.forEach((user, index) => {
+        rankMap.set(user.id, index + 1);
+      });
+    }
     return rankMap;
-  }, [usersList]);
+  }, [usersList, data, activeTab]);
 
   const rankedUsers = useMemo<RankedLeaderboardUser[]>(() => {
     const result: RankedLeaderboardUser[] = [];
@@ -169,14 +253,14 @@ export default function LeaderboardClient() {
     return result;
   }, [rankByUserId, searchTerm, usersList]);
 
-  const topThree = useMemo(() => isSearching ? [] : rankedUsers.slice(0, 3), [isSearching, rankedUsers]);
-  const othersList = useMemo(() => isSearching ? rankedUsers : rankedUsers.slice(3), [isSearching, rankedUsers]);
+  const topThree = useMemo(() => (isSearching || activeTab === "around_me") ? [] : rankedUsers.slice(0, 3), [isSearching, activeTab, rankedUsers]);
+  const othersList = useMemo(() => (isSearching || activeTab === "around_me") ? rankedUsers : rankedUsers.slice(3), [isSearching, activeTab, rankedUsers]);
 
   const isOwnUserInTop20 = useMemo(
     () => usersList.some((x) => x.id === currentUserId),
     [currentUserId, usersList]
   );
-  const showFloatingOwnRank = !isGuest && currentUserId !== "guest" && ownRank !== null && !isOwnUserInTop20;
+  const showFloatingOwnRank = !isGuest && currentUserId !== "guest" && ownRank !== null && !isOwnUserInTop20 && activeTab === "top_global";
 
   if (showSkeleton) {
     return (
@@ -204,9 +288,9 @@ export default function LeaderboardClient() {
           <div className="pl-3.5 text-muted-foreground/60">
             <Search size={16} />
           </div>
-          <input aria-label="Cari nama siswa"
+          <input aria-label="Cari nama member"
             type="text"
-            placeholder="Cari nama siswa..."
+            placeholder="Cari nama member..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="flex-1 bg-transparent border-none outline-none py-2 px-3 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/50"
@@ -223,8 +307,47 @@ export default function LeaderboardClient() {
         </Card>
       </div>
 
+      {/* 🏆 TAB SWITCHER */}
+      <div className="flex justify-center -mt-2 sm:-mt-6 relative z-20">
+        <div className="bg-background/40 glass p-1 rounded-2xl flex gap-1.5 border border-border/80 shadow-md">
+          <button
+            type="button"
+            onClick={() => setActiveTab("top_global")}
+            className={`px-6 py-2.5 text-xs font-black uppercase tracking-wider rounded-xl transition-all ${
+              activeTab === "top_global"
+                ? "bg-primary text-primary-foreground shadow-lg"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Top 20 Global
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              if (isOffline) {
+                toast.error("Mode luring aktif. Peringkat sekitar saya membutuhkan jaringan.");
+                return;
+              }
+              if (isGuest || currentUserId === "guest") {
+                toast.error("Kamu perlu masuk/daftar untuk melihat peringkat sekitar.");
+                return;
+              }
+              setActiveTab("around_me");
+            }}
+            className={`px-6 py-2.5 text-xs font-black uppercase tracking-wider rounded-xl transition-all flex items-center gap-1.5 ${
+              activeTab === "around_me"
+                ? "bg-primary text-primary-foreground shadow-lg"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {(isGuest || currentUserId === "guest") && <Lock size={12} className="text-muted-foreground/60" />}
+            Di Sekitar Saya
+          </button>
+        </div>
+      </div>
+
       <AnimatePresence mode="wait">
-        {!isSearching && topThree.length > 0 && (
+        {!isSearching && activeTab === "top_global" && topThree.length > 0 && (
           <m.div
             key="podium"
             initial={{ opacity: 0, y: 20 }}
@@ -240,7 +363,13 @@ export default function LeaderboardClient() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: "spring", stiffness: 100, damping: 15, delay: 0.1 }}
-              className="order-1 flex flex-col items-center group/podium"
+              onClick={() => {
+                if (topThree[1]) {
+                  setSelectedUser(topThree[1]);
+                  confetti({ particleCount: 70, spread: 50, colors: ["#9ca3af", "#cbd5e1", "#e2e8f0"] });
+                }
+              }}
+              className="order-1 flex flex-col items-center group/podium cursor-pointer"
             >
               <div className="relative mb-3 sm:mb-6">
                 <div className="absolute -inset-1 bg-gradient-to-br from-secondary to-transparent rounded-full blur-md opacity-40 group-hover/podium:opacity-85 transition duration-500" />
@@ -261,13 +390,19 @@ export default function LeaderboardClient() {
                 </Badge>
               </div>
             </m.div>
-
+ 
             {/* RANK 1 (Gold - Champion) */}
             <m.div 
               initial={{ opacity: 0, y: 35 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: "spring", stiffness: 100, damping: 12 }}
-              className="order-2 flex flex-col items-center relative z-10 scale-105 sm:scale-115 group/champ"
+              onClick={() => {
+                if (topThree[0]) {
+                  setSelectedUser(topThree[0]);
+                  confetti({ particleCount: 120, spread: 80, colors: ["#fbbf24", "#f59e0b", "#d97706"] });
+                }
+              }}
+              className="order-2 flex flex-col items-center relative z-10 scale-105 sm:scale-115 group/champ cursor-pointer"
             >
               <div className="relative mb-5 sm:mb-8">
                 <div className="absolute -inset-2 bg-gradient-to-br from-warning via-amber-500 to-transparent rounded-full blur-md opacity-35 group-hover/champ:opacity-75 transition duration-500 pointer-events-none" />
@@ -292,13 +427,19 @@ export default function LeaderboardClient() {
                 </Badge>
               </div>
             </m.div>
-
+ 
             {/* RANK 3 (Bronze) */}
             <m.div 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: "spring", stiffness: 100, damping: 15, delay: 0.2 }}
-              className="order-3 flex flex-col items-center group/third"
+              onClick={() => {
+                if (topThree[2]) {
+                  setSelectedUser(topThree[2]);
+                  confetti({ particleCount: 60, spread: 40, colors: ["#b45309", "#d97706", "#f97316"] });
+                }
+              }}
+              className="order-3 flex flex-col items-center group/third cursor-pointer"
             >
               <div className="relative mb-3 sm:mb-6">
                 <div className="absolute -inset-1 bg-gradient-to-br from-destructive to-transparent rounded-full blur-md opacity-35 group-hover/third:opacity-80 transition duration-500" />
@@ -327,7 +468,7 @@ export default function LeaderboardClient() {
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between px-2 mb-2 sm:mb-4">
           <h3 className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground/70">
-            {isSearching ? "Hasil Pencarian Siswa" : "Peringkat Belajar Lainnya"}
+            {isSearching ? "Hasil Pencarian Member" : "Peringkat Belajar Lainnya"}
           </h3>
           <div className="flex items-center gap-2 text-muted-foreground/50 text-[10px] font-black uppercase tracking-widest">
             <Search size={12} /> Global
@@ -369,6 +510,7 @@ export default function LeaderboardClient() {
               animate={{ opacity: 1, x: 0 }}
             >
               <Card 
+                onClick={() => setSelectedUser(user)}
                 className={`glass border p-3.5 sm:p-5 flex items-center gap-3 sm:gap-6 shadow-sm group transition-all duration-200 hover:-translate-y-0.5 cursor-pointer ${
                   isOwnCard 
                     ? "border-primary/50 bg-primary/[0.03] shadow-[0_0_12px_rgb(var(--primary-rgb)/0.12)]"
@@ -400,7 +542,7 @@ export default function LeaderboardClient() {
                     <h4 className={`text-xs sm:text-base font-black truncate group-hover:text-primary transition-colors ${
                       isOwnCard ? "text-primary" : "text-foreground"
                     }`}>
-                      {user.full_name || "Siswa Misterius"}
+                      {user.full_name || "Member Misterius"}
                     </h4>
                     {isOwnCard && (
                       <Badge className="bg-primary/25 text-primary border-primary/35 text-[7px] sm:text-[9px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-full shrink-0">
@@ -437,9 +579,9 @@ export default function LeaderboardClient() {
         {othersList.length === 0 && (
           <div className="text-center py-20 border-2 border-dashed border-border/80 rounded-[2.5rem] bg-muted/5 glass flex flex-col items-center justify-center gap-3">
             <p className="text-muted-foreground/60 font-black uppercase tracking-widest text-xs">
-              Siswa "{searchQuery}" tidak ditemukan
+              Member "{searchQuery}" tidak ditemukan
             </p>
-            <p className="text-[10px] text-muted-foreground/45">Coba periksa ejaan atau cari nama siswa lain.</p>
+            <p className="text-[10px] text-muted-foreground/45">Coba periksa ejaan atau cari nama member lain.</p>
           </div>
         )}
       </div>
@@ -492,6 +634,105 @@ export default function LeaderboardClient() {
           </Card>
         </m.div>
       )}
+
+      {/* 👤 USER DETAIL MODAL */}
+      <Dialog open={!!selectedUser} onOpenChange={(open) => !open && setSelectedUser(null)}>
+        <DialogContent className="glass border-border max-w-sm w-full p-6 sm:p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-tr from-primary/[0.04] to-transparent pointer-events-none" />
+          
+          {selectedUser && (
+            <div className="relative z-10 flex flex-col items-center text-center">
+              {/* Profile Avatar */}
+              <div className="size-20 rounded-[2rem] bg-gradient-to-br from-primary/10 to-transparent flex items-center justify-center font-black text-foreground shrink-0 border border-primary/20 shadow-inner select-none font-japanese text-2xl mb-4">
+                {selectedUser.full_name?.charAt(0).toUpperCase() || "?"}
+              </div>
+
+              {/* Title & Badges */}
+              <DialogTitle className="text-xl font-black text-foreground uppercase tracking-tight mb-1">
+                {selectedUser.full_name || "Member Misterius"}
+              </DialogTitle>
+              
+              <DialogDescription className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-6">
+                {selectedUser.level >= 15
+                  ? "Sensei Bahasa / Ahli Utama"
+                  : selectedUser.level >= 10
+                  ? "Samurai Nihongo / Pembelajar Madya"
+                  : selectedUser.level >= 5
+                  ? "Ronin Bahasa / Pembelajar Aktif"
+                  : "Chibi Nihongo / Pemula"}
+              </DialogDescription>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-2 gap-3.5 w-full mb-6 text-left">
+                {/* Level */}
+                <div className="p-4 bg-background/25 border border-border/80 rounded-2xl flex items-center gap-3">
+                  <div className="size-8 rounded-lg bg-primary/10 border border-primary/20 text-primary flex items-center justify-center shrink-0">
+                    <Target size={15} />
+                  </div>
+                  <div>
+                    <span className="text-[8px] font-black text-muted-foreground/60 uppercase tracking-wider block">Level</span>
+                    <span className="text-sm font-black text-foreground">{selectedUser.level}</span>
+                  </div>
+                </div>
+
+                {/* Streak */}
+                <div className="p-4 bg-background/25 border border-border/80 rounded-2xl flex items-center gap-3">
+                  <div className="size-8 rounded-lg bg-warning/10 border border-warning/20 text-warning flex items-center justify-center shrink-0">
+                    <Flame size={15} className="fill-current" />
+                  </div>
+                  <div>
+                    <span className="text-[8px] font-black text-muted-foreground/60 uppercase tracking-wider block">Streak</span>
+                    <span className="text-sm font-black text-stone-900 dark:text-stone-100">{selectedUser.streak} Hari</span>
+                  </div>
+                </div>
+
+                {/* Total XP */}
+                <div className="p-4 bg-background/25 border border-border/80 rounded-2xl flex items-center gap-3 col-span-2">
+                  <div className="size-8 rounded-lg bg-primary/10 border border-primary/20 text-primary flex items-center justify-center shrink-0">
+                    <Trophy size={15} />
+                  </div>
+                  <div>
+                    <span className="text-[8px] font-black text-muted-foreground/60 uppercase tracking-wider block">Total XP</span>
+                    <span className="text-base font-black text-primary font-mono">{selectedUser.xp.toLocaleString()} XP</span>
+                  </div>
+                </div>
+
+                {/* Hari Aktif Belajar */}
+                <div className="p-4 bg-background/25 border border-border/80 rounded-2xl flex items-center gap-3 col-span-2">
+                  <div className="size-8 rounded-lg bg-success/10 border border-success/20 text-success flex items-center justify-center shrink-0">
+                    <Calendar size={15} />
+                  </div>
+                  <div>
+                    <span className="text-[8px] font-black text-muted-foreground/60 uppercase tracking-wider block">Hari Belajar Aktif</span>
+                    <span className="text-sm font-black text-foreground">
+                      {selectedUser.study_days && typeof selectedUser.study_days === "object"
+                        ? Object.keys(selectedUser.study_days).length
+                        : 0}{" "}
+                      Hari
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Cheer Button */}
+              <button
+                onClick={() => {
+                  confetti({
+                    particleCount: 80,
+                    spread: 60,
+                    origin: { y: 0.6 },
+                    colors: ["#fbbf24", "#f59e0b", "#3b82f6"]
+                  });
+                  toast.success(`Kamu mengirimkan semangat kepada ${selectedUser.full_name || "member"}! 🎉⚡`);
+                }}
+                className="w-full h-12 bg-primary hover:bg-secondary text-primary-foreground font-black uppercase tracking-widest text-xs rounded-xl shadow-lg transition-all active:scale-[0.97]"
+              >
+                Kirim Semangat! ⚡
+              </button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
       
     </div>
   );

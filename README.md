@@ -173,24 +173,18 @@ Security rule: never expose `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_API_SECRET`, web
 
 ## Data Model Notes
 
-Checked-in Supabase migrations create:
+Supabase schema is consolidated in a single migration (`supabase/migrations/20260620130000_initial_schema.sql`):
 
 | Domain | Tables |
 | --- | --- |
-| Public library | `course_categories`, `kanji`, `vocab`, `grammar`, `lessons`, `reading_material`, `listening_material`, `exams`, `cheatsheets` |
+| Public library | `course_categories`, `kanji`, `vocab`, `grammar`, `lessons`, `cheatsheets` |
 | Auxiliary content | `expressions`, `radicals`, `sentences` |
+| JLPT exam bank | `jlpt_exam_templates`, `jlpt_passages`, `jlpt_questions`, `jlpt_exam_template_questions` |
 | User progress | `profiles`, `user_srs`, `user_lessons` |
+| User exams | `user_exam_sessions`, `user_exam_answers` |
+| Community | `community_posts`, `community_comments` |
 | Feedback/support/cache | `user_feedback`, `supporters`, `tts_cache` |
-
-The live database also includes resources that were previously missing from the migration history. They are now captured by `supabase/migrations/20260609080000_sync_live_schema_drift.sql`:
-
-| Resource | Used for |
-| --- | --- |
-| `tts_cache` | TTS audio metadata read by `/api/tts` and maintenance scripts |
-| `expressions` | Random daily expression data |
-| `sentences` | Example sentence/TTS generation scripts |
-| `radicals` | Radical lookup data related to kanji content |
-| storage bucket `tts-cache` | Pre-generated MP3 files |
+| Storage buckets | `tts-cache`, `exam-assets` |
 
 Sanity schemas:
 

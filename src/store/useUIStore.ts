@@ -92,6 +92,7 @@ interface UIState {
   toggleNotifications: (enabled: boolean) => void;
   toggleFurigana: (enabled: boolean) => void;
   setLayoutPreference: (layout: "grid" | "list") => void;
+  updateSettings: (newSettings: Partial<Settings>) => void;
   exportData: () => Promise<void>;
   importData: (jsonData: string) => Promise<boolean>;
   setReadingState: (state: Partial<UIState['readingState']>) => void;
@@ -198,6 +199,10 @@ export const useUIStore = create<UIState>()(
 
       setLayoutPreference: (layout) => set((state) => ({
         settings: { ...state.settings, layoutPreference: layout }
+      })),
+
+      updateSettings: (newSettings) => set((state) => ({
+        settings: { ...state.settings, ...newSettings }
       })),
 
       exportData: async () => {

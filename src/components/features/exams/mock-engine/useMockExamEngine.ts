@@ -356,7 +356,7 @@ export function useMockExamEngine(initialExam: ExamData) {
 
     try {
       const encodedData = btoa(encodeURIComponent(JSON.stringify(shareData)));
-      const shareUrl = `${window.location.origin}/share?data=${encodedData}`;
+      const shareUrl = `${window.location.origin}/share?data=${encodeURIComponent(encodedData)}`;
 
       if (navigator.share) {
         navigator.share({

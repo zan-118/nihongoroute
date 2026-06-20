@@ -55,7 +55,7 @@ export function useAuth() {
         });
         if (error) throw error;
         
-        toast.success(`Selamat Datang Kembali, ${data.user?.user_metadata?.full_name ? data.user.user_metadata.full_name.split(' ')[0] : 'Siswa'}!`, {
+        toast.success(`Selamat Datang Kembali, ${data.user?.user_metadata?.full_name ? data.user.user_metadata.full_name.split(' ')[0] : 'Member'}!`, {
           description: "Senang melihatmu kembali. Mari lanjut belajarnya!",
         });
 

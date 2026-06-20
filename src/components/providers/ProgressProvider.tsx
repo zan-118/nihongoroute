@@ -39,10 +39,15 @@ export const ProgressProvider = ({
   // AUTHENTICATION LISTENER
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      const userFullName = session?.user?.user_metadata?.full_name || session?.user?.email?.split('@')[0] || "Siswa";
+      const userFullName = session?.user?.user_metadata?.full_name || session?.user?.email?.split('@')[0] || "Member";
       setAuth(!!session?.user);
       if (session?.user) {
-        syncUserData({ id: session.user.id, isGuest: false, name: userFullName });
+        const currentLocalName = useUserStore.getState().name;
+        syncUserData({ 
+          id: session.user.id, 
+          isGuest: false, 
+          name: currentLocalName || userFullName 
+        });
       } else {
         syncUserData({ id: "guest", isGuest: true, name: null });
       }
@@ -51,10 +56,15 @@ export const ProgressProvider = ({
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      const userFullName = session?.user?.user_metadata?.full_name || session?.user?.email?.split('@')[0] || "Siswa";
+      const userFullName = session?.user?.user_metadata?.full_name || session?.user?.email?.split('@')[0] || "Member";
       setAuth(!!session?.user);
       if (session?.user) {
-        syncUserData({ id: session.user.id, isGuest: false, name: userFullName });
+        const currentLocalName = useUserStore.getState().name;
+        syncUserData({ 
+          id: session.user.id, 
+          isGuest: false, 
+          name: currentLocalName || userFullName 
+        });
       } else {
         syncUserData({ id: "guest", isGuest: true, name: null });
       }

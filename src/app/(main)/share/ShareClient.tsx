@@ -38,6 +38,7 @@ function ShareContent() {
 
   let data: SharedData | null = null;
   let error = false;
+  const isDirectAccess = !rawData;
 
   if (rawData) {
     try {
@@ -46,8 +47,41 @@ function ShareContent() {
       console.error("Gagal memproses data share", e);
       error = true;
     }
-  } else {
-    error = true;
+  }
+
+  if (isDirectAccess) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6 text-center bg-transparent relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-tr from-primary/[0.03] to-transparent pointer-events-none" />
+        <Card className="p-8 sm:p-12 max-w-md w-full glass border-border rounded-[3rem] shadow-[0_20px_50px_rgba(var(--primary-rgb),0.15)] relative z-10">
+          <div className="size-20 mx-auto rounded-3xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-6">
+            <Share2 size={40} className="text-primary drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.4)]" />
+          </div>
+          <h1 className="text-2xl font-black uppercase tracking-wide mb-3 text-foreground">Bagikan NihongoRoute</h1>
+          <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
+            Ajak teman-temanmu belajar bahasa Jepang secara seru, interaktif, dan terstruktur di NihongoRoute! Selesaikan ujian simulasi untuk memamerkan sertifikat kelulusanmu di sini.
+          </p>
+          <div className="flex flex-col gap-4">
+            <Button 
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  navigator.clipboard.writeText(window.location.origin);
+                  toast.success("Tautan NihongoRoute berhasil disalin!");
+                }
+              }}
+              className="w-full h-14 bg-primary hover:bg-secondary text-primary-foreground rounded-2xl font-black uppercase tracking-widest text-xs transition-all hover:scale-[1.02]"
+            >
+              Salin Tautan Aplikasi
+            </Button>
+            <Button asChild variant="ghost" className="w-full h-14 border border-border bg-background/20 hover:bg-background/40 text-foreground rounded-2xl font-black uppercase tracking-widest text-xs transition-all">
+              <Link href="/exams" className="flex items-center justify-center gap-2">
+                <Trophy size={14} className="text-warning" /> Ikuti Simulasi Ujian
+              </Link>
+            </Button>
+          </div>
+        </Card>
+      </div>
+    );
   }
 
   if (error) {

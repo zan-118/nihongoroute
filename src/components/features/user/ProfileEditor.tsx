@@ -148,7 +148,7 @@ export default function ProfileEditor() {
             </h2>
             <p className="text-muted-foreground text-xs md:text-sm font-bold uppercase tracking-[0.2em] mt-2 flex items-center gap-2">
               <span className="size-1.5 rounded-full bg-success animate-pulse" />
-              Siswa Aktif NihongoRoute
+              Member Aktif NihongoRoute
             </p>
           </div>
         </div>
