@@ -100,16 +100,6 @@ export async function getCourseCategories() {
 }
 
 export async function getExamsByCategory(categoryId: string) {
-  const supabase = createStaticClient();
-  const { data, error } = await supabase
-    .from("exams")
-    .select("*")
-    .eq("category_id", categoryId)
-    .order("created_at", { ascending: true });
-
-  if (error) {
-    console.error("Gagal mengambil daftar ujian:", error);
-    return [];
-  }
-  return data || [];
+  // Legacy exams table has been dropped. Returning empty array.
+  return [];
 }

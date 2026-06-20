@@ -171,27 +171,32 @@ export async function checkExistingContent(
   const slug = slugify(keyword);
 
   try {
-    let query;
     if (type === "kanji") {
-      query = supabase.from("kanji").select("*").eq("character", keyword).single();
+      const { data, error } = await supabase.from("kanji").select("*").eq("character", keyword).single();
+      if (error && error.code !== "PGRST116") throw error;
+      return { data: data || null };
     } else if (type === "vocab" || type === "adjective" || type === "verb" || type === "phrase") {
-      query = supabase.from("vocab").select("*, meaning:meaning_id").eq("word", keyword).single();
+      const { data, error } = await supabase.from("vocab").select("*, meaning:meaning_id").eq("word", keyword).single();
+      if (error && error.code !== "PGRST116") throw error;
+      return { data: data || null };
     } else if (type === "grammar") {
-      query = supabase.from("grammar").select("*").eq("slug", slug).single();
+      const { data, error } = await supabase.from("grammar").select("*").eq("slug", slug).single();
+      if (error && error.code !== "PGRST116") throw error;
+      return { data: data || null };
     } else if (type === "reading") {
-      query = supabase.from("reading_material").select("*").eq("slug", slug).single();
+      const data = await getSanityReadingBySlug(slug);
+      return { data: data || null };
     } else if (type === "listening") {
-      query = supabase.from("listening_material").select("*").eq("slug", slug).single();
+      const data = await getSanityListeningBySlug(slug);
+      return { data: data || null };
     } else if (type === "lessons") {
-      query = supabase.from("lessons").select("*, course_categories(title)").eq("slug", slug).single();
+      const data = await getSanityLessonBySlug(slug);
+      return { data: data || null };
     } else if (type === "exams") {
-      query = supabase.from("exams").select("*").eq("slug", slug).single();
+      const data = await getSanityExamBySlug(slug);
+      return { data: data || null };
     }
-
-    const { data, error } = await query!;
-    if (error && error.code !== "PGRST116") throw error; // Abaikan galat jika data tidak ditemukan (PGRST116)
-    
-    return { data: data || null };
+    return { data: null };
   } catch (error) {
     console.error("Gagal memeriksa konten yang sudah ada:", error);
     return { error: error instanceof Error ? error.message : "Terjadi kesalahan yang tidak diketahui" };
@@ -687,24 +692,19 @@ export async function getLibraryItemBySlug(
       const fetchListening = async () => {
         if (!listeningListRaw.length) return;
         const cleanList = listeningListRaw.map((s: unknown) => String(s).trim());
-        const hasUUIDs = cleanList.some(isUUID);
         
-        let lItems: ListeningMaterialRow[] = [];
-        if (hasUUIDs) {
-          const { data } = await supabase.from("listening_material").select("*").in("id", cleanList);
-          lItems = data || [];
-        } else {
-          const [byTitle, bySlug] = await Promise.all([
-            supabase.from("listening_material").select("*").in("title", cleanList),
-            supabase.from("listening_material").select("*").in("slug", cleanList)
-          ]);
-          lItems = [...(byTitle.data || []), ...(bySlug.data || [])];
-          lItems = Array.from(new Map(lItems.map(item => [item.id, item])).values());
-        }
+        const lItems = (await Promise.all(
+          cleanList.map(async (slug: string) => {
+            try {
+              return await getSanityListeningBySlug(slug);
+            } catch {
+              return null;
+            }
+          })
+        )).filter(Boolean);
         
         if (lItems && lItems.length > 0) {
-          result.listeningList = lItems.map((l: ListeningTable) => {
-            // Parser yang kuat untuk Teks Dialog Mentah
+          result.listeningList = lItems.map((l: any) => {
             let dialogue: Record<string, unknown>[] = [];
             if (typeof l.body === 'string') {
               const lines = l.body.split('\n').filter((line: string) => line.trim());
@@ -716,13 +716,11 @@ export async function getLibraryItemBySlug(
                 const speaker = parts.length > 1 ? parts[0].trim() : "???";
                 const text = parts.length > 1 ? parts.slice(1).join("：").trim() : line.trim();
                 
-                // Coba temukan terjemahan yang cocok
                 let translation = translations[idx] || "";
                 if (translation.includes("：") || translation.includes(":")) {
                    translation = translation.split(/[：:]/).slice(1).join("：").trim();
                 }
 
-                // Coba temukan bacaan (hiragana) yang cocok
                 let furigana = "";
                 if (readings[idx]) {
                   const rLine = readings[idx];
@@ -737,7 +735,7 @@ export async function getLibraryItemBySlug(
                   speaker,
                   text,
                   jp: text,
-                  furigana: furigana,
+                  furigana,
                   translation: translation || text,
                   id: idx
                 };
@@ -748,7 +746,7 @@ export async function getLibraryItemBySlug(
 
             return {
               ...l,
-              _id: l.id,
+              _id: l._id || l.id,
               audioUrl: l.audio_url,
               imageUrl: l.image_url,
               videoUrl: l.video_url,
@@ -761,25 +759,21 @@ export async function getLibraryItemBySlug(
       const fetchReading = async () => {
         if (!readingListRaw.length) return;
         const cleanList = readingListRaw.map((s: unknown) => String(s).trim());
-        const hasUUIDs = cleanList.some(isUUID);
         
-        let rItems: ReadingMaterialRow[] = [];
-        if (hasUUIDs) {
-          const { data } = await supabase.from("reading_material").select("*").in("id", cleanList);
-          rItems = data || [];
-        } else {
-          const [byTitle, bySlug] = await Promise.all([
-            supabase.from("reading_material").select("*").in("title", cleanList),
-            supabase.from("reading_material").select("*").in("slug", cleanList)
-          ]);
-          rItems = [...(byTitle.data || []), ...(bySlug.data || [])];
-          rItems = Array.from(new Map(rItems.map(item => [item.id, item])).values());
-        }
+        const rItems = (await Promise.all(
+          cleanList.map(async (slug: string) => {
+            try {
+              return await getSanityReadingBySlug(slug);
+            } catch {
+              return null;
+            }
+          })
+        )).filter(Boolean);
         
         if (rItems && rItems.length > 0) {
-          result.readingList = rItems.map(r => ({
+          result.readingList = rItems.map((r: any) => ({
             ...r,
-            _id: r.id,
+            _id: r._id || r.id,
             audioUrl: r.audio_url,
             imageUrl: r.image_url,
             videoUrl: r.video_url,

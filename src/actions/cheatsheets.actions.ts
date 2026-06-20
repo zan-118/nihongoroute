@@ -57,7 +57,8 @@ export async function getCheatsheetByIdOrSlug(idOrSlug: string) {
   const supabase = createStaticClient();
   
   try {
-    const { data: sheet, error } = await supabase
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrSlug);
+    const query = supabase
       .from("cheatsheets")
       .select(`
         id, 
@@ -65,9 +66,12 @@ export async function getCheatsheetByIdOrSlug(idOrSlug: string) {
         title, 
         category, 
         items
-      `)
-      .or(`id.eq.${idOrSlug},slug.eq.${idOrSlug}`)
-      .single();
+      `);
+
+    const { data: sheet, error } = await (isUuid 
+      ? query.eq("id", idOrSlug) 
+      : query.eq("slug", idOrSlug)
+    ).single();
 
     if (error && error.code !== "PGRST116") throw error;
     if (!sheet) return null;

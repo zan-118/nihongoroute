@@ -31,7 +31,7 @@ export const ROUTES = {
     VOCAB: (slug: string) => `/library/vocab/${slug}`,
     KANJI: (slug: string) => `/library/kanji/${slug}`, // Menggunakan slug ASCII untuk stabilitas static
     GRAMMAR: (slug: string) => `/library/grammar/${slug}`,
-    READING: (slug: string) => `/library/reading/${slugify(slug)}`,
+    READING: (slug: string) => `/library/reading/${slug}`,
     CHEATSHEET: "/library/cheatsheet",
   },
 
