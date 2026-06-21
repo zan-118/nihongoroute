@@ -247,7 +247,7 @@ export async function getExamByIdOrSlug(idOrSlug: string): Promise<ExamData | nu
       }
     }`;
 
-    const exam = await sanityClient.fetch(query, { idOrSlug }, sanityPublicFetchOptions);
+    const exam = await sanityClient.fetch(query, { idOrSlug }, { cache: "no-store" });
 
     if (!exam) return getSupabaseExamTemplateBySlug(idOrSlug);
 

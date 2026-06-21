@@ -32,6 +32,7 @@ export const ROUTES = {
     KANJI: (slug: string) => `/library/kanji/${slug}`, // Menggunakan slug ASCII untuk stabilitas static
     GRAMMAR: (slug: string) => `/library/grammar/${slug}`,
     READING: (slug: string) => `/library/reading/${slug}`,
+    LISTENING: (slug: string) => `/library/listening/${slug}`,
     CHEATSHEET: "/library/cheatsheet",
   },
 
