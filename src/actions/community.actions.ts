@@ -74,20 +74,32 @@ export async function getCommunityPosts(category?: string): Promise<CommunityPos
     if (error) throw error;
     
     // Konversi format likes_users dari JSONB array ke string[]
-    return (data || []).map((post: any) => ({
-      id: post.id,
-      user_id: post.user_id,
-      content: post.content,
-      created_at: post.created_at,
-      comments_count: post.comments_count,
-      category: post.category,
-      likes_users: Array.isArray(post.likes_users) ? (post.likes_users as string[]) : [],
-      author: post.author ? {
-        full_name: post.author.full_name,
-        avatar_url: post.author.avatar_url,
-        level: post.author.level || 1,
-      } : undefined
-    })) as CommunityPost[];
+    return (data || []).map((post: {
+      id: string;
+      user_id: string;
+      content: string;
+      created_at: string;
+      likes_users: unknown;
+      comments_count: number;
+      category?: string;
+      author?: unknown;
+    }) => {
+      const authorData = post.author as { full_name: string; avatar_url?: string; level?: number } | null | undefined;
+      return {
+        id: post.id,
+        user_id: post.user_id,
+        content: post.content,
+        created_at: post.created_at,
+        comments_count: post.comments_count,
+        category: post.category,
+        likes_users: Array.isArray(post.likes_users) ? (post.likes_users as string[]) : [],
+        author: authorData ? {
+          full_name: authorData.full_name,
+          avatar_url: authorData.avatar_url,
+          level: authorData.level || 1,
+        } : undefined
+      };
+    }) as CommunityPost[];
   } catch (error) {
     console.error("Gagal mengambil postingan komunitas:", error);
     return [];
@@ -188,18 +200,28 @@ export async function getPostComments(postId: string): Promise<CommunityComment[
 
     if (error) throw error;
 
-    return (data || []).map((comment: any) => ({
-      id: comment.id,
-      post_id: comment.post_id,
-      user_id: comment.user_id,
-      content: comment.content,
-      created_at: comment.created_at,
-      author: comment.author ? {
-        full_name: comment.author.full_name,
-        avatar_url: comment.author.avatar_url,
-        level: comment.author.level || 1,
-      } : undefined
-    })) as CommunityComment[];
+    return (data || []).map((comment: {
+      id: string;
+      post_id: string;
+      user_id: string;
+      content: string;
+      created_at: string;
+      author?: unknown;
+    }) => {
+      const authorData = comment.author as { full_name: string; avatar_url?: string; level?: number } | null | undefined;
+      return {
+        id: comment.id,
+        post_id: comment.post_id,
+        user_id: comment.user_id,
+        content: comment.content,
+        created_at: comment.created_at,
+        author: authorData ? {
+          full_name: authorData.full_name,
+          avatar_url: authorData.avatar_url,
+          level: authorData.level || 1,
+        } : undefined
+      };
+    }) as CommunityComment[];
   } catch (error) {
     console.error("Gagal mengambil komentar:", error);
     return [];
@@ -240,7 +262,7 @@ export interface PublicProfile {
   level: number;
   streak: number;
   avatar_url: string | null;
-  study_days: any;
+  study_days: Record<string, number | boolean>;
 }
 
 /**

@@ -52,55 +52,65 @@ describe.skipIf(isCI)("Supabase Integration Tests", () => {
   });
 
   it("should test user_exam_sessions insert with a dummy user id", async () => {
-    // Let's find a user in auth.users first
-    const { data: users, error: uErr } = await supabase.auth.admin.listUsers({
-      perPage: 1
+    const email = `test-db-conn-${Date.now()}@example.com`;
+    const password = "password123";
+
+    const { data: authData, error: signUpErr } = await supabase.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true
     });
-    expect(uErr).toBeNull();
-    expect(users).not.toBeNull();
-    expect(users.users.length).toBeGreaterThan(0);
 
-    const testUser = users.users[0];
-    console.log(`Using test user: ${testUser.id} (${testUser.email})`);
+    expect(signUpErr).toBeNull();
+    const testUser = authData.user;
+    expect(testUser).not.toBeNull();
+    expect(testUser).toBeDefined();
 
-    const { data: template } = await supabase
-      .from("jlpt_exam_templates")
-      .select("*")
-      .eq("slug", "jlpt-n5-moji-goi-paket-1")
-      .single();
+    try {
+      const { data: template } = await supabase
+        .from("jlpt_exam_templates")
+        .select("*")
+        .eq("slug", "jlpt-n5-moji-goi-paket-1")
+        .single();
 
-    expect(template).not.toBeNull();
+      expect(template).not.toBeNull();
 
-    const sessionId = "00000000-0000-0000-0000-000000000000";
-    
-    // Clean up if it exists
-    await supabase.from("user_exam_sessions").delete().eq("id", sessionId);
+      const sessionId = "00000000-0000-0000-0000-000000000000";
+      
+      // Clean up if it exists
+      await supabase.from("user_exam_sessions").delete().eq("id", sessionId);
 
-    // Try inserting a session
-    const { data: session, error: sErr } = await supabase
-      .from("user_exam_sessions")
-      .insert({
-        id: sessionId,
-        user_id: testUser.id,
-        template_id: template!.id,
-        jlpt_level: "N5",
-        status: "in_progress",
-        question_order: [],
-        payload_snapshot: {},
-        answers_snapshot: {}
-      })
-      .select("id")
-      .single();
+      // Try inserting a session
+      const { data: session, error: sErr } = await supabase
+        .from("user_exam_sessions")
+        .insert({
+          id: sessionId,
+          user_id: testUser!.id,
+          template_id: template!.id,
+          jlpt_level: "N5",
+          status: "in_progress",
+          question_order: [],
+          payload_snapshot: {},
+          answers_snapshot: {}
+        })
+        .select("id")
+        .single();
 
-    if (sErr) {
-      console.error("Session insert error:", sErr);
+      if (sErr) {
+        console.error("Session insert error:", sErr);
+      }
+      expect(sErr).toBeNull();
+      expect(session).not.toBeNull();
+      expect(session!.id).toBe(sessionId);
+
+      // Clean up
+      await supabase.from("user_exam_sessions").delete().eq("id", sessionId);
+      console.log("Insert session test passed successfully.");
+    } finally {
+      if (testUser) {
+        await supabase.auth.admin.deleteUser(testUser.id);
+        console.log("Cleaned up temp user.");
+      }
     }
-    expect(sErr).toBeNull();
-    expect(session).not.toBeNull();
-    expect(session!.id).toBe(sessionId);
-
-    // Clean up
-    await supabase.from("user_exam_sessions").delete().eq("id", sessionId);
-    console.log("Insert session test passed successfully.");
   });
 });

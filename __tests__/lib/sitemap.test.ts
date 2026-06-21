@@ -4,7 +4,8 @@ import path from "path";
 
 // Load environment variables from .env.local if exists
 const envPath = path.resolve(process.cwd(), ".env.local");
-if (fs.existsSync(envPath)) {
+const hasEnv = fs.existsSync(envPath);
+if (hasEnv) {
   const envContent = fs.readFileSync(envPath, "utf8");
   envContent.split(/\r?\n/).forEach((line) => {
     const trimmed = line.trim();
@@ -17,9 +18,11 @@ if (fs.existsSync(envPath)) {
   });
 }
 
-import sitemap from "@/app/sitemap";
+const isCI = process.env.GITHUB_ACTIONS === "true" || !hasEnv;
 
-describe("Sitemap Performance and Size Test", () => {
+import sitemap from "../../src/app/sitemap";
+
+describe.skipIf(isCI)("Sitemap Performance and Size Test", () => {
   it("should generate sitemap and measure time", async () => {
     console.log("Measuring sitemap generation...");
     const start = Date.now();
