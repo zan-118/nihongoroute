@@ -265,7 +265,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
               <button
                 key={tab.id}
                 type="button"
-                onClick={() => handleModeChange(tab.id as any)}
+                onClick={() => handleModeChange(tab.id as "all" | "simulasi" | "latihan")}
                 className={`px-4 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border ${
                   isActive
                     ? "bg-primary text-primary-foreground border-transparent shadow-[0_0_12px_rgba(var(--primary-rgb),0.25)] scale-105"
@@ -298,7 +298,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
                 <button
                   key={subTab.id}
                   type="button"
-                  onClick={() => setActiveSubFilter(subTab.id as any)}
+                  onClick={() => setActiveSubFilter(subTab.id as "all" | "moji-goi" | "bunpou" | "reading" | "listening")}
                   className={`px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border ${
                     isActive
                       ? "bg-secondary text-secondary-foreground border-transparent shadow-[0_0_10px_rgba(var(--secondary-rgb),0.2)] scale-105"

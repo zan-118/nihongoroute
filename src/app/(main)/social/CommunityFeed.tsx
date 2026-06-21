@@ -45,7 +45,17 @@ function formatRelativeTime(dateString: string) {
 }
 
 interface PostCardProps {
-  post: any;
+  post: {
+    id: string;
+    user_id: string;
+    content: string;
+    created_at: string;
+    likes_users: string[];
+    comments_count: number;
+    category?: string;
+    author?: { full_name: string; level?: number };
+    [key: string]: unknown;
+  };
   currentUserId: string;
   isGuest: boolean;
   onAuthorClick: (userId: string) => void;
@@ -167,7 +177,7 @@ function PostCard({ post, currentUserId, isGuest, onAuthorClick }: PostCardProps
                   <Loader2 className="animate-spin text-primary" size={14} /> Memuat komentar…
                 </div>
               ) : comments && comments.length > 0 ? (
-                comments.map((comment: any) => (
+                comments.map((comment: { id: string; user_id: string; content: string; created_at: string; author?: { full_name: string }; [key: string]: unknown }) => (
                   <div key={comment.id} className="p-3 bg-background/30 rounded-2xl border border-border/60 flex flex-col relative">
                     <div className="flex items-center justify-between mb-1.5">
                       <div className="flex items-center gap-2">

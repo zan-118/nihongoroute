@@ -2,18 +2,20 @@ import { describe, it, expect } from "vitest";
 import fs from "fs";
 import path from "path";
 
-// Load environment variables from .env.local
+// Load environment variables from .env.local if exists
 const envPath = path.resolve(process.cwd(), ".env.local");
-const envContent = fs.readFileSync(envPath, "utf8");
-envContent.split(/\r?\n/).forEach((line) => {
-  const trimmed = line.trim();
-  if (!trimmed || trimmed.startsWith("#")) return;
-  const eqIdx = trimmed.indexOf("=");
-  if (eqIdx === -1) return;
-  const key = trimmed.slice(0, eqIdx).trim();
-  const val = trimmed.slice(eqIdx + 1).trim().replace(/^['"]|['"]$/g, "");
-  process.env[key] = val;
-});
+if (fs.existsSync(envPath)) {
+  const envContent = fs.readFileSync(envPath, "utf8");
+  envContent.split(/\r?\n/).forEach((line) => {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) return;
+    const eqIdx = trimmed.indexOf("=");
+    if (eqIdx === -1) return;
+    const key = trimmed.slice(0, eqIdx).trim();
+    const val = trimmed.slice(eqIdx + 1).trim().replace(/^['"]|['"]$/g, "");
+    process.env[key] = val;
+  });
+}
 
 import sitemap from "@/app/sitemap";
 

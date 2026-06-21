@@ -98,8 +98,8 @@ export default function WeakPointPanel() {
 
       try {
         const supabase = createClient();
-        let vocabData: any[] = [];
-        let kanjiData: any[] = [];
+        let vocabData: { id: string; word: string; romaji?: string; furigana?: string; slug?: string }[] = [];
+        let kanjiData: { id: string; character: string; meaning: string }[] = [];
 
         // 2. Ambil data pelengkap dari tabel 'vocab'
         if (uuids.length > 0 || nonUuids.length > 0) {
@@ -140,14 +140,14 @@ export default function WeakPointPanel() {
         // 4. Gabungkan data dari kedua tabel
         const mergedList: WeakItem[] = [];
 
-        const vocabMap = new Map<string, any>();
+        const vocabMap = new Map<string, { id: string; word: string; romaji?: string; furigana?: string; slug?: string }>();
         vocabData.forEach((v) => {
           vocabMap.set(v.id, v);
           if (v.slug) vocabMap.set(v.slug, v);
           if (v.word) vocabMap.set(v.word, v);
         });
 
-        const kanjiMap = new Map<string, any>();
+        const kanjiMap = new Map<string, { id: string; character: string; meaning: string }>();
         kanjiData.forEach((k) => {
           kanjiMap.set(k.id, k);
           if (k.character) kanjiMap.set(k.character, k);

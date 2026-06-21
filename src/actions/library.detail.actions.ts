@@ -85,8 +85,8 @@ export interface LibraryItem {
   levelCode?: string | null;
   grammar_family?: string | null;
   related_grammar?: string[] | null;
-  familyGrammarList?: any[] | null;
-  relatedGrammarList?: any[] | null;
+  familyGrammarList?: Record<string, unknown>[] | null;
+  relatedGrammarList?: Record<string, unknown>[] | null;
   [key: string]: unknown;
 }
 
@@ -583,9 +583,18 @@ export async function getLibraryItemBySlug(
           const { data } = await supabase.from("vocab").select("id, word, furigana, romaji, meaning_id, hinshi, pitch_accent, usage_notes, mnemonic, slug").in("id", cleanList);
           vItems = data || [];
         } else {
+          // Normalisasi daftar pencarian untuk mencakup bagian kata sebelum tanda hubung '-'
+          const searchTerms = cleanList.flatMap((item) => {
+            if (item.includes("-") && !isUUID(item)) {
+              const parts = item.split("-");
+              return [item, parts[0]];
+            }
+            return [item];
+          });
+
           const [byWord, bySlug] = await Promise.all([
-            supabase.from("vocab").select("id, word, furigana, romaji, meaning_id, hinshi, pitch_accent, usage_notes, mnemonic, slug").in("word", cleanList),
-            supabase.from("vocab").select("id, word, furigana, romaji, meaning_id, hinshi, pitch_accent, usage_notes, mnemonic, slug").in("slug", cleanList)
+            supabase.from("vocab").select("id, word, furigana, romaji, meaning_id, hinshi, pitch_accent, usage_notes, mnemonic, slug").in("word", searchTerms),
+            supabase.from("vocab").select("id, word, furigana, romaji, meaning_id, hinshi, pitch_accent, usage_notes, mnemonic, slug").in("slug", searchTerms)
           ]);
           vItems = [...(byWord.data || []), ...(bySlug.data || [])];
           vItems = Array.from(new Map(vItems.map(item => [item.id, item])).values());
@@ -704,7 +713,7 @@ export async function getLibraryItemBySlug(
         )).filter(Boolean);
         
         if (lItems && lItems.length > 0) {
-          result.listeningList = lItems.map((l: any) => {
+          result.listeningList = lItems.map((l: Record<string, unknown>) => {
             let dialogue: Record<string, unknown>[] = [];
             if (typeof l.body === 'string') {
               const lines = l.body.split('\n').filter((line: string) => line.trim());
@@ -771,7 +780,7 @@ export async function getLibraryItemBySlug(
         )).filter(Boolean);
         
         if (rItems && rItems.length > 0) {
-          result.readingList = rItems.map((r: any) => ({
+          result.readingList = rItems.map((r: Record<string, unknown>) => ({
             ...r,
             _id: r._id || r.id,
             audioUrl: r.audio_url,

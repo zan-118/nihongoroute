@@ -74,7 +74,11 @@ export async function getCommunityPosts(category?: string): Promise<CommunityPos
     if (error) throw error;
     
     // Konversi format likes_users dari JSONB array ke string[]
-    return (data || []).map((post: any) => ({
+    return (data || []).map((post: {
+      likes_users: unknown;
+      author?: { full_name: string; avatar_url?: string; level?: number };
+      [key: string]: unknown;
+    }) => ({
       ...post,
       likes_users: Array.isArray(post.likes_users) ? post.likes_users : [],
       author: post.author ? {
@@ -112,9 +116,9 @@ export async function createCommunityPost(content: string, category: string = "U
 
     revalidatePath("/social");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Gagal membuat postingan:", error);
-    return { success: false, error: error.message || "Gagal membuat postingan." };
+    return { success: false, error: error instanceof Error ? error.message : "Gagal membuat postingan." };
   }
 }
 
@@ -183,7 +187,10 @@ export async function getPostComments(postId: string): Promise<CommunityComment[
 
     if (error) throw error;
 
-    return (data || []).map((comment: any) => ({
+    return (data || []).map((comment: {
+      author?: { full_name: string; avatar_url?: string; level?: number };
+      [key: string]: unknown;
+    }) => ({
       ...comment,
       author: comment.author ? {
         full_name: comment.author.full_name,
@@ -218,9 +225,9 @@ export async function addCommunityComment(postId: string, content: string): Prom
 
     revalidatePath("/social");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Gagal menambahkan komentar:", error);
-    return { success: false, error: error.message || "Gagal menambahkan komentar." };
+    return { success: false, error: error instanceof Error ? error.message : "Gagal menambahkan komentar." };
   }
 }
 
@@ -238,9 +245,9 @@ export async function getPublicProfile(userId: string) {
 
     if (error) throw error;
     return { success: true, profile: data };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Gagal mengambil profil publik:", error);
-    return { success: false, error: error.message || "Gagal mengambil profil." };
+    return { success: false, error: error instanceof Error ? error.message : "Gagal mengambil profil." };
   }
 }
 
@@ -261,9 +268,9 @@ export async function deleteCommunityPost(postId: string): Promise<{ success: bo
 
     revalidatePath("/social");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Gagal menghapus postingan:", error);
-    return { success: false, error: error.message || "Gagal menghapus postingan." };
+    return { success: false, error: error instanceof Error ? error.message : "Gagal menghapus postingan." };
   }
 }
 
@@ -284,8 +291,8 @@ export async function deleteCommunityComment(commentId: string): Promise<{ succe
 
     revalidatePath("/social");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Gagal menghapus komentar:", error);
-    return { success: false, error: error.message || "Gagal menghapus komentar." };
+    return { success: false, error: error instanceof Error ? error.message : "Gagal menghapus komentar." };
   }
 }

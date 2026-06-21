@@ -1,12 +1,23 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { validateAdminApiRequest } from "@/lib/admin-api-auth";
 
 describe("validateAdminApiRequest", () => {
+  let originalSecret: string | undefined;
+
+  beforeEach(() => {
+    originalSecret = process.env.ADMIN_API_SECRET;
+  });
+
   afterEach(() => {
-    delete process.env.ADMIN_API_SECRET;
+    if (originalSecret === undefined) {
+      delete process.env.ADMIN_API_SECRET;
+    } else {
+      process.env.ADMIN_API_SECRET = originalSecret;
+    }
   });
 
   it("menolak request jika ADMIN_API_SECRET tidak dikonfigurasi", () => {
+    delete process.env.ADMIN_API_SECRET;
     const result = validateAdminApiRequest(new Request("https://example.test/api/admin"));
 
     expect(result).toEqual({

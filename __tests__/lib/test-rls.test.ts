@@ -3,24 +3,35 @@ import { createClient } from "@supabase/supabase-js";
 import fs from "fs";
 import path from "path";
 
-// Load environment variables from .env.local
+// Load environment variables from .env.local if exists
 const envPath = path.resolve(process.cwd(), ".env.local");
-const envContent = fs.readFileSync(envPath, "utf8");
+const hasEnv = fs.existsSync(envPath);
 const env: Record<string, string> = {};
-envContent.split(/\r?\n/).forEach((line) => {
-  const trimmed = line.trim();
-  if (!trimmed || trimmed.startsWith("#")) return;
-  const eqIdx = trimmed.indexOf("=");
-  if (eqIdx === -1) return;
-  const key = trimmed.slice(0, eqIdx).trim();
-  const val = trimmed.slice(eqIdx + 1).trim().replace(/^['"]|['"]$/g, "");
-  env[key] = val;
-});
+if (hasEnv) {
+  const envContent = fs.readFileSync(envPath, "utf8");
+  envContent.split(/\r?\n/).forEach((line) => {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) return;
+    const eqIdx = trimmed.indexOf("=");
+    if (eqIdx === -1) return;
+    const key = trimmed.slice(0, eqIdx).trim();
+    const val = trimmed.slice(eqIdx + 1).trim().replace(/^['"]|['"]$/g, "");
+    env[key] = val;
+  });
+}
 
-const anonClient = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-const adminClient = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY);
+const isCI = process.env.GITHUB_ACTIONS === "true" || !hasEnv;
 
-describe("RLS Policies Integration Test", () => {
+const anonClient = createClient(
+  env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || "https://example.supabase.co",
+  env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "ci-anon-key"
+);
+const adminClient = createClient(
+  env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || "https://example.supabase.co",
+  env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "ci-service-role-key"
+);
+
+describe.skipIf(isCI)("RLS Policies Integration Test", () => {
   it("should test RLS on user_exam_sessions", async () => {
     // 1. Get a test user email/password or create one
     const email = `test-rls-${Date.now()}@example.com`;
@@ -34,8 +45,9 @@ describe("RLS Policies Integration Test", () => {
 
     expect(signUpErr).toBeNull();
     const testUser = authData.user;
+    expect(testUser).not.toBeNull();
     expect(testUser).toBeDefined();
-    console.log(`Created temp user for RLS test: ${testUser.id}`);
+    console.log(`Created temp user for RLS test: ${testUser!.id}`);
 
     try {
       // 2. Sign in with the anon client
@@ -63,8 +75,8 @@ describe("RLS Policies Integration Test", () => {
         .from("user_exam_sessions")
         .insert({
           id: sessionId,
-          user_id: testUser.id,
-          template_id: template.id,
+          user_id: testUser!.id,
+          template_id: template!.id,
           jlpt_level: "N5",
           status: "in_progress",
           question_order: [],
@@ -82,8 +94,10 @@ describe("RLS Policies Integration Test", () => {
       console.log("Successfully inserted session under RLS!");
     } finally {
       // Clean up temp user
-      await adminClient.auth.admin.deleteUser(testUser.id);
-      console.log("Cleaned up temp user.");
+      if (testUser) {
+        await adminClient.auth.admin.deleteUser(testUser.id);
+        console.log("Cleaned up temp user.");
+      }
     }
   });
 });

@@ -20,7 +20,7 @@ export function useCommunityFeed() {
   const [postCategory, setPostCategory] = useState("Umum");
 
   // Profile Modal State
-  const [selectedUserProfile, setSelectedUserProfile] = useState<any | null>(null);
+  const [selectedUserProfile, setSelectedUserProfile] = useState<Record<string, unknown> | null>(null);
   const [isFetchingProfile, setIsFetchingProfile] = useState(false);
 
   const currentUserId = useUserStore((s) => s.id);

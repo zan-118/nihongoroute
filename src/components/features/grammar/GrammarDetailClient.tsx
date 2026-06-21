@@ -616,7 +616,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
               </h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {article.familyGrammarList.map((item: any) => (
+              {article.familyGrammarList.map((item: { id: string; slug: string; title: string; jlpt_level: string; meaning: string; [key: string]: unknown }) => (
                 <Link key={item.id} href={`/library/grammar/${item.slug}`} className="block group">
                   <Card className="p-5 bg-card/5 backdrop-blur-md border border-border group-hover:border-primary/40 rounded-[1.2rem] transition-all duration-300 shadow-[0_0_15px_rgba(var(--primary-rgb),0.02)] group-hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.05)]">
                     <div className="flex justify-between items-center mb-2">
@@ -647,7 +647,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
               </h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {article.relatedGrammarList.map((item: any) => (
+              {article.relatedGrammarList.map((item: { id: string; slug: string; title: string; jlpt_level: string; meaning: string; [key: string]: unknown }) => (
                 <Link key={item.id} href={`/library/grammar/${item.slug}`} className="block group">
                   <Card className="p-5 bg-card/5 backdrop-blur-md border border-border group-hover:border-secondary/40 rounded-[1.2rem] transition-all duration-300 shadow-[0_0_15px_rgba(var(--secondary-rgb),0.02)] group-hover:shadow-[0_0_20px_rgba(var(--secondary-rgb),0.05)]">
                     <div className="flex justify-between items-center mb-2">

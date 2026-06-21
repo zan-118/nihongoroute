@@ -12,7 +12,7 @@ import {
 import { toast } from "sonner";
 
 interface UsePostCardParams {
-  post: any;
+  post: { id: string; user_id: string; likes_users: string[]; [key: string]: unknown };
   currentUserId: string;
   isGuest: boolean;
 }
@@ -41,7 +41,7 @@ export function usePostCard({ post, currentUserId, isGuest }: UsePostCardParams)
     onMutate: async () => {
       setIsLiking(true);
       await queryClient.cancelQueries({ queryKey: ["community_posts"] });
-      const previousPosts = queryClient.getQueryData<any[]>(["community_posts"]);
+      const previousPosts = queryClient.getQueryData<{ id: string; likes_users: string[]; [key: string]: unknown }[]>(["community_posts"]);
       
       if (previousPosts) {
         queryClient.setQueryData(
@@ -62,7 +62,7 @@ export function usePostCard({ post, currentUserId, isGuest }: UsePostCardParams)
       }
       return { previousPosts };
     },
-    onError: (err, newLike, context: any) => {
+    onError: (err, newLike, context: { previousPosts?: { id: string; likes_users: string[]; [key: string]: unknown }[] } | undefined) => {
       if (context?.previousPosts) {
         queryClient.setQueryData(["community_posts"], context.previousPosts);
       }
