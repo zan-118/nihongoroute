@@ -5,7 +5,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { 
   getCommunityPosts, 
   createCommunityPost,
-  getPublicProfile
+  getPublicProfile,
+  type PublicProfile
 } from "@/actions/community.actions";
 import { useUserStore } from "@/store/useUserStore";
 import { toast } from "sonner";
@@ -20,7 +21,7 @@ export function useCommunityFeed() {
   const [postCategory, setPostCategory] = useState("Umum");
 
   // Profile Modal State
-  const [selectedUserProfile, setSelectedUserProfile] = useState<Record<string, unknown> | null>(null);
+  const [selectedUserProfile, setSelectedUserProfile] = useState<PublicProfile | null>(null);
   const [isFetchingProfile, setIsFetchingProfile] = useState(false);
 
   const currentUserId = useUserStore((s) => s.id);

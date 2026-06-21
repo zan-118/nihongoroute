@@ -161,7 +161,7 @@ export default function WeakPointPanel() {
               id: leech.id,
               type: "vocab",
               display: vocabItem.word,
-              detail: vocabItem.furigana ? `${vocabItem.furigana} (${vocabItem.romaji})` : vocabItem.romaji,
+              detail: vocabItem.furigana ? `${vocabItem.furigana} (${vocabItem.romaji || ""})` : vocabItem.romaji || "",
               easeFactor: leech.easeFactor,
               slug: vocabItem.slug || undefined,
             });

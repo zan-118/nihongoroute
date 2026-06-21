@@ -7,12 +7,13 @@ import {
   getPostComments, 
   addCommunityComment,
   deleteCommunityPost,
-  deleteCommunityComment
+  deleteCommunityComment,
+  type CommunityPost
 } from "@/actions/community.actions";
 import { toast } from "sonner";
 
 interface UsePostCardParams {
-  post: { id: string; user_id: string; likes_users: string[]; [key: string]: unknown };
+  post: CommunityPost;
   currentUserId: string;
   isGuest: boolean;
 }
@@ -41,7 +42,7 @@ export function usePostCard({ post, currentUserId, isGuest }: UsePostCardParams)
     onMutate: async () => {
       setIsLiking(true);
       await queryClient.cancelQueries({ queryKey: ["community_posts"] });
-      const previousPosts = queryClient.getQueryData<{ id: string; likes_users: string[]; [key: string]: unknown }[]>(["community_posts"]);
+      const previousPosts = queryClient.getQueryData<CommunityPost[]>(["community_posts"]);
       
       if (previousPosts) {
         queryClient.setQueryData(
@@ -62,7 +63,7 @@ export function usePostCard({ post, currentUserId, isGuest }: UsePostCardParams)
       }
       return { previousPosts };
     },
-    onError: (err, newLike, context: { previousPosts?: { id: string; likes_users: string[]; [key: string]: unknown }[] } | undefined) => {
+    onError: (err, newLike, context: { previousPosts?: CommunityPost[] } | undefined) => {
       if (context?.previousPosts) {
         queryClient.setQueryData(["community_posts"], context.previousPosts);
       }

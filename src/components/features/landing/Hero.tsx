@@ -40,40 +40,20 @@ export function Hero() {
           />
         </m.div>
 
-        <m.h1
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="text-[3.35rem] sm:text-6xl md:text-7xl lg:text-[5.95rem] font-black tracking-[-0.07em] leading-[0.92] text-foreground mb-7"
-        >
+        <h1 className="text-[3.35rem] sm:text-6xl md:text-7xl lg:text-[5.95rem] font-black tracking-[-0.07em] leading-[0.92] text-foreground mb-7">
           Kuasai <br />
-          <m.span
-            initial={{ filter: "blur(14px)", opacity: 0 }}
-            animate={{ filter: "blur(0px)", opacity: 1 }}
-            transition={{ delay: 0.25, duration: 0.8 }}
-            className="brand-text-gradient inline-block"
-          >
+          <span className="brand-text-gradient inline-block">
             Bahasa Jepang.
-          </m.span>
-        </m.h1>
+          </span>
+        </h1>
 
-        <m.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.35 }}
-          className="text-muted-foreground text-base md:text-lg max-w-xl mb-10 leading-relaxed font-semibold text-balance"
-        >
+        <p className="text-muted-foreground text-base md:text-lg max-w-xl mb-10 leading-relaxed font-semibold text-balance">
           Belajar bahasa Jepang di NihongoRoute dengan jalur yang rapi: kana,
           kosakata, tata bahasa, SRS, dan simulasi ujian dalam satu pengalaman
           yang cepat, nyaman, dan siap dipakai harian.
-        </m.p>
+        </p>
 
-        <m.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.45 }}
-          className="flex flex-col sm:flex-row gap-3.5 w-full sm:w-auto"
-        >
+        <div className="flex flex-col sm:flex-row gap-3.5 w-full sm:w-auto">
           <Button
             asChild
             className="brand-button h-14 px-7 sm:px-9 text-xs group"
@@ -96,7 +76,7 @@ export function Hero() {
               Jelajahi Materi
             </Link>
           </Button>
-        </m.div>
+        </div>
       </div>
 
       <m.div

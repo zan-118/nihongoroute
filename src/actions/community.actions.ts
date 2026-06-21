@@ -74,19 +74,20 @@ export async function getCommunityPosts(category?: string): Promise<CommunityPos
     if (error) throw error;
     
     // Konversi format likes_users dari JSONB array ke string[]
-    return (data || []).map((post: {
-      likes_users: unknown;
-      author?: { full_name: string; avatar_url?: string; level?: number };
-      [key: string]: unknown;
-    }) => ({
-      ...post,
-      likes_users: Array.isArray(post.likes_users) ? post.likes_users : [],
+    return (data || []).map((post: any) => ({
+      id: post.id,
+      user_id: post.user_id,
+      content: post.content,
+      created_at: post.created_at,
+      comments_count: post.comments_count,
+      category: post.category,
+      likes_users: Array.isArray(post.likes_users) ? (post.likes_users as string[]) : [],
       author: post.author ? {
         full_name: post.author.full_name,
         avatar_url: post.author.avatar_url,
         level: post.author.level || 1,
       } : undefined
-    }));
+    })) as CommunityPost[];
   } catch (error) {
     console.error("Gagal mengambil postingan komunitas:", error);
     return [];
@@ -187,17 +188,18 @@ export async function getPostComments(postId: string): Promise<CommunityComment[
 
     if (error) throw error;
 
-    return (data || []).map((comment: {
-      author?: { full_name: string; avatar_url?: string; level?: number };
-      [key: string]: unknown;
-    }) => ({
-      ...comment,
+    return (data || []).map((comment: any) => ({
+      id: comment.id,
+      post_id: comment.post_id,
+      user_id: comment.user_id,
+      content: comment.content,
+      created_at: comment.created_at,
       author: comment.author ? {
         full_name: comment.author.full_name,
         avatar_url: comment.author.avatar_url,
         level: comment.author.level || 1,
       } : undefined
-    }));
+    })) as CommunityComment[];
   } catch (error) {
     console.error("Gagal mengambil komentar:", error);
     return [];
@@ -231,10 +233,20 @@ export async function addCommunityComment(postId: string, content: string): Prom
   }
 }
 
+export interface PublicProfile {
+  id: string;
+  full_name: string | null;
+  xp: number;
+  level: number;
+  streak: number;
+  avatar_url: string | null;
+  study_days: any;
+}
+
 /**
  * Mengambil profil detail lengkap pengguna berdasarkan ID untuk modal profil.
  */
-export async function getPublicProfile(userId: string) {
+export async function getPublicProfile(userId: string): Promise<{ success: boolean; profile?: PublicProfile; error?: string }> {
   try {
     const supabase = await createClient();
     const { data, error } = await supabase
@@ -244,7 +256,7 @@ export async function getPublicProfile(userId: string) {
       .single();
 
     if (error) throw error;
-    return { success: true, profile: data };
+    return { success: true, profile: data as PublicProfile };
   } catch (error: unknown) {
     console.error("Gagal mengambil profil publik:", error);
     return { success: false, error: error instanceof Error ? error.message : "Gagal mengambil profil." };

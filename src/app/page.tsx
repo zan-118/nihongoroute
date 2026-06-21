@@ -17,11 +17,34 @@ import {
   webPageJsonLd,
 } from "@/lib/seo";
 
-// Komponen Domain (seluruhnya "use client" secara internal)
+import dynamic from "next/dynamic";
+
+// Komponen Domain (optimasi dynamic loading untuk performa mobile)
 import { Hero } from "@/components/features/landing/Hero";
-import { FeatureGrid } from "@/components/features/landing/FeatureGrid";
-import { TrustBanner } from "@/components/features/landing/TrustBanner";
-import { LandingFooter } from "@/components/features/landing/LandingFooter";
+
+const FeatureGrid = dynamic(
+  () => import("@/components/features/landing/FeatureGrid").then((mod) => mod.FeatureGrid),
+  {
+    loading: () => (
+      <div className="min-h-[400px] animate-pulse bg-muted/20 rounded-[34px] w-full border border-border/40" />
+    ),
+    ssr: true,
+  }
+);
+
+const TrustBanner = dynamic(
+  () => import("@/components/features/landing/TrustBanner").then((mod) => mod.TrustBanner),
+  {
+    ssr: true,
+  }
+);
+
+const LandingFooter = dynamic(
+  () => import("@/components/features/landing/LandingFooter").then((mod) => mod.LandingFooter),
+  {
+    ssr: true,
+  }
+);
 
 export const metadata: Metadata = {
   ...createPageMetadata({

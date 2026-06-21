@@ -2,6 +2,7 @@
 
 import { usePostCard } from "./hooks/usePostCard";
 import { useCommunityFeed } from "./hooks/useCommunityFeed";
+import type { CommunityComment, CommunityPost } from "@/actions/community.actions";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -45,17 +46,7 @@ function formatRelativeTime(dateString: string) {
 }
 
 interface PostCardProps {
-  post: {
-    id: string;
-    user_id: string;
-    content: string;
-    created_at: string;
-    likes_users: string[];
-    comments_count: number;
-    category?: string;
-    author?: { full_name: string; level?: number };
-    [key: string]: unknown;
-  };
+  post: CommunityPost;
   currentUserId: string;
   isGuest: boolean;
   onAuthorClick: (userId: string) => void;
@@ -177,7 +168,7 @@ function PostCard({ post, currentUserId, isGuest, onAuthorClick }: PostCardProps
                   <Loader2 className="animate-spin text-primary" size={14} /> Memuat komentar…
                 </div>
               ) : comments && comments.length > 0 ? (
-                comments.map((comment: { id: string; user_id: string; content: string; created_at: string; author?: { full_name: string }; [key: string]: unknown }) => (
+                comments.map((comment: CommunityComment) => (
                   <div key={comment.id} className="p-3 bg-background/30 rounded-2xl border border-border/60 flex flex-col relative">
                     <div className="flex items-center justify-between mb-1.5">
                       <div className="flex items-center gap-2">
