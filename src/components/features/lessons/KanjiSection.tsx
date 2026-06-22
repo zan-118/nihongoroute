@@ -20,6 +20,7 @@ export interface KanjiLessonItem {
   id?: string;
   character: string;
   meaning?: string;
+  slug?: string;
 }
 
 interface KanjiSectionProps {
@@ -48,7 +49,7 @@ export const KanjiSection: React.FC<KanjiSectionProps> = ({ kanjiList }) => {
         {visibleKanjis.map((k: KanjiLessonItem) => (
           <Link
             key={k._id || k.id}
-            href={`/library/kanji/${k.character}`}
+            href={`/library/kanji/${k.slug || k.character}`}
             className="neo-card p-6 flex flex-col items-center justify-center group hover:border-primary/40 transition-all duration-300"
           >
             <span className="text-4xl font-black mb-3 group-hover:scale-110 transition-transform">

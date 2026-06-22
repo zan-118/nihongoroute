@@ -39,6 +39,7 @@ interface KanjiToolRow {
   onyomi: string | null;
   kunyomi: string | null;
   jlpt_level: string | null;
+  slug: string | null;
 }
 
 interface GrammarToolRow {
@@ -359,7 +360,7 @@ export async function getIntegratedMiniDrillQuestions(
       .not("word", "is", null);
     const kanjiQuery = supabase
       .from("kanji")
-      .select("id, character, meaning, onyomi, kunyomi, jlpt_level")
+      .select("id, character, meaning, onyomi, kunyomi, jlpt_level, slug")
       .not("character", "is", null);
     const grammarQuery = supabase
       .from("grammar")
@@ -395,7 +396,7 @@ export async function getIntegratedMiniDrillQuestions(
       source === "kanji" && slug
         ? supabase
             .from("kanji")
-            .select("id, character, meaning, onyomi, kunyomi, jlpt_level")
+            .select("id, character, meaning, onyomi, kunyomi, jlpt_level, slug")
             .eq("character", slug)
             .limit(1)
         : Promise.resolve({ data: [], error: null }),
@@ -474,7 +475,7 @@ export async function getIntegratedMiniDrillQuestions(
           answer,
           options: buildOptions(answer, kanjiMeanings, `kanji-${row.id}`),
           explanation: `${row.character} berkaitan dengan arti ${answer}.`,
-          sourceHref: row.character ? `/library/kanji/${encodeURIComponent(row.character)}` : undefined,
+          sourceHref: row.slug ? `/library/kanji/${row.slug}` : row.character ? `/library/kanji/${encodeURIComponent(row.character)}` : undefined,
           sourceTitle: row.character || undefined,
           sourceType: "database",
         };

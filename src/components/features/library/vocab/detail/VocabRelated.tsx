@@ -65,7 +65,7 @@ export function VocabRelated({ relatedKanji, synonyms, antonyms }: VocabRelatedP
           </div>
           <div className="flex flex-wrap gap-3">
             {relatedKanji.map((kanji) => (
-              <Link key={kanji.id || kanji._id} href={`/library/kanji/${kanji.character}`}>
+              <Link key={kanji.id || kanji._id} href={`/library/kanji/${kanji.slug || kanji.character}`}>
                 <div className="p-2 pr-4 bg-[rgb(var(--muted-rgb)/0.3)] border border-border rounded-xl flex items-center gap-3 hover:border-primary/40 transition-all group/kanji">
                   <div className="size-10 rounded-lg bg-background border border-border flex items-center justify-center text-xl font-japanese group-hover/kanji:text-primary transition-colors">
                     {kanji.character}

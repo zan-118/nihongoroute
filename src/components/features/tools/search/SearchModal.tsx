@@ -65,7 +65,7 @@ async function searchSupabase(query: string): Promise<SearchItem[]> {
     supabase.from("grammar").select("id, title, slug, meaning")
       .or(`title.ilike.${searchTerm},slug.ilike.${searchTerm},meaning.ilike.${searchTerm}`)
       .limit(3),
-    supabase.from("kanji").select("id, character, meaning")
+    supabase.from("kanji").select("id, character, meaning, slug")
       .or(`character.ilike.${searchTerm},meaning.ilike.${searchTerm},onyomi.ilike.${searchTerm},kunyomi.ilike.${searchTerm},romaji.ilike.${searchTerm},character.ilike.${kanaTerm},onyomi.ilike.${kanaTerm},kunyomi.ilike.${kanaTerm}`)
       .limit(3),
   ]);
@@ -73,7 +73,7 @@ async function searchSupabase(query: string): Promise<SearchItem[]> {
   const mapped: SearchItem[] = [
     ...(vocabRes.data || []).map(v => ({ id: v.id, title: v.word, description: v.meaning_id || "Kosakata", href: `/library/vocab/${v.slug || v.id}`, icon: FileText, category: "Kosakata" as const })),
     ...(grammarRes.data || []).map(g => ({ id: g.id, title: g.title, description: g.meaning || "Tata Bahasa", href: `/library/grammar/${g.slug || g.id}`, icon: BookOpen, category: "Tata Bahasa" as const })),
-    ...(kanjiRes.data || []).map(k => ({ id: k.id, title: k.character, description: k.meaning || "Kanji", href: `/library/kanji/${k.character || k.id}`, icon: Hash, category: "Kanji" as const })),
+    ...(kanjiRes.data || []).map(k => ({ id: k.id, title: k.character, description: k.meaning || "Kanji", href: `/library/kanji/${k.slug || k.character || k.id}`, icon: Hash, category: "Kanji" as const })),
   ];
   searchCache.set(normalizedQuery, mapped);
   return mapped;

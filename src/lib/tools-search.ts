@@ -126,7 +126,7 @@ export async function searchToolDictionary(
       .limit(Math.max(3, Math.min(limitPerType, 6))),
     supabase
       .from("kanji")
-      .select("id, character, meaning, onyomi, kunyomi, romaji, jlpt_level")
+      .select("id, character, meaning, onyomi, kunyomi, romaji, jlpt_level, slug")
       .or(
         `character.ilike."${searchTerm}",meaning.ilike."${searchTerm}",onyomi.ilike."${searchTerm}",kunyomi.ilike."${searchTerm}",romaji.ilike."${searchTerm}",character.ilike."${kanaTerm}",onyomi.ilike."${kanaTerm}",kunyomi.ilike."${kanaTerm}"`
       )
@@ -188,16 +188,18 @@ export async function searchToolDictionary(
       kunyomi?: string | null;
       romaji?: string | null;
       jlpt_level?: string | null;
+      slug?: string | null;
     }>).map((item) => ({
       id: item.id,
       title: item.character,
       description: item.meaning || "Kanji",
-      href: `/library/kanji/${item.character || item.id}`,
+      href: `/library/kanji/${item.slug || item.character || item.id}`,
       icon: Hash,
       category: "kanji" as const,
       jlptLevel: item.jlpt_level,
       reading: [item.onyomi, item.kunyomi].filter(Boolean).join(" / "),
       romaji: item.romaji,
+      slug: item.slug,
     })),
   };
 

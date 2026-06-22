@@ -642,7 +642,7 @@ export async function getLibraryItemBySlug(
         const hasUUIDs = cleanList.some(isUUID);
         const { data: kItems } = await supabase
           .from("kanji")
-          .select("id, character, meaning, onyomi, kunyomi, jlpt_level, stroke_order_svg")
+          .select("id, character, meaning, onyomi, kunyomi, jlpt_level, stroke_order_svg, slug")
           .in(hasUUIDs ? "id" : "character", cleanList);
         
         result.kanjiList = cleanList.map((item: string, idx: number) => {
@@ -651,7 +651,8 @@ export async function getLibraryItemBySlug(
             return {
               ...matched,
               _id: matched.id,
-              jlptLevel: matched.jlpt_level
+              jlptLevel: matched.jlpt_level,
+              slug: matched.slug
             };
           }
           return {
