@@ -37,6 +37,9 @@ export default function DailyExpression({ expression }: DailyExpressionProps) {
       {/* Pola kisi halus di latar belakang */}
       <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--primary-rgb)/0.02)_1px,transparent_1px)] bg-[size:100%_4px] opacity-40 pointer-events-none" />
 
+      {/* Pola tradisional Asanoha Jepang */}
+      <div className="absolute inset-0 bg-asanoha pointer-events-none" />
+
       {/* Kilau gradasi di sudut kanan atas */}
       <div className="absolute -top-10 -right-10 size-40 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
 

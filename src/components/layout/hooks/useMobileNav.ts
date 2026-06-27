@@ -7,7 +7,14 @@
 // IMPOR
 // ======================
 import { usePathname } from "next/navigation";
-import { Compass, Home, BrainCircuit, Library, LogIn, User } from "lucide-react";
+import { 
+  CustomDashboardIcon, 
+  CustomHubIcon, 
+  CustomSRSIcon, 
+  CustomLibraryIcon, 
+  CustomUserIcon, 
+  CustomLoginIcon 
+} from "@/components/ui/CustomIcons";
 import { useUserStore } from "@/store/useUserStore";
 import { useAuthStore } from "@/store/useAuthStore";
 
@@ -20,13 +27,13 @@ export function useMobileNav() {
   const userFullName = useUserStore((state) => state.name);
 
   const navItems = [
-    { href: "/dashboard", icon: Home, label: "Beranda" },
-    { href: "/learning-hub", icon: Compass, label: "Hub" },
-    { href: "/review", icon: BrainCircuit, label: "Hafalan" },
-    { href: "/library", icon: Library, label: "Pustaka" },
+    { href: "/dashboard", icon: CustomDashboardIcon, label: "Beranda" },
+    { href: "/learning-hub", icon: CustomHubIcon, label: "Hub" },
+    { href: "/review", icon: CustomSRSIcon, label: "Hafalan" },
+    { href: "/library", icon: CustomLibraryIcon, label: "Pustaka" },
     { 
       href: isAuthenticated ? "/settings" : "/login", 
-      icon: isAuthenticated ? User : LogIn, 
+      icon: isAuthenticated ? CustomUserIcon : CustomLoginIcon, 
       label: isAuthenticated ? (userFullName ? userFullName.split(' ')[0].substring(0, 7) : "Profil") : "Masuk" 
     },
   ];

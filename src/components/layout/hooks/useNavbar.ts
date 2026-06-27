@@ -10,19 +10,18 @@ import { useMemo } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { 
-  LayoutDashboard, 
-  Compass,
-  BookOpen, 
-  Trophy, 
-  Layers, 
-  BrainCircuit, 
-  Settings,
-  Share2,
-  Users,
-  CircleHelp,
-  Wrench,
-  LucideIcon
-} from "lucide-react";
+  CustomDashboardIcon,
+  CustomHubIcon,
+  CustomCoursesIcon,
+  CustomToolsIcon,
+  CustomExamsIcon,
+  CustomSRSIcon,
+  CustomLibraryIcon,
+  CustomCommunityIcon,
+  CustomSettingsIcon,
+  CustomShareIcon,
+  CustomHelpIcon
+} from "@/components/ui/CustomIcons";
 import { useUserStore } from "@/store/useUserStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { ROUTES } from "@/lib/routes";
@@ -33,7 +32,7 @@ import { ROUTES } from "@/lib/routes";
 interface NavLink {
   href: string;
   label: string;
-  icon: LucideIcon;
+  icon: React.ComponentType<any>;
 }
 
 interface NavLinks {
@@ -60,21 +59,21 @@ export function useNavbar() {
 
   const links: NavLinks = useMemo(() => ({
     main: [
-      { href: ROUTES.DASHBOARD, label: "Dasbor", icon: LayoutDashboard },
-      { href: ROUTES.LEARNING_HUB, label: "Learning Hub", icon: Compass },
-      { href: ROUTES.COURSES.ROOT, label: "Materi", icon: BookOpen },
-      { href: "/tools", label: "Peralatan", icon: Wrench },
-      { href: ROUTES.EXAMS.ROOT, label: "Ujian", icon: Trophy },
+      { href: ROUTES.DASHBOARD, label: "Dasbor", icon: CustomDashboardIcon },
+      { href: ROUTES.LEARNING_HUB, label: "Learning Hub", icon: CustomHubIcon },
+      { href: ROUTES.COURSES.ROOT, label: "Materi", icon: CustomCoursesIcon },
+      { href: "/tools", label: "Peralatan", icon: CustomToolsIcon },
+      { href: ROUTES.EXAMS.ROOT, label: "Ujian", icon: CustomExamsIcon },
     ],
     learn: [
-      { href: "/review", label: "Hafalan (SRS)", icon: BrainCircuit },
-      { href: ROUTES.LIBRARY.ROOT, label: "Pustaka", icon: Layers },
-      { href: "/social", label: "Komunitas", icon: Users },
+      { href: "/review", label: "Hafalan (SRS)", icon: CustomSRSIcon },
+      { href: ROUTES.LIBRARY.ROOT, label: "Pustaka", icon: CustomLibraryIcon },
+      { href: "/social", label: "Komunitas", icon: CustomCommunityIcon },
     ],
     system: [
-      { href: "/settings", label: "Pengaturan", icon: Settings },
-      { href: "/share", label: "Bagikan", icon: Share2 },
-      { href: ROUTES.SUPPORT, label: "Bantuan", icon: CircleHelp },
+      { href: "/settings", label: "Pengaturan", icon: CustomSettingsIcon },
+      { href: "/share", label: "Bagikan", icon: CustomShareIcon },
+      { href: ROUTES.SUPPORT, label: "Bantuan", icon: CustomHelpIcon },
     ]
   }), []);
 

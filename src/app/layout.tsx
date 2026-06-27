@@ -9,7 +9,7 @@
 // IMPOR
 // ======================
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_JP } from "next/font/google";
+import { Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
@@ -24,6 +24,13 @@ const notoSansJp = Noto_Sans_JP({
   subsets: ["latin"],
   weight: ["400", "700", "900"],
   variable: "--font-noto-jp",
+  display: "swap",
+});
+
+const notoSerifJp = Noto_Serif_JP({
+  subsets: ["latin"],
+  weight: ["400", "700", "900"],
+  variable: "--font-noto-serif-jp",
   display: "swap",
 });
 import {
@@ -124,7 +131,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" className={notoSansJp.variable} suppressHydrationWarning>
+    <html lang="id" className={`${notoSansJp.variable} ${notoSerifJp.variable}`} suppressHydrationWarning>
       <body
         suppressHydrationWarning
         className="font-sans antialiased text-foreground selection:bg-destructive selection:text-destructive-foreground transition-colors duration-300"

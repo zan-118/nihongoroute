@@ -45,6 +45,8 @@ export const PracticeSection: React.FC<PracticeSectionProps> = ({ lesson }) => {
         <div className="absolute top-0 right-0 p-12 opacity-5 rotate-12">
           <Award size={180} />
         </div>
+        {/* Pola tradisional Seigaiha Jepang */}
+        <div className="absolute inset-0 bg-seigaiha pointer-events-none" />
         <div className="relative z-10 flex flex-col items-center text-center max-w-xl mx-auto">
           <div 
             className="size-16 rounded-2xl flex items-center justify-center text-primary mb-6"

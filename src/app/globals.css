@@ -9,38 +9,38 @@
     --font-inter: var(--font-noto-jp), ui-sans-serif, system-ui, sans-serif;
     --font-noto-serif-jp: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", ui-serif, Georgia, serif;
 
-    /* 10/10 cyan-first brand system */
-    --background: 195 100% 98%;
-    --background-rgb: 245 253 255;
+    /* Cyan & Crimson Custom Brand System (Matching Logo and Personal Website) */
+    --background: 220 10% 96%;
+    --background-rgb: 244 245 247;
 
-    --foreground: 222 64% 8%;
-    --foreground-rgb: 8 14 31;
+    --foreground: 220 15% 10%;
+    --foreground-rgb: 24 26 31;
 
     --card: 0 0% 100%;
     --card-rgb: 255 255 255;
-    --card-foreground: 222 64% 8%;
+    --card-foreground: 220 15% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 64% 8%;
+    --popover-foreground: 220 15% 10%;
 
-    /* Primary is cyan, not teal/green. */
-    --primary: 190 94% 39%;
-    --primary-rgb: 8 157 190;
-    --primary-foreground: 222 64% 8%;
+    /* Primary is Cyan (fauzanabdulbasith.com logo style) */
+    --primary: 187 100% 36%;
+    --primary-rgb: 0 163 184;
+    --primary-foreground: 0 0% 100%;
 
-    /* Secondary only supports brand depth. It should not overpower cyan. */
-    --secondary: 259 88% 61%;
-    --secondary-rgb: 124 58 237;
+    /* Secondary is Crimson Red (fauzanabdulbasith.com design style) */
+    --secondary: 343 100% 41%;
+    --secondary-rgb: 208 0 60;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 198 56% 95%;
-    --muted-rgb: 234 248 252;
-    --muted-foreground: 220 18% 35%;
-    --muted-foreground-rgb: 73 85 105;
+    --muted: 220 10% 91%;
+    --muted-rgb: 232 234 237;
+    --muted-foreground: 220 10% 40%;
+    --muted-foreground-rgb: 90 95 102;
 
-    --accent: 188 95% 90%;
-    --accent-rgb: 207 250 254;
-    --accent-foreground: 191 90% 26%;
+    --accent: 187 100% 94%;
+    --accent-rgb: 224 247 250;
+    --accent-foreground: 187 100% 25%;
 
     --destructive: 0 84% 60%;
     --destructive-rgb: 239 68 68;
@@ -52,28 +52,28 @@
 
     --warning: 38 92% 50%;
     --warning-rgb: 245 158 11;
-    --warning-foreground: 222 64% 8%;
+    --warning-foreground: 220 15% 10%;
 
-    --border: 194 46% 82%;
-    --border-rgb: 180 222 232;
+    --border: 220 10% 86%;
+    --border-rgb: 219 222 227;
 
-    --input: 194 46% 82%;
-    --ring: 190 94% 39%;
+    --input: 220 10% 86%;
+    --ring: 187 100% 36%;
 
-    --sidebar: 195 100% 97%;
-    --sidebar-rgb: 239 252 255;
+    --sidebar: 220 10% 94%;
+    --sidebar-rgb: 240 241 243;
 
     --surface: 0 0% 100%;
     --surface-rgb: 255 255 255;
 
-    --surface-elevated: 195 100% 99%;
+    --surface-elevated: 220 10% 98%;
 
-    /* Extra brand tokens for gradients/glow. */
-    --brand-cyan-rgb: 34 211 238;
-    --brand-cyan-deep-rgb: 8 157 190;
-    --brand-blue-rgb: 14 165 233;
-    --brand-violet-rgb: 124 58 237;
-    --brand-pink-rgb: 217 70 239;
+    /* Extra brand tokens for gradients/glow. Mapping to Cyan & Crimson */
+    --brand-cyan-rgb: 0 163 184;
+    --brand-cyan-deep-rgb: 0 120 140;
+    --brand-blue-rgb: 208 0 60;
+    --brand-violet-rgb: 208 0 60;
+    --brand-pink-rgb: 255 80 120;
 
     --radius: 0.875rem;
     --border-opacity: 1;
@@ -82,67 +82,71 @@
   .dark {
     color-scheme: dark;
 
-    --background: 225 58% 4%;
-    --background-rgb: 3 7 18;
+    /* Charcoal Black (#121417) & Neon Cyan (#00eeff) & Crimson (#ff014f) */
+    --background: 218 12% 8%;
+    --background-rgb: 18 20 23;
 
-    --foreground: 210 40% 98%;
-    --foreground-rgb: 248 250 252;
+    --foreground: 45 10% 93%;
+    --foreground-rgb: 238 236 230;
 
-    --card: 224 44% 9%;
-    --card-rgb: 12 18 34;
-    --card-foreground: 210 40% 98%;
+    --card: 216 13% 11%;
+    --card-rgb: 23 26 31;
+    --card-foreground: 45 10% 93%;
 
-    --popover: 224 44% 8%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 216 13% 10%;
+    --popover-foreground: 45 10% 93%;
 
-    --primary: 188 95% 54%;
-    --primary-rgb: 34 211 238;
-    --primary-foreground: 222 64% 8%;
+    /* Primary is Neon Cyan */
+    --primary: 184 100% 50%;
+    --primary-rgb: 0 238 255;
+    --primary-foreground: 218 12% 8%;
 
-    --secondary: 263 92% 76%;
-    --secondary-rgb: 167 139 250;
-    --secondary-foreground: 222 64% 8%;
+    /* Secondary is Neon Crimson Red */
+    --secondary: 342 100% 50%;
+    --secondary-rgb: 255 1 79;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 221 34% 15%;
-    --muted-rgb: 25 35 58;
-    --muted-foreground: 215 20% 75%;
-    --muted-foreground-rgb: 148 163 184;
+    --muted: 216 10% 15%;
+    --muted-rgb: 33 37 43;
+    --muted-foreground: 45 6% 72%;
+    --muted-foreground-rgb: 185 182 176;
 
-    --accent: 193 78% 22%;
-    --accent-rgb: 12 74 110;
-    --accent-foreground: 188 95% 88%;
+    --accent: 184 100% 15%;
+    --accent-rgb: 0 76 80;
+    --accent-foreground: 184 100% 85%;
 
     --destructive: 0 91% 71%;
     --destructive-rgb: 248 113 113;
-    --destructive-foreground: 222 64% 8%;
+    --destructive-foreground: 218 12% 8%;
 
     --success: 160 84% 42%;
     --success-rgb: 16 185 129;
-    --success-foreground: 222 64% 8%;
+    --success-foreground: 218 12% 8%;
 
     --warning: 43 96% 56%;
     --warning-rgb: 250 204 21;
-    --warning-foreground: 222 64% 8%;
+    --warning-foreground: 218 12% 8%;
 
-    --border: 219 34% 22%;
-    --border-rgb: 45 58 87;
+    --border: 216 10% 18%;
+    --border-rgb: 38 42 49;
 
-    --input: 219 34% 22%;
-    --ring: 188 95% 54%;
+    --input: 216 10% 18%;
+    --ring: 184 100% 50%;
 
-    --sidebar: 225 54% 6%;
-    --sidebar-rgb: 7 12 25;
+    --sidebar: 218 14% 9%;
+    --sidebar-rgb: 20 22 26;
 
-    --surface: 224 44% 9%;
-    --surface-rgb: 12 18 34;
+    --surface: 216 13% 11%;
+    --surface-rgb: 23 26 31;
 
-    --surface-elevated: 223 40% 13%;
+    --surface-elevated: 216 10% 15%;
 
-    --brand-cyan-rgb: 34 211 238;
-    --brand-cyan-deep-rgb: 8 145 178;
-    --brand-blue-rgb: 56 189 248;
-    --brand-violet-rgb: 167 139 250;
-    --brand-pink-rgb: 232 121 249;
+    /* Mapping brand colors to Neon Cyan & Neon Crimson */
+    --brand-cyan-rgb: 0 238 255;
+    --brand-cyan-deep-rgb: 0 170 190;
+    --brand-blue-rgb: 255 1 79;
+    --brand-violet-rgb: 255 1 79;
+    --brand-pink-rgb: 255 80 120;
   }
 
   * {
@@ -220,6 +224,7 @@
   h4,
   h5,
   h6 {
+    font-family: var(--font-noto-serif-jp), serif;
     @apply text-foreground tracking-tight transition-colors duration-300;
     text-wrap: balance;
   }
@@ -838,11 +843,11 @@
   }
 
   .dark .neo-card:hover {
-    border-color: rgb(var(--brand-cyan-rgb) / 0.5);
+    border-color: rgb(var(--secondary-rgb) / 0.52);
     box-shadow:
       0 22px 64px rgb(0 0 0 / 0.45),
-      0 0 36px rgb(var(--brand-cyan-rgb) / 0.17),
-      0 0 46px rgb(var(--brand-violet-rgb) / 0.11),
+      0 0 36px rgb(var(--secondary-rgb) / 0.18),
+      0 0 46px rgb(var(--primary-rgb) / 0.12),
       inset 0 1px 0 rgb(255 255 255 / 0.06);
   }
 
@@ -1105,4 +1110,26 @@
     transition-duration: 0s !important;
     transition-delay: 0s !important;
   }
+}
+
+/* Noise Overlay & Traditional Patterns for Handcrafted Feel */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.015;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.bg-asanoha {
+  background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15 0 L30 15 L15 30 L0 15 Z M0 0 L15 15 L0 30 M30 0 L15 15 L30 30 M15 0 L15 30 M0 15 L30 15' fill='none' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.08'/%3E%3C/svg%3E");
+}
+
+.bg-seigaiha {
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='24' viewBox='0 0 40 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 24 C 10 24, 10 16, 20 16 C 30 16, 30 24, 40 24 M0 20 C 10 20, 10 12, 20 12 C 30 12, 30 20, 40 20 M0 16 C 10 16, 10 8, 20 8 C 30 8, 30 16, 40 16 M0 12 C 10 12, 10 4, 20 4 C 30 4, 30 12, 40 12 M0 8 C 10 8, 10 0, 20 0 C 30 0, 30 8, 40 8' fill='none' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.06'/%3E%3C/svg%3E");
 }
