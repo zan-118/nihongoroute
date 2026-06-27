@@ -28,7 +28,7 @@ export default function AddToSRSButton({ wordId }: { wordId: string }) {
         className="p-3 bg-success/10 border border-success/30 text-success rounded-xl transition-all cursor-default flex items-center justify-center relative group shadow-inner"
       >
         <Check size={18} />
-        <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-popover text-xs font-bold px-3 py-1 rounded-lg border border-success/30 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+        <span className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-popover text-xs font-bold px-3 py-1 rounded-lg border border-success/30 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
           Tersimpan di Hafalan
         </span>
       </button>
@@ -41,7 +41,7 @@ export default function AddToSRSButton({ wordId }: { wordId: string }) {
       className="p-3 bg-card border border-border hover:border-primary hover:bg-primary/10 text-muted-foreground hover:text-primary rounded-xl transition-all flex items-center justify-center active:scale-90 relative group"
     >
       <Plus size={18} />
-      <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-popover text-xs font-bold px-3 py-1 rounded-lg border border-primary/30 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none text-primary z-10">
+      <span className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-popover text-xs font-bold px-3 py-1 rounded-lg border border-primary/30 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none text-primary z-10">
         Mulai Hafalkan Kata Ini
       </span>
     </button>
