@@ -36,7 +36,7 @@ export const PracticeSection: React.FC<PracticeSectionProps> = ({ lesson }) => {
   return (
     <section>
       <div 
-        className="neo-card p-10 relative overflow-hidden"
+        className="neo-card p-6 md:p-10 relative overflow-hidden"
         style={{ 
           backgroundImage: "linear-gradient(135deg, rgb(var(--primary-rgb)/0.1), transparent, rgb(var(--secondary-rgb)/0.1))",
           borderColor: "rgb(var(--primary-rgb)/0.2)"
@@ -60,7 +60,7 @@ export const PracticeSection: React.FC<PracticeSectionProps> = ({ lesson }) => {
           </p>
           <Link
             href={`/exams/${lesson.finalPractice.slug}`}
-            className="px-10 py-4 rounded-full bg-primary text-primary-foreground font-black uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-[0_0_30px_rgb(var(--primary-rgb)/0.3)]"
+            className="w-full sm:w-auto text-center px-6 md:px-10 py-4 rounded-full bg-primary text-primary-foreground font-black uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-[0_0_30px_rgb(var(--primary-rgb)/0.3)]"
           >
             Mulai Latihan: {lesson.finalPractice.title}
           </Link>

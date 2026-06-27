@@ -122,7 +122,7 @@ export function FeatureGrid() {
         >
           {/* KARTU 1: ALAT BANTU KANA INTERAKTIF */}
           <m.div variants={itemVariants}>
-            <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-primary/40 hover:shadow-[0_0_50px_rgb(var(--primary-rgb)_/_0.12)] shadow-none glass">
+            <Card className="p-6 sm:p-8 md:p-10 group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[24px] sm:rounded-[34px] hover:border-primary/40 hover:shadow-[0_0_50px_rgb(var(--primary-rgb)_/_0.12)] shadow-none glass">
               <div className="absolute top-0 right-0 size-32 bg-primary/5 rounded-full blur-[40px] group-hover:bg-primary/10 transition-all duration-500" />
               
               <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm text-primary">
@@ -157,7 +157,7 @@ export function FeatureGrid() {
  
           {/* KARTU 2: DATABASE PERPUSTAKAAN KOSAKATA & TATA BAHASA */}
           <m.div variants={itemVariants}>
-            <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-secondary/40 hover:shadow-[0_0_50px_rgb(var(--secondary-rgb)_/_0.12)] shadow-none glass">
+            <Card className="p-6 sm:p-8 md:p-10 group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[24px] sm:rounded-[34px] hover:border-secondary/40 hover:shadow-[0_0_50px_rgb(var(--secondary-rgb)_/_0.12)] shadow-none glass">
               <div className="absolute top-0 right-0 size-32 bg-secondary/5 rounded-full blur-[40px] group-hover:bg-secondary/10 transition-all duration-500" />
               
               <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm text-secondary">
@@ -208,7 +208,7 @@ export function FeatureGrid() {
  
           {/* KARTU 3: FLASHCARDS DENGAN SYSTEM SRS */}
           <m.div variants={itemVariants}>
-            <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-primary/40 hover:shadow-[0_0_50px_rgb(var(--primary-rgb)_/_0.12)] shadow-none glass">
+            <Card className="p-6 sm:p-8 md:p-10 group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[24px] sm:rounded-[34px] hover:border-primary/40 hover:shadow-[0_0_50px_rgb(var(--primary-rgb)_/_0.12)] shadow-none glass">
               <div className="absolute top-0 right-0 size-32 bg-primary/5 rounded-full blur-[40px] group-hover:bg-primary/10 transition-all duration-500" />
               
               <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm text-primary">
@@ -244,7 +244,7 @@ export function FeatureGrid() {
  
           {/* KARTU 4: SIMULASI UJIAN JLPT REAL-TIME */}
           <m.div variants={itemVariants}>
-            <Card className="p-[42px] group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[34px] hover:border-secondary/40 hover:shadow-[0_0_50px_rgb(var(--secondary-rgb)_/_0.12)] shadow-none glass">
+            <Card className="p-6 sm:p-8 md:p-10 group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[24px] sm:rounded-[34px] hover:border-secondary/40 hover:shadow-[0_0_50px_rgb(var(--secondary-rgb)_/_0.12)] shadow-none glass">
               <div className="absolute top-0 right-0 size-32 bg-secondary/5 rounded-full blur-[40px] group-hover:bg-secondary/10 transition-all duration-500" />
               
               <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm text-secondary">
@@ -351,7 +351,7 @@ export function FeatureGrid() {
 
           {/* TAMPILAN DETIL LANGKAH AKTIF - KOLOM KANAN */}
           <div className="lg:col-span-7 h-full">
-            <Card className="p-10 rounded-[34px] bg-card/10 backdrop-blur-xl border border-border shadow-none relative overflow-hidden min-h-[350px] flex flex-col justify-between">
+            <Card className="p-6 sm:p-8 md:p-10 rounded-[24px] sm:rounded-[34px] bg-card/10 backdrop-blur-xl border border-border shadow-none relative overflow-hidden min-h-[350px] flex flex-col justify-between">
               <div className="absolute top-0 right-0 size-[200px] bg-primary/5 rounded-full blur-[80px] pointer-events-none" />
               
               <div className="space-y-6 relative z-10">
@@ -392,7 +392,7 @@ export function FeatureGrid() {
 
       {/* SEKSI 3: PRATINJAU GAMIFIKASI KEMAJUAN BELAJAR */}
       <section className="relative">
-        <Card className="p-[55px] rounded-[42px] bg-card/10 backdrop-blur-xl border border-border shadow-none relative overflow-hidden group">
+        <Card className="p-6 sm:p-10 md:p-[42px] lg:p-[55px] rounded-[28px] sm:rounded-[34px] md:rounded-[42px] bg-card/10 backdrop-blur-xl border border-border shadow-none relative overflow-hidden group">
           {/* Aksen Kilau Latar Belakang */}
           <div className="absolute -top-32 -left-32 size-89 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
           <div className="absolute -bottom-32 -right-32 size-89 bg-secondary/5 rounded-full blur-[100px] pointer-events-none" />

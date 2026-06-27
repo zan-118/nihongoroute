@@ -51,7 +51,7 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
       <div className="space-y-16">
         {readingList.map((r: ReadingLessonItem) => (
           <div key={r._id || r.id} className="relative">
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
                <div>
                  <span 
                    className="text-[10px] font-black text-primary uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-3 inline-block"
@@ -62,11 +62,11 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
                  <h3 className="text-3xl font-black tracking-tighter uppercase">{r.title}</h3>
                </div>
                {(r.audioUrl || r.audio_url) && (
-                 <div className="flex items-center gap-4">
+                 <div className="flex items-center gap-4 w-full sm:w-auto">
                    <OfflineAudio 
                      controls 
                      src={(r.audioUrl || r.audio_url)!} 
-                     className="h-10 filter brightness-90 contrast-125" 
+                     className="w-full sm:w-64 h-10 filter brightness-90 contrast-125" 
                    />
                  </div>
                )}

@@ -13,7 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
-import { BookmarkCheck, BookmarkPlus, ExternalLink, Loader2, Trash2 } from "lucide-react";
+import { BookmarkCheck, BookmarkPlus, ExternalLink, Loader2, Trash2, X } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import AddToSRSButton from "@/components/features/srs/actions/AddToSRSButton";
@@ -172,18 +172,28 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
               )}
             >
               <div className={cn(
-                "p-5 border border-border/60 shadow-2xl bg-card",
+                "p-5 border border-border/60 shadow-2xl bg-card relative",
                 isMobile 
                   ? "rounded-t-[2.5rem] pb-8" 
                   : "rounded-3xl glass bg-card/80 backdrop-blur-2xl"
               )}>
+                {isMobile && (
+                  <button
+                    type="button"
+                    onClick={() => setIsOpen(false)}
+                    className="absolute top-4 right-4 text-muted-foreground hover:text-foreground p-1.5 rounded-xl bg-muted/50 transition-colors border border-border/40 z-30"
+                    aria-label="Tutup"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
                 {isLoading ? (
                   <div className="flex items-center justify-center py-8">
                     <Loader2 size={24} className="animate-spin text-primary" />
                   </div>
                 ) : vocab ? (
                   <div className="space-y-4">
-                    <div className="flex justify-between items-start">
+                    <div className="flex justify-between items-start pr-8 md:pr-0">
                       <div className="flex flex-col">
                         <span className="text-2xl font-black font-japanese text-foreground">
                           <SmartJapanese word={vocab.word} furigana={vocab.furigana} />

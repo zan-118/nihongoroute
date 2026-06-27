@@ -40,7 +40,7 @@ export function Hero() {
           />
         </m.div>
 
-        <h1 className="text-[3.35rem] sm:text-6xl md:text-7xl lg:text-[5.95rem] font-black tracking-[-0.07em] leading-[0.92] text-foreground mb-7">
+        <h1 className="text-[2.75rem] sm:text-6xl md:text-7xl lg:text-[5.95rem] font-black tracking-[-0.07em] leading-[0.92] text-foreground mb-7">
           Kuasai <br />
           <span className="brand-text-gradient inline-block">
             Bahasa Jepang.
