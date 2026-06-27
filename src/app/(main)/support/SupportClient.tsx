@@ -222,7 +222,7 @@ export default function SupportClient() {
           </Button>
 
           <div className="flex items-center gap-2">
-            <div className="relative size-8 shrink-0 drop-shadow-[0_0_8px_rgb(var(--primary-rgb)/0.3)]">
+            <div className="relative size-12 shrink-0 drop-shadow-[0_0_8px_rgb(var(--primary-rgb)/0.3)]">
               <Image
                 src="/logo-branding.svg"
                 alt="Logo NihongoRoute"

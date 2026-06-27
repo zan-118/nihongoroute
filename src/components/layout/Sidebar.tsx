@@ -36,7 +36,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
 
         <div className="mb-7 flex items-center gap-4 relative z-10 px-1">
           <Link href="/" className="flex items-center gap-3 group rounded-xl focus-visible:ring-offset-0">
-            <div className="relative size-9 group-hover:rotate-6 transition-transform duration-500 drop-shadow-[0_8px_18px_rgb(var(--brand-cyan-rgb)/0.26)]">
+            <div className="relative size-12 group-hover:rotate-6 transition-transform duration-500 drop-shadow-[0_8px_18px_rgb(var(--brand-cyan-rgb)/0.26)]">
               <Image
                 src="/logo-branding.svg"
                 alt="NihongoRoute"

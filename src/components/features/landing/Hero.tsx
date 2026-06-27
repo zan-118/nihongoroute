@@ -29,14 +29,14 @@ export function Hero() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.14, duration: 0.5 }}
-          className="lg:hidden relative size-16 mb-5 rounded-2xl premium-surface flex items-center justify-center"
+          className="lg:hidden relative size-36 mb-5 rounded-2xl premium-surface flex items-center justify-center"
         >
           <Image
             src="/logo-branding.svg"
             alt="NihongoRoute"
             fill
             priority
-            className="object-contain p-3"
+            className="object-contain p-2"
           />
         </m.div>
 

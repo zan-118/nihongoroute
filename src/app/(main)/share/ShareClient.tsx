@@ -223,7 +223,7 @@ function ShareContent() {
 
           {/* Branding Footer */}
           <div className="mt-12 flex items-center justify-center gap-3 opacity-35 select-none">
-            <div className="relative size-6 shrink-0">
+            <div className="relative size-10 shrink-0">
               <Image src="/logo-branding.svg" alt="NihongoRoute Branding" fill className="object-contain" />
             </div>
             <span className="text-[10px] font-black uppercase tracking-[0.45em] text-foreground">NihongoRoute</span>
