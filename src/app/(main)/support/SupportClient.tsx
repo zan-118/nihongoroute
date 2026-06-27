@@ -304,7 +304,7 @@ export default function SupportClient() {
 
         {/* 1. INTERACTIVE TARGET BAR */}
         <Card className="glass border border-border/80 rounded-[3rem] p-8 sm:p-12 mb-12 sm:mb-16 shadow-xl relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese pointer-events-none text-foreground font-japanese select-none">
+          <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese">
             TARGET
           </div>
           <div className="absolute -top-28 -right-28 size-56 bg-primary/5 blur-[55px] rounded-full pointer-events-none" />
