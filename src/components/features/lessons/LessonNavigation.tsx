@@ -66,14 +66,7 @@ export const LessonNavigation: React.FC<LessonNavigationProps> = ({
       ) : (
         <Link
           href={`/courses/${levelCode || categoryId}`}
-          className="neo-card h-full p-8 flex flex-col items-center justify-center text-center group hover:border-primary transition-all duration-300"
-          style={{ backgroundColor: "rgb(var(--primary-rgb)/0.05)", borderColor: "rgb(var(--primary-rgb)/0.2)" }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "rgb(var(--primary-rgb)/0.1)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "rgb(var(--primary-rgb)/0.05)";
-          }}
+          className="neo-card h-full p-8 flex flex-col items-center justify-center text-center group bg-[rgb(var(--primary-rgb)/0.05)] hover:bg-[rgb(var(--primary-rgb)/0.1)] border-[rgb(var(--primary-rgb)/0.2)] hover:border-primary transition-all duration-300"
         >
           <span className="text-4xl mb-3 group-hover:scale-110 transition-transform">
             🎉
