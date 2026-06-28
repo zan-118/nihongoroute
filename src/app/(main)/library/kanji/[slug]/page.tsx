@@ -37,12 +37,8 @@ import {
   encodeRouteSegment,
 } from "@/lib/seo";
 
-// ======================
-// KONFIGURASI STATIC GENERATION (ISR/SSG)
-// ======================
-export async function generateStaticParams() {
-  return []; // Halaman detail di-generate secara statis on-demand (ISR) menggunakan slug ASCII
-}
+export const dynamic = "force-dynamic";
+
 
 // ======================
 // METADATA SEO

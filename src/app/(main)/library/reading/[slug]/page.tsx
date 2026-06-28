@@ -19,12 +19,8 @@ import {
   encodeRouteSegment,
 } from "@/lib/seo";
 
-// ======================
-// KONFIGURASI STATIC GENERATION (ISR/SSG)
-// ======================
-export async function generateStaticParams() {
-  return []; // Halaman detail di-generate secara statis on-demand (ISR) menggunakan ID ASCII (UUID/Slug)
-}
+export const dynamic = "force-dynamic";
+
 
 const getReadingBySlug = cache((slug: string) => getLibraryItemBySlug("reading", slug));
 
