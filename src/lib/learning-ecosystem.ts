@@ -125,11 +125,11 @@ function normalizedLevel(level: string | undefined) {
   return ["N5", "N4", "N3", "N2", "N1"].includes(upper) ? upper : "";
 }
 
-function sourceSlug(source: LearningEventSource) {
+function sourceSlug(source: any) {
   return source.slug || source.id || "";
 }
 
-function sourceParams(source: LearningEventSource) {
+function sourceParams(source: any) {
   const params = new URLSearchParams();
   params.set("source", source.type);
   if (sourceSlug(source)) params.set("slug", sourceSlug(source));
@@ -137,7 +137,7 @@ function sourceParams(source: LearningEventSource) {
   return params.toString();
 }
 
-function drillHref(source: LearningEventSource, kind?: string) {
+function drillHref(source: any, kind?: string) {
   const params = new URLSearchParams(sourceParams(source));
   if (kind) params.set("kind", kind);
   return `/tools/jlpt-drill?${params.toString()}`;

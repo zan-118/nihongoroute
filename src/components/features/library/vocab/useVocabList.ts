@@ -79,7 +79,7 @@ export function useVocabList(initialData: VocabItem[] = []) {
       if (error) throw error;
 
       // Normalisasi properti data dari Supabase ke dalam format VocabItem pustaka
-      const mapped: VocabItem[] = (data || []).map(v => ({
+      const mapped: VocabItem[] = (data || []).map((v: { id: string; word: string; furigana: string | null; romaji: string | null; meaning_id: string | null; hinshi: any; mnemonic: string | null; slug: string | null; related_kanji: any }) => ({
         id: v.id,
         word: v.word,
         furigana: v.furigana || undefined,

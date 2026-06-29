@@ -40,10 +40,10 @@ export async function syncLocalToCloud(userId: string, localData: UserProgress, 
     ]);
 
     const cloudProfile = profileRes.data;
-    const cloudSrs = srsRes.data || [];
+    const cloudSrs: any[] = srsRes.data || [];
     
     // Buat map untuk akses cepat data SRS cloud
-    const cloudSrsMap = new Map(cloudSrs.map(item => [item.word_id, item]));
+    const cloudSrsMap = new Map(cloudSrs.map((item: any) => [item.word_id, item]));
 
     // 2. Logika Merge: Ambil yang tertinggi/terbaik
     const mergedXP = Math.max(localData.xp || 0, cloudProfile?.xp || 0);

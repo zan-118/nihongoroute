@@ -71,9 +71,9 @@ async function searchSupabase(query: string): Promise<SearchItem[]> {
   ]);
 
   const mapped: SearchItem[] = [
-    ...(vocabRes.data || []).map(v => ({ id: v.id, title: v.word, description: v.meaning_id || "Kosakata", href: `/library/vocab/${v.slug || v.id}`, icon: FileText, category: "Kosakata" as const })),
-    ...(grammarRes.data || []).map(g => ({ id: g.id, title: g.title, description: g.meaning || "Tata Bahasa", href: `/library/grammar/${g.slug || g.id}`, icon: BookOpen, category: "Tata Bahasa" as const })),
-    ...(kanjiRes.data || []).map(k => ({ id: k.id, title: k.character, description: k.meaning || "Kanji", href: `/library/kanji/${k.slug || k.character || k.id}`, icon: Hash, category: "Kanji" as const })),
+    ...(vocabRes.data || []).map((v: any) => ({ id: v.id, title: v.word, description: v.meaning_id || "Kosakata", href: `/library/vocab/${v.slug || v.id}`, icon: FileText, category: "Kosakata" as const })),
+    ...(grammarRes.data || []).map((g: any) => ({ id: g.id, title: g.title, description: g.meaning || "Tata Bahasa", href: `/library/grammar/${g.slug || g.id}`, icon: BookOpen, category: "Tata Bahasa" as const })),
+    ...(kanjiRes.data || []).map((k: any) => ({ id: k.id, title: k.character, description: k.meaning || "Kanji", href: `/library/kanji/${k.slug || k.character || k.id}`, icon: Hash, category: "Kanji" as const })),
   ];
   searchCache.set(normalizedQuery, mapped);
   return mapped;

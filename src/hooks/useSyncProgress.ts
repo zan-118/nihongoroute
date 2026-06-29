@@ -155,7 +155,7 @@ export function useSyncProgress() {
         lastStudyDate: userState.lastStudyDate, 
         studyDays: userState.studyDays,
         inventory: userState.inventory, 
-        settings: userState.settings, 
+        settings: (userState as any).settings, 
         srs: currentSrs, 
         completedLessons: currentCompletedLessons
       };
