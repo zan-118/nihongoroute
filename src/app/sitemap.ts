@@ -10,9 +10,7 @@ import { createStaticClient } from "@/lib/supabase/server";
 import { sanityClient } from "@/lib/sanity.client";
 import { absoluteUrl, encodeRouteSegment, getSiteUrl } from "@/lib/seo";
 
-export const revalidate = 3600;
-
-interface SanitySitemapItem {
+export const dynamic = "force-dynamic";interface SanitySitemapItem {
   slug: string | null;
   _updatedAt?: string | null;
   _createdAt?: string | null;
@@ -132,27 +130,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     addUniqueEntry(urls, seen, route);
   }
 
-  const { data: categories } = await supabase
-    .from("course_categories")
-    .select("id, slug, created_at");
-
-  const categoryMap = new Map<string, string>();
-
-  if (categories) {
-    for (const category of categories) {
-      if (!category.slug) continue;
-      categoryMap.set(category.id, category.slug);
-      addUniqueEntry(urls, seen, {
-        changeFrequency: "weekly",
-        lastModified: category.created_at,
-        path: `/courses/${encodeRouteSegment(category.slug)}`,
-        priority: 0.82,
-      });
-    }
-  }
-
-  try {
-    const lessons = await sanityClient.fetch<SanitySitemapItem[]>(
+  const [
+    categoriesResult,
+    lessonsResult,
+    readingsResult,
+    listeningsResult,
+    grammarRows,
+    cheatsheetRows
+  ] = await Promise.all([
+    supabase.from("course_categories").select("id, slug, created_at"),
+    sanityClient.fetch<SanitySitemapItem[]>(
       `*[_type == "lesson" && is_published == true && defined(slug.current)] {
         "slug": slug.current,
         _updatedAt,
@@ -160,70 +147,80 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         category_id
       }`,
       {},
-    );
-
-    for (const lesson of lessons || []) {
-      if (!lesson.slug || !lesson.category_id) continue;
-      const categorySlug = categoryMap.get(lesson.category_id) || lesson.category_id;
-      addUniqueEntry(urls, seen, {
-        changeFrequency: "monthly",
-        lastModified: lesson._updatedAt || lesson._createdAt,
-        path: `/courses/${encodeRouteSegment(categorySlug)}/${encodeRouteSegment(lesson.slug)}`,
-        priority: 0.78,
-      });
-    }
-  } catch (err) {
-    console.error("[Sitemap] Gagal mengambil data pelajaran dari Sanity:", err);
-  }
-
-  try {
-    const [readings, listenings] = await Promise.all([
-      sanityClient.fetch<SanitySitemapItem[]>(
-        `*[_type == "readingMaterial" && defined(slug.current)] {
-          "slug": slug.current,
-          _updatedAt,
-          _createdAt
-        }`,
-        {},
-      ),
-      sanityClient.fetch<SanitySitemapItem[]>(
-        `*[_type == "listeningMaterial" && defined(slug.current)] {
-          "slug": slug.current,
-          _updatedAt,
-          _createdAt
-        }`,
-        {},
-      ),
-    ]);
-
-    for (const reading of readings || []) {
-      if (!reading.slug) continue;
-      addUniqueEntry(urls, seen, {
-        changeFrequency: "monthly",
-        lastModified: reading._updatedAt || reading._createdAt,
-        path: `/library/reading/${encodeRouteSegment(reading.slug)}`,
-        priority: 0.72,
-      });
-    }
-
-    for (const listening of listenings || []) {
-      if (!listening.slug) continue;
-      addUniqueEntry(urls, seen, {
-        changeFrequency: "monthly",
-        lastModified: listening._updatedAt || listening._createdAt,
-        path: `/library/listening/${encodeRouteSegment(listening.slug)}`,
-        priority: 0.72,
-      });
-    }
-
-  } catch (err) {
-    console.error("[Sitemap] Gagal mengambil data editorial dari Sanity:", err);
-  }
-
-  const [grammarRows, cheatsheetRows] = await Promise.all([
+    ).catch((err) => {
+      console.error("[Sitemap] Gagal mengambil data pelajaran dari Sanity:", err);
+      return [];
+    }),
+    sanityClient.fetch<SanitySitemapItem[]>(
+      `*[_type == "readingMaterial" && defined(slug.current)] {
+        "slug": slug.current,
+        _updatedAt,
+        _createdAt
+      }`,
+      {},
+    ).catch((err) => {
+      console.error("[Sitemap] Gagal mengambil reading dari Sanity:", err);
+      return [];
+    }),
+    sanityClient.fetch<SanitySitemapItem[]>(
+      `*[_type == "listeningMaterial" && defined(slug.current)] {
+        "slug": slug.current,
+        _updatedAt,
+        _createdAt
+      }`,
+      {},
+    ).catch((err) => {
+      console.error("[Sitemap] Gagal mengambil listening dari Sanity:", err);
+      return [];
+    }),
     fetchAllSupabaseRows("grammar", "slug, created_at", "created_at"),
     fetchAllSupabaseRows("cheatsheets", "slug, created_at, updated_at", "updated_at"),
   ]);
+
+  const categories = categoriesResult.data || [];
+  const categoryMap = new Map<string, string>();
+
+  for (const category of categories) {
+    if (!category.slug) continue;
+    categoryMap.set(category.id, category.slug);
+    addUniqueEntry(urls, seen, {
+      changeFrequency: "weekly",
+      lastModified: category.created_at,
+      path: `/courses/${encodeRouteSegment(category.slug)}`,
+      priority: 0.82,
+    });
+  }
+
+  for (const lesson of lessonsResult || []) {
+    if (!lesson.slug || !lesson.category_id) continue;
+    const categorySlug = categoryMap.get(lesson.category_id) || lesson.category_id;
+    addUniqueEntry(urls, seen, {
+      changeFrequency: "monthly",
+      lastModified: lesson._updatedAt || lesson._createdAt,
+      path: `/courses/${encodeRouteSegment(categorySlug)}/${encodeRouteSegment(lesson.slug)}`,
+      priority: 0.78,
+    });
+  }
+
+  for (const reading of readingsResult || []) {
+    if (!reading.slug) continue;
+    addUniqueEntry(urls, seen, {
+      changeFrequency: "monthly",
+      lastModified: reading._updatedAt || reading._createdAt,
+      path: `/library/reading/${encodeRouteSegment(reading.slug)}`,
+      priority: 0.72,
+    });
+  }
+
+  for (const listening of listeningsResult || []) {
+    if (!listening.slug) continue;
+    addUniqueEntry(urls, seen, {
+      changeFrequency: "monthly",
+      lastModified: listening._updatedAt || listening._createdAt,
+      path: `/library/listening/${encodeRouteSegment(listening.slug)}`,
+      priority: 0.72,
+    });
+  }
 
   for (const item of grammarRows) {
     if (!item.slug) continue;

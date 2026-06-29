@@ -271,7 +271,7 @@ export async function getLibraryItemBySlug(
     }
 
     if (!data) {
-      console.warn(`[getLibraryItemBySlug] Data tidak ditemukan untuk type="${type}" slugOrId="${slugOrId}"`);
+      // Dihapus console.warn agar tidak membanjiri log Vercel untuk request 404/not-found
       return null;
     }
 
