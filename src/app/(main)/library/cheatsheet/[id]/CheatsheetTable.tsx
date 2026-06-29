@@ -340,7 +340,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
               style={{ perspective: "1000px" }}
             >
               <div 
-                className="w-full h-full relative rounded-[3rem] transition-transform duration-700 shadow-[0_20px_50px_rgba(0,0,0,0.05)] group-hover:shadow-[0_25px_60px_rgba(var(--primary-rgb),0.08)] border border-border glass"
+                className="w-full h-full relative rounded-[3rem] transition-transform duration-700 shadow-[0_20px_50px_rgba(var(--foreground-rgb),0.05)] group-hover:shadow-[0_25px_60px_rgba(var(--primary-rgb),0.08)] border border-border glass"
                 style={{ 
                   transformStyle: "preserve-3d", 
                   transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)"

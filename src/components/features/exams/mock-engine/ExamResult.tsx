@@ -544,7 +544,7 @@ export function ExamResult({
             <Button
               asChild
               variant="outline"
-              className="w-full sm:w-auto px-12 h-14 bg-background/10 hover:bg-background/20 text-xs font-black uppercase tracking-widest rounded-2xl transition-all border border-white/20 text-white backdrop-blur-md"
+              className="w-full sm:w-auto px-12 h-14 bg-background/10 hover:bg-background/20 text-xs font-black uppercase tracking-widest rounded-2xl transition-all border border-border text-foreground backdrop-blur-md glass"
             >
               <Link href={backLink}>Finish & Exit</Link>
             </Button>
@@ -552,7 +552,7 @@ export function ExamResult({
             <Button
               onClick={() => setGameState("review")}
               variant="outline"
-              className="w-full sm:w-auto px-12 h-14 bg-background/5 hover:bg-background/15 text-xs font-black uppercase tracking-widest rounded-2xl transition-all border border-white/10 text-white/80 backdrop-blur-md"
+              className="w-full sm:w-auto px-12 h-14 bg-background/5 hover:bg-background/15 text-xs font-black uppercase tracking-widest rounded-2xl transition-all border border-border text-muted-foreground backdrop-blur-md glass"
             >
               Analisis Kesalahan
             </Button>

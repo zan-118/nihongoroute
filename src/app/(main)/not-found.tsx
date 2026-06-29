@@ -26,7 +26,7 @@ export default function MainNotFound() {
         </span>
       </div>
 
-      <Card className="p-8 md:p-12 border border-border max-w-lg w-full relative z-10 rounded-[2.5rem] bg-card/40 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:shadow-[0_25px_60px_rgb(var(--primary-rgb)/0.1)] transition-all duration-500 glass">
+      <Card className="p-8 md:p-12 border border-border max-w-lg w-full relative z-10 rounded-[2.5rem] bg-card/40 backdrop-blur-xl shadow-[0_20px_50px_rgba(var(--foreground-rgb),0.3)] hover:shadow-[0_25px_60px_rgb(var(--primary-rgb)/0.1)] transition-all duration-500 glass">
         {/* Kilau Pojok Siber */}
         <div className="absolute top-0 right-0 size-24 bg-gradient-to-br from-primary/10 to-transparent blur-md rounded-tr-[2.5rem] pointer-events-none" />
 

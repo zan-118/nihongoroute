@@ -87,7 +87,7 @@ export function Hero() {
       >
         <div className="relative size-[490px]">
           <div className="absolute -inset-8 rounded-[52px] bg-[radial-gradient(circle_at_35%_30%,rgb(var(--brand-cyan-rgb)_/_0.22),transparent_35%),radial-gradient(circle_at_72%_70%,rgb(var(--brand-violet-rgb)_/_0.16),transparent_38%)] blur-3xl" />
-          <div className="absolute inset-7 rounded-[40px] border border-border/70 bg-card/32 rotate-3 shadow-[0_30px_90px_rgb(var(--foreground-rgb)_/_0.08)] dark:shadow-[0_30px_90px_rgb(0_0_0_/_0.45)]" />
+          <div className="absolute inset-7 rounded-[40px] border border-border/70 bg-card/32 rotate-3 shadow-[0_30px_90px_rgb(var(--foreground-rgb)_/_0.08)] dark:shadow-[0_30px_90px_rgb(var(--foreground-rgb)_/_0.45)]" />
           <div className="absolute inset-13 rounded-[30px] border border-dashed border-primary/35 -rotate-6" />
 
           <div className="premium-surface absolute top-1/2 left-1/2 size-[316px] -translate-x-1/2 -translate-y-1/2 rotate-6 rounded-[30px] overflow-hidden">

@@ -93,7 +93,7 @@ export default function FuriganaDisplay({
         <span className={`${kanjiSize} font-medium transition-colors text-foreground`}>
           {part.text}
         </span>
-        <rt className={`${furiSize} text-primary/60 font-medium tracking-normal select-none`}>
+        <rt className="text-[0.55em] text-primary/60 font-medium tracking-normal select-none">
           {part.furi}
         </rt>
       </ruby>

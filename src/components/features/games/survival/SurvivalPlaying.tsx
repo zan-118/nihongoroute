@@ -145,7 +145,7 @@ export function SurvivalPlaying({
                     chunk.furi ? (
                       <ruby key={`${chunk.text}-${i}`}>
                         {chunk.text}
-                        <rt className="text-xs md:text-sm lg:text-base text-primary/80 font-bold tracking-widest not-italic mb-1 md:mb-2">
+                        <rt className="text-[0.55em] text-primary/80 font-bold tracking-widest not-italic mb-1 md:mb-2">
                           {chunk.furi}
                         </rt>
                       </ruby>

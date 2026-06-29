@@ -72,7 +72,7 @@ export function LessonGrid({
           className="flex flex-col items-center justify-center py-16 sm:py-24 md:py-32 glass rounded-2xl sm:rounded-3xl text-center px-6 sm:px-10 border border-dashed border-border relative overflow-hidden"
           style={{
             backgroundColor: "rgb(var(--card-rgb)/0.2)",
-            boxShadow: "0 10px 30px rgba(0, 0, 0, 0.04)"
+            boxShadow: "0 10px 30px rgba(var(--foreground-rgb), 0.04)"
           }}
         >
           {/* Accent light glow */}
@@ -107,7 +107,7 @@ export function LessonGrid({
             style={{
               backgroundColor: "rgb(var(--card-rgb)/0.3)",
               borderColor: "rgb(var(--border-rgb)/0.4)",
-              boxShadow: "0 8px 24px rgba(0,0,0,0.08)"
+              boxShadow: "0 8px 24px rgba(var(--foreground-rgb), 0.08)"
             }}
           >
             <Button

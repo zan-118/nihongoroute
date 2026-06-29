@@ -40,18 +40,20 @@ export function Pagination({
       <div className="flex items-center gap-2">
         <Button
           variant="ghost"
-          size="icon" aria-label="Aksi"
+          size="icon"
           onClick={() => onPageChange(1)}
           disabled={currentPage === 1}
+          aria-label="Ke halaman pertama"
           className="action-icon size-10 disabled:opacity-30"
         >
           <ChevronsLeft size={18} />
         </Button>
         <Button
           variant="ghost"
-          size="icon" aria-label="Aksi"
+          size="icon"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
+          aria-label="Ke halaman sebelumnya"
           className="action-icon size-10 disabled:opacity-30"
         >
           <ChevronLeft size={18} />
@@ -89,18 +91,20 @@ export function Pagination({
 
         <Button
           variant="ghost"
-          size="icon" aria-label="Aksi"
+          size="icon"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
+          aria-label="Ke halaman berikutnya"
           className="action-icon size-10 disabled:opacity-30"
         >
           <ChevronRight size={18} />
         </Button>
         <Button
           variant="ghost"
-          size="icon" aria-label="Aksi"
+          size="icon"
           onClick={() => onPageChange(totalPages)}
           disabled={currentPage === totalPages}
+          aria-label="Ke halaman terakhir"
           className="action-icon size-10 disabled:opacity-30"
         >
           <ChevronsRight size={18} />

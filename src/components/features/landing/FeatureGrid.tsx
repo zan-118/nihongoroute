@@ -201,7 +201,7 @@ export function FeatureGrid() {
                 </div>
                 <div className="h-px bg-border/60" />
                 <div className="text-[9px] text-muted-foreground leading-relaxed">
-                  <strong>Contoh:</strong> 日本語の勉強gadaisukiです。<br />
+                  <strong>Contoh:</strong> 日本語の勉強が大好きです。<br />
                   <span className="opacity-80">Saya sangat suka belajar bahasa Jepang.</span>
                 </div>
               </div>

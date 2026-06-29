@@ -129,7 +129,7 @@ function ShareContent() {
         transition={{ type: "spring", stiffness: 100, damping: 15 }}
         className="w-full max-w-3xl relative z-10"
       >
-        <Card className="p-8 sm:p-16 text-center glass border border-border/80 rounded-[4rem] shadow-[0_30px_70px_rgba(0,0,0,0.35)] relative overflow-hidden">
+        <Card className="p-8 sm:p-16 text-center glass border border-border/80 rounded-[4rem] shadow-[0_30px_70px_rgba(var(--foreground-rgb),0.35)] relative overflow-hidden">
           {/* Certificate Holographic Grid Background Overlay */}
           <div className="absolute inset-0 bg-grid-white/[0.02] pointer-events-none" />
           <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent" />

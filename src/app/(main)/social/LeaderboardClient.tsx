@@ -593,7 +593,7 @@ export default function LeaderboardClient() {
           animate={{ opacity: 1, y: 0 }}
           className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-4xl z-50 pointer-events-none"
         >
-          <Card className="glass border-primary/45 p-4 flex items-center gap-3 sm:gap-6 bg-card/90 backdrop-blur-sm shadow-[0_-10px_28px_rgba(0,0,0,0.24),0_0_22px_rgb(var(--primary-rgb)/0.14)] rounded-3xl pointer-events-auto border-2 hover:border-primary/60 transition-colors">
+          <Card className="glass border-primary/45 p-4 flex items-center gap-3 sm:gap-6 bg-card/90 backdrop-blur-sm shadow-[0_-10px_28px_rgba(var(--foreground-rgb),0.24),0_0_22px_rgb(var(--primary-rgb)/0.14)] rounded-3xl pointer-events-auto border-2 hover:border-primary/60 transition-colors">
             {/* Peringkat */}
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 border border-primary/30 flex flex-col items-center justify-center shrink-0 shadow-[0_0_12px_rgb(var(--primary-rgb)/0.25)]">
               <span className="text-[10px] font-black uppercase text-primary tracking-widest leading-none">Rank</span>

@@ -110,7 +110,7 @@ export default function CheatsheetClient({
               id="cheatsheet-search"
               type="text"
               placeholder="Cari materi referensi..."
-              className="w-full bg-[rgba(var(--muted-rgb),0.1)] border border-border pl-14 pr-6 py-7 h-auto rounded-[2rem] text-foreground font-medium text-base glass shadow-[0_4px_30px_rgba(0,0,0,0.03)] placeholder:text-muted-foreground/40 focus-visible:ring-[rgba(var(--primary-rgb),0.2)] focus-visible:border-primary transition-all duration-300"
+              className="w-full bg-[rgba(var(--muted-rgb),0.1)] border border-border pl-14 pr-6 py-7 h-auto rounded-[2rem] text-foreground font-medium text-base glass shadow-[0_4px_30px_rgba(var(--foreground-rgb),0.03)] placeholder:text-muted-foreground/40 focus-visible:ring-[rgba(var(--primary-rgb),0.2)] focus-visible:border-primary transition-all duration-300"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -189,7 +189,7 @@ export default function CheatsheetClient({
                 className="h-full"
               >
                 <Link href={`/library/cheatsheet/${sheet.slug || sheet.id || sheet._id}`}>
-                  <Card className="group relative h-full bg-[rgba(var(--card-rgb),0.4)] border border-border hover:border-[rgba(var(--primary-rgb),0.5)] rounded-[2.5rem] p-8 cursor-pointer transition-all duration-500 shadow-[0_4px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(var(--primary-rgb),0.15)] glass flex flex-col justify-between gap-6 overflow-hidden">
+                  <Card className="group relative h-full bg-[rgba(var(--card-rgb),0.4)] border border-border hover:border-[rgba(var(--primary-rgb),0.5)] rounded-[2.5rem] p-8 cursor-pointer transition-all duration-500 shadow-[0_4px_30px_rgba(var(--foreground-rgb),0.02)] hover:shadow-[0_20px_50px_rgba(var(--primary-rgb),0.15)] glass flex flex-col justify-between gap-6 overflow-hidden">
                     {/* Ambient Glow Background Effect */}
                     <div className="absolute top-0 right-0 size-32 bg-[rgba(var(--primary-rgb),0.03)] blur-[40px] rounded-full -mr-12 -mt-12 group-hover:bg-[rgba(var(--primary-rgb),0.08)] transition-all duration-500 pointer-events-none" />
 

@@ -702,7 +702,7 @@ export function ExamPlaying({
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="size-3 rounded-full bg-muted shadow-[0_0_8px_rgba(0,0,0,0.1)]" />
+                  <div className="size-3 rounded-full bg-muted shadow-[0_0_8px_rgba(var(--foreground-rgb),0.1)]" />
                   <div>
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none font-sans">Belum Dijawab</p>
                     <p className="text-lg font-black font-mono text-foreground mt-1">

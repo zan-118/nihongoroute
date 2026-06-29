@@ -91,6 +91,7 @@ function DonationCard({
     <m.a
       href={href}
       target="_blank"
+      rel="noopener noreferrer"
       whileHover={{ y: -4 }}
       whileTap={{ scale: 0.98 }}
       className="block h-full cursor-pointer"
@@ -484,19 +485,19 @@ export default function SupportClient() {
                 let label = "Perunggu";
 
                 if (s.tier === "gold") {
-                  tierStyle = "border-[rgba(255,215,0,0.4)] bg-[rgba(255,215,0,0.015)] hover:bg-[rgba(255,215,0,0.03)]";
-                  badgeColor = "bg-[rgba(255,215,0,0.15)] text-[rgba(255,215,0,1)] border-[rgba(255,215,0,0.3)]";
-                  glowEffect = "rgba(255, 215, 0, 0.15)";
+                  tierStyle = "border-warning/50 bg-[rgba(var(--warning-rgb),0.015)] hover:bg-[rgba(var(--warning-rgb),0.03)]";
+                  badgeColor = "bg-[rgba(var(--warning-rgb),0.15)] text-warning border-warning/30";
+                  glowEffect = "rgba(var(--warning-rgb), 0.15)";
                   label = "Gold";
                 } else if (s.tier === "silver") {
-                  tierStyle = "border-[rgba(192,192,192,0.4)] bg-[rgba(192,192,192,0.015)] hover:bg-[rgba(192,192,192,0.03)]";
-                  badgeColor = "bg-[rgba(192,192,192,0.15)] text-[rgba(180,180,180,1)] border-[rgba(192,192,192,0.3)]";
-                  glowEffect = "rgba(192, 192, 192, 0.12)";
+                  tierStyle = "border-muted-foreground/50 bg-[rgba(var(--muted-foreground-rgb),0.015)] hover:bg-[rgba(var(--muted-foreground-rgb),0.03)]";
+                  badgeColor = "bg-[rgba(var(--muted-foreground-rgb),0.15)] text-muted-foreground border-muted-foreground/30";
+                  glowEffect = "rgba(var(--muted-foreground-rgb), 0.12)";
                   label = "Silver";
                 } else if (s.tier === "bronze") {
-                  tierStyle = "border-[rgba(180,110,50,0.4)] bg-[rgba(180,110,50,0.015)] hover:bg-[rgba(180,110,50,0.03)]";
-                  badgeColor = "bg-[rgba(180,110,50,0.15)] text-[rgba(190,120,60,1)] border-[rgba(180,110,50,0.3)]";
-                  glowEffect = "rgba(180, 110, 50, 0.08)";
+                  tierStyle = "border-destructive/50 bg-[rgba(var(--destructive-rgb),0.015)] hover:bg-[rgba(var(--destructive-rgb),0.03)]";
+                  badgeColor = "bg-[rgba(var(--destructive-rgb),0.15)] text-destructive border-destructive/30";
+                  glowEffect = "rgba(var(--destructive-rgb), 0.08)";
                   label = "Bronze";
                 }
 
@@ -508,7 +509,7 @@ export default function SupportClient() {
                     transition={{ delay: Math.min(idx * 0.03, 0.24) }}
                     className={`p-5 rounded-2xl border transition-all duration-200 flex gap-4 items-start ${tierStyle}`}
                     style={{
-                      boxShadow: `0 6px 18px rgba(0,0,0,0.12), 0 0 8px ${glowEffect}`,
+                      boxShadow: `0 6px 18px rgba(var(--foreground-rgb),0.12), 0 0 8px ${glowEffect}`,
                     }}
                   >
                     <div className="shrink-0">

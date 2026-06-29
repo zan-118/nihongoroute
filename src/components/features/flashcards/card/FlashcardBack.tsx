@@ -131,9 +131,9 @@ export function FlashcardBack({
               {isKanji ? word : docType === "sentence" ? word : (
                 splitFurigana(word, hiraReading).map((chunk, i) => (
                   chunk.furi ? (
-                    <ruby key={`${chunk.text}-${i}`}>
+                    <ruby key={`${chunk.text}-${i}`} className="flex flex-col items-center">
                       {chunk.text}
-                      <rt className="text-[0.5em] text-primary/80 font-bold tracking-widest not-italic">
+                      <rt className="text-[0.55em] text-primary/80 font-bold tracking-widest not-italic">
                         {chunk.furi}
                       </rt>
                     </ruby>

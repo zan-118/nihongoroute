@@ -365,8 +365,7 @@ export default function AudioController({
       )}
 
       <div className={cn(
-        "w-full flex items-center gap-4 rounded-full p-2 transition-all duration-500",
-        "bg-card/55 backdrop-blur-md border border-border/50 shadow-xl ring-1 ring-white/5",
+        "bg-card/55 backdrop-blur-md border border-border/50 shadow-xl ring-1 ring-border",
         compact && "p-1 bg-transparent border-none ring-0 shadow-none",
         header  && "rounded-2xl px-4 py-3 gap-3"
       )}>

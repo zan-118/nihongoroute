@@ -116,19 +116,19 @@ export default function AchievementToast() {
   let rarityLabel = "Bronze";
 
   if (isGold) {
-    borderStyle = "border-[rgba(255,215,0,0.5)] shadow-[0_0_35px_rgba(255,215,0,0.25)] bg-[rgba(255,215,0,0.02)]";
-    glowColor = "rgba(255, 215, 0, 0.4)";
-    badgeColor = "bg-[rgba(255,215,0,0.15)] text-[rgba(255,215,0,1)] border-[rgba(255,215,0,0.3)]";
+    borderStyle = "border-warning/50 shadow-[0_0_35px_rgba(var(--warning-rgb),0.25)] bg-[rgba(var(--warning-rgb),0.02)]";
+    glowColor = "rgba(var(--warning-rgb), 0.4)";
+    badgeColor = "bg-[rgba(var(--warning-rgb),0.15)] text-warning border-warning/30";
     rarityLabel = "Gold / Emas";
   } else if (isSilver) {
-    borderStyle = "border-[rgba(192,192,192,0.5)] shadow-[0_0_30px_rgba(192,192,192,0.2)] bg-[rgba(192,192,192,0.02)]";
-    glowColor = "rgba(192, 192, 192, 0.35)";
-    badgeColor = "bg-[rgba(192,192,192,0.15)] text-[rgba(180,180,180,1)] border-[rgba(192,192,192,0.3)]";
+    borderStyle = "border-muted-foreground/50 shadow-[0_0_30px_rgba(var(--muted-foreground-rgb),0.2)] bg-[rgba(var(--muted-foreground-rgb),0.02)]";
+    glowColor = "rgba(var(--muted-foreground-rgb), 0.35)";
+    badgeColor = "bg-[rgba(var(--muted-foreground-rgb),0.15)] text-muted-foreground border-muted-foreground/30";
     rarityLabel = "Silver / Perak";
   } else if (isBronze) {
-    borderStyle = "border-[rgba(180,110,50,0.5)] shadow-[0_0_30px_rgba(180,110,50,0.15)] bg-[rgba(180,110,50,0.02)]";
-    glowColor = "rgba(180, 110, 50, 0.3)";
-    badgeColor = "bg-[rgba(180,110,50,0.15)] text-[rgba(190,120,60,1)] border-[rgba(180,110,50,0.3)]";
+    borderStyle = "border-destructive/50 shadow-[0_0_30px_rgba(var(--destructive-rgb),0.15)] bg-[rgba(var(--destructive-rgb),0.02)]";
+    glowColor = "rgba(var(--destructive-rgb), 0.3)";
+    badgeColor = "bg-[rgba(var(--destructive-rgb),0.15)] text-destructive border-destructive/30";
     rarityLabel = "Bronze / Perunggu";
   }
 
@@ -145,7 +145,7 @@ export default function AchievementToast() {
           <div
             className={`w-full glass p-5 rounded-3xl border flex gap-4 relative overflow-hidden transition-all ${borderStyle}`}
             style={{
-              boxShadow: `0 20px 50px rgba(0, 0, 0, 0.3), 0 0 30px ${glowColor}`,
+              boxShadow: `0 20px 50px rgba(var(--foreground-rgb), 0.3), 0 0 30px ${glowColor}`,
             }}
           >
             {/* Efek sorotan lampu neon teranimasi di bagian dalam */}

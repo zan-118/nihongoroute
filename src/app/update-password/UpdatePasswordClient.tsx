@@ -36,7 +36,7 @@ export default function UpdatePasswordClient() {
         <div className="size-[400px] bg-primary/10 rounded-full blur-[100px] opacity-35 absolute -bottom-10 -right-10" />
       </div>
 
-      <div className="w-full max-w-md bg-card/85 backdrop-blur-xl border border-border/80 rounded-[2rem] p-8 z-10 shadow-[0_15px_50px_rgba(0,0,0,0.3)] hover:shadow-[0_20px_60px_rgb(var(--brand-cyan-rgb)/0.14)] transition-all duration-500 relative glass">
+      <div className="w-full max-w-md bg-card/85 backdrop-blur-xl border border-border/80 rounded-[2rem] p-8 z-10 shadow-[0_15px_50px_rgba(var(--foreground-rgb),0.3)] hover:shadow-[0_20px_60px_rgb(var(--brand-cyan-rgb)/0.14)] transition-all duration-500 relative glass">
         {/* Kilau Sudut Dekoratif */}
         <div className="absolute top-0 right-0 size-24 bg-gradient-to-br from-primary/10 to-transparent blur-md rounded-tr-[2rem] pointer-events-none" />
 
