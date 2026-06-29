@@ -17,7 +17,7 @@ import {
   createLearningEvent,
   type LearningEvent,
   type LearningEventInput,
-} from "@/lib/learning-ecosystem";
+} from "@/lib/learning-events";
 
 export interface ReadingVocabularyBankEntry {
   id: string;

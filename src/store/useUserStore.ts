@@ -47,6 +47,7 @@ interface UserState {
   syncUserData: (data: { id: string; isGuest: boolean; name?: string | null }) => void;
   resetUser: () => void;
   checkAchievements: () => void;
+  isCheckingAchievements?: boolean;
 }
 
 // ==========================================
@@ -84,6 +85,7 @@ export const useUserStore = create<UserState>()(
       },
       completedLessons: {},
       dirtyLessons: new Set<string>(),
+      isCheckingAchievements: false,
 
       updateProfileName: (name) => set({ name }),
 
@@ -240,6 +242,11 @@ export const useUserStore = create<UserState>()(
           return;
         }
 
+        if (get().isCheckingAchievements) return;
+        set({ isCheckingAchievements: true });
+
+        try {
+
         const state = get();
         const achievements = state.inventory?.achievements || [];
         const unlockedIds = new Set(achievements.map((a) => a.id));
@@ -333,6 +340,9 @@ export const useUserStore = create<UserState>()(
           if (totalRewardXp > 0) {
             get().addXP(totalRewardXp);
           }
+        }
+        } finally {
+          set({ isCheckingAchievements: false });
         }
       }
     }),

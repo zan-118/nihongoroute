@@ -16,7 +16,9 @@ import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useSyncProgress } from "@/hooks/useSyncProgress";
 import { useHasMounted } from "@/hooks/useHasMounted";
-import ReminderSystem from "@/components/features/notifications/ReminderSystem";
+import dynamic from "next/dynamic";
+
+const ReminderSystem = dynamic(() => import("@/components/features/notifications/ReminderSystem"), { ssr: false });
 
 // ======================
 // EKSEKUSI UTAMA

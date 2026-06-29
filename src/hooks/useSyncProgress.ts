@@ -104,23 +104,20 @@ export function useSyncProgress() {
   const isPending = syncMutation.isPending;
 
   // Serialisasi data profil menjadi string stabil untuk mendeteksi perubahan properti secara presisi
-  const profileKey = useMemo(() => JSON.stringify({
-    name, xp, streak, studyDays, inventory, settings, lastStudyDate, todayReviewCount
-  }), [name, xp, streak, studyDays, inventory, settings, lastStudyDate, todayReviewCount]);
+  const profileKey = useMemo(() => {
+    const invLength = inventory?.achievements?.length || 0;
+    const freeze = inventory?.streakFreeze || 0;
+    const notifs = settings?.notificationsEnabled ? 1 : 0;
+    return `${name}-${xp}-${streak}-${lastStudyDate}-${todayReviewCount}-${invLength}-${freeze}-${notifs}`;
+  }, [name, xp, streak, lastStudyDate, todayReviewCount, inventory?.achievements?.length, inventory?.streakFreeze, settings?.notificationsEnabled]);
 
   // Serialisasi data profil dari cloud untuk menyelaraskan status sinkronisasi pasca-merge
   const cloudProfileKey = useMemo(() => {
     if (!cloudData) return "";
-    return JSON.stringify({
-      name: cloudData.name,
-      xp: cloudData.xp,
-      streak: cloudData.streak,
-      studyDays: cloudData.studyDays,
-      inventory: cloudData.inventory,
-      settings: cloudData.settings,
-      lastStudyDate: cloudData.lastStudyDate,
-      todayReviewCount: cloudData.todayReviewCount
-    });
+    const invLength = cloudData.inventory?.achievements?.length || 0;
+    const freeze = cloudData.inventory?.streakFreeze || 0;
+    const notifs = cloudData.settings?.notificationsEnabled ? 1 : 0;
+    return `${cloudData.name}-${cloudData.xp}-${cloudData.streak}-${cloudData.lastStudyDate}-${cloudData.todayReviewCount}-${invLength}-${freeze}-${notifs}`;
   }, [cloudData]);
 
   // Selaraskan lastSyncedProgress.current dengan profil cloud yang baru saja di-merge
@@ -143,14 +140,24 @@ export function useSyncProgress() {
 
     const timer = setTimeout(() => {
       // Dapatkan data SRS & Pelajaran terbaru secara dinamis dari store tanpa berlangganan (anti-render)
-      const currentSrs = useSRSStore.getState().srs;
-      const currentCompletedLessons = useUserStore.getState().completedLessons;
-      const currentDirtySrs = useSRSStore.getState().dirtySrs;
-      const currentDirtyLessons = useUserStore.getState().dirtyLessons;
+      const userState = useUserStore.getState();
+      const srsState = useSRSStore.getState();
+      const currentSrs = srsState.srs;
+      const currentCompletedLessons = userState.completedLessons;
+      const currentDirtySrs = srsState.dirtySrs;
+      const currentDirtyLessons = userState.dirtyLessons;
 
       const currentProgress = {
-        name, xp, streak, todayReviewCount, lastStudyDate, studyDays,
-        inventory, settings, srs: currentSrs, completedLessons: currentCompletedLessons
+        name: userState.name, 
+        xp: userState.xp, 
+        streak: userState.streak, 
+        todayReviewCount: userState.todayReviewCount, 
+        lastStudyDate: userState.lastStudyDate, 
+        studyDays: userState.studyDays,
+        inventory: userState.inventory, 
+        settings: userState.settings, 
+        srs: currentSrs, 
+        completedLessons: currentCompletedLessons
       };
       syncMutateRef.current({
         progress: currentProgress,
@@ -161,7 +168,7 @@ export function useSyncProgress() {
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [profileKey, dirtySrsSize, dirtyLessonsSize, session?.user, isFetching, isPending, isGuest, userHydrated, srsHydrated, name, xp, streak, todayReviewCount, lastStudyDate, studyDays, inventory, settings]);
+  }, [profileKey, dirtySrsSize, dirtyLessonsSize, session?.user, isFetching, isPending, isGuest, userHydrated, srsHydrated]);
 
   // Fungsi sinkronisasi manual instan
   const syncNow = useCallback(() => {

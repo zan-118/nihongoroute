@@ -12,8 +12,10 @@ import { ReactNode, useMemo, useState } from "react";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import MobileNav from "./MobileNav";
-import FloatingActions from "@/components/features/global/FloatingActions";
-import AchievementToast from "./AchievementToast";
+import dynamic from "next/dynamic";
+
+const FloatingActions = dynamic(() => import("@/components/features/global/FloatingActions"), { ssr: false });
+const AchievementToast = dynamic(() => import("./AchievementToast"), { ssr: false });
 import { usePathname, useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";

@@ -16,8 +16,10 @@ import { toast } from "sonner";
 import { useUIStore } from "@/store/useUIStore";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useNavbar } from "@/components/layout/hooks/useNavbar";
-import NotificationPopover from "@/components/features/user/NotificationPopover";
-import SearchModal from "@/components/features/tools/search/SearchModal";
+import dynamic from "next/dynamic";
+
+const NotificationPopover = dynamic(() => import("@/components/features/user/NotificationPopover"), { ssr: false });
+const SearchModal = dynamic(() => import("@/components/features/tools/search/SearchModal"), { ssr: false });
 import UserNav from "@/components/features/user/UserNav";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { getBreadcrumbItems, getCurrentRouteLabel, getParentRouteLabel } from "@/lib/routes";
