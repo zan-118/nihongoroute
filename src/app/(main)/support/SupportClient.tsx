@@ -168,7 +168,7 @@ export default function SupportClient() {
         return [];
       }
 
-      return (data || []).map((row) => ({
+      return (data || []).map((row: { name: string; amount: number; message: string; tier: string; created_at: string }) => ({
         name: row.name,
         amount: Number(row.amount),
         tier: (row.tier || "bronze") as "gold" | "silver" | "bronze",
