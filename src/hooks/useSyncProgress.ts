@@ -18,6 +18,7 @@ import { useHasMounted } from "@/hooks/useHasMounted";
 import { useCloudData } from "./useCloudData";
 import { useCloudMutation } from "./useCloudMutation";
 import { useStoreHydration } from "./useStoreHydration";
+import { AuthChangeEvent, Session } from "@supabase/supabase-js";
 
 // ==========================================
 // CUSTOM HOOK UTAMA
@@ -29,6 +30,7 @@ import { useStoreHydration } from "./useStoreHydration";
  */
 export function useSyncProgress() {
   const supabase = useMemo(() => createClient(), []);
+  const queryClient = useQueryClient();
   
   const userHydrated = useStoreHydration(useUserStore);
   const srsHydrated = useStoreHydration(useSRSStore);
@@ -71,6 +73,17 @@ export function useSyncProgress() {
     enabled: hasMounted,
   });
 
+  // Sinkronkan status sesi secara real-time saat terjadi perubahan status auth
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
+      queryClient.setQueryData(["session"], session);
+      if (session) {
+        queryClient.invalidateQueries({ queryKey: ["user-progress"] });
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [supabase, queryClient]);
+
   // 2. Mengambil Data Awan: Menarik profil, SRS, dan data pelajaran dari database saat inisialisasi awal
   const { cloudData, isFetching } = useCloudData(session, hasMounted);
 
@@ -80,7 +93,7 @@ export function useSyncProgress() {
   // 4. Sinkronisasi Lintas Tab (Multi-Tab Integrity):
   // Mendengarkan saluran penyiaran lokal. Jika tab lain sukses melakukan sinkronisasi awan,
   // tab aktif ini akan membuang cache React Query untuk menyelaraskan data secara instan.
-  const queryClient = useQueryClient();
+
   useEffect(() => {
     if (typeof window === "undefined" || !("BroadcastChannel" in window)) return;
 
@@ -140,8 +153,9 @@ export function useSyncProgress() {
 
     const timer = setTimeout(() => {
       // Dapatkan data SRS & Pelajaran terbaru secara dinamis dari store tanpa berlangganan (anti-render)
-      const userState = useUserStore.getState();
+       const userState = useUserStore.getState();
       const srsState = useSRSStore.getState();
+      const uiState = useUIStore.getState();
       const currentSrs = srsState.srs;
       const currentCompletedLessons = userState.completedLessons;
       const currentDirtySrs = srsState.dirtySrs;
@@ -155,7 +169,7 @@ export function useSyncProgress() {
         lastStudyDate: userState.lastStudyDate, 
         studyDays: userState.studyDays,
         inventory: userState.inventory, 
-        settings: (userState as any).settings, 
+        settings: uiState.settings, 
         srs: currentSrs, 
         completedLessons: currentCompletedLessons
       };
