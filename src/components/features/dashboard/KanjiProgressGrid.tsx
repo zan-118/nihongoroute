@@ -50,7 +50,7 @@ function getN5Kanjis() {
         throw error;
       }
 
-      return (data || []).map((k) => ({
+      return (data || []).map((k: { id: string; character: string; meaning: string }) => ({
         _id: k.id,
         kanji: k.character,
         meaning: k.meaning,
