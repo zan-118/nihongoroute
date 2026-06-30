@@ -32,7 +32,7 @@ import { ROUTES } from "@/lib/routes";
 interface NavLink {
   href: string;
   label: string;
-  icon: React.ComponentType<any>;
+  icon: React.ElementType;
 }
 
 interface NavLinks {

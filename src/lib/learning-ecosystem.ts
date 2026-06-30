@@ -125,19 +125,19 @@ function normalizedLevel(level: string | undefined) {
   return ["N5", "N4", "N3", "N2", "N1"].includes(upper) ? upper : "";
 }
 
-function sourceSlug(source: any) {
+function sourceSlug(source: { slug?: string; id?: string }) {
   return source.slug || source.id || "";
 }
 
-function sourceParams(source: any) {
+function sourceParams(source: { type?: string; slug?: string; id?: string; level?: string }) {
   const params = new URLSearchParams();
-  params.set("source", source.type);
+  if (source.type) params.set("source", source.type);
   if (sourceSlug(source)) params.set("slug", sourceSlug(source));
   if (normalizedLevel(source.level)) params.set("level", normalizedLevel(source.level));
   return params.toString();
 }
 
-function drillHref(source: any, kind?: string) {
+function drillHref(source: { type?: string; slug?: string; id?: string; level?: string }, kind?: string) {
   const params = new URLSearchParams(sourceParams(source));
   if (kind) params.set("kind", kind);
   return `/tools/jlpt-drill?${params.toString()}`;

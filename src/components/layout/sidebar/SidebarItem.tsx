@@ -20,7 +20,7 @@ interface SidebarItemProps {
   item: {
     href: string;
     label: string;
-    icon: React.ComponentType<any>;
+    icon: React.ElementType;
   };
   pathname: string;
   onClick?: () => void;

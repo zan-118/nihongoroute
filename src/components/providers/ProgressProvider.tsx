@@ -40,7 +40,7 @@ export const ProgressProvider = ({
 
   // AUTHENTICATION LISTENER
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }: any) => {
+    supabase.auth.getSession().then(({ data: { session } }: { data: { session: { user?: { id: string; user_metadata?: { full_name?: string }; email?: string } } | null } }) => {
       const userFullName = session?.user?.user_metadata?.full_name || session?.user?.email?.split('@')[0] || "Member";
       setAuth(!!session?.user);
       if (session?.user) {
@@ -57,7 +57,7 @@ export const ProgressProvider = ({
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event: any, session: any) => {
+    } = supabase.auth.onAuthStateChange((event: string, session: { user?: { id: string; user_metadata?: { full_name?: string }; email?: string } } | null) => {
       const userFullName = session?.user?.user_metadata?.full_name || session?.user?.email?.split('@')[0] || "Member";
       setAuth(!!session?.user);
       if (session?.user) {

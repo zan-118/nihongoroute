@@ -83,7 +83,7 @@ export function useCloudData(session: Session | null | undefined, hasMounted: bo
       // 1. Parsing data kartu SRS awan ke bentuk record luring
       const parsedSrs: Record<string, SRSState> = {};
       if (srsData) {
-        srsData.forEach((row: any) => {
+        srsData.forEach((row: { word_id: string; interval: number; repetition: number; ease_factor: number; next_review: string; updated_at: string; custom_mnemonic?: string }) => {
           parsedSrs[row.word_id] = {
             interval: row.interval,
             repetition: row.repetition,
@@ -98,7 +98,7 @@ export function useCloudData(session: Session | null | undefined, hasMounted: bo
       // 2. Parsing data riwayat pelajaran awan ke bentuk record luring
       const parsedLessons: Record<string, LessonProgress> = {};
       if (lessonsData) {
-        lessonsData.forEach((row: any) => {
+        lessonsData.forEach((row: { lesson_id: string; completed_at: string; updated_at: string; is_completed: boolean }) => {
           parsedLessons[row.lesson_id] = {
             completedAt: new Date(row.completed_at).getTime(),
             updatedAt: new Date(row.updated_at).getTime(),

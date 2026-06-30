@@ -193,7 +193,7 @@ export default function ContentBlockRenderer({
   const isImageBlock = (b: ContentBlock) => {
     const raw = b as unknown as Record<string, unknown>;
     const t = b.type || raw._type;
-    return t === "image" || t === "imageBlock";
+    return (t as string) === "image" || (t as string) === "imageBlock";
   };
   
   const imageBlocks = sorted.filter(isImageBlock);
