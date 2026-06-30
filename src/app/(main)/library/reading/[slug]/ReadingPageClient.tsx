@@ -342,7 +342,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
 
         {/* Panel Kontrol Layar Lengket (Sticky Bottom Control Bar) */}
         {!isZenMode && (
-          <div className="fixed bottom-6 left-6 md:left-[calc(18rem+1.5rem)] right-6 max-w-6xl mx-auto z-50 rounded-[2rem] border border-border bg-background/80 backdrop-blur-xl p-4 shadow-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-4 glass animate-in slide-in-from-bottom duration-500 pointer-events-auto">
+          <div className="fixed bottom-6 left-6 md:left-[calc(18rem+1.5rem)] right-6 z-50 rounded-[2rem] border border-border bg-background/80 backdrop-blur-xl p-4 shadow-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-4 glass animate-in slide-in-from-bottom duration-500 pointer-events-auto">
             {/* Sisi Kiri: Audio & Playback Controller */}
             <div className="flex-1 w-full lg:max-w-xs">
               {!!(data.audioUrl || (!data.isTTSDisabled && typeof data.body === "string" ? data.body : undefined)) && (

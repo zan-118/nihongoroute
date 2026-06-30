@@ -23,7 +23,9 @@ import {
   ChevronRight,
   ClipboardPenLine,
   Target,
-  Languages
+  Languages,
+  Play,
+  Pause
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -590,10 +592,10 @@ export default function ListeningWorkspace({
       </AnimatePresence>
 
       {/* Floating Sticky Bottom Media Control Bar (Unified) */}
-      <div className="fixed bottom-6 left-6 md:left-[calc(18rem+1.5rem)] right-6 max-w-4xl mx-auto z-50 rounded-[2rem] border border-border bg-background/80 backdrop-blur-xl p-4 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 glass animate-in slide-in-from-bottom duration-500 pointer-events-auto">
+      <div className="fixed bottom-6 left-6 md:left-[calc(18rem+1.5rem)] right-6 z-50 rounded-[2rem] border border-border bg-background/80 backdrop-blur-xl p-4 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 glass animate-in slide-in-from-bottom duration-500 pointer-events-auto">
         {/* Playback Controls & Progress Bar */}
         <div className="flex-1 w-full md:max-w-md">
-          {audioUrl && (
+          {audioUrl ? (
             <AudioController
               audioUrl={audioUrl}
               textToSpeak=""
@@ -602,6 +604,26 @@ export default function ListeningWorkspace({
               compact={true}
               header={false}
             />
+          ) : (
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => isPlayingPlaylist ? pausePlaylist() : playPlaylist(transcript, currentActiveIndex >= 0 ? currentActiveIndex : 0)}
+                className="rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-all duration-300 active:scale-90 w-10 h-10 flex items-center justify-center shrink-0"
+                aria-label={isPlayingPlaylist ? "Pause Playlist" : "Putar Playlist"}
+              >
+                {isPlayingPlaylist ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" className="ml-0.5" />}
+              </Button>
+              <div className="flex flex-col">
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary/70 mb-0.5">
+                  AI Playlist
+                </span>
+                <span className="text-xs font-bold text-foreground">
+                  {isPlayingPlaylist ? `Memutar ${currentActiveIndex + 1}/${transcript.length}` : "Siap?"}
+                </span>
+              </div>
+            </div>
           )}
         </div>
 

@@ -9,7 +9,7 @@
 
 import React, { useState, useEffect } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, MessageSquare, RotateCcw } from "lucide-react";
+import { ChevronLeft, ChevronRight, MessageSquare, RotateCcw, Play } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -125,20 +125,15 @@ export function StickerScene({
   const translationVal = currentLine.translation;
 
   return (
-    <div className={cn(
-      "w-full overflow-hidden relative max-w-4xl mx-auto",
-      borderless
-        ? "rounded-2xl"
-        : "rounded-[2rem] border border-border bg-card shadow-2xl glass mb-8"
-    )}>
-      {/* 🏙️ Latar Belakang Panggung */}
-      <div className="relative w-full h-[320px] sm:h-[400px] md:h-[460px] overflow-hidden bg-muted">
+    <div className="w-full max-w-4xl mx-auto flex flex-col">
+      {/* 🏙️ Latar Belakang Panggung (Visual Stage) */}
+      <div className="relative w-full aspect-[16/9] rounded-3xl border border-border bg-muted overflow-hidden shadow-2xl">
         <Image
           src={backgroundUrl}
           alt="Panggung Latar Belakang"
           fill
           unoptimized
-          className="object-cover brightness-[0.75] scale-105 select-none"
+          className="object-cover object-top brightness-[0.8] scale-105 select-none"
         />
 
         {/* Header Overlay */}
@@ -153,7 +148,7 @@ export function StickerScene({
         </div>
 
         {/* 🎭 Panggung Karakter (Stiker) */}
-        <div className="absolute inset-x-0 bottom-0 top-12 flex justify-around items-end px-4 md:px-12 pointer-events-none z-10 overflow-hidden pb-16">
+        <div className="absolute inset-x-0 bottom-0 top-12 flex justify-around items-end px-4 md:px-12 pointer-events-none z-10 overflow-hidden pb-4">
           {uniqueSpeakers.map((speakerKey) => {
             const asset = characterAssets[speakerKey];
             if (!asset) return null;
@@ -170,7 +165,7 @@ export function StickerScene({
                 }}
                 transition={{ type: "spring", stiffness: 200, damping: 20 }}
                 className={cn(
-                  "relative w-[85px] sm:w-[120px] md:w-[170px] h-[82%] rounded-t-[2rem] border-x border-t bg-gradient-to-t from-background/95 via-background/30 to-transparent flex flex-col justify-end overflow-hidden transition-all duration-300",
+                  "relative w-[85px] sm:w-[120px] md:w-[170px] h-[95%] rounded-t-[2rem] border-x border-t bg-gradient-to-t from-background/95 via-background/30 to-transparent flex flex-col justify-end transition-all duration-300",
                   isActive ? asset.color : "border-transparent",
                   isActive && "shadow-[0_-10px_25px_rgba(var(--color-rgb),0.1)]"
                 )}
@@ -204,65 +199,74 @@ export function StickerScene({
             );
           })}
         </div>
+      </div>
 
-        {/* 💬 Kotak Dialog Visual Novel (Overlay di bottom dari Latar Belakang) */}
-        <div className="absolute bottom-0 inset-x-0 p-4 sm:p-5 bg-gradient-to-t from-background/95 via-background/90 to-background/80 border-t border-border/80 z-20 pointer-events-auto shadow-[0_-5px_20px_rgba(0,0,0,0.1)]">
-          <div className="flex flex-col gap-2">
-            {/* Label Pembicara yang Aktif + Tombol Navigasi Mini */}
-            <div className="flex items-center justify-between">
-              <span
-                className={cn(
-                  "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white shadow-sm",
-                  activeSpeakerKey === "zundamon" ? "bg-emerald-500" :
-                  (activeSpeakerKey === "ayu" || activeSpeakerKey === "lara") ? "bg-pink-500" :
-                  (activeSpeakerKey === "narrator" || activeSpeakerKey === "narator") ? "bg-neutral-600" : "bg-sky-500"
-                )}
+      {/* 💬 Kotak Dialog Visual Novel (Separate Card Below Stage) */}
+      <div className="w-full mt-4 p-5 sm:p-6 bg-card/45 backdrop-blur-xl border border-border/80 rounded-3xl shadow-xl flex flex-col gap-4 glass mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/40 pb-3">
+          {/* Label Pembicara */}
+          <span
+            className={cn(
+              "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white shadow-sm self-start",
+              activeSpeakerKey === "zundamon" ? "bg-emerald-500" :
+              (activeSpeakerKey === "ayu" || activeSpeakerKey === "lara") ? "bg-pink-500" :
+              (activeSpeakerKey === "narrator" || activeSpeakerKey === "narator") ? "bg-neutral-600" : "bg-sky-500"
+            )}
+          >
+            {rawSpeaker}
+          </span>
+
+          {/* 🎮 Mini Control Panel */}
+          <div className="flex items-center gap-1.5 self-end sm:self-auto">
+            {typeof currentLine.startTime === "number" && seekToLine && (
+              <button
+                onClick={() => seekToLine(currentLine.startTime!)}
+                className="px-2.5 py-1.5 rounded-lg bg-primary hover:bg-primary/95 text-white transition-all shadow-md flex items-center gap-1 font-bold text-[9px] uppercase tracking-wider"
+                title="Putar dialog baris ini"
+                aria-label="Putar dialog baris ini"
               >
-                {rawSpeaker}
-              </span>
-
-              {/* 🎮 Mini Control Panel */}
-              <div className="flex items-center gap-1.5">
-                <button
-                  onClick={handleReset}
-                  className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-                  title="Reset"
-                  aria-label="Reset"
-                >
-                  <RotateCcw size={13} />
-                </button>
-                <button
-                  onClick={handlePrev}
-                  disabled={currentIndex === 0}
-                  className="p-1.5 rounded-lg border border-border/60 bg-background/50 hover:bg-muted text-foreground disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
-                  aria-label="Kembali"
-                >
-                  <ChevronLeft size={13} />
-                </button>
-                <button
-                  onClick={handleNext}
-                  disabled={currentIndex === dialogue.length - 1}
-                  className="px-3 py-1.5 rounded-lg bg-primary hover:bg-primary/95 text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-md flex items-center gap-0.5 font-bold text-[9px] uppercase tracking-wider"
-                  aria-label="Lanjut"
-                >
-                  <span>Lanjut</span>
-                  <ChevronRight size={10} />
-                </button>
-              </div>
-            </div>
-
-            {/* Konten Ucapan */}
-            <div className="min-h-[50px] sm:min-h-[55px] flex flex-col justify-center">
-              <p className="text-sm sm:text-base font-bold text-foreground leading-relaxed">
-                {textVal}
-              </p>
-              {translationVal && (
-                <p className="text-[11px] sm:text-xs text-muted-foreground italic leading-relaxed mt-0.5">
-                  {translationVal}
-                </p>
-              )}
-            </div>
+                <Play size={10} fill="currentColor" />
+                <span>Putar</span>
+              </button>
+            )}
+            <button
+              onClick={handleReset}
+              className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+              title="Reset"
+              aria-label="Reset"
+            >
+              <RotateCcw size={13} />
+            </button>
+            <button
+              onClick={handlePrev}
+              disabled={currentIndex === 0}
+              className="p-1.5 rounded-lg border border-border/60 bg-background/50 hover:bg-muted text-foreground disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
+              aria-label="Kembali"
+            >
+              <ChevronLeft size={13} />
+            </button>
+            <button
+              onClick={handleNext}
+              disabled={currentIndex === dialogue.length - 1}
+              className="px-3 py-1.5 rounded-lg bg-primary hover:bg-primary/95 text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-md flex items-center gap-0.5 font-bold text-[9px] uppercase tracking-wider"
+              aria-label="Lanjut"
+            >
+              <span>Lanjut</span>
+              <ChevronRight size={10} />
+            </button>
           </div>
+        </div>
+
+        {/* Konten Ucapan */}
+        <div className="min-h-[50px] sm:min-h-[55px] flex flex-col justify-center">
+          <p className="text-sm sm:text-base font-bold text-foreground leading-relaxed">
+            {textVal}
+          </p>
+          {translationVal && (
+            <p className="text-[11px] sm:text-xs text-muted-foreground italic leading-relaxed mt-0.5">
+              {translationVal}
+            </p>
+          )}
         </div>
       </div>
     </div>
