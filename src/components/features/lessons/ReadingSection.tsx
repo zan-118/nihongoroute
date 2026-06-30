@@ -7,7 +7,6 @@
 // IMPOR
 // ======================
 import React from "react";
-import { BookOpen } from "lucide-react";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import SanityMedia from "@/components/ui/SanityMedia";
 import { OfflineAudio } from "@/components/ui/OfflineAudio";
@@ -44,7 +43,7 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
     <section id="reading">
       <div className="flex items-center gap-4 mb-10">
         <h2 className="text-xl font-black uppercase tracking-tight text-foreground flex items-center gap-3">
-          <BookOpen size={24} className="text-primary" /> Materi Bacaan
+          <span className="text-2xl">読解</span> Materi Bacaan
         </h2>
         <div className="h-[1px] flex-1 bg-border" />
       </div>

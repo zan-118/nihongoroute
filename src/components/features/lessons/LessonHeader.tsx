@@ -31,26 +31,37 @@ export const LessonHeader: React.FC<LessonHeaderProps> = ({
   lesson 
 }) => {
   return (
-    <header className="mb-20">
+    <header className="mb-14">
       <h1
-        className={`text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-none mb-8 ${
+        className={`text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-none mb-4 ${
           isSideQuest ? "text-warning" : "text-foreground"
         }`}
       >
         {title}
       </h1>
+      {/* Accent gradient bar */}
+      <div
+        className={`h-1 w-24 rounded-full mb-8 ${
+          isSideQuest ? "bg-warning" : ""
+        }`}
+        style={
+          isSideQuest
+            ? undefined
+            : { backgroundImage: "linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)))" }
+        }
+      />
       {summary && (
         <div
-          className={`p-8 rounded-[2rem] neo-inset border-l-8 mb-8 ${
+          className={`p-6 md:p-8 rounded-[2rem] neo-inset border-l-8 mb-8 ${
             isSideQuest ? "border-warning" : "border-primary"
           }`}
         >
-          <p className="text-base md:text-lg font-medium leading-relaxed text-muted-foreground">
+          <p className="text-sm md:text-base font-medium leading-relaxed text-muted-foreground">
             {renderSmartText(summary)}
           </p>
         </div>
       )}
-      <div className="flex items-center flex-wrap gap-4 justify-start">
+      <div className="flex items-center flex-wrap gap-3 justify-start p-3 rounded-xl bg-muted/20 border border-border/40 w-fit">
         <DownloadOfflineButton lesson={lesson} />
         <DownloadPdfButton data={lesson} />
       </div>

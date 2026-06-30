@@ -189,17 +189,42 @@ export default function ContentBlockRenderer({
   // Urutkan berdasarkan kolom order jika tersedia
   const sorted = [...blocks].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
+  // Pisahkan blok gambar untuk ditampilkan sebagai hero banner di paling atas
+  const isImageBlock = (b: ContentBlock) => {
+    const raw = b as unknown as Record<string, unknown>;
+    const t = b.type || raw._type;
+    return t === "image" || t === "imageBlock";
+  };
+  
+  const imageBlocks = sorted.filter(isImageBlock);
+  const otherBlocks = sorted.filter(b => !isImageBlock(b));
+
   return (
     <div className="space-y-10">
-      {sorted.map((block, idx) => (
-        <BlockItem 
-          key={block.id || idx} 
-          block={block} 
-          components={components}
-          vocabList={vocabList}
-          kanjiList={kanjiList}
-        />
-      ))}
+      {imageBlocks.length > 0 && (
+        <div className="mb-14">
+          {imageBlocks.map((block, idx) => (
+            <BlockItem 
+              key={block.id || `img-${idx}`} 
+              block={block} 
+              components={components}
+              vocabList={vocabList}
+              kanjiList={kanjiList}
+            />
+          ))}
+        </div>
+      )}
+      <div className="space-y-10">
+        {otherBlocks.map((block, idx) => (
+          <BlockItem 
+            key={block.id || idx} 
+            block={block} 
+            components={components}
+            vocabList={vocabList}
+            kanjiList={kanjiList}
+          />
+        ))}
+      </div>
     </div>
   );
 }
@@ -706,19 +731,19 @@ function DialogueBlock({ block }: { block: ContentBlock }) {
 function ImageBlock({ block }: { block: ContentBlock }) {
   if (!block.content) return null;
   return (
-    <figure className="space-y-2">
-      <div className="relative rounded-2xl overflow-hidden border border-border">
+    <figure className="w-full mb-10">
+      <div className="relative w-full rounded-[2.5rem] overflow-hidden border border-border/80 shadow-[0_15px_40px_rgba(var(--primary-rgb),0.1)] glass group">
         <Image
           src={block.content}
           alt={block.title || "Gambar pelajaran"}
-          width={800}
-          height={450}
-          className="w-full object-cover"
+          width={1200}
+          height={1200}
+          className="w-full h-auto max-h-[60vh] object-contain transition-transform duration-700 group-hover:scale-[1.02]"
           unoptimized
         />
       </div>
       {block.title && (
-        <figcaption className="text-xs text-muted-foreground text-center">
+        <figcaption className="text-xs font-bold uppercase tracking-widest text-muted-foreground text-center mt-6">
           {block.title}
         </figcaption>
       )}

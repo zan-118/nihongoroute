@@ -40,7 +40,7 @@ export const KanjiSection: React.FC<KanjiSectionProps> = ({ kanjiList }) => {
   return (
     <section id="kanji">
       <div className="flex items-center gap-4 mb-10">
-        <h2 className="text-xl font-black uppercase italic tracking-tighter text-foreground flex items-center gap-3">
+        <h2 className="text-xl font-black uppercase tracking-tight text-foreground flex items-center gap-3">
           <span className="text-2xl not-italic">漢字</span> Kanji Pelajaran
         </h2>
         <div className="h-[1px] flex-1 bg-border" />

@@ -191,67 +191,33 @@ export default async function LessonPage({ params }: Props) {
           />
 
           {/* JUMP LINKS SHORTCUT MENU */}
-          <nav className="mb-12 p-3 sm:p-4 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/60 shadow-sm flex flex-wrap gap-2.5 items-center justify-start relative z-20 glass">
-            <span className="text-[9px] font-black uppercase tracking-wider text-muted-foreground mr-1.5 hidden sm:inline-block">Pintasan Sesi:</span>
-            {!!(lesson.articles || lesson.content_blocks) && (
-              <a
-                href="#article-content"
-                className="px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm flex items-center gap-1.5"
-              >
-                <span>Artikel</span>
-              </a>
-            )}
-            {vocabList.length > 0 && (
-              <a
-                href="#vocabulary"
-                className="px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm flex items-center gap-1.5"
-              >
-                <span>単語 Kosakata</span>
-              </a>
-            )}
-            {kanjiList.length > 0 && (
-              <a
-                href="#kanji"
-                className="px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm flex items-center gap-1.5"
-              >
-                <span>漢字 Kanji</span>
-              </a>
-            )}
-            {listeningList.length > 0 && (
-              <a
-                href="#scenario"
-                className="px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm flex items-center gap-1.5"
-              >
-                <span>場面 Dialog</span>
-              </a>
-            )}
-            {readingList.length > 0 && (
-              <a
-                href="#reading"
-                className="px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm flex items-center gap-1.5"
-              >
-                <span>読解 Bacaan</span>
-              </a>
-            )}
-            {cheatsheets.length > 0 && (
-              <a
-                href="#cheatsheet"
-                className="px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm flex items-center gap-1.5"
-              >
-                <span>参考 Referensi</span>
-              </a>
-            )}
-            {formattedQuizzes.length > 0 && (
-              <a
-                href="#quiz"
-                className="px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm flex items-center gap-1.5"
-              >
-                <span>答え Kuis</span>
-              </a>
-            )}
-          </nav>
+          {(() => {
+            const linkCls = "px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm whitespace-nowrap shrink-0";
+            const jumpLinks: { href: string; label: string; show: boolean }[] = [
+              { href: "#article-content", label: "Artikel", show: !!(lesson.articles || lesson.content_blocks) },
+              { href: "#vocabulary", label: "単語 Kosakata", show: vocabList.length > 0 },
+              { href: "#kanji", label: "漢字 Kanji", show: kanjiList.length > 0 },
+              { href: "#scenario", label: "場面 Dialog", show: listeningList.length > 0 },
+              { href: "#reading", label: "読解 Bacaan", show: readingList.length > 0 },
+              { href: "#cheatsheet", label: "参考 Referensi", show: cheatsheets.length > 0 },
+              { href: "#quiz", label: "答え Kuis", show: formattedQuizzes.length > 0 },
+            ].filter((l) => l.show);
+            if (jumpLinks.length === 0) return null;
+            return (
+              <nav className="mb-10 py-3 px-1 rounded-2xl bg-card/40 backdrop-blur-sm border border-border/50 shadow-sm relative z-20 glass">
+                <div className="flex gap-2 items-center overflow-x-auto scrollbar-none px-3">
+                  <span className="text-[9px] font-black uppercase tracking-wider text-muted-foreground/70 shrink-0 mr-1 hidden sm:inline-block">Pintasan:</span>
+                  {jumpLinks.map((link) => (
+                    <a key={link.href} href={link.href} className={linkCls}>
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
+              </nav>
+            );
+          })()}
 
-          <div className="space-y-24 mb-24">
+          <div className="space-y-14 md:space-y-20 mb-16 md:mb-24">
             {!!(lesson.articles || lesson.content_blocks) && (
               <section id="article-content" className="prose-custom">
                 <ContentBlockRenderer
@@ -298,9 +264,9 @@ export default async function LessonPage({ params }: Props) {
             categoryId={categoryId}
           />
 
-          <footer className="mt-20 pt-10 border-t border-border/50 text-center">
-            <p className="text-muted-foreground text-xs" suppressHydrationWarning={true}>
-              &copy; {new Date().getFullYear()} NihongoRoute. All rights reserved.
+          <footer className="mt-14 md:mt-20 pt-8 border-t border-border/40 text-center">
+            <p className="text-muted-foreground/60 text-[10px] font-medium tracking-wider uppercase" suppressHydrationWarning={true}>
+              &copy; {new Date().getFullYear()} NihongoRoute
             </p>
           </footer>
         </article>

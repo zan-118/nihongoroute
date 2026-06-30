@@ -102,7 +102,7 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
   return (
     <section id="scenario">
       <div className="flex items-center gap-4 mb-10">
-        <h2 className="text-xl font-black uppercase italic tracking-tighter text-foreground flex items-center gap-3">
+        <h2 className="text-xl font-black uppercase tracking-tight text-foreground flex items-center gap-3">
           <span className="text-2xl not-italic">場面</span> Skenario Percakapan
         </h2>
         <div className="h-[1px] flex-1 bg-border" />
@@ -114,68 +114,70 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
           const isCurrentPlaying = activeDialogId === dialogId && isPlayingPlaylist;
 
           return (
-            <div key={dialogId} className="p-8 md:p-12 border border-border/80 rounded-[2.5rem] bg-card/35 shadow-[0_0_40px_rgba(var(--secondary-rgb),0.02)] glass relative overflow-hidden">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 border-b border-border/50 pb-8">
-                <div>
-                  <h3 className="text-xl font-black uppercase tracking-tight mb-2">{l.title}</h3>
-                  <p className="text-xs text-muted-foreground font-medium flex items-center gap-2">
-                     <MessageSquare size={12} className="text-secondary" /> Dengarkan dan pelajari percakapan di bawah ini
-                  </p>
-                </div>
-                <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
-                  {/* Playlist TTS Button */}
-                  {(l.transcript || l.body) && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        const lines = l.transcript || l.body || [];
-                        if (isCurrentPlaying) {
-                          pausePlaylist();
-                        } else {
-                          setActiveDialogId(dialogId);
-                          playPlaylist(lines, 0);
-                        }
-                      }}
-                      title={isCurrentPlaying ? "Jeda Dialog AI" : "Putar Semua Dialog AI"}
-                      className={cn(
-                        "rounded-full gap-2 transition-all border shrink-0 text-xs font-bold uppercase tracking-widest px-4 py-2 h-10",
-                        isCurrentPlaying
-                          ? "bg-success/15 border-success/30 text-success"
-                          : "bg-muted/50 border-border text-muted-foreground hover:text-success hover:bg-success/5 hover:border-success/20"
-                      )}
-                    >
-                      {isCurrentPlaying ? (
-                        <Pause size={13} className="animate-pulse" />
-                      ) : (
-                        <Play size={13} />
-                      )}
-                      <span>
-                        {isCurrentPlaying ? "Jeda Dialog (AI)" : "Putar Dialog (AI)"}
-                      </span>
-                    </Button>
-                  )}
-
-                  {(l.audioUrl || l.audio_url) && (
-                    <OfflineAudio 
-                      controls 
-                      src={(l.audioUrl || l.audio_url)!} 
-                      className="w-full md:w-64 h-10 filter brightness-90 contrast-125" 
+            <div key={dialogId} className="p-6 md:p-10 border border-border/80 rounded-[2.5rem] bg-card/35 shadow-[0_0_40px_rgba(var(--secondary-rgb),0.02)] glass relative overflow-hidden">
+              {/* Header: media + title/audio side-by-side */}
+              <div className={`flex flex-col ${(l.imageUrl || l.videoUrl) ? 'md:flex-row' : ''} gap-6 mb-8 border-b border-border/50 pb-8`}>
+                {/* MEDIA HERO MENYIMAK (SANITY) — ditaruh di samping, bukan bawah */}
+                {(l.imageUrl || l.videoUrl) && (
+                  <div className="w-full md:w-48 lg:w-56 shrink-0 rounded-2xl overflow-hidden">
+                    <SanityMedia 
+                      url={l.videoUrl || l.imageUrl || ""} 
+                      type={l.videoUrl ? "video" : "image"}
+                      className="shadow-lg rounded-2xl overflow-hidden w-full h-40 md:h-full object-cover"
                     />
-                  )}
+                  </div>
+                )}
+                <div className="flex-1 flex flex-col justify-between gap-4">
+                  <div>
+                    <h3 className="text-lg md:text-xl font-black uppercase tracking-tight mb-2">{l.title}</h3>
+                    <p className="text-xs text-muted-foreground font-medium flex items-center gap-2">
+                       <MessageSquare size={12} className="text-secondary" /> Dengarkan dan pelajari percakapan di bawah ini
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3 w-full">
+                    {/* Playlist TTS Button */}
+                    {(l.transcript || l.body) && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          const lines = l.transcript || l.body || [];
+                          if (isCurrentPlaying) {
+                            pausePlaylist();
+                          } else {
+                            setActiveDialogId(dialogId);
+                            playPlaylist(lines, 0);
+                          }
+                        }}
+                        title={isCurrentPlaying ? "Jeda Dialog AI" : "Putar Semua Dialog AI"}
+                        className={cn(
+                          "rounded-full gap-2 transition-all border shrink-0 text-xs font-bold uppercase tracking-widest px-4 py-2 h-10",
+                          isCurrentPlaying
+                            ? "bg-success/15 border-success/30 text-success"
+                            : "bg-muted/50 border-border text-muted-foreground hover:text-success hover:bg-success/5 hover:border-success/20"
+                        )}
+                      >
+                        {isCurrentPlaying ? (
+                          <Pause size={13} className="animate-pulse" />
+                        ) : (
+                          <Play size={13} />
+                        )}
+                        <span>
+                          {isCurrentPlaying ? "Jeda Dialog (AI)" : "Putar Dialog (AI)"}
+                        </span>
+                      </Button>
+                    )}
+
+                    {(l.audioUrl || l.audio_url) && (
+                      <OfflineAudio 
+                        controls 
+                        src={(l.audioUrl || l.audio_url)!} 
+                        className="w-full md:w-56 h-10 filter brightness-90 contrast-125" 
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
-
-            {/* MEDIA HERO MENYIMAK (SANITY) */}
-            {(l.imageUrl || l.videoUrl) && (
-              <div className="mb-10 max-w-2xl mx-auto">
-                <SanityMedia 
-                  url={l.videoUrl || l.imageUrl || ""} 
-                  type={l.videoUrl ? "video" : "image"}
-                  className="shadow-2xl rounded-[2.5rem] overflow-hidden"
-                />
-              </div>
-            )}
                       {(l.transcript || l.body) && (
               <div className="space-y-8">
                 {(l.transcript || l.body)!.map((item: DialogueSpeakerItem, pos: number) => {
