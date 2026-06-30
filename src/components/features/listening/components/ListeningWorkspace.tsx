@@ -199,7 +199,7 @@ export default function ListeningWorkspace({
   return (
     <div className="w-full flex flex-col pb-28">
       {/* Tab Selector Workspace */}
-      <div className="flex w-full p-1 rounded-2xl bg-muted/20 border border-border/80 mb-6 glass max-w-4xl mx-auto">
+      <div className="flex w-full p-1 rounded-2xl bg-muted/20 border border-border/80 mb-6 glass">
         <Button
           variant={activeTab === "study" ? "default" : "ghost"}
           onClick={() => setActiveTab("study")}
@@ -244,7 +244,7 @@ export default function ListeningWorkspace({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.25 }}
-            className="flex flex-col gap-6 w-full max-w-4xl mx-auto"
+            className="flex flex-col gap-6 w-full"
           >
             {/* Visualizer Stage */}
             {transcript.some((t) => t.speaker) ? (
@@ -357,7 +357,7 @@ export default function ListeningWorkspace({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.25 }}
-            className="w-full max-w-4xl mx-auto grid grid-cols-1 gap-6 md:grid-cols-[220px_1fr]"
+            className="w-full grid grid-cols-1 gap-6 md:grid-cols-[220px_1fr]"
           >
             {/* Left Side: Line list */}
             <div className="max-h-[350px] overflow-y-auto rounded-2xl border border-border/80 bg-muted/5 p-2 custom-scrollbar">

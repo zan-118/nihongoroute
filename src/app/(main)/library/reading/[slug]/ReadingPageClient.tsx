@@ -281,7 +281,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
       {/* Kontainer Membaca Utama */}
       <div
         className={cn(
-          "max-w-4xl mx-auto px-6 relative z-10 transition-all duration-1000",
+          "max-w-none w-full px-8 relative z-10 transition-all duration-1000",
           isZenMode ? "pt-12 sm:pt-20" : "pt-4 md:pt-6"
         )}
       >

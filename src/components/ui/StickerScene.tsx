@@ -125,7 +125,7 @@ export function StickerScene({
   const translationVal = currentLine.translation;
 
   return (
-    <div className="w-full max-w-4xl mx-auto flex flex-col">
+    <div className="w-full flex flex-col">
       {/* 🏙️ Latar Belakang Panggung (Visual Stage) */}
       <div className="relative w-full aspect-[16/9] rounded-3xl border border-border bg-muted overflow-hidden shadow-2xl">
         <Image

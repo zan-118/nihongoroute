@@ -101,7 +101,7 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
         <div className="absolute top-1/2 -right-48 size-96 bg-primary/10 blur-[100px] rounded-full" />
       </div>
 
-      <main className="max-w-4xl mx-auto px-4 lg:px-6 mt-6 md:mt-10 relative z-10">
+      <main className="max-w-none w-full px-4 lg:px-8 mt-6 md:mt-10 relative z-10">
         {/* Slim Header Row */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/40 pb-6 mb-6">
           <div className="flex flex-col gap-1.5">
