@@ -5,7 +5,7 @@
 <h1 align="center">NihongoRoute</h1>
 
 <p align="center">
-  A Japanese-learning platform for Indonesian learners, built with an offline-first study loop, SRS review, gamification, Sanity editorial content, and Supabase-backed progress sync.
+  Platform pembelajaran Bahasa Jepang interaktif khusus untuk pelajar Indonesia. Dirancang dengan prinsip <strong>offline-first</strong> (luring), dilengkapi sistem pengulangan cerdas (SRS), gamifikasi dasbor, konten pembelajaran dinamis dari Sanity CMS, dan sinkronisasi progres otomatis yang didukung oleh Supabase.
 </p>
 
 <p align="center">
@@ -20,223 +20,89 @@
 
 ---
 
-## Overview
+## Gambaran Umum
 
-NihongoRoute combines course lessons, vocab/kanji/grammar libraries, reading and listening material, flashcards, SRS review, mock exams, dashboard gamification, support/donation display, furigana generation, cached TTS playback, and an embedded Sanity Studio.
+NihongoRoute menggabungkan materi pembelajaran terstruktur, pustaka lengkap kosakata/kanji/tata bahasa, latihan membaca dan menyimak interaktif, dek flashcard kustom, dasbor ulasan kartu SRS (Spaced Repetition System), simulasi ujian JLPT (Mock Exam), gamifikasi profil (XP, level, streak), serta Studio Sanity tertanam.
 
-The application uses a split-source architecture:
+Proyek ini menerapkan **arsitektur split-source**:
 
-| Layer | Responsibility |
+| Komponen | Tanggung Jawab |
 | --- | --- |
-| Next.js App Router | Pages, layouts, metadata routes, route handlers, embedded Studio route |
-| Supabase | Auth, Postgres data, user progress, SRS, support records, TTS cache metadata/storage, sync RPC |
-| Sanity | Editorial learning content: lessons, reading, listening, mock exams |
-| Zustand | Offline-first browser state persisted to IndexedDB |
-| TanStack Query | Session/progress fetching, cloud merge, background sync |
-| Kuroshiro/Kuromoji | Furigana conversion in Node route handlers |
+| **Next.js App Router** | Mengatur halaman, layouts, rute API, dan penayangan Sanity Studio tertanam di rute `/studio`. |
+| **Supabase** | Otentikasi pengguna, database PostgreSQL (kamus leksikal, progress belajar, log ujian, postingan forum), media audio statis VOICEVOX TTS, dan RPC `sync_user_progress`. |
+| **Sanity CMS** | Pusat konten pembelajaran editorial dinamis seperti materi pelajaran, bacaan, listening, dan paket soal ujian. |
+| **Zustand** | Manajemen status global klien yang dipersistensikan secara luring ke IndexedDB menggunakan `idb-keyval`. |
+| **TanStack Query** | Mengelola fetching sesi, pengambilan progres awal, dan orkestrasi background sync. |
+| **Kuroshiro + Kuromoji** | Pemrosesan konversi Furigana pada API route. |
 
-## Quick Links
+---
 
-| Document | Purpose |
-| --- | --- |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | Full technical architecture and data-flow audit |
-| [architecture_visual.md](architecture_visual.md) | Mermaid diagrams for runtime, data, sync, and APIs |
-| [project_folder_structure.md](project_folder_structure.md) | Repository tree and folder responsibilities |
-| [SECURITY.md](SECURITY.md) | Security policy, secret handling, and review checklist |
-| [docs/enterprise-readiness.md](docs/enterprise-readiness.md) | Enterprise controls, remaining work, CI, deployment, rollback |
-| [docs/operations-runbook.md](docs/operations-runbook.md) | Health checks, incidents, backup, and restore operations |
-| [src/app/api/health/route.ts](src/app/api/health/route.ts) | Runtime health and env readiness endpoint |
-| [sanity.config.ts](sanity.config.ts) | Embedded Sanity Studio configuration |
+## Pusat Dokumentasi Teknis Modular (Bahasa Indonesia)
 
-## Feature Surface
+Seluruh dokumentasi teknis sistem telah dipecah secara modular berdasarkan fungsinya di folder `docs/` untuk mempermudah pemeliharaan:
 
-| Area | Routes / Modules |
-| --- | --- |
-| Landing | `/` |
-| Auth | `/login`, `/forgot-password`, `/update-password`, `/auth/callback` |
-| Dashboard | `/dashboard` |
-| Courses | `/courses`, `/courses/[categoryId]`, `/courses/[categoryId]/[slug]` |
-| Library | `/library`, vocab, kanji, grammar, reading, listening, cheatsheet |
-| Exams | `/exams`, `/exams/[id]` |
-| Review | `/review` |
-| Tools | `/tools`, flashcards, kana, survival, writing, dictation |
-| Account | `/settings`, `/onboarding` |
-| Social/support | `/share`, `/social`, `/support` |
-| Studio | `/studio/[[...tool]]` |
+* 📖 **[Indeks Dokumentasi (README)](docs/README.md)**: Titik masuk utama seluruh file dokumentasi modular.
+* ⚙️ **[Arsitektur Aplikasi](docs/arsitektur-aplikasi.md)**: Penjelasan Next.js App Router, orkestrasi Zustand, IndexedDB, dan TanStack Query.
+* 🔄 **[Sinkronisasi Progres Luring](docs/sinkronisasi-progres.md)**: Alur sinkronisasi progress 3-tingkat, BroadcastChannel lintas tab, dan validasi anti-cheat XP.
+* 🧠 **[Logika SRS & Gamifikasi](docs/logika-srs-dan-gamifikasi.md)**: Cara kerja modifikasi algoritma SM-2, Due-Date Guard, Modern Halving, streak freeze, dan kenaikan level.
+* 🔊 **[Sintesis Audio & Furigana](docs/sintesis-audio-dan-furigana.md)**: Integrasi VOICEVOX TTS, fallback Web Speech API, deteksi suara otomatis, dan komponen SmartJapanese.
+* 🗄️ **[Skema Database & RLS](docs/skema-database-dan-rls.md)**: Skema tabel relasional Supabase, trigger database, index, policies, dan storage buckets.
+* 🔗 **[Server Actions & API Routes](docs/server-actions-dan-api.md)**: Penjelasan actions di `src/actions/` dan endpoint API route.
+* 📝 **[Simulasi Ujian JLPT](docs/simulasi-ujian-jlpt.md)**: Arsitektur Mock Exam, format berkas impor JSON, skrip generator CLI, adapter, dan UI engine.
+* 🔍 **[Audit Kompatibilitas Ujian](docs/audit-kompatibilitas-ujian.md)**: Lapisan adapter bank soal Supabase ke legacy engine.
+* 🎨 **[Visualisasi Arsitektur](docs/visualisasi-arsitektur.md)**: Diagram visual alur data, sync, runtime, dan studio.
+* 📂 **[Struktur Folder Proyek](docs/struktur-folder-proyek.md)**: Pemetaan folder dan file di repositori NihongoRoute.
+* 📐 **[Cetak Biru Ujian JLPT](docs/cetak-biru-ujian-jlpt.md)**: Arsitektur lengkap dan cetak biru implementasi 7-fase bank soal Supabase.
+* 🧪 **[Arsitektur Pengujian](docs/arsitektur-pengujian.md)**: Uji unit Vitest dan pengujian Playwright E2E.
+* 🛠️ **[Panduan Operasional & Runbook](docs/operasional-dan-runbook.md)**: Standar deploy, rollback, backup & restore, penanganan insiden, dan skrip utilitas.
 
-## Architecture Snapshot
+---
 
-```mermaid
-flowchart LR
-  Browser["Browser"] --> Next["Next.js App Router"]
-  Next --> Supabase["Supabase Auth/Postgres/Storage"]
-  Next --> Sanity["Sanity Content Lake"]
-  Next --> Zustand["Zustand + IndexedDB"]
-  Next --> API["Route Handlers"]
-  API --> Kuroshiro["Kuroshiro/Kuromoji"]
-  API --> Gemini["Gemini API"]
-  API --> Webhooks["Saweria/Trakteer"]
-  Studio["Sanity Studio"] --> API
-  Studio --> Sanity
-```
+## Cara Memulai Pengembangan
 
-Primary sync path:
-
-```mermaid
-sequenceDiagram
-  participant UI as Browser UI
-  participant Store as Zustand Stores
-  participant Query as TanStack Query
-  participant DB as Supabase
-
-  UI->>Store: study, review, complete lesson
-  Store->>Store: mark dirty SRS/lesson data
-  Query->>DB: fetch profiles + user_srs + user_lessons
-  DB-->>Query: cloud progress
-  Query->>Store: merge local and cloud state
-  Query->>DB: rpc sync_user_progress
-  DB-->>Query: accepted_xp
-  Query->>Store: clear dirty IDs and align XP
-```
-
-## Getting Started
-
+### 1. Prasyarat Instalasi
+Pastikan Node.js terinstal di lokal. Unduh repositori dan pasang dependensi:
 ```bash
 npm install
+```
+
+### 2. Menjalankan Server Pengembangan Lokal
+Jalankan perintah berikut untuk mengaktifkan server lokal Next.js:
+```bash
 npm run dev
 ```
+Buka peramban dan navigasikan ke alamat: `http://localhost:3000`
 
-Open:
-
-```text
-http://localhost:3000
-```
-
-Production build:
-
+### 3. Membangun dan Menjalankan Mode Produksi
 ```bash
 npm run build
 npm run start
 ```
 
-## Scripts
+---
 
-| Command | Description |
+## Skrip NPM yang Tersedia
+
+| Skrip | Deskripsi |
 | --- | --- |
-| `npm run dev` | Start the Next.js dev server |
-| `npm run build` | Build production output |
-| `npm run start` | Start the production server |
-| `npm run lint` | Run ESLint |
-| `npm run lint:fix` | Run ESLint with fixes |
-| `npm run typecheck` | Run strict TypeScript checks without emitting files |
-| `npm run test` | Run Vitest once |
-| `npm run test:unit` | Run the unit-test quality gate |
-| `npm run test:watch` | Run Vitest in watch mode |
-| `npm run test:e2e` | Run Playwright E2E tests |
-| `npm run db:migrations:check` | Validate Supabase migration names and duplicate timestamps |
-| `npm run prepare` | Install Husky hooks |
+| `npm run dev` | Menjalankan server lokal pengembangan Next.js. |
+| `npm run build` | Membangun bundel produksi aplikasi mandiri (standalone). |
+| `npm run start` | Menjalankan server produksi setelah build. |
+| `npm run lint` | Menjalankan analisis statis ESLint untuk mendeteksi kesalahan sintaks. |
+| `npm run lint:fix` | Menjalankan analisis statis ESLint dan memperbaiki kesalahan otomatis. |
+| `npm run typecheck` | Menjalankan pemeriksaan tipe ketat TypeScript tanpa memproduksi file output. |
+| `npm run test` | Menjalankan rangkaian uji unit Vitest satu kali. |
+| `npm run test:unit` | Menjalankan uji unit gate kualitas integrasi. |
+| `npm run test:watch` | Menjalankan uji unit Vitest dalam mode interaktif (watch mode). |
+| `npm run test:e2e` | Menjalankan uji visual ujung-ke-ujung (E2E) menggunakan Playwright. |
+| `npm run db:migrations:check` | Memvalidasi integritas nama file dan keunikan stempel waktu migrasi Supabase. |
+| `npm run prepare` | Memasang Husky git hooks. |
 
-## Environment
+---
 
-Required by `/api/health`:
+## Konvensi dan Aturan Utama Repositori
 
-| Variable | Purpose |
-| --- | --- |
-| `NEXT_PUBLIC_SUPABASE_URL` | Public Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public Supabase anon key |
-| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Sanity project ID |
-| `NEXT_PUBLIC_SANITY_DATASET` | Sanity dataset |
-| `NEXT_PUBLIC_SITE_URL` | Canonical site URL for metadata, sitemap, CORS |
-
-Feature/server variables:
-
-| Variable | Purpose |
-| --- | --- |
-| `ADMIN_API_SECRET` | Protects admin bridge APIs used by Studio tooling |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server-only Supabase admin access |
-| `GEMINI_API_KEY` | AI lesson/admin assistant generation |
-| `SANITY_API_READ_TOKEN` | Draft/non-CDN Sanity reads |
-| `SANITY_API_WRITE_TOKEN` | Sanity write/script access |
-| `SAWERIA_WEBHOOK_SECRET` | Saweria webhook validation |
-| `TRAKTEER_WEBHOOK_SECRET` | Trakteer webhook validation |
-| `SANITY_STUDIO_ADMIN_API_SECRET` | Studio-side admin bridge secret |
-
-Optional script/AI gateway variables:
-
-| Variable | Purpose |
-| --- | --- |
-| `AI_BASE_URL` | OpenAI-compatible gateway base URL used by scripts |
-| `AI_API_KEY` | Script AI gateway key |
-| `AI_MODEL` | Script AI model override |
-
-Security rule: never expose `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_API_SECRET`, webhook secrets, or Sanity write tokens through `NEXT_PUBLIC_*`.
-
-## Data Model Notes
-
-Supabase schema is consolidated in a single migration (`supabase/migrations/20260620130000_initial_schema.sql`):
-
-| Domain | Tables |
-| --- | --- |
-| Public library | `course_categories`, `kanji`, `vocab`, `grammar`, `lessons`, `cheatsheets` |
-| Auxiliary content | `expressions`, `radicals`, `sentences` |
-| JLPT exam bank | `jlpt_exam_templates`, `jlpt_passages`, `jlpt_questions`, `jlpt_exam_template_questions` |
-| User progress | `profiles`, `user_srs`, `user_lessons` |
-| User exams | `user_exam_sessions`, `user_exam_answers` |
-| Community | `community_posts`, `community_comments` |
-| Feedback/support/cache | `user_feedback`, `supporters`, `tts_cache` |
-| Storage buckets | `tts-cache`, `exam-assets` |
-
-Sanity schemas:
-
-| Schema | Content |
-| --- | --- |
-| `lesson` | Course lesson content, quizzes, related vocab/kanji/grammar |
-| `readingMaterial` | Reading content, translation, media, quizzes |
-| `listeningMaterial` | Transcript, timestamps, media, quizzes |
-| `mockExam` | Timed exam metadata and question sets |
-
-## Testing
-
-```bash
-npm run test
-npm run test:e2e
-```
-
-Vitest covers hooks, stores, and core libraries under `__tests__`.
-
-Playwright covers auth, dashboard, navigation, and study flows under `e2e`. The Playwright config starts `npm run dev` at `http://localhost:3000` and runs desktop plus mobile browser projects.
-
-## Project Conventions
-
-| Convention | Rule |
-| --- | --- |
-| Zustand selectors | Use atomic selectors such as `useUserStore((s) => s.xp)` |
-| Store destructuring | Do not destructure `useUserStore`, `useSRSStore`, `useUIStore`, or `useAuthStore` results |
-| Service role | Keep `createAdminClient()` usage server-only |
-| Sanity changes | Update `sanity/schemaTypes`, `src/lib/queries.ts`, actions, and page clients together |
-| Sync payloads | Keep `useCloudData`, `useCloudMutation`, `useSRSStore.mergeProgress`, and `sync_user_progress` aligned |
-| TTS | Generate audio offline; `/api/tts` only serves cached audio and returns 404 on cache miss |
-
-## Repository Map
-
-```text
-src/app         App Router pages, layouts, route handlers, metadata routes
-src/actions     Server Actions for Supabase/Sanity reads
-src/components  UI primitives, layout shell, providers, feature modules
-src/hooks       Cloud sync, hydration, cached audio, mounted-state helpers
-src/lib         Supabase/Sanity clients, SRS, gamification, TTS, utilities
-src/store       Zustand offline-first stores
-src/types       Shared database and library types
-sanity          Studio components and schema types
-supabase        SQL migrations
-scripts         Content, TTS, Sanity, Supabase maintenance scripts
-__tests__       Vitest tests
-e2e             Playwright tests
-public          Static images, logos, fonts, Open Graph assets
-```
-
-## Operational Notes
-
-`/api/tts` serves pre-generated audio from Supabase `tts_cache` and storage bucket `tts-cache`. It does not synthesize audio in real time; cache misses intentionally fall back to browser Web Speech behavior on the client.
-
-Scripts under `scripts/` are operational tools for content generation, Sanity/Supabase alignment, TTS cache work, grammar ordering, and data cleanup. Many require `.env.local`, service-role access, Sanity write tokens, Gemini or AI gateway credentials, and local audio-generation prerequisites.
+1. **Zustand Selectors**: Selalu gunakan selektor atomik (contoh: `useUserStore((s) => s.xp)`) saat berlangganan status store untuk mencegah render ulang berlebih. Jangan melakukan destructuring pada store.
+2. **Database Service Role**: Penggunaan `createAdminClient()` murni terbatas di lingkungan server aman (Route Handlers/Server Actions/Skrip). Jangan mengekspos kunci admin ke klien Next.js dengan prefiks `NEXT_PUBLIC_`.
+3. **Penyimpanan Audio TTS**: File audio pengucapan kosakata dihasilkan offline menggunakan skrip, bukan secara real-time pada saat user meminta di API route. Cache miss wajib mengembalikan status `404` untuk memicu fallback Web Speech API di peramban klien.
+4. **Pembaruan Skema**: Saat melakukan modifikasi tabel database, perbarui juga file `src/types/database.ts` dan pastikan migrasi SQL tercatat dengan nama terurut di folder `supabase/migrations/`.
