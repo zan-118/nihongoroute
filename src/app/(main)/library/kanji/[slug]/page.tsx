@@ -129,47 +129,38 @@ export default async function KanjiDetailPage({
       {/* Background Grid Overlay */}
       <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none z-0" />
 
-      <div className="max-w-6xl mx-auto w-full relative z-10 pt-8 md:pt-16">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-8 animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out">
+      <div className="max-w-4xl mx-auto w-full relative z-10 pt-8 md:pt-16">
+        <div className="flex flex-col gap-12 md:gap-16 animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out">
           
-          {/* Kolom Kiri: Visual & Detail Leksikal */}
-          <div className="flex flex-col gap-6">
-            {/* 1. Stroke & Visual Bento (Fokus Utama) */}
-            <KanjiStrokeHero 
-              id={kanji.id || kanji._id || ""}
-              character={kanji.character || ""} 
-              strokeOrderSvg={kanji.strokeOrderSvg || undefined} 
-              meaning={kanji.meaning || ""} 
-              jlpt={kanji.jlpt_level || undefined} 
-            />
+          {/* 1. Stroke & Visual Bento (Fokus Utama) */}
+          <KanjiStrokeHero 
+            id={kanji.id || kanji._id || ""}
+            character={kanji.character || ""} 
+            strokeOrderSvg={kanji.strokeOrderSvg || undefined} 
+            meaning={kanji.meaning || ""} 
+            jlpt={kanji.jlpt_level || undefined} 
+          />
 
-            {/* 2 & 3. Onyomi & Kunyomi */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <KanjiReadings 
-                onyomi={kanji.onyomi || undefined} 
-                kunyomi={kanji.kunyomi || undefined} 
-              />
-            </div>
+          {/* 2 & 3. Onyomi & Kunyomi */}
+          <KanjiReadings 
+            onyomi={kanji.onyomi || undefined} 
+            kunyomi={kanji.kunyomi || undefined} 
+          />
 
-            {/* 4. Radicals Bento (Akar Kata) */}
-            <KanjiRadicals radicals={kanji.radicals || undefined} />
-          </div>
+          {/* 4. Radicals Bento (Akar Kata) */}
+          <KanjiRadicals radicals={kanji.radicals || undefined} />
 
-          {/* Kolom Kanan: Penggunaan & Contoh Konteks */}
-          <div className="flex flex-col gap-6">
-            {/* 5. Mnemonic Bento (Jembatan Keledai) */}
-            <KanjiMnemonic 
-              mnemonics={kanji.mnemonics || undefined} 
-              wordId={kanji.character || ""}
-            />
+          {/* 5. Mnemonic Bento (Jembatan Keledai) */}
+          <KanjiMnemonic 
+            mnemonics={kanji.mnemonics || undefined} 
+            wordId={kanji.character || ""}
+          />
 
-            {/* 6. Related Context Bento (Kosakata Terkait) */}
-            <KanjiRelatedVocab relatedVocab={kanji.relatedVocab || undefined} />
+          {/* 6. Related Context Bento (Kosakata Terkait) */}
+          <KanjiRelatedVocab relatedVocab={kanji.relatedVocab || undefined} />
 
-            {/* 7. Example Sentences Bento (Kalimat Contoh Dinamis) */}
-            <KanjiSentences sentences={sentences} character={kanjiCharacter} />
-          </div>
-
+          {/* 7. Example Sentences Bento (Kalimat Contoh Dinamis) */}
+          <KanjiSentences sentences={sentences} character={kanjiCharacter} />
         </div>
 
         {/* Footer Actions */}

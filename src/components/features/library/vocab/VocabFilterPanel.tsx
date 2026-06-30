@@ -53,7 +53,7 @@ export function VocabFilterPanel({
   const setLayoutPreference = useUIStore((s) => s.setLayoutPreference);
 
   return (
-    <div className="mb-10 md:mb-16 bg-card p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-border neo-card shadow-sm font-sans">
+    <div className="mb-14 md:mb-20 bg-card/35 p-8 md:p-12 rounded-[2.5rem] border border-border/80 shadow-[0_0_50px_rgba(var(--primary-rgb),0.02)] font-sans glass">
       <div className="flex flex-col gap-6 md:gap-8">
         
         {/* Kolom Pencarian Kosakata */}

@@ -25,12 +25,16 @@ import QuizEngine from "@/components/features/exams/quiz-engine/QuizEngine";
 import AudioController from "@/components/features/reading/components/AudioController";
 
 // Komponen Pendukung
-import { ReadingNavbar } from "@/components/features/reading/components/ReadingNavbar";
-import {
-  ReadingArticle,
-  type ReadingProgressSnapshot,
-} from "@/components/features/reading/components/ReadingArticle";
+import { IllustrationGallery } from "@/components/ui/IllustrationGallery";
+import ReadingWorkspace from "@/components/features/reading/components/ReadingWorkspace";
 import { ReadingVocabularyCollector } from "@/components/features/reading/components/ReadingVocabularyCollector";
+
+interface ReadingProgressSnapshot {
+  activeParagraphIndex: number;
+  elapsedSeconds: number;
+  totalParagraphs: number;
+  hasResumed: boolean;
+}
 
 // ======================
 // TIPE DATA
@@ -87,6 +91,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
   const updateReadingProgress = useUIStore((state) => state.updateReadingProgress);
   const recordLearningEvent = useUIStore((state) => state.recordLearningEvent);
   const [isLocallyCompleted, setIsLocallyCompleted] = useState(false);
+  const [showVisuals, setShowVisuals] = useState(false);
   const isCompleted = !!(lessonId && completedLessons[lessonId]) || isLocallyCompleted;
   const [readingSnapshot, setReadingSnapshot] = useState<ReadingProgressSnapshot>(() => ({
     activeParagraphIndex: savedProgress?.lastParagraphIndex || 0,
@@ -205,6 +210,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
   };
 
   const [isZenMode, setIsZenMode] = useState(false);
+  const [isVocabOpen, setIsVocabOpen] = useState(false);
   const [fontSize, setFontSize] = useState<"standard" | "large" | "extra">("large");
   const toolParams = React.useMemo(() => {
     const params = new URLSearchParams({
@@ -236,21 +242,17 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
         <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px)] bg-[size:100px_100px] pointer-events-none opacity-20" />
       </div>
 
-      {/* Bilah Navigasi Atas */}
-      <AnimatePresence>
-        {!isZenMode && (
-          <ReadingNavbar
-            title={data.title}
-            difficulty={data.difficulty}
-            mode={mode}
-            modes={modes}
-            onModeChange={(id) =>
-              setMode(id as "kanji" | "furigana" | "romaji" | "hiragana")
-            }
-            onZenModeToggle={() => setIsZenMode(true)}
-          />
-        )}
-      </AnimatePresence>
+      {/* Style Override untuk Zen Mode */}
+      {isZenMode && (
+        <style dangerouslySetInnerHTML={{ __html: `
+          aside, .premium-shell > aside, .premium-shell > div > div:first-child {
+            display: none !important;
+          }
+          .premium-shell > div {
+            padding-left: 0 !important;
+          }
+        `}} />
+      )}
 
       {/* Tombol Melayang Keluar untuk Mode Zen */}
       <AnimatePresence>
@@ -280,191 +282,178 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
       <div
         className={cn(
           "max-w-4xl mx-auto px-6 relative z-10 transition-all duration-1000",
-          isZenMode ? "pt-12 sm:pt-24 md:pt-40" : "pt-20 sm:pt-32 md:pt-48"
+          isZenMode ? "pt-12 sm:pt-20" : "pt-4 md:pt-6"
         )}
       >
-        {/* Dekorasi Header Imersif */}
+        {/* Ramping Left-Aligned Header */}
         {!isZenMode && (
-          <div className="flex flex-col items-center mb-12 md:mb-24 text-center">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="size-1.5 rounded-full bg-primary animate-ping" />
-              <span className="text-primary font-black text-[10px] md:text-xs uppercase tracking-[0.4em]">
-                Graded Reading Experience
+          <div className="flex flex-col gap-1.5 mb-10 pb-6 border-b border-border/40">
+            <div className="flex items-center gap-2">
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">
+                Graded Reading
               </span>
+              {data.jlpt_level && (
+                <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+                  {data.jlpt_level}
+                </span>
+              )}
             </div>
-            <h1 className="text-3xl sm:text-5xl md:text-7xl font-black text-foreground tracking-tighter leading-[1.1] md:leading-[0.9] mb-8 max-w-3xl drop-shadow-2xl">
+            <h1 className="text-2xl md:text-4xl font-black text-foreground tracking-tight leading-tight uppercase font-sans">
               {data.title}
             </h1>
-            <div className="h-1.5 w-32 bg-gradient-to-r from-primary/0 via-primary to-primary/0 rounded-full" />
           </div>
         )}
 
 
 
-        {/* Panel Kontrol Premium (Notion/Medium Reader style) */}
+        {/* Ilustrasi Pendukung (Collapsible) */}
         {!isZenMode && (
-          <div className="border border-border/80 bg-card/40 backdrop-blur-xl rounded-[2rem] p-6 shadow-[0_0_50px_rgb(var(--primary-rgb)/0.03)] mb-8 flex flex-col gap-6 relative overflow-hidden">
-            {/* Background Accent */}
-            <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full pointer-events-none" />
-            
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/60 pb-4">
-              <div className="flex items-center gap-2">
-                <Sparkles size={16} className="text-primary animate-pulse" />
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
-                    Pengaturan Membaca
-                  </span>
-                  {readingSnapshot.hasResumed && (
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/10 px-2.5 py-1 text-[9px] font-black uppercase tracking-widest text-primary">
-                      <MapPin size={10} aria-hidden="true" />
-                      Lanjut Paragraf {currentParagraph}
-                    </span>
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-wrap items-center gap-2">
-                <Button asChild variant="outline" size="sm" className="rounded-xl">
-                  <Link href={`/tools/shadowing?${toolParams}`}>
-                    <Mic size={14} aria-hidden="true" />
-                    Shadowing
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" size="sm" className="rounded-xl">
-                  <Link href={`/tools/text-analyzer?${toolParams}`}>
-                    <ScanText size={14} aria-hidden="true" />
-                    Analyzer
-                  </Link>
-                </Button>
-              </div>
-              
-              {/* Pill buttons for Text & Translation Settings */}
-              <div className="flex flex-wrap items-center gap-3">
-                {/* Mode Selector */}
-                <div className="flex flex-wrap items-center gap-1 p-1 rounded-xl bg-muted/20 border border-border">
-                  {modes.map((m) => (
-                    <Button
-                      key={m.id}
-                      variant={mode === m.id ? "default" : "ghost"}
-                      size="sm"
-                      onClick={() => setMode(m.id as "kanji" | "furigana" | "romaji" | "hiragana")}
-                      className={cn(
-                        "rounded-lg px-2.5 py-1.5 h-auto text-[10px] font-black uppercase tracking-wider transition-all",
-                        mode === m.id && "shadow-md shadow-primary/20 text-primary-foreground bg-primary"
-                      )}
-                    >
-                      {React.createElement(m.icon, { size: 12, className: "mr-1" })}
-                      {m.label}
-                    </Button>
-                  ))}
-                </div>
+          <div className="w-full mb-6">
+            <Button
+              variant="outline"
+              onClick={() => setShowVisuals(!showVisuals)}
+              className="w-full py-4 rounded-2xl border-dashed border-primary/20 hover:border-primary/50 bg-primary/5 hover:bg-primary/10 transition-all flex items-center justify-center gap-2 group glass"
+            >
+              <Sparkles size={14} className={cn("text-primary transition-transform duration-300", showVisuals && "rotate-45")} />
+              <span className="text-xs font-black uppercase tracking-wider">
+                {showVisuals ? "Sembunyikan Ilustrasi Cerita" : "Lihat Ilustrasi Cerita (AI Generated)"}
+              </span>
+            </Button>
 
-                {/* Font Size Selector */}
-                <div className="flex items-center gap-1 p-1 rounded-xl bg-muted/20 border border-border">
-                  {(["standard", "large", "extra"] as const).map((sz) => (
-                    <Button
-                      key={sz}
-                      variant={fontSize === sz ? "default" : "ghost"}
-                      size="sm"
-                      onClick={() => setFontSize(sz)}
-                      className={cn(
-                        "rounded-lg px-3 py-1.5 h-auto text-[10px] font-black uppercase tracking-wider transition-all",
-                        fontSize === sz && "shadow-md shadow-primary/20 text-primary-foreground bg-primary"
-                      )}
-                    >
-                      <Type size={12} className="mr-1" />
-                      {sz === "standard" ? "Standard" : sz === "large" ? "Besar" : "Ekstra"}
-                    </Button>
-                  ))}
-                </div>
-
-                {/* Translation Toggle */}
-                <Button
-                  variant={showTranslation ? "default" : "outline"}
-                  size="sm"
-                  onClick={toggleTranslation}
-                  className={cn(
-                    "rounded-xl px-4 py-1.5 h-9 text-[10px] font-black uppercase tracking-wider transition-all gap-1.5 border border-border/85",
-                    showTranslation 
-                      ? "bg-success hover:bg-success/90 text-success-foreground shadow-md shadow-success/20 border-transparent" 
-                      : "bg-muted/10 text-muted-foreground hover:text-foreground hover:bg-muted/20"
-                  )}
+            <AnimatePresence>
+              {showVisuals && (
+                <m.div
+                  initial={{ height: 0, opacity: 0, marginTop: 0 }}
+                  animate={{ height: "auto", opacity: 1, marginTop: 16 }}
+                  exit={{ height: 0, opacity: 0, marginTop: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden"
                 >
-                  <Languages size={14} />
-                  <span>Terjemahan: {showTranslation ? "ON" : "OFF"}</span>
-                </Button>
-              </div>
-            </div>
-
-            <div className="grid overflow-hidden rounded-2xl border border-border/60 bg-muted/10 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="flex items-center gap-3 border-b border-border/50 p-4 sm:border-r lg:border-b-0">
-                <Clock size={17} className="text-primary" aria-hidden="true" />
-                <div>
-                  <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
-                    Waktu
-                  </p>
-                  <p className="font-mono text-lg font-black text-foreground">
-                    {formatReadingDuration(readingSnapshot.elapsedSeconds)}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 border-b border-border/50 p-4 lg:border-b-0 lg:border-r">
-                <BookmarkCheck size={17} className="text-success" aria-hidden="true" />
-                <div>
-                  <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
-                    Posisi
-                  </p>
-                  <p className="font-mono text-lg font-black text-foreground">
-                    {currentParagraph}/{totalParagraphs}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 border-b border-border/50 p-4 sm:border-b-0 sm:border-r">
-                <Gauge size={17} className="text-warning" aria-hidden="true" />
-                <div>
-                  <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
-                    Pace
-                  </p>
-                  <p className="font-mono text-lg font-black text-foreground">
-                    {readingPace || "-"}
-                    <span className="ml-1 text-[10px] text-muted-foreground">unit/mnt</span>
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 p-4">
-                <MapPin size={17} className="text-secondary" aria-hidden="true" />
-                <div>
-                  <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
-                    Progress
-                  </p>
-                  <p className="font-mono text-lg font-black text-foreground">
-                    {readingCompletionPercent}%
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Audio Section */}
-            {!!(data.audioUrl || (!data.isTTSDisabled && typeof data.body === "string" ? data.body : undefined)) && (
-              <div className="w-full flex flex-col gap-2">
-                <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground mb-1">
-                  Audio & Pengisi Suara (TTS)
-                </span>
-                <div className="w-full rounded-2xl bg-muted/10 border border-border/40 p-1">
-                  <AudioController
-                    audioUrl={data.audioUrl}
-                    textToSpeak={typeof data.body === "string" ? data.body : undefined}
-                    isTTSDisabled={data.isTTSDisabled}
-                    compact={false}
-                    header={true}
+                  <IllustrationGallery
+                    illustrations={data.illustrations}
+                    fallbackImage={typeof data.image_url === "string" ? data.image_url : undefined}
+                    title={data.title}
                   />
-                </div>
+                </m.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
+
+        {/* Panel Kontrol Layar Lengket (Sticky Bottom Control Bar) */}
+        {!isZenMode && (
+          <div className="fixed bottom-6 left-6 md:left-[calc(18rem+1.5rem)] right-6 max-w-6xl mx-auto z-50 rounded-[2rem] border border-border bg-background/80 backdrop-blur-xl p-4 shadow-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-4 glass animate-in slide-in-from-bottom duration-500 pointer-events-auto">
+            {/* Sisi Kiri: Audio & Playback Controller */}
+            <div className="flex-1 w-full lg:max-w-xs">
+              {!!(data.audioUrl || (!data.isTTSDisabled && typeof data.body === "string" ? data.body : undefined)) && (
+                <AudioController
+                  audioUrl={data.audioUrl}
+                  textToSpeak={typeof data.body === "string" ? data.body : undefined}
+                  isTTSDisabled={data.isTTSDisabled}
+                  compact={true}
+                  header={false}
+                />
+              )}
+            </div>
+
+            {/* Sisi Tengah: Ramping Stats Row */}
+            <div className="hidden md:flex items-center gap-4 text-xs font-mono border-x border-border/40 px-4 py-1">
+              <span className="flex items-center gap-1.5 text-muted-foreground">
+                ⏱️ <span>{formatReadingDuration(readingSnapshot.elapsedSeconds)}</span>
+              </span>
+              <span className="flex items-center gap-1.5 text-muted-foreground">
+                ⚡ <span>{readingPace || "-"} <span className="text-[9px] text-muted-foreground font-sans">u/m</span></span>
+              </span>
+              <span className="flex items-center gap-1.5 text-muted-foreground">
+                📊 <span>{readingCompletionPercent}%</span>
+              </span>
+            </div>
+
+            {/* Sisi Kanan: Toggles Mode Membaca, Font Size, Kosakata, dan Terjemahan */}
+            <div className="flex flex-wrap items-center gap-2 justify-end">
+              {/* Mode Select */}
+              <div className="flex items-center gap-1 p-1 rounded-xl bg-muted/20 border border-border/80">
+                {modes.map((m) => (
+                  <Button
+                    key={m.id}
+                    variant={mode === m.id ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => setMode(m.id as "kanji" | "furigana" | "romaji" | "hiragana")}
+                    className={cn(
+                      "rounded-lg px-2 py-1 h-7 text-[9px] font-black uppercase tracking-wider transition-all",
+                      mode === m.id && "shadow-md shadow-primary/20 text-primary-foreground bg-primary"
+                    )}
+                    title={m.label}
+                  >
+                    {m.label}
+                  </Button>
+                ))}
               </div>
-            )}
+
+              {/* Font Size Select */}
+              <div className="flex items-center gap-1 p-1 rounded-xl bg-muted/20 border border-border/80">
+                {(["standard", "large", "extra"] as const).map((sz) => (
+                  <Button
+                    key={sz}
+                    variant={fontSize === sz ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => setFontSize(sz)}
+                    className={cn(
+                      "rounded-lg px-2 py-1 h-7 text-[9px] font-black uppercase tracking-wider transition-all",
+                      fontSize === sz && "shadow-md shadow-primary/20 text-primary-foreground bg-primary"
+                    )}
+                  >
+                    {sz === "standard" ? "S" : sz === "large" ? "M" : "L"}
+                  </Button>
+                ))}
+              </div>
+
+              {/* Kosakata Drawer Toggle */}
+              <Button
+                variant={isVocabOpen ? "default" : "outline"}
+                size="sm"
+                onClick={() => setIsVocabOpen(!isVocabOpen)}
+                className={cn(
+                  "rounded-xl px-3 py-1.5 h-9 text-[9px] font-black uppercase tracking-wider transition-all gap-1 border border-border/80",
+                  isVocabOpen 
+                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 border-transparent animate-pulse" 
+                    : "bg-muted/10 text-muted-foreground hover:text-foreground hover:bg-muted/20"
+                )}
+              >
+                <span>KOSAKATA</span>
+              </Button>
+
+              {/* Translation Toggle */}
+              <Button
+                variant={showTranslation ? "default" : "outline"}
+                size="sm"
+                onClick={toggleTranslation}
+                className={cn(
+                  "rounded-xl px-3 py-1.5 h-9 text-[9px] font-black uppercase tracking-wider transition-all gap-1 border border-border/80",
+                  showTranslation 
+                    ? "bg-success hover:bg-success/90 text-success-foreground shadow-md shadow-success/20 border-transparent" 
+                    : "bg-muted/10 text-muted-foreground hover:text-foreground hover:bg-muted/20"
+                )}
+              >
+                <Languages size={11} />
+                <span>IND: {showTranslation ? "ON" : "OFF"}</span>
+              </Button>
+
+              {/* Zen Mode Toggle */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsZenMode(true)}
+                className="rounded-xl px-3 py-1.5 h-9 text-[9px] font-black uppercase tracking-wider bg-muted/10 text-muted-foreground hover:text-foreground hover:bg-muted/20 border border-border/80"
+              >
+                ZEN
+              </Button>
+            </div>
           </div>
         )}
 
         {/* Artikel */}
-        <ReadingArticle
+        <ReadingWorkspace
           paragraphs={paragraphs}
           hiraganaParagraphs={hiraganaParagraphs}
           romajiParagraphs={romajiParagraphs}
@@ -481,9 +470,52 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
           onProgressChange={handleReadingProgressChange}
         />
 
-        {!isZenMode && lessonId && (
-          <ReadingVocabularyCollector sourceId={lessonId} />
-        )}
+        {/* Kosakata Slide-Over Sheet Drawer */}
+        <AnimatePresence>
+          {isVocabOpen && (
+            <>
+              {/* Backdrop */}
+              <m.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.5 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsVocabOpen(false)}
+                className="fixed inset-0 bg-black/60 z-[100] cursor-pointer"
+              />
+              {/* Panel Drawer */}
+              <m.div
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%" }}
+                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                className="fixed top-0 right-0 bottom-0 w-full sm:w-[420px] bg-background/95 backdrop-blur-xl border-l border-border z-[101] shadow-2xl p-6 overflow-y-auto glass flex flex-col"
+              >
+                <div className="flex items-center justify-between border-b border-border/40 pb-4 mb-4">
+                  <div className="flex items-center gap-2">
+                    <Sparkles size={16} className="text-primary animate-pulse" />
+                    <span className="text-xs font-black uppercase tracking-widest text-foreground">
+                      Kosakata Terkumpul
+                    </span>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsVocabOpen(false)}
+                    className="rounded-xl text-[10px] font-black uppercase h-8"
+                  >
+                    Tutup
+                  </Button>
+                </div>
+
+                <div className="flex-1 overflow-y-auto custom-scrollbar">
+                  {lessonId && (
+                    <ReadingVocabularyCollector sourceId={lessonId} />
+                  )}
+                </div>
+              </m.div>
+            </>
+          )}
+        </AnimatePresence>
 
         {/* Kuis Membaca Inline — tampil setelah artikel, tanpa overlay */}
         {hasQuiz && !isZenMode && (

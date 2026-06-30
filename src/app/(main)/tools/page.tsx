@@ -203,16 +203,16 @@ export default function ToolsPage() {
           </p>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {tools.map((tool, idx) => (
             <motion.div
               key={tool.title}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.1 }}
+              transition={{ delay: idx * 0.05 }}
             >
               <Link data-tour="tool-card" href={tool.href}>
-                <Card className={`group relative p-8 rounded-[2rem] border ${tool.border} bg-card/50 backdrop-blur-sm hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 overflow-hidden`}>
+                <Card className={`group relative p-8 md:p-10 rounded-[2.5rem] border ${tool.border} bg-card/35 hover:shadow-[0_0_35px_rgba(var(--primary-rgb),0.02)] transition-all duration-300 overflow-hidden glass`}>
                   {/* Pendaran Hover */}
                   <div className={`absolute -right-8 -top-8 w-32 h-32 ${tool.bgColor} rounded-full blur-lg opacity-0 group-hover:opacity-80 transition-opacity duration-200`} />
 

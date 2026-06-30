@@ -45,12 +45,12 @@ export const KanjiSection: React.FC<KanjiSectionProps> = ({ kanjiList }) => {
         </h2>
         <div className="h-[1px] flex-1 bg-border" />
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 md:gap-6">
         {visibleKanjis.map((k: KanjiLessonItem) => (
           <Link
             key={k._id || k.id}
             href={`/library/kanji/${k.slug || k.character}`}
-            className="neo-card p-6 flex flex-col items-center justify-center group hover:border-primary/40 transition-all duration-300"
+            className="p-6 border border-border/80 rounded-[2rem] bg-card/35 shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] flex flex-col items-center justify-center group hover:border-primary/45 transition-all duration-300 glass"
           >
             <span className="text-4xl font-black mb-3 group-hover:scale-110 transition-transform">
               {k.character}

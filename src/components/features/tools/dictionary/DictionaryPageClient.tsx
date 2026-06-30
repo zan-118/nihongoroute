@@ -65,7 +65,7 @@ function DictionaryResultCard({ item }: { item: ToolSearchItem }) {
   const Icon = item.icon;
 
   return (
-    <Card className="group rounded-[2rem] border border-border bg-card/45 p-5 transition-all hover:border-primary/35 hover:bg-card/65">
+    <Card className="group rounded-[2rem] border border-border/80 bg-card/35 p-6 transition-all duration-300 hover:border-primary/45 shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] glass">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex min-w-0 items-start gap-4">
           <div
@@ -211,7 +211,7 @@ export default function DictionaryPageClient() {
           </div>
         </header>
 
-        <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-2xl md:p-6">
+        <Card className="rounded-[2.5rem] border border-border/80 bg-card/35 p-6 shadow-[0_0_50px_rgba(var(--primary-rgb),0.02)] md:p-8 glass">
           <form
             className="grid gap-3 md:grid-cols-[1fr_auto]"
             onSubmit={(event) => {
@@ -307,7 +307,7 @@ export default function DictionaryPageClient() {
               <DictionaryResultCard key={`${item.category}-${item.id}`} item={item} />
             ))
           ) : (
-            <Card className="rounded-[2rem] border border-dashed border-border bg-card/35 p-10 text-center">
+            <Card className="rounded-[2.5rem] border border-dashed border-border/80 bg-card/25 p-12 text-center glass shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] relative overflow-hidden">
               <div className="mx-auto mb-5 flex size-16 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary">
                 <Sparkles size={26} aria-hidden="true" />
               </div>

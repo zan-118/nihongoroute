@@ -129,7 +129,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
             <Loader2 className="size-10 animate-spin text-primary" />
           </div>
         )}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[300px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 min-h-[300px]">
           {tasks.map((task: ListeningTaskItem & { jlpt_level?: string; difficulty?: string }) => {
             const isCompleted = !!(
               task.id &&
@@ -147,7 +147,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
               }}
             >
               <Link href={`/library/listening/${task.slug}`}>
-                <Card className="group h-full p-8 rounded-[2.5rem] bg-card/30 backdrop-blur-xl border border-border hover:border-primary/40 shadow-xl hover:shadow-[0_20px_50px_rgb(var(--primary-rgb)/0.1)] transition-all duration-500 relative overflow-hidden flex flex-col justify-between cursor-pointer">
+                <Card className="group h-full p-8 md:p-10 rounded-[2.5rem] bg-card/35 backdrop-blur-xl border border-border hover:border-primary/45 shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] hover:shadow-[0_20px_50px_rgba(var(--primary-rgb),0.1)] transition-all duration-500 relative overflow-hidden flex flex-col justify-between cursor-pointer glass">
                   {/* Efek Kilau / Pendar Ambient */}
                   <div className="absolute top-0 right-0 size-32 bg-primary/5 blur-[50px] rounded-full -mr-16 -mt-16 group-hover:bg-primary/10 transition-all duration-500" />
                   

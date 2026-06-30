@@ -54,30 +54,23 @@ export const CheatsheetSection: React.FC<CheatsheetSectionProps> = ({ cheatsheet
       </div>
       <div className="space-y-12">
         {cheatsheets.map((c: CheatsheetData) => (
-          <div key={c._id || c.id} className="neo-card overflow-hidden">
+          <div key={c._id || c.id} className="border border-border/80 rounded-[2.5rem] bg-card/25 shadow-[0_0_40px_rgba(var(--warning-rgb),0.015)] overflow-hidden glass relative">
             <div 
-              className="p-6 border-b"
-              style={{ backgroundColor: "rgb(var(--warning-rgb)/0.05)", borderColor: "rgb(var(--warning-rgb)/0.1)" }}
+              className="p-6 md:p-8 border-b border-border/60"
+              style={{ backgroundColor: "rgb(var(--warning-rgb)/0.03)" }}
             >
                <p className="text-[10px] font-black text-warning uppercase tracking-widest mb-1">{c.category}</p>
-               <h3 className="text-xl font-black uppercase tracking-tight">{c.title}</h3>
+               <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight">{c.title}</h3>
             </div>
-            <div className="p-8">
+            <div className="p-8 md:p-10">
               {c.items && c.items.length > 0 && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
                   {c.items.map((item: CheatsheetItem) => (
                     <div 
                       key={item.jp} 
-                      className="p-5 rounded-2xl neo-inset transition-all flex flex-col items-center text-center"
-                      // Apply hover styles inline to match rules
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = "rgb(var(--warning-rgb)/0.05)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = "";
-                      }}
+                      className="p-6 rounded-2xl border border-border/60 bg-muted/10 transition-all duration-300 flex flex-col items-center text-center hover:bg-warning/5 hover:border-warning/30 hover:-translate-y-0.5"
                     >
-                      <span className="text-2xl font-japanese font-black mb-1">{item.jp}</span>
+                      <span className="text-2xl font-japanese font-black mb-1 text-foreground">{item.jp}</span>
                       <span className="text-[10px] font-bold text-warning/80 uppercase tracking-widest mb-2">{item.romaji}</span>
                       <span className="text-xs font-medium text-muted-foreground">{item.label}</span>
                     </div>

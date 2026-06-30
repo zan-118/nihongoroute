@@ -115,10 +115,10 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
           {/* BENTO CARD 1: JUMBO HEADER & GLOBAL STATS (SPAN 3) */}
           <m.div
             variants={itemVariants}
-            className="lg:col-span-3 p-6 sm:p-10 md:p-12 rounded-[2.5rem] bg-card/20 backdrop-blur-md border border-border shadow-xl relative overflow-hidden group transition-all duration-200 hover:border-primary/30 hover:shadow-lg glass"
+            className="lg:col-span-3 p-8 sm:p-10 md:p-14 rounded-[2.5rem] bg-card/25 border border-border/80 shadow-[0_0_50px_rgba(var(--primary-rgb),0.015)] relative overflow-hidden group transition-all duration-300 glass"
           >
-            <div className="absolute top-0 right-0 size-56 bg-primary/5 rounded-full blur-[45px] pointer-events-none group-hover:bg-primary/8 transition-all duration-300" />
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-50 pointer-events-none" />
+            <div className="absolute top-0 right-0 size-64 bg-primary/5 rounded-full blur-[55px] pointer-events-none group-hover:bg-primary/8 transition-all duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-30 pointer-events-none" />
 
             <div className="relative z-10 flex flex-col xl:flex-row xl:items-center justify-between gap-8 md:gap-12">
               <div className="space-y-4 max-w-2xl">

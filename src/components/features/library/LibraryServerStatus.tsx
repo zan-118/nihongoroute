@@ -1,7 +1,7 @@
 /**
  * @file LibraryServerStatus.tsx
  * @description Komponen visualizer status kesiapan modul materi pembelajaran secara luring (offline) di NihongoRoute.
- * Menampilkan diagram indikator kesiapan materi menggunakan animasi CSS murni yang super cepat.
+ * Menampilkan diagram indikator kesiapan materi menggunakan animasi CSS murni yang super cepat dan estetika siber-glass.
  */
 
 // ==========================================
@@ -19,24 +19,24 @@ import { Card } from "@/components/ui/card";
  */
 export function LibraryServerStatus() {
   return (
-    <Card className="p-8 md:p-10 rounded-3xl md:rounded-[3.5rem] bg-[rgb(var(--card-rgb)/0.3)] backdrop-blur-sm border-border neo-card shadow-none min-w-[320px] font-sans">
+    <Card className="p-8 md:p-10 rounded-[2.5rem] border border-border bg-[rgb(var(--card-rgb)/0.35)] backdrop-blur-xl shadow-[0_0_50px_rgba(var(--primary-rgb),0.02)] min-w-[320px] font-sans glass">
       <div className="flex items-center justify-between mb-6">
-         <div className="flex items-center gap-3 md:gap-4 text-muted-foreground font-black uppercase text-xs md:text-xs tracking-widest">
-            <Server size={16} className="md:w-5 md:h-5 text-primary/50" /> Kesiapan Materi
+         <div className="flex items-center gap-3 md:gap-4 text-muted-foreground font-black uppercase text-xs tracking-widest">
+            <Server size={16} className="text-primary/70 animate-pulse" /> Kesiapan Materi
          </div>
-         <span className="text-xs md:text-xs font-mono text-primary font-black">100%</span>
+         <span className="text-xs font-mono text-primary font-black">100% Ready</span>
       </div>
       
       {/* Batang Visualizer Indikator Kesiapan (Animasi Pulse) */}
-      <div className="flex gap-2 md:gap-2.5">
+      <div className="flex gap-2.5">
          {[...Array(6)].map((_, i) => (
-            <div key={`bar-${i}`} className="flex-1 h-8 md:h-12 bg-[rgb(var(--primary-rgb)/0.1)] rounded-full overflow-hidden flex items-end">
+            <div key={`bar-${i}`} className="flex-1 h-12 md:h-14 bg-[rgb(var(--primary-rgb)/0.08)] border border-border/30 rounded-full overflow-hidden flex items-end">
                <div 
-                 className="w-full bg-primary animate-pulse" 
+                 className="w-full bg-primary/80 animate-pulse rounded-full" 
                  style={{ 
-                   height: `${30 + (i * 10) % 70}%`,
-                   animationDelay: `${i * 0.1}s`,
-                   animationDuration: '1.5s'
+                   height: `${30 + (i * 12) % 70}%`,
+                   animationDelay: `${i * 0.12}s`,
+                   animationDuration: '1.8s'
                  }} 
                />
             </div>

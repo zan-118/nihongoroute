@@ -62,10 +62,10 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
         />
 
         <Card
-          className="p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl transition-all duration-200 flex flex-col items-start gap-3 sm:gap-4 md:gap-5 cursor-pointer h-full relative overflow-hidden glass"
+          className="p-6 sm:p-7 md:p-8 rounded-[2rem] transition-all duration-300 flex flex-col items-start gap-4 cursor-pointer h-full relative overflow-hidden glass"
           style={{
-            borderColor: isHovered ? `rgba(${themeRgb}, 0.3)` : `rgb(var(--border-rgb)/0.4)`,
-            boxShadow: isHovered ? `0 8px 22px rgba(${themeRgb}, 0.06), 0 0 12px rgba(${themeRgb}, 0.03)` : 'none'
+            borderColor: isHovered ? `rgba(${themeRgb}, 0.35)` : `rgb(var(--border-rgb)/0.85)`,
+            boxShadow: isHovered ? `0 12px 30px rgba(${themeRgb}, 0.04), 0 0 15px rgba(${themeRgb}, 0.02)` : 'none'
           }}
         >
           {/* Shine Effect */}

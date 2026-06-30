@@ -40,7 +40,7 @@ interface VocabExamplesProps {
  */
 export function VocabExamples({ examples }: VocabExamplesProps) {
   return (
-    <Card className="p-6 md:p-8 bg-card/20 backdrop-blur-xl border-border rounded-[2rem] hover:border-primary/40 transition-all group overflow-hidden relative md:col-span-full lg:col-span-2 font-sans">
+    <Card className="p-6 md:p-8 bg-card/20 backdrop-blur-xl border-border rounded-[2rem] hover:border-primary/40 transition-all group overflow-hidden relative font-sans glass shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
       <div className="flex items-center gap-3 mb-6">
         <Layers size={18} aria-hidden="true" className="text-primary" />
         <h2 className="text-sm font-black uppercase tracking-[0.2em] text-foreground">Contoh Penggunaan</h2>

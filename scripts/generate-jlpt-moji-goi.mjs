@@ -382,12 +382,22 @@ async function createAiClient() {
   loadEnvFile();
 
   const geminiKeys = collectGeminiKeys();
-  const hasOpenAi = !!(process.env.AI_BASE_URL && process.env.AI_API_KEY);
+  
+  const ninerouterUrl = process.env.NINEROUTER_URL;
+  const ninerouterKey = process.env.NINEROUTER_KEY;
+
+  let openAiBaseUrl = process.env.AI_BASE_URL;
+  if (ninerouterUrl) {
+    openAiBaseUrl = ninerouterUrl.endsWith("/v1") ? ninerouterUrl : `${ninerouterUrl}/v1`;
+  }
+  const openAiApiKey = ninerouterKey ?? process.env.AI_API_KEY;
+
+  const hasOpenAi = !!openAiBaseUrl;
   const hasGemini = geminiKeys.length > 0;
 
   if (!hasOpenAi && !hasGemini) {
     throw new Error(
-      "--llm-enhance membutuhkan AI_BASE_URL/AI_API_KEY atau GEMINI_API_KEY."
+      "--llm-enhance membutuhkan NINEROUTER_URL/NINEROUTER_KEY, AI_BASE_URL/AI_API_KEY, atau GEMINI_API_KEY."
     );
   }
 
@@ -398,12 +408,12 @@ async function createAiClient() {
     openAiClient = {
       async generateText(prompt) {
         const response = await fetchFn(
-          `${process.env.AI_BASE_URL}/chat/completions`,
+          `${openAiBaseUrl}/chat/completions`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${process.env.AI_API_KEY}`,
+              ...(openAiApiKey ? { Authorization: `Bearer ${openAiApiKey}` } : {}),
             },
             body: JSON.stringify({
               model: process.env.AI_MODEL || "ag/gemini-3-flash",

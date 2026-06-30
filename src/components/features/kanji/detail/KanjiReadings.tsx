@@ -28,9 +28,9 @@ export function KanjiReadings({ onyomi, kunyomi }: KanjiReadingsProps) {
   // RENDER KOMPONEN
   // ==========================================
   return (
-    <>
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
       {/* Bento Onyomi */}
-      <Card className="p-6 md:p-8 bg-card/20 backdrop-blur-xl border-border rounded-[2.5rem] hover:border-primary/40 transition-all relative overflow-hidden flex flex-col justify-center col-span-1 group">
+      <Card className="p-6 md:p-8 bg-card/20 backdrop-blur-xl border-border rounded-[2.5rem] hover:border-primary/40 transition-all relative overflow-hidden flex flex-col justify-center group glass shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
         <div className="absolute top-4 right-6 opacity-[0.05] group-hover:scale-110 transition-transform text-primary">
           <Play size={40} aria-hidden="true" />
         </div>
@@ -41,7 +41,7 @@ export function KanjiReadings({ onyomi, kunyomi }: KanjiReadingsProps) {
       </Card>
 
       {/* Bento Kunyomi */}
-      <Card className="p-6 md:p-8 bg-card/20 backdrop-blur-xl border-border rounded-[2.5rem] hover:border-primary/40 transition-all relative overflow-hidden flex flex-col justify-center col-span-1 group">
+      <Card className="p-6 md:p-8 bg-card/20 backdrop-blur-xl border-border rounded-[2.5rem] hover:border-primary/40 transition-all relative overflow-hidden flex flex-col justify-center group glass shadow-[0_0_20px_rgba(var(--success-rgb),0.02)]">
         <div className="absolute top-4 right-6 opacity-[0.05] group-hover:scale-110 transition-transform text-success">
           <Play size={40} aria-hidden="true" />
         </div>
@@ -50,6 +50,6 @@ export function KanjiReadings({ onyomi, kunyomi }: KanjiReadingsProps) {
           {kunyomi || "—"}
         </span>
       </Card>
-    </>
+    </div>
   );
 }

@@ -32,7 +32,7 @@ interface VocabNotesProps {
  */
 export function VocabNotes({ wordId, mnemonic, usageNotes }: VocabNotesProps) {
   return (
-    <Card className="p-6 bg-warning/5 backdrop-blur-xl border-warning/20 rounded-[2rem] hover:border-warning/40 transition-all group overflow-hidden relative col-span-1 md:col-span-1 lg:col-span-1 flex flex-col gap-4 font-sans">
+    <Card className="p-6 bg-warning/5 backdrop-blur-xl border-warning/20 rounded-[2rem] hover:border-warning/40 transition-all group overflow-hidden relative flex flex-col gap-4 font-sans glass shadow-[0_0_20px_rgba(var(--warning-rgb),0.02)]">
       <div className="absolute -top-4 -right-4 p-8 opacity-[0.05] group-hover:scale-110 transition-transform duration-700 text-warning">
         <Sparkles size={80} />
       </div>

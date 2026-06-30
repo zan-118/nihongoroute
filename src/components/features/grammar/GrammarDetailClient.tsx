@@ -430,7 +430,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
       <div className="space-y-12">
         {/* Bento Struktur */}
         {article.formation && (
-          <Card className="p-8 md:p-10 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-xl border border-border rounded-[2rem] relative overflow-hidden group hover:border-primary/40 shadow-[0_0_30px_rgb(var(--primary-rgb)/0.02)] transition-all duration-500 select-none">
+          <Card className="p-8 md:p-10 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-xl border border-border rounded-[2rem] relative overflow-hidden group hover:border-primary/40 shadow-[0_0_30px_rgba(var(--primary-rgb),0.05)] transition-all duration-500 select-none glass">
             <div className="absolute -top-12 -right-12 p-8 opacity-[0.02] group-hover:opacity-[0.05] group-hover:scale-110 transition-all duration-700 pointer-events-none text-primary">
               <BookText size={180} />
             </div>
@@ -465,7 +465,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
 
         {/* Bento Catatan Tambahan (Spacious Full Width) */}
         {article.notes && (
-          <Card className="p-8 md:p-10 bg-gradient-to-br from-card/30 to-card/5 backdrop-blur-xl border border-border rounded-[2rem] relative overflow-hidden group hover:border-border transition-all duration-500 shadow-sm select-none">
+          <Card className="p-8 md:p-10 bg-gradient-to-br from-card/30 to-card/5 backdrop-blur-xl border border-border rounded-[2rem] relative overflow-hidden group hover:border-border transition-all duration-500 shadow-[0_0_30px_rgba(var(--primary-rgb),0.02)] select-none glass">
             <div className="absolute -top-12 -right-12 p-8 opacity-[0.02] group-hover:opacity-[0.05] group-hover:scale-110 transition-all duration-700 pointer-events-none text-muted-foreground">
               <Lightbulb size={180} />
             </div>
@@ -496,7 +496,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
                 return (
                   <div 
                     key={ex.id}
-                    className="border border-border rounded-[1.8rem] p-6 md:p-8 bg-card/5 backdrop-blur-lg hover:border-primary/40 transition-all duration-300 shadow-sm relative overflow-hidden group flex items-start gap-4 md:gap-6"
+                    className="border border-border rounded-[1.8rem] p-6 md:p-8 bg-card/5 backdrop-blur-lg hover:border-primary/40 transition-all duration-300 shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)] relative overflow-hidden group flex items-start gap-4 md:gap-6 glass"
                   >
                     {/* Aksen Siber Kiri & Penomoran */}
                     <div className="absolute top-0 left-0 w-1.5 h-full bg-primary/10 group-hover:bg-primary transition-all duration-300" />
@@ -563,7 +563,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
               {dynamicSentences.map((sentence, i) => (
                 <div
                   key={sentence.id}
-                  className="border border-border rounded-[1.8rem] p-5 md:p-6 bg-card/5 backdrop-blur-lg hover:border-success/40 transition-all duration-300 shadow-sm relative overflow-hidden group flex items-start gap-4 md:gap-5"
+                  className="border border-border rounded-[1.8rem] p-5 md:p-6 bg-card/5 backdrop-blur-lg hover:border-success/40 transition-all duration-300 shadow-[0_0_20px_rgba(var(--success-rgb),0.02)] relative overflow-hidden group flex items-start gap-4 md:gap-5 glass"
                 >
                   <div className="absolute top-0 left-0 w-1.5 h-full bg-success/10 group-hover:bg-success transition-all duration-300" />
 

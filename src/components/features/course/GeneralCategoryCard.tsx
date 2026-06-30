@@ -158,17 +158,17 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
       <Card
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className="flex flex-col h-full rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden group transition-all duration-200 glass"
+        className="flex flex-col h-full rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden group transition-all duration-300 glass"
         style={{
-          borderColor: isHovered ? `rgba(${theme.glowColor}, 0.45)` : `rgb(var(--border-rgb)/0.45)`,
+          borderColor: isHovered ? `rgba(${theme.glowColor}, 0.4)` : `rgb(var(--border-rgb)/0.75)`,
           boxShadow: isHovered
-            ? `0 12px 32px rgba(${theme.glowColor}, 0.1), 0 0 14px rgba(${theme.glowColor}, 0.05)`
+            ? `0 20px 40px rgba(${theme.glowColor}, 0.08), 0 0 25px rgba(${theme.glowColor}, 0.03)`
             : isFeatured
-            ? `0 8px 20px rgba(${theme.glowColor}, 0.04)`
+            ? `0 8px 25px rgba(${theme.glowColor}, 0.025)`
             : 'none'
         }}
       >
-        <div className={`p-6 sm:p-8 flex flex-col h-full relative ${isFeatured ? 'md:p-10 lg:p-12' : ''}`}>
+        <div className={`p-8 sm:p-10 flex flex-col h-full relative ${isFeatured ? 'md:p-12 lg:p-14' : ''}`}>
 
           {/* Cyber Glow Ambient Latar Belakang — Adaptive size */}
           <div

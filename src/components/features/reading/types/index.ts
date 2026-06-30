@@ -56,4 +56,6 @@ export interface ReadingData {
   romaji?: PortableTextContent;
   translation: PortableTextContent;
   quizzes?: unknown[];
+  illustrations?: { title?: string; content: string }[];
+  image_url?: string | { _type: string; asset: { _type: string; _ref: string } };
 }

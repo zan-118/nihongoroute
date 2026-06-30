@@ -1,0 +1,8 @@
+[2026-06-29T14:26:25.684Z] [Vocab] Teks: "ベニヤ板" | Error: tts.on is not a function
+[2026-06-29T14:26:34.625Z] [Vocab] Teks: "マイクロバス" | Error: tts.on is not a function
+[2026-06-29T14:26:43.525Z] [Vocab] Teks: "マグニチュード" | Error: tts.on is not a function
+[2026-06-29T14:32:19.337Z] [Vocab] Teks: "ベニヤ板" | Error: Registrasi DB gagal: null value in column "audio_url" of relation "tts_cache" violates not-null constraint
+[2026-06-29T14:32:22.393Z] [Vocab] Teks: "マイクロバス" | Error: Registrasi DB gagal: null value in column "audio_url" of relation "tts_cache" violates not-null constraint
+[2026-06-29T14:32:25.442Z] [Vocab] Teks: "マグニチュード" | Error: Registrasi DB gagal: null value in column "audio_url" of relation "tts_cache" violates not-null constraint
+[2026-06-29T14:32:28.774Z] [Vocab] Teks: "館内" | Error: Registrasi DB gagal: null value in column "audio_url" of relation "tts_cache" violates not-null constraint
+[2026-06-29T14:32:31.647Z] [Vocab] Teks: "さあ" | Error: Registrasi DB gagal: null value in column "audio_url" of relation "tts_cache" violates not-null constraint

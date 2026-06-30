@@ -13,16 +13,13 @@ import React, { useEffect } from "react";
 import Link from "next/link";
 import { Mic, ScanText } from "lucide-react";
 import { ListeningTaskData } from "@/components/features/listening/types";
-import ListeningKaraoke from "@/components/features/listening/components/ListeningKaraoke";
-import ListeningQuiz from "@/components/features/listening/components/ListeningQuiz";
-import ListeningDictation from "@/components/features/listening/components/ListeningDictation";
+import ListeningWorkspace from "@/components/features/listening/components/ListeningWorkspace";
 import { useListeningSync } from "@/components/features/listening/hooks/useListeningSync";
 import { useUserStore } from "@/store/useUserStore";
 import { useUIStore } from "@/store/useUIStore";
 
-// Komponen Pendukung
-import { ListeningHeader } from "@/components/features/listening/components/ListeningHeader";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 // ======================
 // TIPE DATA
@@ -45,48 +42,24 @@ interface ListeningPageClientProps {
 export default function ListeningPageClient({ data }: ListeningPageClientProps) {
   const setListeningState = useUIStore(state => state.setListeningState);
   const recordLearningEvent = useUIStore(state => state.recordLearningEvent);
-  const hasRecordedStartRef = React.useRef(false);
+
   const toolParams = React.useMemo(() => {
-    const params = new URLSearchParams({
-      source: "listening",
-      slug: data.slug || data._id || data.id || "",
-    });
-    if (data.jlpt_level) params.set("level", data.jlpt_level.toUpperCase());
-    return params.toString();
-  }, [data._id, data.id, data.jlpt_level, data.slug]);
+    const p = new URLSearchParams();
+    if (data.title) p.set("title", data.title);
+    if (data.body) p.set("body", data.body);
+    if (data.translation) p.set("translation", data.translation);
+    return p.toString();
+  }, [data.title, data.body, data.translation]);
 
-  // Sinkronisasi data ke store global saat mounting untuk akses tombol melayang (FAB)
   useEffect(() => {
-    if (!hasRecordedStartRef.current) {
-      hasRecordedStartRef.current = true;
-      recordLearningEvent({
-        type: "listening_started",
-        source: {
-          type: "listening",
-          id: data._id || data.id || data.slug,
-          slug: data.slug || data._id || data.id,
-          title: data.title,
-          href: data.slug ? `/library/listening/${data.slug}` : undefined,
-          level: data.jlpt_level || data.difficulty,
-        },
-      });
-    }
-
-    const textToSpeak = data.transcript.map(t => {
-      if (typeof t.text === "string") return t.text;
-      if (Array.isArray(t.text)) {
-        return (t.text as { children?: { text?: string }[] }[])
-          .map(block => block.children?.map(child => child.text).join("") || "")
-          .join(" ");
-      }
-      return "";
-    }).join(" ");
-
     setListeningState({
-      audioUrl: data.audioUrl,
-      textToSpeak: textToSpeak,
+      currentTime: 0,
+      activeIndex: 0,
+      isScrolling: false,
+      activeTab: "transcript",
+      textToSpeak: data.body || "",
     });
-  }, [data, recordLearningEvent, setListeningState]);
+  }, [data.body, setListeningState]);
 
   const { 
     activeIndex, 
@@ -97,7 +70,6 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
 
   const completeLesson = useUserStore(state => state.completeLesson);
   const addXP = useUserStore(state => state.addXP);
-  const listeningState = useUIStore(state => state.listeningState);
 
   const handleQuizComplete = (score: number) => {
     const reward = score * 50;
@@ -121,8 +93,6 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
     });
   };
 
-  const hasQuiz = (data.quiz?.length ?? 0) > 0;
-
   return (
     <div className="min-h-screen bg-transparent text-foreground pb-20 relative overflow-hidden">
       {/* Latar Belakang Ambient Premium */}
@@ -131,60 +101,56 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
         <div className="absolute top-1/2 -right-48 size-96 bg-primary/10 blur-[100px] rounded-full" />
       </div>
 
-      <ListeningHeader
-        title={data.title}
-        description={data.description}
-        jlptLevel={data.jlpt_level}
-        difficulty={data.difficulty}
-      />
-
-      <main className="max-w-4xl mx-auto px-4 lg:px-6 mt-6 md:mt-12 relative z-10">
-        <div className="mb-6 flex flex-wrap gap-2">
-          <Button asChild variant="outline" className="rounded-xl">
-            <Link href={`/tools/shadowing?${toolParams}`}>
-              <Mic size={14} aria-hidden="true" />
-              Shadowing
-            </Link>
-          </Button>
-          <Button asChild variant="outline" className="rounded-xl">
-            <Link href={`/tools/text-analyzer?${toolParams}`}>
-              <ScanText size={14} aria-hidden="true" />
-              Analyzer
-            </Link>
-          </Button>
-        </div>
-        <div className="flex flex-col gap-6 md:gap-10">
-          <ListeningKaraoke 
-            transcript={data.transcript} 
-            activeIndex={activeIndex}
-            seekToLine={seekToLine}
-            audioUrl={data.audioUrl}
-            onTimeUpdate={handleTimeUpdate}
-            externalSeek={externalSeek || 0}
-          />
-
-          <ListeningDictation
-            transcript={data.transcript}
-            seekToLine={seekToLine}
-          />
-
-          {hasQuiz && (
-            <div className="px-4 lg:px-8" data-section="quiz">
-              {/* Divider menuju kuis */}
-              <div className="flex items-center gap-4 mb-8">
-                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50 shrink-0">
-                  Kuis Pemahaman
+      <main className="max-w-4xl mx-auto px-4 lg:px-6 mt-6 md:mt-10 relative z-10">
+        {/* Slim Header Row */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/40 pb-6 mb-6">
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">
+                Latihan Menyimak
+              </span>
+              {data.jlpt_level && (
+                <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+                  {data.jlpt_level}
                 </span>
-                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-              </div>
-              <ListeningQuiz 
-                questions={data.quiz!} 
-                onComplete={handleQuizComplete} 
-              />
+              )}
             </div>
-          )}
+            <h1 className="text-xl md:text-3xl font-black text-foreground tracking-tight leading-tight uppercase font-sans">
+              {data.title}
+            </h1>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Button asChild variant="outline" size="sm" className="rounded-xl text-[10px] font-bold h-8 glass">
+              <Link href={`/tools/shadowing?${toolParams}`}>
+                <Mic size={12} className="mr-1 text-primary" aria-hidden="true" />
+                Shadowing
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm" className="rounded-xl text-[10px] font-bold h-8 glass">
+              <Link href={`/tools/text-analyzer?${toolParams}`}>
+                <ScanText size={12} className="mr-1 text-primary" aria-hidden="true" />
+                Analyzer
+              </Link>
+            </Button>
+          </div>
         </div>
+
+        {/* Workspace Terintegrasi Baru */}
+        <ListeningWorkspace
+          transcript={data.transcript}
+          activeIndex={activeIndex}
+          seekToLine={seekToLine}
+          audioUrl={data.audioUrl}
+          onTimeUpdate={handleTimeUpdate}
+          externalSeek={externalSeek}
+          quiz={data.quiz}
+          imageUrl={data.image_url && typeof data.image_url === "string" ? data.image_url : undefined}
+          illustrations={data.illustrations}
+          onQuizComplete={handleQuizComplete}
+          toolParams={toolParams}
+          title={data.title}
+        />
       </main>
     </div>
   );

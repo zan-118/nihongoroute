@@ -34,7 +34,7 @@ interface VocabHeroProps {
  */
 export function VocabHero({ word, furigana, romaji, meaning }: VocabHeroProps) {
   return (
-    <Card className="p-8 md:p-12 bg-card/40 backdrop-blur-xl border-border rounded-[2rem] hover:border-primary/40 transition-all group overflow-hidden relative md:col-span-2 lg:col-span-2 md:row-span-2 flex flex-col items-center justify-center text-center shadow-2xl font-sans">
+    <Card className="p-8 md:p-12 bg-card/40 backdrop-blur-xl border-border rounded-[2rem] hover:border-primary/40 transition-all group overflow-hidden relative flex flex-col items-center justify-center text-center shadow-[0_0_30px_rgba(var(--primary-rgb),0.05)] font-sans glass">
       {/* Grup Tombol Aksi Pojok Kanan Atas */}
       <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
         <AddToSRSButton wordId={word} />

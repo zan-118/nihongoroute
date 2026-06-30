@@ -1,7 +1,7 @@
 /**
  * @file page.tsx
  * @description Halaman utama Pustaka (Library Hub) NihongoRoute.
- * Menyediakan navigasi ke semua kategori konten: Kosakata, Kanji, Tata Bahasa, Membaca, Menyimak, dan Ujian.
+ * Menyediakan navigasi ke semua kategori konten secara interaktif dan sangat lapang di desktop.
  */
 
 // ======================
@@ -9,7 +9,7 @@
 // ======================
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { BookOpen, BarChart2, Library, Database, Activity, Award, Headphones, Type } from "lucide-react";
+import { BookOpen, BarChart2, Library, Database, Activity, Award, Headphones, Type, Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 // Komponen Pendukung
@@ -48,9 +48,9 @@ export const metadata: Metadata = {
 
 /**
  * Halaman utama Pustaka (RSC).
- * Mengambil data statistik agregat jumlah kosakata, kanji, pola kalimat, dll., lalu menyajikan grid navigasi kategori.
+ * Mengambil data statistik agregat jumlah kosakata, kanji, pola kalimat, dll., lalu menyajikan bento grid navigasi kategori.
  * 
- * @returns {JSX.Element} Halaman direktori pustaka materi belajar.
+ * @returns {JSX.Element} Halaman direktori pustaka materi belajar Jepang yang super lega.
  */
 export default async function LibraryPage() {
   const counts = await getLibraryCounts();
@@ -61,7 +61,7 @@ export default async function LibraryPage() {
     {
       href: "/library/vocab",
       title: "Daftar Kosakata",
-      desc: "Ribuan kosakata, kata kerja, dan kata sifat N5-N1 lengkap dengan audio dan fitur SRS.",
+      desc: "Ribuan kosakata, kata kerja, dan kata sifat N5-N1 lengkap dengan audio dan fitur SRS luring.",
       icon: <Database size={24} />,
       label: "Perbendaharaan Kata",
       count: counts.vocab,
@@ -79,7 +79,7 @@ export default async function LibraryPage() {
     {
       href: "/library/grammar",
       title: "Panduan Tata Bahasa",
-      desc: "Bahas pola kalimat jadi lebih mudah dengan contoh audio dan penjelasan yang simpel.",
+      desc: "Bahas pola kalimat jadi lebih mudah dengan contoh audio dan penjelasan praktis.",
       icon: <BookOpen size={24} />,
       label: "Pola Kalimat",
       count: counts.grammar,
@@ -132,7 +132,7 @@ export default async function LibraryPage() {
   ];
 
   return (
-    <div className="w-full px-4 md:px-8 lg:px-12 relative overflow-hidden pb-24 bg-transparent text-foreground transition-colors duration-300 min-h-screen pt-8 md:pt-12">
+    <div className="w-full px-4 md:px-8 lg:px-12 relative overflow-hidden pb-32 bg-transparent text-foreground transition-colors duration-300 min-h-screen pt-8 md:pt-16">
       <JsonLd
         data={[
           breadcrumbJsonLd([
@@ -153,38 +153,39 @@ export default async function LibraryPage() {
           }),
         ]}
       />
-      {/* Background Neural Overlays */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgb(var(--primary-rgb)/0.05)_0%,transparent_50%)] pointer-events-none z-0" />
+      {/* Background Neural Overlays & Glowing Ambient Accents */}
+      <div className="absolute top-[5%] -left-[10%] size-[50%] bg-primary/5 blur-[150px] rounded-full pointer-events-none z-0" />
+      <div className="absolute bottom-[10%] -right-[10%] size-[40%] bg-secondary/5 blur-[150px] rounded-full pointer-events-none z-0" />
       <div className="neural-grid" />
 
       <div className="max-w-7xl mx-auto relative z-10">
 
         {/* ── HEADER ── */}
-        <header className="mb-10 md:mb-16">
-          <div className="flex items-center gap-4 md:gap-6 mb-8 md:mb-10">
-            <Card className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-2xl bg-[rgb(var(--primary-rgb)/0.1)] border-[rgb(var(--primary-rgb)/0.2)] flex items-center justify-center neo-inset shadow-none">
+        <header className="mb-14 md:mb-20">
+          <div className="flex items-center gap-4 md:gap-6 mb-8 md:mb-12">
+            <Card className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-2.5xl bg-[rgb(var(--primary-rgb)/0.08)] border-border/80 flex items-center justify-center shadow-[0_0_30px_rgba(var(--primary-rgb),0.02)] glass">
               <Library size={28} className="text-primary md:w-8 md:h-8" />
             </Card>
-            <div className="flex flex-col">
-              <span className="text-xs font-bold uppercase tracking-widest text-[rgb(var(--primary-rgb)/0.5)]">
+            <div className="flex flex-col gap-1">
+              <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary/70">
                 Pusat Sumber Belajar
               </span>
-              <div className="flex items-center gap-2 mt-1">
-                <Activity size={12} className="text-primary animate-pulse" />
-                <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest leading-none">
-                  Status: Siap Belajar
+              <div className="flex items-center gap-2.5">
+                <div className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest leading-none">
+                  Koneksi Luring: Aktif
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10 lg:gap-12 mb-10 md:mb-14">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12 mb-14 md:mb-20">
             <div className="flex-1">
-              <h1 className="text-3xl sm:text-4xl md:text-7xl lg:text-7xl font-black uppercase tracking-tight text-foreground mb-4 md:mb-6 drop-shadow-lg leading-none md:leading-[0.85]">
+              <h1 className="text-4xl sm:text-5xl md:text-8xl font-black uppercase tracking-tight text-foreground mb-6 drop-shadow-sm leading-none">
                 Pustaka<br />
                 <span className="text-primary">Materi</span>
               </h1>
-              <p className="text-muted-foreground text-xs md:text-base lg:text-xl max-w-2xl leading-relaxed font-medium">
+              <p className="text-muted-foreground text-sm md:text-lg lg:text-xl max-w-3xl leading-relaxed font-medium">
                 Cari semua materi belajar kamu di sini. Mulai dari kata kerja sampai pola kalimat buat persiapan JLPT, semuanya lengkap.
               </p>
             </div>
@@ -193,38 +194,42 @@ export default async function LibraryPage() {
             </div>
           </div>
 
-          {/* ── BANNER STATISTIK ── */}
-          <div className="rounded-[1.75rem] border border-border bg-card/40 backdrop-blur-sm overflow-hidden">
-            <div className="grid grid-cols-3 divide-x divide-border">
+          {/* ── BANNER STATISTIK (Bento Grid Style) ── */}
+          <div className="flex flex-col gap-6 w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8">
               {stats.map((stat) => (
-                <div key={stat.label} className="px-5 py-5 md:px-8 md:py-6 flex flex-col items-center text-center gap-1 group">
+                <Card 
+                  key={stat.label} 
+                  className="p-6 md:p-8 rounded-[2rem] border border-border/80 bg-[rgb(var(--card-rgb)/0.3)] backdrop-blur-xl flex flex-col justify-center items-center text-center gap-2 group transition-all duration-300 hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.03)] hover:border-primary/20 glass"
+                >
                   <span
-                    className="text-2xl sm:text-3xl md:text-4xl font-black tabular-nums tracking-tight leading-none"
+                    className="text-3xl md:text-5xl font-black tabular-nums tracking-tighter leading-none transition-transform duration-300 group-hover:scale-105"
                     style={{ color: `rgb(${stat.accentRgb})` }}
                   >
                     {stat.value.toLocaleString("id-ID")}
                   </span>
-                  <span className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
+                  <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.25em]">
                     {stat.label}
                   </span>
-                </div>
+                </Card>
               ))}
             </div>
-            {/* Total strip */}
+
+            {/* Total strip status */}
             <div
-              className="px-6 py-2.5 border-t border-border flex items-center justify-center gap-2"
-              style={{ background: "rgb(var(--primary-rgb)/0.03)" }}
+              className="px-8 py-4 rounded-2xl border border-border/60 backdrop-blur-md flex items-center justify-center gap-3 glass"
+              style={{ background: "rgb(var(--primary-rgb)/0.02)" }}
             >
-              <Activity size={10} className="text-primary animate-pulse" />
-              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.25em]">
-                {totalMateri.toLocaleString("id-ID")} total materi tersedia
+              <Sparkles size={14} className="text-primary animate-pulse" />
+              <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.3em] text-center">
+                {totalMateri.toLocaleString("id-ID")} total materi siap diakses secara luring
               </span>
             </div>
           </div>
         </header>
 
         {/* ── NAVIGATION GRID ── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-stretch mt-12">
           {categories.map((cat, idx) => (
             <div
               key={cat.href}

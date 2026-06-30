@@ -51,7 +51,7 @@ const VocabCard: React.FC<{ v: VocabLessonItem; idx: number }> = ({ v, idx }) =>
 
   return (
     <div
-      className="neo-card p-4 md:p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 md:gap-6 group hover:border-[rgb(var(--primary-rgb)/0.3)] transition-colors duration-300"
+      className="p-6 md:p-8 border border-border/80 rounded-[2rem] bg-card/35 shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 group hover:border-[rgb(var(--primary-rgb)/0.35)] transition-all duration-300 glass"
     >
       <div className="flex-1 w-full">
         <div className="flex items-center gap-2 mb-3">

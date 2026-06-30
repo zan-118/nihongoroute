@@ -303,9 +303,51 @@ export async function getLibraryItemBySlug(
         data.meaning = data.meaning_id;
         data._id = data.id;
 
-        data.relatedKanji = Array.isArray(data.related_kanji) ? data.related_kanji : [];
-        data.synonyms = Array.isArray(data.synonyms) ? data.synonyms : [];
-        data.antonyms = Array.isArray(data.antonyms) ? data.antonyms : [];
+        const rawRelatedKanji = Array.isArray(data.related_kanji) ? data.related_kanji : [];
+        const rawSynonyms = Array.isArray(data.synonyms) ? data.synonyms : [];
+        const rawAntonyms = Array.isArray(data.antonyms) ? data.antonyms : [];
+
+        // Fetch detail related kanji
+        if (rawRelatedKanji.length > 0) {
+          const { data: kanjis } = await supabase
+            .from("kanji")
+            .select("id, character, meaning, onyomi, kunyomi, slug")
+            .in("character", rawRelatedKanji);
+          data.relatedKanji = rawRelatedKanji.map((char: string) => {
+            const matched = (kanjis || []).find((k) => k.character === char);
+            return matched ? { ...matched, _id: matched.id } : { character: char, meaning: "", onyomi: "", kunyomi: "", slug: "" };
+          });
+        } else {
+          data.relatedKanji = [];
+        }
+
+        // Fetch detail synonyms
+        if (rawSynonyms.length > 0) {
+          const { data: syns } = await supabase
+            .from("vocab")
+            .select("id, word, meaning_id, romaji, slug")
+            .in("word", rawSynonyms);
+          data.synonyms = rawSynonyms.map((word: string) => {
+            const matched = (syns || []).find((v) => v.word === word);
+            return matched ? { ...matched, _id: matched.id, meaning: matched.meaning_id } : { word, meaning: "", romaji: "", slug: "" };
+          });
+        } else {
+          data.synonyms = [];
+        }
+
+        // Fetch detail antonyms
+        if (rawAntonyms.length > 0) {
+          const { data: ants } = await supabase
+            .from("vocab")
+            .select("id, word, meaning_id, romaji, slug")
+            .in("word", rawAntonyms);
+          data.antonyms = rawAntonyms.map((word: string) => {
+            const matched = (ants || []).find((v) => v.word === word);
+            return matched ? { ...matched, _id: matched.id, meaning: matched.meaning_id } : { word, meaning: "", romaji: "", slug: "" };
+          });
+        } else {
+          data.antonyms = [];
+        }
         
         // Tangani contoh kalimat secara aman
         if (typeof data.examples === "string") {
@@ -337,9 +379,7 @@ export async function getLibraryItemBySlug(
           console.error(`[getLibraryItemBySlug] gagal mengambil data kalimat dinamis untuk "${data.word}":`, sentenceErr);
         }
 
-        data.relatedKanji = ((data.relatedKanji as Array<{ id?: string; _id?: string }>) || []).map((k) => ({ ...k, _id: k.id || k._id }));
-        data.synonyms = ((data.synonyms as Array<{ id?: string; _id?: string }>) || []).map((s) => ({ ...s, _id: s.id || s._id }));
-        data.antonyms = ((data.antonyms as Array<{ id?: string; _id?: string }>) || []).map((a) => ({ ...a, _id: a.id || a._id }));
+
 
         // Tangani konjugasi kata
         let conj = typeof data.conjugations === "object" && data.conjugations !== null ? data.conjugations : {};

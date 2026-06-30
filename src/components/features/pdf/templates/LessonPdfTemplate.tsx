@@ -36,11 +36,11 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: 60,
-    paddingBottom: 80,
+    padding: 50,
+    paddingBottom: 70,
     fontFamily: "NotoSansJP",
     backgroundColor: "#ffffff",
-    fontSize: 10,
+    fontSize: 9,
     color: "#334155",
   },
   // HEADER BRANDING
@@ -48,180 +48,181 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 40,
-    borderBottomWidth: 2,
-    borderBottomColor: "#0891b2",
-    paddingBottom: 20,
+    marginBottom: 30,
+    borderBottomWidth: 1.5,
+    borderBottomColor: "#0f172a",
+    paddingBottom: 15,
   },
   logoSection: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 12,
+    gap: 10,
   },
   logoImage: {
-    width: 30,
-    height: 30,
+    width: 26,
+    height: 26,
   },
   brandText: {
     flexDirection: "column",
   },
   brandName: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
     color: "#0f172a",
-    letterSpacing: 1,
+    letterSpacing: 2,
   },
   brandTagline: {
-    fontSize: 7,
+    fontSize: 6,
     color: "#94a3b8",
     textTransform: "uppercase",
     letterSpacing: 1,
     marginTop: 1,
   },
   levelBadge: {
-    backgroundColor: "#ecfeff",
+    backgroundColor: "rgba(2, 132, 199, 0.05)",
     borderWidth: 1,
-    borderColor: "#22d3ee",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-    color: "#0891b2",
-    fontSize: 10,
+    borderColor: "rgba(2, 132, 199, 0.2)",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 4,
+    color: "#0284c7",
+    fontSize: 7.5,
     fontWeight: "bold",
+    textTransform: "uppercase",
   },
 
   // TYPOGRAPHY
   title: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#0f172a",
-    marginBottom: 20,
+    marginBottom: 15,
     letterSpacing: -0.5,
   },
   sectionTitle: {
-    fontSize: 13,
+    fontSize: 10.5,
     fontWeight: "bold",
-    color: "#0891b2",
-    marginTop: 35,
-    marginBottom: 20,
+    color: "#0284c7",
+    marginTop: 25,
+    marginBottom: 15,
     textTransform: "uppercase",
-    letterSpacing: 1.5,
+    letterSpacing: 1,
     borderLeftWidth: 3,
-    borderLeftColor: "#0891b2",
-    paddingLeft: 10,
+    borderLeftColor: "#0284c7",
+    paddingLeft: 8,
   },
   contentH2: {
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: "bold",
     color: "#1e293b",
-    marginTop: 15,
-    marginBottom: 10,
+    marginTop: 12,
+    marginBottom: 8,
   },
   contentParagraph: {
-    fontSize: 11,
+    fontSize: 9.5,
     lineHeight: 1.6,
-    marginBottom: 15,
+    marginBottom: 12,
     color: "#475569",
   },
 
   // EXAMPLE BOX
   exampleBox: {
-    backgroundColor: "#f8fafc",
+    backgroundColor: "#fafaf9",
     padding: 12,
-    marginTop: 10,
-    marginBottom: 10,
+    marginTop: 8,
+    marginBottom: 8,
     borderLeftWidth: 3,
-    borderLeftColor: "#0891b2",
+    borderLeftColor: "#0284c7",
     borderRadius: 4,
     display: "flex",
     flexDirection: "column",
   },
   exampleFurigana: { 
-    fontSize: 8, 
-    color: "#0891b2", 
+    fontSize: 7.5, 
+    color: "#0284c7", 
     marginBottom: 2,
     fontWeight: "bold"
   },
   exampleJp: { 
-    fontSize: 13, 
+    fontSize: 12.5, 
     fontWeight: "bold", 
     color: "#0f172a",
   },
   exampleId: { 
-    fontSize: 9, 
+    fontSize: 8.5, 
     color: "#64748b", 
     marginTop: 4,
   },
 
   // CALLOUT BOX
   calloutBox: {
-    backgroundColor: "#ecfeff",
+    backgroundColor: "rgba(2, 132, 199, 0.03)",
     padding: 12,
-    marginTop: 12,
-    marginBottom: 12,
+    marginTop: 10,
+    marginBottom: 10,
     borderLeftWidth: 3,
-    borderLeftColor: "#06b6d4",
+    borderLeftColor: "#0284c7",
     borderRadius: 4,
   },
   calloutTitle: {
-    fontSize: 9,
+    fontSize: 8,
     fontWeight: "bold",
-    color: "#0891b2",
+    color: "#0284c7",
     marginBottom: 4,
     textTransform: "uppercase",
   },
   calloutText: { 
-    fontSize: 10, 
+    fontSize: 9, 
     color: "#334155", 
     lineHeight: 1.5 
   },
 
   // QUIZ BOX
   quizBox: {
-    marginBottom: 25,
-    padding: 20,
-    backgroundColor: "#f8fafc",
-    borderRadius: 8,
+    marginBottom: 20,
+    padding: 15,
+    backgroundColor: "#fafaf9",
+    borderRadius: 6,
     borderWidth: 1,
     borderColor: "#e2e8f0",
   },
   quizQuestion: {
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: "bold",
     color: "#0f172a",
-    marginBottom: 12,
+    marginBottom: 10,
     lineHeight: 1.4,
   },
   quizOption: {
-    fontSize: 10,
+    fontSize: 9,
     color: "#475569",
-    marginLeft: 10,
-    marginBottom: 6,
-    padding: 4,
+    marginLeft: 8,
+    marginBottom: 5,
+    padding: 3,
   },
   quizCorrect: {
-    fontSize: 10,
-    color: "#059669",
-    marginLeft: 10,
-    marginBottom: 6,
-    padding: 4,
+    fontSize: 9,
+    color: "#10b981",
+    marginLeft: 8,
+    marginBottom: 5,
+    padding: 3,
     fontWeight: "bold",
     backgroundColor: "#f0fdf4",
     borderRadius: 4,
   },
   quizExplanation: {
-    fontSize: 9,
+    fontSize: 8.5,
     color: "#64748b",
-    marginTop: 12,
-    paddingTop: 10,
+    marginTop: 10,
+    paddingTop: 8,
     borderTopWidth: 1,
     borderTopColor: "#e2e8f0",
   },
 
   // VOCAB TABLE
   table: {
-    marginTop: 15,
-    borderRadius: 10,
+    marginTop: 12,
+    borderRadius: 6,
     overflow: "hidden",
     borderWidth: 1,
     borderColor: "#e2e8f0",
@@ -229,10 +230,10 @@ const styles = StyleSheet.create({
   tableHeader: {
     flexDirection: "row",
     backgroundColor: "#0f172a",
-    padding: 15,
+    padding: 12,
   },
   headerText: {
-    fontSize: 8,
+    fontSize: 7.5,
     fontWeight: "bold",
     color: "#ffffff",
     textTransform: "uppercase",
@@ -241,35 +242,35 @@ const styles = StyleSheet.create({
   tableRow: {
     flexDirection: "row",
     borderBottomWidth: 1,
-    borderBottomColor: "#f1f5f9",
-    padding: 12,
+    borderBottomColor: "#f5f5f4",
+    padding: 10,
     alignItems: "flex-start",
-    minHeight: 40,
+    minHeight: 35,
   },
-  tableRowZebra: { backgroundColor: "#f8fafc" },
+  tableRowZebra: { backgroundColor: "#fafaf9" },
   // CELLS
   cellNo: { width: "5%", paddingRight: 5 },
-  cellWord: { width: "22%", paddingRight: 10, flexWrap: "wrap" },
-  cellReading: { width: "22%", paddingRight: 10, flexWrap: "wrap" },
-  cellRomaji: { width: "18%", paddingRight: 10, flexWrap: "wrap" },
-  cellMeaning: { width: "33%", flexWrap: "wrap" },
+  cellWord: { width: "23%", paddingRight: 10, flexWrap: "wrap" },
+  cellReading: { width: "23%", paddingRight: 10, flexWrap: "wrap" },
+  cellRomaji: { width: "17%", paddingRight: 10, flexWrap: "wrap" },
+  cellMeaning: { width: "32%", flexWrap: "wrap" },
   
   kanjiText: {
-    fontSize: 10,
+    fontSize: 10.5,
     fontWeight: "bold",
     color: "#0f172a",
   },
   kanaText: {
-    fontSize: 9,
-    color: "#0891b2",
+    fontSize: 8.5,
+    color: "#0284c7",
     fontWeight: "bold",
   },
   romajiText: {
-    fontSize: 7,
+    fontSize: 7.5,
     color: "#64748b",
   },
   meaningText: {
-    fontSize: 9,
+    fontSize: 8.5,
     color: "#334155",
     lineHeight: 1.4,
   },
@@ -277,23 +278,23 @@ const styles = StyleSheet.create({
   // FOOTER
   footer: {
     position: "absolute",
-    bottom: 30,
+    bottom: 25,
     left: 50,
     right: 50,
     borderTopWidth: 1,
     borderTopColor: "#f1f5f9",
-    paddingTop: 15,
+    paddingTop: 12,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
   footerText: { 
-    fontSize: 8, 
+    fontSize: 7.5, 
     color: "#94a3b8" 
   },
   footerLink: {
-    fontSize: 8,
-    color: "#0891b2",
+    fontSize: 7.5,
+    color: "#0284c7",
     fontWeight: "bold",
     textDecoration: "none",
   },
@@ -399,7 +400,7 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
           }
           if (part.startsWith("`") && part.endsWith("`")) {
             return (
-              <Text key={index} style={{ backgroundColor: "#f1f5f9", color: "#0891b2" }}>
+              <Text key={index} style={{ backgroundColor: "#f1f5f9", color: "#0284c7" }}>
                 {part.slice(1, -1)}
               </Text>
             );
@@ -438,7 +439,7 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
         return (
           <View key={`exSentence-${pos}`} style={styles.exampleBox} wrap={false}>
             <Text style={styles.exampleJp}>{block.jp}</Text>
-            <Text style={[styles.exampleFurigana, { marginTop: 4, color: "#64748b" }]}>
+            <Text style={[styles.exampleFurigana, { marginTop: 3, color: "#64748b" }]}>
               {block.romaji}
             </Text>
             {parseInlineStylesPdf(stripEmojisOnly(block.id), styles.exampleId, `exSentenceId-${pos}`)}
@@ -458,17 +459,17 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
 
       if (type === "grammar" || type === "grammarBlock") {
         return (
-          <View key={`grammar-${pos}`} style={{ marginBottom: 20, padding: 10, borderLeftWidth: 3, borderLeftColor: "#0891b2" }} wrap={false}>
-            <Text style={{ fontSize: 9, fontWeight: "bold", color: "#64748b", textTransform: "uppercase" }}>Grammar Point</Text>
-            {block.title && <Text style={styles.contentH2}>{stripEmojisOnly(block.title)}</Text>}
-            {block.content && block.content !== block.title && <Text style={{ fontSize: 14, fontWeight: "bold", color: "#0f172a", marginBottom: 4 }}>{block.content}</Text>}
-            {block.furigana && block.furigana !== block.title && block.furigana !== block.content && <Text style={{ fontSize: 10, color: "#64748b", marginBottom: 4 }}>{block.furigana}</Text>}
-            {block.translation && parseInlineStylesPdf(stripEmojisOnly(block.translation), { fontSize: 10, color: "#64748b", marginBottom: 8 }, `grammarTranslation-${pos}`)}
+          <View key={`grammar-${pos}`} style={{ marginBottom: 20, padding: 15, borderLeftWidth: 3, borderLeftColor: "#0284c7", backgroundColor: "rgba(2, 132, 199, 0.02)", borderRadius: 4 }} wrap={false}>
+            <Text style={{ fontSize: 7.5, fontWeight: "bold", color: "#0284c7", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 5 }}>Grammar Point</Text>
+            {block.title && <Text style={[styles.contentH2, { marginTop: 0, marginBottom: 6 }]}>{stripEmojisOnly(block.title)}</Text>}
+            {block.content && block.content !== block.title && <Text style={{ fontSize: 13, fontWeight: "bold", color: "#0f172a", marginBottom: 4 }}>{block.content}</Text>}
+            {block.furigana && block.furigana !== block.title && block.furigana !== block.content && <Text style={{ fontSize: 8.5, color: "#64748b", marginBottom: 4 }}>{block.furigana}</Text>}
+            {block.translation && parseInlineStylesPdf(stripEmojisOnly(block.translation), { fontSize: 9, color: "#64748b", marginBottom: 8 }, `grammarTranslation-${pos}`)}
             
             {block.examples?.map((ex: { jp?: string; romaji?: string; id?: string }, exPos: number) => (
               <View key={`ex-${exPos}`} style={styles.exampleBox} wrap={false}>
                 <Text style={styles.exampleJp}>{ex.jp}</Text>
-                {ex.romaji && <Text style={[styles.exampleFurigana, { marginTop: 4, color: "#64748b" }]}>{ex.romaji}</Text>}
+                {ex.romaji && <Text style={[styles.exampleFurigana, { marginTop: 3, color: "#64748b" }]}>{ex.romaji}</Text>}
                 {parseInlineStylesPdf(stripEmojisOnly(ex.id), styles.exampleId, `grammarExId-${exPos}`)}
               </View>
             ))}
@@ -479,20 +480,20 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
       if (type === "dialogue" || type === "dialogueBlock") {
         const lines = block.content ? block.content.split("\n").filter(Boolean) : [];
         return (
-          <View key={`dialogue-${pos}`} style={{ marginBottom: 15, padding: 15, backgroundColor: "#f8fafc", borderRadius: 8, borderWidth: 1, borderColor: "#e2e8f0" }} wrap={false}>
-            {block.title && <Text style={[styles.contentH2, { marginTop: 0 }]}>{stripEmojisOnly(block.title)}</Text>}
+          <View key={`dialogue-${pos}`} style={{ marginBottom: 15, padding: 15, backgroundColor: "#fafaf9", borderRadius: 6, borderWidth: 1, borderColor: "#e2e8f0" }} wrap={false}>
+            {block.title && <Text style={[styles.contentH2, { marginTop: 0, marginBottom: 10 }]}>{stripEmojisOnly(block.title)}</Text>}
             {lines.map((line: string, lPos: number) => {
               const parts = line.split(/[：:]/);
               const speaker = parts.length > 1 ? parts[0].trim() : `Person ${lPos + 1}`;
               const text = parts.length > 1 ? parts.slice(1).join("：").trim() : line.trim();
               return (
-                <View key={`line-${lPos}`} style={{ flexDirection: "row", marginBottom: 8 }}>
-                  <Text style={{ width: "20%", fontSize: 9, fontWeight: "bold", color: "#0891b2" }}>{speaker}</Text>
-                  <Text style={{ width: "80%", fontSize: 10, color: "#0f172a", lineHeight: 1.5 }}>{text}</Text>
+                <View key={`line-${lPos}`} style={{ flexDirection: "row", marginBottom: 8, alignItems: "flex-start" }}>
+                  <Text style={{ width: "22%", fontSize: 8.5, fontWeight: "bold", color: "#0284c7" }}>{speaker}</Text>
+                  <Text style={{ width: "78%", fontSize: 9, color: "#0f172a", lineHeight: 1.5 }}>{text}</Text>
                 </View>
               );
             })}
-            {block.translation && parseInlineStylesPdf(stripEmojisOnly(block.translation), { fontSize: 9, color: "#64748b", marginTop: 8, paddingTop: 8, borderTopWidth: 1, borderTopColor: "#e2e8f0" }, `dialogueTranslation-${pos}`)}
+            {block.translation && parseInlineStylesPdf(stripEmojisOnly(block.translation), { fontSize: 8.5, color: "#64748b", marginTop: 8, paddingTop: 8, borderTopWidth: 1, borderTopColor: "#e2e8f0" }, `dialogueTranslation-${pos}`)}
           </View>
         );
       }
@@ -507,11 +508,11 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
                 {parseInlineStylesPdf(stripEmojisOnly(line), styles.contentParagraph, `lineText-${lPos}`)}
               </React.Fragment>
             ))}
-            {block.translation && parseInlineStylesPdf(stripEmojisOnly(block.translation), [styles.contentParagraph, { color: "#64748b", borderLeftWidth: 2, borderLeftColor: "#e2e8f0", paddingLeft: 8 }], `translationText-${pos}`)}
+            {block.translation && parseInlineStylesPdf(stripEmojisOnly(block.translation), [styles.contentParagraph, { color: "#64748b", borderLeftWidth: 2, borderLeftColor: "#e2e8f0", paddingLeft: 8, marginLeft: 2 }], `translationText-${pos}`)}
             {block.examples?.map((ex: { jp?: string; romaji?: string; id?: string }, exPos: number) => (
               <View key={`ex-${exPos}`} style={styles.exampleBox} wrap={false}>
                 <Text style={styles.exampleJp}>{ex.jp}</Text>
-                {ex.romaji && <Text style={[styles.exampleFurigana, { marginTop: 4, color: "#64748b" }]}>{ex.romaji}</Text>}
+                {ex.romaji && <Text style={[styles.exampleFurigana, { marginTop: 3, color: "#64748b" }]}>{ex.romaji}</Text>}
                 {parseInlineStylesPdf(stripEmojisOnly(ex.id), styles.exampleId, `articleExId-${exPos}`)}
               </View>
             ))}

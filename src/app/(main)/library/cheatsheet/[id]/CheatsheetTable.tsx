@@ -11,20 +11,16 @@
 // ======================
 import { useState } from "react";
 import { 
-  Copy, 
   List, 
-  Grid, 
   Layers, 
   ChevronLeft, 
   ChevronRight, 
   Shuffle, 
   Eye, 
   EyeOff, 
-  Info,
-  Check
+  Info
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import * as wanakana from "wanakana";
@@ -44,7 +40,7 @@ interface CheatsheetTableProps {
   items: SheetItem[];
 }
 
-type ViewMode = "table" | "grid" | "flashcard";
+type ViewMode = "table" | "flashcard";
 
 // ======================
 // EKSEKUSI UTAMA
@@ -52,7 +48,6 @@ type ViewMode = "table" | "grid" | "flashcard";
 
 export function CheatsheetTable({ items }: CheatsheetTableProps) {
   const [viewMode, setViewMode] = useState<ViewMode>("table");
-  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   // State untuk Flashcard Mode
   const [flashcardItems, setFlashcardItems] = useState<SheetItem[]>(() => [...items]);
@@ -82,13 +77,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
     );
   };
 
-  // Salin teks Jepang ke clipboard
-  const handleCopy = (text: string, index: number) => {
-    navigator.clipboard.writeText(text);
-    setCopiedIndex(index);
-    toast.success("Disalin ke papan klip!");
-    setTimeout(() => setCopiedIndex(null), 2000);
-  };
+
 
   // Mengacak daftar flashcard
   const handleShuffle = () => {
@@ -124,7 +113,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
   return (
     <div className="space-y-8 w-full">
       {/* Pengontrol Mode Tampilan (Premium Tab Switcher) */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-2 rounded-[2rem] border border-border bg-[rgba(var(--card-rgb),0.1)] backdrop-blur-md w-full no-print">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-3 rounded-[2rem] border border-border bg-[rgba(var(--card-rgb),0.1)] backdrop-blur-md w-full no-print glass">
         <div className="flex items-center gap-1.5 p-1 bg-[rgba(var(--muted-rgb),0.2)] rounded-2xl w-fit">
           <Button
             id="view-mode-table"
@@ -132,21 +121,10 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
             variant={viewMode === "table" ? "secondary" : "ghost"}
             size="sm"
             onClick={() => setViewMode("table")}
-            className={cn("rounded-xl gap-2 font-bold px-4", viewMode === "table" && "shadow-sm")}
+            className={cn("rounded-xl gap-2 font-bold px-5 py-4", viewMode === "table" && "shadow-sm")}
             aria-label="Tampilan Tabel"
           >
-            <List size={16} /> Tabel
-          </Button>
-          <Button
-            id="view-mode-grid"
-            type="button"
-            variant={viewMode === "grid" ? "secondary" : "ghost"}
-            size="sm"
-            onClick={() => setViewMode("grid")}
-            className={cn("rounded-xl gap-2 font-bold px-4", viewMode === "grid" && "shadow-sm")}
-            aria-label="Tampilan Kartu"
-          >
-            <Grid size={16} /> Kartu
+            <List size={16} /> Tabel Referensi
           </Button>
           <Button
             id="view-mode-flashcard"
@@ -154,7 +132,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
             variant={viewMode === "flashcard" ? "secondary" : "ghost"}
             size="sm"
             onClick={() => setViewMode("flashcard")}
-            className={cn("rounded-xl gap-2 font-bold px-4", viewMode === "flashcard" && "shadow-sm")}
+            className={cn("rounded-xl gap-2 font-bold px-5 py-4", viewMode === "flashcard" && "shadow-sm")}
             aria-label="Tampilan Kuis Flashcard"
           >
             <Layers size={16} /> Mode Kuis
@@ -163,15 +141,14 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
 
         <div className="flex items-center gap-2 text-xs text-muted-foreground font-semibold px-4">
           <Info size={14} className="text-primary" />
-          {viewMode === "table" && "Gunakan tabel untuk tinjauan menyeluruh."}
-          {viewMode === "grid" && "Gunakan kartu untuk mempermudah pemetaan visual."}
-          {viewMode === "flashcard" && "Uji hafalanmu dengan sistem flashcard interaktif."}
+          {viewMode === "table" && "Tinjauan cepat dan padat materi belajar."}
+          {viewMode === "flashcard" && "Uji hafalanmu dengan sistem kuis flashcard interaktif."}
         </div>
       </div>
 
       {/* Render Berdasarkan Tampilan Terpilih */}
       <AnimatePresence mode="wait">
-        {/* 1. VIEW MODE: TABLE (Fully Responsive Flex/Grid Implementation) */}
+        {/* 1. VIEW MODE: TABLE (Fully Responsive Compact Table Implementation) */}
         {viewMode === "table" && (
           <motion.div
             key="table-view"
@@ -179,13 +156,14 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.3 }}
-            className="w-full rounded-[2.5rem] border border-border bg-[rgba(var(--card-rgb),0.2)] backdrop-blur-md shadow-2xl overflow-hidden glass"
+            className="w-full rounded-[2rem] border border-border bg-[rgba(var(--card-rgb),0.2)] backdrop-blur-md shadow-2xl overflow-hidden glass"
           >
             {/* Header: Hanya terlihat di md ke atas */}
-            <div className="hidden md:flex items-center bg-[rgba(var(--muted-rgb),0.3)] border-b border-border px-8 py-5 text-[10px] font-black uppercase tracking-widest text-primary">
+            <div className="hidden md:flex items-center bg-[rgba(var(--muted-rgb),0.3)] border-b border-border px-8 py-4 text-[10px] font-black uppercase tracking-widest text-primary">
               <div className="w-16 text-center">No</div>
-              <div className="flex-1">Materi Bahasa Jepang</div>
-              <div className="w-24 text-right">Aksi</div>
+              <div className="w-48 pl-2">Tulisan Jepang</div>
+              <div className="w-48 pl-2">Romaji</div>
+              <div className="flex-1 pl-2">Arti / Penjelasan</div>
             </div>
 
             {/* List Row Item */}
@@ -193,114 +171,31 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
               {items.map((item, idx) => (
                 <div 
                   key={`${item.jp}-${idx}`} 
-                  className="flex flex-col md:flex-row md:items-center gap-4 md:gap-0 px-6 md:px-8 py-6 group hover:bg-[rgba(var(--primary-rgb),0.02)] transition-all duration-300"
+                  className="flex flex-col md:flex-row md:items-center px-6 md:px-8 py-4 hover:bg-[rgba(var(--primary-rgb),0.02)] transition-all duration-200"
                 >
                   {/* Nomor Baris */}
-                  <div className="md:w-16 text-left md:text-center font-black text-muted-foreground/30 text-xs md:text-sm italic group-hover:text-primary transition-colors flex items-center gap-2 md:block">
-                    <span className="md:hidden not-italic font-bold text-[9px] uppercase tracking-wider text-muted-foreground">No.</span>
+                  <div className="md:w-16 text-left md:text-center font-bold text-muted-foreground/45 text-xs md:text-sm">
+                    <span className="md:hidden font-bold text-[9px] uppercase tracking-wider text-muted-foreground/50 mr-2">No.</span>
                     {String(idx + 1).padStart(2, '0')}
                   </div>
 
-                  {/* Isi Konten */}
-                  <div className="flex-1 space-y-3">
-                    <div className="flex flex-col gap-1">
-                      <div className="text-2xl md:text-3xl font-japanese font-black text-foreground tracking-tighter leading-[1.6]">
-                        <SmartJapanese 
-                          word={item.jp || ""} 
-                          furigana={wanakana.toHiragana(item.romaji || "")} 
-                        />
-                      </div>
-                      <div className="text-[10px] font-black text-primary uppercase tracking-[0.2em] italic opacity-90">
-                        {item.romaji}
-                      </div>
-                    </div>
-                    <div className="text-sm md:text-base font-semibold text-foreground leading-relaxed group-hover:text-primary transition-colors">
-                      {formatLabel(item.label)}
-                    </div>
+                  {/* Tulisan Jepang */}
+                  <div className="md:w-48 font-japanese font-black text-lg md:text-xl text-foreground select-all mt-2 md:mt-0 pl-0 md:pl-2">
+                    {item.jp}
                   </div>
 
-                  {/* Opsi / Aksi */}
-                  <div className="md:w-24 flex md:block justify-end items-center border-t border-border/10 pt-4 md:pt-0 md:border-none">
-                    <Button 
-                      id={`copy-btn-table-${idx}`}
-                      variant="ghost" 
-                      size="icon"
-                      className="w-10 h-10 rounded-xl hover:bg-[rgba(var(--primary-rgb),0.1)] hover:text-primary text-muted-foreground transition-all"
-                      aria-label={`Salin tulisan ${item.jp}`}
-                      onClick={() => handleCopy(item.jp, idx)}
-                    >
-                      {copiedIndex === idx ? (
-                        <Check size={18} className="text-success animate-scale" aria-hidden="true" />
-                      ) : (
-                        <Copy size={16} aria-hidden="true" />
-                      )}
-                    </Button>
+                  {/* Romaji */}
+                  <div className="md:w-48 text-xs font-mono font-bold text-primary/80 uppercase tracking-wider mt-1 md:mt-0 pl-0 md:pl-2">
+                    {item.romaji}
+                  </div>
+
+                  {/* Arti / Penjelasan */}
+                  <div className="flex-1 text-xs md:text-sm text-foreground/95 font-semibold leading-relaxed mt-2 md:mt-0 pl-0 md:pl-2">
+                    {formatLabel(item.label)}
                   </div>
                 </div>
               ))}
             </div>
-          </motion.div>
-        )}
-
-        {/* 2. VIEW MODE: GRID CARDS */}
-        {viewMode === "grid" && (
-          <motion.div
-            key="grid-view"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.3 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {items.map((item, idx) => (
-              <Card 
-                key={`${item.jp}-${idx}`} 
-                className="group relative bg-[rgba(var(--card-rgb),0.3)] border border-border hover:border-[rgba(var(--primary-rgb),0.4)] rounded-[2rem] p-6 flex flex-col justify-between gap-6 transition-all duration-500 hover:shadow-[0_15px_40px_rgba(var(--primary-rgb),0.1)] glass"
-              >
-                <div className="absolute top-4 right-4 z-20">
-                  <Button 
-                    id={`copy-btn-grid-${idx}`}
-                    variant="ghost" 
-                    size="icon"
-                    className="w-9 h-9 rounded-lg bg-[rgba(var(--muted-rgb),0.2)] border border-border hover:bg-[rgba(var(--primary-rgb),0.1)] hover:text-primary text-muted-foreground transition-all"
-                    aria-label={`Salin tulisan ${item.jp}`}
-                    onClick={() => handleCopy(item.jp, idx)}
-                  >
-                    {copiedIndex === idx ? (
-                      <Check size={16} className="text-success" aria-hidden="true" />
-                    ) : (
-                      <Copy size={14} aria-hidden="true" />
-                    )}
-                  </Button>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="text-[10px] font-black text-muted-foreground/40 italic">
-                    REF #{String(idx + 1).padStart(2, '0')}
-                  </div>
-
-                  <div className="flex flex-col gap-1">
-                    <div className="text-3xl font-japanese font-black text-foreground leading-[1.6]">
-                      <SmartJapanese 
-                        word={item.jp || ""} 
-                        furigana={wanakana.toHiragana(item.romaji || "")} 
-                      />
-                    </div>
-                    <span className="text-[10px] font-black text-primary uppercase tracking-widest italic leading-none">
-                      {item.romaji}
-                    </span>
-                  </div>
-
-                  <div className="text-sm font-semibold text-muted-foreground leading-relaxed pt-2 border-t border-[rgba(var(--border-rgb),0.1)]">
-                    {formatLabel(item.label)}
-                  </div>
-                </div>
-
-                <div className="text-[8px] font-black text-muted-foreground/30 uppercase tracking-widest">
-                  NihongoRoute Lexical System
-                </div>
-              </Card>
-            ))}
           </motion.div>
         )}
 
@@ -336,7 +231,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
             <div 
               id="flashcard-touch-area"
               onClick={() => setIsFlipped(!isFlipped)}
-              className="w-full h-[26rem] md:h-[24rem] rounded-[3rem] cursor-pointer relative select-none group"
+              className="w-full h-[30rem] md:h-[28rem] rounded-[3rem] cursor-pointer relative select-none group"
               style={{ perspective: "1000px" }}
             >
               <div 

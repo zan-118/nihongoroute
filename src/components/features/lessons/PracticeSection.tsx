@@ -36,10 +36,9 @@ export const PracticeSection: React.FC<PracticeSectionProps> = ({ lesson }) => {
   return (
     <section>
       <div 
-        className="neo-card p-6 md:p-10 relative overflow-hidden"
+        className="p-8 md:p-14 relative overflow-hidden border border-border/80 rounded-[2.5rem] bg-card/25 shadow-[0_0_50px_rgba(var(--primary-rgb),0.015)] glass"
         style={{ 
-          backgroundImage: "linear-gradient(135deg, rgb(var(--primary-rgb)/0.1), transparent, rgb(var(--secondary-rgb)/0.1))",
-          borderColor: "rgb(var(--primary-rgb)/0.2)"
+          backgroundImage: "linear-gradient(135deg, rgba(var(--primary-rgb),0.05), transparent, rgba(var(--secondary-rgb),0.05))"
         }}
       >
         <div className="absolute top-0 right-0 p-12 opacity-5 rotate-12">

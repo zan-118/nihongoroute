@@ -49,18 +49,18 @@ export function KanjiGrid({ kanjis, isFetching }: KanjiGridProps) {
       )}
       
       {/* Kisi Bento Kartu Kanji */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 min-h-[400px]">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5 md:gap-6 min-h-[400px]">
         {kanjis.map((kanji, idx) => (
           <div
             key={kanji.id || kanji._id}
-            className="transform hover:-translate-y-1 transition-all duration-200"
+            className="transform hover:-translate-y-1 transition-all duration-300"
             style={{
               contentVisibility: "auto",
               containIntrinsicSize: "0 180px",
             }}
           >
             <Link href={`/library/kanji/${kanji.slug || kanji.id || kanji._id}`}>
-              <Card className="group relative aspect-square flex flex-col items-center justify-center p-4 bg-card/75 border border-border hover:border-[rgb(var(--primary-rgb)/0.5)] transition-all duration-200 rounded-[2rem] overflow-hidden cursor-pointer">
+              <Card className="group relative aspect-square flex flex-col items-center justify-center p-6 bg-card/45 border border-border/80 hover:border-[rgb(var(--primary-rgb)/0.45)] transition-all duration-300 rounded-[2.5rem] overflow-hidden cursor-pointer glass shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)]">
                 {/* Efek Pendar Latar Belakang (Neon Glow Effect) */}
                 <div className="absolute inset-0 bg-gradient-to-br from-[rgb(var(--primary-rgb)/0.05)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 

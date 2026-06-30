@@ -109,6 +109,23 @@ export default {
       },
     },
     {
+      name: 'illustrations',
+      title: 'Ilustrasi Pendukung (Multi-Gambar)',
+      type: 'array',
+      group: 'content',
+      of: [
+        {
+          type: 'object',
+          name: 'illustrationItem',
+          title: 'Item Ilustrasi',
+          fields: [
+            { name: 'title', title: 'Caption Ilustrasi', type: 'string' },
+            { name: 'content', title: 'URL Gambar (Sanity/CDN)', type: 'string' }
+          ]
+        }
+      ]
+    },
+    {
       name: 'video_url',
       title: 'Video (Media Library)',
       type: 'file',

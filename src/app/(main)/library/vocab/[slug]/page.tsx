@@ -174,54 +174,47 @@ export default async function VocabDetailPage({
       {/* Background Grid Overlay */}
       <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none z-0" />
 
-      <div className="max-w-5xl mx-auto w-full relative z-10 pt-8 md:pt-16">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-8">
+      <div className="max-w-4xl mx-auto w-full relative z-10 pt-8 md:pt-16">
+        <div className="flex flex-col gap-12 md:gap-16">
           
-          {/* Kolom Kiri: Visual & Atribut Kata */}
-          <div className="flex flex-col gap-6">
-            {/* 1. Hero Bento (Fokus Utama) */}
-            <VocabHero 
-              word={vocab.word || ""} 
-              furigana={typeof vocab.furigana === "string" ? vocab.furigana : undefined} 
-              romaji={typeof vocab.romaji === "string" ? vocab.romaji : undefined} 
-              meaning={vocab.meaning || ""} 
-            />
+          {/* 1. Hero Bento (Fokus Utama) */}
+          <VocabHero 
+            word={vocab.word || ""} 
+            furigana={typeof vocab.furigana === "string" ? vocab.furigana : undefined} 
+            romaji={typeof vocab.romaji === "string" ? vocab.romaji : undefined} 
+            meaning={vocab.meaning || ""} 
+          />
 
-            {/* 2. Meta Data Bento (Atribut Kata) */}
-            <VocabDetails 
-              hinshi={typeof vocab.hinshi === "string" ? vocab.hinshi : undefined} 
-              jlptLevel={vocab.jlptLevel || undefined} 
-              pitchAccent={vocab.pitchAccent || undefined} 
-            />
+          {/* 2. Meta Data Bento (Atribut Kata) */}
+          <VocabDetails 
+            hinshi={typeof vocab.hinshi === "string" ? vocab.hinshi : undefined} 
+            jlptLevel={vocab.jlptLevel || undefined} 
+            pitchAccent={vocab.pitchAccent || undefined} 
+          />
 
-            {/* 6. Related Context Bento */}
-            <VocabRelated 
-              relatedKanji={vocab.relatedKanji as VocabKanjiRef[] | undefined} 
-              synonyms={vocab.synonyms as VocabRef[] | undefined} 
-              antonyms={vocab.antonyms as VocabRef[] | undefined} 
-            />
-          </div>
+          {/* 3. Mnemonic & Notes Bento */}
+          <VocabNotes 
+            wordId={vocab.word || ""}
+            mnemonic={typeof vocab.mnemonic === "string" ? vocab.mnemonic : undefined} 
+            usageNotes={vocab.usageNotes || undefined} 
+          />
 
-          {/* Kolom Kanan: Penjelasan & Contoh Kalimat */}
-          <div className="flex flex-col gap-6">
-            {/* 3. Mnemonic & Notes Bento */}
-            <VocabNotes 
-              wordId={vocab.word || ""}
-              mnemonic={typeof vocab.mnemonic === "string" ? vocab.mnemonic : undefined} 
-              usageNotes={vocab.usageNotes || undefined} 
-            />
+          {/* 4. Conjugation Bento (Jika Kata Sifat atau Kata Kerja) */}
+          <VocabConjugation 
+            isAdjective={isAdjective}
+            isVerb={isVerb}
+            conjugations={vocab.conjugations as Record<string, string> | null | undefined}
+          />
 
-            {/* 4. Conjugation Bento (Jika Kata Sifat atau Kata Kerja) */}
-            <VocabConjugation 
-              isAdjective={isAdjective}
-              isVerb={isVerb}
-              conjugations={vocab.conjugations as Record<string, string> | null | undefined}
-            />
+          {/* 5. Examples Bento */}
+          <VocabExamples examples={vocab.examples as VocabExampleItem[] | undefined} />
 
-            {/* 5. Examples Bento */}
-            <VocabExamples examples={vocab.examples as VocabExampleItem[] | undefined} />
-          </div>
-
+          {/* 6. Related Context Bento */}
+          <VocabRelated 
+            relatedKanji={vocab.relatedKanji as VocabKanjiRef[] | undefined} 
+            synonyms={vocab.synonyms as VocabRef[] | undefined} 
+            antonyms={vocab.antonyms as VocabRef[] | undefined} 
+          />
         </div>
 
         {/* Action Footer */}

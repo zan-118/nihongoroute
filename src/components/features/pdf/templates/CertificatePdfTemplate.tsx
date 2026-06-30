@@ -37,7 +37,7 @@ Font.register({
 // ==========================================
 const styles = StyleSheet.create({
   page: {
-    backgroundColor: "#0a0c10",
+    backgroundColor: "#0b1329",
     padding: 40,
     fontFamily: "NotoSansJP",
     color: "#ffffff",
@@ -53,73 +53,119 @@ const styles = StyleSheet.create({
     left: 20,
     right: 20,
     bottom: 20,
-    border: "2pt solid #22d3ee",
-    borderRadius: 20,
+    border: "2pt solid #c5a880",
+    borderRadius: 8,
   },
   innerBorder: {
     position: "absolute",
-    top: 30,
-    left: 30,
-    right: 30,
-    bottom: 30,
-    border: "1pt solid rgba(255, 255, 255, 0.1)",
-    borderRadius: 15,
+    top: 28,
+    left: 28,
+    right: 28,
+    bottom: 28,
+    border: "1pt dashed rgba(197, 168, 128, 0.35)",
+    borderRadius: 6,
+  },
+  cornerTL: {
+    position: "absolute",
+    top: 34,
+    left: 34,
+    width: 25,
+    height: 25,
+    borderTopWidth: 2,
+    borderTopColor: "#c5a880",
+    borderLeftWidth: 2,
+    borderLeftColor: "#c5a880",
+  },
+  cornerTR: {
+    position: "absolute",
+    top: 34,
+    right: 34,
+    width: 25,
+    height: 25,
+    borderTopWidth: 2,
+    borderTopColor: "#c5a880",
+    borderRightWidth: 2,
+    borderRightColor: "#c5a880",
+  },
+  cornerBL: {
+    position: "absolute",
+    bottom: 34,
+    left: 34,
+    width: 25,
+    height: 25,
+    borderBottomWidth: 2,
+    borderBottomColor: "#c5a880",
+    borderLeftWidth: 2,
+    borderLeftColor: "#c5a880",
+  },
+  cornerBR: {
+    position: "absolute",
+    bottom: 34,
+    right: 34,
+    width: 25,
+    height: 25,
+    borderBottomWidth: 2,
+    borderBottomColor: "#c5a880",
+    borderRightWidth: 2,
+    borderRightColor: "#c5a880",
   },
   header: {
-    marginBottom: 40,
+    marginBottom: 30,
     textAlign: "center",
   },
-  logo: {
-    width: 60,
-    height: 60,
-    marginBottom: 20,
-    alignSelf: "center",
-  },
   title: {
-    fontSize: 42,
+    fontSize: 44,
     fontWeight: "bold",
     textTransform: "uppercase",
-    letterSpacing: -2,
-    color: "#22d3ee",
+    letterSpacing: 2,
+    color: "#c5a880",
   },
   subtitle: {
-    fontSize: 12,
-    color: "#94a3b8",
-    marginTop: 10,
-    letterSpacing: 4,
+    fontSize: 11,
+    color: "#e2e8f0",
+    marginTop: 8,
+    letterSpacing: 6,
     textTransform: "uppercase",
+    fontWeight: "bold",
   },
   content: {
     textAlign: "center",
-    marginTop: 40,
+    marginTop: 20,
+    alignItems: "center",
   },
   presentLabel: {
-    fontSize: 14,
-    color: "#64748b",
-    marginBottom: 10,
+    fontSize: 12,
+    color: "#94a3b8",
+    marginBottom: 12,
+    fontStyle: "italic",
   },
   userName: {
-    fontSize: 32,
+    fontSize: 34,
     fontWeight: "bold",
     color: "#ffffff",
     marginBottom: 20,
-    borderBottom: "1pt solid #22d3ee",
-    paddingBottom: 5,
-    minWidth: 300,
+    borderBottomWidth: 1,
+    borderBottomColor: "#c5a880",
+    paddingBottom: 8,
+    minWidth: 320,
+    textAlign: "center",
   },
   examInfo: {
-    fontSize: 14,
-    color: "#94a3b8",
+    fontSize: 13,
+    color: "#e2e8f0",
     lineHeight: 1.6,
   },
   scoreContainer: {
-    marginTop: 30,
-    padding: 20,
-    backgroundColor: "rgba(34, 211, 238, 0.1)",
-    borderRadius: 10,
+    marginTop: 25,
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    backgroundColor: "rgba(197, 168, 128, 0.08)",
+    borderWidth: 1,
+    borderColor: "rgba(197, 168, 128, 0.2)",
+    borderRadius: 8,
     display: "flex",
     flexDirection: "row",
-    gap: 20,
+    gap: 30,
   },
   scoreItem: {
     display: "flex",
@@ -127,48 +173,80 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   scoreLabel: {
-    fontSize: 8,
-    color: "#22d3ee",
+    fontSize: 7,
+    color: "#c5a880",
     textTransform: "uppercase",
-    marginBottom: 5,
+    marginBottom: 4,
+    letterSpacing: 1,
   },
   scoreValue: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "bold",
+    color: "#ffffff",
   },
   footer: {
     position: "absolute",
-    bottom: 60,
-    width: "100%",
+    bottom: 50,
+    left: 60,
+    right: 60,
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     alignItems: "center",
   },
   signatureBox: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    width: 160,
   },
   signatureLine: {
     width: 150,
     height: 1,
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-    marginBottom: 5,
+    backgroundColor: "rgba(197, 168, 128, 0.3)",
+    marginBottom: 6,
   },
   signatureLabel: {
+    fontSize: 7,
+    color: "#94a3b8",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+  },
+  goldSeal: {
+    width: 66,
+    height: 66,
+    borderRadius: 33,
+    borderWidth: 2,
+    borderColor: "#c5a880",
+    backgroundColor: "#0f172a",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 2,
+  },
+  goldSealText: {
+    fontSize: 5,
+    fontWeight: "bold",
+    color: "#c5a880",
+    letterSpacing: 0.5,
+    textTransform: "uppercase",
+    marginBottom: 2,
+  },
+  goldSealBadge: {
     fontSize: 8,
-    color: "#64748b",
+    fontWeight: "bold",
+    color: "#ffffff",
+    letterSpacing: 1,
     textTransform: "uppercase",
   },
   watermark: {
     position: "absolute",
-    bottom: -50,
-    right: -50,
-    fontSize: 150,
+    bottom: 30,
+    right: 40,
+    fontSize: 100,
     fontWeight: "bold",
-    color: "rgba(34, 211, 238, 0.03)",
-    transform: "rotate(-30deg)",
+    color: "rgba(197, 168, 128, 0.015)",
   }
 });
 
@@ -192,7 +270,13 @@ export const CertificatePdfTemplate = ({ data }: { data: CertificateData }) => (
       <View style={styles.border} />
       <View style={styles.innerBorder} />
       
-      <Text style={styles.watermark}>NIHONGOROUTE</Text>
+      {/* Corner Ornaments */}
+      <View style={styles.cornerTL} />
+      <View style={styles.cornerTR} />
+      <View style={styles.cornerBL} />
+      <View style={styles.cornerBR} />
+      
+      <Text style={styles.watermark}>合格</Text>
 
       <View style={styles.header}>
         <Text style={styles.title}>CERTIFICATE</Text>
@@ -213,22 +297,27 @@ export const CertificatePdfTemplate = ({ data }: { data: CertificateData }) => (
           </View>
           <View style={styles.scoreItem}>
             <Text style={styles.scoreLabel}>Status</Text>
-            <Text style={[styles.scoreValue, { color: "#34d399" }]}>PASSED</Text>
+            <Text style={[styles.scoreValue, { color: "#10b981" }]}>PASSED</Text>
           </View>
         </View>
       </View>
 
       <View style={styles.footer}>
         <View style={styles.signatureBox}>
-          <Text style={{ fontSize: 12, fontWeight: "bold", marginBottom: 5 }}>{data.date}</Text>
+          <Text style={{ fontSize: 10, fontWeight: "bold", marginBottom: 5, color: "#ffffff" }}>{data.date}</Text>
           <View style={styles.signatureLine} />
           <Text style={styles.signatureLabel}>Date of Issue</Text>
         </View>
+
+        <View style={styles.goldSeal}>
+          <Text style={styles.goldSealText}>NihongoRoute</Text>
+          <Text style={styles.goldSealBadge}>PASSED</Text>
+        </View>
         
         <View style={styles.signatureBox}>
-          <Text style={{ fontSize: 12, fontWeight: "bold", marginBottom: 5, color: "#22d3ee" }}>NIHONGO ROUTE</Text>
+          <Text style={{ fontSize: 10, fontWeight: "bold", marginBottom: 5, color: "#c5a880" }}>NIHONGO ROUTE</Text>
           <View style={styles.signatureLine} />
-          <Text style={styles.signatureLabel}>Official Learning Platform</Text>
+          <Text style={styles.signatureLabel}>Learning Platform</Text>
         </View>
       </View>
     </Page>

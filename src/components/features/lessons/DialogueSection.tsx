@@ -114,7 +114,7 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
           const isCurrentPlaying = activeDialogId === dialogId && isPlayingPlaylist;
 
           return (
-            <div key={dialogId} className="neo-card p-5 md:p-10 border-l-4 border-l-secondary">
+            <div key={dialogId} className="p-8 md:p-12 border border-border/80 rounded-[2.5rem] bg-card/35 shadow-[0_0_40px_rgba(var(--secondary-rgb),0.02)] glass relative overflow-hidden">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 border-b border-border/50 pb-8">
                 <div>
                   <h3 className="text-xl font-black uppercase tracking-tight mb-2">{l.title}</h3>

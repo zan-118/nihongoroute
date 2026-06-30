@@ -169,7 +169,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
             {kanjis.map((kanji) => (
               <div
                 key={kanji.id}
-                className="flex md:grid md:grid-cols-12 items-center justify-between gap-4 px-4 py-3 bg-card/70 border border-border hover:border-[rgb(var(--primary-rgb)/0.5)] transition-all duration-200 rounded-2xl shadow-sm group"
+                className="flex md:grid md:grid-cols-12 items-center justify-between gap-6 px-6 py-4 bg-card/45 border border-border/80 hover:border-primary/45 transition-all duration-300 rounded-[1.5rem] shadow-[0_0_20px_rgba(var(--primary-rgb),0.015)] group glass"
               >
                 {/* Sisi Kiri: Kanji & Arti (Flex di Seluler, Kolom Grid di Desktop) */}
                 <div className="flex-1 md:col-span-8 flex flex-col md:grid md:grid-cols-8 md:gap-4 md:items-center min-w-0 pr-2">

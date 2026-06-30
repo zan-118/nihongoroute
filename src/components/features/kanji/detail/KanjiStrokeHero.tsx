@@ -33,7 +33,7 @@ export function KanjiStrokeHero({ id, character, strokeOrderSvg, meaning, jlpt }
   // RENDER KOMPONEN
   // ==========================================
   return (
-    <Card className="p-6 sm:p-8 md:p-12 bg-card/20 backdrop-blur-xl border-border rounded-[2.5rem] hover:border-primary/40 transition-all flex flex-col items-center justify-center group relative overflow-hidden md:col-span-2 lg:col-span-2 md:row-span-2">
+    <Card className="p-6 sm:p-8 md:p-12 bg-card/20 backdrop-blur-xl border-border rounded-[2.5rem] hover:border-primary/40 transition-all flex flex-col items-center justify-center group relative overflow-hidden glass shadow-[0_0_30px_rgba(var(--primary-rgb),0.05)]">
       <div className="absolute top-4 right-4 z-20">
         {id && <AddToSRSButton wordId={id} />}
       </div>

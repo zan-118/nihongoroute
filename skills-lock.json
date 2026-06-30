@@ -1,6 +1,42 @@
 {
   "version": 1,
   "skills": {
+    "9router": {
+      "source": "decolua/9router",
+      "sourceType": "github",
+      "skillPath": "skills/9router/SKILL.md",
+      "computedHash": "965b0a099cb69c48badc4785f025fbdde90d6f2151059918a9bb809c285a930d"
+    },
+    "9router-chat": {
+      "source": "decolua/9router",
+      "sourceType": "github",
+      "skillPath": "skills/9router-chat/SKILL.md",
+      "computedHash": "ba9ff872e46d15bc7c0612037325160c1c394b4269d417019cb877e405e3bdf4"
+    },
+    "9router-embeddings": {
+      "source": "decolua/9router",
+      "sourceType": "github",
+      "skillPath": "skills/9router-embeddings/SKILL.md",
+      "computedHash": "1397da4bd065dbfec84847650d610c4d2d7e3fe9df914d81a74dfbe8fc35e582"
+    },
+    "9router-image": {
+      "source": "decolua/9router",
+      "sourceType": "github",
+      "skillPath": "skills/9router-image/SKILL.md",
+      "computedHash": "b40047e0d535049365fa0a5eb7daf597b7364f27968cc133ee2379f8ef8844ab"
+    },
+    "9router-web-fetch": {
+      "source": "decolua/9router",
+      "sourceType": "github",
+      "skillPath": "skills/9router-web-fetch/SKILL.md",
+      "computedHash": "0ad053e61b54fc7d1e96968211f36d3f7a2a36b21b879c572fb92f2ccb576ba8"
+    },
+    "9router-web-search": {
+      "source": "decolua/9router",
+      "sourceType": "github",
+      "skillPath": "skills/9router-web-search/SKILL.md",
+      "computedHash": "cfb511b0312802b0137e6514e16265bc38a7fa8c1881189d7e440ea708be379c"
+    },
     "find-skills": {
       "source": "vercel-labs/skills",
       "sourceType": "github",

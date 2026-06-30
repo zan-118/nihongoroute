@@ -115,7 +115,7 @@ export function KanjiSentences({ sentences = [], character }: KanjiSentencesProp
   }, [cleanupObjectUrl]);
 
   return (
-    <Card className="p-6 md:p-10 bg-card/20 backdrop-blur-xl border-border rounded-[2.5rem] hover:border-primary/40 transition-all md:col-span-full">
+    <Card className="p-6 md:p-10 bg-card/20 backdrop-blur-xl border-border rounded-[2.5rem] hover:border-primary/40 transition-all glass shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
       <div className="flex items-center gap-3 mb-6">
         <BookOpen size={18} className="text-success" aria-hidden="true" />
         <h2 className="text-xs md:text-sm font-black uppercase tracking-[0.2em] text-foreground">

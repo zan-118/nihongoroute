@@ -38,6 +38,10 @@ export interface ListeningTaskData {
   quiz?: QuizItem[];
   jlpt_level?: string;
   difficulty?: string;
+  illustrations?: { title?: string; content: string }[];
+  image_url?: string | { _type: string; asset: { _type: string; _ref: string } };
+  body?: string;
+  translation?: string;
 }
 
 export interface ListeningState {

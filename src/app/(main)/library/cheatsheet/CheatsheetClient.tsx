@@ -123,7 +123,7 @@ export default function CheatsheetClient({
         <div className="flex items-center gap-2 mb-4 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
           <Filter size={14} className="text-primary" /> Saring Berdasarkan Topik
         </div>
-        <div className="flex flex-wrap gap-2.5 p-2 rounded-[2rem] border border-border bg-[rgba(var(--card-rgb),0.2)] backdrop-blur-md w-fit max-w-full">
+        <div className="flex flex-wrap gap-2.5 p-2 rounded-[2rem] border border-border bg-[rgba(var(--card-rgb),0.2)] backdrop-blur-md w-fit max-w-full glass">
           {categories.map((cat) => {
             const isActive = selectedCategory === cat;
             const count = categoryCounts[cat] || 0;
@@ -192,11 +192,6 @@ export default function CheatsheetClient({
                   <Card className="group relative h-full bg-[rgba(var(--card-rgb),0.4)] border border-border hover:border-[rgba(var(--primary-rgb),0.5)] rounded-[2.5rem] p-8 cursor-pointer transition-all duration-500 shadow-[0_4px_30px_rgba(var(--foreground-rgb),0.02)] hover:shadow-[0_20px_50px_rgba(var(--primary-rgb),0.15)] glass flex flex-col justify-between gap-6 overflow-hidden">
                     {/* Ambient Glow Background Effect */}
                     <div className="absolute top-0 right-0 size-32 bg-[rgba(var(--primary-rgb),0.03)] blur-[40px] rounded-full -mr-12 -mt-12 group-hover:bg-[rgba(var(--primary-rgb),0.08)] transition-all duration-500 pointer-events-none" />
-
-                    {/* Watermark Number */}
-                    <div className="absolute -bottom-6 -right-6 text-[8rem] font-black text-[rgba(var(--foreground-rgb),0.02)] group-hover:text-[rgba(var(--primary-rgb),0.04)] transition-all duration-500 pointer-events-none italic select-none leading-none">
-                      {String(idx + 1).padStart(2, "0")}
-                    </div>
 
                     <div className="flex items-center justify-between relative z-10">
                       <div className="size-14 rounded-2xl bg-[rgba(var(--muted-rgb),0.2)] border border-border flex items-center justify-center text-muted-foreground group-hover:text-primary group-hover:bg-[rgba(var(--primary-rgb),0.15)] group-hover:border-[rgba(var(--primary-rgb),0.3)] transition-all duration-500 shadow-inner">
