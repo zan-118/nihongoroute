@@ -350,6 +350,19 @@ CREATE TABLE public.community_comments (
     created_at timestamptz DEFAULT now()
 );
 
+-- 24. Notifications
+CREATE TABLE public.notifications (
+    id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id uuid NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+    sender_id uuid REFERENCES public.profiles(id) ON DELETE CASCADE,
+    type varchar NOT NULL,
+    title text NOT NULL,
+    message text NOT NULL,
+    post_id uuid REFERENCES public.community_posts(id) ON DELETE CASCADE,
+    read boolean DEFAULT false NOT NULL,
+    created_at timestamptz DEFAULT now() NOT NULL
+);
+
 -- ═══════════════════════════════════════════════════════════════════════════
 -- FUNCTIONS
 -- ═══════════════════════════════════════════════════════════════════════════
@@ -789,6 +802,9 @@ CREATE INDEX idx_user_exam_sessions_template_id ON public.user_exam_sessions USI
 CREATE INDEX idx_user_exam_answers_session_id ON public.user_exam_answers USING btree (session_id);
 CREATE INDEX idx_user_exam_answers_question_id ON public.user_exam_answers USING btree (question_id);
 
+-- Notifications
+CREATE INDEX idx_notifications_user_id_created_at ON public.notifications USING btree (user_id, created_at DESC);
+
 -- ═══════════════════════════════════════════════════════════════════════════
 -- ROW LEVEL SECURITY
 -- ═══════════════════════════════════════════════════════════════════════════
@@ -816,6 +832,7 @@ ALTER TABLE public.user_exam_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_exam_answers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.community_posts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.community_comments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
 
 -- ═══════════════════════════════════════════════════════════════════════════
 -- RLS POLICIES
@@ -922,6 +939,11 @@ CREATE POLICY "Allow anyone to read comments" ON public.community_comments FOR S
 CREATE POLICY "Allow authenticated users to create comments" ON public.community_comments FOR INSERT WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "Allow users to delete their own comments" ON public.community_comments FOR DELETE USING (auth.uid() = user_id);
 
+-- Notifications Policies
+CREATE POLICY "Allow users to read their own notifications" ON public.notifications FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Allow users to update their own notifications (read status)" ON public.notifications FOR UPDATE USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Allow users to delete their own notifications" ON public.notifications FOR DELETE USING (auth.uid() = user_id);
+
 -- ═══════════════════════════════════════════════════════════════════════════
 -- GRANTS
 -- ═══════════════════════════════════════════════════════════════════════════
@@ -935,6 +957,7 @@ GRANT SELECT ON public.jlpt_questions TO anon, authenticated;
 GRANT SELECT ON public.jlpt_exam_template_questions TO anon, authenticated;
 GRANT SELECT, INSERT, UPDATE ON public.user_exam_sessions TO authenticated;
 GRANT SELECT, INSERT, UPDATE ON public.user_exam_answers TO authenticated;
+GRANT SELECT, UPDATE, DELETE ON public.notifications TO authenticated;
 
 -- ═══════════════════════════════════════════════════════════════════════════
 -- STORAGE BUCKETS

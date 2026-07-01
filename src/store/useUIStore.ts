@@ -175,19 +175,39 @@ export const useUIStore = create<UIState>()(
         ].slice(0, 50)
       })),
 
-      markNotificationAsRead: (id) => set((state) => ({
-        notifications: state.notifications.map(n =>
-          n.id === id ? { ...n, read: true } : n
-        )
-      })),
+      markNotificationAsRead: (id) => {
+        set((state) => ({
+          notifications: state.notifications.map(n =>
+            n.id === id ? { ...n, read: true } : n
+          )
+        }));
 
-      markAllNotificationsAsRead: () => set((state) => ({
-        notifications: state.notifications.map(n =>
-          n.read ? n : { ...n, read: true }
-        )
-      })),
+        if (id.includes("-")) {
+          import("@/actions/community.actions").then(({ markNotificationRead }) => {
+            markNotificationRead(id).catch(err => console.error("Gagal sinkronisasi baca notifikasi:", err));
+          });
+        }
+      },
 
-      clearNotifications: () => set({ notifications: [] }),
+      markAllNotificationsAsRead: () => {
+        set((state) => ({
+          notifications: state.notifications.map(n =>
+            n.read ? n : { ...n, read: true }
+          )
+        }));
+
+        import("@/actions/community.actions").then(({ markAllNotificationsRead }) => {
+          markAllNotificationsRead().catch(err => console.error("Gagal sinkronisasi baca semua notifikasi:", err));
+        });
+      },
+
+      clearNotifications: () => {
+        set({ notifications: [] });
+
+        import("@/actions/community.actions").then(({ clearAllNotifications }) => {
+          clearAllNotifications().catch(err => console.error("Gagal sinkronisasi hapus semua notifikasi:", err));
+        });
+      },
 
       toggleNotifications: (enabled) => set((state) => ({
         settings: { ...state.settings, notificationsEnabled: enabled }

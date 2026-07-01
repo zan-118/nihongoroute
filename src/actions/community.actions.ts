@@ -146,7 +146,7 @@ export async function toggleLikePost(postId: string): Promise<{ success: boolean
     // Dapatkan data postingan saat ini
     const { data: post, error: fetchErr } = await supabase
       .from("community_posts")
-      .select("likes_users")
+      .select("likes_users, user_id")
       .eq("id", postId)
       .single();
 
@@ -173,6 +173,38 @@ export async function toggleLikePost(postId: string): Promise<{ success: boolean
       .eq("id", postId);
 
     if (updateErr) throw updateErr;
+
+    // Kirim atau hapus notifikasi suka
+    if (isLiked) {
+      if (post.user_id !== user.id) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("full_name")
+          .eq("id", user.id)
+          .single();
+        const senderName = profile?.full_name || "Seseorang";
+
+        await adminSupabase.from("notifications").insert({
+          user_id: post.user_id,
+          sender_id: user.id,
+          type: "like",
+          title: "Suka Baru",
+          message: `${senderName} menyukai postingan Anda.`,
+          post_id: postId,
+          read: false
+        });
+      }
+    } else {
+      if (post.user_id !== user.id) {
+        await adminSupabase
+          .from("notifications")
+          .delete()
+          .eq("user_id", post.user_id)
+          .eq("sender_id", user.id)
+          .eq("type", "like")
+          .eq("post_id", postId);
+      }
+    }
 
     revalidatePath("/social");
     return { success: true, likesCount: likesList.length, isLiked };
@@ -249,6 +281,33 @@ export async function addCommunityComment(postId: string, content: string): Prom
     });
 
     if (error) throw error;
+
+    // Kirim notifikasi ke pemilik postingan jika pemberi komentar adalah orang lain
+    const { data: post } = await supabase
+      .from("community_posts")
+      .select("user_id")
+      .eq("id", postId)
+      .single();
+
+    if (post && post.user_id !== user.id) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("id", user.id)
+        .single();
+      const senderName = profile?.full_name || "Seseorang";
+
+      const adminSupabase = createAdminClient();
+      await adminSupabase.from("notifications").insert({
+        user_id: post.user_id,
+        sender_id: user.id,
+        type: "comment",
+        title: "Komentar Baru",
+        message: `${senderName} mengomentari postingan Anda.`,
+        post_id: postId,
+        read: false
+      });
+    }
 
     revalidatePath("/social");
     return { success: true };
@@ -331,5 +390,96 @@ export async function deleteCommunityComment(commentId: string): Promise<{ succe
   } catch (error: unknown) {
     console.error("Gagal menghapus komentar:", error);
     return { success: false, error: error instanceof Error ? error.message : "Gagal menghapus komentar." };
+  }
+}
+
+export interface CommunityNotification {
+  id: string;
+  user_id: string;
+  sender_id: string | null;
+  type: string;
+  title: string;
+  message: string;
+  post_id: string | null;
+  read: boolean;
+  created_at: string;
+}
+
+/**
+ * Mengambil daftar notifikasi terbaru milik pengguna terautentikasi.
+ */
+export async function getNotifications(): Promise<CommunityNotification[]> {
+  try {
+    const { supabase, user } = await requireAuth();
+    const { data, error } = await supabase
+      .from("notifications")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(50);
+
+    if (error) throw error;
+    return (data || []) as CommunityNotification[];
+  } catch (error) {
+    console.error("Gagal mengambil notifikasi:", error);
+    return [];
+  }
+}
+
+/**
+ * Menandai notifikasi tertentu sebagai terbaca di database.
+ */
+export async function markNotificationRead(notificationId: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { supabase, user } = await requireAuth();
+    const { error } = await supabase
+      .from("notifications")
+      .update({ read: true })
+      .eq("id", notificationId)
+      .eq("user_id", user.id);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error: unknown) {
+    console.error("Gagal menandai notifikasi terbaca:", error);
+    return { success: false, error: error instanceof Error ? error.message : "Gagal menandai notifikasi." };
+  }
+}
+
+/**
+ * Menandai seluruh notifikasi pengguna sebagai terbaca di database.
+ */
+export async function markAllNotificationsRead(): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { supabase, user } = await requireAuth();
+    const { error } = await supabase
+      .from("notifications")
+      .update({ read: true })
+      .eq("user_id", user.id);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error: unknown) {
+    console.error("Gagal menandai semua notifikasi terbaca:", error);
+    return { success: false, error: error instanceof Error ? error.message : "Gagal menandai semua notifikasi." };
+  }
+}
+
+/**
+ * Menghapus seluruh notifikasi pengguna di database.
+ */
+export async function clearAllNotifications(): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { supabase, user } = await requireAuth();
+    const { error } = await supabase
+      .from("notifications")
+      .delete()
+      .eq("user_id", user.id);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error: unknown) {
+    console.error("Gagal menghapus semua notifikasi:", error);
+    return { success: false, error: error instanceof Error ? error.message : "Gagal menghapus semua notifikasi." };
   }
 }

@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { useUIStore } from "@/store/useUIStore";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useNavbar } from "@/components/layout/hooks/useNavbar";
+import { useSyncNotifications } from "@/hooks/useSyncNotifications";
 import dynamic from "next/dynamic";
 
 const NotificationPopover = dynamic(() => import("@/components/features/user/NotificationPopover"), { ssr: false });
@@ -36,6 +37,9 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
   const hasPendingSync = useSRSStore((s) => s.dirtySrs.size > 0);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  // Jalankan sinkronisasi notifikasi database ke Zustand
+  useSyncNotifications();
   const unreadNotifications = notifications?.filter((n: { read: boolean }) => !n.read).length || 0;
 
   const breadcrumbItems = getBreadcrumbItems(pathname);
