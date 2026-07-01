@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 
 export interface PostAuthor {
@@ -164,7 +165,9 @@ export async function toggleLikePost(postId: string): Promise<{ success: boolean
       isLiked = true;
     }
 
-    const { error: updateErr } = await supabase
+    // Gunakan admin client untuk bypass RLS saat update likes_users
+    const adminSupabase = createAdminClient();
+    const { error: updateErr } = await adminSupabase
       .from("community_posts")
       .update({ likes_users: likesList })
       .eq("id", postId);

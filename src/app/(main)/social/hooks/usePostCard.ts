@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, type QueryKey } from "@tanstack/react-query";
 import { 
   toggleLikePost, 
   getPostComments, 
@@ -42,30 +42,39 @@ export function usePostCard({ post, currentUserId, isGuest }: UsePostCardParams)
     onMutate: async () => {
       setIsLiking(true);
       await queryClient.cancelQueries({ queryKey: ["community_posts"] });
-      const previousPosts = queryClient.getQueryData<CommunityPost[]>(["community_posts"]);
       
-      if (previousPosts) {
-        queryClient.setQueryData(
-          ["community_posts"],
-          previousPosts.map((p) => {
-            if (p.id === post.id) {
-              const hasLiked = p.likes_users.includes(currentUserId);
-              return {
-                ...p,
-                likes_users: hasLiked
-                  ? p.likes_users.filter((id: string) => id !== currentUserId)
-                  : [...p.likes_users, currentUserId],
-              };
-            }
-            return p;
-          })
-        );
-      }
-      return { previousPosts };
+      // Ambil seluruh cache kueri yang berawalan ["community_posts"]
+      const queries = queryClient.getQueriesData<CommunityPost[]>({ queryKey: ["community_posts"] });
+      const previousQueries = queries.map(([queryKey, data]) => ({ queryKey, data }));
+
+      // Update secara optimistik untuk setiap cache kueri yang ditemukan
+      queries.forEach(([queryKey, previousPosts]) => {
+        if (previousPosts) {
+          queryClient.setQueryData(
+            queryKey,
+            previousPosts.map((p) => {
+              if (p.id === post.id) {
+                const hasLiked = p.likes_users.includes(currentUserId);
+                return {
+                  ...p,
+                  likes_users: hasLiked
+                    ? p.likes_users.filter((id: string) => id !== currentUserId)
+                    : [...p.likes_users, currentUserId],
+                };
+              }
+              return p;
+            })
+          );
+        }
+      });
+
+      return { previousQueries };
     },
-    onError: (err, newLike, context: { previousPosts?: CommunityPost[] } | undefined) => {
-      if (context?.previousPosts) {
-        queryClient.setQueryData(["community_posts"], context.previousPosts);
+    onError: (err, newLike, context: { previousQueries?: { queryKey: QueryKey; data: CommunityPost[] | undefined }[] } | undefined) => {
+      if (context?.previousQueries) {
+        context.previousQueries.forEach(({ queryKey, data }) => {
+          queryClient.setQueryData(queryKey, data);
+        });
       }
       toast.error("Gagal menyukai postingan.");
     },
