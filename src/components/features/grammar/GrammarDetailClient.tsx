@@ -573,7 +573,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
 
                   <div className="flex-1 min-w-0">
                     <p className="text-lg md:text-xl font-japanese font-bold text-foreground leading-relaxed tracking-wide select-text">
-                      {sentence.japanese}
+                      <SmartJapanese word={sentence.japanese} furigana={sentence.furigana || undefined} />
                     </p>
                     {(sentence.indonesia || sentence.english) && (
                       <div className="mt-3 pl-4 border-l-2 border-success/30 text-sm md:text-base text-muted-foreground/80 font-semibold leading-relaxed select-text">

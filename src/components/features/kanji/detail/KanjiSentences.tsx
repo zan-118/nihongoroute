@@ -14,6 +14,7 @@ import { Card } from "@/components/ui/card";
 import { Volume2, VolumeX, BookOpen } from "lucide-react";
 import { fetchTTSAudio, speakWithWebSpeech, TTS_VOICES, type TtsVoice } from "@/lib/tts";
 import type { SentenceRow } from "@/actions/sentences.actions";
+import { SmartJapanese } from "@/components/ui/SmartJapanese";
 
 // ==========================================
 // TIPE DATA / INTERFACE
@@ -138,7 +139,7 @@ export function KanjiSentences({ sentences = [], character }: KanjiSentencesProp
 
               <div className="flex-1 min-w-0">
                 <p className="text-lg md:text-xl font-japanese font-bold text-foreground leading-relaxed tracking-wide select-text">
-                  {sentence.japanese}
+                  <SmartJapanese word={sentence.japanese} furigana={sentence.furigana || undefined} />
                 </p>
                 {(sentence.indonesia || sentence.english) && (
                   <div className="mt-3 pl-4 border-l-2 border-success/30 text-sm md:text-base text-muted-foreground/80 font-semibold leading-relaxed select-text">

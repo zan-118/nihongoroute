@@ -473,6 +473,7 @@ export interface SentenceTable {
   created_at?: string;
   indonesia?: string | null;
   jlpt_level?: string | null;
+  furigana?: string | null;
 }
 
 export interface SupporterTable {

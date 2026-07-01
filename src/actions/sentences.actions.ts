@@ -22,6 +22,7 @@ export interface SentenceRow {
   english: string | null;
   indonesia: string | null;
   jlpt_level: string | null;
+  furigana: string | null;
 }
 
 export interface SentenceDrillItem {
@@ -29,6 +30,7 @@ export interface SentenceDrillItem {
   japanese: string;
   translation: string;
   jlpt_level: string | null;
+  furigana: string | null;
 }
 
 // ======================
@@ -52,7 +54,7 @@ export async function getSentencesByWord(
 
   const { data, error } = await supabase
     .from("sentences")
-    .select("id, japanese, english, indonesia, jlpt_level")
+    .select("id, japanese, english, indonesia, jlpt_level, furigana")
     .like("japanese", `%${word.trim()}%`)
     .limit(limit);
 
@@ -83,7 +85,7 @@ export async function getRandomSentencesForDrill(
 
   let query = supabase
     .from("sentences")
-    .select("id, japanese, english, indonesia, jlpt_level")
+    .select("id, japanese, english, indonesia, jlpt_level, furigana")
     .not("japanese", "is", null);
 
   if (level && level !== "all") {
@@ -114,6 +116,7 @@ export async function getRandomSentencesForDrill(
     japanese: row.japanese,
     translation: (row.indonesia as string | null) || (row.english as string | null) || "",
     jlpt_level: row.jlpt_level as string | null,
+    furigana: row.furigana as string | null,
   }));
 }
 
@@ -134,7 +137,7 @@ export async function getSentencesByGrammarPattern(
 
   const { data, error } = await supabase
     .from("sentences")
-    .select("id, japanese, english, indonesia, jlpt_level")
+    .select("id, japanese, english, indonesia, jlpt_level, furigana")
     .like("japanese", `%${pattern.trim()}%`)
     .limit(limit);
 
@@ -163,7 +166,7 @@ export async function getSentencesByKanji(
 
   const { data, error } = await supabase
     .from("sentences")
-    .select("id, japanese, english, indonesia, jlpt_level")
+    .select("id, japanese, english, indonesia, jlpt_level, furigana")
     .like("japanese", `%${character.trim()}%`)
     .limit(limit);
 

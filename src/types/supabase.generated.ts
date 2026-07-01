@@ -44,6 +44,83 @@ export type Database = {
         }
         Relationships: []
       }
+      community_comments: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "community_comments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_posts: {
+        Row: {
+          category: string | null
+          comments_count: number | null
+          content: string
+          created_at: string | null
+          id: string
+          likes_users: Json | null
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          comments_count?: number | null
+          content: string
+          created_at?: string | null
+          id?: string
+          likes_users?: Json | null
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          comments_count?: number | null
+          content?: string
+          created_at?: string | null
+          id?: string
+          likes_users?: Json | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_posts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_categories: {
         Row: {
           created_at: string
@@ -73,56 +150,6 @@ export type Database = {
           type?: string | null
         }
         Relationships: []
-      }
-      exams: {
-        Row: {
-          category_id: string | null
-          created_at: string | null
-          description: string | null
-          id: string
-          is_published: boolean | null
-          passing_score: number | null
-          questions: Json
-          slug: string
-          time_limit: number
-          title: string
-          updated_at: string | null
-        }
-        Insert: {
-          category_id?: string | null
-          created_at?: string | null
-          description?: string | null
-          id?: string
-          is_published?: boolean | null
-          passing_score?: number | null
-          questions?: Json
-          slug: string
-          time_limit?: number
-          title: string
-          updated_at?: string | null
-        }
-        Update: {
-          category_id?: string | null
-          created_at?: string | null
-          description?: string | null
-          id?: string
-          is_published?: boolean | null
-          passing_score?: number | null
-          questions?: Json
-          slug?: string
-          time_limit?: number
-          title?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "exams_category_id_fkey"
-            columns: ["category_id"]
-            isOneToOne: false
-            referencedRelation: "course_categories"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       expressions: {
         Row: {
@@ -167,11 +194,13 @@ export type Database = {
           formation: string | null
           formation_furigana: string | null
           formation_romaji: string | null
+          grammar_family: string | null
           id: string
           jlpt_level: string | null
           meaning: string
           notes: string | null
           order_number: number | null
+          related_grammar: string[] | null
           slug: string
           title: string
         }
@@ -181,11 +210,13 @@ export type Database = {
           formation?: string | null
           formation_furigana?: string | null
           formation_romaji?: string | null
+          grammar_family?: string | null
           id?: string
           jlpt_level?: string | null
           meaning: string
           notes?: string | null
           order_number?: number | null
+          related_grammar?: string[] | null
           slug: string
           title: string
         }
@@ -195,11 +226,13 @@ export type Database = {
           formation?: string | null
           formation_furigana?: string | null
           formation_romaji?: string | null
+          grammar_family?: string | null
           id?: string
           jlpt_level?: string | null
           meaning?: string
           notes?: string | null
           order_number?: number | null
+          related_grammar?: string[] | null
           slug?: string
           title?: string
         }
@@ -439,6 +472,7 @@ export type Database = {
           radicals: Json | null
           romaji: string | null
           show_in_flashcard: boolean | null
+          slug: string | null
           stroke_order_svg: string | null
         }
         Insert: {
@@ -457,6 +491,7 @@ export type Database = {
           radicals?: Json | null
           romaji?: string | null
           show_in_flashcard?: boolean | null
+          slug?: string | null
           stroke_order_svg?: string | null
         }
         Update: {
@@ -475,6 +510,7 @@ export type Database = {
           radicals?: Json | null
           romaji?: string | null
           show_in_flashcard?: boolean | null
+          slug?: string | null
           stroke_order_svg?: string | null
         }
         Relationships: []
@@ -565,71 +601,63 @@ export type Database = {
           },
         ]
       }
-      listening_material: {
+      notifications: {
         Row: {
-          audio_url: string | null
-          audit_log: Json | null
-          body: string
-          confidence: Json | null
-          created_at: string | null
-          difficulty: string | null
-          estimated_minutes: number | null
-          generation_context: Json | null
-          hiragana: string | null
+          created_at: string
           id: string
-          image_url: string | null
-          jlpt_level: string | null
-          seo: Json | null
-          slug: string
-          status: string | null
+          message: string
+          post_id: string | null
+          read: boolean
+          sender_id: string | null
           title: string
-          translation: string | null
-          video_url: string | null
-          warnings: Json | null
+          type: string
+          user_id: string
         }
         Insert: {
-          audio_url?: string | null
-          audit_log?: Json | null
-          body: string
-          confidence?: Json | null
-          created_at?: string | null
-          difficulty?: string | null
-          estimated_minutes?: number | null
-          generation_context?: Json | null
-          hiragana?: string | null
+          created_at?: string
           id?: string
-          image_url?: string | null
-          jlpt_level?: string | null
-          seo?: Json | null
-          slug: string
-          status?: string | null
+          message: string
+          post_id?: string | null
+          read?: boolean
+          sender_id?: string | null
           title: string
-          translation?: string | null
-          video_url?: string | null
-          warnings?: Json | null
+          type: string
+          user_id: string
         }
         Update: {
-          audio_url?: string | null
-          audit_log?: Json | null
-          body?: string
-          confidence?: Json | null
-          created_at?: string | null
-          difficulty?: string | null
-          estimated_minutes?: number | null
-          generation_context?: Json | null
-          hiragana?: string | null
+          created_at?: string
           id?: string
-          image_url?: string | null
-          jlpt_level?: string | null
-          seo?: Json | null
-          slug?: string
-          status?: string | null
+          message?: string
+          post_id?: string | null
+          read?: boolean
+          sender_id?: string | null
           title?: string
-          translation?: string | null
-          video_url?: string | null
-          warnings?: Json | null
+          type?: string
+          user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "notifications_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -709,93 +737,33 @@ export type Database = {
         }
         Relationships: []
       }
-      reading_material: {
-        Row: {
-          audio_url: string | null
-          audit_log: Json | null
-          body: string
-          confidence: Json | null
-          created_at: string
-          difficulty: string | null
-          estimated_minutes: number | null
-          generation_context: Json | null
-          hiragana: string | null
-          id: string
-          image_url: string | null
-          jlpt_level: string | null
-          seo: Json | null
-          slug: string
-          status: string | null
-          title: string
-          translation: string | null
-          video_url: string | null
-          warnings: Json | null
-        }
-        Insert: {
-          audio_url?: string | null
-          audit_log?: Json | null
-          body: string
-          confidence?: Json | null
-          created_at?: string
-          difficulty?: string | null
-          estimated_minutes?: number | null
-          generation_context?: Json | null
-          hiragana?: string | null
-          id?: string
-          image_url?: string | null
-          jlpt_level?: string | null
-          seo?: Json | null
-          slug: string
-          status?: string | null
-          title: string
-          translation?: string | null
-          video_url?: string | null
-          warnings?: Json | null
-        }
-        Update: {
-          audio_url?: string | null
-          audit_log?: Json | null
-          body?: string
-          confidence?: Json | null
-          created_at?: string
-          difficulty?: string | null
-          estimated_minutes?: number | null
-          generation_context?: Json | null
-          hiragana?: string | null
-          id?: string
-          image_url?: string | null
-          jlpt_level?: string | null
-          seo?: Json | null
-          slug?: string
-          status?: string | null
-          title?: string
-          translation?: string | null
-          video_url?: string | null
-          warnings?: Json | null
-        }
-        Relationships: []
-      }
       sentences: {
         Row: {
           created_at: string | null
           english: string | null
+          furigana: string | null
           id: string
           indonesia: string | null
           japanese: string
+          jlpt_level: string | null
         }
         Insert: {
           created_at?: string | null
           english?: string | null
+          furigana?: string | null
           id: string
           indonesia?: string | null
           japanese: string
+          jlpt_level?: string | null
         }
         Update: {
           created_at?: string | null
           english?: string | null
+          furigana?: string | null
           id?: string
           indonesia?: string | null
           japanese?: string
+          jlpt_level?: string | null
         }
         Relationships: []
       }
@@ -1126,6 +1094,8 @@ export type Database = {
     Functions: {
       clean_formation: { Args: { val: string }; Returns: string }
       clean_seo_intro: { Args: { val: string }; Returns: string }
+      show_limit: { Args: never; Returns: number }
+      show_trgm: { Args: { "": string }; Returns: string[] }
       sync_user_progress:
         | {
             Args: {

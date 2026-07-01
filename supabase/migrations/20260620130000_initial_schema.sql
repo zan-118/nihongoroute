@@ -163,6 +163,7 @@ CREATE TABLE public.sentences (
     english text,
     indonesia text,
     jlpt_level text,
+    furigana text,
     created_at timestamptz DEFAULT now()
 );
 
