@@ -69,13 +69,7 @@ desktop.ini
 
 
 
-# Migration & Scratch Scripts
-!scripts/
-scripts/*
-!scripts/check-migrations.mjs
-!scripts/validate-jlpt-import.mjs
-!scripts/generate-jlpt-moji-goi.mjs
-!scripts/generate-jlpt-bunpou.mjs
+
 
 data/
 *.ndjson
@@ -92,3 +86,6 @@ vocab_*.json
 scratch/
 
 data_soal_exam/
+
+#log
+tts_failures.log

@@ -53,6 +53,7 @@ Seluruh dokumentasi teknis sistem telah dipecah secara modular berdasarkan fungs
 * 🎨 **[Visualisasi Arsitektur](docs/visualisasi-arsitektur.md)**: Diagram visual alur data, sync, runtime, dan studio.
 * 📂 **[Struktur Folder Proyek](docs/struktur-folder-proyek.md)**: Pemetaan folder dan file di repositori NihongoRoute.
 * 📐 **[Cetak Biru Ujian JLPT](docs/cetak-biru-ujian-jlpt.md)**: Arsitektur lengkap dan cetak biru implementasi 7-fase bank soal Supabase.
+* 🚀 **[Panduan Fitur Aplikasi](docs/fitur-aplikasi.md)**: Rincian fungsionalitas dan kapabilitas pembelajaran bagi pengguna.
 * 🧪 **[Arsitektur Pengujian](docs/arsitektur-pengujian.md)**: Uji unit Vitest dan pengujian Playwright E2E.
 * 🛠️ **[Panduan Operasional & Runbook](docs/operasional-dan-runbook.md)**: Standar deploy, rollback, backup & restore, penanganan insiden, dan skrip utilitas.
 

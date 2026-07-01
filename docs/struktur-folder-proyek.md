@@ -9,17 +9,11 @@ Dokumen ini memetakan tata letak repositori NihongoRoute secara lengkap untuk me
 
 ```text
 nihongoroute/
-├── .agents/                    # Kumpulan agen AI lokal
 ├── .antigravitycli/             # Metadata status perkakas pembantu
-├── .claude/                     # Metadata asisten Claude
-├── .continue/                   # Konfigurasi plugin Continue
 ├── .github/                     # Alur kerja integrasi (workflow quality CI)
-├── .git/                        # Metadata repositori Git
 ├── .husky/                      # Pengait Git hooks (Husky)
-├── .kiro/                       # Metadata status asisten Kiro
 ├── docs/                        # Dokumentasi teknis modular (Bahasa Indonesia)
 ├── e2e/                         # Pengujian ujung-ke-ujung (E2E) Playwright
-├── node_modules/                # Pustaka modul dependensi NPM
 ├── public/                      # Aset statis publik (font, manifest, opengraph)
 ├── sanity/                      # Definisi skema dan input kustom Sanity Studio
 ├── scripts/                     # Skrip pemeliharaan, generator ujian, dan VOICEVOX
@@ -27,7 +21,6 @@ nihongoroute/
 ├── supabase/                    # Berkas migrasi database relasional
 ├── __tests__/                   # Pengujian unit dan integrasi (Vitest)
 ├── .env.example                 # Contoh kontrak variabel lingkungan
-├── .env.local                   # Berkas konfigurasi lokal (jangan di-commit)
 ├── .gitignore                   # Aturan pengabaian berkas Git
 ├── ARCHITECTURE.md              # Dokumentasi arsitektur sistem utama
 ├── README.md                    # Ikhtisar proyek dan petunjuk instalasi

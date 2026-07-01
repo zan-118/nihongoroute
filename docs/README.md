@@ -36,10 +36,13 @@ Selamat datang di pusat dokumentasi teknis NihongoRoute. Seluruh dokumentasi di 
 12. **[Cetak Biru Ujian JLPT](file:///c:/nihongoroute/docs/cetak-biru-ujian-jlpt.md)**
     * Cetak biru implementasi pemindahan bank soal Supabase dan scoring server-side.
 
-13. **[Arsitektur Pengujian (Testing)](file:///c:/nihongoroute/docs/arsitektur-pengujian.md)**
+13. **[Panduan Fitur Aplikasi](file:///c:/nihongoroute/docs/fitur-aplikasi.md)**
+    * Rincian fungsionalitas dan kapabilitas pembelajaran pengguna NihongoRoute.
+
+14. **[Arsitektur Pengujian (Testing)](file:///c:/nihongoroute/docs/arsitektur-pengujian.md)**
     * Cakupan unit test Vitest (`__tests__/`) untuk menguji stores/hooks/lib dan pengujian ujung-ke-ujung (E2E) Playwright (`e2e/`).
 
-14. **[Panduan Operasional & Runbook](file:///c:/nihongoroute/docs/operasional-dan-runbook.md)**
+15. **[Panduan Operasional & Runbook](file:///c:/nihongoroute/docs/operasional-dan-runbook.md)**
     * Kesiapan enterprise, sitemap, manifest, standar deployment & rollback, prosedur backup & restore, penanganan insiden, dan manual pengerjaan skrip utilitas.
 
 ---
