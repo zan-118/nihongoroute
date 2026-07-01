@@ -11,15 +11,15 @@ Server Actions adalah modul asinkron Next.js yang mengeksekusi logika di sisi se
 * **`vocab.actions.ts` & `kanji.actions.ts` & `grammar.actions.ts`**:
   * Menggunakan klien Supabase statis (`createStaticClient`) untuk melayani pembacaan data publik berkecepatan tinggi tanpa pemindaian cookie sesi.
   * Mendukung pemuatan data terpaginasi (paginated), pencarian string teks penuh, dan penyaringan tingkat kesulitan JLPT.
-* **`library.detail.actions.ts`**:
-  * Menyelesaikan detail item pustaka secara individual (kanji, kosakata, tata bahasa, materi membaca, mendengarkan, pelajaran, dan ujian).
+* **`library.actions.ts` & Domain Detail Actions (`vocab`, `kanji`, `grammar`, `reading`, `listening`, `lessons`, `exams`)**:
+  * Menyelesaikan detail item pustaka secara individual per domain (telah dipecah dari berkas lama `library.detail.actions.ts` demi mematuhi Single Responsibility Principle).
   * Bertanggung jawab melakukan hidrasi data antar-platform. Contoh: memuat data kosakata, lalu mencari daftar materi membaca Sanity terkait yang memuat kata tersebut di dalam teksnya menggunakan GROQ query.
 * **`lessons.actions.ts`**:
   * Menggabungkan data kategori kursus dari Supabase dengan susunan materi pelajaran Sanity CMS.
 * **`exams.actions.ts`**:
   * Memproses detail mock exam dari Sanity atau Supabase.
-* **`library.counts.actions.ts`**:
-  * Menghitung total entri pustaka lintas sumber: menghitung jumlah kosakata/kanji/tata bahasa di database Supabase, serta membaca total dokumen membaca/mendengarkan/simulasi ujian yang diterbitkan di Sanity CMS secara real-time.
+* **`library-counts.actions.ts`**:
+  * Menghitung total entri pustaka lintas sumber secara efisien (nama berkas telah diubah ke kebab-case). Menghitung jumlah kosakata/kanji/tata bahasa di database Supabase, serta membaca total dokumen membaca/mendengarkan/simulasi ujian yang diterbitkan di Sanity CMS secara real-time.
 * **`jlpt-exams.actions.ts`**:
   * Mengelola state transaksional sesi ujian JLPT: memulai sesi ujian (`startJlptMockSession`), menyimpan jawaban berkala pengguna (`saveJlptMockSessionAnswers`), dan mengirimkan hasil akhir ujian (`submitJlptMockSession`) ke database Supabase.
 * **`tools-integration.actions.ts`**:

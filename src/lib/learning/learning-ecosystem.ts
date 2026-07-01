@@ -1,5 +1,5 @@
-export * from "./learning-events";
-import { LearningEvent } from "./learning-events";
+export * from "@/lib/learning-events";
+import { LearningEvent } from "@/lib/learning-events";
 export interface EcosystemRecommendation {
   id: string;
   title: string;

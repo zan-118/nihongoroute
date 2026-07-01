@@ -45,5 +45,8 @@ Selamat datang di pusat dokumentasi teknis NihongoRoute. Seluruh dokumentasi di 
 15. **[Panduan Operasional & Runbook](file:///c:/nihongoroute/docs/operasional-dan-runbook.md)**
     * Kesiapan enterprise, sitemap, manifest, standar deployment & rollback, prosedur backup & restore, penanganan insiden, dan manual pengerjaan skrip utilitas.
 
+16. **[Panduan Pengelolaan Konten & Otomatisasi Skrip](file:///c:/nihongoroute/docs/panduan-pengelolaan-konten.md)**
+    * Pengisian konten Sanity Studio, otomatisasi skrip seeding Supabase, prasyarat VOICEVOX audio generator, dan skrip validasi impor JLPT.
+
 ---
 📝 **Catatan Pengembang**: Saat melakukan modifikasi pada arsitektur sistem, peta perutean, manajemen status, atau skema basis data, harap perbarui juga dokumen modular terkait agar tetap sinkron dengan keadaan kode sumber teraktual.

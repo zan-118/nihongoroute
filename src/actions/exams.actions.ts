@@ -11,7 +11,8 @@
 // ======================
 import { createStaticClient } from "@/lib/supabase/server";
 import { sanityClient, sanityPublicFetchOptions } from "@/lib/sanity.client";
-import { getSanityLessonsByCategory } from "@/lib/queries";
+import { getSanityLessonsByCategory, getSanityExamBySlug } from "@/lib/queries";
+import { LibraryItem } from "@/types/library";
 import {
   getSupabaseExamTemplateBySlug,
   getSupabaseExamTemplatesList,
@@ -286,6 +287,18 @@ export async function getExamByIdOrSlug(idOrSlug: string): Promise<ExamData | nu
     };
   } catch (error) {
     console.error("Gagal mengambil detail simulasi ujian dari Sanity:", error);
+    return null;
+  }
+}
+
+/**
+ * Mengambil detail satu simulasi ujian berdasarkan slug.
+ */
+export async function getLibraryExamDetail(slug: string): Promise<LibraryItem | null> {
+  try {
+    return (await getSanityExamBySlug(slug)) as LibraryItem | null;
+  } catch (error) {
+    console.error("Gagal mengambil detail ujian:", error);
     return null;
   }
 }

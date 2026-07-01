@@ -15,7 +15,7 @@ import { Card } from "@/components/ui/card";
 // Komponen Pendukung
 import { LibraryCategoryCard } from "@/components/features/library/LibraryCategoryCard";
 import { LibraryServerStatus } from "@/components/features/library/LibraryServerStatus";
-import { getLibraryCounts } from "@/actions/library.counts.actions";
+import { getLibraryCounts } from "@/actions/library-counts.actions";
 import {
   breadcrumbJsonLd,
   createPageMetadata,

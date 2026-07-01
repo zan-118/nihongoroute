@@ -1,5 +1,5 @@
 /**
- * @file library.counts.actions.ts
+ * @file library-counts.actions.ts
  * @description Server Actions untuk mengambil jumlah item aktual dari seluruh kategori pustaka.
  * Mengambil data leksikal (vocab, kanji, grammar) dari Supabase dan konten editorial
  * (reading, listening, exams) dari Sanity CMS secara paralel.

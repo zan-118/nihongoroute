@@ -10,7 +10,8 @@
 // IMPORTS
 // ======================
 import { sanityClient, sanityPublicFetchOptions } from "@/lib/sanity.client";
-import { PaginatedReadingResponse } from "@/types/library";
+import { PaginatedReadingResponse, LibraryItem } from "@/types/library";
+import { getSanityReadingBySlug } from "@/lib/queries";
 
 // ======================
 // TYPES
@@ -90,5 +91,24 @@ export async function getPaginatedReading(
   } catch (error) {
     console.error("Gagal mengambil data paginasi bacaan dari Sanity:", error);
     return { data: [], total: 0 };
+  }
+}
+
+/**
+ * Mengambil detail satu materi membaca berdasarkan slug.
+ */
+export async function getLibraryReadingDetail(slug: string): Promise<LibraryItem | null> {
+  try {
+    const data = (await getSanityReadingBySlug(slug)) as LibraryItem | null;
+    if (!data) return null;
+
+    data.audioUrl = data.audio_url;
+    data.imageUrl = data.image_url;
+    data.videoUrl = data.video_url;
+
+    return data;
+  } catch (error) {
+    console.error("Gagal mengambil detail bacaan:", error);
+    return null;
   }
 }

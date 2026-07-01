@@ -6,7 +6,7 @@
 // ==========================================
 // IMPORT & DEPENDENSI
 // ==========================================
-import { slugify } from "./utils";
+import { slugify } from "@/lib/utils";
 
 // ==========================================
 // DAFTAR KONSTANTA RUTE (ROUTES)

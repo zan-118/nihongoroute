@@ -89,7 +89,7 @@ export async function POST(req: Request) {
   const corsHeaders = getCorsHeaders(req);
   
   try {
-    const { text } = await req.json();
+    const { text, mode = "normal" } = await req.json();
 
     if (!text) {
       return NextResponse.json({ hiragana: "" }, { headers: corsHeaders });
@@ -98,7 +98,7 @@ export async function POST(req: Request) {
     const engine = await getKuroshiro();
     const result = await engine.convert(text, {
       to: "hiragana",
-      mode: "normal"
+      mode: mode as "normal" | "furigana" | "okurigana" | "roma"
     });
 
     return NextResponse.json({ hiragana: result }, { headers: corsHeaders });

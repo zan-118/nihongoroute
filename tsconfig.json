@@ -19,7 +19,16 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/lib/*": [
+        "./src/lib/*",
+        "./src/lib/audio/*",
+        "./src/lib/japanese/*",
+        "./src/lib/gamification/*",
+        "./src/lib/learning/*",
+        "./src/lib/tools/*",
+        "./src/lib/core/*"
+      ]
     }
   },
   "include": [

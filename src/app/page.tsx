@@ -32,6 +32,16 @@ const FeatureGrid = dynamic(
   }
 );
 
+const InteractivePlayground = dynamic(
+  () => import("@/components/features/landing/InteractivePlayground").then((mod) => mod.InteractivePlayground),
+  {
+    loading: () => (
+      <div className="min-h-[300px] animate-pulse bg-muted/20 rounded-[34px] w-full border border-border/40" />
+    ),
+    ssr: true,
+  }
+);
+
 const TrustBanner = dynamic(
   () => import("@/components/features/landing/TrustBanner").then((mod) => mod.TrustBanner),
   {
@@ -94,6 +104,9 @@ export default function LandingPage() {
       <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-10 md:pt-14 pb-14">
         {/* SEKSI HERO UTAMA */}
         <Hero />
+
+        {/* PLAYGROUND INTERAKTIF KONVERSI FURIGANA */}
+        <InteractivePlayground />
 
         {/* KISI FITUR UNGGULAN */}
         <FeatureGrid />

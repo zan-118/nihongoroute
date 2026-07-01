@@ -13,7 +13,7 @@ import Link from "next/link";
 import { m, Variants } from "framer-motion";
 import { ArrowRight, BookOpen, GraduationCap } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { ROUTES } from "../../../lib/routes";
+import { ROUTES } from "@/lib/routes";
 
 // ======================
 // ANTARMUKA / TIPE DATA

@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * @file TrustBanner.tsx
  * @description Komponen spanduk kepercayaan (Trust Banner) untuk Landing Page NihongoRoute.
@@ -13,6 +15,7 @@
 // ==========================================
 import React from "react";
 import Link from "next/link";
+import { m } from "framer-motion";
 import { 
   ShieldCheck, 
   ArrowRight, 
@@ -26,8 +29,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 // ==========================================
-// KOMPONEN UTAMA
-// ==========================================
 /**
  * Komponen TrustBanner
  * Menyajikan pilar kepercayaan NihongoRoute kepada calon pengguna.
@@ -35,12 +36,12 @@ import { Badge } from "@/components/ui/badge";
 export function TrustBanner() {
   return (
     <section className="w-full mb-[120px]">
-      <Card className="p-6 sm:p-10 md:p-12 rounded-2xl premium-surface relative overflow-hidden group transition-all duration-700 hover:border-primary/30">
+      <Card className="p-6 sm:p-10 md:p-12 rounded-[28px] sm:rounded-[34px] bg-card/10 backdrop-blur-xl border border-border/80 shadow-none relative overflow-hidden group transition-all duration-700 hover:border-primary/40 hover:shadow-[0_0_50px_rgba(var(--primary-rgb),0.1)] glass">
         
         {/* Latar Belakang Kilau Dekoratif menggunakan variabel warna CSS */}
         <div className="absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent pointer-events-none" />
         
-        <div className="flex flex-col xl:flex-row items-center justify-between gap-[55px] relative z-10">
+        <div className="flex flex-col xl:flex-row items-center justify-between gap-[55px] relative z-10 mb-8">
           
           {/* AREA KONTEN KIRI (TEXT & MANFAAT UTAMA) */}
           <div className="flex-1 space-y-6">
@@ -61,7 +62,7 @@ export function TrustBanner() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
               
               {/* MANFAAT 1: BEBAS BIAYA */}
-              <div className="p-5 bg-card/30 backdrop-blur-xl border border-border/80 rounded-2xl transition-all duration-300 hover:border-primary/30 hover:shadow-[0_0_20px_rgb(var(--primary-rgb)_/_0.06)] flex flex-col justify-between h-full hover:bg-card/50 glass group/item">
+              <div className="p-5 bg-card/30 backdrop-blur-xl border border-border/80 rounded-2xl transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.08)] flex flex-col justify-between h-full hover:bg-card/50 glass group/item">
                 <div className="space-y-3">
                   <div className="size-10 rounded-xl bg-primary/10 border border-primary/25 flex items-center justify-center text-primary transition-transform group-hover/item:scale-105">
                     <ShieldCheck size={20} className="drop-shadow-[0_0_5px_rgb(var(--primary-rgb)_/_0.3)]" />
@@ -74,7 +75,7 @@ export function TrustBanner() {
               </div>
  
               {/* MANFAAT 2: OFFLINE */}
-              <div className="p-5 bg-card/30 backdrop-blur-xl border border-border/80 rounded-2xl transition-all duration-300 hover:border-secondary/30 hover:shadow-[0_0_20px_rgb(var(--secondary-rgb)_/_0.06)] flex flex-col justify-between h-full hover:bg-card/50 glass group/item">
+              <div className="p-5 bg-card/30 backdrop-blur-xl border border-border/80 rounded-2xl transition-all duration-300 hover:border-secondary/40 hover:shadow-[0_0_20px_rgba(var(--secondary-rgb),0.08)] flex flex-col justify-between h-full hover:bg-card/50 glass group/item">
                 <div className="space-y-3">
                   <div className="size-10 rounded-xl bg-secondary/10 border border-secondary/25 flex items-center justify-center text-secondary transition-transform group-hover/item:scale-105">
                     <WifiOff size={20} className="drop-shadow-[0_0_5px_rgb(var(--secondary-rgb)_/_0.3)]" />
@@ -87,7 +88,7 @@ export function TrustBanner() {
               </div>
  
               {/* MANFAAT 3: OPEN SOURCE */}
-              <div className="p-5 bg-card/30 backdrop-blur-xl border border-border/80 rounded-2xl transition-all duration-300 hover:border-secondary/30 hover:shadow-[0_0_20px_rgb(var(--brand-violet-rgb)_/_0.12)] flex flex-col justify-between h-full hover:bg-card/50 glass group/item">
+              <div className="p-5 bg-card/30 backdrop-blur-xl border border-border/80 rounded-2xl transition-all duration-300 hover:border-secondary/40 hover:shadow-[0_0_20px_rgba(var(--brand-violet-rgb),0.12)] flex flex-col justify-between h-full hover:bg-card/50 glass group/item">
                 <div className="space-y-3">
                   <div className="size-10 rounded-xl bg-secondary/10 border border-secondary/25 flex items-center justify-center text-secondary transition-transform group-hover/item:scale-105">
                     <Heart size={20} className="drop-shadow-[0_0_5px_rgb(var(--brand-violet-rgb)_/_0.32)]" />
@@ -128,6 +129,38 @@ export function TrustBanner() {
             </Button>
           </div>
  
+        </div>
+
+        {/* Ticker Kontribusi Komunitas Horizontal */}
+        <div className="pt-6 border-t border-border/80 w-full overflow-hidden relative">
+          <m.div
+            animate={{ x: [0, -750] }}
+            transition={{
+              ease: "linear",
+              duration: 28,
+              repeat: Infinity
+            }}
+            className="flex gap-12 w-max"
+          >
+            {[
+              "👥 74+ Pembelajar Terdaftar",
+              "⭐ 100% Open Source di GitHub",
+              "💡 22,000+ Kosakata Terkontribusi",
+              "❤️ Didukung Donatur Trakteer & Saweria",
+              "🔒 Kebijakan Data Offline Aman",
+              "⚡ Didukung Komunitas Bahasa Jepang Indonesia",
+              "👥 74+ Pembelajar Terdaftar",
+              "⭐ 100% Open Source di GitHub",
+              "💡 22,000+ Kosakata Terkontribusi",
+              "❤️ Didukung Donatur Trakteer & Saweria",
+              "🔒 Kebijakan Data Offline Aman",
+              "⚡ Didukung Komunitas Bahasa Jepang Indonesia"
+            ].map((text, index) => (
+              <span key={index} className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                <Sparkles size={10} className="text-primary animate-pulse" /> {text}
+              </span>
+            ))}
+          </m.div>
         </div>
  
       </Card>

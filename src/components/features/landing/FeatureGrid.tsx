@@ -55,6 +55,50 @@ const itemVariants: Variants = {
 };
 
 // ==========================================
+function JlptQuizPlayground() {
+  const [selected, setSelected] = useState<string | null>(null);
+  const isCorrect = selected === "A";
+
+  return (
+    <div className="flex flex-col items-center gap-3">
+      <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Kuis Latihan Ujian N5</span>
+      <div className="w-full p-3 bg-background/80 border border-border rounded-xl text-center shadow-inner">
+        <span className="text-xs font-bold text-foreground">
+          私は昨日デパート <span className="text-primary font-bold">[ ? ]</span> 行きました。
+        </span>
+      </div>
+      <div className="grid grid-cols-2 gap-2 w-full">
+        {[
+          { key: "A", label: "に (ni)" },
+          { key: "B", label: "を (wo)" },
+          { key: "C", label: "が (ga)" },
+          { key: "D", label: "は (ha)" },
+        ].map((opt) => (
+          <button
+            key={opt.key}
+            type="button"
+            onClick={() => setSelected(opt.key)}
+            className={`py-1.5 px-3 rounded-lg border text-xs font-bold transition-all ${
+              selected === opt.key
+                ? opt.key === "A"
+                  ? "bg-success/15 border-success text-success shadow-[0_2px_8px_rgba(var(--success-rgb),0.2)]"
+                  : "bg-destructive/15 border-destructive text-destructive"
+                : "border-border bg-background/50 hover:border-foreground/20 text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+      {selected && (
+        <span className={`text-[10px] font-bold uppercase tracking-wider ${isCorrect ? "text-success animate-pulse" : "text-destructive"}`}>
+          {isCorrect ? "✓ Tepat! 'ni' menyatakan arah/tujuan." : "✗ Salah, coba lagi!"}
+        </span>
+      )}
+    </div>
+  );
+}
+
 // KOMPONEN UTAMA
 // ==========================================
 /**
@@ -377,6 +421,123 @@ export function FeatureGrid() {
                     <strong className="text-foreground">Tips Belajar:</strong> {learningSteps[activeStep].tip}
                   </p>
                 </div>
+
+                {/* Interactive Preview Box based on activeStep */}
+                <div className="p-4 bg-background/40 border border-border/80 rounded-2xl glass transition-all duration-500">
+                  {activeStep === 0 && (
+                    <div className="flex flex-col items-center gap-3">
+                      <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest">Latihan Menulis Kana "あ"</span>
+                      <div className="size-20 border-2 border-dashed border-primary/30 rounded-xl flex items-center justify-center relative font-japanese font-black text-4xl text-primary bg-background/60 shadow-inner">
+                        あ
+                        <m.svg
+                          className="absolute inset-0 size-full pointer-events-none"
+                          viewBox="0 0 100 100"
+                        >
+                          {/* Animated stroke guides */}
+                          <m.path
+                            d="M 25 35 L 75 35"
+                            fill="none"
+                            stroke="rgba(var(--primary-rgb), 0.55)"
+                            strokeWidth="3.5"
+                            strokeLinecap="round"
+                            initial={{ pathLength: 0 }}
+                            animate={{ pathLength: 1 }}
+                            transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 1 }}
+                          />
+                          <m.path
+                            d="M 50 15 L 50 85"
+                            fill="none"
+                            stroke="rgba(var(--primary-rgb), 0.55)"
+                            strokeWidth="3.5"
+                            strokeLinecap="round"
+                            initial={{ pathLength: 0 }}
+                            animate={{ pathLength: 1 }}
+                            transition={{ duration: 1.5, delay: 0.8, repeat: Infinity, repeatDelay: 1 }}
+                          />
+                          <m.path
+                            d="M 30 70 C 20 40, 80 40, 60 75 C 50 85, 35 75, 45 60"
+                            fill="none"
+                            stroke="rgba(var(--primary-rgb), 0.75)"
+                            strokeWidth="3.5"
+                            strokeLinecap="round"
+                            initial={{ pathLength: 0 }}
+                            animate={{ pathLength: 1 }}
+                            transition={{ duration: 2, delay: 1.6, repeat: Infinity, repeatDelay: 1 }}
+                          />
+                        </m.svg>
+                      </div>
+                      <span className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground">Animasi Petunjuk Arah Guratan</span>
+                    </div>
+                  )}
+
+                  {activeStep === 1 && (
+                    <div className="flex flex-col items-center gap-3">
+                      <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest">Mini Flashcard Kamus</span>
+                      <m.div
+                        whileHover={{ rotateY: 180 }}
+                        transition={{ duration: 0.6 }}
+                        style={{ transformStyle: "preserve-3d" }}
+                        className="w-44 h-24 relative cursor-pointer"
+                      >
+                        {/* Front */}
+                        <div 
+                          style={{ backfaceVisibility: "hidden" }}
+                          className="absolute inset-0 bg-card border border-border/80 rounded-xl flex flex-col items-center justify-center gap-1 shadow-sm"
+                        >
+                          <ruby className="text-xl font-bold font-japanese tracking-wide text-foreground">
+                            猫 <rt className="text-[0.55em] text-muted-foreground">ねこ</rt>
+                          </ruby>
+                          <span className="text-[8px] font-black text-primary uppercase tracking-widest">Sorot Untuk Arti</span>
+                        </div>
+                        {/* Back */}
+                        <div 
+                          style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+                          className="absolute inset-0 bg-primary/10 border border-primary/30 rounded-xl flex flex-col items-center justify-center gap-1 shadow-sm"
+                        >
+                          <span className="text-lg font-bold text-primary">Neko</span>
+                          <span className="text-[10px] font-bold text-muted-foreground">Arti: Kucing</span>
+                        </div>
+                      </m.div>
+                    </div>
+                  )}
+
+                  {activeStep === 2 && (
+                    <div className="flex flex-col items-center gap-2">
+                      <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest">Kurva Lupa (Forgetting Curve)</span>
+                      <div className="w-full h-20 flex items-center justify-center relative">
+                        <svg className="w-60 h-16" viewBox="0 0 200 60">
+                          <line x1="10" y1="10" x2="190" y2="10" stroke="rgba(255,255,255,0.06)" strokeDasharray="3" />
+                          <line x1="10" y1="30" x2="190" y2="30" stroke="rgba(255,255,255,0.06)" strokeDasharray="3" />
+                          <line x1="10" y1="50" x2="190" y2="50" stroke="rgba(255,255,255,0.06)" strokeDasharray="3" />
+                          <m.path
+                            d="M 10 10 C 50 15, 80 50, 190 52"
+                            fill="none"
+                            stroke="url(#curve-gradient)"
+                            strokeWidth="3.5"
+                            strokeLinecap="round"
+                            initial={{ pathLength: 0 }}
+                            animate={{ pathLength: 1 }}
+                            transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 1 }}
+                          />
+                          <circle cx="10" cy="10" r="3" fill="hsl(var(--primary))" />
+                          <circle cx="70" cy="22" r="3" fill="hsl(var(--secondary))" />
+                          <circle cx="130" cy="38" r="3" fill="hsl(var(--primary))" />
+                          <defs>
+                            <linearGradient id="curve-gradient" x1="0" y1="0" x2="1" y2="0">
+                              <stop offset="0%" stopColor="hsl(var(--primary))" />
+                              <stop offset="50%" stopColor="hsl(var(--secondary))" />
+                              <stop offset="100%" stopColor="hsl(var(--destructive))" />
+                            </linearGradient>
+                          </defs>
+                        </svg>
+                        <span className="absolute top-1 left-2 text-[8px] font-black text-success uppercase tracking-wider">100% Memori</span>
+                        <span className="absolute bottom-1 right-2 text-[8px] font-black text-destructive uppercase tracking-wider">Lupa</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {activeStep === 3 && <JlptQuizPlayground />}
+                </div>
               </div>
 
               <div className="mt-8 pt-6 border-t border-border/80 flex items-center justify-between relative z-10">
@@ -445,21 +606,34 @@ export function FeatureGrid() {
                     <span className="size-1.5 bg-success rounded-full" /> Streak Aktif!
                   </p>
                 </div>
-                {/* Grid Visual Hari Belajar */}
-                <div className="flex justify-between gap-1 mt-2">
-                  {["S", "S", "R", "K", "J", "S", "M"].map((day, idx) => (
-                    <div key={`day-${idx}`} className="flex flex-col items-center gap-1">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold ${
-                        idx < 5 
-                          ? "bg-success text-success-foreground shadow-[0_2px_6px_rgb(var(--success-rgb)_/_0.2)]" 
-                          : idx === 5 
-                          ? "bg-primary text-primary-foreground animate-pulse" 
-                          : "bg-muted text-muted-foreground border border-border"
-                      }`}>
-                        {idx < 5 ? "✓" : day}
-                      </div>
-                    </div>
-                  ))}
+                {/* Mini Heatmap Grid Kontribusi */}
+                <div className="mt-3 flex flex-col gap-1 w-full overflow-hidden">
+                  <div className="grid grid-cols-7 gap-1">
+                    {Array.from({ length: 28 }).map((_, idx) => {
+                      const colors = [
+                        "bg-muted border border-border/40",
+                        "bg-success/20 border border-success/30",
+                        "bg-success/50 border border-success/40",
+                        "bg-primary/45 border border-primary/30",
+                        "bg-secondary/45 border border-secondary/30",
+                        "bg-success/80 border border-success/60 shadow-[0_0_6px_rgba(var(--success-rgb),0.35)]",
+                      ];
+                      const isToday = idx === 27;
+                      const colorIdx = isToday ? 5 : (idx % 6);
+                      return (
+                        <div
+                          key={`cell-${idx}`}
+                          className={`h-3 rounded-sm transition-transform hover:scale-110 cursor-pointer ${colors[colorIdx]} ${
+                            isToday ? "animate-pulse" : ""
+                          }`}
+                        />
+                      );
+                    })}
+                  </div>
+                  <div className="flex justify-between text-[7px] font-black text-muted-foreground uppercase tracking-widest mt-1">
+                    <span>Mulai</span>
+                    <span>Hari Ini</span>
+                  </div>
                 </div>
               </Card>
 

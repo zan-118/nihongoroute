@@ -51,9 +51,9 @@ export default function manifest(): MetadataRoute.Manifest {
         label: "NihongoRoute Dashboard",
       },
       {
-        src: "/opengraph-image-mobile.jpeg",
-        sizes: "774x1600",
-        type: "image/jpeg",
+        src: "/opengraph-image-mobile.png",
+        sizes: "1440x3200",
+        type: "image/png",
         form_factor: "narrow",
         label: "NihongoRoute Mobile",
       },

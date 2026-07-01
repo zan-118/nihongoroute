@@ -11,6 +11,7 @@
 // ======================
 import { createStaticClient } from "@/lib/supabase/server";
 import { GrammarTable } from "@/types/database";
+import { LibraryItem } from "@/types/library";
 
 // ======================
 // SERVER ACTIONS
@@ -81,4 +82,72 @@ export async function getGrammarArticles(level: string = "") {
   const supabase = createStaticClient();
   const { data } = await getPaginatedGrammar(1, 1000, level);
   return data;
+}
+
+const isUUID = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
+
+/**
+ * Mengambil detail satu tata bahasa berdasarkan slug atau ID.
+ */
+export async function getLibraryGrammarDetail(slugOrId: string): Promise<LibraryItem | null> {
+  const supabase = createStaticClient();
+
+  try {
+    let data: LibraryItem | null = null;
+
+    // Coba slug terlebih dahulu, lalu kembali ke id sebagai fallback
+    const { data: bySlug, error: slugErr } = await supabase.from("grammar").select("*").eq("slug", slugOrId).single();
+    if (slugErr && slugErr.code !== "PGRST116") {
+      console.error(`[getLibraryGrammarDetail] Galat pengambilan slug grammar:`, slugErr.message, slugErr.code);
+    }
+    if (bySlug) {
+      data = bySlug;
+    } else if (isUUID(slugOrId)) {
+      const { data: byId, error: idErr } = await supabase.from("grammar").select("*").eq("id", slugOrId).single();
+      if (idErr && idErr.code !== "PGRST116") console.error(`[getLibraryGrammarDetail] Galat pengambilan ID grammar:`, idErr.message);
+      data = byId ?? null;
+    }
+
+    if (!data) return null;
+
+    data._id = data.id;
+
+    // Tangani contoh kalimat secara aman
+    if (typeof data.examples === "string") {
+      try {
+        data.examples = JSON.parse(data.examples);
+      } catch {
+        data.examples = [];
+      }
+    }
+    data.examples = Array.isArray(data.examples) ? data.examples : [];
+    
+    // Ambil daftar grammar terkait jika ada
+    if (Array.isArray(data.related_grammar) && data.related_grammar.length > 0) {
+      const { data: related } = await supabase
+        .from("grammar")
+        .select("id, title, slug, jlpt_level, meaning")
+        .in("slug", data.related_grammar);
+      data.relatedGrammarList = related || [];
+    } else {
+      data.relatedGrammarList = [];
+    }
+
+    // Ambil anggota keluarga grammar jika ada
+    if (data.grammar_family) {
+      const { data: family } = await supabase
+        .from("grammar")
+        .select("id, title, slug, jlpt_level, meaning")
+        .eq("grammar_family", data.grammar_family)
+        .neq("id", data.id); // Kecualikan item saat ini
+      data.familyGrammarList = family || [];
+    } else {
+      data.familyGrammarList = [];
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Gagal mengambil detail tata bahasa:", error);
+    return null;
+  }
 }

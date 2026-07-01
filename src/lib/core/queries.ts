@@ -6,7 +6,7 @@
 // ==========================================
 // IMPORT & DEPENDENSI
 // ==========================================
-import { sanityClient } from "./sanity.client";
+import { sanityClient } from "@/lib/sanity.client";
 
 // ==========================================
 // KUERI GROQ SANITY CMS

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 /**
- * @file enrich-sentences-furigana.mjs
+ * @file enrich-vocab-examples-furigana.mjs
  * @description Script utilitas produksi untuk mendeteksi dan menghasilkan furigana 
- * pada tabel `sentences` di Supabase menggunakan Kuroshiro + Kuromoji Analyzer secara lokal.
+ * pada array JSON `examples` di dalam tabel `vocab` di Supabase menggunakan Kuroshiro.
  * 
  * Penggunaan:
- *   node scripts/enrich-sentences-furigana.mjs --limit 100
+ *   node scripts/enrich-vocab-examples-furigana.mjs --limit 100
  */
 
 import fs from "node:fs";
@@ -22,14 +22,14 @@ const KuromojiAnalyzer = KuromojiAnalyzerLib.default || KuromojiAnalyzerLib;
 function printUsage() {
   console.log(
     [
-      "=== NIHONGOROUTE SENTENCES FURIGANA ENRICHER ===",
+      "=== NIHONGOROUTE VOCAB EXAMPLES FURIGANA ENRICHER ===",
       "Penggunaan:",
-      "  node scripts/enrich-sentences-furigana.mjs [options]",
+      "  node scripts/enrich-vocab-examples-furigana.mjs [options]",
       "",
       "Opsi:",
-      "  --limit <number>       Jumlah baris maksimal yang diproses. Default: 100",
+      "  --limit <number>       Jumlah baris kosakata maksimal yang diproses. Default: 100",
       "  --concurrency <N>      Jumlah koneksi paralel ke Supabase. Default: 20",
-      "  --all                  Proses semua baris yang belum memiliki furigana.",
+      "  --all                  Proses semua baris kosakata yang contohnya belum memiliki furigana.",
       "  --help, -h             Tampilkan bantuan ini.",
     ].join("\n")
   );
@@ -117,11 +117,11 @@ async function main() {
   let totalError = 0;
 
   while (true) {
-    console.log("\n🔍 [Database] Memuat kalimat yang belum memiliki furigana...");
+    console.log("\n🔍 [Database] Memuat kosakata dengan contoh kalimat tanpa furigana...");
     let query = supabase
-      .from("sentences")
-      .select("id, japanese")
-      .is("furigana", null);
+      .from("vocab")
+      .select("id, word, examples")
+      .filter("examples", "cs", '[{"furigana":""}]');
 
     if (!options.all) {
       const remainingLimit = options.limit - totalProcessed;
@@ -131,22 +131,21 @@ async function main() {
       query = query.limit(1000);
     }
 
-    const { data: sentences, error } = await query;
+    const { data: vocabList, error } = await query;
 
     if (error) {
-      console.error("❌ Gagal memuat data sentences:", error.message);
+      console.error("❌ Gagal memuat data vocab:", error.message);
       process.exit(1);
     }
 
-    if (!sentences || sentences.length === 0) {
-      console.log("✅ Tidak ada lagi kalimat yang perlu diproses.");
+    if (!vocabList || vocabList.length === 0) {
+      console.log("✅ Tidak ada lagi kosakata yang perlu diproses.");
       break;
     }
 
-    console.log(`📈 [Proses] Memulai konversi furigana untuk ${sentences.length} kalimat...`);
+    console.log(`📈 [Proses] Memulai konversi furigana untuk ${vocabList.length} kosakata...`);
 
-    // Proses secara batch dengan concurrency terkendali
-    const queue = [...sentences];
+    const queue = [...vocabList];
     let processedCount = 0;
     let successCount = 0;
     let errorCount = 0;
@@ -157,45 +156,62 @@ async function main() {
         if (!item) break;
 
         try {
-          // Konversi japanese ke hiragana
-          const furiganaText = await kuroshiro.convert(item.japanese, {
-            to: "hiragana",
-            mode: "normal",
-          });
+          let modified = false;
+          const updatedExamples = [];
 
-          // Simpan ke database
-          const { error: updateError } = await supabase
-            .from("sentences")
-            .update({ furigana: furiganaText })
-            .eq("id", item.id);
-
-          if (updateError) {
-            throw updateError;
+          if (Array.isArray(item.examples)) {
+            for (const ex of item.examples) {
+              const sentenceText = ex.jp || ex.japanese;
+              if (sentenceText && (!ex.furigana || ex.furigana === "")) {
+                // Konversi teks kalimat Jepang ke hiragana
+                const converted = await kuroshiro.convert(sentenceText, {
+                  to: "hiragana",
+                  mode: "normal",
+                });
+                updatedExamples.push({
+                  ...ex,
+                  furigana: converted,
+                });
+                modified = true;
+              } else {
+                updatedExamples.push(ex);
+              }
+            }
           }
 
-          successCount++;
+          if (modified) {
+            const { error: updateError } = await supabase
+              .from("vocab")
+              .update({ examples: updatedExamples })
+              .eq("id", item.id);
+
+            if (updateError) throw updateError;
+            successCount++;
+          } else {
+            successCount++; // Tidak perlu diubah, hitung sukses
+          }
         } catch (err) {
-          console.error(`❌ Gagal memproses ID ${item.id} ("${item.japanese}"):`, err.message);
+          console.error(`❌ Gagal memproses kosakata "${item.word}" (ID: ${item.id}):`, err.message);
           errorCount++;
         }
 
         processedCount++;
-        if (processedCount % 100 === 0 || processedCount === sentences.length) {
-          console.log(`   ⏳ Progres: ${processedCount}/${sentences.length} selesai...`);
+        if (processedCount % 100 === 0 || processedCount === vocabList.length) {
+          console.log(`   ⏳ Progres: ${processedCount}/${vocabList.length} selesai...`);
         }
       }
     };
 
     // Jalankan worker pool
     const workers = [];
-    const activeWorkers = Math.min(options.concurrency, sentences.length);
+    const activeWorkers = Math.min(options.concurrency, vocabList.length);
     for (let i = 0; i < activeWorkers; i++) {
       workers.push(worker());
     }
 
     await Promise.all(workers);
 
-    totalProcessed += sentences.length;
+    totalProcessed += vocabList.length;
     totalSuccess += successCount;
     totalError += errorCount;
 
@@ -206,7 +222,7 @@ async function main() {
     }
   }
 
-  console.log(`\n🎉 [Selesai] Total pemrosesan furigana:`);
+  console.log(`\n🎉 [Selesai] Total pemrosesan furigana contoh kalimat kosakata:`);
   console.log(`   └─ Sukses: ${totalSuccess}`);
   console.log(`   └─ Gagal: ${totalError}`);
   setTimeout(() => process.exit(0), 200);

@@ -87,5 +87,5 @@ scratch/
 
 data_soal_exam/
 
-#log
-tts_failures.log
+
+tts_failures*.log

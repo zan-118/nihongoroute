@@ -10,7 +10,7 @@
 // ======================
 import React, { useState } from "react";
 import { Loader2, Wand2 } from "lucide-react";
-import { useFurigana } from "@/components/ui/useFurigana";
+import { useFurigana } from "@/hooks/useFurigana";
 
 // ======================
 // ANTARMUKA / TIPE DATA

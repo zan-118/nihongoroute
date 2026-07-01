@@ -15,8 +15,7 @@ import { Progress } from "@/components/ui/progress";
 import { Timer, Zap, ShieldAlert, AlertTriangle, Target, BatteryMedium } from "lucide-react";
 import { CardData } from "./types";
 import * as wanakana from "wanakana";
-import { splitFurigana } from "@/components/ui/SmartJapanese";
-import { useMemo } from "react";
+import { SmartJapanese } from "@/components/ui/SmartJapanese";
 
 // ======================
 // ANTARMUKA & TIPE
@@ -55,15 +54,6 @@ export function SurvivalPlaying({
 }: SurvivalPlayingProps) {
   const isDangerTime = timeLeft <= 3;
   const isCriticalHp = hp === 1;
-
-  const parsedChunks = useMemo(() => {
-    if (!currentCard) return [];
-    const word = currentCard.word || "";
-    const furi = currentCard.furigana || "";
-    const isRomaji = furi && /^[a-zA-Z\s.,?!'-]+$/.test(furi);
-    const hiraReading = isRomaji ? wanakana.toHiragana(furi) : furi;
-    return splitFurigana(word, hiraReading);
-  }, [currentCard]);
 
   return (
     <div className="w-full flex flex-col h-full min-h-[60vh] max-w-3xl mx-auto pb-6 px-4 md:px-0 transition-colors duration-300">
@@ -141,18 +131,15 @@ export function SurvivalPlaying({
                <h2
                 className={`${(currentCard?.word?.length || 0) > 4 ? "text-4xl sm:text-6xl md:text-7xl lg:text-8xl" : "text-6xl sm:text-7xl md:text-7xl lg:text-8xl"} font-black text-foreground tracking-tight drop-shadow-sm font-japanese leading-none transition-all duration-200`}
                >
-                  {parsedChunks.map((chunk, i) => (
-                    chunk.furi ? (
-                      <ruby key={`${chunk.text}-${i}`}>
-                        {chunk.text}
-                        <rt className="text-[0.55em] text-primary/80 font-bold tracking-widest not-italic mb-1 md:mb-2">
-                          {chunk.furi}
-                        </rt>
-                      </ruby>
-                    ) : (
-                      <span key={`${chunk.text}-${i}`}>{chunk.text}</span>
-                    )
-                  ))}
+                 <SmartJapanese
+                   word={currentCard?.word || ""}
+                   furigana={
+                     currentCard?.furigana && /^[a-zA-Z\s.,?!'-]+$/.test(currentCard.furigana)
+                       ? wanakana.toHiragana(currentCard.furigana)
+                       : currentCard?.furigana || undefined
+                   }
+                   className="[&_rt]:text-primary/80"
+                 />
                </h2>
             </div>
           </Card>

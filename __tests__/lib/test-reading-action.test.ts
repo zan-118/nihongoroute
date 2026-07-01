@@ -18,7 +18,7 @@ if (hasEnv) {
   });
 }
 
-import { getLibraryItemBySlug } from "@/actions/library.detail.actions";
+import { getLibraryItemBySlug } from "@/actions/library.actions";
 import { getCheatsheetByIdOrSlug } from "@/actions/cheatsheets.actions";
 
 const isCI = process.env.GITHUB_ACTIONS === "true" || !hasEnv;

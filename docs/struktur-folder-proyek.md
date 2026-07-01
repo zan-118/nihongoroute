@@ -44,7 +44,7 @@ src/
 ├── app/           # Folder rute Next.js App Router (Layouts, Pages, API Routes)
 ├── components/    # Komponen visual (features, layout chrome, providers, UI primitives)
 ├── hooks/         # React hooks kustom lintas fitur (sync progress, cached audio)
-├── lib/           # Logika bisnis inti (Supabase/Sanity clients, SRS, gamifikasi, TTS)
+├── lib/           # Logika bisnis inti terdistribusi ke 10 subfolder (audio, constants, core, exams, gamification, japanese, learning, supabase, tools, utils)
 ├── proxy.ts       # Endpoint middleware proxy penyegaran cookie autentikasi
 ├── store/         # Penyimpanan status Zustand luring terintegrasi IndexedDB
 └── types/         # Definisi tipe TypeScript terpusat (database & domain)

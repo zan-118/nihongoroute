@@ -17,7 +17,6 @@ import QueryProvider from "@/components/providers/QueryProvider";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { LazyMotion, domAnimation } from "framer-motion";
-import Script from "next/script";
 import { JsonLd } from "@/components/seo/JsonLd";
 
 const notoSansJp = Noto_Sans_JP({
@@ -139,33 +138,17 @@ export default function RootLayout({
         <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <Script id="tts-cache-revocation" strategy="lazyOnload">
-            {`
-              (function() {
-                try {
-                  if (!('caches' in window)) return;
-                  caches.keys().then(function(names) {
-                    names.forEach(function(name) {
-                      if (name.startsWith('nihongoroute_tts_cache_v')) {
-                        caches.delete(name);
-                      }
-                    });
-                  });
-                } catch (_) {}
-              })();
-            `}
-          </Script>
           <LazyMotion features={domAnimation}>
             <QueryProvider>
               {children}
             </QueryProvider>
           </LazyMotion>
           <Toaster
-            theme="dark"
+            theme="system"
             position="top-center"
             offset={80} // Ofset untuk membersihkan Topbar (64px + 16px)
             toastOptions={{

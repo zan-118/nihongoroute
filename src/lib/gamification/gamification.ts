@@ -7,7 +7,7 @@
 // IMPORT & DEPENDENSI
 // ==========================================
 import { calculateLevel } from "./level";
-import { getLocalDateString } from "./utils";
+import { getLocalDateString } from "@/lib/utils";
 import { Inventory } from "@/store/types";
 
 // ==========================================

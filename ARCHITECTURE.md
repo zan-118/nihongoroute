@@ -139,5 +139,5 @@ Arsitektur offline-first diatur oleh hook `useSyncProgress` pada shell layout `P
 Saat melakukan modifikasi pada kode sumber:
 1. **Perubahan Skema**: Update file `supabase/migrations/` dengan nama berkas terurut timestamp dan jalankan typegen untuk memperbarui `src/types/supabase.generated.ts`. Selaraskan tipe data manual di `src/types/database.ts`.
 2. **Kueri Baru**: Selalu pastikan kueri SQL baru dilindungi oleh aturan RLS (Row Level Security) yang sesuai di database.
-3. **Penyelarasan Sanity**: Jika schema Sanity berubah, perbarui kueri GROQ di `src/lib/queries.ts`, Server Actions terkait, dan perender UI klien bersamaan.
-4. **Modifikasi Payload Sync**: Jika struktur data Zustand store berubah, perbarui logika deserializer di middleware persist, payload builder di `src/lib/cloud-sync-payload.ts`, dan argumen RPC `sync_user_progress` bersama-sama.
+3. **Penyelarasan Sanity**: Jika schema Sanity berubah, perbarui kueri GROQ di `src/lib/core/queries.ts`, Server Actions terkait, dan perender UI klien bersamaan.
+4. **Modifikasi Payload Sync**: Jika struktur data Zustand store berubah, perbarui logika deserializer di middleware persist, payload builder di `src/lib/core/cloud-sync-payload.ts`, dan argumen RPC `sync_user_progress` bersama-sama.
