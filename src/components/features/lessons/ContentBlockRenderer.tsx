@@ -15,6 +15,7 @@
 // ==========================================
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { AlertCircle, Info, BookOpen, AlertTriangle, Globe, Hourglass, BarChart } from "lucide-react";
 import { ContentBlock, ExampleSentence } from "@/types/database";
 import FuriganaDisplay from "@/components/ui/FuriganaDisplay";
@@ -30,7 +31,7 @@ import { KanjiSection, KanjiLessonItem } from "./KanjiSection";
 // PENDUKUNG DESAIN & MARKDOWN PARSER
 // ==========================================
 function parseInlineStyles(text: string): React.ReactNode[] {
-  const parts = text.split(/(\*\*.*?\*\*|`.*?`|\*.*?\*)/g);
+  const parts = text.split(/(\*\*.*?\*\*|`.*?`|\*.*?\*|\[.*?\]\(.*?\))/g);
   return parts.map((part, index) => {
     if (part.startsWith("**") && part.endsWith("**")) {
       return (
@@ -56,6 +57,36 @@ function parseInlineStyles(text: string): React.ReactNode[] {
           {part.slice(1, -1)}
         </em>
       );
+    }
+    if (part.startsWith("[") && part.includes("](")) {
+      const match = part.match(/\[(.*?)\]\((.*?)\)/);
+      if (match) {
+        const [, linkText, url] = match;
+        const isExternal = url.startsWith("http");
+        if (isExternal) {
+          return (
+            <a
+              key={index}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline font-bold transition-all"
+            >
+              {linkText}
+            </a>
+          );
+        } else {
+          return (
+            <Link
+              key={index}
+              href={url}
+              className="text-primary hover:underline font-bold transition-all"
+            >
+              {linkText}
+            </Link>
+          );
+        }
+      }
     }
     return part;
   });

@@ -351,6 +351,32 @@ async function queryEdgeTtsWithRetry(text, voiceName, retries = 3, initialDelay 
   }
 }
 
+function parseResetTime(message) {
+  let maxSeconds = 65; // default fallback 65s
+
+  // Pattern 1: Please retry in 54.859173362s
+  const retryMatch = message.match(/Please retry in (\d+(?:\.\d+)?)s/i);
+  if (retryMatch) {
+    const secs = parseFloat(retryMatch[1]);
+    if (secs > maxSeconds) {
+      maxSeconds = secs;
+    }
+  }
+
+  // Pattern 2: reset after 1m 35s or reset after 35s
+  const resetMatch = message.match(/reset after (?:(\d+)m\s*)?(\d+)s/i);
+  if (resetMatch) {
+    const minutes = resetMatch[1] ? parseInt(resetMatch[1], 10) : 0;
+    const seconds = parseInt(resetMatch[2], 10);
+    const totalSecs = minutes * 60 + seconds;
+    if (totalSecs > maxSeconds) {
+      maxSeconds = totalSecs;
+    }
+  }
+
+  return Math.ceil(maxSeconds * 1000) + 5000; // add 5s safety buffer
+}
+
 async function queryGeminiTtsWithRetry(text, geminiVoice, retries = 3, initialDelay = 2000) {
   const baseUrl = process.env.AI_BASE_URL || "http://localhost:20128/v1";
   const apiKey = process.env.AI_API_KEY;
@@ -386,9 +412,17 @@ async function queryGeminiTtsWithRetry(text, geminiVoice, retries = 3, initialDe
       return Buffer.from(arrayBuffer);
     } catch (err) {
       if (attempt === retries) throw err;
-      console.warn(`   ⚠️  [Gemini TTS Coba ${attempt}/${retries}] Gagal: ${err.message}. Mencoba kembali...`);
-      await sleep(delay);
-      delay *= 2;
+
+      const isQuotaError = err.message.includes("quota") || err.message.includes("Quota") || err.message.includes("exceeded");
+      if (isQuotaError) {
+        const waitMs = parseResetTime(err.message);
+        console.warn(`   ⚠️  [Gemini TTS Coba ${attempt}/${retries}] Batas kuota terlampaui. Menunggu ${Math.ceil(waitMs / 1000)} detik agar kuota di-reset...`);
+        await sleep(waitMs);
+      } else {
+        console.warn(`   ⚠️  [Gemini TTS Coba ${attempt}/${retries}] Gagal: ${err.message}. Mencoba kembali...`);
+        await sleep(delay);
+        delay *= 2;
+      }
     }
   }
 }
@@ -591,7 +625,7 @@ async function main() {
         await processTtsItem(supabase, item.text, item.voice, "medium");
         successCount += 1;
         consecutiveFailures = 0; // reset
-        await sleep(6500); // 6.5s rate limiting to stay safely under 10 RPM (Gemini Free Tier)
+        await sleep(8000); // 8s rate limiting to stay safely under 10 RPM (Gemini Free Tier)
       } catch (err) {
         console.error(`❌ Gagal mensintesis "${item.text}":`, err.message);
         logFailure(item.text, item.voice, err.message);
