@@ -33,6 +33,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { StickerScene } from "@/components/ui/StickerScene";
 import { IllustrationGallery } from "@/components/ui/IllustrationGallery";
+import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import AudioController from "@/components/features/reading/components/AudioController";
 import { useLineTTS } from "../hooks/useLineTTS";
 import { evaluateDictation, extractDictationText } from "@/lib/dictation";
@@ -149,7 +150,7 @@ export default function ListeningWorkspace({
 
   const handleCheckDictation = () => {
     if (!dictationActiveLine) return;
-    const evaluation = evaluateDictation(dictationAnswer, dictationActiveLine.cleanText);
+    const evaluation = evaluateDictation(dictationActiveLine.cleanText, dictationAnswer);
     setDictationAttempts((prev) => ({
       ...prev,
       [dictationActiveLine._key]: { isPassed: evaluation.isPassed, accuracy: evaluation.accuracy },
@@ -158,10 +159,15 @@ export default function ListeningWorkspace({
 
   const handleNextDictation = () => {
     if (dictationIndex < dictationLines.length - 1) {
+      const nextLine = dictationLines[dictationIndex + 1];
       setDictationIndex(dictationIndex + 1);
       setDictationAnswer("");
       setShowDictationAnswer(false);
-      seekToLine(dictationLines[dictationIndex + 1].startTime);
+      if (audioUrl) {
+        seekToLine(nextLine.startTime);
+      } else {
+        speakLine(nextLine, nextLine.index);
+      }
     }
   };
 
@@ -197,7 +203,7 @@ export default function ListeningWorkspace({
   };
 
   return (
-    <div className="w-full flex flex-col pb-28">
+    <div className="w-full flex flex-col pb-40 md:pb-28">
       {/* Tab Selector Workspace */}
       <div className="flex w-full p-1 rounded-2xl bg-muted/20 border border-border/80 mb-6 glass">
         <Button
@@ -208,7 +214,7 @@ export default function ListeningWorkspace({
             activeTab === "study" && "shadow-md shadow-primary/20 text-primary-foreground bg-primary"
           )}
         >
-          🎧 Belajar & Transkrip
+          🎧 <span className="hidden sm:inline">Belajar & </span>Transkrip
         </Button>
         <Button
           variant={activeTab === "dictation" ? "default" : "ghost"}
@@ -219,7 +225,7 @@ export default function ListeningWorkspace({
             activeTab === "dictation" && "shadow-md shadow-primary/20 text-primary-foreground bg-primary"
           )}
         >
-          ✍️ Latihan Dikte
+          ✍️ <span className="hidden sm:inline">Latihan </span>Dikte
         </Button>
         {quiz.length > 0 && (
           <Button
@@ -230,7 +236,7 @@ export default function ListeningWorkspace({
               activeTab === "quiz" && "shadow-md shadow-primary/20 text-primary-foreground bg-primary"
             )}
           >
-            📝 Kuis Pemahaman
+            📝 <span className="hidden sm:inline">Kuis </span>Pemahaman
           </Button>
         )}
       </div>
@@ -311,9 +317,9 @@ export default function ListeningWorkspace({
 
                         {/* Japanese text */}
                         {!isTranscriptHidden ? (
-                          <p className="text-base sm:text-lg font-japanese font-medium leading-relaxed text-foreground">
-                            {extractLineText(line.text)}
-                          </p>
+                          <div className="text-base sm:text-lg font-japanese font-medium leading-relaxed text-foreground">
+                            <SmartJapanese word={extractLineText(line.text)} furigana={line.furigana} />
+                          </div>
                         ) : (
                           <div className="h-4 w-32 rounded bg-muted/20 animate-pulse" />
                         )}
@@ -360,8 +366,8 @@ export default function ListeningWorkspace({
             className="w-full grid grid-cols-1 gap-6 md:grid-cols-[220px_1fr]"
           >
             {/* Left Side: Line list */}
-            <div className="max-h-[350px] overflow-y-auto rounded-2xl border border-border/80 bg-muted/5 p-2 custom-scrollbar">
-              <div className="flex flex-col gap-1.5">
+            <div className="max-h-[80px] md:max-h-[350px] overflow-x-auto md:overflow-y-auto rounded-2xl border border-border/80 bg-muted/5 p-2 custom-scrollbar flex flex-row md:flex-col gap-1.5 w-full">
+              <div className="flex flex-row md:flex-col gap-1.5 w-full shrink-0">
                 {dictationLines.map((line, index) => {
                   const attempt = dictationAttempts[line._key];
                   const isActive = index === dictationIndex;
@@ -373,7 +379,11 @@ export default function ListeningWorkspace({
                         setDictationIndex(index);
                         setDictationAnswer("");
                         setShowDictationAnswer(false);
-                        seekToLine(line.startTime);
+                        if (audioUrl) {
+                          seekToLine(line.startTime);
+                        } else {
+                          speakLine(line, line.index);
+                        }
                       }}
                       className={cn(
                         "flex items-center justify-between gap-2 rounded-xl border p-2.5 text-left transition-all text-xs font-black uppercase tracking-wider",
@@ -412,7 +422,13 @@ export default function ListeningWorkspace({
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => seekToLine(dictationActiveLine.startTime)}
+                    onClick={() => {
+                      if (audioUrl) {
+                        seekToLine(dictationActiveLine.startTime);
+                      } else {
+                        speakLine(dictationActiveLine, dictationActiveLine.index);
+                      }
+                    }}
                     className="rounded-xl h-8 text-[10px] font-bold"
                   >
                     <Volume2 size={12} className="mr-1" /> Putar Audio

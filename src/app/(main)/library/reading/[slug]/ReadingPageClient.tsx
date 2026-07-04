@@ -370,7 +370,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
             </div>
 
             {/* Sisi Kanan: Toggles Mode Membaca, Font Size, Kosakata, dan Terjemahan */}
-            <div className="flex flex-wrap items-center gap-2 justify-end">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 justify-center lg:justify-end w-full lg:w-auto">
               {/* Mode Select */}
               <div className="flex items-center gap-1 p-1 rounded-xl bg-muted/20 border border-border/80">
                 {modes.map((m) => (

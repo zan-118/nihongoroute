@@ -178,6 +178,17 @@ export default function AudioController({
       lastSeekRef.current = externalSeek;
       nativeAudioRef.current.currentTime = externalSeek;
       scheduleCurrentTime(externalSeek, true);
+
+      // Auto-play when seeking from karaoke / dictation
+      window.dispatchEvent(new CustomEvent("nihongoroute_pause_line_tts"));
+      nativeAudioRef.current.play()
+        .then(() => {
+          setIsPlaying(true);
+          setIsTTS(false);
+          setIsLoading(false);
+          setError(null);
+        })
+        .catch(() => {});
     }
   }, [externalSeek, scheduleCurrentTime]);
 
@@ -365,9 +376,13 @@ export default function AudioController({
       )}
 
       <div className={cn(
-        "bg-card/55 backdrop-blur-md border border-border/50 shadow-xl ring-1 ring-border",
-        compact && "p-1 bg-transparent border-none ring-0 shadow-none",
-        header  && "rounded-2xl px-4 py-3 gap-3"
+        "flex items-center transition-all duration-300",
+        compact 
+          ? "p-0.5 bg-transparent gap-2.5" 
+          : "bg-card/55 backdrop-blur-md border border-border/50 shadow-xl ring-1 ring-border w-full",
+        header 
+          ? "rounded-2xl px-4 py-3 gap-3" 
+          : !compact ? "rounded-[2rem] px-4 py-3 justify-between gap-4" : ""
       )}>
         {/* Play / Pause */}
         <Button

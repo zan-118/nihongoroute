@@ -192,7 +192,7 @@ export default function ReadingWorkspace({
               )}
             >
               {/* Furigana Text Display */}
-              <div className={cn("font-japanese tracking-wide select-text", FONT_SIZE_CLASSES[fontSize])}>
+              <div className={cn("font-japanese tracking-wide select-text break-all", FONT_SIZE_CLASSES[fontSize])}>
                 <FuriganaDisplay
                   text={para}
                   furigana={hiraganaParagraphs[idx] || ""}

@@ -13,6 +13,7 @@ export interface TranscriptLine {
   endTime: number; // Dalam detik
   speaker?: string;
   translation?: string;
+  furigana?: string;
 }
 
 export interface QuizOption {

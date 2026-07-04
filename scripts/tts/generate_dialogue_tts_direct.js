@@ -1,19 +1,12 @@
 #!/usr/bin/env node
 
 /**
- * @file generate_dialogue_tts.js
- * @description Script utilitas produksi (CommonJS) untuk melakukan batch-generation / pre-sintesis
- * seluruh teks percakapan (dialog) dan contoh kalimat tata bahasa (grammar examples)
- * dari lessons (Supabase & Sanity) dan listeningMaterial (Sanity).
- * 
- * Didukung penanganan error tangguh (AFK-Safe):
- * - Penangkap uncaughtException & unhandledRejection agar tidak crash.
- * - Retry otomatis dengan jeda berjenjang jika koneksi VOICEVOX atau Edge TTS drop.
- * - Pause protektif jika terjadi kegagalan beruntun.
- * - Pencatatan kalimat gagal ke tts_failures.log.
+ * @file generate_dialogue_tts_direct.js
+ * @description Script utilitas produksi untuk pre-sintesis percakapan (dialog)
+ * dan contoh kalimat pelajaran (Lessons) menggunakan Gemini API langsung (tanpa gateway).
  * 
  * Penggunaan:
- *   node scripts/tts/generate_dialogue_tts.js [--execute] [--limit 50]
+ *   node scripts/tts/generate_dialogue_tts_direct.js [--execute] [--limit 50] [--level N5] [--lesson 1]
  */
 
 const fs = require("node:fs");
@@ -23,37 +16,32 @@ const crypto = require("node:crypto");
 const { spawnSync } = require("node:child_process");
 const { createClient } = require("@supabase/supabase-js");
 const { createClient: createSanityClient } = require("@sanity/client");
-const { MsEdgeTTS } = require("msedge-tts");
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const FAILURE_LOG_PATH = path.resolve(process.cwd(), "tts_failures.log");
 
-// ==========================================
-// PENCEGAH CRASH GLOBAL (AFK-Safe)
-// ==========================================
+// Global error handlers
 process.on("unhandledRejection", (reason) => {
-  console.error("\n⚠️ [Global Unhandled Rejection] Terdeteksi (diabaikan):", reason);
+  console.error("\n⚠️ [Global Unhandled Rejection] Terdeteksi:", reason);
 });
 process.on("uncaughtException", (error) => {
-  console.error("\n⚠️ [Global Uncaught Exception] Terdeteksi (diabaikan):", error.message || error);
+  console.error("\n⚠️ [Global Uncaught Exception] Terdeteksi:", error.message || error);
 });
 
 function logFailure(text, voice, errorMsg) {
   const timestamp = new Date().toISOString();
   fs.appendFileSync(
     FAILURE_LOG_PATH,
-    `[${timestamp}] [Dialogue] Teks: "${text}" | Voice: ${voice} | Error: ${errorMsg}\n`,
+    `[${timestamp}] [Dialogue Direct] Teks: "${text}" | Voice: ${voice} | Error: ${errorMsg}\n`,
     "utf8"
   );
 }
 
-// ==========================================
-// VOICE RESOLUTION UTILITIES (Mirrors src/lib/tts.ts)
-// ==========================================
+// Voice mappings (Mirrors existing config)
 const FEMALE_KEYWORDS = [
   "女", "母", "姉", "妹", "奥", "彼女", "娘", "ちゃん", "chan",
   "先生",
-  "ゆき", "はna", "さき", "あおい", "みく", "ゆみ", "けいこ", "みさ",
+  "ゆき", "はna", "さき", "あおい", "みku", "ゆmi", "けいこ", "みsa",
   "Yuki", "Hana", "Saki", "Aoi", "Miku", "Yumi", "Keiko", "Misa",
 ];
 const MALE_KEYWORDS = [
@@ -75,7 +63,7 @@ const SPEAKER_MAP = {
   "sato": "sato", "佐藤": "sato", "さとう": "sato",
   "ayu": "ayu", "アユ": "ayu",
   "zundamon": "zundamon", "ずんだもん": "zundamon", "ズンダモン": "zundamon",
-  "ritsu": "ritsu", "リツ": "ritsu", "りつ": "ritsu",
+  "ritsu": "ritsu", "りつ": "ritsu",
   "budi": "budi", "ブディ": "budi",
   "dito": "dito", "ディト": "dito",
   "suzuki": "suzuki", "鈴木": "suzuki", "すずき": "suzuki",
@@ -144,76 +132,45 @@ function detectVoice(speaker, fallbackIndex = 0) {
   return allVoices[index % allVoices.length];
 }
 
-function getDeterministicVoiceForText(text) {
-  const cleanText = text.trim();
-  let hash = 0;
-  for (let i = 0; i < cleanText.length; i++) {
-    hash = cleanText.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const index = Math.abs(hash);
-  return allVoices[index % allVoices.length];
-}
-
-// Speaker IDs untuk VOICEVOX
-const VOICEVOX_SPEAKER_MAP = {
-  "indah": 2, "lara": 8, "siti": 10, "dewi": 14, "hayashi": 16,
-  "sato": 20, "ayu": 23, "zundamon": 3, "ritsu": 9,
-  "budi": 13, "dito": 11, "suzuki": 21, "tanaka": 52, "yamada": 53,
-  "kimura": 12, "andi": 51, "faisal": 94, "takahashi": 100, "kobayashi": 99,
-  "namonashi": 113, "ooba": 42,
-};
-
-const EDGE_VOICE_MAP = {
-  "indah": "ja-JP-NanamiNeural", "lara": "ja-JP-NanamiNeural", "siti": "ja-JP-NanamiNeural",
-  "dewi": "ja-JP-NanamiNeural", "hayashi": "ja-JP-NanamiNeural", "sato": "ja-JP-NanamiNeural",
-  "ayu": "ja-JP-NanamiNeural", "zundamon": "ja-JP-NanamiNeural", "ritsu": "ja-JP-NanamiNeural",
-  "budi": "ja-JP-KeitaNeural", "dito": "ja-JP-KeitaNeural", "suzuki": "ja-JP-KeitaNeural",
-  "tanaka": "ja-JP-KeitaNeural", "yamada": "ja-JP-KeitaNeural", "kimura": "ja-JP-KeitaNeural",
-  "andi": "ja-JP-KeitaNeural", "faisal": "ja-JP-KeitaNeural", "takahashi": "ja-JP-KeitaNeural",
-  "kobayashi": "ja-JP-KeitaNeural", "namonashi": "ja-JP-KeitaNeural", "ooba": "ja-JP-KeitaNeural",
-};
-
 const GEMINI_VOICE_MAP = {
   // Wanita
-  "indah": "Zephyr",       // default premium (Bright)
-  "lara": "Leda",         // young/cheerful (Youthful)
-  "siti": "Vindemiatrix", // gentle/clear (Gentle)
-  "dewi": "Laomedeia",    // energetic/cutesy (Upbeat)
-  "hayashi": "Gacrux",    // mature/academic (Mature)
-  "sato": "Sulafat",      // friendly/mature (Warm)
-  "ayu": "Erinome",       // cool/clear (Clear)
-  "zundamon": "Autonoe",  // mascot child/neutral (Bright/Youthful)
-  "ritsu": "Achernar",    // cool/neutral (Soft)
+  "indah": "Zephyr",
+  "lara": "Leda",
+  "siti": "Vindemiatrix",
+  "dewi": "Laomedeia",
+  "hayashi": "Gacrux",
+  "sato": "Sulafat",
+  "ayu": "Erinome",
+  "zundamon": "Autonoe",
+  "ritsu": "Achernar",
 
   // Pria
-  "budi": "Charon",       // default polite/formal (Informative)
-  "dito": "Alnilam",      // cool/deep (Firm)
-  "suzuki": "Iapetus",    // smart/young (Clear)
-  "tanaka": "Fenrir",     // energetic/rough (Excitable)
-  "yamada": "Achird",     // warm/casual (Friendly)
-  "kimura": "Algieba",    // polite/formal (Smooth)
-  "andi": "Orus",         // dramatic/heroic (Firm)
-  "faisal": "Puck",       // cool/youthful (Upbeat)
-  "takahashi": "Rasalgethi", // mature/deep (Informative)
-  "kobayashi": "Zubenelgenubi", // youthful (Casual)
-  "namonashi": "Algenib",  // middle-aged/rough (Gravelly)
-  "ooba": "Sadachbia",    // boy/child (Lively)
+  "budi": "Charon",
+  "dito": "Alnilam",
+  "suzuki": "Iapetus",
+  "tanaka": "Fenrir",
+  "yamada": "Achird",
+  "kimura": "Algieba",
+  "andi": "Orus",
+  "faisal": "Puck",
+  "takahashi": "Rasalgethi",
+  "kobayashi": "Zubenelgenubi",
+  "namonashi": "Algenib",
+  "ooba": "Sadachbia",
 };
 
 function printUsage() {
   console.log(
     [
-      "=== NIHONGOROUTE BATCH DIALOGUE/GRAMMAR TTS GENERATOR (AFK-SAFE) ===",
+      "=== NIHONGOROUTE BATCH LESSON DIALOGUE DIRECT TTS GENERATOR ===",
       "Penggunaan:",
-      "  node scripts/tts/generate_dialogue_tts.js [options]",
+      "  node scripts/tts/generate_dialogue_tts_direct.js [options]",
       "",
       "Opsi:",
       "  --execute          Jalankan pemrosesan nyata (Default: Dry Run saja).",
       "  --limit <num>      Batasi jumlah audio baru yang dibuat. Default: Unlimited (Semua)",
       "  --level <lvl>      Filter level JLPT (N5, N4, N3, N2, N1).",
       "  --lesson <num>     Filter berdasarkan nomor order lesson (contoh: 1).",
-      "  --listening <term> Filter berdasarkan kata kunci slug/title listening.",
-      "  --type <type>      Filter tipe konten (lesson / listening).",
       "  --force            Paksa proses ulang dan timpa audio meskipun sudah di-cache.",
       "  --help, -h         Tampilkan bantuan ini.",
     ].join("\n")
@@ -246,8 +203,6 @@ function parseArgs(args) {
     limit: Infinity,
     level: null,
     lessonNum: null,
-    listeningQuery: null,
-    type: null,
     force: false,
   };
 
@@ -277,16 +232,6 @@ function parseArgs(args) {
       index += 1;
       continue;
     }
-    if (arg === "--listening") {
-      options.listeningQuery = args[index + 1]?.trim();
-      index += 1;
-      continue;
-    }
-    if (arg === "--type") {
-      options.type = args[index + 1]?.trim().toLowerCase();
-      index += 1;
-      continue;
-    }
     if (arg === "--force") {
       options.force = true;
       continue;
@@ -296,17 +241,20 @@ function parseArgs(args) {
   return options;
 }
 
-function convertWavToMp3(wavBuffer) {
+function convertPcmToMp3(pcmBuffer, sampleRate = 24000) {
   const result = spawnSync(
     "ffmpeg",
     [
+      "-f", "s16le",
+      "-ar", String(sampleRate),
+      "-ac", "1",
       "-i", "pipe:0",
       "-f", "mp3",
       "-acodec", "libmp3lame",
       "-ab", "128k",
       "pipe:1"
     ],
-    { input: wavBuffer, maxBuffer: 15 * 1024 * 1024 }
+    { input: pcmBuffer, maxBuffer: 15 * 1024 * 1024 }
   );
 
   if (result.status !== 0) {
@@ -317,143 +265,205 @@ function convertWavToMp3(wavBuffer) {
   return result.stdout;
 }
 
-async function queryVoicevoxWithRetry(text, speakerId, retries = 3, initialDelay = 1500) {
-  let delay = initialDelay;
-  for (let attempt = 1; attempt <= retries; attempt += 1) {
-    try {
-      const host = process.env.VOICEVOX_URL || "http://127.0.0.1:50021";
-      const queryUrl = `${host}/audio_query?text=${encodeURIComponent(text)}&speaker=${speakerId}`;
-      const queryRes = await fetch(queryUrl, { method: "POST" });
-      if (!queryRes.ok) throw new Error(`Query VOICEVOX gagal: ${queryRes.statusText}`);
+function getGeminiApiKeys() {
+  const keys = [];
 
-      const queryJson = await queryRes.json();
-      const synthesisUrl = `${host}/synthesis?speaker=${speakerId}`;
-      const synthesisRes = await fetch(synthesisUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(queryJson),
-      });
-      if (!synthesisRes.ok) throw new Error(`Sintesis VOICEVOX gagal: ${synthesisRes.statusText}`);
+  if (process.env.GEMINI_API_KEY) {
+    keys.push(process.env.GEMINI_API_KEY.trim());
+  }
 
-      const arrayBuffer = await synthesisRes.arrayBuffer();
-      return Buffer.from(arrayBuffer);
-    } catch (err) {
-      if (attempt === retries) throw err;
-      console.warn(`   ⚠️  [VOICEVOX Coba ${attempt}/${retries}] Gagal: ${err.message}. Mencoba kembali...`);
-      await sleep(delay);
-      delay *= 2;
+  if (process.env.GEMINI_API_KEYS) {
+    const list = process.env.GEMINI_API_KEYS.split(",").map(k => k.trim()).filter(Boolean);
+    keys.push(...list);
+  }
+
+  for (const envKey in process.env) {
+    if (envKey.startsWith("GEMINI_API_KEY_")) {
+      const val = process.env[envKey]?.trim();
+      if (val) {
+        keys.push(val);
+      }
     }
   }
+
+  return Array.from(new Set(keys)).filter(Boolean);
 }
 
-async function queryEdgeTtsWithRetry(text, voiceName, retries = 3, initialDelay = 2000) {
-  let delay = initialDelay;
-  for (let attempt = 1; attempt <= retries; attempt += 1) {
-    try {
-      const tts = new MsEdgeTTS();
-      await tts.setMetadata(voiceName, "audio-128khz-128kbps-mono-mp3");
-      return await new Promise((resolve, reject) => {
-        const chunks = [];
-        let timer = setTimeout(() => {
-          reject(new Error("Timeout koneksi WebSockets Edge TTS (15 detik)."));
-        }, 15000);
-
-        const { audioStream } = tts.toStream(text);
-
-        audioStream.on("data", (data) => chunks.push(data));
-        audioStream.on("end", () => {
-          clearTimeout(timer);
-          resolve(Buffer.concat(chunks));
-        });
-        audioStream.on("error", (err) => {
-          clearTimeout(timer);
-          reject(err);
-        });
-      });
-    } catch (err) {
-      if (attempt === retries) throw err;
-      console.warn(`   ⚠️  [Edge TTS Coba ${attempt}/${retries}] Gagal: ${err.message}. Mencoba kembali...`);
-      await sleep(delay);
-      delay *= 2;
-    }
+function getGeminiModels() {
+  const models = [];
+  if (process.env.GEMINI_TTS_MODEL) {
+    models.push(process.env.GEMINI_TTS_MODEL.trim());
   }
+  if (process.env.GEMINI_TTS_MODELS) {
+    const list = process.env.GEMINI_TTS_MODELS.split(",").map(m => m.trim()).filter(Boolean);
+    models.push(...list);
+  }
+  if (models.length === 0) {
+    models.push(
+      "gemini-3.1-flash-tts-preview",
+      "gemini-2.5-flash-preview-tts",
+      "gemini-2.5-flash-lite-preview-tts",
+      "gemini-2.5-pro-preview-tts"
+    );
+  }
+  return Array.from(new Set(models)).filter(Boolean);
 }
 
-function parseResetTime(message) {
-  let maxSeconds = 65; // default fallback 65s
+let globalKeyIndex = 0;
+let globalModelIndex = 0;
 
-  // Pattern 1: Please retry in 54.859173362s
-  const retryMatch = message.match(/Please retry in (\d+(?:\.\d+)?)s/i);
-  if (retryMatch) {
-    const secs = parseFloat(retryMatch[1]);
-    if (secs > maxSeconds) {
-      maxSeconds = secs;
-    }
+async function queryGeminiTtsWithRetry(text, geminiVoice, retries = 5, initialDelay = 5000) {
+  const apiKeys = getGeminiApiKeys();
+  if (apiKeys.length === 0) {
+    throw new Error("GEMINI_API_KEY tidak ditemukan di environment.");
   }
 
-  // Pattern 2: reset after 1m 35s or reset after 35s
-  const resetMatch = message.match(/reset after (?:(\d+)m\s*)?(\d+)s/i);
-  if (resetMatch) {
-    const minutes = resetMatch[1] ? parseInt(resetMatch[1], 10) : 0;
-    const seconds = parseInt(resetMatch[2], 10);
-    const totalSecs = minutes * 60 + seconds;
-    if (totalSecs > maxSeconds) {
-      maxSeconds = totalSecs;
-    }
-  }
-
-  return Math.ceil(maxSeconds * 1000) + 5000; // add 5s safety buffer
-}
-
-async function queryGeminiTtsWithRetry(text, geminiVoice, retries = 3, initialDelay = 2000) {
-  const baseUrl = process.env.AI_BASE_URL || "http://localhost:20128/v1";
-  const apiKey = process.env.AI_API_KEY;
-
-  if (!apiKey) {
-    throw new Error("AI_API_KEY tidak dikonfigurasi di env.");
-  }
-
-  const url = `${baseUrl}/audio/speech`;
+  const models = getGeminiModels();
   let delay = initialDelay;
 
-  for (let attempt = 1; attempt <= retries; attempt += 1) {
+  // Pastikan jumlah percobaan minimal cukup untuk mencoba seluruh kombinasi (key * model) setidaknya 2 kali
+  const maxAttempts = Math.max(retries, apiKeys.length * models.length * 2);
+  let keysTriedForCurrentModel = 0;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    const currentApiKey = apiKeys[globalKeyIndex % apiKeys.length];
+    const currentModel = models[globalModelIndex % models.length];
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${currentApiKey}`;
+
     try {
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: `gemini/gemini-2.5-flash-preview-tts/${geminiVoice}`,
-          input: text,
-          language: "Japanese",
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: text }],
+            },
+          ],
+          generationConfig: {
+            responseModalities: ["AUDIO"],
+            speechConfig: {
+              voiceConfig: {
+                prebuiltVoiceConfig: {
+                  voiceName: geminiVoice,
+                },
+              },
+            },
+          },
         }),
       });
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`HTTP ${response.status}: ${errorText}`);
+        let errorJson;
+        try {
+          errorJson = JSON.parse(errorText);
+        } catch (_) {}
+
+        const status = response.status;
+        const msg = errorJson?.error?.message || errorText;
+
+        // 429 = Rate limit, 502/503 = Server overload, 403 = Key diblokir/dilarang
+        if (status === 429 || status === 502 || status === 503 || status === 403) {
+          const hasTriedAllKeys = (attempt % apiKeys.length === 0);
+
+          if (apiKeys.length > 1 && !hasTriedAllKeys) {
+            console.warn(`   ⚠️  [Gemini TTS Coba ${attempt}/${maxAttempts}] Key #${(globalKeyIndex % apiKeys.length) + 1} terkena error ${status} (Model: ${currentModel}). Memutar ke key berikutnya...`);
+            globalKeyIndex += 1;
+            keysTriedForCurrentModel += 1;
+
+            if (keysTriedForCurrentModel >= apiKeys.length) {
+              keysTriedForCurrentModel = 0;
+              globalModelIndex += 1;
+              console.warn(`   🔄 [Gemini TTS] Seluruh key untuk model ${currentModel} telah dicoba. Memutar ke model berikutnya: ${models[globalModelIndex % models.length]}...`);
+            }
+
+            await sleep(1000); // delay singkat sebelum mencoba key berikutnya
+            continue;
+          }
+
+          let waitMs = 25000;
+          if (status === 429) {
+            const retryDelayStr = errorJson?.error?.details?.find(d => d.retryDelay)?.retryDelay;
+            if (retryDelayStr) {
+              const seconds = parseFloat(retryDelayStr);
+              if (!isNaN(seconds)) {
+                waitMs = Math.ceil(seconds * 1000) + 2000;
+              }
+            } else {
+              const resetMatch = msg.match(/Please retry in (\d+(?:\.\d+)?)s/i);
+              if (resetMatch) {
+                waitMs = Math.ceil(parseFloat(resetMatch[1]) * 1000) + 2000;
+              }
+            }
+          } else {
+            // Untuk 502/503/403, jika semua key sudah dicoba dan gagal, tunggu 30 detik sebelum mengulangi loop
+            waitMs = 30000;
+          }
+
+          console.warn(`   ⚠️  [Gemini TTS Coba ${attempt}/${maxAttempts}] Semua key ter-limit / bermasalah (Status: ${status}, Model: ${currentModel}). Menunggu ${Math.ceil(waitMs / 1000)} detik...`);
+          await sleep(waitMs);
+
+          globalKeyIndex += 1; // tetap putar key setelah sleep
+          keysTriedForCurrentModel += 1;
+          if (keysTriedForCurrentModel >= apiKeys.length) {
+            keysTriedForCurrentModel = 0;
+            globalModelIndex += 1;
+            console.warn(`   🔄 [Gemini TTS] Seluruh key untuk model ${currentModel} telah dicoba. Memutar ke model berikutnya: ${models[globalModelIndex % models.length]}...`);
+          }
+          continue;
+        }
+
+        throw new Error(`HTTP ${status}: ${msg}`);
       }
 
-      const arrayBuffer = await response.arrayBuffer();
-      return Buffer.from(arrayBuffer);
+      const data = await response.json();
+      const candidate = data.candidates?.[0];
+      if (!candidate) {
+        throw new Error("Respon Gemini kosong (no candidates).");
+      }
+
+      const part = candidate.content?.parts?.find((p) => p.inlineData);
+      if (!part || !part.inlineData) {
+        throw new Error("Respon Gemini tidak berisi audio inlineData.");
+      }
+
+      const pcmBuffer = Buffer.from(part.inlineData.data, "base64");
+      const mimeType = part.inlineData.mimeType || "audio/L16;codec=pcm;rate=24000";
+
+      let sampleRate = 24000;
+      const rateMatch = mimeType.match(/rate=(\d+)/);
+      if (rateMatch) {
+        sampleRate = parseInt(rateMatch[1], 10);
+      }
+
+      return convertPcmToMp3(pcmBuffer, sampleRate);
     } catch (err) {
-      if (attempt === retries) throw err;
+      if (attempt === maxAttempts) throw err;
+      console.warn(`   ⚠️  [Gemini TTS Coba ${attempt}/${maxAttempts}] Gagal: ${err.message}. Memutar key/model & Retrying in ${delay / 1000}s...`);
 
-      const isQuotaError = err.message.includes("quota") || err.message.includes("Quota") || err.message.includes("exceeded");
-      if (isQuotaError) {
-        const waitMs = parseResetTime(err.message);
-        console.warn(`   ⚠️  [Gemini TTS Coba ${attempt}/${retries}] Batas kuota terlampaui. Menunggu ${Math.ceil(waitMs / 1000)} detik agar kuota di-reset...`);
-        await sleep(waitMs);
-      } else {
-        console.warn(`   ⚠️  [Gemini TTS Coba ${attempt}/${retries}] Gagal: ${err.message}. Mencoba kembali...`);
-        await sleep(delay);
-        delay *= 2;
+      if (apiKeys.length > 1) {
+        globalKeyIndex += 1;
+        keysTriedForCurrentModel += 1;
+        if (keysTriedForCurrentModel >= apiKeys.length) {
+          keysTriedForCurrentModel = 0;
+          globalModelIndex += 1;
+          console.warn(`   🔄 [Gemini TTS] Seluruh key untuk model ${currentModel} telah dicoba. Memutar ke model berikutnya: ${models[globalModelIndex % models.length]}...`);
+        }
       }
+
+      await sleep(delay);
+      delay *= 2;
     }
   }
+
+  // Jika keluar dari loop tanpa return, artinya semua percobaan gagal
+  throw new Error("Semua percobaan sintesis gagal setelah rotasi seluruh API Key dan Model.");
 }
+
 
 async function processTtsItem(supabase, text, voice, rate = "medium") {
   const cacheId = crypto.createHash("md5").update(`${text}_${voice}_${rate}`).digest("hex");
@@ -462,15 +472,15 @@ async function processTtsItem(supabase, text, voice, rate = "medium") {
 
   const geminiVoice = GEMINI_VOICE_MAP[voice];
   if (!geminiVoice) {
-    throw new Error(`Suara Gemini untuk karakter '${voice}' tidak ditemukan di pemetaan.`);
+    throw new Error(`Suara Gemini untuk '${voice}' tidak ditemukan.`);
   }
 
-  const audioBuffer = await queryGeminiTtsWithRetry(text, geminiVoice);
-  console.log(`   └─ [Gemini TTS] Sintesis sukses (${geminiVoice}).`);
+  const mp3Buffer = await queryGeminiTtsWithRetry(text, geminiVoice);
+  console.log(`   └─ [Gemini TTS] Sintesis & konversi sukses (${geminiVoice}).`);
 
   const { error: uploadError } = await supabase.storage
     .from(BUCKET_NAME)
-    .upload(filename, audioBuffer, {
+    .upload(filename, mp3Buffer, {
       contentType: "audio/mpeg",
       upsert: true,
     });
@@ -488,9 +498,24 @@ async function processTtsItem(supabase, text, voice, rate = "medium") {
   return publicUrl;
 }
 
+const readline = require("node:readline");
+
+function askQuestion(query) {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  return new Promise((resolve) => {
+    rl.question(query, (ans) => {
+      rl.close();
+      resolve(ans.trim());
+    });
+  });
+}
+
 async function main() {
   loadEnvFile();
-  const options = parseArgs(process.argv.slice(2));
+  let options = parseArgs(process.argv.slice(2));
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -539,90 +564,114 @@ async function main() {
       });
     };
 
-    // 1. Tarik pelajaran (lessons) dari Supabase
-    if (options.type !== "listening") {
-      console.log("🔍 [1/4] Menarik data lessons dari Supabase...");
-      let sbQuery = supabase.from("lessons").select("content_blocks, slug, order_number");
+    // Tarik daftar lessons terlebih dahulu dari Supabase untuk keperluan menu
+    let allLessons = [];
+    try {
+      const { data } = await supabase.from("lessons").select("title, order_number, slug, content_blocks");
+      if (data) {
+        allLessons = data;
+        allLessons.sort((a, b) => (a.order_number || 0) - (b.order_number || 0));
+      }
+    } catch (e) {
+      console.warn("⚠️ Gagal menarik lessons dari Supabase: ", e.message);
+    }
+
+    // Aktifkan menu interaktif jika dijalankan di terminal dan tanpa filter pencarian
+    if (allLessons.length > 0 && !options.level && options.lessonNum === null && process.stdout.isTTY) {
+      console.log("\n=== PILIH LEVEL JLPT ===");
+      const lvlInput = await askQuestion("Pilih Level JLPT (N5, N4, N3, N2, N1, atau tekan Enter untuk semua): ");
+
+      let targetLessons = allLessons;
+
+      if (lvlInput) {
+        const lvl = lvlInput.trim().toLowerCase();
+        options.level = lvl.toUpperCase();
+        targetLessons = targetLessons.filter(l => 
+          l.slug?.toLowerCase().includes(lvl) ||
+          l.title?.toLowerCase().includes(lvl)
+        );
+      }
+
+      if (targetLessons.length === 0) {
+        console.log("❌ Tidak ada pelajaran yang cocok dengan kriteria level Anda. Membatalkan...");
+        process.exit(0);
+      }
+
+      console.log("\n=== DAFTAR PELAJARAN (LESSONS) ===");
+      targetLessons.forEach((l, idx) => {
+        console.log(`[${idx + 1}] Lesson ${l.order_number || idx + 1}: ${l.title || l.slug || "Untitled"}`);
+      });
+      console.log("[0] PROSES SEMUA PELAJARAN HASIL FILTER");
+
+      const answer = await askQuestion(`\nPilih nomor pelajaran (0-${targetLessons.length}): `);
+      const choice = parseInt(answer, 10);
+      if (isNaN(choice) || choice < 0 || choice > targetLessons.length) {
+        console.log("❌ Pilihan tidak valid. Membatalkan...");
+        process.exit(0);
+      }
+
+      if (choice > 0) {
+        const selectedLesson = targetLessons[choice - 1];
+        options.lessonNum = selectedLesson.order_number;
+        // set filter level jika lessonNum terpilih agar query Sanity di bawah juga ter-filter
+        if (selectedLesson.slug) {
+          const match = selectedLesson.slug.match(/^(n[1-5])/i);
+          if (match) {
+            options.level = match[1].toUpperCase();
+          }
+        }
+        console.log(`\nSelected: Lesson ${selectedLesson.order_number}`);
+      } else {
+        console.log("\nProcessing all filtered lessons...");
+      }
+
+      const forceAns = await askQuestion("Apakah ingin memaksa sintesis ulang (menimpa cache)? (y/N): ");
+      if (forceAns.toLowerCase() === "y" || forceAns.toLowerCase() === "yes") {
+        options.force = true;
+        console.log("⚠️  Mode force aktif: Mengabaikan cache.");
+      }
+    }
+
+    // 1. Ambil pelajaran dari Supabase
+    console.log("\n🔍 [1/3] Menarik data lessons dari Supabase...");
+    let sbQuery = supabase.from("lessons").select("content_blocks, slug, order_number, title");
+    if (options.level) {
+      sbQuery = sbQuery.like("slug", `${options.level.toLowerCase()}-%`);
+    }
+    if (options.lessonNum !== null) {
+      sbQuery = sbQuery.eq("order_number", options.lessonNum);
+    }
+    const { data: supabaseLessons } = await sbQuery;
+    if (supabaseLessons) {
+      supabaseLessons.forEach((row) => processContentBlocks(row.content_blocks));
+    }
+
+    // 2. Ambil pelajaran dari Sanity CMS
+    try {
+      console.log("🔍 [2/3] Menarik data lessons dari Sanity...");
+      let query = '*[_type == "lesson"]';
+      const filters = [];
       if (options.level) {
-        sbQuery = sbQuery.like("slug", `${options.level.toLowerCase()}-%`);
+        filters.push(`(slug.current match "${options.level.toLowerCase()}*" || title match "${options.level}*")`);
       }
       if (options.lessonNum !== null) {
-        sbQuery = sbQuery.eq("order_number", options.lessonNum);
+        filters.push(`order_number == ${options.lessonNum}`);
       }
-      const { data: supabaseLessons } = await sbQuery;
-      if (supabaseLessons) {
-        supabaseLessons.forEach((row) => processContentBlocks(row.content_blocks));
+      if (filters.length > 0) {
+        query = `*[_type == "lesson" && ${filters.join(" && ")}]`;
       }
-    } else {
-      console.log("🔍 [1/4] Melewati lessons dari Supabase (filter tipe).");
-    }
-
-    // 2. Tarik pelajaran (lessons) dari Sanity CMS
-    if (options.type !== "listening") {
-      try {
-        console.log("🔍 [2/4] Menarik data lessons dari Sanity...");
-        let query = '*[_type == "lesson"]';
-        const filters = [];
-        if (options.level) {
-          filters.push(`(slug.current match "${options.level.toLowerCase()}*" || title match "${options.level}*")`);
-        }
-        if (options.lessonNum !== null) {
-          filters.push(`order_number == ${options.lessonNum}`);
-        }
-        if (filters.length > 0) {
-          query = `*[_type == "lesson" && ${filters.join(" && ")}]`;
-        }
-        const sanityLessons = await sanityClient.fetch(`${query} { content_blocks }`);
-        if (Array.isArray(sanityLessons)) {
-          sanityLessons.forEach((row) => processContentBlocks(row.content_blocks));
-        }
-      } catch (err) {
-        console.warn("⚠️  [Sanity] Lewati lessons: ", err.message);
+      const sanityLessons = await sanityClient.fetch(`${query} { content_blocks, title, "slug": slug.current }`);
+      if (Array.isArray(sanityLessons)) {
+        sanityLessons.forEach((row) => processContentBlocks(row.content_blocks));
       }
-    } else {
-      console.log("🔍 [2/4] Melewati lessons dari Sanity (filter tipe).");
-    }
-
-    // 3. Tarik listeningMaterial dari Sanity CMS
-    if (options.type !== "lesson" && options.lessonNum === null) {
-      try {
-        console.log("🔍 [3/4] Menarik data listeningMaterial dari Sanity...");
-        let lmQuery = '*[_type == "listeningMaterial"]';
-        const filters = [];
-        if (options.level) {
-          filters.push(`(level == "${options.level}" || jlpt_level == "${options.level}" || slug.current match "${options.level.toLowerCase()}*")`);
-        }
-        if (options.listeningQuery) {
-          filters.push(`(slug.current match "*${options.listeningQuery}*" || title match "*${options.listeningQuery}*")`);
-        }
-        if (filters.length > 0) {
-          lmQuery = `*[_type == "listeningMaterial" && ${filters.join(" && ")}]`;
-        }
-        const listeningMaterials = await sanityClient.fetch(`${lmQuery} { body }`);
-        if (Array.isArray(listeningMaterials)) {
-          listeningMaterials.forEach((row) => {
-            if (!row.body) return;
-            const lines = row.body.split("\n").filter(Boolean);
-            lines.forEach((line, i) => {
-              const parts = line.split(/[：:]/);
-              const rawSpeaker = parts.length > 1 ? parts[0].trim() : undefined;
-              const lineText = parts.length > 1 ? parts.slice(1).join("：").trim() : line.trim();
-              const voice = detectVoice(rawSpeaker, i);
-              addItem(lineText, voice);
-            });
-          });
-        }
-      } catch (err) {
-        console.warn("⚠️  [Sanity] Lewati listeningMaterial: ", err.message);
-      }
-    } else {
-      console.log("🔍 [3/4] Melewati listeningMaterial dari Sanity (filter tipe/nomor lesson).");
+    } catch (err) {
+      console.warn("⚠️  [Sanity] Lewati lessons: ", err.message);
     }
 
     console.log(`📊 Total baris teks dialog/contoh kalimat unik yang ditemukan: ${itemsToProcess.length}`);
 
-    // 4. Bandingkan dengan database tts_cache (Paginated)
-    console.log("🔍 [4/4] Memeriksa status cache di database...");
+    // 3. Bandingkan dengan cache DB
+    console.log("🔍 [3/3] Memeriksa status cache di database...");
     const missingItems = [];
     const existingCacheIds = new Set();
     let dbHasMore = true;
@@ -686,19 +735,19 @@ async function main() {
         console.log(`[${idx + 1}/${targetItems.length}] Menyintesis: "${item.text}" [Voice: ${item.voice}]`);
         await processTtsItem(supabase, item.text, item.voice, "medium");
         successCount += 1;
-        consecutiveFailures = 0; // reset
-        await sleep(8000); // 8s rate limiting to stay safely under 10 RPM (Gemini Free Tier)
+        consecutiveFailures = 0; 
+        await sleep(22000); // 22s delay agar aman di bawah rate limit 3 RPM Gemini Free Tier
       } catch (err) {
         console.error(`❌ Gagal mensintesis "${item.text}":`, err.message);
         logFailure(item.text, item.voice, err.message);
         consecutiveFailures += 1;
 
         if (consecutiveFailures >= 5) {
-          console.warn("\n⚠️  Terjadi 5 kegagalan beruntun. Istirahat 30 detik untuk menghindari pemblokiran IP...");
-          await sleep(30000);
+          console.warn("\n⚠️  Terjadi 5 kegagalan beruntun. Istirahat 45 detik...");
+          await sleep(45000);
           consecutiveFailures = 0;
         } else {
-          await sleep(5000);
+          await sleep(10000);
         }
       }
     }
