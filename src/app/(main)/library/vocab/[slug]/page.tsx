@@ -69,7 +69,7 @@ interface VocabRef {
   slug?: string;
 }
 
-export const dynamic = "force-dynamic";
+
 
 
 // ======================

@@ -17,44 +17,12 @@ import {
   webPageJsonLd,
 } from "@/lib/seo";
 
-import dynamic from "next/dynamic";
-
-// Komponen Domain (optimasi dynamic loading untuk performa mobile)
+// Komponen Domain (diimpor secara statis untuk menghindari layout shift dan mempercepat FCP/INP)
 import { Hero } from "@/components/features/landing/Hero";
-
-const FeatureGrid = dynamic(
-  () => import("@/components/features/landing/FeatureGrid").then((mod) => mod.FeatureGrid),
-  {
-    loading: () => (
-      <div className="min-h-[400px] animate-pulse bg-muted/20 rounded-[34px] w-full border border-border/40" />
-    ),
-    ssr: true,
-  }
-);
-
-const InteractivePlayground = dynamic(
-  () => import("@/components/features/landing/InteractivePlayground").then((mod) => mod.InteractivePlayground),
-  {
-    loading: () => (
-      <div className="min-h-[300px] animate-pulse bg-muted/20 rounded-[34px] w-full border border-border/40" />
-    ),
-    ssr: true,
-  }
-);
-
-const TrustBanner = dynamic(
-  () => import("@/components/features/landing/TrustBanner").then((mod) => mod.TrustBanner),
-  {
-    ssr: true,
-  }
-);
-
-const LandingFooter = dynamic(
-  () => import("@/components/features/landing/LandingFooter").then((mod) => mod.LandingFooter),
-  {
-    ssr: true,
-  }
-);
+import { FeatureGrid } from "@/components/features/landing/FeatureGrid";
+import { InteractivePlayground } from "@/components/features/landing/InteractivePlayground";
+import { TrustBanner } from "@/components/features/landing/TrustBanner";
+import { LandingFooter } from "@/components/features/landing/LandingFooter";
 
 export const metadata: Metadata = {
   ...createPageMetadata({

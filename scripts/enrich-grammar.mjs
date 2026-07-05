@@ -245,17 +245,21 @@ Untuk setiap item tata bahasa, hasilkan bidang-bidang berikut:
 - "id": String ID dari item input (wajib sama persis).
 - "meaning": Arti atau fungsi tata bahasa tersebut dalam Bahasa Indonesia.
 - "formation": Pola pembentukan tata bahasa (misal: "KK Kamus + ことになっている").
-- "formation_furigana": Pembacaan kana dari pola pembentukan tersebut.
+- "formation_furigana": Pembacaan kana dari pola pembentukan tersebut (gunakan Hiragana bersih, jangan ada huruf Romaji seperti KK/KS/KB, ganti KK dengan どうし, KS dengan けいようし, KB dengan めいし).
 - "formation_romaji": Romaji standar dari pola pembentukan tersebut.
 - "examples": Array berisi tepat 2 objek kalimat contoh Jepang-Indonesia yang mendemonstrasikan pola tata bahasa ini:
   - "jp": Kalimat contoh Jepang natural (tanpa furigana/ruby di dalam string jp, tulis kanji secara normal).
   - "id": Terjemahan kalimat contoh tersebut dalam Bahasa Indonesia.
+- "notes": Catatan tambahan tentang nuansa penggunaan, formalitas, atau informasi kontekstual lainnya dalam Bahasa Indonesia (maksimal 2 kalimat).
+- "grammar_family": Nama keluarga/kategori tata bahasa dalam Bahasa Indonesia (misal: "Keinginan", "Sebab-Akibat", "Keharusan", "Waktu", "Keigo", "こと", "もの").
+- "related_grammar": Array berisi slug tata bahasa lain yang berhubungan dekat (maksimal 2 slug, contoh: jika target adalah "n4-node", related_grammar bisa berupa ["n5-kara"]). Jika tidak ada, isi dengan array kosong [].
 
 Aturan Penting:
 1. Respon WAJIB berupa JSON murni dengan format schema yang diminta secara ketat.
 2. Terjemahan "id" untuk kalimat contoh wajib dalam Bahasa Indonesia yang alami, bukan kaku.
 3. Field "examples" harus berisi tepat 2 kalimat contoh yang relevan dengan pola tata bahasa target.
 4. Di dalam kalimat Jepang ("jp"), DILARANG menggunakan tanda furigana kurung atau markup ruby. Tulis kanji secara normal.
+5. Kolom "formation_furigana" WAJIB menggunakan kana Jepang murni (Hiragana/Katakana) tanpa ada karakter alfabet/Romaji sama sekali.
 
 Skema JSON yang harus dikembalikan:
 {
@@ -269,7 +273,10 @@ Skema JSON yang harus dikembalikan:
       "examples": [
         { "jp": "文法を使った例文です。", "id": "Ini adalah contoh kalimat menggunakan pola tata bahasa." },
         { "jp": "もう一つの例文です。", "id": "Ini adalah kalimat contoh lainnya." }
-      ]
+      ],
+      "notes": "Catatan penggunaan...",
+      "grammar_family": "Keluarga tata bahasa",
+      "related_grammar": ["slug-terkait-1", "slug-terkait-2"]
     }
   ]
 }
@@ -283,6 +290,9 @@ function validateEnrichedItem(item) {
   if (typeof item.formation !== "string" || !item.formation) return false;
   if (typeof item.formation_furigana !== "string") return false;
   if (typeof item.formation_romaji !== "string") return false;
+  if (typeof item.notes !== "string") return false;
+  if (typeof item.grammar_family !== "string") return false;
+  if (!Array.isArray(item.related_grammar)) return false;
   
   if (!Array.isArray(item.examples) || item.examples.length !== 2) return false;
   for (const ex of item.examples) {
@@ -314,19 +324,27 @@ async function main() {
 
   console.log("🔍 [Database] Mencari data kosong pada tabel \"grammar\"...");
 
-  let query = supabase.from("grammar").select("id, title, meaning, formation, examples");
+  let dbItems = [];
+  let page = 0;
+  const pageSize = 1000;
+  let hasMore = true;
 
-  if (options.level) {
-    query = query.eq("jlpt_level", options.level);
-  }
-
-  if (!options.force) {
-    query = query.or("meaning.is.null,formation.is.null,examples.is.null");
-  }
-
-  const { data: dbItems, error } = await query.limit(options.limit);
-
-  if (error) {
+  try {
+    while (hasMore) {
+      let query = supabase.from("grammar").select("id, title, meaning, formation, formation_furigana, formation_romaji, notes, related_grammar, grammar_family, examples, jlpt_level");
+      if (options.level) {
+        query = query.eq("jlpt_level", options.level);
+      }
+      const { data, error } = await query.range(page * pageSize, (page + 1) * pageSize - 1);
+      if (error) throw error;
+      dbItems = dbItems.concat(data);
+      if (data.length < pageSize) {
+        hasMore = false;
+      } else {
+        page++;
+      }
+    }
+  } catch (error) {
     console.error("❌ [Supabase] Gagal membaca tabel:", error.message);
     process.exit(1);
   }
@@ -334,21 +352,23 @@ async function main() {
   const filteredItems = options.force
     ? dbItems
     : dbItems.filter((item) => {
-        const hasExamples = Array.isArray(item.examples) && item.examples.length === 2;
-        return !item.meaning || !item.formation || !hasExamples;
+        const hasExamples = Array.isArray(item.examples) && item.examples.length >= 2;
+        return !item.meaning || !item.formation || !item.formation_furigana || !item.formation_romaji || !item.notes || !item.grammar_family || !hasExamples;
       });
 
-  if (filteredItems.length === 0) {
+  const itemsToProcess = filteredItems.slice(0, options.limit);
+
+  if (itemsToProcess.length === 0) {
     console.log("✅ [Database] Semua kolom pada target sudah terisi lengkap. Tidak ada data yang perlu diperkaya.");
     process.exit(0);
   }
 
-  console.log(`📈 [Database] Menemukan ${filteredItems.length} baris data yang siap diperkaya.`);
+  console.log(`📈 [Database] Menemukan ${filteredItems.length} baris data yang siap diperkaya. Memproses ${itemsToProcess.length} baris sesuai limit.`);
 
-  for (let i = 0; i < filteredItems.length; i += options.batchSize) {
-    const batch = filteredItems.slice(i, i + options.batchSize);
+  for (let i = 0; i < itemsToProcess.length; i += options.batchSize) {
+    const batch = itemsToProcess.slice(i, i + options.batchSize);
     const batchIndex = Math.floor(i / options.batchSize) + 1;
-    const totalBatches = Math.ceil(filteredItems.length / options.batchSize);
+    const totalBatches = Math.ceil(itemsToProcess.length / options.batchSize);
     
     console.log(`\n📦 [Proses] Memproses batch ${batchIndex}/${totalBatches}...`);
 
@@ -357,7 +377,12 @@ async function main() {
 
     try {
       const responseText = await aiClient.generateText(prompt);
-      const cleanJson = responseText.trim().replace(/^```json|```$/g, "").trim();
+      const jsonStart = responseText.indexOf('{');
+      const jsonEnd = responseText.lastIndexOf('}');
+      if (jsonStart === -1 || jsonEnd === -1) {
+        throw new Error("Tidak menemukan block JSON.");
+      }
+      const cleanJson = responseText.substring(jsonStart, jsonEnd + 1);
       const parsed = JSON.parse(cleanJson);
 
       if (!Array.isArray(parsed.results)) {
@@ -374,17 +399,31 @@ async function main() {
         const original = batch.find((b) => b.id === enriched.id);
         const titleLabel = original ? original.title : enriched.id;
         
-        console.log(`  ✨ [Update] ID: "${enriched.id}" (${titleLabel}) -> diperbarui.`);
+        const updatePayload = {};
+        if (options.force || !original.meaning) updatePayload.meaning = enriched.meaning;
+        if (options.force || !original.formation) updatePayload.formation = enriched.formation;
+        if (options.force || !original.formation_furigana) updatePayload.formation_furigana = enriched.formation_furigana;
+        if (options.force || !original.formation_romaji) updatePayload.formation_romaji = enriched.formation_romaji;
+        
+        const originalHasExamples = Array.isArray(original.examples) && original.examples.length >= 2;
+        if (options.force || !originalHasExamples) updatePayload.examples = enriched.examples;
+
+        if (options.force || !original.notes) updatePayload.notes = enriched.notes;
+        if (options.force || !original.grammar_family) updatePayload.grammar_family = enriched.grammar_family;
+        
+        const originalHasRelated = Array.isArray(original.related_grammar) && original.related_grammar.length > 0;
+        if (options.force || !originalHasRelated) updatePayload.related_grammar = enriched.related_grammar;
+
+        if (Object.keys(updatePayload).length === 0) {
+          console.log(`  ℹ️ ID: "${enriched.id}" (${titleLabel}) sudah terisi lengkap. Melewati.`);
+          continue;
+        }
+
+        console.log(`  ✨ [Update] ID: "${enriched.id}" (${titleLabel}) -> memperbarui kolom: ${Object.keys(updatePayload).join(", ")}`);
 
         const { error: updateError } = await supabase
           .from("grammar")
-          .update({
-            meaning: enriched.meaning,
-            formation: enriched.formation,
-            formation_furigana: enriched.formation_furigana,
-            formation_romaji: enriched.formation_romaji,
-            examples: enriched.examples,
-          })
+          .update(updatePayload)
           .eq("id", enriched.id);
 
           if (updateError) {

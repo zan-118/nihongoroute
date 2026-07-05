@@ -301,9 +301,7 @@ function getGeminiModels() {
   if (models.length === 0) {
     models.push(
       "gemini-3.1-flash-tts-preview",
-      "gemini-2.5-flash-preview-tts",
-      "gemini-2.5-flash-lite-preview-tts",
-      "gemini-2.5-pro-preview-tts"
+      "gemini-2.5-flash-preview-tts"
     );
   }
   return Array.from(new Set(models)).filter(Boolean);
@@ -343,6 +341,9 @@ async function queryGeminiTtsWithRetry(text, geminiVoice, retries = 5, initialDe
               parts: [{ text: text }],
             },
           ],
+          systemInstruction: {
+            parts: [{ text: "You are a text-to-speech reader. Read the input text exactly as written, word for word. Do not reply, converse, explain, or output any text." }]
+          },
           generationConfig: {
             responseModalities: ["AUDIO"],
             speechConfig: {
