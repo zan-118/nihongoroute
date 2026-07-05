@@ -57,8 +57,8 @@ export default function SettingsClient() {
           <Skeleton className="h-12 w-64" />
           <Skeleton className="h-4 w-96" />
         </div>
-        <Skeleton className="h-[200px] w-full rounded-3xl" />
-        <Skeleton className="h-[200px] w-full rounded-2xl" />
+        <Skeleton className="h-[200px] w-full rounded-xl" />
+        <Skeleton className="h-[200px] w-full rounded-lg" />
       </div>
     );
   }
@@ -126,11 +126,11 @@ export default function SettingsClient() {
           {/* DANGER ZONE INFO */}
           <m.div variants={itemVariants}>
             <Card className="bg-destructive/[0.02] border border-destructive/10 rounded-[2rem] p-6 md:p-8 shadow-lg flex flex-col md:flex-row items-center md:items-start gap-6 group hover:bg-destructive/[0.04] transition-all duration-300">
-              <div className="size-14 shrink-0 rounded-2xl bg-destructive/10 flex items-center justify-center border border-destructive/20 shadow-lg group-hover:scale-110 transition-transform">
+              <div className="size-14 shrink-0 rounded-lg bg-destructive/10 flex items-center justify-center border border-destructive/20 shadow-lg group-hover:scale-110 transition-transform">
                 <ShieldAlert size={28} className="text-destructive" />
               </div>
               <div className="flex-1 text-center md:text-left">
-                <h4 className="text-destructive font-black uppercase italic tracking-tighter text-lg mb-2">Zona Berbahaya</h4>
+                <h4 className="text-destructive uppercase italic tracking-tighter text-lg mb-2">Zona Berbahaya</h4>
                 <p className="text-muted-foreground text-sm leading-relaxed opacity-60 font-medium">
                   Penghapusan data bersifat permanen. Seluruh pencapaian, streak, dan data memori SRS Anda akan dihapus sepenuhnya dari sistem.
                 </p>
@@ -140,9 +140,9 @@ export default function SettingsClient() {
 
           {/* MOBILE EXTRA NAV */}
           <m.div variants={itemVariants} className="md:hidden">
-            <Card className="bg-background/[0.04] backdrop-blur-sm border border-border rounded-[2rem] p-6 shadow-lg">
-              <h3 className="text-primary font-black uppercase tracking-[0.2em] text-[10px] mb-4">Navigasi Lanjutan</h3>
-              <Button asChild variant="ghost" className="w-full h-14 bg-background/[0.03] border border-border justify-start hover:bg-primary/10 hover:text-primary rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all">
+            <Card className="bg-background/[0.04]  border border-border rounded-[2rem] p-6 shadow-lg">
+              <h3 className="text-primary uppercase tracking-[0.2em] text-[10px] mb-4">Navigasi Lanjutan</h3>
+              <Button asChild variant="ghost" className="w-full h-14 bg-background/[0.03] border border-border justify-start hover:bg-primary/10 hover:text-primary rounded-lg font-black uppercase tracking-widest text-[10px] transition-all">
                 <Link href="/library">
                   <Layers size={18} className="mr-3 text-primary" /> Buka Perpustakaan
                 </Link>

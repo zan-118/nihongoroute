@@ -40,11 +40,11 @@ export function SurvivalGameOver({ gameState, score, startGame }: SurvivalGameOv
       className="w-full px-4 transition-colors duration-300"
     >
       <Card
-        className={`p-10 md:p-16 lg:p-24 rounded-[3rem] md:rounded-[4rem] text-center max-w-2xl mx-auto my-8 md:my-10 relative overflow-hidden border neo-card shadow-xl bg-card bg-background ${borderColor}`}
+        className={`p-10 md:p-16 lg:p-24 rounded-2xl md:rounded-3xl text-center max-w-2xl mx-auto my-8 md:my-10 relative overflow-hidden border neo-card shadow-xl bg-card ${borderColor}`}
       >
         <div className={`absolute inset-0 ${bgGlowColor} pointer-events-none opacity-50`} />
 
-        <Card className={`w-24 h-24 md:w-32 md:h-32 mx-auto rounded-[2rem] md:rounded-[3rem] flex items-center justify-center mb-8 md:mb-12 neo-inset shadow-none border border-border bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.4)] relative z-10`}>
+        <Card className={`w-24 h-24 md:w-32 md:h-32 mx-auto rounded-2xl md:rounded-3xl flex items-center justify-center mb-8 md:mb-12 neo-inset shadow-none border border-border bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.4)] relative z-10`}>
           {isVictory ? (
             <Trophy
               size={48}
@@ -65,7 +65,7 @@ export function SurvivalGameOver({ gameState, score, startGame }: SurvivalGameOv
         </h2>
 
         <div className="flex flex-col items-center gap-3 md:gap-4 mb-10 md:mb-14 relative z-10">
-          <Badge variant="outline" className="text-muted-foreground font-bold uppercase tracking-widest text-xs md:text-xs h-auto border border-border neo-inset px-6 py-2 md:px-8 md:py-3 rounded-2xl bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.3)]">
+          <Badge variant="outline" className="text-muted-foreground font-bold uppercase tracking-widest text-xs md:text-xs h-auto border border-border neo-inset px-6 py-2 md:px-8 md:py-3 rounded-lg bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.3)]">
             SKOR AKHIR
           </Badge>
           <div className="flex flex-col">
@@ -82,7 +82,7 @@ export function SurvivalGameOver({ gameState, score, startGame }: SurvivalGameOv
         <Button
           onClick={startGame}
           variant="ghost"
-          className="flex items-center justify-center gap-4 md:gap-6 w-full h-auto py-6 md:py-8 relative z-10 font-bold uppercase tracking-widest text-xs md:text-xs border border-border neo-card shadow-none bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.4)] hover:bg-primary hover:text-primary-foreground transition-all rounded-[2rem] group"
+          className="flex items-center justify-center gap-4 md:gap-6 w-full h-auto py-6 md:py-8 relative z-10 font-bold uppercase tracking-widest text-xs md:text-xs border border-border neo-card shadow-none bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.4)] hover:bg-primary hover:text-primary-foreground transition-all rounded-2xl md:rounded-3xl group"
         >
           <RotateCcw size={20} aria-hidden="true" className="group-hover:-rotate-90 transition-transform duration-200 md:w-6 md:h-6" /> COBA LAGI
         </Button>

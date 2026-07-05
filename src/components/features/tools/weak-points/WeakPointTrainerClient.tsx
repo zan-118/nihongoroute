@@ -212,7 +212,7 @@ export default function WeakPointTrainerClient() {
                 SRS Diagnosis
               </Badge>
             </div>
-            <h1 className="text-4xl font-black uppercase tracking-tight text-foreground md:text-6xl">
+            <h1 className="text-4xl uppercase tracking-tight text-foreground md:text-6xl">
               Latih Titik Lemah
             </h1>
             <p className="mt-4 max-w-2xl text-sm font-medium leading-relaxed text-muted-foreground md:text-base">
@@ -222,7 +222,7 @@ export default function WeakPointTrainerClient() {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <Button asChild variant="outline" className="h-12 rounded-2xl px-5 text-xs font-black uppercase tracking-widest">
+            <Button asChild variant="outline" className="h-12 rounded-lg px-5 text-xs font-black uppercase tracking-widest">
               <Link href="/dashboard">
                 Dashboard
                 <ArrowRight size={14} />
@@ -231,7 +231,7 @@ export default function WeakPointTrainerClient() {
             <Button
               onClick={startSession}
               disabled={candidates.length === 0}
-              className="h-12 rounded-2xl px-6 text-xs font-black uppercase tracking-widest"
+              className="h-12 rounded-lg px-6 text-xs font-black uppercase tracking-widest"
             >
               <Play size={15} />
               Mulai Latihan
@@ -250,7 +250,7 @@ export default function WeakPointTrainerClient() {
               exit={{ opacity: 0, y: -14 }}
               className="grid grid-cols-1 gap-6 lg:grid-cols-[0.82fr_1.18fr]"
             >
-              <Card className="relative overflow-hidden rounded-[34px] border-border bg-card/40 p-6 shadow-none backdrop-blur-xl md:p-8">
+              <Card className="relative overflow-hidden rounded-[34px] border-border bg-card/40 p-6 shadow-none  md:p-8">
                 <div className="pointer-events-none absolute right-0 top-0 size-52 rounded-full bg-destructive/[0.08] blur-[70px]" />
                 <div className="relative z-10 flex h-full flex-col justify-between gap-8">
                   <div>
@@ -280,10 +280,10 @@ export default function WeakPointTrainerClient() {
                 </div>
               </Card>
 
-              <Card className="rounded-[34px] border-border bg-card/30 p-4 shadow-none backdrop-blur-xl md:p-6">
+              <Card className="rounded-[34px] border-border bg-card/30 p-4 shadow-none  md:p-6">
                 <div className="mb-5 flex items-center justify-between gap-4 px-1">
                   <div>
-                    <h2 className="text-lg font-black uppercase tracking-tight text-foreground">
+                    <h2 className="text-lg uppercase tracking-tight text-foreground">
                       Antrean Latihan
                     </h2>
                     <p className="mt-1 text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
@@ -317,7 +317,7 @@ function SummaryTile({
   icon: ComponentType<{ size?: number; className?: string }>;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-background/35 p-4">
+    <div className="rounded-lg border border-border bg-background/35 p-4">
       <Icon className="mb-3 text-primary" size={18} />
       <div className="font-mono text-2xl font-black text-foreground">{value}</div>
       <div className="mt-1 text-[9px] font-black uppercase tracking-[0.18em] text-muted-foreground">
@@ -329,7 +329,7 @@ function SummaryTile({
 
 function CandidateRow({ candidate, index }: { candidate: WeakPointCandidate; index: number }) {
   return (
-    <div className="rounded-2xl border border-border bg-background/30 p-4 transition-colors hover:border-destructive/25 hover:bg-background/45">
+    <div className="rounded-lg border border-border bg-background/30 p-4 transition-colors hover:border-destructive/25 hover:bg-background/45">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
@@ -365,11 +365,11 @@ function CandidateRow({ candidate, index }: { candidate: WeakPointCandidate; ind
 
 function EmptyDiagnosis() {
   return (
-    <Card className="rounded-[34px] border-border bg-card/35 p-8 text-center shadow-none backdrop-blur-xl md:p-12">
-      <div className="mx-auto mb-6 flex size-16 items-center justify-center rounded-2xl border border-success/20 bg-success/10 text-success">
+    <Card className="rounded-[34px] border-border bg-card/35 p-8 text-center shadow-none  md:p-12">
+      <div className="mx-auto mb-6 flex size-16 items-center justify-center rounded-lg border border-success/20 bg-success/10 text-success">
         <ShieldCheck size={30} />
       </div>
-      <h2 className="text-2xl font-black uppercase tracking-tight text-foreground">
+      <h2 className="text-2xl uppercase tracking-tight text-foreground">
         Tidak ada titik lemah aktif
       </h2>
       <p className="mx-auto mt-3 max-w-xl text-sm font-medium leading-relaxed text-muted-foreground">
@@ -377,20 +377,20 @@ function EmptyDiagnosis() {
         item yang perlu diperkuat.
       </p>
       <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-        <Button asChild className="h-12 rounded-2xl px-5 text-xs font-black uppercase tracking-widest">
+        <Button asChild className="h-12 rounded-lg px-5 text-xs font-black uppercase tracking-widest">
           <Link href="/library/vocab">
             <Library size={15} />
             Tambah Kartu
           </Link>
         </Button>
-        <Button asChild variant="outline" className="h-12 rounded-2xl px-5 text-xs font-black uppercase tracking-widest">
+        <Button asChild variant="outline" className="h-12 rounded-lg px-5 text-xs font-black uppercase tracking-widest">
           <Link href="/tools/flashcards">
             Flashcards
             <ArrowRight size={15} />
           </Link>
         </Button>
       </div>
-      <div className="mt-8 grid grid-cols-1 gap-3 md:grid-cols-3">
+      <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-4">
         <Skeleton className="h-3 rounded-full" />
         <Skeleton className="h-3 rounded-full" />
         <Skeleton className="h-3 rounded-full" />

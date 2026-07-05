@@ -52,7 +52,7 @@ export default function SanityMedia({
         >
           Browser Anda tidak mendukung tag video.
         </video>
-        <div className="absolute top-4 left-4 p-2 rounded-lg bg-background/40 backdrop-blur-md border border-border opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="absolute top-4 left-4 p-2 rounded-lg bg-background/40  border border-border opacity-0 group-hover:opacity-100 transition-opacity">
           <Play className="size-4 text-foreground" />
         </div>
       </div>
@@ -81,7 +81,7 @@ export default function SanityMedia({
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className={`flex items-center gap-4 p-6 rounded-2xl bg-muted/30 border border-border hover:bg-muted/50 transition-all ${className}`}
+      className={`flex items-center gap-4 p-6 rounded-lg bg-muted/30 border border-border hover:bg-muted/50 transition-all ${className}`}
     >
       <div className="p-3 rounded-xl bg-primary/10 text-primary">
         <FileIcon className="size-6" />

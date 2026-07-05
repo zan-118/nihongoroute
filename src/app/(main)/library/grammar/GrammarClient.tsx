@@ -183,7 +183,7 @@ export default function GrammarClient({ initialArticles = EMPTY_GRAMMAR_ARTICLES
 
       <section className="relative min-h-[400px]">
         {loading && (
-          <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-sm rounded-[2rem]">
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50  rounded-[2rem]">
             <div className="size-10 animate-spin border-4 border-primary border-t-transparent rounded-full" />
           </div>
         )}
@@ -203,7 +203,7 @@ export default function GrammarClient({ initialArticles = EMPTY_GRAMMAR_ARTICLES
           ) : (
             <div className="flex flex-col gap-2.5">
               {/* Kepala Tabel (Disembunyikan di Ponsel / Responsif) */}
-              <div className="hidden md:grid md:grid-cols-12 gap-4 px-6 py-4 bg-muted/30 border border-border rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+              <div className="hidden md:grid md:grid-cols-12 gap-4 px-6 py-4 bg-muted/30 border border-border rounded-lg text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
                 <div className="col-span-3">Pola Kalimat</div>
                 <div className="col-span-4">Arti / Penggunaan</div>
                 <div className="col-span-2">Pembentukan</div>
@@ -214,7 +214,7 @@ export default function GrammarClient({ initialArticles = EMPTY_GRAMMAR_ARTICLES
               {paginatedArticles.map((article) => (
                 <div
                   key={article.id || article._id}
-                  className="flex md:grid md:grid-cols-12 items-center justify-between gap-6 px-6 py-4 bg-card/45 border border-border/80 hover:border-primary/45 transition-all duration-300 rounded-[1.5rem] shadow-[0_0_20px_rgba(var(--primary-rgb),0.015)] group glass"
+                  className="flex md:grid md:grid-cols-12 items-center justify-between gap-6 px-6 py-4 bg-card/45 border border-border/80 hover:border-primary/45 hover:shadow-md transition-all duration-300 rounded-[1.5rem] group glass"
                 >
                   {/* Sisi Kiri: Pola Kalimat & Arti (Flex di Seluler, Kolom Grid di Desktop) */}
                   <div className="flex-1 md:col-span-7 flex flex-col md:grid md:grid-cols-7 md:gap-4 md:items-center min-w-0 pr-2">

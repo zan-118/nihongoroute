@@ -117,7 +117,7 @@ export function KanaQuizDialog({
               initial={{ scale: 0.95, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className={`relative bg-card p-5 md:p-8 rounded-2xl border ${themeBorder} shadow-2xl max-w-[95vw] sm:max-w-md w-full max-h-[90vh] flex flex-col mx-auto overflow-y-auto custom-scrollbar`}
+              className={`relative bg-card p-5 md:p-8 rounded-lg border ${themeBorder} shadow-2xl max-w-[95vw] sm:max-w-md w-full max-h-[90vh] flex flex-col mx-auto overflow-y-auto custom-scrollbar`}
             >
               <div className="relative z-10 flex flex-col h-full">
                 <header className="flex justify-between items-center mb-6">
@@ -143,7 +143,7 @@ export function KanaQuizDialog({
 
                 {!gameOver ? (
                   <div className="flex flex-col items-center">
-                    <div className={`w-full aspect-video bg-background rounded-2xl border ${feedback === 'correct' ? 'border-success shadow-lg' : feedback === 'incorrect' ? 'border-destructive shadow-lg' : 'border-border shadow-inner'} flex items-center justify-center mb-8 transition-all duration-300`}>
+                    <div className={`w-full aspect-video bg-background rounded-lg border ${feedback === 'correct' ? 'border-success shadow-lg' : feedback === 'incorrect' ? 'border-destructive shadow-lg' : 'border-border shadow-inner'} flex items-center justify-center mb-8 transition-all duration-300`}>
                       <AnimatePresence mode="wait">
                         {questionMode === "audio" ? (
                           <motion.button
@@ -208,11 +208,11 @@ export function KanaQuizDialog({
                     </div>
                   </div>
                 ) : isVictory ? (
-                  <Card className="bg-success/5 p-8 md:p-10 rounded-2xl border border-success/30 text-center w-full relative overflow-hidden shadow-[0_0_30px_rgb(var(--success-rgb)/0.15)] glass">
+                  <Card className="bg-success/5 p-8 md:p-10 rounded-lg border border-success/30 text-center w-full relative overflow-hidden shadow-[0_0_30px_rgb(var(--success-rgb)/0.15)] glass">
                     <div className="w-16 h-16 bg-warning/10 rounded-xl flex items-center justify-center mx-auto mb-6 border border-warning/25 shadow-[0_0_20px_rgb(var(--warning-rgb)/0.3)] text-warning">
                       <Trophy size={32} className="fill-current" />
                     </div>
-                    <h2 className="text-2xl font-black text-foreground uppercase tracking-tight mb-2">Kemenangan!</h2>
+                    <h2 className="text-2xl text-foreground uppercase tracking-tight mb-2">Kemenangan!</h2>
                     <p className="text-success text-xs font-bold uppercase tracking-widest mb-4">Lulus Latihan Kana</p>
                     <p className="text-muted-foreground text-xs mb-6 leading-relaxed">
                       Luar biasa! Kamu menyelesaikan 20 soal latihan dengan sisa nyawa dan akurasi tinggi.
@@ -232,11 +232,11 @@ export function KanaQuizDialog({
                     </Button>
                   </Card>
                 ) : (
-                  <Card className="bg-muted/20 p-8 md:p-10 rounded-2xl border border-border text-center w-full relative overflow-hidden shadow-2xl">
+                  <Card className="bg-muted/20 p-8 md:p-10 rounded-lg border border-border text-center w-full relative overflow-hidden shadow-2xl">
                     <div className="w-16 h-16 bg-destructive/10 rounded-xl flex items-center justify-center mx-auto mb-6 border border-destructive/20 text-destructive">
                       <Heart size={32} className="fill-current animate-pulse" />
                     </div>
-                    <h2 className="text-2xl font-black text-foreground uppercase tracking-tight mb-2">Game Over!</h2>
+                    <h2 className="text-2xl text-foreground uppercase tracking-tight mb-2">Game Over!</h2>
                     <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mb-6">Skor akhir kamu:</p>
                     <div className="text-5xl md:text-6xl font-black text-destructive mb-8 drop-shadow-md">
                       {score} <span className="text-xs text-muted-foreground font-mono">/ 20</span>

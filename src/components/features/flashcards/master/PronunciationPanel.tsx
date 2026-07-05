@@ -323,7 +323,7 @@ export default function PronunciationPanel({
   }
 
   return (
-    <div className={`w-full glass rounded-3xl p-6 border transition-all duration-200 flex flex-col gap-6 ${borderGlow}`}>
+    <div className={`w-full glass rounded-xl p-6 border transition-all duration-200 flex flex-col gap-6 ${borderGlow}`}>
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
@@ -349,7 +349,7 @@ export default function PronunciationPanel({
             {card.furigana}
           </span>
         )}
-        <h2 className="text-4xl font-black text-foreground tracking-tight select-all">
+        <h2 className="text-4xl text-foreground tracking-tight select-all">
           {card.word}
         </h2>
         <span className="text-xs text-muted-foreground italic mt-1 uppercase tracking-widest font-semibold">
@@ -358,7 +358,7 @@ export default function PronunciationPanel({
       </div>
 
       {/* Canvas Visualizer when recording */}
-      <div className="relative w-full h-16 bg-muted/20 border border-border/30 rounded-2xl overflow-hidden flex items-center justify-center">
+      <div className="relative w-full h-16 bg-muted/20 border border-border/30 rounded-lg overflow-hidden flex items-center justify-center">
         {isRecording ? (
           <canvas ref={canvasRef} className="w-full h-full" width={400} height={64} />
         ) : (
@@ -370,7 +370,7 @@ export default function PronunciationPanel({
 
       {/* Evaluation Results Card */}
       {inputResult !== null && (
-        <div className="flex flex-col gap-2 p-4 bg-muted/30 border border-border/40 rounded-2xl animate-in fade-in duration-300">
+        <div className="flex flex-col gap-2 p-4 bg-muted/30 border border-border/40 rounded-lg animate-in fade-in duration-300">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               {inputResult === "correct" ? (
@@ -402,7 +402,7 @@ export default function PronunciationPanel({
         <Button
           onClick={isRecording ? stopRecording : startRecording}
           variant="outline"
-          className={`flex-1 py-6 rounded-2xl text-xs font-black uppercase tracking-widest group relative overflow-hidden transition-all duration-200 ${
+          className={`flex-1 py-6 rounded-lg text-xs font-black uppercase tracking-widest group relative overflow-hidden transition-all duration-200 ${
             isRecording
               ? "bg-destructive text-destructive-foreground hover:bg-destructive/95 border-none shadow-md"
               : "bg-primary text-primary-foreground hover:bg-primary/95 border-none shadow-md"
@@ -423,7 +423,7 @@ export default function PronunciationPanel({
           <Button
             onClick={onNext}
             variant="outline"
-            className="w-14 py-6 rounded-2xl border-border bg-card/80 backdrop-blur-sm hover:bg-muted text-foreground flex items-center justify-center shrink-0"
+            className="w-14 py-6 rounded-lg border-border bg-card/80  hover:bg-muted text-foreground flex items-center justify-center shrink-0"
             aria-label="Kata Selanjutnya"
           >
             <ChevronRight size={18} />

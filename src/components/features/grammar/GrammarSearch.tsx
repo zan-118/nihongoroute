@@ -43,16 +43,16 @@ export function GrammarSearch({ value, onChange }: GrammarSearchProps) {
         </div>
         <Input
           placeholder="Cari pola kalimat (contoh: ~te kureru)..."
-          className="w-full pl-14 md:pl-16 pr-8 py-5 md:py-7 h-auto bg-[rgb(var(--card-rgb)/0.4)] backdrop-blur-xl border border-border rounded-2xl md:rounded-[2rem] text-sm md:text-lg text-foreground placeholder:text-muted-foreground/30 font-bold shadow-2xl focus-visible:ring-primary/30 focus-visible:border-primary/50 transition-all duration-500 font-sans glass"
+          className="w-full pl-14 md:pl-16 pr-8 py-5 md:py-7 h-auto bg-[rgb(var(--card-rgb)/0.4)]  border border-border rounded-lg md:rounded-3xl text-sm md:text-lg text-foreground placeholder:text-muted-foreground/30 font-bold shadow-2xl focus-visible:ring-primary/30 focus-visible:border-primary/50 transition-all duration-500 font-sans glass"
           value={value}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
         />
         {/* Cincin Pendar Dekoratif Fokus (Decorative Glow Ring) */}
-        <div className="absolute inset-0 rounded-2xl md:rounded-[2rem] border border-primary/0 group-focus-within:border-primary/20 pointer-events-none transition-all duration-500 scale-[1.01]" />
+        <div className="absolute inset-0 rounded-lg md:rounded-3xl border border-primary/0 group-focus-within:border-primary/20 pointer-events-none transition-all duration-500 scale-[1.01]" />
       </div>
 
       {/* Tombol Preferensi Tata Letak (Grid vs Tabel List) */}
-      <div className="flex p-1.5 bg-[rgb(var(--card-rgb)/0.4)] backdrop-blur-xl rounded-2xl border border-border h-[52px] sm:h-[60px] items-center gap-1.5 px-3 shrink-0 glass">
+      <div className="flex p-1.5 bg-[rgb(var(--card-rgb)/0.4)]  rounded-lg border border-border h-[52px] sm:h-[60px] items-center gap-1.5 px-3 shrink-0 glass">
         <Button
           type="button"
           variant="ghost"

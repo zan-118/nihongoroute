@@ -259,12 +259,12 @@ export default function ShadowingRecorderClient({
           </Button>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">
-              <div className="flex size-12 items-center justify-center rounded-2xl border border-success/20 bg-success/10 text-success">
+              <div className="flex size-12 items-center justify-center rounded-lg border border-success/20 bg-success/10 text-success">
                 <Mic size={24} aria-hidden="true" />
               </div>
               <Badge className="w-fit rounded-xl px-3 py-1">Shadowing Recorder</Badge>
             </div>
-            <h1 className="max-w-3xl text-4xl font-black uppercase tracking-tight text-foreground md:text-6xl">
+            <h1 className="max-w-3xl text-4xl uppercase tracking-tight text-foreground md:text-6xl">
               Shadowing Studio
             </h1>
             <p className="max-w-2xl text-sm font-medium leading-relaxed text-muted-foreground">
@@ -284,10 +284,10 @@ export default function ShadowingRecorderClient({
         </header>
 
         <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
-          <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-xl">
+          <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl">
             <div className="mb-5 flex items-center gap-2">
               <AudioLines size={16} className="text-primary" aria-hidden="true" />
-              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground">
+              <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
                 Preset Line
               </h2>
             </div>
@@ -299,7 +299,7 @@ export default function ShadowingRecorderClient({
                   onClick={() => handlePresetChange(index)}
                   disabled={isRecording}
                   className={cn(
-                    "rounded-2xl border p-4 text-left transition-all",
+                    "rounded-lg border p-4 text-left transition-all",
                     preset.id === item.id
                       ? "border-success/40 bg-success/10 text-success"
                       : "border-border bg-background/35 text-muted-foreground hover:text-foreground"
@@ -325,7 +325,7 @@ export default function ShadowingRecorderClient({
           </Card>
 
           <div className="flex flex-col gap-6">
-            <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-2xl md:p-8">
+            <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-2xl md:p-8">
               <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <Badge variant="outline" className="mb-3 rounded-xl">
@@ -343,7 +343,7 @@ export default function ShadowingRecorderClient({
                     </Button>
                   ) : null}
                 </div>
-                <div className="w-full rounded-2xl border border-border bg-muted/15 p-4 sm:w-44">
+                <div className="w-full rounded-lg border border-border bg-muted/15 p-4 sm:w-44">
                   <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                     Rekaman
                   </p>
@@ -366,7 +366,7 @@ export default function ShadowingRecorderClient({
               </div>
 
               <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
-                <div className="grid grid-cols-3 gap-2">
+                <div className="flex flex-wrap items-center justify-center gap-3">
                   {PLAYBACK_RATES.map((item) => (
                     <button
                       key={item.label}
@@ -423,20 +423,20 @@ export default function ShadowingRecorderClient({
               </div>
             </Card>
 
-            <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-xl">
+            <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl">
               <div className="mb-4 flex items-center gap-2">
                 <Waves size={16} className="text-success" aria-hidden="true" />
-                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground">
+                <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
                   Playback Kamu
                 </h2>
               </div>
 
               {audioUrl ? (
-                <div className="rounded-2xl border border-success/20 bg-success/10 p-4">
+                <div className="rounded-lg border border-success/20 bg-success/10 p-4">
                   <audio controls src={audioUrl} className="w-full">
                     <track kind="captions" />
                   </audio>
-                  <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                  <div className="mt-4 flex flex-col sm:flex-row gap-4">
                     <div className="rounded-xl border border-border bg-background/35 p-3">
                       <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                         Target
@@ -462,7 +462,7 @@ export default function ShadowingRecorderClient({
                   </div>
                 </div>
               ) : (
-                <div className="rounded-2xl border border-dashed border-border bg-muted/15 p-5">
+                <div className="rounded-lg border border-dashed border-border bg-muted/15 p-5">
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Play size={16} aria-hidden="true" />
                     <p className="text-sm font-medium">
@@ -473,13 +473,13 @@ export default function ShadowingRecorderClient({
               )}
 
               {error ? (
-                <p className="mt-4 rounded-2xl border border-destructive/25 bg-destructive/10 p-4 text-sm font-bold text-destructive">
+                <p className="mt-4 rounded-lg border border-destructive/25 bg-destructive/10 p-4 text-sm font-bold text-destructive">
                   {error}
                 </p>
               ) : null}
 
               {!speechSupported || !recordingSupported ? (
-                <p className="mt-4 rounded-2xl border border-warning/25 bg-warning/10 p-4 text-sm font-bold text-warning">
+                <p className="mt-4 rounded-lg border border-warning/25 bg-warning/10 p-4 text-sm font-bold text-warning">
                   Beberapa fitur audio bergantung pada izin browser dan dukungan Web Speech atau MediaRecorder.
                 </p>
               ) : null}

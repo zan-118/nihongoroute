@@ -33,7 +33,7 @@ export default function Heatmap({ studyDays }: Props) {
   const { days } = useHeatmap();
 
   return (
-    <Card className="bg-card p-6 md:p-8 lg:p-10 rounded-[2.5rem] md:rounded-[3rem] border border-border relative overflow-hidden neo-card shadow-lg transition-colors duration-300">
+    <Card className="bg-card p-6 md:p-8 lg:p-10 rounded-2xl md:rounded-3xl border border-border relative overflow-hidden neo-card shadow-lg transition-colors duration-300">
       {/* Pola Kisi Halus Latar Belakang */}
       <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--primary-rgb)/0.01)_1px,transparent_1px)] bg-[size:100%_4px] opacity-20 dark:opacity-50 pointer-events-none" />
 
@@ -44,7 +44,7 @@ export default function Heatmap({ studyDays }: Props) {
             <Activity size={20} className="text-primary md:w-6 md:h-6" />
           </Card>
           <div className="text-left">
-            <h3 className="text-foreground font-black uppercase tracking-widest text-xs md:text-sm">
+            <h3 className="text-foreground uppercase tracking-widest text-xs md:text-sm">
               Aktivitas Belajar
             </h3>
             <span className="block text-xs md:text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">Riwayat 35 Hari</span>
@@ -72,7 +72,7 @@ export default function Heatmap({ studyDays }: Props) {
               className={`w-6 h-6 md:w-8 md:h-8 lg:w-9 lg:h-9 rounded-lg md:rounded-xl border transition-all duration-300 hover:scale-125 hover:z-20 cursor-help group relative ${getBoxStyle(value)}`}
             >
               {/* Tooltip Keterangan Detail Aktivitas */}
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 md:mb-3 w-max px-3 py-2 md:px-4 md:py-3 bg-popover/95 backdrop-blur-xl border border-border text-popover-foreground text-xs md:text-xs font-bold uppercase tracking-widest rounded-xl opacity-0 group-hover:opacity-100 transition-all pointer-events-none shadow-2xl z-30 neo-card scale-90 group-hover:scale-100 origin-bottom">
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 md:mb-3 w-max px-3 py-2 md:px-4 md:py-3 bg-popover/95  border border-border text-popover-foreground text-xs md:text-xs font-bold uppercase tracking-widest rounded-xl opacity-0 group-hover:opacity-100 transition-all pointer-events-none shadow-2xl z-30 neo-card scale-90 group-hover:scale-100 origin-bottom">
                 {day} <span className="text-muted-foreground/30 mx-2">|</span> <span className="text-primary">{value} KATA</span>
               </div>
             </m.div>

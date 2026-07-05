@@ -44,7 +44,7 @@ function ResultRow({ item }: { item: ToolSearchItem }) {
   const Icon = item.icon;
 
   return (
-    <div className="group flex flex-col gap-3 rounded-2xl border border-border bg-background/40 p-4 transition-all hover:border-primary/35 hover:bg-muted/20 sm:flex-row sm:items-center">
+    <div className="group flex flex-col gap-3 rounded-lg border border-border bg-background/40 p-4 transition-all hover:border-primary/35 hover:bg-muted/20 sm:flex-row sm:items-center">
       <div className="flex min-w-0 flex-1 items-start gap-3">
         <div
           className={cn(
@@ -106,11 +106,11 @@ function ResultPanel({
   empty: string;
 }) {
   return (
-    <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-xl">
+    <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl">
       <div className="mb-4 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <Icon size={16} className="text-primary" aria-hidden="true" />
-          <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground">
+          <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
             {title}
           </h2>
         </div>
@@ -125,7 +125,7 @@ function ResultPanel({
           ))}
         </div>
       ) : (
-        <p className="rounded-2xl border border-dashed border-border bg-muted/15 p-5 text-sm font-medium text-muted-foreground">
+        <p className="rounded-lg border border-dashed border-border bg-muted/15 p-5 text-sm font-medium text-muted-foreground">
           {empty}
         </p>
       )}
@@ -232,12 +232,12 @@ export default function TextAnalyzerClient({
           </Button>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">
-              <div className="flex size-12 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary">
+              <div className="flex size-12 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
                 <Languages size={24} aria-hidden="true" />
               </div>
               <Badge className="w-fit rounded-xl px-3 py-1">Text Analyzer</Badge>
             </div>
-            <h1 className="max-w-3xl text-4xl font-black uppercase tracking-tight text-foreground md:text-6xl">
+            <h1 className="max-w-3xl text-4xl uppercase tracking-tight text-foreground md:text-6xl">
               Bongkar Teks Jepang
             </h1>
             <p className="max-w-2xl text-sm font-medium leading-relaxed text-muted-foreground">
@@ -259,7 +259,7 @@ export default function TextAnalyzerClient({
         </header>
 
         <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-          <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-2xl md:p-6">
+          <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-2xl md:p-6">
             <div className="mb-4 flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <Clipboard size={16} className="text-primary" aria-hidden="true" />
@@ -280,7 +280,7 @@ export default function TextAnalyzerClient({
             <textarea
               value={text}
               onChange={(event) => setText(event.target.value)}
-              className="min-h-[320px] w-full resize-y rounded-2xl border border-border bg-muted/15 p-5 font-japanese text-lg font-medium leading-relaxed text-foreground outline-none transition-all placeholder:text-muted-foreground/50 focus:border-primary/40 focus:ring-2 focus:ring-primary/20"
+              className="min-h-[320px] w-full resize-y rounded-lg border border-border bg-muted/15 p-5 font-japanese text-lg font-medium leading-relaxed text-foreground outline-none transition-all placeholder:text-muted-foreground/50 focus:border-primary/40 focus:ring-2 focus:ring-primary/20"
               placeholder="例: 昨日、友達と図書館で..."
             />
             {error ? (
@@ -309,10 +309,10 @@ export default function TextAnalyzerClient({
           </Card>
 
           <div className="flex flex-col gap-6">
-            <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-xl md:p-6">
+            <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl md:p-6">
               <div className="mb-5 flex items-center gap-2">
                 <Sparkles size={16} className="text-primary" aria-hidden="true" />
-                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground">
+                <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
                   Ringkasan
                 </h2>
               </div>
@@ -323,7 +323,7 @@ export default function TextAnalyzerClient({
                   ["Kana", analysis?.stats.kanaCount || 0],
                   ["Kanji Unik", analysis?.stats.uniqueKanji.length || 0],
                 ].map(([label, value]) => (
-                  <div key={label} className="rounded-2xl border border-border bg-background/40 p-4">
+                  <div key={label} className="rounded-lg border border-border bg-background/40 p-4">
                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                       {label}
                     </p>
@@ -348,7 +348,7 @@ export default function TextAnalyzerClient({
               ) : null}
             </Card>
 
-            <Card className="rounded-[2rem] border border-border bg-muted/15 p-5">
+            <Card className="rounded-2xl md:rounded-3xl border border-border bg-muted/15 p-5">
               <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
                 Tips: hasil analyzer memakai pencarian database per token dan kanji. Untuk parsing morfologi sempurna, tahap berikutnya bisa ditambah tokenizer Kuromoji.
               </p>
@@ -358,7 +358,7 @@ export default function TextAnalyzerClient({
           </div>
         </div>
 
-        <div className="grid gap-6 xl:grid-cols-3">
+        <div className="flex flex-col xl:flex-row gap-6">
           <ResultPanel
             title="Kosakata"
             icon={FileText}

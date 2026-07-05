@@ -29,32 +29,32 @@ export default function DashboardLoading() {
             <Skeleton className="h-16 w-3/4 md:w-96" />
             <Skeleton className="h-4 w-1/2 md:w-64" />
           </div>
-          <Skeleton className="h-[280px] w-full lg:w-[400px] rounded-2xl" />
+          <Skeleton className="h-[280px] w-full lg:w-[400px] rounded-lg" />
         </div>
 
         {/* Kerangka Pemuatan Grid Bento */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           <div className="md:col-span-8">
-            <Skeleton className="h-[250px] w-full rounded-2xl" />
+            <Skeleton className="h-[250px] w-full rounded-lg" />
           </div>
           <div className="md:col-span-4 space-y-6">
-            <Skeleton className="h-[110px] w-full rounded-2xl" />
-            <Skeleton className="h-[110px] w-full rounded-2xl" />
+            <Skeleton className="h-[110px] w-full rounded-lg" />
+            <Skeleton className="h-[110px] w-full rounded-lg" />
           </div>
 
           {/* Kerangka Pemuatan Sub-Komponen */}
           <div className="md:col-span-4">
-            <Skeleton className="h-[400px] w-full rounded-2xl" />
+            <Skeleton className="h-[400px] w-full rounded-lg" />
           </div>
           <div className="md:col-span-4">
-            <Skeleton className="h-[400px] w-full rounded-2xl" />
+            <Skeleton className="h-[400px] w-full rounded-lg" />
           </div>
           <div className="md:col-span-4">
-            <Skeleton className="h-[400px] w-full rounded-2xl" />
+            <Skeleton className="h-[400px] w-full rounded-lg" />
           </div>
           
           <div className="md:col-span-12">
-            <Skeleton className="h-[220px] w-full rounded-2xl" />
+            <Skeleton className="h-[220px] w-full rounded-lg" />
           </div>
         </div>
       </div>

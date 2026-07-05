@@ -25,7 +25,7 @@ import type { ReadinessCourseCategory } from "@/lib/readiness";
 // ==========================================
 const KanjiProgressGrid = dynamic(() => import("../KanjiProgressGrid"), { 
   ssr: false,
-  loading: () => <div className="h-[200px] w-full animate-pulse bg-muted rounded-2xl" />
+  loading: () => <div className="h-[200px] w-full animate-pulse bg-muted rounded-lg" />
 });
 
 const WeakPointPanel = dynamic(() => import("../WeakPointPanel"), {
@@ -110,15 +110,15 @@ export function ProgressPanel({
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-[13px]">
             <div className="w-[34px] h-[1px] bg-primary/40" />
-            <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
+            <h2 className="text-[10px] uppercase tracking-[0.2em] text-primary">
               Analisis Mendalam
             </h2>
           </div>
-          <h3 className="text-3xl font-bold tracking-tight text-foreground">
+          <h3 className="text-3xl tracking-tight text-foreground">
             Data <span className="text-muted-foreground font-medium">Belajarmu</span>
           </h3>
         </div>
-        <div className="p-[21px] rounded-[34px] bg-card/30 backdrop-blur-sm border border-border">
+        <div className="p-[21px] rounded-[34px] bg-card/30  border border-border">
           <KanjiProgressGrid />
         </div>
         

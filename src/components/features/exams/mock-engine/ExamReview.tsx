@@ -128,9 +128,9 @@ function ReviewPassageBlock({ passage }: { passage?: ExamPassage | null }) {
   if (!hasContent) return null;
 
   return (
-    <div className="mb-8 rounded-2xl border border-border bg-[rgb(var(--muted-rgb)/0.25)] p-5 dark:bg-[rgb(var(--background-rgb)/0.12)]">
+    <div className="mb-8 rounded-lg border border-border bg-[rgb(var(--muted-rgb)/0.25)] p-5 dark:bg-[rgb(var(--background-rgb)/0.12)]">
       {passage.visualUrl && (
-        <div className="mb-5 overflow-hidden rounded-2xl border border-border bg-background/60">
+        <div className="mb-5 overflow-hidden rounded-lg border border-border bg-background/60">
           <Image
             src={passage.visualUrl}
             alt="Visual bacaan"
@@ -250,12 +250,12 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
   return (
     <div className="w-full max-w-5xl mx-auto pb-20 transition-colors duration-300">
       <header className="relative z-20 mb-8">
-        <Card className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between p-5 sm:p-8 mt-6 md:mt-10 border border-border bg-card rounded-3xl shadow-lg">
+        <Card className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between p-5 sm:p-8 mt-6 md:mt-10 border border-border bg-card rounded-xl shadow-lg">
           <div className="flex flex-col gap-2">
             <Badge variant="outline" className="w-fit rounded-xl px-3 py-1">
               Mock Exam Review
             </Badge>
-            <h2 className="text-xl sm:text-2xl font-black text-foreground uppercase leading-none">
+            <h2 className="text-xl sm:text-2xl text-foreground uppercase leading-none">
               Tinjau <span className="text-warning">Jawaban</span>
             </h2>
             <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">
@@ -277,7 +277,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
       </header>
 
       <section className="mb-10">
-        <Card className="p-6 md:p-8 border border-border bg-card rounded-[2rem] shadow-xl">
+        <Card className="p-6 md:p-8 border border-border bg-card rounded-2xl md:rounded-3xl shadow-xl">
           <div className="flex flex-col gap-8">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
               <div className="max-w-2xl flex flex-col gap-3">
@@ -285,7 +285,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                   Mistake Review
                 </Badge>
                 <div className="flex flex-col gap-2">
-                  <h3 className="text-2xl md:text-3xl font-black uppercase leading-tight text-foreground">
+                  <h3 className="text-2xl md:text-3xl uppercase leading-tight text-foreground">
                     Analisis Kesalahan
                   </h3>
                   <p className="text-sm font-medium leading-relaxed text-muted-foreground">
@@ -296,7 +296,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                 </div>
               </div>
 
-              <div className="min-w-full rounded-2xl border border-border bg-muted/20 p-5 sm:min-w-[280px] lg:min-w-[320px]">
+              <div className="min-w-full rounded-lg border border-border bg-muted/20 p-5 sm:min-w-[280px] lg:min-w-[320px]">
                 <div className="mb-4 flex items-center justify-between gap-4">
                   <div className="flex flex-col gap-1">
                     <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
@@ -340,7 +340,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                   <div
                     key={stat.label}
                     className={cn(
-                      "rounded-2xl border p-4 flex flex-col gap-3 bg-muted/20",
+                      "rounded-lg border p-4 flex flex-col gap-3 bg-muted/20",
                       stat.className
                     )}
                   >
@@ -364,7 +364,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
             </div>
 
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_0.9fr]">
-              <div className="rounded-2xl border border-border bg-muted/20 p-5">
+              <div className="rounded-lg border border-border bg-muted/20 p-5">
                 <div className="mb-5 flex items-center justify-between gap-4">
                   <div className="flex items-center gap-2">
                     <BrainCircuit size={18} aria-hidden="true" className="text-primary" />
@@ -397,7 +397,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-border bg-muted/20 p-5">
+              <div className="rounded-lg border border-border bg-muted/20 p-5">
                 <div className="mb-5 flex items-center gap-2">
                   <Target size={18} aria-hidden="true" className="text-primary" />
                   <span className="text-xs font-black uppercase tracking-widest text-foreground">
@@ -412,7 +412,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                     return (
                       <div
                         key={action.id}
-                        className="rounded-2xl border border-border bg-background/55 p-4 flex flex-col gap-4"
+                        className="rounded-lg border border-border bg-background/55 p-4 flex flex-col gap-4"
                       >
                         <div className="flex items-start gap-3">
                           <div className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary">
@@ -456,7 +456,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
           </span>
         </div>
 
-        <div className="flex rounded-2xl border border-border bg-muted/40 p-1.5">
+        <div className="flex rounded-lg border border-border bg-muted/40 p-1.5">
           <Button
             type="button"
             variant={effectiveFilter === "mistakes" ? "default" : "ghost"}
@@ -483,7 +483,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
 
       <div className="flex flex-col gap-10 md:gap-16">
         {visibleInsights.length === 0 ? (
-          <Card className="p-8 text-center rounded-[2rem] border border-border bg-card">
+          <Card className="p-8 text-center rounded-2xl md:rounded-3xl border border-border bg-card">
             <CheckCircle2
               size={44}
               aria-hidden="true"
@@ -513,7 +513,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
               >
                 <Card
                   className={cn(
-                    "p-6 md:p-10 rounded-[2rem] border bg-card shadow-2xl transition-colors",
+                    "p-6 md:p-10 rounded-2xl md:rounded-3xl border bg-card shadow-2xl transition-colors",
                     getQuestionBorderClass(insight)
                   )}
                 >
@@ -538,27 +538,27 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                   {q.questionText && (
                     <ExamQuestionText
                       questionText={q.questionText}
-                      className="mb-8 rounded-2xl border border-border bg-[rgb(var(--muted-rgb)/0.3)] p-5 text-lg font-medium leading-relaxed text-foreground dark:bg-[rgb(var(--background-rgb)/0.1)] md:text-2xl font-japanese prose-custom"
+                      className="mb-8 rounded-lg border border-border bg-[rgb(var(--muted-rgb)/0.3)] p-5 text-lg font-medium leading-relaxed text-foreground dark:bg-[rgb(var(--background-rgb)/0.1)] md:text-2xl font-japanese prose-custom"
                     />
                   )}
 
                   <ReviewPassageBlock passage={q.passage} />
 
                   {q.imageUrl && (
-                    <div className="mb-8 overflow-hidden rounded-3xl border border-border bg-[rgb(var(--muted-rgb)/0.2)] p-3 dark:bg-[rgb(var(--background-rgb)/0.2)]">
+                    <div className="mb-8 overflow-hidden rounded-xl border border-border bg-[rgb(var(--muted-rgb)/0.2)] p-3 dark:bg-[rgb(var(--background-rgb)/0.2)]">
                       <Image
                         src={q.imageUrl}
                         alt="Gambar pendukung"
                         width={800}
                         height={400}
                         unoptimized
-                        className="max-h-[400px] w-full rounded-2xl object-contain opacity-90"
+                        className="max-h-[400px] w-full rounded-lg object-contain opacity-90"
                       />
                     </div>
                   )}
 
                   {q.audioUrl && (
-                    <div className="mb-8 flex flex-col gap-4 rounded-2xl border border-border bg-[rgb(var(--muted-rgb)/0.2)] p-5 shadow-none dark:bg-[rgb(var(--background-rgb)/0.3)]">
+                    <div className="mb-8 flex flex-col gap-4 rounded-lg border border-border bg-[rgb(var(--muted-rgb)/0.2)] p-5 shadow-none dark:bg-[rgb(var(--background-rgb)/0.3)]">
                       <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">
                         <Volume2 size={16} aria-hidden="true" className="text-primary" />
                         Audio Track (Review)
@@ -595,7 +595,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                         <div
                           key={`${opt}-${optIdx}`}
                           className={cn(
-                            "flex items-center gap-4 rounded-2xl border p-5 transition-all",
+                            "flex items-center gap-4 rounded-lg border p-5 transition-all",
                             optionClass
                           )}
                         >
@@ -633,7 +633,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                   </div>
 
                   {!insight.isAnswered && (
-                    <div className="mt-6 flex items-start gap-3 rounded-2xl border border-warning/20 bg-warning/10 p-4 text-warning">
+                    <div className="mt-6 flex items-start gap-3 rounded-lg border border-warning/20 bg-warning/10 p-4 text-warning">
                       <AlertTriangle size={18} aria-hidden="true" className="mt-0.5 shrink-0" />
                       <p className="text-xs font-bold leading-relaxed">
                         Soal ini belum dijawab saat ujian, jadi dihitung sebagai bagian dari review kesalahan.
@@ -642,7 +642,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                   )}
 
                   {(q.explanationHtml || q.sourceReference || q.sourceId) && (
-                    <div className="mt-6 rounded-2xl border border-border bg-muted/20 p-5">
+                    <div className="mt-6 rounded-lg border border-border bg-muted/20 p-5">
                       {q.explanationHtml && (
                         <div
                           className="prose-custom font-japanese text-sm leading-relaxed text-foreground"

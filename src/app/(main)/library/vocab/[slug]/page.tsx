@@ -224,26 +224,26 @@ export default async function VocabDetailPage({
               Latihan Terkait
             </p>
             <div className="flex flex-wrap gap-2">
-              <Button asChild variant="outline" className="rounded-2xl gap-2">
+              <Button asChild variant="outline" className="rounded-lg gap-2">
                 <Link href={`/tools/jlpt-drill?level=${encodeURIComponent(vocabLevel)}&kind=vocab&source=vocab&slug=${encodeURIComponent(vocabSlug)}`}>
                   <ListChecks size={16} aria-hidden="true" />
                   JLPT Drill
                 </Link>
               </Button>
-              <Button asChild variant="outline" className="rounded-2xl gap-2">
+              <Button asChild variant="outline" className="rounded-lg gap-2">
                 <Link href={`/tools/counter-trainer?level=${encodeURIComponent(vocabLevel)}&source=vocab&slug=${encodeURIComponent(vocabSlug)}`}>
                   <Hash size={16} aria-hidden="true" />
                   Counter
                 </Link>
               </Button>
-              <Button asChild variant="outline" className="rounded-2xl gap-2">
+              <Button asChild variant="outline" className="rounded-lg gap-2">
                 <Link href={`/tools/flashcards?category=${encodeURIComponent(vocabLevel.toLowerCase())}&mode=vocab&amount=10`}>
                   <Layers size={16} aria-hidden="true" />
                   Flashcard
                 </Link>
               </Button>
               {isVerb ? (
-                <Button asChild variant="outline" className="rounded-2xl gap-2">
+                <Button asChild variant="outline" className="rounded-lg gap-2">
                   <Link href={`/tools/conjugation?verb=${encodeURIComponent(vocabWord)}&group=${verbGroup}&sourceTitle=${encodeURIComponent(vocabWord)}&sourceHref=${encodeURIComponent(`/library/vocab/${vocabSlug}`)}`}>
                     <GraduationCap size={16} aria-hidden="true" />
                     Konjugasi
@@ -254,7 +254,7 @@ export default async function VocabDetailPage({
           </div>
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           <Link href="/library/vocab" className="w-full md:w-auto">
-            <Button variant="ghost" className="w-full px-10 py-8 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-2xl bg-[rgb(var(--muted-rgb)/0.3)] border border-border hover:bg-[rgb(var(--muted-rgb)/0.5)] hover:border-primary/30 transition-all gap-4 group">
+            <Button variant="ghost" className="w-full px-10 py-8 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-lg bg-[rgb(var(--muted-rgb)/0.3)] border border-border hover:bg-[rgb(var(--muted-rgb)/0.5)] hover:border-primary/30 transition-all gap-4 group">
               <ChevronLeft size={20} aria-hidden="true" className="group-hover:-translate-x-2 transition-transform" /> Kembali ke Daftar Kosakata
             </Button>
           </Link>

@@ -60,7 +60,7 @@ export function ReadingNavbar({
         </Link>
         <div className="h-6 w-px bg-border mx-2 hidden md:block" />
         <div className="flex flex-col">
-          <h2 className="text-sm font-black text-foreground truncate max-w-[200px] md:max-w-[400px]">
+          <h2 className="text-sm text-foreground truncate max-w-[200px] md:max-w-[400px]">
             {title}
           </h2>
           <span className="text-[10px] font-bold text-primary uppercase tracking-widest">

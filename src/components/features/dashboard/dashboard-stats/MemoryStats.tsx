@@ -59,7 +59,7 @@ export default function MemoryStats() {
   ];
 
   return (
-    <Card className="bg-card p-6 md:p-8 lg:p-10 rounded-[2.5rem] md:rounded-[3rem] border-border relative overflow-hidden h-full flex flex-col neo-card shadow-none">
+    <Card className="bg-card p-6 md:p-8 lg:p-10 rounded-2xl md:rounded-3xl border-border relative overflow-hidden h-full flex flex-col neo-card shadow-none">
       {/* Pola Kisi Latar Belakang */}
       <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--primary-rgb)/0.02)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--primary-rgb)/0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none opacity-50" />
 
@@ -70,7 +70,7 @@ export default function MemoryStats() {
             <Database size={20} className="text-primary md:w-6 md:h-6" />
           </Card>
           <div className="text-left">
-            <h3 className="text-foreground font-black uppercase tracking-widest text-xs md:text-sm">
+            <h3 className="text-foreground uppercase tracking-widest text-xs md:text-sm">
               Status Hafalan
             </h3>
             <span className="block text-xs md:text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">Distribusi Memori Pintar</span>
@@ -103,7 +103,7 @@ export default function MemoryStats() {
       <div className="pt-6 md:pt-8 border-t border-border grid grid-cols-2 gap-4 md:gap-5 relative z-10 mt-auto">
         <Link
           href="/library/vocab"
-          className="group relative p-4 md:p-5 bg-muted rounded-2xl md:rounded-3xl border border-border text-xs md:text-xs font-bold text-center uppercase tracking-widest text-muted-foreground transition-all neo-card shadow-none active:translate-y-1 hover:text-primary hover:border-primary/30 hover:bg-primary/5"
+          className="group relative p-4 md:p-5 bg-muted rounded-lg md:rounded-xl border border-border text-xs md:text-xs font-bold text-center uppercase tracking-widest text-muted-foreground transition-all neo-card shadow-none active:translate-y-1 hover:text-primary hover:border-primary/30 hover:bg-primary/5"
         >
           <div className="flex flex-col items-center gap-2 md:gap-3">
             <BookOpen size={18} className="md:w-5 md:h-5 group-hover:scale-110 transition-transform duration-300" />
@@ -112,7 +112,7 @@ export default function MemoryStats() {
         </Link>
         <Link
           href="/courses/n5/kanji"
-          className="group relative p-4 md:p-5 bg-muted rounded-2xl md:rounded-3xl border border-border text-xs md:text-xs font-bold text-center uppercase tracking-widest text-muted-foreground transition-all neo-card shadow-none active:translate-y-1 hover:text-secondary hover:border-secondary/30 hover:bg-secondary/5"
+          className="group relative p-4 md:p-5 bg-muted rounded-lg md:rounded-xl border border-border text-xs md:text-xs font-bold text-center uppercase tracking-widest text-muted-foreground transition-all neo-card shadow-none active:translate-y-1 hover:text-secondary hover:border-secondary/30 hover:bg-secondary/5"
         >
           <div className="flex flex-col items-center gap-2 md:gap-3">
             <PenTool size={18} className="md:w-5 md:h-5 group-hover:scale-110 transition-transform duration-300" />

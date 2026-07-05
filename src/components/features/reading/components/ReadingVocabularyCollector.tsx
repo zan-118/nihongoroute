@@ -27,7 +27,7 @@ export function ReadingVocabularyCollector({ sourceId }: ReadingVocabularyCollec
 
   if (entries.length === 0) {
     return (
-      <Card className="mt-16 rounded-[2rem] border border-dashed border-border bg-card/30 p-6 text-center">
+      <Card className="mt-16 rounded-2xl md:rounded-3xl border border-dashed border-border bg-card/30 p-6 text-center">
         <BookMarked size={28} aria-hidden="true" className="mx-auto mb-3 text-muted-foreground/50" />
         <p className="text-xs font-black uppercase tracking-[0.22em] text-muted-foreground">
           Bank kosakata bacaan masih kosong
@@ -37,10 +37,10 @@ export function ReadingVocabularyCollector({ sourceId }: ReadingVocabularyCollec
   }
 
   return (
-    <Card className="mt-16 rounded-[2rem] border border-border bg-card/45 p-6 shadow-2xl">
+    <Card className="mt-16 rounded-2xl md:rounded-3xl border border-border bg-card/45 p-6 shadow-2xl">
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex size-11 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary">
+          <div className="flex size-11 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
             <BookMarked size={20} aria-hidden="true" />
           </div>
           <div className="flex flex-col gap-1">
@@ -68,7 +68,7 @@ export function ReadingVocabularyCollector({ sourceId }: ReadingVocabularyCollec
         {entries.map((entry) => (
           <div
             key={entry.id}
-            className="rounded-2xl border border-border bg-background/45 p-4"
+            className="rounded-lg border border-border bg-background/45 p-4"
           >
             <div className="mb-3 flex items-start justify-between gap-3">
               <div className="min-w-0">

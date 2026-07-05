@@ -40,16 +40,16 @@ interface VocabExamplesProps {
  */
 export function VocabExamples({ examples }: VocabExamplesProps) {
   return (
-    <Card className="p-6 md:p-8 bg-card/20 backdrop-blur-xl border-border rounded-[2rem] hover:border-primary/40 transition-all group overflow-hidden relative font-sans glass shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
+    <Card className="p-6 md:p-8 bg-card/20  border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all group overflow-hidden relative font-sans glass shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
       <div className="flex items-center gap-3 mb-6">
         <Layers size={18} aria-hidden="true" className="text-primary" />
-        <h2 className="text-sm font-black uppercase tracking-[0.2em] text-foreground">Contoh Penggunaan</h2>
+        <h2 className="text-sm uppercase tracking-[0.2em] text-foreground">Contoh Penggunaan</h2>
       </div>
 
       {/* Daftar Contoh Kalimat */}
       <div className="space-y-4">
         {examples?.map((ex) => (
-          <div key={ex.jp || ex.japanese} className="p-5 pl-6 bg-[rgb(var(--card-rgb)/0.3)] border border-border rounded-2xl relative overflow-hidden group/item hover:border-primary/30 transition-all duration-300 shadow-sm">
+          <div key={ex.jp || ex.japanese} className="p-5 pl-6 bg-[rgb(var(--card-rgb)/0.3)] border border-border rounded-lg relative overflow-hidden group/item hover:border-primary/30 transition-all duration-300 shadow-sm">
             {/* Aksen Batang Warna Kiri */}
             <div className="absolute top-0 left-0 w-1 h-full bg-primary/20 group-hover/item:bg-primary transition-all duration-300" />
             

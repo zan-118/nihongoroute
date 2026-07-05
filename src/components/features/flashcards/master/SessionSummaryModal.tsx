@@ -72,7 +72,7 @@ export function SessionSummaryModal({
   return (
     <Dialog open={isFinished} onOpenChange={setIsFinished}>
       <DialogContent className="max-w-md w-[90%] md:w-full p-0 border-none bg-transparent shadow-none mx-auto transition-colors duration-300">
-        <Card className="w-full bg-card p-8 md:p-10 rounded-2xl border border-border text-center relative overflow-hidden shadow-2xl">
+        <Card className="w-full bg-card p-8 md:p-10 rounded-lg border border-border text-center relative overflow-hidden shadow-2xl">
           <div className={`absolute top-0 left-0 right-0 h-1.5 ${themeBgColor} ${themeShadow}`} />
 
           <div className="w-16 h-16 md:w-20 md:h-20 mx-auto bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.04)] rounded-xl flex items-center justify-center border border-border mb-6 shadow-none">
@@ -118,7 +118,7 @@ export function SessionSummaryModal({
             </Card>
           </div>
 
-          <div className="grid grid-cols-3 gap-3 mb-6">
+          <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
             <Card className="bg-card border border-border p-4 rounded-xl flex flex-col items-center shadow-none">
               <span className="text-lg md:text-xl font-black text-foreground">
                 {sessionStats.accuracy}%

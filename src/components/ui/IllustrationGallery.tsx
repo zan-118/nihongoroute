@@ -65,7 +65,7 @@ export function IllustrationGallery({
             <div
               key={idx}
               className={cn(
-                "group relative overflow-hidden rounded-[2rem] border border-border bg-card/30 backdrop-blur-sm cursor-pointer glass shadow-sm transition-all duration-500 hover:shadow-lg hover:border-primary/30",
+                "group relative overflow-hidden rounded-xl border border-border bg-card/30  cursor-pointer glass shadow-sm transition-all duration-500 hover:shadow-lg hover:border-primary/30",
                 gridClass
               )}
               onClick={() => setSelectedImage(ill)}
@@ -81,14 +81,14 @@ export function IllustrationGallery({
 
               {/* Hover Zoom overlay */}
               <div className="absolute inset-0 bg-background/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
-                <div className="p-3.5 rounded-full bg-background/80 backdrop-blur-md shadow-lg border border-border transform scale-90 group-hover:scale-100 transition-transform duration-300">
+                <div className="p-3.5 rounded-full bg-background/80  shadow-lg border border-border transform scale-90 group-hover:scale-100 transition-transform duration-300">
                   <ZoomIn className="size-5 text-primary" />
                 </div>
               </div>
 
               {/* Caption Tag */}
               {ill.title && (
-                <div className="absolute bottom-4 left-4 right-4 p-3 rounded-2xl bg-background/70 backdrop-blur-md border border-border shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-10">
+                <div className="absolute bottom-4 left-4 right-4 p-3 rounded-lg bg-background/70  border border-border shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-10">
                   <p className="text-[10px] font-bold text-foreground text-center line-clamp-2 leading-relaxed">
                     {ill.title}
                   </p>
@@ -106,7 +106,7 @@ export function IllustrationGallery({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[150] flex flex-col items-center justify-center p-4 bg-background/80 backdrop-blur-xl"
+            className="fixed inset-0 z-[150] flex flex-col items-center justify-center p-4 bg-background/80 "
             onClick={() => setSelectedImage(null)}
           >
             {/* Tombol Tutup */}
@@ -131,10 +131,10 @@ export function IllustrationGallery({
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 20 }}
               transition={{ type: "spring", damping: 25, stiffness: 180 }}
-              className="relative max-w-5xl w-full max-h-[85vh] rounded-[2.5rem] overflow-hidden border border-border shadow-2xl bg-card glass flex flex-col"
+              className="relative max-w-5xl w-full max-h-[85vh] rounded-xl overflow-hidden border border-border shadow-2xl bg-card glass flex flex-col"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="relative overflow-hidden flex-1 bg-black/5 flex items-center justify-center min-h-[50vh] md:min-h-[60vh]">
+              <div className="relative overflow-hidden flex-1 bg-muted/50 flex items-center justify-center min-h-[50vh] md:min-h-[60vh]">
                 <Image
                   src={selectedImage.content}
                   alt={selectedImage.title || "Detail Ilustrasi"}

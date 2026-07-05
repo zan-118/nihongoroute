@@ -110,23 +110,23 @@ export default function AchievementToast() {
   const isSilver = msgLower.includes("silver") || titleLower.includes("silver");
   const isBronze = msgLower.includes("bronze") || titleLower.includes("bronze");
 
-  let borderStyle = "border-primary/50 shadow-[0_0_30px_rgb(var(--primary-rgb)/0.15)]";
+  let borderStyle = "border-primary/50 shadow-md";
   let glowColor = "rgb(var(--primary-rgb)/0.3)";
   let badgeColor = "bg-primary/20 text-primary border-primary/30";
   let rarityLabel = "Bronze";
 
   if (isGold) {
-    borderStyle = "border-warning/50 shadow-[0_0_35px_rgba(var(--warning-rgb),0.25)] bg-[rgba(var(--warning-rgb),0.02)]";
+    borderStyle = "border-warning/50 shadow-md bg-warning/5";
     glowColor = "rgba(var(--warning-rgb), 0.4)";
     badgeColor = "bg-[rgba(var(--warning-rgb),0.15)] text-warning border-warning/30";
     rarityLabel = "Gold / Emas";
   } else if (isSilver) {
-    borderStyle = "border-muted-foreground/50 shadow-[0_0_30px_rgba(var(--muted-foreground-rgb),0.2)] bg-[rgba(var(--muted-foreground-rgb),0.02)]";
+    borderStyle = "border-muted-foreground/50 shadow-md bg-muted";
     glowColor = "rgba(var(--muted-foreground-rgb), 0.35)";
     badgeColor = "bg-[rgba(var(--muted-foreground-rgb),0.15)] text-muted-foreground border-muted-foreground/30";
     rarityLabel = "Silver / Perak";
   } else if (isBronze) {
-    borderStyle = "border-destructive/50 shadow-[0_0_30px_rgba(var(--destructive-rgb),0.15)] bg-[rgba(var(--destructive-rgb),0.02)]";
+    borderStyle = "border-destructive/50 shadow-md bg-destructive/5";
     glowColor = "rgba(var(--destructive-rgb), 0.3)";
     badgeColor = "bg-[rgba(var(--destructive-rgb),0.15)] text-destructive border-destructive/30";
     rarityLabel = "Bronze / Perunggu";
@@ -143,13 +143,13 @@ export default function AchievementToast() {
           className={`fixed bottom-24 right-4 md:bottom-10 md:right-10 z-[250] max-w-sm md:max-w-md w-full px-4`}
         >
           <div
-            className={`w-full glass p-5 rounded-3xl border flex gap-4 relative overflow-hidden transition-all ${borderStyle}`}
+            className={`w-full glass p-5 rounded-xl border flex gap-4 relative overflow-hidden transition-all ${borderStyle}`}
             style={{
               boxShadow: `0 20px 50px rgba(var(--foreground-rgb), 0.3), 0 0 30px ${glowColor}`,
             }}
           >
             {/* Efek sorotan lampu neon teranimasi di bagian dalam */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-primary/5 to-transparent pointer-events-none -translate-x-full animate-[shimmer_3s_infinite]" />
+            <div className="absolute inset-0 bg-primary/5 pointer-events-none" />
 
             {/* Tombol Tutup */}
             <button type="button"
@@ -166,9 +166,9 @@ export default function AchievementToast() {
                 initial={{ rotate: -45, scale: 0.5 }}
                 animate={{ rotate: 0, scale: 1 }}
                 transition={{ delay: 0.15, type: "spring" }}
-                className={`w-14 h-14 rounded-2xl flex items-center justify-center border shadow-inner ${badgeColor}`}
+                className={`w-14 h-14 rounded-lg flex items-center justify-center border shadow-inner ${badgeColor}`}
               >
-                <Trophy size={28} className="animate-pulse" />
+                <Trophy size={28} className="text-warning" />
               </m.div>
               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground mt-2">
                 Lencana
@@ -179,11 +179,11 @@ export default function AchievementToast() {
             <div className="flex-1 pr-6 flex flex-col justify-center">
               <div className="flex items-center gap-2 mb-1">
                 <Zap size={10} className="text-warning animate-premium-bounce" />
-                <span className="text-[8px] font-black uppercase tracking-[0.2em] text-warning animate-pulse">
+                <span className="text-[8px] font-black uppercase tracking-[0.2em] text-warning">
                   Achievement Unlocked
                 </span>
               </div>
-              <h4 className="text-sm font-black text-foreground uppercase tracking-wide leading-snug mb-1">
+              <h4 className="text-sm text-foreground uppercase tracking-wide leading-snug mb-1">
                 {activeToast.title}
               </h4>
               <p className="text-xs text-muted-foreground leading-relaxed font-medium">

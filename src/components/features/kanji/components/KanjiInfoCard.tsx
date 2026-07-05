@@ -38,7 +38,7 @@ export default function KanjiInfoCard({
       {meaning && (
         <div className="flex flex-col gap-2">
           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">Definisi</span>
-          <h2 className="text-2xl font-black text-foreground tracking-tight uppercase">
+          <h2 className="text-2xl text-foreground tracking-tight uppercase">
             {meaning}
           </h2>
         </div>
@@ -71,7 +71,7 @@ export default function KanjiInfoCard({
              <Sparkles size={14} className="text-primary/50" />
              <span className="text-[10px] font-black uppercase tracking-widest text-primary/70">Studi Mnemonic</span>
           </div>
-          <div className="bg-muted/50 border border-border rounded-2xl p-5 text-[13px] text-foreground/70 leading-relaxed font-medium italic shadow-inner">
+          <div className="bg-muted/50 border border-border rounded-lg p-5 text-[13px] text-foreground/70 leading-relaxed font-medium italic shadow-inner">
             {typeof mnemonics === "string"
               ? mnemonics
               : Array.isArray(mnemonics)

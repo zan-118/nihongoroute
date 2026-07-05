@@ -51,8 +51,8 @@ export const LessonHeader: React.FC<LessonHeaderProps> = ({
         }
       />
       {summary && (
-        <div
-          className={`p-6 md:p-8 rounded-[2rem] neo-inset border-l-8 mb-8 ${
+        <div 
+          className={`p-6 md:p-8 rounded-2xl md:rounded-3xl neo-inset border-l-8 mb-8 ${
             isSideQuest ? "border-warning" : "border-primary"
           }`}
         >

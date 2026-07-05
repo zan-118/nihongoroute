@@ -82,10 +82,10 @@ export default function ListeningListClient({ initialData }: ListeningListClient
       {/* Bagian Tajuk */}
       <div className="flex flex-col gap-6">
         <div className="flex items-center gap-4 mb-2">
-          <div className="size-12 rounded-2xl bg-[rgb(var(--primary-rgb)/0.1)] flex items-center justify-center text-primary border border-[rgb(var(--primary-rgb)/0.2)]">
+          <div className="size-12 rounded-lg bg-[rgb(var(--primary-rgb)/0.1)] flex items-center justify-center text-primary border border-[rgb(var(--primary-rgb)/0.2)]">
             <Headphones size={24} />
           </div>
-          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight text-foreground">
+          <h1 className="text-4xl md:text-6xl uppercase tracking-tight text-foreground">
             Listening <span className="text-primary">Lab</span>
           </h1>
         </div>
@@ -98,13 +98,13 @@ export default function ListeningListClient({ initialData }: ListeningListClient
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground size-5" />
             <Input 
               placeholder="Cari materi listening..." 
-              className="pl-12 h-14 bg-[rgb(var(--card-rgb)/0.4)] backdrop-blur-xl border-[rgb(var(--border-rgb)/0.4)] rounded-2xl text-lg shadow-2xl focus:ring-[rgb(var(--primary-rgb)/0.2)]"
+              className="pl-12 h-14 bg-[rgb(var(--card-rgb)/0.4)]  border-[rgb(var(--border-rgb)/0.4)] rounded-lg text-lg shadow-2xl focus:ring-[rgb(var(--primary-rgb)/0.2)]"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-border bg-card/35 p-2 backdrop-blur-xl w-fit max-w-full">
+          <div className="flex flex-wrap items-center gap-2 rounded-lg border border-border bg-card/35 p-2  w-fit max-w-full">
             {JLPT_FILTERS.map((item) => (
               <Button
                 key={item}
@@ -125,7 +125,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
       {/* Daftar Konten */}
       <div className="relative">
         {isFetching && (
-          <div className="absolute inset-0 z-50 flex items-center justify-center bg-[rgb(var(--background-rgb)/0.5)] backdrop-blur-sm rounded-[2rem]">
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-[rgb(var(--background-rgb)/0.5)]  rounded-[2rem]">
             <Loader2 className="size-10 animate-spin text-primary" />
           </div>
         )}
@@ -147,7 +147,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
               }}
             >
               <Link href={`/library/listening/${task.slug}`}>
-                <Card className="group h-full p-8 md:p-10 rounded-[2.5rem] bg-card/35 backdrop-blur-xl border border-border hover:border-primary/45 shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] hover:shadow-[0_20px_50px_rgba(var(--primary-rgb),0.1)] transition-all duration-500 relative overflow-hidden flex flex-col justify-between cursor-pointer glass">
+                <Card className="group h-full p-8 md:p-10 rounded-[2.5rem] bg-card/35  border border-border hover:border-primary/45 shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] hover:shadow-[0_20px_50px_rgba(var(--primary-rgb),0.1)] transition-all duration-500 relative overflow-hidden flex flex-col justify-between cursor-pointer glass">
                   {/* Efek Kilau / Pendar Ambient */}
                   <div className="absolute top-0 right-0 size-32 bg-primary/5 blur-[50px] rounded-full -mr-16 -mt-16 group-hover:bg-primary/10 transition-all duration-500" />
                   
@@ -185,7 +185,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
                           Level {task.difficulty}
                         </span>
                       )}
-                      <h3 className="text-2xl font-black text-foreground leading-tight group-hover:text-primary transition-colors line-clamp-2">
+                      <h3 className="text-2xl text-foreground leading-tight group-hover:text-primary transition-colors line-clamp-2">
                         {task.title}
                       </h3>
                     </div>
@@ -301,7 +301,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
           <div className="size-20 rounded-full bg-[rgb(var(--muted-rgb)/0.2)] flex items-center justify-center mb-6">
              <Headphones size={32} className="text-muted-foreground/50" />
           </div>
-          <h3 className="text-xl font-bold text-foreground">Materi tidak ditemukan</h3>
+          <h3 className="text-xl text-foreground">Materi tidak ditemukan</h3>
           <p className="text-muted-foreground">Coba cari dengan kata kunci lain.</p>
         </div>
       )}

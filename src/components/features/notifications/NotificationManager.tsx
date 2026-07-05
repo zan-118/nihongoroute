@@ -85,7 +85,7 @@ export default function NotificationManager() {
   };
 
   return (
-    <Card className="p-6 rounded-2xl bg-card border border-border shadow-lg relative overflow-hidden group">
+    <Card className="p-6 rounded-lg bg-card border border-border shadow-lg relative overflow-hidden group">
       <div className="absolute -top-4 -right-4 text-primary/5 rotate-12 pointer-events-none group-hover:scale-110 transition-transform duration-700">
         <Bell size={100} />
       </div>
@@ -97,8 +97,8 @@ export default function NotificationManager() {
               {isEnabled ? <BellRing size={20} /> : <BellOff size={20} />}
             </div>
             <div>
-              <h4 className="text-xs font-bold text-primary uppercase tracking-widest mb-0.5">Retensi PWA</h4>
-              <h3 className="text-sm font-black text-foreground uppercase tracking-tight">Pengingat Review</h3>
+              <h4 className="text-xs text-primary uppercase tracking-widest mb-0.5">Retensi PWA</h4>
+              <h3 className="text-sm text-foreground uppercase tracking-tight">Pengingat Review</h3>
             </div>
           </div>
           <Switch 

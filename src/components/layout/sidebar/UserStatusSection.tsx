@@ -38,7 +38,7 @@ export function UserStatusSection({
   if (!hasMounted) {
     return (
       <div className="space-y-4">
-        <Skeleton className="h-16 w-full rounded-2xl" />
+        <Skeleton className="h-16 w-full rounded-lg" />
         <div className="flex gap-2">
           <Skeleton className="size-10 rounded-xl" />
           <Skeleton className="h-10 flex-1 rounded-xl" />
@@ -50,16 +50,16 @@ export function UserStatusSection({
   if (isAuthenticated) {
     return (
       <div className="space-y-4">
-        <div className="interactive-card flex items-center gap-3 p-3 rounded-2xl group">
+        <div className="interactive-card flex items-center gap-3 p-3 rounded-lg group">
           {/* Batas Avatar Gradien Teranimasi */}
           <div className="relative size-12 shrink-0">
             <m.div 
               animate={{ rotate: 360 }}
               transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-              className="absolute inset-0 rounded-xl bg-gradient-to-tr from-primary via-cyan-400 to-secondary opacity-40 blur-[2px]"
+              className="absolute inset-0 rounded-xl bg-primary/20" 
             />
             <div className="absolute inset-[2px] rounded-xl bg-background flex items-center justify-center text-primary-foreground text-sm font-black shadow-lg overflow-hidden z-10">
-              <div className="w-full h-full bg-[linear-gradient(135deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-violet-rgb)))] flex items-center justify-center">
+              <div className="w-full h-full bg-primary flex items-center justify-center">
                 {userFullName ? userFullName.charAt(0).toUpperCase() : "U"}
               </div>
             </div>
@@ -74,7 +74,7 @@ export function UserStatusSection({
               {userFullName || "Pelajar"}
             </span>
             <div className="flex items-center gap-1.5 mt-0.5">
-              <div className="size-1 rounded-full bg-success animate-pulse" />
+              <div className="size-1 rounded-full bg-success" />
               <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">
                 Sinkronisasi Aktif
               </span>

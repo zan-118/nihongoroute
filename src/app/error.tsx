@@ -46,11 +46,11 @@ export default function RootError({
       </div>
 
       <div className="z-10 max-w-md w-full glass border border-border/85 rounded-[2rem] p-8 md:p-12 shadow-[0_20px_50px_rgba(var(--foreground-rgb),0.35)] relative overflow-hidden">
-        <div className="size-20 mx-auto bg-destructive/10 rounded-2xl flex items-center justify-center mb-6 border border-destructive/20 shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.15)] animate-pulse">
+        <div className="size-20 mx-auto bg-destructive/10 rounded-lg flex items-center justify-center mb-6 border border-destructive/20 shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.15)] animate-pulse">
           <AlertOctagon className="text-destructive" size={36} />
         </div>
         
-        <h1 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tight mb-3 font-japanese">
+        <h1 className="text-2xl md:text-3xl text-foreground uppercase tracking-tight mb-3 font-japanese">
           Koneksi Terputus
         </h1>
         

@@ -1591,7 +1591,7 @@ function OnboardingTourSession({ tour }: { tour: PageTour | null }) {
         width: spotlightRect.width,
       }
     : undefined;
-  const overlayPanelClassName = "pointer-events-auto fixed bg-background/80 backdrop-blur-[2px]";
+  const overlayPanelClassName = "pointer-events-auto fixed bg-background/80 -[2px]";
 
   return (
     <AnimatePresence>
@@ -1618,7 +1618,7 @@ function OnboardingTourSession({ tour }: { tour: PageTour | null }) {
             />
           </>
         ) : (
-          <div className="pointer-events-auto absolute inset-0 bg-background/80 backdrop-blur-[2px]" />
+          <div className="pointer-events-auto absolute inset-0 bg-background/80 -[2px]" />
         )}
 
         {spotlightRect && (
@@ -1629,7 +1629,7 @@ function OnboardingTourSession({ tour }: { tour: PageTour | null }) {
               top: spotlightRect.top,
               width: spotlightRect.width,
             }}
-            className="pointer-events-none fixed rounded-2xl border-2 border-primary shadow-[0_0_0_9999px_rgb(0_0_0/0.02),0_0_34px_rgb(var(--primary-rgb)/0.45)]"
+            className="pointer-events-none fixed rounded-lg border-2 border-primary shadow-[0_0_0_9999px_rgb(0_0_0/0.02),0_0_34px_rgb(var(--primary-rgb)/0.45)]"
             data-tour="spotlight-frame"
             initial={false}
             style={spotlightStyle}
@@ -1654,7 +1654,7 @@ function OnboardingTourSession({ tour }: { tour: PageTour | null }) {
             aria-describedby="page-tour-description"
             aria-labelledby="page-tour-title"
             aria-modal="true"
-            className="relative overflow-hidden rounded-2xl border border-primary/25 bg-card/95 p-4 shadow-2xl shadow-background/40 sm:p-5"
+            className="relative overflow-hidden rounded-lg border border-primary/25 bg-card/95 p-4 shadow-2xl shadow-background/40 sm:p-5"
             role="dialog"
           >
             <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/70 to-transparent" />
@@ -1682,7 +1682,7 @@ function OnboardingTourSession({ tour }: { tour: PageTour | null }) {
                   {step.icon}
                 </div>
                 <div className="min-w-0">
-                  <h2 className="text-lg font-black uppercase leading-tight text-foreground sm:text-xl" id="page-tour-title">
+                  <h2 className="text-lg uppercase leading-tight text-foreground sm:text-xl" id="page-tour-title">
                     {step.title}
                   </h2>
                   <p className="mt-2 text-sm font-medium leading-relaxed text-muted-foreground" id="page-tour-description">

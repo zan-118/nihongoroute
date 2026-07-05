@@ -39,17 +39,17 @@ export function KanjiRelatedVocab({ relatedVocab }: KanjiRelatedVocabProps) {
   // RENDER KOMPONEN
   // ==========================================
   return (
-    <Card className="p-6 md:p-10 bg-card/20 backdrop-blur-xl border-border rounded-[2.5rem] hover:border-primary/40 transition-all glass shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
+    <Card className="p-6 md:p-10 bg-card/20  border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all glass shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
       <div className="flex items-center gap-3 mb-6">
         <LinkIcon size={18} className="text-primary" aria-hidden="true" />
-        <h2 className="text-xs md:text-sm font-black uppercase tracking-[0.2em] text-foreground">Kosakata Terkait</h2>
+        <h2 className="text-xs md:text-sm uppercase tracking-[0.2em] text-foreground">Kosakata Terkait</h2>
       </div>
       
       {relatedVocab && relatedVocab.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
           {relatedVocab.map((vocab) => (
             <Link key={vocab.id || vocab._id} href={`/library/vocab/${vocab.slug}`}>
-              <Card className="p-4 sm:p-6 pl-6 sm:pl-8 bg-card/20 border-border rounded-2xl flex items-center gap-4 hover:bg-card/40 hover:border-primary/30 transition-all group cursor-pointer shadow-none relative overflow-hidden">
+              <Card className="p-4 sm:p-6 pl-6 sm:pl-8 bg-card/20 border-border rounded-lg flex items-center gap-4 hover:bg-card/40 hover:border-primary/30 transition-all group cursor-pointer shadow-none relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-1 h-full bg-primary/20 group-hover:bg-primary transition-all duration-300" />
                 
                 <div className="flex-1 min-w-0">

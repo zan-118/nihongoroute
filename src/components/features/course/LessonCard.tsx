@@ -62,7 +62,7 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
         />
 
         <Card
-          className="p-6 sm:p-7 md:p-8 rounded-[2rem] transition-all duration-300 flex flex-col items-start gap-4 cursor-pointer h-full relative overflow-hidden glass"
+          className="p-6 sm:p-7 md:p-8 rounded-2xl md:rounded-3xl transition-all duration-300 flex flex-col items-start gap-4 cursor-pointer h-full relative overflow-hidden glass"
           style={{
             borderColor: isHovered ? `rgba(${themeRgb}, 0.35)` : `rgb(var(--border-rgb)/0.85)`,
             boxShadow: isHovered ? `0 12px 30px rgba(${themeRgb}, 0.04), 0 0 15px rgba(${themeRgb}, 0.02)` : 'none'
@@ -101,7 +101,7 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
 
           <div className="flex-1 relative z-10 w-full space-y-1.5 sm:space-y-2">
             <h4
-              className="text-base sm:text-lg md:text-xl font-black text-foreground transition-colors tracking-tight leading-snug text-balance"
+              className="text-base sm:text-lg md:text-xl text-foreground transition-colors tracking-tight leading-snug text-balance"
               style={{
                 color: isHovered ? `rgb(${themeRgb})` : 'hsl(var(--foreground))'
               }}

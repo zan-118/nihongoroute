@@ -58,14 +58,14 @@ export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps)
       }}
     >
       <Link href={ROUTES.LIBRARY.GRAMMAR(article.slug || article.id || article._id)} className="block h-full">
-        <Card className="h-full p-6 sm:p-8 bg-[rgb(var(--card-rgb)/0.35)] backdrop-blur-xl border border-border rounded-[2.5rem] transition-all duration-500 flex flex-col cursor-pointer hover:border-[rgb(var(--primary-rgb)/0.45)] hover:bg-[rgb(var(--card-rgb)/0.55)] shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] relative overflow-hidden glass">
+        <Card className="h-full p-6 sm:p-8 bg-[rgb(var(--card-rgb)/0.35)]  border border-border rounded-2xl md:rounded-3xl transition-all duration-500 flex flex-col cursor-pointer hover:border-[rgb(var(--primary-rgb)/0.45)] hover:bg-[rgb(var(--card-rgb)/0.55)] shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] relative overflow-hidden glass">
           {/* Efek Pendar Saat Kursor Di Atas (Glow Effect) */}
           <div className="absolute inset-0 bg-gradient-to-br from-[rgb(var(--primary-rgb)/0.05)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
           <div className="relative z-10 flex flex-col h-full">
             {/* Baris Atas: Ikon Penanda & Level */}
             <div className="flex justify-between items-start mb-6">
-              <div className="size-10 rounded-2xl bg-[rgb(var(--muted-rgb)/0.5)] border border-border flex items-center justify-center group-hover:border-[rgb(var(--primary-rgb)/0.3)] group-hover:bg-[rgb(var(--primary-rgb)/0.1)] transition-all duration-500">
+              <div className="size-10 rounded-lg bg-[rgb(var(--muted-rgb)/0.5)] border border-border flex items-center justify-center group-hover:border-[rgb(var(--primary-rgb)/0.3)] group-hover:bg-[rgb(var(--primary-rgb)/0.1)] transition-all duration-500">
                 <Bookmark
                   size={18}
                   className="text-muted-foreground group-hover:text-primary transition-colors duration-500"
@@ -81,7 +81,7 @@ export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps)
             
             {/* Bagian Judul Tata Bahasa */}
             <div className="flex-1">
-              <h2 className="text-xl md:text-2xl font-black text-foreground tracking-tight leading-tight group-hover:text-primary transition-colors duration-300 mb-3 line-clamp-3 font-japanese">
+              <h2 className="text-xl md:text-2xl text-foreground tracking-tight leading-tight group-hover:text-primary transition-colors duration-300 mb-3 line-clamp-3 font-japanese">
                 {article.title}
               </h2>
               <div className="flex items-center gap-2">

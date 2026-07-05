@@ -87,7 +87,7 @@ export function CategoryHero({
         {/* Progress Widget — Compact, Inline */}
         <m.div
           variants={itemVariants}
-          className="w-full lg:w-auto lg:min-w-[240px] lg:max-w-[280px] p-4 sm:p-5 md:p-6 glass rounded-xl sm:rounded-2xl border relative overflow-hidden group transition-all duration-200 shrink-0"
+          className="w-full lg:w-auto lg:min-w-[240px] lg:max-w-[280px] p-4 sm:p-5 md:p-6 glass rounded-xl sm:rounded-lg border relative overflow-hidden group transition-all duration-200 shrink-0"
           style={{
             backgroundColor: "rgb(var(--card-rgb)/0.3)",
             borderColor: "rgb(var(--border-rgb)/0.5)",

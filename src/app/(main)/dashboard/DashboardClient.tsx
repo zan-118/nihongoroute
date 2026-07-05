@@ -30,7 +30,7 @@ import { ProgressPanel } from "@/components/features/dashboard/panels/ProgressPa
 
 const AchievementsGrid = dynamic(() => import("@/components/features/gamification/AchievementsGrid"), { 
   ssr: false,
-  loading: () => <div className="h-[200px] w-full animate-pulse bg-muted rounded-2xl" />
+  loading: () => <div className="h-[200px] w-full animate-pulse bg-muted rounded-lg" />
 });
 
 // ======================
@@ -275,11 +275,11 @@ export default function DashboardClient({ courseMetadata, expression }: Dashboar
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-[13px]">
                 <div className="w-[34px] h-[1px] bg-primary/40" />
-                <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
+                <h2 className="text-[10px] uppercase tracking-[0.2em] text-primary">
                   Koleksi
                 </h2>
               </div>
-              <h3 className="text-3xl font-bold tracking-tight text-foreground">
+              <h3 className="text-3xl tracking-tight text-foreground">
                 Pencapaian <span className="text-muted-foreground font-medium">& Hadiah</span>
               </h3>
             </div>

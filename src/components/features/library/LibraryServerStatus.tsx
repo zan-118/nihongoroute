@@ -19,7 +19,7 @@ import { Card } from "@/components/ui/card";
  */
 export function LibraryServerStatus() {
   return (
-    <Card className="p-8 md:p-10 rounded-[2.5rem] border border-border bg-[rgb(var(--card-rgb)/0.35)] backdrop-blur-xl shadow-[0_0_50px_rgba(var(--primary-rgb),0.02)] min-w-[320px] font-sans glass">
+    <Card className="p-8 md:p-10 rounded-2xl md:rounded-3xl border border-border bg-[rgb(var(--card-rgb)/0.35)]  shadow-[0_0_50px_rgba(var(--primary-rgb),0.02)] min-w-[320px] font-sans glass">
       <div className="flex items-center justify-between mb-6">
          <div className="flex items-center gap-3 md:gap-4 text-muted-foreground font-black uppercase text-xs tracking-widest">
             <Server size={16} className="text-primary/70 animate-pulse" /> Kesiapan Materi

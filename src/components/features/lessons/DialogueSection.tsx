@@ -102,7 +102,7 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
   return (
     <section id="scenario">
       <div className="flex items-center gap-4 mb-10">
-        <h2 className="text-xl font-black uppercase tracking-tight text-foreground flex items-center gap-3">
+        <h2 className="text-xl uppercase tracking-tight text-foreground flex items-center gap-3">
           <span className="text-2xl not-italic">場面</span> Skenario Percakapan
         </h2>
         <div className="h-[1px] flex-1 bg-border" />
@@ -114,22 +114,22 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
           const isCurrentPlaying = activeDialogId === dialogId && isPlayingPlaylist;
 
           return (
-            <div key={dialogId} className="p-6 md:p-10 border border-border/80 rounded-[2.5rem] bg-card/35 shadow-[0_0_40px_rgba(var(--secondary-rgb),0.02)] glass relative overflow-hidden">
+            <div key={dialogId} className="p-6 md:p-10 border border-border/80 rounded-2xl md:rounded-3xl bg-card/35 shadow-[0_0_40px_rgba(var(--secondary-rgb),0.02)] glass relative overflow-hidden">
               {/* Header: media + title/audio side-by-side */}
               <div className={`flex flex-col ${(l.imageUrl || l.videoUrl) ? 'md:flex-row' : ''} gap-6 mb-8 border-b border-border/50 pb-8`}>
                 {/* MEDIA HERO MENYIMAK (SANITY) — ditaruh di samping, bukan bawah */}
                 {(l.imageUrl || l.videoUrl) && (
-                  <div className="w-full md:w-48 lg:w-56 shrink-0 rounded-2xl overflow-hidden">
+                  <div className="w-full md:w-48 lg:w-56 shrink-0 rounded-lg overflow-hidden">
                     <SanityMedia 
                       url={l.videoUrl || l.imageUrl || ""} 
                       type={l.videoUrl ? "video" : "image"}
-                      className="shadow-lg rounded-2xl overflow-hidden w-full h-40 md:h-full object-cover"
+                      className="shadow-lg rounded-lg overflow-hidden w-full h-40 md:h-full object-cover"
                     />
                   </div>
                 )}
                 <div className="flex-1 flex flex-col justify-between gap-4">
                   <div>
-                    <h3 className="text-lg md:text-xl font-black uppercase tracking-tight mb-2">{l.title}</h3>
+                    <h3 className="text-lg md:text-xl uppercase tracking-tight mb-2">{l.title}</h3>
                     <p className="text-xs text-muted-foreground font-medium flex items-center gap-2">
                        <MessageSquare size={12} className="text-secondary" /> Dengarkan dan pelajari percakapan di bawah ini
                     </p>
@@ -215,7 +215,7 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
                       <div 
                         ref={isLineActive ? activeLineRef : null}
                         className={cn(
-                          "p-4 md:p-6 rounded-2xl border transition-all duration-300 overflow-hidden cursor-pointer flex items-center justify-between gap-4",
+                          "p-4 md:p-6 rounded-lg border transition-all duration-300 overflow-hidden cursor-pointer flex items-center justify-between gap-4",
                           bubbleScale
                         )}
                         style={{ 

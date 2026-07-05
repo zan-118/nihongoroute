@@ -32,7 +32,7 @@ export default function SRSAnalytics() {
   });
 
   return (
-    <Card className="bg-card p-8 rounded-[3rem] border-border relative overflow-hidden neo-card shadow-none flex flex-col h-full">
+    <Card className="bg-card p-8 rounded-2xl md:rounded-3xl border-border relative overflow-hidden neo-card shadow-none flex flex-col h-full">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgb(var(--primary-rgb)/0.05),transparent_50%)]" />
       
       <header className="flex items-center justify-between mb-10 relative z-10">
@@ -41,7 +41,7 @@ export default function SRSAnalytics() {
             <LineChart size={24} className="text-primary" />
           </Card>
           <div>
-            <h3 className="text-foreground font-black uppercase tracking-widest text-sm">Kekuatan Ingatan</h3>
+            <h3 className="text-foreground uppercase tracking-widest text-sm">Kekuatan Ingatan</h3>
             <span className="block text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">Stabilitas Memori (Ease Factor)</span>
           </div>
         </div>
@@ -89,7 +89,7 @@ export default function SRSAnalytics() {
         {/* INSIGHT LIST */}
         <div className="grid grid-cols-1 gap-3 mt-4">
           {data.map((item) => (
-            <div key={item.label} className="flex items-center justify-between p-3 rounded-2xl bg-muted/30 border border-border hover:bg-muted/50 transition-colors">
+            <div key={item.label} className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-border hover:bg-muted/50 transition-colors">
               <div className="flex items-center gap-3">
                 <div className="size-1.5 rounded-full" style={{ backgroundColor: item.color }} />
                 <div>

@@ -116,10 +116,10 @@ export function KanjiSentences({ sentences = [], character }: KanjiSentencesProp
   }, [cleanupObjectUrl]);
 
   return (
-    <Card className="p-6 md:p-10 bg-card/20 backdrop-blur-xl border-border rounded-[2.5rem] hover:border-primary/40 transition-all glass shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
+    <Card className="p-6 md:p-10 bg-card/20  border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all glass shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
       <div className="flex items-center gap-3 mb-6">
         <BookOpen size={18} className="text-success" aria-hidden="true" />
-        <h2 className="text-xs md:text-sm font-black uppercase tracking-[0.2em] text-foreground">
+        <h2 className="text-xs md:text-sm uppercase tracking-[0.2em] text-foreground">
           Contoh Kalimat ({character})
         </h2>
       </div>
@@ -129,7 +129,7 @@ export function KanjiSentences({ sentences = [], character }: KanjiSentencesProp
           {sentences.map((sentence, i) => (
             <div
               key={sentence.id}
-              className="border border-border rounded-[1.8rem] p-5 md:p-6 bg-card/5 backdrop-blur-lg hover:border-success/40 transition-all duration-300 shadow-sm relative overflow-hidden group flex items-start gap-4 md:gap-5"
+              className="border border-border rounded-2xl p-5 md:p-6 bg-card/5  hover:border-success/40 transition-all duration-300 shadow-sm relative overflow-hidden group flex items-start gap-4 md:gap-5"
             >
               <div className="absolute top-0 left-0 w-1.5 h-full bg-success/10 group-hover:bg-success transition-all duration-300" />
 
@@ -152,7 +152,7 @@ export function KanjiSentences({ sentences = [], character }: KanjiSentencesProp
                 <button
                   type="button"
                   onClick={() => speakJapanese(sentence.japanese, i)}
-                  className={`h-12 w-12 rounded-[1.2rem] border flex items-center justify-center transition-all duration-300 relative ${
+                  className={`h-12 w-12 rounded-xl border flex items-center justify-center transition-all duration-300 relative ${
                     playingIndex === i
                       ? "border-success bg-success/10 text-success shadow-[0_0_20px_rgb(var(--success-rgb)/0.35)] animate-pulse"
                       : "border-border bg-card/20 text-muted-foreground hover:border-success/40 hover:text-success hover:bg-success/5"

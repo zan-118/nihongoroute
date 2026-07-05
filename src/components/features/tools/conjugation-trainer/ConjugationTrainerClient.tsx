@@ -132,12 +132,12 @@ export default function ConjugationTrainerClient({
           </Button>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">
-              <div className="flex size-12 items-center justify-center rounded-2xl border border-success/20 bg-success/10 text-success">
+              <div className="flex size-12 items-center justify-center rounded-lg border border-success/20 bg-success/10 text-success">
                 <GraduationCap size={24} aria-hidden="true" />
               </div>
               <Badge className="w-fit rounded-xl px-3 py-1">Verb Trainer</Badge>
             </div>
-            <h1 className="max-w-3xl text-4xl font-black uppercase tracking-tight text-foreground md:text-6xl">
+            <h1 className="max-w-3xl text-4xl uppercase tracking-tight text-foreground md:text-6xl">
               Latihan Konjugasi
             </h1>
             <p className="max-w-2xl text-sm font-medium leading-relaxed text-muted-foreground">
@@ -159,10 +159,10 @@ export default function ConjugationTrainerClient({
         </header>
 
         <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-          <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-2xl md:p-6">
+          <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-2xl md:p-6">
             <div className="mb-5 flex items-center gap-2">
               <ClipboardList size={16} className="text-primary" aria-hidden="true" />
-              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground">
+              <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
                 Setup
               </h2>
             </div>
@@ -187,7 +187,7 @@ export default function ConjugationTrainerClient({
                 <p className="mb-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                   Grup
                 </p>
-                <div className="grid gap-2 sm:grid-cols-3">
+                <div className="flex flex-wrap items-center justify-center gap-2">
                   {GROUPS.map((item) => (
                     <button
                       key={item.id}
@@ -197,7 +197,7 @@ export default function ConjugationTrainerClient({
                         setHasChecked(false);
                       }}
                       className={cn(
-                        "rounded-2xl border p-4 text-left transition-all",
+                        "rounded-lg border p-4 text-left transition-all",
                         group === item.id
                           ? "border-primary/40 bg-primary/10 text-primary"
                           : "border-border bg-muted/15 text-muted-foreground hover:text-foreground"
@@ -218,7 +218,7 @@ export default function ConjugationTrainerClient({
                 <p className="mb-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                   Target Bentuk
                 </p>
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                <div className="flex flex-wrap gap-2">
                   {VERB_FORMS.map((item) => (
                     <button
                       key={item.id}
@@ -268,13 +268,13 @@ export default function ConjugationTrainerClient({
           </Card>
 
           <div className="flex flex-col gap-6">
-            <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-2xl md:p-6">
+            <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-2xl md:p-6">
               <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                     Target
                   </p>
-                  <h2 className="font-japanese text-3xl font-black text-foreground">
+                  <h2 className="font-japanese text-3xl text-foreground">
                     {verb || "Verba"} → {targetMeta?.label}
                   </h2>
                 </div>
@@ -304,7 +304,7 @@ export default function ConjugationTrainerClient({
               </div>
 
               {conjugation.error ? (
-                <div className="mt-4 rounded-2xl border border-destructive/25 bg-destructive/10 p-4 text-sm font-bold text-destructive">
+                <div className="mt-4 rounded-lg border border-destructive/25 bg-destructive/10 p-4 text-sm font-bold text-destructive">
                   {conjugation.error}
                 </div>
               ) : null}
@@ -312,7 +312,7 @@ export default function ConjugationTrainerClient({
               {hasChecked && conjugation.result ? (
                 <div
                   className={cn(
-                    "mt-4 rounded-2xl border p-5",
+                    "mt-4 rounded-lg border p-5",
                     isCorrect
                       ? "border-success/25 bg-success/10 text-success"
                       : "border-warning/25 bg-warning/10 text-warning"
@@ -345,14 +345,14 @@ export default function ConjugationTrainerClient({
               </div>
             </Card>
 
-            <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-xl md:p-6">
+            <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl md:p-6">
               <div className="mb-4 flex items-center gap-2">
                 {conjugation.result ? (
                   <Sparkles size={16} className="text-primary" aria-hidden="true" />
                 ) : (
                   <Loader2 size={16} className="text-muted-foreground" aria-hidden="true" />
                 )}
-                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground">
+                <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
                   Tabel Bentuk
                 </h2>
               </div>
@@ -362,7 +362,7 @@ export default function ConjugationTrainerClient({
                     <div
                       key={item.id}
                       className={cn(
-                        "rounded-2xl border p-4",
+                        "rounded-lg border p-4",
                         item.id === targetForm
                           ? "border-primary/35 bg-primary/10"
                           : "border-border bg-background/40"
@@ -378,7 +378,7 @@ export default function ConjugationTrainerClient({
                   ))}
                 </div>
               ) : (
-                <p className="rounded-2xl border border-dashed border-border bg-muted/15 p-5 text-sm font-medium text-muted-foreground">
+                <p className="rounded-lg border border-dashed border-border bg-muted/15 p-5 text-sm font-medium text-muted-foreground">
                   Isi verba yang valid untuk melihat tabel konjugasi.
                 </p>
               )}

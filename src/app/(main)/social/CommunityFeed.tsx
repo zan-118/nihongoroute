@@ -77,7 +77,7 @@ function PostCard({ post, currentUserId, isGuest, onAuthorClick }: PostCardProps
         <button 
           type="button"
           onClick={() => onAuthorClick(post.user_id)}
-          className="size-10 rounded-2xl bg-gradient-to-br from-primary/15 to-transparent flex items-center justify-center font-black text-foreground shrink-0 border border-primary/20 shadow-inner select-none font-japanese text-sm hover:scale-105 active:scale-95 transition-transform"
+          className="size-10 rounded-lg bg-gradient-to-br from-primary/15 to-transparent flex items-center justify-center font-black text-foreground shrink-0 border border-primary/20 shadow-inner select-none font-japanese text-sm hover:scale-105 active:scale-95 transition-transform"
           aria-label={`Lihat profil ${post.author?.full_name || "Member"}`}
         >
           {post.author?.full_name?.charAt(0).toUpperCase() || "?"}
@@ -169,7 +169,7 @@ function PostCard({ post, currentUserId, isGuest, onAuthorClick }: PostCardProps
                 </div>
               ) : comments && comments.length > 0 ? (
                 comments.map((comment: CommunityComment) => (
-                  <div key={comment.id} className="p-3 bg-background/30 rounded-2xl border border-border/60 flex flex-col relative">
+                  <div key={comment.id} className="p-3 bg-background/30 rounded-lg border border-border/60 flex flex-col relative">
                     <div className="flex items-center justify-between mb-1.5">
                       <div className="flex items-center gap-2">
                         <button 
@@ -216,7 +216,7 @@ function PostCard({ post, currentUserId, isGuest, onAuthorClick }: PostCardProps
                   </div>
                 ))
               ) : (
-                <div className="text-center py-6 text-[10px] font-black uppercase tracking-wider text-muted-foreground/45 border-2 border-dashed border-border/50 rounded-2xl bg-muted/5">
+                <div className="text-center py-6 text-[10px] font-black uppercase tracking-wider text-muted-foreground/45 border-2 border-dashed border-border/50 rounded-lg bg-muted/5">
                   Belum ada komentar. Ajak berdiskusi!
                 </div>
               )}
@@ -313,7 +313,7 @@ export default function CommunityFeed() {
               value={postContent}
               onChange={(e) => setPostContent(e.target.value)}
               rows={3}
-              className="w-full bg-background/25 border border-border/60 rounded-2xl p-4 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/50 outline-none resize-none focus:border-primary/45 focus:shadow-[0_0_12px_rgba(var(--primary-rgb),0.06)]"
+              className="w-full bg-background/25 border border-border/60 rounded-lg p-4 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/50 outline-none resize-none focus:border-primary/45 focus:shadow-[0_0_12px_rgba(var(--primary-rgb),0.06)]"
             />
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
               {/* Compose Category Selector */}
@@ -358,7 +358,7 @@ export default function CommunityFeed() {
         </Card>
       ) : (
         <Card className="glass border-dashed border-border/80 p-6 rounded-[2rem] text-center flex flex-col items-center justify-center gap-3">
-          <div className="size-12 rounded-2xl bg-muted/40 flex items-center justify-center text-muted-foreground/60 border border-border">
+          <div className="size-12 rounded-lg bg-muted/40 flex items-center justify-center text-muted-foreground/60 border border-border">
             <AlertCircle size={20} />
           </div>
           <div>
@@ -370,8 +370,8 @@ export default function CommunityFeed() {
 
       {/* Profile loading overlay spinner */}
       {isFetchingProfile && (
-        <div className="fixed inset-0 bg-background/40 backdrop-blur-[1px] flex items-center justify-center z-50">
-          <Card className="glass border-border p-5 rounded-2xl flex items-center gap-3 shadow-lg">
+        <div className="fixed inset-0 bg-background/40 -[1px] flex items-center justify-center z-50">
+          <Card className="glass border-border p-5 rounded-lg flex items-center gap-3 shadow-lg">
             <Loader2 className="animate-spin text-primary" size={20} />
             <span className="text-xs font-black uppercase tracking-wider text-muted-foreground">Memuat profil member…</span>
           </Card>
@@ -380,7 +380,7 @@ export default function CommunityFeed() {
 
       {/* 📋 POSTS LIST */}
       <div className="flex flex-col gap-5 sm:gap-6">
-        <h3 className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground/70 px-2">
+        <h3 className="text-xs uppercase tracking-[0.3em] text-muted-foreground/70 px-2">
           {selectedCategory === "Semua" ? "Semua Diskusi" : `Diskusi: ${selectedCategory}`}
         </h3>
 
@@ -446,7 +446,7 @@ export default function CommunityFeed() {
               {/* Stats Grid */}
               <div className="grid grid-cols-2 gap-3.5 w-full mb-6 text-left">
                 {/* Level */}
-                <div className="p-4 bg-background/25 border border-border/80 rounded-2xl flex items-center gap-3">
+                <div className="p-4 bg-background/25 border border-border/80 rounded-lg flex items-center gap-3">
                   <div className="size-8 rounded-lg bg-primary/10 border border-primary/20 text-primary flex items-center justify-center shrink-0">
                     <Target size={15} />
                   </div>
@@ -457,7 +457,7 @@ export default function CommunityFeed() {
                 </div>
 
                 {/* Streak */}
-                <div className="p-4 bg-background/25 border border-border/80 rounded-2xl flex items-center gap-3">
+                <div className="p-4 bg-background/25 border border-border/80 rounded-lg flex items-center gap-3">
                   <div className="size-8 rounded-lg bg-warning/10 border border-warning/20 text-warning flex items-center justify-center shrink-0">
                     <Flame size={15} className="fill-current" />
                   </div>
@@ -468,7 +468,7 @@ export default function CommunityFeed() {
                 </div>
 
                 {/* Total XP */}
-                <div className="p-4 bg-background/25 border border-border/80 rounded-2xl flex items-center gap-3 col-span-2">
+                <div className="p-4 bg-background/25 border border-border/80 rounded-lg flex items-center gap-3 col-span-2">
                   <div className="size-8 rounded-lg bg-primary/10 border border-primary/20 text-primary flex items-center justify-center shrink-0">
                     <Trophy size={15} />
                   </div>
@@ -479,7 +479,7 @@ export default function CommunityFeed() {
                 </div>
 
                 {/* Hari Aktif Belajar */}
-                <div className="p-4 bg-background/25 border border-border/80 rounded-2xl flex items-center gap-3 col-span-2">
+                <div className="p-4 bg-background/25 border border-border/80 rounded-lg flex items-center gap-3 col-span-2">
                   <div className="size-8 rounded-lg bg-primary/10 border border-primary/20 text-primary flex items-center justify-center shrink-0">
                     <Calendar size={15} />
                   </div>

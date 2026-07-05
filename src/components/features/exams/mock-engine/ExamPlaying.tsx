@@ -193,7 +193,7 @@ function ExamPassageBlock({ passage }: { passage?: ExamPassage | null }) {
   if (!hasContent) return null;
 
   return (
-    <div className="mb-8 rounded-2xl border border-border bg-muted/20 p-4 md:p-5 [&_rt]:text-[0.55em] [&_rt]:leading-none">
+    <div className="mb-8 rounded-lg border border-border bg-muted/20 p-4 md:p-5 [&_rt]:text-[0.55em] [&_rt]:leading-none">
       {passage.visualUrl && (
         <div className="mb-5 overflow-hidden rounded-xl border border-border bg-background/60">
           <Image
@@ -258,7 +258,7 @@ export function ExamPlaying({
       
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Sticky Header Navigasi Seksi */}
-        <header className="sticky top-0 z-50 pt-6 pb-4 bg-background/80 backdrop-blur-md">
+        <header className="sticky top-0 z-50 pt-6 pb-4 bg-background/80 ">
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar flex-1">
@@ -319,7 +319,7 @@ export function ExamPlaying({
                 <div className="space-y-6">
                   {/* Mondai Instruction Header Banner */}
                   {activeQuestion.mondaiNumber && (
-                    <div className="bg-muted/30 border border-border rounded-2xl p-4 flex items-start gap-3 glass">
+                    <div className="bg-muted/30 border border-border rounded-lg p-4 flex items-start gap-3 glass">
                       <div className="bg-destructive/10 text-destructive font-black text-[10px] px-2.5 py-1 rounded-lg uppercase tracking-wider shrink-0">
                         問題 {activeQuestion.mondaiNumber}
                       </div>
@@ -331,7 +331,7 @@ export function ExamPlaying({
 
                   {/* Audio Player Soal */}
                   {isCurrentlyListening && (
-                    <div className="bg-card border border-border rounded-2xl p-4 flex items-center gap-4 shadow-sm glass">
+                    <div className="bg-card border border-border rounded-lg p-4 flex items-center gap-4 shadow-sm glass">
                       <Button
                         onClick={handlePlayAudio}
                         disabled={
@@ -372,7 +372,7 @@ export function ExamPlaying({
                   )}
 
                   {/* Kartu Soal */}
-                  <div className="bg-card border border-border rounded-3xl p-6 md:p-8 shadow-sm glass">
+                  <div className="bg-card border border-border rounded-xl p-6 md:p-8 shadow-sm glass">
                     <div className="flex items-start justify-between gap-4 mb-6">
                       <div className="px-3 py-1 bg-muted dark:bg-[rgb(var(--background-rgb)/0.1)] rounded-lg text-[10px] font-mono font-bold text-muted-foreground">
                         SOAL {currentQuestionIndex + 1}
@@ -382,7 +382,7 @@ export function ExamPlaying({
                     <ExamPassageBlock passage={activeQuestion.passage} />
 
                     {activeQuestion.imageUrl && (
-                      <div className="mb-8 rounded-2xl overflow-hidden border border-border bg-muted/30">
+                      <div className="mb-8 rounded-lg overflow-hidden border border-border bg-muted/30">
                         <Image
                           src={activeQuestion.imageUrl}
                           alt="Question Visual"
@@ -413,7 +413,7 @@ export function ExamPlaying({
                   </div>
 
                   {/* Navigator untuk Mobile */}
-                  <div className="bg-card border border-border rounded-2xl p-4 lg:hidden glass">
+                  <div className="bg-card border border-border rounded-lg p-4 lg:hidden glass">
                     <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4">
                       NAVIGASI {SECTION_LABELS[currentSection].split(" ")[0]}
                     </p>
@@ -461,7 +461,7 @@ export function ExamPlaying({
             
             {/* Timer Card */}
             <div
-              className={`p-5 rounded-2xl border transition-all glass ${
+              className={`p-5 rounded-lg border transition-all glass ${
                 isTimeCritical
                   ? "bg-destructive/10 border-destructive/30 text-destructive animate-pulse"
                   : "bg-card border-border text-card-foreground shadow-sm"
@@ -485,7 +485,7 @@ export function ExamPlaying({
             </div>
 
             {/* Statistik Jawaban */}
-            <div className="bg-card border border-border rounded-2xl p-5 shadow-sm glass">
+            <div className="bg-card border border-border rounded-lg p-5 shadow-sm glass">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Dijawab</p>
@@ -518,7 +518,7 @@ export function ExamPlaying({
             </Button>
 
             {/* Grid Navigasi CBT Persisten (Seluruh Seksi) */}
-            <div className="bg-card border border-border rounded-2xl p-5 shadow-sm space-y-6 glass">
+            <div className="bg-card border border-border rounded-lg p-5 shadow-sm space-y-6 glass">
               <p className="text-[10px] font-extrabold uppercase tracking-widest text-muted-foreground">
                 Lembar Navigasi Soal
               </p>
@@ -586,7 +586,7 @@ export function ExamPlaying({
       </div>
 
       {/* Footer Navigasi Mobile */}
-      <footer className="fixed bottom-0 left-0 right-0 z-[110] bg-background/80 backdrop-blur-md border-t border-border p-4 pb-safe">
+      <footer className="fixed bottom-0 left-0 right-0 z-[110] bg-background/80  border-t border-border p-4 pb-safe">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 px-4 md:px-6">
           <Button
             onClick={prevQuestion}
@@ -658,18 +658,18 @@ export function ExamPlaying({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] bg-background/80 backdrop-blur-xl flex items-center justify-center p-4"
+            className="fixed inset-0 z-[200] bg-background/80  flex items-center justify-center p-4"
           >
             <m.div
               initial={{ scale: 0.95, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 20 }}
-              className="w-full max-w-2xl bg-card border border-border rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] neo-card glass"
+              className="w-full max-w-2xl bg-card border border-border rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] neo-card glass"
             >
               {/* Kepala Lembar Jawaban */}
               <div className="p-6 border-b border-border flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-black uppercase tracking-tight text-foreground">
+                  <h2 className="text-xl uppercase tracking-tight text-foreground">
                     Tinjau Lembar Jawaban
                   </h2>
                   <p className="text-xs text-muted-foreground mt-1">
@@ -682,7 +682,7 @@ export function ExamPlaying({
               </div>
 
               {/* Ringkasan Statistik Jawaban */}
-              <div className="px-6 py-4 bg-muted/30 border-b border-border grid grid-cols-3 gap-4">
+              <div className="px-6 py-4 bg-muted/30 border-b border-border flex flex-wrap gap-4 items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="size-3 rounded-full bg-success shadow-[0_0_8px_rgb(var(--success-rgb)/0.5)]" />
                   <div>
@@ -765,7 +765,7 @@ export function ExamPlaying({
                   })}
                 </div>
 
-                <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-2xl flex items-start gap-3">
+                <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg flex items-start gap-3">
                   <span className="text-sm">⚠️</span>
                   <p className="text-[11px] text-destructive font-medium leading-relaxed">
                     Setelah mengumpulkan lembar jawaban ini, waktu akan dihentikan dan ujian Anda akan segera dihitung secara permanen. Anda tidak dapat kembali mengubah jawaban Anda.

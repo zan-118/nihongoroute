@@ -154,8 +154,8 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-[200] flex items-start justify-center pt-20 px-4 md:pt-[15vh]">
-          <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-background/60 backdrop-blur-md" onClick={onClose} />
-          <m.div initial={{ opacity: 0, scale: 0.95, y: -20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: -20 }} className="w-full max-w-2xl bg-card/85 backdrop-blur-md border border-border shadow-2xl rounded-[2rem] overflow-hidden relative z-10">
+          <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-background/60 " onClick={onClose} />
+          <m.div initial={{ opacity: 0, scale: 0.95, y: -20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: -20 }} className="w-full max-w-2xl bg-card/85  border border-border shadow-2xl rounded-2xl md:rounded-3xl overflow-hidden relative z-10">
             <div className="p-6 border-b border-border flex items-center gap-4">
               {showSearching ? <Loader2 className="text-primary animate-spin" size={24} /> : <Search className="text-primary animate-pulse" size={24} />}
               <input autoFocus placeholder="Cari kosakata, tata bahasa, atau navigasi..." className="flex-1 bg-transparent border-none outline-none text-lg md:text-xl font-bold text-foreground placeholder:text-muted-foreground/40" value={query} onChange={e => { setQuery(e.target.value); setActiveIndex(0); if (e.target.value.trim() === "") setIsSearching(false); }} />
@@ -167,8 +167,8 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
                 <div className="space-y-2">
                   {displayedResults.map((item, index) => (
                     <div key={item.id + index} onMouseEnter={() => setActiveIndex(index)} onClick={() => handleSelect(item.href)}
-                      className={`flex items-center gap-4 p-4 rounded-2xl cursor-pointer transition-all duration-300 relative group ${index === activeIndex ? 'bg-primary/10 border border-primary/20 shadow-[0_0_20px_rgb(var(--primary-rgb)/0.05)]' : 'hover:bg-muted/50 border border-transparent'}`}>
-                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 ${index === activeIndex ? 'bg-primary text-primary-foreground shadow-lg scale-110' : 'bg-muted text-muted-foreground'}`}><item.icon size={24} /></div>
+                      className={`flex items-center gap-4 p-4 rounded-lg cursor-pointer transition-all duration-300 relative group ${index === activeIndex ? 'bg-primary/10 border border-primary/20 shadow-[0_0_20px_rgb(var(--primary-rgb)/0.05)]' : 'hover:bg-muted/50 border border-transparent'}`}>
+                      <div className={`w-12 h-12 rounded-lg flex items-center justify-center transition-all duration-500 ${index === activeIndex ? 'bg-primary text-primary-foreground shadow-lg scale-110' : 'bg-muted text-muted-foreground'}`}><item.icon size={24} /></div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-3">
                           <h4 className={`font-black text-sm md:text-base uppercase tracking-wider ${index === activeIndex ? 'text-foreground' : 'text-primary/70'}`}>{item.title}</h4>
@@ -183,7 +183,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
               ) : (
                 <div className="py-20 text-center">
                   <div className="w-20 h-20 rounded-full bg-muted/50 flex items-center justify-center mx-auto mb-6 border border-border/50"><Search className="text-muted-foreground/20" size={32} /></div>
-                  <h3 className="text-lg font-black uppercase tracking-[0.2em] text-foreground mb-2">Data Tidak Ditemukan</h3>
+                  <h3 className="text-lg uppercase tracking-[0.2em] text-foreground mb-2">Data Tidak Ditemukan</h3>
                   <p className="text-sm text-muted-foreground max-w-xs mx-auto">Coba gunakan kata kunci lain atau cari melalui navigasi utama.</p>
                 </div>
               )}

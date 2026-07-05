@@ -245,7 +245,7 @@ export default function ReadingWorkspace({
         <div className="max-w-3xl mx-auto mt-16 text-center border-t border-border/40 pt-10">
           <Button
             onClick={onComplete}
-            className="rounded-2xl px-12 py-6 bg-gradient-to-r from-primary to-primary/95 text-white shadow-lg shadow-primary/20 font-black uppercase tracking-wider text-xs hover:scale-105 active:scale-95 transition-all"
+            className="rounded-lg px-12 py-6 bg-gradient-to-r from-primary to-primary/95 text-white shadow-lg shadow-primary/20 font-black uppercase tracking-wider text-xs hover:scale-105 active:scale-95 transition-all"
           >
             <CheckCircle2 className="mr-2 h-4 w-4" /> Tandai Selesai Membaca
           </Button>

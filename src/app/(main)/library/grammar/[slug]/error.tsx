@@ -50,14 +50,14 @@ export default function GrammarError({
 
           {/* Ikon Utama */}
           <div className="flex justify-center mb-2 relative z-10">
-            <div className="p-4 bg-destructive/10 rounded-2xl text-destructive neo-inset shadow-none">
+            <div className="p-4 bg-destructive/10 rounded-lg text-destructive neo-inset shadow-none">
               <AlertTriangle size={32} strokeWidth={2} />
             </div>
           </div>
           
           {/* Teks Jepang */}
           <div className="space-y-2 relative z-10">
-            <h2 className="text-2xl md:text-3xl font-black text-destructive font-japanese tracking-tight">
+            <h2 className="text-2xl md:text-3xl text-destructive font-japanese tracking-tight">
               申し訳ありません
             </h2>
             <p className="text-xs md:text-sm font-bold text-destructive/70 uppercase tracking-widest">
@@ -75,7 +75,7 @@ export default function GrammarError({
             <Button 
               onClick={() => reset()} 
               variant="default" 
-              className="rounded-2xl px-8 h-12 shadow-sm font-bold tracking-widest uppercase text-xs md:text-sm bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+              className="rounded-lg px-8 h-12 shadow-sm font-bold tracking-widest uppercase text-xs md:text-sm bg-destructive hover:bg-destructive/90 text-destructive-foreground"
             >
               <RefreshCcw size={16} className="mr-2" />
               Coba Lagi

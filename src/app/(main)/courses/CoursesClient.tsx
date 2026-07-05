@@ -110,15 +110,15 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
         variants={containerVariants}
       >
         {/* BENTO GRID CONTAINER */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="flex flex-col xl:flex-row flex-wrap gap-6 md:gap-8">
 
           {/* BENTO CARD 1: JUMBO HEADER & GLOBAL STATS (SPAN 3) */}
           <m.div
             variants={itemVariants}
-            className="lg:col-span-3 p-8 sm:p-10 md:p-14 rounded-[2.5rem] bg-card/25 border border-border/80 shadow-[0_0_50px_rgba(var(--primary-rgb),0.015)] relative overflow-hidden group transition-all duration-300 glass"
+            className="lg:col-span-3 p-8 sm:p-10 md:p-14 rounded-[2.5rem] bg-card/25 border border-border/80 shadow-md relative overflow-hidden group transition-all duration-300 glass"
           >
             <div className="absolute top-0 right-0 size-64 bg-primary/5 rounded-full blur-[55px] pointer-events-none group-hover:bg-primary/8 transition-all duration-500" />
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-30 pointer-events-none" />
+            <div className="absolute inset-0 bg-asanoha opacity-[0.02] pointer-events-none" />
 
             <div className="relative z-10 flex flex-col xl:flex-row xl:items-center justify-between gap-8 md:gap-12">
               <div className="space-y-4 max-w-2xl">
@@ -127,9 +127,9 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
                     <Sparkles size={10} className="mr-1.5 text-primary" /> Direktori Belajar
                   </Badge>
                 </div>
-                <h1 className="text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-tighter leading-[0.9] text-foreground">
+                <h1 className="text-3xl sm:text-5xl md:text-6xl uppercase tracking-tighter leading-[0.9] text-foreground">
                   PILIH RUTE <br />
-                  <span className="text-primary drop-shadow-[0_0_20px_rgb(var(--primary-rgb)/0.25)]">
+                  <span className="text-primary font-bold">
                     BELAJAR
                   </span>
                 </h1>
@@ -139,7 +139,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
               </div>
 
               {/* GLOBAL PROGRESS MODULE */}
-              <div className="w-full xl:w-auto xl:min-w-[320px] p-6 rounded-3xl bg-background/50 border border-border/80 glass relative overflow-hidden transition-all duration-200 hover:border-primary/25">
+              <div className="w-full xl:w-auto xl:min-w-[320px] p-6 rounded-xl bg-background/50 border border-border/80 glass relative overflow-hidden transition-all duration-200 hover:border-primary/25">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
@@ -151,7 +151,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
                   <Progress
                     value={globalProgress}
                     className="h-2.5 bg-muted border border-border relative overflow-hidden"
-                    indicatorClassName="bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)),rgb(var(--brand-violet-rgb)))]"
+                    indicatorClassName="bg-primary"
                   />
 
                   <div className="flex justify-between items-center gap-4 pt-1">

@@ -57,7 +57,7 @@ export function ReviewClient() {
     return (
       <div className="flex-1 w-full max-w-4xl mx-auto px-4 md:px-8 py-12 flex flex-col">
         <header className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-black text-foreground uppercase tracking-tight italic">
+          <h1 className="text-4xl md:text-5xl text-foreground uppercase tracking-tight italic">
             Pusat <span className="text-primary">Latihan</span>
           </h1>
           <p className="text-muted-foreground text-sm mt-2 max-w-xl font-medium leading-relaxed">

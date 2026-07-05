@@ -52,7 +52,7 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
       {isOpen && (
         <>
           {/* Latar Belakang Redup untuk Seluler - Memfokuskan tampilan pada notifikasi */}
-          <div className="fixed inset-0 z-[100] md:hidden bg-background/40 backdrop-blur-sm" onClick={onClose} />
+          <div className="fixed inset-0 z-[100] md:hidden bg-background/40 " onClick={onClose} />
           
           {/* Wadah Utama Popover */}
           <div className="fixed md:absolute top-20 md:top-full left-4 right-4 md:left-auto md:right-0 md:w-96 z-[110] flex justify-center md:justify-end">
@@ -60,7 +60,7 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
               initial={{ opacity: 0, y: 10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
-              className="w-full bg-card border border-border shadow-[0_30px_60px_-15px_rgb(var(--background-rgb)/0.8)] rounded-[2rem] overflow-hidden"
+              className="w-full bg-card border border-border shadow-[0_30px_60px_-15px_rgb(var(--background-rgb)/0.8)] rounded-xl overflow-hidden"
             >
               <div className="p-5 border-b border-border flex items-center justify-between bg-muted/50">
                 <div className="flex items-center gap-3">
@@ -68,7 +68,7 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
                     <Bell size={18} />
                   </div>
                   <div>
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground leading-none mb-1">Notifikasi</h3>
+                    <h3 className="text-[10px] uppercase tracking-[0.2em] text-foreground leading-none mb-1">Notifikasi</h3>
                     <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest leading-none">
                       {unreadCount} Belum Dibaca
                     </p>
@@ -131,10 +131,10 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
                   </div>
                 ) : (
                   <div className="py-16 px-8 text-center">
-                    <div className="size-16 rounded-[2rem] bg-muted/50 flex items-center justify-center mx-auto mb-4 border border-border/50 rotate-6 group-hover:rotate-0 transition-transform">
+                    <div className="size-16 rounded-xl bg-muted/50 flex items-center justify-center mx-auto mb-4 border border-border/50 rotate-6 group-hover:rotate-0 transition-transform">
                       <Bell className="text-muted-foreground/20" size={24} />
                     </div>
-                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60">Hening Sekali…</h4>
+                    <h4 className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground/60">Hening Sekali…</h4>
                     <p className="text-[9px] font-medium text-muted-foreground/40 mt-1 uppercase tracking-widest">Belum ada notifikasi untukmu</p>
                   </div>
                 )}

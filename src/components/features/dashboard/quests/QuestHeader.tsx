@@ -25,7 +25,7 @@ export function QuestHeader() {
           <Target size={18} className="text-primary" />
         </Card>
         <div className="text-left">
-          <h3 className="text-foreground font-black uppercase tracking-tight text-xs md:text-sm">
+          <h3 className="text-foreground uppercase tracking-tight text-xs md:text-sm">
             Target Hari Ini
           </h3>
           <span className="block text-xs text-muted-foreground font-bold uppercase tracking-widest mt-0.5">

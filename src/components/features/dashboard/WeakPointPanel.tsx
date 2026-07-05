@@ -198,7 +198,7 @@ export default function WeakPointPanel() {
 
   if (loading) {
     return (
-      <Card className="p-8 flex items-center justify-center bg-card/40 border-border rounded-2xl glass">
+      <Card className="p-8 flex items-center justify-center bg-card/40 border-border rounded-lg glass">
         <Loader2 className="animate-spin text-primary" size={24} />
       </Card>
     );
@@ -207,14 +207,14 @@ export default function WeakPointPanel() {
   // Tampilan jika tidak ada titik lemah terdeteksi (semua aman)
   if (weakItems.length === 0) {
     return (
-      <Card className="relative overflow-hidden bg-card/30 backdrop-blur-xl border border-border rounded-[34px] p-6 md:p-8 transition-all duration-300 hover:shadow-[0_0_30px_rgb(var(--primary-rgb)/0.05)] shadow-none">
+      <Card className="relative overflow-hidden bg-card/30  border border-border rounded-2xl p-6 md:p-8 transition-all duration-300 hover:shadow-[0_0_30px_rgb(var(--primary-rgb)/0.05)] shadow-none">
         <div className="absolute top-0 right-0 size-24 bg-success/5 blur-3xl rounded-full" />
         <div className="flex items-center gap-4">
           <div className="size-10 rounded-full bg-success/10 border border-success/20 flex items-center justify-center text-success shadow-[0_0_15px_rgb(var(--success-rgb)/0.2)]">
             <Sparkles size={20} className="animate-pulse" />
           </div>
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-success">Status: Semua Sistem Optimal</h4>
+            <h4 className="text-xs uppercase tracking-[0.2em] text-success">Status: Semua Sistem Optimal</h4>
             <p className="text-[10px] text-muted-foreground mt-1">
               Tidak ada titik lemah kritis yang terdeteksi saat ini. Penguasaan memorimu berjalan dengan sangat baik!
             </p>
@@ -225,13 +225,13 @@ export default function WeakPointPanel() {
   }
 
   return (
-    <Card className="relative overflow-hidden bg-card/30 backdrop-blur-xl border border-border rounded-[34px] p-6 md:p-8 transition-all duration-500 hover:border-destructive/20 hover:shadow-[0_0_40px_rgb(var(--destructive-rgb)/0.08)] shadow-none">
+    <Card className="relative overflow-hidden bg-card/30  border border-border rounded-2xl p-6 md:p-8 transition-all duration-500 hover:border-destructive/20 hover:shadow-[0_0_40px_rgb(var(--destructive-rgb)/0.08)] shadow-none">
       <div className="absolute top-0 right-0 size-32 bg-destructive/5 blur-3xl rounded-full pointer-events-none" />
 
       {/* Bagian Header diagnosis */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
-          <h2 className="text-destructive font-black uppercase tracking-widest text-xs mb-2 flex items-center gap-2">
+          <h2 className="text-destructive uppercase tracking-widest text-xs mb-2 flex items-center gap-2">
             <AlertTriangle size={14} className="text-destructive animate-pulse" />
             Diagnosis Titik Lemah (Leech Detected)
           </h2>
@@ -263,7 +263,7 @@ export default function WeakPointPanel() {
           return (
             <div 
               key={item.id}
-              className={`flex items-center justify-between p-4 rounded-2xl border transition-all duration-300 ${
+              className={`flex items-center justify-between p-4 rounded-lg border transition-all duration-300 ${
                 isCritical
                   ? "bg-destructive/[0.03] border-destructive/20 hover:bg-destructive/[0.06] hover:border-destructive/35 hover:shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.08)] animate-[pulse_5s_infinite]"
                   : "bg-card/50 border-border hover:bg-card/80 hover:border-primary/20"
@@ -290,7 +290,7 @@ export default function WeakPointPanel() {
                   </div>
                   <div className="w-full bg-muted/50 h-1.5 rounded-full overflow-hidden border border-border/50">
                     <div 
-                      className="bg-destructive h-full rounded-full shadow-[0_0_10px_rgb(var(--destructive-rgb)/0.6)] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent" 
+                      className="bg-destructive h-full rounded-full shadow-[0_0_10px_rgb(var(--destructive-rgb)/0.6)] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-background/20 before:to-transparent" 
                       style={{ width: `${difficultyPercent}%` }}
                     />
                   </div>

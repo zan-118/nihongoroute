@@ -76,20 +76,20 @@ export default function DailyRoutePanel({ compact = false, className }: DailyRou
   return (
     <Card
       className={cn(
-        "rounded-[34px] border border-border bg-card/40 p-5 shadow-none backdrop-blur-xl md:p-6",
+        "rounded-2xl md:rounded-3xl border border-border bg-card/40 p-5 shadow-none  md:p-6",
         className
       )}
     >
       <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex size-11 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary">
+          <div className="flex size-11 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
             <Compass size={20} aria-hidden="true" />
           </div>
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
               Daily Route
             </p>
-            <h2 className="text-xl font-black tracking-tight text-foreground">
+            <h2 className="text-xl tracking-tight text-foreground">
               Belajar Hari Ini
             </h2>
           </div>
@@ -111,7 +111,7 @@ export default function DailyRoutePanel({ compact = false, className }: DailyRou
             <Link
               key={step.id}
               href={step.href}
-              className="group rounded-2xl border border-border bg-background/35 p-4 transition-all hover:border-primary/35 hover:bg-muted/20"
+              className="group rounded-lg border border-border bg-background/35 p-4 transition-all hover:border-primary/35 hover:bg-muted/20"
             >
               <div className="flex items-start gap-3">
                 <div
@@ -131,7 +131,7 @@ export default function DailyRoutePanel({ compact = false, className }: DailyRou
                       {meta.label}
                     </Badge>
                   </div>
-                  <h3 className="mt-2 line-clamp-1 text-sm font-black text-foreground">
+                  <h3 className="mt-2 line-clamp-1 text-sm text-foreground">
                     {step.title}
                   </h3>
                   <p className="mt-1 line-clamp-2 text-xs font-medium leading-relaxed text-muted-foreground">
@@ -155,7 +155,7 @@ export default function DailyRoutePanel({ compact = false, className }: DailyRou
       </div>
 
       {weakPoints.length > 0 ? (
-        <div className="mt-5 rounded-2xl border border-warning/20 bg-warning/10 p-4">
+        <div className="mt-5 rounded-lg border border-warning/20 bg-warning/10 p-4">
           <div className="mb-3 flex items-center gap-2">
             <Target size={15} className="text-warning" aria-hidden="true" />
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-warning">
@@ -179,7 +179,7 @@ export default function DailyRoutePanel({ compact = false, className }: DailyRou
           </div>
         </div>
       ) : (
-        <div className="mt-5 rounded-2xl border border-dashed border-border bg-muted/15 p-4">
+        <div className="mt-5 rounded-lg border border-dashed border-border bg-muted/15 p-4">
           <div className="flex items-center gap-2 text-muted-foreground">
             <Sparkles size={15} aria-hidden="true" />
             <p className="text-sm font-bold">Belum ada titik lemah yang menonjol.</p>

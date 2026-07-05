@@ -76,7 +76,7 @@ export function FlashcardFront({
   // ==========================================
   return (
     <Card
-      className={`absolute inset-0 w-full h-full border rounded-2xl flex flex-col items-center justify-center p-6 md:p-8 transition-all duration-200 shadow-none overflow-hidden bg-card ${
+      className={`absolute inset-0 w-full h-full border rounded-lg flex flex-col items-center justify-center p-6 md:p-8 transition-all duration-200 shadow-none overflow-hidden bg-card ${
         inputResult === "correct"
           ? "border-success/50 shadow-md bg-success/[0.02]"
           : inputResult === "wrong"

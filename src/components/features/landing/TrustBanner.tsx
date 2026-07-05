@@ -36,7 +36,7 @@ import { Badge } from "@/components/ui/badge";
 export function TrustBanner() {
   return (
     <section className="w-full mb-[120px]">
-      <Card className="p-6 sm:p-10 md:p-12 rounded-[28px] sm:rounded-[34px] bg-card/10 backdrop-blur-xl border border-border/80 shadow-none relative overflow-hidden group transition-all duration-700 hover:border-primary/40 hover:shadow-[0_0_50px_rgba(var(--primary-rgb),0.1)] glass">
+      <Card className="p-6 sm:p-10 md:p-12 rounded-[28px] sm:rounded-[34px] bg-card/10  border border-border/80 shadow-none relative overflow-hidden group transition-all duration-700 hover:border-primary/40 hover:shadow-[0_0_50px_rgba(var(--primary-rgb),0.1)] glass">
         
         {/* Latar Belakang Kilau Dekoratif menggunakan variabel warna CSS */}
         <div className="absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent pointer-events-none" />
@@ -49,7 +49,7 @@ export function TrustBanner() {
               Akses Edukasi Terbuka
             </Badge>
             
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight text-foreground text-balance">
+            <h2 className="text-4xl md:text-5xl tracking-tight text-foreground text-balance">
               Belajar Tanpa Batas, <br />
               <span className="brand-text-gradient">100% Gratis Selamanya!</span>
             </h2>
@@ -62,12 +62,12 @@ export function TrustBanner() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
               
               {/* MANFAAT 1: BEBAS BIAYA */}
-              <div className="p-5 bg-card/30 backdrop-blur-xl border border-border/80 rounded-2xl transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.08)] flex flex-col justify-between h-full hover:bg-card/50 glass group/item">
+              <div className="p-5 bg-card/30  border border-border/80 rounded-lg transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.08)] flex flex-col justify-between h-full hover:bg-card/50 glass group/item">
                 <div className="space-y-3">
                   <div className="size-10 rounded-xl bg-primary/10 border border-primary/25 flex items-center justify-center text-primary transition-transform group-hover/item:scale-105">
                     <ShieldCheck size={20} className="drop-shadow-[0_0_5px_rgb(var(--primary-rgb)_/_0.3)]" />
                   </div>
-                  <h4 className="text-sm font-black text-foreground uppercase tracking-tight">Tanpa Iklan / Biaya Tersembunyi</h4>
+                  <h4 className="text-sm text-foreground uppercase tracking-tight">Tanpa Iklan / Biaya Tersembunyi</h4>
                   <p className="text-xs text-muted-foreground leading-relaxed font-semibold">
                     Tidak ada interupsi iklan mengganggu, tidak ada fitur berbayar tersembunyi, dan tidak perlu mendaftarkan kartu kredit.
                   </p>
@@ -75,12 +75,12 @@ export function TrustBanner() {
               </div>
  
               {/* MANFAAT 2: OFFLINE */}
-              <div className="p-5 bg-card/30 backdrop-blur-xl border border-border/80 rounded-2xl transition-all duration-300 hover:border-secondary/40 hover:shadow-[0_0_20px_rgba(var(--secondary-rgb),0.08)] flex flex-col justify-between h-full hover:bg-card/50 glass group/item">
+              <div className="p-5 bg-card/30  border border-border/80 rounded-lg transition-all duration-300 hover:border-secondary/40 hover:shadow-[0_0_20px_rgba(var(--secondary-rgb),0.08)] flex flex-col justify-between h-full hover:bg-card/50 glass group/item">
                 <div className="space-y-3">
                   <div className="size-10 rounded-xl bg-secondary/10 border border-secondary/25 flex items-center justify-center text-secondary transition-transform group-hover/item:scale-105">
                     <WifiOff size={20} className="drop-shadow-[0_0_5px_rgb(var(--secondary-rgb)_/_0.3)]" />
                   </div>
-                  <h4 className="text-sm font-black text-foreground uppercase tracking-tight">Akses Luring Penuh</h4>
+                  <h4 className="text-sm text-foreground uppercase tracking-tight">Akses Luring Penuh</h4>
                   <p className="text-xs text-muted-foreground leading-relaxed font-semibold">
                     Mendukung mode offline. Seluruh data kemajuan belajar tersimpan aman di perangkat Anda secara instan.
                   </p>
@@ -88,12 +88,12 @@ export function TrustBanner() {
               </div>
  
               {/* MANFAAT 3: OPEN SOURCE */}
-              <div className="p-5 bg-card/30 backdrop-blur-xl border border-border/80 rounded-2xl transition-all duration-300 hover:border-secondary/40 hover:shadow-[0_0_20px_rgba(var(--brand-violet-rgb),0.12)] flex flex-col justify-between h-full hover:bg-card/50 glass group/item">
+              <div className="p-5 bg-card/30  border border-border/80 rounded-lg transition-all duration-300 hover:border-secondary/40 hover:shadow-[0_0_20px_rgba(var(--brand-violet-rgb),0.12)] flex flex-col justify-between h-full hover:bg-card/50 glass group/item">
                 <div className="space-y-3">
                   <div className="size-10 rounded-xl bg-secondary/10 border border-secondary/25 flex items-center justify-center text-secondary transition-transform group-hover/item:scale-105">
                     <Heart size={20} className="drop-shadow-[0_0_5px_rgb(var(--brand-violet-rgb)_/_0.32)]" />
                   </div>
-                  <h4 className="text-sm font-black text-foreground uppercase tracking-tight">Didukung Komunitas</h4>
+                  <h4 className="text-sm text-foreground uppercase tracking-tight">Didukung Komunitas</h4>
                   <p className="text-xs text-muted-foreground leading-relaxed font-semibold">
                     Ekosistem pembelajaran bersifat open source. Terbuka bagi siapa saja untuk ikut berkontribusi menyempurnakan kurikulum.
                   </p>

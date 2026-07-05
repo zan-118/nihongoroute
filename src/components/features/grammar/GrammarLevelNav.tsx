@@ -31,7 +31,7 @@ interface GrammarLevelNavProps {
  */
 export function GrammarLevelNav({ levels, selectedLevel, onLevelChange }: GrammarLevelNavProps) {
   return (
-    <nav className="inline-flex p-1.5 bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.4)] backdrop-blur-md rounded-2xl md:rounded-[2rem] border border-border shadow-2xl overflow-x-auto w-full xl:w-auto no-scrollbar relative font-sans">
+    <nav className="inline-flex p-1.5 bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.4)]  rounded-lg md:rounded-3xl border border-border shadow-2xl overflow-x-auto w-full xl:w-auto no-scrollbar relative font-sans">
       {levels.map((lvl) => (
         <button type="button"
           key={lvl}

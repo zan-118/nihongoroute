@@ -204,7 +204,7 @@ export default async function LessonPage({ params }: Props) {
             ].filter((l) => l.show);
             if (jumpLinks.length === 0) return null;
             return (
-              <nav className="mb-10 py-3 px-1 rounded-2xl bg-card/40 backdrop-blur-sm border border-border/50 shadow-sm relative z-20 glass">
+              <nav className="mb-10 py-3 px-1 rounded-lg bg-card/40  border border-border/50 shadow-sm relative z-20 glass">
                 <div className="flex gap-2 items-center overflow-x-auto scrollbar-none px-3">
                   <span className="text-[9px] font-black uppercase tracking-wider text-muted-foreground/70 shrink-0 mr-1 hidden sm:inline-block">Pintasan:</span>
                   {jumpLinks.map((link) => (
@@ -239,7 +239,7 @@ export default async function LessonPage({ params }: Props) {
             {formattedQuizzes.length > 0 ? (
               <section id="quiz">
                 <div className="flex items-center gap-4 mb-10">
-                  <h2 className="text-xl font-black uppercase tracking-tight text-foreground flex items-center gap-3">
+                  <h2 className="text-xl uppercase tracking-tight text-foreground flex items-center gap-3">
                     <span className="text-2xl">答え</span> Uji Pemahaman
                   </h2>
                   <div className="h-[1px] flex-1 bg-border" />

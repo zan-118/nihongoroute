@@ -120,7 +120,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
         </div>
 
         <div className="flex flex-col min-w-0 max-w-[190px] sm:max-w-[280px] md:max-w-[360px] lg:max-w-none">
-          <h1 className="text-sm md:text-lg font-black text-foreground tracking-tight truncate leading-none uppercase md:max-w-[18rem] lg:max-w-none">
+          <h1 className="text-sm md:text-lg text-foreground tracking-tight truncate leading-none uppercase md:max-w-[18rem] lg:max-w-none">
             {currentRouteLabel}
           </h1>
           {parentRouteLabel && (
@@ -148,7 +148,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
                 className="flex items-center gap-2"
               >
                 <RefreshCw size={12} className="animate-spin text-primary" aria-hidden="true" />
-                <span className="animate-pulse hidden md:inline">Sinkronisasi…</span>
+                <span className="hidden md:inline">Sinkronisasi…</span>
               </m.div>
             ) : syncError ? (
               <m.div 
@@ -158,7 +158,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
                 exit={{ opacity: 0, x: -10 }}
                 className="flex items-center gap-2"
               >
-                <CloudOff size={12} className="text-destructive drop-shadow-[0_0_8px_rgb(var(--destructive-rgb)/0.4)]" aria-hidden="true" />
+                <CloudOff size={12} className="text-destructive" aria-hidden="true" />
                 <span className="text-destructive/90 hidden md:inline">Gagal Sinkron</span>
               </m.div>
             ) : hasPendingSync ? (
@@ -169,7 +169,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
                 exit={{ opacity: 0, x: -10 }}
                 className="flex items-center gap-2"
               >
-                <CloudUpload size={12} className="text-warning drop-shadow-[0_0_8px_rgb(var(--warning-rgb)/0.4)]" aria-hidden="true" />
+                <CloudUpload size={12} className="text-warning" aria-hidden="true" />
                 <span className="text-warning/90 hidden md:inline">Tertunda</span>
               </m.div>
             ) : (
@@ -180,7 +180,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
                 exit={{ opacity: 0, x: -10 }}
                 className="flex items-center gap-2"
               >
-                <Cloud size={12} className="text-success drop-shadow-[0_0_8px_rgb(var(--success-rgb)/0.4)]" aria-hidden="true" />
+                <Cloud size={12} className="text-success" aria-hidden="true" />
                 <span className="text-success/70 hidden md:inline">Tersinkronisasi</span>
               </m.div>
             )}
@@ -270,7 +270,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
              >
                 <Bell size={18} />
                 {unreadNotifications > 0 && (
-                  <span className="absolute top-3 right-3 size-1.5 bg-destructive rounded-full shadow-[0_0_8px_rgb(var(--destructive-rgb)/1)] animate-pulse" />
+                  <span className="absolute top-3 right-3 size-1.5 bg-destructive rounded-full" />
                 )}
              </m.button>
 

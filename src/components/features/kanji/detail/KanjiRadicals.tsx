@@ -27,7 +27,7 @@ export function KanjiRadicals({ radicals }: KanjiRadicalsProps) {
   // RENDER KOMPONEN
   // ==========================================
   return (
-    <Card className="p-8 bg-card/20 backdrop-blur-xl border-border rounded-[2.5rem] hover:border-primary/40 transition-all flex flex-col justify-center glass shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
+    <Card className="p-8 bg-card/20  border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all flex flex-col justify-center glass shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
       <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground block mb-4">Radikal Utama</span>
       <div className="flex flex-wrap gap-3">
         {radicals && radicals.length > 0 ? (

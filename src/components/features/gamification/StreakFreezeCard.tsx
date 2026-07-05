@@ -40,7 +40,7 @@ export default function StreakFreezeCard() {
   };
 
   return (
-    <Card className="p-6 rounded-2xl bg-secondary/5 border border-secondary/20 shadow-lg relative overflow-hidden group h-full flex flex-col justify-between">
+    <Card className="p-6 rounded-lg bg-secondary/5 border border-secondary/20 shadow-lg relative overflow-hidden group h-full flex flex-col justify-between">
       <div className="absolute -top-4 -right-4 text-secondary/10 rotate-12 group-hover:scale-125 transition-transform duration-700">
         <ShieldCheck size={120} />
       </div>
@@ -51,8 +51,8 @@ export default function StreakFreezeCard() {
             <ShieldCheck size={20} />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-secondary uppercase tracking-widest mb-0.5">Peningkatan</h4>
-            <h3 className="text-sm font-black text-foreground uppercase tracking-tight">Pelindung Streak</h3>
+            <h4 className="text-xs text-secondary uppercase tracking-widest mb-0.5">Peningkatan</h4>
+            <h3 className="text-sm text-foreground uppercase tracking-tight">Pelindung Streak</h3>
           </div>
         </div>
         

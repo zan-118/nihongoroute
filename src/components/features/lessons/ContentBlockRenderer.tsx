@@ -171,12 +171,12 @@ export default function ContentBlockRenderer({
     },
     block: {
       h2: ({ children }: PortableTextChildrenProps) => (
-        <h2 className="text-2xl font-black uppercase tracking-tight text-foreground mt-8 mb-4 border-b border-border pb-2 font-japanese">
+        <h2 className="text-2xl uppercase tracking-tight text-foreground mt-8 mb-4 border-b border-border pb-2 font-japanese">
           {renderWithMarkdown(children)}
         </h2>
       ),
       h3: ({ children }: PortableTextChildrenProps) => (
-        <h3 className="text-xl font-black uppercase tracking-tight text-foreground mt-6 mb-3 font-japanese">
+        <h3 className="text-xl uppercase tracking-tight text-foreground mt-6 mb-3 font-japanese">
           {renderWithMarkdown(children)}
         </h3>
       ),
@@ -425,7 +425,7 @@ function TextBlock({ block }: { block: ContentBlock }) {
   return (
     <div className="space-y-4">
       {block.title && (
-        <h3 className="text-xl font-black uppercase tracking-tight text-foreground">
+        <h3 className="text-xl uppercase tracking-tight text-foreground">
           {block.title}
         </h3>
       )}
@@ -463,7 +463,7 @@ function TextBlock({ block }: { block: ContentBlock }) {
 // ==========================================
 function CalloutBlock({ block }: { block: ContentBlock }) {
   return (
-    <div className="flex gap-4 p-6 rounded-[2rem] shadow-[0_8px_30px_rgb(var(--primary-rgb)/0.03)] glass relative overflow-hidden group hover:border-primary/30 transition-all duration-300">
+    <div className="flex gap-4 p-6 rounded-2xl md:rounded-3xl shadow-[0_8px_30px_rgb(var(--primary-rgb)/0.03)] glass relative overflow-hidden group hover:border-primary/30 transition-all duration-300">
       <div className="absolute top-0 left-0 w-1.5 h-full bg-primary" />
       <Info className="size-5 text-primary flex-shrink-0 mt-0.5" />
       <div className="space-y-2">
@@ -486,7 +486,7 @@ function CalloutBlock({ block }: { block: ContentBlock }) {
 // ==========================================
 function GrammarBlock({ block }: { block: ContentBlock }) {
   return (
-    <div className="space-y-5 rounded-[2.5rem] shadow-[0_15px_35px_rgb(var(--primary-rgb)/0.02)] glass overflow-hidden group hover:border-[rgb(var(--primary-rgb)/0.35)] transition-all duration-500">
+    <div className="space-y-5 rounded-2xl md:rounded-3xl shadow-[0_15px_35px_rgb(var(--primary-rgb)/0.02)] glass overflow-hidden group hover:border-[rgb(var(--primary-rgb)/0.35)] transition-all duration-500">
       <div 
         className="px-6 py-4 border-b border-border flex justify-between items-center"
         style={{ backgroundColor: "rgb(var(--primary-rgb)/0.05)" }}
@@ -499,7 +499,7 @@ function GrammarBlock({ block }: { block: ContentBlock }) {
             Pola Kalimat (Grammar)
           </span>
           {block.title && (
-            <h3 className="text-lg font-black text-foreground mt-1.5 tracking-tight">{block.title}</h3>
+            <h3 className="text-lg text-foreground mt-1.5 tracking-tight">{block.title}</h3>
           )}
         </div>
       </div>
@@ -654,7 +654,7 @@ function DialogueBlock({ block }: { block: ContentBlock }) {
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         {block.title ? (
-          <h3 className="text-xs font-black text-muted-foreground uppercase tracking-widest">
+          <h3 className="text-xs text-muted-foreground uppercase tracking-widest">
             {block.title}
           </h3>
         ) : (
@@ -694,13 +694,13 @@ function DialogueBlock({ block }: { block: ContentBlock }) {
         </div>
       </div>
 
-      <div className="space-y-4 rounded-[2rem] p-6 shadow-[0_10px_35px_rgb(var(--foreground-rgb)/0.01)] glass">
+      <div className="space-y-4 rounded-2xl md:rounded-3xl p-6 shadow-[0_10px_35px_rgb(var(--foreground-rgb)/0.01)] glass">
         {lines.map((line: { speaker: string | undefined; text: string; furigana?: string }, pos: number) => {
           const isLinePlaying = playingIndex === pos;
           return (
             <div 
               key={`dialogue-${pos}`} 
-              className={`flex gap-4 items-start group p-2.5 rounded-2xl transition-all duration-300 ${
+              className={`flex gap-4 items-start group p-2.5 rounded-lg transition-all duration-300 ${
                 isLinePlaying 
                   ? "bg-secondary/10 border-l-4 border-l-secondary pl-3.5 shadow-[0_0_15px_rgb(var(--secondary-rgb)/0.05)]" 
                   : "hover:bg-muted/10"
@@ -763,7 +763,7 @@ function ImageBlock({ block }: { block: ContentBlock }) {
   if (!block.content) return null;
   return (
     <figure className="w-full mb-10">
-      <div className="relative w-full rounded-[2.5rem] overflow-hidden border border-border/80 shadow-[0_15px_40px_rgba(var(--primary-rgb),0.1)] glass group">
+      <div className="relative w-full rounded-2xl md:rounded-3xl overflow-hidden border border-border/80 shadow-[0_15px_40px_rgba(var(--primary-rgb),0.1)] glass group">
         <Image
           src={block.content}
           alt={block.title || "Gambar pelajaran"}
@@ -796,7 +796,7 @@ function ExamplesSection({ examples }: { examples: ExampleSentence[] }) {
         {examples.map((ex) => (
           <div 
             key={ex.jp} 
-            className="border border-border rounded-2xl p-4 space-y-2 transition-all duration-300 group"
+            className="border border-border rounded-lg p-4 space-y-2 transition-all duration-300 group"
             style={{ backgroundColor: "rgb(var(--card-rgb)/0.1)" }}
             onMouseEnter={(e) => {
               e.currentTarget.style.backgroundColor = "rgb(var(--card-rgb)/0.2)";

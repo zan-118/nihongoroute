@@ -126,7 +126,7 @@ export default async function CheatsheetDetailPage({
                 {allItems.length} Materi Terdaftar
               </span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-black text-foreground tracking-tighter leading-[0.85]">
+            <h1 className="text-5xl md:text-7xl text-foreground tracking-tighter leading-[0.85]">
               {sheet.title}
             </h1>
             <p className="text-lg text-muted-foreground font-medium leading-relaxed">
@@ -151,7 +151,7 @@ export default async function CheatsheetDetailPage({
         <div className="mt-16 flex flex-col items-center gap-8 text-center pb-20">
           <div className="w-16 h-1 bg-border rounded-full" />
           <div className="flex flex-col gap-3">
-            <h3 className="text-2xl font-black tracking-tight">Butuh Versi Cetak?</h3>
+            <h3 className="text-2xl tracking-tight">Butuh Versi Cetak?</h3>
             <p className="text-muted-foreground text-sm font-medium">Unduh PDF cheatsheet ini untuk dipelajari secara offline di mana saja.</p>
           </div>
           <Link href="/library/cheatsheet">

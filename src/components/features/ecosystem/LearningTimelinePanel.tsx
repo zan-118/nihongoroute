@@ -164,7 +164,7 @@ function TimelineRow({ event }: { event: LearningEvent }) {
   const OutcomeIcon = outcome.icon;
   const title = getEventTitle(event);
   const content = (
-    <div className="group flex items-start gap-3 rounded-2xl border border-border bg-background/35 p-4 transition-all hover:border-primary/35 hover:bg-muted/20">
+    <div className="group flex items-start gap-3 rounded-lg border border-border bg-background/35 p-4 transition-all hover:border-primary/35 hover:bg-muted/20">
       <div
         className={cn(
           "flex size-10 shrink-0 items-center justify-center rounded-xl border",
@@ -188,7 +188,7 @@ function TimelineRow({ event }: { event: LearningEvent }) {
             {outcome.label}
           </span>
         </div>
-        <h3 className="mt-2 truncate text-sm font-black text-foreground">{title}</h3>
+        <h3 className="mt-2 truncate text-sm text-foreground">{title}</h3>
         <p className="mt-1 line-clamp-2 text-xs font-medium leading-relaxed text-muted-foreground">
           {meta.description}
         </p>
@@ -232,20 +232,20 @@ export default function LearningTimelinePanel({
   return (
     <Card
       className={cn(
-        "rounded-[34px] border border-border bg-card/35 p-5 shadow-none backdrop-blur-xl md:p-6",
+        "rounded-2xl md:rounded-3xl border border-border bg-card/35 p-5 shadow-none  md:p-6",
         className
       )}
     >
       <div className="mb-5 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-2xl border border-secondary/20 bg-secondary/10 text-secondary">
+          <div className="flex size-10 items-center justify-center rounded-lg border border-secondary/20 bg-secondary/10 text-secondary">
             <Activity size={18} aria-hidden="true" />
           </div>
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">
               Timeline
             </p>
-            <h2 className="text-lg font-black tracking-tight text-foreground">
+            <h2 className="text-lg tracking-tight text-foreground">
               Aktivitas Terbaru
             </h2>
           </div>
@@ -262,7 +262,7 @@ export default function LearningTimelinePanel({
           ))}
         </div>
       ) : (
-        <div className="rounded-2xl border border-dashed border-border bg-muted/15 p-5">
+        <div className="rounded-lg border border-dashed border-border bg-muted/15 p-5">
           <p className="text-sm font-bold text-muted-foreground">Belum ada aktivitas.</p>
           <Button asChild variant="outline" size="sm" className="mt-4 rounded-xl">
             <Link href="/library">Buka Library</Link>

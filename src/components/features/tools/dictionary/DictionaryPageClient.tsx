@@ -65,12 +65,12 @@ function DictionaryResultCard({ item }: { item: ToolSearchItem }) {
   const Icon = item.icon;
 
   return (
-    <Card className="group rounded-[2rem] border border-border/80 bg-card/35 p-6 transition-all duration-300 hover:border-primary/45 shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] glass">
+    <Card className="group rounded-2xl md:rounded-3xl border border-border/80 bg-card/35 p-6 transition-all duration-300 hover:border-primary/45 shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] glass">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex min-w-0 items-start gap-4">
           <div
             className={cn(
-              "flex size-12 shrink-0 items-center justify-center rounded-2xl border",
+              "flex size-12 shrink-0 items-center justify-center rounded-lg border",
               item.category === "vocab" && "border-primary/20 bg-primary/10 text-primary",
               item.category === "grammar" && "border-success/20 bg-success/10 text-success",
               item.category === "kanji" && "border-warning/20 bg-warning/10 text-warning"
@@ -197,12 +197,12 @@ export default function DictionaryPageClient() {
           </Button>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">
-              <div className="flex size-12 items-center justify-center rounded-2xl border border-warning/20 bg-warning/10 text-warning">
+              <div className="flex size-12 items-center justify-center rounded-lg border border-warning/20 bg-warning/10 text-warning">
                 <Search size={24} aria-hidden="true" />
               </div>
               <Badge className="w-fit rounded-xl px-3 py-1">Dictionary</Badge>
             </div>
-            <h1 className="max-w-3xl text-4xl font-black uppercase tracking-tight text-foreground md:text-6xl">
+            <h1 className="max-w-3xl text-4xl uppercase tracking-tight text-foreground md:text-6xl">
               Kamus Terpadu
             </h1>
             <p className="max-w-2xl text-sm font-medium leading-relaxed text-muted-foreground">
@@ -211,7 +211,7 @@ export default function DictionaryPageClient() {
           </div>
         </header>
 
-        <Card className="rounded-[2.5rem] border border-border/80 bg-card/35 p-6 shadow-[0_0_50px_rgba(var(--primary-rgb),0.02)] md:p-8 glass">
+        <Card className="rounded-2xl md:rounded-3xl border border-border/80 bg-card/35 p-6 shadow-[0_0_50px_rgba(var(--primary-rgb),0.02)] md:p-8 glass">
           <form
             className="grid gap-3 md:grid-cols-[1fr_auto]"
             onSubmit={(event) => {
@@ -307,11 +307,11 @@ export default function DictionaryPageClient() {
               <DictionaryResultCard key={`${item.category}-${item.id}`} item={item} />
             ))
           ) : (
-            <Card className="rounded-[2.5rem] border border-dashed border-border/80 bg-card/25 p-12 text-center glass shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] relative overflow-hidden">
-              <div className="mx-auto mb-5 flex size-16 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary">
+            <Card className="rounded-2xl md:rounded-3xl border border-dashed border-border/80 bg-card/25 p-12 text-center glass shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] relative overflow-hidden">
+              <div className="mx-auto mb-5 flex size-16 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
                 <Sparkles size={26} aria-hidden="true" />
               </div>
-              <h2 className="text-xl font-black uppercase tracking-tight text-foreground">
+              <h2 className="text-xl uppercase tracking-tight text-foreground">
                 Mulai Dari Pencarian
               </h2>
               <p className="mx-auto mt-2 max-w-md text-sm font-medium leading-relaxed text-muted-foreground">

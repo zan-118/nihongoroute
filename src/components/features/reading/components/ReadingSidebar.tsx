@@ -46,7 +46,7 @@ export function ReadingSidebar({
   return (
     <div className="hidden xl:block absolute -left-32 top-0 h-full">
       <div className="sticky top-40 flex flex-col items-center gap-6">
-        <Card className="p-3 bg-card/30 border-border rounded-2xl glass flex flex-col gap-4 shadow-2xl">
+        <Card className="p-3 bg-card/30 border-border rounded-lg glass flex flex-col gap-4 shadow-2xl">
           <AudioController
             audioUrl={audioUrl}
             textToSpeak={textToSpeak}

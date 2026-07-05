@@ -95,7 +95,7 @@ export default function CheatsheetClient({
               </div>
               <span className="text-primary font-black text-xs uppercase tracking-[0.3em]">Quick Reference</span>
             </div>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-foreground tracking-tighter leading-[0.9]">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl text-foreground tracking-tighter leading-[0.9]">
               Catatan <span className="text-primary">Cepat</span>
             </h1>
             <p className="text-sm md:text-base text-muted-foreground font-medium max-w-xl leading-relaxed">
@@ -123,7 +123,7 @@ export default function CheatsheetClient({
         <div className="flex items-center gap-2 mb-4 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
           <Filter size={14} className="text-primary" /> Saring Berdasarkan Topik
         </div>
-        <div className="flex flex-wrap gap-2.5 p-2 rounded-[2rem] border border-border bg-[rgba(var(--card-rgb),0.2)] backdrop-blur-md w-fit max-w-full glass">
+        <div className="flex flex-wrap gap-2.5 p-2 rounded-[2rem] border border-border bg-[rgba(var(--card-rgb),0.2)]  w-fit max-w-full glass">
           {categories.map((cat) => {
             const isActive = selectedCategory === cat;
             const count = categoryCounts[cat] || 0;
@@ -167,7 +167,7 @@ export default function CheatsheetClient({
       {/* Daftar Cheatsheet */}
       <section className="flex flex-col gap-8">
         <div className="flex items-center justify-between border-b border-border pb-4">
-          <h2 className="text-xs font-black uppercase tracking-[0.4em] text-muted-foreground flex items-center gap-2">
+          <h2 className="text-xs uppercase tracking-[0.4em] text-muted-foreground flex items-center gap-2">
             <Database size={14} className="text-primary" /> Menampilkan {filteredSheets.length} Panduan
           </h2>
         </div>
@@ -194,7 +194,7 @@ export default function CheatsheetClient({
                     <div className="absolute top-0 right-0 size-32 bg-[rgba(var(--primary-rgb),0.03)] blur-[40px] rounded-full -mr-12 -mt-12 group-hover:bg-[rgba(var(--primary-rgb),0.08)] transition-all duration-500 pointer-events-none" />
 
                     <div className="flex items-center justify-between relative z-10">
-                      <div className="size-14 rounded-2xl bg-[rgba(var(--muted-rgb),0.2)] border border-border flex items-center justify-center text-muted-foreground group-hover:text-primary group-hover:bg-[rgba(var(--primary-rgb),0.15)] group-hover:border-[rgba(var(--primary-rgb),0.3)] transition-all duration-500 shadow-inner">
+                      <div className="size-14 rounded-lg bg-[rgba(var(--muted-rgb),0.2)] border border-border flex items-center justify-center text-muted-foreground group-hover:text-primary group-hover:bg-[rgba(var(--primary-rgb),0.15)] group-hover:border-[rgba(var(--primary-rgb),0.3)] transition-all duration-500 shadow-inner">
                         {getIconForCategory(sheet.category)}
                       </div>
                       <Badge
@@ -206,7 +206,7 @@ export default function CheatsheetClient({
                     </div>
 
                     <div className="flex-1 relative z-10 space-y-2.5">
-                      <h3 className="text-2xl font-black text-foreground tracking-tight leading-tight group-hover:text-primary transition-colors">
+                      <h3 className="text-2xl text-foreground tracking-tight leading-tight group-hover:text-primary transition-colors">
                         {sheet.title}
                       </h3>
                       <p className="text-xs text-muted-foreground font-semibold leading-relaxed line-clamp-2">
@@ -238,7 +238,7 @@ export default function CheatsheetClient({
             <div className="size-20 rounded-full bg-[rgba(var(--muted-rgb),0.1)] flex items-center justify-center mb-6">
               <Database size={32} className="text-muted-foreground opacity-45" />
             </div>
-            <h3 className="text-xl font-bold text-foreground">Catatan cepat tidak ditemukan</h3>
+            <h3 className="text-xl text-foreground">Catatan cepat tidak ditemukan</h3>
             <p className="text-muted-foreground text-sm max-w-sm mt-1">
               Tidak ada materi yang cocok dengan kata kunci pencarian Anda. Coba bersihkan pencarian atau ganti filter kategori.
             </p>

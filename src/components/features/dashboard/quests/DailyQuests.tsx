@@ -29,7 +29,7 @@ export default function DailyQuests() {
   const isAllClaimed = todayQuests.length > 0 && todayQuests.every((quest) => !!claimedQuests[quest.id]);
 
   return (
-    <Card className="bg-card p-6 md:p-8 lg:p-10 rounded-[2.5rem] md:rounded-[3rem] border-border h-full relative overflow-hidden neo-card shadow-none flex flex-col">
+    <Card className="bg-card p-6 md:p-8 lg:p-10 rounded-2xl md:rounded-3xl border-border h-full relative overflow-hidden neo-card shadow-none flex flex-col">
       {/* Pola Kisi Latar Belakang */}
       <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--primary-rgb)/0.02)_1px,transparent_1px)] bg-[size:100%_4px] opacity-40 pointer-events-none" />
 

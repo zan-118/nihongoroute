@@ -78,7 +78,7 @@ export default function UserNav() {
           <ChevronDown size={14} className="hidden sm:block text-muted-foreground group-hover:text-primary transition-colors ml-1" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 mt-2 p-2 bg-card/95 backdrop-blur-xl border border-border rounded-2xl shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+      <DropdownMenuContent className="w-56 mt-2 p-2 bg-card/95  border border-border rounded-lg shadow-2xl animate-in fade-in zoom-in-95 duration-200">
         <DropdownMenuLabel className="px-3 py-3">
           <div className="flex flex-col space-y-1">
             <p className="text-xs font-black uppercase tracking-wider text-foreground">{userFullName || 'Pelajar'}</p>

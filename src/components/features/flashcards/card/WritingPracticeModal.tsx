@@ -44,7 +44,7 @@ export function WritingPracticeModal({
         <m.div
           initial={{ scale: 0.95, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
-          className="relative bg-card p-6 md:p-8 rounded-2xl border border-border shadow-2xl max-w-md w-full flex flex-col"
+          className="relative bg-card p-6 md:p-8 rounded-lg border border-border shadow-2xl max-w-md w-full flex flex-col"
         >
           <div className="relative z-10 flex flex-col">
             <header className="flex items-center justify-between mb-6">
@@ -54,7 +54,7 @@ export function WritingPracticeModal({
                 </div>
                 <div className="text-left">
                   <span className="block font-bold text-xs uppercase tracking-widest text-secondary/50 mb-0.5">Latihan Kanji</span>
-                  <h3 className="text-foreground text-lg font-black uppercase tracking-tight leading-none">Cara Menulis</h3>
+                  <h3 className="text-foreground text-lg uppercase tracking-tight leading-none">Cara Menulis</h3>
                 </div>
               </div>
               <Button

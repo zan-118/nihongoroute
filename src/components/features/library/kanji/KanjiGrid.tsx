@@ -43,7 +43,7 @@ export function KanjiGrid({ kanjis, isFetching }: KanjiGridProps) {
     <div className="relative font-sans">
       {/* Overlay Pemuat Visual (Glow Skeleton Blur) */}
       {isFetching && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-sm rounded-[2rem]">
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50  rounded-2xl md:rounded-3xl">
           <Loader2 className="size-10 animate-spin text-primary" />
         </div>
       )}
@@ -60,7 +60,7 @@ export function KanjiGrid({ kanjis, isFetching }: KanjiGridProps) {
             }}
           >
             <Link href={`/library/kanji/${kanji.slug || kanji.id || kanji._id}`}>
-              <Card className="group relative aspect-square flex flex-col items-center justify-center p-6 bg-card/45 border border-border/80 hover:border-[rgb(var(--primary-rgb)/0.45)] transition-all duration-300 rounded-[2.5rem] overflow-hidden cursor-pointer glass shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)]">
+              <Card className="group relative aspect-square flex flex-col items-center justify-center p-6 bg-card/45 border border-border/80 hover:border-[rgb(var(--primary-rgb)/0.45)] transition-all duration-300 rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer glass shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)]">
                 {/* Efek Pendar Latar Belakang (Neon Glow Effect) */}
                 <div className="absolute inset-0 bg-gradient-to-br from-[rgb(var(--primary-rgb)/0.05)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 
@@ -95,7 +95,7 @@ export function KanjiGrid({ kanjis, isFetching }: KanjiGridProps) {
           <div className="size-20 rounded-full bg-muted/20 flex items-center justify-center mb-6">
              <Search size={32} className="text-muted-foreground/50" aria-hidden="true" />
           </div>
-          <h3 className="text-xl font-black text-foreground uppercase tracking-tight">Karakter Kanji Tidak Ditemukan</h3>
+          <h3 className="text-xl text-foreground uppercase tracking-tight">Karakter Kanji Tidak Ditemukan</h3>
           <p className="text-muted-foreground font-medium text-sm mt-2">Silakan periksa kembali kata kunci atau sesuaikan filter level JLPT.</p>
         </div>
       )}

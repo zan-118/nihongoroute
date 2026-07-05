@@ -95,7 +95,7 @@ export function FlashcardBack({
   // ==========================================
   return (
     <Card
-      className={`absolute inset-0 w-full h-full border ${themeBorder} rounded-2xl ${themeShadow} flex flex-col p-4 md:p-6 transition-all duration-200 shadow-none overflow-hidden bg-card`}
+      className={`absolute inset-0 w-full h-full border ${themeBorder} rounded-lg ${themeShadow} flex flex-col p-4 md:p-6 transition-all duration-200 shadow-none overflow-hidden bg-card`}
       style={{
         transform: "rotateY(180deg)",
         backfaceVisibility: "hidden",

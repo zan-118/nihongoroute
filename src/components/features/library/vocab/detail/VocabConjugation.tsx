@@ -127,16 +127,16 @@ export function VocabConjugation({
   if (renderedConjugations.length === 0) return null;
 
   return (
-    <Card className="p-6 md:p-8 bg-card/20 backdrop-blur-xl border-border rounded-[2rem] hover:border-primary/40 transition-all group overflow-hidden relative font-sans glass shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
+    <Card className="p-6 md:p-8 bg-card/20  border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all group overflow-hidden relative font-sans glass shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
       <div className="flex items-center gap-3 mb-6">
         <ArrowRightLeft size={18} aria-hidden="true" className="text-primary" />
-        <h2 className="text-sm font-black uppercase tracking-[0.2em] text-foreground">
+        <h2 className="text-sm uppercase tracking-[0.2em] text-foreground">
           {isAdjective ? "Konjugasi Kata Sifat" : "Konjugasi Kata Kerja"}
         </h2>
       </div>
       
       {/* Grid Item Konjugasi */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="flex flex-col sm:flex-row flex-wrap gap-4">
         {renderedConjugations.map((conj) => (
           <div key={conj.key} className="p-4 bg-[rgb(var(--muted-rgb)/0.2)] border border-border rounded-xl">
             <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block mb-1">{conj.label}</span>

@@ -43,7 +43,7 @@ export function KanaHeader({ themeColor }: KanaHeaderProps) {
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-          <h1 className="text-4xl md:text-5xl font-black text-foreground uppercase tracking-tight">
+          <h1 className="text-4xl md:text-5xl text-foreground uppercase tracking-tight">
             Master <span className={themeColor}>Kana</span>
           </h1>
           <p className="text-muted-foreground text-xs mt-2 max-w-md font-medium leading-relaxed">

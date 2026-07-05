@@ -44,7 +44,7 @@ export const LessonNavigation: React.FC<LessonNavigationProps> = ({
           <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground group-hover:text-primary mb-3 flex items-center gap-2 transition-colors">
             <ChevronLeft size={14} aria-hidden="true" /> Materi Sebelumnya
           </span>
-          <h4 className="text-xl font-black uppercase text-foreground tracking-tight leading-tight">
+          <h4 className="text-xl uppercase text-foreground tracking-tight leading-tight">
             {prevLesson.title}
           </h4>
         </Link>
@@ -59,7 +59,7 @@ export const LessonNavigation: React.FC<LessonNavigationProps> = ({
           <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground group-hover:text-primary mb-3 flex items-center gap-2 transition-colors">
             Materi Selanjutnya <ChevronRight size={14} aria-hidden="true" />
           </span>
-          <h4 className="text-xl font-black uppercase text-foreground tracking-tight leading-tight">
+          <h4 className="text-xl uppercase text-foreground tracking-tight leading-tight">
             {nextLesson.title}
           </h4>
         </Link>

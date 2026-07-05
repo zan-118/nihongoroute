@@ -174,7 +174,7 @@ export function ExamResult({
     >
       {/* Sakelar Tampilan Premium */}
       <div className="flex justify-center mb-8">
-        <div className="bg-muted/80 backdrop-blur-md p-1.5 rounded-2xl flex gap-2 border border-border shadow-lg z-20 relative">
+        <div className="bg-muted/80  p-1.5 rounded-lg flex gap-2 border border-border shadow-lg z-20 relative">
           <Button
             variant="ghost"
             size="sm"
@@ -206,8 +206,8 @@ export function ExamResult({
 
       {viewMode === "official" ? (
         /* Tata Letak Sertifikat Kertas Kulit Autentik */
-        <div className="p-1 md:p-1.5 rounded-[2.2rem] bg-gradient-to-br from-amber-500/20 via-yellow-600/10 to-amber-700/20 shadow-2xl">
-          <Card className="p-6 md:p-12 text-[#2d2821] relative overflow-hidden bg-[#FAF8F5] border-4 border-double border-[#C8BFA7] rounded-[2rem] font-serif transition-all duration-500">
+        <div className="p-1 md:p-1.5 rounded-2xl bg-gradient-to-br from-amber-500/20 via-yellow-600/10 to-amber-700/20 shadow-2xl">
+          <Card className="p-6 md:p-12 text-[#2d2821] relative overflow-hidden bg-[#FAF8F5] border-4 border-double border-[#C8BFA7] rounded-xl font-serif transition-all duration-500">
             {/* Logo / Lambang Latar Belakang Tanda Air Halus */}
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none flex items-center justify-center select-none">
               <svg className="size-[85%]" viewBox="0 0 100 100" fill="currentColor">
@@ -223,10 +223,10 @@ export function ExamResult({
                 </span>
                 {isJft ? (
                   <>
-                    <h1 className="text-xl md:text-3xl font-black tracking-wide text-stone-800 leading-tight">
+                    <h1 className="text-xl md:text-3xl tracking-wide text-stone-800 leading-tight">
                       国際交流基金日本語基礎テスト 結果通知書
                     </h1>
-                    <h2 className="text-[11px] md:text-sm font-sans tracking-wider text-stone-600 font-bold uppercase">
+                    <h2 className="text-[11px] md:text-sm tracking-wider text-stone-600 uppercase">
                       THE JAPAN FOUNDATION TEST FOR BASIC JAPANESE
                     </h2>
                     <p className="text-[9px] md:text-[10px] font-sans text-stone-500 italic uppercase tracking-wider">
@@ -235,10 +235,10 @@ export function ExamResult({
                   </>
                 ) : (
                   <>
-                    <h1 className="text-xl md:text-3xl font-black tracking-wide text-stone-800 leading-tight">
+                    <h1 className="text-xl md:text-3xl tracking-wide text-stone-800 leading-tight">
                       日本語能力試験 合否判定書
                     </h1>
-                    <h2 className="text-[11px] md:text-sm font-sans tracking-wider text-stone-600 font-bold uppercase">
+                    <h2 className="text-[11px] md:text-sm tracking-wider text-stone-600 uppercase">
                       JAPANESE-LANGUAGE PROFICIENCY TEST
                     </h2>
                     <p className="text-[9px] md:text-[10px] font-sans text-stone-500 italic uppercase tracking-wider">
@@ -382,7 +382,7 @@ export function ExamResult({
               ) : (
                 /* Rincian Skor Otentik JLPT */
                 <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="flex flex-wrap gap-4">
                     {/* Kotak 1: Tabel Skor */}
                     <div className="md:col-span-2 border border-[#C8BFA7] rounded-lg overflow-hidden bg-[#FCFBF8]">
                       <div className="bg-[#F3EFE3] p-2.5 text-center text-xs font-bold text-[#554d3d] uppercase tracking-wider border-b border-[#C8BFA7]">
@@ -409,7 +409,7 @@ export function ExamResult({
                         </div>
                       ) : (
                         /* Rincian 3 Bagian N1-N3 */
-                        <div className="grid grid-cols-3 divide-x divide-[#C8BFA7]">
+                        <div className="flex flex-col gap-2 border-l border-[#C8BFA7] pl-4">
                           <div className="p-4 text-center">
                             <p className="text-[10px] text-stone-500 font-semibold uppercase leading-tight">Language Knowledge</p>
                             <p className="text-[9px] text-stone-400 font-serif leading-none mt-0.5">(言語知識)</p>
@@ -544,7 +544,7 @@ export function ExamResult({
             <Button
               asChild
               variant="outline"
-              className="w-full sm:w-auto px-12 h-14 bg-background/10 hover:bg-background/20 text-xs font-black uppercase tracking-widest rounded-2xl transition-all border border-border text-foreground backdrop-blur-md glass"
+              className="w-full sm:w-auto px-12 h-14 bg-background/10 hover:bg-background/20 text-xs font-black uppercase tracking-widest rounded-lg transition-all border border-border text-foreground  glass"
             >
               <Link href={backLink}>Finish & Exit</Link>
             </Button>
@@ -552,7 +552,7 @@ export function ExamResult({
             <Button
               onClick={() => setGameState("review")}
               variant="outline"
-              className="w-full sm:w-auto px-12 h-14 bg-background/5 hover:bg-background/15 text-xs font-black uppercase tracking-widest rounded-2xl transition-all border border-border text-muted-foreground backdrop-blur-md glass"
+              className="w-full sm:w-auto px-12 h-14 bg-background/5 hover:bg-background/15 text-xs font-black uppercase tracking-widest rounded-lg transition-all border border-border text-muted-foreground  glass"
             >
               Analisis Kesalahan
             </Button>
@@ -560,7 +560,7 @@ export function ExamResult({
         </div>
       ) : (
         /* Dasbor Glassmorphism Keamanan Siber Modern */
-        <Card className="p-8 md:p-16 text-center relative overflow-hidden neo-card rounded-[3rem] border border-border bg-card shadow-2xl transition-all duration-500">
+        <Card className="p-8 md:p-16 text-center relative overflow-hidden neo-card rounded-2xl border border-border bg-card shadow-2xl transition-all duration-500">
           <div
             className={`absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] blur-[150px] rounded-full pointer-events-none opacity-20 ${isPassed ? "bg-success" : "bg-destructive"}`}
           />
@@ -570,7 +570,7 @@ export function ExamResult({
               initial={{ scale: 0, rotate: -20 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ type: "spring", damping: 15 }}
-              className={`w-32 h-32 mx-auto neo-inset flex items-center justify-center rounded-[2.5rem] mb-10 bg-muted/50 border border-border ${isPassed ? "text-success" : "text-destructive"}`}
+              className={`w-32 h-32 mx-auto neo-inset flex items-center justify-center rounded-xl mb-10 bg-muted/50 border border-border ${isPassed ? "text-success" : "text-destructive"}`}
             >
               {isPassed ? (
                 <Trophy size={64} aria-hidden="true" className="drop-shadow-[0_0_15px_rgb(var(--success-rgb)/0.5)]" />
@@ -587,13 +587,13 @@ export function ExamResult({
             </p>
 
             {failedSection && finalScore >= exam.passingScore && (
-              <div className="max-w-xl mx-auto mb-8 p-4 rounded-[1.5rem] bg-destructive/10 border border-destructive/20 text-destructive text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-3 animate-pulse shadow-[0_0_15px_rgb(var(--destructive-rgb)/0.1)]">
+              <div className="max-w-xl mx-auto mb-8 p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-3 animate-pulse shadow-[0_0_15px_rgb(var(--destructive-rgb)/0.1)]">
                 <span className="text-base">⚠️</span>
                 <span>Skor Total Mencukupi, tetapi Gagal Batas Nilai Kategori (Maiten)</span>
               </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div className="flex flex-col gap-6 mb-12">
               <Card className="neo-inset p-8 flex flex-col items-center justify-center border border-border bg-muted/10">
                 <span className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-4">Skor Akhir</span>
                 <div className="flex items-baseline gap-2">
@@ -621,11 +621,11 @@ export function ExamResult({
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
                {/* Bagian Breakdown */}
                <div className="space-y-6 text-left">
-                  <h3 className="text-xs font-black uppercase tracking-[0.2em] text-foreground mb-6 flex items-center gap-3">
+                  <h3 className="text-xs uppercase tracking-[0.2em] text-foreground mb-6 flex items-center gap-3">
                      <div className="w-1.5 h-6 bg-primary rounded-full shadow-[0_0_10px_rgb(var(--primary-rgb)/1)]" />
                      Performa Materi
                   </h3>
-                  <div className="space-y-8 bg-muted/20 p-8 rounded-3xl border border-border neo-inset">
+                  <div className="space-y-8 bg-muted/20 p-8 rounded-xl border border-border neo-inset">
                     {Object.entries(sectionBreakdown).map(([sectionKey, data]) => {
                       if (data.total === 0) return null;
                       const percentage = Math.round((data.correct / data.total) * 100);
@@ -662,16 +662,16 @@ export function ExamResult({
 
                {/* Bagian Sertifikat/Aksi */}
                <div className="space-y-6 text-left">
-                  <h3 className="text-xs font-black uppercase tracking-[0.2em] text-foreground mb-6 flex items-center gap-3">
+                  <h3 className="text-xs uppercase tracking-[0.2em] text-foreground mb-6 flex items-center gap-3">
                      <div className="w-1.5 h-6 bg-warning rounded-full shadow-[0_0_10px_rgb(var(--warning-rgb)/1)]" />
                      Aksi & Sertifikasi
                   </h3>
                   
                   {isPassed ? (
-                    <div className="bg-[rgb(var(--warning-rgb)/0.1)] border border-warning/30 rounded-[2.5rem] p-8 relative group overflow-hidden">
+                    <div className="bg-[rgb(var(--warning-rgb)/0.1)] border border-warning/30 rounded-xl p-8 relative group overflow-hidden">
                       <div className="absolute -top-10 -right-10 size-40 bg-[rgb(var(--warning-rgb)/0.1)] blur-[60px] rounded-full group-hover:scale-150 transition-transform duration-700" />
                       <Trophy aria-hidden="true" className="text-warning mb-6 group-hover:scale-110 transition-transform" size={40} />
-                      <h4 className="text-lg font-black uppercase tracking-tight text-warning mb-2">Klaim Sertifikat Anda</h4>
+                      <h4 className="text-lg uppercase tracking-tight text-warning mb-2">Klaim Sertifikat Anda</h4>
                       <p className="text-xs font-medium text-muted-foreground mb-8 leading-relaxed">
                         Selamat! Anda telah menguasai materi ini dengan baik. Unduh sertifikat digital Anda sekarang.
                       </p>
@@ -693,9 +693,9 @@ export function ExamResult({
                       </div>
                     </div>
                   ) : (
-                    <div className="bg-[rgb(var(--muted-rgb)/0.3)] border border-border rounded-[2.5rem] p-8 opacity-80 h-full flex flex-col justify-center">
+                    <div className="bg-[rgb(var(--muted-rgb)/0.3)] border border-border rounded-xl p-8 opacity-80 h-full flex flex-col justify-center">
                       <Skull aria-hidden="true" className="text-muted-foreground/30 mb-6" size={40} />
-                      <h4 className="text-lg font-black uppercase tracking-tight text-muted-foreground mb-2">Terus Berlatih!</h4>
+                      <h4 className="text-lg uppercase tracking-tight text-muted-foreground mb-2">Terus Berlatih!</h4>
                       <p className="text-xs font-medium text-muted-foreground mb-8 leading-relaxed">
                         Dibutuhkan lebih banyak latihan untuk mencapai skor kelulusan. Pelajari kembali materi yang salah.
                       </p>
@@ -715,7 +715,7 @@ export function ExamResult({
                <Button
                   asChild
                   variant="ghost"
-                  className="w-full sm:w-auto px-12 h-14 bg-muted hover:bg-foreground hover:text-background text-xs font-black uppercase tracking-widest rounded-2xl transition-all"
+                  className="w-full sm:w-auto px-12 h-14 bg-muted hover:bg-foreground hover:text-background text-xs font-black uppercase tracking-widest rounded-lg transition-all"
                >
                  <Link href={backLink}>Selesai & Keluar</Link>
                </Button>
@@ -724,7 +724,7 @@ export function ExamResult({
                  <Button
                     onClick={() => setGameState("review")}
                     variant="ghost"
-                    className="w-full sm:w-auto px-12 h-14 border border-border hover:bg-muted text-xs font-black uppercase tracking-widest rounded-2xl transition-all"
+                    className="w-full sm:w-auto px-12 h-14 border border-border hover:bg-muted text-xs font-black uppercase tracking-widest rounded-lg transition-all"
                  >
                    Analisis Kesalahan
                  </Button>

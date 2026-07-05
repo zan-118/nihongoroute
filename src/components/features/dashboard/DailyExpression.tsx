@@ -32,7 +32,7 @@ export default function DailyExpression({ expression }: DailyExpressionProps) {
   return (
     <section
       aria-label="Ungkapan Hari Ini"
-      className="rounded-[2.5rem] md:rounded-[3rem] border border-border bg-card/40 backdrop-blur-md p-6 md:p-8 relative overflow-hidden shadow-[0_0_40px_-10px_rgb(var(--primary-rgb)/0.08)] hover:border-primary/30 hover:shadow-[0_0_45px_rgb(var(--primary-rgb)/0.12)] transition-all duration-500"
+      className="rounded-2xl md:rounded-3xl border border-border bg-card/40  p-6 md:p-8 relative overflow-hidden shadow-[0_0_40px_-10px_rgb(var(--primary-rgb)/0.08)] hover:border-primary/30 hover:shadow-[0_0_45px_rgb(var(--primary-rgb)/0.12)] transition-all duration-500"
     >
       {/* Pola kisi halus di latar belakang */}
       <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--primary-rgb)/0.02)_1px,transparent_1px)] bg-[size:100%_4px] opacity-40 pointer-events-none" />

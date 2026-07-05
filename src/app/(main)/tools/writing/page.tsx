@@ -43,7 +43,7 @@ function FreeWritingContent() {
 
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
             <div>
-              <h1 className="text-4xl md:text-5xl font-black text-foreground uppercase tracking-tight italic">
+              <h1 className="text-4xl md:text-5xl text-foreground uppercase tracking-tight italic">
                 {character ? (
                   <>
                     Kanji <span className="brand-text-gradient">{character}</span>
@@ -85,8 +85,8 @@ function FreeWritingContent() {
 
           {/* Area Tips & Informasi */}
           <div className="lg:col-span-5 space-y-6">
-            <Card className="p-8 rounded-[2rem] border border-border bg-card/50 backdrop-blur-sm shadow-xl">
-              <h3 className="text-lg font-black uppercase tracking-tight text-foreground mb-4">Tips Menulis</h3>
+            <Card className="p-8 rounded-[2rem] border border-border bg-card/50  shadow-xl">
+              <h3 className="text-lg uppercase tracking-tight text-foreground mb-4">Tips Menulis</h3>
               <ul className="space-y-4">
                 {[
                   "Gunakan garis bantu (grid) untuk mengatur proporsi huruf.",
@@ -105,13 +105,13 @@ function FreeWritingContent() {
             </Card>
 
             <div className="grid grid-cols-2 gap-4">
-               <Card className="p-6 rounded-2xl border border-border bg-muted/30 text-center">
+               <Card className="p-6 rounded-lg border border-border bg-muted/30 text-center">
                   <div className="w-10 h-10 bg-background rounded-xl border border-border flex items-center justify-center mx-auto mb-3">
                      <Download size={18} className="text-muted-foreground" />
                   </div>
                   <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Simpan Gambar</p>
                </Card>
-               <Card className="p-6 rounded-2xl border border-border bg-muted/30 text-center">
+               <Card className="p-6 rounded-lg border border-border bg-muted/30 text-center">
                   <div className="w-10 h-10 bg-background rounded-xl border border-border flex items-center justify-center mx-auto mb-3">
                      <Share2 size={18} className="text-muted-foreground" />
                   </div>

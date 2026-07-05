@@ -48,12 +48,12 @@ export function SidebarItem({ item, pathname, onClick }: SidebarItemProps) {
         {isActive && (
           <m.div 
             layoutId="active-side-glow"
-            className="absolute left-0 top-2 bottom-2 w-[3px] bg-[linear-gradient(180deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-violet-rgb)))] rounded-full"
+            className="absolute left-0 top-2 bottom-2 w-[3px] bg-primary rounded-full"
           />
         )}
 
         <div className={`size-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
-          isActive ? "bg-primary/[0.14] text-primary shadow-[0_0_18px_rgb(var(--brand-cyan-rgb)/0.12)]" : "bg-transparent text-muted-foreground group-hover:bg-muted/70 group-hover:text-foreground"
+          isActive ? "bg-primary/10 text-primary" : "bg-transparent text-muted-foreground group-hover:bg-muted/70 group-hover:text-foreground"
         }`}>
           <item.icon size={16} strokeWidth={2.1} />
         </div>
@@ -63,7 +63,7 @@ export function SidebarItem({ item, pathname, onClick }: SidebarItemProps) {
         {isActive && (
           <m.div 
             layoutId="sidebar-active-indicator"
-            className="size-1.5 rounded-full bg-primary shadow-[0_0_10px_rgb(var(--brand-cyan-rgb)/0.7)]"
+            className="size-1.5 rounded-full bg-primary"
           />
         )}
         <ChevronRight size={14} className={`opacity-0 group-hover:opacity-100 transition-all ${isActive ? 'text-primary' : 'text-muted-foreground'} group-hover:translate-x-0.5`} />

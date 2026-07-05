@@ -53,7 +53,7 @@ export function VocabFilterPanel({
   const setLayoutPreference = useUIStore((s) => s.setLayoutPreference);
 
   return (
-    <div className="mb-14 md:mb-20 bg-card/35 p-8 md:p-12 rounded-[2.5rem] border border-border/80 shadow-[0_0_50px_rgba(var(--primary-rgb),0.02)] font-sans glass">
+    <div className="mb-14 md:mb-20 bg-card/35 p-8 md:p-12 rounded-2xl md:rounded-3xl border border-border/80 shadow-[0_0_50px_rgba(var(--primary-rgb),0.02)] font-sans glass">
       <div className="flex flex-col gap-6 md:gap-8">
         
         {/* Kolom Pencarian Kosakata */}
@@ -65,7 +65,7 @@ export function VocabFilterPanel({
           />
           <Input
             placeholder="Masukkan kanji, kana, romaji, atau definisi..."
-            className="w-full pl-12 md:pl-16 pr-6 md:pr-8 py-6 md:py-8 h-auto bg-muted/30 border-border rounded-2xl md:rounded-[2rem] text-sm md:text-base text-foreground placeholder:text-muted-foreground font-medium neo-inset shadow-none focus-visible:ring-primary/30 font-sans"
+            className="w-full pl-12 md:pl-16 pr-6 md:pr-8 py-6 md:py-8 h-auto bg-muted/30 border-border rounded-lg md:rounded-3xl text-sm md:text-base text-foreground placeholder:text-muted-foreground font-medium neo-inset shadow-none focus-visible:ring-primary/30 font-sans"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -104,7 +104,7 @@ export function VocabFilterPanel({
             <select
               value={hinshi}
               onChange={(e) => setHinshi(e.target.value)}
-              className="w-full px-5 md:px-6 py-3 md:py-4 bg-muted border border-border rounded-xl md:rounded-2xl text-xs md:text-xs font-bold uppercase tracking-widest text-foreground outline-none focus:border-primary transition-colors appearance-none cursor-pointer"
+              className="w-full px-5 md:px-6 py-3 md:py-4 bg-muted border border-border rounded-xl md:rounded-lg text-xs md:text-xs font-bold uppercase tracking-widest text-foreground outline-none focus:border-primary transition-colors appearance-none cursor-pointer"
             >
               {HINSHI.map((h) => (
                 <option key={h.value} value={h.value} className="bg-card py-2 uppercase tracking-widest font-sans font-bold">
@@ -119,7 +119,7 @@ export function VocabFilterPanel({
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
           
           {/* Kontrol Toggle Romaji */}
-          <div className="w-full sm:w-auto flex items-center justify-between gap-4 px-4 py-3 bg-muted/20 border border-border rounded-xl md:rounded-2xl neo-inset">
+          <div className="w-full sm:w-auto flex items-center justify-between gap-4 px-4 py-3 bg-muted/20 border border-border rounded-xl md:rounded-lg neo-inset">
             <div className="flex flex-col pr-4">
               <span className="text-[10px] font-black uppercase tracking-widest text-foreground">Tampilkan Romaji</span>
               <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-tight">
@@ -130,7 +130,7 @@ export function VocabFilterPanel({
           </div>
 
           {/* Kontrol Toggle Format Layout (Grid vs List) */}
-          <div className="w-full sm:w-auto flex items-center justify-between gap-4 px-4 py-3 bg-muted/20 border border-border rounded-xl md:rounded-2xl neo-inset">
+          <div className="w-full sm:w-auto flex items-center justify-between gap-4 px-4 py-3 bg-muted/20 border border-border rounded-xl md:rounded-lg neo-inset">
             <div className="flex flex-col pr-4">
               <span className="text-[10px] font-black uppercase tracking-widest text-foreground">Tampilan Pustaka</span>
               <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-tight">

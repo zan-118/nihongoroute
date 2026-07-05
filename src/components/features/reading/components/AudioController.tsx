@@ -379,10 +379,10 @@ export default function AudioController({
         "flex items-center transition-all duration-300",
         compact 
           ? "p-0.5 bg-transparent gap-2.5" 
-          : "bg-card/55 backdrop-blur-md border border-border/50 shadow-xl ring-1 ring-border w-full",
+          : "bg-card/55  border border-border/50 shadow-xl ring-1 ring-border w-full",
         header 
-          ? "rounded-2xl px-4 py-3 gap-3" 
-          : !compact ? "rounded-[2rem] px-4 py-3 justify-between gap-4" : ""
+          ? "rounded-lg px-4 py-3 gap-3" 
+          : !compact ? "rounded-2xl md:rounded-3xl px-4 py-3 justify-between gap-4" : ""
       )}>
         {/* Play / Pause */}
         <Button
@@ -489,7 +489,7 @@ export default function AudioController({
                 <Gauge size={16} />
               </Button>
               {showSpeedMenu && (
-                <div className="absolute bottom-full mb-2 right-0 flex flex-col gap-1 p-2 rounded-2xl bg-card border border-border shadow-2xl z-50 min-w-[80px]">
+                <div className="absolute bottom-full mb-2 right-0 flex flex-col gap-1 p-2 rounded-lg bg-card border border-border shadow-2xl z-50 min-w-[80px]">
                   {SPEED_OPTIONS.map(speed => (
                     <button
                       key={speed}

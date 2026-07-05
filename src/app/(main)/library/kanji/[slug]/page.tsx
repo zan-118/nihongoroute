@@ -170,19 +170,19 @@ export default async function KanjiDetailPage({
               Latihan Terkait
             </p>
             <div className="flex flex-wrap gap-2">
-              <Button asChild variant="outline" className="rounded-2xl gap-2">
+              <Button asChild variant="outline" className="rounded-lg gap-2">
                 <Link href={`/tools/jlpt-drill?level=${encodeURIComponent(kanjiLevel)}&kind=kanji&source=kanji&slug=${encodeURIComponent(kanjiCharacter)}`}>
                   <ListChecks size={16} aria-hidden="true" />
                   JLPT Drill
                 </Link>
               </Button>
-              <Button asChild variant="outline" className="rounded-2xl gap-2">
+              <Button asChild variant="outline" className="rounded-lg gap-2">
                 <Link href={`/tools/writing?char=${encodeURIComponent(kanjiCharacter)}`}>
                   <PenTool size={16} aria-hidden="true" />
                   Menulis
                 </Link>
               </Button>
-              <Button asChild variant="outline" className="rounded-2xl gap-2">
+              <Button asChild variant="outline" className="rounded-lg gap-2">
                 <Link href={`/tools/flashcards?category=${encodeURIComponent(kanjiLevel.toLowerCase())}&mode=kanji&amount=10`}>
                   <Layers size={16} aria-hidden="true" />
                   Flashcard
@@ -192,7 +192,7 @@ export default async function KanjiDetailPage({
           </div>
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           <Link href="/library/kanji" className="w-full md:w-auto">
-            <Button variant="ghost" className="w-full px-10 py-8 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-2xl bg-muted/30 border border-border hover:bg-muted/50 hover:border-primary/30 transition-all gap-4 group shadow-none">
+            <Button variant="ghost" className="w-full px-10 py-8 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-lg bg-muted/30 border border-border hover:bg-muted/50 hover:border-primary/30 transition-all gap-4 group shadow-none">
               <ChevronLeft size={20} className="group-hover:-translate-x-2 transition-transform" aria-hidden="true" /> Kembali ke Daftar Kanji
             </Button>
           </Link>

@@ -20,8 +20,8 @@ export default function MobileNav() {
 
   return (
     <div data-tour="mobile-nav" className="md:hidden fixed bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] left-1/2 -translate-x-1/2 w-[min(94vw,28rem)] z-50">
-      <nav className="mobile-nav-shell rounded-2xl p-1.5 transition-all duration-500 overflow-hidden relative">
-        <div className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent pointer-events-none" />
+      <nav className="mobile-nav-shell rounded-lg p-1.5 transition-all duration-500 overflow-hidden relative">
+        <div className="absolute inset-x-5 top-0 h-px bg-border/40 pointer-events-none" />
         
         <ul className="flex justify-between items-center relative z-10 gap-1 px-1">
           {navItems.map((item) => {
@@ -37,7 +37,7 @@ export default function MobileNav() {
                   {isActive && (
                     <m.div
                       layoutId="mobile-nav-pill"
-                      className="absolute inset-x-0.5 inset-y-0.5 bg-[linear-gradient(135deg,rgb(var(--brand-cyan-rgb)/0.16),rgb(var(--brand-violet-rgb)/0.12))] border border-primary/30 rounded-xl z-0"
+                      className="absolute inset-x-0.5 inset-y-0.5 bg-primary/10 border border-primary/20 rounded-xl z-0"
                       transition={{ type: "spring", stiffness: 380, damping: 30 }}
                     />
                   )}

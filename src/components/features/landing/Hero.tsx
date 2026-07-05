@@ -13,7 +13,7 @@ export function Hero() {
       <div className="pointer-events-none absolute -left-28 top-10 size-72 rounded-full bg-primary/20 blur-[110px] dark:bg-primary/15" />
       <div className="pointer-events-none absolute left-1/3 bottom-6 size-64 rounded-full bg-secondary/10 blur-[120px] dark:bg-secondary/12" />
 
-      <div className="relative z-10 flex-1 flex flex-col items-center lg:items-start text-center lg:text-left max-w-2xl">
+      <div className="relative z-10 flex-1 flex flex-col items-start text-left max-w-2xl w-full">
         <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -29,7 +29,7 @@ export function Hero() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.14, duration: 0.5 }}
-          className="lg:hidden relative size-36 mb-5 rounded-2xl premium-surface flex items-center justify-center"
+          className="lg:hidden relative size-36 mb-5 rounded-lg premium-surface flex items-center justify-center"
         >
           <Image
             src="/logo-branding.svg"
@@ -40,7 +40,7 @@ export function Hero() {
           />
         </m.div>
 
-        <h1 className="text-[2.75rem] sm:text-6xl md:text-7xl lg:text-[5.95rem] font-black tracking-[-0.07em] leading-[0.92] text-foreground mb-7">
+        <h1 className="text-[2.75rem] sm:text-6xl md:text-7xl lg:text-[5.95rem] tracking-[-0.07em] leading-[0.92] text-foreground mb-7">
           Kuasai <br />
           <span className="brand-text-gradient inline-block">
             Bahasa Jepang.
@@ -53,7 +53,7 @@ export function Hero() {
           yang cepat, nyaman, dan siap dipakai harian.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-3.5 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto mt-2">
           <Button
             asChild
             className="brand-button h-14 px-7 sm:px-9 text-xs group"

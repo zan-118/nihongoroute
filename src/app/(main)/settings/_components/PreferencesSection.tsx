@@ -47,17 +47,17 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
 
   return (
     <m.div variants={itemVariants}>
-      <Card className="glass backdrop-blur-md border border-border/80 rounded-[2.5rem] p-8 md:p-10 shadow-xl relative overflow-hidden group">
+      <Card className="glass  border border-border/80 rounded-[2.5rem] p-8 md:p-10 shadow-xl relative overflow-hidden group">
         {/* Background Decorative Gradient Glow */}
         <div className="absolute top-0 left-0 size-40 bg-primary/5 blur-[50px] rounded-full -ml-14 -mt-14 pointer-events-none group-hover:bg-primary/8 transition-colors duration-300" />
         <div className="absolute bottom-0 right-0 size-48 bg-secondary/5 blur-[60px] rounded-full -mr-20 -mb-20 pointer-events-none" />
 
         <div className="flex items-center gap-4 mb-8 relative z-10">
-          <div className="size-12 rounded-2xl bg-background/30 flex items-center justify-center border border-border/80 shadow-lg">
+          <div className="size-12 rounded-lg bg-background/30 flex items-center justify-center border border-border/80 shadow-lg">
             <Sliders size={22} className="text-primary drop-shadow-[0_0_6px_rgb(var(--primary-rgb)/0.3)]" />
           </div>
           <div>
-            <h2 className="text-xl font-black uppercase italic tracking-tighter text-foreground">Preferensi Belajar</h2>
+            <h2 className="text-xl uppercase italic tracking-tighter text-foreground">Preferensi Belajar</h2>
             <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em] mt-0.5 opacity-60">
               Kustomisasi antarmuka dan target pencapaian harian
             </p>
@@ -68,13 +68,13 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
           {/* 1. FURIGANA & LAYOUT PREFERENCE */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Furigana Toggle */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 rounded-2xl bg-background/25 border border-border/60 hover:border-primary/20 transition-all duration-200 shadow-sm">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 rounded-lg bg-background/25 border border-border/60 hover:border-primary/20 transition-all duration-200 shadow-sm">
               <div className="flex items-center gap-4">
                 <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
                   <Eye size={18} />
                 </div>
                 <div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-foreground">Tampilkan Furigana</h4>
+                  <h4 className="text-xs uppercase tracking-wider text-foreground">Tampilkan Furigana</h4>
                   <p className="text-[9px] text-muted-foreground font-semibold">Tampilkan cara baca di atas huruf Kanji</p>
                 </div>
               </div>
@@ -95,13 +95,13 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
             </div>
 
             {/* Library Layout Preference */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 rounded-2xl bg-background/25 border border-border/60 hover:border-primary/20 transition-all duration-200 shadow-sm">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 rounded-lg bg-background/25 border border-border/60 hover:border-primary/20 transition-all duration-200 shadow-sm">
               <div className="flex items-center gap-4">
                 <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
                   <LayoutGrid size={18} />
                 </div>
                 <div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-foreground">Tata Letak Pustaka</h4>
+                  <h4 className="text-xs uppercase tracking-wider text-foreground">Tata Letak Pustaka</h4>
                   <p className="text-[9px] text-muted-foreground font-semibold">Ubah tampilan menu daftar Pustaka</p>
                 </div>
               </div>
@@ -138,7 +138,7 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
 
           {/* 2. THEME SELECTOR */}
           {mounted && (
-            <div className="p-5 rounded-2xl bg-background/25 border border-border/60 hover:border-primary/20 transition-all duration-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="p-5 rounded-lg bg-background/25 border border-border/60 hover:border-primary/20 transition-all duration-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
                   {theme === "dark" ? (
@@ -150,7 +150,7 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
                   )}
                 </div>
                 <div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-foreground">Tema Tampilan</h4>
+                  <h4 className="text-xs uppercase tracking-wider text-foreground">Tema Tampilan</h4>
                   <p className="text-[9px] text-muted-foreground font-semibold">Pilih tema antarmuka aplikasi</p>
                 </div>
               </div>
@@ -195,13 +195,13 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
           {/* 3. GAMIFICATION DAILY GOALS */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Daily Review Goal */}
-            <div className="p-5 rounded-2xl bg-background/25 border border-border/60 hover:border-primary/20 transition-all duration-200 shadow-sm space-y-4">
+            <div className="p-5 rounded-lg bg-background/25 border border-border/60 hover:border-primary/20 transition-all duration-200 shadow-sm space-y-4">
               <div className="flex items-center gap-4">
                 <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
                   <Sparkles size={18} />
                 </div>
                 <div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-foreground">Target Ulasan Harian</h4>
+                  <h4 className="text-xs uppercase tracking-wider text-foreground">Target Ulasan Harian</h4>
                   <p className="text-[9px] text-muted-foreground font-semibold">Target review hafalan (SRS) per hari</p>
                 </div>
               </div>
@@ -224,13 +224,13 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
             </div>
 
             {/* Daily Lesson Goal */}
-            <div className="p-5 rounded-2xl bg-background/25 border border-border/60 hover:border-primary/20 transition-all duration-200 shadow-sm space-y-4">
+            <div className="p-5 rounded-lg bg-background/25 border border-border/60 hover:border-primary/20 transition-all duration-200 shadow-sm space-y-4">
               <div className="flex items-center gap-4">
                 <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
                   <BookOpen size={18} />
                 </div>
                 <div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-foreground">Target Pelajaran Harian</h4>
+                  <h4 className="text-xs uppercase tracking-wider text-foreground">Target Pelajaran Harian</h4>
                   <p className="text-[9px] text-muted-foreground font-semibold">Target menyelesaikan materi per hari</p>
                 </div>
               </div>

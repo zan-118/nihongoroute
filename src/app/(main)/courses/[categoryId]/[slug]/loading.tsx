@@ -40,7 +40,7 @@ export default function CourseDetailLoading() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="neo-card p-6 flex flex-col justify-between items-start gap-6 h-48 rounded-2xl">
+                <div key={i} className="neo-card p-6 flex flex-col justify-between items-start gap-6 h-48 rounded-lg">
                   <div className="w-full space-y-4">
                     <div className="flex gap-2">
                        <Skeleton className="h-5 w-16 rounded" />

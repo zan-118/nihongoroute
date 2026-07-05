@@ -80,7 +80,7 @@ export default function ProfileSection({
 
   return (
     <m.div variants={itemVariants}>
-      <Card className="glass backdrop-blur-md border border-border/80 rounded-[2.5rem] p-8 md:p-10 shadow-xl overflow-hidden relative group">
+      <Card className="glass  border border-border/80 rounded-[2.5rem] p-8 md:p-10 shadow-xl overflow-hidden relative group">
         {/* Elemen Dekoratif Kartu ID Pilot */}
         <div className="absolute top-0 right-0 size-64 bg-primary/8 blur-[70px] rounded-full -mr-28 -mt-28 pointer-events-none" />
         <div className="absolute bottom-0 left-0 size-40 bg-secondary/5 blur-[50px] rounded-full -ml-14 -mb-14 pointer-events-none" />
@@ -99,7 +99,7 @@ export default function ProfileSection({
                       {(newName || "S").charAt(0).toUpperCase()}
                    </span>
                 </div>
-                <div className="absolute -bottom-2 -right-2 size-10 bg-card border border-border rounded-2xl flex items-center justify-center z-20 shadow-xl group-hover/avatar:scale-110 transition-transform">
+                <div className="absolute -bottom-2 -right-2 size-10 bg-card border border-border rounded-lg flex items-center justify-center z-20 shadow-xl group-hover/avatar:scale-110 transition-transform">
                    <ShieldCheck size={20} className="text-success" />
                 </div>
              </div>
@@ -111,7 +111,7 @@ export default function ProfileSection({
 
           <div className="flex-1 space-y-8">
             <div className="text-center lg:text-left space-y-2">
-              <h2 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter text-foreground flex flex-col lg:flex-row lg:items-center gap-3">
+              <h2 className="text-2xl md:text-3xl uppercase italic tracking-tighter text-foreground flex flex-col lg:flex-row lg:items-center gap-3">
                  Profil Pengguna
                  {isAuthenticated && (
                    <span className="text-[9px] not-italic font-black bg-success/15 text-success border border-success/30 px-3 py-1 rounded-full uppercase tracking-widest w-fit mx-auto lg:mx-0 shadow-[0_0_15px_rgb(var(--success-rgb)/0.1)]">
@@ -124,7 +124,7 @@ export default function ProfileSection({
 
             {/* PENGHITUNG STATISTIK */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-               <div className="bg-background/25 backdrop-blur-sm border border-border rounded-2xl p-5 flex items-center gap-4 group/stat hover:bg-background/35 hover:border-primary/20 transition-all duration-200 shadow-sm">
+               <div className="bg-background/25  border border-border rounded-lg p-5 flex items-center gap-4 group/stat hover:bg-background/35 hover:border-primary/20 transition-all duration-200 shadow-sm">
                   <div className="size-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-inner">
                      <Zap size={22} className="fill-current text-primary" />
                   </div>
@@ -135,7 +135,7 @@ export default function ProfileSection({
                      <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">Total XP</p>
                   </div>
                </div>
-               <div className="bg-background/25 backdrop-blur-sm border border-border rounded-2xl p-5 flex items-center gap-4 group/stat hover:bg-background/35 hover:border-warning/20 transition-all duration-200 shadow-sm">
+               <div className="bg-background/25  border border-border rounded-lg p-5 flex items-center gap-4 group/stat hover:bg-background/35 hover:border-warning/20 transition-all duration-200 shadow-sm">
                   <div className="size-12 rounded-xl bg-warning/10 border border-warning/20 flex items-center justify-center text-warning shadow-inner">
                      <Flame size={22} className="fill-current text-warning animate-premium-bounce" />
                   </div>
@@ -158,13 +158,13 @@ export default function ProfileSection({
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
                   placeholder="Masukkan nama Anda..."
-                  className="control-surface w-full h-14 rounded-2xl pl-12 pr-4 text-sm font-black text-foreground uppercase tracking-tight focus:ring-2 focus:ring-primary/35 outline-none transition-all placeholder:text-muted-foreground/40"
+                  className="control-surface w-full h-14 rounded-lg pl-12 pr-4 text-sm font-black text-foreground uppercase tracking-tight focus:ring-2 focus:ring-primary/35 outline-none transition-all placeholder:text-muted-foreground/40"
                 />
               </div>
               <Button
                 onClick={handleSave}
                 disabled={isSyncing}
-                className="h-14 bg-primary hover:bg-primary/95 text-primary-foreground font-black uppercase tracking-widest text-xs rounded-2xl px-8 shadow-lg shadow-primary/15 hover:shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50"
+                className="h-14 bg-primary hover:bg-primary/95 text-primary-foreground font-black uppercase tracking-widest text-xs rounded-lg px-8 shadow-lg shadow-primary/15 hover:shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50"
               >
                 {isSyncing ? "Menyimpan..." : "Simpan Nama"}
               </Button>

@@ -44,7 +44,7 @@ export function KanjiHeader({
     <div className="flex flex-col gap-8 font-sans">
       {/* Judul Utama & Sub-judul */}
       <div>
-        <h1 className="text-3xl sm:text-4xl md:text-6xl font-black uppercase tracking-tight text-foreground mb-4">
+        <h1 className="text-3xl sm:text-4xl md:text-6xl uppercase tracking-tight text-foreground mb-4">
           Pustaka <span className="text-primary">Kanji</span>
         </h1>
         <p className="text-muted-foreground text-lg max-w-2xl font-medium">
@@ -59,7 +59,7 @@ export function KanjiHeader({
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground size-5" aria-hidden="true" />
           <Input 
             placeholder="Cari kanji, arti, atau cara baca..." 
-            className="pl-12 h-14 bg-card/40 backdrop-blur-xl border border-border rounded-2xl text-lg shadow-2xl focus:ring-primary/20 font-sans font-bold"
+            className="pl-12 h-14 bg-card/40  border border-border rounded-lg text-lg shadow-2xl focus:ring-primary/20 font-sans font-bold"
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
           />
@@ -73,7 +73,7 @@ export function KanjiHeader({
               <Button
                 key={lvl}
                 variant={levelFilter === lvl ? "default" : "outline"}
-                className={`h-14 px-6 rounded-2xl font-bold transition-all duration-300 ${
+                className={`h-14 px-6 rounded-lg font-bold transition-all duration-300 ${
                   levelFilter === lvl 
                     ? "bg-primary text-primary-foreground shadow-[0_0_20px_rgb(var(--primary-rgb)/0.3)]" 
                     : "bg-card/40 border border-border hover:bg-muted"
@@ -86,7 +86,7 @@ export function KanjiHeader({
           </div>
 
           {/* Toggle Tata Letak (Grid vs List) */}
-          <div className="flex p-1 bg-card/40 backdrop-blur-xl rounded-2xl border border-border h-14 items-center gap-1 px-2">
+          <div className="flex p-1 bg-card/40  rounded-lg border border-border h-14 items-center gap-1 px-2">
             <Button
               type="button"
               variant="ghost"

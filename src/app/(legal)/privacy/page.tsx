@@ -45,7 +45,7 @@ export default function PrivacyPage() {
         </div>
 
         {/* Kartu Cyber-glass Premium Luar */}
-        <div className="glass border border-border/60 rounded-3xl p-6 sm:p-10 md:p-14 shadow-[0_0_50px_rgb(var(--primary-rgb)/0.05)] relative overflow-hidden backdrop-blur-xl">
+        <div className="glass border border-border/60 rounded-xl p-6 sm:p-10 md:p-14 shadow-[0_0_50px_rgb(var(--primary-rgb)/0.05)] relative overflow-hidden">
           {/* Aksen Sudut Halus */}
           <div className="absolute top-0 left-0 w-8 h-[2px] bg-gradient-to-r from-primary to-transparent" />
           <div className="absolute top-0 left-0 w-[2px] h-8 bg-gradient-to-b from-primary to-transparent" />
@@ -155,7 +155,7 @@ export default function PrivacyPage() {
                 Berbagi Data dengan Pihak Ketiga
               </h2>
               <p className="leading-relaxed">
-                NihongoRoute adalah <strong className="text-foreground font-semibold">platform edukasi non-komersial</strong>. Kami <strong className="text-foreground font-semibold text-destructive">tidak pernah menjual, menyewakan, atau memperdagangkan</strong> data pribadi Anda kepada pihak ketiga mana pun untuk tujuan periklanan, pemasaran, atau komersial.
+                NihongoRoute adalah <strong className="text-foreground font-semibold">platform edukasi non-komersial</strong>. Kami <strong className="font-semibold text-destructive">tidak pernah menjual, menyewakan, atau memperdagangkan</strong> data pribadi Anda kepada pihak ketiga mana pun untuk tujuan periklanan, pemasaran, atau komersial.
               </p>
             </div>
 

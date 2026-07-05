@@ -33,10 +33,10 @@ export function ExamIntro({
   backLink,
 }: ExamIntroProps) {
   return (
-    <Card className="w-full max-w-2xl mx-auto p-8 md:p-12 text-center mt-6 md:mt-12 relative overflow-hidden neo-card rounded-[3rem] border border-border bg-card shadow-2xl transition-colors duration-300">
+    <Card className="w-full max-w-2xl mx-auto p-8 md:p-12 text-center mt-6 md:mt-12 relative overflow-hidden neo-card rounded-2xl md:rounded-3xl border border-border bg-card shadow-2xl transition-colors duration-300">
       <div className="absolute top-0 right-0 size-[300px] bg-destructive/5 blur-[100px] rounded-full pointer-events-none" />
 
-      <Card className="size-24 mx-auto neo-inset flex items-center justify-center rounded-[2rem] mb-8 bg-[rgb(var(--muted-rgb)/0.5)] border border-border shadow-none">
+      <Card className="size-24 mx-auto neo-inset flex items-center justify-center rounded-2xl mb-8 bg-[rgb(var(--muted-rgb)/0.5)] border border-border shadow-none">
         <AlertCircle
           size={40}
           aria-hidden="true"
@@ -44,11 +44,11 @@ export function ExamIntro({
         />
       </Card>
 
-      <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-foreground uppercase tracking-tight mb-8 leading-tight relative z-10">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl text-foreground uppercase tracking-tight mb-8 leading-tight relative z-10">
         {exam.title}
       </h1>
 
-      <Card className="neo-inset p-6 md:p-8 rounded-2xl mb-8 text-left space-y-5 relative z-10 bg-muted/30 border border-border shadow-none">
+      <Card className="neo-inset p-6 md:p-8 rounded-lg mb-8 text-left space-y-5 relative z-10 bg-muted/30 border border-border shadow-none">
         <div className="flex justify-between items-center border-b border-border pb-4">
           <span className="text-xs md:text-xs font-bold uppercase tracking-widest text-muted-foreground">
             Total Soal
@@ -61,7 +61,7 @@ export function ExamIntro({
           <span className="text-xs md:text-xs font-bold uppercase tracking-widest text-muted-foreground">
             Batas Waktu
           </span>
-          <Badge variant="ghost" className="font-mono font-bold text-destructive text-destructive text-sm md:text-base">
+          <Badge variant="ghost" className="font-mono font-bold text-destructive text-sm md:text-base">
             {exam.timeLimit} Menit
           </Badge>
         </div>
@@ -69,7 +69,7 @@ export function ExamIntro({
           <span className="text-xs md:text-xs font-bold uppercase tracking-widest text-muted-foreground">
             Target Pass
           </span>
-          <Badge variant="ghost" className="font-mono font-bold text-warning text-warning text-sm md:text-base">
+          <Badge variant="ghost" className="font-mono font-bold text-warning text-sm md:text-base">
             {exam.passingScore} / 180
           </Badge>
         </div>

@@ -42,7 +42,7 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
   return (
     <section id="reading">
       <div className="flex items-center gap-4 mb-10">
-        <h2 className="text-xl font-black uppercase tracking-tight text-foreground flex items-center gap-3">
+        <h2 className="text-xl uppercase tracking-tight text-foreground flex items-center gap-3">
           <span className="text-2xl">読解</span> Materi Bacaan
         </h2>
         <div className="h-[1px] flex-1 bg-border" />
@@ -58,7 +58,7 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
                  >
                    {r.difficulty || r.level || "N/A"} Reading
                  </span>
-                 <h3 className="text-3xl font-black tracking-tighter uppercase">{r.title}</h3>
+                 <h3 className="text-3xl tracking-tighter uppercase">{r.title}</h3>
                </div>
                {(r.audioUrl || r.audio_url) && (
                  <div className="flex items-center gap-4 w-full sm:w-auto">
@@ -76,15 +76,15 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
               <div className="mb-10">
                 <SanityMedia 
                   url={r.videoUrl || r.imageUrl || ""} 
-                  type={r.videoUrl ? "video" : "image"}
-                  className="shadow-2xl rounded-[2.5rem] overflow-hidden"
+                  alt="Ilustrasi Bacaan"
+                  className="shadow-2xl rounded-2xl overflow-hidden"
                 />
               </div>
             )}
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
               <div 
-                className="prose-custom text-lg md:text-xl leading-[2] md:leading-[2.2] font-japanese p-8 md:p-10 rounded-[2.5rem] border border-border/80 shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] glass"
+                className="prose-custom text-lg md:text-xl leading-[2] md:leading-[2.2] font-japanese p-8 md:p-10 rounded-2xl md:rounded-3xl border border-border/80 shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] glass"
                 style={{ backgroundColor: "rgb(var(--card-rgb)/0.3)" }}
               >
                 {typeof r.body === "string"
@@ -96,10 +96,10 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
                   : null}
               </div>
               <div 
-                className="prose-custom opacity-75 italic text-sm md:text-base p-8 md:p-10 rounded-[2.5rem] border border-border/80 shadow-[0_0_30px_rgba(var(--primary-rgb),0.01)] glass"
+                className="prose-custom opacity-75 italic text-sm md:text-base p-8 md:p-10 rounded-2xl md:rounded-3xl border border-border/80 shadow-[0_0_30px_rgba(var(--primary-rgb),0.01)] glass"
                 style={{ backgroundColor: "rgb(var(--card-rgb)/0.15)" }}
               >
-                 <h4 className="text-[10px] not-italic font-black text-muted-foreground uppercase tracking-[0.2em] mb-4 md:mb-6">Terjemahan</h4>
+                 <h4 className="text-[10px] not-italic text-muted-foreground uppercase tracking-[0.2em] mb-4 md:mb-6">Terjemahan</h4>
                  {typeof r.translation === "string"
                    ? r.translation.split("\n").filter(Boolean).map((line: string, pos: number) => (
                        <p key={`trans-${pos}`} className="mb-2">{line}</p>

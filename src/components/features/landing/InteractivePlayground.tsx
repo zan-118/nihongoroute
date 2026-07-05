@@ -74,7 +74,7 @@ export function InteractivePlayground() {
         <Badge className="bg-primary/10 text-primary border border-primary/20 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
           Interactive Playground
         </Badge>
-        <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-5">
+        <h2 className="text-4xl md:text-5xl tracking-tight mb-5">
           Coba Teknologi Kami <span className="brand-text-gradient">Secara Instan</span>
         </h2>
         <p className="text-muted-foreground text-base md:text-lg font-medium leading-relaxed">
@@ -84,7 +84,7 @@ export function InteractivePlayground() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-[34px]">
         {/* INPUT PANEL - KOLOM KIRI */}
-        <Card className="lg:col-span-6 p-6 sm:p-8 bg-card/10 backdrop-blur-xl border border-border rounded-[28px] glass flex flex-col justify-between h-[450px]">
+        <Card className="lg:col-span-6 p-6 sm:p-8 bg-card/10  border border-border rounded-[28px] glass flex flex-col justify-between h-[450px]">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
@@ -99,7 +99,7 @@ export function InteractivePlayground() {
               value={inputText}
               onChange={(e) => setInputText(e.target.value.substring(0, 100))}
               placeholder="Ketik bahasa Jepang di sini... (contoh: 私は猫が好きです)"
-              className="w-full h-32 bg-background/50 border border-border/80 rounded-2xl p-4 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 text-sm font-semibold transition-all resize-none"
+              className="w-full h-32 bg-background/50 border border-border/80 rounded-lg p-4 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 text-sm font-semibold transition-all resize-none"
             />
 
             {/* Pilihan mode konversi */}
@@ -175,7 +175,7 @@ export function InteractivePlayground() {
         </Card>
 
         {/* OUTPUT PANEL - KOLOM KANAN */}
-        <Card className="lg:col-span-6 p-6 sm:p-8 bg-card/10 backdrop-blur-xl border border-border rounded-[28px] glass flex flex-col justify-between h-[450px] relative overflow-hidden group">
+        <Card className="lg:col-span-6 p-6 sm:p-8 bg-card/10  border border-border rounded-[28px] glass flex flex-col justify-between h-[450px] relative overflow-hidden group">
           {/* Efek glow visual neon */}
           <div className="absolute -top-16 -right-16 size-44 bg-primary/5 rounded-full blur-3xl pointer-events-none transition-opacity group-hover:opacity-80" />
 
@@ -190,7 +190,7 @@ export function InteractivePlayground() {
             )}
           </div>
 
-          <div className="flex-1 my-6 p-6 bg-background/40 border border-border/80 rounded-2xl flex items-center justify-center relative z-10 glass min-h-48 overflow-y-auto">
+          <div className="flex-1 my-6 p-6 bg-background/40 border border-border/80 rounded-lg flex items-center justify-center relative z-10 glass min-h-48 overflow-y-auto">
             <AnimatePresence mode="wait">
               {isLoading ? (
                 <m.div

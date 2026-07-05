@@ -43,7 +43,7 @@ const TrainingCard = React.memo(function TrainingCard({ item }: { item: Training
     <Card
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl transition-all duration-200 h-full relative overflow-hidden glass"
+      className="p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-lg transition-all duration-200 h-full relative overflow-hidden glass"
       style={{
         borderColor: isHovered ? `rgba(${item.rgb}, 0.3)` : "rgb(var(--border-rgb)/0.4)",
         boxShadow: isHovered ? `0 8px 22px rgba(${item.rgb}, 0.06), 0 0 12px rgba(${item.rgb}, 0.03)` : "none"
@@ -75,7 +75,7 @@ const TrainingCard = React.memo(function TrainingCard({ item }: { item: Training
 
         <div className="space-y-1">
           <h4
-            className="text-base sm:text-lg md:text-xl font-black text-foreground tracking-tight uppercase transition-colors"
+            className="text-base sm:text-lg md:text-xl text-foreground tracking-tight uppercase transition-colors"
             style={{
               color: isHovered ? `rgb(${item.rgb})` : "hsl(var(--foreground))"
             }}
@@ -139,7 +139,7 @@ export function TrainingGround({ categoryId, themeColor, itemVariants }: Trainin
     <m.section variants={itemVariants} className="mb-10 md:mb-16">
       <div className="flex items-center gap-4 mb-5 md:mb-8">
         <div className="space-y-0.5">
-          <h3 className="text-base sm:text-lg md:text-xl font-black uppercase tracking-tight text-foreground flex items-center gap-2">
+          <h3 className="text-base sm:text-lg md:text-xl uppercase tracking-tight text-foreground flex items-center gap-2">
             <Sparkles size={16} className={themeColor} /> Training Ground
           </h3>
           <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-muted-foreground/60">
@@ -150,7 +150,7 @@ export function TrainingGround({ categoryId, themeColor, itemVariants }: Trainin
       </div>
 
       {/* Mobile: horizontal scroll, Desktop: 3-col grid */}
-      <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 overflow-x-auto sm:overflow-visible pb-2 sm:pb-0 -mx-1 px-1 sm:mx-0 sm:px-0 scrollbar-none">
+      <div className="flex flex-col gap-4">
         {trainingItems.map((item) => (
           <Link key={item.title} href={item.href} className="group shrink-0 w-[75vw] sm:w-auto">
             <TrainingCard item={item} />

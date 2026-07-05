@@ -47,7 +47,7 @@ export function KanaControls({
   // ==========================================
   return (
     <div className="mb-6 md:mb-8 space-y-4 md:space-y-6">
-      <div className="bg-muted p-1 rounded-2xl border border-border flex gap-1 shadow-inner relative max-w-sm">
+      <div className="bg-muted p-1 rounded-lg border border-border flex gap-1 shadow-inner relative max-w-sm">
         <Button
           variant={isHira ? "default" : "ghost"}
           onClick={() => setType("hiragana")}

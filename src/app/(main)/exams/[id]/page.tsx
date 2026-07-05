@@ -72,7 +72,7 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
           <div className="size-20 mx-auto neo-inset text-destructive flex items-center justify-center rounded-full mb-8 shadow-inner bg-destructive/10">
             <span className="text-4xl block">🚫</span>
           </div>
-          <h1 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tight mb-4">
+          <h1 className="text-2xl md:text-3xl text-foreground uppercase tracking-tight mb-4">
             Ujian Tidak Ditemukan
           </h1>
           <p className="text-muted-foreground mb-10 text-sm leading-relaxed">
@@ -101,7 +101,7 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
           <div className="size-20 mx-auto neo-inset text-warning flex items-center justify-center rounded-full mb-8 shadow-inner bg-warning/10">
             <span className="text-4xl block">🚧</span>
           </div>
-          <h1 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tight mb-4">
+          <h1 className="text-2xl md:text-3xl text-foreground uppercase tracking-tight mb-4">
             Sedang Dalam Pembuatan
           </h1>
           <p className="text-muted-foreground mb-10 text-sm leading-relaxed">

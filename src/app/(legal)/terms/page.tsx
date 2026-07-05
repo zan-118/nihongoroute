@@ -45,7 +45,7 @@ export default function TermsPage() {
         </div>
 
         {/* Kartu Cyber-glass Premium Luar */}
-        <div className="glass border border-border/60 rounded-3xl p-6 sm:p-10 md:p-14 shadow-[0_0_50px_rgb(var(--secondary-rgb)/0.05)] relative overflow-hidden backdrop-blur-xl">
+        <div className="glass border border-border/60 rounded-xl p-6 sm:p-10 md:p-14 shadow-[0_0_50px_rgb(var(--secondary-rgb)/0.05)] relative overflow-hidden">
           {/* Aksen Sudut Halus */}
           <div className="absolute top-0 right-0 w-8 h-[2px] bg-gradient-to-l from-secondary to-transparent" />
           <div className="absolute top-0 right-0 w-[2px] h-8 bg-gradient-to-b from-secondary to-transparent" />
@@ -100,7 +100,7 @@ export default function TermsPage() {
                 Penggunaan yang Diizinkan
               </h2>
               <p className="leading-relaxed">
-                Anda diberikan lisensi terbatas, non-eksklusif, dan tidak dapat dialihkan untuk menggunakan platform ini murni untuk kepentingan belajar mandiri Anda. Anda setuju untuk <strong className="text-foreground font-semibold text-destructive">tidak melakukan tindakan terlarang berikut</strong>:
+                Anda diberikan lisensi terbatas, non-eksklusif, dan tidak dapat dialihkan untuk menggunakan platform ini murni untuk kepentingan belajar mandiri Anda. Anda setuju untuk <strong className="font-semibold text-destructive">tidak melakukan tindakan terlarang berikut</strong>:
               </p>
               
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 !list-none !pl-0">

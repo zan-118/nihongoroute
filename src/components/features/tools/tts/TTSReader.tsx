@@ -49,7 +49,7 @@ export default function TTSReader({ text, minimal = false, speaker, small = fals
         small
           ? "w-8 h-8 rounded-lg"
           : minimal
-            ? "w-12 h-12 md:w-14 md:h-14 rounded-2xl"
+            ? "w-12 h-12 md:w-14 md:h-14 rounded-lg"
             : "px-6 py-2.5 rounded-xl w-max text-xs"
       } ${
         isPlaying

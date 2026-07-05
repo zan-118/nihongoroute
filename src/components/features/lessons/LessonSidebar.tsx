@@ -34,9 +34,9 @@ export default function LessonSidebar({
 }: LessonSidebarProps) {
   return (
     <aside className="w-full lg:w-80 shrink-0 hidden lg:block">
-      <div className="sticky top-24 space-y-6">
+      <div className="sticky top-28 space-y-6">
         {/* Header Kategori */}
-        <div className="p-6 rounded-[2rem] bg-card/30 backdrop-blur-md border border-border/50 shadow-sm">
+        <div className="p-6 rounded-2xl bg-card/30  border border-border/50 shadow-sm">
           <div className="flex items-center gap-3 mb-2">
             <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
               <BookOpen size={16} />
@@ -45,13 +45,13 @@ export default function LessonSidebar({
               Kursus Ini
             </span>
           </div>
-          <h3 className="text-lg font-black tracking-tight text-foreground leading-tight">
+          <h3 className="text-lg tracking-tight text-foreground leading-tight">
             {categoryTitle}
           </h3>
         </div>
 
         {/* Daftar Pelajaran */}
-        <nav className="p-4 rounded-[2.5rem] bg-card/20 backdrop-blur-xl border border-border/40 shadow-xl overflow-hidden">
+        <nav className="p-4 rounded-2xl bg-card/20  border border-border/40 shadow-xl overflow-hidden">
           <div className="max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar space-y-1">
             {nav.map((lesson, idx) => {
               const isActive = lesson.slug === currentSlug;
@@ -60,7 +60,7 @@ export default function LessonSidebar({
                   key={lesson.slug}
                   href={`/courses/${categoryId}/${lesson.slug}`}
                   className={cn(
-                    "flex items-center gap-3 p-4 rounded-2xl transition-all duration-300 group relative overflow-hidden",
+                    "flex items-center gap-3 p-4 rounded-lg transition-all duration-300 group relative overflow-hidden",
                     isActive 
                       ? "bg-primary text-primary-foreground shadow-[0_10px_20px_rgb(var(--primary-rgb)/0.2)]" 
                       : "hover:bg-[rgb(var(--primary-rgb)/0.05)] text-muted-foreground hover:text-foreground"
@@ -96,7 +96,7 @@ export default function LessonSidebar({
 
         {/* Kartu Progres (Penampung Sementara) */}
         <div 
-          className="p-6 rounded-[2rem] border relative overflow-hidden group"
+          className="p-6 rounded-2xl border relative overflow-hidden group"
           style={{ backgroundColor: "rgb(var(--primary-rgb)/0.05)", borderColor: "rgb(var(--primary-rgb)/0.1)" }}
         >
           <div className="relative z-10">

@@ -158,7 +158,7 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
       <Card
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className="flex flex-col h-full rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden group transition-all duration-300 glass"
+        className="flex flex-col h-full rounded-2xl md:rounded-3xl overflow-hidden group transition-all duration-300 glass"
         style={{
           borderColor: isHovered ? `rgba(${theme.glowColor}, 0.4)` : `rgb(var(--border-rgb)/0.75)`,
           boxShadow: isHovered
@@ -216,7 +216,7 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
             <div className="mb-6 sm:mb-8 relative z-10">
               {/* Mobile: horizontal scroll, Desktop: 2-col or 3-col bento grid layout */}
               <div className={`flex overflow-x-auto sm:overflow-visible pb-2 sm:pb-0 -mx-1 px-1 sm:mx-0 sm:px-0 scrollbar-none gap-3 ${
-                isFeatured ? 'sm:grid sm:grid-cols-2 lg:grid-cols-3' : 'sm:grid sm:grid-cols-2'
+                isFeatured ? 'flex flex-col gap-4' : 'flex flex-col gap-4'
               }`}>
                 {cat.previews.map((preview) => (
                   <PreviewItem

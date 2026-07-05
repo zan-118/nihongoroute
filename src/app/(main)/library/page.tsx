@@ -171,7 +171,7 @@ export default async function LibraryPage() {
                 Pusat Sumber Belajar
               </span>
               <div className="flex items-center gap-2.5">
-                <div className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+                <div className="size-2 rounded-full bg-success animate-pulse" />
                 <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest leading-none">
                   Koneksi Luring: Aktif
                 </span>
@@ -181,7 +181,7 @@ export default async function LibraryPage() {
 
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12 mb-14 md:mb-20">
             <div className="flex-1">
-              <h1 className="text-4xl sm:text-5xl md:text-8xl font-black uppercase tracking-tight text-foreground mb-6 drop-shadow-sm leading-none">
+              <h1 className="text-4xl sm:text-5xl md:text-8xl uppercase tracking-tight text-foreground mb-6 drop-shadow-sm leading-none">
                 Pustaka<br />
                 <span className="text-primary">Materi</span>
               </h1>
@@ -196,11 +196,11 @@ export default async function LibraryPage() {
 
           {/* ── BANNER STATISTIK (Bento Grid Style) ── */}
           <div className="flex flex-col gap-6 w-full">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-6 md:gap-8">
               {stats.map((stat) => (
                 <Card 
                   key={stat.label} 
-                  className="p-6 md:p-8 rounded-[2rem] border border-border/80 bg-[rgb(var(--card-rgb)/0.3)] backdrop-blur-xl flex flex-col justify-center items-center text-center gap-2 group transition-all duration-300 hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.03)] hover:border-primary/20 glass"
+                  className="p-6 md:p-8 rounded-[2rem] border border-border/80 bg-[rgb(var(--card-rgb)/0.3)]  flex flex-col justify-center items-center text-center gap-2 group transition-all duration-300 hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.03)] hover:border-primary/20 glass"
                 >
                   <span
                     className="text-3xl md:text-5xl font-black tabular-nums tracking-tighter leading-none transition-transform duration-300 group-hover:scale-105"
@@ -217,7 +217,7 @@ export default async function LibraryPage() {
 
             {/* Total strip status */}
             <div
-              className="px-8 py-4 rounded-2xl border border-border/60 backdrop-blur-md flex items-center justify-center gap-3 glass"
+              className="px-8 py-4 rounded-lg border border-border/60  flex items-center justify-center gap-3 glass"
               style={{ background: "rgb(var(--primary-rgb)/0.02)" }}
             >
               <Sparkles size={14} className="text-primary animate-pulse" />

@@ -125,7 +125,7 @@ function parseNotesToJSX(notes: string): React.ReactNode {
     const rows = rowLines.map(line => line.split("|").slice(1, -1).map(c => c.trim()));
 
     elements.push(
-      <div key={key} className="my-6 overflow-x-auto rounded-2xl border border-border bg-card/5 backdrop-blur-md shadow-[0_0_20px_rgb(var(--primary-rgb)/0.02)] select-text">
+      <div key={key} className="my-6 overflow-x-auto rounded-lg border border-border bg-card/5  shadow-[0_0_20px_rgb(var(--primary-rgb)/0.02)] select-text">
         <table className="w-full text-left border-collapse text-xs md:text-sm">
           <thead>
             <tr className="border-b border-border bg-primary/5">
@@ -379,7 +379,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
               <span>Modul Tata Bahasa Resmi</span>
             </div>
           </div>
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-foreground tracking-tight drop-shadow-[0_0_30px_rgb(var(--foreground-rgb)/0.05)] font-japanese">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl text-foreground tracking-tight drop-shadow-[0_0_30px_rgb(var(--foreground-rgb)/0.05)] font-japanese">
             {article.title}
           </h1>
           {article.meaning && (
@@ -391,7 +391,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
 
         {/* Grup Tombol Bagikan/Aksi */}
         <div className="flex flex-wrap items-center gap-3">
-          <Button asChild variant="outline" className="rounded-2xl py-6 gap-2">
+          <Button asChild variant="outline" className="rounded-lg py-6 gap-2">
             <Link href={`/tools/jlpt-drill?level=${encodeURIComponent(jlptLevel)}&kind=grammar&source=grammar&slug=${encodeURIComponent(String(article.slug || article.id || article._id || ""))}`}>
               <ListChecks size={16} aria-hidden="true" />
               <span className="text-xs font-black uppercase tracking-wider">Latih</span>
@@ -406,7 +406,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
           <Button 
             onClick={handleShare}
             variant="ghost" 
-            className="rounded-2xl border border-border bg-card/10 backdrop-blur-md hover:bg-card/20 hover:border-primary/30 transition-all py-6 gap-2"
+            className="rounded-lg border border-border bg-card/10  hover:bg-card/20 hover:border-primary/30 transition-all py-6 gap-2"
             aria-label="Bagikan materi tata bahasa ini"
           >
             {isCopied ? (
@@ -430,7 +430,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
       <div className="space-y-12">
         {/* Bento Struktur */}
         {article.formation && (
-          <Card className="p-8 md:p-10 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-xl border border-border rounded-[2rem] relative overflow-hidden group hover:border-primary/40 shadow-[0_0_30px_rgba(var(--primary-rgb),0.05)] transition-all duration-500 select-none glass">
+          <Card className="p-8 md:p-10 bg-gradient-to-br from-card/40 to-card/10  border border-border rounded-2xl md:rounded-3xl relative overflow-hidden group hover:border-primary/40 shadow-[0_0_30px_rgba(var(--primary-rgb),0.05)] transition-all duration-500 select-none glass">
             <div className="absolute -top-12 -right-12 p-8 opacity-[0.02] group-hover:opacity-[0.05] group-hover:scale-110 transition-all duration-700 pointer-events-none text-primary">
               <BookText size={180} />
             </div>
@@ -447,7 +447,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
                 return (
                   <React.Fragment key={`formation-${index}`}>
                     {isBracketed ? (
-                      <span className="inline-block px-3.5 py-1 text-sm md:text-base font-black rounded-xl bg-primary/10 border border-primary/20 text-primary font-sans mx-1 shadow-[0_0_15px_rgb(var(--primary-rgb)/0.08)] backdrop-blur-md">
+                      <span className="inline-block px-3.5 py-1 text-sm md:text-base font-black rounded-xl bg-primary/10 border border-primary/20 text-primary font-sans mx-1 shadow-[0_0_15px_rgb(var(--primary-rgb)/0.08)] ">
                         {cleanPart}
                       </span>
                     ) : (
@@ -465,7 +465,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
 
         {/* Bento Catatan Tambahan (Spacious Full Width) */}
         {article.notes && (
-          <Card className="p-8 md:p-10 bg-gradient-to-br from-card/30 to-card/5 backdrop-blur-xl border border-border rounded-[2rem] relative overflow-hidden group hover:border-border transition-all duration-500 shadow-[0_0_30px_rgba(var(--primary-rgb),0.02)] select-none glass">
+          <Card className="p-8 md:p-10 bg-gradient-to-br from-card/30 to-card/5  border border-border rounded-2xl md:rounded-3xl relative overflow-hidden group hover:border-border transition-all duration-500 shadow-[0_0_30px_rgba(var(--primary-rgb),0.02)] select-none glass">
             <div className="absolute -top-12 -right-12 p-8 opacity-[0.02] group-hover:opacity-[0.05] group-hover:scale-110 transition-all duration-700 pointer-events-none text-muted-foreground">
               <Lightbulb size={180} />
             </div>
@@ -485,7 +485,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
           <section className="mb-8">
             <div className="flex items-center gap-3 mb-8">
               <span className="w-1.5 h-6 rounded-full bg-primary" />
-              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground select-none">
+              <h2 className="text-xs uppercase tracking-[0.2em] text-foreground select-none">
                 Contoh Kalimat (例文)
               </h2>
             </div>
@@ -498,7 +498,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
                 return (
                   <div 
                     key={ex.id || ex.indonesian || i}
-                    className="border border-border rounded-[1.8rem] p-6 md:p-8 bg-card/5 backdrop-blur-lg hover:border-primary/40 transition-all duration-300 shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)] relative overflow-hidden group flex items-start gap-4 md:gap-6 glass"
+                    className="border border-border rounded-[1.8rem] p-6 md:p-8 bg-card/5  hover:border-primary/40 transition-all duration-300 shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)] relative overflow-hidden group flex items-start gap-4 md:gap-6 glass"
                   >
                     {/* Aksen Siber Kiri & Penomoran */}
                     <div className="absolute top-0 left-0 w-1.5 h-full bg-primary/10 group-hover:bg-primary transition-all duration-300" />
@@ -558,7 +558,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
           <section className="mb-8">
             <div className="flex items-center gap-3 mb-8">
               <span className="w-1.5 h-6 rounded-full bg-success" />
-              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground select-none">
+              <h2 className="text-xs uppercase tracking-[0.2em] text-foreground select-none">
                 Contoh dalam Konteks (文脈例)
               </h2>
             </div>
@@ -567,7 +567,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
               {dynamicSentences.map((sentence, i) => (
                 <div
                   key={sentence.id}
-                  className="border border-border rounded-[1.8rem] p-5 md:p-6 bg-card/5 backdrop-blur-lg hover:border-success/40 transition-all duration-300 shadow-[0_0_20px_rgba(var(--success-rgb),0.02)] relative overflow-hidden group flex items-start gap-4 md:gap-5 glass"
+                  className="border border-border rounded-[1.8rem] p-5 md:p-6 bg-card/5  hover:border-success/40 transition-all duration-300 shadow-[0_0_20px_rgba(var(--success-rgb),0.02)] relative overflow-hidden group flex items-start gap-4 md:gap-5 glass"
                 >
                   <div className="absolute top-0 left-0 w-1.5 h-full bg-success/10 group-hover:bg-success transition-all duration-300" />
 
@@ -615,16 +615,16 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
           <section className="mt-8">
             <div className="flex items-center gap-3 mb-6">
               <span className="w-1.5 h-6 rounded-full bg-primary" />
-              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground select-none">
+              <h2 className="text-xs uppercase tracking-[0.2em] text-foreground select-none">
                 Kelompok Tata Bahasa (Keluarga {article.grammar_family})
               </h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {(article.familyGrammarList as Array<{ id: string; slug: string; title: string; jlpt_level: string; meaning: string }> || []).map((item) => (
                 <Link key={item.id} href={`/library/grammar/${item.slug}`} className="block group">
-                  <Card className="p-5 bg-card/5 backdrop-blur-md border border-border group-hover:border-primary/40 rounded-[1.2rem] transition-all duration-300 shadow-[0_0_15px_rgba(var(--primary-rgb),0.02)] group-hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.05)]">
+                  <Card className="p-5 bg-card/5  border border-border group-hover:border-primary/40 rounded-[1.2rem] transition-all duration-300 shadow-[0_0_15px_rgba(var(--primary-rgb),0.02)] group-hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.05)]">
                     <div className="flex justify-between items-center mb-2">
-                      <h3 className="font-bold text-foreground group-hover:text-primary transition-colors font-japanese">
+                      <h3 className="text-foreground group-hover:text-primary transition-colors font-japanese">
                         {item.title}
                       </h3>
                       <span className="text-[10px] font-black px-2 py-0.5 rounded border border-muted/30 text-muted-foreground uppercase tracking-wider">
@@ -646,16 +646,16 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
           <section className="mt-8">
             <div className="flex items-center gap-3 mb-6">
               <span className="w-1.5 h-6 rounded-full bg-secondary" />
-              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground select-none">
+              <h2 className="text-xs uppercase tracking-[0.2em] text-foreground select-none">
                 Tata Bahasa Terkait (Related Grammar)
               </h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {(article.relatedGrammarList as Array<{ id: string; slug: string; title: string; jlpt_level: string; meaning: string }> || []).map((item) => (
                 <Link key={item.id} href={`/library/grammar/${item.slug}`} className="block group">
-                  <Card className="p-5 bg-card/5 backdrop-blur-md border border-border group-hover:border-secondary/40 rounded-[1.2rem] transition-all duration-300 shadow-[0_0_15px_rgba(var(--secondary-rgb),0.02)] group-hover:shadow-[0_0_20px_rgba(var(--secondary-rgb),0.05)]">
+                  <Card className="p-5 bg-card/5  border border-border group-hover:border-secondary/40 rounded-[1.2rem] transition-all duration-300 shadow-[0_0_15px_rgba(var(--secondary-rgb),0.02)] group-hover:shadow-[0_0_20px_rgba(var(--secondary-rgb),0.05)]">
                     <div className="flex justify-between items-center mb-2">
-                      <h3 className="font-bold text-foreground group-hover:text-secondary transition-colors font-japanese">
+                      <h3 className="text-foreground group-hover:text-secondary transition-colors font-japanese">
                         {item.title}
                       </h3>
                       <span className="text-[10px] font-black px-2 py-0.5 rounded border border-muted/30 text-muted-foreground uppercase tracking-wider">
@@ -680,7 +680,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
         <Link href="/library/grammar" className="w-full md:w-auto">
           <Button 
             variant="ghost" 
-            className="w-full px-8 py-6 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-2xl bg-card/5 border border-border hover:bg-card/15 hover:border-primary/30 transition-all gap-3 group active:scale-[0.98]"
+            className="w-full px-8 py-6 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-lg bg-card/5 border border-border hover:bg-card/15 hover:border-primary/30 transition-all gap-3 group active:scale-[0.98]"
             aria-label="Kembali ke Daftar Tata Bahasa"
           >
             <ChevronLeft size={16} className="group-hover:-translate-x-1.5 transition-transform" /> Kembali ke Daftar
@@ -689,7 +689,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
 
         <Link href="/library/grammar" className="w-full md:w-auto">
           <Button 
-            className="w-full md:w-auto px-10 py-6 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-2xl bg-primary text-primary-foreground hover:bg-primary/95 transition-all shadow-[0_0_25px_rgb(var(--primary-rgb)/0.25)] hover:shadow-[0_0_40px_rgb(var(--primary-rgb)/0.4)] active:scale-95 flex items-center gap-2 group"
+            className="w-full md:w-auto px-10 py-6 h-auto text-[11px] md:text-xs font-black uppercase tracking-[0.2em] rounded-lg bg-primary text-primary-foreground hover:bg-primary/95 transition-all shadow-[0_0_25px_rgb(var(--primary-rgb)/0.25)] hover:shadow-[0_0_40px_rgb(var(--primary-rgb)/0.4)] active:scale-95 flex items-center gap-2 group"
             aria-label="Tandai materi ini selesai dan kembali"
           >
             Selesai & Lanjut <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />

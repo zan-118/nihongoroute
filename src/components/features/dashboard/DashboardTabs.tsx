@@ -44,7 +44,7 @@ export function DashboardTabs({ tabs, activeTab, onTabChange }: DashboardTabsPro
         role="tablist" 
         aria-label="Dashboard Navigation" 
         data-tour="dashboard-tabs"
-        className="bg-muted/50 dark:bg-background/[0.03] p-1.5 rounded-[2rem] border border-border/50 flex gap-1 shadow-sm max-w-full overflow-x-auto scrollbar-none"
+        className="bg-muted/50 dark:bg-background/[0.03] p-1.5 rounded-full border border-border/50 flex gap-1 shadow-sm max-w-full overflow-x-auto scrollbar-none"
       >
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;

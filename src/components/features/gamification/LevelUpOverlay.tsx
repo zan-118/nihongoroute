@@ -57,7 +57,7 @@ export default function LevelUpOverlay({ level }: { level: number }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-2xl p-4 md:p-8"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80  p-4 md:p-8"
         >
           <m.div
             initial={{ scale: 0.95, y: 20, opacity: 0 }}
@@ -66,7 +66,7 @@ export default function LevelUpOverlay({ level }: { level: number }) {
             transition={{ type: "spring", stiffness: 200, damping: 20 }}
             className="w-full max-w-lg h-auto max-h-[90vh] flex items-center justify-center"
           >
-            <Card className="text-center py-6 px-4 md:py-10 md:px-12 bg-background bg-card rounded-[2rem] md:rounded-[3rem] border border-primary/30 shadow-2xl neo-card relative overflow-hidden w-full h-auto flex flex-col items-center">
+            <Card className="text-center py-6 px-4 md:py-10 md:px-12 bg-background rounded-2xl md:rounded-3xl border border-primary/30 shadow-2xl neo-card relative overflow-hidden w-full h-auto flex flex-col items-center">
               <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--primary-rgb)/0.03)_1px,transparent_1px)] bg-[size:100%_4px] pointer-events-none opacity-20 dark:opacity-40" />
               
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[500px] bg-primary/10 blur-[120px] rounded-full animate-bloom pointer-events-none" />
@@ -84,7 +84,7 @@ export default function LevelUpOverlay({ level }: { level: number }) {
                   duration: 4,
                   ease: "easeInOut"
                 }}
-                className="w-16 h-16 md:w-28 md:h-28 mx-auto bg-primary/10 rounded-2xl md:rounded-[2.5rem] flex items-center justify-center mb-6 md:mb-10 neo-inset shadow-none border border-primary/30"
+                className="w-16 h-16 md:w-28 md:h-28 mx-auto bg-primary/10 rounded-lg md:rounded-2xl flex items-center justify-center mb-6 md:mb-10 neo-inset shadow-none border border-primary/30"
               >
                 <Trophy size={40} className="text-primary drop-shadow-sm dark:drop-shadow-[0_0_20px_rgb(var(--primary-rgb)/0.6)] md:w-14 md:h-14" />
               </m.div>
@@ -93,18 +93,18 @@ export default function LevelUpOverlay({ level }: { level: number }) {
                 Naik Level!
               </Badge>
               
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-foreground uppercase tracking-tighter mb-4 md:mb-6 drop-shadow-sm dark:drop-shadow-[0_0_20px_rgb(var(--foreground-rgb)/0.2)]">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl text-foreground uppercase tracking-tighter mb-4 md:mb-6 drop-shadow-sm dark:drop-shadow-[0_0_20px_rgb(var(--foreground-rgb)/0.2)]">
                 LEVEL <span className="text-primary drop-shadow-sm dark:drop-shadow-[0_0_20px_rgb(var(--primary-rgb)/0.4)]">{level}</span>
               </h1>
               
               <div className="flex items-center justify-center gap-4 md:gap-8 mb-6 md:mb-12">
                  <div className="flex flex-col items-center">
-                    <ShieldCheck size={20} className="text-success text-success mb-2 md:w-6 md:h-6" />
+                    <ShieldCheck size={20} className="text-success mb-2 md:w-6 md:h-6" />
                     <span className="text-xs md:text-xs text-muted-foreground font-bold uppercase tracking-widest">Target Selesai</span>
                  </div>
                  <div className="w-px h-8 md:h-10 bg-border dark:bg-background/10" />
                  <div className="flex flex-col items-center">
-                    <Zap size={20} className="text-warning text-warning mb-2 md:w-6 md:h-6" />
+                    <Zap size={20} className="text-warning mb-2 md:w-6 md:h-6" />
                     <span className="text-xs md:text-xs text-muted-foreground font-bold uppercase tracking-widest">Kapasitas Maksimal</span>
                  </div>
               </div>
@@ -115,7 +115,7 @@ export default function LevelUpOverlay({ level }: { level: number }) {
 
               <Button
                 onClick={() => setShow(false)}
-                className="h-auto w-full sm:w-auto px-8 py-4 md:px-12 md:py-5 bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-[1.2rem] md:rounded-[1.5rem] text-xs md:text-xs uppercase tracking-widest transition-all shadow-xl hover:scale-105 active:scale-95 border-none group relative overflow-hidden"
+                className="h-auto w-full sm:w-auto px-8 py-4 md:px-12 md:py-5 bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-xl md:rounded-2xl text-xs md:text-xs uppercase tracking-widest transition-all shadow-xl hover:scale-105 active:scale-95 border-none group relative overflow-hidden"
               >
                 <span className="relative z-10 flex items-center justify-center">
                   Lanjut Belajar <ArrowRight size={16} className="ml-3 group-hover:translate-x-1.5 transition-transform duration-300 md:w-5 md:h-5" />

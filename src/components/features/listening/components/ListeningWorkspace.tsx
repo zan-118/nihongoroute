@@ -205,7 +205,7 @@ export default function ListeningWorkspace({
   return (
     <div className="w-full flex flex-col pb-40 md:pb-28">
       {/* Tab Selector Workspace */}
-      <div className="flex w-full p-1 rounded-2xl bg-muted/20 border border-border/80 mb-6 glass">
+      <div className="flex w-full p-1 rounded-lg bg-muted/20 border border-border/80 mb-6 glass">
         <Button
           variant={activeTab === "study" ? "default" : "ghost"}
           onClick={() => setActiveTab("study")}
@@ -283,14 +283,14 @@ export default function ListeningWorkspace({
 
                   const speaker = line.speaker;
                   let align = "self-start items-start text-left";
-                  let bubbleClass = "rounded-2xl rounded-tl-none bg-muted/10 border-border/80 hover:bg-muted/15";
+                  let bubbleClass = "rounded-lg rounded-tl-none bg-muted/10 border-border/80 hover:bg-muted/15";
                   let textAccent = "text-primary";
 
                   if (speaker) {
                     const side = speakerSides[speaker];
                     if (side === "right") {
                       align = "self-end items-end text-right";
-                      bubbleClass = "rounded-2xl rounded-tr-none bg-primary/5 border-primary/20 hover:bg-primary/10";
+                      bubbleClass = "rounded-lg rounded-tr-none bg-primary/5 border-primary/20 hover:bg-primary/10";
                       textAccent = "text-secondary";
                     }
                   }
@@ -302,7 +302,7 @@ export default function ListeningWorkspace({
                         onClick={() => seekToLine(line.startTime)}
                         animate={{ scale: isActive ? 1.01 : 1, opacity: isActive ? 1 : 0.75 }}
                         className={cn(
-                          "group relative p-4 pr-12 cursor-pointer transition-all duration-300 border rounded-2xl w-full",
+                          "group relative p-4 pr-12 cursor-pointer transition-all duration-300 border rounded-lg w-full",
                           bubbleClass,
                           isActive && "border-primary/50 shadow-[0_0_15px_rgba(var(--primary-rgb),0.08)] scale-[1.01]"
                         )}
@@ -366,7 +366,7 @@ export default function ListeningWorkspace({
             className="w-full grid grid-cols-1 gap-6 md:grid-cols-[220px_1fr]"
           >
             {/* Left Side: Line list */}
-            <div className="max-h-[80px] md:max-h-[350px] overflow-x-auto md:overflow-y-auto rounded-2xl border border-border/80 bg-muted/5 p-2 custom-scrollbar flex flex-row md:flex-col gap-1.5 w-full">
+            <div className="max-h-[80px] md:max-h-[350px] overflow-x-auto md:overflow-y-auto rounded-lg border border-border/80 bg-muted/5 p-2 custom-scrollbar flex flex-row md:flex-col gap-1.5 w-full">
               <div className="flex flex-row md:flex-col gap-1.5 w-full shrink-0">
                 {dictationLines.map((line, index) => {
                   const attempt = dictationAttempts[line._key];
@@ -408,7 +408,7 @@ export default function ListeningWorkspace({
 
             {/* Right Side: Dictation input workspace */}
             <div className="flex flex-col gap-4">
-              <div className="rounded-2xl border border-border/80 bg-card/35 p-5 glass relative overflow-hidden">
+              <div className="rounded-lg border border-border/80 bg-card/35 p-5 glass relative overflow-hidden">
                 <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/40">
                   <div>
                     <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
@@ -509,7 +509,7 @@ export default function ListeningWorkspace({
               </div>
 
               {/* Dictation Analytics */}
-              <div className="rounded-2xl border border-border/80 bg-muted/5 p-4 flex justify-between items-center">
+              <div className="rounded-lg border border-border/80 bg-muted/5 p-4 flex justify-between items-center">
                 <div>
                   <span className="text-[8px] font-black uppercase tracking-wider text-muted-foreground">Progres Dikte</span>
                   <p className="text-base font-black">{dictationPassedCount} / {dictationLines.length} Selesai</p>
@@ -593,7 +593,7 @@ export default function ListeningWorkspace({
                 Kirim Jawaban Kuis
               </Button>
             ) : (
-              <div className="p-5 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-between">
+              <div className="p-5 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-between">
                 <div>
                   <span className="text-[9px] font-black uppercase text-primary tracking-widest block">Evaluasi Ujian</span>
                   <p className="text-base font-black text-foreground">Hasil kuis: {quizScore} / {quiz.length} Benar</p>
@@ -608,7 +608,7 @@ export default function ListeningWorkspace({
       </AnimatePresence>
 
       {/* Floating Sticky Bottom Media Control Bar (Unified) */}
-      <div className="fixed bottom-6 left-6 md:left-[calc(18rem+1.5rem)] right-6 z-50 rounded-[2rem] border border-border bg-background/80 backdrop-blur-xl p-4 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 glass animate-in slide-in-from-bottom duration-500 pointer-events-auto">
+      <div className="fixed bottom-6 left-6 md:left-[calc(18rem+1.5rem)] right-6 z-50 rounded-2xl md:rounded-3xl border border-border bg-background/80  p-4 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 glass animate-in slide-in-from-bottom duration-500 pointer-events-auto">
         {/* Playback Controls & Progress Bar */}
         <div className="flex-1 w-full md:max-w-md">
           {audioUrl ? (

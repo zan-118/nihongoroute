@@ -31,14 +31,14 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
   if (engine.isFinished) {
     return (
       <section className="w-full max-w-xl mx-auto px-4 mt-10">
-        <Card className="w-full bg-card p-8 md:p-10 rounded-2xl border border-border text-center relative overflow-hidden shadow-2xl">
+        <Card className="w-full bg-card p-8 md:p-10 rounded-lg border border-border text-center relative overflow-hidden shadow-2xl">
           <div className="absolute top-0 left-0 right-0 h-1.5 bg-destructive shadow-lg" />
           
           <div className="w-16 h-16 md:w-20 md:h-20 mx-auto bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.04)] rounded-xl flex items-center justify-center border border-border mb-6 shadow-none">
             <Trophy size={32} aria-hidden="true" className="text-warning drop-shadow-sm" />
           </div>
 
-          <h2 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tight mb-2 text-center">
+          <h2 className="text-2xl md:text-3xl text-foreground uppercase tracking-tight mb-2 text-center">
             Sesi Tinjauan Berakhir
           </h2>
           <p className="text-muted-foreground text-xs md:text-xs mb-8 uppercase font-bold tracking-widest">
@@ -84,7 +84,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
           <div>
             <Badge
               variant="outline"
-              className="text-destructive text-destructive font-black text-xs tracking-[0.3em] uppercase bg-destructive/5 px-4 py-1.5 rounded-xl border-destructive/20 neo-inset h-auto"
+              className="text-destructive font-black text-xs tracking-[0.3em] uppercase bg-destructive/5 px-4 py-1.5 rounded-xl border-destructive/20 neo-inset h-auto"
             >
               Asah Ingatan (SRS)
             </Badge>
@@ -94,11 +94,11 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
           </div>
         </div>
 
-        <Card className="bg-[rgb(var(--destructive-rgb)/0.05)] border-destructive/10 p-4 rounded-[1.5rem] neo-inset shadow-none border-dashed">
+        <Card className="bg-[rgb(var(--destructive-rgb)/0.05)] border-destructive/10 p-4 rounded-xl md:rounded-2xl neo-inset shadow-none border-dashed">
           <div className="flex items-start gap-3">
             <ShieldCheck size={16} aria-hidden="true" className="shrink-0 text-destructive mt-0.5" />
             <div className="space-y-1">
-              <p className="text-destructive/80 text-destructive/80 text-xs leading-relaxed italic font-medium">
+              <p className="text-destructive/80 text-xs leading-relaxed italic font-medium">
                 Bersikaplah jujur pada diri sendiri. SRS paling efektif saat kamu mengakui jika benar-benar lupa.
               </p>
               <p className="text-muted-foreground text-xs leading-relaxed uppercase tracking-widest font-bold">
@@ -130,7 +130,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
             
             {engine.flash && (
               <div 
-                className={`absolute inset-0 z-40 rounded-[2.5rem] pointer-events-none mix-blend-overlay opacity-30 ${engine.flash === "correct" ? "bg-success" : "bg-destructive"}`} 
+                className={`absolute inset-0 z-40 rounded-2xl md:rounded-3xl pointer-events-none mix-blend-overlay opacity-30 ${engine.flash === "correct" ? "bg-success" : "bg-destructive"}`} 
               />
             )}
 
@@ -179,7 +179,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
             <Button
               variant="ghost"
               onClick={() => engine.handleAnswer(0)}
-              className="relative h-auto py-8 bg-destructive/5 border border-destructive/20 rounded-[2.5rem] text-destructive font-black uppercase tracking-[0.2em] text-xs md:text-xs neo-card hover:bg-destructive hover:text-destructive-foreground transition-all group overflow-hidden"
+              className="relative h-auto py-8 bg-destructive/5 border border-destructive/20 rounded-2xl md:rounded-3xl text-destructive font-black uppercase tracking-[0.2em] text-xs md:text-xs neo-card hover:bg-destructive hover:text-destructive-foreground transition-all group overflow-hidden"
             >
               <div className="relative z-10 flex items-center gap-2">
                 <X
@@ -188,7 +188,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
                 />
                 Lupa / Salah
               </div>
-              <kbd className="hidden md:inline-block absolute top-4 left-4 bg-destructive/20 text-destructive text-destructive px-2 py-0.5 rounded font-mono text-xs">
+              <kbd className="hidden md:inline-block absolute top-4 left-4 bg-destructive/20 text-destructive px-2 py-0.5 rounded font-mono text-xs">
                 1
               </kbd>
             </Button>
@@ -196,7 +196,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
             <Button
               variant="ghost"
               onClick={() => engine.handleAnswer(2)}
-              className="relative h-auto py-8 bg-success/5 border border-success/20 rounded-[2.5rem] text-success font-black uppercase tracking-[0.2em] text-xs md:text-xs neo-card hover:bg-success hover:text-success-foreground transition-all group shadow-sm dark:shadow-[0_0_20px_rgb(var(--success-rgb)/0.1)] overflow-hidden"
+              className="relative h-auto py-8 bg-success/5 border border-success/20 rounded-2xl md:rounded-3xl text-success font-black uppercase tracking-[0.2em] text-xs md:text-xs neo-card hover:bg-success hover:text-success-foreground transition-all group shadow-sm dark:shadow-[0_0_20px_rgb(var(--success-rgb)/0.1)] overflow-hidden"
             >
               <div className="relative z-10 flex items-center gap-2">
                 <Check
@@ -205,7 +205,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
                 />
                 Ingat / Benar
               </div>
-              <kbd className="hidden md:inline-block absolute top-4 right-4 bg-success/20 text-success text-success px-2 py-0.5 rounded font-mono text-xs">
+              <kbd className="hidden md:inline-block absolute top-4 right-4 bg-success/20 text-success px-2 py-0.5 rounded font-mono text-xs">
                 2
               </kbd>
             </Button>

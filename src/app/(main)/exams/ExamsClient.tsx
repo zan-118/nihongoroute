@@ -180,7 +180,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
             <div className="size-3.5 rounded-full bg-destructive shadow-[0_0_8px_rgb(var(--destructive-rgb)/0.35)]" />
             <Badge
               variant="outline"
-              className="text-destructive font-bold uppercase tracking-widest text-xs md:text-xs border-destructive/30 px-4 py-1.5 bg-destructive/5 backdrop-blur-md rounded-xl h-auto"
+              className="text-destructive font-bold uppercase tracking-widest text-xs md:text-xs border-destructive/30 px-4 py-1.5 bg-destructive/5  rounded-xl h-auto"
             >
               Simulasi JLPT Aktif
             </Badge>
@@ -198,9 +198,9 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
 
           <m.div
             variants={itemVariants}
-            className="p-6 md:p-8 rounded-2xl border border-border/80 border-l-[3px] border-l-destructive/70 bg-card/60 glass shadow-xl relative overflow-hidden"
+            className="p-6 md:p-8 rounded-lg border border-border/80 border-l-[3px] border-l-destructive/70 bg-card/60 glass shadow-xl relative overflow-hidden"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-red-600/5 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-destructive/5 pointer-events-none" />
             <p className="text-sm md:text-lg text-muted-foreground font-medium leading-relaxed relative z-10">
               Cek sejauh mana kemampuanmu dengan simulasi standar resmi. Jangan tegang, pasti bisa!
             </p>
@@ -209,12 +209,12 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
 
         {/* BAGIAN PERINGATAN */}
         <m.div variants={itemVariants} className="mb-12">
-          <Card className="p-5 md:p-6 border-warning/30 bg-warning/5 flex items-start gap-4 rounded-2xl shadow-lg">
+          <Card className="p-5 md:p-6 border-warning/30 bg-warning/5 flex items-start gap-4 rounded-lg shadow-lg">
             <div className="size-10 rounded-xl bg-warning/10 border border-warning/20 flex items-center justify-center shrink-0">
                <AlertTriangle className="text-warning" size={20} />
             </div>
             <div>
-              <h4 className="text-warning font-bold uppercase tracking-widest text-xs md:text-xs mb-1">
+              <h4 className="text-warning uppercase tracking-widest text-xs md:text-xs mb-1">
                 Catatan Penting
               </h4>
               <p className="text-muted-foreground text-xs md:text-sm font-medium leading-relaxed">
@@ -325,7 +325,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
                   href={ROUTES.EXAMS.SESSION(exam.slug || exam.id || "")}
                   className="block h-full"
                 >
-                  <Card className="p-6 md:p-8 group hover:border-destructive/40 hover:bg-destructive/[0.02] transition-all duration-200 flex flex-col h-full relative overflow-hidden cursor-pointer bg-card rounded-2xl border-border hover:shadow-lg">
+                  <Card className="p-6 md:p-8 group hover:border-destructive/40 hover:bg-destructive/[0.02] transition-all duration-200 flex flex-col h-full relative overflow-hidden cursor-pointer bg-card rounded-lg border-border hover:shadow-lg">
 
                     <div className="flex justify-between items-start mb-8 md:mb-10 relative z-10">
                       <div className="flex flex-wrap gap-2">
@@ -369,7 +369,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
                       </div>
                     </div>
 
-                    <h2 className="text-2xl md:text-3xl font-black text-foreground group-hover:text-destructive dark:group-hover:text-destructive transition-colors uppercase tracking-tight mb-4 leading-tight relative z-10">
+                    <h2 className="text-2xl md:text-3xl text-foreground group-hover:text-destructive dark:group-hover:text-destructive transition-colors uppercase tracking-tight mb-4 leading-tight relative z-10">
                       {exam.title}
                     </h2>
 
@@ -416,7 +416,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
             ))
           ) : (
             <m.div variants={itemVariants} className="col-span-full">
-              <Card className="p-16 md:p-24 text-center bg-muted/20 border border-dashed border-border rounded-2xl shadow-none">
+              <Card className="p-16 md:p-24 text-center bg-muted/20 border border-dashed border-border rounded-lg shadow-none">
                 <span className="text-5xl mb-6 block opacity-30">圦</span>
                 <p className="text-muted-foreground font-bold text-sm md:text-base uppercase tracking-widest">
                   Lagi Gak Ada Ujian Nih

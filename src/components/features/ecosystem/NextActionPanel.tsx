@@ -64,20 +64,20 @@ export default function NextActionPanel({
   return (
     <Card
       className={cn(
-        "relative overflow-hidden rounded-[34px] border border-border bg-card/35 p-5 shadow-none backdrop-blur-xl md:p-6",
+        "relative overflow-hidden rounded-2xl md:rounded-3xl border border-border bg-card/35 p-5 shadow-none  md:p-6",
         className
       )}
     >
       <div className="relative z-10 mb-5 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary">
+          <div className="flex size-10 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
             <Compass size={18} aria-hidden="true" />
           </div>
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
               Ekosistem Belajar
             </p>
-            <h2 className="text-lg font-black tracking-tight text-foreground">
+            <h2 className="text-lg tracking-tight text-foreground">
               Langkah Berikutnya
             </h2>
           </div>
@@ -96,7 +96,7 @@ export default function NextActionPanel({
               <Link
                 key={item.id}
                 href={item.href}
-                className="group rounded-2xl border border-border bg-background/35 p-4 transition-all hover:border-primary/35 hover:bg-muted/20"
+                className="group rounded-lg border border-border bg-background/35 p-4 transition-all hover:border-primary/35 hover:bg-muted/20"
               >
                 <div className="flex items-start gap-3">
                   <div
@@ -129,7 +129,7 @@ export default function NextActionPanel({
           })}
         </div>
       ) : (
-        <div className="relative z-10 rounded-2xl border border-dashed border-border bg-muted/15 p-5">
+        <div className="relative z-10 rounded-lg border border-dashed border-border bg-muted/15 p-5">
           <div className="flex items-center gap-2 text-muted-foreground">
             <Sparkles size={16} aria-hidden="true" />
             <p className="text-sm font-bold">{emptyTitle}</p>

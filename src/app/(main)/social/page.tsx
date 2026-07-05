@@ -29,11 +29,11 @@ export default function SocialPage() {
         
         {/* HEADER SECTION */}
         <div className="flex flex-col items-center text-center mb-10">
-          <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 border border-primary/20 shadow-lg">
+          <div className="size-16 bg-primary/10 rounded-lg flex items-center justify-center mb-6 border border-primary/20 shadow-lg">
             <Users className="text-primary" size={32} />
           </div>
           
-          <h1 className="text-4xl sm:text-6xl font-black text-foreground uppercase tracking-tighter italic mb-4">
+          <h1 className="text-4xl sm:text-6xl text-foreground uppercase tracking-tighter italic mb-4">
             Nihongo <span className="text-primary">Hub</span>
           </h1>
           

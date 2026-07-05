@@ -31,7 +31,7 @@ interface VocabDetailsProps {
  */
 export function VocabDetails({ hinshi, jlptLevel, pitchAccent }: VocabDetailsProps) {
   return (
-    <Card className="p-6 bg-card/20 backdrop-blur-xl border-border rounded-[2rem] hover:border-primary/40 transition-all group overflow-hidden relative flex flex-col justify-center gap-4 font-sans glass shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
+    <Card className="p-6 bg-card/20  border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all group overflow-hidden relative flex flex-col justify-center gap-4 font-sans glass shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
       <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Atribut Kata</span>
       
       {/* Container Lencana Atribut */}

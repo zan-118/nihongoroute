@@ -140,13 +140,13 @@ export default function KanjiProgressGrid() {
   }
 
   return (
-    <Card className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-lg overflow-hidden relative">
+    <Card className="bg-card border border-border rounded-lg p-6 md:p-8 shadow-lg overflow-hidden relative">
       <div className="absolute top-0 right-0 size-32 bg-primary/5 blur-3xl rounded-full" />
       
       {/* BAGIAN HEADER GRID */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
-          <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-xs mb-2 flex items-center gap-2">
+          <h2 className="text-muted-foreground uppercase tracking-widest text-xs mb-2 flex items-center gap-2">
             <div className="size-1.5 rounded-full bg-primary animate-pulse" />
             Peta Penguasaan Kanji N5
           </h2>

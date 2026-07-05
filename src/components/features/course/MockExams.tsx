@@ -38,7 +38,7 @@ const ExamCard = React.memo(function ExamCard({ exam }: { exam: MockExam }) {
     <Card
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl md:rounded-3xl transition-all duration-200 flex flex-col gap-4 sm:gap-6 h-full relative overflow-hidden glass"
+      className="p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-lg md:rounded-xl transition-all duration-200 flex flex-col gap-4 sm:gap-6 h-full relative overflow-hidden glass"
       style={{
         borderColor: isHovered ? "rgb(var(--primary-rgb)/0.4)" : "rgb(var(--border-rgb)/0.4)",
         boxShadow: isHovered ? "0 10px 28px rgb(var(--primary-rgb)/0.08), 0 0 12px rgb(var(--primary-rgb)/0.04)" : "none"
@@ -66,7 +66,7 @@ const ExamCard = React.memo(function ExamCard({ exam }: { exam: MockExam }) {
 
       <div className="relative z-10 space-y-3">
         <h4
-          className="text-xl sm:text-2xl md:text-3xl font-black transition-colors tracking-tighter uppercase leading-none"
+          className="text-xl sm:text-2xl md:text-3xl transition-colors tracking-tighter uppercase leading-none"
           style={{
             color: isHovered ? "hsl(var(--primary))" : "hsl(var(--foreground))"
           }}
@@ -131,7 +131,7 @@ export function MockExams({ exams, itemVariants }: MockExamsProps) {
     <m.section variants={itemVariants} className="mb-10 md:mb-16">
       <div className="flex items-center gap-4 mb-5 md:mb-8">
         <div className="space-y-0.5">
-          <h3 className="text-base sm:text-lg md:text-xl font-black uppercase tracking-tight text-foreground flex items-center gap-2">
+          <h3 className="text-base sm:text-lg md:text-xl uppercase tracking-tight text-foreground flex items-center gap-2">
             <Flame size={16} className="text-destructive" /> Simulasi Ujian
           </h3>
           <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-muted-foreground/60">
@@ -141,7 +141,7 @@ export function MockExams({ exams, itemVariants }: MockExamsProps) {
         <div className="h-[1px] flex-1 bg-gradient-to-r from-border/50 to-transparent hidden sm:block" />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+      <div className="flex overflow-x-auto sm:grid sm:grid-cols-2 lg:grid-cols-12 gap-3 sm:gap-4 md:gap-6 pb-4 sm:pb-0 scrollbar-none snap-x snap-mandatory">
         {exams.map((exam) => (
           <Link key={exam.id} href={`/exams/${exam.id}`} className="group">
             <ExamCard exam={exam} />

@@ -79,10 +79,10 @@ function SurvivalContent() {
             className="flex-1 w-full max-w-3xl mx-auto flex flex-col justify-center relative z-10"
           >
             <div className="text-center mb-10">
-              <div className="w-16 h-16 rounded-2xl bg-destructive/10 border border-destructive/20 flex items-center justify-center shadow-md mx-auto mb-4">
+              <div className="w-16 h-16 rounded-lg bg-destructive/10 border border-destructive/20 flex items-center justify-center shadow-md mx-auto mb-4">
                 <Flame className="text-primary" size={32} />
               </div>
-              <h1 className="text-4xl md:text-5xl font-black text-foreground uppercase tracking-tight italic">
+              <h1 className="text-4xl md:text-5xl text-foreground uppercase tracking-tight italic">
                 Mode <span className="text-primary">Bertahan Hidup</span>
               </h1>
               <p className="text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] mt-1">
@@ -93,7 +93,7 @@ function SurvivalContent() {
               </p>
             </div>
 
-            <div className="space-y-8 glass p-6 md:p-8 rounded-[2rem] border border-border shadow-lg bg-card/50 backdrop-blur-sm">
+            <div className="space-y-8 glass p-6 md:p-8 rounded-[2rem] border border-border shadow-lg bg-card/50 ">
 
               {/* Level Selection */}
               <div className="space-y-4">
@@ -106,7 +106,7 @@ function SurvivalContent() {
                     <button
                       key={lvl.id}
                       onClick={() => setLevel(lvl.id)}
-                      className={`flex flex-col items-center justify-center p-4 rounded-2xl border transition-all duration-200
+                      className={`flex flex-col items-center justify-center p-4 rounded-lg border transition-all duration-200
                         ${level === lvl.id
                           ? `shadow-md ${lvl.color.replace('text-', 'bg-').replace('/10', '/20')} border-primary`
                           : "bg-background/50 border-border hover:bg-muted"
@@ -130,7 +130,7 @@ function SurvivalContent() {
                     <button
                       key={amt}
                       onClick={() => setAmount(amt)}
-                      className={`flex-1 min-w-[80px] py-3 px-4 rounded-2xl border font-bold transition-all duration-200
+                      className={`flex-1 min-w-[80px] py-3 px-4 rounded-lg border font-bold transition-all duration-200
                         ${amount === amt
                           ? "bg-primary text-primary-foreground border-primary shadow-md"
                           : "bg-background/50 text-muted-foreground border-border hover:bg-muted"
@@ -147,13 +147,13 @@ function SurvivalContent() {
                 <Button
                   onClick={() => router.push("/tools")}
                   variant="ghost"
-                  className="w-full sm:w-1/3 py-6 rounded-2xl text-xs font-bold uppercase tracking-widest border border-border bg-muted/20 hover:bg-muted/50"
+                  className="w-full sm:w-1/3 py-6 rounded-lg text-xs font-bold uppercase tracking-widest border border-border bg-muted/20 hover:bg-muted/50"
                 >
                   <ChevronLeft size={16} className="mr-2" /> Batal
                 </Button>
                 <Button
                   onClick={handleStartGame}
-                  className="w-full sm:w-2/3 py-6 rounded-2xl text-xs font-black uppercase tracking-widest bg-primary hover:bg-primary/90 text-primary-foreground shadow-md group transition-all"
+                  className="w-full sm:w-2/3 py-6 rounded-lg text-xs font-black uppercase tracking-widest bg-primary hover:bg-primary/90 text-primary-foreground shadow-md group transition-all"
                 >
                   Mulai Tantangan <Play size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>

@@ -29,7 +29,7 @@ export default async function ExamSessionPage({ params }: PageProps) {
     return (
       <div className="relative flex w-full flex-1 items-center justify-center overflow-hidden px-6 py-12 text-center">
         <Card className="relative z-10 w-full max-w-lg rounded-[2rem] border-destructive/30 bg-card p-10 shadow-xl md:p-14">
-          <h1 className="mb-4 text-2xl font-black uppercase tracking-tight text-foreground md:text-3xl">
+          <h1 className="mb-4 text-2xl uppercase tracking-tight text-foreground md:text-3xl">
             Sesi Tidak Ditemukan
           </h1>
           <p className="mb-10 text-sm leading-relaxed text-muted-foreground">

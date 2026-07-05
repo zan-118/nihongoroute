@@ -66,7 +66,7 @@ export function ReviewModeCard({
   return (
     <Card
       onClick={() => isEnabled && onClick()}
-      className={`group relative p-8 rounded-[2rem] border transition-all duration-500 overflow-hidden cursor-pointer ${
+      className={`group relative p-8 rounded-2xl md:rounded-3xl border transition-all duration-500 overflow-hidden cursor-pointer ${
         isEnabled ? activeStyles : "border-border bg-muted/20 opacity-80"
       }`}
     >

@@ -48,12 +48,12 @@ function extractLineText(text: string | unknown[]): string {
 
 // Peta visual asset stiker karakter ke berkas di folder public/characters/
 const characterAssets: Record<string, { src: string; color: string; rgb: string }> = {
-  ayu: { src: "/characters/ayu.png", color: "border-pink-500/50", rgb: "244, 63, 94" },
-  ken: { src: "/characters/ken.png", color: "border-sky-500/50", rgb: "14, 165, 233" },
-  takahashi: { src: "/characters/ken.png", color: "border-sky-500/50", rgb: "14, 165, 233" },
-  dito: { src: "/characters/ken.png", color: "border-sky-500/50", rgb: "14, 165, 233" },
-  lara: { src: "/characters/ayu.png", color: "border-pink-500/50", rgb: "244, 63, 94" },
-  zundamon: { src: "/characters/zundamon.png", color: "border-emerald-500/50", rgb: "16, 185, 129" },
+  ayu: { src: "/characters/ayu.png", color: "border-secondary/50", rgb: "220, 20, 60" },
+  ken: { src: "/characters/ken.png", color: "border-primary/50", rgb: "0, 255, 255" },
+  takahashi: { src: "/characters/ken.png", color: "border-primary/50", rgb: "0, 255, 255" },
+  dito: { src: "/characters/ken.png", color: "border-primary/50", rgb: "0, 255, 255" },
+  lara: { src: "/characters/ayu.png", color: "border-secondary/50", rgb: "220, 20, 60" },
+  zundamon: { src: "/characters/zundamon.png", color: "border-success/50", rgb: "0, 200, 100" },
 };
 
 export function StickerScene({
@@ -127,7 +127,7 @@ export function StickerScene({
   return (
     <div className="w-full flex flex-col">
       {/* 🏙️ Latar Belakang Panggung (Visual Stage) */}
-      <div className="relative w-full aspect-[16/9] rounded-3xl border border-border bg-muted overflow-hidden shadow-2xl">
+      <div className="relative w-full aspect-[16/9] rounded-xl border border-border bg-muted overflow-hidden shadow-2xl">
         <Image
           src={backgroundUrl}
           alt="Panggung Latar Belakang"
@@ -138,11 +138,11 @@ export function StickerScene({
 
         {/* Header Overlay */}
         <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-30">
-          <div className="px-3 py-1.5 rounded-xl bg-background/80 backdrop-blur-md border border-border/60 flex items-center gap-1.5 shadow-sm">
-            <MessageSquare size={13} className="text-primary animate-pulse" />
+          <div className="px-3 py-1.5 rounded-xl bg-background/80  border border-border/60 flex items-center gap-1.5 shadow-sm">
+            <MessageSquare size={13} className="text-primary" />
             <span className="text-[10px] font-black uppercase tracking-wider text-foreground">{title}</span>
           </div>
-          <div className="text-[10px] font-black text-white px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-sm border border-white/10 shadow-sm">
+          <div className="text-[10px] font-black text-white px-2.5 py-1 rounded-lg bg-black/60  border border-white/10 shadow-sm">
             {currentIndex + 1} / {dialogue.length}
           </div>
         </div>
@@ -165,7 +165,7 @@ export function StickerScene({
                 }}
                 transition={{ type: "spring", stiffness: 200, damping: 20 }}
                 className={cn(
-                  "relative w-[85px] sm:w-[120px] md:w-[170px] h-[95%] rounded-t-[2rem] border-x border-t bg-gradient-to-t from-background/95 via-background/30 to-transparent flex flex-col justify-end transition-all duration-300",
+                  "relative w-[85px] sm:w-[120px] md:w-[170px] h-[95%] rounded-t-[2rem] border-x border-t bg-background/50 flex flex-col justify-end transition-all duration-300",
                   isActive ? asset.color : "border-transparent",
                   isActive && "shadow-[0_-10px_25px_rgba(var(--color-rgb),0.1)]"
                 )}
@@ -202,15 +202,15 @@ export function StickerScene({
       </div>
 
       {/* 💬 Kotak Dialog Visual Novel (Separate Card Below Stage) */}
-      <div className="w-full mt-4 p-5 sm:p-6 bg-card/45 backdrop-blur-xl border border-border/80 rounded-3xl shadow-xl flex flex-col gap-4 glass mb-6">
+      <div className="w-full mt-4 p-5 sm:p-6 bg-card/45  border border-border/80 rounded-xl shadow-xl flex flex-col gap-4 glass mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/40 pb-3">
           {/* Label Pembicara */}
           <span
             className={cn(
               "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white shadow-sm self-start",
-              activeSpeakerKey === "zundamon" ? "bg-emerald-500" :
-              (activeSpeakerKey === "ayu" || activeSpeakerKey === "lara") ? "bg-pink-500" :
-              (activeSpeakerKey === "narrator" || activeSpeakerKey === "narator") ? "bg-neutral-600" : "bg-sky-500"
+              activeSpeakerKey === "zundamon" ? "bg-success" :
+              (activeSpeakerKey === "ayu" || activeSpeakerKey === "lara") ? "bg-secondary" :
+              (activeSpeakerKey === "narrator" || activeSpeakerKey === "narator") ? "bg-muted-foreground" : "bg-primary"
             )}
           >
             {rawSpeaker}

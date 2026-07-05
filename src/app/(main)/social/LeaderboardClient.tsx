@@ -272,7 +272,7 @@ export default function LeaderboardClient() {
         </div>
         <div className="flex flex-col gap-4 mt-12">
           {[...Array(5)].map((_, i) => (
-            <div key={`skeleton-row-${i}`} className="h-20 w-full bg-muted/20 animate-pulse rounded-2xl" />
+            <div key={`skeleton-row-${i}`} className="h-20 w-full bg-muted/20 animate-pulse rounded-lg" />
           ))}
         </div>
       </div>
@@ -284,7 +284,7 @@ export default function LeaderboardClient() {
       
       {/* 🔍 PREMIUM SEARCH INPUT */}
       <div className="relative w-full max-w-md mx-auto z-20">
-        <Card className="glass border-border/80 p-1 flex items-center bg-card/80 rounded-2xl shadow-sm relative z-10 transition-all duration-200 focus-within:border-primary/45 focus-within:shadow-[0_0_14px_rgb(var(--primary-rgb)/0.12)]">
+        <Card className="glass border-border/80 p-1 flex items-center bg-card/80 rounded-lg shadow-sm relative z-10 transition-all duration-200 focus-within:border-primary/45 focus-within:shadow-[0_0_14px_rgb(var(--primary-rgb)/0.12)]">
           <div className="pl-3.5 text-muted-foreground/60">
             <Search size={16} />
           </div>
@@ -309,7 +309,7 @@ export default function LeaderboardClient() {
 
       {/* 🏆 TAB SWITCHER */}
       <div className="flex justify-center -mt-2 sm:-mt-6 relative z-20">
-        <div className="bg-background/40 glass p-1 rounded-2xl flex gap-1.5 border border-border/80 shadow-md">
+        <div className="bg-background/40 glass p-1 rounded-lg flex gap-1.5 border border-border/80 shadow-md">
           <button
             type="button"
             onClick={() => setActiveTab("top_global")}
@@ -380,7 +380,7 @@ export default function LeaderboardClient() {
                   <Medal className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
               </div>
-              <div className="bg-background/20 backdrop-blur-md p-2 sm:p-6 rounded-t-[1.5rem] sm:rounded-t-3xl w-full text-center border-x border-t border-secondary/20 h-24 sm:h-36 flex flex-col justify-between group-hover/podium:border-secondary/40 transition-colors shadow-lg">
+              <div className="bg-background/20  p-2 sm:p-6 rounded-t-[1.5rem] sm:rounded-t-3xl w-full text-center border-x border-t border-secondary/20 h-24 sm:h-36 flex flex-col justify-between group-hover/podium:border-secondary/40 transition-colors shadow-lg">
                 <div className="min-w-0">
                   <p className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.15em] sm:tracking-[0.22em] text-muted-foreground/60 mb-0.5 sm:mb-1">Rank #2</p>
                   <p className="text-[10px] sm:text-sm font-black text-foreground truncate max-w-full px-0.5">{topThree[1]?.full_name || "Misterius"}</p>
@@ -416,7 +416,7 @@ export default function LeaderboardClient() {
                   <Crown className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
               </div>
-              <div className="bg-background/30 backdrop-blur-md p-2 sm:p-6 rounded-t-[1.5rem] sm:rounded-t-3xl w-full text-center border-x border-t border-warning/30 h-30 sm:h-44 flex flex-col justify-between group-hover/champ:border-warning/50 transition-colors shadow-2xl relative overflow-hidden">
+              <div className="bg-background/30  p-2 sm:p-6 rounded-t-[1.5rem] sm:rounded-t-3xl w-full text-center border-x border-t border-warning/30 h-30 sm:h-44 flex flex-col justify-between group-hover/champ:border-warning/50 transition-colors shadow-2xl relative overflow-hidden">
                 <div className="absolute inset-x-0 top-0 h-0.5 sm:h-1 bg-gradient-to-r from-warning/60 to-transparent" />
                 <div className="min-w-0">
                   <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.25em] text-warning mb-0.5 sm:mb-1">Champion</p>
@@ -450,7 +450,7 @@ export default function LeaderboardClient() {
                   <Medal className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
               </div>
-              <div className="bg-background/20 backdrop-blur-md p-2 sm:p-6 rounded-t-[1.5rem] sm:rounded-t-3xl w-full text-center border-x border-t border-destructive/20 h-20 sm:h-32 flex flex-col justify-between group-hover/third:border-destructive/40 transition-colors shadow-lg">
+              <div className="bg-background/20  p-2 sm:p-6 rounded-t-[1.5rem] sm:rounded-t-3xl w-full text-center border-x border-t border-destructive/20 h-20 sm:h-32 flex flex-col justify-between group-hover/third:border-destructive/40 transition-colors shadow-lg">
                 <div className="min-w-0">
                   <p className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.15em] sm:tracking-[0.22em] text-muted-foreground/60 mb-0.5 sm:mb-1">Rank #3</p>
                   <p className="text-[10px] sm:text-sm font-black text-foreground truncate max-w-full px-0.5">{topThree[2]?.full_name || "Pesaing"}</p>
@@ -467,7 +467,7 @@ export default function LeaderboardClient() {
       {/* 📋 LIST SECTION (OTHERS) */}
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between px-2 mb-2 sm:mb-4">
-          <h3 className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground/70">
+          <h3 className="text-xs uppercase tracking-[0.3em] text-muted-foreground/70">
             {isSearching ? "Hasil Pencarian Member" : "Peringkat Belajar Lainnya"}
           </h3>
           <div className="flex items-center gap-2 text-muted-foreground/50 text-[10px] font-black uppercase tracking-widest">
@@ -480,7 +480,7 @@ export default function LeaderboardClient() {
           <m.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="p-3.5 rounded-2xl bg-warning/5 border border-warning/20 text-warning text-xs font-bold flex items-center gap-2.5 select-none"
+            className="p-3.5 rounded-lg bg-warning/5 border border-warning/20 text-warning text-xs font-bold flex items-center gap-2.5 select-none"
           >
             <div className="size-2 rounded-full bg-warning animate-pulse shrink-0" />
             <span>Mode Luring Aktif. Menampilkan peringkat dari cache lokal.</span>
@@ -528,7 +528,7 @@ export default function LeaderboardClient() {
                 </div>
                 
                 {/* AVATAR */}
-                <div className={`w-8 h-8 sm:w-11 sm:h-11 rounded-lg sm:rounded-2xl flex items-center justify-center font-black text-foreground shrink-0 border group-hover:scale-110 transition-transform shadow-inner select-none font-japanese text-xs sm:text-base ${
+                <div className={`w-8 h-8 sm:w-11 sm:h-11 rounded-lg sm:rounded-lg flex items-center justify-center font-black text-foreground shrink-0 border group-hover:scale-110 transition-transform shadow-inner select-none font-japanese text-xs sm:text-base ${
                   isOwnCard
                     ? "bg-primary/25 border-primary/35"
                     : "bg-gradient-to-br from-primary/10 to-transparent border-border/80"
@@ -593,7 +593,7 @@ export default function LeaderboardClient() {
           animate={{ opacity: 1, y: 0 }}
           className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-4xl z-50 pointer-events-none"
         >
-          <Card className="glass border-primary/45 p-4 flex items-center gap-3 sm:gap-6 bg-card/90 backdrop-blur-sm shadow-[0_-10px_28px_rgba(var(--foreground-rgb),0.24),0_0_22px_rgb(var(--primary-rgb)/0.14)] rounded-3xl pointer-events-auto border-2 hover:border-primary/60 transition-colors">
+          <Card className="glass border-primary/45 p-4 flex items-center gap-3 sm:gap-6 bg-card/90  shadow-[0_-10px_28px_rgba(var(--foreground-rgb),0.24),0_0_22px_rgb(var(--primary-rgb)/0.14)] rounded-xl pointer-events-auto border-2 hover:border-primary/60 transition-colors">
             {/* Peringkat */}
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 border border-primary/30 flex flex-col items-center justify-center shrink-0 shadow-[0_0_12px_rgb(var(--primary-rgb)/0.25)]">
               <span className="text-[10px] font-black uppercase text-primary tracking-widest leading-none">Rank</span>
@@ -601,14 +601,14 @@ export default function LeaderboardClient() {
             </div>
 
             {/* Avatar */}
-            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-br from-primary/20 to-transparent flex items-center justify-center font-black text-foreground shrink-0 border border-primary/25 shadow-inner select-none font-japanese text-xs sm:text-sm">
+            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg bg-gradient-to-br from-primary/20 to-transparent flex items-center justify-center font-black text-foreground shrink-0 border border-primary/25 shadow-inner select-none font-japanese text-xs sm:text-sm">
               {currentUserName?.charAt(0).toUpperCase() || "?"}
             </div>
 
             {/* Nama */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <h4 className="text-xs sm:text-base font-black text-foreground truncate">
+                <h4 className="text-xs sm:text-base text-foreground truncate">
                   {currentUserName || "Anda"}
                 </h4>
                 <Badge className="bg-primary/20 text-primary border-primary/30 text-[7px] sm:text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full shrink-0">
@@ -665,7 +665,7 @@ export default function LeaderboardClient() {
               {/* Stats Grid */}
               <div className="grid grid-cols-2 gap-3.5 w-full mb-6 text-left">
                 {/* Level */}
-                <div className="p-4 bg-background/25 border border-border/80 rounded-2xl flex items-center gap-3">
+                <div className="p-4 bg-background/25 border border-border/80 rounded-lg flex items-center gap-3">
                   <div className="size-8 rounded-lg bg-primary/10 border border-primary/20 text-primary flex items-center justify-center shrink-0">
                     <Target size={15} />
                   </div>
@@ -676,7 +676,7 @@ export default function LeaderboardClient() {
                 </div>
 
                 {/* Streak */}
-                <div className="p-4 bg-background/25 border border-border/80 rounded-2xl flex items-center gap-3">
+                <div className="p-4 bg-background/25 border border-border/80 rounded-lg flex items-center gap-3">
                   <div className="size-8 rounded-lg bg-warning/10 border border-warning/20 text-warning flex items-center justify-center shrink-0">
                     <Flame size={15} className="fill-current" />
                   </div>
@@ -687,7 +687,7 @@ export default function LeaderboardClient() {
                 </div>
 
                 {/* Total XP */}
-                <div className="p-4 bg-background/25 border border-border/80 rounded-2xl flex items-center gap-3 col-span-2">
+                <div className="p-4 bg-background/25 border border-border/80 rounded-lg flex items-center gap-3 col-span-2">
                   <div className="size-8 rounded-lg bg-primary/10 border border-primary/20 text-primary flex items-center justify-center shrink-0">
                     <Trophy size={15} />
                   </div>
@@ -698,7 +698,7 @@ export default function LeaderboardClient() {
                 </div>
 
                 {/* Hari Aktif Belajar */}
-                <div className="p-4 bg-background/25 border border-border/80 rounded-2xl flex items-center gap-3 col-span-2">
+                <div className="p-4 bg-background/25 border border-border/80 rounded-lg flex items-center gap-3 col-span-2">
                   <div className="size-8 rounded-lg bg-success/10 border border-success/20 text-success flex items-center justify-center shrink-0">
                     <Calendar size={15} />
                   </div>

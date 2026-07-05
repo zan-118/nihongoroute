@@ -46,7 +46,7 @@ export function VocabCard({ item, idx, showRomaji }: VocabCardProps) {
       className="transform hover:-translate-y-1 transition-all duration-300 font-sans"
     >
       <Link href={ROUTES.LIBRARY.VOCAB(item.slug || item.id)} className="block h-full">
-        <Card className="p-6 sm:p-7 md:p-8 bg-card/40 border border-border/80 rounded-[2.5rem] hover:border-primary/40 transition-all duration-300 group shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] flex flex-col gap-5 relative overflow-hidden h-full glass">
+        <Card className="p-6 sm:p-7 md:p-8 bg-card/40 border border-border/80 rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all duration-300 group shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] flex flex-col gap-5 relative overflow-hidden h-full glass">
           {/* Efek Indikator Sorot Halus */}
           <div className="absolute top-0 right-0 size-12 bg-[rgb(var(--primary-rgb)/0.05)] rounded-bl-[2rem] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity translate-x-4 translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 duration-500">
             <ExternalLink size={14} className="text-primary mr-2 mb-2" aria-hidden="true" />

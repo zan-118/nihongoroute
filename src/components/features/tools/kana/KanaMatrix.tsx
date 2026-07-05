@@ -34,7 +34,7 @@ export function KanaMatrix({ type, category, onSelectChar, themeBgHover }: KanaM
   // RENDER KOMPONEN
   // ==========================================
   return (
-    <Card className="p-4 md:p-8 rounded-2xl border border-border bg-card shadow-2xl relative flex-1 min-h-[400px] md:min-h-[450px] overflow-hidden">
+    <Card className="p-4 md:p-8 rounded-lg border border-border bg-card shadow-2xl relative flex-1 min-h-[400px] md:min-h-[450px] overflow-hidden">
       <div
         className={`relative z-10 grid gap-2 md:gap-4 mx-auto ${category === "yoon" ? "grid-cols-3 max-w-lg" : "grid-cols-5 max-w-2xl"}`}
       >

@@ -46,7 +46,7 @@ export function QuestItem({
 
   return (
     <Card
-      className={`relative group p-4 md:p-5 rounded-2xl border transition-all duration-300 shadow-none ${
+      className={`relative group p-4 md:p-5 rounded-lg border transition-all duration-300 shadow-none ${
         isClaimed
           ? "bg-muted/30 border-border opacity-50 grayscale"
           : isCompleted
@@ -61,7 +61,7 @@ export function QuestItem({
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.05 }}
-            className="absolute inset-0 flex items-center justify-center bg-success/10 backdrop-blur-md rounded-2xl z-20"
+            className="absolute inset-0 flex items-center justify-center bg-success/10  rounded-lg z-20"
           >
             <span className="text-success font-black tracking-widest uppercase text-xs">
               BERHASIL! +{quest.rewardXP} XP

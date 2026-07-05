@@ -36,7 +36,7 @@ export function ListeningHeader({
   difficulty,
 }: ListeningHeaderProps) {
   return (
-    <div className="relative w-full border-b border-border bg-card/50 backdrop-blur-md overflow-hidden">
+    <div className="relative w-full border-b border-border bg-card/50  overflow-hidden">
       {/* Pendar Dekoratif Latar Belakang */}
       <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 blur-[120px] rounded-full -translate-y-1/2 pointer-events-none" />
 
@@ -64,7 +64,7 @@ export function ListeningHeader({
             )}
           </div>
 
-          <h1 className="text-3xl md:text-5xl font-black text-foreground tracking-tighter leading-tight uppercase font-sans">
+          <h1 className="text-3xl md:text-5xl text-foreground tracking-tighter leading-tight uppercase">
             {title}
           </h1>
 

@@ -54,14 +54,14 @@ export function VocabRelated({ relatedKanji, synonyms, antonyms }: VocabRelatedP
   const hasContent = (relatedKanji?.length || 0) > 0 || (synonyms?.length || 0) > 0 || (antonyms?.length || 0) > 0;
 
   return (
-    <Card className="p-6 md:p-8 bg-card/20 backdrop-blur-xl border-border rounded-[2rem] hover:border-primary/40 transition-all group overflow-hidden relative space-y-8 font-sans glass shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
+    <Card className="p-6 md:p-8 bg-card/20  border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all group overflow-hidden relative space-y-8 font-sans glass shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
       
       {/* Tampilan Karakter Kanji Terkait */}
       {relatedKanji && relatedKanji.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-center gap-3">
             <LinkIcon size={16} aria-hidden="true" className="text-primary" />
-            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground">Karakter Kanji</h2>
+            <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">Karakter Kanji</h2>
           </div>
           <div className="flex flex-wrap gap-3">
             {relatedKanji.map((kanji) => {

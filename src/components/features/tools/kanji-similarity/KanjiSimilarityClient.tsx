@@ -19,7 +19,7 @@ function KanjiCompareCard({
   return (
     <Card
       className={cn(
-        "rounded-[2rem] border bg-card/45 p-6 shadow-xl",
+        "rounded-2xl md:rounded-3xl border bg-card/45 p-6 shadow-xl",
         accent === "primary" ? "border-primary/25" : "border-warning/25"
       )}
     >
@@ -56,7 +56,7 @@ function KanjiCompareCard({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-muted/15 p-4">
+        <div className="rounded-lg border border-border bg-muted/15 p-4">
           <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
             Cue Visual
           </p>
@@ -100,12 +100,12 @@ export default function KanjiSimilarityClient() {
           </Button>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">
-              <div className="flex size-12 items-center justify-center rounded-2xl border border-warning/20 bg-warning/10 text-warning">
+              <div className="flex size-12 items-center justify-center rounded-lg border border-warning/20 bg-warning/10 text-warning">
                 <Search size={24} aria-hidden="true" />
               </div>
               <Badge className="w-fit rounded-xl px-3 py-1">Kanji Similarity</Badge>
             </div>
-            <h1 className="max-w-3xl text-4xl font-black uppercase tracking-tight text-foreground md:text-6xl">
+            <h1 className="max-w-3xl text-4xl uppercase tracking-tight text-foreground md:text-6xl">
               Kanji Mirip
             </h1>
             <p className="max-w-2xl text-sm font-medium leading-relaxed text-muted-foreground">
@@ -115,10 +115,10 @@ export default function KanjiSimilarityClient() {
         </header>
 
         <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
-          <Card className="rounded-[2rem] border border-border bg-card/45 p-4 shadow-xl">
+          <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-4 shadow-xl">
             <div className="mb-4 flex items-center gap-2 px-2">
               <Sparkles size={16} className="text-primary" aria-hidden="true" />
-              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground">
+              <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
                 Pasangan
               </h2>
             </div>
@@ -129,7 +129,7 @@ export default function KanjiSimilarityClient() {
                   type="button"
                   onClick={() => setSelectedId(pair.id)}
                   className={cn(
-                    "rounded-2xl border p-4 text-left transition-all",
+                    "rounded-lg border p-4 text-left transition-all",
                     selectedPair.id === pair.id
                       ? "border-primary/40 bg-primary/10 text-primary"
                       : "border-border bg-background/35 text-muted-foreground hover:text-foreground"
@@ -145,20 +145,20 @@ export default function KanjiSimilarityClient() {
           </Card>
 
           <div className="flex flex-col gap-6">
-            <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-2xl md:p-6">
+            <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-2xl md:p-6">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                 <div>
                   <Badge variant="outline" className="mb-3 rounded-xl">
                     {selectedPair.level}
                   </Badge>
-                  <h2 className="font-japanese text-4xl font-black text-foreground">
+                  <h2 className="font-japanese text-4xl text-foreground">
                     {selectedPair.title}
                   </h2>
                   <p className="mt-3 text-sm font-bold leading-relaxed text-primary">
                     {selectedPair.difference}
                   </p>
                 </div>
-                <div className="rounded-2xl border border-success/20 bg-success/10 p-4 text-success lg:max-w-sm">
+                <div className="rounded-lg border border-success/20 bg-success/10 p-4 text-success lg:max-w-sm">
                   <p className="text-[10px] font-black uppercase tracking-widest">Mnemonic</p>
                   <p className="mt-2 text-sm font-bold leading-relaxed text-foreground">
                     {selectedPair.mnemonic}
@@ -172,7 +172,7 @@ export default function KanjiSimilarityClient() {
               <KanjiCompareCard item={selectedPair.items[1]} accent="warning" />
             </div>
 
-            <Card className="rounded-[2rem] border border-border bg-muted/15 p-5">
+            <Card className="rounded-2xl md:rounded-3xl border border-border bg-muted/15 p-5">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
                   Setelah lihat cue visual, coba tulis keduanya bergantian di writing canvas.

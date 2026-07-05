@@ -58,7 +58,7 @@ export function SurvivalPlaying({
   return (
     <div className="w-full flex flex-col h-full min-h-[60vh] max-w-3xl mx-auto pb-6 px-4 md:px-0 transition-colors duration-300">
       <Card
-        className={`flex justify-between items-center mb-4 md:mb-10 p-4 md:p-10 rounded-[1.5rem] md:rounded-[3rem] border transition-all duration-200 neo-card shadow-lg ${isCriticalHp ? "border-destructive/60 bg-destructive/5 shadow-md" : "bg-card border-border"}`}
+        className={`flex justify-between items-center mb-4 md:mb-10 p-4 md:p-10 rounded-xl md:rounded-2xl border transition-all duration-200 neo-card shadow-lg ${isCriticalHp ? "border-destructive/60 bg-destructive/5 shadow-md" : "bg-card border-border"}`}
       >
         <div className="flex gap-1 md:gap-4 items-center">
           {[...Array(MAX_HP)].map((_, i) => (
@@ -104,17 +104,17 @@ export function SurvivalPlaying({
           className="flex-1 flex flex-col mb-4 md:mb-10"
         >
           <Card
-            className={`relative bg-card rounded-[2rem] md:rounded-[4rem] p-6 md:p-20 border text-center shadow-xl flex flex-col items-center justify-center flex-1 min-h-[220px] md:min-h-[400px] lg:min-h-[500px] neo-card transition-all duration-200 ${
+            className={`relative bg-card rounded-2xl md:rounded-3xl p-6 md:p-20 border text-center shadow-xl flex flex-col items-center justify-center flex-1 min-h-[220px] md:min-h-[400px] lg:min-h-[500px] neo-card transition-all duration-200 ${
               isShaking
                 ? "border-primary shadow-xl"
                 : "border-border"
             }`}
           >
-            <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--primary-rgb)/0.03)_1px,transparent_1px)] bg-[size:100%_4px] md:bg-[size:100%_6px] pointer-events-none opacity-40 rounded-[2rem] md:rounded-[4rem]" />
+            <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--primary-rgb)/0.03)_1px,transparent_1px)] bg-[size:100%_4px] md:bg-[size:100%_6px] pointer-events-none opacity-40 rounded-2xl md:rounded-3xl" />
 
             <Badge
               variant="outline"
-              className={`absolute top-4 md:top-10 left-1/2 -translate-x-1/2 text-[10px] md:text-xs font-bold uppercase tracking-widest border px-4 py-1 md:px-8 md:py-3 rounded-lg md:rounded-2xl neo-inset h-auto transition-all duration-300 ${isDangerTime ? "text-destructive border-destructive/50 bg-destructive/10 shadow-sm" : "text-muted-foreground border-border bg-muted/50 dark:bg-[rgb(var(--background-rgb)/0.3)]"}`}
+              className={`absolute top-4 md:top-10 left-1/2 -translate-x-1/2 text-[10px] md:text-xs font-bold uppercase tracking-widest border px-4 py-1 md:px-8 md:py-3 rounded-lg md:rounded-lg neo-inset h-auto transition-all duration-300 ${isDangerTime ? "text-destructive border-destructive/50 bg-destructive/10 shadow-sm" : "text-muted-foreground border-border bg-muted/50 dark:bg-[rgb(var(--background-rgb)/0.3)]"}`}
             >
               {isDangerTime ? (
                 <span className="flex items-center gap-1">
@@ -165,7 +165,7 @@ export function SurvivalPlaying({
               variant="ghost"
               onClick={() => handleAnswer(option)}
               disabled={isCorrecting}
-              className={`group flex h-full w-full p-0 overflow-hidden rounded-2xl md:rounded-[2.5rem] border transition-all duration-300 min-h-[64px] md:min-h-[100px] lg:min-h-[120px] shadow-none ${
+              className={`group flex h-full w-full p-0 overflow-hidden rounded-xl md:rounded-2xl border transition-all duration-300 min-h-[64px] md:min-h-[100px] lg:min-h-[120px] shadow-none ${
                 isWrong
                   ? "bg-destructive/20 border-destructive shadow-lg text-destructive"
                   : isCorrect

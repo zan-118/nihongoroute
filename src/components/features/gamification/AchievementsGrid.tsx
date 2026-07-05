@@ -57,7 +57,7 @@ export default function AchievementsGrid() {
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="flex flex-col sm:flex-row flex-wrap gap-4">
       {ACHIEVEMENTS_LIST.map((ach) => {
         const rawProgress = ach.condition(progress);
         const percent = Math.min(100, Math.max(0, rawProgress));
@@ -68,7 +68,7 @@ export default function AchievementsGrid() {
         return (
           <Card 
             key={ach.id}
-            className={`p-6 rounded-2xl border transition-all duration-500 relative overflow-hidden group ${
+            className={`p-6 rounded-lg border transition-all duration-500 relative overflow-hidden group ${
               isUnlocked 
                 ? 'bg-primary/5 border-primary/30 shadow-[0_0_20px_rgb(var(--primary-rgb)/0.05)]' 
                 : 'bg-muted/30 border-border grayscale opacity-70'

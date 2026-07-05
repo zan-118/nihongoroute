@@ -265,7 +265,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
           >
             <Button
               size="lg"
-              className="rounded-full size-14 bg-background/80 backdrop-blur-xl border border-border shadow-2xl group hover:border-primary/40 transition-all"
+              className="rounded-full size-14 bg-background/80  border border-border shadow-2xl group hover:border-primary/40 transition-all"
               onClick={() => setIsZenMode(false)}
               aria-label="Keluar Mode Zen"
             >
@@ -298,7 +298,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
                 </span>
               )}
             </div>
-            <h1 className="text-2xl md:text-4xl font-black text-foreground tracking-tight leading-tight uppercase font-sans">
+            <h1 className="text-2xl md:text-4xl text-foreground tracking-tight leading-tight uppercase">
               {data.title}
             </h1>
           </div>
@@ -312,7 +312,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
             <Button
               variant="outline"
               onClick={() => setShowVisuals(!showVisuals)}
-              className="w-full py-4 rounded-2xl border-dashed border-primary/20 hover:border-primary/50 bg-primary/5 hover:bg-primary/10 transition-all flex items-center justify-center gap-2 group glass"
+              className="w-full py-4 rounded-lg border-dashed border-primary/20 hover:border-primary/50 bg-primary/5 hover:bg-primary/10 transition-all flex items-center justify-center gap-2 group glass"
             >
               <Sparkles size={14} className={cn("text-primary transition-transform duration-300", showVisuals && "rotate-45")} />
               <span className="text-xs font-black uppercase tracking-wider">
@@ -342,7 +342,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
 
         {/* Panel Kontrol Layar Lengket (Sticky Bottom Control Bar) */}
         {!isZenMode && (
-          <div className="fixed bottom-6 left-6 md:left-[calc(18rem+1.5rem)] right-6 z-50 rounded-[2rem] border border-border bg-background/80 backdrop-blur-xl p-4 shadow-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-4 glass animate-in slide-in-from-bottom duration-500 pointer-events-auto">
+          <div className="fixed bottom-6 left-6 md:left-[calc(18rem+1.5rem)] right-6 z-50 rounded-[2rem] border border-border bg-background/80  p-4 shadow-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-4 glass animate-in slide-in-from-bottom duration-500 pointer-events-auto">
             {/* Sisi Kiri: Audio & Playback Controller */}
             <div className="flex-1 w-full lg:max-w-xs">
               {!!(data.audioUrl || (!data.isTTSDisabled && typeof data.body === "string" ? data.body : undefined)) && (
@@ -480,7 +480,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
                 animate={{ opacity: 0.5 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setIsVocabOpen(false)}
-                className="fixed inset-0 bg-black/60 z-[100] cursor-pointer"
+                className="fixed inset-0 bg-background/80 backdrop-blur-sm z-[100] cursor-pointer"
               />
               {/* Panel Drawer */}
               <m.div
@@ -488,7 +488,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
                 animate={{ x: 0 }}
                 exit={{ x: "100%" }}
                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className="fixed top-0 right-0 bottom-0 w-full sm:w-[420px] bg-background/95 backdrop-blur-xl border-l border-border z-[101] shadow-2xl p-6 overflow-y-auto glass flex flex-col"
+                className="fixed top-0 right-0 bottom-0 w-full sm:w-[420px] bg-background/95  border-l border-border z-[101] shadow-2xl p-6 overflow-y-auto glass flex flex-col"
               >
                 <div className="flex items-center justify-between border-b border-border/40 pb-4 mb-4">
                   <div className="flex items-center gap-2">
@@ -527,7 +527,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
               </span>
               <div className="flex-1 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
             </div>
-            <div className="rounded-[2.5rem] border border-border/60 bg-card/30 backdrop-blur-xl p-6 shadow-2xl">
+            <div className="rounded-[2.5rem] border border-border/60 bg-card/30  p-6 shadow-2xl">
               <QuizEngine questions={formattedQuizzes} lessonId={lessonId} />
             </div>
           </div>

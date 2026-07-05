@@ -250,7 +250,7 @@ export default function DictationClient() {
               </Button>
             </Link>
             <div>
-              <h1 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tight italic">
+              <h1 className="text-2xl md:text-3xl text-foreground uppercase tracking-tight italic">
                 Latihan <span className="text-success">Dictation</span>
               </h1>
               <p className="text-muted-foreground text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em] mt-0.5">
@@ -270,9 +270,9 @@ export default function DictationClient() {
               exit={{ opacity: 0, y: -20 }}
               className="w-full"
             >
-              <Card className="p-6 md:p-8 bg-card/30 backdrop-blur-xl border-border rounded-[2.5rem] hover:border-success/40 transition-all flex flex-col gap-8 shadow-lg">
+              <Card className="p-6 md:p-8 bg-card/30  border-border rounded-2xl md:rounded-3xl hover:border-success/40 transition-all flex flex-col gap-8 shadow-lg">
                 <div>
-                  <h2 className="text-lg md:text-xl font-black uppercase tracking-wider text-foreground mb-2">
+                  <h2 className="text-lg md:text-xl uppercase tracking-wider text-foreground mb-2">
                     Konfigurasi Sesi Dikte
                   </h2>
                   <p className="text-xs md:text-sm text-muted-foreground">
@@ -283,13 +283,13 @@ export default function DictationClient() {
                 {/* Level Selection */}
                 <div className="space-y-3">
                   <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground block">JLPT Level</span>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                  <div className="flex flex-wrap items-center justify-center gap-3">
                     {JLPT_LEVELS.map((lvl) => (
                       <button
                         type="button"
                         key={lvl.id}
                         onClick={() => setLevel(lvl.id)}
-                        className={`flex flex-col items-center justify-center p-3.5 rounded-2xl border transition-all duration-200 ${
+                        className={`flex flex-col items-center justify-center p-3.5 rounded-lg border transition-all duration-200 ${
                           level === lvl.id
                             ? `shadow-md ${lvl.color.replace("text-", "bg-").replace("/10", "/20")} border-success`
                             : "bg-background/50 border-border hover:bg-muted"
@@ -312,7 +312,7 @@ export default function DictationClient() {
                         type="button"
                         key={amt}
                         onClick={() => setAmount(amt)}
-                        className={`flex-1 py-3 px-4 rounded-2xl border font-bold text-xs md:text-sm transition-all duration-200 ${
+                        className={`flex-1 py-3 px-4 rounded-lg border font-bold text-xs md:text-sm transition-all duration-200 ${
                           amount === amt
                             ? "bg-success text-success-foreground border-success shadow-md"
                             : "bg-background/50 text-muted-foreground border-border hover:bg-muted"
@@ -327,7 +327,7 @@ export default function DictationClient() {
                 <Button
                   onClick={handleStart}
                   disabled={loading}
-                  className="w-full py-6 rounded-2xl text-sm md:text-base font-black uppercase tracking-widest bg-success hover:bg-success/90 text-success-foreground shadow-md transition-all flex items-center justify-center gap-2 group"
+                  className="w-full py-6 rounded-lg text-sm md:text-base font-black uppercase tracking-widest bg-success hover:bg-success/90 text-success-foreground shadow-md transition-all flex items-center justify-center gap-2 group"
                 >
                   {loading ? (
                     <>
@@ -379,7 +379,7 @@ export default function DictationClient() {
               </div>
 
               {/* Dictation Box */}
-              <Card className="p-6 md:p-10 bg-card/30 backdrop-blur-xl border-border rounded-[2.5rem] flex flex-col items-center gap-8 shadow-lg relative overflow-hidden">
+              <Card className="p-6 md:p-10 bg-card/30  border-border rounded-2xl md:rounded-3xl flex flex-col items-center gap-8 shadow-lg relative overflow-hidden">
                 {/* Decorative voice-wave animation when audio playing */}
                 <div
                   className={`absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-success/0 via-success to-success/0 transition-opacity duration-300 ${
@@ -423,7 +423,7 @@ export default function DictationClient() {
                     onChange={handleInputChange}
                     disabled={isChecked}
                     placeholder="Ketik apa yang Anda dengar..."
-                    className={`h-14 bg-muted/50 border-2 text-center text-lg font-japanese font-bold rounded-2xl transition-all ${
+                    className={`h-14 bg-muted/50 border-2 text-center text-lg font-japanese font-bold rounded-lg transition-all ${
                       isChecked
                         ? isPerfectMatch
                           ? "border-success bg-success/5 text-success"
@@ -446,7 +446,7 @@ export default function DictationClient() {
                       <m.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="p-5 rounded-2xl border flex flex-col gap-4 bg-card/40 backdrop-blur-md animate-in fade-in duration-300"
+                        className="p-5 rounded-lg border flex flex-col gap-4 bg-card/40  animate-in fade-in duration-300"
                       >
                         <div className="flex items-center gap-3">
                           {isPerfectMatch ? (
@@ -522,10 +522,10 @@ export default function DictationClient() {
               {/* Reveal answer overlay modal (if they just want to read the answer directly) */}
               <AnimatePresence>
                 {isRevealed && !isChecked && (
-                  <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                    <Card className="w-full max-w-md p-6 bg-card border-border rounded-3xl flex flex-col gap-6 shadow-2xl animate-in fade-in zoom-in duration-200">
+                  <div className="fixed inset-0 bg-background/80  z-50 flex items-center justify-center p-4">
+                    <Card className="w-full max-w-md p-6 bg-card border-border rounded-xl flex flex-col gap-6 shadow-2xl animate-in fade-in zoom-in duration-200">
                       <div>
-                        <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
+                        <h3 className="text-sm uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
                           <BookOpen size={16} className="text-success" /> Jawaban & Arti Kalimat
                         </h3>
                         <p className="text-xl font-japanese font-black text-foreground mb-2 leading-relaxed">
@@ -577,14 +577,14 @@ export default function DictationClient() {
         {/* Results summary modal when all done */}
         <AnimatePresence>
           {isPlaying && isChecked && currentIndex === sentences.length - 1 && (
-            <div className="fixed inset-0 bg-background/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-              <Card className="w-full max-w-md p-8 bg-card border-border rounded-[2.5rem] flex flex-col items-center text-center gap-6 shadow-2xl animate-in fade-in zoom-in-95 duration-300">
+            <div className="fixed inset-0 bg-background/80  z-50 flex items-center justify-center p-4">
+              <Card className="w-full max-w-md p-8 bg-card border-border rounded-2xl md:rounded-3xl flex flex-col items-center text-center gap-6 shadow-2xl animate-in fade-in zoom-in-95 duration-300">
                 <div className="w-16 h-16 rounded-full bg-success/10 border border-success/20 flex items-center justify-center shadow-lg text-success animate-bounce">
                   <Award size={32} />
                 </div>
                 
                 <div>
-                  <h2 className="text-2xl font-black uppercase tracking-tight text-foreground">
+                  <h2 className="text-2xl uppercase tracking-tight text-foreground">
                     Latihan Selesai!
                   </h2>
                   <p className="text-muted-foreground text-xs uppercase tracking-widest font-bold mt-1">
@@ -592,7 +592,7 @@ export default function DictationClient() {
                   </p>
                 </div>
 
-                <div className="w-full bg-muted/30 p-5 rounded-2xl border border-border flex flex-col items-center">
+                <div className="w-full bg-muted/30 p-5 rounded-lg border border-border flex flex-col items-center">
                   <span className="text-4xl font-black text-success font-mono">
                     {score.correct} / {sentences.length}
                   </span>

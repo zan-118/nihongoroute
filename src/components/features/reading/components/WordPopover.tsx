@@ -156,7 +156,7 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 z-[60] bg-background/60 backdrop-blur-sm"
+              className="fixed inset-0 z-[60] bg-background/60 "
             />
             
             <m.div
@@ -175,7 +175,7 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
                 "p-5 border border-border/60 shadow-2xl bg-card relative",
                 isMobile 
                   ? "rounded-t-[2.5rem] pb-8" 
-                  : "rounded-3xl glass bg-card/80 backdrop-blur-2xl"
+                  : "rounded-xl glass bg-card/80 "
               )}>
                 {isMobile && (
                   <button

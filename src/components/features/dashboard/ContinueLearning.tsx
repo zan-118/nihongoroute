@@ -108,12 +108,12 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-[13px]">
           <div className="w-[34px] h-[1px] bg-primary/40" />
-          <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
+          <h2 className="text-[10px] uppercase tracking-[0.2em] text-primary">
             Lanjut Belajar
           </h2>
         </div>
         <div className="flex items-end justify-between">
-           <h3 className="text-xl md:text-2xl font-bold text-foreground tracking-tight">
+           <h3 className="text-xl md:text-2xl text-foreground tracking-tight">
              {activeData.isNew ? "Mulai Perjalanan" : "Lanjut Belajar"}
            </h3>
            <Link href="/courses" className="text-[10px] font-bold text-primary hover:text-foreground transition-colors uppercase tracking-widest flex items-center gap-1 group">
@@ -122,7 +122,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
         </div>
       </div>
 
-      <Card className="group relative overflow-hidden border-border bg-card/10 backdrop-blur-xl p-0 rounded-[34px] transition-all duration-500 hover:border-primary/40 hover:shadow-[0_0_40px_rgb(var(--primary-rgb)/0.1)] shadow-none glass">
+      <Card className="group relative overflow-hidden border-border bg-card/10  p-0 rounded-2xl transition-all duration-500 hover:border-primary/40 hover:shadow-[0_0_40px_rgb(var(--primary-rgb)/0.1)] shadow-none glass">
         {/* Glow Latar Belakang Kemajuan Belajar */}
         <div 
           className="absolute left-0 top-0 bottom-0 bg-primary/5 transition-all duration-1000 ease-out pointer-events-none" 
@@ -132,7 +132,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
         <div className="relative z-10 flex flex-col md:flex-row items-center gap-[34px] p-[34px]">
           {/* Area Ikon / Miniatur */}
           <div className="shrink-0 relative transition-transform duration-300 group-hover:scale-105">
-            <div className="size-[89px] rounded-[21px] bg-card/40 border border-border flex items-center justify-center shadow-2xl overflow-hidden group-hover:border-primary/30 transition-colors">
+            <div className="size-[89px] rounded-xl bg-card/40 border border-border flex items-center justify-center shadow-2xl overflow-hidden group-hover:border-primary/30 transition-colors">
                {activeData.progress === 100 ? (
                  <CheckCircle2 size={34} className="text-success drop-shadow-[0_0_8px_rgb(var(--success-rgb)/0.4)]" />
                ) : (
@@ -152,7 +152,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
               <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em] opacity-80">
                 {activeData.courseTitle}
               </span>
-              <h4 className="text-2xl md:text-3xl font-black text-foreground tracking-tight line-clamp-1 transition-colors group-hover:text-primary">
+              <h4 className="text-2xl md:text-3xl text-foreground tracking-tight line-clamp-1 transition-colors group-hover:text-primary">
                 {activeData.lessonTitle}
               </h4>
             </div>
@@ -185,7 +185,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
 
           {/* Area Tombol Aksi */}
           <div className="w-full md:w-auto shrink-0 transition-transform active:scale-[0.98]">
-            <Button asChild className="w-full md:w-auto h-[89px] px-10 rounded-[21px] bg-foreground text-background hover:bg-primary hover:text-primary-foreground font-black uppercase tracking-widest transition-all duration-300 group shadow-2xl border-none">
+            <Button asChild className="w-full md:w-auto h-[89px] px-10 rounded-xl bg-foreground text-background hover:bg-primary hover:text-primary-foreground font-black uppercase tracking-widest transition-all duration-300 group shadow-2xl border-none">
               <Link href={`/courses/${activeData.courseSlug}/${activeData.lessonSlug}`}>
                 {activeData.isNew ? "Mulai" : "Lanjut"}
                 <div className="ml-3 size-[34px] rounded-full bg-background/20 flex items-center justify-center group-hover:bg-primary-foreground/20 transition-all duration-300 group-hover:rotate-12">
@@ -202,7 +202,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
             initial={{ width: 0 }}
             animate={{ width: `${activeData.progress}%` }}
             transition={{ duration: 1.5, ease: "easeOut" }}
-            className={`h-full relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent ${
+            className={`h-full relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-background/25 before:to-transparent ${
               activeData.progress === 100
                 ? "bg-success shadow-[0_0_15px_rgb(var(--success-rgb)/0.6)]"
                 : "bg-primary shadow-[0_0_15px_rgb(var(--primary-rgb)/0.6)]"

@@ -48,7 +48,7 @@ export default function AppBreadcrumbs({ items, className = "" }: AppBreadcrumbs
           {item.active ? (
             <span
               aria-current="page"
-              className="inline-flex min-h-8 max-w-[13rem] items-center gap-1.5 rounded-lg bg-primary/10 px-2.5 text-primary shadow-[0_0_18px_rgb(var(--primary-rgb)/0.08)] md:max-w-[18rem]"
+              className="inline-flex min-h-8 max-w-[13rem] items-center gap-1.5 rounded-lg bg-primary/10 px-2.5 text-primary shadow-sm md:max-w-[18rem]"
               title={item.label}
             >
               {index === 0 && <Home size={13} className="mb-0.5 shrink-0" />}

@@ -52,7 +52,7 @@ export default function KanjiStrokeOrder({ kanji, minimal = false }: KanjiStroke
   // ==========================================
   return (
     <div className={`flex flex-col ${minimal ? 'gap-2' : 'gap-4'}`}>
-      <div className={`relative aspect-square w-full mx-auto bg-background dark:bg-background/5 rounded-2xl border border-border ${minimal ? 'p-2' : 'p-4'} flex items-center justify-center group overflow-hidden`}>
+      <div className={`relative aspect-square w-full mx-auto bg-background dark:bg-background/5 rounded-lg border border-border ${minimal ? 'p-2' : 'p-4'} flex items-center justify-center group overflow-hidden`}>
         {loading && !error && (
           <div className="absolute inset-0 flex items-center justify-center animate-pulse text-primary/20">
             <span className="text-4xl font-black">{kanji}</span>

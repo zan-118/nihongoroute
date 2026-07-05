@@ -55,7 +55,7 @@ export const MarkCompleteButton: React.FC<MarkCompleteButtonProps> = ({ lessonId
 
   if (isCompleted || marked) {
     return (
-      <div className="flex items-center justify-center gap-3 py-6 px-8 rounded-2xl bg-success/10 border border-success/30 text-success glass transition-all duration-500">
+      <div className="flex items-center justify-center gap-3 py-6 px-8 rounded-lg bg-success/10 border border-success/30 text-success glass transition-all duration-500">
         <CheckCircle2 size={24} />
         <span className="font-bold tracking-widest uppercase text-sm">Materi Selesai</span>
       </div>
@@ -66,7 +66,7 @@ export const MarkCompleteButton: React.FC<MarkCompleteButtonProps> = ({ lessonId
     <Button 
       onClick={handleComplete}
       className={cn(
-        "w-full sm:w-auto flex items-center justify-center gap-3 py-8 px-10 rounded-2xl",
+        "w-full sm:w-auto flex items-center justify-center gap-3 py-8 px-10 rounded-lg",
         "bg-primary text-primary-foreground font-black uppercase tracking-widest text-sm",
         "shadow-[0_0_20px_rgb(var(--primary-rgb)/0.3)] hover:shadow-[0_0_30px_rgb(var(--primary-rgb)/0.5)]",
         "hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 border-none"

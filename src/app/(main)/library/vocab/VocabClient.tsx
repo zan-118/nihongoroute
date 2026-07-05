@@ -264,13 +264,13 @@ export default function VocabClient({
       {/* Grid Konten */}
       <div className="relative">
         {loading && (
-          <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-sm rounded-[2rem]">
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50  rounded-[2rem]">
             <Loader2 className="size-10 animate-spin text-primary" />
           </div>
         )}
         {vocabList.length === 0 && !loading ? (
           <div
-            className="py-24 text-center border border-dashed border-border rounded-3xl bg-muted/20 neo-inset px-6"
+            className="py-24 text-center border border-dashed border-border rounded-xl bg-muted/20 neo-inset px-6"
           >
             <Search className="mx-auto mb-6 text-muted-foreground/30" size={48} aria-hidden="true" />
             <p className="text-muted-foreground font-bold text-xs md:text-sm uppercase tracking-widest">
@@ -293,7 +293,7 @@ export default function VocabClient({
         ) : (
           <div className="flex flex-col gap-2.5 min-h-[400px]">
             {/* Kepala Tabel (Disembunyikan di Ponsel / Responsif) */}
-            <div className="hidden md:grid md:grid-cols-12 gap-4 px-6 py-4 bg-muted/30 border border-border rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+            <div className="hidden md:grid md:grid-cols-12 gap-4 px-6 py-4 bg-muted/30 border border-border rounded-lg text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
               <div className="col-span-3">Kosakata</div>
               <div className="col-span-4">Arti / Definisi</div>
               <div className="col-span-2">Jenis Kata</div>
@@ -304,7 +304,7 @@ export default function VocabClient({
             {vocabList.map((item) => (
               <div
                 key={item.id}
-                className="flex md:grid md:grid-cols-12 items-center justify-between gap-6 px-6 py-4 bg-card/45 border border-border/80 hover:border-primary/45 transition-all duration-300 rounded-[1.5rem] shadow-[0_0_20px_rgba(var(--primary-rgb),0.015)] group glass"
+                className="flex md:grid md:grid-cols-12 items-center justify-between gap-6 px-6 py-4 bg-card/45 border border-border/80 hover:border-primary/45 hover:shadow-md transition-all duration-300 rounded-[1.5rem] group glass"
               >
                 {/* Sisi Kiri: Kosakata & Arti (Flex di Seluler, Kolom Grid di Desktop) */}
                 <div className="flex-1 md:col-span-7 flex flex-col md:grid md:grid-cols-7 md:gap-4 md:items-center min-w-0 pr-2">
@@ -369,7 +369,7 @@ export default function VocabClient({
           <span className="text-muted-foreground font-black text-[10px] md:text-xs uppercase tracking-[0.2em]">Basis Data Real-time</span>
         </div>
         <Link href="/library" className="w-full sm:w-auto">
-          <Button variant="ghost" className="w-full px-8 py-6 md:px-10 md:py-7 h-auto text-xs md:text-xs font-bold uppercase tracking-widest rounded-2xl bg-muted border border-border neo-card shadow-none hover:bg-primary hover:text-primary-foreground transition-all gap-3 group">
+          <Button variant="ghost" className="w-full px-8 py-6 md:px-10 md:py-7 h-auto text-xs md:text-xs font-bold uppercase tracking-widest rounded-lg bg-muted border border-border neo-card shadow-none hover:bg-primary hover:text-primary-foreground transition-all gap-3 group">
             <ChevronLeft size={16} className="group-hover:-translate-x-1.5 transition-transform duration-300" aria-hidden="true" /> Kembali ke Pustaka
           </Button>
         </Link>

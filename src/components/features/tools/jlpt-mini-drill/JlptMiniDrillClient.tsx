@@ -173,12 +173,12 @@ export default function JlptMiniDrillClient({
           </Button>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">
-              <div className="flex size-12 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary">
+              <div className="flex size-12 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
                 <ListChecks size={24} aria-hidden="true" />
               </div>
               <Badge className="w-fit rounded-xl px-3 py-1">JLPT Mini Drill</Badge>
             </div>
-            <h1 className="max-w-3xl text-4xl font-black uppercase tracking-tight text-foreground md:text-6xl">
+            <h1 className="max-w-3xl text-4xl uppercase tracking-tight text-foreground md:text-6xl">
               Drill Cepat JLPT
             </h1>
             <p className="max-w-2xl text-sm font-medium leading-relaxed text-muted-foreground">
@@ -198,10 +198,10 @@ export default function JlptMiniDrillClient({
         </header>
 
         <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
-          <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-xl">
+          <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl">
             <div className="mb-5 flex items-center gap-2">
               <ClipboardList size={16} className="text-primary" aria-hidden="true" />
-              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground">
+              <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
                 Setup Drill
               </h2>
             </div>
@@ -211,7 +211,7 @@ export default function JlptMiniDrillClient({
                 <p className="mb-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                   Level
                 </p>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="flex flex-wrap items-center justify-center gap-3">
                   {DRILL_LEVELS.map((item) => (
                     <button
                       key={item}
@@ -259,7 +259,7 @@ export default function JlptMiniDrillClient({
                 <p className="mb-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                   Jumlah Soal
                 </p>
-                <div className="grid grid-cols-4 gap-2">
+                <div className="flex flex-col sm:flex-row flex-wrap gap-2">
                   {AMOUNT_OPTIONS.map((item) => (
                     <button
                       key={item}
@@ -287,7 +287,7 @@ export default function JlptMiniDrillClient({
           </Card>
 
           <div className="flex flex-col gap-6">
-            <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-2xl md:p-7">
+            <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-2xl md:p-7">
               <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <Badge variant="outline" className="mb-3 rounded-xl">
@@ -302,7 +302,7 @@ export default function JlptMiniDrillClient({
                     </p>
                   ) : null}
                 </div>
-                <div className="w-full rounded-2xl border border-border bg-muted/15 p-4 sm:w-44">
+                <div className="w-full rounded-lg border border-border bg-muted/15 p-4 sm:w-44">
                   <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                     Akurasi
                   </p>
@@ -313,7 +313,7 @@ export default function JlptMiniDrillClient({
 
               {isFinished ? (
                 <div className="flex flex-col gap-5">
-                  <div className="rounded-2xl border border-success/25 bg-success/10 p-6">
+                  <div className="rounded-lg border border-success/25 bg-success/10 p-6">
                     <div className="flex items-center gap-2 text-success">
                       <Trophy size={20} aria-hidden="true" />
                       <p className="text-xs font-black uppercase tracking-widest">Sesi Selesai</p>
@@ -341,7 +341,7 @@ export default function JlptMiniDrillClient({
                           onClick={() => handleSelect(option)}
                           disabled={hasAnswered}
                           className={cn(
-                            "min-h-20 rounded-2xl border p-4 text-left text-base font-black transition-all",
+                            "min-h-20 rounded-lg border p-4 text-left text-base font-black transition-all",
                             !hasAnswered && "border-border bg-background/45 hover:border-primary/40 hover:bg-primary/10",
                             hasAnswered && isAnswer && "border-success/35 bg-success/10 text-success",
                             hasAnswered && isSelected && !isAnswer && "border-destructive/35 bg-destructive/10 text-destructive",
@@ -368,7 +368,7 @@ export default function JlptMiniDrillClient({
               )}
             </Card>
 
-            <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-xl">
+            <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl">
               <div className="mb-4 flex items-center gap-2">
                 {hasAnswered ? (
                   isCorrect ? (
@@ -379,14 +379,14 @@ export default function JlptMiniDrillClient({
                 ) : (
                   <Sparkles size={16} className="text-primary" aria-hidden="true" />
                 )}
-                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground">
+                <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
                   Feedback
                 </h2>
               </div>
               {hasAnswered ? (
                 <div
                   className={cn(
-                    "rounded-2xl border p-5",
+                    "rounded-lg border p-5",
                     isCorrect ? "border-success/25 bg-success/10" : "border-warning/25 bg-warning/10"
                   )}
                 >
@@ -404,7 +404,7 @@ export default function JlptMiniDrillClient({
                   ) : null}
                 </div>
               ) : (
-                <p className="rounded-2xl border border-dashed border-border bg-muted/15 p-5 text-sm font-medium text-muted-foreground">
+                <p className="rounded-lg border border-dashed border-border bg-muted/15 p-5 text-sm font-medium text-muted-foreground">
                   Pilih jawaban untuk membuka reading dan alasan singkat.
                 </p>
               )}

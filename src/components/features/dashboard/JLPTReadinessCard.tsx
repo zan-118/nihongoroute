@@ -84,14 +84,14 @@ export default function JLPTReadinessCard({ loading, courseMetadata }: JLPTReadi
   );
 
   if (loading) {
-    return <Skeleton className="h-[460px] w-full rounded-[34px]" />;
+    return <Skeleton className="h-[460px] w-full rounded-2xl" />;
   }
 
   const tone = getScoreTone(readiness.score);
 
   return (
     <Card
-      className={`relative overflow-hidden rounded-[34px] border border-border bg-card/35 p-6 shadow-none backdrop-blur-xl transition-all duration-500 hover:border-primary/30 ${tone.glow}`}
+      className={`relative overflow-hidden rounded-2xl border border-border bg-card/35 p-6 shadow-none  transition-all duration-500 hover:border-primary/30 ${tone.glow}`}
     >
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgb(var(--primary-rgb)/0.035)_1px,transparent_1px),linear-gradient(rgb(var(--primary-rgb)/0.025)_1px,transparent_1px)] bg-[size:28px_28px]" />
       <div className="pointer-events-none absolute right-0 top-0 size-64 rounded-full bg-primary/5 blur-[80px]" />
@@ -113,7 +113,7 @@ export default function JLPTReadinessCard({ loading, courseMetadata }: JLPTReadi
             </div>
 
             <div>
-              <h2 className="text-2xl font-black uppercase tracking-tight text-foreground md:text-3xl">
+              <h2 className="text-2xl uppercase tracking-tight text-foreground md:text-3xl">
                 JLPT Readiness Score
               </h2>
               <p className="mt-3 max-w-xl text-sm font-medium leading-relaxed text-muted-foreground">
@@ -151,7 +151,7 @@ export default function JLPTReadinessCard({ loading, courseMetadata }: JLPTReadi
                   {readiness.statusLabel}
                 </p>
               </div>
-              <div className="rounded-2xl border border-border bg-muted/25 p-4">
+              <div className="rounded-lg border border-border bg-muted/25 p-4">
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
                   Target aktif
                 </p>
@@ -172,7 +172,7 @@ export default function JLPTReadinessCard({ loading, courseMetadata }: JLPTReadi
             {readiness.metrics.map((metric) => (
               <div
                 key={metric.id}
-                className="rounded-2xl border border-border bg-background/25 p-4 transition-colors hover:border-primary/25 hover:bg-background/35"
+                className="rounded-lg border border-border bg-background/25 p-4 transition-colors hover:border-primary/25 hover:bg-background/35"
               >
                 <div className="mb-3 flex items-start justify-between gap-3">
                   <div>
@@ -188,18 +188,18 @@ export default function JLPTReadinessCard({ loading, courseMetadata }: JLPTReadi
             ))}
           </div>
 
-          <div className="rounded-3xl border border-border bg-muted/20 p-5">
+          <div className="rounded-xl border border-border bg-muted/20 p-5">
             <div className="mb-4 flex items-center justify-between gap-4">
               <div>
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
                   Rekomendasi
                 </p>
-                <h3 className="mt-1 text-lg font-black text-foreground">{readiness.focusLabel}</h3>
+                <h3 className="mt-1 text-lg text-foreground">{readiness.focusLabel}</h3>
               </div>
               <Trophy className="shrink-0 text-primary" size={24} />
             </div>
 
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+            <div className="flex flex-col gap-3">
               {readiness.actions.map((action, index) => {
                 const Icon = actionIcons[action.id];
                 return (
@@ -207,7 +207,7 @@ export default function JLPTReadinessCard({ loading, courseMetadata }: JLPTReadi
                     key={`${action.id}-${index}`}
                     asChild
                     variant={index === 0 ? "default" : "outline"}
-                    className="h-auto min-h-[76px] justify-start rounded-2xl px-4 py-3 text-left"
+                    className="h-auto min-h-[76px] justify-start rounded-lg px-4 py-3 text-left"
                   >
                     <Link href={action.href}>
                       <Icon size={16} />

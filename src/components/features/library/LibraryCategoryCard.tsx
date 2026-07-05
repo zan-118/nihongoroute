@@ -61,7 +61,7 @@ export function LibraryCategoryCard({
     >
       <div 
         className={cn(
-          "w-full h-full rounded-[2.5rem] border border-border/80 flex flex-col justify-between p-8 md:p-10 transition-all duration-500 relative overflow-hidden glass",
+          "w-full h-full rounded-2xl md:rounded-3xl border border-border/80 flex flex-col justify-between p-8 md:p-10 transition-all duration-500 relative overflow-hidden glass",
           isHovered ? "scale-[1.01]" : ""
         )}
         style={{
@@ -96,11 +96,11 @@ export function LibraryCategoryCard({
 
           {/* Judul & Ikon Container */}
           <div className="flex items-start justify-between gap-4 mt-2">
-            <h2 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight leading-tight group-hover:text-primary transition-colors duration-300">
+            <h2 className="text-2xl sm:text-3xl text-foreground tracking-tight leading-tight group-hover:text-primary transition-colors duration-300">
               {title}
             </h2>
             <div
-              className="w-14 h-14 shrink-0 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:rotate-6"
+              className="w-14 h-14 shrink-0 rounded-lg flex items-center justify-center transition-all duration-500 group-hover:rotate-6"
               style={{
                 background: `rgba(${accentRgb}, 0.08)`,
                 color: `rgb(${accentRgb})`,

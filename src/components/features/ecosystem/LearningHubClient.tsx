@@ -63,7 +63,7 @@ function StatCard({
   icon: typeof Activity;
 }) {
   return (
-    <Card className="rounded-[28px] border border-border bg-card/35 p-5 shadow-none">
+    <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/35 p-5 shadow-none">
       <div className="flex items-center justify-between gap-4">
         <div>
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
@@ -71,7 +71,7 @@ function StatCard({
           </p>
           <p className="mt-2 font-mono text-3xl font-black text-foreground">{value}</p>
         </div>
-        <div className="flex size-11 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary">
+        <div className="flex size-11 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
           <Icon size={19} aria-hidden="true" />
         </div>
       </div>
@@ -95,7 +95,7 @@ export default function LearningHubClient() {
         <header className="grid gap-6 lg:grid-cols-[1fr_360px] lg:items-end">
           <div className="flex flex-col gap-5">
             <div className="flex items-center gap-3">
-              <div className="flex size-14 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary">
+              <div className="flex size-14 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
                 <Layers size={26} aria-hidden="true" />
               </div>
               <div>
@@ -108,7 +108,7 @@ export default function LearningHubClient() {
               </div>
             </div>
             <div>
-              <h1 className="max-w-4xl text-4xl font-black uppercase leading-none tracking-tight text-foreground md:text-6xl">
+              <h1 className="max-w-4xl text-4xl uppercase leading-none tracking-tight text-foreground md:text-6xl">
                 Learning Hub
               </h1>
               <p className="mt-4 max-w-2xl text-sm font-medium leading-relaxed text-muted-foreground md:text-base">
@@ -118,13 +118,13 @@ export default function LearningHubClient() {
             </div>
           </div>
 
-          <Card className="rounded-[30px] border border-border bg-card/35 p-5 shadow-none">
+          <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/35 p-5 shadow-none">
             <div className="mb-4 flex items-center justify-between gap-3">
               <div>
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
                   Status Ekosistem
                 </p>
-                <h2 className="mt-1 text-xl font-black text-foreground">
+                <h2 className="mt-1 text-xl text-foreground">
                   {events.length > 0 ? "Aktif" : "Siap Dimulai"}
                 </h2>
               </div>
@@ -141,7 +141,7 @@ export default function LearningHubClient() {
           </Card>
         </header>
 
-        <section className="grid gap-4 md:grid-cols-3">
+        <section className="grid gap-4 grid-cols-1 md:grid-cols-12">
           <StatCard label="Aktivitas" value={events.length} icon={Activity} />
           <StatCard label="Reading Aktif" value={activeReadingCount} icon={BookOpen} />
           <StatCard label="Bank Vocab" value={vocabBankCount} icon={BrainCircuit} />
@@ -150,16 +150,16 @@ export default function LearningHubClient() {
         <section className="grid gap-6 xl:grid-cols-[1.25fr_0.75fr]">
           <DailyRoutePanel />
           <div className="flex flex-col gap-6">
-            <Card className="rounded-[34px] border border-border bg-card/35 p-5 shadow-none md:p-6">
+            <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/35 p-5 shadow-none md:p-6">
               <div className="mb-5 flex items-center gap-3">
-                <div className="flex size-10 items-center justify-center rounded-2xl border border-warning/20 bg-warning/10 text-warning">
+                <div className="flex size-10 items-center justify-center rounded-lg border border-warning/20 bg-warning/10 text-warning">
                   <Target size={18} aria-hidden="true" />
                 </div>
                 <div>
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-warning">
                     Adaptive Signals
                   </p>
-                  <h2 className="text-lg font-black tracking-tight text-foreground">
+                  <h2 className="text-lg tracking-tight text-foreground">
                     Titik Lemah
                   </h2>
                 </div>
@@ -171,7 +171,7 @@ export default function LearningHubClient() {
                     <Link
                       key={weakPoint.id}
                       href={weakPoint.href}
-                      className="group rounded-2xl border border-border bg-background/35 p-4 transition-all hover:border-warning/35 hover:bg-muted/20"
+                      className="group rounded-lg border border-border bg-background/35 p-4 transition-all hover:border-warning/35 hover:bg-muted/20"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
@@ -183,7 +183,7 @@ export default function LearningHubClient() {
                               {weakPoint.mistakes}/{weakPoint.attempts}
                             </span>
                           </div>
-                          <h3 className="mt-2 line-clamp-1 text-sm font-black text-foreground">
+                          <h3 className="mt-2 line-clamp-1 text-sm text-foreground">
                             {weakPoint.sourceTitle || weakPoint.label}
                           </h3>
                           <p className="mt-1 line-clamp-2 text-xs font-medium leading-relaxed text-muted-foreground">
@@ -200,7 +200,7 @@ export default function LearningHubClient() {
                   ))}
                 </div>
               ) : (
-                <p className="rounded-2xl border border-dashed border-border bg-muted/15 p-5 text-sm font-bold text-muted-foreground">
+                <p className="rounded-lg border border-dashed border-border bg-muted/15 p-5 text-sm font-bold text-muted-foreground">
                   Belum ada pola kesalahan yang cukup kuat.
                 </p>
               )}
@@ -213,7 +213,7 @@ export default function LearningHubClient() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="group rounded-2xl border border-border bg-card/35 p-4 transition-all hover:border-primary/35 hover:bg-muted/20"
+                    className="group rounded-lg border border-border bg-card/35 p-4 transition-all hover:border-primary/35 hover:bg-muted/20"
                   >
                     <div className="flex items-start gap-3">
                       <div
@@ -225,7 +225,7 @@ export default function LearningHubClient() {
                         <Icon size={16} aria-hidden="true" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <h3 className="text-sm font-black text-foreground">{item.title}</h3>
+                        <h3 className="text-sm text-foreground">{item.title}</h3>
                         <p className="mt-1 line-clamp-2 text-xs font-medium leading-relaxed text-muted-foreground">
                           {item.description}
                         </p>

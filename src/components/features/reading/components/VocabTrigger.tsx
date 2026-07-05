@@ -55,7 +55,7 @@ export default function VocabTrigger({ text, vocabId, children }: VocabTriggerPr
             <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary blur-[4px] opacity-0 group-hover:opacity-60 transition-opacity" />
           </span>
         </DialogTrigger>
-        <DialogContent className="bg-[rgb(var(--card-rgb)/0.6)] backdrop-blur-3xl border border-border shadow-[0_0_50px_rgb(var(--primary-rgb)/0.15)] sm:max-w-[400px] overflow-hidden">
+        <DialogContent className="bg-[rgb(var(--card-rgb)/0.6)]  border border-border shadow-[0_0_50px_rgb(var(--primary-rgb)/0.15)] sm:max-w-[400px] overflow-hidden">
           <div className="absolute top-0 right-0 size-32 bg-primary/10 blur-[50px] rounded-full -mr-16 -mt-16" />
           
           <DialogHeader className="relative z-10">
@@ -78,7 +78,7 @@ export default function VocabTrigger({ text, vocabId, children }: VocabTriggerPr
           </DialogHeader>
 
           <div className="mt-6 space-y-6 relative z-10">
-            <div className="p-4 rounded-2xl bg-[rgb(var(--background-rgb)/0.05)] border border-border space-y-2">
+            <div className="p-4 rounded-lg bg-[rgb(var(--background-rgb)/0.05)] border border-border space-y-2">
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">Makna</span>
               <p className="text-lg font-medium text-foreground/90">
                 {/* Teks tiruan cadangan jika tidak ada di SRS */}
@@ -87,13 +87,13 @@ export default function VocabTrigger({ text, vocabId, children }: VocabTriggerPr
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-               <div className="p-4 rounded-2xl bg-[rgb(var(--background-rgb)/0.05)] border border-border">
+               <div className="p-4 rounded-lg bg-[rgb(var(--background-rgb)/0.05)] border border-border">
                   <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 block mb-1">Status</span>
                   <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
                     {srsInfo ? `Level ${srsInfo.repetition > 5 ? 'Master' : 'Learning'}` : "Not Tracked"}
                   </span>
                </div>
-               <div className="p-4 rounded-2xl bg-[rgb(var(--background-rgb)/0.05)] border border-border">
+               <div className="p-4 rounded-lg bg-[rgb(var(--background-rgb)/0.05)] border border-border">
                   <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 block mb-1">JLPT</span>
                   <span className="text-xs font-bold text-foreground">N5 - N4</span>
                </div>

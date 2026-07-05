@@ -89,7 +89,7 @@ export default function ProfileEditor() {
   return (
     <div className="w-full">
       {isEditing ? (
-        <Card className="p-1 bg-muted border-border flex items-center gap-2 rounded-2xl animate-in fade-in slide-in-from-top-1 shadow-sm">
+        <Card className="p-1 bg-muted border-border flex items-center gap-2 rounded-lg animate-in fade-in slide-in-from-top-1 shadow-sm">
           <Input
             value={editName}
             onChange={(e) => setEditName(e.target.value)}
@@ -127,14 +127,14 @@ export default function ProfileEditor() {
       ) : (
         <div className="flex items-center gap-4 group">
           <div className="relative">
-             <div className="size-16 rounded-2xl bg-gradient-to-br from-primary/10 to-secondary/10 border border-border flex items-center justify-center text-primary shadow-sm group-hover:shadow-md transition-all">
+             <div className="size-16 rounded-lg bg-gradient-to-br from-primary/10 to-secondary/10 border border-border flex items-center justify-center text-primary shadow-sm group-hover:shadow-md transition-all">
                 <UserCircle size={32} />
              </div>
              <div className="absolute -bottom-1 -right-1 size-5 bg-success rounded-full border-2 border-background" />
           </div>
           
           <div className="flex-1">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-foreground tracking-tighter leading-none flex items-center gap-3 sm:gap-4 text-balance">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-foreground tracking-tighter leading-none flex items-center gap-3 sm:gap-4 text-balance">
               <span className="brand-text-gradient">
                 {progress.name || "Pelajar"}
               </span>

@@ -29,12 +29,12 @@ export function KanjiMnemonic({ mnemonics, wordId }: KanjiMnemonicProps) {
   // RENDER KOMPONEN
   // ==========================================
   return (
-    <Card className="p-8 md:p-10 bg-card/20 backdrop-blur-xl border-border rounded-[2.5rem] hover:border-primary/40 transition-all relative overflow-hidden group glass shadow-[0_0_20px_rgba(var(--warning-rgb),0.02)]">
+    <Card className="p-8 md:p-10 bg-card/20  border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all relative overflow-hidden group glass shadow-[0_0_20px_rgba(var(--warning-rgb),0.02)]">
       {mnemonics && (
         <div className="mb-6 relative z-10">
           <div className="flex items-center gap-3 mb-6">
             <Sparkles size={20} className="text-warning" aria-hidden="true" />
-            <h2 className="text-sm font-black uppercase tracking-[0.2em] text-foreground">Memory Mnemonic</h2>
+            <h2 className="text-sm uppercase tracking-[0.2em] text-foreground">Memory Mnemonic</h2>
           </div>
           <div className="prose dark:prose-invert prose-sm max-w-none prose-p:leading-relaxed prose-p:text-warning italic font-medium">
             {typeof mnemonics === "string"

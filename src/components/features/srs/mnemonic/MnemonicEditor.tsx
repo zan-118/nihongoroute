@@ -154,7 +154,7 @@ export function MnemonicEditor({ wordId, className, compact = false }: MnemonicE
               placeholder="Tulis cerita atau asosiasi unikmu untuk mengingat kata ini... (Ctrl+Enter untuk simpan)"
               aria-label="Tulis jembatan keledai kustom"
               className={cn(
-                "w-full resize-none rounded-xl border bg-card/50 backdrop-blur-sm px-4 py-3",
+                "w-full resize-none rounded-xl border bg-card/50  px-4 py-3",
                 "text-sm text-foreground placeholder:text-muted-foreground/40 leading-relaxed",
                 "border-primary/30 focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20",
                 "transition-all duration-200"

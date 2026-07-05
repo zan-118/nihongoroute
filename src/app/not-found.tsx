@@ -34,11 +34,11 @@ export default function NotFound() {
         {/* Elemen Tematik Jepang */}
         <div className="space-y-3 mb-6">
           <div className="flex justify-center mb-4">
-            <div className="size-20 bg-destructive/10 rounded-2xl flex items-center justify-center border border-destructive/20 shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.15)] animate-premium-bounce">
+            <div className="size-20 bg-destructive/10 rounded-lg flex items-center justify-center border border-destructive/20 shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.15)] animate-premium-bounce">
               <MapPinOff className="text-destructive animate-pulse" size={36} />
             </div>
           </div>
-          <h1 className="text-3xl font-black tracking-tight text-foreground font-japanese">
+          <h1 className="text-3xl tracking-tight text-foreground font-japanese">
             道に迷いましたか？
           </h1>
           <p className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em]">
@@ -47,7 +47,7 @@ export default function NotFound() {
         </div>
 
         <div className="space-y-3 mb-8">
-          <h2 className="text-xl font-black text-foreground uppercase tracking-tight">
+          <h2 className="text-xl text-foreground uppercase tracking-tight">
             Rute Tidak Ditemukan
           </h2>
           <p className="text-xs md:text-sm text-muted-foreground leading-relaxed font-medium">

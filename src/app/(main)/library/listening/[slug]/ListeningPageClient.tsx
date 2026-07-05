@@ -115,7 +115,7 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
                 </span>
               )}
             </div>
-            <h1 className="text-xl md:text-3xl font-black text-foreground tracking-tight leading-tight uppercase font-sans">
+            <h1 className="text-xl md:text-3xl text-foreground tracking-tight leading-tight uppercase">
               {data.title}
             </h1>
           </div>

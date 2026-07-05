@@ -49,7 +49,7 @@ export default function FeedbackWidget({ forceOpen, onOpenChange }: FeedbackWidg
   return (
     <>
       <Dialog open={openState} onOpenChange={setOpenState}>
-        <DialogContent className="sm:max-w-[425px] border-border bg-card bg-background text-foreground transition-colors duration-300 shadow-2xl rounded-3xl">
+        <DialogContent className="sm:max-w-[425px] border-border bg-card bg-background text-foreground transition-colors duration-300 shadow-2xl rounded-xl">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold text-foreground flex items-center gap-2 font-black uppercase tracking-tight">
               <MessageSquarePlus aria-hidden="true" className="text-primary" />

@@ -47,15 +47,15 @@ export default function MainError({
         <div className="size-[450px] bg-warning/10 rounded-full blur-[100px] opacity-25 absolute -bottom-10 -right-10" />
       </div>
       
-      <Card className="p-8 md:p-12 border border-border/80 max-w-lg w-full relative z-10 rounded-[2.5rem] bg-card/85 backdrop-blur-xl shadow-[0_20px_50px_rgba(var(--foreground-rgb),0.3)] hover:shadow-[0_25px_60px_rgb(var(--destructive-rgb)/0.1)] transition-all duration-500 glass">
+      <Card className="p-8 md:p-12 border border-border/80 max-w-lg w-full relative z-10 rounded-[2.5rem] bg-card/85  shadow-[0_20px_50px_rgba(var(--foreground-rgb),0.3)] hover:shadow-[0_25px_60px_rgb(var(--destructive-rgb)/0.1)] transition-all duration-500 glass">
         {/* Kilau Sudut Atas */}
         <div className="absolute top-0 right-0 size-24 bg-gradient-to-br from-destructive/10 to-transparent blur-md rounded-tr-[2.5rem] pointer-events-none" />
 
-        <div className="size-20 mx-auto bg-destructive/10 rounded-2xl flex items-center justify-center mb-6 border border-destructive/20 shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.15)] animate-pulse">
+        <div className="size-20 mx-auto bg-destructive/10 rounded-lg flex items-center justify-center mb-6 border border-destructive/20 shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.15)] animate-pulse">
           <AlertTriangle className="text-destructive" size={36} />
         </div>
         
-        <h1 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tight mb-3 leading-tight font-japanese">
+        <h1 className="text-2xl md:text-3xl text-foreground uppercase tracking-tight mb-3 leading-tight font-japanese">
           Oops! Ada Kendala Teknis
         </h1>
         
@@ -64,7 +64,7 @@ export default function MainError({
         </p>
 
         {process.env.NODE_ENV === "development" && (
-          <div className="mb-8 p-5 bg-muted/60 rounded-2xl border border-destructive/20 text-left overflow-auto max-h-36 backdrop-blur-md">
+          <div className="mb-8 p-5 bg-muted/60 rounded-lg border border-destructive/20 text-left overflow-auto max-h-36 ">
             <p className="text-[10px] uppercase tracking-[0.2em] text-destructive font-black mb-2">Error Log Console:</p>
             <code className="text-xs text-destructive/90 font-mono break-all font-semibold italic">
               {error.message || "Unknown error occurred"}

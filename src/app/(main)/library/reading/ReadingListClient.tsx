@@ -87,7 +87,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
             <BookOpen size={24} />
             <span className="text-[10px] font-black uppercase tracking-[0.4em]">Perpustakaan Digital</span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-black text-foreground tracking-tighter">
+          <h1 className="text-4xl md:text-6xl text-foreground tracking-tighter">
             Graded Reading
           </h1>
           <p className="text-muted-foreground text-lg max-w-2xl font-medium">
@@ -100,13 +100,13 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground size-5" aria-hidden="true" />
             <Input 
               placeholder="Cari judul atau kategori bacaan..." 
-              className="pl-12 h-14 bg-[rgb(var(--card-rgb)/0.4)] backdrop-blur-xl border border-border rounded-2xl text-lg shadow-2xl focus:ring-[rgb(var(--primary-rgb)/0.2)]"
+              className="pl-12 h-14 bg-[rgb(var(--card-rgb)/0.4)]  border border-border rounded-lg text-lg shadow-2xl focus:ring-[rgb(var(--primary-rgb)/0.2)]"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-border bg-card/35 p-2 backdrop-blur-xl w-fit max-w-full">
+          <div className="flex flex-wrap items-center gap-2 rounded-lg border border-border bg-card/35 p-2  w-fit max-w-full">
             {JLPT_FILTERS.map((item) => (
               <Button
                 key={item}
@@ -126,7 +126,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
 
       <div className="relative">
         {isFetching && (
-          <div className="absolute inset-0 z-50 flex items-center justify-center bg-[rgb(var(--background-rgb)/0.5)] backdrop-blur-sm rounded-[2rem]">
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-[rgb(var(--background-rgb)/0.5)]  rounded-[2rem]">
             <Loader2 className="size-10 animate-spin text-primary" />
           </div>
         )}
@@ -148,7 +148,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
               }}
             >
               <Link href={ROUTES.LIBRARY.READING(material.slug)}>
-                <div className="group h-full p-8 md:p-10 rounded-[2.5rem] bg-card/35 backdrop-blur-xl border border-border hover:border-primary/45 shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] hover:shadow-[0_20px_50px_rgba(var(--primary-rgb),0.1)] transition-all duration-500 relative overflow-hidden flex flex-col justify-between cursor-pointer glass">
+                <div className="group h-full p-8 md:p-10 rounded-[2.5rem] bg-card/35  border border-border hover:border-primary/45 shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] hover:shadow-[0_20px_50px_rgba(var(--primary-rgb),0.1)] transition-all duration-500 relative overflow-hidden flex flex-col justify-between cursor-pointer glass">
                   {/* Efek Kilau saat Melayang */}
                   <div className="absolute top-0 right-0 size-32 bg-primary/5 blur-[50px] rounded-full -mr-16 -mt-16 group-hover:bg-primary/10 transition-all duration-500" />
                   
@@ -184,7 +184,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
                       <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                         {material.category || "General Reading"}
                       </span>
-                      <h3 className="text-2xl font-black text-foreground leading-tight group-hover:text-primary transition-colors line-clamp-2">
+                      <h3 className="text-2xl text-foreground leading-tight group-hover:text-primary transition-colors line-clamp-2">
                         {material.title}
                       </h3>
                     </div>

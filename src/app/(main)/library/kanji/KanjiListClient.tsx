@@ -152,14 +152,14 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
       ) : (
         <div className="relative">
           {isFetching && (
-            <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-sm rounded-[2rem]">
+            <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50  rounded-[2rem]">
               <Loader2 className="size-10 animate-spin text-primary" />
             </div>
           )}
 
           <div className="flex flex-col gap-2.5 min-h-[400px]">
             {/* Kepala Tabel (Disembunyikan di Ponsel / Responsif) */}
-            <div className="hidden md:grid md:grid-cols-12 gap-4 px-6 py-4 bg-muted/30 border border-border rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+            <div className="hidden md:grid md:grid-cols-12 gap-4 px-6 py-4 bg-muted/30 border border-border rounded-lg text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
               <div className="col-span-2">Kanji</div>
               <div className="col-span-6">Arti / Definisi</div>
               <div className="col-span-2 text-center">Level JLPT</div>
@@ -169,7 +169,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
             {kanjis.map((kanji) => (
               <div
                 key={kanji.id}
-                className="flex md:grid md:grid-cols-12 items-center justify-between gap-6 px-6 py-4 bg-card/45 border border-border/80 hover:border-primary/45 transition-all duration-300 rounded-[1.5rem] shadow-[0_0_20px_rgba(var(--primary-rgb),0.015)] group glass"
+                className="flex md:grid md:grid-cols-12 items-center justify-between gap-6 px-6 py-4 bg-card/45 border border-border/80 hover:border-primary/45 hover:shadow-md transition-all duration-300 rounded-[1.5rem] group glass"
               >
                 {/* Sisi Kiri: Kanji & Arti (Flex di Seluler, Kolom Grid di Desktop) */}
                 <div className="flex-1 md:col-span-8 flex flex-col md:grid md:grid-cols-8 md:gap-4 md:items-center min-w-0 pr-2">
@@ -205,7 +205,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
                 <div className="size-20 rounded-full bg-muted/20 flex items-center justify-center mb-6">
                   <Search size={32} className="text-muted-foreground/50" aria-hidden="true" />
                 </div>
-                <h3 className="text-xl font-bold text-foreground">Data Kanji tidak ditemukan</h3>
+                <h3 className="text-xl text-foreground">Data Kanji tidak ditemukan</h3>
                 <p className="text-muted-foreground">Silakan periksa kembali kata kunci atau sesuaikan filter level JLPT.</p>
               </div>
             )}

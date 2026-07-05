@@ -50,7 +50,7 @@ export default function ExamError({
           <span className="text-4xl block">⚠️</span>
         </div>
 
-        <h1 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tight mb-4">
+        <h1 className="text-2xl md:text-3xl text-foreground uppercase tracking-tight mb-4">
           Gagal Memuat Ujian
         </h1>
 

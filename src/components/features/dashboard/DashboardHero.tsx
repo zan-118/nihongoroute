@@ -78,7 +78,7 @@ export default function DashboardHero({
           <div className="flex flex-col items-center lg:items-start gap-[13px] mb-[34px]">
             <Badge 
               variant="outline" 
-              className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] flex items-center gap-2 w-fit border-border backdrop-blur-md transition-all ${
+              className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] flex items-center gap-2 w-fit border-border  transition-all ${
                 isAuthenticated 
                   ? 'bg-success/5 text-success border-success/20' 
                   : 'bg-primary/5 text-primary border-primary/20'
@@ -109,9 +109,9 @@ export default function DashboardHero({
         <div className="absolute -top-[55px] -right-[55px] size-[233px] bg-primary/5 rounded-full blur-[89px] pointer-events-none" />
         
         {loading ? (
-          <Skeleton className="h-[320px] w-full rounded-[34px]" />
+          <Skeleton className="h-[320px] w-full rounded-2xl" />
         ) : (
-        <Card className="p-[34px] md:p-[55px] rounded-[34px] bg-card/20 backdrop-blur-xl border border-border shadow-2xl relative overflow-hidden group transition-all duration-500 hover:border-primary/40 hover:shadow-[0_0_50px_rgb(var(--primary-rgb)/0.15)]">
+        <Card className="p-[34px] md:p-[55px] rounded-2xl bg-card/20  border border-border shadow-2xl relative overflow-hidden group transition-all duration-500 hover:border-primary/40 hover:shadow-[0_0_50px_rgb(var(--primary-rgb)/0.15)]">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-750" />
           
           <div className="relative z-10 flex flex-col items-center text-center">
@@ -134,7 +134,7 @@ export default function DashboardHero({
                 ]
               }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              className={`w-[89px] h-[89px] rounded-[34px] flex items-center justify-center mb-[34px] border transition-all duration-500 ${
+              className={`w-[89px] h-[89px] rounded-xl flex items-center justify-center mb-[34px] border transition-all duration-500 ${
                 dueCount > 0 
                   ? 'bg-primary/15 border-primary/30 text-primary shadow-[0_0_20px_rgb(var(--primary-rgb)/0.1)]' 
                   : 'bg-success/15 border-success/30 text-success shadow-[0_0_20px_rgb(var(--success-rgb)/0.1)]'
@@ -186,12 +186,12 @@ export default function DashboardHero({
             <div className="flex flex-col sm:flex-row gap-[13px] w-full max-w-md">
               {dueCount > 0 ? (
                 <>
-                  <Button asChild className="flex-1 h-[55px] bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-[0.15em] rounded-2xl text-[10px] transition-all shadow-lg shadow-primary/20 hover:shadow-primary/30 active:scale-[0.98]">
+                  <Button asChild className="flex-1 h-[55px] bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-[0.15em] rounded-lg text-[10px] transition-all shadow-lg shadow-primary/20 hover:shadow-primary/30 active:scale-[0.98]">
                     <Link href="/review">
                       Mulai Review <ArrowRight size={14} className="ml-2" />
                     </Link>
                   </Button>
-                  <Button asChild variant="outline" className="flex-1 h-[55px] bg-card/50 backdrop-blur-md border-border hover:bg-card hover:border-primary/30 rounded-2xl text-[10px] font-black uppercase tracking-[0.15em] transition-all active:scale-[0.98]">
+                  <Button asChild variant="outline" className="flex-1 h-[55px] bg-card/50  border-border hover:bg-card hover:border-primary/30 rounded-lg text-[10px] font-black uppercase tracking-[0.15em] transition-all active:scale-[0.98]">
                     <Link href="/review?mode=quick">
                       <Zap size={14} className="mr-2 text-primary" /> Kuis Kilat
                     </Link>
@@ -199,12 +199,12 @@ export default function DashboardHero({
                 </>
               ) : (
                 <>
-                  <Button asChild className="flex-1 h-[55px] bg-foreground text-background hover:bg-foreground/90 font-black uppercase tracking-[0.15em] rounded-2xl text-[10px] transition-all shadow-xl active:scale-[0.98]">
+                  <Button asChild className="flex-1 h-[55px] bg-foreground text-background hover:bg-foreground/90 font-black uppercase tracking-[0.15em] rounded-lg text-[10px] transition-all shadow-xl active:scale-[0.98]">
                     <Link href="/courses">
                       Mulai Pelajaran <BookMarked size={14} className="ml-2" />
                     </Link>
                   </Button>
-                  <Button asChild variant="outline" className="flex-1 h-[55px] bg-card/50 backdrop-blur-md border-border hover:bg-card hover:border-primary/30 rounded-2xl text-[10px] font-black uppercase tracking-[0.15em] transition-all active:scale-[0.98]">
+                  <Button asChild variant="outline" className="flex-1 h-[55px] bg-card/50  border-border hover:bg-card hover:border-primary/30 rounded-lg text-[10px] font-black uppercase tracking-[0.15em] transition-all active:scale-[0.98]">
                     <Link href="/review?mode=quick">
                       <Zap size={14} className="mr-2 text-primary" /> Kuis Kilat
                     </Link>
@@ -234,13 +234,13 @@ export default function DashboardHero({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1 }}
-            className="mt-[34px] p-[21px] rounded-[21px] bg-card/10 backdrop-blur-xl border border-border flex gap-[21px] items-center group hover:bg-card/20 transition-all duration-300 shadow-none"
+            className="mt-[34px] p-[21px] rounded-xl bg-card/10  border border-border flex gap-[21px] items-center group hover:bg-card/20 transition-all duration-300 shadow-none"
           >
             <div className="shrink-0 size-[34px] rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
               <Sparkles size={16} />
             </div>
             <div>
-              <h4 className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] mb-1">Tips Hari Ini</h4>
+              <h4 className="text-[10px] text-primary uppercase tracking-[0.2em] mb-1">Tips Hari Ini</h4>
               <p className="text-xs text-muted-foreground leading-relaxed font-medium">
                 Selesaikan review harian sebelum pukul 10 malam untuk menjaga bonus XP dan semangatmu!
               </p>

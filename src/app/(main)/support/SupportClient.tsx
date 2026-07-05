@@ -107,7 +107,7 @@ function DonationCard({
         <div className="text-5xl sm:text-6xl mb-6 sm:mb-8 group-hover:scale-110 group-hover:rotate-3 transition-transform origin-left duration-300 drop-shadow-xl select-none">
           {icon}
         </div>
-        <h3 className="text-2xl sm:text-3xl font-black text-foreground italic mb-2 uppercase tracking-tighter">
+        <h3 className="text-2xl sm:text-3xl text-foreground italic mb-2 uppercase tracking-tighter">
           {title}
         </h3>
         <p className="text-xs sm:text-xs text-muted-foreground/80 font-bold uppercase tracking-widest mb-8 sm:mb-10 leading-relaxed">
@@ -133,11 +133,11 @@ function StatItem({ icon, title, desc, color }: StatItemProps) {
   return (
     <div className="group text-center sm:text-left flex flex-col items-center sm:items-start">
       <div
-        className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 border transition-all duration-200 shadow-md ${color} group-hover:scale-105`}
+        className={`w-12 h-12 rounded-lg flex items-center justify-center mb-6 border transition-all duration-200 shadow-md ${color} group-hover:scale-105`}
       >
         {icon}
       </div>
-      <h4 className="text-foreground font-black uppercase italic tracking-widest mb-3 text-sm sm:text-base">
+      <h4 className="text-foreground uppercase italic tracking-widest mb-3 text-sm sm:text-base">
         {title}
       </h4>
       <p className="text-xs sm:text-sm text-muted-foreground/70 leading-relaxed italic font-semibold">
@@ -208,7 +208,7 @@ export default function SupportClient() {
         <div className="absolute top-[40%] left-[20%] size-[240px] bg-destructive/5 rounded-full blur-[60px] pointer-events-none" />
       </div>
 
-      <nav className="p-4 sm:p-6 sticky top-0 bg-background/80 backdrop-blur-md z-50 border-b border-border/80 transition-all">
+      <nav className="p-4 sm:p-6 sticky top-0 bg-background/80  z-50 border-b border-border/80 transition-all">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
           <Button
             onClick={() => back()}
@@ -311,11 +311,11 @@ export default function SupportClient() {
           <div className="absolute -top-28 -right-28 size-56 bg-primary/5 blur-[55px] rounded-full pointer-events-none" />
 
           <div className="flex items-center gap-4 mb-6 relative z-10">
-            <div className="size-12 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center shadow-inner relative overflow-hidden">
+            <div className="size-12 rounded-lg bg-primary/10 border border-primary/30 flex items-center justify-center shadow-inner relative overflow-hidden">
               <Zap className="text-primary drop-shadow-[0_0_8px_rgb(var(--primary-rgb)/0.4)] relative z-10" size={22} />
             </div>
             <div>
-              <h3 className="text-lg sm:text-xl font-black text-foreground uppercase italic tracking-wider leading-none">
+              <h3 className="text-lg sm:text-xl text-foreground uppercase italic tracking-wider leading-none">
                 Bilah Target Server
               </h3>
               <p className="text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">
@@ -351,22 +351,22 @@ export default function SupportClient() {
           </div>
 
           {/* Interactive Cost Breakdown Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 relative z-10 pt-4 border-t border-border/40">
-            <div className="p-4 rounded-2xl border border-border/50 bg-card/30 hover:border-warning/50 hover:bg-warning/[0.02] transition-all duration-200">
+          <div className="flex flex-col md:flex-row flex-wrap gap-4 relative z-10 pt-4 border-t border-border/40">
+            <div className="p-4 rounded-lg border border-border/50 bg-card/30 hover:border-warning/50 hover:bg-warning/[0.02] transition-all duration-200">
               <span className="text-[10px] font-black uppercase text-warning tracking-widest block mb-1">Database Server</span>
               <span className="text-sm font-black text-foreground block">Supabase: Rp 150K/bln</span>
               <p className="text-[10px] text-muted-foreground/80 leading-relaxed font-semibold italic mt-1">
                 Menyimpan kosakata, ulasan SRS, dan data kemajuan member secara luring.
               </p>
             </div>
-            <div className="p-4 rounded-2xl border border-border/50 bg-card/30 hover:border-primary/50 hover:bg-primary/[0.02] transition-all duration-200">
+            <div className="p-4 rounded-lg border border-border/50 bg-card/30 hover:border-primary/50 hover:bg-primary/[0.02] transition-all duration-200">
               <span className="text-[10px] font-black uppercase text-primary tracking-widest block mb-1">Hosting & CDN</span>
               <span className="text-sm font-black text-foreground block">Vercel: Rp 200K/bln</span>
               <p className="text-[10px] text-muted-foreground/80 leading-relaxed font-semibold italic mt-1">
                 Menjamin loading instan dan rendering Next.js yang ngebut di seluruh dunia.
               </p>
             </div>
-            <div className="p-4 rounded-2xl border border-border/50 bg-card/30 hover:border-secondary/5 hover:bg-secondary/[0.02] transition-all duration-200">
+            <div className="p-4 rounded-lg border border-border/50 bg-card/30 hover:border-secondary/5 hover:bg-secondary/[0.02] transition-all duration-200">
               <span className="text-[10px] font-black uppercase text-secondary tracking-widest block mb-1">Domain & Core</span>
               <span className="text-sm font-black text-foreground block">Domain: Rp 100K/bln</span>
               <p className="text-[10px] text-muted-foreground/80 leading-relaxed font-semibold italic mt-1">
@@ -384,16 +384,16 @@ export default function SupportClient() {
           <div className="absolute -bottom-28 -left-28 size-56 bg-primary/5 blur-[55px] rounded-full pointer-events-none" />
 
           <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-4 mb-12 relative z-10 text-center sm:text-left">
-            <div className="size-14 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center shadow-inner relative overflow-hidden">
+            <div className="size-14 rounded-lg bg-primary/10 border border-primary/30 flex items-center justify-center shadow-inner relative overflow-hidden">
               <div className="absolute inset-0 bg-primary/10" />
               <ShieldCheck className="text-primary drop-shadow-[0_0_8px_rgb(var(--primary-rgb)/0.4)] relative z-10" size={26} />
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-foreground uppercase italic tracking-widest leading-none pt-1">
+            <h2 className="text-2xl sm:text-3xl text-foreground uppercase italic tracking-widest leading-none pt-1">
               Alokasi Dana
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-10 relative z-10">
+          <div className="flex flex-col md:flex-row flex-wrap justify-center gap-8 sm:gap-10 relative z-10">
             <StatItem
               icon={<Zap className="text-warning drop-shadow-[0_0_8px_rgb(var(--warning-rgb)/0.4)]" size={22} />}
               title="Infrastruktur"
@@ -424,11 +424,11 @@ export default function SupportClient() {
 
           <div className="flex flex-col sm:flex-row justify-between items-center gap-6 mb-8 relative z-10 border-b border-border/40 pb-6">
             <div className="flex items-center gap-4">
-              <div className="size-12 rounded-2xl bg-secondary/10 border border-secondary/30 flex items-center justify-center shadow-inner">
+              <div className="size-12 rounded-lg bg-secondary/10 border border-secondary/30 flex items-center justify-center shadow-inner">
                 <Users className="text-secondary drop-shadow-[0_0_8px_rgb(var(--secondary-rgb)/0.4)]" size={22} />
               </div>
               <div>
-                <h3 className="text-lg sm:text-xl font-black text-foreground uppercase italic tracking-wider leading-none">
+                <h3 className="text-lg sm:text-xl text-foreground uppercase italic tracking-wider leading-none">
                   Pejuang Dukungan
                 </h3>
                 <p className="text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">
@@ -438,7 +438,7 @@ export default function SupportClient() {
             </div>
 
             {/* Filter Tabs */}
-            <div className="flex gap-2 p-1 rounded-xl bg-card/80 border border-border/50 backdrop-blur-sm">
+            <div className="flex gap-2 p-1 rounded-xl bg-card/80 border border-border/50 ">
               <button type="button"
                 onClick={() => setSupporterFilter("top")}
                 className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
@@ -465,9 +465,9 @@ export default function SupportClient() {
           {/* Supporters Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
             {sortedSupporters.length === 0 ? (
-              <div className="col-span-1 md:col-span-2 p-10 rounded-[2rem] border border-dashed border-border/80 text-center bg-card/20 backdrop-blur-sm relative overflow-hidden group shadow-inner">
+              <div className="col-span-1 md:col-span-2 p-10 rounded-[2rem] border border-dashed border-border/80 text-center bg-card/20  relative overflow-hidden group shadow-inner">
                 <div className="text-4xl mb-4">☕</div>
-                <h4 className="text-base font-black text-foreground uppercase tracking-wider mb-2">
+                <h4 className="text-base text-foreground uppercase tracking-wider mb-2">
                   Belum Ada Pejuang Dukungan
                 </h4>
                 <p className="text-xs text-muted-foreground/80 leading-relaxed font-semibold italic max-w-sm mx-auto mb-6 px-4">
@@ -507,7 +507,7 @@ export default function SupportClient() {
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: Math.min(idx * 0.03, 0.24) }}
-                    className={`p-5 rounded-2xl border transition-all duration-200 flex gap-4 items-start ${tierStyle}`}
+                    className={`p-5 rounded-lg border transition-all duration-200 flex gap-4 items-start ${tierStyle}`}
                     style={{
                       boxShadow: `0 6px 18px rgba(var(--foreground-rgb),0.12), 0 0 8px ${glowEffect}`,
                     }}
@@ -520,7 +520,7 @@ export default function SupportClient() {
 
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-start gap-2">
-                        <h4 className="text-sm font-black text-foreground truncate">{s.name}</h4>
+                        <h4 className="text-sm text-foreground truncate">{s.name}</h4>
                         <span className="text-xs font-black text-primary whitespace-nowrap">
                           Rp {s.amount.toLocaleString("id-ID")}
                         </span>
@@ -549,11 +549,11 @@ export default function SupportClient() {
           <div className="absolute -top-28 -left-28 size-56 bg-primary/5 blur-[55px] rounded-full pointer-events-none" />
 
           <div className="flex items-center gap-4 mb-8 relative z-10 border-b border-border/40 pb-6">
-            <div className="size-12 rounded-2xl bg-warning/10 border border-warning/30 flex items-center justify-center shadow-inner">
+            <div className="size-12 rounded-lg bg-warning/10 border border-warning/30 flex items-center justify-center shadow-inner">
               <HelpCircle className="text-warning drop-shadow-[0_0_8px_rgb(var(--warning-rgb)/0.4)]" size={22} />
             </div>
             <div>
-              <h3 className="text-lg sm:text-xl font-black text-foreground uppercase italic tracking-wider leading-none">
+              <h3 className="text-lg sm:text-xl text-foreground uppercase italic tracking-wider leading-none">
                 Tanya Jawab
               </h3>
               <p className="text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">
@@ -569,7 +569,7 @@ export default function SupportClient() {
               return (
                 <div
                   key={faq.question}
-                  className="p-5 rounded-2xl border border-border/60 bg-card/20 hover:border-primary/40 hover:bg-primary/[0.01] transition-all duration-200"
+                  className="p-5 rounded-lg border border-border/60 bg-card/20 hover:border-primary/40 hover:bg-primary/[0.01] transition-all duration-200"
                 >
                   <button type="button"
                     onClick={() => setExpandedFAQ(isOpen ? -1 : idx)}
@@ -617,7 +617,7 @@ export default function SupportClient() {
             <Button
               onClick={() => push("/onboarding")}
               variant="outline"
-              className="rounded-2xl h-14 px-8 border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary font-black uppercase tracking-widest text-xs transition-all duration-200 group shadow-sm"
+              className="rounded-lg h-14 px-8 border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary font-black uppercase tracking-widest text-xs transition-all duration-200 group shadow-sm"
             >
               Mulai Ulang Tutorial <ChevronRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>

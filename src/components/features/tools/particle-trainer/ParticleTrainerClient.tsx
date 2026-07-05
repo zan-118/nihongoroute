@@ -68,12 +68,12 @@ export default function ParticleTrainerClient() {
           </Button>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">
-              <div className="flex size-12 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary">
+              <div className="flex size-12 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
                 <Target size={24} aria-hidden="true" />
               </div>
               <Badge className="w-fit rounded-xl px-3 py-1">Particle Trainer</Badge>
             </div>
-            <h1 className="max-w-3xl text-4xl font-black uppercase tracking-tight text-foreground md:text-6xl">
+            <h1 className="max-w-3xl text-4xl uppercase tracking-tight text-foreground md:text-6xl">
               Latihan Partikel
             </h1>
             <p className="max-w-2xl text-sm font-medium leading-relaxed text-muted-foreground">
@@ -83,7 +83,7 @@ export default function ParticleTrainerClient() {
         </header>
 
         <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
-          <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-2xl md:p-8">
+          <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-2xl md:p-8">
             <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <Badge variant="outline" className="mb-3 rounded-xl">
@@ -94,7 +94,7 @@ export default function ParticleTrainerClient() {
                     <span key={`${question.id}-${index}`}>
                       {part}
                       {index === 0 ? (
-                        <span className="mx-2 inline-flex min-w-16 items-center justify-center rounded-2xl border border-dashed border-primary/40 bg-primary/10 px-4 py-1 text-primary">
+                        <span className="mx-2 inline-flex min-w-16 items-center justify-center rounded-lg border border-dashed border-primary/40 bg-primary/10 px-4 py-1 text-primary">
                           {selectedParticle || "?"}
                         </span>
                       ) : null}
@@ -102,7 +102,7 @@ export default function ParticleTrainerClient() {
                   ))}
                 </p>
               </div>
-              <div className="rounded-2xl border border-border bg-muted/15 p-4">
+              <div className="rounded-lg border border-border bg-muted/15 p-4">
                 <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                   Akurasi
                 </p>
@@ -112,7 +112,7 @@ export default function ParticleTrainerClient() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <div className="flex flex-wrap items-center justify-center gap-3">
               {optionList.map((particle) => {
                 const isSelected = selectedParticle === particle;
                 const isAnswer = question.answer === particle;
@@ -123,7 +123,7 @@ export default function ParticleTrainerClient() {
                     onClick={() => handleSelect(particle)}
                     disabled={isAnswered}
                     className={cn(
-                      "rounded-2xl border p-5 font-japanese text-3xl font-black transition-all",
+                      "rounded-lg border p-5 font-japanese text-3xl font-black transition-all",
                       !isAnswered && "border-border bg-background/45 hover:border-primary/40 hover:bg-primary/10",
                       isAnswered && isAnswer && "border-success/35 bg-success/10 text-success",
                       isAnswered && isSelected && !isAnswer && "border-destructive/35 bg-destructive/10 text-destructive",
@@ -160,17 +160,17 @@ export default function ParticleTrainerClient() {
           </Card>
 
           <div className="flex flex-col gap-6">
-            <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-xl">
+            <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl">
               <div className="mb-4 flex items-center gap-2">
                 <Sparkles size={16} className="text-primary" aria-hidden="true" />
-                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground">
+                <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
                   Feedback
                 </h2>
               </div>
               {isAnswered ? (
                 <div
                   className={cn(
-                    "rounded-2xl border p-5",
+                    "rounded-lg border p-5",
                     isCorrect
                       ? "border-success/25 bg-success/10 text-success"
                       : "border-warning/25 bg-warning/10 text-warning"
@@ -190,12 +190,12 @@ export default function ParticleTrainerClient() {
                   </p>
                 </div>
               ) : (
-                <p className="rounded-2xl border border-dashed border-border bg-muted/15 p-5 text-sm font-medium text-muted-foreground">
+                <p className="rounded-lg border border-dashed border-border bg-muted/15 p-5 text-sm font-medium text-muted-foreground">
                   Jawab dulu untuk melihat penjelasan.
                 </p>
               )}
               {(showHint || isAnswered) && (
-                <p className="mt-4 rounded-2xl border border-primary/20 bg-primary/10 p-4 text-sm font-bold text-primary">
+                <p className="mt-4 rounded-lg border border-primary/20 bg-primary/10 p-4 text-sm font-bold text-primary">
                   {question.hint}
                 </p>
               )}
@@ -204,7 +204,7 @@ export default function ParticleTrainerClient() {
               </p>
             </Card>
 
-            <Card className="rounded-[2rem] border border-border bg-muted/15 p-5">
+            <Card className="rounded-2xl md:rounded-3xl border border-border bg-muted/15 p-5">
               <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                 Progress Set
               </p>

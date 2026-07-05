@@ -133,12 +133,12 @@ export default function CounterTrainerClient({
           </Button>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">
-              <div className="flex size-12 items-center justify-center rounded-2xl border border-warning/20 bg-warning/10 text-warning">
+              <div className="flex size-12 items-center justify-center rounded-lg border border-warning/20 bg-warning/10 text-warning">
                 <Hash size={24} aria-hidden="true" />
               </div>
               <Badge className="w-fit rounded-xl px-3 py-1">Counter Trainer</Badge>
             </div>
-            <h1 className="max-w-3xl text-4xl font-black uppercase tracking-tight text-foreground md:text-6xl">
+            <h1 className="max-w-3xl text-4xl uppercase tracking-tight text-foreground md:text-6xl">
               Latihan Counter
             </h1>
             <p className="max-w-2xl text-sm font-medium leading-relaxed text-muted-foreground">
@@ -158,7 +158,7 @@ export default function CounterTrainerClient({
         </header>
 
         <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
-          <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-2xl md:p-8">
+          <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-2xl md:p-8">
             <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <Badge variant="outline" className="mb-3 rounded-xl">
@@ -171,7 +171,7 @@ export default function CounterTrainerClient({
                   {question.translation}
                 </p>
               </div>
-              <div className="w-full rounded-2xl border border-border bg-muted/15 p-4 sm:w-44">
+              <div className="w-full rounded-lg border border-border bg-muted/15 p-4 sm:w-44">
                 <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                   Akurasi
                 </p>
@@ -180,7 +180,7 @@ export default function CounterTrainerClient({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+            <div className="flex flex-wrap items-center justify-center gap-3">
               {COUNTER_OPTIONS.map((counter) => {
                 const isSelected = selectedCounter === counter;
                 const isAnswer = isCounterAnswerCorrect(question.answer, counter);
@@ -192,7 +192,7 @@ export default function CounterTrainerClient({
                     onClick={() => handleSelect(counter)}
                     disabled={hasAnswered}
                     className={cn(
-                      "flex aspect-square min-h-20 items-center justify-center rounded-2xl border font-japanese text-4xl font-black transition-all",
+                      "flex aspect-square min-h-20 items-center justify-center rounded-lg border font-japanese text-4xl font-black transition-all",
                       !hasAnswered && "border-border bg-background/45 hover:border-warning/40 hover:bg-warning/10",
                       hasAnswered && isAnswer && "border-success/35 bg-success/10 text-success",
                       hasAnswered && isSelected && !isAnswer && "border-destructive/35 bg-destructive/10 text-destructive",
@@ -229,7 +229,7 @@ export default function CounterTrainerClient({
           </Card>
 
           <div className="flex flex-col gap-6">
-            <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-xl">
+            <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl">
               <div className="mb-4 flex items-center gap-2">
                 {hasAnswered ? (
                   isCorrect ? (
@@ -240,7 +240,7 @@ export default function CounterTrainerClient({
                 ) : (
                   <Sparkles size={16} className="text-primary" aria-hidden="true" />
                 )}
-                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground">
+                <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
                   Feedback
                 </h2>
               </div>
@@ -248,7 +248,7 @@ export default function CounterTrainerClient({
               {hasAnswered ? (
                 <div
                   className={cn(
-                    "rounded-2xl border p-5",
+                    "rounded-lg border p-5",
                     isCorrect ? "border-success/25 bg-success/10" : "border-warning/25 bg-warning/10"
                   )}
                 >
@@ -271,23 +271,23 @@ export default function CounterTrainerClient({
                   ) : null}
                 </div>
               ) : (
-                <p className="rounded-2xl border border-dashed border-border bg-muted/15 p-5 text-sm font-medium text-muted-foreground">
+                <p className="rounded-lg border border-dashed border-border bg-muted/15 p-5 text-sm font-medium text-muted-foreground">
                   Jawab dulu untuk melihat frasa lengkap dan bacaan.
                 </p>
               )}
 
               {(showHint || hasAnswered) && (
-                <p className="mt-4 rounded-2xl border border-warning/20 bg-warning/10 p-4 text-sm font-bold text-warning">
+                <p className="mt-4 rounded-lg border border-warning/20 bg-warning/10 p-4 text-sm font-bold text-warning">
                   {question.hint}
                 </p>
               )}
             </Card>
 
-            <Card className="rounded-[2rem] border border-border bg-muted/15 p-5">
+            <Card className="rounded-2xl md:rounded-3xl border border-border bg-muted/15 p-5">
               <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                 Bank Counter
               </p>
-              <div className="mt-4 grid grid-cols-5 gap-2">
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
                 {COUNTER_OPTIONS.map((counter) => (
                   <div
                     key={counter}

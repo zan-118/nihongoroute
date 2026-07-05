@@ -50,12 +50,12 @@ export function LessonGrid({
   return (
     <m.section variants={itemVariants} className="pb-24 md:pb-32">
       <div className="mb-5 md:mb-8 flex items-center gap-4">
-        <h3 className="text-xs sm:text-sm font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-muted-foreground">Daftar Pelajaran</h3>
+        <h3 className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-muted-foreground">Daftar Pelajaran</h3>
         <div className="h-[1px] flex-1 bg-border" />
       </div>
 
       {lessons.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 md:gap-8">
           {lessons.map((lesson, index) => (
             <LessonCard
               key={lesson._id}
@@ -69,7 +69,7 @@ export function LessonGrid({
         </div>
       ) : (
         <div
-          className="flex flex-col items-center justify-center py-16 sm:py-24 md:py-32 glass rounded-2xl sm:rounded-3xl text-center px-6 sm:px-10 border border-dashed border-border relative overflow-hidden"
+          className="flex flex-col items-center justify-center py-16 sm:py-24 md:py-32 glass rounded-lg sm:rounded-xl text-center px-6 sm:px-10 border border-dashed border-border relative overflow-hidden"
           style={{
             backgroundColor: "rgb(var(--card-rgb)/0.2)",
             boxShadow: "0 10px 30px rgba(var(--foreground-rgb), 0.04)"
@@ -79,7 +79,7 @@ export function LessonGrid({
           <div className="absolute size-28 rounded-full bg-primary/5 blur-lg pointer-events-none" />
 
           <div
-            className="size-14 sm:size-16 bg-background/50 border border-border rounded-2xl flex items-center justify-center mb-5 sm:mb-6 shadow-md relative z-10 transition-transform duration-200 hover:scale-105"
+            className="size-14 sm:size-16 bg-background/50 border border-border rounded-lg flex items-center justify-center mb-5 sm:mb-6 shadow-md relative z-10 transition-transform duration-200 hover:scale-105"
             style={{
               backgroundColor: "rgb(var(--background-rgb)/0.5)"
             }}
@@ -87,7 +87,7 @@ export function LessonGrid({
             <Sparkles size={28} className="text-muted-foreground/60" aria-hidden="true" />
           </div>
 
-          <h4 className="text-lg sm:text-xl md:text-2xl font-black text-foreground tracking-tight mb-2 sm:mb-3 uppercase relative z-10">
+          <h4 className="text-lg sm:text-xl md:text-2xl text-foreground tracking-tight mb-2 sm:mb-3 uppercase relative z-10">
             Materi Sedang Disiapkan
           </h4>
           <p className="max-w-md text-muted-foreground text-xs sm:text-sm font-medium leading-relaxed relative z-10">
@@ -103,7 +103,7 @@ export function LessonGrid({
             Halaman <span className="text-foreground">{currentPage}</span> dari {totalPages}
           </div>
           <div
-            className="flex items-center gap-1 sm:gap-1.5 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border"
+            className="flex items-center gap-1 sm:gap-1.5 p-1.5 sm:p-2 rounded-xl sm:rounded-lg border"
             style={{
               backgroundColor: "rgb(var(--card-rgb)/0.3)",
               borderColor: "rgb(var(--border-rgb)/0.4)",

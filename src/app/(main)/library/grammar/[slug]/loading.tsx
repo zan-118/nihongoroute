@@ -89,7 +89,7 @@ export default function GrammarLoading() {
                 <Skeleton className="h-4 md:h-5 w-5/6" />
                 <Skeleton className="h-4 md:h-5 w-1/2" />
               </div>
-              <Skeleton className="h-10 w-10 md:h-12 md:w-12 rounded-2xl shrink-0" />
+              <Skeleton className="h-10 w-10 md:h-12 md:w-12 rounded-lg shrink-0" />
             </div>
           </div>
         </section>

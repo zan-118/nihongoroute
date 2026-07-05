@@ -40,7 +40,7 @@ export const KanjiSection: React.FC<KanjiSectionProps> = ({ kanjiList }) => {
   return (
     <section id="kanji">
       <div className="flex items-center gap-4 mb-10">
-        <h2 className="text-xl font-black uppercase tracking-tight text-foreground flex items-center gap-3">
+        <h2 className="text-xl uppercase tracking-tight text-foreground flex items-center gap-3">
           <span className="text-2xl not-italic">漢字</span> Kanji Pelajaran
         </h2>
         <div className="h-[1px] flex-1 bg-border" />
@@ -50,7 +50,7 @@ export const KanjiSection: React.FC<KanjiSectionProps> = ({ kanjiList }) => {
           <Link
             key={k._id || k.id}
             href={`/library/kanji/${k.slug || k.character}`}
-            className="p-6 border border-border/80 rounded-[2rem] bg-card/35 shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] flex flex-col items-center justify-center group hover:border-primary/45 transition-all duration-300 glass"
+            className="p-6 border border-border/80 rounded-2xl md:rounded-3xl bg-card/35 shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] flex flex-col items-center justify-center group hover:border-primary/45 transition-all duration-300 glass"
           >
             <span className="text-4xl font-black mb-3 group-hover:scale-110 transition-transform">
               {k.character}

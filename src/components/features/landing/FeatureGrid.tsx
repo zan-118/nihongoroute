@@ -149,7 +149,7 @@ export function FeatureGrid() {
           <Badge className="bg-primary/10 text-primary border border-primary/20 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
             Ekosistem Pembelajaran
           </Badge>
-          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-5">
+          <h2 className="text-4xl md:text-5xl tracking-tight mb-5">
             Apa Saja yang <span className="brand-text-gradient">NihongoRoute Sediakan?</span>
           </h2>
           <p className="text-muted-foreground text-base md:text-lg font-medium leading-relaxed">
@@ -166,15 +166,15 @@ export function FeatureGrid() {
         >
           {/* KARTU 1: ALAT BANTU KANA INTERAKTIF */}
           <m.div variants={itemVariants}>
-            <Card className="p-6 sm:p-8 md:p-10 group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[24px] sm:rounded-[34px] hover:border-primary/40 hover:shadow-[0_0_50px_rgb(var(--primary-rgb)_/_0.12)] shadow-none glass">
+            <Card className="p-6 sm:p-8 md:p-10 group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10  border border-border rounded-[24px] sm:rounded-[34px] hover:border-primary/40 hover:shadow-[0_0_50px_rgb(var(--primary-rgb)_/_0.12)] shadow-none glass">
               <div className="absolute inset-0 bg-seigaiha pointer-events-none opacity-[0.45] transition-opacity group-hover:opacity-60" />
               <div className="absolute top-0 right-0 size-32 bg-primary/5 rounded-full blur-[40px] group-hover:bg-primary/10 transition-all duration-500" />
               
-              <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm text-primary">
+              <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-lg group-hover:scale-110 transition-transform duration-500 shadow-sm text-primary">
                 <PenTool size={26} className="drop-shadow-[0_0_6px_rgb(var(--primary-rgb)_/_0.3)]" />
               </div>
               
-              <h3 className="text-2xl font-black tracking-tight mb-[13px] text-foreground group-hover:text-primary transition-colors">
+              <h3 className="text-2xl tracking-tight mb-[13px] text-foreground group-hover:text-primary transition-colors">
                 Alat Bantu Kana Interaktif
               </h3>
               
@@ -183,7 +183,7 @@ export function FeatureGrid() {
               </p>
  
               {/* Tampilan Visual Mockup di Dalam Kartu */}
-              <div className="p-4 bg-background/40 border border-border rounded-2xl flex items-center justify-between gap-4 glass mt-auto transition-all duration-300 group-hover:border-primary/20">
+              <div className="p-4 bg-background/40 border border-border rounded-lg flex items-center justify-between gap-4 glass mt-auto transition-all duration-300 group-hover:border-primary/20">
                 <div className="size-14 border-2 border-dashed border-primary/30 bg-background/80 rounded-xl flex items-center justify-center relative font-japanese font-bold text-2xl text-primary shadow-inner transition-transform group-hover:scale-105">
                   あ
                   <div className="absolute text-[8px] font-bold text-primary/50 top-1 left-1">1</div>
@@ -192,7 +192,7 @@ export function FeatureGrid() {
                 <div className="flex-1 flex flex-col gap-1.5">
                   <span className="text-[11px] font-bold text-foreground">Hiragana "A" (Guratan 1/3)</span>
                   <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden relative">
-                    <div className="h-full bg-primary rounded-full w-[33%] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent" />
+                    <div className="h-full bg-primary rounded-full w-[33%] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-background/20 before:to-transparent" />
                   </div>
                   <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Arah guratan: Melengkung ke kanan</span>
                 </div>
@@ -202,15 +202,15 @@ export function FeatureGrid() {
  
           {/* KARTU 2: DATABASE PERPUSTAKAAN KOSAKATA & TATA BAHASA */}
           <m.div variants={itemVariants}>
-            <Card className="p-6 sm:p-8 md:p-10 group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[24px] sm:rounded-[34px] hover:border-secondary/40 hover:shadow-[0_0_50px_rgb(var(--secondary-rgb)_/_0.12)] shadow-none glass">
+            <Card className="p-6 sm:p-8 md:p-10 group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10  border border-border rounded-[24px] sm:rounded-[34px] hover:border-secondary/40 hover:shadow-[0_0_50px_rgb(var(--secondary-rgb)_/_0.12)] shadow-none glass">
               <div className="absolute inset-0 bg-asanoha pointer-events-none opacity-[0.45] transition-opacity group-hover:opacity-60" />
               <div className="absolute top-0 right-0 size-32 bg-secondary/5 rounded-full blur-[40px] group-hover:bg-secondary/10 transition-all duration-500" />
               
-              <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm text-secondary">
+              <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-lg group-hover:scale-110 transition-transform duration-500 shadow-sm text-secondary">
                 <Library size={26} className="drop-shadow-[0_0_6px_rgb(var(--secondary-rgb)_/_0.3)]" />
               </div>
               
-              <h3 className="text-2xl font-black tracking-tight mb-[13px] text-foreground group-hover:text-secondary transition-colors">
+              <h3 className="text-2xl tracking-tight mb-[13px] text-foreground group-hover:text-secondary transition-colors">
                 Perpustakaan Kosakata, Kanji & Tata Bahasa
               </h3>
               
@@ -232,7 +232,7 @@ export function FeatureGrid() {
               </div>
  
               {/* Tampilan Visual Mockup di Dalam Kartu */}
-              <div className="p-4 bg-background/40 border border-border rounded-2xl flex flex-col gap-2 glass mt-auto transition-all duration-300 group-hover:border-secondary/20">
+              <div className="p-4 bg-background/40 border border-border rounded-lg flex flex-col gap-2 glass mt-auto transition-all duration-300 group-hover:border-secondary/20">
                 <div className="flex items-center justify-between">
                   <span className="text-[9px] font-extrabold uppercase tracking-widest text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full">Kosakata Utama</span>
                   <span className="text-[9px] font-extrabold bg-secondary/10 text-secondary border border-secondary/20 px-2 py-0.5 rounded-full">N5</span>
@@ -254,15 +254,15 @@ export function FeatureGrid() {
  
           {/* KARTU 3: FLASHCARDS DENGAN SYSTEM SRS */}
           <m.div variants={itemVariants}>
-            <Card className="p-6 sm:p-8 md:p-10 group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[24px] sm:rounded-[34px] hover:border-primary/40 hover:shadow-[0_0_50px_rgb(var(--primary-rgb)_/_0.12)] shadow-none glass">
+            <Card className="p-6 sm:p-8 md:p-10 group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10  border border-border rounded-[24px] sm:rounded-[34px] hover:border-primary/40 hover:shadow-[0_0_50px_rgb(var(--primary-rgb)_/_0.12)] shadow-none glass">
               <div className="absolute inset-0 bg-seigaiha pointer-events-none opacity-[0.45] transition-opacity group-hover:opacity-60" />
               <div className="absolute top-0 right-0 size-32 bg-primary/5 rounded-full blur-[40px] group-hover:bg-primary/10 transition-all duration-500" />
               
-              <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm text-primary">
+              <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-lg group-hover:scale-110 transition-transform duration-500 shadow-sm text-primary">
                 <BrainCircuit size={26} className="drop-shadow-[0_0_6px_rgb(var(--primary-rgb)_/_0.3)]" />
               </div>
               
-              <h3 className="text-2xl font-black tracking-tight mb-[13px] text-foreground group-hover:text-primary transition-colors">
+              <h3 className="text-2xl tracking-tight mb-[13px] text-foreground group-hover:text-primary transition-colors">
                 Flashcard Cerdas & Pengulangan Terjadwal
               </h3>
               
@@ -271,7 +271,7 @@ export function FeatureGrid() {
               </p>
  
               {/* Tampilan Visual Mockup di Dalam Kartu */}
-              <div className="p-4 bg-background/40 border border-border rounded-2xl flex items-center gap-3.5 glass mt-auto transition-all duration-300 group-hover:border-primary/20">
+              <div className="p-4 bg-background/40 border border-border rounded-lg flex items-center gap-3.5 glass mt-auto transition-all duration-300 group-hover:border-primary/20">
                 <div className="relative w-11 h-14 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground rounded-lg flex items-center justify-center font-bold text-xl shadow-[0_4px_12px_rgb(var(--primary-rgb)_/_0.3)] shrink-0 transition-transform group-hover:scale-105">
                   猫
                   <div className="absolute -top-1 -right-1 size-2.5 bg-success rounded-full border border-background animate-pulse" />
@@ -282,7 +282,7 @@ export function FeatureGrid() {
                     <span className="size-1.5 bg-success rounded-full" /> Interval: 3 Hari Lagi (Kotak 4)
                   </span>
                   <div className="w-full bg-muted h-1 rounded-full overflow-hidden mt-1 relative">
-                    <div className="bg-success h-full w-[80%] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent" />
+                    <div className="bg-success h-full w-[80%] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-background/20 before:to-transparent" />
                   </div>
                 </div>
               </div>
@@ -291,15 +291,15 @@ export function FeatureGrid() {
  
           {/* KARTU 4: SIMULASI UJIAN JLPT REAL-TIME */}
           <m.div variants={itemVariants}>
-            <Card className="p-6 sm:p-8 md:p-10 group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 backdrop-blur-xl border border-border rounded-[24px] sm:rounded-[34px] hover:border-secondary/40 hover:shadow-[0_0_50px_rgb(var(--secondary-rgb)_/_0.12)] shadow-none glass">
+            <Card className="p-6 sm:p-8 md:p-10 group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10  border border-border rounded-[24px] sm:rounded-[34px] hover:border-secondary/40 hover:shadow-[0_0_50px_rgb(var(--secondary-rgb)_/_0.12)] shadow-none glass">
               <div className="absolute inset-0 bg-asanoha pointer-events-none opacity-[0.45] transition-opacity group-hover:opacity-60" />
               <div className="absolute top-0 right-0 size-32 bg-secondary/5 rounded-full blur-[40px] group-hover:bg-secondary/10 transition-all duration-500" />
               
-              <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm text-secondary">
+              <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-lg group-hover:scale-110 transition-transform duration-500 shadow-sm text-secondary">
                 <Zap size={26} className="drop-shadow-[0_0_6px_rgb(var(--secondary-rgb)_/_0.3)]" />
               </div>
               
-              <h3 className="text-2xl font-black tracking-tight mb-[13px] text-foreground group-hover:text-secondary transition-colors">
+              <h3 className="text-2xl tracking-tight mb-[13px] text-foreground group-hover:text-secondary transition-colors">
                 Simulasi Ujian JLPT Real-Time
               </h3>
               
@@ -308,13 +308,13 @@ export function FeatureGrid() {
               </p>
  
               {/* Tampilan Visual Mockup di Dalam Kartu */}
-              <div className="p-4 bg-background/40 border border-border rounded-2xl flex flex-col gap-2 glass mt-auto transition-all duration-300 group-hover:border-secondary/20">
+              <div className="p-4 bg-background/40 border border-border rounded-lg flex flex-col gap-2 glass mt-auto transition-all duration-300 group-hover:border-secondary/20">
                 <div className="flex items-center justify-between text-[9px] font-bold text-muted-foreground">
                   <span className="flex items-center gap-1"><Timer size={10} className="text-secondary" /> Ujian JLPT N3: Sesi Choukai</span>
                   <span className="text-destructive font-mono font-bold animate-pulse">00:42:15</span>
                 </div>
                 <div className="w-full bg-muted h-1 rounded-full overflow-hidden relative">
-                  <div className="bg-secondary h-full w-[70%] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent" />
+                  <div className="bg-secondary h-full w-[70%] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-background/20 before:to-transparent" />
                 </div>
                 <div className="flex justify-between gap-1.5 mt-0.5">
                   {[1, 2, 3, 4].map((num) => (
@@ -345,8 +345,8 @@ export function FeatureGrid() {
           <Badge className="bg-secondary/10 text-secondary border border-secondary/20 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
             Alur Metode Belajar
           </Badge>
-          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-5">
-            Langkah Cerdas <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary to-primary">Menguasai Bahasa Jepang</span>
+          <h2 className="text-4xl md:text-5xl tracking-tight mb-5">
+            Langkah Cerdas <span className="text-primary">Menguasai Bahasa Jepang</span>
           </h2>
           <p className="text-muted-foreground text-base md:text-lg font-medium leading-relaxed">
             Metode belajar terpadu yang memandu Anda dari langkah awal pengenalan aksara hingga mencapai fasih berbicara dan siap menaklukkan lembar ujian JLPT.
@@ -399,7 +399,7 @@ export function FeatureGrid() {
 
           {/* TAMPILAN DETIL LANGKAH AKTIF - KOLOM KANAN */}
           <div className="lg:col-span-7 h-full">
-            <Card className="p-6 sm:p-8 md:p-10 rounded-[24px] sm:rounded-[34px] bg-card/10 backdrop-blur-xl border border-border shadow-none relative overflow-hidden min-h-[350px] flex flex-col justify-between">
+            <Card className="p-6 sm:p-8 md:p-10 rounded-[24px] sm:rounded-[34px] bg-card/10  border border-border shadow-none relative overflow-hidden min-h-[350px] flex flex-col justify-between">
               <div className="absolute top-0 right-0 size-[200px] bg-primary/5 rounded-full blur-[80px] pointer-events-none" />
               
               <div className="space-y-6 relative z-10">
@@ -407,7 +407,7 @@ export function FeatureGrid() {
                   {learningSteps[activeStep].badge}
                 </Badge>
                 
-                <h3 className="text-3xl font-extrabold tracking-tight text-foreground">
+                <h3 className="text-3xl tracking-tight text-foreground">
                   {learningSteps[activeStep].title}
                 </h3>
                 
@@ -415,7 +415,7 @@ export function FeatureGrid() {
                   {learningSteps[activeStep].desc}
                 </p>
 
-                <div className="p-4 bg-muted/30 border border-border rounded-2xl flex items-start gap-3">
+                <div className="p-4 bg-muted/30 border border-border rounded-lg flex items-start gap-3">
                   <Sparkles size={16} className="text-primary mt-0.5 shrink-0" />
                   <p className="text-xs text-muted-foreground font-semibold leading-relaxed">
                     <strong className="text-foreground">Tips Belajar:</strong> {learningSteps[activeStep].tip}
@@ -423,7 +423,7 @@ export function FeatureGrid() {
                 </div>
 
                 {/* Interactive Preview Box based on activeStep */}
-                <div className="p-4 bg-background/40 border border-border/80 rounded-2xl glass transition-all duration-500">
+                <div className="p-4 bg-background/40 border border-border/80 rounded-lg glass transition-all duration-500">
                   {activeStep === 0 && (
                     <div className="flex flex-col items-center gap-3">
                       <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest">Latihan Menulis Kana "あ"</span>
@@ -557,7 +557,7 @@ export function FeatureGrid() {
 
       {/* SEKSI 3: PRATINJAU GAMIFIKASI KEMAJUAN BELAJAR */}
       <section className="relative">
-        <Card className="p-6 sm:p-10 md:p-[42px] lg:p-[55px] rounded-[28px] sm:rounded-[34px] md:rounded-[42px] bg-card/10 backdrop-blur-xl border border-border shadow-none relative overflow-hidden group">
+        <Card className="p-6 sm:p-10 md:p-[42px] lg:p-[55px] rounded-[28px] sm:rounded-[34px] md:rounded-[42px] bg-card/10  border border-border shadow-none relative overflow-hidden group">
           {/* Aksen Kilau Latar Belakang */}
           <div className="absolute -top-32 -left-32 size-89 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
           <div className="absolute -bottom-32 -right-32 size-89 bg-secondary/5 rounded-full blur-[100px] pointer-events-none" />
@@ -568,7 +568,7 @@ export function FeatureGrid() {
               <Badge className="bg-primary/10 text-primary border border-primary/20 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest">
                 Sistem Kemajuan Belajar
               </Badge>
-              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">
+              <h2 className="text-3xl md:text-4xl tracking-tight">
                 Tetap Konsisten dengan <br />
                 <span className="brand-text-gradient">Sistem Belajar Interaktif</span>
               </h2>

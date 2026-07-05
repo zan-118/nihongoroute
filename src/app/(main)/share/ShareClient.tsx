@@ -54,10 +54,10 @@ function ShareContent() {
       <div className="min-h-screen flex items-center justify-center p-6 text-center bg-transparent relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-tr from-primary/[0.03] to-transparent pointer-events-none" />
         <Card className="p-8 sm:p-12 max-w-md w-full glass border-border rounded-[3rem] shadow-[0_20px_50px_rgba(var(--primary-rgb),0.15)] relative z-10">
-          <div className="size-20 mx-auto rounded-3xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-6">
+          <div className="size-20 mx-auto rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-6">
             <Share2 size={40} className="text-primary drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.4)]" />
           </div>
-          <h1 className="text-2xl font-black uppercase tracking-wide mb-3 text-foreground">Bagikan NihongoRoute</h1>
+          <h1 className="text-2xl uppercase tracking-wide mb-3 text-foreground">Bagikan NihongoRoute</h1>
           <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
             Ajak teman-temanmu belajar bahasa Jepang secara seru, interaktif, dan terstruktur di NihongoRoute! Selesaikan ujian simulasi untuk memamerkan sertifikat kelulusanmu di sini.
           </p>
@@ -69,11 +69,11 @@ function ShareContent() {
                   toast.success("Tautan NihongoRoute berhasil disalin!");
                 }
               }}
-              className="w-full h-14 bg-primary hover:bg-secondary text-primary-foreground rounded-2xl font-black uppercase tracking-widest text-xs transition-all hover:scale-[1.02]"
+              className="w-full h-14 bg-primary hover:bg-secondary text-primary-foreground rounded-lg font-black uppercase tracking-widest text-xs transition-all hover:scale-[1.02]"
             >
               Salin Tautan Aplikasi
             </Button>
-            <Button asChild variant="ghost" className="w-full h-14 border border-border bg-background/20 hover:bg-background/40 text-foreground rounded-2xl font-black uppercase tracking-widest text-xs transition-all">
+            <Button asChild variant="ghost" className="w-full h-14 border border-border bg-background/20 hover:bg-background/40 text-foreground rounded-lg font-black uppercase tracking-widest text-xs transition-all">
               <Link href="/exams" className="flex items-center justify-center gap-2">
                 <Trophy size={14} className="text-warning" /> Ikuti Simulasi Ujian
               </Link>
@@ -89,14 +89,14 @@ function ShareContent() {
       <div className="min-h-screen flex items-center justify-center p-6 text-center bg-transparent relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-tr from-destructive/[0.03] to-transparent pointer-events-none" />
         <Card className="p-8 sm:p-12 max-w-md w-full glass border-destructive/25 rounded-[3rem] shadow-[0_20px_50px_rgb(var(--destructive-rgb)/0.15)] relative z-10">
-          <div className="size-20 mx-auto rounded-3xl bg-destructive/10 border border-destructive/25 flex items-center justify-center mb-6">
+          <div className="size-20 mx-auto rounded-xl bg-destructive/10 border border-destructive/25 flex items-center justify-center mb-6">
             <Skull size={40} className="text-destructive drop-shadow-[0_0_8px_rgb(var(--destructive-rgb)/0.4)]" />
           </div>
-          <h1 className="text-2xl font-black uppercase tracking-wide mb-3">Tautan Tidak Valid</h1>
+          <h1 className="text-2xl uppercase tracking-wide mb-3">Tautan Tidak Valid</h1>
           <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
             Maaf, data sertifikat kelulusan ini tidak ditemukan atau format tautan telah kedaluwarsa.
           </p>
-          <Button asChild className="w-full h-14 bg-primary hover:bg-secondary text-primary-foreground rounded-2xl font-black uppercase tracking-widest text-xs transition-all hover:scale-[1.02]">
+          <Button asChild className="w-full h-14 bg-primary hover:bg-secondary text-primary-foreground rounded-lg font-black uppercase tracking-widest text-xs transition-all hover:scale-[1.02]">
             <Link href="/" className="flex items-center justify-center gap-2">
               <ArrowLeft size={14} /> Kembali ke Beranda
             </Link>
@@ -154,7 +154,7 @@ function ShareContent() {
               Sertifikat Kelulusan
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-tight mb-4 leading-tight">
+            <h1 className="text-3xl sm:text-5xl uppercase tracking-tight mb-4 leading-tight">
               {data.passed ? "Kelulusan Teruji!" : "Prestasi Dicatat!"}
             </h1>
             
@@ -165,8 +165,8 @@ function ShareContent() {
 
           {/* Stats Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-10 text-left">
-            <div className="p-6 bg-background/25 border border-border/70 rounded-3xl backdrop-blur-sm flex items-center gap-5 hover:border-primary/20 transition-all duration-300">
-              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border ${
+            <div className="p-6 bg-background/25 border border-border/70 rounded-xl  flex items-center gap-5 hover:border-primary/20 transition-all duration-300">
+              <div className={`w-12 h-12 rounded-lg flex items-center justify-center shrink-0 border ${
                 data.passed ? 'bg-success/5 border-success/20 text-success' : 'bg-destructive/5 border-destructive/20 text-destructive'
               }`}>
                 <Target size={20} />
@@ -179,8 +179,8 @@ function ShareContent() {
               </div>
             </div>
 
-            <div className="p-6 bg-background/25 border border-border/70 rounded-3xl backdrop-blur-sm flex items-center gap-5 hover:border-primary/20 transition-all duration-300">
-              <div className="size-12 rounded-2xl bg-primary/5 border border-primary/10 text-primary flex items-center justify-center shrink-0">
+            <div className="p-6 bg-background/25 border border-border/70 rounded-xl  flex items-center gap-5 hover:border-primary/20 transition-all duration-300">
+              <div className="size-12 rounded-lg bg-primary/5 border border-primary/10 text-primary flex items-center justify-center shrink-0">
                 <Award size={20} className="text-primary" />
               </div>
               <div>
@@ -202,7 +202,7 @@ function ShareContent() {
           <div className="pt-8 border-t border-border/60">
             <p className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-[0.25em] mb-6">Uji Keterampilan Bahasa Jepang Anda Sekarang</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild className="h-14 px-10 bg-primary hover:bg-secondary text-primary-foreground font-black uppercase tracking-widest text-xs rounded-2xl shadow-lg hover:shadow-primary/25 transition-all hover:-translate-y-0.5">
+              <Button asChild className="h-14 px-10 bg-primary hover:bg-secondary text-primary-foreground font-black uppercase tracking-widest text-xs rounded-lg shadow-lg hover:shadow-primary/25 transition-all hover:-translate-y-0.5">
                 <Link href="/">Mulai Belajar Nihongo</Link>
               </Button>
               <Button 
@@ -213,7 +213,7 @@ function ShareContent() {
                   }
                 }}
                 variant="ghost" 
-                className="h-14 px-10 border border-border bg-background/15 hover:bg-background/25 text-foreground font-black uppercase tracking-widest text-xs rounded-2xl transition-all hover:-translate-y-0.5"
+                className="h-14 px-10 border border-border bg-background/15 hover:bg-background/25 text-foreground font-black uppercase tracking-widest text-xs rounded-lg transition-all hover:-translate-y-0.5"
                 aria-label="Salin Tautan Sertifikat"
               >
                 <Share2 size={16} className="mr-2 text-primary" /> Salin Tautan

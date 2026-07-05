@@ -39,8 +39,8 @@ export function ListeningSidebar({
     <aside className="lg:col-span-4 flex flex-col gap-6">
       {/* Metadata Materi */}
       {(jlptLevel || difficulty || transcriptLength > 0 || quizLength > 0) && (
-        <div className="p-6 rounded-3xl bg-background/[0.02] border border-border flex flex-col gap-4">
-          <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground flex items-center gap-2">
+        <div className="p-6 rounded-xl bg-background/[0.02] border border-border flex flex-col gap-4">
+          <h4 className="text-[10px] uppercase tracking-[0.2em] text-foreground flex items-center gap-2">
             <Layers size={14} className="text-primary/50" />
             Info Materi
           </h4>
@@ -80,10 +80,10 @@ export function ListeningSidebar({
       )}
 
       {/* Seksi Catatan Panduan Belajar */}
-      <div className="p-6 rounded-3xl bg-background/[0.02] border border-border flex flex-col gap-6">
+      <div className="p-6 rounded-xl bg-background/[0.02] border border-border flex flex-col gap-6">
         <div className="flex items-center gap-3">
           <Info size={18} className="text-primary/50" />
-          <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
+          <h4 className="text-[10px] uppercase tracking-[0.2em] text-foreground">
             Catatan Belajar
           </h4>
         </div>
@@ -118,7 +118,7 @@ export function ListeningSidebar({
 
       {/* Seksi Perolehan XP Hadiah */}
       {quizLength > 0 && (
-        <div className="p-6 rounded-3xl bg-gradient-to-br from-primary/10 to-transparent border border-primary/20 flex flex-col gap-4 relative overflow-hidden group">
+        <div className="p-6 rounded-xl bg-gradient-to-br from-primary/10 to-transparent border border-primary/20 flex flex-col gap-4 relative overflow-hidden group">
           <Trophy size={40} className="absolute -bottom-2 -right-2 text-primary/10 group-hover:scale-110 transition-transform" />
           <div className="flex flex-col gap-1">
             <span className="text-[10px] font-black uppercase tracking-widest text-primary">Hadiah Kuis</span>

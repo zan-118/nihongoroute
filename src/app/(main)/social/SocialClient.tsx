@@ -13,7 +13,7 @@ export default function SocialClient() {
     <div className="max-w-4xl mx-auto pb-24">
       {/* 🏆 TAB SWITCHER */}
       <div className="flex justify-center mb-10 relative z-20">
-        <div className="bg-background/40 glass p-1.5 rounded-2xl flex gap-2 border border-border/80 shadow-md">
+        <div className="bg-background/40 glass p-1.5 rounded-lg flex gap-2 border border-border/80 shadow-md">
           <button
             type="button"
             onClick={() => setActiveTab("discussion")}

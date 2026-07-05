@@ -58,7 +58,7 @@ export function KanaWritingDialog({
               initial={{ scale: 0.95, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className={`relative bg-card p-5 md:p-8 rounded-2xl border ${themeBorder} shadow-2xl max-w-[95vw] sm:max-w-md w-full max-h-[90vh] flex flex-col mx-auto overflow-y-auto custom-scrollbar`}
+              className={`relative bg-card p-5 md:p-8 rounded-lg border ${themeBorder} shadow-2xl max-w-[95vw] sm:max-w-md w-full max-h-[90vh] flex flex-col mx-auto overflow-y-auto custom-scrollbar`}
             >
               <div className="relative z-10 flex flex-col h-full">
                 <header className="flex items-center gap-3 mb-5 sm:mb-6 pr-10 shrink-0">

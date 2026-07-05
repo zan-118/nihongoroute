@@ -102,12 +102,12 @@ export default function SentenceBuilderClient() {
           </Button>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">
-              <div className="flex size-12 items-center justify-center rounded-2xl border border-success/20 bg-success/10 text-success">
+              <div className="flex size-12 items-center justify-center rounded-lg border border-success/20 bg-success/10 text-success">
                 <Sparkles size={24} aria-hidden="true" />
               </div>
               <Badge className="w-fit rounded-xl px-3 py-1">Sentence Builder</Badge>
             </div>
-            <h1 className="max-w-3xl text-4xl font-black uppercase tracking-tight text-foreground md:text-6xl">
+            <h1 className="max-w-3xl text-4xl uppercase tracking-tight text-foreground md:text-6xl">
               Susun Kalimat
             </h1>
             <p className="max-w-2xl text-sm font-medium leading-relaxed text-muted-foreground">
@@ -117,10 +117,10 @@ export default function SentenceBuilderClient() {
         </header>
 
         <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
-          <Card className="rounded-[2rem] border border-border bg-card/45 p-4 shadow-xl">
+          <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-4 shadow-xl">
             <div className="mb-4 flex items-center gap-2 px-2">
               <ArrowDown size={16} className="text-primary" aria-hidden="true" />
-              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground">
+              <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
                 Prompt
               </h2>
             </div>
@@ -162,9 +162,9 @@ export default function SentenceBuilderClient() {
             </div>
 
             {isDbMode && (
-              <div className="mb-4 space-y-2 p-2.5 border border-border/60 rounded-2xl bg-background/25">
+              <div className="mb-4 space-y-2 p-2.5 border border-border/60 rounded-lg bg-background/25">
                 <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block">JLPT Level</span>
-                <div className="grid grid-cols-3 gap-1.5">
+                <div className="flex flex-wrap items-center justify-center gap-1.5">
                   {["all", "N5", "N4", "N3", "N2", "N1"].map((l) => (
                     <button
                       key={l}
@@ -202,7 +202,7 @@ export default function SentenceBuilderClient() {
                   type="button"
                   onClick={() => handlePromptChange(index)}
                   className={cn(
-                    "rounded-2xl border p-4 text-left transition-all",
+                    "rounded-lg border p-4 text-left transition-all",
                     prompt.id === item.id
                       ? "border-primary/40 bg-primary/10 text-primary"
                       : "border-border bg-background/35 text-muted-foreground hover:text-foreground"
@@ -225,13 +225,13 @@ export default function SentenceBuilderClient() {
           </Card>
 
           <div className="flex flex-col gap-6">
-            <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-2xl md:p-6">
+            <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-2xl md:p-6">
               <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <Badge variant="outline" className="mb-3 rounded-xl">
                     {prompt.level} · {prompt.pattern}
                   </Badge>
-                  <h2 className="text-2xl font-black text-foreground">{prompt.translation}</h2>
+                  <h2 className="text-2xl text-foreground">{prompt.translation}</h2>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <Button type="button" variant="outline" onClick={handleShuffle} className="rounded-xl">
@@ -245,7 +245,7 @@ export default function SentenceBuilderClient() {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-dashed border-primary/30 bg-primary/10 p-4">
+              <div className="rounded-lg border border-dashed border-primary/30 bg-primary/10 p-4">
                 <p className="mb-3 text-[10px] font-black uppercase tracking-widest text-primary">
                   Susunan Kamu
                 </p>
@@ -308,7 +308,7 @@ export default function SentenceBuilderClient() {
               </div>
             </Card>
 
-            <Card className="rounded-[2rem] border border-border bg-card/45 p-5 shadow-xl">
+            <Card className="rounded-2xl md:rounded-3xl border border-border bg-card/45 p-5 shadow-xl">
               <div className="mb-4 flex items-center gap-2">
                 {hasChecked ? (
                   isCorrect ? (
@@ -319,14 +319,14 @@ export default function SentenceBuilderClient() {
                 ) : (
                   <Sparkles size={16} className="text-primary" />
                 )}
-                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground">
+                <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
                   Feedback
                 </h2>
               </div>
               {hasChecked ? (
                 <div
                   className={cn(
-                    "rounded-2xl border p-5",
+                    "rounded-lg border p-5",
                     isCorrect
                       ? "border-success/25 bg-success/10"
                       : "border-warning/25 bg-warning/10"
@@ -345,7 +345,7 @@ export default function SentenceBuilderClient() {
                   </p>
                 </div>
               ) : (
-                <p className="rounded-2xl border border-dashed border-border bg-muted/15 p-5 text-sm font-medium text-muted-foreground">
+                <p className="rounded-lg border border-dashed border-border bg-muted/15 p-5 text-sm font-medium text-muted-foreground">
                   Susun token lalu cek untuk melihat jawaban target.
                 </p>
               )}

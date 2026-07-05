@@ -26,18 +26,18 @@ export default function MainNotFound() {
         </span>
       </div>
 
-      <Card className="p-8 md:p-12 border border-border max-w-lg w-full relative z-10 rounded-[2.5rem] bg-card/40 backdrop-blur-xl shadow-[0_20px_50px_rgba(var(--foreground-rgb),0.3)] hover:shadow-[0_25px_60px_rgb(var(--primary-rgb)/0.1)] transition-all duration-500 glass">
+      <Card className="p-8 md:p-12 border border-border max-w-lg w-full relative z-10 rounded-[2.5rem] bg-card/40  shadow-[0_20px_50px_rgba(var(--foreground-rgb),0.3)] hover:shadow-[0_25px_60px_rgb(var(--primary-rgb)/0.1)] transition-all duration-500 glass">
         {/* Kilau Pojok Siber */}
         <div className="absolute top-0 right-0 size-24 bg-gradient-to-br from-primary/10 to-transparent blur-md rounded-tr-[2.5rem] pointer-events-none" />
 
         {/* Elemen Tematik Jepang */}
         <div className="space-y-3 mb-6">
           <div className="flex justify-center mb-4">
-            <div className="size-20 bg-destructive/10 rounded-2xl flex items-center justify-center border border-destructive/20 shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.15)] animate-premium-bounce">
+            <div className="size-20 bg-destructive/10 rounded-lg flex items-center justify-center border border-destructive/20 shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.15)] animate-premium-bounce">
               <MapPinOff className="text-destructive animate-pulse" size={36} />
             </div>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground font-japanese">
+          <h1 className="text-2xl sm:text-3xl tracking-tight text-foreground font-japanese">
             道に迷いましたか？
           </h1>
           <p className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em]">
@@ -46,7 +46,7 @@ export default function MainNotFound() {
         </div>
 
         <div className="space-y-3 mb-8">
-          <h2 className="text-xl font-black text-foreground uppercase tracking-tight">
+          <h2 className="text-xl text-foreground uppercase tracking-tight">
             Materi Tidak Ditemukan
           </h2>
           <p className="text-xs md:text-sm text-muted-foreground leading-relaxed font-medium">

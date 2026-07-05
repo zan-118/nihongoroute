@@ -35,7 +35,7 @@ export function AddToSRSButton({ wordId, className }: AddToSRSButtonProps) {
         size="icon"
         disabled
         className={cn(
-          "h-10 w-10 rounded-xl bg-card/20 backdrop-blur-md border-border opacity-50",
+          "h-10 w-10 rounded-xl bg-card/20  border-border opacity-50",
           className
         )}
         aria-label="Memuat status SRS..."
@@ -52,7 +52,7 @@ export function AddToSRSButton({ wordId, className }: AddToSRSButtonProps) {
       onClick={isAdded ? undefined : handleAdd}
       disabled={isAdded}
       className={cn(
-        "h-10 w-10 rounded-xl transition-all duration-300 backdrop-blur-md",
+        "h-10 w-10 rounded-xl transition-all duration-300 ",
         isAdded
           ? "bg-primary/20 border-primary text-primary shadow-[0_0_15px_rgb(var(--primary-rgb)/0.35)] cursor-default"
           : "bg-card/40 border-border hover:border-primary/50 text-muted-foreground hover:text-primary hover:scale-105 active:scale-95 shadow-[0_0_10px_rgba(var(--foreground-rgb),0.05)]",

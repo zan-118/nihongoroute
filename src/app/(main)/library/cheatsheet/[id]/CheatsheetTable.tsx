@@ -113,8 +113,8 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
   return (
     <div className="space-y-8 w-full">
       {/* Pengontrol Mode Tampilan (Premium Tab Switcher) */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-3 rounded-[2rem] border border-border bg-[rgba(var(--card-rgb),0.1)] backdrop-blur-md w-full no-print glass">
-        <div className="flex items-center gap-1.5 p-1 bg-[rgba(var(--muted-rgb),0.2)] rounded-2xl w-fit">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-3 rounded-[2rem] border border-border bg-[rgba(var(--card-rgb),0.1)]  w-full no-print glass">
+        <div className="flex items-center gap-1.5 p-1 bg-[rgba(var(--muted-rgb),0.2)] rounded-lg w-fit">
           <Button
             id="view-mode-table"
             type="button"
@@ -156,7 +156,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.3 }}
-            className="w-full rounded-[2rem] border border-border bg-[rgba(var(--card-rgb),0.2)] backdrop-blur-md shadow-2xl overflow-hidden glass"
+            className="w-full rounded-[2rem] border border-border bg-[rgba(var(--card-rgb),0.2)]  shadow-2xl overflow-hidden glass"
           >
             {/* Header: Hanya terlihat di md ke atas */}
             <div className="hidden md:flex items-center bg-[rgba(var(--muted-rgb),0.3)] border-b border-border px-8 py-4 text-[10px] font-black uppercase tracking-widest text-primary">
