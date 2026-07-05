@@ -491,11 +491,13 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
             </div>
 
             <div className="space-y-6">
-              {(article.examples as Array<{ jp: string; furigana?: string; romaji?: string; id: string }>).map((ex, i: number) => {
+              {(article.examples as Array<{ jp?: string; japanese?: string; furigana?: string; romaji?: string; id?: string; indonesian?: string }>).map((ex, i: number) => {
                 const isActive = playingIndex === i;
+                const sentenceText = ex.japanese || ex.jp || "";
+                const translationText = ex.indonesian || ex.id || "";
                 return (
                   <div 
-                    key={ex.id}
+                    key={ex.id || ex.indonesian || i}
                     className="border border-border rounded-[1.8rem] p-6 md:p-8 bg-card/5 backdrop-blur-lg hover:border-primary/40 transition-all duration-300 shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)] relative overflow-hidden group flex items-start gap-4 md:gap-6 glass"
                   >
                     {/* Aksen Siber Kiri & Penomoran */}
@@ -508,7 +510,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
                     {/* Konten Kalimat Utama Jepang & Terjemahan */}
                     <div className="flex-1 min-w-0">
                       <SmartJapanese 
-                        word={ex.jp} 
+                        word={sentenceText} 
                         furigana={ex.furigana} 
                         className="text-xl md:text-2xl font-japanese font-bold text-foreground leading-relaxed block tracking-wide select-text" 
                       />
@@ -519,15 +521,17 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
                         </div>
                       )}
                       
-                      <div className="mt-4 pl-4 border-l-2 border-primary/30 text-sm md:text-base text-muted-foreground/80 font-semibold leading-relaxed select-text">
-                        {ex.id}
-                      </div>
+                      {translationText && (
+                        <div className="mt-4 pl-4 border-l-2 border-primary/30 text-sm md:text-base text-muted-foreground/80 font-semibold leading-relaxed select-text">
+                          {translationText}
+                        </div>
+                      )}
                     </div>
 
                     {/* Tombol Pemicu Pengucapan Suara (TTS) */}
                     <div className="flex-shrink-0 select-none">
                       <button type="button" 
-                        onClick={() => speakJapanese(ex.jp, i)}
+                        onClick={() => speakJapanese(sentenceText, i)}
                         className={`h-12 w-12 rounded-[1.2rem] border flex items-center justify-center transition-all duration-300 relative group/btn ${
                           isActive 
                             ? "border-primary bg-primary/10 text-primary shadow-[0_0_20px_rgb(var(--primary-rgb)/0.35)] animate-pulse" 

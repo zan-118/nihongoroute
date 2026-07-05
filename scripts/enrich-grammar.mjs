@@ -4,13 +4,17 @@
  * @file enrich-grammar.mjs
  * @description Script utilitas produksi khusus untuk melakukan pengayaan (enrichment) data Tata Bahasa (Grammar)
  * di database Supabase (tabel grammar) menggunakan Google Generative AI (Gemini 3).
- * 
+ *
  * Standar kualitas tinggi:
  * - Menangani satu kebutuhan secara spesifik (tabel grammar saja).
  * - Menggunakan 9router (ag/gemini-3-flash) sebagai prioritas utama.
  * - Fallback otomatis ke SDK Gemini langsung jika 9router gagal.
  * - Rotasi API Key dinamis jika terkena rate limit (HTTP 429) pada fallback Gemini.
- * - Validasi skema JSON hasil kembalian LLM secara ketat.
+ * - Retry dengan backoff untuk kegagalan transient (network/timeout) sebelum menyerah.
+ * - Prompt dikalibrasi per level JLPT dan diberi referensi data asli (bukan menebak buta)
+ *   untuk grammar_family dan related_grammar.
+ * - Validasi skema JSON hasil kembalian LLM secara ketat, termasuk aturan konten
+ *   (kana murni, tanpa markup furigana, panjang notes minimum).
  */
 
 import fs from "node:fs";
@@ -19,6 +23,7 @@ import process from "node:process";
 import { createClient } from "@supabase/supabase-js";
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const JLPT_LEVELS = ["N5", "N4", "N3", "N2", "N1"];
 
 function printUsage() {
   console.log(
@@ -30,7 +35,7 @@ function printUsage() {
       "Opsi:",
       "  --level <N5|N4|N3|N2|N1>       Filter berdasarkan level JLPT (Default: semua level).",
       "  --limit <number>                 Jumlah maksimal baris data yang diproses (Default: 10).",
-      "  --batch-size <number>            Jumlah pola tata bahasa per request LLM (Default: 5).",
+      "  --batch-size <number>            Jumlah pola tata bahasa per request LLM (Default: 3).",
       "  --force                          Paksa update meskipun data sudah lengkap.",
       "  --help, -h                       Tampilkan bantuan ini.",
     ].join("\n")
@@ -61,7 +66,7 @@ function parseArgs(args) {
   const options = {
     level: null,
     limit: 10,
-    batchSize: 5,
+    batchSize: 3,
     force: false,
   };
 
@@ -75,7 +80,7 @@ function parseArgs(args) {
 
     if (arg === "--level") {
       const lvl = args[index + 1]?.trim().toUpperCase();
-      if (lvl && ["N5", "N4", "N3", "N2", "N1"].includes(lvl)) {
+      if (lvl && JLPT_LEVELS.includes(lvl)) {
         options.level = lvl;
       } else {
         console.error(`❌ [Args] Level JLPT tidak valid: ${args[index + 1]}`);
@@ -89,6 +94,8 @@ function parseArgs(args) {
       const val = Number.parseInt(args[index + 1], 10);
       if (Number.isInteger(val) && val > 0) {
         options.limit = val;
+      } else {
+        console.warn(`⚠️ [Args] --limit tidak valid ("${args[index + 1]}"), menggunakan default: ${options.limit}`);
       }
       index += 1;
       continue;
@@ -98,6 +105,8 @@ function parseArgs(args) {
       const val = Number.parseInt(args[index + 1], 10);
       if (Number.isInteger(val) && val > 0) {
         options.batchSize = val;
+      } else {
+        console.warn(`⚠️ [Args] --batch-size tidak valid ("${args[index + 1]}"), menggunakan default: ${options.batchSize}`);
       }
       index += 1;
       continue;
@@ -132,7 +141,6 @@ function collectGeminiKeys() {
 
 async function createAiClient() {
   const geminiKeys = collectGeminiKeys();
-  loadEnvFile();
   const ninerouterUrl = process.env.NINEROUTER_URL;
   const ninerouterKey = process.env.NINEROUTER_KEY;
   let openAiBaseUrl = process.env.AI_BASE_URL;
@@ -161,6 +169,7 @@ async function createAiClient() {
             model: process.env.AI_MODEL || "ag/gemini-3-flash",
             messages: [{ role: "user", content: prompt }],
             response_format: { type: "json_object" },
+            temperature: 0.4,
             stream: false,
           }),
         });
@@ -186,7 +195,7 @@ async function createAiClient() {
       const genAI = new GoogleGenerativeAI(geminiKeys[idx]);
       return genAI.getGenerativeModel({
         model: modelName,
-        generationConfig: { responseMimeType: "application/json" },
+        generationConfig: { responseMimeType: "application/json", temperature: 0.4 },
       });
     };
 
@@ -236,30 +245,78 @@ async function createAiClient() {
   };
 }
 
-function buildPrompt(items) {
-  return `
-Anda adalah ahli bahasa Jepang profesional untuk audiens Indonesia. Tugas Anda adalah melengkapi data tabel tata bahasa (grammar) berikut:
-${JSON.stringify(items, null, 2)}
+/**
+ * Mengambil daftar kandidat related_grammar untuk sebuah item, diprioritaskan dari
+ * level JLPT yang sama, lalu level yang bersebelahan (±1). Ini dikirim ke LLM sebagai
+ * daftar pilihan konkret, bukan meminta LLM menebak slug yang bahkan tidak pernah
+ * ditunjukkan kepadanya.
+ */
+function getRelatedCandidates(item, dbItems, maxCandidates = 18) {
+  const levelIdx = JLPT_LEVELS.indexOf(item.jlpt_level);
+  const sameLevel = [];
+  const adjacentLevel = [];
 
+  for (const other of dbItems) {
+    if (other.id === item.id || !other.slug) continue;
+    if (other.jlpt_level === item.jlpt_level) {
+      sameLevel.push(other);
+    } else if (levelIdx !== -1 && Math.abs(JLPT_LEVELS.indexOf(other.jlpt_level) - levelIdx) === 1) {
+      adjacentLevel.push(other);
+    }
+  }
+
+  return [...sameLevel, ...adjacentLevel]
+    .slice(0, maxCandidates)
+    .map((d) => ({ slug: d.slug, title: d.title }));
+}
+
+/**
+ * Mengambil daftar nama grammar_family yang sudah ada di database (unik, diurutkan),
+ * untuk dikirim sebagai referensi ke LLM agar konsep yang sama tidak berakhir dengan
+ * nama kategori yang berbeda-beda antar item.
+ */
+function getExistingFamilies(dbItems, maxFamilies = 60) {
+  const families = new Set(dbItems.map((d) => d.grammar_family).filter(Boolean));
+  return Array.from(families).sort().slice(0, maxFamilies);
+}
+
+function buildPrompt(items, existingFamilies) {
+  const familiesBlock =
+    existingFamilies.length > 0
+      ? `\nKategori "grammar_family" yang SUDAH ADA di database (gunakan ulang salah satu ini jika konsepnya cocok — JANGAN buat nama variasi baru untuk konsep yang sama; hanya buat nama baru bila benar-benar tidak ada yang cocok):\n${JSON.stringify(existingFamilies)}\n`
+      : "";
+
+  return `
+Anda adalah ahli bahasa Jepang profesional untuk audiens Indonesia. Tugas Anda adalah melengkapi data tabel tata bahasa (grammar) berikut. Setiap item sudah dilengkapi "jlpt_level" dan daftar "related_grammar_candidates" milik item tersebut — gunakan keduanya untuk mengkalibrasi jawaban, jangan mengarang di luar itu.
+
+${JSON.stringify(items, null, 2)}
+${familiesBlock}
 Untuk setiap item tata bahasa, hasilkan bidang-bidang berikut:
 - "id": String ID dari item input (wajib sama persis).
 - "meaning": Arti atau fungsi tata bahasa tersebut dalam Bahasa Indonesia.
 - "formation": Pola pembentukan tata bahasa (misal: "KK Kamus + ことになっている").
 - "formation_furigana": Pembacaan kana dari pola pembentukan tersebut (gunakan Hiragana bersih, jangan ada huruf Romaji seperti KK/KS/KB, ganti KK dengan どうし, KS dengan けいようし, KB dengan めいし).
 - "formation_romaji": Romaji standar dari pola pembentukan tersebut.
-- "examples": Array berisi tepat 2 objek kalimat contoh Jepang-Indonesia yang mendemonstrasikan pola tata bahasa ini:
-  - "jp": Kalimat contoh Jepang natural (tanpa furigana/ruby di dalam string jp, tulis kanji secara normal).
-  - "id": Terjemahan kalimat contoh tersebut dalam Bahasa Indonesia.
-- "notes": Catatan tambahan tentang nuansa penggunaan, formalitas, atau informasi kontekstual lainnya dalam Bahasa Indonesia (maksimal 2 kalimat).
-- "grammar_family": Nama keluarga/kategori tata bahasa dalam Bahasa Indonesia (misal: "Keinginan", "Sebab-Akibat", "Keharusan", "Waktu", "Keigo", "こと", "もの").
-- "related_grammar": Array berisi slug tata bahasa lain yang berhubungan dekat (maksimal 2 slug, contoh: jika target adalah "n4-node", related_grammar bisa berupa ["n5-kara"]). Jika tidak ada, isi dengan array kosong [].
+- "examples": Array berisi tepat 2 objek kalimat contoh Jepang-Indonesia berkualitas tinggi yang mendemonstrasikan pola tata bahasa ini. Sesuaikan tingkat kesulitan vokabulari dan struktur kalimat dengan "jlpt_level" item (kalimat untuk N5 wajib memakai vokabulari dasar N5, bukan vokabulari tingkat lanjut, dan sebaliknya):
+  - "japanese": Kalimat contoh Jepang menggunakan Kanji dan Kana standar.
+  - "furigana": Pembacaan furigana dari kalimat tersebut dalam Hiragana bersih TANPA spasi atau tanda slash '/' sama sekali (contoh: "わたしはがくse..." -> "わたしはがくせいです。" atau "にほんごをべんきょうします。").
+  - "romaji": Romaji transkripsi dari kalimat tersebut (contoh: "Watashi wa gakusei desu.").
+  - "indonesian": Terjemahan alami kalimat contoh dalam Bahasa Indonesia.
+- "notes": Penjelasan komprehensif dalam Bahasa Indonesia yang ramah pemula, terstruktur rapi dengan Markdown agar mudah dibaca (DILARANG menulis satu paragraf panjang tebal). Gunakan format berikut secara ketat:
+  1. Paragraf pembuka singkat (1-2 kalimat) menjelaskan fungsi dasar tata bahasa.
+  2. Gunakan daftar poin (- ) untuk menjabarkan cara penggunaan, nuansa khusus, tingkat kesopanan (formal/informal), atau aturan tata bahasa.
+  3. Jika ada variasi bentuk (seperti positif, negatif, lampau, dsb.), wajib sertakan perbandingan dalam bentuk tabel Markdown.
+  4. Akhiri dengan satu baris peringatan diawali emoji "⚠️" untuk menunjukkan jebakan kesalahan umum yang sering dialami pemula (misal: "⚠️ Hindari memakai bentuk ini...").
+- "grammar_family": Nama kategori tata bahasa dalam Bahasa Indonesia, format Judul Kapital dan konsisten (misal: "Keinginan", "Sebab-Akibat", "Keharusan", "Kondisional", "Waktu", "Keigo"). Gunakan ulang nama dari daftar referensi di atas jika konsepnya sama; hanya buat nama baru jika benar-benar tidak ada kategori yang cocok.
+- "related_grammar": Array berisi maksimal 2 slug tata bahasa yang berhubungan dekat. WAJIB pilih HANYA dari daftar "related_grammar_candidates" milik item tersebut (field "slug"-nya, bukan judulnya). Jika tidak ada kandidat yang relevan, kembalikan array kosong [].
 
 Aturan Penting:
 1. Respon WAJIB berupa JSON murni dengan format schema yang diminta secara ketat.
-2. Terjemahan "id" untuk kalimat contoh wajib dalam Bahasa Indonesia yang alami, bukan kaku.
-3. Field "examples" harus berisi tepat 2 kalimat contoh yang relevan dengan pola tata bahasa target.
-4. Di dalam kalimat Jepang ("jp"), DILARANG menggunakan tanda furigana kurung atau markup ruby. Tulis kanji secara normal.
+2. Terjemahan "indonesian" untuk kalimat contoh wajib dalam Bahasa Indonesia yang alami, bukan kaku.
+3. Field "examples" harus berisi tepat 2 kalimat contoh yang relevan dengan pola tata bahasa target dengan format lengkap (japanese, furigana murni tanpa spasi/slash, romaji, indonesian).
+4. Di dalam kalimat Jepang ("japanese"), DILARANG menggunakan tanda furigana kurung atau markup ruby. Tulis kanji secara normal.
 5. Kolom "formation_furigana" WAJIB menggunakan kana Jepang murni (Hiragana/Katakana) tanpa ada karakter alfabet/Romaji sama sekali.
+6. "related_grammar" WAJIB berupa slug yang benar-benar ada di "related_grammar_candidates" milik item terkait — JANGAN mengarang slug yang tidak ada di daftar tersebut.
 
 Skema JSON yang harus dikembalikan:
 {
@@ -271,10 +328,20 @@ Skema JSON yang harus dikembalikan:
       "formation_furigana": "ふりがな",
       "formation_romaji": "romaji",
       "examples": [
-        { "jp": "文法を使った例文です。", "id": "Ini adalah contoh kalimat menggunakan pola tata bahasa." },
-        { "jp": "もう一つの例文です。", "id": "Ini adalah kalimat contoh lainnya." }
+        {
+          "japanese": "私は学生です。",
+          "furigana": "わたしはがくせいです。",
+          "romaji": "Watashi wa gakusei desu.",
+          "indonesian": "Saya adalah seorang siswa."
+        },
+        {
+          "japanese": "日本語を勉強します。",
+          "furigana": "にほんごをべんきょうします。",
+          "romaji": "Nihongo o benkyou shimasu.",
+          "indonesian": "Saya belajar bahasa Jepang."
+        }
       ],
-      "notes": "Catatan penggunaan...",
+      "notes": "Penjelasan penggunaan...",
       "grammar_family": "Keluarga tata bahasa",
       "related_grammar": ["slug-terkait-1", "slug-terkait-2"]
     }
@@ -284,23 +351,112 @@ Skema JSON yang harus dikembalikan:
 }
 
 function validateEnrichedItem(item) {
-  if (!item || typeof item !== "object") return false;
-  if (typeof item.id !== "string" || !item.id) return false;
-  if (typeof item.meaning !== "string" || !item.meaning) return false;
-  if (typeof item.formation !== "string" || !item.formation) return false;
-  if (typeof item.formation_furigana !== "string") return false;
-  if (typeof item.formation_romaji !== "string") return false;
-  if (typeof item.notes !== "string") return false;
-  if (typeof item.grammar_family !== "string") return false;
-  if (!Array.isArray(item.related_grammar)) return false;
-  
-  if (!Array.isArray(item.examples) || item.examples.length !== 2) return false;
-  for (const ex of item.examples) {
-    if (typeof ex.jp !== "string" || !ex.jp) return false;
-    if (typeof ex.id !== "string" || !ex.id) return false;
+  if (!item || typeof item !== "object") return { valid: false, reason: "item bukan objek" };
+  if (typeof item.id !== "string" || !item.id) return { valid: false, reason: "id tidak valid" };
+  if (typeof item.meaning !== "string" || !item.meaning) return { valid: false, reason: "meaning kosong" };
+  if (typeof item.formation !== "string" || !item.formation) return { valid: false, reason: "formation kosong" };
+
+  if (typeof item.formation_furigana !== "string" || !item.formation_furigana) {
+    return { valid: false, reason: "formation_furigana kosong" };
+  }
+  if (/[A-Za-z]/.test(item.formation_furigana)) {
+    return { valid: false, reason: "formation_furigana mengandung huruf alfabet/romaji (harus kana murni)" };
+  }
+  if (/[\u4E00-\u9FFF]/.test(item.formation_furigana)) {
+    return { valid: false, reason: "formation_furigana mengandung karakter kanji (harus kana murni)" };
   }
 
-  return true;
+  if (typeof item.formation_romaji !== "string" || !item.formation_romaji) {
+    return { valid: false, reason: "formation_romaji kosong" };
+  }
+
+  if (typeof item.notes !== "string" || !item.notes) return { valid: false, reason: "notes kosong" };
+  const noteSentenceCount = (item.notes.match(/[.!?]/g) || []).length;
+  if (noteSentenceCount < 3) {
+    return { valid: false, reason: `notes terlalu singkat (${noteSentenceCount} kalimat, minimal 3)` };
+  }
+
+  if (typeof item.grammar_family !== "string" || !item.grammar_family) return { valid: false, reason: "grammar_family kosong" };
+  if (!Array.isArray(item.related_grammar)) return { valid: false, reason: "related_grammar bukan array" };
+
+  if (!Array.isArray(item.examples) || item.examples.length !== 2) {
+    return { valid: false, reason: "examples harus berisi tepat 2 item" };
+  }
+  for (const [idx, ex] of item.examples.entries()) {
+    if (typeof ex.japanese !== "string" || !ex.japanese) {
+      return { valid: false, reason: `examples[${idx}].japanese kosong` };
+    }
+    if (/[（）()]|<rt\b|<ruby\b/i.test(ex.japanese)) {
+      return { valid: false, reason: `examples[${idx}].japanese mengandung markup furigana/ruby yang dilarang` };
+    }
+    if (typeof ex.furigana !== "string" || !ex.furigana) {
+      return { valid: false, reason: `examples[${idx}].furigana kosong` };
+    }
+    if (typeof ex.romaji !== "string" || !ex.romaji) {
+      return { valid: false, reason: `examples[${idx}].romaji kosong` };
+    }
+    if (typeof ex.indonesian !== "string" || !ex.indonesian) {
+      return { valid: false, reason: `examples[${idx}].indonesian kosong` };
+    }
+  }
+
+  return { valid: true, reason: null };
+}
+
+/**
+ * Menghapus slug related_grammar yang tidak dikenal (halusinasi LLM) atau self-reference,
+ * dengan mencocokkan ke daftar slug yang benar-benar ada di tabel. Ini adalah safety net —
+ * karena prompt sudah mengirim daftar kandidat konkret, seharusnya sudah jarang ketemu
+ * kasus ini, tapi tetap dijaga untuk kasus LLM salah ketik/format.
+ * Membatasi hasil akhir ke maksimal 2 slug sesuai instruksi prompt.
+ */
+function sanitizeRelatedGrammar(item, validSlugs, originalItem) {
+  if (!Array.isArray(item.related_grammar)) return;
+
+  const kept = [];
+  const removed = [];
+
+  for (let slug of item.related_grammar) {
+    if (typeof slug !== "string") continue;
+    slug = slug.trim().toLowerCase();
+
+    if (validSlugs.has(slug) && slug !== originalItem.slug) {
+      kept.push(slug);
+      continue;
+    }
+
+    let matched = false;
+    if (!JLPT_LEVELS.some((lvl) => slug.startsWith(`${lvl.toLowerCase()}-`))) {
+      for (const lvl of JLPT_LEVELS) {
+        const candidate = `${lvl.toLowerCase()}-${slug}`;
+        if (validSlugs.has(candidate) && candidate !== originalItem.slug) {
+          kept.push(candidate);
+          matched = true;
+          break;
+        }
+      }
+    }
+    if (matched) continue;
+
+    const cleanGenerated = slug.replace(/[^a-z0-9]/g, "");
+    for (const valid of validSlugs) {
+      const cleanValid = valid.replace(/[^a-z0-9]/g, "");
+      const validWithoutLvl = valid.slice(3).replace(/[^a-z0-9]/g, "");
+      if ((cleanValid === cleanGenerated || validWithoutLvl === cleanGenerated) && valid !== originalItem.slug) {
+        kept.push(valid);
+        matched = true;
+        break;
+      }
+    }
+
+    if (!matched) removed.push(slug);
+  }
+
+  if (removed.length > 0) {
+    console.warn(`  ⚠️ [Validasi] related_grammar untuk "${originalItem.title}" berisi slug tidak dikenal, dihapus: ${removed.join(", ")}`);
+  }
+
+  item.related_grammar = [...new Set(kept)].slice(0, 2);
 }
 
 async function main() {
@@ -318,11 +474,11 @@ async function main() {
 
   console.log(`🔌 [Supabase] Menghubungkan ke ${supabaseUrl}...`);
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
-  
+
   const aiClient = await createAiClient();
   console.log(`🤖 [AI] Model aktif: ${aiClient.provider}`);
 
-  console.log("🔍 [Database] Mencari data kosong pada tabel \"grammar\"...");
+  console.log('🔍 [Database] Mencari data kosong pada tabel "grammar"...');
 
   let dbItems = [];
   let page = 0;
@@ -331,7 +487,9 @@ async function main() {
 
   try {
     while (hasMore) {
-      let query = supabase.from("grammar").select("id, title, meaning, formation, formation_furigana, formation_romaji, notes, related_grammar, grammar_family, examples, jlpt_level");
+      let query = supabase
+        .from("grammar")
+        .select("id, slug, title, meaning, formation, formation_furigana, formation_romaji, notes, related_grammar, grammar_family, examples, jlpt_level");
       if (options.level) {
         query = query.eq("jlpt_level", options.level);
       }
@@ -348,6 +506,9 @@ async function main() {
     console.error("❌ [Supabase] Gagal membaca tabel:", error.message);
     process.exit(1);
   }
+
+  const validSlugs = new Set(dbItems.map((item) => item.slug).filter(Boolean));
+  const existingFamilies = getExistingFamilies(dbItems);
 
   const filteredItems = options.force
     ? dbItems
@@ -369,20 +530,50 @@ async function main() {
     const batch = itemsToProcess.slice(i, i + options.batchSize);
     const batchIndex = Math.floor(i / options.batchSize) + 1;
     const totalBatches = Math.ceil(itemsToProcess.length / options.batchSize);
-    
+
     console.log(`\n📦 [Proses] Memproses batch ${batchIndex}/${totalBatches}...`);
 
-    const promptItems = batch.map((item) => ({ id: item.id, title: item.title }));
-    const prompt = buildPrompt(promptItems);
+    const promptItems = batch.map((item) => ({
+      id: item.id,
+      title: item.title,
+      jlpt_level: item.jlpt_level,
+      related_grammar_candidates: getRelatedCandidates(item, dbItems),
+    }));
+    const prompt = buildPrompt(promptItems, existingFamilies);
+
+    // Retry dengan backoff untuk kegagalan transient (network/timeout/rate-limit)
+    // sebelum benar-benar menyerah pada batch ini.
+    let responseText = null;
+    let lastError = null;
+    const maxAttempts = 2;
+    for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+      try {
+        responseText = await aiClient.generateText(prompt);
+        lastError = null;
+        break;
+      } catch (err) {
+        lastError = err;
+        console.warn(`⚠️ [Retry] Percobaan ${attempt}/${maxAttempts} untuk batch ${batchIndex} gagal: ${err.message || err}`);
+        if (attempt < maxAttempts) await sleep(2000 * attempt);
+      }
+    }
+
+    if (lastError) {
+      console.error(`❌ [Error] Batch ${batchIndex} gagal setelah ${maxAttempts} percobaan: ${lastError.message || lastError}`);
+      if (batchIndex < totalBatches) await sleep(1500);
+      continue;
+    }
 
     try {
-      const responseText = await aiClient.generateText(prompt);
-      const jsonStart = responseText.indexOf('{');
-      const jsonEnd = responseText.lastIndexOf('}');
+      // Buang code fence markdown (```json ... ```) jika model membalas dengan itu,
+      // baru cari batas objek JSON terluar.
+      const withoutFences = responseText.replace(/```(?:json)?/gi, "");
+      const jsonStart = withoutFences.indexOf("{");
+      const jsonEnd = withoutFences.lastIndexOf("}");
       if (jsonStart === -1 || jsonEnd === -1) {
         throw new Error("Tidak menemukan block JSON.");
       }
-      const cleanJson = responseText.substring(jsonStart, jsonEnd + 1);
+      const cleanJson = withoutFences.substring(jsonStart, jsonEnd + 1);
       const parsed = JSON.parse(cleanJson);
 
       if (!Array.isArray(parsed.results)) {
@@ -391,26 +582,33 @@ async function main() {
       }
 
       for (const enriched of parsed.results) {
-        if (!validateEnrichedItem(enriched)) {
-          console.warn(`⚠️ [Validasi] Item dengan ID "${enriched.id}" gagal dalam validasi skema. Dilewati.`);
+        const original = batch.find((b) => b.id === enriched.id);
+        if (!original) {
+          console.warn(`⚠️ [Validasi] ID "${enriched.id}" dari LLM tidak cocok dengan item manapun di batch ini. Dilewati.`);
+          continue;
+        }
+        const titleLabel = original.title;
+
+        sanitizeRelatedGrammar(enriched, validSlugs, original);
+
+        const { valid, reason } = validateEnrichedItem(enriched);
+        if (!valid) {
+          console.warn(`⚠️ [Validasi] Item dengan ID "${enriched.id}" gagal validasi (${reason}). Dilewati.`);
           continue;
         }
 
-        const original = batch.find((b) => b.id === enriched.id);
-        const titleLabel = original ? original.title : enriched.id;
-        
         const updatePayload = {};
         if (options.force || !original.meaning) updatePayload.meaning = enriched.meaning;
         if (options.force || !original.formation) updatePayload.formation = enriched.formation;
         if (options.force || !original.formation_furigana) updatePayload.formation_furigana = enriched.formation_furigana;
         if (options.force || !original.formation_romaji) updatePayload.formation_romaji = enriched.formation_romaji;
-        
+
         const originalHasExamples = Array.isArray(original.examples) && original.examples.length >= 2;
         if (options.force || !originalHasExamples) updatePayload.examples = enriched.examples;
 
         if (options.force || !original.notes) updatePayload.notes = enriched.notes;
         if (options.force || !original.grammar_family) updatePayload.grammar_family = enriched.grammar_family;
-        
+
         const originalHasRelated = Array.isArray(original.related_grammar) && original.related_grammar.length > 0;
         if (options.force || !originalHasRelated) updatePayload.related_grammar = enriched.related_grammar;
 
@@ -421,17 +619,14 @@ async function main() {
 
         console.log(`  ✨ [Update] ID: "${enriched.id}" (${titleLabel}) -> memperbarui kolom: ${Object.keys(updatePayload).join(", ")}`);
 
-        const { error: updateError } = await supabase
-          .from("grammar")
-          .update(updatePayload)
-          .eq("id", enriched.id);
+        const { error: updateError } = await supabase.from("grammar").update(updatePayload).eq("id", enriched.id);
 
-          if (updateError) {
-            console.error(`  ❌ [Supabase] Gagal menyimpan ID "${enriched.id}":`, updateError.message);
-          }
+        if (updateError) {
+          console.error(`  ❌ [Supabase] Gagal menyimpan ID "${enriched.id}":`, updateError.message);
+        }
       }
     } catch (err) {
-      console.error(`❌ [Error] Gagal menyelesaikan batch ${batchIndex}:`, err.message || err);
+      console.error(`❌ [Error] Gagal memproses hasil batch ${batchIndex}:`, err.message || err);
     }
 
     if (batchIndex < totalBatches) {
