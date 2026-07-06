@@ -465,9 +465,9 @@ async function queryGeminiTtsWithRetry(text, geminiVoice, retries = 5, initialDe
 }
 
 
-async function processTtsItem(supabase, text, voice, rate = "medium") {
+async function processTtsItem(supabase, text, voice, rate = "medium", folder = "") {
   const cacheId = crypto.createHash("md5").update(`${text}_${voice}_${rate}`).digest("hex");
-  const filename = `${cacheId}.mp3`;
+  const filename = folder ? `${folder}/${cacheId}.mp3` : `${cacheId}.mp3`;
   const BUCKET_NAME = "tts-cache";
 
   const geminiVoice = GEMINI_VOICE_MAP[voice];
@@ -536,14 +536,14 @@ async function main() {
   try {
     const itemsToProcess = [];
 
-    const addItem = (text, voice) => {
+    const addItem = (text, voice, folder = "") => {
       if (!text) return;
       const clean = text.trim();
       if (!clean) return;
       
       const exists = itemsToProcess.some((i) => i.text === clean && i.voice === voice);
       if (!exists) {
-        itemsToProcess.push({ text: clean, voice });
+        itemsToProcess.push({ text: clean, voice, folder });
       }
     };
 
@@ -625,7 +625,7 @@ async function main() {
             const rawSpeaker = parts.length > 1 ? parts[0].trim() : undefined;
             const lineText = parts.length > 1 ? parts.slice(1).join("：").trim() : line.trim();
             const voice = detectVoice(rawSpeaker, i);
-            addItem(lineText, voice);
+            addItem(lineText, voice, `listening/${row.slug?.current || 'unknown'}`);
           });
         });
       }
@@ -698,7 +698,7 @@ async function main() {
       const item = targetItems[idx];
       try {
         console.log(`[${idx + 1}/${targetItems.length}] Menyintesis: "${item.text}" [Voice: ${item.voice}]`);
-        await processTtsItem(supabase, item.text, item.voice, "medium");
+        await processTtsItem(supabase, item.text, item.voice, "medium", item.folder);
         successCount += 1;
         consecutiveFailures = 0; 
         await sleep(22000); // 22s delay agar aman di bawah rate limit 3 RPM Gemini Free Tier

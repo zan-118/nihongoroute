@@ -256,7 +256,7 @@ async function main() {
   
   // Hitung hash MD5 yang konsisten dengan route API
   const cacheId = crypto.createHash("md5").update(`${options.text}_${options.voice}_${options.rate}`).digest("hex");
-  const filename = `${cacheId}.mp3`;
+  const filename = `single/${cacheId}.mp3`;
 
   console.log(`🎙️  Sintesis: "${options.text}" [Voice: ${options.voice}, Rate: ${options.rate}]`);
 

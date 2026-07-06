@@ -128,13 +128,18 @@ export async function GET(req: NextRequest) {
 
     if (cached?.audio_url) {
       debugLog(`CACHE HIT di Database! Audio URL: ${cached.audio_url}`);
-      debugLog(`Mencoba download "${hash}.mp3" dari Storage tts-cache...`);
+      let storagePath = `${hash}.mp3`;
+      const match = cached.audio_url.match(/\/public\/tts-cache\/(.+)$/);
+      if (match) {
+        storagePath = decodeURIComponent(match[1]);
+      }
+      debugLog(`Mencoba download "${storagePath}" dari Storage tts-cache...`);
 
       // Coba download file audio dari Storage
       const { data: fileData, error: downloadError } = await supabase
         .storage
         .from("tts-cache")
-        .download(`${hash}.mp3`);
+        .download(storagePath);
 
       if (!downloadError && fileData && fileData.size > 0) {
         debugLog(`SUKSES download file dari Storage! Ukuran: ${fileData.size} bytes. Memulangkan berkas biner.`);

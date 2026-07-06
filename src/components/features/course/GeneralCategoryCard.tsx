@@ -184,7 +184,7 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
               <div className="flex items-center gap-2">
                 <div className="w-5 sm:w-8 h-[1px]" style={{ backgroundColor: `rgba(${theme.glowColor}, 0.4)` }} />
                 <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] ${theme.accentText}`}>
-                  {cat.lessonCount || 0} Lessons • {isJlpt ? "JLPT Track" : "Specialized Module"}
+                  {cat.lessonCount || 0} Pelajaran • {isJlpt ? "Jalur JLPT" : "Modul Spesialis"}
                 </span>
               </div>
               <h4 className={`font-black text-foreground tracking-tighter leading-[0.9] uppercase ${

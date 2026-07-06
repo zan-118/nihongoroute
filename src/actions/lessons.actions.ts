@@ -1,7 +1,7 @@
 /**
  * @file lessons.actions.ts
- * @description Server Actions untuk mengambil data pelajaran (lessons) dan kategori kursus.
- * Menggabungkan data dari Supabase (metadata kategori) dan Sanity CMS (konten pelajaran) secara paralel.
+ * @description Server Actions untuk mengambil data pelajaran (lessons), artikel, dan kategori kursus dari Supabase,
+ * serta Listening & Reading dari Sanity CMS.
  */
 
 "use server";
@@ -10,7 +10,7 @@
 // IMPORTS
 // ======================
 import { createStaticClient } from "@/lib/supabase/server";
-import { getSanityLessonsByCategory, getSanityLessonsByCategories, getSanityLessonBySlug, getSanityReadingBySlug, getSanityListeningBySlug } from "@/lib/queries";
+import { getSanityReadingBySlug, getSanityListeningBySlug } from "@/lib/queries";
 import { LibraryItem } from "@/types/library";
 
 // ======================
@@ -32,10 +32,19 @@ export async function getLessonDetail(slug: string) {
     .from("lessons")
     .select("*, category:course_categories(*)")
     .eq("slug", slug)
-    .single();
+    .maybeSingle();
 
-  if (error) {
-    console.error("Gagal mengambil detail pelajaran:", error);
+  if (!data || error) {
+    const { data: artData } = await supabase
+      .from("articles")
+      .select("*, category:course_categories(*)")
+      .eq("slug", slug)
+      .maybeSingle();
+    if (artData) return artData;
+
+    if (error) {
+      console.error("Gagal mengambil detail pelajaran:", error);
+    }
     return null;
   }
   return data;
@@ -76,8 +85,35 @@ export async function getCourseCategories() {
   // Kumpulkan seluruh slug kategori dan UUID ke dalam satu array
   const categoryIds = categories.flatMap(cat => [cat.slug, cat.id]);
 
-  // Ambil semua data pelajaran untuk seluruh kategori dalam 1 kueri
-  const allLessons = await getSanityLessonsByCategories(categoryIds);
+  // Ambil semua data pelajaran dari Supabase lessons
+  const { data: dbLessons } = await supabase
+    .from("lessons")
+    .select("id, title, slug, category_id, order_number, summary")
+    .in("category_id", categories.map(c => c.id))
+    .order("order_number", { ascending: true });
+
+  // Ambil semua data artikel dari Supabase articles
+  const { data: dbArticles } = await supabase
+    .from("articles")
+    .select("id, title, slug, category_id, order_number, summary")
+    .in("category_id", categories.map(c => c.id))
+    .order("order_number", { ascending: true });
+
+  const allDbLessons = [
+    ...(dbLessons || []),
+    ...(dbArticles || [])
+  ];
+
+  const supabaseLessons = allDbLessons.map((l) => ({
+    _id: l.id,
+    title: l.title,
+    slug: l.slug,
+    category_id: l.category_id,
+    order_number: l.order_number,
+    summary: l.summary
+  }));
+
+  const allLessons = supabaseLessons;
 
   // Kelompokkan pelajaran berdasarkan kategori (yang cocok dengan slug atau id di category_id)
   const categoriesWithData = categories.map((cat) => {
@@ -134,10 +170,156 @@ type ContentBlock = {
   _type?: string;
   type?: string;
   children?: unknown[];
+  id?: string;
+  order?: number;
+  listType?: string;
+  items?: string[];
+  headers?: string[];
+  rows?: string[][];
+  style?: string;
+  calloutType?: string;
+  title?: string;
+  content?: string;
+  romaji?: string;
+  translation?: string;
   [key: string]: unknown;
 };
 
 const isUUID = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
+
+/**
+ * Mengubah konten Markdown biasa menjadi struktur ContentBlock dinamis.
+ */
+function parseMarkdownToBlocks(markdown: string): ContentBlock[] {
+  if (!markdown) return [];
+
+  const blocks: ContentBlock[] = [];
+  const sections = markdown.split(/\r?\n\s*\r?\n/);
+
+  sections.forEach((section, idx) => {
+    const trimmed = section.trim();
+    if (!trimmed) return;
+
+    const id = `block-${idx}`;
+
+    if (trimmed.startsWith("### ")) {
+      blocks.push({
+        id,
+        type: "heading",
+        content: trimmed.slice(4).trim(),
+        level: 3,
+        order: idx
+      });
+      return;
+    }
+    if (trimmed.startsWith("## ")) {
+      blocks.push({
+        id,
+        type: "heading",
+        content: trimmed.slice(3).trim(),
+        level: 2,
+        order: idx
+      });
+      return;
+    }
+    if (trimmed.startsWith("# ")) {
+      blocks.push({
+        id,
+        type: "heading",
+        content: trimmed.slice(2).trim(),
+        level: 1,
+        order: idx
+      });
+      return;
+    }
+
+    if (trimmed.startsWith(">")) {
+      const lines = trimmed.split(/\r?\n/).map(l => l.replace(/^>\s?/, "").trim());
+      let title = "";
+      let content = "";
+      if (lines.length > 1 && (lines[0].startsWith("**") || /^[^\w\s]/.test(lines[0]))) {
+        title = lines[0].replace(/^\*\*|\*\*$/g, "");
+        content = lines.slice(1).join("\n");
+      } else {
+        content = lines.join("\n");
+      }
+
+      blocks.push({
+        id,
+        type: "callout",
+        title,
+        content,
+        calloutType: "info",
+        order: idx
+      });
+      return;
+    }
+
+    // List block (bullet)
+    if (trimmed.startsWith("- ") || trimmed.startsWith("* ") || trimmed.startsWith("• ")) {
+      const items = trimmed.split(/\r?\n/).map(line => line.replace(/^[-*•]\s?/, "").trim());
+      blocks.push({
+        id,
+        type: "list",
+        listType: "bullet",
+        items,
+        order: idx
+      } as ContentBlock);
+      return;
+    }
+
+    // List block (number)
+    if (/^\d+\.\s/.test(trimmed)) {
+      const items = trimmed.split(/\r?\n/).map(line => line.replace(/^\d+\.\s?/, "").trim());
+      blocks.push({
+        id,
+        type: "list",
+        listType: "number",
+        items,
+        order: idx
+      } as ContentBlock);
+      return;
+    }
+
+    // Table block
+    if (trimmed.startsWith("|")) {
+      const lines = trimmed.split(/\r?\n/).map(line => line.trim());
+      if (lines.length >= 2) {
+        const headers = lines[0].split("|").slice(1, -1).map(c => c.trim());
+        const rows = lines.slice(2).map(line => line.split("|").slice(1, -1).map(c => c.trim()));
+        blocks.push({
+          id,
+          type: "table",
+          headers,
+          rows,
+          order: idx
+        } as ContentBlock);
+        return;
+      }
+    }
+
+    const imgMatch = trimmed.match(/^!\[(.*?)\]\((.*?)\)$/);
+    if (imgMatch) {
+      blocks.push({
+        id,
+        type: "image",
+        title: imgMatch[1],
+        content: imgMatch[2],
+        order: idx
+      });
+      return;
+    }
+
+    blocks.push({
+      id,
+      type: "text",
+      content: trimmed,
+      order: idx
+    });
+  });
+
+  return blocks;
+}
 
 /**
  * Mengambil detail satu pelajaran berdasarkan slug atau ID beserta relasinya.
@@ -146,9 +328,6 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
   const supabase = createStaticClient();
 
   try {
-    const data = (await getSanityLessonBySlug(slugOrId)) as LibraryItem | null;
-    if (!data) return null;
-
     // Pastikan array berupa array sungguhan (tangani kemungkinan JSON berbentuk string)
     const parseArray = (val: unknown) => {
       if (!val) return [];
@@ -156,40 +335,130 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
       try { return typeof val === "string" ? JSON.parse(val) : []; } catch { return []; }
     };
 
+    // 1. Coba ambil dari Supabase terlebih dahulu
+    const query = supabase
+      .from("lessons")
+      .select("*, category:course_categories(*)");
+
+    if (isUUID(slugOrId)) {
+      query.eq("id", slugOrId);
+    } else {
+      query.eq("slug", slugOrId);
+    }
+
+    const { data: dbLesson, error: dbErr } = await query.maybeSingle();
+
+    if (dbErr) {
+      console.error(`[getLibraryLessonDetail] Supabase query error:`, dbErr);
+    }
+
+    let data: LibraryItem | null = null;
+    let fromSupabase = false;
+
+    if (dbLesson) {
+      console.log(`[getLibraryLessonDetail] BERHASIL mengambil dari SUPABASE untuk slugOrId="${slugOrId}"`);
+      fromSupabase = true;
+      data = {
+        id: dbLesson.id,
+        _id: dbLesson.id,
+        title: dbLesson.title,
+        slug: dbLesson.slug,
+        summary: dbLesson.summary,
+        order_number: dbLesson.order_number,
+        estimated_minutes: dbLesson.estimated_minutes || 15,
+        content_blocks: parseArray(dbLesson.content_blocks),
+        vocab_list: parseArray(dbLesson.vocab_list),
+        kanji_list: parseArray(dbLesson.kanji_list),
+        grammar_list: parseArray(dbLesson.grammar_list),
+        listening_list: parseArray(dbLesson.listening_list),
+        reading_list: parseArray(dbLesson.reading_list),
+        quizzes: parseArray(dbLesson.quizzes),
+        seo: dbLesson.seo || {},
+        category_id: dbLesson.category_id,
+        levelTitle: dbLesson.category?.title || "N5",
+        categoryType: dbLesson.category?.type || "jlpt",
+        generation_context: dbLesson.generation_context
+      } as LibraryItem;
+    } else {
+      // 2. Coba ambil dari tabel articles di Supabase
+      const { data: dbArticle, error: artErr } = await supabase
+        .from("articles")
+        .select("*, category:course_categories(*)")
+        .eq(isUUID(slugOrId) ? "id" : "slug", slugOrId)
+        .maybeSingle();
+
+      if (dbArticle) {
+        console.log(`[getLibraryLessonDetail] BERHASIL mengambil dari ARTICLES untuk slugOrId="${slugOrId}"`);
+        fromSupabase = true;
+        data = {
+          id: dbArticle.id,
+          _id: dbArticle.id,
+          title: dbArticle.title,
+          slug: dbArticle.slug,
+          summary: dbArticle.summary,
+          order_number: dbArticle.order_number,
+          estimated_minutes: dbArticle.estimated_minutes || 15,
+          content_blocks: parseMarkdownToBlocks(dbArticle.content || ""),
+          image_url: dbArticle.image_url,
+          vocab_list: [],
+          kanji_list: [],
+          grammar_list: [],
+          listening_list: [],
+          reading_list: [],
+          quizzes: parseArray(dbArticle.quizzes),
+          seo: dbArticle.seo || {},
+          category_id: dbArticle.category_id,
+          levelTitle: dbArticle.category?.title || "Artikel",
+          categoryType: dbArticle.category?.type || "article",
+          generation_context: { source: "articles_table" }
+        } as LibraryItem;
+      } else {
+        data = null;
+      }
+    }
+
+    if (!data) return null;
+
     const contentBlocks = parseArray(data.content_blocks);
     
-    // Mengambil vocab_list & kanji_list secara dinamis dari tabel lessons di Supabase berdasarkan slug pelajaran
     let vocabListRaw: string[] = [];
     let kanjiListRaw: string[] = [];
-    try {
-      const lessonSlug = typeof data.slug === "object" && data.slug !== null 
-        ? (data.slug as { current?: string }).current || slugOrId 
-        : String(data.slug || slugOrId);
 
-      const { data: dbLesson, error: dbErr } = await supabase
-        .from("lessons")
-        .select("vocab_list, kanji_list")
-        .eq("slug", lessonSlug)
-        .single();
+    if (fromSupabase) {
+      vocabListRaw = parseArray(data.vocab_list);
+      kanjiListRaw = parseArray(data.kanji_list);
+    } else {
+      // Mengambil vocab_list & kanji_list secara dinamis dari tabel lessons di Supabase berdasarkan slug pelajaran
+      try {
+        const lessonSlug = typeof data.slug === "object" && data.slug !== null 
+          ? (data.slug as { current?: string }).current || slugOrId 
+          : String(data.slug || slugOrId);
 
-      if (dbErr) {
-        if (dbErr.code !== "PGRST116") {
-          console.error(`[getLibraryLessonDetail] Gagal mengambil daftar dari database untuk slug="${lessonSlug}":`, dbErr.message);
+        const { data: dbLessonMeta, error: dbErrMeta } = await supabase
+          .from("lessons")
+          .select("vocab_list, kanji_list")
+          .eq("slug", lessonSlug)
+          .single();
+
+        if (dbErrMeta) {
+          if (dbErrMeta.code !== "PGRST116") {
+            console.error(`[getLibraryLessonDetail] Gagal mengambil daftar dari database untuk slug="${lessonSlug}":`, dbErrMeta.message);
+          }
+        } else if (dbLessonMeta) {
+          if (dbLessonMeta.vocab_list) vocabListRaw = parseArray(dbLessonMeta.vocab_list);
+          if (dbLessonMeta.kanji_list) kanjiListRaw = parseArray(dbLessonMeta.kanji_list);
         }
-      } else if (dbLesson) {
-        if (dbLesson.vocab_list) vocabListRaw = parseArray(dbLesson.vocab_list);
-        if (dbLesson.kanji_list) kanjiListRaw = parseArray(dbLesson.kanji_list);
+      } catch (err) {
+        console.error(`[getLibraryLessonDetail] Gagal mengambil daftar dari database:`, err);
       }
-    } catch (err) {
-      console.error(`[getLibraryLessonDetail] Gagal mengambil daftar dari database:`, err);
-    }
 
-    // Fallback ke data Sanity jika data di database kosong
-    if (!vocabListRaw.length && (data.vocab_list || data.vocabList)) {
-      vocabListRaw = parseArray(data.vocab_list || data.vocabList);
-    }
-    if (!kanjiListRaw.length && (data.kanji_list || data.kanjiList)) {
-      kanjiListRaw = parseArray(data.kanji_list || data.kanjiList);
+      // Fallback ke data Sanity jika data di database kosong
+      if (!vocabListRaw.length && (data.vocab_list || data.vocabList)) {
+        vocabListRaw = parseArray(data.vocab_list || data.vocabList);
+      }
+      if (!kanjiListRaw.length && (data.kanji_list || data.kanjiList)) {
+        kanjiListRaw = parseArray(data.kanji_list || data.kanjiList);
+      }
     }
     const grammarListRaw = parseArray(data.grammar_list || data.grammarList);
     const listeningListRaw = parseArray(data.listening_list || data.listeningList);
@@ -341,7 +610,12 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
             ...matched,
             _id: matched.id,
             jlptLevel: matched.jlpt_level,
-            exampleSentences: matched.examples
+            exampleSentences: (matched.examples as Array<Record<string, string>> || []).map((ex) => ({
+              jp: ex.japanese || ex.jp || "",
+              id: ex.indonesian || ex.id || "",
+              romaji: ex.romaji || "",
+              furigana: ex.furigana || ""
+            }))
           };
         }
         return {
@@ -455,7 +729,140 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
     ]);
 
     // Tambahkan pemeriksaan akhir untuk artikel
-    if (!result.articles || (result.articles as unknown[]).length === 0) {
+    // Rekonstruksi dinamis hanya untuk kategori tipe jlpt, untuk kategori umum/general gunakan content_blocks asli
+    if (fromSupabase && result.categoryType === "jlpt") {
+      const dynamicBlocks: ContentBlock[] = [];
+      const orderNum = result.order_number || 1;
+
+      // 1. Tujuan Belajar (Can-Do Objectives)
+      dynamicBlocks.push({
+        _type: "block",
+        style: "h2",
+        children: [{ _type: "span", text: `🎯 1. Tujuan Belajar (Can-Do Objectives)` }]
+      });
+      const canDoText = (result.generation_context as Record<string, unknown>)?.can_do as string || result.summary;
+      if (canDoText) {
+        dynamicBlocks.push({
+          _type: "block",
+          style: "normal",
+          children: [{ _type: "span", text: `Pada bab ini, kita akan belajar skill penting berikut untuk mencapai target kemampuan:` }]
+        });
+        dynamicBlocks.push({
+          _type: "block",
+          style: "normal",
+          children: [{ _type: "span", text: `• ${canDoText}` }]
+        });
+      }
+
+      // 2. Target Kosakata
+      if (result.vocabList && result.vocabList.length > 0) {
+        dynamicBlocks.push({
+          _type: "block",
+          style: "h2",
+          children: [{ _type: "span", text: `📖 2. Target Kosakata` }]
+        });
+        dynamicBlocks.push({
+          _type: "block",
+          style: "normal",
+          children: [{ _type: "span", text: "Metode belajar praktis: Kanji (Hiragana - Romaji) : Arti Bahasa Indonesia kontekstual." }]
+        });
+        dynamicBlocks.push({
+          _type: "vocabBlock"
+        });
+      }
+
+      // 3. Tata Bahasa & Penjelasan
+      if (result.grammarList && result.grammarList.length > 0) {
+        dynamicBlocks.push({
+          _type: "block",
+          style: "h2",
+          children: [{ _type: "span", text: `📖 3. Tata Bahasa & Penjelasan` }]
+        });
+        (result.grammarList as Array<Record<string, unknown>> || []).forEach((gItem) => {
+          const g = gItem as Record<string, unknown>;
+          dynamicBlocks.push({
+            _type: "grammarBlock",
+            title: g.title as string | undefined,
+            content: (g.formation as string) || "",
+            furigana: (g.formation_furigana as string) || "",
+            translation: (g.meaning as string) || "",
+            examples: g.exampleSentences || g.examples || [],
+            notes: g.notes as string | undefined,
+            slug: g.slug as string | undefined
+          });
+        });
+      }
+
+      // 4. Daftar Kanji Dasar
+      if (result.kanjiList && result.kanjiList.length > 0) {
+        dynamicBlocks.push({
+          _type: "block",
+          style: "h2",
+          children: [{ _type: "span", text: `🖌️ 4. Daftar Kanji Dasar (Bab ${orderNum})` }]
+        });
+        dynamicBlocks.push({
+          _type: "block",
+          style: "normal",
+          children: [{ _type: "span", text: "Ingin mahir menulis aksara Jepang? Pelajari detail urutan goresan (stroke order), cara baca Onyomi dan Kunyomi, serta contoh kosakata praktis di modul Kanji khusus NihongoRoute." }]
+        });
+        dynamicBlocks.push({
+          _type: "kanjiBlock"
+        });
+      }
+
+      // 5. Catatan Budaya
+      const dbCallouts = contentBlocks.filter((b: unknown): b is ContentBlock => {
+        const block = b as Record<string, unknown>;
+        return block?.type === "callout" || block?._type === "calloutBlock";
+      });
+      if (dbCallouts.length > 0) {
+        dynamicBlocks.push({
+          _type: "block",
+          style: "h2",
+          children: [{ _type: "span", text: `⛩️ 5. Catatan Budaya` }]
+        });
+        dbCallouts.forEach((c: ContentBlock) => {
+          dynamicBlocks.push({
+            _type: "calloutBlock",
+            calloutType: (c.calloutType as string) || (c.type as string) || "info",
+            title: c.title as string | undefined,
+            content: c.content as string | undefined
+          });
+        });
+      }
+
+      // 6. Praktik Membaca Nyata (Dialog)
+      const dbDialogs = contentBlocks.filter((b: unknown): b is ContentBlock => {
+        const block = b as Record<string, unknown>;
+        return block?.type === "dialogue" || block?._type === "dialogueBlock";
+      });
+      if (dbDialogs.length > 0) {
+        dynamicBlocks.push({
+          _type: "block",
+          style: "h2",
+          children: [{ _type: "span", text: `💬 6. Praktik Membaca Nyata (Dialog)` }]
+        });
+        dbDialogs.forEach((d: ContentBlock) => {
+          dynamicBlocks.push({
+            _type: "dialogueBlock",
+            content: d.content as string,
+            romaji: d.romaji as string,
+            translation: d.translation as string
+          });
+        });
+      }
+
+      // 7. Kuis Evaluasi
+      if (result.quizzes && result.quizzes.length > 0) {
+        dynamicBlocks.push({
+          _type: "block",
+          style: "h2",
+          children: [{ _type: "span", text: `✏️ 7. Kuis Evaluasi Bab ${orderNum}` }]
+        });
+      }
+
+      result.articles = dynamicBlocks;
+    } else if (!result.articles || (result.articles as unknown[]).length === 0) {
       result.articles = articles.length > 0 ? articles : contentBlocks;
     }
 

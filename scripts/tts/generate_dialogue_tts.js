@@ -455,9 +455,9 @@ async function queryGeminiTtsWithRetry(text, geminiVoice, retries = 3, initialDe
   }
 }
 
-async function processTtsItem(supabase, text, voice, rate = "medium") {
+async function processTtsItem(supabase, text, voice, rate = "medium", folder = "") {
   const cacheId = crypto.createHash("md5").update(`${text}_${voice}_${rate}`).digest("hex");
-  const filename = `${cacheId}.mp3`;
+  const filename = folder ? `${folder}/${cacheId}.mp3` : `${cacheId}.mp3`;
   const BUCKET_NAME = "tts-cache";
 
   const geminiVoice = GEMINI_VOICE_MAP[voice];
@@ -511,18 +511,18 @@ async function main() {
   try {
     const itemsToProcess = [];
 
-    const addItem = (text, voice) => {
+    const addItem = (text, voice, folder = "") => {
       if (!text) return;
       const clean = text.trim();
       if (!clean) return;
       
       const exists = itemsToProcess.some((i) => i.text === clean && i.voice === voice);
       if (!exists) {
-        itemsToProcess.push({ text: clean, voice });
+        itemsToProcess.push({ text: clean, voice, folder });
       }
     };
 
-    const processContentBlocks = (blocks) => {
+    const processContentBlocks = (blocks, folder = "") => {
       if (!Array.isArray(blocks)) return;
       blocks.forEach((block) => {
         const type = block.type || block._type;
@@ -533,7 +533,7 @@ async function main() {
             const rawSpeaker = parts.length > 1 ? parts[0].trim() : undefined;
             const lineText = parts.length > 1 ? parts.slice(1).join("：").trim() : line.trim();
             const voice = detectVoice(rawSpeaker, i);
-            addItem(lineText, voice);
+            addItem(lineText, voice, folder);
           });
         }
       });
@@ -541,7 +541,7 @@ async function main() {
 
     // 1. Tarik pelajaran (lessons) dari Supabase
     if (options.type !== "listening") {
-      console.log("🔍 [1/4] Menarik data lessons dari Supabase...");
+      console.log("🔍 [1/3] Menarik data lessons dari Supabase...");
       let sbQuery = supabase.from("lessons").select("content_blocks, slug, order_number");
       if (options.level) {
         sbQuery = sbQuery.like("slug", `${options.level.toLowerCase()}-%`);
@@ -551,42 +551,16 @@ async function main() {
       }
       const { data: supabaseLessons } = await sbQuery;
       if (supabaseLessons) {
-        supabaseLessons.forEach((row) => processContentBlocks(row.content_blocks));
+        supabaseLessons.forEach((row) => processContentBlocks(row.content_blocks, `lessons/${row.slug}`));
       }
     } else {
-      console.log("🔍 [1/4] Melewati lessons dari Supabase (filter tipe).");
+      console.log("🔍 [1/3] Melewati lessons dari Supabase (filter tipe).");
     }
 
-    // 2. Tarik pelajaran (lessons) dari Sanity CMS
-    if (options.type !== "listening") {
-      try {
-        console.log("🔍 [2/4] Menarik data lessons dari Sanity...");
-        let query = '*[_type == "lesson"]';
-        const filters = [];
-        if (options.level) {
-          filters.push(`(slug.current match "${options.level.toLowerCase()}*" || title match "${options.level}*")`);
-        }
-        if (options.lessonNum !== null) {
-          filters.push(`order_number == ${options.lessonNum}`);
-        }
-        if (filters.length > 0) {
-          query = `*[_type == "lesson" && ${filters.join(" && ")}]`;
-        }
-        const sanityLessons = await sanityClient.fetch(`${query} { content_blocks }`);
-        if (Array.isArray(sanityLessons)) {
-          sanityLessons.forEach((row) => processContentBlocks(row.content_blocks));
-        }
-      } catch (err) {
-        console.warn("⚠️  [Sanity] Lewati lessons: ", err.message);
-      }
-    } else {
-      console.log("🔍 [2/4] Melewati lessons dari Sanity (filter tipe).");
-    }
-
-    // 3. Tarik listeningMaterial dari Sanity CMS
+    // 2. Tarik listeningMaterial dari Sanity CMS
     if (options.type !== "lesson" && options.lessonNum === null) {
       try {
-        console.log("🔍 [3/4] Menarik data listeningMaterial dari Sanity...");
+        console.log("🔍 [2/3] Menarik data listeningMaterial dari Sanity...");
         let lmQuery = '*[_type == "listeningMaterial"]';
         const filters = [];
         if (options.level) {
@@ -598,7 +572,7 @@ async function main() {
         if (filters.length > 0) {
           lmQuery = `*[_type == "listeningMaterial" && ${filters.join(" && ")}]`;
         }
-        const listeningMaterials = await sanityClient.fetch(`${lmQuery} { body }`);
+        const listeningMaterials = await sanityClient.fetch(`${lmQuery} { body, slug }`);
         if (Array.isArray(listeningMaterials)) {
           listeningMaterials.forEach((row) => {
             if (!row.body) return;
@@ -608,7 +582,7 @@ async function main() {
               const rawSpeaker = parts.length > 1 ? parts[0].trim() : undefined;
               const lineText = parts.length > 1 ? parts.slice(1).join("：").trim() : line.trim();
               const voice = detectVoice(rawSpeaker, i);
-              addItem(lineText, voice);
+              addItem(lineText, voice, `listening/${row.slug?.current || 'unknown'}`);
             });
           });
         }
@@ -616,13 +590,13 @@ async function main() {
         console.warn("⚠️  [Sanity] Lewati listeningMaterial: ", err.message);
       }
     } else {
-      console.log("🔍 [3/4] Melewati listeningMaterial dari Sanity (filter tipe/nomor lesson).");
+      console.log("🔍 [2/3] Melewati listeningMaterial dari Sanity (filter tipe/nomor lesson).");
     }
 
     console.log(`📊 Total baris teks dialog/contoh kalimat unik yang ditemukan: ${itemsToProcess.length}`);
 
-    // 4. Bandingkan dengan database tts_cache (Paginated)
-    console.log("🔍 [4/4] Memeriksa status cache di database...");
+    // 3. Bandingkan dengan database tts_cache (Paginated)
+    console.log("🔍 [3/3] Memeriksa status cache di database...");
     const missingItems = [];
     const existingCacheIds = new Set();
     let dbHasMore = true;
@@ -684,7 +658,7 @@ async function main() {
       const item = targetItems[idx];
       try {
         console.log(`[${idx + 1}/${targetItems.length}] Menyintesis: "${item.text}" [Voice: ${item.voice}]`);
-        await processTtsItem(supabase, item.text, item.voice, "medium");
+        await processTtsItem(supabase, item.text, item.voice, "medium", item.folder);
         successCount += 1;
         consecutiveFailures = 0; // reset
         await sleep(8000); // 8s rate limiting to stay safely under 10 RPM (Gemini Free Tier)

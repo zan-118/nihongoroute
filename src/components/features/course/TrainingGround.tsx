@@ -110,24 +110,24 @@ const TrainingCard = React.memo(function TrainingCard({ item }: { item: Training
 export function TrainingGround({ categoryId, themeColor, itemVariants }: TrainingGroundProps) {
   const trainingItems = useMemo<TrainingItem[]>(() => [
     {
-      title: "Vocabulary",
-      desc: "Flashcard & Spaced Repetition",
+      title: "Kosakata",
+      desc: "Flashcard & Sistem SRS",
       icon: Layers,
       colorClass: "text-primary",
       rgb: "var(--primary-rgb)",
       href: `/tools/flashcards?category=${categoryId}&mode=vocab`,
     },
     {
-      title: "Kanji Lab",
-      desc: "Stroke Order & Recognition",
+      title: "Laboratorium Kanji",
+      desc: "Urutan Goresan & Pengenalan",
       icon: PenTool,
       colorClass: "text-secondary",
       rgb: "var(--secondary-rgb)",
       href: `/tools/flashcards?category=${categoryId}&mode=kanji`,
     },
     {
-      title: "Survival",
-      desc: "Speed & Accuracy Challenge",
+      title: "Game Bertahan Hidup",
+      desc: "Tantangan Kecepatan & Akurasi",
       icon: Flame,
       colorClass: "text-destructive",
       rgb: "var(--destructive-rgb)",
@@ -140,7 +140,7 @@ export function TrainingGround({ categoryId, themeColor, itemVariants }: Trainin
       <div className="flex items-center gap-4 mb-5 md:mb-8">
         <div className="space-y-0.5">
           <h3 className="text-base sm:text-lg md:text-xl uppercase tracking-tight text-foreground flex items-center gap-2">
-            <Sparkles size={16} className={themeColor} /> Training Ground
+            <Sparkles size={16} className={themeColor} /> Area Latihan
           </h3>
           <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-muted-foreground/60">
             Optimalkan Hafalan & Keterampilan
@@ -150,9 +150,9 @@ export function TrainingGround({ categoryId, themeColor, itemVariants }: Trainin
       </div>
 
       {/* Mobile: horizontal scroll, Desktop: 3-col grid */}
-      <div className="flex flex-col gap-4">
+      <div className="flex sm:grid sm:grid-cols-3 overflow-x-auto sm:overflow-visible gap-4 pb-4 sm:pb-0 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
         {trainingItems.map((item) => (
-          <Link key={item.title} href={item.href} className="group shrink-0 w-[75vw] sm:w-auto">
+          <Link key={item.title} href={item.href} className="group shrink-0 w-[280px] sm:w-auto h-full block">
             <TrainingCard item={item} />
           </Link>
         ))}

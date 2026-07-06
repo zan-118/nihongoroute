@@ -94,7 +94,7 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
                   color: isHovered ? `rgb(${themeRgb})` : 'hsl(var(--muted-foreground))'
                 }}
               >
-                {progress}% Complete
+                {progress}% Selesai
               </div>
             )}
           </div>
@@ -122,7 +122,7 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
                 color: isHovered ? `rgb(${themeRgb})` : `rgba(${themeRgb}, 0.4)`
               }}
             >
-              Start Learning
+              Mulai Belajar
             </span>
             <div
               className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-md sm:rounded-lg border flex items-center justify-center transition-all duration-200 shadow-md"

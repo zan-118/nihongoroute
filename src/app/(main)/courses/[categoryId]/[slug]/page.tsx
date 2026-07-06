@@ -32,7 +32,6 @@ import { MarkCompleteButton } from "@/components/features/lessons/MarkCompleteBu
 import { createClient } from "@/lib/supabase/server";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
 import { formatQuizzes, getLessonNavigation } from "@/lib/utils/lesson-utils";
-import { getSanityLessonsByCategory } from "@/lib/queries";
 import {
   breadcrumbJsonLd,
   createPageMetadata,
@@ -65,7 +64,7 @@ const getLessonData = cache(async (categoryId: string, slug: string) => {
     supabase
       .from("course_categories")
       .select("id, title, type")
-      .eq("slug", categoryId)
+      .eq("slug", categoryId.toLowerCase())
       .single(),
     getLibraryItemBySlug("lessons", slug)
   ]);
@@ -79,8 +78,34 @@ const getLessonData = cache(async (categoryId: string, slug: string) => {
     lesson.levelCode = categoryId;
   }
 
-  // 2. Dapatkan Navigasi (tergantung pada category.id)
-  const nav = await getSanityLessonsByCategory(categoryId, category.id);
+  // 2. Dapatkan Navigasi (gabungkan Supabase & Sanity)
+  let dbLessons = [];
+  if (category.type === "general" || category.type === "article") {
+    const { data } = await supabase
+      .from("articles")
+      .select("id, title, slug, category_id, order_number, summary")
+      .eq("category_id", category.id)
+      .order("order_number", { ascending: true });
+    dbLessons = data || [];
+  } else {
+    const { data } = await supabase
+      .from("lessons")
+      .select("id, title, slug, category_id, order_number, summary")
+      .eq("category_id", category.id)
+      .order("order_number", { ascending: true });
+    dbLessons = data || [];
+  }
+
+  const supabaseLessons = dbLessons.map((l) => ({
+    _id: l.id,
+    title: l.title,
+    slug: l.slug,
+    category_id: l.category_id,
+    order_number: l.order_number,
+    summary: l.summary
+  }));
+
+  const nav = supabaseLessons.sort((a, b) => (a.order_number || 0) - (b.order_number || 0));
 
   return { lesson, nav };
 });
@@ -137,7 +162,7 @@ export default async function LessonPage({ params }: Props) {
   if (!lesson) return notFound();
 
   const { prevLesson, nextLesson } = getLessonNavigation(nav, slug);
-  const isSideQuest = lesson.categoryType === "general";
+  const isSideQuest = lesson.categoryType === "general" || lesson.categoryType === "article";
   const formattedQuizzes = formatQuizzes(lesson.quizzes || lesson.questions || []);
   const lessonPath = `/courses/${encodeRouteSegment(decodedCategoryId)}/${encodeRouteSegment(decodedSlug)}`;
 

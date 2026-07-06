@@ -206,9 +206,9 @@ export interface LibraryContentAIResponse {
 
 export interface ContentBlock {
   id: string;
-  type: "text" | "article" | "dialogue" | "image" | "quiz" | "callout" | "grammar";
+  type: "text" | "article" | "dialogue" | "image" | "quiz" | "callout" | "grammar" | "heading" | "list" | "table";
   title?: string;
-  content: string;
+  content?: string;
   furigana?: string;
   romaji?: string;
   translation?: string;
@@ -219,6 +219,13 @@ export interface ContentBlock {
   estimated_reading_time?: number;
   audio_url?: string;
   audioUrl?: string;
+  
+  // Markdown rendering specific fields
+  level?: number;
+  listType?: "bullet" | "number";
+  items?: string[];
+  headers?: string[];
+  rows?: string[][];
 }
 
 export interface Quiz {
@@ -360,6 +367,23 @@ export interface LessonTable {
   audit_log?: AuditEntry[];
   confidence?: EditorialConfidence;
   generation_context?: GenerationContext;
+  created_at: string;
+}
+
+export interface ArticleTable {
+  id: string;
+  category_id?: string;
+  title: string;
+  slug: string;
+  order_number: number;
+  summary?: string;
+  content_blocks: any[];
+  image_url?: string | null;
+  quizzes: Quiz[];
+  estimated_minutes: number;
+  is_premium: boolean;
+  is_published: boolean;
+  seo: SEOMetadata;
   created_at: string;
 }
 

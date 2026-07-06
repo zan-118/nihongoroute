@@ -70,7 +70,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
 
         if (category.type === "jlpt") {
           jlpt.push(category);
-        } else if (category.type === "general") {
+        } else if (category.type === "general" || category.type === "article") {
           general.push(category);
         }
       }
@@ -110,7 +110,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
         variants={containerVariants}
       >
         {/* BENTO GRID CONTAINER */}
-        <div className="flex flex-col xl:flex-row flex-wrap gap-6 md:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
 
           {/* BENTO CARD 1: JUMBO HEADER & GLOBAL STATS (SPAN 3) */}
           <m.div

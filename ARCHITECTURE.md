@@ -8,8 +8,8 @@ Dokumen ini menjelaskan struktur arsitektur sistem, pembagian data (split-source
 ## 1. Ringkasan Sistem (System Summary)
 
 NihongoRoute adalah platform pembelajaran Bahasa Jepang terstruktur berbasis Next.js App Router yang dirancang khusus untuk pelajar Indonesia dengan pendekatan **luring-utamakan (offline-first)**. Sistem memadukan:
-* Konten pembelajaran dinamis dan kaya media dari **Sanity CMS**.
-* Keamanan autentikasi, penyimpanan data kamus, transaksi komunitas, media audio Text-to-Speech (TTS), dan sinkronisasi data progres belajar pengguna dari **Supabase (PostgreSQL)**.
+* Konten pelajaran utama (lesson), data kamus leksikal, autentikasi, transaksi, media TTS, dan sinkronisasi progres belajar dari **Supabase (PostgreSQL)**.
+* Konten editorial pelengkap (reading, listening) dan metadata simulasi ujian legacy dari **Sanity CMS**.
 * Pengalaman belajar tanpa latensi di sisi klien (zero-latency client experience) menggunakan **Zustand** yang disimpan otomatis ke **IndexedDB** (`idb-keyval`).
 * Penyelarasan terkoordinasi dan background sync via **TanStack Query**.
 
@@ -41,8 +41,9 @@ NihongoRoute adalah platform pembelajaran Bahasa Jepang terstruktur berbasis Nex
 
 Aplikasi menerapkan pemisahan data berdasarkan karakteristik dan keamanannya:
 
-### 3.1 Repositori Supabase (Lexical & User Data)
-Supabase bertanggung jawab atas data dinamis dan relasional:
+### 3.1 Repositori Supabase (Lesson, Lexical & User Data)
+Supabase bertanggung jawab atas data utama aplikasi:
+* **Konten pelajaran utama**: Tabel `lessons` menyimpan seluruh bab pelajaran N5–N1 lengkap dengan dialog Jepang-Indonesia, blok konten (`content_blocks` JSONB), kuis evaluasi (`quizzes` JSONB), referensi vocab/kanji/grammar (UUID array JSONB), metadata SEO, gambar sampul (`image_url`), dan konteks generasi AI (`generation_context` JSONB). Lesson dihasilkan oleh pipeline AI (`scripts/build_lessons_supabase.mjs`) dan diimpor oleh `scripts/import_lesson_draft.mjs`.
 * Autentikasi pengguna (email, OAuth, status guest).
 * Kamus utama: kosakata (`vocab`), kanji (`kanji`), dan tata bahasa (`grammar`).
 * Log aktivitas: ekspresi harian (`expressions`), radikal kanji (`radicals`), dan kalimat dikte (`sentences`).
@@ -51,12 +52,11 @@ Supabase bertanggung jawab atas data dinamis dan relasional:
 * Fitur sosial: postingan diskusi (`community_posts`) dan komentar (`community_comments`).
 * Transaksi & Feedback: data supporter pendukung (`supporters`), metadata TTS (`tts_cache`), biner MP3 (`tts-cache` bucket), dan laporan bug (`user_feedback`).
 
-### 3.2 Repositori Sanity CMS (Editorial Content)
-Sanity mengelola materi pembelajaran interaktif:
-* Dokumen `lesson`: Teks kaya bab pelajaran (Portable Text), quiz evaluasi, dan pemilih referensi Supabase.
+### 3.2 Repositori Sanity CMS (Editorial Content — Pelengkap)
+Sanity mengelola materi editorial pelengkap (bukan lagi sumber utama lesson):
 * Dokumen `readingMaterial`: Artikel latihan membaca, terjemahan, dan kuis.
 * Dokumen `listeningMaterial`: Teks karaoke menyimak, stempel waktu suara, dan kuis.
-* Dokumen `mockExam`: Metadata simulasi ujian terstruktur (waktu, skor lulus, question pack).
+* Dokumen `mockExam`: Metadata simulasi ujian terstruktur (waktu, skor lulus, question pack) — dipertahankan sebagai fallback/legacy.
 
 ---
 
@@ -139,5 +139,16 @@ Arsitektur offline-first diatur oleh hook `useSyncProgress` pada shell layout `P
 Saat melakukan modifikasi pada kode sumber:
 1. **Perubahan Skema**: Update file `supabase/migrations/` dengan nama berkas terurut timestamp dan jalankan typegen untuk memperbarui `src/types/supabase.generated.ts`. Selaraskan tipe data manual di `src/types/database.ts`.
 2. **Kueri Baru**: Selalu pastikan kueri SQL baru dilindungi oleh aturan RLS (Row Level Security) yang sesuai di database.
-3. **Penyelarasan Sanity**: Jika schema Sanity berubah, perbarui kueri GROQ di `src/lib/core/queries.ts`, Server Actions terkait, dan perender UI klien bersamaan.
+3. **Penyelarasan Sanity**: Jika schema Sanity untuk materi pelengkap (reading, listening, mockExam) berubah, perbarui kueri GROQ di `src/lib/core/queries.ts`, Server Actions terkait, dan perender UI klien bersamaan. **Catatan**: Lesson tidak lagi dikelola di Sanity — lesson dibaca langsung dari tabel `lessons` Supabase.
 4. **Modifikasi Payload Sync**: Jika struktur data Zustand store berubah, perbarui logika deserializer di middleware persist, payload builder di `src/lib/core/cloud-sync-payload.ts`, dan argumen RPC `sync_user_progress` bersama-sama.
+5. **Pipeline Generasi Lesson**: Lesson dihasilkan oleh `scripts/build_lessons_supabase.mjs` (memerlukan kurikulum standar JSON di folder scratch) dan diimpor oleh `scripts/import_lesson_draft.mjs`. Jika skema tabel `lessons` berubah, kedua skrip ini harus diperbarui bersamaan.
+
+---
+
+## 8. Panduan Pembuatan Konten AI (AI Content Generation)
+
+Saat menggunakan script generator AI (seperti `generate-lessons.mjs` atau proses *enrichment* lainnya), perhatikan pedoman kurikulum berikut (berdasarkan audit kurikulum Juli 2026):
+1. **Penanganan Duplikasi Pola/Varian**: Di level tinggi (N3-N1), AI sering mengelompokkan pola grammar yang mirip dalam satu bab (contoh: `～ことだ` dan `～こと`, atau `～際` dan `～ところ`). Script deskripsi *lesson* **wajib** ditekankan untuk secara eksplisit menjelaskan **perbedaan nuansa** antar varian tersebut, bukan sekadar mengulang arti yang sama.
+2. **UX Pembagian Level Besar**: Level transisi seperti N3 memiliki jumlah bab yang membengkak (mencapai 36+ bab). Secara data relasional tetap berada di level N3, namun secara UI/UX di peramban, daftar bab harus dipecah/dipaginasi menjadi "N3 Part 1" dan "N3 Part 2" agar pelajar mandiri (self-study) tidak merasa terbebani (overwhelmed).
+3. **Gaya Bahasa *Can-do Statement***: Di level N2 dan N1, pernyataan *can-do* secara natural menjadi lebih abstrak (akademis/bisnis). Pastikan *prompt* *copywriting* AI tetap menginstruksikan penggunaan bahasa Indonesia yang membumi, ringkas, dan mudah dicerna oleh pelajar self-study. Hindari kalimat *can-do* yang lebih rumit dari materi tata bahasanya sendiri.
+4. **Validasi Referensi JSON**: Jangan pernah menerima data ID (seperti referensi Grammar ID dari Supabase) yang tidak melalui validasi database. Cegah masuknya *placeholder* UUID halusinasi (seperti `[ID tidak ditemukan: ...]`) ke CMS Sanity.

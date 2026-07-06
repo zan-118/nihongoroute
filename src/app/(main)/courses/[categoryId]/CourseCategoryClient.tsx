@@ -68,7 +68,7 @@ export default function CourseCategoryClient({
   };
   categoryId: string;
 }) {
-  const isSideQuest = data.category.type === "general";
+  const isSideQuest = data.category.type === "general" || data.category.type === "article";
   const themeColor = isSideQuest ? "text-warning" : "text-primary";
   const themeRgb = isSideQuest ? "var(--warning-rgb)" : "var(--primary-rgb)";
   const completedLessons = useUserStore((s) => s.completedLessons);

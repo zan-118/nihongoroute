@@ -202,13 +202,29 @@ async function cleanTtsCache() {
       activeTextVoices.get(clean).add(voice);
     };
 
-    // 1. Tarik kosakata (vocab) dari database Supabase
+    // 1. Tarik kosakata (vocab) dari database Supabase (Paginated)
     console.log("🔍 [Vocab] Menarik daftar kata aktif...");
-    const { data: vocabRows, error: vocabErr } = await supabase
-      .from("vocab")
-      .select("word");
+    const vocabRows = [];
+    let vocabHasMore = true;
+    let vocabPage = 0;
+    const vocabLimit = 1000;
+    while (vocabHasMore) {
+      const { data: rows, error: vocabErr } = await supabase
+        .from("vocab")
+        .select("word")
+        .range(vocabPage * vocabLimit, (vocabPage + 1) * vocabLimit - 1);
 
-    if (vocabErr) throw vocabErr;
+      if (vocabErr) throw vocabErr;
+      if (!rows || rows.length === 0) {
+        vocabHasMore = false;
+      } else {
+        vocabRows.push(...rows);
+        vocabPage += 1;
+        if (rows.length < vocabLimit) {
+          vocabHasMore = false;
+        }
+      }
+    }
     vocabRows.forEach((r) => {
       if (r.word) addActive(r.word, "indah");
     });
@@ -251,17 +267,6 @@ async function cleanTtsCache() {
       console.log(`   └─ Selesai memproses ${supabaseLessons.length} lessons dari Supabase.`);
     }
 
-    // 3. Tarik pelajaran (lessons) dari Sanity CMS
-    try {
-      console.log("🔍 [Lessons - Sanity] Menarik data lessons...");
-      const sanityLessons = await sanityClient.fetch(`*[_type == "lesson"] { content_blocks }`);
-      if (Array.isArray(sanityLessons)) {
-        sanityLessons.forEach((row) => processContentBlocks(row.content_blocks));
-        console.log(`   └─ Selesai memproses ${sanityLessons.length} lessons dari Sanity.`);
-      }
-    } catch (err) {
-      console.warn("⚠️  [Sanity] Gagal menarik data dari Sanity:", err.message);
-    }
 
     // 4. Tarik listeningMaterial dari Sanity CMS
     try {

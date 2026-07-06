@@ -11,7 +11,7 @@
 // ======================
 import { createStaticClient } from "@/lib/supabase/server";
 import { sanityClient, sanityPublicFetchOptions } from "@/lib/sanity.client";
-import { getSanityLessonsByCategory, getSanityExamBySlug } from "@/lib/queries";
+import { getSanityExamBySlug } from "@/lib/queries";
 import { LibraryItem } from "@/types/library";
 import {
   getSupabaseExamTemplateBySlug,
@@ -107,8 +107,34 @@ export async function getCourseCategoryData(slug: string) {
     if (catError && catError.code !== "PGRST116") throw catError;
     if (!category) return { category: null, lessons: [], mockExams: [] };
 
-    // 2. Ambil Pelajaran dari Sanity
-    const sanityLessons = await getSanityLessonsByCategory(category.slug, category.id);
+    // 2. Ambil Pelajaran secara hibrida (Supabase & Sanity)
+    let dbLessons = [];
+    if (category.type === "general" || category.type === "article") {
+      const { data } = await supabase
+        .from("articles")
+        .select("id, title, slug, category_id, order_number, summary")
+        .eq("category_id", category.id)
+        .order("order_number", { ascending: true });
+      dbLessons = data || [];
+    } else {
+      const { data } = await supabase
+        .from("lessons")
+        .select("id, title, slug, category_id, order_number, summary")
+        .eq("category_id", category.id)
+        .order("order_number", { ascending: true });
+      dbLessons = data || [];
+    }
+
+    const supabaseLessons = dbLessons.map((l) => ({
+      _id: l.id,
+      title: l.title,
+      slug: l.slug,
+      category_id: l.category_id,
+      order_number: l.order_number,
+      summary: l.summary
+    }));
+
+    const lessons = supabaseLessons.sort((a, b) => (a.order_number || 0) - (b.order_number || 0));
 
     // 3. Ambil Ujian dari Sanity berdasarkan category_id
     const mockExamsQuery = `*[_type == "mockExam" && (category_id == $categoryId || category_id == $categorySlug) && is_published == true] | order(_createdAt desc) {
@@ -155,7 +181,7 @@ export async function getCourseCategoryData(slug: string) {
         description: category.description,
         slug: category.slug
       },
-      lessons: (sanityLessons || []).map((l: SanityLessonListItem) => ({
+      lessons: (lessons || []).map((l) => ({
         _id: l._id,
         title: l.title,
         summary: l.summary || "",
