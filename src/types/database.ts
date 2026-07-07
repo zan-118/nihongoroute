@@ -518,3 +518,16 @@ export interface TTSCacheTable {
   audio_url: string;
   created_at: string;
 }
+
+export interface UserFeedbackTable {
+  id: string;
+  user_id?: string | null;
+  type: "bug" | "suggestion" | "compliment";
+  message: string;
+  route?: string | null;
+  status: "pending" | "investigating" | "resolved" | "rejected";
+  admin_reply?: string | null;
+  created_at?: string;
+  updated_at: string;
+}
+
