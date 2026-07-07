@@ -233,7 +233,7 @@ export default function WeakPointPanel() {
         <div>
           <h2 className="text-destructive uppercase tracking-widest text-xs mb-2 flex items-center gap-2">
             <AlertTriangle size={14} className="text-destructive animate-pulse" />
-            Diagnosis Titik Lemah (Leech Detected)
+            Diagnosis Titik Lemah (Kebocoran Memori)
           </h2>
           <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">
             Item memori berikut memiliki tingkat kegagalan yang tinggi.

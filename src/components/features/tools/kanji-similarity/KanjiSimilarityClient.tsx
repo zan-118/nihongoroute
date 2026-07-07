@@ -58,7 +58,7 @@ function KanjiCompareCard({
 
         <div className="rounded-lg border border-border bg-muted/15 p-4">
           <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-            Cue Visual
+            Petunjuk Visual
           </p>
           <p className="mt-2 text-sm font-bold leading-relaxed text-foreground">{item.cue}</p>
         </div>
@@ -103,13 +103,13 @@ export default function KanjiSimilarityClient() {
               <div className="flex size-12 items-center justify-center rounded-lg border border-warning/20 bg-warning/10 text-warning">
                 <Search size={24} aria-hidden="true" />
               </div>
-              <Badge className="w-fit rounded-xl px-3 py-1">Kanji Similarity</Badge>
+              <Badge className="w-fit rounded-xl px-3 py-1">Kemiripan Kanji</Badge>
             </div>
             <h1 className="max-w-3xl text-4xl uppercase tracking-tight text-foreground md:text-6xl">
               Kanji Mirip
             </h1>
             <p className="max-w-2xl text-sm font-medium leading-relaxed text-muted-foreground">
-              Bandingkan pasangan kanji yang sering tertukar, lihat cue visual, contoh vocab, dan langsung masuk latihan menulis.
+              Bandingkan pasangan kanji yang sering tertukar, lihat petunjuk visual, contoh kosakata, dan langsung masuk latihan menulis.
             </p>
           </div>
         </header>
@@ -175,7 +175,7 @@ export default function KanjiSimilarityClient() {
             <Card className="rounded-2xl md:rounded-3xl border border-border bg-muted/15 p-5">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                  Setelah lihat cue visual, coba tulis keduanya bergantian di writing canvas.
+                  Setelah lihat petunjuk visual, coba tulis keduanya bergantian di kanvas menulis.
                 </p>
                 <Button asChild className="rounded-xl">
                   <Link href={`/tools/writing?char=${encodeURIComponent(selectedPair.items[0].character)}`}>

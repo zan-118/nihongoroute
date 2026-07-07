@@ -37,7 +37,7 @@ const MODES = [
   { id: "kanji" as const, label: "Kanji", icon: <PenTool size={18} />, desc: "Hafalkan bentuk & On/Kun" },
   { id: "sentence" as const, label: "Kalimat", icon: <BookOpen size={18} />, desc: "Pahami kalimat contoh" },
   { id: "survival" as const, label: "Survival", icon: <Flame size={18} />, desc: "Tantangan berbatas waktu" },
-  { id: "pronunciation" as const, label: "Pelafalan", icon: <Mic size={18} />, desc: "Uji akurasi bicara Anda" }
+  { id: "pronunciation" as const, label: "Pelafalan", icon: <Mic size={18} />, desc: "Uji akurasi bicaramu" }
 ];
 
 const AMOUNTS = [10, 20, 50, 100];
@@ -68,10 +68,10 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
     >
       <div className="text-center mb-10">
         <h1 className="text-3xl md:text-4xl uppercase tracking-widest mb-3 text-foreground">
-          Flashcard <span className="text-primary">Setup</span>
+          Atur <span className="text-primary">Flashcard</span>
         </h1>
         <p className="text-muted-foreground text-sm md:text-base">
-          Sesuaikan sesi latihan memori Anda. Pilih level, mode, dan jumlah kartu.
+          Sesuaikan sesi latihan memorimu. Pilih level, mode, dan jumlah kartu.
         </p>
       </div>
 

@@ -160,7 +160,7 @@ export default function PronunciationPanel({
 
   const startRecording = async () => {
     if (!recognitionRef.current) {
-      toast.error("Web Speech Recognition tidak didukung di browser ini. Gunakan Google Chrome/Safari.");
+      toast.error("Speech Recognition tidak didukung di browsermu. Gunakan Google Chrome/Safari ya!");
       return;
     }
 
@@ -188,7 +188,7 @@ export default function PronunciationPanel({
     } catch (err) {
       console.error(err);
       setIsRecording(false);
-      toast.error("Gagal mengakses mikrofon. Pastikan izin akses mikrofon diberikan.");
+      toast.error("Gagal mengakses mikrofonmu. Pastikan izin akses mikrofon diberikan ya!");
     }
   };
 
@@ -241,7 +241,7 @@ export default function PronunciationPanel({
     rec.onerror = (event: SpeechRecognitionErrorEvent) => {
       console.error("Speech recognition error", event);
       if (event.error !== "no-speech") {
-        toast.error("Gagal mendeteksi ucapan. Silakan coba lagi.");
+        toast.error("Gagal mendeteksi ucapanmu. Coba lagi ya!");
       }
       stopRecording();
     };
@@ -410,7 +410,7 @@ export default function PronunciationPanel({
         >
           {isRecording ? (
             <>
-              <MicOff size={14} className="mr-2" /> Stop & Selesai
+              <MicOff size={14} className="mr-2" /> Hentikan & Selesai
             </>
           ) : (
             <>

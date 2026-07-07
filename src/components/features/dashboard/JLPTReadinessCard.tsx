@@ -102,7 +102,7 @@ export default function JLPTReadinessCard({ loading, courseMetadata }: JLPTReadi
             <div className="flex flex-wrap items-center gap-3">
               <Badge className={tone.badge}>
                 <Gauge size={12} />
-                Readiness
+                Kesiapan
               </Badge>
               <Badge variant="outline" className="bg-muted/45 text-muted-foreground">
                 {readiness.targetLabel}
@@ -114,7 +114,7 @@ export default function JLPTReadinessCard({ loading, courseMetadata }: JLPTReadi
 
             <div>
               <h2 className="text-2xl uppercase tracking-tight text-foreground md:text-3xl">
-                JLPT Readiness Score
+                Skor Kesiapan JLPT
               </h2>
               <p className="mt-3 max-w-xl text-sm font-medium leading-relaxed text-muted-foreground">
                 {readiness.summary}

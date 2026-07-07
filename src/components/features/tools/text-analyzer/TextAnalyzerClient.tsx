@@ -70,7 +70,7 @@ function ResultRow({ item }: { item: ToolSearchItem }) {
               </Badge>
             ) : null}
             {item.isCommon ? (
-              <Badge className="rounded-lg text-[9px]">Common</Badge>
+              <Badge className="rounded-lg text-[9px]">Umum</Badge>
             ) : null}
           </div>
           <p className="mt-1 line-clamp-2 text-sm font-medium text-muted-foreground">
@@ -152,7 +152,7 @@ export default function TextAnalyzerClient({
 
   const trimmedText = text.trim();
   const textPreview = useMemo(
-    () => trimmedText || "Paste teks Jepang untuk dianalisis.",
+    () => trimmedText || "Tempel teks Jepang untuk dianalisis.",
     [trimmedText]
   );
 
@@ -235,7 +235,7 @@ export default function TextAnalyzerClient({
               <div className="flex size-12 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
                 <Languages size={24} aria-hidden="true" />
               </div>
-              <Badge className="w-fit rounded-xl px-3 py-1">Text Analyzer</Badge>
+              <Badge className="w-fit rounded-xl px-3 py-1">Penganalisis Teks</Badge>
             </div>
             <h1 className="max-w-3xl text-4xl uppercase tracking-tight text-foreground md:text-6xl">
               Bongkar Teks Jepang
@@ -274,7 +274,7 @@ export default function TextAnalyzerClient({
                 onClick={() => setText(SAMPLE_TEXT)}
                 className="rounded-xl"
               >
-                Sample
+                Contoh
               </Button>
             </div>
             <textarea
@@ -366,10 +366,10 @@ export default function TextAnalyzerClient({
             empty="Belum ada kosakata terdeteksi. Jalankan analisis dulu."
           />
           <ResultPanel
-            title="Grammar"
+            title="Tata Bahasa"
             icon={BookOpen}
             items={analysis?.results.grammar || []}
-            empty="Belum ada pola grammar terdeteksi dari teks ini."
+            empty="Belum ada pola tata bahasa terdeteksi dari teks ini."
           />
           <ResultPanel
             title="Kanji"

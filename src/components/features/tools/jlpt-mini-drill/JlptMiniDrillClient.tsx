@@ -41,9 +41,9 @@ const LEVEL_LABELS: Record<DrillLevel | "all", string> = {
 
 const KIND_LABELS: Record<DrillKind | "mixed", string> = {
   mixed: "Campur",
-  vocab: "Vocab",
+  vocab: "Kosakata",
   kanji: "Kanji",
-  grammar: "Grammar",
+  grammar: "Tata Bahasa",
   sentence: "Kalimat",
 };
 
@@ -176,7 +176,7 @@ export default function JlptMiniDrillClient({
               <div className="flex size-12 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
                 <ListChecks size={24} aria-hidden="true" />
               </div>
-              <Badge className="w-fit rounded-xl px-3 py-1">JLPT Mini Drill</Badge>
+              <Badge className="w-fit rounded-xl px-3 py-1">Latihan Mini JLPT</Badge>
             </div>
             <h1 className="max-w-3xl text-4xl uppercase tracking-tight text-foreground md:text-6xl">
               Drill Cepat JLPT
@@ -202,7 +202,7 @@ export default function JlptMiniDrillClient({
             <div className="mb-5 flex items-center gap-2">
               <ClipboardList size={16} className="text-primary" aria-hidden="true" />
               <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
-                Setup Drill
+                Atur Latihan
               </h2>
             </div>
 
@@ -281,7 +281,7 @@ export default function JlptMiniDrillClient({
 
               <Button type="button" variant="outline" onClick={() => resetSession(seed + 1)} className="rounded-xl">
                 <Shuffle data-icon="inline-start" />
-                Generate Ulang
+                Buat Ulang
               </Button>
             </div>
           </Card>
@@ -322,7 +322,7 @@ export default function JlptMiniDrillClient({
                       {score.correct}/{questions.length}
                     </p>
                     <p className="mt-2 text-sm font-medium leading-relaxed text-muted-foreground">
-                      Sesi kecil sudah selesai. Generate ulang untuk set baru atau ubah level untuk pemanasan yang berbeda.
+                      Sesi latihan selesai. Buat ulang untuk set baru atau ubah level untuk pemanasan yang berbeda.
                     </p>
                   </div>
                   <NextActionPanel compact />

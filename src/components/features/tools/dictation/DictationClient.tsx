@@ -588,7 +588,7 @@ export default function DictationClient() {
                     Latihan Selesai!
                   </h2>
                   <p className="text-muted-foreground text-xs uppercase tracking-widest font-bold mt-1">
-                    Hasil Pencapaian Dikte Anda
+                    Hasil Pencapaian Diktemu
                   </p>
                 </div>
 

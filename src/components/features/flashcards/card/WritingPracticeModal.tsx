@@ -76,7 +76,7 @@ export function WritingPracticeModal({
                 </p>
               </div>
               <div className="px-3 py-1.5 rounded-lg bg-muted/50 border border-border text-[8px] font-bold uppercase tracking-widest text-secondary">
-                KANJI_MODE
+                MODE KANJI
               </div>
             </div>
 

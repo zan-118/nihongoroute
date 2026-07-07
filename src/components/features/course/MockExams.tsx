@@ -90,7 +90,7 @@ const ExamCard = React.memo(function ExamCard({ exam }: { exam: MockExam }) {
               color: isHovered ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"
             }}
           >
-            ⏱️ {exam.timeLimit} Mins
+            ⏱️ {exam.timeLimit} Menit
           </span>
           <span
             className="px-2.5 py-1 rounded-md sm:rounded-lg border text-[9px] sm:text-[10px] font-black uppercase tracking-wider sm:tracking-widest transition-colors duration-300"
@@ -100,7 +100,7 @@ const ExamCard = React.memo(function ExamCard({ exam }: { exam: MockExam }) {
               color: isHovered ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"
             }}
           >
-            🎯 {exam.passingScore}% Pass
+            🎯 {exam.passingScore}% Kelulusan
           </span>
         </div>
       </div>
@@ -112,7 +112,7 @@ const ExamCard = React.memo(function ExamCard({ exam }: { exam: MockExam }) {
             color: isHovered ? "hsl(var(--primary))" : "rgb(var(--primary-rgb)/0.6)"
           }}
         >
-          Challenge Start
+          Mulai Ujian
         </span>
         <div
           className="size-8 sm:size-9 rounded-lg text-primary-foreground flex items-center justify-center shadow-md transition-all duration-200"
@@ -143,7 +143,7 @@ export function MockExams({ exams, itemVariants }: MockExamsProps) {
             <Flame size={16} className="text-destructive" /> Simulasi Ujian
           </h3>
           <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-muted-foreground/60">
-            Uji Batas Kemampuan Anda
+            Uji Batas Kemampuanmu
           </p>
         </div>
         <div className="h-[1px] flex-1 bg-gradient-to-r from-border/50 to-transparent hidden sm:block" />

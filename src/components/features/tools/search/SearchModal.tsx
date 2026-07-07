@@ -28,7 +28,7 @@ interface SearchItem {
 // DATA STATIS NAVIGASI PLATFORM
 // ==========================================
 const SEARCH_ITEMS: SearchItem[] = [
-  { id: "dash", title: "Dasbor", description: "Ringkasan progres dan statistik Anda", href: "/dashboard", icon: Zap, category: "Platform" },
+  { id: "dash", title: "Dasbor", description: "Ringkasan progres dan statistikmu", href: "/dashboard", icon: Zap, category: "Platform" },
   { id: "materi", title: "Materi", description: "Jalur belajar JLPT dan Topik Umum", href: "/courses", icon: BookOpen, category: "Platform" },
   { id: "ujian", title: "Ujian", description: "Simulasi JLPT dan Test Mandiri", href: "/exams", icon: Trophy, category: "Platform" },
   { id: "pustaka", title: "Pustaka", description: "Daftar kata benda, kata kerja, dan kanji", href: "/library", icon: Layers, category: "Belajar" },

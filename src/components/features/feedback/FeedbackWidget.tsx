@@ -56,7 +56,7 @@ export default function FeedbackWidget({ forceOpen, onOpenChange }: FeedbackWidg
               Kirim Masukan
             </DialogTitle>
             <DialogDescription className="text-muted-foreground">
-              Bantu kami membuat NihongoRoute menjadi lebih baik.
+              Bantu NihongoRoute menjadi lebih baik.
             </DialogDescription>
           </DialogHeader>
 

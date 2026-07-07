@@ -42,11 +42,11 @@ interface TrainerCard extends MasterCardData {
 }
 
 const reasonLabels: Record<WeakPointCandidate["reasons"][number], string> = {
-  critical: "Critical",
-  fragile: "Fragile",
-  due: "Due",
-  overdue: "Overdue",
-  learning: "Learning",
+  critical: "Kritis",
+  fragile: "Rentan",
+  due: "Jatuh Tempo",
+  overdue: "Terlambat",
+  learning: "Belajar",
 };
 
 function getCandidateSignature(srs: ReturnType<typeof useSRSStore.getState>["srs"]) {
@@ -206,7 +206,7 @@ export default function WeakPointTrainerClient() {
                 className="h-auto rounded-full border-destructive/25 bg-destructive/10 px-4 py-1.5 text-destructive"
               >
                 <AlertTriangle size={13} />
-                Weak Point Trainer
+                Pelatih Titik Lemah
               </Badge>
               <Badge variant="outline" className="h-auto rounded-full bg-muted/45 px-4 py-1.5 text-muted-foreground">
                 SRS Diagnosis
@@ -272,10 +272,10 @@ export default function WeakPointTrainerClient() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <SummaryTile label="Critical" value={summary.critical} icon={AlertTriangle} />
-                    <SummaryTile label="Due" value={summary.due} icon={RotateCcw} />
-                    <SummaryTile label="Fragile" value={summary.fragile} icon={Gauge} />
-                    <SummaryTile label="Learning" value={summary.learning} icon={BrainCircuit} />
+                    <SummaryTile label="Kritis" value={summary.critical} icon={AlertTriangle} />
+                    <SummaryTile label="Jatuh Tempo" value={summary.due} icon={RotateCcw} />
+                    <SummaryTile label="Rentan" value={summary.fragile} icon={Gauge} />
+                    <SummaryTile label="Belajar" value={summary.learning} icon={BrainCircuit} />
                   </div>
                 </div>
               </Card>

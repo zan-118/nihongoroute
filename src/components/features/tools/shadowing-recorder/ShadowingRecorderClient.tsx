@@ -26,9 +26,9 @@ import { useUIStore } from "@/store/useUIStore";
 import { cn } from "@/lib/utils";
 
 const PLAYBACK_RATES = [
-  { label: "Slow", value: 0.78 },
+  { label: "Lambat", value: 0.78 },
   { label: "Normal", value: 0.95 },
-  { label: "Fast", value: 1.12 },
+  { label: "Cepat", value: 1.12 },
 ] as const;
 
 interface ShadowingRecorderClientProps {
@@ -262,7 +262,7 @@ export default function ShadowingRecorderClient({
               <div className="flex size-12 items-center justify-center rounded-lg border border-success/20 bg-success/10 text-success">
                 <Mic size={24} aria-hidden="true" />
               </div>
-              <Badge className="w-fit rounded-xl px-3 py-1">Shadowing Recorder</Badge>
+              <Badge className="w-fit rounded-xl px-3 py-1">Perekam Shadowing</Badge>
             </div>
             <h1 className="max-w-3xl text-4xl uppercase tracking-tight text-foreground md:text-6xl">
               Shadowing Studio
@@ -288,7 +288,7 @@ export default function ShadowingRecorderClient({
             <div className="mb-5 flex items-center gap-2">
               <AudioLines size={16} className="text-primary" aria-hidden="true" />
               <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
-                Preset Line
+                Baris Preset
               </h2>
             </div>
             <div className="flex flex-col gap-2">
@@ -339,7 +339,7 @@ export default function ShadowingRecorderClient({
                   </p>
                   {preset.sourceHref ? (
                     <Button asChild variant="outline" size="sm" className="mt-4 rounded-xl">
-                      <Link href={preset.sourceHref}>Buka Sumber Library</Link>
+                      <Link href={preset.sourceHref}>Buka Pustaka</Link>
                     </Button>
                   ) : null}
                 </div>
@@ -386,7 +386,7 @@ export default function ShadowingRecorderClient({
                 </div>
                 <Button type="button" onClick={speakTarget} className="rounded-xl">
                   {isSpeaking ? <Square data-icon="inline-start" /> : <Volume2 data-icon="inline-start" />}
-                  {isSpeaking ? "Stop Target" : "Putar Target"}
+                  {isSpeaking ? "Hentikan Target" : "Putar Target"}
                 </Button>
               </div>
 
@@ -400,7 +400,7 @@ export default function ShadowingRecorderClient({
                   ) : (
                     <Button type="button" variant="destructive" onClick={stopRecording} className="rounded-xl">
                       <Square data-icon="inline-start" />
-                      Stop
+                      Hentikan
                     </Button>
                   )}
                   <Button

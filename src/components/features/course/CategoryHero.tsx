@@ -60,7 +60,7 @@ export function CategoryHero({
               className="px-3 py-1 rounded-full border text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all"
               style={badgeStyle}
             >
-              {isSideQuest ? "Practical competency" : "JLPT Mastery Track"}
+              {isSideQuest ? "Kemampuan Praktis" : "Jalur Kuasai JLPT"}
             </span>
             <div className="h-[1px] w-8 bg-border hidden sm:block" />
           </m.div>
@@ -105,7 +105,7 @@ export function CategoryHero({
           <div className="relative z-10 space-y-3 sm:space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                Progress
+                Progres
               </span>
               <span className={`text-sm font-black ${themeColor}`}>{progressPercent}%</span>
             </div>

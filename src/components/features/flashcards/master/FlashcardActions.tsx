@@ -88,7 +88,7 @@ export function FlashcardActions({
               >
                 <X size={16} className="mb-1" />
                 <span className="text-[10px] font-bold uppercase tracking-tight">Ulangi</span>
-                <span className="text-[8px] opacity-60">Again</span>
+                <span className="text-[8px] opacity-60">Lagi</span>
               </Button>
               <Button
                 variant="ghost"
@@ -100,7 +100,7 @@ export function FlashcardActions({
               >
                 <Info size={16} className="mb-1" />
                 <span className="text-[10px] font-bold uppercase tracking-tight">Sulit</span>
-                <span className="text-[8px] opacity-60">Hard</span>
+                <span className="text-[8px] opacity-60">Susah</span>
               </Button>
               <Button
                 variant="ghost"
@@ -112,7 +112,7 @@ export function FlashcardActions({
               >
                 <Check size={16} className="mb-1" />
                 <span className="text-[10px] font-bold uppercase tracking-tight">Paham</span>
-                <span className="text-[8px] opacity-60">Good</span>
+                <span className="text-[8px] opacity-60">Bagus</span>
               </Button>
               <Button
                 variant="ghost"
@@ -124,7 +124,7 @@ export function FlashcardActions({
               >
                 <Check size={16} className="mb-1" />
                 <span className="text-[10px] font-bold uppercase tracking-tight">Mudah</span>
-                <span className="text-[8px] opacity-60">Easy</span>
+                <span className="text-[8px] opacity-60">Gampang</span>
               </Button>
             </m.nav>
           ) : isChallenge ? (

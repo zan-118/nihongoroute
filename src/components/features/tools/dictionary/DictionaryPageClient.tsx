@@ -32,7 +32,7 @@ type DictionaryFilter = "all" | ToolSearchCategory;
 const FILTERS: Array<{ id: DictionaryFilter; label: string; icon: typeof Search }> = [
   { id: "all", label: "Semua", icon: Search },
   { id: "vocab", label: "Kosakata", icon: FileText },
-  { id: "grammar", label: "Grammar", icon: BookOpen },
+  { id: "grammar", label: "Tata Bahasa", icon: BookOpen },
   { id: "kanji", label: "Kanji", icon: Hash },
 ];
 
@@ -57,7 +57,7 @@ function saveHistory(history: string[]) {
 
 function getCategoryLabel(category: ToolSearchCategory) {
   if (category === "vocab") return "Kosakata";
-  if (category === "grammar") return "Grammar";
+  if (category === "grammar") return "Tata Bahasa";
   return "Kanji";
 }
 
@@ -200,7 +200,7 @@ export default function DictionaryPageClient() {
               <div className="flex size-12 items-center justify-center rounded-lg border border-warning/20 bg-warning/10 text-warning">
                 <Search size={24} aria-hidden="true" />
               </div>
-              <Badge className="w-fit rounded-xl px-3 py-1">Dictionary</Badge>
+              <Badge className="w-fit rounded-xl px-3 py-1">Kamus</Badge>
             </div>
             <h1 className="max-w-3xl text-4xl uppercase tracking-tight text-foreground md:text-6xl">
               Kamus Terpadu

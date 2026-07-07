@@ -64,7 +64,7 @@ export default function TTSReader({ text, minimal = false, speaker, small = fals
       ) : (
         <Volume2 size={small ? 14 : minimal ? 24 : 16} />
       )}
-      {!minimal && !small && (isPlaying ? "Terminate" : "Listen")}
+      {!minimal && !small && (isPlaying ? "Hentikan" : "Dengar")}
     </Button>
   );
 }

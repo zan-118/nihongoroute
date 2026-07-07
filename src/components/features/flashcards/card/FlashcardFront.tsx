@@ -56,10 +56,10 @@ export function FlashcardFront({
   const isChallenge = studyMode === "tantangan";
 
   const getMastery = (interval: number = 0) => {
-    if (interval <= 1) return { icon: "🌱", label: "Learning" };
-    if (interval <= 5) return { icon: "🌿", label: "Familiar" };
-    if (interval <= 14) return { icon: "🔥", label: "Solid" };
-    return { icon: "💎", label: "Master" };
+    if (interval <= 1) return { icon: "🌱", label: "Belajar" };
+    if (interval <= 5) return { icon: "🌿", label: "Akrab" };
+    if (interval <= 14) return { icon: "🔥", label: "Kuat" };
+    return { icon: "💎", label: "Mahir" };
   };
 
   const mastery = getMastery(srsState?.interval);

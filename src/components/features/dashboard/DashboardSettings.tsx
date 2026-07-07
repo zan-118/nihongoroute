@@ -68,21 +68,21 @@ export default function DashboardSettings({
                 onClick={handleExportData}
                 className="h-14 bg-background border-border hover:bg-primary/10 hover:border-primary hover:text-primary text-muted-foreground rounded-lg uppercase tracking-widest font-bold text-xs transition-all"
               >
-                <Save size={16} className="mr-2" /> Backup Data
+                <Save size={16} className="mr-2" /> Cadangkan Data
               </Button>
               <Button
                 variant="outline"
                 onClick={handleImportData}
                 className="h-14 bg-background border-border hover:bg-secondary/10 hover:border-secondary hover:text-secondary text-muted-foreground rounded-lg uppercase tracking-widest font-bold text-xs transition-all"
               >
-                <Upload size={16} className="mr-2" /> Restore Data
+                <Upload size={16} className="mr-2" /> Pulihkan Data
               </Button>
               <Button
                 variant="outline"
                 onClick={handleResetData}
                 className="h-14 bg-destructive/5 border-destructive/20 hover:bg-destructive/20 hover:border-destructive text-destructive rounded-lg uppercase tracking-widest font-bold text-xs transition-all"
               >
-                <Trash2 size={16} className="mr-2" /> Reset Data
+                <Trash2 size={16} className="mr-2" /> Setel Ulang Data
               </Button>
               {isAuthenticated && (
                 <Button

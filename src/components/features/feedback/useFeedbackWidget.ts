@@ -50,12 +50,12 @@ export function useFeedbackWidget() {
 
       if (error) throw error;
 
-      toast.success("Feedback berhasil dikirim. Terima kasih!");
+      toast.success("Masukanmu berhasil dikirim. Terima kasih ya!");
       setIsOpen(false);
       setMessage("");
     } catch (error) {
       console.error(error);
-      toast.error("Gagal mengirim feedback. Silakan coba lagi.");
+      toast.error("Gagal mengirim masukan. Coba lagi sebentar lagi ya!");
     } finally {
       setIsSubmitting(false);
     }

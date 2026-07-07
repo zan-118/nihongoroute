@@ -124,14 +124,14 @@ export function useFlashcardSession() {
       combined = combined.sort(() => Math.random() - 0.5);
 
       if (combined.length === 0) {
-        toast.error("Moushiwake arimasen - Data kartu untuk mode ini belum tersedia.");
+        toast.error("Maaf ya, data kartu untuk mode ini belum tersedia.");
         setSelectedMode(null);
       } else {
         setCards(combined);
       }
     } catch (error) {
       console.error("Gagal memuat kartu:", error);
-      toast.error("Terjadi kendala saat memuat kartu.");
+      toast.error("Gagal memuat kartu. Coba lagi sebentar lagi ya!");
       setSelectedMode(null);
     } finally {
       setIsFetchingCards(false);
