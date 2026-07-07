@@ -139,18 +139,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     cheatsheetRows
   ] = await Promise.all([
     supabase.from("course_categories").select("id, slug, created_at"),
-    sanityClient.fetch<SanitySitemapItem[]>(
-      `*[_type == "lesson" && is_published == true && defined(slug.current)] {
-        "slug": slug.current,
-        _updatedAt,
-        _createdAt,
-        category_id
-      }`,
-      {},
-    ).catch((err) => {
-      console.error("[Sitemap] Gagal mengambil data pelajaran dari Sanity:", err);
-      return [];
-    }),
+    supabase
+      .from("lessons")
+      .select("slug, category_id, created_at")
+      .eq("is_published", true)
+      .then(({ data, error }) => {
+        if (error) {
+          console.error("[Sitemap] Gagal mengambil data pelajaran dari Supabase:", error);
+          return [];
+        }
+        return (data || []).map((row) => ({
+          slug: row.slug,
+          category_id: row.category_id,
+          _createdAt: row.created_at,
+          _updatedAt: row.created_at,
+        })) as SanitySitemapItem[];
+      }),
     sanityClient.fetch<SanitySitemapItem[]>(
       `*[_type == "readingMaterial" && defined(slug.current)] {
         "slug": slug.current,

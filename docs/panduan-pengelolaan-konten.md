@@ -70,3 +70,40 @@ Sebelum melakukan deployment produksi atau migrasi data berskala besar, jalankan
 node scripts/validate-jlpt-import.mjs
 ```
 *Skrip ini akan memverifikasi kesesuaian format kunci jawaban, keberadaan audio choukai, kelengkapan passage dokkai, dan mengembalikan laporan error jika ada struktur kuis yang cacat.*
+
+---
+
+## 5. Statistik Skala & Kapasitas Konten Sistem (Non-User Data)
+
+Berikut adalah statistik kapasitas konten pembelajaran dan media pendukung sistem terintegrasi yang tersimpan di dalam database produksi NihongoRoute (tidak termasuk data progres/profil sensitif milik pengguna):
+
+### 5.1 Kapasitas Kamus Leksikal & Pustaka Utama
+| Nama Tabel | Deskripsi Konten Pembelajaran | Jumlah Baris Data |
+| :--- | :--- | :--- |
+| `vocab` | Kosakata Bahasa Jepang (Vocab) | **22.000** |
+| `kanji` | Karakter Kanji & Stroke Order | **13.108** |
+| `grammar` | Pola Tata Bahasa (Grammar) | **996** |
+| `course_categories` | Kategori Pembelajaran Kelas | **6** |
+| `lessons` | Bab Materi Pelajaran | **210** |
+| `cheatsheets` | Lembar Contekan Pembelajaran | **50** |
+| `expressions` | Percakapan & Ekspresi Harian | **13.220** |
+| `radicals` | Komponen Radikal Kanji | **253** |
+| `sentences` | Contoh Kalimat Pembelajaran | **25.980** |
+
+### 5.2 Kapasitas Bank Soal Simulasi Ujian JLPT (Mock Exam)
+| Nama Tabel | Deskripsi Konten Soal | Jumlah Baris Data |
+| :--- | :--- | :--- |
+| `jlpt_exam_templates` | Paket Templat Ujian JLPT | **123** |
+| `jlpt_passages` | Bahan Bacaan & Dialog Choukai | **592** |
+| `jlpt_questions` | Butir Pertanyaan Ujian | **3.466** |
+| `jlpt_exam_template_questions` | Pemetaan Junction Soal ke Paket | **3.477** |
+
+### 5.3 Kapasitas Media, Komunitas, & Artikel Publik
+| Nama Tabel | Deskripsi Konten Sistem | Jumlah Baris Data |
+| :--- | :--- | :--- |
+| `tts_cache` | Metadata Penyangga Suara VOICEVOX | **21.578** |
+| `supporters` | Daftar Sponsor Publik | **2** |
+| `community_posts` | Postingan Diskusi Forum Komunitas | **2** |
+| `community_comments` | Komentar Forum Komunitas | **2** |
+| `articles` | Artikel Modular Publik | **35** |
+
