@@ -61,7 +61,7 @@ export function ReviewClient() {
             Pusat <span className="text-primary">Latihan</span>
           </h1>
           <p className="text-muted-foreground text-sm mt-2 max-w-xl font-medium leading-relaxed">
-            Pilih metode latihan Anda hari ini. Fokus pada kartu yang sudah waktunya diulang (SRS), 
+            Pilih metode latihanmu hari ini. Fokus ke kartu yang udah waktunya diulang (SRS), 
             atau lakukan latihan cepat untuk memperkuat daya ingat.
           </p>
         </header>

@@ -148,12 +148,12 @@ export default function DashboardHero({
             </m.div>
             
             <h3 className={`text-3xl md:text-5xl font-black tracking-tight mb-[13px] text-balance transition-colors ${dueCount > 0 ? 'text-foreground' : 'text-success'}`}>
-              {dueCount > 0 ? `Siap review lagi, ${name || 'Pelajar'}?` : `Hafalanmu aman, ${name || 'Pelajar'}!`}
+              {dueCount > 0 ? `Yuk review lagi, ${name || 'Pelajar'}!` : `Mantap, ${name || 'Pelajar'}! Hafalanmu masih aman.`}
             </h3>
             <p className="text-muted-foreground text-sm md:text-base mb-[34px] font-medium max-w-md leading-relaxed text-balance">
               {dueCount > 0 
-                ? `Ada ${dueCount} kata yang perlu di-review. Yuk, jaga semangat belajarmu!` 
-                : "Hebat! Semua ingatanmu masih segar. Siap lanjut ke materi baru?"}
+                ? `Ada ${dueCount} kata yang nunggu kamu review. Semangat!` 
+                : "Semua masih fresh di ingatanmu. Mau lanjut ke materi baru?"}
             </p>
  
             {/* RINGKASAN STATUS DI DALAM HERO (Mobile-Optimized) */}
@@ -242,7 +242,7 @@ export default function DashboardHero({
             <div>
               <h4 className="text-[10px] text-primary uppercase tracking-[0.2em] mb-1">Tips Hari Ini</h4>
               <p className="text-xs text-muted-foreground leading-relaxed font-medium">
-                Selesaikan review harian sebelum pukul 10 malam untuk menjaga bonus XP dan semangatmu!
+                Usahakan review sebelum jam 10 malam biar bonus XP-mu nggak hilang!
               </p>
             </div>
           </m.div>

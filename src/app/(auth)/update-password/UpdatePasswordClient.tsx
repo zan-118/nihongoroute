@@ -89,7 +89,7 @@ export default function UpdatePasswordClient() {
               disabled={loading}
               className="w-full py-3.5 px-4 brand-button rounded-xl text-xs disabled:opacity-50"
             >
-              {loading ? "Lagi disimpan..." : "Aktifkan Sandi Baru"}
+              {loading ? "Lagi disimpan..." : "Simpan Sandi Baru"}
             </button>
           </form>
         ) : (

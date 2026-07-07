@@ -76,7 +76,7 @@ export function usePostCard({ post, currentUserId, isGuest }: UsePostCardParams)
           queryClient.setQueryData(queryKey, data);
         });
       }
-      toast.error("Gagal menyukai postingan.");
+      toast.error("Gagal kasih suka.");
     },
     onSuccess: () => {
       const channel = new BroadcastChannel("nihongoroute_sync");
@@ -96,14 +96,14 @@ export function usePostCard({ post, currentUserId, isGuest }: UsePostCardParams)
       setCommentText("");
       queryClient.invalidateQueries({ queryKey: ["post_comments", post.id] });
       queryClient.invalidateQueries({ queryKey: ["community_posts"] });
-      toast.success("Komentar ditambahkan!");
+      toast.success("Komentar terkirim!");
 
       const channel = new BroadcastChannel("nihongoroute_sync");
       channel.postMessage("SYNC_COMPLETE");
       channel.close();
     },
     onError: () => {
-      toast.error("Gagal menambahkan komentar.");
+      toast.error("Gagal kirim komentar.");
     },
   });
 
@@ -112,14 +112,14 @@ export function usePostCard({ post, currentUserId, isGuest }: UsePostCardParams)
     mutationFn: () => deleteCommunityPost(post.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["community_posts"] });
-      toast.success("Postingan berhasil dihapus!");
+      toast.success("Postingan udah dihapus.");
 
       const channel = new BroadcastChannel("nihongoroute_sync");
       channel.postMessage("SYNC_COMPLETE");
       channel.close();
     },
     onError: () => {
-      toast.error("Gagal menghapus postingan.");
+      toast.error("Gagal hapus postingan.");
     },
   });
 
@@ -129,20 +129,20 @@ export function usePostCard({ post, currentUserId, isGuest }: UsePostCardParams)
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["post_comments", post.id] });
       queryClient.invalidateQueries({ queryKey: ["community_posts"] });
-      toast.success("Komentar berhasil dihapus!");
+      toast.success("Komentar udah dihapus.");
 
       const channel = new BroadcastChannel("nihongoroute_sync");
       channel.postMessage("SYNC_COMPLETE");
       channel.close();
     },
     onError: () => {
-      toast.error("Gagal menghapus komentar.");
+      toast.error("Gagal hapus komentar.");
     },
   });
 
   const handleLike = () => {
     if (isGuest) {
-      toast.error("Anda harus masuk log terlebih dahulu.");
+      toast.error("Login dulu yuk biar bisa ikutan!");
       return;
     }
     if (isLiking) return;
@@ -152,7 +152,7 @@ export function usePostCard({ post, currentUserId, isGuest }: UsePostCardParams)
   const handleSendComment = (e: React.FormEvent) => {
     e.preventDefault();
     if (isGuest) {
-      toast.error("Anda harus masuk log terlebih dahulu.");
+      toast.error("Login dulu yuk biar bisa ikutan!");
       return;
     }
     if (!commentText.trim()) return;
@@ -160,13 +160,13 @@ export function usePostCard({ post, currentUserId, isGuest }: UsePostCardParams)
   };
 
   const handleDeletePost = () => {
-    if (confirm("Apakah Anda yakin ingin menghapus postingan ini beserta seluruh komentarnya?")) {
+    if (confirm("Yakin ingin menghapus postingan ini beserta semua komentarnya?")) {
       deletePostMutation.mutate();
     }
   };
 
   const handleDeleteComment = (commentId: string) => {
-    if (confirm("Apakah Anda yakin ingin menghapus komentar ini?")) {
+    if (confirm("Yakin ingin menghapus komentar ini?")) {
       deleteCommentMutation.mutate(commentId);
     }
   };

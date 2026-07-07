@@ -112,30 +112,30 @@ export function FeatureGrid() {
   const learningSteps = [
     {
       title: "Langkah 1: Kenali Huruf (Kana)",
-      desc: "Mulailah perjalanan Anda dengan menguasai Hiragana & Katakana. Gunakan tabel interaktif dan panduan menulis guratan demi guratan yang presisi.",
+      desc: "Mulai dari sini: kuasai Hiragana & Katakana lewat tabel interaktif dan panduan menulis langkah demi langkah.",
       badge: "Langkah Pertama",
-      tip: "Penting untuk fondasi membaca manga, artikel, atau soal ujian.",
+      tip: "Fondasi penting buat baca manga, artikel, dan soal ujian.",
       action: "Buka Menu Kana"
     },
     {
       title: "Langkah 2: Perkaya Kosakata & Pelajaran",
-      desc: "Pelajari ribuan kata penting dan tata bahasa praktis berstandar JLPT. Setiap materi dikemas dengan klip audio pelafalan dan contoh kalimat nyata.",
+      desc: "Ribuan kosakata dan tata bahasa sesuai standar JLPT, lengkap dengan audio pelafalan dan contoh kalimat.",
       badge: "Materi Terpadu",
-      tip: "Dilengkapi furigana dinamis yang bisa diaktifkan/matikan kapan saja.",
+      tip: "Ada furigana yang bisa kamu nyalain atau matiin kapan aja.",
       action: "Masuk Perpustakaan"
     },
     {
       title: "Langkah 3: Pengulangan Terjadwal",
-      desc: "Lupakan metode menghafal konvensional. Algoritma pengulangan terjadwal kami secara otomatis mengatur kosakata yang harus diulang tepat sebelum Anda lupa.",
+      desc: "Lupa metode hafalan lama. Sistem SRS kami otomatis ngatur kosakata yang perlu diulang pas sebelum kamu mulai lupa.",
       badge: "Hafal Tanpa Lupa",
-      tip: "Menghemat waktu belajar hingga 60% dibanding metode mencatat biasa.",
+      tip: "Bisa hemat waktu belajar sampai 60% dibanding cara catat biasa.",
       action: "Coba Flashcard"
     },
     {
       title: "Langkah 4: Uji dengan Simulasi JLPT",
-      desc: "Ukur kesiapan belajar Anda melalui simulasi ujian JLPT yang dirancang dengan sistem waktu nyata, format penilaian akurat, dan statistik kelulusan mendalam.",
+      desc: "Ukur kesiapanmu lewat simulasi ujian JLPT dengan timer, penilaian akurat, dan statistik hasil yang lengkap.",
       badge: "Siap Ujian",
-      tip: "Tersedia untuk tingkat N5 hingga N1 dengan pembahasan lengkap.",
+      tip: "Tersedia dari N5 sampai N1, lengkap dengan pembahasan.",
       action: "Mulai Simulasi"
     }
   ];
@@ -150,10 +150,10 @@ export function FeatureGrid() {
             Ekosistem Pembelajaran
           </Badge>
           <h2 className="text-4xl md:text-5xl tracking-tight mb-5">
-            Apa Saja yang <span className="brand-text-gradient">NihongoRoute Sediakan?</span>
+            Apa Saja yang <span className="brand-text-gradient">Bisa Kamu Pelajari?</span>
           </h2>
           <p className="text-muted-foreground text-base md:text-lg font-medium leading-relaxed">
-            Semua modul pembelajaran bahasa Jepang yang Anda butuhkan untuk melangkah dari pemula total hingga mahir, dirancang dalam satu platform modern tanpa hambatan.
+            Semua yang kamu butuhkan buat melangkah dari nol sampai mahir, dalam satu platform modern tanpa ribet.
           </p>
         </div>
 
@@ -179,7 +179,7 @@ export function FeatureGrid() {
               </h3>
               
               <p className="text-muted-foreground text-sm leading-relaxed flex-1 font-medium mb-6">
-                Kuasai sistem penulisan Hiragana & Katakana melalui matriks kana interaktif, panduan langkah-demi-langkah urutan guratan (Stroke Order), serta kanvas latihan menulis langsung di layar gadget Anda.
+                Kuasai Hiragana & Katakana lewat tabel interaktif, panduan urutan guratan, dan latihan menulis langsung di layarmu.
               </p>
  
               {/* Tampilan Visual Mockup di Dalam Kartu */}
@@ -215,7 +215,7 @@ export function FeatureGrid() {
               </h3>
               
               <p className="text-muted-foreground text-sm leading-relaxed flex-1 font-medium mb-4">
-                Akses ribuan kosakata terstruktur, kamus Kanji komprehensif, dan pustaka rumus tata bahasa praktis. Semuanya dilengkapi dengan sistem audio pengucapan penutur asli dan fungsionalitas furigana cerdas.
+                Ribuan kosakata, kamus Kanji lengkap, dan pustaka tata bahasa praktis — semuanya dengan audio penutur asli dan furigana otomatis.
               </p>
 
               {/* STATISTIK NYATA DARIPADA SUPABASE */}
@@ -267,7 +267,7 @@ export function FeatureGrid() {
               </h3>
               
               <p className="text-muted-foreground text-sm leading-relaxed flex-1 font-medium mb-6">
-                Latih daya ingat Anda secara optimal. Sistem pengulangan cerdas kami secara otomatis menghitung dan menjadwalkan ulang kartu flashcard kosa kata yang perlu di-review persis sebelum Anda melupakannya.
+                Latih ingatanmu dengan cara paling efektif. Sistem SRS otomatis jadwalkan kartu flashcard yang perlu diulang tepat sebelum kamu lupa.
               </p>
  
               {/* Tampilan Visual Mockup di Dalam Kartu */}
@@ -304,7 +304,7 @@ export function FeatureGrid() {
               </h3>
               
               <p className="text-muted-foreground text-sm leading-relaxed flex-1 font-medium mb-6">
-                Uji kesiapan kelulusan Anda dengan simulasi ujian JLPT interaktif. Lengkap dengan sistem timer mundur yang presisi, pembagian sesi materi ujian, lembar jawaban digital, dan laporan hasil kelulusan yang rinci.
+                Uji kesiapanmu dengan simulasi ujian JLPT — lengkap dengan timer, sesi ujian terpisah, dan laporan hasil yang detail.
               </p>
  
               {/* Tampilan Visual Mockup di Dalam Kartu */}
@@ -346,10 +346,10 @@ export function FeatureGrid() {
             Alur Metode Belajar
           </Badge>
           <h2 className="text-4xl md:text-5xl tracking-tight mb-5">
-            Langkah Cerdas <span className="text-primary">Menguasai Bahasa Jepang</span>
+            Cara Cerdas <span className="text-primary">Menguasai Bahasa Jepang</span>
           </h2>
           <p className="text-muted-foreground text-base md:text-lg font-medium leading-relaxed">
-            Metode belajar terpadu yang memandu Anda dari langkah awal pengenalan aksara hingga mencapai fasih berbicara dan siap menaklukkan lembar ujian JLPT.
+            Metode belajar yang nganterin kamu dari kenalan huruf sampai siap hadapi ujian JLPT.
           </p>
         </div>
 
@@ -487,7 +487,7 @@ export function FeatureGrid() {
                           <ruby className="text-xl font-bold font-japanese tracking-wide text-foreground">
                             猫 <rt className="text-[0.55em] text-muted-foreground">ねこ</rt>
                           </ruby>
-                          <span className="text-[8px] font-black text-primary uppercase tracking-widest">Sorot Untuk Arti</span>
+                          <span className="text-[8px] font-black text-primary uppercase tracking-widest">Hover Untuk Lihat Arti</span>
                         </div>
                         {/* Back */}
                         <div 
@@ -546,7 +546,7 @@ export function FeatureGrid() {
                   <span className="text-xs text-muted-foreground font-bold uppercase tracking-wider">Kurikulum Terstruktur</span>
                 </div>
                 <span className="text-xs font-bold text-primary flex items-center gap-1 group">
-                  Optimalkan Sekarang 
+                  Mulai Sekarang 
                   <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
                 </span>
               </div>
@@ -573,7 +573,7 @@ export function FeatureGrid() {
                 <span className="brand-text-gradient">Sistem Belajar Interaktif</span>
               </h2>
               <p className="text-muted-foreground text-sm md:text-base leading-relaxed font-medium">
-                NihongoRoute merancang fitur pelacakan konsistensi belajar harian (Streaks) dan poin pengalaman (XP) yang membuat rutinitas belajar bahasa Jepang Anda terasa seperti memainkan game petualangan yang menyenangkan.
+                Streak harian dan poin XP bikin rutinitas belajar bahasa Jepangmu terasa kayak main game yang seru.
               </p>
               
               <div className="grid grid-cols-2 gap-4 pt-2">

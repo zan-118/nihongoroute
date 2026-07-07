@@ -55,8 +55,8 @@ export default function ExamError({
         </h1>
 
         <p className="text-muted-foreground mb-8 text-sm leading-relaxed">
-          Mohon maaf, terjadi kesalahan teknis saat memproses sesi ujian ini.
-          Ini mungkin disebabkan oleh data konten yang tidak lengkap atau gangguan koneksi.
+          Maaf ya, ada masalah teknis waktu menyiapkan sesi ujian ini.
+          Mungkin karena datanya kurang lengkap atau internetmu terganggu.
         </p>
 
         {/* Debug Info (Hanya di Development) */}

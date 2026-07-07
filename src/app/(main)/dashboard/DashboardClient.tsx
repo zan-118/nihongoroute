@@ -188,7 +188,7 @@ export default function DashboardClient({ courseMetadata, expression }: Dashboar
   const handleResetData = () => {
     openConfirm(
       "Hapus Seluruh Riwayat Belajar?",
-      "Tindakan ini akan menghapus permanen seluruh progres, XP, dan pencapaian Anda secara lokal. Anda yakin?",
+      "Tindakan ini akan menghapus permanen seluruh progres, XP, dan pencapaianmu secara lokal. Kamu yakin?",
       "Ya, Hapus Permanen",
       true,
       () => {
@@ -202,7 +202,7 @@ export default function DashboardClient({ courseMetadata, expression }: Dashboar
   const handleLogout = () => {
     openConfirm(
       "Akhiri Sesi Belajar?",
-      "Anda akan keluar dari akun. Pastikan progres terakhir Anda sudah tersimpan di cloud.",
+      "Kamu akan keluar dari akun. Pastikan progres terakhirmu sudah tersimpan di cloud ya.",
       "Keluar Sekarang",
       true,
       async () => {

@@ -91,7 +91,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
             Graded Reading
           </h1>
           <p className="text-muted-foreground text-lg max-w-2xl font-medium">
-            Pilih bacaan yang sesuai dengan level Anda. Klik pada kata yang sulit untuk melihat arti dan mendengarkan pengucapannya.
+            Pilih bacaan yang pas buat levelmu. Klik kata yang sulit untuk melihat artinya dan mendengar pengucapannya.
           </p>
         </div>
 

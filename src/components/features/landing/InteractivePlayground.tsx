@@ -48,13 +48,13 @@ export function InteractivePlayground() {
         body: JSON.stringify({ text: trimmed, mode: modeToUse }),
       });
 
-      if (!res.ok) throw new Error("Gagal memproses teks");
+      if (!res.ok) throw new Error("Gagal proses teks");
       const data = await res.json();
       
       setOutputHtml(data.hiragana);
     } catch (err) {
       console.error(err);
-      setError("Gagal terhubung ke parser. Pastikan internet stabil.");
+      setError("Waduh, koneksi ke parser gagal. Cek koneksi internetmu ya.");
     } finally {
       setIsLoading(false);
     }
@@ -72,13 +72,13 @@ export function InteractivePlayground() {
 
       <div className="text-center max-w-3xl mx-auto mb-[50px]">
         <Badge className="bg-primary/10 text-primary border border-primary/20 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
-          Interactive Playground
+          Coba Langsung
         </Badge>
         <h2 className="text-4xl md:text-5xl tracking-tight mb-5">
-          Coba Teknologi Kami <span className="brand-text-gradient">Secara Instan</span>
+          Coba Langsung, <span className="brand-text-gradient">Tanpa Ribet</span>
         </h2>
         <p className="text-muted-foreground text-base md:text-lg font-medium leading-relaxed">
-          Ketik kalimat bahasa Jepang atau gunakan tombol prasetel di bawah untuk melihat keandalan parser konverter furigana kami secara langsung.
+          Penasaran? Ketik kalimat Jepang atau klik contoh di bawah — lihat sendiri hasilnya dalam hitungan detik.
         </p>
       </div>
 
@@ -88,10 +88,10 @@ export function InteractivePlayground() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                <Languages size={14} className="text-primary" /> Input Kalimat Jepang
+                <Languages size={14} className="text-primary" /> Ketik Kalimat Jepang
               </span>
               <span className="text-[10px] font-bold text-muted-foreground">
-                {inputText.length}/100 Karakter
+                {inputText.length}/100 huruf
               </span>
             </div>
 
@@ -143,7 +143,7 @@ export function InteractivePlayground() {
           <div className="space-y-4">
             {/* Presets */}
             <div className="flex flex-col gap-2">
-              <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Kalimat Presets:</span>
+              <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Contoh Kalimat:</span>
               <div className="flex flex-col gap-1.5">
                 {PRESETS.map((preset) => (
                   <button
@@ -169,7 +169,7 @@ export function InteractivePlayground() {
               ) : (
                 <Sparkles size={14} />
               )}
-              <span>Proses Kalimat Jepang</span>
+              <span>Proses Sekarang</span>
             </Button>
           </div>
         </Card>
@@ -181,7 +181,7 @@ export function InteractivePlayground() {
 
           <div className="flex items-center justify-between relative z-10">
             <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-              <span className="size-2 rounded-full bg-success animate-pulse" /> Hasil Penguraian Teks
+              <span className="size-2 rounded-full bg-success animate-pulse" /> Hasil Konversi
             </span>
             {outputHtml && (
               <Badge className="bg-success/10 text-success border-success/20 font-bold uppercase tracking-widest text-[8px] shadow-none">
@@ -201,7 +201,7 @@ export function InteractivePlayground() {
                   className="flex flex-col items-center gap-3"
                 >
                   <Loader2 size={32} className="text-primary animate-spin" />
-                  <span className="text-xs text-muted-foreground font-bold uppercase tracking-wider animate-pulse">Menghubungkan ke Parser...</span>
+                  <span className="text-xs text-muted-foreground font-bold uppercase tracking-wider animate-pulse">Sedang diproses...</span>
                 </m.div>
               ) : error ? (
                 <m.div
@@ -233,16 +233,16 @@ export function InteractivePlayground() {
                   exit={{ opacity: 0 }}
                   className="text-center text-xs font-semibold text-muted-foreground max-w-xs leading-relaxed"
                 >
-                  Ketik teks bahasa Jepang di kolom input sebelah kiri atau klik tombol prasetel kalimat contoh.
+                  Ketik kalimat Jepang di kolom kiri, atau pilih contoh kalimat yang sudah disiapkan.
                 </m.div>
               )}
             </AnimatePresence>
           </div>
 
           <div className="pt-4 border-t border-border/60 flex items-center justify-between text-[9px] font-bold text-muted-foreground uppercase tracking-widest relative z-10">
-            <span>Powered by Kuroshiro Parser</span>
+            <span>Ditenagai Kuroshiro Parser</span>
             <span className="flex items-center gap-1.5">
-              <Check size={10} className="text-success" /> Offline Caching Ready
+              <Check size={10} className="text-success" /> Siap Mode Offline
             </span>
           </div>
         </Card>

@@ -181,7 +181,7 @@ export const ACHIEVEMENTS_LIST: Achievement[] = [
   {
     id: "first_steps",
     title: "Langkah Pertama",
-    description: "Pelajari 5 kosakata pertama Anda",
+    description: "Pelajari 5 kosakata pertama kamu",
     icon: Star,
     condition: (p) => (Object.keys(p.srs || {}).length / 5) * 100,
     threshold: 5
@@ -197,7 +197,7 @@ export const ACHIEVEMENTS_LIST: Achievement[] = [
   {
     id: "vocab_collector",
     title: "Kolektor Kata",
-    description: "Pelajari 50 kosakata Anda",
+    description: "Pelajari 50 kosakata kamu",
     icon: BookOpen,
     condition: (p) => (Object.keys(p.srs || {}).length / 50) * 100,
     threshold: 50
@@ -255,7 +255,7 @@ export const ACHIEVEMENTS_LIST: Achievement[] = [
   {
     id: "streak_gold",
     title: "Legenda Abadi",
-    description: "Pertahankan streak belajar Anda selama 30 hari",
+    description: "Pertahankan streak belajarmu selama 30 hari",
     icon: Crown,
     condition: (p) => ((p.streak || 0) / 30) * 100,
     threshold: 30
@@ -265,7 +265,7 @@ export const ACHIEVEMENTS_LIST: Achievement[] = [
   {
     id: "lesson_bronze",
     title: "Langkah Akademik",
-    description: "Menyelesaikan 1 Pelajaran pertama Anda",
+    description: "Selesaikan 1 Pelajaran pertama kamu",
     icon: GraduationCap,
     condition: (p) => (Object.keys(p.completedLessons || {}).length / 1) * 100,
     threshold: 1

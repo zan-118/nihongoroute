@@ -226,7 +226,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
 
     useUIStore.getState().addNotification({
       title: "Materi Selesai!",
-      message: "Selamat! Anda mendapatkan +100 XP dari membaca.",
+      message: "Selamat! Kamu dapat +100 XP dari membaca.",
       type: "success",
     });
     recordLearningEvent({

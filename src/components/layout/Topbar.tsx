@@ -48,7 +48,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
   const handleSharePage = async () => {
     const shareData = {
       title: document.title || "NihongoRoute",
-      text: "Ayo belajar Bahasa Jepang di NihongoRoute!",
+      text: "Yuk belajar Bahasa Jepang bareng di NihongoRoute!",
       url: window.location.origin + pathname,
     };
 
@@ -61,7 +61,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
     } else {
       try {
         await navigator.clipboard.writeText(window.location.origin + pathname);
-        toast.success("Tautan halaman berhasil disalin!");
+        toast.success("Link halaman udah disalin!");
       } catch (err) {
         console.error("Gagal menyalin tautan:", err);
       }
@@ -159,7 +159,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
                 className="flex items-center gap-2"
               >
                 <CloudOff size={12} className="text-destructive" aria-hidden="true" />
-                <span className="text-destructive/90 hidden md:inline">Gagal Sinkron</span>
+                <span className="text-destructive/90 hidden md:inline">Sinkron Gagal</span>
               </m.div>
             ) : hasPendingSync ? (
               <m.div 
@@ -170,7 +170,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
                 className="flex items-center gap-2"
               >
                 <CloudUpload size={12} className="text-warning" aria-hidden="true" />
-                <span className="text-warning/90 hidden md:inline">Tertunda</span>
+                <span className="text-warning/90 hidden md:inline">Menunggu</span>
               </m.div>
             ) : (
               <m.div 
@@ -181,7 +181,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
                 className="flex items-center gap-2"
               >
                 <Cloud size={12} className="text-success" aria-hidden="true" />
-                <span className="text-success/70 hidden md:inline">Tersinkronisasi</span>
+                <span className="text-success/70 hidden md:inline">Tersinkron</span>
               </m.div>
             )}
           </AnimatePresence>

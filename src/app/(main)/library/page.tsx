@@ -108,7 +108,7 @@ export default async function LibraryPage() {
     {
       href: "/exams",
       title: "Ujian & Sertifikasi",
-      desc: "Uji kesiapan Anda menghadapi ujian JLPT sesungguhnya dengan simulasi skor yang akurat.",
+      desc: "Uji kesiapanmu menghadapi ujian JLPT sesungguhnya dengan simulasi skor yang akurat.",
       icon: <Award size={24} />,
       label: "Latihan Ujian",
       count: counts.exams,

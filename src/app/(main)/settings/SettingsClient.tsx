@@ -91,7 +91,7 @@ export default function SettingsClient() {
             Pengaturan Akun
           </m.h1>
           <m.p variants={itemVariants} className="text-muted-foreground text-sm md:text-base font-semibold max-w-xl leading-relaxed opacity-70">
-            Atur profil dan preferensi belajar Anda. Gunakan sinkronisasi Cloud untuk menjaga keamanan riwayat belajar Anda di berbagai perangkat.
+            Atur profil dan preferensi belajarmu. Pakai sinkronisasi Cloud biar riwayat belajarmu aman di berbagai perangkat.
           </m.p>
         </header>
 
@@ -132,7 +132,7 @@ export default function SettingsClient() {
               <div className="flex-1 text-center md:text-left">
                 <h4 className="text-destructive uppercase italic tracking-tighter text-lg mb-2">Zona Berbahaya</h4>
                 <p className="text-muted-foreground text-sm leading-relaxed opacity-60 font-medium">
-                  Penghapusan data bersifat permanen. Seluruh pencapaian, streak, dan data memori SRS Anda akan dihapus sepenuhnya dari sistem.
+                  Penghapusan data bersifat permanen. Semua pencapaian, streak, dan data memori SRS kamu akan dihapus sepenuhnya dari sistem.
                 </p>
               </div>
             </Card>

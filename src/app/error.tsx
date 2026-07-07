@@ -51,18 +51,18 @@ export default function RootError({
         </div>
         
         <h1 className="text-2xl md:text-3xl text-foreground uppercase tracking-tight mb-3 font-japanese">
-          Koneksi Terputus
+          Waduh, Koneksinya Putus
         </h1>
         
         <p className="text-xs md:text-sm text-muted-foreground mb-8 leading-relaxed font-medium">
-          Gagal menyambungkan ke server utama. Pastikan jaringan internet Anda aktif, atau silakan coba lagi beberapa saat lagi.
+          Kayaknya koneksi ke server lagi bermasalah. Cek koneksi internetmu, atau coba lagi sebentar lagi ya.
         </p>
 
         <Button
           onClick={() => reset()}
           className="w-full h-12 bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase tracking-widest text-xs rounded-xl duration-300 shadow-[0_0_15px_rgb(var(--destructive-rgb)/0.15)] hover:shadow-[0_0_25px_rgb(var(--destructive-rgb)/0.3)] active:scale-[0.98]"
         >
-          Coba Hubungkan Ulang
+          Coba Lagi
         </Button>
         
         <p className="mt-8 text-[10px] text-muted-foreground/30 uppercase tracking-[0.2em] font-semibold">

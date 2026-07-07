@@ -146,7 +146,7 @@ export default function DictationClient() {
     try {
       const data = await getRandomSentencesForDrill(level === "all" ? "" : level, amount);
       if (data.length === 0) {
-        toast.error("Moushiwake arimasen - Tidak ada kalimat yang ditemukan untuk level ini.");
+        toast.error("Maaf ya, kalimat untuk level ini belum ketemu.");
         return;
       }
       setSentences(data);
@@ -164,7 +164,7 @@ export default function DictationClient() {
       }, 500);
     } catch (e) {
       console.error(e);
-      toast.error("Gagal memuat kalimat dikte.");
+      toast.error("Waduh, gagal memuat kalimat dikte.");
     } finally {
       setLoading(false);
     }
@@ -181,7 +181,7 @@ export default function DictationClient() {
   // Check Answer
   const handleCheck = () => {
     if (!userInput.trim()) {
-      toast.warning("Silakan ketik apa yang Anda dengar.");
+      toast.warning("Ketik dulu apa yang kamu dengar ya.");
       return;
     }
 
@@ -422,7 +422,7 @@ export default function DictationClient() {
                     value={userInput}
                     onChange={handleInputChange}
                     disabled={isChecked}
-                    placeholder="Ketik apa yang Anda dengar..."
+                    placeholder="Ketik apa yang kamu dengar..."
                     className={`h-14 bg-muted/50 border-2 text-center text-lg font-japanese font-bold rounded-lg transition-all ${
                       isChecked
                         ? isPerfectMatch

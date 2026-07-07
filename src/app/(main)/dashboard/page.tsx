@@ -19,7 +19,7 @@ import { createPageMetadata } from "@/lib/seo";
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Dashboard | NihongoRoute",
-    description: "Pantau progres belajar bahasa Jepang Anda, kelola jadwal SRS, dan taklukkan quest harian.",
+    description: "Pantau progres belajar bahasa Jepangmu, kelola jadwal SRS, dan selesaikan quest harian.",
     path: "/dashboard",
     noIndex: true,
   }),

@@ -102,7 +102,7 @@ export function useSettingsActions() {
         if (await importData(result)) {
           window.location.reload();
         } else {
-          alert("Format file data tidak valid atau rusak!");
+          alert("File-nya nggak valid atau rusak. Coba file lain ya.");
         }
       };
       reader.readAsText(file);
@@ -112,21 +112,21 @@ export function useSettingsActions() {
 
   const handleResetData = useCallback(() => {
     openConfirm(
-      "Hapus Seluruh Riwayat Belajar?",
-      "Peringatan: Seluruh progres belajar Anda akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.",
+      "Hapus Semua Data Belajar?",
+      "Semua progres belajarmu bakal dihapus permanen dan nggak bisa dikembalikan.",
       "Ya, Hapus Permanen",
       true,
       () => {
         resetAll();
-        toast.success("Semua data progres telah direset.");
+        toast.success("Data belajar udah direset.");
       }
     );
   }, [openConfirm, resetAll]);
 
   const handleLogout = useCallback(() => {
     openConfirm(
-      "Akhiri Sesi Belajar?",
-      "Sesi belajar Anda akan diakhiri. Pastikan data sudah tersinkronisasi ke Cloud untuk keamanan progres Anda.",
+      "Mau Keluar?",
+      "Kamu akan keluar dari akun. Pastikan datamu udah tersinkron ke cloud ya.",
       "Keluar Sekarang",
       true,
       async () => {
@@ -139,7 +139,7 @@ export function useSettingsActions() {
 
   const handleManualSync = useCallback(async () => {
     if (!isAuthenticated) {
-      toast.error("Silakan login untuk sinkronisasi cloud!");
+      toast.error("Login dulu ya biar data belajarmu bisa disinkronkan ke cloud.");
       return;
     }
     
@@ -167,16 +167,16 @@ export function useSettingsActions() {
         const success = await syncLocalToCloud(session.user.id, progressData);
         if (success) {
           clearDirtySrs();
-          toast.success("Data berhasil disinkronkan ke Cloud!");
+          toast.success("Oke, datamu udah disimpan ke cloud!");
         } else {
-          toast.error("Sinkronisasi gagal. Coba lagi nanti.");
+          toast.error("Waduh, sinkronisasinya gagal. Coba lagi nanti ya.");
         }
       } else {
-        toast.error("Sesi tidak ditemukan. Silakan login ulang.");
+        toast.error("Sesinya udah habis. Coba login lagi ya.");
       }
     } catch (err) {
       console.error("Sync error:", err);
-      toast.error("Terjadi kesalahan saat sinkronisasi.");
+      toast.error("Ada masalah waktu sinkronisasi. Coba lagi nanti ya.");
     } finally {
       setIsSyncing(false);
     }

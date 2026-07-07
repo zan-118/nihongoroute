@@ -74,7 +74,7 @@ export const ProgressProvider = ({
       if (event === "SIGNED_IN" && session?.user) {
         if (typeof sessionStorage !== "undefined" && !sessionStorage.getItem("nihongo_welcomed")) {
           toast.success(`Okaeri, ${userFullName}!`, {
-            description: "Senang kamu kembali, mari taklukkan tantangan hari ini!",
+            description: "Senang kamu balik! Yuk selesaikan tantangan hari ini.",
           });
           sessionStorage.setItem("nihongo_welcomed", "true");
         }

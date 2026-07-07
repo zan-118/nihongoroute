@@ -55,7 +55,7 @@ export function TrustBanner() {
             </h2>
             
             <p className="text-muted-foreground text-base md:text-lg font-medium leading-relaxed max-w-2xl text-balance">
-              NihongoRoute adalah platform belajar nirlaba yang didesain secara transparan untuk mempermudah siapa saja menguasai bahasa Jepang secara mandiri tanpa terhalang kendala biaya.
+              NihongoRoute itu gratis, transparan, dan dibuat biar siapa aja bisa belajar bahasa Jepang tanpa mikirin biaya.
             </p>
  
             {/* BARIS TIGA MANFAAT UTAMA */}
@@ -69,7 +69,7 @@ export function TrustBanner() {
                   </div>
                   <h4 className="text-sm text-foreground uppercase tracking-tight">Tanpa Iklan / Biaya Tersembunyi</h4>
                   <p className="text-xs text-muted-foreground leading-relaxed font-semibold">
-                    Tidak ada interupsi iklan mengganggu, tidak ada fitur berbayar tersembunyi, dan tidak perlu mendaftarkan kartu kredit.
+                    Nggak ada iklan mengganggu, nggak ada biaya tersembunyi, dan nggak perlu kartu kredit.
                   </p>
                 </div>
               </div>
@@ -82,7 +82,7 @@ export function TrustBanner() {
                   </div>
                   <h4 className="text-sm text-foreground uppercase tracking-tight">Akses Luring Penuh</h4>
                   <p className="text-xs text-muted-foreground leading-relaxed font-semibold">
-                    Mendukung mode offline. Seluruh data kemajuan belajar tersimpan aman di perangkat Anda secara instan.
+                    Bisa dipakai offline. Semua progres belajarmu tersimpan aman di perangkatmu.
                   </p>
                 </div>
               </div>
@@ -95,7 +95,7 @@ export function TrustBanner() {
                   </div>
                   <h4 className="text-sm text-foreground uppercase tracking-tight">Didukung Komunitas</h4>
                   <p className="text-xs text-muted-foreground leading-relaxed font-semibold">
-                    Ekosistem pembelajaran bersifat open source. Terbuka bagi siapa saja untuk ikut berkontribusi menyempurnakan kurikulum.
+                    Open source dan terbuka. Siapa aja boleh ikut kontribusi buat bikin kurikulumnya makin bagus.
                   </p>
                 </div>
               </div>

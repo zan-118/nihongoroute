@@ -45,7 +45,7 @@ export function useAuth() {
         });
         if (error) throw error;
         toast.success("Selamat Bergabung!", {
-          description: "Akunmu sudah siap. Silakan masuk untuk mulai petualangan belajarmu!",
+          description: "Akunmu udah jadi! Tinggal masuk dan mulai belajar.",
         });
         setIsRegistering(false);
       } else {
@@ -56,7 +56,7 @@ export function useAuth() {
         if (error) throw error;
         
         toast.success(`Selamat Datang Kembali, ${data.user?.user_metadata?.full_name ? data.user.user_metadata.full_name.split(' ')[0] : 'Member'}!`, {
-          description: "Senang melihatmu kembali. Mari lanjut belajarnya!",
+          description: "Senang kamu balik! Yuk lanjut belajar.",
         });
 
         router.push("/");
@@ -65,7 +65,7 @@ export function useAuth() {
       const err = error as Error;
       console.error("Gagal autentikasi email:", err);
       toast.error("Ada sedikit kendala...", {
-        description: err.message || "Email atau kata sandi mungkin salah. Coba cek lagi ya!",
+        description: err.message || "Email atau kata sandinya kayaknya salah. Coba dicek lagi ya!",
       });
     } finally {
       setLoading(false);
@@ -85,7 +85,7 @@ export function useAuth() {
     } catch (error) {
       console.error(`Gagal login dengan ${provider}:`, error);
       toast.error(`Gagal login dengan ${provider}`, {
-        description: "Ada masalah saat menghubungkan ke akun sosmedmu. Coba lagi nanti ya!"
+        description: "Ada kendala waktu nyambungin ke akun Google-mu. Coba lagi nanti ya!"
       });
       setLoading(false);
     }

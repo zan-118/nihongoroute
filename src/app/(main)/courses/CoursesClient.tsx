@@ -145,7 +145,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
                   </span>
                 </h1>
                 <p className="text-muted-foreground text-xs sm:text-sm md:text-base font-semibold leading-relaxed">
-                  Mulai petualangan bahasa Jepang Anda dengan kurikulum terstruktur untuk penguasaan cepat dan retensi jangka panjang.
+                  Mulai petualangan bahasa Jepangmu dengan kurikulum terstruktur untuk penguasaan cepat dan retensi jangka panjang.
                 </p>
               </div>
 

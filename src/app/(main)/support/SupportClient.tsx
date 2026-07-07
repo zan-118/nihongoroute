@@ -50,19 +50,19 @@ interface FAQItem {
 const FAQS_MOCK: FAQItem[] = [
   {
     question: "Apakah NihongoRoute akan selalu gratis dan bebas iklan?",
-    answer: "Ya! Komitmen utama NihongoRoute adalah menyediakan akses belajar bahasa Jepang yang setara, modern, dan 100% bebas dari iklan banner yang merusak fokus belajar member.",
+    answer: "Pasti! NihongoRoute berkomitmen kasih akses belajar yang setara, modern, dan 100% bebas iklan yang ganggu fokus.",
   },
   {
     question: "Ke mana seluruh dana dukungan saya disalurkan?",
-    answer: "100% dari dukungan Anda disalurkan langsung untuk membayar tagihan server awan (database Supabase), hosting cepat CDN (Vercel), perpanjangan nama domain tahunan, serta pembiayaan aset rekaman audio asli penutur bahasa Jepang.",
+    answer: "100% dukunganmu dipakai buat bayar biaya server, hosting, domain, dan biaya rekaman audio dari penutur asli Jepang.",
   },
   {
     question: "Bagaimana jika saya ingin berkontribusi kode atau materi?",
-    answer: "Kami sangat menyambut kontribusi open-source! Anda dapat mengunjungi repositori GitHub resmi kami atau mengirim pesan langsung melalui menu kontak pengembang untuk berkolaborasi.",
+    answer: "Boleh banget! Langsung aja cek repositori GitHub kami, atau hubungi pengembang lewat menu kontak buat mulai kolaborasi.",
   },
   {
     question: "Apakah ada batas minimum untuk memberikan dukungan?",
-    answer: "Tidak ada batas minimum sama sekali. Satu rupiah pun dukungan Anda sangat berharga untuk menjaga kestabilan database server ulasan harian kami agar tetap beroperasi.",
+    answer: "Nggak ada batas minimum. Berapapun dukunganmu, sangat berarti buat jaga server review harian tetap jalan.",
   },
 ];
 
@@ -274,8 +274,8 @@ export default function SupportClient() {
           >
             Dukungan Anda sangat berarti agar{" "}
             <span className="text-primary font-black not-italic">NihongoRoute</span> tetap
-            berjalan, gratis, terus berkembang, dan tanpa iklan yang mengganggu
-            bagi para pejuang bahasa Jepang.
+            gratis, terus berkembang, dan bebas iklan buat semua
+            pejuang bahasa Jepang.
           </m.p>
         </section>
 
@@ -319,7 +319,7 @@ export default function SupportClient() {
                 Bilah Target Server
               </h3>
               <p className="text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">
-                Kemandirian Operasional Bulanan
+                Biaya Operasional Bulanan
               </p>
             </div>
           </div>

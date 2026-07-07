@@ -363,7 +363,7 @@ export default function CommunityFeed() {
           </div>
           <div>
             <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">Gabung Komunitas Diskusi</p>
-            <p className="text-[10px] text-muted-foreground/60 mt-1 max-w-sm">Anda harus login/register untuk bisa menulis postingan dan membalas pertanyaan di komunitas.</p>
+            <p className="text-[10px] text-muted-foreground/60 mt-1 max-w-sm">Kamu harus login/register dulu ya untuk bisa menulis postingan dan membalas pertanyaan di komunitas.</p>
           </div>
         </Card>
       )}
@@ -393,7 +393,7 @@ export default function CommunityFeed() {
         ) : isError ? (
           <div className="text-center py-20 border-2 border-dashed border-border/80 rounded-[2.5rem] bg-muted/5 glass flex flex-col items-center justify-center gap-3">
             <p className="text-destructive font-black uppercase tracking-widest text-xs">Gagal Memuat Feed</p>
-            <p className="text-[10px] text-muted-foreground/45">Periksa sambungan internet Anda dan coba lagi.</p>
+            <p className="text-[10px] text-muted-foreground/45">Coba periksa koneksi internetmu dan ulangi lagi.</p>
           </div>
         ) : posts && posts.length > 0 ? (
           posts.map((post) => (

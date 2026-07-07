@@ -37,7 +37,7 @@ export default function NotificationManager() {
   const requestPermission = async () => {
     if (!("Notification" in window)) {
       toast.error("Browser Tidak Mendukung", {
-        description: "Browser Anda tidak mendukung notifikasi web."
+        description: "Browser kamu belum support notifikasi web."
       });
       return;
     }
@@ -48,14 +48,14 @@ export default function NotificationManager() {
       if (res === "granted") {
         toggleNotifications(true);
         toast.success("Notifikasi Aktif!", {
-          description: "Anda akan menerima pengingat untuk sesi review berikutnya."
+          description: "Kamu bakal dapat pengingat buat sesi review selanjutnya."
         });
         
         // Uji notifikasi menggunakan Service Worker jika tersedia (lebih baik untuk perangkat Mobile)
         if ("serviceWorker" in navigator) {
           navigator.serviceWorker.ready.then((registration) => {
             registration.showNotification("NihongoRoute", {
-              body: "Notifikasi berhasil diaktifkan! Kami akan mengingatkanmu jika ada kartu yang jatuh tempo.",
+              body: "Notifikasi aktif! Kamu bakal diingatkan kalau ada kartu yang perlu di-review.",
               icon: "/logo-branding.png",
               badge: "/logo-branding.png",
               vibrate: [100, 50, 100],
@@ -63,20 +63,20 @@ export default function NotificationManager() {
           } as NotificationOptions);
           }).catch(() => {
             new Notification("NihongoRoute", {
-              body: "Notifikasi berhasil diaktifkan! Kami akan mengingatkanmu jika ada kartu yang jatuh tempo.",
+              body: "Notifikasi aktif! Kamu bakal diingatkan kalau ada kartu yang perlu di-review.",
               icon: "/logo-branding.png"
             });
           });
         } else {
           new Notification("NihongoRoute", {
-            body: "Notifikasi berhasil diaktifkan! Kami akan mengingatkanmu jika ada kartu yang jatuh tempo.",
+            body: "Notifikasi aktif! Kamu bakal diingatkan kalau ada kartu yang perlu di-review.",
             icon: "/logo-branding.png"
           });
         }
       } else {
         toggleNotifications(false);
         toast.warning("Izin Ditolak", {
-          description: "Anda tidak akan menerima notifikasi pengingat."
+          description: "Kamu nggak akan dapat notifikasi pengingat."
         });
       }
     } catch (err) {
@@ -119,7 +119,7 @@ export default function NotificationManager() {
         </div>
 
         <p className="text-xs text-muted-foreground font-medium leading-relaxed">
-          Jangan biarkan ingatanmu pudar! Aktifkan notifikasi untuk mendapatkan pengingat saat kosakata masuk jadwal review (SRS).
+          Biar nggak lupa, aktifkan notifikasi supaya kamu diingatkan waktu ada kosakata yang perlu di-review.
         </p>
 
         <div className="flex items-center gap-4 pt-2">

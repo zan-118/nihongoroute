@@ -240,7 +240,7 @@ export default function CheatsheetClient({
             </div>
             <h3 className="text-xl text-foreground">Catatan cepat tidak ditemukan</h3>
             <p className="text-muted-foreground text-sm max-w-sm mt-1">
-              Tidak ada materi yang cocok dengan kata kunci pencarian Anda. Coba bersihkan pencarian atau ganti filter kategori.
+              Nggak ada catatan cepat yang cocok sama kata kuncimu. Coba ganti kata kunci atau filter kategorinya ya.
             </p>
           </motion.div>
         )}

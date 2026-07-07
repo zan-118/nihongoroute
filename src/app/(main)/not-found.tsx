@@ -47,10 +47,10 @@ export default function MainNotFound() {
 
         <div className="space-y-3 mb-8">
           <h2 className="text-xl text-foreground uppercase tracking-tight">
-            Materi Tidak Ditemukan
+            Materi Nggak Ketemu
           </h2>
           <p className="text-xs md:text-sm text-muted-foreground leading-relaxed font-medium">
-            Sepertinya Anda mengakses alamat materi yang tidak terdaftar, telah dihapus, atau sedang dipindahkan di basis data kami.
+            Kayaknya materi ini udah dihapus, dipindah, atau memang belum ada.
           </p>
         </div>
 
@@ -65,7 +65,7 @@ export default function MainNotFound() {
           <Button asChild variant="outline" size="lg" className="w-full sm:w-auto font-black uppercase tracking-widest text-xs h-12 rounded-xl border border-border hover:bg-muted text-muted-foreground hover:text-foreground duration-300">
             <Link href="/library" className="flex items-center justify-center gap-2">
               <ArrowLeft size={14} />
-              Kembali ke Pustaka
+              Ke Pustaka
             </Link>
           </Button>
         </div>

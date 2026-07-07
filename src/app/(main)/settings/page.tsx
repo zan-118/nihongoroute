@@ -11,7 +11,7 @@ import { createPageMetadata } from "@/lib/seo";
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Pengaturan Akun | NihongoRoute",
-    description: "Atur profil dan preferensi belajar Anda di NihongoRoute.",
+    description: "Atur profil dan preferensi belajarmu di NihongoRoute.",
     path: "/settings",
     noIndex: true,
   }),

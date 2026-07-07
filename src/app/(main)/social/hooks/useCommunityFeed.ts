@@ -59,18 +59,18 @@ export function useCommunityFeed() {
         channel.postMessage("SYNC_COMPLETE");
         channel.close();
       } else {
-        toast.error(data.error || "Gagal membuat postingan.");
+        toast.error(data.error || "Gagal kirim postingan.");
       }
     },
     onError: () => {
-      toast.error("Terjadi kesalahan.");
+      toast.error("Waduh, ada yang salah. Coba lagi ya.");
     },
   });
 
   const handleSubmitPost = (e: React.FormEvent) => {
     e.preventDefault();
     if (isGuest) {
-      toast.error("Anda harus masuk log terlebih dahulu.");
+      toast.error("Login dulu yuk biar bisa posting!");
       return;
     }
     if (!postContent.trim()) return;
@@ -84,10 +84,10 @@ export function useCommunityFeed() {
       if (res.success && res.profile) {
         setSelectedUserProfile(res.profile);
       } else {
-        toast.error("Profil tidak dapat dimuat.");
+        toast.error("Hmm, profilnya belum bisa dimuat.");
       }
     } catch (err) {
-      toast.error("Terjadi kesalahan mengambil profil.");
+      toast.error("Gagal ambil profil. Coba lagi ya.");
     } finally {
       setIsFetchingProfile(false);
     }

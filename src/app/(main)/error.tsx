@@ -56,11 +56,11 @@ export default function MainError({
         </div>
         
         <h1 className="text-2xl md:text-3xl text-foreground uppercase tracking-tight mb-3 leading-tight font-japanese">
-          Oops! Ada Kendala Teknis
+          Oops, Ada yang Nggak Beres
         </h1>
         
         <p className="text-xs md:text-sm text-muted-foreground mb-8 leading-relaxed font-medium">
-          Kami mendeteksi adanya masalah saat memuat data. Silakan coba memuat ulang halaman atau kembali ke dashboard utama Anda.
+          Sepertinya ada masalah waktu muat data. Coba refresh halaman atau balik ke dashboard dulu ya.
         </p>
 
         {process.env.NODE_ENV === "development" && (
@@ -77,7 +77,7 @@ export default function MainError({
             onClick={() => reset()}
             className="rounded-xl h-12 px-6 bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase tracking-widest text-xs duration-300 shadow-[0_0_15px_rgb(var(--destructive-rgb)/0.15)] active:scale-[0.98] w-full sm:w-auto"
           >
-            <RefreshCw size={14} className="mr-2 animate-spin-slow" /> Segarkan Sesi
+            <RefreshCw size={14} className="mr-2 animate-spin-slow" /> Coba Lagi
           </Button>
           
           <Button

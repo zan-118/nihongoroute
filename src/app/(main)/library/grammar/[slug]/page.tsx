@@ -44,7 +44,7 @@ export async function generateMetadata({
   if (!article) {
     return {
       title: "Grammar Tidak Ditemukan | NihongoRoute",
-      description: "Halaman panduan tata bahasa Jepang yang Anda cari tidak tersedia atau telah dipindahkan.",
+      description: "Halaman panduan tata bahasa Jepang yang kamu cari nggak tersedia atau udah dipindahkan.",
     };
   }
 

@@ -546,7 +546,7 @@ export default function LeaderboardClient() {
                     </h4>
                     {isOwnCard && (
                       <Badge className="bg-primary/25 text-primary border-primary/35 text-[7px] sm:text-[9px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-full shrink-0">
-                        Anda
+                        Kamu
                       </Badge>
                     )}
                   </div>
@@ -609,10 +609,10 @@ export default function LeaderboardClient() {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <h4 className="text-xs sm:text-base text-foreground truncate">
-                  {currentUserName || "Anda"}
+                  {currentUserName || "Kamu"}
                 </h4>
                 <Badge className="bg-primary/20 text-primary border-primary/30 text-[7px] sm:text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full shrink-0">
-                  Peringkat Anda
+                  Peringkatmu
                 </Badge>
               </div>
               <p className="text-[8px] sm:text-[10px] text-muted-foreground font-black uppercase tracking-widest mt-0.5">

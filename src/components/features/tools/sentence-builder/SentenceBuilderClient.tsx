@@ -48,7 +48,7 @@ export default function SentenceBuilderClient() {
     try {
       const data = await getRandomSentencesForDrill(lvl === "all" ? "" : lvl, 10);
       if (data.length === 0) {
-        toast.error("Tidak ada kalimat contoh ditemukan di database.");
+        toast.error("Maaf ya, kalimat contoh di database belum ketemu.");
         return;
       }
       const mapped: SentenceBuilderPrompt[] = data.map((s, i) => ({
@@ -66,10 +66,10 @@ export default function SentenceBuilderClient() {
       setShuffleRound((prev) => prev + 1);
       setHasChecked(false);
       setIsDbMode(true);
-      toast.success("Kalimat contoh berhasil dimuat dari database!");
+      toast.success("Oke, kalimat contoh udah dimuat!");
     } catch (e) {
       console.error(e);
-      toast.error("Gagal mengambil kalimat dari database.");
+      toast.error("Waduh, gagal mengambil kalimat dari database.");
     } finally {
       setLoading(false);
     }

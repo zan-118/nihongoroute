@@ -198,7 +198,7 @@ export default function ToolsPage() {
              </div>
           </div>
           <p className="text-muted-foreground text-sm max-w-2xl leading-relaxed">
-            Kumpulan alat bantu belajar mandiri untuk mempercepat penguasaan bahasa Jepang Anda.
+            Kumpulan alat bantu belajar mandiri untuk mempercepat penguasaan bahasa Jepangmu.
             Dari pengenalan aksara hingga latihan hafalan intensif.
           </p>
         </header>

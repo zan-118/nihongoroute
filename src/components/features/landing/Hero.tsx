@@ -21,7 +21,7 @@ export function Hero() {
         >
           <Badge variant="outline" className="brand-pill shadow-none">
             <Sparkles size={12} className="text-primary" />
-            <span>NihongoRoute | Platform Belajar Bahasa Jepang</span>
+            <span>NihongoRoute | Teman Belajar Bahasa Jepangmu</span>
           </Badge>
         </m.div>
 
@@ -48,9 +48,9 @@ export function Hero() {
         </h1>
 
         <p className="text-muted-foreground text-base md:text-lg max-w-xl mb-10 leading-relaxed font-semibold text-balance">
-          Belajar bahasa Jepang di NihongoRoute dengan jalur yang rapi: kana,
-          kosakata, tata bahasa, SRS, dan simulasi ujian dalam satu pengalaman
-          yang cepat, nyaman, dan siap dipakai harian.
+          Mulai dari kana, kosakata, tata bahasa, sampai simulasi ujian JLPT
+          — semuanya ada di NihongoRoute. Cepat, nyaman, dan bisa kamu pakai tiap
+          hari.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto mt-2">
@@ -59,7 +59,7 @@ export function Hero() {
             className="brand-button h-14 px-7 sm:px-9 text-xs group"
           >
             <Link href="/dashboard">
-              Mulai Belajar Sekarang
+              Ayo Mulai Belajar
               <ArrowRight
                 size={16}
                 className="ml-2 group-hover:translate-x-1 transition-transform duration-300"
@@ -73,7 +73,7 @@ export function Hero() {
           >
             <Link href="/courses">
               <PlayCircle size={18} className="mr-2 text-primary" />
-              Jelajahi Materi
+              Lihat Semua Materi
             </Link>
           </Button>
         </div>
@@ -95,7 +95,7 @@ export function Hero() {
             <div className="absolute top-7 left-7 flex items-center gap-2">
               <span className="size-2 rounded-full bg-primary shadow-[0_0_16px_rgb(var(--brand-cyan-rgb)_/_0.55)]" />
               <span className="text-[9px] font-black uppercase tracking-[0.22em] text-muted-foreground">
-                Learning Route
+                Jalur Belajar
               </span>
             </div>
 
@@ -145,7 +145,7 @@ export function Hero() {
             <div className="flex items-center gap-3">
               <div className="size-3 bg-primary rounded-full animate-pulse shadow-[0_0_14px_rgb(var(--brand-cyan-rgb)_/_0.65)]" />
               <span className="text-xs font-black text-foreground uppercase tracking-widest">
-                Sinkronisasi Cloud Aktif
+                Data Tersinkron ke Cloud
               </span>
             </div>
           </m.div>

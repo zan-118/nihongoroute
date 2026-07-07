@@ -12,7 +12,7 @@ export default function RootLoading() {
           <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-primary animate-spin" />
         </div>
         <p className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground">
-          Menginisialisasi NihongoRoute
+          Menyiapkan NihongoRoute...
         </p>
       </div>
     </div>

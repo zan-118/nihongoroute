@@ -200,7 +200,7 @@ function ShareContent() {
 
           {/* CTA Section */}
           <div className="pt-8 border-t border-border/60">
-            <p className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-[0.25em] mb-6">Uji Keterampilan Bahasa Jepang Anda Sekarang</p>
+            <p className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-[0.25em] mb-6">Uji Kemampuan Bahasa Jepangmu Sekarang</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild className="h-14 px-10 bg-primary hover:bg-secondary text-primary-foreground font-black uppercase tracking-widest text-xs rounded-lg shadow-lg hover:shadow-primary/25 transition-all hover:-translate-y-0.5">
                 <Link href="/">Mulai Belajar Nihongo</Link>
@@ -209,7 +209,7 @@ function ShareContent() {
                 onClick={() => {
                   if (typeof window !== "undefined") {
                     navigator.clipboard.writeText(window.location.href);
-                    toast.success("Tautan sertifikat berhasil disalin!");
+                    toast.success("Link sertifikat udah disalin!");
                   }
                 }}
                 variant="ghost" 

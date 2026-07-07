@@ -16,7 +16,7 @@ import { createPageMetadata } from "@/lib/seo";
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Berbagi Progres | NihongoRoute",
-    description: "Lihat dan bagikan pencapaian serta progres belajar bahasa Jepang Anda di NihongoRoute.",
+    description: "Lihat dan bagikan pencapaian serta progres belajar bahasa Jepangmu di NihongoRoute.",
     path: "/share",
     noIndex: true,
   }),

@@ -95,8 +95,8 @@ export function LandingFooter() {
           </div>
 
           <p className="text-muted-foreground text-xs font-semibold leading-relaxed max-w-sm">
-            Platform belajar bahasa Jepang bebas biaya yang dirancang agar rutinitas
-            belajar terasa rapi, cepat, dan nyaman dipakai setiap hari.
+            Platform belajar bahasa Jepang gratis yang bikin rutinitas
+            belajarmu rapi, cepat, dan nyaman setiap hari.
           </p>
 
           <div className="flex items-center gap-3 pt-2">
@@ -128,10 +128,10 @@ export function LandingFooter() {
 
       <div className="pt-8 border-t border-border/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
         <span suppressHydrationWarning>
-          &copy; {new Date().getFullYear()} NihongoRoute. All Rights Reserved.
+          &copy; {new Date().getFullYear()} NihongoRoute. Hak cipta dilindungi.
         </span>
         <span className="text-muted-foreground/70 font-semibold normal-case tracking-normal text-center sm:text-right">
-          Dibuat untuk seluruh pembelajar bahasa Jepang di Indonesia.
+          Dibuat dengan ❤️ untuk semua pejuang bahasa Jepang di Indonesia.
         </span>
       </div>
     </footer>

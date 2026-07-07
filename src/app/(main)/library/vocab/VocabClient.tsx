@@ -274,7 +274,7 @@ export default function VocabClient({
           >
             <Search className="mx-auto mb-6 text-muted-foreground/30" size={48} aria-hidden="true" />
             <p className="text-muted-foreground font-bold text-xs md:text-sm uppercase tracking-widest">
-              Kosakata tidak ditemukan. Coba gunakan kriteria pencarian lain.
+              Kosakata nggak ketemu. Coba cari kata kunci lain ya.
             </p>
           </div>
         ) : layoutPreference === "grid" ? (

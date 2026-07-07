@@ -125,7 +125,7 @@ export default function WeakPointTrainerClient() {
         .filter((card): card is TrainerCard => Boolean(card));
 
       if (enrichedCards.length === 0) {
-        toast.error("Kartu lemah belum bisa dimuat dari database.");
+        toast.error("Waduh, kartu lemahmu belum bisa dimuat dari database.");
         setCards([]);
         return;
       }
@@ -135,7 +135,7 @@ export default function WeakPointTrainerClient() {
       setIsSessionActive(true);
     } catch (error) {
       console.error("Gagal memulai Weak Point Trainer:", error);
-      toast.error("Gagal memuat sesi titik lemah");
+      toast.error("Gagal memuat sesi titik lemah. Coba lagi ya!");
     } finally {
       setIsFetching(false);
     }

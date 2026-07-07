@@ -57,7 +57,7 @@ export function calculateNewStreak(
   if (inventory.streakFreeze > 0 && lastStudyDate !== null) {
     addNotification({
       title: "Streak Freeze Digunakan!",
-      message: "Streak Anda terselamatkan oleh item Streak Freeze.",
+      message: "Streak-mu berhasil diselamatkan oleh Streak Freeze!",
       type: "warning"
     });
     return { streak: currentStreak + 1, streakFreezeUsed: true };

@@ -36,14 +36,14 @@ export default function ForgotPasswordClient() {
       if (error) throw error;
       
       setEmailSent(true);
-      toast.success("Email Pemulihan Meluncur!", {
-        description: "Silakan cek kotak masuk (atau spam) email Anda untuk mengatur ulang kata sandi.",
+      toast.success("Link reset udah dikirim!", {
+        description: "Cek inbox (atau folder spam) emailmu ya buat reset kata sandi.",
       });
     } catch (error: unknown) {
       console.error("Gagal mengirim email pemulihan:", error);
       const message = error instanceof Error ? error.message : "Terjadi kesalahan tidak dikenal";
-      toast.error("Ups, pengiriman gagal...", {
-        description: message || "Pastikan alamat email yang Anda masukkan sudah benar dan terdaftar.",
+      toast.error("Waduh, gagal kirim...", {
+        description: message || "Coba pastikan emailnya bener dan udah terdaftar ya.",
       });
     } finally {
       setLoading(false);

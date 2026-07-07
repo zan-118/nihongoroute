@@ -89,7 +89,7 @@ function SurvivalContent() {
                 Survival Vocabulary Challenge
               </p>
               <p className="text-muted-foreground text-sm max-w-md mx-auto mt-4 leading-relaxed">
-                Uji kecepatan ingatan kosakata Anda. Tebak arti kata bahasa Jepang dengan tepat sebelum kehabisan waktu dan 3 nyawa berharga Anda!
+                Uji seberapa cepat ingatan kosakatamu. Tebak arti kata Jepang dengan tepat sebelum kehabisan waktu dan 3 nyawamu habis!
               </p>
             </div>
 

@@ -89,7 +89,7 @@ export default function OnboardingClient() {
                   Selamat Datang di NihongoRoute
                 </h2>
                 <p className="text-base md:text-lg text-muted-foreground font-medium max-w-xl mx-auto leading-relaxed">
-                  Platform edukasi cerdas untuk menaklukkan bahasa Jepang. Mari tentukan jalur belajar ideal Anda.
+                  Platform belajar bahasa Jepang yang pas buat kamu. Yuk, tentukan jalur belajarmu!
                 </p>
               </div>
 
@@ -98,7 +98,7 @@ export default function OnboardingClient() {
                   onClick={() => setStep(2)}
                   className="brand-button rounded-2xl px-10 h-14 text-base"
                 >
-                  Mulai Perjalanan <ChevronRight className="ml-2" />
+                  Mulai Yuk <ChevronRight className="ml-2" />
                 </Button>
               </div>
             </m.div>
@@ -116,10 +116,10 @@ export default function OnboardingClient() {
             >
               <div className="text-center space-y-3 mb-8">
                 <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight font-japanese">
-                  Apa Target JLPT Anda?
+                  Target JLPT-mu Apa?
                 </h2>
                 <p className="text-sm md:text-base text-muted-foreground font-medium">
-                  Beri tahu kami level mana yang ingin Anda capai saat ini.
+                  Pilih level yang pengen kamu capai sekarang.
                 </p>
               </div>
 
@@ -177,10 +177,10 @@ export default function OnboardingClient() {
             >
               <div className="text-center space-y-3 mb-8">
                 <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight font-japanese">
-                  Apa Motivasi Anda?
+                  Apa yang Bikin Kamu Semangat?
                 </h2>
                 <p className="text-sm md:text-base text-muted-foreground font-medium">
-                  Alasan kuat akan memandu Anda saat materi terasa sulit.
+                  Alasan yang kuat bakal bantu kamu di saat materi terasa berat.
                 </p>
               </div>
 

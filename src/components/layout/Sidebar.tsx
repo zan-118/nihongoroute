@@ -51,7 +51,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
               </span>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="text-[7px] font-bold text-primary/70 uppercase tracking-[0.2em]">
-                  Ecosystem
+                  Ekosistem
                 </span>
                 <span className="size-0.5 rounded-full bg-border" />
                 <span className="text-[7px] font-black text-muted-foreground/55 uppercase tracking-[0.2em]">

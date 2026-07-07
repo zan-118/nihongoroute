@@ -104,7 +104,7 @@ export const useUserStore = create<UserState>()(
         if (newLevel > currentLevel) {
           useUIStore.getState().addNotification({
             title: "Level Up!",
-            message: `Selamat! Anda sekarang berada di Level ${newLevel}.`,
+            message: `Selamat! Kamu sekarang berada di Level ${newLevel}. 🎉`,
             type: "achievement"
           });
         }
@@ -134,7 +134,7 @@ export const useUserStore = create<UserState>()(
 
         useUIStore.getState().addNotification({
           title: "Pembelian Berhasil!",
-          message: "Streak Freeze telah ditambahkan ke koleksi Anda.",
+          message: "Streak Freeze udah masuk ke koleksimu!",
           type: "success"
         });
 
@@ -338,7 +338,7 @@ export const useUserStore = create<UserState>()(
 
               useUIStore.getState().addNotification({
                 title: "Lencana Terbuka!",
-                message: `Selamat! Anda berhasil membuka lencana '${ach.title}': ${ach.description}. (+${rewardXp} XP)`,
+                message: `Mantap! Kamu berhasil membuka lencana '${ach.title}': ${ach.description}. (+${rewardXp} XP)`,
                 type: "achievement"
               });
             }

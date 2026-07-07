@@ -50,7 +50,7 @@ export default function ProfileSection({
 
   const handleSave = async () => {
     if (!newName.trim()) {
-      toast.error("Nama tidak boleh kosong!");
+      toast.error("Nama nggak boleh kosong ya.");
       return;
     }
 
@@ -69,10 +69,10 @@ export default function ProfileSection({
           if (error) throw error;
         }
       }
-      toast.success("Nama profil berhasil diperbarui!");
+      toast.success("Nama profil udah diperbarui!");
     } catch (error) {
       console.error("Gagal sinkron nama:", error);
-      toast.error("Nama disimpan lokal, tapi gagal sinkron ke cloud.");
+      toast.error("Nama udah disimpan lokal, tapi gagal sinkron ke cloud.");
     } finally {
       setIsSyncing(false);
     }
@@ -119,7 +119,7 @@ export default function ProfileSection({
                    </span>
                  )}
               </h2>
-              <p className="text-[10px] sm:text-xs text-muted-foreground/60 font-semibold uppercase tracking-widest">Sesuaikan nama tampilan Anda di NihongoRoute</p>
+              <p className="text-[10px] sm:text-xs text-muted-foreground/60 font-semibold uppercase tracking-widest">Ganti nama tampilanmu di NihongoRoute</p>
             </div>
 
             {/* PENGHITUNG STATISTIK */}
@@ -153,11 +153,11 @@ export default function ProfileSection({
                 <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-muted-foreground/30 group-focus-within/input:text-primary transition-colors">
                    <User size={18} />
                 </div>
-                <input aria-label="Masukkan nama Anda"
+                <input aria-label="Masukkan namamu"
                   type="text"
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
-                  placeholder="Masukkan nama Anda..."
+                  placeholder="Masukkan namamu..."
                   className="control-surface w-full h-14 rounded-lg pl-12 pr-4 text-sm font-black text-foreground uppercase tracking-tight focus:ring-2 focus:ring-primary/35 outline-none transition-all placeholder:text-muted-foreground/40"
                 />
               </div>

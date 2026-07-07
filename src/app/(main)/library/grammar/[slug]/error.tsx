@@ -67,7 +67,7 @@ export default function GrammarError({
 
           {/* Deskripsi Error */}
           <p className="text-sm md:text-base text-muted-foreground font-medium relative z-10 leading-relaxed">
-            Mohon maaf, terjadi kendala saat memuat materi. Pastikan koneksi Anda stabil atau coba muat ulang bagian ini.
+            Maaf ya, ada kendala pas memuat materi. Coba pastikan koneksi internetmu stabil, terus coba muat ulang bagian ini.
           </p>
 
           {/* Tombol Interaksi */}

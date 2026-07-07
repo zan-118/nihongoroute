@@ -85,7 +85,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
     setFlashcardItems(shuffled);
     setCurrentIndex(0);
     setIsFlipped(false);
-    toast.success("Materi berhasil diacak!");
+    toast.success("Oke, materinya udah diacak!");
   };
 
   const handleNextCard = () => {

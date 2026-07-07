@@ -48,10 +48,10 @@ export default function NotFound() {
 
         <div className="space-y-3 mb-8">
           <h2 className="text-xl text-foreground uppercase tracking-tight">
-            Rute Tidak Ditemukan
+            Halaman Nggak Ketemu
           </h2>
           <p className="text-xs md:text-sm text-muted-foreground leading-relaxed font-medium">
-            Sepertinya Anda keluar dari jalur pembelajaran utama. Halaman ini mungkin telah dipindahkan atau belum tersedia saat ini.
+            Kayaknya kamu nyasar nih. Halaman ini mungkin udah dipindah atau belum tersedia.
           </p>
         </div>
 
