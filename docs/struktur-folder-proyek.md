@@ -1,5 +1,5 @@
 # Struktur Folder Proyek NihongoRoute
-**Snapshot Audit: Juni 2026**
+**Snapshot Audit: Juli 2026**
 
 Dokumen ini memetakan tata letak repositori NihongoRoute secara lengkap untuk membantu pengembang memahami letak kode sumber, berkas konfigurasi, migrasi basis data, pengujian, serta skrip operasional.
 
@@ -9,29 +9,37 @@ Dokumen ini memetakan tata letak repositori NihongoRoute secara lengkap untuk me
 
 ```text
 nihongoroute/
-├── .antigravitycli/             # Metadata status perkakas pembantu
-├── .github/                     # Alur kerja integrasi (workflow quality CI)
+├── .agents/                     # Petunjuk khusus dan skills agen AI
+├── .github/                     # Alur kerja integrasi otomatis (Quality CI)
 ├── .husky/                      # Pengait Git hooks (Husky)
 ├── docs/                        # Dokumentasi teknis modular (Bahasa Indonesia)
 ├── e2e/                         # Pengujian ujung-ke-ujung (E2E) Playwright
 ├── public/                      # Aset statis publik (font, manifest, opengraph)
-├── sanity/                      # Definisi skema dan input kustom Sanity Studio
+├── sanity/                      # Definisi skema dan konfigurasi Sanity Studio
 ├── scripts/                     # Skrip pemeliharaan, generator ujian, dan VOICEVOX
 ├── src/                         # Kode sumber utama aplikasi Next.js
-├── supabase/                    # Berkas migrasi database relasional
+├── supabase/                    # Berkas migrasi basis data relasional Supabase
 ├── __tests__/                   # Pengujian unit dan integrasi (Vitest)
 ├── .env.example                 # Contoh kontrak variabel lingkungan
+├── .env.local                   # Variabel lingkungan lokal (secrets & keys)
 ├── .gitignore                   # Aturan pengabaian berkas Git
 ├── ARCHITECTURE.md              # Dokumentasi arsitektur sistem utama
+├── components.json              # Konfigurasi instalasi shadcn/ui
+├── eslint.config.mjs            # Konfigurasi linter ESLint
+├── next-env.d.ts                # Tipe deklarasi lingkungan Next.js
+├── next.config.ts               # Konfigurasi Next.js 16 (Turbopack, stand-alone)
+├── package.json                 # Manajer dependensi npm & script commands
+├── playwright.config.ts         # Konfigurasi framework pengujian E2E Playwright
+├── postcss.config.js            # Konfigurasi PostCSS untuk Tailwind
 ├── README.md                    # Ikhtisar proyek dan petunjuk instalasi
-├── SECURITY.md                  # Kebijakan keamanan dan checklist rilis
 ├── sanity.cli.ts                # Konfigurasi CLI deployment Sanity
 ├── sanity.config.ts             # Konfigurasi Studio Sanity tertanam
-├── schema.json                  # Ekspor artefak skema basis data
-├── skills-lock.json             # Lockfile agent skills metadata
-├── tailwind.config.js           # Konfigurasi tema dan gaya Tailwind CSS
+├── schema.json                  # Ekspor berkas skema basis data Supabase
+├── SECURITY.md                  # Kebijakan keamanan dan rilis
+├── skills-lock.json             # Lockfile metadata agen AI
+├── tailwind.config.js           # Konfigurasi gaya visual Tailwind CSS
 ├── tsconfig.json                # Aturan strict mode kompilasi TypeScript
-├── vitest.config.ts             # Konfigurasi pengujian unit Vitest
+└── vitest.config.ts             # Konfigurasi pengujian unit Vitest
 ```
 
 ---
@@ -56,19 +64,26 @@ src/
 
 ```text
 src/app/
+├── (auth)/        # Rute manajemen otentikasi & onboarding
+│   ├── forgot-password/
+│   ├── login/
+│   ├── onboarding/
+│   └── update-password/
+├── (legal)/       # Rute kepatuhan hukum statis
+│   ├── privacy/
+│   └── terms/
 ├── (main)/        # Rute terautentikasi (navigasi Sidebar, Topbar, ProgressProvider)
 │   ├── courses/   # Kategori kelas dan halaman belajar interaktif
 │   ├── dashboard/ # Dasbor statistik, heatmap, dan misi harian pengguna
 │   ├── exams/     # Dasbor bank soal simulasi ujian dan mesin ujian klien
+│   ├── learning-hub/ # Dasbor terpusat rekomendasi belajar
 │   ├── library/   # Direktori pustaka kamus leksikal, materi membaca & menyimak
 │   ├── review/    # Sesi peninjauan ulasan kartu spaced repetition (SRS)
 │   ├── settings/  # Pengaturan profil, preferences, dan backup restore
 │   ├── share/     # Fitur berbagi profil kemajuan belajar
 │   ├── social/    # Forum diskusi komunitas dan papan peringkat (leaderboard)
 │   ├── support/   # Halaman apresiasi supporter donasi (Saweria/Trakteer)
-│   ├── tools/     # Direktori utilitas bantu (Kana, writing, dictation, flashcard)
-│   ├── layout.tsx # Shell navigasi terautentikasi
-│   └── loading.tsx
+│   └── tools/     # Direktori utilitas bantu (Kana, writing, dictation, flashcard)
 ├── api/           # Endpoint rute API
 │   ├── admin/     # Jembatan admin Studio Sanity ke Supabase & Gemini API
 │   ├── cards/     # Resolusi ID flashcard ke data kosakata
@@ -77,16 +92,16 @@ src/app/
 │   ├── tts/       # Aliran data biner MP3 audio statis VOICEVOX
 │   └── webhooks/  # Penerima webhook pembayaran Saweria & Trakteer
 ├── auth/          # Rute penanganan pertukaran token sesi OAuth
-├── forgot-password/
-├── login/
-├── onboarding/
-├── privacy/
 ├── studio/        # Dasbor CMS Studio Sanity tertanam di rute /studio
-├── terms/
-├── update-password/
+├── error.tsx      # Penanganan error halaman utama (RSC)
 ├── globals.css    # Gaya global CSS dan variabel tema visual semantik
 ├── layout.tsx     # Shell HTML dasar aplikasi dan inisialisasi QueryClient
-└── manifest.ts    # File manifes aplikasi web progresif (PWA)
+├── loading.tsx    # Komponen pemuatan dasar
+├── manifest.ts    # File manifes aplikasi web progresif (PWA)
+├── not-found.tsx  # Halaman penanganan rute tidak terdefinisi (404)
+├── page.tsx       # Halaman beranda / landing page
+├── robots.ts      # Aturan sitemap pencarian crawler
+└── sitemap.ts     # Peta rute halaman otomatis (sitemap.xml)
 ```
 
 ---
@@ -98,4 +113,4 @@ src/app/
 * **UI Primitives**: Komponen dasar pakai ulang yang berukuran kecil (seperti button, card, input, dialog) diletakkan di `src/components/ui/`.
 * **Feature Modules**: Komponen visual spesifik per-fitur diletakkan di `src/components/features/<nama_fitur>/`.
 * **API Route Handlers**: Ditempatkan di folder `src/app/api/<nama_rute>/route.ts`.
-* **Database SQL Migrations**: Seluruh migrasi database diletakkan di `supabase/migrations/`. Setiap berkas migrasi harus memiliki format penamaan terurut `<timestamp>_<nama_migrasi>.sql`.
+* **Database SQL Migrations**: Seluruh skema migrasi database dikonsolidasikan langsung ke dalam satu file migrasi utama di `supabase/migrations/20260620130000_initial_schema.sql`. Pembuatan file migrasi bertimestamp tambahan dilarang untuk memelihara kestabilan repositori lokal dan cloud.

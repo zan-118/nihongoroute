@@ -96,6 +96,8 @@ export interface GrammarArticle {
   pastNegative?: string | null;
   teForm?: string | null;
   adverbial?: string | null;
+  image_url?: string | null;
+  imageUrl?: string | null;
   content_blocks?: unknown;
   vocab_list?: unknown;
   kanji_list?: unknown;

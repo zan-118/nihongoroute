@@ -48,12 +48,12 @@ Due-Date Guard melindungi database dari inflasi interval belajar yang tidak real
 
 ## 2. Sistem Gamifikasi & Aktivitas Belajar
 
-Modul gamifikasi di `src/lib/gamification.ts` memproses pertambahan poin, pemeliharaan hari aktif belajar, streak freeze, dan deduplikasi pencapaian.
+Modul gamifikasi di `src/lib/gamification/gamification.ts` memproses pertambahan poin, pemeliharaan hari aktif belajar, streak freeze, dan deduplikasi pencapaian.
 
 ### 2.1 Formula Kenaikan Level (Leveling Math)
 Total level pengguna dihitung secara langsung dari akumulasi XP menggunakan fungsi matematika berikut:
-$$\text{Level} = \lfloor 0.1 \times \sqrt{\text{XP}} \rfloor + 1$$
-* Formula ini diimplementasikan di `src/lib/level.ts` dan dievaluasi setiap kali user mendapatkan tambahan XP di `useUserStore`. Jika level baru $> \text{level lama}$, pemicu notifikasi in-app "Level Up!" diaktifkan.
+$$\text{Level} = \lfloor \sqrt{\text{XP} / 50} \rfloor + 1$$
+* Formula ini diimplementasikan di `src/lib/gamification/level.ts` dan dievaluasi setiap kali user mendapatkan tambahan XP di `useUserStore`. Jika level baru $> \text{level lama}$, pemicu notifikasi in-app "Level Up!" diaktifkan.
 
 ### 2.2 Perhitungan Hari Beruntun (Streak) & Proteksi Streak Freeze
 Streak adalah jumlah hari berturut-turut pengguna melakukan aktivitas pembelajaran.

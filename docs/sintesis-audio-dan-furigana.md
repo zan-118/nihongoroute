@@ -17,7 +17,7 @@ Untuk menghemat sumber daya komputasi server, aplikasi **tidak diperkenankan** m
 * Jika metadata atau berkas tidak ditemukan di storage, API route mengembalikan status **`404 Not Found`**. Jika metadata di database menunjuk ke berkas yang ternyata kosong/hilang di storage, record database akan dihapus otomatis agar dapat dihasilkan kembali secara offline.
 
 ### 1.2 Peta Tokoh Pengisi Suara & Deteksi Gender Otomatis
-Sistem mendefinisikan daftar nama pembicara tetap (`VOICE_CHARACTERS`) di `src/lib/tts.ts` yang dipetakan ke Speaker ID VOICEVOX:
+Sistem mendefinisikan daftar nama pembicara tetap (`VOICE_CHARACTERS`) di `src/lib/audio/tts.ts` yang dipetakan ke Speaker ID VOICEVOX:
 
 | Nama Pengisi Suara | Gender | Nama VOICEVOX | Speaker ID | Peran / Karakteristik |
 | :--- | :--- | :--- | :--- | :--- |
@@ -45,7 +45,7 @@ Fungsi `detectVoice` bertanggung jawab menentukan suara mana yang akan memutar a
 5. Jika gender tidak dapat diidentifikasi, rotasi acak deterministik dari seluruh suara pria & wanita dijalankan.
 
 ### 1.3 Caching Sisi Klien & Fallback Web Speech API
-* **Client Caching**: Panggilan audio di sisi klien menggunakan helper `fetchTTSAudio` di `src/hooks/useCachedAudio.ts` yang mengakses CacheStorage lokal bernama `nihongoroute_tts_cache`. Audio yang berhasil diambil disimpan lokal (maksimal **200 file**) agar bisa diputar kembali secara luring tanpa lalu lintas data jaringan.
+* **Client Caching**: Panggilan audio di sisi klien menggunakan helper `fetchTTSAudio` di `src/lib/audio/tts.ts` serta caching luring di klien via hook `useCachedAudio` di `src/hooks/useCachedAudio.ts` yang mengakses CacheStorage lokal bernama `nihongoroute_audio_cache`. Audio yang berhasil diambil disimpan lokal (maksimal **50 file**) agar bisa diputar kembali secara luring tanpa lalu lintas data jaringan.
 * **Web Speech API Fallback**: Jika pemanggilan API lokal mengembalikan status 404 (audio belum dihasilkan offline) atau koneksi jaringan mati total, klien secara otomatis mengaktifkan `speakWithWebSpeech`.
   * Fungsi ini memanggil modul peramban bawaan `window.speechSynthesis`.
   * Ia memfilter daftar suara sistem yang berbahasa Jepang (`ja-JP`).

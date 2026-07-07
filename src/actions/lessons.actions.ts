@@ -377,7 +377,9 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
         category_id: dbLesson.category_id,
         levelTitle: dbLesson.category?.title || "N5",
         categoryType: dbLesson.category?.type || "jlpt",
-        generation_context: dbLesson.generation_context
+        generation_context: dbLesson.generation_context,
+        image_url: dbLesson.image_url,
+        imageUrl: dbLesson.image_url
       } as LibraryItem;
     } else {
       // 2. Coba ambil dari tabel articles di Supabase

@@ -19,6 +19,7 @@ import ContentBlockRenderer from "@/components/features/lessons/ContentBlockRend
 
 // Komponen Modular
 import { LessonHeader } from "@/components/features/lessons/LessonHeader";
+import { IllustrationGallery } from "@/components/ui/IllustrationGallery";
 import { VocabSection } from "@/components/features/lessons/VocabSection";
 import { KanjiSection } from "@/components/features/lessons/KanjiSection";
 import { DialogueSection } from "@/components/features/lessons/DialogueSection";
@@ -215,21 +216,31 @@ export default async function LessonPage({ params }: Props) {
             lesson={lesson as import("@/components/features/lessons/DownloadOfflineButton").LessonData}
           />
 
+          {/* Ilustrasi Pelajaran */}
+          {(lesson.image_url || lesson.imageUrl) && (
+            <div className="mb-10">
+              <IllustrationGallery
+                fallbackImage={lesson.image_url || lesson.imageUrl || undefined}
+                title={lesson.title || undefined}
+              />
+            </div>
+          )}
+
           {/* JUMP LINKS SHORTCUT MENU */}
           {(() => {
-            const linkCls = "px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest bg-background/60 border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm whitespace-nowrap shrink-0";
+            const linkCls = "px-3.5 py-2 rounded-full text-[10px] font-black uppercase tracking-wider bg-muted/40 dark:bg-card/40 border border-border/60 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 hover:shadow-md hover:shadow-primary/5 transition-all duration-300 whitespace-nowrap shrink-0 flex items-center gap-1.5";
             const jumpLinks: { href: string; label: string; show: boolean }[] = [
-              { href: "#article-content", label: "Artikel", show: !!(lesson.articles || lesson.content_blocks) },
-              { href: "#vocabulary", label: "単語 Kosakata", show: vocabList.length > 0 },
-              { href: "#kanji", label: "漢字 Kanji", show: kanjiList.length > 0 },
-              { href: "#scenario", label: "場面 Dialog", show: listeningList.length > 0 },
-              { href: "#reading", label: "読解 Bacaan", show: readingList.length > 0 },
-              { href: "#cheatsheet", label: "参考 Referensi", show: cheatsheets.length > 0 },
-              { href: "#quiz", label: "答え Kuis", show: formattedQuizzes.length > 0 },
+              { href: "#article-content", label: "📄 Artikel", show: !!(lesson.articles || lesson.content_blocks) },
+              { href: "#vocabulary", label: "📖 Kosakata", show: vocabList.length > 0 },
+              { href: "#kanji", label: "🖌️ Kanji", show: kanjiList.length > 0 },
+              { href: "#scenario", label: "💬 Dialog", show: listeningList.length > 0 },
+              { href: "#reading", label: "📚 Bacaan", show: readingList.length > 0 },
+              { href: "#cheatsheet", label: "💡 Referensi", show: cheatsheets.length > 0 },
+              { href: "#quiz", label: "✏️ Kuis", show: formattedQuizzes.length > 0 },
             ].filter((l) => l.show);
             if (jumpLinks.length === 0) return null;
             return (
-              <nav className="mb-10 py-3 px-1 rounded-lg bg-card/40  border border-border/50 shadow-sm relative z-20 glass">
+              <nav className="sticky top-4 z-40 mb-10 py-3.5 px-1 rounded-2xl bg-background/70 border border-border/60 shadow-lg glass backdrop-blur-md">
                 <div className="flex gap-2 items-center overflow-x-auto scrollbar-none px-3">
                   <span className="text-[9px] font-black uppercase tracking-wider text-muted-foreground/70 shrink-0 mr-1 hidden sm:inline-block">Pintasan:</span>
                   {jumpLinks.map((link) => (

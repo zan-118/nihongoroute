@@ -13,18 +13,18 @@ Setiap perubahan kode ke cabang utama (`main`) wajib melewati workflow kualitas 
 * Menjalankan strict type checking (`npm run typecheck`).
 * Menjalankan static analysis linting (`npm run lint`).
 * Menjalankan seluruh rangkaian uji unit Vitest (`npm run test:unit`).
-* Memeriksa kesesuaian penamaan dan stempel waktu file migrasi database (`npm run db:migrations:check`).
+* Memeriksa kesesuaian konsolidasi berkas migrasi basis data tunggal (`npm run db:migrations:check`).
 * Membangun bundel produksi Next.js (`npm run build`).
 
 ### 1.2 Konfigurasi `next.config.ts` Produksi
 * **`output: "standalone"`**: Menginstruksikan Next.js untuk memaketkan aplikasi ke dalam kontainer mandiri (hanya menyertakan modul node_modules yang terpakai), meminimalkan ukuran gambar Docker untuk deployment server.
 * **`poweredByHeader: false`**: Menyembunyikan tajuk HTTP `X-Powered-By: Next.js` untuk mengurangi risiko peretasan pengenalan sistem.
 * **Security Headers**: Menyertakan tajuk keamanan ketat di setiap respons rute HTTP:
-  * `Content-Security-Policy` (CSP) untuk mencegah serangan XSS.
-  * `X-Frame-Options: DENY` untuk mencegah serangan clickjacking.
+  * `X-Frame-Options: SAMEORIGIN` untuk mencegah serangan clickjacking.
   * `X-Content-Type-Options: nosniff`.
   * `Referrer-Policy: strict-origin-when-cross-origin`.
-  * `Strict-Transport-Security` (HSTS) untuk memaksa enkripsi SSL/HTTPS.
+  * `Strict-Transport-Security` (HSTS) untuk memaksa enkripsi SSL/HTTPS di tingkat produksi.
+  * `Permissions-Policy` dan `Cross-Origin-Opener-Policy` untuk kontrol akses fitur peramban.
 * **Font Caching**: Menambahkan aturan `Cache-Control` permanen untuk aset font publik di `/fonts/:path*` (`public, max-age=31536000, immutable`).
 
 ---
@@ -45,8 +45,8 @@ Setiap perubahan kode ke cabang utama (`main`) wajib melewati workflow kualitas 
 1. Jika terjadi kegagalan fatal pada rilis baru, lakukan rollback aplikasi Next.js ke versi Git tag sebelumnya melalui platform hosting.
 2. **Rollback Perubahan Database**:
    * **Jangan melakukan rollback migrasi SQL yang destruktif (drop column/table) di database produksi** jika tabel telah memuat data riil pengguna baru.
-   * Utamakan metode perbaikan maju (Forward-Fix Migration) dengan membuat file migrasi baru untuk memperbaiki bug skema.
-   * Jika migrasi bersifat reversibel dan aman bagi data, jalankan rollback ke stempel waktu aman.
+   * Seluruh perbaikan skema database wajib dikonsolidasikan langsung ke file migrasi utama `20260620130000_initial_schema.sql` (bukan membuat berkas baru dengan timestamp).
+   * Lakukan penyuntingan dan penyesuaian skema secara langsung di dalam berkas migrasi utama tersebut.
 
 ---
 
