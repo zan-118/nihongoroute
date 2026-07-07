@@ -15,7 +15,7 @@ Server Actions adalah modul asinkron Next.js yang mengeksekusi logika di sisi se
   * Menyelesaikan detail item pustaka secara individual per domain (telah dipecah dari berkas lama `library.detail.actions.ts` demi mematuhi Single Responsibility Principle).
   * Bertanggung jawab melakukan hidrasi data antar-platform. Contoh: memuat data kosakata, lalu mencari daftar materi membaca Sanity terkait yang memuat kata tersebut di dalam teksnya menggunakan GROQ query.
 * **`lessons.actions.ts`**:
-  * Menggabungkan data kategori kursus dari Supabase dengan susunan materi pelajaran Sanity CMS.
+  * Mengambil data kategori kursus dan detail bab pelajaran (`lessons`) secara dinamis langsung dari database relasional Supabase.
 * **`exams.actions.ts`**:
   * Memproses detail mock exam dari Sanity atau Supabase.
 * **`library-counts.actions.ts`**:
@@ -58,7 +58,7 @@ Sanity Studio memerlukan data dari Supabase untuk menghubungkan konten editorial
 * **`/api/admin/ai-assistant`**: Menghubungkan asisten AI di Sanity dengan Gemini API untuk otomatisasi pembuatan konten bab pelajaran dan furigana.
 
 ### Mekanisme Proteksi Jembatan (`validateAdminApiRequest`):
-* Seluruh endpoint `/api/admin/*` diamankan menggunakan helper otentikasi di `src/lib/admin-api-auth.ts`.
+* Seluruh endpoint `/api/admin/*` diamankan menggunakan helper otentikasi di `src/lib/core/admin-api-auth.ts`.
 * API menolak permintaan jika token rahasia dikirimkan melalui parameter kueri URL (*Query String*) untuk menghindari kebocoran di log server.
 * API wajib menerima token via header `Authorization: Bearer <ADMIN_API_SECRET>`.
 * Pencocokan token menggunakan fungsi perbandingan waktu konstan (`crypto.timingSafeEqual`) untuk meminimalkan risiko serangan analisis waktu (*timing attacks*).

@@ -255,6 +255,30 @@ export const useUserStore = create<UserState>()(
         const srsStore = typeof window !== "undefined" ? (window as unknown as Record<string, { getState: () => { srs: Record<string, { isDeleted?: boolean; repetition?: number }> } }>).useSRSStore : null;
         const srsState = srsStore ? srsStore.getState().srs || {} : {};
 
+        const completedLessonsKeysObj: Record<string, boolean> = {};
+        if (state.completedLessons) {
+          for (const key in state.completedLessons) {
+            if (Object.prototype.hasOwnProperty.call(state.completedLessons, key)) {
+              const lesson = state.completedLessons[key];
+              if (lesson && !lesson.isDeleted) {
+                completedLessonsKeysObj[key] = true;
+              }
+            }
+          }
+        }
+
+        const srsKeysObj: Record<string, boolean> = {};
+        if (srsState) {
+          for (const key in srsState) {
+            if (Object.prototype.hasOwnProperty.call(srsState, key)) {
+              const card = srsState[key];
+              if (card && !card.isDeleted) {
+                srsKeysObj[key] = true;
+              }
+            }
+          }
+        }
+
         // Konstruksi progress payload yang kompatibel dengan tipe UserProgress untuk dicocokkan dengan pencapaian prestasi
         const progressPayload = {
           id: state.id,
@@ -267,12 +291,8 @@ export const useUserStore = create<UserState>()(
           lastStudyDate: state.lastStudyDate,
           studyDays: state.studyDays,
           inventory: state.inventory,
-          completedLessons: Object.fromEntries(
-            Object.entries(state.completedLessons || {}).filter(([_, l]) => !l.isDeleted)
-          ),
-          srs: Object.fromEntries(
-            Object.entries(srsState).filter(([_, card]) => !card.isDeleted)
-          ),
+          completedLessons: completedLessonsKeysObj,
+          srs: srsKeysObj,
           notifications: [],
           settings: {}
         } as unknown as UserProgress;

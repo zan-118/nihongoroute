@@ -48,5 +48,8 @@ Selamat datang di pusat dokumentasi teknis NihongoRoute. Seluruh dokumentasi di 
 16. **[Panduan Pengelolaan Konten & Otomatisasi Skrip](file:///c:/nihongoroute/docs/panduan-pengelolaan-konten.md)**
     * Pengisian konten Sanity Studio, otomatisasi skrip seeding Supabase, prasyarat VOICEVOX audio generator, dan skrip validasi impor JLPT.
 
+17. **[Optimalisasi Performa (Performance Engineering)](file:///c:/nihongoroute/docs/optimalisasi-performa.md)**
+    * Panduan optimalisasi performa teknis seperti resize listener kondisional, controlled memoization timer, pencarian kamus cepat `.in()`, dan evaluasi gamifikasi berkecepatan tinggi.
+
 ---
 📝 **Catatan Pengembang**: Saat melakukan modifikasi pada arsitektur sistem, peta perutean, manajemen status, atau skema basis data, harap perbarui juga dokumen modular terkait agar tetap sinkron dengan keadaan kode sumber teraktual.

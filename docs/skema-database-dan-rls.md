@@ -19,6 +19,8 @@ Seluruh basis data didefinisikan dalam berkas migrasi tunggal: `supabase/migrati
 * **`user_lessons`**:
   * Melacak riwayat penyelesaian bab pelajaran. Memiliki kolom `is_completed` (boolean), `completed_at`, dan `updated_at`.
   * Indeks Unik: `UNIQUE (user_id, lesson_id)`.
+* **`user_feedback`**:
+  * Menyimpan laporan bug/saran dari pengguna. Memiliki kolom `type`, `message`, `route`, `status` (`pending`, `investigating`, `resolved`, `rejected`), `admin_reply` (balasan administrator), `created_at`, dan `updated_at`.
 
 ### 1.2 Tabel Kamus Leksikal (Public Data)
 * **`course_categories`**: Kategori kelas bahasa Jepang (misal: N5, N4, Percakapan).
@@ -54,6 +56,9 @@ Pekerjaan manipulasi status dan keamanan dijalankan otomatis melalui triggers da
 5. **`update_community_post_comments_count()`**:
    * Pemicu setelah penambahan atau penghapusan komentar di tabel `community_comments`.
    * Memperbarui hitungan kolom `comments_count` pada tabel `community_posts` secara otomatis untuk meredam latency waterfall kueri.
+6. **`handle_feedback_update_notification()`**:
+   * Pemicu setelah pembaruan baris data feedback di tabel `user_feedback`.
+   * Otomatis membuat notifikasi baru untuk pengguna jika status laporan atau tanggapan admin diperbarui.
 
 ---
 
@@ -76,7 +81,7 @@ NihongoRoute mengaktifkan RLS pada seluruh tabel di dalam database untuk mencega
   WITH CHECK (auth.uid() = user_id);
   ```
 * **Kebijakan Khusus Feedback**:
-  Tabel `user_feedback` mengizinkan seluruh pengguna mengirim data laporan (`INSERT` diizinkan untuk umum/anon), tetapi kueri baca (`SELECT`) diblokir total bagi siapa saja kecuali akun administrator lewat filter `USING (false)`.
+  Tabel `user_feedback` mengizinkan seluruh pengguna mengirim data laporan (`INSERT` diizinkan untuk umum/anon). Kueri baca (`SELECT`) diizinkan bagi pemilik laporan (`auth.uid() = user_id`) dan administrator saja (menggunakan filter `USING (false)` untuk membatasi akses publik lainnya).
 
 ---
 

@@ -137,7 +137,7 @@ Arsitektur offline-first diatur oleh hook `useSyncProgress` pada shell layout `P
 ## 7. Checklist Pemeliharaan (Maintenance Checklist)
 
 Saat melakukan modifikasi pada kode sumber:
-1. **Perubahan Skema**: Update file `supabase/migrations/` dengan nama berkas terurut timestamp dan jalankan typegen untuk memperbarui `src/types/supabase.generated.ts`. Selaraskan tipe data manual di `src/types/database.ts`.
+1. **Perubahan Skema**: Konsolidasikan seluruh perubahan skema database secara langsung ke dalam berkas migrasi tunggal public schema utama: `supabase/migrations/20260620130000_initial_schema.sql`. Jalankan typegen untuk memperbarui `src/types/supabase.generated.ts` dan selaraskan tipe data manual di `src/types/database.ts`.
 2. **Kueri Baru**: Selalu pastikan kueri SQL baru dilindungi oleh aturan RLS (Row Level Security) yang sesuai di database.
 3. **Penyelarasan Sanity**: Jika schema Sanity untuk materi pelengkap (reading, listening, mockExam) berubah, perbarui kueri GROQ di `src/lib/core/queries.ts`, Server Actions terkait, dan perender UI klien bersamaan. **Catatan**: Lesson tidak lagi dikelola di Sanity — lesson dibaca langsung dari tabel `lessons` Supabase.
 4. **Modifikasi Payload Sync**: Jika struktur data Zustand store berubah, perbarui logika deserializer di middleware persist, payload builder di `src/lib/core/cloud-sync-payload.ts`, dan argumen RPC `sync_user_progress` bersama-sama.

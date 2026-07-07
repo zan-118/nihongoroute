@@ -44,11 +44,12 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
   const addNotification = useUIStore((state) => state.addNotification);
 
   useEffect(() => {
+    if (!isOpen) return;
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+  }, [isOpen]);
 
   // ==========================================
   // QUERY & FETCH DATA (REAL-TIME)

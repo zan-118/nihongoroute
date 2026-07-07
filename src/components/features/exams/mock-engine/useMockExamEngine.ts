@@ -379,13 +379,27 @@ export function useMockExamEngine(initialExam: ExamData) {
 
   useEffect(() => {
     if (gameState !== "playing") return;
+    let cheatTimeout: number | undefined;
+
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden") {
-        setTimeout(() => setCheatWarnings((prev) => prev + 1), 1500);
+        cheatTimeout = window.setTimeout(() => {
+          setCheatWarnings((prev) => prev + 1);
+        }, 1500);
+      } else if (document.visibilityState === "visible") {
+        if (cheatTimeout) {
+          window.clearTimeout(cheatTimeout);
+          cheatTimeout = undefined;
+        }
       }
     };
     document.addEventListener("visibilitychange", handleVisibilityChange);
-    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      if (cheatTimeout) {
+        window.clearTimeout(cheatTimeout);
+      }
+    };
   }, [gameState]);
 
   useEffect(() => {

@@ -8,7 +8,7 @@ Dokumen ini merinci seluruh fitur dan kapabilitas pembelajaran yang tersedia bag
 
 Dasbor (`/dashboard`) adalah halaman utama setelah pengguna masuk log. Dasbor berfungsi sebagai pusat pemantauan kemajuan belajar harian.
 
-* **Statistik Utama**: Menampilkan akumulasi poin XP, tingkat level pengguna, dan sisa koin belajar.
+* **Statistik Utama**: Menampilkan akumulasi poin XP dan tingkat level pengguna.
 * **Sistem Hari Beruntun (Streak Counter)**: Menunjukkan jumlah hari berturut-turut pengguna aktif belajar. Jika pengguna memiliki item *Streak Freeze* di inventarisnya, streak akan terlindungi otomatis saat pengguna terlewat belajar satu hari penuh.
 * **Heatmap Aktivitas (Commit Calendar Grid)**: Visualisasi grid kalender mirip gaya kontribusi GitHub. Menampilkan tingkat intensitas ulasan/pelajaran yang diselesaikan pengguna per tanggal kalender untuk memotivasi konsistensi belajar.
 * **Misi Harian (Daily Quests)**: Daftar 3 misi harian acak (misal: "Selesaikan 10 ulasan SRS", "Selesaikan 1 Bab Pelajaran baru"). Ketika target misi tercapai, tombol klaim aktif dan pengguna mendapatkan hadiah XP bonus setelah divalidasi oleh database.
@@ -95,7 +95,7 @@ Fitur Alat Bantu (`/tools`) menyediakan berbagai utilitas interaktif untuk mempe
 * **Umpan Komunitas (Community Feed)**:
   * Forum diskusi terintegrasi di mana pengguna dapat mempublikasikan pertanyaan tata bahasa, berbagi tips menghafal kanji, berdiskusi mengenai budaya Jepang, serta saling membalas komentar.
 * **Sistem Lencana Prestasi (Achievements)**:
-  * Lemari lencana virtual yang terbuka otomatis ketika pengguna mencapai target tertentu (misal: "Mencapai 100 hari streak", "Menyelesaikan kelas JLPT N5", "Mengulas 500 kosakata"). Setiap lencana memberikan hadiah koin belajar dan XP besar.
+  * Lemari lencana virtual yang terbuka otomatis ketika pengguna mencapai target tertentu (misal: "Mencapai 100 hari streak", "Menyelesaikan kelas JLPT N5", "Mengulas 500 kosakata"). Setiap lencana memberikan hadiah XP besar.
 
 ---
 

@@ -38,7 +38,7 @@ function isUsefulInteractivePart(text: string) {
 // ======================
 // EKSEKUSI UTAMA
 // ======================
-export default function FuriganaDisplay({ 
+function FuriganaDisplay({ 
   text, 
   furigana, 
   romaji,
@@ -129,3 +129,5 @@ export default function FuriganaDisplay({
     </span>
   );
 }
+
+export default React.memo(FuriganaDisplay);

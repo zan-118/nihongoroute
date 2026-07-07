@@ -203,33 +203,90 @@ export async function searchToolDictionary(
     })),
   };
 
+  if (dictionaryCache.size > 100) {
+    const firstKey = dictionaryCache.keys().next().value;
+    if (firstKey) dictionaryCache.delete(firstKey);
+  }
   dictionaryCache.set(cacheKey, result);
   return result;
 }
 
 export async function analyzeTextWithDictionary(text: string) {
   const stats = getJapaneseTextStats(text);
-  const searchTerms = Array.from(
-    new Set([...stats.tokens.slice(0, 8), ...stats.uniqueKanji.slice(0, 12)])
-  ).slice(0, 16);
-  const result = emptyToolSearchResult();
+  const supabase = createClient();
 
-  const matches = await Promise.all(
-    searchTerms.map((term) => searchToolDictionary(term, { limitPerType: 4 }))
-  );
+  const [vocabByWordRes, vocabByFuriRes, grammarByTitleRes, grammarBySlugRes, kanjiRes] = await Promise.all([
+    stats.tokens.length > 0
+      ? supabase.from("vocab").select("id, word, meaning_id, furigana, romaji, hinshi, jlpt_level, slug, is_common").in("word", stats.tokens).limit(16)
+      : Promise.resolve({ data: null, error: null }),
+    stats.tokens.length > 0
+      ? supabase.from("vocab").select("id, word, meaning_id, furigana, romaji, hinshi, jlpt_level, slug, is_common").in("furigana", stats.tokens).limit(16)
+      : Promise.resolve({ data: null, error: null }),
+    stats.tokens.length > 0
+      ? supabase.from("grammar").select("id, title, slug, meaning, jlpt_level, formation").in("title", stats.tokens).limit(8)
+      : Promise.resolve({ data: null, error: null }),
+    stats.tokens.length > 0
+      ? supabase.from("grammar").select("id, title, slug, meaning, jlpt_level, formation").in("slug", stats.tokens).limit(8)
+      : Promise.resolve({ data: null, error: null }),
+    stats.uniqueKanji.length > 0
+      ? supabase.from("kanji").select("id, character, meaning, onyomi, kunyomi, romaji, jlpt_level, slug").in("character", stats.uniqueKanji).limit(16)
+      : Promise.resolve({ data: null, error: null }),
+  ]);
 
-  matches.forEach((match) => {
-    result.vocab.push(...match.vocab);
-    result.grammar.push(...match.grammar);
-    result.kanji.push(...match.kanji);
-  });
+  const rawVocabs = [
+    ...(vocabByWordRes?.data || []),
+    ...(vocabByFuriRes?.data || [])
+  ];
+  const uniqueVocabs = Array.from(new Map(rawVocabs.map(v => [v.id, v])).values());
+
+  const rawGrammars = [
+    ...(grammarByTitleRes?.data || []),
+    ...(grammarBySlugRes?.data || [])
+  ];
+  const uniqueGrammars = Array.from(new Map(rawGrammars.map(g => [g.id, g])).values());
+
+  const uniqueKanjis = kanjiRes?.data || [];
 
   return {
     stats,
     results: {
-      vocab: dedupeItems(result.vocab).slice(0, 16),
-      grammar: dedupeItems(result.grammar).slice(0, 8),
-      kanji: dedupeItems(result.kanji).slice(0, 16),
+      vocab: uniqueVocabs.map((item) => ({
+        id: item.id,
+        title: item.word,
+        description: item.meaning_id || "Kosakata",
+        href: `/library/vocab/${item.slug || item.id}`,
+        icon: FileText,
+        category: "vocab" as const,
+        jlptLevel: item.jlpt_level,
+        reading: item.furigana,
+        romaji: item.romaji,
+        slug: item.slug,
+        hinshi: item.hinshi,
+        isCommon: item.is_common,
+      })).slice(0, 16),
+      grammar: uniqueGrammars.map((item) => ({
+        id: item.id,
+        title: item.title,
+        description: item.meaning || "Tata bahasa",
+        href: `/library/grammar/${item.slug || item.id}`,
+        icon: BookOpen,
+        category: "grammar" as const,
+        jlptLevel: item.jlpt_level,
+        slug: item.slug,
+        formation: item.formation,
+      })).slice(0, 8),
+      kanji: uniqueKanjis.map((item) => ({
+        id: item.id,
+        title: item.character,
+        description: item.meaning || "Kanji",
+        href: `/library/kanji/${item.slug || item.character || item.id}`,
+        icon: Hash,
+        category: "kanji" as const,
+        jlptLevel: item.jlpt_level,
+        reading: [item.onyomi, item.kunyomi].filter(Boolean).join(" / "),
+        romaji: item.romaji,
+        slug: item.slug,
+      })).slice(0, 16),
     },
   };
 }

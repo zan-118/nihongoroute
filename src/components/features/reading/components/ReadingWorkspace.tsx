@@ -28,8 +28,8 @@ interface ReadingWorkspaceProps {
   isCompleted?: boolean;
   sourceId?: string;
   sourceTitle?: string;
-  savedProgress?: { lastParagraphIndex: number; elapsedSeconds: number };
-  onProgressChange?: (progress: { activeParagraphIndex: number; elapsedSeconds: number; totalParagraphs: number; hasResumed: boolean }) => void;
+  activeParagraphIndex: number;
+  onParagraphChange?: (index: number) => void;
 }
 
 const FONT_SIZE_CLASSES = {
@@ -38,7 +38,7 @@ const FONT_SIZE_CLASSES = {
   extra: "text-2xl sm:text-3xl md:text-4xl leading-[1.8]",
 } as const;
 
-export default function ReadingWorkspace({
+function ReadingWorkspace({
   paragraphs,
   hiraganaParagraphs,
   romajiParagraphs,
@@ -51,11 +51,9 @@ export default function ReadingWorkspace({
   isCompleted = false,
   sourceId,
   sourceTitle = "Bacaan",
-  savedProgress,
-  onProgressChange,
+  activeParagraphIndex,
+  onParagraphChange,
 }: ReadingWorkspaceProps) {
-  const [activeIdx, setActiveIdx] = useState(savedProgress?.lastParagraphIndex || 0);
-  const [elapsedSeconds, setElapsedSeconds] = useState(savedProgress?.elapsedSeconds || 0);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Scroll Progress Bar
@@ -134,30 +132,6 @@ export default function ReadingWorkspace({
     }
   }, [speakingIdx, loadingIdx, stopTTS]);
 
-  // Track elapsed seconds
-  useEffect(() => {
-    if (isCompleted) return;
-    const interval = setInterval(() => {
-      setElapsedSeconds((prev) => prev + 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [isCompleted]);
-
-  // Report progress change
-  useEffect(() => {
-    if (onProgressChange) {
-      const hasResumed = !!savedProgress && (
-        savedProgress.lastParagraphIndex > 0 || savedProgress.elapsedSeconds > 0
-      );
-      onProgressChange({
-        activeParagraphIndex: activeIdx,
-        elapsedSeconds,
-        totalParagraphs: paragraphs.length,
-        hasResumed,
-      });
-    }
-  }, [activeIdx, elapsedSeconds, paragraphs.length, onProgressChange, savedProgress]);
-
   // Stop TTS on clean up
   useEffect(() => {
     return () => {
@@ -176,14 +150,14 @@ export default function ReadingWorkspace({
       {/* Distraction-Free Article Feed */}
       <div className="flex flex-col gap-10 md:gap-14 max-w-3xl mx-auto py-6">
         {paragraphs.map((para, idx) => {
-          const isActive = idx === activeIdx;
+          const isActive = idx === activeParagraphIndex;
           const isSpeaking = idx === speakingIdx;
           const isLoading = idx === loadingIdx;
 
           return (
             <div
               key={idx}
-              onClick={() => setActiveIdx(idx)}
+              onClick={() => onParagraphChange?.(idx)}
               className={cn(
                 "group relative pl-4 border-l-2 transition-all duration-300 cursor-pointer",
                 isActive
@@ -254,3 +228,5 @@ export default function ReadingWorkspace({
     </div>
   );
 }
+
+export default React.memo(ReadingWorkspace);

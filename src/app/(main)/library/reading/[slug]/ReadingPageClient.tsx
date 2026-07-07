@@ -149,32 +149,63 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
   const readingCompletionPercent =
     totalParagraphs > 0 ? Math.round((currentParagraph / totalParagraphs) * 100) : 0;
 
-  const handleReadingProgressChange = React.useCallback(
-    (progress: ReadingProgressSnapshot) => {
-      setReadingSnapshot(progress);
-      if (!readingSourceId) return;
-
-      const lastPersisted = lastPersistedReadingRef.current;
-      const movedParagraph = progress.activeParagraphIndex !== lastPersisted.paragraphIndex;
-      const elapsedDelta = progress.elapsedSeconds - lastPersisted.elapsedSeconds;
-
-      if (!movedParagraph && elapsedDelta < 5) return;
-
-      updateReadingProgress(readingSourceId, {
-        elapsedSeconds: progress.elapsedSeconds,
-        lastParagraphIndex: progress.activeParagraphIndex,
-        sourceTitle: data.title,
-        totalParagraphs: progress.totalParagraphs,
+  const handleParagraphChange = React.useCallback(
+    (index: number) => {
+      setReadingSnapshot((prev) => {
+        const next = { ...prev, activeParagraphIndex: index };
+        if (readingSourceId) {
+          updateReadingProgress(readingSourceId, {
+            elapsedSeconds: prev.elapsedSeconds,
+            lastParagraphIndex: index,
+            sourceTitle: data.title,
+            totalParagraphs: paragraphs.length,
+          });
+          lastPersistedReadingRef.current = {
+            elapsedSeconds: prev.elapsedSeconds,
+            paragraphIndex: index,
+          };
+        }
+        return next;
       });
-      lastPersistedReadingRef.current = {
-        elapsedSeconds: progress.elapsedSeconds,
-        paragraphIndex: progress.activeParagraphIndex,
-      };
     },
-    [data.title, readingSourceId, updateReadingProgress]
+    [data.title, paragraphs.length, readingSourceId, updateReadingProgress]
   );
 
-  const handleComplete = () => {
+  React.useEffect(() => {
+    if (isCompleted) return;
+    const interval = setInterval(() => {
+      setReadingSnapshot((prev) => {
+        const nextSeconds = prev.elapsedSeconds + 1;
+        
+        // Persist ke store setiap 5 detik
+        if (readingSourceId) {
+          const lastPersisted = lastPersistedReadingRef.current;
+          const elapsedDelta = nextSeconds - lastPersisted.elapsedSeconds;
+          
+          if (elapsedDelta >= 5) {
+            updateReadingProgress(readingSourceId, {
+              elapsedSeconds: nextSeconds,
+              lastParagraphIndex: prev.activeParagraphIndex,
+              sourceTitle: data.title,
+              totalParagraphs: paragraphs.length,
+            });
+            lastPersistedReadingRef.current = {
+              elapsedSeconds: nextSeconds,
+              paragraphIndex: prev.activeParagraphIndex,
+            };
+          }
+        }
+        
+        return {
+          ...prev,
+          elapsedSeconds: nextSeconds,
+        };
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isCompleted, readingSourceId, data.title, paragraphs.length, updateReadingProgress]);
+
+  const handleComplete = React.useCallback(() => {
     if (!lessonId || isCompleted) return;
     const currentProgress = readingSnapshotRef.current;
     setIsLocallyCompleted(true);
@@ -207,7 +238,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
         elapsedSeconds: currentProgress.elapsedSeconds,
       },
     });
-  };
+  }, [lessonId, isCompleted, addXP, completeLesson, readingSourceId, data.title, data.slug, data.jlpt_level, data.difficulty, paragraphs.length, updateReadingProgress, recordLearningEvent]);
 
   const [isZenMode, setIsZenMode] = useState(false);
   const [isVocabOpen, setIsVocabOpen] = useState(false);
@@ -452,7 +483,6 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
           </div>
         )}
 
-        {/* Artikel */}
         <ReadingWorkspace
           paragraphs={paragraphs}
           hiraganaParagraphs={hiraganaParagraphs}
@@ -466,8 +496,8 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
           isCompleted={isCompleted}
           sourceId={readingSourceId}
           sourceTitle={data.title}
-          savedProgress={savedProgress}
-          onProgressChange={handleReadingProgressChange}
+          activeParagraphIndex={readingSnapshot.activeParagraphIndex}
+          onParagraphChange={handleParagraphChange}
         />
 
         {/* Kosakata Slide-Over Sheet Drawer */}

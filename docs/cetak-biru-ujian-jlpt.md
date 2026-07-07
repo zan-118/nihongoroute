@@ -33,7 +33,7 @@ Tujuan utama dari proyek ini adalah membangun **bank soal JLPT di Supabase/Postg
   * Mendukung dua mode templat ujian: mode `fixed` (soal tetap yang ditentukan templat) dan mode `random_by_quota` (soal acak yang dipilih secara dinamis memenuhi kuota per seksi).
 * **[x] Fase 4: Integrasi Klien, Auto-Save, & Pengiriman Skor**:
   * Mengintegrasikan `MockExamEngine` dengan server action Supabase.
-  * Mengaktifkan timer debounce selama **1200 ms** untuk auto-save jawaban ke database `/api/exams/session/save`.
+  * Mengaktifkan timer debounce selama **1200 ms** untuk auto-save jawaban ke database kolom `user_exam_sessions.answers_snapshot` menggunakan Server Action `saveJlptMockSessionAnswers` secara langsung.
   * Menulis fungsi evaluasi skor akhir ujian (`submitJlptMockSession`) di sisi server.
 * **[x] Fase 5: Integrasi Ulasan Spaced Repetition (SRS)**:
   * Memetakan pertanyaan ujian yang dijawab salah oleh pengguna ke dalam tabel ulasan `user_srs` dengan status `learning` untuk melatih area kelemahan secara berulang.

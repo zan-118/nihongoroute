@@ -59,10 +59,7 @@ Skrip pembuat audio berada di folder `scripts/tts/` dan akan mengunggah file MP3
   ```
   *Skrip ini memindai dokumen listening di level N5, mengirimkan teks dialog Jepang ke VOICEVOX port 50021, lalu menyimpan berkas MP3 ke penyimpanan awan Supabase.*
 
-* **Sintesis Audio Contoh Kalimat Kosakata**:
-  ```bash
-  node scripts/tts/generate_example_sentences.js --execute --level N4
-  ```
+
 
 ---
 

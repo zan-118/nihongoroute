@@ -232,7 +232,10 @@ CREATE TABLE public.user_feedback (
     type text NOT NULL CHECK (type = ANY (ARRAY['bug','suggestion','compliment'])),
     message text NOT NULL,
     route text,
-    created_at timestamptz DEFAULT now()
+    status text DEFAULT 'pending' NOT NULL CHECK (status = ANY (ARRAY['pending','investigating','resolved','rejected'])),
+    admin_reply text,
+    created_at timestamptz DEFAULT now(),
+    updated_at timestamptz DEFAULT now() NOT NULL
 );
 
 -- 16. JLPT Exam Templates
@@ -483,6 +486,63 @@ BEGIN
     WHERE id = OLD.post_id;
   END IF;
   RETURN NULL;
+END;
+$$;
+
+-- Fungsi trigger untuk mengotomatisasi penyisipan notifikasi saat feedback di-update
+CREATE OR REPLACE FUNCTION public.handle_feedback_update_notification()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+    v_type_label text;
+    v_status_label text;
+BEGIN
+    -- Kirim notifikasi jika status atau admin_reply berubah, dan user_id terasosiasi
+    IF (OLD.status IS DISTINCT FROM NEW.status OR OLD.admin_reply IS DISTINCT FROM NEW.admin_reply) 
+       AND NEW.user_id IS NOT NULL THEN
+       
+        -- Mapping tipe feedback ke label bahasa Indonesia
+        v_type_label := CASE NEW.type
+            WHEN 'bug' THEN 'Bug'
+            WHEN 'suggestion' THEN 'Saran'
+            WHEN 'compliment' THEN 'Pujian'
+            ELSE 'Laporan'
+        END;
+
+        -- Mapping status feedback ke label bahasa Indonesia
+        v_status_label := CASE NEW.status
+            WHEN 'pending' THEN 'Menunggu'
+            WHEN 'investigating' THEN 'Sedang Diperiksa'
+            WHEN 'resolved' THEN 'Selesai'
+            WHEN 'rejected' THEN 'Ditolak'
+            ELSE NEW.status
+        END;
+
+        -- Sisipkan notifikasi baru ke tabel notifications
+        INSERT INTO public.notifications (
+            user_id,
+            sender_id,
+            type,
+            title,
+            message,
+            post_id,
+            read,
+            created_at
+        ) VALUES (
+            NEW.user_id,
+            NULL,
+            CASE WHEN NEW.status = 'resolved' THEN 'success' ELSE 'info' END,
+            'Tanggapan Masukan',
+            'Laporan ' || v_type_label || ' Anda sekarang: [' || v_status_label || '].' || 
+            CASE WHEN NEW.admin_reply IS NOT NULL AND NEW.admin_reply <> '' THEN ' Balasan admin: ' || NEW.admin_reply ELSE '' END,
+            NULL,
+            false,
+            now()
+        );
+    END IF;
+    RETURN NEW;
 END;
 $$;
 
@@ -739,6 +799,12 @@ CREATE TRIGGER update_post_comments_count_trigger
 CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
+-- User Feedback
+CREATE TRIGGER set_user_feedback_updated_at BEFORE UPDATE ON public.user_feedback
+  FOR EACH ROW EXECUTE FUNCTION handle_updated_at();
+CREATE TRIGGER tr_feedback_update_notification AFTER UPDATE ON public.user_feedback
+  FOR EACH ROW EXECUTE FUNCTION public.handle_feedback_update_notification();
+
 -- ═══════════════════════════════════════════════════════════════════════════
 -- INDEXES
 -- ═══════════════════════════════════════════════════════════════════════════
@@ -761,6 +827,7 @@ CREATE INDEX idx_user_feedback_user_id ON public.user_feedback USING btree (user
 -- Vocab
 CREATE INDEX idx_vocab_word_furigana ON public.vocab USING btree (word, furigana);
 CREATE INDEX idx_vocab_jlpt ON public.vocab USING btree (jlpt_level);
+CREATE INDEX idx_vocab_furigana ON public.vocab USING btree (furigana);
 
 -- Grammar
 CREATE INDEX idx_grammar_slug ON public.grammar USING btree (slug);
@@ -857,6 +924,7 @@ CREATE POLICY "Users can manage own lesson progress" ON public.user_lessons FOR 
 -- User Feedback
 CREATE POLICY "Allow public inserts on user_feedback" ON public.user_feedback FOR INSERT WITH CHECK (true);
 CREATE POLICY "Only admins can view feedback" ON public.user_feedback FOR SELECT USING (false);
+CREATE POLICY "Users can view their own feedback" ON public.user_feedback FOR SELECT USING (auth.uid() = user_id);
 
 -- Public Read: Library Tables
 CREATE POLICY "Allow public read access for library" ON public.course_categories FOR SELECT USING (true);

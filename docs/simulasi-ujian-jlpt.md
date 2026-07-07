@@ -11,7 +11,7 @@ Sistem simulasi ujian JLPT dirancang agar dapat memuat paket soal ujian terstruk
 ### 1.1 Sesi Klien & Alur Ujian (`useMockExamEngine.ts`)
 * **Pengaktifan Sesi**: Sesi ujian dimulai dengan memanggil server action `startJlptMockSession` yang membuat ID sesi unik di database tabel `user_exam_sessions` dan mengalihkan URL peramban ke `/exams/session/[id]`.
 * **Navigasi Ujian**: Pertanyaan dikelompokkan berdasarkan seksi ujian (`vocabulary`, `grammar`, `reading`, `listening`). Untuk seksi menyimak (listening), tombol kembali ke soal sebelumnya dinonaktifkan secara otomatis (`disablePreviousButton = true`) untuk mensimulasikan kondisi ujian riil.
-* **Auto-Save Jawaban**: Jawaban yang dipilih pengguna disimpan ke dalam state memori lokal dan disinkronkan ke database tabel `user_exam_answers` secara berkala menggunakan timer debounce selama **1200 ms** untuk menghindari kehilangan kemajuan jika peramban terputus.
+* **Auto-Save Jawaban**: Jawaban yang dipilih pengguna disimpan ke dalam state memori lokal dan disinkronkan ke database kolom `answers_snapshot` pada tabel `user_exam_sessions` secara berkala menggunakan timer debounce selama **1200 ms** untuk menghindari kehilangan kemajuan jika peramban terputus.
 * **Cheat Warnings (Proteksi Kecurangan)**:
   * Hook mendengarkan event `visibilitychange` pada dokumen.
   * Jika pengguna meninggalkan tab ujian (membuka tab baru untuk mencari jawaban), sistem meningkatkan counter `cheatWarnings`.
