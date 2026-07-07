@@ -37,6 +37,7 @@ export default function NavWrapper({ children }: NavWrapperProps) {
   const pathname = usePathname();
   const router = useRouter();
   const isExamPage = pathname?.includes("/exams/");
+  const hideMobileNav = isExamPage || pathname?.includes("/library/reading/");
   const breadcrumbItems = useMemo(() => getBreadcrumbItems(pathname), [pathname]);
 
   return (
@@ -58,7 +59,7 @@ export default function NavWrapper({ children }: NavWrapperProps) {
         <main
           id="main-content" 
           data-tour="main-content"
-          className={`app-main-frame flex-1 w-full flex flex-col ${!isExamPage ? 'pb-[7.5rem] md:pb-12' : 'pb-12'} outline-none relative`}
+          className={`app-main-frame flex-1 w-full flex flex-col ${!isExamPage ? (hideMobileNav ? 'pb-12' : 'pb-[7.5rem] md:pb-12') : 'pb-12'} outline-none relative`}
         >
           {!isExamPage && (
             <div className="relative z-20 flex w-full animate-in items-center gap-2 px-4 pt-4 duration-500 fade-in slide-in-from-top-4 sm:px-6 md:px-8 md:pt-6 lg:px-10 xl:px-12">
@@ -81,7 +82,7 @@ export default function NavWrapper({ children }: NavWrapperProps) {
       {!isExamPage && <FloatingActions />}
 
       {/* Navigasi Khusus Seluler */}
-      {!isExamPage && <MobileNav />}
+      {!hideMobileNav && <MobileNav />}
 
       <AchievementToast />
     </div>

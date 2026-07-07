@@ -34,11 +34,17 @@ interface TrainingItem {
 }
 
 // ======================
-// KOMPONEN PEMBANTU KARTU — Compact
-// ======================
 const TrainingCard = React.memo(function TrainingCard({ item }: { item: TrainingItem }) {
   const [isHovered, setIsHovered] = useState(false);
   const IconComponent = item.icon;
+
+  const kanjiWatermark = React.useMemo(() => {
+    if (item.title.includes("Kosakata")) return "語";
+    if (item.title.includes("Kanji")) return "字";
+    if (item.title.includes("Game")) return "命";
+    return "練";
+  }, [item.title]);
+
   return (
     <Card
       onMouseEnter={() => setIsHovered(true)}
@@ -49,6 +55,17 @@ const TrainingCard = React.memo(function TrainingCard({ item }: { item: Training
         boxShadow: isHovered ? `0 8px 22px rgba(${item.rgb}, 0.06), 0 0 12px rgba(${item.rgb}, 0.03)` : "none"
       }}
     >
+      {/* Motif Asanoha halus */}
+      <div className="absolute inset-0 bg-asanoha opacity-[0.01] pointer-events-none group-hover:opacity-[0.025] transition-opacity duration-300" />
+
+      {/* Kanji Watermark */}
+      <div 
+        className="absolute -bottom-4 -right-4 text-[7rem] sm:text-[9rem] font-black pointer-events-none select-none opacity-[0.01] group-hover:opacity-[0.03] transition-all duration-300 font-noto-serif-jp translate-y-4 translate-x-2"
+        style={{ color: `rgb(${item.rgb})` }}
+      >
+        {kanjiWatermark}
+      </div>
+
       {/* Premium Glow Overlay */}
       <div
         className="absolute inset-0 transition-opacity duration-200 pointer-events-none"
@@ -60,9 +77,8 @@ const TrainingCard = React.memo(function TrainingCard({ item }: { item: Training
 
       <div className="relative z-10 flex flex-col gap-4 sm:gap-5">
         <div
-          className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center transition-all duration-200 shadow-md border"
+          className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center transition-all duration-200 shadow-md border bg-background/50"
           style={{
-            backgroundColor: isHovered ? `rgba(${item.rgb}, 0.1)` : "rgb(var(--background-rgb)/0.5)",
             borderColor: isHovered ? `rgba(${item.rgb}, 0.4)` : "rgb(var(--border-rgb)/0.5)",
             color: `rgb(${item.rgb})`,
             transform: isHovered ? "scale(1.05) rotate(4deg)" : "none"

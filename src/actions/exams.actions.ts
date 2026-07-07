@@ -9,7 +9,7 @@
 // ======================
 // IMPORTS
 // ======================
-import { createStaticClient } from "@/lib/supabase/server";
+import { createStaticClient, createClient } from "@/lib/supabase/server";
 import { sanityClient, sanityPublicFetchOptions } from "@/lib/sanity.client";
 import { getSanityExamBySlug } from "@/lib/queries";
 import { LibraryItem } from "@/types/library";
@@ -93,8 +93,18 @@ function normalizeExamSection(section: string): ExamQuestion["section"] {
  * @param {string} slug - Slug unik kategori kursus (misal: "n5", "n4")
  * @returns {Promise<Object>} Mengembalikan objek kategori, daftar pelajaran, dan daftar simulasi ujian
  */
+interface DBLessonRow {
+  id: string;
+  title: string;
+  slug: string;
+  category_id: string;
+  order_number: number | null;
+  summary: string | null;
+  image_url: string | null;
+}
+
 export async function getCourseCategoryData(slug: string) {
-  const supabase = createStaticClient();
+  const supabase = await createClient();
   
   try {
     // 1. Ambil Kategori (Tetap dari Supabase karena course_categories ada di Supabase)
@@ -108,21 +118,21 @@ export async function getCourseCategoryData(slug: string) {
     if (!category) return { category: null, lessons: [], mockExams: [] };
 
     // 2. Ambil Pelajaran secara hibrida (Supabase & Sanity)
-    let dbLessons = [];
+    let dbLessons: DBLessonRow[] = [];
     if (category.type === "general" || category.type === "article") {
       const { data } = await supabase
         .from("articles")
-        .select("id, title, slug, category_id, order_number, summary")
+        .select("id, title, slug, category_id, order_number, summary, image_url")
         .eq("category_id", category.id)
         .order("order_number", { ascending: true });
-      dbLessons = data || [];
+      dbLessons = (data || []) as unknown as DBLessonRow[];
     } else {
       const { data } = await supabase
         .from("lessons")
-        .select("id, title, slug, category_id, order_number, summary")
+        .select("id, title, slug, category_id, order_number, summary, image_url")
         .eq("category_id", category.id)
         .order("order_number", { ascending: true });
-      dbLessons = data || [];
+      dbLessons = (data || []) as unknown as DBLessonRow[];
     }
 
     const supabaseLessons = dbLessons.map((l) => ({
@@ -131,7 +141,8 @@ export async function getCourseCategoryData(slug: string) {
       slug: l.slug,
       category_id: l.category_id,
       order_number: l.order_number,
-      summary: l.summary
+      summary: l.summary,
+      image_url: l.image_url
     }));
 
     const lessons = supabaseLessons.sort((a, b) => (a.order_number || 0) - (b.order_number || 0));
@@ -185,7 +196,8 @@ export async function getCourseCategoryData(slug: string) {
         _id: l._id,
         title: l.title,
         summary: l.summary || "",
-        slug: l.slug
+        slug: l.slug,
+        image_url: l.image_url || undefined
       })),
       mockExams: mergedMockExams
     };

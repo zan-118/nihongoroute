@@ -20,7 +20,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 function printUsage() {
   console.log(
     [
-      "=== NIHONGOROUTE MISSING LESSON ILLUSTRATION GENERATOR ===",
+      "=== NIHONGOROUTE MISSING LESSON/ARTICLE ILLUSTRATION GENERATOR ===",
       "Penggunaan:",
       "  node scripts/generate-missing-illustrations.mjs [options]",
       "",
@@ -28,6 +28,7 @@ function printUsage() {
       "  --limit <number>       Jumlah dokumen maksimal yang diproses. Default: 50",
       "  --level <N5/N4/...>    Filter level JLPT (contoh: N5)",
       "  --lesson <number>      Filter nomor bab pelajaran (contoh: 1)",
+      "  --type <lesson/article> Tipe dokumen: 'lesson' atau 'article'. Default: 'lesson'",
       "  --help, -h             Tampilkan bantuan ini.",
     ].join("\n")
   );
@@ -58,6 +59,7 @@ function parseArgs(args) {
     limit: 50,
     level: null,
     lessonNum: null,
+    type: "lesson",
   };
 
   for (let index = 0; index < args.length; index += 1) {
@@ -82,6 +84,13 @@ function parseArgs(args) {
 
     if (arg === "--lesson") {
       options.lessonNum = Number.parseInt(args[index + 1], 10) || null;
+      index += 1;
+      continue;
+    }
+
+    if (arg === "--type") {
+      const typeVal = args[index + 1] ? args[index + 1].toLowerCase() : "lesson";
+      options.type = (typeVal === "article" || typeVal === "articles") ? "article" : "lesson";
       index += 1;
       continue;
     }
@@ -132,14 +141,16 @@ async function main() {
     console.warn(`⚠️ Gagal mendeteksi/membuat bucket: ${err.message}`);
   }
 
-  console.log("🔍 [Supabase] Membaca dokumen lesson dari database...");
+  const targetTable = options.type === "article" ? "articles" : "lessons";
+  const contentCol = options.type === "article" ? "content" : "content_blocks";
+  console.log(`🔍 [Supabase] Membaca dokumen ${options.type} dari database...`);
 
-  // 1. Bangun query lessons berfilter
+  // 1. Bangun query berfilter
   let sbQuery = supabase
-    .from("lessons")
-    .select("id, title, content_blocks, slug, image_url");
+    .from(targetTable)
+    .select(`id, title, ${contentCol}, slug, image_url`);
 
-  // Hanya lessons yang belum memiliki gambar
+  // Hanya dokumen yang belum memiliki gambar
   sbQuery = sbQuery.or("image_url.is.null,image_url.eq.");
 
   if (options.level) {
@@ -152,17 +163,17 @@ async function main() {
   // Batasi
   sbQuery = sbQuery.limit(options.limit);
 
-  const { data: lessons, error: fetchError } = await sbQuery;
+  const { data: documents, error: fetchError } = await sbQuery;
 
   if (fetchError) {
-    console.error("❌ Gagal membaca lessons dari Supabase:", fetchError.message);
+    console.error(`❌ Gagal membaca ${options.type} dari Supabase:`, fetchError.message);
     process.exit(1);
   }
 
-  console.log(`✓ Ditemukan ${lessons ? lessons.length : 0} lesson untuk diproses.`);
+  console.log(`✓ Ditemukan ${documents ? documents.length : 0} ${options.type} untuk diproses.`);
 
-  if (!lessons || lessons.length === 0) {
-    console.log("✅ Semua dokumen lesson di Supabase sudah memiliki ilustrasi!");
+  if (!documents || documents.length === 0) {
+    console.log(`✅ Semua dokumen ${options.type} di Supabase sudah memiliki ilustrasi!`);
     process.exit(0);
   }
 
@@ -213,10 +224,11 @@ Aturan prompt gambar:
   };
 
   const processDoc = async (doc, type) => {
-    const slugStr = doc.slug || "lesson";
+    const slugStr = doc.slug || type;
     console.log(`\n🎨 [AI Image] Menggenerasi ilustrasi untuk ${type}: "${doc.title}"...`);
 
-    const imagePrompt = await generatePromptForDoc(doc.title, doc.content_blocks, type);
+    const contentBlocks = doc.content_blocks || doc.content;
+    const imagePrompt = await generatePromptForDoc(doc.title, contentBlocks, type);
     console.log(`   Prompt: "${imagePrompt}"`);
 
     try {
@@ -239,7 +251,7 @@ Aturan prompt gambar:
 
       const buffer = Buffer.from(await response.arrayBuffer());
       const BUCKET_NAME = "asset";
-      const filename = `lesson/${slugStr}/illustration.png`;
+      const filename = `${type}/${slugStr}/illustration.png`;
 
       console.log(`   ⚡ Mengunggah ilustrasi ke Supabase Storage (${BUCKET_NAME}/${filename})...`);
       const { error: uploadError } = await supabase.storage
@@ -255,7 +267,7 @@ Aturan prompt gambar:
       console.log(`   ✓ Gambar berhasil diunggah ke Supabase: ${publicUrl}`);
 
       const { error: updateError } = await supabase
-        .from("lessons")
+        .from(type === "article" ? "articles" : "lessons")
         .update({ image_url: publicUrl })
         .eq("id", doc.id);
 
@@ -268,10 +280,10 @@ Aturan prompt gambar:
     }
   };
 
-  // Jalankan untuk lesson
-  console.log("\n🚀 Memulai pemrosesan dokumen lesson...");
-  for (const doc of lessons) {
-    await processDoc(doc, "lesson");
+  // Jalankan untuk target dokumen
+  console.log(`\n🚀 Memulai pemrosesan dokumen ${options.type}...`);
+  for (const doc of documents) {
+    await processDoc(doc, options.type);
     await sleep(2000);
   }
 

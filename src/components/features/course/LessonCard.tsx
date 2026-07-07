@@ -11,6 +11,7 @@
 import React, { useState } from "react";
 import { m } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
@@ -23,6 +24,7 @@ interface LessonCardProps {
     title: string;
     slug: string;
     summary?: string;
+    image_url?: string;
   };
   index: number;
   categoryId: string;
@@ -68,6 +70,9 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
             boxShadow: isHovered ? `0 12px 30px rgba(${themeRgb}, 0.04), 0 0 15px rgba(${themeRgb}, 0.02)` : 'none'
           }}
         >
+          {/* Wave/Sea Texture Overlay (Seigaiha) */}
+          <div className="absolute inset-0 bg-seigaiha opacity-[0.015] pointer-events-none group-hover:opacity-[0.03] transition-opacity duration-500" />
+
           {/* Shine Effect */}
           <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-foreground/[0.02] to-transparent skew-x-12 pointer-events-none" />
 
@@ -98,6 +103,20 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
               </div>
             )}
           </div>
+
+          {/* Widescreen Lesson Illustration Preview */}
+          {lesson.image_url && (
+            <div className="w-full aspect-[16/10] rounded-xl overflow-hidden relative z-10 border border-border/60 bg-muted/20">
+              <Image
+                src={lesson.image_url}
+                alt={lesson.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                unoptimized
+              />
+            </div>
+          )}
 
           <div className="flex-1 relative z-10 w-full space-y-1.5 sm:space-y-2">
             <h4

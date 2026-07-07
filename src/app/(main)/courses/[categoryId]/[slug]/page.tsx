@@ -13,6 +13,7 @@ import { cache } from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { FileText, Book, Edit, MessageSquare, BookOpen, Lightbulb, GraduationCap } from "lucide-react";
 
 import QuizEngine from "@/components/features/exams/quiz-engine/QuizEngine";
 import ContentBlockRenderer from "@/components/features/lessons/ContentBlockRenderer";
@@ -228,26 +229,30 @@ export default async function LessonPage({ params }: Props) {
 
           {/* JUMP LINKS SHORTCUT MENU */}
           {(() => {
-            const linkCls = "px-3.5 py-2 rounded-full text-[10px] font-black uppercase tracking-wider bg-muted/40 dark:bg-card/40 border border-border/60 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 hover:shadow-md hover:shadow-primary/5 transition-all duration-300 whitespace-nowrap shrink-0 flex items-center gap-1.5";
-            const jumpLinks: { href: string; label: string; show: boolean }[] = [
-              { href: "#article-content", label: "📄 Artikel", show: !!(lesson.articles || lesson.content_blocks) },
-              { href: "#vocabulary", label: "📖 Kosakata", show: vocabList.length > 0 },
-              { href: "#kanji", label: "🖌️ Kanji", show: kanjiList.length > 0 },
-              { href: "#scenario", label: "💬 Dialog", show: listeningList.length > 0 },
-              { href: "#reading", label: "📚 Bacaan", show: readingList.length > 0 },
-              { href: "#cheatsheet", label: "💡 Referensi", show: cheatsheets.length > 0 },
-              { href: "#quiz", label: "✏️ Kuis", show: formattedQuizzes.length > 0 },
+            const linkCls = "px-3.5 py-2 rounded-full text-[10px] font-black uppercase tracking-wider bg-muted/40 dark:bg-card/40 border border-border/60 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 hover:shadow-md hover:shadow-primary/5 transition-all duration-300 whitespace-nowrap shrink-0 flex items-center gap-1.5 group";
+            const jumpLinks: { href: string; label: string; icon: React.ComponentType<{ size?: number; className?: string }>; show: boolean }[] = [
+              { href: "#article-content", label: "Artikel", icon: FileText, show: !!(lesson.articles || lesson.content_blocks) },
+              { href: "#vocabulary", label: "Kosakata", icon: Book, show: vocabList.length > 0 },
+              { href: "#kanji", label: "Kanji", icon: GraduationCap, show: kanjiList.length > 0 },
+              { href: "#scenario", label: "Dialog", icon: MessageSquare, show: listeningList.length > 0 },
+              { href: "#reading", label: "Bacaan", icon: BookOpen, show: readingList.length > 0 },
+              { href: "#cheatsheet", label: "Referensi", icon: Lightbulb, show: cheatsheets.length > 0 },
+              { href: "#quiz", label: "Kuis", icon: Edit, show: formattedQuizzes.length > 0 },
             ].filter((l) => l.show);
             if (jumpLinks.length === 0) return null;
             return (
               <nav className="sticky top-4 z-40 mb-10 py-3.5 px-1 rounded-2xl bg-background/70 border border-border/60 shadow-lg glass backdrop-blur-md">
                 <div className="flex gap-2 items-center overflow-x-auto scrollbar-none px-3">
                   <span className="text-[9px] font-black uppercase tracking-wider text-muted-foreground/70 shrink-0 mr-1 hidden sm:inline-block">Pintasan:</span>
-                  {jumpLinks.map((link) => (
-                    <a key={link.href} href={link.href} className={linkCls}>
-                      {link.label}
-                    </a>
-                  ))}
+                  {jumpLinks.map((link) => {
+                    const Icon = link.icon;
+                    return (
+                      <a key={link.href} href={link.href} className={linkCls}>
+                        <Icon size={12} className="text-muted-foreground group-hover:text-primary transition-colors" />
+                        <span>{link.label}</span>
+                      </a>
+                    );
+                  })}
                 </div>
               </nav>
             );

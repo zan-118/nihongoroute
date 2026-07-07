@@ -44,6 +44,14 @@ const ExamCard = React.memo(function ExamCard({ exam }: { exam: MockExam }) {
         boxShadow: isHovered ? "0 10px 28px rgb(var(--primary-rgb)/0.08), 0 0 12px rgb(var(--primary-rgb)/0.04)" : "none"
       }}
     >
+      {/* Wave/Asanoha Texture Overlay */}
+      <div className="absolute inset-0 bg-asanoha opacity-[0.01] pointer-events-none group-hover:opacity-[0.025] transition-opacity duration-300" />
+
+      {/* Kanji Watermark '試' (Test/Exam) */}
+      <div className="absolute -bottom-6 -right-6 text-[8rem] sm:text-[10rem] font-black font-noto-serif-jp opacity-[0.015] group-hover:opacity-[0.04] pointer-events-none select-none text-primary transition-all duration-300 translate-y-4 translate-x-2">
+        試
+      </div>
+
       {/* Premium Glow Overlay */}
       <div
         className="absolute inset-0 transition-opacity duration-200 pointer-events-none"
@@ -56,7 +64,7 @@ const ExamCard = React.memo(function ExamCard({ exam }: { exam: MockExam }) {
       <div
         className="absolute top-0 right-0 p-6 sm:p-8 pointer-events-none text-foreground transition-all duration-200"
         style={{
-          opacity: isHovered ? 0.06 : 0.02,
+          opacity: isHovered ? 0.04 : 0.01,
           transform: isHovered ? 'scale(1.1) rotate(6deg)' : 'scale(1)'
         }}
       >

@@ -43,6 +43,7 @@ interface Lesson {
   title: string;
   slug: string;
   summary?: string;
+  image_url?: string;
 }
 
 interface MockExam {

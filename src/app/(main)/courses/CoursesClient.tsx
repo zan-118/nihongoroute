@@ -59,7 +59,7 @@ interface CoursesClientProps {
 export default function CoursesClient({ categories }: CoursesClientProps) {
   const completedLessons = useUserStore((s) => s.completedLessons);
 
-  const { totalLessons, lessonsDoneCount, globalProgress, jlptCategories, generalCategories } =
+  const { totalLessons, lessonsDoneCount, globalProgress, sortedCategories } =
     React.useMemo(() => {
       let lessonsTotal = 0;
       const jlpt: Category[] = [];
@@ -75,17 +75,23 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
         }
       }
 
+      // Sort N5 (5) first, then N4 (4), N3 (3), N2 (2), N1 (1)
+      jlpt.sort((a, b) => {
+        const aNum = Number.parseInt(a.title.match(/N(\d)/)?.[1] || "6", 10);
+        const bNum = Number.parseInt(b.title.match(/N(\d)/)?.[1] || "6", 10);
+        return bNum - aNum;
+      });
+
       const doneCount = Object.values(completedLessons).filter(
         (record) => record && record.completedAt && !record.isDeleted
       ).length;
 
       return {
-        generalCategories: general,
         globalProgress:
           lessonsTotal > 0 ? Math.min(100, Math.round((doneCount / lessonsTotal) * 100)) : 0,
-        jlptCategories: jlpt,
         lessonsDoneCount: doneCount,
         totalLessons: lessonsTotal,
+        sortedCategories: [...jlpt, ...general],
       };
     }, [categories, completedLessons]);
 
@@ -115,16 +121,21 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
           {/* BENTO CARD 1: JUMBO HEADER & GLOBAL STATS (SPAN 3) */}
           <m.div
             variants={itemVariants}
-            className="lg:col-span-3 p-8 sm:p-10 md:p-14 rounded-[2.5rem] bg-card/25 border border-border/80 shadow-md relative overflow-hidden group transition-all duration-300 glass"
+            className="lg:col-span-3 p-8 sm:p-10 md:p-14 rounded-[2.5rem] bg-card/25 border border-border/80 shadow-[0_0_30px_rgba(var(--primary-rgb),0.02)] relative overflow-hidden group transition-all duration-300 glass"
           >
             <div className="absolute top-0 right-0 size-64 bg-primary/5 rounded-full blur-[55px] pointer-events-none group-hover:bg-primary/8 transition-all duration-500" />
             <div className="absolute inset-0 bg-asanoha opacity-[0.02] pointer-events-none" />
+            
+            {/* Calligraphy Watermark '道' (Path/Route) */}
+            <div className="absolute -bottom-10 -right-6 text-[15rem] md:text-[22rem] font-black font-noto-serif-jp opacity-[0.015] pointer-events-none select-none text-primary">
+              道
+            </div>
 
             <div className="relative z-10 flex flex-col xl:flex-row xl:items-center justify-between gap-8 md:gap-12">
               <div className="space-y-4 max-w-2xl">
                 <div className="flex items-center gap-3">
                   <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-3.5 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.2em] shadow-none">
-                    <Sparkles size={10} className="mr-1.5 text-primary" /> Direktori Belajar
+                    <Sparkles size={10} className="mr-1.5 text-primary animate-pulse" /> Direktori Belajar
                   </Badge>
                 </div>
                 <h1 className="text-3xl sm:text-5xl md:text-6xl uppercase tracking-tighter leading-[0.9] text-foreground">
@@ -175,30 +186,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
             </div>
           </m.div>
 
-          {/* BENTO CARD 2: FEATURED COURSE (JLPT N5 - SPAN 2) */}
-          {jlptCategories.map((cat) => {
-            const isFeatured = cat.title.toUpperCase().includes("N5");
-            if (!isFeatured) return null;
-            return (
-              <m.div key={cat._id} variants={itemVariants} className="lg:col-span-2">
-                <GeneralCategoryCard cat={cat} variants={itemVariants} isFeatured={true} />
-              </m.div>
-            );
-          })}
-
-          {/* BENTO CARD 3: OTHER JLPT TRACKS (SPAN 1 EACH) */}
-          {jlptCategories.map((cat) => {
-            const isFeatured = cat.title.toUpperCase().includes("N5");
-            if (isFeatured) return null;
-            return (
-              <m.div key={cat._id} variants={itemVariants} className="lg:col-span-1">
-                <GeneralCategoryCard cat={cat} variants={itemVariants} isFeatured={false} />
-              </m.div>
-            );
-          })}
-
-          {/* BENTO CARD 4: PRACTICAL COMPETENCY TRACKS (SPAN 1 EACH) */}
-          {generalCategories.map((cat) => (
+          {sortedCategories.map((cat) => (
             <m.div key={cat._id} variants={itemVariants} className="lg:col-span-1">
               <GeneralCategoryCard cat={cat} variants={itemVariants} isFeatured={false} />
             </m.div>

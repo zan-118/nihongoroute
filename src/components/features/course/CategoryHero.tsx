@@ -93,6 +93,9 @@ export function CategoryHero({
             borderColor: "rgb(var(--border-rgb)/0.5)",
           }}
         >
+          {/* Motif Asanoha halus */}
+          <div className="absolute inset-0 bg-asanoha opacity-[0.015] pointer-events-none" />
+
           {/* Subtle Ambient Accent */}
           <div
             className="absolute top-0 right-0 size-16 blur-md rounded-full opacity-20 pointer-events-none transition-all duration-200 group-hover:scale-125"

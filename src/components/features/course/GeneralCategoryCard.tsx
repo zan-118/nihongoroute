@@ -148,6 +148,17 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
 
   const IconComponent = isJlpt ? GraduationCap : BookOpen;
 
+  // Map levels to elegant Kanji watermarks
+  const kanjiWatermark = React.useMemo(() => {
+    if (!isJlpt) return "学"; // 'Gaku' for general study
+    if (cat.title.toUpperCase().includes("N5")) return "五";
+    if (cat.title.toUpperCase().includes("N4")) return "四";
+    if (cat.title.toUpperCase().includes("N3")) return "三";
+    if (cat.title.toUpperCase().includes("N2")) return "二";
+    if (cat.title.toUpperCase().includes("N1")) return "一";
+    return "級";
+  }, [cat.title, isJlpt]);
+
   return (
     <m.div
       variants={variants}
@@ -158,7 +169,7 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
       <Card
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className="flex flex-col h-full rounded-2xl md:rounded-3xl overflow-hidden group transition-all duration-300 glass"
+        className="flex flex-col h-full rounded-2xl md:rounded-3xl overflow-hidden group transition-all duration-300 glass relative"
         style={{
           borderColor: isHovered ? `rgba(${theme.glowColor}, 0.4)` : `rgb(var(--border-rgb)/0.75)`,
           boxShadow: isHovered
@@ -168,7 +179,18 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
             : 'none'
         }}
       >
-        <div className={`p-8 sm:p-10 flex flex-col h-full relative ${isFeatured ? 'md:p-12 lg:p-14' : ''}`}>
+        {/* Japanese Geometric Texture Overlay */}
+        <div className="absolute inset-0 bg-asanoha opacity-[0.015] pointer-events-none group-hover:opacity-[0.035] transition-opacity duration-500" />
+
+        {/* Kanji Watermark */}
+        <div 
+          className="absolute -bottom-6 -right-6 text-[10rem] sm:text-[14rem] font-black pointer-events-none select-none opacity-[0.015] group-hover:opacity-[0.045] transition-all duration-500 font-noto-serif-jp translate-y-8 translate-x-4"
+          style={{ color: `rgb(${theme.glowColor})` }}
+        >
+          {kanjiWatermark}
+        </div>
+
+        <div className={`p-8 sm:p-10 flex flex-col h-full relative z-10 ${isFeatured ? 'md:p-12 lg:p-14' : ''}`}>
 
           {/* Cyber Glow Ambient Latar Belakang — Adaptive size */}
           <div
@@ -215,9 +237,7 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
           {cat.previews && cat.previews.length > 0 && (
             <div className="mb-6 sm:mb-8 relative z-10">
               {/* Mobile: horizontal scroll, Desktop: 2-col or 3-col bento grid layout */}
-              <div className={`flex overflow-x-auto sm:overflow-visible pb-2 sm:pb-0 -mx-1 px-1 sm:mx-0 sm:px-0 scrollbar-none gap-3 ${
-                isFeatured ? 'flex flex-col gap-4' : 'flex flex-col gap-4'
-              }`}>
+              <div className="flex flex-col gap-3 overflow-x-auto sm:overflow-visible pb-2 sm:pb-0 -mx-1 px-1 sm:mx-0 sm:px-0 scrollbar-none">
                 {cat.previews.map((preview) => (
                   <PreviewItem
                     key={preview._id}

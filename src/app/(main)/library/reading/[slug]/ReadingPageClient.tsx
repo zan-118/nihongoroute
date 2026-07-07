@@ -151,22 +151,24 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
 
   const handleParagraphChange = React.useCallback(
     (index: number) => {
+      let seconds = 0;
       setReadingSnapshot((prev) => {
-        const next = { ...prev, activeParagraphIndex: index };
-        if (readingSourceId) {
-          updateReadingProgress(readingSourceId, {
-            elapsedSeconds: prev.elapsedSeconds,
-            lastParagraphIndex: index,
-            sourceTitle: data.title,
-            totalParagraphs: paragraphs.length,
-          });
-          lastPersistedReadingRef.current = {
-            elapsedSeconds: prev.elapsedSeconds,
-            paragraphIndex: index,
-          };
-        }
-        return next;
+        seconds = prev.elapsedSeconds;
+        return { ...prev, activeParagraphIndex: index };
       });
+
+      if (readingSourceId) {
+        updateReadingProgress(readingSourceId, {
+          elapsedSeconds: seconds,
+          lastParagraphIndex: index,
+          sourceTitle: data.title,
+          totalParagraphs: paragraphs.length,
+        });
+        lastPersistedReadingRef.current = {
+          elapsedSeconds: seconds,
+          paragraphIndex: index,
+        };
+      }
     },
     [data.title, paragraphs.length, readingSourceId, updateReadingProgress]
   );
@@ -174,33 +176,36 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
   React.useEffect(() => {
     if (isCompleted) return;
     const interval = setInterval(() => {
+      let nextSeconds = 0;
+      let activeIndex = 0;
+
       setReadingSnapshot((prev) => {
-        const nextSeconds = prev.elapsedSeconds + 1;
-        
-        // Persist ke store setiap 5 detik
-        if (readingSourceId) {
-          const lastPersisted = lastPersistedReadingRef.current;
-          const elapsedDelta = nextSeconds - lastPersisted.elapsedSeconds;
-          
-          if (elapsedDelta >= 5) {
-            updateReadingProgress(readingSourceId, {
-              elapsedSeconds: nextSeconds,
-              lastParagraphIndex: prev.activeParagraphIndex,
-              sourceTitle: data.title,
-              totalParagraphs: paragraphs.length,
-            });
-            lastPersistedReadingRef.current = {
-              elapsedSeconds: nextSeconds,
-              paragraphIndex: prev.activeParagraphIndex,
-            };
-          }
-        }
-        
+        nextSeconds = prev.elapsedSeconds + 1;
+        activeIndex = prev.activeParagraphIndex;
         return {
           ...prev,
           elapsedSeconds: nextSeconds,
         };
       });
+
+      // Persist ke store setiap 5 detik (di luar updater callback)
+      if (readingSourceId) {
+        const lastPersisted = lastPersistedReadingRef.current;
+        const elapsedDelta = nextSeconds - lastPersisted.elapsedSeconds;
+        
+        if (elapsedDelta >= 5) {
+          updateReadingProgress(readingSourceId, {
+            elapsedSeconds: nextSeconds,
+            lastParagraphIndex: activeIndex,
+            sourceTitle: data.title,
+            totalParagraphs: paragraphs.length,
+          });
+          lastPersistedReadingRef.current = {
+            elapsedSeconds: nextSeconds,
+            paragraphIndex: activeIndex,
+          };
+        }
+      }
     }, 1000);
     return () => clearInterval(interval);
   }, [isCompleted, readingSourceId, data.title, paragraphs.length, updateReadingProgress]);
