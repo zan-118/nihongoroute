@@ -49,9 +49,9 @@ export default function FeedbackWidget({ forceOpen, onOpenChange }: FeedbackWidg
   return (
     <>
       <Dialog open={openState} onOpenChange={setOpenState}>
-        <DialogContent className="sm:max-w-[425px] border-border bg-card bg-background text-foreground transition-colors duration-300 shadow-2xl rounded-xl">
+        <DialogContent className="sm:max-w-[425px] border-border bg-background text-foreground transition-colors duration-300 shadow-2xl rounded-xl">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold text-foreground flex items-center gap-2 font-black uppercase tracking-tight">
+            <DialogTitle className="text-xl text-foreground flex items-center gap-2 font-black uppercase tracking-tight">
               <MessageSquarePlus aria-hidden="true" className="text-primary" />
               Kirim Masukan
             </DialogTitle>
@@ -71,7 +71,7 @@ export default function FeedbackWidget({ forceOpen, onOpenChange }: FeedbackWidg
                     onClick={() => setType(t)}
                     className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium border transition-all ${
                       type === t 
-                        ? 'bg-[rgb(var(--primary-rgb)/0.2)] border-primary text-primary text-primary' 
+                        ? 'bg-[rgb(var(--primary-rgb)/0.2)] border-primary text-primary' 
                         : 'bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.2)] border border-border text-muted-foreground hover:bg-muted dark:hover:bg-[rgb(var(--background-rgb)/0.05)]'
                     }`}
                   >
