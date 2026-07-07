@@ -211,6 +211,38 @@ export async function searchToolDictionary(
   return result;
 }
 
+interface VocabDoc {
+  id: string;
+  word: string;
+  meaning_id?: string | null;
+  furigana?: string | null;
+  romaji?: string | null;
+  hinshi?: string[] | null;
+  jlpt_level?: string | null;
+  slug?: string | null;
+  is_common?: boolean | null;
+}
+
+interface GrammarDoc {
+  id: string;
+  title: string;
+  slug?: string | null;
+  meaning?: string | null;
+  jlpt_level?: string | null;
+  formation?: string | null;
+}
+
+interface KanjiDoc {
+  id: string;
+  character: string;
+  meaning?: string | null;
+  onyomi?: string | null;
+  kunyomi?: string | null;
+  romaji?: string | null;
+  jlpt_level?: string | null;
+  slug?: string | null;
+}
+
 export async function analyzeTextWithDictionary(text: string) {
   const stats = getJapaneseTextStats(text);
   const supabase = createClient();
@@ -234,18 +266,18 @@ export async function analyzeTextWithDictionary(text: string) {
   ]);
 
   const rawVocabs = [
-    ...(vocabByWordRes?.data || []),
-    ...(vocabByFuriRes?.data || [])
+    ...((vocabByWordRes?.data || []) as VocabDoc[]),
+    ...((vocabByFuriRes?.data || []) as VocabDoc[])
   ];
   const uniqueVocabs = Array.from(new Map(rawVocabs.map(v => [v.id, v])).values());
 
   const rawGrammars = [
-    ...(grammarByTitleRes?.data || []),
-    ...(grammarBySlugRes?.data || [])
+    ...((grammarByTitleRes?.data || []) as GrammarDoc[]),
+    ...((grammarBySlugRes?.data || []) as GrammarDoc[])
   ];
   const uniqueGrammars = Array.from(new Map(rawGrammars.map(g => [g.id, g])).values());
 
-  const uniqueKanjis = kanjiRes?.data || [];
+  const uniqueKanjis = (kanjiRes?.data || []) as KanjiDoc[];
 
   return {
     stats,

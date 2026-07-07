@@ -713,7 +713,7 @@ function parseNotesToJSX(notes: string): React.ReactNode {
 // BLOK TATA BAHASA
 // ==========================================
 function GrammarBlock({ block }: { block: ContentBlock }) {
-  const raw = block as any;
+  const raw = block as ContentBlock & { notes?: string; slug?: string };
   const notes = raw.notes;
   const slug = raw.slug;
 

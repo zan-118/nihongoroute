@@ -135,7 +135,10 @@ export function useSurvivalMode(cards: CardData[]) {
 
   useEffect(() => {
     if (gameState === "playing" && timeLeft === 0 && !isCorrecting) {
-      handleWrongAnswer();
+      const timer = setTimeout(() => {
+        handleWrongAnswer();
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [gameState, timeLeft, handleWrongAnswer, isCorrecting]);
 
