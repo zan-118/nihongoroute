@@ -133,6 +133,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [
     categoriesResult,
     lessonsResult,
+    articlesResult,
     readingsResult,
     listeningsResult,
     grammarRows,
@@ -146,6 +147,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .then(({ data, error }) => {
         if (error) {
           console.error("[Sitemap] Gagal mengambil data pelajaran dari Supabase:", error);
+          return [];
+        }
+        return (data || []).map((row) => ({
+          slug: row.slug,
+          category_id: row.category_id,
+          _createdAt: row.created_at,
+          _updatedAt: row.created_at,
+        })) as SanitySitemapItem[];
+      }),
+    supabase
+      .from("articles")
+      .select("slug, category_id, created_at")
+      .eq("is_published", true)
+      .then(({ data, error }) => {
+        if (error) {
+          console.error("[Sitemap] Gagal mengambil data artikel dari Supabase:", error);
           return [];
         }
         return (data || []).map((row) => ({
@@ -195,7 +212,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   }
 
-  for (const lesson of lessonsResult || []) {
+  const allLessons = [
+    ...(lessonsResult || []),
+    ...(articlesResult || [])
+  ];
+
+  for (const lesson of allLessons) {
     if (!lesson.slug || !lesson.category_id) continue;
     const categorySlug = categoryMap.get(lesson.category_id) || lesson.category_id;
     addUniqueEntry(urls, seen, {
