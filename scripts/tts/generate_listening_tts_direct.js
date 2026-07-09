@@ -134,29 +134,31 @@ function detectVoice(speaker, fallbackIndex = 0) {
 
 const GEMINI_VOICE_MAP = {
   // Wanita
-  "indah": "Zephyr",
-  "lara": "Leda",
-  "siti": "Vindemiatrix",
-  "dewi": "Laomedeia",
-  "hayashi": "Gacrux",
-  "sato": "Sulafat",
-  "ayu": "Erinome",
-  "zundamon": "Autonoe",
-  "ritsu": "Achernar",
+  "indah": "Zephyr",       // default premium (Bright)
+  "lara": "Despina",      // youthful, gentle
+  "siti": "Vindemiatrix", // gentle/clear (Gentle)
+  "dewi": "Leda",         // young, cheerful, upbeat child/student
+  "hayashi": "Gacrux",    // mature/academic (Mature)
+  "sato": "Sulafat",      // friendly/mature (Warm)
+  "ayu": "Erinome",       // cool/clear (Clear)
+  "zundamon": "Autonoe",  // mascot child/neutral (Bright/Youthful)
+  "ritsu": "Achernar",    // cool/neutral (Soft)
+  "sakura": "Callirrhoe", // youthful, clear female
+  "rara": "Kore",         // gentle, soft, clear female
 
   // Pria
-  "budi": "Charon",
-  "dito": "Alnilam",
-  "suzuki": "Iapetus",
-  "tanaka": "Fenrir",
-  "yamada": "Achird",
-  "kimura": "Algieba",
-  "andi": "Orus",
-  "faisal": "Puck",
-  "takahashi": "Rasalgethi",
-  "kobayashi": "Zubenelgenubi",
-  "namonashi": "Algenib",
-  "ooba": "Sadachbia",
+  "budi": "Charon",       // default polite/formal (Informative)
+  "dito": "Alnilam",      // cool/deep (Firm)
+  "suzuki": "Iapetus",    // smart/young (Clear)
+  "tanaka": "Fenrir",     // energetic/rough (Excitable)
+  "yamada": "Achird",     // warm/casual (Friendly)
+  "kimura": "Zubenelgenubi", // youthful, casual, relaxed male (slang)
+  "andi": "Orus",         // dramatic/heroic (Firm)
+  "faisal": "Algieba",    // polite, formal, smooth, calm male
+  "takahashi": "Puck",    // youthful, upbeat, friendly male
+  "kobayashi": "Rasalgethi", // mature, deep, informative, warm male
+  "namonashi": "Algenib",  // middle-aged/rough (Gravelly)
+  "ooba": "Sadachbia",    // boy/child (Lively)
 };
 
 function printUsage() {

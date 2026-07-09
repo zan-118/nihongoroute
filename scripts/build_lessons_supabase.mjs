@@ -215,30 +215,30 @@ async function generateDialogue(
 ) {
   const EXACT_CAST_ROLES = `TOKOH WANITA (10 karakter):
 1. Indah: Guru Wanita. Tenang, dewasa, formal.
-2. Lara: Siswi SMA. Ceria, ramah.
+2. Lala: Siswi SMA. Ceria, ramah.
 3. Siti: Teman Sekolah. Lembut, natural.
 4. Dewi: Gadis Kecil. Manja, energetik.
 5. Hayashi: Wanita Karir / Ibu. Bijaksana.
 6. Sato: Resepsionis / Pegawai. Sopan, formal.
 7. Ayu: Teman Wanita. Modern, santai.
-8. Ritsu: Wanita Dewasa. Misterius.
+8. Ritsu: Wanita Dewasa. Misterius, bernada khas.
 9. Sakura: Remaja Gadis. Baik hati.
-10. Rara: Remaja Gadis. Pemalu.
+10. Rara: Remaja Gadis. Pemalu, santun.
 
 TOKOH PRIA (10 karakter):
 1. Budi: Guru Pria. Berwibawa.
 2. Dito: Siswa SMA. Kalem, kasual.
-3. Suzuki: Pegawai Stasiun / Kantor. Tegas.
-4. Tanaka: Ayah / Pria Dewasa. Tenang.
-5. Yamada: Kakek. Ramah, serak.
+3. Suzuki: Pegawai Stasiun / Kantor. Tegas, formal.
+4. Tanaka: Ayah / Pria Dewasa. Tenang, berat.
+5. Yamada: Kakek. Ramah, berat, serak.
 6. Kimura: Pemuda Gaul. Santai, energetik.
-7. Andi: Pemuda Dramatis. Bersemangat.
-8. Faisal: Pria Kalem. Bijaksana.
-9. Takahashi: Pekerja Kantoran Muda. Sopan.
-10. Kobayashi: Pria Dewasa. Serius.
+7. Andi: Pemuda Keren. Suara khas, bernada dramatis & penuh semangat.
+8. Faisal: Pria Dewasa Kalem. Tenang, bijaksana.
+9. Takahashi: Pekerja Kantoran Muda. Sopan, ramah.
+10. Kobayashi: Pria Dewasa. Suara serius, dalam, berwibawa.
 
 MASKOT (1 karakter):
-1. Zundamon: Maskot Cilik. Kekanak-kanakan, sering mengakhiri kalimat dengan "noda".`;
+1. Zundamon: Maskot Cilik. Kekanak-kanakan, nada sangat tinggi. Sering mengakhiri kalimat dengan "noda" (のだ).`;
 
   const grammarStr = grammars.slice(0, 5).map(g => g.title).join(', ');
   const vocabStr = vocabs.slice(0, 10).map(v => v.word).join(', ');

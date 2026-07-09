@@ -12,7 +12,7 @@
  * 1. INDAH    -> VOICEVOX: Shikoku Metan (ID 2). Peran: Narator Utama / Guru Wanita. 
  *                Karakteristik: Tenang, dewasa, artikulasi sangat jelas, intonasi formal & natural.
  *                *Digunakan sebagai default pengucapan seluruh kosakata (vocab)*.
- * 2. LARA     -> VOICEVOX: Kasukabe Tsumugi (ID 8). Peran: Siswi SMA / Remaja.
+ * 2. LALA     -> VOICEVOX: Kasukabe Tsumugi (ID 8). Peran: Siswi SMA / Remaja.
  *                Karakteristik: Ceria, ramah, riang, bernada cerah.
  * 3. SITI     -> VOICEVOX: Amehare Hau (ID 10). Peran: Teman Sekolah / Wanita Muda.
  *                Karakteristik: Lembut, ramah, jernih.
@@ -61,7 +61,7 @@ export const VOICE_CHARACTERS: Record<string, VoiceCharacter> = {
     description: "Tenang, dewasa, artikulasi sangat jelas, intonasi formal & natural. Default pengucapan kosakata.",
   },
   lara: {
-    name: "lara",
+    name: "lala",
     voicevoxName: "Kasukabe Tsumugi",
     speakerId: 8,
     gender: "female",
@@ -123,6 +123,22 @@ export const VOICE_CHARACTERS: Record<string, VoiceCharacter> = {
     gender: "female",
     role: "Wanita Misterius / Bernada Khas",
     description: "Unik, ekspresif, bernada khas.",
+  },
+  sakura: {
+    name: "sakura",
+    voicevoxName: "Sayo",
+    speakerId: 46,
+    gender: "female",
+    role: "Remaja Gadis / Baik Hati",
+    description: "Suara lembut, ramah, penolong.",
+  },
+  rara: {
+    name: "rara",
+    voicevoxName: "Nurse Roboko",
+    speakerId: 47,
+    gender: "female",
+    role: "Remaja Gadis / Pemalu",
+    description: "Suara manis, pemalu, santun.",
   },
   // Pria
   budi: {
@@ -234,6 +250,8 @@ export const TTS_VOICES = {
   AYU: "ayu",
   ZUNDAMON: "zundamon",
   RITSU: "ritsu",
+  SAKURA: "sakura",
+  RARA: "rara",
   
   // Pria (VOICEVOX)
   DITO: "dito",
@@ -256,9 +274,11 @@ export const SPEAKER_MAP: Record<string, TtsVoice> = {
   "インダ": TTS_VOICES.INDAH,
   "インダハ": TTS_VOICES.INDAH,
 
-  // === LARA (春日部つむぎ / Kasukabe Tsumugi) — Siswi SMA ===
+  // === LALA (春日部つむぎ / Kasukabe Tsumugi) — Siswi SMA ===
+  "lala": TTS_VOICES.LARA,
   "lara": TTS_VOICES.LARA,
   "ララ": TTS_VOICES.LARA,
+
 
   // === SITI (雨晴はう / Amehare Hau) — Wanita Muda ===
   "siti": TTS_VOICES.SITI,
@@ -291,6 +311,16 @@ export const SPEAKER_MAP: Record<string, TtsVoice> = {
   "ritsu": TTS_VOICES.RITSU,
   "リツ": TTS_VOICES.RITSU,
   "りつ": TTS_VOICES.RITSU,
+
+  // === SAKURA (小夜 / Sayo) — Remaja Baik Hati ===
+  "sakura": TTS_VOICES.SAKURA,
+  "サクラ": TTS_VOICES.SAKURA,
+  "さくら": TTS_VOICES.SAKURA,
+
+  // === RARA (ナースロボ＿タイプＴ / Nurse Roboko) — Remaja Pemalu ===
+  "rara": TTS_VOICES.RARA,
+  "ラーラ": TTS_VOICES.RARA,
+  "らら": TTS_VOICES.RARA,
 
   // === BUDI (青山龍星 / Aoyama Ryuusei) — Narator Pria ===
   "budi": TTS_VOICES.BUDI,
@@ -388,6 +418,8 @@ export function detectVoice(speaker?: string, fallbackIndex = 0): TtsVoice {
     TTS_VOICES.SATO,
     TTS_VOICES.AYU,
     TTS_VOICES.RITSU,
+    TTS_VOICES.SAKURA,
+    TTS_VOICES.RARA,
   ];
   const maleVoices = [
     TTS_VOICES.NAMONASHI,
