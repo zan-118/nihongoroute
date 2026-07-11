@@ -22,6 +22,7 @@ interface VocabHeroProps {
   furigana?: string;
   romaji?: string;
   meaning: string;
+  audioUrl?: string | null;
 }
 
 // ==========================================
@@ -32,13 +33,13 @@ interface VocabHeroProps {
  * 
  * @param {VocabHeroProps} props Properti komponen visual utama kosakata.
  */
-export function VocabHero({ word, furigana, romaji, meaning }: VocabHeroProps) {
+export function VocabHero({ word, furigana, romaji, meaning, audioUrl }: VocabHeroProps) {
   return (
     <Card className="p-8 md:p-12 bg-card/40  border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all group overflow-hidden relative flex flex-col items-center justify-center text-center shadow-[0_0_30px_rgba(var(--primary-rgb),0.05)] font-sans glass">
       {/* Grup Tombol Aksi Pojok Kanan Atas */}
       <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
         <AddToSRSButton wordId={word} />
-        <TTSReader text={word} minimal={false} speaker="indah" />
+        <TTSReader text={word} minimal={false} speaker="indah" audioUrl={audioUrl} />
       </div>
 
       {/* Karakter Ejaan Utama (Furigana Presisi 0.55em) */}

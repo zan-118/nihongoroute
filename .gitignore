@@ -90,3 +90,4 @@ data_soal_exam/
 
 
 tts_failures*.log
+tts_vocab_failures.log

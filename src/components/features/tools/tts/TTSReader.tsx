@@ -18,6 +18,7 @@ interface Props {
   minimal?: boolean;
   speaker?: string;
   small?: boolean;
+  audioUrl?: string | null;
 }
 
 // ==========================================
@@ -26,11 +27,11 @@ interface Props {
 /**
  * Komponen pembaca suara teks Jepang (TTS).
  */
-export default function TTSReader({ text, minimal = false, speaker, small = false }: Props) {
+export default function TTSReader({ text, minimal = false, speaker, small = false, audioUrl }: Props) {
   // ==========================================
   // HOOKS & STATUS
   // ==========================================
-  const { isPlaying, hasJapanese, speak } = useTTSReader(text, speaker);
+  const { isPlaying, hasJapanese, speak } = useTTSReader(text, speaker, audioUrl);
 
   if (!hasJapanese || !text) return null;
 

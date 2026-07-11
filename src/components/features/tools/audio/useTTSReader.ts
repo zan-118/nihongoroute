@@ -24,7 +24,7 @@ import { fetchTTSAudio, speakWithWebSpeech, detectVoice, TTS_VOICES, type TtsVoi
  * @returns {{ isPlaying: boolean; hasJapanese: boolean; speak: () => Promise<void> }} Status pemutaran, keberadaan karakter Jepang, dan fungsi pemicu speak.
  * @effects Memutar audio di browser, memprefetch data ke CacheStorage, memanipulasi window.speechSynthesis.
  */
-export function useTTSReader(text: string, speaker?: string) {
+export function useTTSReader(text: string, speaker?: string, audioUrl?: string | null) {
   // ==========================================
   // STATUS & STATE & REFS
   // ==========================================
@@ -174,8 +174,8 @@ export function useTTSReader(text: string, speaker?: string) {
     };
 
     try {
-      const audioUrl = await fetchTTSAudio(cleanText, voice);
-      if (!audioUrl) {
+      const finalAudioUrl = audioUrl || await fetchTTSAudio(cleanText, voice);
+      if (!finalAudioUrl) {
         playFallback();
         return;
       }
@@ -187,11 +187,11 @@ export function useTTSReader(text: string, speaker?: string) {
       const audio = audioRef.current;
 
       cleanupObjectUrl();
-      if (audioUrl.startsWith("blob:")) {
-        objectUrlRef.current = audioUrl;
+      if (finalAudioUrl.startsWith("blob:")) {
+        objectUrlRef.current = finalAudioUrl;
       }
 
-      audio.src = audioUrl;
+      audio.src = finalAudioUrl;
 
       audio.onplay = () => setIsPlaying(true);
       audio.onended = () => {
