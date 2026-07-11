@@ -15,7 +15,7 @@
  * @returns {Object} Konfigurasi rules dan sitemap.
  */
 export default function robots() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.nihongoroute.my.id";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://nihongoroute.my.id";
 
   return {
     rules: [

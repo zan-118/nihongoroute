@@ -32,7 +32,7 @@ export function getApiUrl(path: string): string {
       if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         return `http://localhost:3000${path}`;
       }
-      return `https://www.nihongoroute.my.id${path}`;
+      return `https://nihongoroute.my.id${path}`;
     }
   }
   return path;

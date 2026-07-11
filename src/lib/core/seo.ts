@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const SITE_NAME = "NihongoRoute";
-export const DEFAULT_SITE_URL = "https://www.nihongoroute.my.id";
+export const DEFAULT_SITE_URL = "https://nihongoroute.my.id";
 export const DEFAULT_OG_IMAGE = "/opengraph-image.png";
 export const DEFAULT_TITLE = "NihongoRoute | Belajar Bahasa Jepang Gratis";
 export const DEFAULT_DESCRIPTION =

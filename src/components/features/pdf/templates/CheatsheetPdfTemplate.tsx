@@ -263,8 +263,8 @@ export const CheatsheetPdfTemplate = ({ data, title, category }: CheatsheetTempl
         <Text style={styles.footerText} suppressHydrationWarning={true}>
           © {new Date().getFullYear()} NihongoRoute. Dicetak pada {new Date().toLocaleDateString('id-ID')}.
         </Text>
-        <Link src="https://www.nihongoroute.my.id" style={styles.footerLink}>
-          www.nihongoroute.my.id
+        <Link src="https://nihongoroute.my.id" style={styles.footerLink}>
+          nihongoroute.my.id
         </Link>
         <Text
           style={styles.footerText}

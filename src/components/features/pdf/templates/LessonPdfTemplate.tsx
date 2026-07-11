@@ -655,8 +655,8 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
           <Text style={styles.footerText} suppressHydrationWarning={true}>
             © {new Date().getFullYear()} NihongoRoute. Dicetak pada {new Date().toLocaleDateString('id-ID')}.
           </Text>
-          <Link style={styles.footerLink} src="https://www.nihongoroute.my.id">
-            www.nihongoroute.my.id
+          <Link style={styles.footerLink} src="https://nihongoroute.my.id">
+            nihongoroute.my.id
           </Link>
           <Text
             style={styles.footerText}

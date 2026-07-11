@@ -70,6 +70,8 @@ export const metadata: Metadata = {
     "JLPT N5",
     "JLPT N4",
     "JLPT N3",
+    "JLPT N2",
+    "JLPT N1",
     "hiragana",
     "katakana",
     "kanji",

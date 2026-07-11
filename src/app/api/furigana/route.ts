@@ -63,7 +63,7 @@ async function getKuroshiro(): Promise<KuroshiroInstance> {
 const ALLOWED_ORIGINS = [
   "http://localhost:3000",
   "http://localhost:3001",
-  "https://www.nihongoroute.my.id",
+  "https://nihongoroute.my.id",
   process.env.NEXT_PUBLIC_SITE_URL
 ].filter(Boolean) as string[];
 
