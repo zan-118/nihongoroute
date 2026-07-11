@@ -55,7 +55,7 @@ export function useVocabList(initialData: VocabItem[] = []) {
     try {
       let query = supabase
         .from("vocab")
-        .select("id, word, furigana, romaji, meaning_id, hinshi, mnemonic, slug, related_kanji, jlpt_level", { count: "exact" })
+        .select("id, word, furigana, romaji, meaning_id, hinshi, mnemonic, slug, related_kanji, jlpt_level, audio_url", { count: "exact" })
         .eq("jlpt_level", levelFilter);
 
       // Menerapkan kueri pencarian multi-bahasa (Jepang Kanji/Kana, Romaji, Indonesia arti)
@@ -79,7 +79,7 @@ export function useVocabList(initialData: VocabItem[] = []) {
       if (error) throw error;
 
       // Normalisasi properti data dari Supabase ke dalam format VocabItem pustaka
-      const mapped: VocabItem[] = (data || []).map((v: { id: string; word: string; furigana: string | null; romaji: string | null; meaning_id: string | null; hinshi: unknown; mnemonic: string | null; slug: string | null; related_kanji: unknown }) => ({
+      const mapped: VocabItem[] = (data || []).map((v: { id: string; word: string; furigana: string | null; romaji: string | null; meaning_id: string | null; hinshi: unknown; mnemonic: string | null; slug: string | null; related_kanji: unknown; audio_url: string | null }) => ({
         id: v.id,
         word: v.word,
         furigana: v.furigana || undefined,
@@ -88,6 +88,7 @@ export function useVocabList(initialData: VocabItem[] = []) {
         hinshi: Array.isArray(v.hinshi) ? v.hinshi : v.hinshi ? [v.hinshi] : undefined,
         mnemonic: v.mnemonic || undefined,
         slug: v.slug || undefined,
+        audio_url: v.audio_url || undefined,
         related_kanji: (v.related_kanji as Array<{ character: string; meaning: string }>) || [],
       }));
 
