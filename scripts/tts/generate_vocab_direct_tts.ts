@@ -88,7 +88,7 @@ async function synthesizeWithRetry(text: string, voiceName: string, retries = 3,
   for (let attempt = 1; attempt <= retries; attempt += 1) {
     try {
       const tts = new MsEdgeTTS();
-      await tts.setMetadata(voiceName, "audio-24khz-96kbitrate-mono-mp3");
+      await tts.setMetadata(voiceName, "audio-24khz-96kbitrate-mono-mp3" as any);
 
       return await new Promise<Buffer>((resolve, reject) => {
         const chunks: Buffer[] = [];

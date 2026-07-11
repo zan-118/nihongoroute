@@ -183,7 +183,7 @@ export default async function VocabDetailPage({
             furigana={typeof vocab.furigana === "string" ? vocab.furigana : undefined} 
             romaji={typeof vocab.romaji === "string" ? vocab.romaji : undefined} 
             meaning={vocab.meaning || ""} 
-            audioUrl={vocab.audioUrl || vocab.audio_url}
+            audioUrl={(vocab.audioUrl as string) || (vocab.audio_url as string) || undefined}
           />
 
           {/* 2. Meta Data Bento (Atribut Kata) */}
