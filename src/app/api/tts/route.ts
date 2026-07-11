@@ -141,13 +141,17 @@ export async function GET(req: NextRequest) {
         .from("tts-cache")
         .download(storagePath);
 
-      if (!downloadError && fileData && fileData.size > 0) {
-        debugLog(`SUKSES download file dari Storage! Ukuran: ${fileData.size} bytes. Memulangkan berkas biner.`);
-        const audioBuffer = await fileData.arrayBuffer();
+      let audioBuffer: ArrayBuffer | null = null;
+      if (!downloadError && fileData) {
+        audioBuffer = await fileData.arrayBuffer();
+      }
+
+      if (audioBuffer && audioBuffer.byteLength > 0) {
+        debugLog(`SUKSES download file dari Storage! Ukuran: ${audioBuffer.byteLength} bytes. Memulangkan berkas biner.`);
         return new Response(new Uint8Array(audioBuffer), {
           headers: {
             "Content-Type": "audio/mpeg",
-            "Content-Length": fileData.size.toString(),
+            "Content-Length": audioBuffer.byteLength.toString(),
             "Cache-Control": "public, max-age=604800, immutable",
           },
         });
