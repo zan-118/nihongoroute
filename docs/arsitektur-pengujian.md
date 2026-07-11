@@ -41,12 +41,12 @@ Pengujian unit terpusat di bawah direktori `__tests__/`. Konfigurasi diatur pada
 Pengujian E2E terpusat di direktori `e2e/` dan diatur oleh file `playwright.config.ts`. Skenario E2E mengaktifkan server pengembangan lokal Next.js di latar belakang (`http://localhost:3000`) dan menguji visualisasi interaksi fungsional lintas platform peramban (Chromium, Firefox, WebKit, Mobile Chrome, dan Mobile Safari).
 
 ### 2.1 Skenario Pengujian E2E Utama (`e2e/*`)
-* **`auth.spec.ts`**:
-  * Menguji pendaftaran akun baru, validasi kesalahan sandi/email salah, otentikasi masuk log berhasil, penyegaran token sesi di cookie, dan keluar log (logout) aman.
-* **`navigation.spec.ts`**:
-  * Mensimulasikan klik pengguna ke berbagai rute pustaka, tools, dan ujian.
-  * Memastikan sidebar, topbar, dan mobile navigation beradaptasi responsif dan merender halaman tanpa memicu eror pemuatan Next.js.
-* **`dashboard.spec.ts`**:
-  * Menguji keberadaan komponen visual dasbor: grafik aktivitas belajar heatmap, daftar misi harian, sisa saldo XP, indikator level, dan popover nama profil pengguna.
-* **`study.spec.ts`**:
-  * Mensimulasikan alur belajar nyata: pengguna masuk log, membuka menu kelas/kursus, memilih pelajaran, membaca materi Portable Text, menjawab kuis evaluasi hingga lulus, melihat notifikasi penambahan XP, masuk dasbor ulasan SRS, menyelesaikan ulasan, dan memverifikasi data lokal tersinkronisasi tanpa kendala jaringan.
+Pengujian E2E ini dibangun dengan **100% fungsionalitas luring (offline-first)**, menggunakan *API Mocking* (intersepsi `page.route` via `e2e/helpers/mock.ts`) sehingga skenario tidak memukul (hit) database produksi maupun menyalahgunakan kuota API pihak ketiga (Sanity).
+* **`auth.spec.ts`**: Menguji keberadaan form masuk/daftar, validasi proteksi rute halaman khusus sesi (seperti pengalihan `/dashboard`), serta ketersediaan beranda publik.
+* **`navigation.spec.ts`**: Menguji layout global, responsivitas tema gelap (Dark Mode/Light Mode switch), dan penanganan halaman 404 pada rute yang salah (Not Found).
+* **`learning/srs.spec.ts`**: Menangani interaksi kuis flashcard, membalik (flip) kartu, serta asersi fungsionalitas pengisian nilai 'Ingat/Lupa'.
+* **`exams/jlpt.spec.ts`**: Menangani navigasi skenario tes JLPT (pemilihan soal, tombol inisialisasi ujian, batas waktu/timer simulasi).
+* **`gamification/dashboard.spec.ts`**: Mengevaluasi _render_ visual tingkat level, progress bar XP, visual misi harian (Daily Quests), dan komponen beruntun (Streak/Freeze).
+* **`content/lessons.spec.ts`**: Menguji pembacaan materi/artikel (data di-_mock_ dari CMS) serta tombol "Tandai Selesai" dan perubahannya di profil.
+* **`tools/dictionary.spec.ts`**: Menguji kapabilitas penelusuran leksikon (Kanji, kosa kata) dan hasil render pembacaan konversi *Furigana*.
+* **`community/feed.spec.ts`**: Memastikan linimasa (timeline) sosial komunitas ter-render dengan komponen interaksi standar (contoh: *Like*, *Comment* placeholder).

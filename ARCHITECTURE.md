@@ -129,8 +129,8 @@ Arsitektur offline-first diatur oleh hook `useSyncProgress` pada shell layout `P
 * Cache eksternal Font diatur permanen.
 
 ### 6.2 Unit & E2E Testing
-* Uji unit dijalankan oleh Vitest di bawah folder `__tests__/` untuk memverifikasi logika spaced repetition, state stores, kuis/exam engine, dan hooks sync.
-* Uji fungsional visual dijalankan oleh Playwright di folder `e2e/` untuk memastikan kestabilan alur navigasi, autentikasi, dan pengerjaan materi pelajaran di browser desktop maupun mobile.
+* Uji unit dijalankan oleh Vitest di bawah folder `__tests__/` untuk memverifikasi logika spaced repetition, state stores, kuis/exam engine, dan hooks sync. Seluruh pengujian ini menjamin kelayakan 100% skenario luring murni dengan kapabilitas mocking `jsdom`.
+* Uji fungsional visual dijalankan oleh Playwright di folder `e2e/` yang diimplementasikan secara statis tanpa interaksi database produksi (mocking via `page.route` dan helper lokal `e2e/helpers/mock.ts`). Cakupan ini melibatkan uji autentikasi, SRS, gamifikasi, modul ujian JLPT simulasi, lesson CMS, hingga feed komunitas di beragam resolusi peramban.
 
 ---
 

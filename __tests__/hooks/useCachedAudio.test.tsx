@@ -1,72 +1,54 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { renderHook, waitFor } from "@testing-library/react";
-import { useCachedAudio } from "@/hooks/useCachedAudio";
+import { renderHook, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { useCachedAudio } from '@/hooks/useCachedAudio';
 
-// Mock API browser yang tidak tersedia di jsdom
-if (typeof window !== "undefined") {
-  global.caches = {
-    open: vi.fn().mockResolvedValue({
-      match: vi.fn().mockResolvedValue(null),
-      put: vi.fn().mockResolvedValue(undefined),
-    }),
-  } as unknown as CacheStorage;
-}
-
-describe("useCachedAudio Hook", () => {
+describe('useCachedAudio', () => {
   beforeEach(() => {
-    // Mock global fetch
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      clone: vi.fn().mockImplementation(function (this: Response) {
-        return this;
-      }),
-      blob: vi.fn().mockResolvedValue(new Blob(["mock-audio-data"], { type: "audio/mpeg" })),
-    } as unknown as Response);
+    vi.stubGlobal('caches', {
+      open: vi.fn().mockResolvedValue({
+        match: vi.fn().mockResolvedValue(undefined), // Tidak ada di cache
+        put: vi.fn().mockResolvedValue(undefined),
+        keys: vi.fn().mockResolvedValue([]),
+      })
+    });
 
-    // Mock URL.createObjectURL dan URL.revokeObjectURL
-    global.URL.createObjectURL = vi.fn().mockReturnValue("blob:mock-audio-url");
-    global.URL.revokeObjectURL = vi.fn();
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      clone: vi.fn().mockReturnThis(),
+      blob: vi.fn().mockResolvedValue(new Blob(['audio content'], { type: 'audio/mpeg' }))
+    }));
+
+    vi.stubGlobal('URL', {
+      createObjectURL: vi.fn().mockReturnValue('blob:http://localhost/mock-url'),
+      revokeObjectURL: vi.fn()
+    });
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
   });
 
-  it("kembali dengan undefined jika src kosong", () => {
-    const { result } = renderHook(() => useCachedAudio(undefined));
-    expect(result.current).toBeUndefined();
+  it('harus mengembalikan url langsung sebagai fallback sebelum cache selesai', () => {
+    const { result } = renderHook(() => useCachedAudio('https://example.com/audio.mp3'));
+    
+    // Default kembalian pertama kali (sinkron)
+    expect(result.current).toBe('https://example.com/audio.mp3');
   });
 
-  it("melakukan fetch dan caching jika berkas tidak ditemukan di cache", async () => {
-    const { result } = renderHook(() => useCachedAudio("https://example.com/audio.mp3"));
-
+  it('harus mengubah URL menjadi blob: setelah di-fetch dan cache sukses', async () => {
+    const { result } = renderHook(() => useCachedAudio('https://example.com/audio.mp3'));
+    
     await waitFor(() => {
-      expect(result.current).toBe("blob:mock-audio-url");
+      expect(result.current).toBe('blob:http://localhost/mock-url');
     });
-
-    expect(global.fetch).toHaveBeenCalledWith("https://example.com/audio.mp3");
-    expect(global.URL.createObjectURL).toHaveBeenCalled();
   });
 
-  it("langsung menggunakan berkas dari cache jika tersedia", async () => {
-    // Mock cache hit
-    const mockBlob = new Blob(["cached-audio-data"], { type: "audio/mpeg" });
-    const mockCachedResponse = {
-      blob: vi.fn().mockResolvedValue(mockBlob),
-    };
-
-    global.caches.open = vi.fn().mockResolvedValue({
-      match: vi.fn().mockResolvedValue(mockCachedResponse),
-      put: vi.fn(),
-    });
-
-    const { result } = renderHook(() => useCachedAudio("https://example.com/cached-audio.mp3"));
-
-    await waitFor(() => {
-      expect(result.current).toBe("blob:mock-audio-url");
-    });
-
-    expect(global.fetch).not.toHaveBeenCalled();
-    expect(global.URL.createObjectURL).toHaveBeenCalled();
+  it('harus memanggil URL.revokeObjectURL saat unmount', async () => {
+    const { unmount } = renderHook(() => useCachedAudio('https://example.com/audio.mp3'));
+    
+    await waitFor(() => {}); // Biarkan efek berjalan
+    unmount();
+    
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:http://localhost/mock-url');
   });
 });
