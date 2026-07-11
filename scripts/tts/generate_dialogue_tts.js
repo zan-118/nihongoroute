@@ -176,8 +176,8 @@ const CHARACTER_VOICE_MAP = {
 
   // 10. Rara - Remaja Gadis Pemalu
   rara: "rara",
-  ララ: "rara",
-  らら: "rara",
+  ラーラ: "rara",
+  らーら: "rara",
 
   // ===== TOKOH PRIA (10 karakter) =====
   // 1. Budi - Guru Pria
@@ -242,80 +242,101 @@ const CHARACTER_VOICE_MAP = {
 // Berdasarkan karakter yang didefinisikan
 // ==========================================
 
+// Struktur tiap caption sengaja dibuat konsisten supaya VoiceDesign gampang
+// "mengunci" identitas suara: [usia+gender+peran] → [kepribadian] →
+// [kualitas suara: pitch/tempo/timbre] → [nada bicara khas]. Caption yang
+// terlalu pendek/generic cenderung menghasilkan suara yang "melayang" dan
+// gampang berubah antar generate; detail tempo & timbre di akhir kalimat
+// membantu konsistensi itu.
 const VOICE_PRESETS = {
   // ===== TOKOH WANITA (10 karakter) =====
 
   // 1. Indah - Guru Wanita. Tenang, dewasa, formal.
-  indah: "30代女性、教師、落ち着いた、丁寧な声、大人っぽい",
+  indah:
+    "30代女性、中学校の教師、落ち着きがあり知的、やや低めで丁寧な声、ゆっくりはっきりした話し方、穏やかで安定したトーン",
 
   // 2. Lala - Siswi SMA. Ceria, ramah.
-  lara: "10代女性、高校生、明るい、元気な声、フレンドリー",
+  lara: "16歳女性、女子高生、明るく元気、少し高めで張りのある声、テンポが速めで弾むような話し方、フレンドリーな笑顔が伝わる声",
 
   // 3. Siti - Teman Sekolah. Lembut, natural.
-  siti: "10代女性、高校生、優しい、自然な声、柔らかい",
+  siti: "16歳女性、女子高生、優しく控えめ、柔らかく自然な中音域の声、ゆったりとした話し方、聞き手を安心させる穏やかな声",
 
   // 4. Dewi - Gadis Kecil. Manja, energetik.
-  dewi: "子供、女性、元気いっぱい、高い声、甘えん坊",
+  dewi: "7歳女性、子供、無邪気で甘えん坊、非常に高いかわいい声、早口で跳ねるような話し方、興奮しやすいテンション",
 
   // 5. Hayashi - Wanita Karir / Ibu. Bijaksana.
-  hayashi: "30代女性、母親、温かい、知性的な声、落ち着いた",
+  hayashi:
+    "35歳女性、母親兼キャリアウーマン、温かく知性的、低めで包み込むような声、ゆっくり落ち着いた話し方、安心感のある包容力",
 
   // 6. Sato - Resepsionis / Pegawai. Sopan, formal.
-  sato: "20代女性、受付嬢、丁寧な声、はっきりした、礼儀正しい",
+  sato: "24歳女性、受付嬢、礼儀正しく几帳面、はっきりとした明瞭な声、標準的なテンポで丁寧な言葉遣い、業務的だが柔らかい印象",
 
   // 7. Ayu - Teman Wanita. Modern, santai.
-  ayu: "20代女性、現代的な、カジュアルな声、自然体",
+  ayu: "22歳女性、現代的な友人、カジュアルで自然体、軽やかな中音域の声、リラックスした話し方、飾らない親しみやすいトーン",
 
   // 8. Ritsu - Wanita Dewasa. Misterius, bernada khas.
-  ritsu: "20代女性、神秘的、独特な雰囲気、落ち着いた声",
+  ritsu:
+    "27歳女性、神秘的な雰囲気、クールで独特、低めで艶のある声、ゆっくり間を置く話し方、感情を抑えた落ち着いたトーン",
 
   // 9. Sakura - Remaja Gadis. Baik hati.
-  sakura: "10代女性、優しい、透明感のある声、思いやりがある",
+  sakura:
+    "15歳女性、優しい少女、思いやりがあり純粋、透明感のある高めの声、穏やかで丁寧な話し方、柔らかく澄んだトーン",
 
   // 10. Rara - Remaja Gadis. Pemalu, santun.
-  rara: "10代女性、恥ずかしがり屋、控えめな声、礼儀正しい",
+  rara: "15歳女性、恥ずかしがり屋、内気で控えめ、小さめで震えがちな声、ゆっくりとためらいがちな話し方、礼儀正しく遠慮気味なトーン",
 
   // ===== TOKOH PRIA (10 karakter) =====
 
   // 1. Budi - Guru Pria. Berwibawa.
-  budi: "40代男性、教師、低い声、威厳がある、落ち着いた",
+  budi: "45歳男性、高校の教師、威厳があり落ち着いている、低く響く声、ゆっくりはっきりした話し方、安定感のある権威的なトーン",
 
   // 2. Dito - Siswa SMA. Kalem, kasual.
-  dito: "10代男性、高校生、穏やかな声、自然な話し方",
+  dito: "17歳男性、高校生、穏やかでカジュアル、自然な中音域の声、標準的なテンポで飾らない話し方、リラックスした友好的なトーン",
 
   // 3. Suzuki - Pegawai Stasiun / Kantor. Tegas, formal.
-  suzuki: "30代男性、駅員、はっきりした声、業務的、丁寧",
+  suzuki:
+    "32歳男性、駅員、几帳面で業務的、はっきりとした張りのある声、テキパキとした話し方、礼儀正しく事務的なトーン",
 
   // 4. Tanaka - Ayah / Pria Dewasa. Tenang, berat.
-  tanaka: "40代男性、父親、低く落ち着いた声、ゆっくり話す",
+  tanaka:
+    "45歳男性、父親、落ち着いていて頼りがいがある、低く重みのある声、ゆっくりとした話し方、安定感のある温かいトーン",
 
   // 5. Yamada - Kakek. Ramah, berat, serak.
-  yamada: "70代男性、おじいさん、優しい、少し掠れた声、ゆっくり",
+  yamada:
+    "72歳男性、祖父、優しく穏やか、低くやや掠れた声、非常にゆっくりとした話し方、慈しみ深い温かいトーン",
 
   // 6. Kimura - Pemuda Gaul. Santai, energetik.
-  kimura: "20代男性、元気な若者、軽い感じ、早口気味",
+  kimura:
+    "23歳男性、元気な若者、軽快でノリがいい、明るめの中音域の声、早口気味でテンポの良い話し方、カジュアルで陽気なトーン",
 
   // 7. Andi - Pemuda Keren. Suara khas, dramatis & penuh semangat.
-  andi: "20代男性、情熱的な、はっきりした声、ドラマチック",
+  andi: "24歳男性、情熱的な青年、ドラマチックで自信家、はっきりと通る声、抑揚の効いた話し方、熱のこもった力強いトーン",
 
   // 8. Faisal - Pria Dewasa Kalem. Tenang, bijaksana.
-  faisal: "30代男性、知的で落ち着いた、安心感のある声",
+  faisal:
+    "34歳男性、知的で落ち着いた性格、低めで安心感のある声、ゆったりとした話し方、思慮深く穏やかなトーン",
 
   // 9. Takahashi - Pekerja Kantoran Muda. Sopan, ramah.
-  takahashi: "20代男性、会社員、爽やかな声、礼儀正しい",
+  takahashi:
+    "26歳男性、若手会社員、礼儀正しく爽やか、明瞭な中音域の声、標準的なテンポで丁寧な話し方、親しみやすいビジネストーン",
 
   // 10. Kobayashi - Pria Dewasa. Suara serius, dalam, berwibawa.
-  kobayashi: "40代男性、深い低音、真面目で威厳がある、堂々とした",
+  kobayashi:
+    "42歳男性、真面目で威厳がある、深く低い声、ゆっくりと重みのある話し方、堂々とした真剣なトーン",
 
   // ===== MASKOT =====
 
   // Zundamon - Maskot Cilik. Kekanak-kanakan, nada sangat tinggi.
-  zundamon: "子供、マスコット、とても高い声、可愛い、元気いっぱい",
+  zundamon:
+    "マスコットキャラクター、子供っぽく無邪気、非常に高くかわいい声、早口で弾むような話し方、元気いっぱいの明るいトーン",
 };
 
-// Default fallback
-const DEFAULT_FEMALE = "女性、自然な声、聞き取りやすい";
-const DEFAULT_MALE = "男性、自然な声、聞き取りやすい";
+// Default fallback — tetap ikut struktur yang sama biar gak keluar dari
+// "kerangka" suara yang lain kalau ada voice baru yang belum di-preset.
+const DEFAULT_FEMALE =
+  "成人女性、自然な話し方、聞き取りやすい標準的な声、落ち着いたテンポ";
+const DEFAULT_MALE =
+  "成人男性、自然な話し方、聞き取りやすい標準的な声、落ち着いたテンポ";
 
 function buildVoicePrompt(voice) {
   const isFemale = femaleVoices.includes(voice);
@@ -436,7 +457,18 @@ function printUsage() {
       "  --listening <term> Filter berdasarkan slug/title listening.",
       "  --type <type>      Filter tipe konten (lesson / listening).",
       "  --force            Paksa proses ulang meskipun sudah di-cache.",
+      "  --no-emoji         Matikan auto-emoji styling (default: aktif).",
       "  --help, -h         Tampilkan bantuan ini.",
+      "",
+      "Mode Audisi Suara (cari seed terbaik per karakter):",
+      "  --audition <voice>       Generate beberapa kandidat seed untuk 1 karakter.",
+      "  --audition all           Audisi SEMUA karakter sekaligus (satu per satu, otomatis).",
+      "  --candidates <num>       Jumlah kandidat seed per karakter. Default: 5",
+      '  --audition-text "..."    Kalimat contoh custom. Default: kalimat netral bawaan.',
+      "  Contoh: node scripts/tts/generate_dialogue_tts.js --audition budi --candidates 8",
+      "  Contoh: node scripts/tts/generate_dialogue_tts.js --audition all --candidates 3",
+      "  Hasil disimpan lokal di ./audition_output/{voice}/, gak masuk Supabase.",
+      "  Kalau udah nemu seed favorit, kunci di MANUAL_SEED_OVERRIDES di dalam script.",
     ].join("\n"),
   );
 }
@@ -466,6 +498,10 @@ function parseArgs(args) {
     listeningQuery: null,
     type: null,
     force: false,
+    audition: null,
+    candidates: 5,
+    auditionText: null,
+    noEmoji: false,
   };
 
   for (let index = 0; index < args.length; index += 1) {
@@ -508,6 +544,25 @@ function parseArgs(args) {
       options.force = true;
       continue;
     }
+    if (arg === "--no-emoji") {
+      options.noEmoji = true;
+      continue;
+    }
+    if (arg === "--audition") {
+      options.audition = args[index + 1]?.trim();
+      index += 1;
+      continue;
+    }
+    if (arg === "--candidates") {
+      options.candidates = Number.parseInt(args[index + 1], 10) || 5;
+      index += 1;
+      continue;
+    }
+    if (arg === "--audition-text") {
+      options.auditionText = args[index + 1];
+      index += 1;
+      continue;
+    }
   }
 
   return options;
@@ -542,16 +597,130 @@ function convertWavToMp3(wavBuffer) {
 // 🎯 SEED UNTUK KONSISTENSI SUARA
 // ==========================================
 
-function generateConsistentSeed(voice, text) {
-  // Kombinasi voice + text untuk seed yang konsisten
-  const combined = `${voice}_${text.slice(0, 30)}`;
+function generateConsistentSeed(voice) {
+  // PENTING: seed HANYA dari nama voice, bukan dari teks kalimat.
+  // Kalau teks ikut campur ke hash, tiap kalimat beda bakal dapet seed beda,
+  // dan karena mode VoiceDesign gak pakai reference audio, seed itulah yang
+  // menentukan identitas suara virtual -- hasilnya karakter yang sama bisa
+  // kedengeran kontras banget antar kalimat kalau seed-nya ikut berubah.
   let hash = 0;
-  for (let i = 0; i < combined.length; i++) {
-    const char = combined.charCodeAt(i);
+  for (let i = 0; i < voice.length; i++) {
+    const char = voice.charCodeAt(i);
     hash = (hash << 5) - hash + char;
     hash = hash & hash; // Convert to 32bit integer
   }
   return Math.abs(hash) % 2147483647; // Max int32
+}
+
+// ==========================================
+// 🎯 OVERRIDE SEED MANUAL
+// Kalau seed hasil hash-otomatis kedengeran kurang pas buat karakter
+// tertentu (misal setelah sesi audisi via --audition), kunci di sini.
+// Isi angkanya dari hasil "🎯 Seed:" yang dicetak pas audisi.
+// ==========================================
+const MANUAL_SEED_OVERRIDES = {
+  // indah: 123456789,
+  // budi: 987654321,
+};
+
+function resolveSeed(voice) {
+  if (MANUAL_SEED_OVERRIDES[voice] !== undefined) {
+    return MANUAL_SEED_OVERRIDES[voice];
+  }
+  return generateConsistentSeed(voice);
+}
+
+// ==========================================
+// 🎭 EMOJI STYLE CONTROL (Irodori-TTS VoiceDesign)
+// Model ini bisa dikontrol lewat emoji yang disisipkan di teks (bukan di
+// caption). Referensi resmi dari model card (Aratako/Irodori-TTS-600M-v3-
+// VoiceDesign), disederhanakan jadi tabel dipilih yang relevan buat dialog
+// belajar bahasa (netral, gak yang NSFW/moaning dkk):
+//
+//   👂 bisikan/dekat telinga   😮‍💨 helaan napas/menghela   ⏸️ jeda/diam
+//   🤭 tertawa kecil/cekikikan  😏 menggoda/manja           🥺 suara bergetar/ragu
+//   😮 menahan napas/kaget      🫶 lembut                    😭 isak/sedih
+//   😱 teriak/jeritan           😪 mengantuk/lesu            😴 ngigau/mendengkur
+//   ⏩ bicara cepat/terburu²    📞 lewat telepon             🐢 pelan-pelan
+//   😰 panik/gugup/gagap        😆 gembira                   💥 penuh tenaga
+//   😠 marah/kesal/ngambek      😲 terkejut/takjub           🥱 menguap
+//   😖 kesakitan/menderita      😟 khawatir                  🫣 malu²
+//   🙄 kesal/eneg               😊 senang/ceria               😎 pede/sombong
+//   👌 menyahut/mengangguk      🙏 memohon                    😌 lega/puas
+//   🤔 bertanya²/ragu           💪 dengan tenaga              🎵 bersenandung
+//   😌 tenang/lega               📖 narasi/monolog
+//
+// Emoji bisa diulang untuk menguatkan efeknya (mis. 😭😭 = tangisan lebih
+// kuat). Fungsi di bawah cuma heuristik RINGAN berbasis tanda baca & kata
+// kunci yang sering muncul di teks pelajaran/dialog Jepang -- niatnya
+// nambah sedikit ekspresi otomatis, BUKAN pengganti anotasi emosi manual.
+// Kalau sumber dialog sudah/nanti punya field emosi eksplisit, sambungkan
+// lewat parameter `emotionHint` di enrichSpeechText().
+// ==========================================
+
+const EMOTION_EMOJI_RULES = [
+  // [regex, emoji, posisi] — posisi "before" | "after"
+  {
+    pattern: /[！!]{2,}|[？?][！!]|[！!][？?]/,
+    emoji: "😲",
+    position: "before",
+  }, // terkejut/takjub
+  { pattern: /[！!]{1}$/, emoji: "💥", position: "before" }, // tegas/penuh tenaga
+  {
+    pattern: /(笑|ふふ|うふふ|えへへ|くすくす)/,
+    emoji: "🤭",
+    position: "before",
+  }, // tertawa kecil
+  { pattern: /(はぁ|ふぅ|やれやれ|ため息)/, emoji: "😮‍💨", position: "before" }, // helaan napas
+  {
+    pattern: /(え[…、]|えっ|うそ[…、]|まさか)/,
+    emoji: "😮",
+    position: "before",
+  }, // menahan napas/kaget
+  {
+    pattern: /(ごめん(なさい)?|お願いします|お願い[…、])/,
+    emoji: "🙏",
+    position: "before",
+  }, // memohon
+  { pattern: /(うれし|楽し|やった)/, emoji: "😊", position: "before" }, // senang
+  { pattern: /(心配|大丈夫かな|不安)/, emoji: "😟", position: "before" }, // khawatir
+  { pattern: /…$|\.{3,}$|、、、$/, emoji: "⏸️", position: "after" }, // jeda/menggantung
+];
+
+function enrichSpeechText(text, emotionHint = null) {
+  if (!text) return text;
+  let result = text;
+
+  // Kalau ada hint emosi eksplisit (mis. dari field data), pakai itu dulu.
+  const HINT_MAP = {
+    senang: "😊",
+    sedih: "😭",
+    marah: "😠",
+    kaget: "😲",
+    takut: "😱",
+    bisik: "👂",
+    ragu: "🥺",
+    ngantuk: "😪",
+    lega: "😌",
+    narasi: "📖",
+  };
+  if (emotionHint && HINT_MAP[emotionHint]) {
+    return `${HINT_MAP[emotionHint]}${result}`;
+  }
+
+  // Heuristik ringan berbasis pola teks. Cukup terapkan aturan PERTAMA yang
+  // cocok supaya gak numpuk banyak emoji dan bikin caption jadi berisik.
+  for (const rule of EMOTION_EMOJI_RULES) {
+    if (rule.pattern.test(result)) {
+      result =
+        rule.position === "before"
+          ? `${rule.emoji}${result}`
+          : `${result}${rule.emoji}`;
+      break;
+    }
+  }
+
+  return result;
 }
 
 // ==========================================
@@ -568,12 +737,14 @@ async function queryIrodoriTtsWithRetry(
   voice,
   retries = 3,
   initialDelay = 2000,
+  seedOverride = null,
 ) {
   let delay = initialDelay;
   const stylePrompt = buildVoicePrompt(voice);
 
-  // 🎯 Seed konsisten untuk voice + text
-  const seedValue = generateConsistentSeed(voice, text);
+  // 🎯 Seed konsisten per karakter (bukan per kalimat!), atau pakai
+  // seedOverride kalau dipanggil dari mode audisi.
+  const seedValue = seedOverride ?? resolveSeed(voice);
 
   for (let attempt = 1; attempt <= retries; attempt += 1) {
     try {
@@ -652,6 +823,68 @@ async function queryIrodoriTtsWithRetry(
 }
 
 // ==========================================
+// 🎯 MODE AUDISI: cari seed terbaik per karakter
+// ==========================================
+const DEFAULT_AUDITION_TEXT =
+  "こんにちは、はじめまして。今日はいい天気ですね。よろしくお願いします。";
+
+async function runAudition(
+  gradioApp,
+  baseApiUrl,
+  voice,
+  candidateCount,
+  customText,
+) {
+  if (!allVoices.includes(voice)) {
+    console.error(`❌ Voice "${voice}" tidak dikenal.`);
+    console.log(`💡 Voice yang tersedia:\n   ${allVoices.join(", ")}`);
+    process.exit(1);
+  }
+
+  const text = customText || DEFAULT_AUDITION_TEXT;
+  const outDir = path.resolve(process.cwd(), "audition_output", voice);
+  fs.mkdirSync(outDir, { recursive: true });
+
+  console.log(`\n🎧 Mode Audisi: "${voice}"`);
+  console.log(`📝 Kalimat contoh: ${text}`);
+  console.log(`🎯 Style/caption: ${buildVoicePrompt(voice)}`);
+  console.log(`🔢 Jumlah kandidat: ${candidateCount}\n`);
+
+  const baseSeed = generateConsistentSeed(voice);
+
+  for (let i = 0; i < candidateCount; i += 1) {
+    // Kandidat ke-0 pakai seed hash asli (baseline), sisanya offset
+    // supaya tetap deterministik/reproducible tiap kali audisi diulang.
+    const candidateSeed = i === 0 ? baseSeed : baseSeed + i * 97;
+    try {
+      console.log(`[${i + 1}/${candidateCount}] Seed: ${candidateSeed}...`);
+      const rawWavBuffer = await queryIrodoriTtsWithRetry(
+        gradioApp,
+        baseApiUrl,
+        text,
+        voice,
+        3,
+        2000,
+        candidateSeed,
+      );
+      const audioBuffer = convertWavToMp3(rawWavBuffer);
+      const filename = path.join(outDir, `seed${candidateSeed}.mp3`);
+      fs.writeFileSync(filename, audioBuffer);
+      console.log(`   ✅ Tersimpan: ${filename}`);
+      await sleep(1000);
+    } catch (err) {
+      console.error(
+        `   ❌ Kandidat seed ${candidateSeed} gagal: ${err.message}`,
+      );
+    }
+  }
+
+  console.log(
+    `\n🎉 Audisi selesai! Dengerin file-file di ${outDir}, lalu kunci seed favoritmu di MANUAL_SEED_OVERRIDES.`,
+  );
+}
+
+// ==========================================
 // PROCESS TTS ITEM
 // ==========================================
 
@@ -664,6 +897,7 @@ async function processTtsItem(
   rate = "medium",
   folder = "",
   ttsText = null,
+  useEmoji = true,
 ) {
   const cacheId = crypto
     .createHash("md5")
@@ -672,7 +906,10 @@ async function processTtsItem(
 
   const filename = folder ? `${folder}/${cacheId}.mp3` : `${cacheId}.mp3`;
   const BUCKET_NAME = "tts-cache";
-  const speechText = ttsText || text;
+  const baseSpeechText = ttsText || text;
+  const speechText = useEmoji
+    ? enrichSpeechText(baseSpeechText)
+    : baseSpeechText;
 
   // Pastikan teks dalam bahasa Jepang
   if (!/[\u3040-\u30FF\u4E00-\u9FFF]/.test(speechText)) {
@@ -742,7 +979,7 @@ async function main() {
     apiVersion: "2024-03-11",
   });
 
-  if (options.execute) {
+  if (options.execute || options.audition) {
     if (!irodoriApiUrl) {
       console.error("❌ IRODORI_API_URL not found!");
       process.exit(1);
@@ -755,6 +992,39 @@ async function main() {
       console.error("❌ Connection failed:", err.message);
       process.exit(1);
     }
+  }
+
+  if (options.audition === "all") {
+    console.log(
+      `\n🎧 Audisi SEMUA karakter (${allVoices.length} voice) — ${options.candidates} kandidat masing-masing.`,
+    );
+    console.log(
+      `⏱️  Estimasi total: ~${allVoices.length * options.candidates} kali generate, bisa makan waktu cukup lama.\n`,
+    );
+    for (const v of allVoices) {
+      await runAudition(
+        gradioApp,
+        irodoriApiUrl,
+        v,
+        options.candidates,
+        options.auditionText,
+      );
+    }
+    console.log(
+      `\n🎉🎉 Audisi semua karakter selesai! Cek folder ./audition_output/{nama_voice}/ satu-satu.`,
+    );
+    process.exit(0);
+  }
+
+  if (options.audition) {
+    await runAudition(
+      gradioApp,
+      irodoriApiUrl,
+      options.audition,
+      options.candidates,
+      options.auditionText,
+    );
+    process.exit(0);
   }
 
   try {
@@ -864,6 +1134,7 @@ async function main() {
               const voice = detectVoice(rawSpeaker, i);
               addItem(
                 lineText,
+                null, // belum ada data furigana untuk listeningMaterial
                 voice,
                 `listening/${row.slug?.current || "unknown"}`,
               );
@@ -952,6 +1223,7 @@ async function main() {
           "medium",
           item.folder,
           item.furigana,
+          !options.noEmoji,
         );
         successCount += 1;
         consecutiveFailures = 0;
