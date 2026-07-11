@@ -504,7 +504,7 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
       
       let vItems: VocabRow[] = [];
       if (hasUUIDs) {
-        const { data } = await supabase.from("vocab").select("id, word, furigana, romaji, meaning_id, hinshi, pitch_accent, usage_notes, mnemonic, slug").in("id", cleanList);
+        const { data } = await supabase.from("vocab").select("id, word, furigana, romaji, meaning_id, hinshi, pitch_accent, usage_notes, mnemonic, slug, audio_url").in("id", cleanList);
         vItems = data || [];
       } else {
         // Normalisasi daftar pencarian untuk mencakup bagian kata sebelum tanda hubung '-'
@@ -517,8 +517,8 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
         });
 
         const [byWord, bySlug] = await Promise.all([
-          supabase.from("vocab").select("id, word, furigana, romaji, meaning_id, hinshi, pitch_accent, usage_notes, mnemonic, slug").in("word", searchTerms),
-          supabase.from("vocab").select("id, word, furigana, romaji, meaning_id, hinshi, pitch_accent, usage_notes, mnemonic, slug").in("slug", searchTerms)
+          supabase.from("vocab").select("id, word, furigana, romaji, meaning_id, hinshi, pitch_accent, usage_notes, mnemonic, slug, audio_url").in("word", searchTerms),
+          supabase.from("vocab").select("id, word, furigana, romaji, meaning_id, hinshi, pitch_accent, usage_notes, mnemonic, slug, audio_url").in("slug", searchTerms)
         ]);
         vItems = [...(byWord.data || []), ...(bySlug.data || [])];
         vItems = Array.from(new Map(vItems.map(item => [item.id, item])).values());
