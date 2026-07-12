@@ -292,11 +292,13 @@ export const SPEAKER_MAP: Record<string, TtsVoice> = {
   "hayashi": TTS_VOICES.HAYASHI,
   "林": TTS_VOICES.HAYASHI,
   "はやし": TTS_VOICES.HAYASHI,
+  "ハヤシ": TTS_VOICES.HAYASHI,
 
   // === SATO (もち子さん / Mochiko-san) — Resepsionis ===
   "sato": TTS_VOICES.SATO,
   "佐藤": TTS_VOICES.SATO,
   "さとう": TTS_VOICES.SATO,
+  "サトウ": TTS_VOICES.SATO,
 
   // === AYU (WhiteCUL) — Remaja Santai ===
   "ayu": TTS_VOICES.AYU,
@@ -334,21 +336,25 @@ export const SPEAKER_MAP: Record<string, TtsVoice> = {
   "suzuki": TTS_VOICES.SUZUKI,
   "鈴木": TTS_VOICES.SUZUKI,
   "すずき": TTS_VOICES.SUZUKI,
+  "スズキ": TTS_VOICES.SUZUKI,
 
   // === TANAKA (雀松朱司 / Sakamatsuri Shuji) — Ayah / Pria Paruh Baya ===
   "tanaka": TTS_VOICES.TANAKA,
   "田中": TTS_VOICES.TANAKA,
   "たなか": TTS_VOICES.TANAKA,
+  "タナカ": TTS_VOICES.TANAKA,
 
   // === YAMADA (麒ヶ島宗麟 / Kigasajima Sourin) — Kakek ===
   "yamada": TTS_VOICES.YAMADA,
   "山田": TTS_VOICES.YAMADA,
   "やまだ": TTS_VOICES.YAMADA,
+  "ヤマダ": TTS_VOICES.YAMADA,
 
   // === KIMURA (白上虎太郎 / Shirakami Koutarou) — Pemuda Gaul ===
   "kimura": TTS_VOICES.KIMURA,
   "木村": TTS_VOICES.KIMURA,
   "きむら": TTS_VOICES.KIMURA,
+  "キムラ": TTS_VOICES.KIMURA,
 
   // === ANDI (†聖騎士 紅桜† / Holy Knight Red Sakura) — Pemuda Dramatis ===
   "andi": TTS_VOICES.ANDI,
@@ -362,11 +368,13 @@ export const SPEAKER_MAP: Record<string, TtsVoice> = {
   "takahashi": TTS_VOICES.TAKAHASHI,
   "高橋": TTS_VOICES.TAKAHASHI,
   "たかはし": TTS_VOICES.TAKAHASHI,
+  "タカハシ": TTS_VOICES.TAKAHASHI,
 
   // === KOBAYASHI (離途 / Rito) — Pria Serius ===
   "kobayashi": TTS_VOICES.KOBAYASHI,
   "小林": TTS_VOICES.KOBAYASHI,
   "こばやし": TTS_VOICES.KOBAYASHI,
+  "コバヤシ": TTS_VOICES.KOBAYASHI,
 
   // === NAMONASHI (あんこもん / Ankomon) — Pria Anonim ===
   "namonashi": TTS_VOICES.NAMONASHI,
@@ -376,6 +384,7 @@ export const SPEAKER_MAP: Record<string, TtsVoice> = {
   "ooba": TTS_VOICES.OOBA,
   "大庭": TTS_VOICES.OOBA,
   "おおば": TTS_VOICES.OOBA,
+  "オオバ": TTS_VOICES.OOBA,
 };
 
 export type TtsVoice = typeof TTS_VOICES[keyof typeof TTS_VOICES];

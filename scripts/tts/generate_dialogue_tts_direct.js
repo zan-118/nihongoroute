@@ -38,128 +38,114 @@ function logFailure(text, voice, errorMsg) {
 }
 
 // Voice mappings (Mirrors existing config)
-const FEMALE_KEYWORDS = [
-  "女", "母", "姉", "妹", "奥", "彼女", "娘", "ちゃん", "chan",
-  "先生",
-  "ゆき", "はna", "さき", "あおい", "みku", "ゆmi", "けいこ", "みsa",
-  "Yuki", "Hana", "Saki", "Aoi", "Miku", "Yumi", "Keiko", "Misa",
-];
-const MALE_KEYWORDS = [
-  "男", "父", "兄", "弟", "夫", "彼", "くん", "君", "kun",
-  "たろう", "けんじ", "ひろし", "けん", "しんじ", "だいち", "ケン",
-  "Taro", "Kenji", "Hiroshi", "Ken", "Shinji", "Daichi",
-];
-
-const femaleVoices = ["zundamon", "lara", "indah", "siti", "dewi", "hayashi", "sato", "ayu", "ritsu"];
-const maleVoices = ["namonashi", "dito", "budi", "suzuki", "tanaka", "yamada", "kimura", "andi", "faisal", "takahashi", "kobayashi", "ooba"];
-const allVoices = [...femaleVoices, ...maleVoices];
-
 const SPEAKER_MAP = {
+  // Wanita
   "indah": "indah", "インダ": "indah", "インダハ": "indah",
-  "lara": "lara", "ララ": "lara",
+  "lala": "lala", "ララ": "lala", "らら": "lala", "lara": "lala",
   "siti": "siti", "シティ": "siti",
   "dewi": "dewi", "デウィ": "dewi",
-  "hayashi": "hayashi", "林": "hayashi", "はやし": "hayashi",
-  "sato": "sato", "佐藤": "sato", "さとう": "sato",
-  "ayu": "ayu", "アユ": "ayu",
+  "hayashi": "hayashi", "林": "hayashi", "はやし": "hayashi", "ハヤシ": "hayashi",
+  "sato": "sato", "佐藤": "sato", "さとう": "sato", "サトウ": "sato",
+  "ayu": "ayu", "アユ": "ayu", "あゆ": "ayu",
   "zundamon": "zundamon", "ずんだもん": "zundamon", "ズンダモン": "zundamon",
-  "ritsu": "ritsu", "りつ": "ritsu",
-  "budi": "budi", "ブディ": "budi",
-  "dito": "dito", "ディト": "dito",
-  "suzuki": "suzuki", "鈴木": "suzuki", "すずき": "suzuki",
-  "tanaka": "tanaka", "田中": "tanaka", "たなか": "tanaka",
-  "yamada": "yamada", "山田": "yamada", "やまだ": "yamada",
-  "kimura": "kimura", "木村": "kimura", "きむら": "kimura",
-  "andi": "andi", "アンディ": "andi",
-  "faisal": "faisal", "ファイサル": "faisal",
-  "takahashi": "takahashi", "高橋": "takahashi", "たかはし": "takahashi",
-  "kobayashi": "kobayashi", "小林": "kobayashi", "こばやし": "kobayashi",
-  "namonashi": "namonashi", "名無し": "namonashi",
-  "ooba": "ooba", "大庭": "ooba", "おおば": "ooba"
+  "ritsu": "ritsu", "りつ": "ritsu", "リツ": "ritsu",
+  "sakura": "sakura", "さくら": "sakura", "サクラ": "sakura",
+  "raara": "raara", "らーら": "raara", "ラーラ": "raara", "rara": "raara",
+
+  // Pria
+  "budi": "budi", "ブディ": "budi", "budhi": "budi",
+  "dito": "dito", "ディト": "dito", "ditho": "dito",
+  "suzuki": "suzuki", "鈴木": "suzuki", "すずき": "suzuki", "スズキ": "suzuki",
+  "tanaka": "tanaka", "田中": "tanaka", "たなか": "tanaka", "タナカ": "tanaka",
+  "yamada": "yamada", "山田": "yamada", "やまだ": "yamada", "ヤマダ": "yamada",
+  "kimura": "kimura", "木村": "kimura", "きむら": "kimura", "キムラ": "kimura",
+  "andi": "andi", "アンディ": "andi", "andhi": "andi",
+  "faisal": "faisal", "ファイサル": "faisal", "faizal": "faisal",
+  "takahashi": "takahashi", "高橋": "takahashi", "たかはし": "takahashi", "タカハシ": "takahashi",
+  "kobayashi": "kobayashi", "小林": "kobayashi", "こばやし": "kobayashi", "コバヤシ": "kobayashi",
+  "namonashi": "namonashi", "名無し": "namonashi", "なもなし": "namonashi",
+  "ooba": "ooba", "大庭": "ooba", "おおば": "ooba", "オオバ": "ooba",
+  "adit": "adit", "アディット": "adit",
+  "ken": "ken", "ケン": "ken",
 };
 
-function detectVoice(speaker, fallbackIndex = 0) {
+const GEMINI_VOICE_MAP = {
+  // Pemetaan 24 suara berdasarkan karakteristik vokal Gemini
+  // Wanita
+  "indah": "Aoede",        // Dewasa/Guru (Breezy/Clear)
+  "lala": "Zephyr",        // Ceria/Cepat (Bright)
+  "siti": "Vindemiatrix",  // Lembut/Kalem (Gentle)
+  "dewi": "Leda",          // Anak/Muda (Muda)
+  "hayashi": "Sulafat",    // Ibu/Bijaksana (Hangat)
+  "sato": "Erinome",       // Resepsionis (Clear)
+  "ayu": "Callirrhoe",     // Modern/Teman (Santai)
+  "zundamon": "Autonoe",   // Maskot (Bright)
+  "ritsu": "Enceladus",    // Misterius (Breathy)
+  "sakura": "Kore",        // Murni/Baik (Firm/Gentle)
+  "raara": "Achernar",     // Pemalu/Pelan (Soft)
+
+  // Pria
+  "budi": "Charon",        // Guru/Berwibawa (Informatif)
+  "dito": "Umbriel",       // Siswa kalem (Kasual/Chill)
+  "suzuki": "Iapetus",     // Pegawai formal (Jelas)
+  "tanaka": "Orus",        // Ayah/Tegas (Firm)
+  "yamada": "Algenib",     // Kakek (Berbatu/Gravelly)
+  "kimura": "Fenrir",      // Gaul/Energetik (Excitable)
+  "andi": "Alnilam",       // Dramatis/Keren (Firm)
+  "faisal": "Algieba",     // Kalem/Bijaksana (Halus/Smooth)
+  "takahashi": "Achird",   // Pekerja ramah (Ramah)
+  "kobayashi": "Rasalgethi", // Serius/Dalam (Informatif)
+  "namonashi": "Sadaltager", // Narator (Berpengetahuan)
+  "ooba": "Sadachbia",     // Bersemangat (Lively)
+  "adit": "Puck",          // Pemuda ceria (Ceria)
+  "ken": "Laomedeia",      // Santai/Upbeat (Upbeat)
+};
+
+const DIRECTOR_NOTES = {
+  "indah": "Style: Calm and intellectual. Pace: Slow and polite.",
+  "lala": "Style: 'Vocal Smile', very bright and energetic high school girl. Pace: Fast, bouncing cadence.",
+  "siti": "Style: Gentle, soft-spoken, and reassuring. Pace: Relaxed.",
+  "dewi": "Style: Innocent, spoiled child. Dynamics: High pitch, excitable.",
+  "hayashi": "Style: Motherly, wise, and warm. Pace: Slow and comforting.",
+  "sato": "Style: Formal, polite receptionist. Pace: Standard, professional.",
+  "ayu": "Style: Casual, friendly, modern youth. Pace: Natural and relaxed.",
+  "ritsu": "Style: Mysterious, cool, breathless. Pace: Very slow with pauses.",
+  "sakura": "Style: Pure, gentle, and caring girl. Pace: Soft and polite.",
+  "raara": "Style: Shy, hesitant, and quiet. Pace: Slow and slightly trembling.",
+  "zundamon": "Style: Childish mascot, extremely high energy. Pace: Very fast and jumpy.",
+  "budi": "Style: Authoritative but warm teacher. Voice: Deep and resonant. Pace: Slow and clear.",
+  "dito": "Style: Chill, casual high school boy. Pace: Standard, relaxed.",
+  "suzuki": "Style: Crisp, formal office worker. Pace: Fast and efficient.",
+  "tanaka": "Style: Dependable father figure. Voice: Heavy and deep. Pace: Slow and steady.",
+  "yamada": "Style: Kind grandfather. Voice: Gravelly and breathy. Pace: Very slow and warm.",
+  "kimura": "Style: Energetic, casual youth. Pace: Fast and upbeat.",
+  "andi": "Style: Passionate, dramatic, confident. Dynamics: Strong projection.",
+  "faisal": "Style: Calm, intellectual, and smooth. Pace: Relaxed and thoughtful.",
+  "takahashi": "Style: Friendly, polite young businessman. Pace: Natural.",
+  "kobayashi": "Style: Serious, strict, and deep. Pace: Deliberate and heavy.",
+  "namonashi": "Style: Neutral narrator. Pace: Standard.",
+  "ooba": "Style: Lively and boisterous. Pace: Energetic.",
+  "adit": "Style: Cheerful, friendly boy. Pace: Upbeat.",
+  "ken": "Style: Cool, confident, casual. Pace: Steady."
+};
+
+function detectVoice(speaker) {
   if (!speaker || speaker === "???" || speaker.trim() === "") {
-    return allVoices[fallbackIndex % allVoices.length];
+    return "namonashi";
   }
+  
   const cleanSpeaker = speaker.replace(/[- ]?(さん|くん|ちゃん|様|君|sama|san|kun|chan)$/i, "").trim().toLowerCase();
+  
   if (SPEAKER_MAP[cleanSpeaker]) {
     return SPEAKER_MAP[cleanSpeaker];
   }
-  if (allVoices.includes(cleanSpeaker)) {
+  
+  if (GEMINI_VOICE_MAP[cleanSpeaker]) {
     return cleanSpeaker;
   }
-  const speakerLowerOriginal = speaker.toLowerCase().trim();
-  let preDetectedGender = null;
-  if (speakerLowerOriginal.endsWith("ちゃん") || speakerLowerOriginal.endsWith("chan")) {
-    preDetectedGender = "female";
-  } else if (speakerLowerOriginal.endsWith("くん") || speakerLowerOriginal.endsWith("kun") || speakerLowerOriginal.endsWith("君")) {
-    preDetectedGender = "male";
-  }
-  let hash = 0;
-  for (let i = 0; i < cleanSpeaker.length; i++) {
-    hash = cleanSpeaker.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const index = Math.abs(hash);
-  if (preDetectedGender === "female") {
-    return femaleVoices[index % femaleVoices.length];
-  }
-  if (preDetectedGender === "male") {
-    return maleVoices[index % maleVoices.length];
-  }
-  const EXACT_FEMALE = [
-    "ayu", "siti", "dewi", "rara", "indah", "sakura", "lara", "sato", "hayashi",
-    "アユ", "シティ", "デウィ", "ララ", "インダ", "さくら", "サクラ", "さとう", "はやし"
-  ];
-  const EXACT_MALE = [
-    "budi", "faisal", "andi", "dito", "adit", "ken", "suzuki", "tanaka", "yamada", "kimura", "takahashi", "kobayashi",
-    "ブディ", "ファイサル", "アンディ", "ディト", "アディット", "ケン", "すずき", "たなか", "やまだ", "きむら", "たかはし", "こばやし"
-  ];
-  if (EXACT_FEMALE.includes(cleanSpeaker)) {
-    return femaleVoices[index % femaleVoices.length];
-  }
-  if (EXACT_MALE.includes(cleanSpeaker)) {
-    return maleVoices[index % maleVoices.length];
-  }
-  const isFemale = FEMALE_KEYWORDS.some(k => cleanSpeaker.includes(k));
-  const isMale   = MALE_KEYWORDS.some(k => cleanSpeaker.includes(k));
-  if (isFemale && !isMale) {
-    return femaleVoices[index % femaleVoices.length];
-  }
-  if (isMale && !isFemale) {
-    return maleVoices[index % maleVoices.length];
-  }
-  return allVoices[index % allVoices.length];
+  
+  throw new Error(`Karakter tidak dikenal: "${speaker}". Script dikonfigurasi secara Strict Mode (tidak menerima karakter baru). Pastikan ejaan karakter sudah benar di sumber materi.`);
 }
-
-const GEMINI_VOICE_MAP = {
-  // Wanita
-  "indah": "Zephyr",       // default premium (Bright)
-  "lara": "Despina",      // youthful, gentle
-  "siti": "Vindemiatrix", // gentle/clear (Gentle)
-  "dewi": "Leda",         // young, cheerful, upbeat child/student
-  "hayashi": "Gacrux",    // mature/academic (Mature)
-  "sato": "Sulafat",      // friendly/mature (Warm)
-  "ayu": "Erinome",       // cool/clear (Clear)
-  "zundamon": "Autonoe",  // mascot child/neutral (Bright/Youthful)
-  "ritsu": "Achernar",    // cool/neutral (Soft)
-  "sakura": "Callirrhoe", // youthful, clear female
-  "rara": "Kore",         // gentle, soft, clear female
-
-  // Pria
-  "budi": "Charon",       // default polite/formal (Informative)
-  "dito": "Alnilam",      // cool/deep (Firm)
-  "suzuki": "Iapetus",    // smart/young (Clear)
-  "tanaka": "Fenrir",     // energetic/rough (Excitable)
-  "yamada": "Achird",     // warm/casual (Friendly)
-  "kimura": "Zubenelgenubi", // youthful, casual, relaxed male (slang)
-  "andi": "Orus",         // dramatic/heroic (Firm)
-  "faisal": "Algieba",    // polite, formal, smooth, calm male
-  "takahashi": "Puck",    // youthful, upbeat, friendly male
-  "kobayashi": "Rasalgethi", // mature, deep, informative, warm male
-  "namonashi": "Algenib",  // middle-aged/rough (Gravelly)
-  "ooba": "Sadachbia",    // boy/child (Lively)
-};
 
 function printUsage() {
   console.log(
@@ -197,6 +183,39 @@ function loadEnvFile() {
 
     process.env[key] = rawValue.replace(/^['"]|['"]$/g, "");
   });
+}
+
+// --- Load Context Cache from .cache ---
+const CACHE_DIR = path.resolve(process.cwd(), ".cache");
+const lessonContextCache = {}; // format: { "n5_1": "Context string..." }
+
+function loadLocalCache() {
+  if (!fs.existsSync(CACHE_DIR)) return;
+  const files = fs.readdirSync(CACHE_DIR).filter(f => f.endsWith("_progress.json"));
+  for (const file of files) {
+    try {
+      const level = file.split("_")[0].toLowerCase(); // e.g. "n5"
+      const content = JSON.parse(fs.readFileSync(path.join(CACHE_DIR, file), "utf8"));
+      if (content.lessons) {
+        for (const [orderNumber, lessonData] of Object.entries(content.lessons)) {
+          const title = lessonData.title || "";
+          const summary = lessonData.summary || "";
+          const canDo = lessonData.generation_context?.can_do || "";
+          
+          const ctx = [];
+          if (title) ctx.push(`Title: ${title}`);
+          if (summary) ctx.push(`Situation: ${summary}`);
+          if (canDo) ctx.push(`Goal: ${canDo}`);
+          
+          if (ctx.length > 0) {
+            lessonContextCache[`${level}_${orderNumber}`] = ctx.join("\n");
+          }
+        }
+      }
+    } catch (e) {
+      console.warn(`⚠️ Gagal memuat cache konteks dari ${file}:`, e.message);
+    }
+  }
 }
 
 function parseArgs(args) {
@@ -312,7 +331,7 @@ function getGeminiModels() {
 let globalKeyIndex = 0;
 let globalModelIndex = 0;
 
-async function queryGeminiTtsWithRetry(text, geminiVoice, retries = 5, initialDelay = 5000) {
+async function queryGeminiTtsWithRetry(text, geminiVoice, characterId, context = "", retries = 5, initialDelay = 5000) {
   const apiKeys = getGeminiApiKeys();
   if (apiKeys.length === 0) {
     throw new Error("GEMINI_API_KEY tidak ditemukan di environment.");
@@ -321,14 +340,63 @@ async function queryGeminiTtsWithRetry(text, geminiVoice, retries = 5, initialDe
   const models = getGeminiModels();
   let delay = initialDelay;
 
-  // Pastikan jumlah percobaan minimal cukup untuk mencoba seluruh kombinasi (key * model) setidaknya 2 kali
   const maxAttempts = Math.max(retries, apiKeys.length * models.length * 2);
   let keysTriedForCurrentModel = 0;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
     const currentApiKey = apiKeys[globalKeyIndex % apiKeys.length];
     const currentModel = models[globalModelIndex % models.length];
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${currentApiKey}`;
+    
+    const isInteractionsApi = currentModel.includes("3.1");
+    let url, requestBody;
+    
+    const notes = DIRECTOR_NOTES[characterId] || "Style: Neutral reading.";
+    let sceneSection = "";
+    if (context) {
+      sceneSection = `\n## THE SCENE\n${context}\n`;
+    }
+
+    const promptText = `
+### DIRECTOR'S NOTES
+Language: Native Japanese [BCP-47: ja-JP]. You are a Japanese voice actor. Pronounce the transcript with fluent, native Japanese intonation.
+${notes}
+${sceneSection}
+#### TRANSCRIPT
+${text}
+`.trim();
+
+    if (isInteractionsApi) {
+      url = `https://generativelanguage.googleapis.com/v1beta/interactions?key=${currentApiKey}`;
+      requestBody = {
+        model: currentModel,
+        input: promptText,
+        response_format: { type: "audio" },
+        generation_config: {
+          speech_config: [ { voice: geminiVoice } ]
+        }
+      };
+    } else {
+      url = `https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${currentApiKey}`;
+      requestBody = {
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: text }],
+          },
+        ],
+        systemInstruction: {
+          parts: [{ text: `You are a text-to-speech reader. Do not converse. Emulate this persona:\n${notes}\n\nContext:\n${context}` }]
+        },
+        generationConfig: {
+          responseModalities: ["AUDIO"],
+          speechConfig: {
+            voiceConfig: {
+              prebuiltVoiceConfig: { voiceName: geminiVoice },
+            },
+          },
+        },
+      };
+    }
 
     try {
       const response = await fetch(url, {
@@ -336,27 +404,7 @@ async function queryGeminiTtsWithRetry(text, geminiVoice, retries = 5, initialDe
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts: [{ text: text }],
-            },
-          ],
-          systemInstruction: {
-            parts: [{ text: "You are a text-to-speech reader. Read the input text exactly as written, word for word. Do not reply, converse, explain, or output any text." }]
-          },
-          generationConfig: {
-            responseModalities: ["AUDIO"],
-            speechConfig: {
-              voiceConfig: {
-                prebuiltVoiceConfig: {
-                  voiceName: geminiVoice,
-                },
-              },
-            },
-          },
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
@@ -369,22 +417,13 @@ async function queryGeminiTtsWithRetry(text, geminiVoice, retries = 5, initialDe
         const status = response.status;
         const msg = errorJson?.error?.message || errorText;
 
-        // 429 = Rate limit, 502/503 = Server overload, 403 = Key diblokir/dilarang
+        // 429 = Rate limit, 502/503 = Server overload, 403 = Key diblokir
         if (status === 429 || status === 502 || status === 503 || status === 403) {
-          const hasTriedAllKeys = (attempt % apiKeys.length === 0);
-
-          if (apiKeys.length > 1 && !hasTriedAllKeys) {
+          if (apiKeys.length > 1 && keysTriedForCurrentModel + 1 < apiKeys.length) {
             console.warn(`   ⚠️  [Gemini TTS Coba ${attempt}/${maxAttempts}] Key #${(globalKeyIndex % apiKeys.length) + 1} terkena error ${status} (Model: ${currentModel}). Memutar ke key berikutnya...`);
             globalKeyIndex += 1;
             keysTriedForCurrentModel += 1;
-
-            if (keysTriedForCurrentModel >= apiKeys.length) {
-              keysTriedForCurrentModel = 0;
-              globalModelIndex += 1;
-              console.warn(`   🔄 [Gemini TTS] Seluruh key untuk model ${currentModel} telah dicoba. Memutar ke model berikutnya: ${models[globalModelIndex % models.length]}...`);
-            }
-
-            await sleep(1000); // delay singkat sebelum mencoba key berikutnya
+            await sleep(1000);
             continue;
           }
 
@@ -402,21 +441,13 @@ async function queryGeminiTtsWithRetry(text, geminiVoice, retries = 5, initialDe
                 waitMs = Math.ceil(parseFloat(resetMatch[1]) * 1000) + 2000;
               }
             }
-          } else {
-            // Untuk 502/503/403, jika semua key sudah dicoba dan gagal, tunggu 30 detik sebelum mengulangi loop
-            waitMs = 30000;
           }
 
-          console.warn(`   ⚠️  [Gemini TTS Coba ${attempt}/${maxAttempts}] Semua key ter-limit / bermasalah (Status: ${status}, Model: ${currentModel}). Menunggu ${Math.ceil(waitMs / 1000)} detik...`);
+          console.warn(`   ⏳ Limit API tercapai pada semua key. Menunggu ${Math.ceil(waitMs / 1000)} detik untuk reset quota sebelum retry...`);
           await sleep(waitMs);
 
-          globalKeyIndex += 1; // tetap putar key setelah sleep
-          keysTriedForCurrentModel += 1;
-          if (keysTriedForCurrentModel >= apiKeys.length) {
-            keysTriedForCurrentModel = 0;
-            globalModelIndex += 1;
-            console.warn(`   🔄 [Gemini TTS] Seluruh key untuk model ${currentModel} telah dicoba. Memutar ke model berikutnya: ${models[globalModelIndex % models.length]}...`);
-          }
+          // Jangan memutar model! Quota sudah di-reset, jadi kita bisa mencoba model yang sama lagi.
+          keysTriedForCurrentModel = 0;
           continue;
         }
 
@@ -424,26 +455,37 @@ async function queryGeminiTtsWithRetry(text, geminiVoice, retries = 5, initialDe
       }
 
       const data = await response.json();
-      const candidate = data.candidates?.[0];
-      if (!candidate) {
-        throw new Error("Respon Gemini kosong (no candidates).");
+
+      if (isInteractionsApi) {
+        const step = data.steps?.find(s => s.type === "model_output");
+        const audioPart = step?.content?.find(c => c.type === "audio" || c.mime_type?.startsWith("audio/"));
+        if (!audioPart || !audioPart.data) {
+          throw new Error("Respon Gemini Interactions tidak berisi data audio.");
+        }
+        const pcmBuffer = Buffer.from(audioPart.data, "base64");
+        return convertPcmToMp3(pcmBuffer, audioPart.sample_rate || 24000);
+      } else {
+        const candidate = data.candidates?.[0];
+        if (!candidate) {
+          throw new Error("Respon Gemini kosong (no candidates).");
+        }
+
+        const part = candidate.content?.parts?.find((p) => p.inlineData);
+        if (!part || !part.inlineData) {
+          throw new Error("Respon Gemini tidak berisi audio inlineData.");
+        }
+
+        const pcmBuffer = Buffer.from(part.inlineData.data, "base64");
+        const mimeType = part.inlineData.mimeType || "audio/L16;codec=pcm;rate=24000";
+
+        let sampleRate = 24000;
+        const rateMatch = mimeType.match(/rate=(\d+)/);
+        if (rateMatch) {
+          sampleRate = parseInt(rateMatch[1], 10);
+        }
+
+        return convertPcmToMp3(pcmBuffer, sampleRate);
       }
-
-      const part = candidate.content?.parts?.find((p) => p.inlineData);
-      if (!part || !part.inlineData) {
-        throw new Error("Respon Gemini tidak berisi audio inlineData.");
-      }
-
-      const pcmBuffer = Buffer.from(part.inlineData.data, "base64");
-      const mimeType = part.inlineData.mimeType || "audio/L16;codec=pcm;rate=24000";
-
-      let sampleRate = 24000;
-      const rateMatch = mimeType.match(/rate=(\d+)/);
-      if (rateMatch) {
-        sampleRate = parseInt(rateMatch[1], 10);
-      }
-
-      return convertPcmToMp3(pcmBuffer, sampleRate);
     } catch (err) {
       if (attempt === maxAttempts) throw err;
       console.warn(`   ⚠️  [Gemini TTS Coba ${attempt}/${maxAttempts}] Gagal: ${err.message}. Memutar key/model & Retrying in ${delay / 1000}s...`);
@@ -468,7 +510,7 @@ async function queryGeminiTtsWithRetry(text, geminiVoice, retries = 5, initialDe
 }
 
 
-async function processTtsItem(supabase, text, voice, rate = "medium", folder = "") {
+async function processTtsItem(supabase, text, voice, rate = "medium", folder = "", context = "") {
   const cacheId = crypto.createHash("md5").update(`${text}_${voice}_${rate}`).digest("hex");
   const filename = folder ? `${folder}/${cacheId}.mp3` : `${cacheId}.mp3`;
   const BUCKET_NAME = "tts-cache";
@@ -478,7 +520,7 @@ async function processTtsItem(supabase, text, voice, rate = "medium", folder = "
     throw new Error(`Suara Gemini untuk '${voice}' tidak ditemukan.`);
   }
 
-  const mp3Buffer = await queryGeminiTtsWithRetry(text, geminiVoice);
+  const mp3Buffer = await queryGeminiTtsWithRetry(text, geminiVoice, voice, context);
   console.log(`   └─ [Gemini TTS] Sintesis & konversi sukses (${geminiVoice}).`);
 
   const { error: uploadError } = await supabase.storage
@@ -518,6 +560,7 @@ function askQuestion(query) {
 
 async function main() {
   loadEnvFile();
+  loadLocalCache();
   let options = parseArgs(process.argv.slice(2));
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -539,18 +582,18 @@ async function main() {
   try {
     const itemsToProcess = [];
 
-    const addItem = (text, voice, folder = "") => {
+    const addItem = (text, voice, folder = "", context = "") => {
       if (!text) return;
       const clean = text.trim();
       if (!clean) return;
       
       const exists = itemsToProcess.some((i) => i.text === clean && i.voice === voice);
       if (!exists) {
-        itemsToProcess.push({ text: clean, voice, folder });
+        itemsToProcess.push({ text: clean, voice, folder, context });
       }
     };
 
-    const processContentBlocks = (blocks, folder = "") => {
+    const processContentBlocks = (blocks, folder = "", contextString = "") => {
       if (!Array.isArray(blocks)) return;
       blocks.forEach((block) => {
         const type = block.type || block._type;
@@ -560,8 +603,8 @@ async function main() {
             const parts = line.split(/[：:]/);
             const rawSpeaker = parts.length > 1 ? parts[0].trim() : undefined;
             const lineText = parts.length > 1 ? parts.slice(1).join("：").trim() : line.trim();
-            const voice = detectVoice(rawSpeaker, i);
-            addItem(lineText, voice, folder);
+            const voice = detectVoice(rawSpeaker);
+            addItem(lineText, voice, folder, contextString);
           });
         }
       });
@@ -646,7 +689,18 @@ async function main() {
     }
     const { data: supabaseLessons } = await sbQuery;
     if (supabaseLessons) {
-      supabaseLessons.forEach((row) => processContentBlocks(row.content_blocks, `lessons/${row.slug}`));
+      supabaseLessons.forEach((row) => {
+        let ctxStr = "";
+        const match = row.slug?.match(/^(n[1-5])/i);
+        if (match && row.order_number) {
+          const level = match[1].toLowerCase();
+          ctxStr = lessonContextCache[`${level}_${row.order_number}`] || "";
+        }
+        if (!ctxStr && row.title) {
+          ctxStr = `Title: ${row.title}`;
+        }
+        processContentBlocks(row.content_blocks, `lessons/${row.slug}`, ctxStr);
+      });
     }
 
     console.log(`📊 Total baris teks dialog/contoh kalimat unik yang ditemukan: ${itemsToProcess.length}`);
@@ -714,7 +768,7 @@ async function main() {
       const item = targetItems[idx];
       try {
         console.log(`[${idx + 1}/${targetItems.length}] Menyintesis: "${item.text}" [Voice: ${item.voice}]`);
-        await processTtsItem(supabase, item.text, item.voice, "medium", item.folder);
+        await processTtsItem(supabase, item.text, item.voice, "medium", item.folder, item.context);
         successCount += 1;
         consecutiveFailures = 0; 
         await sleep(22000); // 22s delay agar aman di bawah rate limit 3 RPM Gemini Free Tier
