@@ -134,7 +134,7 @@ function detectVoice(speaker) {
     return "namonashi";
   }
   
-  const cleanSpeaker = speaker.replace(/[- ]?(さん|くん|ちゃん|様|君|sama|san|kun|chan)$/i, "").trim().toLowerCase();
+  const cleanSpeaker = speaker.replace(/[- ]?(さん|くん|ちゃん|様|君|先生|sama|san|kun|chan|sensei)$/i, "").trim().toLowerCase();
   
   if (SPEAKER_MAP[cleanSpeaker]) {
     return SPEAKER_MAP[cleanSpeaker];
