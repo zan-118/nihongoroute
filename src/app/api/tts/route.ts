@@ -38,6 +38,8 @@ const ALLOWED_VOICES = new Set([
   "namonashi",
   "ritsu",
   "ooba",
+  "sakura",
+  "rara",
 ]);
 
 const CANONICAL_TO_JAPANESE: Record<string, string> = {
@@ -59,6 +61,8 @@ const CANONICAL_TO_JAPANESE: Record<string, string> = {
   andi: "アンディ",
   faisal: "ファイサル",
   ritsu: "リツ",
+  sakura: "サクラ",
+  rara: "ラーラ",
 };
 
 export async function GET(req: NextRequest) {
