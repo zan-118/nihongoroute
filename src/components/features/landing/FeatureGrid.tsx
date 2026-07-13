@@ -77,6 +77,8 @@ function JlptQuizPlayground() {
           <button
             key={opt.key}
             type="button"
+            aria-pressed={selected === opt.key}
+            aria-label={`Pilih jawaban ${opt.key}: ${opt.label}`}
             onClick={() => setSelected(opt.key)}
             className={`py-1.5 px-3 rounded-lg border text-xs font-bold transition-all ${
               selected === opt.key
@@ -357,8 +359,11 @@ export function FeatureGrid() {
           {/* TOMBOL NAVIGASI LANGKAH - KOLOM KIRI */}
           <div className="lg:col-span-5 flex flex-col gap-4 w-full">
             {learningSteps.map((step, idx) => (
-              <button type="button"
+              <button
+                type="button"
                 key={step.title}
+                aria-pressed={activeStep === idx}
+                aria-label={`Lihat detail ${step.title}`}
                 onClick={() => setActiveStep(idx)}
                 className={`w-full text-left p-6 rounded-[24px] border transition-all duration-300 flex items-center justify-between gap-4 group relative overflow-hidden ${
                   activeStep === idx 

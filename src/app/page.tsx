@@ -66,8 +66,8 @@ export default function LandingPage() {
           }),
         ]}
       />
-      <div className="fixed inset-0 pointer-events-none z-0 bg-[radial-gradient(circle_at_18%_8%,rgb(var(--brand-cyan-rgb)_/_0.16),transparent_34rem),radial-gradient(circle_at_82%_12%,rgb(var(--brand-violet-rgb)_/_0.11),transparent_32rem)]" />
-      <div className="fixed inset-0 pointer-events-none z-0 opacity-[0.12] bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)_/_0.08)_1px,transparent_1px),linear-gradient(rgb(var(--brand-violet-rgb)_/_0.06)_1px,transparent_1px)] bg-[size:72px_72px]" />
+      <div className="hidden md:block fixed inset-0 pointer-events-none z-0 bg-[radial-gradient(circle_at_18%_8%,rgb(var(--brand-cyan-rgb)_/_0.16),transparent_34rem),radial-gradient(circle_at_82%_12%,rgb(var(--brand-violet-rgb)_/_0.11),transparent_32rem)]" />
+      <div className="hidden md:block fixed inset-0 pointer-events-none z-0 opacity-[0.12] bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)_/_0.08)_1px,transparent_1px),linear-gradient(rgb(var(--brand-violet-rgb)_/_0.06)_1px,transparent_1px)] bg-[size:72px_72px]" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-10 md:pt-14 pb-14">
         {/* SEKSI HERO UTAMA */}

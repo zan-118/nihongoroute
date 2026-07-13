@@ -107,6 +107,8 @@ export function InteractivePlayground() {
               <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider mr-2">Mode Konversi:</span>
               <button
                 type="button"
+                aria-pressed={mode === "furigana"}
+                aria-label="Gunakan Mode Furigana Ruby"
                 onClick={() => {
                   setMode("furigana");
                   if (inputText.trim()) {
@@ -123,6 +125,8 @@ export function InteractivePlayground() {
               </button>
               <button
                 type="button"
+                aria-pressed={mode === "normal"}
+                aria-label="Gunakan Mode Hiragana Kana"
                 onClick={() => {
                   setMode("normal");
                   if (inputText.trim()) {
@@ -149,6 +153,7 @@ export function InteractivePlayground() {
                   <button
                     key={preset.text}
                     type="button"
+                    aria-label={`Gunakan contoh kalimat: ${preset.text}`}
                     onClick={() => handlePresetClick(preset.text)}
                     className="w-full text-left px-3 py-2 bg-background/30 hover:bg-background/80 border border-border/80 rounded-xl transition-all flex items-center justify-between text-xs text-foreground font-semibold group"
                   >

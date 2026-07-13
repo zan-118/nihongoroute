@@ -21,14 +21,14 @@ import { JsonLd } from "@/components/seo/JsonLd";
 
 const notoSansJp = Noto_Sans_JP({
   subsets: ["latin"],
-  weight: ["400", "700", "900"],
+  weight: ["400", "700"],
   variable: "--font-noto-jp",
   display: "swap",
 });
 
 const notoSerifJp = Noto_Serif_JP({
   subsets: ["latin"],
-  weight: ["400", "700", "900"],
+  weight: ["400", "700"],
   variable: "--font-noto-serif-jp",
   display: "swap",
 });
