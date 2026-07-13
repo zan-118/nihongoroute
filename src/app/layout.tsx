@@ -18,6 +18,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { LazyMotion, domAnimation } from "framer-motion";
 import { JsonLd } from "@/components/seo/JsonLd";
+import Script from "next/script";
 
 const notoSansJp = Noto_Sans_JP({
   subsets: ["latin"],
@@ -131,12 +132,30 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+
   return (
     <html lang="id" className={`${notoSansJp.variable} ${notoSerifJp.variable}`} suppressHydrationWarning>
       <body
         suppressHydrationWarning
         className="font-sans antialiased text-foreground selection:bg-destructive selection:text-destructive-foreground transition-colors duration-300"
       >
+        {gaId && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${gaId}');
+              `}
+            </Script>
+          </>
+        )}
         <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
         <ThemeProvider
           attribute="class"

@@ -322,8 +322,8 @@ function getGeminiModels() {
   }
   if (models.length === 0) {
     models.push(
-      "gemini-3.1-flash-tts-preview",
       "gemini-2.5-flash-preview-tts",
+      "gemini-3.1-flash-tts-preview",
     );
   }
   return Array.from(new Set(models)).filter(Boolean);
@@ -511,6 +511,67 @@ ${text}
 }
 
 
+async function query9RouterTtsWithRetry(text, geminiVoice, characterId, context = "", retries = 5) {
+  const ninerouterUrl = process.env.NINEROUTER_URL || "http://localhost:20128";
+  const ninerouterKey = process.env.NINEROUTER_KEY;
+
+  const models = getGeminiModels();
+  const maxAttempts = retries * models.length;
+  let delay = 5000;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    let voiceModel = process.env.NINEROUTER_TTS_MODEL || "";
+    const currentModel = models[globalModelIndex % models.length];
+    if (!voiceModel) {
+      voiceModel = `gemini/${currentModel}`;
+    }
+
+    const baseUrl = ninerouterUrl.endsWith("/v1") ? ninerouterUrl : `${ninerouterUrl}/v1`;
+    const url = `${baseUrl}/audio/speech`;
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(ninerouterKey ? { "Authorization": `Bearer ${ninerouterKey}` } : {}),
+        },
+        body: JSON.stringify({
+          model: voiceModel,
+          voice: geminiVoice,
+          input: text,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        const status = response.status;
+
+        // Rotate model on rate limit or other failures
+        if (status === 429 || status === 502 || status === 503 || status === 403) {
+          console.warn(`   ⚠️  [9Router TTS Coba ${attempt}/${maxAttempts}] Model ${voiceModel} terkena error ${status}. Memutar ke model berikutnya...`);
+          globalModelIndex += 1;
+          await sleep(1000);
+          continue;
+        }
+
+        throw new Error(`9Router TTS HTTP ${status}: ${errorText}`);
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
+      return Buffer.from(arrayBuffer);
+    } catch (err) {
+      if (attempt === maxAttempts) throw err;
+      console.warn(`   ⚠️  [9Router TTS Coba ${attempt}/${maxAttempts}] Gagal: ${err.message}. Memutar model & Retrying in ${delay / 1000}s...`);
+      globalModelIndex += 1;
+      await sleep(delay);
+      delay *= 2;
+    }
+  }
+
+  throw new Error("Semua percobaan sintesis gagal setelah rotasi seluruh model di 9Router.");
+}
+
 async function processTtsItem(supabase, text, voice, rate = "medium", folder = "", context = "") {
   const cacheId = crypto.createHash("md5").update(`${text}_${voice}_${rate}`).digest("hex");
   const filename = folder ? `${folder}/${cacheId}.mp3` : `${cacheId}.mp3`;
@@ -521,8 +582,16 @@ async function processTtsItem(supabase, text, voice, rate = "medium", folder = "
     throw new Error(`Suara Gemini untuk '${voice}' tidak ditemukan.`);
   }
 
-  const mp3Buffer = await queryGeminiTtsWithRetry(text, geminiVoice, voice, context);
-  console.log(`   └─ [Gemini TTS] Sintesis & konversi sukses (${geminiVoice}).`);
+  let mp3Buffer;
+  try {
+    // Prioritaskan penggunaan 9Router (default ke http://localhost:20128 jika env kosong)
+    mp3Buffer = await query9RouterTtsWithRetry(text, geminiVoice, voice, context);
+    console.log(`   └─ [9Router TTS] Sintesis sukses (${geminiVoice}).`);
+  } catch (ninerouterError) {
+    console.warn(`   ⚠️  [9Router TTS] Gagal/tidak aktif (${ninerouterError.message}). Mencoba direct Gemini API...`);
+    mp3Buffer = await queryGeminiTtsWithRetry(text, geminiVoice, voice, context);
+    console.log(`   └─ [Gemini TTS] Sintesis & konversi sukses (${geminiVoice}).`);
+  }
 
   const { error: uploadError } = await supabase.storage
     .from(BUCKET_NAME)
