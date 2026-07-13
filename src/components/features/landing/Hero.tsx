@@ -46,7 +46,7 @@ export function Hero() {
           </span>
         </h1>
 
-        <p className="text-muted-foreground text-base md:text-lg max-w-xl mb-10 leading-relaxed font-semibold text-balance">
+        <p className="text-muted-foreground text-base md:text-lg max-w-xl mb-10 leading-relaxed font-normal text-balance">
           Mulai dari kana, kosakata, tata bahasa, sampai simulasi ujian JLPT
           — semuanya ada di NihongoRoute. Cepat, nyaman, dan bisa kamu pakai tiap
           hari.

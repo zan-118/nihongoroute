@@ -374,8 +374,8 @@ export function FeatureGrid() {
                 <div className="flex items-center gap-4 relative z-10">
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-base transition-all duration-300 ${
                     activeStep === idx 
-                      ? "bg-primary text-primary-foreground shadow-[0_4px_12px_rgb(var(--primary-rgb)_/_0.3)]" 
-                      : "bg-muted text-muted-foreground"
+                      ? "bg-primary text-slate-950 dark:text-primary-foreground shadow-[0_4px_12px_rgb(var(--primary-rgb)_/_0.3)]" 
+                      : "bg-muted text-foreground/80 dark:text-muted-foreground"
                   }`}>
                     0{idx + 1}
                   </div>

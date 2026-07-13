@@ -67,7 +67,7 @@ export function TrustBanner() {
                   <div className="size-10 rounded-xl bg-primary/10 border border-primary/25 flex items-center justify-center text-primary transition-transform group-hover/item:scale-105">
                     <ShieldCheck size={20} className="drop-shadow-[0_0_5px_rgb(var(--primary-rgb)_/_0.3)]" />
                   </div>
-                  <h4 className="text-sm text-foreground uppercase tracking-tight">Tanpa Iklan / Biaya Tersembunyi</h4>
+                  <h3 className="text-sm text-foreground uppercase tracking-tight">Tanpa Iklan / Biaya Tersembunyi</h3>
                   <p className="text-xs text-muted-foreground leading-relaxed font-semibold">
                     Nggak ada iklan mengganggu, nggak ada biaya tersembunyi, dan nggak perlu kartu kredit.
                   </p>
@@ -80,7 +80,7 @@ export function TrustBanner() {
                   <div className="size-10 rounded-xl bg-secondary/10 border border-secondary/25 flex items-center justify-center text-secondary transition-transform group-hover/item:scale-105">
                     <WifiOff size={20} className="drop-shadow-[0_0_5px_rgb(var(--secondary-rgb)_/_0.3)]" />
                   </div>
-                  <h4 className="text-sm text-foreground uppercase tracking-tight">Akses Luring Penuh</h4>
+                  <h3 className="text-sm text-foreground uppercase tracking-tight">Akses Luring Penuh</h3>
                   <p className="text-xs text-muted-foreground leading-relaxed font-semibold">
                     Bisa dipakai offline. Semua progres belajarmu tersimpan aman di perangkatmu.
                   </p>
@@ -93,7 +93,7 @@ export function TrustBanner() {
                   <div className="size-10 rounded-xl bg-secondary/10 border border-secondary/25 flex items-center justify-center text-secondary transition-transform group-hover/item:scale-105">
                     <Heart size={20} className="drop-shadow-[0_0_5px_rgb(var(--brand-violet-rgb)_/_0.32)]" />
                   </div>
-                  <h4 className="text-sm text-foreground uppercase tracking-tight">Didukung Komunitas</h4>
+                  <h3 className="text-sm text-foreground uppercase tracking-tight">Didukung Komunitas</h3>
                   <p className="text-xs text-muted-foreground leading-relaxed font-semibold">
                     Open source dan terbuka. Siapa aja boleh ikut kontribusi buat bikin kurikulumnya makin bagus.
                   </p>
