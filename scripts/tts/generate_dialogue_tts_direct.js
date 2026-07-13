@@ -134,7 +134,8 @@ function detectVoice(speaker) {
     return "namonashi";
   }
   
-  const cleanSpeaker = speaker.replace(/[- ]?(さん|くん|ちゃん|様|君|先生|sama|san|kun|chan|sensei)$/i, "").trim().toLowerCase();
+  const firstSpeaker = speaker.split(/[・、/&,]/)[0].split(/\s+dan\s+/i)[0].split(/\s+and\s+/i)[0].trim();
+  const cleanSpeaker = firstSpeaker.replace(/[- ]?(さん|くん|ちゃん|様|君|先生|sama|san|kun|chan|sensei)$/i, "").trim().toLowerCase();
   
   if (SPEAKER_MAP[cleanSpeaker]) {
     return SPEAKER_MAP[cleanSpeaker];
@@ -322,7 +323,7 @@ function getGeminiModels() {
   if (models.length === 0) {
     models.push(
       "gemini-3.1-flash-tts-preview",
-      "gemini-2.5-flash-preview-tts"
+      "gemini-2.5-flash-preview-tts",
     );
   }
   return Array.from(new Set(models)).filter(Boolean);

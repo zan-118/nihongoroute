@@ -452,7 +452,8 @@ export function detectVoice(speaker?: string, fallbackIndex = 0): TtsVoice {
   }
 
   // 1. Bersihkan gelar kehormatan Jepang/Romaji agar tidak mengganggu pencocokan
-  const cleanSpeaker = speaker.replace(/[- ]?(さん|くん|ちゃん|様|君|先生|sama|san|kun|chan|sensei)$/i, "").trim().toLowerCase();
+  const firstSpeaker = speaker.split(/[・、/&,]/)[0].split(/\s+dan\s+/i)[0].split(/\s+and\s+/i)[0].trim();
+  const cleanSpeaker = firstSpeaker.replace(/[- ]?(さん|くん|ちゃん|様|君|先生|sama|san|kun|chan|sensei)$/i, "").trim().toLowerCase();
 
   // 1b. Cek kamus pemetaan eksplisit
   if (SPEAKER_MAP[cleanSpeaker]) {
