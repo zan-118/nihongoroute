@@ -10,7 +10,7 @@ import { createStaticClient } from "@/lib/supabase/server";
 import { sanityClient } from "@/lib/sanity.client";
 import { absoluteUrl, encodeRouteSegment, getSiteUrl } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";interface SanitySitemapItem {
+interface SanitySitemapItem {
   slug: string | null;
   _updatedAt?: string | null;
   _createdAt?: string | null;

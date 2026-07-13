@@ -96,15 +96,6 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: "/sitemap.xml",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, s-maxage=3600, stale-while-revalidate=59",
-          },
-        ],
-      },
-      {
         source: "/library/vocab/:path*",
         headers: [
           {
