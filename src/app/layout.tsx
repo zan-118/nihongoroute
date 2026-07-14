@@ -40,6 +40,7 @@ const notoSerifJp = Noto_Serif_JP({
   weight: ["400", "700"],
   variable: "--font-noto-serif-jp",
   display: "swap",
+  preload: false,
 });
 import {
   DEFAULT_DESCRIPTION,
@@ -154,9 +155,9 @@ export default function RootLayout({
           <>
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-              strategy="afterInteractive"
+              strategy="lazyOnload"
             />
-            <Script id="google-analytics" strategy="afterInteractive">
+            <Script id="google-analytics" strategy="lazyOnload">
               {`
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}

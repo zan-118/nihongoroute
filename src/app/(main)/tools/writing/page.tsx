@@ -131,17 +131,65 @@ function FreeWritingContent() {
   );
 }
 
+function FreeWritingSkeleton() {
+  return (
+    <div className="w-full flex-1 relative overflow-hidden flex flex-col bg-transparent pt-12 pb-24 px-4 md:px-8 animate-pulse">
+      {/* Background Decorative Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[640px] h-[320px] bg-primary/5 blur-[55px] rounded-full pointer-events-none" />
+
+      <div className="max-w-4xl mx-auto w-full relative z-10 flex flex-col h-full">
+        {/* Navigation Mock */}
+        <header className="mb-12">
+          <div className="mb-6">
+            <div className="w-40 h-9 bg-muted border border-border/40 rounded-xl" />
+          </div>
+
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+            <div className="space-y-3 flex-1">
+              {/* Title Placeholder */}
+              <div className="w-64 h-10 bg-muted rounded-xl" />
+              {/* Description Placeholder */}
+              <div className="w-full max-w-md h-5 bg-muted rounded-lg" />
+              <div className="w-5/6 max-w-sm h-5 bg-muted rounded-lg" />
+            </div>
+            {/* Badge Placeholder */}
+            <div className="w-32 h-8 bg-muted rounded-xl" />
+          </div>
+        </header>
+
+        {/* Content Layout Grid Mock */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Main Canvas Box Placeholder */}
+          <div className="lg:col-span-7 flex justify-center w-full">
+            <div className="w-full max-w-[500px] flex justify-center">
+              <div className="w-full max-w-[400px] md:max-w-[450px] aspect-square rounded-2xl border border-border bg-muted/20 dark:bg-card/20" />
+            </div>
+          </div>
+
+          {/* Sidebar Placeholders */}
+          <div className="lg:col-span-5 space-y-6">
+            {/* Tips Card Placeholder */}
+            <div className="h-64 rounded-[2rem] border border-border bg-muted/10" />
+
+            {/* Action Cards Placeholder */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="h-24 rounded-lg border border-border bg-muted/10" />
+              <div className="h-24 rounded-lg border border-border bg-muted/10" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /**
  * Free writing page root.
  * Wraps content in Suspense. Prevents build errors from search params.
  */
 export default function FreeWritingPage() {
   return (
-    <Suspense fallback={
-      <div className="w-full flex-1 flex items-center justify-center bg-transparent">
-        <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest">Memuat Kanvas...</p>
-      </div>
-    }>
+    <Suspense fallback={<FreeWritingSkeleton />}>
       <FreeWritingContent />
     </Suspense>
   );
