@@ -13,7 +13,7 @@ import { PenTool, ExternalLink } from "lucide-react";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import { FlashcardThemeContext } from "./types";
 import Link from "next/link";
-import * as wanakana from "wanakana";
+import { toRomaji, toHiragana } from "wanakana";
 import { splitFurigana } from "@/components/ui/SmartJapanese";
 import { MnemonicEditor } from "@/components/features/srs/mnemonic/MnemonicEditor";
 
@@ -99,10 +99,8 @@ export function FlashcardBack({
   const isRomaji = furigana && /^[a-zA-Z\s.,?!'-]+$/.test(furigana);
   
   // Resolve romaji representation.
-  const displayRomaji = romaji || (isRomaji ? furigana : (furigana ? wanakana.toRomaji(furigana) : ""));
-  
-  // Convert romaji to hiragana if needed.
-  const hiraReading = isRomaji ? wanakana.toHiragana(furigana || "") : (furigana || "");
+  const displayRomaji = romaji || (isRomaji ? furigana : (furigana ? toRomaji(furigana) : ""));
+  const hiraReading = isRomaji ? toHiragana(furigana || "") : (furigana || "");
 
   /**
    * Map SRS interval to memory level label and color.

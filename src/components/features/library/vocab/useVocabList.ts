@@ -10,7 +10,7 @@
 // IMPOR UTAMA
 // ==========================================
 import { useState, useEffect, useCallback } from "react";
-import * as wanakana from "wanakana";
+import { toHiragana, toKatakana } from "wanakana";
 import { createClient } from "@/lib/supabase/client";
 import { VocabItem } from "./types";
 
@@ -69,8 +69,8 @@ export function useVocabList(initialData: VocabItem[] = []) {
 
       // Menerapkan kueri pencarian multi-bahasa (Jepang Kanji/Kana, Romaji, Indonesia arti)
       if (trimmed !== "") {
-        const kanaSearch = wanakana.toHiragana(trimmed);
-        const kataSearch = wanakana.toKatakana(trimmed);
+        const kanaSearch = toHiragana(trimmed);
+        const kataSearch = toKatakana(trimmed);
         query = query.or(
           `word.ilike.%${trimmed}%,meaning_id.ilike.%${trimmed}%,romaji.ilike.%${trimmed}%,word.ilike.%${kanaSearch}%,furigana.ilike.%${kanaSearch}%,word.ilike.%${kataSearch}%`
         );
@@ -126,8 +126,8 @@ export function useVocabList(initialData: VocabItem[] = []) {
         .eq("jlpt_level", levelFilter);
 
       if (trimmed !== "") {
-        const kanaSearch = wanakana.toHiragana(trimmed);
-        const kataSearch = wanakana.toKatakana(trimmed);
+        const kanaSearch = toHiragana(trimmed);
+        const kataSearch = toKatakana(trimmed);
         query = query.or(
           `word.ilike.%${trimmed}%,meaning_id.ilike.%${trimmed}%,romaji.ilike.%${trimmed}%,word.ilike.%${kanaSearch}%,furigana.ilike.%${kanaSearch}%,word.ilike.%${kataSearch}%`
         );

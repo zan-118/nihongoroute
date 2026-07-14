@@ -3,7 +3,7 @@
  * @description Helpers for Japanese listening dictation normalization and scoring.
  */
 
-import * as wanakana from "wanakana";
+import { toHiragana } from "wanakana";
 
 /**
  * Result of dictation evaluation.
@@ -60,8 +60,7 @@ export function extractDictationText(value: unknown): string {
  * @returns Normalized hiragana string.
  */
 export function normalizeDictationText(value: string): string {
-  return wanakana
-    .toHiragana(value.normalize("NFKC").toLowerCase())
+  return toHiragana(value.normalize("NFKC").toLowerCase())
     .replace(JAPANESE_PUNCTUATION_PATTERN, "")
     .trim();
 }

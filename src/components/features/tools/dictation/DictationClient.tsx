@@ -31,7 +31,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { getRandomSentencesForDrill, type SentenceDrillItem } from "@/actions/sentences.actions";
 import { fetchTTSAudio, speakWithWebSpeech, TTS_VOICES, type TtsVoice } from "@/lib/tts";
-import * as wanakana from "wanakana";
+import { toHiragana } from "wanakana";
 
 // ==========================================
 // KONSTANTA & KONFIGURASI
@@ -204,9 +204,11 @@ export default function DictationClient() {
    * @param text Japanese text to normalize.
    */
   const normalizeJapanese = (text: string) => {
-    return wanakana.toHiragana(
-      text
-        .replace(/[\s\u3000、。！？?.!,;:"'()（）]/g, "") // remove punctuation and spaces
+    return toHiragana(
+      text.normalize("NFKC").toLowerCase()
+    ).replace(
+      /[\s。、，,.．・!！?？:：;；'"“”‘’`´「」『』（）()\[\]【】<>〈〉《》…ー~-]/g,
+      ""
     );
   };
 

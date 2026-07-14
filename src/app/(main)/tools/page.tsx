@@ -10,7 +10,7 @@
 // IMPOR
 // ======================
 import React from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import {
   Wrench,
   PenTool,
@@ -227,7 +227,7 @@ export default function ToolsPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {tools.map((tool, idx) => (
-            <motion.div
+            <m.div
               key={tool.title}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -268,7 +268,7 @@ export default function ToolsPage() {
                   </div>
                 </Card>
               </Link>
-            </motion.div>
+            </m.div>
           ))}
         </div>
 

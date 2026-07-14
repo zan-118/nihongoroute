@@ -6,7 +6,7 @@
 // ==========================================
 // IMPORT & DEPENDENSI
 // ==========================================
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { PenTool, Sparkles } from "lucide-react";
 import {
   Dialog,
@@ -66,7 +66,7 @@ export function KanaWritingDialog({
       <DialogContent className="max-w-md p-0 border-none bg-transparent shadow-none">
         <AnimatePresence>
           {selectedChar && (
-            <motion.div
+            <m.div
               initial={{ scale: 0.95, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -123,7 +123,7 @@ export function KanaWritingDialog({
                   Yuk, coba tulis huruf ini di kanvas!
                 </p>
               </div>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       </DialogContent>

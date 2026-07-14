@@ -149,7 +149,7 @@ function ReviewPassageBlock({ passage }: { passage?: ExamPassage | null }) {
             alt="Visual bacaan"
             width={900}
             height={500}
-            unoptimized
+            sizes="(max-width: 1024px) 100vw, 900px"
             className="max-h-[420px] w-full object-contain"
           />
         </div>
@@ -204,7 +204,6 @@ function ReviewChoiceContent({
           alt={choice.alt || text}
           fill
           sizes="(max-width: 768px) 72vw, 560px"
-          unoptimized
           className="object-contain"
         />
       </span>
@@ -573,7 +572,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                         alt="Gambar pendukung"
                         width={800}
                         height={400}
-                        unoptimized
+                        sizes="(max-width: 1024px) 100vw, 800px"
                         className="max-h-[400px] w-full rounded-lg object-contain opacity-90"
                       />
                     </div>

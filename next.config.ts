@@ -73,6 +73,7 @@ const nextConfig: NextConfig = {
       "@radix-ui/react-select",
       "@radix-ui/react-switch",
       "@radix-ui/react-progress",
+      "wanakana",
     ],
   },
   logging: {

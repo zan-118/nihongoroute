@@ -7,7 +7,7 @@
 // IMPORT & DEPENDENSI
 // ==========================================
 import React, { useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Heart, Trophy, Volume2 } from "lucide-react";
 import {
   Dialog,
@@ -141,7 +141,7 @@ export function KanaQuizDialog({
         <DialogDescription className="sr-only">Latihan membaca huruf kana.</DialogDescription>
         <AnimatePresence>
           {isActive && (
-            <motion.div
+            <m.div
               initial={{ scale: 0.95, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -174,7 +174,7 @@ export function KanaQuizDialog({
                     <div className={`w-full aspect-video bg-background rounded-lg border ${feedback === 'correct' ? 'border-success shadow-lg' : feedback === 'incorrect' ? 'border-destructive shadow-lg' : 'border-border shadow-inner'} flex items-center justify-center mb-8 transition-all duration-300`}>
                       <AnimatePresence mode="wait">
                         {questionMode === "audio" ? (
-                          <motion.button
+                          <m.button
                             key="audio-speaker"
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
@@ -185,9 +185,9 @@ export function KanaQuizDialog({
                             className="w-20 h-20 rounded-full flex items-center justify-center bg-warning/10 border border-warning/45 hover:bg-warning/20 shadow-[0_0_25px_rgb(var(--warning-rgb)/0.25)] hover:shadow-[0_0_35px_rgb(var(--warning-rgb)/0.4)] transition-all duration-300 text-warning"
                           >
                             <Volume2 size={36} className="animate-pulse" />
-                          </motion.button>
+                          </m.button>
                         ) : (
-                          <motion.span
+                          <m.span
                             key={char?.char}
                             initial={{ opacity: 0, scale: 0.5 }}
                             animate={{ opacity: 1, scale: 1 }}
@@ -195,7 +195,7 @@ export function KanaQuizDialog({
                             className="text-5xl sm:text-7xl font-black text-foreground font-japanese"
                           >
                             {char?.char}
-                          </motion.span>
+                          </m.span>
                         )}
                       </AnimatePresence>
                     </div>
@@ -280,7 +280,7 @@ export function KanaQuizDialog({
                   </Card>
                 )}
               </div>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       </DialogContent>

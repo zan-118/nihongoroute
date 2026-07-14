@@ -10,7 +10,7 @@
 // IMPOR
 // ======================
 import React, { Suspense } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import {
   Zap,
   RotateCw,
@@ -48,7 +48,7 @@ function FlashcardsContent() {
     <AnimatePresence mode="wait">
       {isFetchingCards ? (
         // Show loading spinner while fetching cards.
-        <motion.div
+        <m.div
           key="loading-cards"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -59,7 +59,7 @@ function FlashcardsContent() {
           <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs font-bold">
             Mengumpulkan kartu...
           </p>
-        </motion.div>
+        </m.div>
       ) : !selectedMode ? (
         // Show setup screen if no mode selected.
         <FlashcardSetup
@@ -69,7 +69,7 @@ function FlashcardsContent() {
         />
       ) : (
         // Show active session.
-        <motion.div
+        <m.div
           key="session"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -109,7 +109,7 @@ function FlashcardsContent() {
               isFixedMode={true}
             />
           </div>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

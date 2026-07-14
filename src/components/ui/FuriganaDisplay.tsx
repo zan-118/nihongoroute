@@ -11,7 +11,7 @@
 import React, { useMemo } from "react";
 import { splitFurigana } from "@/components/ui/SmartJapanese";
 import { useUIStore } from "@/store/useUIStore";
-import * as wanakana from "wanakana";
+import { isJapanese, toRomaji, isKanji } from "wanakana";
 import WordPopover from "@/components/features/reading/components/WordPopover";
 
 // ======================
@@ -49,7 +49,7 @@ function isUsefulInteractivePart(text: string) {
   // Skip empty or excessively long segments
   if (!trimmed || trimmed.length > 24) return false;
   // Must be Japanese text
-  if (!wanakana.isJapanese(trimmed)) return false;
+  if (!isJapanese(trimmed)) return false;
   // Skip 1-2 character hiragana particles/words
   if (/^[\u3040-\u309f]{1,2}$/.test(trimmed)) return false;
   // Must contain kanji or katakana
@@ -106,8 +106,8 @@ function FuriganaDisplay({
     const romajiText = romaji
       ? romaji
       : furigana
-        ? wanakana.toRomaji(furigana)
-        : wanakana.toRomaji(text);
+        ? toRomaji(furigana)
+        : toRomaji(text);
     return (
       <span className={`font-sans leading-relaxed tracking-wide inline-block w-full text-foreground ${kanjiSize} ${className}`}>
         {romajiText}
@@ -131,7 +131,7 @@ function FuriganaDisplay({
       </ruby>
     ) : (
       <span className={`${kanjiSize} font-medium transition-colors ${
-        wanakana.isKanji(part.text.charAt(0)) ? "text-foreground" : "text-foreground/90"
+        isKanji(part.text.charAt(0)) ? "text-foreground" : "text-foreground/90"
       }`}>
         {part.text}
       </span>

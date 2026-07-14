@@ -1118,7 +1118,7 @@ function ImageBlock({ block }: { block: ContentBlock }) {
           width={1200}
           height={1200}
           className="w-full h-auto max-h-[60vh] object-contain transition-transform duration-700 group-hover:scale-[1.02]"
-          unoptimized
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
         />
       </div>
       {block.title && (

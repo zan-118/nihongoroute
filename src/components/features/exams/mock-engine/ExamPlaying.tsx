@@ -195,7 +195,6 @@ const OptionButton = memo(({
               alt={choice.alt || text}
               fill
               sizes="(max-width: 768px) 70vw, 520px"
-              unoptimized
               className="object-contain"
             />
           </span>
@@ -238,7 +237,7 @@ function ExamPassageBlock({ passage }: { passage?: ExamPassage | null }) {
             alt="Passage visual"
             width={900}
             height={500}
-            unoptimized
+            sizes="(max-width: 1024px) 100vw, 900px"
             className="max-h-[420px] w-full object-contain"
           />
         </div>

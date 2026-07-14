@@ -9,7 +9,7 @@
 // IMPORT & DEPENDENSI
 // ==========================================
 import { useEffect, useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -160,7 +160,7 @@ export default function DictionaryPopup() {
   return (
     <AnimatePresence>
       {selection && (
-        <motion.div
+        <m.div
           ref={popupRef}
           initial={{ opacity: 0, scale: 0.9, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -224,7 +224,7 @@ export default function DictionaryPopup() {
             {/* Arrow */}
             <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-card border-r border-b border-border rotate-45" />
           </Card>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

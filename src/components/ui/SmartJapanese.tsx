@@ -7,7 +7,7 @@
 // IMPOR
 // ======================
 import React, { useMemo } from "react";
-import * as wanakana from "wanakana";
+import { isKanji, toHiragana, toRomaji } from "wanakana";
 
 // ======================
 // CACHE PENYIMPANAN SEMENTARA (MEMOIZATION)
@@ -45,20 +45,20 @@ export function splitFurigana(word: string, reading: string): { text: string; fu
   // Loop through word characters.
   while (wIdx < word.length) {
     const char = word[wIdx];
-    const isKanjiChar = wanakana.isKanji(char) || char === "々";
+    const isKanjiChar = isKanji(char) || char === "々";
 
     if (!isKanjiChar) {
       // 1. Tangani Segmen Non-Kanji (Hiragana, Katakana, Simbol, Spasi)
       let segment = "";
-      while (wIdx < word.length && !wanakana.isKanji(word[wIdx]) && word[wIdx] !== "々") {
+      while (wIdx < word.length && !isKanji(word[wIdx]) && word[wIdx] !== "々") {
         const wChar = word[wIdx];
         segment += wChar;
 
         // Sinkronisasi rIdx: Majukan rIdx hanya jika karakternya cocok
         if (rIdx < reading.length) {
           const rChar = reading[rIdx];
-          const wHira = wanakana.toHiragana(wChar);
-          const rHira = wanakana.toHiragana(rChar);
+          const wHira = toHiragana(wChar);
+          const rHira = toHiragana(rChar);
           
           if (wHira === rHira || wChar === rChar) {
             rIdx++;
@@ -75,7 +75,7 @@ export function splitFurigana(word: string, reading: string): { text: string; fu
     } else {
       // 2. Tangani Segmen Kanji
       const kanjiStart = wIdx;
-      while (wIdx < word.length && (wanakana.isKanji(word[wIdx]) || word[wIdx] === "々")) {
+      while (wIdx < word.length && (isKanji(word[wIdx]) || word[wIdx] === "々")) {
         wIdx++;
       }
       const kanjiSegment = word.substring(kanjiStart, wIdx);
@@ -95,7 +95,7 @@ export function splitFurigana(word: string, reading: string): { text: string; fu
 
       let rEnd = rIdx;
       if (nextAnchor) {
-        const anchorHira = wanakana.toHiragana(nextAnchor);
+        const anchorHira = toHiragana(nextAnchor);
         
         let bestREnd = rIdx + 1; 
         let highestScore = -1000; // Mulai dengan nilai sangat rendah
@@ -108,7 +108,7 @@ export function splitFurigana(word: string, reading: string): { text: string; fu
 
         // Search reading for anchor. Score matches to find best fit.
         for (let searchIdx = rIdx + 1; searchIdx < maxSearch; searchIdx++) {
-          if (wanakana.toHiragana(reading[searchIdx]) === anchorHira) {
+          if (toHiragana(reading[searchIdx]) === anchorHira) {
             found = true;
             
             let score = 0;
@@ -121,9 +121,9 @@ export function splitFurigana(word: string, reading: string): { text: string; fu
                 break;
               }
               
-              if (nextR && wanakana.toHiragana(nextW) === wanakana.toHiragana(nextR)) {
+              if (nextR && toHiragana(nextW) === toHiragana(nextR)) {
                 score += 15; 
-              } else if (nextR && (wanakana.isKanji(nextW) || nextW === "々")) {
+              } else if (nextR && (isKanji(nextW) || nextW === "々")) {
                 score += 8; 
               }
             }
@@ -202,7 +202,7 @@ export function SmartJapanese({
   if (!word) return <span className={className}>{furigana}</span>;
   
   if (mode === "romaji") {
-    return <span className={className}>{wanakana.toRomaji(furigana || word)}</span>;
+    return <span className={className}>{toRomaji(furigana || word)}</span>;
   }
  
   if (!furigana || word === furigana || mode === "kanji") {

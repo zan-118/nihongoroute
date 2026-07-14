@@ -23,7 +23,7 @@ import {
   ChevronRight,
   Filter,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -153,7 +153,7 @@ export default function CheatsheetClient({
                 }`}
               >
                 {isActive && (
-                  <motion.div
+                  <m.div
                     layoutId="activeCategoryBackdrop"
                     className="absolute inset-0 bg-primary rounded-full shadow-[0_10px_20px_rgba(var(--primary-rgb),0.3)]"
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
@@ -185,13 +185,13 @@ export default function CheatsheetClient({
           </h2>
         </div>
 
-        <motion.div
+        <m.div
           layout
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8"
         >
           <AnimatePresence mode="popLayout">
             {filteredSheets.map((sheet, idx) => (
-              <motion.div
+              <m.div
                 id={`cheatsheet-card-${sheet.slug || sheet.id}`}
                 key={sheet._id || sheet.id}
                 layout
@@ -237,13 +237,13 @@ export default function CheatsheetClient({
                     </div>
                   </Card>
                 </Link>
-              </motion.div>
+              </m.div>
             ))}
           </AnimatePresence>
-        </motion.div>
+        </m.div>
 
         {filteredSheets.length === 0 && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="flex flex-col items-center justify-center py-20 text-center bg-[rgba(var(--card-rgb),0.1)] rounded-[2.5rem] border border-dashed border-border"
@@ -255,7 +255,7 @@ export default function CheatsheetClient({
             <p className="text-muted-foreground text-sm max-w-sm mt-1">
               Nggak ada catatan cepat yang cocok sama kata kuncimu. Coba ganti kata kunci atau filter kategorinya ya.
             </p>
-          </motion.div>
+          </m.div>
         )}
       </section>
     </div>

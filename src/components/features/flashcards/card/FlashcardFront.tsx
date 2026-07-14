@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { MousePointer2, CheckCircle2, XCircle } from "lucide-react";
 import { FlashcardThemeContext } from "./types";
 import { Input } from "@/components/ui/input";
-import * as wanakana from "wanakana";
+import { toHiragana } from "wanakana";
 
 // ==========================================
 // TIPE DATA / INTERFACE
@@ -86,7 +86,7 @@ export function FlashcardFront({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     // Convert keystrokes to Hiragana in real-time.
-    const converted = wanakana.toHiragana(val);
+    const converted = toHiragana(val);
     onUserInputChange?.(converted);
   };
 

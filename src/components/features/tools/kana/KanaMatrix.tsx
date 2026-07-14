@@ -7,7 +7,7 @@
 // IMPORT & DEPENDENSI
 // ==========================================
 import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { KANA_DATA, KanaType, KanaCategory } from "./kana-data";
 
@@ -54,7 +54,7 @@ export function KanaMatrix({ type, category, onSelectChar, themeBgHover }: KanaM
               {row.map((char, colIndex) =>
                 char !== "" ? (
                   // Render character cell if not empty
-                  <motion.div
+                  <m.div
                     key={`${category}-${type}-${rowIndex}-${colIndex}`}
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -68,7 +68,7 @@ export function KanaMatrix({ type, category, onSelectChar, themeBgHover }: KanaM
                     <span className="text-[10px] md:text-xs font-bold font-mono text-muted-foreground uppercase tracking-widest mt-1 md:mt-2 group-hover:text-foreground transition-colors">
                       {currentData.romaji[rowIndex][colIndex]}
                     </span>
-                  </motion.div>
+                  </m.div>
                 ) : (
                   // Render empty spacer cell to maintain grid alignment
                   <div

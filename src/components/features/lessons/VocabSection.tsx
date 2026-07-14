@@ -9,7 +9,7 @@
 // IMPOR
 // ======================
 import React, { useState } from "react";
-import * as wanakana from "wanakana";
+import { toRomaji } from "wanakana";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import AddToSRSButton from "@/components/features/srs/actions/AddToSRSButton";
@@ -74,8 +74,8 @@ const VocabCard: React.FC<{ v: VocabLessonItem; idx: number }> = ({ v, idx }) =>
             className="text-[10px] font-bold text-primary uppercase tracking-widest px-2 py-0.5 rounded"
             style={{ backgroundColor: "rgb(var(--primary-rgb)/0.1)" }}
           >
-            {/* Convert furigana to romaji if romaji missing. */}
-            {v.romaji || (v.furigana ? wanakana.toRomaji(v.furigana) : "-")}
+            {/* Convert furigana to romaji if romaji */}
+            {v.romaji || (v.furigana ? toRomaji(v.furigana) : "-")}
           </span>
           {v.hinshi && (
             <span 

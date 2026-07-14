@@ -11,7 +11,7 @@
 // ======================
 import React, { Suspense } from "react";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import {
   Flame,
   RotateCw,
@@ -71,7 +71,7 @@ function SurvivalContent() {
       <AnimatePresence mode="wait">
         {/* Render loading spinner when fetching cards */}
         {isFetchingCards ? (
-          <motion.div
+          <m.div
             key="loading-cards"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -82,10 +82,10 @@ function SurvivalContent() {
             <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs font-bold">
               Menyiapkan arena tantangan...
             </p>
-          </motion.div>
+          </m.div>
         ) : !isPlaying ? (
           /* Render setup screen when game not active */
-          <motion.div
+          <m.div
             key="setup"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -174,10 +174,10 @@ function SurvivalContent() {
               </div>
 
             </div>
-          </motion.div>
+          </m.div>
         ) : (
           /* Render active gameplay screen */
-          <motion.div
+          <m.div
             key="gameplay"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -202,7 +202,7 @@ function SurvivalContent() {
 
               <SurvivalMode cards={cards} />
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

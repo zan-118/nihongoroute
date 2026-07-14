@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import * as wanakana from "wanakana";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import { cn } from "@/lib/utils";
@@ -185,7 +185,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
       <AnimatePresence mode="wait">
         {/* 1. VIEW MODE: TABLE (Fully Responsive Compact Table Implementation) */}
         {viewMode === "table" && (
-          <motion.div
+          <m.div
             key="table-view"
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
@@ -231,12 +231,12 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
                 </div>
               ))}
             </div>
-          </motion.div>
+          </m.div>
         )}
 
         {/* 3. VIEW MODE: FLASHCARD QUIZ (Fixed 3D Flipping & Overlap with CSS styles) */}
         {viewMode === "flashcard" && (
-          <motion.div
+          <m.div
             key="flashcard-view"
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
@@ -373,7 +373,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
                 </Button>
               </div>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

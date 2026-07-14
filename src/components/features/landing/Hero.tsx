@@ -117,6 +117,7 @@ export function Hero() {
                   alt="NihongoRoute"
                   fill
                   priority
+                  sizes="128px"
                   className="object-contain"
                 />
               </div>

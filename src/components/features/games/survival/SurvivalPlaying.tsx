@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Timer, Zap, ShieldAlert, AlertTriangle, Target, BatteryMedium } from "lucide-react";
 import { CardData } from "./types";
-import * as wanakana from "wanakana";
+import { toHiragana } from "wanakana";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 
 // ======================
@@ -159,7 +159,7 @@ export function SurvivalPlaying({
                    word={currentCard?.word || ""}
                    furigana={
                      currentCard?.furigana && /^[a-zA-Z\s.,?!'-]+$/.test(currentCard.furigana)
-                       ? wanakana.toHiragana(currentCard.furigana) // Convert romaji furigana to hiragana
+                       ? toHiragana(currentCard.furigana) // Convert romaji furigana to hiragana
                        : currentCard?.furigana || undefined
                    }
                    className="[&_rt]:text-primary/80"
