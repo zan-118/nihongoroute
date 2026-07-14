@@ -13,21 +13,38 @@ import { m, Variants } from "framer-motion";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+
+/**
+ * Props for CategoryHero component.
+ */
 interface CategoryHeroProps {
+  /** Title of the category */
   title: string;
+  /** Optional description text */
   description?: string;
+  /** Flag indicating if category is side quest or main JLPT path */
   isSideQuest: boolean;
+  /** Percentage of progress completed */
   progressPercent: number;
+  /** Number of completed lessons */
   lessonsDone: number;
+  /** Total number of lessons in category */
   totalLessons: number;
+  /** Tailwind text color class name */
   themeColor: string;
+  /** RGB values for theme color accent */
   themeRgb: string;
+  /** Framer motion animation variants for child items */
   itemVariants: Variants;
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * CategoryHero component. Displays header, description, and progress widget.
+ */
 export function CategoryHero({
   title,
   description,
@@ -39,6 +56,7 @@ export function CategoryHero({
   themeRgb,
   itemVariants,
 }: CategoryHeroProps) {
+  // Set badge colors based on quest type
   const badgeStyle = isSideQuest
     ? {
         backgroundColor: "rgb(var(--warning-rgb)/0.1)",
@@ -119,6 +137,7 @@ export function CategoryHero({
                 animate={{ width: `${progressPercent}%` }}
                 className="h-full rounded-full transition-all duration-500"
                 style={{
+                  // Apply gradient and shadow based on quest type
                   background: isSideQuest
                     ? "linear-gradient(90deg, hsl(var(--warning)) 0%, rgb(var(--warning-rgb)/0.6) 100%)"
                     : "linear-gradient(90deg, hsl(var(--primary)) 0%, rgb(var(--primary-rgb)/0.6) 100%)",

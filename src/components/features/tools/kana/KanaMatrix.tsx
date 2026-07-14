@@ -14,10 +14,17 @@ import { KANA_DATA, KanaType, KanaCategory } from "./kana-data";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Props for KanaMatrix component.
+ */
 interface KanaMatrixProps {
+  /** Kana type: hiragana or katakana. */
   type: KanaType;
+  /** Kana category: gojuon, dakuon, or yoon. */
   category: KanaCategory;
+  /** Callback triggered on character selection. */
   onSelectChar: (char: string, romaji: string) => void;
+  /** Tailwind hover background class. */
   themeBgHover: string;
 }
 
@@ -25,9 +32,10 @@ interface KanaMatrixProps {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen matriks grid huruf kana.
+ * Interactive grid visualizer for Hiragana and Katakana characters.
  */
 export function KanaMatrix({ type, category, onSelectChar, themeBgHover }: KanaMatrixProps) {
+  // Get character data for selected category
   const currentData = KANA_DATA[category];
 
   // ==========================================
@@ -35,14 +43,17 @@ export function KanaMatrix({ type, category, onSelectChar, themeBgHover }: KanaM
   // ==========================================
   return (
     <Card className="p-4 md:p-8 rounded-lg border border-border bg-card shadow-2xl relative flex-1 min-h-[400px] md:min-h-[450px] overflow-hidden">
+      {/* Yoon category uses 3 columns, others use 5 */}
       <div
         className={`relative z-10 grid gap-2 md:gap-4 mx-auto ${category === "yoon" ? "grid-cols-3 max-w-lg" : "grid-cols-5 max-w-2xl"}`}
       >
+        {/* Animate grid items during category transitions */}
         <AnimatePresence mode="wait">
           {currentData[type].map((row, rowIndex) => (
             <React.Fragment key={`${category}-${type}-${rowIndex}`}>
               {row.map((char, colIndex) =>
                 char !== "" ? (
+                  // Render character cell if not empty
                   <motion.div
                     key={`${category}-${type}-${rowIndex}-${colIndex}`}
                     initial={{ opacity: 0, scale: 0.9 }}
@@ -59,6 +70,7 @@ export function KanaMatrix({ type, category, onSelectChar, themeBgHover }: KanaM
                     </span>
                   </motion.div>
                 ) : (
+                  // Render empty spacer cell to maintain grid alignment
                   <div
                     key={`empty-${rowIndex}-${colIndex}`}
                     className="aspect-square opacity-0 pointer-events-none"

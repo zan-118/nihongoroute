@@ -17,10 +17,17 @@ import { useWritingCanvas } from "../canvas/useWritingCanvas";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Props for WritingCanvas component.
+ */
 interface WritingCanvasProps {
+  /** Character to write. */
   character?: string;
+  /** Color of user stroke. */
   strokeColor?: string;
+  /** Color of guide stroke. */
   guideColor?: string;
+  /** Custom CSS classes. */
   className?: string;
 }
 
@@ -28,7 +35,8 @@ interface WritingCanvasProps {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen kanvas latihan coretan tulisan Jepang.
+ * Interactive canvas component for Japanese writing practice.
+ * Detects stroke accuracy and provides visual feedback.
  */
 export default function WritingCanvas({ 
   character = "", 
@@ -36,6 +44,7 @@ export default function WritingCanvas({
   guideColor = "rgb(var(--secondary-rgb))",
   className = "max-w-[280px] sm:max-w-sm mx-auto"
 }: WritingCanvasProps) {
+  // Get canvas state and drawing handlers.
   const {
     canvasRef,
     containerRef,
@@ -54,7 +63,7 @@ export default function WritingCanvas({
     isCompleted,
   } = useWritingCanvas({ character, strokeColor });
 
-  // Dynamic glow ring and border color based on canvas state
+  // Compute dynamic styles based on success or error state.
   const containerClass = `relative w-full aspect-square rounded-lg overflow-hidden group touch-none transition-all duration-500 border ${
     isCompleted
       ? "border-success/40 shadow-[0_0_30px_rgb(var(--success-rgb)/0.25)] bg-success/5"
@@ -73,13 +82,16 @@ export default function WritingCanvas({
         className={containerClass}
         style={{ touchAction: 'none' }}
       >
+        {/* Render background grid lines. */}
         <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px)] bg-[size:25%_25%] opacity-40 pointer-events-none" />
         
+        {/* Render center guidelines. */}
         <div className="absolute inset-0 pointer-events-none opacity-10">
           <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-destructive/30 border-dashed" />
           <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-destructive/30 border-dashed" />
         </div>
 
+        {/* Show XP pop animation on success. */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-40">
           <XPPop show={showXP} amount={10} />
         </div>
@@ -120,6 +132,7 @@ export default function WritingCanvas({
                 {character}
               </span>
             </div>
+            {/* Stroke order animation guide. */}
             <div className="absolute inset-8 pointer-events-none z-0">
               <AnimatedKanji 
                 character={character} 
@@ -130,6 +143,7 @@ export default function WritingCanvas({
           </>
         )}
 
+        {/* Interactive drawing canvas. */}
         <canvas
           ref={canvasRef}
           onPointerDown={startDrawing}
@@ -139,6 +153,7 @@ export default function WritingCanvas({
           className="absolute inset-0 w-full h-full cursor-crosshair z-10"
         />
 
+        {/* Show current stroke progress. */}
         <div className="absolute top-3 left-3 flex items-center gap-2 z-20">
            <Zap size={10} className="text-destructive animate-pulse" />
            <span className="text-[7px] font-mono font-bold uppercase tracking-widest text-muted-foreground">
@@ -147,6 +162,7 @@ export default function WritingCanvas({
         </div>
       </Card>
 
+      {/* Control panel for guide, replay, and clear actions. */}
       <Card className="grid grid-cols-3 gap-2 bg-muted/50 p-2 rounded-lg border-border shadow-none">
         {character && (
           <>

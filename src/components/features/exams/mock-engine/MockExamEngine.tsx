@@ -19,25 +19,42 @@ import { ExamPlaying } from "./ExamPlaying";
 // ======================
 // ANTARMUKA & TIPE
 // ======================
+
+/**
+ * Props for MockExamEngine component.
+ */
 interface MockExamEngineProps {
+  /** Exam data payload containing questions and metadata. */
   exam: ExamData;
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Main entry point for mock exam.
+ * Uses unique key to force re-mount when exam session changes.
+ */
 export default function MockExamEngine({ exam }: MockExamEngineProps) {
+  // Generate unique key to reset state on exam switch.
   const engineKey = exam.sessionId || exam.templateId || exam.slug || exam.id;
 
   return <MockExamEngineSession key={engineKey} exam={exam} />;
 }
 
+/**
+ * Handles exam state machine.
+ * Renders intro, result, review, or playing screen based on engine state.
+ */
 function MockExamEngineSession({ exam }: MockExamEngineProps) {
   const engine = useMockExamEngine(exam);
   const activeExam = engine.exam;
 
+  // Fallback path if category slug missing.
   const backLink = activeExam.categorySlug ? `/courses/${activeExam.categorySlug}` : "/courses";
 
+  // Show intro screen before start.
   if (engine.gameState === "intro") {
     return (
       <ExamIntro
@@ -49,6 +66,7 @@ function MockExamEngineSession({ exam }: MockExamEngineProps) {
     );
   }
 
+  // Show score summary and analysis.
   if (engine.gameState === "result") {
     return (
       <ExamResult
@@ -61,6 +79,7 @@ function MockExamEngineSession({ exam }: MockExamEngineProps) {
     );
   }
 
+  // Show user answers review.
   if (engine.gameState === "review") {
     return (
       <ExamReview
@@ -71,6 +90,7 @@ function MockExamEngineSession({ exam }: MockExamEngineProps) {
     );
   }
 
+  // Default state. Render active exam interface.
   return (
     <ExamPlaying
       exam={activeExam}

@@ -12,18 +12,21 @@ import { useEffect, useRef, useState } from "react";
 // HOOK UTAMA
 // ==========================================
 /**
- * Hook untuk menganimasikan SVG kanji.
+ * Hook animates kanji SVG stroke order.
+ * Fetches SVG from KanjiVG. Injects into DOM. Animates paths.
  * 
- * @param character Karakter kanji.
- * @param triggerKey Kunci pemicu reset animasi.
- * @param color Warna goresan teranimasi.
- * @returns Ref kontainer kontainer SVG dan status error.
+ * @param character Kanji character to animate.
+ * @param triggerKey Key to reset animation.
+ * @param color Stroke color.
+ * @returns Container ref and error state.
  */
 export function useAnimatedKanji(character: string, triggerKey: number, color: string) {
   // ==========================================
   // STATUS & STATE & REFS
   // ==========================================
+  /** Ref for SVG container element. */
   const containerRef = useRef<HTMLDivElement>(null);
+  /** Error state for fetch failure. */
   const [error, setError] = useState(false);
 
   // ==========================================
@@ -33,8 +36,11 @@ export function useAnimatedKanji(character: string, triggerKey: number, color: s
     if (!containerRef.current) return;
     setError(false);
 
+    // Get first character. Avoid multi-character input errors.
     const baseChar = character.charAt(0);
+    // Convert character to hex code. Match KanjiVG naming scheme.
     const code = baseChar.charCodeAt(0).toString(16).padStart(5, "0");
+    // KanjiVG raw GitHub URL.
     const url = `https://raw.githubusercontent.com/KanjiVG/kanjivg/master/kanji/${code}.svg`;
 
     fetch(url)
@@ -45,11 +51,13 @@ export function useAnimatedKanji(character: string, triggerKey: number, color: s
       .then((svgText) => {
         if (!containerRef.current) return;
 
+        // Inject SVG string into container.
         containerRef.current.innerHTML = svgText;
         const svg = containerRef.current.querySelector("svg");
 
         if (!svg) return;
 
+        // Make SVG responsive. Fill container element.
         svg.setAttribute("width", "100%");
         svg.setAttribute("height", "100%");
         svg.style.width = "100%";
@@ -58,7 +66,9 @@ export function useAnimatedKanji(character: string, triggerKey: number, color: s
 
         const paths = svg.querySelectorAll("path");
 
+        // Configure path stroke animation.
         paths.forEach((path, index) => {
+          // Get path length. Hide stroke initially via offset.
           const length = path.getTotalLength();
 
           path.style.strokeDasharray = length.toString();
@@ -71,10 +81,12 @@ export function useAnimatedKanji(character: string, triggerKey: number, color: s
           path.style.fill = "none";
           path.style.filter = `drop-shadow(0 0 4px ${color})`;
 
+          // Apply CSS animation. Delay stroke start sequentially.
           path.style.animation = `drawKanji 0.8s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.7}s forwards`;
         });
 
         const texts = svg.querySelectorAll("text");
+        // Hide stroke numbers. Keep visual clean.
         texts.forEach((text) => (text.style.display = "none"));
       })
       .catch(() => {

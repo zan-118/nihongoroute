@@ -26,6 +26,9 @@ import NextActionPanel from "@/components/features/ecosystem/NextActionPanel";
 import { useUIStore } from "@/store/useUIStore";
 import { cn } from "@/lib/utils";
 
+/**
+ * Sample verbs for quick selection in trainer.
+ */
 const SAMPLE_VERBS: Array<{ word: string; group: VerbGroup; label: string }> = [
   { word: "書く", group: "godan", label: "Godan" },
   { word: "読む", group: "godan", label: "Godan" },
@@ -35,20 +38,34 @@ const SAMPLE_VERBS: Array<{ word: string; group: VerbGroup; label: string }> = [
   { word: "来る", group: "irregular", label: "Irregular" },
 ];
 
+/**
+ * Verb groups with labels and hints.
+ */
 const GROUPS: Array<{ id: VerbGroup; label: string; hint: string }> = [
   { id: "godan", label: "Godan", hint: "う-verbs" },
   { id: "ichidan", label: "Ichidan", hint: "る-verbs" },
   { id: "irregular", label: "Irregular", hint: "する / 来る" },
 ];
 
+/**
+ * Props for ConjugationTrainerClient component.
+ */
 interface ConjugationTrainerClientProps {
+  /** Initial dictionary form of verb. */
   initialVerb?: string;
+  /** Initial verb group classification. */
   initialGroup?: VerbGroup;
+  /** Initial target conjugation form. */
   initialForm?: VerbFormId;
+  /** Title of source vocabulary item. */
   sourceTitle?: string;
+  /** URL path of source vocabulary item. */
   sourceHref?: string;
 }
 
+/**
+ * Interactive trainer component for Japanese verb conjugations.
+ */
 export default function ConjugationTrainerClient({
   initialVerb,
   initialGroup = "godan",
@@ -63,6 +80,9 @@ export default function ConjugationTrainerClient({
   const [hasChecked, setHasChecked] = useState(false);
   const recordLearningEvent = useUIStore((state) => state.recordLearningEvent);
 
+  /**
+   * Computes verb conjugations based on input verb and group.
+   */
   const conjugation = useMemo(() => {
     try {
       return { error: "", result: conjugateVerb(verb, group) };
@@ -74,13 +94,23 @@ export default function ConjugationTrainerClient({
     }
   }, [group, verb]);
 
+  // Expected correct conjugation string
   const expected = conjugation.result?.forms[targetForm] || "";
+  
+  // Check if user answer matches expected conjugation
   const isCorrect = hasChecked && expected
     ? isConjugationAnswerCorrect(expected, answer)
     : false;
+    
+  // Metadata for target conjugation form
   const targetMeta = VERB_FORMS.find((item) => item.id === targetForm);
+  
+  // Extract slug from source URL for tracking
   const sourceSlug = sourceHref?.split("?")[0].split("/").filter(Boolean).pop();
 
+  /**
+   * Sets state based on selected sample verb.
+   */
   const handleSample = (sample: (typeof SAMPLE_VERBS)[number]) => {
     setVerb(sample.word);
     setGroup(sample.group);
@@ -88,11 +118,17 @@ export default function ConjugationTrainerClient({
     setHasChecked(false);
   };
 
+  /**
+   * Resets user answer and check state.
+   */
   const handleReset = () => {
     setAnswer("");
     setHasChecked(false);
   };
 
+  /**
+   * Validates user answer and records learning event.
+   */
   const handleCheck = () => {
     if (!conjugation.result || !answer.trim()) return;
 

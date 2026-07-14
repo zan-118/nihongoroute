@@ -20,6 +20,7 @@ import {
 // CONFIG / FONTS
 // ======================
 
+// Register Japanese font family to support Kanji and Kana characters in PDF.
 Font.register({
   family: "NotoSansJP",
   fonts: [
@@ -33,14 +34,22 @@ Font.register({
 // ======================
 import { PdfVocabItem } from "./LessonPdfTemplate";
 
+/**
+ * Props for the VocabPdfTemplate component.
+ */
 interface VocabTemplateProps {
+  /** Array of vocabulary items to display in the PDF table */
   data: PdfVocabItem[];
+  /** JLPT level or lesson level identifier */
   level: string;
 }
 
 // ======================
 // STYLES
 // ======================
+/**
+ * Stylesheet definitions for the PDF layout.
+ */
 const styles = StyleSheet.create({
   page: {
     padding: 50,
@@ -204,6 +213,13 @@ const styles = StyleSheet.create({
 // MAIN EXECUTION
 // ======================
 
+/**
+ * Formats the meaning string by limiting the items to a maximum of two.
+ * Appends "dll." if the list exceeds two items.
+ * 
+ * @param text - Raw meaning string containing comma or semicolon separated values.
+ * @returns Formatted meaning string.
+ */
 const formatMeaning = (text?: string) => {
   if (!text) return "—";
   const parts = text.split(/[,;]/).map((s: string) => s.trim()).filter(Boolean);
@@ -211,7 +227,9 @@ const formatMeaning = (text?: string) => {
 };
 
 /**
- * Komponen VocabPdfTemplate: Menyusun layout PDF untuk daftar kosakata.
+ * VocabPdfTemplate Component.
+ * Renders a structured PDF document containing a vocabulary list table.
+ * Designed for A4 size with custom headers, footers, and Japanese font support.
  */
 export const VocabPdfTemplate = ({ data, level }: VocabTemplateProps) => (
   <Document title={`Kamus Kosakata NihongoRoute - ${level}`}>
@@ -263,6 +281,7 @@ export const VocabPdfTemplate = ({ data, level }: VocabTemplateProps) => (
             key={`vocab-${pos}`}
             style={[
               styles.tableRow,
+              // Apply zebra striping to alternate rows
               pos % 2 === 1 ? styles.tableRowZebra : {},
             ]}
             wrap={false}
@@ -295,6 +314,7 @@ export const VocabPdfTemplate = ({ data, level }: VocabTemplateProps) => (
         <Link src="https://nihongoroute.my.id" style={styles.footerLink}>
           nihongoroute.my.id
         </Link>
+        {/* Dynamic page number rendering */}
         <Text
           style={styles.footerText}
           render={({ pageNumber, totalPages }) => `Halaman ${pageNumber} dari ${totalPages}`}

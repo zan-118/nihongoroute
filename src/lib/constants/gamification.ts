@@ -29,6 +29,10 @@ import { UserProgress } from "@/store/types";
 // ==========================================
 // TIPE DATA & ANTARMUKA
 // ==========================================
+
+/**
+ * Quest structure. Define daily task parameters.
+ */
 export interface Quest {
   id: string;
   title: string;
@@ -38,6 +42,9 @@ export interface Quest {
   icon: React.ComponentType<{ size?: number; className?: string }>;
 }
 
+/**
+ * Achievement structure. Track user milestones.
+ */
 export interface Achievement {
   id: string;
   title: string;
@@ -50,6 +57,10 @@ export interface Achievement {
 // ==========================================
 // POOL 15 MISI HARIAN (DAILY QUESTS POOL)
 // ==========================================
+
+/**
+ * Pool of daily quests. System select subset daily.
+ */
 export const DAILY_QUESTS_POOL: Quest[] = [
   {
     id: "q_review_10",
@@ -176,6 +187,10 @@ export const DAILY_QUESTS_POOL: Quest[] = [
 // ==========================================
 // DAFTAR 20 LENCANA PRESTASI (ACHIEVEMENTS LIST)
 // ==========================================
+
+/**
+ * List of achievements. Evaluate progress against thresholds.
+ */
 export const ACHIEVEMENTS_LIST: Achievement[] = [
   // 1. Kosakata dipelajari (SRS card count)
   {
@@ -353,11 +368,18 @@ export const ACHIEVEMENTS_LIST: Achievement[] = [
 // ==========================================
 // SEEDED RANDOM SELECTION HELPER (PRNG)
 // ==========================================
+
+/**
+ * Seeded pseudo-random number generator. Ensure same seed yield same sequence.
+ * @param seedStr Input string for seed.
+ */
 function getSeededRandom(seedStr: string) {
   let h = 0;
+  // Generate hash from seed string.
   for (let i = 0; i < seedStr.length; i++) {
     h = Math.imul(31, h) + seedStr.charCodeAt(i) | 0;
   }
+  // Mulberry32 algorithm. Return float 0 to 1.
   return function() {
     let t = h += 0x6D2B79F5;
     t = Math.imul(t ^ (t >>> 15), t | 1);
@@ -367,7 +389,9 @@ function getSeededRandom(seedStr: string) {
 }
 
 /**
- * Memilih 3 misi harian dari pool secara acak dan deterministik berdasarkan tanggal.
+ * Select 3 daily quests. Use date string as seed for consistency.
+ * @param quests Quest pool.
+ * @param dateStr Date string key.
  */
 export function getTodayQuests(quests: Quest[], dateStr: string): Quest[] {
   if (quests.length <= 3) return quests;

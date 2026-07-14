@@ -15,14 +15,14 @@ import { fetchTTSAudio, speakWithWebSpeech, detectVoice, TTS_VOICES, type TtsVoi
 // HOOK UTAMA
 // ==========================================
 /**
- * Hook kustom untuk membacakan teks bahasa Jepang (TTS) menggunakan strategi Hybrid & Caching.
- * Mengutamakan Edge TTS API dan mendeteksi suara pria/wanita otomatis berdasarkan nama pembicara,
- * fallback ke Web Speech API jika Edge TTS tidak tersedia.
+ * Hook for Japanese text-to-speech.
+ * Uses hybrid strategy with caching.
+ * Falls back to Web Speech API.
  * 
- * @param {string} text - Teks bahasa Jepang yang akan dibacakan.
- * @param {string} [speaker] - Nama pembicara untuk penentuan gender suara dinamis.
- * @returns {{ isPlaying: boolean; hasJapanese: boolean; speak: () => Promise<void> }} Status pemutaran, keberadaan karakter Jepang, dan fungsi pemicu speak.
- * @effects Memutar audio di browser, memprefetch data ke CacheStorage, memanipulasi window.speechSynthesis.
+ * @param text Japanese text to read.
+ * @param speaker Speaker name for voice selection.
+ * @param audioUrl Optional pre-fetched audio URL.
+ * @returns Playback state, Japanese text check, and speak trigger.
  */
 export function useTTSReader(text: string, speaker?: string, audioUrl?: string | null) {
   // ==========================================
@@ -35,6 +35,9 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
   const objectUrlRef = useRef<string | null>(null);
   const isSelfPlayingRef = useRef(false);
 
+  /**
+   * Release memory of active blob URL.
+   */
   const cleanupObjectUrl = () => {
     if (objectUrlRef.current) {
       URL.revokeObjectURL(objectUrlRef.current);
@@ -46,7 +49,9 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
   // EFEK SAMPING (EFFECTS)
   // ==========================================
   useEffect(() => {
+    // Regex matches Hiragana, Katakana, and Kanji.
     const jpRegex = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/;
+    // Run check in animation frame to prevent UI lag.
     const frame = requestAnimationFrame(() => {
       setHasJapanese(jpRegex.test(text));
     });
@@ -54,6 +59,7 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
   }, [text]);
 
   useEffect(() => {
+    // Handle global pause event to stop audio.
     const handlePause = () => {
       if (isSelfPlayingRef.current) {
         isSelfPlayingRef.current = false;
@@ -87,11 +93,9 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
   // LOGIKA PENGENDALI & PEMUTARAN AUDIO
   // ==========================================
   /**
-   * Menjalankan pemutaran suara.
-   * Strategi:
-   * 1. Hentikan pemutaran jika sedang berjalan.
-   * 2. Ambil audio berkualitas tinggi dari API Route /api/tts menggunakan fetchTTSAudio.
-   * 3. Jika gagal atau luring total tanpa cache, gunakan Web Speech API (speakWithWebSpeech).
+   * Trigger audio playback.
+   * Stop current audio if playing.
+   * Fetch from API or use Web Speech API fallback.
    */
   const speak = async () => {
     if (typeof window === "undefined") return;
@@ -111,7 +115,7 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
       return;
     }
 
-    // Pemicu pause audio lain di halaman
+    // Prevent self-pausing. Stop other active TTS instances.
     isSelfPlayingRef.current = true;
     window.dispatchEvent(new CustomEvent("nihongoroute_pause_line_tts"));
     window.dispatchEvent(new CustomEvent("nihongoroute_pause_native_audio"));
@@ -129,7 +133,7 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
       // agar hash deterministik menghasilkan voice yang sama (cache hit)
       const voices = [
         // Wanita
-        TTS_VOICES.LARA,
+        TTS_VOICES.LALA,
         TTS_VOICES.INDAH,
         TTS_VOICES.SITI,
         TTS_VOICES.DEWI,
@@ -148,8 +152,8 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
         TTS_VOICES.FAISAL,
         TTS_VOICES.TAKAHASHI,
         TTS_VOICES.KOBAYASHI,
-        TTS_VOICES.NAMONASHI,
       ];
+      // Generate deterministic hash from text to select voice.
       let hash = 0;
       for (let i = 0; i < cleanText.length; i++) {
         hash = cleanText.charCodeAt(i) + ((hash << 5) - hash);
@@ -158,6 +162,9 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
       voice = voices[voiceIndex];
     }
 
+    /**
+     * Fallback to Web Speech API if API fetch fails.
+     */
     const playFallback = () => {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -187,6 +194,7 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
       const audio = audioRef.current;
 
       cleanupObjectUrl();
+      // Track blob URL to release later.
       if (finalAudioUrl.startsWith("blob:")) {
         objectUrlRef.current = finalAudioUrl;
       }
@@ -205,6 +213,7 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
         playFallback();
       };
 
+      // Handle browser autoplay restrictions.
       const playPromise = audio.play();
       if (playPromise !== undefined) {
         playPromise.catch(error => {
@@ -223,4 +232,3 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
   // ==========================================
   return { isPlaying, hasJapanese, speak };
 }
-

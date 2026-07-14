@@ -30,12 +30,18 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
+/**
+ * Represents single vocabulary item in cheatsheet.
+ */
 export interface SheetItem {
   label: string;
   jp: string;
   romaji: string;
 }
 
+/**
+ * Represents cheatsheet document structure.
+ */
 export interface Cheatsheet {
   _id?: string;
   id?: string;
@@ -46,16 +52,21 @@ export interface Cheatsheet {
   items?: SheetItem[];
 }
 
+/**
+ * Interactive client component for cheatsheet library.
+ * Handles search, category filtering, and responsive grid display.
+ */
 export default function CheatsheetClient({
   initialSheets,
 }: {
   initialSheets: Cheatsheet[];
 }) {
+  // Ensure sheets is array. Prevent crash if API returns null.
   const safeSheets = useMemo(() => Array.isArray(initialSheets) ? initialSheets : [], [initialSheets]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
-  // Mendapatkan kategori unik dengan jumlah item masing-masing
+  // Count sheets per category. Used for filter badges.
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = { all: safeSheets.length };
     safeSheets.forEach((sheet) => {
@@ -66,11 +77,13 @@ export default function CheatsheetClient({
     return counts;
   }, [safeSheets]);
 
+  // Extract unique categories. Add 'all' option at start.
   const categories = useMemo(() => {
     const list = Array.from(new Set(safeSheets.map((s) => s.category).filter(Boolean)));
     return ["all", ...list];
   }, [safeSheets]);
 
+  // Filter sheets by search query and selected category.
   const filteredSheets = useMemo(() => {
     return safeSheets.filter((sheet) => {
       if (!sheet) return false;
@@ -249,6 +262,9 @@ export default function CheatsheetClient({
   );
 }
 
+/**
+ * Returns Lucide icon component based on category name.
+ */
 function getIconForCategory(cat: string) {
   const c = cat?.toLowerCase() || "";
   if (c.includes("bilangan") || c.includes("angka") || c.includes("counter")) return <Hash size={24} />;

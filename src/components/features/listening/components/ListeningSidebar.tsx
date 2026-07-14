@@ -14,10 +14,17 @@ import { Info, Trophy, FileText, CircleHelp, Layers } from "lucide-react";
 // ==========================================
 // ANTARMUKA & TIPE DATA
 // ==========================================
+/**
+ * Props for ListeningSidebar.
+ */
 interface ListeningSidebarProps {
+  /** Total quiz questions. */
   quizLength: number;
+  /** Total transcript lines. */
   transcriptLength?: number;
+  /** JLPT level. */
   jlptLevel?: string;
+  /** Difficulty level. */
   difficulty?: string;
 }
 
@@ -25,9 +32,10 @@ interface ListeningSidebarProps {
 // KOMPONEN UTAMA: ListeningSidebar
 // ==========================================
 /**
- * Komponen bilah samping informatif latihan menyimak.
+ * Sidebar for listening practice. Show metadata, tips, XP rewards.
  *
- * @param {ListeningSidebarProps} props Properti untuk komponen bilah samping.
+ * @param props - Component properties.
+ * @returns Sidebar element.
  */
 export function ListeningSidebar({
   quizLength,
@@ -38,6 +46,7 @@ export function ListeningSidebar({
   return (
     <aside className="lg:col-span-4 flex flex-col gap-6">
       {/* Metadata Materi */}
+      {/* Show metadata block if any data present. */}
       {(jlptLevel || difficulty || transcriptLength > 0 || quizLength > 0) && (
         <div className="p-6 rounded-xl bg-background/[0.02] border border-border flex flex-col gap-4">
           <h4 className="text-[10px] uppercase tracking-[0.2em] text-foreground flex items-center gap-2">
@@ -122,6 +131,7 @@ export function ListeningSidebar({
           <Trophy size={40} className="absolute -bottom-2 -right-2 text-primary/10 group-hover:scale-110 transition-transform" />
           <div className="flex flex-col gap-1">
             <span className="text-[10px] font-black uppercase tracking-widest text-primary">Hadiah Kuis</span>
+            {/* Calculate max XP. Each question worth 50 XP. */}
             <span className="text-xl font-black text-foreground">
               hingga +{quizLength * 50} XP
             </span>

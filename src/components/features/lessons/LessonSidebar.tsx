@@ -16,16 +16,28 @@ import { cn } from "@/lib/utils";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+
+/**
+ * Props for LessonSidebar.
+ */
 interface LessonSidebarProps {
+  /** Lesson list in course. */
   nav: { slug: string; title: string }[];
+  /** Active lesson slug. */
   currentSlug: string;
+  /** Course category ID. */
   categoryId: string;
+  /** Course category title. */
   categoryTitle: string;
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Sidebar component. Render lesson navigation and progress.
+ */
 export default function LessonSidebar({ 
   nav, 
   currentSlug, 
@@ -54,6 +66,7 @@ export default function LessonSidebar({
         <nav className="p-4 rounded-2xl bg-card/20  border border-border/40 shadow-xl overflow-hidden">
           <div className="max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar space-y-1">
             {nav.map((lesson, idx) => {
+              // Check if lesson active.
               const isActive = lesson.slug === currentSlug;
               return (
                 <Link
@@ -66,6 +79,7 @@ export default function LessonSidebar({
                       : "hover:bg-[rgb(var(--primary-rgb)/0.05)] text-muted-foreground hover:text-foreground"
                   )}
                 >
+                  {/* Highlight active item. */}
                   {isActive && (
                     <div 
                       className="absolute inset-0 pointer-events-none" 
@@ -102,12 +116,14 @@ export default function LessonSidebar({
           <div className="relative z-10">
             <p className="text-[9px] font-black text-primary uppercase tracking-widest mb-2">Statistik Kamu</p>
             <div className="flex items-end gap-2 mb-4">
+              {/* Calculate progress percent. */}
               <span className="text-3xl font-black text-foreground leading-none">
                 {Math.round((nav.findIndex(l => l.slug === currentSlug) + 1) / nav.length * 100)}%
               </span>
               <span className="text-[10px] font-bold text-muted-foreground mb-1">Selesai</span>
             </div>
             <div className="h-1.5 w-full bg-muted/30 rounded-full overflow-hidden">
+              {/* Set progress bar width. */}
               <div 
                 className="h-full bg-primary transition-all duration-1000" 
                 style={{ width: `${(nav.findIndex(l => l.slug === currentSlug) + 1) / nav.length * 100}%` }}

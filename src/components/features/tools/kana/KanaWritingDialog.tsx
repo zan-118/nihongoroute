@@ -20,11 +20,19 @@ import { KanaType } from "./kana-data";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Props for KanaWritingDialog component.
+ */
 interface KanaWritingDialogProps {
+  /** Selected character data. Null hides dialog. */
   selectedChar: { char: string; romaji: string } | null;
+  /** State setter for selected character. */
   setSelectedChar: (char: { char: string; romaji: string } | null) => void;
+  /** Kana type. Hiragana or katakana. */
   type: KanaType;
+  /** CSS class for text/icon color. */
   themeColor: string;
+  /** CSS class for border color. */
   themeBorder: string;
 }
 
@@ -32,7 +40,8 @@ interface KanaWritingDialogProps {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen modal latihan menulis kana.
+ * Dialog component for interactive kana writing practice.
+ * Uses canvas to draw and trace characters.
  */
 export function KanaWritingDialog({
   selectedChar,
@@ -41,6 +50,7 @@ export function KanaWritingDialog({
   themeColor,
   themeBorder,
 }: KanaWritingDialogProps) {
+  // Check if hiragana. Determine color scheme.
   const isHira = type === "hiragana";
 
   // ==========================================
@@ -48,7 +58,9 @@ export function KanaWritingDialog({
   // ==========================================
   return (
     <Dialog
+      // Open when character selected.
       open={!!selectedChar}
+      // Clear selection on close.
       onOpenChange={(open) => !open && setSelectedChar(null)}
     >
       <DialogContent className="max-w-md p-0 border-none bg-transparent shadow-none">
@@ -98,6 +110,7 @@ export function KanaWritingDialog({
                 </div>
 
                 <div className="w-full flex-1 flex flex-col justify-center min-h-[300px] mb-2 bg-background rounded-xl border border-border overflow-hidden">
+                  {/* Canvas for drawing. Pass character and theme colors. */}
                   <WritingCanvas 
                     character={selectedChar!.char} 
                     strokeColor={isHira ? "rgb(var(--primary-rgb))" : "rgb(var(--secondary-rgb))"}

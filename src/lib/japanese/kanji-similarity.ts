@@ -1,3 +1,6 @@
+/**
+ * Kanji details for similarity comparison.
+ */
 export interface SimilarKanjiItem {
   character: string;
   meaning: string;
@@ -6,6 +9,9 @@ export interface SimilarKanjiItem {
   examples: Array<{ word: string; meaning: string }>;
 }
 
+/**
+ * Pair of similar kanji with comparison details.
+ */
 export interface SimilarKanjiPair {
   id: string;
   level: "N5" | "N4" | "N3";
@@ -15,6 +21,9 @@ export interface SimilarKanjiPair {
   items: [SimilarKanjiItem, SimilarKanjiItem];
 }
 
+/**
+ * List of similar kanji pairs for N5-N3 levels.
+ */
 export const SIMILAR_KANJI_PAIRS: SimilarKanjiPair[] = [
   {
     id: "matsu-mada",
@@ -55,7 +64,7 @@ export const SIMILAR_KANJI_PAIRS: SimilarKanjiPair[] = [
       {
         character: "日",
         meaning: "hari / matahari",
-        reading: "にち / ひ",
+        reading: "にchi / ひ",
         cue: "Satu garis horizontal di dalam.",
         examples: [
           { word: "日本", meaning: "Jepang" },
@@ -192,6 +201,11 @@ export const SIMILAR_KANJI_PAIRS: SimilarKanjiPair[] = [
   },
 ];
 
+/**
+ * Get kanji pair by ID. Fallback to first pair if not found.
+ * @param id Pair identifier.
+ */
 export function getSimilarKanjiPair(id: string) {
+  // Find pair by ID. Fallback to index 0 if missing.
   return SIMILAR_KANJI_PAIRS.find((pair) => pair.id === id) || SIMILAR_KANJI_PAIRS[0];
 }

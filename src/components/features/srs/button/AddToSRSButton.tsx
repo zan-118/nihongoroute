@@ -17,17 +17,27 @@ import { Button } from "@/components/ui/button";
 // ======================
 // ANTARMUKA & TIPE
 // ======================
+/**
+ * Props for AddToSRSButton.
+ */
 interface AddToSRSButtonProps {
+  /** Unique identifier of word. */
   wordId: string;
+  /** Optional CSS class names. */
   className?: string;
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * Button to add word to SRS.
+ * Shows active star if added, clickable star if not.
+ */
 export function AddToSRSButton({ wordId, className }: AddToSRSButtonProps) {
   const { isLoaded, isAdded, handleAdd } = useAddToSRS(wordId);
 
+  // Show skeleton while loading SRS status
   if (!isLoaded) {
     return (
       <Button
@@ -61,6 +71,7 @@ export function AddToSRSButton({ wordId, className }: AddToSRSButtonProps) {
       aria-label={isAdded ? "Sudah ditambahkan ke SRS" : "Tambahkan ke SRS"}
       title={isAdded ? "Sudah ditambahkan ke SRS" : "Tambahkan ke SRS"}
     >
+      {/* Show star with checkmark overlay if added, empty star if not */}
       {isAdded ? (
         <div className="relative flex items-center justify-center">
           <Star className="size-5 fill-primary text-primary filter drop-shadow-[0_0_2px_rgb(var(--primary-rgb)/0.5)] animate-[scaleIn_0.3s_ease-out]" />

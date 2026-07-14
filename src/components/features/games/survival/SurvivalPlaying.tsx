@@ -20,24 +20,45 @@ import { SmartJapanese } from "@/components/ui/SmartJapanese";
 // ======================
 // ANTARMUKA & TIPE
 // ======================
+
+/**
+ * Props for SurvivalPlaying component.
+ */
 interface SurvivalPlayingProps {
+  /** Current player health points. */
   hp: number;
+  /** Maximum player health points. */
   MAX_HP: number;
+  /** Current game score. */
   score: number;
+  /** Seconds left for current question. */
   timeLeft: number;
+  /** Max seconds allowed per question. */
   TIME_PER_QUESTION: number;
+  /** Active question card data. */
   currentCard: CardData | null;
+  /** Answer choices. */
   options: CardData[];
+  /** Trigger shake animation on error. */
   isShaking: boolean;
+  /** ID of selected wrong choice. */
   selectedWrongId: string | null;
+  /** ID of chosen option. */
   selectedId: string | null;
+  /** Block input during answer validation. */
   isCorrecting: boolean;
+  /** Trigger on choice click. */
   handleAnswer: (option: CardData) => void;
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Active gameplay UI for survival mode.
+ * Shows health, timer, score, target word, and choices.
+ */
 export function SurvivalPlaying({
   hp,
   MAX_HP,
@@ -52,7 +73,9 @@ export function SurvivalPlaying({
   isCorrecting,
   handleAnswer,
 }: SurvivalPlayingProps) {
+  // Danger state if time low
   const isDangerTime = timeLeft <= 3;
+  // Critical state if one life left
   const isCriticalHp = hp === 1;
 
   return (
@@ -61,6 +84,7 @@ export function SurvivalPlaying({
         className={`flex justify-between items-center mb-4 md:mb-10 p-4 md:p-10 rounded-xl md:rounded-2xl border transition-all duration-200 neo-card shadow-lg ${isCriticalHp ? "border-destructive/60 bg-destructive/5 shadow-md" : "bg-card border-border"}`}
       >
         <div className="flex gap-1 md:gap-4 items-center">
+          {/* Render health battery icons */}
           {[...Array(MAX_HP)].map((_, i) => (
             <BatteryMedium
               key={`hp-${i}`}
@@ -97,7 +121,7 @@ export function SurvivalPlaying({
             opacity: 1,
             scale: 1,
             y: 0,
-            x: isShaking ? [-10, 10, -10, 10, 0] : 0,
+            x: isShaking ? [-10, 10, -10, 10, 0] : 0, // Shake animation on wrong answer
           }}
           exit={{ opacity: 0, scale: 0.95, y: -20 }}
           transition={{ duration: 0.3, type: "spring", stiffness: 400, damping: 25 }}
@@ -135,7 +159,7 @@ export function SurvivalPlaying({
                    word={currentCard?.word || ""}
                    furigana={
                      currentCard?.furigana && /^[a-zA-Z\s.,?!'-]+$/.test(currentCard.furigana)
-                       ? wanakana.toHiragana(currentCard.furigana)
+                       ? wanakana.toHiragana(currentCard.furigana) // Convert romaji furigana to hiragana
                        : currentCard?.furigana || undefined
                    }
                    className="[&_rt]:text-primary/80"
@@ -148,7 +172,7 @@ export function SurvivalPlaying({
 
       <div className="mb-4 md:mb-10">
          <Progress
-           value={(timeLeft / TIME_PER_QUESTION) * 100}
+           value={(timeLeft / TIME_PER_QUESTION) * 100} // Calculate time progress percentage
            className="h-1.5 md:h-3 bg-muted border border-border rounded-full overflow-hidden"
            indicatorClassName={isDangerTime ? "bg-destructive shadow-sm transition-all duration-700" : "bg-primary transition-all duration-700"}
          />
@@ -156,7 +180,9 @@ export function SurvivalPlaying({
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-6 items-stretch">
         {options.map((option, idx) => {
+          // Check if option matches correct answer
           const isCorrect = selectedId === option.id && option.id === currentCard?.id;
+          // Check if option matches wrong selection
           const isWrong = selectedWrongId === option.id;
 
           return (

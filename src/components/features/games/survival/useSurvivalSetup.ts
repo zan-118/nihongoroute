@@ -19,6 +19,13 @@ import { toast } from "sonner";
 // ======================
 // HOOK UTAMA
 // ======================
+
+/**
+ * Hook manages survival game setup state.
+ * Handles level selection, card count, fetching, and game state transitions.
+ * 
+ * @returns Game setup state and control handlers.
+ */
 export function useSurvivalSetup() {
   const searchParams = useSearchParams();
   const categorySlug = searchParams.get("category");
@@ -30,9 +37,10 @@ export function useSurvivalSetup() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasAutoFetched, setHasAutoFetched] = useState(false);
 
-  // Trigger otomatis jika masuk via URL ?category=slug (misal dari halaman pelajaran)
+  // Sync URL category parameter to level state once on mount.
   useEffect(() => {
     if (categorySlug && !hasAutoFetched) {
+      // Defer state update to avoid render conflicts.
       requestAnimationFrame(() => {
         setHasAutoFetched(true);
         setLevel(categorySlug.toUpperCase());
@@ -40,9 +48,14 @@ export function useSurvivalSetup() {
     }
   }, [categorySlug, hasAutoFetched]);
 
+  /**
+   * Fetches vocabulary cards and starts game.
+   * Validates card count and formats data for game loop.
+   */
   const handleStartGame = useCallback(async () => {
     setIsFetchingCards(true);
     try {
+      // Fetch cards from database based on selected level and limit.
       const data = await getFlashcardsByMode("survival", level, amount);
       
       const vocabData = data as unknown as Array<{
@@ -55,11 +68,13 @@ export function useSurvivalSetup() {
         jlpt_level?: string | null;
       }>;
 
+      // Game requires at least 4 cards to generate multiple choice options.
       if (!vocabData || vocabData.length < 4) {
         toast.error("Moushiwake arimasen - Data kosakata tidak cukup untuk memulai permainan (minimal 4 kata).");
         return;
       }
 
+      // Map database schema to game card structure.
       const formatted = vocabData.map((v) => ({
         id: v.id,
         word: v.word,
@@ -81,6 +96,9 @@ export function useSurvivalSetup() {
     }
   }, [level, amount]);
 
+  /**
+   * Resets game state and clears loaded cards.
+   */
   const handleExitGame = useCallback(() => {
     setIsPlaying(false);
     setCards([]);

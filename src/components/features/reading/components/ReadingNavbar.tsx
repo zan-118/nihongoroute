@@ -15,12 +15,21 @@ import { cn } from "@/lib/utils";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Props for ReadingNavbar component.
+ */
 interface ReadingNavbarProps {
+  /** Article title. */
   title: string;
+  /** JLPT difficulty level. */
   difficulty: string;
+  /** Active reading mode ID. */
   mode: string;
+  /** Available reading modes. */
   modes: { id: string; icon: React.ElementType; label: string }[];
+  /** Callback when mode changes. */
   onModeChange: (id: string) => void;
+  /** Callback to toggle Zen mode. */
   onZenModeToggle: () => void;
 }
 
@@ -28,7 +37,8 @@ interface ReadingNavbarProps {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen bilah navigasi artikel membaca.
+ * Navigation bar for reading page.
+ * Provides back navigation, difficulty display, mode switching, and Zen mode toggle.
  */
 export function ReadingNavbar({
   title,
@@ -40,6 +50,7 @@ export function ReadingNavbar({
 }: ReadingNavbarProps) {
   return (
     <m.nav
+      // Slide down animation on mount
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: -100, opacity: 0 }}
@@ -103,6 +114,7 @@ export function ReadingNavbar({
         <button
           type="button"
           onClick={() => {
+            // Cycle to next mode index on click
             const idx  = modes.findIndex(m => m.id === mode);
             const next = modes[(idx + 1) % modes.length];
             onModeChange(next.id);
@@ -111,6 +123,7 @@ export function ReadingNavbar({
           className="lg:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-muted/30 border border-border text-[10px] font-black uppercase tracking-wider text-foreground hover:bg-primary/10 hover:text-primary hover:border-primary/30 transition-all"
         >
           {(() => {
+            // Render icon for active mode
             const current = modes.find(m => m.id === mode);
             return current ? <current.icon size={14} /> : null;
           })()}

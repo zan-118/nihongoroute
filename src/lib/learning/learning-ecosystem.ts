@@ -1,5 +1,9 @@
 export * from "@/lib/learning-events";
 import { LearningEvent } from "@/lib/learning-events";
+
+/**
+ * Recommendation item for user dashboard.
+ */
 export interface EcosystemRecommendation {
   id: string;
   title: string;
@@ -9,6 +13,9 @@ export interface EcosystemRecommendation {
   priority: number;
 }
 
+/**
+ * Reading progress state for specific source.
+ */
 export interface EcosystemReadingProgress {
   sourceId: string;
   sourceTitle?: string;
@@ -19,6 +26,9 @@ export interface EcosystemReadingProgress {
   updatedAt: number;
 }
 
+/**
+ * Vocabulary entry tracked from reading.
+ */
 export interface EcosystemVocabEntry {
   word: string;
   slug?: string;
@@ -28,6 +38,9 @@ export interface EcosystemVocabEntry {
   hitCount: number;
 }
 
+/**
+ * Categories of weak points.
+ */
 export type WeakPointCategory =
   | "reading"
   | "listening"
@@ -39,6 +52,9 @@ export type WeakPointCategory =
   | "sentence"
   | "mixed";
 
+/**
+ * Insight data for user weak points.
+ */
 export interface WeakPointInsight {
   id: string;
   category: WeakPointCategory;
@@ -52,8 +68,14 @@ export interface WeakPointInsight {
   sourceTitle?: string;
 }
 
+/**
+ * Categories for daily route steps.
+ */
 export type DailyRouteCategory = EcosystemRecommendation["category"] | "warmup";
 
+/**
+ * Step in daily learning route.
+ */
 export interface DailyRouteStep {
   id: string;
   order: number;
@@ -65,6 +87,9 @@ export interface DailyRouteStep {
   priority: number;
 }
 
+/**
+ * Metadata for weak point categories.
+ */
 const WEAK_POINT_META: Record<
   WeakPointCategory,
   { label: string; href: string; description: string }
@@ -116,19 +141,31 @@ const WEAK_POINT_META: Record<
   },
 };
 
+/**
+ * URL encode string safely.
+ */
 function safeQuery(value: string | undefined) {
   return encodeURIComponent(value || "");
 }
 
+/**
+ * Normalize JLPT level string.
+ */
 function normalizedLevel(level: string | undefined) {
   const upper = String(level || "").toUpperCase();
   return ["N5", "N4", "N3", "N2", "N1"].includes(upper) ? upper : "";
 }
 
+/**
+ * Get slug or ID from source.
+ */
 function sourceSlug(source: { slug?: string; id?: string }) {
   return source.slug || source.id || "";
 }
 
+/**
+ * Build URL query parameters from source.
+ */
 function sourceParams(source: { type?: string; slug?: string; id?: string; level?: string }) {
   const params = new URLSearchParams();
   if (source.type) params.set("source", source.type);
@@ -137,12 +174,18 @@ function sourceParams(source: { type?: string; slug?: string; id?: string; level
   return params.toString();
 }
 
+/**
+ * Generate drill tool URL.
+ */
 function drillHref(source: { type?: string; slug?: string; id?: string; level?: string }, kind?: string) {
   const params = new URLSearchParams(sourceParams(source));
   if (kind) params.set("kind", kind);
   return `/tools/jlpt-drill?${params.toString()}`;
 }
 
+/**
+ * Add recommendation if unique or higher priority.
+ */
 function pushUnique(
   items: EcosystemRecommendation[],
   recommendation: EcosystemRecommendation
@@ -151,6 +194,7 @@ function pushUnique(
     (item) => item.href === recommendation.href || item.id === recommendation.id
   );
   if (existingIndex >= 0) {
+    // Keep item with higher priority.
     if (recommendation.priority > items[existingIndex].priority) {
       items[existingIndex] = recommendation;
     }
@@ -159,10 +203,16 @@ function pushUnique(
   items.push(recommendation);
 }
 
+/**
+ * Sort events by date descending.
+ */
 function latestEvents(events: LearningEvent[]) {
   return [...events].sort((a, b) => b.createdAt - a.createdAt);
 }
 
+/**
+ * Generate recommendations from single event.
+ */
 function recommendationsFromEvent(event: LearningEvent): EcosystemRecommendation[] {
   const items: EcosystemRecommendation[] = [];
   const source = event.source;
@@ -171,6 +221,7 @@ function recommendationsFromEvent(event: LearningEvent): EcosystemRecommendation
   const kind = event.details?.kind;
   const sourceHref = source.href;
 
+  // Handle reading events.
   if (source.type === "reading") {
     pushUnique(items, {
       id: `${event.id}-shadowing`,
@@ -190,6 +241,7 @@ function recommendationsFromEvent(event: LearningEvent): EcosystemRecommendation
     });
   }
 
+  // Handle listening events.
   if (source.type === "listening") {
     pushUnique(items, {
       id: `${event.id}-shadowing`,
@@ -209,6 +261,7 @@ function recommendationsFromEvent(event: LearningEvent): EcosystemRecommendation
     });
   }
 
+  // Handle vocabulary events.
   if (source.type === "vocab") {
     pushUnique(items, {
       id: `${event.id}-vocab-drill`,
@@ -228,6 +281,7 @@ function recommendationsFromEvent(event: LearningEvent): EcosystemRecommendation
     });
   }
 
+  // Handle kanji events.
   if (source.type === "kanji") {
     pushUnique(items, {
       id: `${event.id}-kanji-writing`,
@@ -247,6 +301,7 @@ function recommendationsFromEvent(event: LearningEvent): EcosystemRecommendation
     });
   }
 
+  // Handle grammar events.
   if (source.type === "grammar") {
     pushUnique(items, {
       id: `${event.id}-grammar-drill`,
@@ -258,6 +313,7 @@ function recommendationsFromEvent(event: LearningEvent): EcosystemRecommendation
     });
   }
 
+  // Handle incorrect drill answers.
   if (event.type === "jlpt_drill_answered" && event.details?.isCorrect === false) {
     pushUnique(items, {
       id: `${event.id}-retry-drill`,
@@ -281,6 +337,7 @@ function recommendationsFromEvent(event: LearningEvent): EcosystemRecommendation
     }
   }
 
+  // Handle incorrect counter answers.
   if (event.type === "counter_answered" && event.details?.isCorrect === false) {
     pushUnique(items, {
       id: `${event.id}-counter-retry`,
@@ -292,6 +349,7 @@ function recommendationsFromEvent(event: LearningEvent): EcosystemRecommendation
     });
   }
 
+  // Handle incorrect conjugation checks.
   if (event.type === "conjugation_checked" && event.details?.isCorrect === false) {
     const params = new URLSearchParams();
     if (event.details.prompt) params.set("verb", event.details.prompt);
@@ -320,6 +378,7 @@ function recommendationsFromEvent(event: LearningEvent): EcosystemRecommendation
     }
   }
 
+  // Handle low accuracy drill sessions.
   if (
     event.type === "jlpt_drill_completed" &&
     typeof event.metrics?.accuracy === "number" &&
@@ -335,6 +394,7 @@ function recommendationsFromEvent(event: LearningEvent): EcosystemRecommendation
     });
   }
 
+  // Handle shadowing recordings.
   if (event.type === "shadowing_recorded") {
     pushUnique(items, {
       id: `${event.id}-shadowing-again`,
@@ -359,6 +419,9 @@ function recommendationsFromEvent(event: LearningEvent): EcosystemRecommendation
   return items;
 }
 
+/**
+ * Generate recommendations from active reading progress.
+ */
 function recommendationsFromReadingProgress(
   readingProgressMap: Record<string, EcosystemReadingProgress>
 ): EcosystemRecommendation[] {
@@ -376,6 +439,9 @@ function recommendationsFromReadingProgress(
     }));
 }
 
+/**
+ * Generate recommendations from vocabulary bank.
+ */
 function recommendationsFromVocabBank(
   bank: Record<string, EcosystemVocabEntry>
 ): EcosystemRecommendation[] {
@@ -402,6 +468,9 @@ function recommendationsFromVocabBank(
     });
 }
 
+/**
+ * Build list of ecosystem recommendations.
+ */
 export function buildEcosystemRecommendations({
   events,
   readingProgressMap,
@@ -416,13 +485,16 @@ export function buildEcosystemRecommendations({
   const recommendations: EcosystemRecommendation[] = [];
   const sortedEvents = latestEvents(events);
 
+  // Process recent events.
   sortedEvents.slice(0, 8).forEach((event) => {
     recommendationsFromEvent(event).forEach((item) => pushUnique(recommendations, item));
   });
 
+  // Process reading progress.
   recommendationsFromReadingProgress(readingProgressMap || {}).forEach((item) =>
     pushUnique(recommendations, item)
   );
+  // Process vocabulary bank.
   recommendationsFromVocabBank(readingVocabularyBank || {}).forEach((item) =>
     pushUnique(recommendations, item)
   );
@@ -432,6 +504,9 @@ export function buildEcosystemRecommendations({
     .slice(0, limit);
 }
 
+/**
+ * Determine weak point category from event.
+ */
 function weakPointCategory(event: LearningEvent): WeakPointCategory {
   const detailKind = event.details?.kind;
   if (detailKind === "counter" || detailKind === "conjugation") return detailKind;
@@ -447,6 +522,9 @@ function weakPointCategory(event: LearningEvent): WeakPointCategory {
   return "mixed";
 }
 
+/**
+ * Get tool URL for weak point category.
+ */
 function categoryHref(category: WeakPointCategory, event?: LearningEvent) {
   if (category === "counter") return "/tools/counter-trainer";
   if (category === "conjugation") {
@@ -462,6 +540,9 @@ function categoryHref(category: WeakPointCategory, event?: LearningEvent) {
   return WEAK_POINT_META[category].href;
 }
 
+/**
+ * Build weak point insights from events.
+ */
 export function buildWeakPointInsights({
   events,
   limit = 5,
@@ -480,6 +561,7 @@ export function buildWeakPointInsights({
     }
   >();
 
+  // Aggregate recent events into category buckets.
   latestEvents(events).slice(0, 40).forEach((event) => {
     const isAnswerEvent =
       event.type === "jlpt_drill_answered" ||
@@ -509,10 +591,12 @@ export function buildWeakPointInsights({
     });
   });
 
+  // Map buckets to weak point insights.
   return Array.from(buckets.entries())
     .filter(([, bucket]) => bucket.mistakes > 0)
     .map(([category, bucket]) => {
       const meta = WEAK_POINT_META[category];
+      // Calculate priority score.
       const score = bucket.mistakes * 10 + Math.min(bucket.attempts, 6) * 2 + bucket.lastSeenAt / 1_000_000_000_000;
       return {
         id: `weak-${category}`,
@@ -534,6 +618,9 @@ export function buildWeakPointInsights({
     .slice(0, limit);
 }
 
+/**
+ * Add route step if unique or higher priority.
+ */
 function pushRouteStep(steps: DailyRouteStep[], step: Omit<DailyRouteStep, "order">) {
   const existingIndex = steps.findIndex((item) => item.href === step.href || item.id === step.id);
   if (existingIndex >= 0) {
@@ -545,6 +632,9 @@ function pushRouteStep(steps: DailyRouteStep[], step: Omit<DailyRouteStep, "orde
   steps.push({ ...step, order: steps.length + 1 });
 }
 
+/**
+ * Build daily learning route steps.
+ */
 export function buildDailyRoute({
   events,
   readingProgressMap,
@@ -568,6 +658,7 @@ export function buildDailyRoute({
     .filter((entry) => !entry.completedAt && entry.totalParagraphs > 0)
     .sort((a, b) => b.updatedAt - a.updatedAt)[0];
 
+  // Add active reading step.
   if (unfinishedReading) {
     pushRouteStep(steps, {
       id: `daily-continue-${unfinishedReading.sourceId}`,
@@ -590,6 +681,7 @@ export function buildDailyRoute({
     });
   }
 
+  // Add weak point steps.
   weakPoints.forEach((weakPoint, index) => {
     pushRouteStep(steps, {
       id: `daily-weak-${weakPoint.category}`,
@@ -604,6 +696,7 @@ export function buildDailyRoute({
     });
   });
 
+  // Add recommendation steps.
   recommendations.forEach((recommendation, index) => {
     pushRouteStep(steps, {
       id: `daily-${recommendation.id}`,
@@ -619,6 +712,7 @@ export function buildDailyRoute({
     });
   });
 
+  // Add vocabulary bank step.
   if (Object.keys(readingVocabularyBank || {}).length > 0) {
     pushRouteStep(steps, {
       id: "daily-vocab-bank",
@@ -631,6 +725,7 @@ export function buildDailyRoute({
     });
   }
 
+  // Add final shadowing step.
   pushRouteStep(steps, {
     id: "daily-finish-shadowing",
     title: "Tutup dengan Shadowing",
@@ -646,4 +741,3 @@ export function buildDailyRoute({
     .slice(0, limit)
     .map((step, index) => ({ ...step, order: index + 1 }));
 }
-

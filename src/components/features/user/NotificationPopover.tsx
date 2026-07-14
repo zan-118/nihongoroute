@@ -20,14 +20,27 @@ import { useUIStore } from "@/store/useUIStore";
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Notification popover component. Show user notifications.
+ * @param props - Component properties.
+ * @param props.isOpen - Popover visibility state.
+ * @param props.onClose - Callback to close popover.
+ */
 export default function NotificationPopover({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  // Get notification state and actions from UI store
   const notifications = useUIStore(s => s.notifications);
   const markAsRead = useUIStore(s => s.markNotificationAsRead);
   const markAllAsRead = useUIStore(s => s.markAllNotificationsAsRead);
   const clearAll = useUIStore(s => s.clearNotifications);
 
+  // Count unread notifications
   const unreadCount = notifications?.filter(n => !n.read).length || 0;
 
+  /**
+   * Get icon by notification type.
+   * @param type - Notification type string.
+   */
   const getIcon = (type: string) => {
     switch (type) {
       case "achievement": return <Trophy size={16} className="text-warning" />;
@@ -37,8 +50,13 @@ export default function NotificationPopover({ isOpen, onClose }: { isOpen: boole
     }
   };
 
+  /**
+   * Format timestamp safely to relative time.
+   * @param timestamp - Raw timestamp value.
+   */
   const formatTimeSafely = (timestamp: unknown) => {
     try {
+      // Convert timestamp. Fallback if invalid.
       const t = Number(timestamp);
       if (isNaN(t) || t <= 0) return "Baru saja";
       return formatDistanceToNow(t, { addSuffix: true, locale: id });

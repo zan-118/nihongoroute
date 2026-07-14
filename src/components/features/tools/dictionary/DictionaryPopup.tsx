@@ -20,6 +20,9 @@ import { createClient } from "@/lib/supabase/client";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Dictionary query result structure.
+ */
 interface DictionaryResult {
   word: string;
   furigana?: string;
@@ -32,7 +35,7 @@ interface DictionaryResult {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen popup kamus pintar melayang.
+ * Floating dictionary popup component. Detects Japanese text selection. Shows definition and SRS options.
  */
 export default function DictionaryPopup() {
   const [selection, setSelection] = useState<{ text: string; x: number; y: number } | null>(null);
@@ -43,12 +46,17 @@ export default function DictionaryPopup() {
   // ==========================================
   // METODE PENCARIAN KATA (LOOKUP)
   // ==========================================
+  /**
+   * Fetch word definition from database.
+   * @param text Selected Japanese text.
+   */
   const lookupWord = async (text: string) => {
     setLoading(true);
     try {
       const supabase = createClient();
       
       // 1. Cari kecocokan eksak pada word atau furigana
+      // Query exact match first.
       let { data, error } = await supabase
         .from("vocab")
         .select("id, word, furigana, romaji, meaning_id")
@@ -59,6 +67,7 @@ export default function DictionaryPopup() {
       if (error) throw error;
 
       // 2. Jika tidak ditemukan, coba cari substring (ilike)
+      // Fallback to substring search if exact match fails.
       if (!data) {
         const { data: list, error: listError } = await supabase
           .from("vocab")
@@ -103,15 +112,20 @@ export default function DictionaryPopup() {
   // EFEK SAMPING (EFFECTS)
   // ==========================================
   useEffect(() => {
+    /**
+     * Handle text selection event.
+     */
     const handleMouseUp = () => {
       const selected = window.getSelection();
       const text = selected?.toString().trim();
 
+      // Check if text contains Japanese characters and is under length limit.
       if (text && text.length < 15 && /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff]/.test(text)) {
         const range = selected?.getRangeAt(0);
         const rect = range?.getBoundingClientRect();
 
         if (rect) {
+          // Calculate popup coordinates relative to viewport and scroll.
           setSelection({
             text,
             x: rect.left + window.scrollX + rect.width / 2,
@@ -122,6 +136,9 @@ export default function DictionaryPopup() {
       }
     };
 
+    /**
+     * Close popup when clicking outside.
+     */
     const handleMouseDown = (e: MouseEvent) => {
       if (popupRef.current && !popupRef.current.contains(e.target as Node)) {
         setSelection(null);
@@ -150,6 +167,7 @@ export default function DictionaryPopup() {
           exit={{ opacity: 0, scale: 0.9, y: 10 }}
           style={{
             position: "fixed", // Changed to fixed for easier boundary clamping
+            // Keep popup inside screen boundaries.
             left: Math.max(140, Math.min(selection.x - window.scrollX, typeof window !== 'undefined' ? window.innerWidth - 140 : 1000)),
             top: Math.max(200, selection.y - window.scrollY),
             transform: "translateX(-50%) translateY(-100%)",

@@ -12,19 +12,29 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useUIStore } from "@/store/useUIStore";
 
+/**
+ * Props for ReadingVocabularyCollector component.
+ */
 interface ReadingVocabularyCollectorProps {
+  /** Source reading material ID. */
   sourceId: string;
 }
 
+/**
+ * Render collected vocabulary list for reading material.
+ * Allow delete and detail view.
+ */
 export function ReadingVocabularyCollector({ sourceId }: ReadingVocabularyCollectorProps) {
   const vocabularyBank = useUIStore((state) => state.readingVocabularyBank);
   const removeReadingVocabulary = useUIStore((state) => state.removeReadingVocabulary);
   const clearReadingVocabulary = useUIStore((state) => state.clearReadingVocabulary);
 
+  // Filter words by source ID. Sort by newest first.
   const entries = Object.values(vocabularyBank)
     .filter((entry) => entry.sourceId === sourceId)
     .sort((left, right) => right.addedAt - left.addedAt);
 
+  // Show empty state if no words saved.
   if (entries.length === 0) {
     return (
       <Card className="mt-16 rounded-2xl md:rounded-3xl border border-dashed border-border bg-card/30 p-6 text-center">

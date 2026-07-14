@@ -30,15 +30,18 @@ import { Badge } from "@/components/ui/badge";
 
 // ==========================================
 /**
- * Komponen TrustBanner
- * Menyajikan pilar kepercayaan NihongoRoute kepada calon pengguna.
+ * TrustBanner component.
+ * Displays platform core values: free access, offline capability, open source.
+ * Includes community contribution ticker.
+ * 
+ * @returns React element representing trust banner section.
  */
 export function TrustBanner() {
   return (
     <section className="w-full mb-[120px]">
       <Card className="p-6 sm:p-10 md:p-12 rounded-[28px] sm:rounded-[34px] bg-card/10  border border-border/80 shadow-none relative overflow-hidden group transition-all duration-700 hover:border-primary/40 hover:shadow-[0_0_50px_rgba(var(--primary-rgb),0.1)] glass">
         
-        {/* Latar Belakang Kilau Dekoratif menggunakan variabel warna CSS */}
+        {/* Top border glow effect */}
         <div className="absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent pointer-events-none" />
         
         <div className="flex flex-col xl:flex-row items-center justify-between gap-[55px] relative z-10 mb-8">
@@ -133,6 +136,7 @@ export function TrustBanner() {
 
         {/* Ticker Kontribusi Komunitas Horizontal */}
         <div className="pt-6 border-t border-border/80 w-full overflow-hidden relative">
+          {/* Infinite horizontal scroll animation for community stats */}
           <m.div
             animate={{ x: [0, -750] }}
             transition={{

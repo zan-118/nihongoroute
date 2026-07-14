@@ -25,6 +25,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
+/**
+ * Metadata mapping for daily route categories.
+ * Defines label, icon, and style classes.
+ */
 const CATEGORY_META: Record<
   DailyRouteCategory,
   { label: string; icon: LucideIcon; className: string }
@@ -56,21 +60,34 @@ const CATEGORY_META: Record<
   },
 };
 
+/**
+ * Props for DailyRoutePanel component.
+ */
 interface DailyRoutePanelProps {
+  /** Show fewer items if true. */
   compact?: boolean;
+  /** Additional CSS classes. */
   className?: string;
 }
 
+/**
+ * Render daily learning route and weak points based on user history.
+ */
 export default function DailyRoutePanel({ compact = false, className }: DailyRoutePanelProps) {
+  // Get user learning history and progress from store.
   const events = useUIStore((state) => state.learningEvents);
   const readingProgressMap = useUIStore((state) => state.readingProgressMap);
   const readingVocabularyBank = useUIStore((state) => state.readingVocabularyBank);
+  
+  // Generate personalized steps.
   const dailyRoute = buildDailyRoute({
     events,
     readingProgressMap,
     readingVocabularyBank,
     limit: compact ? 4 : 6,
   });
+  
+  // Identify areas needing review.
   const weakPoints = buildWeakPointInsights({ events, limit: compact ? 2 : 4 });
 
   return (
@@ -104,6 +121,7 @@ export default function DailyRoutePanel({ compact = false, className }: DailyRou
 
       <div className={cn("grid gap-3", !compact && "lg:grid-cols-2")}>
         {dailyRoute.map((step) => {
+          // Get category visual style.
           const meta = CATEGORY_META[step.category];
           const Icon = meta.icon;
 
@@ -154,6 +172,7 @@ export default function DailyRoutePanel({ compact = false, className }: DailyRou
         })}
       </div>
 
+      {/* Render weak points section if mistakes exist */}
       {weakPoints.length > 0 ? (
         <div className="mt-5 rounded-lg border border-warning/20 bg-warning/10 p-4">
           <div className="mb-3 flex items-center gap-2">

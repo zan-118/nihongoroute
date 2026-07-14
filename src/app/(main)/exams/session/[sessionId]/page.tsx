@@ -6,11 +6,18 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { createPageMetadata, encodeRouteSegment } from "@/lib/seo";
 
+/**
+ * Props for exam session page.
+ */
 interface PageProps {
   params: Promise<{ sessionId: string }>;
 }
 
+/**
+ * Generate metadata for exam session page.
+ */
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  // Extract session ID from route params
   const { sessionId } = await params;
 
   return createPageMetadata({
@@ -21,10 +28,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   });
 }
 
+/**
+ * Exam session page component. Load session data and render exam engine.
+ */
 export default async function ExamSessionPage({ params }: PageProps) {
+  // Extract session ID from route params
   const { sessionId } = await params;
+  
+  // Fetch exam session package from database
   const session = await getExamSessionPackage(decodeURIComponent(sessionId));
 
+  // Show error if session not found or unauthorized
   if (!session) {
     return (
       <div className="relative flex w-full flex-1 items-center justify-center overflow-hidden px-6 py-12 text-center">
@@ -44,6 +58,7 @@ export default async function ExamSessionPage({ params }: PageProps) {
     );
   }
 
+  // Map session result to exam object for engine
   const exam = {
     ...session.exam,
     serverResult: session.result,

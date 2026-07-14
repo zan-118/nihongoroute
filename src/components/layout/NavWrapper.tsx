@@ -14,7 +14,9 @@ import Topbar from "./Topbar";
 import MobileNav from "./MobileNav";
 import dynamic from "next/dynamic";
 
+// Load floating actions dynamically. Disable SSR to prevent hydration mismatch.
 const FloatingActions = dynamic(() => import("@/components/features/global/FloatingActions"), { ssr: false });
+// Load achievement toast dynamically. Disable SSR to prevent hydration mismatch.
 const AchievementToast = dynamic(() => import("./AchievementToast"), { ssr: false });
 import { usePathname, useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
@@ -25,19 +27,36 @@ import AppBreadcrumbs from "./AppBreadcrumbs";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+
+/**
+ * Props for NavWrapper component.
+ */
 interface NavWrapperProps {
+  /** Child elements to render inside main content area. */
   children: ReactNode;
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Main layout wrapper. Handles sidebar, topbar, mobile navigation, and breadcrumbs.
+ * Adjusts layout dynamically based on current route (e.g., hides navigation on exam pages).
+ */
 export default function NavWrapper({ children }: NavWrapperProps) {
+  // Track mobile sidebar drawer open state.
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  
+  // Check if current page is exam. Hides sidebar and topbar.
   const isExamPage = pathname?.includes("/exams/");
+  
+  // Check if mobile navigation should be hidden. True for exams and reading library.
   const hideMobileNav = isExamPage || pathname?.includes("/library/reading/");
+  
+  // Memoize breadcrumb items. Recompute only when pathname changes.
   const breadcrumbItems = useMemo(() => getBreadcrumbItems(pathname), [pathname]);
 
   return (
@@ -54,6 +73,7 @@ export default function NavWrapper({ children }: NavWrapperProps) {
       {!isExamPage && <Sidebar isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />}
 
       {/* Area Konten Utama */}
+      {/* Adjust padding-left dynamically when sidebar is visible. */}
       <div className={`flex-1 flex flex-col min-w-0 ${!isExamPage ? 'md:pl-72' : ''} transition-all duration-500`}>
         {!isExamPage && <Topbar onMenuClick={() => setIsMobileMenuOpen(true)} />}
         <main

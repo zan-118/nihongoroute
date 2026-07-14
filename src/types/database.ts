@@ -7,6 +7,9 @@
 // DEKLARASI ANTARMUKA & TIPE DATA DATABASE
 // ==========================================
 
+/**
+ * Represents example sentence with translations and phonetic guides.
+ */
 export interface ExampleSentence {
   jp: string;
   id: string;
@@ -17,14 +20,23 @@ export interface ExampleSentence {
   romaji?: string;
 }
 
+/**
+ * SEO metadata for search engine optimization.
+ */
 export interface SEOMetadata {
   title?: string;
   description?: string;
   keywords?: string;
 }
 
+/**
+ * Status of content lifecycle.
+ */
 export type ContentStatus = "draft" | "review" | "approved" | "published" | "rejected";
 
+/**
+ * AI generation modes.
+ */
 export type GenerationMode =
   | "full"
   | "summary"
@@ -36,6 +48,9 @@ export type GenerationMode =
   | "examples"
   | "outline";
 
+/**
+ * Target types for editorial warnings.
+ */
 export type WarningTargetType =
   | "lesson"
   | "summary"
@@ -44,13 +59,20 @@ export type WarningTargetType =
   | "seo"
   | "reference";
 
+/**
+ * Context for AI generation runs.
+ */
 export interface GenerationContext {
   mode: GenerationMode;
   retry_count: number;
 }
 
+/**
+ * Editorial warning for content validation.
+ */
 export interface EditorialWarning {
-  key: string; // v1:${category}:${severity}:${target_id}:${target_path}
+  // Format: v1:${category}:${severity}:${target_id}:${target_path}
+  key: string; 
   category: "reference" | "validation" | "normalization" | "retry";
   severity: "high" | "medium" | "low";
   severity_weight: number; // 3: high, 2: medium, 1: low
@@ -64,6 +86,9 @@ export interface EditorialWarning {
   context?: GenerationContext;
 }
 
+/**
+ * Audit log entry for tracking content changes.
+ */
 export interface AuditEntry {
   id: string;
   timestamp: string;
@@ -79,12 +104,18 @@ export interface AuditEntry {
   };
 }
 
+/**
+ * AI confidence score and reasons.
+ */
 export interface EditorialConfidence {
   level: "high" | "medium" | "low";
   confidence_rank: number; // 3: high, 2: medium, 1: low
   reasons: string[];
 }
 
+/**
+ * Conjugation forms for adjectives.
+ */
 export interface AdjectiveConjugations {
   negative?: string;
   past?: string;
@@ -93,6 +124,9 @@ export interface AdjectiveConjugations {
   adverbial?: string;
 }
 
+/**
+ * Conjugation forms for verbs.
+ */
 export interface VerbConjugations {
   te?: string;
   nai?: string;
@@ -106,12 +140,18 @@ export interface VerbConjugations {
   meirei?: string;
 }
 
+/**
+ * Mnemonic block structure for rich text rendering.
+ */
 export interface MnemonicBlock {
   _type: string;
   children: Array<{ _type: string; text: string }>;
   [key: string]: unknown;
 }
 
+/**
+ * Unified AI response structure for library content generation.
+ */
 export interface LibraryContentAIResponse {
   id?: string;
   // Core Identifiers (per table)
@@ -204,6 +244,9 @@ export interface LibraryContentAIResponse {
   items?: Record<string, unknown>[];
 }
 
+/**
+ * Block of content within a lesson.
+ */
 export interface ContentBlock {
   id: string;
   type: "text" | "article" | "dialogue" | "image" | "quiz" | "callout" | "grammar" | "heading" | "list" | "table";
@@ -228,6 +271,9 @@ export interface ContentBlock {
   rows?: string[][];
 }
 
+/**
+ * Quiz question structure.
+ */
 export interface Quiz {
   id: string;
   question: string;
@@ -239,6 +285,9 @@ export interface Quiz {
   type: "multiple-choice" | "true-false" | "fill-in-the-blank";
 }
 
+/**
+ * Kanji table schema.
+ */
 export interface KanjiTable {
   id: string;
   character: string;
@@ -259,6 +308,9 @@ export interface KanjiTable {
   created_at: string;
 }
 
+/**
+ * Vocabulary table schema.
+ */
 export interface VocabTable {
   id: string;
   word: string;
@@ -283,6 +335,9 @@ export interface VocabTable {
   created_at: string;
 }
 
+/**
+ * Grammar table schema.
+ */
 export interface GrammarTable {
   id: string;
   title: string;
@@ -300,6 +355,9 @@ export interface GrammarTable {
   grammar_family?: string | null;
 }
 
+/**
+ * Reading material table schema.
+ */
 export interface ReadingMaterialTable {
   id: string;
   title: string;
@@ -322,6 +380,9 @@ export interface ReadingMaterialTable {
   created_at: string;
 }
 
+/**
+ * Listening material table schema.
+ */
 export interface ListeningMaterialTable {
   id: string;
   title: string;
@@ -344,6 +405,9 @@ export interface ListeningMaterialTable {
   created_at: string;
 }
 
+/**
+ * Lesson table schema.
+ */
 export interface LessonTable {
   id: string;
   category_id?: string;
@@ -370,6 +434,9 @@ export interface LessonTable {
   created_at: string;
 }
 
+/**
+ * Article table schema.
+ */
 export interface ArticleTable {
   id: string;
   category_id?: string;
@@ -387,6 +454,9 @@ export interface ArticleTable {
   created_at: string;
 }
 
+/**
+ * Exam question structure.
+ */
 export interface ExamQuestion {
   questionText: string;
   options: string[];
@@ -396,6 +466,9 @@ export interface ExamQuestion {
   imageUrl?: string | null;
 }
 
+/**
+ * Exam table schema.
+ */
 export interface ExamTable {
   id: string;
   category_id?: string;
@@ -410,6 +483,9 @@ export interface ExamTable {
   updated_at?: string;
 }
 
+/**
+ * User profile table schema.
+ */
 export interface ProfileTable {
   id: string;
   xp: number;
@@ -426,6 +502,9 @@ export interface ProfileTable {
   settings: Record<string, unknown>;
 }
 
+/**
+ * User Spaced Repetition System (SRS) progress table schema.
+ */
 export interface UserSRSTable {
   id: string;
   user_id: string;
@@ -440,6 +519,9 @@ export interface UserSRSTable {
   custom_mnemonic?: string | null;
 }
 
+/**
+ * User lesson completion table schema.
+ */
 export interface UserLessonTable {
   user_id: string;
   lesson_id: string;
@@ -448,6 +530,9 @@ export interface UserLessonTable {
   updated_at: string;
 }
 
+/**
+ * Course category table schema.
+ */
 export interface CourseCategoryTable {
   id: string;
   title: string;
@@ -458,6 +543,9 @@ export interface CourseCategoryTable {
   description?: string | null;
 }
 
+/**
+ * Cheatsheet table schema.
+ */
 export interface CheatsheetTable {
   id: string;
   slug: string;
@@ -468,6 +556,9 @@ export interface CheatsheetTable {
   updated_at?: string;
 }
 
+/**
+ * Expression table schema.
+ */
 export interface ExpressionTable {
   id: string;
   text: string;
@@ -480,6 +571,9 @@ export interface ExpressionTable {
   indonesia?: string[] | Record<string, unknown>[] | null;
 }
 
+/**
+ * Radical table schema.
+ */
 export interface RadicalTable {
   id: string;
   character: string;
@@ -490,6 +584,9 @@ export interface RadicalTable {
   created_at?: string;
 }
 
+/**
+ * Sentence table schema.
+ */
 export interface SentenceTable {
   id: string;
   japanese: string;
@@ -500,6 +597,9 @@ export interface SentenceTable {
   furigana?: string | null;
 }
 
+/**
+ * Supporter table schema.
+ */
 export interface SupporterTable {
   id: string;
   name: string;
@@ -510,6 +610,9 @@ export interface SupporterTable {
   created_at?: string;
 }
 
+/**
+ * Text-to-Speech cache table schema.
+ */
 export interface TTSCacheTable {
   id: string;
   text: string;
@@ -519,6 +622,9 @@ export interface TTSCacheTable {
   created_at: string;
 }
 
+/**
+ * User feedback table schema.
+ */
 export interface UserFeedbackTable {
   id: string;
   user_id?: string | null;
@@ -530,4 +636,3 @@ export interface UserFeedbackTable {
   created_at?: string;
   updated_at: string;
 }
-

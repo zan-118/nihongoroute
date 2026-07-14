@@ -16,16 +16,29 @@ import { ExamData } from "./types";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+
+/**
+ * Props for ExamIntro component.
+ */
 interface ExamIntroProps {
+  /** Exam metadata and question list. */
   exam: ExamData;
+  /** Callback triggered when user starts exam. */
   onStartExam: () => void | Promise<void>;
+  /** Loading state during exam initialization. */
   isStarting?: boolean;
+  /** URL path to redirect back. */
   backLink: string;
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * ExamIntro component.
+ * Renders exam details, rules, and start button.
+ */
 export function ExamIntro({
   exam,
   onStartExam,
@@ -34,6 +47,7 @@ export function ExamIntro({
 }: ExamIntroProps) {
   return (
     <Card className="w-full max-w-2xl mx-auto p-8 md:p-12 text-center mt-6 md:mt-12 relative overflow-hidden neo-card rounded-2xl md:rounded-3xl border border-border bg-card shadow-2xl transition-colors duration-300">
+      {/* Decorative background glow */}
       <div className="absolute top-0 right-0 size-[300px] bg-destructive/5 blur-[100px] rounded-full pointer-events-none" />
 
       <Card className="size-24 mx-auto neo-inset flex items-center justify-center rounded-2xl mb-8 bg-[rgb(var(--muted-rgb)/0.5)] border border-border shadow-none">

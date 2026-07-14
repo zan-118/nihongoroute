@@ -13,6 +13,9 @@ import StudioClient from "./StudioClient";
 // ======================
 // METADATA & VIEWPORT
 // ======================
+/**
+ * Metadata config for Sanity Studio. Disable search engine index.
+ */
 export const metadata: Metadata = {
   title: "NihongoRoute Sanity Studio",
   description: "CMS NihongoRoute Studio untuk mengelola kurikulum, ujian, cheatsheet, pelajaran membaca (dokkai), dan mendengarkan (choukai).",
@@ -22,6 +25,9 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * Viewport config. Prevent zoom. Ensure responsive layout.
+ */
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -32,6 +38,10 @@ export const viewport: Viewport = {
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * Page component. Render client-side Sanity Studio.
+ */
 export default function StudioPage() {
+  // Render client component wrapper for Sanity Studio
   return <StudioClient />;
 }

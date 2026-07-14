@@ -12,22 +12,37 @@ import { AnimatePresence, m } from "framer-motion";
 import { X, ZoomIn } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+/**
+ * Data structure for single illustration item.
+ */
 interface IllustrationItem {
+  /** Caption or title of illustration. */
   title?: string;
+  /** Image source URL. */
   content: string;
 }
 
+/**
+ * Props for IllustrationGallery component.
+ */
 interface IllustrationGalleryProps {
+  /** List of illustrations to display. */
   illustrations?: IllustrationItem[];
+  /** Fallback image URL if list empty. */
   fallbackImage?: string;
+  /** Default title for fallback image. */
   title?: string;
 }
 
+/**
+ * Bento-grid gallery component with lightbox modal.
+ */
 export function IllustrationGallery({
   illustrations = [],
   fallbackImage,
   title = "Ilustrasi Pelajaran",
 }: IllustrationGalleryProps) {
+  // Track selected image for lightbox modal
   const [selectedImage, setSelectedImage] = useState<IllustrationItem | null>(null);
 
   // Satukan ilustrasi dan fallback ke dalam satu list
@@ -39,6 +54,7 @@ export function IllustrationGallery({
     list.push({ content: fallbackImage, title });
   }
 
+  // Return early if no images to display
   if (list.length === 0) return null;
 
   return (
@@ -132,7 +148,7 @@ export function IllustrationGallery({
               exit={{ scale: 0.95, y: 20 }}
               transition={{ type: "spring", damping: 25, stiffness: 180 }}
               className="relative max-w-5xl w-full max-h-[85vh] rounded-xl overflow-hidden border border-border shadow-2xl bg-card glass flex flex-col"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()} // Prevent modal close when clicking content
             >
               <div className="relative overflow-hidden flex-1 bg-muted/50 flex items-center justify-center min-h-[50vh] md:min-h-[60vh]">
                 <Image

@@ -14,6 +14,10 @@ import { createStaticClient } from "@/lib/supabase/server";
 // ======================
 // TYPES
 // ======================
+
+/**
+ * Shape of random expression data.
+ */
 export interface RandomExpression {
   id: string;
   text: string;
@@ -28,13 +32,13 @@ export interface RandomExpression {
 // ======================
 
 /**
- * Mengambil satu ungkapan acak dari tabel `expressions`
- * dengan filter `common = true` untuk menjamin kualitas ungkapan.
+ * Fetch single random common expression from database.
+ * @returns Expression object or null if error/empty.
  */
 export async function getRandomExpression(): Promise<RandomExpression | null> {
   const supabase = createStaticClient();
 
-  // Ambil jumlah total ungkapan umum untuk offset acak
+  // Get total count of common expressions to calculate random offset.
   const { count } = await supabase
     .from("expressions")
     .select("*", { count: "exact", head: true })
@@ -42,8 +46,10 @@ export async function getRandomExpression(): Promise<RandomExpression | null> {
 
   if (!count || count === 0) return null;
 
+  // Generate random index within range.
   const randomOffset = Math.floor(Math.random() * count);
 
+  // Fetch single row at random offset.
   const { data, error } = await supabase
     .from("expressions")
     .select("id, text, reading, meanings, indonesia, jlpt_level")
@@ -56,6 +62,7 @@ export async function getRandomExpression(): Promise<RandomExpression | null> {
     return null;
   }
 
+  // Map database response to RandomExpression type.
   return {
     id: data.id as string,
     text: data.text as string,

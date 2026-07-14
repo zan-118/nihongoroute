@@ -29,12 +29,18 @@ import { ROUTES } from "@/lib/routes";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+/**
+ * Navigation link item structure.
+ */
 interface NavLink {
   href: string;
   label: string;
   icon: React.ElementType;
 }
 
+/**
+ * Grouped navigation links.
+ */
 interface NavLinks {
   main: NavLink[];
   learn: NavLink[];
@@ -44,19 +50,29 @@ interface NavLinks {
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * Hook manage navbar state, links, user session, logout action.
+ * @returns Navbar state and handlers.
+ */
 export function useNavbar() {
   const pathname = usePathname();
   const router = useRouter();
   const isAuthenticated = useAuthStore(s => s.isAuthenticated);
   const userFullName = useUserStore(s => s.name);
   const isGuest = useUserStore(s => s.isGuest);
+  
+  // Initialize Supabase client for auth actions.
   const supabase = createClient();
 
+  /**
+   * Sign out user and refresh page.
+   */
   const handleLogout = async () => {
     await supabase.auth.signOut();
     router.refresh();
   };
 
+  // Memoize links to prevent unnecessary re-renders.
   const links: NavLinks = useMemo(() => ({
     main: [
       { href: ROUTES.DASHBOARD, label: "Dasbor", icon: CustomDashboardIcon },

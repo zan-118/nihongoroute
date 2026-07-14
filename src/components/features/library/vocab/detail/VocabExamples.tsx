@@ -16,17 +16,32 @@ import { SmartJapanese } from "@/components/ui/SmartJapanese";
 // ==========================================
 // ANTARMUKA & TIPE DATA
 // ==========================================
+
+/**
+ * Structure representing a vocabulary sentence example.
+ */
 interface Example {
+  /** Japanese text (short key) */
   jp?: string;
+  /** Japanese text (long key) */
   japanese?: string;
+  /** Indonesian translation (short key) */
   id?: string;
+  /** Indonesian translation (long key) */
   indonesian?: string;
+  /** Furigana reading guide */
   furigana?: string;
+  /** Romaji transliteration */
   romaji?: string;
+  /** Meaning translation */
   meaning?: string;
 }
 
+/**
+ * Properties for the VocabExamples component.
+ */
 interface VocabExamplesProps {
+  /** Array of sentence examples */
   examples?: Example[];
 }
 
@@ -34,9 +49,10 @@ interface VocabExamplesProps {
 // KOMPONEN UTAMA: VocabExamples
 // ==========================================
 /**
- * Komponen panel penampil daftar contoh kalimat interaktif.
+ * Renders list of vocabulary usage examples with Japanese, Romaji, and Indonesian translation.
  * 
- * @param {VocabExamplesProps} props Properti komponen contoh kalimat kosakata.
+ * @param props Component properties.
+ * @returns Card component containing list of examples.
  */
 export function VocabExamples({ examples }: VocabExamplesProps) {
   return (
@@ -56,6 +72,7 @@ export function VocabExamples({ examples }: VocabExamplesProps) {
             <div className="mb-3 flex flex-col gap-1">
               {/* Kalimat Ejaan Bahasa Jepang (Furigana Presisi 0.55em) */}
               <p className="text-lg md:text-xl font-bold text-foreground font-japanese leading-relaxed">
+                {/* Fallback to japanese field if jp field missing */}
                 <SmartJapanese word={ex.jp || ex.japanese || ""} furigana={ex.furigana} />
               </p>
               {ex.romaji && (
@@ -69,11 +86,13 @@ export function VocabExamples({ examples }: VocabExamplesProps) {
             <div className="flex items-start gap-3 border-t border-border/50 pt-3">
               <div className="size-1.5 rounded-full bg-primary/40 mt-1.5 shrink-0" />
               <p className="text-sm font-semibold text-muted-foreground italic leading-relaxed">
+                {/* Fallback chain for translation text */}
                 {ex.meaning || ex.id || ex.indonesian}
               </p>
             </div>
           </div>
         ))}
+        {/* Render fallback message when no examples exist */}
         {(!examples || examples.length === 0) && (
           <p className="text-xs text-muted-foreground italic">Belum ada contoh kalimat untuk kata ini.</p>
         )}
@@ -81,4 +100,3 @@ export function VocabExamples({ examples }: VocabExamplesProps) {
     </Card>
   );
 }
-

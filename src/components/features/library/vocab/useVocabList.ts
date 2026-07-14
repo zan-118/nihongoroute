@@ -17,16 +17,20 @@ import { VocabItem } from "./types";
 // ==========================================
 // KONSTRUKTOR / INDEKS KONSTANTA
 // ==========================================
+/**
+ * Number of vocabulary items displayed per page.
+ */
 const ITEMS_PER_PAGE = 50;
 
 // ==========================================
 // HOOK UTAMA: useVocabList
 // ==========================================
 /**
- * Hook kustom untuk orkestrasi pemuatan data kosakata lengkap dengan fitur pencarian dan filter kelas kata.
+ * Custom hook to manage vocabulary list state, search, filtering, and pagination.
+ * Fetches data from Supabase with offline-first support.
  * 
- * @param {VocabItem[]} initialData Data awal penampung kosakata untuk rendering pertama luring.
- * @returns {Object} State dan handler pemrosesan data kosakata.
+ * @param initialData - Initial vocabulary items for offline-first rendering.
+ * @returns State and handlers for vocabulary list management.
  */
 export function useVocabList(initialData: VocabItem[] = []) {
   const [level, setLevel] = useState("N5");
@@ -44,7 +48,11 @@ export function useVocabList(initialData: VocabItem[] = []) {
     return () => clearTimeout(timer);
   }, [search]);
 
-  // Mengambil data kosakata halaman tertentu secara asinkron dari Supabase
+  /**
+   * Fetches paginated vocabulary data from Supabase based on current filters.
+   * 
+   * @param page - The page number to fetch.
+   */
   const fetchData = useCallback(async (page: number) => {
     setLoading(true);
     const supabase = createClient();
@@ -53,6 +61,7 @@ export function useVocabList(initialData: VocabItem[] = []) {
     const trimmed = debouncedSearch.trim();
 
     try {
+      // Build Supabase query with exact count
       let query = supabase
         .from("vocab")
         .select("id, word, furigana, romaji, meaning_id, hinshi, mnemonic, slug, related_kanji, jlpt_level, audio_url", { count: "exact" })
@@ -101,13 +110,16 @@ export function useVocabList(initialData: VocabItem[] = []) {
     }
   }, [level, hinshi, debouncedSearch]);
 
-  // Mengambil total item tanpa mengambil data baris secara asinkron (head-only query)
+  /**
+   * Fetches the total count of vocabulary items matching current filters.
+   */
   const fetchTotalCount = useCallback(async () => {
     const supabase = createClient();
     const levelFilter = level.toUpperCase();
     const trimmed = debouncedSearch.trim();
 
     try {
+      // Perform head-only query to get total count
       let query = supabase
         .from("vocab")
         .select("id", { count: "exact", head: true })
@@ -143,13 +155,18 @@ export function useVocabList(initialData: VocabItem[] = []) {
       return;
     }
 
+    // Reset page and fetch data when filters change
     requestAnimationFrame(() => {
       setCurrentPage(1);
       fetchData(1);
     });
   }, [level, hinshi, debouncedSearch, fetchData, fetchTotalCount, initialData.length, totalItems]);
 
-  // Handler berpindah halaman visual
+  /**
+   * Handles page changes, fetches new data, and scrolls window to top.
+   * 
+   * @param newPage - The target page number.
+   */
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
     fetchData(newPage);
@@ -171,4 +188,3 @@ export function useVocabList(initialData: VocabItem[] = []) {
     handlePageChange,
   };
 }
-

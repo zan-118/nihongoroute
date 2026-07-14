@@ -21,6 +21,15 @@ import {
 // UTILITAS MURNI
 // ======================
 
+/**
+ * Calculates exam score, section breakdown, and passing status.
+ * Requires at least 32% accuracy per section to pass (Maiten rule).
+ * 
+ * @param questions - List of exam questions.
+ * @param answers - User answers mapped by question key.
+ * @param passingScore - Minimum score required to pass.
+ * @returns Score calculation results.
+ */
 const performScoreCalculation = (questions: ExamQuestion[], answers: Record<string, number>, passingScore: number) => {
   let correctCount = 0;
   const sectionBreakdown: Record<string, { total: number; correct: number; passed: boolean }> = {
@@ -62,11 +71,25 @@ const performScoreCalculation = (questions: ExamQuestion[], answers: Record<stri
   return { correctCount, finalScore, sectionBreakdown, failedSection, isPassed };
 };
 
+/**
+ * Extracts error message from unknown error object.
+ * 
+ * @param error - Caught error.
+ * @param fallback - Default message if extraction fails.
+ * @returns Error message string.
+ */
 function getErrorMessage(error: unknown, fallback: string) {
   return error instanceof Error ? error.message : fallback;
 }
 
+/**
+ * Custom hook managing JLPT mock exam state, timer, audio playback, and progress saving.
+ * 
+ * @param initialExam - Initial exam data from server or local template.
+ * @returns State and handlers for the exam engine.
+ */
 export function useMockExamEngine(initialExam: ExamData) {
+  // Initialize game state based on existing session or results
   const [exam, setExam] = useState<ExamData>(initialExam);
   const [gameState, setGameState] = useState<GameState>(() =>
     initialExam.serverResult ? "result" : initialExam.sessionId ? "playing" : "intro"
@@ -74,6 +97,7 @@ export function useMockExamEngine(initialExam: ExamData) {
   const [timeLeft, setTimeLeft] = useState(
     () => initialExam.remainingTimeSeconds ?? exam.timeLimit * 60
   );
+  // Filter and load initial answers safely
   const [answers, setAnswers] = useState<Record<string, number>>(() =>
     Object.fromEntries(
       Object.entries(
@@ -86,6 +110,8 @@ export function useMockExamEngine(initialExam: ExamData) {
   const [serverResult, setServerResult] = useState(() => exam.serverResult ?? null);
   const [isStartingSession, setIsStartingSession] = useState(false);
   const [isSubmittingSession, setIsSubmittingSession] = useState(false);
+  
+  // Keep answers ref updated to avoid stale closures in callbacks
   const answersRef = useRef(answers);
   const isStartingRef = useRef(false);
   const isFinishingRef = useRef(false);
@@ -101,6 +127,9 @@ export function useMockExamEngine(initialExam: ExamData) {
   const [pendingConfirm, setPendingConfirm] = useState<PendingConfirmType>(null);
   const [flaggedQuestions, setFlaggedQuestions] = useState<Record<string, boolean>>({});
 
+  /**
+   * Toggles flag status for a specific question.
+   */
   const toggleFlag = useCallback((questionKey: string) => {
     setFlaggedQuestions((prev) => ({
       ...prev,
@@ -135,6 +164,7 @@ export function useMockExamEngine(initialExam: ExamData) {
   );
   const hasGlobalChoukai = !!exam.choukaiAudioUrl;
 
+  // Disable back button during listening sections to match real JLPT constraints
   const disablePreviousButton = useMemo(() => {
     if (currentQuestionIndex === 0) return true;
     if (hasGlobalChoukai) return false;
@@ -143,6 +173,7 @@ export function useMockExamEngine(initialExam: ExamData) {
     return prevQ?.section === "listening" || !!prevQ?.audioUrl;
   }, [currentQuestionIndex, isCurrentlyListening, exam.questions, hasGlobalChoukai]);
 
+  // Auto-save answers to database with debounce
   useEffect(() => {
     if (
       exam.source !== "supabase" ||
@@ -170,6 +201,9 @@ export function useMockExamEngine(initialExam: ExamData) {
     return () => window.clearTimeout(saveTimer);
   }, [answers, exam.sessionId, exam.source, gameState, serverResult]);
 
+  /**
+   * Starts the exam session, initializing state and URL.
+   */
   const startExam = useCallback(async () => {
     if (isStartingRef.current) return;
 
@@ -216,6 +250,9 @@ export function useMockExamEngine(initialExam: ExamData) {
     }
   }, [exam.id, exam.sessionId, exam.slug, exam.source, exam.templateSlug]);
 
+  /**
+   * Submits final answers and transitions to results screen.
+   */
   const finishExam = useCallback(async () => {
     if (isFinishingRef.current) return;
     isFinishingRef.current = true;
@@ -266,6 +303,9 @@ export function useMockExamEngine(initialExam: ExamData) {
   }, [exam.source, exam.sessionId, exam.questions, exam.passingScore, addXP]);
 
 
+  /**
+   * Saves selected option index for the active question.
+   */
   const handleAnswer = useCallback((optionIndex: number) => {
     if (!activeQuestion) return;
     setAnswers((prev) => {
@@ -274,6 +314,9 @@ export function useMockExamEngine(initialExam: ExamData) {
     });
   }, [activeQuestion]);
 
+  /**
+   * Navigates to next question or triggers section/finish confirmation.
+   */
   const nextQuestion = useCallback(() => {
     const sectionQuestions = sections[currentSection];
     const isLastInSection = sectionQuestions[sectionQuestions.length - 1] === currentQuestionIndex;
@@ -308,6 +351,9 @@ export function useMockExamEngine(initialExam: ExamData) {
     }
   }, [pendingConfirm, activeSectionIndex, sections, availableSections, finishExam]);
 
+  /**
+   * Navigates to previous question within the current section.
+   */
   const prevQuestion = useCallback(() => {
     const sectionQuestions = sections[currentSection];
     const isFirstInSection = sectionQuestions[0] === currentQuestionIndex;
@@ -319,6 +365,9 @@ export function useMockExamEngine(initialExam: ExamData) {
     }
   }, [currentQuestionIndex, sections, currentSection]);
 
+  /**
+   * Calculates score using server result if available, otherwise calculates locally.
+   */
   const calculateScore = useCallback(() => {
     const result = serverResult ?? exam.serverResult;
     if (result) {
@@ -334,6 +383,9 @@ export function useMockExamEngine(initialExam: ExamData) {
     return performScoreCalculation(exam.questions, answersRef.current, exam.passingScore);
   }, [serverResult, exam.serverResult, exam.questions, exam.passingScore]);
 
+  /**
+   * Generates and shares/copies result link.
+   */
   const handleShareResult = useCallback(() => {
     const { finalScore, sectionBreakdown, isPassed } = calculateScore();
     const userFullName = useUserStore.getState().name;
@@ -377,6 +429,7 @@ export function useMockExamEngine(initialExam: ExamData) {
     }
   }, [calculateScore, exam.title, exam.questions.length]);
 
+  // Detect tab switching / cheating attempts
   useEffect(() => {
     if (gameState !== "playing") return;
     let cheatTimeout: number | undefined;
@@ -402,6 +455,7 @@ export function useMockExamEngine(initialExam: ExamData) {
     };
   }, [gameState]);
 
+  // Countdown timer effect
   useEffect(() => {
     if (gameState !== "playing") return;
     const timer = setInterval(() => {
@@ -415,8 +469,9 @@ export function useMockExamEngine(initialExam: ExamData) {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [gameState, finishExam]);  // Hentikan audio dan kunci (tandai sebagai telah diputar) saat berganti pertanyaan (untuk mencegah pemutaran ulang dan tumpang tindih)
+  }, [gameState, finishExam]);  // Hentikan audio dan kunci (tandai sebagai telah diputar) saat berganti pertanyaan (untuk mencegah pemutaran ulang dan tumpang sulit)
 
+  // Stop audio playback when switching questions
   const prevQuestionIndexRef = useRef(currentQuestionIndex);
   useEffect(() => {
     const prevIdx = prevQuestionIndexRef.current;
@@ -435,6 +490,10 @@ export function useMockExamEngine(initialExam: ExamData) {
     }
   }, [currentQuestionIndex, exam.questions, exam.choukaiAudioUrl, audioStatus]);
 
+  /**
+   * Plays audio for listening section (global or question-specific).
+   * Restricts playback to once per audio track.
+   */
   const handlePlayAudio = useCallback(() => {
     if (exam.choukaiAudioUrl) {
       if (audioRef.current) {
@@ -467,6 +526,10 @@ export function useMockExamEngine(initialExam: ExamData) {
     }
   }, [activeQuestion, audioStatus, exam.choukaiAudioUrl]);
 
+  /**
+   * Navigates directly to a specific question index.
+   * Enforces linear navigation constraints for listening sections.
+   */
   const goToQuestion = useCallback((index: number) => {
     if (index >= 0 && index < exam.questions.length) {
       const targetQuestion = exam.questions[index];

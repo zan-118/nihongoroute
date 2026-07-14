@@ -5,8 +5,10 @@ import type {
 } from "@/lib/exams/import-pipeline";
 import type { Tables } from "@/types/supabase.generated";
 
+/** Vocab table row type from database schema. */
 type VocabTableRow = Tables<"vocab">;
 
+/** Official JLPT Moji-Goi question categories. */
 export const MOJI_GOI_OFFICIAL_QUESTION_TYPES = [
   "kanji_reading",
   "orthography",
@@ -16,14 +18,17 @@ export const MOJI_GOI_OFFICIAL_QUESTION_TYPES = [
   "usage",
 ] as const;
 
+/** Official question type union. */
 export type MojiGoiOfficialQuestionType =
   (typeof MOJI_GOI_OFFICIAL_QUESTION_TYPES)[number];
 
+/** Extended question type union including legacy types. */
 export type MojiGoiQuestionType =
   | MojiGoiOfficialQuestionType
   | "reading"
   | "meaning";
 
+/** Subset of vocab fields needed for question generation. */
 export type MojiGoiVocabRow = Pick<VocabTableRow, "id" | "word"> &
   Partial<
     Pick<
@@ -40,6 +45,7 @@ export type MojiGoiVocabRow = Pick<VocabTableRow, "id" | "word"> &
     >
   >;
 
+/** Pre-generated or LLM-generated question structure. */
 export interface MojiGoiEnhancedQuestion {
   type: MojiGoiQuestionType;
   sourceId: string;
@@ -50,6 +56,7 @@ export interface MojiGoiEnhancedQuestion {
   sourceReference?: string | null;
 }
 
+/** Input parameters for building Moji-Goi package. */
 export interface BuildMojiGoiImportPackageInput {
   vocabRows: readonly MojiGoiVocabRow[];
   jlptLevel: JlptImportLevel;
@@ -66,6 +73,7 @@ export interface BuildMojiGoiImportPackageInput {
   isPublished?: boolean;
 }
 
+/** Statistics for generation run. */
 export interface MojiGoiGenerationStats {
   inputRows: number;
   poolRows: number;
@@ -75,11 +83,13 @@ export interface MojiGoiGenerationStats {
   skippedByReason: Record<string, number>;
 }
 
+/** Result of package generation. */
 export interface BuildMojiGoiImportPackageResult {
   importPackage: JlptImportPackage;
   stats: MojiGoiGenerationStats;
 }
 
+/** Cleaned vocab row structure. */
 interface NormalizedVocabRow {
   id: string;
   word: string;
@@ -91,6 +101,7 @@ interface NormalizedVocabRow {
   isCommon: boolean | null;
 }
 
+/** Map JLPT level to numeric difficulty. */
 const LEVEL_DIFFICULTY: Record<JlptImportLevel, number> = {
   N5: 1,
   N4: 2,
@@ -99,6 +110,7 @@ const LEVEL_DIFFICULTY: Record<JlptImportLevel, number> = {
   N1: 5,
 };
 
+/** Map JLPT level to official Mondai section numbers. */
 const MOJI_GOI_MONDAI_BY_LEVEL: Record<
   JlptImportLevel,
   Partial<Record<MojiGoiOfficialQuestionType, number>>
@@ -139,18 +151,21 @@ const MOJI_GOI_MONDAI_BY_LEVEL: Record<
   },
 };
 
+/** Question types requiring LLM generation. */
 const LLM_QUESTION_TYPES = new Set<MojiGoiOfficialQuestionType>([
   "context",
   "usage",
   "word_formation",
 ]);
 
+/** Clean and trim string. Return null if empty. */
 function compactString(value: unknown) {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
 }
 
+/** Parse and validate JLPT level. */
 function normalizeLevel(value: unknown): JlptImportLevel | null {
   const normalized = compactString(value)?.toUpperCase();
   if (
@@ -166,6 +181,7 @@ function normalizeLevel(value: unknown): JlptImportLevel | null {
   return null;
 }
 
+/** Extract part-of-speech tags from raw database field. */
 function extractHinshiTags(value: unknown): string[] {
   if (typeof value === "string") {
     const normalized = value.trim().toLowerCase();
@@ -187,10 +203,12 @@ function extractHinshiTags(value: unknown): string[] {
   return [];
 }
 
+/** Check if string contains kanji characters. */
 function hasKanji(value: string) {
   return /[\u3400-\u9fff々]/u.test(value);
 }
 
+/** Escape HTML special characters. */
 function escapeHtml(value: string) {
   return value
     .replace(/&/g, "&amp;")
@@ -200,6 +218,7 @@ function escapeHtml(value: string) {
     .replace(/'/g, "&#39;");
 }
 
+/** FNV-1a 32-bit hash implementation. */
 function hash32(value: string) {
   let hash = 0x811c9dc5;
   for (let index = 0; index < value.length; index += 1) {
@@ -209,6 +228,7 @@ function hash32(value: string) {
   return hash >>> 0;
 }
 
+/** Create seeded pseudo-random number generator (Mulberry32). */
 function createRandom(seed: string | number) {
   let state = typeof seed === "number" ? seed >>> 0 : hash32(seed);
   return () => {
@@ -220,6 +240,7 @@ function createRandom(seed: string | number) {
   };
 }
 
+/** Shuffle array deterministically using seed. */
 function stableShuffle<T>(items: readonly T[], seed: string | number) {
   const output = [...items];
   const random = createRandom(seed);
@@ -232,6 +253,7 @@ function stableShuffle<T>(items: readonly T[], seed: string | number) {
   return output;
 }
 
+/** Generate URL-safe slug token with hash suffix. */
 function slugToken(value: string) {
   const normalized = value
     .toLowerCase()
@@ -243,6 +265,7 @@ function slugToken(value: string) {
   return normalized ? `${normalized}-${hash}` : hash;
 }
 
+/** Sort function for deterministic vocab ordering. */
 function sortRow(a: NormalizedVocabRow, b: NormalizedVocabRow) {
   return (
     a.word.localeCompare(b.word, "ja") ||
@@ -251,6 +274,7 @@ function sortRow(a: NormalizedVocabRow, b: NormalizedVocabRow) {
   );
 }
 
+/** Clean, filter, and sort raw vocab rows. */
 function normalizeVocabRows(
   rows: readonly MojiGoiVocabRow[],
   jlptLevel: JlptImportLevel
@@ -280,6 +304,7 @@ function normalizeVocabRows(
   return Array.from(uniqueRows.values()).sort(sortRow);
 }
 
+/** Increment skip reason counter. */
 function incrementReason(
   skippedByReason: Record<string, number>,
   reason: string
@@ -287,6 +312,7 @@ function incrementReason(
   skippedByReason[reason] = (skippedByReason[reason] ?? 0) + 1;
 }
 
+/** Initialize empty stats counter map. */
 function emptyGeneratedByType(): Record<MojiGoiOfficialQuestionType, number> {
   return {
     kanji_reading: 0,
@@ -298,6 +324,7 @@ function emptyGeneratedByType(): Record<MojiGoiOfficialQuestionType, number> {
   };
 }
 
+/** Initialize empty question lists grouped by type. */
 function emptyQuestionGroups(): Record<
   MojiGoiOfficialQuestionType,
   JlptImportQuestion[]
@@ -312,6 +339,7 @@ function emptyQuestionGroups(): Record<
   };
 }
 
+/** Build human-readable reference string for question source. */
 function sourceReference(row: NormalizedVocabRow) {
   const parts = [row.word];
   if (row.furigana && row.furigana !== row.word) parts.push(row.furigana);
@@ -319,6 +347,7 @@ function sourceReference(row: NormalizedVocabRow) {
   return parts.join(" / ");
 }
 
+/** Check if two vocab items share part-of-speech tags. */
 function hasSharedHinshi(
   target: NormalizedVocabRow,
   candidate: NormalizedVocabRow
@@ -330,6 +359,7 @@ function hasSharedHinshi(
   return target.hinshiTags.some((tag) => candidate.hinshiTags.includes(tag));
 }
 
+/** Select unique distractor values from candidate pool. */
 function selectDistinctDistractors(input: {
   candidates: readonly NormalizedVocabRow[];
   correctValue: string;
@@ -354,6 +384,7 @@ function selectDistinctDistractors(input: {
   return choices;
 }
 
+/** Shuffle correct answer and distractors together. */
 function buildChoices(correctValue: string, distractors: string[], seed: string) {
   const values = stableShuffle([correctValue, ...distractors], seed);
   return {
@@ -362,6 +393,7 @@ function buildChoices(correctValue: string, distractors: string[], seed: string)
   };
 }
 
+/** Map legacy question types to official types. */
 function canonicalQuestionType(
   type: MojiGoiQuestionType
 ): MojiGoiOfficialQuestionType {
@@ -370,12 +402,14 @@ function canonicalQuestionType(
   return type;
 }
 
+/** Get official question types supported by JLPT level. */
 export function getMojiGoiQuestionTypesForLevel(level: JlptImportLevel) {
   return MOJI_GOI_OFFICIAL_QUESTION_TYPES.filter(
     (type) => MOJI_GOI_MONDAI_BY_LEVEL[level][type] !== undefined
   );
 }
 
+/** Filter and normalize requested question types for level. */
 export function normalizeMojiGoiQuestionTypes(
   questionTypes: readonly MojiGoiQuestionType[] | undefined,
   level: JlptImportLevel
@@ -390,10 +424,12 @@ export function normalizeMojiGoiQuestionTypes(
   );
 }
 
+/** Check if question type requires LLM generation. */
 export function requiresMojiGoiLlm(type: MojiGoiQuestionType) {
   return LLM_QUESTION_TYPES.has(canonicalQuestionType(type));
 }
 
+/** Get Mondai section number for question type. */
 function mondaiNumberForType(
   level: JlptImportLevel,
   type: MojiGoiOfficialQuestionType
@@ -401,6 +437,7 @@ function mondaiNumberForType(
   return MOJI_GOI_MONDAI_BY_LEVEL[level][type] ?? null;
 }
 
+/** Build base question object with common fields. */
 function baseQuestion(input: {
   row: NormalizedVocabRow;
   jlptLevel: JlptImportLevel;
@@ -436,6 +473,7 @@ function baseQuestion(input: {
   } satisfies JlptImportQuestion;
 }
 
+/** Build kanji reading question (Mondai 1). */
 function buildKanjiReadingQuestion(input: {
   row: NormalizedVocabRow;
   poolRows: readonly NormalizedVocabRow[];
@@ -492,6 +530,7 @@ function buildKanjiReadingQuestion(input: {
   });
 }
 
+/** Build orthography question (Mondai 2). */
 function buildOrthographyQuestion(input: {
   row: NormalizedVocabRow;
   poolRows: readonly NormalizedVocabRow[];
@@ -548,6 +587,7 @@ function buildOrthographyQuestion(input: {
   });
 }
 
+/** Build paraphrase question (Mondai 4/5). */
 function buildParaphraseQuestion(input: {
   row: NormalizedVocabRow;
   poolRows: readonly NormalizedVocabRow[];
@@ -561,6 +601,7 @@ function buildParaphraseQuestion(input: {
     return null;
   }
 
+  // Prioritize distractors sharing same part-of-speech tags.
   const sameHinshiRows = input.poolRows.filter((row) =>
     hasSharedHinshi(input.row, row)
   );
@@ -607,6 +648,7 @@ function buildParaphraseQuestion(input: {
   });
 }
 
+/** Route to correct rule-based generator function. */
 function buildRuleBasedQuestion(input: {
   type: MojiGoiOfficialQuestionType;
   row: NormalizedVocabRow;
@@ -623,6 +665,7 @@ function buildRuleBasedQuestion(input: {
   return null;
 }
 
+/** Validate and build question from pre-generated input. */
 function buildEnhancedQuestion(input: {
   enhancedQuestion: MojiGoiEnhancedQuestion;
   rowById: Map<string, NormalizedVocabRow>;
@@ -677,6 +720,7 @@ function buildEnhancedQuestion(input: {
   });
 }
 
+/** Select questions up to limit, distributing evenly across types. */
 function selectQuestionsByLimit(
   questionGroups: Record<MojiGoiOfficialQuestionType, JlptImportQuestion[]>,
   questionTypes: readonly MojiGoiOfficialQuestionType[],
@@ -691,6 +735,7 @@ function selectQuestionsByLimit(
   const baseQuota = Math.floor(maxQuestions / questionTypes.length);
   let remainder = maxQuestions % questionTypes.length;
 
+  // Allocate base quota to each type.
   for (const type of questionTypes) {
     const quota = baseQuota + (remainder > 0 ? 1 : 0);
     remainder = Math.max(0, remainder - 1);
@@ -702,6 +747,7 @@ function selectQuestionsByLimit(
     0
   );
 
+  // Fill remaining slots from available pools.
   for (const type of questionTypes) {
     if (selectedCount >= maxQuestions) break;
     const alreadySelected = selectedGroups[type].length;
@@ -714,6 +760,7 @@ function selectQuestionsByLimit(
   return questionTypes.flatMap((type) => selectedGroups[type]);
 }
 
+/** Assign sequential question numbers within each Mondai section. */
 function assignQuestionNumbers(questions: readonly JlptImportQuestion[]) {
   const counters = new Map<number, number>();
 
@@ -727,6 +774,7 @@ function assignQuestionNumbers(questions: readonly JlptImportQuestion[]) {
   });
 }
 
+/** Generate unique signature to identify duplicate questions. */
 function questionSignature(question: JlptImportQuestion) {
   const correctChoice = question.choices[question.correctChoiceIndex]?.value ?? "";
   return [
@@ -737,6 +785,7 @@ function questionSignature(question: JlptImportQuestion) {
   ].join("|");
 }
 
+/** Build complete JLPT Moji-Goi import package from vocab rows. */
 export function buildMojiGoiImportPackage(
   input: BuildMojiGoiImportPackageInput
 ): BuildMojiGoiImportPackageResult {
@@ -783,6 +832,7 @@ export function buildMojiGoiImportPackage(
     );
   };
 
+  // Process pre-generated enhanced questions first.
   for (const enhancedQuestion of input.enhancedQuestions ?? []) {
     addQuestion(
       buildEnhancedQuestion({
@@ -794,6 +844,7 @@ export function buildMojiGoiImportPackage(
     );
   }
 
+  // Generate rule-based questions.
   for (const type of questionTypes) {
     if (requiresMojiGoiLlm(type)) continue;
 
@@ -820,6 +871,7 @@ export function buildMojiGoiImportPackage(
     }
   }
 
+  // Log missing LLM questions.
   for (const type of questionTypes) {
     if (
       requiresMojiGoiLlm(type) &&

@@ -17,22 +17,40 @@ import { Card } from "@/components/ui/card";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+
+/**
+ * Mock exam data structure.
+ */
 interface MockExam {
+  /** Unique identifier for exam */
   id: string;
+  /** Exam title */
   title: string;
+  /** Time limit in minutes */
   timeLimit: number;
+  /** Passing score percentage */
   passingScore: number;
 }
 
+/**
+ * Props for MockExams component.
+ */
 interface MockExamsProps {
+  /** Array of mock exams to display */
   exams: MockExam[];
+  /** Framer motion animation variants */
   itemVariants: Variants;
 }
 
 // ======================
 // KOMPONEN PEMBANTU KARTU — Compact
 // ======================
+
+/**
+ * Card component for single mock exam. Memoized to prevent unnecessary re-renders.
+ */
 const ExamCard = React.memo(function ExamCard({ exam }: { exam: MockExam }) {
+  // Track hover state for dynamic styles
   const [isHovered, setIsHovered] = useState(false);
   return (
     <Card
@@ -40,6 +58,7 @@ const ExamCard = React.memo(function ExamCard({ exam }: { exam: MockExam }) {
       onMouseLeave={() => setIsHovered(false)}
       className="p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-lg md:rounded-xl transition-all duration-200 flex flex-col gap-4 sm:gap-6 h-full relative overflow-hidden glass"
       style={{
+        // Dynamic border and shadow based on hover state
         borderColor: isHovered ? "rgb(var(--primary-rgb)/0.4)" : "rgb(var(--border-rgb)/0.4)",
         boxShadow: isHovered ? "0 10px 28px rgb(var(--primary-rgb)/0.08), 0 0 12px rgb(var(--primary-rgb)/0.04)" : "none"
       }}
@@ -61,6 +80,7 @@ const ExamCard = React.memo(function ExamCard({ exam }: { exam: MockExam }) {
         }}
       />
 
+      {/* Decorative background flame icon */}
       <div
         className="absolute top-0 right-0 p-6 sm:p-8 pointer-events-none text-foreground transition-all duration-200"
         style={{
@@ -82,6 +102,7 @@ const ExamCard = React.memo(function ExamCard({ exam }: { exam: MockExam }) {
           {exam.title}
         </h4>
         <div className="flex flex-wrap gap-2">
+          {/* Time limit badge */}
           <span
             className="px-2.5 py-1 rounded-md sm:rounded-lg border text-[9px] sm:text-[10px] font-black uppercase tracking-wider sm:tracking-widest transition-colors duration-300"
             style={{
@@ -92,6 +113,7 @@ const ExamCard = React.memo(function ExamCard({ exam }: { exam: MockExam }) {
           >
             ⏱️ {exam.timeLimit} Menit
           </span>
+          {/* Passing score badge */}
           <span
             className="px-2.5 py-1 rounded-md sm:rounded-lg border text-[9px] sm:text-[10px] font-black uppercase tracking-wider sm:tracking-widest transition-colors duration-300"
             style={{
@@ -105,6 +127,7 @@ const ExamCard = React.memo(function ExamCard({ exam }: { exam: MockExam }) {
         </div>
       </div>
 
+      {/* Card footer action */}
       <div className="mt-auto relative z-10 flex items-center justify-between pt-4 sm:pt-6 border-t border-border">
         <span
           className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-colors"
@@ -132,7 +155,12 @@ const ExamCard = React.memo(function ExamCard({ exam }: { exam: MockExam }) {
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Section component displaying list of mock exams.
+ */
 export function MockExams({ exams, itemVariants }: MockExamsProps) {
+  // Exit early if no exams
   if (!exams || exams.length === 0) return null;
 
   return (
@@ -150,6 +178,7 @@ export function MockExams({ exams, itemVariants }: MockExamsProps) {
       </div>
 
       <div className="flex overflow-x-auto sm:grid sm:grid-cols-2 lg:grid-cols-12 gap-3 sm:gap-4 md:gap-6 pb-4 sm:pb-0 scrollbar-none snap-x snap-mandatory">
+        {/* Render exam cards wrapped in links */}
         {exams.map((exam) => (
           <Link key={exam.id} href={`/exams/${exam.id}`} className="group">
             <ExamCard exam={exam} />

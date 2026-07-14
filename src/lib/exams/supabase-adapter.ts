@@ -3,12 +3,18 @@ import type {
   ExamQuestion,
 } from "@/components/features/exams/mock-engine/types";
 
+/**
+ * Exam section types.
+ */
 export type SupabaseExamSection =
   | "vocabulary"
   | "grammar"
   | "reading"
   | "listening";
 
+/**
+ * Exam choice structure. Support text or image.
+ */
 export type SupabaseExamChoice =
   | {
       type: "text";
@@ -20,6 +26,9 @@ export type SupabaseExamChoice =
       alt?: string | null;
     };
 
+/**
+ * Passage data for reading or listening questions.
+ */
 export interface SupabaseExamPassage {
   id: string;
   contentHtml?: string | null;
@@ -28,6 +37,9 @@ export interface SupabaseExamPassage {
   visualUrl?: string | null;
 }
 
+/**
+ * Question structure from database.
+ */
 export interface SupabaseExamQuestion {
   id: string;
   sessionType: SupabaseExamSection;
@@ -45,6 +57,9 @@ export interface SupabaseExamQuestion {
   sourceReference?: string | null;
 }
 
+/**
+ * Exam package container. Hold metadata and questions.
+ */
 export interface SupabaseExamPackage {
   id: string;
   templateId?: string | null;
@@ -63,16 +78,26 @@ export interface SupabaseExamPackage {
   updatedAt?: string | null;
 }
 
+/**
+ * Normalize JLPT level string to lowercase.
+ */
 function normalizeLevelCode(level?: string | null) {
   if (!level) return undefined;
   return level.toLowerCase();
 }
 
+/**
+ * Convert choice object to string.
+ */
 function choiceToLegacyOption(choice: SupabaseExamChoice, index: number) {
   if (choice.type === "text") return choice.value;
+  // Use alt text or fallback label for image choices
   return choice.alt || `Pilihan gambar ${index + 1}`;
 }
 
+/**
+ * Map database question to legacy engine format.
+ */
 function questionToLegacyQuestion(
   question: SupabaseExamQuestion
 ): ExamQuestion {
@@ -82,6 +107,7 @@ function questionToLegacyQuestion(
     section: question.sessionType,
     questionText: question.promptHtml || "",
     imageUrl: question.visualUrl || null,
+    // Fallback to passage audio if question audio missing
     audioUrl: question.audioUrl || question.passage?.audioUrl || null,
     options: question.choices.map(choiceToLegacyOption),
     correctAnswer: question.correctChoiceIndex,
@@ -105,8 +131,12 @@ function questionToLegacyQuestion(
   };
 }
 
+/**
+ * Convert database exam package to legacy exam data format.
+ */
 export function toLegacyExamData(examPackage: SupabaseExamPackage): ExamData {
   return {
+    // Resolve unique identifier from session, template, or package ID
     id: examPackage.sessionId || examPackage.templateId || examPackage.id,
     title: examPackage.title,
     timeLimit: examPackage.timeLimitMinutes,

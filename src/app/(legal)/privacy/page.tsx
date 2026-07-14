@@ -17,6 +17,9 @@ import { getBreadcrumbItems } from "@/lib/routes";
 // ======================
 // KONFIGURASI METADATA
 // ======================
+/**
+ * Metadata configuration for Privacy Policy page.
+ */
 export const metadata = {
   ...createPageMetadata({
     title: "Kebijakan Privasi | NihongoRoute",
@@ -26,10 +29,14 @@ export const metadata = {
   }),
 };
 
+/**
+ * PrivacyPage component. Renders privacy policy document.
+ */
 export default function PrivacyPage() {
   return (
     <main className="min-h-screen premium-shell text-foreground py-24 px-4 sm:px-6 md:px-12 relative overflow-hidden flex flex-col items-center justify-start transition-colors duration-300">
       {/* Hamparan Neural Latar Belakang */}
+      {/* Background decorative elements */}
       <div className="neural-grid" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgb(var(--primary-rgb)/0.07)_0%,transparent_70%)] pointer-events-none z-0" />
       <div className="absolute top-1/4 right-0 size-[300px] bg-[rgb(var(--primary-rgb)/0.03)] rounded-full blur-[100px] pointer-events-none z-0" />
@@ -37,6 +44,7 @@ export default function PrivacyPage() {
 
       <div className="max-w-4xl w-full relative z-10 flex flex-col">
         {/* Breadcrumb / Navigasi Atas */}
+        {/* Navigation breadcrumbs */}
         <div className="mb-8 animate-fade-in">
           <AppBreadcrumbs
             items={getBreadcrumbItems("/privacy")}
@@ -45,14 +53,17 @@ export default function PrivacyPage() {
         </div>
 
         {/* Kartu Cyber-glass Premium Luar */}
+        {/* Main content container with glassmorphism */}
         <div className="glass border border-border/60 rounded-xl p-6 sm:p-10 md:p-14 shadow-[0_0_50px_rgb(var(--primary-rgb)/0.05)] relative overflow-hidden">
           {/* Aksen Sudut Halus */}
+          {/* Decorative corner borders */}
           <div className="absolute top-0 left-0 w-8 h-[2px] bg-gradient-to-r from-primary to-transparent" />
           <div className="absolute top-0 left-0 w-[2px] h-8 bg-gradient-to-b from-primary to-transparent" />
           <div className="absolute bottom-0 right-0 w-8 h-[2px] bg-gradient-to-l from-primary to-transparent" />
           <div className="absolute bottom-0 right-0 w-[2px] h-8 bg-gradient-to-t from-primary to-transparent" />
 
           {/* Header Jepang */}
+          {/* Page header with Japanese title */}
           <header className="mb-12 border-b border-border/60 pb-8 relative">
             <div className="flex items-center gap-3 mb-4">
               <div className="size-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-[0_0_15px_rgb(var(--primary-rgb)/0.2)]">
@@ -72,7 +83,9 @@ export default function PrivacyPage() {
           </header>
 
           {/* Konten Tipografi Minimalis & Modern */}
+          {/* Policy content sections */}
           <article className="prose prose-slate dark:prose-invert max-w-none text-muted-foreground space-y-8">
+            {/* Dynamic date generation. Suppress hydration warning for SSR safety. */}
             <div className="flex items-center gap-2 text-xs font-semibold text-primary/80 bg-primary/5 border border-primary/10 w-fit px-4 py-2 rounded-xl">
               <span className="size-2 rounded-full bg-primary animate-pulse" />
               <span suppressHydrationWarning={true}>Terakhir diperbarui: {new Date().toLocaleDateString("id-ID", { month: "long", year: "numeric" })}</span>
@@ -195,6 +208,7 @@ export default function PrivacyPage() {
           </article>
 
           {/* Tombol Kembali Kaki Halaman */}
+          {/* Navigation back to dashboard */}
           <div className="pt-10 mt-14 border-t border-border/60 flex justify-start">
             <Link href="/dashboard">
               <Button variant="outline" className="rounded-2xl px-6 h-12 shadow-sm font-bold tracking-widest uppercase text-xs flex items-center gap-2 hover:bg-muted border border-border hover:border-primary/30 transition-all duration-300">

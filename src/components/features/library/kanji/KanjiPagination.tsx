@@ -15,9 +15,15 @@ import { Button } from "@/components/ui/button";
 // ==========================================
 // ANTARMUKA & TIPE DATA
 // ==========================================
+/**
+ * Props for KanjiPagination component.
+ */
 interface KanjiPaginationProps {
+  /** Current active page number. */
   currentPage: number;
+  /** Total number of pages. */
   totalPages: number;
+  /** Callback triggered on page change. */
   onPageChange: (page: number) => void;
 }
 
@@ -25,15 +31,17 @@ interface KanjiPaginationProps {
 // KOMPONEN UTAMA: KanjiPagination
 // ==========================================
 /**
- * Komponen navigasi pagination dengan nomor halaman dinamis.
+ * Render pagination controls. Allow user navigate pages.
  * 
- * @param {KanjiPaginationProps} props Properti komponen pagination.
+ * @param props Component properties.
+ * @returns Pagination element or null if single page.
  */
 export function KanjiPagination({
   currentPage,
   totalPages,
   onPageChange,
 }: KanjiPaginationProps) {
+  // Hide pagination if only one page exists.
   if (totalPages <= 1) return null;
 
   return (
@@ -71,6 +79,7 @@ export function KanjiPagination({
 
         {/* Nomor Urut Halaman Pintas */}
         <div className="flex items-center gap-2">
+          {/* Calculate sliding window of 5 pages around current page. */}
           {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
             let pageNum;
             if (totalPages <= 5) {

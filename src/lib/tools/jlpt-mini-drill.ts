@@ -1,6 +1,16 @@
+/**
+ * JLPT level options.
+ */
 export type DrillLevel = "N5" | "N4" | "N3" | "N2" | "N1";
+
+/**
+ * Drill question categories.
+ */
 export type DrillKind = "vocab" | "kanji" | "grammar" | "sentence";
 
+/**
+ * Structure for single drill question.
+ */
 export interface MiniDrillQuestion {
   id: string;
   level: DrillLevel;
@@ -15,6 +25,9 @@ export interface MiniDrillQuestion {
   sourceType?: "database" | "static";
 }
 
+/**
+ * Configuration to generate drill.
+ */
 export interface MiniDrillConfig {
   level: DrillLevel | "all";
   kind: DrillKind | "mixed";
@@ -23,9 +36,19 @@ export interface MiniDrillConfig {
   bank?: MiniDrillQuestion[];
 }
 
+/**
+ * Available JLPT levels including all.
+ */
 export const DRILL_LEVELS: Array<DrillLevel | "all"> = ["all", "N5", "N4", "N3", "N2", "N1"];
+
+/**
+ * Available drill kinds including mixed.
+ */
 export const DRILL_KINDS: Array<DrillKind | "mixed"> = ["mixed", "vocab", "kanji", "grammar", "sentence"];
 
+/**
+ * Default static question bank.
+ */
 export const MINI_DRILL_BANK: MiniDrillQuestion[] = [
   {
     id: "n5-vocab-water",
@@ -183,40 +206,59 @@ export const MINI_DRILL_BANK: MiniDrillQuestion[] = [
   },
 ];
 
+/**
+ * Shuffle array deterministically using string seed.
+ */
 function shuffleBySeed<T>(items: T[], seed: string) {
   const next = [...items];
+  // Convert seed string to numeric state
   let state = Array.from(seed).reduce((total, char) => total + char.charCodeAt(0), 0) || 1;
 
   for (let index = next.length - 1; index > 0; index--) {
+    // LCG pseudo-random generator formula
     state = (state * 9301 + 49297) % 233280;
     const swapIndex = state % (index + 1);
+    // Swap elements
     [next[index], next[swapIndex]] = [next[swapIndex], next[index]];
   }
 
   return next;
 }
 
+/**
+ * Generate drill questions based on config.
+ */
 export function createMiniDrill(config: MiniDrillConfig) {
   const questionBank = config.bank && config.bank.length > 0 ? config.bank : MINI_DRILL_BANK;
+  // Filter bank by level and kind
   const pool = questionBank.filter((question) => {
     const levelMatch = config.level === "all" || question.level === config.level;
     const kindMatch = config.kind === "mixed" || question.kind === config.kind;
     return levelMatch && kindMatch;
   });
+  // Fallback to full bank if filter yields empty pool
   const fallbackPool = pool.length > 0 ? pool : questionBank;
   const shuffled = shuffleBySeed(
     fallbackPool,
     `${config.level}-${config.kind}-${config.amount}-${config.seed ?? "default"}`
   );
+  // Limit amount between 1 and 20
   const amount = Math.max(1, Math.min(config.amount, 20));
 
+  // Fill array, repeat questions if pool size smaller than amount
   return Array.from({ length: amount }, (_, index) => shuffled[index % shuffled.length]);
 }
 
+/**
+ * Normalize string for comparison.
+ */
 export function normalizeMiniDrillAnswer(value: string) {
   return value.normalize("NFKC").trim().toLowerCase();
 }
 
+/**
+ * Check if user answer matches expected answer.
+ */
 export function isMiniDrillAnswerCorrect(expected: string, answer: string) {
   return normalizeMiniDrillAnswer(expected) === normalizeMiniDrillAnswer(answer);
 }

@@ -14,6 +14,9 @@ import { draftMode } from 'next/headers';
 // ==========================================
 // INISIALISASI KLIEN SANITY CMS
 // ==========================================
+/**
+ * Primary Sanity client. Connects to CMS dataset.
+ */
 export const sanityClient = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'qoczxvvo',
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
@@ -21,8 +24,14 @@ export const sanityClient = createClient({
   useCdn: true,
 });
 
+/**
+ * Cache lifetime. One hour in seconds.
+ */
 export const SANITY_PUBLIC_REVALIDATE_SECONDS = 60 * 60;
 
+/**
+ * Next.js fetch configuration. Sets revalidation interval.
+ */
 export const sanityPublicFetchOptions = {
   next: {
     revalidate: SANITY_PUBLIC_REVALIDATE_SECONDS,
@@ -30,20 +39,21 @@ export const sanityPublicFetchOptions = {
 } as const;
 
 /**
- * Mengembalikan client Sanity yang dikonfigurasi secara dinamis berdasarkan status draftMode saat ini.
- * Jika draftMode diaktifkan, ia akan mengembalikan client non-CDN menggunakan token baca untuk mengambil draf.
- * Jika tidak, ia akan mengembalikan client CDN standar yang di-cache di edge untuk kinerja optimal.
+ * Get client instance. Returns preview client if draft mode active. Returns CDN client otherwise.
+ * @returns Sanity client.
  */
 export async function getSanityClient() {
   let isDraft = false;
   try {
+    // Read draft mode state.
     const draft = await draftMode();
     isDraft = draft.isEnabled;
   } catch {
-    // Kembali ke false ketika header tidak tersedia (misalnya saat pembuatan statis / waktu kompilasi build)
+    // Fail silent. Draft mode API fails during static build.
   }
 
   if (isDraft) {
+    // Bypass CDN. Use read token for draft content.
     return sanityClient.withConfig({
       useCdn: false,
       token: process.env.SANITY_API_READ_TOKEN || process.env.SANITY_API_WRITE_TOKEN,
@@ -53,8 +63,14 @@ export async function getSanityClient() {
   return sanityClient;
 }
 
+// Image builder helper.
 const builder = imageUrlBuilder(sanityClient);
 
+/**
+ * Convert Sanity image source to builder object.
+ * @param source Sanity image asset.
+ * @returns Image builder.
+ */
 export function urlFor(source: SanityImageSource) {
   return builder.image(source);
 }

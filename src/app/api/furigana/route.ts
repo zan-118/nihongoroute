@@ -17,19 +17,30 @@ import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
 // ======================
 // TIPE DATA
 // ======================
+/**
+ * Kuroshiro instance interface.
+ */
 interface KuroshiroInstance {
   init(analyzer: unknown): Promise<void>;
   convert(text: string, options: { to: string; mode: string }): Promise<string>;
 }
 
+// Cache instance to prevent re-initialization.
 let kuroshiro: KuroshiroInstance | null = null;
+// Lock flag for initialization concurrency.
 let isInitializing = false;
 
+/**
+ * Get or initialize Kuroshiro instance.
+ * Handles concurrent calls during initialization.
+ * @returns Promise resolving to KuroshiroInstance.
+ */
 async function getKuroshiro(): Promise<KuroshiroInstance> {
   if (kuroshiro) return kuroshiro;
   
   if (isInitializing) {
     if (process.env.NODE_ENV === 'development') console.log("Kuroshiro sedang diinisialisasi, menunggu...");
+    // Wait if initialization in progress.
     while (isInitializing) {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
@@ -39,13 +50,14 @@ async function getKuroshiro(): Promise<KuroshiroInstance> {
   isInitializing = true;
   if (process.env.NODE_ENV === 'development') console.log("Menginisialisasi Kuroshiro untuk pertama kalinya...");
   try {
-    // Tangani kemungkinan masalah interop CJS/ESM
+    // Resolve ESM/CJS default export differences.
     const KConstructor = (Kuroshiro as { default?: new () => KuroshiroInstance }).default || (Kuroshiro as new () => KuroshiroInstance);
+    // Resolve analyzer default export differences.
     const AConstructor = (KuromojiAnalyzer as { default?: unknown }).default || KuromojiAnalyzer;
 
     const instance = new KConstructor();
     if (process.env.NODE_ENV === 'development') console.log("Memuat Kuromoji Analyzer dengan jalur kamus (dict path) eksplisit...");
-    // Menunjuk langsung ke folder dict di node_modules/kuromoji
+    // Set absolute path to kuromoji dictionary.
     const dictPath = path.join(process.cwd(), "node_modules", "kuromoji", "dict");
     
     await instance.init(new AConstructor({ dictPath }));
@@ -60,6 +72,7 @@ async function getKuroshiro(): Promise<KuroshiroInstance> {
   }
 }
 
+// Allowed origins for CORS.
 const ALLOWED_ORIGINS = [
   "http://localhost:3000",
   "http://localhost:3001",
@@ -67,6 +80,11 @@ const ALLOWED_ORIGINS = [
   process.env.NEXT_PUBLIC_SITE_URL
 ].filter(Boolean) as string[];
 
+/**
+ * Generate CORS headers based on request origin.
+ * @param req - Incoming request object.
+ * @returns Headers object.
+ */
 function getCorsHeaders(req: Request) {
   const origin = req.headers.get("origin");
   const allowOrigin = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
@@ -78,6 +96,11 @@ function getCorsHeaders(req: Request) {
   };
 }
 
+/**
+ * Handle CORS preflight requests.
+ * @param req - Incoming request object.
+ * @returns NextResponse with CORS headers.
+ */
 export async function OPTIONS(req: Request) {
   return new NextResponse(null, {
     status: 204,
@@ -85,17 +108,24 @@ export async function OPTIONS(req: Request) {
   });
 }
 
+/**
+ * Convert Japanese text to Hiragana/Furigana.
+ * @param req - Incoming request object containing text and mode.
+ * @returns NextResponse with converted text or error.
+ */
 export async function POST(req: Request) {
   const corsHeaders = getCorsHeaders(req);
   
   try {
     const { text, mode = "normal" } = await req.json();
 
+    // Return empty if no text provided.
     if (!text) {
       return NextResponse.json({ hiragana: "" }, { headers: corsHeaders });
     }
 
     const engine = await getKuroshiro();
+    // Convert text using Kuroshiro engine.
     const result = await engine.convert(text, {
       to: "hiragana",
       mode: mode as "normal" | "furigana" | "okurigana" | "roma"

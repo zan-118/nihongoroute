@@ -11,6 +11,9 @@ import { slugify } from "@/lib/utils";
 // ==========================================
 // DAFTAR KONSTANTA RUTE (ROUTES)
 // ==========================================
+/**
+ * Application route registry. Map internal URIs.
+ */
 export const ROUTES = {
   // ==========================================
   // GLOBAL & DASHBOARD
@@ -65,7 +68,9 @@ export const ROUTES = {
 } as const;
 
 /**
- * Mendapatkan label yang "rapih" untuk segmen breadcrumb.
+ * Get readable label for route segment.
+ * @param segment - URL path segment.
+ * @returns Readable label string.
  */
 export function getRouteLabel(segment: string): string {
   const labels: Record<string, string> = {
@@ -106,28 +111,43 @@ export function getRouteLabel(segment: string): string {
     terms: "Syarat & Ketentuan",
   };
 
+  // Check predefined map. Return match.
   if (labels[segment.toLowerCase()]) {
     return labels[segment.toLowerCase()];
   }
 
   // Fallback: Format slug menjadi teks yang rapi (Hapus -, Capitalize)
+  // Decode URL. Replace hyphens with spaces.
   const decoded = decodeURIComponent(segment).replace(/-/g, ' ');
   
   // Jika terlalu panjang, ringkas (untuk kerapihan di mobile)
+  // Capitalize first letter of each word.
   const formatted = decoded.toLowerCase().replace(/\b\w/g, (l) => l.toUpperCase());
+  // Truncate long labels for mobile display.
   return formatted.length > 30 ? formatted.substring(0, 27) + "..." : formatted;
 }
 
+/**
+ * Breadcrumb item structure.
+ */
 export interface BreadcrumbItem {
   label: string;
   href?: string;
   active?: boolean;
 }
 
+/**
+ * Generate breadcrumb list from pathname.
+ * @param pathname - Current URL path.
+ * @returns Array of breadcrumb items.
+ */
 export function getBreadcrumbItems(pathname: string | null | undefined): BreadcrumbItem[] {
+  // Strip query params. Remove trailing slashes.
   const normalizedPathname = pathname?.split("?")[0]?.replace(/\/+$/, "") || "/";
+  // Split path. Remove empty segments.
   const segments = normalizedPathname.split("/").filter(Boolean);
 
+  // Return default home breadcrumb if root or dashboard.
   if (segments.length === 0 || segments[0] === "dashboard") {
     return [{ active: true, label: "Beranda" }];
   }
@@ -135,6 +155,7 @@ export function getBreadcrumbItems(pathname: string | null | undefined): Breadcr
   const items: BreadcrumbItem[] = [{ href: ROUTES.DASHBOARD, label: "Beranda" }];
 
   segments.forEach((segment, index) => {
+    // Build cumulative path for current segment.
     const href = `/${segments.slice(0, index + 1).join("/")}`;
     const isLast = index === segments.length - 1;
 
@@ -148,11 +169,21 @@ export function getBreadcrumbItems(pathname: string | null | undefined): Breadcr
   return items;
 }
 
+/**
+ * Get label of current active route.
+ * @param pathname - Current URL path.
+ * @returns Active route label.
+ */
 export function getCurrentRouteLabel(pathname: string | null | undefined): string {
   const breadcrumbs = getBreadcrumbItems(pathname);
   return breadcrumbs[breadcrumbs.length - 1]?.label || "Beranda";
 }
 
+/**
+ * Get label of parent route.
+ * @param pathname - Current URL path.
+ * @returns Parent route label or null.
+ */
 export function getParentRouteLabel(pathname: string | null | undefined): string | null {
   const breadcrumbs = getBreadcrumbItems(pathname);
   return breadcrumbs.length > 1 ? breadcrumbs[breadcrumbs.length - 2]?.label || null : null;

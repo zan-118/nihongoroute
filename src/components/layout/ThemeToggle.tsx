@@ -16,22 +16,35 @@ import { Button } from "@/components/ui/button";
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * Theme toggle button component.
+ * Cycles theme: dark -> light -> system.
+ * Prevents hydration mismatch.
+ * 
+ * @returns Theme toggle button or skeleton placeholder.
+ */
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   // Mencegah hydration mismatch
+  // Delay mount state. Avoid hydration mismatch.
   useEffect(() => {
     const frame = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(frame);
   }, []);
 
+  // Render placeholder. Prevent layout shift before mount.
   if (!mounted) {
     return (
       <div className="skeleton-brand size-11 rounded-xl" />
     );
   }
 
+  /**
+   * Cycle theme state.
+   * Dark to light, light to system, system to dark.
+   */
   const toggleTheme = () => {
     if (theme === "dark") setTheme("light");
     else if (theme === "light") setTheme("system");

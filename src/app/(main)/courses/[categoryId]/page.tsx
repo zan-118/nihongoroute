@@ -20,11 +20,18 @@ import {
   encodeRouteSegment,
 } from "@/lib/seo";
 
-
+/**
+ * Route parameters for the course category page.
+ */
 interface PageProps {
+  /** Promise resolving to route parameters. */
   params: Promise<{ categoryId: string }>;
 }
 
+/**
+ * Cached function to retrieve course category data.
+ * Prevents duplicate database queries during metadata generation and page rendering.
+ */
 const getCachedCourseCategoryData = cache(getCourseCategoryData);
 
 // ======================
@@ -32,12 +39,15 @@ const getCachedCourseCategoryData = cache(getCourseCategoryData);
 // ======================
 
 /**
- * Menghasilkan metadata SEO dinamis berdasarkan kategori.
+ * Generates dynamic SEO metadata based on the requested course category.
+ * @param props - Component properties containing route parameters.
+ * @returns Promise resolving to Next.js Metadata object.
  */
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { categoryId } = await params;
+  // Decode URL parameter to handle special characters or spaces
   const decodedCategoryId = decodeURIComponent(categoryId);
   const data = await getCachedCourseCategoryData(decodedCategoryId);
 
@@ -64,15 +74,18 @@ export async function generateMetadata({
 // ======================
 
 /**
- * Komponen CourseCategoryPage: Mengambil data kategori dan merender CourseCategoryClient.
+ * CourseCategoryPage component. Fetches category data and renders client view.
  * 
- * @returns {JSX.Element} Halaman kategori materi.
+ * @param props - Component properties containing route parameters.
+ * @returns React element containing SEO JSON-LD and client component.
  */
 export default async function CourseCategoryPage({ params }: PageProps) {
   const { categoryId } = await params;
+  // Decode URL parameter to match database identifier format
   const decodedCategoryId = decodeURIComponent(categoryId);
   const data = await getCachedCourseCategoryData(decodedCategoryId);
 
+  // Trigger 404 page if category does not exist
   if (!data.category) return notFound();
 
   const path = `/courses/${encodeRouteSegment(decodedCategoryId)}`;
@@ -101,4 +114,3 @@ export default async function CourseCategoryPage({ params }: PageProps) {
     </>
   );
 }
-

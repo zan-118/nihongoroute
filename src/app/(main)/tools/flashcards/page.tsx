@@ -28,7 +28,12 @@ import { Badge } from "@/components/ui/badge";
 import { useFlashcardSession } from "@/components/features/flashcards/useFlashcardSession";
 import { FlashcardSetup } from "@/components/features/flashcards/FlashcardSetup";
 
+/**
+ * Flashcard session content manager.
+ * Handles loading, setup, and active card states.
+ */
 function FlashcardsContent() {
+  // Get session state and handlers from custom hook.
   const {
     categorySlug,
     modeParam,
@@ -42,6 +47,7 @@ function FlashcardsContent() {
   return (
     <AnimatePresence mode="wait">
       {isFetchingCards ? (
+        // Show loading spinner while fetching cards.
         <motion.div
           key="loading-cards"
           initial={{ opacity: 0 }}
@@ -55,12 +61,14 @@ function FlashcardsContent() {
           </p>
         </motion.div>
       ) : !selectedMode ? (
+        // Show setup screen if no mode selected.
         <FlashcardSetup
           defaultLevel={categorySlug?.toUpperCase() || null}
           defaultMode={modeParam}
           onStart={fetchCardsAndStart}
         />
       ) : (
+        // Show active session.
         <motion.div
           key="session"
           initial={{ opacity: 0, y: 20 }}
@@ -71,9 +79,11 @@ function FlashcardsContent() {
         >
           <div className="relative z-10 w-full max-w-2xl mt-4 sm:mt-8">
             <header className="flex justify-between items-center mb-10">
+              {/* Button to reset mode and return to setup */}
               <Button onClick={() => setSelectedMode(null)} variant="ghost" className="text-muted-foreground hover:text-foreground text-xs font-bold uppercase tracking-widest bg-muted/50 h-auto px-4 py-2.5 rounded-xl border border-border">
                 <ChevronLeft size={14} className="mr-2" /> Ganti Mode
               </Button>
+              {/* Dynamic badge based on selected mode */}
               <Badge variant="outline" className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center gap-2 h-auto ${
                 selectedMode === "kanji" ? "bg-secondary/10 border-secondary/30 text-secondary" :
                 selectedMode === "survival" ? "bg-destructive/10 border-destructive/30 text-destructive" :
@@ -90,6 +100,7 @@ function FlashcardsContent() {
               </Badge>
             </header>
 
+            {/* Flashcard player component */}
             <FlashcardMaster
               key={cards[0]?.id}
               cards={cards}
@@ -104,6 +115,10 @@ function FlashcardsContent() {
   );
 }
 
+/**
+ * Flashcards page entry point.
+ * Wraps content in Suspense boundary for search params.
+ */
 export default function FlashcardsPage() {
   return (
     <Suspense fallback={

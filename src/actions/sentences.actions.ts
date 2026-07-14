@@ -16,6 +16,10 @@ import { createStaticClient } from "@/lib/supabase/server";
 // ======================
 // TYPES
 // ======================
+
+/**
+ * Database sentence record structure.
+ */
 export interface SentenceRow {
   id: string;
   japanese: string;
@@ -25,6 +29,9 @@ export interface SentenceRow {
   furigana: string | null;
 }
 
+/**
+ * Sentence structure formatted for drill UI.
+ */
 export interface SentenceDrillItem {
   id: string;
   japanese: string;
@@ -48,10 +55,13 @@ export async function getSentencesByWord(
   word: string,
   limit: number = 5
 ): Promise<SentenceRow[]> {
+  // Return empty if query blank.
   if (!word.trim()) return [];
 
+  // Init Supabase client.
   const supabase = createStaticClient();
 
+  // Fetch matching sentences from DB.
   const { data, error } = await supabase
     .from("sentences")
     .select("id, japanese, english, indonesia, jlpt_level, furigana")
@@ -80,21 +90,24 @@ export async function getRandomSentencesForDrill(
 ): Promise<SentenceDrillItem[]> {
   const supabase = createStaticClient();
 
-  // Ambil pool lebih besar untuk randomisasi sisi-server
+  // Get larger pool for random mix.
   const poolSize = Math.min(limit * 4, 200);
 
+  // Build base query.
   let query = supabase
     .from("sentences")
     .select("id, japanese, english, indonesia, jlpt_level, furigana")
     .not("japanese", "is", null);
 
+  // Filter by JLPT level if set.
   if (level && level !== "all") {
     query = query.eq("jlpt_level", level.toUpperCase());
   }
 
-  // Hanya ambil yang punya terjemahan
+  // Require translation text.
   query = query.or("indonesia.neq.null,english.neq.null");
 
+  // Fetch pool from DB.
   const { data, error } = await query.limit(poolSize);
 
   if (error) {
@@ -104,13 +117,14 @@ export async function getRandomSentencesForDrill(
 
   if (!data || data.length === 0) return [];
 
-  // Shuffle Fisher-Yates di server
+  // Shuffle pool using Fisher-Yates.
   const shuffled = [...data];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
 
+  // Slice to limit and map to drill format.
   return shuffled.slice(0, limit).map((row) => ({
     id: row.id,
     japanese: row.japanese,
@@ -131,10 +145,12 @@ export async function getSentencesByGrammarPattern(
   pattern: string,
   limit: number = 4
 ): Promise<SentenceRow[]> {
+  // Return empty if pattern blank.
   if (!pattern.trim()) return [];
 
   const supabase = createStaticClient();
 
+  // Fetch sentences containing pattern.
   const { data, error } = await supabase
     .from("sentences")
     .select("id, japanese, english, indonesia, jlpt_level, furigana")
@@ -160,10 +176,12 @@ export async function getSentencesByKanji(
   character: string,
   limit: number = 4
 ): Promise<SentenceRow[]> {
+  // Return empty if kanji blank.
   if (!character.trim()) return [];
 
   const supabase = createStaticClient();
 
+  // Fetch sentences containing kanji.
   const { data, error } = await supabase
     .from("sentences")
     .select("id, japanese, english, indonesia, jlpt_level, furigana")

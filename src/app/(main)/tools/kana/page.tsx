@@ -17,7 +17,12 @@ import { KanaMatrix } from "@/components/features/tools/kana/KanaMatrix";
 import { KanaWritingDialog } from "@/components/features/tools/kana/KanaWritingDialog";
 import { KanaQuizDialog } from "@/components/features/tools/kana/KanaQuizDialog";
 
+/**
+ * Kana content component.
+ * Manage state via useKanaQuiz hook. Render layout.
+ */
 function KanaContent() {
+  // Get quiz state, handlers, and theme configurations
   const {
     type,
     setType,
@@ -47,6 +52,7 @@ function KanaContent() {
 
   return (
     <div className="w-full flex-1 relative overflow-hidden flex flex-col bg-transparent transition-colors duration-300 pt-12 pb-24 px-4 md:px-8">
+      {/* Background grid effect */}
       <div className="neural-grid" />
 
       <div className="max-w-4xl mx-auto w-full relative z-10 flex flex-col h-full">
@@ -71,6 +77,7 @@ function KanaContent() {
         />
       </div>
 
+      {/* Modal for writing practice */}
       <KanaWritingDialog
         selectedChar={selectedChar}
         setSelectedChar={setSelectedChar}
@@ -79,6 +86,7 @@ function KanaContent() {
         themeBorder={themeBorder}
       />
 
+      {/* Modal for active quiz session */}
       <KanaQuizDialog
         isActive={isQuizActive}
         onClose={handleCloseQuiz}
@@ -103,6 +111,10 @@ function KanaContent() {
   );
 }
 
+/**
+ * Kana page component.
+ * Wrap content in Suspense boundary. Prevent loading errors.
+ */
 export default function KanaPage() {
   return (
     <Suspense fallback={

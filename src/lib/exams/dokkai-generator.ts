@@ -5,6 +5,9 @@ import type {
   JlptImportQuestion,
 } from "@/lib/exams/import-pipeline";
 
+/**
+ * Official JLPT reading question types.
+ */
 export const DOKKAI_OFFICIAL_QUESTION_TYPES = [
   "short_passage",
   "medium_passage",
@@ -13,8 +16,14 @@ export const DOKKAI_OFFICIAL_QUESTION_TYPES = [
   "information_retrieval",
 ] as const;
 
+/**
+ * Union type of official reading question types.
+ */
 export type DokkaiQuestionType = (typeof DOKKAI_OFFICIAL_QUESTION_TYPES)[number];
 
+/**
+ * Structure for enhanced reading question data.
+ */
 export interface DokkaiEnhancedQuestion {
   type: DokkaiQuestionType;
   sourceType?: "vocab" | "grammar" | "kanji" | "reading" | "custom" | null;
@@ -32,6 +41,9 @@ export interface DokkaiEnhancedQuestion {
   sourceReference?: string | null;
 }
 
+/**
+ * Input parameters for building reading import package.
+ */
 export interface BuildDokkaiImportPackageInput {
   jlptLevel: JlptImportLevel;
   templateSlug?: string;
@@ -44,25 +56,35 @@ export interface BuildDokkaiImportPackageInput {
   isPublished?: boolean;
 }
 
+/**
+ * Statistics for reading package generation.
+ */
 export interface DokkaiGenerationStats {
   generatedQuestions: number;
   generatedByType: Record<DokkaiQuestionType, number>;
   skippedByReason: Record<string, number>;
 }
 
+/**
+ * Result of reading package generation.
+ */
 export interface BuildDokkaiImportPackageResult {
   importPackage: JlptImportPackage;
   stats: DokkaiGenerationStats;
 }
 
 /**
- * Mendapatkan mondai_number resmi untuk Dokkai berdasarkan Level JLPT dan jenis bacaan.
- * Referensi sesuai spesifikasi ujian JLPT resmi.
+ * Get official JLPT mondai number based on level and question type.
+ * 
+ * @param level JLPT level.
+ * @param type Question type.
+ * @returns Official mondai number.
  */
 export function getDokkaiMondaiNumber(
   level: JlptImportLevel,
   type: DokkaiQuestionType
 ): number {
+  // Map level and type to official JLPT section number
   switch (level) {
     case "N5":
       if (type === "short_passage") return 4;
@@ -99,12 +121,24 @@ export function getDokkaiMondaiNumber(
   }
 }
 
+/**
+ * Trim string. Return null if empty.
+ * 
+ * @param value Input value.
+ * @returns Cleaned string or null.
+ */
 function compactString(value: unknown): string | null {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
 }
 
+/**
+ * Generate unique slug hash from string.
+ * 
+ * @param value Input string.
+ * @returns Slug with hash suffix.
+ */
 function slugToken(value: string): string {
   const normalized = value
     .toLowerCase()
@@ -112,6 +146,7 @@ function slugToken(value: string): string {
     .replace(/^-+|-+$/g, "")
     .slice(0, 50);
 
+  // FNV-1a hash implementation for unique slug suffix
   let hash = 0x811c9dc5;
   for (let index = 0; index < value.length; index += 1) {
     hash ^= value.charCodeAt(index);
@@ -121,6 +156,11 @@ function slugToken(value: string): string {
   return normalized ? `${normalized}-${hex}` : hex;
 }
 
+/**
+ * Initialize zeroed counters for each question type.
+ * 
+ * @returns Record with zeroed counters.
+ */
 function emptyGeneratedByType(): Record<DokkaiQuestionType, number> {
   return {
     short_passage: 0,
@@ -132,10 +172,10 @@ function emptyGeneratedByType(): Record<DokkaiQuestionType, number> {
 }
 
 /**
- * Membangun paket impor JLPT Dokkai dari kumpulan soal yang dihasilkan oleh LLM.
+ * Build JLPT reading import package from enhanced questions.
  * 
- * @param input Objek parameter input pembangun paket impor Dokkai.
- * @returns Hasil paket impor beserta statistik generasinya.
+ * @param input Package build parameters.
+ * @returns Import package and generation stats.
  */
 export function buildDokkaiImportPackage(
   input: BuildDokkaiImportPackageInput
@@ -156,21 +196,25 @@ export function buildDokkaiImportPackage(
     const pKey = compactString(eq.passage.key);
     const pContent = compactString(eq.passage.contentHtml);
 
+    // Validate prompt
     if (!promptHtml) {
       skippedByReason["missing_prompt"] = (skippedByReason["missing_prompt"] ?? 0) + 1;
       continue;
     }
+    // Validate passage
     if (!pKey || !pContent) {
       skippedByReason["missing_passage_content"] = (skippedByReason["missing_passage_content"] ?? 0) + 1;
       continue;
     }
 
+    // Filter and validate choices
     const choices = eq.choices.map(compactString).filter((choice): choice is string => Boolean(choice));
     if (choices.length < 2) {
       skippedByReason["insufficient_choices"] = (skippedByReason["insufficient_choices"] ?? 0) + 1;
       continue;
     }
 
+    // Validate correct choice index
     if (
       !Number.isInteger(eq.correctChoiceIndex) ||
       eq.correctChoiceIndex < 0 ||
@@ -180,7 +224,7 @@ export function buildDokkaiImportPackage(
       continue;
     }
 
-    // Buat tanda unik untuk menghindari duplikasi pertanyaan
+    // Prevent duplicate questions using signature hash
     const signature = `${eq.passage.key}|${promptHtml}|${choices[eq.correctChoiceIndex]}`;
     if (seenSignatures.has(signature)) {
       skippedByReason["duplicate_question"] = (skippedByReason["duplicate_question"] ?? 0) + 1;
@@ -190,7 +234,7 @@ export function buildDokkaiImportPackage(
 
     const mondaiNumber = getDokkaiMondaiNumber(input.jlptLevel, type);
 
-    // Registrasikan passage unik ke daftar package
+    // Register unique passage
     if (!passages.has(pKey)) {
       passages.set(pKey, {
         key: pKey,
@@ -204,6 +248,7 @@ export function buildDokkaiImportPackage(
       });
     }
 
+    // Generate unique question key
     const questionKey = `q-${input.jlptLevel.toLowerCase()}-reading-${type}-${slugToken(promptHtml.slice(0, 30))}-${qIndex}`;
     
     questions.push({
@@ -226,7 +271,7 @@ export function buildDokkaiImportPackage(
     generatedByType[type] += 1;
   }
 
-  // Menugaskan nomor pertanyaan berurutan per mondaiNumber
+  // Assign sequential question numbers per mondaiNumber
   const mondaiCounters = new Map<number, number>();
   const numberedQuestions = questions.map((q) => {
     const nextNum = (mondaiCounters.get(q.mondaiNumber) ?? 0) + 1;
@@ -238,8 +283,10 @@ export function buildDokkaiImportPackage(
   });
 
   const templateSlug = input.templateSlug ?? `jlpt-${input.jlptLevel.toLowerCase()}-reading-draft`;
+  // Calculate fallback time limit based on question count
   const timeLimitMinutes = input.timeLimitMinutes ?? Math.max(20, Math.ceil(numberedQuestions.length * 2.5));
 
+  // Construct final import package structure
   const importPackage: JlptImportPackage = {
     template: {
       slug: templateSlug,

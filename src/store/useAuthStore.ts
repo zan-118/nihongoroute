@@ -14,11 +14,15 @@ import { get, set as idbSet, del } from "idb-keyval";
 // ANTARMUKA STATE
 // ==========================================
 /**
+ * Authentication state structure.
  * Mengelola status autentikasi pengguna secara luring dan daring.
  */
 interface AuthState {
+  /** User authentication status flag. */
   isAuthenticated: boolean;
+  /** Set authentication status flag. */
   setAuth: (isAuthenticated: boolean) => void;
+  /** Reset authentication status flag to false. */
   resetAuth: () => void;
 }
 
@@ -26,6 +30,7 @@ interface AuthState {
 // ZUSTAND STORE UTAMA
 // ==========================================
 /**
+ * Zustand store for authentication state. Persists to IndexedDB.
  * Zustand Store untuk memantau status sesi masuk pengguna secara zero-latency di peramban.
  */
 export const useAuthStore = create<AuthState>()(
@@ -40,6 +45,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "nihongoroute_auth_data",
+      // Custom storage engine using IndexedDB for async storage.
       storage: createJSONStorage(() => ({
         // Membaca status autentikasi dari IndexedDB
         getItem: async (name) => (await get(name)) ?? null,
@@ -49,6 +55,7 @@ export const useAuthStore = create<AuthState>()(
         removeItem: async (name) => await del(name),
       })),
       // Hanya menyimpan status isAuthenticated ke penyimpanan lokal untuk menjaga keamanan data
+      // Only persist isAuthenticated field to limit storage footprint.
       partialize: (state) => ({ isAuthenticated: state.isAuthenticated }),
     }
   )

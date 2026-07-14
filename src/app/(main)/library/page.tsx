@@ -23,6 +23,9 @@ import {
   webPageJsonLd,
 } from "@/lib/seo";
 
+/**
+ * Metadata SEO untuk halaman Pustaka Belajar.
+ */
 // ======================
 // METADATA SEO
 // ======================
@@ -50,13 +53,16 @@ export const metadata: Metadata = {
  * Halaman utama Pustaka (RSC).
  * Mengambil data statistik agregat jumlah kosakata, kanji, pola kalimat, dll., lalu menyajikan bento grid navigasi kategori.
  * 
- * @returns {JSX.Element} Halaman direktori pustaka materi belajar Jepang yang super lega.
+ * @returns {Promise<JSX.Element>} Halaman direktori pustaka materi belajar Jepang yang super lega.
  */
 export default async function LibraryPage() {
+  // Ambil data jumlah materi dari database/API
   const counts = await getLibraryCounts();
 
+  // Hitung total akumulasi seluruh materi belajar
   const totalMateri = counts.vocab + counts.kanji + counts.grammar + counts.reading + counts.listening + counts.exams;
 
+  // Konfigurasi data untuk setiap kategori kartu navigasi
   const categories = [
     {
       href: "/library/vocab",
@@ -125,6 +131,7 @@ export default async function LibraryPage() {
     }
   ];
 
+  // Konfigurasi data statistik utama untuk banner atas
   const stats = [
     { label: "Total Kosakata", value: counts.vocab, accentRgb: "59 130 246" },
     { label: "Total Kanji", value: counts.kanji, accentRgb: "239 68 68" },
@@ -133,6 +140,7 @@ export default async function LibraryPage() {
 
   return (
     <div className="w-full px-4 md:px-8 lg:px-12 relative overflow-hidden pb-32 bg-transparent text-foreground transition-colors duration-300 min-h-screen pt-8 md:pt-16">
+      {/* Injeksi JSON-LD untuk optimasi SEO mesin pencari */}
       <JsonLd
         data={[
           breadcrumbJsonLd([
@@ -234,6 +242,7 @@ export default async function LibraryPage() {
             <div
               key={cat.href}
               className={
+                // Jika item terakhir ganjil, buat melebar penuh pada layar medium ke atas
                 idx === categories.length - 1 && categories.length % 2 !== 0
                   ? "md:col-span-2"
                   : ""

@@ -15,20 +15,28 @@ import { useUIStore } from "@/store/useUIStore";
 // ==========================================
 // ANTARMUKA & TIPE DATA
 // ==========================================
+/**
+ * Props for the KanjiHeader component.
+ */
 interface KanjiHeaderProps {
+  /** Current search query string. */
   search: string;
+  /** Callback function triggered when search query changes. */
   onSearchChange: (value: string) => void;
+  /** Selected JLPT level filter. Null represents no filter. */
   levelFilter: string | null;
+  /** Callback function triggered when JLPT level filter changes. */
   onLevelFilterChange: (level: string | null) => void;
 }
 
 // ==========================================
-// KOMPONEN UTAMA: KanjiHeader
+// KOMKOMPONEN UTAMA: KanjiHeader
 // ==========================================
 /**
- * Komponen tajuk interaktif untuk filter pencarian tingkat JLPT pada Pustaka Kanji.
- * 
- * @param {KanjiHeaderProps} props Properti komponen tajuk kanji.
+ * Header component for the Kanji library.
+ * Renders search input, JLPT level filter buttons, and layout view toggles.
+ *
+ * @param props - Component properties.
  */
 export function KanjiHeader({
   search,
@@ -36,7 +44,10 @@ export function KanjiHeader({
   levelFilter,
   onLevelFilterChange,
 }: KanjiHeaderProps) {
+  // Available JLPT levels for filtering
   const levels = ["N5", "N4", "N3", "N2", "N1"];
+  
+  // Retrieve layout preference state and setter from UI store
   const layoutPreference = useUIStore((s) => s.settings.layoutPreference) ?? "grid";
   const setLayoutPreference = useUIStore((s) => s.setLayoutPreference);
 
@@ -78,6 +89,7 @@ export function KanjiHeader({
                     ? "bg-primary text-primary-foreground shadow-[0_0_20px_rgb(var(--primary-rgb)/0.3)]" 
                     : "bg-card/40 border border-border hover:bg-muted"
                 }`}
+                // Toggle filter off if clicked again, otherwise set new level
                 onClick={() => onLevelFilterChange(levelFilter === lvl ? null : lvl)}
               >
                 {lvl}
@@ -119,4 +131,3 @@ export function KanjiHeader({
     </div>
   );
 }
-

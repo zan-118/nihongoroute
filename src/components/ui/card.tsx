@@ -12,6 +12,9 @@ import { cn } from "@/lib/utils"
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * Root card container. Apply neo-card styling.
+ */
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -19,6 +22,7 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
+      // neo-card apply custom glassmorphism border and background
       "neo-card text-card-foreground",
       className
     )}
@@ -27,6 +31,9 @@ const Card = React.forwardRef<
 ))
 Card.displayName = "Card"
 
+/**
+ * Header container for card. Stack children vertically.
+ */
 const CardHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -39,6 +46,9 @@ const CardHeader = React.forwardRef<
 ))
 CardHeader.displayName = "CardHeader"
 
+/**
+ * Card title. Bold, uppercase, tight tracking.
+ */
 const CardTitle = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -54,6 +64,9 @@ const CardTitle = React.forwardRef<
 ))
 CardTitle.displayName = "CardTitle"
 
+/**
+ * Card description. Muted text color.
+ */
 const CardDescription = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -66,20 +79,32 @@ const CardDescription = React.forwardRef<
 ))
 CardDescription.displayName = "CardDescription"
 
+/**
+ * Main content area. Padding top zeroed.
+ */
 const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
+  <div 
+    ref={ref} 
+    // pt-0 prevent double padding when header present
+    className={cn("p-6 pt-0", className)} 
+    {...props} 
+  />
 ))
 CardContent.displayName = "CardContent"
 
+/**
+ * Footer container. Align items center.
+ */
 const CardFooter = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
+    // pt-0 prevent double padding when content present
     className={cn("flex items-center p-6 pt-0", className)}
     {...props}
   />

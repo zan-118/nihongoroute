@@ -19,6 +19,9 @@ import {
   type LearningEventInput,
 } from "@/lib/learning-events";
 
+/**
+ * Vocabulary entry saved from reading session.
+ */
 export interface ReadingVocabularyBankEntry {
   id: string;
   word: string;
@@ -33,11 +36,17 @@ export interface ReadingVocabularyBankEntry {
   hitCount: number;
 }
 
+/**
+ * Input type for creating vocabulary entry. Excludes auto-generated fields.
+ */
 export type ReadingVocabularyBankInput = Omit<
   ReadingVocabularyBankEntry,
   "id" | "addedAt" | "hitCount"
 >;
 
+/**
+ * Reading progress tracking per article.
+ */
 export interface ReadingProgressEntry {
   sourceId: string;
   sourceTitle?: string;
@@ -48,6 +57,10 @@ export interface ReadingProgressEntry {
   updatedAt: number;
 }
 
+/**
+ * Generate unique ID for vocabulary entry.
+ * Combine source, word, reading. Lowercase result.
+ */
 function createVocabularyBankId(entry: ReadingVocabularyBankInput) {
   return [
     entry.sourceId || "reading",
@@ -62,7 +75,8 @@ function createVocabularyBankId(entry: ReadingVocabularyBankInput) {
 // ANTARMUKA STATE
 // ==========================================
 /**
- * Mengelola status antarmuka pengguna global, preferensi tampilan, dan state sesi belajar terpadu.
+ * UI store state and actions.
+ * Manage global UI, notifications, settings, reading/listening states, and learning events.
  */
 interface UIState {
   loading: boolean;
@@ -111,7 +125,10 @@ interface UIState {
   resetUI: () => void;
 }
 
-/** Adapter penyimpanan StateStorage khusus untuk IndexedDB menggunakan idb-keyval */
+/** 
+ * IndexedDB storage adapter.
+ * Save state to browser database via idb-keyval.
+ */
 const idbStorage: StateStorage = {
   getItem: async (name: string) => (await get(name)) || null,
   setItem: async (name: string, value: string) => await idbSet(name, value),
@@ -172,7 +189,7 @@ export const useUIStore = create<UIState>()(
             read: false
           },
           ...state.notifications
-        ].slice(0, 50)
+        ].slice(0, 50) // Keep last 50 notifications.
       })),
 
       markNotificationAsRead: (id) => {
@@ -182,6 +199,7 @@ export const useUIStore = create<UIState>()(
           )
         }));
 
+        // Sync read status to server if ID is database-backed.
         if (id.includes("-")) {
           import("@/actions/community.actions").then(({ markNotificationRead }) => {
             markNotificationRead(id).catch(err => console.error("Gagal sinkronisasi baca notifikasi:", err));
@@ -196,6 +214,7 @@ export const useUIStore = create<UIState>()(
           )
         }));
 
+        // Sync all read status to server.
         import("@/actions/community.actions").then(({ markAllNotificationsRead }) => {
           markAllNotificationsRead().catch(err => console.error("Gagal sinkronisasi baca semua notifikasi:", err));
         });
@@ -204,6 +223,7 @@ export const useUIStore = create<UIState>()(
       clearNotifications: () => {
         set({ notifications: [] });
 
+        // Sync clear action to server.
         import("@/actions/community.actions").then(({ clearAllNotifications }) => {
           clearAllNotifications().catch(err => console.error("Gagal sinkronisasi hapus semua notifikasi:", err));
         });
@@ -321,7 +341,7 @@ export const useUIStore = create<UIState>()(
                 ...entry,
                 id,
                 addedAt: existing?.addedAt || Date.now(),
-                hitCount: (existing?.hitCount || 0) + 1,
+                hitCount: (existing?.hitCount || 0) + 1, // Increment hit count on duplicate add.
               },
             },
           };
@@ -338,6 +358,7 @@ export const useUIStore = create<UIState>()(
       clearReadingVocabulary: (sourceId) => set((state) => {
         if (!sourceId) return { readingVocabularyBank: {} };
 
+        // Filter out vocabulary entries matching sourceId.
         return {
           readingVocabularyBank: Object.fromEntries(
             Object.entries(state.readingVocabularyBank).filter(
@@ -351,6 +372,7 @@ export const useUIStore = create<UIState>()(
         if (!sourceId) return {};
 
         const existing = state.readingProgressMap[sourceId];
+        // Prevent timer rollback.
         const elapsedSeconds = Math.max(
           progress.elapsedSeconds ?? existing?.elapsedSeconds ?? 0,
           existing?.elapsedSeconds ?? 0
@@ -388,7 +410,7 @@ export const useUIStore = create<UIState>()(
       recordLearningEvent: (input) => {
         const event = createLearningEvent(input);
         set((state) => ({
-          learningEvents: [event, ...state.learningEvents].slice(0, 100),
+          learningEvents: [event, ...state.learningEvents].slice(0, 100), // Keep last 100 events.
         }));
         return event.id;
       },

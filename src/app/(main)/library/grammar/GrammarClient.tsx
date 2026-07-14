@@ -26,13 +26,19 @@ import { GrammarHeader } from "@/components/features/grammar/GrammarHeader";
 // ======================
 // KONFIGURASI / KONSTANTA
 // ======================
+/** JLPT levels for filtering. */
 const LEVELS = ["n5", "n4", "n3", "n2", "n1"];
+/** Pagination limit. */
 const ITEMS_PER_PAGE = 12;
+/** Static empty array reference. Prevent unnecessary re-renders. */
 const EMPTY_GRAMMAR_ARTICLES: GrammarArticle[] = [];
 
 // ======================
 // TIPE DATA
 // ======================
+/**
+ * Grammar article schema.
+ */
 interface GrammarArticle {
   id?: string;
   _id: string;
@@ -44,6 +50,9 @@ interface GrammarArticle {
   notes?: string;
 }
 
+/**
+ * Props for GrammarClient.
+ */
 interface GrammarClientProps {
   initialArticles?: GrammarArticle[];
 }
@@ -53,11 +62,10 @@ interface GrammarClientProps {
 // ======================
 
 /**
- * Komponen GrammarClient: Menyediakan antarmuka interaktif untuk menyaring, mencari, 
- * dan mempaginasi materi tata bahasa Jepang (Bunpou) dengan status sinkronisasi URL.
+ * GrammarClient component. Handle search, filter, pagination.
  * 
- * @param {GrammarClientProps} props Properti komponen.
- * @returns {JSX.Element} Antarmuka direktori tata bahasa interaktif.
+ * @param props Component props.
+ * @returns Interactive grammar directory UI.
  */
 export default function GrammarClient({ initialArticles = EMPTY_GRAMMAR_ARTICLES }: GrammarClientProps) {
   const searchParams = useSearchParams();
@@ -106,16 +114,21 @@ export default function GrammarClient({ initialArticles = EMPTY_GRAMMAR_ARTICLES
     const currentParamsString = searchParams.toString();
     const newParamsString = params.toString();
 
+    // Update URL only if parameters changed. Prevent redundant history entries.
     if (currentParamsString !== newParamsString) {
       router.replace(`${pathname}?${newParamsString}`, { scroll: false });
     }
   }, [searchTerm, selectedLevel, currentPage, pathname, router, searchParams]);
 
   useEffect(() => {
+    // Skip fetch if initial load and level is default n5.
     if (selectedLevel === "n5" && articles.length > 0 && articles.length === (initialArticles?.length || 0)) {
       return;
     }
 
+    /**
+     * Fetch grammar articles from server action.
+     */
     async function fetchGrammar() {
       setLoading(true);
       try {
@@ -136,6 +149,7 @@ export default function GrammarClient({ initialArticles = EMPTY_GRAMMAR_ARTICLES
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedLevel]);
 
+  // Filter articles locally based on search term.
   const filteredArticles = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
     if (!term) return articles;
@@ -150,11 +164,18 @@ export default function GrammarClient({ initialArticles = EMPTY_GRAMMAR_ARTICLES
   }, [articles, searchTerm]);
 
   const totalPages = Math.ceil(filteredArticles.length / ITEMS_PER_PAGE);
+  
+  // Slice filtered articles for current page view.
   const paginatedArticles = useMemo(() => filteredArticles.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   ), [currentPage, filteredArticles]);
 
+  /**
+   * Handle page change event. Scroll to top smoothly.
+   * 
+   * @param page Target page number.
+   */
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });

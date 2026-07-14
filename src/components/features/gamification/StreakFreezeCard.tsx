@@ -19,12 +19,26 @@ import { useUserStore, STREAK_FREEZE_COST } from "@/store/useUserStore";
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * StreakFreezeCard component.
+ * Renders user streak freeze inventory, cost, and purchase button.
+ * Syncs with Zustand user store.
+ */
 export default function StreakFreezeCard() {
+  // Get current user XP
   const xp = useUserStore(s => s.xp);
+  // Get current streak freeze count from inventory
   const freezeCount = useUserStore(s => s.inventory.streakFreeze || 0);
+  // Get purchase action from store
   const buyStreakFreeze = useUserStore(s => s.buyStreakFreeze);
 
+  /**
+   * Handles streak freeze purchase.
+   * Validates XP balance before executing transaction.
+   */
   const handleBuy = () => {
+    // Block purchase if XP insufficient
     if (xp < STREAK_FREEZE_COST) {
       toast.error("XP Tidak Cukup", {
         description: `Kamu butuh ${STREAK_FREEZE_COST - xp} XP lagi untuk membeli ini.`
@@ -32,6 +46,7 @@ export default function StreakFreezeCard() {
       return;
     }
     
+    // Execute purchase and notify user
     if (buyStreakFreeze()) {
       toast.success("Streak Terlindungi!", {
         description: "1 Pelindung Streak telah ditambahkan ke kantongmu."
@@ -41,6 +56,7 @@ export default function StreakFreezeCard() {
 
   return (
     <Card className="p-6 rounded-lg bg-secondary/5 border border-secondary/20 shadow-lg relative overflow-hidden group h-full flex flex-col justify-between">
+      {/* Background decorative icon */}
       <div className="absolute -top-4 -right-4 text-secondary/10 rotate-12 group-hover:scale-125 transition-transform duration-700">
         <ShieldCheck size={120} />
       </div>
@@ -67,6 +83,7 @@ export default function StreakFreezeCard() {
       </div>
 
       <div className="relative z-10 flex flex-col gap-3">
+        {/* Purchase button. Disabled if user cannot afford cost. */}
         <Button 
           onClick={handleBuy}
           disabled={xp < STREAK_FREEZE_COST}

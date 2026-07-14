@@ -25,17 +25,19 @@ import { sounds } from "@/lib/audio";
 // HOOK UTAMA
 // ==========================================
 /**
- * Hook useSRSReview
- * Mengelola alur permainan dan status dari sesi ulasan kartu flash SRS.
+ * Manage SRS review session state and logic.
+ * Handles card order, flip state, user answers, XP calculation, audio, and keyboard shortcuts.
  *
- * @param cards Daftar kartu flash yang akan diulas
- * @returns Berbagai status sesi ulasan, fungsi pembalik kartu, dan fungsi penjawab
+ * @param cards Flashcards to review.
+ * @returns Review state and handlers.
  */
 export function useSRSReview(cards: FlashcardType[]) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [direction, setDirection] = useState(0);
   const [isClient, setIsClient] = useState(false);
+  
+  // Shuffle cards once on mount or when cards change. Prevent layout shifts.
   const shuffledCards = useMemo(() => {
     if (!cards || cards.length === 0) return [];
     return shuffleArray([...cards]);
@@ -54,7 +56,7 @@ export function useSRSReview(cards: FlashcardType[]) {
   const isSyncing = useUIStore((state) => state.isSyncing);
   const router = useRouter();
 
-  // Memastikan rendering di sisi klien (hydration-safe)
+  // Delay client render to avoid hydration mismatch.
   useEffect(() => {
     const frame = requestAnimationFrame(() => setIsClient(true));
     return () => cancelAnimationFrame(frame);
@@ -65,6 +67,9 @@ export function useSRSReview(cards: FlashcardType[]) {
   // ==========================================
   // FUNGSI NAVIGASI & PENANGANAN
   // ==========================================
+  /**
+   * Advance to next card or finish session.
+   */
   const goToNext = useCallback(() => {
     setDirection(1);
     setIsFlipped(false);
@@ -76,11 +81,12 @@ export function useSRSReview(cards: FlashcardType[]) {
     }
   }, [currentIndex, shuffledCards.length]);
 
+  // Prevent double submission during animation.
   const isProcessing = useRef(false);
 
   /**
-   * Menangani jawaban pengguna berdasarkan tingkat kemudahan (grade).
-   * @param grade Angka 0 (salah) atau 2 (benar/mudah)
+   * Process user answer, update SRS state, award XP, trigger audio/visual feedback.
+   * @param grade Answer quality score (0 for wrong, 2 for correct).
    */
   const handleAnswer = useCallback(
     (grade: number) => {
@@ -119,6 +125,9 @@ export function useSRSReview(cards: FlashcardType[]) {
     [currentCard, xp, updateProgress, goToNext],
   );
 
+  /**
+   * Flip card to show/hide answer.
+   */
   const toggleFlip = useCallback(() => {
     sounds?.playPop();
     setIsFlipped((prev) => !prev);
@@ -127,6 +136,7 @@ export function useSRSReview(cards: FlashcardType[]) {
   // ==========================================
   // PINTASAN PAPAN KETIK (KEYBOARD SHORTCUTS)
   // ==========================================
+  // Bind keyboard shortcuts for fast review navigation.
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Abaikan jika pengguna sedang fokus pada input atau textarea

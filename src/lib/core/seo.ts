@@ -1,12 +1,22 @@
 import type { Metadata } from "next";
 
+/** Brand name. */
 export const SITE_NAME = "NihongoRoute";
+
+/** Fallback site URL. */
 export const DEFAULT_SITE_URL = "https://nihongoroute.my.id";
+
+/** Fallback OpenGraph image path. */
 export const DEFAULT_OG_IMAGE = "/opengraph-image.png";
+
+/** Fallback page title. */
 export const DEFAULT_TITLE = "NihongoRoute | Belajar Bahasa Jepang Gratis";
+
+/** Fallback page description. */
 export const DEFAULT_DESCRIPTION =
   "Platform belajar bahasa Jepang gratis dengan kurikulum JLPT, kosakata, kanji, tata bahasa, SRS, dan latihan interaktif.";
 
+/** Valid JSON-LD values. */
 export type JsonLdValue =
   | string
   | number
@@ -15,10 +25,12 @@ export type JsonLdValue =
   | JsonLdObject
   | JsonLdValue[];
 
+/** JSON-LD object structure. */
 export type JsonLdObject = {
   [key: string]: JsonLdValue | undefined;
 };
 
+/** Input for page metadata generator. */
 type PageMetadataInput = {
   title: string;
   description: string;
@@ -29,11 +41,13 @@ type PageMetadataInput = {
   noIndex?: boolean;
 };
 
+/** Breadcrumb node data. */
 type BreadcrumbItem = {
   name: string;
   path: string;
 };
 
+/** Input for learning resource schema. */
 type LearningResourceInput = {
   name: string;
   description: string;
@@ -45,6 +59,7 @@ type LearningResourceInput = {
   image?: string | null;
 };
 
+/** Input for defined term schema. */
 type DefinedTermInput = {
   name: string;
   description: string;
@@ -55,6 +70,7 @@ type DefinedTermInput = {
   inLanguage?: string;
 };
 
+/** Input for article schema. */
 type ArticleInput = {
   headline: string;
   description: string;
@@ -65,6 +81,7 @@ type ArticleInput = {
   educationalLevel?: string | null;
 };
 
+/** Robots config to block indexing. */
 export const noIndexRobots = {
   follow: false,
   googleBot: {
@@ -74,20 +91,26 @@ export const noIndexRobots = {
   index: false,
 };
 
+/** Get base site URL. Use env var or fallback. Strip trailing slash. */
 export function getSiteUrl() {
+  // Remove trailing slash to prevent double slashes in paths
   return (process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL).replace(/\/+$/, "");
 }
 
+/** Convert relative path to absolute URL. Return exact if already absolute. */
 export function absoluteUrl(path = "/") {
+  // Return path if already absolute URL
   if (/^https?:\/\//i.test(path)) return path;
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
   return `${getSiteUrl()}${normalizedPath}`;
 }
 
+/** Encode URL path segment. */
 export function encodeRouteSegment(value: string) {
   return encodeURIComponent(value);
 }
 
+/** Generate Next.js Metadata object. Set canonical, OG, Twitter tags. */
 export function createPageMetadata({
   title,
   description,
@@ -101,6 +124,7 @@ export function createPageMetadata({
   const imageUrl = absoluteUrl(image);
 
   return {
+    // Disable canonical link if page not indexed
     alternates: noIndex
       ? undefined
       : {
@@ -135,6 +159,7 @@ export function createPageMetadata({
   };
 }
 
+/** Generate Organization schema. */
 export function organizationJsonLd(): JsonLdObject {
   return {
     "@id": `${getSiteUrl()}/#organization`,
@@ -147,6 +172,7 @@ export function organizationJsonLd(): JsonLdObject {
   };
 }
 
+/** Generate WebSite schema. */
 export function websiteJsonLd(): JsonLdObject {
   return {
     "@id": `${getSiteUrl()}/#website`,
@@ -161,6 +187,7 @@ export function websiteJsonLd(): JsonLdObject {
   };
 }
 
+/** Generate WebPage schema. */
 export function webPageJsonLd({
   name,
   description,
@@ -184,6 +211,7 @@ export function webPageJsonLd({
   };
 }
 
+/** Generate BreadcrumbList schema. */
 export function breadcrumbJsonLd(items: BreadcrumbItem[]): JsonLdObject {
   return {
     "@type": "BreadcrumbList",
@@ -196,6 +224,7 @@ export function breadcrumbJsonLd(items: BreadcrumbItem[]): JsonLdObject {
   };
 }
 
+/** Generate Course schema. */
 export function courseJsonLd({
   name,
   description,
@@ -215,6 +244,7 @@ export function courseJsonLd({
   };
 }
 
+/** Generate LearningResource schema. */
 export function learningResourceJsonLd({
   name,
   description,
@@ -243,6 +273,7 @@ export function learningResourceJsonLd({
   };
 }
 
+/** Generate DefinedTerm schema. */
 export function definedTermJsonLd({
   name,
   description,
@@ -267,6 +298,7 @@ export function definedTermJsonLd({
   };
 }
 
+/** Generate Article schema. */
 export function articleJsonLd({
   headline,
   description,

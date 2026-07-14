@@ -18,26 +18,48 @@ import { Card } from "@/components/ui/card";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+
+/**
+ * Props for TrainingGround component.
+ */
 interface TrainingGroundProps {
+  /** Category identifier for routing */
   categoryId: string;
+  /** Tailwind color class for theme icon */
   themeColor: string;
+  /** Framer motion animation variants */
   itemVariants: Variants;
 }
 
+/**
+ * Structure for training menu item.
+ */
 interface TrainingItem {
+  /** Title of training mode */
   title: string;
+  /** Short description of training mode */
   desc: string;
+  /** Lucide icon component */
   icon: React.ComponentType<{ size?: number; className?: string }>;
+  /** Tailwind text color class */
   colorClass: string;
+  /** RGB color string for dynamic inline styles */
   rgb: string;
+  /** Target URL path */
   href: string;
 }
 
 // ======================
+
+/**
+ * Card component for individual training mode.
+ * Uses hover states to trigger dynamic glow and watermark effects.
+ */
 const TrainingCard = React.memo(function TrainingCard({ item }: { item: TrainingItem }) {
   const [isHovered, setIsHovered] = useState(false);
   const IconComponent = item.icon;
 
+  // Select watermark character based on title.
   const kanjiWatermark = React.useMemo(() => {
     if (item.title.includes("Kosakata")) return "語";
     if (item.title.includes("Kanji")) return "字";
@@ -51,6 +73,7 @@ const TrainingCard = React.memo(function TrainingCard({ item }: { item: Training
       onMouseLeave={() => setIsHovered(false)}
       className="p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-lg transition-all duration-200 h-full relative overflow-hidden glass"
       style={{
+        // Dynamic border and shadow on hover.
         borderColor: isHovered ? `rgba(${item.rgb}, 0.3)` : "rgb(var(--border-rgb)/0.4)",
         boxShadow: isHovered ? `0 8px 22px rgba(${item.rgb}, 0.06), 0 0 12px rgba(${item.rgb}, 0.03)` : "none"
       }}
@@ -79,6 +102,7 @@ const TrainingCard = React.memo(function TrainingCard({ item }: { item: Training
         <div
           className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center transition-all duration-200 shadow-md border bg-background/50"
           style={{
+            // Rotate and scale icon on hover.
             borderColor: isHovered ? `rgba(${item.rgb}, 0.4)` : "rgb(var(--border-rgb)/0.5)",
             color: `rgb(${item.rgb})`,
             transform: isHovered ? "scale(1.05) rotate(4deg)" : "none"
@@ -107,6 +131,7 @@ const TrainingCard = React.memo(function TrainingCard({ item }: { item: Training
       <div
         className="absolute bottom-4 right-4 sm:bottom-5 sm:right-5 size-8 sm:size-9 rounded-full border flex items-center justify-center transition-all duration-200"
         style={{
+          // Slide and fade chevron on hover.
           backgroundColor: isHovered ? `rgb(${item.rgb})` : "rgb(var(--background-rgb)/0.5)",
           borderColor: isHovered ? `rgb(${item.rgb})` : "rgb(var(--border-rgb)/0.5)",
           color: isHovered ? "hsl(var(--background))" : "hsl(var(--foreground))",
@@ -123,7 +148,12 @@ const TrainingCard = React.memo(function TrainingCard({ item }: { item: Training
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Main training hub component. Displays vocabulary, kanji, and survival modes.
+ */
 export function TrainingGround({ categoryId, themeColor, itemVariants }: TrainingGroundProps) {
+  // Memoize training items to prevent recreation on render.
   const trainingItems = useMemo<TrainingItem[]>(() => [
     {
       title: "Kosakata",

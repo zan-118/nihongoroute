@@ -21,6 +21,10 @@ import { useDownloadPdfButton } from "../useDownloadPdfButton";
 // ==========================================
 // ELEMEN DINAMIS
 // ==========================================
+/**
+ * Dynamically imported PdfGenerator component.
+ * SSR disabled to prevent canvas/document reference errors on server.
+ */
 const PdfGenerator = dynamic(() => import("../PdfGenerator"), {
   ssr: false,
   loading: () => (
@@ -34,6 +38,14 @@ const PdfGenerator = dynamic(() => import("../PdfGenerator"), {
 // ==========================================
 // KOMPONEN UTAMA
 // ==========================================
+/**
+ * DownloadPdfButton component.
+ * Handles client-side mounting check and renders PDF generator trigger.
+ *
+ * @param props - Component properties.
+ * @param props.data - Raw data payload for PDF generation.
+ * @param props.type - Document type schema selector.
+ */
 export default function DownloadPdfButton({
   data,
   type = "lesson",
@@ -42,8 +54,10 @@ export default function DownloadPdfButton({
   data: unknown;
   type?: "lesson" | "vocab";
 }) {
+  // Check client-side mount status to prevent hydration mismatch
   const { isMounted } = useDownloadPdfButton();
 
+  // Render loading state if not mounted or data missing
   if (!isMounted || !data) {
     return (
       <Button variant="ghost" disabled className="bg-[rgb(var(--background-rgb)/0.4)] border border-border neo-inset shadow-none px-8 py-4 rounded-[1.5rem] text-muted-foreground text-xs font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 w-full sm:w-auto h-auto italic">
@@ -53,6 +67,6 @@ export default function DownloadPdfButton({
     );
   }
 
+  // Render generator component when ready
   return <PdfGenerator data={data} type={type} />;
 }
-

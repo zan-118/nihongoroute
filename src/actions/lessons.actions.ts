@@ -18,13 +18,11 @@ import { LibraryItem } from "@/types/library";
 // ======================
 
 /**
- * Server Action: getLessonDetail
- * 
  * Mengambil detail lengkap materi pelajaran bahasa Jepang berdasarkan slug teks.
  * Menghubungkan data pelajaran dengan data kategori kursusnya (course_categories) dari Supabase.
  * 
  * @param {string} slug - Slug unik pelajaran
- * @returns {Promise<Object | null>} Objek detail pelajaran, atau null jika gagal
+ * @returns {Promise<any | null>} Objek detail pelajaran, atau null jika gagal
  */
 export async function getLessonDetail(slug: string) {
   const supabase = createStaticClient();
@@ -35,6 +33,7 @@ export async function getLessonDetail(slug: string) {
     .maybeSingle();
 
   if (!data || error) {
+    // Fallback ke tabel articles jika data pelajaran tidak ditemukan
     const { data: artData } = await supabase
       .from("articles")
       .select("*, category:course_categories(*)")
@@ -53,6 +52,10 @@ export async function getLessonDetail(slug: string) {
 // ======================
 // TYPES
 // ======================
+
+/**
+ * Representasi item pelajaran minimal dari Sanity.
+ */
 interface SanityLessonListItem {
   _id: string;
   title: string;
@@ -60,13 +63,11 @@ interface SanityLessonListItem {
 }
 
 /**
- * Server Action: getCourseCategories
- * 
  * Mengambil seluruh daftar kategori kursus dari Supabase, lalu menggabungkannya secara paralel
  * dengan mengambil daftar pelajaran dari Sanity CMS dalam satu kueri efisien.
  * Mengelompokkan pelajaran berdasarkan kategori masing-masing untuk rendering katalog Dasbor.
  * 
- * @returns {Promise<Array>} Daftar kategori kursus terformat lengkap beserta daftar preview pelajarannya
+ * @returns {Promise<Array<any>>} Daftar kategori kursus terformat lengkap beserta daftar preview pelajarannya
  */
 export async function getCourseCategories() {
   const supabase = createStaticClient();
@@ -99,11 +100,13 @@ export async function getCourseCategories() {
     .in("category_id", categories.map(c => c.id))
     .order("order_number", { ascending: true });
 
+  // Gabungkan pelajaran dan artikel ke dalam satu array
   const allDbLessons = [
     ...(dbLessons || []),
     ...(dbArticles || [])
   ];
 
+  // Normalisasi struktur data agar sesuai dengan format SanityLessonListItem
   const supabaseLessons = allDbLessons.map((l) => ({
     _id: l.id,
     title: l.title,
@@ -136,11 +139,21 @@ export async function getCourseCategories() {
   return categoriesWithData;
 }
 
+/**
+ * Mengambil daftar ujian berdasarkan kategori.
+ * 
+ * @deprecated Tabel ujian lama telah dihapus. Selalu mengembalikan array kosong.
+ * @param {string} categoryId - ID Kategori
+ * @returns {Promise<Array<any>>} Array kosong
+ */
 export async function getExamsByCategory(categoryId: string) {
   // Legacy exams table has been dropped. Returning empty array.
   return [];
 }
 
+/**
+ * Representasi baris data kosakata dari database.
+ */
 interface VocabRow {
   id: string;
   word: string;
@@ -154,6 +167,9 @@ interface VocabRow {
   slug: string | null;
 }
 
+/**
+ * Representasi baris data tata bahasa dari database.
+ */
 interface GrammarRow {
   id: string;
   title: string;
@@ -166,6 +182,9 @@ interface GrammarRow {
   notes: string | null;
 }
 
+/**
+ * Tipe data untuk blok konten dinamis pelajaran.
+ */
 type ContentBlock = {
   _type?: string;
   type?: string;
@@ -185,15 +204,26 @@ type ContentBlock = {
   [key: string]: unknown;
 };
 
+/**
+ * Memeriksa apakah string merupakan format UUID v4 yang valid.
+ * 
+ * @param {string} s - String yang akan diperiksa
+ * @returns {boolean} True jika format UUID valid
+ */
 const isUUID = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
 
 /**
  * Mengubah konten Markdown biasa menjadi struktur ContentBlock dinamis.
+ * Berguna untuk parsing artikel atau konten berbasis teks mentah.
+ * 
+ * @param {string} markdown - String markdown mentah
+ * @returns {ContentBlock[]} Array blok konten terstruktur
  */
 function parseMarkdownToBlocks(markdown: string): ContentBlock[] {
   if (!markdown) return [];
 
   const blocks: ContentBlock[] = [];
+  // Pisahkan berdasarkan baris kosong ganda untuk mendeteksi paragraf/blok baru
   const sections = markdown.split(/\r?\n\s*\r?\n/);
 
   sections.forEach((section, idx) => {
@@ -202,6 +232,7 @@ function parseMarkdownToBlocks(markdown: string): ContentBlock[] {
 
     const id = `block-${idx}`;
 
+    // Deteksi Heading 3
     if (trimmed.startsWith("### ")) {
       blocks.push({
         id,
@@ -212,6 +243,7 @@ function parseMarkdownToBlocks(markdown: string): ContentBlock[] {
       });
       return;
     }
+    // Deteksi Heading 2
     if (trimmed.startsWith("## ")) {
       blocks.push({
         id,
@@ -222,6 +254,7 @@ function parseMarkdownToBlocks(markdown: string): ContentBlock[] {
       });
       return;
     }
+    // Deteksi Heading 1
     if (trimmed.startsWith("# ")) {
       blocks.push({
         id,
@@ -233,6 +266,7 @@ function parseMarkdownToBlocks(markdown: string): ContentBlock[] {
       return;
     }
 
+    // Deteksi Callout / Blockquote
     if (trimmed.startsWith(">")) {
       const lines = trimmed.split(/\r?\n/).map(l => l.replace(/^>\s?/, "").trim());
       let title = "";
@@ -298,6 +332,7 @@ function parseMarkdownToBlocks(markdown: string): ContentBlock[] {
       }
     }
 
+    // Deteksi Gambar Markdown
     const imgMatch = trimmed.match(/^!\[(.*?)\]\((.*?)\)$/);
     if (imgMatch) {
       blocks.push({
@@ -310,6 +345,7 @@ function parseMarkdownToBlocks(markdown: string): ContentBlock[] {
       return;
     }
 
+    // Default ke blok teks biasa
     blocks.push({
       id,
       type: "text",
@@ -323,6 +359,11 @@ function parseMarkdownToBlocks(markdown: string): ContentBlock[] {
 
 /**
  * Mengambil detail satu pelajaran berdasarkan slug atau ID beserta relasinya.
+ * Melakukan query ke Supabase (lessons/articles) dan memformat relasi kosakata, kanji, tata bahasa,
+ * listening, dan reading secara paralel.
+ * 
+ * @param {string} slugOrId - Slug atau UUID pelajaran
+ * @returns {Promise<LibraryItem | null>} Objek detail pelajaran terformat lengkap, atau null jika tidak ditemukan
  */
 export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryItem | null> {
   const supabase = createStaticClient();
@@ -382,7 +423,7 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
         imageUrl: dbLesson.image_url
       } as LibraryItem;
     } else {
-      // 2. Coba ambil dari tabel articles di Supabase
+      // 2. Coba ambil dari tabel articles di Supabase jika tidak ada di lessons
       const { data: dbArticle, error: artErr } = await supabase
         .from("articles")
         .select("*, category:course_categories(*)")
@@ -497,6 +538,10 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
     };
 
     // Ambil data relasi secara paralel untuk menghindari penumpukan latensi (waterfall)
+    
+    /**
+     * Mengambil data kosakata (vocab) dari Supabase berdasarkan ID, kata, atau slug.
+     */
     const fetchVocab = async () => {
       if (!vocabListRaw.length) return;
       const cleanList = vocabListRaw.map((s: unknown) => String(s).trim());
@@ -560,6 +605,9 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
       });
     };
 
+    /**
+     * Mengambil data Kanji dari Supabase berdasarkan ID atau karakter.
+     */
     const fetchKanji = async () => {
       if (!kanjiListRaw.length) return;
       const cleanList = kanjiListRaw.map((s: unknown) => String(s).trim());
@@ -587,6 +635,9 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
       });
     };
 
+    /**
+     * Mengambil data tata bahasa (grammar) dari Supabase berdasarkan ID, judul, atau slug.
+     */
     const fetchGrammar = async () => {
       if (!grammarListRaw.length) return;
       const cleanList = grammarListRaw.map((s: unknown) => String(s).trim());
@@ -628,6 +679,9 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
       });
     };
 
+    /**
+     * Mengambil data latihan menyimak (listening) dari Sanity CMS berdasarkan slug.
+     */
     const fetchListening = async () => {
       if (!listeningListRaw.length) return;
       const cleanList = listeningListRaw.map((s: unknown) => String(s).trim());
@@ -695,6 +749,9 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
       }
     };
 
+    /**
+     * Mengambil data latihan membaca (reading) dari Sanity CMS berdasarkan slug.
+     */
     const fetchReading = async () => {
       if (!readingListRaw.length) return;
       const cleanList = readingListRaw.map((s: unknown) => String(s).trim());
@@ -722,6 +779,7 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
       }
     };
 
+    // Jalankan semua fungsi fetch relasi secara paralel
     await Promise.all([
       fetchVocab(),
       fetchKanji(),

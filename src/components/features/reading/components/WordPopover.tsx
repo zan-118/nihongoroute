@@ -22,9 +22,15 @@ import { useUIStore } from "@/store/useUIStore";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Props for WordPopover component.
+ */
 interface WordPopoverProps {
+  /** Element trigger popover. */
   children: React.ReactNode;
+  /** Target Japanese word. */
   word: string;
+  /** Optional reading of word. */
   reading?: string;
 }
 
@@ -32,7 +38,7 @@ interface WordPopoverProps {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen popover kosakata dinamis.
+ * Interactive popover component. Fetches word data from Supabase on click.
  */
 export default function WordPopover({ children, word, reading }: WordPopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,6 +49,7 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
   const removeReadingVocabulary = useUIStore((state) => state.removeReadingVocabulary);
   const addNotification = useUIStore((state) => state.addNotification);
 
+  // Track screen size to toggle mobile drawer layout.
   useEffect(() => {
     if (!isOpen) return;
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -54,6 +61,7 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
   // ==========================================
   // QUERY & FETCH DATA (REAL-TIME)
   // ==========================================
+  // Fetch word details from Supabase database.
   const { data: vocab, isLoading } = useQuery({
     queryKey: ["vocab-lookup", word, reading],
     queryFn: async () => {
@@ -80,12 +88,13 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
         hinshi: Array.isArray(data.hinshi) ? data.hinshi[0] : data.hinshi,
       };
     },
-    enabled: isOpen,
+    enabled: isOpen, // Only fetch when popover opens.
     staleTime: 1000 * 60 * 5, // 5 menit
   });
 
   const collectibleWord = vocab?.word || word;
   const collectibleReading = vocab?.furigana || reading;
+  // Unique key for local vocabulary bank storage.
   const bankId = [
     readingState.sourceId || "reading",
     collectibleWord,
@@ -95,6 +104,9 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
     .toLowerCase();
   const isCollected = !!vocabularyBank[bankId];
 
+  /**
+   * Add or remove word from local reading vocabulary bank.
+   */
   const handleToggleCollection = () => {
     if (!collectibleWord.trim()) return;
 
@@ -121,6 +133,7 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
     });
   };
 
+  // Animation variants for mobile drawer vs desktop popover.
   const variants = isMobile
     ? {
         initial: { y: "100%", opacity: 0 },

@@ -16,21 +16,35 @@ import { ChevronRight, LucideIcon } from "lucide-react";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+/**
+ * Properties for SidebarItem component.
+ */
 interface SidebarItemProps {
+  /** Navigation item details. */
   item: {
+    /** Target URL path. */
     href: string;
+    /** Display label text. */
     label: string;
+    /** Icon component. */
     icon: React.ElementType;
   };
+  /** Current active URL path. */
   pathname: string;
+  /** Optional click handler. */
   onClick?: () => void;
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * Render single navigation link with active state styling and animations.
+ */
 export function SidebarItem({ item, pathname, onClick }: SidebarItemProps) {
+  // Check if current path matches item destination.
   const isActive = pathname.startsWith(item.href);
+  // Generate clean ID for tour guide step.
   const tourId = item.href.replace(/^\/+/, "").replace(/[^a-z0-9]+/gi, "-") || "home";
 
   return (
@@ -46,6 +60,7 @@ export function SidebarItem({ item, pathname, onClick }: SidebarItemProps) {
       >
         {/* Pendar Samping Aktif */}
         {isActive && (
+          // Framer motion layout animation for active state indicator.
           <m.div 
             layoutId="active-side-glow"
             className="absolute left-0 top-2 bottom-2 w-[3px] bg-primary rounded-full"
@@ -61,6 +76,7 @@ export function SidebarItem({ item, pathname, onClick }: SidebarItemProps) {
           {item.label}
         </span>
         {isActive && (
+          // Framer motion layout animation for active dot.
           <m.div 
             layoutId="sidebar-active-indicator"
             className="size-1.5 rounded-full bg-primary"

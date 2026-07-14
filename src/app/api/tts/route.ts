@@ -2,20 +2,29 @@ import { NextRequest } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import crypto from "crypto";
 
+/** Force dynamic rendering for API route. */
 export const dynamic = "force-dynamic";
 
+/** Maximum allowed text length for synthesis. */
 const MAX_TEXT_LENGTH = 500;
+
+/** Check if environment is development. */
 const isDevelopment = process.env.NODE_ENV === "development";
 
+/**
+ * Log debug messages in development environment.
+ * @param args - Arguments to log.
+ */
 function debugLog(...args: unknown[]) {
   if (isDevelopment) {
     console.log(...args);
   }
 }
 
+/** Set of allowed voice identifiers. */
 const ALLOWED_VOICES = new Set([
   // Wanita
-  "lara",
+  "lala",
   "indah",
   "siti",
   "dewi",
@@ -35,13 +44,12 @@ const ALLOWED_VOICES = new Set([
   "faisal",
   "takahashi",
   "kobayashi",
-  "namonashi",
   "ritsu",
-  "ooba",
   "sakura",
-  "rara",
+  "ani",
 ]);
 
+/** Map canonical voice names to Japanese equivalents. */
 const CANONICAL_TO_JAPANESE: Record<string, string> = {
   suzuki: "鈴木",
   tanaka: "田中",
@@ -54,7 +62,7 @@ const CANONICAL_TO_JAPANESE: Record<string, string> = {
   budi: "ブディ",
   ayu: "アユ",
   indah: "インダ",
-  lara: "ララ",
+  lala: "ララ",
   siti: "シティ",
   dewi: "デウィ",
   dito: "ディト",
@@ -62,9 +70,15 @@ const CANONICAL_TO_JAPANESE: Record<string, string> = {
   faisal: "ファイサル",
   ritsu: "リツ",
   sakura: "サクラ",
-  rara: "ラーラ",
+  ani: "アニ",
 };
 
+/**
+ * GET handler for TTS audio retrieval.
+ * Checks Supabase cache for pre-generated audio. Returns 404 if cache miss.
+ * @param req - NextRequest object.
+ * @returns Response with audio file or error status.
+ */
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
   const text  = (searchParams.get("text") || "").trim();
@@ -76,6 +90,7 @@ export async function GET(req: NextRequest) {
   debugLog(`Voice: "${voice}"`);
   debugLog(`Rate:  "${rate}"`);
 
+  // Validate input parameters
   if (!text) {
     debugLog(`[TTS API] Gagal: parameter teks kosong.`);
     return new Response("Missing text parameter", { status: 400 });
@@ -133,6 +148,7 @@ export async function GET(req: NextRequest) {
     if (cached?.audio_url) {
       debugLog(`CACHE HIT di Database! Audio URL: ${cached.audio_url}`);
       let storagePath = `${hash}.mp3`;
+      // Extract storage path from public URL
       const match = cached.audio_url.match(/\/public\/tts-cache\/(.+)$/);
       if (match) {
         storagePath = decodeURIComponent(match[1]);

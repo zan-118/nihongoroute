@@ -16,6 +16,10 @@ import { sanityClient, sanityPublicFetchOptions } from "@/lib/sanity.client";
 // ======================
 // TYPES
 // ======================
+
+/**
+ * Library item counts.
+ */
 export interface LibraryCounts {
   vocab: number;
   kanji: number;
@@ -30,11 +34,15 @@ export interface LibraryCounts {
 // ======================
 
 /**
- * Mengambil jumlah item nyata dari tabel leksikal Supabase dan konten editorial Sanity CMS secara paralel.
+ * Fetch library item counts.
+ * Query Supabase and Sanity CMS in parallel.
+ * 
+ * @returns Promise resolving to library counts.
  */
 export async function getLibraryCounts(): Promise<LibraryCounts> {
   const supabase = createStaticClient();
 
+  // Query Supabase and Sanity in parallel for speed.
   const [
     vocabResult,
     kanjiResult,
@@ -43,9 +51,11 @@ export async function getLibraryCounts(): Promise<LibraryCounts> {
     listeningCount,
     examsCount
   ] = await Promise.all([
+    // Use head query to get count without data payload.
     supabase.from("vocab").select("*", { count: "exact", head: true }),
     supabase.from("kanji").select("*", { count: "exact", head: true }),
     supabase.from("grammar").select("*", { count: "exact", head: true }),
+    // Query Sanity document count. Fallback to 0 if query fail.
     sanityClient.fetch<number>('count(*[_type == "readingMaterial"])', {}, sanityPublicFetchOptions).catch(() => 0),
     sanityClient.fetch<number>('count(*[_type == "listeningMaterial"])', {}, sanityPublicFetchOptions).catch(() => 0),
     sanityClient.fetch<number>('count(*[_type == "mockExam" && is_published == true])', {}, sanityPublicFetchOptions).catch(() => 0),

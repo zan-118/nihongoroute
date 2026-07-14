@@ -1,14 +1,30 @@
+/**
+ * Prompt data structure for sentence builder exercise.
+ */
 export interface SentenceBuilderPrompt {
+  /** Unique identifier. */
   id: string;
+  /** JLPT level (e.g., N5, N4). */
   level: string;
+  /** Target Japanese sentence. */
   target: string;
+  /** Translation in target language. */
   translation: string;
+  /** Correct sequence of tokens. */
   tokens: string[];
+  /** Grammar explanation. */
   explanation?: string;
+  /** Grammar pattern template. */
   pattern?: string;
 }
 
+/**
+ * Split Japanese sentence into tokens using regex.
+ * @param japanese Japanese text.
+ * @returns Array of tokens.
+ */
 export function tokenizeSentence(japanese: string): string[] {
+  // Match particles, punctuation, or kanji/kana blocks
   const regex = /(でした|です|ました|ます|から|まで|[はがをにでとへも])|([。、！？!?])|([^\u3001\u3002\uFF01\uFF1F!?\sはがをにでとへも]+)/g;
   const matches: string[] = [];
   let match;
@@ -18,6 +34,9 @@ export function tokenizeSentence(japanese: string): string[] {
   return matches.filter(Boolean);
 }
 
+/**
+ * Predefined sentence builder prompts.
+ */
 export const SENTENCE_BUILDER_PROMPTS: SentenceBuilderPrompt[] = [
   {
     id: "want-water",
@@ -75,10 +94,18 @@ export const SENTENCE_BUILDER_PROMPTS: SentenceBuilderPrompt[] = [
   },
 ];
 
+/**
+ * Shuffle tokens deterministically using seed.
+ * @param tokens Array of tokens.
+ * @param seed Seed string.
+ * @returns Shuffled tokens.
+ */
 export function shuffleSentenceTokens(tokens: string[], seed: string) {
   const next = [...tokens];
+  // Generate seed hash value
   let state = Array.from(seed).reduce((total, char) => total + char.charCodeAt(0), 0) || 1;
 
+  // Linear Congruential Generator (LCG) for deterministic shuffle
   for (let index = next.length - 1; index > 0; index--) {
     state = (state * 9301 + 49297) % 233280;
     const swapIndex = state % (index + 1);
@@ -88,10 +115,21 @@ export function shuffleSentenceTokens(tokens: string[], seed: string) {
   return next;
 }
 
+/**
+ * Normalize tokens to single string.
+ * @param tokens Array of tokens.
+ * @returns Normalized string.
+ */
 export function normalizeBuiltSentence(tokens: string[]) {
   return tokens.join("").normalize("NFKC").replace(/\s/g, "");
 }
 
+/**
+ * Compare expected and answer tokens.
+ * @param expectedTokens Correct tokens.
+ * @param answerTokens User tokens.
+ * @returns True if match.
+ */
 export function isBuiltSentenceCorrect(expectedTokens: string[], answerTokens: string[]) {
   return normalizeBuiltSentence(expectedTokens) === normalizeBuiltSentence(answerTokens);
 }

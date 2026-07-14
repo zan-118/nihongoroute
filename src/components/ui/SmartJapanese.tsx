@@ -12,21 +12,27 @@ import * as wanakana from "wanakana";
 // ======================
 // CACHE PENYIMPANAN SEMENTARA (MEMOIZATION)
 // ======================
-/** Cache global untuk performa tinggi pencarian splitFurigana */
+/** 
+ * Cache splitFurigana results. Prevent redundant parsing.
+ */
 const furiganaCache = new Map<string, { text: string; furi?: string }[]>();
 
 // ======================
 // FUNGSI PEMBANTU
 // ======================
 /**
- * Membedah kata menjadi potongan-potongan (chunks) yang memisahkan Kanji dan Hiragana.
- * Contoh: word="食べ物", reading="たべもの" 
- * Hasil: [{text: "食", furi: "た"}, {text: "べ"}, {text: "物", furi: "もの"}]
+ * Split Japanese word into Kanji and Kana chunks.
+ * Match Kanji characters with corresponding Furigana reading.
+ * 
+ * @param word - Original Japanese text.
+ * @param reading - Full Furigana reading.
+ * @returns Array of text chunks with optional Furigana.
  */
 export function splitFurigana(word: string, reading: string): { text: string; furi?: string }[] {
   if (!word) return [];
   if (!reading || word === reading) return [{ text: word }];
 
+  // Generate cache key. Return cached result if exist.
   const cacheKey = `${word}|${reading}`;
   if (furiganaCache.has(cacheKey)) {
     return furiganaCache.get(cacheKey)!;
@@ -36,6 +42,7 @@ export function splitFurigana(word: string, reading: string): { text: string; fu
   let wIdx = 0;
   let rIdx = 0;
 
+  // Loop through word characters.
   while (wIdx < word.length) {
     const char = word[wIdx];
     const isKanjiChar = wanakana.isKanji(char) || char === "々";
@@ -99,6 +106,7 @@ export function splitFurigana(word: string, reading: string): { text: string; fu
         // Kita batasi area pencarian agar tidak melompat ke kalimat/paragraf lain.
         const maxSearch = Math.min(reading.length, rIdx + Math.max(10, kanjiSegment.length * 5));
 
+        // Search reading for anchor. Score matches to find best fit.
         for (let searchIdx = rIdx + 1; searchIdx < maxSearch; searchIdx++) {
           if (wanakana.toHiragana(reading[searchIdx]) === anchorHira) {
             found = true;
@@ -148,7 +156,7 @@ export function splitFurigana(word: string, reading: string): { text: string; fu
     }
   }
 
-  // Batasi ukuran cache maksimal 1000 item untuk mencegah memory leak
+  // Evict oldest cache entry if size exceeds limit. Prevent memory leak.
   if (furiganaCache.size > 1000) {
     const firstKey = furiganaCache.keys().next().value;
     if (firstKey !== undefined) {
@@ -164,7 +172,15 @@ export function splitFurigana(word: string, reading: string): { text: string; fu
 // EKSEKUSI UTAMA
 // ======================
 /**
- * Komponen untuk merender teks Jepang dengan Furigana yang hanya muncul di atas Kanji.
+ * Render Japanese text with Furigana above Kanji.
+ * Support multiple display modes.
+ * 
+ * @param props - Component properties.
+ * @param props.word - Original Japanese text.
+ * @param props.furigana - Full Furigana reading.
+ * @param props.className - Optional CSS class name.
+ * @param props.mode - Display mode (furigana, kanji, hiragana, romaji).
+ * @returns React element.
  */
 export function SmartJapanese({ 
   word, 
@@ -177,6 +193,7 @@ export function SmartJapanese({
   className?: string;
   mode?: "furigana" | "kanji" | "hiragana" | "romaji";
 }) {
+  // Parse word and furigana into chunks. Memoize result.
   const chunks = useMemo(() => {
     if (!word || !furigana) return [];
     return splitFurigana(word, furigana);

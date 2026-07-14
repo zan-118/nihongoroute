@@ -12,12 +12,19 @@ import Link from "next/link";
 // ==========================================
 // ANTARMUKA & KATA KUNCI
 // ==========================================
+
+/**
+ * Keyword link mapping structure.
+ */
 interface KeywordLink {
   keyword: string;
   href: string;
   description?: string;
 }
 
+/**
+ * List of common Japanese grammar and vocabulary keywords.
+ */
 const COMMON_KEYWORDS: KeywordLink[] = [
   { keyword: "Partikel", href: "/library/cheatsheet#particles", description: "Kata bantu yang menunjukkan hubungan gramatikal." },
   { keyword: "Kata Kerja", href: "/library/vocab", description: "Dōshi - Kata yang menunjukkan tindakan atau keadaan." },
@@ -32,9 +39,17 @@ const COMMON_KEYWORDS: KeywordLink[] = [
 // ==========================================
 // PENDUKUNG DESAIN & MARKDOWN PARSER
 // ==========================================
+
+/**
+ * Parse markdown syntax for bold, italic, and code blocks.
+ * @param text Raw text input.
+ * @returns Array of React nodes with applied styles.
+ */
 function parseInlineStyles(text: string): React.ReactNode[] {
+  // Split text by markdown delimiters: bold (**), code (`), italic (*)
   const parts = text.split(/(\*\*.*?\*\*|`.*?`|\*.*?\*)/g);
   return parts.map((part, index) => {
+    // Match bold syntax
     if (part.startsWith("**") && part.endsWith("**")) {
       return (
         <strong key={index} className="text-foreground font-black">
@@ -42,6 +57,7 @@ function parseInlineStyles(text: string): React.ReactNode[] {
         </strong>
       );
     }
+    // Match inline code syntax
     if (part.startsWith("`") && part.endsWith("`")) {
       return (
         <code key={index} className="px-1.5 py-0.5 rounded bg-primary/5 border border-primary/10 text-primary font-mono text-xs md:text-sm font-bold mx-0.5">
@@ -49,6 +65,7 @@ function parseInlineStyles(text: string): React.ReactNode[] {
         </code>
       );
     }
+    // Match italic syntax
     if (part.startsWith("*") && part.endsWith("*")) {
       return (
         <em key={index} className="italic text-muted-foreground/90 font-medium">
@@ -75,19 +92,23 @@ export function renderSmartText(text: string) {
 
   let parts: (string | React.ReactNode)[] = [text];
 
+  // Iterate keywords to find and replace matches in text segments
   COMMON_KEYWORDS.forEach(({ keyword, href, description }) => {
     const newParts: (string | React.ReactNode)[] = [];
     
     parts.forEach((part) => {
+      // Skip already processed React nodes
       if (typeof part !== "string") {
         newParts.push(part);
         return;
       }
 
+      // Case-insensitive match for current keyword
       const regex = new RegExp(`(${keyword})`, "gi");
       const split = part.split(regex);
       
       split.forEach((subPart, i) => {
+        // Wrap matching keyword in Link component
         if (subPart.toLowerCase() === keyword.toLowerCase()) {
           newParts.push(
             <Link 
@@ -109,6 +130,7 @@ export function renderSmartText(text: string) {
   });
 
   const finalizedParts: React.ReactNode[] = [];
+  // Apply inline markdown styles to remaining plain text parts
   parts.forEach((part) => {
     if (typeof part === "string") {
       finalizedParts.push(...parseInlineStyles(part));

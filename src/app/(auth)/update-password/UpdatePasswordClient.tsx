@@ -16,7 +16,15 @@ import { usePasswordUpdate } from "@/components/features/user/usePasswordUpdate"
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Client component for password update form.
+ * Renders input fields and handles submission state.
+ * 
+ * @returns React element representing password update interface.
+ */
 export default function UpdatePasswordClient() {
+  // Fetch state and handlers for password update flow
   const {
     password,
     setPassword,
@@ -41,6 +49,7 @@ export default function UpdatePasswordClient() {
         <div className="absolute top-0 right-0 size-24 bg-gradient-to-br from-primary/10 to-transparent blur-md rounded-tr-[2rem] pointer-events-none" />
 
         <div className="text-center mb-6">
+          {/* Toggle icon based on success state */}
           <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary/20 shadow-[0_0_20px_rgb(var(--brand-cyan-rgb)/0.15)]">
             {isSuccess ? <CheckCircle className="text-primary animate-premium-bounce" size={32} /> : <KeyRound className="text-primary animate-pulse" size={32} />}
           </div>
@@ -54,6 +63,7 @@ export default function UpdatePasswordClient() {
           </p>
         </div>
 
+        {/* Render form if not successful, otherwise show redirect link */}
         {!isSuccess ? (
           <form onSubmit={handleUpdatePassword} className="space-y-4">
             <div className="space-y-3">

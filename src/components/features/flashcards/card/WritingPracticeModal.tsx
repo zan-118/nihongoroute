@@ -15,9 +15,15 @@ import WritingCanvas from "@/components/features/tools/writing/WritingCanvas";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Props for WritingPracticeModal component.
+ */
 interface WritingPracticeModalProps {
+  /** Target word containing kanji character. */
   word: string;
+  /** Controls modal visibility. */
   isOpen: boolean;
+  /** Callback triggered on modal close. */
   onClose: () => void;
 }
 
@@ -25,13 +31,14 @@ interface WritingPracticeModalProps {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen modal dialog kanvas latihan menulis kanji flashcard.
+ * Modal dialog containing interactive kanji writing canvas.
  */
 export function WritingPracticeModal({
   word,
   isOpen,
   onClose,
 }: WritingPracticeModalProps) {
+  // Extract first character for writing practice.
   const kanjiChar = word.charAt(0);
 
   // ==========================================
@@ -41,6 +48,7 @@ export function WritingPracticeModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md p-0 border-none bg-transparent shadow-none">
         <DialogTitle className="sr-only">Latihan Menulis Kanji</DialogTitle>
+        {/* Animated modal body */}
         <m.div
           initial={{ scale: 0.95, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -80,6 +88,7 @@ export function WritingPracticeModal({
               </div>
             </div>
 
+            {/* Interactive canvas for stroke order validation */}
             <div className="w-full flex-1 flex flex-col justify-center min-h-[300px] mb-2">
               <WritingCanvas 
                 character={kanjiChar} 

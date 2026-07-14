@@ -29,6 +29,9 @@ import { IllustrationGallery } from "@/components/ui/IllustrationGallery";
 import ReadingWorkspace from "@/components/features/reading/components/ReadingWorkspace";
 import { ReadingVocabularyCollector } from "@/components/features/reading/components/ReadingVocabularyCollector";
 
+/**
+ * Snapshot structure for tracking reading progress.
+ */
 interface ReadingProgressSnapshot {
   activeParagraphIndex: number;
   elapsedSeconds: number;
@@ -39,10 +42,17 @@ interface ReadingProgressSnapshot {
 // ======================
 // TIPE DATA
 // ======================
+/**
+ * Props for the ReadingPageClient component.
+ */
 interface ReadingPageClientProps {
   data: ReadingData;
 }
 
+/**
+ * Format seconds into readable duration string.
+ * @param seconds Time in seconds.
+ */
 function formatReadingDuration(seconds: number) {
   const safeSeconds = Math.max(0, Math.floor(seconds));
   const minutes = Math.floor(safeSeconds / 60);
@@ -61,6 +71,9 @@ function formatReadingDuration(seconds: number) {
 // EKSEKUSI UTAMA
 // ======================
 
+/**
+ * Internal content component containing reading workspace logic and layout.
+ */
 function ReadingPageContent({ data }: ReadingPageClientProps) {
   const {
     mode,
@@ -81,6 +94,8 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
   const lessonId = data._id || data.id || "";
   const legacyReadingSourceId = data._id || data.id || data.title;
   const readingSourceId = data.slug || legacyReadingSourceId;
+  
+  // Get saved progress from global UI store.
   const savedProgress = useUIStore((state) => {
     if (!readingSourceId) return undefined;
     return (
@@ -93,6 +108,8 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
   const [isLocallyCompleted, setIsLocallyCompleted] = useState(false);
   const [showVisuals, setShowVisuals] = useState(false);
   const isCompleted = !!(lessonId && completedLessons[lessonId]) || isLocallyCompleted;
+  
+  // Initialize reading snapshot state from saved progress.
   const [readingSnapshot, setReadingSnapshot] = useState<ReadingProgressSnapshot>(() => ({
     activeParagraphIndex: savedProgress?.lastParagraphIndex || 0,
     elapsedSeconds: savedProgress?.elapsedSeconds || 0,
@@ -101,7 +118,11 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
       savedProgress.lastParagraphIndex > 0 || savedProgress.elapsedSeconds > 0
     ),
   }));
+  
+  // Keep mutable ref of snapshot to prevent effect re-runs.
   const readingSnapshotRef = React.useRef(readingSnapshot);
+  
+  // Track last persisted values to throttle store updates.
   const lastPersistedReadingRef = React.useRef({
     elapsedSeconds: savedProgress?.elapsedSeconds || 0,
     paragraphIndex: savedProgress?.lastParagraphIndex || 0,
@@ -112,10 +133,12 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
   const formattedQuizzes = data.quizzes ? formatQuizzes(data.quizzes as any) : [];
   const hasQuiz = formattedQuizzes.length > 0;
 
+  // Sync snapshot ref with state changes.
   React.useEffect(() => {
     readingSnapshotRef.current = readingSnapshot;
   }, [readingSnapshot]);
 
+  // Record start event once on mount.
   React.useEffect(() => {
     if (!readingSourceId || hasRecordedStartRef.current) return;
     hasRecordedStartRef.current = true;
@@ -132,6 +155,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
     });
   }, [data.difficulty, data.jlpt_level, data.slug, data.title, readingSourceId, recordLearningEvent]);
 
+  // Count characters excluding whitespace for pace calculation.
   const readingCharacterCount = React.useMemo(
     () => paragraphs.join("").replace(/\s/g, "").length,
     [paragraphs]
@@ -149,6 +173,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
   const readingCompletionPercent =
     totalParagraphs > 0 ? Math.round((currentParagraph / totalParagraphs) * 100) : 0;
 
+  // Handle paragraph change and persist progress.
   const handleParagraphChange = React.useCallback(
     (index: number) => {
       let seconds = 0;
@@ -173,6 +198,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
     [data.title, paragraphs.length, readingSourceId, updateReadingProgress]
   );
 
+  // Increment elapsed time every second. Persist to store every 5 seconds.
   React.useEffect(() => {
     if (isCompleted) return;
     const interval = setInterval(() => {
@@ -210,6 +236,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
     return () => clearInterval(interval);
   }, [isCompleted, readingSourceId, data.title, paragraphs.length, updateReadingProgress]);
 
+  // Mark lesson complete, award XP, and record completion event.
   const handleComplete = React.useCallback(() => {
     if (!lessonId || isCompleted) return;
     const currentProgress = readingSnapshotRef.current;
@@ -248,6 +275,8 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
   const [isZenMode, setIsZenMode] = useState(false);
   const [isVocabOpen, setIsVocabOpen] = useState(false);
   const [fontSize, setFontSize] = useState<"standard" | "large" | "extra">("large");
+  
+  // Build query parameters for external tools.
   const toolParams = React.useMemo(() => {
     const params = new URLSearchParams({
       source: "reading",
@@ -258,6 +287,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
     return params.toString();
   }, [data._id, data.difficulty, data.id, data.jlpt_level, data.slug]);
 
+  // Cycle through font size options.
   const toggleFontSize = () => {
     setFontSize((prev) =>
       prev === "standard" ? "large" : prev === "large" ? "extra" : "standard"

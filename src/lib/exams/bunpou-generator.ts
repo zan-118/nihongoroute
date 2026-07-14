@@ -6,17 +6,29 @@ import type {
 } from "@/lib/exams/import-pipeline";
 import type { Tables } from "@/types/supabase.generated";
 
+/**
+ * Database grammar table row type.
+ */
 type GrammarTableRow = Tables<"grammar">;
 
+/**
+ * Official JLPT grammar question types.
+ */
 export const BUNPOU_OFFICIAL_QUESTION_TYPES = [
   "sentential_grammar_1",
   "sentential_grammar_2",
   "text_grammar",
 ] as const;
 
+/**
+ * Union of official grammar question types.
+ */
 export type BunpouQuestionType =
   (typeof BUNPOU_OFFICIAL_QUESTION_TYPES)[number];
 
+/**
+ * Subset of grammar table row fields used for generation.
+ */
 export type BunpouGrammarRow = Pick<
   GrammarTableRow,
   "id" | "meaning" | "slug" | "title"
@@ -34,6 +46,9 @@ export type BunpouGrammarRow = Pick<
     >
   >;
 
+/**
+ * Question structure for externally generated or LLM-enhanced grammar questions.
+ */
 export interface BunpouEnhancedQuestion {
   type: BunpouQuestionType;
   sourceId: string;
@@ -51,6 +66,9 @@ export interface BunpouEnhancedQuestion {
   sourceReference?: string | null;
 }
 
+/**
+ * Input parameters for building a grammar import package.
+ */
 export interface BuildBunpouImportPackageInput {
   grammarRows: readonly BunpouGrammarRow[];
   jlptLevel: JlptImportLevel;
@@ -67,6 +85,9 @@ export interface BuildBunpouImportPackageInput {
   isPublished?: boolean;
 }
 
+/**
+ * Statistics tracked during the grammar package generation process.
+ */
 export interface BunpouGenerationStats {
   inputRows: number;
   poolRows: number;
@@ -76,11 +97,17 @@ export interface BunpouGenerationStats {
   skippedByReason: Record<string, number>;
 }
 
+/**
+ * Result of the grammar import package generation.
+ */
 export interface BuildBunpouImportPackageResult {
   importPackage: JlptImportPackage;
   stats: BunpouGenerationStats;
 }
 
+/**
+ * Internal normalized representation of a grammar row.
+ */
 interface NormalizedGrammarRow {
   id: string;
   title: string;
@@ -91,6 +118,9 @@ interface NormalizedGrammarRow {
   orderNumber: number | null;
 }
 
+/**
+ * Map of JLPT levels to numeric difficulty values.
+ */
 const LEVEL_DIFFICULTY: Record<JlptImportLevel, number> = {
   N5: 1,
   N4: 2,
@@ -99,23 +129,35 @@ const LEVEL_DIFFICULTY: Record<JlptImportLevel, number> = {
   N1: 5,
 };
 
+/**
+ * Map of question types to official JLPT Mondai section numbers.
+ */
 const BUNPOU_MONDAI_BY_TYPE: Record<BunpouQuestionType, number> = {
   sentential_grammar_1: 1,
   sentential_grammar_2: 2,
   text_grammar: 3,
 };
 
+/**
+ * Question types that require LLM generation and cannot be rule-based.
+ */
 const LLM_QUESTION_TYPES = new Set<BunpouQuestionType>([
   "sentential_grammar_2",
   "text_grammar",
 ]);
 
+/**
+ * Trims string and returns null if empty.
+ */
 function compactString(value: unknown) {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
 }
 
+/**
+ * Validates and normalizes JLPT level string.
+ */
 function normalizeLevel(value: unknown): JlptImportLevel | null {
   const normalized = compactString(value)?.toUpperCase();
   if (
@@ -131,6 +173,9 @@ function normalizeLevel(value: unknown): JlptImportLevel | null {
   return null;
 }
 
+/**
+ * Escapes HTML special characters.
+ */
 function escapeHtml(value: string) {
   return value
     .replace(/&/g, "&amp;")
@@ -140,6 +185,9 @@ function escapeHtml(value: string) {
     .replace(/'/g, "&#39;");
 }
 
+/**
+ * FNV-1a 32-bit hash implementation.
+ */
 function hash32(value: string) {
   let hash = 0x811c9dc5;
   for (let index = 0; index < value.length; index += 1) {
@@ -149,9 +197,13 @@ function hash32(value: string) {
   return hash >>> 0;
 }
 
+/**
+ * Creates a seeded pseudo-random number generator.
+ */
 function createRandom(seed: string | number) {
   let state = typeof seed === "number" ? seed >>> 0 : hash32(seed);
   return () => {
+    // Mulberry32 generator algorithm
     state += 0x6d2b79f5;
     let mixed = state;
     mixed = Math.imul(mixed ^ (mixed >>> 15), mixed | 1);
@@ -160,6 +212,9 @@ function createRandom(seed: string | number) {
   };
 }
 
+/**
+ * Shuffles array deterministically using a seed.
+ */
 function stableShuffle<T>(items: readonly T[], seed: string | number) {
   const output = [...items];
   const random = createRandom(seed);
@@ -172,6 +227,9 @@ function stableShuffle<T>(items: readonly T[], seed: string | number) {
   return output;
 }
 
+/**
+ * Generates a URL-safe slug appended with a hash of the original value.
+ */
 function slugToken(value: string) {
   const normalized = value
     .toLowerCase()
@@ -183,6 +241,9 @@ function slugToken(value: string) {
   return normalized ? `${normalized}-${hash}` : hash;
 }
 
+/**
+ * Sort comparator for grammar rows. Sorts by order number, then title, then ID.
+ */
 function sortRow(a: NormalizedGrammarRow, b: NormalizedGrammarRow) {
   return (
     (a.orderNumber ?? Number.MAX_SAFE_INTEGER) -
@@ -192,6 +253,9 @@ function sortRow(a: NormalizedGrammarRow, b: NormalizedGrammarRow) {
   );
 }
 
+/**
+ * Filters, normalizes, and sorts raw grammar rows.
+ */
 function normalizeGrammarRows(
   rows: readonly BunpouGrammarRow[],
   jlptLevel: JlptImportLevel
@@ -223,6 +287,9 @@ function normalizeGrammarRows(
   return Array.from(uniqueRows.values()).sort(sortRow);
 }
 
+/**
+ * Increments the counter for a specific skip reason.
+ */
 function incrementReason(
   skippedByReason: Record<string, number>,
   reason: string
@@ -230,6 +297,9 @@ function incrementReason(
   skippedByReason[reason] = (skippedByReason[reason] ?? 0) + 1;
 }
 
+/**
+ * Returns a zeroed stats record for all question types.
+ */
 function emptyGeneratedByType(): Record<BunpouQuestionType, number> {
   return {
     sentential_grammar_1: 0,
@@ -238,6 +308,9 @@ function emptyGeneratedByType(): Record<BunpouQuestionType, number> {
   };
 }
 
+/**
+ * Returns an empty array group for each question type.
+ */
 function emptyQuestionGroups(): Record<BunpouQuestionType, JlptImportQuestion[]> {
   return {
     sentential_grammar_1: [],
@@ -246,10 +319,16 @@ function emptyQuestionGroups(): Record<BunpouQuestionType, JlptImportQuestion[]>
   };
 }
 
+/**
+ * Gets all supported grammar question types.
+ */
 export function getBunpouQuestionTypesForLevel() {
   return [...BUNPOU_OFFICIAL_QUESTION_TYPES];
 }
 
+/**
+ * Normalizes and filters requested question types.
+ */
 export function normalizeBunpouQuestionTypes(
   questionTypes?: readonly BunpouQuestionType[]
 ) {
@@ -262,14 +341,23 @@ export function normalizeBunpouQuestionTypes(
   );
 }
 
+/**
+ * Checks if a question type requires LLM generation.
+ */
 export function requiresBunpouLlm(type: BunpouQuestionType) {
   return LLM_QUESTION_TYPES.has(type);
 }
 
+/**
+ * Formats a source reference string for a grammar row.
+ */
 function sourceReference(row: NormalizedGrammarRow) {
   return `${row.title} / ${row.meaning}`;
 }
 
+/**
+ * Selects distinct distractor values from candidate rows.
+ */
 function selectDistinctDistractors(input: {
   candidates: readonly NormalizedGrammarRow[];
   correctValue: string;
@@ -294,6 +382,9 @@ function selectDistinctDistractors(input: {
   return choices;
 }
 
+/**
+ * Shuffles correct answer and distractors, returning choices and correct index.
+ */
 function buildChoices(correctValue: string, distractors: string[], seed: string) {
   const values = stableShuffle([correctValue, ...distractors], seed);
   return {
@@ -302,6 +393,9 @@ function buildChoices(correctValue: string, distractors: string[], seed: string)
   };
 }
 
+/**
+ * Factory function to build a base JlptImportQuestion object.
+ */
 function baseQuestion(input: {
   row: NormalizedGrammarRow;
   jlptLevel: JlptImportLevel;
@@ -336,6 +430,9 @@ function baseQuestion(input: {
   } satisfies JlptImportQuestion;
 }
 
+/**
+ * Generates a rule-based sentential_grammar_1 question.
+ */
 function buildSententialGrammar1Question(input: {
   row: NormalizedGrammarRow;
   poolRows: readonly NormalizedGrammarRow[];
@@ -385,6 +482,9 @@ function buildSententialGrammar1Question(input: {
   });
 }
 
+/**
+ * Dispatches rule-based question generation based on type.
+ */
 function buildRuleBasedQuestion(input: {
   type: BunpouQuestionType;
   row: NormalizedGrammarRow;
@@ -401,6 +501,9 @@ function buildRuleBasedQuestion(input: {
   return null;
 }
 
+/**
+ * Normalizes passage data from an enhanced question.
+ */
 function normalizePassage(
   enhancedQuestion: BunpouEnhancedQuestion,
   jlptLevel: JlptImportLevel
@@ -423,6 +526,9 @@ function normalizePassage(
   };
 }
 
+/**
+ * Validates and builds a question from enhanced input data.
+ */
 function buildEnhancedQuestion(input: {
   enhancedQuestion: BunpouEnhancedQuestion;
   rowById: Map<string, NormalizedGrammarRow>;
@@ -485,6 +591,9 @@ function buildEnhancedQuestion(input: {
   });
 }
 
+/**
+ * Selects questions up to maxQuestions, balancing distribution across types.
+ */
 function selectQuestionsByLimit(
   questionGroups: Record<BunpouQuestionType, JlptImportQuestion[]>,
   questionTypes: readonly BunpouQuestionType[],
@@ -499,6 +608,7 @@ function selectQuestionsByLimit(
   const baseQuota = Math.floor(maxQuestions / questionTypes.length);
   let remainder = maxQuestions % questionTypes.length;
 
+  // Distribute base quota to each type
   for (const type of questionTypes) {
     const quota = baseQuota + (remainder > 0 ? 1 : 0);
     remainder = Math.max(0, remainder - 1);
@@ -510,6 +620,7 @@ function selectQuestionsByLimit(
     0
   );
 
+  // Fill remaining slots from available pools
   for (const type of questionTypes) {
     if (selectedCount >= maxQuestions) break;
     const alreadySelected = selectedGroups[type].length;
@@ -522,6 +633,9 @@ function selectQuestionsByLimit(
   return questionTypes.flatMap((type) => selectedGroups[type]);
 }
 
+/**
+ * Assigns sequential question numbers within each Mondai section.
+ */
 function assignQuestionNumbers(questions: readonly JlptImportQuestion[]) {
   const counters = new Map<number, number>();
 
@@ -535,6 +649,9 @@ function assignQuestionNumbers(questions: readonly JlptImportQuestion[]) {
   });
 }
 
+/**
+ * Generates a unique signature string for deduplication.
+ */
 function questionSignature(question: JlptImportQuestion) {
   const correctChoice = question.choices[question.correctChoiceIndex]?.value ?? "";
   return [
@@ -546,6 +663,9 @@ function questionSignature(question: JlptImportQuestion) {
   ].join("|");
 }
 
+/**
+ * Main entry point to build a grammar import package from grammar rows and enhanced questions.
+ */
 export function buildBunpouImportPackage(
   input: BuildBunpouImportPackageInput
 ): BuildBunpouImportPackageResult {
@@ -564,6 +684,7 @@ export function buildBunpouImportPackage(
   const seenQuestionSignatures = new Set<string>();
   const passages = new Map<string, JlptImportPassage>();
 
+  // Extract and normalize passages from enhanced questions
   for (const enhancedQuestion of input.enhancedQuestions ?? []) {
     const passage = normalizePassage(enhancedQuestion, input.jlptLevel);
     if (passage) passages.set(passage.key, passage);
@@ -588,6 +709,7 @@ export function buildBunpouImportPackage(
     questionGroups[type].push(question);
   };
 
+  // Process enhanced questions first
   for (const enhancedQuestion of input.enhancedQuestions ?? []) {
     addQuestion(
       buildEnhancedQuestion({
@@ -606,6 +728,7 @@ export function buildBunpouImportPackage(
     );
   };
 
+  // Process rule-based questions for types that do not require LLM
   for (const type of questionTypes) {
     if (requiresBunpouLlm(type)) continue;
 
@@ -632,6 +755,7 @@ export function buildBunpouImportPackage(
     }
   }
 
+  // Track skipped types that require LLM but had no enhanced questions
   for (const type of questionTypes) {
     if (requiresBunpouLlm(type) && questionGroups[type].length === 0) {
       incrementReason(skippedByReason, `${type}_requires_llm`);

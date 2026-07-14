@@ -16,6 +16,10 @@ import { LessonCard } from "./LessonCard";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+
+/**
+ * Lesson data structure.
+ */
 interface Lesson {
   _id: string;
   title: string;
@@ -24,6 +28,9 @@ interface Lesson {
   image_url?: string;
 }
 
+/**
+ * Props for LessonGrid component.
+ */
 interface LessonGridProps {
   lessons: Lesson[];
   currentPage: number;
@@ -38,6 +45,10 @@ interface LessonGridProps {
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Renders grid of lessons with pagination controls.
+ */
 export function LessonGrid({
   lessons,
   currentPage,
@@ -61,9 +72,11 @@ export function LessonGrid({
             <LessonCard
               key={lesson._id}
               lesson={lesson}
+              // Calculate global index for animation delay
               index={index + (currentPage - 1) * 12} // Adjusted index for pagination
               categoryId={categoryId}
               isSideQuest={isSideQuest}
+              // Set progress to 100 if lesson is completed and not deleted
               progress={completedLessons[lesson._id] && !completedLessons[lesson._id].isDeleted ? 100 : 0}
             />
           ))}
@@ -135,6 +148,7 @@ export function LessonGrid({
             <div className="flex items-center gap-1 px-1 sm:px-1.5">
               {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                 let pageNum;
+                // Calculate page numbers to display in pagination bar
                 if (totalPages <= 5) pageNum = i + 1;
                 else if (currentPage <= 3) pageNum = i + 1;
                 else if (currentPage >= totalPages - 2) pageNum = totalPages - 4 + i;

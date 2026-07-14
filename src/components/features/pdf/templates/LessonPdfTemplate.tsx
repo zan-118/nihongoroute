@@ -22,6 +22,7 @@ import { formatQuizzes } from "@/lib/utils/lesson-utils";
 // CONFIG / FONTS
 // ======================
 
+// Register Noto Sans JP font to support Japanese characters in PDF generation
 Font.register({
   family: "NotoSansJP",
   fonts: [
@@ -34,6 +35,9 @@ Font.register({
 // STYLES
 // ======================
 
+/**
+ * Stylesheet definitions for the PDF document layout and typography.
+ */
 const styles = StyleSheet.create({
   page: {
     padding: 50,
@@ -305,9 +309,8 @@ const styles = StyleSheet.create({
 // ======================
 
 /**
- * Komponen LessonPdfTemplate: Menyusun struktur visual PDF untuk satu materi pelajaran.
+ * Represents a vocabulary item in the PDF template.
  */
- 
 export interface PdfVocabItem {
   word?: string;
   furigana?: string;
@@ -315,6 +318,9 @@ export interface PdfVocabItem {
   meaning?: string;
 }
 
+/**
+ * Represents a quiz item in the PDF template.
+ */
 export interface PdfQuizItem {
   question?: string;
   options?: string[];
@@ -322,6 +328,9 @@ export interface PdfQuizItem {
   explanation?: string;
 }
 
+/**
+ * Represents a rich text content block in the PDF template.
+ */
 export interface PdfContentBlock {
   _type?: string;
   type?: string;
@@ -338,6 +347,9 @@ export interface PdfContentBlock {
   examples?: { jp?: string; romaji?: string; id?: string }[];
 }
 
+/**
+ * Represents the complete lesson data structure passed to the PDF template.
+ */
 export interface PdfLessonData {
   title?: string;
   levelTitle?: string;
@@ -350,6 +362,13 @@ export interface PdfLessonData {
   questions?: PdfQuizItem[];
 }
 
+/**
+ * LessonPdfTemplate component. Renders a structured PDF document for a lesson.
+ * Supports vocabulary tables, grammar points, dialogue blocks, and quizzes.
+ * 
+ * @param props - Component properties.
+ * @param props.lessonData - The lesson data to render.
+ */
 export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData }) => {
   const combinedVocabList = lessonData.vocabList || lessonData.vocab_list || [];
   const contentBlocks = lessonData.articles || lessonData.content_blocks || [];
@@ -360,6 +379,12 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
   // HELPER FUNCTIONS
   // ======================
 
+  /**
+   * Removes emojis from text to prevent rendering issues in react-pdf.
+   * 
+   * @param text - The input text.
+   * @returns Cleaned text without emojis.
+   */
   const stripEmojisOnly = (text?: string): string => {
     if (!text) return "";
     return text
@@ -368,23 +393,43 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
       .trim();
   };
 
+  /**
+   * Removes emojis and list prefixes (e.g., "1. ", "A. ") from text.
+   * 
+   * @param text - The input text.
+   * @returns Cleaned text.
+   */
   const stripEmojisAndPrefixes = (text?: string): string => {
     if (!text) return "";
     let cleaned = text
       .replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, "")
       .replace(/[\u2600-\u27BF]/g, "")
       .trim();
-    // Menghapus prefix list seperti "1. ", "A. ", "a) "
+    // Remove list prefixes like "1. ", "A. ", "a) "
     cleaned = cleaned.replace(/^[0-9a-zA-Z\u2160-\u217F\u2460-\u249B]+[\.\)\:\-\/ー\uFF0E\uFF09\uFF1A]+\s*/, "").trim();
     return cleaned;
   };
 
+  /**
+   * Formats vocabulary meaning text, limiting items and appending "dll." if too long.
+   * 
+   * @param text - The meaning text.
+   * @returns Formatted meaning string.
+   */
   const formatMeaning = (text?: string) => {
     if (!text) return "—";
     const parts = text.split(/[,;]/).map((s: string) => s.trim()).filter(Boolean);
     return parts.length > 2 ? `${parts.slice(0, 2).join(", ")}, dll.` : text;
   };
 
+  /**
+   * Parses markdown-like inline styles (**bold**, `code`, *italic*) into react-pdf Text components.
+   * 
+   * @param text - The raw text containing inline styles.
+   * @param baseStyle - Base style to apply to the parent Text component.
+   * @param key - Unique React key.
+   * @returns React element containing styled Text components.
+   */
   const parseInlineStylesPdf = (text: string, baseStyle: React.ComponentProps<typeof View>["style"] = {}, key?: string) => {
     if (!text) return null;
     const parts = text.split(/(\*\*.*?\*\*|`.*?`|\*.*?\*)/g);
@@ -418,6 +463,12 @@ export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData })
     );
   };
 
+  /**
+   * Renders rich text content blocks based on block type.
+   * 
+   * @param blocks - Array of content blocks.
+   * @returns Array of rendered React elements.
+   */
   const renderRichText = (blocks: PdfContentBlock[]) => {
     if (!blocks || !Array.isArray(blocks)) return null;
     let h2Counter = 0;

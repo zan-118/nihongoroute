@@ -20,6 +20,7 @@ import {
 // CONFIG / FONTS
 // ======================
 
+// Register Japanese font. Support kanji/kana rendering.
 Font.register({
   family: "NotoSansJP",
   fonts: [
@@ -31,12 +32,19 @@ Font.register({
 // ======================
 // TYPES
 // ======================
+
+/**
+ * Data structure for single cheatsheet item.
+ */
 interface SheetItem {
   label: string;
   jp: string;
   romaji: string;
 }
 
+/**
+ * Props for CheatsheetPdfTemplate component.
+ */
 interface CheatsheetTemplateProps {
   data: SheetItem[];
   title: string;
@@ -46,6 +54,10 @@ interface CheatsheetTemplateProps {
 // ======================
 // STYLES
 // ======================
+
+/**
+ * Stylesheet for PDF layout.
+ */
 const styles = StyleSheet.create({
   page: {
     padding: 50,
@@ -198,6 +210,10 @@ const styles = StyleSheet.create({
   },
 });
 
+/**
+ * PDF template component for cheatsheets.
+ * Render A4 document with header, table of items, and footer.
+ */
 export const CheatsheetPdfTemplate = ({ data, title, category }: CheatsheetTemplateProps) => (
   <Document title={`Cheatsheet NihongoRoute - ${title}`}>
     <Page size="A4" style={styles.page}>
@@ -239,8 +255,10 @@ export const CheatsheetPdfTemplate = ({ data, title, category }: CheatsheetTempl
             key={`sheet-${pos}`}
             style={[
               styles.tableRow,
+              // Apply zebra striping. Improve readability.
               pos % 2 === 1 ? styles.tableRowZebra : {},
             ]}
+            // Prevent row break across pages.
             wrap={false}
           >
             <View style={styles.cellNo}>
@@ -259,6 +277,7 @@ export const CheatsheetPdfTemplate = ({ data, title, category }: CheatsheetTempl
       </View>
 
       <View style={styles.footer} fixed>
+        {/* Avoid SSR mismatch. Date generated on client/server. */}
         {/* @ts-expect-error - suppressHydrationWarning is standard in React but not defined in react-pdf types */}
         <Text style={styles.footerText} suppressHydrationWarning={true}>
           © {new Date().getFullYear()} NihongoRoute. Dicetak pada {new Date().toLocaleDateString('id-ID')}.
@@ -266,6 +285,7 @@ export const CheatsheetPdfTemplate = ({ data, title, category }: CheatsheetTempl
         <Link src="https://nihongoroute.my.id" style={styles.footerLink}>
           nihongoroute.my.id
         </Link>
+        {/* Dynamic page numbering. Calculated during PDF generation. */}
         <Text
           style={styles.footerText}
           render={({ pageNumber, totalPages }) => `Halaman ${pageNumber} dari ${totalPages}`}

@@ -20,13 +20,16 @@ import { Progress } from "@/components/ui/progress";
 import { Trophy, TrendingUp, Flame, Sprout, BookOpen, PenTool, Database } from "lucide-react";
 import { useMemoryStats } from "@/components/features/srs/stats/useMemoryStats";
 
-// ==========================================
-// KOMPONEN UTAMA
-// ==========================================
+/**
+ * Dashboard widget for SRS memory progress.
+ * Shows memory distribution across four levels.
+ * Includes navigation links to vocabulary and kanji.
+ */
 export default function MemoryStats() {
+  // Fetch memory statistics from custom hook
   const { activeCount, stats, total } = useMemoryStats();
 
-  // Konfigurasi visual untuk masing-masing tingkatan penguasaan memori
+  // Map memory levels to visual configurations
   const statConfig = [
     {
       label: "Tingkat Master",
@@ -127,6 +130,10 @@ export default function MemoryStats() {
 // ==========================================
 // ELEMEN SUB-KOMPONEN (STATBAR)
 // ==========================================
+
+/**
+ * Props for StatBar component.
+ */
 interface StatBarProps {
   label: string;
   count: number;
@@ -136,8 +143,12 @@ interface StatBarProps {
   colorClass: string;
 }
 
+/**
+ * Progress bar for single memory level.
+ * Shows label, percentage, count, and progress bar.
+ */
 function StatBar({ label, count, total, indicatorColor, icon, colorClass }: StatBarProps) {
-  // Pelindung: total > 0 mencegah pembagian dengan nol (NaN / Infinity)
+  // Calculate percentage. Prevent division by zero.
   const percent = total > 0 ? (count / total) * 100 : 0;
 
   return (

@@ -23,21 +23,36 @@ import { RandomExpression } from "@/actions/expressions.actions";
 // ==========================================
 // ELEMEN DINAMIS (LAZY LOADING)
 // ==========================================
+/**
+ * Lazy load KanjiProgressGrid component.
+ * Disable SSR to prevent hydration mismatch from client-side state.
+ */
 const KanjiProgressGrid = dynamic(() => import("../KanjiProgressGrid"), { 
   ssr: false,
+  // Render skeleton loader during client-side load.
   loading: () => <div className="h-[200px] w-full animate-pulse bg-muted rounded-lg" />
 });
 
 // ==========================================
 // ANTARMUKA & PROPS (INTERFACES)
 // ==========================================
+/**
+ * Props for HomePanel component.
+ */
 interface HomePanelProps {
+  /** Loading state indicator. */
   loading: boolean;
+  /** Unique identifier for guest user. */
   guestId: string;
+  /** Number of items due for review. */
   dueCount: number;
+  /** Framer motion animation variants. */
   itemVariants: Variants;
+  /** User authentication status. */
   isAuthenticated: boolean;
+  /** Random daily expression data. */
   expression: RandomExpression | null;
+  /** Course structure metadata. */
   courseMetadata: Array<{
     id?: string;
     _id?: string;
@@ -55,6 +70,10 @@ interface HomePanelProps {
 // ==========================================
 // KOMPONEN UTAMA
 // ==========================================
+/**
+ * Home panel component.
+ * Renders dashboard hero, kanji progress, daily quests, and daily expression.
+ */
 export function HomePanel({
   loading,
   guestId,
@@ -75,6 +94,7 @@ export function HomePanel({
           dueCount={dueCount}
           itemVariants={itemVariants}
           isAuthenticated={isAuthenticated}
+          // Cast metadata to match DashboardHero expected type structure.
           courseMetadata={courseMetadata as unknown as Array<{
             _id: string;
             title: string;

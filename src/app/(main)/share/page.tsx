@@ -13,6 +13,10 @@ import { createPageMetadata } from "@/lib/seo";
 // ======================
 // KONFIGURASI METADATA
 // ======================
+/**
+ * Metadata for Share page.
+ * Disable search indexing via noIndex.
+ */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Berbagi Progres | NihongoRoute",
@@ -25,6 +29,10 @@ export const metadata: Metadata = {
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * Share page entry point.
+ * Render ShareClient component.
+ */
 export default function SharePage() {
   return <ShareClient />;
 }

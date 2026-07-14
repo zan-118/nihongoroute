@@ -40,6 +40,10 @@ import {
 // ======================
 // ANTARMUKA
 // ======================
+
+/**
+ * Structure for vocabulary example sentences.
+ */
 interface VocabExampleItem {
   jp?: string;
   japanese?: string;
@@ -50,6 +54,9 @@ interface VocabExampleItem {
   meaning?: string;
 }
 
+/**
+ * Structure for related Kanji references.
+ */
 interface VocabKanjiRef {
   id?: string;
   _id?: string;
@@ -60,6 +67,9 @@ interface VocabKanjiRef {
   slug: string;
 }
 
+/**
+ * Structure for related vocabulary references.
+ */
 interface VocabRef {
   id?: string;
   _id?: string;
@@ -77,16 +87,21 @@ interface VocabRef {
 // ======================
 
 /**
- * Menghasilkan metadata SEO dinamis untuk halaman detail kosakata bahasa Jepang.
+ * Generates dynamic SEO metadata for the vocabulary detail page.
+ * @param props - Component properties.
+ * @param props.params - Route parameters containing the vocabulary slug.
+ * @returns Promise resolving to page metadata.
  */
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+  // Decode slug to handle Japanese characters in URL
   const { slug } = await params;
   const decodedSlug = fullyDecode(slug);
 
+  // Fetch vocabulary item from database
   const vocab = await getLibraryItemBySlug("vocab", decodedSlug);
 
   if (!vocab) {
@@ -116,31 +131,39 @@ export async function generateMetadata({
 // ======================
 
 /**
- * Halaman detail kosakata (RSC) untuk mengambil informasi detail leksem dari database,
- * kemudian merender modul bento hero kosakata, radikal, mnemonic, konjugasi, dan contoh kalimat.
+ * Vocabulary detail page component (React Server Component).
+ * Fetches vocabulary data and renders details, conjugations, examples, and related items.
+ * @param props - Component properties.
+ * @param props.params - Route parameters containing the vocabulary slug.
  */
 export default async function VocabDetailPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  // Decode slug to handle Japanese characters in URL
   const { slug } = await params;
   const decodedSlug = fullyDecode(slug);
 
+  // Fetch vocabulary item from database
   const vocab = await getLibraryItemBySlug("vocab", decodedSlug);
 
   if (!vocab) return notFound();
 
+  // Normalize part of speech (hinshi) list to lowercase
   const hinshiList = Array.isArray(vocab.hinshi)
     ? vocab.hinshi.map((h: string) => h.toLowerCase())
     : (typeof vocab.hinshi === "string" ? [vocab.hinshi.toLowerCase()] : []);
 
+  // Determine word type flags for conditional rendering
   const isAdjective = hinshiList.some((h: string) => h.includes("adjective"));
   const isVerb = hinshiList.some((h: string) => h.includes("verb"));
   const vocabSlug = String(vocab.slug || vocab.id || decodedSlug);
   const vocabPath = `/library/vocab/${encodeRouteSegment(vocabSlug)}`;
   const vocabLevel = String(vocab.jlptLevel || vocab.jlpt_level || "").toUpperCase();
   const vocabWord = String(vocab.word || "");
+  
+  // Determine verb group for conjugation tool link
   const verbGroup = hinshiList.some((h: string) => h.includes("ichidan"))
     ? "ichidan"
     : hinshiList.some((h: string) => h.includes("irregular") || h.includes("suru") || h.includes("kuru"))
@@ -149,6 +172,7 @@ export default async function VocabDetailPage({
 
   return (
     <main className="w-full bg-transparent px-4 md:px-8 lg:px-12 relative overflow-hidden flex flex-col justify-start min-h-screen pb-32 transition-colors duration-300">
+      {/* Structured data for SEO */}
       <JsonLd
         data={[
           breadcrumbJsonLd([

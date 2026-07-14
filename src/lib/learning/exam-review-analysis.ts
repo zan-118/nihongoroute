@@ -5,50 +5,102 @@
 
 import type { ExamData, ExamQuestion } from "@/components/features/exams/mock-engine/types";
 
+/**
+ * Insight details for a single exam question.
+ */
 export interface ExamReviewQuestionInsight {
+  /** The original exam question data. */
   question: ExamQuestion;
+  /** Zero-based index of the question in the exam. */
   index: number;
+  /** The index of the answer selected by the user, if any. */
   userAnswer?: number;
+  /** Indicates if the user provided an answer. */
   isAnswered: boolean;
+  /** Indicates if the user's answer matches the correct answer. */
   isCorrect: boolean;
 }
 
+/**
+ * Performance metrics grouped by exam section.
+ */
 export interface ExamReviewSectionInsight {
+  /** The section category. */
   section: ExamQuestion["section"];
+  /** Total questions in this section. */
   total: number;
+  /** Number of correct answers. */
   correct: number;
+  /** Number of incorrect answers. */
   wrong: number;
+  /** Number of unanswered questions. */
   unanswered: number;
+  /** Percentage of correct answers (0-100). */
   accuracy: number;
 }
 
+/**
+ * Recommended action item for study remediation.
+ */
 export interface ExamReviewAction {
+  /** Unique identifier for the action type. */
   id: "weak-points" | "flashcards" | "listening" | "reading" | "grammar" | "vocab";
+  /** Display label for the action button or link. */
   label: string;
+  /** Target URL for remediation. */
   href: string;
+  /** Reason explaining why this action is recommended. */
   reason: string;
 }
 
+/**
+ * Complete analysis payload for exam review.
+ */
 export interface ExamReviewAnalysis {
+  /** Total number of questions in the exam. */
   totalQuestions: number;
+  /** Total correct answers. */
   correctCount: number;
+  /** Total incorrect answers. */
   wrongCount: number;
+  /** Total unanswered questions. */
   unansweredCount: number;
+  /** Overall exam accuracy percentage (0-100). */
   accuracy: number;
+  /** Detailed insights for all questions. */
   insights: ExamReviewQuestionInsight[];
+  /** Subset of insights containing only incorrect or unanswered questions. */
   mistakes: ExamReviewQuestionInsight[];
+  /** Performance metrics grouped by section. */
   sections: ExamReviewSectionInsight[];
+  /** The section with the lowest performance, if applicable. */
   weakestSection: ExamReviewSectionInsight | null;
+  /** Recommended remediation actions (maximum of 3). */
   actions: ExamReviewAction[];
 }
 
+/**
+ * Standard display and processing order for exam sections.
+ */
 const SECTION_ORDER: ExamQuestion["section"][] = ["vocabulary", "grammar", "reading", "listening"];
 
+/**
+ * Clamps a numeric value to a valid percentage integer between 0 and 100.
+ * 
+ * @param value - The raw percentage value.
+ * @returns Clamped integer percentage.
+ */
 function clampPercent(value: number) {
   if (!Number.isFinite(value)) return 0;
   return Math.max(0, Math.min(100, Math.round(value)));
 }
 
+/**
+ * Generates a remediation action based on the weakest exam section.
+ * 
+ * @param section - The target exam section.
+ * @returns The corresponding review action.
+ */
 function getSectionAction(section: ExamQuestion["section"]): ExamReviewAction {
   if (section === "listening") {
     return {
@@ -85,16 +137,30 @@ function getSectionAction(section: ExamQuestion["section"]): ExamReviewAction {
   };
 }
 
+/**
+ * Appends an action to the list if an action with the same ID does not already exist.
+ * 
+ * @param actions - The target actions array.
+ * @param action - The action to insert.
+ */
 function pushUniqueAction(actions: ExamReviewAction[], action: ExamReviewAction) {
   if (!actions.some((item) => item.id === action.id)) actions.push(action);
 }
 
+/**
+ * Analyzes exam questions and user answers to generate performance insights and remediation actions.
+ * 
+ * @param exam - Object containing the list of exam questions.
+ * @param answers - Map of question keys to user-selected answer indices.
+ * @returns Comprehensive exam review analysis.
+ */
 export function analyzeExamReview(
   exam: Pick<ExamData, "questions">,
   answers: Record<string, number>
 ): ExamReviewAnalysis {
   const sectionMap = new Map<ExamQuestion["section"], ExamReviewSectionInsight>();
 
+  // Initialize map with default metrics for all standard sections
   for (const section of SECTION_ORDER) {
     sectionMap.set(section, {
       section,
@@ -106,6 +172,7 @@ export function analyzeExamReview(
     });
   }
 
+  // Process each question to build individual insights and aggregate section metrics
   const insights = exam.questions.map<ExamReviewQuestionInsight>((question, index) => {
     const userAnswer = answers[question._key];
     const isAnswered = userAnswer !== undefined;
@@ -138,6 +205,7 @@ export function analyzeExamReview(
     };
   });
 
+  // Calculate final accuracy percentages for active sections
   const sections = Array.from(sectionMap.values())
     .filter((section) => section.total > 0)
     .map((section) => ({
@@ -149,6 +217,8 @@ export function analyzeExamReview(
   const correctCount = insights.length - mistakes.length;
   const unansweredCount = mistakes.filter((insight) => !insight.isAnswered).length;
   const wrongCount = mistakes.length - unansweredCount;
+
+  // Determine weakest section by lowest accuracy, breaking ties with total incorrect/unanswered count
   const weakestSection =
     sections.length > 0
       ? sections.reduce((weakest, section) => {
@@ -162,8 +232,11 @@ export function analyzeExamReview(
       : null;
 
   const actions: ExamReviewAction[] = [];
+  
+  // Add section-specific remediation if a weakest section is identified
   if (weakestSection) pushUniqueAction(actions, getSectionAction(weakestSection.section));
 
+  // Add general remediation actions based on performance
   if (mistakes.length > 0) {
     pushUniqueAction(actions, {
       id: "weak-points",
@@ -190,6 +263,6 @@ export function analyzeExamReview(
     mistakes,
     sections,
     weakestSection,
-    actions: actions.slice(0, 3),
+    actions: actions.slice(0, 3), // Limit to top 3 recommendations
   };
 }

@@ -15,6 +15,13 @@ import { useUIStore } from "@/store/useUIStore";
 // ======================
 // HOOK UTAMA
 // ======================
+/**
+ * Hook to manage adding vocabulary to Spaced Repetition System (SRS).
+ * Tracks loading state and whether word is already added.
+ * 
+ * @param wordId - Unique identifier of vocabulary word.
+ * @returns Object containing loading state, added status, and add handler.
+ */
 export function useAddToSRS(wordId: string) {
   const addToSRS = useSRSStore((state) => state.addToSRS);
   const name = useUserStore((state) => state.name);
@@ -33,16 +40,20 @@ export function useAddToSRS(wordId: string) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
+    // Defer state updates to next animation frame to prevent blocking main thread
     const frame = requestAnimationFrame(() => {
       setIsLoaded(true);
+      // Check if word already exists in SRS store
       if (progress.srs && progress.srs[wordId]) {
         setIsAdded(true);
       }
     });
+    // Clean up pending animation frame on unmount
     return () => cancelAnimationFrame(frame);
   }, [progress.srs, wordId]);
 
   const handleAdd = useCallback(() => {
+    // Trigger store action to add word to SRS
     addToSRS(wordId);
     setIsAdded(true);
   }, [addToSRS, wordId]);

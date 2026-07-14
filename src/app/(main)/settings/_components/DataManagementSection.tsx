@@ -17,15 +17,28 @@ import { Save, Upload, Trash2, LogOut, Database } from "lucide-react";
 // ======================
 // TIPE DATA
 // ======================
+/**
+ * Props for DataManagementSection component.
+ */
 interface DataManagementSectionProps {
+  /** User authentication status. */
   isAuthenticated: boolean;
+  /** Trigger data export. */
   handleExportData: () => void;
+  /** Trigger data import. */
   handleImportData: () => void;
+  /** Trigger data reset. */
   handleResetData: () => void;
+  /** Trigger user logout. */
   handleLogout: () => void;
+  /** Framer motion animation variants. */
   itemVariants: Variants;
 }
 
+/**
+ * Data management section component.
+ * Renders export, import, reset, and logout buttons.
+ */
 export default function DataManagementSection({
   isAuthenticated,
   handleExportData,
@@ -35,11 +48,13 @@ export default function DataManagementSection({
   itemVariants
 }: DataManagementSectionProps) {
   return (
+    // Animate section entry
     <m.div variants={itemVariants}>
       <Card className="glass  border border-border/80 rounded-[2.5rem] p-8 md:p-10 shadow-xl relative overflow-hidden group">
         {/* Background Accent */}
         <div className="absolute top-0 right-0 size-40 bg-primary/8 blur-[55px] rounded-full -mr-14 -mt-14 pointer-events-none group-hover:bg-primary/12 transition-colors duration-300" />
 
+        {/* Section header with icon */}
         <div className="flex items-center gap-4 mb-10 relative z-10">
           <div className="size-12 rounded-lg bg-background/30 flex items-center justify-center border border-border/80 shadow-lg">
             <Database size={22} className="text-primary drop-shadow-[0_0_6px_rgb(var(--primary-rgb)/0.3)]" />
@@ -50,7 +65,9 @@ export default function DataManagementSection({
           </div>
         </div>
 
+        {/* Action buttons grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
+          {/* Export button */}
           <Button
             variant="ghost"
             onClick={handleExportData}
@@ -58,6 +75,8 @@ export default function DataManagementSection({
           >
             <Save size={18} className="mr-3 group-hover/btn:scale-110 group-hover/btn:text-primary transition-all text-muted-foreground/70" /> Ekspor Backup
           </Button>
+          
+          {/* Import button */}
           <Button
             variant="ghost"
             onClick={handleImportData}
@@ -65,6 +84,8 @@ export default function DataManagementSection({
           >
             <Upload size={18} className="mr-3 group-hover/btn:scale-110 group-hover/btn:text-secondary transition-all text-muted-foreground/70" /> Impor Backup
           </Button>
+          
+          {/* Reset button */}
           <Button
             variant="ghost"
             onClick={handleResetData}
@@ -72,6 +93,8 @@ export default function DataManagementSection({
           >
             <Trash2 size={18} className="mr-3 group-hover/btn:scale-110 group-hover/btn:text-destructive transition-all text-destructive/70" /> Hapus Semua Data
           </Button>
+          
+          {/* Logout button shown only if authenticated */}
           {isAuthenticated && (
             <Button
               variant="ghost"

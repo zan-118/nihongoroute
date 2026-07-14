@@ -28,12 +28,21 @@ import NextActionPanel from "@/components/features/ecosystem/NextActionPanel";
 import { useUIStore } from "@/store/useUIStore";
 import { cn } from "@/lib/utils";
 
+/**
+ * Props for CounterTrainerClient.
+ */
 interface CounterTrainerClientProps {
+  /** Questions loaded from database or local fallback. */
   initialQuestions?: CounterQuestion[];
+  /** Total questions available in database. */
   databaseQuestionCount?: number;
+  /** Label showing source context. */
   contextLabel?: string;
 }
 
+/**
+ * Interactive trainer for Japanese counters.
+ */
 export default function CounterTrainerClient({
   initialQuestions = [],
   databaseQuestionCount = 0,
@@ -46,6 +55,8 @@ export default function CounterTrainerClient({
   const [answeredIds, setAnsweredIds] = useState<Set<string>>(() => new Set());
   const completedBankRef = useRef(false);
   const recordLearningEvent = useUIStore((state) => state.recordLearningEvent);
+  
+  // Use database questions if available, else fallback to local questions
   const questionBank = initialQuestions.length > 0 ? initialQuestions : COUNTER_QUESTIONS;
 
   const question = getCounterQuestion(questionIndex, questionBank);
@@ -56,7 +67,12 @@ export default function CounterTrainerClient({
   const progressPercent = Math.round((answeredIds.size / questionBank.length) * 100);
   const accuracy = score.total > 0 ? Math.round((score.correct / score.total) * 100) : 0;
 
+  /**
+   * Handle counter selection.
+   * Logs events and updates score.
+   */
   const handleSelect = (counter: CounterWord) => {
+    // Block input if answered
     if (hasAnswered) return;
 
     const correct = isCounterAnswerCorrect(question.answer, counter);
@@ -67,6 +83,7 @@ export default function CounterTrainerClient({
     }));
     setAnsweredIds((prev) => {
       const next = new Set(prev).add(question.id);
+      // Log completion event when all questions answered
       if (next.size >= questionBank.length && !completedBankRef.current) {
         completedBankRef.current = true;
         recordLearningEvent({
@@ -90,6 +107,7 @@ export default function CounterTrainerClient({
       }
       return next;
     });
+    // Log answer event
     recordLearningEvent({
       type: "counter_answered",
       source: {
@@ -109,12 +127,18 @@ export default function CounterTrainerClient({
     });
   };
 
+  /**
+   * Cycle to next question.
+   */
   const handleNext = () => {
     setQuestionIndex((prev) => (prev + 1) % questionBank.length);
     setSelectedCounter(null);
     setShowHint(false);
   };
 
+  /**
+   * Reset trainer state.
+   */
   const handleReset = () => {
     setQuestionIndex(0);
     setSelectedCounter(null);
@@ -180,6 +204,7 @@ export default function CounterTrainerClient({
               </div>
             </div>
 
+            {/* Render counter options */}
             <div className="flex flex-wrap items-center justify-center gap-3">
               {COUNTER_OPTIONS.map((counter) => {
                 const isSelected = selectedCounter === counter;

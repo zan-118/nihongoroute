@@ -12,26 +12,35 @@ import { useUserStore } from "@/store/useUserStore";
 import { toast } from "sonner";
 
 /**
- * Hook kustom untuk memisahkan logika utama halaman hub komunitas (komposisi, kategori filter, detail profil).
+ * Custom hook to manage community feed state, post creation, 
+ * user profile modal fetching, and cross-tab synchronization.
+ * 
+ * @returns Object containing feed states, query results, mutations, and event handlers.
  */
 export function useCommunityFeed() {
   const queryClient = useQueryClient();
+  
+  // Input state for new post content
   const [postContent, setPostContent] = useState("");
+  // Filter state for filtering posts by category
   const [selectedCategory, setSelectedCategory] = useState("Semua");
+  // Category state for new post creation
   const [postCategory, setPostCategory] = useState("Umum");
 
   // Profile Modal State
   const [selectedUserProfile, setSelectedUserProfile] = useState<PublicProfile | null>(null);
   const [isFetchingProfile, setIsFetchingProfile] = useState(false);
 
+  // User authentication states
   const currentUserId = useUserStore((s) => s.id);
   const isGuest = useUserStore((s) => s.isGuest);
 
-  // BroadcastChannel untuk sinkronisasi lintas-tab
+  // BroadcastChannel for cross-tab synchronization
   useEffect(() => {
     if (typeof window === "undefined") return;
     const channel = new BroadcastChannel("nihongoroute_sync");
     channel.onmessage = (event) => {
+      // Invalidate cache when another tab completes sync
       if (event.data === "SYNC_COMPLETE") {
         queryClient.invalidateQueries({ queryKey: ["community_posts"] });
       }
@@ -39,13 +48,13 @@ export function useCommunityFeed() {
     return () => channel.close();
   }, [queryClient]);
 
-  // Query daftar postingan berdasarkan kategori terpilih
+  // Query community posts filtered by selected category
   const { data: posts, isLoading, isError } = useQuery({
     queryKey: ["community_posts", selectedCategory],
     queryFn: () => getCommunityPosts(selectedCategory),
   });
 
-  // Mutasi membuat postingan baru
+  // Mutation to create a new community post
   const postMutation = useMutation({
     mutationFn: (payload: { content: string; category: string }) => 
       createCommunityPost(payload.content, payload.category),
@@ -55,6 +64,7 @@ export function useCommunityFeed() {
         queryClient.invalidateQueries({ queryKey: ["community_posts"] });
         toast.success("Postingan berhasil dikirim!");
 
+        // Notify other tabs to sync feed
         const channel = new BroadcastChannel("nihongoroute_sync");
         channel.postMessage("SYNC_COMPLETE");
         channel.close();
@@ -67,6 +77,12 @@ export function useCommunityFeed() {
     },
   });
 
+  /**
+   * Handles submission of a new community post.
+   * Prevents action if user is guest or content is empty.
+   * 
+   * @param e - React form event
+   */
   const handleSubmitPost = (e: React.FormEvent) => {
     e.preventDefault();
     if (isGuest) {
@@ -77,6 +93,11 @@ export function useCommunityFeed() {
     postMutation.mutate({ content: postContent, category: postCategory });
   };
 
+  /**
+   * Fetches and sets public profile data for the selected user.
+   * 
+   * @param userId - ID of the user whose profile is requested
+   */
   const handleAuthorClick = async (userId: string) => {
     setIsFetchingProfile(true);
     try {

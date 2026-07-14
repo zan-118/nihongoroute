@@ -1,6 +1,6 @@
 /**
  * @file XPPop.tsx
- * @description Komponen notifikasi visual yang muncul saat pengguna mendapatkan XP.
+ * @description Floating XP notification component.
  * @module XPPop
  */
 
@@ -16,12 +16,12 @@ import { m, AnimatePresence } from "framer-motion";
 // ======================
 
 /**
- * Komponen XPPop: Animasi teks melayang untuk feedback perolehan XP.
+ * XPPop component. Shows floating XP gain animation.
  * 
- * @param {Object} props - Properti komponen.
- * @param {boolean} props.show - Status tampilan animasi.
- * @param {number} props.amount - Jumlah XP yang didapatkan.
- * @returns {JSX.Element} Animasi perolehan XP.
+ * @param props - Component properties.
+ * @param props.show - Toggle visibility.
+ * @param props.amount - XP points earned.
+ * @returns XP animation element.
  */
 export default function XPPop({
   show,
@@ -31,17 +31,20 @@ export default function XPPop({
   amount: number;
 }) {
   return (
+    // AnimatePresence manage exit animation.
     <AnimatePresence>
       {show && (
+        // Motion div animate up, scale up, fade out.
         <m.div
           initial={{ opacity: 0, y: 0, scale: 0.5 }}
           animate={{ opacity: 1, y: -100, scale: 1.5 }}
           exit={{ opacity: 0, scale: 2 }}
           className="absolute pointer-events-none z-50 flex items-center justify-center"
         >
-          {/* Latar Belakang Efek Bloom */}
+          {/* Glow effect background */}
           <div className="absolute size-24 bg-destructive/20 blur-3xl rounded-full animate-bloom" />
           
+          {/* XP text with drop shadow */}
           <span className="relative text-destructive font-black italic text-4xl drop-shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.8)] tracking-tighter">
             +{amount} XP
           </span>

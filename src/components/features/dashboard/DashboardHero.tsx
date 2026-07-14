@@ -30,9 +30,15 @@ import { getLevelProgressPercent } from "@/lib/level";
 // ==========================================
 // ANTARMUKA & PROPS (INTERFACES)
 // ==========================================
+/**
+ * Props for DashboardHero component.
+ */
 interface DashboardHeroProps {
+  /** Guest identifier string */
   guestId: string;
+  /** Framer motion animation variants */
   itemVariants: Variants;
+  /** Course structure metadata */
   courseMetadata: Array<{
     _id: string;
     title: string;
@@ -43,14 +49,20 @@ interface DashboardHeroProps {
       slug: string;
     }>;
   }>;
+  /** Loading state indicator */
   loading: boolean;
+  /** Number of items due for review */
   dueCount: number;
+  /** User authentication status */
   isAuthenticated: boolean;
 }
 
 // ==========================================
 // KOMPONEN UTAMA
 // ==========================================
+/**
+ * Dashboard hero component. Display user stats, SRS status, quick actions.
+ */
 export default function DashboardHero({ 
   guestId, 
   itemVariants, 
@@ -60,17 +72,20 @@ export default function DashboardHero({
   isAuthenticated
 }: DashboardHeroProps) {
   // SELEKTOR ATOMIK (Sangat dilarang melakukan destrukturisasi untuk menjaga reaktivitas store)
+  // Get user state. Use atomic selectors to keep reactivity.
   const name = useUserStore(s => s.name);
   const xp = useUserStore(s => s.xp);
   const level = useUserStore(s => s.level);
   const streak = useUserStore(s => s.streak);
 
+  // Calculate level progress percent.
   const xpProgress = Math.round(getLevelProgressPercent(xp, level));
 
   return (
     <m.div variants={itemVariants} className="flex flex-col gap-[34px] items-start w-full">
       
       {/* AREA SAPAAN PENGGUNA */}
+      {/* Render loading skeleton or user badge */}
       <div className="flex-1 w-full flex flex-col items-center lg:items-start text-center lg:text-left">
         {loading ? (
           <Skeleton className="h-6 w-32 rounded-full mb-6" />
@@ -104,6 +119,7 @@ export default function DashboardHero({
       </div>
 
       {/* KARTU PINTAS PREMIUM (CALL TO ACTION) */}
+      {/* Render review card. Change style based on due count */}
       <div className="w-full relative">
         {/* Glow Latar Belakang Dekoratif */}
         <div className="absolute -top-[55px] -right-[55px] size-[233px] bg-primary/5 rounded-full blur-[89px] pointer-events-none" />
@@ -117,6 +133,7 @@ export default function DashboardHero({
           <div className="relative z-10 flex flex-col items-center text-center">
             
             {/* Ikon Berdenyut Interaktif (Pulsing Icon) */}
+            {/* Animate icon scale and shadow based on due count */}
             <m.div 
               animate={dueCount > 0 ? {
                 scale: [1, 1.05, 1],
@@ -157,6 +174,7 @@ export default function DashboardHero({
             </p>
  
             {/* RINGKASAN STATUS DI DALAM HERO (Mobile-Optimized) */}
+            {/* Render stats grid */}
             <div className="grid grid-cols-3 gap-2 md:gap-[21px] mb-[34px] md:mb-[55px] w-full max-w-sm">
               <div className="flex flex-col items-center gap-1 md:gap-2">
                 <div className="flex items-center gap-1 md:gap-1.5 text-warning transition-transform hover:scale-105">
@@ -183,6 +201,7 @@ export default function DashboardHero({
               </div>
             </div>
  
+            {/* Render action buttons */}
             <div className="flex flex-col sm:flex-row gap-[13px] w-full max-w-md">
               {dueCount > 0 ? (
                 <>
@@ -217,6 +236,7 @@ export default function DashboardHero({
         )}
         
         {/* WIDGET LANJUT BELAJAR */}
+        {/* Render continue learning widget */}
         {!loading && (
           <m.div
             initial={{ opacity: 0, y: 20 }}
@@ -229,6 +249,7 @@ export default function DashboardHero({
         )}
         
         {/* TIPS BELAJAR CERDAS */}
+        {/* Render daily tip */}
         {!loading && (
           <m.div 
             initial={{ opacity: 0, y: 10 }}
@@ -251,4 +272,3 @@ export default function DashboardHero({
     </m.div>
   );
 }
-

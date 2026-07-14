@@ -13,10 +13,18 @@ import { m } from "framer-motion";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+
+/**
+ * Props for QuizProgress component.
+ */
 interface QuizProgressProps {
+  /** Current progress value. */
   current: number;
+  /** Total progress value. */
   total: number;
+  /** Tailwind background color class. */
   color?: string;
+  /** Additional CSS classes for progress indicator. */
   indicatorClassName?: string;
 }
 
@@ -24,7 +32,11 @@ interface QuizProgressProps {
 // EKSEKUSI UTAMA
 // ======================
 
+/**
+ * QuizProgress component. Renders animated progress bar.
+ */
 export function QuizProgress({ current, total, color = "bg-primary", indicatorClassName = "" }: QuizProgressProps) {
+  // Clamp percentage between 0 and 100 to prevent overflow.
   const percentage = Math.min(100, Math.max(0, (current / total) * 100));
 
   return (

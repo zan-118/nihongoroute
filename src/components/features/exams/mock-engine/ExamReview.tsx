@@ -41,14 +41,21 @@ import { ExamChoice, ExamData, ExamPassage, GameState } from "./types";
 import { SECTION_LABELS } from "./constants";
 import { ExamQuestionText } from "./ExamQuestionText";
 
+/**
+ * ExamReview component props.
+ */
 interface ExamReviewProps {
+  /** Exam data. */
   exam: ExamData;
+  /** User answers. Key is question ID, value is choice index. */
   answers: Record<string, number>;
+  /** Callback to update game state. */
   setGameState: (state: GameState) => void;
 }
 
 type ReviewFilter = "mistakes" | "all";
 
+/** Map action ID to icon. */
 const ACTION_ICONS: Record<ExamReviewAction["id"], LucideIcon> = {
   "weak-points": Target,
   flashcards: ClipboardList,
@@ -58,18 +65,21 @@ const ACTION_ICONS: Record<ExamReviewAction["id"], LucideIcon> = {
   vocab: BookOpen,
 };
 
+/** Get CSS classes from accuracy score. */
 function getAccuracyTone(accuracy: number) {
   if (accuracy >= 70) return "text-success border-success/25 bg-success/10";
   if (accuracy >= 45) return "text-warning border-warning/25 bg-warning/10";
   return "text-destructive border-destructive/25 bg-destructive/10";
 }
 
+/** Get border class from question correctness. */
 function getQuestionBorderClass(insight: ExamReviewQuestionInsight) {
   if (insight.isCorrect) return "border-success/25";
   if (!insight.isAnswered) return "border-warning/30";
   return "border-destructive/25";
 }
 
+/** Get status metadata for question. */
 function getQuestionStatus(insight: ExamReviewQuestionInsight) {
   if (insight.isCorrect) {
     return {
@@ -94,6 +104,7 @@ function getQuestionStatus(insight: ExamReviewQuestionInsight) {
   };
 }
 
+/** Get library URL from source type and ID. */
 function getSourceHref(sourceType?: string | null, sourceId?: string | null) {
   if (!sourceType || !sourceId) return null;
   const encodedId = encodeURIComponent(sourceId);
@@ -107,6 +118,7 @@ function getSourceHref(sourceType?: string | null, sourceId?: string | null) {
   return null;
 }
 
+/** Get SRS label for wrong answer. */
 function getSrsStatusLabel(insight: ExamReviewQuestionInsight) {
   const hasSource = Boolean(insight.question.sourceType && insight.question.sourceId);
   if (insight.isCorrect || !hasSource) return null;
@@ -116,6 +128,7 @@ function getSrsStatusLabel(insight: ExamReviewQuestionInsight) {
     : "Masuk weak point";
 }
 
+/** Render passage content, image, or transcript. */
 function ReviewPassageBlock({ passage }: { passage?: ExamPassage | null }) {
   if (!passage) return null;
 
@@ -166,6 +179,7 @@ function ReviewPassageBlock({ passage }: { passage?: ExamPassage | null }) {
   );
 }
 
+/** Render choice text or image. */
 function ReviewChoiceContent({
   choice,
   text,
@@ -201,11 +215,17 @@ function ReviewChoiceContent({
   );
 }
 
+/**
+ * Exam review screen. Show stats, recommendations, and question list.
+ */
 export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
   const { resolvedTheme } = useTheme();
+  
+  // Analyze exam results. Cache for performance.
   const analysis = useMemo(() => analyzeExamReview(exam, answers), [exam, answers]);
   const [filter, setFilter] = useState<ReviewFilter>("mistakes");
 
+  // Fallback to all if no mistakes exist.
   const effectiveFilter = analysis.mistakes.length === 0 ? "all" : filter;
   const visibleInsights =
     effectiveFilter === "mistakes" ? analysis.mistakes : analysis.insights;
@@ -216,6 +236,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
     ? analysis.weakestSection.wrong + analysis.weakestSection.unanswered
     : 0;
 
+  // Stats cards configuration.
   const stats = [
     {
       label: "Akurasi",
@@ -494,6 +515,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
             </p>
           </Card>
         ) : (
+          // Render each question review card.
           visibleInsights.map((insight) => {
             const q = insight.question;
             const userAnswer = insight.userAnswer;
@@ -581,6 +603,7 @@ export function ExamReview({ exam, answers, setGameState }: ExamReviewProps) {
                       const isUserSelection = optIdx === userAnswer;
                       const choice = q.choices?.[optIdx];
 
+                      // Style option based on correctness and user selection.
                       let optionClass =
                         "border-border bg-[rgb(var(--muted-rgb)/0.5)] opacity-65 dark:bg-[rgb(var(--background-rgb)/0.1)]";
                       if (isCorrectAnswer) {

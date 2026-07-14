@@ -6,5 +6,7 @@
  * @project NihongoRoute
  */
 
+/**
+ * Daily quest pool alias for dashboard.
+ */
 export { DAILY_QUESTS_POOL as DAILY_QUESTS } from "@/lib/constants/gamification";
-

@@ -37,10 +37,16 @@ import {
   type WeakPointCandidate,
 } from "@/lib/weak-points";
 
+/**
+ * Card data enriched with weak point metadata.
+ */
 interface TrainerCard extends MasterCardData {
   weakPoint: WeakPointCandidate;
 }
 
+/**
+ * Map candidate reasons to Indonesian labels.
+ */
 const reasonLabels: Record<WeakPointCandidate["reasons"][number], string> = {
   critical: "Kritis",
   fragile: "Rentan",
@@ -49,6 +55,11 @@ const reasonLabels: Record<WeakPointCandidate["reasons"][number], string> = {
   learning: "Belajar",
 };
 
+/**
+ * Generate unique string signature from SRS state. Prevent unnecessary re-renders.
+ * @param srs SRS state object.
+ * @returns Signature string.
+ */
 function getCandidateSignature(srs: ReturnType<typeof useSRSStore.getState>["srs"]) {
   return selectWeakPointCandidates(srs, { limit: 16 })
     .map((item) => [
@@ -63,9 +74,15 @@ function getCandidateSignature(srs: ReturnType<typeof useSRSStore.getState>["srs
     .join("|");
 }
 
+/**
+ * Parse signature string back to candidate array.
+ * @param signature Signature string.
+ * @returns Candidate array.
+ */
 function parseCandidateSignature(signature: string): WeakPointCandidate[] {
   if (!signature) return [];
 
+  // Split pipe-separated entries, reconstruct candidate objects
   return signature.split("|").map((entry) => {
     const [id, easeFactor, interval, repetition, nextReview, weaknessScore, reasonText] = entry.split(":");
     return {
@@ -80,27 +97,41 @@ function parseCandidateSignature(signature: string): WeakPointCandidate[] {
   });
 }
 
+/**
+ * Calculate average weakness score of candidates.
+ * @param candidates Candidate array.
+ * @returns Average score.
+ */
 function getMeanWeakness(candidates: WeakPointCandidate[]) {
   if (candidates.length === 0) return 0;
   const total = candidates.reduce((sum, item) => sum + item.weaknessScore, 0);
   return Math.round(total / candidates.length);
 }
 
+/**
+ * Client component for targeted flashcard session on weak SRS cards.
+ */
 export default function WeakPointTrainerClient() {
   const [cards, setCards] = useState<TrainerCard[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [sessionKey, setSessionKey] = useState(0);
 
+  // Get signature from SRS store
   const candidateSignature = useSRSStore((state) => getCandidateSignature(state.srs));
+  // Parse signature to get candidates
   const candidates = useMemo(() => parseCandidateSignature(candidateSignature), [candidateSignature]);
   const summary = useMemo(() => getWeakPointSummary(candidates), [candidates]);
   const meanWeakness = useMemo(() => getMeanWeakness(candidates), [candidates]);
+  // Map candidates by ID for fast lookup
   const candidateMap = useMemo(
     () => new Map(candidates.map((candidate) => [candidate.id, candidate])),
     [candidates]
   );
 
+  /**
+   * Start training session. Fetch card details.
+   */
   const startSession = useCallback(async () => {
     if (candidates.length === 0) return;
 
@@ -109,10 +140,12 @@ export default function WeakPointTrainerClient() {
       setIsSessionActive(false);
 
       const ids = candidates.map((candidate) => candidate.id);
+      // Fetch full card details from API
       const res = await fetch(`/api/cards?ids=${ids.join(",")}`);
       if (!res.ok) throw new Error(`API /api/cards gagal: ${res.status}`);
 
       const data = (await res.json()) as MasterCardData[];
+      // Match API cards with weak point metadata
       const enrichedCards = data
         .map((card, index) => {
           const weakPoint =
@@ -141,6 +174,9 @@ export default function WeakPointTrainerClient() {
     }
   }, [candidateMap, candidates]);
 
+  /**
+   * Reset session state.
+   */
   const resetSession = () => {
     setIsSessionActive(false);
     setCards([]);
@@ -307,6 +343,9 @@ export default function WeakPointTrainerClient() {
   );
 }
 
+/**
+ * Render summary metric tile.
+ */
 function SummaryTile({
   label,
   value,
@@ -327,6 +366,9 @@ function SummaryTile({
   );
 }
 
+/**
+ * Render single candidate row with progress bar.
+ */
 function CandidateRow({ candidate, index }: { candidate: WeakPointCandidate; index: number }) {
   return (
     <div className="rounded-lg border border-border bg-background/30 p-4 transition-colors hover:border-destructive/25 hover:bg-background/45">
@@ -363,6 +405,9 @@ function CandidateRow({ candidate, index }: { candidate: WeakPointCandidate; ind
   );
 }
 
+/**
+ * Render empty state when no weak points found.
+ */
 function EmptyDiagnosis() {
   return (
     <Card className="rounded-[34px] border-border bg-card/35 p-8 text-center shadow-none  md:p-12">

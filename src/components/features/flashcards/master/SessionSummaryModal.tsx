@@ -15,23 +15,42 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 // ==========================================
 // ANTARMUKA PROPS
 // ==========================================
+/**
+ * Props for SessionSummaryModal component.
+ */
 interface SessionSummaryModalProps {
+  /** Flag indicating if the session has finished */
   isFinished: boolean;
+  /** Callback to update the finished state */
   setIsFinished: (val: boolean) => void;
+  /** Total number of cards reviewed in the session */
   cardsCount: number;
+  /** Statistics gathered during the session */
   sessionStats: { 
+    /** Number of cards marked as known */
     known: number; 
+    /** Number of cards marked as learning/forgotten */
     learning: number; 
+    /** Total XP gained during the session */
     xpGained: number;
+    /** Maximum consecutive correct answers */
     maxCombo: number;
+    /** Percentage of correct answers */
     accuracy: number;
+    /** Duration of the session in seconds */
     duration: number;
   };
+  /** Background color class for the top accent bar */
   themeBgColor: string;
+  /** Shadow class for the top accent bar */
   themeShadow: string;
+  /** Callback to restart the entire session */
   handleRestart: () => void;
+  /** Callback to start reviewing incorrect cards */
   handleReviewMistakes: () => void;
+  /** Number of incorrect cards available for review */
   mistakeCount: number;
+  /** Next.js router instance for navigation */
   router: AppRouterInstance;
 }
 
@@ -39,9 +58,8 @@ interface SessionSummaryModalProps {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen modal dialog ringkasan yang muncul setelah semua kartu selesai diulas.
- * 
- * @param {SessionSummaryModalProps} props - Properti untuk mengatur dialog hasil sesi flashcard
+ * Modal dialog showing flashcard session summary.
+ * Displays accuracy, combo, duration, XP, and action buttons.
  */
 export function SessionSummaryModal({
   isFinished,
@@ -55,14 +73,21 @@ export function SessionSummaryModal({
   mistakeCount,
   router,
 }: SessionSummaryModalProps) {
+  /**
+   * Get rating title, color, and background style based on accuracy.
+   */
   const getRating = (accuracy: number) => {
     if (accuracy >= 90) return { title: "Luar Biasa! 🎉", color: "text-success", bg: "bg-success/5 border-success/20 dark:shadow-[0_0_20px_rgb(var(--success-rgb)/0.1)]" };
     if (accuracy >= 70) return { title: "Bagus Sekali! 👍", color: "text-warning", bg: "bg-warning/5 border-warning/20 dark:shadow-[0_0_20px_rgb(var(--warning-rgb)/0.1)]" };
     return { title: "Mari Terus Latihan! 💪", color: "text-primary", bg: "bg-primary/5 border-primary/20 dark:shadow-[0_0_20px_rgb(var(--primary-rgb)/0.1)]" };
   };
 
+  // Get rating details based on accuracy
   const rating = getRating(sessionStats.accuracy || 0);
 
+  /**
+   * Format seconds into MM:SS string.
+   */
   const formatDuration = (sec: number) => {
     const mins = Math.floor(sec / 60);
     const secs = sec % 60;
@@ -73,8 +98,10 @@ export function SessionSummaryModal({
     <Dialog open={isFinished} onOpenChange={setIsFinished}>
       <DialogContent className="max-w-md w-[90%] md:w-full p-0 border-none bg-transparent shadow-none mx-auto transition-colors duration-300">
         <Card className="w-full bg-card p-8 md:p-10 rounded-lg border border-border text-center relative overflow-hidden shadow-2xl">
+          {/* Top accent bar */}
           <div className={`absolute top-0 left-0 right-0 h-1.5 ${themeBgColor} ${themeShadow}`} />
 
+          {/* Trophy icon container */}
           <div className="w-16 h-16 md:w-20 md:h-20 mx-auto bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.04)] rounded-xl flex items-center justify-center border border-border mb-6 shadow-none">
             <Trophy
               size={32}
@@ -89,6 +116,7 @@ export function SessionSummaryModal({
             </DialogTitle>
           </DialogHeader>
 
+          {/* Performance rating banner */}
           <Card className={`py-4 rounded-xl border mb-6 flex justify-center items-center shadow-none ${rating.bg}`}>
             <span className={`text-base md:text-lg font-black uppercase tracking-wider ${rating.color}`}>
               {rating.title}
@@ -99,6 +127,7 @@ export function SessionSummaryModal({
             {cardsCount} KARTU SELESAI DITINJAU
           </p>
 
+          {/* Known vs Learning stats */}
           <div className="grid grid-cols-2 gap-4 mb-6">
             <Card className="bg-success/5 border border-success/20 p-5 rounded-xl flex flex-col items-center shadow-none">
               <span className="text-2xl md:text-3xl font-black text-success">
@@ -118,6 +147,7 @@ export function SessionSummaryModal({
             </Card>
           </div>
 
+          {/* Accuracy, Combo, and Duration stats */}
           <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
             <Card className="bg-card border border-border p-4 rounded-xl flex flex-col items-center shadow-none">
               <span className="text-lg md:text-xl font-black text-foreground">
@@ -147,6 +177,7 @@ export function SessionSummaryModal({
             </Card>
           </div>
 
+          {/* XP Gained banner */}
           <Card className="bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.03)] py-4 rounded-xl border border-border mb-6 flex justify-center items-center gap-3 shadow-none">
             <Flame size={18} aria-hidden="true" className="text-primary" />
             <span className="text-foreground font-mono font-black text-base md:text-lg">
@@ -154,6 +185,7 @@ export function SessionSummaryModal({
             </span>
           </Card>
 
+          {/* Action buttons */}
           <div className="flex flex-col gap-3">
             {mistakeCount > 0 && (
               <Button

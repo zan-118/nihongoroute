@@ -17,11 +17,18 @@ import { useSRSAnalytics } from "./useSRSAnalytics";
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * SRS memory stability analytics component.
+ * Shows card distribution by ease factor.
+ */
 export default function SRSAnalytics() {
   const { total, rawData, maxCount } = useSRSAnalytics();
 
+  // No data. Return null.
   if (total === 0) return null;
 
+  // Assign icon based on category.
   const data = rawData.map((item) => {
     let icon = <AlertTriangle size={14} />;
     if (item.label === "Fragile") icon = <Zap size={14} />;
@@ -54,6 +61,7 @@ export default function SRSAnalytics() {
       <div className="flex-1 flex flex-col justify-between gap-8 relative z-10">
         <div className="flex items-end justify-between gap-4 h-48 px-2">
           {data.map((item) => {
+            // Calculate bar height percentage.
             const height = (item.count / maxCount) * 100;
             return (
               <div key={item.label} className="flex-1 flex flex-col items-center gap-4 group">
@@ -62,6 +70,7 @@ export default function SRSAnalytics() {
                     {item.count} Items
                   </div>
                   
+                  {/* Apply dynamic height and color styles. */}
                   <div 
                     className="w-full max-w-[40px] rounded-t-xl transition-all duration-1000 ease-out relative group-hover:brightness-125"
                     style={{ 

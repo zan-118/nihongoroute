@@ -28,6 +28,7 @@ import { DashboardTabs } from "@/components/features/dashboard/DashboardTabs";
 import { HomePanel } from "@/components/features/dashboard/panels/HomePanel";
 import { ProgressPanel } from "@/components/features/dashboard/panels/ProgressPanel";
 
+/** Dynamic import for achievements grid to optimize initial load. */
 const AchievementsGrid = dynamic(() => import("@/components/features/gamification/AchievementsGrid"), { 
   ssr: false,
   loading: () => <div className="h-[200px] w-full animate-pulse bg-muted rounded-lg" />
@@ -36,6 +37,8 @@ const AchievementsGrid = dynamic(() => import("@/components/features/gamificatio
 // ======================
 // CONFIG / CONSTANTS
 // ======================
+
+/** Animation variants for dashboard items. */
 const itemVariants: Variants = {
   hidden: { y: 16, opacity: 0 },
   visible: {
@@ -45,6 +48,7 @@ const itemVariants: Variants = {
   },
 };
 
+/** Navigation tabs configuration. */
 const TABS = [
   { id: "beranda", label: "Beranda", icon: "🏠" },
   { id: "progres", label: "Progres", icon: "📈" },
@@ -52,8 +56,11 @@ const TABS = [
   { id: "pengaturan", label: "Setelan", icon: "⚙️" },
 ];
 
+/** Props for DashboardClient component. */
 interface DashboardClientProps {
+  /** Random expression of the day. */
   expression: RandomExpression | null;
+  /** Course structure metadata. */
   courseMetadata: Array<{
     id?: string;
     _id?: string;
@@ -68,10 +75,16 @@ interface DashboardClientProps {
   }>;
 }
 
+/**
+ * Main dashboard client component.
+ * Handles tab switching, user stats, data export/import, and reset actions.
+ */
 export default function DashboardClient({ courseMetadata, expression }: DashboardClientProps) {
+  // Auth store selectors
   const isAuthenticated = useAuthStore(s => s.isAuthenticated);
   const resetAuth = useAuthStore(s => s.resetAuth);
 
+  // User store selectors
   const id = useUserStore(s => s.id);
   const isGuest = useUserStore(s => s.isGuest);
   const name = useUserStore(s => s.name);
@@ -84,9 +97,11 @@ export default function DashboardClient({ courseMetadata, expression }: Dashboar
   const inventory = useUserStore(s => s.inventory);
   const resetUser = useUserStore(s => s.resetUser);
 
+  // SRS store selectors
   const resetSRS = useSRSStore(s => s.resetSRS);
   const dueCount = useSRSStore(s => summarizeSrs(s.srs).due);
 
+  // UI store selectors
   const loading = useUIStore(s => s.loading);
   const resetUI = useUIStore(s => s.resetUI);
   const exportData = useUIStore(s => s.exportData);
@@ -94,6 +109,7 @@ export default function DashboardClient({ courseMetadata, expression }: Dashboar
   const notifications = useUIStore(s => s.notifications);
   const settings = useUIStore(s => s.settings);
 
+  /** Reset all local and global state stores. */
   const resetProgress = () => {
     resetAuth();
     resetUser();
@@ -101,6 +117,7 @@ export default function DashboardClient({ courseMetadata, expression }: Dashboar
     resetUI();
   };
 
+  /** Memoized user progress object. */
   const progress = useMemo(() => ({
     id: id || "guest", 
     isGuest: !!isGuest, 
@@ -141,6 +158,7 @@ export default function DashboardClient({ courseMetadata, expression }: Dashboar
   const router = useRouter();
   const supabase = createClient();
 
+  // Fetch or generate unique identifier for guest or authenticated user
   useEffect(() => {
     const checkId = async () => {
       if (isAuthenticated) {
@@ -160,7 +178,10 @@ export default function DashboardClient({ courseMetadata, expression }: Dashboar
     checkId();
   }, [isAuthenticated, supabase.auth]);
 
+  /** Trigger JSON data export. */
   const handleExportData = () => exportData();
+  
+  /** Trigger JSON data import via file reader. */
   const handleImportData = () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -180,11 +201,15 @@ export default function DashboardClient({ courseMetadata, expression }: Dashboar
     input.click();
   };
 
+  /** Open confirmation modal with custom settings. */
   const openConfirm = (title: string, description: string, confirmText: string, isDestructive: boolean, onConfirm: () => void) => {
     setConfirmModal({ isOpen: true, title, description, confirmText, isDestructive, onConfirm });
   };
+  
+  /** Close confirmation modal. */
   const closeConfirm = () => setConfirmModal(prev => ({ ...prev, isOpen: false }));
 
+  /** Reset all user data after confirmation. */
   const handleResetData = () => {
     openConfirm(
       "Hapus Seluruh Riwayat Belajar?",
@@ -199,6 +224,7 @@ export default function DashboardClient({ courseMetadata, expression }: Dashboar
     );
   };
 
+  /** Log out user and clear local state. */
   const handleLogout = () => {
     openConfirm(
       "Akhiri Sesi Belajar?",
@@ -213,6 +239,7 @@ export default function DashboardClient({ courseMetadata, expression }: Dashboar
     );
   };
 
+  // Calculate XP progress for current level (1000 XP per level)
   const xpNeeded = 1000 - (progress.xp % 1000);
   const xpProgress = (progress.xp % 1000) / 10;
 

@@ -20,11 +20,17 @@ import { useUIStore } from "@/store/useUIStore";
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * NotificationManager component.
+ * Renders UI to toggle SRS reminders and request browser notification permissions.
+ */
 export default function NotificationManager() {
   const settings = useUIStore((state) => state.settings);
   const toggleNotifications = useUIStore((state) => state.toggleNotifications);
   const notificationsEnabled = settings?.notificationsEnabled || false;
   
+  // Initialize permission state from window.Notification if available
   const [permission, setPermission] = useState<NotificationPermission>(() => {
     if (typeof window !== "undefined" && "Notification" in window) {
       return Notification.permission;
@@ -34,7 +40,12 @@ export default function NotificationManager() {
 
   const isEnabled = notificationsEnabled;
 
+  /**
+   * Requests permission for web notifications.
+   * Triggers test notification if permission is granted.
+   */
   const requestPermission = async () => {
+    // Check if browser supports Notification API
     if (!("Notification" in window)) {
       toast.error("Browser Tidak Mendukung", {
         description: "Browser kamu belum support notifikasi web."
@@ -43,6 +54,7 @@ export default function NotificationManager() {
     }
 
     try {
+      // Request permission from user
       const res = await Notification.requestPermission();
       setPermission(res);
       if (res === "granted") {
@@ -62,12 +74,14 @@ export default function NotificationManager() {
                
           } as NotificationOptions);
           }).catch(() => {
+            // Fallback to standard Notification API if Service Worker fails
             new Notification("NihongoRoute", {
               body: "Notifikasi aktif! Kamu bakal diingatkan kalau ada kartu yang perlu di-review.",
               icon: "/logo-branding.png"
             });
           });
         } else {
+          // Fallback to standard Notification API if Service Worker is not supported
           new Notification("NihongoRoute", {
             body: "Notifikasi aktif! Kamu bakal diingatkan kalau ada kartu yang perlu di-review.",
             icon: "/logo-branding.png"
@@ -104,6 +118,7 @@ export default function NotificationManager() {
           <Switch 
             checked={isEnabled}
             onCheckedChange={(checked: boolean) => {
+              // Request permission if enabling and not yet granted, otherwise toggle state
               if (checked && permission !== "granted") {
                 requestPermission();
               } else {

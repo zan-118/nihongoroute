@@ -14,6 +14,9 @@ import { validateAdminApiRequest } from "@/lib/admin-api-auth";
 // ======================
 // KONSTANTA CORS
 // ======================
+/**
+ * Allowed origins for CORS validation.
+ */
 const ALLOWED_ORIGINS = [
   "http://localhost:3000",
   "http://localhost:3001",
@@ -22,23 +25,45 @@ const ALLOWED_ORIGINS = [
   process.env.NEXT_PUBLIC_SITE_URL
 ].filter(Boolean) as string[];
 
+/**
+ * Maximum character length for search query.
+ */
 const MAX_QUERY_LENGTH = 80;
 
+/**
+ * Sanitizes search term for PostgREST query safety.
+ * Escapes special characters and limits length.
+ * 
+ * @param term - Raw search query string.
+ * @returns Sanitized search query string.
+ */
 function escapePostgrestSearchTerm(term: string) {
   return term
     .trim()
     .slice(0, MAX_QUERY_LENGTH)
+    // Escape backslashes
     .replace(/\\/g, "\\\\")
+    // Escape percentage signs
     .replace(/%/g, "\\%")
+    // Escape underscores
     .replace(/_/g, "\\_")
+    // Remove double quotes
     .replace(/"/g, "")
+    // Replace commas with spaces
     .replace(/,/g, " ");
 }
 
+/**
+ * Generates CORS headers based on request origin.
+ * 
+ * @param req - Incoming HTTP request.
+ * @returns Object containing CORS headers.
+ */
 function getCorsHeaders(req: Request) {
   const origin = req.headers.get("origin");
   let allowOrigin = ALLOWED_ORIGINS[0];
   if (origin) {
+    // Allow exact match or sanity.studio subdomains
     if (ALLOWED_ORIGINS.includes(origin) || origin.endsWith(".sanity.studio")) {
       allowOrigin = origin;
     }
@@ -53,6 +78,12 @@ function getCorsHeaders(req: Request) {
   };
 }
 
+/**
+ * Handles CORS preflight OPTIONS requests.
+ * 
+ * @param req - Incoming HTTP request.
+ * @returns NextResponse with CORS headers.
+ */
 export async function OPTIONS(req: Request) {
   return new NextResponse(null, {
     status: 204,
@@ -60,10 +91,17 @@ export async function OPTIONS(req: Request) {
   });
 }
 
+/**
+ * Handles GET search requests for categories, vocab, kanji, and grammar.
+ * 
+ * @param req - Incoming HTTP request.
+ * @returns NextResponse containing search results or error message.
+ */
 export async function GET(req: Request) {
   const corsHeaders = getCorsHeaders(req);
   
   try {
+    // Validate admin authorization
     const auth = validateAdminApiRequest(req);
     if (!auth.ok) {
       return NextResponse.json(
@@ -78,6 +116,7 @@ export async function GET(req: Request) {
 
     const supabase = createAdminClient();
 
+    // Fetch course categories
     if (type === "category") {
       const { data, error } = await supabase
         .from("course_categories")
@@ -88,6 +127,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ data }, { headers: corsHeaders });
     }
 
+    // Search vocabulary table
     if (type === "vocab") {
       let queryBuilder = supabase
         .from("vocab")
@@ -104,6 +144,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ data }, { headers: corsHeaders });
     }
 
+    // Search kanji table
     if (type === "kanji") {
       let queryBuilder = supabase
         .from("kanji")
@@ -120,6 +161,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ data }, { headers: corsHeaders });
     }
 
+    // Search grammar table
     if (type === "grammar") {
       let queryBuilder = supabase
         .from("grammar")

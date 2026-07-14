@@ -15,18 +15,29 @@ import { createClient } from "@/lib/supabase/server";
 // SERVER ACTIONS
 // ======================
 
+/**
+ * Fetch flashcards from database.
+ * Filter by mode, JLPT level, and limit count.
+ * 
+ * @param mode - Flashcard type (vocab, kanji, survival, sentence).
+ * @param level - JLPT level filter or "all".
+ * @param amount - Max items to return. Default 20.
+ * @returns Array of flashcard items.
+ */
 export async function getFlashcardsByMode(
   mode: "vocab" | "kanji" | "survival" | "sentence", 
   level: string | "all", 
   amount: number = 20
 ) {
   const supabase = await createClient();
+  // Refresh session to keep user authenticated.
   await supabase.auth.getSession();
   
   if (mode === "kanji") {
     let query = supabase
       .from("kanji")
       .select("id, character, meaning, onyomi, kunyomi, examples")
+      // Exclude items hidden from flashcards.
       .neq("show_in_flashcard", false)
       .limit(amount); // Ambil tepat sejumlah kuantitas yang diminta oleh pengguna
 
@@ -45,7 +56,9 @@ export async function getFlashcardsByMode(
     let query = supabase
       .from("sentences")
       .select("id, japanese, english, indonesia, jlpt_level")
+      // Require Japanese text.
       .not("japanese", "is", null)
+      // Require at least one translation.
       .or("indonesia.neq.null,english.neq.null")
       .limit(amount);
 
@@ -64,6 +77,7 @@ export async function getFlashcardsByMode(
     let query = supabase
       .from("vocab")
       .select("id, word, meaning_id, romaji, furigana, slug")
+      // Exclude items hidden from flashcards.
       .neq("show_in_flashcard", false)
       .limit(amount); // Ambil tepat sejumlah kuantitas yang diminta oleh pengguna
 

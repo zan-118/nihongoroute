@@ -17,10 +17,15 @@ import { Target } from "lucide-react";
 // ==========================================
 // KOMPONEN UTAMA
 // ==========================================
+/**
+ * Header component for daily quests.
+ * Shows target icon, title, subtitle, and reset time badge.
+ */
 export function QuestHeader() {
   return (
     <header className="flex items-center justify-between mb-8 relative z-10">
       <div className="flex items-center gap-3">
+        {/* Icon container with card style */}
         <Card className="size-10 rounded-xl bg-muted dark:bg-muted/50 border border-border flex items-center justify-center shadow-none shrink-0">
           <Target size={18} className="text-primary" />
         </Card>
@@ -33,6 +38,7 @@ export function QuestHeader() {
           </span>
         </div>
       </div>
+      {/* Reset time indicator */}
       <Badge
         variant="ghost"
         className="bg-muted dark:bg-muted/30 border border-border text-muted-foreground px-3 py-1.5 rounded-lg text-xs font-bold tracking-widest uppercase shadow-none h-auto"
@@ -42,4 +48,3 @@ export function QuestHeader() {
     </header>
   );
 }
-

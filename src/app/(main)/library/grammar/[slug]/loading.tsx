@@ -13,20 +13,20 @@ import { Skeleton } from "@/components/ui/skeleton";
 // ======================
 
 /**
- * Komponen kerangka pemuatan (Skeleton) untuk halaman detail tata bahasa.
- * Menampilkan animasi pemuatan struktur artikel grammar dengan mulus.
+ * GrammarLoading component.
+ * Show skeleton UI during grammar detail page load.
  * 
- * @returns {JSX.Element} Antarmuka kerangka pemuatan detail tata bahasa.
+ * @returns React element.
  */
 export default function GrammarLoading() {
   return (
     <main className="w-full bg-transparent px-4 md:px-8 lg:px-12 relative overflow-hidden flex flex-col justify-start min-h-screen pb-24 transition-colors duration-300">
-      {/* Background Neural Overlays (Sama dengan aslinya untuk menjaga konsistensi visual) */}
+      {/* Background overlays. Add depth. Match main page style. */}
       <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none z-0" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgb(var(--primary-rgb)/0.05)_0%,transparent_70%)] pointer-events-none z-0" />
 
       <div className="max-w-4xl mx-auto w-full relative z-10 pt-8 md:pt-12">
-        {/* Header Skeleton */}
+        {/* Header skeleton. Mimic breadcrumbs and title. */}
         <header className="mb-16 md:mb-20">
           <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
             <Skeleton className="h-4 w-4 md:h-5 md:w-5 rounded-full" />
@@ -39,7 +39,7 @@ export default function GrammarLoading() {
           <Skeleton className="h-1.5 md:h-2 w-24 md:w-32 bg-primary/40 mt-8 md:mt-10 rounded-full" />
         </header>
 
-        {/* Grid Cards Skeleton (Formation & Notes) */}
+        {/* Grid layout. Mimic formation rules and usage notes. */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
           <div className="p-6 md:p-8 bg-primary/5 border border-primary/20 rounded-[2rem] relative overflow-hidden">
             <Skeleton className="h-3 w-32 mb-5 bg-primary/30" />
@@ -54,7 +54,7 @@ export default function GrammarLoading() {
           </div>
         </div>
 
-        {/* Content Prose Skeleton */}
+        {/* Prose skeleton. Mimic article body text. */}
         <section className="max-w-none mb-16 md:mb-20 space-y-12">
           {/* Paragraph block 1 */}
           <div className="space-y-4">
@@ -77,7 +77,7 @@ export default function GrammarLoading() {
             <Skeleton className="h-4 w-full" />
           </div>
 
-          {/* Example Sentence Card Skeleton */}
+          {/* Card skeleton. Mimic interactive Japanese example sentence. */}
           <div className="my-8 p-6 md:p-10 bg-card border border-border/50 rounded-[2rem] md:rounded-[3rem] shadow-sm">
             <div className="space-y-4 mb-6">
               <Skeleton className="h-8 md:h-10 w-3/4 rounded-lg" />

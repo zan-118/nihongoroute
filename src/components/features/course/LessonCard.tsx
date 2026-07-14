@@ -18,7 +18,11 @@ import { Card } from "@/components/ui/card";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+/**
+ * Props for LessonCard component.
+ */
 interface LessonCardProps {
+  /** Lesson data object. */
   lesson: {
     _id: string;
     title: string;
@@ -26,17 +30,26 @@ interface LessonCardProps {
     summary?: string;
     image_url?: string;
   };
+  /** Zero-based index of lesson in list. */
   index: number;
+  /** Parent category identifier. */
   categoryId: string;
+  /** Flag for side quest styling. */
   isSideQuest?: boolean;
+  /** Completion progress percentage. Range 0 to 100. */
   progress?: number; // 0 to 100
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * LessonCard component. Render individual lesson card with progress indicator and hover effects.
+ */
 export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 0 }: LessonCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  
+  // Set color theme based on quest type.
   const themeRgb = isSideQuest ? "var(--warning-rgb)" : "var(--primary-rgb)";
 
   return (
@@ -44,6 +57,7 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
       whileHover={{ y: -4 }}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
       style={{
+        // Optimize rendering performance for offscreen cards.
         contentVisibility: 'auto',
         containIntrinsicSize: '0 220px',
       }}
@@ -77,6 +91,7 @@ export function LessonCard({ lesson, index, categoryId, isSideQuest, progress = 
           <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-foreground/[0.02] to-transparent skew-x-12 pointer-events-none" />
 
           <div className="flex justify-between items-start w-full relative z-10">
+            {/* Format index to two-digit string. */}
             <div
               className="w-8 h-8 sm:w-10 sm:h-10 shrink-0 rounded-lg sm:rounded-xl flex items-center justify-center font-black text-[10px] sm:text-xs font-mono transition-all duration-200 border"
               style={{

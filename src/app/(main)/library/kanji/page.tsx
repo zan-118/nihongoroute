@@ -21,6 +21,10 @@ import {
 // ======================
 // METADATA SEO
 // ======================
+
+/**
+ * SEO metadata configuration for the Kanji library page.
+ */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Pustaka Kanji JLPT | NihongoRoute",
@@ -36,16 +40,18 @@ export const metadata: Metadata = {
 // ======================
 
 /**
- * Halaman utama Pustaka Kanji (RSC).
- * Melakukan pra-ambil data halaman pertama daftar kanji sebelum merender KanjiListClient dalam Suspense.
+ * Kanji library index page component.
+ * Fetches initial paginated Kanji data on the server and renders the client list.
  * 
- * @returns {JSX.Element} Halaman direktori pustaka kanji.
+ * @returns React Server Component rendering the Kanji list.
  */
 export default async function KanjiListPage() {
+  // Fetch initial page of N5 Kanji (24 items) on server to prevent layout shift
   const initialData = await getPaginatedKanji(1, 24, "", "N5");
 
   return (
     <div className="w-full min-h-screen bg-transparent relative overflow-hidden pt-12 pb-24 px-4 md:px-8">
+      {/* Inject structured JSON-LD data for SEO breadcrumbs and learning resources */}
       <JsonLd
         data={[
           breadcrumbJsonLd([
@@ -67,6 +73,7 @@ export default async function KanjiListPage() {
       <div className="neural-grid" />
 
       <div className="max-w-6xl mx-auto relative z-10">
+        {/* Stream client component with loading fallback while rendering */}
         <Suspense fallback={
           <div className="h-40 flex flex-col items-center justify-center text-muted-foreground gap-2">
             <RotateCw className="text-primary animate-spin" size={24} />

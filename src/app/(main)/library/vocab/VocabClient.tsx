@@ -36,9 +36,17 @@ import type { VocabItem } from "@/components/features/library/vocab/types";
 // EKSEKUSI UTAMA
 // ======================
 
+/** Number of items per page. */
 const VOCAB_PAGE_SIZE = 50;
+
+/** Default JLPT level filter. */
 const DEFAULT_VOCAB_LEVEL = "N5";
 
+/**
+ * Normalize level parameter from URL.
+ * @param value Raw level string.
+ * @returns Normalized level string.
+ */
 function normalizeLevelParam(value: string | null) {
   if (!value) return DEFAULT_VOCAB_LEVEL;
 
@@ -49,6 +57,11 @@ function normalizeLevelParam(value: string | null) {
   return value;
 }
 
+/**
+ * Map UI level label to API query value.
+ * @param label UI level label.
+ * @returns API query string.
+ */
 function mapLevelToQuery(label: string) {
   if (label === "Semua") return "all";
   if (label === "Umum") return "umum";
@@ -126,6 +139,7 @@ export default function VocabClient({
     }
   }, [debouncedSearch, level, hinshi, currentPage, pathname, router, searchParams]);
 
+  // Debounce search input to prevent excessive API calls
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(search);
@@ -137,6 +151,7 @@ export default function VocabClient({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
+  // Reset page to 1 when filters change
   useEffect(() => {
     if (isFirstMount.current) {
       isFirstMount.current = false;
@@ -145,6 +160,7 @@ export default function VocabClient({
     setCurrentPage(1);
   }, [level, hinshi]);
 
+  // Fetch paginated vocabulary data from server action
   const { data, isFetching: loading } = useQuery({
     queryKey: ["vocab", currentPage, debouncedSearch, level, hinshi],
     queryFn: () => getPaginatedVocab(currentPage, VOCAB_PAGE_SIZE, debouncedSearch, mapLevelToQuery(level), hinshi),
@@ -154,8 +170,10 @@ export default function VocabClient({
 
   const vocabListRaw = useMemo(() => data?.data || [], [data?.data]);
 
+  /** Type definition for raw vocabulary item from query. */
   type VocabItemType = (typeof vocabListRaw)[number];
 
+  // Parse and normalize raw database fields into structured VocabItem format
   const vocabList = useMemo<VocabItem[]>(() => {
     const seen = new Set<string>();
     const mapped: VocabItem[] = [];
@@ -165,6 +183,7 @@ export default function VocabClient({
       if (seen.has(key)) continue;
       seen.add(key);
 
+      // Safely parse related kanji array structure
       const relatedKanjiParsed = Array.isArray(item.related_kanji)
         ? (item.related_kanji as unknown[]).map((rk) => {
           if (typeof rk === "string") {
@@ -181,6 +200,7 @@ export default function VocabClient({
         })
         : null;
 
+      // Safely parse example sentences structure
       mapped.push({
         id: item.id,
         word: item.word,
@@ -236,6 +256,10 @@ export default function VocabClient({
     );
   }
 
+  /**
+   * Handle page change and scroll to top.
+   * @param page Target page number.
+   */
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });

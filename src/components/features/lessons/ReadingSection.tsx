@@ -14,6 +14,10 @@ import { OfflineAudio } from "@/components/ui/OfflineAudio";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+
+/**
+ * Reading lesson item data structure.
+ */
 export interface ReadingLessonItem {
   _id?: string;
   id?: string;
@@ -29,6 +33,9 @@ export interface ReadingLessonItem {
   translation?: string;
 }
 
+/**
+ * Props for ReadingSection component.
+ */
 interface ReadingSectionProps {
   readingList: ReadingLessonItem[];
 }
@@ -36,7 +43,12 @@ interface ReadingSectionProps {
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Render reading section. Display Japanese text, furigana, translation, and audio.
+ */
 export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) => {
+  // Return null if no reading items exist.
   if (!readingList || readingList.length === 0) return null;
 
   return (
@@ -56,10 +68,12 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
                    className="text-[10px] font-black text-primary uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-3 inline-block"
                    style={{ backgroundColor: "rgb(var(--primary-rgb)/0.1)" }}
                  >
+                   {/* Fallback difficulty label. */}
                    {r.difficulty || r.level || "N/A"} Reading
                  </span>
                  <h3 className="text-3xl tracking-tighter uppercase">{r.title}</h3>
                </div>
+               {/* Render audio player if source exists. */}
                {(r.audioUrl || r.audio_url) && (
                  <div className="flex items-center gap-4 w-full sm:w-auto">
                    <OfflineAudio 
@@ -72,6 +86,7 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
             </div>
 
             {/* MEDIA HERO BACAAN (SANITY) */}
+            {/* Render media hero if image or video exists. */}
             {(r.imageUrl || r.videoUrl) && (
               <div className="mb-10">
                 <SanityMedia 
@@ -87,6 +102,7 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
                 className="prose-custom text-lg md:text-xl leading-[2] md:leading-[2.2] font-japanese p-8 md:p-10 rounded-2xl md:rounded-3xl border border-border/80 shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] glass"
                 style={{ backgroundColor: "rgb(var(--card-rgb)/0.3)" }}
               >
+                {/* Split body text by line. Match with hiragana line by index. */}
                 {typeof r.body === "string"
                   ? r.body.split("\n").filter(Boolean).map((line: string, pos: number) => (
                       <div key={`body-${pos}`} className="mb-4">
@@ -100,6 +116,7 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({ readingList }) =
                 style={{ backgroundColor: "rgb(var(--card-rgb)/0.15)" }}
               >
                  <h4 className="text-[10px] not-italic text-muted-foreground uppercase tracking-[0.2em] mb-4 md:mb-6">Terjemahan</h4>
+                 {/* Split translation text by line. */}
                  {typeof r.translation === "string"
                    ? r.translation.split("\n").filter(Boolean).map((line: string, pos: number) => (
                        <p key={`trans-${pos}`} className="mb-2">{line}</p>

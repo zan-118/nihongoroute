@@ -21,6 +21,9 @@ import {
 // ======================
 // METADATA SEO
 // ======================
+/**
+ * SEO metadata configuration for cheatsheet page.
+ */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Cheatsheet Bahasa Jepang | NihongoRoute",
@@ -36,15 +39,16 @@ export const metadata: Metadata = {
 // ======================
 
 /**
- * Halaman utama Referensi Cepat & Cheatsheets (RSC).
- * Menarik seluruh data cheatsheet dari Supabase dan merender komponen klien.
+ * Cheatsheet page component.
+ * Fetches cheatsheet data from database. Renders client view with SEO metadata.
  * 
- * @returns {JSX.Element} Halaman indeks cheatsheet referensi cepat.
+ * @returns Cheatsheet page layout.
  */
 export default async function CheatsheetPage() {
   // ======================
   // OPERASI DATABASE
   // ======================
+  // Fetch cheatsheet list from database.
   const sheets = await getCheatsheets();
 
   // ======================
@@ -52,6 +56,7 @@ export default async function CheatsheetPage() {
   // ======================
   return (
     <main className="w-full bg-transparent px-6 md:px-12 relative overflow-hidden flex flex-col justify-start min-h-screen">
+      {/* Inject structured JSON-LD data for SEO. */}
       <JsonLd
         data={[
           breadcrumbJsonLd([
@@ -72,6 +77,7 @@ export default async function CheatsheetPage() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgb(var(--destructive-rgb)/0.05)_0%,transparent_70%)] pointer-events-none z-0" />
 
       <div className="max-w-7xl mx-auto w-full relative z-10 flex flex-col pt-10">
+        {/* Render interactive client component with initial data. */}
         <CheatsheetClient initialSheets={sheets} />
       </div>
     </main>

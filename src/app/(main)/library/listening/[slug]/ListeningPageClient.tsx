@@ -24,7 +24,12 @@ import { cn } from "@/lib/utils";
 // ======================
 // TIPE DATA
 // ======================
+
+/**
+ * Props for the ListeningPageClient component.
+ */
 interface ListeningPageClientProps {
+  /** The listening task data containing transcript, audio, and quiz details. */
   data: ListeningTaskData;
 }
 
@@ -40,9 +45,11 @@ interface ListeningPageClientProps {
  * @returns {JSX.Element} Antarmuka player menyimak interaktif.
  */
 export default function ListeningPageClient({ data }: ListeningPageClientProps) {
+  // Global UI store actions for managing listening state and analytics.
   const setListeningState = useUIStore(state => state.setListeningState);
   const recordLearningEvent = useUIStore(state => state.recordLearningEvent);
 
+  // Serialize task data to query parameters for external tools (shadowing, analyzer).
   const toolParams = React.useMemo(() => {
     const p = new URLSearchParams();
     if (data.title) p.set("title", data.title);
@@ -51,6 +58,7 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
     return p.toString();
   }, [data.title, data.body, data.translation]);
 
+  // Reset listening state in global UI store when active task changes.
   useEffect(() => {
     setListeningState({
       currentTime: 0,
@@ -61,6 +69,7 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
     });
   }, [data.body, setListeningState]);
 
+  // Sync audio playback time with transcript line indices.
   const { 
     activeIndex, 
     handleTimeUpdate, 
@@ -68,9 +77,15 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
     externalSeek 
   } = useListeningSync(data.transcript);
 
+  // User store actions for progression and rewards.
   const completeLesson = useUserStore(state => state.completeLesson);
   const addXP = useUserStore(state => state.addXP);
 
+  /**
+   * Handles quiz completion, awards XP, marks lesson complete, and logs learning event.
+   * 
+   * @param {number} score - Number of correct answers.
+   */
   const handleQuizComplete = (score: number) => {
     const reward = score * 50;
     addXP(reward);

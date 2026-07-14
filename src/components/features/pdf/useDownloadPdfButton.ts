@@ -16,19 +16,20 @@ import { useState, useEffect } from "react";
 // HOOK UTAMA
 // ==========================================
 /**
- * Hook useDownloadPdfButton
- * Melacak apakah komponen telah terpasang (mounted) di sisi klien.
- *
- * @returns Status isMounted (boolean)
+ * Track mount state. Prevent hydration mismatch.
+ * 
+ * @returns Object containing mount status.
  */
 export function useDownloadPdfButton() {
+  // Track client mount status.
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    // Defer state update to next frame. Avoid layout thrashing.
     const frame = requestAnimationFrame(() => setIsMounted(true));
+    // Cancel frame on unmount. Prevent memory leak.
     return () => cancelAnimationFrame(frame);
   }, []);
 
   return { isMounted };
 }
-

@@ -22,6 +22,9 @@ import {
 // ======================
 // METADATA SEO
 // ======================
+/**
+ * SEO metadata configuration for courses page.
+ */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Pusat Belajar - Pilih Rute Kamu | NihongoRoute",
@@ -37,11 +40,12 @@ export const metadata: Metadata = {
 // ======================
 
 /**
- * Halaman utama untuk merender indeks seluruh kategori dan modul pembelajaran NihongoRoute.
+ * Courses landing page component. Fetch categories. Render client view.
  * 
- * @returns {JSX.Element} Halaman direktori rute belajar.
+ * @returns React element containing SEO JSON-LD and client component.
  */
 export default async function CoursesLandingPage() {
+  // Fetch course categories from DB
   const categories = await getCourseCategories();
 
   return (
@@ -57,6 +61,7 @@ export default async function CoursesLandingPage() {
             description: metadata.description as string,
             path: "/courses",
             educationalLevel: "JLPT N5-N1",
+            // Extract valid category titles for SEO schema
             teaches: categories.map((category) => category.title).filter(Boolean),
           }),
         ]}

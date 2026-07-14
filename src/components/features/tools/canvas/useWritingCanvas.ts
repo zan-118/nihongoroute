@@ -13,8 +13,13 @@ import { sounds } from "@/lib/audio";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Hook properties.
+ */
 interface UseWritingCanvasProps {
+  /** Character to draw. */
   character: string;
+  /** Color of stroke. */
   strokeColor: string;
 }
 
@@ -23,7 +28,7 @@ interface UseWritingCanvasProps {
 // ==========================================
 
 /**
- * Helper to resolve CSS colors (HEX, RGB, HSL, CSS variables) to a valid Canvas shadowColor string.
+ * Convert CSS color to canvas shadow color. Handle CSS variables, RGB, RGBA, HEX.
  */
 const getShadowColor = (colorStr: string, opacity: number): string => {
   if (typeof window === "undefined") return colorStr;
@@ -31,6 +36,7 @@ const getShadowColor = (colorStr: string, opacity: number): string => {
   
   if (colorStr.includes("var(")) {
     try {
+      // Resolve CSS variable. Create temp element to read computed style.
       const temp = document.createElement("div");
       temp.style.color = colorStr;
       document.body.appendChild(temp);
@@ -43,6 +49,7 @@ const getShadowColor = (colorStr: string, opacity: number): string => {
 
   // Tangani format rgb(r, g, b)
   if (resolved.startsWith("rgb(")) {
+    // Convert RGB to RGBA. Add opacity.
     return resolved.replace("rgb(", "rgba(").replace(")", `, ${opacity})`);
   }
   // Tangani format rgba(r, g, b, a)
@@ -53,9 +60,11 @@ const getShadowColor = (colorStr: string, opacity: number): string => {
   // Tangani format HEX
   let hex = resolved.replace("#", "").trim();
   if (hex.length === 3) {
+    // Expand 3-digit HEX to 6-digit.
     hex = hex.split("").map((c) => c + c).join("");
   }
   if (hex.length === 6) {
+    // Convert 6-digit HEX to RGBA.
     const r = parseInt(hex.slice(0, 2), 16);
     const g = parseInt(hex.slice(2, 4), 16);
     const b = parseInt(hex.slice(4, 6), 16);
@@ -69,7 +78,7 @@ const getShadowColor = (colorStr: string, opacity: number): string => {
 // HOOK UTAMA
 // ==========================================
 /**
- * Hook khusus pengendali coretan kanvas menulis kana/kanji.
+ * Manage drawing canvas, validate strokes, track progress.
  */
 export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasProps) {
   // ==========================================
@@ -120,6 +129,7 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
 
         let svgText = "";
         try {
+          // Fetch KanjiVG SVG. Use Cache API for offline support.
           const cache = await caches.open("nihongoroute_kanjivg_cache");
           const cachedResponse = await cache.match(url);
           if (cachedResponse) {
@@ -165,6 +175,7 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
     if (typeof document === "undefined") return points;
 
     try {
+      // Sample points along SVG path. Used for stroke comparison.
       const pathEl = document.createElementNS("http://www.w3.org/2000/svg", "path");
       pathEl.setAttribute("d", d);
 
@@ -230,6 +241,7 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
     if (!canvas || !container) return;
 
     const resizeCanvas = (width: number, height: number) => {
+      // Resize canvas. Adjust for device pixel ratio.
       const ratio = window.devicePixelRatio || 1;
       canvas.width = width * ratio;
       canvas.height = height * ratio;
@@ -283,6 +295,7 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
+    // Start drawing. Record initial point. Vibrate device.
     ctx.beginPath();
     ctx.moveTo(x, y);
     currentStrokePointsRef.current = [{ x, y }];
@@ -302,6 +315,7 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
+    // Track drawing. Record points. Redraw canvas.
     currentStrokePointsRef.current.push({ x, y });
     redrawCanvas(currentStrokePointsRef.current);
   }, [isDrawing, isLocked, isCompleted, redrawCanvas]);
@@ -353,6 +367,7 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
     const isReverse = dRevStart <= DIST_THRESHOLD && dRevEnd <= DIST_THRESHOLD;
     const isCorrect = dStart <= DIST_THRESHOLD && dMid <= (DIST_THRESHOLD * 1.25) && dEnd <= DIST_THRESHOLD;
 
+    // Validate stroke. Compare user points to standard path points. Check distance and direction.
     if (isCorrect) {
       // 1. Sukses: Tambahkan ke goresan yang benar
       correctStrokesRef.current.push([...currentStrokePointsRef.current]);
@@ -399,10 +414,12 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
   const stopDrawing = useCallback(() => {
     if (!isDrawing) return;
     setIsDrawing(false);
+    // Stop drawing. Trigger stroke validation.
     validateStroke();
   }, [isDrawing, validateStroke]);
 
   const clearCanvas = () => {
+    // Reset canvas state. Clear paths.
     correctStrokesRef.current = [];
     currentStrokePointsRef.current = [];
     setCurrentStrokeIndex(0);
@@ -419,6 +436,7 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
   };
 
   const handleReplay = () => {
+    // Replay character. Reset state. Reload SVG.
     clearCanvas();
     setReplayKey((prev) => prev + 1);
   };

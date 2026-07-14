@@ -6,7 +6,12 @@ import CommunityFeed from "./CommunityFeed";
 import { MessageSquare, Trophy } from "lucide-react";
 import { m, AnimatePresence } from "framer-motion";
 
+/**
+ * Social page client component.
+ * Switch between community feed and leaderboard.
+ */
 export default function SocialClient() {
+  // Track active tab view
   const [activeTab, setActiveTab] = useState<"discussion" | "leaderboard">("discussion");
 
   return (
@@ -42,6 +47,7 @@ export default function SocialClient() {
       </div>
 
       {/* CONTENT AREA WITH ANIMATION */}
+      {/* Animate tab switch transition */}
       <AnimatePresence mode="wait">
         <m.div
           key={activeTab}

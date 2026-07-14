@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import DictionaryPageClient from "@/components/features/tools/dictionary/DictionaryPageClient";
 import { createPageMetadata } from "@/lib/seo";
 
+/**
+ * Page metadata. Configures SEO for dictionary route.
+ */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Kamus Terpadu Jepang | NihongoRoute",
@@ -11,6 +14,9 @@ export const metadata: Metadata = {
   }),
 };
 
+/**
+ * Dictionary page. Renders client search interface.
+ */
 export default function DictionaryPage() {
   return <DictionaryPageClient />;
 }

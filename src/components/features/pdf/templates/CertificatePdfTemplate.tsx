@@ -23,7 +23,7 @@ import {
 // ==========================================
 // REGISTRASI FONT
 // ==========================================
-// Registrasi Font NotoSansJP (Lokal TTF untuk stabilitas rendering dan dukungan karakter Jepang)
+// Register Japanese font. Prevent character corruption.
 Font.register({
   family: "NotoSansJP",
   fonts: [
@@ -35,6 +35,10 @@ Font.register({
 // ==========================================
 // GAYA VISUAL (STYLESHEET)
 // ==========================================
+/**
+ * Stylesheet for certificate PDF layout.
+ * Define colors, borders, typography, and absolute positioning.
+ */
 const styles = StyleSheet.create({
   page: {
     backgroundColor: "#0b1329",
@@ -253,20 +257,35 @@ const styles = StyleSheet.create({
 // ==========================================
 // ANTARMUKA & DATA
 // ==========================================
+/**
+ * Data structure for certificate template.
+ */
 interface CertificateData {
+  /** Candidate full name */
   userName: string;
+  /** Exam title name */
   examTitle: string;
+  /** Final score achieved */
   score: number;
+  /** Date of issue formatted */
   date: string;
+  /** JLPT level if applicable */
   level?: string;
 }
 
 // ==========================================
 // KOMPONEN UTAMA (TEMPLAT EKSPOR)
 // ==========================================
+/**
+ * PDF template component. Render landscape A4 certificate.
+ * 
+ * @param props - Component properties.
+ * @param props.data - Certificate data.
+ */
 export const CertificatePdfTemplate = ({ data }: { data: CertificateData }) => (
   <Document>
     <Page size="A4" orientation="landscape" style={styles.page}>
+      {/* Outer and inner borders */}
       <View style={styles.border} />
       <View style={styles.innerBorder} />
       
@@ -276,13 +295,16 @@ export const CertificatePdfTemplate = ({ data }: { data: CertificateData }) => (
       <View style={styles.cornerBL} />
       <View style={styles.cornerBR} />
       
+      {/* Background Japanese watermark */}
       <Text style={styles.watermark}>合格</Text>
 
+      {/* Header section */}
       <View style={styles.header}>
         <Text style={styles.title}>CERTIFICATE</Text>
         <Text style={styles.subtitle}>OF ACHIEVEMENT</Text>
       </View>
 
+      {/* Main content section */}
       <View style={styles.content}>
         <Text style={styles.presentLabel}>This certificate is proudly presented to</Text>
         <Text style={styles.userName}>{data.userName}</Text>
@@ -290,6 +312,7 @@ export const CertificatePdfTemplate = ({ data }: { data: CertificateData }) => (
           For successfully passing the {data.examTitle} {data.level ? `(${data.level})` : ""}
         </Text>
         
+        {/* Score and status box */}
         <View style={styles.scoreContainer}>
           <View style={styles.scoreItem}>
             <Text style={styles.scoreLabel}>Final Score</Text>
@@ -302,6 +325,7 @@ export const CertificatePdfTemplate = ({ data }: { data: CertificateData }) => (
         </View>
       </View>
 
+      {/* Footer section with date, seal, and issuer */}
       <View style={styles.footer}>
         <View style={styles.signatureBox}>
           <Text style={{ fontSize: 10, fontWeight: "bold", marginBottom: 5, color: "#ffffff" }}>{data.date}</Text>
@@ -323,4 +347,3 @@ export const CertificatePdfTemplate = ({ data }: { data: CertificateData }) => (
     </Page>
   </Document>
 );
-

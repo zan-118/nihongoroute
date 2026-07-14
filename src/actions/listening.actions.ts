@@ -16,6 +16,10 @@ import { getSanityListeningBySlug } from "@/lib/queries";
 // ======================
 // TYPES
 // ======================
+
+/**
+ * Raw listening material item structure returned from Sanity CMS.
+ */
 interface SanityListeningItem {
   _id: string;
   title: string;
@@ -32,7 +36,14 @@ interface SanityListeningItem {
 // ======================
 
 /**
- * Mengambil materi mendengarkan (listening) dengan paginasi, pencarian, dan filter level dari Sanity.
+ * Fetches paginated listening materials from Sanity CMS.
+ * Supports search queries and JLPT level filtering.
+ * 
+ * @param page - Current page number (1-indexed).
+ * @param limit - Number of items per page.
+ * @param search - Search query string.
+ * @param level - JLPT level filter (e.g., "N5", "N4").
+ * @returns Paginated response containing items and total count.
  */
 export async function getPaginatedListening(
   page: number,
@@ -40,9 +51,11 @@ export async function getPaginatedListening(
   search: string = "",
   level: string = ""
 ): Promise<PaginatedListeningResponse> {
+  // Calculate offset for pagination
   const offset = (page - 1) * limit;
 
   try {
+    // Build dynamic GROQ filter query
     let filter = `_type == "listeningMaterial"`;
     if (search) {
       filter += ` && (title match $search || body match $search || difficulty match $search)`;
@@ -51,6 +64,7 @@ export async function getPaginatedListening(
       filter += ` && jlpt_level == $level`;
     }
 
+    // Fetch paginated data and total count in a single query
     const query = `{
       "data": *[${filter}] | order(_createdAt desc) [$offset...$limit] {
         _id,
@@ -65,6 +79,7 @@ export async function getPaginatedListening(
       "total": count(*[${filter}])
     }`;
 
+    // Map query parameters
     const params: Record<string, string | number> = {
       offset,
       limit: offset + limit
@@ -79,6 +94,7 @@ export async function getPaginatedListening(
 
     const result = await sanityClient.fetch(query, params, sanityPublicFetchOptions);
 
+    // Map Sanity fields to application-specific structure
     return {
       data: (result.data || []).map((l: SanityListeningItem) => ({
         ...l,
@@ -95,7 +111,11 @@ export async function getPaginatedListening(
 }
 
 /**
- * Mengambil satu task listening acak berdasarkan JLPT level (Dipakai di Homepage).
+ * Fetches a random listening task for a specific JLPT level.
+ * Used primarily on the homepage.
+ * 
+ * @param level - Target JLPT level.
+ * @returns A random listening task item or null if not found.
  */
 export async function getRandomListeningTask(level: string = "N5"): Promise<ListeningTaskItem | null> {
   try {
@@ -109,6 +129,7 @@ export async function getRandomListeningTask(level: string = "N5"): Promise<List
 
     if (!data || data.length === 0) return null;
 
+    // Select random item from the fetched subset
     const randomItem = data[Math.floor(Math.random() * data.length)];
     return {
       id: randomItem._id,
@@ -124,13 +145,18 @@ export async function getRandomListeningTask(level: string = "N5"): Promise<List
 }
 
 /**
- * Mengambil detail satu materi menyimak berdasarkan slug.
+ * Fetches detailed listening material by its slug.
+ * Parses raw transcript text, timestamps, and quizzes.
+ * 
+ * @param slug - Unique identifier slug of the listening material.
+ * @returns Detailed library item or null if not found.
  */
 export async function getLibraryListeningDetail(slug: string): Promise<LibraryItem | null> {
   try {
     const data = (await getSanityListeningBySlug(slug)) as LibraryItem | null;
     if (!data) return null;
 
+    // Map snake_case fields to camelCase
     data.audioUrl = data.audio_url;
     data.imageUrl = data.image_url;
     data.videoUrl = data.video_url;
@@ -155,6 +181,7 @@ export async function getLibraryListeningDetail(slug: string): Promise<LibraryIt
           });
       }
 
+      // Map raw lines to structured transcript lines with speaker, text, furigana, and translation
       dialogue = lines.map((line: string, idx: number) => {
         const parts = line.split(/[：:]/);
         const speaker = parts.length > 1 ? parts[0].trim() : "???";
@@ -199,6 +226,7 @@ export async function getLibraryListeningDetail(slug: string): Promise<LibraryIt
     }
     data.transcript = dialogue;
 
+    // Map raw quizzes and normalize correct answer options
     const rawQuizzes = data.quizzes || [];
     data.quiz = rawQuizzes.map((q, idx: number) => {
       const correctAns = q.correct_answer ?? q.correctAnswer ?? "";

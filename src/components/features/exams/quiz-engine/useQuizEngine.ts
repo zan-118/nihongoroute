@@ -17,32 +17,50 @@ import { QuizQuestion } from "./types";
 // ======================
 // HOOK UTAMA
 // ======================
+/**
+ * Manage quiz state, scoring, and XP updates.
+ * @param questions Quiz questions.
+ * @param lessonId Lesson ID.
+ */
 export function useQuizEngine(questions: QuizQuestion[], lessonId?: string) {
+  // Track current question index.
   const [currentIndex, setCurrentIndex] = useState(0);
+  // Track selected answer option.
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  // Flag if current question answered.
   const [isAnswered, setIsAnswered] = useState(false);
+  // Count correct answers.
   const [score, setScore] = useState(0);
+  // Flag if quiz completed.
   const [isFinished, setIsFinished] = useState(false);
+  // Control XP animation visibility.
   const [showXP, setShowXP] = useState(false);
+  // Total XP earned in session.
   const [xpGained, setXpGained] = useState(0);
 
   const updateProgress = useSRSStore((state) => state.updateProgress);
   const completeLesson = useUserStore((state) => state.completeLesson);
 
+  /**
+   * Process quiz end. Calculate XP. Update user progress.
+   * @param finalScore Correct answer count.
+   */
   const handleFinish = useCallback((finalScore: number) => {
     setIsFinished(true);
+    // 25 XP per correct answer.
     const baseXP = finalScore * 25;
+    // 50 XP bonus for perfect score.
     const bonusXP = finalScore === questions.length ? 50 : 0;
     const totalXP = baseXP + bonusXP;
 
     if (totalXP > 0) {
       setXpGained(totalXP);
       setShowXP(true);
-      // Baca xp fresh dari store untuk mencegah stale snapshot di sesi panjang
+      // Get fresh XP from store to avoid stale state.
       const currentXp = useUserStore.getState().xp;
       updateProgress(currentXp + totalXP, {});
       
-      // Tandai pelajaran sebagai selesai jika skor setidaknya mencapai 70%
+      // Mark lesson complete if score >= 70%.
       if (lessonId && finalScore / questions.length >= 0.7) {
         completeLesson(lessonId);
       }
@@ -51,6 +69,9 @@ export function useQuizEngine(questions: QuizQuestion[], lessonId?: string) {
     }
   }, [questions.length, updateProgress, completeLesson, lessonId]);
 
+  /**
+   * Go to next question. Finish quiz if last question.
+   */
   const nextQuestion = useCallback(() => {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex((prev) => prev + 1);
@@ -61,7 +82,12 @@ export function useQuizEngine(questions: QuizQuestion[], lessonId?: string) {
     }
   }, [currentIndex, questions.length, score, handleFinish]);
 
+  /**
+   * Process selected answer. Play sound. Update score.
+   * @param option Selected answer.
+   */
   const handleSelect = useCallback((option: string) => {
+    // Prevent double answering or empty question errors.
     if (isAnswered || !questions || questions.length === 0) return;
 
     const currentQ = questions[currentIndex];
@@ -81,6 +107,9 @@ export function useQuizEngine(questions: QuizQuestion[], lessonId?: string) {
   }, [isAnswered, currentIndex, questions]); 
 
 
+  /**
+   * Reset quiz state.
+   */
   const resetQuiz = useCallback(() => {
     setCurrentIndex(0);
     setScore(0);
@@ -90,6 +119,7 @@ export function useQuizEngine(questions: QuizQuestion[], lessonId?: string) {
     setShowXP(false);
   }, []);
 
+  // Get current active question.
   const currentQ = questions && questions.length > 0 ? questions[currentIndex] : null;
 
   return {

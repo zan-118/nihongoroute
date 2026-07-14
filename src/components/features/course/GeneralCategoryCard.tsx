@@ -18,6 +18,10 @@ import { ROUTES } from "@/lib/routes";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+
+/**
+ * Props for GeneralCategoryCard component.
+ */
 interface GeneralCategoryCardProps {
   cat: {
     _id: string;
@@ -36,7 +40,9 @@ interface GeneralCategoryCardProps {
 // KONSTANTA / COLORMAP
 // ======================
 
-// Map level JLPT ke variabel warna CSS Semantik (RGB)
+/**
+ * Map JLPT levels to CSS semantic color variables.
+ */
 const colorMap: Record<string, {
   accentText: string;
   glowColor: string;
@@ -91,6 +97,11 @@ const colorMap: Record<string, {
 // ======================
 // KOMPONEN PEMBANTU MIKRO
 // ======================
+
+/**
+ * Render single lesson preview item.
+ * Interactive link with custom hover glow.
+ */
 function PreviewItem({
   preview,
   catSlug,
@@ -100,6 +111,7 @@ function PreviewItem({
   catSlug: string;
   glowColor: string;
 }) {
+  // Track hover state for dynamic inline styles
   const [hovered, setHovered] = React.useState(false);
   return (
     <Link
@@ -108,6 +120,7 @@ function PreviewItem({
       onMouseLeave={() => setHovered(false)}
       className="flex items-center justify-between p-3 rounded-xl border transition-all duration-200 group/item shrink-0 min-w-[200px] sm:min-w-0 glass relative overflow-hidden pl-4"
       style={{
+        // Apply dynamic glow background and border based on hover state
         backgroundColor: hovered ? `rgba(${glowColor}, 0.08)` : `rgb(var(--background-rgb)/0.35)`,
         borderColor: hovered ? `rgba(${glowColor}, 0.45)` : `rgb(var(--border-rgb)/0.45)`,
         boxShadow: hovered ? `0 4px 14px rgba(${glowColor}, 0.06)` : 'none'
@@ -139,9 +152,15 @@ function PreviewItem({
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Render course category card.
+ * Adapt to JLPT level or general module.
+ */
 export function GeneralCategoryCard({ cat, variants, isFeatured = false }: GeneralCategoryCardProps) {
   const [isHovered, setIsHovered] = React.useState(false);
 
+  // Find matching JLPT level in title. Fallback to general.
   const jlptLevelKey = Object.keys(colorMap).find(key => cat.title.toUpperCase().includes(key));
   const theme = colorMap[jlptLevelKey || "general"];
   const isJlpt = cat.type === "jlpt" || !!jlptLevelKey;
@@ -171,6 +190,7 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
         onMouseLeave={() => setIsHovered(false)}
         className="flex flex-col h-full rounded-2xl md:rounded-3xl overflow-hidden group transition-all duration-300 glass relative"
         style={{
+          // Dynamic border and shadow based on hover and featured state
           borderColor: isHovered ? `rgba(${theme.glowColor}, 0.4)` : `rgb(var(--border-rgb)/0.75)`,
           boxShadow: isHovered
             ? `0 20px 40px rgba(${theme.glowColor}, 0.08), 0 0 25px rgba(${theme.glowColor}, 0.03)`
@@ -256,6 +276,7 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
               href={ROUTES.COURSES.CATEGORY(cat.slug)}
               className="inline-flex items-center gap-2.5 sm:gap-3 px-5 py-3 sm:px-7 sm:py-4 rounded-xl font-black uppercase tracking-widest text-[9px] sm:text-[10px] transition-all duration-200 active:scale-95 group/btn border shadow-sm"
               style={{
+                // Dynamic button background and text color based on hover state
                 backgroundColor: isHovered ? `rgb(${theme.glowColor})` : 'hsl(var(--foreground))',
                 color: isHovered ? 'hsl(var(--primary-foreground))' : 'hsl(var(--background))',
                 borderColor: isHovered ? `rgb(${theme.glowColor})` : 'transparent',

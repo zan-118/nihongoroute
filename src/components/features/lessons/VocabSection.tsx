@@ -18,6 +18,10 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+
+/**
+ * Vocab item data structure. Hold word, reading, meaning, grammar info.
+ */
 export interface VocabLessonItem {
   _id?: string;
   id?: string;
@@ -33,6 +37,9 @@ export interface VocabLessonItem {
   audio_url?: string;
 }
 
+/**
+ * Props for VocabSection component. Contain list of vocab items.
+ */
 interface VocabSectionProps {
   vocabList: VocabLessonItem[];
 }
@@ -40,12 +47,19 @@ interface VocabSectionProps {
 // ======================
 // KARTU KOSAKATA INDIVIDU (STATEFUL)
 // ======================
+
+/**
+ * Card component. Show single vocab item. Handle meaning expansion, audio play, SRS add.
+ */
 const VocabCard: React.FC<{ v: VocabLessonItem; idx: number }> = ({ v, idx }) => {
+  // Track expansion state for long meaning text.
   const [isExpanded, setIsExpanded] = useState(false);
+  // Fallback meaning if empty.
   const meaning = v.meaning || v.meaning_id || "-";
   const maxLength = 80;
   const isLong = meaning.length > maxLength;
 
+  // Truncate long meaning text. Prevent layout break.
   const displayedMeaning = isLong && !isExpanded 
     ? meaning.slice(0, maxLength) + "..." 
     : meaning;
@@ -60,6 +74,7 @@ const VocabCard: React.FC<{ v: VocabLessonItem; idx: number }> = ({ v, idx }) =>
             className="text-[10px] font-bold text-primary uppercase tracking-widest px-2 py-0.5 rounded"
             style={{ backgroundColor: "rgb(var(--primary-rgb)/0.1)" }}
           >
+            {/* Convert furigana to romaji if romaji missing. */}
             {v.romaji || (v.furigana ? wanakana.toRomaji(v.furigana) : "-")}
           </span>
           {v.hinshi && (
@@ -137,11 +152,17 @@ const VocabCard: React.FC<{ v: VocabLessonItem; idx: number }> = ({ v, idx }) =>
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Section component. Render list of vocab cards. Handle pagination if item count exceed 10.
+ */
 export const VocabSection: React.FC<VocabSectionProps> = ({ vocabList }) => {
+  // Track visibility state for items beyond index 10.
   const [showAll, setShowAll] = useState(false);
   if (!vocabList || vocabList.length === 0) return null;
 
   const hasMoreThanTen = vocabList.length > 10;
+  // Limit initial view to 10 items. Improve render speed.
   const visibleVocabs = showAll ? vocabList : vocabList.slice(0, 10);
 
   return (

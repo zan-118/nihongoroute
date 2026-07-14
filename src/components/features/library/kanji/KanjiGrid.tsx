@@ -16,17 +16,32 @@ import { Card } from "@/components/ui/card";
 // ==========================================
 // ANTARMUKA & TIPE DATA
 // ==========================================
+
+/**
+ * Kanji item data structure.
+ */
 export interface KanjiGridItem {
+  /** Unique identifier from database. */
   id?: string;
+  /** Alternative MongoDB identifier. */
   _id?: string;
+  /** Kanji character symbol. */
   character: string;
+  /** JLPT level designation. */
   jlpt?: string;
+  /** English meaning translation. */
   meaning?: string;
+  /** URL slug for routing. */
   slug?: string;
 }
 
+/**
+ * Props for KanjiGrid component.
+ */
 interface KanjiGridProps {
+  /** Array of kanji items to display. */
   kanjis: KanjiGridItem[];
+  /** Loading state flag. */
   isFetching: boolean;
 }
 
@@ -34,9 +49,11 @@ interface KanjiGridProps {
 // KOMPONEN UTAMA: KanjiGrid
 // ==========================================
 /**
- * Komponen bento grid interaktif untuk menampilkan karakter Kanji.
+ * Interactive bento grid component displaying kanji characters.
+ * Handles loading overlays and empty search states.
  * 
- * @param {KanjiGridProps} props Properti komponen grid kanji.
+ * @param props Component properties.
+ * @returns React element.
  */
 export function KanjiGrid({ kanjis, isFetching }: KanjiGridProps) {
   return (
@@ -55,10 +72,12 @@ export function KanjiGrid({ kanjis, isFetching }: KanjiGridProps) {
             key={kanji.id || kanji._id}
             className="transform hover:-translate-y-1 transition-all duration-300"
             style={{
+              // Optimize rendering performance for offscreen items.
               contentVisibility: "auto",
               containIntrinsicSize: "0 180px",
             }}
           >
+            {/* Resolve route using slug or fallback ID. */}
             <Link href={`/library/kanji/${kanji.slug || kanji.id || kanji._id}`}>
               <Card className="group relative aspect-square flex flex-col items-center justify-center p-6 bg-card/45 border border-border/80 hover:border-[rgb(var(--primary-rgb)/0.45)] transition-all duration-300 rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer glass shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)]">
                 {/* Efek Pendar Latar Belakang (Neon Glow Effect) */}
@@ -90,6 +109,7 @@ export function KanjiGrid({ kanjis, isFetching }: KanjiGridProps) {
       </div>
 
       {/* Tampilan Keadaan Kosong (Empty State) */}
+      {/* Show empty state only when loading finished and no data. */}
       {kanjis.length === 0 && !isFetching && (
         <div className="flex flex-col items-center justify-center py-24 text-center">
           <div className="size-20 rounded-full bg-muted/20 flex items-center justify-center mb-6">

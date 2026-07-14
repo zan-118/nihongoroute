@@ -20,32 +20,51 @@ import { MnemonicEditor } from "@/components/features/srs/mnemonic/MnemonicEdito
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Props for FlashcardBack component.
+ */
 interface FlashcardBackProps {
+  /** Unique identifier for card item */
   id: string;
+  /** Type of document (e.g., kanji, vocab, sentence) */
   docType?: string;
+  /** Slug for routing */
   slug?: string;
+  /** Japanese word text */
   word: string;
+  /** Meaning translation */
   meaning: string;
+  /** Furigana reading */
   furigana?: string | null;
+  /** Romaji reading */
   romaji?: string | null;
+  /** Theme styling context */
   themeContext: FlashcardThemeContext;
+  /** Click handler for drawing canvas */
   onDrawClick: (e: React.MouseEvent) => void;
+  /** SRS state data */
   srsState?: {
     interval: number;
     repetition: number;
     easeFactor: number;
     nextReview: number;
   };
+  /** Mnemonic text */
   mnemonic?: string | null;
+  /** Pitch accent pattern */
   pitchAccent?: string | null;
+  /** Part of speech */
   hinshi?: string | null;
+  /** Example sentences */
   examples?: Array<{
     japanese?: string;
     indonesian?: string;
     jp?: string;
     meaning?: string;
   }> | null;
+  /** Kanji details object */
   kanjiDetails?: unknown;
+  /** Related kanji array */
   relatedKanji?: unknown[] | null;
 }
 
@@ -53,7 +72,7 @@ interface FlashcardBackProps {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen sisi belakang kartu flashcard.
+ * Back side of flashcard. Shows meaning, reading, examples, SRS state.
  */
 export function FlashcardBack({
   id,
@@ -76,10 +95,18 @@ export function FlashcardBack({
   // ==========================================
   const { isKanji, themeColor, themeBorder, themeShadow } = themeContext;
 
+  // Check if furigana contains only romaji characters.
   const isRomaji = furigana && /^[a-zA-Z\s.,?!'-]+$/.test(furigana);
+  
+  // Resolve romaji representation.
   const displayRomaji = romaji || (isRomaji ? furigana : (furigana ? wanakana.toRomaji(furigana) : ""));
+  
+  // Convert romaji to hiragana if needed.
   const hiraReading = isRomaji ? wanakana.toHiragana(furigana || "") : (furigana || "");
 
+  /**
+   * Map SRS interval to memory level label and color.
+   */
   const getMemoryLevel = (interval: number) => {
     if (interval <= 1) return { label: "Baru", color: "text-primary bg-primary/10" };
     if (interval <= 3) return { label: "Belajar", color: "text-primary bg-primary/10" };
@@ -88,6 +115,7 @@ export function FlashcardBack({
     return { label: "Master", color: "text-destructive bg-destructive/10" };
   };
 
+  // Get current memory level.
   const memory = srsState ? getMemoryLevel(srsState.interval) : { label: "Baru", color: "text-primary bg-primary/10" };
 
   // ==========================================
@@ -129,6 +157,7 @@ export function FlashcardBack({
               className={`${isKanji ? "text-5xl md:text-7xl" : docType === "sentence" ? "text-lg md:text-2xl px-4 text-center leading-relaxed font-semibold" : word.length > 5 ? "text-2xl md:text-5xl" : "text-4xl md:text-7xl"} font-black text-foreground tracking-tight font-japanese leading-none drop-shadow-sm`}
             >
               {isKanji ? word : docType === "sentence" ? word : (
+                // Split word into kanji-furigana pairs.
                 splitFurigana(word, hiraReading).map((chunk, i) => (
                   chunk.furi ? (
                     <ruby key={`${chunk.text}-${i}`} className="flex flex-col items-center">

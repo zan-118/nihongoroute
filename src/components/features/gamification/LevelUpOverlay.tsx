@@ -22,7 +22,16 @@ import { useEffect } from "react";
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * LevelUpOverlay component.
+ * Renders full-screen celebration overlay with confetti when user levels up.
+ * 
+ * @param props - Component props.
+ * @param props.level - Current user level.
+ */
 export default function LevelUpOverlay({ level }: { level: number }) {
+  // Hook manages visibility state based on level changes
   const { show, setShow } = useLevelUpOverlay(level);
 
   useEffect(() => {
@@ -31,8 +40,10 @@ export default function LevelUpOverlay({ level }: { level: number }) {
       const animationEnd = Date.now() + duration;
       const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 200 };
 
+      // Helper generates random number in range
       const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
+      // Interval fires confetti bursts from sides
       const interval: NodeJS.Timeout = setInterval(() => {
         const timeLeft = animationEnd - Date.now();
 
@@ -42,7 +53,9 @@ export default function LevelUpOverlay({ level }: { level: number }) {
 
         const particleCount = 50 * (timeLeft / duration);
         
+        // Left side burst
         confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+        // Right side burst
         confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
       }, 250);
 
@@ -67,13 +80,16 @@ export default function LevelUpOverlay({ level }: { level: number }) {
             className="w-full max-w-lg h-auto max-h-[90vh] flex items-center justify-center"
           >
             <Card className="text-center py-6 px-4 md:py-10 md:px-12 bg-background rounded-2xl md:rounded-3xl border border-primary/30 shadow-2xl neo-card relative overflow-hidden w-full h-auto flex flex-col items-center">
+              {/* Grid background pattern */}
               <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--primary-rgb)/0.03)_1px,transparent_1px)] bg-[size:100%_4px] pointer-events-none opacity-20 dark:opacity-40" />
               
+              {/* Radial glow effects */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[500px] bg-primary/10 blur-[120px] rounded-full animate-bloom pointer-events-none" />
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[300px] bg-primary/10 blur-[100px] rounded-full animate-pulse pointer-events-none" />
               
               <div className="absolute -top-16 -left-16 w-48 h-48 md:w-64 md:h-64 bg-primary/10 blur-[80px] md:blur-[100px] pointer-events-none" />
 
+              {/* Floating trophy container */}
               <m.div
                 animate={{ 
                   scale: [1, 1.05, 1],
@@ -97,6 +113,7 @@ export default function LevelUpOverlay({ level }: { level: number }) {
                 LEVEL <span className="text-primary drop-shadow-sm dark:drop-shadow-[0_0_20px_rgb(var(--primary-rgb)/0.4)]">{level}</span>
               </h1>
               
+              {/* Level stats indicators */}
               <div className="flex items-center justify-center gap-4 md:gap-8 mb-6 md:mb-12">
                  <div className="flex flex-col items-center">
                     <ShieldCheck size={20} className="text-success mb-2 md:w-6 md:h-6" />
@@ -113,6 +130,7 @@ export default function LevelUpOverlay({ level }: { level: number }) {
                 &quot;Selamat! Kemampuan bahasamu makin jago. Terus semangat ya, perjalanan masih panjang!&quot;
               </p>
 
+              {/* Action button to dismiss overlay */}
               <Button
                 onClick={() => setShow(false)}
                 className="h-auto w-full sm:w-auto px-8 py-4 md:px-12 md:py-5 bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-xl md:rounded-2xl text-xs md:text-xs uppercase tracking-widest transition-all shadow-xl hover:scale-105 active:scale-95 border-none group relative overflow-hidden"
@@ -123,6 +141,7 @@ export default function LevelUpOverlay({ level }: { level: number }) {
                 <div className="absolute inset-0 bg-background/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
               </Button>
               
+              {/* Decorative background star */}
               <div className="absolute -bottom-16 -right-16 md:-bottom-20 md:-right-20 opacity-5 pointer-events-none scale-125 md:scale-150 rotate-12">
                 <Star size={200} fill="currentColor" className="text-foreground md:w-[300px] md:h-[300px]" />
               </div>

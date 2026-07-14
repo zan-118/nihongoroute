@@ -19,6 +19,13 @@ import { useSRSStore } from "@/store/useSRSStore";
 // ======================
 // ANTARMUKA & TIPE
 // ======================
+
+/**
+ * Properties for MnemonicEditor.
+ * @property wordId - Target word identifier.
+ * @property className - Optional CSS class.
+ * @property compact - Enable minimal layout.
+ */
 interface MnemonicEditorProps {
   wordId: string;
   className?: string;
@@ -27,33 +34,31 @@ interface MnemonicEditorProps {
 }
 
 /**
- * Komponen: MnemonicEditor
+ * Interactive editor for custom mnemonics.
+ * Syncs with local SRS store. Prevents hydration mismatch.
  * 
- * Antarmuka editor interaktif untuk membuat, memperbarui, atau menghapus "jembatan keledai" (mnemonik)
- * kustom milik pengguna untuk membantu mengingat kosakata bahasa Jepang.
- * Terintegrasi langsung dengan `useSRSStore` untuk pembaruan instan (luring-pertama) dan 
- * penanganan inisialisasi state aman menggunakan penundaan hidrasi peramban (isClient).
- * 
- * @param {Object} props - Properti komponen
- * @param {string} props.wordId - ID kosakata terkait yang ingin ditambahkan mnemonik kustom
- * @param {string} [props.className] - Kelas CSS opsional untuk kustomisasi gaya pembungkus
- * @param {boolean} [props.compact=false] - Jika true, render dalam mode minimal ringkas (tampilan kartu flashcard)
+ * @param props - Component properties.
+ * @returns React element or null.
  */
 // ======================
 // EKSEKUSI UTAMA
 // ======================
 export function MnemonicEditor({ wordId, className, compact = false }: MnemonicEditorProps) {
+  // Get SRS state and update action.
   const srs = useSRSStore((s) => s.srs);
   const updateCustomMnemonic = useSRSStore((s) => s.updateCustomMnemonic);
 
+  // Local UI states.
   const [isClient, setIsClient] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [draft, setDraft] = useState("");
 
   // Derived state from store (luring-pertama)
+  // Read saved mnemonic. Avoid hydration mismatch.
   const savedMnemonic = isClient ? (srs[wordId]?.customMnemonic ?? "") : "";
 
+  // Set client flag after mount. Avoid layout shift.
   useEffect(() => {
     requestAnimationFrame(() => setIsClient(true));
   }, []);
@@ -65,6 +70,9 @@ export function MnemonicEditor({ wordId, className, compact = false }: MnemonicE
     }
   }, [isClient, wordId, srs]);
 
+  /**
+   * Save draft to store. Trigger success indicator.
+   */
   const handleSave = useCallback(() => {
     const trimmed = draft.trim();
     updateCustomMnemonic(wordId, trimmed);
@@ -73,6 +81,9 @@ export function MnemonicEditor({ wordId, className, compact = false }: MnemonicE
     setTimeout(() => setIsSaved(false), 2000);
   }, [draft, wordId, updateCustomMnemonic]);
 
+  /**
+   * Handle keyboard shortcuts. Ctrl+Enter saves. Escape cancels.
+   */
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
@@ -87,6 +98,7 @@ export function MnemonicEditor({ wordId, className, compact = false }: MnemonicE
     [handleSave, savedMnemonic]
   );
 
+  // Prevent SSR mismatch.
   if (!isClient) return null;
 
   if (compact) {

@@ -17,29 +17,49 @@ import { toast } from "sonner";
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * ForgotPasswordClient component.
+ * Renders password recovery form.
+ * Sends reset link to user email.
+ */
 export default function ForgotPasswordClient() {
+  /** User email input state. */
   const [email, setEmail] = useState("");
+  /** Loading state during API request. */
   const [loading, setLoading] = useState(false);
+  /** Success state tracker. */
   const [emailSent, setEmailSent] = useState(false);
   
+  /** Supabase client instance. */
   const supabase = createClient();
 
+  /**
+   * Handles password reset request.
+   * Sends reset link to user email.
+   * @param e Form event.
+   */
   const handleResetPassword = async (e: React.FormEvent) => {
+    // Prevent default form submission.
     e.preventDefault();
     setLoading(true);
 
     try {
+      // Request reset link from Supabase. Redirect to update-password page.
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/update-password`,
       });
       
+      // Throw error if request fails.
       if (error) throw error;
       
+      // Set success state and notify user.
       setEmailSent(true);
       toast.success("Link reset udah dikirim!", {
         description: "Cek inbox (atau folder spam) emailmu ya buat reset kata sandi.",
       });
     } catch (error: unknown) {
+      // Log error and notify user.
       console.error("Gagal mengirim email pemulihan:", error);
       const message = error instanceof Error ? error.message : "Terjadi kesalahan tidak dikenal";
       toast.error("Waduh, gagal kirim...", {

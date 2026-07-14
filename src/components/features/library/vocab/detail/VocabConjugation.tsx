@@ -12,9 +12,9 @@
 import { Card } from "@/components/ui/card";
 import { ArrowRightLeft } from "lucide-react";
 
-// ==========================================
-// LABEL DAN PRESET KONJUGASI JEPANG
-// ==========================================
+/**
+ * Map database conjugation keys to Indonesian/English labels.
+ */
 const CONJUGATION_LABELS: Record<string, string> = {
   // Kata Kerja (Verb) / Umum
   te: "Bentuk-Te / Te-Form",
@@ -60,12 +60,15 @@ const CONJUGATION_LABELS: Record<string, string> = {
   dictionary: "Bentuk Kamus / Dictionary"
 };
 
-// ==========================================
-// ANTARMUKA & TIPE DATA
-// ==========================================
+/**
+ * Props for VocabConjugation component.
+ */
 interface VocabConjugationProps {
+  /** Whether vocabulary is adjective. */
   isAdjective: boolean;
+  /** Whether vocabulary is verb. */
   isVerb?: boolean;
+  /** Raw conjugation data from database. */
   conjugations?: Record<string, string> | null;
 }
 
@@ -73,20 +76,22 @@ interface VocabConjugationProps {
 // KOMPONEN UTAMA: VocabConjugation
 // ==========================================
 /**
- * Komponen panel penampil daftar konjugasi kata kerja/sifat secara interaktif.
+ * Render conjugation table for Japanese verbs or adjectives.
  * 
- * @param {VocabConjugationProps} props Properti komponen konjugasi kata.
+ * @param props Component properties.
+ * @returns Conjugation card element or null.
  */
 export function VocabConjugation({ 
   isAdjective, 
   isVerb = false,
   conjugations
 }: VocabConjugationProps) {
+  // Exit early if word type has no conjugations.
   if (!isAdjective && !isVerb) return null;
 
   let rawConjugations = typeof conjugations === "object" && conjugations !== null ? conjugations : {};
   
-  // Ekstraksi data dari nested JSONB display_forms, forms, atau conjugations jika terdeteksi
+  // Extract nested conjugation data from known database structures.
   if (rawConjugations.display_forms && typeof rawConjugations.display_forms === "object") {
     rawConjugations = rawConjugations.display_forms as Record<string, string>;
   } else if (rawConjugations.forms && typeof rawConjugations.forms === "object") {
@@ -95,7 +100,7 @@ export function VocabConjugation({
     rawConjugations = rawConjugations.conjugations as Record<string, string>;
   }
   
-  // Pengurutan urutan konjugasi secara logis demi kenyamanan belajar pembelajar
+  // Define display order for logical learning flow.
   const orderedKeys = [
     "dictionary", "present", "politePresent", "polite_nonpast", "masu",
     "negative", "politeNegative", "polite_negative", "masen", "nai", "nai_form",
@@ -105,6 +110,7 @@ export function VocabConjugation({
     "potential", "passive", "causative", "causativePassive", "volitional", "imperative"
   ];
 
+  // Map raw keys to labels and filter out empty values.
   const renderedConjugations = orderedKeys
     .map(key => ({
       key,
@@ -113,7 +119,7 @@ export function VocabConjugation({
     }))
     .filter(item => item.value && typeof item.value === "string");
 
-  // Sisipkan kunci ekstra dari database jika ada yang belum terpetakan dalam orderedKeys
+  // Append unmapped database keys to end of list.
   Object.entries(rawConjugations).forEach(([key, val]) => {
     if (val && typeof val === "string" && !orderedKeys.includes(key)) {
       renderedConjugations.push({
@@ -124,6 +130,7 @@ export function VocabConjugation({
     }
   });
 
+  // Hide component if no valid conjugations exist.
   if (renderedConjugations.length === 0) return null;
 
   return (
@@ -147,4 +154,3 @@ export function VocabConjugation({
     </Card>
   );
 }
-

@@ -13,7 +13,11 @@ import Link from "next/link";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Properties for KanaHeader component.
+ */
 interface KanaHeaderProps {
+  /** Tailwind text color class applied to highlighted text and icons. */
   themeColor: string;
 }
 
@@ -21,7 +25,11 @@ interface KanaHeaderProps {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen header modul kana.
+ * Header component for Kana Master page.
+ * Renders navigation link, page title, description, and layout indicator.
+ * 
+ * @param props - Component properties.
+ * @param props.themeColor - Tailwind class for text color styling.
  */
 export function KanaHeader({ themeColor }: KanaHeaderProps) {
   // ==========================================
@@ -29,6 +37,7 @@ export function KanaHeader({ themeColor }: KanaHeaderProps) {
   // ==========================================
   return (
     <header className="mb-8">
+      {/* Navigation bar containing back button */}
       <nav className="mb-4">
         <Button
           variant="outline"
@@ -41,6 +50,7 @@ export function KanaHeader({ themeColor }: KanaHeaderProps) {
         </Button>
       </nav>
 
+      {/* Header content area with responsive layout */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
           <h1 className="text-4xl md:text-5xl text-foreground uppercase tracking-tight">
@@ -51,6 +61,7 @@ export function KanaHeader({ themeColor }: KanaHeaderProps) {
             Katakana di sini sebelum mulai belajar kalimat dan tata bahasa.
           </p>
         </div>
+        {/* Layout indicator visible on medium screens and above */}
         <div
           className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-muted border border-border text-xs font-bold uppercase tracking-widest ${themeColor}`}
         >

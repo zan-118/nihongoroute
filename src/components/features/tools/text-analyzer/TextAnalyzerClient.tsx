@@ -21,9 +21,15 @@ import NextActionPanel from "@/components/features/ecosystem/NextActionPanel";
 import { useUIStore } from "@/store/useUIStore";
 import { cn } from "@/lib/utils";
 
+/**
+ * Default sample text for analyzer.
+ */
 const SAMPLE_TEXT =
   "昨日、友達と図書館で日本語の本を読みました。難しい言葉もありましたが、とても面白かったです。";
 
+/**
+ * Structure for text analysis results. Holds stats and matched items.
+ */
 interface AnalyzerState {
   stats: {
     charCount: number;
@@ -40,12 +46,16 @@ interface AnalyzerState {
   };
 }
 
+/**
+ * Render single search item result. Show title, badge, description, and action buttons.
+ */
 function ResultRow({ item }: { item: ToolSearchItem }) {
   const Icon = item.icon;
 
   return (
     <div className="group flex flex-col gap-3 rounded-lg border border-border bg-background/40 p-4 transition-all hover:border-primary/35 hover:bg-muted/20 sm:flex-row sm:items-center">
       <div className="flex min-w-0 flex-1 items-start gap-3">
+        {/* Category icon with dynamic color styling */}
         <div
           className={cn(
             "flex size-11 shrink-0 items-center justify-center rounded-xl border",
@@ -94,6 +104,9 @@ function ResultRow({ item }: { item: ToolSearchItem }) {
   );
 }
 
+/**
+ * Container for list of analysis results. Group by category.
+ */
 function ResultPanel({
   items,
   title,
@@ -133,12 +146,18 @@ function ResultPanel({
   );
 }
 
+/**
+ * Props for TextAnalyzerClient component.
+ */
 interface TextAnalyzerClientProps {
   initialText?: string;
   initialSourceTitle?: string;
   initialSourceHref?: string;
 }
 
+/**
+ * Main client component for Japanese text analysis. Parse text, show stats, list vocabulary, grammar, and kanji.
+ */
 export default function TextAnalyzerClient({
   initialText,
   initialSourceTitle,
@@ -156,6 +175,9 @@ export default function TextAnalyzerClient({
     [trimmedText]
   );
 
+  /**
+   * Trigger text analysis. Call API, update state, record event.
+   */
   const handleAnalyze = () => {
     if (!trimmedText) return;
     setError("");
@@ -163,6 +185,8 @@ export default function TextAnalyzerClient({
       try {
         const nextAnalysis = await analyzeTextWithDictionary(trimmedText);
         setAnalysis(nextAnalysis);
+        
+        // Record event for user progress tracking
         recordLearningEvent({
           type: "text_analyzed",
           source: {
@@ -190,6 +214,7 @@ export default function TextAnalyzerClient({
     });
   };
 
+  // Run analysis on initial text load if provided
   useEffect(() => {
     if (!initialText?.trim()) return;
     startTransition(async () => {

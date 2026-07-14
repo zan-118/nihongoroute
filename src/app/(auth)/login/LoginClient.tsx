@@ -16,7 +16,13 @@ import { useAuth } from "@/components/features/user/useAuth";
 // ======================
 // KOMPONEN INTERNAL
 // ======================
+
+/**
+ * LoginContent component.
+ * Render auth form, social login, guest access UI.
+ */
 function LoginContent() {
+  // Get auth state, handlers from hook.
   const {
     loading,
     isRegistering,
@@ -41,7 +47,7 @@ function LoginContent() {
         <div className="size-[400px] bg-secondary/15 rounded-full blur-[100px] opacity-35 absolute -bottom-10 -right-10" />
       </div>
 
-      <div className="w-full max-w-md bg-card/85 border border-border/80 rounded-xl p-8 z-10 shadow-[0_15px_50px_rgba(var(--foreground-rgb),0.3)] hover:shadow-[0_20px_60px_rgb(var(--primary-rgb)/0.1)] transition-all duration-500 relative glass">
+      <div className="w-full max-w-md bg-card/85 border border-border/80 rounded-xl p-8 z-10 shadow-[0_15px_50px_rgba(var(--foreground-rgb),0.3)] hover:shadow-[0_20px_60px_rgb(var(--primary-rgb)/0.15)] transition-all duration-500 relative glass">
         {/* Kilau Sudut Dekoratif */}
         <div className="absolute top-0 right-0 size-24 bg-gradient-to-br from-primary/10 to-transparent blur-md rounded-tr-[2rem] pointer-events-none" />
         <div className="absolute bottom-0 left-0 size-24 bg-gradient-to-tl from-secondary/10 to-transparent blur-md rounded-bl-[2rem] pointer-events-none" />
@@ -73,6 +79,7 @@ function LoginContent() {
         {/* Formulir Surel & Kata Sandi */}
         <form onSubmit={handleEmailAuth} className="space-y-4 mb-6">
           <div className="space-y-3">
+            {/* Show name input if register mode active. */}
             {isRegistering && (
               <div className="relative animate-in fade-in slide-in-from-top-2 duration-300">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
@@ -154,6 +161,7 @@ function LoginContent() {
         </div>
 
         <div className="space-y-3">
+          {/* Start Google OAuth flow. */}
           <button
             type="button"
             onClick={() => handleSocialLogin("google")}
@@ -172,6 +180,7 @@ function LoginContent() {
             <ChevronRight size={16} className="text-background/80" />
           </button>
 
+          {/* Start guest session. */}
           <button
             type="button"
             onClick={handleAnonymousLogin}
@@ -192,6 +201,10 @@ function LoginContent() {
   );
 }
 
+/**
+ * LoginClient component.
+ * Wrap LoginContent in Suspense boundary.
+ */
 export default function LoginClient() {
   return (
     <Suspense fallback={

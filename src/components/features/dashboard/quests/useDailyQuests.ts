@@ -18,16 +18,10 @@ import { DAILY_QUESTS_POOL, getTodayQuests } from "@/lib/constants/gamification"
 // HOOK UTAMA: useDailyQuests
 // ==========================================
 /**
- * Hook kustom untuk memantau kemajuan serta mengeksekusi klaim hadiah misi harian.
+ * Manage daily quest progress and reward claims.
+ * Connects user stats to offline-first quest system.
  * 
- * @returns {Object} State dan aksi interaksi misi harian pengguna:
- *  - `todayQuests`: Daftar 3 misi harian yang dipilih secara seeded random untuk hari ini.
- *  - `claimedQuests`: Rekaman misi harian yang sudah diklaim pada hari ini.
- *  - `justClaimed`: ID misi yang baru saja diklaim (berguna untuk efek visual/animasi).
- *  - `handleClaim`: Fungsi untuk mengeksekusi klaim imbalan misi harian.
- *  - `getCurrentProgress`: Fungsi untuk mendapatkan progres terkini berdasarkan tipe misi.
- * 
- * @stores Mengakses `useUserStore` secara atomik untuk mengambil data kemajuan dan aksi mutasi lokal.
+ * @returns Quest state, claim handler, and progress calculator.
  */
 export function useDailyQuests() {
   const xp = useUserStore(s => s.xp);
@@ -39,12 +33,12 @@ export function useDailyQuests() {
 
   const today = getTodayDateString();
 
-  // Memilih 3 misi harian secara acak dan deterministik untuk hari ini
+  // Seeded random selection ensures same quests for date.
   const todayQuests = useMemo(() => {
     return getTodayQuests(DAILY_QUESTS_POOL, today);
   }, [today]);
   
-  // Memetakan daftar misi harian yang sudah diklaim pengguna pada hari aktif ini
+  // Map claimed quest IDs to boolean lookup table for fast checks.
   const claimedQuests = useMemo(() => {
     if (inventory.claimedQuests?.date === today) {
       const record: Record<string, boolean> = {};
@@ -54,26 +48,39 @@ export function useDailyQuests() {
     return {};
   }, [inventory.claimedQuests, today]);
 
-  // Menangani proses klaim misi harian dan memberikan imbalan XP
+  /**
+   * Claim quest reward and update user XP.
+   * 
+   * @param quest Quest to claim.
+   */
   const handleClaim = (quest: Quest) => {
+    // Prevent double claim.
     if (claimedQuests[quest.id]) return;
 
+    // Persist claim state and award XP.
     claimQuest(quest.id, today, quest.rewardXP);
 
     toast.success("Misi Selesai!", {
       description: `Kamu mendapatkan +${quest.rewardXP} XP. Terus semangat belajarnya!`,
     });
 
+    // Trigger animation state. Reset after duration.
     setJustClaimed(quest.id);
     setTimeout(() => setJustClaimed(null), 2000);
   };
 
-  // Mengambil progres aktual pengguna berdasarkan tipe metrik misi harian
+  /**
+   * Calculate progress based on quest metric type.
+   * 
+   * @param type Quest type identifier.
+   * @returns Current progress value.
+   */
   const getCurrentProgress = (type: Quest["type"]) => {
     switch (type) {
       case "review":
         return todayReviewCount || 0;
       case "xp":
+        // Use modulo to track XP gained in current cycle.
         return xp % 1000;
       case "streak":
         return streak || 0;
@@ -90,4 +97,3 @@ export function useDailyQuests() {
     getCurrentProgress,
   };
 }
-

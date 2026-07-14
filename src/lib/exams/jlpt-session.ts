@@ -9,35 +9,66 @@ import {
 } from "@/lib/exams/supabase-adapter";
 import type { Json, Tables, TablesInsert } from "@/types/supabase.generated";
 
+/**
+ * Storage bucket name for exam assets.
+ */
 export const EXAM_ASSETS_BUCKET = "exam-assets";
+
+/**
+ * Supported JLPT levels.
+ */
 export const JLPT_LEVELS = ["N5", "N4", "N3", "N2", "N1"] as const;
 
+/**
+ * JLPT level type.
+ */
 export type JlptLevel = (typeof JLPT_LEVELS)[number];
 
+/**
+ * Resolves storage object path to public URL.
+ */
 export type AssetUrlResolver = (objectPath: string) => string;
 
+/**
+ * Database row for JLPT exam template with optional category.
+ */
 export type JlptExamTemplateRow = Tables<"jlpt_exam_templates"> & {
   category?: { slug: string | null } | { slug: string | null }[] | null;
 };
 
+/**
+ * Database row for JLPT passage.
+ */
 export type JlptPassageRow = Tables<"jlpt_passages">;
 
+/**
+ * Database row for JLPT question with optional passage.
+ */
 export type JlptQuestionRow = Tables<"jlpt_questions"> & {
   passage?: JlptPassageRow | JlptPassageRow[] | null;
 };
 
+/**
+ * Template question row with position and section order.
+ */
 export interface JlptTemplateQuestionRow {
   position: number;
   section_order: number;
   question: JlptQuestionRow | JlptQuestionRow[] | null;
 }
 
+/**
+ * User answer record for a question.
+ */
 export interface JlptAnswerRow {
   questionId: string;
   selectedChoiceIndex: number | null;
   isCorrect: boolean;
 }
 
+/**
+ * Score breakdown for a single exam section.
+ */
 export interface JlptSectionScore {
   total: number;
   correct: number;
@@ -46,6 +77,9 @@ export interface JlptSectionScore {
   passed: boolean;
 }
 
+/**
+ * Candidate question for SRS system.
+ */
 export interface JlptSrsCandidate {
   questionId: string;
   sourceType: string;
@@ -53,8 +87,14 @@ export interface JlptSrsCandidate {
   sourceReference?: string | null;
 }
 
+/**
+ * Database insert row for user SRS.
+ */
 export type JlptSrsUpsertRow = TablesInsert<"user_srs">;
 
+/**
+ * Score breakdown for exam submission.
+ */
 export interface JlptExamSubmissionScore {
   totalQuestions: number;
   correctCount: number;
@@ -70,6 +110,9 @@ export interface JlptExamSubmissionScore {
   srsCandidates: JlptSrsCandidate[];
 }
 
+/**
+ * Final exam submission result.
+ */
 export interface ExamSubmitResult
   extends Omit<JlptExamSubmissionScore, "answerRows"> {
   sessionId: string;
@@ -77,6 +120,9 @@ export interface ExamSubmitResult
   completedAt: string;
 }
 
+/**
+ * Ordered list of JLPT exam sections.
+ */
 export const JLPT_EXAM_SECTIONS: SupabaseExamSection[] = [
   "vocabulary",
   "grammar",
@@ -84,11 +130,17 @@ export const JLPT_EXAM_SECTIONS: SupabaseExamSection[] = [
   "listening",
 ];
 
+/**
+ * Quota request for a section.
+ */
 export interface JlptQuotaRequest {
   section: SupabaseExamSection;
   total: number;
 }
 
+/**
+ * Quota configuration map.
+ */
 export type JlptQuotaConfig = Partial<
   Record<SupabaseExamSection, { total?: unknown }>
 >;
@@ -107,23 +159,38 @@ const PREFIXED_SRS_SOURCE_TYPES = new Set([
   "custom",
 ]);
 
+/**
+ * Check if value is record object.
+ */
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+/**
+ * Get first item if array, else return value.
+ */
 function firstOrNull<T>(value: T | T[] | null | undefined): T | null {
   if (Array.isArray(value)) return value[0] ?? null;
   return value ?? null;
 }
 
+/**
+ * Check if string is valid exam section.
+ */
 function isExamSection(value: string): value is SupabaseExamSection {
   return JLPT_EXAM_SECTIONS.includes(value as SupabaseExamSection);
 }
 
+/**
+ * Check if URL is absolute or local path.
+ */
 function isAbsoluteOrAppAssetUrl(value: string) {
   return /^(https?:|data:|blob:)/i.test(value) || value.startsWith("/");
 }
 
+/**
+ * Normalize string to JLPT level.
+ */
 export function normalizeJlptLevel(value?: string | null): JlptLevel | null {
   if (!value) return null;
   const normalized = value.trim().toUpperCase();
@@ -132,6 +199,9 @@ export function normalizeJlptLevel(value?: string | null): JlptLevel | null {
     : null;
 }
 
+/**
+ * Parse quota configuration from JSON.
+ */
 export function getJlptQuotaRequests(
   value: Json,
   templateSlug = "template"
@@ -171,6 +241,7 @@ export function getJlptQuotaRequests(
     );
   }
 
+  // Sort requests by standard section order
   return requests.sort(
     (a, b) =>
       JLPT_EXAM_SECTIONS.indexOf(a.section) -
@@ -178,6 +249,9 @@ export function getJlptQuotaRequests(
   );
 }
 
+/**
+ * Shuffle array using Fisher-Yates algorithm.
+ */
 function shuffleRows<T>(rows: T[]) {
   const copy = [...rows];
   for (let index = copy.length - 1; index > 0; index -= 1) {
@@ -187,6 +261,9 @@ function shuffleRows<T>(rows: T[]) {
   return copy;
 }
 
+/**
+ * Build question rows randomly based on quota.
+ */
 export function buildRandomTemplateQuestionRows(input: {
   quotaRequests: JlptQuotaRequest[];
   questionsBySection: Partial<Record<SupabaseExamSection, JlptQuestionRow[]>>;
@@ -207,6 +284,7 @@ export function buildRandomTemplateQuestionRows(input: {
       );
     }
 
+    // Select random subset of questions
     shuffleQuestions(candidates)
       .slice(0, total)
       .forEach((question) => {
@@ -227,6 +305,9 @@ export function buildRandomTemplateQuestionRows(input: {
   return selectedRows;
 }
 
+/**
+ * Clean storage path by removing bucket prefix.
+ */
 export function normalizeStorageObjectPath(value?: string | null) {
   if (!value) return null;
   const trimmed = value.trim();
@@ -237,6 +318,9 @@ export function normalizeStorageObjectPath(value?: string | null) {
     .replace(new RegExp(`^${EXAM_ASSETS_BUCKET}/`), "");
 }
 
+/**
+ * Resolve asset path to full URL.
+ */
 export function resolveExamAssetUrl(
   value: string | null | undefined,
   resolveAssetUrl: AssetUrlResolver
@@ -250,6 +334,9 @@ export function resolveExamAssetUrl(
   return objectPath ? resolveAssetUrl(objectPath) : null;
 }
 
+/**
+ * Extract string from choice object.
+ */
 function getChoiceString(
   choice: Record<string, unknown>,
   key: "value" | "alt"
@@ -258,6 +345,9 @@ function getChoiceString(
   return typeof value === "string" && value.trim() ? value.trim() : null;
 }
 
+/**
+ * Parse choices from JSON format.
+ */
 export function parseSupabaseExamChoices(
   choices: Json,
   resolveAssetUrl: AssetUrlResolver
@@ -291,6 +381,9 @@ export function parseSupabaseExamChoices(
     .filter((choice): choice is SupabaseExamChoice => Boolean(choice));
 }
 
+/**
+ * Build passage object from database row.
+ */
 function buildPassage(
   passage: JlptPassageRow | null,
   resolveAssetUrl: AssetUrlResolver
@@ -306,6 +399,9 @@ function buildPassage(
   };
 }
 
+/**
+ * Build question object from template row.
+ */
 function buildQuestion(
   item: JlptTemplateQuestionRow,
   resolveAssetUrl: AssetUrlResolver
@@ -345,6 +441,9 @@ function buildQuestion(
   };
 }
 
+/**
+ * Build full exam package from template and questions.
+ */
 export function buildSupabaseExamPackage(
   template: JlptExamTemplateRow,
   templateQuestions: JlptTemplateQuestionRow[],
@@ -378,6 +477,9 @@ export function buildSupabaseExamPackage(
   };
 }
 
+/**
+ * Initialize empty section scores.
+ */
 function createEmptySectionBreakdown() {
   return JLPT_EXAM_SECTIONS.reduce(
     (breakdown, section) => {
@@ -394,6 +496,9 @@ function createEmptySectionBreakdown() {
   );
 }
 
+/**
+ * Validate selected choice index.
+ */
 function normalizeSelectedChoice(
   value: number | null | undefined,
   choices: SupabaseExamChoice[]
@@ -404,6 +509,9 @@ function normalizeSelectedChoice(
   return value;
 }
 
+/**
+ * Calculate score and breakdown for submission.
+ */
 export function calculateJlptExamSubmission(
   examPackage: SupabaseExamPackage,
   submittedAnswers: Record<string, number | null | undefined>
@@ -442,6 +550,7 @@ export function calculateJlptExamSubmission(
       sectionScore.wrong += 1;
     }
 
+    // Collect incorrect questions for SRS review
     if (!isCorrect && question.sourceType && question.sourceId) {
       srsCandidates.push({
         questionId: question.id,
@@ -452,6 +561,7 @@ export function calculateJlptExamSubmission(
     }
   }
 
+  // Check section passing thresholds
   let failedSection = false;
   for (const section of JLPT_EXAM_SECTIONS) {
     const score = sectionBreakdown[section];
@@ -487,6 +597,9 @@ export function calculateJlptExamSubmission(
   };
 }
 
+/**
+ * Generate SRS word ID from candidate.
+ */
 export function toJlptSrsWordId(
   candidate: Pick<JlptSrsCandidate, "sourceType" | "sourceId">
 ) {
@@ -496,6 +609,7 @@ export function toJlptSrsWordId(
   if (!sourceType || !sourceId) return null;
   if (sourceType === "vocab") return sourceId;
 
+  // Prefix non-vocab source types
   if (PREFIXED_SRS_SOURCE_TYPES.has(sourceType)) {
     const prefix = `${sourceType}:`;
     return sourceId.startsWith(prefix) ? sourceId : `${prefix}${sourceId}`;
@@ -504,6 +618,9 @@ export function toJlptSrsWordId(
   return null;
 }
 
+/**
+ * Build SRS rows for database insert.
+ */
 export function buildJlptSrsUpsertRows(input: {
   userId: string;
   candidates: JlptSrsCandidate[];
@@ -538,6 +655,9 @@ export function buildJlptSrsUpsertRows(input: {
   return Array.from(rowsByWordId.values());
 }
 
+/**
+ * Format submission score to result.
+ */
 export function toExamSubmitResult(
   sessionId: string,
   score: JlptExamSubmissionScore,
@@ -553,6 +673,9 @@ export function toExamSubmitResult(
   };
 }
 
+/**
+ * Format score to JSON snapshot.
+ */
 export function toScoreBreakdownSnapshot(score: JlptExamSubmissionScore): Json {
   return {
     totalQuestions: score.totalQuestions,
@@ -568,6 +691,9 @@ export function toScoreBreakdownSnapshot(score: JlptExamSubmissionScore): Json {
   } as unknown as Json;
 }
 
+/**
+ * Convert snapshot to legacy exam format.
+ */
 export function packageSnapshotToLegacyExam(
   snapshot: Json,
   sessionId?: string | null
@@ -591,6 +717,9 @@ export function packageSnapshotToLegacyExam(
   });
 }
 
+/**
+ * Convert snapshot to package format.
+ */
 export function packageSnapshotToSupabasePackage(
   snapshot: Json,
   sessionId?: string | null
@@ -614,6 +743,9 @@ export function packageSnapshotToSupabasePackage(
   };
 }
 
+/**
+ * Convert stored snapshot to result.
+ */
 export function storedScoreSnapshotToResult(input: {
   sessionId: string;
   completedAt: string | null;

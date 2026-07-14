@@ -21,15 +21,27 @@ import { Zap, Flame, Award, ShieldCheck, User } from "lucide-react";
 // ======================
 // TIPE DATA
 // ======================
+/**
+ * Props for ProfileSection component.
+ */
 interface ProfileSectionProps {
+  /** User display name */
   name: string;
+  /** Total experience points */
   xp: number;
+  /** Current daily streak count */
   streak: number;
+  /** Authentication status flag */
   isAuthenticated: boolean;
+  /** Callback to update profile name in parent state */
   updateProfileName: (name: string) => void;
+  /** Framer motion animation variants */
   itemVariants: Variants;
 }
 
+/**
+ * Profile section component. Handles avatar display, stats, and name updates.
+ */
 export default function ProfileSection({
   name,
   xp,
@@ -42,12 +54,16 @@ export default function ProfileSection({
   const [isSyncing, setIsSyncing] = useState(false);
   const supabase = createClient();
 
+  // Sync state when prop name changes.
   const [prevName, setPrevName] = useState(name);
   if (name !== prevName) {
     setPrevName(name);
     setNewName(name);
   }
 
+  /**
+   * Save profile name locally and sync to database if authenticated.
+   */
   const handleSave = async () => {
     if (!newName.trim()) {
       toast.error("Nama nggak boleh kosong ya.");
@@ -56,8 +72,10 @@ export default function ProfileSection({
 
     setIsSyncing(true);
     try {
+      // Update local state first.
       updateProfileName(newName);
 
+      // Sync to Supabase if user authenticated.
       if (isAuthenticated) {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {

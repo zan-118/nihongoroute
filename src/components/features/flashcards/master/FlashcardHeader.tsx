@@ -17,16 +17,29 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 // ==========================================
 // ANTARMUKA PROPS
 // ==========================================
+/**
+ * Props for FlashcardHeader component.
+ */
 interface FlashcardHeaderProps {
+  /** True if study mode locked. */
   isFixedMode: boolean;
+  /** Current active study mode. */
   studyMode: StudyMode;
+  /** Callback to change study mode. */
   setStudyMode: (mode: StudyMode) => void;
+  /** Callback to reset card flip state. */
   setIsFlipped: (flipped: boolean) => void;
+  /** Current card index. */
   currentIndex: number;
+  /** Total number of cards. */
   totalCards: number;
+  /** Theme text color class. */
   themeColor: string;
+  /** Theme background color class. */
   themeBgColor: string;
+  /** Theme shadow class. */
   themeShadow: string;
+  /** Router instance for navigation. */
   router: AppRouterInstance;
 }
 
@@ -34,9 +47,10 @@ interface FlashcardHeaderProps {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen header untuk menavigasi mode belajar sesi flashcard dan menampilkan status kemajuan visual.
+ * Header component for flashcard session.
+ * Displays progress bar, study mode selector, combo counter, and exit button.
  * 
- * @param {FlashcardHeaderProps & { combo?: number }} props - Properti status sesi belajar aktif dan combo hafalan
+ * @param props Component properties.
  */
 export function FlashcardHeader({
   isFixedMode,
@@ -59,6 +73,7 @@ export function FlashcardHeader({
             <Button
               variant="ghost"
               onClick={() => {
+                // Reset flip state when changing mode to prevent showing answer early.
                 setStudyMode("latihan");
                 setIsFlipped(false);
               }}
@@ -73,6 +88,7 @@ export function FlashcardHeader({
             <Button
               variant="ghost"
               onClick={() => {
+                // Reset flip state when changing mode to prevent showing answer early.
                 setStudyMode("ujian");
                 setIsFlipped(false);
               }}
@@ -87,6 +103,7 @@ export function FlashcardHeader({
             <Button
               variant="ghost"
               onClick={() => {
+                // Reset flip state when changing mode to prevent showing answer early.
                 setStudyMode("tantangan");
                 setIsFlipped(false);
               }}
@@ -101,6 +118,7 @@ export function FlashcardHeader({
           </Card>
         )}
 
+        {/* Show combo badge only when streak is active. */}
         {combo > 1 && (
           <div className="flex items-center gap-1.5 bg-warning text-warning-foreground px-3 py-2 rounded-xl animate-in zoom-in duration-300 shadow-lg shadow-orange-500/20">
             <span className="text-sm font-black">🔥 {combo}</span>
@@ -134,6 +152,7 @@ export function FlashcardHeader({
             {currentIndex + 1} <span className="opacity-30 mx-1">/</span> {totalCards}
           </Badge>
         </div>
+        {/* Calculate percentage progress for visual bar. */}
         <Progress
           value={((currentIndex + 1) / totalCards) * 100}
           className="h-1.5 md:h-2 bg-muted/50 border-none"
@@ -143,5 +162,3 @@ export function FlashcardHeader({
     </header>
   );
 }
-
-

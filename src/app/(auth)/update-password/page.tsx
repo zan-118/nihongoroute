@@ -13,6 +13,10 @@ import { createPageMetadata } from "@/lib/seo";
 // ======================
 // KONFIGURASI METADATA
 // ======================
+/**
+ * Metadata for Update Password page.
+ * Disables search engine indexing for security.
+ */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Perbarui Kata Sandi | NihongoRoute",
@@ -25,6 +29,11 @@ export const metadata: Metadata = {
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * Page component for password updates.
+ * Serves as entry point for client component.
+ */
 export default function UpdatePasswordPage() {
+  // Render client-side password update form
   return <UpdatePasswordClient />;
 }

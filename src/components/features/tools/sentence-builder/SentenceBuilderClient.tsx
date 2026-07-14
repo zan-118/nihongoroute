@@ -17,10 +17,19 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { getRandomSentencesForDrill } from "@/actions/sentences.actions";
 
+/**
+ * SentenceBuilderClient component.
+ * Provides interactive UI to build Japanese sentences from tokens.
+ * Supports local static prompts and dynamic database prompts.
+ */
 export default function SentenceBuilderClient() {
+  // Active prompt index in current list
   const [promptIndex, setPromptIndex] = useState(0);
+  // Tokens selected by user in order
   const [selectedTokens, setSelectedTokens] = useState<string[]>([]);
+  // Counter to force token reshuffle
   const [shuffleRound, setShuffleRound] = useState(0);
+  // Flag indicating if user checked answer
   const [hasChecked, setHasChecked] = useState(false);
 
   // DB Mode States
@@ -29,20 +38,34 @@ export default function SentenceBuilderClient() {
   const [dbPrompts, setDbPrompts] = useState<SentenceBuilderPrompt[]>([]);
   const [loading, setLoading] = useState(false);
 
+  // Resolve active prompt list and current prompt
   const activePrompts = isDbMode && dbPrompts.length > 0 ? dbPrompts : SENTENCE_BUILDER_PROMPTS;
   const prompt = activePrompts[promptIndex] || activePrompts[0] || SENTENCE_BUILDER_PROMPTS[0];
 
+  // Shuffle tokens based on prompt ID and shuffle round
   const shuffledTokens = useMemo(
     () => shuffleSentenceTokens(prompt.tokens, `${prompt.id}-${shuffleRound}`),
     [prompt.id, prompt.tokens, shuffleRound]
   );
-  const availableTokens = shuffledTokens.filter((token, index) => {
-    const usedCount = selectedTokens.filter((selected) => selected === token).length;
-    const seenSoFar = shuffledTokens.slice(0, index + 1).filter((item) => item === token).length;
-    return usedCount < seenSoFar;
-  });
+
+  // Filter out tokens already selected, accounting for duplicates
+  const availableTokens = useMemo(() => {
+    return shuffledTokens.filter((token, index) => {
+      const usedCount = selectedTokens.filter((selected) => selected === token).length;
+      const seenSoFar = shuffledTokens.slice(0, index + 1).filter((item) => item === token).length;
+      return usedCount < seenSoFar;
+    });
+  }, [shuffledTokens, selectedTokens]);
+
+  // Check if built sentence matches target
   const isCorrect = hasChecked && isBuiltSentenceCorrect(prompt.tokens, selectedTokens);
 
+  /**
+   * Fetches random sentences from database for drill.
+   * Maps database schema to SentenceBuilderPrompt structure.
+   * 
+   * @param lvl - JLPT level filter
+   */
   const fetchDbSentences = async (lvl: string) => {
     setLoading(true);
     try {
@@ -75,6 +98,11 @@ export default function SentenceBuilderClient() {
     }
   };
 
+  /**
+   * Switches active prompt and resets state.
+   * 
+   * @param nextIndex - Index of next prompt
+   */
   const handlePromptChange = (nextIndex: number) => {
     setPromptIndex(nextIndex);
     setSelectedTokens([]);
@@ -82,11 +110,17 @@ export default function SentenceBuilderClient() {
     setHasChecked(false);
   };
 
+  /**
+   * Resets selected tokens and check state.
+   */
   const handleReset = () => {
     setSelectedTokens([]);
     setHasChecked(false);
   };
 
+  /**
+   * Triggers reshuffle of tokens and resets selection.
+   */
   const handleShuffle = () => {
     setShuffleRound((prev) => prev + 1);
     setSelectedTokens([]);
@@ -256,6 +290,7 @@ export default function SentenceBuilderClient() {
                         key={`${token}-${index}`}
                         type="button"
                         onClick={() => {
+                          // Remove token at specific index to handle duplicates correctly
                           setSelectedTokens((prev) => prev.filter((_, itemIndex) => itemIndex !== index));
                           setHasChecked(false);
                         }}

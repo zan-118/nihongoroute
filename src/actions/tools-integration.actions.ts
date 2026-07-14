@@ -18,10 +18,24 @@ import {
   type ShadowingPreset,
 } from "@/lib/shadowing-recorder";
 
+/**
+ * Valid JLPT levels for mini drills.
+ */
 const JLPT_LEVELS = ["N5", "N4", "N3", "N2", "N1"] as const;
+
+/**
+ * Valid JLPT levels for counter trainer.
+ */
 const COUNTER_LEVELS = ["N5", "N4"] as const;
+
+/**
+ * Valid JLPT levels for shadowing recorder.
+ */
 const SHADOWING_LEVELS = ["N5", "N4", "N3"] as const;
 
+/**
+ * Database row structure for vocabulary.
+ */
 interface VocabToolRow {
   id: string;
   word: string | null;
@@ -32,6 +46,9 @@ interface VocabToolRow {
   hinshi?: string[] | string | null;
 }
 
+/**
+ * Database row structure for kanji.
+ */
 interface KanjiToolRow {
   id: string;
   character: string | null;
@@ -42,6 +59,9 @@ interface KanjiToolRow {
   slug: string | null;
 }
 
+/**
+ * Database row structure for grammar.
+ */
 interface GrammarToolRow {
   id: string;
   title: string | null;
@@ -51,8 +71,14 @@ interface GrammarToolRow {
   jlpt_level: string | null;
 }
 
+/**
+ * Source types for integration tools.
+ */
 type ToolsSource = "vocab" | "kanji" | "grammar" | "reading" | "listening";
 
+/**
+ * Context parameters for filtering integration data.
+ */
 export interface ToolsIntegrationContext {
   level?: string;
   kind?: DrillKind | "mixed" | string;
@@ -60,12 +86,18 @@ export interface ToolsIntegrationContext {
   slug?: string;
 }
 
+/**
+ * Text content extracted from library sources.
+ */
 export interface ToolSourceText {
   title?: string;
   text: string;
   sourceHref?: string;
 }
 
+/**
+ * Raw data structure from Sanity CMS.
+ */
 interface SanityLineSource {
   _id: string;
   title?: string;
@@ -76,6 +108,9 @@ interface SanityLineSource {
   translation?: unknown;
 }
 
+/**
+ * Combined integration data payload.
+ */
 export interface ToolsIntegrationData {
   miniDrillQuestions: MiniDrillQuestion[];
   counterQuestions: CounterQuestion[];
@@ -87,16 +122,25 @@ export interface ToolsIntegrationData {
   };
 }
 
+/**
+ * Cast string to DrillLevel. Fallback to N5.
+ */
 function asDrillLevel(value: string | null | undefined): DrillLevel {
   const upper = String(value || "N5").toUpperCase();
   return JLPT_LEVELS.includes(upper as DrillLevel) ? (upper as DrillLevel) : "N5";
 }
 
+/**
+ * Get DrillLevel filter if valid.
+ */
 function getDrillLevelFilter(value: string | null | undefined): DrillLevel | undefined {
   const upper = String(value || "").toUpperCase();
   return JLPT_LEVELS.includes(upper as DrillLevel) ? (upper as DrillLevel) : undefined;
 }
 
+/**
+ * Get DrillKind filter if valid.
+ */
 function getDrillKindFilter(value: string | null | undefined): DrillKind | undefined {
   const normalized = String(value || "").toLowerCase();
   return ["vocab", "kanji", "grammar", "sentence"].includes(normalized)
@@ -104,6 +148,9 @@ function getDrillKindFilter(value: string | null | undefined): DrillKind | undef
     : undefined;
 }
 
+/**
+ * Get ToolsSource filter if valid.
+ */
 function getToolsSource(value: string | null | undefined): ToolsSource | undefined {
   const normalized = String(value || "").toLowerCase();
   return ["vocab", "kanji", "grammar", "reading", "listening"].includes(normalized)
@@ -111,11 +158,17 @@ function getToolsSource(value: string | null | undefined): ToolsSource | undefin
     : undefined;
 }
 
+/**
+ * Cast string to Counter level. Fallback to N4.
+ */
 function asCounterLevel(value: string | null | undefined): "N5" | "N4" {
   const upper = String(value || "N5").toUpperCase();
   return COUNTER_LEVELS.includes(upper as "N5" | "N4") ? (upper as "N5" | "N4") : "N4";
 }
 
+/**
+ * Cast string to Shadowing level. Fallback to N3.
+ */
 function asShadowingLevel(value: string | null | undefined): "N5" | "N4" | "N3" {
   const upper = String(value || "N5").toUpperCase();
   return SHADOWING_LEVELS.includes(upper as "N5" | "N4" | "N3")
@@ -123,16 +176,23 @@ function asShadowingLevel(value: string | null | undefined): "N5" | "N4" | "N3" 
     : "N3";
 }
 
+/**
+ * Normalize whitespace and trim string.
+ */
 function compactText(value: unknown) {
   return String(value || "")
     .replace(/\s+/g, " ")
     .trim();
 }
 
+/**
+ * Extract plain text from Sanity Portable Text structure.
+ */
 function textFromPortable(value: unknown): string {
   if (!value) return "";
   if (typeof value === "string") return value;
   if (Array.isArray(value)) {
+    // Parse blocks and children arrays from Portable Text JSON.
     return value
       .map((block) => {
         if (typeof block === "string") return block;
@@ -161,14 +221,23 @@ function textFromPortable(value: unknown): string {
   return "";
 }
 
+/**
+ * Filter unique non-empty trimmed strings.
+ */
 function uniqueValues(values: string[]) {
   return Array.from(new Set(values.map((value) => compactText(value)).filter(Boolean)));
 }
 
+/**
+ * Deduplicate rows by id property.
+ */
 function uniqueRowsById<T extends { id: string }>(rows: T[]) {
   return Array.from(new Map(rows.map((row) => [row.id, row])).values());
 }
 
+/**
+ * Safely decode URI component. Fallback to raw string on error.
+ */
 function safeDecodeHref(value: string | undefined) {
   if (!value) return "";
   try {
@@ -178,12 +247,18 @@ function safeDecodeHref(value: string | undefined) {
   }
 }
 
+/**
+ * Check if source URL matches target slug.
+ */
 function sourceHrefMatches(sourceHref: string | undefined, slug: string | undefined) {
   const target = compactText(slug);
   if (!sourceHref || !target) return false;
   return safeDecodeHref(sourceHref).endsWith(`/${target}`);
 }
 
+/**
+ * Sort questions prioritizing matches with context slug, kind, and level.
+ */
 function sortMiniDrillByContext(
   questions: MiniDrillQuestion[],
   context: ToolsIntegrationContext
@@ -193,6 +268,7 @@ function sortMiniDrillByContext(
   const slug = compactText(context.slug);
 
   return [...questions].sort((a, b) => {
+    // Calculate rank score. Lower score means higher priority.
     const aRank =
       (sourceHrefMatches(a.sourceHref, slug) ? 0 : 8) +
       (kindFilter && a.kind === kindFilter ? 0 : 2) +
@@ -205,16 +281,23 @@ function sortMiniDrillByContext(
   });
 }
 
+/**
+ * Build multiple choice options with distractors.
+ */
 function buildOptions(answer: string, candidates: string[], seed: string) {
   const distractors = uniqueValues(candidates).filter((candidate) => candidate !== answer).slice(0, 8);
   const selected = shuffleBySeed(distractors, seed).slice(0, 3);
   return shuffleBySeed(uniqueValues([answer, ...selected]), `${seed}-options`);
 }
 
+/**
+ * Shuffle array deterministically using string seed.
+ */
 function shuffleBySeed<T>(items: T[], seed: string) {
   const next = [...items];
   let state = Array.from(seed).reduce((total, char) => total + char.charCodeAt(0), 0) || 1;
 
+  // Linear Congruential Generator for deterministic shuffle.
   for (let index = next.length - 1; index > 0; index--) {
     state = (state * 9301 + 49297) % 233280;
     const swapIndex = state % (index + 1);
@@ -224,6 +307,9 @@ function shuffleBySeed<T>(items: T[], seed: string) {
   return next;
 }
 
+/**
+ * Split Japanese text into clean sentences.
+ */
 function splitJapaneseLines(text: string) {
   return text
     .split(/\r?\n|(?<=[。！？!?])/)
@@ -233,6 +319,9 @@ function splitJapaneseLines(text: string) {
     .slice(0, 24);
 }
 
+/**
+ * Split translation text into clean sentences.
+ */
 function splitTranslationLines(text: string | undefined) {
   return String(text || "")
     .split(/\r?\n|(?<=[.!?。！？])/)
@@ -240,6 +329,9 @@ function splitTranslationLines(text: string | undefined) {
     .filter(Boolean);
 }
 
+/**
+ * Split sentence into smaller chunks for shadowing display.
+ */
 function createShadowingChunks(text: string) {
   const chunks = text
     .replace(/[。！？!?]$/g, "")
@@ -249,10 +341,14 @@ function createShadowingChunks(text: string) {
 
   if (chunks.length > 1) return chunks.slice(0, 4);
 
+  // Fallback to splitting in half if no punctuation found.
   const midpoint = Math.ceil(text.length / 2);
   return [text.slice(0, midpoint), text.slice(midpoint)].map((chunk) => chunk.trim()).filter(Boolean);
 }
 
+/**
+ * Parse Sanity source item and push generated presets to array.
+ */
 function pushShadowingPresetsFromSource(
   presets: ShadowingPreset[],
   item: SanityLineSource,
@@ -279,10 +375,16 @@ function pushShadowingPresetsFromSource(
   });
 }
 
+/**
+ * Estimate target duration in seconds based on character length.
+ */
 function estimateTargetSeconds(text: string) {
   return Math.max(3, Math.min(14, Math.round(text.length / 4)));
 }
 
+/**
+ * Detect counter category and metadata based on kanji characters in word.
+ */
 function detectCounter(word: string): { answer: CounterWord; category: string; hint: string; explanation: string } | null {
   if (/[人者員生師友客母父兄姉弟妹子]/.test(word)) {
     return {
@@ -344,6 +446,9 @@ function detectCounter(word: string): { answer: CounterWord; category: string; h
   return null;
 }
 
+/**
+ * Fetch and build mini drill questions from database.
+ */
 export async function getIntegratedMiniDrillQuestions(
   context: ToolsIntegrationContext = {}
 ): Promise<MiniDrillQuestion[]> {
@@ -367,6 +472,7 @@ export async function getIntegratedMiniDrillQuestions(
       .select("id, title, meaning, formation, slug, jlpt_level")
       .not("title", "is", null);
 
+    // Fetch general pool items.
     const [vocabResult, kanjiResult, grammarResult] = await Promise.allSettled([
       kindFilter && kindFilter !== "vocab"
         ? Promise.resolve({ data: [], error: null })
@@ -385,6 +491,7 @@ export async function getIntegratedMiniDrillQuestions(
           : grammarQuery.limit(60),
     ]);
 
+    // Fetch exact match item based on slug context.
     const [exactVocabResult, exactKanjiResult, exactGrammarResult] = await Promise.allSettled([
       source === "vocab" && slug
         ? supabase
@@ -557,6 +664,9 @@ export async function getIntegratedMiniDrillQuestions(
   }
 }
 
+/**
+ * Fetch and build counter questions from database vocabulary.
+ */
 export async function getIntegratedCounterQuestions(
   context: ToolsIntegrationContext = {}
 ): Promise<CounterQuestion[]> {
@@ -626,6 +736,9 @@ export async function getIntegratedCounterQuestions(
   }
 }
 
+/**
+ * Fetch and build shadowing presets from Sanity CMS materials.
+ */
 export async function getIntegratedShadowingPresets(
   context: ToolsIntegrationContext = {}
 ): Promise<ShadowingPreset[]> {
@@ -704,6 +817,9 @@ export async function getIntegratedShadowingPresets(
   }
 }
 
+/**
+ * Fetch raw text content for specific library material.
+ */
 export async function getLibraryTextForTool(
   context: ToolsIntegrationContext = {}
 ): Promise<ToolSourceText | null> {
@@ -740,6 +856,9 @@ export async function getLibraryTextForTool(
   }
 }
 
+/**
+ * Fetch combined tools integration data. Fallback to static presets if empty.
+ */
 export async function getToolsIntegrationData(): Promise<ToolsIntegrationData> {
   const [miniDrillQuestions, counterQuestions, shadowingPresets] = await Promise.all([
     getIntegratedMiniDrillQuestions(),

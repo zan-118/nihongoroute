@@ -21,26 +21,30 @@ import {
   encodeRouteSegment,
 } from "@/lib/seo";
 
-
-
-
 // ======================
 // METADATA SEO
 // ======================
 
 /**
- * Menghasilkan metadata SEO dinamis untuk halaman detail tata bahasa Jepang (Bunpou).
+ * Generate SEO metadata for grammar detail page.
+ * @param props Component props.
+ * @param props.params Route parameters.
+ * @returns Metadata object.
  */
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+  // Resolve route params.
   const { slug } = await params;
+  // Decode slug for database query.
   const decodedSlug = decodeURIComponent(slug);
   
+  // Fetch grammar article from database.
   const article = await getLibraryItemBySlug("grammar", decodedSlug);
 
+  // Return fallback metadata if article not found.
   if (!article) {
     return {
       title: "Grammar Tidak Ditemukan | NihongoRoute",
@@ -48,6 +52,7 @@ export async function generateMetadata({
     };
   }
 
+  // Build metadata with SEO helper.
   return createPageMetadata({
     title: `Belajar Grammar ${article.title} | NihongoRoute`,
     description: article.notes 
@@ -70,31 +75,41 @@ export async function generateMetadata({
 // ======================
 
 /**
- * Halaman detail tata bahasa Jepang (RSC) untuk mengambil data satu materi grammar dan menyajikan detail penjelasannya.
+ * Grammar detail page component.
+ * @param props Component props.
+ * @param props.params Route parameters.
+ * @returns React element.
  */
 export default async function GrammarDetailPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  // Resolve route params.
   const { slug } = await params;
+  // Decode slug for database query.
   const decodedSlug = decodeURIComponent(slug);
 
   // ======================
   // OPERASI DATABASE
   // ======================
+  // Fetch grammar article.
   const article = await getLibraryItemBySlug("grammar", decodedSlug);
+  // Trigger 404 if article missing.
   if (!article) notFound();
 
-  // Ambil kalimat contoh dinamis dari tabel sentences berdasarkan pola grammar
+  // Extract pattern name for sentence search.
   const grammarPattern = String(article.title || "");
+  // Fetch example sentences matching pattern.
   const dynamicSentences = grammarPattern ? await getSentencesByGrammarPattern(grammarPattern, 4) : [];
 
 
   // ======================
   // RENDER UTAMA
   // ======================
+  // Construct canonical URL path.
   const articlePath = `/library/grammar/${encodeRouteSegment(String(article.slug || decodedSlug))}`;
+  // Fallback description if notes empty.
   const articleDescription =
     article.notes
       ? `${String(article.notes).slice(0, 150)}...`

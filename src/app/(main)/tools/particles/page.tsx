@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import ParticleTrainerClient from "@/components/features/tools/particle-trainer/ParticleTrainerClient";
 import { createPageMetadata } from "@/lib/seo";
 
+/**
+ * Metadata for Particle Trainer page.
+ * Configures SEO title, description, path, and keywords.
+ */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Particle Trainer Jepang | NihongoRoute",
@@ -11,6 +15,10 @@ export const metadata: Metadata = {
   }),
 };
 
+/**
+ * Particle Trainer page component.
+ * Renders client-side particle trainer tool.
+ */
 export default function ParticleTrainerPage() {
   return <ParticleTrainerClient />;
 }

@@ -18,15 +18,27 @@ import { m } from "framer-motion";
 // ==========================================
 // ANTARMUKA & PROPS (INTERFACES)
 // ==========================================
+/**
+ * Represents a single tab item configuration.
+ */
 interface Tab {
+  /** Unique identifier for the tab. */
   id: string;
+  /** Display label text. */
   label: string;
+  /** Emoji or icon character. */
   icon: string;
 }
 
+/**
+ * Props for the DashboardTabs component.
+ */
 interface DashboardTabsProps {
+  /** Array of tab configurations. */
   tabs: Tab[];
+  /** Currently active tab identifier. */
   activeTab: string;
+  /** Callback triggered when a tab is clicked. */
   onTabChange: (id: string) => void;
 }
 
@@ -34,8 +46,8 @@ interface DashboardTabsProps {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen DashboardTabs
- * Navigasi tab bar interaktif untuk dashboard.
+ * DashboardTabs component.
+ * Renders an interactive tab navigation bar with smooth sliding animations.
  */
 export function DashboardTabs({ tabs, activeTab, onTabChange }: DashboardTabsProps) {
   return (
@@ -47,6 +59,7 @@ export function DashboardTabs({ tabs, activeTab, onTabChange }: DashboardTabsPro
         className="bg-muted/50 dark:bg-background/[0.03] p-1.5 rounded-full border border-border/50 flex gap-1 shadow-sm max-w-full overflow-x-auto scrollbar-none"
       >
         {tabs.map((tab) => {
+          // Determine if the current tab is active
           const isActive = activeTab === tab.id;
           return (
             <m.button
@@ -55,6 +68,7 @@ export function DashboardTabs({ tabs, activeTab, onTabChange }: DashboardTabsPro
               data-tour={`dashboard-tab-${tab.id}`}
               aria-selected={isActive}
               aria-controls={`${tab.id}-panel`}
+              // Scale down slightly on tap for tactile feedback
               whileTap={{ scale: 0.95 }}
               onClick={() => onTabChange(tab.id)}
               className={`relative px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-colors duration-300 flex items-center gap-2 outline-none select-none min-h-[44px] ${
@@ -64,6 +78,7 @@ export function DashboardTabs({ tabs, activeTab, onTabChange }: DashboardTabsPro
               }`}
             >
               {isActive && (
+                // Shared layout animation for sliding background pill
                 <m.div
                   layoutId="active-dashboard-tab"
                   className="absolute inset-0 bg-primary rounded-full shadow-lg shadow-primary/20"
@@ -80,4 +95,3 @@ export function DashboardTabs({ tabs, activeTab, onTabChange }: DashboardTabsPro
     </div>
   );
 }
-

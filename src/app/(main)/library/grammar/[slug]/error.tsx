@@ -17,13 +17,13 @@ import { AlertTriangle, RefreshCcw } from "lucide-react";
 // ======================
 
 /**
- * Komponen pembatas kesalahan (Error Boundary) granular untuk halaman detail materi tata bahasa.
- * Menangani crash di sisi klien saat memuat Portable Text atau memutar audio contoh kalimat.
+ * Error boundary component for grammar detail route.
+ * Handles runtime crashes during Portable Text rendering or audio playback.
  * 
- * @param {Object} props Properti komponen.
- * @param {Error & { digest?: string }} props.error Objek kesalahan runtime yang ditangkap.
- * @param {function} props.reset Fungsi callback untuk memicu pemuatan ulang komponen.
- * @returns {JSX.Element} Antarmuka penanganan kesalahan granular tata bahasa.
+ * @param props - Component properties.
+ * @param props.error - Runtime error object with optional digest.
+ * @param props.reset - Callback function to retry rendering.
+ * @returns React element representing the error state UI.
  */
 export default function GrammarError({
   error,
@@ -33,7 +33,7 @@ export default function GrammarError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log error secara background agar mudah di-debug
+    // Log error to console for debugging purposes
     console.error("Granular Error [Grammar Detail]:", error);
   }, [error]);
 

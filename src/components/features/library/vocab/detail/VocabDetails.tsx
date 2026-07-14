@@ -15,6 +15,12 @@ import { Badge } from "@/components/ui/badge";
 // ==========================================
 // ANTARMUKA & TIPE DATA
 // ==========================================
+/**
+ * Properties for VocabDetails component.
+ * @property {string} [hinshi] - Part of speech classification.
+ * @property {string} [jlptLevel] - Japanese Language Proficiency Test level.
+ * @property {string} [pitchAccent] - Pitch accent pattern information.
+ */
 interface VocabDetailsProps {
   hinshi?: string;
   jlptLevel?: string;
@@ -25,9 +31,10 @@ interface VocabDetailsProps {
 // KOMPONEN UTAMA: VocabDetails
 // ==========================================
 /**
- * Komponen kartu visualisasi status metadata kata.
+ * Renders vocabulary metadata badges including part of speech, JLPT level, and pitch accent.
  * 
- * @param {VocabDetailsProps} props Properti komponen atribut kosakata.
+ * @param {VocabDetailsProps} props - Component properties.
+ * @returns {JSX.Element} Card component containing metadata badges.
  */
 export function VocabDetails({ hinshi, jlptLevel, pitchAccent }: VocabDetailsProps) {
   return (
@@ -36,14 +43,17 @@ export function VocabDetails({ hinshi, jlptLevel, pitchAccent }: VocabDetailsPro
       
       {/* Container Lencana Atribut */}
       <div className="flex flex-wrap gap-2">
+        {/* Fallback to default label if part of speech is missing */}
         <Badge variant="outline" className="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-xl bg-primary/10 text-primary border-primary/20">
           {hinshi || "Kosakata"}
         </Badge>
+        {/* Render JLPT badge only if level is provided */}
         {jlptLevel && (
           <Badge variant="outline" className="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-xl bg-secondary/10 text-secondary border-secondary/20">
             JLPT {jlptLevel}
           </Badge>
         )}
+        {/* Render pitch accent badge only if pattern is provided */}
         {pitchAccent && (
           <Badge variant="secondary" className="px-3 py-1.5 text-[9px] font-bold tracking-widest bg-muted border-border">
             PITCH: {pitchAccent}
@@ -53,4 +63,3 @@ export function VocabDetails({ hinshi, jlptLevel, pitchAccent }: VocabDetailsPro
     </Card>
   );
 }
-

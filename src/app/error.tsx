@@ -17,22 +17,28 @@ import { AlertOctagon } from "lucide-react";
 // ======================
 
 /**
- * Komponen pembatas kesalahan tingkat akar (Root Error Boundary) aplikasi.
- * Menangani crash kritis pada rute utama dan menyediakan opsi pemulihan.
+ * Props for RootError component.
+ */
+interface RootErrorProps {
+  /** Uncaught runtime error object. */
+  error: Error & { digest?: string };
+  /** Callback function to trigger route re-render. */
+  reset: () => void;
+}
+
+/**
+ * Root error boundary component.
+ * Catches uncaught runtime errors at application root and provides recovery UI.
  * 
- * @param {Object} props Properti komponen.
- * @param {Error & { digest?: string }} props.error Objek kesalahan runtime yang ditangkap.
- * @param {function} props.reset Fungsi callback untuk memicu pemuatan ulang halaman.
- * @returns {JSX.Element} Antarmuka penanganan kesalahan kritis.
+ * @param props - Component properties.
+ * @returns Error boundary fallback interface.
  */
 export default function RootError({
   error,
   reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
+}: RootErrorProps) {
   useEffect(() => {
+    // Log error details for debugging and monitoring
     console.error("Kesalahan Tingkat Akar (Root Level Error):", error);
   }, [error]);
 
@@ -66,6 +72,7 @@ export default function RootError({
         </Button>
         
         <p className="mt-8 text-[10px] text-muted-foreground/30 uppercase tracking-[0.2em] font-semibold">
+          {/* Display unique error hash if present, otherwise show generic code */}
           Error Code: {error.digest || "500_SYSTEM_FAILURE"}
         </p>
       </div>

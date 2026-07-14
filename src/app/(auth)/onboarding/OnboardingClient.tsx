@@ -17,6 +17,7 @@ import { useOnboardingWizard } from "@/components/features/onboarding/useOnboard
 // ======================
 // KONSTANTA
 // ======================
+/** JLPT levels for user selection. */
 const JLPT_LEVELS = [
   { id: "N5", label: "Pemula (N5)" },
   { id: "N4", label: "Dasar (N4)" },
@@ -25,6 +26,7 @@ const JLPT_LEVELS = [
   { id: "N1", label: "Mahir (N1)" },
 ];
 
+/** User motivations for learning Japanese. */
 const MOTIVATIONS = [
   { id: "exam", icon: BookOpen, label: "Lulus Ujian JLPT" },
   { id: "hobby", icon: Tv, label: "Hobi / Anime" },
@@ -32,7 +34,13 @@ const MOTIVATIONS = [
   { id: "travel", icon: Plane, label: "Wisata ke Jepang" },
 ];
 
+/**
+ * Onboarding wizard component. Collects target JLPT level and motivation.
+ * 
+ * @returns Onboarding wizard UI.
+ */
 export default function OnboardingClient() {
+  // Get wizard state and handlers.
   const {
     step,
     setStep,
@@ -44,7 +52,7 @@ export default function OnboardingClient() {
     handleComplete,
   } = useOnboardingWizard();
 
-  // Variasi Animasi Framer Motion untuk transisi elegan
+  /** Framer motion variants for step transitions. */
   const variants = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
@@ -53,7 +61,7 @@ export default function OnboardingClient() {
 
   return (
     <main className="min-h-screen premium-shell text-foreground flex flex-col items-center justify-center p-6 md:p-12 relative overflow-hidden transition-colors duration-300">
-      {/* Dekorasi Latar Belakang & Kisi Neural */}
+      {/* Background decorative elements. */}
       <div className="neural-grid" />
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
         <div className="size-[500px] bg-primary/10 rounded-full blur-[120px] opacity-40 absolute -top-12 -left-12" />
@@ -239,7 +247,7 @@ export default function OnboardingClient() {
           )}
         </AnimatePresence>
 
-        {/* Progress Indicator Bawah */}
+        {/* Render step progress indicators. */}
         <div className="mt-16 flex justify-center gap-3">
           {[1, 2, 3].map((i) => (
             <div 

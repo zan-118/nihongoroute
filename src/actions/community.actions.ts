@@ -4,12 +4,18 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 
+/**
+ * Author profile details for posts and comments.
+ */
 export interface PostAuthor {
   full_name: string;
   avatar_url?: string;
   level: number;
 }
 
+/**
+ * Community post structure.
+ */
 export interface CommunityPost {
   id: string;
   user_id: string;
@@ -21,6 +27,9 @@ export interface CommunityPost {
   category?: string;
 }
 
+/**
+ * Community comment structure.
+ */
 export interface CommunityComment {
   id: string;
   post_id: string;
@@ -31,7 +40,9 @@ export interface CommunityComment {
 }
 
 /**
- * Memastikan user sudah terautentikasi dan mengembalikan client Supabase + User.
+ * Verify user authentication.
+ * Returns Supabase client and user object.
+ * Throws error if unauthenticated.
  */
 async function requireAuth() {
   const supabase = await createClient();
@@ -48,11 +59,15 @@ async function requireAuth() {
 }
 
 /**
- * Mengambil daftar postingan komunitas terbaru.
+ * Fetch latest community posts.
+ * Optional category filter.
+ * 
+ * @param category - Filter posts by category.
  */
 export async function getCommunityPosts(category?: string): Promise<CommunityPost[]> {
   try {
     const supabase = await createClient();
+    // Build query to fetch posts with author profile details
     let query = supabase
       .from("community_posts")
       .select(`
@@ -66,6 +81,7 @@ export async function getCommunityPosts(category?: string): Promise<CommunityPos
         author:profiles(full_name, avatar_url, level)
       `);
 
+    // Apply category filter if specified and not default
     if (category && category !== "Semua") {
       query = query.eq("category", category);
     }
@@ -74,7 +90,7 @@ export async function getCommunityPosts(category?: string): Promise<CommunityPos
 
     if (error) throw error;
     
-    // Konversi format likes_users dari JSONB array ke string[]
+    // Map database response to CommunityPost structure
     return (data || []).map((post: {
       id: string;
       user_id: string;
@@ -93,6 +109,7 @@ export async function getCommunityPosts(category?: string): Promise<CommunityPos
         created_at: post.created_at,
         comments_count: post.comments_count,
         category: post.category,
+        // Ensure likes_users is parsed as string array
         likes_users: Array.isArray(post.likes_users) ? (post.likes_users as string[]) : [],
         author: authorData ? {
           full_name: authorData.full_name,
@@ -108,16 +125,21 @@ export async function getCommunityPosts(category?: string): Promise<CommunityPos
 }
 
 /**
- * Membuat postingan baru di feed komunitas.
+ * Create new community post.
+ * 
+ * @param content - Post text content.
+ * @param category - Post category classification.
  */
 export async function createCommunityPost(content: string, category: string = "Umum"): Promise<{ success: boolean; error?: string }> {
   try {
     const { supabase, user } = await requireAuth();
     
+    // Validate non-empty content
     if (!content.trim()) {
       return { success: false, error: "Konten tidak boleh kosong." };
     }
 
+    // Insert post record
     const { error } = await supabase.from("community_posts").insert({
       user_id: user.id,
       content: content.trim(),
@@ -128,6 +150,7 @@ export async function createCommunityPost(content: string, category: string = "U
 
     if (error) throw error;
 
+    // Refresh social feed path
     revalidatePath("/social");
     return { success: true };
   } catch (error: unknown) {
@@ -137,13 +160,16 @@ export async function createCommunityPost(content: string, category: string = "U
 }
 
 /**
- * Menyukai atau membatalkan suka pada postingan.
+ * Toggle like status on a post.
+ * Updates likes list and triggers notifications.
+ * 
+ * @param postId - Target post ID.
  */
 export async function toggleLikePost(postId: string): Promise<{ success: boolean; likesCount: number; isLiked: boolean }> {
   try {
     const { supabase, user } = await requireAuth();
 
-    // Dapatkan data postingan saat ini
+    // Fetch current likes list and author ID
     const { data: post, error: fetchErr } = await supabase
       .from("community_posts")
       .select("likes_users, user_id")
@@ -156,16 +182,15 @@ export async function toggleLikePost(postId: string): Promise<{ success: boolean
     const userIndex = likesList.indexOf(user.id);
     let isLiked = false;
 
+    // Add or remove user ID from likes array
     if (userIndex > -1) {
-      // Batal suka
       likesList = likesList.filter(id => id !== user.id);
     } else {
-      // Menyukai
       likesList.push(user.id);
       isLiked = true;
     }
 
-    // Gunakan admin client untuk bypass RLS saat update likes_users
+    // Update likes array using admin client to bypass RLS restrictions
     const adminSupabase = createAdminClient();
     const { error: updateErr } = await adminSupabase
       .from("community_posts")
@@ -174,7 +199,7 @@ export async function toggleLikePost(postId: string): Promise<{ success: boolean
 
     if (updateErr) throw updateErr;
 
-    // Kirim atau hapus notifikasi suka
+    // Handle notification creation or deletion
     if (isLiked) {
       if (post.user_id !== user.id) {
         const { data: profile } = await supabase
@@ -206,6 +231,7 @@ export async function toggleLikePost(postId: string): Promise<{ success: boolean
       }
     }
 
+    // Refresh social feed path
     revalidatePath("/social");
     return { success: true, likesCount: likesList.length, isLiked };
   } catch (error) {
@@ -215,11 +241,14 @@ export async function toggleLikePost(postId: string): Promise<{ success: boolean
 }
 
 /**
- * Mengambil daftar komentar untuk postingan tertentu.
+ * Fetch comments for a specific post.
+ * 
+ * @param postId - Target post ID.
  */
 export async function getPostComments(postId: string): Promise<CommunityComment[]> {
   try {
     const supabase = await createClient();
+    // Fetch comments with author profile details
     const { data, error } = await supabase
       .from("community_comments")
       .select(`
@@ -235,6 +264,7 @@ export async function getPostComments(postId: string): Promise<CommunityComment[
 
     if (error) throw error;
 
+    // Map database response to CommunityComment structure
     return (data || []).map((comment: {
       id: string;
       post_id: string;
@@ -264,16 +294,22 @@ export async function getPostComments(postId: string): Promise<CommunityComment[
 }
 
 /**
- * Menambahkan komentar ke postingan.
+ * Add comment to a post.
+ * Triggers notification to post owner.
+ * 
+ * @param postId - Target post ID.
+ * @param content - Comment text content.
  */
 export async function addCommunityComment(postId: string, content: string): Promise<{ success: boolean; error?: string }> {
   try {
     const { supabase, user } = await requireAuth();
 
+    // Validate non-empty content
     if (!content.trim()) {
       return { success: false, error: "Komentar tidak boleh kosong." };
     }
 
+    // Insert comment record
     const { error } = await supabase.from("community_comments").insert({
       post_id: postId,
       user_id: user.id,
@@ -282,13 +318,14 @@ export async function addCommunityComment(postId: string, content: string): Prom
 
     if (error) throw error;
 
-    // Kirim notifikasi ke pemilik postingan jika pemberi komentar adalah orang lain
+    // Fetch post owner details for notification
     const { data: post } = await supabase
       .from("community_posts")
       .select("user_id")
       .eq("id", postId)
       .single();
 
+    // Notify post owner if commenter is a different user
     if (post && post.user_id !== user.id) {
       const { data: profile } = await supabase
         .from("profiles")
@@ -309,6 +346,7 @@ export async function addCommunityComment(postId: string, content: string): Prom
       });
     }
 
+    // Refresh social feed path
     revalidatePath("/social");
     return { success: true };
   } catch (error: unknown) {
@@ -317,6 +355,9 @@ export async function addCommunityComment(postId: string, content: string): Prom
   }
 }
 
+/**
+ * Public profile details for user modal.
+ */
 export interface PublicProfile {
   id: string;
   full_name: string | null;
@@ -328,7 +369,9 @@ export interface PublicProfile {
 }
 
 /**
- * Mengambil profil detail lengkap pengguna berdasarkan ID untuk modal profil.
+ * Fetch public profile details by user ID.
+ * 
+ * @param userId - Target user ID.
  */
 export async function getPublicProfile(userId: string): Promise<{ success: boolean; profile?: PublicProfile; error?: string }> {
   try {
@@ -348,12 +391,15 @@ export async function getPublicProfile(userId: string): Promise<{ success: boole
 }
 
 /**
- * Menghapus postingan sendiri.
+ * Delete post owned by the authenticated user.
+ * 
+ * @param postId - Target post ID.
  */
 export async function deleteCommunityPost(postId: string): Promise<{ success: boolean; error?: string }> {
   try {
     const { supabase, user } = await requireAuth();
 
+    // Delete post matching ID and user ID ownership
     const { error } = await supabase
       .from("community_posts")
       .delete()
@@ -362,6 +408,7 @@ export async function deleteCommunityPost(postId: string): Promise<{ success: bo
 
     if (error) throw error;
 
+    // Refresh social feed path
     revalidatePath("/social");
     return { success: true };
   } catch (error: unknown) {
@@ -371,12 +418,15 @@ export async function deleteCommunityPost(postId: string): Promise<{ success: bo
 }
 
 /**
- * Menghapus komentar sendiri.
+ * Delete comment owned by the authenticated user.
+ * 
+ * @param commentId - Target comment ID.
  */
 export async function deleteCommunityComment(commentId: string): Promise<{ success: boolean; error?: string }> {
   try {
     const { supabase, user } = await requireAuth();
 
+    // Delete comment matching ID and user ID ownership
     const { error } = await supabase
       .from("community_comments")
       .delete()
@@ -385,6 +435,7 @@ export async function deleteCommunityComment(commentId: string): Promise<{ succe
 
     if (error) throw error;
 
+    // Refresh social feed path
     revalidatePath("/social");
     return { success: true };
   } catch (error: unknown) {
@@ -393,6 +444,9 @@ export async function deleteCommunityComment(commentId: string): Promise<{ succe
   }
 }
 
+/**
+ * Notification structure.
+ */
 export interface CommunityNotification {
   id: string;
   user_id: string;
@@ -406,7 +460,7 @@ export interface CommunityNotification {
 }
 
 /**
- * Mengambil daftar notifikasi terbaru milik pengguna terautentikasi.
+ * Fetch latest notifications for the authenticated user.
  */
 export async function getNotifications(): Promise<CommunityNotification[]> {
   try {
@@ -427,7 +481,9 @@ export async function getNotifications(): Promise<CommunityNotification[]> {
 }
 
 /**
- * Menandai notifikasi tertentu sebagai terbaca di database.
+ * Mark a specific notification as read.
+ * 
+ * @param notificationId - Target notification ID.
  */
 export async function markNotificationRead(notificationId: string): Promise<{ success: boolean; error?: string }> {
   try {
@@ -447,7 +503,7 @@ export async function markNotificationRead(notificationId: string): Promise<{ su
 }
 
 /**
- * Menandai seluruh notifikasi pengguna sebagai terbaca di database.
+ * Mark all notifications of the authenticated user as read.
  */
 export async function markAllNotificationsRead(): Promise<{ success: boolean; error?: string }> {
   try {
@@ -466,7 +522,7 @@ export async function markAllNotificationsRead(): Promise<{ success: boolean; er
 }
 
 /**
- * Menghapus seluruh notifikasi pengguna di database.
+ * Delete all notifications of the authenticated user.
  */
 export async function clearAllNotifications(): Promise<{ success: boolean; error?: string }> {
   try {

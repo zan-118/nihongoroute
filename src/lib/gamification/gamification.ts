@@ -13,12 +13,22 @@ import { Inventory } from "@/store/types";
 // ==========================================
 // ANTARMUKA DATA GAMIFIKASI
 // ==========================================
+
+/**
+ * Gamification state structure.
+ */
 export interface GamificationData {
+  /** Total experience points accumulated. */
   xp: number;
+  /** Current consecutive study streak in days. */
   streak: number;
+  /** Record of study dates mapped to review counts. */
   studyDays: Record<string, number>;
+  /** ISO date string of the last study session. */
   lastStudyDate: string | null;
+  /** Number of reviews completed today. */
   todayReviewCount: number;
+  /** User inventory containing items and achievements. */
   inventory: Inventory;
 }
 
@@ -42,13 +52,16 @@ export function calculateNewStreak(
   addNotification: (notif: { title: string; message: string; type: "info" | "success" | "warning" | "achievement" }) => void
 ): { streak: number; streakFreezeUsed: boolean } {
   const today = getLocalDateString();
+  // Already studied today, streak remains unchanged
   if (lastStudyDate === today) return { streak: currentStreak, streakFreezeUsed: false };
 
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
+  // Adjust for local timezone offset to prevent date mismatch
   const offset = yesterday.getTimezoneOffset() * 60000;
   const yesterdayStr = new Date(yesterday.getTime() - offset).toISOString().split("T")[0];
 
+  // Studied yesterday, increment streak
   if (lastStudyDate === yesterdayStr) {
     return { streak: currentStreak + 1, streakFreezeUsed: false };
   }
@@ -63,15 +76,21 @@ export function calculateNewStreak(
     return { streak: currentStreak + 1, streakFreezeUsed: true };
   }
 
+  // Streak reset to 1 if no freeze item is available
   return { streak: 1, streakFreezeUsed: false };
 }
 
 /**
  * Menggabungkan data study days dari lokal dan cloud.
+ * 
+ * @param localDays - Local study days record.
+ * @param cloudDays - Cloud study days record.
+ * @returns Merged study days record.
  */
 export function mergeStudyDays(localDays: Record<string, number>, cloudDays: Record<string, number>): Record<string, number> {
   const merged = { ...cloudDays };
   Object.entries(localDays).forEach(([date, count]) => {
+    // Keep the highest review count for each date
     merged[date] = Math.max(count, merged[date] || 0);
   });
   return merged;
@@ -95,11 +114,13 @@ export function mergeStudyDays(localDays: Record<string, number>, cloudDays: Rec
  * - Mencegah terjadinya pengulangan pencapaian (infinite badge unlocking loop) di sisi client.
  */
 export function mergeGamification(local: GamificationData, cloud: GamificationData) {
+  // Resolve XP and streak conflicts by taking maximum values
   const mergedXP = Math.max(local.xp, cloud.xp);
   const mergedStreak = Math.max(local.streak, cloud.streak);
   const mergedStudyDays = mergeStudyDays(local.studyDays, cloud.studyDays);
   
   const today = getLocalDateString();
+  // Resolve today's review count based on date match
   const todayReviewCount = local.lastStudyDate === cloud.lastStudyDate 
     ? Math.max(local.todayReviewCount, cloud.todayReviewCount)
     : (local.lastStudyDate === today ? local.todayReviewCount : cloud.todayReviewCount);
@@ -129,10 +150,12 @@ export function mergeGamification(local: GamificationData, cloud: GamificationDa
   const cloudAchievements = cloud.inventory?.achievements || [];
   const achievementMap = new Map<string, number>();
 
+  // Map local achievements with unlock timestamps
   localAchievements.forEach((a) => {
     achievementMap.set(a.id, a.unlockedAt);
   });
 
+  // Merge cloud achievements, keeping the earliest unlock timestamp
   cloudAchievements.forEach((a) => {
     const existing = achievementMap.get(a.id);
     if (existing === undefined || a.unlockedAt < existing) {

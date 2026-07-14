@@ -17,6 +17,13 @@ import { toast } from "sonner";
 // ======================
 // HOOK UTAMA
 // ======================
+
+/**
+ * Custom hook to manage password update form state, validation, and submission.
+ * Integrates with Supabase Auth to update the user's password.
+ * 
+ * @returns Form states, setters, loading/success flags, and the submit handler.
+ */
 export function usePasswordUpdate() {
   const router = useRouter();
   const supabase = createClient();
@@ -27,7 +34,7 @@ export function usePasswordUpdate() {
   const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
-    // Memeriksa apakah user benar-benar masuk dengan status pemulihan
+    // Verify active session exists for password recovery flow
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
@@ -39,9 +46,16 @@ export function usePasswordUpdate() {
     checkSession();
   }, [supabase.auth]);
 
+  /**
+   * Handles password update form submission.
+   * Validates inputs and updates password via Supabase.
+   * 
+   * @param e - React form event
+   */
   const handleUpdatePassword = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Validate password match
     if (password !== confirmPassword) {
       toast.error("Wah, passwordnya beda...", {
         description: "Pastikan kedua kolom kata sandi terisi dengan karakter yang sama persis.",
@@ -49,6 +63,7 @@ export function usePasswordUpdate() {
       return;
     }
     
+    // Validate minimum password length
     if (password.length < 6) {
       toast.error("Password terlalu singkat", {
         description: "Gunakan minimal 6 karakter agar akunmu tetap aman.",
@@ -59,6 +74,7 @@ export function usePasswordUpdate() {
     setLoading(true);
 
     try {
+      // Call Supabase API to update user password
       const { error } = await supabase.auth.updateUser({
         password: password
       });
@@ -70,7 +86,7 @@ export function usePasswordUpdate() {
         description: "Kata sandi barumu sudah aktif. Yuk, lanjut belajar lagi!",
       });
       
-      // Redirect setelah 3 detik
+      // Redirect user to dashboard after successful update
       setTimeout(() => {
         router.push("/dashboard");
       }, 3000);

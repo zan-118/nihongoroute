@@ -7,6 +7,10 @@ import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
+/**
+ * Style variants for Badge component.
+ * Use CVA to manage Tailwind classes.
+ */
 const badgeVariants = cva(
   "inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-black uppercase tracking-[0.14em] transition-all focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
@@ -25,12 +29,26 @@ const badgeVariants = cva(
   }
 )
 
+/**
+ * Props for Badge component.
+ * Combine HTML div attributes with CVA variant props.
+ */
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof badgeVariants> {}
 
+/**
+ * Badge component.
+ * Render styled inline-flex container.
+ */
 function Badge({ className, variant, ...props }: BadgeProps) {
-  return <div className={cn(badgeVariants({ variant }), className)} {...props} />
+  return (
+    <div 
+      // Merge CVA classes with user-provided className
+      className={cn(badgeVariants({ variant }), className)} 
+      {...props} 
+    />
+  )
 }
 
 export { Badge, badgeVariants }

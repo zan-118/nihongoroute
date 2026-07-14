@@ -19,8 +19,13 @@ import { SmartJapanese } from "@/components/ui/SmartJapanese";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Props for KanjiSentences component.
+ */
 interface KanjiSentencesProps {
+  /** Array of sentence rows containing Japanese text and translations. */
   sentences?: SentenceRow[];
+  /** Target kanji character. */
   character: string;
 }
 
@@ -28,13 +33,19 @@ interface KanjiSentencesProps {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen panel kalimat contoh kanji.
+ * Render list of example sentences for specific kanji with TTS audio.
  */
 export function KanjiSentences({ sentences = [], character }: KanjiSentencesProps) {
+  // Track index of currently playing sentence audio.
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
+  // Reference to HTMLAudioElement instance.
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  // Reference to active object URL for cleanup.
   const objectUrlRef = useRef<string | null>(null);
 
+  /**
+   * Revoke active object URL to prevent memory leaks.
+   */
   const cleanupObjectUrl = useCallback(() => {
     if (objectUrlRef.current) {
       URL.revokeObjectURL(objectUrlRef.current);
@@ -42,15 +53,20 @@ export function KanjiSentences({ sentences = [], character }: KanjiSentencesProp
     }
   }, []);
 
-  // Hitung voice deterministik dari teks agar suara konsisten tiap kalimat
+  // List of available TTS voices for rotation.
   const VOICES_ROTATION: TtsVoice[] = [
-    TTS_VOICES.LARA, TTS_VOICES.INDAH, TTS_VOICES.SITI, TTS_VOICES.DEWI,
+    TTS_VOICES.LALA, TTS_VOICES.INDAH, TTS_VOICES.SITI, TTS_VOICES.DEWI,
     TTS_VOICES.HAYASHI, TTS_VOICES.SATO, TTS_VOICES.AYU, TTS_VOICES.ZUNDAMON,
     TTS_VOICES.RITSU, TTS_VOICES.DITO, TTS_VOICES.BUDI, TTS_VOICES.SUZUKI,
     TTS_VOICES.TANAKA, TTS_VOICES.KIMURA, TTS_VOICES.ANDI, TTS_VOICES.FAISAL,
-    TTS_VOICES.TAKAHASHI, TTS_VOICES.KOBAYASHI, TTS_VOICES.NAMONASHI,
+    TTS_VOICES.TAKAHASHI, TTS_VOICES.KOBAYASHI,
   ];
 
+  /**
+   * Get voice deterministically based on text hash.
+   * @param text Input text.
+   * @returns Selected TTS voice.
+   */
   const getDeterministicVoice = (text: string): TtsVoice => {
     let hash = 0;
     for (let i = 0; i < text.length; i++) hash = text.charCodeAt(i) + ((hash << 5) - hash);
@@ -58,7 +74,9 @@ export function KanjiSentences({ sentences = [], character }: KanjiSentencesProp
   };
 
   /**
-   * Mengucapkan contoh kalimat Jepang menggunakan cache DB (VoiceVox) dengan fallback Web Speech API.
+   * Play Japanese text audio using TTS API or Web Speech fallback.
+   * @param text Japanese text to speak.
+   * @param index Sentence index.
    */
   const speakJapanese = async (text: string, index: number) => {
     // Toggle stop jika kalimat yang sama diklik lagi
@@ -106,7 +124,7 @@ export function KanjiSentences({ sentences = [], character }: KanjiSentencesProp
     }
   };
 
-  // Bersihkan audio saat unmount
+  // Clean up audio resources on component unmount.
   useEffect(() => {
     return () => {
       audioRef.current?.pause();

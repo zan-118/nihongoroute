@@ -30,6 +30,10 @@ Font.register({
 // ======================
 // TYPES
 // ======================
+
+/**
+ * Grammar item data structure.
+ */
 export interface PdfGrammarItem {
   title: string;
   meaning?: string;
@@ -40,6 +44,9 @@ export interface PdfGrammarItem {
   examples?: { jp: string; furigana?: string; romaji?: string; id: string }[];
 }
 
+/**
+ * Props for GrammarPdfTemplate component.
+ */
 interface GrammarTemplateProps {
   data: PdfGrammarItem;
 }
@@ -295,6 +302,12 @@ const styles = StyleSheet.create({
 // ======================
 // PARSER & HELPERS
 // ======================
+
+/**
+ * Remove emoji characters from text.
+ * @param text Input string.
+ * @returns Cleaned string.
+ */
 const stripEmojisOnly = (text?: string): string => {
   if (!text) return "";
   return text
@@ -303,12 +316,20 @@ const stripEmojisOnly = (text?: string): string => {
     .trim();
 };
 
+/**
+ * Parse markdown-like inline styles to PDF Text elements.
+ * Supports bold (**), code (`), and italic (*).
+ * @param text Input text.
+ * @param baseStyle Base style for text.
+ * @param key React key.
+ */
 const parseInlineStylesPdf = (
   text: string,
   baseStyle: React.ComponentProps<typeof View>["style"] = {},
   key?: string
 ) => {
   if (!text) return null;
+  // Split text by markdown markers: bold (**), code (`), italic (*)
   const parts = text.split(/(\*\*.*?\*\*|`.*?`|\*.*?\*)/g);
   return (
     <Text key={key} style={baseStyle}>
@@ -340,7 +361,10 @@ const parseInlineStylesPdf = (
   );
 };
 
-// Parser untuk membedah Notes (catatan grammar) ke dalam List, Tabel, Warning Box, atau Paragraf di PDF.
+/**
+ * Parse markdown notes into PDF layout elements (lists, tables, warning boxes, paragraphs).
+ * @param notes Raw notes string.
+ */
 const parseNotesToPdfJSX = (notes: string) => {
   if (!notes) return null;
   const lines = notes.split("\n");
@@ -348,6 +372,7 @@ const parseNotesToPdfJSX = (notes: string) => {
   let currentList: { type: "ul" | "ol"; items: string[] } | null = null;
   let currentTable: string[][] | null = null;
 
+  // Render accumulated list items
   const flushList = (key: string) => {
     if (!currentList) return;
     elements.push(
@@ -365,6 +390,7 @@ const parseNotesToPdfJSX = (notes: string) => {
     currentList = null;
   };
 
+  // Render accumulated table rows
   const flushTable = (key: string) => {
     if (!currentTable || currentTable.length < 2) return;
     const headerCols = currentTable[0];
@@ -404,6 +430,7 @@ const parseNotesToPdfJSX = (notes: string) => {
     currentTable = null;
   };
 
+  // Flush all active lists and tables
   const flushAll = (key: string) => {
     flushList(`${key}-list`);
     flushTable(`${key}-table`);
@@ -416,7 +443,7 @@ const parseNotesToPdfJSX = (notes: string) => {
       return;
     }
 
-    // Pendeteksian Tabel Markdown
+    // Detect markdown table row
     if (trimmed.startsWith("|")) {
       flushList(`table-interrupt-list-${index}`);
       const cols = trimmed
@@ -431,10 +458,10 @@ const parseNotesToPdfJSX = (notes: string) => {
       return;
     }
 
-    // Jika bukan baris tabel, flush tabel aktif
+    // If not table row, flush active table
     flushTable(`table-interrupt-other-${index}`);
 
-    // Item daftar tidak berurutan
+    // Detect unordered list item
     if ((trimmed.startsWith("*") && !trimmed.startsWith("**")) || trimmed.startsWith("-")) {
       const itemText = trimmed.substring(1).trim();
       if (!currentList || currentList.type !== "ul") {
@@ -446,7 +473,7 @@ const parseNotesToPdfJSX = (notes: string) => {
       return;
     }
 
-    // Item daftar berurutan
+    // Detect ordered list item
     const matchOrdered = trimmed.match(/^(\d+)\.\s(.*)/);
     if (matchOrdered) {
       const itemText = matchOrdered[2].trim();
@@ -459,10 +486,10 @@ const parseNotesToPdfJSX = (notes: string) => {
       return;
     }
 
-    // Bersihkan daftar aktif jika bukan item list
+    // Flush active list if not list item
     flushList(`list-flush-${index}`);
 
-    // Warning Box
+    // Detect warning box
     if (trimmed.startsWith("⚠️")) {
       elements.push(
         <View key={`warning-${index}`} style={styles.warningBox} wrap={false}>
@@ -475,7 +502,7 @@ const parseNotesToPdfJSX = (notes: string) => {
       return;
     }
 
-    // Paragraf biasa
+    // Standard paragraph
     elements.push(
       <View key={`para-${index}`} style={{ marginVertical: 6 }}>
         {parseInlineStylesPdf(trimmed, styles.notesText)}
@@ -490,6 +517,10 @@ const parseNotesToPdfJSX = (notes: string) => {
 // ======================
 // MAIN COMPONENT
 // ======================
+
+/**
+ * PDF template component for grammar lessons.
+ */
 export const GrammarPdfTemplate = ({ data }: GrammarTemplateProps) => {
   const jlptLevel = data.jlptLevel || data.jlpt_level || "N5";
   return (

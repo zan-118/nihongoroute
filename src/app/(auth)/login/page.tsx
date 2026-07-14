@@ -13,7 +13,12 @@ import { createPageMetadata } from "@/lib/seo";
 // ======================
 // KONFIGURASI METADATA
 // ======================
+/**
+ * Metadata for login page.
+ * Disable search indexing. Set SEO title and description.
+ */
 export const metadata: Metadata = {
+  // Generate base SEO metadata.
   ...createPageMetadata({
     title: "Masuk & Daftar | NihongoRoute",
     description: "Masuk ke akun NihongoRoute Anda untuk melanjutkan petualangan belajar bahasa Jepang.",
@@ -25,6 +30,10 @@ export const metadata: Metadata = {
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * Login page entry point.
+ * Render client-side login interface.
+ */
 export default function LoginPage() {
   return <LoginClient />;
 }

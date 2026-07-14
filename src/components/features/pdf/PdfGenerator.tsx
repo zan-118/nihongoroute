@@ -27,7 +27,10 @@ import { GrammarPdfTemplate } from "./templates/GrammarPdfTemplate";
 // ==========================================
 // IMPOR DINAMIS & KONFIGURASI
 // ==========================================
-// Impor dinamis untuk PDFDownloadLink guna memperkecil ukuran bundel awal
+/**
+ * Dynamic import for PDFDownloadLink.
+ * Prevents server-side rendering issues with PDF engine.
+ */
 const PDFDownloadLink = dynamic(
   () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
   {
@@ -48,20 +51,34 @@ const PDFDownloadLink = dynamic(
 // ==========================================
 // TIPE & ANTARMUKA (TYPES & INTERFACES)
 // ==========================================
+/**
+ * Supported PDF template types.
+ */
 export type TemplateType = "lesson" | "vocab" | "certificate" | "cheatsheet" | "grammar";
 
+/**
+ * Props for PdfGenerator component.
+ */
 interface PdfGeneratorProps {
-   
+  /** Data payload passed to the selected PDF template. */
   data: unknown;
+  /** Type of PDF template to generate. */
   type: TemplateType;
+  /** Optional title for the PDF document. */
   title?: string;
+  /** Optional JLPT level. */
   level?: string;
+  /** Optional category for cheatsheets. */
   category?: string;
 }
 
 // ==========================================
 // KOMPONEN UTAMA
 // ==========================================
+/**
+ * PdfGenerator component.
+ * Renders a download button that triggers client-side PDF generation.
+ */
 export default function PdfGenerator({
   data,
   type,
@@ -71,7 +88,10 @@ export default function PdfGenerator({
 }: PdfGeneratorProps) {
   const { isClient, getFileName } = usePdfGenerator({ type, title, level });
 
-  // Memilih template dokumen PDF yang sesuai dengan jenis yang ditentukan
+  /**
+   * Resolves and returns the appropriate PDF template component based on type.
+   * Casts data to template-specific interfaces.
+   */
   const getDocument = (): React.ReactElement => {
     if (type === "lesson")
       return <LessonPdfTemplate lessonData={data as unknown as import("./templates/LessonPdfTemplate").PdfLessonData} />;
@@ -86,6 +106,7 @@ export default function PdfGenerator({
     return <LessonPdfTemplate lessonData={data as unknown as import("./templates/LessonPdfTemplate").PdfLessonData} />;
   };
 
+  // Prevent rendering if client hydration is incomplete or data is missing
   if (!isClient || !data || (Array.isArray(data) && data.length === 0)) {
     return (
       <Button variant="ghost" disabled className="bg-card border-border neo-inset shadow-none px-6 py-3 rounded-xl text-muted-foreground text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 w-full sm:w-auto h-auto">
@@ -121,4 +142,3 @@ export default function PdfGenerator({
     </PDFDownloadLink>
   );
 }
-

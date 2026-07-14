@@ -39,29 +39,55 @@ import { useLineTTS } from "../hooks/useLineTTS";
 import { evaluateDictation, extractDictationText } from "@/lib/dictation";
 import { TranscriptLine, QuizItem } from "../types";
 
+/**
+ * Props for ListeningWorkspace component.
+ */
 interface ListeningWorkspaceProps {
+  /** Array of transcript lines containing text, translation, and timing data */
   transcript: TranscriptLine[];
+  /** Index of the currently active transcript line */
   activeIndex: number;
+  /** Callback to seek audio playback to a specific timestamp */
   seekToLine: (startTime: number) => void;
+  /** Optional URL of the audio file */
   audioUrl?: string;
+  /** Optional callback triggered on audio playback time updates */
   onTimeUpdate?: (time: number) => void;
+  /** Optional external seek timestamp to trigger audio updates */
   externalSeek?: number;
+  /** Optional list of quiz questions related to the audio */
   quiz?: QuizItem[];
+  /** Optional background image URL for the visualizer scene */
   imageUrl?: string;
+  /** Optional list of illustrations to display when no speaker is present */
   illustrations?: { title?: string; content: string }[];
+  /** Callback triggered when the quiz is completed, returning the final score */
   onQuizComplete: (score: number) => void;
+  /** Query parameters or identifiers for tools */
   toolParams: string;
+  /** Title of the listening exercise */
   title: string;
 }
 
+/**
+ * Represents a node structure in PortableText format.
+ */
 interface PortableTextNode {
+  /** Text content of the node */
   text?: string;
+  /** Child nodes containing text segments */
   children?: { text?: string }[];
 }
 
+/**
+ * Extracts plain text from a transcript line's text field, handling both strings and PortableText arrays.
+ * @param text - Raw text field from TranscriptLine.
+ * @returns Extracted plain text string.
+ */
 function extractLineText(text: TranscriptLine["text"]): string {
   if (typeof text === "string") return text;
   if (Array.isArray(text)) {
+    // Parse PortableText block structure
     return (text as unknown as PortableTextNode[])
       .map((block) =>
         block?.children?.map((c) => c?.text || "").join("") || block?.text || ""
@@ -71,6 +97,10 @@ function extractLineText(text: TranscriptLine["text"]): string {
   return String(text || "");
 }
 
+/**
+ * ListeningWorkspace component.
+ * Provides interactive transcript, dictation practice, and quiz modes for Japanese listening practice.
+ */
 export default function ListeningWorkspace({
   transcript,
   activeIndex,
@@ -85,11 +115,15 @@ export default function ListeningWorkspace({
   toolParams,
   title,
 }: ListeningWorkspaceProps) {
+  // Active workspace tab state
   const [activeTab, setActiveTab] = useState<"study" | "dictation" | "quiz">("study");
+  // Toggle translation visibility state
   const [showTranslation, setShowTranslation] = useState(false);
+  // Toggle transcript text visibility state
   const [isTranscriptHidden, setIsTranscriptHidden] = useState(false);
 
   // Dictation States
+  // Filter and clean transcript lines suitable for dictation practice
   const dictationLines = useMemo(
     () =>
       transcript
@@ -111,7 +145,7 @@ export default function ListeningWorkspace({
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [quizScore, setQuizScore] = useState(0);
 
-  // TTS Line Hook
+  // TTS Line Hook for fallback audio playback
   const {
     speakingIndex,
     loadingIndex,
@@ -125,11 +159,12 @@ export default function ListeningWorkspace({
     pausePlaylist,
   } = useLineTTS({ rate: "medium", lines: transcript });
 
+  // Determine active line index based on playlist or manual audio sync
   const currentActiveIndex = isPlayingPlaylist ? playlistIndex : activeIndex;
   const activeLineRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll transcript line
+  // Auto-scroll active transcript line into view
   useEffect(() => {
     if (activeLineRef.current && scrollContainerRef.current) {
       const parent = scrollContainerRef.current;
@@ -148,6 +183,9 @@ export default function ListeningWorkspace({
   const dictationPassedCount = Object.values(dictationAttempts).filter((a) => a.isPassed).length;
   const dictationScore = dictationLines.length > 0 ? Math.round((dictationPassedCount / dictationLines.length) * 100) : 0;
 
+  /**
+   * Evaluates user's dictation input against the clean target text.
+   */
   const handleCheckDictation = () => {
     if (!dictationActiveLine) return;
     const evaluation = evaluateDictation(dictationActiveLine.cleanText, dictationAnswer);
@@ -157,6 +195,9 @@ export default function ListeningWorkspace({
     }));
   };
 
+  /**
+   * Advances to the next dictation line and triggers audio playback.
+   */
   const handleNextDictation = () => {
     if (dictationIndex < dictationLines.length - 1) {
       const nextLine = dictationLines[dictationIndex + 1];
@@ -171,7 +212,7 @@ export default function ListeningWorkspace({
     }
   };
 
-  // Speaker Alignment Memo
+  // Speaker Alignment Memo: Assigns left/right layout positions to speakers dynamically
   const speakerSides = useMemo(() => {
     const sides: Record<string, "left" | "right"> = {};
     let nonNarratorCount = 0;
@@ -188,7 +229,9 @@ export default function ListeningWorkspace({
     return sides;
   }, [transcript]);
 
-  // Quiz submission
+  /**
+   * Submits quiz answers, calculates score, and triggers completion callback.
+   */
   const handleSubmitQuiz = () => {
     if (quizSubmitted) return;
     let correct = 0;
@@ -286,6 +329,7 @@ export default function ListeningWorkspace({
                   let bubbleClass = "rounded-lg rounded-tl-none bg-muted/10 border-border/80 hover:bg-muted/15";
                   let textAccent = "text-primary";
 
+                  // Align bubbles based on speaker side mapping
                   if (speaker) {
                     const side = speakerSides[speaker];
                     if (side === "right") {

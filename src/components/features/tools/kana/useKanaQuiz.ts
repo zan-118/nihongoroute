@@ -15,17 +15,23 @@ import { KANA_DATA, KanaType, KanaCategory } from "./kana-data";
 // HOOK UTAMA
 // ==========================================
 /**
- * Hook khusus pengendali logika kuis kana.
+ * Custom hook to manage Kana quiz state, score, lives, options, and handlers.
  * 
- * @returns State kuis kana, score, sisa nyawa, opsi, dan method handler.
+ * @returns Object containing quiz state, theme variables, and control handlers.
  */
 export function useKanaQuiz() {
   // ==========================================
   // STATUS & STATE & HOOKS
   // ==========================================
   const searchParams = useSearchParams();
+  
+  /** Active kana type (hiragana or katakana) */
   const [type, setType] = useState<KanaType>("hiragana");
+  
+  /** Active kana category (seion, dakuon, or yoon) */
   const [category, setCategory] = useState<KanaCategory>("seion");
+  
+  /** Currently selected character for writing practice */
   const [selectedChar, setSelectedChar] = useState<{
     char: string;
     romaji: string;
@@ -34,34 +40,64 @@ export function useKanaQuiz() {
   // ==========================================
   // EFEK SAMPING (EFFECTS)
   // ==========================================
-  // Auto-open writing dialog if mode=writing is present
+  // Auto-open writing dialog if mode=writing is present in URL search parameters
   useEffect(() => {
     const mode = searchParams.get("mode");
     if (mode === "writing" && !selectedChar) {
+      // Defer state update to avoid rendering conflicts
       requestAnimationFrame(() => {
         setSelectedChar({ char: "あ", romaji: "a" });
       });
     }
   }, [searchParams, selectedChar]);
 
+  /** Flag indicating if the quiz is currently active */
   const [isQuizActive, setIsQuizActive] = useState(false);
+  
+  /** Current score of the user in the active quiz session */
   const [quizScore, setQuizScore] = useState(0);
+  
+  /** Remaining lives of the user in the active quiz session */
   const [quizLives, setQuizLives] = useState(3);
+  
+  /** Current target character for the active quiz question */
   const [quizChar, setQuizChar] = useState<{ char: string; romaji: string } | null>(null);
+  
+  /** Multiple choice options for the current question */
   const [quizOptions, setQuizOptions] = useState<string[]>([]);
+  
+  /** User's selected answer input */
   const [quizInput, setQuizInput] = useState("");
+  
+  /** Feedback status for the answered question */
   const [quizFeedback, setQuizFeedback] = useState<"correct" | "incorrect" | null>(null);
+  
+  /** Flag indicating if the quiz session has ended */
   const [gameOver, setGameOver] = useState(false);
+  
+  /** Question mode: classic (read kana, choose romaji) or audio (hear sound, choose kana) */
   const [questionMode, setQuestionMode] = useState<"classic" | "audio">("classic");
+  
+  /** Total number of questions answered in the current session */
   const [questionCount, setQuestionCount] = useState(0);
+  
+  /** Flag indicating if the user successfully passed the quiz */
   const [isVictory, setIsVictory] = useState(false);
 
+  /** Action to add experience points to the user's profile */
   const addXP = useUserStore((state) => state.addXP);
 
   // ==========================================
   // FUNGSI PEMBANTU (HELPERS)
   // ==========================================
 
+  /**
+   * Retrieves all valid kana characters and their romaji equivalents for a given type and category.
+   * 
+   * @param currentType - The kana type (hiragana/katakana).
+   * @param currentCategory - The kana category (seion/dakuon/yoon).
+   * @returns Array of character-romaji pairs.
+   */
   const getAllKanaForType = useCallback((currentType: KanaType, currentCategory: KanaCategory) => {
     const pairs: { char: string; romaji: string }[] = [];
     const data = KANA_DATA[currentCategory];
@@ -81,6 +117,13 @@ export function useKanaQuiz() {
   // ==========================================
   // LOGIKA PENGENDALI & METODE (HANDLERS)
   // ==========================================
+  
+  /**
+   * Generates the next quiz question, randomizes the mode, and populates multiple choice options.
+   * 
+   * @param currentType - The active kana type.
+   * @param currentCategory - The active kana category.
+   */
   const nextQuizQuestion = useCallback((currentType: KanaType = type, currentCategory: KanaCategory = category) => {
     const pairs = getAllKanaForType(currentType, currentCategory);
     if (pairs.length === 0) return;
@@ -95,12 +138,14 @@ export function useKanaQuiz() {
     const correctAnswerValue = nextMode === "classic" ? randomPair.romaji : randomPair.char;
     options.add(correctAnswerValue);
     
+    // Fill options set with unique incorrect answers
     while (options.size < 4 && options.size < pairs.length) {
       const wrongPair = pairs[Math.floor(Math.random() * pairs.length)];
       const wrongValue = nextMode === "classic" ? wrongPair.romaji : wrongPair.char;
       options.add(wrongValue);
     }
     
+    // Shuffle options randomly
     const shuffledOptions = Array.from(options).sort(() => Math.random() - 0.5);
     
     setQuizChar(randomPair);
@@ -109,6 +154,9 @@ export function useKanaQuiz() {
     setQuizFeedback(null);
   }, [type, category, getAllKanaForType]);
 
+  /**
+   * Resets quiz states and starts a new quiz session.
+   */
   const startQuiz = useCallback(() => {
     setQuizScore(0);
     setQuizLives(3);
@@ -119,6 +167,11 @@ export function useKanaQuiz() {
     nextQuizQuestion(type, category);
   }, [type, category, nextQuizQuestion]);
 
+  /**
+   * Handles the user's option selection, updates score/lives, and checks for game over or victory conditions.
+   * 
+   * @param option - The selected answer string.
+   */
   const handleOptionClick = useCallback((option: string) => {
     if (gameOver || isVictory || !quizChar || quizFeedback) return;
     setQuizInput(option);
@@ -136,6 +189,7 @@ export function useKanaQuiz() {
       setQuizScore(nextScore);
       addXP(1);
 
+      // Check if maximum questions reached
       if (nextCount >= 20) {
         setTimeout(() => {
           if (nextScore >= 15 && quizLives > 0) {
@@ -154,6 +208,7 @@ export function useKanaQuiz() {
       const nextLives = quizLives - 1;
       setQuizLives(nextLives);
       
+      // Check if lives depleted or maximum questions reached
       if (nextLives <= 0 || nextCount >= 20) {
         setTimeout(() => {
           if (nextCount >= 20 && quizScore >= 15 && nextLives > 0) {
@@ -170,6 +225,11 @@ export function useKanaQuiz() {
     }
   }, [gameOver, isVictory, quizChar, quizFeedback, questionMode, questionCount, quizScore, quizLives, addXP, nextQuizQuestion]);
 
+  /**
+   * Closes the quiz modal and resets victory/gameover states.
+   * 
+   * @param open - Boolean indicating if the quiz should remain open.
+   */
   const handleCloseQuiz = useCallback((open: boolean) => {
     setIsQuizActive(open);
     if (!open) {
@@ -178,6 +238,7 @@ export function useKanaQuiz() {
     }
   }, []);
 
+  // Dynamic theme classes based on active kana type
   const isHira = type === "hiragana";
   const themeColor = isHira ? "text-primary" : "text-secondary";
   const themeBorder = isHira ? "border-primary/30" : "border-secondary/30";

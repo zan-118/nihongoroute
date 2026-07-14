@@ -57,30 +57,30 @@ const EDGE_VOICE_MAP = {
 };
 
 const GEMINI_VOICE_MAP = {
-  // Wanita
-  "indah": "Zephyr",       // default premium (Bright)
-  "lara": "Leda",         // young/cheerful (Youthful)
-  "siti": "Vindemiatrix", // gentle/clear (Gentle)
-  "dewi": "Laomedeia",    // energetic/cutesy (Upbeat)
-  "hayashi": "Gacrux",    // mature/academic (Mature)
-  "sato": "Sulafat",      // friendly/mature (Warm)
-  "ayu": "Erinome",       // cool/clear (Clear)
-  "zundamon": "Autonoe",  // mascot child/neutral (Bright/Youthful)
-  "ritsu": "Achernar",    // cool/neutral (Soft)
+  // Wanita (11)
+  "indah": "Aoede",
+  "lara": "Zephyr",
+  "siti": "Vindemiatrix",
+  "dewi": "Leda",
+  "hayashi": "Sulafat",
+  "sato": "Erinome",
+  "ayu": "Callirrhoe",
+  "zundamon": "Autonoe",
+  "ritsu": "Enceladus",
+  "sakura": "Kore",
+  "ani": "Achernar",
 
-  // Pria
-  "budi": "Charon",       // default polite/formal (Informative)
-  "dito": "Alnilam",      // cool/deep (Firm)
-  "suzuki": "Iapetus",    // smart/young (Clear)
-  "tanaka": "Fenrir",     // energetic/rough (Excitable)
-  "yamada": "Achird",     // warm/casual (Friendly)
-  "kimura": "Algieba",    // polite/formal (Smooth)
-  "andi": "Orus",         // dramatic/heroic (Firm)
-  "faisal": "Puck",       // cool/youthful (Upbeat)
-  "takahashi": "Rasalgethi", // mature/deep (Informative)
-  "kobayashi": "Zubenelgenubi", // youthful (Casual)
-  "namonashi": "Algenib",  // middle-aged/rough (Gravelly)
-  "ooba": "Sadachbia",    // boy/child (Lively)
+  // Pria (10)
+  "budi": "Charon",
+  "dito": "Umbriel",
+  "suzuki": "Iapetus",
+  "tanaka": "Orus",
+  "kimura": "Fenrir",
+  "andi": "Alnilam",
+  "faisal": "Algieba",
+  "takahashi": "Achird",
+  "kobayashi": "Rasalgethi",
+  "yamada": "Algenib"
 };
 
 function printUsage() {
@@ -274,13 +274,25 @@ async function main() {
       process.exit(0);
     }
 
-    const geminiVoice = GEMINI_VOICE_MAP[options.voice];
-    if (!geminiVoice) {
-      throw new Error(`Suara Gemini untuk karakter '${options.voice}' tidak ditemukan di pemetaan.`);
-    }
+    let audioBuffer;
+    if (options.voice === "zundamon") {
+      try {
+        console.log(`   ➔ [VOICEVOX] Menyintesis Zundamon (Speaker ID: 3)...`);
+        const wavBuffer = await synthesizeVoicevox(options.text, 3);
+        audioBuffer = convertWavToMp3(wavBuffer);
+        console.log(`   └─ [VOICEVOX] Sintesis Zundamon sukses.`);
+      } catch (vvError) {
+        throw new Error(`Gagal sintesis VOICEVOX untuk Zundamon: ${vvError.message}`);
+      }
+    } else {
+      const geminiVoice = GEMINI_VOICE_MAP[options.voice];
+      if (!geminiVoice) {
+        throw new Error(`Suara Gemini untuk karakter '${options.voice}' tidak ditemukan di pemetaan.`);
+      }
 
-    const audioBuffer = await synthesizeGeminiTts(options.text, geminiVoice);
-    console.log(`   └─ [Gemini TTS] Sintesis sukses (${geminiVoice}).`);
+      audioBuffer = await synthesizeGeminiTts(options.text, geminiVoice);
+      console.log(`   └─ [Gemini TTS] Sintesis sukses (${geminiVoice}).`);
+    }
 
     console.log(`   ⚡ Mengunggah ke Supabase Storage (${filename})...`);
     const { error: uploadError } = await supabase.storage

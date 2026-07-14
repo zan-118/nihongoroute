@@ -13,7 +13,15 @@ import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 // ==========================================
 // INISIALISASI KLIEN SERVER SUPABASE
 // ==========================================
+
+/**
+ * Creates Supabase client for server-side contexts (Server Components, Actions, Route Handlers).
+ * Handles cookie storage automatically.
+ * 
+ * @returns Promise resolving to Supabase client instance.
+ */
 export async function createClient() {
+  // Await Next.js cookie store for header manipulation
   const cookieStore = await cookies();
 
   return createServerClient(
@@ -26,6 +34,7 @@ export async function createClient() {
         },
         setAll(cookiesToSet) {
           try {
+            // Apply cookies to response headers
             cookiesToSet.forEach(({ name, value, options }) => {
               cookieStore.set(name, value, options);
             });
@@ -42,6 +51,8 @@ export async function createClient() {
 /**
  * Klien Supabase statis bebas cookie untuk digunakan saat build time (generateStaticParams)
  * atau operasi pembacaan data publik tanpa context request HTTP.
+ * 
+ * @returns Supabase client instance.
  */
 export function createStaticClient() {
   return createSupabaseClient(
@@ -49,4 +60,3 @@ export function createStaticClient() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 }
-

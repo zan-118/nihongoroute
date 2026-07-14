@@ -16,8 +16,13 @@ import { useUIStore } from "@/store/useUIStore";
 // ==========================================
 // ANTARMUKA & TIPE DATA
 // ==========================================
+/**
+ * Props for GrammarSearch component.
+ */
 interface GrammarSearchProps {
+  /** Current search query value. */
   value: string;
+  /** Callback function triggered when search input changes. */
   onChange: (value: string) => void;
 }
 
@@ -25,13 +30,16 @@ interface GrammarSearchProps {
 // KOMPONEN UTAMA: GrammarSearch
 // ==========================================
 /**
- * Komponen pencarian interaktif lengkap dengan penyesuai format baris tampilan.
+ * Grammar search input component with layout toggle buttons.
+ * Syncs layout preference with global UI store.
  * 
- * @param {GrammarSearchProps} props Properti untuk komponen pencarian tata bahasa.
- * @stores Mengakses `useUIStore` untuk menyimpan dan membaca preferensi visual pengguna.
+ * @param props - Component properties.
+ * @returns Search and layout toggle UI.
  */
 export function GrammarSearch({ value, onChange }: GrammarSearchProps) {
+  // Get current layout preference from store. Default to grid.
   const layoutPreference = useUIStore((s) => s.settings.layoutPreference) ?? "grid";
+  // Get layout setter action from store.
   const setLayoutPreference = useUIStore((s) => s.setLayoutPreference);
 
   return (
@@ -45,6 +53,7 @@ export function GrammarSearch({ value, onChange }: GrammarSearchProps) {
           placeholder="Cari pola kalimat (contoh: ~te kureru)..."
           className="w-full pl-14 md:pl-16 pr-8 py-5 md:py-7 h-auto bg-[rgb(var(--card-rgb)/0.4)]  border border-border rounded-lg md:rounded-3xl text-sm md:text-lg text-foreground placeholder:text-muted-foreground/30 font-bold shadow-2xl focus-visible:ring-primary/30 focus-visible:border-primary/50 transition-all duration-500 font-sans glass"
           value={value}
+          // Trigger parent state update on input change.
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
         />
         {/* Cincin Pendar Dekoratif Fokus (Decorative Glow Ring) */}
@@ -56,6 +65,7 @@ export function GrammarSearch({ value, onChange }: GrammarSearchProps) {
         <Button
           type="button"
           variant="ghost"
+          // Set layout preference to grid.
           onClick={() => setLayoutPreference("grid")}
           className={`p-2 h-9 w-9 sm:h-11 sm:w-11 rounded-xl transition-all ${
             layoutPreference === "grid"
@@ -69,6 +79,7 @@ export function GrammarSearch({ value, onChange }: GrammarSearchProps) {
         <Button
           type="button"
           variant="ghost"
+          // Set layout preference to list.
           onClick={() => setLayoutPreference("list")}
           className={`p-2 h-9 w-9 sm:h-11 sm:w-11 rounded-xl transition-all ${
             layoutPreference === "list"
@@ -83,4 +94,3 @@ export function GrammarSearch({ value, onChange }: GrammarSearchProps) {
     </div>
   );
 }
-

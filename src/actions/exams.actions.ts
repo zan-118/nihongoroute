@@ -25,6 +25,10 @@ import type {
 // ======================
 // TYPES
 // ======================
+
+/**
+ * Raw lesson item structure returned from Sanity CMS.
+ */
 interface SanityLessonListItem {
   _id: string;
   title: string;
@@ -32,6 +36,9 @@ interface SanityLessonListItem {
   slug: string;
 }
 
+/**
+ * Raw mock exam item structure returned from Sanity CMS.
+ */
 interface SanityMockExamListItem {
   _id: string;
   title: string;
@@ -43,6 +50,9 @@ interface SanityMockExamListItem {
   levelCode?: string;
 }
 
+/**
+ * Normalized mock exam item structure used across the application.
+ */
 interface MockExamListItem {
   id: string;
   slug: string;
@@ -56,6 +66,9 @@ interface MockExamListItem {
 
 import { ExamPortableTextBlock } from "@/components/features/exams/mock-engine/ExamQuestionText";
 
+/**
+ * Raw question item structure returned from Sanity CMS.
+ */
 interface SanityQuestionItem {
   _key: string;
   section: string;
@@ -66,6 +79,13 @@ interface SanityQuestionItem {
   correctAnswer: number | string;
 }
 
+/**
+ * Normalizes raw section string to valid ExamQuestion section type.
+ * Falls back to "vocabulary" if invalid.
+ * 
+ * @param section - Raw section string
+ * @returns Valid section type
+ */
 function normalizeExamSection(section: string): ExamQuestion["section"] {
   if (
     section === "vocabulary" ||
@@ -84,14 +104,7 @@ function normalizeExamSection(section: string): ExamQuestion["section"] {
 // ======================
 
 /**
- * Server Action: getCourseCategoryData
- * 
- * Mengambil data kategori kursus beserta pelajaran dan simulasi ujian JLPT yang terkait.
- * Menghubungkan basis data Supabase (untuk metadata kategori) dengan Sanity CMS 
- * (untuk konten pelajaran statis dan modul ujian) secara paralel menggunakan arsitektur split-source.
- * 
- * @param {string} slug - Slug unik kategori kursus (misal: "n5", "n4")
- * @returns {Promise<Object>} Mengembalikan objek kategori, daftar pelajaran, dan daftar simulasi ujian
+ * Database row structure for lessons and articles.
  */
 interface DBLessonRow {
   id: string;
@@ -103,6 +116,16 @@ interface DBLessonRow {
   image_url: string | null;
 }
 
+/**
+ * Server Action: getCourseCategoryData
+ * 
+ * Mengambil data kategori kursus beserta pelajaran dan simulasi ujian JLPT yang terkait.
+ * Menghubungkan basis data Supabase (untuk metadata kategori) dengan Sanity CMS 
+ * (untuk konten pelajaran statis dan modul ujian) secara paralel menggunakan arsitektur split-source.
+ * 
+ * @param slug - Slug unik kategori kursus (misal: "n5", "n4")
+ * @returns Mengembalikan objek kategori, daftar pelajaran, dan daftar simulasi ujian
+ */
 export async function getCourseCategoryData(slug: string) {
   const supabase = await createClient();
   
@@ -135,6 +158,7 @@ export async function getCourseCategoryData(slug: string) {
       dbLessons = (data || []) as unknown as DBLessonRow[];
     }
 
+    // Map database rows to normalized lesson objects
     const supabaseLessons = dbLessons.map((l) => ({
       _id: l.id,
       title: l.title,
@@ -145,6 +169,7 @@ export async function getCourseCategoryData(slug: string) {
       image_url: l.image_url
     }));
 
+    // Sort lessons by order number ascending
     const lessons = supabaseLessons.sort((a, b) => (a.order_number || 0) - (b.order_number || 0));
 
     // 3. Ambil Ujian dari Sanity berdasarkan category_id
@@ -161,6 +186,7 @@ export async function getCourseCategoryData(slug: string) {
       categorySlug: category.slug
     }, sanityPublicFetchOptions);
 
+    // Map Sanity mock exams to normalized list items
     const sanityMockExams: MockExamListItem[] = (mockExams || []).map((e: SanityMockExamListItem) => ({
       id: e._id,
       title: e.title,
@@ -170,13 +196,16 @@ export async function getCourseCategoryData(slug: string) {
       levelCode: e.levelCode || "general",
       source: "sanity"
     }));
+    // Fetch fallback/additional mock exams from Supabase
     const supabaseMockExams = await getSupabaseExamTemplatesList({
       categoryId: category.id,
       jlptLevel: category.slug,
     });
+    // Create set of existing slugs/IDs to prevent duplicates
     const legacyKeys = new Set(
       sanityMockExams.map((exam) => exam.slug || exam.id).filter(Boolean)
     );
+    // Merge Sanity and Supabase exams, prioritizing Sanity
     const mergedMockExams = [
       ...sanityMockExams,
       ...supabaseMockExams.filter(
@@ -212,7 +241,7 @@ export async function getCourseCategoryData(slug: string) {
  * 
  * Mengambil daftar ringkas seluruh simulasi ujian (Mock Exams) aktif dari Sanity CMS.
  * 
- * @returns {Promise<Array>} Daftar simulasi ujian terformat
+ * @returns Daftar simulasi ujian terformat
  */
 export async function getExamsList() {
   try {
@@ -228,6 +257,7 @@ export async function getExamsList() {
     }`;
 
     const data = await sanityClient.fetch(query, {}, sanityPublicFetchOptions);
+    // Map Sanity exams to normalized list items
     const sanityExams: MockExamListItem[] = (data || []).map((e: SanityMockExamListItem) => ({
       id: e._id,
       slug: e.slug,
@@ -238,11 +268,14 @@ export async function getExamsList() {
       passingScore: e.passing_score ?? 90,
       source: "sanity"
     }));
+    // Fetch additional exams from Supabase
     const supabaseExams = await getSupabaseExamTemplatesList();
+    // Prevent duplicates by tracking existing slugs/IDs
     const legacyKeys = new Set(
       sanityExams.map((exam) => exam.slug || exam.id).filter(Boolean)
     );
 
+    // Merge lists prioritizing Sanity exams
     return [
       ...sanityExams,
       ...supabaseExams.filter((exam) => !legacyKeys.has(exam.slug || exam.id)),
@@ -260,8 +293,8 @@ export async function getExamsList() {
  * Mengimplementasikan GROQ Asset Coalesce Expansion untuk mengambil file audio/gambar asli Sanity,
  * serta Resolusi Dinamis UUID Kategori dari Supabase PostgreSQL untuk mencegah 404 client routing.
  * 
- * @param {string} idOrSlug - ID dokumen Sanity atau slug unik simulasi ujian
- * @returns {Promise<Object | null>} Detail simulasi ujian terformat lengkap, atau null jika tidak ditemukan
+ * @param idOrSlug - ID dokumen Sanity atau slug unik simulasi ujian
+ * @returns Detail simulasi ujian terformat lengkap, atau null jika tidak ditemukan
  */
 export async function getExamByIdOrSlug(idOrSlug: string): Promise<ExamData | null> {
   const supabase = createStaticClient();
@@ -288,6 +321,7 @@ export async function getExamByIdOrSlug(idOrSlug: string): Promise<ExamData | nu
 
     const exam = await sanityClient.fetch(query, { idOrSlug }, { cache: "no-store" });
 
+    // Fallback to Supabase if exam is not found in Sanity
     if (!exam) return getSupabaseExamTemplateBySlug(idOrSlug);
 
     // Selesaikan categorySlug jika berupa UUID dari Supabase, atau gunakan langsung jika berupa slug
@@ -331,6 +365,9 @@ export async function getExamByIdOrSlug(idOrSlug: string): Promise<ExamData | nu
 
 /**
  * Mengambil detail satu simulasi ujian berdasarkan slug.
+ * 
+ * @param slug - Slug unik simulasi ujian
+ * @returns Detail item pustaka ujian, atau null jika gagal
  */
 export async function getLibraryExamDetail(slug: string): Promise<LibraryItem | null> {
   try {

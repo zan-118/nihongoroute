@@ -16,18 +16,40 @@ import { cn } from "@/lib/utils"
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Root container. Manage state.
+ */
 const DropdownMenu = DropdownMenuPrimitive.Root
 
+/**
+ * Open menu. Receive click.
+ */
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger
 
+/**
+ * Group items. Assist screen readers.
+ */
 const DropdownMenuGroup = DropdownMenuPrimitive.Group
 
+/**
+ * Render content outside DOM tree. Prevent overflow clip.
+ */
 const DropdownMenuPortal = DropdownMenuPrimitive.Portal
 
+/**
+ * Sub-menu container. Manage nested state.
+ */
 const DropdownMenuSub = DropdownMenuPrimitive.Sub
 
+/**
+ * Group radio items. Manage single selection.
+ */
 const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup
 
+/**
+ * Trigger nested menu. Show arrow icon.
+ */
 const DropdownMenuSubTrigger = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.SubTrigger>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger> & {
@@ -38,7 +60,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
     ref={ref}
     className={cn(
       "flex cursor-default select-none items-center rounded-xl px-3 py-2 text-sm font-semibold outline-none transition-colors focus:bg-primary/10 focus:text-primary data-[state=open]:bg-primary/10 data-[state=open]:text-primary",
-      inset && "pl-8",
+      inset && "pl-8", // Shift right if inset prop active
       className
     )}
     {...props}
@@ -50,6 +72,9 @@ const DropdownMenuSubTrigger = React.forwardRef<
 DropdownMenuSubTrigger.displayName =
   DropdownMenuPrimitive.SubTrigger.displayName
 
+/**
+ * Container for nested items. Animate entry.
+ */
 const DropdownMenuSubContent = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.SubContent>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubContent>
@@ -66,6 +91,9 @@ const DropdownMenuSubContent = React.forwardRef<
 DropdownMenuSubContent.displayName =
   DropdownMenuPrimitive.SubContent.displayName
 
+/**
+ * Main container. Position relative to trigger.
+ */
 const DropdownMenuContent = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
@@ -84,6 +112,9 @@ const DropdownMenuContent = React.forwardRef<
 ))
 DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName
 
+/**
+ * Standard interactive item. Handle click.
+ */
 const DropdownMenuItem = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
@@ -94,7 +125,7 @@ const DropdownMenuItem = React.forwardRef<
     ref={ref}
     className={cn(
       "relative flex cursor-default select-none items-center rounded-xl px-3 py-2 text-sm font-semibold outline-none transition-colors focus:bg-primary/10 focus:text-primary data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-      inset && "pl-8",
+      inset && "pl-8", // Shift right if inset prop active
       className
     )}
     {...props}
@@ -102,6 +133,9 @@ const DropdownMenuItem = React.forwardRef<
 ))
 DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName
 
+/**
+ * Toggleable item. Show checkmark when active.
+ */
 const DropdownMenuCheckboxItem = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.CheckboxItem>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.CheckboxItem>
@@ -126,6 +160,9 @@ const DropdownMenuCheckboxItem = React.forwardRef<
 DropdownMenuCheckboxItem.displayName =
   DropdownMenuPrimitive.CheckboxItem.displayName
 
+/**
+ * Single-select item. Show dot when active.
+ */
 const DropdownMenuRadioItem = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.RadioItem>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioItem>
@@ -148,6 +185,9 @@ const DropdownMenuRadioItem = React.forwardRef<
 ))
 DropdownMenuRadioItem.displayName = DropdownMenuPrimitive.RadioItem.displayName
 
+/**
+ * Section header. Non-interactive text.
+ */
 const DropdownMenuLabel = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Label>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Label> & {
@@ -158,7 +198,7 @@ const DropdownMenuLabel = React.forwardRef<
     ref={ref}
     className={cn(
       "px-3 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground",
-      inset && "pl-8",
+      inset && "pl-8", // Shift right if inset prop active
       className
     )}
     {...props}
@@ -166,6 +206,9 @@ const DropdownMenuLabel = React.forwardRef<
 ))
 DropdownMenuLabel.displayName = DropdownMenuPrimitive.Label.displayName
 
+/**
+ * Divider line. Separate sections.
+ */
 const DropdownMenuSeparator = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Separator>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator>
@@ -178,6 +221,9 @@ const DropdownMenuSeparator = React.forwardRef<
 ))
 DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName
 
+/**
+ * Keyboard shortcut text. Align right.
+ */
 const DropdownMenuShortcut = ({
   className,
   ...props

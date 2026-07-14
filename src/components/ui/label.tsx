@@ -15,10 +15,19 @@ import { cn } from "@/lib/utils";
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Style variants for Label component.
+ * Define base classes for text size, weight, line height, and peer-disabled states.
+ */
 const labelVariants = cva(
   "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
 );
 
+/**
+ * Label component.
+ * Render HTML label element with styled variants. Forward ref to underlying DOM node.
+ */
 const Label = React.forwardRef<
   HTMLLabelElement,
   React.LabelHTMLAttributes<HTMLLabelElement> &
@@ -26,6 +35,7 @@ const Label = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <label
     ref={ref}
+    // Merge default label styles with custom className.
     className={cn(labelVariants(), className)}
     {...props}
   />

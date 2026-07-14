@@ -30,6 +30,9 @@ import NextActionPanel from "@/components/features/ecosystem/NextActionPanel";
 import { useUIStore } from "@/store/useUIStore";
 import { cn } from "@/lib/utils";
 
+/**
+ * Map drill levels to display labels.
+ */
 const LEVEL_LABELS: Record<DrillLevel | "all", string> = {
   all: "Semua",
   N5: "N5",
@@ -39,6 +42,9 @@ const LEVEL_LABELS: Record<DrillLevel | "all", string> = {
   N1: "N1",
 };
 
+/**
+ * Map drill kinds to display labels.
+ */
 const KIND_LABELS: Record<DrillKind | "mixed", string> = {
   mixed: "Campur",
   vocab: "Kosakata",
@@ -47,8 +53,14 @@ const KIND_LABELS: Record<DrillKind | "mixed", string> = {
   sentence: "Kalimat",
 };
 
+/**
+ * Allowed question counts.
+ */
 const AMOUNT_OPTIONS = [5, 8, 12, 16] as const;
 
+/**
+ * Props for JLPT mini drill client.
+ */
 interface JlptMiniDrillClientProps {
   initialQuestions?: MiniDrillQuestion[];
   databaseQuestionCount?: number;
@@ -57,6 +69,9 @@ interface JlptMiniDrillClientProps {
   contextLabel?: string;
 }
 
+/**
+ * JLPT mini drill client. Manage state, filters, scoring, events.
+ */
 export default function JlptMiniDrillClient({
   initialQuestions = [],
   databaseQuestionCount = 0,
@@ -74,23 +89,31 @@ export default function JlptMiniDrillClient({
   const [isFinished, setIsFinished] = useState(false);
   const hasRecordedFinishRef = useRef(false);
   const recordLearningEvent = useUIStore((state) => state.recordLearningEvent);
+
+  // Cache initial questions.
   const questionBank = useMemo(
     () => (initialQuestions.length > 0 ? initialQuestions : undefined),
     [initialQuestions]
   );
 
+  // Generate questions from filters and seed.
   const questions = useMemo(
     () => createMiniDrill({ level, kind, amount, seed: String(seed), bank: questionBank }),
     [amount, kind, level, questionBank, seed]
   );
   const question = questions[questionIndex] ?? questions[0];
   const hasAnswered = selectedAnswer !== null;
+
+  // Check if answer correct.
   const isCorrect = selectedAnswer
     ? isMiniDrillAnswerCorrect(question.answer, selectedAnswer)
     : false;
   const progressPercent = Math.round((score.total / questions.length) * 100);
   const accuracy = score.total > 0 ? Math.round((score.correct / score.total) * 100) : 0;
 
+  /**
+   * Reset session. Use new seed for new questions.
+   */
   const resetSession = (nextSeed = seed) => {
     setSeed(nextSeed);
     setQuestionIndex(0);
@@ -100,6 +123,9 @@ export default function JlptMiniDrillClient({
     hasRecordedFinishRef.current = false;
   };
 
+  /**
+   * Process answer. Update score. Record event.
+   */
   const handleSelect = (answer: string) => {
     if (hasAnswered || isFinished) return;
 
@@ -128,6 +154,9 @@ export default function JlptMiniDrillClient({
     });
   };
 
+  /**
+   * Advance question. Finish session if last. Record completion.
+   */
   const handleNext = () => {
     if (questionIndex >= questions.length - 1) {
       setIsFinished(true);
@@ -159,6 +188,9 @@ export default function JlptMiniDrillClient({
     setSelectedAnswer(null);
   };
 
+  /**
+   * Apply config. Reset session.
+   */
   const handleConfigChange = (callback: () => void) => {
     callback();
     resetSession(seed + 1);

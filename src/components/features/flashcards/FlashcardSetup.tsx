@@ -14,15 +14,22 @@ import { Button } from "@/components/ui/button";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Props for FlashcardSetup component.
+ */
 interface FlashcardSetupProps {
+  /** Callback triggered when setup completes. Passes selected level, mode, and card count. */
   onStart: (level: string, mode: "vocab" | "kanji" | "survival" | "pronunciation" | "sentence", amount: number) => void;
+  /** Initial JLPT level selection. */
   defaultLevel?: string | null;
+  /** Initial study mode selection. */
   defaultMode?: "vocab" | "kanji" | "survival" | "pronunciation" | "sentence" | null;
 }
 
 // ==========================================
 // DATA STATIS KONFIGURASI SESI
 // ==========================================
+/** JLPT level options with styling classes. */
 const JLPT_LEVELS = [
   { id: "all", label: "Campur (Semua)", color: "bg-muted text-muted-foreground border-border" },
   { id: "N5", label: "N5", color: "bg-[rgb(var(--primary-rgb)/0.1)] text-primary border-[rgb(var(--primary-rgb)/0.2)]" },
@@ -32,6 +39,7 @@ const JLPT_LEVELS = [
   { id: "N1", label: "N1", color: "bg-[rgb(var(--destructive-rgb)/0.1)] text-destructive border-[rgb(var(--destructive-rgb)/0.2)]" }
 ];
 
+/** Study mode options with icons and descriptions. */
 const MODES = [
   { id: "vocab" as const, label: "Kosakata", icon: <Zap size={18} />, desc: "Latihan bacaan & makna kata" },
   { id: "kanji" as const, label: "Kanji", icon: <PenTool size={18} />, desc: "Hafalkan bentuk & On/Kun" },
@@ -40,19 +48,26 @@ const MODES = [
   { id: "pronunciation" as const, label: "Pelafalan", icon: <Mic size={18} />, desc: "Uji akurasi bicaramu" }
 ];
 
+/** Card count options. */
 const AMOUNTS = [10, 20, 50, 100];
 
 // ==========================================
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen penyetelan konfigurasi flashcard.
+ * Flashcard configuration panel.
+ * Let user choose JLPT level, study mode, and card count.
  */
 export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: FlashcardSetupProps) {
+  // Selected JLPT level state.
   const [level, setLevel] = useState<string>(defaultLevel || "all");
+  
+  // Selected study mode state.
   const [mode, setMode] = useState<"vocab" | "kanji" | "survival" | "pronunciation" | "sentence">(
     defaultMode ?? "vocab"
   );
+  
+  // Selected card count state.
   const [amount, setAmount] = useState<number>(20);
 
   // ==========================================
@@ -95,6 +110,7 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
                   }
                 `}
               >
+                {/* Highlight text if level is active */}
                 <span className={`font-black text-lg ${level === lvl.id ? 'text-primary' : ''}`}>{lvl.label}</span>
               </button>
             ))}
@@ -119,6 +135,7 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
                   }
                 `}
               >
+                {/* Shared layout animation for active mode background */}
                 {mode === modeItem.id && (
                   <m.div layoutId="mode-active-bg" className="absolute inset-0 bg-primary/5 pointer-events-none" />
                 )}
@@ -156,6 +173,7 @@ export function FlashcardSetup({ onStart, defaultLevel, defaultMode }: Flashcard
           </div>
         </div>
 
+        {/* Start Button */}
         <div className="pt-6 border-t border-border mt-8">
           <Button
             onClick={() => onStart(level, mode, amount)}

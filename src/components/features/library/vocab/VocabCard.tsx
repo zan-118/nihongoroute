@@ -22,9 +22,15 @@ import { VocabItem } from "./types";
 // ==========================================
 // ANTARMUKA & TIPE DATA
 // ==========================================
+/**
+ * Props for the VocabCard component.
+ */
 interface VocabCardProps {
+  /** Vocabulary item data containing word, meaning, and metadata. */
   item: VocabItem;
+  /** Index of the card in the list. */
   idx: number;
+  /** Toggle to display or hide romaji transliteration. */
   showRomaji: boolean;
 }
 
@@ -32,15 +38,19 @@ interface VocabCardProps {
 // KOMPONEN UTAMA: VocabCard
 // ==========================================
 /**
- * Komponen kartu kosakata interaktif berkecepatan tinggi dengan integrasi TTS luring.
+ * Interactive vocabulary card component with TTS integration.
+ * Renders Japanese text, part of speech, meaning, and related kanji.
  * 
- * @param {VocabCardProps} props Properti komponen kartu kosakata.
+ * @param props - Component properties.
+ * @returns React element representing the vocabulary card.
  */
 export function VocabCard({ item, idx, showRomaji }: VocabCardProps) {
   return (
     <div
       style={{ 
+        // Skip rendering offscreen elements to boost scroll performance
         contentVisibility: 'auto', 
+        // Provide estimated height for layout calculations before rendering
         containIntrinsicSize: '0 250px',
       }}
       className="transform hover:-translate-y-1 transition-all duration-300 font-sans"
@@ -102,4 +112,3 @@ export function VocabCard({ item, idx, showRomaji }: VocabCardProps) {
     </div>
   );
 }
-

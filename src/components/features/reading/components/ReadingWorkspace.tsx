@@ -15,29 +15,53 @@ import { cn } from "@/lib/utils";
 import FuriganaDisplay from "@/components/ui/FuriganaDisplay";
 import { fetchTTSAudio, speakWithWebSpeech, detectVoice, TTS_VOICES } from "@/lib/tts";
 
+/**
+ * Props for the ReadingWorkspace component.
+ */
 interface ReadingWorkspaceProps {
+  /** Array of raw Japanese paragraphs */
   paragraphs: string[];
+  /** Array of hiragana readings corresponding to each paragraph */
   hiraganaParagraphs: string[];
+  /** Array of romaji readings corresponding to each paragraph */
   romajiParagraphs: string[];
+  /** Array of translations corresponding to each paragraph */
   translationParagraphs: string[];
+  /** Current display mode for Japanese text */
   mode: "kanji" | "furigana" | "romaji" | "hiragana";
+  /** Font size configuration */
   fontSize: "standard" | "large" | "extra";
+  /** Toggle to show or hide translations */
   showTranslation: boolean;
+  /** Toggle for distraction-free zen mode */
   isZenMode: boolean;
+  /** Callback triggered when reading is completed */
   onComplete?: () => void;
+  /** Completion status of the reading material */
   isCompleted?: boolean;
+  /** Unique identifier for the reading source */
   sourceId?: string;
+  /** Title of the reading source */
   sourceTitle?: string;
+  /** Index of the currently active paragraph */
   activeParagraphIndex: number;
+  /** Callback triggered when the active paragraph changes */
   onParagraphChange?: (index: number) => void;
 }
 
+/**
+ * Tailwind CSS classes mapping for different font size options.
+ */
 const FONT_SIZE_CLASSES = {
   standard: "text-lg sm:text-xl md:text-2xl leading-[1.8]",
   large: "text-xl sm:text-2xl md:text-3xl leading-[1.8]",
   extra: "text-2xl sm:text-3xl md:text-4xl leading-[1.8]",
 } as const;
 
+/**
+ * ReadingWorkspace component.
+ * Provides an interactive reading environment with TTS, translation toggles, and scroll tracking.
+ */
 function ReadingWorkspace({
   paragraphs,
   hiraganaParagraphs,
@@ -54,19 +78,23 @@ function ReadingWorkspace({
   activeParagraphIndex,
   onParagraphChange,
 }: ReadingWorkspaceProps) {
+  // Reference to the main container element
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Scroll Progress Bar
+  // Scroll Progress Bar tracking
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end end"] });
   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
 
-  // Paragraph TTS Logic
+  // Paragraph TTS Logic states
   const [speakingIdx, setSpeakingIdx] = useState(-1);
   const [loadingIdx, setLoadingIdx] = useState(-1);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const isSelfPlayingRef = useRef(false);
   const requestIdRef = useRef(0);
 
+  /**
+   * Stops any active TTS playback and resets state.
+   */
   const stopTTS = useCallback(() => {
     requestIdRef.current += 1;
     if (audioRef.current) {
@@ -80,13 +108,17 @@ function ReadingWorkspace({
     setLoadingIdx(-1);
   }, []);
 
+  /**
+   * Plays TTS audio for a specific paragraph.
+   * Falls back to Web Speech API if external TTS fails.
+   */
   const speakParagraph = useCallback(async (text: string, idx: number) => {
     if (speakingIdx === idx || loadingIdx === idx) {
       stopTTS();
       return;
     }
 
-    // Pause other native audios
+    // Pause other native audio players on the page
     window.dispatchEvent(new CustomEvent("nihongoroute_pause_native_audio"));
     isSelfPlayingRef.current = true;
     window.dispatchEvent(new CustomEvent("nihongoroute_pause_line_tts"));
@@ -119,7 +151,7 @@ function ReadingWorkspace({
       return;
     }
 
-    // Fallback Web Speech
+    // Fallback Web Speech API
     setLoadingIdx(-1);
     setSpeakingIdx(idx);
     if (typeof window !== "undefined" && window.speechSynthesis) {
@@ -132,7 +164,7 @@ function ReadingWorkspace({
     }
   }, [speakingIdx, loadingIdx, stopTTS]);
 
-  // Stop TTS on clean up
+  // Stop TTS on component unmount
   useEffect(() => {
     return () => {
       stopTTS();

@@ -7,18 +7,19 @@ import { useUserStore } from "@/store/useUserStore";
 import { getNotifications } from "@/actions/community.actions";
 
 /**
- * Hook kustom untuk menyinkronkan notifikasi database (Supabase) ke Zustand UI Store.
- * Melakukan polling secara berkala untuk mengambil notifikasi interaksi komunitas terbaru.
+ * Sync database notifications to Zustand UI store.
+ * Polls database periodically.
  */
 export function useSyncNotifications() {
   const isGuest = useUserStore((s) => s.isGuest);
   const currentUserId = useUserStore((s) => s.id);
 
+  // Fetch notifications from database periodically
   const { data: dbNotifs } = useQuery({
     queryKey: ["db_notifications", currentUserId],
     queryFn: () => getNotifications(),
-    enabled: !isGuest && !!currentUserId,
-    refetchInterval: 30000, // Sinkronkan setiap 30 detik
+    enabled: !isGuest && !!currentUserId, // Only fetch for logged-in users
+    refetchInterval: 30000, // Poll every 30 seconds
   });
 
   useEffect(() => {
@@ -27,13 +28,13 @@ export function useSyncNotifications() {
     const currentNotifs = useUIStore.getState().notifications;
     let hasChanges = false;
     
-    // Gandakan untuk manipulasi data
+    // Clone array to avoid direct mutation
     const newNotifs = [...currentNotifs];
 
     dbNotifs.forEach((dbNotif) => {
       const existingIdx = newNotifs.findIndex((n) => n.id === dbNotif.id);
       if (existingIdx > -1) {
-        // Jika ada perubahan status keterbacaan dari cloud
+        // Update read status if changed on server
         if (newNotifs[existingIdx].read !== dbNotif.read) {
           newNotifs[existingIdx] = {
             ...newNotifs[existingIdx],
@@ -42,7 +43,7 @@ export function useSyncNotifications() {
           hasChanges = true;
         }
       } else {
-        // Notifikasi baru dari database
+        // Add new notification from database
         newNotifs.push({
           id: dbNotif.id,
           title: dbNotif.title,
@@ -56,9 +57,9 @@ export function useSyncNotifications() {
     });
 
     if (hasChanges) {
-      // Urutkan berdasarkan waktu terbaru
+      // Sort newest first
       newNotifs.sort((a, b) => b.timestamp - a.timestamp);
-      // Batasi maksimal 50 notifikasi di cache lokal
+      // Keep max 50 items in store
       useUIStore.setState({ notifications: newNotifs.slice(0, 50) });
     }
   }, [dbNotifs]);

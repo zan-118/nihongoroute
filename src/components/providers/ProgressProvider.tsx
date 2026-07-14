@@ -18,11 +18,24 @@ import { useSyncProgress } from "@/hooks/useSyncProgress";
 import { useHasMounted } from "@/hooks/useHasMounted";
 import dynamic from "next/dynamic";
 
+/**
+ * ReminderSystem component.
+ * Loaded dynamically. Client-side only.
+ */
 const ReminderSystem = dynamic(() => import("@/components/features/notifications/ReminderSystem"), { ssr: false });
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * ProgressProvider component.
+ * Syncs Supabase auth state with Zustand stores.
+ * Warns user on exit if local SRS data unsynced.
+ * 
+ * @param props - Component props.
+ * @param props.children - Child nodes.
+ */
 export const ProgressProvider = ({
   children,
 }: {
@@ -35,11 +48,12 @@ export const ProgressProvider = ({
   
   const [supabase] = useState(() => createClient());
 
-  // Inisialisasi Sinkronisasi via React Query Hook
+  // Trigger background sync hook for progress data.
   useSyncProgress();
 
   // AUTHENTICATION LISTENER
   useEffect(() => {
+    // Fetch initial session. Update auth store and user data.
     supabase.auth.getSession().then(({ data: { session } }: { data: { session: { user?: { id: string; user_metadata?: { full_name?: string }; email?: string } } | null } }) => {
       const userFullName = session?.user?.user_metadata?.full_name || session?.user?.email?.split('@')[0] || "Member";
       setAuth(!!session?.user);
@@ -55,6 +69,7 @@ export const ProgressProvider = ({
       }
     });
 
+    // Listen to auth state changes. Update store and show welcome toast.
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event: string, session: { user?: { id: string; user_metadata?: { full_name?: string }; email?: string } } | null) => {
@@ -90,6 +105,7 @@ export const ProgressProvider = ({
   
   // UNSYNCED DATA WARNING (beforeunload)
   useEffect(() => {
+    // Prevent tab close if local SRS changes not synced to server.
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (dirtySrsSize > 0 && hasMounted) {
         const message = "Ada data belajar yang belum tersinkron ke Cloud. Yakin ingin keluar?";

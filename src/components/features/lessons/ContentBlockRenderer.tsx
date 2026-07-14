@@ -30,8 +30,15 @@ import { KanjiSection, KanjiLessonItem } from "./KanjiSection";
 // ==========================================
 // PENDUKUNG DESAIN & MARKDOWN PARSER
 // ==========================================
+
+/**
+ * Parses basic markdown syntax (bold, italic, code, links) into React nodes.
+ * @param text - Raw string containing markdown syntax.
+ * @returns Array of React nodes with applied styles.
+ */
 function parseInlineStyles(text: string): React.ReactNode[] {
   if (!text || typeof text !== "string") return [];
+  // Split text by markdown tokens to isolate styled segments
   const parts = text.split(/(\*\*.*?\*\*|`.*?`|\*.*?\*|\[.*?\]\(.*?\))/g);
   return parts.map((part, index) => {
     if (part.startsWith("**") && part.endsWith("**")) {
@@ -93,6 +100,11 @@ function parseInlineStyles(text: string): React.ReactNode[] {
   });
 }
 
+/**
+ * Recursively traverses React nodes to parse inline markdown styles.
+ * @param children - React nodes to process.
+ * @returns Processed React nodes with parsed markdown.
+ */
 function renderWithMarkdown(children: React.ReactNode): React.ReactNode {
   if (!children) return children;
 
@@ -127,18 +139,28 @@ function renderWithMarkdown(children: React.ReactNode): React.ReactNode {
 // ==========================================
 // ANTARMUKA & PROPS (INTERFACES)
 // ==========================================
+
+/**
+ * Props for ContentBlockRenderer component.
+ */
 interface ContentBlockRendererProps {
   blocks: ContentBlock[];
   vocabList?: VocabLessonItem[];
   kanjiList?: KanjiLessonItem[];
 }
 
+/**
+ * Structure representing a Sanity Portable Text block.
+ */
 interface SanityPortableTextBlock {
   _type?: string;
   _key?: string;
   [key: string]: unknown;
 }
 
+/**
+ * Props for Portable Text custom type components.
+ */
 interface PortableTextValueProps {
   value: {
     _type: string;
@@ -146,6 +168,9 @@ interface PortableTextValueProps {
   };
 }
 
+/**
+ * Props for Portable Text block level components.
+ */
 interface PortableTextChildrenProps {
   children?: React.ReactNode;
 }
@@ -153,6 +178,11 @@ interface PortableTextChildrenProps {
 // ==========================================
 // KOMPONEN UTAMA
 // ==========================================
+
+/**
+ * Renders a list of content blocks, handling standard text, custom blocks,
+ * and specialized sections like vocabulary and kanji.
+ */
 export default function ContentBlockRenderer({ 
   blocks,
   vocabList = [],
@@ -264,6 +294,10 @@ export default function ContentBlockRenderer({
 // ==========================================
 // LENCANA PEDAGOGIS (PEDAGOGICAL BADGES)
 // ==========================================
+
+/**
+ * Renders pedagogical metadata badges (role, stage, reading time) for a block.
+ */
 function PedagogicalBadges({ block }: { block: ContentBlock }) {
   const { pedagogical_role, difficulty_stage, estimated_reading_time } = block;
 
@@ -350,6 +384,10 @@ function PedagogicalBadges({ block }: { block: ContentBlock }) {
 // ==========================================
 // PORTABLE TEXT BLOCK RENDERER
 // ==========================================
+
+/**
+ * Renders a single Sanity Portable Text block using the next-sanity renderer.
+ */
 function PortableTextBlockRenderer({ block, components }: { block: SanityPortableTextBlock; components: React.ComponentProps<typeof PortableText>["components"] }) {
   return (
     <div className="prose-custom max-w-none">
@@ -364,6 +402,10 @@ function PortableTextBlockRenderer({ block, components }: { block: SanityPortabl
 // ==========================================
 // RENDERER ITEM BLOK (BLOCK ITEM)
 // ==========================================
+
+/**
+ * Wrapper component that determines the correct renderer for a given content block.
+ */
 function BlockItem({ 
   block,
   components,
@@ -378,6 +420,7 @@ function BlockItem({
   const rawBlock = block as unknown as Record<string, unknown>;
   const type = block.type || rawBlock._type || "text";
 
+  // Check if block is structured as a Sanity Portable Text block
   const isPortableText = rawBlock._type === "block" || 
                          rawBlock._type === "dialogueBlock" || 
                          rawBlock._type === "grammarBlock" || 
@@ -428,6 +471,10 @@ function BlockItem({
 // ==========================================
 // PENINGKATAN BLOK MARKDOWN KUSTOM
 // ==========================================
+
+/**
+ * Renders heading blocks (H1, H2, H3) with markdown support.
+ */
 function HeadingBlock({ block }: { block: ContentBlock }) {
   const level = block.level || 2;
   const Tag = level === 3 ? "h3" : level === 1 ? "h1" : "h2";
@@ -444,6 +491,9 @@ function HeadingBlock({ block }: { block: ContentBlock }) {
   );
 }
 
+/**
+ * Renders ordered or unordered list blocks.
+ */
 function ListBlock({ block }: { block: ContentBlock }) {
   const items = block.items || [];
   const listType = block.listType || "bullet";
@@ -463,6 +513,9 @@ function ListBlock({ block }: { block: ContentBlock }) {
   );
 }
 
+/**
+ * Renders tabular data blocks with markdown support inside cells.
+ */
 function TableBlock({ block }: { block: ContentBlock }) {
   const headers = block.headers || [];
   const rows = block.rows || [];
@@ -501,6 +554,10 @@ function TableBlock({ block }: { block: ContentBlock }) {
 // ==========================================
 // BLOK TEKS
 // ==========================================
+
+/**
+ * Renders standard text blocks, supporting furigana, translations, and example sentences.
+ */
 function TextBlock({ block }: { block: ContentBlock }) {
   return (
     <div className="space-y-4">
@@ -545,6 +602,10 @@ function TextBlock({ block }: { block: ContentBlock }) {
 // ==========================================
 // BLOK CALLOUT
 // ==========================================
+
+/**
+ * Renders callout/alert boxes for tips, warnings, or cultural notes.
+ */
 function CalloutBlock({ block }: { block: ContentBlock }) {
   return (
     <div className="flex gap-4 p-6 rounded-2xl md:rounded-3xl shadow-[0_8px_30px_rgb(var(--primary-rgb)/0.03)] glass relative overflow-hidden group hover:border-primary/30 transition-all duration-300">
@@ -568,12 +629,19 @@ function CalloutBlock({ block }: { block: ContentBlock }) {
 // ==========================================
 // PARSER CATATAN TATA BAHASA (GRAMMAR NOTES)
 // ==========================================
+
+/**
+ * Parses raw grammar notes string into structured JSX elements (lists, tables, warnings).
+ * @param notes - Raw notes string.
+ * @returns Structured React node.
+ */
 function parseNotesToJSX(notes: string): React.ReactNode {
   const lines = notes.split("\n");
   const elements: React.ReactNode[] = [];
   let currentList: { type: "ul" | "ol"; items: string[] } | null = null;
   let currentTable: string[] | null = null;
 
+  // Flushes accumulated list items into a JSX list element
   const flushList = (key: string) => {
     if (!currentList) return;
     const ListTag = currentList.type;
@@ -596,6 +664,7 @@ function parseNotesToJSX(notes: string): React.ReactNode {
     currentList = null;
   };
 
+  // Flushes accumulated table lines into a JSX table element
   const flushTable = (key: string) => {
     if (!currentTable || currentTable.length < 2) return;
     
@@ -634,6 +703,7 @@ function parseNotesToJSX(notes: string): React.ReactNode {
     currentTable = null;
   };
 
+  // Flushes both lists and tables
   const flushAll = (key: string) => {
     flushList(`${key}-list`);
     flushTable(`${key}-table`);
@@ -712,6 +782,10 @@ function parseNotesToJSX(notes: string): React.ReactNode {
 // ==========================================
 // BLOK TATA BAHASA
 // ==========================================
+
+/**
+ * Renders grammar explanation blocks, including patterns, translations, examples, and notes.
+ */
 function GrammarBlock({ block }: { block: ContentBlock }) {
   const raw = block as ContentBlock & { notes?: string; slug?: string };
   const notes = raw.notes;
@@ -793,7 +867,12 @@ function GrammarBlock({ block }: { block: ContentBlock }) {
 // ==========================================
 // BLOK PERCAKAPAN
 // ==========================================
+
+/**
+ * Renders interactive dialogue blocks with text-to-speech (TTS) playback controls.
+ */
 function DialogueBlock({ block }: { block: ContentBlock }) {
+  // Parse dialogue lines and speakers from raw content and furigana strings
   const lines = React.useMemo(() => {
     return block.content
       ? block.content.split("\n").filter(Boolean).map((line: string, i: number) => {
@@ -819,6 +898,7 @@ function DialogueBlock({ block }: { block: ContentBlock }) {
   const currentAudioRef = React.useRef<HTMLAudioElement | null>(null);
   const playTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Stops active audio playback and Web Speech synthesis
   const stopPlayback = React.useCallback(() => {
     if (currentAudioRef.current) {
       currentAudioRef.current.pause();
@@ -834,6 +914,7 @@ function DialogueBlock({ block }: { block: ContentBlock }) {
     setPlayingIndex(null);
   }, []);
 
+  // Plays a specific dialogue line by index, chaining to the next line on completion
   async function playLine(index: number) {
     if (index >= lines.length) {
       stopPlayback();
@@ -896,6 +977,7 @@ function DialogueBlock({ block }: { block: ContentBlock }) {
     }
   };
 
+  // Cleanup audio resources on unmount
   React.useEffect(() => {
     return () => {
       if (currentAudioRef.current) {
@@ -1021,6 +1103,10 @@ function DialogueBlock({ block }: { block: ContentBlock }) {
 // ==========================================
 // BLOK GAMBAR
 // ==========================================
+
+/**
+ * Renders image blocks with optional captions.
+ */
 function ImageBlock({ block }: { block: ContentBlock }) {
   if (!block.content) return null;
   return (
@@ -1047,6 +1133,10 @@ function ImageBlock({ block }: { block: ContentBlock }) {
 // ==========================================
 // BAGIAN CONTOH
 // ==========================================
+
+/**
+ * Renders a list of example sentences with furigana, romaji, translation, and TTS.
+ */
 function ExamplesSection({ examples }: { examples: ExampleSentence[] }) {
   if (!examples?.length) return null;
   return (
@@ -1092,4 +1182,3 @@ function ExamplesSection({ examples }: { examples: ExampleSentence[] }) {
     </div>
   );
 }
-

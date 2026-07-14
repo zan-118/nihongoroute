@@ -16,6 +16,10 @@ import { createPageMetadata } from "@/lib/seo";
 // ======================
 // METADATA SEO
 // ======================
+
+/**
+ * SEO metadata configuration for dashboard.
+ */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Dashboard | NihongoRoute",
@@ -30,12 +34,12 @@ export const metadata: Metadata = {
 // ======================
 
 /**
- * Halaman utama Dasbor Pengguna (RSC).
- * Mengambil data kategori kursus dan ekspresi harian secara paralel sebelum merender DashboardClient.
- * 
- * @returns {JSX.Element} Halaman utama dasbor belajar.
+ * Dashboard page server component.
+ * Fetch course categories and daily expression.
+ * Render dashboard client view.
  */
 export default async function DashboardPage() {
+  // Fetch data in parallel to avoid waterfall delay.
   const [courseMetadata, expression] = await Promise.all([
     getCourseCategories(),
     getRandomExpression(),

@@ -34,6 +34,10 @@ import { Card } from "@/components/ui/card";
 // ======================
 // TIPE DATA
 // ======================
+
+/**
+ * Supporter data structure.
+ */
 interface Supporter {
   name: string;
   amount: number;
@@ -42,11 +46,15 @@ interface Supporter {
   date: string;
 }
 
+/**
+ * FAQ item structure.
+ */
 interface FAQItem {
   question: string;
   answer: string;
 }
 
+// Mock FAQ data.
 const FAQS_MOCK: FAQItem[] = [
   {
     question: "Apakah NihongoRoute akan selalu gratis dan bebas iklan?",
@@ -66,6 +74,9 @@ const FAQS_MOCK: FAQItem[] = [
   },
 ];
 
+/**
+ * Props for DonationCard component.
+ */
 interface DonationCardProps {
   href: string;
   title: string;
@@ -77,6 +88,9 @@ interface DonationCardProps {
   glowColor: string;
 }
 
+/**
+ * Card component for donation link.
+ */
 function DonationCard({
   href,
   title,
@@ -99,8 +113,10 @@ function DonationCard({
       <Card
         className={`group relative p-8 sm:p-12 rounded-[2.5rem] bg-card border border-border/80 ${accent} ${shadowColor} transition-all duration-300 shadow-lg overflow-hidden flex flex-col h-full`}
       >
+        {/* Decorative background glow */}
         <div className={`absolute top-0 right-0 w-40 h-40 ${glowColor} blur-[36px] rounded-full pointer-events-none opacity-30 group-hover:opacity-50 transition-opacity`} />
 
+        {/* Large background text */}
         <div className="absolute top-0 right-0 p-6 sm:p-8 opacity-[0.03] text-5xl sm:text-7xl font-black italic group-hover:opacity-[0.06] transition-opacity pointer-events-none uppercase text-foreground font-japanese select-none">
           {title}
         </div>
@@ -122,6 +138,9 @@ function DonationCard({
   );
 }
 
+/**
+ * Props for StatItem component.
+ */
 interface StatItemProps {
   icon: React.ReactNode;
   title: string;
@@ -129,6 +148,9 @@ interface StatItemProps {
   color: string;
 }
 
+/**
+ * Component to display single stat or allocation item.
+ */
 function StatItem({ icon, title, desc, color }: StatItemProps) {
   return (
     <div className="group text-center sm:text-left flex flex-col items-center sm:items-start">
@@ -147,27 +169,35 @@ function StatItem({ icon, title, desc, color }: StatItemProps) {
   );
 }
 
+/**
+ * Main client component for NihongoRoute support page.
+ * Handles donation links, target progress, supporter list, and FAQs.
+ */
 export default function SupportClient() {
   const { back, push } = useRouter();
   const [supporterFilter, setSupporterFilter] = useState<"recent" | "top">("top");
   const [expandedFAQ, setExpandedFAQ] = useState<number>(-1);
 
+  // Memoize Supabase client. Prevent recreation.
   const supabase = useMemo(() => createClient(), []);
 
   // Fetch data donatur secara real-time dari Supabase
   const { data: dbSupporters = [] } = useQuery<Supporter[]>({
     queryKey: ["live-supporters"],
     queryFn: async () => {
+      // Fetch supporters from Supabase. Keep list updated.
       const { data, error } = await supabase
         .from("supporters")
         .select("name, amount, message, tier, created_at")
         .order("created_at", { ascending: false });
 
       if (error) {
+        // Query fail. Log warning. Return empty array.
         console.warn("Gagal memuat data donatur dari Supabase, menggunakan mock fallback:", error);
         return [];
       }
 
+      // Map database rows to Supporter interface.
       return (data || []).map((row: { name: string; amount: number; message: string; tier: string; created_at: string }) => ({
         name: row.name,
         amount: Number(row.amount),
@@ -182,13 +212,17 @@ export default function SupportClient() {
 
   // Hitung total donasi terkumpul dan persentase target secara dinamis
   const monthlyTarget = 450000;
+  
+  // Sum all donation amounts. Get total.
   const totalDonations = useMemo(
     () => allSupporters.reduce((sum, supporter) => sum + supporter.amount, 0),
     [allSupporters]
   );
+  
+  // Calculate progress percentage. Cap at 100.
   const progressPercentage = Math.min(Math.round((totalDonations / monthlyTarget) * 100), 100);
 
-  // Mengurutkan donatur berdasarkan filter aktif
+  // Sort supporters. Use active filter.
   const sortedSupporters = useMemo(() => Array.from(allSupporters).sort((a, b) => {
       if (supporterFilter === "top") {
         return b.amount - a.amount;

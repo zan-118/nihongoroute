@@ -15,26 +15,50 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+
+/**
+ * Represents a single kanji item in a lesson.
+ */
 export interface KanjiLessonItem {
+  /** Unique identifier from database */
   _id?: string;
+  /** Alternative unique identifier */
   id?: string;
+  /** The kanji character symbol */
   character: string;
+  /** Meaning of the kanji character */
   meaning?: string;
+  /** URL slug for the kanji detail page */
   slug?: string;
 }
 
+/**
+ * Props for the KanjiSection component.
+ */
 interface KanjiSectionProps {
+  /** Array of kanji items to display */
   kanjiList: KanjiLessonItem[];
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Renders a grid of kanji characters with links to their details.
+ * Limits initial display to 10 items with a toggle to show all.
+ */
 export const KanjiSection: React.FC<KanjiSectionProps> = ({ kanjiList }) => {
+  // State to toggle visibility of kanji items beyond the initial limit
   const [showAll, setShowAll] = useState(false);
+  
+  // Render nothing if list is empty or undefined
   if (!kanjiList || kanjiList.length === 0) return null;
 
+  // Check if list exceeds the default display limit of 10
   const hasMoreThanTen = kanjiList.length > 10;
+  
+  // Slice list based on toggle state
   const visibleKanjis = showAll ? kanjiList : kanjiList.slice(0, 10);
 
   return (

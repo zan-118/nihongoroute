@@ -15,20 +15,35 @@ import { Button } from "@/components/ui/button";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+/**
+ * Props for ConfirmModal component.
+ */
 interface ConfirmModalProps {
+  /** Control modal visibility. */
   isOpen: boolean;
+  /** Callback when modal closes. */
   onClose: () => void;
+  /** Callback when action confirmed. */
   onConfirm: () => void;
+  /** Modal title text. */
   title: string;
+  /** Modal description text. */
   description: string;
+  /** Text for confirm button. */
   confirmText?: string;
+  /** Text for cancel button. */
   cancelText?: string;
+  /** Use destructive styling if true. */
   isDestructive?: boolean;
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * Premium confirmation dialog modal.
+ * Used for critical or destructive actions.
+ */
 export default function ConfirmModal({
   isOpen,
   onClose,
@@ -40,6 +55,7 @@ export default function ConfirmModal({
   isDestructive = false,
 }: ConfirmModalProps) {
   return (
+    /* Close modal when open state changes to false */
     <DialogPrimitive.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogPrimitive.Portal>
         {/* Lapisan overlay latar belakang dengan z-[200] agar berada di atas seluruh kanvas permainan */}
@@ -48,9 +64,11 @@ export default function ConfirmModal({
         {/* Kontainer Modal dengan perangkap fokus dan transisi ease-out kustom yang terinspirasi pegas */}
         <DialogPrimitive.Content className="premium-surface fixed left-[50%] top-[50%] z-[200] w-[calc(100%-2rem)] max-w-md translate-x-[-50%] translate-y-[-50%] p-5 md:p-8 rounded-xl shadow-2xl overflow-hidden focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200">
           {/* Batang batas atas aksen */}
+          {/* Dynamic accent bar color based on action severity */}
           <div className={`absolute top-0 left-0 w-full h-1 ${isDestructive ? 'bg-destructive' : 'bg-primary'} shadow-sm`} />
           
           <div className="flex flex-col items-center text-center pt-2">
+            {/* Dynamic icon container styling */}
             <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-6 border ${
               isDestructive 
                 ? 'bg-destructive/10 border-destructive/30 text-destructive shadow-lg shadow-destructive/10' 
@@ -76,6 +94,7 @@ export default function ConfirmModal({
               </Button>
               <Button
                 onClick={() => {
+                  /* Execute confirmation callback then close modal */
                   onConfirm();
                   onClose();
                 }}

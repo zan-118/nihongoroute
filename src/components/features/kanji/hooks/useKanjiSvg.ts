@@ -15,18 +15,22 @@ import { KanjiSvgData, StrokeData } from "../types";
 // HOOK UTAMA
 // ==========================================
 /**
- * Hook untuk memuat dan mem-parsing data SVG urutan goresan kanji.
+ * Custom hook to fetch, parse, and normalize Kanji SVG stroke data.
+ * Attempts to use database SVG string first, falling back to KanjiVG GitHub repository.
  * 
- * @param character Karakter kanji yang ingin diambil SVG-nya.
- * @param strokeOrderSvg String SVG opsional yang bersumber dari database.
- * @returns Data SVG kanji ter-parse, status loading, dan pesan kesalahan jika ada.
+ * @param character - The target Kanji character.
+ * @param strokeOrderSvg - Optional raw SVG string from database.
+ * @returns Object containing parsed SVG data, loading state, and error state.
  */
 export function useKanjiSvg(character: string, strokeOrderSvg?: string) {
   // ==========================================
   // STATUS & STATE
   // ==========================================
+  /** Parsed Kanji SVG data structure. */
   const [data, setData] = useState<KanjiSvgData | null>(null);
+  /** Loading state indicator. */
   const [loading, setLoading] = useState(true);
+  /** Error message state. */
   const [error, setError] = useState<string | null>(null);
 
   // ==========================================
@@ -35,6 +39,9 @@ export function useKanjiSvg(character: string, strokeOrderSvg?: string) {
   useEffect(() => {
     if (!character) return;
 
+    /**
+     * Fetches and parses SVG data from database or external KanjiVG API.
+     */
     const fetchSvg = async () => {
       setLoading(true);
       setError(null);
@@ -47,6 +54,7 @@ export function useKanjiSvg(character: string, strokeOrderSvg?: string) {
           svgText = strokeOrderSvg;
         } else {
           const KANJIVG_URL = "https://raw.githubusercontent.com/KanjiVG/kanjivg/master/kanji";
+          // Convert character to 5-digit lowercase hex code point for KanjiVG URL
           const code = character.charCodeAt(0).toString(16).padStart(5, "0");
           const url = `${KANJIVG_URL}/${code}.svg`;
           
@@ -65,6 +73,7 @@ export function useKanjiSvg(character: string, strokeOrderSvg?: string) {
         if ((!svg || parserError) && strokeOrderSvg) {
           console.warn("SVG dari database tidak valid, mencoba fetch dari KanjiVG...");
           const KANJIVG_URL = "https://raw.githubusercontent.com/KanjiVG/kanjivg/master/kanji";
+          // Convert character to 5-digit lowercase hex code point for KanjiVG URL
           const code = character.charCodeAt(0).toString(16).padStart(5, "0");
           const url = `${KANJIVG_URL}/${code}.svg`;
           
@@ -93,6 +102,7 @@ export function useKanjiSvg(character: string, strokeOrderSvg?: string) {
         // Ambil numbers (urutan)
         const texts = doc.querySelectorAll("text");
         texts.forEach((t) => {
+          // Extract X and Y coordinates from SVG transform translate attribute
           const x = t.getAttribute("transform")?.match(/translate\(([\d.]+), ([\d.]+)\)/);
           if (x) {
             numbers.push({

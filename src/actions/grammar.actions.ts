@@ -18,7 +18,13 @@ import { LibraryItem } from "@/types/library";
 // ======================
 
 /**
- * Mengambil daftar tata bahasa dengan paginasi dan filter level.
+ * Fetch paginated grammar records from database.
+ * Filter by JLPT level if specified.
+ * 
+ * @param page - Current page number.
+ * @param limit - Records per page.
+ * @param level - JLPT level filter.
+ * @returns Paginated grammar list and total count.
  */
 export async function getPaginatedGrammar(
   page: number,
@@ -26,11 +32,13 @@ export async function getPaginatedGrammar(
   level: string = ""
 ): Promise<{ data: (GrammarTable & { _id: string; jlptLevel: string | null })[]; total: number }> {
   const supabase = createStaticClient();
+  // Calculate offset for pagination.
   const offset = (page - 1) * limit;
 
   try {
     let query = supabase.from("grammar").select("*", { count: "exact" });
 
+    // Apply JLPT level filter if active.
     if (level && level !== "all") {
       query = query.eq("jlpt_level", level.toUpperCase());
     }
@@ -43,6 +51,7 @@ export async function getPaginatedGrammar(
     if (error) throw error;
 
     return {
+      // Map database fields to application schema.
       data: (data || []).map(g => ({ ...g, _id: g.id, jlptLevel: g.jlpt_level })),
       total: count || 0,
     };
@@ -53,7 +62,11 @@ export async function getPaginatedGrammar(
 }
 
 /**
- * Mengambil artikel Grammar acak berdasarkan JLPT level (Dipakai di Homepage).
+ * Fetch random grammar article for specific JLPT level.
+ * Used for homepage recommendations.
+ * 
+ * @param level - Target JLPT level.
+ * @returns Random grammar article metadata or null.
  */
 export async function getRandomGrammarArticle(level: string = "N5") {
   const supabase = createStaticClient();
@@ -62,10 +75,11 @@ export async function getRandomGrammarArticle(level: string = "N5") {
     .from("grammar")
     .select("id, title, slug, jlpt_level")
     .eq("jlpt_level", level)
-    .limit(10); // Ambil pool 10 terbaru
+    .limit(10); // Fetch pool of 10 latest items.
 
   if (error || !data || data.length === 0) return null;
 
+  // Select random item from pool.
   const randomItem = data[Math.floor(Math.random() * data.length)];
   return {
     _id: randomItem.id,
@@ -76,7 +90,10 @@ export async function getRandomGrammarArticle(level: string = "N5") {
 }
 
 /**
- * Mengambil semua artikel Grammar berdasarkan JLPT level (tanpa paginasi).
+ * Fetch all grammar articles for specific JLPT level without pagination.
+ * 
+ * @param level - Target JLPT level.
+ * @returns Array of grammar articles.
  */
 export async function getGrammarArticles(level: string = "") {
   const supabase = createStaticClient();
@@ -84,10 +101,20 @@ export async function getGrammarArticles(level: string = "") {
   return data;
 }
 
-const isUUID = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
+/**
+ * Validate if string is valid UUID v4.
+ * 
+ * @param s - String to validate.
+ * @returns True if valid UUID.
+ */
+const isUUID = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
 
 /**
- * Mengambil detail satu tata bahasa berdasarkan slug atau ID.
+ * Fetch detailed grammar item by slug or ID.
+ * Resolves related grammar and family grammar items.
+ * 
+ * @param slugOrId - Slug or UUID of grammar item.
+ * @returns Detailed grammar item or null.
  */
 export async function getLibraryGrammarDetail(slugOrId: string): Promise<LibraryItem | null> {
   const supabase = createStaticClient();
@@ -95,7 +122,7 @@ export async function getLibraryGrammarDetail(slugOrId: string): Promise<Library
   try {
     let data: LibraryItem | null = null;
 
-    // Coba slug terlebih dahulu, lalu kembali ke id sebagai fallback
+    // Try fetching by slug first.
     const { data: bySlug, error: slugErr } = await supabase.from("grammar").select("*").eq("slug", slugOrId).single();
     if (slugErr && slugErr.code !== "PGRST116") {
       console.error(`[getLibraryGrammarDetail] Galat pengambilan slug grammar:`, slugErr.message, slugErr.code);
@@ -103,6 +130,7 @@ export async function getLibraryGrammarDetail(slugOrId: string): Promise<Library
     if (bySlug) {
       data = bySlug;
     } else if (isUUID(slugOrId)) {
+      // Fallback to ID lookup if input is UUID.
       const { data: byId, error: idErr } = await supabase.from("grammar").select("*").eq("id", slugOrId).single();
       if (idErr && idErr.code !== "PGRST116") console.error(`[getLibraryGrammarDetail] Galat pengambilan ID grammar:`, idErr.message);
       data = byId ?? null;
@@ -112,7 +140,7 @@ export async function getLibraryGrammarDetail(slugOrId: string): Promise<Library
 
     data._id = data.id;
 
-    // Tangani contoh kalimat secara aman
+    // Parse JSON string examples safely.
     if (typeof data.examples === "string") {
       try {
         data.examples = JSON.parse(data.examples);
@@ -122,7 +150,7 @@ export async function getLibraryGrammarDetail(slugOrId: string): Promise<Library
     }
     data.examples = Array.isArray(data.examples) ? data.examples : [];
     
-    // Ambil daftar grammar terkait jika ada
+    // Fetch related grammar items by slug.
     if (Array.isArray(data.related_grammar) && data.related_grammar.length > 0) {
       const { data: related } = await supabase
         .from("grammar")
@@ -133,13 +161,13 @@ export async function getLibraryGrammarDetail(slugOrId: string): Promise<Library
       data.relatedGrammarList = [];
     }
 
-    // Ambil anggota keluarga grammar jika ada
+    // Fetch other items in same grammar family.
     if (data.grammar_family) {
       const { data: family } = await supabase
         .from("grammar")
         .select("id, title, slug, jlpt_level, meaning")
         .eq("grammar_family", data.grammar_family)
-        .neq("id", data.id); // Kecualikan item saat ini
+        .neq("id", data.id); // Exclude current item.
       data.familyGrammarList = family || [];
     } else {
       data.familyGrammarList = [];

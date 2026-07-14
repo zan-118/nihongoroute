@@ -18,20 +18,36 @@ import { SurvivalPlaying } from "./survival/SurvivalPlaying";
 // ======================
 // ANTARMUKA & TIPE
 // ======================
+
+/**
+ * Props for the SurvivalMode component.
+ */
 interface SurvivalModeProps {
+  /** Array of card data used as questions in the game. */
   cards: CardData[];
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * SurvivalMode orchestrates the survival game state machine.
+ * Switches views between Intro, Playing, and GameOver based on engine state.
+ * 
+ * @param props - Component props.
+ * @returns React element matching current game state.
+ */
 export default function SurvivalMode({ cards }: SurvivalModeProps) {
+  // Initialize game state engine hook
   const engine = useSurvivalMode(cards);
 
+  // Show intro screen if game not started
   if (engine.gameState === "idle") {
     return <SurvivalIntro startGame={engine.startGame} />;
   }
 
+  // Show game over or victory screen when game ends
   if (engine.gameState === "gameover" || engine.gameState === "victory") {
     return (
       <SurvivalGameOver
@@ -42,6 +58,7 @@ export default function SurvivalMode({ cards }: SurvivalModeProps) {
     );
   }
 
+  // Show active gameplay screen
   return (
     <SurvivalPlaying
       hp={engine.hp}

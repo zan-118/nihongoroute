@@ -23,12 +23,14 @@ import { Session } from "@supabase/supabase-js";
 // CUSTOM HOOK UTAMA
 // ==========================================
 /**
- * Hook kustom untuk memicu mutasi data progres belajar kotor luring ke database awan.
+ * Custom hook to synchronize offline-first local study progress to Supabase cloud database.
+ * Handles batch updates, exponential backoff retries, and multi-tab synchronization signals.
  * 
- * @param {Session | null | undefined} session - Sesi aktif autentikasi Supabase
- * @returns {UseMutationResult} Status mutasi TanStack Query untuk eksekusi sinkronisasi
+ * @param session - Active Supabase authentication session.
+ * @returns TanStack Query mutation object for executing the sync.
  */
 export function useCloudMutation(session: Session | null | undefined) {
+  // Memoize Supabase client instance to prevent recreation on re-renders
   const supabase = useMemo(() => createClient(), []);
   
   // Mengambil pengendali status visual sinkronisasi dari UIStore
@@ -40,6 +42,12 @@ export function useCloudMutation(session: Session | null | undefined) {
 
   // Inisialisasi Mutasi Awan via TanStack Query (React Query)
   const syncMutation = useMutation({
+    /**
+     * Performs the network request to sync local progress with the remote database.
+     * 
+     * @param data - The local progress data and sets of dirty item IDs.
+     * @returns Sync result containing status and synced IDs.
+     */
     mutationFn: async (data: {
       progress: { 
         name: string | null;
@@ -96,6 +104,9 @@ export function useCloudMutation(session: Session | null | undefined) {
         acceptedXp 
       };
     },
+    /**
+     * Callback executed upon successful mutation. Clears dirty flags and broadcasts sync event.
+     */
     onSuccess: (result) => {
       // Matikan indikator pemuatan dan error
       setSyncing(false);
@@ -119,6 +130,9 @@ export function useCloudMutation(session: Session | null | undefined) {
         }
       }
     },
+    /**
+     * Callback executed when mutation fails after all retries.
+     */
     onError: (error) => {
       console.error("Sinkronisasi gagal setelah beberapa kali percobaan ulang:", error);
       setSyncing(false);
@@ -126,6 +140,7 @@ export function useCloudMutation(session: Session | null | undefined) {
     },
     // Pengaturan percobaan ulang (retry) 3 kali dengan jeda exponential backoff
     retry: 3,
+    // Exponential backoff delay calculation: 2^attempt * 1000ms, capped at 10 seconds
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
   });
 

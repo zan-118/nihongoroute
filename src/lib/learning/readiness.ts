@@ -7,10 +7,19 @@ import type { SRSState } from "@/lib/srs";
 import { summarizeSrs, type SrsMemorySummary } from "@/lib/srs-summary";
 import type { LessonProgress } from "@/store/types";
 
+/**
+ * Supported JLPT levels ordered from lowest to highest.
+ */
 export const JLPT_LEVELS = ["n5", "n4", "n3", "n2", "n1"] as const;
 
+/**
+ * JLPT level type.
+ */
 export type JlptLevel = (typeof JLPT_LEVELS)[number];
 
+/**
+ * Lesson structure for readiness calculation.
+ */
 export interface ReadinessCourseLesson {
   id?: string;
   _id?: string;
@@ -18,6 +27,9 @@ export interface ReadinessCourseLesson {
   slug: string;
 }
 
+/**
+ * Course category structure containing lessons.
+ */
 export interface ReadinessCourseCategory {
   id?: string;
   _id?: string;
@@ -28,6 +40,9 @@ export interface ReadinessCourseCategory {
   previews?: ReadinessCourseLesson[];
 }
 
+/**
+ * Individual readiness metric score and weight.
+ */
 export interface ReadinessMetric {
   id: "curriculum" | "memoryVolume" | "stability" | "routine";
   label: string;
@@ -36,6 +51,9 @@ export interface ReadinessMetric {
   detail: string;
 }
 
+/**
+ * Recommended action based on readiness score.
+ */
 export interface ReadinessAction {
   id: "review" | "course" | "library" | "exam" | "routine";
   label: string;
@@ -43,6 +61,9 @@ export interface ReadinessAction {
   reason: string;
 }
 
+/**
+ * Final readiness calculation output.
+ */
 export interface ReadinessResult {
   score: number;
   targetLevel: JlptLevel;
@@ -57,6 +78,9 @@ export interface ReadinessResult {
   actions: ReadinessAction[];
 }
 
+/**
+ * Input parameters for readiness calculation.
+ */
 interface CalculateReadinessInput {
   courseMetadata: ReadinessCourseCategory[];
   completedLessons: Record<string, LessonProgress>;
@@ -68,6 +92,9 @@ interface CalculateReadinessInput {
   now?: Date;
 }
 
+/**
+ * Intermediate stats for course progress.
+ */
 interface CourseReadinessStats {
   course: ReadinessCourseCategory;
   level: JlptLevel | null;
@@ -76,6 +103,9 @@ interface CourseReadinessStats {
   progress: number;
 }
 
+/**
+ * Target thresholds per JLPT level.
+ */
 const LEVEL_TARGETS: Record<JlptLevel, { cards: number; activeDays: number; streak: number }> = {
   n5: { cards: 150, activeDays: 7, streak: 7 },
   n4: { cards: 400, activeDays: 9, streak: 14 },
@@ -84,23 +114,43 @@ const LEVEL_TARGETS: Record<JlptLevel, { cards: number; activeDays: number; stre
   n1: { cards: 2500, activeDays: 12, streak: 45 },
 };
 
+/**
+ * Target daily review count.
+ */
 const DAILY_REVIEW_TARGET = 20;
+
+/**
+ * Day window size for recent activity check.
+ */
 const RECENT_WINDOW_DAYS = 14;
 
+/**
+ * Clamps score between 0 and 100.
+ */
 function clampScore(value: number) {
   if (!Number.isFinite(value)) return 0;
   return Math.max(0, Math.min(100, Math.round(value)));
 }
 
+/**
+ * Formats number as percentage string.
+ */
 function formatPercent(value: number) {
   return `${clampScore(value)}%`;
 }
 
+/**
+ * Converts date to local YYYY-MM-DD key.
+ */
 function toLocalDateKey(date: Date) {
+  // Adjust timezone offset to get correct local date string
   const offset = date.getTimezoneOffset() * 60000;
   return new Date(date.getTime() - offset).toISOString().split("T")[0];
 }
 
+/**
+ * Counts active study days in recent window.
+ */
 function getRecentStudyDayCount(
   studyDays: Record<string, number>,
   windowDays = RECENT_WINDOW_DAYS,
@@ -117,6 +167,9 @@ function getRecentStudyDayCount(
   return activeDays;
 }
 
+/**
+ * Extracts JLPT level from string.
+ */
 export function detectJlptLevel(value: string | null | undefined): JlptLevel | null {
   if (!value) return null;
 
@@ -126,15 +179,24 @@ export function detectJlptLevel(value: string | null | undefined): JlptLevel | n
   return `n${match[1]}` as JlptLevel;
 }
 
+/**
+ * Gets possible identifier keys for lesson.
+ */
 function getLessonKeyCandidates(lesson: ReadinessCourseLesson) {
   return [lesson._id, lesson.id, lesson.slug].filter((key): key is string => Boolean(key));
 }
 
+/**
+ * Retrieves lessons or previews from course.
+ */
 function getCourseLessons(course: ReadinessCourseCategory) {
   if (course.lessons && course.lessons.length > 0) return course.lessons;
   return course.previews || [];
 }
 
+/**
+ * Checks if lesson is completed.
+ */
 function isLessonCompleted(
   lesson: ReadinessCourseLesson,
   completedLessons: Record<string, LessonProgress>
@@ -145,6 +207,9 @@ function isLessonCompleted(
   });
 }
 
+/**
+ * Builds progress stats for all courses.
+ */
 function buildCourseStats(
   courseMetadata: ReadinessCourseCategory[],
   completedLessons: Record<string, LessonProgress>
@@ -166,12 +231,18 @@ function buildCourseStats(
   });
 }
 
+/**
+ * Sorts course stats by JLPT level order.
+ */
 function sortByJlptOrder(a: CourseReadinessStats, b: CourseReadinessStats) {
   const aOrder = a.level ? JLPT_LEVELS.indexOf(a.level) : Number.MAX_SAFE_INTEGER;
   const bOrder = b.level ? JLPT_LEVELS.indexOf(b.level) : Number.MAX_SAFE_INTEGER;
   return aOrder - bOrder;
 }
 
+/**
+ * Finds current target course based on progress.
+ */
 function getTargetCourse(stats: CourseReadinessStats[]) {
   const jlptStats = stats.filter((stat) => stat.level).sort(sortByJlptOrder);
   const target =
@@ -183,6 +254,9 @@ function getTargetCourse(stats: CourseReadinessStats[]) {
   return target || null;
 }
 
+/**
+ * Maps score to status label.
+ */
 function getStatusLabel(score: number) {
   if (score >= 85) return "Siap Simulasi";
   if (score >= 70) return "Hampir Siap";
@@ -191,6 +265,9 @@ function getStatusLabel(score: number) {
   return "Mulai Fondasi";
 }
 
+/**
+ * Maps weakest metric to focus label.
+ */
 function getFocusLabel(metric: ReadinessMetric) {
   if (metric.id === "curriculum") return "Lanjutkan materi inti";
   if (metric.id === "memoryVolume") return "Perbesar bank hafalan";
@@ -198,6 +275,9 @@ function getFocusLabel(metric: ReadinessMetric) {
   return "Jaga ritme harian";
 }
 
+/**
+ * Calculates confidence label based on activity signals.
+ */
 function getConfidenceLabel(stats: {
   totalLessons: number;
   activeCards: number;
@@ -213,10 +293,16 @@ function getConfidenceLabel(stats: {
   return "Rendah";
 }
 
+/**
+ * Pushes action to list if ID is unique.
+ */
 function pushUniqueAction(actions: ReadinessAction[], action: ReadinessAction) {
   if (!actions.some((item) => item.id === action.id)) actions.push(action);
 }
 
+/**
+ * Builds recommended actions based on metrics and scores.
+ */
 function buildActions(params: {
   metrics: ReadinessMetric[];
   score: number;
@@ -294,6 +380,9 @@ function buildActions(params: {
   return actions.slice(0, 3);
 }
 
+/**
+ * Calculates overall JLPT readiness score and metrics.
+ */
 export function calculateJlptReadiness(input: CalculateReadinessInput): ReadinessResult {
   const srsSummary = input.srsSummary || summarizeSrs(input.srs);
   const courseStats = buildCourseStats(input.courseMetadata || [], input.completedLessons || {});
@@ -308,13 +397,18 @@ export function calculateJlptReadiness(input: CalculateReadinessInput): Readines
   const targetCourseHref = target?.course.slug ? `/courses/${target.course.slug}` : "/courses";
   const curriculumScore = clampScore(target?.progress || 0);
   const memoryVolumeScore = clampScore((activeCards / targets.cards) * 100);
+  
+  // Calculate stability score with penalties for fragile and due cards
   const stabilityBase = activeCards > 0 ? (stableCards / activeCards) * 100 : 0;
   const fragilePenalty = activeCards > 0 ? (fragileCards / activeCards) * 25 : 0;
   const duePenalty = activeCards > 0 ? Math.min(20, (srsSummary.due / activeCards) * 20) : 0;
   const stabilityScore = clampScore(stabilityBase - fragilePenalty - duePenalty);
+  
   const activeDaysScore = clampScore((recentActiveDays / targets.activeDays) * 100);
   const todayReviewScore = clampScore((input.todayReviewCount / DAILY_REVIEW_TARGET) * 100);
   const streakScore = clampScore((input.streak / targets.streak) * 100);
+  
+  // Weighted routine score calculation
   const routineScore = clampScore(activeDaysScore * 0.45 + todayReviewScore * 0.35 + streakScore * 0.2);
 
   const metrics: ReadinessMetric[] = [

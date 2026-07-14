@@ -15,10 +15,11 @@ import { ReadingData, ReadingMode, PortableTextContent, PortableTextBlock } from
 // HOOK UTAMA
 // ==========================================
 /**
- * Hook utama pengendali artikel bacaan terpandu.
+ * Custom hook to manage reading article logic.
+ * Handles multi-format text parsing, visualization modes, and Zustand state sync.
  * 
- * @param data Data artikel membaca mentah dari Sanity.
- * @returns State membaca, list paragraf ter-parse, mode membaca, dan fungsi toggle.
+ * @param data - Raw reading article data from Sanity.
+ * @returns Reading state, parsed paragraphs, active mode, and toggle handlers.
  */
 export function useReadingLogic(data: ReadingData) {
   // ==========================================
@@ -31,7 +32,7 @@ export function useReadingLogic(data: ReadingData) {
   // ==========================================
   // EFEK SAMPING (EFFECTS)
   // ==========================================
-  // Sinkronkan data ke store global saat mount untuk akses tombol aksi melayang (FAB)
+  // Sync article data to global UI store on mount for Floating Action Button (FAB) access.
   useEffect(() => {
     setReadingState({
       audioUrl: data.audioUrl,
@@ -46,10 +47,17 @@ export function useReadingLogic(data: ReadingData) {
   // ==========================================
   // FUNGSI PEMBANTU (HELPERS)
   // ==========================================
-  // Helper untuk mengekstrak teks baik dari string maupun blok PortableText
+  /**
+   * Extracts text paragraphs from string or PortableText content.
+   * 
+   * @param content - Raw content source (string or PortableText array).
+   * @returns Array of cleaned paragraph strings.
+   */
   const extractText = (content: PortableTextContent | undefined): string[] => {
     if (!content) return [];
+    // Split plain text by newlines and filter out empty lines.
     if (typeof content === "string") return content.split(/\n+/).filter(p => p.trim());
+    // Filter blocks of type "block", map children text, join, and filter empty results.
     if (Array.isArray(content)) {
       return content
         .filter((block: PortableTextBlock) => block._type === "block" && block.children)
@@ -59,7 +67,7 @@ export function useReadingLogic(data: ReadingData) {
     return [];
   };
 
-  // Bagi konten menjadi beberapa paragraf
+  // Parse all text variants concurrently when data changes.
   const content = useMemo(() => {
     const paragraphs = extractText(data.body);
     const hiraganaParagraphs = extractText(data.hiragana);
@@ -77,6 +85,9 @@ export function useReadingLogic(data: ReadingData) {
   // ==========================================
   // LOGIKA PENGENDALI & METODE (HANDLERS)
   // ==========================================
+  /**
+   * Available reading visualization modes with corresponding icons.
+   */
   const modes: { id: ReadingMode; label: string; icon: ElementType }[] = [
     { id: "kanji", label: "Kanji", icon: BookOpen },
     { id: "furigana", label: "Furigana", icon: Eye },
@@ -84,10 +95,18 @@ export function useReadingLogic(data: ReadingData) {
     { id: "romaji", label: "Romaji", icon: Type },
   ];
 
+  /**
+   * Toggles translation visibility state.
+   */
   const toggleTranslation = () => {
     setReadingState({ showTranslation: !showTranslation });
   };
 
+  /**
+   * Updates active reading mode.
+   * 
+   * @param newMode - Target reading mode.
+   */
   const setMode = (newMode: ReadingMode) => {
     setReadingState({ mode: newMode });
   };

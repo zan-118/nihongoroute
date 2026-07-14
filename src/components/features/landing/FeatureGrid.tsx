@@ -38,6 +38,11 @@ import { Badge } from "@/components/ui/badge";
 // ==========================================
 // VARIASI ANIMASI FRAMER MOTION
 // ==========================================
+
+/**
+ * Framer motion container animation variants.
+ * Staggers children entry animations.
+ */
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -46,6 +51,10 @@ const containerVariants: Variants = {
   },
 };
 
+/**
+ * Framer motion item animation variants.
+ * Fades in individual grid items.
+ */
 const itemVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -55,8 +64,15 @@ const itemVariants: Variants = {
 };
 
 // ==========================================
+
+/**
+ * Interactive JLPT N5 grammar quiz playground.
+ * Allows user to select answers and displays instant feedback.
+ */
 function JlptQuizPlayground() {
+  // Track selected answer key
   const [selected, setSelected] = useState<string | null>(null);
+  // Check if selected answer is correct (A is correct)
   const isCorrect = selected === "A";
 
   return (
@@ -104,10 +120,11 @@ function JlptQuizPlayground() {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen FeatureGrid
- * Pusat eksplorasi fitur premium dan interaktif NihongoRoute.
+ * FeatureGrid component.
+ * Displays interactive learning ecosystem, steps, and gamification preview.
  */
 export function FeatureGrid() {
+  // Track active step in learning path
   const [activeStep, setActiveStep] = useState<number>(0);
 
   // Langkah-langkah metode belajar terpadu NihongoRoute
@@ -689,4 +706,3 @@ export function FeatureGrid() {
     </div>
   );
 }
-

@@ -12,49 +12,96 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { fetchTTSAudio, speakWithWebSpeech, detectVoice, TtsVoice } from "@/lib/tts";
 
 // ── Tipe ─────────────────────────────────────────────────────
+
+/**
+ * Speech rate options.
+ */
 export type TTSRate = "slow" | "medium" | "fast";
 
+/**
+ * Transcript line item structure.
+ */
 export interface TTSLineItem {
+  /** Japanese text content. */
   jp?: string | unknown[];
+  /** Alternative text content. */
   text?: string | unknown[];
+  /** Speaker identifier. */
   speaker?: string;
+  /** Speaker display name. */
   speakerName?: string;
+  /** Index of line in local context. */
   localIndex?: number;
 }
 
+/**
+ * Configuration options for useLineTTS hook.
+ */
 interface UseLineTTSOptions {
+  /** Initial playback speed. */
   rate?: TTSRate;
+  /** List of lines for prefetching. */
   lines?: TTSLineItem[];
 }
 
+/**
+ * Return type of useLineTTS hook.
+ */
 interface UseLineTTSReturn {
+  /** Index of line currently playing. -1 if idle. */
   speakingIndex: number;
+  /** Index of line currently loading. -1 if idle. */
   loadingIndex: number;
+  /** Play TTS for specific line. */
   speakLine: (line: TTSLineItem, index: number) => Promise<void>;
+  /** Stop all active TTS playback. */
   stopLineTTS: () => void;
+  /** Toggle state of line TTS feature. */
   lineTTSEnabled: boolean;
+  /** Toggle line TTS feature on/off. */
   toggleLineTTS: () => void;
+  /** Current playback speed. */
   rate: TTSRate;
+  /** Update playback speed. */
   setRate: (r: TTSRate) => void;
   
   // Fitur playlist sequential
+  /** Flag indicating if playlist is playing. */
   isPlayingPlaylist: boolean;
+  /** Current index in playlist. */
   playlistIndex: number;
+  /** Start playing playlist from index. */
   playPlaylist: (lines: TTSLineItem[], startIndex?: number) => void;
+  /** Pause playlist playback. */
   pausePlaylist: () => void;
 }
 
+/**
+ * Extended window interface for idle callback support.
+ */
 interface WindowWithIdle {
   requestIdleCallback: (callback: () => void, options?: { timeout: number }) => number;
   cancelIdleCallback: (id: number) => void;
 }
 
 // ── Helper: konversi rate string ke playbackRate number ──────
+
+/**
+ * Converts rate string to numeric playback rate.
+ * @param rate - Speed string.
+ * @returns Numeric multiplier.
+ */
 function rateToNumber(rate: TTSRate): number {
   return rate === "slow" ? 0.75 : rate === "fast" ? 1.25 : 1;
 }
 
 // ── Hook utama ────────────────────────────────────────────────
+
+/**
+ * Hook to manage line-by-line TTS playback and sequential playlist playback.
+ * @param options - Hook configuration options.
+ * @returns TTS state and control functions.
+ */
 export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOptions = {}): UseLineTTSReturn {
   const [speakingIndex,   setSpeakingIndex]   = useState(-1);
   const [loadingIndex,    setLoadingIndex]     = useState(-1);
@@ -73,6 +120,9 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
   const objectUrlRef     = useRef<string | null>(null);
   const requestIdRef     = useRef(0);
 
+  /**
+   * Revokes active object URL to prevent memory leaks.
+   */
   const cleanupObjectUrl = useCallback(() => {
     if (objectUrlRef.current) {
       URL.revokeObjectURL(objectUrlRef.current);
@@ -80,6 +130,9 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
     }
   }, []);
 
+  /**
+   * Stops all active audio playback and resets state.
+   */
   const stopLineTTS = useCallback(() => {
     requestIdRef.current++;
     if (audioRef.current) {
@@ -157,6 +210,7 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
       }
     };
 
+    // Schedule prefetch during idle periods to avoid blocking main thread
     let timerId: number | ReturnType<typeof setTimeout> | null = null;
     if (typeof window !== "undefined") {
       const win = window as unknown as WindowWithIdle;
@@ -180,6 +234,9 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
     };
   }, [lines, rate]);
 
+  /**
+   * Internal function to execute TTS playback for a line.
+   */
   const speakLineRaw = useCallback(async (line: TTSLineItem, index: number, forcePlay = false) => {
     if (!lineTTSEnabled && !forcePlay) return;
 
@@ -220,6 +277,9 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
 
     setLoadingIndex(index);
 
+    /**
+     * Handles completion of audio playback, advancing playlist if active.
+     */
     const onAudioEnded = () => {
       setSpeakingIndex(-1);
       cleanupObjectUrl();
@@ -268,6 +328,7 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
           if (myRequestId !== requestIdRef.current) return;
           setLoadingIndex(-1);
           setSpeakingIndex(index);
+          // Fallback to Web Speech API on audio element error
           stopWebSpeechRef.current = speakWithWebSpeech(
             cleanText,
             voice,
@@ -311,10 +372,16 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
       }
   }, [lineTTSEnabled, rate, cleanupObjectUrl]);
 
+  /**
+   * Public function to trigger TTS for a specific line.
+   */
   const speakLine = useCallback(async (line: TTSLineItem, index: number) => {
     await speakLineRaw(line, index, false);
   }, [speakLineRaw]);
 
+  /**
+   * Toggles line TTS feature state.
+   */
   const toggleLineTTS = useCallback(() => {
     setLineTTSEnabled(prev => {
       if (prev) stopLineTTS();
@@ -323,6 +390,9 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
   }, [stopLineTTS]);
 
   // Playlist handlers
+  /**
+   * Starts sequential playlist playback.
+   */
   const playPlaylist = useCallback((lines: TTSLineItem[], startIndex = 0) => {
     playlistLinesRef.current = lines;
     isPlayingPlaylistRef.current = true;
@@ -330,6 +400,9 @@ export function useLineTTS({ rate: initialRate = "medium", lines }: UseLineTTSOp
     setPlaylistIndex(startIndex);
   }, []);
 
+  /**
+   * Pauses playlist playback.
+   */
   const pausePlaylist = useCallback(() => {
     isPlayingPlaylistRef.current = false;
     setIsPlayingPlaylist(false);

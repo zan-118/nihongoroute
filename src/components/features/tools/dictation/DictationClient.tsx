@@ -36,6 +36,10 @@ import * as wanakana from "wanakana";
 // ==========================================
 // KONSTANTA & KONFIGURASI
 // ==========================================
+
+/**
+ * JLPT difficulty levels for selection.
+ */
 const JLPT_LEVELS = [
   { id: "all", label: "Campur (Semua)", color: "bg-muted text-muted-foreground border-border" },
   { id: "N5", label: "N5", color: "bg-primary/10 text-primary border-primary/20" },
@@ -45,11 +49,19 @@ const JLPT_LEVELS = [
   { id: "N1", label: "N1", color: "bg-destructive/10 text-destructive border-destructive/20" }
 ];
 
+/**
+ * Sentence count options.
+ */
 const AMOUNTS = [5, 10, 15, 20];
 
 // ==========================================
 // KOMPONEN UTAMA
 // ==========================================
+
+/**
+ * Dictation practice client component.
+ * Handles audio playback, user input validation, and score tracking.
+ */
 export default function DictationClient() {
   // Setup State
   const [level, setLevel] = useState<string>("all");
@@ -71,6 +83,9 @@ export default function DictationClient() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const objectUrlRef = useRef<string | null>(null);
 
+  /**
+   * Revoke active blob URL to prevent memory leaks.
+   */
   const cleanupObjectUrl = useCallback(() => {
     if (objectUrlRef.current) {
       URL.revokeObjectURL(objectUrlRef.current);
@@ -78,23 +93,34 @@ export default function DictationClient() {
     }
   }, []);
 
-  // Deterministik Voice Vox
+  /**
+   * List of TTS voices for rotation.
+   */
   const VOICES_ROTATION: TtsVoice[] = [
-    TTS_VOICES.LARA, TTS_VOICES.INDAH, TTS_VOICES.SITI, TTS_VOICES.DEWI,
+    TTS_VOICES.LALA, TTS_VOICES.INDAH, TTS_VOICES.SITI, TTS_VOICES.DEWI,
     TTS_VOICES.HAYASHI, TTS_VOICES.SATO, TTS_VOICES.AYU, TTS_VOICES.ZUNDAMON,
     TTS_VOICES.RITSU, TTS_VOICES.DITO, TTS_VOICES.BUDI, TTS_VOICES.SUZUKI,
     TTS_VOICES.TANAKA, TTS_VOICES.KIMURA, TTS_VOICES.ANDI, TTS_VOICES.FAISAL,
-    TTS_VOICES.TAKAHASHI, TTS_VOICES.KOBAYASHI, TTS_VOICES.NAMONASHI,
+    TTS_VOICES.TAKAHASHI, TTS_VOICES.KOBAYASHI,
   ];
 
+  /**
+   * Get voice based on text hash. Ensures same text uses same voice.
+   * @param text Input text to hash.
+   */
   const getDeterministicVoice = (text: string): TtsVoice => {
     let hash = 0;
     for (let i = 0; i < text.length; i++) hash = text.charCodeAt(i) + ((hash << 5) - hash);
     return VOICES_ROTATION[Math.abs(hash) % VOICES_ROTATION.length];
   };
 
+  /**
+   * Play TTS audio for given text. Fallback to Web Speech API if fetch fails.
+   * @param text Japanese text to speak.
+   */
   const speakSentence = async (text: string) => {
     if (audioPlaying) {
+      // Stop current audio if playing
       audioRef.current?.pause();
       cleanupObjectUrl();
       if (typeof window !== "undefined") window.speechSynthesis.cancel();
@@ -132,6 +158,7 @@ export default function DictationClient() {
     }
   };
 
+  // Cleanup audio resources on unmount
   useEffect(() => {
     return () => {
       audioRef.current?.pause();
@@ -140,7 +167,9 @@ export default function DictationClient() {
     };
   }, [cleanupObjectUrl]);
 
-  // Start Session
+  /**
+   * Fetch sentences and start dictation session.
+   */
   const handleStart = async () => {
     setLoading(true);
     try {
@@ -170,7 +199,10 @@ export default function DictationClient() {
     }
   };
 
-  // Normalisasi karakter Jepang untuk membandingkan
+  /**
+   * Convert text to hiragana and strip punctuation for comparison.
+   * @param text Japanese text to normalize.
+   */
   const normalizeJapanese = (text: string) => {
     return wanakana.toHiragana(
       text
@@ -178,7 +210,9 @@ export default function DictationClient() {
     );
   };
 
-  // Check Answer
+  /**
+   * Validate user input against target sentence. Update score.
+   */
   const handleCheck = () => {
     if (!userInput.trim()) {
       toast.warning("Ketik dulu apa yang kamu dengar ya.");
@@ -204,6 +238,9 @@ export default function DictationClient() {
     }
   };
 
+  /**
+   * Advance to next sentence or finish session.
+   */
   const handleNext = () => {
     if (currentIndex < sentences.length - 1) {
       const nextIdx = currentIndex + 1;
@@ -221,11 +258,18 @@ export default function DictationClient() {
     }
   };
 
+  /**
+   * Reset session state to setup screen.
+   */
   const handleRestart = () => {
     setIsPlaying(false);
     setSentences([]);
   };
 
+  /**
+   * Update user input state.
+   * @param e Input change event.
+   */
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInput(e.target.value);
   };

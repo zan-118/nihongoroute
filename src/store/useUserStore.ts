@@ -18,50 +18,69 @@ import { ACHIEVEMENTS_LIST } from "@/lib/constants/gamification";
 // ANTARMUKA STATE STORE
 // ==========================================
 /**
- * Mendefinisikan struktur data progres belajar dan aksi gamifikasi milik pengguna.
- * Mengelola XP, level, rekor hari beruntun (streak), inventarisasi item,
- * riwayat pelajaran yang telah diselesaikan, serta penandaan pelajaran kotor (dirtyLessons).
+ * User state interface. Track progress, XP, level, streak, inventory, lessons.
  */
 interface UserState {
+  /** User ID. */
   id: string;
+  /** Guest flag. */
   isGuest: boolean;
+  /** User display name. */
   name: string | null;
+  /** Total experience points. */
   xp: number;
+  /** Current level. */
   level: number;
+  /** Daily streak count. */
   streak: number;
+  /** Reviews done today. */
   todayReviewCount: number;
+  /** Last active date. */
   lastStudyDate: string | null;
+  /** Map of study dates to review counts. */
   studyDays: Record<string, number>;
+  /** User items and achievements. */
   inventory: Inventory;
+  /** Map of completed lesson progress. */
   completedLessons: Record<string, LessonProgress>;
+  /** Unsynced lesson IDs. */
   dirtyLessons: Set<string>;
 
+  /** Update profile name. */
   updateProfileName: (name: string) => void;
+  /** Add XP. Level up if threshold met. */
   addXP: (amount: number) => void;
+  /** Update gamification state. */
   setGamification: (data: Partial<UserState>) => void;
+  /** Buy streak freeze item. Deduct XP. */
   buyStreakFreeze: () => boolean;
+  /** Claim quest reward. */
   claimQuest: (questId: string, date: string, rewardXP: number) => void;
+  /** Mark lesson completed. Add to dirty set. */
   completeLesson: (lessonId: string) => void;
+  /** Update dirty lessons set. */
   setDirtyLessons: (updater: Set<string> | ((prev: Set<string>) => Set<string>)) => void;
+  /** Remove synced IDs from dirty set. */
   clearDirtyLessons: (syncedIds?: string[]) => void;
+  /** Sync user profile data. */
   syncUserData: (data: { id: string; isGuest: boolean; name?: string | null }) => void;
+  /** Reset state to guest defaults. */
   resetUser: () => void;
+  /** Evaluate achievements. Award XP. */
   checkAchievements: () => void;
+  /** Lock flag for achievement check. */
   isCheckingAchievements?: boolean;
 }
 
 // ==========================================
 // BIAYA ITEM & KONSTANTA
 // ==========================================
-/** Biaya XP untuk membeli Streak Freeze. Exported sebagai satu sumber kebenaran. */
+/** XP cost for streak freeze. */
 export const STREAK_FREEZE_COST = 500;
 
 /**
- * Zustand Store: useUserStore
- * 
- * Mengelola status utama gamifikasi, pencapaian prestasi (achievements), riwayat harian belajar,
- * penyelesaian kuis mini pelajaran, serta data inventarisasi (seperti item Streak Freeze).
- * State store ini di-persist otomatis ke IndexedDB peramban via `idb-keyval`.
+ * Zustand store for user data.
+ * Persisted to IndexedDB via idb-keyval.
  */
 export const useUserStore = create<UserState>()(
   persist(
@@ -93,6 +112,7 @@ export const useUserStore = create<UserState>()(
         const currentXp = get().xp;
         const newXp = currentXp + amount;
         const currentLevel = get().level;
+        // Calculate new level from XP.
         const newLevel = calculateLevel(newXp);
 
         set({
@@ -100,7 +120,7 @@ export const useUserStore = create<UserState>()(
           level: newLevel,
         });
 
-        // 1. Kirim notifikasi "Naik Level" jika level pengguna bertambah
+        // Notify user on level up.
         if (newLevel > currentLevel) {
           useUIStore.getState().addNotification({
             title: "Level Up!",
@@ -109,7 +129,7 @@ export const useUserStore = create<UserState>()(
           });
         }
 
-        // 2. Evaluasi apakah penambahan XP membuka lencana pencapaian (achievements) baru
+        // Check achievements after XP gain.
         get().checkAchievements();
       },
 
@@ -120,10 +140,10 @@ export const useUserStore = create<UserState>()(
 
       buyStreakFreeze: () => {
         const state = get();
-        // Cek kecukupan koin XP pengguna untuk pembelian
+        // Check XP balance.
         if (state.xp < STREAK_FREEZE_COST) return false;
 
-        // Potong XP dan tambahkan kuantitas streakFreeze di dalam inventaris luring
+        // Deduct XP. Increment item count.
         set({
           xp: state.xp - STREAK_FREEZE_COST,
           inventory: {
@@ -147,12 +167,12 @@ export const useUserStore = create<UserState>()(
         
         let newQuests = [...(currentClaimed?.quests || [])];
         
-        // Reset daftar quest jika berganti hari kalender belajar
+        // Reset quests if new day.
         if (currentClaimed?.date !== date) {
           newQuests = [];
         }
         
-        // Jika quest belum pernah diklaim hari ini, masukkan ke daftar klaim luring
+        // Add quest if not claimed.
         if (!newQuests.includes(questId)) {
           newQuests.push(questId);
           
@@ -166,14 +186,14 @@ export const useUserStore = create<UserState>()(
             }
           });
           
-          // Tambahkan reward XP lokal (akan diverifikasi ulang oleh backend anticheat Supabase saat sinkronisasi)
+          // Add reward XP.
           state.addXP(rewardXP);
         }
       },
 
       completeLesson: (lessonId) => {
         const state = get();
-        // Jangan selesaikan ulang jika pelajaran sudah selesai dan tidak dihapus
+        // Skip if already completed.
         if (state.completedLessons[lessonId] && !state.completedLessons[lessonId].isDeleted) return;
 
         const now = Date.now();
@@ -184,7 +204,7 @@ export const useUserStore = create<UserState>()(
           isDeleted: false
         };
 
-        // Tandai pelajaran ini kotor (dirtyLessons) agar disinkronkan ke cloud
+        // Mark dirty for sync.
         const newDirty = new Set(state.dirtyLessons);
         newDirty.add(lessonId);
 
@@ -237,11 +257,12 @@ export const useUserStore = create<UserState>()(
       }),
 
       checkAchievements: () => {
-        // Jangan jalankan verifikasi lencana jika sedang berada di dalam lingkungan pengetesan unit (Vitest)
+        // Skip in Vitest environment.
         if (typeof process !== "undefined" && process.env?.VITEST) {
           return;
         }
 
+        // Prevent concurrent checks.
         if (get().isCheckingAchievements) return;
         set({ isCheckingAchievements: true });
 
@@ -251,7 +272,7 @@ export const useUserStore = create<UserState>()(
         const achievements = state.inventory?.achievements || [];
         const unlockedIds = new Set(achievements.map((a) => a.id));
 
-        // Dapatkan data SRS secara aman dan sinkron dari global window untuk menghindari circular dependency antar-store
+        // Get SRS store dynamically to avoid circular import.
         const srsStore = typeof window !== "undefined" ? (window as unknown as Record<string, { getState: () => { srs: Record<string, { isDeleted?: boolean; repetition?: number }> } }>).useSRSStore : null;
         const srsState = srsStore ? srsStore.getState().srs || {} : {};
 
@@ -279,7 +300,7 @@ export const useUserStore = create<UserState>()(
           }
         }
 
-        // Konstruksi progress payload yang kompatibel dengan tipe UserProgress untuk dicocokkan dengan pencapaian prestasi
+        // Build payload for condition check.
         const progressPayload = {
           id: state.id,
           isGuest: state.isGuest,
@@ -297,7 +318,7 @@ export const useUserStore = create<UserState>()(
           settings: {}
         } as unknown as UserProgress;
 
-        // Peta XP reward dinamis untuk 20 pencapaian prestasi terpusat
+        // XP rewards map.
         const ACHIEVEMENT_XP_REWARDS: Record<string, number> = {
           first_steps: 50,
           lesson_bronze: 50,
@@ -324,9 +345,8 @@ export const useUserStore = create<UserState>()(
         const newlyUnlocked: Array<{ id: string; unlockedAt: number }> = [];
         let totalRewardXp = 0;
 
-        // Evaluasi 20 lencana prestasi secara dinamis dari list terpusat
+        // Check each locked achievement.
         for (const ach of ACHIEVEMENTS_LIST) {
-          // Lewati jika sudah terbuka
           if (unlockedIds.has(ach.id)) continue;
 
           try {
@@ -347,7 +367,7 @@ export const useUserStore = create<UserState>()(
           }
         }
 
-        // Simpan data lencana baru ke inventaris lokal dan tambahkan total XP reward
+        // Save unlocked achievements. Add XP.
         if (newlyUnlocked.length > 0) {
           const updatedAchievements = [...achievements, ...newlyUnlocked];
           set({
@@ -369,14 +389,13 @@ export const useUserStore = create<UserState>()(
     {
       name: "nihongoroute_user_data",
       storage: {
-        // Mengambil dan merekonstruksi data pengguna dari IndexedDB
+        // Load state from IndexedDB. Parse Set.
         getItem: async (name) => {
           const data = await get(name);
           if (!data) return null;
           
           try {
             const parsed = JSON.parse(data, (key, value) => {
-              // Rekonstruksi struktur data Set untuk pelajaran kotor (dirty lessons)
               if (key === 'dirtyLessons' && Array.isArray(value)) {
                 return new Set(value);
               }
@@ -388,11 +407,10 @@ export const useUserStore = create<UserState>()(
             return null;
           }
         },
-        // Melakukan serialisasi dan menyimpan data pengguna ke IndexedDB
+        // Save state to IndexedDB. Stringify Set.
         setItem: async (name, value) => {
           try {
             const stringified = JSON.stringify(value, (key, val) => {
-              // Konversi struktur data Set menjadi Array agar dapat diserialisasi ke format JSON
               if (val instanceof Set) {
                 return Array.from(val);
               }
@@ -403,7 +421,7 @@ export const useUserStore = create<UserState>()(
             console.error("Gagal menyimpan data user store:", e);
           }
         },
-        // Menghapus data pengguna dari IndexedDB
+        // Delete state from IndexedDB.
         removeItem: async (name) => await del(name),
       },
     }

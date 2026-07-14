@@ -223,7 +223,7 @@ async function generateDialogue(
 7. Ayu: Teman Wanita. Modern, santai.
 8. Ritsu: Wanita Dewasa. Misterius, bernada khas.
 9. Sakura: Remaja Gadis. Baik hati.
-10. Rara: Remaja Gadis. Pemalu, santun.
+10. Ani: Remaja Gadis. Pemalu, santun.
 
 TOKOH PRIA (10 karakter):
 1. Budi: Guru Pria. Berwibawa.
@@ -281,7 +281,7 @@ OUTPUT FORMAT HARUS JSON murni tanpa markdown, dengan format berikut:
   "summary": "Ringkasan materi pelajaran singkat dan menarik dalam 1-2 kalimat (Bahasa Indonesia).",
   "content": "ララ：こんにちは、先生。\\nインダ：ああ、ララさん。元気ですか。",
   "translation": "Lara: Halo, Sensei.\\nIndah: Ah, Lara. Apa kabar?",
-  "romaji": "Lara: Konnichiwa, sensei.\\nIndah: Aa, Rara-san. Genki desu ka.",
+  "romaji": "Lara: Konnichiwa, sensei.\\nIndah: Aa, Lara-san. Genki desu ka.",
   "next_plot_summary": "Ringkasan plot realistis bab ini maksimal 2 kalimat, untuk diteruskan ke bab berikutnya.",
   "callouts": [
     {

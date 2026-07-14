@@ -1,5 +1,11 @@
+/**
+ * Verb group classification.
+ */
 export type VerbGroup = "godan" | "ichidan" | "irregular";
 
+/**
+ * Supported verb conjugation form identifiers.
+ */
 export type VerbFormId =
   | "masu"
   | "nai"
@@ -12,18 +18,27 @@ export type VerbFormId =
   | "conditional"
   | "imperative";
 
+/**
+ * Metadata definition for verb form.
+ */
 export interface VerbFormDefinition {
   id: VerbFormId;
   label: string;
   description: string;
 }
 
+/**
+ * Result structure containing all conjugated forms.
+ */
 export interface VerbConjugationResult {
   dictionary: string;
   group: VerbGroup;
   forms: Record<VerbFormId, string>;
 }
 
+/**
+ * List of verb forms with Indonesian descriptions.
+ */
 export const VERB_FORMS: VerbFormDefinition[] = [
   { id: "masu", label: "ます", description: "bentuk sopan" },
   { id: "nai", label: "ない", description: "negatif kasual" },
@@ -37,6 +52,9 @@ export const VERB_FORMS: VerbFormDefinition[] = [
   { id: "imperative", label: "命令", description: "perintah" },
 ];
 
+/**
+ * Mapping of godan verb endings to their respective kana shifts.
+ */
 const GODAN_ENDINGS: Record<
   string,
   {
@@ -59,19 +77,32 @@ const GODAN_ENDINGS: Record<
   る: { a: "ら", e: "れ", i: "り", o: "ろ", ta: "った", te: "って" },
 };
 
+/**
+ * Remove last character from verb string.
+ */
 function stripLastKana(verb: string) {
   return verb.slice(0, -1);
 }
 
+/**
+ * Check if verb is kuru (to come).
+ */
 function isKuru(verb: string) {
   return verb === "来る" || verb === "くる";
 }
 
+/**
+ * Check if verb is suru (to do) or ends with suru.
+ */
 function isSuru(verb: string) {
   return verb === "する" || verb.endsWith("する");
 }
 
+/**
+ * Conjugate suru irregular verbs.
+ */
 function conjugateSuru(verb: string): Record<VerbFormId, string> {
+  // Strip する ending
   const stem = verb.slice(0, -2);
   return {
     masu: `${stem}します`,
@@ -87,7 +118,11 @@ function conjugateSuru(verb: string): Record<VerbFormId, string> {
   };
 }
 
+/**
+ * Conjugate kuru irregular verb.
+ */
 function conjugateKuru(verb: string): Record<VerbFormId, string> {
+  // Check if kanji form is used
   const kanji = verb === "来る";
   return {
     masu: kanji ? "来ます" : "きます",
@@ -103,6 +138,9 @@ function conjugateKuru(verb: string): Record<VerbFormId, string> {
   };
 }
 
+/**
+ * Conjugate ichidan verbs.
+ */
 function conjugateIchidan(verb: string): Record<VerbFormId, string> {
   const stem = stripLastKana(verb);
   return {
@@ -119,7 +157,11 @@ function conjugateIchidan(verb: string): Record<VerbFormId, string> {
   };
 }
 
+/**
+ * Conjugate godan verbs.
+ */
 function conjugateGodan(verb: string): Record<VerbFormId, string> {
+  // Special case for iku (to go)
   if (verb === "行く" || verb === "いく") {
     const stem = stripLastKana(verb);
     return {
@@ -157,20 +199,26 @@ function conjugateGodan(verb: string): Record<VerbFormId, string> {
   };
 }
 
+/**
+ * Conjugate verb based on dictionary form and group.
+ */
 export function conjugateVerb(dictionary: string, group: VerbGroup): VerbConjugationResult {
   const verb = dictionary.trim();
   if (!verb) {
     throw new Error("Verba belum diisi.");
   }
 
+  // Route to irregular kuru
   if (isKuru(verb)) {
     return { dictionary: verb, forms: conjugateKuru(verb), group: "irregular" };
   }
 
+  // Route to irregular suru
   if (isSuru(verb)) {
     return { dictionary: verb, forms: conjugateSuru(verb), group: "irregular" };
   }
 
+  // Validate ichidan ending
   if (!verb.endsWith("る") && group === "ichidan") {
     throw new Error("Ichidan biasanya berakhiran る.");
   }
@@ -182,10 +230,16 @@ export function conjugateVerb(dictionary: string, group: VerbGroup): VerbConjuga
   return { dictionary: verb, forms: conjugateGodan(verb), group: "godan" };
 }
 
+/**
+ * Normalize input string for comparison.
+ */
 export function normalizeConjugationAnswer(value: string) {
   return value.normalize("NFKC").replace(/\s/g, "").trim();
 }
 
+/**
+ * Compare expected conjugation with user answer.
+ */
 export function isConjugationAnswerCorrect(expected: string, answer: string) {
   return normalizeConjugationAnswer(expected) === normalizeConjugationAnswer(answer);
 }

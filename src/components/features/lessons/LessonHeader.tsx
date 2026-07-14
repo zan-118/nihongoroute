@@ -14,16 +14,26 @@ import DownloadOfflineButton, { type LessonData } from "@/components/features/le
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+/**
+ * Props for LessonHeader component.
+ */
 interface LessonHeaderProps {
+  /** Lesson title text. */
   title: string;
+  /** Optional lesson summary text. */
   summary?: string;
+  /** Flag indicating if lesson is side quest. */
   isSideQuest?: boolean;
+  /** Lesson data payload for downloads. */
   lesson: LessonData;
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * Header component for lessons. Displays title, summary, and action buttons.
+ */
 export const LessonHeader: React.FC<LessonHeaderProps> = ({
   title, 
   summary, 
@@ -32,6 +42,7 @@ export const LessonHeader: React.FC<LessonHeaderProps> = ({
 }) => {
   return (
     <header className="mb-14">
+      {/* Dynamic title color based on side quest status */}
       <h1
         className={`text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-none mb-4 ${
           isSideQuest ? "text-warning" : "text-foreground"
@@ -50,6 +61,7 @@ export const LessonHeader: React.FC<LessonHeaderProps> = ({
             : { backgroundImage: "linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)))" }
         }
       />
+      {/* Render summary with smart text formatting if provided */}
       {summary && (
         <div 
           className={`p-6 md:p-8 rounded-2xl md:rounded-3xl neo-inset border-l-8 mb-8 ${
@@ -61,6 +73,7 @@ export const LessonHeader: React.FC<LessonHeaderProps> = ({
           </p>
         </div>
       )}
+      {/* Action buttons for offline storage and PDF generation */}
       <div className="flex items-center flex-wrap gap-3 justify-start p-3 rounded-xl bg-muted/20 border border-border/40 w-fit">
         <DownloadOfflineButton lesson={lesson} />
         <DownloadPdfButton data={lesson} />

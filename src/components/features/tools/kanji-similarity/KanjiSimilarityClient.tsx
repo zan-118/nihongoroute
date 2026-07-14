@@ -9,6 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
+/**
+ * Card component to display and compare single kanji details.
+ * Shows character, meaning, reading, visual cue, and examples.
+ */
 function KanjiCompareCard({
   item,
   accent,
@@ -20,6 +24,7 @@ function KanjiCompareCard({
     <Card
       className={cn(
         "rounded-2xl md:rounded-3xl border bg-card/45 p-6 shadow-xl",
+        // Apply accent color border based on primary/warning role
         accent === "primary" ? "border-primary/25" : "border-warning/25"
       )}
     >
@@ -29,6 +34,7 @@ function KanjiCompareCard({
             <p
               className={cn(
                 "font-japanese text-8xl font-black leading-none",
+                // Apply accent color text based on primary/warning role
                 accent === "primary" ? "text-primary" : "text-warning"
               )}
             >
@@ -86,8 +92,15 @@ function KanjiCompareCard({
   );
 }
 
+/**
+ * Client component for comparing similar Japanese kanji characters.
+ * Allows selecting pairs, viewing differences, mnemonics, and navigating to writing practice.
+ */
 export default function KanjiSimilarityClient() {
+  // Track currently selected kanji pair ID
   const [selectedId, setSelectedId] = useState(SIMILAR_KANJI_PAIRS[0].id);
+  
+  // Find active pair data, fallback to first pair if not found
   const selectedPair =
     SIMILAR_KANJI_PAIRS.find((pair) => pair.id === selectedId) || SIMILAR_KANJI_PAIRS[0];
 

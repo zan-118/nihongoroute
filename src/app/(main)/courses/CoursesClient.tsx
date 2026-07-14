@@ -14,19 +14,25 @@ import React from "react";
 import { m } from "framer-motion";
 import { GeneralCategoryCard } from "@/components/features/course/GeneralCategoryCard";
 
-// ======================
-// KONSTANTA ANIMASI
-// ======================
+/**
+ * Container animation config. Stagger children.
+ */
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
 };
 
+/**
+ * Item animation config. Fade and slide up.
+ */
 const itemVariants = {
   hidden: { y: 16, opacity: 0 },
   visible: { y: 0, opacity: 1 },
 };
 
+/**
+ * Category data shape.
+ */
 interface Category {
   _id: string;
   title: string;
@@ -42,6 +48,9 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Trophy, BookOpen, Layers } from "lucide-react";
 
+/**
+ * Duplicate category data shape.
+ */
 interface Category {
   _id: string;
   title: string;
@@ -52,19 +61,28 @@ interface Category {
   previews?: { _id: string; title: string; slug: string }[];
 }
 
+/**
+ * Props for CoursesClient.
+ */
 interface CoursesClientProps {
   categories: Category[];
 }
 
+/**
+ * Courses page client component. Render category list and progress.
+ */
 export default function CoursesClient({ categories }: CoursesClientProps) {
+  // Get completed lessons from store.
   const completedLessons = useUserStore((s) => s.completedLessons);
 
+  // Compute stats and sort categories.
   const { totalLessons, lessonsDoneCount, globalProgress, sortedCategories } =
     React.useMemo(() => {
       let lessonsTotal = 0;
       const jlpt: Category[] = [];
       const general: Category[] = [];
 
+      // Accumulate total lessons. Group by type.
       for (const category of categories) {
         lessonsTotal += category.lessonCount || 0;
 
@@ -75,17 +93,19 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
         }
       }
 
-      // Sort N5 (5) first, then N4 (4), N3 (3), N2 (2), N1 (1)
+      // Sort JLPT categories. N5 first, N1 last.
       jlpt.sort((a, b) => {
         const aNum = Number.parseInt(a.title.match(/N(\d)/)?.[1] || "6", 10);
         const bNum = Number.parseInt(b.title.match(/N(\d)/)?.[1] || "6", 10);
         return bNum - aNum;
       });
 
+      // Count active completed lessons.
       const doneCount = Object.values(completedLessons).filter(
         (record) => record && record.completedAt && !record.isDeleted
       ).length;
 
+      // Calculate progress percentage. Cap at 100.
       return {
         globalProgress:
           lessonsTotal > 0 ? Math.min(100, Math.round((doneCount / lessonsTotal) * 100)) : 0,

@@ -15,9 +15,15 @@ import { m } from "framer-motion";
 // ==========================================
 // ANTARMUKA & TIPE DATA
 // ==========================================
+/**
+ * Props for GrammarLevelNav component.
+ */
 interface GrammarLevelNavProps {
+  /** Array of available JLPT levels. */
   levels: string[];
+  /** Active selected JLPT level. */
   selectedLevel: string;
+  /** Callback function triggered when level changes. */
   onLevelChange: (level: string) => void;
 }
 
@@ -25,9 +31,11 @@ interface GrammarLevelNavProps {
 // KOMPONEN UTAMA: GrammarLevelNav
 // ==========================================
 /**
- * Komponen navigasi level JLPT dengan transisi penyorotan aktif yang dinamis.
+ * JLPT level navigation bar.
+ * Render tab buttons with spring transition indicator.
  * 
- * @param {GrammarLevelNavProps} props Properti untuk navigasi level tata bahasa.
+ * @param props Component properties.
+ * @returns Navigation component.
  */
 export function GrammarLevelNav({ levels, selectedLevel, onLevelChange }: GrammarLevelNavProps) {
   return (
@@ -43,6 +51,7 @@ export function GrammarLevelNav({ levels, selectedLevel, onLevelChange }: Gramma
           }`}
         >
           {/* Latar Belakang Aktif Dinamis dengan Efek Pegas */}
+          {/* layoutId animate background pill between tabs smoothly */}
           {selectedLevel === lvl && (
             <m.div
               layoutId="activeTab"
@@ -56,4 +65,3 @@ export function GrammarLevelNav({ levels, selectedLevel, onLevelChange }: Gramma
     </nav>
   );
 }
-

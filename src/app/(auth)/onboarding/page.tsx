@@ -13,6 +13,9 @@ import { createPageMetadata } from "@/lib/seo";
 // ======================
 // KONFIGURASI METADATA
 // ======================
+/**
+ * Page metadata. Disable search engine indexing for onboarding.
+ */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Selamat Datang | NihongoRoute",
@@ -25,6 +28,10 @@ export const metadata: Metadata = {
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * Onboarding page entry point. Renders client onboarding flow.
+ */
 export default function OnboardingPage() {
+  // Render client component wrapper
   return <OnboardingClient />;
 }

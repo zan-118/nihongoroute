@@ -17,23 +17,33 @@ import { toast } from "sonner";
 // ======================
 // HOOK UTAMA
 // ======================
+/**
+ * Auth hook. Manage email auth, Google OAuth, guest login.
+ * @returns Auth state and handler functions.
+ */
 export function useAuth() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const supabase = createClient();
 
   const [loading, setLoading] = useState(false);
+  // Check URL query param. Set initial mode.
   const [isRegistering, setIsRegistering] = useState(() => searchParams.get("mode") === "signup");
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
 
+  /**
+   * Handle email registration or login.
+   * @param e Form event.
+   */
   const handleEmailAuth = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       if (isRegistering) {
+        // Register user. Save full name metadata.
         const { error } = await supabase.auth.signUp({
           email,
           password,
@@ -49,6 +59,7 @@ export function useAuth() {
         });
         setIsRegistering(false);
       } else {
+        // Sign in user. Redirect to home.
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password,
@@ -72,6 +83,10 @@ export function useAuth() {
     }
   }, [isRegistering, email, fullName, password, router, supabase.auth]);
 
+  /**
+   * Start Google OAuth flow. Redirect to callback.
+   * @param provider OAuth provider name.
+   */
   const handleSocialLogin = useCallback(async (provider: "google") => {
     setLoading(true);
     try {
@@ -91,6 +106,9 @@ export function useAuth() {
     }
   }, [supabase.auth]);
 
+  /**
+   * Sign in anonymously. Temporary session.
+   */
   const handleAnonymousLogin = useCallback(async () => {
     setLoading(true);
     try {

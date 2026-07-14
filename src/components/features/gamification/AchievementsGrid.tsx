@@ -22,7 +22,13 @@ import { ACHIEVEMENTS_LIST } from "@/lib/constants/gamification";
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * AchievementsGrid component.
+ * Render user achievements grid. Evaluate unlock conditions dynamically.
+ */
 export default function AchievementsGrid() {
+  // Extract user state from stores.
   const name = useUserStore(s => s.name);
   const xp = useUserStore(s => s.xp);
   const level = useUserStore(s => s.level);
@@ -39,6 +45,7 @@ export default function AchievementsGrid() {
   const notifications = useUIStore(s => s.notifications);
   const settings = useUIStore(s => s.settings);
 
+  // Build progress object for condition evaluation.
   const progress: UserProgress = { 
     id: id || "guest", 
     isGuest: !!isGuest, 
@@ -59,8 +66,10 @@ export default function AchievementsGrid() {
   return (
     <div className="flex flex-col sm:flex-row flex-wrap gap-4">
       {ACHIEVEMENTS_LIST.map((ach) => {
+        // Calculate progress percentage. Clamp 0-100.
         const rawProgress = ach.condition(progress);
         const percent = Math.min(100, Math.max(0, rawProgress));
+        // Check if unlocked.
         const isUnlocked = percent >= 100;
 
         const IconComponent = ach.icon;

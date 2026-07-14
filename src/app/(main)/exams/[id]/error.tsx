@@ -1,6 +1,6 @@
 /**
  * @file error.tsx
- * @description Halaman penanganan kesalahan runtime pada sesi simulasi ujian (Exam Error Boundary).
+ * @description Runtime error boundary component for exam simulation sessions.
  */
 
 "use client";
@@ -18,34 +18,38 @@ import { Button } from "@/components/ui/button";
 // ======================
 
 /**
- * Komponen pembatas kesalahan (Error Boundary) rute sesi ujian.
- * Menangani crash logika di sisi klien selama simulasi ujian berlangsung.
- *
- * @param {Object} props Properti komponen.
- * @param {Error & { digest?: string }} props.error Objek kesalahan runtime yang ditangkap.
- * @param {function} props.reset Fungsi callback untuk mereset komponen dan memuat ulang sesi ujian.
- * @returns {JSX.Element} Antarmuka penanganan kesalahan sesi ujian.
+ * Props interface for the ExamError component.
  */
+interface ExamErrorProps {
+  /** The error object thrown by the child components. */
+  error: Error & { digest?: string };
+  /** Callback function to reset the error boundary and retry rendering. */
+  reset: () => void;
+}
 
+/**
+ * ExamError component handles runtime crashes during exam sessions.
+ * Displays error details in development and provides retry/navigation actions.
+ *
+ * @param props - Component properties.
+ * @returns React element rendering the error state.
+ */
 export default function ExamError({
   error,
   reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
+}: ExamErrorProps) {
   useEffect(() => {
-    // Logging error untuk keperluan debugging atau analytics
+    // Log critical error to console for debugging and analytics tracking
     console.error("Critical Exam Session Error:", error);
   }, [error]);
 
   return (
     <div className="w-full flex-1 flex flex-col items-center justify-center px-6 text-center relative overflow-hidden py-12">
-      {/* Efek Latar Belakang Cyber Glow */}
+      {/* Cyber glow background effect */}
       <div className="absolute top-0 left-1/4 size-[300px] bg-destructive/10 blur-[55px] rounded-full pointer-events-none" />
 
       <Card className="p-10 md:p-14 border-destructive/30 max-w-lg w-full relative z-10 my-auto neo-card rounded-[2rem] bg-card">
-        {/* Ikon Peringatan Neumorphic */}
+        {/* Neumorphic warning icon container */}
         <div className="size-20 mx-auto neo-inset text-destructive flex items-center justify-center rounded-full mb-8 shadow-inner bg-destructive/10">
           <span className="text-4xl block">⚠️</span>
         </div>
@@ -59,7 +63,7 @@ export default function ExamError({
           Mungkin karena datanya kurang lengkap atau internetmu terganggu.
         </p>
 
-        {/* Debug Info (Hanya di Development) */}
+        {/* Render technical error details only in development environment */}
         {process.env.NODE_ENV === "development" && (
           <div className="mb-8 p-4 bg-muted rounded-lg border border-destructive/20 text-left overflow-auto max-h-32">
             <code className="text-[10px] text-destructive font-mono break-all">
@@ -68,7 +72,7 @@ export default function ExamError({
           </div>
         )}
 
-        {/* Kontrol Navigasi */}
+        {/* Action controls for retrying or canceling the session */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button
             onClick={() => reset()}
@@ -89,7 +93,7 @@ export default function ExamError({
         </div>
       </Card>
 
-      {/* Branding Footer Sederhana */}
+      {/* Footer branding */}
       <p className="mt-12 text-muted-foreground text-[10px] uppercase tracking-[0.2em] font-bold">
         NihongoRoute System Protection
       </p>

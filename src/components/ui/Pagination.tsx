@@ -14,22 +14,34 @@ import { Button } from "@/components/ui/button";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+/**
+ * Properties for Pagination component.
+ */
 interface PaginationProps {
+  /** Current active page number. */
   currentPage: number;
+  /** Total number of pages. */
   totalPages: number;
+  /** Callback triggered on page change. */
   onPageChange: (page: number) => void;
+  /** Optional CSS class name. */
   className?: string;
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * Cyber-style pagination control component.
+ * Renders page navigation buttons and page indicator.
+ */
 export function Pagination({
   currentPage,
   totalPages,
   onPageChange,
   className = "",
 }: PaginationProps) {
+  // Hide pagination if only one page exists.
   if (totalPages <= 1) return null;
 
   return (
@@ -60,6 +72,7 @@ export function Pagination({
         </Button>
 
         <div className="flex items-center gap-2">
+          {/* Generate sliding window of max 5 page numbers around current page */}
           {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
             let pageNum;
             if (totalPages <= 5) {
@@ -113,5 +126,3 @@ export function Pagination({
     </div>
   );
 }
-
-

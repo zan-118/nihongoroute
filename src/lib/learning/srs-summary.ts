@@ -5,19 +5,38 @@
 
 import { SRSState } from "@/lib/srs";
 
+/**
+ * SRS memory metrics.
+ */
 export interface SrsMemorySummary {
+  /** Count of active items. */
   active: number;
+  /** Count of items due for review. */
   due: number;
+  /** Count of mastered items (interval >= 30 days). */
   master: number;
+  /** Count of intermediate items (interval >= 7 days). */
   intermediate: number;
+  /** Count of learning items (repetition > 1, interval < 7). */
   learning: number;
+  /** Count of new items (repetition <= 1). */
   new: number;
+  /** Count of items with critical ease (< 1.7). */
   easeCritical: number;
+  /** Count of items with fragile ease (< 2.2). */
   easeFragile: number;
+  /** Count of items with stable ease (< 2.7). */
   easeStable: number;
+  /** Count of items with master ease (>= 2.7). */
   easeMaster: number;
 }
 
+/**
+ * Compute SRS metrics from state map.
+ * @param srs SRS state map.
+ * @param now Current timestamp.
+ * @returns Metrics summary.
+ */
 export function summarizeSrs(
   srs: Record<string, SRSState> | null | undefined,
   now = Date.now()
@@ -35,15 +54,19 @@ export function summarizeSrs(
     easeMaster: 0,
   };
 
+  // Return empty if no data.
   if (!srs) return summary;
 
   for (const id in srs) {
     const state = srs[id];
+    // Skip deleted items.
     if (state.isDeleted) continue;
 
     summary.active += 1;
+    // Increment due count if review time passed.
     if (state.nextReview <= now) summary.due += 1;
 
+    // Group by interval and repetition count.
     if (state.interval >= 30) {
       summary.master += 1;
     } else if (state.repetition > 1 && state.interval >= 7) {
@@ -54,6 +77,7 @@ export function summarizeSrs(
       summary.new += 1;
     }
 
+    // Group by ease factor thresholds.
     if (state.easeFactor < 1.7) {
       summary.easeCritical += 1;
     } else if (state.easeFactor < 2.2) {

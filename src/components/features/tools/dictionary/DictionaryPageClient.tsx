@@ -27,8 +27,14 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
+/**
+ * Filter options for dictionary search results.
+ */
 type DictionaryFilter = "all" | ToolSearchCategory;
 
+/**
+ * Configuration for search filter buttons.
+ */
 const FILTERS: Array<{ id: DictionaryFilter; label: string; icon: typeof Search }> = [
   { id: "all", label: "Semua", icon: Search },
   { id: "vocab", label: "Kosakata", icon: FileText },
@@ -36,9 +42,19 @@ const FILTERS: Array<{ id: DictionaryFilter; label: string; icon: typeof Search 
   { id: "kanji", label: "Kanji", icon: Hash },
 ];
 
+/**
+ * Local storage key for dictionary search history.
+ */
 const HISTORY_KEY = "nihongoroute_dictionary_history";
 
+/**
+ * Loads search history from localStorage.
+ * Safe for SSR environments.
+ * 
+ * @returns Array of historical search query strings.
+ */
 function loadHistory() {
+  // Prevent execution during server-side rendering
   if (typeof window === "undefined") return [];
   try {
     const raw = window.localStorage.getItem(HISTORY_KEY);
@@ -50,17 +66,33 @@ function loadHistory() {
   }
 }
 
+/**
+ * Saves search history to localStorage.
+ * Limits history size to 8 items.
+ * 
+ * @param history - Array of search query strings.
+ */
 function saveHistory(history: string[]) {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(0, 8)));
 }
 
+/**
+ * Maps search category to Indonesian label.
+ * 
+ * @param category - The tool search category.
+ * @returns Indonesian label string.
+ */
 function getCategoryLabel(category: ToolSearchCategory) {
   if (category === "vocab") return "Kosakata";
   if (category === "grammar") return "Tata Bahasa";
   return "Kanji";
 }
 
+/**
+ * Card component displaying a single dictionary search result.
+ * Includes category badges, readings, and action buttons.
+ */
 function DictionaryResultCard({ item }: { item: ToolSearchItem }) {
   const Icon = item.icon;
 
@@ -136,6 +168,10 @@ function DictionaryResultCard({ item }: { item: ToolSearchItem }) {
   );
 }
 
+/**
+ * Client component for the integrated dictionary search page.
+ * Handles query input, filtering, search history, and result rendering.
+ */
 export default function DictionaryPageClient() {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<DictionaryFilter>("all");
@@ -144,11 +180,13 @@ export default function DictionaryPageClient() {
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
 
+  // Filter results based on selected category
   const displayedResults = useMemo(() => {
     if (filter === "all") return flattenToolSearchResult(result);
     return result[filter];
   }, [filter, result]);
 
+  // Calculate result counts for each category tab
   const counts = useMemo(
     () => ({
       all: flattenToolSearchResult(result).length,
@@ -159,6 +197,11 @@ export default function DictionaryPageClient() {
     [result]
   );
 
+  /**
+   * Executes search query and updates history.
+   * 
+   * @param nextQuery - Query string to search. Defaults to current state query.
+   */
   const runSearch = (nextQuery = query) => {
     const trimmed = nextQuery.trim();
     if (!trimmed) {
@@ -172,6 +215,7 @@ export default function DictionaryPageClient() {
         const nextResult = await searchToolDictionary(trimmed, { limitPerType: 12 });
         setResult(nextResult);
         setHistory((prev) => {
+          // Move current query to front and limit history size
           const nextHistory = [trimmed, ...prev.filter((item) => item !== trimmed)].slice(0, 8);
           saveHistory(nextHistory);
           return nextHistory;
@@ -183,6 +227,9 @@ export default function DictionaryPageClient() {
     });
   };
 
+  /**
+   * Clears search history from state and localStorage.
+   */
   const clearHistory = () => {
     setHistory([]);
     saveHistory([]);

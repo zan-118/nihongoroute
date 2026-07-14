@@ -26,10 +26,17 @@ import { PlaybackStatus } from "../types";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Props for KanjiStrokePlayer component.
+ */
 interface KanjiStrokePlayerProps {
+  /** Kanji character to display */
   character: string;
+  /** Optional pre-fetched SVG path data */
   strokeOrderSvg?: string;
+  /** Color of active stroke animation */
   strokeColor?: string;
+  /** Width and height of player canvas */
   size?: number;
 }
 
@@ -37,7 +44,8 @@ interface KanjiStrokePlayerProps {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen interaktif pengendali pemutaran goresan kanji.
+ * Kanji stroke order animation player.
+ * Render SVG paths. Provide playback controls.
  */
 export default function KanjiStrokePlayer({
   character,
@@ -48,13 +56,20 @@ export default function KanjiStrokePlayer({
   // ==========================================
   // STATUS & STATE & HOOKS
   // ==========================================
+  // Fetch SVG data for character.
   const { data, loading, error } = useKanjiSvg(character, strokeOrderSvg);
   
+  // Track playback state.
   const [status, setStatus] = useState<PlaybackStatus>("paused");
+  // Animation speed multiplier.
   const [speed, setSpeed] = useState(1);
+  // Current stroke index. -1 means static.
   const [currentStroke, setCurrentStroke] = useState(-1); // -1 berarti tidak menampilkan apa-apa/statis
+  // Toggle stroke order numbers.
   const [showNumbers, setShowNumbers] = useState(true);
+  // Force SVG re-render on reset.
   const [resetKey, setResetKey] = useState(0);
+  // Trigger animation restart for current stroke.
   const [strokeTrigger, setStrokeTrigger] = useState(0);
 
   // Konstanta durasi animasi dasar (detik)
@@ -63,6 +78,9 @@ export default function KanjiStrokePlayer({
   // ==========================================
   // FUNGSI PENGENDALI PEMUTARAN
   // ==========================================
+  /**
+   * Advance to next stroke. Finish if last.
+   */
   const handleNext = useCallback(() => {
     if (!data) return;
     setCurrentStroke((prev) => {
@@ -76,19 +94,26 @@ export default function KanjiStrokePlayer({
 
   }, [data]);
 
+  /**
+   * Go to previous stroke. Clamp to zero.
+   */
   const handlePrev = () => {
     setCurrentStroke((prev) => (prev <= 0 ? 0 : prev - 1));
     setStrokeTrigger((s) => s + 1);
   };
 
-
+  /**
+   * Reset animation state. Start from first stroke.
+   */
   const handleReset = () => {
     setResetKey((prev) => prev + 1);
     setCurrentStroke(0);
     setStatus("playing");
   };
 
-
+  /**
+   * Toggle play/pause. Reset index if finished.
+   */
   const togglePlay = () => {
     if (status === "playing") {
       setStatus("paused");
@@ -161,6 +186,7 @@ export default function KanjiStrokePlayer({
 
             return (
               <m.path
+                // Unique key force re-render on active stroke change.
                 key={`anim-${stroke.index}-${stroke.index === currentStroke && status === "playing" ? `active-${strokeTrigger}` : 'static'}`}
                 d={stroke.path}
 
@@ -310,6 +336,3 @@ export default function KanjiStrokePlayer({
     </div>
   );
 }
-
-
-

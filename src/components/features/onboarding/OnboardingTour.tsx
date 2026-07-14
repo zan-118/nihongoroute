@@ -47,6 +47,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
+/**
+ * Tour step configuration.
+ */
 interface TourStep {
   title: string;
   description: string;
@@ -54,6 +57,9 @@ interface TourStep {
   targetSelectors?: string[];
 }
 
+/**
+ * Spotlight dimensions and position.
+ */
 interface SpotlightRect {
   top: number;
   left: number;
@@ -63,16 +69,25 @@ interface SpotlightRect {
   height: number;
 }
 
+/**
+ * Tooltip dimensions.
+ */
 interface TooltipSize {
   width: number;
   height: number;
 }
 
+/**
+ * Tooltip layout style and placement.
+ */
 interface TooltipLayout {
   style: CSSProperties;
   placement: "above" | "below" | "left" | "right" | "center";
 }
 
+/**
+ * Page tour configuration.
+ */
 interface PageTour {
   id: string;
   match: RegExp;
@@ -104,6 +119,9 @@ const disabledPathPatterns = [
   /^\/exams\/[^/]+(?:\/|$)/,
 ];
 
+/**
+ * Render Lucide icon with default styles.
+ */
 const icon = (Icon: LucideIcon, className = "text-primary") => (
   <Icon aria-hidden="true" className={className} size={30} strokeWidth={2.25} />
 );
@@ -1097,12 +1115,18 @@ const fallbackTourBase = {
   ],
 } satisfies Omit<PageTour, "id" | "match">;
 
+/**
+ * Clean trailing slashes from pathname.
+ */
 function normalizePathname(pathname: string | null): string {
   if (!pathname) return "/";
   const normalized = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
   return normalized || "/";
 }
 
+/**
+ * Generate fallback tour configuration for unmatched routes.
+ */
 function createFallbackTour(pathname: string): PageTour {
   const pageId = pathname.replace(/[^a-zA-Z0-9]+/g, "-").replace(/^-|-$/g, "") || "home";
 
@@ -1113,6 +1137,9 @@ function createFallbackTour(pathname: string): PageTour {
   };
 }
 
+/**
+ * Match route to tour configuration. Return null if route is disabled.
+ */
 function resolveTour(pathname: string | null): PageTour | null {
   const normalizedPathname = normalizePathname(pathname);
 
@@ -1123,10 +1150,16 @@ function resolveTour(pathname: string | null): PageTour | null {
   return pageTours.find((tour) => tour.match.test(normalizedPathname)) ?? createFallbackTour(normalizedPathname);
 }
 
+/**
+ * Get local storage key for tour.
+ */
 function getSeenKey(tourId: string) {
   return `${TOUR_SEEN_PREFIX}${tourId}`;
 }
 
+/**
+ * Read value from local storage. Safe for SSR.
+ */
 function readStorage(key: string) {
   try {
     return window.localStorage.getItem(key);
@@ -1135,6 +1168,9 @@ function readStorage(key: string) {
   }
 }
 
+/**
+ * Write value to local storage. Safe for SSR.
+ */
 function writeStorage(key: string, value: string) {
   try {
     window.localStorage.setItem(key, value);
@@ -1143,10 +1179,16 @@ function writeStorage(key: string, value: string) {
   }
 }
 
+/**
+ * Restrict value to range.
+ */
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
+/**
+ * Check if element is visible and has size.
+ */
 function isElementUsable(element: HTMLElement) {
   const rect = element.getBoundingClientRect();
   const style = window.getComputedStyle(element);
@@ -1160,6 +1202,9 @@ function isElementUsable(element: HTMLElement) {
   );
 }
 
+/**
+ * Find first visible element matching selectors.
+ */
 function findVisibleElement(selectors: string[]) {
   for (const selector of selectors) {
     try {
@@ -1177,6 +1222,9 @@ function findVisibleElement(selectors: string[]) {
   return null;
 }
 
+/**
+ * Convert DOMRect to spotlight coordinates with padding.
+ */
 function toSpotlightRect(rect: DOMRect): SpotlightRect {
   const top = clamp(rect.top - SPOTLIGHT_PADDING, 12, window.innerHeight - 24);
   const left = clamp(rect.left - SPOTLIGHT_PADDING, 12, window.innerWidth - 24);
@@ -1297,6 +1345,9 @@ const routeTargetSelectors: Record<string, string[][]> = {
   ],
 };
 
+/**
+ * Get dynamic selectors based on route patterns.
+ */
 function getDerivedTargets(tourId: string, stepIndex: number) {
   if (tourId.startsWith("tools-")) {
     return [
@@ -1325,6 +1376,9 @@ function getDerivedTargets(tourId: string, stepIndex: number) {
   return [];
 }
 
+/**
+ * Get target selectors for step.
+ */
 function getStepTargetSelectors(tour: PageTour, stepIndex: number, step: TourStep) {
   return [
     ...(step.targetSelectors ?? []),
@@ -1336,6 +1390,9 @@ function getStepTargetSelectors(tour: PageTour, stepIndex: number, step: TourSte
   ];
 }
 
+/**
+ * Calculate tooltip layout style and placement.
+ */
 function getTooltipLayout(rect: SpotlightRect | null, size: TooltipSize): TooltipLayout {
   if (typeof window === "undefined") {
     return { placement: "center", style: {} };
@@ -1428,6 +1485,9 @@ function getTooltipLayout(rect: SpotlightRect | null, size: TooltipSize): Toolti
   };
 }
 
+/**
+ * Main onboarding tour component.
+ */
 export default function OnboardingTour() {
   const pathname = usePathname();
   const tour = useMemo(() => resolveTour(pathname), [pathname]);
@@ -1435,6 +1495,9 @@ export default function OnboardingTour() {
   return <OnboardingTourSession key={tour?.id ?? "no-tour"} tour={tour} />;
 }
 
+/**
+ * Active onboarding tour session.
+ */
 function OnboardingTourSession({ tour }: { tour: PageTour | null }) {
   const tourId = tour?.id;
   const tooltipRef = useRef<HTMLDivElement | null>(null);
@@ -1446,6 +1509,7 @@ function OnboardingTourSession({ tour }: { tour: PageTour | null }) {
     width: TOOLTIP_WIDTH,
   });
 
+  // Trigger tour delay.
   useEffect(() => {
     if (!tourId) return;
     if (readStorage(TOUR_SKIP_ALL_KEY) === "true") return;
@@ -1455,6 +1519,7 @@ function OnboardingTourSession({ tour }: { tour: PageTour | null }) {
     return () => window.clearTimeout(timer);
   }, [tourId]);
 
+  // Track target element and update spotlight.
   useEffect(() => {
     if (!isOpen || !tour) return;
 
@@ -1481,6 +1546,7 @@ function OnboardingTourSession({ tour }: { tour: PageTour | null }) {
         rect.left < 0 ||
         rect.right > viewportWidth;
 
+      // Scroll target into view.
       if (shouldScroll) {
         const targetY = window.scrollY + rect.top - desiredTop;
         window.scrollTo({
@@ -1489,6 +1555,7 @@ function OnboardingTourSession({ tour }: { tour: PageTour | null }) {
         });
       }
 
+      // Delay spotlight update to allow scroll animation to finish.
       frameId = window.setTimeout(() => {
         if (!targetElement) return;
         setSpotlightRect(toSpotlightRect(targetElement.getBoundingClientRect()));
@@ -1516,6 +1583,7 @@ function OnboardingTourSession({ tour }: { tour: PageTour | null }) {
     };
   }, [currentStep, isOpen, tour]);
 
+  // Track tooltip size changes.
   useEffect(() => {
     if (!isOpen) return;
 
@@ -1554,6 +1622,9 @@ function OnboardingTourSession({ tour }: { tour: PageTour | null }) {
     };
   }, [currentStep, isOpen]);
 
+  /**
+   * Close tour and save state.
+   */
   const closeTour = (skipAll = false) => {
     if (tourId) {
       writeStorage(getSeenKey(tourId), "true");
@@ -1567,6 +1638,9 @@ function OnboardingTourSession({ tour }: { tour: PageTour | null }) {
     setSpotlightRect(null);
   };
 
+  /**
+   * Advance to next step or close tour.
+   */
   const handleNext = () => {
     if (!tour) return;
 
@@ -1598,15 +1672,19 @@ function OnboardingTourSession({ tour }: { tour: PageTour | null }) {
       <div className="fixed inset-0 z-[100] pointer-events-none">
         {spotlightRect ? (
           <>
+            {/* Top overlay */}
             <div className={overlayPanelClassName} style={{ height: spotlightRect.top, insetInline: 0, top: 0 }} />
+            {/* Bottom overlay */}
             <div
               className={overlayPanelClassName}
               style={{ bottom: 0, height: Math.max(0, window.innerHeight - spotlightRect.bottom), insetInline: 0 }}
             />
+            {/* Left overlay */}
             <div
               className={overlayPanelClassName}
               style={{ height: spotlightRect.height, left: 0, top: spotlightRect.top, width: spotlightRect.left }}
             />
+            {/* Right overlay */}
             <div
               className={overlayPanelClassName}
               style={{

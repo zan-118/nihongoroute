@@ -25,6 +25,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
+/**
+ * Map event types to UI metadata.
+ */
 const EVENT_META: Record<
   LearningEventType,
   {
@@ -102,6 +105,9 @@ const EVENT_META: Record<
   },
 };
 
+/**
+ * Map source types to display labels.
+ */
 const SOURCE_LABELS: Record<LearningSourceType, string> = {
   reading: "Reading",
   listening: "Listening",
@@ -112,8 +118,12 @@ const SOURCE_LABELS: Record<LearningSourceType, string> = {
   tool: "Tool",
 };
 
+/**
+ * Format timestamp to relative time. Fallback if invalid.
+ */
 function formatTimeSafely(timestamp: number) {
   try {
+    // Check invalid timestamp
     if (!Number.isFinite(timestamp) || timestamp <= 0) return "Baru saja";
     return formatDistanceToNow(timestamp, { addSuffix: true, locale: idLocale });
   } catch {
@@ -121,7 +131,11 @@ function formatTimeSafely(timestamp: number) {
   }
 }
 
+/**
+ * Get outcome icon, label, style from event.
+ */
 function getOutcome(event: LearningEvent) {
+  // Check incorrect answer
   if (event.details?.isCorrect === false) {
     return {
       icon: XCircle,
@@ -130,6 +144,7 @@ function getOutcome(event: LearningEvent) {
     };
   }
 
+  // Check correct answer
   if (event.details?.isCorrect === true) {
     return {
       icon: CheckCircle2,
@@ -138,6 +153,7 @@ function getOutcome(event: LearningEvent) {
     };
   }
 
+  // Check completion event
   if (event.type.endsWith("_completed")) {
     return {
       icon: CheckCircle2,
@@ -146,6 +162,7 @@ function getOutcome(event: LearningEvent) {
     };
   }
 
+  // Default active state
   return {
     icon: PlayCircle,
     label: "Aktif",
@@ -153,10 +170,16 @@ function getOutcome(event: LearningEvent) {
   };
 }
 
+/**
+ * Get title for event.
+ */
 function getEventTitle(event: LearningEvent) {
   return event.source.title || event.details?.prompt || SOURCE_LABELS[event.source.type];
 }
 
+/**
+ * Render single event row.
+ */
 function TimelineRow({ event }: { event: LearningEvent }) {
   const meta = EVENT_META[event.type];
   const outcome = getOutcome(event);
@@ -206,6 +229,7 @@ function TimelineRow({ event }: { event: LearningEvent }) {
     </div>
   );
 
+  // Render link wrapper if href exists
   if (!event.source.href) return content;
 
   return (
@@ -215,12 +239,18 @@ function TimelineRow({ event }: { event: LearningEvent }) {
   );
 }
 
+/**
+ * Props for timeline panel.
+ */
 interface LearningTimelinePanelProps {
   compact?: boolean;
   className?: string;
   limit?: number;
 }
 
+/**
+ * Panel showing recent learning activities.
+ */
 export default function LearningTimelinePanel({
   compact = false,
   className,

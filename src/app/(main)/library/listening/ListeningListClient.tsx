@@ -23,12 +23,22 @@ import { cn } from "@/lib/utils";
 // ======================
 // TIPE DATA
 // ======================
+
+/**
+ * Props for ListeningListClient component.
+ */
 interface ListeningListClientProps {
+  /** Initial paginated listening data from server. */
   initialData: PaginatedListeningResponse;
 }
 
+/** Number of items displayed per page. */
 const ITEMS_PER_PAGE = 10;
+
+/** Available JLPT level filters. */
 const JLPT_FILTERS = ["all", "N5", "N4", "N3", "N2", "N1"] as const;
+
+/** Type representing selected JLPT filter level. */
 type JlptFilter = (typeof JLPT_FILTERS)[number];
 
 // ======================
@@ -36,11 +46,10 @@ type JlptFilter = (typeof JLPT_FILTERS)[number];
 // ======================
 
 /**
- * Komponen ListeningListClient: Menyediakan antarmuka interaktif untuk menyaring, mencari,
- * dan mempaginasi pustaka latihan menyimak (Listening Lab) dengan React Query.
+ * Interactive client component for filtering, searching, and paginating listening tasks.
  * 
- * @param {ListeningListClientProps} props Properti komponen.
- * @returns {JSX.Element} Antarmuka direktori menyimak interaktif.
+ * @param props - Component properties.
+ * @returns Rendered listening list interface.
  */
 export default function ListeningListClient({ initialData }: ListeningListClientProps) {
   const [search, setSearch] = useState("");
@@ -49,6 +58,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
   const [level, setLevel] = useState<JlptFilter>("all");
   const completedLessons = useUserStore((state) => state.completedLessons);
 
+  // Debounce search input to prevent excessive API calls
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(search);
@@ -57,6 +67,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
     return () => clearTimeout(handler);
   }, [search]);
 
+  // Fetch paginated listening tasks based on search, page, and level filters
   const { data, isFetching } = useQuery({
     queryKey: ["listening", currentPage, debouncedSearch, level],
     queryFn: () => getPaginatedListening(currentPage, ITEMS_PER_PAGE, debouncedSearch, level),
@@ -67,11 +78,21 @@ export default function ListeningListClient({ initialData }: ListeningListClient
   const tasks = data?.data || [];
   const totalPages = data?.total ? Math.ceil(data.total / ITEMS_PER_PAGE) : 0;
 
+  /**
+   * Handles page navigation and scrolls window to top.
+   * 
+   * @param page - Target page number.
+   */
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  /**
+   * Handles JLPT level filter changes and resets page to 1.
+   * 
+   * @param nextLevel - Selected JLPT level.
+   */
   const handleLevelChange = (nextLevel: JlptFilter) => {
     setLevel(nextLevel);
     setCurrentPage(1);
@@ -131,6 +152,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
         )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 min-h-[300px]">
           {tasks.map((task: ListeningTaskItem & { jlpt_level?: string; difficulty?: string }) => {
+            // Check if user completed current task
             const isCompleted = !!(
               task.id &&
               completedLessons[task.id] &&
@@ -141,6 +163,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
             <div
               key={task.id}
               className="transform hover:-translate-y-1 transition-all duration-300"
+              // Optimize rendering performance for off-screen cards
               style={{ 
                 contentVisibility: 'auto', 
                 containIntrinsicSize: '0 200px',
@@ -244,6 +267,7 @@ export default function ListeningListClient({ initialData }: ListeningListClient
             <div className="flex items-center gap-2">
               {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                 let pageNum;
+                // Calculate sliding window of page numbers to display
                 if (totalPages <= 5) {
                   pageNum = i + 1;
                 } else if (currentPage <= 3) {
@@ -308,4 +332,3 @@ export default function ListeningListClient({ initialData }: ListeningListClient
     </div>
   );
 }
-

@@ -18,31 +18,45 @@ import {
   Sliders
 } from "lucide-react";
 
+/**
+ * Props for PreferencesSection component.
+ */
 interface PreferencesSectionProps {
+  /** Framer motion variants for entry animation. */
   itemVariants: Variants;
 }
 
+/**
+ * PreferencesSection component.
+ * Renders user settings for learning preferences, theme, and daily goals.
+ */
 export default function PreferencesSection({ itemVariants }: PreferencesSectionProps) {
+  // Fetch UI settings and actions from Zustand store
   const settings = useUIStore((state) => state.settings);
   const toggleFurigana = useUIStore((state) => state.toggleFurigana);
   const setLayoutPreference = useUIStore((state) => state.setLayoutPreference);
   const updateSettings = useUIStore((state) => state.updateSettings);
 
+  // Theme management hooks
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Mencegah hydration mismatch untuk visual tema
+  // Prevent hydration mismatch by waiting for client-side mount.
+  // Uses requestAnimationFrame to defer state update until next frame.
   useEffect(() => {
     const frame = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(frame);
   }, []);
 
+  // Fallback values for settings
   const dailyReviewGoal = settings?.dailyReviewGoal ?? 50;
   const dailyLessonGoal = settings?.dailyLessonGoal ?? 10;
   const showFurigana = settings?.showFurigana ?? true;
   const layoutPreference = settings?.layoutPreference ?? "grid";
 
+  // Predefined options for daily review targets
   const REVIEW_GOALS = [10, 25, 50, 100, 150] as const;
+  // Predefined options for daily lesson targets
   const LESSON_GOALS = [2, 5, 10, 15, 20] as const;
 
   return (

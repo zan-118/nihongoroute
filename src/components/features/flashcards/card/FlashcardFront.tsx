@@ -16,14 +16,25 @@ import * as wanakana from "wanakana";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Props for the FlashcardFront component.
+ */
 interface FlashcardFrontProps {
+  /** The Japanese word or character to display. */
   word: string;
+  /** Theme configuration context for styling. */
   themeContext: FlashcardThemeContext;
+  /** Current study mode. */
   studyMode?: "latihan" | "ujian" | "tantangan";
+  /** Current text input by the user. */
   userInput?: string;
+  /** Callback triggered when user input changes. */
   onUserInputChange?: (val: string) => void;
+  /** Flag indicating if the answer has been checked. */
   isAnswerChecked?: boolean;
+  /** Result of the user's input validation. */
   inputResult?: "correct" | "wrong" | null;
+  /** Spaced Repetition System (SRS) state data. */
   srsState?: {
     interval: number;
     repetition: number;
@@ -36,7 +47,8 @@ interface FlashcardFrontProps {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen sisi depan kartu flashcard.
+ * Renders the front side of a flashcard.
+ * Displays the target word and handles text input for challenge mode.
  */
 export function FlashcardFront({
   word,
@@ -55,6 +67,10 @@ export function FlashcardFront({
 
   const isChallenge = studyMode === "tantangan";
 
+  /**
+   * Determines mastery level icon and label based on SRS interval.
+   * @param interval - Days until next review.
+   */
   const getMastery = (interval: number = 0) => {
     if (interval <= 1) return { icon: "🌱", label: "Belajar" };
     if (interval <= 5) return { icon: "🌿", label: "Akrab" };
@@ -64,9 +80,12 @@ export function FlashcardFront({
 
   const mastery = getMastery(srsState?.interval);
 
+  /**
+   * Handles input change and converts Romaji to Hiragana automatically.
+   */
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
-    // Auto convert to Hiragana if it's Japanese input
+    // Convert keystrokes to Hiragana in real-time.
     const converted = wanakana.toHiragana(val);
     onUserInputChange?.(converted);
   };
@@ -84,6 +103,7 @@ export function FlashcardFront({
           : `${themeBorder} ${themeShadow}`
       }`}
       style={{
+        // Prevents flickering during 3D card flip animation.
         backfaceVisibility: "hidden",
         WebkitBackfaceVisibility: "hidden",
       }}
@@ -110,6 +130,7 @@ export function FlashcardFront({
       </div>
 
       <div className="flex flex-col items-center justify-center flex-1 w-full space-y-8">
+        {/* Adjust font size dynamically based on word length to prevent overflow */}
         <h2
           className={`${word.length > 12 ? "text-xl sm:text-2xl md:text-3xl lg:text-4xl px-4 text-center leading-relaxed" : word.length > 6 ? "text-3xl sm:text-4xl md:text-5xl lg:text-6xl" : "text-5xl sm:text-6xl md:text-7xl lg:text-8xl"} font-black text-foreground tracking-tight font-japanese leading-tight transition-all duration-300 drop-shadow-sm dark:drop-shadow-[0_0_20px_rgb(var(--foreground-rgb)/0.1)]`}
         >

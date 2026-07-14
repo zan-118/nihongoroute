@@ -14,8 +14,13 @@ import Image from "next/image";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Props for KanjiStrokeOrder component.
+ */
 interface KanjiStrokeOrderProps {
+  /** Kanji character to display. */
   kanji: string;
+  /** Render minimal UI without control buttons. */
   minimal?: boolean;
 }
 
@@ -23,19 +28,22 @@ interface KanjiStrokeOrderProps {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen visualizer urutan goresan kanji.
+ * Renders stroke order diagram for kanji using KanjiVG SVG.
  */
 export default function KanjiStrokeOrder({ kanji, minimal = false }: KanjiStrokeOrderProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [resetKey, setResetKey] = useState(0);
 
+  // Convert kanji character to 5-digit hex code point for KanjiVG URL.
   const codePoint = kanji ? kanji.charCodeAt(0).toString(16).padStart(5, '0') : "";
+  // Construct KanjiVG SVG URL.
   const svgUrl = codePoint ? `https://raw.githubusercontent.com/KanjiVG/kanjivg/master/kanji/${codePoint}.svg` : "";
 
   // ==========================================
   // EFEK SAMPING (EFFECTS)
   // ==========================================
+  // Reset loading and error states when kanji changes.
   useEffect(() => {
     if (svgUrl) {
       requestAnimationFrame(() => {
@@ -67,6 +75,7 @@ export default function KanjiStrokeOrder({ kanji, minimal = false }: KanjiStroke
         ) : (
           svgUrl && (
             <Image 
+              // Force image reload by changing key.
               key={`${svgUrl}-${resetKey}`}
               src={svgUrl} 
               alt={`Stroke order for ${kanji}`}

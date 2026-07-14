@@ -14,8 +14,16 @@ import crypto from "crypto";
 // ======================
 // HANDLER
 // ======================
+/**
+ * Handle Saweria webhook POST request.
+ * Verify signature, parse payload, save supporter to database.
+ * 
+ * @param request - Incoming HTTP request.
+ * @returns JSON response with status.
+ */
 export async function POST(request: Request) {
   try {
+    // Read raw body for signature verification.
     const rawBody = await request.text();
     const body = JSON.parse(rawBody);
     
@@ -31,6 +39,7 @@ export async function POST(request: Request) {
     const signature = request.headers.get("x-saweria-signature");
 
     if (expectedSecret && signature) {
+      // Compute HMAC SHA256 hash to verify payload integrity.
       const hmac = crypto.createHmac("sha256", expectedSecret);
       const computedSignature = hmac.update(rawBody).digest("hex");
       if (computedSignature !== signature) {
@@ -57,6 +66,7 @@ export async function POST(request: Request) {
       tier = "silver";
     }
 
+    // Initialize Supabase client with admin privileges.
     const supabase = createAdminClient();
 
     // Simpan ke database Supabase

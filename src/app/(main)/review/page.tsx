@@ -16,6 +16,10 @@ import { createPageMetadata } from "@/lib/seo";
 // ======================
 // KONFIGURASI METADATA
 // ======================
+/**
+ * Page metadata configuration.
+ * Disable search indexing for review session page.
+ */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Review SRS | NihongoRoute",
@@ -28,9 +32,16 @@ export const metadata: Metadata = {
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * Review page entry component.
+ * Wrap ReviewClient in Suspense boundary to handle client-side loading.
+ * 
+ * @returns React element containing Suspense-wrapped ReviewClient.
+ */
 export default function ReviewPage() {
   return (
     <Suspense fallback={
+      /* Render loading spinner while client bundle loads */
       <div className="flex-1 flex flex-col items-center justify-center px-4">
         <RotateCw className="text-primary animate-spin mb-4" size={32} />
         <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs animate-pulse font-bold">

@@ -20,6 +20,10 @@ import { LazyMotion, domAnimation } from "framer-motion";
 import { JsonLd } from "@/components/seo/JsonLd";
 import Script from "next/script";
 
+/**
+ * Noto Sans JP font configuration.
+ * Sets up sans-serif Japanese typography.
+ */
 const notoSansJp = Noto_Sans_JP({
   subsets: ["latin"],
   weight: ["400", "700"],
@@ -27,6 +31,10 @@ const notoSansJp = Noto_Sans_JP({
   display: "swap",
 });
 
+/**
+ * Noto Serif JP font configuration.
+ * Sets up serif Japanese typography.
+ */
 const notoSerifJp = Noto_Serif_JP({
   subsets: ["latin"],
   weight: ["400", "700"],
@@ -132,6 +140,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Get Google Analytics ID from environment variables.
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
   return (
@@ -140,6 +149,7 @@ export default function RootLayout({
         suppressHydrationWarning
         className="font-sans antialiased text-foreground selection:bg-destructive selection:text-destructive-foreground transition-colors duration-300"
       >
+        {/* Inject Google Analytics scripts if ID is configured */}
         {gaId && (
           <>
             <Script
@@ -156,18 +166,23 @@ export default function RootLayout({
             </Script>
           </>
         )}
+        {/* Inject structured JSON-LD data for SEO */}
         <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
+        {/* Provide theme context (light/dark/system) to application */}
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
+          {/* Enable lazy-loaded Framer Motion animations to reduce bundle size */}
           <LazyMotion features={domAnimation}>
+            {/* Provide React Query client context for data fetching */}
             <QueryProvider>
               {children}
             </QueryProvider>
           </LazyMotion>
+          {/* Global toast notification container with custom styling */}
           <Toaster
             theme="system"
             position="top-center"
@@ -189,6 +204,7 @@ export default function RootLayout({
               duration: 4000,
             }}
           />
+          {/* Load Vercel analytics only in production environment */}
           {process.env.NODE_ENV === "production" &&
             process.env.VERCEL === "1" && (
               <>

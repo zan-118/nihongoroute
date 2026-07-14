@@ -16,6 +16,12 @@ import { PaginatedVocabResponse, LibraryItem } from "@/types/library";
 // ======================
 // HELPERS
 // ======================
+
+/**
+ * Map part-of-speech string to database categories.
+ * @param hinshi Input part-of-speech.
+ * @returns Array of matching database categories.
+ */
 function getHinshiFilters(hinshi: string): string[] {
   const lower = hinshi.toLowerCase();
   if (lower === "noun" || lower === "n") {
@@ -53,7 +59,14 @@ function getHinshiFilters(hinshi: string): string[] {
 // ======================
 
 /**
- * Mengambil kosakata dengan paginasi, pencarian, filter level, dan part of speech.
+ * Fetch paginated vocabulary items.
+ * @param page Page number.
+ * @param limit Items per page.
+ * @param search Search query.
+ * @param level JLPT level.
+ * @param hinshi Part of speech.
+ * @param type Route type.
+ * @returns Paginated vocabulary response.
  */
 export async function getPaginatedVocab(
   page: number,
@@ -64,12 +77,14 @@ export async function getPaginatedVocab(
   type: "vocab" | "verb" | "adjective" | "phrase" = "vocab"
 ): Promise<PaginatedVocabResponse> {
   const supabase = createStaticClient();
+  // Calculate offset for pagination.
   const offset = (page - 1) * limit;
 
   try {
     let query = supabase.from("vocab").select("*", { count: "exact" });
 
     if (search) {
+      // Escape special characters to prevent SQL injection/wildcard issues.
       const safeSearch = search
         .replace(/\\/g, '\\\\')  // hindari backslash terlebih dahulu
         .replace(/%/g, '\\%')    // hindari SQL wildcard %
@@ -79,6 +94,7 @@ export async function getPaginatedVocab(
     }
 
     if (level && level !== "all") {
+      // Filter by JLPT level. Handle non-JLPT items.
       if (level.toLowerCase() === "umum" || level.toLowerCase() === "other" || level.toLowerCase() === "non-jlpt") {
         query = query.is("jlpt_level", null);
       } else {
@@ -87,6 +103,7 @@ export async function getPaginatedVocab(
     }
 
     if (hinshi && hinshi !== "all") {
+      // Filter by part of speech using JSON array containment.
       const targets = getHinshiFilters(hinshi);
       if (targets.length === 1) {
         query = query.contains("hinshi", JSON.stringify([targets[0]]));
@@ -129,10 +146,16 @@ export async function getPaginatedVocab(
   }
 }
 
+/**
+ * Check if string is valid UUID.
+ * @param s Input string.
+ */
 const isUUID = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
 
 /**
- * Mengambil detail satu kosakata berdasarkan slug, ID, atau kata.
+ * Fetch single vocabulary detail by slug or ID.
+ * @param slugOrId Slug or UUID.
+ * @returns Vocabulary detail or null.
  */
 export async function getLibraryVocabDetail(slugOrId: string): Promise<LibraryItem | null> {
   const supabase = createStaticClient();

@@ -18,31 +18,52 @@ import { sounds } from "@/lib/audio";
 // ==========================================
 // ANTARMUKA PROPS & KONTAK
 // ==========================================
+/**
+ * Props for PronunciationPanel component.
+ */
 interface PronunciationPanelProps {
+  /** Target card data containing word, furigana, and meaning. */
   card: {
     word: string;
     furigana?: string | null;
     meaning: string;
   };
+  /** Callback triggered when moving to next card. */
   onNext: () => void;
+  /** Current card index in stack. */
   currentIndex: number;
+  /** Total number of cards in stack. */
   totalCards: number;
 }
 
 // ==========================================
 // FUNGSI PEMBANTU (HELPERS)
 // ==========================================
+/**
+ * Convert Katakana characters to Hiragana.
+ * @param str Input string containing Katakana.
+ * @returns Converted Hiragana string.
+ */
 function toHiragana(str: string): string {
+  // Replace Katakana unicode range with Hiragana equivalents.
   return str.replace(/[\u30a1-\u30f6]/g, (match) => {
     return String.fromCharCode(match.charCodeAt(0) - 0x60);
   });
 }
 
+/**
+ * Calculate Levenshtein distance between two strings.
+ * @param a First string.
+ * @param b Second string.
+ * @returns Minimum edit operations needed to match strings.
+ */
 function getLevenshteinDistance(a: string, b: string): number {
+  // Initialize matrix with base edit costs.
   const matrix = Array.from({ length: a.length + 1 }, (_, i) =>
     Array.from({ length: b.length + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
   );
 
+  // Fill matrix with minimum operations.
   for (let i = 1; i <= a.length; i++) {
     for (let j = 1; j <= b.length; j++) {
       matrix[i][j] =
@@ -59,6 +80,12 @@ function getLevenshteinDistance(a: string, b: string): number {
   return matrix[a.length][b.length];
 }
 
+/**
+ * Calculate similarity percentage between two strings.
+ * @param target Target string.
+ * @param input User input string.
+ * @returns Similarity score from 0 to 100.
+ */
 function getSimilarityScore(target: string, input: string): number {
   const distance = getLevenshteinDistance(target, input);
   const maxLength = Math.max(target.length, input.length);
@@ -90,14 +117,17 @@ export default function PronunciationPanel({
   const [combo, setCombo] = useState(0);
 
   // Custom interface to avoid 'any' type warnings
+  /** Speech recognition result event structure. */
   interface SpeechRecognitionEvent {
     results: { [index: number]: { [index: number]: { transcript: string } } };
   }
 
+  /** Speech recognition error event structure. */
   interface SpeechRecognitionErrorEvent {
     error: string;
   }
 
+  /** Speech recognition instance interface. */
   interface SpeechRecognitionInstance {
     continuous: boolean;
     interimResults: boolean;
@@ -133,6 +163,9 @@ export default function PronunciationPanel({
     }
   }, []);
 
+  /**
+   * Stop recording, release audio stream, and close audio context.
+   */
   const stopRecording = useCallback(() => {
     setIsRecording(false);
 
@@ -158,6 +191,9 @@ export default function PronunciationPanel({
     setAudioAnalyser(null);
   }, []);
 
+  /**
+   * Request microphone access, initialize audio analyzer, and start speech recognition.
+   */
   const startRecording = async () => {
     if (!recognitionRef.current) {
       toast.error("Speech Recognition tidak didukung di browsermu. Gunakan Google Chrome/Safari ya!");

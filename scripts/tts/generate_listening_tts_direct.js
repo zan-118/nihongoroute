@@ -51,114 +51,151 @@ const MALE_KEYWORDS = [
 ];
 
 const femaleVoices = ["zundamon", "lara", "indah", "siti", "dewi", "hayashi", "sato", "ayu", "ritsu"];
-const maleVoices = ["namonashi", "dito", "budi", "suzuki", "tanaka", "yamada", "kimura", "andi", "faisal", "takahashi", "kobayashi", "ooba"];
-const allVoices = [...femaleVoices, ...maleVoices];
+const maleVoices = ["namonashi", "dito", "budi", "suzuki", "tanaka", "yamada"];
 
 const SPEAKER_MAP = {
-  "indah": "indah", "インダ": "indah", "インダハ": "indah",
-  "lara": "lara", "ララ": "lara",
-  "siti": "siti", "シティ": "siti",
-  "dewi": "dewi", "デウィ": "dewi",
-  "hayashi": "hayashi", "林": "hayashi", "はやし": "hayashi",
-  "sato": "sato", "佐藤": "sato", "さとう": "sato",
-  "ayu": "ayu", "アユ": "ayu",
-  "zundamon": "zundamon", "ずんだもん": "zundamon", "ズンダモン": "zundamon",
-  "ritsu": "ritsu", "りつ": "ritsu",
-  "budi": "budi", "ブディ": "budi",
-  "dito": "dito", "ディト": "dito",
-  "suzuki": "suzuki", "鈴木": "suzuki", "すずき": "suzuki",
-  "tanaka": "tanaka", "田中": "tanaka", "たなか": "tanaka",
-  "yamada": "yamada", "山田": "yamada", "やまだ": "yamada",
-  "kimura": "kimura", "木村": "kimura", "きむら": "kimura",
-  "andi": "andi", "アンディ": "andi",
-  "faisal": "faisal", "ファイサル": "faisal",
-  "takahashi": "takahashi", "高橋": "takahashi", "たかはし": "takahashi",
-  "kobayashi": "kobayashi", "小林": "kobayashi", "こばやし": "kobayashi",
-  "namonashi": "namonashi", "名無し": "namonashi",
-  "ooba": "ooba", "大庭": "ooba", "おおば": "ooba"
+  // English/Romaji (20)
+  "ani": "ani",
+  "ayu": "ayu",
+  "andi": "andi",
+  "indah": "indah",
+  "kimura": "kimura",
+  "kobayashi": "kobayashi",
+  "sakura": "sakura",
+  "sato": "sato",
+  "siti": "siti",
+  "suzuki": "suzuki",
+  "zundamon": "zundamon",
+  "takahashi": "takahashi",
+  "tanaka": "tanaka",
+  "dito": "dito",
+  "dewi": "dewi",
+  "hayashi": "hayashi",
+  "budi": "budi",
+  "lara": "lara",
+  "ritsu": "ritsu",
+  "yamada": "yamada",
+
+  // Japanese Katakana/Kanji dari database (30)
+  "アニ": "ani",
+  "アユ": "ayu",
+  "アンディ": "andi",
+  "インダ": "indah",
+  "キムラ": "kimura",
+  "コバヤシ": "kobayashi",
+  "サクラ": "sakura",
+  "サト": "sato",
+  "サトウ": "sato",
+  "シティ": "siti",
+  "スズキ": "suzuki",
+  "ずんだもん": "zundamon",
+  "ズンダモン": "zundamon",
+  "タカハシ": "takahashi",
+  "タナカ": "tanaka",
+  "ディト": "dito",
+  "デウィ": "dewi",
+  "ハヤシ": "hayashi",
+  "ブディ": "budi",
+  "ララ": "lara",
+  "ララ・ディト・シティ": "lara",
+  "ララ・ディト・シティ ": "lara",
+  "lala・dito・siti": "lara",
+  "リツ": "ritsu",
+  "佐藤": "sato",
+  "小林": "kobayashi",
+  "林": "hayashi",
+  "鈴木": "suzuki",
+  "高橋": "takahashi",
+  "山田": "yamada",
+  "ヤマダ": "yamada",
+  "やまだ": "yamada"
 };
 
-function detectVoice(speaker, fallbackIndex = 0) {
+function detectVoice(speaker) {
   if (!speaker || speaker === "???" || speaker.trim() === "") {
-    return allVoices[fallbackIndex % allVoices.length];
+    throw new Error("Nama pembicara tidak boleh kosong atau tidak valid.");
   }
-  const cleanSpeaker = speaker.replace(/[- ]?(さん|くん|ちゃん|様|君|sama|san|kun|chan)$/i, "").trim().toLowerCase();
+  
+  const originalClean = speaker.trim().toLowerCase();
+  
+  // 1. Cek pemetaan eksplisit untuk nama persis (misal: "ララ・ディト・シティ")
+  if (SPEAKER_MAP[originalClean]) {
+    return SPEAKER_MAP[originalClean];
+  }
+  
+  // 2. Cek pemetaan setelah dibersihkan gelar/honorifik secara utuh
+  const cleanOriginal = originalClean.replace(/[- ]?(さん|くん|ちゃん|様|君|先生|sama|san|kun|chan|sensei)$/i, "").trim();
+  if (SPEAKER_MAP[cleanOriginal]) {
+    return SPEAKER_MAP[cleanOriginal];
+  }
+  
+  // 3. Fallback potong pembicara pertama jika berupa gabungan yang tidak terdaftar
+  const firstSpeaker = speaker.split(/[・、/&,]/)[0].split(/\s+dan\s+/i)[0].split(/\s+and\s+/i)[0].trim();
+  const cleanSpeaker = firstSpeaker.replace(/[- ]?(さん|くん|ちゃん|様|君|先生|sama|san|kun|chan|sensei)$/i, "").trim().toLowerCase();
+  
   if (SPEAKER_MAP[cleanSpeaker]) {
     return SPEAKER_MAP[cleanSpeaker];
   }
-  if (allVoices.includes(cleanSpeaker)) {
+  
+  if (GEMINI_VOICE_MAP[cleanSpeaker]) {
     return cleanSpeaker;
   }
-  const speakerLowerOriginal = speaker.toLowerCase().trim();
-  let preDetectedGender = null;
-  if (speakerLowerOriginal.endsWith("ちゃん") || speakerLowerOriginal.endsWith("chan")) {
-    preDetectedGender = "female";
-  } else if (speakerLowerOriginal.endsWith("くん") || speakerLowerOriginal.endsWith("kun") || speakerLowerOriginal.endsWith("君")) {
-    preDetectedGender = "male";
-  }
-  let hash = 0;
-  for (let i = 0; i < cleanSpeaker.length; i++) {
-    hash = cleanSpeaker.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const index = Math.abs(hash);
-  if (preDetectedGender === "female") {
-    return femaleVoices[index % femaleVoices.length];
-  }
-  if (preDetectedGender === "male") {
-    return maleVoices[index % maleVoices.length];
-  }
-  const EXACT_FEMALE = [
-    "ayu", "siti", "dewi", "rara", "indah", "sakura", "lara", "sato", "hayashi",
-    "アユ", "シティ", "デウィ", "ララ", "インダ", "さくら", "サクラ", "さとう", "はやし"
-  ];
-  const EXACT_MALE = [
-    "budi", "faisal", "andi", "dito", "adit", "ken", "suzuki", "tanaka", "yamada", "kimura", "takahashi", "kobayashi",
-    "ブディ", "ファイサル", "アンディ", "ディト", "アディット", "ケン", "すずき", "たなか", "やまだ", "きむら", "たかはし", "こばやし"
-  ];
-  if (EXACT_FEMALE.includes(cleanSpeaker)) {
-    return femaleVoices[index % femaleVoices.length];
-  }
-  if (EXACT_MALE.includes(cleanSpeaker)) {
-    return maleVoices[index % maleVoices.length];
-  }
-  const isFemale = FEMALE_KEYWORDS.some(k => cleanSpeaker.includes(k));
-  const isMale   = MALE_KEYWORDS.some(k => cleanSpeaker.includes(k));
-  if (isFemale && !isMale) {
-    return femaleVoices[index % femaleVoices.length];
-  }
-  if (isMale && !isFemale) {
-    return maleVoices[index % maleVoices.length];
-  }
-  return allVoices[index % allVoices.length];
+  
+  throw new Error(`Karakter tidak dikenal: "${speaker}". Script dikonfigurasi secara Strict Mode (tidak menerima karakter baru). Pastikan ejaan karakter sudah benar di sumber materi.`);
 }
 
 const GEMINI_VOICE_MAP = {
-  // Wanita
-  "indah": "Zephyr",       // default premium (Bright)
-  "lara": "Despina",      // youthful, gentle
-  "siti": "Vindemiatrix", // gentle/clear (Gentle)
-  "dewi": "Leda",         // young, cheerful, upbeat child/student
-  "hayashi": "Gacrux",    // mature/academic (Mature)
-  "sato": "Sulafat",      // friendly/mature (Warm)
-  "ayu": "Erinome",       // cool/clear (Clear)
-  "zundamon": "Autonoe",  // mascot child/neutral (Bright/Youthful)
-  "ritsu": "Achernar",    // cool/neutral (Soft)
-  "sakura": "Callirrhoe", // youthful, clear female
-  "rara": "Kore",         // gentle, soft, clear female
+  // Wanita (11)
+  "indah": "Aoede",
+  "lara": "Zephyr",
+  "siti": "Vindemiatrix",
+  "dewi": "Leda",
+  "hayashi": "Sulafat",
+  "sato": "Erinome",
+  "ayu": "Callirrhoe",
+  "zundamon": "Autonoe",
+  "ritsu": "Enceladus",
+  "sakura": "Kore",
+  "ani": "Achernar",
 
-  // Pria
-  "budi": "Charon",       // default polite/formal (Informative)
-  "dito": "Alnilam",      // cool/deep (Firm)
-  "suzuki": "Iapetus",    // smart/young (Clear)
-  "tanaka": "Fenrir",     // energetic/rough (Excitable)
-  "yamada": "Achird",     // warm/casual (Friendly)
-  "kimura": "Zubenelgenubi", // youthful, casual, relaxed male (slang)
-  "andi": "Orus",         // dramatic/heroic (Firm)
-  "faisal": "Algieba",    // polite, formal, smooth, calm male
-  "takahashi": "Puck",    // youthful, upbeat, friendly male
-  "kobayashi": "Rasalgethi", // mature, deep, informative, warm male
-  "namonashi": "Algenib",  // middle-aged/rough (Gravelly)
-  "ooba": "Sadachbia",    // boy/child (Lively)
+  // Pria (10)
+  "budi": "Charon",
+  "dito": "Umbriel",
+  "suzuki": "Iapetus",
+  "tanaka": "Orus",
+  "kimura": "Fenrir",
+  "andi": "Alnilam",
+  "faisal": "Algieba",
+  "takahashi": "Achird",
+  "kobayashi": "Rasalgethi",
+  "yamada": "Algenib"
+};
+
+const DIRECTOR_NOTES = {
+  // Wanita (11)
+  "indah": "Style: Calm and intellectual. Pace: Slow and polite.",
+  "lara": "Style: 'Vocal Smile', very bright and energetic high school girl. Pace: Fast, bouncing cadence.",
+  "siti": "Style: Gentle, soft-spoken, and reassuring. Pace: Relaxed.",
+  "dewi": "Style: Innocent, spoiled child. Dynamics: High pitch, excitable.",
+  "hayashi": "Style: Motherly, wise, and warm. Pace: Slow and comforting.",
+  "sato": "Style: Formal, polite receptionist. Pace: Standard, professional.",
+  "ayu": "Style: Casual, friendly, modern youth. Pace: Natural and relaxed.",
+  "ritsu": "Style: Mysterious, cool, breathless. Pace: Very slow with pauses.",
+  "sakura": "Style: Pure, gentle, and caring girl. Pace: Soft and polite.",
+  "ani": "Style: Shy, hesitant, and quiet. Pace: Slow and slightly trembling.",
+  "zundamon": "Style: Childish mascot, extremely high energy. Pace: Very fast and jumpy.",
+
+  // Pria (10)
+  "budi": "Style: Authoritative but warm teacher. Voice: Deep and resonant. Pace: Slow and clear.",
+  "dito": "Style: Chill, casual high school boy. Pace: Standard, relaxed.",
+  "suzuki": "Style: Crisp, formal office worker. Pace: Fast and efficient.",
+  "tanaka": "Style: Dependable father figure. Voice: Heavy and deep. Pace: Slow and steady.",
+  "kimura": "Style: Energetic, casual youth. Pace: Fast and upbeat.",
+  "andi": "Style: Passionate, dramatic, confident. Dynamics: Strong projection.",
+  "faisal": "Style: Calm, intellectual, and smooth. Pace: Relaxed and thoughtful.",
+  "takahashi": "Style: Friendly, polite young businessman. Pace: Natural.",
+  "kobayashi": "Style: Serious, strict, and deep. Pace: Deliberate and heavy.",
+  "yamada": "Style: Kind grandfather. Voice: Gravelly and breathy. Pace: Very slow and warm."
 };
 
 function printUsage() {
@@ -266,6 +303,46 @@ function convertPcmToMp3(pcmBuffer, sampleRate = 24000) {
   return result.stdout;
 }
 
+function convertWavToMp3(wavBuffer) {
+  const result = spawnSync(
+    "ffmpeg",
+    [
+      "-i", "pipe:0",
+      "-f", "mp3",
+      "-acodec", "libmp3lame",
+      "-ab", "128k",
+      "pipe:1"
+    ],
+    { input: wavBuffer, maxBuffer: 15 * 1024 * 1024 }
+  );
+
+  if (result.status !== 0) {
+    const err = result.stderr ? result.stderr.toString() : "Ffmpeg error";
+    throw new Error(`Ffmpeg WAV conversion failed: ${err}`);
+  }
+
+  return result.stdout;
+}
+
+async function synthesizeVoicevox(text, speakerId) {
+  const host = process.env.VOICEVOX_URL || "http://127.0.0.1:50021";
+  const queryUrl = `${host}/audio_query?text=${encodeURIComponent(text)}&speaker=${speakerId}`;
+  const queryRes = await fetch(queryUrl, { method: "POST" });
+  if (!queryRes.ok) throw new Error(`Query VOICEVOX gagal: ${queryRes.statusText}`);
+
+  const queryJson = await queryRes.json();
+  const synthesisUrl = `${host}/synthesis?speaker=${speakerId}`;
+  const synthesisRes = await fetch(synthesisUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(queryJson),
+  });
+  if (!synthesisRes.ok) throw new Error(`Sintesis VOICEVOX gagal: ${synthesisRes.statusText}`);
+
+  const arrayBuffer = await synthesisRes.arrayBuffer();
+  return Buffer.from(arrayBuffer);
+}
+
 function getGeminiApiKeys() {
   const keys = [];
 
@@ -311,7 +388,7 @@ function getGeminiModels() {
 let globalKeyIndex = 0;
 let globalModelIndex = 0;
 
-async function queryGeminiTtsWithRetry(text, geminiVoice, retries = 5, initialDelay = 5000) {
+async function queryGeminiTtsWithRetry(text, geminiVoice, characterId, retries = 5, initialDelay = 5000) {
   const apiKeys = getGeminiApiKeys();
   if (apiKeys.length === 0) {
     throw new Error("GEMINI_API_KEY tidak ditemukan di environment.");
@@ -323,6 +400,8 @@ async function queryGeminiTtsWithRetry(text, geminiVoice, retries = 5, initialDe
   // Pastikan jumlah percobaan minimal cukup untuk mencoba seluruh kombinasi (key * model) setidaknya 2 kali
   const maxAttempts = Math.max(retries, apiKeys.length * models.length * 2);
   let keysTriedForCurrentModel = 0;
+
+  const notes = DIRECTOR_NOTES[characterId] || "Style: Neutral reading.";
 
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
     const currentApiKey = apiKeys[globalKeyIndex % apiKeys.length];
@@ -343,7 +422,7 @@ async function queryGeminiTtsWithRetry(text, geminiVoice, retries = 5, initialDe
             },
           ],
           systemInstruction: {
-            parts: [{ text: "You are a text-to-speech reader. Read the input text exactly as written, word for word. Do not reply, converse, explain, or output any text." }]
+            parts: [{ text: `You are a text-to-speech reader. Read the input text exactly as written, word for word. Do not reply, converse, explain, or output any text. Emulate this persona:\n${notes}` }]
           },
           generationConfig: {
             responseModalities: ["AUDIO"],
@@ -472,13 +551,25 @@ async function processTtsItem(supabase, text, voice, rate = "medium", folder = "
   const filename = folder ? `${folder}/${cacheId}.mp3` : `${cacheId}.mp3`;
   const BUCKET_NAME = "tts-cache";
 
-  const geminiVoice = GEMINI_VOICE_MAP[voice];
-  if (!geminiVoice) {
-    throw new Error(`Suara Gemini untuk '${voice}' tidak ditemukan.`);
-  }
+  let mp3Buffer;
+  if (voice === "zundamon") {
+    try {
+      console.log(`   ➔ [VOICEVOX] Menyintesis Zundamon (Speaker ID: 3)...`);
+      const wavBuffer = await synthesizeVoicevox(text, 3);
+      mp3Buffer = convertWavToMp3(wavBuffer);
+      console.log(`   └─ [VOICEVOX] Sintesis Zundamon sukses.`);
+    } catch (vvError) {
+      throw new Error(`Gagal sintesis VOICEVOX untuk Zundamon: ${vvError.message}`);
+    }
+  } else {
+    const geminiVoice = GEMINI_VOICE_MAP[voice];
+    if (!geminiVoice) {
+      throw new Error(`Suara Gemini untuk '${voice}' tidak ditemukan.`);
+    }
 
-  const mp3Buffer = await queryGeminiTtsWithRetry(text, geminiVoice);
-  console.log(`   └─ [Gemini TTS] Sintesis & konversi sukses (${geminiVoice}).`);
+    mp3Buffer = await queryGeminiTtsWithRetry(text, geminiVoice, voice);
+    console.log(`   └─ [Gemini TTS] Sintesis & konversi sukses (${geminiVoice}).`);
+  }
 
   const { error: uploadError } = await supabase.storage
     .from(BUCKET_NAME)

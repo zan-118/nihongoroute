@@ -16,22 +16,35 @@ import { cn } from "@/lib/utils";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+
+/**
+ * Audio item structure.
+ */
 interface LessonAudioItem {
   audioUrl?: string;
   audio_url?: string;
 }
 
+/**
+ * Vocabulary item structure.
+ */
 interface LessonVocabItem {
   vocab?: string;
   japanese?: string;
   word?: string;
 }
 
+/**
+ * Kanji item structure.
+ */
 interface LessonKanjiItem {
   kanji?: string;
   character?: string;
 }
 
+/**
+ * Lesson data structure.
+ */
 export interface LessonData {
   listeningList?: unknown[];
   listening_list?: unknown[];
@@ -43,6 +56,9 @@ export interface LessonData {
   kanji_list?: unknown[];
 }
 
+/**
+ * Component props.
+ */
 interface DownloadOfflineButtonProps {
   lesson: LessonData;
 }
@@ -50,6 +66,10 @@ interface DownloadOfflineButtonProps {
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Cyber-Glass button. Download lesson assets for offline use.
+ */
 export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonProps) {
   const [status, setStatus] = useState<"idle" | "downloading" | "completed" | "error">("idle");
   const [progress, setProgress] = useState(0);
@@ -97,6 +117,7 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
 
   // Cek pada mount apakah berkas utama sudah ada di cache
   useEffect(() => {
+    // Skip if SSR or no lesson
     if (typeof window === "undefined" || !lesson) return;
 
     const checkCacheStatus = async () => {
@@ -106,6 +127,7 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
           return;
         }
 
+        // Open cache storages
         const audioCache = await caches.open("nihongoroute_audio_cache");
         const ttsCache = await caches.open("nihongoroute_tts_cache");
         const kanjiCache = await caches.open("nihongoroute_kanjivg_cache");
@@ -159,9 +181,14 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
     checkCacheStatus();
   }, [lesson, getAssetUrls]);
 
+  /**
+   * Download all assets and save to cache.
+   */
   const handleDownload = async () => {
+    // Prevent double download
     if (status === "downloading" || status === "completed") return;
 
+    // Play sound, reset state
     sounds?.playPop();
     setStatus("downloading");
     setProgress(0);
@@ -243,6 +270,7 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
       // 5. Sukses
       setStatus("completed");
       setProgress(100);
+      // Play success sound, vibrate
       sounds?.playSuccess();
       if ("vibrate" in navigator) {
         navigator.vibrate([10, 50, 10]);

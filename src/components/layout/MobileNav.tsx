@@ -15,7 +15,13 @@ import { useMobileNav } from "@/components/layout/hooks/useMobileNav";
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Mobile navigation bar component.
+ * Renders bottom navigation bar for mobile viewports with active state animations.
+ */
 export default function MobileNav() {
+  // Get current route and navigation items.
   const { pathname, navItems } = useMobileNav();
 
   return (
@@ -25,6 +31,7 @@ export default function MobileNav() {
         
         <ul className="flex justify-between items-center relative z-10 gap-1 px-1">
           {navItems.map((item) => {
+            // Check if item is active.
             const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
 
             return (
@@ -42,6 +49,7 @@ export default function MobileNav() {
                     />
                   )}
 
+                  {/* Animate active icon scale and position. */}
                   <m.div
                     animate={{
                       y: isActive ? -1 : 0,

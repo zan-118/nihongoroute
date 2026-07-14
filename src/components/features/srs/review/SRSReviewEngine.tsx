@@ -23,11 +23,19 @@ import { useSRSReview } from "./useSRSReview";
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * SRS review engine component.
+ * Handles review session, progress, XP animations, and card state.
+ * @param props.cards Array of flashcards to review.
+ */
 export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
   const engine = useSRSReview(cards);
 
+  // Prevent SSR mismatch and handle empty card list.
   if (!engine.isClient || engine.shuffledCards.length === 0) return null;
 
+  // Render completion screen with earned XP.
   if (engine.isFinished) {
     return (
       <section className="w-full max-w-xl mx-auto px-4 mt-10">
@@ -63,6 +71,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
     );
   }
 
+  // Calculate progress percentage for progress bar.
   const progressPercent = (engine.currentIndex / engine.shuffledCards.length) * 100;
 
   return (
@@ -116,7 +125,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
       >
         <AnimatePresence mode="wait">
           <m.div
-            key={engine.currentIndex}
+            key={engine.currentIndex} // Key change triggers exit/enter animations.
             initial={{ x: engine.direction * 50, opacity: 0, scale: 0.95 }}
             animate={{ x: 0, opacity: 1, scale: 1 }}
             exit={{ x: -engine.direction * 50, opacity: 0, scale: 0.95 }}
@@ -154,6 +163,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
       {/* KONTROL BAWAH */}
       <footer className="min-h-[100px]">
         {!engine.isFlipped ? (
+          // Show progress and hints when card is face down.
           <div className="flex flex-col items-center gap-6">
             <div className="text-muted-foreground font-mono text-xs font-black tracking-[0.4em] uppercase text-center flex flex-col gap-1">
               <span className="text-muted-foreground/40 italic">Progres Sesi</span>
@@ -171,6 +181,7 @@ export default function SRSReviewEngine({ cards }: { cards: FlashcardType[] }) {
             </div>
           </div>
         ) : (
+          // Show answer buttons when card is flipped.
           <m.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}

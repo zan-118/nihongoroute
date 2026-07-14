@@ -20,6 +20,11 @@ import { Trophy, Skull, Share2, Loader2, FileText, BarChart2, Calendar, User, Aw
 import Link from "next/link";
 import { ExamData, GameState } from "./types";
 import { SECTION_LABELS } from "./constants";
+
+/**
+ * Dynamic import for PdfGenerator component.
+ * Disable SSR to prevent canvas/document reference errors.
+ */
 const PdfGenerator = dynamic(() => import("@/components/features/pdf/PdfGenerator"), {
   ssr: false,
   loading: () => <Loader2 className="animate-spin text-primary" size={20} />
@@ -28,10 +33,18 @@ const PdfGenerator = dynamic(() => import("@/components/features/pdf/PdfGenerato
 // ======================
 // ANTARMUKA & TIPE
 // ======================
+
+/**
+ * Props for ExamResult component.
+ */
 interface ExamResultProps {
+  /** Exam configuration and question data */
   exam: ExamData;
+  /** State setter to switch between exam phases */
   setGameState: (state: GameState) => void;
+  /** Redirect path when exiting the exam */
   backLink: string;
+  /** Function to compute final scores and section status */
   calculateScore: () => {
     correctCount: number;
     finalScore: number;
@@ -39,12 +52,17 @@ interface ExamResultProps {
     failedSection: boolean;
     isPassed: boolean;
   };
+  /** Callback to trigger sharing functionality */
   handleShareResult: () => void;
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * ExamResult component. Displays score, certificate, and performance breakdown.
+ */
 export function ExamResult({
   exam,
   setGameState,
@@ -55,12 +73,23 @@ export function ExamResult({
   // Memoize kalkulasi skor — iterasi penuh array soal, tidak perlu diulang setiap render
   const [viewMode, setViewMode] = useState<"official" | "modern">("official");
 
+  /**
+   * Memoized score calculation results.
+   */
   const { correctCount, finalScore, sectionBreakdown, failedSection, isPassed } = useMemo(
     () => calculateScore(),
     [calculateScore]
   );
+  
+  /**
+   * Retrieve current user name from store.
+   */
   const userFullName = useUserStore(s => s.name) || "Member NihongoRoute";
 
+  /**
+   * Generate deterministic registration number.
+   * Uses simple string hashing to ensure consistent output across renders.
+   */
   const regNo = useMemo(() => {
     const prefix = exam.title.toLowerCase().includes("jft") ? "JFT" : "JLPT";
     // Hash deterministik murni dari userFullName + exam.title untuk memastikan rendering yang murni
@@ -73,6 +102,9 @@ export function ExamResult({
     return `26-1A-${prefix}-${rand}`;
   }, [exam.title, userFullName]);
 
+  /**
+   * Format current date to Japanese standard format.
+   */
   const testDateStr = useMemo(() => {
     return new Date().toLocaleDateString("ja-JP", {
       year: "numeric",
@@ -81,13 +113,20 @@ export function ExamResult({
     }).replace(/\//g, "/");
   }, []);
 
+  /**
+   * Determine if the exam is JFT-Basic.
+   */
   const isJft = useMemo(() => {
     return exam.title.toLowerCase().includes("jft") || 
            exam.categorySlug?.toLowerCase().includes("jft") || 
            exam.levelCode?.toLowerCase() === "a2";
   }, [exam.title, exam.categorySlug, exam.levelCode]);
 
-  // Pemetaan Bagian JLPT (maksimal 60 poin per bagian, total 180)
+  /**
+   * Calculate JLPT specific section scores and grades.
+   * N4/N5 combines language knowledge and reading into a single 120-point section.
+   * N1/N2/N3 splits language knowledge, reading, and listening into three 60-point sections.
+   */
   const jlptScores = useMemo(() => {
     const vocab = sectionBreakdown.vocabulary || { correct: 0, total: 0, passed: true };
     const grammar = sectionBreakdown.grammar || { correct: 0, total: 0, passed: true };
@@ -116,6 +155,9 @@ export function ExamResult({
       scoreList = listening.total > 0 ? Math.round((listening.correct / listening.total) * 60) : 0;
     }
 
+    /**
+     * Get letter grade based on correct answer ratio.
+     */
     const getGrade = (correct: number, total: number) => {
       if (total === 0) return "-";
       const rate = correct / total;
@@ -135,7 +177,10 @@ export function ExamResult({
     };
   }, [sectionBreakdown, exam.levelCode]);
 
-  // Penilaian JFT (berkisar antara 10 hingga 250, nilai kelulusan adalah 200)
+  /**
+   * Calculate JFT specific scores.
+   * Scaled score ranges from 10 to 250. Passing score is 200.
+   */
   const jftScores = useMemo(() => {
     const vocab = sectionBreakdown.vocabulary || { correct: 0, total: 0, passed: true };
     const grammar = sectionBreakdown.grammar || { correct: 0, total: 0, passed: true };
@@ -155,6 +200,9 @@ export function ExamResult({
     };
   }, [sectionBreakdown, correctCount, exam.questions.length, failedSection]);
 
+  /**
+   * Data payload passed to PDF generator.
+   */
   const certificateData = {
     userName: userFullName,
     examTitle: exam.title,

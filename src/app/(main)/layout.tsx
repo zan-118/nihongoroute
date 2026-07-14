@@ -17,13 +17,25 @@ import DeferredOnboardingTour from "@/components/providers/DeferredOnboardingTou
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Main layout component for functional route group.
+ * Wraps children with navigation, progress tracking, and client-side addons.
+ * 
+ * @param props - Component props.
+ * @param props.children - Child nodes to render.
+ */
 export default function MainLayout({ children }: { children: ReactNode }) {
   return (
+    /* ProgressProvider tracks page transition progress */
     <ProgressProvider>
+      {/* NavWrapper handles client-side navigation layout */}
       <NavWrapper>
         {children}
       </NavWrapper>
+      {/* AppClientAddons mounts global client utilities */}
       <AppClientAddons />
+      {/* DeferredOnboardingTour triggers user onboarding flow */}
       <DeferredOnboardingTour />
     </ProgressProvider>
   );

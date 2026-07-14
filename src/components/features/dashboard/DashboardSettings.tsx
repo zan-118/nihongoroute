@@ -22,18 +22,30 @@ import NotificationManager from "@/components/features/notifications/Notificatio
 // ==========================================
 // ANTARMUKA & PROPS (INTERFACES)
 // ==========================================
+/**
+ * Props for DashboardSettings component.
+ */
 interface DashboardSettingsProps {
+  /** Auth state flag. */
   isAuthenticated: boolean;
+  /** Export local data to file. */
   handleExportData: () => void;
+  /** Import data from file. */
   handleImportData: () => void;
+  /** Clear local storage data. */
   handleResetData: () => void;
+  /** Sign out user. */
   handleLogout: () => void;
+  /** Animation variants for container. */
   itemVariants: Variants;
 }
 
 // ==========================================
 // KOMPONEN UTAMA
 // ==========================================
+/**
+ * Dashboard settings panel. Manage notifications and data backup.
+ */
 export default function DashboardSettings({ 
   isAuthenticated, 
   handleExportData, 
@@ -84,6 +96,7 @@ export default function DashboardSettings({
               >
                 <Trash2 size={16} className="mr-2" /> Setel Ulang Data
               </Button>
+              {/* Render logout button if user logged in. */}
               {isAuthenticated && (
                 <Button
                   variant="outline"
@@ -101,4 +114,3 @@ export default function DashboardSettings({
     </m.div>
   );
 }
-

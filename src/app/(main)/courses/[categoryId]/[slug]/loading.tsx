@@ -12,10 +12,17 @@ import { Skeleton } from "@/components/ui/skeleton";
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Loading skeleton component for course detail page.
+ * Renders placeholder UI while course data loads.
+ * 
+ * @returns {React.JSX.Element} Course detail loading skeleton.
+ */
 export default function CourseDetailLoading() {
   return (
     <div className="w-full text-foreground px-4 md:px-8 relative overflow-hidden flex flex-col flex-1">
-      {/* Kerangka Dekorasi Ambient Latar Belakang */}
+      {/* Ambient background glow effect */}
       <div className="absolute top-0 right-0 size-[360px] bg-primary/5 blur-[65px] rounded-full pointer-events-none" />
 
       <article className="max-w-4xl mx-auto w-full relative z-10 flex-1 pt-10 md:pt-14">
@@ -39,6 +46,7 @@ export default function CourseDetailLoading() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Render 4 placeholder cards for vocabulary items */}
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="neo-card p-6 flex flex-col justify-between items-start gap-6 h-48 rounded-lg">
                   <div className="w-full space-y-4">

@@ -12,9 +12,15 @@ import { BookOpen, Sparkles } from "lucide-react";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Props for KanjiInfoCard component.
+ */
 interface KanjiInfoCardProps {
+  /** List of radical characters. */
   radicals?: string[];
+  /** Mnemonic text or Sanity Portable Text block array. */
   mnemonics?: string | unknown[]; // Konten Portable Text editor/sanity
+  /** English meaning of the kanji. */
   meaning?: string;
 }
 
@@ -22,7 +28,10 @@ interface KanjiInfoCardProps {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen kartu informasi kanji.
+ * Renders kanji details including meaning, radicals, and mnemonics.
+ * 
+ * @param props - Component properties.
+ * @returns Kanji info card element.
  */
 export default function KanjiInfoCard({
   radicals = [],
@@ -77,6 +86,7 @@ export default function KanjiInfoCard({
               : Array.isArray(mnemonics)
                 ? mnemonics
                     .map((block: unknown) => {
+                      // Cast block to extract text from Sanity Portable Text structure
                       const b = block as { children?: { text?: string }[]; text?: string };
                       return (
                         b?.children

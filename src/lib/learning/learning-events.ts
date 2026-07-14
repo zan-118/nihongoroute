@@ -1,3 +1,6 @@
+/**
+ * Types of tracked learning activities.
+ */
 export type LearningEventType =
   | "reading_started"
   | "reading_completed"
@@ -11,6 +14,9 @@ export type LearningEventType =
   | "conjugation_checked"
   | "text_analyzed";
 
+/**
+ * Categories of content sources.
+ */
 export type LearningSourceType =
   | "reading"
   | "listening"
@@ -20,6 +26,9 @@ export type LearningSourceType =
   | "sentence"
   | "tool";
 
+/**
+ * Metadata for content source.
+ */
 export interface LearningEventSource {
   type: LearningSourceType;
   id?: string;
@@ -29,6 +38,9 @@ export interface LearningEventSource {
   level?: string;
 }
 
+/**
+ * Performance metrics for event.
+ */
 export interface LearningEventMetrics {
   correct?: number;
   total?: number;
@@ -37,6 +49,9 @@ export interface LearningEventMetrics {
   targetSeconds?: number;
 }
 
+/**
+ * Complete learning event record.
+ */
 export interface LearningEvent {
   id: string;
   type: LearningEventType;
@@ -53,17 +68,26 @@ export interface LearningEvent {
   };
 }
 
+/**
+ * Input payload for creating event. Excludes generated fields.
+ */
 export type LearningEventInput = Omit<LearningEvent, "id" | "createdAt"> & {
   id?: string;
   createdAt?: number;
 };
 
+/**
+ * Create learning event. Generate ID and timestamp if missing.
+ * @param input Event data.
+ * @returns Complete event object.
+ */
 export function createLearningEvent(input: LearningEventInput): LearningEvent {
   const createdAt = input.createdAt || Date.now();
   return {
     ...input,
     id:
       input.id ||
+      // Fallback ID format: type-sourceType-sourceIdentifier-timestamp
       `${input.type}-${input.source.type}-${input.source.id || input.source.slug || "source"}-${createdAt}`,
     createdAt,
   };

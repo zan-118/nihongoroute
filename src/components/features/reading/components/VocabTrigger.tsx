@@ -21,9 +21,15 @@ import { Badge } from "@/components/ui/badge";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Props for VocabTrigger component.
+ */
 interface VocabTriggerProps {
+  /** Target vocabulary word text */
   text: string;
+  /** Optional vocabulary identifier for SRS lookup */
   vocabId?: string;
+  /** Trigger element content */
   children: React.ReactNode;
 }
 
@@ -31,14 +37,19 @@ interface VocabTriggerProps {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen pemicu popup info kosakata.
+ * Interactive wrapper for vocabulary words.
+ * Shows quick dictionary popup and SRS status on click.
  */
 export default function VocabTrigger({ text, vocabId, children }: VocabTriggerProps) {
+  // Track dialog open state
   const [isOpen, setIsOpen] = useState(false);
+  // Get SRS data from global store
   const srsData = useSRSStore((state) => state.srs);
 
   // Pencarian sederhana jika tidak ada vocabId yang disediakan (Pencarian Otomatis)
+  // Fallback to text if ID missing
   const lookupId = vocabId || text;
+  // Check if word exists in SRS
   const srsInfo = srsData[lookupId];
 
   // ==========================================
@@ -47,6 +58,7 @@ export default function VocabTrigger({ text, vocabId, children }: VocabTriggerPr
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
+          {/* Trigger element with hover effects */}
           <span 
             className="cursor-help border-b-2 border-dashed border-primary/40 hover:border-primary transition-all duration-300 relative group"
           >
@@ -56,6 +68,7 @@ export default function VocabTrigger({ text, vocabId, children }: VocabTriggerPr
           </span>
         </DialogTrigger>
         <DialogContent className="bg-[rgb(var(--card-rgb)/0.6)]  border border-border shadow-[0_0_50px_rgb(var(--primary-rgb)/0.15)] sm:max-w-[400px] overflow-hidden">
+          {/* Decorative background glow */}
           <div className="absolute top-0 right-0 size-32 bg-primary/10 blur-[50px] rounded-full -mr-16 -mt-16" />
           
           <DialogHeader className="relative z-10">

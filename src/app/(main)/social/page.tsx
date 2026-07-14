@@ -12,7 +12,10 @@ import { Badge } from "@/components/ui/badge";
 import { Users } from "lucide-react";
 import { createPageMetadata } from "@/lib/seo";
 
-
+/**
+ * Metadata configuration for Social page.
+ * Disables search engine indexing for social hub.
+ */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Sosial & Komunitas | NihongoRoute",
@@ -22,12 +25,19 @@ export const metadata: Metadata = {
   }),
 };
 
+/**
+ * SocialPage component.
+ * Renders main layout, header, and client-side social hub interface.
+ * 
+ * @returns Social page layout.
+ */
 export default function SocialPage() {
   return (
     <main className="min-h-screen bg-transparent pt-12 px-4 sm:px-6 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         
         {/* HEADER SECTION */}
+        {/* Renders page icon, title, description, and status badges */}
         <div className="flex flex-col items-center text-center mb-10">
           <div className="size-16 bg-primary/10 rounded-lg flex items-center justify-center mb-6 border border-primary/20 shadow-lg">
             <Users className="text-primary" size={32} />
@@ -52,6 +62,7 @@ export default function SocialPage() {
         </div>
 
         {/* CONTENT SECTION (TABBED CLIENT VIEW) */}
+        {/* Client component handles tab switching and dynamic data fetching */}
         <SocialClient />
         
       </div>

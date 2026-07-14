@@ -26,16 +26,25 @@ import { toLegacyExamData, type SupabaseExamSection } from "@/lib/exams/supabase
 import { createClient, createStaticClient } from "@/lib/supabase/server";
 import type { Json } from "@/types/supabase.generated";
 
+/**
+ * Input parameters for starting a JLPT mock session.
+ */
 type StartJlptMockSessionInput = {
   templateSlug?: string;
   jlptLevel?: JlptLevel;
 };
 
+/**
+ * Result of starting a JLPT mock session.
+ */
 type StartJlptMockSessionResult = {
   sessionId: string;
   exam: ExamData;
 };
 
+/**
+ * Result containing session package details and status.
+ */
 type ExamSessionPackageResult = {
   sessionId: string;
   status: string;
@@ -43,10 +52,16 @@ type ExamSessionPackageResult = {
   result: ExamSubmitResult | null;
 };
 
+/**
+ * Result of saving mock session answers.
+ */
 type SaveJlptMockSessionAnswersResult = {
   saved: boolean;
 };
 
+/**
+ * Represents a Supabase exam template item in lists.
+ */
 type SupabaseExamListItem = {
   id: string;
   slug: string;
@@ -58,6 +73,9 @@ type SupabaseExamListItem = {
   source: "supabase";
 };
 
+/**
+ * SQL select fields for JLPT exam templates.
+ */
 const TEMPLATE_SELECT = `
   id,
   slug,
@@ -76,6 +94,9 @@ const TEMPLATE_SELECT = `
   category:course_categories(slug)
 `;
 
+/**
+ * SQL select fields for template questions.
+ */
 const TEMPLATE_QUESTION_SELECT = `
   position,
   section_order,
@@ -117,6 +138,9 @@ const TEMPLATE_QUESTION_SELECT = `
   )
 `;
 
+/**
+ * SQL select fields for random questions.
+ */
 const RANDOM_QUESTION_SELECT = `
   id,
   jlpt_level,
@@ -154,16 +178,25 @@ const RANDOM_QUESTION_SELECT = `
   )
 `;
 
+/**
+ * Extracts error message from PostgrestError.
+ */
 function getSupabaseErrorMessage(error: PostgrestError | null) {
   return error?.message || "Terjadi kesalahan saat mengakses Supabase.";
 }
 
+/**
+ * Validates if string is UUID format.
+ */
 function isUuid(value: string) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
     value
   );
 }
 
+/**
+ * Maps template row to list item format.
+ */
 function toSupabaseExamListItem(
   template: JlptExamTemplateRow
 ): SupabaseExamListItem {
@@ -179,6 +212,9 @@ function toSupabaseExamListItem(
   };
 }
 
+/**
+ * Hides correct answers from exam payload to prevent cheating.
+ */
 function maskLegacyExamAnswers(exam: ExamData): ExamData {
   return {
     ...exam,
@@ -189,10 +225,16 @@ function maskLegacyExamAnswers(exam: ExamData): ExamData {
   };
 }
 
+/**
+ * Checks if Json value is a record object.
+ */
 function isJsonRecord(value: Json): value is Record<string, Json> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+/**
+ * Normalizes raw JSON answers to typed record.
+ */
 function normalizeSavedAnswers(value: Json): Record<string, number> {
   if (!isJsonRecord(value)) return {};
 
@@ -208,6 +250,9 @@ function normalizeSavedAnswers(value: Json): Record<string, number> {
   );
 }
 
+/**
+ * Filters and validates submitted answers against exam package choices.
+ */
 function normalizePartialAnswers(
   examPackage: ReturnType<typeof packageSnapshotToSupabasePackage>,
   submittedAnswers: Record<string, number | null>
@@ -220,6 +265,7 @@ function normalizePartialAnswers(
     }
 
     const answerIndex = selectedChoiceIndex as number;
+    // Ensure selected index is within valid choice bounds
     if (answerIndex >= 0 && answerIndex < question.choices.length) {
       answers[question.id] = answerIndex;
     }
@@ -228,6 +274,9 @@ function normalizePartialAnswers(
   }, {});
 }
 
+/**
+ * Calculates remaining time in seconds for active session.
+ */
 function getRemainingTimeSeconds(input: {
   startedAt: string | null;
   timeLimitMinutes: number;
@@ -247,6 +296,9 @@ function getRemainingTimeSeconds(input: {
   return Math.max(0, totalSeconds - elapsedSeconds);
 }
 
+/**
+ * Asserts user authentication and returns client instance.
+ */
 async function requireAuthenticatedUser() {
   const supabase = await createClient();
   const {
@@ -261,6 +313,9 @@ async function requireAuthenticatedUser() {
   return { supabase, user };
 }
 
+/**
+ * Creates resolver function for public asset URLs.
+ */
 function createAssetUrlResolver(
   supabase: Awaited<ReturnType<typeof createClient>> | ReturnType<typeof createStaticClient>
 ) {
@@ -269,6 +324,9 @@ function createAssetUrlResolver(
       .publicUrl;
 }
 
+/**
+ * Fetches published template by slug or level.
+ */
 async function getPublishedTemplate(
   supabase: Awaited<ReturnType<typeof createClient>> | ReturnType<typeof createStaticClient>,
   input: StartJlptMockSessionInput
@@ -280,6 +338,7 @@ async function getPublishedTemplate(
 
   if (input.templateSlug) {
     const templateKey = input.templateSlug.trim();
+    // Support querying by UUID or slug string
     query = isUuid(templateKey)
       ? query.or(`slug.eq.${templateKey},id.eq.${templateKey}`)
       : query.eq("slug", templateKey);
@@ -303,6 +362,9 @@ async function getPublishedTemplate(
   return data as JlptExamTemplateRow;
 }
 
+/**
+ * Fetches fixed questions assigned to template.
+ */
 async function getFixedTemplateQuestions(
   supabase: Awaited<ReturnType<typeof createClient>> | ReturnType<typeof createStaticClient>,
   templateId: string
@@ -323,6 +385,9 @@ async function getFixedTemplateQuestions(
   return data as unknown as JlptTemplateQuestionRow[];
 }
 
+/**
+ * Fetches random questions matching template quota configuration.
+ */
 async function getRandomTemplateQuestions(
   supabase: Awaited<ReturnType<typeof createClient>> | ReturnType<typeof createStaticClient>,
   template: JlptExamTemplateRow
@@ -330,6 +395,7 @@ async function getRandomTemplateQuestions(
   const quotaRequests = getJlptQuotaRequests(template.quota_config, template.slug);
   const questionsBySection: Partial<Record<SupabaseExamSection, JlptQuestionRow[]>> = {};
 
+  // Fetch questions for each required section
   for (const { section } of quotaRequests) {
     const { data, error } = await supabase
       .from("jlpt_questions")
@@ -350,6 +416,9 @@ async function getRandomTemplateQuestions(
   });
 }
 
+/**
+ * Builds complete exam package from template configuration.
+ */
 async function buildPublishedPackage(
   supabase: Awaited<ReturnType<typeof createClient>> | ReturnType<typeof createStaticClient>,
   input: StartJlptMockSessionInput
@@ -367,6 +436,9 @@ async function buildPublishedPackage(
   );
 }
 
+/**
+ * Retrieves exam template data by slug with masked answers.
+ */
 export async function getSupabaseExamTemplateBySlug(
   templateSlug: string
 ): Promise<ExamData | null> {
@@ -385,6 +457,9 @@ export async function getSupabaseExamTemplateBySlug(
   }
 }
 
+/**
+ * Retrieves list of published exam templates filtered by category or level.
+ */
 export async function getSupabaseExamTemplatesList(input?: {
   categoryId?: string | null;
   jlptLevel?: string | null;
@@ -420,6 +495,9 @@ export async function getSupabaseExamTemplatesList(input?: {
   }
 }
 
+/**
+ * Starts new mock exam session for authenticated user.
+ */
 export async function startJlptMockSession(
   input: StartJlptMockSessionInput
 ): Promise<StartJlptMockSessionResult> {
@@ -454,6 +532,9 @@ export async function startJlptMockSession(
   };
 }
 
+/**
+ * Retrieves active or completed exam session package.
+ */
 export async function getExamSessionPackage(
   sessionId: string
 ): Promise<ExamSessionPackageResult | null> {
@@ -477,6 +558,7 @@ export async function getExamSessionPackage(
     answersSnapshot: data.answers_snapshot,
   });
   const exam = packageSnapshotToLegacyExam(data.payload_snapshot, data.id);
+  // Only expose correct answers if exam is completed
   const publicExam = result ? exam : maskLegacyExamAnswers(exam);
 
   return {
@@ -495,6 +577,9 @@ export async function getExamSessionPackage(
   };
 }
 
+/**
+ * Saves current progress answers for active session.
+ */
 export async function saveJlptMockSessionAnswers(input: {
   sessionId: string;
   answers: Record<string, number | null>;
@@ -531,6 +616,9 @@ export async function saveJlptMockSessionAnswers(input: {
   return { saved: true };
 }
 
+/**
+ * Submits final answers, calculates score, and updates SRS items.
+ */
 export async function submitJlptMockSession(input: {
   sessionId: string;
   answers: Record<string, number | null>;
@@ -547,6 +635,7 @@ export async function submitJlptMockSession(input: {
   if (sessionError) throw new Error(getSupabaseErrorMessage(sessionError));
   if (!session) throw new Error("Session mock test tidak ditemukan.");
 
+  // Return existing result if already completed
   if (session.status === "completed") {
     const storedResult = storedScoreSnapshotToResult({
       sessionId: session.id,
@@ -573,6 +662,7 @@ export async function submitJlptMockSession(input: {
     answered_at: completedAt,
   }));
 
+  // Save individual question answers
   const { error: answersError } = await supabase
     .from("user_exam_answers")
     .upsert(answerRows, {
@@ -587,6 +677,7 @@ export async function submitJlptMockSession(input: {
     completedAt,
   });
 
+  // Insert new items into user SRS queue
   if (srsRows.length > 0) {
     const { error: srsError } = await supabase.from("user_srs").upsert(srsRows, {
       onConflict: "user_id,word_id",
@@ -596,6 +687,7 @@ export async function submitJlptMockSession(input: {
     if (srsError) throw new Error(getSupabaseErrorMessage(srsError));
   }
 
+  // Finalize session status and score breakdown
   const { error: updateError } = await supabase
     .from("user_exam_sessions")
     .update({
@@ -612,6 +704,9 @@ export async function submitJlptMockSession(input: {
   return toExamSubmitResult(session.id, score, completedAt);
 }
 
+/**
+ * Retrieves completed session data including results and correct answers.
+ */
 export async function getCompletedJlptMockSessionExam(
   sessionId: string
 ): Promise<ExamData | null> {

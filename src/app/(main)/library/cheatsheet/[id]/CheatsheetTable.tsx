@@ -30,31 +30,55 @@ import { cn } from "@/lib/utils";
 // ======================
 // TIPE DATA
 // ======================
+
+/**
+ * Represents a single item in the cheatsheet.
+ */
 interface SheetItem {
+  /** Explanation or translation label */
   label: string;
+  /** Japanese text (Kanji/Kana) */
   jp: string;
+  /** Romaji representation */
   romaji: string;
 }
 
+/**
+ * Props for the CheatsheetTable component.
+ */
 interface CheatsheetTableProps {
+  /** Array of cheatsheet items to display */
   items: SheetItem[];
 }
 
+/**
+ * Available view modes for the cheatsheet.
+ */
 type ViewMode = "table" | "flashcard";
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
 
+/**
+ * Interactive table component for rendering cheatsheet items.
+ * Supports standard table view and interactive flashcard quiz view.
+ */
 export function CheatsheetTable({ items }: CheatsheetTableProps) {
+  // Active view mode state
   const [viewMode, setViewMode] = useState<ViewMode>("table");
 
   // State untuk Flashcard Mode
+  // Initialize flashcard items state with a copy of the original items array
   const [flashcardItems, setFlashcardItems] = useState<SheetItem[]>(() => [...items]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
 
-  // Menangani format tulisan pelabelan khusus
+  /**
+   * Formats label text by highlighting specific Japanese learning keywords.
+   * @param text - Raw label text
+   * @returns React node with highlighted keywords
+   */
   const formatLabel = (text: string) => {
     if (!text) return text;
     const keywords = [
@@ -63,6 +87,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
       "Pengecualian penting", "Batas", "Fakta budaya", "Nuansa sosial"
     ];
     
+    // Escape special regex characters and join keywords with OR operator
     const pattern = new RegExp(`(${keywords.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')}:)`, 'g');
     const parts = text.split(pattern);
 
@@ -79,8 +104,11 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
 
 
 
-  // Mengacak daftar flashcard
+  /**
+   * Shuffles the flashcard items array randomly and resets index.
+   */
   const handleShuffle = () => {
+    // Randomize array order
     const shuffled = [...flashcardItems].sort(() => Math.random() - 0.5);
     setFlashcardItems(shuffled);
     setCurrentIndex(0);
@@ -88,6 +116,9 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
     toast.success("Oke, materinya udah diacak!");
   };
 
+  /**
+   * Navigates to the next flashcard.
+   */
   const handleNextCard = () => {
     if (currentIndex < flashcardItems.length - 1) {
       setCurrentIndex(prev => prev + 1);
@@ -95,6 +126,9 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
     }
   };
 
+  /**
+   * Navigates to the previous flashcard.
+   */
   const handlePrevCard = () => {
     if (currentIndex > 0) {
       setCurrentIndex(prev => prev - 1);
@@ -102,6 +136,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
     }
   };
 
+  // Render fallback message if no items are provided
   if (!items || items.length === 0) {
     return (
       <div className="px-8 py-20 text-center text-muted-foreground font-medium italic bg-[rgba(var(--card-rgb),0.2)] rounded-[3rem] border border-border glass">

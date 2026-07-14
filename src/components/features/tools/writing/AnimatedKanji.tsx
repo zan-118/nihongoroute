@@ -12,9 +12,15 @@ import { useAnimatedKanji } from "../kanji/useAnimatedKanji";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Props for AnimatedKanji component.
+ */
 interface AnimatedKanjiProps {
+  /** Kanji character to animate. */
   character: string;
+  /** Key to trigger animation restart. */
   triggerKey: number;
+  /** Stroke color. Defaults to purple. */
   color?: string;
 }
 
@@ -22,7 +28,8 @@ interface AnimatedKanjiProps {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen animasi coretan kanji di dalam kanvas.
+ * Renders animated stroke-by-stroke kanji character.
+ * Uses SVG path drawing. Falls back to static text on error.
  */
 export default function AnimatedKanji({
   character,
@@ -35,6 +42,7 @@ export default function AnimatedKanji({
   // RENDER KOMPONEN
   // ==========================================
   if (error) {
+    // Fallback to static text if SVG loading fails
     return (
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
         <span className="text-[12rem] font-japanese font-black text-foreground/5 opacity-30">
@@ -46,11 +54,13 @@ export default function AnimatedKanji({
 
   return (
     <>
+      {/* Inject CSS keyframes for stroke animation */}
       <style>{`
         @keyframes drawKanji {
           to { stroke-dashoffset: 0; }
         }
       `}</style>
+      {/* Container where SVG element is injected by hook */}
       <div
         ref={containerRef}
         className="absolute inset-0 w-full h-full opacity-40 pointer-events-none"

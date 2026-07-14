@@ -11,6 +11,9 @@ import type { Metadata } from "next";
 // ======================
 // KONFIGURASI METADATA
 // ======================
+/**
+ * SEO metadata configuration for tools route group.
+ */
 export const metadata: Metadata = {
   title: "Pusat Peralatan Bahasa Jepang | NihongoRoute",
   description:
@@ -20,6 +23,15 @@ export const metadata: Metadata = {
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * Layout component for tools section.
+ * Passes children directly without extra wrapper markup.
+ * 
+ * @param props - Component properties.
+ * @param props.children - Child elements to render.
+ * @returns Rendered children.
+ */
 export default function ToolsLayout({ children }: { children: React.ReactNode }) {
+  // Pass children through directly. Layout acts as metadata provider.
   return children;
 }

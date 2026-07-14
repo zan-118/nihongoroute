@@ -13,6 +13,9 @@ import { createPageMetadata } from "@/lib/seo";
 // ======================
 // KONFIGURASI METADATA
 // ======================
+/**
+ * Page metadata. Disable search indexing.
+ */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Lupa Kata Sandi | NihongoRoute",
@@ -25,6 +28,10 @@ export const metadata: Metadata = {
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * Forgot password page. Render client form.
+ */
 export default function ForgotPasswordPage() {
+  // Render client component wrapper
   return <ForgotPasswordClient />;
 }

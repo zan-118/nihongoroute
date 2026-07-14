@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
+/** Category metadata. Map category to label, icon, style. */
 const CATEGORY_META = {
   continue: {
     label: "Lanjut",
@@ -40,20 +41,31 @@ const CATEGORY_META = {
   },
 } as const;
 
+/** Props for NextActionPanel. */
 interface NextActionPanelProps {
+  /** Show fewer items if true. */
   compact?: boolean;
+  /** Custom CSS classes. */
   className?: string;
+  /** Text for empty state. */
   emptyTitle?: string;
 }
 
+/**
+ * NextActionPanel component.
+ * Show personalized learning recommendations.
+ */
 export default function NextActionPanel({
   compact = false,
   className,
   emptyTitle = "Belum ada sinyal belajar",
 }: NextActionPanelProps) {
+  // Get user state from store.
   const events = useUIStore((state) => state.learningEvents);
   const readingProgressMap = useUIStore((state) => state.readingProgressMap);
   const readingVocabularyBank = useUIStore((state) => state.readingVocabularyBank);
+  
+  // Build recommendations list.
   const recommendations = buildEcosystemRecommendations({
     events,
     readingProgressMap,
@@ -90,6 +102,7 @@ export default function NextActionPanel({
       {recommendations.length > 0 ? (
         <div className="relative z-10 grid gap-3">
           {recommendations.map((item) => {
+            // Get category metadata for rendering.
             const meta = CATEGORY_META[item.category];
             const Icon = meta.icon;
             return (

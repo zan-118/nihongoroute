@@ -15,6 +15,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
+/**
+ * Interactive Japanese particle training interface.
+ * Handles quiz state, scoring, progress tracking, and feedback.
+ */
 export default function ParticleTrainerClient() {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [selectedParticle, setSelectedParticle] = useState<ParticleOption | null>(null);
@@ -22,6 +26,7 @@ export default function ParticleTrainerClient() {
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [answeredIds, setAnsweredIds] = useState<Set<string>>(() => new Set());
 
+  // Get current question data
   const question = getParticleQuestion(questionIndex);
   const isAnswered = selectedParticle !== null;
   const isCorrect = selectedParticle
@@ -29,11 +34,18 @@ export default function ParticleTrainerClient() {
     : false;
   const progressPercent = Math.round((answeredIds.size / PARTICLE_QUESTIONS.length) * 100);
 
+  // Generate options list. Mix correct options with random extras. Limit to 6.
   const optionList = useMemo(() => {
     const extras = PARTICLE_OPTIONS.filter((item) => !question.options.includes(item)).slice(0, 2);
     return Array.from(new Set([...question.options, ...extras])).slice(0, 6);
   }, [question.options]);
 
+  /**
+   * Handle user answer selection.
+   * Updates score and progress.
+   * 
+   * @param particle - Selected particle option
+   */
   const handleSelect = (particle: ParticleOption) => {
     if (isAnswered) return;
     const correct = isParticleAnswerCorrect(question.answer, particle);
@@ -45,12 +57,19 @@ export default function ParticleTrainerClient() {
     setAnsweredIds((prev) => new Set(prev).add(question.id));
   };
 
+  /**
+   * Advance to next question.
+   * Reset answer state.
+   */
   const handleNext = () => {
     setQuestionIndex((prev) => (prev + 1) % PARTICLE_QUESTIONS.length);
     setSelectedParticle(null);
     setShowHint(false);
   };
 
+  /**
+   * Reset all progress and score.
+   */
   const handleReset = () => {
     setQuestionIndex(0);
     setSelectedParticle(null);
@@ -90,6 +109,7 @@ export default function ParticleTrainerClient() {
                   {question.level} · Soal {questionIndex + 1}/{PARTICLE_QUESTIONS.length}
                 </Badge>
                 <p className="font-japanese text-3xl font-black leading-relaxed text-foreground md:text-5xl">
+                  {/* Split sentence by placeholder to insert selected particle or question mark */}
                   {question.sentence.split("___").map((part, index) => (
                     <span key={`${question.id}-${index}`}>
                       {part}

@@ -44,6 +44,10 @@ import {
 // ======================
 // TIPE DATA
 // ======================
+
+/**
+ * Route parameters for the dynamic lesson page.
+ */
 interface Props {
   params: Promise<{ categoryId: string; slug: string }>;
 }
@@ -53,15 +57,18 @@ interface Props {
 // ======================
 
 /**
- * Menarik data materi lengkap secara paralel dari Supabase dan Sanity CMS.
+ * Fetches lesson data and navigation list from Supabase and Sanity.
+ * Uses React cache to deduplicate requests during rendering.
  *
- * @param {string} categoryId Slug ID kategori kursus.
- * @param {string} slug Slug materi pelajaran.
+ * @param categoryId - Course category slug.
+ * @param slug - Lesson slug.
+ * @returns Lesson details and navigation array, or null if category not found.
  */
 const getLessonData = cache(async (categoryId: string, slug: string) => {
   const supabase = await createClient();
 
   // 1. Ambil Kategori & Pelajaran secara paralel
+  // Fetch category metadata and Sanity lesson content concurrently.
   const [categoryRes, lesson] = await Promise.all([
     supabase
       .from("course_categories")
@@ -81,6 +88,7 @@ const getLessonData = cache(async (categoryId: string, slug: string) => {
   }
 
   // 2. Dapatkan Navigasi (gabungkan Supabase & Sanity)
+  // Fetch sibling lessons from database to build navigation context.
   let dbLessons = [];
   if (category.type === "general" || category.type === "article") {
     const { data } = await supabase
@@ -98,6 +106,7 @@ const getLessonData = cache(async (categoryId: string, slug: string) => {
     dbLessons = data || [];
   }
 
+  // Map database fields to match expected Sanity lesson structure.
   const supabaseLessons = dbLessons.map((l) => ({
     _id: l.id,
     title: l.title,
@@ -107,6 +116,7 @@ const getLessonData = cache(async (categoryId: string, slug: string) => {
     summary: l.summary
   }));
 
+  // Sort navigation items by order number ascending.
   const nav = supabaseLessons.sort((a, b) => (a.order_number || 0) - (b.order_number || 0));
 
   return { lesson, nav };
@@ -117,7 +127,10 @@ const getLessonData = cache(async (categoryId: string, slug: string) => {
 // ======================
 
 /**
- * Menghasilkan metadata SEO dinamis untuk halaman detail materi pelajaran.
+ * Generates dynamic SEO metadata for the lesson page.
+ *
+ * @param props - Component properties containing route parameters.
+ * @returns Metadata object for Next.js.
  */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { categoryId, slug } = await params;
@@ -150,10 +163,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 // ======================
 
 /**
- * Halaman utama ruang kelas pelajaran untuk menyajikan Portable Text materi, dialog menyimak, bacaan, dan kuis uji pemahaman.
+ * Dynamic lesson page component.
+ * Renders content blocks, vocabulary, kanji, dialogues, readings, cheatsheets, and quizzes.
+ *
+ * @param props - Component properties containing route parameters.
  */
 export default async function LessonPage({ params }: Props) {
   const { categoryId, slug } = await params;
+  // Decode URL parameters to handle special characters.
   const decodedCategoryId = decodeURIComponent(categoryId);
   const decodedSlug = decodeURIComponent(slug);
 
@@ -164,10 +181,12 @@ export default async function LessonPage({ params }: Props) {
   if (!lesson) return notFound();
 
   const { prevLesson, nextLesson } = getLessonNavigation(nav, slug);
+  // Determine if lesson is a general article or structured course unit.
   const isSideQuest = lesson.categoryType === "general" || lesson.categoryType === "article";
   const formattedQuizzes = formatQuizzes(lesson.quizzes || lesson.questions || []);
   const lessonPath = `/courses/${encodeRouteSegment(decodedCategoryId)}/${encodeRouteSegment(decodedSlug)}`;
 
+  // Cast lists to unknown first to bypass strict type checking.
   const vocabList = (lesson.vocabList || lesson.vocab_list || []) as unknown[];
   const kanjiList = (lesson.kanjiList || lesson.kanji_list || []) as unknown[];
   const listeningList = (lesson.listeningList || lesson.listening_list || []) as unknown[];
@@ -230,6 +249,7 @@ export default async function LessonPage({ params }: Props) {
           {/* JUMP LINKS SHORTCUT MENU */}
           {(() => {
             const linkCls = "px-3.5 py-2 rounded-full text-[10px] font-black uppercase tracking-wider bg-muted/40 dark:bg-card/40 border border-border/60 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 hover:shadow-md hover:shadow-primary/5 transition-all duration-300 whitespace-nowrap shrink-0 flex items-center gap-1.5 group";
+            // Generate jump links dynamically based on content availability.
             const jumpLinks: { href: string; label: string; icon: React.ComponentType<{ size?: number; className?: string }>; show: boolean }[] = [
               { href: "#article-content", label: "Artikel", icon: FileText, show: !!(lesson.articles || lesson.content_blocks) },
               { href: "#vocabulary", label: "Kosakata", icon: Book, show: vocabList.length > 0 },
@@ -277,6 +297,7 @@ export default async function LessonPage({ params }: Props) {
 
             <PracticeSection lesson={lesson as import("@/components/features/lessons/PracticeSection").LessonPracticeData} />
 
+            {/* Render quiz engine if questions exist, otherwise show completion button. */}
             {formattedQuizzes.length > 0 ? (
               <section id="quiz">
                 <div className="flex items-center gap-4 mb-10">

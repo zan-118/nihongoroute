@@ -31,6 +31,11 @@ import {
 // ======================
 // KONFIGURASI STATIC GENERATION (ISR/SSG)
 // ======================
+
+/**
+ * Generate static params.
+ * Return empty array for on-demand ISR.
+ */
 export async function generateStaticParams() {
   return []; // Halaman detail di-generate secara statis on-demand (ISR) menggunakan ID ASCII (UUID)
 }
@@ -40,7 +45,8 @@ export async function generateStaticParams() {
 // ======================
 
 /**
- * Menghasilkan metadata SEO dinamis untuk halaman detail referensi cheatsheet.
+ * Generate page metadata.
+ * Fetch cheatsheet details for SEO.
  */
 export async function generateMetadata({
   params,
@@ -48,7 +54,9 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
+  // Decode URL parameter.
   const decodedId = decodeURIComponent(id);
+  // Fetch cheatsheet data.
   const sheet = await getCheatsheetByIdOrSlug(decodedId);
   return createPageMetadata({
     title: sheet ? `${sheet.title} | Cheatsheet NihongoRoute` : "Cheatsheet Referensi Cepat | NihongoRoute",
@@ -70,7 +78,8 @@ export async function generateMetadata({
 // ======================
 
 /**
- * Halaman utama untuk merender cheatsheet interaktif berdasarkan ID atau slug.
+ * Cheatsheet detail page component.
+ * Render interactive table and PDF export option.
  */
 export default async function CheatsheetDetailPage({
   params,
@@ -78,14 +87,18 @@ export default async function CheatsheetDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  // Decode URL parameter.
   const decodedId = decodeURIComponent(id);
   
+  // Fetch cheatsheet data.
   const sheet = await getCheatsheetByIdOrSlug(decodedId);
 
-
+  // Redirect to 404 if not found.
   if (!sheet) notFound();
+  // Build canonical path.
   const sheetPath = `/library/cheatsheet/${encodeRouteSegment(String(sheet.slug || decodedId))}`;
 
+  // Merge vocabulary and items.
   const allItems = [
     ...(sheet.linkedVocab || []),
     ...(sheet.items || [])

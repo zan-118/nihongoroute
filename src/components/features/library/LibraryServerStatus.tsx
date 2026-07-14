@@ -15,7 +15,10 @@ import { Card } from "@/components/ui/card";
 // KOMPONEN UTAMA: LibraryServerStatus
 // ==========================================
 /**
- * Komponen status kesiapan server luring tanpa dependensi animasi eksternal demi performa tinggi.
+ * LibraryServerStatus component.
+ * Render offline material readiness status. Use CSS animation for performance.
+ * 
+ * @returns React element representing server status card.
  */
 export function LibraryServerStatus() {
   return (
@@ -29,11 +32,13 @@ export function LibraryServerStatus() {
       
       {/* Batang Visualizer Indikator Kesiapan (Animasi Pulse) */}
       <div className="flex gap-2.5">
+         {/* Generate 6 visualizer bars */}
          {[...Array(6)].map((_, i) => (
             <div key={`bar-${i}`} className="flex-1 h-12 md:h-14 bg-[rgb(var(--primary-rgb)/0.08)] border border-border/30 rounded-full overflow-hidden flex items-end">
                <div 
                  className="w-full bg-primary/80 animate-pulse rounded-full" 
                  style={{ 
+                   // Calculate staggered height and animation delay for wave effect
                    height: `${30 + (i * 12) % 70}%`,
                    animationDelay: `${i * 0.12}s`,
                    animationDuration: '1.8s'

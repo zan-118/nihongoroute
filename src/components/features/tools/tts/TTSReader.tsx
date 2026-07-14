@@ -13,11 +13,19 @@ import { useTTSReader } from "../audio/useTTSReader";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Props for TTSReader component.
+ */
 interface Props {
+  /** Japanese text content to read. */
   text: string;
+  /** Render minimal icon-only button. */
   minimal?: boolean;
+  /** Voice speaker identifier. */
   speaker?: string;
+  /** Render small icon-only button. */
   small?: boolean;
+  /** Pre-existing audio source URL. */
   audioUrl?: string | null;
 }
 
@@ -25,7 +33,10 @@ interface Props {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen pembaca suara teks Jepang (TTS).
+ * TTSReader component. Triggers text-to-speech audio playback for Japanese text.
+ * 
+ * @param props - Component properties.
+ * @returns Button element or null if text invalid.
  */
 export default function TTSReader({ text, minimal = false, speaker, small = false, audioUrl }: Props) {
   // ==========================================
@@ -33,6 +44,7 @@ export default function TTSReader({ text, minimal = false, speaker, small = fals
   // ==========================================
   const { isPlaying, hasJapanese, speak } = useTTSReader(text, speaker, audioUrl);
 
+  // Hide component if text empty or lacks Japanese characters.
   if (!hasJapanese || !text) return null;
 
   // ==========================================
@@ -42,10 +54,12 @@ export default function TTSReader({ text, minimal = false, speaker, small = fals
     <Button
       variant="ghost"
       onClick={(e) => {
+        // Prevent parent click events triggering.
         e.preventDefault();
         e.stopPropagation();
         speak();
       }}
+      // Apply styles based on size and playing state.
       className={`flex items-center justify-center gap-3 border transition-all font-black uppercase tracking-[0.2em] h-auto italic ${
         small
           ? "w-8 h-8 rounded-lg"

@@ -15,6 +15,9 @@ import { createClient } from "@/lib/supabase/client";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Search item structure.
+ */
 interface SearchItem {
   id: string;
   title: string;
@@ -27,6 +30,9 @@ interface SearchItem {
 // ==========================================
 // DATA STATIS NAVIGASI PLATFORM
 // ==========================================
+/**
+ * Static navigation items.
+ */
 const SEARCH_ITEMS: SearchItem[] = [
   { id: "dash", title: "Dasbor", description: "Ringkasan progres dan statistikmu", href: "/dashboard", icon: Zap, category: "Platform" },
   { id: "materi", title: "Materi", description: "Jalur belajar JLPT dan Topik Umum", href: "/courses", icon: BookOpen, category: "Platform" },
@@ -41,14 +47,27 @@ const SEARCH_ITEMS: SearchItem[] = [
   { id: "quick-kana", title: "Belajar Kana", description: "Latihan dasar Hiragana & Katakana", href: "/tools/kana", icon: BookOpen, category: "Aksi Cepat" },
 ];
 
+/**
+ * Filtered quick action items.
+ */
 const QUICK_ACTIONS = SEARCH_ITEMS.filter((item) => item.category === "Aksi Cepat");
+
+/**
+ * Cache for database search results.
+ */
 const searchCache = new Map<string, SearchItem[]>();
 
 // ==========================================
 // FUNGSI PENCARIAN DATABASE (SUPABASE)
 // ==========================================
+/**
+ * Query Supabase for vocab, grammar, and kanji.
+ * @param query Search term.
+ * @returns Array of matching search items.
+ */
 async function searchSupabase(query: string): Promise<SearchItem[]> {
   const normalizedQuery = query.trim().toLowerCase();
+  // Return cached results if available
   const cached = searchCache.get(normalizedQuery);
   if (cached) return cached;
 
@@ -58,6 +77,7 @@ async function searchSupabase(query: string): Promise<SearchItem[]> {
   const searchTerm = `%${query}%`;
   const kanaTerm = `%${kanaQuery}%`;
 
+  // Query vocab, grammar, and kanji tables in parallel
   const [vocabRes, grammarRes, kanjiRes] = await Promise.all([
     supabase.from("vocab").select("id, word, meaning_id, slug")
       .or(`word.ilike.${searchTerm},meaning_id.ilike.${searchTerm},romaji.ilike.${searchTerm},word.ilike.${kanaTerm},furigana.ilike.${kanaTerm}`)
@@ -70,11 +90,13 @@ async function searchSupabase(query: string): Promise<SearchItem[]> {
       .limit(3),
   ]);
 
+  // Map database results to SearchItem format
   const mapped: SearchItem[] = [
     ...(vocabRes.data || []).map((v: { id: string; word?: string; meaning_id?: string; slug?: string }) => ({ id: v.id, title: v.word, description: v.meaning_id || "Kosakata", href: `/library/vocab/${v.slug || v.id}`, icon: FileText, category: "Kosakata" as const })),
     ...(grammarRes.data || []).map((g: { id: string; title?: string; meaning?: string; slug?: string }) => ({ id: g.id, title: g.title, description: g.meaning || "Tata Bahasa", href: `/library/grammar/${g.slug || g.id}`, icon: BookOpen, category: "Tata Bahasa" as const })),
     ...(kanjiRes.data || []).map((k: { id: string; character?: string; meaning?: string; slug?: string }) => ({ id: k.id, title: k.character, description: k.meaning || "Kanji", href: `/library/kanji/${k.slug || k.character || k.id}`, icon: Hash, category: "Kanji" as const })),
   ];
+  // Save results to cache
   searchCache.set(normalizedQuery, mapped);
   return mapped;
 }
@@ -83,7 +105,10 @@ async function searchSupabase(query: string): Promise<SearchItem[]> {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen modal pencarian global.
+ * Global search modal component.
+ * @param props Component properties.
+ * @param props.isOpen Modal visibility state.
+ * @param props.onClose Callback to close modal.
  */
 export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [query, setQuery] = useState("");
@@ -93,6 +118,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
   const router = useRouter();
   const requestIdRef = useRef(0);
 
+  // Handle debounced search query execution
   useEffect(() => {
     if (!isOpen) return;
     const trimmedQuery = query.trim();
@@ -105,11 +131,14 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
     const timer = setTimeout(async () => {
       setIsSearching(true);
       try {
+        // Search local static items
         const localMatches = SEARCH_ITEMS.filter(item =>
           item.title.toLowerCase().includes(trimmedQuery.toLowerCase()) ||
           item.description.toLowerCase().includes(trimmedQuery.toLowerCase())
         );
+        // Search remote database items
         const dbResults = await searchSupabase(trimmedQuery);
+        // Prevent state update if request is stale
         if (requestId !== requestIdRef.current) return;
         setResults([...localMatches, ...dbResults]);
       } catch (err) {
@@ -122,25 +151,32 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
     return () => clearTimeout(timer);
   }, [query, isOpen]);
 
+  // Handle item selection and navigation
   const handleSelect = useCallback((href: string) => {
     router.push(href);
     onClose();
   }, [router, onClose]);
 
   const trimmedQuery = query.trim();
+  // Determine which results to display based on query presence
   const displayedResults = useMemo(
     () => trimmedQuery === "" ? QUICK_ACTIONS : results,
     [results, trimmedQuery]
   );
   const showSearching = trimmedQuery !== "" && isSearching;
 
+  // Handle keyboard navigation and shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Toggle modal on Ctrl+K or Cmd+K
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); if (isOpen) onClose(); }
       if (!isOpen) return;
       if (e.key === "Escape") onClose();
+      // Navigate down list
       if (e.key === "ArrowDown" && displayedResults.length > 0) { e.preventDefault(); setActiveIndex(prev => (prev + 1) % displayedResults.length); }
+      // Navigate up list
       if (e.key === "ArrowUp" && displayedResults.length > 0) { e.preventDefault(); setActiveIndex(prev => (prev - 1 + displayedResults.length) % displayedResults.length); }
+      // Select active item
       if (e.key === "Enter") { e.preventDefault(); if (displayedResults[activeIndex]) handleSelect(displayedResults[activeIndex].href); }
     };
     window.addEventListener("keydown", handleKeyDown);

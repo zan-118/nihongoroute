@@ -19,14 +19,25 @@ import { useUIStore } from "@/store/useUIStore";
 // ==========================================
 // ANTARMUKA & TIPE DATA
 // ==========================================
+/**
+ * Props for VocabFilterPanel component.
+ */
 interface VocabFilterPanelProps {
+  /** Current search query. */
   search: string;
+  /** Update search query. */
   setSearch: (val: string) => void;
+  /** Selected JLPT level. */
   level: string;
+  /** Update JLPT level. */
   setLevel: (val: string) => void;
+  /** Selected part of speech. */
   hinshi: string;
+  /** Update part of speech. */
   setHinshi: (val: string) => void;
+  /** Romaji visibility state. */
   showRomaji: boolean;
+  /** Update romaji visibility. */
   setShowRomaji: (val: boolean) => void;
 }
 
@@ -34,10 +45,10 @@ interface VocabFilterPanelProps {
 // KOMPONEN UTAMA: VocabFilterPanel
 // ==========================================
 /**
- * Komponen panel filter interaktif untuk pengelolaan daftar kosakata.
+ * Filter panel component. Handles search, JLPT level, part of speech, romaji toggle, and layout preference.
  * 
- * @param {VocabFilterPanelProps} props Properti komponen panel filter kosakata.
- * @stores Mengakses `useUIStore` untuk mengelola preferensi visual baris tata letak.
+ * @param props Component properties.
+ * @returns Filter panel element.
  */
 export function VocabFilterPanel({
   search,
@@ -49,7 +60,9 @@ export function VocabFilterPanel({
   showRomaji,
   setShowRomaji,
 }: VocabFilterPanelProps) {
+  // Get layout preference from UI store. Fallback to grid.
   const layoutPreference = useUIStore((s) => s.settings.layoutPreference) ?? "grid";
+  // Get layout setter from UI store.
   const setLayoutPreference = useUIStore((s) => s.setLayoutPreference);
 
   return (
@@ -63,6 +76,7 @@ export function VocabFilterPanel({
             size={20}
             aria-hidden="true"
           />
+          {/* Search input field. Triggers search state update. */}
           <Input
             placeholder="Masukkan kanji, kana, romaji, atau definisi..."
             className="w-full pl-12 md:pl-16 pr-6 md:pr-8 py-6 md:py-8 h-auto bg-muted/30 border-border rounded-lg md:rounded-3xl text-sm md:text-base text-foreground placeholder:text-muted-foreground font-medium neo-inset shadow-none focus-visible:ring-primary/30 font-sans"
@@ -78,6 +92,7 @@ export function VocabFilterPanel({
             <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-muted-foreground block ml-1">
               Level JLPT
             </span>
+            {/* JLPT level filter buttons. Map levels to buttons. */}
             <div className="flex flex-wrap gap-2 md:gap-3">
               {LEVELS.map((l) => (
                 <Button
@@ -101,6 +116,7 @@ export function VocabFilterPanel({
             <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-muted-foreground block ml-1">
               Jenis Kata
             </span>
+            {/* Part of speech dropdown selector. */}
             <select
               value={hinshi}
               onChange={(e) => setHinshi(e.target.value)}
@@ -126,6 +142,7 @@ export function VocabFilterPanel({
                 Pemandu bacaan Latin
               </span>
             </div>
+            {/* Romaji toggle switch. */}
             <Switch checked={showRomaji} onCheckedChange={setShowRomaji} className="data-[state=checked]:bg-primary" />
           </div>
 
@@ -137,6 +154,7 @@ export function VocabFilterPanel({
                 Grid / Tabel Ringkas
               </span>
             </div>
+            {/* Layout preference toggle buttons. */}
             <div className="flex p-1 bg-background/60 rounded-xl border border-border">
               <Button
                 type="button"
@@ -171,4 +189,3 @@ export function VocabFilterPanel({
     </div>
   );
 }
-

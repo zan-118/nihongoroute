@@ -17,18 +17,35 @@ import { SurvivalGameState } from "./types";
 // ======================
 // ANTARMUKA & TIPE
 // ======================
+
+/**
+ * Props for SurvivalGameOver component.
+ */
 interface SurvivalGameOverProps {
+  /** Current state of survival game. */
   gameState: SurvivalGameState;
+  /** Final score achieved. */
   score: number;
+  /** Callback to restart game. */
   startGame: () => void;
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Render game over screen for survival mode.
+ * Show score, earned XP, victory/defeat status, and retry button.
+ */
 export function SurvivalGameOver({ gameState, score, startGame }: SurvivalGameOverProps) {
+  // Check if game state is victory.
   const isVictory = gameState === "victory";
+  
+  // Calculate XP. Victory grant bonus.
   const earnedXp = isVictory ? (score * 2 + 10) : (score * 2);
+  
+  // Determine theme colors based on outcome.
   const accentColor = isVictory ? "text-warning" : "text-destructive";
   const bgGlowColor = isVictory ? "bg-warning/10" : "bg-destructive/10";
   const borderColor = isVictory ? "border-warning/40" : "border-destructive/40";
@@ -45,6 +62,7 @@ export function SurvivalGameOver({ gameState, score, startGame }: SurvivalGameOv
         <div className={`absolute inset-0 ${bgGlowColor} pointer-events-none opacity-50`} />
 
         <Card className={`w-24 h-24 md:w-32 md:h-32 mx-auto rounded-2xl md:rounded-3xl flex items-center justify-center mb-8 md:mb-12 neo-inset shadow-none border border-border bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.4)] relative z-10`}>
+          {/* Render icon based on victory status. */}
           {isVictory ? (
             <Trophy
               size={48}
@@ -71,6 +89,7 @@ export function SurvivalGameOver({ gameState, score, startGame }: SurvivalGameOv
           <div className="flex flex-col">
              <span className="text-foreground text-7xl md:text-7xl lg:text-7xl font-black drop-shadow-sm leading-none">{score}</span>
              <span className="text-muted-foreground font-bold text-xs md:text-xs uppercase tracking-widest mt-3 md:mt-4">KATA BERHASIL DITEBAK</span>
+             {/* Render XP badge if points earned. */}
              {earnedXp > 0 && (
                <Badge className="bg-success/15 border border-success/30 text-success shadow-sm text-[10px] sm:text-xs font-black uppercase tracking-widest px-4 py-2 rounded-xl mt-6 w-fit mx-auto shrink-0">
                  + {earnedXp} Poin XP Didapatkan

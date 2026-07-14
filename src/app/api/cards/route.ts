@@ -13,12 +13,13 @@ import { createClient } from "@/lib/supabase/server";
 // ======================
 // KONSTANTA VALIDASI
 // ======================
-// UUID v4 validation regex
+/** Regex validate UUID v4 format. */
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 // ======================
 // TIPE DATA
 // ======================
+/** Structure for unified flashcard output. */
 interface FormattedCard {
   _id: string;
   id: string;
@@ -40,6 +41,11 @@ interface FormattedCard {
   } | null;
 }
 
+/**
+ * Handle GET request. Fetch vocab and kanji cards by ID, slug, romaji, or character.
+ * @param request NextRequest object.
+ * @returns NextResponse with formatted cards or error.
+ */
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const idsParam = searchParams.get("ids");
@@ -48,7 +54,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Parameter 'ids' wajib diisi." }, { status: 400 });
   }
 
-  // Pisahkan parameter identifikasi
+  // Split and clean IDs
   const rawIds = idsParam.split(",").map(id => id.trim()).filter(Boolean);
 
   if (rawIds.length === 0) {
@@ -60,6 +66,7 @@ export async function GET(request: NextRequest) {
   const romajis: string[] = [];
   const kanjiChars: string[] = [];
 
+  // Legacy Sanity ID prefixes
   const posPrefixes = [
     "pre-noun-adjectival-",
     "adverbial-noun-",
@@ -72,12 +79,13 @@ export async function GET(request: NextRequest) {
     "verb-"
   ];
 
+  // Categorize IDs to optimize queries
   for (const id of rawIds) {
     if (UUID_REGEX.test(id)) {
       uuids.push(id);
     } else if (id.startsWith("n5-") || id.startsWith("n4-")) {
-      // Ekstrak romaji secara cerdas dari ID legacy Sanity
-      const cleanId = id.slice(3); // Hapus n5- atau n4-
+      // Extract romaji from legacy Sanity ID
+      const cleanId = id.slice(3); // Remove prefix
       let romajiFound = cleanId;
       for (const prefix of posPrefixes) {
         if (cleanId.startsWith(prefix)) {
@@ -96,7 +104,7 @@ export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();
 
-    // 1. Eksekusi seluruh kueri secara paralel asinkron
+    // 1. Execute queries in parallel
     const [
       vocabByUuidRes,
       vocabBySlugRes,
@@ -121,14 +129,14 @@ export async function GET(request: NextRequest) {
         : Promise.resolve({ data: null, error: null }),
     ]);
 
-    // Tangani error kueri
+    // Handle query errors
     if (vocabByUuidRes.error) throw vocabByUuidRes.error;
     if (vocabBySlugRes.error) throw vocabBySlugRes.error;
     if (vocabByRomajiRes.error) throw vocabByRomajiRes.error;
     if (kanjiByUuidRes.error) throw kanjiByUuidRes.error;
     if (kanjiByCharRes.error) throw kanjiByCharRes.error;
 
-    // 2. Gabungkan & Eliminasi Duplikat kosakata (UUID & Slug)
+    // 2. Merge and deduplicate vocab
     const rawVocabs = [
       ...(vocabByUuidRes.data || []),
       ...(vocabBySlugRes.data || [])
@@ -136,7 +144,7 @@ export async function GET(request: NextRequest) {
     const uniqueVocabsMap = new Map<string, typeof rawVocabs[number]>();
     rawVocabs.forEach(v => uniqueVocabsMap.set(v.id, v));
 
-    // Gabungkan & Eliminasi Duplikat Kanji
+    // Merge and deduplicate kanji
     const rawKanjis = [
       ...(kanjiByUuidRes.data || []),
       ...(kanjiByCharRes.data || [])
@@ -144,7 +152,7 @@ export async function GET(request: NextRequest) {
     const uniqueKanjisMap = new Map<string, typeof rawKanjis[number]>();
     rawKanjis.forEach(k => uniqueKanjisMap.set(k.id, k));
 
-    // 3. Format kosakata menjadi struktur MasterCardData
+    // 3. Format vocab to MasterCardData structure
     const formattedVocabs: FormattedCard[] = Array.from(uniqueVocabsMap.values()).map((v) => ({
       _id: v.id,
       id: v.id,
@@ -165,7 +173,7 @@ export async function GET(request: NextRequest) {
       docType: "vocab",
     }));
 
-    // 4. Format kosakata dari kueri romaji ke struktur legacy ID
+    // 4. Format legacy romaji vocab
     const formattedRomajiVocabs: FormattedCard[] = [];
     if (vocabByRomajiRes.data) {
       vocabByRomajiRes.data.forEach((v) => {
@@ -185,7 +193,7 @@ export async function GET(request: NextRequest) {
         matchingLegacyIds.forEach((legacyId) => {
           formattedRomajiVocabs.push({
             _id: legacyId,
-            id: legacyId, // SANGAT PENTING: Gunakan ID legacy agar sesuai dengan Zustand store client!
+            id: legacyId, // Keep legacy ID for client Zustand store compatibility
             word: v.word,
             meaning: v.meaning,
             romaji: v.romaji,
@@ -206,7 +214,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // 5. Format Kanji menjadi struktur MasterCardData
+    // 5. Format Kanji to MasterCardData structure
     const formattedKanjis: FormattedCard[] = Array.from(uniqueKanjisMap.values()).map((k) => {
       let formattedMnemonic = "";
       if (Array.isArray(k.mnemonics)) {
@@ -239,7 +247,7 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    // 6. Gabungkan seluruh tipe kartu secara unik berdasarkan id
+    // 6. Merge all cards uniquely by ID
     const uniqueFinalCardsMap = new Map<string, FormattedCard>();
     formattedVocabs.forEach(c => uniqueFinalCardsMap.set(c.id, c));
     formattedRomajiVocabs.forEach(c => uniqueFinalCardsMap.set(c.id, c));
@@ -247,7 +255,7 @@ export async function GET(request: NextRequest) {
 
     const allCards = Array.from(uniqueFinalCardsMap.values());
 
-    // 7. Urutkan hasil agar presisi sesuai dengan urutan parameter `ids` yang diminta klien
+    // 7. Sort cards to match requested order
     const requestedOrderMap = new Map<string, number>();
     rawIds.forEach((id, index) => {
       requestedOrderMap.set(id.toLowerCase(), index);

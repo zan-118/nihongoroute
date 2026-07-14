@@ -22,17 +22,28 @@ import { Quest } from "./types";
 // ==========================================
 // ANTARMUKA & PROPS (INTERFACES)
 // ==========================================
+/**
+ * Props for QuestItem component.
+ */
 interface QuestItemProps {
+  /** Quest definition data containing target, reward, and icon. */
   quest: Quest;
+  /** Current progress value achieved by user. */
   current: number;
+  /** Flag indicating if reward has already been claimed. */
   isClaimed: boolean;
+  /** Flag triggering temporary claim success animation overlay. */
   justClaimed: boolean;
+  /** Callback triggered when user claims quest reward. */
   onClaim: (quest: Quest) => void;
 }
 
 // ==========================================
 // KOMPONEN UTAMA
 // ==========================================
+/**
+ * Renders individual quest card showing progress, status, and claim action.
+ */
 export function QuestItem({
   quest,
   current,
@@ -40,8 +51,11 @@ export function QuestItem({
   justClaimed,
   onClaim,
 }: QuestItemProps) {
+  // Cap progress percentage at 100 to prevent overflow
   const percent = Math.min((current / quest.target) * 100, 100);
+  // Determine if quest target is met
   const isCompleted = current >= quest.target;
+  // Resolve dynamic icon component from quest data
   const IconComponent = quest.icon;
 
   return (
@@ -131,4 +145,3 @@ export function QuestItem({
     </Card>
   );
 }
-

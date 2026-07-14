@@ -6,4 +6,7 @@
  * @project NihongoRoute
  */
 
+/**
+ * Quest type. Define structure for daily tasks.
+ */
 export type { Quest } from "@/lib/constants/gamification";

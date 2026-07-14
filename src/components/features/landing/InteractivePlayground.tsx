@@ -7,18 +7,24 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
+/**
+ * Structure for preset Japanese sentences.
+ */
 interface PresetItem {
   text: string;
   translation: string;
 }
 
+/**
+ * Default Japanese sentences for quick testing.
+ */
 const PRESETS: PresetItem[] = [
   {
     text: "日本語の勉強はとても面白いです。",
     translation: "Belajar bahasa Jepang sangat menarik.",
   },
   {
-    text: "毎朝七時に起きて、温かいお茶を飲みます。",
+    text: "毎朝七時に起きて、温かいお茶uを飲みます。",
     translation: "Setiap pagi bangun jam 7 dan minum teh hangat.",
   },
   {
@@ -27,6 +33,9 @@ const PRESETS: PresetItem[] = [
   },
 ];
 
+/**
+ * Interactive playground component. Converts Japanese text to Furigana or Hiragana.
+ */
 export function InteractivePlayground() {
   const [inputText, setInputText] = useState("");
   const [mode, setMode] = useState<"furigana" | "normal">("furigana");
@@ -34,14 +43,21 @@ export function InteractivePlayground() {
   const [outputHtml, setOutputHtml] = useState("");
   const [error, setError] = useState("");
 
+  /**
+   * Sends text to API for conversion.
+   * 
+   * @param textToConvert - Japanese text to parse.
+   * @param modeToUse - Target conversion mode.
+   */
   const handleConvert = async (textToConvert = inputText, modeToUse = mode) => {
     const trimmed = textToConvert.trim();
-    if (!trimmed) return;
+    if (!trimmed) return; // Skip empty input
 
     setIsLoading(true);
     setError("");
 
     try {
+      // Request conversion from API
       const res = await fetch("/api/furigana", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -51,6 +67,7 @@ export function InteractivePlayground() {
       if (!res.ok) throw new Error("Gagal proses teks");
       const data = await res.json();
       
+      // Update state with parsed HTML containing ruby tags
       setOutputHtml(data.hiragana);
     } catch (err) {
       console.error(err);
@@ -60,6 +77,11 @@ export function InteractivePlayground() {
     }
   };
 
+  /**
+   * Sets input text and triggers conversion.
+   * 
+   * @param text - Preset text to load.
+   */
   const handlePresetClick = (text: string) => {
     setInputText(text);
     handleConvert(text);
@@ -225,6 +247,7 @@ export function InteractivePlayground() {
                   animate={{ opacity: 1, y: 0 }}
                   className="w-full text-center"
                 >
+                  {/* Render parsed HTML containing ruby tags */}
                   <div
                     className="text-2xl sm:text-3xl font-bold font-japanese tracking-wide text-foreground leading-[2.2] [&_ruby]:font-japanese [&_rt]:text-[0.55em] [&_rt]:font-bold [&_rt]:text-primary [&_rt]:leading-none [&_rt]:select-none [&_rt]:tracking-normal"
                     dangerouslySetInnerHTML={{ __html: outputHtml }}

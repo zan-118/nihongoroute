@@ -7,7 +7,7 @@
 // DEKLARASI ANTARMUKA & TYPE
 // ==========================================
 /**
- * Deklarasi fallback untuk browser lama berbasis WebKit (Safari).
+ * Window extension. Support legacy WebKit audio.
  */
 interface CustomWindow extends Window {
   webkitAudioContext?: typeof AudioContext;
@@ -18,16 +18,19 @@ interface CustomWindow extends Window {
 // ==========================================
 
 /**
- * SoundEngine: Kelas pengelola audio context dan pembuatan nada oscillator.
+ * Audio synthesizer. Generate UI sound effects via Web Audio API.
  */
 class SoundEngine {
+  /**
+   * Web Audio context instance. Null if uninitialized.
+   */
   private ctx: AudioContext | null = null;
 
   /**
-   * Inisialisasi AudioContext secara malas (lazy loading).
-   * Penting untuk mematuhi kebijakan browser mengenai interaksi pengguna.
+   * Initialize audio context. Resume if suspended.
    */
   private init() {
+    // Check window exist. Avoid SSR crash.
     if (!this.ctx && typeof window !== "undefined") {
       const CustomWin = window as unknown as CustomWindow;
       const AudioCtx = window.AudioContext || CustomWin.webkitAudioContext;
@@ -37,19 +40,19 @@ class SoundEngine {
       }
     }
 
-    // Browser modern biasanya "menidurkan" audio context sampai user berinteraksi
+    // Resume context. Browser block autoplay.
     if (this.ctx && this.ctx.state === "suspended") {
       this.ctx.resume();
     }
   }
 
   /**
-   * Menghasilkan nada tunggal menggunakan Oscillator.
+   * Play single oscillator tone.
    * 
-   * @param {number} freq - Frekuensi nada (Hz).
-   * @param {OscillatorType} type - Bentuk gelombang (sine, square, triangle, sawtooth).
-   * @param {number} duration - Durasi suara (detik).
-   * @param {number} volume - Intensitas suara (0.0 ke 1.0).
+   * @param freq Tone frequency in Hz.
+   * @param type Waveform type.
+   * @param duration Play duration in seconds.
+   * @param volume Gain level (0.0 to 1.0).
    */
   private playTone(
     freq: number,
@@ -61,12 +64,15 @@ class SoundEngine {
     if (!this.ctx) return;
 
     try {
+      // Create nodes. Oscillator and gain.
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
 
+      // Set frequency. Start immediately.
       osc.type = type;
       osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
 
+      // Set volume. Fade out to prevent click pop.
       gain.gain.setValueAtTime(volume, this.ctx.currentTime);
       
       // Memberikan efek fade-out yang halus
@@ -75,9 +81,11 @@ class SoundEngine {
         this.ctx.currentTime + duration,
       );
 
+      // Connect nodes. Route to output.
       osc.connect(gain);
       gain.connect(this.ctx.destination);
 
+      // Schedule start and stop.
       osc.start();
       osc.stop(this.ctx.currentTime + duration);
     } catch (error) {
@@ -90,7 +98,7 @@ class SoundEngine {
   // ==========================================
 
   /**
-   * Memainkan nada tinggi berurutan untuk menandakan keberhasilan.
+   * Play success sound. Two rising tones.
    */
   playSuccess() {
     this.playTone(880, "sine", 0.3, 0.1);
@@ -98,14 +106,14 @@ class SoundEngine {
   }
 
   /**
-   * Memainkan nada rendah berat untuk menandakan kesalahan.
+   * Play error sound. Low frequency tone.
    */
   playError() {
     this.playTone(150, "triangle", 0.4, 0.2);
   }
 
   /**
-   * Memainkan suara klik/pop ringan untuk interaksi tombol.
+   * Play UI click sound. Short sine wave.
    */
   playPop() {
     this.playTone(400, "sine", 0.1, 0.05);
@@ -113,6 +121,6 @@ class SoundEngine {
 }
 
 /**
- * Instance tunggal SoundEngine yang hanya aktif di sisi klien.
+ * Global sound engine instance. Client-side only.
  */
 export const sounds = typeof window !== "undefined" ? new SoundEngine() : null;

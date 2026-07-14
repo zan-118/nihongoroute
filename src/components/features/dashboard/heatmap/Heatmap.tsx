@@ -22,14 +22,26 @@ import { useHeatmap, getBoxStyle } from "./useHeatmap";
 // ==========================================
 // ANTARMUKA & PROPS (INTERFACES)
 // ==========================================
+/**
+ * Props for Heatmap component.
+ */
 interface Props {
+  /** Map of ISO date strings to number of words studied. */
   studyDays: Record<string, number>;
 }
 
 // ==========================================
 // KOMPONEN UTAMA
 // ==========================================
+/**
+ * Heatmap component. Render 35-day study activity grid.
+ * Show color intensity based on words studied.
+ *
+ * @param props Component props.
+ * @returns React element.
+ */
 export default function Heatmap({ studyDays }: Props) {
+  // Get list of past 35 days.
   const { days } = useHeatmap();
 
   return (
@@ -61,10 +73,12 @@ export default function Heatmap({ studyDays }: Props) {
       {/* Grid Peta Kontribusi/Aktivitas */}
       <div className="flex flex-wrap gap-2 md:gap-3 lg:gap-4 relative z-10 justify-start">
         {days.map((day, index) => {
+          // Get study count for day. Default zero.
           const value = studyDays?.[day] ?? 0;
 
           return (
             <m.div
+              // Animate entry. Delay based on index.
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.01, duration: 0.4 }}
@@ -86,6 +100,7 @@ export default function Heatmap({ studyDays }: Props) {
           Sedikit
         </span>
         <div className="flex gap-1.5 md:gap-2">
+          {/* Color scale boxes */}
           <div className="w-4 h-4 md:w-5 md:h-5 rounded-[6px] bg-muted border border-border neo-inset opacity-30"></div>
           <div className="w-4 h-4 md:w-5 md:h-5 rounded-[6px] bg-primary/20 border border-primary/30 neo-card"></div>
           <div className="w-4 h-4 md:w-5 md:h-5 rounded-[6px] bg-primary/50 border border-primary/60 neo-card"></div>
@@ -98,4 +113,3 @@ export default function Heatmap({ studyDays }: Props) {
     </Card>
   );
 }
-

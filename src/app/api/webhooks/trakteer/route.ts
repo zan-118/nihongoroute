@@ -13,6 +13,9 @@ import { createAdminClient } from "@/lib/supabase/admin";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+/**
+ * Payload structure sent by Trakteer webhook.
+ */
 interface TrakteerPayload {
   tr_id?: string;
   transaction_id?: string;
@@ -28,8 +31,16 @@ interface TrakteerPayload {
 // ======================
 // HANDLER UTAMA (POST)
 // ======================
+/**
+ * Handles POST requests from Trakteer webhook.
+ * Validates token, parses donation details, determines tier, and saves to database.
+ * 
+ * @param request - Incoming HTTP request.
+ * @returns JSON response indicating success or failure.
+ */
 export async function POST(request: Request) {
   try {
+    // Parse incoming JSON payload
     const body = (await request.json()) as TrakteerPayload;
     
     // Field payload Trakteer:
@@ -37,6 +48,7 @@ export async function POST(request: Request) {
     const trId = body.transaction_id || body.tr_id;
     const supporterName = body.supporter_name || "Anonim";
     
+    // Calculate donation amounts
     const priceVal = Number(body.price || 0);
     const quantityVal = Number(body.quantity || 1);
     const netAmount = Number(body.net_amount || (priceVal * quantityVal) || 0);
@@ -48,9 +60,11 @@ export async function POST(request: Request) {
       request.headers.get("x-webhook-token") || 
       request.headers.get("x-trakteer-token") || 
       body.key;
+    // Normalize tokens by removing whitespace
     const cleanToken = (token || "").replace(/[\s\r\n]/g, "");
     const cleanExpected = (expectedKey || "").replace(/[\s\r\n]/g, "");
 
+    // Verify webhook authenticity
     if (cleanExpected && cleanToken !== cleanExpected) {
       return NextResponse.json({ error: "Invalid webhook secret key" }, { status: 401 });
     }
@@ -69,6 +83,7 @@ export async function POST(request: Request) {
       tier = "silver";
     }
 
+    // Initialize Supabase admin client
     const supabase = createAdminClient();
 
     // Simpan ke database Supabase
@@ -82,6 +97,7 @@ export async function POST(request: Request) {
         source: "trakteer"
       });
 
+    // Handle database insertion errors
     if (error) {
       console.error("Gagal menyimpan donatur Trakteer ke Supabase:", error);
       return NextResponse.json({ error: "Failed to save to database" }, { status: 500 });
@@ -89,6 +105,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, message: "Donator successfully processed and saved" });
   } catch (err) {
+    // Handle unexpected errors
     console.error("Fatal error di Trakteer webhook:", err);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }

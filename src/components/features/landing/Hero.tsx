@@ -7,9 +7,16 @@ import { ArrowRight, BookOpen, PlayCircle, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
+/**
+ * Hero component for the landing page.
+ * Displays branding, value proposition, call-to-action buttons, and animated decorative elements.
+ * 
+ * @returns React element representing the hero section.
+ */
 export function Hero() {
   return (
     <section className="relative min-h-[560px] md:min-h-[600px] lg:min-h-[640px] flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16 mb-12 md:mb-16 py-8 md:py-10">
+      {/* Decorative background glow effects */}
       <div className="pointer-events-none absolute -left-28 top-10 size-72 rounded-full bg-primary/20 blur-[110px] dark:bg-primary/15" />
       <div className="pointer-events-none absolute left-1/3 bottom-6 size-64 rounded-full bg-secondary/10 blur-[120px] dark:bg-secondary/12" />
 
@@ -25,6 +32,7 @@ export function Hero() {
           </Badge>
         </m.div>
 
+        {/* Mobile-only logo display */}
         <m.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -52,6 +60,7 @@ export function Hero() {
           hari.
         </p>
 
+        {/* Call-to-action buttons */}
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto mt-2">
           <Button
             asChild
@@ -78,6 +87,7 @@ export function Hero() {
         </div>
       </div>
 
+      {/* Desktop-only animated graphic container */}
       <m.div
         initial={{ opacity: 0, scale: 0.94, rotate: -4 }}
         animate={{ opacity: 1, scale: 1, rotate: 0 }}
@@ -85,10 +95,12 @@ export function Hero() {
         className="hidden lg:flex flex-1 justify-end relative pointer-events-none"
       >
         <div className="relative size-[490px]">
+          {/* Layered background shapes and borders */}
           <div className="absolute -inset-8 rounded-[52px] bg-[radial-gradient(circle_at_35%_30%,rgb(var(--brand-cyan-rgb)_/_0.22),transparent_35%),radial-gradient(circle_at_72%_70%,rgb(var(--brand-violet-rgb)_/_0.16),transparent_38%)] blur-3xl" />
           <div className="absolute inset-7 rounded-[40px] border border-border/70 bg-card/32 rotate-3 shadow-[0_30px_90px_rgb(var(--foreground-rgb)_/_0.08)] dark:shadow-[0_30px_90px_rgb(var(--foreground-rgb)_/_0.45)]" />
           <div className="absolute inset-13 rounded-[30px] border border-dashed border-primary/35 -rotate-6" />
 
+          {/* Central branding card */}
           <div className="premium-surface absolute top-1/2 left-1/2 size-[316px] -translate-x-1/2 -translate-y-1/2 rotate-6 rounded-[30px] overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_24%,rgb(var(--brand-cyan-rgb)_/_0.2),transparent_34%),linear-gradient(135deg,rgb(var(--brand-cyan-rgb)_/_0.1),transparent_45%,rgb(var(--brand-violet-rgb)_/_0.12))]" />
             <div className="absolute top-7 left-7 flex items-center gap-2">
@@ -123,6 +135,7 @@ export function Hero() {
             </div>
           </div>
 
+          {/* Floating animated badge: Sparkles */}
           <m.div
             animate={{ y: [0, -12, 0], x: [0, 4, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
@@ -131,6 +144,7 @@ export function Hero() {
             <Sparkles className="text-primary drop-shadow-[0_0_16px_rgb(var(--brand-cyan-rgb)_/_0.45)]" size={24} />
           </m.div>
 
+          {/* Floating animated badge: Cloud Sync */}
           <m.div
             animate={{ y: [0, 16, 0], x: [0, -6, 0] }}
             transition={{
@@ -149,6 +163,7 @@ export function Hero() {
             </div>
           </m.div>
 
+          {/* Static badge: JLPT Ready */}
           <div className="absolute bottom-20 right-0 p-4 premium-surface rounded-xl flex items-center gap-3">
             <BookOpen size={18} className="text-secondary" />
             <div className="flex flex-col">

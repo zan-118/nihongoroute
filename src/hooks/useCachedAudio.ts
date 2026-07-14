@@ -13,20 +13,28 @@
 
 import { useState, useEffect } from "react";
 
-// requestIdleCallback tidak ada di semua env TypeScript — deklarasi manual
+/** Safe reference to window.requestIdleCallback. */
 const idleCb: ((cb: () => void, opts?: { timeout: number }) => number) | undefined =
   typeof window !== "undefined" ? (window as Window & { requestIdleCallback?: typeof idleCb }).requestIdleCallback : undefined;
 
+/** Safe reference to window.cancelIdleCallback. */
 const cancelIdleCb: ((id: number) => void) | undefined =
   typeof window !== "undefined" ? (window as Window & { cancelIdleCallback?: typeof cancelIdleCb }).cancelIdleCallback : undefined;
 
-// ── Batasi ukuran cache FIFO ─────────────────────────────────
+/**
+ * Enforces FIFO limit on CacheStorage items.
+ * 
+ * @param cacheName - Target cache identifier.
+ * @param maxItems - Maximum allowed items.
+ */
 const limitCacheSize = async (cacheName: string, maxItems: number) => {
   try {
+    // Prevent execution during SSR or if Cache API is unsupported
     if (typeof window === "undefined" || !("caches" in window)) return;
     const cache = await caches.open(cacheName);
     if (typeof cache.keys !== "function") return;
     const keys = await cache.keys();
+    // Remove oldest entries if limit exceeded
     if (keys.length > maxItems) {
       for (let i = 0; i < keys.length - maxItems; i++) {
         await cache.delete(keys[i]);
@@ -35,11 +43,18 @@ const limitCacheSize = async (cacheName: string, maxItems: number) => {
   } catch { /* non-critical */ }
 };
 
-// ── Hook utama ───────────────────────────────────────────────
+/**
+ * Hook to load and cache audio files offline-first.
+ * Downloads remote audio, stores in CacheStorage, and returns Blob URL.
+ * 
+ * @param src - Remote audio source URL.
+ * @returns Cached local Blob URL or original remote URL fallback.
+ */
 export function useCachedAudio(src: string | undefined): string | undefined {
   const [prevSrc, setPrevSrc] = useState<string | undefined>(src);
   const [cachedUrl, setCachedUrl] = useState<string | undefined>(src);
 
+  // Reset state immediately if source URL changes
   if (src !== prevSrc) {
     setPrevSrc(src);
     setCachedUrl(src);
@@ -54,8 +69,12 @@ export function useCachedAudio(src: string | undefined): string | undefined {
     let localBlobUrl: string | null = null;
     const cacheName = "nihongoroute_audio_cache";
 
+    /**
+     * Resolves audio source from cache or fetches from remote.
+     */
     const loadAudio = async () => {
       try {
+        // Fallback to remote URL if Cache API is missing
         if (!("caches" in window)) {
           if (!cancelled) setCachedUrl(src);
           return;
@@ -64,6 +83,7 @@ export function useCachedAudio(src: string | undefined): string | undefined {
         const cache = await caches.open(cacheName);
         const cachedResponse = await cache.match(src);
 
+        // Return cached blob if hit
         if (cachedResponse) {
           const blob = await cachedResponse.blob();
           if (!cancelled) {
@@ -73,7 +93,7 @@ export function useCachedAudio(src: string | undefined): string | undefined {
           return;
         }
 
-        // Jika tidak ada di cache, fetch dari remote
+        // Fetch from remote on cache miss
         const res = await fetch(src);
         if (!res.ok) throw new Error("Gagal mengunduh berkas audio");
 
@@ -81,6 +101,7 @@ export function useCachedAudio(src: string | undefined): string | undefined {
         const blob = await res.blob();
 
         try {
+          // Save clone to cache and enforce size limit
           await cache.put(src, resClone);
           await limitCacheSize(cacheName, 50);
         } catch (err) {
@@ -100,6 +121,7 @@ export function useCachedAudio(src: string | undefined): string | undefined {
     };
     loadAudio();
 
+    // Clean up local object URL on unmount or source change
     return () => {
       cancelled = true;
       if (localBlobUrl) {

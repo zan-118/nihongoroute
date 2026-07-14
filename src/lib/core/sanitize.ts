@@ -6,7 +6,7 @@
 // ==========================================
 // KONFIGURASI DAFTAR PUTIH (WHITELIST)
 // ==========================================
-/** Tag HTML yang diizinkan untuk konten editorial CMS */
+/** Set of allowed HTML tags. Safe for rendering. */
 const ALLOWED_TAGS = new Set([
   'b', 'i', 'em', 'strong', 'u', 's', 'br', 'p', 'span',
   'ruby', 'rt', 'rp', 'sub', 'sup',
@@ -17,7 +17,7 @@ const ALLOWED_TAGS = new Set([
   'img', 'a',
 ]);
 
-/** Atribut yang diizinkan per tag */
+/** Allowed attributes per HTML tag. Key '*' applies to all tags. */
 const ALLOWED_ATTRS: Record<string, Set<string>> = {
   '*': new Set(['class', 'id', 'lang', 'dir', 'style']),
   'a': new Set(['href', 'target', 'rel', 'title']),
@@ -31,16 +31,16 @@ const ALLOWED_ATTRS: Record<string, Set<string>> = {
 // ==========================================
 
 /**
- * Sanitasi string HTML dengan menghapus tag dan atribut berbahaya.
- * Mencegah XSS dari konten CMS/database yang di-render via dangerouslySetInnerHTML.
+ * Sanitize HTML string. Remove unsafe tags and attributes. Prevent XSS.
  *
- * @param dirty - String HTML mentah dari sumber eksternal
- * @returns String HTML yang sudah disanitasi
+ * @param dirty - Raw HTML string.
+ * @returns Clean HTML string.
  */
 export function sanitizeHtml(dirty: string): string {
+  // Return empty if input null or empty.
   if (!dirty) return '';
 
-  // 1. Hapus tag <script>, <iframe>, <object>, <embed>, <form>, <input>, dll.
+  // Strip dangerous tags and inner content.
   let clean = dirty
     // Hapus tag berbahaya beserta kontennya
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
@@ -54,14 +54,14 @@ export function sanitizeHtml(dirty: string): string {
     .replace(/<select\b[^>]*>[\s\S]*?<\/select>/gi, '')
     .replace(/<button\b[^>]*>[\s\S]*?<\/button>/gi, '');
 
-  // 2. Hapus event handler (onclick, onerror, onload, dll.)
+  // Strip inline event handlers.
   clean = clean.replace(/\s+on\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]*)/gi, '');
 
-  // 3. Hapus javascript: dan data: URI di atribut href/src
+  // Strip javascript and data URIs.
   clean = clean.replace(/(href|src)\s*=\s*(?:"javascript:[^"]*"|'javascript:[^']*')/gi, '$1=""');
   clean = clean.replace(/(href|src)\s*=\s*(?:"data:[^"]*"|'data:[^']*')/gi, '$1=""');
 
-  // 4. Hapus tag yang tidak ada di whitelist (tapi pertahankan kontennya)
+  // Filter tags against whitelist. Keep content of disallowed tags.
   clean = clean.replace(/<\/?([a-zA-Z][a-zA-Z0-9]*)\b[^>]*>/g, (match, tag: string) => {
     const tagLower = tag.toLowerCase();
     if (ALLOWED_TAGS.has(tagLower)) {
@@ -76,30 +76,35 @@ export function sanitizeHtml(dirty: string): string {
 }
 
 /**
- * Sanitasi atribut pada tag yang diizinkan.
- * Menghapus atribut yang tidak ada di whitelist.
+ * Filter attributes on allowed tag. Keep whitelisted attributes only.
+ * 
+ * @param tagHtml - Full tag string.
+ * @param tagName - Name of tag.
+ * @returns Cleaned tag string.
  */
 function sanitizeTagAttributes(tagHtml: string, tagName: string): string {
-  // Closing tag — langsung kembalikan
+  // Closing tag has no attributes. Return early.
   if (tagHtml.startsWith('</')) return tagHtml;
 
+  // Merge global and tag-specific allowed attributes.
   const globalAllowed = ALLOWED_ATTRS['*'] ?? new Set<string>();
   const tagAllowed = ALLOWED_ATTRS[tagName] ?? new Set<string>();
   const combined = new Set([...globalAllowed, ...tagAllowed]);
 
-  // Ekstrak tag name dan atribut
+  // Check if tag self-closes.
   const selfClosing = tagHtml.endsWith('/>');
   const attrRegex = /\s+([a-zA-Z][a-zA-Z0-9-]*)\s*(?:=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]*)))?/g;
 
   const attrs: string[] = [];
   let attrMatch: RegExpExecArray | null;
 
+  // Parse attributes using regex loop.
   while ((attrMatch = attrRegex.exec(tagHtml)) !== null) {
     const attrName = attrMatch[1].toLowerCase();
     const attrValue = attrMatch[2] ?? attrMatch[3] ?? attrMatch[4] ?? '';
 
     if (combined.has(attrName)) {
-      // Untuk href, pastikan tidak javascript: atau data:
+      // Block javascript/data URIs hidden by whitespace.
       if (attrName === 'href' || attrName === 'src') {
         const cleanVal = attrValue.replace(/[\r\n\t\u0000-\u001F]/g, '').trim().toLowerCase();
         if (cleanVal.startsWith('javascript:') || cleanVal.startsWith('data:')) {
@@ -114,7 +119,12 @@ function sanitizeTagAttributes(tagHtml: string, tagName: string): string {
   return `<${tagName}${attrStr}${selfClosing ? ' /' : ''}>`;
 }
 
-/** Escape karakter khusus dalam nilai atribut HTML */
+/**
+ * Escape special characters in attribute values. Prevent HTML injection.
+ * 
+ * @param value - Raw attribute value.
+ * @returns Escaped value.
+ */
 function escapeAttrValue(value: string): string {
   return value
     .replace(/&/g, '&amp;')

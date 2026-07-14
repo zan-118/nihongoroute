@@ -1,6 +1,6 @@
 /**
  * @file AchievementToast.tsx
- * @description Komponen notifikasi toast premium untuk menampilkan lencana pencapaian pengguna.
+ * @description Premium toast notification component to display user achievement badges.
  */
 
 "use client";
@@ -17,39 +17,43 @@ import { sounds } from "@/lib/audio";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+
+/**
+ * Structure of achievement notification payload.
+ */
 interface AchievementNotification {
+  /** Unique identifier for notification */
   id: string;
+  /** Type classification of notification */
   type: string;
+  /** Title text of achievement */
   title: string;
+  /** Description text of achievement */
   message: string;
 }
 
 /**
  * AchievementToast Component
  * 
- * Komponen ini bertanggung jawab untuk menampilkan notifikasi pencapaian (lencana)
- * secara antrean (queue) dengan animasi premium, efek suara sukses, dan penutupan otomatis.
+ * Renders queue of unlocked achievement badges.
+ * Plays success sound and handles auto-dismissal.
  * 
- * @component
- * @returns {JSX.Element | null} Elemen toast pencapaian yang aktif atau null jika antrean kosong.
- * 
- * @effects
- * 1. Notification Watcher: Memantau Zustand `useUIStore.notifications` dan menyaring notifikasi
- *    tipe "achievement" yang berumur kurang dari 15 detik, menghindari pemutaran ulang lencana lawas saat remounting.
- * 2. Queue Consumer: Memindahkan item pertama dari antrean (`queue`) ke `activeToast` dan memotong antrean.
- * 3. Toast Timer & Audio Player: Memutar suara sukses dan memulai timer auto-dismiss 6.5 detik untuk
- *    menghapus `activeToast`. Efek ini terisolasi dari perubahan antrean untuk stabilitas timer.
- * 
- * @store
- * - `useUIStore`: Mengakses state `notifications` untuk memantau lencana yang baru dibuka.
+ * @returns Achievement toast element or null if queue empty.
  */
 // ======================
 // EKSEKUSI UTAMA
 // ======================
 export default function AchievementToast() {
+  // Get notifications from global UI store
   const notifications = useUIStore((state) => state.notifications);
+  
+  // Track processed notification IDs to prevent duplicate displays
   const shownIdsRef = useRef<Set<string>>(new Set());
+  
+  // Queue of pending achievements to display
   const [queue, setQueue] = useState<AchievementNotification[]>([]);
+  
+  // Currently active toast notification
   const [activeToast, setActiveToast] = useState<AchievementNotification | null>(null);
 
   // Efek 1: Notification Watcher - Menyaring notifikasi berumur < 15 detik dan memasukkannya ke queue
@@ -57,6 +61,7 @@ export default function AchievementToast() {
     if (!notifications || notifications.length === 0) return;
 
     const now = Date.now();
+    // Filter achievements under 15 seconds old that have not been shown yet
     const newAchievements = notifications.filter(
       (n) => n.type === "achievement" && !shownIdsRef.current.has(n.id) && now - n.timestamp < 15000
     ) as AchievementNotification[];
@@ -75,6 +80,7 @@ export default function AchievementToast() {
   useEffect(() => {
     if (!activeToast && queue.length > 0) {
       const nextToast = queue[0];
+      // Defer state update to next animation frame for smooth transition
       requestAnimationFrame(() => {
         setActiveToast(nextToast);
         setQueue((prev) => prev.slice(1));
@@ -115,6 +121,7 @@ export default function AchievementToast() {
   let badgeColor = "bg-primary/20 text-primary border-primary/30";
   let rarityLabel = "Bronze";
 
+  // Apply specific styles based on detected rarity
   if (isGold) {
     borderStyle = "border-warning/50 shadow-md bg-warning/5";
     glowColor = "rgba(var(--warning-rgb), 0.4)";

@@ -21,6 +21,9 @@ import {
 // ======================
 // METADATA SEO
 // ======================
+/**
+ * SEO metadata configuration for the Grammar Articles page.
+ */
 export const metadata = {
   ...createPageMetadata({
     title: "Tata Bahasa Jepang JLPT | NihongoRoute",
@@ -42,12 +45,13 @@ export const metadata = {
  * @returns {JSX.Element} Halaman daftar tata bahasa Jepang.
  */
 export default async function GrammarArticlesPage() {
-  // Pre-fetch artikel di sisi server
+  // Pre-fetch N5 grammar articles on the server to speed up initial load
   const grammarData = await getGrammarArticles("n5");
 
 
   return (
     <main className="w-full relative overflow-hidden flex flex-1 flex-col pb-24 px-4 md:px-8 lg:px-12 bg-transparent text-foreground transition-colors duration-300">
+      {/* Inject JSON-LD structured data for search engine optimization */}
       <JsonLd
         data={[
           breadcrumbJsonLd([
@@ -68,6 +72,7 @@ export default async function GrammarArticlesPage() {
       <div className="neural-grid" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgb(var(--primary-rgb)/0.05)_0%,transparent_70%)] pointer-events-none z-0" />
 
+      {/* Suspense boundary handles loading state during client-side transitions */}
       <Suspense fallback={
         <div className="h-40 flex flex-col items-center justify-center text-muted-foreground gap-2">
           <RotateCw className="text-primary animate-spin" size={24} />

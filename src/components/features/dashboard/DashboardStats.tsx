@@ -29,24 +29,45 @@ import { useUserStore } from "@/store/useUserStore";
 // ==========================================
 // ANTARMUKA & PROPS (INTERFACES)
 // ==========================================
+
+/**
+ * Props for DashboardStats component.
+ */
 interface DashboardStatsProps {
+  /** Loading state flag. */
   loading: boolean;
+  /** User progress data. */
   progress: {
+    /** Current XP. */
     xp: number;
+    /** Current level. */
     level: number;
+    /** Current daily streak. */
     streak: number;
+    /** Map of study dates to activity count. */
     studyDays: Record<string, number>;
   };
+  /** XP needed for next level. */
   xpNeeded: number;
+  /** Percentage progress to next level. */
   xpProgress: number;
+  /** Animation variants for grid items. */
   itemVariants: Variants;
+  /** Course structure metadata. */
   courseMetadata: Array<{
+    /** Course ID. */
     _id: string;
+    /** Course title. */
     title: string;
+    /** Course slug. */
     slug: string;
+    /** Lessons in course. */
     lessons: Array<{
+      /** Lesson ID. */
       _id: string;
+      /** Lesson title. */
       title: string;
+      /** Lesson slug. */
       slug: string;
     }>;
   }>;
@@ -55,6 +76,10 @@ interface DashboardStatsProps {
 // ==========================================
 // KOMPONEN UTAMA
 // ==========================================
+
+/**
+ * Dashboard stats grid. Shows level, XP, streak, course progress, quests, SRS stats, and heatmap.
+ */
 export default function DashboardStats({ 
   loading, 
   progress, 
@@ -63,6 +88,7 @@ export default function DashboardStats({
   itemVariants,
   courseMetadata 
 }: DashboardStatsProps) {
+  // Fetch completed lessons from store.
   const completedLessons = useUserStore(s => s.completedLessons);
 
   return (
@@ -157,9 +183,12 @@ export default function DashboardStats({
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {courseMetadata.map((cat) => {
+             // Fallback to empty array.
              const lessons = cat.lessons || [];
              const total = lessons.length;
+             // Count completed lessons.
              const completed = lessons.filter(l => completedLessons[l._id]?.completedAt).length;
+             // Calculate progress percentage.
              const percentage = total > 0 ? (completed / total) * 100 : 0;
              
              return (

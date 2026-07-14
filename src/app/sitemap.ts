@@ -10,6 +10,9 @@ import { createStaticClient } from "@/lib/supabase/server";
 import { sanityClient } from "@/lib/sanity.client";
 import { absoluteUrl, encodeRouteSegment, getSiteUrl } from "@/lib/seo";
 
+/**
+ * Sanity sitemap item structure.
+ */
 interface SanitySitemapItem {
   slug: string | null;
   _updatedAt?: string | null;
@@ -17,6 +20,9 @@ interface SanitySitemapItem {
   category_id?: string | null;
 }
 
+/**
+ * Supabase sitemap item structure.
+ */
 interface SupabaseSitemapItem {
   id?: string | null;
   slug?: string | null;
@@ -25,6 +31,9 @@ interface SupabaseSitemapItem {
   updated_at?: string | null;
 }
 
+/**
+ * Input parameters for sitemap entry.
+ */
 type SitemapEntryInput = {
   path: string;
   lastModified?: string | Date | null;
@@ -32,6 +41,9 @@ type SitemapEntryInput = {
   priority?: number;
 };
 
+/**
+ * Static routes list.
+ */
 const STATIC_ROUTES: SitemapEntryInput[] = [
   { path: "/", changeFrequency: "weekly", priority: 1 },
   { path: "/courses", changeFrequency: "weekly", priority: 0.9 },
@@ -60,12 +72,19 @@ const STATIC_ROUTES: SitemapEntryInput[] = [
   { path: "/terms", changeFrequency: "yearly", priority: 0.35 },
 ];
 
+/**
+ * Convert value to Date object. Fallback to current date if invalid.
+ */
 function toDate(value?: string | Date | null) {
   if (!value) return new Date();
   const date = value instanceof Date ? value : new Date(value);
+  // Check if date valid. Return current date if invalid.
   return Number.isNaN(date.getTime()) ? new Date() : date;
 }
 
+/**
+ * Create formatted sitemap entry.
+ */
 function createEntry({
   path,
   lastModified,
@@ -80,6 +99,9 @@ function createEntry({
   };
 }
 
+/**
+ * Fetch all rows from Supabase table using pagination.
+ */
 async function fetchAllSupabaseRows<T extends SupabaseSitemapItem>(
   table: string,
   select: string,
@@ -89,6 +111,7 @@ async function fetchAllSupabaseRows<T extends SupabaseSitemapItem>(
   const rows: T[] = [];
   const pageSize = 1000;
 
+  // Loop pages until all rows fetched.
   for (let from = 0; ; from += pageSize) {
     const { data, error } = await supabase
       .from(table)
@@ -110,26 +133,35 @@ async function fetchAllSupabaseRows<T extends SupabaseSitemapItem>(
   return rows;
 }
 
+/**
+ * Add entry to sitemap list if URL not already added.
+ */
 function addUniqueEntry(
   urls: MetadataRoute.Sitemap,
   seen: Set<string>,
   entry: SitemapEntryInput,
 ) {
   const fullUrl = `${getSiteUrl()}${entry.path.startsWith("/") ? entry.path : `/${entry.path}`}`;
+  // Prevent duplicate URLs in sitemap.
   if (seen.has(fullUrl)) return;
   seen.add(fullUrl);
   urls.push(createEntry(entry));
 }
 
+/**
+ * Generate dynamic sitemap. Fetch data from Supabase and Sanity.
+ */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const urls: MetadataRoute.Sitemap = [];
   const seen = new Set<string>();
   const supabase = createStaticClient();
 
+  // Add static routes first.
   for (const route of STATIC_ROUTES) {
     addUniqueEntry(urls, seen, route);
   }
 
+  // Fetch all dynamic content concurrently.
   const [
     categoriesResult,
     lessonsResult,
@@ -201,6 +233,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const categories = categoriesResult.data || [];
   const categoryMap = new Map<string, string>();
 
+  // Map categories to map for fast lookup.
   for (const category of categories) {
     if (!category.slug) continue;
     categoryMap.set(category.id, category.slug);
@@ -212,11 +245,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   }
 
+  // Combine lessons and articles for processing.
   const allLessons = [
     ...(lessonsResult || []),
     ...(articlesResult || [])
   ];
 
+  // Add lesson and article entries.
   for (const lesson of allLessons) {
     if (!lesson.slug || !lesson.category_id) continue;
     const categorySlug = categoryMap.get(lesson.category_id) || lesson.category_id;
@@ -228,6 +263,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   }
 
+  // Add reading entries.
   for (const reading of readingsResult || []) {
     if (!reading.slug) continue;
     addUniqueEntry(urls, seen, {
@@ -238,6 +274,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   }
 
+  // Add listening entries.
   for (const listening of listeningsResult || []) {
     if (!listening.slug) continue;
     addUniqueEntry(urls, seen, {
@@ -248,6 +285,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   }
 
+  // Add grammar entries.
   for (const item of grammarRows) {
     if (!item.slug) continue;
     addUniqueEntry(urls, seen, {
@@ -258,6 +296,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   }
 
+  // Add cheatsheet entries.
   for (const item of cheatsheetRows) {
     if (!item.slug) continue;
     addUniqueEntry(urls, seen, {

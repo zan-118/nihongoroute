@@ -24,18 +24,32 @@ import { useSRSStore } from "@/store/useSRSStore";
 // ==========================================
 // ANTARMUKA & PROPS (INTERFACES)
 // ==========================================
+
+/**
+ * Kanji item structure.
+ */
 interface KanjiItem {
   _id: string;
   kanji: string;
   meaning: string;
 }
 
+/**
+ * SRS status for a kanji.
+ */
 interface KanjiStatus {
   interval: number;
 }
 
+/**
+ * Cached promise for N5 kanji fetch. Prevents duplicate requests.
+ */
 let n5KanjiPromise: Promise<KanjiItem[]> | null = null;
 
+/**
+ * Fetch N5 kanji list from Supabase.
+ * Uses promise caching to avoid redundant network calls.
+ */
 function getN5Kanjis() {
   if (!n5KanjiPromise) {
     n5KanjiPromise = (async () => {
@@ -61,6 +75,10 @@ function getN5Kanjis() {
   return n5KanjiPromise;
 }
 
+/**
+ * Generate string signature of SRS states for dependency tracking.
+ * Prevents unnecessary re-renders from store updates.
+ */
 function getKanjiSrsSignature(
   srs: ReturnType<typeof useSRSStore.getState>["srs"],
   kanjiIdsSignature: string
@@ -69,6 +87,7 @@ function getKanjiSrsSignature(
 
   const signatures: string[] = [];
 
+  // Loop through IDs to build signature string
   for (const id of kanjiIdsSignature.split("|")) {
     const status = srs[id];
     if (!status || status.isDeleted) continue;
@@ -78,12 +97,16 @@ function getKanjiSrsSignature(
   return signatures.join("|");
 }
 
+/**
+ * Parse SRS signature string back into status map.
+ */
 function parseKanjiSrsSignature(signature: string) {
   const statuses = new Map<string, KanjiStatus>();
   if (!signature) return statuses;
 
   signature.split("|").forEach((entry) => {
     const separatorIndex = entry.lastIndexOf(":");
+    // Extract ID and interval value
     statuses.set(entry.slice(0, separatorIndex), {
       interval: Number(entry.slice(separatorIndex + 1)),
     });
@@ -95,6 +118,11 @@ function parseKanjiSrsSignature(signature: string) {
 // ==========================================
 // KOMPONEN UTAMA
 // ==========================================
+
+/**
+ * Grid component showing N5 Kanji learning progress.
+ * Maps database kanji items against local SRS intervals.
+ */
 export default function KanjiProgressGrid() {
   const { data: kanjis = [], isLoading } = useQuery({
     queryKey: ["dashboard", "n5-kanji-progress"],
@@ -102,23 +130,31 @@ export default function KanjiProgressGrid() {
     staleTime: 30 * 60 * 1000,
     gcTime: 60 * 60 * 1000,
   });
+  
+  // Create stable string key of all kanji IDs
   const kanjiIdsSignature = useMemo(
     () => kanjis.map((item) => item._id).join("|"),
     [kanjis]
   );
+  
+  // Get SRS signature for current kanjis
   const kanjiSrsSignature = useSRSStore((state) =>
     getKanjiSrsSignature(state.srs, kanjiIdsSignature)
   );
+  
+  // Parse signature to map for O(1) lookups
   const kanjiStatuses = useMemo(
     () => parseKanjiSrsSignature(kanjiSrsSignature),
     [kanjiSrsSignature]
   );
 
+  // Calculate mastery counts and item states
   const kanjiProgress = useMemo(() => {
     const counts = { masteredCount: 0, learningCount: 0 };
 
     const items = kanjis.map((item) => {
       const status = kanjiStatuses.get(item._id);
+      // Mastered if SRS interval exceeds 21 days
       const isMastered = (status?.interval || 0) > 21;
       const isLearning = !!status && !isMastered;
 

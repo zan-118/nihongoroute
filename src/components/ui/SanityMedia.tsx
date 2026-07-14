@@ -15,18 +15,33 @@ import { Play, FileIcon } from "lucide-react";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+/**
+ * Props for SanityMedia component.
+ */
 interface SanityMediaProps {
+  /** Source URL of media asset. */
   url: string;
+  /** Alternative text for images. */
   alt?: string;
+  /** Media type. Auto-detects if set to auto. */
   type?: "image" | "video" | "auto" | "raw";
+  /** Custom CSS classes. */
   className?: string;
+  /** Image width in pixels. */
   width?: number;
+  /** Image height in pixels. */
   height?: number;
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * Render media asset from Sanity CMS. Handle image, video, document.
+ * 
+ * @param props - Component properties.
+ * @returns Media element or null.
+ */
 export default function SanityMedia({
   url,
   alt = "NihongoRoute Asset",
@@ -35,10 +50,12 @@ export default function SanityMedia({
   width = 800,
   height = 450,
 }: SanityMediaProps) {
+  // Exit early if URL empty.
   if (!url) return null;
 
-  // Deteksi tipe file jika auto
+  // Check video type by prop or file extension.
   const isVideo = type === "video" || url.match(/\.(mp4|webm|ogg|mov)$/i);
+  // Check image type by prop or file extension.
   const isImage = type === "image" || url.match(/\.(jpg|jpeg|png|webp|gif|svg)$/i);
 
   if (isVideo) {
@@ -48,7 +65,7 @@ export default function SanityMedia({
           src={url}
           controls
           className="w-full aspect-video object-cover"
-          poster={`${url.replace(/\.[^/.]+$/, ".jpg")}`} // Mencoba menggunakan thumbnail
+          poster={`${url.replace(/\.[^/.]+$/, ".jpg")}`} // Guess thumbnail path by swap extension to jpg.
         >
           Browser Anda tidak mendukung tag video.
         </video>
@@ -87,6 +104,7 @@ export default function SanityMedia({
         <FileIcon className="size-6" />
       </div>
       <div className="flex-1">
+        {/* Get filename from URL end. */}
         <p className="text-sm font-bold text-foreground truncate">{url.split("/").pop()}</p>
         <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Unduh Lampiran</p>
       </div>

@@ -26,13 +26,26 @@ import { Pagination } from "@/components/ui/Pagination";
 // ======================
 // TIPE DATA
 // ======================
+
+/**
+ * Props for KanjiListClient component.
+ */
 interface KanjiListClientProps {
+  /** Initial kanji data fetched from server. */
   initialData: PaginatedKanjiResponse;
 }
 
+/** Number of kanji items displayed per page. */
 const ITEMS_PER_PAGE = 24;
+
+/** Default JLPT level filter. */
 const DEFAULT_KANJI_LEVEL = "N5";
 
+/**
+ * Normalize JLPT level string from URL parameter.
+ * @param value Raw level string from URL.
+ * @returns Normalized uppercase level string or default level.
+ */
 function normalizeLevelParam(value: string | null) {
   if (!value || value.toLowerCase() === "all") return DEFAULT_KANJI_LEVEL;
   if (/^n[1-5]$/i.test(value)) return value.toUpperCase();
@@ -47,27 +60,29 @@ function normalizeLevelParam(value: string | null) {
  * Komponen KanjiListClient: Menyediakan antarmuka interaktif untuk menyaring, mencari,
  * dan mempaginasi pustaka kanji dengan React Query dan state parameter URL.
  * 
- * @param {KanjiListClientProps} props Properti komponen.
- * @returns {JSX.Element} Antarmuka direktori kanji interaktif.
+ * @param props Properti komponen.
+ * @returns Antarmuka direktori kanji interaktif.
  */
 export default function KanjiListClient({ initialData }: KanjiListClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
 
-  // Membaca nilai filter awal dari URL jika ada (kompatibel dengan bookmark)
+  // Read initial state from URL search params to support bookmarking.
   const initialLevel = normalizeLevelParam(searchParams.get("level"));
   const initialSearch = searchParams.get("search") || "";
   const initialPage = Number(searchParams.get("page") || "1");
 
+  // Local states for search, filter, and pagination.
   const [search, setSearch] = useState(initialSearch);
   const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
   const [levelFilter, setLevelFilter] = useState<string | null>(initialLevel);
   const [currentPage, setCurrentPage] = useState(initialPage);
 
+  // Ref to track first mount and prevent redundant page resets.
   const isFirstMount = useRef(true);
 
-  // Menyinkronkan status filter dengan parameter pencarian URL secara reaktif
+  // Sync local state changes back to URL search params.
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
 
@@ -92,24 +107,25 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
     const currentParamsString = searchParams.toString();
     const newParamsString = params.toString();
 
+    // Only update router if params actually changed.
     if (currentParamsString !== newParamsString) {
       router.replace(`${pathname}?${newParamsString}`, { scroll: false });
     }
   }, [debouncedSearch, levelFilter, currentPage, pathname, router, searchParams]);
 
-  // Melakukan debounce pada input pencarian
+  // Debounce search input to avoid excessive API requests.
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(search);
       if (search !== initialSearch) {
-        setCurrentPage(1); // Reset halaman jika kata kunci berubah
+        setCurrentPage(1); // Reset page on search term change.
       }
     }, 500);
     return () => clearTimeout(handler);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
-  // Mereset halaman ke 1 saat filter level berubah
+  // Reset page to 1 when level filter changes.
   useEffect(() => {
     if (isFirstMount.current) {
       isFirstMount.current = false;
@@ -118,6 +134,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
     setCurrentPage(1);
   }, [levelFilter]);
 
+  // Fetch paginated kanji data using React Query.
   const { data, isFetching } = useQuery({
     queryKey: ["kanji", currentPage, debouncedSearch, levelFilter],
     queryFn: () => getPaginatedKanji(currentPage, ITEMS_PER_PAGE, debouncedSearch, levelFilter || ""),
@@ -128,11 +145,16 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
   const kanjis = data?.data || [];
   const totalPages = data?.total ? Math.ceil(data.total / ITEMS_PER_PAGE) : 0;
 
+  /**
+   * Handle page change and scroll window to top.
+   * @param page Target page number.
+   */
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Get user layout preference (grid or list) from UI store.
   const layoutPreference = useUIStore((s) => s.settings.layoutPreference) ?? "grid";
 
   return (
@@ -151,6 +173,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
         />
       ) : (
         <div className="relative">
+          {/* Loading overlay during data fetch */}
           {isFetching && (
             <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50  rounded-[2rem]">
               <Loader2 className="size-10 animate-spin text-primary" />
@@ -166,6 +189,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
               <div className="col-span-2 text-right">Aksi</div>
             </div>
 
+            {/* Kanji List Rows */}
             {kanjis.map((kanji) => (
               <div
                 key={kanji.id}
@@ -181,7 +205,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
                   </div>
                 </div>
 
-                {/* Sisi Kanan: Level JLPT & Tombol Tindakan */}
+                {/* Sisi Ranan: Level JLPT & Tombol Tindakan */}
                 <div className="flex items-center gap-2.5 shrink-0 md:col-span-4 md:justify-end">
                   {kanji.jlptLevel && (
                     <span className="text-[9px] md:text-[10px] font-black bg-[rgb(var(--primary-rgb)/0.1)] text-primary px-2 py-0.5 rounded-full border border-[rgb(var(--primary-rgb)/0.2)] uppercase shrink-0">
@@ -200,6 +224,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
               </div>
             ))}
 
+            {/* Empty State */}
             {kanjis.length === 0 && !isFetching && (
               <div className="flex flex-col items-center justify-center py-24 text-center">
                 <div className="size-20 rounded-full bg-muted/20 flex items-center justify-center mb-6">

@@ -18,6 +18,9 @@ import { LibraryItem } from "@/types/library";
 // RE-EXPORTS
 // ======================
 
+/**
+ * Re-export library types and actions for unified access.
+ */
 export * from "@/types/library";
 export * from "./kanji.actions";
 export * from "./vocab.actions";
@@ -30,15 +33,22 @@ export * from "./jlpt-exams.actions";
 export * from "./cheatsheets.actions";
 
 /**
- * Berkas router helper untuk backward compatibility / penyamaan antarmuka detail library.
+ * Fetch library item detail by type and identifier.
+ * Router helper for backward compatibility.
+ * 
+ * @param type Item category.
+ * @param slugOrId Unique slug or ID.
+ * @returns Item data or null if not found.
  */
 export async function getLibraryItemBySlug(
   type: "kanji" | "vocab" | "verb" | "adjective" | "grammar" | "reading" | "listening" | "lessons" | "exams" | "phrase",
   slugOrId: string
 ): Promise<LibraryItem | null> {
+  // Route type to specific fetcher action
   switch (type) {
     case "kanji":
       return getLibraryKanjiDetail(slugOrId);
+    // Vocab, verbs, adjectives, phrases share vocab fetcher
     case "vocab":
     case "verb":
     case "adjective":
@@ -55,6 +65,7 @@ export async function getLibraryItemBySlug(
     case "exams":
       return getLibraryExamDetail(slugOrId);
     default:
+      // Return null if type not matched
       return null;
   }
 }

@@ -19,22 +19,33 @@ import { ThemeToggle } from "@/components/layout/ThemeToggle";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+/**
+ * Properties for UserStatusSection component.
+ */
 interface UserStatusSectionProps {
+  /** Flag indicating if component has mounted on client. */
   hasMounted: boolean;
+  /** User authentication status. */
   isAuthenticated: boolean;
+  /** Full name of authenticated user. */
   userFullName: string | null;
+  /** Callback function to trigger logout. */
   handleLogout: () => void;
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * Renders user profile card, theme toggle, and auth actions in sidebar footer.
+ */
 export function UserStatusSection({
   hasMounted,
   isAuthenticated,
   userFullName,
   handleLogout,
 }: UserStatusSectionProps) {
+  // Prevent hydration mismatch by rendering skeleton until mounted
   if (!hasMounted) {
     return (
       <div className="space-y-4">
@@ -47,12 +58,14 @@ export function UserStatusSection({
     );
   }
 
+  // Render user profile and logout button when authenticated
   if (isAuthenticated) {
     return (
       <div className="space-y-4">
         <div className="interactive-card flex items-center gap-3 p-3 rounded-lg group">
           {/* Batas Avatar Gradien Teranimasi */}
           <div className="relative size-12 shrink-0">
+            {/* Continuous rotation animation for avatar border */}
             <m.div 
               animate={{ rotate: 360 }}
               transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
@@ -60,6 +73,7 @@ export function UserStatusSection({
             />
             <div className="absolute inset-[2px] rounded-xl bg-background flex items-center justify-center text-primary-foreground text-sm font-black shadow-lg overflow-hidden z-10">
               <div className="w-full h-full bg-primary flex items-center justify-center">
+                {/* Fallback to 'U' if name is missing */}
                 {userFullName ? userFullName.charAt(0).toUpperCase() : "U"}
               </div>
             </div>
@@ -98,6 +112,7 @@ export function UserStatusSection({
     );
   }
 
+  // Render theme toggle and login redirect when unauthenticated
   return (
      <div className="space-y-4">
         <ThemeToggle />

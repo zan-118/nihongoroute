@@ -22,6 +22,9 @@ import { toast } from "sonner";
 // ======================
 // TIPE DATA
 // ======================
+/**
+ * Shared certificate data structure.
+ */
 interface SharedData {
   guestId: string;
   examTitle: string;
@@ -32,8 +35,12 @@ interface SharedData {
   date: string;
 }
 
+/**
+ * Component decodes URL data. Renders certificate or fallback.
+ */
 function ShareContent() {
   const searchParams = useSearchParams();
+  // Get base64 data from URL query
   const rawData = searchParams.get("data");
 
   let data: SharedData | null = null;
@@ -42,6 +49,7 @@ function ShareContent() {
 
   if (rawData) {
     try {
+      // Decode base64, parse JSON to object
       data = JSON.parse(decodeURIComponent(atob(rawData))) as SharedData;
     } catch (e) {
       console.error("Gagal memproses data share", e);
@@ -49,6 +57,7 @@ function ShareContent() {
     }
   }
 
+  // Handle access without data payload
   if (isDirectAccess) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 text-center bg-transparent relative overflow-hidden">
@@ -65,6 +74,7 @@ function ShareContent() {
             <Button 
               onClick={() => {
                 if (typeof window !== "undefined") {
+                  // Copy base URL to clipboard
                   navigator.clipboard.writeText(window.location.origin);
                   toast.success("Tautan NihongoRoute berhasil disalin!");
                 }
@@ -84,6 +94,7 @@ function ShareContent() {
     );
   }
 
+  // Handle invalid or corrupted payload
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 text-center bg-transparent relative overflow-hidden">
@@ -108,13 +119,14 @@ function ShareContent() {
 
   if (!data) return null;
 
+  // Format date to Indonesian locale
   const formattedDate = data.date 
     ? new Date(data.date).toLocaleDateString("id-ID", { year: "numeric", month: "long", day: "numeric" })
     : "-";
 
   return (
     <div className="min-h-screen bg-transparent flex items-center justify-center p-4 md:p-12 relative overflow-hidden">
-      {/* Dynamic Background Glow */}
+      {/* Dynamic Background Glow based on pass status */}
       <div 
         className={`absolute top-0 left-1/2 -translate-x-1/2 w-[600px] sm:w-[900px] h-[600px] sm:h-[900px] blur-[150px] rounded-full pointer-events-none opacity-20 transition-all duration-700 ${
           data.passed 
@@ -208,6 +220,7 @@ function ShareContent() {
               <Button 
                 onClick={() => {
                   if (typeof window !== "undefined") {
+                    // Copy current URL to clipboard
                     navigator.clipboard.writeText(window.location.href);
                     toast.success("Link sertifikat udah disalin!");
                   }
@@ -234,6 +247,9 @@ function ShareContent() {
   );
 }
 
+/**
+ * Main client component. Wraps content in Suspense.
+ */
 export default function ShareClient() {
   return (
     <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-xs font-black uppercase tracking-widest text-muted-foreground animate-pulse bg-transparent">Memuat Sertifikat…</div>}>

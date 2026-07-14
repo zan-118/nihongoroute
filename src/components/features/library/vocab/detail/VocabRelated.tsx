@@ -17,6 +17,10 @@ import { Badge } from "@/components/ui/badge";
 // ==========================================
 // ANTARMUKA & TIPE DATA
 // ==========================================
+
+/**
+ * Kanji reference data structure.
+ */
 interface KanjiRef {
   id?: string;
   _id?: string;
@@ -27,6 +31,9 @@ interface KanjiRef {
   slug: string;
 }
 
+/**
+ * Vocabulary reference data structure.
+ */
 interface VocabRef {
   id?: string;
   _id?: string;
@@ -36,6 +43,9 @@ interface VocabRef {
   slug?: string;
 }
 
+/**
+ * Props for VocabRelated component.
+ */
 interface VocabRelatedProps {
   relatedKanji?: KanjiRef[];
   synonyms?: VocabRef[];
@@ -46,11 +56,13 @@ interface VocabRelatedProps {
 // KOMPONEN UTAMA: VocabRelated
 // ==========================================
 /**
- * Komponen panel visualisasi referensi leksikal terkait.
+ * Component displays related kanji, synonyms, and antonyms.
  * 
- * @param {VocabRelatedProps} props Properti komponen relasi leksikal.
+ * @param props - Component properties.
+ * @returns Rendered component.
  */
 export function VocabRelated({ relatedKanji, synonyms, antonyms }: VocabRelatedProps) {
+  // Check if any related data exists to render.
   const hasContent = (relatedKanji?.length || 0) > 0 || (synonyms?.length || 0) > 0 || (antonyms?.length || 0) > 0;
 
   return (
@@ -65,6 +77,7 @@ export function VocabRelated({ relatedKanji, synonyms, antonyms }: VocabRelatedP
           </div>
           <div className="flex flex-wrap gap-3">
             {relatedKanji.map((kanji) => {
+              // Render kanji card.
               const kanjiEl = (
                 <div className="p-2 pr-4 bg-[rgb(var(--muted-rgb)/0.3)] border border-border rounded-xl flex items-center gap-3 transition-all group/kanji hover:border-primary/40">
                   <div className="size-10 rounded-lg bg-background border border-border flex items-center justify-center text-xl font-japanese group-hover/kanji:text-primary transition-colors">
@@ -79,6 +92,7 @@ export function VocabRelated({ relatedKanji, synonyms, antonyms }: VocabRelatedP
                 </div>
               );
 
+              // Link to kanji detail page if slug exists.
               if (kanji.slug) {
                 return (
                   <Link key={kanji.id || kanji._id || kanji.character} href={`/library/kanji/${kanji.slug}`}>
@@ -99,6 +113,7 @@ export function VocabRelated({ relatedKanji, synonyms, antonyms }: VocabRelatedP
           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground block">Sinonim</span>
           <div className="flex flex-wrap gap-2">
             {synonyms.map((s) => {
+              // Check if vocab has valid link target.
               const hasLink = !!(s.slug || s.id || s._id);
               const badgeEl = (
                 <Badge 
@@ -112,6 +127,7 @@ export function VocabRelated({ relatedKanji, synonyms, antonyms }: VocabRelatedP
                 </Badge>
               );
 
+              // Link to vocab detail page if target exists.
               if (hasLink) {
                 return (
                   <Link key={s.id || s._id || s.word} href={`/library/vocab/${s.slug}`}>
@@ -132,6 +148,7 @@ export function VocabRelated({ relatedKanji, synonyms, antonyms }: VocabRelatedP
           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground block">Antonim</span>
           <div className="flex flex-wrap gap-2">
             {antonyms.map((a) => {
+              // Check if vocab has valid link target.
               const hasLink = !!(a.slug || a.id || a._id);
               const badgeEl = (
                 <Badge 
@@ -145,6 +162,7 @@ export function VocabRelated({ relatedKanji, synonyms, antonyms }: VocabRelatedP
                 </Badge>
               );
 
+              // Link to vocab detail page if target exists.
               if (hasLink) {
                 return (
                   <Link key={a.id || a._id || a.word} href={`/library/vocab/${a.slug}`}>
@@ -165,4 +183,3 @@ export function VocabRelated({ relatedKanji, synonyms, antonyms }: VocabRelatedP
     </Card>
   );
 }
-

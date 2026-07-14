@@ -13,6 +13,9 @@ import { ChevronLeft, ChevronRight, MessageSquare, RotateCcw, Play } from "lucid
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
+/**
+ * Dialogue line structure.
+ */
 interface DialogueLine {
   speaker?: string;
   text: string | unknown[];
@@ -20,6 +23,9 @@ interface DialogueLine {
   startTime?: number;
 }
 
+/**
+ * Props for StickerScene component.
+ */
 interface StickerSceneProps {
   dialogue: DialogueLine[];
   activeIndex?: number;
@@ -29,13 +35,21 @@ interface StickerSceneProps {
   borderless?: boolean;
 }
 
+/**
+ * Portable text node structure.
+ */
 interface PortableTextNode {
   text?: string;
   children?: { text?: string }[];
 }
 
+/**
+ * Extract text from string or portable text array.
+ */
 function extractLineText(text: string | unknown[]): string {
+  // Return string directly
   if (typeof text === "string") return text;
+  // Parse portable text array
   if (Array.isArray(text)) {
     return (text as unknown as PortableTextNode[])
       .map((block) =>
@@ -46,16 +60,21 @@ function extractLineText(text: string | unknown[]): string {
   return String(text || "");
 }
 
-// Peta visual asset stiker karakter ke berkas di folder public/characters/
+/**
+ * Map character keys to asset paths and colors.
+ */
 const characterAssets: Record<string, { src: string; color: string; rgb: string }> = {
   ayu: { src: "/characters/ayu.png", color: "border-secondary/50", rgb: "220, 20, 60" },
   ken: { src: "/characters/ken.png", color: "border-primary/50", rgb: "0, 255, 255" },
   takahashi: { src: "/characters/ken.png", color: "border-primary/50", rgb: "0, 255, 255" },
   dito: { src: "/characters/ken.png", color: "border-primary/50", rgb: "0, 255, 255" },
-  lara: { src: "/characters/ayu.png", color: "border-secondary/50", rgb: "220, 20, 60" },
+  lala: { src: "/characters/ayu.png", color: "border-secondary/50", rgb: "220, 20, 60" },
   zundamon: { src: "/characters/zundamon.png", color: "border-success/50", rgb: "0, 200, 100" },
 };
 
+/**
+ * Interactive visual novel dialogue scene.
+ */
 export function StickerScene({
   dialogue,
   activeIndex,
@@ -64,8 +83,10 @@ export function StickerScene({
   title = "Sesi Dialog Interaktif",
   borderless = false,
 }: StickerSceneProps) {
+  // Track active index internally if not synced
   const [internalIndex, setInternalIndex] = useState(0);
 
+  // Check if index synced with external audio player
   const isSynced = typeof activeIndex === "number" && activeIndex >= 0;
   const currentIndex = isSynced ? activeIndex : internalIndex;
 
@@ -73,11 +94,12 @@ export function StickerScene({
 
   if (!dialogue || dialogue.length === 0) return null;
 
+  // Get current active line
   const currentLine = dialogue[currentIndex] || dialogue[0];
   const rawSpeaker = currentLine.speaker || "Narator";
   const activeSpeakerKey = rawSpeaker.toLowerCase().trim();
 
-  // Dapatkan maksimal 3 pembicara unik dari seluruh percakapan
+  // Get maximum 3 unique speakers for stage display
   const uniqueSpeakers = Array.from(
     new Set(
       dialogue
@@ -86,6 +108,7 @@ export function StickerScene({
     )
   ).slice(0, 3);
 
+  // Handle next line navigation
   const handleNext = () => {
     const nextIndex = Math.min(dialogue.length - 1, currentIndex + 1);
     if (isSynced && seekToLine) {
@@ -98,6 +121,7 @@ export function StickerScene({
     }
   };
 
+  // Handle previous line navigation
   const handlePrev = () => {
     const prevIndex = Math.max(0, currentIndex - 1);
     if (isSynced && seekToLine) {
@@ -110,6 +134,7 @@ export function StickerScene({
     }
   };
 
+  // Reset dialogue to start
   const handleReset = () => {
     if (isSynced && seekToLine) {
       const line = dialogue[0];
@@ -209,7 +234,7 @@ export function StickerScene({
             className={cn(
               "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white shadow-sm self-start",
               activeSpeakerKey === "zundamon" ? "bg-success" :
-              (activeSpeakerKey === "ayu" || activeSpeakerKey === "lara") ? "bg-secondary" :
+              (activeSpeakerKey === "ayu" || activeSpeakerKey === "lala") ? "bg-secondary" :
               (activeSpeakerKey === "narrator" || activeSpeakerKey === "narator") ? "bg-muted-foreground" : "bg-primary"
             )}
           >

@@ -17,6 +17,10 @@ import { toast } from "sonner";
 // ==========================================
 // DEKLARASI TIPE
 // ==========================================
+
+/**
+ * Supported flashcard practice modes.
+ */
 export type ModeLatihan = "vocab" | "kanji" | "survival" | "pronunciation" | "sentence";
 
 // ==========================================
@@ -24,22 +28,9 @@ export type ModeLatihan = "vocab" | "kanji" | "survival" | "pronunciation" | "se
 // ==========================================
 
 /**
- * Custom Hook: useFlashcardSession
+ * Manage flashcard session state, URL query parameters, and data fetching.
  * 
- * Mengelola state sesi belajar kartu pengingat (flashcard), mencakup inisialisasi parameter query
- * URL (?category=...&mode=...), pemanggilan asinkron data kosakata/kanji JLPT via `getFlashcardsByMode`
- * Server Action, serta pengubahan layout berdasarkan tingkat JLPT dan mode latihan terpilih.
- * 
- * @returns {Object} State sesi flashcard dan callback handler pendukung
- * @returns {string | null} categorySlug - Slug kategori kursus aktif yang dideteksi dari URL
- * @returns {ModeLatihan | null} modeParam - Mode latihan terdeteksi dari parameter query URL
- * @returns {string | null} selectedLevel - Tingkat JLPT aktif yang terpilih
- * @returns {ModeLatihan | null} selectedMode - Mode latihan aktif yang sedang berjalan
- * @returns {Function} setSelectedMode - Setter mode latihan aktif
- * @returns {MasterCardData[]} cards - Daftar kartu pengingat acak terformat yang siap dipelajari
- * @returns {boolean} isFetchingCards - Status tunggu pengambilan data dari Server Actions
- * @returns {Function} fetchCardsAndStart - Callback asinkron untuk mengambil kartu dan memulai sesi
- * @returns {Function} handleBackFromMode - Callback untuk membatalkan mode latihan dan mereset layout/halaman
+ * @returns Session state and handler functions.
  */
 export function useFlashcardSession() {
   const router = useRouter();
@@ -56,17 +47,26 @@ export function useFlashcardSession() {
   const hasAutoFetchedRef = useRef(false);
 
   const [prevCategorySlug, setPrevCategorySlug] = useState(categorySlug);
+  // Sync level state when category slug changes in URL.
   if (categorySlug !== prevCategorySlug) {
     setPrevCategorySlug(categorySlug);
     setSelectedLevel(categorySlug ? categorySlug.toUpperCase() : null);
   }
 
+  /**
+   * Fetch flashcard data from server and initialize session.
+   * 
+   * @param level JLPT level.
+   * @param mode Practice mode.
+   * @param amount Number of cards to fetch.
+   */
   const fetchCardsAndStart = useCallback(async (level: string, mode: ModeLatihan, amount: number) => {
     setIsFetchingCards(true);
     setSelectedLevel(level);
     setSelectedMode(mode);
     try {
       let combined: MasterCardData[] = [];
+      // Pronunciation mode uses vocab data source.
       const fetchMode = mode === "pronunciation" ? "vocab" : mode;
       const data = await getFlashcardsByMode(fetchMode, level, amount);
 
@@ -78,6 +78,7 @@ export function useFlashcardSession() {
           onyomi?: string | null;
           kunyomi?: string | null;
         }>;
+        // Map kanji database schema to unified card structure.
         combined = kanjiData.map((k) => ({
           id: k.id,
           docType: "kanji" as const,
@@ -94,6 +95,7 @@ export function useFlashcardSession() {
           indonesia?: string | null;
           jlpt_level?: string | null;
         }>;
+        // Map sentence database schema to unified card structure.
         combined = sentenceData.map((s) => ({
           id: s.id,
           docType: "sentence" as const,
@@ -110,6 +112,7 @@ export function useFlashcardSession() {
           furigana?: string | null;
           slug?: string | null;
         }>;
+        // Map vocabulary database schema to unified card structure.
         combined = vocabData.map((v) => ({
           id: v.id,
           docType: "vocab" as const,
@@ -121,6 +124,7 @@ export function useFlashcardSession() {
         }));
       }
 
+      // Shuffle cards randomly.
       combined = combined.sort(() => Math.random() - 0.5);
 
       if (combined.length === 0) {
@@ -138,7 +142,7 @@ export function useFlashcardSession() {
     }
   }, []);
 
-  // Trigger otomatis jika masuk via URL ?category=slug
+  // Auto-start session if valid category and mode present in URL.
   useEffect(() => {
     if (categorySlug && !hasAutoFetchedRef.current) {
       const modeParamLower = modeParam?.toLowerCase();
@@ -158,6 +162,9 @@ export function useFlashcardSession() {
     }
   }, [categorySlug, modeParam, searchParams, fetchCardsAndStart]);
 
+  /**
+   * Reset session state or navigate back to course page.
+   */
   const handleBackFromMode = useCallback(() => {
     if (categorySlug) {
       router.push(`/courses/${categorySlug}`);

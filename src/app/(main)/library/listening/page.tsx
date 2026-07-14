@@ -19,6 +19,10 @@ import {
 // ======================
 // METADATA SEO
 // ======================
+
+/**
+ * SEO metadata configuration for listening library page.
+ */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Latihan Listening Bahasa Jepang | NihongoRoute",
@@ -37,13 +41,15 @@ export const metadata: Metadata = {
  * Halaman utama Latihan Menyimak (Listening Lab) (RSC).
  * Melakukan pra-ambil data halaman pertama daftar latihan menyimak sebelum merender ListeningListClient.
  * 
- * @returns {JSX.Element} Halaman direktori pustaka latihan menyimak.
+ * @returns {Promise<JSX.Element>} Halaman direktori pustaka latihan menyimak.
  */
 export default async function ListeningListPage() {
+  // Fetch first page of listening exercises. Default page size 10.
   const initialData = await getPaginatedListening(1, 10, "");
 
   return (
     <div className="w-full min-h-screen bg-transparent relative overflow-hidden pt-12 pb-24 px-4 md:px-8">
+      {/* Inject structured data for SEO. */}
       <JsonLd
         data={[
           breadcrumbJsonLd([
@@ -61,10 +67,12 @@ export default async function ListeningListPage() {
         ]}
       />
       {/* Efek Latar Belakang */}
+      {/* Background visual effects. */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[500px] bg-primary/10 blur-[120px] rounded-[100%] pointer-events-none opacity-50" />
       <div className="neural-grid" />
 
       <div className="max-w-5xl mx-auto relative z-10">
+        {/* Render interactive client list. */}
         <ListeningListClient initialData={initialData} />
       </div>
     </div>

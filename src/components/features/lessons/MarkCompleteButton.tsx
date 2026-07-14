@@ -18,15 +18,24 @@ import { cn } from "@/lib/utils";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+/**
+ * Props for MarkCompleteButton component.
+ */
 interface MarkCompleteButtonProps {
+  /** ID of current lesson. */
   lessonId: string;
+  /** Slug of next lesson for navigation. */
   nextLessonSlug?: string;
+  /** ID of category for navigation fallback. */
   categoryId?: string;
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * Button component to mark lesson complete, award XP, and navigate.
+ */
 export const MarkCompleteButton: React.FC<MarkCompleteButtonProps> = ({ lessonId, nextLessonSlug, categoryId }) => {
   const router = useRouter();
   const [marked, setMarked] = useState(false);
@@ -34,9 +43,14 @@ export const MarkCompleteButton: React.FC<MarkCompleteButtonProps> = ({ lessonId
   const completedLessons = useUserStore((s) => s.completedLessons);
   const addXP = useUserStore((s) => s.addXP);
 
+  // Check if lesson already completed and not deleted.
   const isCompleted = completedLessons[lessonId] && !completedLessons[lessonId].isDeleted;
 
+  /**
+   * Handle completion logic, XP award, and navigation.
+   */
   const handleComplete = () => {
+    // Prevent double submission.
     if (isCompleted || marked) return;
     
     // Memberikan sedikit XP untuk menyelesaikan materi bacaan
@@ -44,6 +58,7 @@ export const MarkCompleteButton: React.FC<MarkCompleteButtonProps> = ({ lessonId
     completeLesson(lessonId);
     setMarked(true);
 
+    // Delay navigation to show success state.
     setTimeout(() => {
       if (nextLessonSlug && categoryId) {
         router.push(`/courses/${categoryId}/${nextLessonSlug}`);

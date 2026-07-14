@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import SentenceBuilderClient from "@/components/features/tools/sentence-builder/SentenceBuilderClient";
 import { createPageMetadata } from "@/lib/seo";
 
+/**
+ * SEO metadata for Sentence Builder page.
+ */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Japanese Sentence Builder | NihongoRoute",
@@ -11,6 +14,10 @@ export const metadata: Metadata = {
   }),
 };
 
+/**
+ * Sentence Builder page component.
+ * Renders client-side sentence builder tool.
+ */
 export default function SentenceBuilderPage() {
   return <SentenceBuilderClient />;
 }

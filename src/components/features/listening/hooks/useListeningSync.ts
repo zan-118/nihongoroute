@@ -14,24 +14,29 @@ import { TranscriptLine } from "../types";
 // HOOK UTAMA: useListeningSync
 // ==========================================
 /**
- * Hook kustom untuk sinkronisasi waktu karaoke latihan menyimak.
+ * Syncs audio playback time with active transcript lines.
  * 
- * @param {TranscriptLine[]} transcript Array baris transkrip beserta metadata waktunya.
- * @returns {Object} State dan aksi sinkronisasi menyimak:
- *  - `currentTime`: Detik aktif waktu audio saat ini.
- *  - `activeIndex`: Indeks baris transkrip yang sedang diucapkan.
- *  - `externalSeek`: Target waktu pemutaran baru (jika ada lompatan audio).
- *  - `handleTimeUpdate`: Handler untuk memperbarui state detik audio.
- *  - `seekToLine`: Fungsi lompat pemutaran audio ke awal baris transkrip tertentu.
+ * @param transcript Array of transcript lines with start and end times.
+ * @returns Sync state and control functions.
  */
 export function useListeningSync(transcript: TranscriptLine[]) {
+  /** Track current time without triggering re-renders. */
   const currentTimeRef = useRef(0);
+  /** Track active index to prevent redundant state updates. */
   const activeIndexRef = useRef(-1);
+  
   const [currentTime, setCurrentTime] = useState(0);
   const [activeIndex, setActiveIndex] = useState(-1);
   const [externalSeek, setExternalSeek] = useState<number | undefined>(undefined);
 
+  /**
+   * Finds and sets active transcript index based on current time.
+   * 
+   * @param time Current audio time in seconds.
+   * @param forceTimeUpdate Force state update even if index did not change.
+   */
   const syncActiveIndex = useCallback((time: number, forceTimeUpdate = false) => {
+    // Find line matching current playback time.
     const nextIndex = transcript.findIndex(
       (line) => time >= line.startTime && time <= line.endTime
     );
@@ -40,6 +45,7 @@ export function useListeningSync(transcript: TranscriptLine[]) {
       setCurrentTime(time);
     }
 
+    // Only update state if active line index changed.
     if (nextIndex !== activeIndexRef.current) {
       activeIndexRef.current = nextIndex;
       if (!forceTimeUpdate) {
@@ -49,14 +55,23 @@ export function useListeningSync(transcript: TranscriptLine[]) {
     }
   }, [transcript]);
 
-  // Memperbarui waktu aktif pemutaran audio dan mereset lompatan eksternal
+  /**
+   * Updates playback time and syncs active index.
+   * 
+   * @param time Current audio time in seconds.
+   */
   const handleTimeUpdate = useCallback((time: number) => {
     currentTimeRef.current = time;
     syncActiveIndex(time);
+    // Reset external seek target once audio catches up.
     setExternalSeek((current) => current === undefined ? current : undefined);
   }, [syncActiveIndex]);
 
-  // Melompat ke baris tertentu berdasarkan waktu mulai baris transkrip tersebut
+  /**
+   * Jumps audio playback to specific transcript line start time.
+   * 
+   * @param startTime Start time of target transcript line.
+   */
   const seekToLine = useCallback((startTime: number) => {
     setExternalSeek(startTime);
     currentTimeRef.current = startTime;

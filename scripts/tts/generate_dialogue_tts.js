@@ -105,7 +105,7 @@ const femaleVoices = [
   "ayu",
   "ritsu",
   "sakura",
-  "rara",
+  "ani",
 ];
 const maleVoices = [
   "namonashi",
@@ -174,10 +174,13 @@ const CHARACTER_VOICE_MAP = {
   さくら: "sakura",
   サクラ: "sakura",
 
-  // 10. Rara - Remaja Gadis Pemalu
-  rara: "rara",
-  ラーラ: "rara",
-  らーら: "rara",
+  // 10. Ani - Remaja Gadis Pemalu
+  ani: "ani",
+  アニ: "ani",
+  あに: "ani",
+  rara: "ani",
+  ラーラ: "ani",
+  らーら: "ani",
 
   // ===== TOKOH PRIA (10 karakter) =====
   // 1. Budi - Guru Pria
@@ -282,8 +285,8 @@ const VOICE_PRESETS = {
   sakura:
     "15歳女性、優しい少女、思いやりがあり純粋、透明感のある高めの声、穏やかで丁寧な話し方、柔らかく澄んだトーン",
 
-  // 10. Rara - Remaja Gadis. Pemalu, santun.
-  rara: "15歳女性、恥ずかしがり屋、内気で控えめ、小さめで震えがちな声、ゆっくりとためらいがちな話し方、礼儀正しく遠慮気味なトーン",
+  // 10. Ani - Remaja Gadis. Pemalu, santun.
+  ani: "15歳女性、恥ずかしがり屋、内気で控えめ、小さめで震えがちな声、ゆっくりとためらいがちな話し方、礼儀正しく遠慮気味なトーン",
 
   // ===== TOKOH PRIA (10 karakter) =====
 
@@ -401,7 +404,7 @@ function detectVoice(speaker, fallbackIndex = 0) {
     "ayu",
     "siti",
     "dewi",
-    "rara",
+    "ani",
     "indah",
     "sakura",
     "lara",

@@ -16,6 +16,11 @@ import { useUserStore } from "@/store/useUserStore";
 // ======================
 // HOOK UTAMA
 // ======================
+/**
+ * Manage survival game state, HP, timer, score, and card deck.
+ * @param cards Array of card data for game.
+ * @returns Game state, HP, score, timer, current card, options, and control functions.
+ */
 export function useSurvivalMode(cards: CardData[]) {
   const MAX_HP = 3;
   const TIME_PER_QUESTION = 10;
@@ -35,6 +40,12 @@ export function useSurvivalMode(cards: CardData[]) {
 
   const addXP = useUserStore((s) => s.addXP);
 
+  /**
+   * Load next card. End game if deck empty.
+   * @param currentDeck Active deck.
+   * @param index Next card index.
+   * @param currentScore Current score.
+   */
   const loadNextQuestion = useCallback((currentDeck: CardData[], index: number, currentScore: number) => {
     if (index >= currentDeck.length) {
       setGameState("victory");
@@ -50,6 +61,7 @@ export function useSurvivalMode(cards: CardData[]) {
 
     let wrongOptions = currentDeck.filter((c) => c.id !== targetCard.id);
 
+    // Filter wrong options. Prefer same category if enough exist.
     if (targetCard.type) {
       const sameCategoryOptions = wrongOptions.filter((c) => c.type === targetCard.type);
       if (sameCategoryOptions.length >= 3) {
@@ -63,7 +75,11 @@ export function useSurvivalMode(cards: CardData[]) {
     setOptions(shuffleArray([targetCard, ...selectedWrongOptions]));
   }, [addXP]);
 
+  /**
+   * Deduct HP. Trigger game over if HP zero.
+   */
   const handleWrongAnswer = useCallback(() => {
+    // Trigger shake animation.
     setIsShaking(true);
     setTimeout(() => setIsShaking(false), 500);
 
@@ -83,6 +99,10 @@ export function useSurvivalMode(cards: CardData[]) {
     });
   }, [deck, currentCard, loadNextQuestion, score, addXP]);
 
+  /**
+   * Process user answer. Update score or deduct HP.
+   * @param selectedOption Chosen card.
+   */
   const handleAnswer = useCallback((selectedOption: CardData) => {
     if (gameState !== "playing" || isCorrecting) return;
 
@@ -92,6 +112,7 @@ export function useSurvivalMode(cards: CardData[]) {
       setScore(nextScore);
       const currentIndex = deck.findIndex((c) => c.id === currentCard?.id);
       
+      // Delay transition to show correct state.
       setIsCorrecting(true);
       setTimeout(() => {
         loadNextQuestion(deck, currentIndex + 1, nextScore);
@@ -102,6 +123,7 @@ export function useSurvivalMode(cards: CardData[]) {
       setSelectedWrongId(selectedOption.id);
       setIsCorrecting(true);
       
+      // Delay transition to show incorrect state.
       setTimeout(() => {
         handleWrongAnswer();
         setSelectedWrongId(null);
@@ -110,6 +132,9 @@ export function useSurvivalMode(cards: CardData[]) {
     }
   }, [gameState, isCorrecting, currentCard, deck, loadNextQuestion, handleWrongAnswer, score]);
 
+  /**
+   * Reset state and start game.
+   */
   const startGame = useCallback(() => {
     if (cards.length < 4) return;
     const shuffledDeck = shuffleArray(cards);
@@ -120,6 +145,7 @@ export function useSurvivalMode(cards: CardData[]) {
     loadNextQuestion(shuffledDeck, 0, 0);
   }, [cards, loadNextQuestion]);
 
+  // Countdown timer.
   useEffect(() => {
     if (gameState !== "playing" || !currentCard || isCorrecting) return;
 
@@ -133,6 +159,7 @@ export function useSurvivalMode(cards: CardData[]) {
     return () => clearInterval(timer);
   }, [gameState, currentCard, isCorrecting]);
 
+  // Handle timeout.
   useEffect(() => {
     if (gameState === "playing" && timeLeft === 0 && !isCorrecting) {
       const timer = setTimeout(() => {

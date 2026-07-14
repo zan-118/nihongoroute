@@ -29,30 +29,48 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 
-// Helper untuk format waktu relatif (misal: "2 jam yang lalu")
+/**
+ * Format date string to relative time.
+ * @param dateString - ISO date string.
+ * @returns Relative time string.
+ */
 function formatRelativeTime(dateString: string) {
   const date = new Date(dateString);
   const now = new Date();
+  // Calculate time difference in milliseconds
   const diffMs = now.getTime() - date.getTime();
   const diffSec = Math.floor(diffMs / 1000);
   const diffMin = Math.floor(diffSec / 60);
   const diffHr = Math.floor(diffMin / 60);
   const diffDays = Math.floor(diffHr / 24);
 
+  // Return relative time based on duration
   if (diffSec < 60) return "Baru saja";
   if (diffMin < 60) return `${diffMin} menit lalu`;
   if (diffHr < 24) return `${diffHr} jam lalu`;
   return `${diffDays} hari lalu`;
 }
 
+/**
+ * Props for PostCard component.
+ */
 interface PostCardProps {
+  /** Post data object */
   post: CommunityPost;
+  /** Current logged-in user ID */
   currentUserId: string;
+  /** Guest status flag */
   isGuest: boolean;
+  /** Callback when author avatar or name clicked */
   onAuthorClick: (userId: string) => void;
 }
 
+/**
+ * Render single community post card.
+ * Handle likes, comments, and deletion.
+ */
 function PostCard({ post, currentUserId, isGuest, onAuthorClick }: PostCardProps) {
+  // Get post actions and state from hook
   const {
     showComments,
     setShowComments,
@@ -253,7 +271,12 @@ function PostCard({ post, currentUserId, isGuest, onAuthorClick }: PostCardProps
   );
 }
 
+/**
+ * Main community feed component.
+ * Handle post creation, category filtering, and user profile modal.
+ */
 export default function CommunityFeed() {
+  // Get feed state and actions from hook
   const {
     postContent,
     setPostContent,
@@ -499,6 +522,7 @@ export default function CommunityFeed() {
               <button
                 type="button"
                 onClick={() => {
+                  // Trigger confetti on cheer click
                   confetti({
                     particleCount: 80,
                     spread: 60,

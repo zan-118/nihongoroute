@@ -22,24 +22,45 @@ import { KanaType } from "./kana-data";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Props for KanaQuizDialog component.
+ */
 interface KanaQuizDialogProps {
+  /** Toggle dialog visibility */
   isActive: boolean;
+  /** Callback when dialog open state changes */
   onClose: (open: boolean) => void;
+  /** Remaining lives count */
   lives: number;
+  /** Current score count */
   score: number;
+  /** Current active kana character object */
   char: { char: string; romaji: string } | null;
+  /** Multiple choice options */
   options: string[];
+  /** User selected option */
   input: string;
+  /** Feedback state for current answer */
   feedback: "correct" | "incorrect" | null;
+  /** Game over state flag */
   gameOver: boolean;
+  /** Callback when option clicked */
   onOptionClick: (option: string) => void;
+  /** Callback to restart/start quiz */
   startQuiz: () => void;
+  /** Kana type category */
   type: KanaType;
+  /** Tailwind text color class */
   themeColor: string;
+  /** Tailwind border color class */
   themeBorder: string;
+  /** Tailwind accent color class */
   themeAccent: string;
+  /** Quiz mode type */
   questionMode?: "classic" | "audio";
+  /** Current question index */
   questionCount?: number;
+  /** Victory state flag */
   isVictory?: boolean;
 }
 
@@ -47,7 +68,8 @@ interface KanaQuizDialogProps {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen modal dialog kuis latihan kana.
+ * Interactive quiz dialog component for Hiragana and Katakana practice.
+ * Provides visual feedback, lives system, and audio pronunciation.
  */
 export function KanaQuizDialog({
   isActive,
@@ -74,13 +96,18 @@ export function KanaQuizDialog({
   // ==========================================
   // METODE & EFEK SAMPING (EFFECTS)
   // ==========================================
+  /**
+   * Play audio pronunciation of current kana character using SpeechSynthesis API.
+   */
   const speakActiveKana = useCallback(() => {
     if (typeof window === "undefined" || !window.speechSynthesis || !char?.char) return;
+    // Cancel ongoing speech to prevent overlap
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(char.char);
     utterance.lang = "ja-JP";
     utterance.rate = 0.85;
 
+    // Find Japanese voice if available
     const voices = window.speechSynthesis.getVoices();
     const jaVoice = voices.find((v) => v.lang.startsWith("ja"));
     if (jaVoice) {
@@ -93,6 +120,7 @@ export function KanaQuizDialog({
   // Autoplay voice in audio mode
   useEffect(() => {
     if (isActive && questionMode === "audio" && char?.char) {
+      // Delay speech slightly to allow dialog transition to finish
       const timer = setTimeout(() => {
         speakActiveKana();
       }, 120);
@@ -174,12 +202,14 @@ export function KanaQuizDialog({
 
                     <div className="grid grid-cols-2 gap-3 w-full">
                       {options.map((option, i) => {
+                        // Check if option matches correct answer based on mode
                         const isCorrect = questionMode === "classic" 
                           ? option === char?.romaji 
                           : option === char?.char;
                         const isClicked = option === input;
                         let btnClass = "bg-muted border-border text-muted-foreground hover:bg-background hover:text-foreground";
                         
+                        // Determine button style based on feedback state
                         if (feedback) {
                           if (isCorrect) {
                             btnClass = "bg-success border-success text-success-foreground shadow-lg";

@@ -1,8 +1,13 @@
+/** Supported Japanese counter characters. */
 export const COUNTER_OPTIONS = ["人", "本", "枚", "匹", "台", "冊", "杯", "個", "階", "歳"] as const;
 
+/** Counter character type. */
 export type CounterWord = (typeof COUNTER_OPTIONS)[number];
+
+/** JLPT level. */
 export type CounterLevel = "N5" | "N4";
 
+/** Counter question structure. */
 export interface CounterQuestion {
   id: string;
   level: CounterLevel;
@@ -21,6 +26,7 @@ export interface CounterQuestion {
   sourceType?: "database" | "static";
 }
 
+/** Static counter questions. */
 export const COUNTER_QUESTIONS: CounterQuestion[] = [
   {
     id: "people-three",
@@ -86,7 +92,7 @@ export const COUNTER_QUESTIONS: CounterQuestion[] = [
     nounReading: "くるま",
     category: "mesin/kendaraan",
     answer: "台",
-    phrase: "四台の車",
+    phrase: "四台 of 車",
     reading: "よんだいのくるま",
     translation: "empat mobil",
     hint: "Untuk kendaraan dan mesin.",
@@ -164,20 +170,26 @@ export const COUNTER_QUESTIONS: CounterQuestion[] = [
   },
 ];
 
+/** Normalize user input. */
 export function normalizeCounterAnswer(value: string) {
+  // NFKC normalizes full-width characters to standard form.
   return value.normalize("NFKC").trim();
 }
 
+/** Compare user answer with expected answer. */
 export function isCounterAnswerCorrect(expected: string, answer: string) {
   return normalizeCounterAnswer(expected) === normalizeCounterAnswer(answer);
 }
 
+/** Get question by index. Safe index wrapping. */
 export function getCounterQuestion(index: number, questions: CounterQuestion[] = COUNTER_QUESTIONS) {
   const questionBank = questions.length > 0 ? questions : COUNTER_QUESTIONS;
+  // Double modulo handles negative index values.
   const normalizedIndex = ((index % questionBank.length) + questionBank.length) % questionBank.length;
   return questionBank[normalizedIndex];
 }
 
+/** Format question prompt string. */
 export function formatCounterPrompt(question: CounterQuestion) {
   return `${question.number} ___ の${question.noun}`;
 }

@@ -19,11 +19,13 @@ import {
   encodeRouteSegment,
 } from "@/lib/seo";
 
+/** Force dynamic rendering. Prevent build-time static generation. */
 export const dynamic = "force-dynamic";
 
-
+/** Fetch reading item by slug. Cache result to avoid duplicate requests. */
 const getReadingBySlug = cache((slug: string) => getLibraryItemBySlug("reading", slug));
 
+/** Extract SEO title and description from CMS data safely. */
 function getCmsSeo(data: unknown) {
   const seo = data && typeof data === "object" && "seo" in data
     ? (data as { seo?: { title?: string; description?: string } }).seo
@@ -40,7 +42,7 @@ function getCmsSeo(data: unknown) {
 // ======================
 
 /**
- * Menghasilkan metadata SEO dinamis untuk halaman graded reading tertentu.
+ * Generate dynamic SEO metadata for reading page.
  */
 export async function generateMetadata({
   params,
@@ -48,6 +50,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+  // Decode slug. Handle Japanese characters in URL.
   const decodedSlug = decodeURIComponent(slug);
   const data = await getReadingBySlug(decodedSlug);
   const seo = getCmsSeo(data);
@@ -74,19 +77,21 @@ export async function generateMetadata({
 // ======================
 
 /**
- * Halaman detail graded reading (RSC) untuk memuat artikel membaca dari Sanity CMS, kemudian merender reader ReadingPageClient.
+ * Render reading page. Fetch data from CMS. Render client component.
  */
 export default async function ReadingPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  // Decode slug. Handle Japanese characters in URL.
   const decodedSlug = decodeURIComponent(slug);
 
   const data = await getReadingBySlug(decodedSlug);
 
-
+  // Trigger 404 if reading item not found.
   if (!data) {
     notFound();
   }
 
+  // Extract SEO metadata from CMS payload.
   const seo = getCmsSeo(data);
   const readingPath = `/library/reading/${encodeRouteSegment(String(data.slug || decodedSlug))}`;
   const description =
@@ -95,6 +100,7 @@ export default async function ReadingPage({ params }: { params: Promise<{ slug: 
 
   return (
     <>
+      {/* Inject SEO structured data */}
       <JsonLd
         data={[
           breadcrumbJsonLd([

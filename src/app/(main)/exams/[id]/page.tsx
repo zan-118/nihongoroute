@@ -19,6 +19,10 @@ import { createPageMetadata, encodeRouteSegment } from "@/lib/seo";
 // ======================
 // ANTARMUKA
 // ======================
+
+/**
+ * Route parameters for exam page.
+ */
 interface PageProps {
   params: Promise<{ id: string }>;
 }
@@ -28,11 +32,15 @@ interface PageProps {
 // ======================
 
 /**
- * Menghasilkan metadata SEO dinamis untuk halaman sesi ujian JLPT spesifik.
+ * Generate dynamic SEO metadata for specific JLPT exam session.
+ * Resolves route params, fetches exam details, returns metadata object.
  */
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  // Await route params from Next.js 15 dynamic route
   const { id } = await params;
+  // Decode URL-encoded ID or slug
   const decodedId = decodeURIComponent(id);
+  // Fetch exam structure from database
   const examData = await getExamByIdOrSlug(decodedId);
   return createPageMetadata({
     title: examData ? `${examData.title} | Simulasi JLPT NihongoRoute` : "Simulasi Ujian JLPT | NihongoRoute",
@@ -49,11 +57,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 // ======================
 
 /**
- * Halaman sesi ujian mandiri (RSC) untuk mengambil data paket ujian dan butir soal, kemudian merender engine ujian interaktif.
+ * Standalone exam session page component.
+ * Fetches exam data and questions, renders interactive exam engine.
  */
 export default async function StandaloneExamSessionPage({ params }: PageProps) {
+  // Await route params from Next.js 15 dynamic route
   const { id } = await params;
+  // Decode URL-encoded ID or slug
   const decodedId = decodeURIComponent(id);
+  // Fetch exam structure from database
   const examData = await getExamByIdOrSlug(decodedId);
 
   const backLink = "/exams";

@@ -27,7 +27,10 @@ import { cn } from "@/lib/utils";
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen FAB global yang menyesuaikan diri secara adaptif berdasarkan pathname aktif (mode membaca, mode mendengarkan, atau halaman umum).
+ * Global Floating Action Button (FAB) component.
+ * Adapts based on active pathname to show feedback, donation, audio, or layout controls.
+ * 
+ * @returns React element representing the floating action menu.
  */
 
 export default function FloatingActions() {
@@ -42,9 +45,12 @@ export default function FloatingActions() {
   const listeningState = useUIStore((state) => state.listeningState);
   const setListeningState = useUIStore((state) => state.setListeningState);
 
+  // Exit early on reading/listening pages. Avoid duplicate controls.
   if (isReadingPage || isListeningPage) return null;
 
-
+  /**
+   * Available reading modes for Japanese text display.
+   */
   const modes: { id: ReadingMode; label: string; icon: React.ElementType }[] = [
     { id: "kanji", label: "Kanji", icon: BookIcon },
     { id: "furigana", label: "Furigana", icon: Eye },

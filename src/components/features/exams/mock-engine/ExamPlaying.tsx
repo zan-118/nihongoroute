@@ -39,32 +39,61 @@ import { ExamQuestionText } from "./ExamQuestionText";
 // ======================
 // ANTARMUKA & TIPE
 // ======================
+/**
+ * Props for ExamPlaying component.
+ */
 interface ExamPlayingProps {
+  /** Exam data object containing questions and metadata */
   exam: ExamData;
+  /** Currently active question object */
   activeQuestion: ExamQuestion;
+  /** Index of active question in exam array */
   currentQuestionIndex: number;
+  /** Remaining time in seconds */
   timeLeft: number;
+  /** Map of question keys to selected choice indices */
   answers: Record<string, number>;
+  /** Map of question keys or global key to audio playback states */
   audioStatus: Record<string, AudioState>;
+  /** Reference to HTML audio element */
   audioRef: React.MutableRefObject<HTMLAudioElement | null>;
+  /** Flag indicating time is running out */
   isTimeCritical: boolean;
+  /** Flag indicating current question has audio */
   isCurrentlyListening: boolean;
+  /** Flag to disable previous navigation button */
   disablePreviousButton: boolean;
+  /** Trigger audio playback */
   handlePlayAudio: () => void;
+  /** Save selected answer index for active question */
   handleAnswer: (idx: number) => void;
+  /** Navigate to next question */
   nextQuestion: () => void;
+  /** Navigate to previous question */
   prevQuestion: () => void;
+  /** Map of section keys to question index arrays */
   sections: Record<string, number[]>;
+  /** List of available section keys */
   availableSections: string[];
+  /** Current active section key */
   currentSection: string;
+  /** Navigate directly to specific question index */
   goToQuestion: (idx: number) => void;
+  /** Index of active section in available sections */
   activeSectionIndex: number;
+  /** Current pending confirmation modal state */
   pendingConfirm: PendingConfirmType;
+  /** Set pending confirmation modal state */
   setPendingConfirm: (v: PendingConfirmType) => void;
+  /** Execute action after confirmation */
   confirmPendingAction: () => void;
+  /** Label data for pending confirmation modal */
   pendingConfirmLabel: { title: string; description: string } | null;
+  /** Flag indicating submission request in progress */
   isSubmitting?: boolean;
+  /** Map of question keys to flagged status */
   flaggedQuestions: Record<string, boolean>;
+  /** Toggle flagged status for question key */
   toggleFlag: (key: string) => void;
 }
 
@@ -72,26 +101,29 @@ interface ExamPlayingProps {
 // FUNGSI PEMBANTU
 // ======================
 /**
- * Mengembalikan instruksi standar ujian bahasa Jepang untuk Mondai tertentu berdasarkan seksi.
+ * Get standard Japanese exam instruction for specific mondai.
+ * @param section Exam section key.
+ * @param mondaiNumber Mondai number.
+ * @returns Instruction text or null.
  */
 const getMondaiInstruction = (section: string, mondaiNumber: number | null | undefined): string | null => {
   if (!mondaiNumber) return null;
   if (section === "vocabulary") {
     switch (mondaiNumber) {
-      case 1: return "［　］の言葉の読み方として最もよいものを、1・2・3・4から一つ選びなさい。";
-      case 2: return "［　］の言葉を漢字で書くとき、最もよいものを、1・2・3・4から一つ選びなさい。";
-      case 3: return "（　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。";
-      case 4: return "［　］の言葉に意味が最も近いものを、1・2・3・4から一つ選びなさい。";
-      case 5: return "次の言葉の使い方として最もよいものを、1・2・3・4から一つ選びなさい。";
-      default: return "最もよいものを、1・2・3・4から一つ選びなさい。";
+      case 1: return "［　］の言葉 diucapkan dengan cara apa? Pilih 1, 2, 3, atau 4.";
+      case 2: return "［　］kata ditulis dengan kanji apa? Pilih 1, 2, 3, atau 4.";
+      case 3: return "Pilih kata paling cocok untuk mengisi (　) dari 1, 2, 3, atau 4.";
+      case 4: return "Pilih kata dengan arti paling dekat dengan ［　］ dari 1, 2, 3, atau 4.";
+      case 5: return "Pilih penggunaan kata paling tepat dari 1, 2, 3, atau 4.";
+      default: return "Pilih jawaban paling tepat dari 1, 2, 3, atau 4.";
     }
   }
   if (section === "grammar") {
     switch (mondaiNumber) {
-      case 1: return "（　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。";
-      case 2: return "次の文の ★ に入る最もよいものを、1・2・3・4から一つ選びなさい。";
-      case 3: return "文章の空欄に入る最もよいものを、1・2・3・4から一つ選びなさい。";
-      default: return "最もよいものを、1・2・3・4から一つ選びなさい。";
+      case 1: return "Pilih kata paling cocok untuk mengisi (　) dari 1, 2, 3, atau 4.";
+      case 2: return "Pilih kata paling cocok untuk mengisi ★ dari 1, 2, 3, atau 4.";
+      case 3: return "Pilih kata paling cocok untuk mengisi bagian kosong dari 1, 2, 3, atau 4.";
+      default: return "Pilih jawaban paling tepat dari 1, 2, 3, atau 4.";
     }
   }
   if (section === "reading") {
@@ -102,17 +134,17 @@ const getMondaiInstruction = (section: string, mondaiNumber: number | null | und
       case 4:
       case 5:
       case 6:
-        return "内容に関する質問に対して、最もよいものを、1・2・3・4から一つ選びなさい。";
-      default: return "質問に対して、最もよいものを、1・2・3・4から一つ選びなさい。";
+        return "Pilih jawaban paling tepat untuk pertanyaan bacaan dari 1, 2, 3, atau 4.";
+      default: return "Pilih jawaban paling tepat untuk pertanyaan dari 1, 2, 3, atau 4.";
     }
   }
   if (section === "listening") {
     switch (mondaiNumber) {
-      case 1: return "質問を聞いて、最もよいものを、1・2・3・4から一つ選びなさい。";
-      case 2: return "まず質問を聞いてください。そのあと、話を聞いて、最もよいものを一つ選びなさい。";
-      case 3: return "絵を見ながら質問を聞いてください。矢印の人は何と言いますか。最もよいものを一つ選びなさい。";
-      case 4: return "文を聞いて、最もよい返事を、1・2・3から一つ選びなさい。";
-      default: return "質問を聞いて、最もよいものを一つ選びなさい。";
+      case 1: return "Dengarkan pertanyaan, pilih jawaban paling tepat dari 1, 2, 3, atau 4.";
+      case 2: return "Dengarkan pertanyaan dahulu. Lalu dengarkan cerita, pilih jawaban paling tepat.";
+      case 3: return "Lihat gambar sambil mendengarkan pertanyaan. Apa yang dikatakan orang bertanda panah? Pilih jawaban paling tepat.";
+      case 4: return "Dengarkan kalimat, pilih respon paling tepat dari 1, 2, atau 3.";
+      default: return "Dengarkan pertanyaan, pilih jawaban paling tepat.";
     }
   }
   return null;
@@ -122,7 +154,7 @@ const getMondaiInstruction = (section: string, mondaiNumber: number | null | und
 // KOMPONEN PEMBANTU
 // ======================
 /**
- * Komponen Opsi Jawaban yang di-memoize untuk menghindari re-render yang tidak perlu.
+ * Memoized option button component. Render choice text or image.
  */
 const OptionButton = memo(({
   idx,
@@ -154,6 +186,7 @@ const OptionButton = memo(({
       >
         {idx + 1}
       </div>
+      {/* Choice is image. Render Next.js Image component. */}
       {choice?.type === "image" ? (
         <span className="flex min-w-0 flex-1 flex-col gap-3">
           <span className="relative block aspect-[16/9] w-full overflow-hidden rounded-xl border border-border bg-muted/40">
@@ -171,6 +204,7 @@ const OptionButton = memo(({
           </span>
         </span>
       ) : (
+        /* Render HTML content safely. Furigana support. */
         <span 
           className="leading-tight font-japanese text-base md:text-lg flex-1 [&_rt]:text-[0.55em] [&_rt]:leading-none"
           dangerouslySetInnerHTML={{ __html: sanitizeHtml(choice?.type === "text" ? choice.value : text) }}
@@ -185,6 +219,9 @@ const OptionButton = memo(({
 
 OptionButton.displayName = "OptionButton";
 
+/**
+ * Render reading passage text or image.
+ */
 function ExamPassageBlock({ passage }: { passage?: ExamPassage | null }) {
   if (!passage) return null;
 
@@ -220,6 +257,9 @@ function ExamPassageBlock({ passage }: { passage?: ExamPassage | null }) {
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * Main exam interface component. Handle layout, timer, navigation, and submission.
+ */
 export function ExamPlaying({
   exam,
   activeQuestion,
@@ -263,6 +303,7 @@ export function ExamPlaying({
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar flex-1">
                 {availableSections.map((section, idx) => {
+                  /* Lock previous sections. Prevent user return. */
                   const isLocked = idx < activeSectionIndex;
                   const isActive = currentSection === section;
                   return (
@@ -334,6 +375,7 @@ export function ExamPlaying({
                     <div className="bg-card border border-border rounded-lg p-4 flex items-center gap-4 shadow-sm glass">
                       <Button
                         onClick={handlePlayAudio}
+                        /* Check global or per-question audio state. Disable button if played. */
                         disabled={
                           exam.choukaiAudioUrl
                             ? (audioStatus.global === "playing" || audioStatus.global === "played")
@@ -425,6 +467,7 @@ export function ExamPlaying({
                         const isActive = qIdx === currentQuestionIndex;
                         const isLocked = currentSection === "listening" && !exam.choukaiAudioUrl && qIdx !== currentQuestionIndex;
 
+                        /* Determine button style based on state (active, locked, flagged, answered). */
                         let btnClass = "bg-background text-muted-foreground border-border";
                         if (isActive) {
                           btnClass = "bg-destructive text-destructive-foreground border-transparent shadow-md scale-105";
@@ -543,6 +586,7 @@ export function ExamPlaying({
                         const isListeningLocked = secKey === "listening" && !exam.choukaiAudioUrl && qIdx !== currentQuestionIndex;
                         const isLocked = isSectionLocked || isListeningLocked;
 
+                        /* Determine button style based on state (active, locked, flagged, answered). */
                         let btnClass = "bg-muted/10 border-border text-muted-foreground hover:border-destructive/30";
                         if (isActive) {
                           btnClass = "bg-destructive/10 text-destructive border-destructive shadow-[0_0_8px_rgba(var(--destructive-rgb),0.35)] scale-105 ring-2 ring-destructive/20";
@@ -626,7 +670,7 @@ export function ExamPlaying({
               className="flex-1 sm:flex-none bg-destructive hover:bg-destructive/90 text-destructive-foreground px-8 py-6 rounded-xl font-bold uppercase tracking-wider text-[10px] transition-all shadow-md"
             >
               {sections[currentSection][sections[currentSection].length - 1] === currentQuestionIndex ? (
-                <>Lanjut: {SECTION_LABELS[availableSections[availableSections.indexOf(currentSection) + 1]]?.split(" ")[0] || "Next"} <ArrowRight aria-hidden="true" size={16} className="ml-2" /></>
+                <>{/* Show next section label if current section is completed. */ }Lanjut: {SECTION_LABELS[availableSections[availableSections.indexOf(currentSection) + 1]]?.split(" ")[0] || "Next"} <ArrowRight aria-hidden="true" size={16} className="ml-2" /></>
               ) : (
                 <>Lanjut <ArrowRight aria-hidden="true" size={16} className="ml-2" /></>
               )}
@@ -724,6 +768,7 @@ export function ExamPlaying({
                     let cellClass = "";
                     let onClickHandler = () => { };
 
+                    /* Handle navigation from answer sheet. Block locked questions. */
                     if (isLocked) {
                       cellClass = "bg-muted/40 text-muted-foreground/30 border-border/50 cursor-not-allowed";
                       onClickHandler = () => {

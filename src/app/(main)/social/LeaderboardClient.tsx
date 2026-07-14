@@ -28,9 +28,9 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 
-// ======================
-// TIPE DATA
-// ======================
+/**
+ * Structure representing user data retrieved from the database.
+ */
 interface LeaderboardUser {
   id: string;
   full_name: string;
@@ -41,8 +41,16 @@ interface LeaderboardUser {
   study_days?: Record<string, number>;
 }
 
+/**
+ * Structure representing user data combined with their calculated rank.
+ */
 type RankedLeaderboardUser = LeaderboardUser & { rank: number | null };
 
+/**
+ * Interactive leaderboard client component.
+ * Fetches real-time ranks from Supabase.
+ * Supports offline caching and tab sync.
+ */
 export default function LeaderboardClient() {
   const [cachedUsers, setCachedUsers] = useState<LeaderboardUser[]>([]);
   const [isOffline, setIsOffline] = useState(false);
@@ -77,6 +85,7 @@ export default function LeaderboardClient() {
   // 2. BroadcastChannel untuk sinkronisasi lintas-tab
   useEffect(() => {
     if (typeof window === "undefined") return;
+    // Listen to sync events from other tabs to invalidate queries
     const channel = new BroadcastChannel("nihongoroute_sync");
     channel.onmessage = (event) => {
       if (event.data === "SYNC_COMPLETE") {
@@ -90,6 +99,7 @@ export default function LeaderboardClient() {
   useEffect(() => {
     const loadCache = async () => {
       try {
+        // Retrieve cached leaderboard data from IndexedDB
         const cached = await idbGet<LeaderboardUser[]>("nihongoroute_ui_data_leaderboard");
         if (cached && Array.isArray(cached)) {
           setCachedUsers(cached);
@@ -111,6 +121,7 @@ export default function LeaderboardClient() {
       const userIsGuest = currentUserState.isGuest;
 
       if (activeTab === "top_global") {
+        // Fetch top 20 users sorted by XP descending
         const { data: topUsers, error } = await supabase
           .from("profiles")
           .select("id, full_name, xp, level, streak, avatar_url, study_days")
@@ -132,6 +143,7 @@ export default function LeaderboardClient() {
         let ownRank: number | null = null;
 
         if (!userIsGuest && userId && userId !== "guest") {
+          // Count users with higher XP to determine absolute rank
           const { count, error: rankError } = await supabase
             .from("profiles")
             .select("id", { count: "exact", head: true })
@@ -215,6 +227,7 @@ export default function LeaderboardClient() {
     refetchOnWindowFocus: false,
   });
 
+  // Fallback to cached users if query is loading and cache exists
   const usersList = useMemo(() => data?.users || cachedUsers, [cachedUsers, data?.users]);
   const ownRank = data?.ownRank || null;
   const showSkeleton = isLoading && usersList.length === 0;
@@ -222,6 +235,7 @@ export default function LeaderboardClient() {
   const searchTerm = deferredSearchQuery.trim().toLowerCase();
   const isSearching = searchTerm.length > 0;
 
+  // Map user IDs to their calculated ranks based on active tab
   const rankByUserId = useMemo(() => {
     const rankMap = new Map<string, number>();
     if (activeTab === "around_me" && data?.customRanks) {
@@ -236,6 +250,7 @@ export default function LeaderboardClient() {
     return rankMap;
   }, [usersList, data, activeTab]);
 
+  // Filter and map users with their calculated ranks
   const rankedUsers = useMemo<RankedLeaderboardUser[]>(() => {
     const result: RankedLeaderboardUser[] = [];
 
@@ -253,13 +268,17 @@ export default function LeaderboardClient() {
     return result;
   }, [rankByUserId, searchTerm, usersList]);
 
+  // Extract top 3 users for podium display (only in global tab and when not searching)
   const topThree = useMemo(() => (isSearching || activeTab === "around_me") ? [] : rankedUsers.slice(0, 3), [isSearching, activeTab, rankedUsers]);
+  // Extract remaining users below top 3
   const othersList = useMemo(() => (isSearching || activeTab === "around_me") ? rankedUsers : rankedUsers.slice(3), [isSearching, activeTab, rankedUsers]);
 
+  // Check if current user is present in the top 20 list
   const isOwnUserInTop20 = useMemo(
     () => usersList.some((x) => x.id === currentUserId),
     [currentUserId, usersList]
   );
+  // Determine if floating rank card should be displayed
   const showFloatingOwnRank = !isGuest && currentUserId !== "guest" && ownRank !== null && !isOwnUserInTop20 && activeTab === "top_global";
 
   if (showSkeleton) {

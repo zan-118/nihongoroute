@@ -34,11 +34,26 @@ import {
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 
+/**
+ * Represents metadata structure for a learning tool.
+ */
+interface ToolItem {
+  title: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string; size?: number }>;
+  href: string;
+  color: string;
+  bgColor: string;
+  border: string;
+}
 
 // ======================
 // KONSTANTA
 // ======================
-const tools = [
+/**
+ * List of available learning tools with metadata and styling configurations.
+ */
+const tools: ToolItem[] = [
   {
     title: "Kana Master",
     description: "Tabel interaktif Hiragana & Katakana lengkap dengan latihan menulis.",
@@ -176,10 +191,17 @@ const tools = [
   }
 ];
 
+/**
+ * ToolsPage component.
+ * Renders dashboard containing links to various Japanese learning utilities.
+ *
+ * @returns {React.JSX.Element} Rendered tools directory page.
+ */
 export default function ToolsPage() {
   return (
     <div className="w-full flex-1 relative overflow-hidden flex flex-col bg-transparent transition-colors duration-300 pt-12 pb-24 px-4 md:px-8">
       {/* Efek Latar Belakang */}
+      {/* Radial gradient background overlay for visual depth */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent pointer-events-none" />
 
       <div className="max-w-5xl mx-auto w-full relative z-10 flex flex-col h-full">
@@ -214,6 +236,7 @@ export default function ToolsPage() {
               <Link data-tour="tool-card" href={tool.href}>
                 <Card className={`group relative p-8 md:p-10 rounded-[2.5rem] border ${tool.border} bg-card/35 hover:shadow-[0_0_35px_rgba(var(--primary-rgb),0.02)] transition-all duration-300 overflow-hidden glass`}>
                   {/* Pendaran Hover */}
+                  {/* Decorative glow effect visible on card hover */}
                   <div className={`absolute -right-8 -top-8 w-32 h-32 ${tool.bgColor} rounded-full blur-lg opacity-0 group-hover:opacity-80 transition-opacity duration-200`} />
 
                   <div className="relative z-10 flex flex-col gap-6">
@@ -221,6 +244,7 @@ export default function ToolsPage() {
                       <div className={`w-14 h-14 rounded-lg ${tool.bgColor} border ${tool.border} flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform duration-200`}>
                         <tool.icon className={tool.color} size={28} />
                       </div>
+                      {/* Arrow indicator slides in on hover */}
                       <div className="p-2 rounded-full bg-muted border border-border opacity-0 group-hover:opacity-100 transition-all duration-200 translate-x-4 group-hover:translate-x-0">
                         <ChevronRight size={20} className="text-muted-foreground" />
                       </div>
@@ -249,6 +273,7 @@ export default function ToolsPage() {
         </div>
 
         {/* Informasi Kaki Halaman */}
+        {/* Footer banner with grid background pattern */}
         <div className="mt-16 p-8 rounded-xl bg-muted/30 border border-border/50 text-center relative overflow-hidden">
            <div className="absolute inset-0 bg-grid-foreground/5 [mask-image:radial-gradient(hsl(var(--foreground)),transparent)]" />
            <p className="relative z-10 text-xs font-bold text-muted-foreground uppercase tracking-[0.2em]">

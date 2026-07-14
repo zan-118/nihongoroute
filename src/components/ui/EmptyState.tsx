@@ -16,18 +16,30 @@ import Link from "next/link";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+/**
+ * Props for EmptyState component.
+ */
 interface EmptyStateProps {
+  /** Icon component from lucide-react. Default is Coffee. */
   icon?: LucideIcon;
+  /** Main heading text. */
   title: string;
+  /** Subtext description. */
   description: string;
+  /** Label for action button. */
   actionText?: string;
+  /** Destination URL for link action. */
   actionHref?: string;
+  /** Click handler for button action. */
   onClick?: () => void;
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * Render animated empty state UI. Show icon, text, optional action button.
+ */
 export default function EmptyState({
   icon: Icon = Coffee,
   title,
@@ -38,6 +50,7 @@ export default function EmptyState({
 }: EmptyStateProps) {
   return (
     <m.div 
+      // Animate entry scale and opacity
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       className="premium-surface flex flex-col items-center justify-center p-8 md:p-12 text-center rounded-xl"
@@ -54,6 +67,7 @@ export default function EmptyState({
       </p>
 
       {actionText && (
+        // Render link button if href exists, else render button with click handler
         actionHref ? (
           <Button asChild className="h-14 px-10 brand-button rounded-lg">
             <Link href={actionHref}>{actionText}</Link>

@@ -26,11 +26,17 @@ import { useSRSStore } from "@/store/useSRSStore";
 import { useUserStore } from "@/store/useUserStore";
 import { calculateJlptReadiness, type ReadinessCourseCategory } from "@/lib/readiness";
 
+/**
+ * Props for JLPTReadinessCard component.
+ */
 interface JLPTReadinessCardProps {
+  /** Loading state flag. */
   loading: boolean;
+  /** Course metadata for readiness calculation. */
   courseMetadata: ReadinessCourseCategory[];
 }
 
+/** Map action IDs to Lucide icons. */
 const actionIcons = {
   review: Repeat2,
   course: BookOpenCheck,
@@ -39,6 +45,10 @@ const actionIcons = {
   routine: BrainCircuit,
 };
 
+/**
+ * Get color, badge, and glow styles based on score.
+ * @param score - Readiness score (0-100).
+ */
 function getScoreTone(score: number) {
   if (score >= 85) {
     return {
@@ -63,6 +73,10 @@ function getScoreTone(score: number) {
   };
 }
 
+/**
+ * JLPT Readiness Card component.
+ * Displays readiness score, metrics, and recommendations.
+ */
 export default function JLPTReadinessCard({ loading, courseMetadata }: JLPTReadinessCardProps) {
   const completedLessons = useUserStore((state) => state.completedLessons);
   const streak = useUserStore((state) => state.streak);
@@ -70,6 +84,7 @@ export default function JLPTReadinessCard({ loading, courseMetadata }: JLPTReadi
   const studyDays = useUserStore((state) => state.studyDays);
   const srs = useSRSStore((state) => state.srs);
 
+  // Calculate readiness metrics when dependencies change.
   const readiness = useMemo(
     () =>
       calculateJlptReadiness({
@@ -83,6 +98,7 @@ export default function JLPTReadinessCard({ loading, courseMetadata }: JLPTReadi
     [completedLessons, courseMetadata, srs, streak, studyDays, todayReviewCount]
   );
 
+  // Show skeleton loader during data fetch.
   if (loading) {
     return <Skeleton className="h-[460px] w-full rounded-2xl" />;
   }
@@ -123,6 +139,7 @@ export default function JLPTReadinessCard({ loading, courseMetadata }: JLPTReadi
           </div>
 
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+            {/* Render circular progress ring using conic gradient. */}
             <div
               className="relative grid size-[168px] shrink-0 place-items-center rounded-full border border-border bg-background/55 shadow-inner"
               style={{
@@ -201,6 +218,7 @@ export default function JLPTReadinessCard({ loading, courseMetadata }: JLPTReadi
 
             <div className="flex flex-col gap-3">
               {readiness.actions.map((action, index) => {
+                // Resolve icon component dynamically.
                 const Icon = actionIcons[action.id];
                 return (
                   <Button

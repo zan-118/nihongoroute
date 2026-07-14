@@ -13,6 +13,10 @@ import { createPageMetadata } from "@/lib/seo";
 // ======================
 // KONFIGURASI METADATA
 // ======================
+/**
+ * Metadata configuration for Support page.
+ * Sets SEO title, description, path, and keywords.
+ */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Dukung Kami | NihongoRoute",
@@ -26,6 +30,11 @@ export const metadata: Metadata = {
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+/**
+ * SupportPage component.
+ * Server component wrapper that renders SupportClient.
+ */
 export default function SupportPage() {
+  // Render client-side support page UI
   return <SupportClient />;
 }

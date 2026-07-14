@@ -17,6 +17,10 @@ import { getBreadcrumbItems } from "@/lib/routes";
 // ======================
 // KONFIGURASI METADATA
 // ======================
+/**
+ * Metadata configuration for the Terms of Service page.
+ * Sets SEO titles, descriptions, and canonical path.
+ */
 export const metadata = {
   ...createPageMetadata({
     title: "Syarat & Ketentuan | NihongoRoute",
@@ -26,6 +30,13 @@ export const metadata = {
   }),
 };
 
+/**
+ * TermsPage component.
+ * Renders the NihongoRoute Terms of Service page with localized Indonesian content.
+ * Includes layout elements, breadcrumbs, and legal sections.
+ * 
+ * @returns {React.JSX.Element} The rendered Terms of Service page.
+ */
 export default function TermsPage() {
   return (
     <main className="min-h-screen premium-shell text-foreground py-24 px-4 sm:px-6 md:px-12 relative overflow-hidden flex flex-col items-center justify-start transition-colors duration-300">
@@ -75,6 +86,7 @@ export default function TermsPage() {
           <article className="prose prose-slate dark:prose-invert max-w-none text-muted-foreground space-y-8">
             <div className="flex items-center gap-2 text-xs font-semibold text-secondary/80 bg-secondary/5 border border-secondary/10 w-fit px-4 py-2 rounded-xl">
               <span className="size-2 rounded-full bg-secondary animate-pulse" />
+              {/* suppressHydrationWarning used because server and client render times may differ slightly */}
               <span suppressHydrationWarning={true}>Terakhir diperbarui: {new Date().toLocaleDateString("id-ID", { month: "long", year: "numeric" })}</span>
             </div>
 

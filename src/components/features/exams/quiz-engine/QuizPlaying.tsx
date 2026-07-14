@@ -18,19 +18,34 @@ import { QuizProgress } from "./QuizProgress";
 // ======================
 // ANTARMUKA & TIPE
 // ======================
+
+/**
+ * Props for QuizPlaying component.
+ */
 interface QuizPlayingProps {
+  /** Current active question object. */
   currentQ: QuizQuestion;
+  /** Zero-based index of current question. */
   currentIndex: number;
+  /** Total number of questions in quiz. */
   totalQuestions: number;
+  /** Selected option string, or null if not selected. */
   selectedOption: string | null;
+  /** True if user submitted answer for current question. */
   isAnswered: boolean;
+  /** Callback triggered when option selected. */
   handleSelect: (option: string) => void;
+  /** Callback triggered to advance to next question. */
   nextQuestion: () => void;
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * QuizPlaying component renders current question, options, feedback, and explanation.
+ */
 export function QuizPlaying({
   currentQ,
   currentIndex,
@@ -40,10 +55,12 @@ export function QuizPlaying({
   handleSelect,
   nextQuestion,
 }: QuizPlayingProps) {
+  // Check if selected option matches correct answer
   const isCorrectAnswer = isAnswered && selectedOption === currentQ.answer;
 
   return (
     <Card className="bg-card p-5 md:p-12 rounded-2xl md:rounded-3xl border-border shadow-none relative overflow-hidden neo-card">
+      {/* Background decorative glow elements */}
       <div className="absolute top-0 right-0 size-96 bg-destructive/5 blur-[100px] pointer-events-none" />
       <div className="absolute -bottom-10 -left-10 size-64 bg-destructive/5 blur-[80px] pointer-events-none" />
 
@@ -133,6 +150,7 @@ export function QuizPlaying({
               const isSelected = selectedOption === option;
               const isCorrect = option === currentQ.answer;
 
+              // Determine button style based on answer state
               let buttonStyle = "bg-muted/50 border-border text-muted-foreground md:hover:border-primary/50 md:hover:bg-muted neo-card active:scale-[0.98] transition-transform";
               let statusIcon = null;
 
@@ -168,6 +186,7 @@ export function QuizPlaying({
                             ? 'bg-foreground text-background border-none' 
                             : 'bg-muted text-muted-foreground border-border'
                     }`}>
+                      {/* Convert index to letter (A, B, C, D) */}
                       {String.fromCharCode(65 + index)}
                     </Card>
                     <span className="flex-1 text-base md:text-2xl font-black uppercase tracking-tight leading-tight">{option}</span>

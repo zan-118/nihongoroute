@@ -21,22 +21,32 @@ import { UserProgress } from "./types";
 // ANTARMUKA STATE STORE
 // ==========================================
 /**
- * Mendefinisikan struktur state dan aksi untuk Zustand store pengulangan cerdas (SRS).
- * Mengelola kartu SRS lokal dan penandaan kartu yang belum tersinkronisasi ke cloud (dirty).
+ * SRS store state and actions. Manage local cards and sync status.
  */
 interface SRSStateStore {
+  /** Map of word ID to SRS state. */
   srs: Record<string, SRSState>;
+  /** Set of unsynced word IDs. */
   dirtySrs: Set<string>;
   
+  /** Set SRS state map. */
   setSRS: (srs: Record<string, SRSState>) => void;
+  /** Update dirty SRS set. */
   setDirtySrs: (updater: Set<string> | ((prev: Set<string>) => Set<string>)) => void;
+  /** Clear dirty IDs. Remove synced IDs if provided. */
   clearDirtySrs: (syncedIds?: string[]) => void;
   
+  /** Update XP and SRS card states. Trigger gamification updates. */
   updateProgress: (newXp: number, srsUpdates: Record<string, SRSState>) => void;
+  /** Add new word to SRS. */
   addToSRS: (wordId: string) => void;
+  /** Mark word as deleted. Keep tombstone for sync. */
   removeFromSRS: (wordId: string) => void;
+  /** Update custom mnemonic text for word. */
   updateCustomMnemonic: (wordId: string, text: string) => void;
+  /** Merge cloud progress with local state. Resolve conflicts via timestamp. */
   mergeProgress: (cloudData: UserProgress) => void;
+  /** Reset SRS state to empty. */
   resetSRS: () => void;
 }
 
@@ -44,7 +54,7 @@ interface SRSStateStore {
 // ZUSTAND STORE UTAMA
 // ==========================================
 /**
- * Zustand Store untuk merekam kemajuan belajar spaced repetition (SRS) secara aman dan luring.
+ * Zustand store for SRS data. Persist to IndexedDB.
  */
 export const useSRSStore = create<SRSStateStore>()(
   persist(
@@ -59,33 +69,36 @@ export const useSRSStore = create<SRSStateStore>()(
       })),
 
       clearDirtySrs: (syncedIds) => set((state) => {
+        // Clear all if no IDs provided.
         if (!syncedIds) return { dirtySrs: new Set() };
+        // Remove specific synced IDs.
         const newDirty = new Set(state.dirtySrs);
         syncedIds.forEach(id => newDirty.delete(id));
         return { dirtySrs: newDirty };
       }),
 
       updateProgress: (newXp, srsUpdates) => {
-        // Ambil string tanggal hari ini di tingkat lokal
+        // Get local date string. Track daily reviews.
         const today = getLocalDateString();
         const userState = useUserStore.getState();
         
+        // Clone dirty set. Avoid direct mutation.
         const newDirty = new Set(get().dirtySrs);
         const newSrs = { ...get().srs };
         let srsChanged = false;
 
-        // Tandai seluruh kata yang mengalami perubahan sebagai data kotor (dirtySrs)
+        // Apply updates. Mark IDs dirty.
         Object.keys(srsUpdates).forEach((id) => {
           newSrs[id] = srsUpdates[id];
           newDirty.add(id);
           srsChanged = true;
         });
 
-        // 1. Jika ada perubahan kartu SRS lokal, hitung ulang progres gamifikasi & hari beruntun (streak)
+        // SRS changed. Recalculate streak and gamification.
         if (srsChanged) {
           const { streak, todayReviewCount, lastStudyDate, inventory, studyDays } = userState;
           
-          // Kalkulasi streak baru dengan mendeteksi konsumsi item Streak Freeze luring
+          // Calculate new streak. Check streak freeze usage.
           const { streak: newStreak, streakFreezeUsed } = calculateNewStreak(
             streak,
             lastStudyDate,
@@ -96,7 +109,7 @@ export const useSRSStore = create<SRSStateStore>()(
           const newStudyDays = { ...studyDays };
           newStudyDays[today] = (newStudyDays[today] || 0) + 1;
 
-          // Perbarui informasi gamifikasi lokal di dalam UserStore
+          // Update user store gamification data.
           useUserStore.getState().setGamification({
             xp: newXp,
             level: calculateLevel(newXp),
@@ -110,7 +123,7 @@ export const useSRSStore = create<SRSStateStore>()(
             }
           });
         } else {
-          // Jika tidak ada perubahan kartu, cukup tambahkan perolehan Poin XP murni
+          // No SRS change. Add XP only.
           useUserStore.getState().addXP(newXp - userState.xp);
         }
 
@@ -118,25 +131,27 @@ export const useSRSStore = create<SRSStateStore>()(
       },
 
       addToSRS: (wordId) => {
-        // Abaikan jika kata sudah terdaftar di database luring SRS
+        // Skip if word exists.
         if (get().srs[wordId]) return;
         
-        // Daftarkan sebagai kartu baru dengan status inisiasi belajar awal (learning)
+        // Add new card. Set initial learning state.
         get().updateProgress(useUserStore.getState().xp, {
           [wordId]: createNewCardState(),
         });
       },
 
       removeFromSRS: (wordId) => {
+        // Skip if word missing.
         if (!get().srs[wordId]) return;
         
         const newDirty = new Set(get().dirtySrs);
         newDirty.add(wordId);
         
+        // Set tombstone. Sync will delete from cloud.
         const newSrs = { ...get().srs };
         newSrs[wordId] = {
           ...newSrs[wordId],
-          isDeleted: true, // Berikan penanda dihapus agar disinkronkan ke cloud sebelum dihapus fisik
+          isDeleted: true, 
           updatedAt: Date.now()
         };
         set({ srs: newSrs, dirtySrs: newDirty });
@@ -144,10 +159,11 @@ export const useSRSStore = create<SRSStateStore>()(
 
       updateCustomMnemonic: (wordId, text) => {
         const newSrs = { ...get().srs };
+        // Get existing card or create new.
         const existing = newSrs[wordId] || createNewCardState();
         newSrs[wordId] = {
           ...existing,
-          customMnemonic: text, // Simpan teks mnemonik kustom lokal
+          customMnemonic: text, 
           updatedAt: Date.now()
         };
         
@@ -161,13 +177,12 @@ export const useSRSStore = create<SRSStateStore>()(
         const userState = useUserStore.getState();
         const uiState = useUIStore.getState();
         
-        // 1. Integrasikan Kemajuan Gamifikasi Awan & Lokal (Extracted Helper)
+        // Merge gamification data.
         const mergedGamification = mergeGamification(userState, cloudData);
 
-        // 2. Integrasikan Kemajuan Kartu SRS Awan & Lokal
         const mergedSrs = { ...cloudData.srs };
         
-        // Memulihkan tipe Set pada dirtySrs lokal jika mengalami kegagalan serialisasi IndexedDB
+        // Recover Set type. Handle IndexedDB serialization loss.
         let recoveredDirty: Set<string>;
         try {
           const rawDirty = get().dirtySrs;
@@ -180,12 +195,11 @@ export const useSRSStore = create<SRSStateStore>()(
         
         const newDirty = new Set(recoveredDirty);
 
-        // Pindai dan selesaikan konflik kartu menggunakan timestamp terbaru (updatedAt)
+        // Merge SRS cards. Resolve conflicts.
         Object.entries(localSrs).forEach(([id, localState]) => {
           const cloudState = cloudData.srs[id];
           
-          // Jika kartu dihapus lokal tetapi masih ada di awan, pertahankan tombstone
-          // sampai sinkronisasi berikutnya berhasil menghapus baris cloud.
+          // Handle deleted cards. Keep tombstone if cloud has it.
           if (localState.isDeleted) {
             if (cloudState) {
               newDirty.add(id);
@@ -197,23 +211,23 @@ export const useSRSStore = create<SRSStateStore>()(
             return;
           }
           
-          // Jika kartu tidak ada di awan, pertahankan kartu lokal dan tandai kotor
+          // Local card only. Keep and mark dirty.
           if (!cloudState) {
             mergedSrs[id] = localState;
             newDirty.add(id);
           } else {
-            // Resolusi Konflik: Ambil data dengan timestamp updatedAt terbaru
+            // Compare timestamps. Keep newest.
             if (localState.updatedAt > cloudState.updatedAt) {
               mergedSrs[id] = localState;
               newDirty.add(id);
             } else {
               mergedSrs[id] = cloudState;
-              newDirty.delete(id); // Bersihkan dari antrean sinkronisasi jika data awan lebih baru
+              newDirty.delete(id); 
             }
           }
         });
 
-        // 3. Integrasikan Riwayat Pelajaran Selesai Awan & Lokal
+        // Merge completed lessons.
         const localLessons = userState.completedLessons || {};
         const cloudLessons = cloudData.completedLessons || {};
         const mergedLessons = { ...cloudLessons };
@@ -232,7 +246,7 @@ export const useSRSStore = create<SRSStateStore>()(
             mergedLessons[id] = localState;
             newDirtyLessons.add(id);
           } else {
-            // Resolusi Konflik: Bandingkan timestamp pelajaran
+            // Compare lesson timestamps.
             if (localState.updatedAt > cloudState.updatedAt) {
               mergedLessons[id] = localState;
               newDirtyLessons.add(id);
@@ -243,7 +257,7 @@ export const useSRSStore = create<SRSStateStore>()(
           }
         });
 
-        // 4. Perbarui Informasi di Seluruh Stores Lokal
+        // Update user store with merged data.
         useUserStore.getState().setGamification({
           ...mergedGamification,
           name: cloudData.name || userState.name,
@@ -268,7 +282,7 @@ export const useSRSStore = create<SRSStateStore>()(
           if (!data) return null;
           
           try {
-            // Parsing manual untuk memulihkan struktur Set (reviver)
+            // Parse JSON. Restore Set type.
             const parsed = JSON.parse(data, (key, value) => {
               if (key === 'dirtySrs' && Array.isArray(value)) {
                 return new Set(value);
@@ -283,7 +297,7 @@ export const useSRSStore = create<SRSStateStore>()(
         },
         setItem: async (name, value) => {
           try {
-            // Serialisasi manual untuk menangani konversi tipe Set ke Array (replacer)
+            // Serialize to JSON. Convert Set to Array.
             const stringified = JSON.stringify(value, (key, val) => {
               if (val instanceof Set) {
                 return Array.from(val);
@@ -301,6 +315,7 @@ export const useSRSStore = create<SRSStateStore>()(
   )
 );
 
+// Expose store to window. Debugging helper.
 if (typeof window !== "undefined") {
   (window as unknown as Record<string, typeof useSRSStore>).useSRSStore = useSRSStore;
 }

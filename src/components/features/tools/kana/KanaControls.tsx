@@ -13,14 +13,25 @@ import { KanaType, KanaCategory } from "./kana-data";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
+/**
+ * Props for KanaControls component.
+ */
 interface KanaControlsProps {
+  /** Selected kana type (hiragana or katakana) */
   type: KanaType;
+  /** Callback to change kana type */
   setType: (type: KanaType) => void;
+  /** Selected kana category (seion, dakuon, yoon) */
   category: KanaCategory;
+  /** Callback to change kana category */
   setCategory: (cat: KanaCategory) => void;
+  /** Callback to start quiz */
   startQuiz: () => void;
+  /** Tailwind text color class for active category */
   themeColor: string;
+  /** Tailwind border color class for active category */
   themeBorder: string;
+  /** Tailwind background color class for quiz button */
   themeAccent: string;
 }
 
@@ -28,7 +39,7 @@ interface KanaControlsProps {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen panel kontrol pemilihan kana.
+ * Control panel component. User select kana type and category. Start quiz.
  */
 export function KanaControls({
   type,
@@ -40,6 +51,7 @@ export function KanaControls({
   themeBorder,
   themeAccent,
 }: KanaControlsProps) {
+  // Check if Hiragana selected. Toggle styles.
   const isHira = type === "hiragana";
 
   // ==========================================
@@ -47,6 +59,7 @@ export function KanaControls({
   // ==========================================
   return (
     <div className="mb-6 md:mb-8 space-y-4 md:space-y-6">
+      {/* Kana type selector (Hiragana / Katakana) */}
       <div className="bg-muted p-1 rounded-lg border border-border flex gap-1 shadow-inner relative max-w-sm">
         <Button
           variant={isHira ? "default" : "ghost"}
@@ -64,7 +77,9 @@ export function KanaControls({
         </Button>
       </div>
 
+      {/* Category selector and start quiz button */}
       <div className="flex flex-wrap items-center justify-between gap-4">
+        {/* Map categories to buttons */}
         <div className="flex flex-wrap gap-2 md:gap-3">
           {[
             { id: "seion", label: "Utama" },
@@ -86,6 +101,7 @@ export function KanaControls({
           ))}
         </div>
 
+        {/* Start quiz button */}
         <Button 
           onClick={startQuiz}
           className={`w-full md:w-auto px-6 py-3 h-auto rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-all duration-300 ${themeAccent} text-foreground shadow-lg hover:opacity-90 border-none`}

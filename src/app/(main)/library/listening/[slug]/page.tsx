@@ -19,11 +19,13 @@ import {
   learningResourceJsonLd,
 } from "@/lib/seo";
 
+/** Force dynamic rendering. Prevent static generation. */
 export const dynamic = "force-dynamic";
 
-
+/** Fetch listening item by slug. Cache result. */
 const getListeningBySlug = cache((slug: string) => getLibraryItemBySlug("listening", slug));
 
+/** Extract SEO title and description from CMS data object safely. */
 function getCmsSeo(data: unknown) {
   const seo = data && typeof data === "object" && "seo" in data
     ? (data as { seo?: { title?: string; description?: string } }).seo
@@ -40,7 +42,7 @@ function getCmsSeo(data: unknown) {
 // ======================
 
 /**
- * Menghasilkan metadata SEO dinamis untuk halaman latihan menyimak spesifik.
+ * Generate dynamic SEO metadata for listening page.
  */
 export async function generateMetadata({
   params,
@@ -48,6 +50,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+  // Decode slug to handle special characters in URL.
   const decodedSlug = decodeURIComponent(slug);
   const data = await getListeningBySlug(decodedSlug);
   const seo = getCmsSeo(data);
@@ -73,19 +76,22 @@ export async function generateMetadata({
 // ======================
 
 /**
- * Halaman detail latihan menyimak (RSC) untuk mengambil data materi audio dari CMS Sanity, kemudian merender modul player ListeningPageClient.
+ * Render listening page. Fetch data. Inject JSON-LD. Load client player.
  */
 export default async function ListeningPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  // Decode slug to handle special characters in URL.
   const decodedSlug = decodeURIComponent(slug);
 
+  // Fetch listening task data from CMS.
   const data = await getListeningBySlug(decodedSlug);
 
-
+  // Trigger 404 if data missing.
   if (!data) {
     notFound();
   }
 
+  // Extract SEO metadata from CMS payload.
   const seo = getCmsSeo(data);
   const listeningPath = `/library/listening/${encodeRouteSegment(String(data.slug || decodedSlug))}`;
   const description =

@@ -27,6 +27,9 @@ import { selectWeakPointCandidates } from "@/lib/weak-points";
 // ==========================================
 // ANTARMUKA & PROPS (INTERFACES)
 // ==========================================
+/**
+ * Weak item data structure.
+ */
 interface WeakItem {
   id: string;
   type: "vocab" | "kanji";
@@ -36,11 +39,20 @@ interface WeakItem {
   slug?: string;
 }
 
+/**
+ * Weak candidate structure.
+ */
 interface WeakCandidate {
   id: string;
   easeFactor: number;
 }
 
+/**
+ * Get top weak candidates. Limit 4.
+ * 
+ * @param srs SRS state.
+ * @returns Candidate array.
+ */
 function getTopWeakCandidates(srs: ReturnType<typeof useSRSStore.getState>["srs"]) {
   return selectWeakPointCandidates(srs, { limit: 4 }).map((candidate) => ({
     id: candidate.id,
@@ -48,12 +60,24 @@ function getTopWeakCandidates(srs: ReturnType<typeof useSRSStore.getState>["srs"
   }));
 }
 
+/**
+ * Create string signature. Prevent effect loop.
+ * 
+ * @param srs SRS state.
+ * @returns Signature string.
+ */
 function getWeakCandidatesSignature(srs: ReturnType<typeof useSRSStore.getState>["srs"]) {
   return getTopWeakCandidates(srs)
     .map((item) => `${item.id}:${item.easeFactor}`)
     .join("|");
 }
 
+/**
+ * Parse signature string. Return candidate array.
+ * 
+ * @param signature Signature string.
+ * @returns Candidate array.
+ */
 function parseWeakCandidatesSignature(signature: string): WeakCandidate[] {
   if (!signature) return [];
 
@@ -69,6 +93,9 @@ function parseWeakCandidatesSignature(signature: string): WeakCandidate[] {
 // ==========================================
 // KOMPONEN UTAMA
 // ==========================================
+/**
+ * WeakPointPanel component. Show weak SRS items.
+ */
 export default function WeakPointPanel() {
   const [weakItems, setWeakItems] = useState<WeakItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -81,6 +108,9 @@ export default function WeakPointPanel() {
   useEffect(() => {
     let isMounted = true;
 
+    /**
+     * Fetch details from Supabase.
+     */
     const fetchDetails = async () => {
       if (weakCandidates.length === 0) {
         if (!isMounted) return;
@@ -92,6 +122,7 @@ export default function WeakPointPanel() {
       const leechesIds = weakCandidates.map((item) => item.id);
       setLoading(true);
 
+      // UUID regex. Separate UUID from slug.
       const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
       const uuids = leechesIds.filter(id => UUID_REGEX.test(id));
       const nonUuids = leechesIds.filter(id => !UUID_REGEX.test(id));
@@ -104,6 +135,7 @@ export default function WeakPointPanel() {
         // 2. Ambil data pelengkap dari tabel 'vocab'
         if (uuids.length > 0 || nonUuids.length > 0) {
           let vocabQuery = supabase.from("vocab").select("id, word, romaji, furigana, slug");
+          // Query by UUID or slug. Handle mixed types.
           if (uuids.length > 0 && nonUuids.length > 0) {
             vocabQuery = vocabQuery.or(`id.in.(${uuids.map(id => `"${id}"`).join(",")}),slug.in.(${nonUuids.map(slug => `"${slug}"`).join(",")})`);
           } else if (uuids.length > 0) {
@@ -122,6 +154,7 @@ export default function WeakPointPanel() {
         // 3. Ambil data pelengkap dari tabel 'kanji'
         if (uuids.length > 0 || nonUuids.length > 0) {
           let kanjiQuery = supabase.from("kanji").select("id, character, meaning");
+          // Query by UUID or character. Handle mixed types.
           if (uuids.length > 0 && nonUuids.length > 0) {
             kanjiQuery = kanjiQuery.or(`id.in.(${uuids.map(id => `"${id}"`).join(",")}),character.in.(${nonUuids.map(char => `"${char}"`).join(",")})`);
           } else if (uuids.length > 0) {
@@ -140,6 +173,7 @@ export default function WeakPointPanel() {
         // 4. Gabungkan data dari kedua tabel
         const mergedList: WeakItem[] = [];
 
+        // Map vocab data. Speed up lookup.
         const vocabMap = new Map<string, { id: string; word: string; romaji?: string; furigana?: string; slug?: string }>();
         vocabData.forEach((v) => {
           vocabMap.set(v.id, v);
@@ -147,12 +181,14 @@ export default function WeakPointPanel() {
           if (v.word) vocabMap.set(v.word, v);
         });
 
+        // Map kanji data. Speed up lookup.
         const kanjiMap = new Map<string, { id: string; character: string; meaning: string }>();
         kanjiData.forEach((k) => {
           kanjiMap.set(k.id, k);
           if (k.character) kanjiMap.set(k.character, k);
         });
 
+        // Merge SRS candidates with database details.
         weakCandidates.forEach((leech) => {
           // Cari kecocokan di vocab
           const vocabItem = vocabMap.get(leech.id);

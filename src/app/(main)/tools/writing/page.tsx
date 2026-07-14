@@ -18,7 +18,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+/**
+ * Free writing canvas content.
+ * Renders canvas and tips. Reads target character from URL.
+ */
 function FreeWritingContent() {
+  // Extract target character from URL query parameter.
   const searchParams = useSearchParams();
   const character = searchParams.get("char") || "";
 
@@ -75,6 +80,7 @@ function FreeWritingContent() {
           {/* Area Kanvas Utama */}
           <div className="lg:col-span-7 flex justify-center">
             <div className="w-full max-w-[500px]">
+               {/* Render canvas with selected character and custom stroke color. */}
                <WritingCanvas
                  character={character}
                  strokeColor="rgb(var(--brand-cyan-rgb))"
@@ -125,6 +131,10 @@ function FreeWritingContent() {
   );
 }
 
+/**
+ * Free writing page root.
+ * Wraps content in Suspense. Prevents build errors from search params.
+ */
 export default function FreeWritingPage() {
   return (
     <Suspense fallback={

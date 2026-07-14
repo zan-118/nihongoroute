@@ -23,8 +23,14 @@ import { useReviewSession } from "@/components/features/review/hooks/useReviewSe
 import { ReviewModeCard } from "@/components/features/review/ReviewModeCard";
 import { ReviewCompletionState } from "@/components/features/review/ReviewCompletionState";
 
+/**
+ * Main review hub component. Manage session flow, mode selection, and active flashcard state.
+ */
 export function ReviewClient() {
+  // Get global loading state.
   const loading = useUIStore((state) => state.loading);
+  
+  // Get session state and actions.
   const {
     mode,
     setMode,
@@ -41,6 +47,7 @@ export function ReviewClient() {
   // LOGIKA RENDER
   // ======================
 
+  // Show spinner during initial sync.
   if (loading) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center px-4">
@@ -52,7 +59,7 @@ export function ReviewClient() {
     );
   }
 
-  // Tampilan Pemilihan Mode
+  // Show mode selection screen when no active session.
   if (!mode) {
     return (
       <div className="flex-1 w-full max-w-4xl mx-auto px-4 md:px-8 py-12 flex flex-col">
@@ -96,7 +103,7 @@ export function ReviewClient() {
     );
   }
 
-  // Tampilan Loading Kartu
+  // Show spinner while fetching cards.
   if (isFetching) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center px-4">
@@ -108,7 +115,7 @@ export function ReviewClient() {
     );
   }
 
-  // Tampilan Selesai atau Kosong
+  // Show completion screen when done or empty.
   if (cards.length === 0 || isFinished) {
     return (
       <ReviewCompletionState 
@@ -140,7 +147,7 @@ export function ReviewClient() {
         </header>
 
         <FlashcardMaster
-          key={cards[0]?.id}
+          key={cards[0]?.id} // Force remount when card list changes.
           cards={cards}
           type={cards[0]?.docType === "kanji" ? "kanji" : "vocab"}
           mode="ujian"

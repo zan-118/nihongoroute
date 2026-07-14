@@ -3,8 +3,14 @@ import { BookOpen, FileText, Hash } from "lucide-react";
 import { toHiragana } from "wanakana";
 import { createClient } from "@/lib/supabase/client";
 
+/**
+ * Search category types.
+ */
 export type ToolSearchCategory = "vocab" | "grammar" | "kanji";
 
+/**
+ * Search result item structure.
+ */
 export interface ToolSearchItem {
   id: string;
   title: string;
@@ -21,12 +27,18 @@ export interface ToolSearchItem {
   isCommon?: boolean | null;
 }
 
+/**
+ * Grouped search results.
+ */
 export interface ToolSearchResult {
   vocab: ToolSearchItem[];
   grammar: ToolSearchItem[];
   kanji: ToolSearchItem[];
 }
 
+/**
+ * Character and token statistics for Japanese text.
+ */
 export interface JapaneseTextStats {
   charCount: number;
   japaneseCharCount: number;
@@ -36,9 +48,14 @@ export interface JapaneseTextStats {
   tokens: string[];
 }
 
+// Cache search results to limit DB queries.
 const dictionaryCache = new Map<string, ToolSearchResult>();
 
+/**
+ * Escape special characters for PostgREST ILIKE queries.
+ */
 function escapePostgrestLike(value: string) {
+  // Replace backslashes, wildcards, quotes, and commas.
   return value
     .replace(/\\/g, "\\\\")
     .replace(/%/g, "\\%")
@@ -47,24 +64,36 @@ function escapePostgrestLike(value: string) {
     .replace(/,/g, " ");
 }
 
+/**
+ * Return empty search result structure.
+ */
 export function emptyToolSearchResult(): ToolSearchResult {
   return { grammar: [], kanji: [], vocab: [] };
 }
 
+/**
+ * Flatten grouped search results into single array.
+ */
 export function flattenToolSearchResult(result: ToolSearchResult) {
   return [...result.vocab, ...result.grammar, ...result.kanji];
 }
 
+/**
+ * Analyze text to extract Japanese character counts and tokens.
+ */
 export function getJapaneseTextStats(text: string): JapaneseTextStats {
   const chars = Array.from(text);
+  // Regex for Hiragana, Katakana, Kanji, and iteration marks.
   const japaneseChars = chars.filter((char) =>
     /[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}ー々]/u.test(char)
   );
   const kanaChars = chars.filter((char) =>
     /[\p{Script=Hiragana}\p{Script=Katakana}ー]/u.test(char)
   );
+  // Regex for Kanji only.
   const kanjiChars = chars.filter((char) => /[\p{Script=Han}々]/u.test(char));
   const uniqueKanji = Array.from(new Set(kanjiChars));
+  // Extract unique tokens of 2+ Japanese characters.
   const tokens = Array.from(
     new Set(
       (text.match(/[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}ー々]{2,}/gu) || [])
@@ -83,6 +112,9 @@ export function getJapaneseTextStats(text: string): JapaneseTextStats {
   };
 }
 
+/**
+ * Remove duplicate items based on category and ID.
+ */
 function dedupeItems(items: ToolSearchItem[]) {
   const seen = new Set<string>();
   return items.filter((item) => {
@@ -93,6 +125,9 @@ function dedupeItems(items: ToolSearchItem[]) {
   });
 }
 
+/**
+ * Search database for vocab, grammar, and kanji matching query.
+ */
 export async function searchToolDictionary(
   query: string,
   options: { limitPerType?: number } = {}
@@ -101,16 +136,19 @@ export async function searchToolDictionary(
   const limitPerType = options.limitPerType ?? 8;
   if (!normalizedQuery) return emptyToolSearchResult();
 
+  // Check cache first.
   const cacheKey = `${normalizedQuery.toLowerCase()}:${limitPerType}`;
   const cached = dictionaryCache.get(cacheKey);
   if (cached) return cached;
 
   const supabase = createClient();
   const safeQuery = escapePostgrestLike(normalizedQuery);
+  // Convert query to Hiragana for phonetic matching.
   const kanaQuery = escapePostgrestLike(toHiragana(normalizedQuery));
   const searchTerm = `%${safeQuery}%`;
   const kanaTerm = `%${kanaQuery}%`;
 
+  // Query vocab, grammar, and kanji tables concurrently.
   const [vocabRes, grammarRes, kanjiRes] = await Promise.all([
     supabase
       .from("vocab")
@@ -203,6 +241,7 @@ export async function searchToolDictionary(
     })),
   };
 
+  // Evict oldest cache entry if size limit exceeded.
   if (dictionaryCache.size > 100) {
     const firstKey = dictionaryCache.keys().next().value;
     if (firstKey) dictionaryCache.delete(firstKey);
@@ -211,6 +250,9 @@ export async function searchToolDictionary(
   return result;
 }
 
+/**
+ * Database vocab document interface.
+ */
 interface VocabDoc {
   id: string;
   word: string;
@@ -223,6 +265,9 @@ interface VocabDoc {
   is_common?: boolean | null;
 }
 
+/**
+ * Database grammar document interface.
+ */
 interface GrammarDoc {
   id: string;
   title: string;
@@ -232,6 +277,9 @@ interface GrammarDoc {
   formation?: string | null;
 }
 
+/**
+ * Database kanji document interface.
+ */
 interface KanjiDoc {
   id: string;
   character: string;
@@ -243,10 +291,14 @@ interface KanjiDoc {
   slug?: string | null;
 }
 
+/**
+ * Analyze text and query database for matching dictionary entries.
+ */
 export async function analyzeTextWithDictionary(text: string) {
   const stats = getJapaneseTextStats(text);
   const supabase = createClient();
 
+  // Query database concurrently using extracted tokens and kanji.
   const [vocabByWordRes, vocabByFuriRes, grammarByTitleRes, grammarBySlugRes, kanjiRes] = await Promise.all([
     stats.tokens.length > 0
       ? supabase.from("vocab").select("id, word, meaning_id, furigana, romaji, hinshi, jlpt_level, slug, is_common").in("word", stats.tokens).limit(16)
@@ -265,12 +317,14 @@ export async function analyzeTextWithDictionary(text: string) {
       : Promise.resolve({ data: null, error: null }),
   ]);
 
+  // Deduplicate vocab results.
   const rawVocabs = [
     ...((vocabByWordRes?.data || []) as VocabDoc[]),
     ...((vocabByFuriRes?.data || []) as VocabDoc[])
   ];
   const uniqueVocabs = Array.from(new Map(rawVocabs.map(v => [v.id, v])).values());
 
+  // Deduplicate grammar results.
   const rawGrammars = [
     ...((grammarByTitleRes?.data || []) as GrammarDoc[]),
     ...((grammarBySlugRes?.data || []) as GrammarDoc[])

@@ -19,13 +19,12 @@ import { AlertTriangle, RefreshCw, LayoutDashboard } from "lucide-react";
 // ======================
 
 /**
- * Komponen pembatas kesalahan (Error Boundary) untuk grup rute utama.
- * Menampilkan pesan ramah pengguna dan opsi untuk memuat ulang sesi atau kembali ke dashboard.
+ * Error boundary component for main route group.
+ * Handles runtime errors. Displays error details and recovery actions.
  * 
- * @param {Object} props Properti komponen.
- * @param {Error & { digest?: string }} props.error Objek kesalahan runtime yang ditangkap.
- * @param {function} props.reset Fungsi callback untuk mereset dan memuat ulang sesi yang rusak.
- * @returns {JSX.Element} Antarmuka penanganan kesalahan visual.
+ * @param props Component properties.
+ * @param props.error Runtime error object.
+ * @param props.reset Function to retry rendering.
  */
 export default function MainError({
   error,
@@ -34,6 +33,7 @@ export default function MainError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  // Log error to console for debugging.
   useEffect(() => {
     console.error("Kesalahan Aplikasi Utama (Main Application Error):", error);
   }, [error]);
@@ -63,6 +63,7 @@ export default function MainError({
           Sepertinya ada masalah waktu muat data. Coba refresh halaman atau balik ke dashboard dulu ya.
         </p>
 
+        {/* Show error details only in development mode. */}
         {process.env.NODE_ENV === "development" && (
           <div className="mb-8 p-5 bg-muted/60 rounded-lg border border-destructive/20 text-left overflow-auto max-h-36 ">
             <p className="text-[10px] uppercase tracking-[0.2em] text-destructive font-black mb-2">Error Log Console:</p>
@@ -73,6 +74,7 @@ export default function MainError({
         )}
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          {/* Trigger reset callback to retry rendering. */}
           <Button
             onClick={() => reset()}
             className="rounded-xl h-12 px-6 bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase tracking-widest text-xs duration-300 shadow-[0_0_15px_rgb(var(--destructive-rgb)/0.15)] active:scale-[0.98] w-full sm:w-auto"
@@ -80,6 +82,7 @@ export default function MainError({
             <RefreshCw size={14} className="mr-2 animate-spin-slow" /> Coba Lagi
           </Button>
           
+          {/* Navigation fallback to dashboard. */}
           <Button
             asChild
             variant="outline"

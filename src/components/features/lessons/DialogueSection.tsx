@@ -21,29 +21,59 @@ import { cn } from "@/lib/utils";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+
+/**
+ * DialogueSpeakerItem
+ * Represents single line in dialogue transcript.
+ */
 export interface DialogueSpeakerItem {
+  /** Speaker identifier code */
   speaker?: string;
+  /** Display name of speaker */
   speakerName?: string;
+  /** Japanese text content */
   jp?: string;
+  /** Alternative Japanese text field */
   text?: string;
+  /** Furigana annotations for Japanese text */
   furigana?: string | { text: string; rt?: string }[];
+  /** Indonesian translation text */
   translation?: string;
+  /** Alternative translation field or ID */
   id?: string;
 }
 
+/**
+ * DialogueItem
+ * Represents dialogue scenario containing transcript and media.
+ */
 export interface DialogueItem {
+  /** Unique identifier from Sanity CMS */
   _id?: string;
+  /** Alternative unique identifier */
   id?: string;
+  /** Title of dialogue scenario */
   title?: string;
+  /** URL to audio file */
   audioUrl?: string;
+  /** Alternative audio URL field */
   audio_url?: string;
+  /** URL to illustration image */
   imageUrl?: string;
+  /** URL to reference video */
   videoUrl?: string;
+  /** List of dialogue lines */
   transcript?: DialogueSpeakerItem[];
+  /** Alternative list of dialogue lines */
   body?: DialogueSpeakerItem[];
 }
 
+/**
+ * DialogueSectionProps
+ * Props for DialogueSection component.
+ */
 interface DialogueSectionProps {
+  /** List of dialogue scenarios to render */
   listeningList: DialogueItem[];
 }
 
@@ -63,6 +93,7 @@ interface DialogueSectionProps {
  * @param {DialogueItem[]} props.listeningList - Daftar skenario percakapan hasil query Sanity CMS
  */
 export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList }) => {
+  // Flatten all dialogue lines across scenarios with local index tracking
   const allLines = React.useMemo(() => {
     const lines: (DialogueSpeakerItem & { localIndex: number })[] = [];
     listeningList?.forEach((l) => {
@@ -77,6 +108,7 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
     return lines;
   }, [listeningList]);
 
+  // Hook managing TTS playback state and controls
   const {
     speakingIndex,
     loadingIndex,
@@ -87,10 +119,12 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
     speakLine,
   } = useLineTTS({ rate: "medium", lines: allLines });
 
+  // Track active dialogue block ID
   const [activeDialogId, setActiveDialogId] = React.useState<string | null>(null);
+  // Reference to active dialogue line element for auto-scroll
   const activeLineRef = React.useRef<HTMLDivElement | null>(null);
 
-  // Auto-scroll baris aktif saat memutar playlist TTS
+  // Scroll active line into view during playlist playback
   React.useEffect(() => {
     if (activeLineRef.current && isPlayingPlaylist) {
       activeLineRef.current.scrollIntoView({ behavior: "smooth", block: "center" });

@@ -1,7 +1,10 @@
+/** Valid Japanese particle options. */
 export const PARTICLE_OPTIONS = ["は", "が", "を", "に", "へ", "で", "と", "も", "から", "まで"] as const;
 
+/** Union type of valid Japanese particles. */
 export type ParticleOption = (typeof PARTICLE_OPTIONS)[number];
 
+/** Structure of particle training question. */
 export interface ParticleQuestion {
   id: string;
   level: "N5" | "N4" | "N3";
@@ -13,6 +16,7 @@ export interface ParticleQuestion {
   options: ParticleOption[];
 }
 
+/** List of particle training questions. */
 export const PARTICLE_QUESTIONS: ParticleQuestion[] = [
   {
     id: "topic-wa",
@@ -131,19 +135,24 @@ export const PARTICLE_QUESTIONS: ParticleQuestion[] = [
     answer: "で",
     translation: "Saya pergi ke kantor dengan kereta.",
     hint: "Menandai alat atau cara.",
-    explanation: "で juga dipakai untuk alat, cara, atau sarana melakukan sesuatu.",
+    explanation: "de juga dipakai untuk alat, cara, atau sarana melakukan sesuatu.",
     options: ["で", "に", "と", "は"],
   },
 ];
 
+/** Normalize input string. Trim whitespace and standardize character width. */
 export function normalizeParticleAnswer(value: string) {
+  // NFKC normalizes Japanese character widths.
   return value.normalize("NFKC").trim();
 }
 
+/** Compare expected answer with user answer. Return true if match. */
 export function isParticleAnswerCorrect(expected: string, answer: string) {
   return normalizeParticleAnswer(expected) === normalizeParticleAnswer(answer);
 }
 
+/** Get question by index. Wrap around if index exceeds array length. */
 export function getParticleQuestion(index: number) {
+  // Modulo operator prevents out-of-bounds errors.
   return PARTICLE_QUESTIONS[index % PARTICLE_QUESTIONS.length];
 }

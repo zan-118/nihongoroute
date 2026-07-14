@@ -15,12 +15,22 @@ import { useAddToSRS } from "../button/useAddToSRS";
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Button component to add word to SRS.
+ * Displays status and triggers add action.
+ * 
+ * @param props - Component properties.
+ * @param props.wordId - Unique identifier of word.
+ */
 export default function AddToSRSButton({ wordId }: { wordId: string }) {
   const { isLoaded, isAdded, handleAdd } = useAddToSRS(wordId);
 
+  // Render skeleton loader during initial status check.
   if (!isLoaded)
     return <div className="size-10 animate-pulse bg-background/5 rounded-xl" />;
 
+  // Render disabled success state if word already added.
   if (isAdded) {
     return (
       <button type="button"
@@ -36,6 +46,7 @@ export default function AddToSRSButton({ wordId }: { wordId: string }) {
     );
   }
 
+  // Render active button to trigger SRS addition.
   return (
     <button type="button"
       onClick={handleAdd}

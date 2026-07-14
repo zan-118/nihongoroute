@@ -18,8 +18,13 @@ import { VocabItem } from "./types";
 // ==========================================
 // ANTARMUKA & TIPE DATA
 // ==========================================
+/**
+ * Props for VocabFlashcardView component.
+ */
 interface VocabFlashcardViewProps {
+  /** List of vocabulary items to study. */
   vocabList: VocabItem[];
+  /** Callback triggered when back button clicked. */
   onBack: () => void;
 }
 
@@ -27,12 +32,14 @@ interface VocabFlashcardViewProps {
 // KOMPONEN UTAMA: VocabFlashcardView
 // ==========================================
 /**
- * Komponen penayang sesi latihan flashcards kosakata.
+ * Component for vocabulary flashcard study session.
+ * Maps vocabulary items to flashcard format and renders master flashcard interface.
  * 
- * @param {VocabFlashcardViewProps} props Properti komponen flashcard view kosakata.
+ * @param props Component properties.
+ * @returns React element.
  */
 export function VocabFlashcardView({ vocabList, onBack }: VocabFlashcardViewProps) {
-  // Memetakan struktur VocabItem dari Pustaka ke skema data yang kompatibel dengan FlashcardMaster
+  // Map VocabItem structure to FlashcardMaster compatible schema.
   const flashcardData = vocabList.map((item) => ({
     id: item.id,
     word: item.word,
@@ -62,4 +69,3 @@ export function VocabFlashcardView({ vocabList, onBack }: VocabFlashcardViewProp
     </div>
   );
 }
-

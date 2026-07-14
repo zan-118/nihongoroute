@@ -45,7 +45,11 @@ import {
 // ======================
 
 /**
- * Menghasilkan metadata SEO dinamis untuk halaman detail karakter Kanji.
+ * Generates dynamic SEO metadata for a specific Kanji detail page.
+ * 
+ * @param props - Component properties.
+ * @param props.params - Route parameters containing the Kanji slug.
+ * @returns Promise resolving to page metadata.
  */
 export async function generateMetadata({
   params,
@@ -53,6 +57,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+  // Decode URL-encoded Japanese characters in slug
   const decodedSlug = fullyDecode(slug);
   const kanji = await getLibraryItemBySlug("kanji", decodedSlug);
 
@@ -83,8 +88,12 @@ export async function generateMetadata({
 // ======================
 
 /**
- * Halaman detail karakter kanji (RSC) untuk mengambil data kanji dari database, 
- * kemudian merender hero goresan, readings Onyomi/Kunyomi, radikal, mnemonic, dan kosakata terkait.
+ * Kanji detail page component.
+ * Fetches Kanji data and related sentences, then renders stroke order, readings,
+ * radicals, mnemonics, vocabulary, and example sentences.
+ * 
+ * @param props - Component properties.
+ * @param props.params - Route parameters containing the Kanji slug.
  */
 export default async function KanjiDetailPage({
   params,
@@ -92,11 +101,13 @@ export default async function KanjiDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  // Decode URL-encoded Japanese characters in slug
   const decodedSlug = fullyDecode(slug);
   const kanji = await getLibraryItemBySlug("kanji", decodedSlug);
 
   if (!kanji) notFound();
   const kanjiCharacter = String(kanji.character || "");
+  // Fetch up to 5 example sentences containing this Kanji
   const sentences = await getSentencesByKanji(kanjiCharacter, 5);
   const kanjiLevel = String(kanji.jlpt_level || kanji.jlptLevel || "").toUpperCase();
   const kanjiSlug = String(kanji.slug || decodedSlug);
@@ -104,6 +115,7 @@ export default async function KanjiDetailPage({
 
   return (
     <main className="w-full bg-transparent px-4 md:px-8 lg:px-12 relative overflow-hidden flex flex-col justify-start min-h-screen pb-32 transition-colors duration-300">
+      {/* Generate JSON-LD structured data for search engines */}
       <JsonLd
         data={[
           breadcrumbJsonLd([

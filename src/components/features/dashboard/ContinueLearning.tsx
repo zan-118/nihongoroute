@@ -25,6 +25,10 @@ import { m } from "framer-motion";
 // ==========================================
 // ANTARMUKA & PROPS (INTERFACES)
 // ==========================================
+/**
+ * Props for ContinueLearning component.
+ * Contains course metadata array.
+ */
 interface ContinueLearningProps {
   courseMetadata: Array<{
     _id: string;
@@ -41,14 +45,22 @@ interface ContinueLearningProps {
 // ==========================================
 // KOMPONEN UTAMA
 // ==========================================
+/**
+ * ContinueLearning component.
+ * Render shortcut to next incomplete lesson.
+ * Show progress bar and percentage.
+ */
 export default function ContinueLearning({ courseMetadata }: ContinueLearningProps) {
+  // Get completed lessons from Zustand store.
   const completedLessons = useUserStore(s => s.completedLessons);
 
   // Logika untuk menemukan kursus aktif dan pelajaran berikutnya berdasarkan riwayat penyelesaian
+  // Compute active course and next lesson.
   const activeData = useMemo(() => {
     if (!courseMetadata || courseMetadata.length === 0) return null;
 
     // 1. Hitung progres untuk setiap kategori/kursus
+    // Map courses to calculate progress and last update time.
     const stats = courseMetadata.map(cat => {
       const lessons = cat.lessons || [];
       const completedInCat = lessons.filter(lesson => {
@@ -62,6 +74,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
         : 0;
       
       // Temukan waktu pelajaran terakhir yang diperbarui di kategori ini
+      // Find latest update timestamp.
       const lastUpdate = lessons.reduce((max, lesson) => {
         const ts = completedLessons[lesson._id]?.updatedAt || 0;
         return ts > max ? ts : max;
@@ -72,18 +85,21 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
 
     // 2. Temukan kursus "Aktif" (memiliki progres tetapi belum 100%, dan paling baru diperbarui)
     // Jika tidak ada yang memiliki progres, pilih kategori pertama (biasanya N5)
+    // Find course in progress. Fallback to first incomplete.
     let active = stats
       .filter(s => s.progress > 0 && s.progress < 100)
       .sort((a, b) => b.lastUpdate - a.lastUpdate)[0] as typeof stats[number] | undefined;
 
     if (!active) {
        // Jika tidak ada kursus yang selesai sebagian, cari kursus pertama yang belum 100%
+       // Fallback to first incomplete course.
        active = stats.find(s => s.progress < 100);
     }
 
     if (!active || !active.lessons || active.lessons.length === 0) return null;
 
     // 3. Temukan pelajaran berikutnya dalam urutan kursus aktif yang belum diselesaikan
+    // Find first uncompleted lesson.
     const nextLessonIndex = active.lessons.findIndex(l => !completedLessons[l._id]?.completedAt);
     const nextLesson = active.lessons[nextLessonIndex] || active.lessons[0];
 
@@ -124,6 +140,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
 
       <Card className="group relative overflow-hidden border-border bg-card/10  p-0 rounded-2xl transition-all duration-500 hover:border-primary/40 hover:shadow-[0_0_40px_rgb(var(--primary-rgb)/0.1)] shadow-none glass">
         {/* Glow Latar Belakang Kemajuan Belajar */}
+        {/* Background progress glow width matches progress percentage */}
         <div 
           className="absolute left-0 top-0 bottom-0 bg-primary/5 transition-all duration-1000 ease-out pointer-events-none" 
           style={{ width: `${activeData.progress}%` }}
@@ -141,6 +158,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
             </div>
             
             {/* Lencana Persentase Progres */}
+            {/* Progress percentage badge */}
             <div className={`absolute -bottom-2 -right-2 text-background text-[10px] font-black px-3 py-1 rounded-full border border-border shadow-xl transition-colors ${activeData.progress === 100 ? 'bg-success text-success-foreground border-success/30' : 'bg-foreground'}`}>
               {Math.round(activeData.progress)}%
             </div>
@@ -160,6 +178,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
             <div className="flex items-center justify-center md:justify-start gap-4">
               <div className="flex items-center gap-2">
                 <div className="flex -space-x-1">
+                  {/* Render progress dots based on percentage */}
                   {[...Array(3)].map((_, i) => {
                     const isDotActive = i < Math.floor(activeData.progress / 33);
                     return (
@@ -197,6 +216,7 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
         </div>
 
         {/* Batang Progres Tipis di Sisi Bawah Card */}
+        {/* Bottom progress bar with shimmer effect */}
         <div className="absolute bottom-0 left-0 w-full h-[2px] bg-border/50">
           <m.div 
             initial={{ width: 0 }}

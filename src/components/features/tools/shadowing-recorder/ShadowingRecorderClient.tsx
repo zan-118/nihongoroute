@@ -25,23 +25,33 @@ import NextActionPanel from "@/components/features/ecosystem/NextActionPanel";
 import { useUIStore } from "@/store/useUIStore";
 import { cn } from "@/lib/utils";
 
+/** Playback speed options for target speech. */
 const PLAYBACK_RATES = [
   { label: "Lambat", value: 0.78 },
   { label: "Normal", value: 0.95 },
   { label: "Cepat", value: 1.12 },
 ] as const;
 
+/** Props for ShadowingRecorderClient component. */
 interface ShadowingRecorderClientProps {
+  /** Initial presets to display. */
   initialPresets?: ShadowingPreset[];
+  /** Total presets available in library. */
   libraryPresetCount?: number;
+  /** Optional label for context. */
   contextLabel?: string;
 }
 
+/**
+ * Shadowing recorder client component.
+ * Allows users to listen to Japanese text, record their own voice, and compare durations.
+ */
 export default function ShadowingRecorderClient({
   initialPresets = [],
   libraryPresetCount = 0,
   contextLabel,
 }: ShadowingRecorderClientProps) {
+  // State hooks for UI and audio status
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [playbackRate, setPlaybackRate] = useState<(typeof PLAYBACK_RATES)[number]["value"]>(0.95);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -52,6 +62,7 @@ export default function ShadowingRecorderClient({
   const [speechSupported, setSpeechSupported] = useState(false);
   const [recordingSupported, setRecordingSupported] = useState(false);
 
+  // Refs for media recording and timers
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -61,11 +72,13 @@ export default function ShadowingRecorderClient({
   const audioUrlRef = useRef<string | null>(null);
   const recordLearningEvent = useUIStore((state) => state.recordLearningEvent);
 
+  // Resolve presets and current selection
   const presets = initialPresets.length > 0 ? initialPresets : SHADOWING_PRESETS;
   const preset = presets[selectedIndex] ?? presets[0];
   const paceLabel = getShadowingPaceLabel(elapsedSeconds, preset.targetSeconds);
   const pacePercent = Math.min(100, Math.round((elapsedSeconds / Math.max(preset.targetSeconds, 1)) * 100));
 
+  /** Stop active timer. */
   const stopTimer = useCallback(() => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
@@ -73,11 +86,13 @@ export default function ShadowingRecorderClient({
     }
   }, []);
 
+  /** Stop microphone stream tracks. */
   const stopStream = useCallback(() => {
     streamRef.current?.getTracks().forEach((track) => track.stop());
     streamRef.current = null;
   }, []);
 
+  /** Free memory from old audio URL. */
   const revokeRecordingUrl = useCallback(() => {
     if (audioUrlRef.current) {
       URL.revokeObjectURL(audioUrlRef.current);
@@ -85,12 +100,14 @@ export default function ShadowingRecorderClient({
     }
   }, []);
 
+  /** Reset recording state. */
   const clearRecording = useCallback(() => {
     revokeRecordingUrl();
     setAudioUrl(null);
     setElapsedSeconds(0);
   }, [revokeRecordingUrl]);
 
+  /** Cancel active speech synthesis. */
   const stopSpeaking = useCallback(() => {
     if (typeof window !== "undefined" && window.speechSynthesis) {
       window.speechSynthesis.cancel();
@@ -98,6 +115,7 @@ export default function ShadowingRecorderClient({
     setIsSpeaking(false);
   }, []);
 
+  // Check browser API support and handle cleanup
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
       setSpeechSupported(typeof window !== "undefined" && "speechSynthesis" in window && "SpeechSynthesisUtterance" in window);
@@ -117,6 +135,7 @@ export default function ShadowingRecorderClient({
     };
   }, [revokeRecordingUrl, stopSpeaking, stopStream, stopTimer]);
 
+  /** Switch preset and reset state. */
   const handlePresetChange = (nextIndex: number) => {
     if (isRecording) return;
     stopSpeaking();
@@ -125,6 +144,7 @@ export default function ShadowingRecorderClient({
     setError("");
   };
 
+  /** Play target text using Web Speech API. */
   const speakTarget = () => {
     if (!speechSupported) {
       setError("Browser ini belum mendukung Web Speech API.");
@@ -138,6 +158,7 @@ export default function ShadowingRecorderClient({
     }
 
     setError("");
+    // Pause other audio players
     window.dispatchEvent(new CustomEvent("nihongoroute_pause_line_tts"));
     window.dispatchEvent(new CustomEvent("nihongoroute_pause_native_audio"));
     window.speechSynthesis.cancel();
@@ -146,6 +167,8 @@ export default function ShadowingRecorderClient({
     utterance.lang = "ja-JP";
     utterance.rate = playbackRate;
     utterance.pitch = 1;
+    
+    // Find Japanese voice
     const japaneseVoice = window.speechSynthesis
       .getVoices()
       .find((voice) => voice.lang.toLowerCase().startsWith("ja"));
@@ -161,6 +184,7 @@ export default function ShadowingRecorderClient({
     window.speechSynthesis.speak(utterance);
   };
 
+  /** Request microphone access and start recording. */
   const startRecording = async () => {
     if (!recordingSupported) {
       setError("Browser ini belum mendukung perekaman mikrofon.");
@@ -197,6 +221,8 @@ export default function ShadowingRecorderClient({
           const url = URL.createObjectURL(blob);
           audioUrlRef.current = url;
           setAudioUrl(url);
+          
+          // Log learning event to store
           recordLearningEvent({
             type: "shadowing_recorded",
             source: {
@@ -237,6 +263,7 @@ export default function ShadowingRecorderClient({
     }
   };
 
+  /** Stop recording and calculate final duration. */
   const stopRecording = () => {
     const recorder = mediaRecorderRef.current;
     if (recorder && recorder.state !== "inactive") {

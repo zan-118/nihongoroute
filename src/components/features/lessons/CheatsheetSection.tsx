@@ -12,12 +12,19 @@ import { Zap } from "lucide-react";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+
+/**
+ * Represents a single item in a cheatsheet.
+ */
 interface CheatsheetItem {
   jp: string;
   romaji: string;
   label: string;
 }
 
+/**
+ * Represents a vocabulary item linked to a cheatsheet.
+ */
 interface LinkedVocabItem {
   id?: string;
   _id?: string;
@@ -25,6 +32,9 @@ interface LinkedVocabItem {
   meaning: string;
 }
 
+/**
+ * Structure of cheatsheet data containing category, title, items, and linked vocabulary.
+ */
 export interface CheatsheetData {
   id?: string;
   _id?: string;
@@ -34,6 +44,9 @@ export interface CheatsheetData {
   linkedVocab?: LinkedVocabItem[];
 }
 
+/**
+ * Props for CheatsheetSection component.
+ */
 interface CheatsheetSectionProps {
   cheatsheets: CheatsheetData[];
 }
@@ -41,7 +54,12 @@ interface CheatsheetSectionProps {
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Renders cheatsheet section with quick reference tables and linked vocabulary.
+ */
 export const CheatsheetSection: React.FC<CheatsheetSectionProps> = ({ cheatsheets }) => {
+  // Return null if no cheatsheets provided
   if (!cheatsheets || cheatsheets.length === 0) return null;
 
   return (
@@ -55,6 +73,7 @@ export const CheatsheetSection: React.FC<CheatsheetSectionProps> = ({ cheatsheet
       <div className="space-y-12">
         {cheatsheets.map((c: CheatsheetData) => (
           <div key={c._id || c.id} className="border border-border/80 rounded-2xl md:rounded-3xl bg-card/25 shadow-[0_0_40px_rgba(var(--warning-rgb),0.015)] overflow-hidden glass relative">
+            {/* Header section with category and title */}
             <div 
               className="p-6 md:p-8 border-b border-border/60"
               style={{ backgroundColor: "rgb(var(--warning-rgb)/0.03)" }}
@@ -63,6 +82,7 @@ export const CheatsheetSection: React.FC<CheatsheetSectionProps> = ({ cheatsheet
                <h3 className="text-xl md:text-2xl uppercase tracking-tight">{c.title}</h3>
             </div>
             <div className="p-8 md:p-10">
+              {/* Render main cheatsheet items */}
               {c.items && c.items.length > 0 && (
                 <div className="flex flex-col sm:flex-row flex-wrap gap-5 mb-10">
                   {c.items.map((item: CheatsheetItem) => (
@@ -78,6 +98,7 @@ export const CheatsheetSection: React.FC<CheatsheetSectionProps> = ({ cheatsheet
                 </div>
               )}
 
+              {/* Render linked vocabulary tags */}
               {c.linkedVocab && c.linkedVocab.length > 0 && (
                 <div>
                   <h4 className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] mb-6 text-center">Kosakata Terkait</h4>

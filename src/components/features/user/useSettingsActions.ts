@@ -21,6 +21,11 @@ import { toast } from "sonner";
 // ======================
 // HOOK UTAMA
 // ======================
+
+/**
+ * Manage account settings actions.
+ * Handle export, import, reset, logout, cloud sync.
+ */
 export function useSettingsActions() {
   const router = useRouter();
   const supabase = createClient();
@@ -53,7 +58,10 @@ export function useSettingsActions() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const resetAuth = useAuthStore((state) => state.resetAuth);
 
+  // Sync state indicator.
   const [isSyncing, setIsSyncing] = useState(false);
+  
+  // Confirmation modal state.
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,
     title: "",
@@ -63,6 +71,9 @@ export function useSettingsActions() {
     onConfirm: () => {},
   });
 
+  /**
+   * Open confirmation modal.
+   */
   const openConfirm = useCallback((
     title: string,
     description: string,
@@ -73,10 +84,16 @@ export function useSettingsActions() {
     setConfirmModal({ isOpen: true, title, description, confirmText, isDestructive, onConfirm });
   }, []);
 
+  /**
+   * Close confirmation modal.
+   */
   const closeConfirm = useCallback(() => {
     setConfirmModal((prev) => ({ ...prev, isOpen: false }));
   }, []);
 
+  /**
+   * Reset all local stores.
+   */
   const resetAll = useCallback(() => {
     resetAuth();
     resetUser();
@@ -84,11 +101,18 @@ export function useSettingsActions() {
     resetUI();
   }, [resetAuth, resetUser, resetSRS, resetUI]);
 
+  /**
+   * Export user data to JSON.
+   */
   const handleExportData = useCallback(() => {
     exportData();
   }, [exportData]);
 
+  /**
+   * Import user data from JSON.
+   */
   const handleImportData = useCallback(() => {
+    // Create hidden file input to trigger file picker.
     const input = document.createElement("input");
     input.type = "file";
     input.accept = ".json";
@@ -100,6 +124,7 @@ export function useSettingsActions() {
       reader.onload = async (event: ProgressEvent<FileReader>) => {
         const result = event.target?.result as string;
         if (await importData(result)) {
+          // Reload page to apply imported state.
           window.location.reload();
         } else {
           alert("File-nya nggak valid atau rusak. Coba file lain ya.");
@@ -110,6 +135,9 @@ export function useSettingsActions() {
     input.click();
   }, [importData]);
 
+  /**
+   * Trigger reset confirmation.
+   */
   const handleResetData = useCallback(() => {
     openConfirm(
       "Hapus Semua Data Belajar?",
@@ -123,6 +151,9 @@ export function useSettingsActions() {
     );
   }, [openConfirm, resetAll]);
 
+  /**
+   * Trigger logout confirmation.
+   */
   const handleLogout = useCallback(() => {
     openConfirm(
       "Mau Keluar?",
@@ -137,6 +168,9 @@ export function useSettingsActions() {
     );
   }, [openConfirm, resetAll, router, supabase.auth]);
 
+  /**
+   * Sync local progress to Supabase.
+   */
   const handleManualSync = useCallback(async () => {
     if (!isAuthenticated) {
       toast.error("Login dulu ya biar data belajarmu bisa disinkronkan ke cloud.");
@@ -147,6 +181,7 @@ export function useSettingsActions() {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
+        // Dynamic import to reduce initial bundle size.
         const { syncLocalToCloud } = await import("@/lib/supabase/sync");
         const progressData = {
           id,

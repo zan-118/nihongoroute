@@ -2,6 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { Github, Instagram, MessageCircle } from "lucide-react";
 
+/**
+ * Navigation links for learning resources.
+ */
 const learningLinks = [
   { href: "/tools/kana", label: "Hiragana & Katakana" },
   { href: "/library/vocab", label: "Kosakata Utama" },
@@ -10,6 +13,9 @@ const learningLinks = [
   { href: "/exams", label: "Simulasi JLPT" },
 ];
 
+/**
+ * Navigation links for core platform features.
+ */
 const featureLinks = [
   { href: "/review", label: "Flashcard SRS" },
   { href: "/dashboard", label: "Papan Kemajuan" },
@@ -17,18 +23,30 @@ const featureLinks = [
   { href: "https://github.com/zan-118/nihongoroute", label: "Kontribusi GitHub", external: true },
 ];
 
+/**
+ * Navigation links for support and legal pages.
+ */
 const supportLinks = [
   { href: "/support", label: "Dukung Kami" },
   { href: "/privacy", label: "Kebijakan Privasi" },
   { href: "/terms", label: "Syarat & Ketentuan" },
 ];
 
+/**
+ * Social media links with icons.
+ */
 const socialLinks = [
   { href: "https://www.instagram.com/nihongoroute", label: "Instagram", icon: Instagram },
   { href: "https://www.threads.com/nihongoroute", label: "Threads", icon: MessageCircle },
   { href: "https://github.com/zan-118/nihongoroute", label: "GitHub", icon: Github },
 ];
 
+/**
+ * @description Render single column of footer links.
+ * @param props - Component props.
+ * @param props.title - Column header text.
+ * @param props.links - Array of link objects.
+ */
 function FooterColumn({
   title,
   links,
@@ -68,9 +86,13 @@ function FooterColumn({
   );
 }
 
+/**
+ * @description Main footer component for landing page.
+ */
 export function LandingFooter() {
   return (
     <footer className="mt-24 md:mt-28 pt-16 md:pt-20 border-t border-border/80 pb-14 relative z-10 w-full">
+      {/* Decorative top border gradient */}
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent pointer-events-none" />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12 mb-16">
@@ -127,6 +149,7 @@ export function LandingFooter() {
       </div>
 
       <div className="pt-8 border-t border-border/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+        {/* Prevent SSR mismatch on dynamic year */}
         <span suppressHydrationWarning>
           &copy; {new Date().getFullYear()} NihongoRoute. Hak cipta dilindungi.
         </span>

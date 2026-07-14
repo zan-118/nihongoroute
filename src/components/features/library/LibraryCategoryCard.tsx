@@ -18,14 +18,25 @@ import { cn } from "@/lib/utils";
 // ==========================================
 // ANTARMUKA & TIPE DATA
 // ==========================================
+/**
+ * Props for LibraryCategoryCard component.
+ */
 interface LibraryCategoryCardProps {
+  /** Target URL path. */
   href: string;
+  /** Category title. */
   title: string;
+  /** Category description text. */
   desc: string;
+  /** React node for category icon. */
   icon: React.ReactNode;
+  /** Small uppercase category label. */
   label: string;
+  /** Card index for numbering. */
   index: number;
+  /** Optional count of items in category. */
   count?: number;
+  /** Flag indicating content source is Sanity CMS. */
   isSanity?: boolean;
   /** Aksen warna unik berbasis RGB triplet (contoh: "59 130 246") */
   accentRgb?: string;
@@ -35,7 +46,11 @@ interface LibraryCategoryCardProps {
 // KOMPONEN UTAMA: LibraryCategoryCard
 // ==========================================
 /**
- * Komponen kartu kategori interaktif dengan efek Bento Grid lapang dan pendar siber semantik.
+ * Bento-grid style card component for library categories.
+ * Renders interactive card with custom accent glow on hover.
+ * 
+ * @param props - Component properties.
+ * @returns React element.
  */
 export function LibraryCategoryCard({
   href,
@@ -48,6 +63,7 @@ export function LibraryCategoryCard({
   isSanity = false,
   accentRgb = "0 122 124",
 }: LibraryCategoryCardProps) {
+  // Track hover state for dynamic glow effects
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -65,6 +81,7 @@ export function LibraryCategoryCard({
           isHovered ? "scale-[1.01]" : ""
         )}
         style={{
+          // Apply dynamic shadow and background gradient based on hover state
           boxShadow: isHovered 
             ? `0 20px 50px -12px rgba(${accentRgb}, 0.15), 0 0 0 1px rgba(${accentRgb}, 0.4)`
             : "none",
@@ -89,6 +106,7 @@ export function LibraryCategoryCard({
             >
               {label}
             </span>
+            {/* Format index with leading zero */}
             <span className="text-[10px] font-mono font-black text-muted-foreground/30 group-hover:text-primary/50 transition-colors">
               /{String(index + 1).padStart(2, "0")}
             </span>
@@ -113,6 +131,7 @@ export function LibraryCategoryCard({
 
           {/* Indikator Data / Jumlah Materi */}
           <div className="mt-2">
+            {/* Render item count if provided, fallback to Sanity badge or empty spacer */}
             {count !== undefined ? (
               <div className="flex items-baseline gap-2">
                 <span

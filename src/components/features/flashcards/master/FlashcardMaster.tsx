@@ -25,14 +25,15 @@ import PronunciationPanel from "./PronunciationPanel";
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen pembungkus utama untuk melatih kosakata atau kanji melalui kartu flashcard interaktif.
+ * Main orchestrator component for flashcard study sessions.
+ * Manages card navigation, study modes, user input validation, and session statistics.
  *
- * @param {Object} props - Properti komponen
- * @param {MasterCardData[]} props.cards - Koleksi data kartu pengingat
- * @param {"vocab" | "kanji"} props.type - Kategori pembelajaran kartu
- * @param {StudyMode} props.mode - Mode belajar awal
- * @param {boolean} props.isFixedMode - Kunci mode belajar agar tidak dapat diganti manual
- * @param {Function} props.onFinish - Callback ketika sesi belajar selesai sepenuhnya
+ * @param props - Component properties.
+ * @param props.cards - Array of flashcard data.
+ * @param props.type - Card category type (vocab or kanji).
+ * @param props.mode - Initial study mode.
+ * @param props.isFixedMode - Lock study mode to prevent manual changes.
+ * @param props.onFinish - Callback triggered when session completes.
  */
 export default function FlashcardMaster({
   cards,
@@ -77,19 +78,22 @@ export default function FlashcardMaster({
     isSyncing,
   } = useFlashcardMaster({ cards, initialMode: mode });
 
-  // Pemicu onFinish untuk parent (ReviewClient)
+  // Trigger parent callback when session finishes.
   useEffect(() => {
     if (isFinished && onFinish) {
       onFinish();
     }
   }, [isFinished, onFinish]);
 
+  // Prevent SSR mismatch or rendering empty cards.
   if (!isClient || !cards || cards.length === 0) return null;
 
   const card = currentCards[currentIndex];
   const cardId = card.id || "";
   const srsState = srs[cardId];
   const isKanji = card.docType === "kanji" || type === "kanji";
+  
+  // Compute theme styles based on card type.
   const themeColor = isKanji ? "text-secondary" : "text-primary";
   const themeBgColor = isKanji ? "bg-secondary" : "bg-primary";
   const themeShadow = isKanji
@@ -98,6 +102,7 @@ export default function FlashcardMaster({
 
   return (
     <section className="w-full max-w-2xl mx-auto relative px-4 md:px-0 transition-colors duration-300">
+      {/* Modal shown when all cards are completed */}
       <SessionSummaryModal
         isFinished={isFinished}
         setIsFinished={setIsFinished}
@@ -111,6 +116,7 @@ export default function FlashcardMaster({
         router={router}
       />
 
+      {/* Floating XP feedback animation */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50">
         <XPPop show={showXP} amount={15} />
       </div>
@@ -143,6 +149,7 @@ export default function FlashcardMaster({
       ) : (
         <>
           <div className="relative w-full mb-8 md:mb-10">
+            {/* Animate card transitions based on navigation direction */}
             <AnimatePresence initial={false} mode="wait">
               <m.div
                 key={currentCards[currentIndex]?.id || currentIndex}
@@ -168,6 +175,7 @@ export default function FlashcardMaster({
                   kanjiDetails={currentCards[currentIndex]?.kanjiDetails}
                   isFlipped={isFlipped}
                   onFlip={() => {
+                    // Restrict flipping in test/challenge modes.
                     if ((studyMode === "ujian" || studyMode === "tantangan") && isFlipped) return;
                     if (studyMode === "tantangan" && !isFlipped) {
                       return;
@@ -199,6 +207,7 @@ export default function FlashcardMaster({
             </AnimatePresence>
           </div>
 
+          {/* Action buttons for navigation and answering */}
           <FlashcardActions
             studyMode={studyMode}
             isFlipped={isFlipped}
@@ -212,6 +221,7 @@ export default function FlashcardMaster({
           />
         </>
       )}
+      {/* Background sync status indicator */}
       {isSyncing && (
         <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-[10px] text-muted-foreground text-center w-full">
           Menyinkronkan progres ke cloud…

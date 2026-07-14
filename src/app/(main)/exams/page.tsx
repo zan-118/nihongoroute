@@ -18,6 +18,9 @@ import {
   learningResourceJsonLd,
 } from "@/lib/seo";
 
+/**
+ * Represents a simplified exam item for SEO metadata generation.
+ */
 type ExamListItem = {
   title?: string;
 };
@@ -25,6 +28,9 @@ type ExamListItem = {
 // ======================
 // METADATA SEO
 // ======================
+/**
+ * SEO metadata configuration for the Exams page.
+ */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Pusat Ujian Simulasi JLPT | NihongoRoute",
@@ -40,15 +46,18 @@ export const metadata: Metadata = {
 // ======================
 
 /**
- * Halaman utama untuk memuat daftar simulasi ujian JLPT yang tersedia dari Sanity CMS.
+ * Server component for the JLPT exam center page.
+ * Fetches exam list from CMS and renders client-side exam interface.
  * 
- * @returns {JSX.Element} Halaman daftar simulasi ujian.
+ * @returns React element containing SEO JSON-LD and the ExamsClient component.
  */
 export default async function ExamsPage() {
+  // Fetch available exams from Sanity CMS
   const exams = await getExamsList();
 
   return (
     <>
+      {/* Inject JSON-LD structured data for SEO */}
       <JsonLd
         data={[
           breadcrumbJsonLd([
@@ -60,10 +69,12 @@ export default async function ExamsPage() {
             description: metadata.description as string,
             path: "/exams",
             educationalLevel: "JLPT N5-N1",
+            // Map exam titles to teachable topics for SEO schema
             teaches: (exams as ExamListItem[]).map((exam) => exam.title || "").filter(Boolean),
           }),
         ]}
       />
+      {/* Render client component with fetched exams */}
       <ExamsClient exams={exams} />
     </>
   );

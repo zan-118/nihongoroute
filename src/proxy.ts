@@ -1,10 +1,20 @@
 import { type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
+/**
+ * Proxy request to update Supabase session.
+ * @param request - Incoming Next.js request.
+ * @returns Response with updated session headers.
+ */
 export async function proxy(request: NextRequest) {
+  // Refresh session token in cookies
   return await updateSession(request);
 }
 
+/**
+ * Middleware configuration.
+ * Defines paths to run proxy middleware.
+ */
 export const config = {
   matcher: [
     /*

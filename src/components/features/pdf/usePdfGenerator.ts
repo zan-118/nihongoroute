@@ -16,9 +16,15 @@ import { TemplateType } from "./PdfGenerator";
 // ==========================================
 // ANTARMUKA (INTERFACES)
 // ==========================================
+/**
+ * Properties for the usePdfGenerator hook.
+ */
 interface UsePdfGeneratorProps {
+  /** Type of PDF template to generate. */
   type: TemplateType;
+  /** Optional title of the document. */
   title?: string;
+  /** Optional JLPT level or study level. */
   level?: string;
 }
 
@@ -26,26 +32,29 @@ interface UsePdfGeneratorProps {
 // HOOK UTAMA
 // ==========================================
 /**
- * Hook usePdfGenerator
- * Mengelola logic klien dan pembuatan nama file hasil unduhan PDF.
+ * Custom hook to manage client-side PDF rendering state and generate dynamic PDF filenames.
  *
- * @param props Parameter tipe, judul, dan tingkat pembelajaran
- * @returns Status rendering klien (isClient) dan fungsi getFileName
+ * @param props - Configuration properties containing template type, title, and level.
+ * @returns Object containing client mount status and filename generator function.
  */
 export function usePdfGenerator({ type, title, level }: UsePdfGeneratorProps) {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    // Delay setting client state to next animation frame to prevent hydration mismatch.
     const frame = requestAnimationFrame(() => setIsClient(true));
     return () => cancelAnimationFrame(frame);
   }, []);
 
   /**
-   * Menghasilkan nama berkas PDF yang sesuai dan dinamis.
-   * @returns Nama berkas dalam format string
+   * Generates a dynamic PDF filename based on title, type, level, and current date.
+   *
+   * @returns Formatted PDF filename string.
    */
   const getFileName = () => {
     if (title) return `${title}_NihongoRoute.pdf`;
+    
+    // Format date to DD-MM-YYYY using Indonesian locale to avoid slash characters in filename.
     const timestamp = new Date()
       .toLocaleDateString("id-ID")
       .replace(/\//g, "-");
@@ -57,4 +66,3 @@ export function usePdfGenerator({ type, title, level }: UsePdfGeneratorProps) {
 
   return { isClient, getFileName };
 }
-

@@ -18,14 +18,20 @@ import { ROUTES } from "@/lib/routes";
 // ==========================================
 // ANTARMUKA & TIPE DATA
 // ==========================================
+/**
+ * Props for GrammarCard component.
+ */
 interface GrammarCardProps {
+  /** Article data containing identifiers and title. */
   article: {
     id?: string;
     _id: string;
     title: string;
     slug: string;
   };
+  /** Index of card in list. */
   index: number;
+  /** Selected JLPT level. */
   selectedLevel: string;
 }
 
@@ -33,12 +39,14 @@ interface GrammarCardProps {
 // KOMPONEN UTAMA: GrammarCard
 // ==========================================
 /**
- * Komponen kartu tata bahasa interaktif dengan efek transisi premium.
+ * Grammar card component. Displays JLPT level, title, and link to detail page.
  * 
- * @param {GrammarCardProps} props Properti untuk komponen kartu tata bahasa.
+ * @param props Component properties.
+ * @returns React element.
  */
 export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps) {
   // Tentukan warna lencana berdasarkan level JLPT (Menggunakan variabel CSS semantik)
+  /** Map JLPT levels to CSS classes for styling. */
   const levelColors: Record<string, string> = {
     n5: "text-success border-[rgb(var(--success-rgb)/0.2)] bg-[rgb(var(--success-rgb)/0.05)]",
     n4: "text-primary border-[rgb(var(--primary-rgb)/0.2)] bg-[rgb(var(--primary-rgb)/0.05)]",
@@ -47,16 +55,19 @@ export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps)
     n1: "text-destructive border-[rgb(var(--destructive-rgb)/0.2)] bg-[rgb(var(--destructive-rgb)/0.05)]",
   };
 
+  /** Fallback to N5 style if level not found. */
   const currentLevelColor = levelColors[selectedLevel.toLowerCase()] || levelColors.n5;
 
   return (
     <div
       className="group h-full transform hover:-translate-y-1 transition-all duration-300"
       style={{ 
+        // Optimize rendering performance. Browser skips rendering offscreen cards.
         contentVisibility: 'auto', 
         containIntrinsicSize: '0 200px',
       }}
     >
+      {/* Resolve route using slug, id, or fallback MongoDB _id. */}
       <Link href={ROUTES.LIBRARY.GRAMMAR(article.slug || article.id || article._id)} className="block h-full">
         <Card className="h-full p-6 sm:p-8 bg-[rgb(var(--card-rgb)/0.35)]  border border-border rounded-2xl md:rounded-3xl transition-all duration-500 flex flex-col cursor-pointer hover:border-[rgb(var(--primary-rgb)/0.45)] hover:bg-[rgb(var(--card-rgb)/0.55)] shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] relative overflow-hidden glass">
           {/* Efek Pendar Saat Kursor Di Atas (Glow Effect) */}
@@ -107,4 +118,3 @@ export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps)
     </div>
   );
 }
-

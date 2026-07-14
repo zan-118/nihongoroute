@@ -16,25 +16,50 @@ import { fetchTTSAudio, speakWithWebSpeech, TTS_VOICES } from "@/lib/tts";
 // ============================================================
 // TIPE DATA
 // ============================================================
+
+/**
+ * Props for the AudioController component.
+ */
 interface AudioControllerProps {
+  /** URL of the native audio file. */
   audioUrl?: string;
+  /** Text content to be spoken by TTS. */
   textToSpeak?: string;
+  /** Disables TTS functionality if true. */
   isTTSDisabled?: boolean;
-  /** compact: ikon + label saja (sidebar). header: player horizontal. default: floating bar */
+  /** Compact mode: icon and label only (sidebar). Header mode: horizontal player. Default: floating bar. */
   compact?: boolean;
+  /** Renders as a header player if true. */
   header?: boolean;
+  /** Callback triggered when audio playback time updates. */
   onTimeUpdate?: (time: number) => void;
+  /** External seek time in seconds. */
   externalSeek?: number;
+  /** Callback triggered on play/pause toggle. Return true to prevent default behavior. */
   onPlayPause?: () => boolean | void;
+  /** Overrides the internal playing state. */
   isPlayingOverride?: boolean;
 }
 
+/** Available playback speed options. */
 const SPEED_OPTIONS = [0.5, 0.75, 1, 1.25, 1.5] as const;
+
+/** Type representing one of the available playback speed options. */
 type SpeedOption = typeof SPEED_OPTIONS[number];
 
+/**
+ * Removes bracketed text and normalizes whitespace.
+ * @param text - Raw input text.
+ * @returns Cleaned text.
+ */
 const cleanText = (text: string) =>
   text.replace(/\[.*?\]/g, "").replace(/[\[\]]/g, "").replace(/\s+/g, " ").trim();
 
+/**
+ * Formats seconds into MM:SS format.
+ * @param t - Time in seconds.
+ * @returns Formatted time string.
+ */
 const formatTime = (t: number) => {
   const m = Math.floor(t / 60);
   const s = Math.floor(t % 60);
@@ -44,6 +69,11 @@ const formatTime = (t: number) => {
 // ============================================================
 // KOMPONEN UTAMA
 // ============================================================
+
+/**
+ * AudioController component.
+ * Handles native audio playback and TTS fallback.
+ */
 export default function AudioController({
   audioUrl,
   textToSpeak,
@@ -57,6 +87,7 @@ export default function AudioController({
 }: AudioControllerProps) {
 
   // ── State ──────────────────────────────────────────────
+  /** Cached version of the native audio URL. */
   const cachedAudioUrl = useCachedAudio(audioUrl);
 
   const [isPlaying,     setIsPlaying]     = useState(false);
@@ -77,13 +108,21 @@ export default function AudioController({
   const stopSpeechRef  = useRef<(() => void) | null>(null);
   /** Tracking seek agar tidak double-trigger */
   const lastSeekRef    = useRef<number | undefined>(undefined);
+  /** Tracks active TTS request ID to prevent race conditions. */
   const ttsRequestIdRef = useRef(0);
+  /** Tracks last rendered time to throttle updates. */
   const lastRenderedTimeRef = useRef(0);
+  /** Tracks pending time update for requestAnimationFrame. */
   const pendingTimeRef = useRef<number | null>(null);
+  /** requestAnimationFrame ID. */
   const timeUpdateFrameRef = useRef<number | null>(null);
+  /** Mutable ref for callback to avoid effect re-runs. */
   const onTimeUpdateRef = useRef(onTimeUpdate);
   
+  /** Tracks active blob URL for cleanup. */
   const ttsObjectUrlRef = useRef<string | null>(null);
+
+  /** Revokes active blob URL to prevent memory leaks. */
   const cleanupTTSObjectUrl = useCallback(() => {
     if (ttsObjectUrlRef.current) {
       URL.revokeObjectURL(ttsObjectUrlRef.current);
@@ -93,6 +132,7 @@ export default function AudioController({
 
 
   // ── Helpers ────────────────────────────────────────────
+  /** Cancels pending animation frame. */
   const cancelTimeUpdateFrame = useCallback(() => {
     if (timeUpdateFrameRef.current !== null) {
       cancelAnimationFrame(timeUpdateFrameRef.current);
@@ -101,6 +141,7 @@ export default function AudioController({
     pendingTimeRef.current = null;
   }, []);
 
+  /** Throttles time updates to parent component. */
   const publishCurrentTime = useCallback((time: number, force = false) => {
     if (!force && Math.abs(time - lastRenderedTimeRef.current) < 0.2) {
       return;
@@ -111,6 +152,7 @@ export default function AudioController({
     onTimeUpdateRef.current?.(time);
   }, []);
 
+  /** Schedules time update using requestAnimationFrame. */
   const scheduleCurrentTime = useCallback((time: number, force = false) => {
     if (force) {
       cancelTimeUpdateFrame();
@@ -133,6 +175,7 @@ export default function AudioController({
   }, [cancelTimeUpdateFrame, publishCurrentTime]);
 
   // ── Stop semua ─────────────────────────────────────────
+  /** Stops all audio sources and resets state. */
   const stopAll = useCallback(() => {
     ttsRequestIdRef.current++;
     cancelTimeUpdateFrame();
@@ -163,6 +206,7 @@ export default function AudioController({
     onTimeUpdateRef.current = onTimeUpdate;
   }, [onTimeUpdate]);
 
+  // Updates playback rate on audio elements.
   useEffect(() => {
     if (nativeAudioRef.current) nativeAudioRef.current.playbackRate = playbackSpeed;
     if (ttsAudioRef.current)    ttsAudioRef.current.playbackRate    = playbackSpeed;
@@ -228,6 +272,7 @@ export default function AudioController({
   }, [showSpeedMenu]);
 
   // ── Native audio toggle ────────────────────────────────
+  /** Toggles native audio playback. */
   const toggleNativeAudio = () => {
     const el = nativeAudioRef.current;
     if (!el) return;
@@ -248,6 +293,7 @@ export default function AudioController({
   };
 
   // ── TTS toggle (Edge TTS → Web Speech fallback) ────────
+  /** Toggles TTS playback with Web Speech fallback. */
   const toggleTTS = async () => {
     const text = cleanText(textToSpeak || "");
     if (!text) { setError("Tidak ada teks untuk dibaca."); return; }
@@ -322,6 +368,7 @@ export default function AudioController({
   };
 
   // ── Play/Pause dispatch ────────────────────────────────
+  /** Dispatches play/pause action. */
   const handlePlayPause = () => {
     if (onPlayPause) {
       const preventDefault = onPlayPause();
@@ -333,6 +380,7 @@ export default function AudioController({
     else setError("Audio dinonaktifkan.");
   };
 
+  /** Handles manual seek bar changes. */
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const t = parseFloat(e.target.value);
     if (nativeAudioRef.current) {
@@ -342,6 +390,7 @@ export default function AudioController({
     scheduleCurrentTime(t, true);
   };
 
+  /** Updates playback speed. */
   const handleSpeedChange = (speed: SpeedOption, e: React.MouseEvent) => {
     e.stopPropagation();
     setPlaybackSpeed(speed);

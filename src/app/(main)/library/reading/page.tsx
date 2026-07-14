@@ -20,6 +20,10 @@ import {
 // ======================
 // METADATA SEO
 // ======================
+
+/**
+ * SEO metadata configuration.
+ */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Graded Reading Bahasa Jepang | NihongoRoute",
@@ -35,16 +39,18 @@ export const metadata: Metadata = {
 // ======================
 
 /**
- * Halaman utama Graded Reading (RSC).
- * Melakukan pra-ambil data halaman pertama daftar bacaan sebelum merender ReadingListClient.
+ * Reading list page component.
+ * Fetches initial reading data. Renders client list.
  * 
- * @returns {JSX.Element} Halaman direktori pustaka graded reading.
+ * @returns Reading list page layout.
  */
 export default async function ReadingListPage() {
+  // Fetch first page of reading materials. Limit 9 items.
   const initialData = await getPaginatedReading(1, 9, "");
 
   return (
     <div className="w-full min-h-screen bg-transparent relative overflow-hidden pt-12 pb-24 px-4 md:px-8">
+      {/* Inject JSON-LD structured data for SEO */}
       <JsonLd
         data={[
           breadcrumbJsonLd([
@@ -61,7 +67,7 @@ export default async function ReadingListPage() {
           }),
         ]}
       />
-      {/* Efek Latar Belakang */}
+      {/* Background visual effects */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[500px] bg-primary/10 blur-[120px] rounded-[100%] pointer-events-none opacity-50" />
       <div className="neural-grid" />
 

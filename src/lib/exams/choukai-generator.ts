@@ -5,6 +5,9 @@ import type {
   JlptImportQuestion,
 } from "@/lib/exams/import-pipeline";
 
+/**
+ * Official JLPT Choukai (listening) question types.
+ */
 export const CHOUKAI_OFFICIAL_QUESTION_TYPES = [
   "task_comprehension",
   "point_comprehension",
@@ -13,46 +16,90 @@ export const CHOUKAI_OFFICIAL_QUESTION_TYPES = [
   "quick_response",
 ] as const;
 
+/**
+ * Union type of official Choukai question types.
+ */
 export type ChoukaiQuestionType = (typeof CHOUKAI_OFFICIAL_QUESTION_TYPES)[number];
 
+/**
+ * Represents a single line of dialogue in a listening script.
+ */
 export interface ChoukaiDialoguePart {
-  speaker: string; // e.g., "narrator", "man", "woman"
+  /** Speaker identifier (e.g., "narrator", "man", "woman") */
+  speaker: string;
+  /** Text spoken by the speaker */
   text: string;
 }
 
+/**
+ * Enhanced question structure containing dialogue and audio metadata.
+ */
 export interface ChoukaiEnhancedQuestion {
+  /** Type of listening question */
   type: ChoukaiQuestionType;
+  /** Source category of the question */
   sourceType?: "vocab" | "grammar" | "kanji" | "listening" | "custom" | null;
+  /** Reference ID of the source material */
   sourceId?: string | null;
-  promptHtml: string; // Pertanyaan tertulis (jika ada, e.g., Kadai/Point Rikai) atau kosong
-  dialogue: ChoukaiDialoguePart[]; // Struktur dialog untuk TTS
-  audioPath: string; // Path relatif audio file hasil kompilasi
-  choices: readonly string[]; // Pilihan jawaban (bisa teks pilihan, gambar, atau sekadar angka "1", "2", "3", "4")
+  /** Written prompt HTML if applicable */
+  promptHtml: string;
+  /** Dialogue structure for TTS generation */
+  dialogue: ChoukaiDialoguePart[];
+  /** Relative path to the compiled audio file */
+  audioPath: string;
+  /** List of answer choices */
+  choices: readonly string[];
+  /** Index of the correct choice */
   correctChoiceIndex: number;
+  /** Explanation HTML for the answer */
   explanationHtml?: string | null;
+  /** Reference source text */
   sourceReference?: string | null;
 }
 
+/**
+ * Input parameters for building a Choukai import package.
+ */
 export interface BuildChoukaiImportPackageInput {
+  /** Target JLPT level */
   jlptLevel: JlptImportLevel;
+  /** Unique slug for the exam template */
   templateSlug?: string;
+  /** Title of the exam package */
   title?: string;
+  /** Description of the exam package */
   description?: string | null;
+  /** Time limit in minutes */
   timeLimitMinutes?: number;
+  /** Passing score threshold */
   passingScore?: number;
+  /** Seed for random generation */
   seed?: string | number;
+  /** List of enhanced questions to process */
   enhancedQuestions: readonly ChoukaiEnhancedQuestion[];
+  /** Publish status flag */
   isPublished?: boolean;
 }
 
+/**
+ * Statistics for the Choukai package generation process.
+ */
 export interface ChoukaiGenerationStats {
+  /** Total number of successfully generated questions */
   generatedQuestions: number;
+  /** Count of generated questions grouped by type */
   generatedByType: Record<ChoukaiQuestionType, number>;
+  /** Count of skipped questions grouped by reason */
   skippedByReason: Record<string, number>;
 }
 
+/**
+ * Result of the Choukai package generation process.
+ */
 export interface BuildChoukaiImportPackageResult {
+  /** Generated import package */
   importPackage: JlptImportPackage;
+  /** Generation statistics */
   stats: ChoukaiGenerationStats;
 }
 
@@ -97,19 +144,31 @@ export function getChoukaiMondaiNumber(
   }
 }
 
+/**
+ * Trims string and returns null if empty.
+ * 
+ * @param value Value to check
+ */
 function compactString(value: unknown): string | null {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
 }
 
+/**
+ * Generates a slug token with an appended FNV-1a hash.
+ * 
+ * @param value Input string
+ */
 function slugToken(value: string): string {
+  // Normalize string for slug
   const normalized = value
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 50);
 
+  // FNV-1a 32-bit hash algorithm
   let hash = 0x811c9dc5;
   for (let index = 0; index < value.length; index += 1) {
     hash ^= value.charCodeAt(index);
@@ -119,6 +178,9 @@ function slugToken(value: string): string {
   return normalized ? `${normalized}-${hex}` : hex;
 }
 
+/**
+ * Returns a zeroed counter record for all Choukai question types.
+ */
 function emptyGeneratedByType(): Record<ChoukaiQuestionType, number> {
   return {
     task_comprehension: 0,
@@ -154,17 +216,20 @@ export function buildChoukaiImportPackage(
     const promptHtml = compactString(eq.promptHtml) ?? ""; // Beberapa soal choukai tidak punya prompt tertulis
     const audioPath = compactString(eq.audioPath);
 
+    // Skip if audio path is missing
     if (!audioPath) {
       skippedByReason["missing_audio_path"] = (skippedByReason["missing_audio_path"] ?? 0) + 1;
       continue;
     }
 
+    // Skip if choices are insufficient
     const choices = eq.choices.map(compactString).filter((choice): choice is string => Boolean(choice));
     if (choices.length < 2) {
       skippedByReason["insufficient_choices"] = (skippedByReason["insufficient_choices"] ?? 0) + 1;
       continue;
     }
 
+    // Skip if correct choice index is out of bounds
     if (
       !Number.isInteger(eq.correctChoiceIndex) ||
       eq.correctChoiceIndex < 0 ||

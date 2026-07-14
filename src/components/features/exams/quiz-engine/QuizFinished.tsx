@@ -17,11 +17,20 @@ import { Trophy, Target, RefreshCw, ArrowRight } from "lucide-react";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
+
+/**
+ * Props for QuizFinished component.
+ */
 interface QuizFinishedProps {
+  /** Number of correct answers. */
   score: number;
+  /** Total questions in quiz. */
   totalQuestions: number;
+  /** Flag to trigger XP animation. */
   showXP: boolean;
+  /** Amount of XP earned. */
   xpGained: number;
+  /** Callback to restart quiz. */
   resetQuiz: () => void;
 }
 
@@ -29,6 +38,9 @@ interface QuizFinishedProps {
 // EKSEKUSI UTAMA
 // ======================
 
+/**
+ * QuizFinished component. Displays final score, percentage, XP gained, and action buttons.
+ */
 export function QuizFinished({
   score,
   totalQuestions,
@@ -37,7 +49,11 @@ export function QuizFinished({
   resetQuiz,
 }: QuizFinishedProps) {
   const router = useRouter();
+  
+  // Calculate percentage score.
   const percentage = Math.round((score / totalQuestions) * 100);
+  
+  // Check if score is 100%.
   const isPerfect = percentage === 100;
 
   return (
@@ -101,6 +117,7 @@ export function QuizFinished({
           </Button>
           <Button
             onClick={() => {
+              // Get parent path to navigate back to course list or module.
               const basePath = window.location.pathname.replace(/\/[^/]+$/, "");
               router.push(basePath || "/courses");
             }}

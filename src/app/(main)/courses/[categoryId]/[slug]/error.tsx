@@ -17,13 +17,12 @@ import { AlertTriangle, RefreshCcw } from "lucide-react";
 // ======================
 
 /**
- * Komponen pembatas kesalahan (Error Boundary) granular untuk halaman detail materi kursus.
- * Menangani crash lokal saat gagal memuat Portable Text, audio, kuis, atau material CMS Sanity.
+ * Error boundary component for course detail page.
+ * Handles runtime crashes during lesson loading.
  * 
- * @param {Object} props Properti komponen.
- * @param {Error & { digest?: string }} props.error Objek kesalahan runtime yang ditangkap.
- * @param {function} props.reset Fungsi callback untuk mereset komponen dan memuat ulang data.
- * @returns {JSX.Element} Antarmuka penanganan kesalahan materi kursus.
+ * @param props - Component properties.
+ * @param props.error - Runtime error object.
+ * @param props.reset - Callback to retry rendering.
  */
 export default function CourseDetailError({
   error,
@@ -33,7 +32,7 @@ export default function CourseDetailError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log error secara background agar mudah di-debug
+    // Log error to console for debugging.
     console.error("Granular Error [Course Detail]:", error);
   }, [error]);
 
@@ -73,6 +72,7 @@ export default function CourseDetailError({
           {/* Tombol Interaksi */}
           <div className="pt-6 relative z-10">
             <Button 
+              // Trigger reset callback to attempt recovery.
               onClick={() => reset()} 
               variant="default" 
               className="rounded-lg px-8 h-12 shadow-sm font-bold tracking-widest uppercase text-xs md:text-sm bg-destructive hover:bg-destructive/90 text-destructive-foreground"

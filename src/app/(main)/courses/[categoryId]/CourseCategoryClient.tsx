@@ -23,6 +23,9 @@ import { LessonGrid } from "@/components/features/course/LessonGrid";
 // ======================
 // KONSTANTA ANIMASI
 // ======================
+/**
+ * Animation variants for container element.
+ */
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -31,13 +34,22 @@ const containerVariants: Variants = {
   },
 };
 
+/**
+ * Animation variants for child elements.
+ */
 const itemVariants: Variants = {
   hidden: { y: 16, opacity: 0 },
   visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 120, damping: 20 } },
 };
 
+/**
+ * Number of lessons displayed per page.
+ */
 const ITEMS_PER_PAGE = 12;
 
+/**
+ * Lesson data structure.
+ */
 interface Lesson {
   _id: string;
   title: string;
@@ -46,6 +58,9 @@ interface Lesson {
   image_url?: string;
 }
 
+/**
+ * Mock exam data structure.
+ */
 interface MockExam {
   id: string;
   title: string;
@@ -53,6 +68,10 @@ interface MockExam {
   passingScore: number;
 }
 
+/**
+ * CourseCategoryClient component.
+ * Renders category details, progress, training options, and paginated lessons.
+ */
 export default function CourseCategoryClient({
   data,
   categoryId,
@@ -69,17 +88,24 @@ export default function CourseCategoryClient({
   };
   categoryId: string;
 }) {
+  // Check if category is side quest (general/article)
   const isSideQuest = data.category.type === "general" || data.category.type === "article";
+  
+  // Set theme color based on category type
   const themeColor = isSideQuest ? "text-warning" : "text-primary";
   const themeRgb = isSideQuest ? "var(--warning-rgb)" : "var(--primary-rgb)";
+  
+  // Get completed lessons from global store
   const completedLessons = useUserStore((s) => s.completedLessons);
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Calculate lesson progress and pagination data
   const { lessonsDone, progressPercent, totalLessons, totalPages, paginatedLessons } = useMemo(() => {
     const lessons = data.lessons || [];
     const lessonsTotal = lessons.length;
     let doneCount = 0;
 
+    // Count completed lessons that are not deleted
     for (const lesson of lessons) {
       if (completedLessons[lesson._id] && !completedLessons[lesson._id].isDeleted) {
         doneCount += 1;
@@ -99,6 +125,7 @@ export default function CourseCategoryClient({
     };
   }, [completedLessons, currentPage, data.lessons]);
 
+  // Handle page change and scroll to top
   const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -17,7 +17,12 @@ import { WritingPracticeModal } from "./WritingPracticeModal";
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen kartu flashcard 3D flip.
+ * Flashcard component.
+ * Renders 3D flipping card with front (question/input) and back (answer/details) faces.
+ * Supports shake animation on error and writing practice modal.
+ * 
+ * @param props - Component properties.
+ * @returns React element.
  */
 export default function Flashcard({
   id,
@@ -44,6 +49,7 @@ export default function Flashcard({
   // ==========================================
   // STATUS & STATE & HOOKS
   // ==========================================
+  /** Custom hook managing flashcard state, theme, and click handlers */
   const {
     showWritingModal,
     setShowWritingModal,
@@ -57,15 +63,18 @@ export default function Flashcard({
   // ==========================================
   return (
     <>
+      {/* Outer container establishing 3D perspective context */}
       <m.div
         className="relative w-full aspect-[4/5] md:aspect-square max-h-[550px] sm:max-h-[600px] cursor-pointer mx-auto"
         style={{ perspective: "1500px" }}
         onClick={handleClick}
+        // Triggers horizontal shake animation when answer is incorrect
         animate={isShaking ? {
           x: [-10, 10, -10, 10, 0],
           transition: { duration: 0.4 }
         } : {}}
       >
+        {/* Inner container performing the actual 3D rotation */}
         <m.div
           className="w-full h-full relative"
           style={{ transformStyle: "preserve-3d" }}
@@ -104,6 +113,7 @@ export default function Flashcard({
         </m.div>
       </m.div>
 
+      {/* Modal overlay for canvas-based writing practice */}
       <WritingPracticeModal
         word={word}
         isOpen={showWritingModal}

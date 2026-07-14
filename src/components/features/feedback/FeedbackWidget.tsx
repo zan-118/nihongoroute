@@ -17,14 +17,25 @@ import { useFeedbackWidget } from "./useFeedbackWidget";
 // ======================
 // ANTARMUKA & TIPE
 // ======================
+
+/**
+ * Props for FeedbackWidget component.
+ */
 interface FeedbackWidgetProps {
+  /** Force dialog open state. Override internal state. */
   forceOpen?: boolean;
+  /** Callback trigger when dialog open state change. */
   onOpenChange?: (open: boolean) => void;
 }
 
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * FeedbackWidget component. Render dialog modal for user feedback.
+ * Allow user select type (bug, suggestion, compliment) and write message.
+ */
 export default function FeedbackWidget({ forceOpen, onOpenChange }: FeedbackWidgetProps) {
   const {
     isOpen,
@@ -38,10 +49,13 @@ export default function FeedbackWidget({ forceOpen, onOpenChange }: FeedbackWidg
     handleSubmit,
   } = useFeedbackWidget();
 
-  // If externally controlled, use the props
+  // Use external open state if provided. Fallback to internal state.
   const openState = forceOpen !== undefined ? forceOpen : isOpen;
+  
+  // Use external state handler if provided. Fallback to internal handler.
   const setOpenState = onOpenChange !== undefined ? onOpenChange : setIsOpen;
 
+  // Hide widget if user not authenticated or route excluded.
   if (isHidden) {
     return null;
   }
@@ -64,6 +78,7 @@ export default function FeedbackWidget({ forceOpen, onOpenChange }: FeedbackWidg
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground/80">Jenis Masukan</label>
               <div className="flex gap-2">
+                {/* Render feedback type buttons */}
                 {(['bug', 'suggestion', 'compliment'] as const).map((t) => (
                   <button
                     key={t}

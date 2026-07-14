@@ -17,6 +17,9 @@ import PreferencesSection from "./_components/PreferencesSection";
 import DataManagementSection from "./_components/DataManagementSection";
 import SyncStatusSection from "./_components/SyncStatusSection";
 
+/**
+ * Container animation config. Stagger children.
+ */
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -25,11 +28,17 @@ const containerVariants: Variants = {
   },
 };
 
+/**
+ * Item animation config. Spring slide up.
+ */
 const itemVariants: Variants = {
   hidden: { y: 16, opacity: 0 },
   visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100, damping: 20 } },
 };
 
+/**
+ * Settings page client component. Handle profile, sync, data reset.
+ */
 export default function SettingsClient() {
   const hasMounted = useHasMounted();
   const {
@@ -49,6 +58,7 @@ export default function SettingsClient() {
     handleManualSync,
   } = useSettingsActions();
 
+  // Avoid hydration mismatch. Show skeleton loader.
   if (!hasMounted) {
     return (
       <div className="max-w-3xl mx-auto pt-12 space-y-8 px-4">
@@ -65,6 +75,7 @@ export default function SettingsClient() {
 
   return (
     <>
+      {/* Modal for destructive actions */}
       <ConfirmModal
         isOpen={confirmModal.isOpen}
         onClose={closeConfirm}
@@ -75,6 +86,7 @@ export default function SettingsClient() {
         onConfirm={confirmModal.onConfirm}
       />
 
+      {/* Animated wrapper */}
       <m.div
         initial="hidden"
         animate="visible"

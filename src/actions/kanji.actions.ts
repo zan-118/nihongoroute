@@ -17,7 +17,12 @@ import { PaginatedKanjiResponse, LibraryItem } from "@/types/library";
 // ======================
 
 /**
- * Mengambil kanji dengan paginasi, pencarian, dan filter level.
+ * Fetch kanji list with pagination, search, and JLPT filter.
+ * @param page Page number.
+ * @param limit Items per page.
+ * @param search Search query.
+ * @param level JLPT level.
+ * @returns Paginated kanji data.
  */
 export async function getPaginatedKanji(
   page: number,
@@ -26,21 +31,25 @@ export async function getPaginatedKanji(
   level: string = ""
 ): Promise<PaginatedKanjiResponse> {
   const supabase = createStaticClient();
+  // Calculate offset for pagination.
   const offset = (page - 1) * limit;
 
   try {
     let query = supabase.from("kanji").select("*", { count: "exact" });
 
     if (search) {
+      // Escape special characters to prevent SQL injection and PostgREST syntax errors.
       const safeSearch = search
         .replace(/\\/g, '\\\\')  // hindari backslash terlebih dahulu
         .replace(/%/g, '\\%')    // hindari SQL wildcard %
         .replace(/_/g, '\\_')    // hindari SQL wildcard _
         .replace(/"/g, '');       // hapus tanda kutip untuk sintaks PostgREST
+      // Search across multiple fields using OR condition.
       query = query.or(`character.ilike."%${safeSearch}%",meaning.ilike."%${safeSearch}%",onyomi.ilike."%${safeSearch}%",kunyomi.ilike."%${safeSearch}%",romaji.ilike."%${safeSearch}%"`);
     }
 
     if (level && level !== "all") {
+      // Filter by JLPT level if provided.
       query = query.eq("jlpt_level", level.toUpperCase());
     }
 
@@ -51,6 +60,7 @@ export async function getPaginatedKanji(
     if (error) throw error;
 
     return {
+      // Map database fields to frontend property names.
       data: (data || []).map(k => ({ ...k, _id: k.id, jlptLevel: k.jlpt_level })),
       total: count || 0,
     };
@@ -60,10 +70,17 @@ export async function getPaginatedKanji(
   }
 }
 
+/**
+ * Check if string is valid UUID.
+ * @param s Input string.
+ * @returns True if UUID.
+ */
 const isUUID = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
 
 /**
- * Mengambil detail satu Kanji berdasarkan slug, ID, atau karakter.
+ * Fetch single kanji detail by slug, ID, or character.
+ * @param slugOrId Kanji identifier.
+ * @returns Kanji detail or null.
  */
 export async function getLibraryKanjiDetail(slugOrId: string): Promise<LibraryItem | null> {
   const supabase = createStaticClient();
@@ -72,6 +89,7 @@ export async function getLibraryKanjiDetail(slugOrId: string): Promise<LibraryIt
     let data: LibraryItem | null = null;
 
     if (isUUID(slugOrId)) {
+      // Fetch by ID if input is UUID.
       const { data: d, error } = await supabase.from("kanji").select("*").eq("id", slugOrId).single();
       if (error && error.code !== "PGRST116") console.error(`[getLibraryKanjiDetail] Galat pengambilan data kanji ID:`, error.message, error.code);
       data = d ?? null;

@@ -28,6 +28,13 @@ import { getBreadcrumbItems, getCurrentRouteLabel, getParentRouteLabel } from "@
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Topbar component.
+ * Render global search, sync status, reading mode toggle, notifications, user navigation.
+ * @param props - Component properties.
+ * @param props.onMenuClick - Callback to open mobile navigation menu.
+ */
 export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
   const router = useRouter();
   const { pathname } = useNavbar();
@@ -45,6 +52,11 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
   const breadcrumbItems = getBreadcrumbItems(pathname);
   const currentRouteLabel = getCurrentRouteLabel(pathname);
   const parentRouteLabel = getParentRouteLabel(pathname);
+  
+  /**
+   * Share current page URL.
+   * Use Web Share API if browser support exist. Fallback to clipboard copy.
+   */
   const handleSharePage = async () => {
     const shareData = {
       title: document.title || "NihongoRoute",
@@ -223,6 +235,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
                 key={disp.id}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => {
+                  // Mobile cycle through modes on click. Desktop select specific mode.
                   if (window.innerWidth < 640) {
                     const nextMode = arr[(idx + 1) % arr.length].id;
                     useUIStore.getState().setReadingState({ mode: nextMode as "kanji" | "furigana" | "hiragana" });

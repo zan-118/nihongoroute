@@ -24,14 +24,17 @@ import { AuthChangeEvent, Session } from "@supabase/supabase-js";
 // CUSTOM HOOK UTAMA
 // ==========================================
 /**
- * Hook kustom untuk menyinkronkan data gamifikasi, target belajar, dan status SRS luring ke database awan Supabase.
+ * Sync local progress with Supabase.
+ * Handles debouncing, dirty state tracking, and multi-tab sync.
  * 
- * @returns {Object} Aksi pemantau sinkronisasi (isLoading, syncNow)
+ * @returns Sync status and manual trigger function.
  */
 export function useSyncProgress() {
+  // Memoize Supabase client to prevent recreation.
   const supabase = useMemo(() => createClient(), []);
   const queryClient = useQueryClient();
   
+  // Track store hydration status.
   const userHydrated = useStoreHydration(useUserStore);
   const srsHydrated = useStoreHydration(useSRSStore);
   
@@ -39,7 +42,7 @@ export function useSyncProgress() {
   // SELEKTOR STATE LOKAL (ZUSTAND STORES)
   // ==========================================
   
-  // Mengambil properti profil atomik dari useUserStore untuk mencegah pemicuan rendering tak terbatas (infinite render)
+  // Select atomic properties to avoid infinite re-renders.
   const name = useUserStore((s) => s.name);
   const xp = useUserStore((s) => s.xp);
   const streak = useUserStore((s) => s.streak);
@@ -49,12 +52,11 @@ export function useSyncProgress() {
   const inventory = useUserStore((s) => s.inventory);
   const isGuest = useUserStore((s) => s.isGuest);
 
-  // Melacak ukuran Set data kotor menggunakan tipe primitif number demi menjaga kestabilan dependency array
-  // Menggunakan selektor atomik untuk menghindari langganan ke seluruh objek set
+  // Track size only to keep dependency array stable.
   const dirtyLessonsSize = useUserStore((s) => s.dirtyLessons.size);
   const dirtySrsSize = useSRSStore((s) => s.dirtySrs.size);
 
-  // Mengambil preferensi antarmuka pengguna
+  // Get UI settings.
   const settings = useUIStore((s) => s.settings);
 
   const hasMounted = useHasMounted();
@@ -63,7 +65,7 @@ export function useSyncProgress() {
   // TIER 2 & TIER 3: ALUR ALIRAN DATA SINKRONISASI
   // ==========================================
 
-  // 1. Kueri Sesi Pengguna: Mendapatkan status login aktif secara aman dari klien Supabase
+  // Fetch active session from Supabase.
   const { data: session } = useQuery({
     queryKey: ["session"],
     queryFn: async () => {
@@ -73,7 +75,7 @@ export function useSyncProgress() {
     enabled: hasMounted,
   });
 
-  // Sinkronkan status sesi secara real-time saat terjadi perubahan status auth
+  // Listen to auth changes and invalidate cache.
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
       queryClient.setQueryData(["session"], session);
@@ -84,16 +86,13 @@ export function useSyncProgress() {
     return () => subscription.unsubscribe();
   }, [supabase, queryClient]);
 
-  // 2. Mengambil Data Awan: Menarik profil, SRS, dan data pelajaran dari database saat inisialisasi awal
+  // Fetch cloud data.
   const { cloudData, isFetching } = useCloudData(session, hasMounted);
 
-  // 3. Mutasi Awan: Mempersiapkan fungsi eksekusi RPC Supabase dengan strategi retry asinkron
+  // Prepare cloud mutation.
   const syncMutation = useCloudMutation(session);
 
-  // 4. Sinkronisasi Lintas Tab (Multi-Tab Integrity):
-  // Mendengarkan saluran penyiaran lokal. Jika tab lain sukses melakukan sinkronisasi awan,
-  // tab aktif ini akan membuang cache React Query untuk menyelaraskan data secara instan.
-
+  // Listen to broadcast channel for multi-tab sync.
   useEffect(() => {
     if (typeof window === "undefined" || !("BroadcastChannel" in window)) return;
 
@@ -106,7 +105,7 @@ export function useSyncProgress() {
     return () => channel.close();
   }, [queryClient]);
 
-  // 5. Orkestrator Sinkronisasi Latar Belakang (Debounced Auto-Sync):
+  // Track sync state and mutation ref.
   const lastSyncedProgress = useRef<string>("");
   const syncMutateRef = useRef(syncMutation.mutate);
   
@@ -116,7 +115,7 @@ export function useSyncProgress() {
 
   const isPending = syncMutation.isPending;
 
-  // Serialisasi data profil menjadi string stabil untuk mendeteksi perubahan properti secara presisi
+  // Serialize profile data to detect changes.
   const profileKey = useMemo(() => {
     const invLength = inventory?.achievements?.length || 0;
     const freeze = inventory?.streakFreeze || 0;
@@ -124,7 +123,7 @@ export function useSyncProgress() {
     return `${name}-${xp}-${streak}-${lastStudyDate}-${todayReviewCount}-${invLength}-${freeze}-${notifs}`;
   }, [name, xp, streak, lastStudyDate, todayReviewCount, inventory?.achievements?.length, inventory?.streakFreeze, settings?.notificationsEnabled]);
 
-  // Serialisasi data profil dari cloud untuk menyelaraskan status sinkronisasi pasca-merge
+  // Serialize cloud profile data for post-merge sync.
   const cloudProfileKey = useMemo(() => {
     if (!cloudData) return "";
     const invLength = cloudData.inventory?.achievements?.length || 0;
@@ -133,27 +132,23 @@ export function useSyncProgress() {
     return `${cloudData.name}-${cloudData.xp}-${cloudData.streak}-${cloudData.lastStudyDate}-${cloudData.todayReviewCount}-${invLength}-${freeze}-${notifs}`;
   }, [cloudData]);
 
-  // Selaraskan lastSyncedProgress.current dengan profil cloud yang baru saja di-merge
+  // Update sync ref with cloud data.
   useEffect(() => {
     if (cloudProfileKey) {
       lastSyncedProgress.current = cloudProfileKey;
     }
   }, [cloudProfileKey]);
 
-  // Efek Samping Auto-Sync: Berjalan secara otomatis jika terdeteksi data kotor lokal atau perubahan profil.
-  // Menerapkan debounce selama 2000ms untuk meredam pemanggilan berulang yang sia-sia.
+  // Debounce auto-sync by 2000ms on local changes.
   useEffect(() => {
-    // Penjaga: Jangan sinkronisasi jika data sedang dimuat, sedang dikirim, pengguna tamu, atau belum terhidrasi
     if (isFetching || isPending || !session?.user || isGuest || !userHydrated || !srsHydrated) return;
 
     const isProfileChanged = profileKey !== lastSyncedProgress.current;
 
-    // Jika profil tidak berubah dan tidak ada item kotor lokal, batalkan sinkronisasi
     if (!isProfileChanged && dirtySrsSize === 0 && dirtyLessonsSize === 0) return;
 
     const timer = setTimeout(() => {
-      // Dapatkan data SRS & Pelajaran terbaru secara dinamis dari store tanpa berlangganan (anti-render)
-       const userState = useUserStore.getState();
+      const userState = useUserStore.getState();
       const srsState = useSRSStore.getState();
       const uiState = useUIStore.getState();
       const currentSrs = srsState.srs;
@@ -184,7 +179,7 @@ export function useSyncProgress() {
     return () => clearTimeout(timer);
   }, [profileKey, dirtySrsSize, dirtyLessonsSize, session?.user, isFetching, isPending, isGuest, userHydrated, srsHydrated]);
 
-  // Fungsi sinkronisasi manual instan
+  // Trigger manual sync immediately.
   const syncNow = useCallback(() => {
     const currentSrs = useSRSStore.getState().srs;
     const currentCompletedLessons = useUserStore.getState().completedLessons;

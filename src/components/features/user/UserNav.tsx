@@ -32,10 +32,16 @@ import Link from "next/link";
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * User navigation dropdown component.
+ * Shows auth buttons for guests. Shows profile menu for logged-in users.
+ */
 export default function UserNav() {
   const { isAuthenticated, userFullName, handleLogout } = useNavbar();
   const level = useUserStore(s => s.level);
 
+  // Guest view. Show login and signup buttons.
   if (!isAuthenticated) {
     return (
       <div className="flex items-center gap-2">
@@ -59,11 +65,13 @@ export default function UserNav() {
     );
   }
 
+  // Authenticated view. Show profile dropdown.
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button type="button" className="min-h-11 flex items-center gap-1 sm:gap-3 p-1 pr-1 sm:pr-3 rounded-xl premium-surface hover:border-primary/30 transition-all group outline-none">
           <div className="size-8 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-primary-foreground text-xs font-black shadow-md group-hover:scale-105 transition-transform">
+            {/* Get first letter for avatar fallback */}
             {userFullName ? userFullName.charAt(0).toUpperCase() : "U"}
           </div>
           <div className="hidden md:flex flex-col items-start">

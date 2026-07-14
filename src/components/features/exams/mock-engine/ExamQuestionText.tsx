@@ -13,20 +13,34 @@ import { sanitizeHtml } from "@/lib/sanitize";
 // ======================
 // ANTARMUKA & TIPE
 // ======================
+
+/**
+ * Represents a single block in Sanity PortableText format.
+ */
 export interface ExamPortableTextBlock {
   _type: string;
   _key?: string;
   [key: string]: unknown;
 }
 
+/**
+ * Props for ExamQuestionText component.
+ */
 interface ExamQuestionTextProps {
+  /** Raw HTML string or PortableText block array containing the question content */
   questionText?: string | ExamPortableTextBlock[];
+  /** Optional CSS class names for styling the wrapper container */
   className?: string;
 }
 
 // ======================
 // KONSTANTA & ATURAN
 // ======================
+
+/**
+ * Custom renderers for PortableText nodes.
+ * Formats Japanese text blocks and standard inline marks.
+ */
 const examPortableTextComponents = {
   block: {
     normal: ({ children }: { children?: React.ReactNode }) => (
@@ -45,9 +59,16 @@ const examPortableTextComponents = {
 // ======================
 // EKSEKUSI UTAMA
 // ======================
+
+/**
+ * Renders exam question text.
+ * Supports raw HTML strings (sanitized) and Sanity PortableText arrays.
+ */
 export function ExamQuestionText({ questionText, className }: ExamQuestionTextProps) {
+  // Return null if no content provided
   if (!questionText) return null;
 
+  // Render sanitized HTML string
   if (typeof questionText === "string") {
     return (
       <div
@@ -57,6 +78,7 @@ export function ExamQuestionText({ questionText, className }: ExamQuestionTextPr
     );
   }
 
+  // Render PortableText array structure
   return (
     <div className={className}>
       <PortableText value={questionText} components={examPortableTextComponents} />

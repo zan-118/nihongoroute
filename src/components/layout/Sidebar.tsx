@@ -15,12 +15,23 @@ import { ROUTES } from "@/lib/routes";
 import { SidebarItem } from "./sidebar/SidebarItem";
 import { UserStatusSection } from "./sidebar/UserStatusSection";
 
+/**
+ * Sidebar navigation component.
+ * Renders desktop sidebar and mobile drawer.
+ * 
+ * @param props - Component properties.
+ * @param props.isOpen - Mobile drawer open state.
+ * @param props.onClose - Callback to close mobile drawer.
+ */
 export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  // Check if component mounted to prevent hydration mismatch.
   const hasMounted = useHasMounted();
+  // Get navigation state and actions.
   const { pathname, isAuthenticated, userFullName, handleLogout, links } = useNavbar();
 
   return (
     <>
+      {/* Mobile backdrop. Close on click. */}
       {isOpen && (
         <m.div
           initial={{ opacity: 0 }}
@@ -31,9 +42,12 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
         />
       )}
 
+      {/* Sidebar container. Toggle translation based on open state. */}
       <aside data-tour="sidebar" className={`sidebar-shell fixed top-0 left-0 h-dvh p-4 sm:p-5 z-[60] flex flex-col w-[18rem] transition-transform duration-500 md:translate-x-0 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        {/* Decorative background pattern */}
         <div className="absolute inset-0 bg-asanoha opacity-[0.02] pointer-events-none" />
 
+        {/* Logo branding section */}
         <div className="mb-7 flex items-center gap-4 relative z-10 px-1">
           <Link href="/" className="flex items-center gap-3 group rounded-xl focus-visible:ring-offset-0">
             <div className="relative size-12 group-hover:rotate-6 transition-transform duration-500">
@@ -62,7 +76,9 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
           </Link>
         </div>
 
+        {/* Navigation links grouped by category */}
         <nav data-tour="sidebar-nav" className="flex-1 space-y-7 relative z-10 overflow-y-auto pr-1 custom-scrollbar">
+          {/* Main platform links */}
           <div className="space-y-1">
             <div className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.28em] mb-3 ml-3 opacity-70">
               Platform
@@ -72,6 +88,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
             ))}
           </div>
 
+          {/* Learning path links */}
           <div className="space-y-1">
             <div className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.28em] mb-3 ml-3 opacity-70">
               Pembelajaran
@@ -81,6 +98,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
             ))}
           </div>
 
+          {/* System configuration links */}
           <div className="space-y-1">
             <div className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.28em] mb-3 ml-3 opacity-70">
               Sistem
@@ -91,6 +109,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
           </div>
         </nav>
 
+        {/* User profile or login button */}
         <div className="mt-auto space-y-4 relative z-10 pt-5 border-t border-border/75">
           <UserStatusSection
             hasMounted={hasMounted}
@@ -100,6 +119,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
           />
         </div>
 
+        {/* Footer links and theme toggle */}
         <div className="mt-5 pt-4 border-t border-border/70 relative z-10">
           <div className="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/55">
             <Link
@@ -118,6 +138,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
             <span className="size-1 rounded-full bg-muted" />
             <span className="opacity-50">&copy; 2026</span>
           </div>
+          {/* Theme toggle visible on mobile only */}
           <div className="md:hidden flex justify-center mt-4">
             <ThemeToggle />
           </div>

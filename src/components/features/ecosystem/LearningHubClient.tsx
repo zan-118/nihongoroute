@@ -22,6 +22,9 @@ import LearningTimelinePanel from "./LearningTimelinePanel";
 import NextActionPanel from "./NextActionPanel";
 import { cn } from "@/lib/utils";
 
+/**
+ * Quick navigation links for ecosystem.
+ */
 const QUICK_LINKS = [
   {
     title: "Reading",
@@ -53,6 +56,14 @@ const QUICK_LINKS = [
   },
 ];
 
+/**
+ * Card component for single metric.
+ * 
+ * @param props - Component properties.
+ * @param props.label - Metric name.
+ * @param props.value - Metric value.
+ * @param props.icon - Lucide icon component.
+ */
 function StatCard({
   label,
   value,
@@ -79,14 +90,24 @@ function StatCard({
   );
 }
 
+/**
+ * Main dashboard client. Connects library, tools, weak points, next actions.
+ */
 export default function LearningHubClient() {
+  // Fetch learning events.
   const events = useUIStore((state) => state.learningEvents);
+  // Fetch reading progress.
   const readingProgressMap = useUIStore((state) => state.readingProgressMap);
+  // Fetch vocabulary bank.
   const readingVocabularyBank = useUIStore((state) => state.readingVocabularyBank);
+  
+  // Compute weak points.
   const weakPoints = buildWeakPointInsights({ events, limit: 4 });
+  // Count active readings.
   const activeReadingCount = Object.values(readingProgressMap).filter(
     (entry) => !entry.completedAt
   ).length;
+  // Count total vocabulary.
   const vocabBankCount = Object.keys(readingVocabularyBank).length;
 
   return (

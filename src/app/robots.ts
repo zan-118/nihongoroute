@@ -10,11 +10,13 @@
 // ======================
 
 /**
- * Konfigurasi robots.txt untuk aplikasi.
+ * Generates robots.txt configuration.
+ * Controls search engine crawler access.
  * 
- * @returns {Object} Konfigurasi rules dan sitemap.
+ * @returns Robots configuration object.
  */
 export default function robots() {
+  // Fallback to production domain if env variable missing.
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://nihongoroute.my.id";
 
   return {
@@ -28,6 +30,7 @@ export default function robots() {
         ],
       },
     ],
+    // Remove trailing slashes from base URL to prevent malformed path.
     sitemap: `${siteUrl.replace(/\/+$/, "")}/sitemap.xml`,
   };
 }

@@ -17,16 +17,25 @@ import { Sparkles } from "lucide-react";
 // ==========================================
 // ANTARMUKA & PROPS (INTERFACES)
 // ==========================================
+/**
+ * Props for DailyExpression component.
+ */
 interface DailyExpressionProps {
+  /** Expression data from CMS. Can be null. */
   expression: RandomExpression | null;
 }
 
 // ==========================================
 // KOMPONEN UTAMA
 // ==========================================
+/**
+ * Show random Japanese expression. Display text, reading, translation.
+ */
 export default function DailyExpression({ expression }: DailyExpressionProps) {
+  // No expression data. Render nothing.
   if (!expression) return null;
 
+  // Get Indonesian translation. Fallback to English meaning.
   const meaningId = expression.indonesia[0] ?? expression.meanings[0] ?? "";
 
   return (
@@ -86,4 +95,3 @@ export default function DailyExpression({ expression }: DailyExpressionProps) {
     </section>
   );
 }
-

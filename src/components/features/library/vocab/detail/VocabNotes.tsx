@@ -16,23 +16,31 @@ import { MnemonicEditor } from "@/components/features/srs/mnemonic/MnemonicEdito
 // ==========================================
 // ANTARMUKA & TIPE DATA
 // ==========================================
+/**
+ * Properties for VocabNotes component.
+ */
 interface VocabNotesProps {
+  /** Unique identifier of vocabulary word. */
   wordId: string;
+  /** Official mnemonic text from server. */
   mnemonic?: string;
+  /** Additional usage or grammar notes. */
   usageNotes?: string;
 }
 
 // ==========================================
-// KOMPONEN UTAMA: VocabNotes
+// KOMKOMPONEN UTAMA: VocabNotes
 // ==========================================
 /**
- * Komponen penampil catatan & editor mnemonik kustom.
+ * Renders official mnemonics, usage notes, and custom mnemonic editor.
  * 
- * @param {VocabNotesProps} props Properti komponen catatan kosakata.
+ * @param props - Component properties.
+ * @returns React element.
  */
 export function VocabNotes({ wordId, mnemonic, usageNotes }: VocabNotesProps) {
   return (
     <Card className="p-6 bg-warning/5  border-warning/20 rounded-2xl md:rounded-3xl hover:border-warning/40 transition-all group overflow-hidden relative flex flex-col gap-4 font-sans glass shadow-[0_0_20px_rgba(var(--warning-rgb),0.02)]">
+      {/* Decorative background icon */}
       <div className="absolute -top-4 -right-4 p-8 opacity-[0.05] group-hover:scale-110 transition-transform duration-700 text-warning">
         <Sparkles size={80} />
       </div>
@@ -70,4 +78,3 @@ export function VocabNotes({ wordId, mnemonic, usageNotes }: VocabNotesProps) {
     </Card>
   );
 }
-

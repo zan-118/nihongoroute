@@ -6,8 +6,18 @@
 // ==========================================
 // DATA UTAMA TABEL KANA (HIRAGANA & KATAKANA)
 // ==========================================
+
+/**
+ * Static dataset for Japanese kana characters.
+ * Maps Hiragana, Katakana, and Romaji equivalents.
+ * Divided by phonetic categories.
+ */
 export const KANA_DATA = {
+  /**
+   * Seion: Basic unvoiced sounds.
+   */
   seion: {
+    // Empty strings represent non-existent sounds in modern Japanese grid.
     hiragana: [
       ["あ", "い", "う", "え", "お"],
       ["か", "き", "く", "け", "こ"],
@@ -29,7 +39,7 @@ export const KANA_DATA = {
       ["ナ", "ニ", "ヌ", "ネ", "ノ"],
       ["ハ", "ヒ", "フ", "ヘ", "ホ"],
       ["マ", "ミ", "ム", "メ", "モ"],
-      ["ヤ", "", "ユ", "", "ヨ"],
+      ["ヤ", "", "ユ", "", "よ"],
       ["ラ", "リ", "ル", "レ", "ロ"],
       ["ワ", "", "", "", "ヲ"],
       ["ン", "", "", "", ""],
@@ -48,6 +58,9 @@ export const KANA_DATA = {
       ["n", "", "", "", ""],
     ],
   },
+  /**
+   * Dakuon: Voiced sounds (with dakuten/handakuten).
+   */
   dakuon: {
     hiragana: [
       ["が", "ぎ", "ぐ", "げ", "ご"],
@@ -71,6 +84,9 @@ export const KANA_DATA = {
       ["pa", "pi", "pu", "pe", "po"],
     ],
   },
+  /**
+   * Yoon: Contracted sounds (digraphs with small ya/yu/yo).
+   */
   yoon: {
     hiragana: [
       ["きゃ", "きゅ", "きょ"],
@@ -96,7 +112,7 @@ export const KANA_DATA = {
       ["ギャ", "ギュ", "ギョ"],
       ["ジャ", "ジュ", "ジョ"],
       ["ビャ", "ビュ", "ビョ"],
-      ["ピャ", "ピュ", "ピョ"],
+      ["ピャ", "ピュ", "ピュ"],
     ],
     romaji: [
       ["kya", "kyu", "kyo"],
@@ -117,5 +133,13 @@ export const KANA_DATA = {
 // ==========================================
 // DEFINISI TIPE DATA (TYPES)
 // ==========================================
+
+/**
+ * Target Japanese writing system type.
+ */
 export type KanaType = "hiragana" | "katakana";
+
+/**
+ * Phonetic category of kana characters.
+ */
 export type KanaCategory = "seion" | "dakuon" | "yoon";

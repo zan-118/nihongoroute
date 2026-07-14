@@ -24,12 +24,22 @@ import { cn } from "@/lib/utils";
 // ======================
 // TIPE DATA
 // ======================
+
+/**
+ * Props for ReadingListClient.
+ * @property initialData Initial paginated reading data.
+ */
 interface ReadingListClientProps {
   initialData: PaginatedReadingResponse;
 }
 
+/** Items shown per page. */
 const ITEMS_PER_PAGE = 9;
+
+/** Available JLPT levels for filtering. */
 const JLPT_FILTERS = ["all", "N5", "N4", "N3", "N2", "N1"] as const;
+
+/** JLPT filter type. */
 type JlptFilter = (typeof JLPT_FILTERS)[number];
 
 // ======================
@@ -37,11 +47,8 @@ type JlptFilter = (typeof JLPT_FILTERS)[number];
 // ======================
 
 /**
- * Komponen ReadingListClient: Menyediakan antarmuka interaktif untuk menyaring, mencari,
- * dan mempaginasi pustaka graded reading dengan React Query.
- * 
- * @param {ReadingListClientProps} props Properti komponen.
- * @returns {JSX.Element} Antarmuka direktori graded reading interaktif.
+ * Reading list client component. Handle search, filter, pagination.
+ * @param props Component props.
  */
 export default function ReadingListClient({ initialData }: ReadingListClientProps) {
   const [search, setSearch] = useState("");
@@ -50,7 +57,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
   const [level, setLevel] = useState<JlptFilter>("all");
   const completedLessons = useUserStore((state) => state.completedLessons);
 
-  // Melakukan debounce pada input pencarian
+  // Debounce search input. Prevent excessive API calls.
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(search);
@@ -59,6 +66,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
     return () => clearTimeout(handler);
   }, [search]);
 
+  // Fetch paginated data. Keep old data during fetch.
   const { data, isFetching } = useQuery({
     queryKey: ["reading", currentPage, debouncedSearch, level],
     queryFn: () => getPaginatedReading(currentPage, ITEMS_PER_PAGE, debouncedSearch, level),
@@ -69,11 +77,19 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
   const materials = data?.data || [];
   const totalPages = data?.total ? Math.ceil(data.total / ITEMS_PER_PAGE) : 0;
 
+  /**
+   * Handle page change. Scroll to top.
+   * @param page Target page number.
+   */
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  /**
+   * Handle level filter change. Reset page to 1.
+   * @param nextLevel Target JLPT level.
+   */
   const handleLevelChange = (nextLevel: JlptFilter) => {
     setLevel(nextLevel);
     setCurrentPage(1);
@@ -132,6 +148,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
         )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 min-h-[300px]">
           {materials.map((material) => {
+            // Check if user finished lesson. Use store state.
             const isCompleted = !!(
               material.id &&
               completedLessons[material.id] &&
@@ -142,6 +159,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
             <div
               key={material.slug}
               className="transform hover:-translate-y-1 transition-all duration-300"
+              // Optimize render performance. Use content-visibility.
               style={{ 
                 contentVisibility: 'auto', 
                 containIntrinsicSize: '0 200px',
@@ -252,6 +270,7 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
             </Button>
 
             <div className="flex items-center gap-2">
+              {/* Calculate page numbers. Show max 5 pages. */}
               {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                 let pageNum;
                 if (totalPages <= 5) {
@@ -308,4 +327,3 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
     </div>
   );
 }
-

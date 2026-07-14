@@ -26,6 +26,9 @@ import { useSurvivalSetup } from "@/components/features/games/survival/useSurviv
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
+/**
+ * JLPT level configurations. Map level ID to label and style classes.
+ */
 const JLPT_LEVELS = [
   { id: "all", label: "Campur (Semua)", color: "bg-muted text-muted-foreground border-border" },
   { id: "N5", label: "N5", color: "bg-[rgb(var(--primary-rgb)/0.1)] text-primary border-[rgb(var(--primary-rgb)/0.2)]" },
@@ -35,10 +38,19 @@ const JLPT_LEVELS = [
   { id: "N1", label: "N1", color: "bg-[rgb(var(--destructive-rgb)/0.1)] text-destructive border-[rgb(var(--destructive-rgb)/0.2)]" }
 ];
 
+/**
+ * Card count options. Define number of questions.
+ */
 const AMOUNTS = [10, 20, 50, 100];
 
+/**
+ * Survival game content component. Handle setup UI and active gameplay state.
+ */
 function SurvivalContent() {
+  // Initialize router for navigation.
   const router = useRouter();
+  
+  // Fetch game state and handlers from custom hook.
   const {
     level,
     setLevel,
@@ -57,6 +69,7 @@ function SurvivalContent() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent pointer-events-none" />
 
       <AnimatePresence mode="wait">
+        {/* Render loading spinner when fetching cards */}
         {isFetchingCards ? (
           <motion.div
             key="loading-cards"
@@ -71,6 +84,7 @@ function SurvivalContent() {
             </p>
           </motion.div>
         ) : !isPlaying ? (
+          /* Render setup screen when game not active */
           <motion.div
             key="setup"
             initial={{ opacity: 0, y: 20 }}
@@ -162,6 +176,7 @@ function SurvivalContent() {
             </div>
           </motion.div>
         ) : (
+          /* Render active gameplay screen */
           <motion.div
             key="gameplay"
             initial={{ opacity: 0, y: 20 }}
@@ -194,6 +209,9 @@ function SurvivalContent() {
   );
 }
 
+/**
+ * Survival page entry point. Wrap content in Suspense for safe loading.
+ */
 export default function SurvivalPage() {
   return (
     <Suspense fallback={

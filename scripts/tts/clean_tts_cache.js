@@ -87,7 +87,7 @@ function detectVoice(speaker, fallbackIndex = 0) {
     return maleVoices[index % maleVoices.length];
   }
   const EXACT_FEMALE = [
-    "ayu", "siti", "dewi", "rara", "indah", "sakura", "lara", "sato", "hayashi",
+    "ayu", "siti", "dewi", "ani", "indah", "sakura", "lara", "sato", "hayashi",
     "アユ", "シティ", "デウィ", "ララ", "インダ", "さくら", "サクラ", "さとう", "はやし"
   ];
   const EXACT_MALE = [

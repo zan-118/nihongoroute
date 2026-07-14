@@ -16,6 +16,9 @@ import { getSanityReadingBySlug } from "@/lib/queries";
 // ======================
 // TYPES
 // ======================
+/**
+ * Raw reading material item structure returned from Sanity CMS.
+ */
 interface SanityReadingItem {
   _id: string;
   title: string;
@@ -32,7 +35,13 @@ interface SanityReadingItem {
 // ======================
 
 /**
- * Mengambil materi membaca (reading) dengan paginasi, pencarian, dan filter level dari Sanity.
+ * Fetches paginated reading materials from Sanity CMS with optional search and JLPT level filters.
+ * 
+ * @param page - Current page number (1-indexed).
+ * @param limit - Number of items per page.
+ * @param search - Search query string for title, body, or difficulty.
+ * @param level - JLPT level filter (e.g., 'N5', 'N4', or 'all').
+ * @returns Paginated reading response containing mapped items and total count.
  */
 export async function getPaginatedReading(
   page: number,
@@ -40,9 +49,11 @@ export async function getPaginatedReading(
   search: string = "",
   level: string = ""
 ): Promise<PaginatedReadingResponse> {
+  // Calculate offset for pagination slicing
   const offset = (page - 1) * limit;
 
   try {
+    // Build dynamic GROQ filter based on search query and JLPT level
     let filter = `_type == "readingMaterial"`;
     if (search) {
       filter += ` && (title match $search || body match $search || difficulty match $search)`;
@@ -51,6 +62,7 @@ export async function getPaginatedReading(
       filter += ` && jlpt_level == $level`;
     }
 
+    // GROQ query to fetch paginated data and total count in a single request
     const query = `{
       "data": *[${filter}] | order(_createdAt desc) [$offset...$limit] {
         _id,
@@ -65,6 +77,7 @@ export async function getPaginatedReading(
       "total": count(*[${filter}])
     }`;
 
+    // Map query parameters, appending wildcard to search for partial matches
     const params: Record<string, string | number> = {
       offset,
       limit: offset + limit
@@ -79,6 +92,7 @@ export async function getPaginatedReading(
 
     const result = await sanityClient.fetch(query, params, sanityPublicFetchOptions);
 
+    // Map Sanity schema fields to application-compatible LibraryItem structure
     return {
       data: (result.data || []).map((r: SanityReadingItem) => ({
         ...r,
@@ -95,13 +109,17 @@ export async function getPaginatedReading(
 }
 
 /**
- * Mengambil detail satu materi membaca berdasarkan slug.
+ * Fetches a single reading material detail by its slug.
+ * 
+ * @param slug - Unique identifier slug of the reading material.
+ * @returns The mapped library item, or null if not found or on error.
  */
 export async function getLibraryReadingDetail(slug: string): Promise<LibraryItem | null> {
   try {
     const data = (await getSanityReadingBySlug(slug)) as LibraryItem | null;
     if (!data) return null;
 
+    // Map snake_case Sanity fields to camelCase application properties
     data.audioUrl = data.audio_url;
     data.imageUrl = data.image_url;
     data.videoUrl = data.video_url;

@@ -15,10 +15,17 @@ import { Button } from "@/components/ui/button";
 // ==========================================
 // ANTARMUKA & TIPE DATA
 // ==========================================
+/**
+ * Props for VocabPagination component.
+ */
 interface VocabPaginationProps {
+  /** Current active page number. */
   currentPage: number;
+  /** Total number of pages available. */
   totalPages: number;
+  /** Loading state blocks interaction. */
   loading: boolean;
+  /** Callback triggered when page changes. */
   onPageChange: (page: number) => void;
 }
 
@@ -26,18 +33,24 @@ interface VocabPaginationProps {
 // KOMPONEN UTAMA: VocabPagination
 // ==========================================
 /**
- * Komponen navigasi pagination kosakata interaktif berkinerja tinggi.
+ * Interactive pagination navigation component.
  * 
- * @param {VocabPaginationProps} props Properti komponen pagination kosakata.
+ * @param props Component properties.
+ * @returns Pagination element or null if single page.
  */
 export function VocabPagination({ currentPage, totalPages, loading, onPageChange }: VocabPaginationProps) {
+  // Hide pagination if only one page exists.
   if (totalPages <= 1) return null;
 
   const pages: number[] = [];
   const maxVisible = 5;
+  // Calculate start index based on current page position.
   let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+  // Calculate end index based on start index and max visible limit.
   const end = Math.min(totalPages, start + maxVisible - 1);
+  // Adjust start index if remaining pages smaller than max visible limit.
   if (end - start + 1 < maxVisible) start = Math.max(1, end - maxVisible + 1);
+  // Populate visible page numbers.
   for (let i = start; i <= end; i++) pages.push(i);
 
   return (
@@ -116,4 +129,3 @@ export function VocabPagination({ currentPage, totalPages, loading, onPageChange
     </div>
   );
 }
-

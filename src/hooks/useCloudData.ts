@@ -26,40 +26,41 @@ import { useStoreHydration } from "./useStoreHydration";
 // CUSTOM HOOK UTAMA
 // ==========================================
 /**
- * Hook kustom untuk mengambil dan merekonsiliasi seluruh data kemajuan belajar dari database awan ke luring.
+ * Hook to fetch and reconcile cloud progress data with local storage.
  * 
- * @param {Session | null | undefined} session - Sesi aktif autentikasi Supabase
- * @param {boolean} hasMounted - Status apakah komponen pemanggil hook telah dimuat penuh di peramban
- * @returns {Object} Hasil kemajuan belajar awan dan status pemuatan data
+ * @param session - Active Supabase session.
+ * @param hasMounted - Component mount status.
+ * @returns Cloud data and fetching state.
  */
 export function useCloudData(session: Session | null | undefined, hasMounted: boolean) {
+  // Initialize Supabase client once.
   const supabase = useMemo(() => createClient(), []);
   
-  // Mengambil tindakan penggabungan progres ke local stores
+  // Get local store actions.
   const mergeProgress = useSRSStore((s) => s.mergeProgress);
   const setLoading = useUIStore((s) => s.setLoading);
   
-  // Ref untuk menjamin penanganan migrasi data tamu hanya dieksekusi sekali di awal sesi
+  // Track guest migration status.
   const initialLoadDone = useRef(false);
 
-  // Menunggu status hidrasi Zustand lokal (IndexedDB) selesai sepenuhnya sebelum fetching
+  // Wait for local stores to hydrate.
   const userHydrated = useStoreHydration(useUserStore);
   const srsHydrated = useStoreHydration(useSRSStore);
 
-  // TanStack Query untuk menarik progress terpadu dari Supabase
+  // Fetch unified progress from Supabase.
   const { data: cloudData, isLoading: isFetching } = useQuery({
     queryKey: ["user-progress", session?.user?.id],
     queryFn: async () => {
-      // Penjaga: Sesi harus terautentikasi dan komponen terpasang di layar
+      // Guard: require auth and mount.
       if (!session?.user || !hasMounted) return null;
 
-      // Cek dan eksekusi migrasi jika ada riwayat belajar lokal dari akun Guest (tamu)
+      // Migrate guest data on first load.
       if (!initialLoadDone.current) {
         await handleLegacyMigration(session.user.id, supabase);
         initialLoadDone.current = true;
       }
 
-      // Ambil seluruh modul data secara paralel via Promise.all (menghindari waterfall latency)
+      // Fetch profile, SRS, and lessons in parallel.
       const [profileRes, srsRes, lessonsRes] = await Promise.all([
         supabase
           .from("profiles")
@@ -80,7 +81,7 @@ export function useCloudData(session: Session | null | undefined, hasMounted: bo
       const srsData = srsRes.data;
       const lessonsData = lessonsRes.data;
 
-      // 1. Parsing data kartu SRS awan ke bentuk record luring
+      // Map database rows to local SRS state.
       const parsedSrs: Record<string, SRSState> = {};
       if (srsData) {
         srsData.forEach((row: { word_id: string; interval: number; repetition: number; ease_factor: number; next_review: string; updated_at: string; custom_mnemonic?: string }) => {
@@ -95,7 +96,7 @@ export function useCloudData(session: Session | null | undefined, hasMounted: bo
         });
       }
 
-      // 2. Parsing data riwayat pelajaran awan ke bentuk record luring
+      // Map database rows to local lesson progress.
       const parsedLessons: Record<string, LessonProgress> = {};
       if (lessonsData) {
         lessonsData.forEach((row: { lesson_id: string; completed_at: string; updated_at: string; is_completed: boolean }) => {
@@ -107,14 +108,14 @@ export function useCloudData(session: Session | null | undefined, hasMounted: bo
         });
       }
 
-      // 3. Rekonsiliasi hitungan ulasan harian berdasarkan kecocokan tanggal lokal hari ini
+      // Reset review count if day changed.
       const today = getLocalDateString();
       let cloudReviewCount = profile?.today_review_count || 0;
       if (profile?.last_study_date !== today) {
         cloudReviewCount = 0;
       }
 
-      // 4. Sanitasi data log hari belajar pengguna
+      // Normalize study days format.
       const sanitizedStudyDays: Record<string, number> = {};
       if (profile?.study_days) {
         Object.entries(profile.study_days).forEach(([date, val]) => {
@@ -122,7 +123,7 @@ export function useCloudData(session: Session | null | undefined, hasMounted: bo
         });
       }
 
-      // Kembalikan objek UserProgress yang terpadu
+      // Return unified progress object.
       return {
         id: session!.user.id,
         isGuest: false,
@@ -143,9 +144,10 @@ export function useCloudData(session: Session | null | undefined, hasMounted: bo
     enabled: hasMounted && !!session?.user && userHydrated && srsHydrated,
   });
 
-  // Sinkronkan Cloud Data ke Zustand jika ada perubahan riil pada properti data
-  // Guard khusus: Hanya picu mergeProgress jika XP, panjang SRS, panjang lesson, streak, atau lastStudyDate berubah
+  // Track last merged state to prevent loops.
   const lastMergedKey = useRef<string>("");
+  
+  // Merge cloud data to local store on change.
   useEffect(() => {
     if (cloudData && hasMounted) {
       const mergeKey = `${cloudData.xp}-${Object.keys(cloudData.srs).length}-${Object.keys(cloudData.completedLessons).length}-${cloudData.streak}-${cloudData.lastStudyDate}`;
@@ -156,7 +158,7 @@ export function useCloudData(session: Session | null | undefined, hasMounted: bo
     }
   }, [cloudData, mergeProgress, hasMounted]);
 
-  // Efek Samping: Selaraskan indikator pemuatan global dengan status fetching query
+  // Sync global loading state.
   useEffect(() => {
     if (hasMounted) {
       setLoading(isFetching);

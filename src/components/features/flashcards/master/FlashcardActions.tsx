@@ -14,15 +14,27 @@ import { StudyMode } from "./types";
 // ==========================================
 // ANTARMUKA PROPS
 // ==========================================
+/**
+ * Props for FlashcardActions component.
+ */
 interface FlashcardActionsProps {
+  /** Current study mode. */
   studyMode: StudyMode;
+  /** Card flip state. */
   isFlipped: boolean;
+  /** Current card index. */
   currentIndex: number;
+  /** Total cards count. */
   totalCards: number;
+  /** Theme color class. */
   themeColor: string;
+  /** Navigation handler. */
   handleNav: (dir: 1 | -1) => void;
+  /** SRS grade handler. */
   handleAnswer: (grade: number) => void;
+  /** Check state for challenge mode. */
   isAnswerChecked?: boolean;
+  /** Check action for challenge mode. */
   onCheckAnswer?: () => void;
 }
 
@@ -30,9 +42,10 @@ interface FlashcardActionsProps {
 // KOMPONEN UTAMA
 // ==========================================
 /**
- * Komponen panel aksi bawah untuk menavigasi sesi flashcard dan mengevaluasi hafalan.
+ * Interactive control panel for flashcards.
+ * Handles navigation, SRS grading, and answer checking.
  * 
- * @param {FlashcardActionsProps} props - Properti untuk mengatur status sesi dan navigasi kartu
+ * @param props - Component properties.
  */
 export function FlashcardActions({
   studyMode,
@@ -45,10 +58,12 @@ export function FlashcardActions({
   isAnswerChecked,
   onCheckAnswer,
 }: FlashcardActionsProps) {
+  // Check if mode is challenge.
   const isChallenge = studyMode === "tantangan";
 
   return (
     <div className="min-h-[70px] md:min-h-[80px]">
+      {/* Practice mode: show simple prev/next navigation. */}
       {studyMode === "latihan" ? (
         <div className="flex justify-between gap-3 md:gap-4">
             <Button
@@ -70,6 +85,7 @@ export function FlashcardActions({
         </div>
       ) : (
         <AnimatePresence mode="wait">
+          {/* Card flipped: show SRS grading buttons. */}
           {isFlipped ? (
             <m.nav
               key="flipped-actions"
@@ -78,6 +94,7 @@ export function FlashcardActions({
               exit={{ y: -10, opacity: 0 }}
               className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3"
             >
+              {/* Grade 0: Again */}
               <Button
                 variant="ghost"
                 onClick={(e) => {
@@ -90,6 +107,7 @@ export function FlashcardActions({
                 <span className="text-[10px] font-bold uppercase tracking-tight">Ulangi</span>
                 <span className="text-[8px] opacity-60">Lagi</span>
               </Button>
+              {/* Grade 1: Hard */}
               <Button
                 variant="ghost"
                 onClick={(e) => {
@@ -102,6 +120,7 @@ export function FlashcardActions({
                 <span className="text-[10px] font-bold uppercase tracking-tight">Sulit</span>
                 <span className="text-[8px] opacity-60">Susah</span>
               </Button>
+              {/* Grade 2: Good */}
               <Button
                 variant="ghost"
                 onClick={(e) => {
@@ -114,6 +133,7 @@ export function FlashcardActions({
                 <span className="text-[10px] font-bold uppercase tracking-tight">Paham</span>
                 <span className="text-[8px] opacity-60">Bagus</span>
               </Button>
+              {/* Grade 3: Easy */}
               <Button
                 variant="ghost"
                 onClick={(e) => {
@@ -128,6 +148,7 @@ export function FlashcardActions({
               </Button>
             </m.nav>
           ) : isChallenge ? (
+            /* Challenge mode: show check answer button. */
             <m.div
               key="challenge-actions"
               initial={{ opacity: 0 }}
@@ -144,6 +165,7 @@ export function FlashcardActions({
               </Button>
             </m.div>
           ) : (
+            /* Card not flipped: show hint to tap card. */
             <m.div
               key="standard-actions"
               initial={{ opacity: 0 }}

@@ -36,8 +36,14 @@ import type { SentenceRow } from "@/actions/sentences.actions";
 // ==========================================
 // ANTARMUKA & TIPE DATA
 // ==========================================
+
+/**
+ * Props for GrammarDetailClient component.
+ */
 interface GrammarDetailClientProps {
+  /** Grammar article data from database */
   article: LibraryItem;
+  /** Optional dynamic example sentences */
   dynamicSentences?: SentenceRow[];
 }
 
@@ -45,14 +51,17 @@ interface GrammarDetailClientProps {
 // PENDUKUNG DESAIN & MARKDOWN PARSER
 // ==========================================
 /**
- * Mem-parsing gaya inline markdown sederhana seperti bold (**), italic (*), dan inline code (`) menjadi JSX.
+ * Parse markdown inline styles to JSX.
+ * Handles bold (**), italic (*), and inline code (`).
  * 
- * @param {string} text - Teks mentah dengan tag markdown.
- * @returns {React.ReactNode[]} Array berisi elemen JSX hasil parsing.
+ * @param text Raw markdown text.
+ * @returns Array of JSX elements.
  */
 function parseInlineStyles(text: string): React.ReactNode[] {
+  // Split text by markdown tags
   const parts = text.split(/(\*\*.*?\*\*|`.*?`|\*.*?\*)/g);
   return parts.map((part, index) => {
+    // Check for bold tag
     if (part.startsWith("**") && part.endsWith("**")) {
       return (
         <strong key={index} className="text-foreground font-black">
@@ -60,6 +69,7 @@ function parseInlineStyles(text: string): React.ReactNode[] {
         </strong>
       );
     }
+    // Check for code tag
     if (part.startsWith("`") && part.endsWith("`")) {
       return (
         <code key={index} className="px-1.5 py-0.5 rounded bg-primary/5 border border-primary/10 text-primary font-mono text-xs md:text-sm font-bold mx-0.5">
@@ -67,6 +77,7 @@ function parseInlineStyles(text: string): React.ReactNode[] {
         </code>
       );
     }
+    // Check for italic tag
     if (part.startsWith("*") && part.endsWith("*")) {
       return (
         <em key={index} className="italic text-muted-foreground/90 font-medium">
@@ -79,12 +90,11 @@ function parseInlineStyles(text: string): React.ReactNode[] {
 }
 
 /**
- * Mem-parsing seluruh isi catatan tata bahasa (grammar notes) menjadi struktur JSX yang tertata rapi.
- * Mengelompokkan item daftar berurutan/tidak berurutan yang berturut-turut ke dalam satu tag kontainer tunggal.
- * Juga mengelompokkan baris tabel Markdown (|...|...|) menjadi tabel HTML yang dinamis dan ber-style premium.
+ * Parse markdown notes to structured JSX.
+ * Handles lists, tables, warnings, paragraphs.
  * 
- * @param {string} notes - Catatan teks mentah dari database.
- * @returns {React.ReactNode} Elemen JSX terstruktur.
+ * @param notes Raw notes string.
+ * @returns Structured JSX element.
  */
 function parseNotesToJSX(notes: string): React.ReactNode {
   const lines = notes.split("\n");
@@ -92,6 +102,9 @@ function parseNotesToJSX(notes: string): React.ReactNode {
   let currentList: { type: "ul" | "ol"; items: string[] } | null = null;
   let currentTable: string[] | null = null;
 
+  /**
+   * Flush list items to elements array.
+   */
   const flushList = (key: string) => {
     if (!currentList) return;
     const ListTag = currentList.type;
@@ -114,6 +127,9 @@ function parseNotesToJSX(notes: string): React.ReactNode {
     currentList = null;
   };
 
+  /**
+   * Flush table rows to elements array.
+   */
   const flushTable = (key: string) => {
     if (!currentTable || currentTable.length < 2) return;
     
@@ -153,6 +169,9 @@ function parseNotesToJSX(notes: string): React.ReactNode {
     currentTable = null;
   };
 
+  /**
+   * Flush both list and table.
+   */
   const flushAll = (key: string) => {
     flushList(`${key}-list`);
     flushTable(`${key}-table`);
@@ -165,7 +184,7 @@ function parseNotesToJSX(notes: string): React.ReactNode {
       return;
     }
 
-    // Pendeteksian Tabel Markdown
+    // Detect markdown table line
     if (trimmed.startsWith("|")) {
       flushList(`table-interrupt-list-${index}`);
       if (!currentTable) {
@@ -176,10 +195,10 @@ function parseNotesToJSX(notes: string): React.ReactNode {
       return;
     }
 
-    // Jika bukan baris tabel, flush tabel aktif yang ada
+    // If not table line, flush active table
     flushTable(`table-interrupt-other-${index}`);
 
-    // Item daftar tidak berurutan (hanya jika dimulai dengan single * atau -)
+    // Detect unordered list item
     if ((trimmed.startsWith("*") && !trimmed.startsWith("**")) || trimmed.startsWith("-")) {
       const itemText = trimmed.substring(1).trim();
       if (!currentList || currentList.type !== "ul") {
@@ -191,7 +210,7 @@ function parseNotesToJSX(notes: string): React.ReactNode {
       return;
     }
 
-    // Item daftar berurutan
+    // Detect ordered list item
     const matchOrdered = trimmed.match(/^(\d+)\.\s(.*)/);
     if (matchOrdered) {
       const itemText = matchOrdered[2].trim();
@@ -204,10 +223,10 @@ function parseNotesToJSX(notes: string): React.ReactNode {
       return;
     }
 
-    // Jika bukan item daftar, bersihkan daftar aktif yang tersimpan
+    // If not list item, flush active list
     flushList(`list-flush-${index}`);
 
-    // Box peringatan bahaya/perangkap
+    // Detect warning box
     if (trimmed.startsWith("⚠️")) {
       elements.push(
         <div 
@@ -223,7 +242,7 @@ function parseNotesToJSX(notes: string): React.ReactNode {
       return;
     }
 
-    // Paragraf biasa
+    // Process regular paragraph
     elements.push(
       <p key={`para-${index}`} className="font-semibold text-muted-foreground/85 leading-relaxed">
         {parseInlineStyles(trimmed)}
@@ -239,17 +258,25 @@ function parseNotesToJSX(notes: string): React.ReactNode {
 // KOMPONEN UTAMA: GrammarDetailClient
 // ==========================================
 /**
- * Komponen GrammarDetailClient: Mengendalikan logika interaktif client-side detail grammar.
+ * Interactive client component for grammar detail page.
+ * Handles TTS, sharing, and dynamic layout.
  * 
- * @param {GrammarDetailClientProps} props Properti komponen detail tata bahasa.
- * @returns {JSX.Element} Komponen detail grammar yang interaktif dan premium.
+ * @param props Component props.
+ * @returns Interactive grammar detail component.
  */
 export default function GrammarDetailClient({ article, dynamicSentences = [] }: GrammarDetailClientProps) {
+  // Track active playing audio index
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
+  // Track clipboard copy state
   const [isCopied, setIsCopied] = useState(false);
+  // Audio element reference
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  // Object URL reference for memory cleanup
   const objectUrlRef = useRef<string | null>(null);
 
+  /**
+   * Revoke object URL to prevent memory leak.
+   */
   const cleanupObjectUrl = useCallback(() => {
     if (objectUrlRef.current) {
       URL.revokeObjectURL(objectUrlRef.current);
@@ -257,14 +284,22 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
     }
   }, []);
 
-  // Hitung voice deterministik dari teks — selaras dengan generate_example_sentences.js
+  // Voice list for rotation
   const VOICES_ROTATION: TtsVoice[] = [
-    TTS_VOICES.LARA, TTS_VOICES.INDAH, TTS_VOICES.SITI, TTS_VOICES.DEWI,
+    TTS_VOICES.LALA, TTS_VOICES.INDAH, TTS_VOICES.SITI, TTS_VOICES.DEWI,
     TTS_VOICES.HAYASHI, TTS_VOICES.SATO, TTS_VOICES.AYU, TTS_VOICES.ZUNDAMON,
     TTS_VOICES.RITSU, TTS_VOICES.DITO, TTS_VOICES.BUDI, TTS_VOICES.SUZUKI,
     TTS_VOICES.TANAKA, TTS_VOICES.KIMURA, TTS_VOICES.ANDI, TTS_VOICES.FAISAL,
-    TTS_VOICES.TAKAHASHI, TTS_VOICES.KOBAYASHI, TTS_VOICES.NAMONASHI,
+    TTS_VOICES.TAKAHASHI, TTS_VOICES.KOBAYASHI,
   ];
+
+  /**
+   * Get voice based on text hash.
+   * Ensures same voice for same text.
+   * 
+   * @param text Input text.
+   * @returns Selected voice.
+   */
   const getDeterministicVoice = (text: string): TtsVoice => {
     let hash = 0;
     for (let i = 0; i < text.length; i++) hash = text.charCodeAt(i) + ((hash << 5) - hash);
@@ -272,10 +307,14 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
   };
 
   /**
-   * Mengucapkan contoh kalimat Jepang menggunakan cache DB (VoiceVox) dengan fallback Web Speech API.
+   * Play Japanese text audio using TTS.
+   * Fallback to Web Speech API if fetch fails.
+   * 
+   * @param text Japanese text.
+   * @param index Sentence index.
    */
   const speakJapanese = async (text: string, index: number) => {
-    // Toggle stop jika kalimat yang sama diklik lagi
+    // Stop current audio if same index clicked
     if (playingIndex === index) {
       audioRef.current?.pause();
       cleanupObjectUrl();
@@ -284,7 +323,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
       return;
     }
 
-    // Hentikan yang sedang berjalan
+    // Stop any active audio before playing new
     audioRef.current?.pause();
     cleanupObjectUrl();
     if (typeof window !== "undefined") window.speechSynthesis.cancel();
@@ -320,7 +359,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
     }
   };
 
-  // Bersihkan audio saat unmount
+  // Cleanup audio on component unmount
   useEffect(() => {
     return () => {
       audioRef.current?.pause();
@@ -330,7 +369,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
   }, [cleanupObjectUrl]);
 
   /**
-   * Menyalin tautan halaman detail grammar aktif ke clipboard.
+   * Copy current URL to clipboard.
    */
   const handleShare = () => {
     if (typeof window !== "undefined") {
@@ -340,13 +379,14 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
     }
   };
 
+  // Determine JLPT level
   const jlptLevel = article.jlpt_level || article.jlptLevel || "N/A";
 
   /**
-   * Mendapatkan kelas style spesifik siber-neon untuk setiap level JLPT.
-   * Menggunakan variabel CSS semantik dinamis seutuhnya sesuai pedoman desain proyek.
+   * Get CSS classes for JLPT level badge.
    * 
-   * @param {string} level - Level JLPT (N1 - N5).
+   * @param level JLPT level string.
+   * @returns CSS class string.
    */
   const getJLPTBadgeStyle = (level: string) => {
     const lvl = level.toUpperCase();

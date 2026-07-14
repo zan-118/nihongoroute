@@ -27,6 +27,10 @@ import { ROUTES } from "@/lib/routes";
 // ======================
 // KONFIGURASI / KONSTANTA
 // ======================
+
+/**
+ * Framer Motion container animation configuration.
+ */
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -35,6 +39,9 @@ const containerVariants: Variants = {
   },
 };
 
+/**
+ * Framer Motion item animation configuration.
+ */
 const itemVariants: Variants = {
   hidden: { y: 20, opacity: 0 },
   visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100 } },
@@ -43,14 +50,26 @@ const itemVariants: Variants = {
 // ======================
 // ANTARMUKA
 // ======================
+
+/**
+ * Exam data structure.
+ */
 export interface ExamData {
+  /** Unique identifier. */
   id?: string;
+  /** Alternative MongoDB identifier. */
   _id?: string;
+  /** Exam title. */
   title: string;
+  /** Optional description. */
   description?: string | null;
+  /** JLPT level code (e.g., N5, N4). */
   levelCode?: string;
+  /** URL slug. */
   slug?: string | null;
+  /** Time limit in minutes. */
   timeLimit: number;
+  /** Minimum score to pass. */
   passingScore: number;
 }
 
@@ -58,13 +77,6 @@ export interface ExamData {
 // EKSEKUSI UTAMA
 // ======================
 
-/**
- * Komponen ExamsClient: Merender antarmuka daftar ujian JLPT interaktif dengan animasi stagger Framer Motion.
- *
- * @param {Object} props Properti komponen.
- * @param {ExamData[]} props.exams Daftar data ujian dari CMS Sanity.
- * @returns {JSX.Element} Antarmuka daftar simulasi ujian.
- */
 /**
  * Menentukan tipe seksi ujian berdasarkan slug dan title.
  * 
@@ -75,6 +87,7 @@ const getExamSectionType = (exam: ExamData): "moji-goi" | "bunpou" | "reading" |
   const slug = (exam.slug || "").toLowerCase();
   const title = (exam.title || "").toLowerCase();
   
+  // Match vocabulary keywords
   if (
     slug.includes("moji-goi") || 
     title.includes("moji/goi") || 
@@ -83,6 +96,7 @@ const getExamSectionType = (exam: ExamData): "moji-goi" | "bunpou" | "reading" |
   ) {
     return "moji-goi";
   }
+  // Match grammar keywords
   if (
     slug.includes("bunpou") || 
     title.includes("bunpou") || 
@@ -90,6 +104,7 @@ const getExamSectionType = (exam: ExamData): "moji-goi" | "bunpou" | "reading" |
   ) {
     return "bunpou";
   }
+  // Match reading keywords
   if (
     slug.includes("reading") || 
     title.includes("reading") || 
@@ -99,6 +114,7 @@ const getExamSectionType = (exam: ExamData): "moji-goi" | "bunpou" | "reading" |
   ) {
     return "reading";
   }
+  // Match listening keywords
   if (
     slug.includes("listening") || 
     title.includes("listening") || 
@@ -109,27 +125,47 @@ const getExamSectionType = (exam: ExamData): "moji-goi" | "bunpou" | "reading" |
     return "listening";
   }
   
+  // Default to full simulation
   return "simulasi";
 };
 
+/**
+ * Komponen ExamsClient: Merender antarmuka daftar ujian JLPT interaktif dengan animasi stagger Framer Motion.
+ *
+ * @param {Object} props Properti komponen.
+ * @param {ExamData[]} props.exams Daftar data ujian dari CMS Sanity.
+ * @returns {JSX.Element} Antarmuka daftar simulasi ujian.
+ */
 export default function ExamsClient({ exams }: { exams: ExamData[] }) {
+  // Active level filter state (all, n5, n4, etc.)
   const [activeFilter, setActiveFilter] = useState<string>("all");
+  // Active mode filter state (all, simulasi, latihan)
   const [activeMode, setActiveMode] = useState<"all" | "simulasi" | "latihan">("all");
+  // Active sub-filter state for practice mode
   const [activeSubFilter, setActiveSubFilter] = useState<"all" | "moji-goi" | "bunpou" | "reading" | "listening">("all");
 
+  /**
+   * Check if exam is practice session.
+   */
   const checkIsPractice = (exam: ExamData) => {
     return getExamSectionType(exam) !== "simulasi";
   };
 
+  /**
+   * Update mode and reset sub-filter.
+   */
   const handleModeChange = (mode: "all" | "simulasi" | "latihan") => {
     setActiveMode(mode);
     setActiveSubFilter("all");
   };
 
+  // Filter exams based on level, mode, and sub-filter criteria
   const filteredExams = useMemo(() => {
     return exams.filter((exam) => {
       const level = (exam.levelCode || "").toLowerCase().trim();
       let matchLevel = true;
+      
+      // Apply level filter
       if (activeFilter !== "all") {
         if (activeFilter === "general") {
           matchLevel = !["n1", "n2", "n3", "n4", "n5"].includes(level);
@@ -142,12 +178,14 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
       const sectionType = getExamSectionType(exam);
       const isPractice = sectionType !== "simulasi";
 
+      // Apply mode filter
       if (activeMode !== "all") {
         const mode = isPractice ? "latihan" : "simulasi";
         matchMode = mode === activeMode;
       }
 
       let matchSubFilter = true;
+      // Apply sub-filter for practice mode
       if (activeMode === "latihan" && activeSubFilter !== "all") {
         matchSubFilter = sectionType === activeSubFilter;
       }
@@ -340,6 +378,7 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
                           let badgeText = "Simulasi";
                           let badgeColorClass = "text-destructive border-destructive/30 bg-destructive/5";
 
+                          // Determine badge color and text based on section type
                           if (sectionType === "moji-goi") {
                             badgeText = "Moji-Goi";
                             badgeColorClass = "text-warning border-warning/30 bg-warning/5";

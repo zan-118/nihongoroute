@@ -6,21 +6,40 @@
 // ==========================================
 // KONFIGURASI & KONSTANTA
 // ==========================================
+
+/** One day in milliseconds. */
 const DAY = 24 * 60 * 60 * 1000;
+
+/** Minimum ease factor limit to prevent interval stagnation. */
 const MIN_EASE_FACTOR = 1.3;
+
+/** Maximum ease factor limit to prevent interval explosion. */
 const MAX_EASE_FACTOR = 5.0; // Batas maksimal ease factor
+
+/** Maximum interval limit in days (approx. 10 years). */
 const MAX_INTERVAL = 3650;   // Maksimal interval 10 tahun
 
 // ==========================================
 // ANTARMUKA STATE SRS
 // ==========================================
+
+/**
+ * Represents the Spaced Repetition System (SRS) state for a flashcard.
+ */
 export interface SRSState {
+  /** Current interval in days before the next review. */
   interval: number; // Dalam satuan hari (days)
+  /** Number of consecutive successful reviews. */
   repetition: number;
+  /** Difficulty multiplier used to calculate the next interval. */
   easeFactor: number;
+  /** Epoch timestamp in milliseconds for the next scheduled review. */
   nextReview: number; // Timestamp (ms)
+  /** Epoch timestamp in milliseconds of the last state update. */
   updatedAt: number; // Timestamp (ms) update terakhir
+  /** Flag indicating if the card is marked for deletion during sync. */
   isDeleted?: boolean; // Flag untuk sinkronisasi penghapusan
+  /** Optional custom mnemonic text provided by the user. */
   customMnemonic?: string; // Jembatan keledai kustom
 }
 
@@ -58,6 +77,8 @@ export function createNewCardState(): SRSState {
 export function updateCardState(state: SRSState, grade: number): SRSState {
   let { repetition, interval, easeFactor } = state;
   const { nextReview } = state;
+  
+  // Card is due if current time is within 6 hours of next review time
   const isDue = Date.now() >= nextReview - (DAY / 4); // Toleransi 6 jam untuk fleksibilitas
 
   if (grade < 2) {
@@ -84,8 +105,10 @@ export function updateCardState(state: SRSState, grade: number): SRSState {
       repetition += 1;
 
       if (repetition === 1 && interval === 1) {
+        // First repetition interval adjustment
         interval = grade === 3 ? 2 : 1;
       } else if (repetition === 2 && interval <= 2) {
+        // Second repetition interval adjustment
         interval = grade === 3 ? 5 : 3;
       } else {
         // Multiplier bonus untuk jawaban "Sangat Mudah"
@@ -107,6 +130,7 @@ export function updateCardState(state: SRSState, grade: number): SRSState {
   }
 
   const now = new Date();
+  // Calculate next review date at midnight local time plus interval days
   const targetDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + interval);
   const newNextReview = targetDate.getTime();
 
@@ -118,4 +142,3 @@ export function updateCardState(state: SRSState, grade: number): SRSState {
     updatedAt: Date.now(),
   };
 }
-

@@ -1,5 +1,7 @@
+/** JLPT levels for shadowing practice. */
 export type ShadowingLevel = "N5" | "N4" | "N3";
 
+/** Shadowing practice preset structure. */
 export interface ShadowingPreset {
   id: string;
   level: ShadowingLevel;
@@ -14,6 +16,7 @@ export interface ShadowingPreset {
   sourceType?: "reading" | "listening" | "static";
 }
 
+/** Default shadowing practice presets. */
 export const SHADOWING_PRESETS: ShadowingPreset[] = [
   {
     id: "morning-greeting",
@@ -77,12 +80,22 @@ export const SHADOWING_PRESETS: ShadowingPreset[] = [
   },
 ];
 
+/**
+ * Get preset by index. Wrap around if out of bounds.
+ * @param index Preset index.
+ */
 export function getShadowingPreset(index: number) {
+  // Handle negative index wrap-around.
   const normalizedIndex = ((index % SHADOWING_PRESETS.length) + SHADOWING_PRESETS.length) % SHADOWING_PRESETS.length;
   return SHADOWING_PRESETS[normalizedIndex];
 }
 
+/**
+ * Format seconds to MM:SS string.
+ * @param totalSeconds Duration in seconds.
+ */
 export function formatShadowingDuration(totalSeconds: number) {
+  // Prevent negative duration.
   const safeSeconds = Math.max(0, Math.floor(totalSeconds));
   const minutes = Math.floor(safeSeconds / 60).toString().padStart(2, "0");
   const seconds = (safeSeconds % 60).toString().padStart(2, "0");
@@ -90,6 +103,11 @@ export function formatShadowingDuration(totalSeconds: number) {
   return `${minutes}:${seconds}`;
 }
 
+/**
+ * Compare elapsed time with target time. Return pace feedback.
+ * @param elapsedSeconds Recorded duration.
+ * @param targetSeconds Target duration.
+ */
 export function getShadowingPaceLabel(elapsedSeconds: number, targetSeconds: number) {
   if (elapsedSeconds <= 0) return "Belum direkam";
   if (elapsedSeconds < targetSeconds * 0.75) return "Terlalu cepat";

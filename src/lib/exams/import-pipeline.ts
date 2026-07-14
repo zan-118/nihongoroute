@@ -1,12 +1,17 @@
 import type { Json, TablesInsert } from "@/types/supabase.generated";
 
+/** Valid JLPT levels. */
 export const JLPT_IMPORT_LEVELS = ["N5", "N4", "N3", "N2", "N1"] as const;
+
+/** Valid exam sections. */
 export const JLPT_IMPORT_SECTIONS = [
   "vocabulary",
   "grammar",
   "reading",
   "listening",
 ] as const;
+
+/** Valid question source types. */
 export const JLPT_IMPORT_SOURCE_TYPES = [
   "vocab",
   "grammar",
@@ -15,23 +20,34 @@ export const JLPT_IMPORT_SOURCE_TYPES = [
   "reading",
   "custom",
 ] as const;
+
+/** Valid exam generation modes. */
 export const JLPT_IMPORT_GENERATION_MODES = [
   "fixed",
   "random_by_quota",
 ] as const;
 
+/** JLPT level type. */
 export type JlptImportLevel = (typeof JLPT_IMPORT_LEVELS)[number];
+
+/** Exam section type. */
 export type JlptImportSection = (typeof JLPT_IMPORT_SECTIONS)[number];
+
+/** Question source type. */
 export type JlptImportSourceType = (typeof JLPT_IMPORT_SOURCE_TYPES)[number];
+
+/** Exam generation mode type. */
 export type JlptImportGenerationMode =
   (typeof JLPT_IMPORT_GENERATION_MODES)[number];
 
+/** Choice structure for question. */
 export interface JlptImportChoice {
   type: "text" | "image";
   value: string;
   alt?: string | null;
 }
 
+/** Exam template metadata. */
 export interface JlptImportTemplate {
   slug: string;
   title: string;
@@ -46,6 +62,7 @@ export interface JlptImportTemplate {
   isPublished?: boolean;
 }
 
+/** Reading/listening passage data. */
 export interface JlptImportPassage {
   key: string;
   jlptLevel?: JlptImportLevel;
@@ -60,6 +77,7 @@ export interface JlptImportPassage {
   isPublished?: boolean;
 }
 
+/** Exam question data. */
 export interface JlptImportQuestion {
   key: string;
   jlptLevel?: JlptImportLevel;
@@ -80,18 +98,21 @@ export interface JlptImportQuestion {
   isPublished?: boolean;
 }
 
+/** Link between template and question. */
 export interface JlptImportTemplateQuestion {
   questionKey: string;
   position: number;
   sectionOrder?: number;
 }
 
+/** Asset file metadata. */
 export interface JlptImportAsset {
   path: string;
   localPath?: string | null;
   mimeType?: string | null;
 }
 
+/** Full import payload. */
 export interface JlptImportPackage {
   template: JlptImportTemplate;
   passages?: JlptImportPassage[];
@@ -100,18 +121,21 @@ export interface JlptImportPackage {
   assets?: Array<string | JlptImportAsset>;
 }
 
+/** Validation error or warning. */
 export interface JlptImportValidationIssue {
   code: string;
   path: string;
   message: string;
 }
 
+/** Asset usage reference. */
 export interface JlptImportAssetReference {
   path: string;
   sourcePath: string;
   usage: "passage_audio" | "passage_visual" | "question_audio" | "question_visual" | "choice_image";
 }
 
+/** Validation run summary. */
 export interface JlptImportValidationSummary {
   templateSlug: string | null;
   jlptLevel: JlptImportLevel | null;
@@ -124,6 +148,7 @@ export interface JlptImportValidationSummary {
   missingAssetReferences: JlptImportAssetReference[];
 }
 
+/** Validation result report. */
 export interface JlptImportValidationReport {
   ok: boolean;
   errors: JlptImportValidationIssue[];
@@ -131,6 +156,7 @@ export interface JlptImportValidationReport {
   summary: JlptImportValidationSummary;
 }
 
+/** Asset planned for import. */
 export interface JlptImportPlanAsset {
   path: string;
   localPath?: string | null;
@@ -139,6 +165,7 @@ export interface JlptImportPlanAsset {
   usages: JlptImportAssetReference["usage"][];
 }
 
+/** Database rows to insert. */
 export interface JlptImportRows {
   template: TablesInsert<"jlpt_exam_templates">;
   passages: TablesInsert<"jlpt_passages">[];
@@ -146,6 +173,7 @@ export interface JlptImportRows {
   templateQuestions: TablesInsert<"jlpt_exam_template_questions">[];
 }
 
+/** Execution plan for import. */
 export interface JlptImportPlan {
   validation: JlptImportValidationReport;
   rows: JlptImportRows;
@@ -157,6 +185,7 @@ export interface JlptImportPlan {
   };
 }
 
+/** Validation options. */
 export interface ValidateJlptImportOptions {
   assetExists?: (assetPath: string) => boolean;
   requireDeclaredAssets?: boolean;
@@ -173,22 +202,27 @@ const SECTION_ORDER: Record<JlptImportSection, number> = {
   listening: 3,
 };
 
+/** Check if value is non-null object. */
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+/** Check if value is non-empty string. */
 function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
 }
 
+/** Check if value is integer > 0. */
 function isPositiveInteger(value: unknown): value is number {
   return Number.isInteger(value) && Number(value) > 0;
 }
 
+/** Check if value is integer >= 0. */
 function isNonNegativeInteger(value: unknown): value is number {
   return Number.isInteger(value) && Number(value) >= 0;
 }
 
+/** Add validation issue to list. */
 function addIssue(
   target: JlptImportValidationIssue[],
   code: string,
@@ -198,6 +232,7 @@ function addIssue(
   target.push({ code, path, message });
 }
 
+/** Generate 32-bit FNV-1a hash. */
 function stableHash32(value: string, seed: number) {
   let hash = seed >>> 0;
   for (let index = 0; index < value.length; index += 1) {
@@ -207,8 +242,10 @@ function stableHash32(value: string, seed: number) {
   return (hash >>> 0).toString(16).padStart(8, "0");
 }
 
+/** Generate UUID v5 from scope and key. */
 export function createDeterministicUuid(scope: string, key: string) {
   const input = `${scope}:${key}`;
+  // FNV-1a hash blocks. Combine to 128-bit hex.
   const hex = [
     stableHash32(input, 0x811c9dc5),
     stableHash32(input, 0x9e3779b9),
@@ -217,9 +254,12 @@ export function createDeterministicUuid(scope: string, key: string) {
   ].join("");
   const chars = hex.split("");
 
+  // Set UUID version 5.
   chars[12] = "5";
+  // Set UUID variant RFC 4122.
   chars[16] = ((Number.parseInt(chars[16], 16) & 0x3) | 0x8).toString(16);
 
+  // Format as 8-4-4-4-12 hex string.
   return [
     chars.slice(0, 8).join(""),
     chars.slice(8, 12).join(""),
@@ -229,17 +269,20 @@ export function createDeterministicUuid(scope: string, key: string) {
   ].join("-");
 }
 
+/** Normalize string to JLPT level. */
 function normalizeLevel(value: unknown): JlptImportLevel | null {
   if (typeof value !== "string") return null;
   const normalized = value.trim().toUpperCase();
   return LEVEL_SET.has(normalized) ? (normalized as JlptImportLevel) : null;
 }
 
+/** Normalize string to exam section. */
 function normalizeSection(value: unknown): JlptImportSection | null {
   if (typeof value !== "string") return null;
   return SECTION_SET.has(value) ? (value as JlptImportSection) : null;
 }
 
+/** Normalize string to generation mode. */
 function normalizeGenerationMode(
   value: unknown
 ): JlptImportGenerationMode | null {
@@ -250,12 +293,14 @@ function normalizeGenerationMode(
     : null;
 }
 
+/** Normalize string to source type. */
 function normalizeSourceType(value: unknown): JlptImportSourceType | null {
   if (value === undefined || value === null || value === "") return null;
   if (typeof value !== "string") return null;
   return SOURCE_TYPE_SET.has(value) ? (value as JlptImportSourceType) : null;
 }
 
+/** Get empty section count map. */
 function emptySectionCounts(): Record<JlptImportSection, number> {
   return {
     vocabulary: 0,
@@ -265,17 +310,21 @@ function emptySectionCounts(): Record<JlptImportSection, number> {
   };
 }
 
+/** Clean asset path. Remove protocol, leading slash, prefix. */
 export function normalizeExamAssetPath(value?: string | null) {
   if (!value) return null;
   const trimmed = value.trim();
   if (!trimmed) return null;
+  // Skip absolute URLs, data URIs, absolute paths.
   if (/^(https?:|data:|blob:)/i.test(trimmed) || trimmed.startsWith("/")) {
     return null;
   }
 
+  // Strip leading slashes and exam-assets prefix.
   return trimmed.replace(/^\/+/, "").replace(/^exam-assets\//, "");
 }
 
+/** Extract and store asset reference. */
 function collectAssetReference(
   references: Map<string, JlptImportAssetReference>,
   value: unknown,
@@ -290,6 +339,7 @@ function collectAssetReference(
   references.set(key, { path: assetPath, sourcePath, usage });
 }
 
+/** Get set of declared asset paths. */
 function declaredAssetPaths(value: unknown) {
   const paths = new Set<string>();
   if (!Array.isArray(value)) return paths;
@@ -312,6 +362,7 @@ function declaredAssetPaths(value: unknown) {
   return paths;
 }
 
+/** Get map of declared asset records. */
 function declaredAssetRecords(value: unknown) {
   const assets = new Map<string, Pick<JlptImportPlanAsset, "path" | "localPath" | "mimeType">>();
   if (!Array.isArray(value)) return assets;
@@ -340,6 +391,7 @@ function declaredAssetRecords(value: unknown) {
   return assets;
 }
 
+/** Validate and count template questions. */
 function questionOrderFromTemplate(input: {
   generationMode: JlptImportGenerationMode | null;
   rawTemplateQuestions: unknown;
@@ -437,6 +489,7 @@ function questionOrderFromTemplate(input: {
   return input.rawTemplateQuestions.length;
 }
 
+/** Validate import package structure and values. */
 export function validateJlptImportPackage(
   rawPackage: unknown,
   options: ValidateJlptImportOptions = {}
@@ -467,6 +520,7 @@ export function validateJlptImportPackage(
     };
   }
 
+  // Validate template metadata.
   const template = isRecord(rawPackage.template) ? rawPackage.template : null;
   const templateSlug = isNonEmptyString(template?.slug)
     ? template.slug.trim()
@@ -520,6 +574,7 @@ export function validateJlptImportPackage(
     }
   }
 
+  // Validate passages.
   const passages = Array.isArray(rawPackage.passages) ? rawPackage.passages : [];
   if (rawPackage.passages !== undefined && !Array.isArray(rawPackage.passages)) {
     addIssue(errors, "passages_type", "passages", "passages harus berupa array.");
@@ -574,6 +629,7 @@ export function validateJlptImportPackage(
     collectAssetReference(assetReferences, passage.visualPath, "passage_visual", `${path}.visualPath`);
   });
 
+  // Validate questions.
   const questions = Array.isArray(rawPackage.questions) ? rawPackage.questions : [];
   if (!Array.isArray(rawPackage.questions)) {
     addIssue(errors, "questions_type", "questions", "questions wajib berupa array.");
@@ -634,6 +690,7 @@ export function validateJlptImportPackage(
       );
     }
 
+    // Validate choices.
     const choices = Array.isArray(question.choices) ? question.choices : [];
     if (!Array.isArray(question.choices) || choices.length < 2) {
       addIssue(errors, "question_choices_min", `${path}.choices`, "choices minimal 2 item.");
@@ -732,6 +789,7 @@ export function validateJlptImportPackage(
     collectAssetReference(assetReferences, question.visualPath, "question_visual", `${path}.visualPath`);
   });
 
+  // Validate quota config for random mode.
   if (generationMode === "random_by_quota") {
     const quotaConfig = isRecord(template?.quotaConfig) ? template.quotaConfig : null;
     if (!quotaConfig) {
@@ -772,6 +830,7 @@ export function validateJlptImportPackage(
     warnings,
   });
 
+  // Validate assets.
   const declaredAssets = declaredAssetPaths(rawPackage.assets);
   const shouldRequireDeclaredAssets =
     options.requireDeclaredAssets ?? Array.isArray(rawPackage.assets);
@@ -819,16 +878,19 @@ export function validateJlptImportPackage(
   };
 }
 
+/** Trim string. Return null if empty. */
 function compactNullableString(value: string | null | undefined) {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
 }
 
+/** Normalize asset path. Fallback to original. */
 function assetPathOrOriginal(value: string | null | undefined) {
   return normalizeExamAssetPath(value) ?? compactNullableString(value);
 }
 
+/** Build template question rows. */
 function buildTemplateQuestions(
   inputPackage: JlptImportPackage,
   templateId: string,
@@ -853,6 +915,7 @@ function buildTemplateQuestions(
   }));
 }
 
+/** Build plan asset list. */
 function buildPlanAssets(
   inputPackage: JlptImportPackage,
   validation: JlptImportValidationReport
@@ -891,6 +954,7 @@ function buildPlanAssets(
     .sort((a, b) => a.path.localeCompare(b.path));
 }
 
+/** Build database rows and assets from package. */
 export function buildJlptImportPlan(
   inputPackage: JlptImportPackage,
   options: ValidateJlptImportOptions = {}
@@ -905,6 +969,7 @@ export function buildJlptImportPlan(
     );
   }
 
+  // Generate deterministic IDs.
   const templateId = createDeterministicUuid(
     "jlpt-template",
     inputPackage.template.slug
@@ -933,6 +998,7 @@ export function buildJlptImportPlan(
     ])
   );
 
+  // Build template row.
   const template: TablesInsert<"jlpt_exam_templates"> = {
     id: templateId,
     slug: inputPackage.template.slug,
@@ -948,6 +1014,7 @@ export function buildJlptImportPlan(
     legacy_sanity_id: inputPackage.template.legacySanityId ?? null,
   };
 
+  // Build passage rows.
   const passages: TablesInsert<"jlpt_passages">[] = (inputPackage.passages ?? []).map(
     (passage) => ({
       id: passageIds[passage.key],
@@ -964,6 +1031,7 @@ export function buildJlptImportPlan(
     })
   );
 
+  // Build question rows.
   const questions: TablesInsert<"jlpt_questions">[] = inputPackage.questions.map(
     (question) => ({
       id: questionIds[question.key],

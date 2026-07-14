@@ -22,10 +22,15 @@ import { UserProgress } from "@/store/types";
  * Terintegrasi dengan sistem store lokal dan sinkronisasi Supabase.
  */
 
-// ======================
-// EKSEKUSI UTAMA
-// ======================
+/**
+ * ProfileEditor component.
+ * Renders user profile name. Allows inline editing.
+ * Syncs changes to local store and Supabase database.
+ * 
+ * @returns React element.
+ */
 export default function ProfileEditor() {
+  // Load user progress state from Zustand store
   const name = useUserStore(s => s.name);
   const xp = useUserStore(s => s.xp);
   const level = useUserStore(s => s.level);
@@ -39,19 +44,29 @@ export default function ProfileEditor() {
   const completedLessons = useUserStore(s => s.completedLessons);
   const updateProfileName = useUserStore(s => s.updateProfileName);
 
+  // Load auth and UI state from stores
   const isAuthenticated = useAuthStore(s => s.isAuthenticated);
   const srs = useSRSStore(s => s.srs);
   const notifications = useUIStore(s => s.notifications);
   const settings = useUIStore(s => s.settings);
   
+  // Consolidate user progress data
   const progress: UserProgress = { id, isGuest, name, xp, level, streak, todayReviewCount, lastStudyDate, studyDays, inventory, srs, notifications, settings, completedLessons };
   
+  // Local UI states
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(progress.name || "");
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Initialize Supabase client
   const supabase = createClient();
 
+  /**
+   * Saves updated profile name.
+   * Validates input, updates local store, and syncs to Supabase if authenticated.
+   */
   const handleSave = async () => {
+    // Validate input name
     if (!editName.trim()) {
       toast.error("Nama tidak boleh kosong!");
       return;
@@ -64,8 +79,10 @@ export default function ProfileEditor() {
 
       // 2. Jika login, sync ke Supabase
       if (isAuthenticated) {
+        // Get current authenticated user
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
+          // Update profiles table in database
           const { error } = await supabase
             .from("profiles")
             .update({ full_name: editName.trim() })
@@ -89,6 +106,7 @@ export default function ProfileEditor() {
   return (
     <div className="w-full">
       {isEditing ? (
+        /* Render input field when editing */
         <Card className="p-1 bg-muted border-border flex items-center gap-2 rounded-lg animate-in fade-in slide-in-from-top-1 shadow-sm">
           <Input
             value={editName}
@@ -97,6 +115,7 @@ export default function ProfileEditor() {
             className="bg-transparent border-none text-foreground font-black uppercase tracking-tighter text-xl h-12 focus-visible:ring-0 placeholder:text-muted-foreground/30"
             autoFocus
             onKeyDown={(e) => {
+              // Save on Enter, cancel on Escape
               if (e.key === "Enter") handleSave();
               if (e.key === "Escape") setIsEditing(false);
             }}
@@ -125,6 +144,7 @@ export default function ProfileEditor() {
           </div>
         </Card>
       ) : (
+        /* Render profile display when not editing */
         <div className="flex items-center gap-4 group">
           <div className="relative">
              <div className="size-16 rounded-lg bg-gradient-to-br from-primary/10 to-secondary/10 border border-border flex items-center justify-center text-primary shadow-sm group-hover:shadow-md transition-all">
