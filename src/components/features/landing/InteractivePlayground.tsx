@@ -106,7 +106,7 @@ export function InteractivePlayground() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-[34px]">
         {/* INPUT PANEL - KOLOM KIRI */}
-        <Card className="lg:col-span-6 p-6 sm:p-8 bg-card/10  border border-border rounded-[28px] glass flex flex-col justify-between h-[450px]">
+        <Card className="lg:col-span-6 p-6 sm:p-8 bg-card/10 border border-border rounded-3xl glass flex flex-col justify-between h-[450px] transition-all duration-300 hover:border-primary/30 hover:shadow-[0_0_40px_rgba(var(--primary-rgb),0.08)]">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
@@ -202,7 +202,7 @@ export function InteractivePlayground() {
         </Card>
 
         {/* OUTPUT PANEL - KOLOM KANAN */}
-        <Card className="lg:col-span-6 p-6 sm:p-8 bg-card/10  border border-border rounded-[28px] glass flex flex-col justify-between h-[450px] relative overflow-hidden group">
+        <Card className="lg:col-span-6 p-6 sm:p-8 bg-card/10 border border-border rounded-3xl glass flex flex-col justify-between h-[450px] relative overflow-hidden group transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_50px_rgba(var(--primary-rgb),0.12)]">
           {/* Efek glow visual neon */}
           <div className="absolute -top-16 -right-16 size-44 bg-primary/5 rounded-full blur-3xl pointer-events-none transition-opacity group-hover:opacity-80" />
 

@@ -39,7 +39,7 @@ import { Badge } from "@/components/ui/badge";
 export function TrustBanner() {
   return (
     <section className="w-full mb-[120px]">
-      <Card className="p-6 sm:p-10 md:p-12 rounded-[28px] sm:rounded-[34px] bg-card/10  border border-border/80 shadow-none relative overflow-hidden group transition-all duration-700 hover:border-primary/40 hover:shadow-[0_0_50px_rgba(var(--primary-rgb),0.1)] glass">
+      <Card className="p-6 sm:p-10 md:p-12 rounded-3xl bg-card/10 border border-border/80 shadow-none relative overflow-hidden group transition-all duration-700 hover:border-primary/40 hover:shadow-[0_0_50px_rgba(var(--primary-rgb),0.1)] glass">
         
         {/* Top border glow effect */}
         <div className="absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent pointer-events-none" />

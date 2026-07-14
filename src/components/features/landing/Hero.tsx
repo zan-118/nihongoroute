@@ -37,7 +37,7 @@ export function Hero() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.14, duration: 0.5 }}
-          className="lg:hidden relative size-36 mb-5 rounded-lg premium-surface flex items-center justify-center"
+          className="lg:hidden relative size-36 mb-5 mx-auto self-center rounded-lg premium-surface flex items-center justify-center"
         >
           <Image
             src="/logo-branding.svg"
@@ -97,21 +97,21 @@ export function Hero() {
         <div className="relative size-[490px]">
           {/* Layered background shapes and borders */}
           <div className="absolute -inset-8 rounded-[52px] bg-[radial-gradient(circle_at_35%_30%,rgb(var(--brand-cyan-rgb)_/_0.22),transparent_35%),radial-gradient(circle_at_72%_70%,rgb(var(--brand-violet-rgb)_/_0.16),transparent_38%)] blur-3xl" />
-          <div className="absolute inset-7 rounded-[40px] border border-border/70 bg-card/32 rotate-3 shadow-[0_30px_90px_rgb(var(--foreground-rgb)_/_0.08)] dark:shadow-[0_30px_90px_rgb(var(--foreground-rgb)_/_0.45)]" />
-          <div className="absolute inset-13 rounded-[30px] border border-dashed border-primary/35 -rotate-6" />
+          <div className="absolute inset-7 rounded-3xl border border-border/70 bg-card/32 rotate-3 shadow-[0_30px_90px_rgba(var(--foreground-rgb),0.08)] dark:shadow-[0_30px_90px_rgba(var(--foreground-rgb),0.45)]" />
+          <div className="absolute inset-13 rounded-3xl border border-dashed border-primary/35 -rotate-6" />
 
           {/* Central branding card */}
-          <div className="premium-surface absolute top-1/2 left-1/2 size-[316px] -translate-x-1/2 -translate-y-1/2 rotate-6 rounded-[30px] overflow-hidden">
+          <div className="premium-surface absolute top-1/2 left-1/2 size-[316px] -translate-x-1/2 -translate-y-1/2 rotate-6 rounded-3xl overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_24%,rgb(var(--brand-cyan-rgb)_/_0.2),transparent_34%),linear-gradient(135deg,rgb(var(--brand-cyan-rgb)_/_0.1),transparent_45%,rgb(var(--brand-violet-rgb)_/_0.12))]" />
             <div className="absolute top-7 left-7 flex items-center gap-2">
-              <span className="size-2 rounded-full bg-primary shadow-[0_0_16px_rgb(var(--brand-cyan-rgb)_/_0.55)]" />
+              <span className="size-2 rounded-full bg-primary shadow-[0_0_16px_rgba(var(--brand-cyan-rgb),0.55)]" />
               <span className="text-[9px] font-black uppercase tracking-[0.22em] text-muted-foreground">
                 Jalur Belajar
               </span>
             </div>
 
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="relative size-32 drop-shadow-[0_18px_42px_rgb(var(--brand-cyan-rgb)_/_0.28)] dark:drop-shadow-[0_0_42px_rgb(var(--brand-cyan-rgb)_/_0.24)]">
+              <div className="relative size-32 drop-shadow-[0_18px_42px_rgba(var(--brand-cyan-rgb),0.28)] dark:drop-shadow-[0_0_42px_rgba(var(--brand-cyan-rgb),0.24)]">
                 <Image
                   src="/logo-branding.svg"
                   alt="NihongoRoute"
@@ -141,7 +141,7 @@ export function Hero() {
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             className="absolute -top-4 right-8 p-4 premium-surface rounded-xl flex items-center justify-center hover:border-primary/40 transition-colors pointer-events-auto"
           >
-            <Sparkles className="text-primary drop-shadow-[0_0_16px_rgb(var(--brand-cyan-rgb)_/_0.45)]" size={24} />
+            <Sparkles className="text-primary drop-shadow-[0_0_16px_rgba(var(--brand-cyan-rgb),0.45)]" size={24} />
           </m.div>
 
           {/* Floating animated badge: Cloud Sync */}
@@ -156,7 +156,7 @@ export function Hero() {
             className="absolute bottom-8 -left-8 p-5 premium-surface rounded-xl flex items-center justify-center hover:border-primary/40 transition-colors pointer-events-auto"
           >
             <div className="flex items-center gap-3">
-              <div className="size-3 bg-primary rounded-full animate-pulse shadow-[0_0_14px_rgb(var(--brand-cyan-rgb)_/_0.65)]" />
+              <div className="size-3 bg-primary rounded-full animate-pulse shadow-[0_0_14px_rgba(var(--brand-cyan-rgb),0.65)]" />
               <span className="text-xs font-black text-foreground uppercase tracking-widest">
                 Data Tersinkron ke Cloud
               </span>
