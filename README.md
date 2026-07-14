@@ -26,14 +26,14 @@ NihongoRoute menggabungkan materi pembelajaran terstruktur, pustaka lengkap kosa
 
 Proyek ini menerapkan **arsitektur split-source**:
 
-| Komponen | Tanggung Jawab |
-| --- | --- |
-| **Next.js App Router** | Mengatur halaman, layouts, rute API, dan penayangan Sanity Studio tertanam di rute `/studio`. |
-| **Supabase** | Otentikasi pengguna, database PostgreSQL (kamus leksikal, progress belajar, log ujian, postingan forum), media audio statis VOICEVOX TTS, dan RPC `sync_user_progress`. |
-| **Sanity CMS** | Pusat konten pembelajaran editorial dinamis seperti materi pelajaran, bacaan, listening, dan paket soal ujian. |
-| **Zustand** | Manajemen status global klien yang dipersistensikan secara luring ke IndexedDB menggunakan `idb-keyval`. |
-| **TanStack Query** | Mengelola fetching sesi, pengambilan progres awal, dan orkestrasi background sync. |
-| **Kuroshiro + Kuromoji** | Pemrosesan konversi Furigana pada API route. |
+| Komponen                 | Tanggung Jawab                                                                                                                                                                 |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Next.js App Router**   | Mengatur halaman, layouts, rute API, dan penayangan Sanity Studio tertanam di rute `/studio`.                                                                                  |
+| **Supabase**             | Otentikasi pengguna, database PostgreSQL (lesson/kamus leksikal, progress belajar, log ujian, postingan forum), media audio statis VOICEVOX TTS, dan RPC `sync_user_progress`. |
+| **Sanity CMS**           | Konten editorial pelengkap: materi bacaan (reading), menyimak (listening), dan metadata simulasi ujian legacy (`mockExam`, fallback).                                          |
+| **Zustand**              | Manajemen status global klien yang dipersistensikan secara luring ke IndexedDB menggunakan `idb-keyval`.                                                                       |
+| **TanStack Query**       | Mengelola fetching sesi, pengambilan progres awal, dan orkestrasi background sync.                                                                                             |
+| **Kuroshiro + Kuromoji** | Pemrosesan konversi Furigana pada API route.                                                                                                                                   |
 
 ---
 
@@ -41,40 +41,49 @@ Proyek ini menerapkan **arsitektur split-source**:
 
 Seluruh dokumentasi teknis sistem telah dipecah secara modular berdasarkan fungsinya di folder `docs/` untuk mempermudah pemeliharaan:
 
-* 📖 **[Indeks Dokumentasi (README)](docs/README.md)**: Titik masuk utama seluruh file dokumentasi modular.
-* ⚙️ **[Arsitektur Aplikasi](docs/arsitektur-aplikasi.md)**: Penjelasan Next.js App Router, orkestrasi Zustand, IndexedDB, dan TanStack Query.
-* 🔄 **[Sinkronisasi Progres Luring](docs/sinkronisasi-progres.md)**: Alur sinkronisasi progress 3-tingkat, BroadcastChannel lintas tab, dan validasi anti-cheat XP.
-* 🧠 **[Logika SRS & Gamifikasi](docs/logika-srs-dan-gamifikasi.md)**: Cara kerja modifikasi algoritma SM-2, Due-Date Guard, Modern Halving, streak freeze, dan kenaikan level.
-* 🔊 **[Sintesis Audio & Furigana](docs/sintesis-audio-dan-furigana.md)**: Integrasi VOICEVOX TTS, fallback Web Speech API, deteksi suara otomatis, dan komponen SmartJapanese.
-* 🗄️ **[Skema Database & RLS](docs/skema-database-dan-rls.md)**: Skema tabel relasional Supabase, trigger database, index, policies, dan storage buckets.
-* 🔗 **[Server Actions & API Routes](docs/server-actions-dan-api.md)**: Penjelasan actions di `src/actions/` dan endpoint API route.
-* 📝 **[Simulasi Ujian JLPT](docs/simulasi-ujian-jlpt.md)**: Arsitektur Mock Exam, format berkas impor JSON, skrip generator CLI, adapter, dan UI engine.
-* 🔍 **[Audit Kompatibilitas Ujian](docs/audit-kompatibilitas-ujian.md)**: Lapisan adapter bank soal Supabase ke legacy engine.
-* 🎨 **[Visualisasi Arsitektur](docs/visualisasi-arsitektur.md)**: Diagram visual alur data, sync, runtime, dan studio.
-* 📂 **[Struktur Folder Proyek](docs/struktur-folder-proyek.md)**: Pemetaan folder dan file di repositori NihongoRoute.
-* 📐 **[Cetak Biru Ujian JLPT](docs/cetak-biru-ujian-jlpt.md)**: Arsitektur lengkap dan cetak biru implementasi 7-fase bank soal Supabase.
-* 🚀 **[Panduan Fitur Aplikasi](docs/fitur-aplikasi.md)**: Rincian fungsionalitas dan kapabilitas pembelajaran bagi pengguna.
-* 🧪 **[Arsitektur Pengujian](docs/arsitektur-pengujian.md)**: Uji unit Vitest dan pengujian Playwright E2E.
-* 🛠️ **[Panduan Operasional & Runbook](docs/operasional-dan-runbook.md)**: Standar deploy, rollback, backup & restore, penanganan insiden, dan skrip utilitas.
+- 📖 **[Indeks Dokumentasi (README)](docs/README.md)**: Titik masuk utama seluruh file dokumentasi modular.
+- ⚙️ **[Arsitektur Aplikasi](docs/arsitektur-aplikasi.md)**: Penjelasan Next.js App Router, orkestrasi Zustand, IndexedDB, dan TanStack Query.
+- 🔄 **[Sinkronisasi Progres Luring](docs/sinkronisasi-progres.md)**: Alur sinkronisasi progress 3-tingkat, BroadcastChannel lintas tab, dan validasi anti-cheat XP.
+- 🧠 **[Logika SRS & Gamifikasi](docs/logika-srs-dan-gamifikasi.md)**: Cara kerja modifikasi algoritma SM-2, Due-Date Guard, Modern Halving, streak freeze, dan kenaikan level.
+- 🔊 **[Sintesis Audio & Furigana](docs/sintesis-audio-dan-furigana.md)**: Integrasi VOICEVOX TTS, fallback Web Speech API, deteksi suara otomatis, dan komponen SmartJapanese.
+- 🗄️ **[Skema Database & RLS](docs/skema-database-dan-rls.md)**: Skema tabel relasional Supabase, trigger database, index, policies, dan storage buckets.
+- 🔗 **[Server Actions & API Routes](docs/server-actions-dan-api.md)**: Penjelasan actions di `src/actions/` dan endpoint API route.
+- 📝 **[Simulasi Ujian JLPT](docs/simulasi-ujian-jlpt.md)**: Arsitektur Mock Exam, format berkas impor JSON, skrip generator CLI, adapter, dan UI engine.
+- 🔍 **[Audit Kompatibilitas Ujian](docs/audit-kompatibilitas-ujian.md)**: Lapisan adapter bank soal Supabase ke legacy engine.
+- 🎨 **[Visualisasi Arsitektur](docs/visualisasi-arsitektur.md)**: Diagram visual alur data, sync, runtime, dan studio.
+- 📂 **[Struktur Folder Proyek](docs/struktur-folder-proyek.md)**: Pemetaan folder dan file di repositori NihongoRoute.
+- 📐 **[Cetak Biru Ujian JLPT](docs/cetak-biru-ujian-jlpt.md)**: Arsitektur lengkap dan cetak biru implementasi 7-fase bank soal Supabase.
+- 🚀 **[Panduan Fitur Aplikasi](docs/fitur-aplikasi.md)**: Rincian fungsionalitas dan kapabilitas pembelajaran bagi pengguna.
+- 🧪 **[Arsitektur Pengujian](docs/arsitektur-pengujian.md)**: Uji unit Vitest dan pengujian Playwright E2E.
+- 🛠️ **[Panduan Operasional & Runbook](docs/operasional-dan-runbook.md)**: Standar deploy, rollback, backup & restore, penanganan insiden, dan skrip utilitas.
+- 🎨 **[Design System](docs/design-system.md)**: Token warna semantik, aturan anti-AI-slop, dan contoh kode UI benar/salah.
+- 📋 **[Panduan Pengelolaan Konten](docs/panduan-pengelolaan-konten.md)**: Alur kerja Sanity CMS, skrip seeding kamus Supabase, dan generator audio VOICEVOX offline.
+- ⚡ **[Optimalisasi Performa](docs/optimalisasi-performa.md)**: Pola rekayasa performa (event listener kondisional, memoization, indeks database, dsb).
 
 ---
 
 ## Cara Memulai Pengembangan
 
 ### 1. Prasyarat Instalasi
+
 Pastikan Node.js terinstal di lokal. Unduh repositori dan pasang dependensi:
+
 ```bash
 npm install
 ```
 
 ### 2. Menjalankan Server Pengembangan Lokal
+
 Jalankan perintah berikut untuk mengaktifkan server lokal Next.js:
+
 ```bash
 npm run dev
 ```
+
 Buka peramban dan navigasikan ke alamat: `http://localhost:3000`
 
 ### 3. Membangun dan Menjalankan Mode Produksi
+
 ```bash
 npm run build
 npm run start
@@ -84,20 +93,20 @@ npm run start
 
 ## Skrip NPM yang Tersedia
 
-| Skrip | Deskripsi |
-| --- | --- |
-| `npm run dev` | Menjalankan server lokal pengembangan Next.js. |
-| `npm run build` | Membangun bundel produksi aplikasi mandiri (standalone). |
-| `npm run start` | Menjalankan server produksi setelah build. |
-| `npm run lint` | Menjalankan analisis statis ESLint untuk mendeteksi kesalahan sintaks. |
-| `npm run lint:fix` | Menjalankan analisis statis ESLint dan memperbaiki kesalahan otomatis. |
-| `npm run typecheck` | Menjalankan pemeriksaan tipe ketat TypeScript tanpa memproduksi file output. |
-| `npm run test` | Menjalankan rangkaian uji unit Vitest satu kali. |
-| `npm run test:unit` | Menjalankan uji unit gate kualitas integrasi. |
-| `npm run test:watch` | Menjalankan uji unit Vitest dalam mode interaktif (watch mode). |
-| `npm run test:e2e` | Menjalankan uji visual ujung-ke-ujung (E2E) menggunakan Playwright. |
+| Skrip                         | Deskripsi                                                                     |
+| ----------------------------- | ----------------------------------------------------------------------------- |
+| `npm run dev`                 | Menjalankan server lokal pengembangan Next.js.                                |
+| `npm run build`               | Membangun bundel produksi aplikasi mandiri (standalone).                      |
+| `npm run start`               | Menjalankan server produksi setelah build.                                    |
+| `npm run lint`                | Menjalankan analisis statis ESLint untuk mendeteksi kesalahan sintaks.        |
+| `npm run lint:fix`            | Menjalankan analisis statis ESLint dan memperbaiki kesalahan otomatis.        |
+| `npm run typecheck`           | Menjalankan pemeriksaan tipe ketat TypeScript tanpa memproduksi file output.  |
+| `npm run test`                | Menjalankan rangkaian uji unit Vitest satu kali.                              |
+| `npm run test:unit`           | Menjalankan uji unit gate kualitas integrasi.                                 |
+| `npm run test:watch`          | Menjalankan uji unit Vitest dalam mode interaktif (watch mode).               |
+| `npm run test:e2e`            | Menjalankan uji visual ujung-ke-ujung (E2E) menggunakan Playwright.           |
 | `npm run db:migrations:check` | Memvalidasi integritas nama file dan keunikan stempel waktu migrasi Supabase. |
-| `npm run prepare` | Memasang Husky git hooks. |
+| `npm run prepare`             | Memasang Husky git hooks.                                                     |
 
 ---
 
