@@ -242,11 +242,10 @@ export function createMiniDrill(config: MiniDrillConfig) {
     fallbackPool,
     `${config.level}-${config.kind}-${config.amount}-${config.seed ?? "default"}`
   );
-  // Limit amount between 1 and 20
-  const amount = Math.max(1, Math.min(config.amount, 20));
+  // Limit amount between 1 and 20, capped by pool size to avoid duplicates
+  const amount = Math.max(1, Math.min(config.amount, fallbackPool.length, 20));
 
-  // Fill array, repeat questions if pool size smaller than amount
-  return Array.from({ length: amount }, (_, index) => shuffled[index % shuffled.length]);
+  return shuffled.slice(0, amount);
 }
 
 /**

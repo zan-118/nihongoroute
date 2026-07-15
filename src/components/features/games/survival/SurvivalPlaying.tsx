@@ -174,7 +174,7 @@ export function SurvivalPlaying({
          <Progress
            value={(timeLeft / TIME_PER_QUESTION) * 100} // Calculate time progress percentage
            className="h-1.5 md:h-3 bg-muted border border-border rounded-full overflow-hidden"
-           indicatorClassName={isDangerTime ? "bg-destructive shadow-sm transition-all duration-700" : "bg-primary transition-all duration-700"}
+           indicatorClassName={isDangerTime ? "bg-destructive shadow-sm transition-all duration-150" : "bg-primary transition-all duration-700"}
          />
       </div>
 

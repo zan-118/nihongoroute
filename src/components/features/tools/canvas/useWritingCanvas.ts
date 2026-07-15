@@ -322,7 +322,15 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
 
   // Melakukan validasi koordinat guratan dengan skala standar 109x109
   const validateStroke = useCallback(() => {
-    if (currentStrokePointsRef.current.length < 2 || standardPaths.length === 0) return;
+    if (currentStrokePointsRef.current.length < 2) return;
+
+    if (standardPaths.length === 0) {
+      // Mode Bebas: simpan coretan langsung tanpa validasi
+      correctStrokesRef.current.push([...currentStrokePointsRef.current]);
+      currentStrokePointsRef.current = [];
+      redrawCanvas();
+      return;
+    }
 
     const canvas = canvasRef.current;
     if (!canvas) return;

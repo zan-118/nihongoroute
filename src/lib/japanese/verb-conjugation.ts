@@ -162,7 +162,7 @@ function conjugateIchidan(verb: string): Record<VerbFormId, string> {
  */
 function conjugateGodan(verb: string): Record<VerbFormId, string> {
   // Special case for iku (to go)
-  if (verb === "行く" || verb === "いく") {
+  if (verb === "行く" || verb === "いく" || verb.endsWith("行く") || verb.endsWith("いく")) {
     const stem = stripLastKana(verb);
     return {
       masu: `${stem}きます`,

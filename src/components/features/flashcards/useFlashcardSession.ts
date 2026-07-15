@@ -13,6 +13,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { getFlashcardsByMode } from "@/actions/flashcard.actions";
 import { MasterCardData } from "./master/types";
 import { toast } from "sonner";
+import { shuffleArray } from "@/lib/utils";
 
 // ==========================================
 // DEKLARASI TIPE
@@ -125,7 +126,7 @@ export function useFlashcardSession() {
       }
 
       // Shuffle cards randomly.
-      combined = combined.sort(() => Math.random() - 0.5);
+      combined = shuffleArray(combined);
 
       if (combined.length === 0) {
         toast.error("Maaf ya, data kartu untuk mode ini belum tersedia.");

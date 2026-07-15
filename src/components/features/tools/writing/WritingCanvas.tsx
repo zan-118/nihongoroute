@@ -150,7 +150,8 @@ export default function WritingCanvas({
           onPointerMove={draw}
           onPointerUp={stopDrawing}
           onPointerLeave={stopDrawing}
-          className="absolute inset-0 w-full h-full cursor-crosshair z-10"
+          className="absolute inset-0 w-full h-full cursor-crosshair z-10 touch-none"
+          style={{ touchAction: "none" }}
         />
 
         {/* Show current stroke progress. */}

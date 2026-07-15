@@ -16,10 +16,10 @@ import {
 import {
   emptyToolSearchResult,
   flattenToolSearchResult,
-  searchToolDictionary,
   type ToolSearchCategory,
   type ToolSearchItem,
 } from "@/lib/tools-search";
+import { searchToolDictionaryAction } from "@/actions/dictionary.actions";
 import { AddToSRSButton } from "@/components/features/srs/button/AddToSRSButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -212,8 +212,13 @@ export default function DictionaryPageClient() {
     setError("");
     startTransition(async () => {
       try {
-        const nextResult = await searchToolDictionary(trimmed, { limitPerType: 12 });
-        setResult(nextResult);
+        const nextResult = await searchToolDictionaryAction(trimmed, 12);
+        const mappedResult = {
+          vocab: nextResult.vocab.map((item) => ({ ...item, icon: FileText })),
+          grammar: nextResult.grammar.map((item) => ({ ...item, icon: BookOpen })),
+          kanji: nextResult.kanji.map((item) => ({ ...item, icon: Hash })),
+        };
+        setResult(mappedResult);
         setHistory((prev) => {
           // Move current query to front and limit history size
           const nextHistory = [trimmed, ...prev.filter((item) => item !== trimmed)].slice(0, 8);
@@ -277,6 +282,7 @@ export default function DictionaryPageClient() {
                 onChange={(event) => setQuery(event.target.value)}
                 className="pl-11 font-japanese text-lg font-bold"
                 placeholder="Cari: 食べる, N5, 〜てもいい, air..."
+                autoFocus
               />
             </div>
             <Button type="submit" disabled={isPending || !query.trim()} className="rounded-xl">

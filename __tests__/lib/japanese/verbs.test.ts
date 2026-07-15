@@ -47,6 +47,14 @@ describe('Verb Conjugation', () => {
       expect(result.forms.masu).toBe('行きます');
     });
 
+    it('harus mengkonjugasi golongan Godan khusus turunan (持っていく)', () => {
+      const result = conjugateVerb('持っていく', 'godan');
+      expect(result.group).toBe('godan');
+      expect(result.forms.te).toBe('持っていって');
+      expect(result.forms.ta).toBe('持っていった');
+      expect(result.forms.masu).toBe('持っていきます');
+    });
+
     it('harus mengkonjugasi golongan Godan umum (飲む)', () => {
       const result = conjugateVerb('飲む', 'godan');
       expect(result.group).toBe('godan');

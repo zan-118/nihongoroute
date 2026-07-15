@@ -8,7 +8,7 @@
 // ======================
 // IMPOR
 // ======================
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { CardData, SurvivalGameState } from "./types";
 import { shuffleArray } from "@/lib/utils";
 import { useUserStore } from "@/store/useUserStore";
@@ -37,6 +37,7 @@ export function useSurvivalMode(cards: CardData[]) {
   const [selectedWrongId, setSelectedWrongId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isCorrecting, setIsCorrecting] = useState(false);
+  const isCorrectingRef = useRef(false);
 
   const addXP = useUserStore((s) => s.addXP);
 
@@ -104,7 +105,10 @@ export function useSurvivalMode(cards: CardData[]) {
    * @param selectedOption Chosen card.
    */
   const handleAnswer = useCallback((selectedOption: CardData) => {
-    if (gameState !== "playing" || isCorrecting) return;
+    if (gameState !== "playing" || isCorrectingRef.current) return;
+
+    isCorrectingRef.current = true;
+    setIsCorrecting(true);
 
     if (selectedOption.id === currentCard?.id) {
       setSelectedId(selectedOption.id);
@@ -113,24 +117,24 @@ export function useSurvivalMode(cards: CardData[]) {
       const currentIndex = deck.findIndex((c) => c.id === currentCard?.id);
       
       // Delay transition to show correct state.
-      setIsCorrecting(true);
       setTimeout(() => {
         loadNextQuestion(deck, currentIndex + 1, nextScore);
         setIsCorrecting(false);
+        isCorrectingRef.current = false;
       }, 400);
     } else {
       setSelectedId(selectedOption.id);
       setSelectedWrongId(selectedOption.id);
-      setIsCorrecting(true);
       
       // Delay transition to show incorrect state.
       setTimeout(() => {
         handleWrongAnswer();
         setSelectedWrongId(null);
         setIsCorrecting(false);
+        isCorrectingRef.current = false;
       }, 600);
     }
-  }, [gameState, isCorrecting, currentCard, deck, loadNextQuestion, handleWrongAnswer, score]);
+  }, [gameState, currentCard, deck, loadNextQuestion, handleWrongAnswer, score]);
 
   /**
    * Reset state and start game.
@@ -138,6 +142,7 @@ export function useSurvivalMode(cards: CardData[]) {
   const startGame = useCallback(() => {
     if (cards.length < 4) return;
     const shuffledDeck = shuffleArray(cards);
+    isCorrectingRef.current = false;
     setDeck(shuffledDeck);
     setHp(MAX_HP);
     setScore(0);
@@ -161,13 +166,17 @@ export function useSurvivalMode(cards: CardData[]) {
 
   // Handle timeout.
   useEffect(() => {
-    if (gameState === "playing" && timeLeft === 0 && !isCorrecting) {
+    if (gameState === "playing" && timeLeft === 0 && !isCorrectingRef.current) {
+      isCorrectingRef.current = true;
+      setIsCorrecting(true);
       const timer = setTimeout(() => {
         handleWrongAnswer();
+        setIsCorrecting(false);
+        isCorrectingRef.current = false;
       }, 0);
       return () => clearTimeout(timer);
     }
-  }, [gameState, timeLeft, handleWrongAnswer, isCorrecting]);
+  }, [gameState, timeLeft, handleWrongAnswer]);
 
   return {
     gameState,

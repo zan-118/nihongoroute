@@ -620,6 +620,7 @@ export interface TTSCacheTable {
   rate: string;
   audio_url: string;
   created_at: string;
+  model_used?: string | null;
 }
 
 /**

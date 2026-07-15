@@ -175,6 +175,16 @@ export default function TextAnalyzerClient({
     [trimmedText]
   );
 
+  // Validate that sourceHref is a safe internal path to prevent open redirect and XSS
+  const safeSourceHref = useMemo(() => {
+    if (!initialSourceHref) return "";
+    // Allow only internal paths starting with single '/' and no backslashes
+    if (/^\/[^\/\\]/u.test(initialSourceHref)) {
+      return initialSourceHref;
+    }
+    return "";
+  }, [initialSourceHref]);
+
   /**
    * Trigger text analysis. Call API, update state, record event.
    */
@@ -190,15 +200,15 @@ export default function TextAnalyzerClient({
         recordLearningEvent({
           type: "text_analyzed",
           source: {
-            type: initialSourceHref?.includes("/library/listening")
+            type: safeSourceHref.includes("/library/listening")
               ? "listening"
-              : initialSourceHref?.includes("/library/reading")
+              : safeSourceHref.includes("/library/reading")
                 ? "reading"
                 : "tool",
-            id: initialSourceHref?.split("/").pop() || "text-analyzer",
-            slug: initialSourceHref?.split("/").pop(),
+            id: safeSourceHref.split("/").pop() || "text-analyzer",
+            slug: safeSourceHref.split("/").pop(),
             title: initialSourceTitle || "Text Analyzer",
-            href: initialSourceHref || "/tools/text-analyzer",
+            href: safeSourceHref || "/tools/text-analyzer",
           },
           metrics: {
             total:
@@ -224,15 +234,15 @@ export default function TextAnalyzerClient({
         recordLearningEvent({
           type: "text_analyzed",
           source: {
-            type: initialSourceHref?.includes("/library/listening")
+            type: safeSourceHref.includes("/library/listening")
               ? "listening"
-              : initialSourceHref?.includes("/library/reading")
+              : safeSourceHref.includes("/library/reading")
                 ? "reading"
                 : "tool",
-            id: initialSourceHref?.split("/").pop() || "text-analyzer",
-            slug: initialSourceHref?.split("/").pop(),
+            id: safeSourceHref.split("/").pop() || "text-analyzer",
+            slug: safeSourceHref.split("/").pop(),
             title: initialSourceTitle || "Text Analyzer",
-            href: initialSourceHref || "/tools/text-analyzer",
+            href: safeSourceHref || "/tools/text-analyzer",
           },
           metrics: {
             total:
@@ -246,7 +256,7 @@ export default function TextAnalyzerClient({
         setError("Analisis teks sumber gagal dimuat. Coba jalankan ulang.");
       }
     });
-  }, [initialSourceHref, initialSourceTitle, initialText, recordLearningEvent]);
+  }, [safeSourceHref, initialSourceTitle, initialText, recordLearningEvent]);
 
   return (
     <div className="min-h-screen bg-background/95 px-4 py-12 md:px-8">
@@ -273,9 +283,9 @@ export default function TextAnalyzerClient({
                 <Badge variant="outline" className="w-fit rounded-xl px-3 py-1 text-[10px]">
                   Sumber: {initialSourceTitle}
                 </Badge>
-                {initialSourceHref ? (
+                {safeSourceHref ? (
                   <Button variant="outline" size="sm" asChild className="rounded-xl">
-                    <Link href={initialSourceHref}>Buka Sumber</Link>
+                    <Link href={safeSourceHref}>Buka Sumber</Link>
                   </Button>
                 ) : null}
               </div>

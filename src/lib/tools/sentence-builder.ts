@@ -24,14 +24,32 @@ export interface SentenceBuilderPrompt {
  * @returns Array of tokens.
  */
 export function tokenizeSentence(japanese: string): string[] {
-  // Match particles, punctuation, or kanji/kana blocks
-  const regex = /(でした|です|ました|ます|から|まで|[はがをにでとへも])|([。、！？!?])|([^\u3001\u3002\uFF01\uFF1F!?\sはがをにでとへも]+)/g;
-  const matches: string[] = [];
-  let match;
-  while ((match = regex.exec(japanese)) !== null) {
-    matches.push(match[0]);
+  // Pecah menjadi kelompok aksara kanji+kana, katakana, hiragana, atau tanda baca
+  const chunks = japanese.match(/[\p{Script=Han}々]+[ぁ-んァ-ヶ]*|[\p{Script=Katakana}ー]+|[ぁ-ん]+|[。、！？!?]/gu) || [];
+  const tokens: string[] = [];
+  
+  // Deteksi jika chunk berakhiran partikel umum di akhir kata
+  const particleRegex = /^(.*)(でした|es|です|ました|ます|から|まで|[はがをにでとへも])$/;
+
+  for (const chunk of chunks) {
+    if (/[。、！？!?]/.test(chunk)) {
+      tokens.push(chunk);
+      continue;
+    }
+
+    const match = chunk.match(particleRegex);
+    if (match) {
+      const [, stem, particle] = match;
+      if (stem) {
+        tokens.push(stem);
+      }
+      tokens.push(particle);
+    } else {
+      tokens.push(chunk);
+    }
   }
-  return matches.filter(Boolean);
+
+  return tokens.filter(Boolean);
 }
 
 /**

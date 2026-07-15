@@ -802,6 +802,7 @@ export type Database = {
           audio_url: string
           created_at: string
           id: string
+          model_used: string | null
           rate: string
           text: string
           voice: string
@@ -810,6 +811,7 @@ export type Database = {
           audio_url: string
           created_at?: string
           id: string
+          model_used?: string | null
           rate: string
           text: string
           voice: string
@@ -818,6 +820,7 @@ export type Database = {
           audio_url?: string
           created_at?: string
           id?: string
+          model_used?: string | null
           rate?: string
           text?: string
           voice?: string

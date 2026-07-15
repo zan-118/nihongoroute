@@ -13,7 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { cn, shuffleArray } from "@/lib/utils";
 
 /**
  * Interactive Japanese particle training interface.
@@ -34,11 +34,11 @@ export default function ParticleTrainerClient() {
     : false;
   const progressPercent = Math.round((answeredIds.size / PARTICLE_QUESTIONS.length) * 100);
 
-  // Generate options list. Mix correct options with random extras. Limit to 6.
   const optionList = useMemo(() => {
     const extras = PARTICLE_OPTIONS.filter((item) => !question.options.includes(item)).slice(0, 2);
-    return Array.from(new Set([...question.options, ...extras])).slice(0, 6);
-  }, [question.options]);
+    const combined = Array.from(new Set([...question.options, ...extras])).slice(0, 6);
+    return shuffleArray(combined);
+  }, [question]);
 
   /**
    * Handle user answer selection.

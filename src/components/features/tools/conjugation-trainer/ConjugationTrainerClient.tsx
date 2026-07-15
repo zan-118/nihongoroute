@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
+  AlertTriangle,
   CheckCircle2,
   ClipboardList,
   GraduationCap,
@@ -11,6 +12,7 @@ import {
   Sparkles,
   XCircle,
 } from "lucide-react";
+import { toRomaji } from "wanakana";
 import {
   conjugateVerb,
   isConjugationAnswerCorrect,
@@ -79,6 +81,33 @@ export default function ConjugationTrainerClient({
   const [answer, setAnswer] = useState("");
   const [hasChecked, setHasChecked] = useState(false);
   const recordLearningEvent = useUIStore((state) => state.recordLearningEvent);
+
+  // Heuristic verification for verb group selection
+  const groupWarning = useMemo(() => {
+    const trimmed = verb.trim();
+    if (!trimmed || trimmed.endsWith("する") || trimmed.endsWith("くる") || trimmed.endsWith("来る")) return "";
+    if (!trimmed.endsWith("る")) {
+      if (group !== "godan") {
+        return "Verba tidak berakhiran 'る' biasanya merupakan verba Godan.";
+      }
+      return "";
+    }
+    
+    // Get character before 'る'
+    const charBefore = trimmed.charAt(trimmed.length - 2);
+    if (!charBefore) return "";
+    
+    // Check if it is hiragana
+    const isHiragana = /[\p{Script=Hiragana}]/u.test(charBefore);
+    if (isHiragana) {
+      const romaji = toRomaji(charBefore);
+      const lastChar = romaji.charAt(romaji.length - 1);
+      if (["a", "u", "o"].includes(lastChar) && group === "ichidan") {
+        return `Akhiran '${charBefore}る' (vokal '${lastChar}') biasanya merupakan verba Godan.`;
+      }
+    }
+    return "";
+  }, [group, verb]);
 
   /**
    * Computes verb conjugations based on input verb and group.
@@ -248,6 +277,12 @@ export default function ConjugationTrainerClient({
                     </button>
                   ))}
                 </div>
+                {groupWarning && (
+                  <p className="mt-2 text-xs font-bold text-destructive flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
+                    <AlertTriangle size={14} className="shrink-0" />
+                    {groupWarning}
+                  </p>
+                )}
               </div>
 
               <div>

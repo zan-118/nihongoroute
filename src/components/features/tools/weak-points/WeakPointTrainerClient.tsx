@@ -36,6 +36,7 @@ import {
   selectWeakPointCandidates,
   type WeakPointCandidate,
 } from "@/lib/weak-points";
+import { getFlashcardsByIds } from "@/actions/flashcard.actions";
 
 /**
  * Card data enriched with weak point metadata.
@@ -140,11 +141,7 @@ export default function WeakPointTrainerClient() {
       setIsSessionActive(false);
 
       const ids = candidates.map((candidate) => candidate.id);
-      // Fetch full card details from API
-      const res = await fetch(`/api/cards?ids=${ids.join(",")}`);
-      if (!res.ok) throw new Error(`API /api/cards gagal: ${res.status}`);
-
-      const data = (await res.json()) as MasterCardData[];
+      const data = (await getFlashcardsByIds(ids)) as MasterCardData[];
       // Match API cards with weak point metadata
       const enrichedCards = data
         .map((card, index) => {

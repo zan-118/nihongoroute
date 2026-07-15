@@ -61,6 +61,7 @@ export default function ShadowingRecorderClient({
   const [error, setError] = useState("");
   const [speechSupported, setSpeechSupported] = useState(false);
   const [recordingSupported, setRecordingSupported] = useState(false);
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
 
   // Refs for media recording and timers
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -115,15 +116,24 @@ export default function ShadowingRecorderClient({
     setIsSpeaking(false);
   }, []);
 
-  // Check browser API support and handle cleanup
+  // Check browser API support, load voices, and handle cleanup
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
-      setSpeechSupported(typeof window !== "undefined" && "speechSynthesis" in window && "SpeechSynthesisUtterance" in window);
+      const supported = typeof window !== "undefined" && "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+      setSpeechSupported(supported);
       setRecordingSupported(
         typeof navigator !== "undefined" &&
           !!navigator.mediaDevices?.getUserMedia &&
           typeof MediaRecorder !== "undefined"
       );
+
+      if (supported && typeof window !== "undefined" && window.speechSynthesis) {
+        const updateVoices = () => {
+          setVoices(window.speechSynthesis.getVoices());
+        };
+        updateVoices();
+        window.speechSynthesis.onvoiceschanged = updateVoices;
+      }
     });
 
     return () => {
@@ -132,6 +142,9 @@ export default function ShadowingRecorderClient({
       stopTimer();
       stopStream();
       revokeRecordingUrl();
+      if (typeof window !== "undefined" && window.speechSynthesis) {
+        window.speechSynthesis.onvoiceschanged = null;
+      }
     };
   }, [revokeRecordingUrl, stopSpeaking, stopStream, stopTimer]);
 
@@ -169,9 +182,8 @@ export default function ShadowingRecorderClient({
     utterance.pitch = 1;
     
     // Find Japanese voice
-    const japaneseVoice = window.speechSynthesis
-      .getVoices()
-      .find((voice) => voice.lang.toLowerCase().startsWith("ja"));
+    const currentVoices = voices.length > 0 ? voices : window.speechSynthesis.getVoices();
+    const japaneseVoice = currentVoices.find((voice) => voice.lang.toLowerCase().startsWith("ja"));
     if (japaneseVoice) utterance.voice = japaneseVoice;
 
     utterance.onstart = () => setIsSpeaking(true);

@@ -96,7 +96,7 @@ export function getJapaneseTextStats(text: string): JapaneseTextStats {
   // Extract unique tokens of 2+ Japanese characters.
   const tokens = Array.from(
     new Set(
-      (text.match(/[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}ー々]{2,}/gu) || [])
+      (text.match(/[^はがをにでとへもの。、！？!?\s]*[\p{Script=Han}々]+[^はがをにでとへもの。、！？!?\s]*|[\p{Script=Katakana}ー]+|[\p{Script=Hiragana}]{2,}/gu) || [])
         .map((token) => token.trim())
         .filter((token) => token.length > 0)
     )

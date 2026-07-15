@@ -174,6 +174,7 @@ CREATE TABLE public.tts_cache (
     voice text NOT NULL,
     rate text NOT NULL,
     audio_url text NOT NULL,
+    model_used text,
     created_at timestamptz NOT NULL DEFAULT timezone('utc'::text, now())
 );
 

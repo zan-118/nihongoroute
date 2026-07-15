@@ -28,7 +28,7 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import NextActionPanel from "@/components/features/ecosystem/NextActionPanel";
 import { useUIStore } from "@/store/useUIStore";
-import { cn } from "@/lib/utils";
+import { cn, shuffleArray } from "@/lib/utils";
 
 /**
  * Map drill levels to display labels.
@@ -102,6 +102,10 @@ export default function JlptMiniDrillClient({
     [amount, kind, level, questionBank, seed]
   );
   const question = questions[questionIndex] ?? questions[0];
+  const shuffledOptions = useMemo(() => {
+    if (!question) return [];
+    return shuffleArray([...question.options]);
+  }, [question]);
   const hasAnswered = selectedAnswer !== null;
 
   // Check if answer correct.
@@ -362,7 +366,7 @@ export default function JlptMiniDrillClient({
               ) : (
                 <>
                   <div className="grid gap-3 sm:grid-cols-2">
-                    {question.options.map((option) => {
+                    {shuffledOptions.map((option) => {
                       const isSelected = selectedAnswer === option;
                       const isAnswer = isMiniDrillAnswerCorrect(question.answer, option);
 

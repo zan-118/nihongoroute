@@ -92,7 +92,7 @@ export const COUNTER_QUESTIONS: CounterQuestion[] = [
     nounReading: "くるま",
     category: "mesin/kendaraan",
     answer: "台",
-    phrase: "四台 of 車",
+    phrase: "四台の車",
     reading: "よんだいのくるま",
     translation: "empat mobil",
     hint: "Untuk kendaraan dan mesin.",

@@ -77,6 +77,7 @@ export default function DictationClient() {
   const [isRevealed, setIsRevealed] = useState<boolean>(false);
   const [score, setScore] = useState<{ correct: number; total: number }>({ correct: 0, total: 0 });
   const [correctList, setCorrectList] = useState<boolean[]>([]); // track which ones were correct
+  const [isFinished, setIsFinished] = useState<boolean>(false);
   
   // Audio State
   const [audioPlaying, setAudioPlaying] = useState<boolean>(false);
@@ -185,6 +186,7 @@ export default function DictationClient() {
       setIsRevealed(false);
       setScore({ correct: 0, total: data.length });
       setCorrectList(new Array(data.length).fill(false));
+      setIsFinished(false);
       setIsPlaying(true);
       
       // Auto play first audio
@@ -255,8 +257,7 @@ export default function DictationClient() {
       }, 300);
     } else {
       // Selesai
-      setIsChecked(true);
-      setIsRevealed(true);
+      setIsFinished(true);
     }
   };
 
@@ -266,6 +267,7 @@ export default function DictationClient() {
   const handleRestart = () => {
     setIsPlaying(false);
     setSentences([]);
+    setIsFinished(false);
   };
 
   /**
@@ -559,7 +561,8 @@ export default function DictationClient() {
                       onClick={handleNext}
                       className="w-full py-6 rounded-xl text-xs font-bold uppercase tracking-widest bg-primary hover:bg-primary/95 text-primary-foreground gap-2"
                     >
-                      Kalimat Berikutnya <ChevronRight size={16} />
+                      {currentIndex === sentences.length - 1 ? "Selesai & Lihat Hasil" : "Kalimat Berikutnya"}{" "}
+                      <ChevronRight size={16} />
                     </Button>
                   )}
                 </div>
@@ -622,7 +625,7 @@ export default function DictationClient() {
 
         {/* Results summary modal when all done */}
         <AnimatePresence>
-          {isPlaying && isChecked && currentIndex === sentences.length - 1 && (
+          {isPlaying && isFinished && (
             <div className="fixed inset-0 bg-background/80  z-50 flex items-center justify-center p-4">
               <Card className="w-full max-w-md p-8 bg-card border-border rounded-2xl md:rounded-3xl flex flex-col items-center text-center gap-6 shadow-2xl animate-in fade-in zoom-in-95 duration-300">
                 <div className="w-16 h-16 rounded-full bg-success/10 border border-success/20 flex items-center justify-center shadow-lg text-success animate-bounce">
