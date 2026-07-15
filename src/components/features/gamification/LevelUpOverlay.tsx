@@ -16,8 +16,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Star, ArrowRight, ShieldCheck, Zap } from "lucide-react";
 import { useLevelUpOverlay } from "./levelup/useLevelUpOverlay";
-import confetti from "canvas-confetti";
-import { useEffect } from "react";
 
 // ======================
 // EKSEKUSI UTAMA
@@ -33,35 +31,6 @@ import { useEffect } from "react";
 export default function LevelUpOverlay({ level }: { level: number }) {
   // Hook manages visibility state based on level changes
   const { show, setShow } = useLevelUpOverlay(level);
-
-  useEffect(() => {
-    if (show) {
-      const duration = 3 * 1000;
-      const animationEnd = Date.now() + duration;
-      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 200 };
-
-      // Helper generates random number in range
-      const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
-
-      // Interval fires confetti bursts from sides
-      const interval: NodeJS.Timeout = setInterval(() => {
-        const timeLeft = animationEnd - Date.now();
-
-        if (timeLeft <= 0) {
-          return clearInterval(interval);
-        }
-
-        const particleCount = 50 * (timeLeft / duration);
-        
-        // Left side burst
-        confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
-        // Right side burst
-        confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
-      }, 250);
-
-      return () => clearInterval(interval);
-    }
-  }, [show]);
 
   return (
     <AnimatePresence mode="wait">

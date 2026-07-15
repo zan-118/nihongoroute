@@ -13,6 +13,7 @@ import { ProgressProvider } from "@/components/providers/ProgressProvider";
 import NavWrapper from "@/components/layout/NavWrapper";
 import AppClientAddons from "@/components/providers/AppClientAddons";
 import DeferredOnboardingTour from "@/components/providers/DeferredOnboardingTour";
+import { createClient } from "@/lib/supabase/server";
 
 // ======================
 // EKSEKUSI UTAMA
@@ -25,10 +26,13 @@ import DeferredOnboardingTour from "@/components/providers/DeferredOnboardingTou
  * @param props - Component props.
  * @param props.children - Child nodes to render.
  */
-export default function MainLayout({ children }: { children: ReactNode }) {
+export default async function MainLayout({ children }: { children: ReactNode }) {
+  const supabase = await createClient();
+  const { data: { session } } = await supabase.auth.getSession();
+
   return (
     /* ProgressProvider tracks page transition progress */
-    <ProgressProvider>
+    <ProgressProvider initialSession={session}>
       {/* NavWrapper handles client-side navigation layout */}
       <NavWrapper>
         {children}

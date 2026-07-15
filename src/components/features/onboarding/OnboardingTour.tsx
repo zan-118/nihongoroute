@@ -1656,6 +1656,16 @@ function OnboardingTourSession({ tour }: { tour: PageTour | null }) {
 
   const step = tour.steps[currentStep] ?? tour.steps[0];
   const isLastStep = currentStep === tour.steps.length - 1;
+
+  // Check if there are explicit target elements for this step.
+  const hasExplicitTarget = 
+    (step.targetSelectors && step.targetSelectors.length > 0) ||
+    (routeTargetSelectors[tour.id]?.[currentStep] && routeTargetSelectors[tour.id]?.[currentStep].length > 0) ||
+    (getDerivedTargets(tour.id, currentStep) && getDerivedTargets(tour.id, currentStep).length > 0);
+
+  // If there's an explicit target but spotlightRect is not measured yet, hide the tooltip to prevent CLS.
+  const shouldShowTooltip = !hasExplicitTarget || spotlightRect !== null;
+
   const tooltipLayout = getTooltipLayout(spotlightRect, tooltipSize);
   const spotlightStyle: CSSProperties | undefined = spotlightRect
     ? {
@@ -1718,16 +1728,17 @@ function OnboardingTourSession({ tour }: { tour: PageTour | null }) {
           </m.div>
         )}
 
-        <m.div
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          className="pointer-events-auto fixed overflow-y-auto overscroll-contain"
-          data-tour="tour-tooltip"
-          exit={{ opacity: 0, scale: 0.96, y: 12 }}
-          initial={{ opacity: 0, scale: 0.96, y: 12 }}
-          ref={tooltipRef}
-          style={tooltipLayout.style}
-          transition={{ duration: 0.22, ease: "easeOut" }}
-        >
+        {shouldShowTooltip && (
+          <m.div
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className="pointer-events-auto fixed overflow-y-auto overscroll-contain"
+            data-tour="tour-tooltip"
+            exit={{ opacity: 0, scale: 0.96, y: 12 }}
+            initial={{ opacity: 0, scale: 0.96, y: 12 }}
+            ref={tooltipRef}
+            style={tooltipLayout.style}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+          >
           <Card
             aria-describedby="page-tour-description"
             aria-labelledby="page-tour-title"
@@ -1808,6 +1819,7 @@ function OnboardingTourSession({ tour }: { tour: PageTour | null }) {
             </button>
           </Card>
         </m.div>
+        )}
       </div>
     </AnimatePresence>
   );

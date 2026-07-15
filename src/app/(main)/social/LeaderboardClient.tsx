@@ -18,7 +18,6 @@ import { m, AnimatePresence } from "framer-motion";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { get as idbGet, set as idbSet } from "idb-keyval";
 import { useUserStore } from "@/store/useUserStore";
-import confetti from "canvas-confetti";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -385,7 +384,6 @@ export default function LeaderboardClient() {
               onClick={() => {
                 if (topThree[1]) {
                   setSelectedUser(topThree[1]);
-                  confetti({ particleCount: 70, spread: 50, colors: ["#9ca3af", "#cbd5e1", "#e2e8f0"] });
                 }
               }}
               className="order-1 flex flex-col items-center group/podium cursor-pointer"
@@ -418,7 +416,6 @@ export default function LeaderboardClient() {
               onClick={() => {
                 if (topThree[0]) {
                   setSelectedUser(topThree[0]);
-                  confetti({ particleCount: 120, spread: 80, colors: ["#fbbf24", "#f59e0b", "#d97706"] });
                 }
               }}
               className="order-2 flex flex-col items-center relative z-10 scale-105 sm:scale-115 group/champ cursor-pointer"
@@ -455,7 +452,6 @@ export default function LeaderboardClient() {
               onClick={() => {
                 if (topThree[2]) {
                   setSelectedUser(topThree[2]);
-                  confetti({ particleCount: 60, spread: 40, colors: ["#b45309", "#d97706", "#f97316"] });
                 }
               }}
               className="order-3 flex flex-col items-center group/third cursor-pointer"
@@ -736,12 +732,6 @@ export default function LeaderboardClient() {
               {/* Cheer Button */}
               <button
                 onClick={() => {
-                  confetti({
-                    particleCount: 80,
-                    spread: 60,
-                    origin: { y: 0.6 },
-                    colors: ["#fbbf24", "#f59e0b", "#3b82f6"]
-                  });
                   toast.success(`Kamu mengirimkan semangat kepada ${selectedUser.full_name || "member"}! 🎉⚡`);
                 }}
                 className="w-full h-12 bg-primary hover:bg-secondary text-primary-foreground font-black uppercase tracking-widest text-xs rounded-xl shadow-lg transition-all active:scale-[0.97]"

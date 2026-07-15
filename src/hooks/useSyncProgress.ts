@@ -29,7 +29,7 @@ import { AuthChangeEvent, Session } from "@supabase/supabase-js";
  * 
  * @returns Sync status and manual trigger function.
  */
-export function useSyncProgress() {
+export function useSyncProgress(initialSession?: Session | null) {
   // Memoize Supabase client to prevent recreation.
   const supabase = useMemo(() => createClient(), []);
   const queryClient = useQueryClient();
@@ -72,6 +72,7 @@ export function useSyncProgress() {
       const { data: { session } } = await supabase.auth.getSession();
       return session;
     },
+    initialData: initialSession ?? undefined,
     enabled: hasMounted,
   });
 

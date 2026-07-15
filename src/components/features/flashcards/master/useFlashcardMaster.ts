@@ -13,7 +13,6 @@ import { useSRSStore } from "@/store/useSRSStore";
 import { useUIStore } from "@/store/useUIStore";
 import { updateCardState } from "@/lib/srs";
 import { sounds } from "@/lib/audio";
-import confetti from "canvas-confetti";
 import { MasterCardData, StudyMode } from "./types";
 
 // ==========================================
@@ -159,15 +158,6 @@ export function useFlashcardMaster({
         }));
         return nextCombo;
       });
-      // Mastery Celebration: trigger confetti when card reaches 30+ days interval
-      if (newState.interval >= 30 && currentState.interval < 30) {
-        confetti({
-          particleCount: 150,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ["#FFD700", "#FFA500", "#00EEFF"]
-        });
-      }
     } else {
       setCombo(0);
     }

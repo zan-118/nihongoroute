@@ -20,7 +20,6 @@ import {
   Filter
 } from "lucide-react";
 import { m, AnimatePresence } from "framer-motion";
-import confetti from "canvas-confetti";
 import {
   Dialog,
   DialogContent,
@@ -28,6 +27,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 /**
  * Format date string to relative time.
@@ -522,13 +522,7 @@ export default function CommunityFeed() {
               <button
                 type="button"
                 onClick={() => {
-                  // Trigger confetti on cheer click
-                  confetti({
-                    particleCount: 80,
-                    spread: 60,
-                    origin: { y: 0.6 },
-                    colors: ["#fbbf24", "#f59e0b", "#3b82f6"]
-                  });
+                  toast.success(`Kamu mengirimkan semangat kepada ${selectedUserProfile?.full_name || "member"}! 🎉⚡`);
                 }}
                 className="w-full h-12 bg-primary hover:bg-secondary text-primary-foreground font-black uppercase tracking-widest text-xs rounded-xl shadow-lg transition-all active:scale-[0.97]"
               >

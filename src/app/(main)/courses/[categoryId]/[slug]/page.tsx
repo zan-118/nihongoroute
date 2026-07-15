@@ -24,8 +24,6 @@ import { IllustrationGallery } from "@/components/ui/IllustrationGallery";
 import { VocabSection } from "@/components/features/lessons/VocabSection";
 import { KanjiSection } from "@/components/features/lessons/KanjiSection";
 import { DialogueSection } from "@/components/features/lessons/DialogueSection";
-import { ReadingSection } from "@/components/features/lessons/ReadingSection";
-import { CheatsheetSection } from "@/components/features/lessons/CheatsheetSection";
 import { PracticeSection } from "@/components/features/lessons/PracticeSection";
 import { LessonNavigation } from "@/components/features/lessons/LessonNavigation";
 import { MarkCompleteButton } from "@/components/features/lessons/MarkCompleteButton";
@@ -191,7 +189,6 @@ export default async function LessonPage({ params }: Props) {
   const kanjiList = (lesson.kanjiList || lesson.kanji_list || []) as unknown[];
   const listeningList = (lesson.listeningList || lesson.listening_list || []) as unknown[];
   const readingList = (lesson.readingList || lesson.reading_list || []) as unknown[];
-  const cheatsheets = (lesson.cheatsheets || []) as unknown[];
 
   return (
     <>
@@ -255,8 +252,6 @@ export default async function LessonPage({ params }: Props) {
               { href: "#vocabulary", label: "Kosakata", icon: Book, show: vocabList.length > 0 },
               { href: "#kanji", label: "Kanji", icon: GraduationCap, show: kanjiList.length > 0 },
               { href: "#scenario", label: "Dialog", icon: MessageSquare, show: listeningList.length > 0 },
-              { href: "#reading", label: "Bacaan", icon: BookOpen, show: readingList.length > 0 },
-              { href: "#cheatsheet", label: "Referensi", icon: Lightbulb, show: cheatsheets.length > 0 },
               { href: "#quiz", label: "Kuis", icon: Edit, show: formattedQuizzes.length > 0 },
             ].filter((l) => l.show);
             if (jumpLinks.length === 0) return null;
@@ -290,10 +285,6 @@ export default async function LessonPage({ params }: Props) {
             )}
 
             <DialogueSection listeningList={(lesson.listeningList || lesson.listening_list || []) as import("@/components/features/lessons/DialogueSection").DialogueItem[]} />
-
-            <ReadingSection readingList={(lesson.readingList || lesson.reading_list || []) as import("@/components/features/lessons/ReadingSection").ReadingLessonItem[]} />
-
-            <CheatsheetSection cheatsheets={(lesson.cheatsheets || []) as import("@/components/features/lessons/CheatsheetSection").CheatsheetData[]} />
 
             <PracticeSection lesson={lesson as import("@/components/features/lessons/PracticeSection").LessonPracticeData} />
 

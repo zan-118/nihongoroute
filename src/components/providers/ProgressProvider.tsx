@@ -28,6 +28,8 @@ const ReminderSystem = dynamic(() => import("@/components/features/notifications
 // EKSEKUSI UTAMA
 // ======================
 
+import { Session } from "@supabase/supabase-js";
+
 /**
  * ProgressProvider component.
  * Syncs Supabase auth state with Zustand stores.
@@ -38,8 +40,10 @@ const ReminderSystem = dynamic(() => import("@/components/features/notifications
  */
 export const ProgressProvider = ({
   children,
+  initialSession,
 }: {
   children: React.ReactNode;
+  initialSession?: Session | null;
 }) => {
   const hasMounted = useHasMounted();
   const setAuth = useAuthStore((state) => state.setAuth);
@@ -48,26 +52,46 @@ export const ProgressProvider = ({
   
   const [supabase] = useState(() => createClient());
 
+  // Seed Zustand stores synchronously on the first render using initialSession to prevent CLS. Only run in browser.
+  useState(() => {
+    if (typeof window !== "undefined") {
+      if (initialSession?.user) {
+        const userFullName = initialSession.user.user_metadata?.full_name || initialSession.user.email?.split('@')[0] || "Member";
+        useAuthStore.getState().setAuth(true);
+        useUserStore.getState().syncUserData({
+          id: initialSession.user.id,
+          isGuest: false,
+          name: useUserStore.getState().name || userFullName
+        });
+      } else if (initialSession === null) {
+        useAuthStore.getState().setAuth(false);
+        useUserStore.getState().syncUserData({ id: "guest", isGuest: true, name: null });
+      }
+    }
+  });
+
   // Trigger background sync hook for progress data.
-  useSyncProgress();
+  useSyncProgress(initialSession);
 
   // AUTHENTICATION LISTENER
   useEffect(() => {
-    // Fetch initial session. Update auth store and user data.
-    supabase.auth.getSession().then(({ data: { session } }: { data: { session: { user?: { id: string; user_metadata?: { full_name?: string }; email?: string } } | null } }) => {
-      const userFullName = session?.user?.user_metadata?.full_name || session?.user?.email?.split('@')[0] || "Member";
-      setAuth(!!session?.user);
-      if (session?.user) {
-        const currentLocalName = useUserStore.getState().name;
-        syncUserData({ 
-          id: session.user.id, 
-          isGuest: false, 
-          name: currentLocalName || userFullName 
-        });
-      } else {
-        syncUserData({ id: "guest", isGuest: true, name: null });
-      }
-    });
+    // Only fetch session client-side if it wasn't provided server-side.
+    if (!initialSession) {
+      supabase.auth.getSession().then(({ data: { session } }: { data: { session: Session | null } }) => {
+        const userFullName = session?.user?.user_metadata?.full_name || session?.user?.email?.split('@')[0] || "Member";
+        setAuth(!!session?.user);
+        if (session?.user) {
+          const currentLocalName = useUserStore.getState().name;
+          syncUserData({ 
+            id: session.user.id, 
+            isGuest: false, 
+            name: currentLocalName || userFullName 
+          });
+        } else {
+          syncUserData({ id: "guest", isGuest: true, name: null });
+        }
+      });
+    }
 
     // Listen to auth state changes. Update store and show welcome toast.
     const {
@@ -101,7 +125,7 @@ export const ProgressProvider = ({
     });
 
     return () => subscription.unsubscribe();
-  }, [setAuth, supabase, syncUserData]);
+  }, [setAuth, supabase, syncUserData, initialSession]);
   
   // UNSYNCED DATA WARNING (beforeunload)
   useEffect(() => {
