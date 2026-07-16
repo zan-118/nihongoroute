@@ -330,3 +330,24 @@ export function articleJsonLd({
     url: absoluteUrl(path),
   };
 }
+
+/** Input for FAQ schema. */
+type FaqItemInput = {
+  question: string;
+  answer: string;
+};
+
+/** Generate FAQPage schema. */
+export function faqPageJsonLd(items: FaqItemInput[]): JsonLdObject {
+  return {
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+      name: item.question,
+    })),
+  };
+}

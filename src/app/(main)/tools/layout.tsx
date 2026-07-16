@@ -7,6 +7,7 @@
 // IMPOR
 // ======================
 import type { Metadata } from "next";
+import { createPageMetadata } from "@/lib/seo";
 
 // ======================
 // KONFIGURASI METADATA
@@ -15,9 +16,19 @@ import type { Metadata } from "next";
  * SEO metadata configuration for tools route group.
  */
 export const metadata: Metadata = {
-  title: "Pusat Peralatan Bahasa Jepang | NihongoRoute",
-  description:
-    "Kumpulan alat bantu belajar bahasa Jepang: Kana Master, kamus terpadu, text analyzer, latihan menulis, konjugasi, partikel, dan flashcards.",
+  ...createPageMetadata({
+    title: "Pusat Peralatan Bahasa Jepang | NihongoRoute",
+    description:
+      "Kumpulan alat bantu belajar bahasa Jepang: Kana Master, kamus terpadu, text analyzer, latihan menulis, konjugasi, partikel, dan flashcards.",
+    path: "/tools",
+    keywords: [
+      "alat belajar bahasa jepang",
+      "kana master",
+      "text analyzer jepang",
+      "latihan menulis jepang",
+      "konjugasi jepang",
+    ],
+  }),
 };
 
 // ======================
