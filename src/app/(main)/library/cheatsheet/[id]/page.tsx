@@ -15,11 +15,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheatsheetTable } from "./CheatsheetTable";
-import dynamicImport from "next/dynamic";
+import dynamic from "next/dynamic";
 import { getCheatsheetByIdOrSlug, getCheatsheets } from "@/actions/library.actions";
 
 // Memuat PDF Generator secara dinamis untuk membebaskan bundle awal dari @react-pdf/renderer
-const PdfGenerator = dynamicImport(() => import("@/components/features/pdf/PdfGenerator"), { ssr: false });
+const PdfGenerator = dynamic(() => import("@/components/features/pdf/PdfGenerator"), { ssr: false });
 import type { Metadata } from "next";
 import {
   breadcrumbJsonLd,
