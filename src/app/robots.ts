@@ -9,13 +9,15 @@
 // EKSEKUSI UTAMA
 // ======================
 
+import { MetadataRoute } from "next";
+
 /**
  * Generates robots.txt configuration.
  * Controls search engine crawler access.
  * 
  * @returns Robots configuration object.
  */
-export default function robots() {
+export default function robots(): MetadataRoute.Robots {
   // Fallback to production domain if env variable missing.
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://nihongoroute.my.id";
 

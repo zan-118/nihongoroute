@@ -14,11 +14,10 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import QueryProvider from "@/components/providers/QueryProvider";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { LazyMotion, domAnimation } from "framer-motion";
 import { JsonLd } from "@/components/seo/JsonLd";
-import Script from "next/script";
+import { GoogleAnalytics } from "@next/third-parties/google";
+import VercelAnalytics from "@/components/providers/VercelAnalytics";
 
 /**
  * Noto Sans JP font configuration.
@@ -150,23 +149,8 @@ export default function RootLayout({
         suppressHydrationWarning
         className="font-sans antialiased text-foreground selection:bg-destructive selection:text-destructive-foreground transition-colors duration-300"
       >
-        {/* Inject Google Analytics scripts if ID is configured */}
-        {gaId && (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-              strategy="lazyOnload"
-            />
-            <Script id="google-analytics" strategy="lazyOnload">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${gaId}');
-              `}
-            </Script>
-          </>
-        )}
+        {/* Inject Google Analytics if ID is configured */}
+        {gaId && <GoogleAnalytics gaId={gaId} />}
         {/* Inject structured JSON-LD data for SEO */}
         <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
         {/* Provide theme context (light/dark/system) to application */}
@@ -208,10 +192,7 @@ export default function RootLayout({
           {/* Load Vercel analytics only in production environment */}
           {process.env.NODE_ENV === "production" &&
             process.env.VERCEL === "1" && (
-              <>
-                <Analytics />
-                <SpeedInsights />
-              </>
+              <VercelAnalytics />
             )}
         </ThemeProvider>
       </body>
