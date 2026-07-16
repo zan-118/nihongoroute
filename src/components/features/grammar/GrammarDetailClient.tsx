@@ -30,7 +30,8 @@ import { Button } from "@/components/ui/button";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import { LibraryItem } from "@/actions/library.actions";
 import { fetchTTSAudio, speakWithWebSpeech, TTS_VOICES, type TtsVoice } from "@/lib/tts";
-import PdfGenerator from "@/components/features/pdf/PdfGenerator";
+import dynamic from "next/dynamic";
+const PdfGenerator = dynamic(() => import("@/components/features/pdf/PdfGenerator"), { ssr: false });
 import type { SentenceRow } from "@/actions/sentences.actions";
 
 // ==========================================

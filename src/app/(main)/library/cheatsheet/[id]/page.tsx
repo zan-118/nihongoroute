@@ -19,7 +19,7 @@ import dynamicImport from "next/dynamic";
 import { getCheatsheetByIdOrSlug, getCheatsheets } from "@/actions/library.actions";
 
 // Memuat PDF Generator secara dinamis untuk membebaskan bundle awal dari @react-pdf/renderer
-const PdfGenerator = dynamicImport(() => import("@/components/features/pdf/PdfGenerator"));
+const PdfGenerator = dynamicImport(() => import("@/components/features/pdf/PdfGenerator"), { ssr: false });
 import type { Metadata } from "next";
 import {
   breadcrumbJsonLd,
