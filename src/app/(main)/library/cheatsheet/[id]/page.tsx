@@ -15,11 +15,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheatsheetTable } from "./CheatsheetTable";
-import dynamic from "next/dynamic";
 import { getCheatsheetByIdOrSlug, getCheatsheets } from "@/actions/library.actions";
-
-// Memuat PDF Generator secara dinamis untuk membebaskan bundle awal dari @react-pdf/renderer
-const PdfGenerator = dynamic(() => import("@/components/features/pdf/PdfGenerator"), { ssr: false });
+import CheatsheetPdfButton from "./CheatsheetPdfButton";
 import type { Metadata } from "next";
 import {
   breadcrumbJsonLd,
@@ -148,9 +145,8 @@ export default async function CheatsheetDetailPage({
           </div>
 
           <div className="flex items-center gap-3 no-print">
-            <PdfGenerator 
+            <CheatsheetPdfButton 
               data={allItems} 
-              type="cheatsheet" 
               title={sheet.title} 
               category={sheet.category} 
             />
