@@ -125,3 +125,8 @@ Sistem TTS dirancang hemat biaya dan berkinerja tinggi:
   - Konten artikel, materi membaca (reading), dan mendengar (listening) dilayani lewat tabel `articles`, `reading`, dan `listening` di Supabase dengan strategi offline-first.
 * **Format Adapter Legacy**: Komponen ujian `MockExamEngine` tetap membaca model data lama. Pemetaan data tabel relasional baru Supabase (`jlpt_exam_templates`, `jlpt_passages`, `jlpt_questions`) ke format lama disentralkan pada adapter `src/lib/exams/supabase-adapter.ts` (`toLegacyExamData`) untuk meminimalisasi refactoring komponen visual.
 * **Timing-Safe Webhook Comparison**: String rahasia Saweria/Trakteer dicocokkan secara konstan menggunakan `crypto.timingSafeEqual` pada level binary buffer untuk mencegah eksploitasi serangan analisis waktu (timing attacks).
+* **Strategi Rendering Hybrid (ISR + Client-Side Progress)**:
+  - Konten leksikal (kosakata, kanji, tata bahasa) dan materi editorial (reading, listening, courses) menggunakan **Incremental Static Regeneration (ISR)** dengan `generateStaticParams()` untuk pre-rendering halaman-halaman populer (top slugs) pada saat build time.
+  - Slug lain di-render on-demand saat pertama kali diakses (`dynamicParams = true`) dan di-cache kembali. Cache diregenerasi di latar belakang setiap 3600 detik (`revalidate = 3600`).
+  - Status spesifik pengguna (progres belajar, bookmark, data SRS) diproses secara terpisah di sisi klien melalui Zustand dan IndexedDB untuk mencegah pengotoran cache statis (cache poisoning) dan menjaga performa pemuatan awal tetap instan.
+

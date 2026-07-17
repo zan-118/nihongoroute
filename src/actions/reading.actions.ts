@@ -103,3 +103,26 @@ export async function getLibraryReadingDetail(slug: string): Promise<LibraryItem
     return null;
   }
 }
+
+/**
+ * Fetch top Reading slugs for static build generation (ISR).
+ * 
+ * @param limit - Maximum number of slugs to pre-render.
+ * @returns Array of object params with slug property.
+ */
+export async function getReadingStaticSlugs(limit: number = 50): Promise<{ slug: string }[]> {
+  const supabase = createStaticClient();
+  try {
+    const { data, error } = await supabase
+      .from("reading")
+      .select("slug")
+      .not("slug", "is", null)
+      .limit(limit);
+
+    if (error || !data) return [];
+    return data.map((item) => ({ slug: String(item.slug) })).filter((x) => x.slug);
+  } catch (error) {
+    console.error("Gagal mengambil static slugs reading:", error);
+    return [];
+  }
+}

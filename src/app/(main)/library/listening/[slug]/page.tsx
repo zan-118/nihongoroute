@@ -8,6 +8,7 @@
 // ======================
 import { cache } from "react";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
+import { getListeningStaticSlugs } from "@/actions/listening.actions";
 import ListeningPageClient from "./ListeningPageClient";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -19,8 +20,13 @@ import {
   learningResourceJsonLd,
 } from "@/lib/seo";
 
-/** Force dynamic rendering. Prevent static generation. */
-export const dynamic = "force-dynamic";
+export const dynamicParams = true;
+export const revalidate = 3600;
+
+/** Generate static params for listening detail pages (ISR). */
+export async function generateStaticParams() {
+  return await getListeningStaticSlugs(50);
+}
 
 /** Fetch listening item by slug. Cache result. */
 const getListeningBySlug = cache((slug: string) => getLibraryItemBySlug("listening", slug));

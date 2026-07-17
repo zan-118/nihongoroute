@@ -10,6 +10,7 @@
 // ======================
 import { Metadata } from "next";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
+import { getKanjiStaticSlugs } from "@/actions/kanji.actions";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -81,6 +82,16 @@ export async function generateMetadata({
       "stroke order kanji",
     ].filter(Boolean),
   });
+}
+
+export const dynamicParams = true;
+export const revalidate = 3600;
+
+/**
+ * Generate static params for Kanji detail pages (ISR).
+ */
+export async function generateStaticParams() {
+  return await getKanjiStaticSlugs(200);
 }
 
 // ======================

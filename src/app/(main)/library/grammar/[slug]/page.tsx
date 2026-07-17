@@ -10,6 +10,7 @@
 // ======================
 import { Metadata } from "next";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
+import { getGrammarStaticSlugs } from "@/actions/grammar.actions";
 import { getSentencesByGrammarPattern } from "@/actions/sentences.actions";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -68,6 +69,16 @@ export async function generateMetadata({
       "bunpou JLPT",
     ].filter(Boolean),
   });
+}
+
+export const dynamicParams = true;
+export const revalidate = 3600;
+
+/**
+ * Generate static params for grammar detail pages (ISR).
+ */
+export async function generateStaticParams() {
+  return await getGrammarStaticSlugs(100);
 }
 
 // ======================

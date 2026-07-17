@@ -1010,3 +1010,60 @@ export async function getLessonData(categoryId: string, slug: string) {
 
   return { lesson, nav };
 }
+
+/**
+ * Fetch top Lesson/Course category & slug params for static build generation (ISR).
+ * Filters explicitly by beginner levels (N5, N4, kana).
+ * 
+ * @param limit - Maximum number of params to pre-render.
+ * @returns Array of objects containing categoryId and slug.
+ */
+export async function getLessonStaticParams(limit: number = 100): Promise<{ categoryId: string; slug: string }[]> {
+  const supabase = createStaticClient();
+  try {
+    const { data: categories, error: catErr } = await supabase
+      .from("course_categories")
+      .select("id, slug")
+      .in("slug", ["n5", "n4", "hiragana", "katakana"]);
+
+    if (catErr || !categories || categories.length === 0) return [];
+
+    const categoryMap = new Map<string, string>();
+    categories.forEach((c) => categoryMap.set(c.id, c.slug));
+
+    const categoryIds = categories.map((c) => c.id);
+
+    const [lessonsRes, articlesRes] = await Promise.all([
+      supabase
+        .from("lessons")
+        .select("slug, category_id")
+        .in("category_id", categoryIds)
+        .not("slug", "is", null)
+        .order("order_number", { ascending: true })
+        .limit(limit),
+      supabase
+        .from("articles")
+        .select("slug, category_id")
+        .in("category_id", categoryIds)
+        .not("slug", "is", null)
+        .order("order_number", { ascending: true })
+        .limit(limit),
+    ]);
+
+    const combined = [...(lessonsRes.data || []), ...(articlesRes.data || [])];
+    const results: { categoryId: string; slug: string }[] = [];
+
+    for (const item of combined) {
+      const catSlug = categoryMap.get(item.category_id);
+      if (catSlug && item.slug) {
+        results.push({ categoryId: catSlug, slug: item.slug });
+      }
+      if (results.length >= limit) break;
+    }
+
+    return results;
+  } catch (error) {
+    console.error("Gagal mengambil static params lessons:", error);
+    return [];
+  }
+}

@@ -15,7 +15,7 @@ const process = require("node:process");
 const crypto = require("node:crypto");
 const { spawnSync } = require("node:child_process");
 const { createClient } = require("@supabase/supabase-js");
-const { createClient: createSanityClient } = require("@sanity/client");
+
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const FAILURE_LOG_PATH = path.resolve(process.cwd(), "tts_failures.log");
@@ -817,12 +817,6 @@ async function main() {
   }
 
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
-  const sanityClient = createSanityClient({
-    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
-    useCdn: false,
-    apiVersion: "2024-03-11",
-  });
 
   console.log("\n=== NIHONGOROUTE TTS DIALOGUE GENERATOR ===");
   log(`Mode         : ${options.execute ? "🚀 EXECUTE (akan generate audio nyata)" : "📋 DRY RUN (cuma preview, tidak generate)"}`);
@@ -854,15 +848,49 @@ async function main() {
     const processContentBlocks = (blocks, folder = "", contextString = "") => {
       if (!Array.isArray(blocks)) return;
       blocks.forEach((block) => {
+        if (!block) return;
+
+        // 1. Dukungan format Supabase lessons.dialogue (array of dialogue line objects)
+        if (block.text || block.jp) {
+          const rawText = (block.text || block.jp || "").trim();
+          let rawSpeaker = (block.speaker || block.speakerName || "").trim();
+          let lineText = rawText;
+
+          if (lineText.includes("：") || lineText.includes(":")) {
+            const parts = lineText.split(/[：:]/);
+            if (parts.length > 1 && (!rawSpeaker || parts[0].trim().length < 15)) {
+              if (!rawSpeaker) rawSpeaker = parts[0].trim();
+              lineText = parts.slice(1).join("：").trim();
+            }
+          }
+
+          if (lineText && rawSpeaker) {
+            try {
+              const voice = detectVoice(rawSpeaker);
+              addItem(lineText, voice, folder, contextString);
+            } catch (err) {
+              logWarn(`Gagal deteksi voice untuk baris dialog "${lineText}" (${rawSpeaker}): ${err.message}`);
+            }
+          }
+          return;
+        }
+
+        // 2. Dukungan format legacy (PortableText / content block)
         const type = block.type || block._type;
         if ((type === "dialogue" || type === "dialogueBlock") && block.content) {
           const lines = block.content.split("\n").filter(Boolean);
-          lines.forEach((line, i) => {
+          lines.forEach((line) => {
             const parts = line.split(/[：:]/);
             const rawSpeaker = parts.length > 1 ? parts[0].trim() : undefined;
             const lineText = parts.length > 1 ? parts.slice(1).join("：").trim() : line.trim();
-            const voice = detectVoice(rawSpeaker);
-            addItem(lineText, voice, folder, contextString);
+            if (lineText && rawSpeaker) {
+              try {
+                const voice = detectVoice(rawSpeaker);
+                addItem(lineText, voice, folder, contextString);
+              } catch (err) {
+                logWarn(`Gagal deteksi voice untuk baris dialog legacy "${lineText}": ${err.message}`);
+              }
+            }
           });
         }
       });
@@ -871,7 +899,7 @@ async function main() {
     // Tarik daftar lessons terlebih dahulu dari Supabase untuk keperluan menu
     let allLessons = [];
     try {
-      const { data } = await supabase.from("lessons").select("title, order_number, slug, content_blocks");
+      const { data } = await supabase.from("lessons").select("title, order_number, slug, dialogue");
       if (data) {
         allLessons = data;
         allLessons.sort((a, b) => (a.order_number || 0) - (b.order_number || 0));
@@ -943,7 +971,7 @@ async function main() {
 
     // 1. Ambil pelajaran dari Supabase
     log("🔍 [1/2] Menarik data lessons dari Supabase...");
-    let sbQuery = supabase.from("lessons").select("content_blocks, slug, order_number, title");
+    let sbQuery = supabase.from("lessons").select("dialogue, slug, order_number, title");
     if (options.level) {
       sbQuery = sbQuery.like("slug", `${options.level.toLowerCase()}-%`);
     }
@@ -966,7 +994,7 @@ async function main() {
         if (!ctxStr && row.title) {
           ctxStr = `Title: ${row.title}`;
         }
-        processContentBlocks(row.content_blocks, `lessons/${row.slug}`, ctxStr);
+        processContentBlocks(row.dialogue, `lessons/${row.slug}`, ctxStr);
       });
     }
 

@@ -8,6 +8,7 @@
 // ======================
 import { cache } from "react";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
+import { getReadingStaticSlugs } from "@/actions/reading.actions";
 import ReadingPageClient from "./ReadingPageClient";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -19,8 +20,13 @@ import {
   encodeRouteSegment,
 } from "@/lib/seo";
 
-/** Force dynamic rendering. Prevent build-time static generation. */
-export const dynamic = "force-dynamic";
+export const dynamicParams = true;
+export const revalidate = 3600;
+
+/** Generate static params for reading detail pages (ISR). */
+export async function generateStaticParams() {
+  return await getReadingStaticSlugs(50);
+}
 
 /** Fetch reading item by slug. Cache result to avoid duplicate requests. */
 const getReadingBySlug = cache((slug: string) => getLibraryItemBySlug("reading", slug));

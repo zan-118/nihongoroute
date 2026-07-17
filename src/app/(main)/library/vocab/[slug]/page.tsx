@@ -10,6 +10,7 @@
 // ======================
 import { Metadata } from "next";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
+import { getVocabStaticSlugs } from "@/actions/vocab.actions";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -124,6 +125,16 @@ export async function generateMetadata({
       "kosakata bahasa Jepang",
     ].filter(Boolean),
   });
+}
+
+export const dynamicParams = true;
+export const revalidate = 3600;
+
+/**
+ * Generate static params for vocabulary detail pages (ISR).
+ */
+export async function generateStaticParams() {
+  return await getVocabStaticSlugs(200);
 }
 
 // ======================

@@ -220,3 +220,26 @@ export async function getLibraryListeningDetail(slug: string): Promise<LibraryIt
     return null;
   }
 }
+
+/**
+ * Fetch top Listening slugs for static build generation (ISR).
+ * 
+ * @param limit - Maximum number of slugs to pre-render.
+ * @returns Array of object params with slug property.
+ */
+export async function getListeningStaticSlugs(limit: number = 50): Promise<{ slug: string }[]> {
+  const supabase = createStaticClient();
+  try {
+    const { data, error } = await supabase
+      .from("listening")
+      .select("slug")
+      .not("slug", "is", null)
+      .limit(limit);
+
+    if (error || !data) return [];
+    return data.map((item) => ({ slug: String(item.slug) })).filter((x) => x.slug);
+  } catch (error) {
+    console.error("Gagal mengambil static slugs listening:", error);
+    return [];
+  }
+}

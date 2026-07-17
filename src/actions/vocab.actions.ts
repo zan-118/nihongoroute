@@ -284,3 +284,27 @@ export async function getLibraryVocabDetail(slugOrId: string): Promise<LibraryIt
     return null;
   }
 }
+
+/**
+ * Fetch top vocabulary slugs for static build generation (ISR).
+ * 
+ * @param limit - Maximum number of slugs to pre-render.
+ * @returns Array of object params with slug property.
+ */
+export async function getVocabStaticSlugs(limit: number = 200): Promise<{ slug: string }[]> {
+  const supabase = createStaticClient();
+  try {
+    const { data, error } = await supabase
+      .from("vocab")
+      .select("slug")
+      .not("slug", "is", null)
+      .order("created_at", { ascending: false })
+      .limit(limit);
+
+    if (error || !data) return [];
+    return data.map((item) => ({ slug: String(item.slug) }));
+  } catch (error) {
+    console.error("Gagal mengambil static slugs vocab:", error);
+    return [];
+  }
+}

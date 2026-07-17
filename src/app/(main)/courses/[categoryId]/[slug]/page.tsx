@@ -28,7 +28,7 @@ import { LessonNavigation } from "@/components/features/lessons/LessonNavigation
 import { MarkCompleteButton } from "@/components/features/lessons/MarkCompleteButton";
 
 // Integrasi Database & Utilitas
-import { getLessonData } from "@/actions/lessons.actions";
+import { getLessonData, getLessonStaticParams } from "@/actions/lessons.actions";
 import { formatQuizzes, getLessonNavigation } from "@/lib/utils/lesson-utils";
 import {
   breadcrumbJsonLd,
@@ -84,6 +84,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       "belajar JLPT",
     ].filter(Boolean),
   });
+}
+
+export const dynamicParams = true;
+export const revalidate = 3600;
+
+/**
+ * Generate static params for lesson/course detail pages (ISR).
+ */
+export async function generateStaticParams() {
+  return await getLessonStaticParams(100);
 }
 
 // ======================
