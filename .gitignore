@@ -93,3 +93,7 @@ tts_failures*.log
 tts_vocab_failures.log
 
 logs/
+
+skills-lock.json
+
+scripts/

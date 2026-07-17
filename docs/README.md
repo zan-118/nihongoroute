@@ -1,60 +1,43 @@
-# NihongoRoute - Dokumentasi Teknis Modular
+# Indeks Dokumentasi Teknis NihongoRoute
 
-Selamat datang di pusat dokumentasi teknis NihongoRoute. Seluruh dokumentasi di bawah ini telah ditulis ulang dalam Bahasa Indonesia dengan merujuk langsung pada kondisi aktual kode sumber (codebase).
+Dokumentasi ini digenerate otomatis dari analisis source code pada 17 Juli 2026.
 
-## Daftar Dokumentasi Modular
-
-1. **[Arsitektur Aplikasi](arsitektur-aplikasi.md)**
-   - Ikhtisar Next.js App Router, pemisahan RSC vs RCC, serta manajemen status global luring memanfaatkan Zustand dan IndexedDB (`idb-keyval`).
-
-2. **[Sinkronisasi Progres Luring (Offline Sync)](sinkronisasi-progres.md)**
-   - Arsitektur sinkronisasi progres 3-tingkat, deteksi data kotor (dirty state), penggabungan data lokal/awan, sinkronisasi lintas tab (`BroadcastChannel`), dan sistem anti-cheat XP di tingkat server database.
-
-3. **[Logika Spaced Repetition System (SRS) & Gamifikasi](logika-srs-dan-gamifikasi.md)**
-   - Cara kerja algoritma pengulangan cerdas (SM-2 dengan modifikasi Modern Halving dan Due-Date Guard), formula leveling XP, rekor hari beruntun (streak), streak freeze, dan misi harian.
-
-4. **[Sintesis Audio & Furigana](sintesis-audio-dan-furigana.md)**
-   - Aliran data biner VOICEVOX TTS statis (caching Storage & DB, fallback Web Speech API), pencocokan gender suara pembicara dialog otomatis (`detectVoice`), Kuroshiro, dan pembelahan teks Kanji-Hiragana di `<SmartJapanese>`.
-
-5. **[Skema Database & Row Level Security (RLS)](skema-database-dan-rls.md)**
-   - Detail skema tabel relasional PostgreSQL Supabase, relasi, indeks, trigger, database function, grant hak akses, dan kebijakan RLS untuk perlindungan privasi.
-
-6. **[Server Actions & API Routes](server-actions-dan-api.md)**
-   - Spesifikasi fungsional Server Actions di `src/actions/` dan endpoint API Route Handlers di `src/app/api/`, termasuk perlindungan jembatan admin (`validateAdminApiRequest`).
-
-7. **[Simulasi Ujian JLPT (Mock Exam)](simulasi-ujian-jlpt.md)**
-   - Arsitektur simulasi ujian JLPT, skema berkas JSON bank soal, skrip generator CLI, adapter, dan UI engine.
-
-8. **[Audit Kompatibilitas Ujian](audit-kompatibilitas-ujian.md)**
-   - Jembatan adapter bank soal Supabase ke legacy engine dari audit kompatibilitas Fase 0.
-
-9. **[Visualisasi Arsitektur](visualisasi-arsitektur.md)**
-   - Diagram visual alur data, sync progress, runtime layer, status store Zustand, dan API handlers berbasis Mermaid.
-
-10. **[Struktur Folder Proyek](struktur-folder-proyek.md)**
-    - Pemetaan lengkap seluruh struktur folder repositori NihongoRoute.
-
-11. **[Cetak Biru Ujian JLPT](cetak-biru-ujian-jlpt.md)**
-    - Cetak biru implementasi pemindahan bank soal Supabase dan scoring server-side.
-
-12. **[Panduan Fitur Aplikasi](fitur-aplikasi.md)**
-    - Rincian fungsionalitas dan kapabilitas pembelajaran pengguna NihongoRoute.
-
-13. **[Arsitektur Pengujian (Testing)](arsitektur-pengujian.md)**
-    - Cakupan unit test Vitest (`__tests__/`) untuk menguji stores/hooks/lib dan pengujian ujung-ke-ujung (E2E) Playwright (`e2e/`).
-
-14. **[Panduan Operasional & Runbook](operasional-dan-runbook.md)**
-    - Kesiapan enterprise, standar deployment & rollback, prosedur backup & restore, penanganan insiden, dan manual pengerjaan skrip utilitas.
-
-15. **[Panduan Pengelolaan Konten & Otomatisasi Skrip](panduan-pengelolaan-konten.md)**
-    - Pengisian konten Sanity Studio, otomatisasi skrip seeding Supabase, prasyarat VOICEVOX audio generator, dan skrip validasi impor JLPT.
-
-16. **[Optimalisasi Performa (Performance Engineering)](optimalisasi-performa.md)**
-    - Panduan optimalisasi performa teknis seperti resize listener kondisional, controlled memoization timer, pencarian kamus cepat `.in()`, dan evaluasi gamifikasi berkecepatan tinggi.
-
-17. **[Design System](design-system.md)**
-    - Token warna semantik, aturan anti-AI-slop, dan contoh kode UI benar/salah — WAJIB dibaca setiap tugas menyentuh komponen visual.
+Selamat datang di direktori dokumentasi teknis **NihongoRoute**. Seluruh dokumen di bawah ini disusun berdasarkan analisis mendalam terhadap basis kode aktif, arsitektur luring, skema database Supabase, dan API backend.
 
 ---
 
-📝 **Catatan Pengembang**: Saat melakukan modifikasi pada arsitektur sistem, peta perutean, manajemen status, atau skema basis data, harap perbarui juga dokumen modular terkait agar tetap sinkron dengan keadaan kode sumber teraktual. Jika ada dokumen baru ditambahkan ke folder ini, pastikan juga ditambahkan ke daftar ini **dan** ke daftar dokumentasi di `README.md` root — kedua indeks ini harus selalu sinkron.
+## 📚 Daftar Berkas Dokumentasi
+
+1. **[Overview Proyek (overview.md)](file:///c:/nihongoroute/docs/overview.md)**
+   - Latar belakang proyek, masalah yang diselesaikan, target audiens pengguna, dan spesifikasi lengkap seluruh tech stack beserta versinya dari `package.json`.
+
+2. **[Arsitektur Sistem (architecture.md)](file:///c:/nihongoroute/docs/architecture.md)**
+   - Diagram arsitektur sistem (Mermaid), request lifecycle, dan penjelasan mendalam mengenai alur sinkronisasi progres luring 3 tingkat (*Zustand ↔ Debouncing ↔ RPC sync_user_progress*).
+
+3. **[Panduan Memulai (getting-started.md)](file:///c:/nihongoroute/docs/getting-started.md)**
+   - Prasyarat runtime (Node.js 20+), langkah instalasi & setup lokal, validasi berkas migrasi database, serta panduan pengujian (Vitest & Playwright).
+
+4. **[Konfigurasi Sistem (configuration.md)](file:///c:/nihongoroute/docs/configuration.md)**
+   - Tabel lengkap seluruh variabel lingkungan (`.env.example`), tipe data, batasan keamanan (`NEXT_PUBLIC_` vs server-only), dan peruntukannya.
+
+5. **[Referensi API & Rute Server (api-reference.md)](file:///c:/nihongoroute/docs/api-reference.md)**
+   - Spesifikasi 9 API Route Handlers aktif (`/api/tts`, `/api/furigana`, `/api/health`, `/api/cards`, `/api/webhooks/*`, `/api/admin/*`, `/auth/callback`), metode HTTP, otentikasi, dan skema payload.
+
+6. **[Model Data & Database (data-model.md)](file:///c:/nihongoroute/docs/data-model.md)**
+   - Spesifikasi detail seluruh 26 tabel database PostgreSQL, foreign key, trigger integritas level/SRS, diagram ERD Mermaid, dan kalkulasi matematis anti-cheat XP guard.
+
+7. **[Deployment & Operasional (deployment.md)](file:///c:/nihongoroute/docs/deployment.md)**
+   - Strategi kompilasi standalone Next.js 16, pipeline CI/CD GitHub Actions, release gates checklist, dan aturan revalidasi path tanpa cache berbasis waktu.
+
+8. **[Keamanan & Kepatuhan (security.md)](file:///c:/nihongoroute/docs/security.md)**
+   - Batas keamanan kredensial, proteksi admin API via header Bearer token, verifikasi tanda tangan webhook timing-safe HMAC SHA256, dan checklist RLS.
+
+9. **[Troubleshooting & FAQ (troubleshooting.md)](file:///c:/nihongoroute/docs/troubleshooting.md)**
+   - Panduan penanganan kendala umum: inisialisasi kamus Kuroshiro, dynamic Edge TTS connection timeout dengan fallback Web Speech API, dan resolusi konflik offline sync.
+
+10. **[Panduan Kontribusi (contribution.md)](file:///c:/nihongoroute/docs/contribution.md)**
+    - Standar penulisan TypeScript ketat, konvensi desain token UI, alur branch Git, Conventional Commits, serta 5 langkah siklus hidup migrasi SQL (*migration folding*).
+
+---
+
+*Catatan: Jika ada pembaruan pada logika bisnis atau skema basis data di masa mendatang, lakukan pembaruan dokumen terkait pada folder ini secara berkala.*

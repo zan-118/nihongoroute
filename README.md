@@ -1,118 +1,115 @@
 <p align="center">
-  <img src="public/logo-branding.svg" alt="NihongoRoute" width="92" />
-</p>
-
-<h1 align="center">NihongoRoute</h1>
-
-<p align="center">
-  Platform pembelajaran Bahasa Jepang interaktif khusus untuk pelajar Indonesia. Dirancang dengan prinsip <strong>offline-first</strong> (luring), dilengkapi sistem pengulangan cerdas (SRS), gamifikasi dasbor, konten pembelajaran dinamis dari Sanity CMS, dan sinkronisasi progres otomatis yang didukung oleh Supabase.
+  <a href="https://nihongoroute.my.id">
+    <img src="public/opengraph-image.png" alt="NihongoRoute Banner" width="100%" style="border-radius: 8px;" />
+  </a>
 </p>
 
 <p align="center">
-  <img alt="Next.js" src="https://img.shields.io/badge/Next.js-16.2.2-black?style=flat-square&logo=nextdotjs" />
-  <img alt="React" src="https://img.shields.io/badge/React-19.2.2-149eca?style=flat-square&logo=react&logoColor=white" />
-  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-strict-3178c6?style=flat-square&logo=typescript&logoColor=white" />
-  <img alt="Supabase" src="https://img.shields.io/badge/Supabase-auth%20%7C%20db%20%7C%20storage-3fcf8e?style=flat-square&logo=supabase&logoColor=white" />
-  <img alt="Sanity" src="https://img.shields.io/badge/Sanity-CMS-f03e2f?style=flat-square&logo=sanity&logoColor=white" />
-  <img alt="Vitest" src="https://img.shields.io/badge/Vitest-unit-6e9f18?style=flat-square&logo=vitest&logoColor=white" />
-  <img alt="Playwright" src="https://img.shields.io/badge/Playwright-E2E-2ead33?style=flat-square&logo=playwright&logoColor=white" />
+  <img src="https://img.shields.io/badge/Next.js-16.2.2-black?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/React-19.2.2-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
+  <img src="https://img.shields.io/badge/Supabase-Database-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase" />
+  <img src="https://img.shields.io/badge/TypeScript-5.3-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Quality_Gate-Passed-4EAA25?style=for-the-badge&logo=githubactions&logoColor=white" alt="Quality Gate" />
+</p>
+
+<p align="center">
+  <strong>NihongoRoute</strong> adalah <em>self-study platform</em> modern untuk belajar Bahasa Jepang tanpa pusing soal koneksi internet. Mengusung arsitektur <strong>Offline-First</strong>, platform ini memastikan sesi belajar Anda tetap mulus, instan, dan bebas lemot—di mana saja, kapan saja.
+</p>
+
+<p align="center">
+  <a href="file:///c:/nihongoroute/docs/README.md">📖 Baca Dokumentasi Teknis</a> 
+  • 
+  <a href="#-memulai-cepat-quick-start">🚀 Panduan Instalasi</a> 
+  • 
+  <a href="#-peta-dokumentasi">📂 Peta Dokumen</a>
 </p>
 
 ---
 
-## Gambaran Umum
+## ⚡ Fitur Utama
 
-NihongoRoute menggabungkan materi pembelajaran terstruktur, pustaka lengkap kosakata/kanji/tata bahasa, latihan membaca dan menyimak interaktif, dek flashcard kustom, dasbor ulasan kartu SRS (Spaced Repetition System), simulasi ujian JLPT (Mock Exam), gamifikasi profil (XP, level, streak), serta Studio Sanity tertanam.
+### 🔋 Offline-First: Belajar Tanpa Putus
+Nggak perlu takut progres belajar hilang saat internet mati. Semua data belajar, kuis, dan review kartu flashcard (SRS) langsung tersimpan aman di browser Anda menggunakan IndexedDB (via Zustand & `idb-keyval`). Rasakan UI super responsif dengan latensi 0ms.
 
-Proyek ini menerapkan **arsitektur split-source**:
+### 🔄 Sync 3-Tingkat yang Pintar
+Progres lokal Anda akan otomatis diunggah ke cloud Supabase secara cerdas. Menggunakan *dirty tracking* dan *debouncing* 2000ms untuk menghemat kuota internet, diselesaikan secara instan dengan resolusi konflik otomatis berbasis stempel waktu (*timestamp*).
 
-| Komponen                 | Tanggung Jawab                                                                                                                                                                 |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Next.js App Router**   | Mengatur halaman, layouts, rute API, dan penayangan Sanity Studio tertanam di rute `/studio`.                                                                                  |
-| **Supabase**             | Otentikasi pengguna, database PostgreSQL (lesson/kamus leksikal, progress belajar, log ujian, postingan forum), media audio statis VOICEVOX TTS, dan RPC `sync_user_progress`. |
-| **Sanity CMS**           | Konten editorial pelengkap: materi bacaan (reading), menyimak (listening), dan metadata simulasi ujian legacy (`mockExam`, fallback).                                          |
-| **Zustand**              | Manajemen status global klien yang dipersistensikan secara luring ke IndexedDB menggunakan `idb-keyval`.                                                                       |
-| **TanStack Query**       | Mengelola fetching sesi, pengambilan progres awal, dan orkestrasi background sync.                                                                                             |
-| **Kuroshiro + Kuromoji** | Pemrosesan konversi Furigana pada API route.                                                                                                                                   |
+### 🛡️ Anti-Cheat XP & Gamifikasi Adil
+Persaingan sehat di papan peringkat! Perolehan XP, level, dan streak dihitung dan divalidasi langsung di server PostgreSQL lewat RPC `sync_user_progress`. Ditambah limit harian 150 XP bonus untuk mencegah bot dan skrip manipulasi dari sisi browser.
 
----
+### 🔊 Smart Cache Text-to-Speech (TTS)
+Pelafalan audio bahasa Jepang secepat kilat tanpa boros kuota. Rute API otomatis memutar file dari storage bucket `tts-cache` Supabase jika ada (*cache hit*), atau menyintesis suara secara instan menggunakan Edge Neural TTS saat *cache miss* tanpa membebani penyimpanan.
 
-## Pusat Dokumentasi Teknis Modular (Bahasa Indonesia)
-
-Seluruh dokumentasi teknis sistem telah dipecah secara modular berdasarkan fungsinya di folder `docs/` untuk mempermudah pemeliharaan:
-
-- 📖 **[Indeks Dokumentasi (README)](docs/README.md)**: Titik masuk utama seluruh file dokumentasi modular.
-- ⚙️ **[Arsitektur Aplikasi](docs/arsitektur-aplikasi.md)**: Penjelasan Next.js App Router, orkestrasi Zustand, IndexedDB, dan TanStack Query.
-- 🔄 **[Sinkronisasi Progres Luring](docs/sinkronisasi-progres.md)**: Alur sinkronisasi progress 3-tingkat, BroadcastChannel lintas tab, dan validasi anti-cheat XP.
-- 🧠 **[Logika SRS & Gamifikasi](docs/logika-srs-dan-gamifikasi.md)**: Cara kerja modifikasi algoritma SM-2, Due-Date Guard, Modern Halving, streak freeze, dan kenaikan level.
-- 🔊 **[Sintesis Audio & Furigana](docs/sintesis-audio-dan-furigana.md)**: Integrasi VOICEVOX TTS, fallback Web Speech API, deteksi suara otomatis, dan komponen SmartJapanese.
-- 🗄️ **[Skema Database & RLS](docs/skema-database-dan-rls.md)**: Skema tabel relasional Supabase, trigger database, index, policies, dan storage buckets.
-- 🔗 **[Server Actions & API Routes](docs/server-actions-dan-api.md)**: Penjelasan actions di `src/actions/` dan endpoint API route.
-- 📝 **[Simulasi Ujian JLPT](docs/simulasi-ujian-jlpt.md)**: Arsitektur Mock Exam, format berkas impor JSON, skrip generator CLI, adapter, dan UI engine.
-- 🔍 **[Audit Kompatibilitas Ujian](docs/audit-kompatibilitas-ujian.md)**: Lapisan adapter bank soal Supabase ke legacy engine.
-- 🎨 **[Visualisasi Arsitektur](docs/visualisasi-arsitektur.md)**: Diagram visual alur data, sync, runtime, dan studio.
-- 📂 **[Struktur Folder Proyek](docs/struktur-folder-proyek.md)**: Pemetaan folder dan file di repositori NihongoRoute.
-- 📐 **[Cetak Biru Ujian JLPT](docs/cetak-biru-ujian-jlpt.md)**: Arsitektur lengkap dan cetak biru implementasi 7-fase bank soal Supabase.
-- 🚀 **[Panduan Fitur Aplikasi](docs/fitur-aplikasi.md)**: Rincian fungsionalitas dan kapabilitas pembelajaran bagi pengguna.
-- 🧪 **[Arsitektur Pengujian](docs/arsitektur-pengujian.md)**: Uji unit Vitest dan pengujian Playwright E2E.
-- 🛠️ **[Panduan Operasional & Runbook](docs/operasional-dan-runbook.md)**: Standar deploy, rollback, backup & restore, penanganan insiden, dan skrip utilitas.
-- 🎨 **[Design System](docs/design-system.md)**: Token warna semantik, aturan anti-AI-slop, dan contoh kode UI benar/salah.
-- 📋 **[Panduan Pengelolaan Konten](docs/panduan-pengelolaan-konten.md)**: Alur kerja Sanity CMS, skrip seeding kamus Supabase, dan generator audio VOICEVOX offline.
-- ⚡ **[Optimalisasi Performa](docs/optimalisasi-performa.md)**: Pola rekayasa performa (event listener kondisional, memoization, indeks database, dsb).
+### 📝 Simulasi Ujian JLPT Realistis
+Uji kemampuan Anda sebelum ujian JLPT yang sebenarnya (N5 hingga N1). Bank soal relasional (`jlpt_exam_templates`, `jlpt_passages`, `jlpt_questions`) dari database Supabase dialirkan secara dinamis ke mesin ujian melalui *adapter layer* `supabase-adapter.ts`.
 
 ---
 
-## Cara Memulai Pengembangan
+## 🛠️ Di Balik Layar (Tech Stack)
 
-### 1. Prasyarat Instalasi
+NihongoRoute ditenagai oleh kombinasi Next.js App Router dan serverless database untuk performa tinggi:
 
-Pastikan Node.js terinstal di lokal. Unduh repositori dan pasang dependensi:
+* **Sisi Klien (Client-Side)**: Next.js 16 Client Components, Zustand (State), React Query v5 (Caching), Tailwind CSS (Styling), Framer Motion (Animations), Wanakana (IME).
+* **Sisi Server (Server-Side)**: Next.js Server Actions, Route Handlers (Standalone Output), Kuroshiro & Kuromoji (Furigana), Google Gemini API (AI Assistant).
+* **Infrastruktur**: Supabase (PostgreSQL Database, Auth, Storage Buckets, & RLS Policies).
 
+---
+
+## 🚀 Memulai Cepat (Quick Start)
+
+### 1. Prasyarat
+Pastikan runtime Node.js Anda berada pada versi **Node.js >= 20.x**.
+
+### 2. Kloning & Instalasi
 ```bash
+git clone https://github.com/username/nihongoroute.git
+cd nihongoroute
 npm install
 ```
 
-### 2. Menjalankan Server Pengembangan Lokal
+### 3. Konfigurasi Kunci API (.env)
+Salin berkas `.env.example` ke direktori proyek lokal Anda sebagai `.env.local`:
+```bash
+cp .env.example .env.local
+```
+Lengkapi nilai kunci Supabase, Sanity, Gemini API, dan token rahasia webhook Anda.
 
-Jalankan perintah berikut untuk mengaktifkan server lokal Next.js:
-
+### 4. Jalankan Lingkungan Pengembangan
 ```bash
 npm run dev
 ```
+Buka browser di [http://localhost:3000](http://localhost:3000) untuk mengakses aplikasi.
 
-Buka peramban dan navigasikan ke alamat: `http://localhost:3000`
-
-### 3. Membangun dan Menjalankan Mode Produksi
-
+### 5. Pengujian Kualitas Kode (Quality Gate Checks)
+Jalankan seluruh perintah pengecekan standar kode dan pengujian otomatis sebelum mengirimkan Pull Request:
 ```bash
-npm run build
-npm run start
+npm run typecheck             # Validasi tipe TypeScript
+npm run lint                  # Pengecekan linter kode (ESLint)
+npm run test:unit             # Eksekusi unit test fungsional (Vitest)
+npm run db:migrations:check   # Validasi stempel berkas migrasi database
+npm run build                 # Kompilasi build rilis produksi standalone
 ```
 
 ---
 
-## Skrip NPM yang Tersedia
+## 📂 Peta Dokumentasi
 
-| Skrip                         | Deskripsi                                                                     |
-| ----------------------------- | ----------------------------------------------------------------------------- |
-| `npm run dev`                 | Menjalankan server lokal pengembangan Next.js.                                |
-| `npm run build`               | Membangun bundel produksi aplikasi mandiri (standalone).                      |
-| `npm run start`               | Menjalankan server produksi setelah build.                                    |
-| `npm run lint`                | Menjalankan analisis statis ESLint untuk mendeteksi kesalahan sintaks.        |
-| `npm run lint:fix`            | Menjalankan analisis statis ESLint dan memperbaiki kesalahan otomatis.        |
-| `npm run typecheck`           | Menjalankan pemeriksaan tipe ketat TypeScript tanpa memproduksi file output.  |
-| `npm run test`                | Menjalankan rangkaian uji unit Vitest satu kali.                              |
-| `npm run test:unit`           | Menjalankan uji unit gate kualitas integrasi.                                 |
-| `npm run test:watch`          | Menjalankan uji unit Vitest dalam mode interaktif (watch mode).               |
-| `npm run test:e2e`            | Menjalankan uji visual ujung-ke-ujung (E2E) menggunakan Playwright.           |
-| `npm run db:migrations:check` | Memvalidasi integritas nama file dan keunikan stempel waktu migrasi Supabase. |
-| `npm run prepare`             | Memasang Husky git hooks.                                                     |
+Dokumentasi detail arsitektur sistem dan model data tersimpan secara terstruktur pada direktori [`/docs`](file:///c:/nihongoroute/docs):
+
+* 📖 **[Indeks Dokumentasi Teknis (docs/README.md)](file:///c:/nihongoroute/docs/README.md)**
+* 🗺️ **[Overview & Deskripsi Proyek](file:///c:/nihongoroute/docs/overview.md)**
+* 🏛️ **[Arsitektur Sistem & Alur Sinkronisasi](file:///c:/nihongoroute/docs/architecture.md)**
+* 📦 **[Panduan Memulai & Setup](file:///c:/nihongoroute/docs/getting-started.md)**
+* ⚙️ **[Konfigurasi Variabel Lingkungan](file:///c:/nihongoroute/docs/configuration.md)**
+* 🔌 **[Referensi API & Endpoint Rute](file:///c:/nihongoroute/docs/api-reference.md)**
+* 💾 **[Model Data & Skema Database (26 Tabel)](file:///c:/nihongoroute/docs/data-model.md)**
+* 🚢 **[Deployment & Alur CI/CD](file:///c:/nihongoroute/docs/deployment.md)**
+* 🔒 **[Keamanan, RLS, & Enkapsulasi Token](file:///c:/nihongoroute/docs/security.md)**
+* 🛠️ **[Troubleshooting & FAQ Operasional](file:///c:/nihongoroute/docs/troubleshooting.md)**
+* 🤝 **[Panduan Kontribusi & Git Workflow](file:///c:/nihongoroute/docs/contribution.md)**
 
 ---
 
-## Konvensi dan Aturan Utama Repositori
-
-1. **Zustand Selectors**: Selalu gunakan selektor atomik (contoh: `useUserStore((s) => s.xp)`) saat berlangganan status store untuk mencegah render ulang berlebih. Jangan melakukan destructuring pada store.
-2. **Database Service Role**: Penggunaan `createAdminClient()` murni terbatas di lingkungan server aman (Route Handlers/Server Actions/Skrip). Jangan mengekspos kunci admin ke klien Next.js dengan prefiks `NEXT_PUBLIC_`.
-3. **Penyimpanan Audio TTS**: File audio pengucapan kosakata dihasilkan offline menggunakan skrip, bukan secara real-time pada saat user meminta di API route. Cache miss wajib mengembalikan status `404` untuk memicu fallback Web Speech API di peramban klien.
-4. **Pembaruan Skema**: Saat melakukan modifikasi tabel database, perbarui juga file `src/types/database.ts` dan pastikan migrasi SQL tercatat dengan nama terurut di folder `supabase/migrations/`.
+<p align="center">
+  <sub>Dikelola oleh tim pengembang NihongoRoute • Rilis terakhir diperbarui pada 17 Juli 2026.</sub>
+</p>
