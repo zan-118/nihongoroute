@@ -12,7 +12,7 @@ import React from "react";
 import { MessageSquare, Play, Pause } from "lucide-react";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
-import SanityMedia from "@/components/ui/SanityMedia";
+import MediaAsset from "@/components/ui/MediaAsset";
 import { OfflineAudio } from "@/components/ui/OfflineAudio";
 import { Button } from "@/components/ui/button";
 import { useLineTTS } from "@/components/features/listening/hooks/useLineTTS";
@@ -151,10 +151,10 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
             <div key={dialogId} className="p-6 md:p-10 border border-border/80 rounded-2xl md:rounded-3xl bg-card/35 shadow-[0_0_40px_rgba(var(--secondary-rgb),0.02)] glass relative overflow-hidden">
               {/* Header: media + title/audio side-by-side */}
               <div className={`flex flex-col ${(l.imageUrl || l.videoUrl) ? 'md:flex-row' : ''} gap-6 mb-8 border-b border-border/50 pb-8`}>
-                {/* MEDIA HERO MENYIMAK (SANITY) — ditaruh di samping, bukan bawah */}
+                {/* MEDIA HERO MENYIMAK — ditaruh di samping, bukan bawah */}
                 {(l.imageUrl || l.videoUrl) && (
                   <div className="w-full md:w-48 lg:w-56 shrink-0 rounded-lg overflow-hidden">
-                    <SanityMedia 
+                    <MediaAsset 
                       url={l.videoUrl || l.imageUrl || ""} 
                       type={l.videoUrl ? "video" : "image"}
                       className="shadow-lg rounded-lg overflow-hidden w-full h-40 md:h-full object-cover"

@@ -1,6 +1,6 @@
 /**
- * @file SanityMedia.tsx
- * @description Komponen pemutar/penampil media universal (SanityMedia) untuk merender gambar, video, dan lampiran dokumen dari Sanity CMS.
+ * @file MediaAsset.tsx
+ * @description Komponen pemutar/penampil media universal untuk merender gambar, video, dan lampiran dokumen.
  */
 
 "use client";
@@ -16,9 +16,9 @@ import { Play, FileIcon } from "lucide-react";
 // ANTARMUKA / TIPE DATA
 // ======================
 /**
- * Props for SanityMedia component.
+ * Props for MediaAsset component.
  */
-interface SanityMediaProps {
+interface MediaAssetProps {
   /** Source URL of media asset. */
   url: string;
   /** Alternative text for images. */
@@ -37,19 +37,19 @@ interface SanityMediaProps {
 // EKSEKUSI UTAMA
 // ======================
 /**
- * Render media asset from Sanity CMS. Handle image, video, document.
+ * Render media asset. Handle image, video, document.
  * 
  * @param props - Component properties.
  * @returns Media element or null.
  */
-export default function SanityMedia({
+export default function MediaAsset({
   url,
   alt = "NihongoRoute Asset",
   type = "auto",
   className = "",
   width = 800,
   height = 450,
-}: SanityMediaProps) {
+}: MediaAssetProps) {
   // Exit early if URL empty.
   if (!url) return null;
 

@@ -14,7 +14,6 @@ export interface LibraryCategoryItem {
   icon: React.ReactNode;
   label: string;
   count?: number;
-  isSanity?: boolean;
   accentRgb: string;
 }
 
@@ -28,25 +27,25 @@ export function buildLibraryCategories(counts: LibraryCounts): LibraryCategoryIt
   return [
     {
       href: "/library/vocab",
-      title: "Daftar Kosakata",
-      desc: "Ribuan kosakata, kata kerja, dan kata sifat N5-N1 lengkap dengan audio dan fitur SRS luring.",
-      icon: <Database size={24} />,
-      label: "Perbendaharaan Kata",
+      title: "Pustaka Kata",
+      desc: "Kuasai ribuan kosakata bahasa Jepang dengan panduan audio, pelafalan, dan contoh kalimat.",
+      icon: <BookOpen size={24} />,
+      label: "Kosakata",
       count: counts.vocab,
       accentRgb: "59 130 246",
     },
     {
       href: "/library/kanji",
-      title: "Pustaka Kanji",
-      desc: "Dalami struktur ribuan kanji melalui visualisasi urutan goresan (stroke order) yang interaktif.",
-      icon: <Type size={24} />,
-      label: "Koleksi Kanji",
+      title: "Kamus Kanji",
+      desc: "Pelajari detail karakter Kanji, cara baca Onyomi/Kunyomi, radikal, dan urutan guratan visual.",
+      icon: <BookOpen size={24} />,
+      label: "Kanji",
       count: counts.kanji,
       accentRgb: "239 68 68",
     },
     {
       href: "/library/grammar",
-      title: "Panduan Tata Bahasa",
+      title: "Tata Bahasa",
       desc: "Bahas pola kalimat jadi lebih mudah dengan contoh audio dan penjelasan praktis.",
       icon: <BookOpen size={24} />,
       label: "Pola Kalimat",
@@ -60,7 +59,6 @@ export function buildLibraryCategories(counts: LibraryCounts): LibraryCategoryIt
       icon: <BookOpen size={24} />,
       label: "Bacaan Berjenjang",
       count: counts.reading,
-      isSanity: true,
       accentRgb: "168 85 247",
     },
     {
@@ -70,7 +68,6 @@ export function buildLibraryCategories(counts: LibraryCounts): LibraryCategoryIt
       icon: <Headphones size={24} />,
       label: "Listening Lab",
       count: counts.listening,
-      isSanity: true,
       accentRgb: "6 182 212",
     },
     {
@@ -80,7 +77,6 @@ export function buildLibraryCategories(counts: LibraryCounts): LibraryCategoryIt
       icon: <Award size={24} />,
       label: "Latihan Ujian",
       count: counts.exams,
-      isSanity: true,
       accentRgb: "249 115 22",
     },
     {

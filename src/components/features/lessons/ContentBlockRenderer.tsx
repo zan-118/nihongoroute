@@ -23,7 +23,6 @@ import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import { OfflineAudio } from "@/components/ui/OfflineAudio";
 import { detectVoice, fetchTTSAudio, speakWithWebSpeech } from "@/lib/tts";
-import { PortableText } from "next-sanity";
 import { VocabSection, VocabLessonItem } from "./VocabSection";
 import { KanjiSection, KanjiLessonItem } from "./KanjiSection";
 
@@ -386,15 +385,18 @@ function PedagogicalBadges({ block }: { block: ContentBlock }) {
 // ==========================================
 
 /**
- * Renders a single Sanity Portable Text block using the next-sanity renderer.
+ * Renders a single Portable Text block using custom renderer.
  */
-function PortableTextBlockRenderer({ block, components }: { block: SanityPortableTextBlock; components: React.ComponentProps<typeof PortableText>["components"] }) {
+function PortableTextBlockRenderer({ block, components }: { block: SanityPortableTextBlock; components: Record<string, Record<string, unknown>> }) {
+  const style = ((block.style as string) || "normal");
+  const blockChildren = (block.children as Array<{ text: string }> || []);
+  const text = blockChildren.map((c) => c.text).join("");
+
+  const blockRenderers = components.block || {};
+  const renderFn = (blockRenderers[style] || blockRenderers.normal) as ((props: { children: string }) => React.ReactNode) | undefined;
   return (
     <div className="prose-custom max-w-none">
-      <PortableText 
-        value={[block as unknown as Record<string, unknown>] as unknown as React.ComponentProps<typeof PortableText>["value"]} 
-        components={components} 
-      />
+      {renderFn ? renderFn({ children: text }) : <p className="text-lg leading-relaxed text-foreground/90 font-japanese mb-4">{text}</p>}
     </div>
   );
 }
@@ -413,7 +415,7 @@ function BlockItem({
   kanjiList = []
 }: { 
   block: ContentBlock;
-  components: React.ComponentProps<typeof PortableText>["components"];
+  components: Record<string, Record<string, unknown>>;
   vocabList?: VocabLessonItem[];
   kanjiList?: KanjiLessonItem[];
 }) {

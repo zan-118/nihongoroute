@@ -36,8 +36,6 @@ interface LibraryCategoryCardProps {
   index: number;
   /** Optional count of items in category. */
   count?: number;
-  /** Flag indicating content source is Sanity CMS. */
-  isSanity?: boolean;
   /** Aksen warna unik berbasis RGB triplet (contoh: "59 130 246") */
   accentRgb?: string;
 }
@@ -60,7 +58,6 @@ export function LibraryCategoryCard({
   label,
   index,
   count,
-  isSanity = false,
   accentRgb = "0 122 124",
 }: LibraryCategoryCardProps) {
   // Track hover state for dynamic glow effects
@@ -144,10 +141,6 @@ export function LibraryCategoryCard({
                   Materi Terintegrasi
                 </span>
               </div>
-            ) : isSanity ? (
-              <Badge variant="outline" className="text-[8px] font-black tracking-widest text-primary border-primary/20 uppercase bg-primary/5 rounded-md px-2 py-0.5">
-                Sanity CMS
-              </Badge>
             ) : (
               <div className="h-5" />
             )}

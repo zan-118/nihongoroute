@@ -7,7 +7,6 @@
 // IMPOR
 // ======================
 import React from "react";
-import { PortableText } from "next-sanity";
 import { sanitizeHtml } from "@/lib/sanitize";
 
 // ======================
@@ -34,27 +33,26 @@ interface ExamQuestionTextProps {
 }
 
 // ======================
-// KONSTANTA & ATURAN
+// SIMPLE PORTABLE TEXT COMPONENT (CUSTOM RENDERER)
 // ======================
-
-/**
- * Custom renderers for PortableText nodes.
- * Formats Japanese text blocks and standard inline marks.
- */
-const examPortableTextComponents = {
-  block: {
-    normal: ({ children }: { children?: React.ReactNode }) => (
-      <span className="block font-japanese leading-relaxed">
-        {children}
-      </span>
-    ),
-  },
-  marks: {
-    strong: ({ children }: { children?: React.ReactNode }) => <strong className="font-bold">{children}</strong>,
-    em: ({ children }: { children?: React.ReactNode }) => <em className="italic">{children}</em>,
-    underline: ({ children }: { children?: React.ReactNode }) => <span className="underline">{children}</span>,
-  }
-};
+function SimplePortableText({ value }: { value: ExamPortableTextBlock[] }) {
+  return (
+    <>
+      {value.map((block, i) => {
+        if (block._type === "block") {
+          const children = (block.children as Array<{ text: string }> || []);
+          const text = children.map((c) => c.text).join("");
+          return (
+            <span key={block._key || i} className="block font-japanese leading-relaxed">
+              {text}
+            </span>
+          );
+        }
+        return null;
+      })}
+    </>
+  );
+}
 
 // ======================
 // EKSEKUSI UTAMA
@@ -81,7 +79,7 @@ export function ExamQuestionText({ questionText, className }: ExamQuestionTextPr
   // Render PortableText array structure
   return (
     <div className={className}>
-      <PortableText value={questionText} components={examPortableTextComponents} />
+      <SimplePortableText value={questionText} />
     </div>
   );
 }
