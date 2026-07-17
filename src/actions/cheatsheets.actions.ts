@@ -111,3 +111,23 @@ export async function getCheatsheetByIdOrSlug(idOrSlug: string) {
     return null;
   }
 }
+
+/**
+ * Fetch static params for cheatsheet routes (both ID and slug).
+ * 
+ * @returns Array of objects with id property.
+ */
+export async function getCheatsheetStaticParams(): Promise<{ id: string }[]> {
+  try {
+    const sheets = await getCheatsheets();
+    return sheets.flatMap((s) => {
+      const results = [];
+      if (s.slug) results.push({ id: s.slug });
+      if (s._id) results.push({ id: s._id });
+      return results;
+    });
+  } catch (error) {
+    console.error("Gagal mengambil static params cheatsheet:", error);
+    return [];
+  }
+}

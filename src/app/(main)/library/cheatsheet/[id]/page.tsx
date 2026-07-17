@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheatsheetTable } from "./CheatsheetTable";
-import { getCheatsheetByIdOrSlug, getCheatsheets } from "@/actions/library.actions";
+import { getCheatsheetByIdOrSlug, getCheatsheets, getCheatsheetStaticParams } from "@/actions/library.actions";
 import CheatsheetPdfButton from "./CheatsheetPdfButton";
 import type { Metadata } from "next";
 import {
@@ -29,12 +29,15 @@ import {
 // KONFIGURASI STATIC GENERATION (ISR/SSG)
 // ======================
 
+export const dynamicParams = true;
+export const revalidate = 3600;
+
 /**
  * Generate static params.
- * Return empty array for on-demand ISR.
+ * Return active cheatsheet slugs and IDs for ISR.
  */
 export async function generateStaticParams() {
-  return []; // Halaman detail di-generate secara statis on-demand (ISR) menggunakan ID ASCII (UUID)
+  return await getCheatsheetStaticParams();
 }
 
 // ======================
