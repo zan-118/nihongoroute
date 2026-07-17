@@ -122,6 +122,6 @@ Sistem TTS dirancang hemat biaya dan berkinerja tinggi:
 * **Zero-Latency UI**: Zustand memproses semua status antarmuka pengguna di sisi klien secara langsung sebelum data dikirim ke server. Pengguna tidak merasakan jeda pemuatan halaman saat berinteraksi.
 * **Separasi Data Pelajaran vs Editorial**: 
   - Konten pelajaran utama (Lesson) dikelola secara relasional dalam tabel `lessons` di Supabase untuk mendukung tracking progres pengguna secara terintegrasi.
-  - Konten artikel, materi membaca (reading), dan mendengar (listening) dilayani lewat integrasi eksternal Sanity CMS dengan strategi `cache: "no-store"` pada request aktif untuk mendukung strategi offline-first yang dinamis.
+  - Konten artikel, materi membaca (reading), dan mendengar (listening) dilayani lewat tabel `articles`, `reading`, dan `listening` di Supabase dengan strategi offline-first.
 * **Format Adapter Legacy**: Komponen ujian `MockExamEngine` tetap membaca model data lama. Pemetaan data tabel relasional baru Supabase (`jlpt_exam_templates`, `jlpt_passages`, `jlpt_questions`) ke format lama disentralkan pada adapter `src/lib/exams/supabase-adapter.ts` (`toLegacyExamData`) untuk meminimalisasi refactoring komponen visual.
 * **Timing-Safe Webhook Comparison**: String rahasia Saweria/Trakteer dicocokkan secara konstan menggunakan `crypto.timingSafeEqual` pada level binary buffer untuk mencegah eksploitasi serangan analisis waktu (timing attacks).

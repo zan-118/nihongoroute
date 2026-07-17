@@ -1,7 +1,7 @@
 /**
  * @file sitemap.ts
  * @description Generator sitemap dinamis untuk SEO.
- * Memetakan rute publik statis dan konten dinamis dari Sanity CMS dan Supabase.
+ * Memetakan rute publik statis dan konten dinamis dari Supabase.
  * @module Sitemap
  */
 
@@ -10,9 +10,9 @@ import { createStaticClient } from "@/lib/supabase/server";
 import { absoluteUrl, encodeRouteSegment, getSiteUrl } from "@/lib/seo";
 
 /**
- * Sanity sitemap item structure.
+ * Dynamic content sitemap item structure.
  */
-interface SanitySitemapItem {
+interface ContentSitemapItem {
   slug: string | null;
   _updatedAt?: string | null;
   _createdAt?: string | null;
@@ -148,7 +148,7 @@ function addUniqueEntry(
 }
 
 /**
- * Generate dynamic sitemap. Fetch data from Supabase and Sanity.
+ * Generate dynamic sitemap. Fetch data from Supabase.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const urls: MetadataRoute.Sitemap = [];
@@ -185,7 +185,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           category_id: row.category_id,
           _createdAt: row.created_at,
           _updatedAt: row.created_at,
-        })) as SanitySitemapItem[];
+        })) as ContentSitemapItem[];
       }),
     supabase
       .from("articles")
@@ -201,7 +201,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           category_id: row.category_id,
           _createdAt: row.created_at,
           _updatedAt: row.created_at,
-        })) as SanitySitemapItem[];
+        })) as ContentSitemapItem[];
       }),
     fetchAllSupabaseRows("reading", "slug, created_at", "created_at"),
     fetchAllSupabaseRows("listening", "slug, created_at", "created_at"),

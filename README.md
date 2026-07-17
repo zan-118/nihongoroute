@@ -72,7 +72,7 @@ Salin berkas `.env.example` ke direktori proyek lokal Anda sebagai `.env.local`:
 ```bash
 cp .env.example .env.local
 ```
-Lengkapi nilai kunci Supabase, Sanity, Gemini API, dan token rahasia webhook Anda.
+Lengkapi nilai kunci Supabase, Gemini API, dan token rahasia webhook Anda.
 
 ### 4. Jalankan Lingkungan Pengembangan
 ```bash

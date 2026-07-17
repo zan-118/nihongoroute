@@ -3,7 +3,7 @@
 /**
  * @file ContentBlockRenderer.tsx
  * @description Komponen perender blok konten pelajaran untuk NihongoRoute.
- * Menangani rendering teks kaya (Rich Text) dari Sanity Portable Text serta berbagai blok kustom seperti
+ * Menangani rendering teks kaya (Rich Text) serta berbagai blok kustom seperti
  * tata bahasa (grammar), percakapan (dialogue), sorotan (callout), gambar (image), kosakata (vocab), dan kanji.
  *
  * @package components/features/lessons
@@ -149,9 +149,9 @@ interface ContentBlockRendererProps {
 }
 
 /**
- * Structure representing a Sanity Portable Text block.
+ * Structure representing a Portable Text block.
  */
-interface SanityPortableTextBlock {
+interface PortableTextBlock {
   _type?: string;
   _key?: string;
   [key: string]: unknown;
@@ -387,7 +387,7 @@ function PedagogicalBadges({ block }: { block: ContentBlock }) {
 /**
  * Renders a single Portable Text block using custom renderer.
  */
-function PortableTextBlockRenderer({ block, components }: { block: SanityPortableTextBlock; components: Record<string, Record<string, unknown>> }) {
+function PortableTextBlockRenderer({ block, components }: { block: PortableTextBlock; components: Record<string, Record<string, unknown>> }) {
   const style = ((block.style as string) || "normal");
   const blockChildren = (block.children as Array<{ text: string }> || []);
   const text = blockChildren.map((c) => c.text).join("");
@@ -422,7 +422,7 @@ function BlockItem({
   const rawBlock = block as unknown as Record<string, unknown>;
   const type = block.type || rawBlock._type || "text";
 
-  // Check if block is structured as a Sanity Portable Text block
+  // Check if block is structured as a Rich Text block
   const isPortableText = rawBlock._type === "block" || 
                          rawBlock._type === "dialogueBlock" || 
                          rawBlock._type === "grammarBlock" || 
@@ -436,7 +436,7 @@ function BlockItem({
       <PedagogicalBadges block={block} />
       {(() => {
         if (isPortableText) {
-          return <PortableTextBlockRenderer block={block as unknown as SanityPortableTextBlock} components={components} />;
+          return <PortableTextBlockRenderer block={block as unknown as PortableTextBlock} components={components} />;
         }
 
         switch (type as string) {
@@ -883,7 +883,7 @@ function DialogueBlock({ block }: { block: ContentBlock }) {
           const furiParts = furiLine.split(/[：:]/);
           
           // Speaker undefined (bukan string fallback) agar detectVoice pakai rotasi fallbackIndex
-          // — selaras dengan generate_sanity_dialogs.js yang juga set speaker = null untuk baris tanpa label
+          // — set speaker = null untuk baris tanpa label
           const rawSpeaker = parts.length > 1 ? parts[0].trim() : undefined;
           
           return {

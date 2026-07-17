@@ -14,7 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 /**
  * Komponen kerangka pemuatan (Skeleton) untuk halaman Dasbor.
- * Menampilkan tata letak penampung data visual saat proses memuat data dari Supabase/Sanity.
+ * Menampilkan tata letak penampung data visual saat proses memuat data dari database Supabase.
  * 
  * @returns {JSX.Element} Antarmuka kerangka dasbor yang sedang memuat.
  */

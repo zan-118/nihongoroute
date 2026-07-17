@@ -128,7 +128,7 @@ export function LibraryCategoryCard({
 
           {/* Indikator Data / Jumlah Materi */}
           <div className="mt-2">
-            {/* Render item count if provided, fallback to Sanity badge or empty spacer */}
+            {/* Render item count if provided, fallback to empty spacer */}
             {count !== undefined ? (
               <div className="flex items-baseline gap-2">
                 <span

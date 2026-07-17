@@ -35,11 +35,11 @@ export interface ReadingState {
 }
 
 // ==========================================
-// TIPE DATA PORTABLE TEXT (SANITY CMS)
+// TIPE DATA PORTABLE TEXT
 // ==========================================
 
 /**
- * Child node in Sanity Portable Text. Represent text segment.
+ * Child node in Portable Text. Represent text segment.
  */
 export interface PortableTextChild {
   _key: string;
@@ -49,7 +49,7 @@ export interface PortableTextChild {
 }
 
 /**
- * Block node in Sanity Portable Text. Represent paragraph or list item.
+ * Block node in Portable Text. Represent paragraph or list item.
  */
 export interface PortableTextBlock {
   _key: string;
@@ -60,7 +60,7 @@ export interface PortableTextBlock {
 }
 
 /**
- * Content format for Sanity Portable Text. Raw string or block array.
+ * Content format for Rich Text. Raw string or block array.
  */
 export type PortableTextContent = string | PortableTextBlock[];
 

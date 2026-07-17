@@ -65,4 +65,4 @@ Terdapat variabel lingkungan wajib (*required environment variables*) yang belum
 
 ### Solusi:
 1. Periksa log kueri respons `/api/health`. Di lingkungan pengembangan (development), daftar variabel wajib yang hilang akan ditampilkan pada objek `missingRequired`.
-2. Pastikan variabel seperti `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, dan `NEXT_PUBLIC_SITE_URL` sudah dikonfigurasi dengan benar.
+2. Pastikan variabel seperti `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, dan `NEXT_PUBLIC_SITE_URL` sudah dikonfigurasi dengan benar.

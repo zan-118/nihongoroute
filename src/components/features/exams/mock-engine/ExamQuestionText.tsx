@@ -1,6 +1,6 @@
 /**
  * @file ExamQuestionText.tsx
- * @description Komponen parser teks pertanyaan ujian yang mendukung string HTML murni maupun format PortableText dari Sanity CMS.
+ * @description Komponen parser teks pertanyaan ujian yang mendukung string HTML murni maupun format PortableText.
  */
 
 // ======================
@@ -14,7 +14,7 @@ import { sanitizeHtml } from "@/lib/sanitize";
 // ======================
 
 /**
- * Represents a single block in Sanity PortableText format.
+ * Represents a single block in PortableText format.
  */
 export interface ExamPortableTextBlock {
   _type: string;
@@ -60,7 +60,7 @@ function SimplePortableText({ value }: { value: ExamPortableTextBlock[] }) {
 
 /**
  * Renders exam question text.
- * Supports raw HTML strings (sanitized) and Sanity PortableText arrays.
+ * Supports raw HTML strings (sanitized) and PortableText arrays.
  */
 export function ExamQuestionText({ questionText, className }: ExamQuestionTextProps) {
   // Return null if no content provided

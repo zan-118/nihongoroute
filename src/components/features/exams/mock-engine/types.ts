@@ -53,7 +53,7 @@ export interface ExamPassage {
 export interface ExamQuestion {
   /** Question ID. */
   id?: string;
-  /** Sanity key or unique key. */
+  /** Unique key. */
   _key: string;
   /** Exam section category. */
   section: "vocabulary" | "grammar" | "reading" | "listening";
@@ -142,7 +142,7 @@ export interface ExamData {
   /** Kode level JLPT (N5–N1), bukan kolom DB — diisi dari kategori */
   levelCode?: string;
   /** Data source origin. */
-  source?: "sanity" | "supabase";
+  source?: "database" | "supabase";
   /** Exam slug. */
   slug?: string | null;
   /** Template ID. */

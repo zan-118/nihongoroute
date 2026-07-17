@@ -1,7 +1,6 @@
 /**
  * @file lessons.actions.ts
- * @description Server Actions untuk mengambil data pelajaran (lessons), artikel, dan kategori kursus dari Supabase,
- * serta Listening & Reading dari Sanity CMS.
+ * @description Server Actions untuk mengambil data pelajaran (lessons), artikel, dan kategori kursus dari Supabase.
  */
 
 "use server";
@@ -54,9 +53,9 @@ export async function getLessonDetail(slug: string) {
 // ======================
 
 /**
- * Representasi item pelajaran minimal dari Sanity.
+ * Representasi item pelajaran minimal.
  */
-interface SanityLessonListItem {
+interface LessonListItem {
   _id: string;
   title: string;
   slug: string;
@@ -64,7 +63,7 @@ interface SanityLessonListItem {
 
 /**
  * Mengambil seluruh daftar kategori kursus dari Supabase, lalu menggabungkannya secara paralel
- * dengan mengambil daftar pelajaran dari Sanity CMS dalam satu kueri efisien.
+ * dengan mengambil daftar pelajaran dari database Supabase dalam satu kueri efisien.
  * Mengelompokkan pelajaran berdasarkan kategori masing-masing untuk rendering katalog Dasbor.
  * 
  * @returns {Promise<Array<any>>} Daftar kategori kursus terformat lengkap beserta daftar preview pelajarannya
@@ -106,7 +105,7 @@ export async function getCourseCategories() {
     ...(dbArticles || [])
   ];
 
-  // Normalisasi struktur data agar sesuai dengan format SanityLessonListItem
+  // Normalisasi struktur data
   const supabaseLessons = allDbLessons.map((l) => ({
     _id: l.id,
     title: l.title,
@@ -121,14 +120,14 @@ export async function getCourseCategories() {
   // Kelompokkan pelajaran berdasarkan kategori (yang cocok dengan slug atau id di category_id)
   const categoriesWithData = categories.map((cat) => {
     const lessons = allLessons.filter(
-      (l: SanityLessonListItem & { category_id?: string }) => l.category_id === cat.id || l.category_id === cat.slug
+      (l: LessonListItem & { category_id?: string }) => l.category_id === cat.id || l.category_id === cat.slug
     );
 
     return {
       ...cat,
       _id: cat.id,
       lessonCount: lessons.length,
-      previews: lessons.slice(0, 4).map((l: SanityLessonListItem) => ({
+      previews: lessons.slice(0, 4).map((l: LessonListItem) => ({
         _id: l._id,
         title: l.title,
         slug: l.slug
@@ -499,7 +498,7 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
         console.error(`[getLibraryLessonDetail] Gagal mengambil daftar dari database:`, err);
       }
 
-      // Fallback ke data Sanity jika data di database kosong
+      // Fallback ke data metadata jika data relasi kosong
       if (!vocabListRaw.length && (data.vocab_list || data.vocabList)) {
         vocabListRaw = parseArray(data.vocab_list || data.vocabList);
       }
@@ -952,7 +951,7 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
 }
 
 /**
- * Fetches lesson data and navigation list from Supabase and Sanity.
+ * Fetches lesson data and navigation list from Supabase.
  *
  * @param categoryId - Course category slug.
  * @param slug - Lesson slug.
@@ -980,7 +979,7 @@ export async function getLessonData(categoryId: string, slug: string) {
     lesson.levelCode = categoryId;
   }
 
-  // 2. Dapatkan Navigasi (gabungkan Supabase & Sanity)
+  // 2. Dapatkan Navigasi
   let dbLessons = [];
   if (category.type === "general" || category.type === "article") {
     const { data } = await supabase
@@ -998,7 +997,7 @@ export async function getLessonData(categoryId: string, slug: string) {
     dbLessons = data || [];
   }
 
-  // Map database fields to match expected Sanity lesson structure.
+  // Map database fields to match expected structure.
   const supabaseLessons = dbLessons.map((l) => ({
     _id: l.id,
     title: l.title,

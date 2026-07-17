@@ -58,5 +58,5 @@ NihongoRoute tidak menerapkan strategi revalidasi berbasis waktu (*time-based re
 
 ### Aturan Revalidasi Konten:
 1. **Revalidasi Manual**: Lakukan pembaruan cache rute klien secara instan setelah mutasi data di database menggunakan helper Next.js `revalidatePath` atau `revalidateTag` langsung pada Server Actions.
-2. **Dynamic Query Cache**: Pengambilan konten dinamis atau konten yang dipengaruhi CMS (seperti Sanity) wajib menggunakan opsi fetch `{ cache: "no-store" }` atau memanfaatkan API Route Handlers non-cached untuk memastikan data teraktual disajikan saat pengguna beralih status ke online.
+2. **Dynamic Query Cache**: Pengambilan konten dinamis wajib menggunakan opsi fetch `{ cache: "no-store" }` atau memanfaatkan API Route Handlers non-cached untuk memastikan data teraktual disajikan saat pengguna beralih status ke online.
 3. **TTS Caching**: Data suara statis hasil generate dynamic synthesized Edge TTS di-cache selamanya di storage bucket `tts-cache` Supabase. Rute `/api/tts` mengembalikan header caching permanen (`Cache-Control: public, max-age=604800, immutable`) apabila audio ditemukan di database cache.

@@ -14,14 +14,12 @@ Hanya variabel lingkungan yang diawali dengan prefiks **`NEXT_PUBLIC_`** yang di
 Seluruh variabel server-only di bawah ini **DILARANG KERAS** dibaca atau diimpor di dalam Client Component:
 * `SUPABASE_SERVICE_ROLE_KEY`
 * `ADMIN_API_SECRET`
-* `SANITY_STUDIO_ADMIN_API_SECRET`
-* `SANITY_API_READ_TOKEN` / `SANITY_API_WRITE_TOKEN`
 * `GEMINI_API_KEY`
 * `SAWERIA_WEBHOOK_SECRET` / `TRAKTEER_WEBHOOK_SECRET`
 
 ---
 
-## 2. Autentikasi & Otorisasi Admin Bridge
+## 2. Autentikasi & Otorisasi API Admin
 
 Seluruh rute administrasi di bawah rute `/api/admin/*` menghubungkan antarmuka internal dengan kemampuan generasi AI dan pencarian basis data Supabase.
 

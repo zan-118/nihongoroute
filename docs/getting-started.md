@@ -43,14 +43,9 @@ Buka `.env.local` dan isi nilainya dengan kredensial proyek lokal atau staging A
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-publishable-or-anon-key
-NEXT_PUBLIC_SANITY_PROJECT_ID=your-sanity-project-id
-NEXT_PUBLIC_SANITY_DATASET=production
 
 SUPABASE_SERVICE_ROLE_KEY=your-server-only-service-role-key
-SANITY_API_READ_TOKEN=your-sanity-read-token
-SANITY_API_WRITE_TOKEN=your-sanity-write-token
 ADMIN_API_SECRET=your-long-random-secret
-SANITY_STUDIO_ADMIN_API_SECRET=your-same-admin-secret-for-studio
 
 GEMINI_API_KEY=your-gemini-api-key
 TRAKTEER_WEBHOOK_SECRET=your-trakteer-secret

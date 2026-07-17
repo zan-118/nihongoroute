@@ -47,12 +47,12 @@ export const metadata: Metadata = {
 
 /**
  * Server component for the JLPT exam center page.
- * Fetches exam list from CMS and renders client-side exam interface.
+ * Fetches exam list from database and renders client-side exam interface.
  * 
  * @returns React element containing SEO JSON-LD and the ExamsClient component.
  */
 export default async function ExamsPage() {
-  // Fetch available exams from Sanity CMS
+  // Fetch available exams from database
   const exams = await getExamsList();
 
   return (

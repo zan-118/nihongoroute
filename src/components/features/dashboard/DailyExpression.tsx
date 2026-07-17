@@ -1,7 +1,7 @@
 /**
  * @file DailyExpression.tsx
  * @description Komponen dashboard untuk menampilkan "Ungkapan Hari Ini" secara interaktif.
- * Menerima data ungkapan acak dari Sanity CMS, menampilkan teks Jepang, cara baca (Romaji/Kana),
+ * Menerima data ungkapan acak dari database Supabase, menampilkan teks Jepang, cara baca (Romaji/Kana),
  * serta arti terjemahan dalam Bahasa Indonesia.
  *
  * @package components/features/dashboard

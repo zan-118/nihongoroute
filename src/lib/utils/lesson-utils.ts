@@ -1,10 +1,10 @@
 /**
  * @file lesson-utils.ts
- * @description Modul utilitas pembantu normalisasi data kuis pelajaran dari berbagai schema (Sanity / Supabase) ke bentuk format seragam luring-ready, serta kalkulasi navigasi urutan belajar.
+ * @description Modul utilitas pembantu normalisasi data kuis pelajaran dari berbagai schema ke bentuk format seragam luring-ready, serta kalkulasi navigasi urutan belajar.
  */
 
 /**
- * Raw quiz item structure from Sanity or Supabase.
+ * Raw quiz item structure from various schemas.
  */
 export interface RawQuizItem {
   options?: unknown[] | { text?: string; isCorrect?: boolean }[];
@@ -67,7 +67,7 @@ export function formatQuizzes(quizzesRaw: RawQuizItem[]): FormattedQuizItem[] {
           answer = options[0] || "";
         }
       } else {
-        // Handle Sanity format with object array options
+        // Handle object array options format
         const rawOptions = (quiz.options || quiz.choices || []) as { text?: string; isCorrect?: boolean }[];
         options = rawOptions.map((opt) => (typeof opt === 'string' ? opt : (opt?.text || ""))) || [];
         const correctOption = rawOptions.find((opt) => opt?.isCorrect);

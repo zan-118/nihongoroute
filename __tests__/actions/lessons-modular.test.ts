@@ -22,11 +22,6 @@ vi.mock('@/lib/supabase/server', () => {
   };
 });
 
-vi.mock('@/lib/queries', () => ({
-  getSanityReadingBySlug: vi.fn().mockResolvedValue(null),
-  getSanityListeningBySlug: vi.fn().mockResolvedValue(null)
-}));
-
 describe('Lessons Actions - Modular Content and Dialogue Schema', () => {
   beforeEach(() => {
     vi.clearAllMocks();

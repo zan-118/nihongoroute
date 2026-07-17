@@ -1,7 +1,7 @@
 /**
  * @file route.ts
  * @description API Route Handler untuk mengambil data kartu flashcard (vocab & kanji) dari Supabase.
- * Mendukung resolusi ID berupa UUID, slug, romaji (ID legacy Sanity), dan karakter kanji tunggal.
+ * Mendukung resolusi ID berupa UUID, slug, romaji (ID sistem legacy), dan karakter kanji tunggal.
  */
 
 // ======================
@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
   const romajis: string[] = [];
   const kanjiChars: string[] = [];
 
-  // Legacy Sanity ID prefixes
+  // Legacy ID prefixes
   const posPrefixes = [
     "pre-noun-adjectival-",
     "adverbial-noun-",
@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
     if (UUID_REGEX.test(id)) {
       uuids.push(id);
     } else if (id.startsWith("n5-") || id.startsWith("n4-")) {
-      // Extract romaji from legacy Sanity ID
+      // Extract romaji from legacy ID
       const cleanId = id.slice(3); // Remove prefix
       let romajiFound = cleanId;
       for (const prefix of posPrefixes) {

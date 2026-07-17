@@ -1,7 +1,7 @@
 /**
  * @file page.tsx
  * @description Halaman indeks daftar materi membaca (Reading List) NihongoRoute.
- * Mengambil data awal dari Sanity CMS dan mendelegasikan rendering ke ReadingListClient.
+ * Mengambil data awal dari database Supabase dan mendelegasikan rendering ke ReadingListClient.
  */
 
 // ======================

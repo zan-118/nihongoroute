@@ -55,11 +55,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "res.cloudinary.com", // Keep for legacy, but we'll mainly use Sanity
-      },
-      {
-        protocol: "https",
-        hostname: "cdn.sanity.io",
+        hostname: "res.cloudinary.com",
       },
     ],
   },

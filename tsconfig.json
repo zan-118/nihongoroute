@@ -37,17 +37,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts",
-    "sanity.config.js",
-    "sanity.cli.js",
-    "sanity/structure.ts",
-    "sanity/env.ts",
-    "sanity/schemaTypes/question.js",
-    "sanity/schemaTypes/index.js",
-    "sanity/lib/live.ts",
-    "sanity/lib/image.ts",
-    "sanity/lib/client.ts",
-    "deleteData.mjs"
+    "**/*.mts"
   ],
   "exclude": ["node_modules", "__tests__"]
 }

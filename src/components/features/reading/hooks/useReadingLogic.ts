@@ -1,6 +1,6 @@
 /**
  * @file useReadingLogic.ts
- * @description Hook khusus untuk mengelola logika membaca artikel, mencakup parsing teks multi-format (Portable Text Sanity vs Plain Text), kontrol mode visualisasi, dan sinkronisasi status ke Zustand.
+ * @description Hook khusus untuk mengelola logika membaca artikel, mencakup parsing teks multi-format (Rich Text vs Plain Text), kontrol mode visualisasi, dan sinkronisasi status ke Zustand.
  */
 
 // ==========================================
@@ -18,7 +18,7 @@ import { ReadingData, ReadingMode, PortableTextContent, PortableTextBlock } from
  * Custom hook to manage reading article logic.
  * Handles multi-format text parsing, visualization modes, and Zustand state sync.
  * 
- * @param data - Raw reading article data from Sanity.
+ * @param data - Raw reading article data from database.
  * @returns Reading state, parsed paragraphs, active mode, and toggle handlers.
  */
 export function useReadingLogic(data: ReadingData) {

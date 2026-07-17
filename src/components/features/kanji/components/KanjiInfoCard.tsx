@@ -18,8 +18,8 @@ import { BookOpen, Sparkles } from "lucide-react";
 interface KanjiInfoCardProps {
   /** List of radical characters. */
   radicals?: string[];
-  /** Mnemonic text or Sanity Portable Text block array. */
-  mnemonics?: string | unknown[]; // Konten Portable Text editor/sanity
+  /** Mnemonic text or Rich Text block array. */
+  mnemonics?: string | unknown[]; // Konten Rich Text/Plain Text
   /** English meaning of the kanji. */
   meaning?: string;
 }
@@ -86,7 +86,7 @@ export default function KanjiInfoCard({
               : Array.isArray(mnemonics)
                 ? mnemonics
                     .map((block: unknown) => {
-                      // Cast block to extract text from Sanity Portable Text structure
+                      // Cast block to extract text from Rich Text block structure
                       const b = block as { children?: { text?: string }[]; text?: string };
                       return (
                         b?.children

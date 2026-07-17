@@ -95,9 +95,9 @@ export interface ToolSourceText {
 }
 
 /**
- * Raw data structure from Sanity CMS.
+ * Raw data structure from database.
  */
-interface SanityLineSource {
+interface LibraryLineSource {
   _id: string;
   title?: string;
   slug?: string;
@@ -185,7 +185,7 @@ function compactText(value: unknown) {
 }
 
 /**
- * Extract plain text from Sanity Portable Text structure.
+ * Extract plain text from Rich Text structure.
  */
 function textFromPortable(value: unknown): string {
   if (!value) return "";
@@ -346,11 +346,11 @@ function createShadowingChunks(text: string) {
 }
 
 /**
- * Parse Sanity source item and push generated presets to array.
+ * Parse library source item and push generated presets to array.
  */
 function pushShadowingPresetsFromSource(
   presets: ShadowingPreset[],
-  item: SanityLineSource,
+  item: LibraryLineSource,
   sourceType: "reading" | "listening",
   maxLines = 2
 ) {
@@ -747,7 +747,7 @@ export async function getIntegratedShadowingPresets(
   const supabase = createStaticClient();
 
   try {
-    let exactItem: SanityLineSource | null = null;
+    let exactItem: LibraryLineSource | null = null;
     if ((source === "reading" || source === "listening") && slug) {
       const { data } = await supabase
         .from(source)
@@ -781,7 +781,7 @@ export async function getIntegratedShadowingPresets(
         .limit(8)
     ]);
 
-    const listenings: SanityLineSource[] = (listeningsRes.data || []).map((l) => ({
+    const listenings: LibraryLineSource[] = (listeningsRes.data || []).map((l) => ({
       _id: l.id,
       title: l.title,
       slug: l.slug,
@@ -791,7 +791,7 @@ export async function getIntegratedShadowingPresets(
       translation: l.translation
     }));
 
-    const readings: SanityLineSource[] = (readingsRes.data || []).map((r) => ({
+    const readings: LibraryLineSource[] = (readingsRes.data || []).map((r) => ({
       _id: r.id,
       title: r.title,
       slug: r.slug,

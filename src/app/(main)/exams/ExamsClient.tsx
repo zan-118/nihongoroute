@@ -133,7 +133,7 @@ const getExamSectionType = (exam: ExamData): "moji-goi" | "bunpou" | "reading" |
  * Komponen ExamsClient: Merender antarmuka daftar ujian JLPT interaktif dengan animasi stagger Framer Motion.
  *
  * @param {Object} props Properti komponen.
- * @param {ExamData[]} props.exams Daftar data ujian dari CMS Sanity.
+ * @param {ExamData[]} props.exams Daftar data ujian dari database Supabase.
  * @returns {JSX.Element} Antarmuka daftar simulasi ujian.
  */
 export default function ExamsClient({ exams }: { exams: ExamData[] }) {

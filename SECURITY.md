@@ -10,16 +10,16 @@ NihongoRoute melindungi permukaan produksi berikut sebagai batas keamanan tingka
 * **Autentikasi & Otorisasi**: Integrasi Supabase Auth dengan hak akses Row Level Security (RLS) pada tingkat tabel relasional database.
 * **Progres Pengguna**: Perlindungan modifikasi progress belajar lewat RPC `sync_user_progress` yang memvalidasi perolehan XP dan streak di sisi server (anti-cheat guard).
 * **Integrasi Klien Luring**: Keamanan status data lokal di IndexedDB (`idb-keyval`) peramban klien.
-* **API Jembatan Admin (Admin Bridge)**: Endpoint di bawah `/api/admin/*` yang menghubungkan Sanity Studio dengan database Supabase dan Gemini API.
+* **API Admin**: Endpoint di bawah `/api/admin/*` yang menghubungkan modul admin internal dengan database Supabase dan Gemini API.
 * **Webhook Transaksi**: Rute webhook `/api/webhooks/*` penerima data supporter donasi dari Saweria dan Trakteer.
-* **Secret Server-Only**: Enkapsulasi token Gemini, API tokens Sanity, dan service-role key Supabase agar murni berjalan di sisi server.
+* **Secret Server-Only**: Enkapsulasi token Gemini dan service-role key Supabase agar murni berjalan di sisi server.
 
 ---
 
 ## 2. Penanganan Kredensial & Variabel Lingkungan (Secret Handling)
 
-* **Prefiks Keamanan**: Jangan pernah mengekspos variabel lingkungan rahasia (`SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_API_SECRET`, API tokens Sanity, webhook secrets, Gemini API keys) ke sisi browser klien. Hanya variabel lingkungan yang diawali dengan prefiks **`NEXT_PUBLIC_`** yang diizinkan untuk dibaca oleh kode sisi klien.
-* **Otentikasi Jembatan Admin**: Permintaan API jembatan admin wajib melampirkan header `Authorization: Bearer <ADMIN_API_SECRET>` atau `x-admin-api-secret`.
+* **Prefiks Keamanan**: Jangan pernah mengekspos variabel lingkungan rahasia (`SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_API_SECRET`, webhook secrets, Gemini API keys) ke sisi browser klien. Hanya variabel lingkungan yang diawali dengan prefiks **`NEXT_PUBLIC_`** yang diizinkan untuk dibaca oleh kode sisi klien.
+* **Otentikasi API Admin**: Permintaan API admin wajib melampirkan header `Authorization: Bearer <ADMIN_API_SECRET>` atau `x-admin-api-secret`.
 * **Keamanan URL**: Rahasia admin dilarang keras dikirimkan melalui parameter kueri URL (*Query String*) karena URL umum tercatat pada log server, history peramban, dan tools pemantauan eksternal.
 * **Berkas Lingkungan**: Jaga berkas `.env.local` tetap privat dan jangan pernah di-commit ke Git. Gunakan `.env.example` sebagai kontrak variabel yang diizinkan untuk dibagikan.
 

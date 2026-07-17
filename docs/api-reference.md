@@ -132,19 +132,7 @@ Rute administrasi untuk melakukan generasi konten modul pelajaran via Gemini AI,
 
 ---
 
-## 8. `/api/admin/supabase-search` (Admin Library Search)
-
-Rute pencarian pustaka Supabase (vocab, kanji, grammar) khusus panel admin dan integrasi Sanity Studio.
-
-* **Method**: `GET`
-* **Autentikasi**: **Wajib Admin API Secret** (`Authorization: Bearer <ADMIN_API_SECRET>`).
-* **Parameter Kueri**:
-  - `q`: String kata kunci pencarian.
-  - `type`: `vocab` | `kanji` | `grammar` | `all`.
-
----
-
-## 9. `/auth/callback` (OAuth Callback Handler)
+## 8. `/auth/callback` (OAuth Callback Handler)
 
 API Route Handler untuk menangani pengalihan masuk (callback) setelah otentikasi melalui pihak ketiga (OAuth) menggunakan Supabase Auth.
 

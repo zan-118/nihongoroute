@@ -77,8 +77,8 @@ export interface ListeningTaskData {
   difficulty?: string;
   /** Optional illustrations associated with the task. */
   illustrations?: { title?: string; content: string }[];
-  /** Optional image URL or Sanity image asset reference. */
-  image_url?: string | { _type: string; asset: { _type: string; _ref: string } };
+  /** Optional image URL. */
+  image_url?: string;
   /** Optional body text. */
   body?: string;
   /** Optional translation of the body text. */

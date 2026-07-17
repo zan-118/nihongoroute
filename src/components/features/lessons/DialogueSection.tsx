@@ -48,7 +48,7 @@ export interface DialogueSpeakerItem {
  * Represents dialogue scenario containing transcript and media.
  */
 export interface DialogueItem {
-  /** Unique identifier from Sanity CMS */
+  /** Unique identifier */
   _id?: string;
   /** Alternative unique identifier */
   id?: string;
@@ -90,7 +90,7 @@ interface DialogueSectionProps {
  * dan pembaca text-to-speech (TTSReader) per kalimat dialog.
  * 
  * @param {Object} props - Properti komponen
- * @param {DialogueItem[]} props.listeningList - Daftar skenario percakapan hasil query Sanity CMS
+ * @param {DialogueItem[]} props.listeningList - Daftar skenario percakapan hasil query database Supabase
  */
 export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList }) => {
   // Flatten all dialogue lines across scenarios with local index tracking
