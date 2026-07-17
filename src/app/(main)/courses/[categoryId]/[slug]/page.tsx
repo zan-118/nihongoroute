@@ -9,7 +9,6 @@
 // IMPOR
 // ======================
 import React from "react";
-import { cache } from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -29,8 +28,7 @@ import { LessonNavigation } from "@/components/features/lessons/LessonNavigation
 import { MarkCompleteButton } from "@/components/features/lessons/MarkCompleteButton";
 
 // Integrasi Database & Utilitas
-import { createClient } from "@/lib/supabase/server";
-import { getLibraryItemBySlug } from "@/actions/library.actions";
+import { getLessonData } from "@/actions/lessons.actions";
 import { formatQuizzes, getLessonNavigation } from "@/lib/utils/lesson-utils";
 import {
   breadcrumbJsonLd,
@@ -50,75 +48,7 @@ interface Props {
   params: Promise<{ categoryId: string; slug: string }>;
 }
 
-// ======================
-// FUNGSI PEMBANTU
-// ======================
 
-/**
- * Fetches lesson data and navigation list from Supabase and Sanity.
- * Uses React cache to deduplicate requests during rendering.
- *
- * @param categoryId - Course category slug.
- * @param slug - Lesson slug.
- * @returns Lesson details and navigation array, or null if category not found.
- */
-const getLessonData = cache(async (categoryId: string, slug: string) => {
-  const supabase = await createClient();
-
-  // 1. Ambil Kategori & Pelajaran secara paralel
-  // Fetch category metadata and Sanity lesson content concurrently.
-  const [categoryRes, lesson] = await Promise.all([
-    supabase
-      .from("course_categories")
-      .select("id, title, type")
-      .eq("slug", categoryId.toLowerCase())
-      .single(),
-    getLibraryItemBySlug("lessons", slug)
-  ]);
-
-  const category = categoryRes.data;
-  if (!category) return null;
-
-  if (lesson) {
-    lesson.levelTitle = category.title;
-    lesson.categoryType = category.type;
-    lesson.levelCode = categoryId;
-  }
-
-  // 2. Dapatkan Navigasi (gabungkan Supabase & Sanity)
-  // Fetch sibling lessons from database to build navigation context.
-  let dbLessons = [];
-  if (category.type === "general" || category.type === "article") {
-    const { data } = await supabase
-      .from("articles")
-      .select("id, title, slug, category_id, order_number, summary")
-      .eq("category_id", category.id)
-      .order("order_number", { ascending: true });
-    dbLessons = data || [];
-  } else {
-    const { data } = await supabase
-      .from("lessons")
-      .select("id, title, slug, category_id, order_number, summary")
-      .eq("category_id", category.id)
-      .order("order_number", { ascending: true });
-    dbLessons = data || [];
-  }
-
-  // Map database fields to match expected Sanity lesson structure.
-  const supabaseLessons = dbLessons.map((l) => ({
-    _id: l.id,
-    title: l.title,
-    slug: l.slug,
-    category_id: l.category_id,
-    order_number: l.order_number,
-    summary: l.summary
-  }));
-
-  // Sort navigation items by order number ascending.
-  const nav = supabaseLessons.sort((a, b) => (a.order_number || 0) - (b.order_number || 0));
-
-  return { lesson, nav };
-});
 
 // ======================
 // METADATA SEO

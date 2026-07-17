@@ -1,9 +1,14 @@
 import { NextRequest } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import crypto from "crypto";
+// @ts-ignore
+import { MsEdgeTTS } from "msedge-tts";
+import { TTS_VOICES, SPEAKER_MAP, type TtsVoice } from "@/lib/constants/tts";
+import { MALE_VOICES } from "@/lib/audio/tts";
 
-/** Force dynamic rendering for API route. */
+/** Force dynamic rendering & Node.js runtime for API route. */
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 /** Maximum allowed text length for synthesis. */
 const MAX_TEXT_LENGTH = 500;
@@ -11,149 +16,92 @@ const MAX_TEXT_LENGTH = 500;
 /** Check if environment is development. */
 const isDevelopment = process.env.NODE_ENV === "development";
 
-/**
- * Log debug messages in development environment.
- * @param args - Arguments to log.
- */
 function debugLog(...args: unknown[]) {
   if (isDevelopment) {
     console.log(...args);
   }
 }
 
-/** Set of allowed voice identifiers. */
-const ALLOWED_VOICES = new Set([
-  // Wanita
-  "lala",
-  "indah",
-  "siti",
-  "dewi",
-  "hayashi",
-  "sato",
-  "ayu",
-  "zundamon",
-  
-  // Pria
-  "dito",
-  "budi",
-  "suzuki",
-  "tanaka",
-  "yamada",
-  "kimura",
-  "andi",
-  "faisal",
-  "takahashi",
-  "kobayashi",
-  "ritsu",
-  "sakura",
-  "ani",
-]);
+/** Set of all recognized voice identifiers. */
+const ALLOWED_VOICES = new Set(Object.values(TTS_VOICES));
 
-/** Map canonical voice names to Japanese equivalents. */
-const CANONICAL_TO_JAPANESE: Record<string, string> = {
-  suzuki: "鈴木",
-  tanaka: "田中",
-  sato: "佐藤",
-  yamada: "山田",
-  kimura: "木村",
-  kobayashi: "小林",
-  takahashi: "高橋",
-  hayashi: "林",
-  budi: "ブディ",
-  ayu: "アユ",
-  indah: "インダ",
-  lala: "ララ",
-  siti: "シティ",
-  dewi: "デウィ",
-  dito: "ディト",
-  andi: "アンディ",
-  faisal: "ファイサル",
-  ritsu: "リツ",
-  sakura: "サクラ",
-  ani: "アニ",
-};
+/**
+ * Synthesizes speech dynamically via Edge TTS without saving to DB.
+ */
+async function synthesizeEdgeTTS(text: string, edgeVoice: string): Promise<Buffer> {
+  const tts = new MsEdgeTTS();
+  await tts.setMetadata(edgeVoice, "audio-24khz-96kbitrate-mono-mp3" as unknown as Parameters<typeof tts.setMetadata>[1]);
+
+  return new Promise<Buffer>((resolve, reject) => {
+    const chunks: Buffer[] = [];
+    const timer = setTimeout(() => {
+      reject(new Error("Timeout koneksi Edge TTS (10 detik)."));
+    }, 10000);
+
+    const { audioStream } = tts.toStream(text);
+
+    audioStream.on("data", (data: Buffer) => chunks.push(data));
+    audioStream.on("end", () => {
+      clearTimeout(timer);
+      resolve(Buffer.concat(chunks));
+    });
+    audioStream.on("error", (err: Error) => {
+      clearTimeout(timer);
+      reject(err);
+    });
+  });
+}
 
 /**
  * GET handler for TTS audio retrieval.
- * Checks Supabase cache for pre-generated audio. Returns 404 if cache miss.
- * @param req - NextRequest object.
- * @returns Response with audio file or error status.
+ * Checks Supabase cache first. If cache miss, serves dynamic Edge TTS stream
+ * without saving to database or storage bucket.
  */
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
-  const text  = (searchParams.get("text") || "").trim();
-  const voice = searchParams.get("voice") || "zundamon";
-  const rate  = searchParams.get("rate")  || "medium";
+  const rawText  = (searchParams.get("text") || "").trim();
+  const rawVoice = (searchParams.get("voice") || "zundamon").trim().toLowerCase();
+  const rate     = searchParams.get("rate") || "medium";
+
+  // Resolve voice using canonical speaker map
+  const resolvedVoice: TtsVoice = SPEAKER_MAP[rawVoice] || (ALLOWED_VOICES.has(rawVoice as TtsVoice) ? (rawVoice as TtsVoice) : TTS_VOICES.ZUNDAMON);
 
   debugLog(`\n--- [TTS API REQUEST] ---`);
-  debugLog(`Text:  "${text}"`);
-  debugLog(`Voice: "${voice}"`);
-  debugLog(`Rate:  "${rate}"`);
+  debugLog(`Text: "${rawText}" | Raw Voice: "${rawVoice}" | Resolved: "${resolvedVoice}" | Rate: "${rate}"`);
 
   // Validate input parameters
-  if (!text) {
+  if (!rawText) {
     debugLog(`[TTS API] Gagal: parameter teks kosong.`);
     return new Response("Missing text parameter", { status: 400 });
   }
-  if (text.length > MAX_TEXT_LENGTH) {
-    debugLog(`[TTS API] Gagal: teks terlalu panjang (${text.length} chars).`);
+  if (rawText.length > MAX_TEXT_LENGTH) {
+    debugLog(`[TTS API] Gagal: teks terlalu panjang (${rawText.length} chars).`);
     return new Response("Text too long (max 500 chars)", { status: 400 });
-  }
-  if (!ALLOWED_VOICES.has(voice)) {
-    debugLog(`[TTS API] Gagal: pengisi suara "${voice}" tidak terdaftar.`);
-    return new Response("Invalid voice", { status: 400 });
   }
 
   // 1. Hitung hash MD5 unik untuk kombinasi text + voice + rate
-  let hash = crypto
+  const hash = crypto
     .createHash("md5")
-    .update(`${text}_${voice}_${rate}`)
+    .update(`${rawText}_${resolvedVoice}_${rate}`)
     .digest("hex");
-
-  debugLog(`Calculated Hash: "${hash}"`);
 
   const supabase = createAdminClient();
 
   try {
     // 2. Cek apakah metadata cache ada di Database
-    let { data: cached } = await supabase
+    const { data: cached } = await supabase
       .from("tts_cache")
       .select("audio_url")
       .eq("id", hash)
       .maybeSingle();
 
-    // Fallback pencarian dengan nama bahasa Jepang jika tidak ditemukan
-    if (!cached?.audio_url && CANONICAL_TO_JAPANESE[voice]) {
-      const jpVoice = CANONICAL_TO_JAPANESE[voice];
-      const fallbackHash = crypto
-        .createHash("md5")
-        .update(`${text}_${jpVoice}_${rate}`)
-        .digest("hex");
-
-      debugLog(`Cache miss untuk "${voice}". Mencoba fallback Jepang "${jpVoice}" dengan hash: "${fallbackHash}"`);
-
-      const { data: fallbackCached } = await supabase
-        .from("tts_cache")
-        .select("audio_url")
-        .eq("id", fallbackHash)
-        .maybeSingle();
-
-      if (fallbackCached?.audio_url) {
-        debugLog(`Fallback Jepang HIT!`);
-        cached = fallbackCached;
-        hash = fallbackHash;
-      }
-    }
-
     if (cached?.audio_url) {
       debugLog(`CACHE HIT di Database! Audio URL: ${cached.audio_url}`);
       let storagePath = `${hash}.mp3`;
-      // Extract storage path from public URL
       const match = cached.audio_url.match(/\/public\/tts-cache\/(.+)$/);
       if (match) {
         storagePath = decodeURIComponent(match[1]);
       }
-      debugLog(`Mencoba download "${storagePath}" dari Storage tts-cache...`);
 
       // Coba download file audio dari Storage
       const { data: fileData, error: downloadError } = await supabase
@@ -167,7 +115,7 @@ export async function GET(req: NextRequest) {
       }
 
       if (audioBuffer && audioBuffer.byteLength > 0) {
-        debugLog(`SUKSES download file dari Storage! Ukuran: ${audioBuffer.byteLength} bytes. Memulangkan berkas biner.`);
+        debugLog(`SUKSES download file dari Storage! Ukuran: ${audioBuffer.byteLength} bytes.`);
         return new Response(new Uint8Array(audioBuffer), {
           headers: {
             "Content-Type": "audio/mpeg",
@@ -175,28 +123,30 @@ export async function GET(req: NextRequest) {
             "Cache-Control": "public, max-age=604800, immutable",
           },
         });
-      } else {
-        // DB record ada tapi file di Storage hilang/rusak — hapus record DB agar hash bisa di-generate ulang
-        console.warn(`GAGAL download file dari Storage atau file kosong. Error:`, downloadError?.message);
-        console.warn(`Menghapus record DB "${hash}" yang menunjuk ke file Storage yang tidak valid...`);
-        try {
-          await supabase.from("tts_cache").delete().eq("id", hash);
-          debugLog(`Record DB "${hash}" berhasil dihapus. Generate ulang audio via script VoiceVox.`);
-        } catch (cleanupErr) {
-          console.error(`Gagal hapus record DB "${hash}":`, cleanupErr);
-        }
       }
-    } else {
-      debugLog(`CACHE MISS di Database (Tidak ada data untuk hash "${hash}").`);
     }
   } catch (err) {
-    console.error("[TTS API] Gagal membaca cache dari database/storage:", err);
+    console.warn("[TTS API] Gagal membaca cache Supabase:", err);
   }
 
-  // 3. Cache miss — tidak ada synthesis real-time dari API route.
-  // Semua audio harus di-generate terlebih dahulu via script generate_voicevox.js / generate_example_sentences.js
-  // menggunakan VOICEVOX lokal, kemudian disimpan ke Supabase Storage & DB.
-  // Kembalikan 404 agar client fallback ke Web Speech API (browser).
-  debugLog(`Cache miss untuk hash "${hash}". Mengembalikan 404 — audio harus di-generate offline via VoiceVox.`);
-  return new Response("Audio not found in cache", { status: 404 });
+  // 3. Cache Miss — Langsung sintesis secara dinamis via Edge TTS (tanpa simpan ke DB)
+  debugLog(`Cache miss untuk hash "${hash}". Melakukan live synthesis Edge TTS...`);
+  try {
+    const isMale = MALE_VOICES.includes(resolvedVoice);
+    const edgeVoice = isMale ? "ja-JP-KeitaNeural" : "ja-JP-NanamiNeural";
+
+    const dynamicBuffer = await synthesizeEdgeTTS(rawText, edgeVoice);
+    debugLog(`Live Edge TTS sukses! Ukuran: ${dynamicBuffer.length} bytes.`);
+
+    return new Response(new Uint8Array(dynamicBuffer), {
+      headers: {
+        "Content-Type": "audio/mpeg",
+        "Content-Length": dynamicBuffer.length.toString(),
+        "Cache-Control": "no-store", // Ephemeral, tidak disimpan di client cache tetap
+      },
+    });
+  } catch (synthErr) {
+    console.error("[TTS API] Gagal sintesis dinamis Edge TTS:", synthErr);
+    return new Response("Audio synthesis failed", { status: 500 });
+  }
 }

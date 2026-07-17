@@ -7,7 +7,6 @@
 
 import { MetadataRoute } from "next";
 import { createStaticClient } from "@/lib/supabase/server";
-import { sanityClient } from "@/lib/sanity.client";
 import { absoluteUrl, encodeRouteSegment, getSiteUrl } from "@/lib/seo";
 
 /**
@@ -204,28 +203,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           _updatedAt: row.created_at,
         })) as SanitySitemapItem[];
       }),
-    sanityClient.fetch<SanitySitemapItem[]>(
-      `*[_type == "readingMaterial" && defined(slug.current)] {
-        "slug": slug.current,
-        _updatedAt,
-        _createdAt
-      }`,
-      {},
-    ).catch((err) => {
-      console.error("[Sitemap] Gagal mengambil reading dari Sanity:", err);
-      return [];
-    }),
-    sanityClient.fetch<SanitySitemapItem[]>(
-      `*[_type == "listeningMaterial" && defined(slug.current)] {
-        "slug": slug.current,
-        _updatedAt,
-        _createdAt
-      }`,
-      {},
-    ).catch((err) => {
-      console.error("[Sitemap] Gagal mengambil listening dari Sanity:", err);
-      return [];
-    }),
+    fetchAllSupabaseRows("reading", "slug, created_at", "created_at"),
+    fetchAllSupabaseRows("listening", "slug, created_at", "created_at"),
     fetchAllSupabaseRows("grammar", "slug, created_at", "created_at"),
     fetchAllSupabaseRows("cheatsheets", "slug, created_at, updated_at", "updated_at"),
   ]);
@@ -268,7 +247,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     if (!reading.slug) continue;
     addUniqueEntry(urls, seen, {
       changeFrequency: "monthly",
-      lastModified: reading._updatedAt || reading._createdAt,
+      lastModified: reading.updated_at || reading.created_at,
       path: `/library/reading/${encodeRouteSegment(reading.slug)}`,
       priority: 0.72,
     });
@@ -279,7 +258,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     if (!listening.slug) continue;
     addUniqueEntry(urls, seen, {
       changeFrequency: "monthly",
-      lastModified: listening._updatedAt || listening._createdAt,
+      lastModified: listening.updated_at || listening.created_at,
       path: `/library/listening/${encodeRouteSegment(listening.slug)}`,
       priority: 0.72,
     });

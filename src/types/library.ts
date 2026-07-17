@@ -133,6 +133,8 @@ export interface LibraryItem {
   image_url?: string | null;
   imageUrl?: string | null;
   content_blocks?: unknown;
+  content?: string | null;
+  dialogue?: unknown;
   vocab_list?: unknown;
   kanji_list?: unknown;
   grammar_list?: unknown;

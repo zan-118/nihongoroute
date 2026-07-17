@@ -370,6 +370,7 @@ export interface ReadingMaterialTable {
   audio_url?: string;
   image_url?: string;
   video_url?: string;
+  quizzes?: Quiz[] | null;
   seo?: SEOMetadata;
   jlpt_level?: string;
   status: ContentStatus;
@@ -394,6 +395,7 @@ export interface ListeningMaterialTable {
   body: string;
   hiragana?: string;
   translation?: string;
+  quizzes?: Quiz[] | null;
   seo?: SEOMetadata;
   jlpt_level?: string;
   estimated_minutes?: number;
@@ -406,6 +408,19 @@ export interface ListeningMaterialTable {
 }
 
 /**
+ * Represents a line of dialogue in a lesson.
+ */
+export interface DialogueLine {
+  speaker?: string;
+  speakerName?: string;
+  jp?: string;
+  text?: string;
+  furigana?: string | Array<{ text: string; rt?: string }>;
+  translation?: string;
+  id?: string;
+}
+
+/**
  * Lesson table schema.
  */
 export interface LessonTable {
@@ -415,6 +430,8 @@ export interface LessonTable {
   slug: string;
   order_number: number;
   summary?: string;
+  content: string | null;
+  dialogue: DialogueLine[] | null;
   content_blocks: ContentBlock[];
   vocab_list: string[]; // array of word slugs/ids
   kanji_list: string[]; // array of kanji characters/ids

@@ -1,6 +1,6 @@
 /**
  * @file reading.actions.ts
- * @description Server Actions untuk mengambil data materi membaca (reading) dari Sanity CMS.
+ * @description Server Actions untuk mengambil data materi membaca (reading) dari Supabase.
  * Menyediakan fungsi paginasi dengan filter level JLPT untuk halaman pustaka membaca.
  */
 
@@ -9,33 +9,15 @@
 // ======================
 // IMPORTS
 // ======================
-import { sanityClient, sanityPublicFetchOptions } from "@/lib/sanity.client";
+import { createStaticClient } from "@/lib/supabase/server";
 import { PaginatedReadingResponse, LibraryItem } from "@/types/library";
-import { getSanityReadingBySlug } from "@/lib/queries";
-
-// ======================
-// TYPES
-// ======================
-/**
- * Raw reading material item structure returned from Sanity CMS.
- */
-interface SanityReadingItem {
-  _id: string;
-  title: string;
-  slug: string;
-  jlpt_level: string;
-  difficulty: string;
-  estimated_minutes: number;
-  body?: unknown;
-  _createdAt: string;
-}
 
 // ======================
 // SERVER ACTIONS
 // ======================
 
 /**
- * Fetches paginated reading materials from Sanity CMS with optional search and JLPT level filters.
+ * Fetches paginated reading materials from Supabase with optional search and JLPT level filters.
  * 
  * @param page - Current page number (1-indexed).
  * @param limit - Number of items per page.
@@ -51,59 +33,41 @@ export async function getPaginatedReading(
 ): Promise<PaginatedReadingResponse> {
   // Calculate offset for pagination slicing
   const offset = (page - 1) * limit;
+  const supabase = createStaticClient();
 
   try {
-    // Build dynamic GROQ filter based on search query and JLPT level
-    let filter = `_type == "readingMaterial"`;
-    if (search) {
-      filter += ` && (title match $search || body match $search || difficulty match $search)`;
-    }
-    if (level && level !== "all") {
-      filter += ` && jlpt_level == $level`;
-    }
-
-    // GROQ query to fetch paginated data and total count in a single request
-    const query = `{
-      "data": *[${filter}] | order(_createdAt desc) [$offset...$limit] {
-        _id,
-        title,
-        "slug": slug.current,
-        jlpt_level,
-        difficulty,
-        estimated_minutes,
-        body,
-        _createdAt
-      },
-      "total": count(*[${filter}])
-    }`;
-
-    // Map query parameters, appending wildcard to search for partial matches
-    const params: Record<string, string | number> = {
-      offset,
-      limit: offset + limit
-    };
+    let query = supabase
+      .from("reading")
+      .select("*", { count: "exact" });
 
     if (search) {
-      params.search = `${search}*`;
+      query = query.or(`title.ilike.%${search}%,body.ilike.%${search}%,difficulty.ilike.%${search}%`);
     }
     if (level && level !== "all") {
-      params.level = level.toUpperCase();
+      query = query.eq("jlpt_level", level.toUpperCase());
     }
 
-    const result = await sanityClient.fetch(query, params, sanityPublicFetchOptions);
+    const { data, count, error } = await query
+      .order("created_at", { ascending: false })
+      .range(offset, offset + limit - 1);
 
-    // Map Sanity schema fields to application-compatible LibraryItem structure
+    if (error) throw error;
+
+    // Map Supabase schema fields to application-compatible structure
     return {
-      data: (result.data || []).map((r: SanityReadingItem) => ({
+      data: (data || []).map((r) => ({
         ...r,
-        id: r._id,
+        id: r.id,
         difficulty: r.difficulty || r.jlpt_level,
-        body: typeof r.body === 'string' ? r.body : JSON.stringify(r.body)
-      })),
-      total: result.total || 0,
+        body: r.body || "",
+        audioUrl: r.audio_url,
+        imageUrl: r.image_url,
+        videoUrl: r.video_url
+      })) as PaginatedReadingResponse["data"],
+      total: count || 0,
     };
   } catch (error) {
-    console.error("Gagal mengambil data paginasi bacaan dari Sanity:", error);
+    console.error("Gagal mengambil data paginasi bacaan dari Supabase:", error);
     return { data: [], total: 0 };
   }
 }
@@ -115,18 +79,27 @@ export async function getPaginatedReading(
  * @returns The mapped library item, or null if not found or on error.
  */
 export async function getLibraryReadingDetail(slug: string): Promise<LibraryItem | null> {
+  const supabase = createStaticClient();
   try {
-    const data = (await getSanityReadingBySlug(slug)) as LibraryItem | null;
-    if (!data) return null;
+    const { data, error } = await supabase
+      .from("reading")
+      .select("*")
+      .eq("slug", slug)
+      .maybeSingle();
 
-    // Map snake_case Sanity fields to camelCase application properties
-    data.audioUrl = data.audio_url;
-    data.imageUrl = data.image_url;
-    data.videoUrl = data.video_url;
+    if (error || !data) return null;
 
-    return data;
+    // Map snake_case Supabase fields to camelCase application properties
+    return {
+      ...data,
+      id: data.id,
+      difficulty: data.difficulty || data.jlpt_level,
+      audioUrl: data.audio_url,
+      imageUrl: data.image_url,
+      videoUrl: data.video_url
+    } as LibraryItem;
   } catch (error) {
-    console.error("Gagal mengambil detail bacaan:", error);
+    console.error("Gagal mengambil detail bacaan dari Supabase:", error);
     return null;
   }
 }

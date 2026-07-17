@@ -55,303 +55,50 @@
  * 10. KOBAYASHI -> Peran: Pria Dewasa / Suara Serius.
  *                Karakteristik: Dalam, berwibawa, bernada serius.
  * ============================================================================
- */
+ */import {
+  TTS_VOICES,
+  type TtsVoice,
+  type VoiceCharacter,
+  VOICE_CHARACTERS,
+  SPEAKER_MAP
+} from "@/lib/constants/tts";
 
-/**
- * Configuration metadata for a voice character.
- */
-export interface VoiceCharacter {
-  readonly name: string;
-  readonly voicevoxName?: string;
-  readonly speakerId?: number;
-  readonly gender: "female" | "male";
-  readonly role: string;
-  readonly description: string;
-}
-
-/**
- * Database of voice characters mapped by name.
- */
-export const VOICE_CHARACTERS: Record<string, VoiceCharacter> = {
-  // Wanita
-  indah: {
-    name: "indah",
-    gender: "female",
-    role: "Narator Utama / Guru Wanita",
-    description: "Tenang, dewasa, artikulasi sangat jelas, intonasi formal & natural. Default pengucapan kosakata.",
-  },
-  lala: {
-    name: "lala",
-    gender: "female",
-    role: "Remaja / Siswi SMA",
-    description: "Ceria, ramah, riang, bernada cerah.",
-  },
-  siti: {
-    name: "siti",
-    gender: "female",
-    role: "Teman Sekolah / Wanita Muda",
-    description: "Lembut, ramah, jernih.",
-  },
-  dewi: {
-    name: "dewi",
-    gender: "female",
-    role: "Gadis Kecil / Karakter Imut",
-    description: "Manja, energetik, ekspresif.",
-  },
-  hayashi: {
-    name: "hayashi",
-    gender: "female",
-    role: "Ibu Rumah Tangga / Wanita Karir",
-    description: "Dewasa, bijaksana, berwibawa.",
-  },
-  sato: {
-    name: "sato",
-    gender: "female",
-    role: "Petugas Toko / Resepsionis",
-    description: "Sopan, intonasi formal, ramah.",
-  },
-  ayu: {
-    name: "ayu",
-    gender: "female",
-    role: "Remaja Santai / Teman Wanita",
-    description: "Intonasi tenang, suara jernih, modern.",
-  },
-  zundamon: {
-    name: "zundamon",
-    voicevoxName: "Zundamon",
-    speakerId: 3,
-    gender: "female",
-    role: "Maskot Cilik / Anak-anak",
-    description: "Nada sangat tinggi, kekanak-kanakan, energetik.",
-  },
-  ritsu: {
-    name: "ritsu",
-    gender: "female",
-    role: "Wanita Misterius / Bernada Khas",
-    description: "Unik, ekspresif, bernada khas.",
-  },
-  sakura: {
-    name: "sakura",
-    gender: "female",
-    role: "Remaja Gadis / Baik Hati",
-    description: "Suara lembut, ramah, penolong.",
-  },
-  ani: {
-    name: "ani",
-    gender: "female",
-    role: "Remaja Gadis / Pemalu",
-    description: "Suara manis, pemalu, santun.",
-  },
-  // Pria
-  budi: {
-    name: "budi",
-    gender: "male",
-    role: "Narator Utama Pria / Guru Pria",
-    description: "Suara bariton, tenang, berwibawa, intonasi mantap & formal.",
-  },
-  dito: {
-    name: "dito",
-    gender: "male",
-    role: "Remaja / Member SMA",
-    description: "Tenang, kasual, ramah.",
-  },
-  suzuki: {
-    name: "suzuki",
-    gender: "male",
-    role: "Pekerja Kantor / Pegawai Stasiun",
-    description: "Formal, tegas, intonasi profesional.",
-  },
-  tanaka: {
-    name: "tanaka",
-    gender: "male",
-    role: "Ayah / Pria Paruh Baya",
-    description: "Berat, tenang, berwibawa.",
-  },
-  yamada: {
-    name: "yamada",
-    gender: "male",
-    role: "Kakek / Pria Lanjut Usia",
-    description: "Berat, serak, berwibawa.",
-  },
-  kimura: {
-    name: "kimura",
-    gender: "male",
-    role: "Pemuda Gaul / Sahabat Dekat",
-    description: "Cepat, energetik, sangat santai.",
-  },
-  andi: {
-    name: "andi",
-    gender: "male",
-    role: "Pemuda Keren / Nada Dramatis",
-    description: "Suara khas pemuda, bernada dramatis & penuh semangat.",
-  },
-  faisal: {
-    name: "faisal",
-    gender: "male",
-    role: "Pria Dewasa / Kalem",
-    description: "Tenang, bijaksana, intonasi seimbang.",
-  },
-  takahashi: {
-    name: "takahashi",
-    gender: "male",
-    role: "Pekerja Kantoran Muda / Sopan",
-    description: "Ramah, sopan, intonasi profesional santai.",
-  },
-  kobayashi: {
-    name: "kobayashi",
-    gender: "male",
-    role: "Pria Dewasa / Suara Serius",
-    description: "Dalam, berwibawa, bernada serius.",
-  },
+export {
+  TTS_VOICES,
+  type TtsVoice,
+  type VoiceCharacter,
+  VOICE_CHARACTERS,
+  SPEAKER_MAP
 };
 
-/**
- * TTS voice identifiers.
- */
-export const TTS_VOICES = {
-  // Wanita (VOICEVOX)
-  LALA: "lala",
-  INDAH: "indah",
-  SITI: "siti",
-  DEWI: "dewi",
-  HAYASHI: "hayashi",
-  SATO: "sato",
-  AYU: "ayu",
-  ZUNDAMON: "zundamon",
-  RITSU: "ritsu",
-  SAKURA: "sakura",
-  ANI: "ani",
-  
-  // Pria (VOICEVOX)
-  DITO: "dito",
-  BUDI: "budi",
-  SUZUKI: "suzuki",
-  TANAKA: "tanaka",
-  YAMADA: "yamada",
-  KIMURA: "kimura",
-  ANDI: "andi",
-  FAISAL: "faisal",
-  TAKAHASHI: "takahashi",
-  KOBAYASHI: "kobayashi",
-} as const;
+export const FEMALE_VOICES: readonly TtsVoice[] = [
+  TTS_VOICES.LALA,
+  TTS_VOICES.SITI,
+  TTS_VOICES.SAKURA,
+  TTS_VOICES.AYU,
+  TTS_VOICES.ANI,
+  TTS_VOICES.DEWI,
+  TTS_VOICES.INDAH,
+  TTS_VOICES.HAYASHI,
+  TTS_VOICES.SATO,
+  TTS_VOICES.RITSU,
+  TTS_VOICES.ZUNDAMON,
+];
 
-/**
- * Maps Japanese and Romaji speaker names to TTS voice identifiers.
- */
-export const SPEAKER_MAP: Record<string, TtsVoice> = {
-  // === INDAH — Narator Wanita ===
-  "indah": TTS_VOICES.INDAH,
-  "インダ": TTS_VOICES.INDAH,
-  "インダハ": TTS_VOICES.INDAH,
-
-  // === LALA — Siswi SMA ===
-  "lala": TTS_VOICES.LALA,
-  "lara": TTS_VOICES.LALA,
-  "ララ": TTS_VOICES.LALA,
+export const MALE_VOICES: readonly TtsVoice[] = [
+  TTS_VOICES.DITO,
+  TTS_VOICES.ANDI,
+  TTS_VOICES.KIMURA,
+  TTS_VOICES.BUDI,
+  TTS_VOICES.SUZUKI,
+  TTS_VOICES.TANAKA,
+  TTS_VOICES.YAMADA,
+  TTS_VOICES.TAKAHASHI,
+  TTS_VOICES.KOBAYASHI,
+  TTS_VOICES.FAISAL,
+];
 
 
-  // === SITI — Wanita Muda ===
-  "siti": TTS_VOICES.SITI,
-  "シティ": TTS_VOICES.SITI,
-
-  // === DEWI — Gadis Kecil ===
-  "dewi": TTS_VOICES.DEWI,
-  "デウィ": TTS_VOICES.DEWI,
-
-  // === HAYASHI — Ibu / Wanita Karir ===
-  "hayashi": TTS_VOICES.HAYASHI,
-  "林": TTS_VOICES.HAYASHI,
-  "はやし": TTS_VOICES.HAYASHI,
-  "ハヤシ": TTS_VOICES.HAYASHI,
-
-  // === SATO — Resepsionis ===
-  "sato": TTS_VOICES.SATO,
-  "佐藤": TTS_VOICES.SATO,
-  "さとう": TTS_VOICES.SATO,
-  "サトウ": TTS_VOICES.SATO,
-  "サト": TTS_VOICES.SATO,
-
-  // === AYU — Remaja Santai ===
-  "ayu": TTS_VOICES.AYU,
-  "アユ": TTS_VOICES.AYU,
-
-  // === ZUNDAMON (VOICEVOX) — Maskot Cilik ===
-  "zundamon": TTS_VOICES.ZUNDAMON,
-  "ずんだもん": TTS_VOICES.ZUNDAMON,
-  "ズンダモン": TTS_VOICES.ZUNDAMON,
-
-  // === RITSU — Wanita Misterius ===
-  "ritsu": TTS_VOICES.RITSU,
-  "リツ": TTS_VOICES.RITSU,
-  "りつ": TTS_VOICES.RITSU,
-
-  // === SAKURA — Remaja Baik Hati ===
-  "sakura": TTS_VOICES.SAKURA,
-  "サクラ": TTS_VOICES.SAKURA,
-  "さくら": TTS_VOICES.SAKURA,
-
-  // === ANI — Remaja Pemalu ===
-  "ani": TTS_VOICES.ANI,
-  "アニ": TTS_VOICES.ANI,
-  "あに": TTS_VOICES.ANI,
-
-  // === BUDI — Narator Pria ===
-  "budi": TTS_VOICES.BUDI,
-  "ブディ": TTS_VOICES.BUDI,
-
-  // === DITO — Member SMA ===
-  "dito": TTS_VOICES.DITO,
-  "ディト": TTS_VOICES.DITO,
-
-  // === SUZUKI — Pekerja Kantor ===
-  "suzuki": TTS_VOICES.SUZUKI,
-  "鈴木": TTS_VOICES.SUZUKI,
-  "すずき": TTS_VOICES.SUZUKI,
-  "スズキ": TTS_VOICES.SUZUKI,
-
-  // === TANAKA — Ayah / Pria Paruh Baya ===
-  "tanaka": TTS_VOICES.TANAKA,
-  "田中": TTS_VOICES.TANAKA,
-  "たなか": TTS_VOICES.TANAKA,
-  "タナカ": TTS_VOICES.TANAKA,
-
-  // === YAMADA — Kakek ===
-  "yamada": TTS_VOICES.YAMADA,
-  "山田": TTS_VOICES.YAMADA,
-  "やまだ": TTS_VOICES.YAMADA,
-  "ヤマダ": TTS_VOICES.YAMADA,
-
-  // === KIMURA — Pemuda Gaul ===
-  "kimura": TTS_VOICES.KIMURA,
-  "木村": TTS_VOICES.KIMURA,
-  "きむら": TTS_VOICES.KIMURA,
-  "キムラ": TTS_VOICES.KIMURA,
-
-  // === ANDI — Pemuda Dramatis ===
-  "andi": TTS_VOICES.ANDI,
-  "アンディ": TTS_VOICES.ANDI,
-
-  // === FAISAL — Pria Dewasa Kalem ===
-  "faisal": TTS_VOICES.FAISAL,
-  "ファイサル": TTS_VOICES.FAISAL,
-
-  // === TAKAHASHI — Pekerja Kantoran Muda ===
-  "takahashi": TTS_VOICES.TAKAHASHI,
-  "高橋": TTS_VOICES.TAKAHASHI,
-  "たかはし": TTS_VOICES.TAKAHASHI,
-  "タカハシ": TTS_VOICES.TAKAHASHI,
-
-  // === KOBAYASHI — Pria Serius ===
-  "kobayashi": TTS_VOICES.KOBAYASHI,
-  "小林": TTS_VOICES.KOBAYASHI,
-  "こばやし": TTS_VOICES.KOBAYASHI,
-  "コバヤシ": TTS_VOICES.KOBAYASHI,
-};
-
-/**
- * Type representing valid TTS voice identifiers.
- */
-export type TtsVoice = typeof TTS_VOICES[keyof typeof TTS_VOICES];
 
 // ============================================
 // DETEKSI GENDER BERDASARKAN NAMA PEMBICARA
@@ -385,32 +132,7 @@ const MALE_KEYWORDS = [
  * @returns Detected TTS voice.
  */
 export function detectVoice(speaker?: string, fallbackIndex = 0): TtsVoice {
-  const femaleVoices = [
-    TTS_VOICES.ZUNDAMON,
-    TTS_VOICES.LALA,
-    TTS_VOICES.INDAH,
-    TTS_VOICES.SITI,
-    TTS_VOICES.DEWI,
-    TTS_VOICES.HAYASHI,
-    TTS_VOICES.SATO,
-    TTS_VOICES.AYU,
-    TTS_VOICES.RITSU,
-    TTS_VOICES.SAKURA,
-    TTS_VOICES.ANI,
-  ];
-  const maleVoices = [
-    TTS_VOICES.DITO,
-    TTS_VOICES.BUDI,
-    TTS_VOICES.SUZUKI,
-    TTS_VOICES.TANAKA,
-    TTS_VOICES.YAMADA,
-    TTS_VOICES.KIMURA,
-    TTS_VOICES.ANDI,
-    TTS_VOICES.FAISAL,
-    TTS_VOICES.TAKAHASHI,
-    TTS_VOICES.KOBAYASHI,
-  ];
-  const allVoices = [...femaleVoices, ...maleVoices];
+  const allVoices = [...FEMALE_VOICES, ...MALE_VOICES];
 
   // Fallback rotation for empty speaker names
   if (!speaker || speaker === "???" || speaker.trim() === "") {
@@ -458,10 +180,10 @@ export function detectVoice(speaker?: string, fallbackIndex = 0): TtsVoice {
 
   // Return voice based on suffix gender
   if (preDetectedGender === "female") {
-    return femaleVoices[index % femaleVoices.length];
+    return FEMALE_VOICES[index % FEMALE_VOICES.length];
   }
   if (preDetectedGender === "male") {
-    return maleVoices[index % maleVoices.length];
+    return MALE_VOICES[index % MALE_VOICES.length];
   }
 
   // Check exact gender lists
@@ -475,10 +197,10 @@ export function detectVoice(speaker?: string, fallbackIndex = 0): TtsVoice {
   ];
 
   if (EXACT_FEMALE.includes(cleanSpeaker)) {
-    return femaleVoices[index % femaleVoices.length];
+    return FEMALE_VOICES[index % FEMALE_VOICES.length];
   }
   if (EXACT_MALE.includes(cleanSpeaker)) {
-    return maleVoices[index % maleVoices.length];
+    return MALE_VOICES[index % MALE_VOICES.length];
   }
 
   // Check keyword matches
@@ -486,10 +208,10 @@ export function detectVoice(speaker?: string, fallbackIndex = 0): TtsVoice {
   const isMale   = MALE_KEYWORDS.some(k => cleanSpeaker.includes(k));
 
   if (isFemale && !isMale) {
-    return femaleVoices[index % femaleVoices.length];
+    return FEMALE_VOICES[index % FEMALE_VOICES.length];
   }
   if (isMale && !isFemale) {
-    return maleVoices[index % maleVoices.length];
+    return MALE_VOICES[index % MALE_VOICES.length];
   }
 
   // Fallback to deterministic rotation
@@ -609,21 +331,8 @@ export function speakWithWebSpeech(
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = "ja-JP";
   
-  const maleVoices = [
-    TTS_VOICES.DITO,
-    TTS_VOICES.BUDI,
-    TTS_VOICES.SUZUKI,
-    TTS_VOICES.TANAKA,
-    TTS_VOICES.YAMADA,
-    TTS_VOICES.KIMURA,
-    TTS_VOICES.ANDI,
-    TTS_VOICES.FAISAL,
-    TTS_VOICES.TAKAHASHI,
-    TTS_VOICES.KOBAYASHI,
-  ] as string[];
-  
   // Adjust rate based on gender
-  const isMaleVoice = maleVoices.includes(voice);
+  const isMaleVoice = MALE_VOICES.includes(voice);
   utterance.rate = isMaleVoice ? rate * 0.9 : rate * 0.95;
 
   // Match system Japanese voice by gender

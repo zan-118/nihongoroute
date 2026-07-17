@@ -112,6 +112,8 @@ CREATE TABLE public.lessons (
     slug text NOT NULL UNIQUE,
     order_number integer DEFAULT 0,
     summary text,
+    content text,
+    dialogue jsonb DEFAULT '[]'::jsonb,
     content_blocks jsonb DEFAULT '[]'::jsonb,
     vocab_list jsonb DEFAULT '[]'::jsonb,
     kanji_list jsonb DEFAULT '[]'::jsonb,
@@ -365,6 +367,54 @@ CREATE TABLE public.notifications (
     message text NOT NULL,
     post_id uuid REFERENCES public.community_posts(id) ON DELETE CASCADE,
     read boolean DEFAULT false NOT NULL,
+    created_at timestamptz DEFAULT now() NOT NULL
+);
+
+-- 25. Listening Materials
+CREATE TABLE public.listening (
+    id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+    title text NOT NULL,
+    slug text NOT NULL UNIQUE,
+    difficulty text,
+    estimated_minutes integer DEFAULT 5,
+    body text NOT NULL,
+    hiragana text,
+    translation text,
+    audio_url text,
+    image_url text,
+    video_url text,
+    quizzes jsonb DEFAULT '[]'::jsonb,
+    seo jsonb DEFAULT '{}'::jsonb,
+    jlpt_level text CHECK (jlpt_level IS NULL OR jlpt_level = ANY (ARRAY['N5','N4','N3','N2','N1'])),
+    status text DEFAULT 'draft'::text CHECK (status = ANY (ARRAY['draft','review','approved','published','rejected'])),
+    warnings jsonb DEFAULT '[]'::jsonb,
+    audit_log jsonb DEFAULT '[]'::jsonb,
+    confidence jsonb DEFAULT '{"level": "high", "reasons": [], "confidence_rank": 3}'::jsonb,
+    generation_context jsonb DEFAULT '{}'::jsonb,
+    created_at timestamptz DEFAULT now() NOT NULL
+);
+
+-- 26. Reading Materials
+CREATE TABLE public.reading (
+    id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+    title text NOT NULL,
+    slug text NOT NULL UNIQUE,
+    difficulty text,
+    estimated_minutes integer DEFAULT 5,
+    body text NOT NULL,
+    hiragana text,
+    translation text,
+    audio_url text,
+    image_url text,
+    video_url text,
+    quizzes jsonb DEFAULT '[]'::jsonb,
+    seo jsonb DEFAULT '{}'::jsonb,
+    jlpt_level text CHECK (jlpt_level IS NULL OR jlpt_level = ANY (ARRAY['N5','N4','N3','N2','N1'])),
+    status text DEFAULT 'draft'::text CHECK (status = ANY (ARRAY['draft','review','approved','published','rejected'])),
+    warnings jsonb DEFAULT '[]'::jsonb,
+    audit_log jsonb DEFAULT '[]'::jsonb,
+    confidence jsonb DEFAULT '{"level": "high", "reasons": [], "confidence_rank": 3}'::jsonb,
+    generation_context jsonb DEFAULT '{}'::jsonb,
     created_at timestamptz DEFAULT now() NOT NULL
 );
 
@@ -902,6 +952,8 @@ ALTER TABLE public.user_exam_answers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.community_posts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.community_comments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.listening ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.reading ENABLE ROW LEVEL SECURITY;
 
 -- ═══════════════════════════════════════════════════════════════════════════
 -- RLS POLICIES
@@ -933,6 +985,8 @@ CREATE POLICY "Allow public read access for library" ON public.kanji FOR SELECT 
 CREATE POLICY "Allow public read access for library" ON public.vocab FOR SELECT USING (true);
 CREATE POLICY "Allow public read access for library" ON public.grammar FOR SELECT USING (true);
 CREATE POLICY "Allow public read access for library" ON public.lessons FOR SELECT USING (true);
+CREATE POLICY "Allow public read access for library" ON public.listening FOR SELECT USING (true);
+CREATE POLICY "Allow public read access for library" ON public.reading FOR SELECT USING (true);
 CREATE POLICY "Cheatsheets are viewable by everyone" ON public.cheatsheets FOR SELECT USING (true);
 CREATE POLICY "Public read" ON public.expressions FOR SELECT USING (true);
 CREATE POLICY "Public read" ON public.radicals FOR SELECT USING (true);
@@ -1019,6 +1073,8 @@ CREATE POLICY "Allow users to delete their own notifications" ON public.notifica
 -- ═══════════════════════════════════════════════════════════════════════════
 
 GRANT SELECT ON public.expressions TO anon, authenticated;
+GRANT SELECT ON public.listening TO anon, authenticated;
+GRANT SELECT ON public.reading TO anon, authenticated;
 GRANT SELECT ON public.radicals TO anon, authenticated;
 GRANT SELECT ON public.sentences TO anon, authenticated;
 GRANT SELECT ON public.jlpt_exam_templates TO anon, authenticated;

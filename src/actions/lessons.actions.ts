@@ -10,8 +10,8 @@
 // IMPORTS
 // ======================
 import { createStaticClient } from "@/lib/supabase/server";
-import { getSanityReadingBySlug, getSanityListeningBySlug } from "@/lib/queries";
 import { LibraryItem } from "@/types/library";
+import { getLibraryItemBySlug } from "./library.actions";
 
 // ======================
 // SERVER ACTIONS
@@ -407,7 +407,11 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
         summary: dbLesson.summary,
         order_number: dbLesson.order_number,
         estimated_minutes: dbLesson.estimated_minutes || 15,
-        content_blocks: parseArray(dbLesson.content_blocks),
+        content_blocks: dbLesson.content
+          ? parseMarkdownToBlocks(dbLesson.content)
+          : parseArray(dbLesson.content_blocks),
+        content: dbLesson.content,
+        dialogue: dbLesson.dialogue,
         vocab_list: parseArray(dbLesson.vocab_list),
         kanji_list: parseArray(dbLesson.kanji_list),
         grammar_list: parseArray(dbLesson.grammar_list),
@@ -680,21 +684,38 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
     };
 
     /**
-     * Mengambil data latihan menyimak (listening) dari Sanity CMS berdasarkan slug.
+     * Mengambil data latihan menyimak (listening) dari Supabase.
      */
     const fetchListening = async () => {
+      if (data && data.dialogue && Array.isArray(data.dialogue) && data.dialogue.length > 0) {
+        const dialogueList = (data.dialogue as Record<string, unknown>[]) || [];
+        result.listeningList = [{
+          _id: `dialogue-${data.id}`,
+          id: `dialogue-${data.id}`,
+          title: "Skenario Percakapan",
+          transcript: dialogueList.map((item, idx) => ({
+            ...item,
+            id: String(item.id || idx),
+            text: String(item.text || item.jp || ""),
+            jp: String(item.jp || item.text || ""),
+            speaker: String(item.speaker || ""),
+            speakerName: String(item.speakerName || ""),
+            translation: String(item.translation || ""),
+            furigana: item.furigana as string | undefined
+          }))
+        }];
+        return;
+      }
+
       if (!listeningListRaw.length) return;
       const cleanList = listeningListRaw.map((s: unknown) => String(s).trim());
       
-      const lItems = (await Promise.all(
-        cleanList.map(async (slug: string) => {
-          try {
-            return await getSanityListeningBySlug(slug);
-          } catch {
-            return null;
-          }
-        })
-      )).filter(Boolean);
+      const { data: dbListening } = await supabase
+        .from("listening")
+        .select("*")
+        .in("slug", cleanList);
+
+      const lItems: Record<string, unknown>[] = (dbListening as Record<string, unknown>[]) || [];
       
       if (lItems && lItems.length > 0) {
         result.listeningList = lItems.map((l: Record<string, unknown>) => {
@@ -730,11 +751,11 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
                 jp: text,
                 furigana,
                 translation: translation || text,
-                id: idx
+                id: String(idx)
               };
             });
           } else if (Array.isArray(l.body)) {
-            dialogue = l.body;
+            dialogue = l.body as Record<string, unknown>[];
           }
 
           return {
@@ -750,21 +771,18 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
     };
 
     /**
-     * Mengambil data latihan membaca (reading) dari Sanity CMS berdasarkan slug.
+     * Mengambil data latihan membaca (reading) dari Supabase.
      */
     const fetchReading = async () => {
       if (!readingListRaw.length) return;
       const cleanList = readingListRaw.map((s: unknown) => String(s).trim());
       
-      const rItems = (await Promise.all(
-        cleanList.map(async (slug: string) => {
-          try {
-            return await getSanityReadingBySlug(slug);
-          } catch {
-            return null;
-          }
-        })
-      )).filter(Boolean);
+      const { data: dbReading } = await supabase
+        .from("reading")
+        .select("*")
+        .in("slug", cleanList);
+
+      const rItems: Record<string, unknown>[] = (dbReading as Record<string, unknown>[]) || [];
       
       if (rItems && rItems.length > 0) {
         result.readingList = rItems.map((r: Record<string, unknown>) => ({
@@ -931,4 +949,67 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
     console.error(`Gagal mengambil detail pelajaran:`, error);
     return null;
   }
+}
+
+/**
+ * Fetches lesson data and navigation list from Supabase and Sanity.
+ *
+ * @param categoryId - Course category slug.
+ * @param slug - Lesson slug.
+ * @returns Lesson details and navigation array, or null if category not found.
+ */
+export async function getLessonData(categoryId: string, slug: string) {
+  const supabase = createStaticClient();
+
+  // 1. Ambil Kategori & Pelajaran secara paralel
+  const [categoryRes, lesson] = await Promise.all([
+    supabase
+      .from("course_categories")
+      .select("id, title, type")
+      .eq("slug", categoryId.toLowerCase())
+      .single(),
+    getLibraryItemBySlug("lessons", slug)
+  ]);
+
+  const category = categoryRes.data;
+  if (!category) return null;
+
+  if (lesson) {
+    lesson.levelTitle = category.title;
+    lesson.categoryType = category.type;
+    lesson.levelCode = categoryId;
+  }
+
+  // 2. Dapatkan Navigasi (gabungkan Supabase & Sanity)
+  let dbLessons = [];
+  if (category.type === "general" || category.type === "article") {
+    const { data } = await supabase
+      .from("articles")
+      .select("id, title, slug, category_id, order_number, summary")
+      .eq("category_id", category.id)
+      .order("order_number", { ascending: true });
+    dbLessons = data || [];
+  } else {
+    const { data } = await supabase
+      .from("lessons")
+      .select("id, title, slug, category_id, order_number, summary")
+      .eq("category_id", category.id)
+      .order("order_number", { ascending: true });
+    dbLessons = data || [];
+  }
+
+  // Map database fields to match expected Sanity lesson structure.
+  const supabaseLessons = dbLessons.map((l) => ({
+    _id: l.id,
+    title: l.title,
+    slug: l.slug,
+    category_id: l.category_id,
+    order_number: l.order_number,
+    summary: l.summary
+  }));
+
+  // Sort navigation items by order number ascending.
+  const nav = supabaseLessons.sort((a, b) => (a.order_number || 0) - (b.order_number || 0));
+
+  return { lesson, nav };
 }

@@ -1,7 +1,6 @@
 "use server";
 
 import { createStaticClient } from "@/lib/supabase/server";
-import { sanityClient, sanityPublicFetchOptions } from "@/lib/sanity.client";
 import {
   MINI_DRILL_BANK,
   type DrillKind,
@@ -737,7 +736,7 @@ export async function getIntegratedCounterQuestions(
 }
 
 /**
- * Fetch and build shadowing presets from Sanity CMS materials.
+ * Fetch and build shadowing presets from Supabase materials.
  */
 export async function getIntegratedShadowingPresets(
   context: ToolsIntegrationContext = {}
@@ -745,52 +744,62 @@ export async function getIntegratedShadowingPresets(
   const source = getToolsSource(context.source);
   const slug = compactText(context.slug);
   const levelFilter = getDrillLevelFilter(context.level);
+  const supabase = createStaticClient();
 
   try {
-    const exactType =
-      source === "reading" ? "readingMaterial" : source === "listening" ? "listeningMaterial" : "";
-    const exactItem =
-      exactType && slug
-        ? await sanityClient.fetch<SanityLineSource | null>(
-            /* groq */ `*[_type == $type && slug.current == $slug][0] {
-              _id,
-              title,
-              "slug": slug.current,
-              jlpt_level,
-              difficulty,
-              body,
-              translation
-            }`,
-            { type: exactType, slug },
-            sanityPublicFetchOptions
-          )
-        : null;
+    let exactItem: SanityLineSource | null = null;
+    if ((source === "reading" || source === "listening") && slug) {
+      const { data } = await supabase
+        .from(source)
+        .select("id, title, slug, jlpt_level, difficulty, body, translation")
+        .eq("slug", slug)
+        .maybeSingle();
 
-    const query = /* groq */ `{
-      "listenings": *[_type == "listeningMaterial" && defined(body)] | order(_createdAt desc)[0...8] {
-        _id,
-        title,
-        "slug": slug.current,
-        jlpt_level,
-        difficulty,
-        body,
-        translation
-      },
-      "readings": *[_type == "readingMaterial" && defined(body)] | order(_createdAt desc)[0...8] {
-        _id,
-        title,
-        "slug": slug.current,
-        jlpt_level,
-        difficulty,
-        body,
-        translation
+      if (data) {
+        exactItem = {
+          _id: data.id,
+          title: data.title,
+          slug: data.slug,
+          jlpt_level: data.jlpt_level,
+          difficulty: data.difficulty,
+          body: data.body,
+          translation: data.translation
+        };
       }
-    }`;
+    }
 
-    const result = await sanityClient.fetch<{
-      listenings?: SanityLineSource[];
-      readings?: SanityLineSource[];
-    }>(query, {}, sanityPublicFetchOptions);
+    const [listeningsRes, readingsRes] = await Promise.all([
+      supabase
+        .from("listening")
+        .select("id, title, slug, jlpt_level, difficulty, body, translation")
+        .order("created_at", { ascending: false })
+        .limit(8),
+      supabase
+        .from("reading")
+        .select("id, title, slug, jlpt_level, difficulty, body, translation")
+        .order("created_at", { ascending: false })
+        .limit(8)
+    ]);
+
+    const listenings: SanityLineSource[] = (listeningsRes.data || []).map((l) => ({
+      _id: l.id,
+      title: l.title,
+      slug: l.slug,
+      jlpt_level: l.jlpt_level,
+      difficulty: l.difficulty,
+      body: l.body,
+      translation: l.translation
+    }));
+
+    const readings: SanityLineSource[] = (readingsRes.data || []).map((r) => ({
+      _id: r.id,
+      title: r.title,
+      slug: r.slug,
+      jlpt_level: r.jlpt_level,
+      difficulty: r.difficulty,
+      body: r.body,
+      translation: r.translation
+    }));
 
     const presets: ShadowingPreset[] = [];
 
@@ -798,13 +807,13 @@ export async function getIntegratedShadowingPresets(
       pushShadowingPresetsFromSource(presets, exactItem, source, 4);
     }
 
-    for (const item of result.listenings || []) {
+    for (const item of listenings) {
       if (source === "reading") continue;
       if (levelFilter && asShadowingLevel(item.jlpt_level) !== levelFilter) continue;
       pushShadowingPresetsFromSource(presets, item, "listening");
     }
 
-    for (const item of result.readings || []) {
+    for (const item of readings) {
       if (source === "listening") continue;
       if (levelFilter && asShadowingLevel(item.jlpt_level) !== levelFilter) continue;
       pushShadowingPresetsFromSource(presets, item, "reading");
@@ -812,13 +821,13 @@ export async function getIntegratedShadowingPresets(
 
     return Array.from(new Map(presets.map((preset) => [preset.id, preset])).values()).slice(0, 16);
   } catch (error) {
-    console.error("[tools integration] Gagal mengambil preset shadowing:", error);
+    console.error("[tools integration] Gagal mengambil preset shadowing dari Supabase:", error);
     return [];
   }
 }
 
 /**
- * Fetch raw text content for specific library material.
+ * Fetch raw text content for specific library material from Supabase.
  */
 export async function getLibraryTextForTool(
   context: ToolsIntegrationContext = {}
@@ -826,21 +835,14 @@ export async function getLibraryTextForTool(
   const source = getToolsSource(context.source);
   const slug = compactText(context.slug);
   if (!slug || (source !== "reading" && source !== "listening")) return null;
-
-  const type = source === "reading" ? "readingMaterial" : "listeningMaterial";
+  const supabase = createStaticClient();
 
   try {
-    const item = await sanityClient.fetch<SanityLineSource | null>(
-      /* groq */ `*[_type == $type && slug.current == $slug][0] {
-        _id,
-        title,
-        "slug": slug.current,
-        body,
-        translation
-      }`,
-      { type, slug },
-      sanityPublicFetchOptions
-    );
+    const { data: item } = await supabase
+      .from(source)
+      .select("id, title, slug, body, translation")
+      .eq("slug", slug)
+      .maybeSingle();
 
     if (!item) return null;
 
@@ -851,7 +853,7 @@ export async function getLibraryTextForTool(
       sourceHref: item.slug ? `/library/${source}/${item.slug}` : undefined,
     };
   } catch (error) {
-    console.error("[tools integration] Gagal mengambil teks sumber:", error);
+    console.error("[tools integration] Gagal mengambil teks sumber dari Supabase:", error);
     return null;
   }
 }
