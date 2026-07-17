@@ -79,7 +79,7 @@ Modul utama pembelajaran bahasa Jepang terstruktur.
 * `category_id` (`uuid`): FK ke `course_categories(id)`.
 * `title` / `slug` (`text`, NOT NULL, `slug` UNIQUE).
 * `order_number` (`integer`, Default: `0`), `summary` / `content` (`text`).
-* `dialogue`, `content_blocks`, `vocab_list`, `kanji_list`, `grammar_list`, `listening_list`, `reading_list`, `quizzes` (`jsonb`, Default: `'[]'`).
+* `dialogue`, `vocab_list`, `kanji_list`, `grammar_list`, `listening_list`, `reading_list`, `quizzes` (`jsonb`, Default: `'[]'`).
 * `estimated_minutes` (`integer`, Default: `5`), `is_premium` / `is_published` (`boolean`).
 * `seo` (`jsonb`), `status` (`text`, CHECK `'draft','review','approved','published','rejected'`).
 * `warnings`, `confidence`, `audit_log`, `generation_context` (`jsonb`).

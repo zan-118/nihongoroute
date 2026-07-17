@@ -356,7 +356,6 @@ export interface PdfLessonData {
   vocabList?: PdfVocabItem[];
   vocab_list?: PdfVocabItem[];
   articles?: PdfContentBlock[];
-  content_blocks?: PdfContentBlock[];
   grammar?: PdfContentBlock[];
   quizzes?: PdfQuizItem[];
   questions?: PdfQuizItem[];
@@ -371,7 +370,7 @@ export interface PdfLessonData {
  */
 export const LessonPdfTemplate = ({ lessonData }: { lessonData: PdfLessonData }) => {
   const combinedVocabList = lessonData.vocabList || lessonData.vocab_list || [];
-  const contentBlocks = lessonData.articles || lessonData.content_blocks || [];
+  const contentBlocks = lessonData.articles || [];
   const grammarBlocks = lessonData.grammar || [];
   const quizzesList = formatQuizzes((lessonData.quizzes || lessonData.questions || []) as unknown as import("@/lib/utils/lesson-utils").RawQuizItem[]);
 

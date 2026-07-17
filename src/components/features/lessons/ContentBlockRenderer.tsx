@@ -423,13 +423,7 @@ function BlockItem({
   const type = block.type || rawBlock._type || "text";
 
   // Check if block is structured as a Rich Text block
-  const isPortableText = rawBlock._type === "block" || 
-                         rawBlock._type === "dialogueBlock" || 
-                         rawBlock._type === "grammarBlock" || 
-                         rawBlock._type === "calloutBlock" || 
-                         rawBlock._type === "imageBlock" ||
-                         rawBlock._type === "vocabBlock" ||
-                         rawBlock._type === "kanjiBlock";
+  const isPortableText = rawBlock._type === "block";
 
   return (
     <div className="group relative">
@@ -441,12 +435,16 @@ function BlockItem({
 
         switch (type as string) {
           case "callout":
+          case "calloutBlock":
             return <CalloutBlock block={block} />;
           case "dialogue":
+          case "dialogueBlock":
             return <DialogueBlock block={block} />;
           case "grammar":
+          case "grammarBlock":
             return <GrammarBlock block={block} />;
           case "image":
+          case "imageBlock":
             return <ImageBlock block={block} />;
           case "vocab":
           case "vocabBlock":

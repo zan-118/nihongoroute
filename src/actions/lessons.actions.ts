@@ -406,9 +406,7 @@ export async function getLibraryLessonDetail(slugOrId: string): Promise<LibraryI
         summary: dbLesson.summary,
         order_number: dbLesson.order_number,
         estimated_minutes: dbLesson.estimated_minutes || 15,
-        content_blocks: dbLesson.content
-          ? parseMarkdownToBlocks(dbLesson.content)
-          : parseArray(dbLesson.content_blocks),
+        content_blocks: parseMarkdownToBlocks(dbLesson.content || ""),
         content: dbLesson.content,
         dialogue: dbLesson.dialogue,
         vocab_list: parseArray(dbLesson.vocab_list),

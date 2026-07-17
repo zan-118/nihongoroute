@@ -178,7 +178,7 @@ export default async function LessonPage({ params }: Props) {
             const linkCls = "px-3.5 py-2 rounded-full text-[10px] font-black uppercase tracking-wider bg-muted/40 dark:bg-card/40 border border-border/60 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 hover:shadow-md hover:shadow-primary/5 transition-all duration-300 whitespace-nowrap shrink-0 flex items-center gap-1.5 group";
             // Generate jump links dynamically based on content availability.
             const jumpLinks: { href: string; label: string; icon: React.ComponentType<{ size?: number; className?: string }>; show: boolean }[] = [
-              { href: "#article-content", label: "Artikel", icon: FileText, show: !!(lesson.articles || lesson.content_blocks) },
+              { href: "#article-content", label: "Artikel", icon: FileText, show: !!lesson.articles },
               { href: "#vocabulary", label: "Kosakata", icon: Book, show: vocabList.length > 0 },
               { href: "#kanji", label: "Kanji", icon: GraduationCap, show: kanjiList.length > 0 },
               { href: "#scenario", label: "Dialog", icon: MessageSquare, show: listeningList.length > 0 },
@@ -204,10 +204,10 @@ export default async function LessonPage({ params }: Props) {
           })()}
 
           <div className="space-y-14 md:space-y-20 mb-16 md:mb-24">
-            {!!(lesson.articles || lesson.content_blocks) && (
+            {!!lesson.articles && (
               <section id="article-content" className="prose-custom">
                 <ContentBlockRenderer
-                  blocks={(lesson.articles || lesson.content_blocks) as import("@/types/database").ContentBlock[]}
+                  blocks={lesson.articles as import("@/types/database").ContentBlock[]}
                   vocabList={(lesson.vocabList || lesson.vocab_list || []) as import("@/components/features/lessons/VocabSection").VocabLessonItem[]}
                   kanjiList={(lesson.kanjiList || lesson.kanji_list || []) as import("@/components/features/lessons/KanjiSection").KanjiLessonItem[]}
                 />

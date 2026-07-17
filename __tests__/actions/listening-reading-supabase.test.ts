@@ -44,7 +44,6 @@ describe('Listening and Reading Actions from Supabase', () => {
       order_number: 5,
       content: null,
       dialogue: null,
-      content_blocks: [],
       vocab_list: [],
       kanji_list: [],
       grammar_list: [],

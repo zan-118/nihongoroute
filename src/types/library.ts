@@ -132,7 +132,6 @@ export interface LibraryItem {
   adverbial?: string | null;
   image_url?: string | null;
   imageUrl?: string | null;
-  content_blocks?: unknown;
   content?: string | null;
   dialogue?: unknown;
   vocab_list?: unknown;

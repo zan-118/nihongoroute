@@ -189,11 +189,8 @@ export default function RootLayout({
               duration: 4000,
             }}
           />
-          {/* Load Vercel analytics only in production environment */}
-          {process.env.NODE_ENV === "production" &&
-            process.env.VERCEL === "1" && (
-              <VercelAnalytics />
-            )}
+          {/* Load Vercel analytics and Speed Insights */}
+          <VercelAnalytics />
         </ThemeProvider>
       </body>
     </html>

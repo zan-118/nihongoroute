@@ -60,23 +60,20 @@ describe('Lessons Actions - Modular Content and Dialogue Schema', () => {
     expect(result).not.toBeNull();
     expect(result?.title).toBe('Bab 1: Perkenalan');
     expect(result?.content).toBe('# Judul Materi\n\nPenjelasan singkat materi modular.');
-    expect(result?.content_blocks).toHaveLength(2); // Heading 1 + Text block
+    expect(result?.content_blocks).toHaveLength(2); // Heading 1 + Text block parsed from markdown content
     expect(result?.listeningList).toHaveLength(1);
     expect(result?.listeningList?.[0]?.transcript?.[0]?.jp).toBe('こんにちは');
   });
 
-  it('harus fallback ke content_blocks lama jika kolom modular content kosong', async () => {
+  it('harus menangani data pelajaran dengan content kosong', async () => {
     mockLessonDbData = {
-      id: 'lesson-legacy',
-      title: 'Bab 2: Kosakata Lama',
-      slug: 'n5-bab-2-legacy',
-      summary: 'Belajar dengan JSONB lama',
+      id: 'lesson-empty',
+      title: 'Bab 2: Kosakata Baru',
+      slug: 'n5-bab-2-empty',
+      summary: 'Belajar modular',
       order_number: 2,
       content: null,
       dialogue: null,
-      content_blocks: [
-        { id: 'b1', type: 'text', content: 'Konten JSONB lama', order: 0 }
-      ],
       vocab_list: [],
       kanji_list: [],
       grammar_list: [],
@@ -86,10 +83,9 @@ describe('Lessons Actions - Modular Content and Dialogue Schema', () => {
       category: { title: 'N5', type: 'jlpt' }
     };
 
-    const result = await getLibraryLessonDetail('n5-bab-2-legacy');
+    const result = await getLibraryLessonDetail('n5-bab-2-empty');
     expect(result).not.toBeNull();
     expect(result?.content).toBeNull();
-    expect(result?.content_blocks).toHaveLength(1);
-    expect(result?.content_blocks?.[0]?.content).toBe('Konten JSONB lama');
+    expect(result?.content_blocks).toHaveLength(0);
   });
 });

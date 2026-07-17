@@ -6,23 +6,14 @@
  * Menonaktifkan SSR (ssr: false) untuk menghindari perlambatan pemuatan bundel awal dan hidrasi.
  */
 
-import dynamic from "next/dynamic";
-
-const Analytics = dynamic(
-  () => import("@vercel/analytics/react").then((m) => m.Analytics),
-  { ssr: false }
-);
-
-const SpeedInsights = dynamic(
-  () => import("@vercel/speed-insights/next").then((m) => m.SpeedInsights),
-  { ssr: false }
-);
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 /**
  * VercelAnalytics component.
- * Loads Vercel production analytics after hydration.
+ * Loads Vercel production analytics statically to capture initial paint metrics (Web Vitals).
  * 
- * @returns JSX element rendering dynamic analytics.
+ * @returns JSX element rendering analytics.
  */
 export default function VercelAnalytics() {
   return (

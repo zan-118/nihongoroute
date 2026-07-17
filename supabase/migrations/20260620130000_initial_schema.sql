@@ -114,7 +114,6 @@ CREATE TABLE public.lessons (
     summary text,
     content text,
     dialogue jsonb DEFAULT '[]'::jsonb,
-    content_blocks jsonb DEFAULT '[]'::jsonb,
     vocab_list jsonb DEFAULT '[]'::jsonb,
     kanji_list jsonb DEFAULT '[]'::jsonb,
     grammar_list jsonb DEFAULT '[]'::jsonb,

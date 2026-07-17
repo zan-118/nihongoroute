@@ -211,7 +211,6 @@ export interface LibraryContentAIResponse {
   grammar_list?: string[];
   reading_list?: string[];
   listening_list?: string[];
-  content_blocks?: ContentBlock[];
   quizzes?: Quiz[];
   estimated_minutes?: number;
   is_premium?: boolean;
@@ -432,7 +431,6 @@ export interface LessonTable {
   summary?: string;
   content: string | null;
   dialogue: DialogueLine[] | null;
-  content_blocks: ContentBlock[];
   vocab_list: string[]; // array of word slugs/ids
   kanji_list: string[]; // array of kanji characters/ids
   grammar_list: string[]; // array of grammar slugs/ids
