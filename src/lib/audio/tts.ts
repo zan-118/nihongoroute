@@ -71,6 +71,18 @@ export {
   SPEAKER_MAP
 };
 
+// Auto-purge old cache storage once to clean up potential corrupted Edge TTS fallbacks.
+if (typeof window !== "undefined" && "caches" in window) {
+  const PURGE_KEY = "nihongoroute_tts_cache_cleaned_july2026";
+  if (!localStorage.getItem(PURGE_KEY)) {
+    caches.delete("nihongoroute_tts_cache")
+      .then(() => {
+        localStorage.setItem(PURGE_KEY, "true");
+      })
+      .catch(() => {});
+  }
+}
+
 export const FEMALE_VOICES: readonly TtsVoice[] = [
   TTS_VOICES.LALA,
   TTS_VOICES.SITI,
@@ -273,16 +285,21 @@ export async function fetchTTSAudio(
         if (res.ok) {
           const blob = await res.blob();
           
-          const responseToCache = new Response(blob, {
-            headers: { "Content-Type": "audio/mpeg" }
-          });
-          await cache.put(apiUrl, responseToCache);
+          const cacheControl = res.headers.get("Cache-Control") || "";
+          const isNoStore = cacheControl.includes("no-store");
 
-          // Limit cache size to 200 items
-          const keys = await cache.keys();
-          if (keys.length > 200) {
-            for (let i = 0; i < keys.length - 200; i++) {
-              await cache.delete(keys[i]);
+          if (!isNoStore) {
+            const responseToCache = new Response(blob, {
+              headers: { "Content-Type": "audio/mpeg" }
+            });
+            await cache.put(apiUrl, responseToCache);
+
+            // Limit cache size to 200 items
+            const keys = await cache.keys();
+            if (keys.length > 200) {
+              for (let i = 0; i < keys.length - 200; i++) {
+                await cache.delete(keys[i]);
+              }
             }
           }
 
