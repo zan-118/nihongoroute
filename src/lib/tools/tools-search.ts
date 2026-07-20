@@ -1,12 +1,13 @@
 import type { ElementType } from "react";
-import { BookOpen, FileText, Hash } from "lucide-react";
+import { BookOpen, FileText, Hash, Wrench, Headphones } from "lucide-react";
 import { toHiragana } from "wanakana";
 import { createClient } from "@/lib/supabase/client";
+import { tools } from "@/lib/constants/tools";
 
 /**
  * Search category types.
  */
-export type ToolSearchCategory = "vocab" | "grammar" | "kanji";
+export type ToolSearchCategory = "vocab" | "grammar" | "kanji" | "lesson" | "reading" | "listening" | "tool";
 
 /**
  * Search result item structure.
@@ -34,6 +35,10 @@ export interface ToolSearchResult {
   vocab: ToolSearchItem[];
   grammar: ToolSearchItem[];
   kanji: ToolSearchItem[];
+  lesson: ToolSearchItem[];
+  reading: ToolSearchItem[];
+  listening: ToolSearchItem[];
+  tool: ToolSearchItem[];
 }
 
 /**
@@ -68,14 +73,14 @@ function escapePostgrestLike(value: string) {
  * Return empty search result structure.
  */
 export function emptyToolSearchResult(): ToolSearchResult {
-  return { grammar: [], kanji: [], vocab: [] };
+  return { grammar: [], kanji: [], vocab: [], lesson: [], reading: [], listening: [], tool: [] };
 }
 
 /**
  * Flatten grouped search results into single array.
  */
 export function flattenToolSearchResult(result: ToolSearchResult) {
-  return [...result.vocab, ...result.grammar, ...result.kanji];
+  return [...result.vocab, ...result.grammar, ...result.kanji, ...result.lesson, ...result.reading, ...result.listening, ...result.tool];
 }
 
 /**
@@ -239,6 +244,10 @@ export async function searchToolDictionary(
       romaji: item.romaji,
       slug: item.slug,
     })),
+    lesson: [],
+    reading: [],
+    listening: [],
+    tool: [],
   };
 
   // Evict oldest cache entry if size limit exceeded.
@@ -373,6 +382,166 @@ export async function analyzeTextWithDictionary(text: string) {
         romaji: item.romaji,
         slug: item.slug,
       })).slice(0, 16),
+      lesson: [],
+      reading: [],
+      listening: [],
+      tool: [],
     },
   };
+}
+
+/**
+ * Global search spanning all library and tool categories.
+ */
+export async function searchGlobal(
+  query: string,
+  limitPerType = 3
+): Promise<ToolSearchResult> {
+  const normalizedQuery = query.trim();
+  if (!normalizedQuery) return emptyToolSearchResult();
+
+  const supabase = createClient();
+  const safeQuery = escapePostgrestLike(normalizedQuery);
+  const kanaQuery = escapePostgrestLike(toHiragana(normalizedQuery));
+  const searchTerm = `%${safeQuery}%`;
+  const kanaTerm = `%${kanaQuery}%`;
+
+  const [vocabRes, grammarRes, kanjiRes, lessonRes, readingRes, listeningRes] = await Promise.all([
+    supabase
+      .from("vocab")
+      .select("id, word, meaning_id, furigana, romaji, hinshi, jlpt_level, slug, is_common")
+      .or(`word.ilike."${searchTerm}",meaning_id.ilike."${searchTerm}",romaji.ilike."${searchTerm}",furigana.ilike."${searchTerm}",word.ilike."${kanaTerm}",furigana.ilike."${kanaTerm}"`)
+      .limit(limitPerType),
+    supabase
+      .from("grammar")
+      .select("id, title, slug, meaning, jlpt_level, formation")
+      .or(`title.ilike."${searchTerm}",slug.ilike."${searchTerm}",meaning.ilike."${searchTerm}",formation.ilike."${searchTerm}"`)
+      .limit(limitPerType),
+    supabase
+      .from("kanji")
+      .select("id, character, meaning, onyomi, kunyomi, romaji, jlpt_level, slug")
+      .or(`character.ilike."${searchTerm}",meaning.ilike."${searchTerm}",onyomi.ilike."${searchTerm}",kunyomi.ilike."${searchTerm}",romaji.ilike."${searchTerm}",character.ilike."${kanaTerm}",onyomi.ilike."${kanaTerm}",kunyomi.ilike."${kanaTerm}"`)
+      .limit(limitPerType),
+    supabase
+      .from("lessons")
+      .select("id, title, slug, category_id")
+      .or(`title.ilike."${searchTerm}",slug.ilike."${searchTerm}"`)
+      .limit(limitPerType),
+    supabase
+      .from("reading")
+      .select("id, title, slug, jlpt_level, difficulty")
+      .or(`title.ilike."${searchTerm}",slug.ilike."${searchTerm}"`)
+      .limit(limitPerType),
+    supabase
+      .from("listening")
+      .select("id, title, slug, jlpt_level, difficulty")
+      .or(`title.ilike."${searchTerm}",slug.ilike."${searchTerm}"`)
+      .limit(limitPerType),
+  ]);
+
+  const matchedTools = tools.filter((t) => 
+    t.title.toLowerCase().includes(normalizedQuery.toLowerCase()) || 
+    t.description.toLowerCase().includes(normalizedQuery.toLowerCase())
+  ).slice(0, limitPerType);
+
+  const result: ToolSearchResult = {
+    vocab: ((vocabRes.data || []) as Array<{
+      id: string;
+      word: string;
+      meaning_id?: string | null;
+      slug?: string | null;
+      jlpt_level?: string | null;
+    }>).map((item) => ({
+      id: item.id,
+      title: item.word,
+      description: item.meaning_id || "Kosakata",
+      href: `/library/vocab/${item.slug || item.id}`,
+      icon: FileText,
+      category: "vocab" as const,
+      jlptLevel: item.jlpt_level,
+    })),
+    grammar: ((grammarRes.data || []) as Array<{
+      id: string;
+      title: string;
+      meaning?: string | null;
+      slug?: string | null;
+      jlpt_level?: string | null;
+    }>).map((item) => ({
+      id: item.id,
+      title: item.title,
+      description: item.meaning || "Tata bahasa",
+      href: `/library/grammar/${item.slug || item.id}`,
+      icon: BookOpen,
+      category: "grammar" as const,
+      jlptLevel: item.jlpt_level,
+    })),
+    kanji: ((kanjiRes.data || []) as Array<{
+      id: string;
+      character: string;
+      meaning?: string | null;
+      slug?: string | null;
+      jlpt_level?: string | null;
+    }>).map((item) => ({
+      id: item.id,
+      title: item.character,
+      description: item.meaning || "Kanji",
+      href: `/library/kanji/${item.slug || item.character || item.id}`,
+      icon: Hash,
+      category: "kanji" as const,
+      jlptLevel: item.jlpt_level,
+    })),
+    lesson: ((lessonRes.data || []) as Array<{
+      id: string;
+      title: string;
+      slug?: string | null;
+      category_id?: string | null;
+    }>).map((item) => ({
+      id: item.id,
+      title: item.title,
+      description: "Pelajaran",
+      href: `/courses/${item.category_id}/${item.slug}`,
+      icon: BookOpen,
+      category: "lesson" as const,
+    })),
+    reading: ((readingRes.data || []) as Array<{
+      id: string;
+      title: string;
+      slug?: string | null;
+      difficulty?: string | null;
+      jlpt_level?: string | null;
+    }>).map((item) => ({
+      id: item.id,
+      title: item.title,
+      description: item.difficulty || item.jlpt_level || "Bacaan",
+      href: `/library/reading/${item.slug}`,
+      icon: BookOpen,
+      category: "reading" as const,
+      jlptLevel: item.jlpt_level,
+    })),
+    listening: ((listeningRes.data || []) as Array<{
+      id: string;
+      title: string;
+      slug?: string | null;
+      difficulty?: string | null;
+      jlpt_level?: string | null;
+    }>).map((item) => ({
+      id: item.id,
+      title: item.title,
+      description: item.difficulty || item.jlpt_level || "Menyimak",
+      href: `/library/listening/${item.slug}`,
+      icon: Headphones,
+      category: "listening" as const,
+      jlptLevel: item.jlpt_level,
+    })),
+    tool: matchedTools.map((t) => ({
+      id: t.href,
+      title: t.title,
+      description: t.description,
+      href: t.href,
+      icon: t.icon || Wrench,
+      category: "tool" as const,
+    })),
+  };
+
+  return result;
 }

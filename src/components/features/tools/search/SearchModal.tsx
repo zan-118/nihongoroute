@@ -10,7 +10,6 @@ import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { Search, X, Command, BookOpen, Trophy, Layers, BrainCircuit, Heart, Settings, Share2, ArrowRight, Zap, Loader2, FileText, Hash } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 
 // ==========================================
 // TIPE DATA / INTERFACE
@@ -24,7 +23,7 @@ interface SearchItem {
   description: string;
   href: string;
   icon: React.ElementType;
-  category: "Platform" | "Belajar" | "Sistem" | "Aksi Cepat" | "Kosakata" | "Tata Bahasa" | "Kanji";
+  category: "Platform" | "Belajar" | "Sistem" | "Aksi Cepat" | "Kosakata" | "Tata Bahasa" | "Kanji" | "Pelajaran" | "Bacaan" | "Menyimak" | "Alat";
 }
 
 // ==========================================
@@ -60,8 +59,10 @@ const searchCache = new Map<string, SearchItem[]>();
 // ==========================================
 // FUNGSI PENCARIAN DATABASE (SUPABASE)
 // ==========================================
+import { searchGlobal, flattenToolSearchResult } from "@/lib/tools/tools-search";
+
 /**
- * Query Supabase for vocab, grammar, and kanji.
+ * Query Supabase for all categories.
  * @param query Search term.
  * @returns Array of matching search items.
  */
@@ -71,31 +72,28 @@ async function searchSupabase(query: string): Promise<SearchItem[]> {
   const cached = searchCache.get(normalizedQuery);
   if (cached) return cached;
 
-  const supabase = createClient();
-  const { toHiragana } = await import("wanakana");
-  const kanaQuery = toHiragana(query);
-  const searchTerm = `%${query}%`;
-  const kanaTerm = `%${kanaQuery}%`;
+  const result = await searchGlobal(query, 3);
+  const flatItems = flattenToolSearchResult(result);
 
-  // Query vocab, grammar, and kanji tables in parallel
-  const [vocabRes, grammarRes, kanjiRes] = await Promise.all([
-    supabase.from("vocab").select("id, word, meaning_id, slug")
-      .or(`word.ilike.${searchTerm},meaning_id.ilike.${searchTerm},romaji.ilike.${searchTerm},word.ilike.${kanaTerm},furigana.ilike.${kanaTerm}`)
-      .limit(5),
-    supabase.from("grammar").select("id, title, slug, meaning")
-      .or(`title.ilike.${searchTerm},slug.ilike.${searchTerm},meaning.ilike.${searchTerm}`)
-      .limit(3),
-    supabase.from("kanji").select("id, character, meaning, slug")
-      .or(`character.ilike.${searchTerm},meaning.ilike.${searchTerm},onyomi.ilike.${searchTerm},kunyomi.ilike.${searchTerm},romaji.ilike.${searchTerm},character.ilike.${kanaTerm},onyomi.ilike.${kanaTerm},kunyomi.ilike.${kanaTerm}`)
-      .limit(3),
-  ]);
+  const categoryMap: Record<string, SearchItem["category"]> = {
+    vocab: "Kosakata",
+    grammar: "Tata Bahasa",
+    kanji: "Kanji",
+    lesson: "Pelajaran",
+    reading: "Bacaan",
+    listening: "Menyimak",
+    tool: "Alat"
+  };
 
-  // Map database results to SearchItem format
-  const mapped: SearchItem[] = [
-    ...(vocabRes.data || []).map((v: { id: string; word?: string; meaning_id?: string; slug?: string }) => ({ id: v.id, title: v.word, description: v.meaning_id || "Kosakata", href: `/library/vocab/${v.slug || v.id}`, icon: FileText, category: "Kosakata" as const })),
-    ...(grammarRes.data || []).map((g: { id: string; title?: string; meaning?: string; slug?: string }) => ({ id: g.id, title: g.title, description: g.meaning || "Tata Bahasa", href: `/library/grammar/${g.slug || g.id}`, icon: BookOpen, category: "Tata Bahasa" as const })),
-    ...(kanjiRes.data || []).map((k: { id: string; character?: string; meaning?: string; slug?: string }) => ({ id: k.id, title: k.character, description: k.meaning || "Kanji", href: `/library/kanji/${k.slug || k.character || k.id}`, icon: Hash, category: "Kanji" as const })),
-  ];
+  const mapped: SearchItem[] = flatItems.map((item) => ({
+    id: item.id,
+    title: item.title,
+    description: item.description,
+    href: item.href,
+    icon: item.icon,
+    category: categoryMap[item.category] || "Belajar"
+  }));
+
   // Save results to cache
   searchCache.set(normalizedQuery, mapped);
   return mapped;

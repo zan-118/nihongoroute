@@ -30,7 +30,7 @@ import { cn } from "@/lib/utils";
 /**
  * Filter options for dictionary search results.
  */
-type DictionaryFilter = "all" | ToolSearchCategory;
+type DictionaryFilter = "all" | "vocab" | "grammar" | "kanji";
 
 /**
  * Configuration for search filter buttons.
@@ -214,6 +214,7 @@ export default function DictionaryPageClient() {
       try {
         const nextResult = await searchToolDictionaryAction(trimmed, 12);
         const mappedResult = {
+          ...emptyToolSearchResult(),
           vocab: nextResult.vocab.map((item) => ({ ...item, icon: FileText })),
           grammar: nextResult.grammar.map((item) => ({ ...item, icon: BookOpen })),
           kanji: nextResult.kanji.map((item) => ({ ...item, icon: Hash })),
