@@ -230,16 +230,16 @@ const pageTours: PageTour[] = [
     match: /^\/dashboard$/,
     eyebrow: "Pusat belajar",
     title: "Kelola ritme harian",
-    intro: "Dashboard adalah tempat melihat progres, review, pencapaian, dan pengaturan belajar.",
+    intro: "Dashboard adalah tempat melihat progres, rekomendasi belajar, rute harian, titik lemah, pencapaian, dan pengaturan.",
     steps: [
       {
         title: "Lihat fokus hari ini",
-        description: "Cek review yang jatuh tempo, ekspresi harian, dan rekomendasi lanjut belajar.",
+        description: "Tab Beranda menampilkan rekomendasi langkah selanjutnya, rute harian, ringkasan titik lemah, dan review yang jatuh tempo.",
         icon: icon(Home),
       },
       {
         title: "Pantau progres",
-        description: "Buka tab progres untuk melihat XP, streak, statistik, dan perkembangan belajarmu.",
+        description: "Buka tab progres untuk melihat XP, streak, statistik, timeline belajar, dan perkembangan detailmu.",
         icon: icon(Gauge, "text-secondary"),
       },
       {
@@ -274,30 +274,7 @@ const pageTours: PageTour[] = [
       },
     ],
   },
-  {
-    id: "learning-hub",
-    match: /^\/learning-hub$/,
-    eyebrow: "Learning hub",
-    title: "Satukan rencana belajar",
-    intro: "Gunakan hub ini untuk berpindah cepat antara materi, latihan, dan review.",
-    steps: [
-      {
-        title: "Temukan aktivitas utama",
-        description: "Buka materi, review, tools, atau ujian dari satu tempat tanpa mencari menu lagi.",
-        icon: icon(Compass),
-      },
-      {
-        title: "Lanjutkan dari progres",
-        description: "Pakai rekomendasi untuk kembali ke aktivitas yang paling relevan dengan kondisi terbaru.",
-        icon: icon(ArrowRight, "text-secondary"),
-      },
-      {
-        title: "Jaga konsistensi",
-        description: "Kombinasikan belajar baru, review SRS, dan drill singkat dalam satu sesi.",
-        icon: icon(Target, "text-success"),
-      },
-    ],
-  },
+
   {
     id: "library",
     match: /^\/library$/,
@@ -1303,11 +1280,7 @@ const routeTargetSelectors: Record<string, string[][]> = {
     ["a[href='/courses']", "a[href='/dashboard']", "main a[href]", "main section"],
     ["a[href='/login']", "a[href='/dashboard']", "main a[href]"],
   ],
-  "learning-hub": [
-    ["main h1", "h1", "main header"],
-    ["a[href^='/']", "main button", "main article"],
-    ["[data-tour='nav-review']", "[data-tour='nav-tools']", "[data-tour='sidebar-nav']"],
-  ],
+
   "library": [
     ["main h1", "h1", "main header"],
     ["[data-tour='library-category-card']", "a[href^='/library/']", "a[href='/exams']"],

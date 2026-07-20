@@ -20,7 +20,6 @@ export const ROUTES = {
   // ==========================================
   HOME: "/",
   DASHBOARD: "/dashboard",
-  LEARNING_HUB: "/learning-hub",
   SUPPORT: "/support",
   TERMS: "/terms",
   PRIVACY: "/privacy",
@@ -83,7 +82,6 @@ export function getRouteLabel(segment: string): string {
     listening: "Listening",
     courses: "Kursus",
     exams: "Ujian",
-    "learning-hub": "Learning Hub",
     cheatsheet: "Referensi Kilat",
     support: "Bantuan",
     settings: "Pengaturan",

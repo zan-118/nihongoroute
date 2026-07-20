@@ -112,7 +112,7 @@ export default function DailyRoutePanel({ compact = false, className }: DailyRou
           </div>
         </div>
         <Button asChild variant="outline" size="sm" className="w-fit rounded-xl">
-          <Link href="/learning-hub">
+          <Link href="/dashboard">
             Hub
             <ArrowRight data-icon="inline-end" />
           </Link>

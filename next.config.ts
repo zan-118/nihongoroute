@@ -80,6 +80,15 @@ const nextConfig: NextConfig = {
       fullUrl: !isProduction,
     },
   },
+  async redirects() {
+    return [
+      {
+        source: "/learning-hub",
+        destination: "/dashboard",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

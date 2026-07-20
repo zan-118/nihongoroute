@@ -11,7 +11,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { 
   CustomDashboardIcon,
-  CustomHubIcon,
   CustomCoursesIcon,
   CustomToolsIcon,
   CustomExamsIcon,
@@ -76,7 +75,6 @@ export function useNavbar() {
   const links: NavLinks = useMemo(() => ({
     main: [
       { href: ROUTES.DASHBOARD, label: "Dasbor", icon: CustomDashboardIcon },
-      { href: ROUTES.LEARNING_HUB, label: "Learning Hub", icon: CustomHubIcon },
       { href: ROUTES.COURSES.ROOT, label: "Materi", icon: CustomCoursesIcon },
       { href: "/tools", label: "Peralatan", icon: CustomToolsIcon },
       { href: ROUTES.EXAMS.ROOT, label: "Ujian", icon: CustomExamsIcon },

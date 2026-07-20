@@ -9,7 +9,7 @@
 import { usePathname } from "next/navigation";
 import { 
   CustomDashboardIcon, 
-  CustomHubIcon, 
+  CustomCoursesIcon, 
   CustomSRSIcon, 
   CustomLibraryIcon, 
   CustomUserIcon, 
@@ -41,7 +41,7 @@ export function useMobileNav() {
   // Define navigation items. Last item changes dynamically based on auth state.
   const navItems = [
     { href: "/dashboard", icon: CustomDashboardIcon, label: "Beranda" },
-    { href: "/learning-hub", icon: CustomHubIcon, label: "Hub" },
+    { href: "/courses", icon: CustomCoursesIcon, label: "Materi" },
     { href: "/review", icon: CustomSRSIcon, label: "Hafalan" },
     { href: "/library", icon: CustomLibraryIcon, label: "Pustaka" },
     { 

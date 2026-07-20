@@ -17,6 +17,9 @@ import dynamic from "next/dynamic";
 import DashboardHero from "../DashboardHero";
 import DailyQuests from "../quests/DailyQuests";
 import DailyExpression from "../DailyExpression";
+import DailyRoutePanel from "@/components/features/ecosystem/DailyRoutePanel";
+import NextActionPanel from "@/components/features/ecosystem/NextActionPanel";
+import WeakPointSummary from "../WeakPointSummary";
 import { Variants } from "framer-motion";
 import { RandomExpression } from "@/actions/expressions.actions";
 
@@ -72,7 +75,8 @@ interface HomePanelProps {
 // ==========================================
 /**
  * Home panel component.
- * Renders dashboard hero, kanji progress, daily quests, and daily expression.
+ * Renders dashboard hero, rekomendasi belajar, daily route, ringkasan weak-point,
+ * kanji progress, daily quests, dan daily expression.
  */
 export function HomePanel({
   loading,
@@ -107,6 +111,10 @@ export function HomePanel({
           }>}
         />
         
+        <NextActionPanel compact />
+        <DailyRoutePanel compact />
+        <WeakPointSummary />
+
         <section className="space-y-[34px]">
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-[13px]">
