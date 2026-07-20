@@ -70,15 +70,7 @@ export function buildLibraryCategories(counts: LibraryCounts): LibraryCategoryIt
       count: counts.listening,
       accentRgb: "6 182 212",
     },
-    {
-      href: "/exams",
-      title: "Ujian & Sertifikasi",
-      desc: "Uji kesiapanmu menghadapi ujian JLPT sesungguhnya dengan simulasi skor yang akurat.",
-      icon: <Award size={24} />,
-      label: "Latihan Ujian",
-      count: counts.exams,
-      accentRgb: "249 115 22",
-    },
+
     {
       href: "/library/cheatsheet",
       title: "Catatan Cepat",

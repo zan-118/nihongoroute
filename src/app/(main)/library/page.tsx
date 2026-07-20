@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Pustaka Belajar | NihongoRoute",
     description:
-      "Cari semua materi belajar bahasa Jepang: kosakata, tata bahasa, kanji, graded reading, listening lab, cheatsheet, dan simulasi ujian JLPT.",
+      "Cari semua materi belajar bahasa Jepang: kosakata, tata bahasa, kanji, graded reading, listening lab, dan cheatsheet.",
     path: "/library",
     keywords: [
       "pustaka bahasa Jepang",
