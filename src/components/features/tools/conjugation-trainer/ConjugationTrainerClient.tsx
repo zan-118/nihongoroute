@@ -28,6 +28,7 @@ import NextActionPanel from "@/components/features/ecosystem/NextActionPanel";
 import { useUIStore } from "@/store/useUIStore";
 import { cn } from "@/lib/utils";
 
+import { ROUTES } from "@/lib/core/routes";
 /**
  * Sample verbs for quick selection in trainer.
  */
@@ -170,7 +171,7 @@ export default function ConjugationTrainerClient({
         id: sourceSlug || verb,
         slug: sourceSlug,
         title: sourceTitle || verb,
-        href: sourceHref || "/tools/conjugation",
+        href: sourceHref ||ROUTES.TOOLS.CONJUGATION,
       },
       metrics: {
         correct: correct ? 1 : 0,
@@ -193,7 +194,7 @@ export default function ConjugationTrainerClient({
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
         <header className="flex flex-col gap-5">
           <Button variant="outline" asChild className="w-fit rounded-xl">
-            <Link href="/tools">Kembali ke Peralatan</Link>
+            <Link href={ROUTES.TOOLS.ROOT}>Kembali ke Peralatan</Link>
           </Button>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">

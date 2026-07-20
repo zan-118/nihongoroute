@@ -33,6 +33,7 @@ import { getRandomSentencesForDrill, type SentenceDrillItem } from "@/actions/se
 import { fetchTTSAudio, speakWithWebSpeech, TTS_VOICES, type TtsVoice } from "@/lib/tts";
 import { toHiragana } from "wanakana";
 
+import { ROUTES } from "@/lib/core/routes";
 // ==========================================
 // KONSTANTA & KONFIGURASI
 // ==========================================
@@ -292,7 +293,7 @@ export default function DictationClient() {
         {/* Header */}
         <header className="mb-10 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/tools">
+            <Link href={ROUTES.TOOLS.ROOT}>
               <Button variant="ghost" size="icon" className="rounded-xl border border-border bg-card/20 hover:bg-card/40">
                 <ChevronLeft size={20} />
               </Button>

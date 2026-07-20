@@ -3,12 +3,13 @@ import ConjugationTrainerClient from "@/components/features/tools/conjugation-tr
 import type { VerbFormId, VerbGroup } from "@/lib/verb-conjugation";
 import { createPageMetadata } from "@/lib/seo";
 
+import { ROUTES } from "@/lib/core/routes";
 /** Page metadata. Define SEO tags for conjugation trainer. */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Verb Conjugation Trainer Jepang | NihongoRoute",
     description: "Latihan konjugasi verba Jepang untuk bentuk masu, te, nai, ta, potensial, pasif, kausatif, dan lainnya.",
-    path: "/tools/conjugation",
+    path:ROUTES.TOOLS.CONJUGATION,
     keywords: ["konjugasi verba Jepang", "verb conjugation Japanese", "latihan te form", "masu form"],
   }),
 };

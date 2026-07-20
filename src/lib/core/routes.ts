@@ -8,6 +8,7 @@
 // ==========================================
 import { slugify } from "@/lib/utils";
 
+
 // ==========================================
 // DAFTAR KONSTANTA RUTE (ROUTES)
 // ==========================================
@@ -61,10 +62,40 @@ export const ROUTES = {
   // ======================
   AUTH: {
     LOGIN: "/login",
-    REGISTER: "/register",
     FORGOT_PASSWORD: "/forgot-password",
   },
+
+  // ======================
+  // GLOBAL
+  // ======================
+  REVIEW: "/review",
+  SETTINGS: "/settings",
+  SHARE: "/share",
+  SOCIAL: "/social",
+
+  // ======================
+  // TOOLS
+  // ======================
+  TOOLS: {
+    ROOT: "/tools",
+    KANA: "/tools/kana",
+    TEXT_ANALYZER: "/tools/text-analyzer",
+    CONJUGATION: "/tools/conjugation",
+    PARTICLES: "/tools/particles",
+    KANJI_SIMILARITY: "/tools/kanji-similarity",
+    SENTENCE_BUILDER: "/tools/sentence-builder",
+    JLPT_DRILL: "/tools/jlpt-drill",
+    COUNTER_TRAINER: "/tools/counter-trainer",
+    SHADOWING: "/tools/shadowing",
+    DICTATION: "/tools/dictation",
+    FLASHCARDS: "/tools/flashcards",
+    SURVIVAL: "/tools/survival",
+    WEAK_POINTS: "/tools/weak-points",
+    DICTIONARY: "/tools/dictionary",
+    WRITING: "/tools/writing",
+  },
 } as const;
+
 
 /**
  * Get readable label for route segment.

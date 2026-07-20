@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useWeakPointQuery } from "./useWeakPointQuery";
 
+import { ROUTES } from "@/lib/core/routes";
 // ==========================================
 // KOMPONEN UTAMA
 // ==========================================
@@ -79,7 +80,7 @@ export default function WeakPointPanel() {
             {weakItems.length} Titik Lemah
           </Badge>
           <Button asChild size="sm" className="h-8 rounded-xl px-3 text-[8px] font-black uppercase tracking-widest">
-            <Link href="/tools/weak-points">
+            <Link href={ROUTES.TOOLS.WEAK_POINTS}>
               <Target size={12} />
               Latih Fokus
             </Link>

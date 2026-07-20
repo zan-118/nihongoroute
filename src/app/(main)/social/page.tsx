@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Users } from "lucide-react";
 import { createPageMetadata } from "@/lib/seo";
 
+import { ROUTES } from "@/lib/core/routes";
 /**
  * Metadata configuration for Social page.
  * Disables search engine indexing for social hub.
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Sosial & Komunitas | NihongoRoute",
     description: "Berdiskusi, bertanya, dan bersaing secara sehat dengan pembelajar bahasa Jepang lainnya di seluruh dunia.",
-    path: "/social",
+    path:ROUTES.SOCIAL,
     noIndex: true,
   }),
 };

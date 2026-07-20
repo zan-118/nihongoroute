@@ -21,6 +21,7 @@ import NextActionPanel from "@/components/features/ecosystem/NextActionPanel";
 import { useUIStore } from "@/store/useUIStore";
 import { cn } from "@/lib/utils";
 
+import { ROUTES } from "@/lib/core/routes";
 /**
  * Default sample text for analyzer.
  */
@@ -208,7 +209,7 @@ export default function TextAnalyzerClient({
             id: safeSourceHref.split("/").pop() || "text-analyzer",
             slug: safeSourceHref.split("/").pop(),
             title: initialSourceTitle || "Text Analyzer",
-            href: safeSourceHref || "/tools/text-analyzer",
+            href: safeSourceHref ||ROUTES.TOOLS.TEXT_ANALYZER,
           },
           metrics: {
             total:
@@ -242,7 +243,7 @@ export default function TextAnalyzerClient({
             id: safeSourceHref.split("/").pop() || "text-analyzer",
             slug: safeSourceHref.split("/").pop(),
             title: initialSourceTitle || "Text Analyzer",
-            href: safeSourceHref || "/tools/text-analyzer",
+            href: safeSourceHref ||ROUTES.TOOLS.TEXT_ANALYZER,
           },
           metrics: {
             total:
@@ -263,7 +264,7 @@ export default function TextAnalyzerClient({
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
         <header className="flex flex-col gap-5">
           <Button variant="outline" asChild className="w-fit rounded-xl">
-            <Link href="/tools">Kembali ke Peralatan</Link>
+            <Link href={ROUTES.TOOLS.ROOT}>Kembali ke Peralatan</Link>
           </Button>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">

@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { getRandomSentencesForDrill } from "@/actions/sentences.actions";
 
+import { ROUTES } from "@/lib/core/routes";
 /**
  * SentenceBuilderClient component.
  * Provides interactive UI to build Japanese sentences from tokens.
@@ -132,7 +133,7 @@ export default function SentenceBuilderClient() {
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
         <header className="flex flex-col gap-5">
           <Button variant="outline" asChild className="w-fit rounded-xl">
-            <Link href="/tools">Kembali ke Peralatan</Link>
+            <Link href={ROUTES.TOOLS.ROOT}>Kembali ke Peralatan</Link>
           </Button>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">

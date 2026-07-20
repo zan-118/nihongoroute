@@ -7,6 +7,7 @@ import type { SRSState } from "@/lib/srs";
 import { summarizeSrs, type SrsMemorySummary } from "@/lib/srs-summary";
 import type { LessonProgress } from "@/store/types";
 
+import { ROUTES } from "@/lib/core/routes";
 /**
  * Supported JLPT levels ordered from lowest to highest.
  */
@@ -318,7 +319,7 @@ function buildActions(params: {
     pushUniqueAction(actions, {
       id: "review",
       label: "Mulai review",
-      href: "/review",
+      href:ROUTES.REVIEW,
       reason: `${params.dueCount} kartu menunggu penguatan.`,
     });
   }
@@ -336,7 +337,7 @@ function buildActions(params: {
     pushUniqueAction(actions, {
       id: "review",
       label: "Stabilkan memori",
-      href: "/review",
+      href:ROUTES.REVIEW,
       reason: "Prioritaskan kartu yang masih rentan.",
     });
   }
@@ -354,7 +355,7 @@ function buildActions(params: {
     pushUniqueAction(actions, {
       id: "routine",
       label: "Sesi singkat",
-      href: "/tools/flashcards",
+      href:ROUTES.TOOLS.FLASHCARDS,
       reason: "Bangun ritme dengan latihan ringan.",
     });
   }

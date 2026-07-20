@@ -37,13 +37,13 @@ const SEARCH_ITEMS: SearchItem[] = [
   { id: "materi", title: "Materi", description: "Jalur belajar JLPT dan Topik Umum", href: "/courses", icon: BookOpen, category: "Platform" },
   { id: "ujian", title: "Ujian", description: "Simulasi JLPT dan Test Mandiri", href: "/exams", icon: Trophy, category: "Platform" },
   { id: "pustaka", title: "Pustaka", description: "Daftar kata benda, kata kerja, dan kanji", href: "/library", icon: Layers, category: "Belajar" },
-  { id: "hafalan", title: "Peninjauan", description: "Latihan SRS untuk ingatan jangka panjang", href: "/review", icon: BrainCircuit, category: "Belajar" },
-  { id: "sosial", title: "Papan Skor", description: "Peringkat global dan komunitas", href: "/social", icon: Trophy, category: "Belajar" },
+  { id: "hafalan", title: "Peninjauan", description: "Latihan SRS untuk ingatan jangka panjang", href:ROUTES.REVIEW, icon: BrainCircuit, category: "Belajar" },
+  { id: "sosial", title: "Papan Skor", description: "Peringkat global dan komunitas", href:ROUTES.SOCIAL, icon: Trophy, category: "Belajar" },
   { id: "dukungan", title: "Dukungan", description: "Bantuan dan panduan penggunaan", href: "/support", icon: Heart, category: "Sistem" },
-  { id: "pengaturan", title: "Pengaturan", description: "Kelola profil dan preferensi aplikasi", href: "/settings", icon: Settings, category: "Sistem" },
-  { id: "bagikan", title: "Bagikan", description: "Ajak teman belajar bersama di NihongoRoute", href: "/share", icon: Share2, category: "Sistem" },
-  { id: "quick-review", title: "Review Sekarang", description: "Mulai sesi review SRS yang tertunda", href: "/review", icon: Zap, category: "Aksi Cepat" },
-  { id: "quick-kana", title: "Belajar Kana", description: "Latihan dasar Hiragana & Katakana", href: "/tools/kana", icon: BookOpen, category: "Aksi Cepat" },
+  { id: "pengaturan", title: "Pengaturan", description: "Kelola profil dan preferensi aplikasi", href:ROUTES.SETTINGS, icon: Settings, category: "Sistem" },
+  { id: "bagikan", title: "Bagikan", description: "Ajak teman belajar bersama di NihongoRoute", href:ROUTES.SHARE, icon: Share2, category: "Sistem" },
+  { id: "quick-review", title: "Review Sekarang", description: "Mulai sesi review SRS yang tertunda", href:ROUTES.REVIEW, icon: Zap, category: "Aksi Cepat" },
+  { id: "quick-kana", title: "Belajar Kana", description: "Latihan dasar Hiragana & Katakana", href:ROUTES.TOOLS.KANA, icon: BookOpen, category: "Aksi Cepat" },
 ];
 
 /**
@@ -61,6 +61,7 @@ const searchCache = new Map<string, SearchItem[]>();
 // ==========================================
 import { searchGlobal, flattenToolSearchResult } from "@/lib/tools/tools-search";
 
+import { ROUTES } from "@/lib/core/routes";
 /**
  * Query Supabase for all categories.
  * @param query Search term.

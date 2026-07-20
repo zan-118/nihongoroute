@@ -30,6 +30,7 @@ import NextActionPanel from "@/components/features/ecosystem/NextActionPanel";
 import { useUIStore } from "@/store/useUIStore";
 import { cn, shuffleArray } from "@/lib/utils";
 
+import { ROUTES } from "@/lib/core/routes";
 /**
  * Map drill levels to display labels.
  */
@@ -172,7 +173,7 @@ export default function JlptMiniDrillClient({
             type: "tool",
             id: "jlpt-drill",
             title: "JLPT Mini Drill",
-            href: "/tools/jlpt-drill",
+            href:ROUTES.TOOLS.JLPT_DRILL,
             level: level === "all" ? undefined : level,
           },
           metrics: {
@@ -205,7 +206,7 @@ export default function JlptMiniDrillClient({
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
         <header className="flex flex-col gap-5">
           <Button variant="outline" asChild className="w-fit rounded-xl">
-            <Link href="/tools">Kembali ke Peralatan</Link>
+            <Link href={ROUTES.TOOLS.ROOT}>Kembali ke Peralatan</Link>
           </Button>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">

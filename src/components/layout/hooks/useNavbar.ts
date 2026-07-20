@@ -76,17 +76,17 @@ export function useNavbar() {
     main: [
       { href: ROUTES.DASHBOARD, label: "Dasbor", icon: CustomDashboardIcon },
       { href: ROUTES.COURSES.ROOT, label: "Materi", icon: CustomCoursesIcon },
-      { href: "/tools", label: "Peralatan", icon: CustomToolsIcon },
+      { href:ROUTES.TOOLS.ROOT, label: "Peralatan", icon: CustomToolsIcon },
       { href: ROUTES.EXAMS.ROOT, label: "Ujian", icon: CustomExamsIcon },
     ],
     learn: [
-      { href: "/review", label: "Hafalan (SRS)", icon: CustomSRSIcon },
+      { href:ROUTES.REVIEW, label: "Hafalan (SRS)", icon: CustomSRSIcon },
       { href: ROUTES.LIBRARY.ROOT, label: "Pustaka", icon: CustomLibraryIcon },
-      { href: "/social", label: "Komunitas", icon: CustomCommunityIcon },
+      { href:ROUTES.SOCIAL, label: "Komunitas", icon: CustomCommunityIcon },
     ],
     system: [
-      { href: "/settings", label: "Pengaturan", icon: CustomSettingsIcon },
-      { href: "/share", label: "Bagikan", icon: CustomShareIcon },
+      { href:ROUTES.SETTINGS, label: "Pengaturan", icon: CustomSettingsIcon },
+      { href:ROUTES.SHARE, label: "Bagikan", icon: CustomShareIcon },
       { href: ROUTES.SUPPORT, label: "Bantuan", icon: CustomHelpIcon },
     ]
   }), []);

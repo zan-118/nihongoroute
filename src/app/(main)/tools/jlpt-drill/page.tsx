@@ -4,12 +4,13 @@ import JlptMiniDrillClient from "@/components/features/tools/jlpt-mini-drill/Jlp
 import type { DrillKind, DrillLevel } from "@/lib/jlpt-mini-drill";
 import { createPageMetadata } from "@/lib/seo";
 
+import { ROUTES } from "@/lib/core/routes";
 /** Page metadata for SEO. */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "JLPT Mini Drill | NihongoRoute",
     description: "Generator latihan cepat JLPT untuk kosakata, kanji, dan grammar dari level N5 sampai N1.",
-    path: "/tools/jlpt-drill",
+    path:ROUTES.TOOLS.JLPT_DRILL,
     keywords: ["JLPT drill", "latihan JLPT", "quiz JLPT", "vocab kanji grammar JLPT"],
   }),
 };

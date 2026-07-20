@@ -1,6 +1,7 @@
 export * from "@/lib/learning-events";
 import { LearningEvent } from "@/lib/learning-events";
 
+import { ROUTES } from "@/lib/core/routes";
 /**
  * Recommendation item for user dashboard.
  */
@@ -121,12 +122,12 @@ const WEAK_POINT_META: Record<
   },
   counter: {
     label: "Counter",
-    href: "/tools/counter-trainer",
+    href: ROUTES.TOOLS.COUNTER_TRAINER,
     description: "Pilihan kata bantu bilangan masih perlu pemanasan.",
   },
   conjugation: {
     label: "Konjugasi",
-    href: "/tools/conjugation",
+    href: ROUTES.TOOLS.CONJUGATION,
     description: "Bentuk verba perlu dicek ulang.",
   },
   sentence: {
@@ -136,7 +137,7 @@ const WEAK_POINT_META: Record<
   },
   mixed: {
     label: "Campuran",
-    href: "/tools/jlpt-drill",
+    href: ROUTES.TOOLS.JLPT_DRILL,
     description: "Ada beberapa area kecil yang perlu distabilkan.",
   },
 };
@@ -526,13 +527,13 @@ function weakPointCategory(event: LearningEvent): WeakPointCategory {
  * Get tool URL for weak point category.
  */
 function categoryHref(category: WeakPointCategory, event?: LearningEvent) {
-  if (category === "counter") return "/tools/counter-trainer";
+  if (category === "counter") return ROUTES.TOOLS.COUNTER_TRAINER;
   if (category === "conjugation") {
     const params = new URLSearchParams();
     if (event?.details?.prompt) params.set("verb", event.details.prompt);
     if (event?.details?.focus) params.set("group", event.details.focus);
     if (event?.details?.text) params.set("form", event.details.text);
-    return params.size > 0 ? `/tools/conjugation?${params.toString()}` : "/tools/conjugation";
+    return params.size > 0 ? `/tools/conjugation?${params.toString()}` : ROUTES.TOOLS.CONJUGATION;
   }
   if (category === "vocab" || category === "kanji" || category === "grammar") {
     return drillHref(event?.source || { type: category }, category);
@@ -730,7 +731,7 @@ export function buildDailyRoute({
     id: "daily-finish-shadowing",
     title: "Tutup dengan Shadowing",
     description: "Rekam satu kalimat untuk mengunci bunyi dan ritme.",
-    href: "/tools/shadowing",
+    href: ROUTES.TOOLS.SHADOWING,
     category: "tool",
     reason: "Sesi singkat berbasis output menjaga learning loop tetap aktif.",
     priority: 58,

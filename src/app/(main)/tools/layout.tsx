@@ -9,6 +9,7 @@
 import type { Metadata } from "next";
 import { createPageMetadata } from "@/lib/seo";
 
+import { ROUTES } from "@/lib/core/routes";
 // ======================
 // KONFIGURASI METADATA
 // ======================
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
     title: "Pusat Peralatan Bahasa Jepang | NihongoRoute",
     description:
       "Kumpulan alat bantu belajar bahasa Jepang: Kana Master, kamus terpadu, text analyzer, latihan menulis, konjugasi, partikel, dan flashcards.",
-    path: "/tools",
+    path:ROUTES.TOOLS.ROOT,
     keywords: [
       "alat belajar bahasa jepang",
       "kana master",

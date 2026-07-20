@@ -9,6 +9,7 @@
 import type { Metadata } from "next";
 import { createPageMetadata } from "@/lib/seo";
 
+import { ROUTES } from "@/lib/core/routes";
 // ======================
 // KONFIGURASI METADATA
 // ======================
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Pengaturan | NihongoRoute",
     description: "Atur profil, tema tampilan, dan preferensi belajar di NihongoRoute.",
-    path: "/settings",
+    path:ROUTES.SETTINGS,
     noIndex: true,
   }),
 };

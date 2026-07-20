@@ -27,6 +27,7 @@ import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import ContinueLearning from "./ContinueLearning";
 import { getLevelProgressPercent } from "@/lib/level";
 
+import { ROUTES } from "@/lib/core/routes";
 // ==========================================
 // ANTARMUKA & PROPS (INTERFACES)
 // ==========================================
@@ -206,7 +207,7 @@ export default function DashboardHero({
               {dueCount > 0 ? (
                 <>
                   <Button asChild className="flex-1 h-[55px] bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-[0.15em] rounded-lg text-[10px] transition-all shadow-lg shadow-primary/20 hover:shadow-primary/30 active:scale-[0.98]">
-                    <Link href="/review">
+                    <Link href={ROUTES.REVIEW}>
                       Mulai Review <ArrowRight size={14} className="ml-2" />
                     </Link>
                   </Button>

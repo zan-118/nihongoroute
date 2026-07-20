@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+import { ROUTES } from "@/lib/core/routes";
 /**
  * Free writing canvas content.
  * Renders canvas and tips. Reads target character from URL.
@@ -40,7 +41,7 @@ function FreeWritingContent() {
               asChild
               className="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest bg-muted border-border"
             >
-              <Link href="/tools">
+              <Link href={ROUTES.TOOLS.ROOT}>
                 <ChevronLeft size={14} className="mr-2" /> Kembali ke Peralatan
               </Link>
             </Button>

@@ -22,6 +22,7 @@ import LearningTimelinePanel from "./LearningTimelinePanel";
 import NextActionPanel from "./NextActionPanel";
 import { cn } from "@/lib/utils";
 
+import { ROUTES } from "@/lib/core/routes";
 /**
  * Quick navigation links for ecosystem.
  */
@@ -43,7 +44,7 @@ const QUICK_LINKS = [
   {
     title: "Tools",
     description: "Buka latihan yang tersambung dengan data library.",
-    href: "/tools",
+    href:ROUTES.TOOLS.ROOT,
     icon: Wrench,
     className: "border-success/25 bg-success/10 text-success",
   },

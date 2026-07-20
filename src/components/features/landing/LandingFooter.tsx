@@ -2,11 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { Github, Instagram, MessageCircle } from "lucide-react";
 
+import { ROUTES } from "@/lib/core/routes";
 /**
  * Navigation links for learning resources.
  */
 const learningLinks = [
-  { href: "/tools/kana", label: "Hiragana & Katakana" },
+  { href:ROUTES.TOOLS.KANA, label: "Hiragana & Katakana" },
   { href: "/library/vocab", label: "Kosakata Utama" },
   { href: "/library/kanji", label: "Kamus Kanji" },
   { href: "/library/grammar", label: "Tata Bahasa" },
@@ -17,9 +18,9 @@ const learningLinks = [
  * Navigation links for core platform features.
  */
 const featureLinks = [
-  { href: "/review", label: "Flashcard SRS" },
+  { href:ROUTES.REVIEW, label: "Flashcard SRS" },
   { href: "/dashboard", label: "Papan Kemajuan" },
-  { href: "/tools", label: "Pusat Peralatan" },
+  { href:ROUTES.TOOLS.ROOT, label: "Pusat Peralatan" },
   { href: "https://github.com/zan-118/nihongoroute", label: "Kontribusi GitHub", external: true },
 ];
 

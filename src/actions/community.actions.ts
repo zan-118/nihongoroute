@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 
+import { ROUTES } from "@/lib/core/routes";
 /**
  * Author profile details for posts and comments.
  */
@@ -151,7 +152,7 @@ export async function createCommunityPost(content: string, category: string = "U
     if (error) throw error;
 
     // Refresh social feed path
-    revalidatePath("/social");
+    revalidatePath(ROUTES.SOCIAL);
     return { success: true };
   } catch (error: unknown) {
     console.error("Gagal membuat postingan:", error);
@@ -232,7 +233,7 @@ export async function toggleLikePost(postId: string): Promise<{ success: boolean
     }
 
     // Refresh social feed path
-    revalidatePath("/social");
+    revalidatePath(ROUTES.SOCIAL);
     return { success: true, likesCount: likesList.length, isLiked };
   } catch (error) {
     console.error("Gagal mengubah suka postingan:", error);
@@ -347,7 +348,7 @@ export async function addCommunityComment(postId: string, content: string): Prom
     }
 
     // Refresh social feed path
-    revalidatePath("/social");
+    revalidatePath(ROUTES.SOCIAL);
     return { success: true };
   } catch (error: unknown) {
     console.error("Gagal menambahkan komentar:", error);
@@ -409,7 +410,7 @@ export async function deleteCommunityPost(postId: string): Promise<{ success: bo
     if (error) throw error;
 
     // Refresh social feed path
-    revalidatePath("/social");
+    revalidatePath(ROUTES.SOCIAL);
     return { success: true };
   } catch (error: unknown) {
     console.error("Gagal menghapus postingan:", error);
@@ -436,7 +437,7 @@ export async function deleteCommunityComment(commentId: string): Promise<{ succe
     if (error) throw error;
 
     // Refresh social feed path
-    revalidatePath("/social");
+    revalidatePath(ROUTES.SOCIAL);
     return { success: true };
   } catch (error: unknown) {
     console.error("Gagal menghapus komentar:", error);

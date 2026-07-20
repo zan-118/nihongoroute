@@ -3,12 +3,13 @@ import { getIntegratedCounterQuestions } from "@/actions/tools-integration.actio
 import CounterTrainerClient from "@/components/features/tools/counter-trainer/CounterTrainerClient";
 import { createPageMetadata } from "@/lib/seo";
 
+import { ROUTES } from "@/lib/core/routes";
 /** Page metadata for SEO. */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Counter Trainer Jepang | NihongoRoute",
     description: "Latihan memilih counter bahasa Jepang untuk orang, benda, umur, lantai, waktu, dan kategori umum lainnya.",
-    path: "/tools/counter-trainer",
+    path:ROUTES.TOOLS.COUNTER_TRAINER,
     keywords: ["counter bahasa Jepang", "josuushi", "latihan counter Jepang", "angka Jepang"],
   }),
 };

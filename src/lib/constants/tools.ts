@@ -1,4 +1,5 @@
 import React from "react";
+import { ROUTES } from "@/lib/core/routes";
 import {
   LayoutGrid,
   FileText,
@@ -32,7 +33,7 @@ export const tools: ToolItem[] = [
     title: "Kana Master",
     description: "Tabel interaktif Hiragana & Katakana lengkap dengan latihan menulis.",
     icon: LayoutGrid,
-    href: "/tools/kana",
+    href:ROUTES.TOOLS.KANA,
     color: "text-primary",
     bgColor: "bg-primary/10",
     border: "border-primary/20"
@@ -41,7 +42,7 @@ export const tools: ToolItem[] = [
     title: "Text Analyzer",
     description: "Tempel teks Jepang untuk menemukan kosakata, kanji, dan pola grammar penting.",
     icon: FileText,
-    href: "/tools/text-analyzer",
+    href:ROUTES.TOOLS.TEXT_ANALYZER,
     color: "text-primary",
     bgColor: "bg-primary/10",
     border: "border-primary/20"
@@ -50,7 +51,7 @@ export const tools: ToolItem[] = [
     title: "Verb Conjugation Trainer",
     description: "Latih perubahan verba ke bentuk masu, te, nai, ta, pasif, potensial, dan lainnya.",
     icon: GraduationCap,
-    href: "/tools/conjugation",
+    href:ROUTES.TOOLS.CONJUGATION,
     color: "text-success",
     bgColor: "bg-success/10",
     border: "border-success/20"
@@ -59,7 +60,7 @@ export const tools: ToolItem[] = [
     title: "Particle Trainer",
     description: "Latihan memilih partikel は, が, を, に, で, と, から, dan lainnya dari kalimat rumpang.",
     icon: Puzzle,
-    href: "/tools/particles",
+    href:ROUTES.TOOLS.PARTICLES,
     color: "text-primary",
     bgColor: "bg-primary/10",
     border: "border-primary/20"
@@ -68,7 +69,7 @@ export const tools: ToolItem[] = [
     title: "Kanji Similarity Tool",
     description: "Bandingkan kanji mirip seperti 未/末, 日/目, 土/士 dengan cue visual dan contoh vocab.",
     icon: GitCompare,
-    href: "/tools/kanji-similarity",
+    href:ROUTES.TOOLS.KANJI_SIMILARITY,
     color: "text-warning",
     bgColor: "bg-warning/10",
     border: "border-warning/20"
@@ -77,7 +78,7 @@ export const tools: ToolItem[] = [
     title: "Sentence Builder",
     description: "Susun token menjadi kalimat Jepang yang benar untuk melatih grammar pattern.",
     icon: MessageSquareText,
-    href: "/tools/sentence-builder",
+    href:ROUTES.TOOLS.SENTENCE_BUILDER,
     color: "text-success",
     bgColor: "bg-success/10",
     border: "border-success/20"
@@ -86,7 +87,7 @@ export const tools: ToolItem[] = [
     title: "JLPT Mini Drill",
     description: "Generate sesi cepat vocab, kanji, dan grammar dari N5 sampai N1.",
     icon: ListChecks,
-    href: "/tools/jlpt-drill",
+    href:ROUTES.TOOLS.JLPT_DRILL,
     color: "text-primary",
     bgColor: "bg-primary/10",
     border: "border-primary/20"
@@ -95,7 +96,7 @@ export const tools: ToolItem[] = [
     title: "Counter Trainer",
     description: "Latih counter 人, 本, 枚, 匹, 台, 冊, 杯, 個, 階, dan 歳 dari konteks benda.",
     icon: Hash,
-    href: "/tools/counter-trainer",
+    href:ROUTES.TOOLS.COUNTER_TRAINER,
     color: "text-warning",
     bgColor: "bg-warning/10",
     border: "border-warning/20"
@@ -104,7 +105,7 @@ export const tools: ToolItem[] = [
     title: "Shadowing Recorder",
     description: "Putar kalimat target, rekam suara sendiri, lalu bandingkan tempo playback.",
     icon: Mic,
-    href: "/tools/shadowing",
+    href:ROUTES.TOOLS.SHADOWING,
     color: "text-success",
     bgColor: "bg-success/10",
     border: "border-success/20"
@@ -113,7 +114,7 @@ export const tools: ToolItem[] = [
     title: "Dikte Kalimat (Dictation)",
     description: "Dengarkan kalimat contoh audio asli lalu ketik ejaannya untuk melatih pendengaran.",
     icon: BookOpen,
-    href: "/tools/dictation",
+    href:ROUTES.TOOLS.DICTATION,
     color: "text-success",
     bgColor: "bg-success/10",
     border: "border-success/20"
@@ -122,7 +123,7 @@ export const tools: ToolItem[] = [
     title: "Flashcards",
     description: "Latih hafalan kosakata dan verba dengan sistem kartu pintar.",
     icon: BrainCircuit,
-    href: "/tools/flashcards",
+    href:ROUTES.TOOLS.FLASHCARDS,
     color: "text-secondary",
     bgColor: "bg-secondary/10",
     border: "border-secondary/20"
@@ -131,7 +132,7 @@ export const tools: ToolItem[] = [
     title: "Mode Bertahan Hidup",
     description: "Kuis kilat berbatas waktu. Tebak arti kata sebelum kehabisan nyawa dan waktu!",
     icon: Flame,
-    href: "/tools/survival",
+    href:ROUTES.TOOLS.SURVIVAL,
     color: "text-destructive",
     bgColor: "bg-destructive/10",
     border: "border-destructive/20"
@@ -140,7 +141,7 @@ export const tools: ToolItem[] = [
     title: "Weak Point Trainer",
     description: "Latihan terarah untuk kartu SRS yang paling rapuh, overdue, dan sering gagal.",
     icon: Target,
-    href: "/tools/weak-points",
+    href:ROUTES.TOOLS.WEAK_POINTS,
     color: "text-destructive",
     bgColor: "bg-destructive/10",
     border: "border-destructive/20"
@@ -149,7 +150,7 @@ export const tools: ToolItem[] = [
     title: "Kamus Terpadu",
     description: "Cari cepat lintas kosakata, kanji, dan tata bahasa dalam satu kolom, langsung tambahkan ke SRS dari hasil pencarian — untuk baca detail lengkap, buka Pustaka.",
     icon: Search,
-    href: "/tools/dictionary",
+    href:ROUTES.TOOLS.DICTIONARY,
     color: "text-warning",
     bgColor: "bg-warning/10",
     border: "border-warning/20"
@@ -158,7 +159,7 @@ export const tools: ToolItem[] = [
     title: "Latihan Menulis",
     description: "Kanvas digital kosong untuk melatih guratan kanji, kana, atau coretan belajar.",
     icon: PenTool,
-    href: "/tools/writing",
+    href:ROUTES.TOOLS.WRITING,
     color: "text-success",
     bgColor: "bg-success/10",
     border: "border-success/20"

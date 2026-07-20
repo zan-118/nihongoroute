@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, LayoutGrid } from "lucide-react";
 import Link from "next/link";
 
+import { ROUTES } from "@/lib/core/routes";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
@@ -44,7 +45,7 @@ export function KanaHeader({ themeColor }: KanaHeaderProps) {
           asChild
           className="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest bg-muted border-border"
         >
-          <Link href="/tools">
+          <Link href={ROUTES.TOOLS.ROOT}>
             <ChevronLeft size={14} className="mr-2" /> Kembali ke Peralatan
           </Link>
         </Button>

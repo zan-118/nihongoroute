@@ -9,6 +9,7 @@ import { MetadataRoute } from "next";
 import { createStaticClient } from "@/lib/supabase/server";
 import { absoluteUrl, encodeRouteSegment, getSiteUrl } from "@/lib/seo";
 
+import { ROUTES } from "@/lib/core/routes";
 /**
  * Dynamic content sitemap item structure.
  */
@@ -54,18 +55,18 @@ const STATIC_ROUTES: SitemapEntryInput[] = [
   { path: "/library/listening", changeFrequency: "weekly", priority: 0.8 },
   { path: "/library/cheatsheet", changeFrequency: "monthly", priority: 0.75 },
   { path: "/exams", changeFrequency: "weekly", priority: 0.75 },
-  { path: "/tools", changeFrequency: "monthly", priority: 0.7 },
-  { path: "/tools/dictionary", changeFrequency: "monthly", priority: 0.7 },
-  { path: "/tools/text-analyzer", changeFrequency: "monthly", priority: 0.65 },
-  { path: "/tools/kana", changeFrequency: "monthly", priority: 0.65 },
-  { path: "/tools/writing", changeFrequency: "monthly", priority: 0.65 },
-  { path: "/tools/conjugation", changeFrequency: "monthly", priority: 0.65 },
-  { path: "/tools/particles", changeFrequency: "monthly", priority: 0.65 },
-  { path: "/tools/kanji-similarity", changeFrequency: "monthly", priority: 0.65 },
-  { path: "/tools/jlpt-drill", changeFrequency: "monthly", priority: 0.65 },
-  { path: "/tools/counter-trainer", changeFrequency: "monthly", priority: 0.6 },
-  { path: "/tools/sentence-builder", changeFrequency: "monthly", priority: 0.6 },
-  { path: "/tools/shadowing", changeFrequency: "monthly", priority: 0.6 },
+  { path:ROUTES.TOOLS.ROOT, changeFrequency: "monthly", priority: 0.7 },
+  { path:ROUTES.TOOLS.DICTIONARY, changeFrequency: "monthly", priority: 0.7 },
+  { path:ROUTES.TOOLS.TEXT_ANALYZER, changeFrequency: "monthly", priority: 0.65 },
+  { path:ROUTES.TOOLS.KANA, changeFrequency: "monthly", priority: 0.65 },
+  { path:ROUTES.TOOLS.WRITING, changeFrequency: "monthly", priority: 0.65 },
+  { path:ROUTES.TOOLS.CONJUGATION, changeFrequency: "monthly", priority: 0.65 },
+  { path:ROUTES.TOOLS.PARTICLES, changeFrequency: "monthly", priority: 0.65 },
+  { path:ROUTES.TOOLS.KANJI_SIMILARITY, changeFrequency: "monthly", priority: 0.65 },
+  { path:ROUTES.TOOLS.JLPT_DRILL, changeFrequency: "monthly", priority: 0.65 },
+  { path:ROUTES.TOOLS.COUNTER_TRAINER, changeFrequency: "monthly", priority: 0.6 },
+  { path:ROUTES.TOOLS.SENTENCE_BUILDER, changeFrequency: "monthly", priority: 0.6 },
+  { path:ROUTES.TOOLS.SHADOWING, changeFrequency: "monthly", priority: 0.6 },
   { path: "/support", changeFrequency: "monthly", priority: 0.55 },
   { path: "/privacy", changeFrequency: "yearly", priority: 0.35 },
   { path: "/terms", changeFrequency: "yearly", priority: 0.35 },

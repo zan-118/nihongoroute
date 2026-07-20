@@ -11,6 +11,7 @@ import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 
+import { ROUTES } from "@/lib/core/routes";
 /**
  * Custom hook to manage feedback widget state, visibility, and submission.
  * Handles modal open state, feedback type, message input, and Supabase database insertion.
@@ -29,7 +30,7 @@ export function useFeedbackWidget() {
     pathname === "/support" ||
     pathname?.startsWith("/studio") ||
     pathname?.includes("/exam") ||
-    pathname === "/review";
+    pathname === ROUTES.REVIEW;
 
   /**
    * Handles feedback form submission.

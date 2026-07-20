@@ -5,6 +5,7 @@
 
 import type { ExamData, ExamQuestion } from "@/components/features/exams/mock-engine/types";
 
+import { ROUTES } from "@/lib/core/routes";
 /**
  * Insight details for a single exam question.
  */
@@ -241,7 +242,7 @@ export function analyzeExamReview(
     pushUniqueAction(actions, {
       id: "weak-points",
       label: "Weak Point Trainer",
-      href: "/tools/weak-points",
+      href:ROUTES.TOOLS.WEAK_POINTS,
       reason: "Perkuat kartu SRS yang rentan setelah ujian.",
     });
   }
@@ -249,7 +250,7 @@ export function analyzeExamReview(
   pushUniqueAction(actions, {
     id: "flashcards",
     label: "Flashcards",
-    href: "/tools/flashcards",
+    href:ROUTES.TOOLS.FLASHCARDS,
     reason: "Ulangi materi dengan sesi kartu cepat.",
   });
 

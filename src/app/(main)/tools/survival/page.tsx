@@ -28,6 +28,7 @@ import { Badge } from "@/components/ui/badge";
 
 import { JLPT_LEVELS, AMOUNTS } from "@/lib/constants/learning";
 
+import { ROUTES } from "@/lib/core/routes";
 /**
  * Survival game content component. Handle setup UI and active gameplay state.
  */
@@ -144,7 +145,7 @@ function SurvivalContent() {
 
               <div className="pt-6 border-t border-border/50 mt-8 flex flex-col sm:flex-row gap-4">
                 <Button
-                  onClick={() => router.push("/tools")}
+                  onClick={() => router.push(ROUTES.TOOLS.ROOT)}
                   variant="ghost"
                   className="w-full sm:w-1/3 py-6 rounded-lg text-xs font-bold uppercase tracking-widest border border-border bg-muted/20 hover:bg-muted/50"
                 >

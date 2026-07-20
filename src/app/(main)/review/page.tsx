@@ -13,6 +13,7 @@ import { RotateCw } from "lucide-react";
 import type { Metadata } from "next";
 import { createPageMetadata } from "@/lib/seo";
 
+import { ROUTES } from "@/lib/core/routes";
 // ======================
 // KONFIGURASI METADATA
 // ======================
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Review SRS | NihongoRoute",
     description: "Sesi ulangan spasi repetisi (SRS) untuk memperkuat hafalan kosakata dan kanji bahasa Jepang.",
-    path: "/review",
+    path:ROUTES.REVIEW,
     noIndex: true,
   }),
 };

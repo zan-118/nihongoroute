@@ -3,12 +3,13 @@ import { getIntegratedShadowingPresets } from "@/actions/tools-integration.actio
 import ShadowingRecorderClient from "@/components/features/tools/shadowing-recorder/ShadowingRecorderClient";
 import { createPageMetadata } from "@/lib/seo";
 
+import { ROUTES } from "@/lib/core/routes";
 /** Page metadata. Define SEO tags for shadowing tool. */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Shadowing Recorder Jepang | NihongoRoute",
     description: "Latihan shadowing bahasa Jepang dengan playback target, rekaman mikrofon, dan preset dari materi listening.",
-    path: "/tools/shadowing",
+    path:ROUTES.TOOLS.SHADOWING,
     keywords: ["shadowing bahasa Jepang", "latihan speaking Jepang", "rekaman pronunciation Jepang"],
   }),
 };

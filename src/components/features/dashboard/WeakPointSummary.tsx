@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
+import { ROUTES } from "@/lib/core/routes";
 /**
  * WeakPointSummary — compact weak-point overview for Dashboard Home tab.
  * Shows top 3 weak points with CTA to full trainer.
@@ -46,7 +47,7 @@ export default function WeakPointSummary() {
           </div>
         </div>
         <Button asChild variant="outline" size="sm" className="rounded-xl">
-          <Link href="/tools/weak-points">
+          <Link href={ROUTES.TOOLS.WEAK_POINTS}>
             Latih Semua
             <ArrowRight data-icon="inline-end" />
           </Link>

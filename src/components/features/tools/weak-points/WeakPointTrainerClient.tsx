@@ -38,6 +38,7 @@ import {
 } from "@/lib/weak-points";
 import { getFlashcardsByIds } from "@/actions/flashcard.actions";
 
+import { ROUTES } from "@/lib/core/routes";
 /**
  * Card data enriched with weak point metadata.
  */
@@ -426,7 +427,7 @@ function EmptyDiagnosis() {
           </Link>
         </Button>
         <Button asChild variant="outline" className="h-12 rounded-lg px-5 text-xs font-black uppercase tracking-widest">
-          <Link href="/tools/flashcards">
+          <Link href={ROUTES.TOOLS.FLASHCARDS}>
             Flashcards
             <ArrowRight size={15} />
           </Link>

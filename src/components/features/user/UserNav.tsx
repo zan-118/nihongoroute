@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 
+import { ROUTES } from "@/lib/core/routes";
 // ======================
 // EKSEKUSI UTAMA
 // ======================
@@ -96,7 +97,7 @@ export default function UserNav() {
         <DropdownMenuSeparator className="bg-border/50 mx-2" />
         <div className="p-1 space-y-1">
           <DropdownMenuItem asChild className="rounded-xl cursor-pointer hover:bg-primary/10 hover:text-primary transition-colors py-2.5">
-            <Link href="/settings" className="flex items-center">
+            <Link href={ROUTES.SETTINGS} className="flex items-center">
               <Settings size={16} className="mr-3" />
               <span className="text-xs font-bold uppercase tracking-widest">Pengaturan Akun</span>
             </Link>

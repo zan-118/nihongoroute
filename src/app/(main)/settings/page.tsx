@@ -8,6 +8,7 @@ import { Metadata } from "next";
 import SettingsClient from "./SettingsClient";
 import { createPageMetadata } from "@/lib/seo";
 
+import { ROUTES } from "@/lib/core/routes";
 /**
  * SEO metadata configuration.
  * Disables indexing for privacy.
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Pengaturan Akun | NihongoRoute",
     description: "Atur profil dan preferensi belajarmu di NihongoRoute.",
-    path: "/settings",
+    path:ROUTES.SETTINGS,
     noIndex: true, // Prevent search engine indexing
   }),
 };
