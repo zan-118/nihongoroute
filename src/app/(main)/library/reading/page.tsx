@@ -68,7 +68,7 @@ export default async function ReadingListPage() {
         ]}
       />
       {/* Background visual effects */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[500px] bg-primary/10 blur-[120px] rounded-[100%] pointer-events-none opacity-50" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[500px] bg-primary/10 blur-[65px] rounded-[100%] pointer-events-none opacity-50 ambient-glow will-change-transform" />
       <div className="neural-grid" />
 
       <div className="max-w-6xl mx-auto relative z-10">

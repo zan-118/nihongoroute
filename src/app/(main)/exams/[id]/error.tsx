@@ -46,7 +46,7 @@ export default function ExamError({
   return (
     <div className="w-full flex-1 flex flex-col items-center justify-center px-6 text-center relative overflow-hidden py-12">
       {/* Cyber glow background effect */}
-      <div className="absolute top-0 left-1/4 size-[300px] bg-destructive/10 blur-[55px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-1/4 size-[300px] bg-destructive/10 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
 
       <Card className="p-10 md:p-14 border-destructive/30 max-w-lg w-full relative z-10 my-auto neo-card rounded-[2rem] bg-card">
         {/* Neumorphic warning icon container */}

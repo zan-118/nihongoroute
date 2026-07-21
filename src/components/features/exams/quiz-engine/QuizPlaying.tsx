@@ -61,8 +61,8 @@ export function QuizPlaying({
   return (
     <Card className="bg-card p-5 md:p-12 rounded-2xl md:rounded-3xl border-border shadow-none relative overflow-hidden neo-card">
       {/* Background decorative glow elements */}
-      <div className="absolute top-0 right-0 size-96 bg-destructive/5 blur-[100px] pointer-events-none" />
-      <div className="absolute -bottom-10 -left-10 size-64 bg-destructive/5 blur-[80px] pointer-events-none" />
+      <div className="absolute top-0 right-0 size-96 bg-destructive/5 blur-[60px] pointer-events-none ambient-glow will-change-transform" />
+      <div className="absolute -bottom-10 -left-10 size-64 bg-destructive/5 blur-[80px] pointer-events-none ambient-glow will-change-transform" />
 
       <div className="relative z-10">
         <header className="flex justify-between items-center mb-4 md:mb-6">

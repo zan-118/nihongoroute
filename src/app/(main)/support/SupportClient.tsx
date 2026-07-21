@@ -114,7 +114,7 @@ function DonationCard({
         className={`group relative p-8 sm:p-12 rounded-[2.5rem] bg-card border border-border/80 ${accent} ${shadowColor} transition-all duration-300 shadow-lg overflow-hidden flex flex-col h-full`}
       >
         {/* Decorative background glow */}
-        <div className={`absolute top-0 right-0 w-40 h-40 ${glowColor} blur-[36px] rounded-full pointer-events-none opacity-30 group-hover:opacity-50 transition-opacity`} />
+        <div className={`absolute top-0 right-0 w-40 h-40 ${glowColor} blur-[36px] rounded-full pointer-events-none opacity-30 group-hover:opacity-50 transition-opacity ambient-glow will-change-transform`} />
 
         {/* Large background text */}
         <div className="absolute top-0 right-0 p-6 sm:p-8 opacity-[0.03] text-5xl sm:text-7xl font-black italic group-hover:opacity-[0.06] transition-opacity pointer-events-none uppercase text-foreground font-japanese select-none">
@@ -237,9 +237,7 @@ export default function SupportClient() {
       {/* Dynamic Galactic Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute inset-0 neural-grid opacity-[0.15] mix-blend-overlay" />
-        <div className="absolute top-[-10%] right-[-5%] w-[320px] sm:w-[460px] h-[320px] sm:h-[460px] bg-primary/8 rounded-full blur-[70px] sm:blur-[90px] pointer-events-none" />
-        <div className="absolute bottom-[-10%] left-[-5%] w-[300px] sm:w-[420px] h-[300px] sm:h-[420px] bg-secondary/5 rounded-full blur-[60px] sm:blur-[80px] pointer-events-none" />
-        <div className="absolute top-[40%] left-[20%] size-[240px] bg-destructive/5 rounded-full blur-[60px] pointer-events-none" />
+        <div className="absolute top-[-10%] right-[-5%] w-[320px] sm:w-[460px] h-[320px] sm:h-[460px] bg-primary/8 rounded-full blur-[70px] sm:blur-[90px] pointer-events-none ambient-glow will-change-transform" />
       </div>
 
       <nav className="p-4 sm:p-6 sticky top-0 bg-background/80  z-50 border-b border-border/80 transition-all">
@@ -342,7 +340,7 @@ export default function SupportClient() {
           <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese">
             TARGET
           </div>
-          <div className="absolute -top-28 -right-28 size-56 bg-primary/5 blur-[55px] rounded-full pointer-events-none" />
+          <div className="absolute -top-28 -right-28 size-56 bg-primary/5 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
 
           <div className="flex items-center gap-4 mb-6 relative z-10">
             <div className="size-12 rounded-lg bg-primary/10 border border-primary/30 flex items-center justify-center shadow-inner relative overflow-hidden">
@@ -415,7 +413,7 @@ export default function SupportClient() {
           <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese">
             TRANSPARANSI
           </div>
-          <div className="absolute -bottom-28 -left-28 size-56 bg-primary/5 blur-[55px] rounded-full pointer-events-none" />
+          <div className="absolute -bottom-28 -left-28 size-56 bg-primary/5 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
 
           <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-4 mb-12 relative z-10 text-center sm:text-left">
             <div className="size-14 rounded-lg bg-primary/10 border border-primary/30 flex items-center justify-center shadow-inner relative overflow-hidden">
@@ -454,7 +452,7 @@ export default function SupportClient() {
           <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese">
             DONATUR
           </div>
-          <div className="absolute -bottom-28 -right-28 size-56 bg-primary/5 blur-[55px] rounded-full pointer-events-none" />
+          <div className="absolute -bottom-28 -right-28 size-56 bg-primary/5 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
 
           <div className="flex flex-col sm:flex-row justify-between items-center gap-6 mb-8 relative z-10 border-b border-border/40 pb-6">
             <div className="flex items-center gap-4">
@@ -580,7 +578,7 @@ export default function SupportClient() {
           <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese">
             TANYA JAWAB
           </div>
-          <div className="absolute -top-28 -left-28 size-56 bg-primary/5 blur-[55px] rounded-full pointer-events-none" />
+          <div className="absolute -top-28 -left-28 size-56 bg-primary/5 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
 
           <div className="flex items-center gap-4 mb-8 relative z-10 border-b border-border/40 pb-6">
             <div className="size-12 rounded-lg bg-warning/10 border border-warning/30 flex items-center justify-center shadow-inner">

@@ -91,8 +91,8 @@ export default async function LibraryPage() {
         ]}
       />
       {/* Background Neural Overlays & Glowing Ambient Accents */}
-      <div className="absolute top-[5%] -left-[10%] size-[50%] bg-primary/5 blur-[150px] rounded-full pointer-events-none z-0" />
-      <div className="absolute bottom-[10%] -right-[10%] size-[40%] bg-secondary/5 blur-[150px] rounded-full pointer-events-none z-0" />
+      <div className="absolute top-[5%] -left-[10%] size-[50%] bg-primary/5 blur-[70px] rounded-full pointer-events-none z-0 ambient-glow will-change-transform" />
+      <div className="absolute bottom-[10%] -right-[10%] size-[40%] bg-secondary/5 blur-[70px] rounded-full pointer-events-none z-0 ambient-glow will-change-transform" />
       <div className="neural-grid" />
 
       <div className="max-w-7xl mx-auto relative z-10">

@@ -110,7 +110,7 @@ export default function JLPTReadinessCard({ loading, courseMetadata }: JLPTReadi
       className={`relative overflow-hidden rounded-2xl border border-border bg-card/35 p-6 shadow-none  transition-all duration-500 hover:border-primary/30 ${tone.glow}`}
     >
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgb(var(--primary-rgb)/0.035)_1px,transparent_1px),linear-gradient(rgb(var(--primary-rgb)/0.025)_1px,transparent_1px)] bg-[size:28px_28px]" />
-      <div className="pointer-events-none absolute right-0 top-0 size-64 rounded-full bg-primary/5 blur-[80px]" />
+      <div className="pointer-events-none absolute right-0 top-0 size-64 rounded-full bg-primary/5 blur-[80px] ambient-glow will-change-transform" />
 
       <div className="relative z-10 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(240px,0.82fr)_minmax(0,1.18fr)]">
         <section className="flex flex-col justify-between gap-8">

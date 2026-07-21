@@ -204,7 +204,7 @@ export default function CheatsheetClient({
                 <Link href={`/library/cheatsheet/${sheet.slug || sheet.id || sheet._id}`}>
                   <Card className="group relative h-full bg-[rgba(var(--card-rgb),0.4)] border border-border hover:border-[rgba(var(--primary-rgb),0.5)] rounded-[2.5rem] p-8 cursor-pointer transition-all duration-500 shadow-[0_4px_30px_rgba(var(--foreground-rgb),0.02)] hover:shadow-[0_20px_50px_rgba(var(--primary-rgb),0.15)] glass flex flex-col justify-between gap-6 overflow-hidden">
                     {/* Ambient Glow Background Effect */}
-                    <div className="absolute top-0 right-0 size-32 bg-[rgba(var(--primary-rgb),0.03)] blur-[40px] rounded-full -mr-12 -mt-12 group-hover:bg-[rgba(var(--primary-rgb),0.08)] transition-all duration-500 pointer-events-none" />
+                    <div className="absolute top-0 right-0 size-32 bg-[rgba(var(--primary-rgb),0.03)] blur-[40px] rounded-full -mr-12 -mt-12 group-hover:bg-[rgba(var(--primary-rgb),0.08)] transition-all duration-500 pointer-events-none ambient-glow will-change-transform" />
 
                     <div className="flex items-center justify-between relative z-10">
                       <div className="size-14 rounded-lg bg-[rgba(var(--muted-rgb),0.2)] border border-border flex items-center justify-center text-muted-foreground group-hover:text-primary group-hover:bg-[rgba(var(--primary-rgb),0.15)] group-hover:border-[rgba(var(--primary-rgb),0.3)] transition-all duration-500 shadow-inner">

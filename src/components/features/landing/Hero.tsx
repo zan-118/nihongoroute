@@ -17,8 +17,8 @@ export function Hero() {
   return (
     <section className="relative min-h-[560px] md:min-h-[600px] lg:min-h-[640px] flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16 mb-12 md:mb-16 py-8 md:py-10">
       {/* Decorative background glow effects */}
-      <div className="pointer-events-none absolute -left-28 top-10 size-72 rounded-full bg-primary/20 blur-[110px] dark:bg-primary/15" />
-      <div className="pointer-events-none absolute left-1/3 bottom-6 size-64 rounded-full bg-secondary/10 blur-[120px] dark:bg-secondary/12" />
+      <div className="pointer-events-none absolute -left-28 top-10 size-72 rounded-full bg-primary/20 blur-[60px] dark:bg-primary/15 ambient-glow will-change-transform" />
+      <div className="pointer-events-none absolute left-1/3 bottom-6 size-64 rounded-full bg-secondary/10 blur-[65px] dark:bg-secondary/12 ambient-glow will-change-transform" />
 
       <div className="relative z-10 flex-1 flex flex-col items-start text-left max-w-2xl w-full">
         <m.div

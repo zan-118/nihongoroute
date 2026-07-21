@@ -115,7 +115,7 @@ export function FlashcardFront({
         }`}
       />
 
-      <div className={`absolute top-0 right-0 w-40 h-40 md:w-52 md:h-52 blur-[45px] md:blur-[55px] rounded-full opacity-10 pointer-events-none ${isKanji ? 'bg-secondary' : 'bg-primary'}`} />
+      <div className={`absolute top-0 right-0 w-40 h-40 md:w-52 md:h-52 blur-[45px] md:blur-[55px] rounded-full opacity-10 pointer-events-none ambient-glow will-change-transform ${isKanji ? 'bg-secondary' : 'bg-primary'}`} />
 
       <Badge
         variant="outline"

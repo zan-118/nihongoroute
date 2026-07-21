@@ -100,7 +100,7 @@ export default function DashboardStats({
           <Skeleton className="h-[250px] w-full rounded-2xl" />
         ) : (
           <Card className="h-full bg-card/40 backdrop-blur-xl border border-border rounded-[2rem] p-6 md:p-8 flex flex-col justify-center relative overflow-hidden group transition-all duration-300 hover:border-success/30 shadow-lg">
-            <div className="absolute top-0 right-0 size-64 bg-success/10 blur-[80px] rounded-full pointer-events-none" />
+            <div className="absolute top-0 right-0 size-64 bg-success/10 blur-[80px] rounded-full pointer-events-none ambient-glow will-change-transform" />
             <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
               <div>
                 <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-xs md:text-xs mb-2">

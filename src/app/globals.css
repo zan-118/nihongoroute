@@ -591,8 +591,8 @@
       linear-gradient(180deg, hsl(var(--background) / 0.86), hsl(var(--background) / 0.68));
     border-bottom: 1px solid hsl(var(--border) / 0.72);
     box-shadow: 0 14px 36px rgb(var(--foreground-rgb) / 0.065);
-    backdrop-filter: blur(22px);
-    -webkit-backdrop-filter: blur(22px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .dark .topbar-shell {
@@ -609,8 +609,8 @@
       hsl(var(--sidebar) / 0.95);
     border-right: 1px solid hsl(var(--border) / 0.74);
     box-shadow: 20px 0 62px rgb(var(--foreground-rgb) / 0.08);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .dark .sidebar-shell {
@@ -628,8 +628,8 @@
       radial-gradient(circle at 88% 0%, rgb(var(--brand-violet-rgb) / 0.08), transparent 16rem),
       hsl(var(--card) / 0.88);
     box-shadow: 0 20px 52px rgb(var(--foreground-rgb) / 0.12), inset 0 1px 0 rgb(255 255 255 / 0.58);
-    backdrop-filter: blur(22px);
-    -webkit-backdrop-filter: blur(22px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .dark .mobile-nav-shell {
@@ -1083,10 +1083,46 @@
     background-color: hsl(var(--card) / 0.98) !important;
   }
 
+  /*
+   * Elemen fixed/sticky (topbar, sidebar, bottom nav) dipaksa browser untuk
+   * dihitung ulang tiap frame saat scroll karena konten di baliknya berubah.
+   * backdrop-filter + gradient berlapis di elemen ini adalah penyebab utama
+   * frame drop saat scroll di perangkat mobile, jadi kita matikan dan
+   * gantikan dengan warna solid semi-transparan yang jauh lebih murah untuk
+   * di-composite ulang.
+   */
+  .topbar-shell,
+  .sidebar-shell,
+  .mobile-nav-shell {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: hsl(var(--background) / 0.98) !important;
+    box-shadow: 0 4px 12px rgb(var(--foreground-rgb) / 0.08) !important;
+  }
+
+  .sidebar-shell {
+    background: hsl(var(--sidebar) / 0.98) !important;
+  }
+
+  .mobile-nav-shell {
+    background: hsl(var(--card) / 0.98) !important;
+  }
+
   .neo-card,
   .card {
     will-change: transform;
     backface-visibility: hidden;
+  }
+
+  /*
+   * Blob dekoratif "glow" (filter: blur(...) berukuran besar) tersebar di hampir
+   * semua halaman (dashboard, courses, library, tools, landing, dst). Blur radius
+   * besar itu mahal untuk dirender, dan di layar kecil efek ambient-nya nyaris
+   * tidak terlihat karena area viewport sempit. Jadi disembunyikan total di mobile
+   * supaya biaya rendernya juga hilang total, bukan cuma dikurangi.
+   */
+  .ambient-glow {
+    display: none !important;
   }
 
   body::before {

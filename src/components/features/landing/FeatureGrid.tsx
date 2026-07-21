@@ -358,7 +358,7 @@ export function FeatureGrid() {
       {/* SEKSI 2: LANGKAH PERJALANAN BELAJAR TERPADU */}
       <section className="relative">
         {/* Glow latar belakang redup */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-secondary/5 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-secondary/5 rounded-full blur-[65px] pointer-events-none ambient-glow will-change-transform" />
 
         <div className="text-center max-w-3xl mx-auto mb-[65px]">
           <Badge className="bg-secondary/10 text-secondary border border-secondary/20 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
@@ -422,7 +422,7 @@ export function FeatureGrid() {
           {/* TAMPILAN DETIL LANGKAH AKTIF - KOLOM KANAN */}
           <div className="lg:col-span-7 h-full">
             <Card className="p-6 sm:p-8 md:p-10 rounded-2xl sm:rounded-3xl bg-card/10 border border-border shadow-none relative overflow-hidden min-h-[350px] flex flex-col justify-between">
-              <div className="absolute top-0 right-0 size-[200px] bg-primary/5 rounded-full blur-[80px] pointer-events-none" />
+              <div className="absolute top-0 right-0 size-[200px] bg-primary/5 rounded-full blur-[80px] pointer-events-none ambient-glow will-change-transform" />
               
               <div className="space-y-6 relative z-10">
                 <Badge className="bg-primary/10 text-primary border border-primary/20 rounded-full font-bold uppercase tracking-widest text-[9px]">
@@ -581,8 +581,8 @@ export function FeatureGrid() {
       <section className="relative">
         <Card className="p-6 sm:p-10 md:p-[42px] lg:p-[55px] rounded-3xl bg-card/10 border border-border shadow-none relative overflow-hidden group">
           {/* Aksen Kilau Latar Belakang */}
-          <div className="absolute -top-32 -left-32 size-89 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
-          <div className="absolute -bottom-32 -right-32 size-89 bg-secondary/5 rounded-full blur-[100px] pointer-events-none" />
+          <div className="absolute -top-32 -left-32 size-89 bg-primary/5 rounded-full blur-[60px] pointer-events-none ambient-glow will-change-transform" />
+          <div className="absolute -bottom-32 -right-32 size-89 bg-secondary/5 rounded-full blur-[60px] pointer-events-none ambient-glow will-change-transform" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
             {/* PENJELASAN SEBELAH KIRI */}

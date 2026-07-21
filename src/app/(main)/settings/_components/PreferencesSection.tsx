@@ -63,8 +63,8 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
     <m.div variants={itemVariants}>
       <Card className="glass  border border-border/80 rounded-[2.5rem] p-8 md:p-10 shadow-xl relative overflow-hidden group">
         {/* Background Decorative Gradient Glow */}
-        <div className="absolute top-0 left-0 size-40 bg-primary/5 blur-[50px] rounded-full -ml-14 -mt-14 pointer-events-none group-hover:bg-primary/8 transition-colors duration-300" />
-        <div className="absolute bottom-0 right-0 size-48 bg-secondary/5 blur-[60px] rounded-full -mr-20 -mb-20 pointer-events-none" />
+        <div className="absolute top-0 left-0 size-40 bg-primary/5 blur-[50px] rounded-full -ml-14 -mt-14 pointer-events-none group-hover:bg-primary/8 transition-colors duration-300 ambient-glow will-change-transform" />
+        <div className="absolute bottom-0 right-0 size-48 bg-secondary/5 blur-[60px] rounded-full -mr-20 -mb-20 pointer-events-none ambient-glow will-change-transform" />
 
         <div className="flex items-center gap-4 mb-8 relative z-10">
           <div className="size-12 rounded-lg bg-background/30 flex items-center justify-center border border-border/80 shadow-lg">

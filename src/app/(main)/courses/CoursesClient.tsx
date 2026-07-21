@@ -143,7 +143,7 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
             variants={itemVariants}
             className="lg:col-span-3 p-8 sm:p-10 md:p-14 rounded-[2.5rem] bg-card/25 border border-border/80 shadow-[0_0_30px_rgba(var(--primary-rgb),0.02)] relative overflow-hidden group transition-all duration-300 glass"
           >
-            <div className="absolute top-0 right-0 size-64 bg-primary/5 rounded-full blur-[55px] pointer-events-none group-hover:bg-primary/8 transition-all duration-500" />
+            <div className="absolute top-0 right-0 size-64 bg-primary/5 rounded-full blur-[55px] pointer-events-none group-hover:bg-primary/8 transition-all duration-500 ambient-glow will-change-transform" />
             <div className="absolute inset-0 bg-asanoha opacity-[0.02] pointer-events-none" />
             
             {/* Calligraphy Watermark '道' (Path/Route) */}

@@ -214,7 +214,7 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
 
           {/* Cyber Glow Ambient Latar Belakang — Adaptive size */}
           <div
-            className={`absolute top-0 right-0 blur-[45px] md:blur-[55px] rounded-full -mr-10 -mt-10 pointer-events-none transition-all duration-300 opacity-20 group-hover:opacity-35 ${
+            className={`absolute top-0 right-0 blur-[45px] md:blur-[55px] rounded-full -mr-10 -mt-10 pointer-events-none transition-all duration-300 opacity-20 group-hover:opacity-35 ambient-glow will-change-transform ${
               isFeatured ? 'size-[220px] md:size-[280px]' : 'size-[140px] md:size-[200px]'
             }`}
             style={{ backgroundColor: `rgba(${theme.glowColor}, 0.25)` }}

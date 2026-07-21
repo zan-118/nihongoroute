@@ -53,10 +53,10 @@ export default function LevelUpOverlay({ level }: { level: number }) {
               <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--primary-rgb)/0.03)_1px,transparent_1px)] bg-[size:100%_4px] pointer-events-none opacity-20 dark:opacity-40" />
               
               {/* Radial glow effects */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[500px] bg-primary/10 blur-[120px] rounded-full animate-bloom pointer-events-none" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[300px] bg-primary/10 blur-[100px] rounded-full animate-pulse pointer-events-none" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[500px] bg-primary/10 blur-[65px] rounded-full animate-bloom pointer-events-none ambient-glow will-change-transform" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[300px] bg-primary/10 blur-[60px] rounded-full animate-pulse pointer-events-none ambient-glow will-change-transform" />
               
-              <div className="absolute -top-16 -left-16 w-48 h-48 md:w-64 md:h-64 bg-primary/10 blur-[80px] md:blur-[100px] pointer-events-none" />
+              <div className="absolute -top-16 -left-16 w-48 h-48 md:w-64 md:h-64 bg-primary/10 blur-[80px] md:blur-[60px] pointer-events-none ambient-glow will-change-transform" />
 
               {/* Floating trophy container */}
               <m.div

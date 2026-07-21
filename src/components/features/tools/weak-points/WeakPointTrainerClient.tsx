@@ -194,7 +194,7 @@ export default function WeakPointTrainerClient() {
   if (isSessionActive && cards.length > 0) {
     return (
       <main className="relative flex min-h-screen w-full flex-col items-center overflow-hidden px-4 py-8 md:px-8">
-        <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-[420px] max-w-5xl rounded-full bg-destructive/5 blur-[120px]" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-[420px] max-w-5xl rounded-full bg-destructive/5 blur-[65px] ambient-glow will-change-transform" />
         <div className="relative z-10 w-full max-w-2xl">
           <header className="mb-8 flex items-center justify-between gap-4">
             <Button
@@ -285,7 +285,7 @@ export default function WeakPointTrainerClient() {
               className="grid grid-cols-1 gap-6 lg:grid-cols-[0.82fr_1.18fr]"
             >
               <Card className="relative overflow-hidden rounded-[34px] border-border bg-card/40 p-6 shadow-none  md:p-8">
-                <div className="pointer-events-none absolute right-0 top-0 size-52 rounded-full bg-destructive/[0.08] blur-[70px]" />
+                <div className="pointer-events-none absolute right-0 top-0 size-52 rounded-full bg-destructive/[0.08] blur-[70px] ambient-glow will-change-transform" />
                 <div className="relative z-10 flex h-full flex-col justify-between gap-8">
                   <div>
                     <p className="text-[10px] font-black uppercase tracking-[0.22em] text-destructive">

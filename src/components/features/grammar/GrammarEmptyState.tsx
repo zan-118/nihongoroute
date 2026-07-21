@@ -70,7 +70,7 @@ export function GrammarEmptyState({ searchTerm, selectedLevel, onResetSearch }: 
       </div>
       {/* Pendar Ambient Latar Belakang */}
       {/* Decorative background glow element */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-64 bg-primary/5 blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-64 bg-primary/5 blur-[60px] pointer-events-none ambient-glow will-change-transform" />
     </Card>
   );
 }

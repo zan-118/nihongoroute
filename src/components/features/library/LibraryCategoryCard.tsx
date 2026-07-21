@@ -89,7 +89,7 @@ export function LibraryCategoryCard({
       >
         {/* Radial neon glow background saat hover */}
         <div
-          className="absolute -top-20 -right-20 size-60 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-[60px]"
+          className="absolute -top-20 -right-20 size-60 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-[60px] ambient-glow will-change-transform"
           style={{ background: `radial-gradient(circle, rgba(${accentRgb}, 0.25) 0%, transparent 80%)` }}
         />
 

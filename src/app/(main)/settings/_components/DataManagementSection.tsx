@@ -52,7 +52,7 @@ export default function DataManagementSection({
     <m.div variants={itemVariants}>
       <Card className="glass  border border-border/80 rounded-[2.5rem] p-8 md:p-10 shadow-xl relative overflow-hidden group">
         {/* Background Accent */}
-        <div className="absolute top-0 right-0 size-40 bg-primary/8 blur-[55px] rounded-full -mr-14 -mt-14 pointer-events-none group-hover:bg-primary/12 transition-colors duration-300" />
+        <div className="absolute top-0 right-0 size-40 bg-primary/8 blur-[55px] rounded-full -mr-14 -mt-14 pointer-events-none group-hover:bg-primary/12 transition-colors duration-300 ambient-glow will-change-transform" />
 
         {/* Section header with icon */}
         <div className="flex items-center gap-4 mb-10 relative z-10">

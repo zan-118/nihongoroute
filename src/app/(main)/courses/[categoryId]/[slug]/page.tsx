@@ -161,8 +161,8 @@ export default async function LessonPage({ params }: Props) {
     />
     <div className="w-full text-foreground px-4 md:px-8 relative overflow-hidden flex flex-col flex-1 transition-colors duration-300">
       {/* Dekorasi Ambient Latar Belakang */}
-      <div className="absolute top-0 right-0 size-[360px] bg-primary/5 blur-[65px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 left-0 size-[300px] bg-secondary/5 blur-[55px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 right-0 size-[360px] bg-primary/5 blur-[65px] rounded-full pointer-events-none ambient-glow will-change-transform" />
+      <div className="absolute bottom-0 left-0 size-[300px] bg-secondary/5 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
 
       <div className="max-w-4xl mx-auto w-full relative z-10 flex flex-col flex-1">
         <article className="flex-1 min-w-0">

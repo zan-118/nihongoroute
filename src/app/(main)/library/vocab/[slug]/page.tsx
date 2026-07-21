@@ -203,8 +203,8 @@ export default async function VocabDetailPage({
         ]}
       />
       {/* Ambient Background Glows */}
-      <div className="absolute top-[10%] -left-[10%] size-[40%] bg-primary/10 blur-[120px] rounded-full pointer-events-none z-0 animate-pulse" />
-      <div className="absolute bottom-[10%] -right-[10%] size-[30%] bg-secondary/5 blur-[120px] rounded-full pointer-events-none z-0" />
+      <div className="absolute top-[10%] -left-[10%] size-[40%] bg-primary/10 blur-[65px] rounded-full pointer-events-none z-0 animate-pulse ambient-glow will-change-transform" />
+      <div className="absolute bottom-[10%] -right-[10%] size-[30%] bg-secondary/5 blur-[65px] rounded-full pointer-events-none z-0 ambient-glow will-change-transform" />
       
       {/* Background Grid Overlay */}
       <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none z-0" />

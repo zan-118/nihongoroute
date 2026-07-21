@@ -610,7 +610,7 @@ export function ExamResult({
         /* Dasbor Glassmorphism Keamanan Siber Modern */
         <Card className="p-8 md:p-16 text-center relative overflow-hidden neo-card rounded-2xl border border-border bg-card shadow-2xl transition-all duration-500">
           <div
-            className={`absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] blur-[150px] rounded-full pointer-events-none opacity-20 ${isPassed ? "bg-success" : "bg-destructive"}`}
+            className={`absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] blur-[70px] rounded-full pointer-events-none opacity-20 ambient-glow will-change-transform ${isPassed ? "bg-success" : "bg-destructive"}`}
           />
 
           <div className="relative z-10">

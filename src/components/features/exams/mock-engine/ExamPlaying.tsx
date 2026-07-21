@@ -12,7 +12,6 @@ import { m, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
-  Clock,
   ArrowRight,
   ArrowLeft,
   Volume2,
@@ -31,10 +30,10 @@ import {
   ExamPassage,
 } from "./types";
 import { SECTION_LABELS } from "./constants";
-import { formatTime } from "@/lib/utils";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { toast } from "sonner";
 import { ExamQuestionText } from "./ExamQuestionText";
+import { ExamCountdown } from "./ExamCountdown";
 
 // ======================
 // ANTARMUKA & TIPE
@@ -49,16 +48,16 @@ interface ExamPlayingProps {
   activeQuestion: ExamQuestion;
   /** Index of active question in exam array */
   currentQuestionIndex: number;
-  /** Remaining time in seconds */
-  timeLeft: number;
+  /** Stable timestamp (ms) when the exam ends. Does not change every second. */
+  examEndAt: number;
+  /** Called once when the countdown reaches zero. */
+  onExpire: () => void;
   /** Map of question keys to selected choice indices */
   answers: Record<string, number>;
   /** Map of question keys or global key to audio playback states */
   audioStatus: Record<string, AudioState>;
   /** Reference to HTML audio element */
   audioRef: React.MutableRefObject<HTMLAudioElement | null>;
-  /** Flag indicating time is running out */
-  isTimeCritical: boolean;
   /** Flag indicating current question has audio */
   isCurrentlyListening: boolean;
   /** Flag to disable previous navigation button */
@@ -263,11 +262,11 @@ export function ExamPlaying({
   exam,
   activeQuestion,
   currentQuestionIndex,
-  timeLeft,
+  examEndAt,
+  onExpire,
   answers,
   audioStatus,
   audioRef,
-  isTimeCritical,
   isCurrentlyListening,
   disablePreviousButton,
   handlePlayAudio,
@@ -327,18 +326,12 @@ export function ExamPlaying({
               </div>
 
               {/* Timer Mobile */}
-              <div className="flex items-center gap-3 shrink-0 lg:hidden">
-                <div
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors ${
-                    isTimeCritical
-                      ? "bg-destructive/10 border-destructive/30 text-destructive animate-pulse"
-                      : "bg-background border-border text-muted-foreground"
-                  }`}
-                >
-                  <Clock size={14} aria-hidden="true" />
-                  <span className="font-mono font-bold text-xs">{formatTime(timeLeft)}</span>
-                </div>
-              </div>
+              <ExamCountdown
+                endAt={examEndAt}
+                timeLimitSeconds={exam.timeLimit * 60}
+                onExpire={onExpire}
+                variant="compact"
+              />
             </div>
           </div>
         </header>
@@ -502,29 +495,12 @@ export function ExamPlaying({
           <aside className="hidden lg:block lg:col-span-1 lg:sticky lg:top-24 space-y-6">
             
             {/* Timer Card */}
-            <div
-              className={`p-5 rounded-lg border transition-all glass ${
-                isTimeCritical
-                  ? "bg-destructive/10 border-destructive/30 text-destructive animate-pulse"
-                  : "bg-card border-border text-card-foreground shadow-sm"
-              }`}
-            >
-              <div className="flex items-center gap-2 mb-2 text-muted-foreground">
-                <Clock size={16} />
-                <span className="text-[10px] font-bold uppercase tracking-wider">Sisa Waktu</span>
-              </div>
-              <div className="text-3xl font-black font-mono tracking-tight text-foreground">
-                {formatTime(timeLeft)}
-              </div>
-              <div className="w-full bg-muted h-1.5 rounded-full mt-4 overflow-hidden">
-                <div
-                  className={`h-full rounded-full transition-all duration-1000 ${
-                    isTimeCritical ? "bg-destructive" : "bg-destructive"
-                  }`}
-                  style={{ width: `${Math.max(0, Math.min(100, (timeLeft / (exam.timeLimit * 60)) * 100))}%` }}
-                />
-              </div>
-            </div>
+            <ExamCountdown
+              endAt={examEndAt}
+              timeLimitSeconds={exam.timeLimit * 60}
+              onExpire={onExpire}
+              variant="card"
+            />
 
             {/* Statistik Jawaban */}
             <div className="bg-card border border-border rounded-lg p-5 shadow-sm glass">

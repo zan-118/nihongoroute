@@ -128,7 +128,7 @@ function ShareContent() {
     <div className="min-h-screen bg-transparent flex items-center justify-center p-4 md:p-12 relative overflow-hidden">
       {/* Dynamic Background Glow based on pass status */}
       <div 
-        className={`absolute top-0 left-1/2 -translate-x-1/2 w-[600px] sm:w-[900px] h-[600px] sm:h-[900px] blur-[150px] rounded-full pointer-events-none opacity-20 transition-all duration-700 ${
+        className={`absolute top-0 left-1/2 -translate-x-1/2 w-[600px] sm:w-[900px] h-[600px] sm:h-[900px] blur-[70px] rounded-full pointer-events-none opacity-20 transition-all duration-700 ambient-glow will-change-transform ${
           data.passed 
             ? 'bg-gradient-to-tr from-success via-primary to-transparent' 
             : 'bg-gradient-to-tr from-destructive via-destructive to-transparent'

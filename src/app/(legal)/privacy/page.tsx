@@ -39,8 +39,8 @@ export default function PrivacyPage() {
       {/* Background decorative elements */}
       <div className="neural-grid" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgb(var(--primary-rgb)/0.07)_0%,transparent_70%)] pointer-events-none z-0" />
-      <div className="absolute top-1/4 right-0 size-[300px] bg-[rgb(var(--primary-rgb)/0.03)] rounded-full blur-[100px] pointer-events-none z-0" />
-      <div className="absolute bottom-1/4 left-0 size-[250px] bg-[rgb(var(--destructive-rgb)/0.02)] rounded-full blur-[80px] pointer-events-none z-0" />
+      <div className="absolute top-1/4 right-0 size-[300px] bg-[rgb(var(--primary-rgb)/0.03)] rounded-full blur-[60px] pointer-events-none z-0 ambient-glow will-change-transform" />
+      <div className="absolute bottom-1/4 left-0 size-[250px] bg-[rgb(var(--destructive-rgb)/0.02)] rounded-full blur-[80px] pointer-events-none z-0 ambient-glow will-change-transform" />
 
       <div className="max-w-4xl w-full relative z-10 flex flex-col">
         {/* Breadcrumb / Navigasi Atas */}

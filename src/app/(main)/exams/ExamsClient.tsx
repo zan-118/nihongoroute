@@ -200,8 +200,8 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
   return (
     <div className="w-full px-4 sm:px-6 relative overflow-hidden bg-transparent text-foreground transition-colors duration-300 min-h-screen pt-8 sm:pt-12 pb-24">
       {/* Dekorasi Ambient Latar Belakang */}
-      <div className="absolute top-[-8%] right-[-5%] size-[420px] bg-destructive/5 rounded-full blur-[70px] pointer-events-none" />
-      <div className="absolute bottom-[10%] left-[-10%] size-[360px] bg-primary/5 rounded-full blur-[60px] pointer-events-none" />
+      <div className="absolute top-[-8%] right-[-5%] size-[420px] bg-destructive/5 rounded-full blur-[70px] pointer-events-none ambient-glow will-change-transform" />
+      <div className="absolute bottom-[10%] left-[-10%] size-[360px] bg-primary/5 rounded-full blur-[60px] pointer-events-none ambient-glow will-change-transform" />
 
       <m.div
         className="max-w-5xl mx-auto relative z-10"

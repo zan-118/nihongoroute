@@ -96,11 +96,11 @@ function MockExamEngineSession({ exam }: MockExamEngineProps) {
       exam={activeExam}
       activeQuestion={engine.activeQuestion}
       currentQuestionIndex={engine.currentQuestionIndex}
-      timeLeft={engine.timeLeft}
+      examEndAt={engine.examEndAt}
+      onExpire={engine.finishExam}
       answers={engine.answers}
       audioStatus={engine.audioStatus}
       audioRef={engine.audioRef}
-      isTimeCritical={engine.isTimeCritical}
       isCurrentlyListening={engine.isCurrentlyListening}
       disablePreviousButton={engine.disablePreviousButton}
       handlePlayAudio={engine.handlePlayAudio}

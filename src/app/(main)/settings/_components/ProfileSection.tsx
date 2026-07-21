@@ -100,8 +100,8 @@ export default function ProfileSection({
     <m.div variants={itemVariants}>
       <Card className="glass  border border-border/80 rounded-[2.5rem] p-8 md:p-10 shadow-xl overflow-hidden relative group">
         {/* Elemen Dekoratif Kartu ID Pilot */}
-        <div className="absolute top-0 right-0 size-64 bg-primary/8 blur-[70px] rounded-full -mr-28 -mt-28 pointer-events-none" />
-        <div className="absolute bottom-0 left-0 size-40 bg-secondary/5 blur-[50px] rounded-full -ml-14 -mb-14 pointer-events-none" />
+        <div className="absolute top-0 right-0 size-64 bg-primary/8 blur-[70px] rounded-full -mr-28 -mt-28 pointer-events-none ambient-glow will-change-transform" />
+        <div className="absolute bottom-0 left-0 size-40 bg-secondary/5 blur-[50px] rounded-full -ml-14 -mb-14 pointer-events-none ambient-glow will-change-transform" />
 
         {/* Pola Header Kartu ID */}
         <div className="absolute top-0 left-0 right-0 h-1.5 bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)),rgb(var(--brand-violet-rgb)))] opacity-80" />

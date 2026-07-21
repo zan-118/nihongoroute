@@ -46,7 +46,7 @@ export function ListeningHeader({
   return (
     <div className="relative w-full border-b border-border bg-card/50  overflow-hidden">
       {/* Decorative background glow for visual depth */}
-      <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 blur-[120px] rounded-full -translate-y-1/2 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 blur-[65px] rounded-full -translate-y-1/2 pointer-events-none ambient-glow will-change-transform" />
 
       <div className="max-w-7xl mx-auto px-6 py-8 md:py-12">
         <div className="flex flex-col gap-4 relative z-10">

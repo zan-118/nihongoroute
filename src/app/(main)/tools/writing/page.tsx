@@ -31,7 +31,7 @@ function FreeWritingContent() {
   return (
     <div className="w-full flex-1 relative overflow-hidden flex flex-col bg-transparent transition-colors duration-300 pt-12 pb-24 px-4 md:px-8">
       {/* Dekorasi Latar Belakang */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[640px] h-[320px] bg-primary/10 blur-[55px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[640px] h-[320px] bg-primary/10 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
 
       <div className="max-w-4xl mx-auto w-full relative z-10 flex flex-col h-full">
         <header className="mb-12">
@@ -136,7 +136,7 @@ function FreeWritingSkeleton() {
   return (
     <div className="w-full flex-1 relative overflow-hidden flex flex-col bg-transparent pt-12 pb-24 px-4 md:px-8 animate-pulse">
       {/* Background Decorative Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[640px] h-[320px] bg-primary/5 blur-[55px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[640px] h-[320px] bg-primary/5 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
 
       <div className="max-w-4xl mx-auto w-full relative z-10 flex flex-col h-full">
         {/* Navigation Mock */}

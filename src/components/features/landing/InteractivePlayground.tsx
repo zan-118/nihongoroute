@@ -90,7 +90,7 @@ export function InteractivePlayground() {
   return (
     <section className="w-full mb-[120px] relative">
       {/* Ornamen visual background */}
-      <div className="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[250px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[250px] bg-primary/5 rounded-full blur-[60px] pointer-events-none ambient-glow will-change-transform" />
 
       <div className="text-center max-w-3xl mx-auto mb-[50px]">
         <Badge className="bg-primary/10 text-primary border border-primary/20 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] mb-4">

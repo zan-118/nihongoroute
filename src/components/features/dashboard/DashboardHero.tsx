@@ -123,7 +123,7 @@ export default function DashboardHero({
       {/* Render review card. Change style based on due count */}
       <div className="w-full relative">
         {/* Glow Latar Belakang Dekoratif */}
-        <div className="absolute -top-[55px] -right-[55px] size-[233px] bg-primary/5 rounded-full blur-[89px] pointer-events-none" />
+        <div className="absolute -top-[55px] -right-[55px] size-[233px] bg-primary/5 rounded-full blur-[89px] pointer-events-none ambient-glow will-change-transform" />
         
         {loading ? (
           <Skeleton className="h-[320px] w-full rounded-2xl" />

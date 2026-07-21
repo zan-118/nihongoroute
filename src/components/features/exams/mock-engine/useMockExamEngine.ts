@@ -94,8 +94,11 @@ export function useMockExamEngine(initialExam: ExamData) {
   const [gameState, setGameState] = useState<GameState>(() =>
     initialExam.serverResult ? "result" : initialExam.sessionId ? "playing" : "intro"
   );
-  const [timeLeft, setTimeLeft] = useState(
-    () => initialExam.remainingTimeSeconds ?? exam.timeLimit * 60
+  // Hitung timestamp akhir ujian SEKALI saat sesi dimulai/di-resume. Nilai ini stabil
+  // (tidak berubah tiap detik) sehingga tidak memicu re-render seluruh tree ujian.
+  // Detik-per-detik ticking dipindahkan ke komponen leaf `ExamCountdown`.
+  const [examEndAt, setExamEndAt] = useState(
+    () => Date.now() + (initialExam.remainingTimeSeconds ?? exam.timeLimit * 60) * 1000
   );
   // Filter and load initial answers safely
   const [answers, setAnswers] = useState<Record<string, number>>(() =>
@@ -157,7 +160,6 @@ export function useMockExamEngine(initialExam: ExamData) {
 
   const activeQuestion = useMemo(() => exam.questions[currentQuestionIndex], [exam.questions, currentQuestionIndex]);
   const currentSection = activeQuestion?.section || "vocabulary";
-  const isTimeCritical = useMemo(() => timeLeft < 300, [timeLeft]);
   const isCurrentlyListening = useMemo(() =>
     currentSection === "listening" || !!activeQuestion?.audioUrl,
     [currentSection, activeQuestion]
@@ -225,7 +227,7 @@ export function useMockExamEngine(initialExam: ExamData) {
     try {
       const result = await startJlptMockSession({ templateSlug });
       setExam(result.exam);
-      setTimeLeft(result.exam.timeLimit * 60);
+      setExamEndAt(Date.now() + result.exam.timeLimit * 60 * 1000);
       setAnswers({});
       answersRef.current = {};
       setServerResult(null);
@@ -455,21 +457,10 @@ export function useMockExamEngine(initialExam: ExamData) {
     };
   }, [gameState]);
 
-  // Countdown timer effect
-  useEffect(() => {
-    if (gameState !== "playing") return;
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          void finishExam();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [gameState, finishExam]);  // Hentikan audio dan kunci (tandai sebagai telah diputar) saat berganti pertanyaan (untuk mencegah pemutaran ulang dan tumpang sulit)
+  // Catatan: countdown per-detik tidak lagi dilakukan di sini. Ticking dan pemanggilan
+  // finishExam() saat waktu habis kini ditangani oleh komponen `ExamCountdown` (leaf
+  // component) via prop `onExpire`, supaya tidak memicu re-render seluruh tree ujian
+  // setiap detik. Hentikan audio dan kunci (tandai sebagai telah diputar) saat berganti pertanyaan (untuk mencegah pemutaran ulang dan tumpang sulit)
 
   // Stop audio playback when switching questions
   const prevQuestionIndexRef = useRef(currentQuestionIndex);
@@ -570,8 +561,8 @@ export function useMockExamEngine(initialExam: ExamData) {
   }, [pendingConfirm, availableSections, activeSectionIndex]);
 
   return {
-    exam, gameState, setGameState, timeLeft, answers, currentQuestionIndex, audioStatus,
-    cheatWarnings, audioRef, activeQuestion, isTimeCritical, isCurrentlyListening,
+    exam, gameState, setGameState, examEndAt, answers, currentQuestionIndex, audioStatus,
+    cheatWarnings, audioRef, activeQuestion, isCurrentlyListening,
     disablePreviousButton, handlePlayAudio, startExam, finishExam, handleAnswer, nextQuestion,
     prevQuestion, calculateScore, handleShareResult,
     sections, availableSections, currentSection, goToQuestion, activeSectionIndex,
