@@ -64,24 +64,28 @@ export function Hero() {
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto mt-2">
           <Button
             asChild
-            className="brand-button h-14 px-7 sm:px-9 text-xs group"
+            className="brand-button h-14 pl-8 pr-6 text-xs group rounded-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.97]"
           >
-            <Link href="/dashboard">
-              Ayo Mulai Belajar
-              <ArrowRight
-                size={16}
-                className="ml-2 group-hover:translate-x-1 transition-transform duration-300"
-              />
+            <Link href="/dashboard" className="flex items-center gap-3">
+              <span>Ayo Mulai Belajar</span>
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 dark:bg-white/15 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1 group-hover:-translate-y-[0.5px]">
+                <ArrowRight
+                  size={14}
+                  className="stroke-[1.5]"
+                />
+              </span>
             </Link>
           </Button>
           <Button
             asChild
             variant="ghost"
-            className="brand-button-ghost h-14 px-7 sm:px-9 text-xs group"
+            className="brand-button-ghost h-14 pl-6 pr-8 text-xs group rounded-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.97]"
           >
-            <Link href="/courses">
-              <PlayCircle size={18} className="mr-2 text-primary" />
-              Lihat Semua Materi
+            <Link href="/courses" className="flex items-center gap-3">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-110">
+                <PlayCircle size={16} className="text-primary stroke-[1.5]" />
+              </span>
+              <span>Lihat Semua Materi</span>
             </Link>
           </Button>
         </div>

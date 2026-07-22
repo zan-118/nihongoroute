@@ -9,7 +9,7 @@ interface CalloutBlockProps {
 
 export function CalloutBlock({ block }: CalloutBlockProps) {
   return (
-    <div className="flex gap-4 p-6 rounded-2xl md:rounded-3xl shadow-[0_8px_30px_rgb(var(--primary-rgb)/0.03)] glass relative overflow-hidden group hover:border-primary/30 transition-all duration-300">
+    <div className="flex gap-4 p-6 rounded-2xl shadow-sm bg-card border border-border/50 dark:border-white/10 relative overflow-hidden group hover:border-primary/45 transition-all duration-500">
       <div className="absolute top-0 left-0 w-1.5 h-full bg-primary" />
       <Info className="size-5 text-primary flex-shrink-0 mt-0.5" />
       <div className="space-y-2">

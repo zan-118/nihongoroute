@@ -60,18 +60,21 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
   const LESSON_GOALS = [2, 5, 10, 15, 20] as const;
 
   return (
-    <m.div variants={itemVariants}>
-      <Card className="glass  border border-border/80 rounded-[2.5rem] p-8 md:p-10 shadow-xl relative overflow-hidden group">
-        {/* Background Decorative Gradient Glow */}
-        <div className="absolute top-0 left-0 size-40 bg-primary/5 blur-[50px] rounded-full -ml-14 -mt-14 pointer-events-none group-hover:bg-primary/8 transition-colors duration-300 ambient-glow will-change-transform" />
-        <div className="absolute bottom-0 right-0 size-48 bg-secondary/5 blur-[60px] rounded-full -mr-20 -mb-20 pointer-events-none ambient-glow will-change-transform" />
+    <m.div variants={itemVariants} className="relative group">
+      {/* Tombou Register Mark */}
+      <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+        <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+        <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+      </div>
+
+      <Card className="bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 md:p-10 shadow-[0_4px_25px_rgba(0,0,0,0.015)] relative overflow-hidden">
 
         <div className="flex items-center gap-4 mb-8 relative z-10">
-          <div className="size-12 rounded-lg bg-background/30 flex items-center justify-center border border-border/80 shadow-lg">
-            <Sliders size={22} className="text-primary drop-shadow-[0_0_6px_rgb(var(--primary-rgb)/0.3)]" />
+          <div className="size-12 rounded-lg bg-background/50 flex items-center justify-center border border-border/80 shadow-sm">
+            <Sliders size={22} className="text-primary" />
           </div>
           <div>
-            <h2 className="text-xl uppercase italic tracking-tighter text-foreground">Preferensi Belajar</h2>
+            <h2 className="text-xl uppercase italic tracking-tighter text-foreground font-bold">Preferensi Belajar</h2>
             <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em] mt-0.5 opacity-60">
               Kustomisasi antarmuka dan target pencapaian harian
             </p>
@@ -84,7 +87,7 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
             {/* Furigana Toggle */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 rounded-lg bg-background/25 border border-border/60 hover:border-primary/20 transition-all duration-200 shadow-sm">
               <div className="flex items-center gap-4">
-                <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                <div className="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
                   <Eye size={18} />
                 </div>
                 <div>
@@ -98,28 +101,27 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
                 className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out outline-none ${
                   showFurigana ? "bg-primary" : "bg-muted/30"
                 }`}
-                aria-label={`Toggle Furigana (Sekarang: ${showFurigana ? 'Aktif' : 'Nonaktif'})`}
               >
                 <span
-                  className={`pointer-events-none inline-block size-5 transform rounded-full bg-background shadow-md ring-0 transition duration-200 ease-in-out ${
+                  className={`pointer-events-none inline-block size-5 transform rounded-full bg-background shadow-lg ring-0 transition duration-200 ease-in-out ${
                     showFurigana ? "translate-x-5" : "translate-x-0"
                   }`}
                 />
               </button>
             </div>
 
-            {/* Library Layout Preference */}
+            {/* Layout Grid / List Switcher */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 rounded-lg bg-background/25 border border-border/60 hover:border-primary/20 transition-all duration-200 shadow-sm">
               <div className="flex items-center gap-4">
-                <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                  <LayoutGrid size={18} />
+                <div className="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                  <BookOpen size={18} />
                 </div>
                 <div>
-                  <h4 className="text-xs uppercase tracking-wider text-foreground">Tata Letak Pustaka</h4>
-                  <p className="text-[9px] text-muted-foreground font-semibold">Ubah tampilan menu daftar Pustaka</p>
+                  <h4 className="text-xs uppercase tracking-wider text-foreground">Layout Pustaka</h4>
+                  <p className="text-[9px] text-muted-foreground font-semibold">Tampilan default daftar kata & kanji</p>
                 </div>
               </div>
-              <div className="bg-background/40 glass p-1 rounded-xl flex gap-1 border border-border/60">
+              <div className="bg-background/40 p-1 rounded-lg flex gap-1 border border-border/60 shadow-inner">
                 <button
                   type="button"
                   onClick={() => setLayoutPreference("grid")}
@@ -128,10 +130,9 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
                       ? "bg-primary text-primary-foreground shadow-sm"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
-                  aria-label="Tampilan Kisi (Grid)"
-                  title="Tampilan Kisi"
+                  title="Grid Layout"
                 >
-                  <LayoutGrid size={15} />
+                  <LayoutGrid size={16} />
                 </button>
                 <button
                   type="button"
@@ -141,38 +142,31 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
                       ? "bg-primary text-primary-foreground shadow-sm"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
-                  aria-label="Tampilan Daftar (List)"
-                  title="Tampilan Daftar"
+                  title="List Layout"
                 >
-                  <LayoutList size={15} />
+                  <LayoutList size={16} />
                 </button>
               </div>
             </div>
           </div>
 
-          {/* 2. THEME SELECTOR */}
+          {/* 2. THEME SWITCHER */}
           {mounted && (
-            <div className="p-5 rounded-lg bg-background/25 border border-border/60 hover:border-primary/20 transition-all duration-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 rounded-lg bg-background/25 border border-border/60 hover:border-primary/20 transition-all duration-200 shadow-sm">
               <div className="flex items-center gap-4">
-                <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                  {theme === "dark" ? (
-                    <Moon size={18} />
-                  ) : theme === "light" ? (
-                    <Sun size={18} />
-                  ) : (
-                    <Monitor size={18} />
-                  )}
+                <div className="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                  {theme === "light" ? <Sun size={18} /> : theme === "dark" ? <Moon size={18} /> : <Monitor size={18} />}
                 </div>
                 <div>
-                  <h4 className="text-xs uppercase tracking-wider text-foreground">Tema Tampilan</h4>
-                  <p className="text-[9px] text-muted-foreground font-semibold">Pilih tema antarmuka aplikasi</p>
+                  <h4 className="text-xs uppercase tracking-wider text-foreground">Tema Aplikasi</h4>
+                  <p className="text-[9px] text-muted-foreground font-semibold">Pilih gaya visual antarmuka sistem</p>
                 </div>
               </div>
-              <div className="bg-background/40 glass p-1 rounded-xl flex gap-1 border border-border/60 self-start sm:self-auto">
+              <div className="bg-background/40 p-1 rounded-lg flex gap-1 border border-border/60 shadow-inner">
                 <button
                   type="button"
                   onClick={() => setTheme("light")}
-                  className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+                  className={`px-3 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all flex items-center gap-1.5 ${
                     theme === "light"
                       ? "bg-primary text-primary-foreground shadow-sm"
                       : "text-muted-foreground hover:text-foreground"
@@ -183,7 +177,7 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
                 <button
                   type="button"
                   onClick={() => setTheme("dark")}
-                  className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+                  className={`px-3 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all flex items-center gap-1.5 ${
                     theme === "dark"
                       ? "bg-primary text-primary-foreground shadow-sm"
                       : "text-muted-foreground hover:text-foreground"
@@ -194,7 +188,7 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
                 <button
                   type="button"
                   onClick={() => setTheme("system")}
-                  className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+                  className={`px-3 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all flex items-center gap-1.5 ${
                     theme === "system"
                       ? "bg-primary text-primary-foreground shadow-sm"
                       : "text-muted-foreground hover:text-foreground"
@@ -211,7 +205,7 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
             {/* Daily Review Goal */}
             <div className="p-5 rounded-lg bg-background/25 border border-border/60 hover:border-primary/20 transition-all duration-200 shadow-sm space-y-4">
               <div className="flex items-center gap-4">
-                <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                <div className="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
                   <Sparkles size={18} />
                 </div>
                 <div>
@@ -225,7 +219,7 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
                     key={goal}
                     type="button"
                     onClick={() => updateSettings({ dailyReviewGoal: goal })}
-                    className={`px-3 py-2 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all ${
+                    className={`px-3 py-2 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all ${
                       dailyReviewGoal === goal
                         ? "bg-primary text-primary-foreground shadow-sm"
                         : "bg-background/30 border border-border/80 text-muted-foreground hover:text-foreground hover:bg-background/50"
@@ -240,7 +234,7 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
             {/* Daily Lesson Goal */}
             <div className="p-5 rounded-lg bg-background/25 border border-border/60 hover:border-primary/20 transition-all duration-200 shadow-sm space-y-4">
               <div className="flex items-center gap-4">
-                <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                <div className="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
                   <BookOpen size={18} />
                 </div>
                 <div>
@@ -254,7 +248,7 @@ export default function PreferencesSection({ itemVariants }: PreferencesSectionP
                     key={goal}
                     type="button"
                     onClick={() => updateSettings({ dailyLessonGoal: goal })}
-                    className={`px-3 py-2 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all ${
+                    className={`px-3 py-2 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all ${
                       dailyLessonGoal === goal
                         ? "bg-primary text-primary-foreground shadow-sm"
                         : "bg-background/30 border border-border/80 text-muted-foreground hover:text-foreground hover:bg-background/50"

@@ -63,7 +63,7 @@ export function SidebarItem({ item, pathname, onClick }: SidebarItemProps) {
           // Framer motion layout animation for active state indicator.
           <m.div 
             layoutId="active-side-glow"
-            className="absolute left-0 top-2 bottom-2 w-[3px] bg-primary rounded-full"
+            className="absolute left-0 top-2 bottom-2 w-[1px] bg-primary rounded-full"
           />
         )}
 
@@ -79,7 +79,7 @@ export function SidebarItem({ item, pathname, onClick }: SidebarItemProps) {
           // Framer motion layout animation for active dot.
           <m.div 
             layoutId="sidebar-active-indicator"
-            className="size-1.5 rounded-full bg-primary"
+            className="size-[3px] rounded-full bg-primary"
           />
         )}
         <ChevronRight size={14} className={`opacity-0 group-hover:opacity-100 transition-all ${isActive ? 'text-primary' : 'text-muted-foreground'} group-hover:translate-x-0.5`} />

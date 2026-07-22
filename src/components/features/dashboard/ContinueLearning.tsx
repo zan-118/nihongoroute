@@ -138,98 +138,109 @@ export default function ContinueLearning({ courseMetadata }: ContinueLearningPro
         </div>
       </div>
 
-      <Card className="group relative overflow-hidden border-border bg-card/10  p-0 rounded-2xl transition-all duration-500 hover:border-primary/40 hover:shadow-[0_0_40px_rgb(var(--primary-rgb)/0.1)] shadow-none glass">
-        {/* Glow Latar Belakang Kemajuan Belajar */}
-        {/* Background progress glow width matches progress percentage */}
-        <div 
-          className="absolute left-0 top-0 bottom-0 bg-primary/5 transition-all duration-1000 ease-out pointer-events-none" 
-          style={{ width: `${activeData.progress}%` }}
-        />
-
-        <div className="relative z-10 flex flex-col md:flex-row items-center gap-[34px] p-[34px]">
-          {/* Area Ikon / Miniatur */}
-          <div className="shrink-0 relative transition-transform duration-300 group-hover:scale-105">
-            <div className="size-[89px] rounded-xl bg-card/40 border border-border flex items-center justify-center shadow-2xl overflow-hidden group-hover:border-primary/30 transition-colors">
-               {activeData.progress === 100 ? (
-                 <CheckCircle2 size={34} className="text-success drop-shadow-[0_0_8px_rgb(var(--success-rgb)/0.4)]" />
-               ) : (
-                 <BookOpen size={34} className="text-primary group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_8px_rgb(var(--primary-rgb)/0.3)]" />
-               )}
-            </div>
-            
-            {/* Lencana Persentase Progres */}
-            {/* Progress percentage badge */}
-            <div className={`absolute -bottom-2 -right-2 text-background text-[10px] font-black px-3 py-1 rounded-full border border-border shadow-xl transition-colors ${activeData.progress === 100 ? 'bg-success text-success-foreground border-success/30' : 'bg-foreground'}`}>
-              {Math.round(activeData.progress)}%
-            </div>
-          </div>
-
-          {/* Area Informasi Judul & Progres */}
-          <div className="flex-1 text-center md:text-left">
-            <div className="flex flex-col gap-1 mb-[13px]">
-              <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em] opacity-80">
-                {activeData.courseTitle}
-              </span>
-              <h4 className="text-2xl md:text-3xl text-foreground tracking-tight line-clamp-1 transition-colors group-hover:text-primary">
-                {activeData.lessonTitle}
-              </h4>
-            </div>
-            
-            <div className="flex items-center justify-center md:justify-start gap-4">
-              <div className="flex items-center gap-2">
-                <div className="flex -space-x-1">
-                  {/* Render progress dots based on percentage */}
-                  {[...Array(3)].map((_, i) => {
-                    const isDotActive = i < Math.floor(activeData.progress / 33);
-                    return (
-                      <div 
-                        key={`progress-dot-${i}`} 
-                        className={`w-1.5 h-3 rounded-full border border-background transition-all duration-500 ${
-                          isDotActive 
-                            ? activeData.progress === 100
-                              ? 'bg-success shadow-[0_0_8px_rgb(var(--success-rgb)/0.5)]'
-                              : 'bg-primary shadow-[0_0_8px_rgb(var(--primary-rgb)/0.5)]' 
-                            : 'bg-background/10'
-                        }`} 
-                      />
-                    );
-                  })}
-                </div>
-                <span className="text-xs text-muted-foreground font-bold uppercase tracking-wider">
-                  {activeData.completedCount} / {activeData.totalLessons} Pelajaran
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Area Tombol Aksi */}
-          <div className="w-full md:w-auto shrink-0 transition-transform active:scale-[0.98]">
-            <Button asChild className="w-full md:w-auto h-[89px] px-10 rounded-xl bg-foreground text-background hover:bg-primary hover:text-primary-foreground font-black uppercase tracking-widest transition-all duration-300 group shadow-2xl border-none">
-              <Link href={`/courses/${activeData.courseSlug}/${activeData.lessonSlug}`}>
-                {activeData.isNew ? "Mulai" : "Lanjut"}
-                <div className="ml-3 size-[34px] rounded-full bg-background/20 flex items-center justify-center group-hover:bg-primary-foreground/20 transition-all duration-300 group-hover:rotate-12">
-                  <Play size={14} fill="currentColor" />
-                </div>
-              </Link>
-            </Button>
-          </div>
-        </div>
-
-        {/* Batang Progres Tipis di Sisi Bawah Card */}
-        {/* Bottom progress bar with shimmer effect */}
-        <div className="absolute bottom-0 left-0 w-full h-[2px] bg-border/50">
-          <m.div 
-            initial={{ width: 0 }}
-            animate={{ width: `${activeData.progress}%` }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
-            className={`h-full relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-background/25 before:to-transparent ${
-              activeData.progress === 100
-                ? "bg-success shadow-[0_0_15px_rgb(var(--success-rgb)/0.6)]"
-                : "bg-primary shadow-[0_0_15px_rgb(var(--primary-rgb)/0.6)]"
-            }`}
+      <div className="relative group">
+        {/* Tombou Register Mark (L-shape offset 6px outside rounded-2xl) */}
+        <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+          <div 
+            className="absolute top-0 right-0 w-[14px] h-[1px] transition-colors duration-500" 
+            style={{ backgroundColor: activeData.progress === 100 ? "var(--success)" : "var(--primary)" }}
+          />
+          <div 
+            className="absolute top-0 right-0 w-[1px] h-[14px] transition-colors duration-500" 
+            style={{ backgroundColor: activeData.progress === 100 ? "var(--success)" : "var(--primary)" }}
           />
         </div>
-      </Card>
+
+        <Card className="relative overflow-hidden border border-border/50 dark:border-white/10 bg-card p-0 rounded-2xl shadow-[0_4px_25px_rgba(0,0,0,0.015)] group-hover:border-primary/50 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+          {/* Subtle background progression tint */}
+          <div 
+            className="absolute left-0 top-0 bottom-0 bg-primary/5 transition-all duration-1000 ease-out pointer-events-none" 
+            style={{ width: `${activeData.progress}%` }}
+          />
+
+          <div className="relative z-10 flex flex-col md:flex-row items-center gap-[34px] p-[34px]">
+            {/* Area Ikon / Miniatur */}
+            <div className="shrink-0 relative transition-transform duration-300 group-hover:scale-105">
+              <div className="size-[89px] rounded-lg bg-card border border-border/60 flex items-center justify-center shadow-md overflow-hidden group-hover:border-primary/30 transition-colors">
+                 {activeData.progress === 100 ? (
+                   <CheckCircle2 size={34} className="text-success" />
+                 ) : (
+                   <BookOpen size={34} className="text-primary group-hover:scale-110 transition-transform duration-500" />
+                 )}
+              </div>
+              
+              {/* Lencana Persentase Progres */}
+              <div className={`absolute -bottom-2 -right-2 text-background text-[10px] font-black px-3 py-1 rounded-[4px] border border-border shadow-md transition-colors ${activeData.progress === 100 ? 'bg-success text-success-foreground border-success/30' : 'bg-foreground'}`}>
+                {Math.round(activeData.progress)}%
+              </div>
+            </div>
+
+            {/* Area Informasi Judul & Progres */}
+            <div className="flex-1 text-center md:text-left">
+              <div className="flex flex-col gap-1 mb-[13px]">
+                <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em] opacity-80">
+                  {activeData.courseTitle}
+                </span>
+                <h4 className="text-2xl md:text-3xl text-foreground tracking-tight line-clamp-1 transition-colors group-hover:text-primary font-bold">
+                  {activeData.lessonTitle}
+                </h4>
+              </div>
+              
+              <div className="flex items-center justify-center md:justify-start gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="flex -space-x-1">
+                    {/* Render progress dots based on percentage */}
+                    {[...Array(3)].map((_, i) => {
+                      const isDotActive = i < Math.floor(activeData.progress / 33);
+                      return (
+                        <div 
+                          key={`progress-dot-${i}`} 
+                          className={`w-1.5 h-3 rounded-full border border-background transition-all duration-500 ${
+                            isDotActive 
+                              ? activeData.progress === 100
+                                ? 'bg-success'
+                                : 'bg-primary' 
+                              : 'bg-background/10'
+                          }`} 
+                        />
+                      );
+                    })}
+                  </div>
+                  <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">
+                    {activeData.completedCount} / {activeData.totalLessons} Pelajaran
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Area Tombol Aksi - Asymmetric Calligraphic Cut */}
+            <div className="w-full md:w-auto shrink-0 transition-transform active:scale-[0.98]">
+              <Button asChild className="w-full md:w-auto h-[70px] pl-8 pr-6 rounded-lg rounded-br-none bg-foreground text-background hover:bg-primary hover:text-primary-foreground font-black uppercase tracking-widest transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group border-none">
+                <Link href={`/courses/${activeData.courseSlug}/${activeData.lessonSlug}`} className="flex items-center justify-between gap-4">
+                  <span>{activeData.isNew ? "Mulai" : "Lanjut"}</span>
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-background/20 group-hover:bg-primary-foreground/20 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:rotate-12">
+                    <Play size={14} fill="currentColor" />
+                  </span>
+                </Link>
+              </Button>
+            </div>
+          </div>
+
+          {/* Batang Progres Tipis di Sisi Bawah Card */}
+          <div className="absolute bottom-0 left-0 w-full h-[2px] bg-border/50">
+            <m.div 
+              initial={{ width: 0 }}
+              animate={{ width: `${activeData.progress}%` }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+              className={`h-full relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-background/25 before:to-transparent ${
+                activeData.progress === 100
+                  ? "bg-success"
+                  : "bg-primary"
+              }`}
+            />
+          </div>
+        </Card>
+      </div>
     </div>
   );
 }

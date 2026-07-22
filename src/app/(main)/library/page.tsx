@@ -100,7 +100,7 @@ export default async function LibraryPage() {
         {/* ── HEADER ── */}
         <header className="mb-14 md:mb-20">
           <div className="flex items-center gap-4 md:gap-6 mb-8 md:mb-12">
-            <Card className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-2.5xl bg-[rgb(var(--primary-rgb)/0.08)] border-border/80 flex items-center justify-center shadow-[0_0_30px_rgba(var(--primary-rgb),0.02)] glass">
+            <Card className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-xl bg-[rgb(var(--primary-rgb)/0.08)] border border-border/50 dark:border-white/10 flex items-center justify-center shadow-sm">
               <Library size={28} className="text-primary md:w-8 md:h-8" />
             </Card>
             <div className="flex flex-col gap-1">
@@ -135,27 +135,34 @@ export default async function LibraryPage() {
           <div className="flex flex-col gap-6 w-full">
             <div className="flex flex-col sm:flex-row flex-wrap gap-6 md:gap-8">
               {stats.map((stat) => (
-                <Card 
-                  key={stat.label} 
-                  className="p-6 md:p-8 rounded-[2rem] border border-border/80 bg-[rgb(var(--card-rgb)/0.3)]  flex flex-col justify-center items-center text-center gap-2 group transition-all duration-300 hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.03)] hover:border-primary/20 glass"
+                <div 
+                  key={stat.label}
+                  className="relative group flex-1 min-w-[120px]"
                 >
-                  <span
-                    className="text-3xl md:text-5xl font-black tabular-nums tracking-tighter leading-none transition-transform duration-300 group-hover:scale-105"
-                    style={{ color: `rgb(${stat.accentRgb})` }}
-                  >
-                    {stat.value.toLocaleString("id-ID")}
-                  </span>
-                  <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.25em]">
-                    {stat.label}
-                  </span>
-                </Card>
+                  {/* Tombou Register Mark (L-shape offset 6px outside rounded-2xl) */}
+                  <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+                    <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
+                    <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
+                  </div>
+
+                  <Card className="h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl p-6 md:p-8 flex flex-col justify-center items-center text-center gap-2 shadow-[0_4px_20px_rgba(0,0,0,0.015)] group-hover:border-primary/50 transition-colors duration-500">
+                    <span
+                      className="text-3xl md:text-5xl font-black tabular-nums tracking-tighter leading-none transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105"
+                      style={{ color: `rgb(${stat.accentRgb})` }}
+                    >
+                      {stat.value.toLocaleString("id-ID")}
+                    </span>
+                    <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.25em]">
+                      {stat.label}
+                    </span>
+                  </Card>
+                </div>
               ))}
             </div>
 
             {/* Total strip status */}
             <div
-              className="px-8 py-4 rounded-lg border border-border/60  flex items-center justify-center gap-3 glass"
-              style={{ background: "rgb(var(--primary-rgb)/0.02)" }}
+              className="px-8 py-4 rounded-lg border border-border/50 flex items-center justify-center gap-3 bg-muted/40"
             >
               <Sparkles size={14} className="text-primary animate-pulse" />
               <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.3em] text-center">

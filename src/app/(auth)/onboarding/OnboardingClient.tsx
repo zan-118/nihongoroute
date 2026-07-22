@@ -133,24 +133,32 @@ export default function OnboardingClient() {
 
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 {JLPT_LEVELS.map((level) => (
-                  <Card
+                  <div
                     key={level.id}
                     onClick={() => setTargetLevel(level.id)}
-                    className={`cursor-pointer p-6 border transition-all duration-300 rounded-[1.5rem] flex flex-col items-center justify-center text-center group shadow-none glass ${
+                    className={`rounded-[1.5rem] p-1 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
                       targetLevel === level.id 
-                        ? "border-primary bg-primary/10 shadow-[0_0_20px_rgb(var(--primary-rgb)/0.2)] scale-[1.03]" 
-                        : "border-border/80 hover:border-primary/50 hover:bg-muted/30"
+                        ? "bg-primary/20 border border-primary/40 shadow-lg scale-[1.03]" 
+                        : "bg-black/[0.01] dark:bg-white/[0.02] border border-black/5 dark:border-white/10 hover:border-primary/40"
                     }`}
                   >
-                    <span className={`text-3xl font-black tracking-tight mb-2 transition-colors ${
-                      targetLevel === level.id ? "text-primary" : "text-foreground group-hover:text-primary"
-                    }`}>
-                      {level.id}
-                    </span>
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                      {level.label.split(" ")[0]}
-                    </span>
-                  </Card>
+                    <Card
+                      className={`cursor-pointer p-6 border-none rounded-[calc(1.5rem-0.25rem)] flex flex-col items-center justify-center text-center group shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                        targetLevel === level.id 
+                          ? "bg-primary/10" 
+                          : "bg-card hover:bg-muted/30"
+                      }`}
+                    >
+                      <span className={`text-3xl font-black tracking-tight mb-2 transition-colors duration-500 ${
+                        targetLevel === level.id ? "text-primary" : "text-foreground group-hover:text-primary"
+                      }`}>
+                        {level.id}
+                      </span>
+                      <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                        {level.label.split(" ")[0]}
+                      </span>
+                    </Card>
+                  </div>
                 ))}
               </div>
 
@@ -194,28 +202,36 @@ export default function OnboardingClient() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {MOTIVATIONS.map((item) => (
-                  <Card
+                  <div
                     key={item.id}
                     onClick={() => setMotivation(item.id)}
-                    className={`cursor-pointer p-6 border transition-all duration-300 rounded-[1.5rem] flex items-center gap-5 group shadow-none glass ${
+                    className={`rounded-[1.5rem] p-1 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
                       motivation === item.id 
-                        ? "border-secondary bg-secondary/10 shadow-[0_0_20px_rgb(var(--secondary-rgb)/0.2)] scale-[1.03]" 
-                        : "border-border/80 hover:border-secondary/50 hover:bg-muted/30"
+                        ? "bg-secondary/20 border border-secondary/40 shadow-lg scale-[1.03]" 
+                        : "bg-black/[0.01] dark:bg-white/[0.02] border border-black/5 dark:border-white/10 hover:border-secondary/40"
                     }`}
                   >
-                    <div className={`p-4 rounded-2xl transition-colors duration-300 ${
-                      motivation === item.id 
-                        ? "bg-secondary text-secondary-foreground shadow-[0_0_15px_rgb(var(--secondary-rgb)/0.2)]" 
-                        : "bg-muted text-muted-foreground group-hover:text-secondary group-hover:bg-secondary/5"
-                    }`}>
-                      <item.icon size={24} />
-                    </div>
-                    <span className={`font-bold text-base md:text-lg transition-colors ${
-                      motivation === item.id ? "text-secondary" : "text-foreground group-hover:text-secondary"
-                    }`}>
-                      {item.label}
-                    </span>
-                  </Card>
+                    <Card
+                      className={`cursor-pointer p-6 border-none rounded-[calc(1.5rem-0.25rem)] flex items-center gap-5 group shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                        motivation === item.id 
+                          ? "bg-secondary/10" 
+                          : "bg-card hover:bg-muted/30"
+                      }`}
+                    >
+                      <div className={`p-4 rounded-2xl transition-colors duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                        motivation === item.id 
+                          ? "bg-secondary text-secondary-foreground shadow-[0_0_15px_rgb(var(--secondary-rgb)/0.2)]" 
+                          : "bg-muted text-muted-foreground group-hover:text-secondary group-hover:bg-secondary/5"
+                      }`}>
+                        <item.icon size={24} />
+                      </div>
+                      <span className={`font-bold text-base md:text-lg transition-colors duration-500 ${
+                        motivation === item.id ? "text-secondary" : "text-foreground group-hover:text-secondary"
+                      }`}>
+                        {item.label}
+                      </span>
+                    </Card>
+                  </div>
                 ))}
               </div>
 

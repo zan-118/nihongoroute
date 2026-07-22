@@ -255,7 +255,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
                 variant="outline"
                 size="sm"
                 onClick={handleShuffle}
-                className="gap-2 rounded-xl text-xs font-bold border-border bg-[rgba(var(--card-rgb),0.2)] hover:bg-[rgba(var(--primary-rgb),0.1)] hover:text-primary transition-colors"
+                className="gap-2 rounded-lg text-xs font-bold border-border bg-card hover:bg-primary/10 hover:text-primary transition-colors"
                 aria-label="Acak urutan kartu"
               >
                 <Shuffle size={14} /> Acak Kartu
@@ -266,11 +266,11 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
             <div 
               id="flashcard-touch-area"
               onClick={() => setIsFlipped(!isFlipped)}
-              className="w-full h-[30rem] md:h-[28rem] rounded-[3rem] cursor-pointer relative select-none group"
+              className="w-full h-[30rem] md:h-[28rem] rounded-2xl cursor-pointer relative select-none group"
               style={{ perspective: "1000px" }}
             >
               <div 
-                className="w-full h-full relative rounded-[3rem] transition-transform duration-700 shadow-[0_20px_50px_rgba(var(--foreground-rgb),0.05)] group-hover:shadow-[0_25px_60px_rgba(var(--primary-rgb),0.08)] border border-border glass"
+                className="w-full h-full relative rounded-2xl transition-transform duration-700 shadow-md border border-border/50 dark:border-white/10 bg-card"
                 style={{ 
                   transformStyle: "preserve-3d", 
                   transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)"
@@ -290,14 +290,14 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
                   <div className="text-5xl md:text-7xl font-japanese font-black text-foreground tracking-tighter leading-snug">
                     {flashcardItems[currentIndex]?.jp}
                   </div>
-                  <div className="flex items-center gap-2 text-xs font-bold text-primary bg-[rgba(var(--primary-rgb),0.1)] px-4 py-1.5 rounded-full border border-[rgba(var(--primary-rgb),0.2)] mt-4">
+                  <div className="flex items-center gap-2 text-xs font-bold text-primary bg-primary/10 px-4 py-1.5 rounded-[4px] border border-primary/20 mt-4">
                     <Eye size={14} /> Tampilkan Detail
                   </div>
                 </div>
 
                 {/* SISI BELAKANG (Detail & Arti) */}
                 <div 
-                  className="absolute inset-0 flex flex-col items-center justify-between p-6 md:p-8 text-center bg-[rgba(var(--background-rgb),0.96)] rounded-[3rem] border border-[rgba(var(--primary-rgb),0.25)] shadow-inner"
+                  className="absolute inset-0 flex flex-col items-center justify-between p-6 md:p-8 text-center bg-card rounded-2xl border border-border/50 dark:border-white/10 shadow-sm"
                   style={{ 
                     backfaceVisibility: "hidden", 
                     WebkitBackfaceVisibility: "hidden",
@@ -333,9 +333,9 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
             {/* Navigasi & Progres Bar */}
             <div className="w-full space-y-6">
               {/* Progres Bar Visual */}
-              <div className="w-full h-2 bg-[rgba(var(--muted-rgb),0.2)] rounded-full overflow-hidden">
+              <div className="w-full h-1 bg-muted rounded-[4px] overflow-hidden">
                 <div 
-                  className="h-full bg-primary transition-all duration-500 shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]"
+                  className="h-full bg-primary transition-all duration-500"
                   style={{ width: `${((currentIndex + 1) / flashcardItems.length) * 100}%` }}
                 />
               </div>
@@ -347,7 +347,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
                   type="button"
                   variant="outline"
                   size="icon"
-                  className="w-12 h-12 rounded-full border-border bg-[rgba(var(--card-rgb),0.2)] hover:bg-[rgba(var(--primary-rgb),0.1)] hover:text-primary disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                  className="w-10 h-10 rounded-lg border-border bg-card hover:bg-primary/10 hover:text-primary disabled:opacity-30 disabled:pointer-events-none transition-colors"
                   onClick={handlePrevCard}
                   disabled={currentIndex === 0}
                   aria-label="Kartu sebelumnya"
@@ -355,7 +355,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
                   <ChevronLeft size={20} />
                 </Button>
 
-                <div className="text-sm font-black text-muted-foreground/70 uppercase tracking-widest">
+                <div className="text-xs font-black text-muted-foreground/70 uppercase tracking-widest">
                   Materi <span className="text-foreground">{currentIndex + 1}</span> dari {flashcardItems.length}
                 </div>
 
@@ -364,7 +364,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
                   type="button"
                   variant="outline"
                   size="icon"
-                  className="w-12 h-12 rounded-full border-border bg-[rgba(var(--card-rgb),0.2)] hover:bg-[rgba(var(--primary-rgb),0.1)] hover:text-primary disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                  className="w-10 h-10 rounded-lg border-border bg-card hover:bg-primary/10 hover:text-primary disabled:opacity-30 disabled:pointer-events-none transition-colors"
                   onClick={handleNextCard}
                   disabled={currentIndex === flashcardItems.length - 1}
                   aria-label="Kartu berikutnya"

@@ -184,34 +184,39 @@ export function FeatureGrid() {
           className="grid grid-cols-1 md:grid-cols-2 gap-[34px]"
         >
           {/* KARTU 1: ALAT BANTU KANA INTERAKTIF */}
-          <m.div variants={itemVariants}>
-            <Card className="p-6 sm:p-8 md:p-10 group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 border border-border rounded-2xl sm:rounded-3xl hover:border-primary/40 hover:shadow-[0_0_50px_rgba(var(--primary-rgb),0.12)] shadow-none glass">
-              <div className="absolute inset-0 bg-seigaiha pointer-events-none opacity-[0.45] transition-opacity group-hover:opacity-60" />
-              <div className="absolute top-0 right-0 size-32 bg-primary/5 rounded-full blur-[40px] group-hover:bg-primary/10 transition-all duration-500" />
+          <m.div variants={itemVariants} className="relative group h-full">
+            {/* Tombou Register Mark */}
+            <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+              <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+              <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+            </div>
+
+            <Card className="p-6 sm:p-8 md:p-10 group relative overflow-hidden flex flex-col h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl shadow-[0_4px_25px_rgba(0,0,0,0.015)] group-hover:border-primary/45 transition-colors duration-500">
+              <div className="absolute inset-0 bg-seigaiha pointer-events-none opacity-[0.2] transition-opacity group-hover:opacity-30" />
               
-              <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-lg group-hover:scale-110 transition-transform duration-500 shadow-sm text-primary">
-                <PenTool size={26} className="drop-shadow-[0_0_6px_rgb(var(--primary-rgb)_/_0.3)]" />
+              <div className="mb-[26px] p-4 bg-background border border-border/80 w-fit rounded-lg group-hover:scale-105 transition-transform duration-500 text-primary">
+                <PenTool size={26} />
               </div>
               
-              <h3 className="text-2xl tracking-tight mb-[13px] text-foreground group-hover:text-primary transition-colors">
+              <h3 className="text-2xl tracking-tight mb-[13px] text-foreground group-hover:text-primary transition-colors font-bold">
                 Alat Bantu Kana Interaktif
               </h3>
               
-              <p className="text-muted-foreground text-sm leading-relaxed flex-1 font-medium mb-6">
+              <p className="text-muted-foreground text-sm leading-relaxed flex-1 font-semibold mb-6">
                 Kuasai Hiragana & Katakana lewat tabel interaktif, panduan urutan guratan, dan latihan menulis langsung di layarmu.
               </p>
  
               {/* Tampilan Visual Mockup di Dalam Kartu */}
-              <div className="p-4 bg-background/40 border border-border rounded-lg flex items-center justify-between gap-4 glass mt-auto transition-all duration-300 group-hover:border-primary/20">
-                <div className="size-14 border-2 border-dashed border-primary/30 bg-background/80 rounded-xl flex items-center justify-center relative font-japanese font-bold text-2xl text-primary shadow-inner transition-transform group-hover:scale-105">
+              <div className="p-4 bg-background/50 border border-border/80 rounded-lg flex items-center justify-between gap-4 mt-auto transition-all duration-300 group-hover:border-primary/20">
+                <div className="size-14 border border-border/80 bg-background/80 rounded-lg flex items-center justify-center relative font-japanese font-bold text-2xl text-primary shadow-sm transition-transform group-hover:scale-105">
                   あ
                   <div className="absolute text-[8px] font-bold text-primary/50 top-1 left-1">1</div>
                   <div className="absolute text-[7px] font-bold text-muted-foreground/60 bottom-1 right-1">N5</div>
                 </div>
                 <div className="flex-1 flex flex-col gap-1.5">
                   <span className="text-[11px] font-bold text-foreground">Hiragana "A" (Guratan 1/3)</span>
-                  <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden relative">
-                    <div className="h-full bg-primary rounded-full w-[33%] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-background/20 before:to-transparent" />
+                  <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden relative border border-border/40">
+                    <div className="h-full bg-primary rounded-full w-[33%]" />
                   </div>
                   <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Arah guratan: Melengkung ke kanan</span>
                 </div>
@@ -220,78 +225,88 @@ export function FeatureGrid() {
           </m.div>
  
           {/* KARTU 2: DATABASE PERPUSTAKAAN KOSAKATA & TATA BAHASA */}
-          <m.div variants={itemVariants}>
-            <Card className="p-6 sm:p-8 md:p-10 group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 border border-border rounded-2xl sm:rounded-3xl hover:border-secondary/40 hover:shadow-[0_0_50px_rgba(var(--secondary-rgb),0.12)] shadow-none glass">
-              <div className="absolute inset-0 bg-asanoha pointer-events-none opacity-[0.45] transition-opacity group-hover:opacity-60" />
-              <div className="absolute top-0 right-0 size-32 bg-secondary/5 rounded-full blur-[40px] group-hover:bg-secondary/10 transition-all duration-500" />
+          <m.div variants={itemVariants} className="relative group h-full">
+            {/* Tombou Register Mark */}
+            <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+              <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-secondary/20 group-hover:bg-secondary transition-colors duration-500" />
+              <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-secondary/20 group-hover:bg-secondary transition-colors duration-500" />
+            </div>
+
+            <Card className="p-6 sm:p-8 md:p-10 group relative overflow-hidden flex flex-col h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl shadow-[0_4px_25px_rgba(0,0,0,0.015)] group-hover:border-secondary/45 transition-colors duration-500">
+              <div className="absolute inset-0 bg-asanoha pointer-events-none opacity-[0.2] transition-opacity group-hover:opacity-30" />
               
-              <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-lg group-hover:scale-110 transition-transform duration-500 shadow-sm text-secondary">
-                <Library size={26} className="drop-shadow-[0_0_6px_rgb(var(--secondary-rgb)_/_0.3)]" />
+              <div className="mb-[26px] p-4 bg-background border border-border/80 w-fit rounded-lg group-hover:scale-105 transition-transform duration-500 text-secondary">
+                <Library size={26} />
               </div>
               
-              <h3 className="text-2xl tracking-tight mb-[13px] text-foreground group-hover:text-secondary transition-colors">
+              <h3 className="text-2xl tracking-tight mb-[13px] text-foreground group-hover:text-secondary transition-colors font-bold">
                 Perpustakaan Kosakata, Kanji & Tata Bahasa
               </h3>
               
-              <p className="text-muted-foreground text-sm leading-relaxed flex-1 font-medium mb-4">
+              <p className="text-muted-foreground text-sm leading-relaxed flex-1 font-semibold mb-4">
                 Ribuan kosakata, kamus Kanji lengkap, dan pustaka tata bahasa praktis — semuanya dengan audio penutur asli dan furigana otomatis.
               </p>
 
               {/* STATISTIK NYATA DARIPADA SUPABASE */}
               <div className="flex gap-2 flex-wrap mb-6">
-                <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 transition-transform hover:scale-105 shadow-none">
+                <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-[4px]">
                   22K+ Kosakata
                 </Badge>
-                <Badge variant="outline" className="bg-secondary/5 text-secondary border-secondary/20 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 transition-transform hover:scale-105 shadow-none">
+                <Badge variant="outline" className="bg-secondary/5 text-secondary border-secondary/20 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-[4px]">
                   13K+ Kanji
                 </Badge>
-                <Badge variant="outline" className="bg-success/5 text-success border-success/20 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 transition-transform hover:scale-105 shadow-none">
+                <Badge variant="outline" className="bg-success/5 text-success border-success/20 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-[4px]">
                   800+ Tata Bahasa
                 </Badge>
               </div>
  
               {/* Tampilan Visual Mockup di Dalam Kartu */}
-              <div className="p-4 bg-background/40 border border-border rounded-lg flex flex-col gap-2 glass mt-auto transition-all duration-300 group-hover:border-secondary/20">
+              <div className="p-4 bg-background/50 border border-border/80 rounded-lg flex flex-col gap-2 mt-auto transition-all duration-300 group-hover:border-secondary/20">
                 <div className="flex items-center justify-between">
-                  <span className="text-[9px] font-extrabold uppercase tracking-widest text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full">Kosakata Utama</span>
-                  <span className="text-[9px] font-extrabold bg-secondary/10 text-secondary border border-secondary/20 px-2 py-0.5 rounded-full">N5</span>
+                  <span className="text-[9px] font-extrabold uppercase tracking-widest text-primary bg-primary/10 border border-primary/25 px-2 py-0.5 rounded-[4px]">Kosakata Utama</span>
+                  <span className="text-[9px] font-extrabold bg-secondary/10 text-secondary border border-secondary/25 px-2 py-0.5 rounded-[4px]">N5</span>
                 </div>
                 <div className="flex flex-col transition-transform group-hover:translate-x-1 duration-300">
                   <ruby className="text-xl font-bold font-japanese tracking-wider text-foreground">
-                    日本語 <rt className="text-[0.55em] font-bold text-muted-foreground transition-colors group-hover:text-primary">にほんご</rt>
+                    日本語 <rt className="text-[0.55em] font-bold text-muted-foreground transition-colors group-hover:text-primary">にほんgo</rt>
                   </ruby>
                   <span className="text-[11px] text-muted-foreground font-semibold mt-0.5">Nihongo — Bahasa Jepang</span>
                 </div>
-                <div className="h-px bg-border/60" />
+                <div className="h-px bg-border/40" />
                 <div className="text-[9px] text-muted-foreground leading-relaxed">
-                  <strong>Contoh:</strong> 日本語の勉強が大好きです。<br />
-                  <span className="opacity-80">Saya sangat suka belajar bahasa Jepang.</span>
+                  <strong>Contoh:</strong> 日本語 diucapkan Ni-hon-go.<br />
+                  <span className="opacity-80">Saya belajar bahasa Jepang setiap hari.</span>
                 </div>
               </div>
             </Card>
           </m.div>
  
           {/* KARTU 3: FLASHCARDS DENGAN SYSTEM SRS */}
-          <m.div variants={itemVariants}>
-            <Card className="p-6 sm:p-8 md:p-10 group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 border border-border rounded-2xl sm:rounded-3xl hover:border-primary/40 hover:shadow-[0_0_50px_rgba(var(--primary-rgb),0.12)] shadow-none glass">
-              <div className="absolute inset-0 bg-seigaiha pointer-events-none opacity-[0.45] transition-opacity group-hover:opacity-60" />
-              <div className="absolute top-0 right-0 size-32 bg-primary/5 rounded-full blur-[40px] group-hover:bg-primary/10 transition-all duration-500" />
+          <m.div variants={itemVariants} className="relative group h-full">
+            {/* Tombou Register Mark */}
+            <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+              <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+              <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+            </div>
+
+            <Card className="p-6 sm:p-8 md:p-10 group relative overflow-hidden flex flex-col h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl shadow-[0_4px_25px_rgba(0,0,0,0.015)] group-hover:border-primary/45 transition-colors duration-500">
+              <div className="absolute inset-0 bg-seigaiha pointer-events-none opacity-[0.2] transition-opacity group-hover:opacity-30" />
               
-              <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-lg group-hover:scale-110 transition-transform duration-500 shadow-sm text-primary">
-                <BrainCircuit size={26} className="drop-shadow-[0_0_6px_rgb(var(--primary-rgb)_/_0.3)]" />
+              <div className="mb-[26px] p-4 bg-background border border-border/80 w-fit rounded-lg group-hover:scale-105 transition-transform duration-500 text-primary">
+                <BrainCircuit size={26} />
               </div>
               
-              <h3 className="text-2xl tracking-tight mb-[13px] text-foreground group-hover:text-primary transition-colors">
+              <h3 className="text-2xl tracking-tight mb-[13px] text-foreground group-hover:text-primary transition-colors font-bold">
                 Flashcard Cerdas & Pengulangan Terjadwal
               </h3>
               
-              <p className="text-muted-foreground text-sm leading-relaxed flex-1 font-medium mb-6">
+              <p className="text-muted-foreground text-sm leading-relaxed flex-1 font-semibold mb-6">
                 Latih ingatanmu dengan cara paling efektif. Sistem SRS otomatis jadwalkan kartu flashcard yang perlu diulang tepat sebelum kamu lupa.
               </p>
  
               {/* Tampilan Visual Mockup di Dalam Kartu */}
-              <div className="p-4 bg-background/40 border border-border rounded-lg flex items-center gap-3.5 glass mt-auto transition-all duration-300 group-hover:border-primary/20">
-                <div className="relative w-11 h-14 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground rounded-lg flex items-center justify-center font-bold text-xl shadow-[0_4px_12px_rgb(var(--primary-rgb)_/_0.3)] shrink-0 transition-transform group-hover:scale-105">
+              <div className="p-4 bg-background/50 border border-border/80 rounded-lg flex items-center gap-3.5 mt-auto transition-all duration-300 group-hover:border-primary/20">
+                <div className="relative w-11 h-14 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground rounded-lg flex items-center justify-center font-bold text-xl shadow-sm shrink-0 transition-transform group-hover:scale-105">
                   猫
                   <div className="absolute -top-1 -right-1 size-2.5 bg-success rounded-full border border-background animate-pulse" />
                 </div>
@@ -300,8 +315,8 @@ export function FeatureGrid() {
                   <span className="text-[9px] text-muted-foreground flex items-center gap-1.5 font-bold">
                     <span className="size-1.5 bg-success rounded-full" /> Interval: 3 Hari Lagi (Kotak 4)
                   </span>
-                  <div className="w-full bg-muted h-1 rounded-full overflow-hidden mt-1 relative">
-                    <div className="bg-success h-full w-[80%] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-background/20 before:to-transparent" />
+                  <div className="w-full bg-muted h-1 rounded-full overflow-hidden mt-1 relative border border-border/40">
+                    <div className="bg-success h-full w-[80%]" />
                   </div>
                 </div>
               </div>
@@ -309,31 +324,36 @@ export function FeatureGrid() {
           </m.div>
  
           {/* KARTU 4: SIMULASI UJIAN JLPT REAL-TIME */}
-          <m.div variants={itemVariants}>
-            <Card className="p-6 sm:p-8 md:p-10 group relative overflow-hidden transition-all duration-500 flex flex-col h-full bg-card/10 border border-border rounded-2xl sm:rounded-3xl hover:border-secondary/40 hover:shadow-[0_0_50px_rgba(var(--secondary-rgb),0.12)] shadow-none glass">
-              <div className="absolute inset-0 bg-asanoha pointer-events-none opacity-[0.45] transition-opacity group-hover:opacity-60" />
-              <div className="absolute top-0 right-0 size-32 bg-secondary/5 rounded-full blur-[40px] group-hover:bg-secondary/10 transition-all duration-500" />
+          <m.div variants={itemVariants} className="relative group h-full">
+            {/* Tombou Register Mark */}
+            <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+              <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-secondary/20 group-hover:bg-secondary transition-colors duration-500" />
+              <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-secondary/20 group-hover:bg-secondary transition-colors duration-500" />
+            </div>
+
+            <Card className="p-6 sm:p-8 md:p-10 group relative overflow-hidden flex flex-col h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl shadow-[0_4px_25px_rgba(0,0,0,0.015)] group-hover:border-secondary/45 transition-colors duration-500">
+              <div className="absolute inset-0 bg-asanoha pointer-events-none opacity-[0.2] transition-opacity group-hover:opacity-30" />
               
-              <div className="mb-[26px] p-4 bg-background border border-border w-fit rounded-lg group-hover:scale-110 transition-transform duration-500 shadow-sm text-secondary">
-                <Zap size={26} className="drop-shadow-[0_0_6px_rgb(var(--secondary-rgb)_/_0.3)]" />
+              <div className="mb-[26px] p-4 bg-background border border-border/80 w-fit rounded-lg group-hover:scale-105 transition-transform duration-500 text-secondary">
+                <Zap size={26} />
               </div>
               
-              <h3 className="text-2xl tracking-tight mb-[13px] text-foreground group-hover:text-secondary transition-colors">
+              <h3 className="text-2xl tracking-tight mb-[13px] text-foreground group-hover:text-secondary transition-colors font-bold">
                 Simulasi Ujian JLPT Real-Time
               </h3>
               
-              <p className="text-muted-foreground text-sm leading-relaxed flex-1 font-medium mb-6">
+              <p className="text-muted-foreground text-sm leading-relaxed flex-1 font-semibold mb-6">
                 Uji kesiapanmu dengan simulasi ujian JLPT — lengkap dengan timer, sesi ujian terpisah, dan laporan hasil yang detail.
               </p>
  
               {/* Tampilan Visual Mockup di Dalam Kartu */}
-              <div className="p-4 bg-background/40 border border-border rounded-lg flex flex-col gap-2 glass mt-auto transition-all duration-300 group-hover:border-secondary/20">
+              <div className="p-4 bg-background/50 border border-border/80 rounded-lg flex flex-col gap-2 mt-auto transition-all duration-300 group-hover:border-secondary/20">
                 <div className="flex items-center justify-between text-[9px] font-bold text-muted-foreground">
                   <span className="flex items-center gap-1"><Timer size={10} className="text-secondary" /> Ujian JLPT N3: Sesi Choukai</span>
                   <span className="text-destructive font-mono font-bold animate-pulse">00:42:15</span>
                 </div>
-                <div className="w-full bg-muted h-1 rounded-full overflow-hidden relative">
-                  <div className="bg-secondary h-full w-[70%] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-background/20 before:to-transparent" />
+                <div className="w-full bg-muted h-1 rounded-full overflow-hidden relative border border-border/40">
+                  <div className="bg-secondary h-full w-[70%]" />
                 </div>
                 <div className="flex justify-between gap-1.5 mt-0.5">
                   {[1, 2, 3, 4].map((num) => (
@@ -341,8 +361,8 @@ export function FeatureGrid() {
                       key={num} 
                       className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-[10px] border transition-all duration-300 ${
                         num === 3 
-                          ? "bg-secondary text-secondary-foreground border-secondary shadow-[0_2px_8px_rgb(var(--secondary-rgb)_/_0.3)]" 
-                          : "border-border bg-background text-muted-foreground hover:border-secondary/30"
+                          ? "bg-secondary text-secondary-foreground border-secondary shadow-sm" 
+                          : "border-border/80 bg-background text-muted-foreground hover:border-secondary/30"
                       }`}
                     >
                       {num}
@@ -420,32 +440,37 @@ export function FeatureGrid() {
           </div>
 
           {/* TAMPILAN DETIL LANGKAH AKTIF - KOLOM KANAN */}
-          <div className="lg:col-span-7 h-full">
-            <Card className="p-6 sm:p-8 md:p-10 rounded-2xl sm:rounded-3xl bg-card/10 border border-border shadow-none relative overflow-hidden min-h-[350px] flex flex-col justify-between">
-              <div className="absolute top-0 right-0 size-[200px] bg-primary/5 rounded-full blur-[80px] pointer-events-none ambient-glow will-change-transform" />
+          <div className="lg:col-span-7 relative group h-full">
+            {/* Tombou Register Mark */}
+            <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+              <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+              <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+            </div>
+
+            <Card className="p-6 sm:p-8 md:p-10 bg-card border border-border/50 dark:border-white/10 rounded-2xl relative overflow-hidden min-h-[350px] flex flex-col justify-between shadow-[0_4px_25px_rgba(0,0,0,0.015)] group-hover:border-primary/45 transition-colors duration-500">
               
               <div className="space-y-6 relative z-10">
-                <Badge className="bg-primary/10 text-primary border border-primary/20 rounded-full font-bold uppercase tracking-widest text-[9px]">
+                <Badge className="bg-primary/10 text-primary border border-primary/20 rounded-[4px] font-bold uppercase tracking-widest text-[9px]">
                   {learningSteps[activeStep].badge}
                 </Badge>
                 
-                <h3 className="text-3xl tracking-tight text-foreground">
+                <h3 className="text-3xl tracking-tight text-foreground font-bold">
                   {learningSteps[activeStep].title}
                 </h3>
                 
-                <p className="text-muted-foreground text-base leading-relaxed font-medium">
+                <p className="text-muted-foreground text-base leading-relaxed font-semibold">
                   {learningSteps[activeStep].desc}
                 </p>
-
-                <div className="p-4 bg-muted/30 border border-border rounded-lg flex items-start gap-3">
+ 
+                <div className="p-4 bg-muted/30 border border-border/60 rounded-lg flex items-start gap-3">
                   <Sparkles size={16} className="text-primary mt-0.5 shrink-0" />
                   <p className="text-xs text-muted-foreground font-semibold leading-relaxed">
                     <strong className="text-foreground">Tips Belajar:</strong> {learningSteps[activeStep].tip}
                   </p>
                 </div>
-
+ 
                 {/* Interactive Preview Box based on activeStep */}
-                <div className="p-4 bg-background/40 border border-border/80 rounded-lg glass transition-all duration-500">
+                <div className="p-4 bg-background/50 border border-border/80 rounded-lg transition-all duration-500">
                   {activeStep === 0 && (
                     <div className="flex flex-col items-center gap-3">
                       <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest">Latihan Menulis Kana "あ"</span>
@@ -579,130 +604,134 @@ export function FeatureGrid() {
 
       {/* SEKSI 3: PRATINJAU GAMIFIKASI KEMAJUAN BELAJAR */}
       <section className="relative">
-        <Card className="p-6 sm:p-10 md:p-[42px] lg:p-[55px] rounded-3xl bg-card/10 border border-border shadow-none relative overflow-hidden group">
-          {/* Aksen Kilau Latar Belakang */}
-          <div className="absolute -top-32 -left-32 size-89 bg-primary/5 rounded-full blur-[60px] pointer-events-none ambient-glow will-change-transform" />
-          <div className="absolute -bottom-32 -right-32 size-89 bg-secondary/5 rounded-full blur-[60px] pointer-events-none ambient-glow will-change-transform" />
+        <div className="relative group">
+          {/* Tombou Register Mark */}
+          <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+            <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+            <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+          </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
-            {/* PENJELASAN SEBELAH KIRI */}
-            <div className="lg:col-span-6 space-y-6">
-              <Badge className="bg-primary/10 text-primary border border-primary/20 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest">
-                Sistem Kemajuan Belajar
-              </Badge>
-              <h2 className="text-3xl md:text-4xl tracking-tight">
-                Tetap Konsisten dengan <br />
-                <span className="brand-text-gradient">Sistem Belajar Interaktif</span>
-              </h2>
-              <p className="text-muted-foreground text-sm md:text-base leading-relaxed font-medium">
-                Streak harian dan poin XP bikin rutinitas belajar bahasa Jepangmu terasa kayak main game yang seru.
-              </p>
-              
-              <div className="grid grid-cols-2 gap-4 pt-2">
-                <div className="flex items-center gap-3">
-                  <div className="size-8 rounded-lg bg-success/10 border border-success/20 flex items-center justify-center text-success">
-                    <Check size={16} />
+          <Card className="p-6 sm:p-10 md:p-[42px] lg:p-[55px] bg-card border border-border/50 dark:border-white/10 rounded-2xl relative overflow-hidden group shadow-[0_4px_25px_rgba(0,0,0,0.015)] group-hover:border-primary/45 transition-colors duration-500">
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
+              {/* PENJELASAN SEBELAH KIRI */}
+              <div className="lg:col-span-6 space-y-6">
+                <Badge className="bg-primary/10 text-primary border border-primary/20 px-3 py-1 rounded-[4px] text-[9px] font-bold uppercase tracking-widest">
+                  Sistem Kemajuan Belajar
+                </Badge>
+                <h2 className="text-3xl md:text-4xl tracking-tight font-bold">
+                  Tetap Konsisten dengan <br />
+                  <span className="brand-text-gradient">Sistem Belajar Interaktif</span>
+                </h2>
+                <p className="text-muted-foreground text-sm md:text-base leading-relaxed font-semibold">
+                  Streak harian dan poin XP bikin rutinitas belajar bahasa Jepangmu terasa kayak main game yang seru.
+                </p>
+                
+                <div className="grid grid-cols-2 gap-4 pt-2">
+                  <div className="flex items-center gap-3">
+                    <div className="size-8 rounded-[4px] bg-success/10 border border-success/20 flex items-center justify-center text-success">
+                      <Check size={16} />
+                    </div>
+                    <span className="text-xs font-bold text-foreground">Target Harian Jelas</span>
                   </div>
-                  <span className="text-xs font-bold text-foreground">Target Harian Jelas</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="size-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
-                    <Target size={16} />
+                  <div className="flex items-center gap-3">
+                    <div className="size-8 rounded-[4px] bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+                      <Target size={16} />
+                    </div>
+                    <span className="text-xs font-bold text-foreground">Lencana Prestasi</span>
                   </div>
-                  <span className="text-xs font-bold text-foreground">Lencana Prestasi</span>
                 </div>
               </div>
+
+              {/* WIDGET GAMIFIKASI SEBELAH KANAN */}
+              <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                {/* KARTU STREAK (HARI AKTIF) */}
+                <Card className="p-5 bg-card border border-border/60 dark:border-white/10 rounded-lg flex flex-col justify-between h-44 shadow-sm hover:border-primary/30 transition-colors duration-300">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest">Belajar Harian</span>
+                    <Flame size={20} className="text-destructive fill-destructive animate-premium-bounce" />
+                  </div>
+                  <div className="my-2">
+                    <span className="text-4xl font-black text-foreground tracking-tight">7 HARI</span>
+                    <p className="text-[10px] text-success font-bold mt-1 uppercase tracking-wider flex items-center gap-1">
+                      <span className="size-1.5 bg-success rounded-full" /> Streak Murni!
+                    </p>
+                  </div>
+                  {/* Mini Heatmap Grid Kontribusi */}
+                  <div className="mt-3 flex flex-col gap-1 w-full overflow-hidden">
+                    <div className="grid grid-cols-7 gap-1">
+                      {Array.from({ length: 28 }).map((_, idx) => {
+                        const colors = [
+                          "bg-muted border border-border/40",
+                          "bg-success/20 border border-success/30",
+                          "bg-success/50 border border-success/40",
+                          "bg-primary/45 border border-primary/30",
+                          "bg-secondary/45 border border-secondary/30",
+                          "bg-success/80 border border-success/60 shadow-[0_0_6px_rgba(var(--success-rgb),0.35)]",
+                        ];
+                        const isToday = idx === 27;
+                        const colorIdx = isToday ? 5 : (idx % 6);
+                        return (
+                          <div
+                            key={`cell-${idx}`}
+                            className={`h-3 rounded-sm transition-transform hover:scale-110 cursor-pointer ${colors[colorIdx]} ${
+                              isToday ? "animate-pulse" : ""
+                            }`}
+                          />
+                        );
+                      })}
+                    </div>
+                    <div className="flex justify-between text-[7px] font-black text-muted-foreground uppercase tracking-widest mt-1">
+                      <span>Mulai</span>
+                      <span>Hari Ini</span>
+                    </div>
+                  </div>
+                </Card>
+
+                {/* KARTU LEVEL DAN XP */}
+                <Card className="p-5 bg-card border border-border/60 dark:border-white/10 rounded-lg flex flex-col justify-between h-44 shadow-sm hover:border-primary/30 transition-colors duration-300">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest">Tingkatan Level</span>
+                    <Award size={20} className="text-secondary" />
+                  </div>
+                  <div className="my-2">
+                    <span className="text-3xl font-black text-foreground tracking-tight">LEVEL 12</span>
+                    <p className="text-[10px] text-muted-foreground font-semibold mt-1">
+                      Pembelajar Tingkat N4 Aktif
+                    </p>
+                  </div>
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between text-[9px] font-bold text-muted-foreground">
+                      <span>1.850 / 2.000 XP</span>
+                      <span>92%</span>
+                    </div>
+                    <div className="w-full bg-muted h-2 rounded-full overflow-hidden border border-border/40">
+                      <div className="bg-gradient-to-r from-secondary to-primary h-full w-[92%]" />
+                    </div>
+                  </div>
+                </Card>
+
+                {/* BARIS LENCANA TERBARU */}
+                <Card className="p-4 bg-card border border-border/60 dark:border-white/10 rounded-lg flex items-center justify-between gap-4 shadow-sm hover:border-primary/30 transition-colors duration-300 sm:col-span-2">
+                  <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest shrink-0">Lencana Baru:</span>
+                  <div className="flex gap-3 overflow-x-auto py-1">
+                    {[
+                      { label: "Kana Master", color: "text-primary bg-primary/10 border-primary/20" },
+                      { label: "SRS Warrior", color: "text-secondary bg-secondary/10 border-secondary/20" },
+                      { label: "JLPT Challenger", color: "text-warning bg-warning/10 border-warning/20" }
+                    ].map((badge) => (
+                      <Badge key={badge.label} className={`px-3 py-1 rounded-[4px] border font-bold text-[9px] whitespace-nowrap ${badge.color}`}>
+                        <GraduationCap size={10} className="mr-1.5 shrink-0" />
+                        {badge.label}
+                      </Badge>
+                    ))}
+                  </div>
+                </Card>
+              </div>
             </div>
-
-            {/* WIDGET GAMIFIKASI SEBELAH KANAN */}
-            <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
-              {/* KARTU STREAK (HARI AKTIF) */}
-              <Card className="p-6 bg-background/50 border border-border/80 rounded-2xl glass flex flex-col justify-between h-48">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest">Belajar Harian</span>
-                  <Flame size={20} className="text-destructive fill-destructive animate-premium-bounce" />
-                </div>
-                <div className="my-2">
-                  <span className="text-4xl font-black text-foreground tracking-tight">7 HARI</span>
-                  <p className="text-[10px] text-success font-bold mt-1 uppercase tracking-wider flex items-center gap-1">
-                    <span className="size-1.5 bg-success rounded-full" /> Streak Aktif!
-                  </p>
-                </div>
-                {/* Mini Heatmap Grid Kontribusi */}
-                <div className="mt-3 flex flex-col gap-1 w-full overflow-hidden">
-                  <div className="grid grid-cols-7 gap-1">
-                    {Array.from({ length: 28 }).map((_, idx) => {
-                      const colors = [
-                        "bg-muted border border-border/40",
-                        "bg-success/20 border border-success/30",
-                        "bg-success/50 border border-success/40",
-                        "bg-primary/45 border border-primary/30",
-                        "bg-secondary/45 border border-secondary/30",
-                        "bg-success/80 border border-success/60 shadow-[0_0_6px_rgba(var(--success-rgb),0.35)]",
-                      ];
-                      const isToday = idx === 27;
-                      const colorIdx = isToday ? 5 : (idx % 6);
-                      return (
-                        <div
-                          key={`cell-${idx}`}
-                          className={`h-3 rounded-sm transition-transform hover:scale-110 cursor-pointer ${colors[colorIdx]} ${
-                            isToday ? "animate-pulse" : ""
-                          }`}
-                        />
-                      );
-                    })}
-                  </div>
-                  <div className="flex justify-between text-[7px] font-black text-muted-foreground uppercase tracking-widest mt-1">
-                    <span>Mulai</span>
-                    <span>Hari Ini</span>
-                  </div>
-                </div>
-              </Card>
-
-              {/* KARTU LEVEL DAN XP */}
-              <Card className="p-6 bg-background/50 border border-border/80 rounded-2xl glass flex flex-col justify-between h-48">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest">Tingkatan Level</span>
-                  <Award size={20} className="text-secondary" />
-                </div>
-                <div className="my-2">
-                  <span className="text-3xl font-black text-foreground tracking-tight">LEVEL 12</span>
-                  <p className="text-[10px] text-muted-foreground font-semibold mt-1">
-                    Pembelajar Tingkat N4 Aktif
-                  </p>
-                </div>
-                <div className="space-y-1.5">
-                  <div className="flex justify-between text-[9px] font-bold text-muted-foreground">
-                    <span>1,850 / 2,000 XP</span>
-                    <span>92%</span>
-                  </div>
-                  <div className="w-full bg-muted h-2 rounded-full overflow-hidden">
-                    <div className="bg-gradient-to-r from-secondary to-primary h-full w-[92%]" />
-                  </div>
-                </div>
-              </Card>
-
-              {/* BARIS LENCANA TERBARU */}
-              <Card className="p-5 bg-background/50 border border-border/80 rounded-2xl glass sm:col-span-2 flex items-center justify-between gap-4">
-                <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest shrink-0">Lencana Baru:</span>
-                <div className="flex gap-3 overflow-x-auto py-1">
-                  {[
-                    { label: "Kana Master", color: "text-primary bg-primary/10 border-primary/20" },
-                    { label: "SRS Warrior", color: "text-secondary bg-secondary/10 border-secondary/20" },
-                    { label: "JLPT Challenger", color: "text-warning bg-warning/10 border-warning/20" }
-                  ].map((badge) => (
-                    <Badge key={badge.label} className={`px-3 py-1 rounded-lg border font-bold text-[9px] whitespace-nowrap ${badge.color}`}>
-                      <GraduationCap size={10} className="mr-1.5 shrink-0" />
-                      {badge.label}
-                    </Badge>
-                  ))}
-                </div>
-              </Card>
-            </div>
-          </div>
-        </Card>
+          </Card>
+        </div>
       </section>
-
     </div>
   );
 }

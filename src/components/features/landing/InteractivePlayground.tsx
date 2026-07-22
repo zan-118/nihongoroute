@@ -106,174 +106,189 @@ export function InteractivePlayground() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-[34px]">
         {/* INPUT PANEL - KOLOM KIRI */}
-        <Card className="lg:col-span-6 p-6 sm:p-8 bg-card/10 border border-border rounded-3xl glass flex flex-col justify-between h-[450px] transition-all duration-300 hover:border-primary/30 hover:shadow-[0_0_40px_rgba(var(--primary-rgb),0.08)]">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                <Languages size={14} className="text-primary" /> Ketik Kalimat Jepang
-              </span>
-              <span className="text-[10px] font-bold text-muted-foreground">
-                {inputText.length}/100 huruf
-              </span>
-            </div>
-
-            <textarea
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value.substring(0, 100))}
-              placeholder="Ketik bahasa Jepang di sini... (contoh: 私は猫が好きです)"
-              className="w-full h-32 bg-background/50 border border-border/80 rounded-lg p-4 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 text-sm font-semibold transition-all resize-none"
-            />
-
-            {/* Pilihan mode konversi */}
-            <div className="flex items-center gap-2 pt-1">
-              <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider mr-2">Mode Konversi:</span>
-              <button
-                type="button"
-                aria-pressed={mode === "furigana"}
-                aria-label="Gunakan Mode Furigana Ruby"
-                onClick={() => {
-                  setMode("furigana");
-                  if (inputText.trim()) {
-                    handleConvert(inputText, "furigana");
-                  }
-                }}
-                className={`px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider rounded-lg border transition-all ${
-                  mode === "furigana"
-                    ? "bg-primary/10 border-primary text-primary"
-                    : "border-border text-muted-foreground hover:border-border/80"
-                }`}
-              >
-                Furigana (Ruby)
-              </button>
-              <button
-                type="button"
-                aria-pressed={mode === "normal"}
-                aria-label="Gunakan Mode Hiragana Kana"
-                onClick={() => {
-                  setMode("normal");
-                  if (inputText.trim()) {
-                    handleConvert(inputText, "normal");
-                  }
-                }}
-                className={`px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider rounded-lg border transition-all ${
-                  mode === "normal"
-                    ? "bg-primary/10 border-primary text-primary"
-                    : "border-border text-muted-foreground hover:border-border/80"
-                }`}
-              >
-                Hiragana (Kana)
-              </button>
-            </div>
+        <div className="lg:col-span-6 relative group h-[450px]">
+          {/* Tombou Register Mark */}
+          <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+            <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+            <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
           </div>
 
-          <div className="space-y-4">
-            {/* Presets */}
-            <div className="flex flex-col gap-2">
-              <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Contoh Kalimat:</span>
-              <div className="flex flex-col gap-1.5">
-                {PRESETS.map((preset) => (
-                  <button
-                    key={preset.text}
-                    type="button"
-                    aria-label={`Gunakan contoh kalimat: ${preset.text}`}
-                    onClick={() => handlePresetClick(preset.text)}
-                    className="w-full text-left px-3 py-2 bg-background/30 hover:bg-background/80 border border-border/80 rounded-xl transition-all flex items-center justify-between text-xs text-foreground font-semibold group"
-                  >
-                    <span>{preset.text}</span>
-                    <CornerDownLeft size={12} className="text-muted-foreground opacity-0 group-hover:opacity-100 group-hover:translate-x-0 -translate-x-1 transition-all" />
-                  </button>
-                ))}
+          <Card className="p-6 sm:p-8 bg-card border border-border/50 dark:border-white/10 rounded-2xl flex flex-col justify-between h-full shadow-[0_4px_25px_rgba(0,0,0,0.015)] group-hover:border-primary/45 transition-colors duration-500">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                  <Languages size={14} className="text-primary" /> Ketik Kalimat Jepang
+                </span>
+                <span className="text-[10px] font-bold text-muted-foreground">
+                  {inputText.length}/100 huruf
+                </span>
+              </div>
+
+              <textarea
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value.substring(0, 100))}
+                placeholder="Ketik bahasa Jepang di sini... (contoh: 私は猫が好きです)"
+                className="w-full h-32 bg-background/50 border border-border/80 rounded-lg p-4 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 text-sm font-semibold transition-all resize-none"
+              />
+
+              {/* Pilihan mode konversi */}
+              <div className="flex items-center gap-2 pt-1">
+                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider mr-2">Mode Konversi:</span>
+                <button
+                  type="button"
+                  aria-pressed={mode === "furigana"}
+                  aria-label="Gunakan Mode Furigana Ruby"
+                  onClick={() => {
+                    setMode("furigana");
+                    if (inputText.trim()) {
+                      handleConvert(inputText, "furigana");
+                    }
+                  }}
+                  className={`px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider rounded-[4px] border transition-all duration-300 ${
+                    mode === "furigana"
+                      ? "bg-primary/10 border-primary text-primary"
+                      : "border-border/80 text-muted-foreground hover:border-border/80"
+                  }`}
+                >
+                  Furigana (Ruby)
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={mode === "normal"}
+                  aria-label="Gunakan Mode Hiragana Kana"
+                  onClick={() => {
+                    setMode("normal");
+                    if (inputText.trim()) {
+                      handleConvert(inputText, "normal");
+                    }
+                  }}
+                  className={`px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider rounded-[4px] border transition-all duration-300 ${
+                    mode === "normal"
+                      ? "bg-primary/10 border-primary text-primary"
+                      : "border-border/80 text-muted-foreground hover:border-border/80"
+                  }`}
+                >
+                  Hiragana (Kana)
+                </button>
               </div>
             </div>
 
-            <Button
-              onClick={() => handleConvert()}
-              disabled={isLoading || !inputText.trim()}
-              className="w-full brand-button h-11 text-xs rounded-xl flex items-center justify-center gap-2"
-            >
-              {isLoading ? (
-                <Loader2 size={16} className="animate-spin" />
-              ) : (
-                <Sparkles size={14} />
-              )}
-              <span>Proses Sekarang</span>
-            </Button>
-          </div>
-        </Card>
+            <div className="space-y-4">
+              {/* Presets */}
+              <div className="flex flex-col gap-2">
+                <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Contoh Kalimat:</span>
+                <div className="flex flex-col gap-1.5">
+                  {PRESETS.map((preset) => (
+                    <button
+                      key={preset.text}
+                      type="button"
+                      aria-label={`Gunakan contoh kalimat: ${preset.text}`}
+                      onClick={() => handlePresetClick(preset.text)}
+                      className="w-full text-left px-3 py-2 bg-background/30 hover:bg-background/80 border border-border/80 rounded-lg transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] flex items-center justify-between text-xs text-foreground font-semibold group"
+                    >
+                      <span>{preset.text}</span>
+                      <CornerDownLeft size={12} className="text-muted-foreground opacity-0 group-hover:opacity-100 group-hover:translate-x-0 -translate-x-1 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Asymmetric Calligraphic Cut for CTA Button */}
+              <Button
+                onClick={() => handleConvert()}
+                disabled={isLoading || !inputText.trim()}
+                className="w-full brand-button h-11 text-xs rounded-lg rounded-br-none flex items-center justify-center gap-2 transition-all duration-300 active:scale-[0.98]"
+              >
+                {isLoading ? (
+                  <Loader2 size={16} className="animate-spin" />
+                ) : (
+                  <Sparkles size={14} />
+                )}
+                <span>Proses Sekarang</span>
+              </Button>
+            </div>
+          </Card>
+        </div>
 
         {/* OUTPUT PANEL - KOLOM KANAN */}
-        <Card className="lg:col-span-6 p-6 sm:p-8 bg-card/10 border border-border rounded-3xl glass flex flex-col justify-between h-[450px] relative overflow-hidden group transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_50px_rgba(var(--primary-rgb),0.12)]">
-          {/* Efek glow visual neon */}
-          <div className="absolute -top-16 -right-16 size-44 bg-primary/5 rounded-full blur-3xl pointer-events-none transition-opacity group-hover:opacity-80" />
-
-          <div className="flex items-center justify-between relative z-10">
-            <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-              <span className="size-2 rounded-full bg-success animate-pulse" /> Hasil Konversi
-            </span>
-            {outputHtml && (
-              <Badge className="bg-success/10 text-success border-success/20 font-bold uppercase tracking-widest text-[8px] shadow-none">
-                Berhasil
-              </Badge>
-            )}
+        <div className="lg:col-span-6 relative group h-[450px]">
+          {/* Tombou Register Mark */}
+          <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+            <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+            <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
           </div>
 
-          <div className="flex-1 my-6 p-6 bg-background/40 border border-border/80 rounded-lg flex items-center justify-center relative z-10 glass min-h-48 overflow-y-auto">
-            <AnimatePresence mode="wait">
-              {isLoading ? (
-                <m.div
-                  key="loading"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="flex flex-col items-center gap-3"
-                >
-                  <Loader2 size={32} className="text-primary animate-spin" />
-                  <span className="text-xs text-muted-foreground font-bold uppercase tracking-wider animate-pulse">Sedang diproses...</span>
-                </m.div>
-              ) : error ? (
-                <m.div
-                  key="error"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="text-center text-xs font-bold text-destructive"
-                >
-                  {error}
-                </m.div>
-              ) : outputHtml ? (
-                <m.div
-                  key="output"
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="w-full text-center"
-                >
-                  {/* Render parsed HTML containing ruby tags */}
-                  <div
-                    className="text-2xl sm:text-3xl font-bold font-japanese tracking-wide text-foreground leading-[2.2] [&_ruby]:font-japanese [&_rt]:text-[0.55em] [&_rt]:font-bold [&_rt]:text-primary [&_rt]:leading-none [&_rt]:select-none [&_rt]:tracking-normal"
-                    dangerouslySetInnerHTML={{ __html: outputHtml }}
-                  />
-                </m.div>
-              ) : (
-                <m.div
-                  key="idle"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="text-center text-xs font-semibold text-muted-foreground max-w-xs leading-relaxed"
-                >
-                  Ketik kalimat Jepang di kolom kiri, atau pilih contoh kalimat yang sudah disiapkan.
-                </m.div>
+          <Card className="p-6 sm:p-8 bg-card border border-border/50 dark:border-white/10 rounded-2xl flex flex-col justify-between h-full relative overflow-hidden group shadow-[0_4px_25px_rgba(0,0,0,0.015)] group-hover:border-primary/45 transition-colors duration-500">
+            <div className="flex items-center justify-between relative z-10">
+              <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                <span className="size-2 rounded-full bg-success animate-pulse" /> Hasil Konversi
+              </span>
+              {outputHtml && (
+                <Badge className="bg-success/10 text-success border-success/20 font-bold uppercase tracking-widest text-[8px] shadow-none rounded-[4px]">
+                  Berhasil
+                </Badge>
               )}
-            </AnimatePresence>
-          </div>
+            </div>
 
-          <div className="pt-4 border-t border-border/60 flex items-center justify-between text-[9px] font-bold text-muted-foreground uppercase tracking-widest relative z-10">
-            <span>Ditenagai Kuroshiro Parser</span>
-            <span className="flex items-center gap-1.5">
-              <Check size={10} className="text-success" /> Siap Mode Offline
-            </span>
-          </div>
-        </Card>
+            <div className="flex-1 my-6 p-6 bg-background/50 border border-border/80 rounded-lg flex items-center justify-center relative z-10 min-h-48 overflow-y-auto">
+              <AnimatePresence mode="wait">
+                {isLoading ? (
+                  <m.div
+                    key="loading"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="flex flex-col items-center gap-3"
+                  >
+                    <Loader2 size={32} className="text-primary animate-spin" />
+                    <span className="text-xs text-muted-foreground font-bold uppercase tracking-wider animate-pulse">Sedang diproses...</span>
+                  </m.div>
+                ) : error ? (
+                  <m.div
+                    key="error"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="text-center text-xs font-bold text-destructive"
+                  >
+                    {error}
+                  </m.div>
+                ) : outputHtml ? (
+                  <m.div
+                    key="output"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ type: "spring", stiffness: 120, damping: 20 }}
+                    className="w-full text-center"
+                  >
+                    {/* Render parsed HTML containing ruby tags */}
+                    <div
+                      className="text-2xl sm:text-3xl font-bold font-japanese tracking-wide text-foreground leading-[2.2] [&_ruby]:font-japanese [&_rt]:text-[0.55em] [&_rt]:font-bold [&_rt]:text-primary [&_rt]:leading-none [&_rt]:select-none [&_rt]:tracking-normal"
+                      dangerouslySetInnerHTML={{ __html: outputHtml }}
+                    />
+                  </m.div>
+                ) : (
+                  <m.div
+                    key="idle"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="text-center text-xs font-semibold text-muted-foreground max-w-xs leading-relaxed"
+                  >
+                    Ketik kalimat Jepang di kolom kiri, atau pilih contoh kalimat yang sudah disiapkan.
+                  </m.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            <div className="pt-4 border-t border-border/60 flex items-center justify-between text-[9px] font-bold text-muted-foreground uppercase tracking-widest relative z-10">
+              <span>Ditenagai Kuroshiro Parser</span>
+              <span className="flex items-center gap-1.5">
+                <Check size={10} className="text-success" /> Siap Mode Offline
+              </span>
+            </div>
+          </Card>
+        </div>
       </div>
     </section>
   );

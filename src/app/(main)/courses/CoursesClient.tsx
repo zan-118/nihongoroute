@@ -46,6 +46,7 @@ interface Category {
 import { useUserStore } from "@/store/useUserStore";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { Sparkles, Trophy, BookOpen, Layers } from "@/components/ui/icons";
 
 /**
@@ -141,69 +142,77 @@ export default function CoursesClient({ categories }: CoursesClientProps) {
           {/* BENTO CARD 1: JUMBO HEADER & GLOBAL STATS (SPAN 3) */}
           <m.div
             variants={itemVariants}
-            className="lg:col-span-3 p-8 sm:p-10 md:p-14 rounded-[2.5rem] bg-card/25 border border-border/80 shadow-[0_0_30px_rgba(var(--primary-rgb),0.02)] relative overflow-hidden group transition-all duration-300 glass"
+            className="lg:col-span-3 relative group/jumbo"
           >
-            <div className="absolute top-0 right-0 size-64 bg-primary/5 rounded-full blur-[55px] pointer-events-none group-hover:bg-primary/8 transition-all duration-500 ambient-glow will-change-transform" />
-            <div className="absolute inset-0 bg-asanoha opacity-[0.02] pointer-events-none" />
-            
-            {/* Calligraphy Watermark '道' (Path/Route) */}
-            <div className="absolute -bottom-10 -right-6 text-[15rem] md:text-[22rem] font-black font-noto-serif-jp opacity-[0.015] pointer-events-none select-none text-primary">
-              道
+            {/* Tombou Register Mark */}
+            <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+              <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover/jumbo:bg-primary transition-colors duration-500" />
+              <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover/jumbo:bg-primary transition-colors duration-500" />
             </div>
 
-            <div className="relative z-10 flex flex-col xl:flex-row xl:items-center justify-between gap-8 md:gap-12">
-              <div className="space-y-4 max-w-2xl">
-                <div className="flex items-center gap-3">
-                  <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-3.5 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.2em] shadow-none">
-                    <Sparkles size={10} className="mr-1.5 text-primary animate-pulse" /> Direktori Belajar
-                  </Badge>
-                </div>
-                <h1 className="text-3xl sm:text-5xl md:text-6xl uppercase tracking-tighter leading-[0.9] text-foreground">
-                  PILIH RUTE <br />
-                  <span className="text-primary font-bold">
-                    BELAJAR
-                  </span>
-                </h1>
-                <p className="text-muted-foreground text-xs sm:text-sm md:text-base font-semibold leading-relaxed">
-                  Mulai petualangan bahasa Jepangmu dengan kurikulum terstruktur untuk penguasaan cepat dan retensi jangka panjang.
-                </p>
+            <Card className="h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 sm:p-10 md:p-14 relative overflow-hidden shadow-[0_4px_25px_rgba(0,0,0,0.015)]">
+              <div className="absolute top-0 right-0 size-64 bg-primary/5 rounded-full blur-[55px] pointer-events-none group-hover:bg-primary/8 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ambient-glow will-change-transform" />
+              <div className="absolute inset-0 bg-asanoha opacity-[0.01] pointer-events-none" />
+              
+              {/* Calligraphy Watermark '道' (Path/Route) */}
+              <div className="absolute -bottom-10 -right-6 text-[15rem] md:text-[22rem] font-black font-noto-serif-jp opacity-[0.015] pointer-events-none select-none text-primary">
+                道
               </div>
 
-              {/* GLOBAL PROGRESS MODULE */}
-              <div className="w-full xl:w-auto xl:min-w-[320px] p-6 rounded-xl bg-background/50 border border-border/80 glass relative overflow-hidden transition-all duration-200 hover:border-primary/25">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                      <Trophy size={12} className="text-primary" /> Progres Global
+              <div className="relative z-10 flex flex-col xl:flex-row xl:items-center justify-between gap-8 md:gap-12">
+                <div className="space-y-4 max-w-2xl">
+                  <div className="flex items-center gap-3">
+                    <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-3.5 py-1 rounded-[4px] text-[9px] font-black uppercase tracking-[0.2em] shadow-none">
+                      <Sparkles size={10} className="mr-1.5 text-primary animate-pulse" /> Direktori Belajar
+                    </Badge>
+                  </div>
+                  <h1 className="text-3xl sm:text-5xl md:text-6xl uppercase tracking-tighter leading-[0.9] text-foreground font-bold">
+                    PILIH RUTE <br />
+                    <span className="text-primary font-bold">
+                      BELAJAR
                     </span>
-                    <span className="text-xs font-black text-primary font-mono">{globalProgress}%</span>
-                  </div>
+                  </h1>
+                  <p className="text-muted-foreground text-xs sm:text-sm md:text-base font-semibold leading-relaxed">
+                    Mulai petualangan bahasa Jepangmu dengan kurikulum terstruktur untuk penguasaan cepat dan retensi jangka panjang.
+                  </p>
+                </div>
 
-                  <Progress
-                    value={globalProgress}
-                    className="h-2.5 bg-muted border border-border relative overflow-hidden"
-                    indicatorClassName="bg-primary"
-                  />
+                {/* GLOBAL PROGRESS MODULE */}
+                <div className="w-full xl:w-auto xl:min-w-[320px] p-6 rounded-lg bg-card border border-border/80 relative overflow-hidden transition-all duration-500 hover:border-primary/45 shadow-sm">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                        <Trophy size={12} className="text-primary" /> Progres Global
+                      </span>
+                      <span className="text-xs font-black text-primary font-mono">{globalProgress}%</span>
+                    </div>
 
-                  <div className="flex justify-between items-center gap-4 pt-1">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-base font-black text-foreground">{lessonsDoneCount}</span>
-                      <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Selesai</span>
-                    </div>
-                    <div className="w-1.5 h-1.5 rounded-full bg-border" />
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-base font-black text-foreground">{totalLessons}</span>
-                      <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Total Materi</span>
-                    </div>
-                    <div className="w-1.5 h-1.5 rounded-full bg-border" />
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-base font-black text-foreground">{categories.length}</span>
-                      <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Rute</span>
+                    <Progress
+                      value={globalProgress}
+                      className="h-2.5 bg-muted border border-border relative overflow-hidden"
+                      indicatorClassName="bg-primary"
+                    />
+
+                    <div className="flex justify-between items-center gap-4 pt-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-base font-black text-foreground">{lessonsDoneCount}</span>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Selesai</span>
+                      </div>
+                      <div className="w-1.5 h-1.5 rounded-full bg-border" />
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-base font-black text-foreground">{totalLessons}</span>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Total Materi</span>
+                      </div>
+                      <div className="w-1.5 h-1.5 rounded-full bg-border" />
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-base font-black text-foreground">{categories.length}</span>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Rute</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </Card>
           </m.div>
 
           {sortedCategories.map((cat) => (

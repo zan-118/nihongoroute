@@ -60,23 +60,29 @@ export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps)
 
   return (
     <div
-      className="group h-full transform hover:-translate-y-1 transition-all duration-300"
+      className="group h-full relative"
       style={{ 
         // Optimize rendering performance. Browser skips rendering offscreen cards.
         contentVisibility: 'auto', 
         containIntrinsicSize: '0 200px',
       }}
     >
+      {/* Tombou Register Mark */}
+      <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+        <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+        <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+      </div>
+
       {/* Resolve route using slug, id, or fallback MongoDB _id. */}
       <Link href={ROUTES.LIBRARY.GRAMMAR(article.slug || article.id || article._id)} className="block h-full">
-        <Card className="h-full p-6 sm:p-8 bg-[rgb(var(--card-rgb)/0.35)]  border border-border rounded-2xl md:rounded-3xl transition-all duration-500 flex flex-col cursor-pointer hover:border-[rgb(var(--primary-rgb)/0.45)] hover:bg-[rgb(var(--card-rgb)/0.55)] shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] relative overflow-hidden glass">
+        <Card className="h-full p-6 sm:p-8 bg-card border border-border/50 dark:border-white/10 rounded-2xl transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-primary/45 flex flex-col cursor-pointer shadow-[0_4px_25px_rgba(0,0,0,0.015)] relative overflow-hidden">
           {/* Efek Pendar Saat Kursor Di Atas (Glow Effect) */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[rgb(var(--primary-rgb)/0.05)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[rgb(var(--primary-rgb)/0.03)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
           <div className="relative z-10 flex flex-col h-full">
             {/* Baris Atas: Ikon Penanda & Level */}
             <div className="flex justify-between items-start mb-6">
-              <div className="size-10 rounded-lg bg-[rgb(var(--muted-rgb)/0.5)] border border-border flex items-center justify-center group-hover:border-[rgb(var(--primary-rgb)/0.3)] group-hover:bg-[rgb(var(--primary-rgb)/0.1)] transition-all duration-500">
+              <div className="size-10 rounded-lg bg-muted border border-border flex items-center justify-center group-hover:border-[rgb(var(--primary-rgb)/0.3)] group-hover:bg-[rgb(var(--primary-rgb)/0.1)] transition-all duration-500">
                 <Bookmark
                   size={18}
                   className="text-muted-foreground group-hover:text-primary transition-colors duration-500"
@@ -84,7 +90,7 @@ export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps)
               </div>
               <Badge 
                 variant="outline" 
-                className={`text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-xl h-auto border ${currentLevelColor}`}
+                className={`text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-[4px] h-auto border ${currentLevelColor}`}
               >
                 {selectedLevel.toUpperCase()}
               </Badge>
@@ -92,7 +98,7 @@ export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps)
             
             {/* Bagian Judul Tata Bahasa */}
             <div className="flex-1">
-              <h2 className="text-xl md:text-2xl text-foreground tracking-tight leading-tight group-hover:text-primary transition-colors duration-300 mb-3 line-clamp-3 font-japanese">
+              <h2 className="text-xl md:text-2xl text-foreground tracking-tight leading-tight group-hover:text-primary transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] mb-3 line-clamp-3 font-japanese font-bold">
                 {article.title}
               </h2>
               <div className="flex items-center gap-2">
@@ -108,7 +114,7 @@ export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps)
               <span className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-[0.15em] group-hover:text-primary transition-colors">
                 Pelajari Modul
               </span>
-              <div className="size-9 rounded-xl bg-[rgb(var(--muted-rgb)/0.5)] border border-border flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-transparent transition-all duration-500">
+              <div className="size-9 rounded-lg bg-muted border border-border flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-transparent transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
                  <ArrowRight size={16} />
               </div>
             </div>

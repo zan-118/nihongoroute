@@ -106,11 +106,16 @@ export default function JLPTReadinessCard({ loading, courseMetadata }: JLPTReadi
   const tone = getScoreTone(readiness.score);
 
   return (
-    <Card
-      className={`relative overflow-hidden rounded-2xl border border-border bg-card/35 p-6 shadow-none  transition-all duration-500 hover:border-primary/30 ${tone.glow}`}
-    >
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgb(var(--primary-rgb)/0.035)_1px,transparent_1px),linear-gradient(rgb(var(--primary-rgb)/0.025)_1px,transparent_1px)] bg-[size:28px_28px]" />
-      <div className="pointer-events-none absolute right-0 top-0 size-64 rounded-full bg-primary/5 blur-[80px] ambient-glow will-change-transform" />
+    <div className="relative group">
+      {/* Tombou Register Mark */}
+      <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+        <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+        <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+      </div>
+
+      <Card
+        className="relative overflow-hidden rounded-2xl border border-border/50 dark:border-white/10 bg-card p-6 shadow-[0_4px_25px_rgba(0,0,0,0.015)] transition-all duration-500 hover:border-primary/45"
+      >
 
       <div className="relative z-10 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(240px,0.82fr)_minmax(0,1.18fr)]">
         <section className="flex flex-col justify-between gap-8">
@@ -225,7 +230,7 @@ export default function JLPTReadinessCard({ loading, courseMetadata }: JLPTReadi
                     key={`${action.id}-${index}`}
                     asChild
                     variant={index === 0 ? "default" : "outline"}
-                    className="h-auto min-h-[76px] justify-start rounded-lg px-4 py-3 text-left"
+                    className="h-auto min-h-[76px] justify-start rounded-lg rounded-br-none px-4 py-3 text-left border-border/60 hover:border-primary/30"
                   >
                     <Link href={action.href}>
                       <Icon size={16} />
@@ -245,6 +250,7 @@ export default function JLPTReadinessCard({ loading, courseMetadata }: JLPTReadi
           </div>
         </section>
       </div>
-    </Card>
+      </Card>
+    </div>
   );
 }

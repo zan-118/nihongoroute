@@ -294,11 +294,11 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
           : "Unduh materi untuk luring"
       }
       className={cn(
-        "relative overflow-hidden flex items-center justify-center gap-3 px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-500",
-        "border  bg-card/40 border-border shadow-[0_0_20px_rgb(var(--primary-rgb)/0.02)] active:scale-95",
-        status === "completed" && "bg-[rgb(var(--success-rgb)/0.1)] border-[rgb(var(--success-rgb)/0.3)] text-success shadow-[0_0_25px_rgb(var(--success-rgb)/0.1)] cursor-default active:scale-100",
-        status === "downloading" && "border-[rgb(var(--primary-rgb)/0.4)] text-primary cursor-default shadow-[0_0_25px_rgb(var(--primary-rgb)/0.15)]",
-        status === "error" && "border-[rgb(var(--destructive-rgb)/0.3)] text-destructive bg-[rgb(var(--destructive-rgb)/0.05)] hover:bg-[rgb(var(--destructive-rgb)/0.1)]"
+        "relative overflow-hidden flex items-center justify-center gap-3 px-6 py-3 rounded-lg rounded-br-none text-xs font-black uppercase tracking-widest transition-all duration-500 shadow-sm",
+        "border bg-card border-border/80 active:scale-95",
+        status === "completed" && "bg-[rgb(var(--success-rgb)/0.1)] border-[rgb(var(--success-rgb)/0.2)] text-success cursor-default active:scale-100",
+        status === "downloading" && "border-[rgb(var(--primary-rgb)/0.3)] text-primary cursor-default",
+        status === "error" && "border-[rgb(var(--destructive-rgb)/0.2)] text-destructive bg-[rgb(var(--destructive-rgb)/0.05)] hover:bg-[rgb(var(--destructive-rgb)/0.1)]"
       )}
     >
       {/* Efek Pendar Latar Belakang Pemuat Visual */}

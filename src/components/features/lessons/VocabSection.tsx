@@ -65,85 +65,94 @@ const VocabCard: React.FC<{ v: VocabLessonItem; idx: number }> = ({ v, idx }) =>
     : meaning;
 
   return (
-    <div
-      className="p-6 md:p-8 border border-border/80 rounded-[2rem] bg-card/35 shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 group hover:border-[rgb(var(--primary-rgb)/0.35)] transition-all duration-300 glass"
-    >
-      <div className="flex-1 w-full">
-        <div className="flex items-center gap-2 mb-3">
-          <span 
-            className="text-[10px] font-bold text-primary uppercase tracking-widest px-2 py-0.5 rounded"
-            style={{ backgroundColor: "rgb(var(--primary-rgb)/0.1)" }}
-          >
-            {/* Convert furigana to romaji if romaji */}
-            {v.romaji || (v.furigana ? toRomaji(v.furigana) : "-")}
-          </span>
-          {v.hinshi && (
+    <div className="relative group/wrapper h-full">
+      {/* Tombou Register Mark */}
+      <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+        <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover/wrapper:bg-primary transition-colors duration-500" />
+        <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover/wrapper:bg-primary transition-colors duration-500" />
+      </div>
+
+      <div
+        className="p-6 md:p-8 border border-border/50 dark:border-white/10 rounded-2xl bg-card shadow-[0_4px_25px_rgba(0,0,0,0.015)] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 group hover:border-primary/45 transition-all duration-500 h-full"
+      >
+        <div className="flex-1 w-full">
+          <div className="flex items-center gap-2 mb-3">
             <span 
-              className="text-[9px] font-mono font-black text-secondary uppercase tracking-widest px-2 py-0.5 rounded border"
-              style={{ backgroundColor: "rgb(var(--secondary-rgb)/0.1)", borderColor: "rgb(var(--secondary-rgb)/0.2)" }}
+              className="text-[10px] font-bold text-primary uppercase tracking-widest px-2 py-0.5 rounded-[4px]"
+              style={{ backgroundColor: "rgb(var(--primary-rgb)/0.1)" }}
             >
-              {Array.isArray(v.hinshi) ? v.hinshi.join(", ") : (
-                v.hinshi === "Meishi" ? "Kata Benda" :
-                v.hinshi === "Doushi" ? "Kata Kerja" :
-                v.hinshi === "I-Keiyoushi" ? "Kata Sifat-I" :
-                v.hinshi === "Na-Keiyoushi" ? "Kata Sifat-Na" : v.hinshi
-              )}
+              {/* Convert furigana to romaji if romaji */}
+              {v.romaji || (v.furigana ? toRomaji(v.furigana) : "-")}
             </span>
-          )}
-          {v.transitivity && (
-            <span 
-              className="text-[9px] font-mono font-black uppercase tracking-widest px-2 py-0.5 rounded border"
-              style={v.transitivity === "transitive" 
-                ? { color: "hsl(var(--warning))", backgroundColor: "rgb(var(--warning-rgb)/0.1)", borderColor: "rgb(var(--warning-rgb)/0.2)" }
-                : { color: "hsl(var(--primary))", backgroundColor: "rgb(var(--primary-rgb)/0.1)", borderColor: "rgb(var(--primary-rgb)/0.2)" }
-              }
-            >
-              {v.transitivity === "transitive" ? "Transitif" : "Intransitif"}
-            </span>
-          )}
-        </div>
-        <h4 className="group-hover:text-primary transition-colors tracking-tight mb-2">
-           <div className="text-2xl md:text-3xl font-black text-foreground">
-              <SmartJapanese word={v.word || ""} furigana={v.furigana} />
-           </div>
-        </h4>
-        
-        {(v.onyomi || v.kunyomi) && (
-          <div className="flex flex-wrap gap-2 mb-3">
-            {v.onyomi && (
+            {v.hinshi && (
               <span 
-                className="text-[10px] font-bold text-secondary border px-2 py-0.5 rounded-lg"
-                style={{ backgroundColor: "rgb(var(--secondary-rgb)/0.05)", borderColor: "rgb(var(--secondary-rgb)/0.2)" }}
+                className="text-[9px] font-mono font-black text-secondary uppercase tracking-widest px-2 py-0.5 rounded-[4px] border border-secondary/20"
+                style={{ backgroundColor: "rgb(var(--secondary-rgb)/0.1)" }}
               >
-                ON: {v.onyomi}
+                {Array.isArray(v.hinshi) ? v.hinshi.join(", ") : (
+                  v.hinshi === "Meishi" ? "Kata Benda" :
+                  v.hinshi === "Doushi" ? "Kata Kerja" :
+                  v.hinshi === "I-Keiyoushi" ? "Kata Sifat-I" :
+                  v.hinshi === "Na-Keiyoushi" ? "Kata Sifat-Na" : v.hinshi
+                )}
               </span>
             )}
-            {v.kunyomi && (
+            {v.transitivity && (
               <span 
-                className="text-[10px] font-bold text-success border px-2 py-0.5 rounded-lg"
-                style={{ backgroundColor: "rgb(var(--success-rgb)/0.05)", borderColor: "rgb(var(--success-rgb)/0.2)" }}
+                className="text-[9px] font-mono font-black uppercase tracking-widest px-2 py-0.5 rounded-[4px] border"
+                style={v.transitivity === "transitive" 
+                  ? { color: "hsl(var(--warning))", backgroundColor: "rgb(var(--warning-rgb)/0.1)", borderColor: "rgb(var(--warning-rgb)/0.2)" }
+                  : { color: "hsl(var(--primary))", backgroundColor: "rgb(var(--primary-rgb)/0.1)", borderColor: "rgb(var(--primary-rgb)/0.2)" }
+                }
               >
-                KUN: {v.kunyomi}
+                {v.transitivity === "transitive" ? "Transitif" : "Intransitif"}
               </span>
             )}
           </div>
-        )}
-
-        <div className="text-[13px] md:text-sm text-muted-foreground font-medium leading-relaxed">
-          {displayedMeaning}
-          {isLong && (
-            <button
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="text-[11px] font-black text-primary hover:text-secondary ml-2 uppercase tracking-wider select-none shrink-0"
-            >
-              {isExpanded ? "Sembunyikan" : "Selengkapnya"}
-            </button>
+          <h4 className="group-hover:text-primary transition-colors tracking-tight mb-2">
+             <div className="text-2xl md:text-3xl font-black text-foreground">
+                <SmartJapanese word={v.word || ""} furigana={v.furigana} />
+             </div>
+          </h4>
+          
+          {(v.onyomi || v.kunyomi) && (
+            <div className="flex flex-wrap gap-2 mb-3">
+              {v.onyomi && (
+                <span 
+                  className="text-[10px] font-bold text-secondary border px-2 py-0.5 rounded-[4px] border-secondary/20"
+                  style={{ backgroundColor: "rgb(var(--secondary-rgb)/0.05)" }}
+                >
+                  ON: {v.onyomi}
+                </span>
+              )}
+              {v.kunyomi && (
+                <span 
+                  className="text-[10px] font-bold text-success border px-2 py-0.5 rounded-[4px] border-success/20"
+                  style={{ backgroundColor: "rgb(var(--success-rgb)/0.05)" }}
+                >
+                  KUN: {v.kunyomi}
+                </span>
+              )}
+            </div>
           )}
+
+          <div className="text-[13px] md:text-sm text-muted-foreground font-medium leading-relaxed">
+            {displayedMeaning}
+            {isLong && (
+              <button
+                type="button"
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="text-[11px] font-black text-primary hover:text-secondary ml-2 uppercase tracking-wider select-none shrink-0"
+              >
+                {isExpanded ? "Sembunyikan" : "Selengkapnya"}
+              </button>
+            )}
+          </div>
         </div>
-      </div>
-      <div className="flex flex-row sm:flex-col gap-3 shrink-0 w-full sm:w-auto justify-end">
-        {(v._id || v.id) && <AddToSRSButton wordId={v._id || v.id || ""} />}
-        {v.word && <TTSReader text={v.word} minimal={true} speaker="indah" audioUrl={v.audio_url} />}
+        <div className="flex flex-row sm:flex-col gap-3 shrink-0 w-full sm:w-auto justify-end">
+          {(v._id || v.id) && <AddToSRSButton wordId={v._id || v.id || ""} />}
+          {v.word && <TTSReader text={v.word} minimal={true} speaker="indah" audioUrl={v.audio_url} />}
+        </div>
       </div>
     </div>
   );
@@ -183,7 +192,7 @@ export const VocabSection: React.FC<VocabSectionProps> = ({ vocabList }) => {
         <div className="flex justify-center pt-8">
           <button
             onClick={() => setShowAll(!showAll)}
-            className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-black uppercase tracking-widest text-[9px] sm:text-[10px] border shadow-md transition-all duration-300 bg-card hover:bg-primary/5 hover:border-primary/30 text-muted-foreground hover:text-primary active:scale-95"
+            className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-lg rounded-br-none font-black uppercase tracking-widest text-[9px] sm:text-[10px] border shadow-sm transition-all duration-300 bg-card hover:bg-primary/5 hover:border-primary/30 text-muted-foreground hover:text-primary active:scale-95"
             aria-label={showAll ? "Sembunyikan kosakata tambahan" : "Tampilkan semua kosakata"}
           >
             <span>{showAll ? "Sembunyikan" : `Lihat Selanjutnya (${vocabList.length - 10} lainnya)`}</span>

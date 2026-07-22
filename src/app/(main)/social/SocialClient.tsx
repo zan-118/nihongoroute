@@ -18,13 +18,13 @@ export default function SocialClient() {
     <div className="max-w-4xl mx-auto pb-24">
       {/* 🏆 TAB SWITCHER */}
       <div className="flex justify-center mb-10 relative z-20">
-        <div className="bg-background/40 glass p-1.5 rounded-lg flex gap-2 border border-border/80 shadow-md">
+        <div className="bg-background/50 p-1.5 rounded-lg flex gap-2 border border-border/80 shadow-sm">
           <button
             type="button"
             onClick={() => setActiveTab("discussion")}
-            className={`px-6 py-3 text-xs font-black uppercase tracking-wider rounded-xl transition-all flex items-center gap-2 ${
+            className={`px-6 py-3 text-xs font-black uppercase tracking-wider rounded-lg transition-all flex items-center gap-2 ${
               activeTab === "discussion"
-                ? "bg-primary text-primary-foreground shadow-lg"
+                ? "bg-primary text-primary-foreground shadow-md"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -34,9 +34,9 @@ export default function SocialClient() {
           <button
             type="button"
             onClick={() => setActiveTab("leaderboard")}
-            className={`px-6 py-3 text-xs font-black uppercase tracking-wider rounded-xl transition-all flex items-center gap-2 ${
+            className={`px-6 py-3 text-xs font-black uppercase tracking-wider rounded-lg transition-all flex items-center gap-2 ${
               activeTab === "leaderboard"
-                ? "bg-primary text-primary-foreground shadow-lg"
+                ? "bg-primary text-primary-foreground shadow-md"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >

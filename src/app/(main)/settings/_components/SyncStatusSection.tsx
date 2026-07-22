@@ -42,27 +42,30 @@ export default function SyncStatusSection({
   itemVariants
 }: SyncStatusSectionProps) {
   return (
-    <m.div variants={itemVariants}>
-      <Card className="glass  border border-border/80 rounded-[2.5rem] p-8 shadow-xl relative overflow-hidden group">
-        {/* Background gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/[0.02] to-transparent pointer-events-none" />
+    <m.div variants={itemVariants} className="relative group">
+      {/* Tombou Register Mark */}
+      <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+        <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+        <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+      </div>
 
+      <Card className="bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 shadow-[0_4px_25px_rgba(0,0,0,0.015)] relative overflow-hidden">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
           <div className="flex items-center gap-6">
             {/* Icon container: yellow warning if unsynced data exists, green success if clean */}
-            <div className={`w-16 h-16 rounded-lg flex items-center justify-center border transition-all duration-300 shadow-lg ${
+            <div className={`w-16 h-16 rounded-lg flex items-center justify-center border transition-all duration-300 shadow-sm ${
               dirtySrsCount > 0
-                ? 'bg-warning/10 border-warning/30 text-warning shadow-[0_0_12px_rgb(var(--warning-rgb)/0.12)]'
-                : 'bg-success/10 border-success/30 text-success shadow-[0_0_12px_rgb(var(--success-rgb)/0.12)]'
+                ? 'bg-warning/10 border-warning/30 text-warning'
+                : 'bg-success/10 border-success/30 text-success'
             }`}>
               {dirtySrsCount > 0 ? (
                 <Cloud size={32} />
               ) : (
-                <CheckCircle size={32} className="drop-shadow-[0_0_8px_rgb(var(--success-rgb)/0.4)]" />
+                <CheckCircle size={32} />
               )}
             </div>
             <div className="space-y-1">
-              <h3 className="text-lg uppercase italic tracking-tighter text-foreground flex items-center gap-2">
+              <h3 className="text-lg uppercase italic tracking-tighter text-foreground flex items-center gap-2 font-bold">
                 Status Sinkronisasi
                 {/* Ping animation when unsynced data exists */}
                 <span className={`w-2 h-2 rounded-full ${dirtySrsCount > 0 ? 'bg-warning animate-ping' : 'bg-success'}`} />
@@ -78,9 +81,9 @@ export default function SyncStatusSection({
           <Button
             onClick={handleManualSync}
             disabled={isSyncing || dirtySrsCount === 0}
-            className={`h-14 px-8 rounded-lg text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-200 shadow-lg ${
+            className={`h-14 px-8 rounded-lg rounded-br-none text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-200 shadow-md ${
               dirtySrsCount > 0
-                ? 'bg-primary text-primary-foreground hover:scale-[1.02] shadow-primary/20 hover:shadow-primary/45'
+                ? 'bg-primary text-primary-foreground hover:scale-[1.02]'
                 : 'bg-background/10 text-muted-foreground border border-border/80 opacity-50 cursor-not-allowed'
             }`}
           >

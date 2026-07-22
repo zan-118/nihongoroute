@@ -125,7 +125,7 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
                 Latihan Menyimak
               </span>
               {data.jlpt_level && (
-                <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+                <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded-[4px] bg-primary/10 text-primary border border-primary/20">
                   {data.jlpt_level}
                 </span>
               )}
@@ -136,13 +136,13 @@ export default function ListeningPageClient({ data }: ListeningPageClientProps) 
           </div>
 
           <div className="flex items-center gap-2">
-            <Button asChild variant="outline" size="sm" className="rounded-xl text-[10px] font-bold h-8 glass">
+            <Button asChild variant="outline" size="sm" className="rounded-lg text-[10px] font-bold h-8">
               <Link href={`/tools/shadowing?${toolParams}`}>
                 <Mic size={12} className="mr-1 text-primary" aria-hidden="true" />
                 Shadowing
               </Link>
             </Button>
-            <Button asChild variant="outline" size="sm" className="rounded-xl text-[10px] font-bold h-8 glass">
+            <Button asChild variant="outline" size="sm" className="rounded-lg text-[10px] font-bold h-8">
               <Link href={`/tools/text-analyzer?${toolParams}`}>
                 <ScanText size={12} className="mr-1 text-primary" aria-hidden="true" />
                 Analyzer

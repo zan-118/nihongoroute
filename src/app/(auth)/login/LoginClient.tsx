@@ -12,6 +12,7 @@ import React, { Suspense } from "react";
 import { User, LogIn, ChevronRight, Sparkles, Mail, Lock, ArrowLeft } from "@/components/ui/icons";
 import Link from "next/link";
 import { useAuth } from "@/components/features/user/useAuth";
+import { Card } from "@/components/ui/card";
 
 // ======================
 // KOMPONEN INTERNAL
@@ -47,95 +48,102 @@ function LoginContent() {
         <div className="size-[400px] bg-secondary/15 rounded-full blur-[100px] opacity-35 absolute -bottom-10 -right-10" />
       </div>
 
-      <div className="w-full max-w-md bg-card/85 border border-border/80 rounded-xl p-8 z-10 shadow-[0_15px_50px_rgba(var(--foreground-rgb),0.3)] hover:shadow-[0_20px_60px_rgb(var(--primary-rgb)/0.15)] transition-all duration-500 relative glass">
-        {/* Kilau Sudut Dekoratif */}
-        <div className="absolute top-0 right-0 size-24 bg-gradient-to-br from-primary/10 to-transparent blur-md rounded-tr-[2rem] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 size-24 bg-gradient-to-tl from-secondary/10 to-transparent blur-md rounded-bl-[2rem] pointer-events-none" />
-
-        <Link 
-          href="/" 
-          className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-primary transition-all group mb-8"
-        >
-          <div className="size-8 rounded-full bg-muted/60 border border-border flex items-center justify-center group-hover:border-primary/40 group-hover:bg-primary/5 transition-all">
-            <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
-          </div>
-          Beranda
-        </Link>
-
-        <div className="text-center mb-6">
-          <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary/20 shadow-[0_0_20px_rgb(var(--primary-rgb)/0.15)]">
-            <Sparkles className="text-primary" size={32} />
-          </div>
-          <h1 className="text-2xl md:text-3xl font-black text-foreground mb-2 uppercase tracking-tight font-japanese">
-            {isRegistering ? "Yuk, bikin akun baru!" : "Siap lanjut belajar?"}
-          </h1>
-          <p className="text-xs md:text-sm text-muted-foreground font-medium leading-relaxed">
-            {isRegistering 
-              ? "Bikin akun yuk, biar semua progres belajarmu tersimpan rapi dan bisa diakses kapan saja." 
-              : "Masuk ke akunmu, yuk! Kita lanjutkan petualangan belajar yang seru ini."}
-          </p>
+      <div className="w-full max-w-md relative group/login z-10">
+        {/* Tombou Register Mark */}
+        <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+          <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover/login:bg-primary transition-colors duration-500" />
+          <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover/login:bg-primary transition-colors duration-500" />
         </div>
 
-        {/* Formulir Surel & Kata Sandi */}
-        <form onSubmit={handleEmailAuth} className="space-y-4 mb-6">
-          <div className="space-y-3">
-            {/* Show name input if register mode active. */}
-            {isRegistering && (
-              <div className="relative animate-in fade-in slide-in-from-top-2 duration-300">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-                <input aria-label="Nama panggilannya siapa?" 
-                  type="text" 
-                  placeholder="Nama panggilannya siapa?" 
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  required={isRegistering}
-                  className="control-surface w-full rounded-xl py-3 pl-10 pr-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all duration-300"
-                />
-              </div>
-            )}
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-              <input aria-label="Alamat emailmu" 
-                type="email" 
-                placeholder="Alamat emailmu" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="control-surface w-full rounded-xl py-3 pl-10 pr-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all duration-300"
-              />
+        <Card className="p-8 relative overflow-hidden rounded-2xl bg-card border border-border/50 dark:border-white/10 shadow-[0_4px_25px_rgba(0,0,0,0.015)]">
+
+          <Link 
+            href="/" 
+            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-primary transition-all group mb-8"
+          >
+            <div className="size-8 rounded-full bg-muted/60 border border-border flex items-center justify-center group-hover:border-primary/40 group-hover:bg-primary/5 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+              <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]" />
             </div>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-              <input aria-label="Kata sandi rahasia" 
-                type="password" 
-                placeholder="Kata sandi rahasia" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={6}
-                className="control-surface w-full rounded-xl py-3 pl-10 pr-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all duration-300"
-              />
+            Beranda
+          </Link>
+
+          <div className="text-center mb-6">
+            <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary/20 shadow-[0_0_20px_rgb(var(--primary-rgb)/0.15)]">
+              <Sparkles className="text-primary" size={32} />
             </div>
-            {!isRegistering && (
-              <div className="flex justify-end mt-1">
-                <Link 
-                  href="/forgot-password" 
-                  className="text-xs text-muted-foreground hover:text-primary transition-colors font-medium"
-                >
-                  Lupa kata sandi? Tenang, bisa kita bantu kok!
-                </Link>
-              </div>
-            )}
+            <h1 className="text-2xl md:text-3xl font-black text-foreground mb-2 uppercase tracking-tight font-japanese">
+              {isRegistering ? "Yuk, bikin akun baru!" : "Siap lanjut belajar?"}
+            </h1>
+            <p className="text-xs md:text-sm text-muted-foreground font-medium leading-relaxed">
+              {isRegistering 
+                ? "Bikin akun yuk, biar semua progres belajarmu tersimpan rapi dan bisa diakses kapan saja." 
+                : "Masuk ke akunmu, yuk! Kita lanjutkan petualangan belajar yang seru ini."}
+            </p>
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3.5 px-4 brand-button rounded-xl text-xs disabled:opacity-50"
-          >
-            {loading ? "Sedang memproses..." : (isRegistering ? "Daftar Sekarang" : "Masuk Sekarang")}
-          </button>
-        </form>
+          {/* Formulir Surel & Kata Sandi */}
+          <form onSubmit={handleEmailAuth} className="space-y-4 mb-6">
+            <div className="space-y-3">
+              {/* Show name input if register mode active. */}
+              {isRegistering && (
+                <div className="relative animate-in fade-in slide-in-from-top-2 duration-350 ease-[cubic-bezier(0.32,0.72,0,1)]">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+                  <input aria-label="Nama panggilannya siapa?" 
+                    type="text" 
+                    placeholder="Nama panggilannya siapa?" 
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required={isRegistering}
+              className="control-surface w-full rounded-lg py-3.5 pl-10 pr-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all duration-300"
+            />
+          </div>
+        )}
+        <div className="relative">
+          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+          <input aria-label="Alamat emailmu" 
+            type="email" 
+            placeholder="Alamat emailmu" 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="control-surface w-full rounded-lg py-3.5 pl-10 pr-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all duration-300"
+          />
+        </div>
+        <div className="relative">
+          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+          <input aria-label="Kata sandi rahasia" 
+            type="password" 
+            placeholder="Kata sandi rahasia" 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={6}
+            className="control-surface w-full rounded-lg py-3.5 pl-10 pr-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all duration-300"
+          />
+        </div>
+        {!isRegistering && (
+          <div className="flex justify-end mt-1">
+            <Link 
+              href="/forgot-password" 
+              className="text-xs text-muted-foreground hover:text-primary transition-colors font-medium"
+            >
+              Lupa kata sandi? Tenang, bisa kita bantu kok!
+            </Link>
+          </div>
+        )}
+      </div>
+
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full h-14 pl-8 pr-6 brand-button rounded-lg rounded-br-none text-xs disabled:opacity-50 flex items-center justify-between group transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.97]"
+      >
+        <span className="font-bold">{loading ? "Sedang memproses..." : (isRegistering ? "Daftar Sekarang" : "Masuk Sekarang")}</span>
+        <div className="w-8 h-8 rounded-full bg-white/10 dark:bg-white/15 flex items-center justify-center group-hover:translate-x-1 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+          <ChevronRight size={14} className="stroke-[1.5]" />
+        </div>
+      </button>
+          </form>
 
         <div className="text-center mb-6">
           <button 
@@ -166,7 +174,7 @@ function LoginContent() {
             type="button"
             onClick={() => handleSocialLogin("google")}
             disabled={loading}
-            className="w-full flex items-center justify-between p-3.5 rounded-xl bg-foreground text-background hover:opacity-95 transition-all disabled:opacity-50 font-bold text-sm shadow-md active:scale-[0.98] duration-300"
+            className="w-full flex items-center justify-between p-3.5 rounded-lg rounded-br-none bg-foreground text-background hover:opacity-95 transition-all disabled:opacity-50 font-bold text-sm shadow-sm active:scale-[0.98] duration-300"
           >
             <div className="flex items-center gap-3">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -185,7 +193,7 @@ function LoginContent() {
             type="button"
             onClick={handleAnonymousLogin}
             disabled={loading}
-            className="w-full flex items-center justify-between p-3.5 rounded-xl bg-muted/60 hover:bg-muted/80 border border-border/80 transition-colors text-foreground disabled:opacity-50 text-sm active:scale-[0.98] duration-300"
+            className="w-full flex items-center justify-between p-3.5 rounded-lg rounded-br-none bg-card hover:bg-primary/5 border border-border/80 transition-colors text-foreground disabled:opacity-50 text-sm active:scale-[0.98] duration-300 shadow-sm"
           >
             <div className="flex items-center gap-3">
               <User size={20} className="text-primary" />
@@ -196,6 +204,7 @@ function LoginContent() {
             <LogIn size={16} className="text-muted-foreground" />
           </button>
         </div>
+      </Card>
       </div>
     </div>
   );

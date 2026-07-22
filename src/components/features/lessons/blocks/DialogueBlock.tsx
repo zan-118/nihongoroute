@@ -5,6 +5,7 @@ import TTSReader from "@/components/features/tools/tts/TTSReader";
 import { OfflineAudio } from "@/components/ui/OfflineAudio";
 import { detectVoice, fetchTTSAudio, speakWithWebSpeech } from "@/lib/tts";
 import { parseInlineStyles } from "@/lib/utils/markdown-parser";
+import { Card } from "@/components/ui/card";
 
 interface DialogueBlockProps {
   block: ContentBlock;
@@ -35,97 +36,94 @@ export function DialogueBlock({ block }: DialogueBlockProps) {
   const currentAudioRef = React.useRef<HTMLAudioElement | null>(null);
   const playTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Stops active audio playback and Web Speech synthesis
   const stopPlayback = React.useCallback(() => {
     if (currentAudioRef.current) {
       currentAudioRef.current.pause();
       currentAudioRef.current = null;
     }
-    if (typeof window !== "undefined" && window.speechSynthesis) {
-      window.speechSynthesis.cancel();
-    }
-    if (playTimeoutRef.current) {
-      clearTimeout(playTimeoutRef.current);
-    }
+    window.speechSynthesis.cancel();
     setIsPlaying(false);
     setPlayingIndex(null);
+    if (playTimeoutRef.current) {
+      clearTimeout(playTimeoutRef.current);
+      playTimeoutRef.current = null;
+    }
   }, []);
 
-  // Plays a specific dialogue line by index, chaining to the next line on completion
-  async function playLine(index: number) {
-    if (index >= lines.length) {
-      stopPlayback();
-      return;
-    }
-    setPlayingIndex(index);
-    setIsPlaying(true);
+  const linesRef = React.useRef(lines);
+  React.useEffect(() => {
+    linesRef.current = lines;
+  }, [lines]);
 
-    const line = lines[index];
-    const voice = detectVoice(line.speaker, index);
+  const playLineRef = React.useRef<(index: number) => Promise<void>>(() => Promise.resolve());
 
-    const fallbackWebSpeech = () => {
-      speakWithWebSpeech(
-        line.text,
-        voice,
-        1,
-        () => {
-          playTimeoutRef.current = setTimeout(() => {
-            playLine(index + 1);
-          }, 800);
-        },
-        () => {
-          stopPlayback();
-        }
-      );
-    };
-
-    try {
-      const audioUrl = await fetchTTSAudio(line.text, voice, "medium");
-      if (audioUrl) {
-        if (currentAudioRef.current) {
-          currentAudioRef.current.pause();
-        }
-        const audio = new Audio(audioUrl);
-        currentAudioRef.current = audio;
-        audio.play();
-
-        audio.onended = () => {
-          playTimeoutRef.current = setTimeout(() => {
-            playLine(index + 1);
-          }, 800);
-        };
-
-        audio.onerror = () => {
-          fallbackWebSpeech();
-        };
-      } else {
-        fallbackWebSpeech();
+  React.useEffect(() => {
+    playLineRef.current = async (index: number) => {
+      const currentLines = linesRef.current;
+      if (index >= currentLines.length) {
+        stopPlayback();
+        return;
       }
-    } catch {
-      fallbackWebSpeech();
-    }
-  }
 
-  const togglePlayAll = () => {
+      setPlayingIndex(index);
+      const line = currentLines[index];
+      const text = line.text;
+      const speaker = line.speaker;
+      const voice = detectVoice(speaker || "");
+
+      const playFallback = () => {
+        speakWithWebSpeech(text, voice, 1, () => {
+          playTimeoutRef.current = setTimeout(() => {
+            playLineRef.current(index + 1);
+          }, 800);
+        });
+      };
+
+      try {
+        const audioUrl = await fetchTTSAudio(text, voice);
+        
+        if (audioUrl) {
+          const audio = new Audio(audioUrl);
+          currentAudioRef.current = audio;
+          audio.play();
+
+          audio.onended = () => {
+            // Delay 800ms before playing next line.
+            playTimeoutRef.current = setTimeout(() => {
+              playLineRef.current(index + 1);
+            }, 800);
+          };
+
+          audio.onerror = () => {
+            playFallback();
+          };
+        } else {
+          playFallback();
+        }
+      } catch (err) {
+        console.warn("TTS fetch failed, falling back to Web Speech:", err);
+        playFallback();
+      }
+    };
+  }, [stopPlayback]);
+
+  const playLine = React.useCallback((index: number) => {
+    return playLineRef.current(index);
+  }, []);
+
+  const togglePlayAll = React.useCallback(() => {
     if (isPlaying) {
       stopPlayback();
     } else {
-      playLine(0);
+      setIsPlaying(true);
+      playLineRef.current(0);
     }
-  };
+  }, [isPlaying, stopPlayback]);
 
-  // Cleanup audio resources on unmount
   React.useEffect(() => {
     return () => {
-      if (currentAudioRef.current) {
-        currentAudioRef.current.pause();
-      }
-      if (typeof window !== "undefined" && window.speechSynthesis) {
-        window.speechSynthesis.cancel();
-      }
-      if (playTimeoutRef.current) {
-        clearTimeout(playTimeoutRef.current);
-      }
+      if (playTimeoutRef.current) clearTimeout(playTimeoutRef.current);
+      window.speechSynthesis.cancel();
     };
   }, []);
 
@@ -152,7 +150,7 @@ export function DialogueBlock({ block }: DialogueBlockProps) {
           {lines.length > 0 && (
             <button
               onClick={togglePlayAll}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all duration-300 shadow-sm shrink-0 ${
+              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg border text-[10px] font-black uppercase tracking-widest transition-all duration-300 shadow-sm shrink-0 ${
                 isPlaying
                   ? "bg-success/15 border-success/30 text-success"
                   : "bg-muted/50 border-border text-muted-foreground hover:text-success hover:bg-success/5 hover:border-success/20"
@@ -175,60 +173,68 @@ export function DialogueBlock({ block }: DialogueBlockProps) {
         </div>
       </div>
 
-      <div className="space-y-4 rounded-2xl md:rounded-3xl p-6 shadow-[0_10px_35px_rgb(var(--foreground-rgb)/0.01)] glass">
-        {lines.map((line: { speaker: string | undefined; text: string; furigana?: string }, pos: number) => {
-          const isLinePlaying = playingIndex === pos;
-          return (
-            <div 
-              key={`dialogue-${pos}`} 
-              className={`flex gap-4 items-start group p-2.5 rounded-lg transition-all duration-300 ${
-                isLinePlaying 
-                  ? "bg-secondary/10 border-l-4 border-l-secondary pl-3.5 shadow-[0_0_15px_rgb(var(--secondary-rgb)/0.05)]" 
-                  : "hover:bg-muted/10"
-              }`}
-            >
-              <span 
-                className="text-[10px] font-black text-secondary uppercase tracking-widest px-2.5 py-1 rounded-xl h-fit flex-shrink-0 mt-1 border"
-                style={{ backgroundColor: "rgb(var(--secondary-rgb)/0.15)", borderColor: "rgb(var(--secondary-rgb)/0.25)" }}
+      <div className="relative group/dialogue w-full">
+        {/* Tombou Register Mark */}
+        <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+          <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover/dialogue:bg-primary transition-colors duration-500" />
+          <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover/dialogue:bg-primary transition-colors duration-500" />
+        </div>
+
+        <Card className="space-y-4 rounded-2xl p-6 shadow-[0_4px_25px_rgba(0,0,0,0.015)] bg-card border border-border/50 dark:border-white/10">
+          {lines.map((line: { speaker: string | undefined; text: string; furigana?: string }, pos: number) => {
+            const isLinePlaying = playingIndex === pos;
+            return (
+              <div 
+                key={`dialogue-${pos}`} 
+                className={`flex gap-4 items-start group p-2.5 rounded-lg transition-all duration-300 ${
+                  isLinePlaying 
+                    ? "bg-secondary/10 border-l-4 border-l-secondary pl-3.5 shadow-[0_0_15px_rgb(var(--secondary-rgb)/0.05)]" 
+                    : "hover:bg-muted/10"
+                }`}
               >
-                {line.speaker}
-              </span>
-              <div className="flex-1 min-w-0 flex items-center justify-between gap-4">
-                <div 
-                  className="text-xl font-japanese font-medium text-foreground leading-relaxed cursor-pointer flex-1"
-                  onClick={async () => {
-                    if (isPlaying) {
-                      stopPlayback();
-                      playLine(pos);
-                    } else {
-                      const voice = detectVoice(line.speaker, pos);
-                      try {
-                        const audioUrl = await fetchTTSAudio(line.text, voice, "medium");
-                        if (audioUrl) {
-                          if (currentAudioRef.current) {
-                            currentAudioRef.current.pause();
+                <span 
+                  className="text-[10px] font-black text-secondary uppercase tracking-widest px-2.5 py-1 rounded-[4px] h-fit flex-shrink-0 mt-1 border border-secondary/20 animate-none"
+                  style={{ backgroundColor: "rgb(var(--secondary-rgb)/0.1)" }}
+                >
+                  {line.speaker}
+                </span>
+                <div className="flex-1 min-w-0 flex items-center justify-between gap-4">
+                  <div 
+                    className="text-xl font-japanese font-medium text-foreground leading-relaxed cursor-pointer flex-1"
+                    onClick={async () => {
+                      if (isPlaying) {
+                        stopPlayback();
+                        playLine(pos);
+                      } else {
+                        const voice = detectVoice(line.speaker || "", pos);
+                        try {
+                          const audioUrl = await fetchTTSAudio(line.text, voice);
+                          if (audioUrl) {
+                            if (currentAudioRef.current) {
+                              currentAudioRef.current.pause();
+                            }
+                            const audio = new Audio(audioUrl);
+                            currentAudioRef.current = audio;
+                            audio.play();
+                          } else {
+                            speakWithWebSpeech(line.text, voice, 1);
                           }
-                          const audio = new Audio(audioUrl);
-                          currentAudioRef.current = audio;
-                          audio.play();
-                        } else {
+                        } catch {
                           speakWithWebSpeech(line.text, voice, 1);
                         }
-                      } catch {
-                        speakWithWebSpeech(line.text, voice, 1);
                       }
-                    }
-                  }}
-                >
-                  <SmartJapanese word={line.text} furigana={line.furigana} />
-                </div>
-                <div className="opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 shrink-0 self-center">
-                  <TTSReader text={line.text} speaker={line.speaker} minimal />
+                    }}
+                  >
+                    <SmartJapanese word={line.text} furigana={line.furigana} />
+                  </div>
+                  <div className="opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 shrink-0 self-center">
+                    <TTSReader text={line.text} speaker={line.speaker} minimal />
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </Card>
       </div>
       {block.translation && (
         <p className="text-sm text-muted-foreground italic px-4 border-l-2 border-border/70 whitespace-pre-wrap">{parseInlineStyles(block.translation)}</p>

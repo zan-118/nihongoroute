@@ -75,7 +75,7 @@ export function CategoryHero({
         <div className="space-y-4 md:space-y-6 max-w-3xl flex-1 min-w-0">
           <m.div variants={itemVariants} className="flex items-center gap-3">
             <span
-              className="px-3 py-1 rounded-full border text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all"
+              className="px-3 py-1 rounded-[4px] border text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all"
               style={badgeStyle}
             >
               {isSideQuest ? "Kemampuan Praktis" : "Jalur Kuasai JLPT"}
@@ -105,14 +105,10 @@ export function CategoryHero({
         {/* Progress Widget — Compact, Inline */}
         <m.div
           variants={itemVariants}
-          className="w-full lg:w-auto lg:min-w-[240px] lg:max-w-[280px] p-4 sm:p-5 md:p-6 glass rounded-xl sm:rounded-lg border relative overflow-hidden group transition-all duration-200 shrink-0"
-          style={{
-            backgroundColor: "rgb(var(--card-rgb)/0.3)",
-            borderColor: "rgb(var(--border-rgb)/0.5)",
-          }}
+          className="w-full lg:w-auto lg:min-w-[240px] lg:max-w-[280px] p-4 sm:p-5 md:p-6 bg-card border border-border/50 dark:border-white/10 rounded-xl relative overflow-hidden group transition-all duration-200 shrink-0 shadow-sm"
         >
           {/* Motif Asanoha halus */}
-          <div className="absolute inset-0 bg-asanoha opacity-[0.015] pointer-events-none" />
+          <div className="absolute inset-0 bg-asanoha opacity-[0.01] pointer-events-none" />
 
           {/* Subtle Ambient Accent */}
           <div

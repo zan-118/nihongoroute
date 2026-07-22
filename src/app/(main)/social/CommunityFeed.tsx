@@ -88,7 +88,14 @@ function PostCard({ post, currentUserId, isGuest, onAuthorClick }: PostCardProps
   } = usePostCard({ post, currentUserId, isGuest });
 
   return (
-    <Card className="glass border-border/80 p-5 rounded-[2rem] shadow-sm relative overflow-hidden transition-all duration-300 hover:border-primary/25">
+    <div className="relative group">
+      {/* Tombou Register Mark */}
+      <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+        <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+        <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+      </div>
+
+      <Card className="bg-card border border-border/50 dark:border-white/10 p-5 rounded-2xl shadow-sm relative overflow-hidden transition-all duration-300 group-hover:border-primary/45">
       {/* Header Postingan */}
       <div className="flex items-center gap-3.5 mb-4">
         {/* Avatar */}
@@ -248,12 +255,12 @@ function PostCard({ post, currentUserId, isGuest, onAuthorClick }: PostCardProps
                   placeholder="Tulis balasan..."
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
-                  className="flex-1 bg-background/25 border border-border/60 rounded-xl px-4 py-2 text-xs text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-primary/45 focus:shadow-[0_0_10px_rgba(var(--primary-rgb),0.05)]"
+                  className="flex-1 bg-background/25 border border-border/60 rounded-lg px-4 py-2 text-xs text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-primary/45"
                 />
                 <Button 
                   type="submit"
                   disabled={isDeletingComment || !commentText.trim()}
-                  className="size-9 bg-primary hover:bg-secondary text-primary-foreground rounded-xl flex items-center justify-center p-0 shrink-0 shadow-sm"
+                  className="size-9 bg-primary hover:bg-secondary text-primary-foreground rounded-lg flex items-center justify-center p-0 shrink-0 shadow-sm"
                   aria-label="Kirim Komentar"
                 >
                   {isDeletingComment ? (
@@ -267,7 +274,8 @@ function PostCard({ post, currentUserId, isGuest, onAuthorClick }: PostCardProps
           </m.div>
         )}
       </AnimatePresence>
-    </Card>
+      </Card>
+    </div>
   );
 }
 
@@ -314,7 +322,7 @@ export default function CommunityFeed() {
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all ${
+              className={`px-3 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all ${
                 selectedCategory === cat
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "bg-background/25 border border-border/60 text-muted-foreground hover:text-foreground hover:bg-background/45"
@@ -328,7 +336,14 @@ export default function CommunityFeed() {
 
       {/* 📝 COMPOSE POST CARD */}
       {!isGuest ? (
-        <Card className="glass border-border/80 p-5 rounded-[2rem] shadow-sm relative overflow-hidden">
+        <div className="relative group">
+          {/* Tombou Register Mark */}
+          <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+            <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+            <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+          </div>
+
+          <Card className="bg-card border border-border/50 dark:border-white/10 p-5 rounded-2xl shadow-sm relative overflow-hidden group-hover:border-primary/45 transition-colors duration-500">
           <form onSubmit={handleSubmitPost} className="space-y-4">
             <textarea
               aria-label="Tulis pertanyaan atau diskusi belajar"
@@ -340,7 +355,7 @@ export default function CommunityFeed() {
             />
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
               {/* Compose Category Selector */}
-              <div className="flex items-center gap-1.5 bg-background/25 border border-border/60 rounded-xl p-1 shrink-0 w-full sm:w-auto">
+              <div className="flex items-center gap-1.5 bg-background/25 border border-border/60 rounded-lg p-1 shrink-0 w-full sm:w-auto">
                 <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 px-2 select-none">Kategori:</span>
                 <div className="flex gap-1 overflow-x-auto">
                   {COMPOSE_CATEGORIES.map((cat) => (
@@ -364,7 +379,7 @@ export default function CommunityFeed() {
               <Button 
                 type="submit" 
                 disabled={isCreatingPost || !postContent.trim()}
-                className="h-10 px-6 bg-primary hover:bg-secondary text-primary-foreground font-black uppercase tracking-widest text-[10px] rounded-xl flex items-center gap-2 shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] w-full sm:w-auto justify-center"
+                className="h-10 px-6 bg-primary hover:bg-secondary text-primary-foreground font-black uppercase tracking-widest text-[10px] rounded-lg rounded-br-none flex items-center gap-2 shadow-sm transition-all w-full sm:w-auto justify-center"
               >
                 {isCreatingPost ? (
                   <>
@@ -379,8 +394,9 @@ export default function CommunityFeed() {
             </div>
           </form>
         </Card>
+      </div>
       ) : (
-        <Card className="glass border-dashed border-border/80 p-6 rounded-[2rem] text-center flex flex-col items-center justify-center gap-3">
+        <Card className="bg-card border border-dashed border-border/80 p-6 rounded-2xl text-center flex flex-col items-center justify-center gap-3 shadow-sm">
           <div className="size-12 rounded-lg bg-muted/40 flex items-center justify-center text-muted-foreground/60 border border-border">
             <AlertCircle size={20} />
           </div>
@@ -410,11 +426,11 @@ export default function CommunityFeed() {
         {isLoading ? (
           <div className="flex flex-col gap-5">
             {[...Array(3)].map((_, i) => (
-              <Card key={`post-skeleton-${i}`} className="h-44 w-full bg-muted/15 animate-pulse rounded-[2rem]" />
+              <Card key={`post-skeleton-${i}`} className="h-44 w-full bg-muted/15 animate-pulse rounded-2xl" />
             ))}
           </div>
         ) : isError ? (
-          <div className="text-center py-20 border-2 border-dashed border-border/80 rounded-[2.5rem] bg-muted/5 glass flex flex-col items-center justify-center gap-3">
+          <div className="text-center py-20 border border-dashed border-border/80 rounded-2xl bg-muted/5 flex flex-col items-center justify-center gap-3">
             <p className="text-destructive font-black uppercase tracking-widest text-xs">Gagal Memuat Feed</p>
             <p className="text-[10px] text-muted-foreground/45">Coba periksa koneksi internetmu dan ulangi lagi.</p>
           </div>
@@ -429,8 +445,8 @@ export default function CommunityFeed() {
             />
           ))
         ) : (
-          <div className="text-center py-20 border-2 border-dashed border-border/80 rounded-[2.5rem] bg-muted/5 glass flex flex-col items-center justify-center gap-3 select-none">
-            <div className="size-16 rounded-[2rem] bg-primary/5 border border-primary/10 text-primary/60 flex items-center justify-center">
+          <div className="text-center py-20 border border-dashed border-border/80 rounded-2xl bg-muted/5 flex flex-col items-center justify-center gap-3 select-none">
+            <div className="size-16 rounded-lg bg-primary/5 border border-primary/10 text-primary/60 flex items-center justify-center">
               <MessageSquare size={28} />
             </div>
             <p className="text-muted-foreground/60 font-black uppercase tracking-widest text-xs mt-2">Belum ada diskusi</p>
@@ -441,13 +457,12 @@ export default function CommunityFeed() {
 
       {/* 👤 USER DETAIL MODAL */}
       <Dialog open={!!selectedUserProfile} onOpenChange={(open) => !open && setSelectedUserProfile(null)}>
-        <DialogContent className="glass border-border max-w-sm w-full p-6 sm:p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-tr from-primary/[0.04] to-transparent pointer-events-none" />
+        <DialogContent className="border border-border/50 dark:border-white/10 max-w-sm w-full p-6 sm:p-8 rounded-2xl bg-card shadow-lg relative overflow-hidden">
           
           {selectedUserProfile && (
             <div className="relative z-10 flex flex-col items-center text-center">
               {/* Profile Avatar */}
-              <div className="size-20 rounded-[2rem] bg-gradient-to-br from-primary/10 to-transparent flex items-center justify-center font-black text-foreground shrink-0 border border-primary/20 shadow-inner select-none font-japanese text-2xl mb-4">
+              <div className="size-20 rounded-2xl bg-gradient-to-br from-primary/10 to-transparent flex items-center justify-center font-black text-foreground shrink-0 border border-primary/20 shadow-sm select-none font-japanese text-2xl mb-4">
                 {selectedUserProfile.full_name?.charAt(0).toUpperCase() || "?"}
               </div>
 

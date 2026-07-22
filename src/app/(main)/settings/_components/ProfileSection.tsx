@@ -97,27 +97,28 @@ export default function ProfileSection({
   };
 
   return (
-    <m.div variants={itemVariants}>
-      <Card className="glass  border border-border/80 rounded-[2.5rem] p-8 md:p-10 shadow-xl overflow-hidden relative group">
-        {/* Elemen Dekoratif Kartu ID Pilot */}
-        <div className="absolute top-0 right-0 size-64 bg-primary/8 blur-[70px] rounded-full -mr-28 -mt-28 pointer-events-none ambient-glow will-change-transform" />
-        <div className="absolute bottom-0 left-0 size-40 bg-secondary/5 blur-[50px] rounded-full -ml-14 -mb-14 pointer-events-none ambient-glow will-change-transform" />
+    <m.div variants={itemVariants} className="relative group">
+      {/* Tombou Register Mark */}
+      <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+        <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+        <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+      </div>
 
+      <Card className="bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 md:p-10 shadow-[0_4px_25px_rgba(0,0,0,0.015)] overflow-hidden relative">
         {/* Pola Header Kartu ID */}
-        <div className="absolute top-0 left-0 right-0 h-1.5 bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)),rgb(var(--brand-violet-rgb)))] opacity-80" />
+        <div className="absolute top-0 left-0 right-0 h-1 bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)),rgb(var(--brand-violet-rgb)))] opacity-80" />
 
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 relative z-10">
           {/* AVATAR / IDENTITAS PILOT */}
           <div className="flex flex-col items-center gap-4 shrink-0">
              <div className="relative group/avatar">
-                <div className="absolute -inset-1.5 bg-gradient-to-br from-primary to-secondary rounded-[2.5rem] blur-sm opacity-25 group-hover/avatar:opacity-45 transition duration-300" />
-                <div className="w-32 h-32 md:w-36 md:h-36 rounded-[2.2rem] bg-card border border-border flex items-center justify-center text-foreground relative z-10 overflow-hidden shadow-xl">
+                <div className="w-32 h-32 md:w-36 md:h-36 rounded-2xl bg-card border border-border flex items-center justify-center text-foreground relative z-10 overflow-hidden shadow-sm">
                    <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent opacity-60" />
                    <span className="text-6xl font-black italic text-primary drop-shadow-md select-none font-japanese">
                       {(newName || "S").charAt(0).toUpperCase()}
                    </span>
                 </div>
-                <div className="absolute -bottom-2 -right-2 size-10 bg-card border border-border rounded-lg flex items-center justify-center z-20 shadow-xl group-hover/avatar:scale-110 transition-transform">
+                <div className="absolute -bottom-2 -right-2 size-10 bg-card border border-border rounded-lg flex items-center justify-center z-20 shadow-md group-hover/avatar:scale-110 transition-transform">
                    <ShieldCheck size={20} className="text-success" />
                 </div>
              </div>
@@ -132,7 +133,7 @@ export default function ProfileSection({
               <h2 className="text-2xl md:text-3xl uppercase italic tracking-tighter text-foreground flex flex-col lg:flex-row lg:items-center gap-3">
                  Profil Pengguna
                  {isAuthenticated && (
-                   <span className="text-[9px] not-italic font-black bg-success/15 text-success border border-success/30 px-3 py-1 rounded-full uppercase tracking-widest w-fit mx-auto lg:mx-0 shadow-[0_0_15px_rgb(var(--success-rgb)/0.1)]">
+                   <span className="text-[9px] not-italic font-black bg-success/15 text-success border border-success/30 px-3 py-1 rounded-[4px] uppercase tracking-widest w-fit mx-auto lg:mx-0 shadow-sm">
                       Akun Terhubung
                    </span>
                  )}
@@ -142,8 +143,8 @@ export default function ProfileSection({
 
             {/* PENGHITUNG STATISTIK */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-               <div className="bg-background/25  border border-border rounded-lg p-5 flex items-center gap-4 group/stat hover:bg-background/35 hover:border-primary/20 transition-all duration-200 shadow-sm">
-                  <div className="size-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-inner">
+               <div className="bg-background/25 border border-border rounded-lg p-5 flex items-center gap-4 group/stat hover:border-primary/20 transition-all duration-200 shadow-sm">
+                  <div className="size-12 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-inner">
                      <Zap size={22} className="fill-current text-primary" />
                   </div>
                   <div>
@@ -153,8 +154,8 @@ export default function ProfileSection({
                      <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">Total XP</p>
                   </div>
                </div>
-               <div className="bg-background/25  border border-border rounded-lg p-5 flex items-center gap-4 group/stat hover:bg-background/35 hover:border-warning/20 transition-all duration-200 shadow-sm">
-                  <div className="size-12 rounded-xl bg-warning/10 border border-warning/20 flex items-center justify-center text-warning shadow-inner">
+               <div className="bg-background/25 border border-border rounded-lg p-5 flex items-center gap-4 group/stat hover:border-warning/20 transition-all duration-200 shadow-sm">
+                  <div className="size-12 rounded-lg bg-warning/10 border border-warning/20 flex items-center justify-center text-warning shadow-inner">
                      <Flame size={22} className="fill-current text-warning animate-premium-bounce" />
                   </div>
                   <div>
@@ -182,7 +183,7 @@ export default function ProfileSection({
               <Button
                 onClick={handleSave}
                 disabled={isSyncing}
-                className="h-14 bg-primary hover:bg-primary/95 text-primary-foreground font-black uppercase tracking-widest text-xs rounded-lg px-8 shadow-lg shadow-primary/15 hover:shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50"
+                className="h-14 bg-primary hover:bg-primary/95 text-primary-foreground font-black uppercase tracking-widest text-xs rounded-lg rounded-br-none px-8 shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50"
               >
                 {isSyncing ? "Menyimpan..." : "Simpan Nama"}
               </Button>

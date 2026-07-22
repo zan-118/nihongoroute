@@ -53,18 +53,24 @@ export function VocabCard({ item, idx, showRomaji }: VocabCardProps) {
         // Provide estimated height for layout calculations before rendering
         containIntrinsicSize: '0 250px',
       }}
-      className="transform hover:-translate-y-1 transition-all duration-300 font-sans"
+      className="relative transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] font-sans h-full group"
     >
+      {/* Tombou Register Mark (L-shape corner mark offset 6px outside rounded-2xl) */}
+      <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+        <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
+        <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
+      </div>
+
       <Link href={ROUTES.LIBRARY.VOCAB(item.slug || item.id)} className="block h-full">
-        <Card className="p-6 sm:p-7 md:p-8 bg-card/40 border border-border/80 rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all duration-300 group shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] flex flex-col gap-5 relative overflow-hidden h-full glass">
-          {/* Efek Indikator Sorot Halus */}
-          <div className="absolute top-0 right-0 size-12 bg-[rgb(var(--primary-rgb)/0.05)] rounded-bl-[2rem] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity translate-x-4 translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 duration-500">
-            <ExternalLink size={14} className="text-primary mr-2 mb-2" aria-hidden="true" />
+        <Card className="p-6 sm:p-7 md:p-8 bg-card border border-border/50 dark:border-white/10 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.015)] group-hover:border-primary/50 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] flex flex-col gap-5 relative overflow-hidden h-full">
+          {/* Subtle indicator icon inside without glowing backgrounds */}
+          <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <ExternalLink size={12} className="text-primary/70" aria-hidden="true" />
           </div>
 
           <div className="flex justify-between items-start">
             <div className="flex flex-wrap gap-2">
-              <Badge variant="outline" className="px-2 py-0.5 text-[10px] font-black uppercase tracking-widest rounded-lg border h-auto bg-muted text-muted-foreground font-sans">
+              <Badge variant="outline" className="px-2 py-0.5 text-[9px] font-black uppercase tracking-widest rounded-[4px] border border-border/70 h-auto bg-muted text-muted-foreground font-sans">
                 {item.hinshi?.[0] || "vocab"}
               </Badge>
             </div>
@@ -76,13 +82,13 @@ export function VocabCard({ item, idx, showRomaji }: VocabCardProps) {
 
           <div className="space-y-1.5 flex-1">
             {/* Ejaan Utama Bahasa Jepang (Dengan Furigana Presisi 0.55em) */}
-            <div className="text-2xl md:text-3xl font-black text-foreground font-japanese leading-tight tracking-tight group-hover:text-primary transition-colors">
+            <div className="text-2xl md:text-3xl font-bold text-foreground font-japanese leading-tight tracking-tight group-hover:text-primary transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
               <SmartJapanese word={item.word} furigana={item.furigana || undefined} />
             </div>
             
             {/* Tampilan Romaji (Opsional) */}
             {showRomaji && item.romaji && (
-              <p className="text-[10px] md:text-xs font-bold text-muted-foreground/50 uppercase tracking-widest overflow-hidden">
+              <p className="text-[10px] md:text-xs font-bold text-muted-foreground/50 uppercase tracking-widest overflow-hidden font-sans">
                 {item.romaji}
               </p>
             )}
@@ -95,11 +101,11 @@ export function VocabCard({ item, idx, showRomaji }: VocabCardProps) {
 
           {/* Bagian Kanji Relevan/Terkait */}
           {(item.mnemonic || (item.related_kanji && item.related_kanji.length > 0)) && (
-            <div className="pt-3 border-t border-border flex flex-col gap-2">
+            <div className="pt-3 border-t border-border/50 flex flex-col gap-2">
               {item.related_kanji && item.related_kanji.length > 0 && (
                 <div className="flex flex-wrap gap-1">
                   {item.related_kanji.map((kanji: { character: string; meaning: string }) => (
-                    <span key={kanji.character} className="text-[10px] px-1.5 py-0.5 rounded-md bg-muted text-muted-foreground border border-border font-japanese" title={kanji.meaning}>
+                    <span key={kanji.character} className="text-[10px] px-1.5 py-0.5 rounded-[4px] bg-muted text-muted-foreground border border-border/60 font-japanese" title={kanji.meaning}>
                       {kanji.character}
                     </span>
                   ))}

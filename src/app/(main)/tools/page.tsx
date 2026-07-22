@@ -59,39 +59,43 @@ export default function ToolsPage() {
               transition={{ delay: idx * 0.05 }}
             >
               <Link data-tour="tool-card" href={tool.href}>
-                <Card className={`group relative p-8 md:p-10 rounded-[2.5rem] border ${tool.border} bg-card/35 hover:shadow-[0_0_35px_rgba(var(--primary-rgb),0.02)] transition-all duration-300 overflow-hidden glass`}>
-                  {/* Pendaran Hover */}
-                  {/* Decorative glow effect visible on card hover */}
-                  <div className={`absolute -right-8 -top-8 w-32 h-32 ${tool.bgColor} rounded-full blur-lg opacity-0 group-hover:opacity-80 transition-opacity duration-200`} />
-
-                  <div className="relative z-10 flex flex-col gap-6">
-                    <div className="flex justify-between items-start">
-                      <div className={`w-14 h-14 rounded-lg ${tool.bgColor} border ${tool.border} flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform duration-200`}>
-                        <tool.icon className={tool.color} size={28} />
-                      </div>
-                      {/* Arrow indicator slides in on hover */}
-                      <div className="p-2 rounded-full bg-muted border border-border opacity-0 group-hover:opacity-100 transition-all duration-200 translate-x-4 group-hover:translate-x-0">
-                        <ChevronRight size={20} className="text-muted-foreground" />
-                      </div>
-                    </div>
-
-                    <div>
-                      <h2 className="text-2xl text-foreground uppercase tracking-tight mb-2 group-hover:text-primary transition-colors">
-                        {tool.title}
-                      </h2>
-                      <p className="text-muted-foreground text-sm leading-relaxed font-medium">
-                        {tool.description}
-                      </p>
-                    </div>
-
-                    <div className="flex items-center gap-2 pt-2">
-                       <Zap size={14} className="text-primary" />
-                       <span className="text-[10px] font-black uppercase tracking-widest text-primary/70">
-                         Mulai Latihan
-                       </span>
-                    </div>
+                <div className="relative group">
+                  {/* Tombou Register Mark (L-shape offset 6px outside rounded-2xl) */}
+                  <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+                    <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
+                    <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
                   </div>
-                </Card>
+
+                  <Card className="h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 md:p-10 relative overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.015)] group-hover:border-primary/50 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+                    <div className="relative z-10 flex flex-col gap-6">
+                      <div className="flex justify-between items-start">
+                        <div className={`w-14 h-14 rounded-lg bg-muted border border-border/60 flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]`}>
+                          <tool.icon className={tool.color} size={28} />
+                        </div>
+                        {/* Arrow indicator slides in on hover - clean circular icon */}
+                        <div className="p-2 rounded-full bg-muted border border-border/80 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] translate-x-4 group-hover:translate-x-0">
+                          <ChevronRight size={20} className="text-muted-foreground" />
+                        </div>
+                      </div>
+
+                      <div>
+                        <h2 className="text-2xl text-foreground uppercase tracking-tight mb-2 group-hover:text-primary transition-colors font-bold duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+                          {tool.title}
+                        </h2>
+                        <p className="text-muted-foreground text-sm leading-relaxed font-semibold">
+                          {tool.description}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-2 pt-2">
+                         <Zap size={14} className="text-primary" />
+                         <span className="text-[10px] font-black uppercase tracking-widest text-primary/70">
+                           Mulai Latihan
+                         </span>
+                      </div>
+                    </div>
+                  </Card>
+                </div>
               </Link>
             </m.div>
           ))}

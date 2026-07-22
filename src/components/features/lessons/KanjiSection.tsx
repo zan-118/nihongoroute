@@ -74,12 +74,18 @@ export const KanjiSection: React.FC<KanjiSectionProps> = ({ kanjiList }) => {
           <Link
             key={k._id || k.id}
             href={`/library/kanji/${k.slug || k.character}`}
-            className="p-6 border border-border/80 rounded-2xl md:rounded-3xl bg-card/35 shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] flex flex-col items-center justify-center group hover:border-primary/45 transition-all duration-300 glass"
+            className="p-6 border border-border/50 dark:border-white/10 rounded-2xl bg-card shadow-[0_4px_25px_rgba(0,0,0,0.015)] flex flex-col items-center justify-center group hover:border-primary/45 transition-all duration-500 relative group/card"
           >
-            <span className="text-4xl font-black mb-3 group-hover:scale-110 transition-transform">
+            {/* Tombou Register Mark */}
+            <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+              <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover/card:bg-primary transition-colors duration-500" />
+              <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover/card:bg-primary transition-colors duration-500" />
+            </div>
+
+            <span className="text-4xl font-black mb-3 group-hover:scale-105 transition-transform">
               {k.character}
             </span>
-            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest text-center">
+            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest text-center opacity-60 group-hover:opacity-100 transition-opacity">
               {k.meaning}
             </span>
           </Link>
@@ -89,7 +95,7 @@ export const KanjiSection: React.FC<KanjiSectionProps> = ({ kanjiList }) => {
         <div className="flex justify-center pt-8">
           <button
             onClick={() => setShowAll(!showAll)}
-            className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-black uppercase tracking-widest text-[9px] sm:text-[10px] border shadow-md transition-all duration-300 bg-card hover:bg-primary/5 hover:border-primary/30 text-muted-foreground hover:text-primary active:scale-95"
+            className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-lg rounded-br-none font-black uppercase tracking-widest text-[9px] sm:text-[10px] border shadow-sm transition-all duration-300 bg-card hover:bg-primary/5 hover:border-primary/30 text-muted-foreground hover:text-primary active:scale-95"
             aria-label={showAll ? "Sembunyikan kanji tambahan" : "Tampilkan semua kanji"}
           >
             <span>{showAll ? "Sembunyikan" : `Lihat Selanjutnya (${kanjiList.length - 10} lainnya)`}</span>

@@ -359,7 +359,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
                 Graded Reading
               </span>
               {data.jlpt_level && (
-                <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+                <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded-[4px] bg-primary/10 text-primary border border-primary/20">
                   {data.jlpt_level}
                 </span>
               )}
@@ -378,7 +378,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
             <Button
               variant="outline"
               onClick={() => setShowVisuals(!showVisuals)}
-              className="w-full py-4 rounded-lg border-dashed border-primary/20 hover:border-primary/50 bg-primary/5 hover:bg-primary/10 transition-all flex items-center justify-center gap-2 group glass"
+              className="w-full py-4 rounded-lg border-dashed border-primary/20 hover:border-primary/50 bg-primary/5 hover:bg-primary/10 transition-all flex items-center justify-center gap-2 group"
             >
               <Sparkles size={14} className={cn("text-primary transition-transform duration-300", showVisuals && "rotate-45")} />
               <span className="text-xs font-black uppercase tracking-wider">
@@ -408,7 +408,7 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
 
         {/* Panel Kontrol Layar Lengket (Sticky Bottom Control Bar) */}
         {!isZenMode && (
-          <div className="fixed bottom-0 left-0 right-0 md:bottom-6 md:left-[calc(18rem+1.5rem)] md:right-6 z-50 rounded-t-2xl rounded-b-none md:rounded-[2rem] border-t border-x-0 border-b-0 md:border border-border bg-background/95 md:bg-background/80 p-3 pb-safe md:p-4 shadow-[0_-8px_30px_rgb(0_0_0_/0.08)] md:shadow-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 md:gap-4 glass animate-in slide-in-from-bottom duration-500 pointer-events-auto">
+          <div className="fixed bottom-0 left-0 right-0 md:bottom-6 md:left-[calc(18rem+1.5rem)] md:right-6 z-50 rounded-t-xl rounded-b-none md:rounded-xl border-t border-x-0 border-b-0 md:border border-border bg-card p-3 pb-safe md:p-4 shadow-lg flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 md:gap-4 animate-in slide-in-from-bottom duration-500 pointer-events-auto">
             {/* Sisi Kiri: Audio & Playback Controller */}
             <div className="flex-1 w-full lg:max-w-xs">
               {!!(data.audioUrl || (!data.isTTSDisabled && typeof data.body === "string" ? data.body : undefined)) && (

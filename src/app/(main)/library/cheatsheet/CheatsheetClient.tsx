@@ -202,40 +202,48 @@ export default function CheatsheetClient({
                 className="h-full"
               >
                 <Link href={`/library/cheatsheet/${sheet.slug || sheet.id || sheet._id}`}>
-                  <Card className="group relative h-full bg-[rgba(var(--card-rgb),0.4)] border border-border hover:border-[rgba(var(--primary-rgb),0.5)] rounded-[2.5rem] p-8 cursor-pointer transition-all duration-500 shadow-[0_4px_30px_rgba(var(--foreground-rgb),0.02)] hover:shadow-[0_20px_50px_rgba(var(--primary-rgb),0.15)] glass flex flex-col justify-between gap-6 overflow-hidden">
-                    {/* Ambient Glow Background Effect */}
-                    <div className="absolute top-0 right-0 size-32 bg-[rgba(var(--primary-rgb),0.03)] blur-[40px] rounded-full -mr-12 -mt-12 group-hover:bg-[rgba(var(--primary-rgb),0.08)] transition-all duration-500 pointer-events-none ambient-glow will-change-transform" />
-
-                    <div className="flex items-center justify-between relative z-10">
-                      <div className="size-14 rounded-lg bg-[rgba(var(--muted-rgb),0.2)] border border-border flex items-center justify-center text-muted-foreground group-hover:text-primary group-hover:bg-[rgba(var(--primary-rgb),0.15)] group-hover:border-[rgba(var(--primary-rgb),0.3)] transition-all duration-500 shadow-inner">
-                        {getIconForCategory(sheet.category)}
-                      </div>
-                      <Badge
-                        variant="outline"
-                        className="bg-[rgba(var(--muted-rgb),0.1)] text-[10px] font-black uppercase tracking-widest text-primary border-border"
-                      >
-                        {sheet.category}
-                      </Badge>
+                  <div className="relative group/sheet h-full">
+                    {/* Tombou Register Mark */}
+                    <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+                      <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover/sheet:bg-primary transition-colors duration-500" />
+                      <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover/sheet:bg-primary transition-colors duration-500" />
                     </div>
 
-                    <div className="flex-1 relative z-10 space-y-2.5">
-                      <h3 className="text-2xl text-foreground tracking-tight leading-tight group-hover:text-primary transition-colors">
-                        {sheet.title}
-                      </h3>
-                      <p className="text-xs text-muted-foreground font-semibold leading-relaxed line-clamp-2">
-                        Lihat tabel referensi cepat untuk {sheet.title}. Lengkap dengan Furigana dinamis, transliterasi romaji, dan tips pemahaman budaya Jepang.
-                      </p>
-                    </div>
+                    <Card className="h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 cursor-pointer group-hover/sheet:border-primary/45 transition-all duration-500 flex flex-col justify-between gap-6 overflow-hidden shadow-[0_4px_25px_rgba(0,0,0,0.015)]">
+                      {/* Ambient Glow Background Effect */}
+                      <div className="absolute top-0 right-0 size-32 bg-[rgba(var(--primary-rgb),0.03)] blur-[40px] rounded-full -mr-12 -mt-12 group-hover/sheet:bg-[rgba(var(--primary-rgb),0.08)] transition-all duration-700 pointer-events-none" />
 
-                    <div className="flex items-center justify-between pt-5 border-t border-[rgba(var(--border-rgb),0.1)] relative z-10">
-                      <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-primary group-hover:text-primary-foreground group-hover:bg-primary group-hover:px-3 group-hover:py-1 group-hover:rounded-full transition-all duration-300">
-                        Buka Tabel <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                      <div className="flex items-center justify-between relative z-10">
+                        <div className="size-14 rounded-lg bg-muted border border-border flex items-center justify-center text-muted-foreground group-hover/sheet:text-primary group-hover/sheet:bg-[rgba(var(--primary-rgb),0.15)] group-hover/sheet:border-[rgba(var(--primary-rgb),0.3)] transition-all duration-500 shadow-sm">
+                          {getIconForCategory(sheet.category)}
+                        </div>
+                        <Badge
+                          variant="outline"
+                          className="bg-[rgba(var(--muted-rgb),0.1)] text-[10px] font-black uppercase tracking-widest text-primary border-border rounded-[4px]"
+                        >
+                          {sheet.category}
+                        </Badge>
                       </div>
-                      <div className="text-[9px] font-bold text-muted-foreground/50 uppercase tracking-wider">
-                        {(sheet.items || []).length} Baris
+
+                      <div className="flex-1 relative z-10 space-y-2.5">
+                        <h3 className="text-2xl text-foreground tracking-tight leading-tight group-hover/sheet:text-primary transition-colors font-bold duration-500">
+                          {sheet.title}
+                        </h3>
+                        <p className="text-xs text-muted-foreground font-semibold leading-relaxed line-clamp-2">
+                          Lihat tabel referensi cepat untuk {sheet.title}. Lengkap dengan Furigana dinamis, transliterasi romaji, dan tips pemahaman budaya Jepang.
+                        </p>
                       </div>
-                    </div>
-                  </Card>
+
+                      <div className="flex items-center justify-between pt-5 border-t border-[rgba(var(--border-rgb),0.1)] relative z-10">
+                        <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-primary group-hover/sheet:text-primary-foreground group-hover/sheet:bg-primary group-hover/sheet:px-3 group-hover/sheet:py-1 group-hover/sheet:rounded-[4px] transition-all duration-300">
+                          Buka Tabel <ChevronRight size={14} className="group-hover/sheet:translate-x-1 transition-transform" />
+                        </div>
+                        <div className="text-[9px] font-bold text-muted-foreground/50 uppercase tracking-wider">
+                          {(sheet.items || []).length} Baris
+                        </div>
+                      </div>
+                    </Card>
+                  </div>
                 </Link>
               </m.div>
             ))}

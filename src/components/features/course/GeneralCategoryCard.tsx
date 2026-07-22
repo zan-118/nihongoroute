@@ -118,12 +118,11 @@ function PreviewItem({
       href={ROUTES.COURSES.LESSON(catSlug, preview.slug)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="flex items-center justify-between p-3 rounded-xl border transition-all duration-200 group/item shrink-0 min-w-[200px] sm:min-w-0 glass relative overflow-hidden pl-4"
+      className="flex items-center justify-between p-3 rounded-lg border transition-all duration-200 group/item shrink-0 min-w-[200px] sm:min-w-0 bg-card border-border/50 dark:border-white/10 relative overflow-hidden pl-4 shadow-sm"
       style={{
         // Apply dynamic glow background and border based on hover state
-        backgroundColor: hovered ? `rgba(${glowColor}, 0.08)` : `rgb(var(--background-rgb)/0.35)`,
-        borderColor: hovered ? `rgba(${glowColor}, 0.45)` : `rgb(var(--border-rgb)/0.45)`,
-        boxShadow: hovered ? `0 4px 14px rgba(${glowColor}, 0.06)` : 'none'
+        backgroundColor: hovered ? `rgba(${glowColor}, 0.08)` : undefined,
+        borderColor: hovered ? `rgba(${glowColor}, 0.45)` : undefined
       }}
       aria-label={`Materi pelajaran: ${preview.title}`}
     >
@@ -181,62 +180,52 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
   return (
     <m.div
       variants={variants}
-      className="h-full"
+      className="relative h-full group"
       whileHover={{ y: -4 }}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
     >
+      {/* Tombou Register Mark (L-shape corner mark offset 6px outside rounded-2xl) */}
+      <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+        <div 
+          className="absolute top-0 right-0 w-[14px] h-[1px] transition-colors duration-500" 
+          style={{ backgroundColor: isHovered ? `rgb(${theme.glowColor})` : `rgba(${theme.glowColor}, 0.2)` }}
+        />
+        <div 
+          className="absolute top-0 right-0 w-[1px] h-[14px] transition-colors duration-500" 
+          style={{ backgroundColor: isHovered ? `rgb(${theme.glowColor})` : `rgba(${theme.glowColor}, 0.2)` }}
+        />
+      </div>
+
       <Card
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className="flex flex-col h-full rounded-2xl md:rounded-3xl overflow-hidden group transition-all duration-300 glass relative"
+        className="flex flex-col h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl overflow-hidden group transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] relative shadow-[0_4px_25px_rgba(0,0,0,0.015)]"
         style={{
-          // Dynamic border and shadow based on hover and featured state
-          borderColor: isHovered ? `rgba(${theme.glowColor}, 0.4)` : `rgb(var(--border-rgb)/0.75)`,
-          boxShadow: isHovered
-            ? `0 20px 40px rgba(${theme.glowColor}, 0.08), 0 0 25px rgba(${theme.glowColor}, 0.03)`
-            : isFeatured
-            ? `0 8px 25px rgba(${theme.glowColor}, 0.025)`
-            : 'none'
+          borderColor: isHovered ? `rgba(${theme.glowColor}, 0.45)` : undefined
         }}
       >
-        {/* Japanese Geometric Texture Overlay */}
-        <div className="absolute inset-0 bg-asanoha opacity-[0.015] pointer-events-none group-hover:opacity-[0.035] transition-opacity duration-500" />
-
-        {/* Kanji Watermark */}
-        <div 
-          className="absolute -bottom-6 -right-6 text-[10rem] sm:text-[14rem] font-black pointer-events-none select-none opacity-[0.015] group-hover:opacity-[0.045] transition-all duration-500 font-noto-serif-jp translate-y-8 translate-x-4"
-          style={{ color: `rgb(${theme.glowColor})` }}
-        >
-          {kanjiWatermark}
-        </div>
+        {/* Japanese Geometric Texture Overlay - very subtle */}
+        <div className="absolute inset-0 bg-asanoha opacity-[0.01] pointer-events-none group-hover:opacity-[0.02] transition-opacity duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]" />
 
         <div className={`p-8 sm:p-10 flex flex-col h-full relative z-10 ${isFeatured ? 'md:p-12 lg:p-14' : ''}`}>
 
-          {/* Cyber Glow Ambient Latar Belakang — Adaptive size */}
-          <div
-            className={`absolute top-0 right-0 blur-[45px] md:blur-[55px] rounded-full -mr-10 -mt-10 pointer-events-none transition-all duration-300 opacity-20 group-hover:opacity-35 ambient-glow will-change-transform ${
-              isFeatured ? 'size-[220px] md:size-[280px]' : 'size-[140px] md:size-[200px]'
-            }`}
-            style={{ backgroundColor: `rgba(${theme.glowColor}, 0.25)` }}
-          />
-
           {/* Header */}
           <div className="flex justify-between items-start mb-5 sm:mb-8 relative z-10">
-            <div className="space-y-1 sm:space-y-2.5 min-w-0 flex-1">
+            <div className="space-y-1.5 sm:space-y-2.5 min-w-0 flex-1">
               <div className="flex items-center gap-2">
                 <div className="w-5 sm:w-8 h-[1px]" style={{ backgroundColor: `rgba(${theme.glowColor}, 0.4)` }} />
                 <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] ${theme.accentText}`}>
                   {cat.lessonCount || 0} Pelajaran • {isJlpt ? "Jalur JLPT" : "Modul Spesialis"}
                 </span>
               </div>
-              <h4 className={`font-black text-foreground tracking-tighter leading-[0.9] uppercase ${
+              <h4 className={`font-black text-foreground tracking-tighter leading-[0.9] uppercase font-sans ${
                 isFeatured ? 'text-2xl sm:text-4xl md:text-5xl lg:text-6xl' : 'text-xl sm:text-3xl md:text-4xl'
               }`}>
                 {cat.title}
               </h4>
             </div>
             <div
-              className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shadow-md transition-all duration-200 shrink-0 border ml-3 bg-background/50"
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-[8px] flex items-center justify-center shadow-sm transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] shrink-0 border ml-3 bg-background"
               style={{
                 borderColor: isHovered ? `rgba(${theme.glowColor}, 0.45)` : `rgb(var(--border-rgb)/0.55)`,
                 color: `rgb(${theme.glowColor})`
@@ -244,12 +233,12 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
               role="img"
               aria-label={`Ikon Kategori ${cat.title}`}
             >
-              <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-200 group-hover:rotate-6 group-hover:scale-105" />
+              <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105" />
             </div>
           </div>
 
           {/* Deskripsi */}
-          <p className="text-xs sm:text-sm text-muted-foreground font-semibold leading-relaxed mb-6 sm:mb-8 max-w-xl relative z-10 group-hover:text-foreground transition-colors line-clamp-2 sm:line-clamp-3">
+          <p className="text-xs sm:text-sm text-muted-foreground font-semibold leading-relaxed mb-6 sm:mb-8 max-w-xl relative z-10 group-hover:text-foreground transition-colors duration-500 line-clamp-2 sm:line-clamp-3">
             {cat.description || "Tingkatkan kompetensi penguasaan bahasa Jepang terarah melalui kurikulum premium kami."}
           </p>
 
@@ -270,17 +259,16 @@ export function GeneralCategoryCard({ cat, variants, isFeatured = false }: Gener
             </div>
           )}
 
-          {/* Tombol Aksi di Bagian Bawah */}
-          <div className="mt-auto pt-6 border-t border-border/80 relative z-10">
+          {/* Tombol Aksi di Bagian Bawah dengan Asymmetric Calligraphic Cut */}
+          <div className="mt-auto pt-6 border-t border-border/60 relative z-10">
             <Link
               href={ROUTES.COURSES.CATEGORY(cat.slug)}
-              className="inline-flex items-center gap-2.5 sm:gap-3 px-5 py-3 sm:px-7 sm:py-4 rounded-xl font-black uppercase tracking-widest text-[9px] sm:text-[10px] transition-all duration-200 active:scale-95 group/btn border shadow-sm"
+              className="inline-flex items-center gap-2.5 sm:gap-3 px-5 py-3 sm:px-7 py-3.5 rounded-lg rounded-br-none font-black uppercase tracking-widest text-[9px] sm:text-[10px] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-95 group/btn border shadow-sm"
               style={{
                 // Dynamic button background and text color based on hover state
                 backgroundColor: isHovered ? `rgb(${theme.glowColor})` : 'hsl(var(--foreground))',
                 color: isHovered ? 'hsl(var(--primary-foreground))' : 'hsl(var(--background))',
-                borderColor: isHovered ? `rgb(${theme.glowColor})` : 'transparent',
-                boxShadow: isHovered ? `0 6px 18px rgba(${theme.glowColor}, 0.18)` : 'none'
+                borderColor: isHovered ? `rgb(${theme.glowColor})` : 'transparent'
               }}
               aria-label={`Jelajahi Rute Kursus ${cat.title}`}
             >

@@ -193,8 +193,14 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
             {kanjis.map((kanji) => (
               <div
                 key={kanji.id}
-                className="flex md:grid md:grid-cols-12 items-center justify-between gap-6 px-6 py-4 bg-card/45 border border-border/80 hover:border-primary/45 hover:shadow-md transition-all duration-300 rounded-[1.5rem] group glass"
+                className="flex md:grid md:grid-cols-12 items-center justify-between gap-6 px-6 py-4 bg-card border border-border/50 dark:border-white/10 hover:border-primary/45 shadow-sm transition-all duration-500 rounded-xl group relative group/row"
               >
+                {/* Tombou Register Mark */}
+                <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+                  <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover/row:bg-primary transition-colors duration-500" />
+                  <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover/row:bg-primary transition-colors duration-500" />
+                </div>
+
                 {/* Sisi Kiri: Kanji & Arti (Flex di Seluler, Kolom Grid di Desktop) */}
                 <div className="flex-1 md:col-span-8 flex flex-col md:grid md:grid-cols-8 md:gap-4 md:items-center min-w-0 pr-2">
                   <div className="md:col-span-2 font-black text-2xl md:text-3xl text-foreground font-japanese select-all leading-none">
@@ -208,7 +214,7 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
                 {/* Sisi Ranan: Level JLPT & Tombol Tindakan */}
                 <div className="flex items-center gap-2.5 shrink-0 md:col-span-4 md:justify-end">
                   {kanji.jlptLevel && (
-                    <span className="text-[9px] md:text-[10px] font-black bg-[rgb(var(--primary-rgb)/0.1)] text-primary px-2 py-0.5 rounded-full border border-[rgb(var(--primary-rgb)/0.2)] uppercase shrink-0">
+                    <span className="text-[9px] md:text-[10px] font-black bg-[rgb(var(--primary-rgb)/0.1)] text-primary px-2 py-0.5 rounded-[4px] border border-[rgb(var(--primary-rgb)/0.2)] uppercase shrink-0">
                       {kanji.jlptLevel}
                     </span>
                   )}

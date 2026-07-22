@@ -484,7 +484,7 @@ function ImageBlock({ block }: { block: ContentBlock }) {
   if (!block.content) return null;
   return (
     <figure className="w-full mb-10">
-      <div className="relative w-full rounded-2xl md:rounded-3xl overflow-hidden border border-border/80 shadow-[0_15px_40px_rgba(var(--primary-rgb),0.1)] glass group">
+      <div className="relative w-full rounded-2xl overflow-hidden border border-border/50 dark:border-white/10 shadow-[0_4px_25px_rgba(0,0,0,0.015)] bg-card group">
         <Image
           src={block.content}
           alt={block.title || "Gambar pelajaran"}

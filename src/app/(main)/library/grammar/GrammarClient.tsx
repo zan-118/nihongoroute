@@ -235,8 +235,14 @@ export default function GrammarClient({ initialArticles = EMPTY_GRAMMAR_ARTICLES
               {paginatedArticles.map((article) => (
                 <div
                   key={article.id || article._id}
-                  className="flex md:grid md:grid-cols-12 items-center justify-between gap-6 px-6 py-4 bg-card/45 border border-border/80 hover:border-primary/45 hover:shadow-md transition-all duration-300 rounded-[1.5rem] group glass"
+                  className="flex md:grid md:grid-cols-12 items-center justify-between gap-6 px-6 py-4 bg-card border border-border/50 dark:border-white/10 hover:border-primary/45 shadow-sm transition-all duration-500 rounded-xl group relative group/row"
                 >
+                  {/* Tombou Register Mark */}
+                  <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+                    <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover/row:bg-primary transition-colors duration-500" />
+                    <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover/row:bg-primary transition-colors duration-500" />
+                  </div>
+
                   {/* Sisi Kiri: Pola Kalimat & Arti (Flex di Seluler, Kolom Grid di Desktop) */}
                   <div className="flex-1 md:col-span-7 flex flex-col md:grid md:grid-cols-7 md:gap-4 md:items-center min-w-0 pr-2">
                     <div className="md:col-span-3 font-black text-sm md:text-base text-foreground leading-snug truncate select-all">
@@ -254,7 +260,7 @@ export default function GrammarClient({ initialArticles = EMPTY_GRAMMAR_ARTICLES
 
                   {/* Sisi Kanan: Level & Tombol Tindakan */}
                   <div className="flex items-center gap-2.5 shrink-0 md:col-span-3 md:justify-end">
-                    <span className="text-[9px] md:text-[10px] font-black bg-[rgb(var(--primary-rgb)/0.1)] text-primary px-2 py-0.5 rounded-full border border-[rgb(var(--primary-rgb)/0.2)] uppercase shrink-0">
+                    <span className="text-[9px] md:text-[10px] font-black bg-[rgb(var(--primary-rgb)/0.1)] text-primary px-2 py-0.5 rounded-[4px] border border-[rgb(var(--primary-rgb)/0.2)] uppercase shrink-0">
                       {article.jlptLevel || selectedLevel}
                     </span>
                     <Link href={`/library/grammar/${article.slug || article.id || article._id}`} className="shrink-0">

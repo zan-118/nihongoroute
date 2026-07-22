@@ -121,151 +121,154 @@ export default function DashboardHero({
 
       {/* KARTU PINTAS PREMIUM (CALL TO ACTION) */}
       {/* Render review card. Change style based on due count */}
-      <div className="w-full relative">
-        {/* Glow Latar Belakang Dekoratif */}
-        <div className="absolute -top-[55px] -right-[55px] size-[233px] bg-primary/5 rounded-full blur-[89px] pointer-events-none ambient-glow will-change-transform" />
-        
+      <div className="w-full relative group">
+        {/* Tombou Register Mark (L-shape offset 6px outside rounded-2xl) */}
+        <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+          <div 
+            className="absolute top-0 right-0 w-[14px] h-[1px] transition-colors duration-500" 
+            style={{ backgroundColor: dueCount > 0 ? "var(--primary)" : "var(--success)" }}
+          />
+          <div 
+            className="absolute top-0 right-0 w-[1px] h-[14px] transition-colors duration-500" 
+            style={{ backgroundColor: dueCount > 0 ? "var(--primary)" : "var(--success)" }}
+          />
+        </div>
+
         {loading ? (
           <Skeleton className="h-[320px] w-full rounded-2xl" />
         ) : (
-        <Card className="p-[34px] md:p-[55px] rounded-2xl bg-card/20  border border-border shadow-2xl relative overflow-hidden group transition-all duration-500 hover:border-primary/40 hover:shadow-[0_0_50px_rgb(var(--primary-rgb)/0.15)]">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-750" />
-          
-          <div className="relative z-10 flex flex-col items-center text-center">
-            
-            {/* Ikon Berdenyut Interaktif (Pulsing Icon) */}
-            {/* Animate icon scale and shadow based on due count */}
-            <m.div 
-              animate={dueCount > 0 ? {
-                scale: [1, 1.05, 1],
-                boxShadow: [
-                  "0 0 0px rgb(var(--primary-rgb)/0)", 
-                  "0 0 30px rgb(var(--primary-rgb)/0.3)", 
-                  "0 0 0px rgb(var(--primary-rgb)/0)"
-                ]
-              } : {
-                scale: [1, 1.05, 1],
-                boxShadow: [
-                  "0 0 0px rgb(var(--success-rgb)/0)", 
-                  "0 0 30px rgb(var(--success-rgb)/0.3)", 
-                  "0 0 0px rgb(var(--success-rgb)/0)"
-                ]
-              }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              className={`w-[89px] h-[89px] rounded-xl flex items-center justify-center mb-[34px] border transition-all duration-500 ${
-                dueCount > 0 
-                  ? 'bg-primary/15 border-primary/30 text-primary shadow-[0_0_20px_rgb(var(--primary-rgb)/0.1)]' 
-                  : 'bg-success/15 border-success/30 text-success shadow-[0_0_20px_rgb(var(--success-rgb)/0.1)]'
-              }`}
-            >
-              {dueCount > 0 ? (
-                <BrainCircuit size={40} className="drop-shadow-[0_0_12px_rgb(var(--primary-rgb)/0.4)]" />
-              ) : (
-                <Trophy size={40} className="drop-shadow-[0_0_12px_rgb(var(--success-rgb)/0.4)]" />
-              )}
-            </m.div>
-            
-            <h3 className={`text-3xl md:text-5xl font-black tracking-tight mb-[13px] text-balance transition-colors ${dueCount > 0 ? 'text-foreground' : 'text-success'}`}>
-              {dueCount > 0 ? `Yuk review lagi, ${name || 'Pelajar'}!` : `Mantap, ${name || 'Pelajar'}! Hafalanmu masih aman.`}
-            </h3>
-            <p className="text-muted-foreground text-sm md:text-base mb-[34px] font-medium max-w-md leading-relaxed text-balance">
-              {dueCount > 0 
-                ? `Ada ${dueCount} kata yang nunggu kamu review. Semangat!` 
-                : "Semua masih fresh di ingatanmu. Mau lanjut ke materi baru?"}
-            </p>
- 
-            {/* RINGKASAN STATUS DI DALAM HERO (Mobile-Optimized) */}
-            {/* Render stats grid */}
-            <div className="grid grid-cols-3 gap-2 md:gap-[21px] mb-[34px] md:mb-[55px] w-full max-w-sm">
-              <div className="flex flex-col items-center gap-1 md:gap-2">
-                <div className="flex items-center gap-1 md:gap-1.5 text-warning transition-transform hover:scale-105">
-                  <Flame size={14} className="fill-current md:w-4 md:h-4 drop-shadow-[0_0_6px_rgb(var(--warning-rgb)/0.3)]" />
-                  <span className="text-sm md:text-lg font-black font-mono">
-                    <AnimatedCounter value={streak} />
-                  </span>
+          <Card className="p-[34px] md:p-[50px] bg-card border border-border/50 dark:border-white/10 rounded-2xl shadow-[0_4px_25px_rgba(0,0,0,0.015)] relative overflow-hidden">
+            <div className="relative z-10 flex flex-col items-center text-center">
+              
+              {/* Ikon Berdenyut Interaktif (Pulsing Icon) */}
+              <m.div 
+                animate={dueCount > 0 ? {
+                  scale: [1, 1.03, 1]
+                } : {
+                  scale: [1, 1.03, 1]
+                }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                className={`w-[80px] h-[80px] rounded-lg flex items-center justify-center mb-[34px] border transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                  dueCount > 0 
+                    ? 'bg-primary/10 border-primary/25 text-primary' 
+                    : 'bg-success/10 border-success/25 text-success'
+                }`}
+              >
+                {dueCount > 0 ? (
+                  <BrainCircuit size={36} />
+                ) : (
+                  <Trophy size={36} />
+                )}
+              </m.div>
+              
+              <h3 className={`text-3xl md:text-5xl font-bold tracking-tight mb-[13px] text-balance transition-colors ${dueCount > 0 ? 'text-foreground' : 'text-success'}`}>
+                {dueCount > 0 ? `Yuk review lagi, ${name || 'Pelajar'}!` : `Mantap, ${name || 'Pelajar'}! Hafalanmu masih aman.`}
+              </h3>
+              <p className="text-muted-foreground text-sm md:text-base mb-[34px] font-semibold max-w-md leading-relaxed text-balance">
+                {dueCount > 0 
+                  ? `Ada ${dueCount} kata yang nunggu kamu review. Semangat!` 
+                  : "Semua masih fresh di ingatanmu. Mau lanjut ke materi baru?"}
+              </p>
+   
+              {/* RINGKASAN STATUS DI DALAM HERO (Mobile-Optimized) */}
+              <div className="grid grid-cols-3 gap-2 md:gap-[21px] mb-[34px] md:mb-[55px] w-full max-w-sm">
+                <div className="flex flex-col items-center gap-1 md:gap-2">
+                  <div className="flex items-center gap-1 md:gap-1.5 text-warning transition-transform hover:scale-105">
+                    <Flame size={14} className="fill-current md:w-4 md:h-4" />
+                    <span className="text-sm md:text-lg font-black font-mono">
+                      <AnimatedCounter value={streak} />
+                    </span>
+                  </div>
+                  <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">Streak</span>
                 </div>
-                <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">Streak</span>
+                <div className="flex flex-col items-center gap-1 md:gap-2 border-x border-border/60">
+                  <div className="flex items-center gap-1 md:gap-1.5 text-primary transition-transform hover:scale-105">
+                    <Star size={14} className="fill-current md:w-4 md:h-4" />
+                    <span className="text-sm md:text-lg font-black font-mono">Lvl {level}</span>
+                  </div>
+                  <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">Level</span>
+                </div>
+                <div className="flex flex-col items-center gap-1 md:gap-2">
+                  <div className="flex items-center gap-1 md:gap-1.5 text-primary transition-transform hover:scale-105">
+                    <Target size={14} className="md:w-4 md:h-4" />
+                    <span className="text-sm md:text-lg font-black font-mono">{Math.floor(xpProgress)}%</span>
+                  </div>
+                  <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">Progres</span>
+                </div>
               </div>
-              <div className="flex flex-col items-center gap-1 md:gap-2 border-x border-border/60">
-                <div className="flex items-center gap-1 md:gap-1.5 text-primary transition-transform hover:scale-105">
-                  <Star size={14} className="fill-current md:w-4 md:h-4 drop-shadow-[0_0_6px_rgb(var(--primary-rgb)/0.3)]" />
-                  <span className="text-sm md:text-lg font-black font-mono">Lvl {level}</span>
-                </div>
-                <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">Level</span>
-              </div>
-              <div className="flex flex-col items-center gap-1 md:gap-2">
-                <div className="flex items-center gap-1 md:gap-1.5 text-primary transition-transform hover:scale-105">
-                  <Target size={14} className="md:w-4 md:h-4 drop-shadow-[0_0_6px_rgb(var(--primary-rgb)/0.3)]" />
-                  <span className="text-sm md:text-lg font-black font-mono">{Math.floor(xpProgress)}%</span>
-                </div>
-                <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">Progres</span>
+   
+              {/* Render action buttons with Asymmetric Calligraphic Cut */}
+              <div className="flex flex-col sm:flex-row gap-[13px] w-full max-w-md">
+                {dueCount > 0 ? (
+                  <>
+                    <Button asChild className="flex-1 h-[50px] bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-[0.15em] rounded-lg rounded-br-none text-[10px] pl-6 pr-4 transition-all active:scale-[0.97] group">
+                      <Link href={ROUTES.REVIEW} className="flex items-center justify-between w-full">
+                        <span>Mulai Review</span>
+                        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 dark:bg-white/15 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1">
+                          <ArrowRight size={14} />
+                        </span>
+                      </Link>
+                    </Button>
+                    <Button asChild variant="outline" className="flex-1 h-[50px] bg-background border border-border/80 hover:border-primary/50 rounded-lg rounded-br-none text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-300 active:scale-[0.97] group">
+                      <Link href="/review?mode=quick" className="flex items-center justify-center gap-2">
+                        <Zap size={14} className="text-primary" />
+                        <span>Kuis Kilat</span>
+                      </Link>
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button asChild className="flex-1 h-[50px] bg-foreground text-background hover:bg-foreground/90 font-black uppercase tracking-[0.15em] rounded-lg rounded-br-none text-[10px] pl-6 pr-4 transition-all active:scale-[0.97] group">
+                      <Link href="/courses" className="flex items-center justify-between w-full">
+                        <span>Mulai Pelajaran</span>
+                        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-background/10 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1">
+                          <BookMarked size={14} />
+                        </span>
+                      </Link>
+                    </Button>
+                    <Button asChild variant="outline" className="flex-1 h-[50px] bg-background border border-border/80 hover:border-primary/50 rounded-lg rounded-br-none text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-300 active:scale-[0.97] group">
+                      <Link href="/review?mode=quick" className="flex items-center justify-center gap-2">
+                        <Zap size={14} className="text-primary" />
+                        <span>Kuis Kilat</span>
+                      </Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
- 
-            {/* Render action buttons */}
-            <div className="flex flex-col sm:flex-row gap-[13px] w-full max-w-md">
-              {dueCount > 0 ? (
-                <>
-                  <Button asChild className="flex-1 h-[55px] bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-[0.15em] rounded-lg text-[10px] transition-all shadow-lg shadow-primary/20 hover:shadow-primary/30 active:scale-[0.98]">
-                    <Link href={ROUTES.REVIEW}>
-                      Mulai Review <ArrowRight size={14} className="ml-2" />
-                    </Link>
-                  </Button>
-                  <Button asChild variant="outline" className="flex-1 h-[55px] bg-card/50  border-border hover:bg-card hover:border-primary/30 rounded-lg text-[10px] font-black uppercase tracking-[0.15em] transition-all active:scale-[0.98]">
-                    <Link href="/review?mode=quick">
-                      <Zap size={14} className="mr-2 text-primary" /> Kuis Kilat
-                    </Link>
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button asChild className="flex-1 h-[55px] bg-foreground text-background hover:bg-foreground/90 font-black uppercase tracking-[0.15em] rounded-lg text-[10px] transition-all shadow-xl active:scale-[0.98]">
-                    <Link href="/courses">
-                      Mulai Pelajaran <BookMarked size={14} className="ml-2" />
-                    </Link>
-                  </Button>
-                  <Button asChild variant="outline" className="flex-1 h-[55px] bg-card/50  border-border hover:bg-card hover:border-primary/30 rounded-lg text-[10px] font-black uppercase tracking-[0.15em] transition-all active:scale-[0.98]">
-                    <Link href="/review?mode=quick">
-                      <Zap size={14} className="mr-2 text-primary" /> Kuis Kilat
-                    </Link>
-                  </Button>
-                </>
-              )}
-            </div>
-          </div>
-        </Card>
+          </Card>
         )}
         
         {/* WIDGET LANJUT BELAJAR */}
-        {/* Render continue learning widget */}
         {!loading && (
           <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="mt-[55px]"
+            transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.5 }}
+            className="mt-[55px] w-full"
           >
             <ContinueLearning courseMetadata={courseMetadata} />
           </m.div>
         )}
         
         {/* TIPS BELAJAR CERDAS */}
-        {/* Render daily tip */}
         {!loading && (
           <m.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1 }}
-            className="mt-[34px] p-[21px] rounded-xl bg-card/10  border border-border flex gap-[21px] items-center group hover:bg-card/20 transition-all duration-300 shadow-none"
+            className="mt-[34px] w-full"
           >
-            <div className="shrink-0 size-[34px] rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-              <Sparkles size={16} />
-            </div>
-            <div>
-              <h4 className="text-[10px] text-primary uppercase tracking-[0.2em] mb-1">Tips Hari Ini</h4>
-              <p className="text-xs text-muted-foreground leading-relaxed font-medium">
-                Usahakan review sebelum jam 10 malam biar bonus XP-mu nggak hilang!
-              </p>
+            <div className="p-5 rounded-lg bg-card border border-border/50 dark:border-white/10 flex gap-[21px] items-center group shadow-[0_2px_12px_rgba(0,0,0,0.01)]">
+              <div className="shrink-0 size-[34px] rounded-lg bg-primary/10 flex items-center justify-center text-primary transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+                <Sparkles size={16} />
+              </div>
+              <div>
+                <h4 className="text-[10px] text-primary uppercase tracking-[0.2em] mb-1 font-bold">Tips Hari Ini</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed font-semibold">
+                  Usahakan review sebelum jam 10 malam biar bonus XP-mu nggak hilang!
+                </p>
+              </div>
             </div>
           </m.div>
         )}

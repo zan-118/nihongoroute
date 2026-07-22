@@ -95,7 +95,7 @@ export default function SettingsClient() {
       >
         <header className="mb-12 px-1">
           <m.div variants={itemVariants}>
-            <Badge variant="outline" className="glass bg-background/20 text-primary border-primary/30 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6 flex items-center gap-2 w-fit shadow-[0_0_20px_rgb(var(--primary-rgb)/0.1)]">
+            <Badge variant="outline" className="bg-primary/10 text-primary border border-primary/20 px-4 py-1.5 rounded-[4px] text-[10px] font-black uppercase tracking-[0.2em] mb-6 flex items-center gap-2 w-fit shadow-sm">
               <SettingsIcon size={14} className="animate-spin-slow" /> Konfigurasi Sistem
             </Badge>
           </m.div>
@@ -136,9 +136,15 @@ export default function SettingsClient() {
           />
 
           {/* DANGER ZONE INFO */}
-          <m.div variants={itemVariants}>
-            <Card className="bg-destructive/[0.02] border border-destructive/10 rounded-[2rem] p-6 md:p-8 shadow-lg flex flex-col md:flex-row items-center md:items-start gap-6 group hover:bg-destructive/[0.04] transition-all duration-300">
-              <div className="size-14 shrink-0 rounded-lg bg-destructive/10 flex items-center justify-center border border-destructive/20 shadow-lg group-hover:scale-110 transition-transform">
+          <m.div variants={itemVariants} className="relative group">
+            {/* Tombou Register Mark */}
+            <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+              <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-destructive/30 group-hover:bg-destructive transition-colors duration-500" />
+              <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-destructive/30 group-hover:bg-destructive transition-colors duration-500" />
+            </div>
+
+            <Card className="bg-destructive/[0.02] border border-destructive/20 rounded-2xl p-6 md:p-8 shadow-sm flex flex-col md:flex-row items-center md:items-start gap-6 group hover:bg-destructive/[0.04] transition-all duration-300">
+              <div className="size-14 shrink-0 rounded-lg bg-destructive/10 flex items-center justify-center border border-destructive/20 shadow-md group-hover:scale-105 transition-transform">
                 <ShieldAlert size={28} className="text-destructive" />
               </div>
               <div className="flex-1 text-center md:text-left">
@@ -152,9 +158,9 @@ export default function SettingsClient() {
 
           {/* MOBILE EXTRA NAV */}
           <m.div variants={itemVariants} className="md:hidden">
-            <Card className="bg-background/[0.04]  border border-border rounded-[2rem] p-6 shadow-lg">
+            <Card className="bg-card border border-border/50 dark:border-white/10 rounded-2xl p-6 shadow-sm">
               <h3 className="text-primary uppercase tracking-[0.2em] text-[10px] mb-4">Navigasi Lanjutan</h3>
-              <Button asChild variant="ghost" className="w-full h-14 bg-background/[0.03] border border-border justify-start hover:bg-primary/10 hover:text-primary rounded-lg font-black uppercase tracking-widest text-[10px] transition-all">
+              <Button asChild variant="ghost" className="w-full h-14 bg-background/50 border border-border justify-start hover:bg-primary/10 hover:text-primary rounded-lg rounded-br-none font-black uppercase tracking-widest text-[10px] transition-all">
                 <Link href="/library">
                   <Layers size={18} className="mr-3 text-primary" /> Buka Perpustakaan
                 </Link>

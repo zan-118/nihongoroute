@@ -17,6 +17,7 @@ import { OfflineAudio } from "@/components/ui/OfflineAudio";
 import { Button } from "@/components/ui/button";
 import { useLineTTS } from "@/components/features/listening/hooks/useLineTTS";
 import { cn } from "@/lib/utils";
+import { Card } from "@/components/ui/card";
 
 // ======================
 // ANTARMUKA / TIPE DATA
@@ -148,7 +149,14 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
           const isCurrentPlaying = activeDialogId === dialogId && isPlayingPlaylist;
 
           return (
-            <div key={dialogId} className="p-6 md:p-10 border border-border/80 rounded-2xl md:rounded-3xl bg-card/35 shadow-[0_0_40px_rgba(var(--secondary-rgb),0.02)] glass relative overflow-hidden">
+            <div key={dialogId} className="relative group/dialog">
+              {/* Tombou Register Mark */}
+              <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+                <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-secondary/20 group-hover/dialog:bg-secondary transition-colors duration-500" />
+                <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-secondary/20 group-hover/dialog:bg-secondary transition-colors duration-500" />
+              </div>
+
+              <Card className="p-6 md:p-10 border border-border/50 dark:border-white/10 rounded-2xl bg-card shadow-[0_4px_25px_rgba(0,0,0,0.015)] relative overflow-hidden">
               {/* Header: media + title/audio side-by-side */}
               <div className={`flex flex-col ${(l.imageUrl || l.videoUrl) ? 'md:flex-row' : ''} gap-6 mb-8 border-b border-border/50 pb-8`}>
                 {/* MEDIA HERO MENYIMAK — ditaruh di samping, bukan bawah */}
@@ -309,6 +317,7 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
                 })}
               </div>
             )}
+            </Card>
           </div>
         );
       })}

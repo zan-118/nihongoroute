@@ -363,93 +363,101 @@ export default function ExamsClient({ exams }: { exams: ExamData[] }) {
                   href={ROUTES.EXAMS.SESSION(exam.slug || exam.id || "")}
                   className="block h-full"
                 >
-                  <Card className="p-6 md:p-8 group hover:border-destructive/40 hover:bg-destructive/[0.02] transition-all duration-200 flex flex-col h-full relative overflow-hidden cursor-pointer bg-card rounded-lg border-border hover:shadow-lg">
-
-                    <div className="flex justify-between items-start mb-8 md:mb-10 relative z-10">
-                      <div className="flex flex-wrap gap-2">
-                        <Badge
-                          variant="outline"
-                          className="px-3 py-1.5 text-xs md:text-xs font-bold uppercase tracking-widest text-destructive border-destructive/30 bg-muted rounded-lg h-auto"
-                        >
-                          {exam.levelCode || "GENERAL"}
-                        </Badge>
-                        {(() => {
-                          const sectionType = getExamSectionType(exam);
-                          let badgeText = "Simulasi";
-                          let badgeColorClass = "text-destructive border-destructive/30 bg-destructive/5";
-
-                          // Determine badge color and text based on section type
-                          if (sectionType === "moji-goi") {
-                            badgeText = "Moji-Goi";
-                            badgeColorClass = "text-warning border-warning/30 bg-warning/5";
-                          } else if (sectionType === "bunpou") {
-                            badgeText = "Bunpou";
-                            badgeColorClass = "text-secondary border-secondary/30 bg-secondary/5";
-                          } else if (sectionType === "reading") {
-                            badgeText = "Dokkai";
-                            badgeColorClass = "text-success border-success/30 bg-success/5";
-                          } else if (sectionType === "listening") {
-                            badgeText = "Choukai";
-                            badgeColorClass = "text-primary border-primary/30 bg-primary/5";
-                          }
-
-                          return (
-                            <Badge
-                              variant="outline"
-                              className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-lg h-auto ${badgeColorClass}`}
-                            >
-                              {badgeText}
-                            </Badge>
-                          );
-                        })()}
-                      </div>
-                      <div className="w-10 h-10 md:w-11 md:h-11 bg-muted border border-border rounded-xl flex items-center justify-center text-muted-foreground group-hover:bg-destructive group-hover:text-destructive-foreground group-hover:border-none transition-all duration-300">
-                        <Activity size={18} />
-                      </div>
+                  <div className="relative group h-full">
+                    {/* Tombou Register Mark (L-shape offset 6px outside rounded-2xl) */}
+                    <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+                      <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-destructive/20 group-hover:bg-destructive transition-colors duration-500" />
+                      <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-destructive/20 group-hover:bg-destructive transition-colors duration-500" />
                     </div>
 
-                    <h2 className="text-2xl md:text-3xl text-foreground group-hover:text-destructive dark:group-hover:text-destructive transition-colors uppercase tracking-tight mb-4 leading-tight relative z-10">
-                      {exam.title}
-                    </h2>
+                    <Card className="p-6 md:p-8 bg-card border border-border/50 dark:border-white/10 rounded-2xl group hover:bg-destructive/[0.01] hover:border-destructive/40 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] flex flex-col h-full relative overflow-hidden cursor-pointer shadow-[0_4px_25px_rgba(0,0,0,0.015)]">
 
-                    {exam.description && (
-                      <p className="text-muted-foreground text-xs md:text-sm font-medium mb-8 line-clamp-2 relative z-10 group-hover:text-foreground transition-colors">
-                        {exam.description}
-                      </p>
-                    )}
+                      <div className="flex justify-between items-start mb-8 md:mb-10 relative z-10">
+                        <div className="flex flex-wrap gap-2">
+                          <Badge
+                            variant="outline"
+                            className="px-3 py-1.5 text-xs md:text-xs font-bold uppercase tracking-widest text-destructive border-destructive/30 bg-muted rounded-[4px] h-auto"
+                          >
+                            {exam.levelCode || "GENERAL"}
+                          </Badge>
+                          {(() => {
+                            const sectionType = getExamSectionType(exam);
+                            let badgeText = "Simulasi";
+                            let badgeColorClass = "text-destructive border-destructive/30 bg-destructive/5";
 
-                    <div className="mt-auto relative z-10">
-                      <div className="grid grid-cols-2 gap-3 mb-8 md:mb-10">
-                        <div className="p-4 flex flex-col gap-1 items-center text-center rounded-xl bg-muted border border-border group-hover:border-destructive/20 transition-all duration-300">
-                          <Clock size={16} className="text-destructive mb-1" />
-                          <span className="text-[8px] md:text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                            Waktu
-                          </span>
-                          <span className="font-bold text-foreground text-base md:text-xl">
-                            {exam.timeLimit}m
-                          </span>
+                            // Determine badge color and text based on section type
+                            if (sectionType === "moji-goi") {
+                              badgeText = "Moji-Goi";
+                              badgeColorClass = "text-warning border-warning/30 bg-warning/5";
+                            } else if (sectionType === "bunpou") {
+                              badgeText = "Bunpou";
+                              badgeColorClass = "text-secondary border-secondary/30 bg-secondary/5";
+                            } else if (sectionType === "reading") {
+                              badgeText = "Dokkai";
+                              badgeColorClass = "text-success border-success/30 bg-success/5";
+                            } else if (sectionType === "listening") {
+                              badgeText = "Choukai";
+                              badgeColorClass = "text-primary border-primary/30 bg-primary/5";
+                            }
+
+                            return (
+                              <Badge
+                                variant="outline"
+                                className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-[4px] h-auto ${badgeColorClass}`}
+                              >
+                                {badgeText}
+                              </Badge>
+                            );
+                          })()}
                         </div>
-                        <div className="p-4 flex flex-col gap-1 items-center text-center rounded-xl bg-muted border border-border group-hover:border-destructive/20 transition-all duration-300">
-                          <Target size={16} className="text-success mb-1" />
-                          <span className="text-[8px] md:text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                            Passing
-                          </span>
-                          <span className="font-bold text-success text-base md:text-xl">
-                            {exam.passingScore}p
-                          </span>
+                        <div className="w-10 h-10 md:w-11 md:h-11 bg-muted border border-border/80 rounded-lg flex items-center justify-center text-muted-foreground group-hover:bg-destructive group-hover:text-destructive-foreground group-hover:border-none transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+                          <Activity size={18} />
                         </div>
                       </div>
 
-                      <div className="w-full bg-muted border border-border p-4 md:p-5 flex items-center justify-between group-hover:border-destructive/40 group-hover:bg-destructive group-hover:text-destructive-foreground transition-all duration-300 rounded-xl shadow-sm">
-                        <span className="text-xs md:text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-destructive-foreground transition-colors">
-                          Mulai Ujian
-                        </span>
-                        <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-foreground/10 flex items-center justify-center group-hover:bg-destructive-foreground/10 transition-all duration-300">
-                           <ChevronRight size={16} />
+                      <h2 className="text-2xl md:text-3xl text-foreground group-hover:text-destructive dark:group-hover:text-destructive transition-colors uppercase tracking-tight mb-4 leading-tight relative z-10 font-bold">
+                        {exam.title}
+                      </h2>
+
+                      {exam.description && (
+                        <p className="text-muted-foreground text-xs md:text-sm font-semibold mb-8 line-clamp-2 relative z-10 group-hover:text-foreground transition-colors">
+                          {exam.description}
+                        </p>
+                      )}
+
+                      <div className="mt-auto relative z-10">
+                        <div className="grid grid-cols-2 gap-3 mb-8 md:mb-10">
+                          <div className="p-4 flex flex-col gap-1 items-center text-center rounded-lg bg-muted border border-border/60 group-hover:border-destructive/20 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+                            <Clock size={16} className="text-destructive mb-1" />
+                            <span className="text-[8px] md:text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                              Waktu
+                            </span>
+                            <span className="font-bold text-foreground text-base md:text-xl">
+                              {exam.timeLimit}m
+                            </span>
+                          </div>
+                          <div className="p-4 flex flex-col gap-1 items-center text-center rounded-lg bg-muted border border-border/60 group-hover:border-destructive/20 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+                            <Target size={16} className="text-success mb-1" />
+                            <span className="text-[8px] md:text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                              Passing
+                            </span>
+                            <span className="font-bold text-success text-base md:text-xl">
+                              {exam.passingScore}p
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="w-full bg-muted border border-border/80 p-4 md:p-5 flex items-center justify-between group-hover:border-destructive/40 group-hover:bg-destructive group-hover:text-destructive-foreground transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] rounded-lg rounded-br-none shadow-sm">
+                          <span className="text-xs md:text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-destructive-foreground transition-colors">
+                            Mulai Ujian
+                          </span>
+                          <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-foreground/10 flex items-center justify-center group-hover:bg-destructive-foreground/15 group-hover:translate-x-1 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+                             <ChevronRight size={16} />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </Card>
+                    </Card>
+                  </div>
                 </Link>
               </m.div>
             ))

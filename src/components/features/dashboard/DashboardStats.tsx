@@ -99,44 +99,52 @@ export default function DashboardStats({
         {loading ? (
           <Skeleton className="h-[250px] w-full rounded-2xl" />
         ) : (
-          <Card className="h-full bg-card/40 backdrop-blur-xl border border-border rounded-[2rem] p-6 md:p-8 flex flex-col justify-center relative overflow-hidden group transition-all duration-300 hover:border-success/30 shadow-lg">
-            <div className="absolute top-0 right-0 size-64 bg-success/10 blur-[80px] rounded-full pointer-events-none ambient-glow will-change-transform" />
-            <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
-              <div>
-                <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-xs md:text-xs mb-2">
-                  Level Kamu
-                </h2>
-                <div className="flex items-baseline gap-3">
-                  <span className="text-5xl md:text-6xl font-black text-foreground tracking-tighter">
-                    {progress.level}
+          <div className="relative group h-full">
+            {/* Tombou Register Mark */}
+            <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+              <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-success/20 group-hover:bg-success transition-colors duration-500" />
+              <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-success/20 group-hover:bg-success transition-colors duration-500" />
+            </div>
+
+            <Card className="h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl p-6 md:p-8 flex flex-col justify-center relative overflow-hidden group shadow-[0_4px_25px_rgba(0,0,0,0.015)] group-hover:border-success/45 transition-colors duration-500">
+              <div className="absolute top-0 right-0 size-64 bg-success/10 blur-[80px] rounded-full pointer-events-none ambient-glow will-change-transform" />
+              <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
+                <div>
+                  <h2 className="text-muted-foreground font-bold uppercase tracking-widest text-xs md:text-xs mb-2">
+                    Level Kamu
+                  </h2>
+                  <div className="flex items-baseline gap-3">
+                    <span className="text-5xl md:text-6xl font-black text-foreground tracking-tighter">
+                      {progress.level}
+                    </span>
+                    <Badge className="bg-success/10 text-success border-success/20 px-3 py-1 font-bold uppercase tracking-widest text-[8px] md:text-xs shadow-none">
+                      Status Belajar
+                    </Badge>
+                  </div>
+                </div>
+                <div className="text-left md:text-right">
+                  <span className="text-primary font-mono font-black text-3xl">
+                    {progress.xp} <span className="text-sm opacity-70">XP</span>
                   </span>
-                  <Badge className="bg-success/10 text-success border-success/20 px-3 py-1 font-bold uppercase tracking-widest text-[8px] md:text-xs shadow-none">
-                    Status Belajar
-                  </Badge>
                 </div>
               </div>
-              <div className="text-left md:text-right">
-                <span className="text-primary font-mono font-black text-3xl">
-                  {progress.xp} <span className="text-sm opacity-70">XP</span>
-                </span>
+              
+              <div className="relative z-10">
+                <div className="flex justify-between text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">
+                  <span>Progres ke Level {progress.level + 1}</span>
+                  <span>{xpProgress}%</span>
+                </div>
+                <Progress
+                  value={xpProgress}
+                  className="h-3 bg-muted border border-border relative overflow-hidden"
+                  indicatorClassName="bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)),rgb(var(--brand-violet-rgb)))] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent"
+                />
+                <p className="mt-4 text-xs text-muted-foreground uppercase font-bold tracking-widest font-mono text-center md:text-right">
+                  Kumpulkan <span className="text-foreground">{xpNeeded} XP</span> lagi untuk naik level!
+                </p>
               </div>
-            </div>
-            
-            <div className="relative z-10">
-              <div className="flex justify-between text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">
-                <span>Progres ke Level {progress.level + 1}</span>
-                <span>{xpProgress}%</span>
-              </div>
-              <Progress
-                value={xpProgress}
-                className="h-3 bg-muted border border-border relative overflow-hidden"
-                indicatorClassName="bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)),rgb(var(--brand-violet-rgb)))] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent"
-              />
-              <p className="mt-4 text-xs text-muted-foreground uppercase font-bold tracking-widest font-mono text-center md:text-right">
-                Kumpulkan <span className="text-foreground">{xpNeeded} XP</span> lagi untuk naik level!
-              </p>
-            </div>
-          </Card>
+            </Card>
+          </div>
         )}
       </m.div>
 
@@ -149,20 +157,28 @@ export default function DashboardStats({
           </>
         ) : (
           <>
-            <Card className="h-[140px] bg-card/40 backdrop-blur-xl border border-border rounded-[1.5rem] p-5 flex flex-col justify-between group overflow-hidden relative transition-all duration-300 hover:border-warning/30 hover:shadow-[0_0_30px_rgb(var(--warning-rgb)/0.1)] shadow-lg">
-              <h3 className="text-warning/60 font-bold uppercase tracking-widest text-xs">
-                Semangat Belajar
-              </h3>
-              <div className="flex items-end gap-2 mt-2">
-                <span className="text-4xl font-black text-warning tracking-tighter">
-                  {progress.streak}
-                </span>
-                <span className="text-warning/80 font-bold uppercase tracking-widest text-xs mb-1">Hari</span>
+            <div className="relative group h-[140px]">
+              {/* Tombou Register Mark */}
+              <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+                <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-warning/20 group-hover:bg-warning transition-colors duration-500" />
+                <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-warning/20 group-hover:bg-warning transition-colors duration-500" />
               </div>
-              <div className="absolute -bottom-4 -right-4 text-warning/10 rotate-12 group-hover:scale-125 transition-transform duration-700">
-                <Flame size={80} />
-              </div>
-            </Card>
+
+              <Card className="h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl p-5 flex flex-col justify-between group overflow-hidden relative shadow-[0_4px_25px_rgba(0,0,0,0.015)] group-hover:border-warning/45 transition-colors duration-500">
+                <h3 className="text-warning/60 font-bold uppercase tracking-widest text-xs">
+                  Semangat Belajar
+                </h3>
+                <div className="flex items-end gap-2 mt-2">
+                  <span className="text-4xl font-black text-warning tracking-tighter">
+                    {progress.streak}
+                  </span>
+                  <span className="text-warning/80 font-bold uppercase tracking-widest text-xs mb-1">Hari</span>
+                </div>
+                <div className="absolute -bottom-4 -right-4 text-warning/10 rotate-12 group-hover:scale-125 transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]">
+                  <Flame size={80} />
+                </div>
+              </Card>
+            </div>
             
             <StreakFreezeCard />
           </>
@@ -192,36 +208,44 @@ export default function DashboardStats({
              const percentage = total > 0 ? (completed / total) * 100 : 0;
              
              return (
-               <Card key={cat._id} className="bg-background/[0.03] backdrop-blur-xl border border-border p-6 rounded-[2rem] group hover:border-primary/40 hover:shadow-[0_0_25px_rgb(var(--primary-rgb)/0.05)] transition-all duration-500 shadow-none">
-                  <div className="flex items-center gap-4 mb-5">
-                    <div className="size-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
-                      {percentage === 100 ? <CheckCircle2 size={24} /> : <BookOpen size={24} />}
+               <div key={cat._id} className="relative group">
+                 {/* Tombou Register Mark */}
+                 <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+                   <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+                   <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+                 </div>
+
+                 <Card className="bg-card border border-border/50 dark:border-white/10 p-5 rounded-2xl group shadow-[0_4px_25px_rgba(0,0,0,0.015)] group-hover:border-primary/45 transition-colors duration-500">
+                    <div className="flex items-center gap-4 mb-5">
+                      <div className="size-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+                        {percentage === 100 ? <CheckCircle2 size={24} /> : <BookOpen size={24} />}
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-sm font-black uppercase tracking-tight line-clamp-1">{cat.title}</h4>
+                        <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
+                          {completed} / {total} Pelajaran
+                        </p>
+                      </div>
+                      <div className="text-lg font-black text-primary font-mono">
+                        {Math.round(percentage)}%
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <h4 className="text-sm font-black uppercase tracking-tight line-clamp-1">{cat.title}</h4>
-                      <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
-                        {completed} / {total} Pelajaran
-                      </p>
+                    
+                    <div className="relative h-2 w-full bg-background/5 rounded-full overflow-hidden border border-border">
+                      <m.div 
+                        initial={{ width: 0 }}
+                        whileInView={{ width: `${percentage}%` }}
+                        transition={{ duration: 1, ease: "easeOut" }}
+                        viewport={{ once: true }}
+                        className={`h-full rounded-full relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent ${
+                          percentage === 100 
+                            ? 'bg-success shadow-[0_0_10px_rgb(var(--success-rgb)/0.5)]' 
+                            : 'bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)),rgb(var(--brand-violet-rgb)))] shadow-[0_0_10px_rgb(var(--brand-cyan-rgb)/0.4)]'
+                        }`}
+                      />
                     </div>
-                    <div className="text-lg font-black text-primary font-mono">
-                      {Math.round(percentage)}%
-                    </div>
-                  </div>
-                  
-                  <div className="relative h-2 w-full bg-background/5 rounded-full overflow-hidden border border-border">
-                    <m.div 
-                      initial={{ width: 0 }}
-                      whileInView={{ width: `${percentage}%` }}
-                      transition={{ duration: 1, ease: "easeOut" }}
-                      viewport={{ once: true }}
-                      className={`h-full rounded-full relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent ${
-                        percentage === 100 
-                          ? 'bg-success shadow-[0_0_10px_rgb(var(--success-rgb)/0.5)]' 
-                          : 'bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)),rgb(var(--brand-violet-rgb)))] shadow-[0_0_10px_rgb(var(--brand-cyan-rgb)/0.4)]'
-                      }`}
-                    />
-                  </div>
-               </Card>
+                  </Card>
+               </div>
              );
           })}
         </div>

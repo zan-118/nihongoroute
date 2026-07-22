@@ -14,6 +14,7 @@ import Link from "next/link";
 import { BookOpen, ChevronRight, GraduationCap, ChevronLeft, ChevronsLeft, ChevronsRight, Search, Loader2, Clock, CheckCircle2 } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { ROUTES } from "@/lib/routes";
@@ -156,77 +157,85 @@ export default function ReadingListClient({ initialData }: ReadingListClientProp
             );
 
             return (
-            <div
-              key={material.slug}
-              className="transform hover:-translate-y-1 transition-all duration-300"
-              // Optimize render performance. Use content-visibility.
-              style={{ 
-                contentVisibility: 'auto', 
-                containIntrinsicSize: '0 200px',
-              }}
-            >
-              <Link href={ROUTES.LIBRARY.READING(material.slug)}>
-                <div className="group h-full p-8 md:p-10 rounded-[2.5rem] bg-card/35  border border-border hover:border-primary/45 shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)] hover:shadow-[0_20px_50px_rgba(var(--primary-rgb),0.1)] transition-all duration-500 relative overflow-hidden flex flex-col justify-between cursor-pointer glass">
-                  {/* Efek Kilau saat Melayang */}
-                  <div className="absolute top-0 right-0 size-32 bg-primary/5 blur-[50px] rounded-full -mr-16 -mt-16 group-hover:bg-primary/10 transition-all duration-500" />
-                  
-                  <div className="space-y-6 relative z-10 flex-1 flex flex-col justify-between">
-                    <div className="flex items-center justify-between">
-                      <div className="flex flex-wrap items-center gap-2">
-                        {(material.jlpt_level || material.difficulty) && (
-                          <Badge variant="outline" className="rounded-full border-primary/20 bg-primary/10 text-primary">
-                            {material.jlpt_level || material.difficulty}
-                          </Badge>
-                        )}
-                        <Badge
-                          variant="outline"
-                          className={cn(
-                            "rounded-full",
-                            isCompleted
-                              ? "border-success/25 bg-success/10 text-success"
-                              : "border-border bg-muted/30 text-muted-foreground"
-                          )}
-                        >
-                          {isCompleted ? (
-                            <CheckCircle2 size={12} aria-hidden="true" className="mr-1.5" />
+              <div
+                key={material.slug}
+                className="transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] h-full"
+                // Optimize render performance. Use content-visibility.
+                style={{ 
+                  contentVisibility: 'auto', 
+                  containIntrinsicSize: '0 200px',
+                }}
+              >
+                <Link href={ROUTES.LIBRARY.READING(material.slug)}>
+                  <div className="relative group/material h-full">
+                    {/* Tombou Register Mark */}
+                    <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+                      <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover/material:bg-primary transition-colors duration-500" />
+                      <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover/material:bg-primary transition-colors duration-500" />
+                    </div>
+
+                    <Card className="h-full p-8 md:p-10 rounded-2xl bg-card border border-border/50 dark:border-white/10 shadow-[0_4px_25px_rgba(0,0,0,0.015)] group-hover/material:border-primary/45 transition-all duration-500 relative overflow-hidden flex flex-col justify-between cursor-pointer">
+                      {/* Efek Kilau saat Melayang */}
+                      <div className="absolute top-0 right-0 size-32 bg-primary/5 blur-[50px] rounded-full -mr-16 -mt-16 group-hover/material:bg-primary/10 transition-all duration-700" />
+                      
+                      <div className="space-y-6 relative z-10 flex-1 flex flex-col justify-between">
+                        <div className="flex items-center justify-between">
+                          <div className="flex flex-wrap items-center gap-2">
+                            {(material.jlpt_level || material.difficulty) && (
+                              <Badge variant="outline" className="rounded-[4px] border-primary/20 bg-primary/10 text-primary">
+                                {material.jlpt_level || material.difficulty}
+                              </Badge>
+                            )}
+                            <Badge
+                              variant="outline"
+                              className={cn(
+                                "rounded-[4px]",
+                                isCompleted
+                                  ? "border-success/25 bg-success/10 text-success"
+                                  : "border-border bg-muted/30 text-muted-foreground"
+                              )}
+                            >
+                              {isCompleted ? (
+                                <CheckCircle2 size={12} aria-hidden="true" className="mr-1.5" />
+                              ) : null}
+                              {isCompleted ? "Selesai" : "Belum mulai"}
+                            </Badge>
+                          </div>
+                          <div className="p-2 rounded-lg bg-background/5 border border-border group-hover/material:bg-primary/10 group-hover/material:border-primary/20 transition-all duration-700">
+                            <GraduationCap size={16} className="text-muted-foreground group-hover/material:text-primary transition-colors duration-500" />
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                            {material.category || "General Reading"}
+                          </span>
+                          <h3 className="text-2xl text-foreground leading-tight group-hover/material:text-primary transition-colors duration-500 font-bold line-clamp-2">
+                            {material.title}
+                          </h3>
+                        </div>
+                      </div>
+
+                      <div className="mt-8 flex items-center justify-between relative z-10">
+                        <div className="flex flex-col gap-1">
+                          <span className="text-xs font-bold text-muted-foreground group-hover/material:text-foreground transition-colors duration-500">
+                            {isCompleted ? "Baca Ulang" : "Mulai Membaca"}
+                          </span>
+                          {material.estimated_minutes ? (
+                            <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+                              <Clock size={12} aria-hidden="true" />
+                              {material.estimated_minutes} menit
+                            </span>
                           ) : null}
-                          {isCompleted ? "Selesai" : "Belum mulai"}
-                        </Badge>
+                        </div>
+                        <div className="size-10 rounded-lg flex items-center justify-center bg-background/5 border border-border group-hover/material:bg-primary group-hover/material:text-primary-foreground group-hover/material:border-transparent transition-all duration-700">
+                          <ChevronRight size={20} />
+                        </div>
                       </div>
-                      <div className="p-2 rounded-xl bg-background/5 border border-border group-hover:bg-primary/10 group-hover:border-primary/20 transition-all duration-300">
-                        <GraduationCap size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                        {material.category || "General Reading"}
-                      </span>
-                      <h3 className="text-2xl text-foreground leading-tight group-hover:text-primary transition-colors line-clamp-2">
-                        {material.title}
-                      </h3>
-                    </div>
+                    </Card>
                   </div>
-
-                  <div className="mt-8 flex items-center justify-between relative z-10">
-                    <div className="flex flex-col gap-1">
-                      <span className="text-xs font-bold text-muted-foreground group-hover:text-foreground transition-colors">
-                        {isCompleted ? "Baca Ulang" : "Mulai Membaca"}
-                      </span>
-                      {material.estimated_minutes ? (
-                        <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
-                          <Clock size={12} aria-hidden="true" />
-                          {material.estimated_minutes} menit
-                        </span>
-                      ) : null}
-                    </div>
-                    <div className="size-10 rounded-full flex items-center justify-center bg-background/5 border border-border group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-transparent transition-all duration-300">
-                      <ChevronRight size={20} />
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </div>
+                </Link>
+              </div>
             );
           })}
         </div>

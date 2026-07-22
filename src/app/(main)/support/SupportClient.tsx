@@ -337,7 +337,12 @@ export default function SupportClient() {
         </div>
 
         {/* 1. INTERACTIVE TARGET BAR */}
-        <Card className="glass border border-border/80 rounded-[3rem] p-8 sm:p-12 mb-12 sm:mb-16 shadow-xl relative overflow-hidden group">
+        <div className="relative group mb-12 sm:mb-16">
+          <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+            <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
+            <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
+          </div>
+          <Card className="bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 sm:p-12 shadow-[0_4px_25px_rgba(0,0,0,0.015)] relative overflow-hidden">
           <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese">
             TARGET
           </div>
@@ -408,9 +413,15 @@ export default function SupportClient() {
             </div>
           </div>
         </Card>
+      </div>
 
         {/* Alokasi Dana (Transparansi) */}
-        <Card className="glass border border-border/80 rounded-[3rem] p-8 sm:p-12 md:p-16 mb-12 sm:mb-16 shadow-xl relative overflow-hidden group">
+        <div className="relative group mb-12 sm:mb-16">
+          <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+            <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
+            <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
+          </div>
+          <Card className="bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 sm:p-12 md:p-16 shadow-[0_4px_25px_rgba(0,0,0,0.015)] relative overflow-hidden">
           <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese">
             TRANSPARANSI
           </div>
@@ -447,9 +458,15 @@ export default function SupportClient() {
             />
           </div>
         </Card>
+      </div>
 
         {/* 2. INTERACTIVE SUPPORTER WALL */}
-        <Card className="glass border border-border/80 rounded-[3rem] p-8 sm:p-12 mb-12 sm:mb-16 shadow-xl relative overflow-hidden group">
+        <div className="relative group mb-12 sm:mb-16">
+          <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+            <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
+            <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
+          </div>
+          <Card className="bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 sm:p-12 shadow-[0_4px_25px_rgba(0,0,0,0.015)] relative overflow-hidden">
           <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese">
             DONATUR
           </div>
@@ -575,9 +592,15 @@ export default function SupportClient() {
             )}
           </div>
         </Card>
+      </div>
 
         {/* 3. SLEEK INTERACTIVE FAQ */}
-        <Card className="glass border border-border/80 rounded-[3rem] p-8 sm:p-12 mb-12 sm:mb-16 shadow-xl relative overflow-hidden group">
+        <div className="relative group mb-12 sm:mb-16">
+          <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+            <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
+            <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
+          </div>
+          <Card className="bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 sm:p-12 shadow-[0_4px_25px_rgba(0,0,0,0.015)] relative overflow-hidden">
           <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese">
             TANYA JAWAB
           </div>
@@ -642,6 +665,7 @@ export default function SupportClient() {
             })}
           </div>
         </Card>
+      </div>
 
         {/* Footer Navigation */}
         <footer className="mt-20 sm:mt-28 mb-16 text-center pb-8 sm:pb-12">
