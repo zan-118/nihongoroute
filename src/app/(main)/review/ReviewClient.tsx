@@ -12,7 +12,7 @@ import {
   RotateCw, 
   ChevronLeft, 
   Zap, 
-} from "lucide-react";
+} from "@/components/ui/icons";
 import FlashcardMaster from "@/components/features/flashcards/master/FlashcardMaster";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";

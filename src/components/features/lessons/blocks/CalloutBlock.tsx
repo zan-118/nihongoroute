@@ -1,5 +1,5 @@
 import React from "react";
-import { Info } from "lucide-react";
+import { Info } from "@/components/ui/icons";
 import { ContentBlock } from "@/types/database";
 import { parseInlineStyles } from "@/lib/utils/markdown-parser";
 

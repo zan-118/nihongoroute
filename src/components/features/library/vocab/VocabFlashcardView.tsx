@@ -10,7 +10,7 @@
 // IMPOR UTAMA
 // ==========================================
 import React from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import FlashcardMaster from "@/components/features/flashcards/master/FlashcardMaster";
 import { VocabItem } from "./types";

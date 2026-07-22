@@ -11,7 +11,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { m, Variants } from "framer-motion";
-import { Flame, ChevronRight } from "lucide-react";
+import { Flame, ChevronRight, Clock, Target } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 
 // ======================
@@ -104,25 +104,25 @@ const ExamCard = React.memo(function ExamCard({ exam }: { exam: MockExam }) {
         <div className="flex flex-wrap gap-2">
           {/* Time limit badge */}
           <span
-            className="px-2.5 py-1 rounded-md sm:rounded-lg border text-[9px] sm:text-[10px] font-black uppercase tracking-wider sm:tracking-widest transition-colors duration-300"
+            className="px-2.5 py-1 rounded-md sm:rounded-lg border text-[9px] sm:text-[10px] font-black uppercase tracking-wider sm:tracking-widest transition-colors duration-300 flex items-center gap-1"
             style={{
               backgroundColor: isHovered ? "rgb(var(--primary-rgb)/0.06)" : "rgb(var(--background-rgb)/0.5)",
               borderColor: isHovered ? "rgb(var(--primary-rgb)/0.3)" : "rgb(var(--border-rgb)/0.5)",
               color: isHovered ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"
             }}
           >
-            ⏱️ {exam.timeLimit} Menit
+            <Clock size={10} /> {exam.timeLimit} Menit
           </span>
           {/* Passing score badge */}
           <span
-            className="px-2.5 py-1 rounded-md sm:rounded-lg border text-[9px] sm:text-[10px] font-black uppercase tracking-wider sm:tracking-widest transition-colors duration-300"
+            className="px-2.5 py-1 rounded-md sm:rounded-lg border text-[9px] sm:text-[10px] font-black uppercase tracking-wider sm:tracking-widest transition-colors duration-300 flex items-center gap-1"
             style={{
               backgroundColor: isHovered ? "rgb(var(--primary-rgb)/0.06)" : "rgb(var(--background-rgb)/0.5)",
               borderColor: isHovered ? "rgb(var(--primary-rgb)/0.3)" : "rgb(var(--border-rgb)/0.5)",
               color: isHovered ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"
             }}
           >
-            🎯 {exam.passingScore}% Kelulusan
+            <Target size={10} /> {exam.passingScore}% Kelulusan
           </span>
         </div>
       </div>

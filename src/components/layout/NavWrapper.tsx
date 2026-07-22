@@ -19,7 +19,7 @@ const FloatingActions = dynamic(() => import("@/components/features/global/Float
 // Load achievement toast dynamically. Disable SSR to prevent hydration mismatch.
 const AchievementToast = dynamic(() => import("./AchievementToast"), { ssr: false });
 import { usePathname, useRouter } from "next/navigation";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { getBreadcrumbItems } from "@/lib/routes";
 import AppBreadcrumbs from "./AppBreadcrumbs";

@@ -27,7 +27,7 @@ import {
   Trophy,
   Users,
   HelpCircle,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -81,7 +81,7 @@ interface DonationCardProps {
   href: string;
   title: string;
   desc: string;
-  icon: string;
+  icon: React.ComponentType<any>;
   accent: string;
   label: string;
   shadowColor: string;
@@ -101,6 +101,7 @@ function DonationCard({
   shadowColor,
   glowColor,
 }: DonationCardProps) {
+  const IconComponent = icon;
   return (
     <m.a
       href={href}
@@ -120,8 +121,8 @@ function DonationCard({
         <div className="absolute top-0 right-0 p-6 sm:p-8 opacity-[0.03] text-5xl sm:text-7xl font-black italic group-hover:opacity-[0.06] transition-opacity pointer-events-none uppercase text-foreground font-japanese select-none">
           {title}
         </div>
-        <div className="text-5xl sm:text-6xl mb-6 sm:mb-8 group-hover:scale-110 group-hover:rotate-3 transition-transform origin-left duration-300 drop-shadow-xl select-none">
-          {icon}
+        <div className="text-5xl sm:text-6xl mb-6 sm:mb-8 group-hover:scale-110 group-hover:rotate-3 transition-transform origin-left duration-300 drop-shadow-xl select-none text-primary">
+          <IconComponent size={56} />
         </div>
         <h3 className="text-2xl sm:text-3xl text-foreground italic mb-2 uppercase tracking-tighter">
           {title}
@@ -317,7 +318,7 @@ export default function SupportClient() {
             href="https://trakteer.id/nihongo_route/gift"
             title="Trakteer"
             desc="Dukungan via Dompet Digital (Gopay/OVO/ShopeePay)"
-            icon="☕"
+            icon={Coffee}
             accent="border-destructive/30 hover:border-destructive/80"
             label="Traktir Kami Kopi"
             shadowColor="hover:shadow-[0_0_35px_rgb(var(--destructive-rgb)/0.15)] hover:bg-destructive/[0.02]"
@@ -327,7 +328,7 @@ export default function SupportClient() {
             href="https://saweria.co/Zan118"
             title="Saweria"
             desc="Dukungan via QRIS / Dana / LinkAja"
-            icon="💸"
+            icon={Heart}
             accent="border-warning/30 hover:border-warning/80"
             label="Kirim Dukungan"
             shadowColor="hover:shadow-[0_0_35px_rgb(var(--warning-rgb)/0.15)] hover:bg-warning/[0.02]"
@@ -498,7 +499,9 @@ export default function SupportClient() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
             {sortedSupporters.length === 0 ? (
               <div className="col-span-1 md:col-span-2 p-10 rounded-[2rem] border border-dashed border-border/80 text-center bg-card/20  relative overflow-hidden group shadow-inner">
-                <div className="text-4xl mb-4">☕</div>
+                <div className="text-primary flex justify-center mb-4 text-4xl">
+                  <Coffee size={44} />
+                </div>
                 <h4 className="text-base text-foreground uppercase tracking-wider mb-2">
                   Belum Ada Pejuang Dukungan
                 </h4>

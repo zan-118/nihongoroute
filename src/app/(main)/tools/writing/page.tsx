@@ -10,7 +10,7 @@
 // IMPOR
 // ======================
 import React, { Suspense } from "react";
-import { ChevronLeft, Download, Share2 } from "lucide-react";
+import { ChevronLeft, Download, Share2 } from "@/components/ui/icons";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import WritingCanvas from "@/components/features/tools/writing/WritingCanvas";

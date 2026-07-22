@@ -7,7 +7,7 @@
 // IMPORT & DEPENDENSI
 // ==========================================
 import { Card } from "@/components/ui/card";
-import { Link as LinkIcon, ChevronLeft } from "lucide-react";
+import { Link as LinkIcon, ChevronLeft } from "@/components/ui/icons";
 import Link from "next/link";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 

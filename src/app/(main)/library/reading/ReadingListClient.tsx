@@ -11,7 +11,7 @@
 // ======================
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { BookOpen, ChevronRight, GraduationCap, ChevronLeft, ChevronsLeft, ChevronsRight, Search, Loader2, Clock, CheckCircle2 } from "lucide-react";
+import { BookOpen, ChevronRight, GraduationCap, ChevronLeft, ChevronsLeft, ChevronsRight, Search, Loader2, Clock, CheckCircle2 } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

@@ -10,7 +10,7 @@
 // ======================
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, RefreshCcw } from "lucide-react";
+import { AlertTriangle, RefreshCcw } from "@/components/ui/icons";
 
 // ======================
 // EKSEKUSI UTAMA

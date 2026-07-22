@@ -12,7 +12,7 @@ import React from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { FileText, Book, Edit, MessageSquare, BookOpen, Lightbulb, GraduationCap } from "lucide-react";
+import { FileText, Book, Edit, MessageSquare, BookOpen, Lightbulb, GraduationCap } from "@/components/ui/icons";
 
 import QuizEngine from "@/components/features/exams/quiz-engine/QuizEngine";
 import ContentBlockRenderer from "@/components/features/lessons/ContentBlockRenderer";

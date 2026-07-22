@@ -25,8 +25,10 @@ import {
   Target,
   Languages,
   Play,
-  Pause
-} from "lucide-react";
+  Pause,
+  Headphones,
+  PenTool
+} from "@/components/ui/icons";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -253,33 +255,36 @@ export default function ListeningWorkspace({
           variant={activeTab === "study" ? "default" : "ghost"}
           onClick={() => setActiveTab("study")}
           className={cn(
-            "flex-1 rounded-xl py-3 text-xs font-black uppercase tracking-wider transition-all h-10",
+            "flex-1 rounded-xl py-3 text-xs font-black uppercase tracking-wider transition-all h-10 flex items-center justify-center gap-1.5",
             activeTab === "study" && "shadow-md shadow-primary/20 text-primary-foreground bg-primary"
           )}
         >
-          🎧 <span className="hidden sm:inline">Belajar & </span>Transkrip
+          <Headphones size={14} />
+          <span><span className="hidden sm:inline">Belajar & </span>Transkrip</span>
         </Button>
         <Button
           variant={activeTab === "dictation" ? "default" : "ghost"}
           disabled={dictationLines.length === 0}
           onClick={() => setActiveTab("dictation")}
           className={cn(
-            "flex-1 rounded-xl py-3 text-xs font-black uppercase tracking-wider transition-all h-10",
+            "flex-1 rounded-xl py-3 text-xs font-black uppercase tracking-wider transition-all h-10 flex items-center justify-center gap-1.5",
             activeTab === "dictation" && "shadow-md shadow-primary/20 text-primary-foreground bg-primary"
           )}
         >
-          ✍️ <span className="hidden sm:inline">Latihan </span>Dikte
+          <PenTool size={14} />
+          <span><span className="hidden sm:inline">Latihan </span>Dikte</span>
         </Button>
         {quiz.length > 0 && (
           <Button
             variant={activeTab === "quiz" ? "default" : "ghost"}
             onClick={() => setActiveTab("quiz")}
             className={cn(
-              "flex-1 rounded-xl py-3 text-xs font-black uppercase tracking-wider transition-all h-10",
+              "flex-1 rounded-xl py-3 text-xs font-black uppercase tracking-wider transition-all h-10 flex items-center justify-center gap-1.5",
               activeTab === "quiz" && "shadow-md shadow-primary/20 text-primary-foreground bg-primary"
             )}
           >
-            📝 <span className="hidden sm:inline">Kuis </span>Pemahaman
+            <ClipboardPenLine size={14} />
+            <span><span className="hidden sm:inline">Kuis </span>Pemahaman</span>
           </Button>
         )}
       </div>

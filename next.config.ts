@@ -66,7 +66,6 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["kuroshiro", "kuroshiro-analyzer-kuromoji", "msedge-tts", "isomorphic-ws", "ws"],
   experimental: {
     optimizePackageImports: [
-      "lucide-react",
       "@radix-ui/react-dialog",
       "@radix-ui/react-dropdown-menu",
       "@radix-ui/react-select",

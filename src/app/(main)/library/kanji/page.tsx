@@ -7,7 +7,7 @@
 // IMPOR
 // ======================
 import { Suspense } from "react";
-import { RotateCw } from "lucide-react";
+import { RotateCw } from "@/components/ui/icons";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getPaginatedKanji } from "@/actions/library.actions";
 import KanjiListClient from "@/app/(main)/library/kanji/KanjiListClient";

@@ -12,8 +12,8 @@ import {
   Sparkles,
   Target,
   Wrench,
-  type LucideIcon,
-} from "lucide-react";
+  type IconType,
+} from "@/components/ui/icons";
 import {
   buildDailyRoute,
   buildWeakPointInsights,
@@ -31,7 +31,7 @@ import { cn } from "@/lib/utils";
  */
 const CATEGORY_META: Record<
   DailyRouteCategory,
-  { label: string; icon: LucideIcon; className: string }
+  { label: string; icon: IconType; className: string }
 > = {
   warmup: {
     label: "Warmup",

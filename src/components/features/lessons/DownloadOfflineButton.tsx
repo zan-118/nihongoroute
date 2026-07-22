@@ -9,7 +9,7 @@
 // IMPOR
 // ======================
 import React, { useState, useEffect, useCallback } from "react";
-import { Download, Loader2, CheckCircle2, CloudLightning } from "lucide-react";
+import { Download, Loader2, CheckCircle2, CloudLightning } from "@/components/ui/icons";
 import { sounds } from "@/lib/audio";
 import { cn } from "@/lib/utils";
 

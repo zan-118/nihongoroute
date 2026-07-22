@@ -9,7 +9,7 @@ import {
   PlayCircle,
   RotateCcw,
   Sparkles,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { buildEcosystemRecommendations } from "@/lib/learning-ecosystem";
 import { useUIStore } from "@/store/useUIStore";
 import { Badge } from "@/components/ui/badge";

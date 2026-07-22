@@ -9,7 +9,7 @@
 // ======================
 // IMPOR
 // ======================
-import { MessageSquarePlus, Send, Loader2 } from "lucide-react";
+import { MessageSquarePlus, Send, Loader2 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useFeedbackWidget } from "./useFeedbackWidget";
@@ -90,7 +90,7 @@ export default function FeedbackWidget({ forceOpen, onOpenChange }: FeedbackWidg
                         : 'bg-[rgb(var(--muted-rgb)/0.5)] dark:bg-[rgb(var(--background-rgb)/0.2)] border border-border text-muted-foreground hover:bg-muted dark:hover:bg-[rgb(var(--background-rgb)/0.05)]'
                     }`}
                   >
-                    {t === 'bug' ? '🐛 Bug' : t === 'suggestion' ? '💡 Saran' : '💖 Pujian'}
+                    {t === 'bug' ? 'Bug' : t === 'suggestion' ? 'Saran' : 'Pujian'}
                   </button>
                 ))}
               </div>

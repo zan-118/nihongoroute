@@ -23,7 +23,7 @@ import {
   Activity,
   Heart,
   TrendingUp
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { UserProgress } from "@/store/types";
 
 // ==========================================

@@ -16,7 +16,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, Lock } from "lucide-react";
+import { CheckCircle2, Lock } from "@/components/ui/icons";
 import { Quest } from "./types";
 
 // ==========================================

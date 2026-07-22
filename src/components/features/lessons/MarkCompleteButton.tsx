@@ -10,7 +10,7 @@
 // ======================
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2 } from "@/components/ui/icons";
 import { useUserStore } from "@/store/useUserStore";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";

@@ -27,7 +27,7 @@ import {
   Library,
   Lightbulb,
   ListChecks,
-  LucideIcon,
+  IconType,
   PenLine,
   PenTool,
   Search,
@@ -42,7 +42,7 @@ import {
   Volume2,
   Wand2,
   X,
-} from "lucide-react";
+} from "@/components/ui/icons";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -122,7 +122,7 @@ const disabledPathPatterns = [
 /**
  * Render Lucide icon with default styles.
  */
-const icon = (Icon: LucideIcon, className = "text-primary") => (
+const icon = (Icon: IconType, className = "text-primary") => (
   <Icon aria-hidden="true" className={className} size={30} strokeWidth={2.25} />
 );
 

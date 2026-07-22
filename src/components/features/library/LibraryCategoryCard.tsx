@@ -11,7 +11,7 @@
 // ==========================================
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 

@@ -9,7 +9,7 @@
 
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { m, AnimatePresence, useScroll, useSpring } from "framer-motion";
-import { Volume2, Loader2, Sparkles, CheckCircle2, BookmarkCheck } from "lucide-react";
+import { Volume2, Loader2, Sparkles, CheckCircle2, BookmarkCheck } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import FuriganaDisplay from "@/components/ui/FuriganaDisplay";

@@ -31,7 +31,7 @@ import {
   Timer,
   Check,
   Target
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 

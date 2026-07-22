@@ -18,7 +18,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Flame, BookOpen, CheckCircle2 } from "lucide-react";
+import { Flame, BookOpen, CheckCircle2 } from "@/components/ui/icons";
 import DailyQuests from "./quests/DailyQuests";
 import MemoryStats from "./dashboard-stats/MemoryStats";
 import SRSAnalytics from "../srs/analytics/SRSAnalytics";

@@ -12,7 +12,7 @@
 import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import { m, Variants } from "framer-motion";
-import { Layers, PenTool, Flame, Sparkles, ChevronRight } from "lucide-react";
+import { Layers, PenTool, Flame, Sparkles, ChevronRight } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 
 // ======================

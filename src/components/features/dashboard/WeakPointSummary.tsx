@@ -10,7 +10,7 @@
  */
 
 import Link from "next/link";
-import { ArrowRight, BrainCircuit, Target } from "lucide-react";
+import { ArrowRight, BrainCircuit, Target } from "@/components/ui/icons";
 import { buildWeakPointInsights } from "@/lib/learning-ecosystem";
 import { useUIStore } from "@/store/useUIStore";
 import { Badge } from "@/components/ui/badge";

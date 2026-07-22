@@ -9,7 +9,7 @@
 // ==========================================
 // IMPOR UTAMA
 // ==========================================
-import { Info, Trophy, FileText, CircleHelp, Layers } from "lucide-react";
+import { Info, Trophy, FileText, CircleHelp, Layers } from "@/components/ui/icons";
 
 // ==========================================
 // ANTARMUKA & TIPE DATA
@@ -119,7 +119,7 @@ export function ListeningSidebar({
           <li className="flex gap-4 items-start">
             <div className="size-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
             <p className="text-xs text-muted-foreground leading-relaxed font-medium">
-              Gunakan kontrol kecepatan <span className="text-primary font-bold">🎚</span> di audio player untuk memutar lebih lambat (0.75×) jika perlu.
+              Gunakan kontrol kecepatan di audio player untuk memutar lebih lambat (0.75×) jika perlu.
             </p>
           </li>
         </ul>

@@ -13,7 +13,7 @@ import { toRomaji } from "wanakana";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import AddToSRSButton from "@/components/features/srs/actions/AddToSRSButton";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp } from "@/components/ui/icons";
 
 // ======================
 // ANTARMUKA / TIPE DATA

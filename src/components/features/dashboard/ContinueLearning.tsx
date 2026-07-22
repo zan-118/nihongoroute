@@ -17,7 +17,7 @@
 import { useUserStore } from "@/store/useUserStore";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Play, ArrowRight, BookOpen, CheckCircle2 } from "lucide-react";
+import { Play, ArrowRight, BookOpen, CheckCircle2 } from "@/components/ui/icons";
 import Link from "next/link";
 import { useMemo } from "react";
 import { m } from "framer-motion";

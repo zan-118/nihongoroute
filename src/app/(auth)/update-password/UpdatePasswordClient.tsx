@@ -9,7 +9,7 @@
 // IMPOR
 // ======================
 import React from "react";
-import { Lock, KeyRound, CheckCircle } from "lucide-react";
+import { Lock, KeyRound, CheckCircle } from "@/components/ui/icons";
 import Link from "next/link";
 import { usePasswordUpdate } from "@/components/features/user/usePasswordUpdate";
 

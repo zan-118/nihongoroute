@@ -10,7 +10,7 @@
 // ==========================================
 import { useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { Plus, MessageSquarePlus, Coffee, X } from "lucide-react";
+import { Plus, MessageSquarePlus, Coffee, X } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -18,7 +18,7 @@ import FeedbackWidget from "../feedback/FeedbackWidget";
 import { useUIStore } from "@/store/useUIStore";
 import { ReadingMode } from "@/components/features/reading/types";
 import AudioController from "@/components/features/reading/components/AudioController";
-import { Eye, Languages, BookOpen as BookIcon, GraduationCap, Headphones } from "lucide-react";
+import { Eye, Languages, BookOpen as BookIcon, GraduationCap, Headphones } from "@/components/ui/icons";
 
 import React from "react";
 import { cn } from "@/lib/utils";

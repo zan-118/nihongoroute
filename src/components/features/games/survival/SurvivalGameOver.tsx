@@ -11,7 +11,7 @@ import { m } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Trophy, ShieldAlert, RotateCcw } from "lucide-react";
+import { Trophy, ShieldAlert, RotateCcw } from "@/components/ui/icons";
 import { SurvivalGameState } from "./types";
 
 // ======================

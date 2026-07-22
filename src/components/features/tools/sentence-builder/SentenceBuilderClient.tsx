@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowDown, CheckCircle2, RotateCcw, Shuffle, Sparkles, XCircle } from "lucide-react";
+import { ArrowDown, CheckCircle2, RotateCcw, Shuffle, Sparkles, XCircle } from "@/components/ui/icons";
 import {
   isBuiltSentenceCorrect,
   SENTENCE_BUILDER_PROMPTS,

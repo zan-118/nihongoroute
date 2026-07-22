@@ -10,7 +10,7 @@
 // IMPOR UTAMA
 // ==========================================
 import React from "react";
-import { BookText } from "lucide-react";
+import { BookText } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 

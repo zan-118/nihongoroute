@@ -6,7 +6,7 @@
 // ==========================================
 // IMPORT & DEPENDENSI
 // ==========================================
-import { Type, Languages } from "lucide-react";
+import { Type, Languages } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";

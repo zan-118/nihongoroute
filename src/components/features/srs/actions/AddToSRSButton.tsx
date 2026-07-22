@@ -9,7 +9,7 @@
 // ======================
 // IMPOR
 // ======================
-import { Plus, Check } from "lucide-react";
+import { Plus, Check } from "@/components/ui/icons";
 import { useAddToSRS } from "../button/useAddToSRS";
 
 // ======================

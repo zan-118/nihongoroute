@@ -20,7 +20,7 @@ import {
   Hash,
   Play,
   Gamepad2
-} from "lucide-react";
+} from "@/components/ui/icons";
 import SurvivalMode from "@/components/features/games/SurvivalMode";
 import { useSurvivalSetup } from "@/components/features/games/survival/useSurvivalSetup";
 import { Button } from "@/components/ui/button";

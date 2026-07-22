@@ -10,7 +10,7 @@
 // ======================
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
-import { Moon, Sun, Monitor } from "lucide-react";
+import { Moon, Sun, Monitor } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
 // ======================

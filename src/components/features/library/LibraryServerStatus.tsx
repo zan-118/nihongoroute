@@ -8,7 +8,7 @@
 // IMPOR UTAMA
 // ==========================================
 import React from "react";
-import { Server } from "lucide-react";
+import { Server } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 
 // ==========================================

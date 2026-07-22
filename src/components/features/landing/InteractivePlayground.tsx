@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { Sparkles, Languages, Check, CornerDownLeft, Loader2 } from "lucide-react";
+import { Sparkles, Languages, Check, CornerDownLeft, Loader2 } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";

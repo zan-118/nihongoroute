@@ -7,7 +7,7 @@
 // IMPORT & DEPENDENSI
 // ==========================================
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, LayoutGrid } from "lucide-react";
+import { ChevronLeft, LayoutGrid } from "@/components/ui/icons";
 import Link from "next/link";
 
 import { ROUTES } from "@/lib/core/routes";

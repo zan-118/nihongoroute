@@ -16,7 +16,7 @@
 import { m } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Activity } from "lucide-react";
+import { Activity } from "@/components/ui/icons";
 import { useHeatmap, getBoxStyle } from "./useHeatmap";
 
 // ==========================================

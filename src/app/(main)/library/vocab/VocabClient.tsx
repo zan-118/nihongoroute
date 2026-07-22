@@ -16,7 +16,7 @@ import {
   Search,
   ChevronLeft,
   Loader2,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { getPaginatedVocab, PaginatedVocabResponse } from "@/actions/library.actions";

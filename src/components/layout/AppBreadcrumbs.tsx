@@ -9,7 +9,7 @@
 // IMPOR
 // ======================
 import Link from "next/link";
-import { ChevronRight, Home } from "lucide-react";
+import { ChevronRight, Home } from "@/components/ui/icons";
 import { m } from "framer-motion";
 import { cn } from "@/lib/utils";
 import type { BreadcrumbItem } from "@/lib/routes";

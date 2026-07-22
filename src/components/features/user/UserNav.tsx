@@ -16,7 +16,7 @@ import {
   LogOut, 
   ShieldCheck,
   ChevronDown
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { useUserStore } from "@/store/useUserStore";
 import { Button } from "@/components/ui/button";
 import {

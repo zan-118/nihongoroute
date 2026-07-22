@@ -10,7 +10,7 @@ import {
   RotateCcw,
   Sparkles,
   XCircle,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import {
   COUNTER_OPTIONS,
   COUNTER_QUESTIONS,

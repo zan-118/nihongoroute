@@ -8,7 +8,7 @@
 // ==========================================
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { Search, X, Command, BookOpen, Trophy, Layers, BrainCircuit, Heart, Settings, Share2, ArrowRight, Zap, Loader2, FileText, Hash } from "lucide-react";
+import { Search, X, Command, BookOpen, Trophy, Layers, BrainCircuit, Heart, Settings, Share2, ArrowRight, Zap, Loader2, FileText, Hash } from "@/components/ui/icons";
 import { useRouter } from "next/navigation";
 
 // ==========================================

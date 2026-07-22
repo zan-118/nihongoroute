@@ -19,7 +19,7 @@ import {
   Target,
   ChevronRight,
   AlertTriangle,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ROUTES } from "@/lib/routes";

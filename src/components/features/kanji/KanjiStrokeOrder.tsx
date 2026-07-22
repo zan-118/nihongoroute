@@ -7,7 +7,7 @@
 // IMPORT & DEPENDENSI
 // ==========================================
 import { useState, useEffect } from "react";
-import { RotateCcw, Info } from "lucide-react";
+import { RotateCcw, Info } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 

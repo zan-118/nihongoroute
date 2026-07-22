@@ -9,7 +9,7 @@
 // IMPOR
 // ======================
 import { m } from "framer-motion";
-import { Coffee, LucideIcon } from "lucide-react";
+import { Coffee, IconType } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -20,8 +20,8 @@ import Link from "next/link";
  * Props for EmptyState component.
  */
 interface EmptyStateProps {
-  /** Icon component from lucide-react. Default is Coffee. */
-  icon?: LucideIcon;
+  /** Icon component. Default is Coffee. */
+  icon?: IconType;
   /** Main heading text. */
   title: string;
   /** Subtext description. */

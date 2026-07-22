@@ -9,7 +9,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Trophy, Flame, RotateCcw, Clock, Zap } from "lucide-react";
+import { Trophy, Flame, RotateCcw, Clock, Zap } from "@/components/ui/icons";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 // ==========================================
@@ -77,9 +77,9 @@ export function SessionSummaryModal({
    * Get rating title, color, and background style based on accuracy.
    */
   const getRating = (accuracy: number) => {
-    if (accuracy >= 90) return { title: "Luar Biasa! 🎉", color: "text-success", bg: "bg-success/5 border-success/20 dark:shadow-[0_0_20px_rgb(var(--success-rgb)/0.1)]" };
-    if (accuracy >= 70) return { title: "Bagus Sekali! 👍", color: "text-warning", bg: "bg-warning/5 border-warning/20 dark:shadow-[0_0_20px_rgb(var(--warning-rgb)/0.1)]" };
-    return { title: "Mari Terus Latihan! 💪", color: "text-primary", bg: "bg-primary/5 border-primary/20 dark:shadow-[0_0_20px_rgb(var(--primary-rgb)/0.1)]" };
+    if (accuracy >= 90) return { title: "Luar Biasa!", color: "text-success", bg: "bg-success/5 border-success/20 dark:shadow-[0_0_20px_rgb(var(--success-rgb)/0.1)]" };
+    if (accuracy >= 70) return { title: "Bagus Sekali!", color: "text-warning", bg: "bg-warning/5 border-warning/20 dark:shadow-[0_0_20px_rgb(var(--warning-rgb)/0.1)]" };
+    return { title: "Mari Terus Latihan!", color: "text-primary", bg: "bg-primary/5 border-primary/20 dark:shadow-[0_0_20px_rgb(var(--primary-rgb)/0.1)]" };
   };
 
   // Get rating details based on accuracy

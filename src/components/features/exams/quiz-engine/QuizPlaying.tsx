@@ -10,7 +10,7 @@
 import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Brain, AlertCircle, ArrowRight, CheckCircle2, XCircle } from "lucide-react";
+import { Brain, AlertCircle, ArrowRight, CheckCircle2, XCircle } from "@/components/ui/icons";
 import { QuizQuestion } from "./types";
 import { Button } from "@/components/ui/button";
 import { QuizProgress } from "./QuizProgress";
@@ -131,7 +131,7 @@ export function QuizPlaying({
                 <p className={`text-sm md:text-base font-black uppercase tracking-widest ${
                   isCorrectAnswer ? 'text-success' : 'text-destructive'
                 }`}>
-                  {isCorrectAnswer ? 'BENAR!' : '✗ SALAH'}
+                  {isCorrectAnswer ? 'BENAR!' : 'SALAH!'}
                 </p>
                 <p className="text-muted-foreground text-xs md:text-sm mt-0.5">
                   {isCorrectAnswer 

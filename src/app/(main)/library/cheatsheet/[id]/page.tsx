@@ -11,7 +11,7 @@ import Link from "next/link";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { 
   ChevronLeft, 
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheatsheetTable } from "./CheatsheetTable";

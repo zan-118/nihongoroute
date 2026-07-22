@@ -9,7 +9,7 @@
 // ==========================================
 // IMPOR UTAMA
 // ==========================================
-import { Headphones, Award, Compass } from "lucide-react";
+import { Headphones, Award, Compass } from "@/components/ui/icons";
 
 // ==========================================
 // ANTARMUKA & TIPE DATA

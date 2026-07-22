@@ -11,7 +11,7 @@ import {
   Library,
   Target,
   Wrench,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { buildWeakPointInsights } from "@/lib/learning-ecosystem";
 import { useUIStore } from "@/store/useUIStore";
 import { Badge } from "@/components/ui/badge";

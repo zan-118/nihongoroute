@@ -7,7 +7,7 @@
 // IMPORT & DEPENDENSI
 // ==========================================
 import { m } from "framer-motion";
-import { ChevronLeft, Maximize2 } from "lucide-react";
+import { ChevronLeft, Maximize2 } from "@/components/ui/icons";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";

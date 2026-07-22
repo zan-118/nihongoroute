@@ -12,7 +12,7 @@
 import { m, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Cloud, CheckCircle, RefreshCw } from "lucide-react";
+import { Cloud, CheckCircle, RefreshCw } from "@/components/ui/icons";
 
 // ======================
 // TIPE DATA

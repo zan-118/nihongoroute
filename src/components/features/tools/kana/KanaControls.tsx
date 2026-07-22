@@ -7,7 +7,7 @@
 // IMPORT & DEPENDENSI
 // ==========================================
 import { Button } from "@/components/ui/button";
-import { Swords } from "lucide-react";
+import { Swords } from "@/components/ui/icons";
 import { KanaType, KanaCategory } from "./kana-data";
 
 // ==========================================

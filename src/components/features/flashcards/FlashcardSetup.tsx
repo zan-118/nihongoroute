@@ -8,7 +8,7 @@
 // ==========================================
 import React, { useState } from "react";
 import { m } from "framer-motion";
-import { Zap, Flame, PenTool, Hash, LayoutGrid, Layers, Play, Mic, BookOpen } from "lucide-react";
+import { Zap, Flame, PenTool, Hash, LayoutGrid, Layers, Play, Mic, BookOpen } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
 // ==========================================

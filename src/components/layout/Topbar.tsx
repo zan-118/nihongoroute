@@ -9,7 +9,7 @@
 // IMPOR
 // ======================
 import { useState, useEffect } from "react";
-import { Search, Bell, Menu, Cloud, RefreshCw, CloudOff, CloudUpload, ChevronLeft, BookOpen, Eye, EyeOff, Share2 } from "lucide-react";
+import { Search, Bell, Menu, Cloud, RefreshCw, CloudOff, CloudUpload, ChevronLeft, BookOpen, Eye, EyeOff, Share2 } from "@/components/ui/icons";
 import { m, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -131,10 +131,10 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
           )}
         </div>
 
-        <div className="flex flex-col min-w-0 max-w-[190px] sm:max-w-[280px] md:max-w-[360px] lg:max-w-none">
-          <h1 className="text-sm md:text-lg text-foreground tracking-tight truncate leading-none uppercase md:max-w-[18rem] lg:max-w-none">
+        <div className="hidden md:flex flex-col min-w-0 max-w-[190px] sm:max-w-[280px] md:max-w-[360px] lg:max-w-none">
+          <p className="text-sm md:text-lg text-foreground tracking-tight truncate leading-none uppercase md:max-w-[18rem] lg:max-w-none">
             {currentRouteLabel}
-          </h1>
+          </p>
           {parentRouteLabel && (
              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.16em] mt-1 truncate">
                {parentRouteLabel}
@@ -148,7 +148,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
         <div 
           aria-live="polite"
           aria-atomic="true"
-          className="status-pill hidden sm:flex items-center gap-2 px-2.5 md:px-3 py-2 text-[10px] font-bold uppercase tracking-[0.14em] transition-all overflow-hidden min-w-fit md:min-w-[108px]"
+          className="status-pill hidden sm:flex items-center justify-center p-2 transition-all"
         >
           <AnimatePresence mode="wait">
             {isSyncing ? (
@@ -157,10 +157,10 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
                 initial={{ opacity: 0, x: 10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
-                className="flex items-center gap-2"
+                className="flex items-center"
               >
                 <RefreshCw size={12} className="animate-spin text-primary" aria-hidden="true" />
-                <span className="hidden md:inline">Sinkronisasi…</span>
+                <span className="sr-only">Sinkronisasi…</span>
               </m.div>
             ) : syncError ? (
               <m.div 
@@ -168,10 +168,10 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
                 initial={{ opacity: 0, x: 10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
-                className="flex items-center gap-2"
+                className="flex items-center"
               >
                 <CloudOff size={12} className="text-destructive" aria-hidden="true" />
-                <span className="text-destructive/90 hidden md:inline">Sinkron Gagal</span>
+                <span className="text-destructive/90 sr-only">Sinkron Gagal</span>
               </m.div>
             ) : hasPendingSync ? (
               <m.div 
@@ -179,10 +179,10 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
                 initial={{ opacity: 0, x: 10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
-                className="flex items-center gap-2"
+                className="flex items-center"
               >
                 <CloudUpload size={12} className="text-warning" aria-hidden="true" />
-                <span className="text-warning/90 hidden md:inline">Menunggu</span>
+                <span className="text-warning/90 sr-only">Menunggu</span>
               </m.div>
             ) : (
               <m.div 
@@ -190,10 +190,10 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
                 initial={{ opacity: 0, x: 10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
-                className="flex items-center gap-2"
+                className="flex items-center"
               >
                 <Cloud size={12} className="text-success" aria-hidden="true" />
-                <span className="text-success/70 hidden md:inline">Tersinkron</span>
+                <span className="text-success/70 sr-only">Tersinkron</span>
               </m.div>
             )}
           </AnimatePresence>

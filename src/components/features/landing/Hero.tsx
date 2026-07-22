@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { m } from "framer-motion";
-import { ArrowRight, BookOpen, PlayCircle, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpen, PlayCircle, Sparkles } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 

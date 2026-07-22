@@ -9,7 +9,7 @@
 // ==========================================
 // IMPOR UTAMA
 // ==========================================
-import { Book } from "lucide-react";
+import { Book } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
 // ==========================================

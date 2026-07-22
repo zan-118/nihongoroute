@@ -11,7 +11,7 @@ import {
   RotateCcw,
   Sparkles,
   XCircle,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { toRomaji } from "wanakana";
 import {
   conjugateVerb,

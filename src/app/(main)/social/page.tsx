@@ -9,7 +9,7 @@
 import { Metadata } from "next";
 import SocialClient from "./SocialClient";
 import { Badge } from "@/components/ui/badge";
-import { Users } from "lucide-react";
+import { Users } from "@/components/ui/icons";
 import { createPageMetadata } from "@/lib/seo";
 
 import { ROUTES } from "@/lib/core/routes";

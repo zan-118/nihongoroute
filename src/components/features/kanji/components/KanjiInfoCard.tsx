@@ -7,7 +7,7 @@
 // IMPORT & DEPENDENSI
 // ==========================================
 import React from "react";
-import { BookOpen, Sparkles } from "lucide-react";
+import { BookOpen, Sparkles } from "@/components/ui/icons";
 
 // ==========================================
 // TIPE DATA / INTERFACE

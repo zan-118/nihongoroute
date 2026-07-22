@@ -7,7 +7,7 @@
 // IMPORT & DEPENDENSI
 // ==========================================
 import { Card } from "@/components/ui/card";
-import { Play } from "lucide-react";
+import { Play } from "@/components/ui/icons";
 
 // ==========================================
 // TIPE DATA / INTERFACE

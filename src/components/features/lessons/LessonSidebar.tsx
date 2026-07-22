@@ -10,7 +10,7 @@
 // ======================
 import React from "react";
 import Link from "next/link";
-import { BookOpen, ChevronRight, CheckCircle2 } from "lucide-react";
+import { BookOpen, ChevronRight, CheckCircle2 } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 // ======================

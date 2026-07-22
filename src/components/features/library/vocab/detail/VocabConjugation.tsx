@@ -10,7 +10,7 @@
 // IMPOR UTAMA
 // ==========================================
 import { Card } from "@/components/ui/card";
-import { ArrowRightLeft } from "lucide-react";
+import { ArrowRightLeft } from "@/components/ui/icons";
 
 /**
  * Map database conjugation keys to Indonesian/English labels.

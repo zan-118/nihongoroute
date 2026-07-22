@@ -23,7 +23,7 @@ import {
   XCircle,
   HelpCircle,
   BookOpen
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

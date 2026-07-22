@@ -9,7 +9,7 @@
 
 import React, { useState, useEffect } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, MessageSquare, RotateCcw, Play } from "lucide-react";
+import { ChevronLeft, ChevronRight, MessageSquare, RotateCcw, Play } from "@/components/ui/icons";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 

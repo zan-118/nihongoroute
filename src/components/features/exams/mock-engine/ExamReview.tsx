@@ -24,8 +24,8 @@ import {
   Volume2,
   XCircle,
   Star,
-  type LucideIcon,
-} from "lucide-react";
+  type IconType,
+} from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -56,7 +56,7 @@ interface ExamReviewProps {
 type ReviewFilter = "mistakes" | "all";
 
 /** Map action ID to icon. */
-const ACTION_ICONS: Record<ExamReviewAction["id"], LucideIcon> = {
+const ACTION_ICONS: Record<ExamReviewAction["id"], IconType> = {
   "weak-points": Target,
   flashcards: ClipboardList,
   listening: Volume2,

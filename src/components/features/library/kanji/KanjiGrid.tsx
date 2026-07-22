@@ -9,7 +9,7 @@
 // ==========================================
 // IMPOR UTAMA
 // ==========================================
-import { Loader2, ArrowRight, Search } from "lucide-react";
+import { Loader2, ArrowRight, Search } from "@/components/ui/icons";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 

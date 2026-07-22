@@ -14,7 +14,7 @@ import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { getPaginatedKanji, PaginatedKanjiResponse } from "@/actions/library.actions";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import { Search, Loader2 } from "lucide-react";
+import { Search, Loader2 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/store/useUIStore";
 

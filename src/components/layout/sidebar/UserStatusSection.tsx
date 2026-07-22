@@ -11,7 +11,7 @@
 import React from "react";
 import Link from "next/link";
 import { m } from "framer-motion";
-import { LogOut } from "lucide-react";
+import { LogOut } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";

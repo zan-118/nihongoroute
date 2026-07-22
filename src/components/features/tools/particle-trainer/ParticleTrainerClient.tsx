@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, HelpCircle, RotateCcw, Sparkles, Target, XCircle } from "lucide-react";
+import { ArrowRight, CheckCircle2, HelpCircle, RotateCcw, Sparkles, Target, XCircle } from "@/components/ui/icons";
 import {
   getParticleQuestion,
   isParticleAnswerCorrect,

@@ -51,7 +51,7 @@ Tech stack utama yang digunakan oleh NihongoRoute diekstrak langsung dari berkas
 ### UI / UX & Desain
 * **Styling**: Tailwind CSS `^3.4.1` dengan `postcss` `^8.5.6` dan `autoprefixer` `^10.4.24`
 * **Utility CSS**: `clsx` `^2.1.1`, `tailwind-merge` `^3.5.0`, `tailwindcss-animate` `^1.0.7`, `class-variance-authority` `^0.7.1`
-* **Icons**: `lucide-react` `^0.454.0`
+* **Icons**: `@iconify/react`
 * **Animasi**: `framer-motion` `^12.38.0`
 * **Komponen Primitif**: Radix UI (`@radix-ui/react-dialog`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-progress`, `@radix-ui/react-select`, `@radix-ui/react-slot`, `@radix-ui/react-switch`)
 * **Notifikasi UI**: `sonner` `^2.0.7`

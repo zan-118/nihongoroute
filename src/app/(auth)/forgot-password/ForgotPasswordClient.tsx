@@ -10,7 +10,7 @@
 // ======================
 import React, { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Mail, ArrowLeft, KeyRound } from "lucide-react";
+import { Mail, ArrowLeft, KeyRound } from "@/components/ui/icons";
 import Link from "next/link";
 import { toast } from "sonner";
 

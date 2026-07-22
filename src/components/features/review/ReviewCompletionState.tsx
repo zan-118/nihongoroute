@@ -10,7 +10,7 @@
 // IMPOR
 // ======================
 import React from "react";
-import { Sparkles, Trophy } from "lucide-react";
+import { Sparkles, Trophy } from "@/components/ui/icons";
 import EmptyState from "@/components/ui/EmptyState";
 
 // ======================

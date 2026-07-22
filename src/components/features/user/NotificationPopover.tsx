@@ -11,7 +11,7 @@
 // IMPOR
 // ======================
 import { m, AnimatePresence } from "framer-motion";
-import { Bell, X, Trash2, Info, Trophy, AlertTriangle, Zap } from "lucide-react";
+import { Bell, X, Trash2, Info, Trophy, AlertTriangle, Zap } from "@/components/ui/icons";
 import { formatDistanceToNow } from "date-fns";
 import { id } from "date-fns/locale";
 import { Button } from "@/components/ui/button";

@@ -8,7 +8,7 @@
 // IMPOR
 // ======================
 import { Suspense } from "react";
-import { RotateCw } from "lucide-react";
+import { RotateCw } from "@/components/ui/icons";
 import { JsonLd } from "@/components/seo/JsonLd";
 import GrammarClient from "./GrammarClient";
 import { getGrammarArticles } from "@/actions/library.actions";

@@ -11,7 +11,7 @@
 // ======================
 import { useState, useEffect, useCallback } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { Lightbulb, Save, Check, Edit2, BrainCircuit } from "lucide-react";
+import { Lightbulb, Save, Check, Edit2, BrainCircuit } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useSRSStore } from "@/store/useSRSStore";

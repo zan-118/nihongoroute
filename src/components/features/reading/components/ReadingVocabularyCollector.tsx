@@ -6,7 +6,7 @@
  */
 
 import Link from "next/link";
-import { BookMarked, ExternalLink, Trash2 } from "lucide-react";
+import { BookMarked, ExternalLink, Trash2 } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

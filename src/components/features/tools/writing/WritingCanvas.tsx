@@ -7,7 +7,7 @@
 // IMPORT & DEPENDENSI
 // ==========================================
 import React from "react";
-import { Trash2, Eye, EyeOff, RotateCcw, Zap, CheckCircle } from "lucide-react";
+import { Trash2, Eye, EyeOff, RotateCcw, Zap, CheckCircle } from "@/components/ui/icons";
 import AnimatedKanji from "@/components/features/tools/writing/AnimatedKanji";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

@@ -12,7 +12,7 @@
 // IMPOR
 // ==========================================
 import { RandomExpression } from "@/actions/expressions.actions";
-import { Sparkles } from "lucide-react";
+import { Sparkles } from "@/components/ui/icons";
 
 // ==========================================
 // ANTARMUKA & PROPS (INTERFACES)

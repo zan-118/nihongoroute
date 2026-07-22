@@ -26,8 +26,8 @@ interface Tab {
   id: string;
   /** Display label text. */
   label: string;
-  /** Emoji or icon character. */
-  icon: string;
+  /** Icon component type. */
+  icon: React.ComponentType<any>;
 }
 
 /**
@@ -61,6 +61,7 @@ export function DashboardTabs({ tabs, activeTab, onTabChange }: DashboardTabsPro
         {tabs.map((tab) => {
           // Determine if the current tab is active
           const isActive = activeTab === tab.id;
+          const IconComponent = tab.icon;
           return (
             <m.button
               key={tab.id}
@@ -86,7 +87,7 @@ export function DashboardTabs({ tabs, activeTab, onTabChange }: DashboardTabsPro
                   style={{ originY: "0px" }}
                 />
               )}
-              <span className="text-base relative z-10" aria-hidden="true">{tab.icon}</span>
+              <IconComponent className="relative z-10" size={16} />
               <span className="hidden sm:inline relative z-10">{tab.label}</span>
             </m.button>
           );

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Eye, PenTool, Search, Sparkles } from "lucide-react";
+import { ArrowRight, Eye, PenTool, Search, Sparkles } from "@/components/ui/icons";
 import { SIMILAR_KANJI_PAIRS, type SimilarKanjiPair } from "@/lib/kanji-similarity";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

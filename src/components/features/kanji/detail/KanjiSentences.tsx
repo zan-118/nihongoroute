@@ -11,7 +11,7 @@
 // ==========================================
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Volume2, VolumeX, BookOpen } from "lucide-react";
+import { Volume2, VolumeX, BookOpen } from "@/components/ui/icons";
 import { TTS_VOICES, type TtsVoice } from "@/lib/tts";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import type { SentenceRow } from "@/actions/sentences.actions";

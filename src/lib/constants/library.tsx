@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { Database, Type, BookOpen, Headphones, Award, BarChart2 } from "lucide-react";
+import { Database, Type, BookOpen, Headphones, Award, BarChart2 } from "@/components/ui/icons";
 import { LibraryCounts } from "@/actions/library-counts.actions";
 
 export interface LibraryCategoryItem {

@@ -7,7 +7,7 @@
  */
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Play, Pause, Square, AlertCircle, RotateCcw, Loader2, Gauge } from "lucide-react";
+import { Play, Pause, Square, AlertCircle, RotateCcw, Loader2, Gauge } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useCachedAudio } from "@/hooks/useCachedAudio";

@@ -32,7 +32,7 @@ export function transformLessonBlocks(
   dynamicBlocks.push({
     _type: "block",
     style: "h2",
-    children: [{ _type: "span", text: `🎯 1. Tujuan Belajar (Can-Do Objectives)` }]
+    children: [{ _type: "span", text: `1. Tujuan Belajar (Can-Do Objectives)` }]
   });
   const canDoText = (result.generation_context as Record<string, unknown>)?.can_do as string || result.summary;
   if (canDoText) {
@@ -53,7 +53,7 @@ export function transformLessonBlocks(
     dynamicBlocks.push({
       _type: "block",
       style: "h2",
-      children: [{ _type: "span", text: `📖 2. Target Kosakata` }]
+      children: [{ _type: "span", text: `2. Target Kosakata` }]
     });
     dynamicBlocks.push({
       _type: "block",
@@ -70,7 +70,7 @@ export function transformLessonBlocks(
     dynamicBlocks.push({
       _type: "block",
       style: "h2",
-      children: [{ _type: "span", text: `📖 3. Tata Bahasa & Penjelasan` }]
+      children: [{ _type: "span", text: `3. Tata Bahasa & Penjelasan` }]
     });
     (result.grammarList as Array<Record<string, unknown>> || []).forEach((gItem) => {
       const g = gItem as Record<string, unknown>;
@@ -92,7 +92,7 @@ export function transformLessonBlocks(
     dynamicBlocks.push({
       _type: "block",
       style: "h2",
-      children: [{ _type: "span", text: `🖌️ 4. Daftar Kanji Dasar (Bab ${orderNum})` }]
+      children: [{ _type: "span", text: `4. Daftar Kanji Dasar (Bab ${orderNum})` }]
     });
     dynamicBlocks.push({
       _type: "block",
@@ -112,7 +112,7 @@ export function transformLessonBlocks(
     dynamicBlocks.push({
       _type: "block",
       style: "h2",
-      children: [{ _type: "span", text: `⛩️ 5. Catatan Budaya` }]
+      children: [{ _type: "span", text: `5. Catatan Budaya` }]
     });
     dbCallouts.forEach((c) => {
       dynamicBlocks.push({
@@ -132,7 +132,7 @@ export function transformLessonBlocks(
     dynamicBlocks.push({
       _type: "block",
       style: "h2",
-      children: [{ _type: "span", text: `💬 6. Praktik Membaca Nyata (Dialog)` }]
+      children: [{ _type: "span", text: `6. Praktik Membaca Nyata (Dialog)` }]
     });
     dbDialogs.forEach((d) => {
       dynamicBlocks.push({
@@ -149,7 +149,7 @@ export function transformLessonBlocks(
     dynamicBlocks.push({
       _type: "block",
       style: "h2",
-      children: [{ _type: "span", text: `✏️ 7. Kuis Evaluasi Bab ${orderNum}` }]
+      children: [{ _type: "span", text: `7. Kuis Evaluasi Bab ${orderNum}` }]
     });
   }
 

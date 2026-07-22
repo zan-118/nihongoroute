@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Github, Instagram, MessageCircle } from "lucide-react";
+import { Github, Instagram, MessageCircle } from "@/components/ui/icons";
 
 import { ROUTES } from "@/lib/core/routes";
 /**
@@ -155,7 +155,7 @@ export function LandingFooter() {
           &copy; {new Date().getFullYear()} NihongoRoute. Hak cipta dilindungi.
         </span>
         <span className="text-muted-foreground/70 font-semibold normal-case tracking-normal text-center sm:text-right">
-          Dibuat dengan ❤️ untuk semua pejuang bahasa Jepang di Indonesia.
+          Dibuat untuk semua pejuang bahasa Jepang di Indonesia.
         </span>
       </div>
     </footer>

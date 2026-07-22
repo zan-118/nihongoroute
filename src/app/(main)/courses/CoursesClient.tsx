@@ -46,7 +46,7 @@ interface Category {
 import { useUserStore } from "@/store/useUserStore";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, Trophy, BookOpen, Layers } from "lucide-react";
+import { Sparkles, Trophy, BookOpen, Layers } from "@/components/ui/icons";
 
 /**
  * Duplicate category data shape.

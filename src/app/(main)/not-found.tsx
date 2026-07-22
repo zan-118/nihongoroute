@@ -6,7 +6,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { MapPinOff, ArrowLeft, LayoutDashboard } from "lucide-react";
+import { MapPinOff, ArrowLeft, LayoutDashboard } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 
 /**

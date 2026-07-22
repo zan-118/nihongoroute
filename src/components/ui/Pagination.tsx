@@ -8,7 +8,7 @@
 // ======================
 // IMPOR
 // ======================
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
 // ======================

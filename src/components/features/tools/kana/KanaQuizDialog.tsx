@@ -8,7 +8,7 @@
 // ==========================================
 import React, { useEffect, useCallback } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { Heart, Trophy, Volume2 } from "lucide-react";
+import { Heart, Trophy, Volume2 } from "@/components/ui/icons";
 import {
   Dialog,
   DialogContent,

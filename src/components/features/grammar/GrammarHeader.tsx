@@ -9,7 +9,7 @@
 // ==========================================
 // IMPOR UTAMA
 // ==========================================
-import { BookOpen } from "lucide-react";
+import { BookOpen } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { GrammarLevelNav } from "./GrammarLevelNav";
 

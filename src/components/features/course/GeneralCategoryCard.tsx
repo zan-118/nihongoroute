@@ -11,7 +11,7 @@
 import React from "react";
 import Link from "next/link";
 import { m, Variants } from "framer-motion";
-import { ArrowRight, BookOpen, GraduationCap } from "lucide-react";
+import { ArrowRight, BookOpen, GraduationCap } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { ROUTES } from "@/lib/routes";
 

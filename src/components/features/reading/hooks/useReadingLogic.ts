@@ -8,7 +8,7 @@
 // ==========================================
 import { useEffect, useMemo, type ElementType } from "react";
 import { useUIStore } from "@/store/useUIStore";
-import { BookOpen, Eye, EyeOff, Type } from "lucide-react";
+import { BookOpen, Eye, EyeOff, Type } from "@/components/ui/icons";
 import { ReadingData, ReadingMode, PortableTextContent, PortableTextBlock } from "../types";
 
 // ==========================================

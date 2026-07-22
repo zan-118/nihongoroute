@@ -8,7 +8,7 @@
 // ==========================================
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MousePointer2, CheckCircle2, XCircle } from "lucide-react";
+import { MousePointer2, CheckCircle2, XCircle, Sprout, Flame, Award } from "@/components/ui/icons";
 import { FlashcardThemeContext } from "./types";
 import { Input } from "@/components/ui/input";
 import { toHiragana } from "wanakana";
@@ -40,24 +40,20 @@ interface FlashcardFrontProps {
     repetition: number;
     easeFactor: number;
     nextReview: number;
-  };
+  } | null;
 }
 
 // ==========================================
-// KOMPONEN UTAMA
+// UTAMA
 // ==========================================
-/**
- * Renders the front side of a flashcard.
- * Displays the target word and handles text input for challenge mode.
- */
 export function FlashcardFront({
   word,
   themeContext,
-  studyMode,
+  studyMode = "latihan",
   userInput = "",
   onUserInputChange,
   isAnswerChecked,
-  inputResult,
+  inputResult = null,
   srsState,
 }: FlashcardFrontProps) {
   // ==========================================
@@ -72,13 +68,14 @@ export function FlashcardFront({
    * @param interval - Days until next review.
    */
   const getMastery = (interval: number = 0) => {
-    if (interval <= 1) return { icon: "🌱", label: "Belajar" };
-    if (interval <= 5) return { icon: "🌿", label: "Akrab" };
-    if (interval <= 14) return { icon: "🔥", label: "Kuat" };
-    return { icon: "💎", label: "Mahir" };
+    if (interval <= 1) return { icon: Sprout, label: "Belajar" };
+    if (interval <= 5) return { icon: Sprout, label: "Akrab" };
+    if (interval <= 14) return { icon: Flame, label: "Kuat" };
+    return { icon: Award, label: "Mahir" };
   };
 
   const mastery = getMastery(srsState?.interval);
+  const IconComponent = mastery.icon;
 
   /**
    * Handles input change and converts Romaji to Hiragana automatically.
@@ -125,7 +122,7 @@ export function FlashcardFront({
       </Badge>
 
       <div className="absolute top-6 md:top-8 right-6 md:right-8 flex flex-col items-end gap-1 opacity-60">
-        <span className="text-lg md:text-xl">{mastery.icon}</span>
+        <IconComponent size={20} className="text-primary" />
         <span className="text-[8px] font-black uppercase tracking-tighter text-muted-foreground">{mastery.label}</span>
       </div>
 

@@ -10,7 +10,7 @@
 // ======================
 import React from "react";
 import Image from "next/image";
-import { Play, FileIcon } from "lucide-react";
+import { Play, FileIcon } from "@/components/ui/icons";
 
 // ======================
 // ANTARMUKA / TIPE DATA

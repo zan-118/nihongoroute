@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { AlertTriangle } from "@/components/ui/icons";
 
 // ======================
 // EKSEKUSI UTAMA
@@ -23,7 +24,7 @@ import { Button } from "@/components/ui/button";
 interface ExamErrorProps {
   /** The error object thrown by the child components. */
   error: Error & { digest?: string };
-  /** Callback function to reset the error boundary and retry rendering. */
+  /** Callback function to attempt reloading/re-rendering. */
   reset: () => void;
 }
 
@@ -51,7 +52,7 @@ export default function ExamError({
       <Card className="p-10 md:p-14 border-destructive/30 max-w-lg w-full relative z-10 my-auto neo-card rounded-[2rem] bg-card">
         {/* Neumorphic warning icon container */}
         <div className="size-20 mx-auto neo-inset text-destructive flex items-center justify-center rounded-full mb-8 shadow-inner bg-destructive/10">
-          <span className="text-4xl block">⚠️</span>
+          <AlertTriangle size={36} className="text-destructive animate-pulse" />
         </div>
 
         <h1 className="text-2xl md:text-3xl text-foreground uppercase tracking-tight mb-4">

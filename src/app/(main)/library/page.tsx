@@ -9,7 +9,7 @@
 // ======================
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { Library, Sparkles } from "lucide-react";
+import { Library, Sparkles } from "@/components/ui/icons";
 import { buildLibraryCategories, buildLibraryStats } from "@/lib/constants/library";
 import { Card } from "@/components/ui/card";
 

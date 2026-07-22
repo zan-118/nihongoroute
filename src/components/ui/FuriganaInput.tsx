@@ -9,7 +9,7 @@
 // IMPOR
 // ======================
 import React, { useState } from "react";
-import { Loader2, Wand2 } from "lucide-react";
+import { Loader2, Wand2 } from "@/components/ui/icons";
 import { useFurigana } from "@/hooks/useFurigana";
 
 // ======================

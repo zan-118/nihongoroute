@@ -16,7 +16,7 @@ import {
   Target,
   Search,
   PenTool,
-} from "lucide-react";
+} from "@/components/ui/icons";
 
 export interface ToolItem {
   title: string;

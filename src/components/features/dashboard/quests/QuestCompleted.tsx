@@ -11,7 +11,7 @@
 // IMPOR
 // ==========================================
 import { m } from "framer-motion";
-import { Sparkles } from "lucide-react";
+import { Sparkles } from "@/components/ui/icons";
 
 // ==========================================
 // KOMPONEN UTAMA

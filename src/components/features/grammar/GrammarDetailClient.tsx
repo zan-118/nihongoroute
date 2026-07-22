@@ -23,8 +23,9 @@ import {
   ArrowRight,
   Share2,
   CheckCircle2,
-  ListChecks
-} from "lucide-react";
+  ListChecks,
+  AlertTriangle
+} from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
@@ -235,7 +236,7 @@ function parseNotesToJSX(notes: string): React.ReactNode {
           key={`warning-${index}`} 
           className="p-4 md:p-5 rounded-[1.2rem] border border-destructive/20 bg-[rgb(var(--destructive-rgb)/0.05)] text-foreground/90 font-semibold my-5 text-xs md:text-sm flex gap-3 items-start shadow-[0_0_20px_rgb(var(--destructive-rgb)/0.05)] select-text"
         >
-          <span className="text-destructive text-base mt-0.5 select-none">⚠️</span>
+          <AlertTriangle size={16} className="text-destructive shrink-0 mt-0.5" />
           <div className="flex-1 leading-relaxed">
             {parseInlineStyles(trimmed.substring(2).trim())}
           </div>

@@ -9,7 +9,7 @@
 // IMPOR
 // ======================
 import React, { useState, useEffect } from "react";
-import { Search, Headphones, Play, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Loader2, CheckCircle2, Radio } from "lucide-react";
+import { Search, Headphones, Play, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Loader2, CheckCircle2, Radio } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

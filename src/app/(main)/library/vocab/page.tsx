@@ -9,7 +9,7 @@
 // IMPOR
 // ======================
 import { Suspense } from "react";
-import { RotateCw } from "lucide-react";
+import { RotateCw } from "@/components/ui/icons";
 import { JsonLd } from "@/components/seo/JsonLd";
 import VocabClient from "./VocabClient";
 import { getPaginatedVocab } from "@/actions/library.actions";

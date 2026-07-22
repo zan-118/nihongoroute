@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { useState, useEffect } from "react";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
-import { Zap, Flame, Award, ShieldCheck, User } from "lucide-react";
+import { Zap, Flame, Award, ShieldCheck, User } from "@/components/ui/icons";
 
 // ======================
 // TIPE DATA

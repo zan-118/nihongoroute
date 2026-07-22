@@ -9,7 +9,7 @@
 // IMPORT & DEPENDENSI
 // ==========================================
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Mic, MicOff, RefreshCw, ChevronRight, Zap, CheckCircle2, AlertCircle } from "lucide-react";
+import { Mic, MicOff, RefreshCw, ChevronRight, Zap, CheckCircle2, AlertCircle } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useUserStore } from "@/store/useUserStore";

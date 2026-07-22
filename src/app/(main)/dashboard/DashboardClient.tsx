@@ -34,6 +34,8 @@ const AchievementsGrid = dynamic(() => import("@/components/features/gamificatio
   loading: () => <div className="h-[200px] w-full animate-pulse bg-muted rounded-lg" />
 });
 
+import { Home, Activity, Trophy, Settings } from "@/components/ui/icons";
+
 // ======================
 // CONFIG / CONSTANTS
 // ======================
@@ -50,10 +52,10 @@ const itemVariants: Variants = {
 
 /** Navigation tabs configuration. */
 const TABS = [
-  { id: "beranda", label: "Beranda", icon: "🏠" },
-  { id: "progres", label: "Progres", icon: "📈" },
-  { id: "pencapaian", label: "Koleksi", icon: "🏆" },
-  { id: "pengaturan", label: "Setelan", icon: "⚙️" },
+  { id: "beranda", label: "Beranda", icon: Home },
+  { id: "progres", label: "Progres", icon: Activity },
+  { id: "pencapaian", label: "Koleksi", icon: Trophy },
+  { id: "pengaturan", label: "Setelan", icon: Settings },
 ];
 
 /** Props for DashboardClient component. */

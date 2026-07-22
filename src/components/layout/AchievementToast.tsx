@@ -10,7 +10,7 @@
 // ======================
 import React, { useState, useEffect, useRef } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { Trophy, X, Zap } from "lucide-react";
+import { Trophy, X, Zap } from "@/components/ui/icons";
 import { useUIStore } from "@/store/useUIStore";
 import { sounds } from "@/lib/audio";
 

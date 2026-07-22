@@ -8,7 +8,7 @@
 // ======================
 import React from "react";
 import Link from "next/link";
-import { Award } from "lucide-react";
+import { Award } from "@/components/ui/icons";
 
 // ======================
 // ANTARMUKA / TIPE DATA

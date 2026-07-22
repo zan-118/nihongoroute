@@ -11,7 +11,7 @@ import {
   Loader2,
   Search,
   Sparkles,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { analyzeTextWithDictionary, type ToolSearchItem } from "@/lib/tools-search";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

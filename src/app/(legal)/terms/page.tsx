@@ -9,7 +9,7 @@
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, BookOpen, Compass, ShieldCheck } from "lucide-react";
+import { ArrowLeft, BookOpen, Compass, ShieldCheck } from "@/components/ui/icons";
 import AppBreadcrumbs from "@/components/layout/AppBreadcrumbs";
 import { createPageMetadata } from "@/lib/seo";
 import { getBreadcrumbItems } from "@/lib/routes";

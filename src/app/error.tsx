@@ -10,7 +10,7 @@
 // ======================
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { AlertOctagon } from "lucide-react";
+import { AlertOctagon } from "@/components/ui/icons";
 
 // ======================
 // EKSEKUSI UTAMA

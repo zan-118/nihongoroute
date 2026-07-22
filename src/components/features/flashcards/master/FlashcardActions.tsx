@@ -8,7 +8,7 @@
 // ==========================================
 import { Button } from "@/components/ui/button";
 import { m, AnimatePresence } from "framer-motion";
-import { Check, X, Info, Search } from "lucide-react";
+import { Check, X, Info, Search } from "@/components/ui/icons";
 import { StudyMode } from "./types";
 
 // ==========================================

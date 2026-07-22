@@ -12,7 +12,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Timer, Zap, ShieldAlert, AlertTriangle, Target, BatteryMedium } from "lucide-react";
+import { Timer, Zap, ShieldAlert, AlertTriangle, Target, BatteryMedium } from "@/components/ui/icons";
 import { CardData } from "./types";
 import { toHiragana } from "wanakana";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";

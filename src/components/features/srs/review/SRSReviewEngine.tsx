@@ -14,7 +14,7 @@ import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { BrainCircuit, Check, X, ShieldCheck, Flame, Trophy } from "lucide-react";
+import { BrainCircuit, Check, X, ShieldCheck, Flame, Trophy } from "@/components/ui/icons";
 import Flashcard from "@/components/features/flashcards/card/Flashcard";
 import XPPop from "@/components/features/gamification/XPPop";
 import { FlashcardType } from "./types";

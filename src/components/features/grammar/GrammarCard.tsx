@@ -10,7 +10,7 @@
 // IMPOR UTAMA
 // ==========================================
 import Link from "next/link";
-import { Bookmark, ArrowRight } from "lucide-react";
+import { Bookmark, ArrowRight } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ROUTES } from "@/lib/routes";

@@ -9,7 +9,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { PenTool, ExternalLink } from "lucide-react";
+import { PenTool, ExternalLink } from "@/components/ui/icons";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import { FlashcardThemeContext } from "./types";
 import Link from "next/link";

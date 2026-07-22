@@ -16,7 +16,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { AlertCircle, Info, BookOpen, AlertTriangle, Globe, Hourglass, BarChart, ChevronDown } from "lucide-react";
+import { AlertCircle, Info, BookOpen, AlertTriangle, Globe, Hourglass, BarChart, ChevronDown } from "@/components/ui/icons";
 import { ContentBlock, ExampleSentence } from "@/types/database";
 import FuriganaDisplay from "@/components/ui/FuriganaDisplay";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";

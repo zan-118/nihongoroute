@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown } from "@/components/ui/icons";
 import { ContentBlock, ExampleSentence } from "@/types/database";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import FuriganaDisplay from "@/components/ui/FuriganaDisplay";

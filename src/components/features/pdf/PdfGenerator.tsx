@@ -15,7 +15,7 @@
 // ==========================================
 import React from "react";
 import dynamic from "next/dynamic";
-import { Download, Loader2 } from "lucide-react";
+import { Download, Loader2 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { usePdfGenerator } from "./usePdfGenerator";
 import { LessonPdfTemplate } from "./templates/LessonPdfTemplate";

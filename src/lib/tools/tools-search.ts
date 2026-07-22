@@ -1,5 +1,5 @@
 import type { ElementType } from "react";
-import { BookOpen, FileText, Hash, Wrench, Headphones } from "lucide-react";
+import { BookOpen, FileText, Hash, Wrench, Headphones } from "@/components/ui/icons";
 import { toHiragana } from "wanakana";
 import { createClient } from "@/lib/supabase/client";
 import { tools } from "@/lib/constants/tools";

@@ -7,7 +7,7 @@
 // IMPORT & DEPENDENSI
 // ==========================================
 import { m, AnimatePresence } from "framer-motion";
-import { PenTool, Sparkles } from "lucide-react";
+import { PenTool, Sparkles } from "@/components/ui/icons";
 import {
   Dialog,
   DialogContent,

@@ -16,7 +16,7 @@ import {
   Settings,
   Sparkles,
   Sliders
-} from "lucide-react";
+} from "@/components/ui/icons";
 
 /**
  * Props for PreferencesSection component.

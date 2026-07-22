@@ -19,7 +19,8 @@ import {
   Loader2,
   Lock as LockIcon,
   Flag,
-} from "lucide-react";
+  AlertTriangle,
+} from "@/components/ui/icons";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import {
   ExamData,
@@ -786,7 +787,7 @@ export function ExamPlaying({
                 </div>
 
                 <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg flex items-start gap-3">
-                  <span className="text-sm">⚠️</span>
+                  <AlertTriangle size={16} className="text-destructive shrink-0 mt-0.5" />
                   <p className="text-[11px] text-destructive font-medium leading-relaxed">
                     Setelah mengumpulkan lembar jawaban ini, waktu akan dihentikan dan ujian Anda akan segera dihitung secara permanen. Anda tidak dapat kembali mengubah jawaban Anda.
                   </p>

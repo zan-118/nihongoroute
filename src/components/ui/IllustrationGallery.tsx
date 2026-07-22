@@ -9,7 +9,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, m } from "framer-motion";
-import { X, ZoomIn } from "lucide-react";
+import { X, ZoomIn } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 /**

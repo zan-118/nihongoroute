@@ -11,7 +11,7 @@
 // ======================
 import React from "react";
 import { m } from "framer-motion";
-import { Wrench, ChevronRight, Zap } from "lucide-react";
+import { Wrench, ChevronRight, Zap } from "@/components/ui/icons";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { tools, type ToolItem } from "@/lib/constants/tools";

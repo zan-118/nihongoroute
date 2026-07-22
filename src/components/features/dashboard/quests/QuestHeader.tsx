@@ -12,7 +12,7 @@
 // ==========================================
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Target } from "lucide-react";
+import { Target } from "@/components/ui/icons";
 
 // ==========================================
 // KOMPONEN UTAMA

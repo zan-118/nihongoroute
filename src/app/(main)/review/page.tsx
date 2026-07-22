@@ -9,7 +9,7 @@
 // ======================
 import { Suspense } from "react";
 import { ReviewClient } from "@/app/(main)/review/ReviewClient";
-import { RotateCw } from "lucide-react";
+import { RotateCw } from "@/components/ui/icons";
 import type { Metadata } from "next";
 import { createPageMetadata } from "@/lib/seo";
 

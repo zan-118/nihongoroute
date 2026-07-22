@@ -10,7 +10,7 @@
 // IMPOR UTAMA
 // ==========================================
 import { Card } from "@/components/ui/card";
-import { Sparkles, Info } from "lucide-react";
+import { Sparkles, Info } from "@/components/ui/icons";
 import { MnemonicEditor } from "@/components/features/srs/mnemonic/MnemonicEditor";
 
 // ==========================================

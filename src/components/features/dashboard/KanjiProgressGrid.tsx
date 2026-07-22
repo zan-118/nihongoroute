@@ -16,7 +16,7 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Info } from "lucide-react";
+import { Loader2, Info } from "@/components/ui/icons";
 import { useKanjiProgressQuery } from "./useKanjiProgressQuery";
 
 // ==========================================

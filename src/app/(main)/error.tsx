@@ -12,7 +12,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, RefreshCw, LayoutDashboard } from "lucide-react";
+import { AlertTriangle, RefreshCw, LayoutDashboard } from "@/components/ui/icons";
 
 // ======================
 // EKSEKUSI UTAMA

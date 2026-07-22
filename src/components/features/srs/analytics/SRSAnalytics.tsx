@@ -11,7 +11,7 @@
 // ======================
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { LineChart, BarChart2, AlertTriangle, Zap, ShieldCheck } from "lucide-react";
+import { LineChart, BarChart2, AlertTriangle, Zap, ShieldCheck } from "@/components/ui/icons";
 import { useSRSAnalytics } from "./useSRSAnalytics";
 
 // ======================

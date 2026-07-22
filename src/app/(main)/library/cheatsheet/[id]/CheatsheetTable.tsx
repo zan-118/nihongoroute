@@ -19,7 +19,7 @@ import {
   Eye, 
   EyeOff, 
   Info
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { m, AnimatePresence } from "framer-motion";

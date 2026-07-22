@@ -1,7 +1,7 @@
 "use client";
 
 import { m, Variants } from "framer-motion";
-import { Settings as SettingsIcon, Layers, ShieldAlert } from "lucide-react";
+import { Settings as SettingsIcon, Layers, ShieldAlert } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import LeaderboardClient from "./LeaderboardClient";
 import CommunityFeed from "./CommunityFeed";
-import { MessageSquare, Trophy } from "lucide-react";
+import { MessageSquare, Trophy } from "@/components/ui/icons";
 import { m, AnimatePresence } from "framer-motion";
 
 /**

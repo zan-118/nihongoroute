@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Brain, Check, X, Search } from "lucide-react";
+import { Brain, Check, X, Search, Flame } from "@/components/ui/icons";
 import { StudyMode } from "./types";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
@@ -121,7 +121,8 @@ export function FlashcardHeader({
         {/* Show combo badge only when streak is active. */}
         {combo > 1 && (
           <div className="flex items-center gap-1.5 bg-warning text-warning-foreground px-3 py-2 rounded-xl animate-in zoom-in duration-300 shadow-lg shadow-orange-500/20">
-            <span className="text-sm font-black">🔥 {combo}</span>
+            <Flame size={14} className="text-orange-500 animate-pulse" />
+            <span className="text-sm font-black">{combo}</span>
           </div>
         )}
 

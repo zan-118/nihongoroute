@@ -15,7 +15,7 @@
 // IMPOR
 // ==========================================
 import React from "react";
-import { AlertTriangle, PenTool, ArrowRight, Loader2, Sparkles, BookOpen, Target } from "lucide-react";
+import { AlertTriangle, PenTool, ArrowRight, Loader2, Sparkles, BookOpen, Target } from "@/components/ui/icons";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

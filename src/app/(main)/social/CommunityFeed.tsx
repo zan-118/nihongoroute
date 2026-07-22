@@ -18,7 +18,7 @@ import {
   Target,
   Calendar,
   Filter
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { m, AnimatePresence } from "framer-motion";
 import {
   Dialog,
@@ -522,11 +522,11 @@ export default function CommunityFeed() {
               <button
                 type="button"
                 onClick={() => {
-                  toast.success(`Kamu mengirimkan semangat kepada ${selectedUserProfile?.full_name || "member"}! 🎉⚡`);
+                  toast.success(`Kamu mengirimkan semangat kepada ${selectedUserProfile?.full_name || "member"}!`);
                 }}
                 className="w-full h-12 bg-primary hover:bg-secondary text-primary-foreground font-black uppercase tracking-widest text-xs rounded-xl shadow-lg transition-all active:scale-[0.97]"
               >
-                Kirim Semangat! ⚡
+                Kirim Semangat!
               </button>
             </div>
           )}

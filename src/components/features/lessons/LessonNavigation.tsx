@@ -8,7 +8,7 @@
 // ======================
 import React from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Trophy } from "@/components/ui/icons";
 
 // ======================
 // ANTARMUKA / TIPE DATA
@@ -92,9 +92,9 @@ export const LessonNavigation: React.FC<LessonNavigationProps> = ({
           href={`/courses/${levelCode || categoryId}`}
           className="neo-card h-full p-8 flex flex-col items-center justify-center text-center group bg-[rgb(var(--primary-rgb)/0.05)] hover:bg-[rgb(var(--primary-rgb)/0.1)] border-[rgb(var(--primary-rgb)/0.2)] hover:border-primary transition-all duration-300"
         >
-          <span className="text-4xl mb-3 group-hover:scale-110 transition-transform">
-            🎉
-          </span>
+          <div className="text-primary mb-3 group-hover:scale-110 transition-transform">
+            <Trophy size={40} />
+          </div>
           <p className="text-xs font-black uppercase tracking-widest text-primary">
             Yeay! Materi Selesai
           </p>

@@ -10,7 +10,7 @@
  */
 
 import { memo, useEffect, useRef, useState } from "react";
-import { Clock } from "lucide-react";
+import { Clock } from "@/components/ui/icons";
 import { formatTime } from "@/lib/core/utils";
 
 interface ExamCountdownProps {

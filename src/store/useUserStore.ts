@@ -124,7 +124,7 @@ export const useUserStore = create<UserState>()(
         if (newLevel > currentLevel) {
           useUIStore.getState().addNotification({
             title: "Level Up!",
-            message: `Selamat! Kamu sekarang berada di Level ${newLevel}. 🎉`,
+            message: `Selamat! Kamu sekarang berada di Level ${newLevel}.`,
             type: "achievement"
           });
         }

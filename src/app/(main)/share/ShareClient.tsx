@@ -14,7 +14,7 @@ import { useSearchParams } from "next/navigation";
 import { m } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trophy, Skull, Share2, Award, ArrowLeft, Target, Calendar } from "lucide-react";
+import { Trophy, Skull, Share2, Award, ArrowLeft, Target, Calendar } from "@/components/ui/icons";
 import Link from "next/link";
 import Image from "next/image";
 import { toast } from "sonner";

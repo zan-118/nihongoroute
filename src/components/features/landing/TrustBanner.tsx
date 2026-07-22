@@ -23,7 +23,7 @@ import {
   Heart, 
   Github, 
   Sparkles 
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -147,18 +147,18 @@ export function TrustBanner() {
             className="flex gap-12 w-max"
           >
             {[
-              "👥 74+ Pembelajar Terdaftar",
-              "⭐ 100% Open Source di GitHub",
-              "💡 22,000+ Kosakata Terkontribusi",
-              "❤️ Didukung Donatur Trakteer & Saweria",
-              "🔒 Kebijakan Data Offline Aman",
-              "⚡ Didukung Komunitas Bahasa Jepang Indonesia",
-              "👥 74+ Pembelajar Terdaftar",
-              "⭐ 100% Open Source di GitHub",
-              "💡 22,000+ Kosakata Terkontribusi",
-              "❤️ Didukung Donatur Trakteer & Saweria",
-              "🔒 Kebijakan Data Offline Aman",
-              "⚡ Didukung Komunitas Bahasa Jepang Indonesia"
+              "74+ Pembelajar Terdaftar",
+              "100% Open Source di GitHub",
+              "22,000+ Kosakata Terkontribusi",
+              "Didukung Donatur Trakteer & Saweria",
+              "Kebijakan Data Offline Aman",
+              "Didukung Komunitas Bahasa Jepang Indonesia",
+              "74+ Pembelajar Terdaftar",
+              "100% Open Source di GitHub",
+              "22,000+ Kosakata Terkontribusi",
+              "Didukung Donatur Trakteer & Saweria",
+              "Kebijakan Data Offline Aman",
+              "Didukung Komunitas Bahasa Jepang Indonesia"
             ].map((text, index) => (
               <span key={index} className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
                 <Sparkles size={10} className="text-primary animate-pulse" /> {text}

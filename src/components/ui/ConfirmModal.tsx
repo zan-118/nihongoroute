@@ -9,7 +9,7 @@
 // IMPOR
 // ======================
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
 // ======================

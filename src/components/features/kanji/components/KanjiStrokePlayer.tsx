@@ -18,7 +18,7 @@ import {
   ChevronRight, 
   Zap, 
   Hash 
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { useKanjiSvg } from "../hooks/useKanjiSvg";
 import { PlaybackStatus } from "../types";

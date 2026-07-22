@@ -12,7 +12,7 @@ import React, { useState } from "react";
 import { m } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 
 // ======================

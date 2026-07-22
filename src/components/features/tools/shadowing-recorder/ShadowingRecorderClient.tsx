@@ -10,7 +10,7 @@ import {
   Square,
   Volume2,
   Waves,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import {
   formatShadowingDuration,
   getShadowingPaceLabel,

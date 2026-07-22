@@ -7,7 +7,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Edit2, Check, X, UserCircle, Loader2 } from "lucide-react";
+import { Edit2, Check, X, UserCircle, Loader2 } from "@/components/ui/icons";
 import { useProfileEditor } from "@/components/features/user/useProfileEditor";
 
 /**

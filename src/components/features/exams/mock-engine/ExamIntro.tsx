@@ -9,7 +9,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle, Loader2 } from "@/components/ui/icons";
 import Link from "next/link";
 import { ExamData } from "./types";
 

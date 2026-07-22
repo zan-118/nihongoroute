@@ -14,7 +14,7 @@
 // IMPOR
 // ==========================================
 import { m, Variants } from "framer-motion";
-import { Sparkles, BrainCircuit, Target, BookMarked, Zap } from "lucide-react";
+import { Sparkles, BrainCircuit, Target, BookMarked, Zap } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { useUserStore } from "@/store/useUserStore";
 import ProfileEditor from "../user/ProfileEditor";
-import { Trophy, Flame, Star, ArrowRight } from "lucide-react";
+import { Trophy, Flame, Star, ArrowRight } from "@/components/ui/icons";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import ContinueLearning from "./ContinueLearning";
 import { getLevelProgressPercent } from "@/lib/level";

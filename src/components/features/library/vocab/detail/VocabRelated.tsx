@@ -10,7 +10,7 @@
 // IMPOR UTAMA
 // ==========================================
 import { Card } from "@/components/ui/card";
-import { Link as LinkIcon } from "lucide-react";
+import { Link as LinkIcon } from "@/components/ui/icons";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 

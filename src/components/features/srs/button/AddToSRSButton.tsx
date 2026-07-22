@@ -10,7 +10,7 @@
 // IMPOR
 // ======================
 import { useAddToSRS } from "./useAddToSRS";
-import { Star, Check } from "lucide-react";
+import { Star, Check } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 

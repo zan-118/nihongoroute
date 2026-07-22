@@ -16,7 +16,7 @@ import {
   Library,
   Repeat2,
   Trophy,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

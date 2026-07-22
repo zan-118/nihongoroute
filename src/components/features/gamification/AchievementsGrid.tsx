@@ -12,7 +12,7 @@
 // ======================
 import { m } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { Trophy } from "lucide-react";
+import { Trophy } from "@/components/ui/icons";
 import { UserProgress } from "@/store/types";
 import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";

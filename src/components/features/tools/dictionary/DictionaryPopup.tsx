@@ -11,7 +11,7 @@
 import { useEffect, useState, useRef } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { X } from "lucide-react";
+import { X } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import AddToSRSButton from "@/components/features/srs/actions/AddToSRSButton";

@@ -10,7 +10,7 @@
 // IMPOR
 // ======================
 import React from "react";
-import { ArrowRight, LucideIcon } from "lucide-react";
+import { ArrowRight, IconType } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -26,7 +26,7 @@ interface ReviewModeCardProps {
   /** Flag indicating if the card is active and clickable */
   isEnabled: boolean;
   /** Lucide icon component to display */
-  icon: LucideIcon;
+  icon: IconType;
   /** Optional count of items available for review */
   count?: number;
   /** Label text for the badge */

@@ -7,7 +7,7 @@
 // IMPORT & DEPENDENSI
 // ==========================================
 import { Card } from "@/components/ui/card";
-import { Sparkles } from "lucide-react";
+import { Sparkles } from "@/components/ui/icons";
 import { MnemonicEditor } from "@/components/features/srs/mnemonic/MnemonicEditor";
 
 // ==========================================

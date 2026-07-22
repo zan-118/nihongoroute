@@ -12,7 +12,7 @@ import XPPop from "@/components/features/gamification/XPPop";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, Target, RefreshCw, ArrowRight } from "lucide-react";
+import { Trophy, Target, RefreshCw, ArrowRight } from "@/components/ui/icons";
 
 // ======================
 // ANTARMUKA / TIPE DATA

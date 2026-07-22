@@ -7,7 +7,7 @@
 // IMPORT & DEPENDENSI
 // ==========================================
 import { Button } from "@/components/ui/button";
-import { Volume2, AudioLines } from "lucide-react";
+import { Volume2, AudioLines } from "@/components/ui/icons";
 import { useTTSReader } from "../audio/useTTSReader";
 
 // ==========================================

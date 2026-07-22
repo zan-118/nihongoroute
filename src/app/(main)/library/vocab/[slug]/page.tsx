@@ -21,7 +21,7 @@ import {
   Hash,
   Layers,
   ListChecks
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
 // Komponen Pendukung

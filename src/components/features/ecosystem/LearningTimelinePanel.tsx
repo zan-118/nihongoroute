@@ -16,8 +16,8 @@ import {
   Mic,
   PlayCircle,
   XCircle,
-  type LucideIcon,
-} from "lucide-react";
+  type IconType,
+} from "@/components/ui/icons";
 import type { LearningEvent, LearningEventType, LearningSourceType } from "@/lib/learning-ecosystem";
 import { useUIStore } from "@/store/useUIStore";
 import { Badge } from "@/components/ui/badge";
@@ -33,7 +33,7 @@ const EVENT_META: Record<
   {
     label: string;
     description: string;
-    icon: LucideIcon;
+    icon: IconType;
     className: string;
   }
 > = {

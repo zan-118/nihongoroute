@@ -12,7 +12,7 @@ import {
   Sparkles,
   Trophy,
   XCircle,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import {
   createMiniDrill,
   DRILL_KINDS,

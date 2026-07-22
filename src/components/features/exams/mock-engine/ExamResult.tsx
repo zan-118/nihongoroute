@@ -16,7 +16,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useUserStore } from "@/store/useUserStore";
 import dynamic from "next/dynamic";
-import { Trophy, Skull, Share2, Loader2, FileText, BarChart2, Calendar, User, Award, CheckCircle2, AlertCircle } from "lucide-react";
+import { Trophy, Skull, Share2, Loader2, FileText, BarChart2, Calendar, User, Award, CheckCircle2, AlertCircle, AlertTriangle } from "@/components/ui/icons";
 import Link from "next/link";
 import { ExamData, GameState } from "./types";
 import { SECTION_LABELS } from "./constants";
@@ -636,7 +636,7 @@ export function ExamResult({
 
             {failedSection && finalScore >= exam.passingScore && (
               <div className="max-w-xl mx-auto mb-8 p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-3 animate-pulse shadow-[0_0_15px_rgb(var(--destructive-rgb)/0.1)]">
-                <span className="text-base">⚠️</span>
+                <AlertTriangle size={16} className="text-destructive shrink-0" />
                 <span>Skor Total Mencukupi, tetapi Gagal Batas Nilai Kategori (Maiten)</span>
               </div>
             )}

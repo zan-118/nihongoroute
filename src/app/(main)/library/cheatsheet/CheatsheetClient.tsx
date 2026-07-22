@@ -22,7 +22,7 @@ import {
   Sparkles,
   ChevronRight,
   Filter,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { m, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";

@@ -13,7 +13,7 @@ import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, Medal, Flame, Search, Crown, X, Lock, Target, Calendar } from "lucide-react";
+import { Trophy, Medal, Flame, Search, Crown, X, Lock, Target, Calendar } from "@/components/ui/icons";
 import { m, AnimatePresence } from "framer-motion";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { get as idbGet, set as idbSet } from "idb-keyval";
@@ -732,11 +732,11 @@ export default function LeaderboardClient() {
               {/* Cheer Button */}
               <button
                 onClick={() => {
-                  toast.success(`Kamu mengirimkan semangat kepada ${selectedUser.full_name || "member"}! 🎉⚡`);
+                  toast.success(`Kamu mengirimkan semangat kepada ${selectedUser.full_name || "member"}!`);
                 }}
                 className="w-full h-12 bg-primary hover:bg-secondary text-primary-foreground font-black uppercase tracking-widest text-xs rounded-xl shadow-lg transition-all active:scale-[0.97]"
               >
-                Kirim Semangat! ⚡
+                Kirim Semangat!
               </button>
             </div>
           )}

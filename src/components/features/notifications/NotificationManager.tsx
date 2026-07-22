@@ -10,7 +10,7 @@
 // IMPOR
 // ======================
 import { useState, useEffect } from "react";
-import { Bell, BellOff, BellRing, Settings2 } from "lucide-react";
+import { Bell, BellOff, BellRing, Settings2 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Switch } from "../../ui/switch";

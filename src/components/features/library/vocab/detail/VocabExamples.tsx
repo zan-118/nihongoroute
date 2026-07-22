@@ -10,7 +10,7 @@
 // IMPOR UTAMA
 // ==========================================
 import { Card } from "@/components/ui/card";
-import { Layers } from "lucide-react";
+import { Layers } from "@/components/ui/icons";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 
 // ==========================================

@@ -11,7 +11,7 @@
 // ======================
 import React, { useEffect } from "react";
 import Link from "next/link";
-import { Mic, ScanText } from "lucide-react";
+import { Mic, ScanText } from "@/components/ui/icons";
 import { ListeningTaskData } from "@/components/features/listening/types";
 import ListeningWorkspace from "@/components/features/listening/components/ListeningWorkspace";
 import { useListeningSync } from "@/components/features/listening/hooks/useListeningSync";

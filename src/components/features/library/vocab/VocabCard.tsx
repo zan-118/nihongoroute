@@ -13,7 +13,7 @@ import React from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink } from "@/components/ui/icons";
 import { ROUTES } from "@/lib/routes";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";

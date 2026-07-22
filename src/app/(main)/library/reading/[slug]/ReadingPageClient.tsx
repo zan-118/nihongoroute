@@ -12,7 +12,7 @@
 import React, { useState } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import Link from "next/link";
-import { BookmarkCheck, Clock, Gauge, Languages, MapPin, Mic, Minimize2, ScanText, Sparkles, Type } from "lucide-react";
+import { BookmarkCheck, Clock, Gauge, Languages, MapPin, Mic, Minimize2, ScanText, Sparkles, Type, Zap, BarChart } from "@/components/ui/icons";
 import { ReadingProvider } from "@/components/features/reading/components/ReadingContext";
 import { cn } from "@/lib/utils";
 import { useReadingLogic } from "@/components/features/reading/hooks/useReadingLogic";
@@ -425,13 +425,13 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
             {/* Sisi Tengah: Ramping Stats Row */}
             <div className="hidden md:flex items-center gap-4 text-xs font-mono border-x border-border/40 px-4 py-1">
               <span className="flex items-center gap-1.5 text-muted-foreground">
-                ⏱️ <span>{formatReadingDuration(readingSnapshot.elapsedSeconds)}</span>
+                <Clock size={14} className="text-primary" /> <span>{formatReadingDuration(readingSnapshot.elapsedSeconds)}</span>
               </span>
               <span className="flex items-center gap-1.5 text-muted-foreground">
-                ⚡ <span>{readingPace || "-"} <span className="text-[9px] text-muted-foreground font-sans">u/m</span></span>
+                <Zap size={14} className="text-warning" /> <span>{readingPace || "-"} <span className="text-[9px] text-muted-foreground font-sans">u/m</span></span>
               </span>
               <span className="flex items-center gap-1.5 text-muted-foreground">
-                📊 <span>{readingCompletionPercent}%</span>
+                <BarChart size={14} className="text-success" /> <span>{readingCompletionPercent}%</span>
               </span>
             </div>
 

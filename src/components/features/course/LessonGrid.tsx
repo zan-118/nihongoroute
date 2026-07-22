@@ -9,7 +9,7 @@
 // IMPOR
 // ======================
 import { m, Variants } from "framer-motion";
-import { Sparkles, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { Sparkles, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { LessonCard } from "./LessonCard";
 

@@ -13,7 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
-import { BookmarkCheck, BookmarkPlus, ExternalLink, Loader2, Trash2, X } from "lucide-react";
+import { BookmarkCheck, BookmarkPlus, ExternalLink, Loader2, Trash2, X } from "@/components/ui/icons";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import AddToSRSButton from "@/components/features/srs/actions/AddToSRSButton";

@@ -12,7 +12,7 @@
 // ======================
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShieldCheck, Zap, Info } from "lucide-react";
+import { ShieldCheck, Zap, Info } from "@/components/ui/icons";
 import { toast } from "sonner";
 import { useUserStore, STREAK_FREEZE_COST } from "@/store/useUserStore";
 

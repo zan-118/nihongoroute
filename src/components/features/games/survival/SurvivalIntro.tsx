@@ -7,7 +7,7 @@
 // ======================
 // IMPOR
 // ======================
-import { Activity } from "lucide-react";
+import { Activity } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 

@@ -21,7 +21,7 @@ import {
   RotateCcw,
   ShieldCheck,
   Target,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { toast } from "sonner";
 import FlashcardMaster from "@/components/features/flashcards/master/FlashcardMaster";
 import type { MasterCardData } from "@/components/features/flashcards/master/types";

@@ -11,7 +11,7 @@
 import React from "react";
 import { m } from "framer-motion";
 import Link from "next/link";
-import { ChevronRight, LucideIcon } from "lucide-react";
+import { ChevronRight, IconType } from "@/components/ui/icons";
 
 // ======================
 // ANTARMUKA / TIPE DATA
