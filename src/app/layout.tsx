@@ -147,7 +147,7 @@ export default function RootLayout({
     <html lang="id" className={`${notoSansJp.variable} ${notoSerifJp.variable}`} suppressHydrationWarning>
       <body
         suppressHydrationWarning
-        className="font-sans antialiased text-foreground selection:bg-destructive selection:text-destructive-foreground transition-colors duration-300"
+        className="font-sans antialiased text-foreground selection:bg-primary/20 selection:text-primary"
       >
         {/* Inject Google Analytics if ID is configured */}
         {gaId && <GoogleAnalytics gaId={gaId} />}

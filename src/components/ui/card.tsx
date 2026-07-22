@@ -22,8 +22,7 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      // neo-card apply custom glassmorphism border and background
-      "neo-card text-card-foreground",
+      "rounded-2xl border border-border/70 bg-card text-card-foreground shadow-sm transition-colors duration-150 hover:border-primary/40",
       className
     )}
     {...props}

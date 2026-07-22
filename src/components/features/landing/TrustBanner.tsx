@@ -1,21 +1,5 @@
-"use client";
-
-/**
- * @file TrustBanner.tsx
- * @description Komponen spanduk kepercayaan (Trust Banner) untuk Landing Page NihongoRoute.
- * Menegaskan tiga nilai utama platform: 100% Gratis Tanpa Iklan, Akses Luring Penuh (Offline),
- * serta didukung penuh oleh kontribusi komunitas secara Terbuka (Open Source).
- *
- * @package components/features/landing
- * @project NihongoRoute
- */
-
-// ==========================================
-// IMPOR
-// ==========================================
 import React from "react";
 import Link from "next/link";
-import { m } from "framer-motion";
 import { 
   ShieldCheck, 
   ArrowRight, 
@@ -28,15 +12,23 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-// ==========================================
 /**
  * TrustBanner component.
+ * Pure Server Component for SSG rendering.
  * Displays platform core values: free access, offline capability, open source.
- * Includes community contribution ticker.
  * 
  * @returns React element representing trust banner section.
  */
 export function TrustBanner() {
+  const tickerItems = [
+    "74+ Pembelajar Terdaftar",
+    "100% Open Source di GitHub",
+    "22,000+ Kosakata Terkontribusi",
+    "Didukung Donatur Trakteer & Saweria",
+    "Kebijakan Data Offline Aman",
+    "Didukung Komunitas Bahasa Jepang Indonesia"
+  ];
+
   return (
     <section className="w-full mb-[120px] relative group">
       {/* Tombou Register Mark */}
@@ -139,35 +131,13 @@ export function TrustBanner() {
 
         {/* Ticker Kontribusi Komunitas Horizontal */}
         <div className="pt-6 border-t border-border/60 w-full overflow-hidden relative">
-          {/* Infinite horizontal scroll animation for community stats */}
-          <m.div
-            animate={{ x: [0, -750] }}
-            transition={{
-              ease: "linear",
-              duration: 28,
-              repeat: Infinity
-            }}
-            className="flex gap-12 w-max"
-          >
-            {[
-              "74+ Pembelajar Terdaftar",
-              "100% Open Source di GitHub",
-              "22,000+ Kosakata Terkontribusi",
-              "Didukung Donatur Trakteer & Saweria",
-              "Kebijakan Data Offline Aman",
-              "Didukung Komunitas Bahasa Jepang Indonesia",
-              "74+ Pembelajar Terdaftar",
-              "100% Open Source di GitHub",
-              "22,000+ Kosakata Terkontribusi",
-              "Didukung Donatur Trakteer & Saweria",
-              "Kebijakan Data Offline Aman",
-              "Didukung Komunitas Bahasa Jepang Indonesia"
-            ].map((text, index) => (
+          <div className="flex gap-8 flex-wrap justify-between items-center">
+            {tickerItems.map((text, index) => (
               <span key={index} className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
                 <Sparkles size={10} className="text-primary animate-pulse" /> {text}
               </span>
             ))}
-          </m.div>
+          </div>
         </div>
  
       </Card>

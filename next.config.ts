@@ -40,7 +40,6 @@ if (isProduction) {
 }
 
 const nextConfig: NextConfig = {
-  output: "standalone",
   poweredByHeader: false,
   reactStrictMode: true,
   images: {
@@ -71,6 +70,13 @@ const nextConfig: NextConfig = {
       "@radix-ui/react-select",
       "@radix-ui/react-switch",
       "@radix-ui/react-progress",
+      "@radix-ui/react-slot",
+      "@radix-ui/react-tabs",
+      "@radix-ui/react-popover",
+      "@iconify/react",
+      "framer-motion",
+      "date-fns",
+      "sonner",
       "wanakana",
     ],
   },

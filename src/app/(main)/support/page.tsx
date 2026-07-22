@@ -1,6 +1,8 @@
 /**
  * @file page.tsx
- * @description Halaman dukungan (Support) NihongoRoute untuk menerima donasi dan transparansi operasional.
+ * @description Halaman Server Component untuk Dukungan (Support) NihongoRoute.
+ * Menyediakan konfigurasi SEO Metadata dan JSON-LD Structured Data.
+ * @module SupportPage
  */
 
 // ======================
@@ -14,41 +16,47 @@ import {
   createPageMetadata,
   faqPageJsonLd,
 } from "@/lib/seo";
+import { getSupporters } from "@/actions/support.actions";
 
 // ======================
-// KONFIGURASI METADATA
+// METADATA & DATA SEO
 // ======================
-/**
- * Metadata configuration for Support page.
- * Sets SEO title, description, path, and keywords.
- */
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Dukung Kami | NihongoRoute",
     description:
-      "Dukung NihongoRoute agar tetap berjalan, gratis, terus berkembang, dan tanpa iklan yang mengganggu bagi pelajar bahasa Jepang.",
+      "Dukung NihongoRoute agar tetap berjalan gratis, 100% tanpa iklan, dan terus berkembang untuk seluruh pelajar bahasa Jepang di Indonesia.",
     path: "/support",
-    keywords: ["dukung NihongoRoute", "donasi belajar bahasa Jepang", "platform Jepang gratis"],
+    keywords: [
+      "dukung NihongoRoute",
+      "donasi belajar bahasa Jepang",
+      "platform Jepang gratis",
+      "saweria nihongoroute",
+      "trakteer nihongoroute",
+    ],
   }),
 };
 
-// Mock FAQ data matching Client Component for search engine indexing
 const supportFaqs = [
   {
     question: "Apakah NihongoRoute akan selalu gratis dan bebas iklan?",
-    answer: "Pasti! NihongoRoute berkomitmen kasih akses belajar yang setara, modern, dan 100% bebas iklan yang ganggu fokus.",
+    answer:
+      "Pasti! NihongoRoute berkomitmen memberikan akses belajar bahasa Jepang yang setara, modern, dan 100% bebas dari iklan banner atau popup yang mengganggu fokus.",
   },
   {
     question: "Ke mana seluruh dana dukungan saya disalurkan?",
-    answer: "100% dukunganmu dipakai buat bayar biaya server, hosting, domain, dan biaya rekaman audio dari penutur asli Jepang.",
-  },
-  {
-    question: "Bagaimana jika saya ingin berkontribusi kode atau materi?",
-    answer: "Boleh banget! Langsung aja cek repositori GitHub kami, atau hubungi pengembang lewat menu kontak buat mulai kolaborasi.",
+    answer:
+      "100% dana dukungan Anda digunakan secara transparan untuk membiayai infrastruktur cloud server, CDN audio TTS, domain, serta pengayaan materi latihan JLPT.",
   },
   {
     question: "Apakah ada batas minimum untuk memberikan dukungan?",
-    answer: "Nggak ada batas minimum. Berapapun dukunganmu, sangat berarti buat jaga server review harian tetap jalan.",
+    answer:
+      "Tidak ada batas minimum. Sekecil apa pun dukungan Anda sangat berarti untuk memastikan server latihan harian tetap aktif tanpa kendala.",
+  },
+  {
+    question: "Bagaimana jika saya ingin berkontribusi kode atau materi?",
+    answer:
+      "Kami sangat terbuka untuk kolaborasi! Anda dapat mengunjungi repositori GitHub terbuka kami atau menghubungi pengembang untuk berkontribusi.",
   },
 ];
 
@@ -57,10 +65,11 @@ const supportFaqs = [
 // ======================
 /**
  * SupportPage component.
- * Server component wrapper that renders SupportClient.
+ * Async Server Component that fetches supporters from Supabase and passes to SupportClient.
  */
-export default function SupportPage() {
-  // Render client-side support page UI
+export default async function SupportPage() {
+  const initialSupporters = await getSupporters();
+
   return (
     <>
       <JsonLd
@@ -72,7 +81,7 @@ export default function SupportPage() {
           faqPageJsonLd(supportFaqs),
         ]}
       />
-      <SupportClient />
+      <SupportClient initialSupporters={initialSupporters} />
     </>
   );
 }

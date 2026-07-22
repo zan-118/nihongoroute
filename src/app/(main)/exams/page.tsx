@@ -9,8 +9,10 @@
 // IMPOR
 // ======================
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { JsonLd } from "@/components/seo/JsonLd";
-import ExamsClient from "./ExamsClient";
+
+const ExamsClient = dynamic(() => import("./ExamsClient"));
 import { getExamsList } from "@/actions/library.actions";
 import {
   breadcrumbJsonLd,

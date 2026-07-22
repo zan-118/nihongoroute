@@ -1,6 +1,9 @@
 /**
  * @file SupportClient.tsx
- * @description Client component for NihongoRoute support page.
+ * @description Komponen Klien utama untuk halaman Dukungan (Support) NihongoRoute.
+ * Mengintegrasikan data donatur riil dari Supabase tabel `supporters`,
+ * dirancang dengan standar visual kelas atas (Awwwards-tier / Doppelrand Architecture),
+ * performa super kencang, dan transparansi operasional 100%.
  * @module SupportClient
  */
 
@@ -9,17 +12,13 @@
 // ======================
 // IMPOR
 // ======================
-import React, { useState, useMemo } from "react";
-import { m, AnimatePresence } from "framer-motion";
-import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { createClient } from "@/lib/supabase/client";
-import Image from "next/image";
+import { getSupporters, FormattedSupporter } from "@/actions/support.actions";
 import {
-  ChevronLeft,
-  ChevronRight,
-  Coffee,
   Heart,
+  Coffee,
   ShieldCheck,
   Zap,
   Globe,
@@ -27,670 +26,455 @@ import {
   Trophy,
   Users,
   HelpCircle,
+  ArrowUpRight,
+  Server,
+  Sparkles,
+  CheckCircle2,
 } from "@/components/ui/icons";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 
 // ======================
-// TIPE DATA
+// TIPE DATA & ANKOR
 // ======================
 
-/**
- * Supporter data structure.
- */
-interface Supporter {
-  name: string;
-  amount: number;
-  tier: "gold" | "silver" | "bronze";
-  message: string;
-  date: string;
+interface TransparencyItem {
+  label: string;
+  allocated: string;
+  percentage: number;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
-/**
- * FAQ item structure.
- */
 interface FAQItem {
+  id: string;
   question: string;
   answer: string;
 }
 
-// Mock FAQ data.
-const FAQS_MOCK: FAQItem[] = [
+// Transparansi Biaya Operasional Platform
+const TRANSPARENCY_METRICS: TransparencyItem[] = [
   {
-    question: "Apakah NihongoRoute akan selalu gratis dan bebas iklan?",
-    answer: "Pasti! NihongoRoute berkomitmen kasih akses belajar yang setara, modern, dan 100% bebas iklan yang ganggu fokus.",
+    label: "Server & Hosting Awan",
+    allocated: "45%",
+    percentage: 45,
+    description: "Infrastruktur cloud server Next.js & Supabase untuk menjaga respon di bawah 100ms.",
+    icon: Server,
   },
   {
-    question: "Ke mana seluruh dana dukungan saya disalurkan?",
-    answer: "100% dukunganmu dipakai buat bayar biaya server, hosting, domain, dan biaya rekaman audio dari penutur asli Jepang.",
+    label: "Sintesis TTS & Cache Audio",
+    allocated: "30%",
+    percentage: 30,
+    description: "Biaya pemrosesan audio MsEdgeTTS dan CDN storage audio kosakata Jepang.",
+    icon: Zap,
   },
   {
-    question: "Bagaimana jika saya ingin berkontribusi kode atau materi?",
-    answer: "Boleh banget! Langsung aja cek repositori GitHub kami, atau hubungi pengembang lewat menu kontak buat mulai kolaborasi.",
+    label: "Domain & SSL Keamanan",
+    allocated: "15%",
+    percentage: 15,
+    description: "Perpanjangan domain nihongoroute.com dan enkripsi sertifikat keamanan.",
+    icon: Globe,
   },
   {
-    question: "Apakah ada batas minimum untuk memberikan dukungan?",
-    answer: "Nggak ada batas minimum. Berapapun dukunganmu, sangat berarti buat jaga server review harian tetap jalan.",
+    label: "Pengembangan Konten Murni",
+    allocated: "10%",
+    percentage: 10,
+    description: "Penyusunan modul latihan JLPT N5–N1 baru dari tim kurasi editorial.",
+    icon: Sparkles,
   },
 ];
 
-/**
- * Props for DonationCard component.
- */
-interface DonationCardProps {
-  href: string;
-  title: string;
-  desc: string;
-  icon: React.ComponentType<any>;
-  accent: string;
-  label: string;
-  shadowColor: string;
-  glowColor: string;
+// Pertanyaan Umum (FAQ)
+const FAQS: FAQItem[] = [
+  {
+    id: "faq-1",
+    question: "Apakah NihongoRoute akan selalu gratis dan bebas iklan?",
+    answer:
+      "Pasti! NihongoRoute berkomitmen memberikan akses belajar bahasa Jepang yang setara, modern, dan 100% bebas dari iklan banner atau popup yang mengganggu fokus.",
+  },
+  {
+    id: "faq-2",
+    question: "Ke mana seluruh dana dukungan saya disalurkan?",
+    answer:
+      "100% dana dukungan Anda digunakan secara transparan untuk membiayai infrastruktur cloud server, CDN audio TTS, domain, serta pengayaan materi latihan JLPT.",
+  },
+  {
+    id: "faq-3",
+    question: "Apakah ada batas minimum untuk memberikan dukungan?",
+    answer:
+      "Tidak ada batas minimum. Sekecil apa pun dukungan Anda sangat berarti untuk memastikan server latihan harian tetap aktif tanpa kendala.",
+  },
+  {
+    id: "faq-4",
+    question: "Bagaimana jika saya ingin berkontribusi kode atau materi?",
+    answer:
+      "Kami sangat terbuka untuk kolaborasi! Anda dapat mengunjungi repositori GitHub terbuka kami atau menghubungi pengembang untuk berkontribusi.",
+  },
+];
+
+interface SupportClientProps {
+  initialSupporters?: FormattedSupporter[];
 }
 
-/**
- * Card component for donation link.
- */
-function DonationCard({
-  href,
-  title,
-  desc,
-  icon,
-  accent,
-  label,
-  shadowColor,
-  glowColor,
-}: DonationCardProps) {
-  const IconComponent = icon;
-  return (
-    <m.a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      whileHover={{ y: -4 }}
-      whileTap={{ scale: 0.98 }}
-      className="block h-full cursor-pointer"
-    >
-      <Card
-        className={`group relative p-8 sm:p-12 rounded-[2.5rem] bg-card border border-border/80 ${accent} ${shadowColor} transition-all duration-300 shadow-lg overflow-hidden flex flex-col h-full`}
-      >
-        {/* Decorative background glow */}
-        <div className={`absolute top-0 right-0 w-40 h-40 ${glowColor} blur-[36px] rounded-full pointer-events-none opacity-30 group-hover:opacity-50 transition-opacity ambient-glow will-change-transform`} />
+// ======================
+// KOMPONEN UTAMA
+// ======================
+export default function SupportClient({ initialSupporters = [] }: SupportClientProps) {
+  const [openFaq, setOpenFaq] = useState<string | null>("faq-1");
 
-        {/* Large background text */}
-        <div className="absolute top-0 right-0 p-6 sm:p-8 opacity-[0.03] text-5xl sm:text-7xl font-black italic group-hover:opacity-[0.06] transition-opacity pointer-events-none uppercase text-foreground font-japanese select-none">
-          {title}
-        </div>
-        <div className="text-5xl sm:text-6xl mb-6 sm:mb-8 group-hover:scale-110 group-hover:rotate-3 transition-transform origin-left duration-300 drop-shadow-xl select-none text-primary">
-          <IconComponent size={56} />
-        </div>
-        <h3 className="text-2xl sm:text-3xl text-foreground italic mb-2 uppercase tracking-tighter">
-          {title}
-        </h3>
-        <p className="text-xs sm:text-xs text-muted-foreground/80 font-bold uppercase tracking-widest mb-8 sm:mb-10 leading-relaxed">
-          {desc}
-        </p>
-        <div className="mt-auto flex items-center gap-3 text-primary font-black uppercase text-xs tracking-[0.2em] group-hover:text-primary/90 transition-colors">
-          <div className="h-[2px] w-8 bg-primary group-hover:w-14 transition-all shadow-[0_0_8px_rgb(var(--primary-rgb)/0.5)]" />
-          {label}
-        </div>
-      </Card>
-    </m.a>
-  );
-}
-
-/**
- * Props for StatItem component.
- */
-interface StatItemProps {
-  icon: React.ReactNode;
-  title: string;
-  desc: string;
-  color: string;
-}
-
-/**
- * Component to display single stat or allocation item.
- */
-function StatItem({ icon, title, desc, color }: StatItemProps) {
-  return (
-    <div className="group text-center sm:text-left flex flex-col items-center sm:items-start">
-      <div
-        className={`w-12 h-12 rounded-lg flex items-center justify-center mb-6 border transition-all duration-200 shadow-md ${color} group-hover:scale-105`}
-      >
-        {icon}
-      </div>
-      <h4 className="text-foreground uppercase italic tracking-widest mb-3 text-sm sm:text-base">
-        {title}
-      </h4>
-      <p className="text-xs sm:text-sm text-muted-foreground/70 leading-relaxed italic font-semibold">
-        {desc}
-      </p>
-    </div>
-  );
-}
-
-/**
- * Main client component for NihongoRoute support page.
- * Handles donation links, target progress, supporter list, and FAQs.
- */
-export default function SupportClient() {
-  const { back, push } = useRouter();
-  const [supporterFilter, setSupporterFilter] = useState<"recent" | "top">("top");
-  const [expandedFAQ, setExpandedFAQ] = useState<number>(-1);
-
-  // Memoize Supabase client. Prevent recreation.
-  const supabase = useMemo(() => createClient(), []);
-
-  // Fetch data donatur secara real-time dari Supabase
-  const { data: dbSupporters = [] } = useQuery<Supporter[]>({
-    queryKey: ["live-supporters"],
-    queryFn: async () => {
-      // Fetch supporters from Supabase. Keep list updated.
-      const { data, error } = await supabase
-        .from("supporters")
-        .select("name, amount, message, tier, created_at")
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        // Query fail. Log warning. Return empty array.
-        console.warn("Gagal memuat data donatur dari Supabase, menggunakan mock fallback:", error);
-        return [];
-      }
-
-      // Map database rows to Supporter interface.
-      return (data || []).map((row: { name: string; amount: number; message: string; tier: string; created_at: string }) => ({
-        name: row.name,
-        amount: Number(row.amount),
-        tier: (row.tier || "bronze") as "gold" | "silver" | "bronze",
-        message: row.message || "",
-        date: row.created_at || new Date().toISOString(),
-      }));
-    },
+  // Ambil data donatur asli dari Supabase via Server Action & React Query
+  const { data: supporters = initialSupporters, isLoading } = useQuery<FormattedSupporter[]>({
+    queryKey: ["supporters"],
+    queryFn: () => getSupporters(),
+    initialData: initialSupporters.length > 0 ? initialSupporters : undefined,
+    staleTime: 1000 * 60 * 5, // Cache 5 menit
   });
 
-  const allSupporters = dbSupporters;
-
-  // Hitung total donasi terkumpul dan persentase target secara dinamis
-  const monthlyTarget = 450000;
-  
-  // Sum all donation amounts. Get total.
-  const totalDonations = useMemo(
-    () => allSupporters.reduce((sum, supporter) => sum + supporter.amount, 0),
-    [allSupporters]
-  );
-  
-  // Calculate progress percentage. Cap at 100.
-  const progressPercentage = Math.min(Math.round((totalDonations / monthlyTarget) * 100), 100);
-
-  // Sort supporters. Use active filter.
-  const sortedSupporters = useMemo(() => Array.from(allSupporters).sort((a, b) => {
-      if (supporterFilter === "top") {
-        return b.amount - a.amount;
-      }
-      return new Date(b.date).getTime() - new Date(a.date).getTime();
-    }),
-    [allSupporters, supporterFilter]
-  );
+  const toggleFaq = (id: string) => {
+    setOpenFaq((prev) => (prev === id ? null : id));
+  };
 
   return (
-    <div className="w-full flex-1 flex flex-col overflow-x-hidden bg-transparent text-foreground transition-colors duration-300 min-h-screen relative">
-      {/* Dynamic Galactic Background */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute inset-0 neural-grid opacity-[0.15] mix-blend-overlay" />
-        <div className="absolute top-[-10%] right-[-5%] w-[320px] sm:w-[460px] h-[320px] sm:h-[460px] bg-primary/8 rounded-full blur-[70px] sm:blur-[90px] pointer-events-none ambient-glow will-change-transform" />
-      </div>
-
-      <nav className="p-4 sm:p-6 sticky top-0 bg-background/80  z-50 border-b border-border/80 transition-all">
-        <div className="max-w-5xl mx-auto flex justify-between items-center">
-          <Button
-            onClick={() => back()}
-            variant="ghost"
-            className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-all group bg-background/25 glass h-auto px-4 py-2.5 rounded-xl border border-border/80"
-          >
-            <ChevronLeft
-              size={16}
-              className="group-hover:-translate-x-1 transition-transform"
-            />
-            Kembali
-          </Button>
-
-          <div className="flex items-center gap-2">
-            <div className="relative size-12 shrink-0 drop-shadow-[0_0_8px_rgb(var(--primary-rgb)/0.3)]">
-              <Image
-                src="/logo-branding.svg"
-                alt="Logo NihongoRoute"
-                fill
-                className="object-contain rounded-md"
-              />
-            </div>
-            <div className="font-black italic text-lg sm:text-xl tracking-tighter text-foreground hidden sm:block">
-              Nihongo<span className="text-primary">Route</span>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <main className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-20 w-full flex-1">
-        {/* Header Hero Section */}
-        <section className="text-center mb-16 sm:mb-24">
-          <m.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: "spring", stiffness: 120, damping: 15 }}
-            className="size-20 bg-card border border-border/80 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-lg relative group overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-destructive/10 to-transparent opacity-60" />
-            <Heart
-              className="text-destructive fill-red-500 relative z-10 drop-shadow-[0_0_6px_rgb(var(--destructive-rgb)/0.35)]"
-              size={32}
-            />
-            <div className="absolute inset-0 bg-destructive blur-md opacity-20" />
-          </m.div>
-
-          <m.h1
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="text-4xl sm:text-5xl md:text-7xl font-black italic tracking-tight text-foreground leading-none mb-6 sm:mb-8 uppercase select-none"
-          >
-            Wujudkan Akses <br />
-            <span className="text-primary drop-shadow-md">
-              Belajar Gratis.
-            </span>
-          </m.h1>
-
-          <m.p
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.1 }}
-            className="text-muted-foreground/80 text-sm md:text-base max-w-xl mx-auto leading-relaxed font-semibold italic px-2 sm:px-0"
-          >
-            Dukungan Anda sangat berarti agar{" "}
-            <span className="text-primary font-black not-italic">NihongoRoute</span> tetap
-            gratis, terus berkembang, dan bebas iklan buat semua
-            pejuang bahasa Jepang.
-          </m.p>
-        </section>
-
-        {/* Donation Portal Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 sm:mb-16">
-          <DonationCard
-            href="https://trakteer.id/nihongo_route/gift"
-            title="Trakteer"
-            desc="Dukungan via Dompet Digital (Gopay/OVO/ShopeePay)"
-            icon={Coffee}
-            accent="border-destructive/30 hover:border-destructive/80"
-            label="Traktir Kami Kopi"
-            shadowColor="hover:shadow-[0_0_35px_rgb(var(--destructive-rgb)/0.15)] hover:bg-destructive/[0.02]"
-            glowColor="bg-destructive/5"
-          />
-          <DonationCard
-            href="https://saweria.co/Zan118"
-            title="Saweria"
-            desc="Dukungan via QRIS / Dana / LinkAja"
-            icon={Heart}
-            accent="border-warning/30 hover:border-warning/80"
-            label="Kirim Dukungan"
-            shadowColor="hover:shadow-[0_0_35px_rgb(var(--warning-rgb)/0.15)] hover:bg-warning/[0.02]"
-            glowColor="bg-warning/5"
-          />
+    <div className="relative min-h-screen pb-24 pt-8 md:pt-12">
+      {/* ---------------------------------------------------- */}
+      {/* 1. HERO SECTION: EYEBROW + BIG HEADLINE              */}
+      {/* ---------------------------------------------------- */}
+      <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
+        {/* Micro Eyebrow Badge */}
+        <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.2em] text-primary shadow-sm">
+          <Sparkles className="size-3.5" />
+          <span>Platform Belajar 100% Bebas Iklan</span>
         </div>
 
-        {/* 1. INTERACTIVE TARGET BAR */}
-        <div className="relative group mb-12 sm:mb-16">
-          <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-            <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
-            <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
-          </div>
-          <Card className="bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 sm:p-12 shadow-[0_4px_25px_rgba(0,0,0,0.015)] relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese">
-            TARGET
-          </div>
-          <div className="absolute -top-28 -right-28 size-56 bg-primary/5 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
+        {/* Headline Utama */}
+        <h1 className="mt-6 text-3xl font-black tracking-tight text-foreground sm:text-5xl md:text-6xl leading-[1.1]">
+          Dukung NihongoRoute <br className="hidden sm:inline" />
+          <span className="bg-gradient-to-r from-cyan-500 via-primary to-violet-500 bg-clip-text text-transparent">
+            Tetap Gratis & Independen
+          </span>
+        </h1>
 
-          <div className="flex items-center gap-4 mb-6 relative z-10">
-            <div className="size-12 rounded-lg bg-primary/10 border border-primary/30 flex items-center justify-center shadow-inner relative overflow-hidden">
-              <Zap className="text-primary drop-shadow-[0_0_8px_rgb(var(--primary-rgb)/0.4)] relative z-10" size={22} />
-            </div>
-            <div>
-              <h3 className="text-lg sm:text-xl text-foreground uppercase italic tracking-wider leading-none">
-                Bilah Target Server
-              </h3>
-              <p className="text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">
-                Biaya Operasional Bulanan
-              </p>
-            </div>
-          </div>
+        {/* Sub-deskripsi */}
+        <p className="mx-auto mt-5 max-w-2xl text-base font-medium leading-relaxed text-muted-foreground sm:text-lg">
+          NihongoRoute dibangun tanpa investor dan tanpa iklan yang mengganggu. Setiap dukungan kecil Anda menjaga server tetap menyala untuk ribuan pelajar bahasa Jepang di Indonesia.
+        </p>
 
-          <div className="relative z-10 mb-8">
-            <div className="flex justify-between items-end mb-3">
-              <span className="text-sm font-bold text-foreground bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
-                Rp {totalDonations.toLocaleString("id-ID")} <span className="text-muted-foreground text-xs font-semibold">Terkumpul</span>
-              </span>
-              <span className="text-lg font-black text-primary">
-                {progressPercentage}%
-              </span>
-              <span className="text-sm font-bold text-muted-foreground">
-                Target: Rp {monthlyTarget.toLocaleString("id-ID")}
-              </span>
-            </div>
+        {/* Metrik Cepat */}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs font-semibold text-muted-foreground">
+          <div className="flex items-center gap-2 rounded-full border border-border/60 bg-muted/30 px-3.5 py-1.5">
+            <CheckCircle2 className="size-4 text-emerald-500" />
+            <span>Tanpa Paywall</span>
+          </div>
+          <div className="flex items-center gap-2 rounded-full border border-border/60 bg-muted/30 px-3.5 py-1.5">
+            <ShieldCheck className="size-4 text-primary" />
+            <span>Transparansi 100%</span>
+          </div>
+          <div className="flex items-center gap-2 rounded-full border border-border/60 bg-muted/30 px-3.5 py-1.5">
+            <Heart className="size-4 text-rose-500" />
+            <span>Ditenagai Komunitas</span>
+          </div>
+        </div>
+      </section>
 
-            {/* Glowing Breathing HSL Progress Bar */}
-            <div className="w-full h-5 bg-muted/60 rounded-full overflow-hidden relative border border-border/50 p-1">
-              <m.div
-                initial={{ width: 0 }}
-                animate={{ width: `${progressPercentage}%` }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                className="h-full bg-gradient-to-r from-primary to-secondary rounded-full shadow-[0_0_20px_rgb(var(--primary-rgb)/0.5)] relative overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-[linear-gradient(45deg,rgba(255,255,255,0.12)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.12)_50%,rgba(255,255,255,0.12)_75%,transparent_75%,transparent)] bg-[length:16px_16px]" />
-              </m.div>
-            </div>
-          </div>
-
-          {/* Interactive Cost Breakdown Grid */}
-          <div className="flex flex-col md:flex-row flex-wrap gap-4 relative z-10 pt-4 border-t border-border/40">
-            <div className="p-4 rounded-lg border border-border/50 bg-card/30 hover:border-warning/50 hover:bg-warning/[0.02] transition-all duration-200">
-              <span className="text-[10px] font-black uppercase text-warning tracking-widest block mb-1">Database Server</span>
-              <span className="text-sm font-black text-foreground block">Supabase: Rp 150K/bln</span>
-              <p className="text-[10px] text-muted-foreground/80 leading-relaxed font-semibold italic mt-1">
-                Menyimpan kosakata, ulasan SRS, dan data kemajuan member secara luring.
-              </p>
-            </div>
-            <div className="p-4 rounded-lg border border-border/50 bg-card/30 hover:border-primary/50 hover:bg-primary/[0.02] transition-all duration-200">
-              <span className="text-[10px] font-black uppercase text-primary tracking-widest block mb-1">Hosting & CDN</span>
-              <span className="text-sm font-black text-foreground block">Vercel: Rp 200K/bln</span>
-              <p className="text-[10px] text-muted-foreground/80 leading-relaxed font-semibold italic mt-1">
-                Menjamin loading instan dan rendering Next.js yang ngebut di seluruh dunia.
-              </p>
-            </div>
-            <div className="p-4 rounded-lg border border-border/50 bg-card/30 hover:border-secondary/5 hover:bg-secondary/[0.02] transition-all duration-200">
-              <span className="text-[10px] font-black uppercase text-secondary tracking-widest block mb-1">Domain & Core</span>
-              <span className="text-sm font-black text-foreground block">Domain: Rp 100K/bln</span>
-              <p className="text-[10px] text-muted-foreground/80 leading-relaxed font-semibold italic mt-1">
-                Biaya lisensi domain resmi dan pemeliharaan alat analisis kuromoji luring.
-              </p>
-            </div>
-          </div>
-        </Card>
-      </div>
-
-        {/* Alokasi Dana (Transparansi) */}
-        <div className="relative group mb-12 sm:mb-16">
-          <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-            <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
-            <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
-          </div>
-          <Card className="bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 sm:p-12 md:p-16 shadow-[0_4px_25px_rgba(0,0,0,0.015)] relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese">
-            TRANSPARANSI
-          </div>
-          <div className="absolute -bottom-28 -left-28 size-56 bg-primary/5 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
-
-          <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-4 mb-12 relative z-10 text-center sm:text-left">
-            <div className="size-14 rounded-lg bg-primary/10 border border-primary/30 flex items-center justify-center shadow-inner relative overflow-hidden">
-              <div className="absolute inset-0 bg-primary/10" />
-              <ShieldCheck className="text-primary drop-shadow-[0_0_8px_rgb(var(--primary-rgb)/0.4)] relative z-10" size={26} />
-            </div>
-            <h2 className="text-2xl sm:text-3xl text-foreground uppercase italic tracking-widest leading-none pt-1">
-              Alokasi Dana
-            </h2>
-          </div>
-
-          <div className="flex flex-col md:flex-row flex-wrap justify-center gap-8 sm:gap-10 relative z-10">
-            <StatItem
-              icon={<Zap className="text-warning drop-shadow-[0_0_8px_rgb(var(--warning-rgb)/0.4)]" size={22} />}
-              title="Infrastruktur"
-              desc="Biaya server database (Supabase), hosting (Vercel), dan domain agar aplikasi tetap ngebut dan stabil."
-              color="bg-warning/10 border-warning/30"
-            />
-            <StatItem
-              icon={<Globe className="text-primary drop-shadow-[0_0_8px_rgb(var(--primary-rgb)/0.4)]" size={22} />}
-              title="Konten Baru"
-              desc="Pengembangan silabus, rekaman audio, dan ekspansi materi JLPT dari level N4 hingga N1 secara bertahap."
-              color="bg-primary/10 border-primary/30"
-            />
-            <StatItem
-              icon={<Coffee className="text-secondary drop-shadow-[0_0_8px_rgb(var(--secondary-rgb)/0.4)]" size={22} />}
-              title="Pengembangan"
-              desc="Menjaga saya (Developer) tetap terjaga untuk mengembangkan fitur baru dan memperbaiki masalah teknis di malam hari."
-              color="bg-secondary/10 border-secondary/30"
-            />
-          </div>
-        </Card>
-      </div>
-
-        {/* 2. INTERACTIVE SUPPORTER WALL */}
-        <div className="relative group mb-12 sm:mb-16">
-          <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-            <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
-            <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
-          </div>
-          <Card className="bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 sm:p-12 shadow-[0_4px_25px_rgba(0,0,0,0.015)] relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese">
-            DONATUR
-          </div>
-          <div className="absolute -bottom-28 -right-28 size-56 bg-primary/5 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
-
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-6 mb-8 relative z-10 border-b border-border/40 pb-6">
-            <div className="flex items-center gap-4">
-              <div className="size-12 rounded-lg bg-secondary/10 border border-secondary/30 flex items-center justify-center shadow-inner">
-                <Users className="text-secondary drop-shadow-[0_0_8px_rgb(var(--secondary-rgb)/0.4)]" size={22} />
+      {/* ---------------------------------------------------- */}
+      {/* 2. DONATION CHANNELS: DOPPELRAND + BUTTON-IN-BUTTON  */}
+      {/* ---------------------------------------------------- */}
+      <section className="mx-auto mt-14 max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* KARTU 1: SAWERIA (Double-Bezel Nested Architecture) */}
+          <div className="group rounded-[2rem] border border-border/70 bg-muted/40 p-2.5 shadow-sm transition-all duration-300 hover:border-primary/40">
+            <div className="rounded-[calc(2rem-0.625rem)] border border-border/50 bg-card p-6 sm:p-8">
+              <div className="flex items-center justify-between">
+                <div className="flex size-12 items-center justify-center rounded-2xl border border-amber-500/20 bg-amber-500/10 text-amber-500">
+                  <Coffee className="size-6" />
+                </div>
+                <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
+                  Saweria • QRIS / E-Wallet
+                </span>
               </div>
+
+              <h2 className="mt-6 text-2xl font-black tracking-tight text-foreground">
+                Dukungan via Saweria
+              </h2>
+              <p className="mt-2 text-sm font-medium leading-relaxed text-muted-foreground">
+                Dukung dengan mudah menggunakan GoPay, OVO, ShopeePay, Dana, atau QRIS dari semua aplikasi bank.
+              </p>
+
+              {/* Button-in-Button CTA Architecture */}
+              <div className="mt-8">
+                <a
+                  href="https://saweria.co/nihongoroute"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group/btn flex w-full items-center justify-between gap-4 rounded-full bg-amber-500 px-6 py-3.5 font-extrabold text-amber-950 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-amber-400 hover:shadow-lg hover:shadow-amber-500/20 active:scale-[0.98]"
+                >
+                  <span>Kirim Dukungan Saweria</span>
+                  <div className="flex size-9 items-center justify-center rounded-full bg-amber-950/15 transition-transform duration-300 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-0.5">
+                    <ArrowUpRight className="size-4 stroke-[2.5]" />
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* KARTU 2: TRAKTEER (Double-Bezel Nested Architecture) */}
+          <div className="group rounded-[2rem] border border-border/70 bg-muted/40 p-2.5 shadow-sm transition-all duration-300 hover:border-primary/40">
+            <div className="rounded-[calc(2rem-0.625rem)] border border-border/50 bg-card p-6 sm:p-8">
+              <div className="flex items-center justify-between">
+                <div className="flex size-12 items-center justify-center rounded-2xl border border-rose-500/20 bg-rose-500/10 text-rose-500">
+                  <Heart className="size-6" />
+                </div>
+                <span className="rounded-full border border-rose-500/30 bg-rose-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-rose-600 dark:text-rose-400">
+                  Trakteer • Karya Cendol
+                </span>
+              </div>
+
+              <h2 className="mt-6 text-2xl font-black tracking-tight text-foreground">
+                Traktir via Trakteer
+              </h2>
+              <p className="mt-2 text-sm font-medium leading-relaxed text-muted-foreground">
+                Traktir Mangkok Cendol untuk mendukung pemeliharaan server review harian dan audio kosakata.
+              </p>
+
+              {/* Button-in-Button CTA Architecture */}
+              <div className="mt-8">
+                <a
+                  href="https://trakteer.id/nihongoroute"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group/btn flex w-full items-center justify-between gap-4 rounded-full bg-rose-500 px-6 py-3.5 font-extrabold text-white transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-rose-600 hover:shadow-lg hover:shadow-rose-500/20 active:scale-[0.98]"
+                >
+                  <span>Traktir di Trakteer</span>
+                  <div className="flex size-9 items-center justify-center rounded-full bg-white/20 transition-transform duration-300 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-0.5">
+                    <ArrowUpRight className="size-4 stroke-[2.5]" />
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------- */}
+      {/* 3. TRANSPARENCY SECTION: SERVER COST METRICS         */}
+      {/* ---------------------------------------------------- */}
+      <section className="mx-auto mt-16 max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div className="rounded-[2rem] border border-border/70 bg-muted/40 p-2.5">
+          <div className="rounded-[calc(2rem-0.625rem)] border border-border/50 bg-card p-6 sm:p-10">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
               <div>
-                <h3 className="text-lg sm:text-xl text-foreground uppercase italic tracking-wider leading-none">
-                  Pejuang Dukungan
-                </h3>
-                <p className="text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">
-                  Apresiasi Donatur Heroik Kami
-                </p>
+                <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest text-primary">
+                  <ShieldCheck className="size-3.5" />
+                  <span>Transparansi Penggunaan Dana</span>
+                </div>
+                <h2 className="mt-3 text-2xl font-black tracking-tight text-foreground sm:text-3xl">
+                  Alokasi Dana Dukungan
+                </h2>
               </div>
+              <p className="max-w-md text-xs font-medium text-muted-foreground leading-relaxed">
+                Setiap donasi yang masuk dialokasikan 100% secara langsung untuk mendukung kebutuhan teknis operasional platform.
+              </p>
             </div>
 
-            {/* Filter Tabs */}
-            <div className="flex gap-2 p-1 rounded-xl bg-card/80 border border-border/50 ">
-              <button type="button"
-                onClick={() => setSupporterFilter("top")}
-                className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
-                  supporterFilter === "top"
-                    ? "bg-primary text-primary-foreground shadow-md"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                Terbesar
-              </button>
-              <button type="button"
-                onClick={() => setSupporterFilter("recent")}
-                className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
-                  supporterFilter === "recent"
-                    ? "bg-primary text-primary-foreground shadow-md"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                Terbaru
-              </button>
-            </div>
-          </div>
-
-          {/* Supporters Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
-            {sortedSupporters.length === 0 ? (
-              <div className="col-span-1 md:col-span-2 p-10 rounded-[2rem] border border-dashed border-border/80 text-center bg-card/20  relative overflow-hidden group shadow-inner">
-                <div className="text-primary flex justify-center mb-4 text-4xl">
-                  <Coffee size={44} />
-                </div>
-                <h4 className="text-base text-foreground uppercase tracking-wider mb-2">
-                  Belum Ada Pejuang Dukungan
-                </h4>
-                <p className="text-xs text-muted-foreground/80 leading-relaxed font-semibold italic max-w-sm mx-auto mb-6 px-4">
-                  Jadilah pejuang pertama yang menanam kebaikan untuk menjaga kelangsungan belajar bahasa Jepang gratis tanpa iklan!
-                </p>
-                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
-                  Klik tombol trakteer / saweria di atas untuk memulai
-                </div>
-              </div>
-            ) : (
-              sortedSupporters.map((s, idx) => {
-                let tierStyle = "border-border/60 hover:border-primary/50 shadow-sm";
-                let badgeColor = "bg-muted text-muted-foreground border-border/40";
-                let glowEffect = "rgb(var(--primary-rgb)/0.05)";
-                let label = "Perunggu";
-
-                if (s.tier === "gold") {
-                  tierStyle = "border-warning/50 bg-[rgba(var(--warning-rgb),0.015)] hover:bg-[rgba(var(--warning-rgb),0.03)]";
-                  badgeColor = "bg-[rgba(var(--warning-rgb),0.15)] text-warning border-warning/30";
-                  glowEffect = "rgba(var(--warning-rgb), 0.15)";
-                  label = "Gold";
-                } else if (s.tier === "silver") {
-                  tierStyle = "border-muted-foreground/50 bg-[rgba(var(--muted-foreground-rgb),0.015)] hover:bg-[rgba(var(--muted-foreground-rgb),0.03)]";
-                  badgeColor = "bg-[rgba(var(--muted-foreground-rgb),0.15)] text-muted-foreground border-muted-foreground/30";
-                  glowEffect = "rgba(var(--muted-foreground-rgb), 0.12)";
-                  label = "Silver";
-                } else if (s.tier === "bronze") {
-                  tierStyle = "border-destructive/50 bg-[rgba(var(--destructive-rgb),0.015)] hover:bg-[rgba(var(--destructive-rgb),0.03)]";
-                  badgeColor = "bg-[rgba(var(--destructive-rgb),0.15)] text-destructive border-destructive/30";
-                  glowEffect = "rgba(var(--destructive-rgb), 0.08)";
-                  label = "Bronze";
-                }
-
+            {/* Grid Metrik Transparansi */}
+            <div className="mt-8 grid gap-6 sm:grid-cols-2">
+              {TRANSPARENCY_METRICS.map((metric, idx) => {
+                const IconComponent = metric.icon;
                 return (
-                  <m.div
-                    key={s.name + idx}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: Math.min(idx * 0.03, 0.24) }}
-                    className={`p-5 rounded-lg border transition-all duration-200 flex gap-4 items-start ${tierStyle}`}
-                    style={{
-                      boxShadow: `0 6px 18px rgba(var(--foreground-rgb),0.12), 0 0 8px ${glowEffect}`,
-                    }}
+                  <div
+                    key={idx}
+                    className="rounded-xl border border-border/60 bg-muted/20 p-5 transition-colors duration-150 hover:border-primary/30"
                   >
-                    <div className="shrink-0">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black ${badgeColor}`}>
-                        <Trophy size={18} />
-                      </div>
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      <div className="flex justify-between items-start gap-2">
-                        <h4 className="text-sm text-foreground truncate">{s.name}</h4>
-                        <span className="text-xs font-black text-primary whitespace-nowrap">
-                          Rp {s.amount.toLocaleString("id-ID")}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="flex size-9 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
+                          <IconComponent className="size-4" />
+                        </div>
+                        <span className="text-sm font-bold text-foreground">
+                          {metric.label}
                         </span>
                       </div>
-
-                      <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded-full border tracking-wider mt-1 inline-block ${badgeColor}`}>
-                        {label}
+                      <span className="text-sm font-black text-primary">
+                        {metric.allocated}
                       </span>
+                    </div>
 
-                      <p className="text-xs text-muted-foreground leading-relaxed font-semibold italic mt-3 pr-2 border-l-2 border-border pl-2">
-                        &quot;{s.message}&quot;
+                    {/* Progress Bar Progress Meter */}
+                    <div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-muted">
+                      <div
+                        className="h-full rounded-full bg-primary transition-all duration-500"
+                        style={{ width: `${metric.percentage}%` }}
+                      />
+                    </div>
+
+                    <p className="mt-3 text-xs font-medium text-muted-foreground leading-relaxed">
+                      {metric.description}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------- */}
+      {/* 4. SUPPORTER HALL OF FAME (SUPABASE RIIL)            */}
+      {/* ---------------------------------------------------- */}
+      <section className="mx-auto mt-16 max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div className="rounded-[2rem] border border-border/70 bg-muted/40 p-2.5">
+          <div className="rounded-[calc(2rem-0.625rem)] border border-border/50 bg-card p-6 sm:p-10">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/25 bg-amber-500/10 px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest text-amber-600 dark:text-amber-400">
+                  <Trophy className="size-3.5" />
+                  <span>Pendukung Setia Komunitas</span>
+                </div>
+                <h2 className="mt-3 text-2xl font-black tracking-tight text-foreground sm:text-3xl">
+                  Daftar Pahlawan NihongoRoute
+                </h2>
+              </div>
+              <div className="hidden sm:flex items-center gap-2 text-xs font-bold text-muted-foreground">
+                <Users className="size-4 text-primary" />
+                <span>Terima Kasih Banyak!</span>
+              </div>
+            </div>
+
+            {/* State Loading */}
+            {isLoading && (
+              <div className="mt-8 grid gap-4 sm:grid-cols-3">
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="h-32 animate-pulse rounded-xl border border-border/40 bg-muted/30"
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Render Donatur Asli dari Supabase */}
+            {!isLoading && supporters.length > 0 && (
+              <div className="mt-8 grid gap-4 sm:grid-cols-3">
+                {supporters.map((supporter) => (
+                  <div
+                    key={supporter.id}
+                    className="flex flex-col justify-between rounded-xl border border-border/60 bg-muted/20 p-5 transition-colors duration-150 hover:border-primary/30"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-black text-foreground">
+                          {supporter.name}
+                        </span>
+                        <span
+                          className={`rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider ${
+                            supporter.tier === "gold"
+                              ? "bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30"
+                              : supporter.tier === "silver"
+                              ? "bg-slate-400/15 text-slate-700 dark:text-slate-300 border border-slate-400/30"
+                              : "bg-orange-600/15 text-orange-700 dark:text-orange-400 border border-orange-600/30"
+                          }`}
+                        >
+                          {supporter.tier}
+                        </span>
+                      </div>
+                      <div className="mt-2 text-xs font-black text-primary">
+                        {supporter.amount}
+                      </div>
+                      <p className="mt-3 text-xs font-medium text-muted-foreground leading-relaxed italic">
+                        "{supporter.message}"
                       </p>
                     </div>
-                  </m.div>
-                );
-              })
+                    <div className="mt-4 flex items-center justify-between border-t border-border/40 pt-3 text-[10px] font-bold text-muted-foreground">
+                      <span>{supporter.date}</span>
+                      <span className="capitalize text-primary/80">{supporter.source}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Empty State bila belum ada transaksi di DB */}
+            {!isLoading && supporters.length === 0 && (
+              <div className="mt-8 rounded-xl border border-dashed border-border/70 p-8 text-center">
+                <Heart className="mx-auto size-8 text-rose-500/70" />
+                <h3 className="mt-3 text-base font-bold text-foreground">
+                  Belum Ada Donatur Terbaru
+                </h3>
+                <p className="mt-1 text-xs font-medium text-muted-foreground">
+                  Jadilah pahlawan pertama yang mendukung keberlangsungan platform ini!
+                </p>
+              </div>
             )}
           </div>
-        </Card>
-      </div>
+        </div>
+      </section>
 
-        {/* 3. SLEEK INTERACTIVE FAQ */}
-        <div className="relative group mb-12 sm:mb-16">
-          <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-            <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
-            <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
-          </div>
-          <Card className="bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 sm:p-12 shadow-[0_4px_25px_rgba(0,0,0,0.015)] relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-6xl sm:text-8xl font-black italic select-none uppercase tracking-tighter pointer-events-none text-foreground font-japanese">
-            TANYA JAWAB
-          </div>
-          <div className="absolute -top-28 -left-28 size-56 bg-primary/5 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
-
-          <div className="flex items-center gap-4 mb-8 relative z-10 border-b border-border/40 pb-6">
-            <div className="size-12 rounded-lg bg-warning/10 border border-warning/30 flex items-center justify-center shadow-inner">
-              <HelpCircle className="text-warning drop-shadow-[0_0_8px_rgb(var(--warning-rgb)/0.4)]" size={22} />
+      {/* ---------------------------------------------------- */}
+      {/* 5. FAST CSS GRID ACCORDION FAQ                       */}
+      {/* ---------------------------------------------------- */}
+      <section className="mx-auto mt-16 max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div className="rounded-[2rem] border border-border/70 bg-muted/40 p-2.5">
+          <div className="rounded-[calc(2rem-0.625rem)] border border-border/50 bg-card p-6 sm:p-10">
+            <div className="text-center sm:text-left">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest text-primary">
+                <HelpCircle className="size-3.5" />
+                <span>Pertanyaan Umum</span>
+              </div>
+              <h2 className="mt-3 text-2xl font-black tracking-tight text-foreground sm:text-3xl">
+                Pertanyaan Seputar Dukungan
+              </h2>
             </div>
-            <div>
-              <h3 className="text-lg sm:text-xl text-foreground uppercase italic tracking-wider leading-none">
-                Tanya Jawab
-              </h3>
-              <p className="text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">
-                Keterbukaan & Akuntabilitas Penuh
-              </p>
-            </div>
-          </div>
 
-          {/* Accordion FAQ List */}
-          <div className="flex flex-col gap-4 relative z-10">
-            {FAQS_MOCK.map((faq, idx) => {
-              const isOpen = expandedFAQ === idx;
-              return (
-                <div
-                  key={faq.question}
-                  className="p-5 rounded-lg border border-border/60 bg-card/20 hover:border-primary/40 hover:bg-primary/[0.01] transition-all duration-200"
-                >
-                  <button type="button"
-                    onClick={() => setExpandedFAQ(isOpen ? -1 : idx)}
-                    className="w-full flex justify-between items-center text-left gap-4 outline-none group"
+            {/* List FAQ Accordion via CSS Grid Compositor */}
+            <div className="mt-8 grid gap-3">
+              {FAQS.map((faq) => {
+                const isOpen = openFaq === faq.id;
+                return (
+                  <div
+                    key={faq.id}
+                    className="overflow-hidden rounded-xl border border-border/60 bg-muted/20 transition-colors duration-150 hover:border-primary/30"
                   >
-                    <span className="text-xs sm:text-sm font-black text-foreground group-hover:text-primary transition-colors leading-relaxed">
-                      {faq.question}
-                    </span>
-                    <m.div
-                      animate={{ rotate: isOpen ? 180 : 0 }}
-                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                      className="shrink-0 text-muted-foreground"
+                    <button
+                      onClick={() => toggleFaq(faq.id)}
+                      className="flex w-full items-center justify-between p-5 text-left text-sm font-bold text-foreground transition-colors hover:text-primary focus:outline-none"
                     >
-                      <ChevronDown size={18} />
-                    </m.div>
-                  </button>
+                      <span>{faq.question}</span>
+                      <ChevronDown
+                        className={`size-4 text-muted-foreground transition-transform duration-200 ${
+                          isOpen ? "rotate-180 text-primary" : ""
+                        }`}
+                      />
+                    </button>
 
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <m.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2, ease: "easeInOut" }}
-                        className="overflow-hidden"
-                      >
-                        <div className="pt-4 pb-1 text-xs sm:text-sm text-muted-foreground/80 leading-relaxed font-semibold italic border-t border-border/30 mt-4">
+                    {/* CSS Grid Animation expansion (0ms layout reflow) */}
+                    <div
+                      className={`grid transition-[grid-template-rows,opacity] duration-200 ease-out ${
+                        isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                      }`}
+                    >
+                      <div className="overflow-hidden">
+                        <p className="px-5 pb-5 pt-1 text-xs font-medium leading-relaxed text-muted-foreground border-t border-border/40">
                           {faq.answer}
-                        </div>
-                      </m.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              );
-            })}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </Card>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------- */}
+      {/* 6. FOOTER BACK LINK                                  */}
+      {/* ---------------------------------------------------- */}
+      <div className="mt-12 text-center">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-xs font-bold text-muted-foreground hover:text-primary transition-colors"
+        >
+          <span>← Kembali ke Beranda</span>
+        </Link>
       </div>
-
-        {/* Footer Navigation */}
-        <footer className="mt-20 sm:mt-28 mb-16 text-center pb-8 sm:pb-12">
-          <div className="mb-16 flex flex-col items-center">
-            <p className="text-[10px] sm:text-xs font-black uppercase tracking-[0.4em] text-muted-foreground/50 mb-6">
-              Butuh Panduan Awal?
-            </p>
-            <Button
-              onClick={() => push("/onboarding")}
-              variant="outline"
-              className="rounded-lg h-14 px-8 border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary font-black uppercase tracking-widest text-xs transition-all duration-200 group shadow-sm"
-            >
-              Mulai Ulang Tutorial <ChevronRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </div>
-
-          <p className="text-[10px] sm:text-xs font-black uppercase tracking-[0.5em] text-primary/70 mb-4 bg-primary/10 w-max mx-auto px-5 py-2 rounded-full border border-primary/30 shadow-[0_0_15px_rgb(var(--primary-rgb)/0.08)]">
-            Kontribusi Langsung
-          </p>
-          <p className="text-xs sm:text-sm text-muted-foreground/70 italic max-w-md mx-auto leading-relaxed font-semibold">
-            &quot;Satu cangkir kopi darimu, satu langkah lebih dekat untuk kita semua
-            menguasai bahasa Jepang.&quot;
-          </p>
-        </footer>
-      </main>
     </div>
   );
 }

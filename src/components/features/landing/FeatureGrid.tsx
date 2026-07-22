@@ -1,25 +1,8 @@
-"use client";
-
-/**
- * @file FeatureGrid.tsx
- * @description Komponen grid fitur utama interaktif untuk Landing Page NihongoRoute.
- * Menampilkan ringkasan ekosistem pembelajaran (Kana, Kamus, SRS, Simulasi JLPT),
- * langkah-langkah belajar terstruktur, dan fitur gamifikasi (Streaks, XP, Lencana).
- *
- * @package components/features/landing
- * @project NihongoRoute
- */
-
-// ==========================================
-// IMPOR
-// ==========================================
-import React, { useState } from "react";
-import { m, Variants } from "framer-motion";
+import React from "react";
 import { 
   BrainCircuit, 
   Library, 
   Zap, 
-  BookOpen, 
   PenTool, 
   Award, 
   Sparkles, 
@@ -27,135 +10,44 @@ import {
   CheckCircle2, 
   GraduationCap, 
   ArrowRight, 
-  BookMarked,
   Timer,
   Check,
   Target
 } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { JlptQuizPlayground } from "./JlptQuizPlayground";
 
-// ==========================================
-// VARIASI ANIMASI FRAMER MOTION
-// ==========================================
-
-/**
- * Framer motion container animation variants.
- * Staggers children entry animations.
- */
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15, delayChildren: 0.1 },
-  },
-};
-
-/**
- * Framer motion item animation variants.
- * Fades in individual grid items.
- */
-const itemVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { duration: 0.4, ease: "easeOut" },
-  },
-};
-
-// ==========================================
-
-/**
- * Interactive JLPT N5 grammar quiz playground.
- * Allows user to select answers and displays instant feedback.
- */
-function JlptQuizPlayground() {
-  // Track selected answer key
-  const [selected, setSelected] = useState<string | null>(null);
-  // Check if selected answer is correct (A is correct)
-  const isCorrect = selected === "A";
-
-  return (
-    <div className="flex flex-col items-center gap-3">
-      <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Kuis Latihan Ujian N5</span>
-      <div className="w-full p-3 bg-background/80 border border-border rounded-xl text-center shadow-inner">
-        <span className="text-xs font-bold text-foreground">
-          私は昨日デパート <span className="text-primary font-bold">[ ? ]</span> 行きました。
-        </span>
-      </div>
-      <div className="grid grid-cols-2 gap-2 w-full">
-        {[
-          { key: "A", label: "に (ni)" },
-          { key: "B", label: "を (wo)" },
-          { key: "C", label: "が (ga)" },
-          { key: "D", label: "は (ha)" },
-        ].map((opt) => (
-          <button
-            key={opt.key}
-            type="button"
-            aria-pressed={selected === opt.key}
-            aria-label={`Pilih jawaban ${opt.key}: ${opt.label}`}
-            onClick={() => setSelected(opt.key)}
-            className={`py-1.5 px-3 rounded-lg border text-xs font-bold transition-all ${
-              selected === opt.key
-                ? opt.key === "A"
-                  ? "bg-success/15 border-success text-success shadow-[0_2px_8px_rgba(var(--success-rgb),0.2)]"
-                  : "bg-destructive/15 border-destructive text-destructive"
-                : "border-border bg-background/50 hover:border-foreground/20 text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {opt.label}
-          </button>
-        ))}
-      </div>
-      {selected && (
-        <span className={`text-[10px] font-bold uppercase tracking-wider ${isCorrect ? "text-success animate-pulse" : "text-destructive"}`}>
-          {isCorrect ? "✓ Tepat! 'ni' menyatakan arah/tujuan." : "✗ Salah, coba lagi!"}
-        </span>
-      )}
-    </div>
-  );
-}
-
-// KOMPONEN UTAMA
-// ==========================================
 /**
  * FeatureGrid component.
+ * Pure Server Component for instant static rendering.
  * Displays interactive learning ecosystem, steps, and gamification preview.
  */
 export function FeatureGrid() {
-  // Track active step in learning path
-  const [activeStep, setActiveStep] = useState<number>(0);
-
-  // Langkah-langkah metode belajar terpadu NihongoRoute
   const learningSteps = [
     {
       title: "Langkah 1: Kenali Huruf (Kana)",
       desc: "Mulai dari sini: kuasai Hiragana & Katakana lewat tabel interaktif dan panduan menulis langkah demi langkah.",
       badge: "Langkah Pertama",
-      tip: "Fondasi penting buat baca manga, artikel, dan soal ujian.",
-      action: "Buka Menu Kana"
+      tip: "Fondasi penting buat baca manga, artikel, dan soal ujian."
     },
     {
       title: "Langkah 2: Perkaya Kosakata & Pelajaran",
       desc: "Ribuan kosakata dan tata bahasa sesuai standar JLPT, lengkap dengan audio pelafalan dan contoh kalimat.",
       badge: "Materi Terpadu",
-      tip: "Ada furigana yang bisa kamu nyalain atau matiin kapan aja.",
-      action: "Masuk Perpustakaan"
+      tip: "Ada furigana yang bisa kamu nyalain atau matiin kapan aja."
     },
     {
       title: "Langkah 3: Pengulangan Terjadwal",
       desc: "Lupa metode hafalan lama. Sistem SRS kami otomatis ngatur kosakata yang perlu diulang pas sebelum kamu mulai lupa.",
       badge: "Hafal Tanpa Lupa",
-      tip: "Bisa hemat waktu belajar sampai 60% dibanding cara catat biasa.",
-      action: "Coba Flashcard"
+      tip: "Bisa hemat waktu belajar sampai 60% dibanding cara catat biasa."
     },
     {
       title: "Langkah 4: Uji dengan Simulasi JLPT",
       desc: "Ukur kesiapanmu lewat simulasi ujian JLPT dengan timer, penilaian akurat, dan statistik hasil yang lengkap.",
       badge: "Siap Ujian",
-      tip: "Tersedia dari N5 sampai N1, lengkap dengan pembahasan.",
-      action: "Mulai Simulasi"
+      tip: "Tersedia dari N5 sampai N1, lengkap dengan pembahasan."
     }
   ];
 
@@ -176,16 +68,9 @@ export function FeatureGrid() {
           </p>
         </div>
 
-        <m.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-[34px]"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-[34px]">
           {/* KARTU 1: ALAT BANTU KANA INTERAKTIF */}
-          <m.div variants={itemVariants} className="relative group h-full">
-            {/* Tombou Register Mark */}
+          <div className="relative group h-full">
             <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
               <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
               <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
@@ -206,7 +91,6 @@ export function FeatureGrid() {
                 Kuasai Hiragana & Katakana lewat tabel interaktif, panduan urutan guratan, dan latihan menulis langsung di layarmu.
               </p>
  
-              {/* Tampilan Visual Mockup di Dalam Kartu */}
               <div className="p-4 bg-background/50 border border-border/80 rounded-lg flex items-center justify-between gap-4 mt-auto transition-all duration-300 group-hover:border-primary/20">
                 <div className="size-14 border border-border/80 bg-background/80 rounded-lg flex items-center justify-center relative font-japanese font-bold text-2xl text-primary shadow-sm transition-transform group-hover:scale-105">
                   あ
@@ -222,11 +106,10 @@ export function FeatureGrid() {
                 </div>
               </div>
             </Card>
-          </m.div>
+          </div>
  
           {/* KARTU 2: DATABASE PERPUSTAKAAN KOSAKATA & TATA BAHASA */}
-          <m.div variants={itemVariants} className="relative group h-full">
-            {/* Tombou Register Mark */}
+          <div className="relative group h-full">
             <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
               <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-secondary/20 group-hover:bg-secondary transition-colors duration-500" />
               <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-secondary/20 group-hover:bg-secondary transition-colors duration-500" />
@@ -247,7 +130,6 @@ export function FeatureGrid() {
                 Ribuan kosakata, kamus Kanji lengkap, dan pustaka tata bahasa praktis — semuanya dengan audio penutur asli dan furigana otomatis.
               </p>
 
-              {/* STATISTIK NYATA DARIPADA SUPABASE */}
               <div className="flex gap-2 flex-wrap mb-6">
                 <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-[4px]">
                   22K+ Kosakata
@@ -260,7 +142,6 @@ export function FeatureGrid() {
                 </Badge>
               </div>
  
-              {/* Tampilan Visual Mockup di Dalam Kartu */}
               <div className="p-4 bg-background/50 border border-border/80 rounded-lg flex flex-col gap-2 mt-auto transition-all duration-300 group-hover:border-secondary/20">
                 <div className="flex items-center justify-between">
                   <span className="text-[9px] font-extrabold uppercase tracking-widest text-primary bg-primary/10 border border-primary/25 px-2 py-0.5 rounded-[4px]">Kosakata Utama</span>
@@ -279,11 +160,10 @@ export function FeatureGrid() {
                 </div>
               </div>
             </Card>
-          </m.div>
+          </div>
  
           {/* KARTU 3: FLASHCARDS DENGAN SYSTEM SRS */}
-          <m.div variants={itemVariants} className="relative group h-full">
-            {/* Tombou Register Mark */}
+          <div className="relative group h-full">
             <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
               <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
               <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
@@ -304,7 +184,6 @@ export function FeatureGrid() {
                 Latih ingatanmu dengan cara paling efektif. Sistem SRS otomatis jadwalkan kartu flashcard yang perlu diulang tepat sebelum kamu lupa.
               </p>
  
-              {/* Tampilan Visual Mockup di Dalam Kartu */}
               <div className="p-4 bg-background/50 border border-border/80 rounded-lg flex items-center gap-3.5 mt-auto transition-all duration-300 group-hover:border-primary/20">
                 <div className="relative w-11 h-14 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground rounded-lg flex items-center justify-center font-bold text-xl shadow-sm shrink-0 transition-transform group-hover:scale-105">
                   猫
@@ -321,11 +200,10 @@ export function FeatureGrid() {
                 </div>
               </div>
             </Card>
-          </m.div>
+          </div>
  
           {/* KARTU 4: SIMULASI UJIAN JLPT REAL-TIME */}
-          <m.div variants={itemVariants} className="relative group h-full">
-            {/* Tombou Register Mark */}
+          <div className="relative group h-full">
             <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
               <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-secondary/20 group-hover:bg-secondary transition-colors duration-500" />
               <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-secondary/20 group-hover:bg-secondary transition-colors duration-500" />
@@ -346,7 +224,6 @@ export function FeatureGrid() {
                 Uji kesiapanmu dengan simulasi ujian JLPT — lengkap dengan timer, sesi ujian terpisah, dan laporan hasil yang detail.
               </p>
  
-              {/* Tampilan Visual Mockup di Dalam Kartu */}
               <div className="p-4 bg-background/50 border border-border/80 rounded-lg flex flex-col gap-2 mt-auto transition-all duration-300 group-hover:border-secondary/20">
                 <div className="flex items-center justify-between text-[9px] font-bold text-muted-foreground">
                   <span className="flex items-center gap-1"><Timer size={10} className="text-secondary" /> Ujian JLPT N3: Sesi Choukai</span>
@@ -371,13 +248,12 @@ export function FeatureGrid() {
                 </div>
               </div>
             </Card>
-          </m.div>
-        </m.div>
+          </div>
+        </div>
       </section>
 
       {/* SEKSI 2: LANGKAH PERJALANAN BELAJAR TERPADU */}
       <section className="relative">
-        {/* Glow latar belakang redup */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-secondary/5 rounded-full blur-[65px] pointer-events-none ambient-glow will-change-transform" />
 
         <div className="text-center max-w-3xl mx-auto mb-[65px]">
@@ -393,55 +269,30 @@ export function FeatureGrid() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-[55px] items-start">
-          {/* TOMBOL NAVIGASI LANGKAH - KOLOM KIRI */}
           <div className="lg:col-span-5 flex flex-col gap-4 w-full">
             {learningSteps.map((step, idx) => (
-              <button
-                type="button"
+              <div
                 key={step.title}
-                aria-pressed={activeStep === idx}
-                aria-label={`Lihat detail ${step.title}`}
-                onClick={() => setActiveStep(idx)}
-                className={`w-full text-left p-6 rounded-2xl border transition-all duration-300 flex items-center justify-between gap-4 group relative overflow-hidden ${
-                  activeStep === idx 
-                    ? "bg-card border-primary/40 shadow-[0_10px_30px_rgba(var(--primary-rgb),0.05)] glass" 
-                    : "bg-transparent border-border hover:border-foreground/10 hover:bg-card/5"
-                }`}
+                className="w-full text-left p-6 rounded-2xl border transition-all duration-300 flex items-center justify-between gap-4 group relative overflow-hidden bg-card border-border/80 hover:border-primary/40"
               >
                 <div className="flex items-center gap-4 relative z-10">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-base transition-all duration-300 ${
-                    activeStep === idx 
-                      ? "bg-primary text-slate-950 dark:text-primary-foreground shadow-[0_4px_12px_rgb(var(--primary-rgb)_/_0.3)]" 
-                      : "bg-muted text-foreground/80 dark:text-muted-foreground"
-                  }`}>
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-base bg-primary text-slate-950 dark:text-primary-foreground shadow-[0_4px_12px_rgb(var(--primary-rgb)_/_0.3)]">
                     0{idx + 1}
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground group-hover:text-primary transition-colors">
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-primary">
                       {step.badge}
                     </span>
-                    <span className={`text-base font-bold transition-colors ${
-                      activeStep === idx ? "text-foreground" : "text-muted-foreground group-hover:text-foreground"
-                    }`}>
+                    <span className="text-base font-bold text-foreground">
                       {step.title.split(": ")[1]}
                     </span>
                   </div>
                 </div>
-                <ArrowRight 
-                  size={16} 
-                  className={`transition-all duration-300 relative z-10 ${
-                    activeStep === idx 
-                      ? "translate-x-0 text-primary opacity-100" 
-                      : "-translate-x-2 text-muted-foreground opacity-0 group-hover:opacity-100 group-hover:translate-x-0"
-                  }`} 
-                />
-              </button>
+              </div>
             ))}
           </div>
 
-          {/* TAMPILAN DETIL LANGKAH AKTIF - KOLOM KANAN */}
           <div className="lg:col-span-7 relative group h-full">
-            {/* Tombou Register Mark */}
             <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
               <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
               <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
@@ -451,139 +302,26 @@ export function FeatureGrid() {
               
               <div className="space-y-6 relative z-10">
                 <Badge className="bg-primary/10 text-primary border border-primary/20 rounded-[4px] font-bold uppercase tracking-widest text-[9px]">
-                  {learningSteps[activeStep].badge}
+                  Siap Ujian
                 </Badge>
                 
                 <h3 className="text-3xl tracking-tight text-foreground font-bold">
-                  {learningSteps[activeStep].title}
+                  Langkah 4: Uji dengan Simulasi JLPT
                 </h3>
                 
                 <p className="text-muted-foreground text-base leading-relaxed font-semibold">
-                  {learningSteps[activeStep].desc}
+                  Ukur kesiapanmu lewat simulasi ujian JLPT dengan timer, penilaian akurat, dan statistik hasil yang lengkap.
                 </p>
- 
+
                 <div className="p-4 bg-muted/30 border border-border/60 rounded-lg flex items-start gap-3">
                   <Sparkles size={16} className="text-primary mt-0.5 shrink-0" />
                   <p className="text-xs text-muted-foreground font-semibold leading-relaxed">
-                    <strong className="text-foreground">Tips Belajar:</strong> {learningSteps[activeStep].tip}
+                    <strong className="text-foreground">Tips Belajar:</strong> Tersedia dari N5 sampai N1, lengkap dengan pembahasan.
                   </p>
                 </div>
- 
-                {/* Interactive Preview Box based on activeStep */}
+
                 <div className="p-4 bg-background/50 border border-border/80 rounded-lg transition-all duration-500">
-                  {activeStep === 0 && (
-                    <div className="flex flex-col items-center gap-3">
-                      <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest">Latihan Menulis Kana "あ"</span>
-                      <div className="size-20 border-2 border-dashed border-primary/30 rounded-xl flex items-center justify-center relative font-japanese font-black text-4xl text-primary bg-background/60 shadow-inner">
-                        あ
-                        <m.svg
-                          className="absolute inset-0 size-full pointer-events-none"
-                          viewBox="0 0 100 100"
-                        >
-                          {/* Animated stroke guides */}
-                          <m.path
-                            d="M 25 35 L 75 35"
-                            fill="none"
-                            stroke="rgba(var(--primary-rgb), 0.55)"
-                            strokeWidth="3.5"
-                            strokeLinecap="round"
-                            initial={{ pathLength: 0 }}
-                            animate={{ pathLength: 1 }}
-                            transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 1 }}
-                          />
-                          <m.path
-                            d="M 50 15 L 50 85"
-                            fill="none"
-                            stroke="rgba(var(--primary-rgb), 0.55)"
-                            strokeWidth="3.5"
-                            strokeLinecap="round"
-                            initial={{ pathLength: 0 }}
-                            animate={{ pathLength: 1 }}
-                            transition={{ duration: 1.5, delay: 0.8, repeat: Infinity, repeatDelay: 1 }}
-                          />
-                          <m.path
-                            d="M 30 70 C 20 40, 80 40, 60 75 C 50 85, 35 75, 45 60"
-                            fill="none"
-                            stroke="rgba(var(--primary-rgb), 0.75)"
-                            strokeWidth="3.5"
-                            strokeLinecap="round"
-                            initial={{ pathLength: 0 }}
-                            animate={{ pathLength: 1 }}
-                            transition={{ duration: 2, delay: 1.6, repeat: Infinity, repeatDelay: 1 }}
-                          />
-                        </m.svg>
-                      </div>
-                      <span className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground">Animasi Petunjuk Arah Guratan</span>
-                    </div>
-                  )}
-
-                  {activeStep === 1 && (
-                    <div className="flex flex-col items-center gap-3">
-                      <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest">Mini Flashcard Kamus</span>
-                      <m.div
-                        whileHover={{ rotateY: 180 }}
-                        transition={{ duration: 0.6 }}
-                        style={{ transformStyle: "preserve-3d" }}
-                        className="w-44 h-24 relative cursor-pointer"
-                      >
-                        {/* Front */}
-                        <div 
-                          style={{ backfaceVisibility: "hidden" }}
-                          className="absolute inset-0 bg-card border border-border/80 rounded-xl flex flex-col items-center justify-center gap-1 shadow-sm"
-                        >
-                          <ruby className="text-xl font-bold font-japanese tracking-wide text-foreground">
-                            猫 <rt className="text-[0.55em] text-muted-foreground">ねこ</rt>
-                          </ruby>
-                          <span className="text-[8px] font-black text-primary uppercase tracking-widest">Hover Untuk Lihat Arti</span>
-                        </div>
-                        {/* Back */}
-                        <div 
-                          style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
-                          className="absolute inset-0 bg-primary/10 border border-primary/30 rounded-xl flex flex-col items-center justify-center gap-1 shadow-sm"
-                        >
-                          <span className="text-lg font-bold text-primary">Neko</span>
-                          <span className="text-[10px] font-bold text-muted-foreground">Arti: Kucing</span>
-                        </div>
-                      </m.div>
-                    </div>
-                  )}
-
-                  {activeStep === 2 && (
-                    <div className="flex flex-col items-center gap-2">
-                      <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest">Kurva Lupa (Forgetting Curve)</span>
-                      <div className="w-full h-20 flex items-center justify-center relative">
-                        <svg className="w-60 h-16" viewBox="0 0 200 60">
-                          <line x1="10" y1="10" x2="190" y2="10" stroke="rgba(255,255,255,0.06)" strokeDasharray="3" />
-                          <line x1="10" y1="30" x2="190" y2="30" stroke="rgba(255,255,255,0.06)" strokeDasharray="3" />
-                          <line x1="10" y1="50" x2="190" y2="50" stroke="rgba(255,255,255,0.06)" strokeDasharray="3" />
-                          <m.path
-                            d="M 10 10 C 50 15, 80 50, 190 52"
-                            fill="none"
-                            stroke="url(#curve-gradient)"
-                            strokeWidth="3.5"
-                            strokeLinecap="round"
-                            initial={{ pathLength: 0 }}
-                            animate={{ pathLength: 1 }}
-                            transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 1 }}
-                          />
-                          <circle cx="10" cy="10" r="3" fill="hsl(var(--primary))" />
-                          <circle cx="70" cy="22" r="3" fill="hsl(var(--secondary))" />
-                          <circle cx="130" cy="38" r="3" fill="hsl(var(--primary))" />
-                          <defs>
-                            <linearGradient id="curve-gradient" x1="0" y1="0" x2="1" y2="0">
-                              <stop offset="0%" stopColor="hsl(var(--primary))" />
-                              <stop offset="50%" stopColor="hsl(var(--secondary))" />
-                              <stop offset="100%" stopColor="hsl(var(--destructive))" />
-                            </linearGradient>
-                          </defs>
-                        </svg>
-                        <span className="absolute top-1 left-2 text-[8px] font-black text-success uppercase tracking-wider">100% Memori</span>
-                        <span className="absolute bottom-1 right-2 text-[8px] font-black text-destructive uppercase tracking-wider">Lupa</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {activeStep === 3 && <JlptQuizPlayground />}
+                  <JlptQuizPlayground />
                 </div>
               </div>
 
@@ -605,7 +343,6 @@ export function FeatureGrid() {
       {/* SEKSI 3: PRATINJAU GAMIFIKASI KEMAJUAN BELAJAR */}
       <section className="relative">
         <div className="relative group">
-          {/* Tombou Register Mark */}
           <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
             <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
             <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
@@ -614,7 +351,6 @@ export function FeatureGrid() {
           <Card className="p-6 sm:p-10 md:p-[42px] lg:p-[55px] bg-card border border-border/50 dark:border-white/10 rounded-2xl relative overflow-hidden group shadow-[0_4px_25px_rgba(0,0,0,0.015)] group-hover:border-primary/45 transition-colors duration-500">
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
-              {/* PENJELASAN SEBELAH KIRI */}
               <div className="lg:col-span-6 space-y-6">
                 <Badge className="bg-primary/10 text-primary border border-primary/20 px-3 py-1 rounded-[4px] text-[9px] font-bold uppercase tracking-widest">
                   Sistem Kemajuan Belajar
@@ -643,13 +379,11 @@ export function FeatureGrid() {
                 </div>
               </div>
 
-              {/* WIDGET GAMIFIKASI SEBELAH KANAN */}
               <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
-                {/* KARTU STREAK (HARI AKTIF) */}
                 <Card className="p-5 bg-card border border-border/60 dark:border-white/10 rounded-lg flex flex-col justify-between h-44 shadow-sm hover:border-primary/30 transition-colors duration-300">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest">Belajar Harian</span>
-                    <Flame size={20} className="text-destructive fill-destructive animate-premium-bounce" />
+                    <Flame size={20} className="text-destructive fill-destructive animate-pulse" />
                   </div>
                   <div className="my-2">
                     <span className="text-4xl font-black text-foreground tracking-tight">7 HARI</span>
@@ -657,7 +391,6 @@ export function FeatureGrid() {
                       <span className="size-1.5 bg-success rounded-full" /> Streak Murni!
                     </p>
                   </div>
-                  {/* Mini Heatmap Grid Kontribusi */}
                   <div className="mt-3 flex flex-col gap-1 w-full overflow-hidden">
                     <div className="grid grid-cols-7 gap-1">
                       {Array.from({ length: 28 }).map((_, idx) => {
@@ -688,7 +421,6 @@ export function FeatureGrid() {
                   </div>
                 </Card>
 
-                {/* KARTU LEVEL DAN XP */}
                 <Card className="p-5 bg-card border border-border/60 dark:border-white/10 rounded-lg flex flex-col justify-between h-44 shadow-sm hover:border-primary/30 transition-colors duration-300">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest">Tingkatan Level</span>
@@ -711,7 +443,6 @@ export function FeatureGrid() {
                   </div>
                 </Card>
 
-                {/* BARIS LENCANA TERBARU */}
                 <Card className="p-4 bg-card border border-border/60 dark:border-white/10 rounded-lg flex items-center justify-between gap-4 shadow-sm hover:border-primary/30 transition-colors duration-300 sm:col-span-2">
                   <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest shrink-0">Lencana Baru:</span>
                   <div className="flex gap-3 overflow-x-auto py-1">

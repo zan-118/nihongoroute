@@ -1,15 +1,13 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { m } from "framer-motion";
 import { ArrowRight, BookOpen, PlayCircle, Sparkles } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 /**
  * Hero component for the landing page.
- * Displays branding, value proposition, call-to-action buttons, and animated decorative elements.
+ * Pure Server Component for instant SSG rendering and zero client JS overhead.
+ * Displays branding, value proposition, call-to-action buttons, and decorative elements.
  * 
  * @returns React element representing the hero section.
  */
@@ -21,31 +19,22 @@ export function Hero() {
       <div className="pointer-events-none absolute left-1/3 bottom-6 size-64 rounded-full bg-secondary/10 blur-[65px] dark:bg-secondary/12 ambient-glow will-change-transform" />
 
       <div className="relative z-10 flex-1 flex flex-col items-start text-left max-w-2xl w-full">
-        <m.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="mb-7"
-        >
+        <div className="mb-7 animate-in fade-in duration-500">
           <Badge variant="outline" className="brand-pill shadow-none">
             <Sparkles size={12} className="text-primary" />
             <span>NihongoRoute | Teman Belajar Bahasa Jepangmu</span>
           </Badge>
-        </m.div>
+        </div>
 
         {/* Mobile-only logo display */}
-        <m.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.14, duration: 0.5 }}
-          className="lg:hidden relative size-36 mb-5 mx-auto self-center rounded-lg premium-surface flex items-center justify-center"
-        >
+        <div className="lg:hidden relative size-36 mb-5 mx-auto self-center rounded-lg premium-surface flex items-center justify-center animate-in fade-in zoom-in-95 duration-500">
           <Image
             src="/logo-branding.svg"
             alt="NihongoRoute"
             fill
             className="object-contain p-2"
           />
-        </m.div>
+        </div>
 
         <h1 className="text-[2.75rem] sm:text-6xl md:text-7xl lg:text-[5.95rem] tracking-[-0.07em] leading-[0.92] text-foreground mb-7">
           Kuasai <br />
@@ -92,12 +81,7 @@ export function Hero() {
       </div>
 
       {/* Desktop-only animated graphic container */}
-      <m.div
-        initial={{ opacity: 0, scale: 0.94, rotate: -4 }}
-        animate={{ opacity: 1, scale: 1, rotate: 0 }}
-        transition={{ delay: 0.35, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className="hidden lg:flex flex-1 justify-end relative pointer-events-none"
-      >
+      <div className="hidden lg:flex flex-1 justify-end relative pointer-events-none animate-in fade-in slide-in-from-right-4 duration-700">
         <div className="relative size-[490px]">
           {/* Layered background shapes and borders */}
           <div className="absolute -inset-8 rounded-[52px] bg-[radial-gradient(circle_at_35%_30%,rgb(var(--brand-cyan-rgb)_/_0.22),transparent_35%),radial-gradient(circle_at_72%_70%,rgb(var(--brand-violet-rgb)_/_0.16),transparent_38%)] blur-3xl" />
@@ -140,33 +124,20 @@ export function Hero() {
             </div>
           </div>
 
-          {/* Floating animated badge: Sparkles */}
-          <m.div
-            animate={{ y: [0, -12, 0], x: [0, 4, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -top-4 right-8 p-4 premium-surface rounded-xl flex items-center justify-center hover:border-primary/40 transition-colors pointer-events-auto"
-          >
+          {/* Decorative badge: Sparkles */}
+          <div className="absolute -top-4 right-8 p-4 premium-surface rounded-xl flex items-center justify-center hover:border-primary/40 transition-colors pointer-events-auto">
             <Sparkles className="text-primary drop-shadow-[0_0_16px_rgba(var(--brand-cyan-rgb),0.45)]" size={24} />
-          </m.div>
+          </div>
 
-          {/* Floating animated badge: Cloud Sync */}
-          <m.div
-            animate={{ y: [0, 16, 0], x: [0, -6, 0] }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 1,
-            }}
-            className="absolute bottom-8 -left-8 p-5 premium-surface rounded-xl flex items-center justify-center hover:border-primary/40 transition-colors pointer-events-auto"
-          >
+          {/* Decorative badge: Cloud Sync */}
+          <div className="absolute bottom-8 -left-8 p-5 premium-surface rounded-xl flex items-center justify-center hover:border-primary/40 transition-colors pointer-events-auto">
             <div className="flex items-center gap-3">
               <div className="size-3 bg-primary rounded-full animate-pulse shadow-[0_0_14px_rgba(var(--brand-cyan-rgb),0.65)]" />
               <span className="text-xs font-black text-foreground uppercase tracking-widest">
                 Data Tersinkron ke Cloud
               </span>
             </div>
-          </m.div>
+          </div>
 
           {/* Static badge: JLPT Ready */}
           <div className="absolute bottom-20 right-0 p-4 premium-surface rounded-xl flex items-center gap-3">
@@ -181,7 +152,7 @@ export function Hero() {
             </div>
           </div>
         </div>
-      </m.div>
+      </div>
     </section>
   );
 }

@@ -42,6 +42,7 @@ export const AlertTriangle = createIcon("flat-color-icons:warning");
 export const ArrowDown = createIcon("flat-color-icons:down");
 export const ArrowLeft = createIcon("flat-color-icons:left");
 export const ArrowRight = createIcon("flat-color-icons:right");
+export const ArrowUpRight = createIcon("solar:arrow-up-right-linear");
 export const ArrowRightLeft = createIcon("flat-color-icons:neutral-trading");
 export const AudioLines = createIcon("flat-color-icons:audio-file");
 export const Award = createIcon("flat-color-icons:vip");

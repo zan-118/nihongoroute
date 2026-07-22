@@ -9,10 +9,12 @@
 // IMPOR
 // ======================
 import { ReactNode } from "react";
+import dynamic from "next/dynamic";
 import { ProgressProvider } from "@/components/providers/ProgressProvider";
 import NavWrapper from "@/components/layout/NavWrapper";
-import AppClientAddons from "@/components/providers/AppClientAddons";
-import DeferredOnboardingTour from "@/components/providers/DeferredOnboardingTour";
+
+const AppClientAddons = dynamic(() => import("@/components/providers/AppClientAddons"));
+const DeferredOnboardingTour = dynamic(() => import("@/components/providers/DeferredOnboardingTour"));
 
 // ======================
 // EKSEKUSI UTAMA

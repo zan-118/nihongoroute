@@ -1,21 +1,21 @@
-/**
- * @file page.tsx
- * @description Halaman dasbor (Dashboard) utama pengguna NihongoRoute.
- * Menampilkan ringkasan kemajuan, statistik XP, dan daftar sesi ulang SRS.
- */
-
-// ======================
-// IMPOR
-// ======================
-import DashboardClient from "./DashboardClient";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { getCourseCategories } from "@/actions/lessons.actions";
 import { getRandomExpression } from "@/actions/expressions.actions";
 import { createPageMetadata } from "@/lib/seo";
 
-// ======================
-// METADATA SEO
-// ======================
+const DashboardClient = dynamic(() => import("./DashboardClient"), {
+  loading: () => (
+    <div className="w-full space-y-8 animate-pulse">
+      <div className="h-32 w-full bg-card/30 rounded-2xl" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="h-44 bg-card/30 rounded-xl" />
+        <div className="h-44 bg-card/30 rounded-xl" />
+        <div className="h-44 bg-card/30 rounded-xl" />
+      </div>
+    </div>
+  ),
+});
 
 /**
  * SEO metadata configuration for dashboard.
@@ -28,10 +28,6 @@ export const metadata: Metadata = {
     noIndex: true,
   }),
 };
-
-// ======================
-// EKSEKUSI UTAMA
-// ======================
 
 /**
  * Dashboard page server component.

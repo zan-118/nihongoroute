@@ -129,4 +129,10 @@ Sistem TTS dirancang hemat biaya dan berkinerja tinggi:
   - Konten leksikal (kosakata, kanji, tata bahasa) dan materi editorial (reading, listening, courses) menggunakan **Incremental Static Regeneration (ISR)** dengan `generateStaticParams()` untuk pre-rendering halaman-halaman populer (top slugs) pada saat build time.
   - Slug lain di-render on-demand saat pertama kali diakses (`dynamicParams = true`) dan di-cache kembali. Cache diregenerasi di latar belakang setiap 3600 detik (`revalidate = 3600`).
   - Status spesifik pengguna (progres belajar, bookmark, data SRS) diproses secara terpisah di sisi klien melalui Zustand dan IndexedDB untuk mencegah pengotoran cache statis (cache poisoning) dan menjaga performa pemuatan awal tetap instan.
-
+* **Optimasi Bundle & Tree-Shaking**:
+  - Penggunaan `optimizePackageImports` di `next.config.ts` untuk Radix UI, Iconify, Framer Motion, Date-fns, Sonner, dan Wanakana untuk memaksa tree-shaking otomatis di Next.js.
+  - Pemisahan bundle client-side addons (`AppClientAddons`, `DeferredOnboardingTour`) dan client components berukuran besar (`ExamsClient`, `DashboardClient`) menggunakan `next/dynamic` untuk meminimalkan *First Load JS* pada initial page shell.
+* **Optimasi Rendering GPU & Animasi Global (60-120 FPS)**:
+  - Eliminasi total filter SVG `feTurbulence` overlay (`body::after`) yang memicu repainting GPU seluas 100vw x 100vh di setiap frame animasi.
+  - Menghapus `transition-colors duration-300` dari tag dasar (`h1..h6`, `p`, `body`) untuk mengeliminasi overhead recalculate style global saat terjadi interaksi UI.
+  - Penggantian animasi *layout thrashing* (`height: "auto"` pada accordion/dropdown) menjadi CSS Grid `grid-template-rows: 0fr -> 1fr` dan *GPU compositor properties* (`transform` & `opacity`).

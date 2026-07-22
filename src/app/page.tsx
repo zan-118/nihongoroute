@@ -1,15 +1,5 @@
-/**
- * @file page.tsx
- * @description Halaman landas (Landing Page) utama NihongoRoute.
- * Menyediakan informasi fitur, branding, dan akses cepat ke dashboard pembelajaran.
- * Server Component untuk SSG dan SEO optimal.
- * @module LandingPage
- */
-
-// ======================
-// IMPOR
-// ======================
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
   createPageMetadata,
@@ -17,12 +7,17 @@ import {
   webPageJsonLd,
 } from "@/lib/seo";
 
-// Komponen Domain (diimpor secara statis untuk menghindari layout shift dan mempercepat FCP/INP)
+// Server Components (rendered purely statically to HTML for zero JS overhead on initial render)
 import { Hero } from "@/components/features/landing/Hero";
 import { FeatureGrid } from "@/components/features/landing/FeatureGrid";
-import { InteractivePlayground } from "@/components/features/landing/InteractivePlayground";
 import { TrustBanner } from "@/components/features/landing/TrustBanner";
 import { LandingFooter } from "@/components/features/landing/LandingFooter";
+
+// Lazy-loaded interactive client playground
+const InteractivePlayground = dynamic(
+  () => import("@/components/features/landing/InteractivePlayground").then((m) => m.InteractivePlayground),
+  { loading: () => <div className="w-full h-[450px] rounded-2xl bg-card/20 animate-pulse mb-[120px]" /> }
+);
 
 /**
  * Metadata configuration for the landing page.
@@ -46,7 +41,8 @@ export const metadata: Metadata = {
 
 /**
  * LandingPage component.
- * Renders the main landing page with SEO JSON-LD schemas, hero section, interactive playground, features, and footer.
+ * Pure Server Component for maximum SSG performance and lightning-fast LCP.
+ * Renders the main landing page with SEO JSON-LD schemas, hero section, features, and footer.
  * 
  * @returns {JSX.Element} The rendered landing page.
  */
@@ -83,19 +79,19 @@ export default function LandingPage() {
       <div className="hidden md:block fixed inset-0 pointer-events-none z-0 opacity-[0.12] bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)_/_0.08)_1px,transparent_1px),linear-gradient(rgb(var(--brand-violet-rgb)_/_0.06)_1px,transparent_1px)] bg-[size:72px_72px]" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-10 md:pt-14 pb-14">
-        {/* SEKSI HERO UTAMA */}
+        {/* SEKSI HERO UTAMA (Pure SSG Server Component) */}
         <Hero />
 
-        {/* PLAYGROUND INTERAKTIF KONVERSI FURIGANA */}
+        {/* PLAYGROUND INTERAKTIF KONVERSI FURIGANA (Code-split Client Component) */}
         <InteractivePlayground />
 
-        {/* KISI FITUR UNGGULAN */}
+        {/* KISI FITUR UNGGULAN (Pure SSG Server Component) */}
         <FeatureGrid />
 
-        {/* BANNER KEPERCAYAAN */}
+        {/* BANNER KEPERCAYAAN (Pure SSG Server Component) */}
         <TrustBanner />
 
-        {/* KAKI HALAMAN */}
+        {/* KAKI HALAMAN (Pure SSG Server Component) */}
         <LandingFooter />
       </div>
     </main>
