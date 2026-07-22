@@ -59,3 +59,27 @@ Tombol aksi utama (tinggi `≥40px`) menggunakan radius asimetris: tiga sudut me
 - **Cubic-Bezier Easing Utama**: `cubic-bezier(0.32, 0.72, 0, 1)` (efek spring-deceleration premium).
 - **Duration**: `500ms` untuk perubahan state mikro, `700ms` untuk kemunculan seksi.
 - **Scroll Reveal**: Gunakan transisi eksklusif pada `transform` dan `opacity` (hindari animating `height`, `width`, `top`, `left` karena performa rendering).
+
+---
+
+## 6. Arsitektur Double-Bezel (Doppelrand) & Button-in-Button CTA
+Kartu direktori utama (seperti di modul `/library`) wajib menggunakan penutup berlapis (*nested enclosure*):
+1. **Outer Shell**: Wrapper dengan padding `p-2` s/d `p-2.5`, outer radius exaggerated (mis. `rounded-[2.25rem]`), hairline border (`ring-1` / `border border-white/10`), dan backdrop blur terisolasi.
+2. **Inner Core**: Container bagian dalam dengan radius konsentris hasil kalkulasi (`rounded-[calc(2.25rem-0.625rem)]`), background gradient surface, dan bayangan inset (`shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]`).
+3. **Button-in-Button CTA**: Interaksi CTA utama menggunakan tombol pill dengan trailing icon terisolasi dalam circle wrapper tersendiri (`w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center shrink-0`), yang meluncur kinetik diagonal pada saat hover.
+
+---
+
+## 7. Aturan Pembersihan Kartu (*Purge Card Overuse*) & Tabel Murni (`<table>`)
+1. **Pembersihan Kartu Total (*No Card Overuse*)**:
+   - DILARANG KERAS membungkus setiap item kecil di dalam list/grid dengan boks kartu individual (`bg-card border rounded-2xl p-6 shadow`).
+   - Elemen antarmuka WAJIB disajikan sebagai **Tampilan Terbuka Sejati (*Seamless Open Layout*)** yang mengalir secara alami di atas halaman dengan aksen hairline border (`border-b border-border/30`).
+2. **Standar Tabel Data Murni (`<table>`)**:
+   - Tampilan berlabel "Tabel" WAJIB menggunakan struktur HTML tabel murni (`<table className="w-full text-left border-collapse">`), BUKAN kartu paragraf vertikal bertumpuk.
+   - Header tabel `<thead>` (`NO`, `JEPANG`, `ROMAJI`, `ARTI`) WAJIB terlihat di semua ukuran layar (Mobile & Desktop).
+   - Di mobile (`<768px`), tabel dibungkus dengan `overflow-x-auto min-w-[640px]` agar data tetap selaras dalam baris horizontal yang utuh tanpa terpotong atau tertekan.
+3. **Standar Responsif Mobile (<768px)**:
+   - Spacing: Gunakan padding ringkas `px-4 py-4`.
+   - Typo scale: Judul utama diskalakan dari `text-7xl` (desktop) menjadi `text-3xl` / `text-4xl` (mobile).
+
+

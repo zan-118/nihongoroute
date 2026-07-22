@@ -1,17 +1,16 @@
 /**
  * @file page.tsx
  * @description Halaman utama Pustaka (Library Hub) NihongoRoute.
- * Menyediakan navigasi ke semua kategori konten secara interaktif dan sangat lapang di desktop.
+ * Menyediakan direktori navigasi bento-grid berkinerja tinggi, berpenampilan premium (Awwwards-tier), dan ramah luring.
  */
 
 // ======================
-// IMPOR
+// IMPOR UTAMA
 // ======================
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Library, Sparkles } from "@/components/ui/icons";
 import { buildLibraryCategories, buildLibraryStats } from "@/lib/constants/library";
-import { Card } from "@/components/ui/card";
 
 // Komponen Pendukung
 import { LibraryCategoryCard } from "@/components/features/library/LibraryCategoryCard";
@@ -27,14 +26,11 @@ import {
 /**
  * Metadata SEO untuk halaman Pustaka Belajar.
  */
-// ======================
-// METADATA SEO
-// ======================
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "Pustaka Belajar | NihongoRoute",
     description:
-      "Cari semua materi belajar bahasa Jepang: kosakata, tata bahasa, kanji, graded reading, listening lab, dan cheatsheet.",
+      "Arsip komprehensif materi bahasa Jepang: Pustaka Kosakata, Kamus Kanji, Pola Kalimat, Graded Reading, Listening Lab, dan Catatan Cepat.",
     path: "/library",
     keywords: [
       "pustaka bahasa Jepang",
@@ -46,15 +42,12 @@ export const metadata: Metadata = {
   }),
 };
 
-// ======================
-// EKSEKUSI UTAMA
-// ======================
-
 /**
  * Halaman utama Pustaka (RSC).
- * Mengambil data statistik agregat jumlah kosakata, kanji, pola kalimat, dll., lalu menyajikan bento grid navigasi kategori.
+ * Mengambil data statistik agregat jumlah kosakata, kanji, pola kalimat, dll.,
+ * lalu menyajikan bento grid navigasi kategori berarsitektur Double-Bezel.
  * 
- * @returns {Promise<JSX.Element>} Halaman direktori pustaka materi belajar Jepang yang super lega.
+ * @returns {Promise<JSX.Element>} Halaman direktori pustaka materi belajar Jepang.
  */
 export default async function LibraryPage() {
   // Ambil data jumlah materi dari database/API
@@ -68,7 +61,7 @@ export default async function LibraryPage() {
   const stats = buildLibraryStats(counts);
 
   return (
-    <div className="w-full px-4 md:px-8 lg:px-12 relative overflow-hidden pb-32 bg-transparent text-foreground transition-colors duration-300 min-h-screen pt-8 md:pt-16">
+    <div className="w-full px-4 sm:px-6 md:px-10 lg:px-16 relative overflow-hidden pb-36 bg-transparent text-foreground min-h-screen pt-10 md:pt-20">
       {/* Injeksi JSON-LD untuk optimasi SEO mesin pencari */}
       <JsonLd
         data={[
@@ -90,107 +83,115 @@ export default async function LibraryPage() {
           }),
         ]}
       />
-      {/* Background Neural Overlays & Glowing Ambient Accents */}
-      <div className="absolute top-[5%] -left-[10%] size-[50%] bg-primary/5 blur-[70px] rounded-full pointer-events-none z-0 ambient-glow will-change-transform" />
-      <div className="absolute bottom-[10%] -right-[10%] size-[40%] bg-secondary/5 blur-[70px] rounded-full pointer-events-none z-0 ambient-glow will-change-transform" />
-      <div className="neural-grid" />
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      {/* Ambient Mesh Gradient Glows */}
+      <div className="absolute top-[5%] -left-[10%] size-[50%] bg-primary/10 blur-[120px] rounded-full pointer-events-none z-0 ambient-glow will-change-transform" />
+      <div className="absolute bottom-[15%] -right-[10%] size-[45%] bg-secondary/10 blur-[120px] rounded-full pointer-events-none z-0 ambient-glow will-change-transform" />
+      <div className="neural-grid opacity-30" />
 
-        {/* ── HEADER ── */}
-        <header className="mb-14 md:mb-20">
-          <div className="flex items-center gap-4 md:gap-6 mb-8 md:mb-12">
-            <Card className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-xl bg-[rgb(var(--primary-rgb)/0.08)] border border-border/50 dark:border-white/10 flex items-center justify-center shadow-sm">
-              <Library size={28} className="text-primary md:w-8 md:h-8" />
-            </Card>
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary/70">
-                Pusat Sumber Belajar
+      <div className="max-w-7xl mx-auto relative z-10 space-y-16 md:space-y-24">
+
+        {/* ── CINEMATIC VAULT HEADER ── */}
+        <header className="flex flex-col gap-10">
+          {/* Eyebrow & Status Pills */}
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 dark:bg-primary/10 backdrop-blur-md">
+              <Library size={16} className="text-primary" />
+              <span className="text-[10px] font-black uppercase tracking-[0.25em] font-mono text-primary">
+                ARCHIVE // PUSTAKA BELAJAR
               </span>
-              <div className="flex items-center gap-2.5">
-                <div className="size-2 rounded-full bg-success animate-pulse" />
-                <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest leading-none">
-                  Koneksi Luring: Aktif
+            </div>
+
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-md">
+              <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest font-mono">
+                SINKRONISASI LURING: AKTIF
+              </span>
+            </div>
+          </div>
+
+          {/* Title & Description Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+            <div className="lg:col-span-8 space-y-6">
+              <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight text-foreground leading-[0.92] drop-shadow-sm font-sans">
+                PUSTAKA<br />
+                <span className="bg-gradient-to-r from-primary via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+                  MATERI
                 </span>
+              </h1>
+              <p className="text-muted-foreground text-base sm:text-lg md:text-xl max-w-2xl leading-relaxed font-medium">
+                Pusat referensi pembelajaran bahasa Jepang serba luring. Jelajahi ribuan kata, modul kanji interaktif, pola kalimat, hingga bahan simakan JLPT dalam satu vault terpadu.
+              </p>
+            </div>
+
+            {/* Server Status Module in Header Right */}
+            <div className="lg:col-span-4 flex lg:justify-end">
+              <div className="w-full sm:w-auto">
+                <LibraryServerStatus />
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12 mb-14 md:mb-20">
-            <div className="flex-1">
-              <h1 className="text-4xl sm:text-5xl md:text-8xl uppercase tracking-tight text-foreground mb-6 drop-shadow-sm leading-none">
-                Pustaka<br />
-                <span className="text-primary">Materi</span>
-              </h1>
-              <p className="text-muted-foreground text-sm md:text-lg lg:text-xl max-w-3xl leading-relaxed font-medium">
-                Cari semua materi belajar kamu di sini. Mulai dari kata kerja sampai pola kalimat buat persiapan JLPT, semuanya lengkap.
-              </p>
-            </div>
-            <div className="shrink-0 hidden xl:block w-full lg:w-auto mt-8 lg:mt-0">
-              <LibraryServerStatus />
-            </div>
+          {/* ── METRIC STATS ── */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+            {stats.map((stat) => (
+              <div 
+                key={stat.label}
+                className="relative group p-5 sm:p-6 rounded-2xl bg-card/60 dark:bg-card/30 border border-border/60 dark:border-white/10 backdrop-blur-md shadow-sm transition-all duration-300 flex flex-col items-center justify-center text-center gap-1.5 overflow-hidden"
+              >
+                <div 
+                  className="absolute top-0 inset-x-0 h-[2px] opacity-60"
+                  style={{ backgroundColor: `rgb(${stat.accentRgb})` }}
+                />
+
+                <span
+                  className="text-3xl sm:text-4xl md:text-5xl font-black tabular-nums tracking-tighter leading-none"
+                  style={{ color: `rgb(${stat.accentRgb})` }}
+                >
+                  {stat.value.toLocaleString("id-ID")}
+                </span>
+                <span className="text-[10px] font-black font-mono text-muted-foreground uppercase tracking-widest pt-1">
+                  {stat.label}
+                </span>
+              </div>
+            ))}
           </div>
 
-          {/* ── BANNER STATISTIK (Bento Grid Style) ── */}
-          <div className="flex flex-col gap-6 w-full">
-            <div className="flex flex-col sm:flex-row flex-wrap gap-6 md:gap-8">
-              {stats.map((stat) => (
-                <div 
-                  key={stat.label}
-                  className="relative group flex-1 min-w-[120px]"
-                >
-                  {/* Tombou Register Mark (L-shape offset 6px outside rounded-2xl) */}
-                  <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-                    <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
-                    <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
-                  </div>
-
-                  <Card className="h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl p-6 md:p-8 flex flex-col justify-center items-center text-center gap-2 shadow-[0_4px_20px_rgba(0,0,0,0.015)] group-hover:border-primary/50 transition-colors duration-500">
-                    <span
-                      className="text-3xl md:text-5xl font-black tabular-nums tracking-tighter leading-none transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105"
-                      style={{ color: `rgb(${stat.accentRgb})` }}
-                    >
-                      {stat.value.toLocaleString("id-ID")}
-                    </span>
-                    <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.25em]">
-                      {stat.label}
-                    </span>
-                  </Card>
-                </div>
-              ))}
-            </div>
-
-            {/* Total strip status */}
-            <div
-              className="px-8 py-4 rounded-lg border border-border/50 flex items-center justify-center gap-3 bg-muted/40"
-            >
-              <Sparkles size={14} className="text-primary animate-pulse" />
-              <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.3em] text-center">
-                {totalMateri.toLocaleString("id-ID")} total materi siap diakses secara luring
+          {/* Total Accumulated Banner Strip */}
+          <div className="p-1 rounded-full bg-card/30 border border-border/40 dark:border-white/5 backdrop-blur-md">
+            <div className="px-6 py-2.5 rounded-full bg-muted/20 flex flex-wrap items-center justify-center gap-3 text-center">
+              <Sparkles size={14} className="text-primary animate-pulse shrink-0" />
+              <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.25em] font-mono">
+                {totalMateri.toLocaleString("id-ID")} TOTAL MATERI BELAJAR TERSEDIA LURING
               </span>
             </div>
           </div>
         </header>
 
-        {/* ── NAVIGATION GRID ── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-stretch mt-12">
-          {categories.map((cat, idx) => (
-            <div
-              key={cat.href}
-              className={
-                // Jika item terakhir ganjil, buat melebar penuh pada layar medium ke atas
-                idx === categories.length - 1 && categories.length % 2 !== 0
-                  ? "md:col-span-2"
-                  : ""
-              }
-            >
+        {/* ── BENTO NAVIGATION GRID ── */}
+        <section className="space-y-8">
+          <div className="flex items-center justify-between border-b border-border/40 dark:border-white/5 pb-4">
+            <div className="flex items-center gap-3">
+              <span className="size-2 rounded-full bg-primary" />
+              <h2 className="text-xs font-black uppercase tracking-[0.3em] font-mono text-foreground">
+                KATALOG DIREKTORI UTAMA
+              </h2>
+            </div>
+            <span className="text-[11px] font-mono font-bold text-muted-foreground/60">
+              6 DIREKTORI TERSEDIA
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-stretch">
+            {categories.map((cat, idx) => (
               <LibraryCategoryCard
+                key={cat.href}
                 {...cat}
                 index={idx}
               />
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </section>
 
       </div>
     </div>

@@ -3,54 +3,28 @@
 /**
  * @file KanjiGrid.tsx
  * @description Komponen grid visualizer daftar karakter Kanji luring di NihongoRoute.
- * Menampilkan kartu-kartu kanji interaktif berdasarkan filter level JLPT dan kueri pencarian.
+ * Menampilkan ubin-ubin kanji interaktif berarsitektur Double-Bezel (Doppelrand).
  */
 
-// ==========================================
-// IMPOR UTAMA
-// ==========================================
-import { Loader2, ArrowRight, Search } from "@/components/ui/icons";
+import { Loader2, ArrowUpRight, Search } from "@/components/ui/icons";
 import Link from "next/link";
-import { Card } from "@/components/ui/card";
 
-// ==========================================
-// ANTARMUKA & TIPE DATA
-// ==========================================
-
-/**
- * Kanji item data structure.
- */
 export interface KanjiGridItem {
-  /** Unique identifier from database. */
   id?: string;
-  /** Alternative MongoDB identifier. */
   _id?: string;
-  /** Kanji character symbol. */
   character: string;
-  /** JLPT level designation. */
   jlpt?: string;
-  /** English meaning translation. */
   meaning?: string;
-  /** URL slug for routing. */
   slug?: string;
 }
 
-/**
- * Props for KanjiGrid component.
- */
 interface KanjiGridProps {
-  /** Array of kanji items to display. */
   kanjis: KanjiGridItem[];
-  /** Loading state flag. */
   isFetching: boolean;
 }
 
-// ==========================================
-// KOMPONEN UTAMA: KanjiGrid
-// ==========================================
 /**
- * Interactive bento grid component displaying kanji characters.
- * Handles loading overlays and empty search states.
+ * Double-Bezel bento grid component displaying kanji tiles.
  * 
  * @param props Component properties.
  * @returns React element.
@@ -58,65 +32,57 @@ interface KanjiGridProps {
 export function KanjiGrid({ kanjis, isFetching }: KanjiGridProps) {
   return (
     <div className="relative font-sans">
-      {/* Overlay Pemuat Visual (Glow Skeleton Blur) */}
+      {/* Loading Overlay */}
       {isFetching && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50  rounded-2xl md:rounded-3xl">
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-md rounded-3xl">
           <Loader2 className="size-10 animate-spin text-primary" />
         </div>
       )}
       
-      {/* Kisi Bento Kartu Kanji */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5 md:gap-6 min-h-[400px]">
-        {kanjis.map((kanji, idx) => (
+      {/* Grid of Kanji Tiles */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-0 border-t border-l border-border/30 min-h-[400px]">
+        {kanjis.map((kanji) => (
           <div
             key={kanji.id || kanji._id}
-            className="transform hover:-translate-y-1 transition-all duration-300"
             style={{
-              // Optimize rendering performance for offscreen items.
               contentVisibility: "auto",
-              containIntrinsicSize: "0 180px",
+              containIntrinsicSize: "0 140px",
             }}
+            className="group font-sans"
           >
-            {/* Resolve route using slug or fallback ID. */}
-            <Link href={`/library/kanji/${kanji.slug || kanji.id || kanji._id}`}>
-              <Card className="group relative aspect-square flex flex-col items-center justify-center p-6 bg-card/45 border border-border/80 hover:border-[rgb(var(--primary-rgb)/0.45)] transition-all duration-300 rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer glass shadow-[0_0_30px_rgba(var(--primary-rgb),0.015)]">
-                {/* Efek Pendar Latar Belakang (Neon Glow Effect) */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[rgb(var(--primary-rgb)/0.05)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                
-                {/* Lencana Tingkat JLPT */}
-                <div className="absolute top-4 right-4 text-[10px] font-black bg-[rgb(var(--primary-rgb)/0.1)] text-primary px-2 py-0.5 rounded-full border border-[rgb(var(--primary-rgb)/0.2)]">
-                  {kanji.jlpt}
+            <Link href={`/library/kanji/${kanji.slug || kanji.id || kanji._id}`} className="block h-full">
+              <div className="w-full aspect-square p-3 border-b border-r border-border/30 hover:border-rose-500/50 transition-colors flex flex-col items-center justify-between text-center relative group-active:scale-[0.98]">
+                {/* Top Meta */}
+                <div className="w-full flex justify-between items-center">
+                  <span className="text-[9px] font-mono font-bold text-rose-500 uppercase tracking-wider">
+                    {kanji.jlpt || "KANJI"}
+                  </span>
+                  <ArrowUpRight size={12} className="text-muted-foreground/40 group-hover:text-rose-500 transition-colors" />
                 </div>
 
-                {/* Karakter Utama Kanji */}
-                <span className="text-4xl md:text-5xl font-black text-foreground mb-2 group-hover:scale-110 transition-transform duration-500 font-japanese">
+                {/* Main Character */}
+                <span className="text-4xl sm:text-5xl font-black text-foreground font-japanese tracking-tight group-hover:text-rose-500 group-hover:scale-110 transition-transform duration-300 my-auto">
                   {kanji.character}
                 </span>
                 
-                {/* Arti Kanji */}
-                <span className="text-[10px] md:text-xs text-muted-foreground font-medium text-center line-clamp-1">
+                {/* Meaning */}
+                <span className="text-[10px] font-semibold text-muted-foreground group-hover:text-foreground transition-colors line-clamp-1 w-full">
                   {kanji.meaning}
                 </span>
-
-                {/* Tombol Akses Cepat */}
-                <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-300">
-                  <ArrowRight size={14} className="text-primary" aria-hidden="true" />
-                </div>
-              </Card>
+              </div>
             </Link>
           </div>
         ))}
       </div>
 
-      {/* Tampilan Keadaan Kosong (Empty State) */}
-      {/* Show empty state only when loading finished and no data. */}
+      {/* Empty State */}
       {kanjis.length === 0 && !isFetching && (
-        <div className="flex flex-col items-center justify-center py-24 text-center">
-          <div className="size-20 rounded-full bg-muted/20 flex items-center justify-center mb-6">
-             <Search size={32} className="text-muted-foreground/50" aria-hidden="true" />
+        <div className="flex flex-col items-center justify-center py-24 text-center p-8 rounded-[2.25rem] bg-card/20 border border-border/40 font-sans">
+          <div className="size-16 rounded-full bg-muted/40 border border-border/60 flex items-center justify-center mb-4">
+             <Search size={24} className="text-muted-foreground/60" aria-hidden="true" />
           </div>
-          <h3 className="text-xl text-foreground uppercase tracking-tight">Karakter Kanji Tidak Ditemukan</h3>
-          <p className="text-muted-foreground font-medium text-sm mt-2">Silakan periksa kembali kata kunci atau sesuaikan filter level JLPT.</p>
+          <h3 className="text-base font-black text-foreground uppercase tracking-widest font-mono">Karakter Kanji Tidak Ditemukan</h3>
+          <p className="text-muted-foreground font-medium text-xs mt-2 max-w-sm">Silakan sesuaikan kata kunci pencarian atau ganti filter level JLPT.</p>
         </div>
       )}
     </div>

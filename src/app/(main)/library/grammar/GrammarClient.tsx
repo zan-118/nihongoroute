@@ -222,58 +222,49 @@ export default function GrammarClient({ initialArticles = EMPTY_GRAMMAR_ARTICLES
               ))}
             </div>
           ) : (
-            <div className="flex flex-col gap-2.5">
-              {/* Kepala Tabel (Disembunyikan di Ponsel / Responsif) */}
-              <div className="hidden md:grid md:grid-cols-12 gap-4 px-6 py-4 bg-muted/30 border border-border rounded-lg text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
-                <div className="col-span-3">Pola Kalimat</div>
-                <div className="col-span-4">Arti / Penggunaan</div>
-                <div className="col-span-2">Pembentukan</div>
-                <div className="col-span-1 text-center">Level</div>
-                <div className="col-span-2 text-right">Aksi</div>
-              </div>
-
-              {paginatedArticles.map((article) => (
-                <div
-                  key={article.id || article._id}
-                  className="flex md:grid md:grid-cols-12 items-center justify-between gap-6 px-6 py-4 bg-card border border-border/50 dark:border-white/10 hover:border-primary/45 shadow-sm transition-all duration-500 rounded-xl group relative group/row"
-                >
-                  {/* Tombou Register Mark */}
-                  <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-                    <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover/row:bg-primary transition-colors duration-500" />
-                    <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover/row:bg-primary transition-colors duration-500" />
-                  </div>
-
-                  {/* Sisi Kiri: Pola Kalimat & Arti (Flex di Seluler, Kolom Grid di Desktop) */}
-                  <div className="flex-1 md:col-span-7 flex flex-col md:grid md:grid-cols-7 md:gap-4 md:items-center min-w-0 pr-2">
-                    <div className="md:col-span-3 font-black text-sm md:text-base text-foreground leading-snug truncate select-all">
-                      {article.title}
-                    </div>
-                    <div className="md:col-span-4 text-[10px] md:text-sm text-muted-foreground md:text-foreground/90 font-medium line-clamp-1 mt-0.5 md:mt-0">
-                      {article.meaning || "-"}
-                    </div>
-                  </div>
-
-                  {/* Bagian Pembentukan (Sembunyikan di Seluler, Tampilkan di Desktop) */}
-                  <div className="hidden md:block md:col-span-2 text-xs text-muted-foreground font-mono truncate">
-                    {article.formation || "-"}
-                  </div>
-
-                  {/* Sisi Kanan: Level & Tombol Tindakan */}
-                  <div className="flex items-center gap-2.5 shrink-0 md:col-span-3 md:justify-end">
-                    <span className="text-[9px] md:text-[10px] font-black bg-[rgb(var(--primary-rgb)/0.1)] text-primary px-2 py-0.5 rounded-[4px] border border-[rgb(var(--primary-rgb)/0.2)] uppercase shrink-0">
-                      {article.jlptLevel || selectedLevel}
-                    </span>
-                    <Link href={`/library/grammar/${article.slug || article.id || article._id}`} className="shrink-0">
-                      <Button
-                        variant="outline"
-                        className="px-3 h-8 text-[9px] md:text-[10px] font-black uppercase tracking-wider rounded-lg bg-muted border-border hover:bg-primary hover:text-primary-foreground transition-all duration-300"
-                      >
-                        Detail
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              ))}
+            <div className="w-full overflow-x-auto font-sans">
+              <table className="w-full min-w-[640px] text-left border-collapse">
+                <thead>
+                  <tr className="border-b-2 border-border/80 text-[10px] font-mono font-black uppercase tracking-widest text-muted-foreground/80 bg-muted/20">
+                    <th className="py-3 px-4 w-48">POLA KALIMAT</th>
+                    <th className="py-3 px-4">ARTI / PENGGUNAAN</th>
+                    <th className="py-3 px-4 w-40">PEMBENTUKAN</th>
+                    <th className="py-3 px-4 w-20 text-center">LEVEL</th>
+                    <th className="py-3 px-4 w-24 text-right">AKSI</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border/30 font-sans">
+                  {paginatedArticles.map((article) => (
+                    <tr key={article.id || article._id} className="hover:bg-emerald-500/5 transition-colors group">
+                      <td className="py-3.5 px-4 font-black font-japanese text-base text-foreground group-hover:text-emerald-500 transition-colors align-top">
+                        {article.title}
+                      </td>
+                      <td className="py-3.5 px-4 text-xs sm:text-sm text-foreground/90 font-medium leading-relaxed align-top">
+                        {article.meaning || "-"}
+                      </td>
+                      <td className="py-3.5 px-4 text-xs font-mono text-muted-foreground/80 align-top">
+                        {article.formation || "-"}
+                      </td>
+                      <td className="py-3.5 px-4 text-center align-top">
+                        <span className="text-[9px] font-mono font-bold bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded-full border border-emerald-500/20 uppercase inline-block">
+                          {article.jlptLevel || selectedLevel}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-4 text-right align-top">
+                        <Link href={`/library/grammar/${article.slug || article.id || article._id}`}>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="px-3 h-8 text-[10px] font-mono font-bold uppercase tracking-wider rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 hover:bg-emerald-500 hover:text-white transition-all"
+                          >
+                            Detail
+                          </Button>
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )
         ) : !loading ? (

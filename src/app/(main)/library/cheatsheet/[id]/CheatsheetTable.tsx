@@ -147,43 +147,49 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
 
   return (
     <div className="space-y-8 w-full">
-      {/* Pengontrol Mode Tampilan (Premium Tab Switcher) */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-3 rounded-[2rem] border border-border bg-[rgba(var(--card-rgb),0.1)]  w-full no-print glass">
-        <div className="flex items-center gap-1.5 p-1 bg-[rgba(var(--muted-rgb),0.2)] rounded-lg w-fit">
+      {/* Tab Switcher */}
+      <div className="flex flex-wrap items-center justify-between gap-4 pb-2 border-b border-border/40 font-sans">
+        <div className="flex items-center gap-2 p-1 rounded-full border border-border/50 bg-muted/20 backdrop-blur-md">
           <Button
             id="view-mode-table"
             type="button"
-            variant={viewMode === "table" ? "secondary" : "ghost"}
+            variant="ghost"
             size="sm"
             onClick={() => setViewMode("table")}
-            className={cn("rounded-xl gap-2 font-bold px-5 py-4", viewMode === "table" && "shadow-sm")}
+            className={cn(
+              "rounded-full gap-2 text-xs font-mono font-bold px-4 h-9 transition-all",
+              viewMode === "table" ? "bg-amber-500 text-amber-950 font-black shadow-sm" : "text-muted-foreground hover:text-foreground"
+            )}
             aria-label="Tampilan Tabel"
           >
-            <List size={16} /> Tabel Referensi
+            <List size={14} /> Tabel Data
           </Button>
           <Button
             id="view-mode-flashcard"
             type="button"
-            variant={viewMode === "flashcard" ? "secondary" : "ghost"}
+            variant="ghost"
             size="sm"
             onClick={() => setViewMode("flashcard")}
-            className={cn("rounded-xl gap-2 font-bold px-5 py-4", viewMode === "flashcard" && "shadow-sm")}
+            className={cn(
+              "rounded-full gap-2 text-xs font-mono font-bold px-4 h-9 transition-all",
+              viewMode === "flashcard" ? "bg-amber-500 text-amber-950 font-black shadow-sm" : "text-muted-foreground hover:text-foreground"
+            )}
             aria-label="Tampilan Kuis Flashcard"
           >
-            <Layers size={16} /> Mode Kuis
+            <Layers size={14} /> Mode Kuis
           </Button>
         </div>
 
-        <div className="flex items-center gap-2 text-xs text-muted-foreground font-semibold px-4">
-          <Info size={14} className="text-primary" />
-          {viewMode === "table" && "Tinjauan cepat dan padat materi belajar."}
-          {viewMode === "flashcard" && "Uji hafalanmu dengan sistem kuis flashcard interaktif."}
+        <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+          <Info size={14} className="text-amber-500" />
+          {viewMode === "table" && "Tabel data referensi ringkas & padat."}
+          {viewMode === "flashcard" && "Uji hafalan dengan mode kuis interaktif."}
         </div>
       </div>
 
       {/* Render Berdasarkan Tampilan Terpilih */}
       <AnimatePresence mode="wait">
-        {/* 1. VIEW MODE: TABLE (Fully Responsive Compact Table Implementation) */}
+        {/* 1. VIEW MODE: PURE DATA TABLE */}
         {viewMode === "table" && (
           <m.div
             key="table-view"
@@ -191,46 +197,46 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.3 }}
-            className="w-full rounded-[2rem] border border-border bg-[rgba(var(--card-rgb),0.2)]  shadow-2xl overflow-hidden glass"
+            className="w-full overflow-x-auto font-sans"
           >
-            {/* Header: Hanya terlihat di md ke atas */}
-            <div className="hidden md:flex items-center bg-[rgba(var(--muted-rgb),0.3)] border-b border-border px-8 py-4 text-[10px] font-black uppercase tracking-widest text-primary">
-              <div className="w-16 text-center">No</div>
-              <div className="w-48 pl-2">Tulisan Jepang</div>
-              <div className="w-48 pl-2">Romaji</div>
-              <div className="flex-1 pl-2">Arti / Penjelasan</div>
-            </div>
+            <table className="w-full min-w-[640px] text-left border-collapse">
+              <thead>
+                <tr className="border-b-2 border-border/80 text-[10px] font-mono font-black uppercase tracking-widest text-muted-foreground/80 bg-muted/20">
+                  <th className="py-3 px-4 w-12 text-center">NO</th>
+                  <th className="py-3 px-4 w-52">TULISAN JEPANG</th>
+                  <th className="py-3 px-4 w-48">ROMAJI</th>
+                  <th className="py-3 px-4">ARTI / PENJELASAN</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/30 font-sans">
+                {items.map((item, idx) => (
+                  <tr 
+                    key={`${item.jp}-${idx}`} 
+                    className="hover:bg-amber-500/5 transition-colors group"
+                  >
+                    {/* NO */}
+                    <td className="py-3.5 px-4 font-mono text-xs font-bold text-muted-foreground/60 text-center align-top">
+                      {String(idx + 1).padStart(2, '0')}
+                    </td>
 
-            {/* List Row Item */}
-            <div className="divide-y divide-border/40">
-              {items.map((item, idx) => (
-                <div 
-                  key={`${item.jp}-${idx}`} 
-                  className="flex flex-col md:flex-row md:items-center px-6 md:px-8 py-4 hover:bg-[rgba(var(--primary-rgb),0.02)] transition-all duration-200"
-                >
-                  {/* Nomor Baris */}
-                  <div className="md:w-16 text-left md:text-center font-bold text-muted-foreground/45 text-xs md:text-sm">
-                    <span className="md:hidden font-bold text-[9px] uppercase tracking-wider text-muted-foreground/50 mr-2">No.</span>
-                    {String(idx + 1).padStart(2, '0')}
-                  </div>
+                    {/* JEPANG */}
+                    <td className="py-3.5 px-4 font-japanese font-black text-lg text-foreground group-hover:text-amber-400 transition-colors align-top">
+                      {item.jp}
+                    </td>
 
-                  {/* Tulisan Jepang */}
-                  <div className="md:w-48 font-japanese font-black text-lg md:text-xl text-foreground select-all mt-2 md:mt-0 pl-0 md:pl-2">
-                    {item.jp}
-                  </div>
+                    {/* ROMAJI */}
+                    <td className="py-3.5 px-4 text-xs font-mono font-bold text-amber-500 uppercase tracking-wider align-top">
+                      {item.romaji}
+                    </td>
 
-                  {/* Romaji */}
-                  <div className="md:w-48 text-xs font-mono font-bold text-primary/80 uppercase tracking-wider mt-1 md:mt-0 pl-0 md:pl-2">
-                    {item.romaji}
-                  </div>
-
-                  {/* Arti / Penjelasan */}
-                  <div className="flex-1 text-xs md:text-sm text-foreground/95 font-semibold leading-relaxed mt-2 md:mt-0 pl-0 md:pl-2">
-                    {formatLabel(item.label)}
-                  </div>
-                </div>
-              ))}
-            </div>
+                    {/* ARTI */}
+                    <td className="py-3.5 px-4 text-xs sm:text-sm text-foreground/90 font-medium leading-relaxed align-top">
+                      {formatLabel(item.label)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </m.div>
         )}
 

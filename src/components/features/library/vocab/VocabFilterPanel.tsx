@@ -6,9 +6,6 @@
  * Menyediakan filter level JLPT, pencarian interaktif, selektor jenis kata (hinshi), serta toggle romaji dan layout.
  */
 
-// ==========================================
-// IMPOR UTAMA
-// ==========================================
 import { Search, Grid3X3, LayoutList } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -16,12 +13,6 @@ import { Switch } from "@/components/ui/switch";
 import { LEVELS, HINSHI } from "./types";
 import { useUIStore } from "@/store/useUIStore";
 
-// ==========================================
-// ANTARMUKA & TIPE DATA
-// ==========================================
-/**
- * Props for VocabFilterPanel component.
- */
 interface VocabFilterPanelProps {
   /** Current search query. */
   search: string;
@@ -41,11 +32,8 @@ interface VocabFilterPanelProps {
   setShowRomaji: (val: boolean) => void;
 }
 
-// ==========================================
-// KOMPONEN UTAMA: VocabFilterPanel
-// ==========================================
 /**
- * Filter panel component. Handles search, JLPT level, part of speech, romaji toggle, and layout preference.
+ * Filter panel component with Double-Bezel glass architecture.
  * 
  * @param props Component properties.
  * @returns Filter panel element.
@@ -60,49 +48,46 @@ export function VocabFilterPanel({
   showRomaji,
   setShowRomaji,
 }: VocabFilterPanelProps) {
-  // Get layout preference from UI store. Fallback to grid.
   const layoutPreference = useUIStore((s) => s.settings.layoutPreference) ?? "grid";
-  // Get layout setter from UI store.
   const setLayoutPreference = useUIStore((s) => s.setLayoutPreference);
 
   return (
-    <div className="mb-14 md:mb-20 bg-card/35 p-8 md:p-12 rounded-2xl md:rounded-3xl border border-border/80 shadow-[0_0_50px_rgba(var(--primary-rgb),0.02)] font-sans glass">
-      <div className="flex flex-col gap-6 md:gap-8">
+    <div className="mb-12 md:mb-16 p-2 rounded-[2.25rem] bg-card/40 dark:bg-card/20 backdrop-blur-xl border border-border/60 dark:border-white/10 shadow-sm font-sans">
+      {/* ── INNER CORE ── */}
+      <div className="w-full h-full rounded-[calc(2.25rem-0.5rem)] p-6 sm:p-8 bg-gradient-to-b from-background/90 via-background/60 to-background/95 dark:from-[#080d14]/90 dark:to-[#05080e]/95 border border-border/30 dark:border-white/5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] flex flex-col gap-6 md:gap-8">
         
-        {/* Kolom Pencarian Kosakata */}
+        {/* Search Bar */}
         <div className="relative group w-full">
           <Search
-            className="absolute left-5 md:left-7 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors z-10"
-            size={20}
+            className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors z-10"
+            size={18}
             aria-hidden="true"
           />
-          {/* Search input field. Triggers search state update. */}
           <Input
-            placeholder="Masukkan kanji, kana, romaji, atau definisi..."
-            className="w-full pl-12 md:pl-16 pr-6 md:pr-8 py-6 md:py-8 h-auto bg-muted/30 border-border rounded-lg md:rounded-3xl text-sm md:text-base text-foreground placeholder:text-muted-foreground font-medium neo-inset shadow-none focus-visible:ring-primary/30 font-sans"
+            placeholder="Cari kanji, kana, romaji, atau arti kata..."
+            className="w-full pl-12 pr-6 py-4 h-14 bg-background/60 dark:bg-[#03060a]/60 border-border/60 dark:border-white/10 rounded-2xl text-sm text-foreground placeholder:text-muted-foreground/60 font-medium focus-visible:ring-primary/30 font-sans shadow-inner transition-all duration-300"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
 
-        {/* Baris Grid: Filter Level JLPT & Jenis Kata (Hinshi) */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-10">
-          {/* Selektor Level JLPT */}
-          <div className="space-y-4">
-            <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-muted-foreground block ml-1">
-              Level JLPT
+        {/* Filters Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
+          {/* JLPT Level Selector */}
+          <div className="lg:col-span-8 space-y-3">
+            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground/80 font-mono block">
+              FILTER LEVEL JLPT
             </span>
-            {/* JLPT level filter buttons. Map levels to buttons. */}
-            <div className="flex flex-wrap gap-2 md:gap-3">
+            <div className="flex flex-wrap gap-2">
               {LEVELS.map((l) => (
                 <Button
                   key={l}
                   variant="ghost"
                   onClick={() => setLevel(l)}
-                  className={`px-4 py-2 md:px-6 md:py-3 h-auto rounded-xl text-xs md:text-xs font-bold transition-all border ${
+                  className={`px-4 py-2.5 h-auto rounded-full text-xs font-mono font-bold transition-all duration-300 ${
                     level === l
-                      ? "bg-primary text-primary-foreground border-none shadow-lg"
-                      : "bg-muted border-border text-muted-foreground hover:border-primary/40"
+                      ? "bg-primary text-primary-foreground border-none shadow-md shadow-primary/20 scale-105"
+                      : "bg-muted/50 border border-border/60 text-muted-foreground hover:border-primary/40 hover:text-foreground"
                   }`}
                 >
                   {l}
@@ -111,19 +96,18 @@ export function VocabFilterPanel({
             </div>
           </div>
 
-          {/* Selektor Kelas Kata (Hinshi) */}
-          <div className="space-y-4">
-            <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-muted-foreground block ml-1">
-              Jenis Kata
+          {/* Part of Speech Dropdown */}
+          <div className="lg:col-span-4 space-y-3">
+            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground/80 font-mono block">
+              JENIS KATA (HINSHI)
             </span>
-            {/* Part of speech dropdown selector. */}
             <select
               value={hinshi}
               onChange={(e) => setHinshi(e.target.value)}
-              className="w-full px-5 md:px-6 py-3 md:py-4 bg-muted border border-border rounded-xl md:rounded-lg text-xs md:text-xs font-bold uppercase tracking-widest text-foreground outline-none focus:border-primary transition-colors appearance-none cursor-pointer"
+              className="w-full px-4 py-3 h-11 bg-background/60 dark:bg-[#03060a]/60 border border-border/60 dark:border-white/10 rounded-2xl text-xs font-mono font-bold uppercase tracking-wider text-foreground outline-none focus:border-primary transition-colors cursor-pointer"
             >
               {HINSHI.map((h) => (
-                <option key={h.value} value={h.value} className="bg-card py-2 uppercase tracking-widest font-sans font-bold">
+                <option key={h.value} value={h.value} className="bg-card py-2 font-sans font-bold">
                   {h.label}
                 </option>
               ))}
@@ -131,56 +115,46 @@ export function VocabFilterPanel({
           </div>
         </div>
 
-        {/* Baris Bawah: Pengendali Tampilan Romaji & Format Layout */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-          
-          {/* Kontrol Toggle Romaji */}
-          <div className="w-full sm:w-auto flex items-center justify-between gap-4 px-4 py-3 bg-muted/20 border border-border rounded-xl md:rounded-lg neo-inset">
-            <div className="flex flex-col pr-4">
-              <span className="text-[10px] font-black uppercase tracking-widest text-foreground">Tampilkan Romaji</span>
-              <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-tight">
-                Pemandu bacaan Latin
-              </span>
+        {/* View Controls & Toggles Bar */}
+        <div className="pt-4 border-t border-border/40 dark:border-white/5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+          {/* Romaji Toggle */}
+          <div className="flex items-center justify-between gap-4 px-4 py-2.5 bg-background/40 dark:bg-[#03060a]/40 border border-border/40 rounded-2xl">
+            <div className="flex flex-col">
+              <span className="text-[10px] font-black uppercase tracking-wider font-mono text-foreground">Tampilkan Romaji</span>
+              <span className="text-[9px] font-medium text-muted-foreground">Panduan abjad Latin</span>
             </div>
-            {/* Romaji toggle switch. */}
             <Switch checked={showRomaji} onCheckedChange={setShowRomaji} className="data-[state=checked]:bg-primary" />
           </div>
 
-          {/* Kontrol Toggle Format Layout (Grid vs List) */}
-          <div className="w-full sm:w-auto flex items-center justify-between gap-4 px-4 py-3 bg-muted/20 border border-border rounded-xl md:rounded-lg neo-inset">
-            <div className="flex flex-col pr-4">
-              <span className="text-[10px] font-black uppercase tracking-widest text-foreground">Tampilan Pustaka</span>
-              <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-tight">
-                Grid / Tabel Ringkas
-              </span>
-            </div>
-            {/* Layout preference toggle buttons. */}
-            <div className="flex p-1 bg-background/60 rounded-xl border border-border">
+          {/* Layout Preference Toggle */}
+          <div className="flex items-center justify-between gap-4 px-4 py-2.5 bg-background/40 dark:bg-[#03060a]/40 border border-border/40 rounded-2xl">
+            <span className="text-[10px] font-black uppercase tracking-wider font-mono text-foreground">Format Tampilan</span>
+            <div className="flex p-1 bg-muted/60 rounded-xl border border-border/40">
               <Button
                 type="button"
                 variant="ghost"
                 onClick={() => setLayoutPreference("grid")}
-                className={`p-2 h-8 w-8 rounded-lg transition-all ${
+                className={`p-1.5 h-7 w-7 rounded-lg transition-all ${
                   layoutPreference === "grid"
-                    ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg"
+                    ? "bg-primary text-primary-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
                 aria-label="Tampilan Grid"
               >
-                <Grid3X3 size={16} />
+                <Grid3X3 size={14} />
               </Button>
               <Button
                 type="button"
                 variant="ghost"
                 onClick={() => setLayoutPreference("list")}
-                className={`p-2 h-8 w-8 rounded-lg transition-all ${
+                className={`p-1.5 h-7 w-7 rounded-lg transition-all ${
                   layoutPreference === "list"
-                    ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg"
+                    ? "bg-primary text-primary-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
                 aria-label="Tampilan Tabel Ringkas"
               >
-                <LayoutList size={16} />
+                <LayoutList size={14} />
               </Button>
             </div>
           </div>

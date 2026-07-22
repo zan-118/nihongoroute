@@ -315,72 +315,76 @@ export default function VocabClient({
             ))}
           </div>
         ) : (
-          <div className="flex flex-col gap-2.5 min-h-[400px]">
-            {/* Kepala Tabel (Disembunyikan di Ponsel / Responsif) */}
-            <div className="hidden md:grid md:grid-cols-12 gap-4 px-6 py-4 bg-muted/30 border border-border rounded-lg text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
-              <div className="col-span-3">Kosakata</div>
-              <div className="col-span-4">Arti / Definisi</div>
-              <div className="col-span-2">Jenis Kata</div>
-              <div className="col-span-1 text-center">JLPT</div>
-              <div className="col-span-2 text-right">Aksi</div>
-            </div>
-
-            {vocabList.map((item) => (
-              <div
-                key={item.id}
-                className="flex md:grid md:grid-cols-12 items-center justify-between gap-6 px-6 py-4 bg-card border border-border/50 dark:border-white/10 hover:border-primary/45 shadow-sm transition-all duration-500 rounded-xl group relative group/row"
-              >
-                {/* Tombou Register Mark */}
-                <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-                  <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover/row:bg-primary transition-colors duration-500" />
-                  <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover/row:bg-primary transition-colors duration-500" />
-                </div>
-
-                {/* Sisi Kiri: Kosakata & Arti (Flex di Seluler, Kolom Grid di Desktop) */}
-                <div className="flex-1 md:col-span-7 flex flex-col md:grid md:grid-cols-7 md:gap-4 md:items-center min-w-0 pr-2">
-                  <div className="md:col-span-3 flex flex-col justify-center min-w-0">
-                    <span className="text-base md:text-lg font-black text-foreground truncate">
-                      <SmartJapanese word={item.word} furigana={item.furigana || undefined} />
-                    </span>
-                    {showRomaji && item.romaji && (
-                      <span className="text-[9px] md:text-xs text-muted-foreground/60 font-semibold tracking-wide uppercase mt-0.5 truncate">
-                        {item.romaji}
+          <div className="w-full overflow-x-auto font-sans">
+            <table className="w-full min-w-[640px] text-left border-collapse">
+              <thead>
+                <tr className="border-b-2 border-border/80 text-[10px] font-mono font-black uppercase tracking-widest text-muted-foreground/80 bg-muted/20">
+                  <th className="py-3 px-4 w-48">KOSAKATA</th>
+                  <th className="py-3 px-4">ARTI / DEFINISI</th>
+                  <th className="py-3 px-4 w-32">JENIS KATA</th>
+                  <th className="py-3 px-4 w-20 text-center">JLPT</th>
+                  <th className="py-3 px-4 w-28 text-right">AKSI</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/30 font-sans">
+                {vocabList.map((item) => (
+                  <tr key={item.id} className="hover:bg-primary/5 transition-colors group">
+                    {/* KOSAKATA */}
+                    <td className="py-3.5 px-4 align-top">
+                      <span className="text-lg font-black text-foreground font-japanese group-hover:text-primary transition-colors block">
+                        <SmartJapanese word={item.word} furigana={item.furigana || undefined} />
                       </span>
-                    )}
-                  </div>
-                  <div className="md:col-span-4 text-[10px] md:text-sm text-muted-foreground md:text-foreground/90 font-medium line-clamp-1 mt-0.5 md:mt-0">
-                    {item.meaning}
-                  </div>
-                </div>
+                      {showRomaji && item.romaji && (
+                        <span className="block text-[10px] text-muted-foreground/60 font-mono font-bold uppercase mt-0.5">
+                          {item.romaji}
+                        </span>
+                      )}
+                    </td>
 
-                {/* Jenis Kata (Sembunyikan di Seluler, Tampilkan di Desktop) */}
-                <div className="hidden md:block md:col-span-2">
-                  {item.hinshi && (
-                    <span className="text-[9px] md:text-[10px] font-black bg-muted px-2 py-0.5 rounded-[4px] border border-border uppercase tracking-widest text-muted-foreground max-w-max">
-                      {item.hinshi}
-                    </span>
-                  )}
-                </div>
+                    {/* ARTI */}
+                    <td className="py-3.5 px-4 text-xs sm:text-sm text-foreground/90 font-medium leading-relaxed align-top">
+                      {item.meaning}
+                    </td>
 
-                {/* Sisi Kanan: Level JLPT & Tombol Tindakan */}
-                <div className="flex items-center gap-2.5 shrink-0 md:col-span-3 md:justify-end">
-                  {item.jlpt_level && (
-                    <span className="text-[9px] md:text-[10px] font-black bg-[rgb(var(--primary-rgb)/0.1)] text-primary px-2 py-0.5 rounded-[4px] border border-[rgb(var(--primary-rgb)/0.2)] uppercase shrink-0">
-                      {item.jlpt_level.toUpperCase()}
-                    </span>
-                  )}
-                  <TTSReader text={item.word} small={true} speaker="indah" audioUrl={item.audio_url} />
-                  <Link href={`/library/vocab/${item.slug || item.id}`} className="shrink-0">
-                    <Button
-                      variant="outline"
-                      className="px-3 h-8 text-[9px] md:text-[10px] font-black uppercase tracking-wider rounded-lg bg-muted border-border hover:bg-primary hover:text-primary-foreground transition-all duration-300"
-                    >
-                      Detail
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            ))}
+                    {/* HINSHI */}
+                    <td className="py-3.5 px-4 align-top">
+                      {item.hinshi?.[0] && (
+                        <span className="text-[9px] font-mono font-bold bg-muted px-2 py-0.5 rounded-full border border-border/50 uppercase text-muted-foreground inline-block">
+                          {item.hinshi[0]}
+                        </span>
+                      )}
+                    </td>
+
+                    {/* JLPT */}
+                    <td className="py-3.5 px-4 text-center align-top">
+                      {item.jlpt_level && (
+                        <span className="text-[9px] font-mono font-bold bg-secondary/10 text-secondary px-2 py-0.5 rounded-full border border-secondary/20 uppercase inline-block">
+                          {item.jlpt_level.toUpperCase()}
+                        </span>
+                      )}
+                    </td>
+
+                    {/* AKSI */}
+                    <td className="py-3.5 px-4 text-right align-top">
+                      <div className="flex items-center justify-end gap-2">
+                        <div onClick={(e) => e.preventDefault()} className="shrink-0">
+                          <TTSReader text={item.word} minimal={true} speaker="indah" audioUrl={item.audio_url} />
+                        </div>
+                        <Link href={`/library/vocab/${item.slug || item.id}`}>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="px-3 h-8 text-[10px] font-mono font-bold uppercase tracking-wider rounded-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary hover:text-white transition-all"
+                          >
+                            Detail
+                          </Button>
+                        </Link>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>

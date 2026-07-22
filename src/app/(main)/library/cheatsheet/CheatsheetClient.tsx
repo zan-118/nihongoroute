@@ -1,14 +1,11 @@
 /**
  * @file CheatsheetClient.tsx
  * @description Antarmuka klien interaktif untuk halaman daftar cheatsheet (referensi cepat).
- * Menampilkan kategori cheatsheet dalam format kartu premium dengan filter kategori teranimasi.
+ * Menampilkan kategori cheatsheet berarsitektur Double-Bezel (Doppelrand).
  */
 
 "use client";
 
-// ======================
-// IMPOR
-// ======================
 import { useState, useMemo } from "react";
 import {
   Search,
@@ -20,28 +17,21 @@ import {
   Users,
   MessageSquare,
   Sparkles,
-  ChevronRight,
+  ArrowUpRight,
   Filter,
 } from "@/components/ui/icons";
 import { m, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-/**
- * Represents single vocabulary item in cheatsheet.
- */
 export interface SheetItem {
   label: string;
   jp: string;
   romaji: string;
 }
 
-/**
- * Represents cheatsheet document structure.
- */
 export interface Cheatsheet {
   _id?: string;
   id?: string;
@@ -52,21 +42,15 @@ export interface Cheatsheet {
   items?: SheetItem[];
 }
 
-/**
- * Interactive client component for cheatsheet library.
- * Handles search, category filtering, and responsive grid display.
- */
 export default function CheatsheetClient({
   initialSheets,
 }: {
   initialSheets: Cheatsheet[];
 }) {
-  // Ensure sheets is array. Prevent crash if API returns null.
   const safeSheets = useMemo(() => Array.isArray(initialSheets) ? initialSheets : [], [initialSheets]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
-  // Count sheets per category. Used for filter badges.
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = { all: safeSheets.length };
     safeSheets.forEach((sheet) => {
@@ -77,13 +61,11 @@ export default function CheatsheetClient({
     return counts;
   }, [safeSheets]);
 
-  // Extract unique categories. Add 'all' option at start.
   const categories = useMemo(() => {
     const list = Array.from(new Set(safeSheets.map((s) => s.category).filter(Boolean)));
     return ["all", ...list];
   }, [safeSheets]);
 
-  // Filter sheets by search query and selected category.
   const filteredSheets = useMemo(() => {
     return safeSheets.filter((sheet) => {
       if (!sheet) return false;
@@ -97,33 +79,33 @@ export default function CheatsheetClient({
   }, [safeSheets, searchTerm, selectedCategory]);
 
   return (
-    <div className="relative w-full max-w-[1600px] mx-auto z-10 flex flex-col flex-1 pb-32 md:pb-24 px-4 md:px-8 lg:px-12 transition-colors duration-300">
-      {/* Tajuk Utama (Hero Header) */}
-      <header className="mb-12 md:mb-16">
+    <div className="relative w-full max-w-[1600px] mx-auto z-10 flex flex-col flex-1 pb-32 md:pb-24 px-4 md:px-8 lg:px-12 transition-colors duration-300 font-sans">
+      {/* Header */}
+      <header className="mb-12 md:mb-16 space-y-6">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 lg:gap-12">
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-3">
-              <div className="size-10 rounded-xl bg-[rgba(var(--primary-rgb),0.1)] flex items-center justify-center text-primary border border-border">
-                <Activity size={20} className="animate-pulse text-primary" />
-              </div>
-              <span className="text-primary font-black text-xs uppercase tracking-[0.3em]">Quick Reference</span>
+          <div className="flex flex-col gap-3">
+            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-amber-500/20 bg-amber-500/10 text-amber-400 w-fit">
+              <Activity size={16} className="animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.25em] font-mono">
+                QUICK REFERENCE VAULT
+              </span>
             </div>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl text-foreground tracking-tighter leading-[0.9]">
-              Catatan <span className="text-primary">Cepat</span>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl text-foreground font-black tracking-tight leading-[0.92]">
+              Catatan <span className="text-amber-400">Cepat</span>
             </h1>
             <p className="text-sm md:text-base text-muted-foreground font-medium max-w-xl leading-relaxed">
-              Kumpulan materi referensi kilat untuk membantumu menghafal angka, waktu, sapaan, hingga aturan tata bahasa penting secara interaktif.
+              Kumpulan materi referensi kilat untuk menghafal sistem angka, waktu, sapaan, dan tata bahasa penting secara interaktif.
             </p>
           </div>
 
-          {/* Kolom Pencarian */}
+          {/* Search Bar */}
           <div className="relative group w-full lg:w-96">
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors z-10" size={20} />
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground size-5" />
             <Input
               id="cheatsheet-search"
               type="text"
               placeholder="Cari materi referensi..."
-              className="w-full bg-[rgba(var(--muted-rgb),0.1)] border border-border pl-14 pr-6 py-7 h-auto rounded-[2rem] text-foreground font-medium text-base glass shadow-[0_4px_30px_rgba(var(--foreground-rgb),0.03)] placeholder:text-muted-foreground/40 focus-visible:ring-[rgba(var(--primary-rgb),0.2)] focus-visible:border-primary transition-all duration-300"
+              className="w-full bg-background/60 dark:bg-[#03060a]/60 border border-border/60 dark:border-white/10 pl-13 pr-6 py-4 h-14 rounded-2xl text-sm font-medium focus-visible:ring-amber-500/30"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -131,12 +113,12 @@ export default function CheatsheetClient({
         </div>
       </header>
 
-      {/* Filter Kategori */}
-      <nav className="mb-10" aria-label="Filter kategori cheatsheet">
-        <div className="flex items-center gap-2 mb-4 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
-          <Filter size={14} className="text-primary" /> Saring Berdasarkan Topik
+      {/* Category Filter Pills */}
+      <nav className="mb-10 space-y-3" aria-label="Filter kategori cheatsheet">
+        <div className="flex items-center gap-2 text-xs font-mono font-black uppercase tracking-widest text-muted-foreground/80">
+          <Filter size={14} className="text-amber-400" /> TOPIK REFERENSI
         </div>
-        <div className="flex flex-wrap gap-2.5 p-2 rounded-[2rem] border border-border bg-[rgba(var(--card-rgb),0.2)]  w-fit max-w-full glass">
+        <div className="flex flex-wrap gap-2 p-1.5 rounded-full border border-border/40 bg-card/30 backdrop-blur-md w-fit max-w-full">
           {categories.map((cat) => {
             const isActive = selectedCategory === cat;
             const count = categoryCounts[cat] || 0;
@@ -148,24 +130,19 @@ export default function CheatsheetClient({
                 onClick={() => setSelectedCategory(cat)}
                 variant="ghost"
                 size="sm"
-                className={`relative rounded-full px-5 py-5 text-sm font-bold transition-all duration-300 hover:text-foreground ${
-                  isActive ? "text-primary-foreground font-black" : "text-muted-foreground"
+                className={`rounded-full px-5 h-9 text-xs font-mono font-bold transition-all duration-300 ${
+                  isActive
+                    ? "bg-amber-500 text-amber-950 font-black shadow-md shadow-amber-500/20 scale-105"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {isActive && (
-                  <m.div
-                    layoutId="activeCategoryBackdrop"
-                    className="absolute inset-0 bg-primary rounded-full shadow-[0_10px_20px_rgba(var(--primary-rgb),0.3)]"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                  />
-                )}
-                <span className="relative z-10 flex items-center gap-2">
+                <span className="flex items-center gap-2">
                   {cat === "all" ? "Semua Topik" : cat}
                   <span
-                    className={`text-[10px] px-2 py-0.5 rounded-full font-black ${
+                    className={`text-[9px] px-2 py-0.5 rounded-full font-mono font-bold ${
                       isActive
-                        ? "bg-[rgba(var(--background-rgb),0.2)] text-primary-foreground"
-                        : "bg-[rgba(var(--muted-rgb),0.3)] text-muted-foreground"
+                        ? "bg-amber-950/20 text-amber-950"
+                        : "bg-muted text-muted-foreground"
                     }`}
                   >
                     {count}
@@ -177,11 +154,11 @@ export default function CheatsheetClient({
         </div>
       </nav>
 
-      {/* Daftar Cheatsheet */}
-      <section className="flex flex-col gap-8">
-        <div className="flex items-center justify-between border-b border-border pb-4">
-          <h2 className="text-xs uppercase tracking-[0.4em] text-muted-foreground flex items-center gap-2">
-            <Database size={14} className="text-primary" /> Menampilkan {filteredSheets.length} Panduan
+      {/* Cheatsheet Grid */}
+      <section className="flex flex-col gap-6">
+        <div className="flex items-center justify-between border-b border-border/40 dark:border-white/5 pb-3">
+          <h2 className="text-xs font-mono font-black uppercase tracking-[0.25em] text-muted-foreground flex items-center gap-2">
+            <Database size={14} className="text-amber-400" /> {filteredSheets.length} PANDUAN TERSEDIA
           </h2>
         </div>
 
@@ -190,7 +167,7 @@ export default function CheatsheetClient({
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8"
         >
           <AnimatePresence mode="popLayout">
-            {filteredSheets.map((sheet, idx) => (
+            {filteredSheets.map((sheet) => (
               <m.div
                 id={`cheatsheet-card-${sheet.slug || sheet.id}`}
                 key={sheet._id || sheet.id}
@@ -199,50 +176,41 @@ export default function CheatsheetClient({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.3 }}
-                className="h-full"
+                className="h-full group font-sans"
               >
-                <Link href={`/library/cheatsheet/${sheet.slug || sheet.id || sheet._id}`}>
-                  <div className="relative group/sheet h-full">
-                    {/* Tombou Register Mark */}
-                    <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-                      <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover/sheet:bg-primary transition-colors duration-500" />
-                      <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover/sheet:bg-primary transition-colors duration-500" />
-                    </div>
-
-                    <Card className="h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 cursor-pointer group-hover/sheet:border-primary/45 transition-all duration-500 flex flex-col justify-between gap-6 overflow-hidden shadow-[0_4px_25px_rgba(0,0,0,0.015)]">
-                      {/* Ambient Glow Background Effect */}
-                      <div className="absolute top-0 right-0 size-32 bg-[rgba(var(--primary-rgb),0.03)] blur-[40px] rounded-full -mr-12 -mt-12 group-hover/sheet:bg-[rgba(var(--primary-rgb),0.08)] transition-all duration-700 pointer-events-none" />
-
-                      <div className="flex items-center justify-between relative z-10">
-                        <div className="size-14 rounded-lg bg-muted border border-border flex items-center justify-center text-muted-foreground group-hover/sheet:text-primary group-hover/sheet:bg-[rgba(var(--primary-rgb),0.15)] group-hover/sheet:border-[rgba(var(--primary-rgb),0.3)] transition-all duration-500 shadow-sm">
+                <Link href={`/library/cheatsheet/${sheet.slug || sheet.id || sheet._id}`} className="block h-full">
+                  <div className="w-full h-full p-6 rounded-2xl bg-card/70 dark:bg-card/30 backdrop-blur-md border border-border/60 dark:border-white/10 shadow-sm group-hover:border-amber-500/40 group-hover:shadow-md transition-all duration-300 flex flex-col justify-between gap-6 relative overflow-hidden group-active:scale-[0.99]">
+                    {/* Top Header */}
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="size-11 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
                           {getIconForCategory(sheet.category)}
                         </div>
-                        <Badge
-                          variant="outline"
-                          className="bg-[rgba(var(--muted-rgb),0.1)] text-[10px] font-black uppercase tracking-widest text-primary border-border rounded-[4px]"
-                        >
+                        <Badge className="px-2.5 py-0.5 text-[9px] font-mono font-bold uppercase rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
                           {sheet.category}
                         </Badge>
                       </div>
 
-                      <div className="flex-1 relative z-10 space-y-2.5">
-                        <h3 className="text-2xl text-foreground tracking-tight leading-tight group-hover/sheet:text-primary transition-colors font-bold duration-500">
+                      <div className="space-y-1">
+                        <h3 className="text-xl sm:text-2xl font-black text-foreground leading-snug group-hover:text-amber-400 transition-colors line-clamp-2">
                           {sheet.title}
                         </h3>
-                        <p className="text-xs text-muted-foreground font-semibold leading-relaxed line-clamp-2">
-                          Lihat tabel referensi cepat untuk {sheet.title}. Lengkap dengan Furigana dinamis, transliterasi romaji, dan tips pemahaman budaya Jepang.
+                        <p className="text-xs text-muted-foreground font-medium leading-relaxed line-clamp-2">
+                          Tabel referensi cepat {sheet.title} dengan ejaan Furigana dan contoh penggunaan.
                         </p>
                       </div>
+                    </div>
 
-                      <div className="flex items-center justify-between pt-5 border-t border-[rgba(var(--border-rgb),0.1)] relative z-10">
-                        <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-primary group-hover/sheet:text-primary-foreground group-hover/sheet:bg-primary group-hover/sheet:px-3 group-hover/sheet:py-1 group-hover/sheet:rounded-[4px] transition-all duration-300">
-                          Buka Tabel <ChevronRight size={14} className="group-hover/sheet:translate-x-1 transition-transform" />
-                        </div>
-                        <div className="text-[9px] font-bold text-muted-foreground/50 uppercase tracking-wider">
-                          {(sheet.items || []).length} Baris
-                        </div>
+                    {/* Footer CTA */}
+                    <div className="pt-4 border-t border-border/40 dark:border-white/5 flex items-center justify-between">
+                      <span className="text-[10px] font-mono font-bold text-muted-foreground/70 uppercase">
+                        {(sheet.items || []).length} BARIS
+                      </span>
+
+                      <div className="size-7 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center shrink-0 group-hover:bg-amber-500 group-hover:text-amber-950 transition-colors duration-300">
+                        <ArrowUpRight size={13} />
                       </div>
-                    </Card>
+                    </div>
                   </div>
                 </Link>
               </m.div>
@@ -254,14 +222,14 @@ export default function CheatsheetClient({
           <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex flex-col items-center justify-center py-20 text-center bg-[rgba(var(--card-rgb),0.1)] rounded-[2.5rem] border border-dashed border-border"
+            className="py-20 text-center space-y-4 rounded-[2.25rem] bg-card/20 border border-border/40 p-8"
           >
-            <div className="size-20 rounded-full bg-[rgba(var(--muted-rgb),0.1)] flex items-center justify-center mb-6">
-              <Database size={32} className="text-muted-foreground opacity-45" />
+            <div className="size-16 rounded-full bg-muted/30 border border-border/60 flex items-center justify-center mx-auto">
+              <Database size={24} className="text-muted-foreground/50" />
             </div>
-            <h3 className="text-xl text-foreground">Catatan cepat tidak ditemukan</h3>
-            <p className="text-muted-foreground text-sm max-w-sm mt-1">
-              Nggak ada catatan cepat yang cocok sama kata kuncimu. Coba ganti kata kunci atau filter kategorinya ya.
+            <h3 className="text-base font-black text-foreground uppercase tracking-widest font-mono">Catatan Cepat Tidak Ditemukan</h3>
+            <p className="text-muted-foreground text-xs max-w-sm mx-auto font-medium">
+              Silakan periksa kata kunci pencarian atau sesuaikan filter topik yang dipilih.
             </p>
           </m.div>
         )}
@@ -270,15 +238,12 @@ export default function CheatsheetClient({
   );
 }
 
-/**
- * Returns Lucide icon component based on category name.
- */
 function getIconForCategory(cat: string) {
   const c = cat?.toLowerCase() || "";
-  if (c.includes("bilangan") || c.includes("angka") || c.includes("counter")) return <Hash size={24} />;
-  if (c.includes("waktu") || c.includes("hari") || c.includes("tanggal") || c.includes("jam")) return <Clock size={24} />;
-  if (c.includes("grammar") || c.includes("partikel") || c.includes("aturan") || c.includes("tata bahasa")) return <BookOpen size={24} />;
-  if (c.includes("keluarga") || c.includes("relasi") || c.includes("hubungan")) return <Users size={24} />;
-  if (c.includes("topik") || c.includes("sosial") || c.includes("sapaan") || c.includes("percakapan")) return <MessageSquare size={24} />;
-  return <Sparkles size={24} />;
+  if (c.includes("bilangan") || c.includes("angka") || c.includes("counter")) return <Hash size={22} />;
+  if (c.includes("waktu") || c.includes("hari") || c.includes("tanggal") || c.includes("jam")) return <Clock size={22} />;
+  if (c.includes("grammar") || c.includes("partikel") || c.includes("aturan") || c.includes("tata bahasa")) return <BookOpen size={22} />;
+  if (c.includes("keluarga") || c.includes("relasi") || c.includes("hubungan")) return <Users size={22} />;
+  if (c.includes("topik") || c.includes("sosial") || c.includes("sapaan") || c.includes("percakapan")) return <MessageSquare size={22} />;
+  return <Sparkles size={22} />;
 }

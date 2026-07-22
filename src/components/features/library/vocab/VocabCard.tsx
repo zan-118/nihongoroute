@@ -2,118 +2,97 @@
 
 /**
  * @file VocabCard.tsx
- * @description Komponen kartu tampilan kosakata individual (Vocab Card) di NihongoRoute.
- * Menampilkan ejaan SmartJapanese, romaji opsional, part of speech (hinshi), arti, serta daftar kanji relevan.
+ * @description Komponen kartu kosakata individual NihongoRoute.
+ * Menyajikan kata Jepang, Furigana, Romaji, Arti, audio TTS, dan penanda JLPT.
  */
 
-// ==========================================
-// IMPOR UTAMA
-// ==========================================
 import React from "react";
 import Link from "next/link";
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink } from "@/components/ui/icons";
+import { ArrowUpRight } from "@/components/ui/icons";
 import { ROUTES } from "@/lib/routes";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import { VocabItem } from "./types";
 
-// ==========================================
-// ANTARMUKA & TIPE DATA
-// ==========================================
-/**
- * Props for the VocabCard component.
- */
 interface VocabCardProps {
-  /** Vocabulary item data containing word, meaning, and metadata. */
   item: VocabItem;
-  /** Index of the card in the list. */
   idx: number;
-  /** Toggle to display or hide romaji transliteration. */
   showRomaji: boolean;
 }
 
-// ==========================================
-// KOMPONEN UTAMA: VocabCard
-// ==========================================
-/**
- * Interactive vocabulary card component with TTS integration.
- * Renders Japanese text, part of speech, meaning, and related kanji.
- * 
- * @param props - Component properties.
- * @returns React element representing the vocabulary card.
- */
-export function VocabCard({ item, idx, showRomaji }: VocabCardProps) {
+export function VocabCard({ item, showRomaji }: VocabCardProps) {
   return (
     <div
       style={{ 
-        // Skip rendering offscreen elements to boost scroll performance
         contentVisibility: 'auto', 
-        // Provide estimated height for layout calculations before rendering
-        containIntrinsicSize: '0 250px',
+        containIntrinsicSize: '0 220px',
       }}
-      className="relative transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] font-sans h-full group"
+      className="relative transition-all duration-300 font-sans h-full group"
     >
-      {/* Tombou Register Mark (L-shape corner mark offset 6px outside rounded-2xl) */}
-      <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-        <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
-        <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 dark:bg-[#005C66] group-hover:bg-primary transition-colors duration-500" />
-      </div>
+      <Link 
+        href={ROUTES.LIBRARY.VOCAB(item.slug || item.id)} 
+        className="w-full h-full rounded-2xl p-5 bg-card/70 dark:bg-card/30 backdrop-blur-md border border-border/60 dark:border-white/10 shadow-sm group-hover:border-primary/40 group-hover:shadow-md flex flex-col justify-between gap-4 relative overflow-hidden transition-all duration-300 group-active:scale-[0.995]"
+      >
+        {/* Top Meta Bar */}
+        <div className="flex justify-between items-center gap-3 relative z-10">
+          <div className="flex flex-wrap gap-1.5 items-center">
+            <Badge className="px-2.5 py-0.5 text-[9px] font-black uppercase tracking-widest font-mono rounded-full bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20">
+              {item.hinshi?.[0] || "kosakata"}
+            </Badge>
 
-      <Link href={ROUTES.LIBRARY.VOCAB(item.slug || item.id)} className="block h-full">
-        <Card className="p-6 sm:p-7 md:p-8 bg-card border border-border/50 dark:border-white/10 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.015)] group-hover:border-primary/50 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] flex flex-col gap-5 relative overflow-hidden h-full">
-          {/* Subtle indicator icon inside without glowing backgrounds */}
-          <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            <ExternalLink size={12} className="text-primary/70" aria-hidden="true" />
-          </div>
-
-          <div className="flex justify-between items-start">
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="outline" className="px-2 py-0.5 text-[9px] font-black uppercase tracking-widest rounded-[4px] border border-border/70 h-auto bg-muted text-muted-foreground font-sans">
-                {item.hinshi?.[0] || "vocab"}
-              </Badge>
-            </div>
-            {/* Tombol TTS Offline (Mencegah navigasi Link saat ditekan) */}
-            <div onClick={(e) => e.preventDefault()} className="relative z-10">
-              <TTSReader text={item.word} minimal={true} speaker="indah" audioUrl={item.audio_url} />
-            </div>
-          </div>
-
-          <div className="space-y-1.5 flex-1">
-            {/* Ejaan Utama Bahasa Jepang (Dengan Furigana Presisi 0.55em) */}
-            <div className="text-2xl md:text-3xl font-bold text-foreground font-japanese leading-tight tracking-tight group-hover:text-primary transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
-              <SmartJapanese word={item.word} furigana={item.furigana || undefined} />
-            </div>
-            
-            {/* Tampilan Romaji (Opsional) */}
-            {showRomaji && item.romaji && (
-              <p className="text-[10px] md:text-xs font-bold text-muted-foreground/50 uppercase tracking-widest overflow-hidden font-sans">
-                {item.romaji}
-              </p>
+            {item.jlpt_level && (
+              <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20 uppercase tracking-wider">
+                {item.jlpt_level.toUpperCase()}
+              </span>
             )}
-            
-            {/* Arti Kosakata */}
-            <p className="text-sm md:text-base font-medium text-muted-foreground leading-snug group-hover:text-foreground transition-colors line-clamp-2">
-              {item.meaning}
-            </p>
           </div>
 
-          {/* Bagian Kanji Relevan/Terkait */}
-          {(item.mnemonic || (item.related_kanji && item.related_kanji.length > 0)) && (
-            <div className="pt-3 border-t border-border/50 flex flex-col gap-2">
-              {item.related_kanji && item.related_kanji.length > 0 && (
-                <div className="flex flex-wrap gap-1">
-                  {item.related_kanji.map((kanji: { character: string; meaning: string }) => (
-                    <span key={kanji.character} className="text-[10px] px-1.5 py-0.5 rounded-[4px] bg-muted text-muted-foreground border border-border/60 font-japanese" title={kanji.meaning}>
-                      {kanji.character}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
+          <div onClick={(e) => e.preventDefault()} className="relative z-20 shrink-0">
+            <TTSReader text={item.word} minimal={true} speaker="indah" audioUrl={item.audio_url} />
+          </div>
+        </div>
+
+        {/* Word & Meaning */}
+        <div className="space-y-1.5 flex-1 relative z-10">
+          <div className="text-2xl font-black text-foreground font-japanese leading-tight group-hover:text-primary transition-colors">
+            <SmartJapanese word={item.word} furigana={item.furigana || undefined} />
+          </div>
+          
+          {showRomaji && item.romaji && (
+            <p className="text-[10px] font-mono font-bold text-muted-foreground/60 uppercase tracking-wider">
+              {item.romaji}
+            </p>
           )}
-        </Card>
+          
+          <p className="text-xs font-medium text-muted-foreground leading-snug line-clamp-2 pt-0.5">
+            {item.meaning}
+          </p>
+        </div>
+
+        {/* Footer */}
+        <div className="pt-3 border-t border-border/40 dark:border-white/5 flex items-center justify-between gap-3 relative z-10">
+          {item.related_kanji && item.related_kanji.length > 0 ? (
+            <div className="flex flex-wrap gap-1 items-center">
+              <span className="text-[9px] font-mono font-bold text-muted-foreground/50 uppercase tracking-widest mr-1">
+                Kanji:
+              </span>
+              {item.related_kanji.slice(0, 3).map((kanji: { character: string; meaning: string }) => (
+                <span key={kanji.character} className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-muted/60 text-foreground border border-border/40 font-japanese" title={kanji.meaning}>
+                  {kanji.character}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <span className="text-[9px] font-mono font-bold text-muted-foreground/40 uppercase tracking-widest">
+              LIHAT DETAIL
+            </span>
+          )}
+
+          <div className="size-6 rounded-full bg-primary/10 border border-primary/20 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+            <ArrowUpRight size={12} />
+          </div>
+        </div>
       </Link>
     </div>
   );

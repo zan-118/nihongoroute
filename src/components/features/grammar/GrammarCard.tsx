@@ -3,123 +3,60 @@
 /**
  * @file GrammarCard.tsx
  * @description Komponen kartu tampilan ringkas untuk tata bahasa (Grammar Card).
- * Menampilkan ringkasan pola kalimat, label level JLPT, dan link ke halaman detail tata bahasa.
+ * Menampilkan ringkasan pola kalimat berarsitektur Double-Bezel (Doppelrand).
  */
 
-// ==========================================
-// IMPOR UTAMA
-// ==========================================
 import Link from "next/link";
-import { Bookmark, ArrowRight } from "@/components/ui/icons";
-import { Card } from "@/components/ui/card";
+import { ArrowUpRight, BookOpen } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { ROUTES } from "@/lib/routes";
 
-// ==========================================
-// ANTARMUKA & TIPE DATA
-// ==========================================
-/**
- * Props for GrammarCard component.
- */
 interface GrammarCardProps {
-  /** Article data containing identifiers and title. */
   article: {
     id?: string;
     _id: string;
     title: string;
     slug: string;
   };
-  /** Index of card in list. */
   index: number;
-  /** Selected JLPT level. */
   selectedLevel: string;
 }
 
-// ==========================================
-// KOMPONEN UTAMA: GrammarCard
-// ==========================================
 /**
- * Grammar card component. Displays JLPT level, title, and link to detail page.
+ * Double-Bezel Grammar card component.
  * 
  * @param props Component properties.
  * @returns React element.
  */
 export function GrammarCard({ article, index, selectedLevel }: GrammarCardProps) {
-  // Tentukan warna lencana berdasarkan level JLPT (Menggunakan variabel CSS semantik)
-  /** Map JLPT levels to CSS classes for styling. */
-  const levelColors: Record<string, string> = {
-    n5: "text-success border-[rgb(var(--success-rgb)/0.2)] bg-[rgb(var(--success-rgb)/0.05)]",
-    n4: "text-primary border-[rgb(var(--primary-rgb)/0.2)] bg-[rgb(var(--primary-rgb)/0.05)]",
-    n3: "text-secondary border-[rgb(var(--secondary-rgb)/0.2)] bg-[rgb(var(--secondary-rgb)/0.05)]",
-    n2: "text-warning border-[rgb(var(--warning-rgb)/0.2)] bg-[rgb(var(--warning-rgb)/0.05)]",
-    n1: "text-destructive border-[rgb(var(--destructive-rgb)/0.2)] bg-[rgb(var(--destructive-rgb)/0.05)]",
-  };
-
-  /** Fallback to N5 style if level not found. */
-  const currentLevelColor = levelColors[selectedLevel.toLowerCase()] || levelColors.n5;
-
   return (
     <div
-      className="group h-full relative"
+      className="group font-sans border-b border-border/30 py-4 hover:border-emerald-500/50 transition-colors"
       style={{ 
-        // Optimize rendering performance. Browser skips rendering offscreen cards.
         contentVisibility: 'auto', 
-        containIntrinsicSize: '0 200px',
+        containIntrinsicSize: '0 80px',
       }}
     >
-      {/* Tombou Register Mark */}
-      <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-        <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
-        <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
-      </div>
-
-      {/* Resolve route using slug, id, or fallback MongoDB _id. */}
-      <Link href={ROUTES.LIBRARY.GRAMMAR(article.slug || article.id || article._id)} className="block h-full">
-        <Card className="h-full p-6 sm:p-8 bg-card border border-border/50 dark:border-white/10 rounded-2xl transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-primary/45 flex flex-col cursor-pointer shadow-[0_4px_25px_rgba(0,0,0,0.015)] relative overflow-hidden">
-          {/* Efek Pendar Saat Kursor Di Atas (Glow Effect) */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[rgb(var(--primary-rgb)/0.03)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-
-          <div className="relative z-10 flex flex-col h-full">
-            {/* Baris Atas: Ikon Penanda & Level */}
-            <div className="flex justify-between items-start mb-6">
-              <div className="size-10 rounded-lg bg-muted border border-border flex items-center justify-center group-hover:border-[rgb(var(--primary-rgb)/0.3)] group-hover:bg-[rgb(var(--primary-rgb)/0.1)] transition-all duration-500">
-                <Bookmark
-                  size={18}
-                  className="text-muted-foreground group-hover:text-primary transition-colors duration-500"
-                />
-              </div>
-              <Badge 
-                variant="outline" 
-                className={`text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-[4px] h-auto border ${currentLevelColor}`}
-              >
-                {selectedLevel.toUpperCase()}
-              </Badge>
-            </div>
-            
-            {/* Bagian Judul Tata Bahasa */}
-            <div className="flex-1">
-              <h2 className="text-xl md:text-2xl text-foreground tracking-tight leading-tight group-hover:text-primary transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] mb-3 line-clamp-3 font-japanese font-bold">
+      <Link href={ROUTES.LIBRARY.GRAMMAR(article.slug || article.id || article._id)} className="block">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="text-xs font-mono font-bold text-muted-foreground/50 w-8 shrink-0">
+              #{String(index + 1).padStart(2, "0")}
+            </span>
+            <div className="min-w-0">
+              <h2 className="text-base sm:text-lg text-foreground font-black font-japanese leading-snug group-hover:text-emerald-500 transition-colors truncate">
                 {article.title}
               </h2>
-              <div className="flex items-center gap-2">
-                <div className="size-1 rounded-full bg-[rgb(var(--primary-rgb)/0.4)]" />
-                <span className="text-[10px] font-black text-muted-foreground/50 uppercase tracking-widest group-hover:text-primary/50 transition-colors">
-                  Pola Kalimat
-                </span>
-              </div>
-            </div>
-
-            {/* Bagian Bawah: Navigasi Aksi */}
-            <div className="mt-8 pt-5 border-t border-border flex items-center justify-between">
-              <span className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-[0.15em] group-hover:text-primary transition-colors">
-                Pelajari Modul
-              </span>
-              <div className="size-9 rounded-lg bg-muted border border-border flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-transparent transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
-                 <ArrowRight size={16} />
-              </div>
             </div>
           </div>
-        </Card>
+
+          <div className="flex items-center gap-3 shrink-0">
+            <Badge className="px-2 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+              {selectedLevel.toUpperCase()}
+            </Badge>
+            <ArrowUpRight size={14} className="text-muted-foreground/40 group-hover:text-emerald-500 transition-colors" />
+          </div>
+        </div>
       </Link>
     </div>
   );

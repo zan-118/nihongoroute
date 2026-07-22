@@ -204,7 +204,7 @@ export default function SupportClient({ initialSupporters = [] }: SupportClientP
                   href="https://saweria.co/nihongoroute"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group/btn flex w-full items-center justify-between gap-4 rounded-full bg-amber-500 px-6 py-3.5 font-extrabold text-amber-950 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-amber-400 hover:shadow-lg hover:shadow-amber-500/20 active:scale-[0.98]"
+                  className="group/btn flex w-full items-center justify-between gap-4 rounded-full bg-amber-500 px-6 py-3.5 font-extrabold text-amber-950 transition-all duration-300 ease-out hover:bg-amber-400 hover:shadow-lg hover:shadow-amber-500/20 active:scale-[0.98]"
                 >
                   <span>Kirim Dukungan Saweria</span>
                   <div className="flex size-9 items-center justify-center rounded-full bg-amber-950/15 transition-transform duration-300 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-0.5">
@@ -240,7 +240,7 @@ export default function SupportClient({ initialSupporters = [] }: SupportClientP
                   href="https://trakteer.id/nihongoroute"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group/btn flex w-full items-center justify-between gap-4 rounded-full bg-rose-500 px-6 py-3.5 font-extrabold text-white transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-rose-600 hover:shadow-lg hover:shadow-rose-500/20 active:scale-[0.98]"
+                  className="group/btn flex w-full items-center justify-between gap-4 rounded-full bg-rose-500 px-6 py-3.5 font-extrabold text-white transition-all duration-300 ease-out hover:bg-rose-600 hover:shadow-lg hover:shadow-rose-500/20 active:scale-[0.98]"
                 >
                   <span>Traktir di Trakteer</span>
                   <div className="flex size-9 items-center justify-center rounded-full bg-white/20 transition-transform duration-300 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-0.5">
