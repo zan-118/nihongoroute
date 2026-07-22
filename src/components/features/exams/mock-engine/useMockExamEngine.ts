@@ -9,6 +9,8 @@ import {
   startJlptMockSession,
   submitJlptMockSession,
 } from "@/actions/jlpt-exams.actions";
+import { calculateJlptExamSubmission } from "@/lib/exams/jlpt-session";
+import type { SupabaseExamPackage } from "@/lib/exams/supabase-adapter";
 
 
 /**
@@ -31,44 +33,30 @@ import {
  * @returns Score calculation results.
  */
 const performScoreCalculation = (questions: ExamQuestion[], answers: Record<string, number>, passingScore: number) => {
-  let correctCount = 0;
-  const sectionBreakdown: Record<string, { total: number; correct: number; passed: boolean }> = {
-    vocabulary: { total: 0, correct: 0, passed: true },
-    grammar: { total: 0, correct: 0, passed: true },
-    listening: { total: 0, correct: 0, passed: true },
-    reading: { total: 0, correct: 0, passed: true },
+  const mockPackage: SupabaseExamPackage = {
+    id: "session-pkg",
+    title: "Exam Session",
+    timeLimitMinutes: 0,
+    passingScore,
+    questions: questions.map((q) => ({
+      id: q._key,
+      sessionType: q.section,
+      choices: (q.choices || q.options.map(val => ({ type: "text", value: val }))),
+      correctChoiceIndex: q.correctAnswer,
+      sourceType: q.sourceType,
+      sourceId: q.sourceId,
+      sourceReference: q.sourceReference,
+    })),
   };
 
-  questions.forEach((q) => {
-    const section = q.section || "vocabulary";
-    if (!sectionBreakdown[section]) {
-      sectionBreakdown[section] = { total: 0, correct: 0, passed: true };
-    }
-
-    sectionBreakdown[section].total += 1;
-    if (answers[q._key] === q.correctAnswer) {
-      correctCount++;
-      sectionBreakdown[section].correct += 1;
-    }
-  });
-
-  const finalScore = Math.round((correctCount / Math.max(1, questions.length)) * 180);
-
-  // Terapkan Batas Kelulusan Bagian (Maiten) - setidaknya 32% akurasi diperlukan per bagian
-  let failedSection = false;
-  Object.keys(sectionBreakdown).forEach((sec) => {
-    const data = sectionBreakdown[sec];
-    if (data.total > 0) {
-      const accuracy = data.correct / data.total;
-      if (accuracy < 0.32) {
-        data.passed = false;
-        failedSection = true;
-      }
-    }
-  });
-
-  const isPassed = finalScore >= passingScore && !failedSection;
-  return { correctCount, finalScore, sectionBreakdown, failedSection, isPassed };
+  const result = calculateJlptExamSubmission(mockPackage, answers);
+  return {
+    correctCount: result.correctCount,
+    finalScore: result.totalScore,
+    sectionBreakdown: result.sectionBreakdown,
+    failedSection: result.failedSection,
+    isPassed: result.isPassed,
+  };
 };
 
 /**

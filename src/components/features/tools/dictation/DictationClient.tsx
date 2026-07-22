@@ -30,7 +30,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { getRandomSentencesForDrill, type SentenceDrillItem } from "@/actions/sentences.actions";
-import { fetchTTSAudio, speakWithWebSpeech, TTS_VOICES, type TtsVoice } from "@/lib/tts";
+import { TTS_VOICES, type TtsVoice } from "@/lib/tts";
+import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { toHiragana } from "wanakana";
 
 import { ROUTES } from "@/lib/core/routes";
@@ -80,20 +81,9 @@ export default function DictationClient() {
   const [correctList, setCorrectList] = useState<boolean[]>([]); // track which ones were correct
   const [isFinished, setIsFinished] = useState<boolean>(false);
   
-  // Audio State
-  const [audioPlaying, setAudioPlaying] = useState<boolean>(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const objectUrlRef = useRef<string | null>(null);
-
-  /**
-   * Revoke active blob URL to prevent memory leaks.
-   */
-  const cleanupObjectUrl = useCallback(() => {
-    if (objectUrlRef.current) {
-      URL.revokeObjectURL(objectUrlRef.current);
-      objectUrlRef.current = null;
-    }
-  }, []);
+  // Audio player hook
+  const { playingIndex, playAudio } = useAudioPlayer();
+  const audioPlaying = playingIndex !== null;
 
   /**
    * List of TTS voices for rotation.
@@ -121,53 +111,8 @@ export default function DictationClient() {
    * @param text Japanese text to speak.
    */
   const speakSentence = async (text: string) => {
-    if (audioPlaying) {
-      // Stop current audio if playing
-      audioRef.current?.pause();
-      cleanupObjectUrl();
-      if (typeof window !== "undefined") window.speechSynthesis.cancel();
-      setAudioPlaying(false);
-      return;
-    }
-
-    const cleanText = text.trim();
-    if (!cleanText) return;
-
-    setAudioPlaying(true);
-    const voice = getDeterministicVoice(cleanText);
-
-    try {
-      const audioUrl = await fetchTTSAudio(cleanText, voice);
-      if (audioUrl) {
-        if (!audioRef.current) audioRef.current = new Audio();
-        const audio = audioRef.current;
-        cleanupObjectUrl();
-        if (audioUrl.startsWith("blob:")) objectUrlRef.current = audioUrl;
-        audio.src = audioUrl;
-        audio.onended = () => { setAudioPlaying(false); cleanupObjectUrl(); };
-        audio.onerror = () => {
-          cleanupObjectUrl();
-          speakWithWebSpeech(cleanText, voice, 1, () => setAudioPlaying(false), () => setAudioPlaying(false));
-        };
-        audio.play().catch(() => {
-          speakWithWebSpeech(cleanText, voice, 1, () => setAudioPlaying(false), () => setAudioPlaying(false));
-        });
-      } else {
-        speakWithWebSpeech(cleanText, voice, 1, () => setAudioPlaying(false), () => setAudioPlaying(false));
-      }
-    } catch {
-      speakWithWebSpeech(cleanText, voice, 1, () => setAudioPlaying(false), () => setAudioPlaying(false));
-    }
+    await playAudio(text, "dictation_drill", { voice: getDeterministicVoice(text) });
   };
-
-  // Cleanup audio resources on unmount
-  useEffect(() => {
-    return () => {
-      audioRef.current?.pause();
-      cleanupObjectUrl();
-      if (typeof window !== "undefined") window.speechSynthesis.cancel();
-    };
-  }, [cleanupObjectUrl]);
 
   /**
    * Fetch sentences and start dictation session.

@@ -9,10 +9,11 @@
 // ==========================================
 // IMPORT & DEPENDENSI
 // ==========================================
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Volume2, VolumeX, BookOpen } from "lucide-react";
-import { fetchTTSAudio, speakWithWebSpeech, TTS_VOICES, type TtsVoice } from "@/lib/tts";
+import { TTS_VOICES, type TtsVoice } from "@/lib/tts";
+import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import type { SentenceRow } from "@/actions/sentences.actions";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 
@@ -37,21 +38,7 @@ interface KanjiSentencesProps {
  */
 export function KanjiSentences({ sentences = [], character }: KanjiSentencesProps) {
   // Track index of currently playing sentence audio.
-  const [playingIndex, setPlayingIndex] = useState<number | null>(null);
-  // Reference to HTMLAudioElement instance.
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  // Reference to active object URL for cleanup.
-  const objectUrlRef = useRef<string | null>(null);
-
-  /**
-   * Revoke active object URL to prevent memory leaks.
-   */
-  const cleanupObjectUrl = useCallback(() => {
-    if (objectUrlRef.current) {
-      URL.revokeObjectURL(objectUrlRef.current);
-      objectUrlRef.current = null;
-    }
-  }, []);
+  const { playingIndex, playAudio } = useAudioPlayer();
 
   // List of available TTS voices for rotation.
   const VOICES_ROTATION: TtsVoice[] = [
@@ -72,66 +59,6 @@ export function KanjiSentences({ sentences = [], character }: KanjiSentencesProp
     for (let i = 0; i < text.length; i++) hash = text.charCodeAt(i) + ((hash << 5) - hash);
     return VOICES_ROTATION[Math.abs(hash) % VOICES_ROTATION.length];
   };
-
-  /**
-   * Play Japanese text audio using TTS API or Web Speech fallback.
-   * @param text Japanese text to speak.
-   * @param index Sentence index.
-   */
-  const speakJapanese = async (text: string, index: number) => {
-    // Toggle stop jika kalimat yang sama diklik lagi
-    if (playingIndex === index) {
-      audioRef.current?.pause();
-      cleanupObjectUrl();
-      if (typeof window !== "undefined") window.speechSynthesis.cancel();
-      setPlayingIndex(null);
-      return;
-    }
-
-    // Hentikan yang sedang berjalan
-    audioRef.current?.pause();
-    cleanupObjectUrl();
-    if (typeof window !== "undefined") window.speechSynthesis.cancel();
-
-    const cleanText = text.trim();
-    if (!cleanText) return;
-
-    setPlayingIndex(index);
-    const voice = getDeterministicVoice(cleanText);
-
-    try {
-      const audioUrl = await fetchTTSAudio(cleanText, voice);
-      if (audioUrl) {
-        if (!audioRef.current) audioRef.current = new Audio();
-        const audio = audioRef.current;
-        cleanupObjectUrl();
-        if (audioUrl.startsWith("blob:")) objectUrlRef.current = audioUrl;
-        audio.src = audioUrl;
-        audio.onended = () => { setPlayingIndex(null); cleanupObjectUrl(); };
-        audio.onerror = () => {
-          cleanupObjectUrl();
-          speakWithWebSpeech(cleanText, voice, 1, () => setPlayingIndex(null), () => setPlayingIndex(null));
-        };
-        audio.play().catch(() => {
-          speakWithWebSpeech(cleanText, voice, 1, () => setPlayingIndex(null), () => setPlayingIndex(null));
-        });
-      } else {
-        // Fallback Web Speech API
-        speakWithWebSpeech(cleanText, voice, 1, () => setPlayingIndex(null), () => setPlayingIndex(null));
-      }
-    } catch {
-      speakWithWebSpeech(cleanText, voice, 1, () => setPlayingIndex(null), () => setPlayingIndex(null));
-    }
-  };
-
-  // Clean up audio resources on component unmount.
-  useEffect(() => {
-    return () => {
-      audioRef.current?.pause();
-      cleanupObjectUrl();
-      if (typeof window !== "undefined") window.speechSynthesis.cancel();
-    };
-  }, [cleanupObjectUrl]);
 
   return (
     <Card className="p-6 md:p-10 bg-card/20  border-border rounded-2xl md:rounded-3xl hover:border-primary/40 transition-all glass shadow-[0_0_20px_rgba(var(--primary-rgb),0.02)]">
@@ -169,7 +96,7 @@ export function KanjiSentences({ sentences = [], character }: KanjiSentencesProp
               <div className="flex-shrink-0 select-none">
                 <button
                   type="button"
-                  onClick={() => speakJapanese(sentence.japanese, i)}
+                  onClick={() => playAudio(sentence.japanese, i, { voice: getDeterministicVoice(sentence.japanese) })}
                   className={`h-12 w-12 rounded-xl border flex items-center justify-center transition-all duration-300 relative ${
                     playingIndex === i
                       ? "border-success bg-success/10 text-success shadow-[0_0_20px_rgb(var(--success-rgb)/0.35)] animate-pulse"

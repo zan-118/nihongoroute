@@ -29,7 +29,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SmartJapanese } from "@/components/ui/SmartJapanese";
 import { LibraryItem } from "@/actions/library.actions";
-import { fetchTTSAudio, speakWithWebSpeech, TTS_VOICES, type TtsVoice } from "@/lib/tts";
+import { TTS_VOICES, type TtsVoice } from "@/lib/tts";
+import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import dynamic from "next/dynamic";
 const PdfGenerator = dynamic(() => import("@/components/features/pdf/PdfGenerator"), { ssr: false });
 import type { SentenceRow } from "@/actions/sentences.actions";
@@ -266,24 +267,10 @@ function parseNotesToJSX(notes: string): React.ReactNode {
  * @returns Interactive grammar detail component.
  */
 export default function GrammarDetailClient({ article, dynamicSentences = [] }: GrammarDetailClientProps) {
-  // Track active playing audio index
-  const [playingIndex, setPlayingIndex] = useState<number | null>(null);
+  // Audio player hook
+  const { playingIndex, playAudio } = useAudioPlayer();
   // Track clipboard copy state
   const [isCopied, setIsCopied] = useState(false);
-  // Audio element reference
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  // Object URL reference for memory cleanup
-  const objectUrlRef = useRef<string | null>(null);
-
-  /**
-   * Revoke object URL to prevent memory leak.
-   */
-  const cleanupObjectUrl = useCallback(() => {
-    if (objectUrlRef.current) {
-      URL.revokeObjectURL(objectUrlRef.current);
-      objectUrlRef.current = null;
-    }
-  }, []);
 
   // Voice list for rotation
   const VOICES_ROTATION: TtsVoice[] = [
@@ -306,68 +293,6 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
     for (let i = 0; i < text.length; i++) hash = text.charCodeAt(i) + ((hash << 5) - hash);
     return VOICES_ROTATION[Math.abs(hash) % VOICES_ROTATION.length];
   };
-
-  /**
-   * Play Japanese text audio using TTS.
-   * Fallback to Web Speech API if fetch fails.
-   * 
-   * @param text Japanese text.
-   * @param index Sentence index.
-   */
-  const speakJapanese = async (text: string, index: number) => {
-    // Stop current audio if same index clicked
-    if (playingIndex === index) {
-      audioRef.current?.pause();
-      cleanupObjectUrl();
-      if (typeof window !== "undefined") window.speechSynthesis.cancel();
-      setPlayingIndex(null);
-      return;
-    }
-
-    // Stop any active audio before playing new
-    audioRef.current?.pause();
-    cleanupObjectUrl();
-    if (typeof window !== "undefined") window.speechSynthesis.cancel();
-
-    const cleanText = text.trim();
-    if (!cleanText) return;
-
-    setPlayingIndex(index);
-    const voice = getDeterministicVoice(cleanText);
-
-    try {
-      const audioUrl = await fetchTTSAudio(cleanText, voice);
-      if (audioUrl) {
-        if (!audioRef.current) audioRef.current = new Audio();
-        const audio = audioRef.current;
-        cleanupObjectUrl();
-        if (audioUrl.startsWith("blob:")) objectUrlRef.current = audioUrl;
-        audio.src = audioUrl;
-        audio.onended = () => { setPlayingIndex(null); cleanupObjectUrl(); };
-        audio.onerror = () => {
-          cleanupObjectUrl();
-          speakWithWebSpeech(cleanText, voice, 1, () => setPlayingIndex(null), () => setPlayingIndex(null));
-        };
-        audio.play().catch(() => {
-          speakWithWebSpeech(cleanText, voice, 1, () => setPlayingIndex(null), () => setPlayingIndex(null));
-        });
-      } else {
-        // Fallback Web Speech API
-        speakWithWebSpeech(cleanText, voice, 1, () => setPlayingIndex(null), () => setPlayingIndex(null));
-      }
-    } catch {
-      speakWithWebSpeech(cleanText, voice, 1, () => setPlayingIndex(null), () => setPlayingIndex(null));
-    }
-  };
-
-  // Cleanup audio on component unmount
-  useEffect(() => {
-    return () => {
-      audioRef.current?.pause();
-      cleanupObjectUrl();
-      if (typeof window !== "undefined") window.speechSynthesis.cancel();
-    };
-  }, [cleanupObjectUrl]);
 
   /**
    * Copy current URL to clipboard.
@@ -572,7 +497,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
                     {/* Tombol Pemicu Pengucapan Suara (TTS) */}
                     <div className="flex-shrink-0 select-none">
                       <button type="button" 
-                        onClick={() => speakJapanese(sentenceText, i)}
+                        onClick={() => playAudio(sentenceText, i, { voice: getDeterministicVoice(sentenceText) })}
                         className={`h-12 w-12 rounded-[1.2rem] border flex items-center justify-center transition-all duration-300 relative group/btn ${
                           isActive 
                             ? "border-primary bg-primary/10 text-primary shadow-[0_0_20px_rgb(var(--primary-rgb)/0.35)] animate-pulse" 
@@ -630,7 +555,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
                   <div className="flex-shrink-0 select-none">
                     <button
                       type="button"
-                      onClick={() => speakJapanese(sentence.japanese, 1000 + i)}
+                      onClick={() => playAudio(sentence.japanese, 1000 + i, { voice: getDeterministicVoice(sentence.japanese) })}
                       className={`h-12 w-12 rounded-[1.2rem] border flex items-center justify-center transition-all duration-300 relative ${
                         playingIndex === 1000 + i
                           ? "border-success bg-success/10 text-success shadow-[0_0_20px_rgb(var(--success-rgb)/0.35)] animate-pulse"
