@@ -1,138 +1,170 @@
 # Arsitektur Sistem
 
-Dokumentasi ini digenerate otomatis dari analisis source code pada 17 Juli 2026.
+> Terakhir diperbarui: 24 Juli 2026
 
 ---
 
-## 1. Diagram Arsitektur Komponen (High-Level)
-
-Diagram di bawah menggambarkan interaksi komponen utama NihongoRoute antara Klien (Peramban), Server Next.js, dan Ekosistem Supabase.
+## 1. Diagram Komponen
 
 ```mermaid
 graph TD
-    %% Client-side Components
-    subgraph Client [Sisi Klien / Browser]
-        UI[React UI Components]
-        Store[Zustand Stores<br/>useUserStore, useSRSStore, useUIStore]
-        IDB[(IndexedDB<br/>idb-keyval)]
-        HookSync[useSyncProgress.ts]
-        HookMut[useCloudMutation.ts]
-        BC[BroadcastChannel<br/>nihongoroute_sync]
+    subgraph Client ["Sisi Klien (Browser)"]
+        UI["React UI Components"]
+        Store["Zustand Stores<br/>useUserStore, useSRSStore,<br/>useUIStore, useAuthStore"]
+        IDB[("IndexedDB<br/>idb-keyval")]
+        HookSync["useSyncProgress.ts"]
+        HookMut["useCloudMutation.ts"]
+        BC["BroadcastChannel<br/>nihongoroute_sync"]
     end
 
-    %% Next.js Server Components
-    subgraph Server [Server Next.js App]
-        Actions[Server Actions<br/>jlpt-exams, lessons, etc.]
-        API[API Route Handlers<br/>/api/tts, /api/furigana, /api/webhooks/*]
-        EdgeTTS[MsEdgeTTS Client]
-        Gemini[Gemini AI Client]
+    subgraph Server ["Server Next.js"]
+        Actions["Server Actions<br/>src/actions/*.actions.ts"]
+        API["API Route Handlers<br/>/api/tts, /api/furigana,<br/>/api/cards, /api/health,<br/>/api/webhooks/*"]
+        AuthCB["Auth Callback<br/>/auth/callback"]
+        EdgeTTS["MsEdgeTTS Client"]
+        Gemini["Gemini AI Client"]
     end
 
-    %% Supabase Backend
-    subgraph Supabase [Supabase / PostgreSQL]
-        Auth[Supabase Auth<br/>auth.users]
-        DB[(PostgreSQL Tables<br/>26 Tables)]
-        RPC[RPC sync_user_progress<br/>Anti-Cheat Calc]
-        Buckets[(Storage Buckets<br/>tts-cache, exam-assets)]
+    subgraph Supabase ["Supabase / PostgreSQL"]
+        Auth["Supabase Auth<br/>auth.users"]
+        DB[("PostgreSQL<br/>27 Tabel")]
+        RPC["RPC sync_user_progress"]
+        Buckets[("Storage Buckets<br/>asset, exam-assets, tts-cache")]
     end
 
-    %% Third-party Webhooks
-    Donation[Saweria & Trakteer] -->|POST Webhook| API
+    Donation["Saweria & Trakteer"] -->|POST Webhook| API
 
-    %% Interconnections
     UI <--> Store
-    Store <-->|idb-keyval persist| IDB
+    Store <-->|persist via idb-keyval| IDB
     Store -->|Track dirty state| HookSync
     HookSync -->|Debounce 2000ms| HookMut
     HookMut -->|Invoke RPC| RPC
-    RPC -->|Update DB & returns final XP| DB
-    HookMut -->|Success: Publish SYNC_COMPLETE| BC
-    BC -->|Invalidate query cache on other tabs| UI
+    RPC -->|accepted_xp + bulk update| DB
+    HookMut -->|SYNC_COMPLETE| BC
+    BC -->|Invalidate cache tab lain| UI
 
     UI -->|Invoke Action| Actions
-    Actions -->|Query/Mutate| DB
-    UI -->|Fetch Audio/Furigana| API
-    API -->|Check Cache| DB
-    API -->|Scrape TTS| EdgeTTS
-    API -->|Generate Lesson| Gemini
-    API -->|Write Supporter Data| DB
-    Buckets <-->|Read/Write Audio & Assets| API
-    Actions -->|Storage Link| Buckets
+    Actions -->|Query / Mutate| DB
+    UI -->|Fetch Audio / Furigana / Cards| API
+    API -->|Check cache tts_cache| DB
+    API -->|Sintesis dinamis| EdgeTTS
+    API -->|Generate lesson| Gemini
+    API -->|Insert supporter| DB
+    Buckets <-->|Read/Write audio & assets| API
+    Actions -->|Storage link| Buckets
+    AuthCB -->|Exchange code for session| Auth
 ```
 
 ---
 
 ## 2. Alur Data Utama
 
-### A. Alur Siklus Hidup Sinkronisasi Progres (3-Tier Offline-First Sync)
-
-NihongoRoute menjamin latensi 0ms bagi pengguna lewat sinkronisasi progres 3 tingkat:
-
-1. **Tingkat 1 (Local Memory / UI)**:
-   - Aktivitas belajar pengguna langsung memperbarui state Zustand (`useUserStore`, `useSRSStore`, `useUIStore`).
-   - State Zustand terikat dengan IndexedDB (`idb-keyval` persist) secara otomatis. Jika koneksi terputus, data aman tersimpan secara lokal di browser.
-   - Perubahan data (seperti penyelesaian lesson atau review kosakata) menandai ID materi ke dalam Set `dirtyLessons` atau `dirtySrs`.
-
-2. **Tingkat 2 (Debounce Orchestrator - `useSyncProgress.ts`)**:
-   - Hook memantau perubahan properti atomik (XP, streak, inventory, size data kotor).
-   - Apabila terdeteksi ada perubahan data kotor (`dirtySrs.size > 0` atau `dirtyLessons.size > 0`), hook memulai timer debounce **2000ms**.
-   - Timer dibersihkan (*cleared*) dan diulang kembali jika ada mutasi baru sebelum 2000ms berlalu. Hal ini menghemat bandwidth dan overhead koneksi ke server.
-
-3. **Tingkat 3 (Cloud Mutation & Server Calculation - `useCloudMutation.ts` & RPC)**:
-   - Setelah timer debounce berakhir, hook memicu mutasi asinkron (menggunakan React Query `useCloudMutation.ts`).
-   - Klien mengirim seluruh payload progres lokal beserta daftar data kotor ke RPC Supabase PostgreSQL `sync_user_progress`.
-   - Di sisi server database (PostgreSQL), fungsi RPC memproses data:
-     - **Anti-Cheat Validation**: Server menghitung selisih XP. XP tidak boleh berkurang.
-     - **XP Verification**: XP baru dihitung murni berdasarkan jumlah penambahan SRS (`active_srs_count * 15`) + lesson (`active_lesson_count * 100`) + reward lencana pencapaian + bonus harian dinamis (dibatasi maksimal 150 XP per hari).
-     - **Bulk Set-Based Updates**: Data kotor di-update ke tabel `user_srs` dan `user_lessons` secara transaksional.
-     - Mengembalikan data XP final (`accepted_xp`) yang telah disetujui server ke klien.
-   - **Invalidasi Multi-Tab**: Jika mutasi sukses, klien menyiarkan pesan `"SYNC_COMPLETE"` ke seluruh tab peramban via `BroadcastChannel("nihongoroute_sync")`. Seluruh tab lain langsung melakukan re-fetch untuk menyinkronkan UI secara instan.
-
----
-
-### B. Alur Request API Text-to-Speech (TTS)
-
-Sistem TTS dirancang hemat biaya dan berkinerja tinggi:
+### A. Sinkronisasi Progres 3-Tier (Offline-First)
 
 ```
-[UI Component] 
+┌─────────────────────────────────────────────────────────────────┐
+│ TIER 1 — Local Memory (Zero-Latency UI)                        │
+│                                                                 │
+│  Aktivitas belajar → Zustand store → IndexedDB (idb-keyval)    │
+│  Perubahan data → dirtyLessons / dirtySrs (Set)                │
+└───────────────────────────┬─────────────────────────────────────┘
+                            │ perubahan terdeteksi
+                            ▼
+┌─────────────────────────────────────────────────────────────────┐
+│ TIER 2 — Debounce Orchestrator (useSyncProgress.ts)             │
+│                                                                 │
+│  Memantau: profileKey, dirtySrsSize, dirtyLessonsSize           │
+│  Timer debounce 2000ms — reset jika ada mutasi baru             │
+│  Skip jika: isFetching, isPending, isGuest, belum hydrated      │
+└───────────────────────────┬─────────────────────────────────────┘
+                            │ timer selesai
+                            ▼
+┌─────────────────────────────────────────────────────────────────┐
+│ TIER 3 — Cloud Mutation (useCloudMutation.ts + RPC)             │
+│                                                                 │
+│  1. buildSrsUpdates() + buildLessonUpdates()                    │
+│  2. supabase.rpc('sync_user_progress', { ... })                 │
+│  3. Server menghitung accepted_xp (anti-cheat)                  │
+│  4. Client update XP lokal dari accepted_xp                     │
+│  5. BroadcastChannel.postMessage("SYNC_COMPLETE")               │
+│  6. Tab lain invalidate query cache                             │
+│                                                                 │
+│  Retry: 3x dengan exponential backoff (maks 10 detik)           │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### B. Alur Text-to-Speech (TTS)
+
+```
+[Komponen UI]
       │
-      ├─► Meminta audio ke /api/tts?text=...&voice=...
+      ├─► GET /api/tts?text=...&voice=...&rate=...
       │
       ▼
-[/api/tts GET Handler]
+[/api/tts Route Handler]
       │
-      ├─► Hitung hash MD5 dari kombinasi text + voice + rate
+      ├─► Hash MD5(text + voice + rate)
       │
-      ├─► Cek database `tts_cache` untuk mencocokkan ID hash
+      ├─► Query tabel tts_cache by hash
       │
-      ├───[CACHE HIT]───► Unduh berkas audio (.mp3) dari Supabase Storage `tts-cache`
-      │                   Kembalikan buffer audio ke klien dengan Cache-Control immutable.
+      ├───[CACHE HIT]──► Download .mp3 dari bucket tts-cache
+      │                   Response: audio/mpeg + Cache-Control: immutable
       │
-      └───[CACHE MISS]──► Jalankan dynamic Edge TTS client (MsEdgeTTS) untuk sintesis audio.
-                          Kembalikan buffer audio ephemeral ke klien dengan Cache-Control no-store.
-                          (Audio tidak disimpan ke database secara otomatis saat dynamic rendering 
-                          untuk menekan penulisan media tak terpakai).
+      └───[CACHE MISS]─► Sintesis dinamis via MsEdgeTTS
+                          Response: audio/mpeg + Cache-Control: no-store
+                          (TIDAK otomatis disimpan ke DB)
+
+[Fallback klien]
+      │
+      └─► Jika /api/tts gagal (error/timeout) →
+          Web Speech API (window.speechSynthesis, lang: ja-JP)
 ```
 
 ---
 
-## 3. Keputusan Desain Penting
+## 3. Zustand Stores
 
-* **Zero-Latency UI**: Zustand memproses semua status antarmuka pengguna di sisi klien secara langsung sebelum data dikirim ke server. Pengguna tidak merasakan jeda pemuatan halaman saat berinteraksi.
-* **Separasi Data Pelajaran vs Editorial**: 
-  - Konten pelajaran utama (Lesson) dikelola secara relasional dalam tabel `lessons` di Supabase untuk mendukung tracking progres pengguna secara terintegrasi.
-  - Konten artikel, materi membaca (reading), dan mendengar (listening) dilayani lewat tabel `articles`, `reading`, dan `listening` di Supabase dengan strategi offline-first.
-* **Format Adapter Legacy**: Komponen ujian `MockExamEngine` tetap membaca model data lama. Pemetaan data tabel relasional baru Supabase (`jlpt_exam_templates`, `jlpt_passages`, `jlpt_questions`) ke format lama disentralkan pada adapter `src/lib/exams/supabase-adapter.ts` (`toLegacyExamData`) untuk meminimalisasi refactoring komponen visual.
-* **Timing-Safe Webhook Comparison**: String rahasia Saweria/Trakteer dicocokkan secara konstan menggunakan `crypto.timingSafeEqual` pada level binary buffer untuk mencegah eksploitasi serangan analisis waktu (timing attacks).
-* **Strategi Rendering Hybrid (ISR + Client-Side Progress)**:
-  - Konten leksikal (kosakata, kanji, tata bahasa) dan materi editorial (reading, listening, courses) menggunakan **Incremental Static Regeneration (ISR)** dengan `generateStaticParams()` untuk pre-rendering halaman-halaman populer (top slugs) pada saat build time.
-  - Slug lain di-render on-demand saat pertama kali diakses (`dynamicParams = true`) dan di-cache kembali. Cache diregenerasi di latar belakang setiap 3600 detik (`revalidate = 3600`).
-  - Status spesifik pengguna (progres belajar, bookmark, data SRS) diproses secara terpisah di sisi klien melalui Zustand dan IndexedDB untuk mencegah pengotoran cache statis (cache poisoning) dan menjaga performa pemuatan awal tetap instan.
-* **Optimasi Bundle & Tree-Shaking**:
-  - Penggunaan `optimizePackageImports` di `next.config.ts` untuk Radix UI, Iconify, Framer Motion, Date-fns, Sonner, dan Wanakana untuk memaksa tree-shaking otomatis di Next.js.
-  - Pemisahan bundle client-side addons (`AppClientAddons`, `DeferredOnboardingTour`) dan client components berukuran besar (`ExamsClient`, `DashboardClient`) menggunakan `next/dynamic` untuk meminimalkan *First Load JS* pada initial page shell.
-* **Optimasi Rendering GPU & Animasi Global (60-120 FPS)**:
-  - Eliminasi total filter SVG `feTurbulence` overlay (`body::after`) yang memicu repainting GPU seluas 100vw x 100vh di setiap frame animasi.
-  - Menghapus `transition-colors duration-300` dari tag dasar (`h1..h6`, `p`, `body`) untuk mengeliminasi overhead recalculate style global saat terjadi interaksi UI.
-  - Penggantian animasi *layout thrashing* (`height: "auto"` pada accordion/dropdown) menjadi CSS Grid `grid-template-rows: 0fr -> 1fr` dan *GPU compositor properties* (`transform` & `opacity`).
+Empat stores yang dipersistensi via `idb-keyval`:
+
+| Store | File | Data Utama |
+|-------|------|------------|
+| `useAuthStore` | `src/store/useAuthStore.ts` | Session, user auth state |
+| `useUserStore` | `src/store/useUserStore.ts` | XP, level, streak, studyDays, inventory, completedLessons, dirtyLessons |
+| `useSRSStore` | `src/store/useSRSStore.ts` | SRS card states, dirtySrs |
+| `useUIStore` | `src/store/useUIStore.ts` | Settings, notifications, sync status, UI preferences |
+
+**Aturan penggunaan**: Selalu pakai atomic selector (`useUserStore((s) => s.xp)`). Dilarang destructure langsung.
+
+---
+
+## 4. Strategi Rendering & Cache
+
+### ISR (Incremental Static Regeneration)
+
+Halaman konten library menggunakan ISR dengan `generateStaticParams()` untuk pre-render dan `revalidate = 3600` (1 jam):
+
+| Halaman | Path |
+|---------|------|
+| Kosakata detail | `/library/vocab/[slug]` |
+| Kanji detail | `/library/kanji/[slug]` |
+| Tata bahasa detail | `/library/grammar/[slug]` |
+| Mendengar detail | `/library/listening/[slug]` |
+| Membaca detail | `/library/reading/[slug]` |
+| Cheatsheet detail | `/library/cheatsheet/[id]` |
+| Pelajaran kursus | `/courses/[categoryId]/[slug]` |
+
+Slug yang belum ter-pre-render di-generate on-demand dan di-cache (`dynamicParams = true`).
+
+### Data Progres Pengguna
+
+Status pengguna (XP, SRS, lesson progress) diproses di sisi klien via Zustand + IndexedDB, disinkronkan ke server via RPC — **bukan** melalui ISR/SSR. Ini mencegah cache poisoning pada halaman statis.
+
+---
+
+## 5. Keputusan Desain
+
+- **Zero-latency UI**: Zustand memproses state di klien sebelum data dikirim ke server.
+- **Separasi konten library vs progres pengguna**: Konten library menggunakan ISR + revalidate. Progres pengguna menggunakan client-side sync via RPC.
+- **Legacy exam adapter**: Komponen `MockExamEngine` membaca format data lama. Adapter `src/lib/exams/supabase-adapter.ts` (`toLegacyExamData`) memetakan data relasional baru ke format lama.
+- **Optimasi bundle**: `optimizePackageImports` di `next.config.ts` untuk Radix UI, Iconify, Framer Motion, Date-fns, Sonner, Wanakana. Pemisahan bundle via `next/dynamic` untuk komponen besar.
+- **Tabel `articles`**: Tabel ini ada di database produksi (50 rows, RLS aktif) dan diquery oleh server actions, namun belum masuk file skema konsolidasi `initial_schema.sql`. Tabel ini digunakan sebagai fallback konten pelajaran di `lessons.actions.ts`.

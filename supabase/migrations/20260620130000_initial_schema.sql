@@ -132,6 +132,24 @@ CREATE TABLE public.lessons (
     generation_context jsonb DEFAULT '{}'::jsonb,
     created_at timestamptz DEFAULT now() NOT NULL
 );
+ 
+-- 6a. Articles
+CREATE TABLE public.articles (
+    id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+    category_id uuid REFERENCES public.course_categories(id),
+    title text NOT NULL,
+    slug text NOT NULL UNIQUE,
+    order_number integer,
+    summary text,
+    content text DEFAULT ''::text NOT NULL,
+    image_url text,
+    quizzes jsonb DEFAULT '[]'::jsonb,
+    estimated_minutes integer,
+    is_premium boolean DEFAULT false,
+    is_published boolean DEFAULT true,
+    seo jsonb DEFAULT '{}'::jsonb,
+    created_at timestamptz DEFAULT now() NOT NULL
+);
 
 -- 7. Expressions
 CREATE TABLE public.expressions (
@@ -936,6 +954,7 @@ ALTER TABLE public.kanji ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.vocab ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.grammar ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.lessons ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.articles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.cheatsheets ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.expressions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.radicals ENABLE ROW LEVEL SECURITY;
@@ -984,6 +1003,7 @@ CREATE POLICY "Allow public read access for library" ON public.kanji FOR SELECT 
 CREATE POLICY "Allow public read access for library" ON public.vocab FOR SELECT USING (true);
 CREATE POLICY "Allow public read access for library" ON public.grammar FOR SELECT USING (true);
 CREATE POLICY "Allow public read access for library" ON public.lessons FOR SELECT USING (true);
+CREATE POLICY "Allow public read access for articles" ON public.articles FOR SELECT USING (true);
 CREATE POLICY "Allow public read access for library" ON public.listening FOR SELECT USING (true);
 CREATE POLICY "Allow public read access for library" ON public.reading FOR SELECT USING (true);
 CREATE POLICY "Cheatsheets are viewable by everyone" ON public.cheatsheets FOR SELECT USING (true);

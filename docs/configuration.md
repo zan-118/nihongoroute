@@ -1,50 +1,69 @@
-# Konfigurasi Sistem (Environment Variables)
+# Konfigurasi Sistem
 
-Dokumentasi ini digenerate otomatis dari analisis source code pada 17 Juli 2026.
-
----
-
-## 1. Daftar Environment Variables (.env)
-
-Seluruh variabel lingkungan dikonfigurasi melalui berkas `.env.local` pada tahap pengembangan dan disuntikkan secara dinamis pada panel deployment cloud (Vercel/Docker) di tahap produksi.
-
-### A. Variabel Sisi Klien (Public Browser-Safe)
-Variabel di bawah ini aman diekspos ke browser karena memiliki prefiks `NEXT_PUBLIC_`.
-
-| Nama Variabel | Tipe Data | Status | Default / Contoh | Deskripsi & Peruntukan |
-| :--- | :--- | :--- | :--- | :--- |
-| `NEXT_PUBLIC_SITE_URL` | String (URL) | Wajib | `http://localhost:3000` | URL dasar website. Digunakan untuk routing CORS API dan metadata SEO canonical. |
-| `NEXT_PUBLIC_SUPABASE_URL` | String (URL) | Wajib | `https://your-project.supabase.co` | Endpoint URL Supabase API dari dashboard proyek Supabase Anda. |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | String (JWT) | Wajib | `eyJhbGciOiJIUzI1NiIsInR...` | Kunci publik Supabase untuk otentikasi tingkat anonim dari browser klien. |
+> Terakhir diperbarui: 24 Juli 2026
 
 ---
 
-### B. Variabel Sisi Server (Server-Only Kredensial)
-**DILARANG KERAS** memberi prefiks `NEXT_PUBLIC_` atau mengimpor variabel di bawah ini ke dalam Client Component browser.
+## 1. Environment Variables
 
-| Nama Variabel | Tipe Data | Status | Default / Contoh | Deskripsi & Peruntukan |
-| :--- | :--- | :--- | :--- | :--- |
-| `SUPABASE_SERVICE_ROLE_KEY` | String (JWT) | Wajib | `eyJhbGciOiJIUzI1NiIsInR...` | Kunci administrasi Supabase (Bypass RLS). Hanya digunakan di Server Actions/Route Handlers via `createAdminClient()`. |
-| `ADMIN_API_SECRET` | String | Wajib | `replace-with-long-random-secret` | Token rahasia internal untuk mengamankan rute API administrasi `/api/admin/*`. |
-| `GEMINI_API_KEY` | String | Wajib | `AIzaSy...` | Kunci otentikasi API Google Generative AI (Gemini) untuk pemrosesan AI Assistant. |
-| `TRAKTEER_WEBHOOK_SECRET` | String | Opsional | `replace-with-trakteer-secret` | Kunci token verifikasi webhook donasi dari platform Trakteer. |
-| `SAWERIA_WEBHOOK_SECRET` | String | Opsional | `replace-with-saweria-secret` | Kunci rahasia HMAC SHA256 verifikasi webhook donasi dari platform Saweria. |
+Dikonfigurasi melalui `.env.local` (development) atau panel deployment (production).
+
+### Variabel Klien (`NEXT_PUBLIC_`)
+
+| Variabel | Tipe | Status | Deskripsi |
+|----------|------|--------|-----------|
+| `NEXT_PUBLIC_SITE_URL` | URL | Wajib | URL dasar website. Digunakan untuk CORS dan metadata SEO. |
+| `NEXT_PUBLIC_SUPABASE_URL` | URL | Wajib | Endpoint Supabase API. |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | JWT | Wajib | Kunci publik Supabase (anonim). |
+
+### Variabel Server-Only
+
+| Variabel | Tipe | Status | Deskripsi |
+|----------|------|--------|-----------|
+| `SUPABASE_SERVICE_ROLE_KEY` | JWT | Wajib | Bypass RLS. Hanya di Server Actions / Route Handlers via `createAdminClient()`. |
+| `ADMIN_API_SECRET` | string | Wajib | Token autentikasi rute admin API. |
+| `GEMINI_API_KEY` | string | Wajib | Google Generative AI key. |
+| `TRAKTEER_WEBHOOK_SECRET` | string | Opsional | Token verifikasi webhook Trakteer. |
+| `SAWERIA_WEBHOOK_SECRET` | string | Opsional | Secret HMAC SHA256 verifikasi webhook Saweria. |
 
 ---
 
-## 2. File Konfigurasi Lainnya
+## 2. File Konfigurasi
 
-Selain berkas `.env.local`, perilaku kompilasi, styling, dan optimasi NihongoRoute dipengaruhi oleh beberapa berkas konfigurasi berikut:
+### `next.config.ts`
 
-* **`next.config.ts`**:
-  - Konfigurasi output build `standalone` untuk integrasi container Docker.
-  - Mematikan header `poweredByHeader` untuk alasan keamanan.
-  - Mengonfigurasi `securityHeaders` (CSP, Referrer-Policy, Frame-Options, HSTS).
-  - Mengatur cache image optimal (`minimumCacheTTL` selama 30 hari) dan remote patterns domain gambar (Supabase, Cloudinary).
-  - Menyatakan modul kustom seperti `kuroshiro`, `kuroshiro-analyzer-kuromoji`, dan `msedge-tts` sebagai `serverExternalPackages` agar tidak di-bundle ke sisi browser klien.
-* **`tailwind.config.js`**:
-  - Berisi konfigurasi token desain semantik proyek, radius, font-pairing, dan animasi Tailwind CSS.
-* **`components.json`**:
-  - Mengatur parameter dasar pustaka shadcn/ui untuk penempatan komponen visual di folder `src/components/ui/`.
-* **`tsconfig.json`**:
-  - Mengonfigurasi path alias TypeScript (misal: `@/*` memetakan langsung ke `src/*`) dan optimasi build compiler.
+| Fitur | Detail |
+|-------|--------|
+| `poweredByHeader` | `false` |
+| `reactStrictMode` | `true` |
+| Security headers | X-DNS-Prefetch-Control, X-Content-Type-Options (`nosniff`), X-Frame-Options (`SAMEORIGIN`), Referrer-Policy (`strict-origin-when-cross-origin`), Permissions-Policy, Cross-Origin-Opener-Policy (`same-origin-allow-popups`), HSTS (production only) |
+| Image optimization | Format AVIF/WebP, cache 30 hari, remote patterns: Supabase (`hubqetausiziocdlbdmd.supabase.co`), Cloudinary (`res.cloudinary.com`) |
+| `serverExternalPackages` | `kuroshiro`, `kuroshiro-analyzer-kuromoji`, `msedge-tts`, `isomorphic-ws`, `ws` |
+| `transpilePackages` | `@react-pdf/renderer` |
+| `optimizePackageImports` | Radix UI (6 paket), `@iconify/react`, `framer-motion`, `date-fns`, `sonner`, `wanakana` |
+| Bundle analyzer | Aktif jika `ANALYZE=true` via `@next/bundle-analyzer` |
+| Redirect | `/learning-hub` → `/dashboard` (permanent) |
+
+### `tailwind.config.js`
+
+Token desain semantik, radius, font-pairing, dan animasi. Menggunakan Tailwind CSS v4 (`@import "tailwindcss"` syntax di `globals.css`).
+
+### `components.json`
+
+Konfigurasi shadcn/ui — penempatan komponen di `src/components/ui/`.
+
+### `tsconfig.json`
+
+Path alias `@/*` → `src/*`, optimasi compiler TypeScript.
+
+### `vitest.config.ts`
+
+Konfigurasi unit test dengan jsdom environment.
+
+### `playwright.config.ts`
+
+Konfigurasi E2E test.
+
+### `eslint.config.mjs`
+
+ESLint flat config dengan `eslint-config-next`.

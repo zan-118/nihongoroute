@@ -1,62 +1,90 @@
-# Deployment & Operasional
+# Deployment & CI/CD
 
-Dokumentasi ini digenerate otomatis dari analisis source code pada 17 Juli 2026.
+> Terakhir diperbarui: 24 Juli 2026
 
 ---
 
-## 1. Kompilasi & Build Standalone
+## 1. Konfigurasi Build
 
-NihongoRoute dikonfigurasi menggunakan fitur **Next.js Standalone Output** (`output: "standalone"` pada `next.config.ts`).
+Next.js dikonfigurasi di `next.config.ts` dengan opsi:
+
+| Opsi | Nilai | Keterangan |
+|------|-------|------------|
+| `poweredByHeader` | `false` | Sembunyikan header X-Powered-By |
+| `reactStrictMode` | `true` | |
+| `images.minimumCacheTTL` | 30 hari | |
+| `images.formats` | `avif`, `webp` | |
+| `serverExternalPackages` | `kuroshiro`, `kuroshiro-analyzer-kuromoji`, `msedge-tts`, `isomorphic-ws`, `ws` | Tidak di-bundle ke klien |
+| `transpilePackages` | `@react-pdf/renderer` | |
 
 > [!NOTE]
-> **TODO: perlu verifikasi** — Kode sumber mengonfigurasi build `standalone` yang kompatibel dengan Docker/Node VPS, dan menyertakan dependensi `@vercel/analytics` serta `@vercel/speed-insights`. Namun, berkas konfigurasi spesifik seperti `Dockerfile` atau file konfigurasi cloud hosting belum disertakan di repositori.
+> Tidak ada `output: "standalone"` di konfigurasi saat ini. Dependensi `@vercel/analytics` dan `@vercel/speed-insights` tersedia di `package.json`.
 
 ---
 
-## 2. CI/CD Pipeline (GitHub Actions)
+## 2. CI/CD Pipeline
 
-Otomatisasi pengujian dan quality gate telah dikonfigurasi melalui GitHub Actions workflow pada berkas `.github/workflows/quality.yml`.
+Otomatisasi via GitHub Actions di `.github/workflows/quality.yml`.
 
-### Tahapan Pipeline "Quality Gate":
-1. **Job `app` (App Quality)**:
-   - Menjalankan `npm run typecheck` (TypeScript validation).
-   - Menjalankan `npm run lint` (ESLint Next.js validation).
-   - Menjalankan `npm run test:unit` (Vitest unit test suite).
-   - Menjalankan `npm run build` (Next.js production compilation).
-2. **Job `database` (Database Guard)**:
-   - Menjalankan `npm run db:migrations:check` untuk memvalidasi konsistensi berkas skema.
-   - Mengonfigurasi Supabase CLI untuk pengujian database.
+### Job: App Quality
+
+| Step | Perintah |
+|------|----------|
+| Typecheck | `npm run typecheck` |
+| Lint | `npm run lint` |
+| Unit tests | `npm run test:unit` |
+| Build | `npm run build` |
+
+Runtime: Node.js 22, Ubuntu.
+
+### Job: Database Guard
+
+| Step | Perintah |
+|------|----------|
+| Migration check | `npm run db:migrations:check` |
+| Supabase CLI setup | `supabase/setup-cli@v2` |
+
+**Trigger**: Push ke `main`, Pull Request ke `main`, manual dispatch.
+**Concurrency**: Satu eksekusi per ref — eksekusi lama dibatalkan.
 
 ---
 
-## 3. Release Gate Checklist (Lokal & Staging)
-
-Sebelum mempromosikan kode ke produksi, jalankan checklist lokal:
+## 3. Release Checklist
 
 ```bash
-# 1. Verifikasi Validitas Tipe Data TypeScript
-npm run typecheck
-
-# 2. Verifikasi Standar Kualitas & Keamanan Kode
-npm run lint
-
-# 3. Jalankan Seluruh Unit Test Fungsional Bisnis
-npm run test:unit
-
-# 4. Verifikasi Konsolidasi Migrasi Database
-npm run db:migrations:check
-
-# 5. Uji Coba Build Kompilasi Produksi
-npm run build
+npm run typecheck          # Validasi tipe TypeScript
+npm run lint               # Standar kode & keamanan
+npm run test:unit          # Unit test logika bisnis
+npm run db:migrations:check  # Konsistensi migrasi database
+npm run build              # Build produksi
 ```
 
 ---
 
-## 4. Revalidasi Jalur & Cache Strategy
+## 4. Strategi Cache & Revalidasi
 
-NihongoRoute tidak menerapkan strategi revalidasi berbasis waktu (*time-based revalidation*) seperti `export const revalidate = 3600;` karena bertentangan dengan kebijakan sinkronisasi data progres instan.
+### Konten Library (ISR)
 
-### Aturan Revalidasi Konten:
-1. **Revalidasi Manual**: Lakukan pembaruan cache rute klien secara instan setelah mutasi data di database menggunakan helper Next.js `revalidatePath` atau `revalidateTag` langsung pada Server Actions.
-2. **Dynamic Query Cache**: Pengambilan konten dinamis wajib menggunakan opsi fetch `{ cache: "no-store" }` atau memanfaatkan API Route Handlers non-cached untuk memastikan data teraktual disajikan saat pengguna beralih status ke online.
-3. **TTS Caching**: Data suara statis hasil generate dynamic synthesized Edge TTS di-cache selamanya di storage bucket `tts-cache` Supabase. Rute `/api/tts` mengembalikan header caching permanen (`Cache-Control: public, max-age=604800, immutable`) apabila audio ditemukan di database cache.
+Halaman detail library menggunakan **Incremental Static Regeneration**:
+
+- `generateStaticParams()` untuk pre-render slug populer saat build.
+- `revalidate = 3600` (1 jam) — halaman di-regenerasi di latar belakang.
+- `dynamicParams = true` — slug baru di-render on-demand dan di-cache.
+
+Halaman yang menggunakan ISR: vocab, kanji, grammar, listening, reading, cheatsheet, courses.
+
+### HTTP Cache Headers (next.config.ts)
+
+| Path | Header |
+|------|--------|
+| `/fonts/*` | `public, max-age=31536000, immutable` |
+| `/library/vocab/*`, `/library/kanji/*`, `/library/grammar/*`, `/library/reading/*`, `/library/listening/*`, `/library/cheatsheet/*` | `public, s-maxage=3600, stale-while-revalidate=59` |
+
+### Data Progres Pengguna
+
+Revalidasi progres pengguna dilakukan secara manual via `revalidatePath` setelah mutasi di Server Actions — **bukan** via ISR/time-based revalidation. Data pengguna diproses client-side via Zustand + RPC.
+
+### TTS Cache
+
+- **Cache hit**: `Cache-Control: public, max-age=604800, immutable` (7 hari).
+- **Cache miss** (dynamic synthesis): `Cache-Control: no-store`.

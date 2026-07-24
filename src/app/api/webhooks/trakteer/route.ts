@@ -9,6 +9,7 @@
 // ======================
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { safeEqual } from "@/lib/core/admin-api-auth";
 
 // ======================
 // ANTARMUKA / TIPE DATA
@@ -65,7 +66,7 @@ export async function POST(request: Request) {
     const cleanExpected = (expectedKey || "").replace(/[\s\r\n]/g, "");
 
     // Verify webhook authenticity
-    if (cleanExpected && cleanToken !== cleanExpected) {
+    if (cleanExpected && !safeEqual(cleanToken, cleanExpected)) {
       return NextResponse.json({ error: "Invalid webhook secret key" }, { status: 401 });
     }
 

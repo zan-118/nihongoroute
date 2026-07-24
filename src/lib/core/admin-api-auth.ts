@@ -12,7 +12,7 @@ interface AdminAuthResult {
 /**
  * Compare strings in constant time. Prevent timing attacks.
  */
-function safeEqual(left: string, right: string) {
+export function safeEqual(left: string, right: string) {
   // Convert strings to buffers for crypto comparison
   const leftBuffer = Buffer.from(left);
   const rightBuffer = Buffer.from(right);

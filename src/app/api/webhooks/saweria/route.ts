@@ -10,6 +10,7 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import crypto from "crypto";
+import { safeEqual } from "@/lib/core/admin-api-auth";
 
 // ======================
 // HANDLER
@@ -42,14 +43,14 @@ export async function POST(request: Request) {
       // Compute HMAC SHA256 hash to verify payload integrity.
       const hmac = crypto.createHmac("sha256", expectedSecret);
       const computedSignature = hmac.update(rawBody).digest("hex");
-      if (computedSignature !== signature) {
+      if (!safeEqual(computedSignature, signature)) {
         return NextResponse.json({ error: "Invalid Saweria signature" }, { status: 401 });
       }
     } else if (expectedSecret) {
       // Cadangan: periksa parameter rahasia di URL query atau parameter body jika header signature tidak ada
       const { searchParams } = new URL(request.url);
       const secretQuery = searchParams.get("secret") || body.secret;
-      if (secretQuery !== expectedSecret) {
+      if (!safeEqual(secretQuery || "", expectedSecret)) {
         return NextResponse.json({ error: "Invalid webhook secret token" }, { status: 401 });
       }
     }

@@ -1,5 +1,7 @@
 # Design System — NihongoRoute
 
+> Terakhir diperbarui: 24 Juli 2026
+
 Dokumen ini adalah sumber kebenaran untuk semua keputusan visual di project ini. Kalau ada UI baru yang mau dibuat dan tidak tercakup di sini, tambahkan definisinya ke dokumen ini dulu (atau tanya user), jangan improvisasi diam-diam di komponen.
 
 Sumber: `src/app/globals.css`.

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { validateAdminApiRequest } from '@/lib/core/admin-api-auth';
+import { validateAdminApiRequest, safeEqual } from '@/lib/core/admin-api-auth';
 
 describe('Admin API Auth Security', () => {
   const SECRET = 'super-secret-key';
@@ -62,5 +62,21 @@ describe('Admin API Auth Security', () => {
     const result = validateAdminApiRequest(req);
     expect(result.ok).toBe(false);
     expect(result.status).toBe(503);
+  });
+
+  describe('safeEqual', () => {
+    it('harus mengembalikan true untuk string yang identik', () => {
+      expect(safeEqual('sama', 'sama')).toBe(true);
+      expect(safeEqual('', '')).toBe(true);
+    });
+
+    it('harus mengembalikan false untuk string dengan panjang berbeda', () => {
+      expect(safeEqual('pendek', 'panjangsekali')).toBe(false);
+      expect(safeEqual('', 'ada')).toBe(false);
+    });
+
+    it('harus mengembalikan false untuk string dengan panjang sama tapi beda isi', () => {
+      expect(safeEqual('abc', 'abd')).toBe(false);
+    });
   });
 });

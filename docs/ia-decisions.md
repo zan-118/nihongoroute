@@ -1,23 +1,41 @@
-# Keputusan Arsitektur Informasi (IA)
+# Keputusan Arsitektur Informasi
 
-Dokumen ini mencatat keputusan-keputusan penting terkait tata letak, peran halaman, dan arsitektur informasi aplikasi agar tidak terjadi redundansi atau kebingungan rute di masa depan.
+> Terakhir diperbarui: 24 Juli 2026
+
+---
+
+Dokumen ini mencatat keputusan penting terkait tata letak, peran halaman, dan arsitektur informasi untuk mencegah redundansi atau kebingungan rute.
+
+---
 
 ## 1. Pustaka vs Kamus Terpadu
+
 **Tanggal**: Juli 2026
 
-Sempat ada kebingungan antara peran Pustaka (`/library`) dan Kamus Terpadu (`/tools/dictionary`), karena keduanya menyediakan data dari entitas yang sama (kosakata, kanji, tata bahasa) dan memiliki fitur pencarian serta SRS.
+### Konteks
 
-**Keputusan**: Keduanya dipertahankan karena melayani model mental / alur pengguna yang berbeda:
-- **Pustaka (`/library`) — Pola BROWSE**: 
-  Fokus pada penjelajahan terstruktur per kategori dengan halaman detail yang lengkap. Pengguna masuk ke Pustaka saat ingin melihat daftar materi secara berurutan atau mengeksplorasi suatu topik secara mendalam. Untuk menambah ke jadwal hafalan (SRS), pengguna perlu masuk ke halaman detail item tersebut.
-- **Kamus Terpadu (`/tools/dictionary`) — Pola SEARCH**: 
-  Fokus pada kecepatan pencarian lintas batas kategori (kosakata + kanji + tata bahasa) dalam satu kolom input. Pengguna dapat langsung menambahkan item ke SRS dari hasil pencarian seketika, tanpa harus membuka halaman detail. Kamus Terpadu digunakan untuk pencarian instan dan spesifik.
+Pustaka (`/library`) dan Kamus Terpadu (`/tools/dictionary`) keduanya menyediakan data dari entitas yang sama (kosakata, kanji, tata bahasa) dengan fitur pencarian dan SRS.
 
-**Aksi yang diambil**: 
-Menambahkan deskripsi eksplisit di kartu Kamus Terpadu pada daftar Alat (`src/lib/constants/tools.ts`) untuk menegaskan perbedaan pola *Search* vs *Browse* ini, sehingga pengguna paham harus menggunakan alat yang mana sesuai kebutuhannya.
+### Keputusan
 
-## 2. Halaman Ujian (Exams)
+Keduanya dipertahankan — melayani model mental berbeda:
+
+| Fitur | Pustaka (`/library`) | Kamus Terpadu (`/tools/dictionary`) |
+|-------|---------------------|-------------------------------------|
+| **Pola** | BROWSE | SEARCH |
+| **Alur** | Jelajah terstruktur per kategori → halaman detail → tambah SRS | Cari lintas kategori dalam satu input → tambah SRS langsung dari hasil |
+| **Kapan dipakai** | Melihat daftar materi berurutan, eksplorasi topik mendalam | Pencarian cepat dan spesifik |
+
+### Aksi
+
+Deskripsi eksplisit ditambahkan di kartu Kamus Terpadu di `src/lib/constants/tools.ts` untuk menegaskan perbedaan Search vs Browse.
+
+---
+
+## 2. Halaman Ujian
+
 **Tanggal**: Juli 2026
 
-**Keputusan**: Ujian (`/exams`) berdiri sendiri sebagai root-level navigasi.
-Kartu "Ujian & Sertifikasi" yang sebelumnya ada di dalam Pustaka (`/library`) telah dihapus untuk menghindari duplikasi jalur navigasi.
+### Keputusan
+
+Ujian (`/exams`) berdiri sendiri sebagai navigasi root-level. Kartu "Ujian & Sertifikasi" yang sebelumnya ada di Pustaka dihapus untuk menghindari duplikasi jalur navigasi.

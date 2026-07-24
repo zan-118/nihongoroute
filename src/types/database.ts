@@ -459,7 +459,7 @@ export interface ArticleTable {
   slug: string;
   order_number: number;
   summary?: string;
-  content_blocks: ContentBlock[];
+  content: string;
   image_url?: string | null;
   quizzes: Quiz[];
   estimated_minutes: number;

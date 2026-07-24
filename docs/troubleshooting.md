@@ -1,68 +1,76 @@
-# Troubleshooting & FAQ
+# Troubleshooting
 
-Dokumentasi ini digenerate otomatis dari analisis source code pada 17 Juli 2026.
+> Terakhir diperbarui: 24 Juli 2026
 
 ---
 
-Berikut adalah daftar masalah umum yang mungkin ditemui oleh pengembang maupun pengguna NihongoRoute beserta solusinya berdasarkan analisis penanganan error (*error handling*) di dalam codebase.
+## 1. Inisialisasi Kuroshiro Gagal
 
-## 1. Kegagalan Inisialisasi Kuroshiro (Furigana Service)
+### Gejala
 
-### Gejala:
-Sistem gagal memuat anotasi furigana hiragana, dan log konsol server menampilkan error:
-`Kuroshiro Init Error: Cannot find dictionary path...`
+Log server: `Kuroshiro Init Error: Cannot find dictionary path...`
 
-### Penyebab:
-Modul `kuroshiro-analyzer-kuromoji` memerlukan berkas kamus biner kuromoji yang terletak di `node_modules/kuromoji/dict`. Apabila folder tersebut tidak ditemukan atau terhapus, konversi akan gagal.
+### Penyebab
 
-### Solusi:
-1. Pastikan folder `node_modules/kuromoji/dict` ada di server.
-2. Di dalam file `src/app/api/furigana/route.ts` dan `src/app/api/admin/ai-assistant/route.ts`, inisialisasi analyzer telah dikonfigurasi untuk mencari jalur absolut kamus secara eksplisit menggunakan:
+Modul `kuroshiro-analyzer-kuromoji` memerlukan kamus biner kuromoji di `node_modules/kuromoji/dict`. Folder tidak ditemukan atau terhapus.
+
+### Solusi
+
+1. Pastikan `node_modules/kuromoji/dict` ada.
+2. Path kamus dikonfigurasi eksplisit di `route.ts`:
    ```typescript
    const dictPath = path.join(process.cwd(), "node_modules", "kuromoji", "dict");
    ```
-3. Lakukan instalasi ulang pustaka: `npm install` untuk memperbarui kamus.
+3. Jalankan `npm install` untuk memperbarui kamus.
 
 ---
 
-## 2. Dynamic Edge TTS Timeout & Fallback Web Speech API
+## 2. Edge TTS Timeout
 
-### Gejala:
-Pemuatan audio pelafalan kosakata lambat atau mengembalikan kode status 500.
+### Gejala
 
-### Penyebab:
-Saat terjadi *cache miss* di database `tts_cache`, server Next.js melakukan dynamic synthesis dengan cara melakukan scraping stream audio ke server Microsoft Edge TTS. Proses ini dibatasi oleh timeout koneksi selama **10 detik**. Jika server Edge TTS lambat merespon, sintesis akan gagal.
+Audio pelafalan lambat atau mengembalikan status 500.
 
-### Solusi / Mekanisme Fallback Klien:
-* Sistem klien dirancang tidak bergantung penuh pada API server. Jika rute `/api/tts` mengembalikan error atau status 404/500, klien secara otomatis mengaktifkan **Web Speech API** bawaan browser (`window.speechSynthesis`) dengan memicu pelafalan sintesis lokal menggunakan objek `SpeechSynthesisUtterance` dengan penunjuk bahasa `ja-JP`.
+### Penyebab
 
----
+Saat cache miss, server melakukan sintesis dinamis via MsEdgeTTS dengan timeout **10 detik**. Jika server Edge TTS lambat, sintesis gagal.
 
-## 3. Resolusi Konflik Sinkronisasi Offline (Sync Conflict Resolution)
+### Fallback Klien
 
-### Gejala:
-Data progres lokal pengguna (saat berstatus Guest) tidak sinkron atau terhapus setelah melakukan login ke akun Supabase.
-
-### Penyebab:
-Terdapat perbedaan antara progres lokal (XP/Streak) dengan data profil yang sudah ada di awan Supabase.
-
-### Solusi (Merge Logic):
-Sistem sinkronisasi di `src/lib/supabase/sync.ts` menyelesaikan konflik secara otomatis dengan aturan:
-1. **XP & Streak**: Memilih nilai tertinggi antara lokal dan awan (`Math.max(localXP, cloudXP)`).
-2. **Item Inventaris**: Jumlah Streak Freeze dipilih yang terbanyak.
-3. **Poin Belajar Harian (`studyDays`)**: Menggabungkan daftar hari belajar dan memilih jumlah review terbanyak untuk setiap tanggal yang sama.
-4. **Data Kartu SRS**: Membandingkan stempel waktu `updated_at`. Kartu dengan waktu pembaruan terbaru yang akan dipertahankan dan di-upsert ke database.
+Jika `/api/tts` mengembalikan error (status 500), klien otomatis mengaktifkan **Web Speech API** bawaan browser (`window.speechSynthesis`) dengan bahasa `ja-JP`.
 
 ---
 
-## 4. Status Degraded pada `/api/health`
+## 3. Konflik Sinkronisasi Offline
 
-### Gejala:
-Pemeriksaan kesehatan sistem mengembalikan status `degraded` dengan kode HTTP 503.
+### Gejala
 
-### Penyebab:
-Terdapat variabel lingkungan wajib (*required environment variables*) yang belum terisi di berkas `.env.local` server Next.js.
+Progres lokal (guest) tidak sinkron setelah login.
 
-### Solusi:
-1. Periksa log kueri respons `/api/health`. Di lingkungan pengembangan (development), daftar variabel wajib yang hilang akan ditampilkan pada objek `missingRequired`.
-2. Pastikan variabel seperti `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, dan `NEXT_PUBLIC_SITE_URL` sudah dikonfigurasi dengan benar.
+### Resolusi Konflik
+
+Sistem di `src/lib/supabase/sync.ts` menyelesaikan konflik otomatis:
+
+| Data | Strategi |
+|------|----------|
+| XP & Streak | `Math.max(lokal, cloud)` |
+| Streak Freeze | Ambil jumlah terbanyak |
+| Study Days | Gabung per tanggal, ambil count tertinggi |
+| Data SRS | Bandingkan `updated_at`, pertahankan yang terbaru |
+
+---
+
+## 4. Health Check Degraded
+
+### Gejala
+
+`/api/health` mengembalikan status `degraded` (HTTP 503).
+
+### Penyebab
+
+Variabel environment wajib belum terisi di `.env.local`.
+
+### Solusi
+
+1. Di development, respons `/api/health` menampilkan daftar variabel yang hilang (`missingRequired`).
+2. Pastikan `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, dan `NEXT_PUBLIC_SITE_URL` sudah dikonfigurasi.

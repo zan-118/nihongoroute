@@ -1,63 +1,102 @@
-# Keamanan & Kepatuhan (Security Policy)
+# Keamanan
 
-Dokumentasi ini digenerate otomatis dari analisis source code pada 17 Juli 2026.
-
----
-
-Kebijakan keamanan sistem NihongoRoute berfokus pada enkapsulasi rahasia server, proteksi integritas progres belajar pengguna terhadap kecurangan (*anti-cheat guard*), pembatasan akses data relasional via Row Level Security (RLS), dan perlindungan rute terhadap serangan berbasis analisis waktu (*timing attacks*).
-
-## 1. Kebijakan Kredensial & Variabel Lingkungan
-
-### Prefiks `NEXT_PUBLIC_`
-Hanya variabel lingkungan yang diawali dengan prefiks **`NEXT_PUBLIC_`** yang diizinkan untuk diakses oleh kode yang terkompilasi ke browser klien. 
-
-Seluruh variabel server-only di bawah ini **DILARANG KERAS** dibaca atau diimpor di dalam Client Component:
-* `SUPABASE_SERVICE_ROLE_KEY`
-* `ADMIN_API_SECRET`
-* `GEMINI_API_KEY`
-* `SAWERIA_WEBHOOK_SECRET` / `TRAKTEER_WEBHOOK_SECRET`
+> Terakhir diperbarui: 24 Juli 2026
 
 ---
 
-## 2. Autentikasi & Otorisasi API Admin
+## 1. Kebijakan Kredensial
 
-Seluruh rute administrasi di bawah rute `/api/admin/*` menghubungkan antarmuka internal dengan kemampuan generasi AI dan pencarian basis data Supabase.
+### Variabel Klien (Prefiks `NEXT_PUBLIC_`)
 
-### Protokol Validasi Admin (`validateAdminApiRequest`):
-1. **Header-Only Authorization**: Kredensial admin **hanya boleh** dikirim melalui header HTTP `Authorization: Bearer <ADMIN_API_SECRET>` atau `x-admin-api-secret`.
-2. **Larangan URL Query String**: Token admin **dilarang keras** dikirimkan via parameter URL (seperti `?token=...`) karena parameter kueri URL rentan tercatat pada log server, riwayat browser, dan sistem pemantauan pihak ketiga.
-3. **Pencocokan Timing-Safe**: Token admin divalidasi menggunakan fungsi pencocokan biner konstan untuk mencegah penyerang menebak token melalui analisis perbedaan waktu respon.
+Hanya variabel dengan prefiks `NEXT_PUBLIC_` yang boleh diakses dari kode browser:
 
----
+- `NEXT_PUBLIC_SITE_URL`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
-## 3. Keamanan Webhook Donasi (Anti-Timing Attacks)
+### Variabel Server-Only
 
-Rute penerima webhook `/api/webhooks/saweria` dan `/api/webhooks/trakteer` menerima notifikasi pembayaran donatur.
+Variabel berikut **dilarang keras** diberi prefiks `NEXT_PUBLIC_` atau diimpor di Client Component:
 
-### Verifikasi Tanda Tangan Webhook:
-* **HMAC SHA256**: Webhook Saweria memvalidasi tanda tangan payload pada header `x-saweria-signature`.
-* **Pencocokan Waktu Konstan**: Verifikasi hash rahasia wajib menggunakan `crypto.timingSafeEqual(Buffer.from(a), Buffer.from(b))` alih-alih perbandingan kesetaraan string biasa (`===` atau `!==`) guna mencegah serangan *timing attack*.
-
----
-
-## 4. Keamanan Database & Row Level Security (RLS)
-
-Seluruh 26 tabel database PostgreSQL yang terdefinisi di Supabase **wajib mengaktifkan Row Level Security (RLS)** secara *default*.
-
-### Kebijakan Standar RLS:
-1. **Data Publik (Library Tables)**: Tabel pustaka (`vocab`, `kanji`, `grammar`, `lessons`, `listening`, `reading`, `cheatsheets`, `jlpt_exam_templates`) memiliki kebijakan RLS publik untuk operasi kueri data (`SELECT USING (true)` atau `is_published = true`).
-2. **Data Pribadi Pengguna**: Tabel yang menyimpan data progres (`profiles`, `user_srs`, `user_lessons`, `user_exam_sessions`, `notifications`) wajib menyertakan klausa kepemilikan baris data:
-   ```sql
-   USING ((select auth.uid()) = user_id)
-   WITH CHECK ((select auth.uid()) = user_id);
-   ```
-3. **Service-Role Boundary**: Penggunaan klien admin Supabase (`createAdminClient()`) yang mengabaikan RLS dibatasi secara ketat hanya pada Server Actions dan Route Handlers, serta dilarang di-bundle ke browser klien.
+| Variabel | Peran |
+|----------|-------|
+| `SUPABASE_SERVICE_ROLE_KEY` | Akses admin Supabase (bypass RLS) |
+| `ADMIN_API_SECRET` | Autentikasi rute admin API |
+| `GEMINI_API_KEY` | Google Generative AI |
+| `SAWERIA_WEBHOOK_SECRET` | Verifikasi webhook Saweria |
+| `TRAKTEER_WEBHOOK_SECRET` | Verifikasi webhook Trakteer |
 
 ---
 
-## 5. Proteksi Integritas Progres (Anti-Cheat XP Guard)
+## 2. Autentikasi Admin API
 
-Klien peramban tidak dipercaya untuk menentukan nilai akhir XP, level, atau streak pengguna. 
+Validasi admin menggunakan `validateAdminApiRequest()` di `src/lib/core/admin-api-auth.ts`.
 
-* Nilai XP final dihitung dan diverifikasi secara mutlak di sisi server database melalui fungsi RPC PostgreSQL `sync_user_progress`.
-* RPC menolak mutasi yang mencoba menurunkan XP (`delta_xp < 0`) dan membatasi perolehan bonus XP harian kumulatif maksimal **150 XP per hari** untuk mencegah eksploitasi skrip otomatis dari sisi klien.
+### Protokol
+
+1. **Header-only**: Token dikirim via `Authorization: Bearer <secret>` atau `x-admin-api-secret`.
+2. **Dilarang via URL query**: Token tidak boleh dikirim via parameter URL.
+3. **Timing-safe comparison**: Token divalidasi menggunakan `crypto.timingSafeEqual` melalui fungsi `safeEqual()` untuk mencegah timing attacks.
+
+---
+
+## 3. Verifikasi Webhook Donasi
+
+Webhook donasi memverifikasi keaslian pengirim menggunakan `safeEqual()` (timing-safe comparison).
+
+### Saweria (`/api/webhooks/saweria`)
+
+- **Mekanisme primer**: HMAC SHA256 — menghitung hash dari raw body dengan `SAWERIA_WEBHOOK_SECRET`, dibandingkan dengan header `x-saweria-signature` menggunakan perbandingan timing-safe.
+- **Mekanisme fallback**: Jika header signature tidak ada, memeriksa `secret` dari URL query atau body payload dengan timing-safe.
+
+### Trakteer (`/api/webhooks/trakteer`)
+
+- **Mekanisme**: Token diperiksa dari header `x-webhook-token`, `x-trakteer-token`, atau body `key`, dan diverifikasi menggunakan timing-safe comparison.
+
+---
+
+## 4. Row Level Security (RLS)
+
+Seluruh **27 tabel** database PostgreSQL mengaktifkan RLS. Kebijakan per kategori:
+
+### Data Publik (SELECT `USING (true)`)
+
+Tabel library yang bisa dibaca siapa saja: `vocab`, `kanji`, `grammar`, `lessons`, `articles`, `listening`, `reading`, `cheatsheets`, `course_categories`, `expressions`, `radicals`, `sentences`, `supporters`, `tts_cache`, `community_posts`, `community_comments`.
+
+### Data Publik Terbatas (SELECT `USING (is_published = true)`)
+
+Tabel ujian yang hanya bisa dibaca jika `is_published = true`: `jlpt_exam_templates`, `jlpt_passages`, `jlpt_questions`.
+
+`jlpt_exam_template_questions` menggunakan policy JOIN yang memeriksa `is_published` pada template dan question.
+
+### Data Pribadi (SELECT/INSERT/UPDATE/DELETE `USING (auth.uid() = user_id)`)
+
+Tabel yang datanya hanya bisa diakses oleh pemilik:
+
+| Tabel | Operasi |
+|-------|---------|
+| `profiles` | SELECT (public + own), INSERT/UPDATE (own only) |
+| `user_srs` | SELECT, INSERT, UPDATE, DELETE (own only) |
+| `user_lessons` | ALL (own only) |
+| `user_exam_sessions` | SELECT, INSERT, UPDATE (own only) |
+| `user_exam_answers` | SELECT, INSERT, UPDATE (own only, via session JOIN) |
+| `notifications` | SELECT, UPDATE, DELETE (own only) |
+
+### Khusus
+
+- `user_feedback`: INSERT terbuka (`true`), SELECT hanya pemilik (`auth.uid() = user_id`), admin SELECT terpisah (`false` — hanya service role).
+
+### Service-Role Boundary
+
+`createAdminClient()` (bypass RLS) hanya boleh digunakan di Server Actions dan Route Handlers. Dilarang diimpor ke Client Component.
+
+---
+
+## 5. Anti-Cheat XP Guard
+
+Klien tidak dipercaya menentukan nilai akhir XP.
+
+- Nilai XP final dihitung oleh RPC `sync_user_progress` di PostgreSQL.
+- RPC menolak penurunan XP (`delta_xp < 0`).
+- Bonus XP harian dibatasi maksimal **150 XP per hari**.
+- Klien menerima `accepted_xp` dari RPC dan memperbarui store lokal sesuai nilai ini.
