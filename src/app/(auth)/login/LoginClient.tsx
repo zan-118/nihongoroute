@@ -40,9 +40,9 @@ function LoginContent() {
   } = useAuth();
 
   return (
-    <div className="min-h-screen premium-shell text-foreground flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-screen shell-ambient text-foreground flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-300">
       {/* Dekorasi Latar Belakang & Kisi Neural */}
-      <div className="neural-grid" />
+      <div className="grid-overlay" />
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
         <div className="size-[500px] bg-primary/10 rounded-full blur-[120px] opacity-40 absolute -top-12 -left-12" />
         <div className="size-[400px] bg-secondary/15 rounded-full blur-[100px] opacity-35 absolute -bottom-10 -right-10" />
@@ -94,7 +94,7 @@ function LoginContent() {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     required={isRegistering}
-              className="control-surface w-full rounded-lg py-3.5 pl-10 pr-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all duration-300"
+              className="interactive-card w-full rounded-lg py-3.5 pl-10 pr-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all duration-300"
             />
           </div>
         )}
@@ -106,7 +106,7 @@ function LoginContent() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="control-surface w-full rounded-lg py-3.5 pl-10 pr-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all duration-300"
+            className="interactive-card w-full rounded-lg py-3.5 pl-10 pr-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all duration-300"
           />
         </div>
         <div className="relative">
@@ -118,7 +118,7 @@ function LoginContent() {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
-            className="control-surface w-full rounded-lg py-3.5 pl-10 pr-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all duration-300"
+            className="interactive-card w-full rounded-lg py-3.5 pl-10 pr-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all duration-300"
           />
         </div>
         {!isRegistering && (
@@ -217,7 +217,7 @@ function LoginContent() {
 export default function LoginClient() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen premium-shell flex items-center justify-center">
+      <div className="min-h-screen shell-ambient flex items-center justify-center">
         <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest animate-pulse">Memuat…</p>
       </div>
     }>

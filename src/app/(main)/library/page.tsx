@@ -87,7 +87,7 @@ export default async function LibraryPage() {
       {/* Ambient Mesh Gradient Glows */}
       <div className="absolute top-[5%] -left-[10%] size-[50%] bg-primary/10 blur-[120px] rounded-full pointer-events-none z-0 ambient-glow will-change-transform" />
       <div className="absolute bottom-[15%] -right-[10%] size-[45%] bg-secondary/10 blur-[120px] rounded-full pointer-events-none z-0 ambient-glow will-change-transform" />
-      <div className="neural-grid opacity-30" />
+      <div className="grid-overlay opacity-30" />
 
       <div className="max-w-7xl mx-auto relative z-10 space-y-16 md:space-y-24">
 

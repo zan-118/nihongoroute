@@ -106,7 +106,7 @@ export default function ProfileSection({
 
       <Card className="bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 md:p-10 shadow-[0_4px_25px_rgba(0,0,0,0.015)] overflow-hidden relative">
         {/* Pola Header Kartu ID */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)),rgb(var(--brand-violet-rgb)))] opacity-80" />
+        <div className="absolute top-0 left-0 right-0 h-1 bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)))] opacity-80" />
 
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 relative z-10">
           {/* AVATAR / IDENTITAS PILOT */}
@@ -177,7 +177,7 @@ export default function ProfileSection({
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
                   placeholder="Masukkan namamu..."
-                  className="control-surface w-full h-14 rounded-lg pl-12 pr-4 text-sm font-black text-foreground uppercase tracking-tight focus:ring-2 focus:ring-primary/35 outline-none transition-all placeholder:text-muted-foreground/40"
+                  className="interactive-card w-full h-14 rounded-lg pl-12 pr-4 text-sm font-black text-foreground uppercase tracking-tight focus:ring-2 focus:ring-primary/35 outline-none transition-all placeholder:text-muted-foreground/40"
                 />
               </div>
               <Button

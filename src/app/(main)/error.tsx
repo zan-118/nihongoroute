@@ -41,7 +41,7 @@ export default function MainError({
   return (
     <div className="w-full min-h-[85vh] flex flex-col items-center justify-center px-4 py-12 text-center relative overflow-hidden transition-colors duration-300">
       {/* Dekorasi Latar Belakang & Kisi Neural */}
-      <div className="neural-grid" />
+      <div className="grid-overlay" />
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
         <div className="size-[550px] bg-destructive/10 rounded-full blur-[130px] opacity-35 absolute -top-12 -left-12" />
         <div className="size-[450px] bg-warning/10 rounded-full blur-[100px] opacity-25 absolute -bottom-10 -right-10" />

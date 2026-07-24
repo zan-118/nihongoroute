@@ -92,71 +92,73 @@ function FooterColumn({
  */
 export function LandingFooter() {
   return (
-    <footer className="mt-24 md:mt-28 pt-16 md:pt-20 border-t border-border/80 pb-14 relative z-10 w-full">
+    <footer className="mt-24 md:mt-28 border-t border-border/80 pb-14 relative z-10 w-full">
       {/* Decorative top border gradient */}
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent pointer-events-none" />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12 mb-16">
-        <div className="lg:col-span-4 flex flex-col gap-6">
-          <div className="flex items-center gap-3">
-            <div className="relative size-14 dark:drop-shadow-[0_0_15px_rgb(var(--primary-rgb)_/_0.25)]">
-              <Image
-                src="/logo-branding.svg"
-                alt="NihongoRoute Logo"
-                fill
-                className="object-contain"
-              />
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-16 md:pt-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12 mb-16">
+          <div className="lg:col-span-4 flex flex-col gap-6">
+            <div className="flex items-center gap-3">
+              <div className="relative size-14 dark:drop-shadow-[0_0_15px_rgb(var(--primary-rgb)_/_0.25)]">
+                <Image
+                  src="/logo-branding.svg"
+                  alt="NihongoRoute Logo"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-foreground text-xl font-black tracking-tight">
+                  Nihongo<span className="text-primary">Route</span>
+                </span>
+                <span className="text-[8px] text-muted-foreground font-extrabold uppercase tracking-widest">
+                  Platform Belajar Modern
+                </span>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <span className="text-foreground text-xl font-black tracking-tight">
-                Nihongo<span className="text-primary">Route</span>
-              </span>
-              <span className="text-[8px] text-muted-foreground font-extrabold uppercase tracking-widest">
-                Platform Belajar Modern
-              </span>
+
+            <p className="text-muted-foreground text-xs font-semibold leading-relaxed max-w-sm">
+              Platform belajar bahasa Jepang gratis yang bikin rutinitas
+              belajarmu rapi, cepat, dan nyaman setiap hari.
+            </p>
+
+            <div className="flex items-center gap-3 pt-2">
+              {socialLinks.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`Kunjungi ${item.label} NihongoRoute`}
+                  className="size-11 rounded-xl surface-elevated-ambient flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/30 transition-all duration-300 hover:-translate-y-0.5"
+                >
+                  <item.icon size={18} />
+                </a>
+              ))}
             </div>
           </div>
 
-          <p className="text-muted-foreground text-xs font-semibold leading-relaxed max-w-sm">
-            Platform belajar bahasa Jepang gratis yang bikin rutinitas
-            belajarmu rapi, cepat, dan nyaman setiap hari.
-          </p>
-
-          <div className="flex items-center gap-3 pt-2">
-            {socialLinks.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={`Kunjungi ${item.label} NihongoRoute`}
-                className="size-11 rounded-xl premium-surface flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/30 transition-all duration-300 hover:-translate-y-0.5"
-              >
-                <item.icon size={18} />
-              </a>
-            ))}
+          <div className="lg:col-span-2 lg:col-start-6">
+            <FooterColumn title="Belajar" links={learningLinks} />
+          </div>
+          <div className="lg:col-span-2">
+            <FooterColumn title="Fitur Utama" links={featureLinks} />
+          </div>
+          <div className="lg:col-span-2">
+            <FooterColumn title="Dukungan & Legal" links={supportLinks} />
           </div>
         </div>
 
-        <div className="lg:col-span-2 lg:col-start-6">
-          <FooterColumn title="Belajar" links={learningLinks} />
+        <div className="pt-8 border-t border-border/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+          {/* Prevent SSR mismatch on dynamic year */}
+          <span suppressHydrationWarning>
+            &copy; {new Date().getFullYear()} NihongoRoute. Hak cipta dilindungi.
+          </span>
+          <span className="text-muted-foreground/70 font-semibold normal-case tracking-normal text-center sm:text-right">
+            Dibuat untuk semua pejuang bahasa Jepang di Indonesia.
+          </span>
         </div>
-        <div className="lg:col-span-2">
-          <FooterColumn title="Fitur Utama" links={featureLinks} />
-        </div>
-        <div className="lg:col-span-2">
-          <FooterColumn title="Dukungan & Legal" links={supportLinks} />
-        </div>
-      </div>
-
-      <div className="pt-8 border-t border-border/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
-        {/* Prevent SSR mismatch on dynamic year */}
-        <span suppressHydrationWarning>
-          &copy; {new Date().getFullYear()} NihongoRoute. Hak cipta dilindungi.
-        </span>
-        <span className="text-muted-foreground/70 font-semibold normal-case tracking-normal text-center sm:text-right">
-          Dibuat untuk semua pejuang bahasa Jepang di Indonesia.
-        </span>
       </div>
     </footer>
   );

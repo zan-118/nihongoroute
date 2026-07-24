@@ -311,10 +311,10 @@ function ReadingPageContent({ data }: ReadingPageClientProps) {
       {/* Style Override untuk Zen Mode */}
       {isZenMode && (
         <style dangerouslySetInnerHTML={{ __html: `
-          aside, .premium-shell > aside, .premium-shell > div > div:first-child {
+          aside, .shell-ambient > aside, .shell-ambient > div > div:first-child {
             display: none !important;
           }
-          .premium-shell > div {
+          .shell-ambient > div {
             padding-left: 0 !important;
           }
         `}} />

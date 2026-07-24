@@ -53,7 +53,7 @@ export default function EmptyState({
       // Animate entry scale and opacity
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="premium-surface flex flex-col items-center justify-center p-8 md:p-12 text-center rounded-xl"
+      className="surface-elevated-ambient flex flex-col items-center justify-center p-8 md:p-12 text-center rounded-xl"
     >
       <div className="brand-icon-soft size-24 rounded-lg mb-8">
         <Icon size={48} className="animate-premium-bounce" />

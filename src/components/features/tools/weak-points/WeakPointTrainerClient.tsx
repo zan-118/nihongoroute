@@ -229,7 +229,7 @@ export default function WeakPointTrainerClient() {
   return (
     <main className="relative min-h-screen overflow-hidden px-4 py-10 md:px-8">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgb(var(--destructive-rgb)/0.07),transparent_42%)]" />
-      <div className="pointer-events-none absolute inset-0 neural-grid opacity-50" />
+      <div className="pointer-events-none absolute inset-0 grid-overlay opacity-50" />
 
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-8">
         <header className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">

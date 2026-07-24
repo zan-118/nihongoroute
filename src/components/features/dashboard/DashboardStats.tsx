@@ -137,7 +137,7 @@ export default function DashboardStats({
                 <Progress
                   value={xpProgress}
                   className="h-3 bg-muted border border-border relative overflow-hidden"
-                  indicatorClassName="bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)),rgb(var(--brand-violet-rgb)))] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent"
+                  indicatorClassName="bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)))] relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent"
                 />
                 <p className="mt-4 text-xs text-muted-foreground uppercase font-bold tracking-widest font-mono text-center md:text-right">
                   Kumpulkan <span className="text-foreground">{xpNeeded} XP</span> lagi untuk naik level!
@@ -240,7 +240,7 @@ export default function DashboardStats({
                         className={`h-full rounded-full relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent ${
                           percentage === 100 
                             ? 'bg-success shadow-[0_0_10px_rgb(var(--success-rgb)/0.5)]' 
-                            : 'bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)),rgb(var(--brand-violet-rgb)))] shadow-[0_0_10px_rgb(var(--brand-cyan-rgb)/0.4)]'
+                            : 'bg-[linear-gradient(90deg,rgb(var(--brand-cyan-rgb)),rgb(var(--brand-blue-rgb)))] shadow-[0_0_10px_rgb(var(--brand-cyan-rgb)/0.4)]'
                         }`}
                       />
                     </div>

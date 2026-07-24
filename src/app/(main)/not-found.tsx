@@ -18,7 +18,7 @@ export default function MainNotFound() {
   return (
     <div className="w-full min-h-[80vh] flex flex-col items-center justify-center px-4 py-12 text-center relative overflow-hidden transition-colors duration-300">
       {/* Kisi Neural & Pendar Latar Belakang */}
-      <div className="neural-grid" />
+      <div className="grid-overlay" />
       {/* Background glow effects. Enhance visual depth. */}
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
         <div className="size-[500px] bg-destructive/10 rounded-full blur-[120px] opacity-35 absolute -top-12 -left-12" />

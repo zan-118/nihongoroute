@@ -60,7 +60,7 @@ export default function NavWrapper({ children }: NavWrapperProps) {
   const breadcrumbItems = useMemo(() => getBreadcrumbItems(pathname), [pathname]);
 
   return (
-    <div className="premium-shell relative min-h-dvh text-foreground flex flex-col md:flex-row overflow-x-hidden w-full transition-colors duration-300">
+    <div className="shell-ambient relative min-h-dvh text-foreground flex flex-col md:flex-row overflow-x-hidden w-full transition-colors duration-300">
       {/* Aksesibilitas: Skip to Content */}
       <a 
         href="#main-content" 

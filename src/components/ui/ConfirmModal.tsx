@@ -62,7 +62,7 @@ export default function ConfirmModal({
         <DialogPrimitive.Overlay className="fixed inset-0 z-[200] bg-background/72  data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
         
         {/* Kontainer Modal dengan perangkap fokus dan transisi ease-out kustom yang terinspirasi pegas */}
-        <DialogPrimitive.Content className="premium-surface fixed left-[50%] top-[50%] z-[200] w-[calc(100%-2rem)] max-w-md translate-x-[-50%] translate-y-[-50%] p-5 md:p-8 rounded-xl shadow-2xl overflow-hidden focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200">
+        <DialogPrimitive.Content className="surface-elevated-ambient fixed left-[50%] top-[50%] z-[200] w-[calc(100%-2rem)] max-w-md translate-x-[-50%] translate-y-[-50%] p-5 md:p-8 rounded-xl shadow-2xl overflow-hidden focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200">
           {/* Batang batas atas aksen */}
           {/* Dynamic accent bar color based on action severity */}
           <div className={`absolute top-0 left-0 w-full h-1 ${isDestructive ? 'bg-destructive' : 'bg-primary'} shadow-sm`} />
@@ -101,7 +101,7 @@ export default function ConfirmModal({
                 className={`flex-1 h-12 rounded-xl font-bold uppercase tracking-widest text-xs shadow-lg border-none ${
                   isDestructive
                     ? 'button-danger-premium hover:opacity-90 transition-all'
-                    : 'btn-cyber transition-all'
+                    : 'btn-accent-glow transition-all'
                 }`}
               >
                 {confirmText}

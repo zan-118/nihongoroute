@@ -123,7 +123,7 @@ export default async function CheatsheetDetailPage({
         ]}
       />
       {/* Dekorasi Latar Belakang */}
-      <div className="neural-grid" />
+      <div className="grid-overlay" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgb(var(--destructive-rgb)/0.03)_0%,transparent_70%)] pointer-events-none" />
 
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 relative z-10 pt-10">

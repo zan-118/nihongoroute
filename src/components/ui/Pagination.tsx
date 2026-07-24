@@ -92,7 +92,7 @@ export function Pagination({
                 onClick={() => onPageChange(pageNum)}
                 className={`size-10 rounded-xl font-black transition-all ${
                   currentPage === pageNum
-                    ? "btn-cyber p-0 text-[11px]"
+                    ? "btn-accent-glow p-0 text-[11px]"
                     : "button-outline-premium text-muted-foreground hover:text-primary"
                 }`}
               >

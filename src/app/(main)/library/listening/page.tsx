@@ -69,7 +69,7 @@ export default async function ListeningListPage() {
       {/* Efek Latar Belakang */}
       {/* Background visual effects. */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[500px] bg-primary/10 blur-[65px] rounded-[100%] pointer-events-none opacity-50 ambient-glow will-change-transform" />
-      <div className="neural-grid" />
+      <div className="grid-overlay" />
 
       <div className="max-w-5xl mx-auto relative z-10">
         {/* Render interactive client list. */}

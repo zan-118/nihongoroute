@@ -205,7 +205,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
           className="hidden lg:flex relative w-44 xl:w-64 group cursor-pointer"
         >
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground group-hover:text-primary transition-colors" size={15} />
-          <div className="control-surface w-full h-10 pl-10 pr-3 rounded-xl text-[10px] uppercase font-bold tracking-[0.16em] text-muted-foreground flex items-center justify-between transition-all">
+          <div className="interactive-card w-full h-10 pl-10 pr-3 rounded-xl text-[10px] uppercase font-bold tracking-[0.16em] text-muted-foreground flex items-center justify-between transition-all">
             Cari…
             <kbd className="hidden xl:inline-flex h-5 select-none items-center gap-1 rounded-md border border-border bg-muted/70 px-1.5 font-mono text-[10px] font-medium opacity-100">
               <span className="text-[10px]">⌘</span>K
@@ -225,7 +225,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
 
         <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 sm:border-l sm:border-border/60 sm:pl-2 md:pl-4">
           {/* Pengalih Mode Tampilan Bahasa Jepang */}
-          <div data-tour="reading-mode" className="flex items-center gap-1 p-1 rounded-xl control-surface">
+          <div data-tour="reading-mode" className="flex items-center gap-1 p-1 rounded-xl interactive-card">
             {[
               { id: "kanji", icon: BookOpen, label: "Kanji" },
               { id: "furigana", icon: Eye, label: "Furi" },

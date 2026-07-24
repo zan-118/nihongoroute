@@ -108,7 +108,7 @@ export default function FloatingActions() {
           >
             {/* Reading: Audio */}
             <m.div whileHover={{ x: -5 }}>
-              <div className="control-surface rounded-lg px-4 py-3 flex items-center gap-3 transition-all h-auto group">
+              <div className="interactive-card rounded-lg px-4 py-3 flex items-center gap-3 transition-all h-auto group">
                  <AudioController 
                   audioUrl={readingState.audioUrl} 
                   textToSpeak={readingState.textToSpeak}
@@ -128,7 +128,7 @@ export default function FloatingActions() {
                   setReadingState({ mode: modes[nextIndex].id });
                 }}
                 aria-label={`Ubah mode membaca, mode aktif saat ini: ${modes.find(m => m.id === readingState.mode)?.label || "Kanji"}`}
-                className="control-surface hover:text-primary rounded-lg px-4 py-4 flex items-center gap-3 transition-all h-auto group w-full justify-between"
+                className="interactive-card hover:text-primary rounded-lg px-4 py-4 flex items-center gap-3 transition-all h-auto group w-full justify-between"
               >
                 <span className="text-[10px] font-black uppercase tracking-widest hidden md:block" aria-hidden="true">
                   {modes.find(m => m.id === readingState.mode)?.label || "Mode"}
@@ -142,7 +142,7 @@ export default function FloatingActions() {
               <button type="button"
                 onClick={() => setReadingState({ showTranslation: !readingState.showTranslation })}
                 aria-label={readingState.showTranslation ? "Matikan terjemahan bahasa Indonesia" : "Aktifkan terjemahan bahasa Indonesia"}
-                className={`control-surface rounded-lg px-4 py-4 flex items-center gap-3 transition-all h-auto group w-full justify-between ${
+                className={`interactive-card rounded-lg px-4 py-4 flex items-center gap-3 transition-all h-auto group w-full justify-between ${
                   readingState.showTranslation ? "hover:bg-success hover:text-success-foreground" : "hover:bg-success/20"
                 }`}
               >
@@ -167,7 +167,7 @@ export default function FloatingActions() {
           >
             {/* Listening: Audio Control */}
             <m.div whileHover={{ x: -5 }}>
-              <div className="control-surface rounded-lg px-4 py-3 flex items-center gap-3 transition-all h-auto group">
+              <div className="interactive-card rounded-lg px-4 py-3 flex items-center gap-3 transition-all h-auto group">
                  <AudioController 
                   audioUrl={listeningState.audioUrl} 
                   textToSpeak={listeningState.textToSpeak}
@@ -185,7 +185,7 @@ export default function FloatingActions() {
                   setIsOpen(false);
                 }}
                 aria-label="Gulir ke bagian kuis pemahaman"
-                className="control-surface hover:text-primary rounded-lg px-4 py-4 flex items-center gap-3 transition-all h-auto group w-full justify-between"
+                className="interactive-card hover:text-primary rounded-lg px-4 py-4 flex items-center gap-3 transition-all h-auto group w-full justify-between"
               >
                 <span className="text-[10px] font-black uppercase tracking-widest hidden md:block" aria-hidden="true">
                   Ke Kuis

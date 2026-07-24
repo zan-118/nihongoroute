@@ -60,9 +60,9 @@ export default function OnboardingClient() {
   };
 
   return (
-    <main className="min-h-screen premium-shell text-foreground flex flex-col items-center justify-center p-6 md:p-12 relative overflow-hidden transition-colors duration-300">
+    <main className="min-h-screen shell-ambient text-foreground flex flex-col items-center justify-center p-6 md:p-12 relative overflow-hidden transition-colors duration-300">
       {/* Background decorative elements. */}
-      <div className="neural-grid" />
+      <div className="grid-overlay" />
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
         <div className="size-[500px] bg-primary/10 rounded-full blur-[120px] opacity-40 absolute -top-12 -left-12" />
         <div className="size-[450px] bg-secondary/10 rounded-full blur-[100px] opacity-35 absolute -bottom-10 -right-10" />

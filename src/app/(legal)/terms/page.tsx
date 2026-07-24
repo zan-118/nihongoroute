@@ -39,9 +39,9 @@ export const metadata = {
  */
 export default function TermsPage() {
   return (
-    <main className="min-h-screen premium-shell text-foreground py-24 px-4 sm:px-6 md:px-12 relative overflow-hidden flex flex-col items-center justify-start transition-colors duration-300">
+    <main className="min-h-screen shell-ambient text-foreground py-24 px-4 sm:px-6 md:px-12 relative overflow-hidden flex flex-col items-center justify-start transition-colors duration-300">
       {/* Hamparan Neural Latar Belakang */}
-      <div className="neural-grid" />
+      <div className="grid-overlay" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgb(var(--secondary-rgb)/0.07)_0%,transparent_70%)] pointer-events-none z-0" />
       <div className="absolute top-1/4 left-0 size-[300px] bg-[rgb(var(--secondary-rgb)/0.03)] rounded-full blur-[60px] pointer-events-none z-0 ambient-glow will-change-transform" />
       <div className="absolute bottom-1/4 right-0 size-[250px] bg-[rgb(var(--primary-rgb)/0.02)] rounded-full blur-[80px] pointer-events-none z-0 ambient-glow will-change-transform" />

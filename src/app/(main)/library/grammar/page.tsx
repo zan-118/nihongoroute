@@ -69,7 +69,7 @@ export default async function GrammarArticlesPage() {
         ]}
       />
       {/* Background Neural Overlays */}
-      <div className="neural-grid" />
+      <div className="grid-overlay" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgb(var(--primary-rgb)/0.05)_0%,transparent_70%)] pointer-events-none z-0" />
 
       {/* Suspense boundary handles loading state during client-side transitions */}

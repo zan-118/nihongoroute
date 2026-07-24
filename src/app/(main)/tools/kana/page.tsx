@@ -53,7 +53,7 @@ function KanaContent() {
   return (
     <div className="w-full flex-1 relative overflow-hidden flex flex-col bg-transparent transition-colors duration-300 pt-12 pb-24 px-4 md:px-8">
       {/* Background grid effect */}
-      <div className="neural-grid" />
+      <div className="grid-overlay" />
 
       <div className="max-w-4xl mx-auto w-full relative z-10 flex flex-col h-full">
         <KanaHeader themeColor={themeColor} />
