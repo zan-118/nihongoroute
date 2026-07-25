@@ -128,6 +128,11 @@ export async function getCourseCategories() {
       ...cat,
       _id: cat.id,
       lessonCount: lessons.length,
+      lessons: lessons.map((l: LessonListItem) => ({
+        _id: l._id,
+        title: l.title,
+        slug: l.slug
+      })),
       previews: lessons.slice(0, 4).map((l: LessonListItem) => ({
         _id: l._id,
         title: l.title,

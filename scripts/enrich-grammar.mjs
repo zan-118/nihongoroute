@@ -15,6 +15,12 @@
  *   untuk grammar_family dan related_grammar.
  * - Validasi skema JSON hasil kembalian LLM secara ketat, termasuk aturan konten
  *   (kana murni, tanpa markup furigana, panjang notes minimum).
+ * - Output "notes" WAJIB mendalam dan terstruktur per-heading (Fungsi & Konteks, Cara
+ *   Pakai & Aturan, Variasi Bentuk, Konteks Pemakaian Nyata, Perbandingan dengan Pola
+ *   Serupa jika relevan, Kesalahan Umum), bukan sekadar ringkasan singkat. "meaning"
+ *   WAJIB berupa penjelasan 2-3 kalimat, dan "examples" berisi 3 kalimat contoh dari
+ *   konteks/register yang berbeda-beda. Semua ambang ini ditegakkan lewat validasi
+ *   panjang/heading di validateEnrichedItem, bukan cuma diminta di prompt.
  */
 
 import fs from "node:fs";
@@ -345,45 +351,49 @@ Anda adalah ahli bahasa Jepang profesional untuk audiens Indonesia. Tugas Anda a
 
 ${JSON.stringify(items, null, 2)}
 ${familiesBlock}
-Untuk setiap item tata bahasa, hasilkan bidang-bidang berikut:
+Untuk setiap item tata bahasa, hasilkan bidang-bidang berikut. INGAT: audiens adalah pembelajar mandiri yang TIDAK punya guru untuk bertanya, jadi setiap penjelasan harus berdiri sendiri, lengkap, dan tidak boleh terasa seperti ringkasan kamus:
 - "id": String ID dari item input (wajib sama persis).
-- "meaning": Arti atau fungsi tata bahasa tersebut dalam Bahasa Indonesia.
+- "meaning": Penjelasan arti/fungsi tata bahasa dalam Bahasa Indonesia, 2-3 kalimat mengalir (BUKAN cuma terjemahan satu-dua kata seperti "keinginan" atau "sebab akibat"). Jelaskan APA fungsinya, kapan pola ini biasanya muncul dalam kalimat, dan nuansa rasa yang dibawanya (mis. terkesan formal, terkesan menyesal, terkesan menekankan). Dilarang mengulang kata-kata dari "title" begitu saja.
 - "formation": Pola pembentukan tata bahasa (misal: "KK Kamus + ことになっている").
 - "formation_furigana": Pembacaan kana dari pola pembentukan tersebut (gunakan Hiragana bersih, jangan ada huruf Romaji seperti KK/KS/KB, ganti KK dengan どうし, KS dengan けいようし, KB dengan めいし).
 - "formation_romaji": Romaji standar dari pola pembentukan tersebut.
-- "examples": Array berisi tepat 2 objek kalimat contoh Jepang-Indonesia berkualitas tinggi yang mendemonstrasikan pola tata bahasa ini. Sesuaikan tingkat kesulitan vokabulari dan struktur kalimat dengan "jlpt_level" item (kalimat untuk N5 wajib memakai vokabulari dasar N5, bukan vokabulari tingkat lanjut, dan sebaliknya):
-  - Kedua contoh WAJIB berbeda secara bermakna satu sama lain — subjek, konteks, dan kosakata isi (content word) harus berbeda. DILARANG membuat dua kalimat yang hanya beda satu kata (misal cuma ganti nama orang/objek dengan struktur identik).
-  - Utamakan konteks sehari-hari yang konkret dan relevan (percakapan, situasi kerja/sekolah/rumah) dibanding kalimat abstrak generik.
+- "examples": Array berisi TEPAT 3 objek kalimat contoh Jepang-Indonesia berkualitas tinggi yang mendemonstrasikan pola tata bahasa ini dari sudut konteks yang berbeda-beda (mis. satu situasi kerja/sekolah, satu percakapan santai sehari-hari, satu pernyataan/narasi formal atau tertulis) — variasi ini penting supaya pembelajar melihat keluwesan pola dalam berbagai register, bukan cuma satu jenis kalimat yang diulang. Sesuaikan tingkat kesulitan vokabulari dan struktur kalimat dengan "jlpt_level" item (kalimat untuk N5 wajib memakai vokabulari dasar N5, bukan vokabulari tingkat lanjut, dan sebaliknya):
+  - Ketiga contoh WAJIB berbeda secara bermakna satu sama lain — subjek, konteks, kosakata isi (content word), DAN idealnya posisi/fungsi pola dalam kalimat harus berbeda. DILARANG membuat kalimat yang hanya beda satu kata (misal cuma ganti nama orang/objek dengan struktur identik).
+  - Utamakan konteks konkret dan relevan dengan kehidupan nyata dibanding kalimat abstrak generik ala buku teks.
   - "japanese": Kalimat contoh Jepang menggunakan Kanji dan Kana standar.
   - "furigana": Pembacaan furigana dari SELURUH kalimat tersebut, dalam Hiragana bersih TANPA spasi, tanda slash '/', maupun huruf Romaji/alfabet sama sekali (contoh: "わたしはがくse..." -> "わたしはがくせいです。" atau "にほんごをべんきょうします。"). Setiap kanji di kalimat "japanese" harus terwakili bacaannya di sini, termasuk kanji dalam angka atau istilah asing yang ditulis dengan kanji/katakana.
   - "romaji": Romaji standar (Hepburn) dari kalimat tersebut (contoh: "Watashi wa gakusei desu.").
   - "indonesian": Terjemahan alami dan mengalir dalam Bahasa Indonesia sehari-hari — DILARANG menerjemahkan kata-per-kata secara kaku/harfiah selama makna aslinya tetap terjaga.
-- "notes": Penjelasan komprehensif dalam Bahasa Indonesia yang ramah pemula, terstruktur rapi dengan Markdown agar mudah dibaca (DILARANG menulis satu paragraf panjang tebal, DILARANG konten generik yang bisa berlaku untuk tata bahasa manapun — semua poin harus spesifik untuk pola ini). Gunakan format berikut secara ketat:
-  1. Paragraf pembuka singkat (1-2 kalimat) menjelaskan fungsi dasar tata bahasa.
-  2. WAJIB gunakan minimal 2 daftar poin (diawali "- ") untuk menjabarkan cara penggunaan, nuansa khusus, tingkat kesopanan (formal/informal), atau aturan tata bahasa. Setiap poin harus berisi informasi konkret, bukan basa-basi.
-  3. Jika ada variasi bentuk (seperti positif, negatif, lampau, dsb.), wajib sertakan perbandingan dalam bentuk tabel Markdown.
-  4. Jika pola ini mirip dengan tata bahasa lain yang ada di "related_grammar_candidates", jelaskan singkat perbedaan nuansanya (kapan pakai yang satu, kapan pakai yang lain).
-  5. Akhiri dengan satu baris peringatan diawali emoji "⚠️" untuk menunjukkan jebakan kesalahan umum yang sering dialami pemula secara SPESIFIK untuk pola ini (bukan peringatan umum seperti "⚠️ Hindari memakai bentuk ini secara sembarangan").
+- "notes": Penjelasan MENDALAM dalam Bahasa Indonesia yang ramah pemula tapi tidak dangkal, terstruktur rapi dengan Markdown (DILARANG satu paragraf panjang tebal, DILARANG konten generik yang bisa berlaku untuk tata bahasa manapun — semua poin harus spesifik dan konkret untuk pola ini, seolah-olah ditulis oleh guru bahasa Jepang yang benar-benar paham detail nuansanya). Gunakan HEADING TEBAL berikut secara berurutan dan PERSIS seperti ini (gunakan format Markdown "**Judul Heading**" di baris tersendiri), jangan lewati satupun:
+  1. **Fungsi & Konteks** — paragraf 2-3 kalimat menjelaskan fungsi dasar tata bahasa, situasi kapan pola ini natural dipakai, dan tingkat formalitas dasarnya (formal/informal, lisan/tulisan).
+  2. **Cara Pakai & Aturan** — WAJIB minimal 4 daftar poin (diawali "- ") yang menjabarkan aturan koneksi/pembentukan secara detail (bentuk kata apa yang bisa disambung, pengecualian jika ada), nuansa penggunaan halus, tingkat kesopanan, dan batasan pemakaian (mis. hanya dipakai dengan kata kerja tertentu, tidak dipakai untuk diri sendiri, dsb). Setiap poin harus berisi informasi konkret dan actionable, bukan basa-basi atau pengulangan poin lain.
+  3. **Variasi Bentuk** — jika pola ini punya variasi (positif/negatif, lampau/non-lampau, formal/informal, dsb.), WAJIB sertakan tabel Markdown perbandingan bentuk-bentuk tersebut lengkap dengan contoh singkat per baris. Jika pola ini benar-benar tidak punya variasi bentuk, jelaskan secara eksplisit kenapa (mis. karena berupa ungkapan tetap/idiomatik), jangan dikosongkan begitu saja.
+  4. **Konteks Pemakaian Nyata** — berikan minimal 1-2 gambaran situasi nyata konkret (bukan sekadar mengulang kalimat contoh) tentang kapan penutur asli akan memilih memakai pola ini dibanding cara lain, termasuk register yang cocok (chat santai, email formal, pidato, dsb).
+  5. **Perbandingan dengan Pola Serupa** — jika ada isi di "related_grammar_candidates" milik item ini, WAJIB pilih minimal 1 dan jelaskan perbedaan nuansa konkret (kapan pakai yang satu, kapan pakai yang lain, apa yang berubah maknanya kalau tertukar). Jika daftar kandidatnya benar-benar kosong, boleh dilewati bagian ini SAJA (heading lain tetap wajib ada).
+  6. **Kesalahan Umum** — diakhiri satu baris peringatan diawali emoji "⚠️", berisi 1-2 kalimat yang menjelaskan jebakan kesalahan SPESIFIK untuk pola ini (kesalahan bentuk, kesalahan konteks pemakaian, atau tertukar dengan pola mirip) DAN kenapa itu salah/apa akibatnya — bukan peringatan umum seperti "⚠️ Hindari memakai bentuk ini secara sembarangan".
 - "grammar_family": Nama kategori tata bahasa dalam Bahasa Indonesia, format Judul Kapital dan konsisten (misal: "Keinginan", "Sebab-Akibat", "Keharusan", "Kondisional", "Waktu", "Keigo"). Gunakan ulang nama dari daftar referensi di atas jika konsepnya sama; hanya buat nama baru jika benar-benar tidak ada kategori yang cocok.
 - "related_grammar": Array berisi maksimal 2 slug tata bahasa yang berhubungan dekat. WAJIB pilih HANYA dari daftar "related_grammar_candidates" milik item tersebut (field "slug"-nya, bukan judulnya). Jika tidak ada kandidat yang relevan, kembalikan array kosong [].
 
 Aturan Penting:
 1. Respon WAJIB berupa JSON murni dengan format schema yang diminta secara ketat.
 2. Terjemahan "indonesian" untuk kalimat contoh wajib dalam Bahasa Indonesia yang alami, bukan kaku.
-3. Field "examples" harus berisi tepat 2 kalimat contoh yang relevan dengan pola tata bahasa target dengan format lengkap (japanese, furigana murni tanpa spasi/slash, romaji, indonesian).
+3. Field "examples" harus berisi TEPAT 3 kalimat contoh yang relevan dengan pola tata bahasa target dengan format lengkap (japanese, furigana murni tanpa spasi/slash, romaji, indonesian), masing-masing dari konteks/register yang berbeda.
 4. Di dalam kalimat Jepang ("japanese"), DILARANG menggunakan tanda furigana kurung atau markup ruby. Tulis kanji secara normal.
 5. Kolom "formation_furigana" WAJIB menggunakan kana Jepang murni (Hiragana/Katakana) tanpa ada karakter alfabet/Romaji sama sekali.
-6. "related_grammar" WAJIB berupa slug yang benar-benar ada di "related_grammar_candidates" milik item terkait — JANGAN mengarang slug yang tidak ada di daftar tersebut.
-7. Prioritaskan akurasi linguistik di atas segalanya: jangan menebak pola pembentukan atau nuansa jika tidak yakin — dasarkan pada aturan tata bahasa Jepang standar yang benar-benar berlaku untuk pola tersebut.
-8. Dua kalimat contoh dalam "examples" WAJIB tidak boleh sama atau nyaris sama (beda hanya 1 kata). Periksa ulang sebelum menjawab.
-9. "formation_furigana" WAJIB merupakan bacaan yang benar-benar sesuai dengan "formation" (bukan bacaan yang hanya mirip-mirip).
+6. Field "notes" WAJIB memuat SEMUA heading tebal wajib (**Fungsi & Konteks**, **Cara Pakai & Aturan**, **Variasi Bentuk**, **Konteks Pemakaian Nyata**, **Kesalahan Umum**, plus **Perbandingan dengan Pola Serupa** jika ada kandidat terkait) — jangan memangkas demi keringkasan. Kedalaman penjelasan lebih penting daripada keringkasan.
+7. Field "meaning" WAJIB berupa penjelasan 2-3 kalimat, bukan terjemahan satu-dua kata.
+8. "related_grammar" WAJIB berupa slug yang benar-benar ada di "related_grammar_candidates" milik item terkait — JANGAN mengarang slug yang tidak ada di daftar tersebut.
+9. Prioritaskan akurasi linguistik di atas segalanya: jangan menebak pola pembentukan atau nuansa jika tidak yakin — dasarkan pada aturan tata bahasa Jepang standar yang benar-benar berlaku untuk pola tersebut.
+10. Ketiga kalimat contoh dalam "examples" WAJIB tidak boleh sama atau nyaris sama satu sama lain (beda hanya 1 kata). Periksa ulang setiap pasangan sebelum menjawab.
+11. "formation_furigana" WAJIB merupakan bacaan yang benar-benar sesuai dengan "formation" (bukan bacaan yang hanya mirip-mirip).
+12. Jangan menyingkat atau menyerahkan bagian "notes" hanya demi menghemat token — kedalaman dan kelengkapan penjelasan adalah prioritas utama tugas ini.
 
-Skema JSON yang harus dikembalikan:
+Skema JSON yang harus dikembalikan (contoh notes di bawah ini sengaja dipersingkat untuk ilustrasi struktur saja; notes asli WAJIB jauh lebih detail dan lengkap sesuai instruksi di atas):
 {
   "results": [
     {
       "id": "id_grammar",
-      "meaning": "arti/fungsi tata bahasa",
+      "meaning": "Penjelasan 2-3 kalimat tentang fungsi dan nuansa tata bahasa ini...",
       "formation": "pola pembentukan",
       "formation_furigana": "ふりがな",
       "formation_romaji": "romaji",
@@ -399,9 +409,15 @@ Skema JSON yang harus dikembalikan:
           "furigana": "にほんごをべんきょうします。",
           "romaji": "Nihongo o benkyou shimasu.",
           "indonesian": "Saya belajar bahasa Jepang."
+        },
+        {
+          "japanese": "来週の会議までに資料を準備しておきます。",
+          "furigana": "らいしゅうのかいぎまでにしりょうをじゅんびしておきます。",
+          "romaji": "Raishuu no kaigi made ni shiryou o junbi shite okimasu.",
+          "indonesian": "Saya akan menyiapkan dokumennya sebelum rapat minggu depan."
         }
       ],
-      "notes": "Penjelasan penggunaan...",
+      "notes": "**Fungsi & Konteks**\n(paragraf 2-3 kalimat...)\n\n**Cara Pakai & Aturan**\n- poin 1\n- poin 2\n- poin 3\n- poin 4\n\n**Variasi Bentuk**\n| Bentuk | Contoh |\n| --- | --- |\n| ... | ... |\n\n**Konteks Pemakaian Nyata**\n(gambaran situasi nyata...)\n\n**Perbandingan dengan Pola Serupa**\n(jika ada kandidat terkait...)\n\n**Kesalahan Umum**\n⚠️ (penjelasan jebakan spesifik dan akibatnya)",
       "grammar_family": "Keluarga tata bahasa",
       "related_grammar": ["slug-terkait-1", "slug-terkait-2"]
     }
@@ -443,6 +459,10 @@ function validateEnrichedItem(item, originalItem = null, validSlugs = null) {
   if (originalItem?.title && item.meaning.trim().toLowerCase() === originalItem.title.trim().toLowerCase()) {
     return { valid: false, reason: "meaning hanya menyalin title, bukan penjelasan arti" };
   }
+  const meaningWordCount = item.meaning.trim().split(/\s+/).filter(Boolean).length;
+  if (meaningWordCount < 12) {
+    return { valid: false, reason: `meaning terlalu singkat (${meaningWordCount} kata, minimal ~12 kata / 2-3 kalimat penjelasan)` };
+  }
   if (typeof item.formation !== "string" || !item.formation) return { valid: false, reason: "formation kosong" };
 
   if (typeof item.formation_furigana !== "string" || !item.formation_furigana) {
@@ -457,16 +477,40 @@ function validateEnrichedItem(item, originalItem = null, validSlugs = null) {
   }
 
   if (typeof item.notes !== "string" || !item.notes) return { valid: false, reason: "notes kosong" };
+  if (item.notes.trim().length < 500) {
+    return { valid: false, reason: `notes terlalu singkat (${item.notes.trim().length} karakter, minimal ~500 karakter untuk penjelasan yang benar-benar mendalam)` };
+  }
   const noteSentenceCount = (item.notes.match(/[.!?]/g) || []).length;
-  if (noteSentenceCount < 3) {
-    return { valid: false, reason: `notes terlalu singkat (${noteSentenceCount} kalimat, minimal 3)` };
+  if (noteSentenceCount < 6) {
+    return { valid: false, reason: `notes terlalu singkat (${noteSentenceCount} kalimat, minimal 6)` };
   }
   const bulletCount = (item.notes.match(/(^|\n)\s*-\s+/g) || []).length;
-  if (bulletCount < 2) {
-    return { valid: false, reason: `notes kurang terstruktur (hanya ${bulletCount} daftar poin "- ", minimal 2)` };
+  if (bulletCount < 4) {
+    return { valid: false, reason: `notes kurang terstruktur (hanya ${bulletCount} daftar poin "- ", minimal 4 di bagian "Cara Pakai & Aturan")` };
   }
   if (!/⚠️/.test(item.notes)) {
     return { valid: false, reason: "notes tidak berisi baris peringatan ⚠️ untuk jebakan kesalahan umum" };
+  }
+
+  // Setiap heading wajib harus ada supaya struktur "mendalam" ini benar-benar
+  // ditegakkan, bukan cuma disarankan di prompt lalu diabaikan oleh LLM.
+  const requiredHeadings = [
+    { label: "Fungsi & Konteks", pattern: /\*\*Fungsi\s*&?\s*Konteks\*\*/i },
+    { label: "Cara Pakai & Aturan", pattern: /\*\*Cara\s*Pakai\s*&?\s*Aturan\*\*/i },
+    { label: "Variasi Bentuk", pattern: /\*\*Variasi\s*Bentuk\*\*/i },
+    { label: "Konteks Pemakaian Nyata", pattern: /\*\*Konteks\s*Pemakaian\s*Nyata\*\*/i },
+    { label: "Kesalahan Umum", pattern: /\*\*Kesalahan\s*Umum\*\*/i },
+  ];
+  const missingHeadings = requiredHeadings.filter((h) => !h.pattern.test(item.notes)).map((h) => h.label);
+  if (missingHeadings.length > 0) {
+    return { valid: false, reason: `notes tidak memuat heading wajib: ${missingHeadings.join(", ")}` };
+  }
+
+  // Heading perbandingan hanya wajib jika item ini memang punya kandidat terkait
+  // untuk dibandingkan (dikirim lewat related_grammar_candidates saat prompt dibuat).
+  const hasCandidates = Array.isArray(originalItem?.related_grammar_candidates) && originalItem.related_grammar_candidates.length > 0;
+  if (hasCandidates && !/\*\*Perbandingan\s*(dengan\s*Pola\s*Serupa)?\*\*/i.test(item.notes)) {
+    return { valid: false, reason: 'notes tidak memuat heading "Perbandingan dengan Pola Serupa" padahal ada kandidat terkait' };
   }
 
   if (typeof item.grammar_family !== "string" || !item.grammar_family) return { valid: false, reason: "grammar_family kosong" };
@@ -481,8 +525,8 @@ function validateEnrichedItem(item, originalItem = null, validSlugs = null) {
     }
   }
 
-  if (!Array.isArray(item.examples) || item.examples.length !== 2) {
-    return { valid: false, reason: "examples harus berisi tepat 2 item" };
+  if (!Array.isArray(item.examples) || item.examples.length !== 3) {
+    return { valid: false, reason: "examples harus berisi tepat 3 item" };
   }
   for (const [idx, ex] of item.examples.entries()) {
     if (typeof ex.japanese !== "string" || !ex.japanese) {
@@ -508,14 +552,19 @@ function validateEnrichedItem(item, originalItem = null, validSlugs = null) {
     }
   }
 
-  if (item.examples.length === 2) {
-    const [ex0, ex1] = item.examples;
-    if (ex0.japanese?.trim() === ex1.japanese?.trim()) {
-      return { valid: false, reason: "kedua examples memiliki kalimat japanese yang identik" };
-    }
-    const ratio = similarityRatio(ex0.japanese, ex1.japanese);
-    if (ratio > 0.75) {
-      return { valid: false, reason: `kedua examples terlalu mirip (rasio kemiripan ${ratio.toFixed(2)}), harus lebih bervariasi` };
+  if (item.examples.length === 3) {
+    for (let i = 0; i < item.examples.length; i += 1) {
+      for (let j = i + 1; j < item.examples.length; j += 1) {
+        const exA = item.examples[i];
+        const exB = item.examples[j];
+        if (exA.japanese?.trim() === exB.japanese?.trim()) {
+          return { valid: false, reason: `examples[${i}] dan examples[${j}] memiliki kalimat japanese yang identik` };
+        }
+        const ratio = similarityRatio(exA.japanese, exB.japanese);
+        if (ratio > 0.75) {
+          return { valid: false, reason: `examples[${i}] dan examples[${j}] terlalu mirip (rasio kemiripan ${ratio.toFixed(2)}), harus lebih bervariasi` };
+        }
+      }
     }
   }
 
@@ -649,7 +698,7 @@ async function main() {
   const filteredItems = options.force
     ? dbItems
     : dbItems.filter((item) => {
-        const hasExamples = Array.isArray(item.examples) && item.examples.length >= 2;
+        const hasExamples = Array.isArray(item.examples) && item.examples.length >= 3;
         const hasMissingField = !item.meaning || !item.formation || !item.formation_furigana || !item.formation_romaji || !item.notes || !item.grammar_family || !hasExamples;
         if (hasMissingField) return true;
 

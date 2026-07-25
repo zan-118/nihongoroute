@@ -20,6 +20,7 @@ import {
   type DailyRouteCategory,
 } from "@/lib/learning-ecosystem";
 import { useUIStore } from "@/store/useUIStore";
+import { useUserStore } from "@/store/useUserStore";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -68,22 +69,30 @@ interface DailyRoutePanelProps {
   compact?: boolean;
   /** Additional CSS classes. */
   className?: string;
+  /** Course structure metadata */
+  courseMetadata?: any[];
+  /** Due count for SRS */
+  dueCount?: number;
 }
 
 /**
  * Render daily learning route and weak points based on user history.
  */
-export default function DailyRoutePanel({ compact = false, className }: DailyRoutePanelProps) {
+export default function DailyRoutePanel({ compact = false, className, courseMetadata, dueCount = 0 }: DailyRoutePanelProps) {
   // Get user learning history and progress from store.
   const events = useUIStore((state) => state.learningEvents);
   const readingProgressMap = useUIStore((state) => state.readingProgressMap);
   const readingVocabularyBank = useUIStore((state) => state.readingVocabularyBank);
+  const completedLessons = useUserStore((state) => state.completedLessons);
   
   // Generate personalized steps.
   const dailyRoute = buildDailyRoute({
     events,
     readingProgressMap,
     readingVocabularyBank,
+    completedLessons,
+    courseMetadata,
+    dueCount,
     limit: compact ? 4 : 6,
   });
   

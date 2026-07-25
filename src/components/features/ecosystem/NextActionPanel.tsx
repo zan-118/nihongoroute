@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/icons";
 import { buildEcosystemRecommendations } from "@/lib/learning-ecosystem";
 import { useUIStore } from "@/store/useUIStore";
+import { useUserStore } from "@/store/useUserStore";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -49,6 +50,8 @@ interface NextActionPanelProps {
   className?: string;
   /** Text for empty state. */
   emptyTitle?: string;
+  /** Course structure metadata */
+  courseMetadata?: any[];
 }
 
 /**
@@ -59,17 +62,21 @@ export default function NextActionPanel({
   compact = false,
   className,
   emptyTitle = "Belum ada sinyal belajar",
+  courseMetadata,
 }: NextActionPanelProps) {
   // Get user state from store.
   const events = useUIStore((state) => state.learningEvents);
   const readingProgressMap = useUIStore((state) => state.readingProgressMap);
   const readingVocabularyBank = useUIStore((state) => state.readingVocabularyBank);
+  const completedLessons = useUserStore((state) => state.completedLessons);
   
   // Build recommendations list.
   const recommendations = buildEcosystemRecommendations({
     events,
     readingProgressMap,
     readingVocabularyBank,
+    completedLessons,
+    courseMetadata,
     limit: compact ? 3 : 5,
   });
 

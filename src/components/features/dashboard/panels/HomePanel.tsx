@@ -111,8 +111,8 @@ export function HomePanel({
           }>}
         />
         
-        <NextActionPanel compact />
-        <DailyRoutePanel compact />
+        <NextActionPanel compact courseMetadata={courseMetadata} />
+        <DailyRoutePanel compact courseMetadata={courseMetadata} dueCount={dueCount} />
         <WeakPointSummary />
 
         <section className="space-y-[34px]">

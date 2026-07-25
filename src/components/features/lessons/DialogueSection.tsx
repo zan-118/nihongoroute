@@ -38,6 +38,8 @@ export interface DialogueSpeakerItem {
   text?: string;
   /** Furigana annotations for Japanese text */
   furigana?: string | { text: string; rt?: string }[];
+  /** Romaji transcription of the Japanese text */
+  romaji?: string;
   /** Indonesian translation text */
   translation?: string;
   /** Alternative translation field or ID */
@@ -290,20 +292,25 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
                           }
                         }}
                       >
-                         <div className="flex-1 min-w-0">
-                           <div className="text-lg font-japanese font-bold text-foreground mb-2 leading-relaxed">
-                             <SmartJapanese 
-                                 word={item.jp || item.text || ""} 
-                                 furigana={typeof item.furigana === "string" ? item.furigana : undefined} 
-                               />
-                           </div>
-                           <p 
-                             className="text-sm text-muted-foreground font-medium italic border-t pt-3"
-                             style={{ borderColor: "rgb(var(--border-rgb)/0.2)" }}
-                           >
-                             &quot;{item.translation || item.id}&quot;
-                           </p>
-                         </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="text-lg font-japanese font-bold text-foreground mb-2 leading-relaxed">
+                              <SmartJapanese 
+                                  word={item.jp || item.text || ""} 
+                                  furigana={typeof item.furigana === "string" ? item.furigana : undefined} 
+                                />
+                            </div>
+                            {item.romaji && (
+                              <p className="text-xs text-muted-foreground/80 font-mono mb-2">
+                                {item.romaji}
+                              </p>
+                            )}
+                            <p 
+                              className="text-sm text-muted-foreground font-medium italic border-t pt-3"
+                              style={{ borderColor: "rgb(var(--border-rgb)/0.2)" }}
+                            >
+                              &quot;{item.translation || item.id}&quot;
+                            </p>
+                          </div>
                          <div className="opacity-100 md:opacity-0 md:group-hover/dialogue:opacity-100 transition-opacity shrink-0 self-center">
                            <TTSReader 
                              text={item.jp || item.text || ""} 

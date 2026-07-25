@@ -13,6 +13,7 @@
 // ==========================================
 // IMPOR
 // ==========================================
+import { useMemo } from "react";
 import { m, Variants } from "framer-motion";
 import { Sparkles, BrainCircuit, Target, BookMarked, Zap } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +25,6 @@ import { useUserStore } from "@/store/useUserStore";
 import ProfileEditor from "../user/ProfileEditor";
 import { Trophy, Flame, Star, ArrowRight } from "@/components/ui/icons";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
-import ContinueLearning from "./ContinueLearning";
 import { getLevelProgressPercent } from "@/lib/level";
 
 import { ROUTES } from "@/lib/core/routes";
@@ -78,6 +78,58 @@ export default function DashboardHero({
   const xp = useUserStore(s => s.xp);
   const level = useUserStore(s => s.level);
   const streak = useUserStore(s => s.streak);
+  const completedLessons = useUserStore(s => s.completedLessons);
+
+  // Compute active course and next lesson.
+  const activeData = useMemo(() => {
+    if (!courseMetadata || courseMetadata.length === 0) return null;
+
+    const stats = courseMetadata.map(cat => {
+      const lessons = cat.lessons || [];
+      const completedInCat = lessons.filter(lesson => {
+        const record = completedLessons[lesson._id];
+        return record && record.completedAt;
+      });
+      
+      const totalLessons = lessons.length;
+      const progress = totalLessons > 0 
+        ? (completedInCat.length / totalLessons) * 100 
+        : 0;
+      
+      const lastUpdate = lessons.reduce((max, lesson) => {
+        const ts = completedLessons[lesson._id]?.updatedAt || 0;
+        return ts > max ? ts : max;
+      }, 0);
+
+      return { ...cat, lessons, progress, lastUpdate, completedCount: completedInCat.length, totalLessons };
+    });
+
+    let active = stats
+      .filter(s => s.progress > 0 && s.progress < 100)
+      .sort((a, b) => b.lastUpdate - a.lastUpdate)[0] as typeof stats[number] | undefined;
+
+    if (!active) {
+       active = stats.find(s => s.progress < 100);
+    }
+
+    if (!active || !active.lessons || active.lessons.length === 0) return null;
+
+    const nextLessonIndex = active.lessons.findIndex(l => !completedLessons[l._id]?.completedAt);
+    const nextLesson = active.lessons[nextLessonIndex] || active.lessons[0];
+
+    if (!nextLesson) return null;
+
+    return {
+      courseTitle: active.title,
+      courseSlug: active.slug,
+      progress: active.progress,
+      lessonTitle: nextLesson.title,
+      lessonSlug: nextLesson.slug,
+      completedCount: active.completedCount,
+      totalLessons: active.totalLessons,
+      isNew: active.progress === 0
+    };
+  }, [courseMetadata, completedLessons]);
 
   // Calculate level progress percent.
   const xpProgress = Math.round(getLevelProgressPercent(xp, level));
@@ -203,7 +255,7 @@ export default function DashboardHero({
                   <>
                     <Button asChild className="flex-1 h-[50px] bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-[0.15em] rounded-lg rounded-br-none text-[10px] pl-6 pr-4 transition-all active:scale-[0.97] group">
                       <Link href={ROUTES.REVIEW} className="flex items-center justify-between w-full">
-                        <span>Mulai Review</span>
+                        <span>Asah Ingatan</span>
                         <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 dark:bg-white/15 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1">
                           <ArrowRight size={14} />
                         </span>
@@ -219,8 +271,8 @@ export default function DashboardHero({
                 ) : (
                   <>
                     <Button asChild className="flex-1 h-[50px] bg-foreground text-background hover:bg-foreground/90 font-black uppercase tracking-[0.15em] rounded-lg rounded-br-none text-[10px] pl-6 pr-4 transition-all active:scale-[0.97] group">
-                      <Link href="/courses" className="flex items-center justify-between w-full">
-                        <span>Mulai Pelajaran</span>
+                      <Link href={activeData ? `/courses/${activeData.courseSlug}/${activeData.lessonSlug}` : "/courses"} className="flex items-center justify-between w-full">
+                        <span>{activeData ? `Lanjut: ${activeData.lessonTitle}` : "Mulai Pelajaran"}</span>
                         <span className="flex h-7 w-7 items-center justify-center rounded-full bg-background/10 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1">
                           <BookMarked size={14} />
                         </span>
@@ -238,18 +290,7 @@ export default function DashboardHero({
             </div>
           </Card>
         )}
-        
-        {/* WIDGET LANJUT BELAJAR */}
-        {!loading && (
-          <m.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.5 }}
-            className="mt-[55px] w-full"
-          >
-            <ContinueLearning courseMetadata={courseMetadata} />
-          </m.div>
-        )}
+
         
         {/* TIPS BELAJAR CERDAS */}
         {!loading && (

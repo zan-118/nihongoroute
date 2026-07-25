@@ -22,24 +22,27 @@ const MOCK_EVENTS: LearningEvent[] = [
   }
 ];
 
+const MOCK_METADATA = [
+  {
+    id: 'n5',
+    slug: 'n5',
+    title: 'JLPT N5: Tingkat Dasar',
+    lessons: [
+      { id: 'l1', _id: 'l1', title: 'Bab 1: Perkenalan Diri', slug: 'n5-bab-1-perkenalan-diri' }
+    ]
+  }
+];
+
 describe('Learning Ecosystem', () => {
   describe('buildEcosystemRecommendations', () => {
-    it('menghasilkan rekomendasi berdasarkan event pembelajaran', () => {
-      const recs = buildEcosystemRecommendations({ events: MOCK_EVENTS });
+    it('menghasilkan rekomendasi pelajaran aktif berdasarkan metadata', () => {
+      const recs = buildEcosystemRecommendations({ 
+        events: [],
+        courseMetadata: MOCK_METADATA,
+        completedLessons: {}
+      });
       
-      // Harusnya merekomendasikan shadowing untuk reading yang selesai
-      expect(recs.some(r => r.id.includes('shadowing'))).toBe(true);
-      
-      // Harusnya merekomendasikan ulangi grammar karena ada yang salah
-      expect(recs.some(r => r.id.includes('retry-drill'))).toBe(true);
-    });
-
-    it('memberikan prioritas lebih tinggi pada jawaban salah (review)', () => {
-      const recs = buildEcosystemRecommendations({ events: MOCK_EVENTS });
-      const retryRec = recs.find(r => r.id.includes('retry-drill'));
-      const shadowRec = recs.find(r => r.id.includes('shadowing'));
-      
-      expect(retryRec!.priority).toBeGreaterThan(shadowRec!.priority);
+      expect(recs.some(r => r.id.includes('active-lesson-l1'))).toBe(true);
     });
   });
 
@@ -56,12 +59,15 @@ describe('Learning Ecosystem', () => {
 
   describe('buildDailyRoute', () => {
     it('membangun urutan rutinitas dengan prioritas rasional', () => {
-      const routes = buildDailyRoute({ events: MOCK_EVENTS });
+      const routes = buildDailyRoute({ 
+        events: [],
+        courseMetadata: MOCK_METADATA,
+        completedLessons: {}
+      });
       
       expect(routes.length).toBeGreaterThan(0);
       expect(routes[0].order).toBe(1);
-      // Yang paling prioritas harusnya me-review weak point
-      expect(routes[0].id).toContain('daily-weak');
+      expect(routes[0].id).toContain('active-lesson');
     });
     
     it('membuat prioritas membaca jika ada progres terputus', () => {

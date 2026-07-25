@@ -469,6 +469,23 @@ function recommendationsFromVocabBank(
     });
 }
 
+interface EcosystemLessonItem {
+  id?: string;
+  _id?: string;
+  title: string;
+  slug: string;
+  description?: string;
+  summary?: string;
+}
+
+interface EcosystemCourseMetadataItem {
+  id?: string;
+  _id?: string;
+  title: string;
+  slug: string;
+  lessons: EcosystemLessonItem[];
+}
+
 /**
  * Build list of ecosystem recommendations.
  */
@@ -476,29 +493,162 @@ export function buildEcosystemRecommendations({
   events,
   readingProgressMap,
   readingVocabularyBank,
+  completedLessons,
+  courseMetadata,
   limit = 5,
 }: {
   events: LearningEvent[];
   readingProgressMap?: Record<string, EcosystemReadingProgress>;
   readingVocabularyBank?: Record<string, EcosystemVocabEntry>;
+  completedLessons?: Record<string, { completedAt: number; updatedAt: number }>;
+  courseMetadata?: EcosystemCourseMetadataItem[];
   limit?: number;
 }) {
   const recommendations: EcosystemRecommendation[] = [];
-  const sortedEvents = latestEvents(events);
+  
+  const safeCompletedLessons = completedLessons || {};
+  // Suntikkan rekomendasi pelajaran aktif berikutnya jika ada data kurikulum
+  if (courseMetadata && courseMetadata.length > 0) {
+    // Cek prioritas aksara dasar (Hiragana, Katakana, & Kanji) sebelum melanjutkan materi pelajaran utama
+    let activeLesson: EcosystemLessonItem | undefined;
+    let activeCategorySlug = "";
+    let activeCategoryTitle = "";
 
-  // Process recent events.
-  sortedEvents.slice(0, 8).forEach((event) => {
-    recommendationsFromEvent(event).forEach((item) => pushUnique(recommendations, item));
-  });
+    const articlesCategory = courseMetadata.find(c => c.slug === "articles");
+    const hiraganaArticle = articlesCategory?.lessons?.find((l: EcosystemLessonItem) => l.slug === "panduan-lengkap-hiragana");
+    const katakanaArticle = articlesCategory?.lessons?.find((l: EcosystemLessonItem) => l.slug === "panduan-lengkap-katakana");
+    const kanjiArticle = articlesCategory?.lessons?.find((l: EcosystemLessonItem) => l.slug === "mengenal-kanji-sistem-tulisan-ketiga");
 
-  // Process reading progress.
-  recommendationsFromReadingProgress(readingProgressMap || {}).forEach((item) =>
-    pushUnique(recommendations, item)
-  );
-  // Process vocabulary bank.
-  recommendationsFromVocabBank(readingVocabularyBank || {}).forEach((item) =>
-    pushUnique(recommendations, item)
-  );
+    const hasCompletedHiragana = hiraganaArticle && safeCompletedLessons[hiraganaArticle.id || hiraganaArticle._id || '']?.completedAt;
+    const hasCompletedKatakana = katakanaArticle && safeCompletedLessons[katakanaArticle.id || katakanaArticle._id || '']?.completedAt;
+    const hasCompletedKanji = kanjiArticle && safeCompletedLessons[kanjiArticle.id || kanjiArticle._id || '']?.completedAt;
+
+    if (hiraganaArticle && !hasCompletedHiragana) {
+      activeLesson = hiraganaArticle;
+      activeCategorySlug = "articles";
+      activeCategoryTitle = "Panduan Aksara";
+    } else if (katakanaArticle && !hasCompletedKatakana) {
+      activeLesson = katakanaArticle;
+      activeCategorySlug = "articles";
+      activeCategoryTitle = "Panduan Aksara";
+    } else if (kanjiArticle && !hasCompletedKanji) {
+      activeLesson = kanjiArticle;
+      activeCategorySlug = "articles";
+      activeCategoryTitle = "Panduan Aksara";
+    }
+
+    let isNew = false;
+    if (!activeLesson) {
+      // Jika aksara dasar sudah dikuasai, baru lakukan pencarian progres kelas pelajaran utama (N5-N1)
+      const stats = courseMetadata
+        .filter(c => c.slug !== "articles") // Kecualikan kategori artikel umum
+        .map((cat: EcosystemCourseMetadataItem) => {
+          const lessons = cat.lessons || [];
+          const completedInCat = lessons.filter((lesson: EcosystemLessonItem) => {
+            const record = safeCompletedLessons[lesson.id || lesson._id || ''];
+            return record && record.completedAt;
+          });
+          const totalLessons = lessons.length;
+          const progress = totalLessons > 0 ? (completedInCat.length / totalLessons) * 100 : 0;
+          const lastUpdate = lessons.reduce((max: number, lesson: EcosystemLessonItem) => {
+            const ts = safeCompletedLessons[lesson.id || lesson._id || '']?.updatedAt || 0;
+            return ts > max ? ts : max;
+          }, 0);
+          return { ...cat, lessons, progress, lastUpdate, completedCount: completedInCat.length, totalLessons };
+        });
+
+      let active: typeof stats[number] | undefined = stats
+        .filter(s => s.progress > 0 && s.progress < 100)
+        .sort((a, b) => b.lastUpdate - a.lastUpdate)[0];
+
+      if (!active) {
+        active = stats.find(s => s.progress < 100);
+      }
+
+      if (active && active.lessons && active.lessons.length > 0) {
+        const nextLessonIndex = active.lessons.findIndex((l: EcosystemLessonItem) => !safeCompletedLessons[l.id || l._id || '']?.completedAt);
+        activeLesson = active.lessons[nextLessonIndex] || active.lessons[0];
+        activeCategorySlug = active.slug;
+        activeCategoryTitle = active.title || 'JLPT';
+        
+        const completedCount = Object.values(safeCompletedLessons).filter((l: any) => l.completedAt).length;
+        isNew = completedCount === 0;
+      }
+    } else {
+      isNew = true; // Rekomendasi aksara dasar dianggap onboarding baru bagi pengguna
+    }
+
+    if (activeLesson && activeCategorySlug) {
+      recommendations.push({
+        id: `active-lesson-${activeLesson.id || activeLesson._id}`,
+        title: isNew ? `Mulai: ${activeLesson.title}` : `Lanjut: ${activeLesson.title}`,
+        description: isNew
+          ? `Mulai belajar bab pertama tingkat ${activeCategoryTitle}. (Ubah tingkat di menu Materi)`
+          : `Pelajaran aktif selanjutnya di tingkat ${activeCategoryTitle}.`,
+        href: `/courses/${activeCategorySlug}/${activeLesson.slug}`,
+        category: "continue" as const,
+        priority: 200 // Prioritas tertinggi mutlak
+      });
+
+      // Tambahkan kuis pelajaran aktif jika bukan artikel
+      if (!activeCategorySlug.includes("articles")) {
+        const cleanTitle = activeLesson.title.replace("Mulai: ", "").replace("Lanjut: ", "");
+        recommendations.push({
+          id: `active-quiz-${activeLesson.id || activeLesson._id}`,
+          title: `Kuis: ${cleanTitle}`,
+          description: `Uji pemahamanmu untuk materi ${cleanTitle}.`,
+          href: `/courses/${activeCategorySlug}/${activeLesson.slug}#quiz`,
+          category: "tool" as const,
+          priority: 190
+        });
+      }
+    }
+  }
+
+  // Rekomendasikan artikel umum berikutnya yang belum dibaca dari kategori articles agar tidak terabaikan
+  if (courseMetadata && courseMetadata.length > 0) {
+    const articlesCategory = courseMetadata.find(c => c.slug === "articles");
+    if (articlesCategory && articlesCategory.lessons) {
+      const nextArticle = articlesCategory.lessons.find((l: EcosystemLessonItem) => {
+        // Lewati artikel onboarding aksara karena sudah ditangani secara khusus
+        if (
+          l.slug === "panduan-lengkap-hiragana" ||
+          l.slug === "panduan-lengkap-katakana" ||
+          l.slug === "mengenal-kanji-sistem-tulisan-ketiga"
+        ) {
+          return false;
+        }
+        return !safeCompletedLessons[l.id || l._id || ""]?.completedAt;
+      });
+
+      if (nextArticle) {
+        recommendations.push({
+          id: `article-recommendation-${nextArticle.id || nextArticle._id}`,
+          title: `Baca Artikel: ${nextArticle.title}`,
+          description: nextArticle.description || nextArticle.summary || "Tinjau wawasan budaya dan tips bahasa Jepang hari ini.",
+          href: `/courses/articles/${nextArticle.slug}`,
+          category: "library" as const,
+          priority: 110, // Berada di bawah pelajaran aktif tetapi tetap direkomendasikan
+        });
+      }
+    }
+  }
+
+  // Tambahkan bacaan aktif yang belum selesai dari library jika ada
+  const unfinishedReading = Object.values(readingProgressMap || {})
+    .filter((entry) => !entry.completedAt && entry.totalParagraphs > 0)
+    .sort((a, b) => b.updatedAt - a.updatedAt)[0];
+
+  if (unfinishedReading) {
+    recommendations.push({
+      id: `continue-reading-${unfinishedReading.sourceId}`,
+      title: "Lanjutkan Bacaan Aktif",
+      description: `Mulai dari paragraf ${unfinishedReading.lastParagraphIndex + 1}/${unfinishedReading.totalParagraphs}.`,
+      href: `/library/reading/${unfinishedReading.sourceId}`,
+      category: "continue" as const,
+      priority: 120
+    });
+  }
 
   return recommendations
     .sort((a, b) => b.priority - a.priority)
@@ -640,11 +790,17 @@ export function buildDailyRoute({
   events,
   readingProgressMap,
   readingVocabularyBank,
+  completedLessons,
+  courseMetadata,
+  dueCount = 0,
   limit = 5,
 }: {
   events: LearningEvent[];
   readingProgressMap?: Record<string, EcosystemReadingProgress>;
   readingVocabularyBank?: Record<string, EcosystemVocabEntry>;
+  completedLessons?: Record<string, { completedAt: number; updatedAt: number }>;
+  courseMetadata?: EcosystemCourseMetadataItem[];
+  dueCount?: number;
   limit?: number;
 }): DailyRouteStep[] {
   const steps: DailyRouteStep[] = [];
@@ -652,6 +808,8 @@ export function buildDailyRoute({
     events,
     readingProgressMap,
     readingVocabularyBank,
+    completedLessons,
+    courseMetadata,
     limit: 8,
   });
   const weakPoints = buildWeakPointInsights({ events, limit: 3 });
@@ -659,43 +817,20 @@ export function buildDailyRoute({
     .filter((entry) => !entry.completedAt && entry.totalParagraphs > 0)
     .sort((a, b) => b.updatedAt - a.updatedAt)[0];
 
-  // Add active reading step.
-  if (unfinishedReading) {
+  // Tambahkan sesi latihan ingatan jika ada kartu SRS jatuh tempo (Prioritas teratas)
+  if (dueCount > 0) {
     pushRouteStep(steps, {
-      id: `daily-continue-${unfinishedReading.sourceId}`,
-      title: "Lanjutkan Bacaan Aktif",
-      description: `Mulai dari paragraf ${unfinishedReading.lastParagraphIndex + 1}/${unfinishedReading.totalParagraphs}.`,
-      href: `/library/reading/${safeQuery(unfinishedReading.sourceId)}`,
-      category: "continue",
-      reason: "Ada sesi reading yang belum selesai.",
-      priority: 120,
-    });
-  } else {
-    pushRouteStep(steps, {
-      id: "daily-warmup-library",
-      title: "Mulai dari Library",
-      description: "Pilih satu reading atau listening pendek sebagai pemanasan.",
-      href: "/library",
-      category: "warmup",
-      reason: "Belum ada sesi terbuka hari ini.",
-      priority: 68,
+      id: "daily-srs-review",
+      title: "Asah Ingatan: Tinjau Kosakata",
+      description: `Ada ${dueCount} kata yang menumpuk di antrean SRS kamu.`,
+      href: "/review",
+      category: "review",
+      reason: "Sistem Spaced Repetition mendeteksi kartu perlu diulas hari ini.",
+      priority: 250,
     });
   }
 
-  // Add weak point steps.
-  weakPoints.forEach((weakPoint, index) => {
-    pushRouteStep(steps, {
-      id: `daily-weak-${weakPoint.category}`,
-      title: `Stabilkan ${weakPoint.label}`,
-      description: weakPoint.sourceTitle
-        ? `Review konteks terakhir: ${weakPoint.sourceTitle}.`
-        : weakPoint.description,
-      href: weakPoint.href,
-      category: "review",
-      reason: `${weakPoint.mistakes} sinyal salah dari ${weakPoint.attempts} aktivitas terkait.`,
-      priority: 112 - index,
-    });
-  });
+
 
   // Add recommendation steps.
   recommendations.forEach((recommendation, index) => {
@@ -705,36 +840,9 @@ export function buildDailyRoute({
       description: recommendation.description,
       href: recommendation.href,
       category: recommendation.category,
-      reason:
-        recommendation.category === "review"
-          ? "Direkomendasikan dari kesalahan terbaru."
-          : "Direkomendasikan dari aktivitas library dan tools.",
+      reason: "Direkomendasikan berdasarkan rencana belajar aktif kamu.",
       priority: recommendation.priority - index,
     });
-  });
-
-  // Add vocabulary bank step.
-  if (Object.keys(readingVocabularyBank || {}).length > 0) {
-    pushRouteStep(steps, {
-      id: "daily-vocab-bank",
-      title: "Ubah Bank Kata Jadi Drill",
-      description: "Ambil kosakata yang sering muncul dari reading kamu.",
-      href: "/tools/jlpt-drill?kind=vocab&source=reading",
-      category: "tool",
-      reason: "Bank vocab reading sudah punya bahan latihan.",
-      priority: 72,
-    });
-  }
-
-  // Add final shadowing step.
-  pushRouteStep(steps, {
-    id: "daily-finish-shadowing",
-    title: "Tutup dengan Shadowing",
-    description: "Rekam satu kalimat untuk mengunci bunyi dan ritme.",
-    href: ROUTES.TOOLS.SHADOWING,
-    category: "tool",
-    reason: "Sesi singkat berbasis output menjaga learning loop tetap aktif.",
-    priority: 58,
   });
 
   return steps

@@ -11,6 +11,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, ChevronUp } from "@/components/ui/icons";
+import AddToSRSButton from "@/components/features/srs/actions/AddToSRSButton";
 
 // ======================
 // ANTARMUKA / TIPE DATA
@@ -80,6 +81,17 @@ export const KanjiSection: React.FC<KanjiSectionProps> = ({ kanjiList }) => {
             <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
               <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover/card:bg-primary transition-colors duration-500" />
               <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover/card:bg-primary transition-colors duration-500" />
+            </div>
+
+            {/* Tombol Tambah ke SRS Langsung */}
+            <div 
+              className="absolute top-3 right-3 z-30 opacity-60 hover:opacity-100 transition-opacity"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >
+              <AddToSRSButton wordId={k._id || k.id || ""} />
             </div>
 
             <span className="text-4xl font-black mb-3 group-hover:scale-105 transition-transform">

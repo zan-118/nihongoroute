@@ -13,19 +13,23 @@ export interface KanjiStatus {
   interval: number;
 }
 
-let n5KanjiPromise: Promise<KanjiItem[]> | null = null;
+const kanjiPromisesMap: Record<string, Promise<KanjiItem[]> | null> = {
+  N5: null,
+  N4: null,
+  N3: null,
+};
 
-function getN5Kanjis() {
-  if (!n5KanjiPromise) {
-    n5KanjiPromise = (async () => {
+function getKanjisForLevel(level: string) {
+  if (!kanjiPromisesMap[level]) {
+    kanjiPromisesMap[level] = (async () => {
       const { data, error } = await createClient()
         .from("kanji")
         .select("id, character, meaning")
-        .eq("jlpt_level", "N5")
+        .eq("jlpt_level", level)
         .order("character", { ascending: true });
 
       if (error) {
-        n5KanjiPromise = null;
+        kanjiPromisesMap[level] = null;
         throw error;
       }
 
@@ -37,7 +41,7 @@ function getN5Kanjis() {
     })();
   }
 
-  return n5KanjiPromise;
+  return kanjiPromisesMap[level]!;
 }
 
 function getKanjiSrsSignature(
@@ -72,12 +76,12 @@ function parseKanjiSrsSignature(signature: string) {
 }
 
 /**
- * Custom hook to manage N5 kanji progress fetching and SRS state calculation.
+ * Custom hook to manage kanji progress fetching and SRS state calculation for N5/N4/N3.
  */
-export function useKanjiProgressQuery() {
+export function useKanjiProgressQuery(level: string = "N5") {
   const { data: kanjis = [], isLoading } = useQuery({
-    queryKey: ["dashboard", "n5-kanji-progress"],
-    queryFn: getN5Kanjis,
+    queryKey: ["dashboard", "kanji-progress", level],
+    queryFn: () => getKanjisForLevel(level),
     staleTime: 30 * 60 * 1000,
     gcTime: 60 * 60 * 1000,
   });
