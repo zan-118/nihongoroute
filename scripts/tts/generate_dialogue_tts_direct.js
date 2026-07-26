@@ -94,6 +94,7 @@ const SPEAKER_MAP = {
   "アンディ": "andi",
   "インダ": "indah",
   "キムラ": "kimura",
+  "木村": "kimura",
   "コバヤシ": "kobayashi",
   "サクラ": "sakura",
   "サト": "sato",
@@ -462,8 +463,8 @@ function getGeminiModels() {
     // punya limitasi resmi "voice tidak konsisten dengan prompt" (lihat
     // dokumentasi Gemini TTS). 3.1 tetap ada sebagai fallback terakhir.
     models.push(
-      "gemini-2.5-flash-preview-tts",
       "gemini-3.1-flash-tts-preview",
+      "gemini-2.5-flash-preview-tts",
     );
   }
   return Array.from(new Set(models)).filter(Boolean);

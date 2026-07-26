@@ -243,19 +243,26 @@ ${JSON.stringify(items, null, 2)}
 
 Untuk setiap kanji, hasilkan bidang-bidang berikut:
 - "id": String ID dari item input (wajib sama persis).
-- "meaning": Terjemahan arti kanji (keyword) dalam Bahasa Indonesia.
-- "onyomi": Pembacaan onyomi dalam katakana (pisahkan dengan koma jika lebih dari satu).
-- "kunyomi": Pembacaan kunyomi dalam hiragana (sertakan okurigana jika ada, pisahkan dengan koma jika lebih dari satu).
-- "romaji": Pembacaan romaji standar dari onyomi/kunyomi utama.
+- "meaning": Terjemahan arti kanji (keyword) dalam Bahasa Indonesia, ringkas dan spesifik (hindari terjemahan generik seperti "kata benda" atau "hal").
+- "english": Terjemahan arti kanji (keyword) dalam Bahasa Inggris, ringkas dan spesifik (misal "minute, part, understand" bukan "thing").
+- "onyomi": Pembacaan onyomi dalam katakana (pisahkan dengan koma jika lebih dari satu). Kosongkan ("") jika kanji ini tidak punya onyomi yang lazim dipakai.
+- "kunyomi": Pembacaan kunyomi dalam hiragana (sertakan okurigana jika ada, pisahkan dengan koma jika lebih dari satu). Kosongkan ("") jika kanji ini tidak punya kunyomi yang lazim dipakai.
+- "romaji": Pembacaan romaji standar (Hepburn) dari onyomi/kunyomi yang paling umum dipakai.
+- "grade_level": Tingkat kelas sekolah Jepang tempat kanji ini diajarkan menurut Kyōiku kanji, ditulis sebagai string angka "1" sampai "6" untuk kanji SD. Jika kanji ini bukan Kyōiku (baru diajarkan di SMP/Jōyō tingkat lanjut), isi dengan "Chuugakkou". Jika benar-benar tidak diketahui, isi dengan "-".
+- "radicals": Array berisi 1-3 string karakter radikal/komponen pembentuk kanji ini (HANYA karakternya, contoh: ["刀", "力"]), urutkan dari yang PALING UTAMA/dominan duluan.
+- "mnemonics": Array berisi 1 string jembatan keledai (memory hook) dalam Bahasa Indonesia yang menghubungkan bentuk/radikal kanji dengan artinya, supaya gampang diingat pelajar. Buat singkat (1-2 kalimat), kreatif, dan masuk akal secara visual/logis — jangan mengada-ada tanpa dasar bentuk kanjinya.
 - "examples": Array berisi tepat 2 objek kalimat contoh Jepang-Indonesia yang menggunakan kata berbasis kanji tersebut:
   - "jp": Kalimat contoh Jepang natural (tanpa furigana/ruby di dalam string jp, tulis kanji secara normal).
   - "id": Terjemahan kalimat contoh tersebut dalam Bahasa Indonesia.
 
 Aturan Penting:
 1. Respon WAJIB berupa JSON murni dengan format schema yang diminta secara ketat.
-2. Terjemahan "id" untuk kalimat contoh wajib dalam Bahasa Indonesia yang alami, bukan kaku.
-3. Field "examples" harus berisi tepat 2 kalimat contoh yang relevan dengan kanji target.
+2. Terjemahan "id" untuk kalimat contoh wajib dalam Bahasa Indonesia yang alami, bukan kaku atau hasil terjemahan mesin harfiah.
+3. Field "examples" harus berisi tepat 2 kalimat contoh yang BERBEDA satu sama lain (kosakata/konteks berbeda), dan KEDUANYA wajib benar-benar mengandung karakter kanji target di dalam kalimat "jp".
 4. Di dalam kalimat Jepang ("jp"), DILARANG menggunakan tanda furigana kurung atau markup ruby. Tulis kanji secara normal.
+5. Sesuaikan tingkat kesulitan kosakata dan tata bahasa pada kalimat contoh dengan field "jlpt_level" pada tiap item input (N5 = kalimat sangat sederhana/dasar, N1 = boleh lebih kompleks). Jangan pakai grammar di atas level tersebut.
+6. Jangan mengarang pembacaan (onyomi/kunyomi/romaji) yang tidak lazim/tidak dipakai dalam kamus standar. Jika ragu, gunakan pembacaan paling umum.
+7. Field "radicals" harus radikal yang SECARA VISUAL benar-benar menyusun kanji tersebut, bukan asal tebak. Kalau kanji terlalu sederhana/dasar untuk dipecah (misal kanji itu sendiri adalah radikal dasar), kembalikan array berisi 1 string yaitu kanji itu sendiri.
 
 Skema JSON yang harus dikembalikan:
 {
@@ -263,9 +270,15 @@ Skema JSON yang harus dikembalikan:
     {
       "id": "id_kanji",
       "meaning": "arti kanji",
+      "english": "meaning in english",
       "onyomi": "オンヨミ",
       "kunyomi": "くんよみ",
       "romaji": "romaji",
+      "grade_level": "1",
+      "radicals": ["刀"],
+      "mnemonics": [
+        "Bayangkan sebuah pisau (刀) memotong sesuatu menjadi beberapa BAGIAN."
+      ],
       "examples": [
         { "jp": "漢字を使った例文です。", "id": "Ini adalah contoh kalimat menggunakan kanji." },
         { "jp": "もう一つの例文です。", "id": "Ini adalah kalimat contoh lainnya." }
@@ -276,21 +289,62 @@ Skema JSON yang harus dikembalikan:
 `.trim();
 }
 
-function validateEnrichedItem(item) {
-  if (!item || typeof item !== "object") return false;
-  if (typeof item.id !== "string" || !item.id) return false;
-  if (typeof item.meaning !== "string" || !item.meaning) return false;
-  if (typeof item.onyomi !== "string") return false;
-  if (typeof item.kunyomi !== "string") return false;
-  if (typeof item.romaji !== "string" || !item.romaji) return false;
-  
-  if (!Array.isArray(item.examples) || item.examples.length !== 2) return false;
-  for (const ex of item.examples) {
-    if (typeof ex.jp !== "string" || !ex.jp) return false;
-    if (typeof ex.id !== "string" || !ex.id) return false;
+function generateSlug(jlptLevel, id) {
+  const levelPart = (jlptLevel || "unranked").toLowerCase();
+  const idPart = id.split("-")[0];
+  return `kanji-level-${levelPart}-${idPart}`;
+}
+
+function validateEnrichedItem(item, originalCharacter) {
+  const fail = (reason) => ({ valid: false, reason });
+
+  if (!item || typeof item !== "object") return fail("item bukan object");
+  if (typeof item.id !== "string" || !item.id) return fail("id kosong/invalid");
+  if (typeof item.meaning !== "string" || !item.meaning.trim()) return fail("meaning kosong");
+  if (typeof item.onyomi !== "string") return fail("onyomi bukan string");
+  if (typeof item.kunyomi !== "string") return fail("kunyomi bukan string");
+  if (!item.onyomi.trim() && !item.kunyomi.trim()) return fail("onyomi dan kunyomi kosong dua-duanya");
+  const latinLettersPattern = /[a-zA-Z]/;
+  if (latinLettersPattern.test(item.onyomi)) return fail("onyomi mengandung huruf latin (kemungkinan romaji tertukar)");
+  if (latinLettersPattern.test(item.kunyomi)) return fail("kunyomi mengandung huruf latin (kemungkinan romaji tertukar)");
+  if (typeof item.romaji !== "string" || !item.romaji.trim()) return fail("romaji kosong");
+  if (typeof item.english !== "string" || !item.english.trim()) return fail("english kosong");
+  if (typeof item.grade_level !== "string" || !item.grade_level.trim()) return fail("grade_level kosong");
+
+  if (!Array.isArray(item.radicals) || item.radicals.length === 0) {
+    return fail("radicals harus array dengan minimal 1 item");
+  }
+  for (const rad of item.radicals) {
+    if (typeof rad !== "string" || !rad.trim()) {
+      return fail("radicals harus berisi string karakter, bukan object/kosong");
+    }
   }
 
-  return true;
+  if (!Array.isArray(item.mnemonics) || item.mnemonics.length === 0) {
+    return fail("mnemonics harus array dengan minimal 1 item");
+  }
+  for (const hint of item.mnemonics) {
+    if (typeof hint !== "string" || !hint.trim()) return fail("mnemonics punya item string kosong");
+  }
+
+  if (!Array.isArray(item.examples) || item.examples.length !== 2) {
+    return fail("examples harus tepat 2 item");
+  }
+
+  const furiganaPattern = /[（(].*[）)]/;
+  const seenJp = new Set();
+  for (const ex of item.examples) {
+    if (typeof ex.jp !== "string" || !ex.jp.trim()) return fail("contoh kalimat 'jp' kosong");
+    if (typeof ex.id !== "string" || !ex.id.trim()) return fail("terjemahan 'id' kosong");
+    if (furiganaPattern.test(ex.jp)) return fail("kalimat 'jp' mengandung markup furigana/kurung");
+    if (originalCharacter && !ex.jp.includes(originalCharacter)) {
+      return fail(`kalimat 'jp' tidak mengandung karakter target "${originalCharacter}"`);
+    }
+    if (seenJp.has(ex.jp.trim())) return fail("dua kalimat contoh identik/duplikat");
+    seenJp.add(ex.jp.trim());
+  }
+
+  return { valid: true };
 }
 
 async function main() {
@@ -314,14 +368,20 @@ async function main() {
 
   console.log("🔍 [Database] Mencari data kosong pada tabel \"kanji\"...");
 
-  let query = supabase.from("kanji").select("id, character, meaning, onyomi, kunyomi, examples");
+  let query = supabase
+    .from("kanji")
+    .select("id, character, jlpt_level, meaning, english, onyomi, kunyomi, romaji, examples, radicals, mnemonics, grade_level, slug");
 
   if (options.level) {
     query = query.eq("jlpt_level", options.level);
   }
 
   if (!options.force) {
-    query = query.or("meaning.is.null,onyomi.is.null,kunyomi.is.null,examples.is.null");
+    query = query.or(
+      "meaning.is.null,onyomi.is.null,kunyomi.is.null,romaji.is.null,examples.is.null," +
+        "english.is.null,radicals.is.null,mnemonics.is.null,grade_level.is.null,slug.is.null," +
+        "meaning.eq.,onyomi.eq.,kunyomi.eq.,romaji.eq.,english.eq.,grade_level.eq.,slug.eq."
+    );
   }
 
   const { data: dbItems, error } = await query.limit(options.limit);
@@ -335,7 +395,19 @@ async function main() {
     ? dbItems
     : dbItems.filter((item) => {
         const hasExamples = Array.isArray(item.examples) && item.examples.length === 2;
-        return !item.meaning || (!item.onyomi && !item.kunyomi) || !hasExamples;
+        const hasRadicals = Array.isArray(item.radicals) && item.radicals.length > 0;
+        const hasMnemonics = Array.isArray(item.mnemonics) && item.mnemonics.length > 0;
+        return (
+          !item.meaning ||
+          (!item.onyomi && !item.kunyomi) ||
+          !item.romaji ||
+          !hasExamples ||
+          !item.english ||
+          !hasRadicals ||
+          !hasMnemonics ||
+          !item.grade_level ||
+          !item.slug
+        );
       });
 
   if (filteredItems.length === 0) {
@@ -352,11 +424,22 @@ async function main() {
     
     console.log(`\n📦 [Proses] Memproses batch ${batchIndex}/${totalBatches}...`);
 
-    const promptItems = batch.map((item) => ({ id: item.id, character: item.character }));
+    const promptItems = batch.map((item) => ({
+      id: item.id,
+      character: item.character,
+      jlpt_level: item.jlpt_level || "tidak diketahui",
+    }));
     const prompt = buildPrompt(promptItems);
 
     try {
-      const responseText = await aiClient.generateText(prompt);
+      let responseText;
+      try {
+        responseText = await aiClient.generateText(prompt);
+      } catch (firstErr) {
+        console.warn(`  ⚠️ [Retry] Batch ${batchIndex} gagal (${firstErr.message || firstErr}), mencoba ulang sekali...`);
+        await sleep(1500);
+        responseText = await aiClient.generateText(prompt);
+      }
       const cleanJson = responseText.trim().replace(/^```json|```$/g, "").trim();
       const parsed = JSON.parse(cleanJson);
 
@@ -366,24 +449,32 @@ async function main() {
       }
 
       for (const enriched of parsed.results) {
-        if (!validateEnrichedItem(enriched)) {
-          console.warn(`⚠️ [Validasi] Item dengan ID "${enriched.id}" gagal dalam validasi skema. Dilewati.`);
+        const original = batch.find((b) => b.id === enriched.id);
+        const charLabel = original ? original.character : enriched.id;
+
+        const check = validateEnrichedItem(enriched, original?.character);
+        if (!check.valid) {
+          console.warn(`  ⚠️ [Validasi] ID "${enriched.id}" (${charLabel}) ditolak: ${check.reason}. Dilewati.`);
           continue;
         }
 
-        const original = batch.find((b) => b.id === enriched.id);
-        const charLabel = original ? original.character : enriched.id;
-        
         console.log(`  ✨ [Update] ID: "${enriched.id}" (${charLabel}) -> diperbarui.`);
+
+        const slug = original?.slug || generateSlug(original?.jlpt_level, enriched.id);
 
         const { error: updateError } = await supabase
           .from("kanji")
           .update({
             meaning: enriched.meaning,
+            english: enriched.english,
             onyomi: enriched.onyomi,
             kunyomi: enriched.kunyomi,
             romaji: enriched.romaji,
+            grade_level: enriched.grade_level,
+            radicals: enriched.radicals,
+            mnemonics: enriched.mnemonics,
             examples: enriched.examples,
+            slug,
           })
           .eq("id", enriched.id);
 

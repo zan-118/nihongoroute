@@ -12,7 +12,6 @@ const fs = require("node:fs");
 const path = require("node:path");
 const process = require("node:process");
 const { createClient } = require("@supabase/supabase-js");
-const { createClient: createSanityClient } = require("@sanity/client");
 
 // ==========================================
 // VOICE RESOLUTION UTILITIES (Mirrors src/lib/tts.ts)
@@ -175,12 +174,7 @@ async function cleanTtsCache() {
   }
 
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
-  const sanityClient = createSanityClient({
-    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
-    useCdn: false,
-    apiVersion: "2024-03-11",
-  });
+ 
 
   console.log("🔌 [Supabase] Menghubungkan ke database...");
   if (dryRun) {
@@ -268,27 +262,7 @@ async function cleanTtsCache() {
     }
 
 
-    // 4. Tarik listeningMaterial dari Sanity CMS
-    try {
-      console.log("🔍 [Listening - Sanity] Menarik data listeningMaterial...");
-      const listeningMaterials = await sanityClient.fetch(`*[_type == "listeningMaterial"] { body }`);
-      if (Array.isArray(listeningMaterials)) {
-        listeningMaterials.forEach((row) => {
-          if (!row.body) return;
-          const lines = row.body.split("\n").filter(Boolean);
-          lines.forEach((line, i) => {
-            const parts = line.split(/[：:]/);
-            const rawSpeaker = parts.length > 1 ? parts[0].trim() : undefined;
-            const lineText = parts.length > 1 ? parts.slice(1).join("：").trim() : line.trim();
-            const voice = detectVoice(rawSpeaker, i);
-            addActive(lineText, voice);
-          });
-        });
-        console.log(`   └─ Selesai memproses ${listeningMaterials.length} materi listening.`);
-      }
-    } catch (err) {
-      console.warn("⚠️  [Sanity] Gagal menarik data listening dari Sanity:", err.message);
-    }
+ 
 
     // 5. Tarik data tts_cache dari Supabase (Paginated)
     console.log("🔍 [Cache] Menarik data dari tabel tts_cache...");
