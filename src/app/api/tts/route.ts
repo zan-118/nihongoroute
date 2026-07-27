@@ -5,6 +5,8 @@ import crypto from "crypto";
 import { MsEdgeTTS } from "msedge-tts";
 import { TTS_VOICES, SPEAKER_MAP, type TtsVoice } from "@/lib/constants/tts";
 import { MALE_VOICES } from "@/lib/audio/tts";
+import { rateLimit } from "@/lib/core/rate-limit";
+import { securityLogger } from "@/lib/core/logger";
 
 /** Force dynamic rendering & Node.js runtime for API route. */
 export const dynamic = "force-dynamic";
@@ -58,6 +60,13 @@ async function synthesizeEdgeTTS(text: string, edgeVoice: string): Promise<Buffe
  * without saving to database or storage bucket.
  */
 export async function GET(req: NextRequest) {
+  const ip = req.headers.get("x-forwarded-for") ?? "unknown";
+  // Batas 30 request per 10 detik per IP
+  if (rateLimit(`tts_${ip}`, 30, 10000)) {
+    securityLogger.warn({ event: "tts_rate_limit", source: "tts", metadata: { ip } });
+    return new Response("Too Many Requests", { status: 429 });
+  }
+
   const { searchParams } = req.nextUrl;
   const rawText  = (searchParams.get("text") || "").trim();
   const rawVoice = (searchParams.get("voice") || "zundamon").trim().toLowerCase();

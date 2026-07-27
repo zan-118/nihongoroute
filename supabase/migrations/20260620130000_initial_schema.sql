@@ -205,7 +205,9 @@ CREATE TABLE public.supporters (
     message text,
     tier text DEFAULT 'bronze'::text,
     source text NOT NULL,
-    created_at timestamptz DEFAULT now()
+    provider_event_id text,
+    created_at timestamptz DEFAULT now(),
+    CONSTRAINT supporters_source_provider_event_id_key UNIQUE (source, provider_event_id)
 );
 
 -- 12. Cheatsheets
@@ -219,7 +221,21 @@ CREATE TABLE public.cheatsheets (
     updated_at timestamptz DEFAULT now()
 );
 
--- 13. User SRS Data
+-- Leaderboard Profiles View (Aman untuk publik)
+CREATE OR REPLACE VIEW public.leaderboard_profiles WITH (security_invoker = false) AS
+SELECT 
+    id, 
+    full_name, 
+    avatar_url, 
+    xp, 
+    level, 
+    streak, 
+    study_days
+FROM public.profiles;
+
+GRANT SELECT ON public.leaderboard_profiles TO anon, authenticated;
+
+-- 2. User SRS Data
 CREATE TABLE public.user_srs (
     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -243,6 +259,16 @@ CREATE TABLE public.user_lessons (
     completed_at timestamptz DEFAULT now() NOT NULL,
     updated_at timestamptz DEFAULT now() NOT NULL,
     PRIMARY KEY (user_id, lesson_id)
+);
+
+-- 14b. User XP Ledger (Idempotent Event Log)
+CREATE TABLE public.user_xp_ledger (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    event_type TEXT NOT NULL,
+    amount INTEGER NOT NULL,
+    reference_id TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 -- 15. User Feedback
@@ -651,63 +677,51 @@ BEGIN
     RAISE EXCEPTION 'Not authenticated';
   END IF;
 
-  -- Get current XP and inventory from DB
-  SELECT xp, inventory INTO v_old_xp, v_old_inventory FROM public.profiles WHERE id = v_user_id;
+  -- FOR UPDATE to lock row for concurrent writes
+  SELECT xp, inventory INTO v_old_xp, v_old_inventory FROM public.profiles WHERE id = v_user_id FOR UPDATE;
 
   v_delta_xp := COALESCE(p_xp, 0) - COALESCE(v_old_xp, 0);
 
-  -- Anti-Cheat: Never allow XP to decrease
-  IF v_delta_xp < 0 THEN v_delta_xp := 0; END IF;
+  -- Anti-Cheat: Reject negative delta
+  IF v_delta_xp < 0 THEN 
+    RAISE EXCEPTION 'Negative XP delta is not allowed. Client out of sync.';
+  END IF;
 
-  -- Count active SRS updates (non-deleted)
+  -- Count active SRS updates idempotently using ledger
   IF p_srs_updates IS NOT NULL AND jsonb_typeof(p_srs_updates) = 'array' THEN
-    SELECT COALESCE(count(*), 0) INTO v_active_srs_count
-    FROM jsonb_array_elements(p_srs_updates) x
-    WHERE NOT COALESCE((x->>'is_deleted')::BOOLEAN, false);
+    WITH srs_inserts AS (
+      INSERT INTO public.user_xp_ledger (user_id, event_type, amount, reference_id)
+      SELECT v_user_id, 'srs', 15, (x->>'word_id') || ':' || (x->>'repetition')
+      FROM jsonb_array_elements(p_srs_updates) x
+      WHERE NOT COALESCE((x->>'is_deleted')::BOOLEAN, false)
+      ON CONFLICT (user_id, event_type, reference_id) WHERE reference_id IS NOT NULL DO NOTHING
+      RETURNING 1
+    )
+    SELECT count(*) INTO v_active_srs_count FROM srs_inserts;
   ELSE
     v_active_srs_count := 0;
   END IF;
 
-  -- Count active Lesson updates (non-deleted)
+  -- Count active Lesson updates idempotently using ledger
   IF p_lesson_updates IS NOT NULL AND jsonb_typeof(p_lesson_updates) = 'array' THEN
-    SELECT COALESCE(count(*), 0) INTO v_active_lesson_count
-    FROM jsonb_array_elements(p_lesson_updates) x
-    WHERE NOT COALESCE((x->>'is_deleted')::BOOLEAN, false);
+    WITH lesson_inserts AS (
+      INSERT INTO public.user_xp_ledger (user_id, event_type, amount, reference_id)
+      SELECT v_user_id, 'lesson', 100, x->>'lesson_id'
+      FROM jsonb_array_elements(p_lesson_updates) x
+      WHERE NOT COALESCE((x->>'is_deleted')::BOOLEAN, false)
+      ON CONFLICT (user_id, event_type, reference_id) WHERE reference_id IS NOT NULL DO NOTHING
+      RETURNING 1
+    )
+    SELECT count(*) INTO v_active_lesson_count FROM lesson_inserts;
   ELSE
     v_active_lesson_count := 0;
   END IF;
 
-  -- Calculate achievements bonus XP from new achievements compared to old ones
-  IF p_inventory IS NOT NULL AND p_inventory->'achievements' IS NOT NULL AND jsonb_typeof(p_inventory->'achievements') = 'array' THEN
-    SELECT COALESCE(SUM(
-      CASE
-        WHEN x->>'id' LIKE '%gold%' THEN 1000
-        WHEN x->>'id' LIKE '%silver%' THEN 250
-        WHEN x->>'id' LIKE '%bronze%' THEN 50
-        ELSE 0
-      END
-    ), 0) INTO v_achievement_bonus_xp
-    FROM jsonb_array_elements(p_inventory->'achievements') x
-    WHERE NOT (
-      v_old_inventory IS NOT NULL
-      AND v_old_inventory->'achievements' IS NOT NULL
-      AND jsonb_typeof(v_old_inventory->'achievements') = 'array'
-      AND EXISTS (
-        SELECT 1
-        FROM jsonb_array_elements(v_old_inventory->'achievements') y
-        WHERE y->>'id' = x->>'id'
-      )
-    );
-  ELSE
-    v_achievement_bonus_xp := 0;
-  END IF;
+  -- Anti-Cheat: Ignore achievements array sent by client
+  v_achievement_bonus_xp := 0;
 
-  IF v_achievement_bonus_xp IS NULL THEN
-    v_achievement_bonus_xp := 0;
-  END IF;
-
-  -- Dynamic Daily Quest / Bonus XP Capping Logic
-  v_today := COALESCE(p_last_study_date, to_char(now(), 'YYYY-MM-DD'));
+  -- Server date for today
+  v_today := to_char(now(), 'YYYY-MM-DD');
 
   IF v_old_inventory IS NOT NULL AND v_old_inventory->'daily_bonus_xp' IS NOT NULL AND v_old_inventory->'daily_bonus_xp'->>'date' = v_today THEN
     v_accumulated_bonus_xp := COALESCE((v_old_inventory->'daily_bonus_xp'->>'amount')::INTEGER, 0);
@@ -727,9 +741,19 @@ BEGIN
   IF v_bonus_delta > v_remaining_bonus_xp THEN
     v_bonus_delta := v_remaining_bonus_xp;
   END IF;
+  
+  IF v_bonus_delta > 0 THEN
+    INSERT INTO public.user_xp_ledger (user_id, event_type, amount, reference_id)
+    VALUES (v_user_id, 'daily_bonus', v_bonus_delta, v_today || ':' || extract(epoch from now())::text);
+  END IF;
 
-  -- Recompute accepted delta XP
+  -- Recompute accepted delta XP using the actual idempotent inserted counts
   v_delta_xp := (v_active_srs_count * 15) + (v_active_lesson_count * 100) + v_achievement_bonus_xp + v_bonus_delta;
+
+  -- Security Alert: Log suspiciously large XP gains (XP spike)
+  IF v_delta_xp > 1000 THEN
+    RAISE WARNING '[SECURITY_ALERT] XP Spike Detected: User % gained % XP in a single sync event.', v_user_id, v_delta_xp;
+  END IF;
 
   -- Update inventory JSONB with the new cumulative daily bonus amount
   v_final_inventory := COALESCE(p_inventory, '{}'::jsonb);
@@ -746,7 +770,7 @@ BEGIN
     xp = COALESCE(v_old_xp, 0) + v_delta_xp,
     streak = p_streak,
     today_review_count = p_today_review_count,
-    last_study_date = p_last_study_date,
+    last_study_date = v_today,
     study_days = p_study_days,
     inventory = v_final_inventory,
     settings = p_settings,
@@ -889,6 +913,9 @@ CREATE INDEX idx_user_srs_user_next_review ON public.user_srs USING btree (user_
 -- User Lessons
 CREATE INDEX idx_user_lessons_user_id ON public.user_lessons USING btree (user_id);
 
+-- User XP Ledger
+CREATE UNIQUE INDEX idx_user_xp_ledger_idempotency ON public.user_xp_ledger (user_id, event_type, reference_id) WHERE reference_id IS NOT NULL;
+
 -- User Feedback
 CREATE INDEX idx_user_feedback_user_id ON public.user_feedback USING btree (user_id);
 
@@ -949,6 +976,7 @@ ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_srs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_feedback ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_lessons ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_xp_ledger ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.course_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.kanji ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.vocab ENABLE ROW LEVEL SECURITY;
@@ -978,7 +1006,6 @@ ALTER TABLE public.reading ENABLE ROW LEVEL SECURITY;
 -- ═══════════════════════════════════════════════════════════════════════════
 
 -- Profiles
-CREATE POLICY "Public profiles are viewable by everyone" ON public.profiles FOR SELECT USING (true);
 CREATE POLICY "Users can view their own profile" ON public.profiles FOR SELECT USING ((select auth.uid()) = id);
 CREATE POLICY "Users can update their own profile" ON public.profiles FOR UPDATE USING ((select auth.uid()) = id);
 CREATE POLICY "Users can insert their own profile" ON public.profiles FOR INSERT WITH CHECK ((select auth.uid()) = id);
@@ -992,6 +1019,9 @@ CREATE POLICY "Users can delete their own SRS data" ON public.user_srs FOR DELET
 -- User Lessons
 CREATE POLICY "Users can manage own lesson progress" ON public.user_lessons FOR ALL USING ((select auth.uid()) = user_id);
 
+-- User XP Ledger
+CREATE POLICY "Users can view their own xp ledger" ON public.user_xp_ledger FOR SELECT USING (auth.uid() = user_id);
+
 -- User Feedback
 CREATE POLICY "Allow public inserts on user_feedback" ON public.user_feedback FOR INSERT WITH CHECK (true);
 CREATE POLICY "Only admins can view feedback" ON public.user_feedback FOR SELECT USING (false);
@@ -1002,10 +1032,10 @@ CREATE POLICY "Allow public read access for library" ON public.course_categories
 CREATE POLICY "Allow public read access for library" ON public.kanji FOR SELECT USING (true);
 CREATE POLICY "Allow public read access for library" ON public.vocab FOR SELECT USING (true);
 CREATE POLICY "Allow public read access for library" ON public.grammar FOR SELECT USING (true);
-CREATE POLICY "Allow public read access for library" ON public.lessons FOR SELECT USING (true);
-CREATE POLICY "Allow public read access for articles" ON public.articles FOR SELECT USING (true);
-CREATE POLICY "Allow public read access for library" ON public.listening FOR SELECT USING (true);
-CREATE POLICY "Allow public read access for library" ON public.reading FOR SELECT USING (true);
+CREATE POLICY "Allow public read access for library" ON public.lessons FOR SELECT USING (is_published = true);
+CREATE POLICY "Allow public read access for articles" ON public.articles FOR SELECT USING (is_published = true);
+CREATE POLICY "Allow public read access for library" ON public.listening FOR SELECT USING (status = 'published');
+CREATE POLICY "Allow public read access for library" ON public.reading FOR SELECT USING (status = 'published');
 CREATE POLICY "Cheatsheets are viewable by everyone" ON public.cheatsheets FOR SELECT USING (true);
 CREATE POLICY "Public read" ON public.expressions FOR SELECT USING (true);
 CREATE POLICY "Public read" ON public.radicals FOR SELECT USING (true);
@@ -1135,3 +1165,27 @@ ON CONFLICT (id) DO UPDATE SET
 
 CREATE POLICY "Allow public read access to exam-assets"
   ON storage.objects FOR SELECT USING (bucket_id = 'exam-assets');
+-- Create function to block direct updates from client
+CREATE OR REPLACE FUNCTION public.prevent_gamification_direct_update()
+RETURNS trigger AS $$
+BEGIN
+  -- Only block if the current role is 'authenticated' or 'anon'
+  IF current_role IN ('authenticated', 'anon') THEN
+    IF NEW.xp IS DISTINCT FROM OLD.xp OR 
+       NEW.level IS DISTINCT FROM OLD.level OR 
+       NEW.streak IS DISTINCT FROM OLD.streak OR 
+       NEW.inventory IS DISTINCT FROM OLD.inventory THEN
+      RAISE EXCEPTION 'Direct update of gamification columns (xp, level, streak, inventory) is not allowed. Please use the designated RPC.';
+    END IF;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create trigger on profiles table
+DROP TRIGGER IF EXISTS block_direct_gamification_update ON public.profiles;
+CREATE TRIGGER block_direct_gamification_update
+BEFORE UPDATE ON public.profiles
+FOR EACH ROW
+EXECUTE FUNCTION public.prevent_gamification_direct_update();
+

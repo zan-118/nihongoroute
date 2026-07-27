@@ -16,6 +16,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useUIStore } from "@/store/useUIStore";
 import { useAuthStore } from "@/store/useAuthStore";
+import { buildSrsUpdates, buildLessonUpdates } from "@/lib/cloud-sync-payload";
 import { toast } from "sonner";
 
 // ======================
@@ -181,26 +182,24 @@ export function useSettingsActions() {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
-        // Dynamic import to reduce initial bundle size.
-        const { syncLocalToCloud } = await import("@/lib/supabase/sync");
-        const progressData = {
-          id,
-          isGuest,
-          name,
-          xp,
-          level,
-          streak,
-          todayReviewCount,
-          lastStudyDate,
-          studyDays,
-          inventory,
-          completedLessons,
-          srs,
-          notifications,
-          settings,
-        };
-        const success = await syncLocalToCloud(session.user.id, progressData);
-        if (success) {
+        // Build relational updates
+        const srsUpdates = buildSrsUpdates(srs, new Set(Object.keys(srs)));
+        const lessonUpdates = buildLessonUpdates(completedLessons, new Set(Object.keys(completedLessons)));
+
+        const { error: rpcError } = await supabase.rpc('sync_user_progress', {
+          p_full_name: name,
+          p_xp: xp,
+          p_streak: streak,
+          p_today_review_count: todayReviewCount,
+          p_last_study_date: lastStudyDate,
+          p_study_days: studyDays,
+          p_inventory: inventory,
+          p_settings: settings,
+          p_srs_updates: srsUpdates,
+          p_lesson_updates: lessonUpdates
+        });
+
+        if (!rpcError) {
           clearDirtySrs();
           toast.success("Oke, datamu udah disimpan ke cloud!");
         } else {

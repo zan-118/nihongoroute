@@ -9,6 +9,10 @@
 // ======================
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { z } from "zod";
+
+const MAX_CARDS_PER_REQUEST = 50;
+const idsArraySchema = z.array(z.string().min(1)).max(MAX_CARDS_PER_REQUEST, `Maksimal ${MAX_CARDS_PER_REQUEST} ID kartu yang diizinkan.`);
 
 // ======================
 // KONSTANTA VALIDASI
@@ -57,7 +61,17 @@ export async function GET(request: NextRequest) {
   // Split and clean IDs
   const rawIds = idsParam.split(",").map(id => id.trim()).filter(Boolean);
 
-  if (rawIds.length === 0) {
+  const parsedIds = idsArraySchema.safeParse(rawIds);
+  if (!parsedIds.success) {
+    return NextResponse.json(
+      { error: parsedIds.error.issues[0].message || "Invalid ids parameter" },
+      { status: 400 }
+    );
+  }
+
+  const validIds = parsedIds.data;
+
+  if (validIds.length === 0) {
     return NextResponse.json([], { status: 200 });
   }
 
@@ -80,7 +94,7 @@ export async function GET(request: NextRequest) {
   ];
 
   // Categorize IDs to optimize queries
-  for (const id of rawIds) {
+  for (const id of validIds) {
     if (UUID_REGEX.test(id)) {
       uuids.push(id);
     } else if (id.startsWith("n5-") || id.startsWith("n4-")) {
@@ -177,7 +191,7 @@ export async function GET(request: NextRequest) {
     const formattedRomajiVocabs: FormattedCard[] = [];
     if (vocabByRomajiRes.data) {
       vocabByRomajiRes.data.forEach((v) => {
-        const matchingLegacyIds = rawIds.filter((id) => {
+        const matchingLegacyIds = validIds.filter((id) => {
           if (!id.startsWith("n5-") && !id.startsWith("n4-")) return false;
           const cleanId = id.slice(3);
           let romajiFound = cleanId;
@@ -257,7 +271,7 @@ export async function GET(request: NextRequest) {
 
     // 7. Sort cards to match requested order
     const requestedOrderMap = new Map<string, number>();
-    rawIds.forEach((id, index) => {
+    validIds.forEach((id, index) => {
       requestedOrderMap.set(id.toLowerCase(), index);
     });
 

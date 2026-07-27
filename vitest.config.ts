@@ -7,6 +7,15 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./__tests__/setup.ts"],
     include: ["__tests__/**/*.test.{ts,tsx}"],
+    coverage: {
+      provider: "v8",
+      thresholds: {
+        statements: 35,
+        branches: 20,
+        functions: 35,
+        lines: 35,
+      },
+    },
     alias: [
       {
         find: /^\@\/lib\/(.+)$/,

@@ -19,6 +19,7 @@ graph TD
 
     subgraph Server ["Server Next.js"]
         Actions["Server Actions<br/>src/actions/*.actions.ts"]
+        Services["Domain Services<br/>src/lib/services/*.service.ts"]
         API["API Route Handlers<br/>/api/tts, /api/furigana,<br/>/api/cards, /api/health,<br/>/api/webhooks/*"]
         AuthCB["Auth Callback<br/>/auth/callback"]
         EdgeTTS["MsEdgeTTS Client"]
@@ -44,7 +45,8 @@ graph TD
     BC -->|Invalidate cache tab lain| UI
 
     UI -->|Invoke Action| Actions
-    Actions -->|Query / Mutate| DB
+    Actions -->|Delegate| Services
+    Services -->|Query / Mutate| DB
     UI -->|Fetch Audio / Furigana / Cards| API
     API -->|Check cache tts_cache| DB
     API -->|Sintesis dinamis| EdgeTTS

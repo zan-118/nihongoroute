@@ -122,7 +122,7 @@ export default function LeaderboardClient() {
       if (activeTab === "top_global") {
         // Fetch top 20 users sorted by XP descending
         const { data: topUsers, error } = await supabase
-          .from("profiles")
+          .from("leaderboard_profiles")
           .select("id, full_name, xp, level, streak, avatar_url, study_days")
           .order("xp", { ascending: false })
           .limit(20);
@@ -144,7 +144,7 @@ export default function LeaderboardClient() {
         if (!userIsGuest && userId && userId !== "guest") {
           // Count users with higher XP to determine absolute rank
           const { count, error: rankError } = await supabase
-            .from("profiles")
+            .from("leaderboard_profiles")
             .select("id", { count: "exact", head: true })
             .gt("xp", userXp);
 
@@ -165,7 +165,7 @@ export default function LeaderboardClient() {
 
         // Ambil 3 user di atas user aktif
         const { data: aboveUsers, error: errorAbove } = await supabase
-          .from("profiles")
+          .from("leaderboard_profiles")
           .select("id, full_name, xp, level, streak, avatar_url, study_days")
           .gt("xp", userXp)
           .order("xp", { ascending: true })
@@ -175,7 +175,7 @@ export default function LeaderboardClient() {
 
         // Ambil 3 user di bawah user aktif
         const { data: belowUsers, error: errorBelow } = await supabase
-          .from("profiles")
+          .from("leaderboard_profiles")
           .select("id, full_name, xp, level, streak, avatar_url, study_days")
           .lt("xp", userXp)
           .order("xp", { ascending: false })
@@ -185,7 +185,7 @@ export default function LeaderboardClient() {
 
         // Ambil data user aktif secara fresh
         const { data: ownProfile, error: errorOwn } = await supabase
-          .from("profiles")
+          .from("leaderboard_profiles")
           .select("id, full_name, xp, level, streak, avatar_url, study_days")
           .eq("id", userId)
           .single();
@@ -204,7 +204,7 @@ export default function LeaderboardClient() {
         await Promise.all(
           combined.map(async (u) => {
             const { count, error: rankErr } = await supabase
-              .from("profiles")
+              .from("leaderboard_profiles")
               .select("id", { count: "exact", head: true })
               .gt("xp", u.xp);
             if (!rankErr && count !== null) {

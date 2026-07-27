@@ -114,8 +114,7 @@ Diekstrak langsung dari `package.json` pada 24 Juli 2026.
 |-------|-------|-------|
 | `@next/bundle-analyzer` | `^16.2.10` | Analisis ukuran bundle |
 | `sharp` | `^0.35.3` | Optimasi image (Next.js) |
-| `lighthouse` / `@lhci/cli` | `^13.4.0` / `^0.15.1` | Performance audit |
+| `lighthouse` | `^13.4.0` | Performance audit |
 | `dotenv` | `^17.4.2` | Environment variable loader (scripts) |
 | `csv-parser` | `^3.2.1` | Parser CSV (import scripts) |
-| `node-fetch` | `^2.7.0` | HTTP fetch (scripts) |
 | `@gradio/client` | `^2.3.1` | Gradio API client (dev tooling) |

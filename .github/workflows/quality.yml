@@ -40,14 +40,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Security Audit
+        run: npm audit --omit=dev
+
       - name: Typecheck
         run: npm run typecheck
 
       - name: Lint
         run: npm run lint
 
-      - name: Unit tests
-        run: npm run test:unit
+      - name: Unit & Integration tests with Coverage
+        run: npm run test:unit -- --coverage
 
       - name: Build
         run: npm run build

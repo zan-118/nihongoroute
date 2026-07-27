@@ -17,8 +17,7 @@ import { useUIStore } from "@/store/useUIStore";
 import { SRSState } from "@/lib/srs";
 import { calculateLevel } from "@/lib/level";
 import { getLocalDateString } from "@/lib/utils";
-import { UserProgress, LessonProgress } from "@/store/types";
-import { handleLegacyMigration } from "@/lib/supabase/sync";
+import { LessonProgress, UserProgress } from "@/store/types";
 import { Session } from "@supabase/supabase-js";
 import { useStoreHydration } from "./useStoreHydration";
 
@@ -40,9 +39,6 @@ export function useCloudData(session: Session | null | undefined, hasMounted: bo
   const mergeProgress = useSRSStore((s) => s.mergeProgress);
   const setLoading = useUIStore((s) => s.setLoading);
   
-  // Track guest migration status.
-  const initialLoadDone = useRef(false);
-
   // Wait for local stores to hydrate.
   const userHydrated = useStoreHydration(useUserStore);
   const srsHydrated = useStoreHydration(useSRSStore);
@@ -53,12 +49,6 @@ export function useCloudData(session: Session | null | undefined, hasMounted: bo
     queryFn: async () => {
       // Guard: require auth and mount.
       if (!session?.user || !hasMounted) return null;
-
-      // Migrate guest data on first load.
-      if (!initialLoadDone.current) {
-        await handleLegacyMigration(session.user.id, supabase);
-        initialLoadDone.current = true;
-      }
 
       // Fetch profile, SRS, and lessons in parallel.
       const [profileRes, srsRes, lessonsRes] = await Promise.all([

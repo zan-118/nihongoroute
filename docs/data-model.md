@@ -65,6 +65,21 @@ Status SRS (Spaced Repetition) per kartu per pengguna.
 
 **PK**: `(user_id, lesson_id)`.
 
+#### 3b. `user_xp_ledger` (0 rows)
+
+Tabel idempotensi untuk mencegah duplikasi poin XP akibat race condition atau replay.
+
+| Kolom | Tipe | Null | Default |
+|-------|------|------|---------|
+| `id` | uuid, PK | NO | `gen_random_uuid()` |
+| `user_id` | uuid | NO | FK → `auth.users(id)` ON DELETE CASCADE |
+| `event_type` | text | NO | |
+| `amount` | integer | NO | |
+| `reference_id` | text | YES | |
+| `created_at` | timestamptz | NO | `now()` |
+
+**Constraint**: `UNIQUE(user_id, event_type, reference_id)`.
+
 #### 4. `user_feedback` (2 rows)
 
 | Kolom | Tipe | Null | Default |

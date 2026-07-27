@@ -1,4 +1,4 @@
-"use server";
+﻿"use server";
 
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -68,59 +68,40 @@ async function requireAuth() {
 export async function getCommunityPosts(category?: string): Promise<CommunityPost[]> {
   try {
     const supabase = await createClient();
-    // Build query to fetch posts with author profile details
     let query = supabase
-      .from("community_posts")
-      .select(`
-        id,
-        user_id,
-        content,
-        created_at,
-        likes_users,
-        comments_count,
-        category,
-        author:profiles(full_name, avatar_url, level)
-      `);
+      .from('community_posts')
+      .select('id, user_id, content, created_at, likes_users, comments_count, category');
 
-    // Apply category filter if specified and not default
-    if (category && category !== "Semua") {
-      query = query.eq("category", category);
+    if (category && category !== 'Semua') {
+      query = query.eq('category', category);
     }
 
-    const { data, error } = await query.order("created_at", { ascending: false });
+    const { data: postsData, error: postsError } = await query.order('created_at', { ascending: false });
+    if (postsError) throw postsError;
+    if (!postsData || postsData.length === 0) return [];
 
-    if (error) throw error;
-    
-    // Map database response to CommunityPost structure
-    return (data || []).map((post: {
-      id: string;
-      user_id: string;
-      content: string;
-      created_at: string;
-      likes_users: unknown;
-      comments_count: number;
-      category?: string;
-      author?: unknown;
-    }) => {
-      const authorData = post.author as { full_name: string; avatar_url?: string; level?: number } | null | undefined;
-      return {
-        id: post.id,
-        user_id: post.user_id,
-        content: post.content,
-        created_at: post.created_at,
-        comments_count: post.comments_count,
-        category: post.category,
-        // Ensure likes_users is parsed as string array
-        likes_users: Array.isArray(post.likes_users) ? (post.likes_users as string[]) : [],
-        author: authorData ? {
-          full_name: authorData.full_name,
-          avatar_url: authorData.avatar_url,
-          level: authorData.level || 1,
-        } : undefined
-      };
-    }) as CommunityPost[];
+    const userIds = [...new Set(postsData.map(p => p.user_id))];
+    const { data: profilesData } = await supabase
+      .from('leaderboard_profiles')
+      .select('id, full_name, avatar_url, level')
+      .in('id', userIds);
+
+    const profileMap = new Map(
+      (profilesData || []).map(p => [p.id, { full_name: p.full_name, avatar_url: p.avatar_url, level: p.level || 1 }])
+    );
+
+    return postsData.map((post: any) => ({
+      id: post.id,
+      user_id: post.user_id,
+      content: post.content,
+      created_at: post.created_at,
+      comments_count: post.comments_count,
+      category: post.category,
+      likes_users: Array.isArray(post.likes_users) ? post.likes_users : [],
+      author: profileMap.get(post.user_id) || { full_name: 'Unknown User', level: 1 }
+    }));
   } catch (error) {
-    console.error("Gagal mengambil postingan komunitas:", error);
+    console.error('Gagal mengambil postingan komunitas:', error);
     return [];
   }
 }

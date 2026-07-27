@@ -10,24 +10,35 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { safeEqual } from "@/lib/core/admin-api-auth";
+import { z } from "zod";
+import { securityLogger } from "@/lib/core/logger";
+import { rateLimit } from "@/lib/core/rate-limit";
 
-// ======================
-// ANTARMUKA / TIPE DATA
-// ======================
-/**
- * Payload structure sent by Trakteer webhook.
- */
-interface TrakteerPayload {
-  tr_id?: string;
-  transaction_id?: string;
-  supporter_name?: string;
-  net_amount?: number | string;
-  price?: number | string;
-  quantity?: number;
-  supporter_message?: string;
-  support_message?: string;
-  key?: string;
-}
+const MAX_DONATION_AMOUNT = 1_000_000_000;
+
+const optionalAmountSchema = z.coerce
+  .number()
+  .finite()
+  .nonnegative()
+  .max(MAX_DONATION_AMOUNT)
+  .optional();
+
+export const trakteerPayloadSchema = z
+  .object({
+    tr_id: z.string().trim().min(1).max(200).optional(),
+    transaction_id: z.string().trim().min(1).max(200).optional(),
+    supporter_name: z.string().trim().max(100).optional(),
+    net_amount: optionalAmountSchema,
+    price: optionalAmountSchema,
+    quantity: z.coerce.number().int().positive().max(10_000).optional(),
+    supporter_message: z.string().trim().max(1_000).optional(),
+    support_message: z.string().trim().max(1_000).optional(),
+    payment_date: z.string().optional(),
+    created_at: z.string().optional(),
+  })
+  .refine((payload) => Boolean(payload.transaction_id || payload.tr_id), {
+    message: "Transaction ID is required",
+  });
 
 // ======================
 // HANDLER UTAMA (POST)
@@ -41,39 +52,75 @@ interface TrakteerPayload {
  */
 export async function POST(request: Request) {
   try {
-    // Parse incoming JSON payload
-    const body = (await request.json()) as TrakteerPayload;
-    
-    // Field payload Trakteer:
-    // transaction_id/tr_id, supporter_name, quantity, price, net_amount, supporter_message/support_message
-    const trId = body.transaction_id || body.tr_id;
-    const supporterName = body.supporter_name || "Anonim";
-    
-    // Calculate donation amounts
-    const priceVal = Number(body.price || 0);
-    const quantityVal = Number(body.quantity || 1);
-    const netAmount = Number(body.net_amount || (priceVal * quantityVal) || 0);
-    
-    const supportMessage = body.supporter_message || body.support_message || "";
-    // Validasi token webhook rahasia dari Trakteer (mendukung header x-webhook-token, x-trakteer-token, dan body key)
-    const expectedKey = process.env.TRAKTEER_WEBHOOK_SECRET;
-    const token = 
-      request.headers.get("x-webhook-token") || 
-      request.headers.get("x-trakteer-token") || 
-      body.key;
-    // Normalize tokens by removing whitespace
-    const cleanToken = (token || "").replace(/[\s\r\n]/g, "");
-    const cleanExpected = (expectedKey || "").replace(/[\s\r\n]/g, "");
+    const ip = request.headers.get("x-forwarded-for") ?? "unknown";
+    // Batas 20 request per 10 detik per IP
+    if (rateLimit(`trakteer_webhook_${ip}`, 20, 10000)) {
+      securityLogger.warn({ event: "trakteer_webhook_rate_limit", source: "trakteer", metadata: { ip } });
+      return NextResponse.json({ error: "Too Many Requests" }, { status: 429 });
+    }
 
-    // Verify webhook authenticity
-    if (cleanExpected && !safeEqual(cleanToken, cleanExpected)) {
+    const expectedKey = process.env.TRAKTEER_WEBHOOK_SECRET?.trim();
+    if (!expectedKey) {
+      return NextResponse.json(
+        { error: "Trakteer webhook is not configured" },
+        { status: 503 }
+      );
+    }
+
+    const token =
+      request.headers.get("x-webhook-token") ||
+      request.headers.get("x-trakteer-token");
+    const cleanToken = (token || "").replace(/[\s\r\n]/g, "");
+    const cleanExpected = expectedKey.replace(/[\s\r\n]/g, "");
+
+    if (!cleanToken || !safeEqual(cleanToken, cleanExpected)) {
+      securityLogger.alert({ event: "trakteer_webhook_invalid_token", source: "trakteer" });
       return NextResponse.json({ error: "Invalid webhook secret key" }, { status: 401 });
     }
 
+    const parsed = trakteerPayloadSchema.safeParse(await request.json());
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Invalid payment payload data" }, { status: 400 });
+    }
+
+    const body = parsed.data;
+    
+    // Field payload Trakteer:
+    // transaction_id/tr_id, supporter_name, quantity, price, net_amount, supporter_message/support_message
+    const trId = (body.transaction_id || body.tr_id)!;
+    const supporterName = body.supporter_name || "Anonim";
+    
+    // Calculate donation amounts
+    const priceVal = body.price ?? 0;
+    const quantityVal = body.quantity ?? 1;
+    const netAmount = body.net_amount ?? priceVal * quantityVal;
+    
+    const supportMessage = body.supporter_message || body.support_message || "";
     // Jika ini adalah uji coba/ping test dari dashboard Trakteer, langsung return sukses tanpa simpan DB
-    const isTest = !trId || trId.toLowerCase().includes("test") || netAmount <= 0;
+    const isTest = trId.toLowerCase().includes("test");
     if (isTest) {
       return NextResponse.json({ success: true, message: "Trakteer Webhook Test Successful" });
+    }
+
+    const paymentDate = body.payment_date || body.created_at || "";
+    if (paymentDate) {
+      const createdAtDate = new Date(paymentDate);
+      if (!isNaN(createdAtDate.getTime())) {
+        const timeDiff = Math.abs(Date.now() - createdAtDate.getTime());
+        // Batas replay window: 5 menit (300.000 ms)
+        if (timeDiff > 300000) {
+          securityLogger.alert({ 
+            event: "trakteer_webhook_replay_attack", 
+            source: "trakteer", 
+            metadata: { payment_date: paymentDate } 
+          });
+          return NextResponse.json({ error: "Replay window exceeded" }, { status: 400 });
+        }
+      }
+    }
+
+    if (!Number.isFinite(netAmount) || netAmount <= 0 || netAmount > MAX_DONATION_AMOUNT) {
+      return NextResponse.json({ error: "Invalid payment payload data" }, { status: 400 });
     }
 
     // Tentukan tingkatan lencana (tier) berdasarkan total kontribusi
@@ -95,19 +142,37 @@ export async function POST(request: Request) {
         amount: netAmount,
         message: supportMessage,
         tier,
-        source: "trakteer"
+        source: "trakteer",
+        provider_event_id: trId
       });
 
     // Handle database insertion errors
     if (error) {
-      console.error("Gagal menyimpan donatur Trakteer ke Supabase:", error);
+      if (error.code === '23505') {
+        securityLogger.warn({ 
+          event: "trakteer_webhook_duplicate", 
+          source: "trakteer", 
+          metadata: { provider_event_id: trId } 
+        });
+        return NextResponse.json({ success: true, message: "Duplicate donation ignored" });
+      }
+      securityLogger.error({ 
+        event: "trakteer_webhook_db_error", 
+        source: "trakteer", 
+        metadata: { error_code: error.code } 
+      });
       return NextResponse.json({ error: "Failed to save to database" }, { status: 500 });
     }
 
+    securityLogger.info({ 
+      event: "trakteer_webhook_success", 
+      source: "trakteer", 
+      metadata: { provider_event_id: trId, amount: netAmount } 
+    });
     return NextResponse.json({ success: true, message: "Donator successfully processed and saved" });
   } catch (err) {
     // Handle unexpected errors
-    console.error("Fatal error di Trakteer webhook:", err);
+    securityLogger.error({ event: "trakteer_webhook_fatal_error", source: "trakteer" });
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

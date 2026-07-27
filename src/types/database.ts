@@ -546,6 +546,18 @@ export interface UserLessonTable {
 }
 
 /**
+ * User XP ledger table schema for idempotent event logging.
+ */
+export interface UserXPLedgerTable {
+  id: string;
+  user_id: string;
+  event_type: string;
+  amount: number;
+  reference_id?: string | null;
+  created_at: string;
+}
+
+/**
  * Course category table schema.
  */
 export interface CourseCategoryTable {
@@ -622,6 +634,7 @@ export interface SupporterTable {
   message?: string | null;
   tier?: "bronze" | "silver" | "gold" | string;
   source: "saweria" | "trakteer" | string;
+  provider_event_id?: string | null;
   created_at?: string;
 }
 

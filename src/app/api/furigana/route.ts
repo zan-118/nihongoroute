@@ -108,6 +108,13 @@ export async function OPTIONS(req: Request) {
   });
 }
 
+import { z } from "zod";
+
+const furiganaPayloadSchema = z.object({
+  text: z.string().max(500, "Teks maksimal 500 karakter").optional(),
+  mode: z.enum(["normal", "furigana", "okurigana", "roma"]).optional().default("normal")
+});
+
 /**
  * Convert Japanese text to Hiragana/Furigana.
  * @param req - Incoming request object containing text and mode.
@@ -117,7 +124,17 @@ export async function POST(req: Request) {
   const corsHeaders = getCorsHeaders(req);
   
   try {
-    const { text, mode = "normal" } = await req.json();
+    const json = await req.json().catch(() => ({}));
+    const parsed = furiganaPayloadSchema.safeParse(json);
+    
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Invalid payload data", details: parsed.error.format() },
+        { status: 400, headers: corsHeaders }
+      );
+    }
+
+    const { text, mode } = parsed.data;
 
     // Return empty if no text provided.
     if (!text) {
@@ -128,7 +145,7 @@ export async function POST(req: Request) {
     // Convert text using Kuroshiro engine.
     const result = await engine.convert(text, {
       to: "hiragana",
-      mode: mode as "normal" | "furigana" | "okurigana" | "roma"
+      mode
     });
 
     return NextResponse.json({ hiragana: result }, { headers: corsHeaders });
