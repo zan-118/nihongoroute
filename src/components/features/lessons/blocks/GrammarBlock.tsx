@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ChevronDown } from "@/components/ui/icons";
 import { ContentBlock, ExampleSentence } from "@/types/database";
 import { SmartJapanese, FuriganaDisplay } from "@/components/ui/japanese";
-import TTSReader from "@/components/features/tools/tts/TTSReader";
+import { TTSReader } from "@/components/features/media";
 import { parseInlineStyles, parseNotesToJSX } from "@/lib/utils/markdown-parser";
 
 interface GrammarBlockProps {

@@ -10,7 +10,7 @@ import { m } from "framer-motion";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { PenTool, X, Sparkles } from "@/components/ui/icons";
-import WritingCanvas from "@/components/features/tools/writing/WritingCanvas";
+import WritingCanvas from "@/components/features/tools/stroke-canvas/WritingCanvas";
 
 // ==========================================
 // TIPE DATA / INTERFACE

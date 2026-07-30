@@ -20,7 +20,7 @@ import {
   type ToolSearchItem,
 } from "@/lib/tools-search";
 import { searchToolDictionaryAction } from "@/actions/dictionary.actions";
-import { AddToSRSButton } from "@/components/features/srs/button/AddToSRSButton";
+import { AddToSRSButton } from "@/components/features/srs/actions/AddToSRSButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

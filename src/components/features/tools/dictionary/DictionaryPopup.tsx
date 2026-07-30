@@ -13,7 +13,7 @@ import { m, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { X } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
-import TTSReader from "@/components/features/tools/tts/TTSReader";
+import { TTSReader } from "@/components/features/media";
 import AddToSRSButton from "@/components/features/srs/actions/AddToSRSButton";
 import { createClient } from "@/lib/supabase/client";
 
@@ -210,7 +210,7 @@ export default function DictionaryPopup() {
                   </div>
                   {result.id && (
                     <div className="flex-1 flex justify-end">
-                       <AddToSRSButton wordId={result.id} />
+                       <AddToSRSButton wordId={result.id} variant="action" />
                     </div>
                   )}
                 </div>

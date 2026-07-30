@@ -1,6 +1,8 @@
+"use client";
+
 /**
  * @file useWritingCanvas.ts
- * @description Hook kustom untuk mengelola kanvas coretan (canvas drawing) interaktif untuk melatih penulisan Hiragana, Katakana, dan Kanji, terintegrasi dengan sensor akurasi goresan.
+ * @description Hook kustom untuk mengelola kanvas coretan (canvas drawing) interaktif melatih penulisan Hiragana, Katakana, dan Kanji.
  */
 
 // ==========================================
@@ -13,58 +15,41 @@ import { sounds } from "@/lib/audio";
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
-/**
- * Hook properties.
- */
-interface UseWritingCanvasProps {
+export interface UseWritingCanvasProps {
   /** Character to draw. */
   character: string;
   /** Color of stroke. */
   strokeColor: string;
 }
 
-// ==========================================
-// FUNGSI PEMBANTU INTERNAL (HELPERS)
-// ==========================================
-
-/**
- * Convert CSS color to canvas shadow color. Handle CSS variables, RGB, RGBA, HEX.
- */
 const getShadowColor = (colorStr: string, opacity: number): string => {
   if (typeof window === "undefined") return colorStr;
   let resolved = colorStr;
   
   if (colorStr.includes("var(")) {
     try {
-      // Resolve CSS variable. Create temp element to read computed style.
       const temp = document.createElement("div");
       temp.style.color = colorStr;
       document.body.appendChild(temp);
       resolved = getComputedStyle(temp).color;
       document.body.removeChild(temp);
-    } catch (e) {
-      // Default aman cadangan jika getComputedStyle gagal atau di lingkungan pengujian
+    } catch {
+      // Default fallback if getComputedStyle fails in test env
     }
   }
 
-  // Tangani format rgb(r, g, b)
   if (resolved.startsWith("rgb(")) {
-    // Convert RGB to RGBA. Add opacity.
     return resolved.replace("rgb(", "rgba(").replace(")", `, ${opacity})`);
   }
-  // Tangani format rgba(r, g, b, a)
   if (resolved.startsWith("rgba(")) {
     return resolved;
   }
   
-  // Tangani format HEX
   let hex = resolved.replace("#", "").trim();
   if (hex.length === 3) {
-    // Expand 3-digit HEX to 6-digit.
     hex = hex.split("").map((c) => c + c).join("");
   }
   if (hex.length === 6) {
-    // Convert 6-digit HEX to RGBA.
     const r = parseInt(hex.slice(0, 2), 16);
     const g = parseInt(hex.slice(2, 4), 16);
     const b = parseInt(hex.slice(4, 6), 16);
@@ -77,39 +62,27 @@ const getShadowColor = (colorStr: string, opacity: number): string => {
 // ==========================================
 // HOOK UTAMA
 // ==========================================
-/**
- * Manage drawing canvas, validate strokes, track progress.
- */
 export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasProps) {
-  // ==========================================
-  // STATUS & STATE & REFS
-  // ==========================================
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   
   const [isDrawing, setIsDrawing] = useState(false);
   const [showGuide, setShowGuide] = useState(true);
   const [replayKey, setReplayKey] = useState(0);
-  const [hasDrawn, setHasDrawn] = useState(false);
+  const [, setHasDrawn] = useState(false);
   const [showXP, setShowXP] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
 
-  // State untuk melacak data guratan standar dan indeks saat ini
   const [standardPaths, setStandardPaths] = useState<string[]>([]);
   const [currentStrokeIndex, setCurrentStrokeIndex] = useState(0);
   const [strokeError, setStrokeError] = useState<"wrong" | "reverse" | null>(null);
   const [isLocked, setIsLocked] = useState(false);
 
-  // Ref untuk merekam koordinat coretan aktif dan daftar coretan yang benar
   const currentStrokePointsRef = useRef<{ x: number; y: number }[]>([]);
   const correctStrokesRef = useRef<{ x: number; y: number }[][]>([]);
 
   const addXP = useUserStore((state) => state.addXP);
 
-  // ==========================================
-  // EFEK SAMPING (EFFECTS)
-  // ==========================================
-  // Memuat data guratan KanjiVG dengan dukung Caching Offline-First
   useEffect(() => {
     if (!character) {
       requestAnimationFrame(() => {
@@ -129,7 +102,6 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
 
         let svgText = "";
         try {
-          // Fetch KanjiVG SVG. Use Cache API for offline support.
           const cache = await caches.open("nihongoroute_kanjivg_cache");
           const cachedResponse = await cache.match(url);
           if (cachedResponse) {
@@ -169,18 +141,16 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
     fetchSVG();
   }, [character, replayKey]);
 
-  // Melakukan sampling koordinat sepanjang standard path SVG
   const samplePathPoints = useCallback((d: string): { x: number; y: number }[] => {
     const points: { x: number; y: number }[] = [];
     if (typeof document === "undefined") return points;
 
     try {
-      // Sample points along SVG path. Used for stroke comparison.
       const pathEl = document.createElementNS("http://www.w3.org/2000/svg", "path");
       pathEl.setAttribute("d", d);
 
       const length = pathEl.getTotalLength ? pathEl.getTotalLength() : 100;
-      const sampleCount = 5; // Awal, Tengah x3, Akhir
+      const sampleCount = 5;
       for (let i = 0; i < sampleCount; i++) {
         const dist = (i / (sampleCount - 1)) * length;
         const pt = pathEl.getPointAtLength ? pathEl.getPointAtLength(dist) : { x: 54, y: 54 };
@@ -192,7 +162,6 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
     return points;
   }, []);
 
-  // Fungsi menggambar ulang isi kanvas
   const redrawCanvas = useCallback((activeStroke?: { x: number; y: number }[], activeColor?: string) => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
@@ -200,7 +169,6 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // 1. Gambar seluruh goresan yang SUDAH BENAR dalam neon hijau
     correctStrokesRef.current.forEach((stroke) => {
       if (stroke.length === 0) return;
       ctx.beginPath();
@@ -217,7 +185,6 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
       ctx.stroke();
     });
 
-    // 2. Gambar goresan aktif saat ini
     if (activeStroke && activeStroke.length > 0) {
       ctx.beginPath();
       ctx.moveTo(activeStroke[0].x, activeStroke[0].y);
@@ -234,14 +201,12 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
     }
   }, [strokeColor]);
 
-  // Efek resize responsif kanvas dengan ResizeObserver
   useEffect(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
 
     const resizeCanvas = (width: number, height: number) => {
-      // Resize canvas. Adjust for device pixel ratio.
       const ratio = window.devicePixelRatio || 1;
       canvas.width = width * ratio;
       canvas.height = height * ratio;
@@ -270,7 +235,6 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
       observer.observe(container);
       return () => observer.disconnect();
     } else {
-      // Fallback untuk testing env
       const handleResize = () => {
         resizeCanvas(container.clientWidth, container.clientHeight);
       };
@@ -280,9 +244,6 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
     }
   }, [strokeColor, redrawCanvas]);
 
-  // ==========================================
-  // LOGIKA PENGENDALI & KOREKSI CORETAN (CORE)
-  // ==========================================
   const startDrawing = useCallback((e: React.PointerEvent) => {
     if (isLocked || isCompleted) return;
     if (e.button !== 0 && e.pointerType === "mouse") return;
@@ -295,7 +256,6 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    // Start drawing. Record initial point. Vibrate device.
     ctx.beginPath();
     ctx.moveTo(x, y);
     currentStrokePointsRef.current = [{ x, y }];
@@ -315,24 +275,20 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    // Track drawing. Record points. Redraw canvas.
     currentStrokePointsRef.current.push({ x, y });
     redrawCanvas(currentStrokePointsRef.current);
   }, [isDrawing, isLocked, isCompleted, redrawCanvas]);
 
-  // Melakukan validasi koordinat guratan dengan skala standar 109x109
   const validateStroke = useCallback(() => {
     if (currentStrokePointsRef.current.length < 2) return;
 
     if (standardPaths.length === 0) {
-      // Mode Bebas: simpan coretan langsung tanpa validasi
       correctStrokesRef.current.push([...currentStrokePointsRef.current]);
       currentStrokePointsRef.current = [];
       redrawCanvas();
       return;
     }
 
-    // Prevent out-of-bounds error if index exceeds standard paths
     if (currentStrokeIndex >= standardPaths.length) {
       currentStrokePointsRef.current = [];
       redrawCanvas();
@@ -346,7 +302,6 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
     const canvasWidth = rect.width || 1;
     const canvasHeight = rect.height || 1;
 
-    // Konversi koordinat goresan pengguna ke skala 109x109
     const mappedPoints = currentStrokePointsRef.current.map((p) => ({
       x: p.x * (109 / canvasWidth),
       y: p.y * (109 / canvasHeight),
@@ -373,7 +328,6 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
     const dMid = dist(uMid, pMid);
     const dEnd = dist(uEnd, pEnd);
 
-    // Hitung juga jarak jika ditarik terbalik
     const dRevStart = dist(uStart, pEnd);
     const dRevEnd = dist(uEnd, pStart);
 
@@ -382,9 +336,7 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
     const isReverse = dRevStart <= DIST_THRESHOLD && dRevEnd <= DIST_THRESHOLD;
     const isCorrect = dStart <= DIST_THRESHOLD && dMid <= (DIST_THRESHOLD * 1.25) && dEnd <= DIST_THRESHOLD;
 
-    // Validate stroke. Compare user points to standard path points. Check distance and direction.
     if (isCorrect) {
-      // 1. Sukses: Tambahkan ke goresan yang benar
       correctStrokesRef.current.push([...currentStrokePointsRef.current]);
       sounds?.playSuccess();
       if ("vibrate" in navigator) navigator.vibrate([10, 30, 10]);
@@ -393,13 +345,11 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
       setCurrentStrokeIndex(nextIndex);
       currentStrokePointsRef.current = [];
 
-      // Periksa apakah seluruh kanji sudah selesai
       if (nextIndex >= standardPaths.length) {
         setIsCompleted(true);
         addXP(10);
         setShowXP(true);
         setTimeout(() => setShowXP(false), 2000);
-        // Mainkan melodi kemenangan
         setTimeout(() => {
           sounds?.playSuccess();
           setTimeout(() => sounds?.playPop(), 80);
@@ -408,7 +358,6 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
         redrawCanvas();
       }
     } else {
-      // 2. Gagal: Visualisasikan neon merah
       setStrokeError(isReverse ? "reverse" : "wrong");
       setIsLocked(true);
       sounds?.playError();
@@ -416,7 +365,6 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
 
       redrawCanvas(currentStrokePointsRef.current, "#ef4444");
 
-      // Flash merah selama 600ms, kemudian hapus goresan yang salah dan buka kunci
       setTimeout(() => {
         setStrokeError(null);
         setIsLocked(false);
@@ -429,12 +377,10 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
   const stopDrawing = useCallback(() => {
     if (!isDrawing) return;
     setIsDrawing(false);
-    // Stop drawing. Trigger stroke validation.
     validateStroke();
   }, [isDrawing, validateStroke]);
 
   const clearCanvas = () => {
-    // Reset canvas state. Clear paths.
     correctStrokesRef.current = [];
     currentStrokePointsRef.current = [];
     setCurrentStrokeIndex(0);
@@ -451,14 +397,10 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
   };
 
   const handleReplay = () => {
-    // Replay character. Reset state. Reload SVG.
     clearCanvas();
     setReplayKey((prev) => prev + 1);
   };
 
-  // ==========================================
-  // HASIL HOOK (RETURN VALUE)
-  // ==========================================
   return {
     canvasRef,
     containerRef,
@@ -471,7 +413,6 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
     clearCanvas,
     handleReplay,
     showXP,
-    // Status Tambahan
     currentStrokeIndex,
     totalStrokes: standardPaths.length,
     strokeError,

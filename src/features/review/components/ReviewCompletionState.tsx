@@ -3,7 +3,6 @@
 /**
  * @file ReviewCompletionState.tsx
  * @description Komponen visual layar selesai ulasan (Review Completion State).
- * Menampilkan ilustrasi lencana/piala, ucapan selamat bertema Bahasa Indonesia premium, serta tombol navigasi kembali ke beranda.
  */
 
 // ======================
@@ -16,9 +15,6 @@ import EmptyState from "@/components/ui/EmptyState";
 // ======================
 // ANTARMUKA & TIPE
 // ======================
-/**
- * Props for ReviewCompletionState.
- */
 export interface ReviewCompletionStateProps {
   /** Review mode. Controls icon and text. */
   mode: "srs" | "quick";
@@ -29,14 +25,9 @@ export interface ReviewCompletionStateProps {
 // ======================
 // EKSEKUSI UTAMA
 // ======================
-/**
- * Review completion screen.
- * Shows success message and navigation button.
- */
 export function ReviewCompletionState({ mode, onBack }: ReviewCompletionStateProps) {
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-4 w-full">
-      {/* Render empty state with dynamic content based on mode */}
       <EmptyState 
         icon={mode === "srs" ? Sparkles : Trophy}
         title={mode === "srs" ? "Review Selesai!" : "Latihan Selesai!"}
@@ -49,3 +40,5 @@ export function ReviewCompletionState({ mode, onBack }: ReviewCompletionStatePro
     </div>
   );
 }
+
+export default ReviewCompletionState;

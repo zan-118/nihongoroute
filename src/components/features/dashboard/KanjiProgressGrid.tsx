@@ -18,13 +18,13 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Info } from "@/components/ui/icons";
 import { useKanjiProgressQuery } from "./useKanjiProgressQuery";
-import { useAddToSRS } from "../srs/button/useAddToSRS";
+import { useAddToSRSInternal } from "../srs/actions/AddToSRSButton";
 
 // ==========================================
 // GRID ITEM KANJI INDIVIDUAL
 // ==========================================
 function KanjiGridItem({ item }: { item: any }) {
-  const { isAdded, handleAdd } = useAddToSRS(item._id);
+  const { isAdded, handleAdd } = useAddToSRSInternal(item._id);
   const activeIsAdded = item.isLearning || item.isMastered || isAdded;
 
   return (

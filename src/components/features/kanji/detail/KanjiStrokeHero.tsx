@@ -9,7 +9,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import KanjiStrokePlayer from "@/components/features/kanji/components/KanjiStrokePlayer";
-import { AddToSRSButton } from "@/components/features/srs/button/AddToSRSButton";
+import { AddToSRSButton } from "@/components/features/srs/actions/AddToSRSButton";
 
 // ==========================================
 // TIPE DATA / INTERFACE

@@ -91,7 +91,7 @@ export const KanjiSection: React.FC<KanjiSectionProps> = ({ kanjiList }) => {
                 e.stopPropagation();
               }}
             >
-              <AddToSRSButton wordId={k._id || k.id || ""} />
+              <AddToSRSButton wordId={k._id || k.id || ""} variant="action" />
             </div>
 
             <span className="text-4xl font-black mb-3 group-hover:scale-105 transition-transform">

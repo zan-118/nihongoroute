@@ -1,6 +1,7 @@
 /**
  * @file OfflineAudio.tsx
- * @description Komponen pemutar audio HTML5 yang secara otomatis memanfaatkan useCachedAudio untuk caching luring penuh.
+ * @description Komponen pemutar audio HTML5 luring dalam modul media domain.
+ * Menggunakan useCachedAudio untuk pemutaran audio luring penuh.
  */
 
 "use client";
@@ -14,10 +15,7 @@ import { useCachedAudio } from "@/hooks/useCachedAudio";
 // ======================
 // ANTARMUKA / TIPE DATA
 // ======================
-/**
- * Props for OfflineAudio component.
- */
-interface OfflineAudioProps extends React.AudioHTMLAttributes<HTMLAudioElement> {
+export interface OfflineAudioProps extends React.AudioHTMLAttributes<HTMLAudioElement> {
   /** Source URL of the audio file. */
   src: string;
 }
@@ -27,13 +25,8 @@ interface OfflineAudioProps extends React.AudioHTMLAttributes<HTMLAudioElement> 
 // ======================
 /**
  * HTML5 audio player component. Uses cached audio URL for offline playback.
- *
- * @param props - Component props.
- * @param props.src - Source audio URL.
- * @param props.className - Optional CSS class name.
  */
 export function OfflineAudio({ src, className, ...props }: OfflineAudioProps) {
-  // Resolve source URL to cached blob URL if available offline.
   const cachedUrl = useCachedAudio(src);
 
   return (
@@ -44,3 +37,5 @@ export function OfflineAudio({ src, className, ...props }: OfflineAudioProps) {
     />
   );
 }
+
+export default OfflineAudio;

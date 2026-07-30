@@ -246,7 +246,7 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
                          )}
                          {isCollected ? "Tersimpan" : "Simpan"}
                        </Button>
-                       <AddToSRSButton wordId={vocab._id} />
+                       <AddToSRSButton wordId={vocab._id} variant="action" />
                     </div>
                   </div>
                 ) : (

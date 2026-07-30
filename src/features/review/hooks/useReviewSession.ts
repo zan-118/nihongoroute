@@ -3,8 +3,6 @@
 /**
  * @file useReviewSession.ts
  * @description Hook kustom (Custom Hook) untuk mengelola inisialisasi sesi ulasan (Review Session).
- * Memilah kartu jatuh tempo (SRS Mode) versus kartu acak (Quick Mode) dari Zustand Store (`useSRSStore`)
- * dan memuat datanya secara asinkron dari API internal.
  */
 
 // ======================
@@ -20,21 +18,8 @@ import { summarizeSrs } from "@/lib/srs-summary";
 // ======================
 // ANTARMUKA & TIPE
 // ======================
-
-/**
- * Review session mode.
- * 'srs' for spaced repetition, 'quick' for random sample, null for inactive.
- */
 export type SessionMode = "srs" | "quick" | null;
 
-/**
- * Retrieve card IDs based on selected session mode.
- * Uses reservoir sampling for quick mode, due date filtering for SRS mode.
- * 
- * @param selectedMode - Active session mode.
- * @param now - Current timestamp.
- * @returns Array of card IDs.
- */
 function getReviewIds(selectedMode: Exclude<SessionMode, null>, now: number) {
   const srs = useSRSStore.getState().srs || {};
 
@@ -42,7 +27,6 @@ function getReviewIds(selectedMode: Exclude<SessionMode, null>, now: number) {
     const sample: string[] = [];
     let seenActiveItems = 0;
 
-    // Reservoir sampling to select 10 random active cards
     for (const id in srs) {
       const state = srs[id];
       if (state.isDeleted) continue;
@@ -61,7 +45,6 @@ function getReviewIds(selectedMode: Exclude<SessionMode, null>, now: number) {
   }
 
   const ids: string[] = [];
-  // Filter cards that are due and not deleted
   for (const id in srs) {
     const state = srs[id];
     if (state.isDeleted || state.nextReview > now) continue;
@@ -74,12 +57,6 @@ function getReviewIds(selectedMode: Exclude<SessionMode, null>, now: number) {
 // ======================
 // HOOK UTAMA
 // ======================
-
-/**
- * Manage review session state, card loading, and progress tracking.
- * 
- * @param loading - Global loading state.
- */
 export function useReviewSession(loading: boolean) {
   const [mode, setMode] = useState<SessionMode>(null);
   const [cards, setCards] = useState<MasterCardData[]>([]);
@@ -88,16 +65,12 @@ export function useReviewSession(loading: boolean) {
 
   const [now] = useState(() => Date.now());
   
-  // Create stable string signature to track SRS count changes
   const reviewCountsSignature = useSRSStore((state) => {
     const { active, due } = summarizeSrs(state.srs, now);
     return `${due}:${active}`;
   });
   const [dueCount, allCount] = reviewCountsSignature.split(":").map(Number);
 
-  /**
-   * Initialize review session and fetch card details.
-   */
   const startSession = useCallback(async (selectedMode: SessionMode) => {
     if (!selectedMode) return;
     
@@ -124,7 +97,6 @@ export function useReviewSession(loading: boolean) {
         throw cmsError;
       }
       
-      // Shuffle cards randomly
       setCards(data.sort(() => Math.random() - 0.5));
     } catch (error) {
       console.error("Gagal memulai sesi:", error);
@@ -135,13 +107,11 @@ export function useReviewSession(loading: boolean) {
     }
   }, [now]);
 
-  // Auto-start berdasarkan query params
   const searchParams = useSearchParams();
   const initialMode = searchParams.get("mode") as SessionMode;
 
   useEffect(() => {
     if (initialMode && (initialMode === "srs" || initialMode === "quick") && !mode && !loading) {
-      // Defer execution to avoid synchronous setState in effect
       const trigger = async () => {
         await startSession(initialMode);
       };

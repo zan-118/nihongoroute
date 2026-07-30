@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import WritingCanvas from "@/components/features/tools/writing/WritingCanvas";
+import WritingCanvas from "@/components/features/tools/stroke-canvas/WritingCanvas";
 import { KanaType } from "./kana-data";
 
 // ==========================================

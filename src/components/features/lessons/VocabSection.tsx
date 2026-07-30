@@ -11,7 +11,7 @@
 import React, { useState } from "react";
 import { toRomaji } from "wanakana";
 import { SmartJapanese } from "@/components/ui/japanese";
-import TTSReader from "@/components/features/tools/tts/TTSReader";
+import { TTSReader } from "@/components/features/media";
 import AddToSRSButton from "@/components/features/srs/actions/AddToSRSButton";
 import { ChevronDown, ChevronUp } from "@/components/ui/icons";
 
@@ -150,7 +150,7 @@ const VocabCard: React.FC<{ v: VocabLessonItem; idx: number }> = ({ v, idx }) =>
           </div>
         </div>
         <div className="flex flex-row sm:flex-col gap-3 shrink-0 w-full sm:w-auto justify-end">
-          {(v._id || v.id) && <AddToSRSButton wordId={v._id || v.id || ""} />}
+          {(v._id || v.id) && <AddToSRSButton wordId={v._id || v.id || ""} variant="action" />}
           {v.word && <TTSReader text={v.word} minimal={true} speaker="indah" audioUrl={v.audio_url} />}
         </div>
       </div>

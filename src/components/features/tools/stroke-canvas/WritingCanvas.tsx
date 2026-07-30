@@ -1,6 +1,6 @@
 /**
  * @file WritingCanvas.tsx
- * @description Komponen kanvas coretan (canvas drawing) interaktif untuk melatih penulisan Hiragana, Katakana, dan Kanji, terintegrasi dengan sensor akurasi goresan.
+ * @description Komponen kanvas coretan (canvas drawing) interaktif untuk melatih penulisan Hiragana, Katakana, dan Kanji.
  */
 
 // ==========================================
@@ -8,19 +8,16 @@
 // ==========================================
 import React from "react";
 import { Trash2, Eye, EyeOff, RotateCcw, Zap, CheckCircle } from "@/components/ui/icons";
-import AnimatedKanji from "@/components/features/tools/writing/AnimatedKanji";
+import { AnimatedKanji } from "./AnimatedKanji";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import XPPop from "@/components/features/gamification/XPPop";
-import { useWritingCanvas } from "../canvas/useWritingCanvas";
+import { useWritingCanvas } from "./useWritingCanvas";
 
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
-/**
- * Props for WritingCanvas component.
- */
-interface WritingCanvasProps {
+export interface WritingCanvasProps {
   /** Character to write. */
   character?: string;
   /** Color of user stroke. */
@@ -34,17 +31,12 @@ interface WritingCanvasProps {
 // ==========================================
 // KOMPONEN UTAMA
 // ==========================================
-/**
- * Interactive canvas component for Japanese writing practice.
- * Detects stroke accuracy and provides visual feedback.
- */
-export default function WritingCanvas({ 
+export function WritingCanvas({ 
   character = "", 
   strokeColor = "rgb(var(--primary-rgb))", 
   guideColor = "rgb(var(--secondary-rgb))",
   className = "max-w-[280px] sm:max-w-sm mx-auto"
 }: WritingCanvasProps) {
-  // Get canvas state and drawing handlers.
   const {
     canvasRef,
     containerRef,
@@ -63,7 +55,6 @@ export default function WritingCanvas({
     isCompleted,
   } = useWritingCanvas({ character, strokeColor });
 
-  // Compute dynamic styles based on success or error state.
   const containerClass = `relative w-full aspect-square rounded-lg overflow-hidden group touch-none transition-all duration-500 border ${
     isCompleted
       ? "border-success/40 shadow-[0_0_30px_rgb(var(--success-rgb)/0.25)] bg-success/5"
@@ -72,9 +63,6 @@ export default function WritingCanvas({
       : "border-border shadow-[0_0_20px_rgb(var(--primary-rgb)/0.12)] bg-muted/40 dark:bg-card/30 glass"
   }`;
 
-  // ==========================================
-  // RENDER KOMPONEN
-  // ==========================================
   return (
     <div className={`flex flex-col gap-4 w-full ${className}`}>
       <Card
@@ -82,23 +70,19 @@ export default function WritingCanvas({
         className={containerClass}
         style={{ touchAction: 'none' }}
       >
-        {/* Render background grid lines. */}
         <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px)] bg-[size:25%_25%] opacity-40 pointer-events-none" />
         
-        {/* Render center guidelines. */}
         <div className="absolute inset-0 pointer-events-none opacity-10">
           <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-destructive/30 border-dashed" />
           <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-destructive/30 border-dashed" />
         </div>
 
-        {/* Show XP pop animation on success. */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-40">
           <XPPop show={showXP} amount={10} />
         </div>
 
-        {/* Overlay Sukses Coretan Selesai */}
         {isCompleted && (
-          <div className="absolute inset-0 bg-background/85  flex flex-col items-center justify-center gap-4 z-30 transition-all duration-300 animate-in fade-in">
+          <div className="absolute inset-0 bg-background/85 flex flex-col items-center justify-center gap-4 z-30 transition-all duration-300 animate-in fade-in">
             <div className="h-14 w-14 rounded-full bg-success/15 border border-success/30 flex items-center justify-center text-success shadow-[0_0_20px_rgb(var(--success-rgb)/0.3)]">
               <CheckCircle size={28} className="animate-premium-bounce" />
             </div>
@@ -117,22 +101,19 @@ export default function WritingCanvas({
           </div>
         )}
 
-        {/* Tooltip Deteksi Kesalahan Coretan */}
         {strokeError && (
-          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl bg-destructive/10 border border-destructive/20  text-[9px] font-bold uppercase tracking-wider text-destructive shadow-[0_0_15px_rgb(var(--destructive-rgb)/0.25)] animate-premium-bounce z-30">
+          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl bg-destructive/10 border border-destructive/20 text-[9px] font-bold uppercase tracking-wider text-destructive shadow-[0_0_15px_rgb(var(--destructive-rgb)/0.25)] animate-premium-bounce z-30">
             {strokeError === "reverse" ? "Arah guratan terbalik!" : "Guratan kurang tepat!"}
           </div>
         )}
 
         {showGuide && character && (
           <>
-            {/* Tracing guide in the background */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 select-none">
               <span className="text-[140px] sm:text-[180px] font-japanese text-foreground/10 font-bold leading-none animate-pulse">
                 {character}
               </span>
             </div>
-            {/* Stroke order animation guide. */}
             <div className="absolute inset-8 pointer-events-none z-0">
               <AnimatedKanji 
                 character={character} 
@@ -143,7 +124,6 @@ export default function WritingCanvas({
           </>
         )}
 
-        {/* Interactive drawing canvas. */}
         <canvas
           ref={canvasRef}
           onPointerDown={startDrawing}
@@ -154,7 +134,6 @@ export default function WritingCanvas({
           style={{ touchAction: "none" }}
         />
 
-        {/* Show current stroke progress. */}
         <div className="absolute top-3 left-3 flex items-center gap-2 z-20">
            <Zap size={10} className="text-destructive animate-pulse" />
            <span className="text-[7px] font-mono font-bold uppercase tracking-widest text-muted-foreground">
@@ -163,7 +142,6 @@ export default function WritingCanvas({
         </div>
       </Card>
 
-      {/* Control panel for guide, replay, and clear actions. */}
       <Card className="grid grid-cols-3 gap-2 bg-muted/50 p-2 rounded-lg border-border shadow-none">
         {character && (
           <>
@@ -203,3 +181,5 @@ export default function WritingCanvas({
     </div>
   );
 }
+
+export default WritingCanvas;

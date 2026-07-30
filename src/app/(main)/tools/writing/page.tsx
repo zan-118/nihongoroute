@@ -13,7 +13,7 @@ import React, { Suspense } from "react";
 import { ChevronLeft, Download, Share2 } from "@/components/ui/icons";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import WritingCanvas from "@/components/features/tools/writing/WritingCanvas";
+import WritingCanvas from "@/components/features/tools/stroke-canvas/WritingCanvas";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";

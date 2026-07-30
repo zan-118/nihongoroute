@@ -17,9 +17,9 @@ import FlashcardMaster from "@/components/features/flashcards/master/FlashcardMa
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useUIStore } from "@/store/useUIStore";
-import { useReviewSession } from "@/components/features/review/hooks/useReviewSession";
-
-import { ReviewModeCard, ReviewCompletionState } from "@/components/features/review";
+import { useReviewSession } from "./hooks/useReviewSession";
+import { ReviewModeCard } from "./components/ReviewModeCard";
+import { ReviewCompletionState } from "./components/ReviewCompletionState";
 
 export function ReviewView() {
   const loading = useUIStore((state) => state.loading);

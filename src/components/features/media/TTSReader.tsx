@@ -1,22 +1,22 @@
 /**
  * @file TTSReader.tsx
- * @description Komponen tombol suara AI (Text-to-Speech) minimal/reguler untuk memicu pengucapan audio bahasa Jepang secara waktu-nyata.
+ * @description Komponen tombol suara AI (Text-to-Speech) dalam modul media domain.
  */
+
+"use client";
 
 // ==========================================
 // IMPORT & DEPENDENSI
 // ==========================================
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Volume2, AudioLines } from "@/components/ui/icons";
-import { useTTSReader } from "../audio/useTTSReader";
+import { useTTSReader } from "./useTTSReader";
 
 // ==========================================
 // TIPE DATA / INTERFACE
 // ==========================================
-/**
- * Props for TTSReader component.
- */
-interface Props {
+export interface TTSReaderProps {
   /** Japanese text content to read. */
   text: string;
   /** Render minimal icon-only button. */
@@ -32,34 +32,19 @@ interface Props {
 // ==========================================
 // KOMPONEN UTAMA
 // ==========================================
-/**
- * TTSReader component. Triggers text-to-speech audio playback for Japanese text.
- * 
- * @param props - Component properties.
- * @returns Button element or null if text invalid.
- */
-export default function TTSReader({ text, minimal = false, speaker, small = false, audioUrl }: Props) {
-  // ==========================================
-  // HOOKS & STATUS
-  // ==========================================
+export function TTSReader({ text, minimal = false, speaker, small = false, audioUrl }: TTSReaderProps) {
   const { isPlaying, hasJapanese, speak } = useTTSReader(text, speaker, audioUrl);
 
-  // Hide component if text empty or lacks Japanese characters.
   if (!hasJapanese || !text) return null;
 
-  // ==========================================
-  // RENDER KOMPONEN
-  // ==========================================
   return (
     <Button
       variant="ghost"
       onClick={(e) => {
-        // Prevent parent click events triggering.
         e.preventDefault();
         e.stopPropagation();
         speak();
       }}
-      // Apply styles based on size and playing state.
       className={`flex items-center justify-center gap-3 border transition-all font-black uppercase tracking-[0.2em] h-auto italic ${
         small
           ? "w-8 h-8 rounded-lg"
@@ -83,3 +68,5 @@ export default function TTSReader({ text, minimal = false, speaker, small = fals
     </Button>
   );
 }
+
+export default TTSReader;

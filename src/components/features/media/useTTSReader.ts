@@ -2,7 +2,7 @@
 
 /**
  * @file useTTSReader.ts
- * @description Hook kustom untuk membacakan teks bahasa Jepang menggunakan strategi Hybrid & Caching. Mengutamakan High-Quality Online Voices, kemudian fallback ke Google Translate TTS API dengan Cache Storage lokal untuk luring penuh.
+ * @description Hook kustom untuk membacakan teks bahasa Jepang dalam modul media domain.
  */
 
 // ==========================================
@@ -18,16 +18,8 @@ import { fetchTTSAudio, speakWithWebSpeech, detectVoice, TTS_VOICES, type TtsVoi
  * Hook for Japanese text-to-speech.
  * Uses hybrid strategy with caching.
  * Falls back to Web Speech API.
- * 
- * @param text Japanese text to read.
- * @param speaker Speaker name for voice selection.
- * @param audioUrl Optional pre-fetched audio URL.
- * @returns Playback state, Japanese text check, and speak trigger.
  */
 export function useTTSReader(text: string, speaker?: string, audioUrl?: string | null) {
-  // ==========================================
-  // STATUS & STATE & REFS
-  // ==========================================
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasJapanese, setHasJapanese] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -35,9 +27,6 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
   const objectUrlRef = useRef<string | null>(null);
   const isSelfPlayingRef = useRef(false);
 
-  /**
-   * Release memory of active blob URL.
-   */
   const cleanupObjectUrl = () => {
     if (objectUrlRef.current) {
       URL.revokeObjectURL(objectUrlRef.current);
@@ -45,13 +34,8 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
     }
   };
 
-  // ==========================================
-  // EFEK SAMPING (EFFECTS)
-  // ==========================================
   useEffect(() => {
-    // Regex matches Hiragana, Katakana, and Kanji.
     const jpRegex = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/;
-    // Run check in animation frame to prevent UI lag.
     const frame = requestAnimationFrame(() => {
       setHasJapanese(jpRegex.test(text));
     });
@@ -59,7 +43,6 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
   }, [text]);
 
   useEffect(() => {
-    // Handle global pause event to stop audio.
     const handlePause = () => {
       if (isSelfPlayingRef.current) {
         isSelfPlayingRef.current = false;
@@ -89,14 +72,6 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
     };
   }, []);
 
-  // ==========================================
-  // LOGIKA PENGENDALI & PEMUTARAN AUDIO
-  // ==========================================
-  /**
-   * Trigger audio playback.
-   * Stop current audio if playing.
-   * Fetch from API or use Web Speech API fallback.
-   */
   const speak = async () => {
     if (typeof window === "undefined") return;
 
@@ -115,13 +90,10 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
       return;
     }
 
-    // Prevent self-pausing. Stop other active TTS instances.
     isSelfPlayingRef.current = true;
     window.dispatchEvent(new CustomEvent("nihongoroute_pause_line_tts"));
     window.dispatchEvent(new CustomEvent("nihongoroute_pause_native_audio"));
 
-    // Tentukan suara: jika ada speaker gunakan speaker, 
-    // jika tidak (seperti pada contoh kalimat), gunakan suara secara acak-deterministik berdasarkan hash teks
     const cleanText = text.trim();
     if (!cleanText) return;
 
@@ -129,10 +101,7 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
     if (speaker) {
       voice = detectVoice(speaker);
     } else {
-      // Pool 19 voices — HARUS identik dengan VOICES_ROTATION di generate_example_sentences.js
-      // agar hash deterministik menghasilkan voice yang sama (cache hit)
       const voices = [
-        // Wanita
         TTS_VOICES.LALA,
         TTS_VOICES.INDAH,
         TTS_VOICES.SITI,
@@ -142,7 +111,6 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
         TTS_VOICES.AYU,
         TTS_VOICES.ZUNDAMON,
         TTS_VOICES.RITSU,
-        // Pria (yamada & ooba dikeluarkan — kakek tidak cocok untuk contoh kalimat)
         TTS_VOICES.DITO,
         TTS_VOICES.BUDI,
         TTS_VOICES.SUZUKI,
@@ -153,7 +121,6 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
         TTS_VOICES.TAKAHASHI,
         TTS_VOICES.KOBAYASHI,
       ];
-      // Generate deterministic hash from text to select voice.
       let hash = 0;
       for (let i = 0; i < cleanText.length; i++) {
         hash = cleanText.charCodeAt(i) + ((hash << 5) - hash);
@@ -162,9 +129,6 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
       voice = voices[voiceIndex];
     }
 
-    /**
-     * Fallback to Web Speech API if API fetch fails.
-     */
     const playFallback = () => {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -192,15 +156,13 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
       }
 
       const audio = audioRef.current;
-
       cleanupObjectUrl();
-      // Track blob URL to release later.
+
       if (finalAudioUrl.startsWith("blob:")) {
         objectUrlRef.current = finalAudioUrl;
       }
 
       audio.src = finalAudioUrl;
-
       audio.onplay = () => setIsPlaying(true);
       audio.onended = () => {
         setIsPlaying(false);
@@ -213,7 +175,6 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
         playFallback();
       };
 
-      // Handle browser autoplay restrictions.
       const playPromise = audio.play();
       if (playPromise !== undefined) {
         playPromise.catch(error => {
@@ -227,8 +188,5 @@ export function useTTSReader(text: string, speaker?: string, audioUrl?: string |
     }
   };
 
-  // ==========================================
-  // HASIL HOOK (RETURN VALUE)
-  // ==========================================
   return { isPlaying, hasJapanese, speak };
 }

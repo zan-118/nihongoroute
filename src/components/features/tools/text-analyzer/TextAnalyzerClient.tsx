@@ -16,7 +16,7 @@ import { analyzeTextWithDictionary, type ToolSearchItem } from "@/lib/tools-sear
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { AddToSRSButton } from "@/components/features/srs/button/AddToSRSButton";
+import { AddToSRSButton } from "@/components/features/srs/actions/AddToSRSButton";
 import NextActionPanel from "@/components/features/ecosystem/NextActionPanel";
 import { useUIStore } from "@/store/useUIStore";
 import { cn } from "@/lib/utils";

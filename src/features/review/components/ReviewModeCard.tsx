@@ -3,7 +3,6 @@
 /**
  * @file ReviewModeCard.tsx
  * @description Komponen visual kartu pemilih mode ulasan (Review Mode Card).
- * Menyediakan tampilan adaptif berdasarkan status ketersediaan kartu review (aktif/dinonaktifkan) dan skema warna semantik.
  */
 
 // ======================
@@ -17,9 +16,6 @@ import { Badge } from "@/components/ui/badge";
 // ======================
 // ANTARMUKA & TIPE
 // ======================
-/**
- * Props for ReviewModeCard component.
- */
 export interface ReviewModeCardProps {
   /** Callback function triggered on card click */
   onClick: () => void;
@@ -46,10 +42,6 @@ export interface ReviewModeCardProps {
 // ======================
 // EKSEKUSI UTAMA
 // ======================
-/**
- * Card component for selecting review modes.
- * Renders interactive card with dynamic styles based on state and accent color.
- */
 export function ReviewModeCard({
   onClick,
   isEnabled,
@@ -62,27 +54,18 @@ export function ReviewModeCard({
   disabledLabel,
   accentColor,
 }: ReviewModeCardProps) {
-  // Check if primary accent color is used
   const isPrimary = accentColor === "primary";
 
-  // Define styles for active state based on accent color
-  const activeStyles = isPrimary
-    ? "hover:border-primary/40 hover:shadow-lg"
-    : "hover:border-warning/40 hover:shadow-lg";
-
-  // Define container styles for icon based on state and accent
   const iconContainerStyles = isEnabled
     ? isPrimary
       ? "bg-primary/10 border border-primary/20"
       : "bg-warning/10 border border-warning/20"
     : "bg-muted border border-border";
 
-  // Define icon color based on state and accent
   const iconColorStyles = isEnabled
     ? isPrimary ? "text-primary" : "text-warning"
     : "text-muted-foreground";
 
-  // Define text color based on accent
   const textColorStyles = isPrimary ? "text-primary" : "text-warning";
 
   return (
@@ -92,7 +75,6 @@ export function ReviewModeCard({
         isEnabled ? "cursor-pointer" : "opacity-50 pointer-events-none"
       }`}
     >
-      {/* Tombou Register Mark (L-shape offset 6px outside rounded-2xl) */}
       <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
         <div 
           className="absolute top-0 right-0 w-[14px] h-[1px] transition-colors duration-500" 
@@ -136,3 +118,5 @@ export function ReviewModeCard({
     </div>
   );
 }
+
+export default ReviewModeCard;
