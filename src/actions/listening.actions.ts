@@ -9,8 +9,14 @@
 // ======================
 // IMPORTS
 // ======================
-import { createStaticClient } from "@/lib/supabase/server";
 import { PaginatedListeningResponse, ListeningTaskItem, LibraryItem } from "@/types/library";
+import { ListeningMaterialTable } from "@/types/database";
+import {
+  getPaginatedContent,
+  getContentBySlugOrId,
+  getStaticSlugs,
+  getRandomListeningPool
+} from "@/lib/services/content-repository";
 
 // ======================
 // SERVER ACTIONS
@@ -32,37 +38,30 @@ export async function getPaginatedListening(
   search: string = "",
   level: string = ""
 ): Promise<PaginatedListeningResponse> {
-  // Calculate offset for pagination
-  const offset = (page - 1) * limit;
-  const supabase = createStaticClient();
-
   try {
-    let query = supabase
-      .from("listening")
-      .select("*", { count: "exact" });
-
-    if (search) {
-      query = query.or(`title.ilike.%${search}%,body.ilike.%${search}%,difficulty.ilike.%${search}%`);
-    }
-    if (level && level !== "all") {
-      query = query.eq("jlpt_level", level.toUpperCase());
-    }
-
-    const { data, count, error } = await query
-      .order("created_at", { ascending: false })
-      .range(offset, offset + limit - 1);
-
-    if (error) throw error;
+    const response = await getPaginatedContent<ListeningMaterialTable>("listening", {
+      page,
+      limit,
+      search,
+      searchColumns: ["title", "body", "difficulty"],
+      orderBy: [{ column: "created_at", ascending: false }],
+      filters: (query) => {
+        if (level && level !== "all") {
+          query = query.eq("jlpt_level", level.toUpperCase());
+        }
+        return query;
+      }
+    });
 
     // Map Supabase fields to application-specific structure
     return {
-      data: (data || []).map((l) => ({
+      data: response.data.map((l) => ({
         ...l,
         id: l.id,
         audioUrl: l.audio_url,
         transcript: l.body ? String(l.body) : ''
       })) as PaginatedListeningResponse["data"],
-      total: count || 0,
+      total: response.total,
     };
   } catch (error) {
     console.error("Gagal mengambil data paginasi menyimak dari Supabase:", error);
@@ -78,16 +77,9 @@ export async function getPaginatedListening(
  * @returns A random listening task item or null if not found.
  */
 export async function getRandomListeningTask(level: string = "N5"): Promise<ListeningTaskItem | null> {
-  const supabase = createStaticClient();
   try {
-    const { data, error } = await supabase
-      .from("listening")
-      .select("id, title, slug, audio_url, body")
-      .eq("jlpt_level", level.toUpperCase())
-      .order("created_at", { ascending: false })
-      .limit(10);
-
-    if (error || !data || data.length === 0) return null;
+    const data = await getRandomListeningPool(level, 10);
+    if (!data || data.length === 0) return null;
 
     // Select random item from the fetched subset
     const randomItem = data[Math.floor(Math.random() * data.length)];
@@ -112,15 +104,10 @@ export async function getRandomListeningTask(level: string = "N5"): Promise<List
  * @returns Detailed library item or null if not found.
  */
 export async function getLibraryListeningDetail(slug: string): Promise<LibraryItem | null> {
-  const supabase = createStaticClient();
   try {
-    const { data: dbData, error } = await supabase
-      .from("listening")
-      .select("*")
-      .eq("slug", slug)
-      .maybeSingle();
+    const dbData = await getContentBySlugOrId<ListeningMaterialTable>("listening", slug);
 
-    if (error || !dbData) return null;
+    if (!dbData) return null;
 
     const data = {
       ...dbData,
@@ -228,15 +215,8 @@ export async function getLibraryListeningDetail(slug: string): Promise<LibraryIt
  * @returns Array of object params with slug property.
  */
 export async function getListeningStaticSlugs(limit: number = 50): Promise<{ slug: string }[]> {
-  const supabase = createStaticClient();
   try {
-    const { data, error } = await supabase
-      .from("listening")
-      .select("slug")
-      .not("slug", "is", null)
-      .limit(limit);
-
-    if (error || !data) return [];
+    const data = await getStaticSlugs("listening", { limit, select: "slug" });
     return data.map((item) => ({ slug: String(item.slug) })).filter((x) => x.slug);
   } catch (error) {
     console.error("Gagal mengambil static slugs listening:", error);

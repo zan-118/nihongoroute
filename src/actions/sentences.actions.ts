@@ -11,7 +11,10 @@
 // ======================
 // IMPORTS
 // ======================
-import { createStaticClient } from "@/lib/supabase/server";
+import {
+  getSentencesContainingWord,
+  getRandomSentencesPool
+} from "@/lib/services/content-repository";
 
 // ======================
 // TYPES
@@ -58,22 +61,14 @@ export async function getSentencesByWord(
   // Return empty if query blank.
   if (!word.trim()) return [];
 
-  // Init Supabase client.
-  const supabase = createStaticClient();
-
-  // Fetch matching sentences from DB.
-  const { data, error } = await supabase
-    .from("sentences")
-    .select("id, japanese, english, indonesia, jlpt_level, furigana")
-    .like("japanese", `%${word.trim()}%`)
-    .limit(limit);
-
-  if (error) {
-    console.error(`[getSentencesByWord] Gagal mengambil kalimat untuk "${word}":`, error.message);
+  try {
+    const data = await getSentencesContainingWord(word, limit);
+    return data as SentenceRow[];
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`[getSentencesByWord] Gagal mengambil kalimat untuk "${word}":`, message);
     return [];
   }
-
-  return (data || []) as SentenceRow[];
 }
 
 /**
@@ -88,50 +83,33 @@ export async function getRandomSentencesForDrill(
   level: string = "",
   limit: number = 30
 ): Promise<SentenceDrillItem[]> {
-  const supabase = createStaticClient();
-
   // Get larger pool for random mix.
   const poolSize = Math.min(limit * 4, 200);
 
-  // Build base query.
-  let query = supabase
-    .from("sentences")
-    .select("id, japanese, english, indonesia, jlpt_level, furigana")
-    .not("japanese", "is", null);
+  try {
+    const data = await getRandomSentencesPool(level, poolSize);
+    if (!data || data.length === 0) return [];
 
-  // Filter by JLPT level if set.
-  if (level && level !== "all") {
-    query = query.eq("jlpt_level", level.toUpperCase());
-  }
+    // Shuffle pool using Fisher-Yates.
+    const shuffled = [...data];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
 
-  // Require translation text.
-  query = query.or("indonesia.neq.null,english.neq.null");
-
-  // Fetch pool from DB.
-  const { data, error } = await query.limit(poolSize);
-
-  if (error) {
-    console.error("[getRandomSentencesForDrill] Gagal mengambil kalimat:", error.message);
+    // Slice to limit and map to drill format.
+    return shuffled.slice(0, limit).map((row) => ({
+      id: row.id,
+      japanese: row.japanese,
+      translation: (row.indonesia as string | null) || (row.english as string | null) || "",
+      jlpt_level: row.jlpt_level as string | null,
+      furigana: row.furigana as string | null,
+    }));
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error("[getRandomSentencesForDrill] Gagal mengambil kalimat:", message);
     return [];
   }
-
-  if (!data || data.length === 0) return [];
-
-  // Shuffle pool using Fisher-Yates.
-  const shuffled = [...data];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-
-  // Slice to limit and map to drill format.
-  return shuffled.slice(0, limit).map((row) => ({
-    id: row.id,
-    japanese: row.japanese,
-    translation: (row.indonesia as string | null) || (row.english as string | null) || "",
-    jlpt_level: row.jlpt_level as string | null,
-    furigana: row.furigana as string | null,
-  }));
 }
 
 /**
@@ -148,21 +126,14 @@ export async function getSentencesByGrammarPattern(
   // Return empty if pattern blank.
   if (!pattern.trim()) return [];
 
-  const supabase = createStaticClient();
-
-  // Fetch sentences containing pattern.
-  const { data, error } = await supabase
-    .from("sentences")
-    .select("id, japanese, english, indonesia, jlpt_level, furigana")
-    .like("japanese", `%${pattern.trim()}%`)
-    .limit(limit);
-
-  if (error) {
-    console.error(`[getSentencesByGrammarPattern] Gagal mengambil kalimat untuk "${pattern}":`, error.message);
+  try {
+    const data = await getSentencesContainingWord(pattern, limit);
+    return data as SentenceRow[];
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`[getSentencesByGrammarPattern] Gagal mengambil kalimat untuk "${pattern}":`, message);
     return [];
   }
-
-  return (data || []) as SentenceRow[];
 }
 
 /**
@@ -179,19 +150,12 @@ export async function getSentencesByKanji(
   // Return empty if kanji blank.
   if (!character.trim()) return [];
 
-  const supabase = createStaticClient();
-
-  // Fetch sentences containing kanji.
-  const { data, error } = await supabase
-    .from("sentences")
-    .select("id, japanese, english, indonesia, jlpt_level, furigana")
-    .like("japanese", `%${character.trim()}%`)
-    .limit(limit);
-
-  if (error) {
-    console.error(`[getSentencesByKanji] Gagal mengambil kalimat untuk "${character}":`, error.message);
+  try {
+    const data = await getSentencesContainingWord(character, limit);
+    return data as SentenceRow[];
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`[getSentencesByKanji] Gagal mengambil kalimat untuk "${character}":`, message);
     return [];
   }
-
-  return (data || []) as SentenceRow[];
 }

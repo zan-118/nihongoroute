@@ -9,8 +9,13 @@
 // ======================
 // IMPORTS
 // ======================
-import { createStaticClient } from "@/lib/supabase/server";
 import { PaginatedReadingResponse, LibraryItem } from "@/types/library";
+import { ReadingMaterialTable } from "@/types/database";
+import {
+  getPaginatedContent,
+  getContentBySlugOrId,
+  getStaticSlugs
+} from "@/lib/services/content-repository";
 
 // ======================
 // SERVER ACTIONS
@@ -31,31 +36,24 @@ export async function getPaginatedReading(
   search: string = "",
   level: string = ""
 ): Promise<PaginatedReadingResponse> {
-  // Calculate offset for pagination slicing
-  const offset = (page - 1) * limit;
-  const supabase = createStaticClient();
-
   try {
-    let query = supabase
-      .from("reading")
-      .select("*", { count: "exact" });
-
-    if (search) {
-      query = query.or(`title.ilike.%${search}%,body.ilike.%${search}%,difficulty.ilike.%${search}%`);
-    }
-    if (level && level !== "all") {
-      query = query.eq("jlpt_level", level.toUpperCase());
-    }
-
-    const { data, count, error } = await query
-      .order("created_at", { ascending: false })
-      .range(offset, offset + limit - 1);
-
-    if (error) throw error;
+    const response = await getPaginatedContent<ReadingMaterialTable>("reading", {
+      page,
+      limit,
+      search,
+      searchColumns: ["title", "body", "difficulty"],
+      orderBy: [{ column: "created_at", ascending: false }],
+      filters: (query) => {
+        if (level && level !== "all") {
+          query = query.eq("jlpt_level", level.toUpperCase());
+        }
+        return query;
+      }
+    });
 
     // Map Supabase schema fields to application-compatible structure
     return {
-      data: (data || []).map((r) => ({
+      data: response.data.map((r) => ({
         ...r,
         id: r.id,
         difficulty: r.difficulty || r.jlpt_level,
@@ -64,7 +62,7 @@ export async function getPaginatedReading(
         imageUrl: r.image_url,
         videoUrl: r.video_url
       })) as PaginatedReadingResponse["data"],
-      total: count || 0,
+      total: response.total,
     };
   } catch (error) {
     console.error("Gagal mengambil data paginasi bacaan dari Supabase:", error);
@@ -79,15 +77,10 @@ export async function getPaginatedReading(
  * @returns The mapped library item, or null if not found or on error.
  */
 export async function getLibraryReadingDetail(slug: string): Promise<LibraryItem | null> {
-  const supabase = createStaticClient();
   try {
-    const { data, error } = await supabase
-      .from("reading")
-      .select("*")
-      .eq("slug", slug)
-      .maybeSingle();
+    const data = await getContentBySlugOrId<ReadingMaterialTable>("reading", slug);
 
-    if (error || !data) return null;
+    if (!data) return null;
 
     // Map snake_case Supabase fields to camelCase application properties
     return {
@@ -111,15 +104,8 @@ export async function getLibraryReadingDetail(slug: string): Promise<LibraryItem
  * @returns Array of object params with slug property.
  */
 export async function getReadingStaticSlugs(limit: number = 50): Promise<{ slug: string }[]> {
-  const supabase = createStaticClient();
   try {
-    const { data, error } = await supabase
-      .from("reading")
-      .select("slug")
-      .not("slug", "is", null)
-      .limit(limit);
-
-    if (error || !data) return [];
+    const data = await getStaticSlugs("reading", { limit, select: "slug" });
     return data.map((item) => ({ slug: String(item.slug) })).filter((x) => x.slug);
   } catch (error) {
     console.error("Gagal mengambil static slugs reading:", error);

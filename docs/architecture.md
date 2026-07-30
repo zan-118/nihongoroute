@@ -170,3 +170,16 @@ Status pengguna (XP, SRS, lesson progress) diproses di sisi klien via Zustand + 
 - **Legacy exam adapter**: Komponen `MockExamEngine` membaca format data lama. Adapter `src/lib/exams/supabase-adapter.ts` (`toLegacyExamData`) memetakan data relasional baru ke format lama.
 - **Optimasi bundle**: `optimizePackageImports` di `next.config.ts` untuk Radix UI, Iconify, Framer Motion, Date-fns, Sonner, Wanakana. Pemisahan bundle via `next/dynamic` untuk komponen besar.
 - **Tabel `articles`**: Tabel ini ada di database produksi (50 rows, RLS aktif) dan diquery oleh server actions, namun belum masuk file skema konsolidasi `initial_schema.sql`. Tabel ini digunakan sebagai fallback konten pelajaran di `lessons.actions.ts`.
+
+---
+
+## 6. Aturan Layer Kode
+
+Untuk menjaga konsistensi codebase dan mempermudah kontribusi baru, struktur layer didefinisikan sebagai berikut:
+
+- **Server Actions (`src/actions/*.actions.ts`)**:
+  Layer tipis yang berfungsi sebagai entry point bagi antarmuka klien. Hanya bertanggung jawab melakukan validasi input/parameter dasar, dan mendelegasikan pemrosesan ke `src/lib/services/`. Tidak diperkenankan melakukan query Supabase secara langsung ke database.
+- **Domain Services & Repository (`src/lib/services/`)**:
+  Satu-satunya layer yang diizinkan untuk menginisiasi klien Supabase (`createStaticClient`) dan mengeksekusi query database PostgreSQL (CRUD terstruktur). Logika akses data konten pustaka generik dipusatkan di `src/lib/services/content-repository.ts`.
+- **Pure Logic Layer (`src/lib/learning/`, `src/lib/tools/`, `src/lib/exams/`)**:
+  Berisi logika bisnis murni (seperti kalkulasi SRS, generator soal, adapter legacy data). Dilarang mengimpor klien Supabase secara langsung. Jika logika membutuhkan data, data tersebut harus dikirimkan dari pemanggil sebagai parameter input.

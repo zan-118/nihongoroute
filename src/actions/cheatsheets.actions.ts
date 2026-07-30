@@ -8,7 +8,11 @@
 // ======================
 // IMPORTS
 // ======================
-import { createStaticClient } from "@/lib/supabase/server";
+import {
+  getCheatsheetsList,
+  getContentBySlugOrId
+} from "@/lib/services/content-repository";
+import { CheatsheetTable } from "@/types/database";
 
 // ======================
 // SERVER ACTIONS
@@ -22,34 +26,17 @@ import { createStaticClient } from "@/lib/supabase/server";
  * @returns {Promise<Array<{ _id: string; slug: string; title: string; category: string; items: any[]; linkedVocab: any[] }>>} Array of cheatsheets.
  */
 export async function getCheatsheets() {
-  // Initialize static Supabase client for server-side rendering
-  const supabase = createStaticClient();
-  
   try {
-    const { data, error } = await supabase
-      .from("cheatsheets")
-      .select(`
-        id, 
-        slug, 
-        title, 
-        category, 
-        items
-      `)
-      // Sort by category first to group items in UI
-      .order("category", { ascending: true })
-      // Sort by title second for alphabetical consistency
-      .order("title", { ascending: true });
-
-    if (error) throw error;
+    const data = await getCheatsheetsList();
 
     // Map database schema to application domain model
     return (data || []).map(s => ({
       _id: s.id,
       slug: s.slug,
       title: s.title,
-      category: s.category,
+      category: s.category || "",
       // Fallback to empty array if items column is null
-      items: s.items || [],
+      items: (s.items || []) as any[],
       // Compatibility field for vocabulary relations
       linkedVocab: []
     }));
@@ -68,30 +55,9 @@ export async function getCheatsheets() {
  * @returns {Promise<{ _id: string; slug: string; title: string; category: string; items: any[]; linkedVocab: any[] } | null>} The cheatsheet object, or null if not found.
  */
 export async function getCheatsheetByIdOrSlug(idOrSlug: string) {
-  // Initialize static Supabase client
-  const supabase = createStaticClient();
-  
   try {
-    // Check if input matches standard UUID format
-    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrSlug);
-    const query = supabase
-      .from("cheatsheets")
-      .select(`
-        id, 
-        slug, 
-        title, 
-        category, 
-        items
-      `);
+    const sheet = await getContentBySlugOrId<CheatsheetTable>("cheatsheets", idOrSlug);
 
-    // Query by ID if UUID, otherwise query by slug
-    const { data: sheet, error } = await (isUuid 
-      ? query.eq("id", idOrSlug) 
-      : query.eq("slug", idOrSlug)
-    ).single();
-
-    // Ignore PGRST116 error which indicates no rows were returned by single()
-    if (error && error.code !== "PGRST116") throw error;
     if (!sheet) return null;
 
     // Map database record to application domain model
@@ -99,9 +65,9 @@ export async function getCheatsheetByIdOrSlug(idOrSlug: string) {
       _id: sheet.id,
       slug: sheet.slug,
       title: sheet.title,
-      category: sheet.category,
+      category: sheet.category || "",
       // Fallback to empty array if items column is null
-      items: sheet.items || [],
+      items: (sheet.items || []) as any[],
       // Compatibility field for vocabulary relations
       linkedVocab: []
     };

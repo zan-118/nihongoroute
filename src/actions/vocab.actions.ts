@@ -10,8 +10,16 @@
 // ======================
 // IMPORTS
 // ======================
-import { createStaticClient } from "@/lib/supabase/server";
 import { PaginatedVocabResponse, LibraryItem } from "@/types/library";
+import { VocabTable } from "@/types/database";
+import {
+  getPaginatedContent,
+  getContentBySlugOrId,
+  getStaticSlugs,
+  getRelatedKanjis,
+  getRelatedVocabByWords,
+  getSentencesContainingWord
+} from "@/lib/services/content-repository";
 
 // ======================
 // HELPERS
@@ -76,69 +84,60 @@ export async function getPaginatedVocab(
   hinshi: string = "",
   type: "vocab" | "verb" | "adjective" | "phrase" = "vocab"
 ): Promise<PaginatedVocabResponse> {
-  const supabase = createStaticClient();
-  // Calculate offset for pagination.
-  const offset = (page - 1) * limit;
-
   try {
-    let query = supabase.from("vocab").select("*", { count: "exact" });
+    const response = await getPaginatedContent<VocabTable>("vocab", {
+      page,
+      limit,
+      search,
+      searchColumns: ["word", "meaning_id", "furigana", "romaji"],
+      orderBy: [{ column: "word", ascending: true }],
+      filters: (query) => {
+        if (level && level !== "all") {
+          if (
+            level.toLowerCase() === "umum" ||
+            level.toLowerCase() === "other" ||
+            level.toLowerCase() === "non-jlpt"
+          ) {
+            query = query.is("jlpt_level", null);
+          } else {
+            query = query.eq("jlpt_level", level.toUpperCase());
+          }
+        }
 
-    if (search) {
-      // Escape special characters to prevent SQL injection/wildcard issues.
-      const safeSearch = search
-        .replace(/\\/g, '\\\\')  // hindari backslash terlebih dahulu
-        .replace(/%/g, '\\%')    // hindari SQL wildcard %
-        .replace(/_/g, '\\_')    // hindari SQL wildcard _
-        .replace(/"/g, '');       // hapus tanda kutip untuk sintaks PostgREST
-      query = query.or(`word.ilike."%${safeSearch}%",meaning_id.ilike."%${safeSearch}%",furigana.ilike."%${safeSearch}%",romaji.ilike."%${safeSearch}%"`);
-    }
+        if (hinshi && hinshi !== "all") {
+          const targets = getHinshiFilters(hinshi);
+          if (targets.length === 1) {
+            query = query.contains("hinshi", JSON.stringify([targets[0]]));
+          } else {
+            const orStr = targets
+              .map((val) => `hinshi.cs."${JSON.stringify([val]).replace(/"/g, '\\"')}"`)
+              .join(",");
+            query = query.or(orStr);
+          }
+        }
 
-    if (level && level !== "all") {
-      // Filter by JLPT level. Handle non-JLPT items.
-      if (level.toLowerCase() === "umum" || level.toLowerCase() === "other" || level.toLowerCase() === "non-jlpt") {
-        query = query.is("jlpt_level", null);
-      } else {
-        query = query.eq("jlpt_level", level.toUpperCase());
-      }
-    }
-
-    if (hinshi && hinshi !== "all") {
-      // Filter by part of speech using JSON array containment.
-      const targets = getHinshiFilters(hinshi);
-      if (targets.length === 1) {
-        query = query.contains("hinshi", JSON.stringify([targets[0]]));
-      } else {
-        const orStr = targets.map(val => `hinshi.cs."${JSON.stringify([val]).replace(/"/g, '\\"')}"`).join(",");
-        query = query.or(orStr);
-      }
-    }
-
-    // Terapkan filter khusus berdasarkan 'type' routing jika tidak ada hinshi manual yang dipilih
-    if (!hinshi || hinshi === "all") {
-      if (type === "verb") {
-        const verbTypes = [
-          "Verb", "Verb (Group 1)", "Verb (Group 2)", "Verb (Group 3)"
-        ];
-        const orStr = verbTypes.map(v => `hinshi.cs."${JSON.stringify([v]).replace(/"/g, '\\"')}"`).join(",");
-        query = query.or(orStr);
-      } else if (type === "adjective") {
-        const adjTypes = [
-          "Na-Adjective", "I-Adjective"
-        ];
-        const orStr = adjTypes.map(a => `hinshi.cs."${JSON.stringify([a]).replace(/"/g, '\\"')}"`).join(",");
-        query = query.or(orStr);
-      }
-    }
-
-    const { data, count, error } = await query
-      .order("word", { ascending: true })
-      .range(offset, offset + limit - 1);
-
-    if (error) throw error;
+        if (!hinshi || hinshi === "all") {
+          if (type === "verb") {
+            const verbTypes = ["Verb", "Verb (Group 1)", "Verb (Group 2)", "Verb (Group 3)"];
+            const orStr = verbTypes
+              .map((v) => `hinshi.cs."${JSON.stringify([v]).replace(/"/g, '\\"')}"`)
+              .join(",");
+            query = query.or(orStr);
+          } else if (type === "adjective") {
+            const adjTypes = ["Na-Adjective", "I-Adjective"];
+            const orStr = adjTypes
+              .map((a) => `hinshi.cs."${JSON.stringify([a]).replace(/"/g, '\\"')}"`)
+              .join(",");
+            query = query.or(orStr);
+          }
+        }
+        return query;
+      },
+    });
 
     return {
-      data: (data || []).map(v => ({ ...v, _id: v.id, meaning: v.meaning_id })),
-      total: count || 0,
+      data: response.data.map((v) => ({ ...v, _id: v.id, meaning: v.meaning_id })),
+      total: response.total,
     };
   } catch (error) {
     console.error(`Gagal mengambil data paginasi ${type}:`, error);
@@ -158,24 +157,8 @@ const isUUID = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-
  * @returns Vocabulary detail or null.
  */
 export async function getLibraryVocabDetail(slugOrId: string): Promise<LibraryItem | null> {
-  const supabase = createStaticClient();
-
   try {
-    let data: LibraryItem | null = null;
-
-    // Coba slug terlebih dahulu, lalu kembali ke id sebagai fallback
-    const { data: bySlug, error: slugErr } = await supabase.from("vocab").select("*").eq("slug", slugOrId).single();
-    if (slugErr && slugErr.code !== "PGRST116") {
-      console.error(`[getLibraryVocabDetail] Galat pengambilan slug kosakata:`, slugErr.message, slugErr.code);
-    }
-    if (bySlug) {
-      data = bySlug;
-    } else if (isUUID(slugOrId)) {
-      // Fallback: coba berdasarkan id
-      const { data: byId, error: idErr } = await supabase.from("vocab").select("*").eq("id", slugOrId).single();
-      if (idErr && idErr.code !== "PGRST116") console.error(`[getLibraryVocabDetail] Galat pengambilan ID kosakata:`, idErr.message);
-      data = byId ?? null;
-    }
+    const data = await getContentBySlugOrId<LibraryItem>("vocab", slugOrId);
 
     if (!data) return null;
 
@@ -192,10 +175,7 @@ export async function getLibraryVocabDetail(slugOrId: string): Promise<LibraryIt
 
     // Fetch detail related kanji
     if (rawRelatedKanji.length > 0) {
-      const { data: kanjis } = await supabase
-        .from("kanji")
-        .select("id, character, meaning, onyomi, kunyomi, slug")
-        .in("character", rawRelatedKanji);
+      const kanjis = await getRelatedKanjis(rawRelatedKanji);
       data.relatedKanji = rawRelatedKanji.map((char: string) => {
         const matched = (kanjis || []).find((k) => k.character === char);
         return matched ? { ...matched, _id: matched.id } : { character: char, meaning: "", onyomi: "", kunyomi: "", slug: "" };
@@ -206,10 +186,7 @@ export async function getLibraryVocabDetail(slugOrId: string): Promise<LibraryIt
 
     // Fetch detail synonyms
     if (rawSynonyms.length > 0) {
-      const { data: syns } = await supabase
-        .from("vocab")
-        .select("id, word, meaning_id, romaji, slug")
-        .in("word", rawSynonyms);
+      const syns = await getRelatedVocabByWords(rawSynonyms);
       data.synonyms = rawSynonyms.map((word: string) => {
         const matched = (syns || []).find((v) => v.word === word);
         return matched ? { ...matched, _id: matched.id, meaning: matched.meaning_id } : { word, meaning: "", romaji: "", slug: "" };
@@ -220,10 +197,7 @@ export async function getLibraryVocabDetail(slugOrId: string): Promise<LibraryIt
 
     // Fetch detail antonyms
     if (rawAntonyms.length > 0) {
-      const { data: ants } = await supabase
-        .from("vocab")
-        .select("id, word, meaning_id, romaji, slug")
-        .in("word", rawAntonyms);
+      const ants = await getRelatedVocabByWords(rawAntonyms);
       data.antonyms = rawAntonyms.map((word: string) => {
         const matched = (ants || []).find((v) => v.word === word);
         return matched ? { ...matched, _id: matched.id, meaning: matched.meaning_id } : { word, meaning: "", romaji: "", slug: "" };
@@ -244,11 +218,7 @@ export async function getLibraryVocabDetail(slugOrId: string): Promise<LibraryIt
 
     // Ambil kalimat contoh dinamis dari tabel public.sentences
     try {
-      const { data: dbSentences } = await supabase
-        .from("sentences")
-        .select("japanese, indonesia, english")
-        .like("japanese", `%${data.word}%`)
-        .limit(3);
+      const dbSentences = await getSentencesContainingWord(data.word as string, 3);
 
       if (dbSentences && dbSentences.length > 0) {
         const dynamicExamples = dbSentences.map((s) => ({
@@ -292,16 +262,12 @@ export async function getLibraryVocabDetail(slugOrId: string): Promise<LibraryIt
  * @returns Array of object params with slug property.
  */
 export async function getVocabStaticSlugs(limit: number = 200): Promise<{ slug: string }[]> {
-  const supabase = createStaticClient();
   try {
-    const { data, error } = await supabase
-      .from("vocab")
-      .select("slug")
-      .not("slug", "is", null)
-      .order("created_at", { ascending: false })
-      .limit(limit);
-
-    if (error || !data) return [];
+    const data = await getStaticSlugs("vocab", {
+      limit,
+      orderBy: { column: "created_at", ascending: false },
+      select: "slug",
+    });
     return data.map((item) => ({ slug: String(item.slug) }));
   } catch (error) {
     console.error("Gagal mengambil static slugs vocab:", error);
