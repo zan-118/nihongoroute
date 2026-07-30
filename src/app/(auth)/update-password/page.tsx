@@ -7,7 +7,7 @@
 // IMPOR
 // ======================
 import type { Metadata } from "next";
-import UpdatePasswordClient from "./UpdatePasswordClient";
+import UpdatePasswordView from "@/features/auth/UpdatePasswordView";
 import { createPageMetadata } from "@/lib/seo";
 
 // ======================
@@ -35,5 +35,5 @@ export const metadata: Metadata = {
  */
 export default function UpdatePasswordPage() {
   // Render client-side password update form
-  return <UpdatePasswordClient />;
+  return <UpdatePasswordView />;
 }

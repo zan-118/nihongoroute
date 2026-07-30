@@ -10,7 +10,7 @@ import { Suspense } from "react";
 import { RotateCw } from "@/components/ui/icons";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getPaginatedKanji } from "@/actions/library.actions";
-import KanjiListClient from "@/app/(main)/library/kanji/KanjiListClient";
+import KanjiListView from "@/features/library/kanji/KanjiListView";
 import type { Metadata } from "next";
 import {
   breadcrumbJsonLd,
@@ -80,7 +80,7 @@ export default async function KanjiListPage() {
             <p className="text-xs font-bold uppercase tracking-widest font-mono animate-pulse">Memuat pustaka kanji…</p>
           </div>
         }>
-          <KanjiListClient initialData={initialData} />
+          <KanjiListView initialData={initialData} />
         </Suspense>
       </div>
     </div>

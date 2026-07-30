@@ -7,7 +7,7 @@
 // IMPOR
 // ======================
 import type { Metadata } from "next";
-import ForgotPasswordClient from "./ForgotPasswordClient";
+import ForgotPasswordView from "@/features/auth/ForgotPasswordView";
 import { createPageMetadata } from "@/lib/seo";
 
 // ======================
@@ -33,5 +33,5 @@ export const metadata: Metadata = {
  */
 export default function ForgotPasswordPage() {
   // Render client component wrapper
-  return <ForgotPasswordClient />;
+  return <ForgotPasswordView />;
 }

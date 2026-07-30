@@ -9,7 +9,7 @@
 // IMPOR
 // ======================
 import type { Metadata } from "next";
-import SupportClient from "./SupportClient";
+import SupportView from "@/features/support/SupportView";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
   breadcrumbJsonLd,
@@ -81,7 +81,7 @@ export default async function SupportPage() {
           faqPageJsonLd(supportFaqs),
         ]}
       />
-      <SupportClient initialSupporters={initialSupporters} />
+      <SupportView initialSupporters={initialSupporters} />
     </>
   );
 }

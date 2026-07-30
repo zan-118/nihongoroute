@@ -7,7 +7,7 @@
 // IMPOR
 // ======================
 import { getPaginatedListening } from "@/actions/library.actions";
-import ListeningListClient from "@/app/(main)/library/listening/ListeningListClient";
+import ListeningListView from "@/features/library/listening/ListeningListView";
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
@@ -73,7 +73,7 @@ export default async function ListeningListPage() {
 
       <div className="max-w-5xl mx-auto relative z-10">
         {/* Render interactive client list. */}
-        <ListeningListClient initialData={initialData} />
+        <ListeningListView initialData={initialData} />
       </div>
     </div>
   );

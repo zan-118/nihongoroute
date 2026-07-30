@@ -5,7 +5,7 @@
  */
 
 import { Metadata } from "next";
-import SettingsClient from "./SettingsClient";
+import SettingsView from "@/features/settings/SettingsView";
 import { createPageMetadata } from "@/lib/seo";
 
 import { ROUTES } from "@/lib/core/routes";
@@ -37,7 +37,7 @@ export default function SettingsPage() {
         <div className="absolute bottom-[10%] -right-[10%] size-[42%] bg-secondary/5 blur-[80px] rounded-full pointer-events-none ambient-glow will-change-transform" />
       </div>
 
-      <SettingsClient />
+      <SettingsView />
     </div>
   );
 }

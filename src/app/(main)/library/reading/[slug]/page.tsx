@@ -9,7 +9,7 @@
 import { cache } from "react";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
 import { getReadingStaticSlugs } from "@/actions/reading.actions";
-import ReadingPageClient from "./ReadingPageClient";
+import ReadingPageClient from "@/features/library/reading/ReadingPageClient";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";

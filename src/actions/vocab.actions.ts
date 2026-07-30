@@ -12,8 +12,8 @@
 // ======================
 import { PaginatedVocabResponse, LibraryItem } from "@/types/library";
 import { VocabTable } from "@/types/database";
+import { queryLexicalDomain } from "@/lib/services/lexical-content-engine";
 import {
-  getPaginatedContent,
   getContentBySlugOrId,
   getStaticSlugs,
   getRelatedKanjis,
@@ -22,52 +22,11 @@ import {
 } from "@/lib/services/content-repository";
 
 // ======================
-// HELPERS
-// ======================
-
-/**
- * Map part-of-speech string to database categories.
- * @param hinshi Input part-of-speech.
- * @returns Array of matching database categories.
- */
-function getHinshiFilters(hinshi: string): string[] {
-  const lower = hinshi.toLowerCase();
-  if (lower === "noun" || lower === "n") {
-    return ["Noun"];
-  }
-  if (lower === "verb" || lower === "v") {
-    return ["Verb", "Verb (Group 1)", "Verb (Group 2)", "Verb (Group 3)"];
-  }
-  if (lower === "i-adjective" || lower === "adj-i") {
-    return ["I-Adjective"];
-  }
-  if (lower === "na-adjective" || lower === "adj-na") {
-    return ["Na-Adjective"];
-  }
-  if (lower === "adverb" || lower === "adv") {
-    return ["Adverb"];
-  }
-  if (lower === "particle") {
-    return ["Particle"];
-  }
-  if (lower === "conjunction" || lower === "conj") {
-    return ["Conjunction"];
-  }
-  if (lower === "pronoun" || lower === "pn") {
-    return ["Pronoun"];
-  }
-  if (lower === "expression" || lower === "exp") {
-    return ["Expression"];
-  }
-  return [hinshi];
-}
-
-// ======================
 // SERVER ACTIONS
 // ======================
 
 /**
- * Fetch paginated vocabulary items.
+ * Fetch paginated vocabulary items using LexicalContentEngine domain seam.
  * @param page Page number.
  * @param limit Items per page.
  * @param search Search query.
@@ -85,54 +44,10 @@ export async function getPaginatedVocab(
   type: "vocab" | "verb" | "adjective" | "phrase" = "vocab"
 ): Promise<PaginatedVocabResponse> {
   try {
-    const response = await getPaginatedContent<VocabTable>("vocab", {
-      page,
-      limit,
-      search,
-      searchColumns: ["word", "meaning_id", "furigana", "romaji"],
-      orderBy: [{ column: "word", ascending: true }],
-      filters: (query) => {
-        if (level && level !== "all") {
-          if (
-            level.toLowerCase() === "umum" ||
-            level.toLowerCase() === "other" ||
-            level.toLowerCase() === "non-jlpt"
-          ) {
-            query = query.is("jlpt_level", null);
-          } else {
-            query = query.eq("jlpt_level", level.toUpperCase());
-          }
-        }
-
-        if (hinshi && hinshi !== "all") {
-          const targets = getHinshiFilters(hinshi);
-          if (targets.length === 1) {
-            query = query.contains("hinshi", JSON.stringify([targets[0]]));
-          } else {
-            const orStr = targets
-              .map((val) => `hinshi.cs."${JSON.stringify([val]).replace(/"/g, '\\"')}"`)
-              .join(",");
-            query = query.or(orStr);
-          }
-        }
-
-        if (!hinshi || hinshi === "all") {
-          if (type === "verb") {
-            const verbTypes = ["Verb", "Verb (Group 1)", "Verb (Group 2)", "Verb (Group 3)"];
-            const orStr = verbTypes
-              .map((v) => `hinshi.cs."${JSON.stringify([v]).replace(/"/g, '\\"')}"`)
-              .join(",");
-            query = query.or(orStr);
-          } else if (type === "adjective") {
-            const adjTypes = ["Na-Adjective", "I-Adjective"];
-            const orStr = adjTypes
-              .map((a) => `hinshi.cs."${JSON.stringify([a]).replace(/"/g, '\\"')}"`)
-              .join(",");
-            query = query.or(orStr);
-          }
-        }
-        return query;
-      },
+    const response = await queryLexicalDomain<VocabTable>({
+      type,
+      filters: { search, level, hinshi },
+      pagination: { page, limit },
     });
 
     return {
@@ -140,7 +55,7 @@ export async function getPaginatedVocab(
       total: response.total,
     };
   } catch (error) {
-    console.error(`Gagal mengambil data paginasi ${type}:`, error);
+    console.error("Gagal mengambil data paginasi vocab:", error);
     return { data: [], total: 0 };
   }
 }

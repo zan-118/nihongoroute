@@ -10,7 +10,7 @@
 // ======================
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
-import CheatsheetClient from "./CheatsheetClient";
+import CheatsheetView from "@/features/library/cheatsheet/CheatsheetView";
 import { getCheatsheets } from "@/actions/library.actions";
 import {
   breadcrumbJsonLd,
@@ -78,7 +78,7 @@ export default async function CheatsheetPage() {
 
       <div className="max-w-7xl mx-auto w-full relative z-10 flex flex-col pt-10">
         {/* Render interactive client component with initial data. */}
-        <CheatsheetClient initialSheets={sheets} />
+        <CheatsheetView initialSheets={sheets} />
       </div>
     </main>
   );

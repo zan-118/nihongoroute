@@ -7,7 +7,7 @@
 // IMPOR
 // ======================
 import type { Metadata } from "next";
-import ShareClient from "./ShareClient";
+import ShareView from "@/features/share/ShareView";
 import { createPageMetadata } from "@/lib/seo";
 
 import { ROUTES } from "@/lib/core/routes";
@@ -35,5 +35,5 @@ export const metadata: Metadata = {
  * Render ShareClient component.
  */
 export default function SharePage() {
-  return <ShareClient />;
+  return <ShareView />;
 }

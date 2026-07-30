@@ -11,7 +11,7 @@ import { cache } from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
-import CourseCategoryClient from "./CourseCategoryClient";
+import CourseCategoryView from "@/features/courses/CourseCategoryView";
 import { getCourseCategoryData } from "@/actions/library.actions";
 import {
   breadcrumbJsonLd,
@@ -110,7 +110,7 @@ export default async function CourseCategoryPage({ params }: PageProps) {
           }),
         ]}
       />
-      <CourseCategoryClient data={data} categoryId={decodedCategoryId} />
+      <CourseCategoryView data={data} categoryId={decodedCategoryId} />
     </>
   );
 }

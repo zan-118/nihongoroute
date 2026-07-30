@@ -14,9 +14,9 @@ import {
 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheatsheetTable } from "./CheatsheetTable";
+import { CheatsheetTable } from "@/features/library/cheatsheet/CheatsheetTable";
 import { getCheatsheetByIdOrSlug, getCheatsheets, getCheatsheetStaticParams } from "@/actions/library.actions";
-import CheatsheetPdfButton from "./CheatsheetPdfButton";
+import CheatsheetPdfButton from "@/features/library/cheatsheet/CheatsheetPdfButton";
 import type { Metadata } from "next";
 import {
   breadcrumbJsonLd,

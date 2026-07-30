@@ -10,7 +10,7 @@
 import { Suspense } from "react";
 import { RotateCw } from "@/components/ui/icons";
 import { JsonLd } from "@/components/seo/JsonLd";
-import GrammarClient from "./GrammarClient";
+import GrammarView from "@/features/library/grammar/GrammarView";
 import { getGrammarArticles } from "@/actions/library.actions";
 import {
   breadcrumbJsonLd,
@@ -79,7 +79,7 @@ export default async function GrammarArticlesPage() {
           <p className="text-xs font-bold uppercase tracking-widest font-mono animate-pulse">Memuat tata bahasa…</p>
         </div>
       }>
-        <GrammarClient initialArticles={grammarData} />
+        <GrammarView initialArticles={grammarData} />
       </Suspense>
     </main>
   );

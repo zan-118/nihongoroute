@@ -8,7 +8,7 @@
 // IMPOR
 // ======================
 import { Suspense } from "react";
-import { ReviewClient } from "@/app/(main)/review/ReviewClient";
+import { ReviewView } from "@/features/review/ReviewView";
 import { RotateCw } from "@/components/ui/icons";
 import type { Metadata } from "next";
 import { createPageMetadata } from "@/lib/seo";
@@ -50,7 +50,7 @@ export default function ReviewPage() {
         </p>
       </div>
     }>
-      <ReviewClient />
+      <ReviewView />
     </Suspense>
   );
 }

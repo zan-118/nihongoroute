@@ -14,6 +14,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useUIStore } from "@/store/useUIStore";
+import { reconcileAcceptedXp, broadcastMultiTabSync } from "@/lib/core/sync-pipeline-engine";
 import { SRSState } from "@/lib/srs";
 import { buildLessonUpdates, buildSrsUpdates } from "@/lib/cloud-sync-payload";
 import { Inventory, Settings, LessonProgress } from "@/store/types";
@@ -118,16 +119,12 @@ export function useCloudMutation(session: Session | null | undefined) {
         if (result.syncedLessonIds) useUserStore.getState().clearDirtyLessons(result.syncedLessonIds);
         
         // Perbarui Poin XP lokal agar sinkron dengan batasan anti-cheat server
-        if (result.acceptedXp !== undefined) {
-          useUserStore.getState().setGamification({ xp: result.acceptedXp });
-        }
+        reconcileAcceptedXp(result.acceptedXp, (xp) => {
+          useUserStore.getState().setGamification({ xp });
+        });
         
         // Multi-Tab Integrity: Siarkan pesan keberhasilan sinkronisasi ke seluruh tab aktif peramban
-        if (typeof window !== "undefined" && "BroadcastChannel" in window) {
-          const channel = new BroadcastChannel("nihongoroute_sync");
-          channel.postMessage("SYNC_COMPLETE");
-          channel.close();
-        }
+        broadcastMultiTabSync("SYNC_COMPLETE");
       }
     },
     /**

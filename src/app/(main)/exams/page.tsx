@@ -12,7 +12,7 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { JsonLd } from "@/components/seo/JsonLd";
 
-const ExamsClient = dynamic(() => import("./ExamsClient"));
+const ExamsView = dynamic(() => import("@/features/exams/ExamsView"));
 import { getExamsList } from "@/actions/library.actions";
 import {
   breadcrumbJsonLd,
@@ -77,7 +77,7 @@ export default async function ExamsPage() {
         ]}
       />
       {/* Render client component with fetched exams */}
-      <ExamsClient exams={exams} />
+      <ExamsView exams={exams} />
     </>
   );
 }

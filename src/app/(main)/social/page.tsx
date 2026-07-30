@@ -7,7 +7,7 @@
 // IMPOR
 // ======================
 import { Metadata } from "next";
-import SocialClient from "./SocialClient";
+import SocialView from "@/features/social/SocialView";
 import { Badge } from "@/components/ui/badge";
 import { Users } from "@/components/ui/icons";
 import { createPageMetadata } from "@/lib/seo";
@@ -64,7 +64,7 @@ export default function SocialPage() {
 
         {/* CONTENT SECTION (TABBED CLIENT VIEW) */}
         {/* Client component handles tab switching and dynamic data fetching */}
-        <SocialClient />
+        <SocialView />
         
       </div>
     </main>

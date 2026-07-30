@@ -11,8 +11,8 @@
 // ======================
 import { GrammarTable } from "@/types/database";
 import { LibraryItem } from "@/types/library";
+import { queryLexicalDomain } from "@/lib/services/lexical-content-engine";
 import {
-  getPaginatedContent,
   getContentBySlugOrId,
   getStaticSlugs,
   getGrammarListBySlugs,
@@ -25,7 +25,7 @@ import {
 // ======================
 
 /**
- * Fetch paginated grammar records from database.
+ * Fetch paginated grammar records from database using LexicalContentEngine domain seam.
  * Filter by JLPT level if specified.
  * 
  * @param page - Current page number.
@@ -39,19 +39,10 @@ export async function getPaginatedGrammar(
   level: string = ""
 ): Promise<{ data: (GrammarTable & { _id: string; jlptLevel: string | null })[]; total: number }> {
   try {
-    const response = await getPaginatedContent<GrammarTable>("grammar", {
-      page,
-      limit,
-      orderBy: [
-        { column: "order_number", ascending: true, nullsFirst: false },
-        { column: "created_at", ascending: false }
-      ],
-      filters: (query) => {
-        if (level && level !== "all") {
-          query = query.eq("jlpt_level", level.toUpperCase());
-        }
-        return query;
-      }
+    const response = await queryLexicalDomain<GrammarTable>({
+      type: "grammar",
+      filters: { level },
+      pagination: { page, limit },
     });
 
     return {

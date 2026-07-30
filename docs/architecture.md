@@ -1,6 +1,6 @@
 # Arsitektur Sistem
 
-> Terakhir diperbarui: 24 Juli 2026
+> Terakhir diperbarui: 31 Juli 2026
 
 ---
 
@@ -177,9 +177,13 @@ Status pengguna (XP, SRS, lesson progress) diproses di sisi klien via Zustand + 
 
 Untuk menjaga konsistensi codebase dan mempermudah kontribusi baru, struktur layer didefinisikan sebagai berikut:
 
+- **Pure Route Wrappers (`src/app/`)**:
+  Folder rute `src/app/` secara ketat HANYA diperuntukkan bagi file routing bawaan Next.js (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `route.ts`). Dilarang menyimpan komponen tampilan klien (`*Client.tsx`) atau helper privat di dalam folder `src/app/`. Seluruh komponen antarmuka dan logika tampilan fitur wajib ditempatkan di `src/features/<feature-name>/`.
 - **Server Actions (`src/actions/*.actions.ts`)**:
   Layer tipis yang berfungsi sebagai entry point bagi antarmuka klien. Hanya bertanggung jawab melakukan validasi input/parameter dasar, dan mendelegasikan pemrosesan ke `src/lib/services/`. Tidak diperkenankan melakukan query Supabase secara langsung ke database.
 - **Domain Services & Repository (`src/lib/services/`)**:
   Satu-satunya layer yang diizinkan untuk menginisiasi klien Supabase (`createStaticClient`) dan mengeksekusi query database PostgreSQL (CRUD terstruktur). Logika akses data konten pustaka generik dipusatkan di `src/lib/services/content-repository.ts`.
+- **Feature Domain Engines (`src/features/*/`)**:
+  Modul dalam (*deep feature modules*) yang mengisolasi klasifikasi, penyaringan, dan transformasi data khusus fitur (mis. `ExamCatalogEngine`, `DashboardStatsEngine`, `PracticeSessionEngine`) dari komponen rute Next.js `app/(main)`. Komponen halaman Next.js hanya bertindak sebagai wrapper tampilan tipis, sementara logika domain dapat diuji 100% secara terisolasi.
 - **Pure Logic Layer (`src/lib/learning/`, `src/lib/tools/`, `src/lib/exams/`)**:
   Berisi logika bisnis murni (seperti kalkulasi SRS, generator soal, adapter legacy data). Dilarang mengimpor klien Supabase secara langsung. Jika logika membutuhkan data, data tersebut harus dikirimkan dari pemanggil sebagai parameter input.

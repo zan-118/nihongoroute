@@ -11,8 +11,8 @@
 // ======================
 import { PaginatedKanjiResponse, LibraryItem } from "@/types/library";
 import { KanjiTable } from "@/types/database";
+import { queryLexicalDomain } from "@/lib/services/lexical-content-engine";
 import {
-  getPaginatedContent,
   getContentBySlugOrId,
   getStaticSlugs,
   getVocabByCharacter
@@ -23,7 +23,7 @@ import {
 // ======================
 
 /**
- * Fetch kanji list with pagination, search, and JLPT filter.
+ * Fetch kanji list with pagination, search, and JLPT filter using LexicalContentEngine domain seam.
  * @param page Page number.
  * @param limit Items per page.
  * @param search Search query.
@@ -37,18 +37,10 @@ export async function getPaginatedKanji(
   level: string = ""
 ): Promise<PaginatedKanjiResponse> {
   try {
-    const response = await getPaginatedContent<KanjiTable>("kanji", {
-      page,
-      limit,
-      search,
-      searchColumns: ["character", "meaning", "onyomi", "kunyomi", "romaji"],
-      orderBy: [{ column: "character", ascending: true }],
-      filters: (query) => {
-        if (level && level !== "all") {
-          query = query.eq("jlpt_level", level.toUpperCase());
-        }
-        return query;
-      }
+    const response = await queryLexicalDomain<KanjiTable>({
+      type: "kanji",
+      filters: { search, level },
+      pagination: { page, limit },
     });
 
     return {

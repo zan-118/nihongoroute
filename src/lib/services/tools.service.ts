@@ -279,12 +279,18 @@ function sortMiniDrillByContext(
   });
 }
 
+import { generateAdaptiveDistractors } from "@/lib/services/practice-session-engine";
+
 /**
- * Build multiple choice options with distractors.
+ * Build multiple choice options with distractors using PracticeSessionEngine.
  */
 function buildOptions(answer: string, candidates: string[], seed: string) {
-  const distractors = uniqueValues(candidates).filter((candidate) => candidate !== answer).slice(0, 8);
-  const selected = shuffleBySeed(distractors, seed).slice(0, 3);
+  const selected = generateAdaptiveDistractors<string>({
+    target: answer,
+    candidatePool: uniqueValues(candidates),
+    getKey: (item) => item,
+    count: 3,
+  });
   return shuffleBySeed(uniqueValues([answer, ...selected]), `${seed}-options`);
 }
 

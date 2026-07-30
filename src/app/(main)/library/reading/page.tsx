@@ -8,7 +8,7 @@
 // IMPOR
 // ======================
 import { getPaginatedReading } from "@/actions/library.actions";
-import ReadingListClient from "./ReadingListClient";
+import ReadingListView from "@/features/library/reading/ReadingListView";
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
@@ -72,7 +72,7 @@ export default async function ReadingListPage() {
       <div className="grid-overlay" />
 
       <div className="max-w-6xl mx-auto relative z-10">
-        <ReadingListClient initialData={initialData} />
+        <ReadingListView initialData={initialData} />
       </div>
     </div>
   );

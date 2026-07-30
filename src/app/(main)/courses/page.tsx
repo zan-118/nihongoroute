@@ -8,8 +8,7 @@
 // ======================
 // IMPOR
 // ======================
-import React from "react";
-import CoursesClient from "./CoursesClient";
+import CoursesView from "@/features/courses/CoursesView";
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getCourseCategories } from "@/actions/lessons.actions";
@@ -66,7 +65,7 @@ export default async function CoursesLandingPage() {
           }),
         ]}
       />
-      <CoursesClient categories={categories} />
+      <CoursesView categories={categories} />
     </>
   );
 }

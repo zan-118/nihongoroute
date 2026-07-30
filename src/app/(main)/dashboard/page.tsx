@@ -4,7 +4,7 @@ import { getCourseCategories } from "@/actions/lessons.actions";
 import { getRandomExpression } from "@/actions/expressions.actions";
 import { createPageMetadata } from "@/lib/seo";
 
-const DashboardClient = dynamic(() => import("./DashboardClient"), {
+const DashboardView = dynamic(() => import("@/features/dashboard/DashboardView"), {
   loading: () => (
     <div className="w-full space-y-8 animate-pulse">
       <div className="h-32 w-full bg-card/30 rounded-2xl" />
@@ -48,7 +48,7 @@ export default async function DashboardPage() {
       <div className="absolute bottom-0 right-0 size-[600px] bg-primary/5 blur-[70px] rounded-full pointer-events-none ambient-glow will-change-transform" />
       <div className="grid-overlay" />
 
-      <DashboardClient courseMetadata={courseMetadata} expression={expression} />
+      <DashboardView courseMetadata={courseMetadata} expression={expression} />
     </div>
   );
 }

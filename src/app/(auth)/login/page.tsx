@@ -7,7 +7,7 @@
 // IMPOR
 // ======================
 import type { Metadata } from "next";
-import LoginClient from "./LoginClient";
+import LoginView from "@/features/auth/LoginView";
 import { createPageMetadata } from "@/lib/seo";
 
 // ======================
@@ -35,5 +35,5 @@ export const metadata: Metadata = {
  * Render client-side login interface.
  */
 export default function LoginPage() {
-  return <LoginClient />;
+  return <LoginView />;
 }

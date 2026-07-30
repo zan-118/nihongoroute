@@ -14,6 +14,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { useSRSStore } from "@/store/useSRSStore";
 import { useUIStore } from "@/store/useUIStore";
 import { useEffect, useRef, useMemo, useCallback } from "react";
+import { dispatchSyncEvent } from "@/lib/core/sync-pipeline-engine";
 import { useHasMounted } from "@/hooks/useHasMounted";
 import { useCloudData } from "./useCloudData";
 import { useCloudMutation } from "./useCloudMutation";
@@ -148,36 +149,37 @@ export function useSyncProgress(initialSession?: Session | null) {
 
     if (!isProfileChanged && dirtySrsSize === 0 && dirtyLessonsSize === 0) return;
 
-    const timer = setTimeout(() => {
-      const userState = useUserStore.getState();
-      const srsState = useSRSStore.getState();
-      const uiState = useUIStore.getState();
-      const currentSrs = srsState.srs;
-      const currentCompletedLessons = userState.completedLessons;
-      const currentDirtySrs = srsState.dirtySrs;
-      const currentDirtyLessons = userState.dirtyLessons;
+    return dispatchSyncEvent({
+      triggerSync: () => {
+        const userState = useUserStore.getState();
+        const srsState = useSRSStore.getState();
+        const uiState = useUIStore.getState();
+        const currentSrs = srsState.srs;
+        const currentCompletedLessons = userState.completedLessons;
+        const currentDirtySrs = srsState.dirtySrs;
+        const currentDirtyLessons = userState.dirtyLessons;
 
-      const currentProgress = {
-        name: userState.name, 
-        xp: userState.xp, 
-        streak: userState.streak, 
-        todayReviewCount: userState.todayReviewCount, 
-        lastStudyDate: userState.lastStudyDate, 
-        studyDays: userState.studyDays,
-        inventory: userState.inventory, 
-        settings: uiState.settings, 
-        srs: currentSrs, 
-        completedLessons: currentCompletedLessons
-      };
-      syncMutateRef.current({
-        progress: currentProgress,
-        dirtySrs: currentDirtySrs,
-        dirtyLessons: currentDirtyLessons
-      });
-      lastSyncedProgress.current = profileKey;
-    }, 2000);
-
-    return () => clearTimeout(timer);
+        const currentProgress = {
+          name: userState.name, 
+          xp: userState.xp, 
+          streak: userState.streak, 
+          todayReviewCount: userState.todayReviewCount, 
+          lastStudyDate: userState.lastStudyDate, 
+          studyDays: userState.studyDays,
+          inventory: userState.inventory, 
+          settings: uiState.settings, 
+          srs: currentSrs, 
+          completedLessons: currentCompletedLessons
+        };
+        syncMutateRef.current({
+          progress: currentProgress,
+          dirtySrs: currentDirtySrs,
+          dirtyLessons: currentDirtyLessons
+        });
+        lastSyncedProgress.current = profileKey;
+      },
+      debounceMs: 2000,
+    });
   }, [profileKey, dirtySrsSize, dirtyLessonsSize, session?.user, isFetching, isPending, isGuest, userHydrated, srsHydrated]);
 
   // Trigger manual sync immediately.

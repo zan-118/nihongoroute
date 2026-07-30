@@ -9,7 +9,7 @@
 import { cache } from "react";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
 import { getListeningStaticSlugs } from "@/actions/listening.actions";
-import ListeningPageClient from "./ListeningPageClient";
+import ListeningPageClient from "@/features/library/listening/ListeningPageClient";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";

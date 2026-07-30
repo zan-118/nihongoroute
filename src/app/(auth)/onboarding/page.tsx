@@ -7,7 +7,7 @@
 // IMPOR
 // ======================
 import type { Metadata } from "next";
-import OnboardingClient from "./OnboardingClient";
+import OnboardingView from "@/features/auth/OnboardingView";
 import { createPageMetadata } from "@/lib/seo";
 
 // ======================
@@ -33,5 +33,5 @@ export const metadata: Metadata = {
  */
 export default function OnboardingPage() {
   // Render client component wrapper
-  return <OnboardingClient />;
+  return <OnboardingView />;
 }

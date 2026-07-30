@@ -11,7 +11,7 @@
 import { Suspense } from "react";
 import { RotateCw } from "@/components/ui/icons";
 import { JsonLd } from "@/components/seo/JsonLd";
-import VocabClient from "./VocabClient";
+import VocabView from "@/features/library/vocab/VocabView";
 import { getPaginatedVocab } from "@/actions/library.actions";
 import {
   breadcrumbJsonLd,
@@ -80,7 +80,7 @@ export default async function VocabLibraryPage() {
             <p className="text-xs font-bold uppercase tracking-widest font-mono animate-pulse">Memuat kamus kosakata…</p>
           </div>
         }>
-          <VocabClient initialData={initialData} />
+          <VocabView initialData={initialData} />
         </Suspense>
       </div>
     </main>
