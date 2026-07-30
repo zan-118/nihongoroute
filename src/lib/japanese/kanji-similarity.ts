@@ -64,7 +64,7 @@ export const SIMILAR_KANJI_PAIRS: SimilarKanjiPair[] = [
       {
         character: "日",
         meaning: "hari / matahari",
-        reading: "にchi / ひ",
+        reading: "にち / ひ",
         cue: "Satu garis horizontal di dalam.",
         examples: [
           { word: "日本", meaning: "Jepang" },

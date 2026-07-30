@@ -17,7 +17,7 @@
 
 ### Target Pengguna
 
-- Pemelajar mandiri bahasa Jepang dari level N5 hingga N1.
+- Pembelajar mandiri bahasa Jepang dari level N5 hingga N1.
 - Pengguna yang sering belajar dalam kondisi mobilitas tinggi atau koneksi tidak stabil.
 
 ---

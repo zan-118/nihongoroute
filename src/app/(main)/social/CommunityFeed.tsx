@@ -305,8 +305,8 @@ export default function CommunityFeed() {
     isCreatingPost,
   } = useCommunityFeed();
 
-  const CATEGORIES = ["Semua", "Tata Bahasa", "Kosa Kata", "JLPT", "Umum"] as const;
-  const COMPOSE_CATEGORIES = ["Umum", "Tata Bahasa", "Kosa Kata", "JLPT"] as const;
+  const CATEGORIES = ["Semua", "Tata Bahasa", "Kosakata", "JLPT", "Umum"] as const;
+  const COMPOSE_CATEGORIES = ["Umum", "Tata Bahasa", "Kosakata", "JLPT"] as const;
 
   return (
     <div className="flex flex-col gap-6 sm:gap-8">

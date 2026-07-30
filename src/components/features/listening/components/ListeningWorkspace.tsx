@@ -487,7 +487,7 @@ export default function ListeningWorkspace({
                 <textarea
                   value={dictationAnswer}
                   onChange={(e) => setDictationAnswer(e.target.value)}
-                  placeholder="Ketik kalimat bahasa Jepang yang Anda dengar..."
+                  placeholder="Ketik kalimat bahasa Jepang yang kamu dengar..."
                   className="min-h-[100px] w-full rounded-xl border border-border/80 bg-muted/10 p-3 text-base font-japanese outline-none placeholder:text-muted-foreground/60 focus:border-primary/40 focus:ring-2 focus:ring-primary/10 resize-none"
                 />
 

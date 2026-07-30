@@ -74,7 +74,7 @@ export function useOnboardingWizard() {
       // Notify user of failure via UI store
       useUIStore.getState().addNotification({
         title: "Gagal Menyimpan",
-        message: "Terjadi kendala saat menyimpan profil Anda. Silakan coba lagi.",
+        message: "Terjadi kendala saat menyimpan profil kamu. Silakan coba lagi.",
         type: "warning"
       });
     } finally {

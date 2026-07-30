@@ -53,7 +53,7 @@ export function VocabHeader({ totalItems, onPracticeClick, isPracticeDisabled }:
               Pusat <span className="text-primary">Kosakata</span>
             </h1>
             <span className="text-xs md:text-xs text-muted-foreground font-medium tracking-tight uppercase tracking-widest">
-              Perkaya perbendaharaan kata bahasa Jepang Anda.
+              Perkaya perbendaharaan kata bahasa Jepangmu.
             </span>
           </div>
         </div>

@@ -149,7 +149,7 @@ export function FeatureGrid() {
                 </div>
                 <div className="flex flex-col transition-transform group-hover:translate-x-1 duration-300">
                   <ruby className="text-xl font-bold font-japanese tracking-wider text-foreground">
-                    日本語 <rt className="text-[0.55em] font-bold text-muted-foreground transition-colors group-hover:text-primary">にほんgo</rt>
+                    日本語 <rt className="text-[0.55em] font-bold text-muted-foreground transition-colors group-hover:text-primary">にほんご</rt>
                   </ruby>
                   <span className="text-[11px] text-muted-foreground font-semibold mt-0.5">Nihongo — Bahasa Jepang</span>
                 </div>

@@ -24,7 +24,7 @@ const PRESETS: PresetItem[] = [
     translation: "Belajar bahasa Jepang sangat menarik.",
   },
   {
-    text: "毎朝七時に起きて、温かいお茶uを飲みます。",
+    text: "毎朝七時に起きて、温かいお茶を飲みます。",
     translation: "Setiap pagi bangun jam 7 dan minum teh hangat.",
   },
   {

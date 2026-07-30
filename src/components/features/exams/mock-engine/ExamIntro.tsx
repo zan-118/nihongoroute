@@ -90,7 +90,7 @@ export function ExamIntro({
       </Card>
 
       <p className="text-xs text-muted-foreground mb-10 font-bold uppercase tracking-widest leading-relaxed px-2 relative z-10">
-        Ingat ya: Sistem deteksi kecurangan lagi aktif nih. Khusus bagian Mendengar (Choukai), audionya cuma bisa diputar SEKALI dan gak bisa diulang. Fokus ya!
+        Ingat ya: Sistem deteksi kecurangan lagi aktif nih. Khusus bagian Mendengar (Choukai), audionya cuma bisa diputar SEKALI dan tidak bisa diulang. Fokus ya!
       </p>
 
       <div className="flex flex-col sm:flex-row gap-4 relative z-10">

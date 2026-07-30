@@ -270,7 +270,7 @@ export default function DictationClient() {
                     Konfigurasi Sesi Dikte
                   </h2>
                   <p className="text-xs md:text-sm text-muted-foreground">
-                    Pilih tingkat kesulitan JLPT dan jumlah kalimat contoh yang ingin Anda tebak bacaannya.
+                    Pilih tingkat kesulitan JLPT dan jumlah kalimat contoh yang ingin kamu tebak bacaannya.
                   </p>
                 </div>
 
@@ -583,7 +583,7 @@ export default function DictationClient() {
                     Latihan Selesai!
                   </h2>
                   <p className="text-muted-foreground text-xs uppercase tracking-widest font-bold mt-1">
-                    Hasil Pencapaian Diktemu
+                    Hasil Latihan Dikte
                   </p>
                 </div>
 

@@ -48,7 +48,7 @@ export function SurvivalIntro({ startGame }: SurvivalIntroProps) {
         Mode <span className="text-primary drop-shadow-sm dark:drop-shadow-[0_0_10px_rgb(var(--primary-rgb)/0.25)]">Evaluasi</span>
       </h2>
       <p className="text-muted-foreground mb-10 md:mb-14 max-w-md mx-auto text-xs md:text-sm leading-relaxed font-bold tracking-wide">
-        Uji kecepatan dan ingatan Anda. Jawab sebelum waktu habis. 3 kesempatan. Buktikan penguasaan kosakata Anda.
+        Uji kecepatan dan ingatanmu. Jawab sebelum waktu habis. 3 kesempatan. Buktikan penguasaan kosakata.
       </p>
       
       {/* Start button trigger callback */}

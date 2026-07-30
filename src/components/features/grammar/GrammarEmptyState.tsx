@@ -55,7 +55,7 @@ export function GrammarEmptyState({ searchTerm, selectedLevel, onResetSearch }: 
         <p className="text-muted-foreground font-medium text-sm md:text-base max-w-md mx-auto mb-10 leading-relaxed font-sans">
           {/* Dynamic message based on search state or selected level */}
           {searchTerm 
-            ? `Waduh, hasil buat "${searchTerm}" gak ketemu nih. Coba cari kata kunci lain atau perjaanmu.` 
+            ? `Waduh, hasil buat "${searchTerm}" gak ketemu nih. Coba cari kata kunci lain atau pencarianmu.` 
             : `Sabar ya, Sensei kami lagi ngeracik materi buat level ${selectedLevel.toUpperCase()}. Pantau terus!`}
         </p>
         {/* Show reset button only when search query is active */}

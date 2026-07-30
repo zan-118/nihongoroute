@@ -59,7 +59,7 @@ export function KanjiHeader({
           Pustaka <span className="text-primary">Kanji</span>
         </h1>
         <p className="text-muted-foreground text-lg max-w-2xl font-medium">
-          Pelajari struktur dan cara penulisan kanji standar JLPT. Gunakan filter level untuk memfokuskan target pembelajaran Anda.
+          Pelajari struktur dan cara penulisan kanji standar JLPT. Gunakan filter level untuk memfokuskan target pembelajaranmu.
         </p>
       </div>
 

@@ -87,7 +87,7 @@ export function GrammarBlock({ block }: GrammarBlockProps) {
                 target="_blank"
                 className="text-xs font-black uppercase tracking-widest text-primary hover:text-secondary transition-colors inline-flex items-center gap-1.5 select-none"
               >
-                <span>Pelajari Lebih Detail Halaman Pola →</span>
+                <span>Pelajari Lebih Detail di Halaman Pola →</span>
               </Link>
             </div>
           )}
