@@ -19,7 +19,7 @@ import EmptyState from "@/components/ui/EmptyState";
 /**
  * Props for ReviewCompletionState.
  */
-interface ReviewCompletionStateProps {
+export interface ReviewCompletionStateProps {
   /** Review mode. Controls icon and text. */
   mode: "srs" | "quick";
   /** Callback. Runs when user clicks back button. */

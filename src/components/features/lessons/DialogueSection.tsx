@@ -10,7 +10,7 @@
 // ======================
 import React from "react";
 import { MessageSquare, Play, Pause } from "@/components/ui/icons";
-import { SmartJapanese } from "@/components/ui/SmartJapanese";
+import { SmartJapanese } from "@/components/ui/japanese";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import MediaAsset from "@/components/ui/MediaAsset";
 import { OfflineAudio } from "@/components/ui/OfflineAudio";

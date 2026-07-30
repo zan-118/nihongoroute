@@ -28,7 +28,7 @@ import { VocabHeader } from "@/components/features/library/vocab/VocabHeader";
 import { VocabFilterPanel } from "@/components/features/library/vocab/VocabFilterPanel";
 import { VocabPagination } from "@/components/features/library/vocab/VocabPagination";
 import { useUIStore } from "@/store/useUIStore";
-import { SmartJapanese } from "@/components/ui/SmartJapanese";
+import { SmartJapanese } from "@/components/ui/japanese";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import type { VocabItem } from "@/components/features/library/vocab/types";
 

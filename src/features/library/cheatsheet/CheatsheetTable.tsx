@@ -24,7 +24,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { m, AnimatePresence } from "framer-motion";
 import * as wanakana from "wanakana";
-import { SmartJapanese } from "@/components/ui/SmartJapanese";
+import { SmartJapanese } from "@/components/ui/japanese";
 import { cn } from "@/lib/utils";
 
 // ======================

@@ -14,7 +14,7 @@ import TTSReader from "@/components/features/tools/tts/TTSReader";
 import { FlashcardThemeContext } from "./types";
 import Link from "next/link";
 import { toRomaji, toHiragana } from "wanakana";
-import { splitFurigana } from "@/components/ui/SmartJapanese";
+import { splitFurigana } from "@/components/ui/japanese";
 import { MnemonicEditor } from "@/components/features/srs/mnemonic/MnemonicEditor";
 
 // ==========================================

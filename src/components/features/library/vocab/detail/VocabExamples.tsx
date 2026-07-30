@@ -11,7 +11,7 @@
 // ==========================================
 import { Card } from "@/components/ui/card";
 import { Layers } from "@/components/ui/icons";
-import { SmartJapanese } from "@/components/ui/SmartJapanese";
+import { SmartJapanese } from "@/components/ui/japanese";
 
 // ==========================================
 // ANTARMUKA & TIPE DATA

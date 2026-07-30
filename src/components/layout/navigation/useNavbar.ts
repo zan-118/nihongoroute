@@ -17,7 +17,7 @@ import {
   CustomSettingsIcon,
   CustomShareIcon,
   CustomHelpIcon
-} from "@/components/ui/CustomIcons";
+} from "@/components/ui/icons";
 import { useUserStore } from "@/store/useUserStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { ROUTES } from "@/lib/routes";

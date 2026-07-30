@@ -10,7 +10,7 @@
 // ======================
 import React, { useState } from "react";
 import { toRomaji } from "wanakana";
-import { SmartJapanese } from "@/components/ui/SmartJapanese";
+import { SmartJapanese } from "@/components/ui/japanese";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import AddToSRSButton from "@/components/features/srs/actions/AddToSRSButton";
 import { ChevronDown, ChevronUp } from "@/components/ui/icons";

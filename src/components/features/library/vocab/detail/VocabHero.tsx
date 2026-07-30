@@ -6,7 +6,7 @@
  * Menampilkan tulisan ejaan kanji/kana utama, bacaan romaji, arti, serta tombol aksi TTS & penambahan ke SRS.
  */
 
-import { SmartJapanese } from "@/components/ui/SmartJapanese";
+import { SmartJapanese } from "@/components/ui/japanese";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import { AddToSRSButton } from "@/components/features/srs/button/AddToSRSButton";
 

@@ -11,7 +11,7 @@ import {
   CustomLibraryIcon, 
   CustomUserIcon, 
   CustomLoginIcon 
-} from "@/components/ui/CustomIcons";
+} from "@/components/ui/icons";
 import { useUserStore } from "@/store/useUserStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { ROUTES } from "@/lib/core/routes";

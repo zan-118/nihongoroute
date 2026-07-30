@@ -35,7 +35,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { StickerScene } from "@/components/ui/StickerScene";
 import { IllustrationGallery } from "@/components/ui/IllustrationGallery";
-import { SmartJapanese } from "@/components/ui/SmartJapanese";
+import { SmartJapanese } from "@/components/ui/japanese";
 import AudioController from "@/components/features/reading/components/AudioController";
 import { useLineTTS } from "../hooks/useLineTTS";
 import { evaluateDictation, extractDictationText } from "@/lib/dictation";

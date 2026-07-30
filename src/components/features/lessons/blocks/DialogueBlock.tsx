@@ -1,6 +1,6 @@
 import React from "react";
 import { ContentBlock } from "@/types/database";
-import { SmartJapanese } from "@/components/ui/SmartJapanese";
+import { SmartJapanese } from "@/components/ui/japanese";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import { OfflineAudio } from "@/components/ui/OfflineAudio";
 import { detectVoice, fetchTTSAudio, speakWithWebSpeech } from "@/lib/tts";

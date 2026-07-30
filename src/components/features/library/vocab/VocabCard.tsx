@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowUpRight } from "@/components/ui/icons";
 import { ROUTES } from "@/lib/routes";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
-import { SmartJapanese } from "@/components/ui/SmartJapanese";
+import { SmartJapanese } from "@/components/ui/japanese";
 import { VocabItem } from "./types";
 
 interface VocabCardProps {

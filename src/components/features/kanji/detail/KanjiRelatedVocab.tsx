@@ -9,7 +9,7 @@
 import { Card } from "@/components/ui/card";
 import { Link as LinkIcon, ChevronLeft } from "@/components/ui/icons";
 import Link from "next/link";
-import { SmartJapanese } from "@/components/ui/SmartJapanese";
+import { SmartJapanese } from "@/components/ui/japanese";
 
 // ==========================================
 // TIPE DATA / INTERFACE

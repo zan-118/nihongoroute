@@ -15,7 +15,7 @@ import { Progress } from "@/components/ui/progress";
 import { Timer, Zap, ShieldAlert, AlertTriangle, Target, BatteryMedium } from "@/components/ui/icons";
 import { CardData } from "./types";
 import { toHiragana } from "wanakana";
-import { SmartJapanese } from "@/components/ui/SmartJapanese";
+import { SmartJapanese } from "@/components/ui/japanese";
 
 // ======================
 // ANTARMUKA & TIPE

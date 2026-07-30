@@ -19,8 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { useUIStore } from "@/store/useUIStore";
 import { useReviewSession } from "@/components/features/review/hooks/useReviewSession";
 
-import { ReviewModeCard } from "@/components/features/review/ReviewModeCard";
-import { ReviewCompletionState } from "@/components/features/review/ReviewCompletionState";
+import { ReviewModeCard, ReviewCompletionState } from "@/components/features/review";
 
 export function ReviewView() {
   const loading = useUIStore((state) => state.loading);

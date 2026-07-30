@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { SmartJapanese } from "@/components/ui/SmartJapanese";
+import { SmartJapanese } from "@/components/ui/japanese";
 import { LibraryItem } from "@/actions/library.actions";
 import { TTS_VOICES, type TtsVoice } from "@/lib/tts";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";

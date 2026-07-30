@@ -1,11 +1,12 @@
 /**
  * @file SmartJapanese.tsx
- * @description Facade pembungkus untuk memelihara kompatibilitas impor SmartJapanese.
- * Seluruh logika rendering dan pemisahan Furigana kini terpusat di `@/components/ui/japanese`.
+ * @description Facade pembungkus untuk memelihara kompatibilitas SmartJapanese.
+ * Seluruh logika rendering dan pemisahan Furigana terpusat di `@/components/ui/japanese`.
  */
 
 import React from "react";
-import { JapaneseText, splitFurigana } from "@/components/ui/japanese";
+import { JapaneseText } from "./JapaneseText";
+import { splitFurigana } from "./splitFurigana";
 
 export { splitFurigana };
 

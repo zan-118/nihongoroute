@@ -12,7 +12,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { SmartJapanese } from "@/components/ui/SmartJapanese";
+import { SmartJapanese } from "@/components/ui/japanese";
 import { BookmarkCheck, BookmarkPlus, ExternalLink, Loader2, Trash2, X } from "@/components/ui/icons";
 import Link from "next/link";
 import { cn } from "@/lib/utils";

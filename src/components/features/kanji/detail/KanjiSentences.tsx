@@ -15,7 +15,7 @@ import { Volume2, VolumeX, BookOpen } from "@/components/ui/icons";
 import { TTS_VOICES, type TtsVoice } from "@/lib/tts";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import type { SentenceRow } from "@/actions/sentences.actions";
-import { SmartJapanese } from "@/components/ui/SmartJapanese";
+import { SmartJapanese } from "@/components/ui/japanese";
 
 // ==========================================
 // TIPE DATA / INTERFACE

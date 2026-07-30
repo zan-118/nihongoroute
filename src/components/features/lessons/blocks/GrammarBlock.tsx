@@ -2,8 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { ChevronDown } from "@/components/ui/icons";
 import { ContentBlock, ExampleSentence } from "@/types/database";
-import { SmartJapanese } from "@/components/ui/SmartJapanese";
-import FuriganaDisplay from "@/components/ui/FuriganaDisplay";
+import { SmartJapanese, FuriganaDisplay } from "@/components/ui/japanese";
 import TTSReader from "@/components/features/tools/tts/TTSReader";
 import { parseInlineStyles, parseNotesToJSX } from "@/lib/utils/markdown-parser";
 

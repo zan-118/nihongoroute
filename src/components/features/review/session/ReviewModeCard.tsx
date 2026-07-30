@@ -20,7 +20,7 @@ import { Badge } from "@/components/ui/badge";
 /**
  * Props for ReviewModeCard component.
  */
-interface ReviewModeCardProps {
+export interface ReviewModeCardProps {
   /** Callback function triggered on card click */
   onClick: () => void;
   /** Flag indicating if the card is active and clickable */
