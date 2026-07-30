@@ -19,6 +19,9 @@
     "exam:generate:bunpou": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-jlpt-bunpou.mjs",
     "exam:generate:dokkai": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-jlpt-dokkai.mjs",
     "exam:generate:choukai": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-jlpt-choukai.mjs",
+    "pdf:generate:vocab-hinshi": "npx tsx scripts/generate-vocab-pdf.tsx",
+    "pdf:generate:grammar": "npx tsx scripts/generate-grammar-pdf.tsx",
+    "pdf:generate:lesson": "npx tsx scripts/generate-lesson-pdf.tsx",
     "prepare": "husky"
   },
   "dependencies": {

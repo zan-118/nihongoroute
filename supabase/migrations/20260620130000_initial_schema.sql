@@ -58,6 +58,7 @@ CREATE TABLE public.kanji (
     show_in_flashcard boolean DEFAULT true,
     frequency_rank integer,
     slug text,
+    seo jsonb DEFAULT '{}'::jsonb,
     created_at timestamptz DEFAULT now() NOT NULL
 );
 
@@ -83,6 +84,7 @@ CREATE TABLE public.vocab (
     antonyms jsonb DEFAULT '[]'::jsonb,
     examples jsonb DEFAULT '[]'::jsonb,
     show_in_flashcard boolean DEFAULT true,
+    seo jsonb DEFAULT '{}'::jsonb,
     created_at timestamptz DEFAULT now() NOT NULL
 );
 
@@ -101,6 +103,7 @@ CREATE TABLE public.grammar (
     order_number integer,
     related_grammar text[],
     grammar_family text,
+    seo jsonb DEFAULT '{}'::jsonb,
     created_at timestamptz DEFAULT now() NOT NULL
 );
 

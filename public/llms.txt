@@ -1,0 +1,19 @@
+# NihongoRoute
+
+NihongoRoute adalah platform belajar bahasa Jepang gratis yang dirancang dengan pendekatan offline-first, cepat, dan tangguh. Membantu pengguna menguasai bahasa Jepang dari tingkat dasar hingga lanjut berdasarkan kurikulum JLPT (N5 - N1).
+
+## Karakteristik Platform
+- **Harga**: 100% Gratis. Tidak ada paywall atau iklan tersembunyi.
+- **Teknologi**: Next.js (React), Supabase (PostgreSQL), Zustand, dan PWA (Progressive Web App).
+- **Target Pembelajaran**: Kosakata (Vocab), Kanji, Tata Bahasa (Grammar), Membaca (Reading), Menyimak (Listening), dan Simulasi Ujian JLPT.
+
+## Struktur & Endpoint Utama
+- **Beranda**: `/` - Dasbor belajar, pelacakan XP, streak, dan progres SRS.
+- **Rute Belajar**: `/courses` - Kursus terstruktur per tingkat JLPT.
+- **Pustaka Kosakata**: `/library/vocab` - Kamus kosakata bahasa Jepang lengkap dengan furigana, romaji, aksen nada (pitch accent), dan jembatan keledai (mnemonic).
+- **Pustaka Kanji**: `/library/kanji` - Informasi goresan (stroke order), akar kata (radical), dan mnemonic kanji.
+- **Pustaka Tata Bahasa**: `/library/grammar` - Pola kalimat, pembentukan rumus (formation), dan contoh penggunaan.
+- **Simulasi Ujian**: `/exams` - Latihan ujian simulasi JLPT interaktif.
+
+## Format Data Pendukung Agen AI
+- **Pricing**: Detail kebijakan harga terstruktur tersedia di `/pricing.md`.

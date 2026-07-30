@@ -30,7 +30,6 @@ import { KanjiRadicals } from "@/components/features/kanji/detail/KanjiRadicals"
 import { KanjiMnemonic } from "@/components/features/kanji/detail/KanjiMnemonic";
 import { KanjiRelatedVocab } from "@/components/features/kanji/detail/KanjiRelatedVocab";
 import { KanjiSentences } from "@/components/features/kanji/detail/KanjiSentences";
-import { getSentencesByKanji } from "@/actions/sentences.actions";
 import {
   breadcrumbJsonLd,
   createPageMetadata,
@@ -70,17 +69,19 @@ export async function generateMetadata({
 
   const kanjiSlug = String(kanji.slug || decodedSlug);
   return createPageMetadata({
-    title: `${kanji.character} (${kanji.meaning}) | Kanji Jepang`,
-    description: `Pelajari arti, onyomi, kunyomi, mnemonic, kosakata terkait, dan cara menulis kanji ${kanji.character}.`,
+    title: kanji.seo?.title ?? `${kanji.character} (${kanji.meaning}) | Kanji Jepang`,
+    description: kanji.seo?.description ?? `Pelajari arti, onyomi, kunyomi, mnemonic, kosakata terkait, dan cara menulis kanji ${kanji.character}.`,
     path: `/library/kanji/${encodeRouteSegment(kanjiSlug)}`,
-    keywords: [
-      String(kanji.character || ""),
-      String(kanji.meaning || ""),
-      String(kanji.onyomi || ""),
-      String(kanji.kunyomi || ""),
-      "kanji Jepang",
-      "stroke order kanji",
-    ].filter(Boolean),
+    keywords: kanji.seo?.keywords
+      ? kanji.seo.keywords.split(",").map((k: string) => k.trim())
+      : [
+          String(kanji.character || ""),
+          String(kanji.meaning || ""),
+          String(kanji.onyomi || ""),
+          String(kanji.kunyomi || ""),
+          "kanji Jepang",
+          "stroke order kanji",
+        ].filter(Boolean),
   });
 }
 
@@ -118,8 +119,15 @@ export default async function KanjiDetailPage({
 
   if (!kanji) notFound();
   const kanjiCharacter = String(kanji.character || "");
-  // Fetch up to 5 example sentences containing this Kanji
-  const sentences = await getSentencesByKanji(kanjiCharacter, 5);
+  // Map examples from kanji data directly instead of querying public.sentences
+  const formattedSentences = ((kanji.examples as import("@/types/database").ExampleSentence[]) || []).map((ex, index) => ({
+    id: ex.id || `kanji-ex-${index}`,
+    japanese: ex.japanese || ex.jp || "",
+    english: ex.english || null,
+    indonesia: ex.indonesian || null,
+    jlpt_level: String(kanji.jlpt_level || kanji.jlptLevel || "") || null,
+    furigana: ex.furigana || null,
+  }));
   const kanjiLevel = String(kanji.jlpt_level || kanji.jlptLevel || "").toUpperCase();
   const kanjiSlug = String(kanji.slug || decodedSlug);
   const kanjiPath = `/library/kanji/${encodeRouteSegment(kanjiSlug)}`;
@@ -183,7 +191,7 @@ export default async function KanjiDetailPage({
           <KanjiRelatedVocab relatedVocab={kanji.relatedVocab || undefined} />
 
           {/* 7. Example Sentences Bento (Kalimat Contoh Dinamis) */}
-          <KanjiSentences sentences={sentences} character={kanjiCharacter} />
+          <KanjiSentences sentences={formattedSentences} character={kanjiCharacter} />
         </div>
 
         {/* Footer Actions */}

@@ -11,7 +11,6 @@
 import { Metadata } from "next";
 import { getLibraryItemBySlug } from "@/actions/library.actions";
 import { getGrammarStaticSlugs } from "@/actions/grammar.actions";
-import { getSentencesByGrammarPattern } from "@/actions/sentences.actions";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/seo/JsonLd";
 import GrammarDetailClient from "@/components/features/grammar/GrammarDetailClient";
@@ -19,6 +18,7 @@ import {
   articleJsonLd,
   breadcrumbJsonLd,
   createPageMetadata,
+  definedTermJsonLd,
   encodeRouteSegment,
 } from "@/lib/seo";
 
@@ -55,19 +55,21 @@ export async function generateMetadata({
 
   // Build metadata with SEO helper.
   return createPageMetadata({
-    title: `Belajar Grammar ${article.title} | NihongoRoute`,
-    description: article.notes 
+    title: article.seo?.title ?? `Belajar Grammar ${article.title} | NihongoRoute`,
+    description: article.seo?.description ?? (article.notes 
       ? `${String(article.notes).slice(0, 150)}...`
-      : `Pelajari rumus dan cara penggunaan tata bahasa ${article.title} secara mendalam beserta contoh kalimatnya.`,
+      : `Pelajari rumus dan cara penggunaan tata bahasa ${article.title} secara mendalam beserta contoh kalimatnya.`),
     path: `/library/grammar/${encodeRouteSegment(String(article.slug || decodedSlug))}`,
     type: "article",
-    keywords: [
-      String(article.title || ""),
-      String(article.jlptLevel || article.jlpt_level || ""),
-      "grammar Jepang",
-      "tata bahasa Jepang",
-      "bunpou JLPT",
-    ].filter(Boolean),
+    keywords: article.seo?.keywords 
+      ? article.seo.keywords.split(",").map((k: string) => k.trim())
+      : [
+          String(article.title || ""),
+          String(article.jlptLevel || article.jlpt_level || ""),
+          "grammar Jepang",
+          "tata bahasa Jepang",
+          "bunpou JLPT",
+        ].filter(Boolean),
   });
 }
 
@@ -109,10 +111,15 @@ export default async function GrammarDetailPage({
   // Trigger 404 if article missing.
   if (!article) notFound();
 
-  // Extract pattern name for sentence search.
-  const grammarPattern = String(article.title || "");
-  // Fetch example sentences matching pattern.
-  const dynamicSentences = grammarPattern ? await getSentencesByGrammarPattern(grammarPattern, 4) : [];
+  // Map examples from grammar data directly instead of querying public.sentences
+  const formattedSentences = ((article.examples as import("@/types/database").ExampleSentence[]) || []).map((ex, index) => ({
+    id: ex.id || `grammar-ex-${index}`,
+    japanese: ex.japanese || ex.jp || "",
+    english: ex.english || null,
+    indonesia: ex.indonesian || null,
+    jlpt_level: String(article.jlptLevel || article.jlpt_level || "") || null,
+    furigana: ex.furigana || null,
+  }));
 
 
   // ======================
@@ -143,6 +150,14 @@ export default async function GrammarDetailPage({
             datePublished: typeof article.created_at === "string" ? article.created_at : null,
             educationalLevel: String(article.jlptLevel || article.jlpt_level || ""),
           }),
+          definedTermJsonLd({
+            name: String(article.title || ""),
+            description: `Tata bahasa Jepang ${String(article.title || "")} berarti ${String(article.meaning || "")}.`,
+            path: articlePath,
+            termCode: String(article.jlptLevel || article.jlpt_level || "") || null,
+            termSetName: "Pustaka Tata Bahasa Jepang NihongoRoute",
+            termSetPath: "/library/grammar",
+          }),
         ]}
       />
       {/* Ambient Background Glows */}
@@ -154,7 +169,7 @@ export default async function GrammarDetailPage({
 
       <div className="max-w-4xl mx-auto w-full relative z-10 pt-8 md:pt-16">
         {/* Client Side Detail & TTS Interactions */}
-        <GrammarDetailClient article={article} dynamicSentences={dynamicSentences} />
+        <GrammarDetailClient article={article} dynamicSentences={formattedSentences} />
       </div>
     </main>
   );

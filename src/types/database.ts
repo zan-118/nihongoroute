@@ -304,6 +304,7 @@ export interface KanjiTable {
   mnemonics: MnemonicBlock[];
   examples: ExampleSentence[];
   show_in_flashcard: boolean;
+  seo?: SEOMetadata;
   created_at: string;
 }
 
@@ -331,6 +332,7 @@ export interface VocabTable {
   transitivity?: string;
   is_common: boolean;
   show_in_flashcard: boolean;
+  seo?: SEOMetadata;
   created_at: string;
 }
 
@@ -352,6 +354,7 @@ export interface GrammarTable {
   created_at: string;
   related_grammar?: string[] | null;
   grammar_family?: string | null;
+  seo?: SEOMetadata;
 }
 
 /**

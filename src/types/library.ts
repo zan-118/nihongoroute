@@ -155,6 +155,7 @@ export interface LibraryItem {
   related_grammar?: string[] | null;
   familyGrammarList?: Record<string, unknown>[] | null;
   relatedGrammarList?: Record<string, unknown>[] | null;
+  seo?: import("@/types/database").SEOMetadata;
   // Catch-all for dynamic properties
   [key: string]: unknown;
 }

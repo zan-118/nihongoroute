@@ -114,16 +114,18 @@ export async function generateMetadata({
   const romajiStr = typeof vocab.romaji === "string" ? vocab.romaji : "";
   const vocabSlug = String(vocab.slug || decodedSlug);
   return createPageMetadata({
-    title: `${vocab.word || ""} (${vocab.meaning || ""}) | Kosakata Jepang`,
-    description: `Pelajari arti, cara baca, romaji, contoh kalimat, dan penggunaan kata ${vocab.word || ""}${romajiStr ? ` (${romajiStr})` : ""} dalam bahasa Jepang.`,
+    title: vocab.seo?.title ?? `${vocab.word || ""} (${vocab.meaning || ""}) | Kosakata Jepang`,
+    description: vocab.seo?.description ?? `Pelajari arti, cara baca, romaji, contoh kalimat, dan penggunaan kata ${vocab.word || ""}${romajiStr ? ` (${romajiStr})` : ""} dalam bahasa Jepang.`,
     path: `/library/vocab/${encodeRouteSegment(vocabSlug)}`,
-    keywords: [
-      String(vocab.word || ""),
-      String(vocab.furigana || ""),
-      String(vocab.romaji || ""),
-      String(vocab.meaning || ""),
-      "kosakata bahasa Jepang",
-    ].filter(Boolean),
+    keywords: vocab.seo?.keywords
+      ? vocab.seo.keywords.split(",").map((k: string) => k.trim())
+      : [
+          String(vocab.word || ""),
+          String(vocab.furigana || ""),
+          String(vocab.romaji || ""),
+          String(vocab.meaning || ""),
+          "kosakata bahasa Jepang",
+        ].filter(Boolean),
   });
 }
 
