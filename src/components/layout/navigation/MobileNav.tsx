@@ -25,7 +25,7 @@ export default function MobileNav() {
               <li key={item.href + item.label} className="flex-1 relative">
                 <Link
                   href={item.href}
-                  className="min-h-[56px] flex flex-col items-center justify-center py-2 relative group rounded-xl"
+                  className="min-h-14 flex flex-col items-center justify-center py-2 relative group rounded-xl"
                 >
                   {isActive && (
                     <m.div

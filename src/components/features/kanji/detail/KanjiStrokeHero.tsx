@@ -52,7 +52,7 @@ export function KanjiStrokeHero({ id, character, strokeOrderSvg, meaning, jlpt }
       <div className="absolute bottom-0 left-0 size-32 bg-secondary/10 rounded-tr-3xl -ml-8 -mb-8 blur-3xl group-hover:bg-secondary/20 transition-all duration-700" />
       
       {/* Interactive stroke order player */}
-      <div className="w-full max-w-[180px] sm:max-w-[200px] md:max-w-[300px] relative z-10 flex justify-center">
+      <div className="w-full max-w-45 sm:max-w-50 md:max-w-75 relative z-10 flex justify-center">
         <KanjiStrokePlayer 
           character={character} 
           strokeOrderSvg={strokeOrderSvg}

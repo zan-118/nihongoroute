@@ -27,13 +27,13 @@ export default function AppBreadcrumbs({ items, className = "" }: AppBreadcrumbs
             <li key={item.href || index} className="flex items-center gap-1.5 shrink-0">
               {index > 0 && <ChevronRight size={12} className="text-muted-foreground/40 shrink-0" />}
               {isLast || !item.href ? (
-                <span className="font-semibold text-foreground truncate max-w-[200px] sm:max-w-[300px]">
+                <span className="font-semibold text-foreground truncate max-w-50 sm:max-w-75">
                   {item.label}
                 </span>
               ) : (
                 <Link
                   href={item.href}
-                  className="hover:text-foreground transition-colors truncate max-w-[150px]"
+                  className="hover:text-foreground transition-colors truncate max-w-37.5"
                 >
                   {item.label}
                 </Link>

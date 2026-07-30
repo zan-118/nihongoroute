@@ -316,7 +316,7 @@ export default function TextAnalyzerClient({
             <textarea
               value={text}
               onChange={(event) => setText(event.target.value)}
-              className="min-h-[320px] w-full resize-y rounded-lg border border-border bg-muted/15 p-5 font-japanese text-lg font-medium leading-relaxed text-foreground outline-none transition-all placeholder:text-muted-foreground/50 focus:border-primary/40 focus:ring-2 focus:ring-primary/20"
+              className="min-h-80 w-full resize-y rounded-lg border border-border bg-muted/15 p-5 font-japanese text-lg font-medium leading-relaxed text-foreground outline-none transition-all placeholder:text-muted-foreground/50 focus:border-primary/40 focus:ring-2 focus:ring-primary/20"
               placeholder="例: 昨日、友達と図書館で..."
             />
             {error ? (

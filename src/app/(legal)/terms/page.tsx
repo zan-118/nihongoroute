@@ -43,8 +43,8 @@ export default function TermsPage() {
       {/* Hamparan Neural Latar Belakang */}
       <div className="grid-overlay" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgb(var(--secondary-rgb)/0.07)_0%,transparent_70%)] pointer-events-none z-0" />
-      <div className="absolute top-1/4 left-0 size-[300px] bg-[rgb(var(--secondary-rgb)/0.03)] rounded-full blur-[60px] pointer-events-none z-0 ambient-glow will-change-transform" />
-      <div className="absolute bottom-1/4 right-0 size-[250px] bg-[rgb(var(--primary-rgb)/0.02)] rounded-full blur-[80px] pointer-events-none z-0 ambient-glow will-change-transform" />
+      <div className="absolute top-1/4 left-0 size-75 bg-[rgb(var(--secondary-rgb)/0.03)] rounded-full blur-[60px] pointer-events-none z-0 ambient-glow will-change-transform" />
+      <div className="absolute bottom-1/4 right-0 size-62.5 bg-[rgb(var(--primary-rgb)/0.02)] rounded-full blur-[80px] pointer-events-none z-0 ambient-glow will-change-transform" />
 
       <div className="max-w-4xl w-full relative z-10 flex flex-col">
         {/* Breadcrumb / Navigasi Atas */}
@@ -58,10 +58,10 @@ export default function TermsPage() {
         {/* Kartu Cyber-glass Premium Luar */}
         <div className="glass border border-border/60 rounded-xl p-6 sm:p-10 md:p-14 shadow-[0_0_50px_rgb(var(--secondary-rgb)/0.05)] relative overflow-hidden">
           {/* Aksen Sudut Halus */}
-          <div className="absolute top-0 right-0 w-8 h-[2px] bg-gradient-to-l from-secondary to-transparent" />
-          <div className="absolute top-0 right-0 w-[2px] h-8 bg-gradient-to-b from-secondary to-transparent" />
-          <div className="absolute bottom-0 left-0 w-8 h-[2px] bg-gradient-to-r from-secondary to-transparent" />
-          <div className="absolute bottom-0 left-0 w-[2px] h-8 bg-gradient-to-t from-secondary to-transparent" />
+          <div className="absolute top-0 right-0 w-8 h-0.5 bg-linear-to-l from-secondary to-transparent" />
+          <div className="absolute top-0 right-0 w-0.5 h-8 bg-linear-to-b from-secondary to-transparent" />
+          <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-linear-to-r from-secondary to-transparent" />
+          <div className="absolute bottom-0 left-0 w-0.5 h-8 bg-linear-to-t from-secondary to-transparent" />
 
           {/* Header Jepang */}
           <header className="mb-12 border-b border-border/60 pb-8 relative">
@@ -115,7 +115,7 @@ export default function TermsPage() {
                 Anda diberikan lisensi terbatas, non-eksklusif, dan tidak dapat dialihkan untuk menggunakan platform ini murni untuk kepentingan belajar mandiri Anda. Anda setuju untuk <strong className="font-semibold text-destructive">tidak melakukan tindakan terlarang berikut</strong>:
               </p>
               
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 !list-none !pl-0">
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 list-none! pl-0!">
                 <li className="glass border border-border/60 hover:border-secondary/30 rounded-2xl p-5 transition-all duration-300 group flex items-start gap-4 shadow-sm hover:shadow-[0_0_20px_rgb(var(--secondary-rgb)/0.02)]">
                   <div className="size-8 rounded-lg bg-secondary/5 border border-secondary/10 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform duration-300">
                     <Compass size={16} />

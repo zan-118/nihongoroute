@@ -27,11 +27,11 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-foreground/35 z-[55] md:hidden"
+          className="fixed inset-0 bg-foreground/35 z-55 md:hidden"
         />
       )}
 
-      <aside data-tour="sidebar" className={`sidebar-shell fixed top-0 left-0 h-dvh p-4 sm:p-5 z-[60] flex flex-col w-[18rem] transition-transform duration-500 md:translate-x-0 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}>
+      <aside data-tour="sidebar" className={`sidebar-shell fixed top-0 left-0 h-dvh p-4 sm:p-5 z-60 flex flex-col w-[18rem] transition-transform duration-500 md:translate-x-0 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="absolute inset-0 bg-asanoha opacity-[0.02] pointer-events-none" />
 
         <div className="mb-7 flex items-center gap-4 relative z-10 px-1">

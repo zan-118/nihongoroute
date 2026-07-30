@@ -75,13 +75,13 @@ export function ReviewModeCard({
         isEnabled ? "cursor-pointer" : "opacity-50 pointer-events-none"
       }`}
     >
-      <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
+      <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 pointer-events-none z-20">
         <div 
-          className="absolute top-0 right-0 w-[14px] h-[1px] transition-colors duration-500" 
+          className="absolute top-0 right-0 w-3.5 h-px transition-colors duration-500" 
           style={{ backgroundColor: isEnabled ? (isPrimary ? "var(--primary)" : "var(--warning)") : "var(--muted)" }}
         />
         <div 
-          className="absolute top-0 right-0 w-[1px] h-[14px] transition-colors duration-500" 
+          className="absolute top-0 right-0 w-px h-3.5 transition-colors duration-500" 
           style={{ backgroundColor: isEnabled ? (isPrimary ? "var(--primary)" : "var(--warning)") : "var(--muted)" }}
         />
       </div>

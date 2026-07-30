@@ -32,7 +32,7 @@ import { ProgressPanel } from "@/components/features/dashboard/panels/ProgressPa
 /** Dynamic import for achievements grid to optimize initial load. */
 const AchievementsGrid = dynamic(() => import("@/components/features/gamification/AchievementsGrid"), { 
   ssr: false,
-  loading: () => <div className="h-[200px] w-full animate-pulse bg-muted rounded-lg" />
+  loading: () => <div className="h-50 w-full animate-pulse bg-muted rounded-lg" />
 });
 
 import { Home, Activity, Trophy, Settings } from "@/components/ui/icons";
@@ -275,7 +275,7 @@ export function DashboardView({ courseMetadata, expression }: DashboardViewProps
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="mt-[34px]"
+        className="mt-8.5"
       >
         {activeTab === "beranda" && (
           <HomePanel
@@ -301,10 +301,10 @@ export function DashboardView({ courseMetadata, expression }: DashboardViewProps
         )}
 
         {activeTab === "pencapaian" && (
-          <div className="space-y-[34px]">
+          <div className="space-y-8.5">
             <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-[13px]">
-                <div className="w-[34px] h-[1px] bg-primary/40" />
+              <div className="flex items-center gap-3.25">
+                <div className="w-8.5 h-px bg-primary/40" />
                 <h2 className="text-[10px] uppercase tracking-[0.2em] text-primary">
                   Koleksi
                 </h2>

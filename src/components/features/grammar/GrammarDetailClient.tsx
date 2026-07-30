@@ -391,13 +391,13 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
         </div>
       </div>
 
-      <div className="w-full h-px bg-gradient-to-r from-border/50 via-border to-border/50 mb-12 shadow-[0_0_20px_rgb(var(--primary-rgb)/0.1)]" />
+      <div className="w-full h-px bg-linear-to-r from-border/50 via-border to-border/50 mb-12 shadow-[0_0_20px_rgb(var(--primary-rgb)/0.1)]" />
 
       {/* Tata Letak Konten Responsif: Tumpukan Vertikal Kolom Tunggal */}
       <div className="space-y-12">
         {/* Bento Struktur */}
         {article.formation && (
-          <Card className="p-8 md:p-10 bg-gradient-to-br from-card/40 to-card/10  border border-border rounded-2xl md:rounded-3xl relative overflow-hidden group hover:border-primary/40 shadow-[0_0_30px_rgba(var(--primary-rgb),0.05)] transition-all duration-500 select-none glass">
+          <Card className="p-8 md:p-10 bg-linear-to-br from-card/40 to-card/10  border border-border rounded-2xl md:rounded-3xl relative overflow-hidden group hover:border-primary/40 shadow-[0_0_30px_rgba(var(--primary-rgb),0.05)] transition-all duration-500 select-none glass">
             <div className="absolute -top-12 -right-12 p-8 opacity-[0.02] group-hover:opacity-[0.05] group-hover:scale-110 transition-all duration-700 pointer-events-none text-primary">
               <BookText size={180} />
             </div>
@@ -432,7 +432,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
 
         {/* Bento Catatan Tambahan (Spacious Full Width) */}
         {article.notes && (
-          <Card className="p-8 md:p-10 bg-gradient-to-br from-card/30 to-card/5  border border-border rounded-2xl md:rounded-3xl relative overflow-hidden group hover:border-border transition-all duration-500 shadow-[0_0_30px_rgba(var(--primary-rgb),0.02)] select-none glass">
+          <Card className="p-8 md:p-10 bg-linear-to-br from-card/30 to-card/5  border border-border rounded-2xl md:rounded-3xl relative overflow-hidden group hover:border-border transition-all duration-500 shadow-[0_0_30px_rgba(var(--primary-rgb),0.02)] select-none glass">
             <div className="absolute -top-12 -right-12 p-8 opacity-[0.02] group-hover:opacity-[0.05] group-hover:scale-110 transition-all duration-700 pointer-events-none text-muted-foreground">
               <Lightbulb size={180} />
             </div>
@@ -496,7 +496,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
                     </div>
 
                     {/* Tombol Pemicu Pengucapan Suara (TTS) */}
-                    <div className="flex-shrink-0 select-none">
+                    <div className="shrink-0 select-none">
                       <button type="button" 
                         onClick={() => playAudio(sentenceText, i, { voice: getDeterministicVoice(sentenceText) })}
                         className={`h-12 w-12 rounded-[1.2rem] border flex items-center justify-center transition-all duration-300 relative group/btn ${
@@ -553,7 +553,7 @@ export default function GrammarDetailClient({ article, dynamicSentences = [] }: 
                     )}
                   </div>
 
-                  <div className="flex-shrink-0 select-none">
+                  <div className="shrink-0 select-none">
                     <button
                       type="button"
                       onClick={() => playAudio(sentence.japanese, 1000 + i, { voice: getDeterministicVoice(sentence.japanese) })}

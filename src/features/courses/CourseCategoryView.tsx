@@ -137,7 +137,7 @@ export default function CourseCategoryView({
       <div className="absolute inset-0 pointer-events-none">
         {/* Top gradient accent */}
         <div
-          className="absolute top-0 left-0 w-full h-[250px] md:h-[350px]"
+          className="absolute top-0 left-0 w-full h-62.5 md:h-87.5"
           style={{
             background: isSideQuest
               ? 'linear-gradient(180deg, rgb(var(--warning-rgb)/0.04) 0%, transparent 100%)'
@@ -146,7 +146,7 @@ export default function CourseCategoryView({
         />
         {/* Corner accent blob — small */}
         <div
-          className="absolute bottom-0 right-0 w-[180px] md:w-[260px] h-[180px] md:h-[260px] rounded-full blur-[45px] md:blur-[55px]"
+          className="absolute bottom-0 right-0 w-45 md:w-65 h-45 md:h-65 rounded-full blur-[45px] md:blur-[55px]"
           style={{ backgroundColor: 'rgb(var(--secondary-rgb)/0.05)' }}
         />
       </div>

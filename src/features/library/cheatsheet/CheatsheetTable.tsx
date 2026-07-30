@@ -139,7 +139,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
   // Render fallback message if no items are provided
   if (!items || items.length === 0) {
     return (
-      <div className="px-8 py-20 text-center text-muted-foreground font-medium italic bg-[rgba(var(--card-rgb),0.2)] rounded-[3rem] border border-border glass">
+      <div className="px-8 py-20 text-center text-muted-foreground font-medium italic bg-[rgba(var(--card-rgb),0.2)] rounded-6xl border border-border glass">
         Belum ada data tersedia untuk cheatsheet ini.
       </div>
     );
@@ -174,9 +174,9 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
               "rounded-full gap-2 text-xs font-mono font-bold px-4 h-9 transition-all",
               viewMode === "flashcard" ? "bg-amber-500 text-amber-950 font-black shadow-sm" : "text-muted-foreground hover:text-foreground"
             )}
-            aria-label="Tampilan Kuis Flashcard"
+            aria-label="Tampilan Flashcard Mode"
           >
-            <Layers size={14} /> Mode Kuis
+            <Layers size={14} /> Flashcard Mode ({items.length})
           </Button>
         </div>
 
@@ -199,7 +199,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
             transition={{ duration: 0.3 }}
             className="w-full overflow-x-auto font-sans"
           >
-            <table className="w-full min-w-[640px] text-left border-collapse">
+            <table className="w-full min-w-160 text-left border-collapse">
               <thead>
                 <tr className="border-b-2 border-border/80 text-[10px] font-mono font-black uppercase tracking-widest text-muted-foreground/80 bg-muted/20">
                   <th className="py-3 px-4 w-12 text-center">NO</th>
@@ -272,7 +272,7 @@ export function CheatsheetTable({ items }: CheatsheetTableProps) {
             <div 
               id="flashcard-touch-area"
               onClick={() => setIsFlipped(!isFlipped)}
-              className="w-full h-[30rem] md:h-[28rem] rounded-2xl cursor-pointer relative select-none group"
+              className="w-full h-120 md:h-112 rounded-2xl cursor-pointer relative select-none group"
               style={{ perspective: "1000px" }}
             >
               <div 

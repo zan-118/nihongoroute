@@ -139,8 +139,8 @@ export default async function StandaloneExamSessionPage({ params }: PageProps) {
   // 3. RENDER UTAMA ENGINE
   return (
     <div className="w-full flex-1 px-4 md:px-8 relative overflow-hidden flex flex-col mt-4 md:mt-8">
-      <div className="absolute top-[-8%] right-[-5%] size-[420px] bg-destructive/5 blur-[70px] rounded-full pointer-events-none ambient-glow will-change-transform" />
-      <div className="absolute bottom-[10%] left-[-5%] size-[360px] bg-warning/5 blur-[60px] rounded-full pointer-events-none ambient-glow will-change-transform" />
+      <div className="absolute top-[-8%] right-[-5%] size-105 bg-destructive/5 blur-[70px] rounded-full pointer-events-none ambient-glow will-change-transform" />
+      <div className="absolute bottom-[10%] left-[-5%] size-90 bg-warning/5 blur-[60px] rounded-full pointer-events-none ambient-glow will-change-transform" />
       <div className="w-full max-w-5xl mx-auto relative z-10 flex-1 flex flex-col">
         <MockExamEngine exam={examData} />
       </div>

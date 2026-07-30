@@ -62,8 +62,8 @@ export function SettingsView() {
           <Skeleton className="h-12 w-64" />
           <Skeleton className="h-4 w-96" />
         </div>
-        <Skeleton className="h-[200px] w-full rounded-xl" />
-        <Skeleton className="h-[200px] w-full rounded-lg" />
+        <Skeleton className="h-50 w-full rounded-xl" />
+        <Skeleton className="h-50 w-full rounded-lg" />
       </div>
     );
   }
@@ -129,12 +129,12 @@ export function SettingsView() {
           />
 
           <m.div variants={itemVariants} className="relative group">
-            <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-              <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-destructive/30 group-hover:bg-destructive transition-colors duration-500" />
-              <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-destructive/30 group-hover:bg-destructive transition-colors duration-500" />
+            <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 pointer-events-none z-20">
+              <div className="absolute top-0 right-0 w-3.5 h-px bg-destructive/30 group-hover:bg-destructive transition-colors duration-500" />
+              <div className="absolute top-0 right-0 w-px h-3.5 bg-destructive/30 group-hover:bg-destructive transition-colors duration-500" />
             </div>
 
-            <Card className="bg-destructive/[0.02] border border-destructive/20 rounded-2xl p-6 md:p-8 shadow-sm flex flex-col md:flex-row items-center md:items-start gap-6 group hover:bg-destructive/[0.04] transition-all duration-300">
+            <Card className="bg-destructive/2 border border-destructive/20 rounded-2xl p-6 md:p-8 shadow-sm flex flex-col md:flex-row items-center md:items-start gap-6 group hover:bg-destructive/4 transition-all duration-300">
               <div className="size-14 shrink-0 rounded-lg bg-destructive/10 flex items-center justify-center border border-destructive/20 shadow-md group-hover:scale-105 transition-transform">
                 <ShieldAlert size={28} className="text-destructive" />
               </div>

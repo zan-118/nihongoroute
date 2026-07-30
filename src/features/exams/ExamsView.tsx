@@ -60,8 +60,8 @@ export function ExamsView({ exams }: ExamsViewProps) {
 
   return (
     <div className="w-full px-4 sm:px-6 relative overflow-hidden bg-transparent text-foreground transition-colors duration-300 min-h-screen pt-8 sm:pt-12 pb-24">
-      <div className="absolute top-[-8%] right-[-5%] size-[420px] bg-destructive/5 rounded-full blur-[70px] pointer-events-none ambient-glow will-change-transform" />
-      <div className="absolute bottom-[10%] left-[-10%] size-[360px] bg-primary/5 rounded-full blur-[60px] pointer-events-none ambient-glow will-change-transform" />
+      <div className="absolute top-[-8%] right-[-5%] size-105 bg-destructive/5 rounded-full blur-[70px] pointer-events-none ambient-glow will-change-transform" />
+      <div className="absolute bottom-[10%] left-[-10%] size-90 bg-primary/5 rounded-full blur-[60px] pointer-events-none ambient-glow will-change-transform" />
 
       <m.div
         className="max-w-5xl mx-auto relative z-10"
@@ -218,12 +218,12 @@ export function ExamsView({ exams }: ExamsViewProps) {
                   className="block h-full"
                 >
                   <div className="relative group h-full">
-                    <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-                      <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-destructive/20 group-hover:bg-destructive transition-colors duration-500" />
-                      <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-destructive/20 group-hover:bg-destructive transition-colors duration-500" />
+                    <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 pointer-events-none z-20">
+                      <div className="absolute top-0 right-0 w-3.5 h-px bg-destructive/20 group-hover:bg-destructive transition-colors duration-500" />
+                      <div className="absolute top-0 right-0 w-px h-3.5 bg-destructive/20 group-hover:bg-destructive transition-colors duration-500" />
                     </div>
 
-                    <Card className="p-6 md:p-8 bg-card border border-border/50 dark:border-white/10 rounded-2xl group hover:bg-destructive/[0.01] hover:border-destructive/40 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] flex flex-col h-full relative overflow-hidden cursor-pointer shadow-[0_4px_25px_rgba(0,0,0,0.015)]">
+                    <Card className="p-6 md:p-8 bg-card border border-border/50 dark:border-white/10 rounded-2xl group hover:bg-destructive/1 hover:border-destructive/40 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] flex flex-col h-full relative overflow-hidden cursor-pointer shadow-[0_4px_25px_rgba(0,0,0,0.015)]">
 
                       <div className="flex justify-between items-start mb-8 md:mb-10 relative z-10">
                         <div className="flex flex-wrap gap-2">

@@ -322,7 +322,7 @@ export default function ListeningWorkspace({
             <div className="relative w-full">
               <div
                 ref={scrollContainerRef}
-                className="max-h-[500px] overflow-y-auto pr-2 custom-scrollbar flex flex-col gap-4 relative z-10"
+                className="max-h-125 overflow-y-auto pr-2 custom-scrollbar flex flex-col gap-4 relative z-10"
               >
                 {transcript.map((line, idx) => {
                   const isActive = idx === currentActiveIndex;
@@ -415,7 +415,7 @@ export default function ListeningWorkspace({
             className="w-full grid grid-cols-1 gap-6 md:grid-cols-[220px_1fr]"
           >
             {/* Left Side: Line list */}
-            <div className="max-h-[80px] md:max-h-[350px] overflow-x-auto md:overflow-y-auto rounded-lg border border-border/80 bg-muted/5 p-2 custom-scrollbar flex flex-row md:flex-col gap-1.5 w-full">
+            <div className="max-h-20 md:max-h-87.5 overflow-x-auto md:overflow-y-auto rounded-lg border border-border/80 bg-muted/5 p-2 custom-scrollbar flex flex-row md:flex-col gap-1.5 w-full">
               <div className="flex flex-row md:flex-col gap-1.5 w-full shrink-0">
                 {dictationLines.map((line, index) => {
                   const attempt = dictationAttempts[line._key];
@@ -488,7 +488,7 @@ export default function ListeningWorkspace({
                   value={dictationAnswer}
                   onChange={(e) => setDictationAnswer(e.target.value)}
                   placeholder="Ketik kalimat bahasa Jepang yang kamu dengar..."
-                  className="min-h-[100px] w-full rounded-xl border border-border/80 bg-muted/10 p-3 text-base font-japanese outline-none placeholder:text-muted-foreground/60 focus:border-primary/40 focus:ring-2 focus:ring-primary/10 resize-none"
+                  className="min-h-25 w-full rounded-xl border border-border/80 bg-muted/10 p-3 text-base font-japanese outline-none placeholder:text-muted-foreground/60 focus:border-primary/40 focus:ring-2 focus:ring-primary/10 resize-none"
                 />
 
                 <div className="flex flex-wrap items-center justify-between gap-3 mt-4">
@@ -657,7 +657,7 @@ export default function ListeningWorkspace({
       </AnimatePresence>
 
       {/* Floating Sticky Bottom Media Control Bar (Unified) */}
-      <div className="fixed bottom-6 left-6 md:left-[calc(18rem+1.5rem)] right-6 z-50 rounded-2xl md:rounded-3xl border border-border bg-background/80  p-4 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 glass animate-in slide-in-from-bottom duration-500 pointer-events-auto">
+      <div className="fixed bottom-6 left-6 md:left-78 right-6 z-50 rounded-2xl md:rounded-3xl border border-border bg-background/80  p-4 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 glass animate-in slide-in-from-bottom duration-500 pointer-events-auto">
         {/* Playback Controls & Progress Bar */}
         <div className="flex-1 w-full md:max-w-md">
           {audioUrl ? (

@@ -67,9 +67,9 @@ const VocabCard: React.FC<{ v: VocabLessonItem; idx: number }> = ({ v, idx }) =>
   return (
     <div className="relative group/wrapper h-full">
       {/* Tombou Register Mark */}
-      <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-        <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover/wrapper:bg-primary transition-colors duration-500" />
-        <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover/wrapper:bg-primary transition-colors duration-500" />
+      <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 pointer-events-none z-20">
+        <div className="absolute top-0 right-0 w-3.5 h-px bg-primary/20 group-hover/wrapper:bg-primary transition-colors duration-500" />
+        <div className="absolute top-0 right-0 w-px h-3.5 bg-primary/20 group-hover/wrapper:bg-primary transition-colors duration-500" />
       </div>
 
       <div
@@ -180,7 +180,7 @@ export const VocabSection: React.FC<VocabSectionProps> = ({ vocabList }) => {
         <h2 className="text-xl font-black uppercase tracking-tight text-foreground flex items-center gap-3">
           <span className="text-2xl not-italic">単語</span> Kosakata (Vocab)
         </h2>
-        <div className="h-[1px] flex-1 bg-border" />
+        <div className="h-px flex-1 bg-border" />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {visibleVocabs.map((v: VocabLessonItem, idx: number) => {

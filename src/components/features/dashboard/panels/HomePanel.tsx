@@ -33,7 +33,7 @@ import { RandomExpression } from "@/actions/expressions.actions";
 const KanjiProgressGrid = dynamic(() => import("../KanjiProgressGrid"), { 
   ssr: false,
   // Render skeleton loader during client-side load.
-  loading: () => <div className="h-[200px] w-full animate-pulse bg-muted rounded-lg" />
+  loading: () => <div className="h-50 w-full animate-pulse bg-muted rounded-lg" />
 });
 
 // ==========================================

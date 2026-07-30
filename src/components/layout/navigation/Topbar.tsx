@@ -111,7 +111,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
           )}
         </div>
 
-        <div className="hidden md:flex flex-col min-w-0 max-w-[190px] sm:max-w-[280px] md:max-w-[360px] lg:max-w-none">
+        <div className="hidden md:flex flex-col min-w-0 max-w-47.5 sm:max-w-70 md:max-w-90 lg:max-w-none">
           <p className="text-sm md:text-lg text-foreground tracking-tight truncate leading-none uppercase md:max-w-[18rem] lg:max-w-none">
             {currentRouteLabel}
           </p>
@@ -270,7 +270,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
           </div>
         </div>
 
-        <div className="w-[1px] h-6 bg-border/50 mx-1 hidden sm:block" />
+        <div className="w-px h-6 bg-border/50 mx-1 hidden sm:block" />
 
         <UserNav />
       </div>

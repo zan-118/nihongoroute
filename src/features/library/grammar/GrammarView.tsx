@@ -202,9 +202,9 @@ export default function GrammarView({ initialArticles = EMPTY_GRAMMAR_ARTICLES }
         }}
       />
 
-      <section className="relative min-h-[400px]">
+      <section className="relative min-h-100">
         {loading && (
-          <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50  rounded-[2rem]">
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50  rounded-4xl">
             <div className="size-10 animate-spin border-4 border-primary border-t-transparent rounded-full" />
           </div>
         )}
@@ -223,7 +223,7 @@ export default function GrammarView({ initialArticles = EMPTY_GRAMMAR_ARTICLES }
             </div>
           ) : (
             <div className="w-full overflow-x-auto font-sans">
-              <table className="w-full min-w-[640px] text-left border-collapse">
+              <table className="w-full min-w-160 text-left border-collapse">
                 <thead>
                   <tr className="border-b-2 border-border/80 text-[10px] font-mono font-black uppercase tracking-widest text-muted-foreground/80 bg-muted/20">
                     <th className="py-3 px-4 w-48">POLA KALIMAT</th>

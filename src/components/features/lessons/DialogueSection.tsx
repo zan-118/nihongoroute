@@ -141,7 +141,7 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
         <h2 className="text-xl uppercase tracking-tight text-foreground flex items-center gap-3">
           <span className="text-2xl not-italic">場面</span> Skenario Percakapan
         </h2>
-        <div className="h-[1px] flex-1 bg-border" />
+        <div className="h-px flex-1 bg-border" />
       </div>
       
       <div className="space-y-10">
@@ -152,9 +152,9 @@ export const DialogueSection: React.FC<DialogueSectionProps> = ({ listeningList 
           return (
             <div key={dialogId} className="relative group/dialog">
               {/* Tombou Register Mark */}
-              <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-                <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-secondary/20 group-hover/dialog:bg-secondary transition-colors duration-500" />
-                <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-secondary/20 group-hover/dialog:bg-secondary transition-colors duration-500" />
+              <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 pointer-events-none z-20">
+                <div className="absolute top-0 right-0 w-3.5 h-px bg-secondary/20 group-hover/dialog:bg-secondary transition-colors duration-500" />
+                <div className="absolute top-0 right-0 w-px h-3.5 bg-secondary/20 group-hover/dialog:bg-secondary transition-colors duration-500" />
               </div>
 
               <Card className="p-6 md:p-10 border border-border/50 dark:border-white/10 rounded-2xl bg-card shadow-[0_4px_25px_rgba(0,0,0,0.015)] relative overflow-hidden">

@@ -147,7 +147,7 @@ export function AddToSRSButton({
       {isAdded ? (
         <div className="relative flex items-center justify-center">
           <Star className="size-5 fill-primary text-primary filter drop-shadow-[0_0_2px_rgb(var(--primary-rgb)/0.5)] animate-[scaleIn_0.3s_ease-out]" />
-          <Check className="size-2.5 absolute text-background font-black stroke-[3]" />
+          <Check className="size-2.5 absolute text-background font-black stroke-3" />
         </div>
       ) : (
         <Star className="size-5 transition-transform duration-300 group-hover:scale-110" />

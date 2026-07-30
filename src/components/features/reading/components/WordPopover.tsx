@@ -170,7 +170,7 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 z-[60] bg-background/60 "
+              className="fixed inset-0 z-60 bg-background/60 "
             />
             
             <m.div
@@ -181,14 +181,14 @@ export default function WordPopover({ children, word, reading }: WordPopoverProp
               transition={isMobile ? { type: "spring", damping: 25, stiffness: 220 } : { duration: 0.2 }}
               className={cn(
                 isMobile 
-                  ? "fixed bottom-0 inset-x-0 w-full z-[70] pointer-events-auto"
-                  : "absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-72 z-[70] pointer-events-auto"
+                  ? "fixed bottom-0 inset-x-0 w-full z-70 pointer-events-auto"
+                  : "absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-72 z-70 pointer-events-auto"
               )}
             >
               <div className={cn(
                 "p-5 border border-border/60 shadow-2xl bg-card relative",
                 isMobile 
-                  ? "rounded-t-[2.5rem] pb-8" 
+                  ? "rounded-t-5xl pb-8" 
                   : "rounded-xl glass bg-card/80 "
               )}>
                 {isMobile && (

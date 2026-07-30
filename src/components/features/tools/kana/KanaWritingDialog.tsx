@@ -109,7 +109,7 @@ export function KanaWritingDialog({
                   </div>
                 </div>
 
-                <div className="w-full flex-1 flex flex-col justify-center min-h-[300px] mb-2 bg-background rounded-xl border border-border overflow-hidden">
+                <div className="w-full flex-1 flex flex-col justify-center min-h-75 mb-2 bg-background rounded-xl border border-border overflow-hidden">
                   {/* Canvas for drawing. Pass character and theme colors. */}
                   <WritingCanvas 
                     character={selectedChar!.char} 

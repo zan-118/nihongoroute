@@ -162,19 +162,24 @@ export async function queryLexicalDomain<T>(
       if (hinshi && (type === "vocab" || type === "verb" || type === "adjective" || type === "phrase")) {
         const matchingCategories = getHinshiFilterValues(hinshi);
         if (matchingCategories.length === 1) {
-          query = query.eq("category", matchingCategories[0]);
+          query = query.cs("hinshi", JSON.stringify([matchingCategories[0]]));
         } else if (matchingCategories.length > 1) {
-          query = query.in("category", matchingCategories);
+          const orFilter = matchingCategories
+            .map((cat) => `hinshi.cs.${JSON.stringify([cat])}`)
+            .join(",");
+          query = query.or(orFilter);
         }
       }
 
       // Route type specific constraints for vocab variants
       if (type === "verb") {
-        query = query.in("category", ["Verb", "Verb (Group 1)", "Verb (Group 2)", "Verb (Group 3)"]);
+        query = query.or(
+          'hinshi.cs.["Verb"],hinshi.cs.["Verb (Group 1)"],hinshi.cs.["Verb (Group 2)"],hinshi.cs.["Verb (Group 3)"]'
+        );
       } else if (type === "adjective") {
-        query = query.in("category", ["I-Adjective", "Na-Adjective"]);
+        query = query.or('hinshi.cs.["I-Adjective"],hinshi.cs.["Na-Adjective"]');
       } else if (type === "phrase") {
-        query = query.eq("category", "Expression");
+        query = query.cs("hinshi", JSON.stringify(["Expression"]));
       }
 
       return query;

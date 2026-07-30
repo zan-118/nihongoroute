@@ -39,8 +39,8 @@ export default function PrivacyPage() {
       {/* Background decorative elements */}
       <div className="grid-overlay" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgb(var(--primary-rgb)/0.07)_0%,transparent_70%)] pointer-events-none z-0" />
-      <div className="absolute top-1/4 right-0 size-[300px] bg-[rgb(var(--primary-rgb)/0.03)] rounded-full blur-[60px] pointer-events-none z-0 ambient-glow will-change-transform" />
-      <div className="absolute bottom-1/4 left-0 size-[250px] bg-[rgb(var(--destructive-rgb)/0.02)] rounded-full blur-[80px] pointer-events-none z-0 ambient-glow will-change-transform" />
+      <div className="absolute top-1/4 right-0 size-75 bg-[rgb(var(--primary-rgb)/0.03)] rounded-full blur-[60px] pointer-events-none z-0 ambient-glow will-change-transform" />
+      <div className="absolute bottom-1/4 left-0 size-62.5 bg-[rgb(var(--destructive-rgb)/0.02)] rounded-full blur-[80px] pointer-events-none z-0 ambient-glow will-change-transform" />
 
       <div className="max-w-4xl w-full relative z-10 flex flex-col">
         {/* Breadcrumb / Navigasi Atas */}
@@ -57,10 +57,10 @@ export default function PrivacyPage() {
         <div className="glass border border-border/60 rounded-xl p-6 sm:p-10 md:p-14 shadow-[0_0_50px_rgb(var(--primary-rgb)/0.05)] relative overflow-hidden">
           {/* Aksen Sudut Halus */}
           {/* Decorative corner borders */}
-          <div className="absolute top-0 left-0 w-8 h-[2px] bg-gradient-to-r from-primary to-transparent" />
-          <div className="absolute top-0 left-0 w-[2px] h-8 bg-gradient-to-b from-primary to-transparent" />
-          <div className="absolute bottom-0 right-0 w-8 h-[2px] bg-gradient-to-l from-primary to-transparent" />
-          <div className="absolute bottom-0 right-0 w-[2px] h-8 bg-gradient-to-t from-primary to-transparent" />
+          <div className="absolute top-0 left-0 w-8 h-0.5 bg-linear-to-r from-primary to-transparent" />
+          <div className="absolute top-0 left-0 w-0.5 h-8 bg-linear-to-b from-primary to-transparent" />
+          <div className="absolute bottom-0 right-0 w-8 h-0.5 bg-linear-to-l from-primary to-transparent" />
+          <div className="absolute bottom-0 right-0 w-0.5 h-8 bg-linear-to-t from-primary to-transparent" />
 
           {/* Header Jepang */}
           {/* Page header with Japanese title */}
@@ -116,7 +116,7 @@ export default function PrivacyPage() {
                 Karena NihongoRoute beroperasi dengan prinsip <strong className="text-foreground font-semibold">&quot;Offline-First&quot;</strong> dan menjunjung tinggi privasi, kami mengumpulkan data yang sangat minimal, yaitu:
               </p>
               
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 !list-none !pl-0">
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 list-none! pl-0!">
                 <li className="glass border border-border/60 hover:border-primary/30 rounded-2xl p-5 transition-all duration-300 group flex items-start gap-4 shadow-sm hover:shadow-[0_0_20px_rgb(var(--primary-rgb)/0.02)]">
                   <div className="size-8 rounded-lg bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300">
                     <Lock size={16} />
@@ -147,14 +147,14 @@ export default function PrivacyPage() {
               <p className="leading-relaxed">
                 Data yang kami kumpulkan murni digunakan untuk meningkatkan pengalaman belajar Anda, dengan rincian:
               </p>
-              <ul className="space-y-3 !list-none !pl-0">
+              <ul className="space-y-3 list-none! pl-0!">
                 {[
                   "Menyimpan dan mengembalikan progres belajar lintas perangkat secara mulus.",
                   "Menghitung algoritma pengulangan materi (SRS) secara akurat dan terpersonalisasi agar Anda bisa menguasai kosakata lebih efisien.",
                   "Mengidentifikasi area untuk meningkatkan kualitas konten NihongoRoute di masa depan."
                 ].map((text, idx) => (
                   <li key={`policy-item-${idx}`} className="flex items-start gap-3 text-sm leading-relaxed">
-                    <span className="size-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+                    <span className="size-1.5 rounded-full bg-primary mt-2 shrink-0" />
                     <span>{text}</span>
                   </li>
                 ))}

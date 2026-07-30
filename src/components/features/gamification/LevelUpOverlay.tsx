@@ -39,7 +39,7 @@ export default function LevelUpOverlay({ level }: { level: number }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80  p-4 md:p-8"
+          className="fixed inset-0 z-100 flex items-center justify-center bg-background/80  p-4 md:p-8"
         >
           <m.div
             initial={{ scale: 0.95, y: 20, opacity: 0 }}
@@ -50,11 +50,11 @@ export default function LevelUpOverlay({ level }: { level: number }) {
           >
             <Card className="text-center py-6 px-4 md:py-10 md:px-12 bg-background rounded-2xl md:rounded-3xl border border-primary/30 shadow-2xl neo-card relative overflow-hidden w-full h-auto flex flex-col items-center">
               {/* Grid background pattern */}
-              <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--primary-rgb)/0.03)_1px,transparent_1px)] bg-[size:100%_4px] pointer-events-none opacity-20 dark:opacity-40" />
+              <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--primary-rgb)/0.03)_1px,transparent_1px)] bg-size-[100%_4px] pointer-events-none opacity-20 dark:opacity-40" />
               
               {/* Radial glow effects */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[500px] bg-primary/10 blur-[65px] rounded-full animate-bloom pointer-events-none ambient-glow will-change-transform" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[300px] bg-primary/10 blur-[60px] rounded-full animate-pulse pointer-events-none ambient-glow will-change-transform" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-125 bg-primary/10 blur-[65px] rounded-full animate-bloom pointer-events-none ambient-glow will-change-transform" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-75 bg-primary/10 blur-[60px] rounded-full animate-pulse pointer-events-none ambient-glow will-change-transform" />
               
               <div className="absolute -top-16 -left-16 w-48 h-48 md:w-64 md:h-64 bg-primary/10 blur-[80px] md:blur-[60px] pointer-events-none ambient-glow will-change-transform" />
 
@@ -112,7 +112,7 @@ export default function LevelUpOverlay({ level }: { level: number }) {
               
               {/* Decorative background star */}
               <div className="absolute -bottom-16 -right-16 md:-bottom-20 md:-right-20 opacity-5 pointer-events-none scale-125 md:scale-150 rotate-12">
-                <Star size={200} fill="currentColor" className="text-foreground md:w-[300px] md:h-[300px]" />
+                <Star size={200} fill="currentColor" className="text-foreground md:w-75 md:h-75" />
               </div>
             </Card>
           </m.div>

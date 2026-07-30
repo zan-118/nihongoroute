@@ -15,6 +15,7 @@ vi.mock("@/lib/supabase/server", () => {
           or: vi.fn().mockReturnThis(),
           eq: vi.fn().mockReturnThis(),
           in: vi.fn().mockReturnThis(),
+          cs: vi.fn().mockReturnThis(),
           neq: vi.fn().mockReturnThis(),
           not: vi.fn().mockReturnThis(),
           order: vi.fn().mockReturnThis(),

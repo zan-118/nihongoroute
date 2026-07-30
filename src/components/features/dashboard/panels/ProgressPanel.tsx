@@ -29,7 +29,7 @@ import type { ReadinessCourseCategory } from "@/lib/readiness";
  */
 const KanjiProgressGrid = dynamic(() => import("../KanjiProgressGrid"), { 
   ssr: false,
-  loading: () => <div className="h-[200px] w-full animate-pulse bg-muted rounded-lg" />
+  loading: () => <div className="h-50 w-full animate-pulse bg-muted rounded-lg" />
 });
 
 /**
@@ -38,7 +38,7 @@ const KanjiProgressGrid = dynamic(() => import("../KanjiProgressGrid"), {
  */
 const WeakPointPanel = dynamic(() => import("../WeakPointPanel"), {
   ssr: false,
-  loading: () => <div className="h-[120px] w-full animate-pulse bg-muted rounded-[34px]" />
+  loading: () => <div className="h-30 w-full animate-pulse bg-muted rounded-4xl" />
 });
 
 /**

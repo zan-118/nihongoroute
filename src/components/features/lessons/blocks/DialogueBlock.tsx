@@ -174,9 +174,9 @@ export function DialogueBlock({ block }: DialogueBlockProps) {
 
       <div className="relative group/dialogue w-full">
         {/* Tombou Register Mark */}
-        <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-          <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover/dialogue:bg-primary transition-colors duration-500" />
-          <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover/dialogue:bg-primary transition-colors duration-500" />
+        <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 pointer-events-none z-20">
+          <div className="absolute top-0 right-0 w-3.5 h-px bg-primary/20 group-hover/dialogue:bg-primary transition-colors duration-500" />
+          <div className="absolute top-0 right-0 w-px h-3.5 bg-primary/20 group-hover/dialogue:bg-primary transition-colors duration-500" />
         </div>
 
         <Card className="space-y-4 rounded-2xl p-6 shadow-[0_4px_25px_rgba(0,0,0,0.015)] bg-card border border-border/50 dark:border-white/10">
@@ -192,7 +192,7 @@ export function DialogueBlock({ block }: DialogueBlockProps) {
                 }`}
               >
                 <span 
-                  className="text-[10px] font-black text-secondary uppercase tracking-widest px-2.5 py-1 rounded-[4px] h-fit flex-shrink-0 mt-1 border border-secondary/20 animate-none"
+                  className="text-[10px] font-black text-secondary uppercase tracking-widest px-2.5 py-1 rounded-[4px] h-fit shrink-0 mt-1 border border-secondary/20 animate-none"
                   style={{ backgroundColor: "rgb(var(--secondary-rgb)/0.1)" }}
                 >
                   {line.speaker}

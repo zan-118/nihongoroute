@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * @file useNavbar.ts
  * @description Hook kustom untuk mengelola data menu dan fungsi navigasi panel samping/navigasi utama.

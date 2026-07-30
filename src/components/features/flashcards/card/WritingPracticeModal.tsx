@@ -89,7 +89,7 @@ export function WritingPracticeModal({
             </div>
 
             {/* Interactive canvas for stroke order validation */}
-            <div className="w-full flex-1 flex flex-col justify-center min-h-[300px] mb-2">
+            <div className="w-full flex-1 flex flex-col justify-center min-h-75 mb-2">
               <WritingCanvas 
                 character={kanjiChar} 
                 strokeColor="hsl(var(--secondary))" 

@@ -74,9 +74,9 @@ export default function ProfileSection({
 
   return (
     <m.div variants={itemVariants} className="relative group">
-      <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-        <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
-        <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+      <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 pointer-events-none z-20">
+        <div className="absolute top-0 right-0 w-3.5 h-px bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+        <div className="absolute top-0 right-0 w-px h-3.5 bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
       </div>
 
       <Card className="bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 md:p-10 shadow-[0_4px_25px_rgba(0,0,0,0.015)] overflow-hidden relative">
@@ -86,7 +86,7 @@ export default function ProfileSection({
           <div className="flex flex-col items-center gap-4 shrink-0">
              <div className="relative group/avatar">
                 <div className="w-32 h-32 md:w-36 md:h-36 rounded-2xl bg-card border border-border flex items-center justify-center text-foreground relative z-10 overflow-hidden shadow-sm">
-                   <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent opacity-60" />
+                   <div className="absolute inset-0 bg-linear-to-br from-primary/20 via-transparent to-transparent opacity-60" />
                    <span className="text-6xl font-black italic text-primary drop-shadow-md select-none font-japanese">
                       {(newName || "S").charAt(0).toUpperCase()}
                    </span>

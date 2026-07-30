@@ -288,7 +288,7 @@ export default function VocabView({
       {/* Grid Konten */}
       <div className="relative">
         {loading && (
-          <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50  rounded-[2rem]">
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50  rounded-4xl">
             <Loader2 className="size-10 animate-spin text-primary" />
           </div>
         )}
@@ -303,7 +303,7 @@ export default function VocabView({
           </div>
         ) : layoutPreference === "grid" ? (
           <div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5 min-h-[400px]"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 items-stretch"
           >
             {vocabList.map((item, idx) => (
               <VocabCard
@@ -316,7 +316,7 @@ export default function VocabView({
           </div>
         ) : (
           <div className="w-full overflow-x-auto font-sans">
-            <table className="w-full min-w-[640px] text-left border-collapse">
+            <table className="w-full min-w-160 text-left border-collapse">
               <thead>
                 <tr className="border-b-2 border-border/80 text-[10px] font-mono font-black uppercase tracking-widest text-muted-foreground/80 bg-muted/20">
                   <th className="py-3 px-4 w-48">KOSAKATA</th>

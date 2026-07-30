@@ -44,8 +44,8 @@ export default async function DashboardPage() {
   return (
     <div className="w-full min-h-screen bg-transparent relative overflow-hidden pt-12 pb-24 px-4 md:px-8 transition-colors duration-300">
       {/* Efek Dekorasi Latar Belakang */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[500px] bg-primary/5 dark:bg-primary/10 blur-[65px] rounded-[100%] pointer-events-none opacity-50 ambient-glow will-change-transform" />
-      <div className="absolute bottom-0 right-0 size-[600px] bg-primary/5 blur-[70px] rounded-full pointer-events-none ambient-glow will-change-transform" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-250 h-125 bg-primary/5 dark:bg-primary/10 blur-[65px] rounded-[100%] pointer-events-none opacity-50 ambient-glow will-change-transform" />
+      <div className="absolute bottom-0 right-0 size-150 bg-primary/5 blur-[70px] rounded-full pointer-events-none ambient-glow will-change-transform" />
       <div className="grid-overlay" />
 
       <DashboardView courseMetadata={courseMetadata} expression={expression} />

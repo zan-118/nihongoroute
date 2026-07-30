@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * @file useMobileNav.ts
  * @description Hook kustom untuk navigasi bawah pada perangkat seluler.

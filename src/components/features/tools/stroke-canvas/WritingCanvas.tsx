@@ -35,7 +35,7 @@ export function WritingCanvas({
   character = "", 
   strokeColor = "rgb(var(--primary-rgb))", 
   guideColor = "rgb(var(--secondary-rgb))",
-  className = "max-w-[280px] sm:max-w-sm mx-auto"
+  className = "max-w-70 sm:max-w-sm mx-auto"
 }: WritingCanvasProps) {
   const {
     canvasRef,
@@ -70,11 +70,11 @@ export function WritingCanvas({
         className={containerClass}
         style={{ touchAction: 'none' }}
       >
-        <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px)] bg-[size:25%_25%] opacity-40 pointer-events-none" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--foreground-rgb)/0.01)_1px,transparent_1px)] bg-size-[25%_25%] opacity-40 pointer-events-none" />
         
         <div className="absolute inset-0 pointer-events-none opacity-10">
-          <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-destructive/30 border-dashed" />
-          <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-destructive/30 border-dashed" />
+          <div className="absolute top-1/2 left-0 right-0 h-px bg-destructive/30 border-dashed" />
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-destructive/30 border-dashed" />
         </div>
 
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-40">

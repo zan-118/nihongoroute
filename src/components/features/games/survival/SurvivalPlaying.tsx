@@ -128,13 +128,13 @@ export function SurvivalPlaying({
           className="flex-1 flex flex-col mb-4 md:mb-10"
         >
           <Card
-            className={`relative bg-card rounded-2xl md:rounded-3xl p-6 md:p-20 border text-center shadow-xl flex flex-col items-center justify-center flex-1 min-h-[220px] md:min-h-[400px] lg:min-h-[500px] neo-card transition-all duration-200 ${
+            className={`relative bg-card rounded-2xl md:rounded-3xl p-6 md:p-20 border text-center shadow-xl flex flex-col items-center justify-center flex-1 min-h-55 md:min-h-100 lg:min-h-125 neo-card transition-all duration-200 ${
               isShaking
                 ? "border-primary shadow-xl"
                 : "border-border"
             }`}
           >
-            <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--primary-rgb)/0.03)_1px,transparent_1px)] bg-[size:100%_4px] md:bg-[size:100%_6px] pointer-events-none opacity-40 rounded-2xl md:rounded-3xl" />
+            <div className="absolute inset-0 bg-[linear-gradient(rgb(var(--primary-rgb)/0.03)_1px,transparent_1px)] bg-size-[100%_4px] md:bg-size-[100%_6px] pointer-events-none opacity-40 rounded-2xl md:rounded-3xl" />
 
             <Badge
               variant="outline"
@@ -151,7 +151,7 @@ export function SurvivalPlaying({
               )}
             </Badge>
 
-            <div className="flex flex-col items-center justify-center w-full min-h-[100px] md:min-h-[200px]">
+            <div className="flex flex-col items-center justify-center w-full min-h-25 md:min-h-50">
                <h2
                 className={`${(currentCard?.word?.length || 0) > 4 ? "text-4xl sm:text-6xl md:text-7xl lg:text-8xl" : "text-6xl sm:text-7xl md:text-7xl lg:text-8xl"} font-black text-foreground tracking-tight drop-shadow-sm font-japanese leading-none transition-all duration-200`}
                >
@@ -191,7 +191,7 @@ export function SurvivalPlaying({
               variant="ghost"
               onClick={() => handleAnswer(option)}
               disabled={isCorrecting}
-              className={`group flex h-full w-full p-0 overflow-hidden rounded-xl md:rounded-2xl border transition-all duration-300 min-h-[64px] md:min-h-[100px] lg:min-h-[120px] shadow-none ${
+              className={`group flex h-full w-full p-0 overflow-hidden rounded-xl md:rounded-2xl border transition-all duration-300 min-h-16 md:min-h-25 lg:min-h-30 shadow-none ${
                 isWrong
                   ? "bg-destructive/20 border-destructive shadow-lg text-destructive"
                   : isCorrect
@@ -203,7 +203,7 @@ export function SurvivalPlaying({
                  <span className={`absolute top-2 left-3 md:top-4 md:left-6 text-[8px] md:text-xs font-bold uppercase tracking-widest transition-colors ${isWrong ? 'text-destructive/30' : 'text-muted-foreground/30 md:group-hover:text-foreground/30 dark:md:group-hover:text-foreground/30'}`}>
                    JAWABAN {idx+1}
                  </span>
-                 <p className="font-bold text-sm md:text-xl lg:text-2xl text-center leading-tight w-full break-words text-foreground md:group-hover:text-primary-foreground">
+                 <p className="font-bold text-sm md:text-xl lg:text-2xl text-center leading-tight w-full wrap-break-word text-foreground md:group-hover:text-primary-foreground">
                    {option.meaning}
                  </p>
                  {isWrong && (

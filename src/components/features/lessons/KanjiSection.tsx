@@ -68,7 +68,7 @@ export const KanjiSection: React.FC<KanjiSectionProps> = ({ kanjiList }) => {
         <h2 className="text-xl uppercase tracking-tight text-foreground flex items-center gap-3">
           <span className="text-2xl not-italic">漢字</span> Kanji Pelajaran
         </h2>
-        <div className="h-[1px] flex-1 bg-border" />
+        <div className="h-px flex-1 bg-border" />
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 md:gap-6">
         {visibleKanjis.map((k: KanjiLessonItem) => (
@@ -78,9 +78,9 @@ export const KanjiSection: React.FC<KanjiSectionProps> = ({ kanjiList }) => {
             className="p-6 border border-border/50 dark:border-white/10 rounded-2xl bg-card shadow-[0_4px_25px_rgba(0,0,0,0.015)] flex flex-col items-center justify-center group hover:border-primary/45 transition-all duration-500 relative group/card"
           >
             {/* Tombou Register Mark */}
-            <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-              <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover/card:bg-primary transition-colors duration-500" />
-              <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover/card:bg-primary transition-colors duration-500" />
+            <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 pointer-events-none z-20">
+              <div className="absolute top-0 right-0 w-3.5 h-px bg-primary/20 group-hover/card:bg-primary transition-colors duration-500" />
+              <div className="absolute top-0 right-0 w-px h-3.5 bg-primary/20 group-hover/card:bg-primary transition-colors duration-500" />
             </div>
 
             {/* Tombol Tambah ke SRS Langsung */}

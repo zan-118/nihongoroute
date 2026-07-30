@@ -31,68 +31,55 @@ function FreeWritingContent() {
   return (
     <div className="w-full flex-1 relative overflow-hidden flex flex-col bg-transparent transition-colors duration-300 pt-12 pb-24 px-4 md:px-8">
       {/* Dekorasi Latar Belakang */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[640px] h-[320px] bg-primary/10 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-160 h-80 bg-primary/10 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
 
       <div className="max-w-4xl mx-auto w-full relative z-10 flex flex-col h-full">
         <header className="mb-12">
           <nav className="mb-6">
             <Button
               variant="outline"
+              size="sm"
               asChild
-              className="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest bg-muted border-border"
+              className="gap-2 border-border bg-card/50 "
             >
               <Link href={ROUTES.TOOLS.ROOT}>
-                <ChevronLeft size={14} className="mr-2" /> Kembali ke Peralatan
+                <ChevronLeft size={16} />
+                <span>Kembali ke Peranti</span>
               </Link>
             </Button>
           </nav>
 
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
             <div>
-              <h1 className="text-4xl md:text-5xl text-foreground uppercase tracking-tight italic">
-                {character ? (
-                  <>
-                    Kanji <span className="brand-text-gradient">{character}</span>
-                  </>
-                ) : (
-                  <>
-                    Kanvas <span className="brand-text-gradient">Bebas</span>
-                  </>
-                )}
+              <h1 className="text-3xl md:text-4xl text-foreground tracking-tight mb-2">
+                Kanvas Menulis
               </h1>
-              <p className="text-muted-foreground text-sm mt-2 max-w-md font-medium leading-relaxed">
-                {character ? (
-                  `Latih menulis karakter "${character}". Sistem akan menganalisis arah dan urutan guratan secara real-time.`
-                ) : (
-                  "Ruang kosong untuk melatih guratan kanji, kana, atau sekadar coretan belajar. Gunakan jari atau stylus untuk hasil terbaik."
-                )}
+              <p className="text-muted-foreground text-sm max-w-lg">
+                Latih ingatan motorik dan urutan guratan Kanji atau Kana secara bebas langsung di atas kanvas digital interaktif.
               </p>
             </div>
-
-            <div className="flex gap-2">
-               <Badge variant="outline" className="bg-primary/10 text-primary border-primary/25 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">
-                 {character ? `Menulis: ${character}` : "Mode Bebas Aktif"}
-               </Badge>
-            </div>
+            <Badge variant="outline" className="px-3 py-1 bg-primary/10 text-primary border-primary/20">
+              Visual & Motorik
+            </Badge>
           </div>
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Area Kanvas Utama */}
           <div className="lg:col-span-7 flex justify-center">
-            <div className="w-full max-w-[500px]">
+            <div className="w-full max-w-125">
                {/* Render canvas with selected character and custom stroke color. */}
                <WritingCanvas
                  character={character}
                  strokeColor="rgb(var(--brand-cyan-rgb))"
-                 className="max-w-[400px] md:max-w-[450px] mx-auto"
+                 className="max-w-100 md:max-w-112.5 mx-auto"
                />
             </div>
           </div>
 
           {/* Area Tips & Informasi */}
           <div className="lg:col-span-5 space-y-6">
-            <Card className="p-8 rounded-[2rem] border border-border bg-card/50  shadow-xl">
+            <Card className="p-8 rounded-4xl border border-border bg-card/50  shadow-xl">
               <h3 className="text-lg uppercase tracking-tight text-foreground mb-4">Tips Menulis</h3>
               <ul className="space-y-4">
                 {[
@@ -136,7 +123,7 @@ function FreeWritingSkeleton() {
   return (
     <div className="w-full flex-1 relative overflow-hidden flex flex-col bg-transparent pt-12 pb-24 px-4 md:px-8 animate-pulse">
       {/* Background Decorative Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[640px] h-[320px] bg-primary/5 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-160 h-80 bg-primary/5 blur-[55px] rounded-full pointer-events-none ambient-glow will-change-transform" />
 
       <div className="max-w-4xl mx-auto w-full relative z-10 flex flex-col h-full">
         {/* Navigation Mock */}
@@ -162,15 +149,15 @@ function FreeWritingSkeleton() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Main Canvas Box Placeholder */}
           <div className="lg:col-span-7 flex justify-center w-full">
-            <div className="w-full max-w-[500px] flex justify-center">
-              <div className="w-full max-w-[400px] md:max-w-[450px] aspect-square rounded-2xl border border-border bg-muted/20 dark:bg-card/20" />
+            <div className="w-full max-w-125 flex justify-center">
+              <div className="w-full max-w-100 md:max-w-112.5 aspect-square rounded-2xl border border-border bg-muted/20 dark:bg-card/20" />
             </div>
           </div>
 
           {/* Sidebar Placeholders */}
           <div className="lg:col-span-5 space-y-6">
             {/* Tips Card Placeholder */}
-            <div className="h-64 rounded-[2rem] border border-border bg-muted/10" />
+            <div className="h-64 rounded-4xl border border-border bg-muted/10" />
 
             {/* Action Cards Placeholder */}
             <div className="grid grid-cols-2 gap-4">

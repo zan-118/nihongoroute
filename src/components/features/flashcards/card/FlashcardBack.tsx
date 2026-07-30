@@ -179,7 +179,7 @@ export function FlashcardBack({
 
           {/* MEANING CARD - More compact padding */}
           <div className="w-full px-1">
-            <div className="bg-muted/30 dark:bg-background/[0.03] p-3 md:p-6 rounded-xl border border-border w-full flex flex-col items-center justify-center text-center shadow-none relative group/meaning">
+            <div className="bg-muted/30 dark:bg-background/3 p-3 md:p-6 rounded-xl border border-border w-full flex flex-col items-center justify-center text-center shadow-none relative group/meaning">
               <h3 className={`${themeColor} text-base md:text-2xl font-black uppercase tracking-tight leading-tight line-clamp-2`}>
                 {meaning}
               </h3>
@@ -189,7 +189,7 @@ export function FlashcardBack({
           {/* CONTENT SECTION (Example OR Mnemonic) - Tighter constraints */}
           <div className="w-full px-1 space-y-2">
             {docType !== "sentence" && examples && examples.length > 0 ? (
-              <div className="p-2.5 bg-primary/[0.03] border border-primary/10 rounded-xl text-left">
+              <div className="p-2.5 bg-primary/3 border border-primary/10 rounded-xl text-left">
                 <span className="text-[7px] font-black uppercase tracking-widest text-primary/60 block mb-0.5">Contoh</span>
                 <p className="text-[10px] md:text-[12px] font-bold text-foreground font-japanese leading-tight line-clamp-1">
                   {examples[0].jp || examples[0].japanese}
@@ -202,7 +202,7 @@ export function FlashcardBack({
               <div className="space-y-2">
                 <MnemonicEditor wordId={id} compact={true} />
                 {mnemonic && (
-                  <div className="p-2.5 bg-warning/[0.03] border border-warning/10 rounded-xl text-left relative overflow-hidden">
+                  <div className="p-2.5 bg-warning/3 border border-warning/10 rounded-xl text-left relative overflow-hidden">
                     <span className="text-[7px] font-black uppercase tracking-widest text-warning/60 block mb-0.5">Mnemonic Resmi</span>
                     <p className="text-[9px] md:text-[11px] font-medium text-muted-foreground italic leading-tight line-clamp-2">
                       &quot;{mnemonic}&quot;

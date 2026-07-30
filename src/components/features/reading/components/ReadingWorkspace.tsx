@@ -229,7 +229,7 @@ function ReadingWorkspace({
                   speakParagraph(para, idx);
                 }}
                 className={cn(
-                  "absolute top-1 right-[-32px] p-2 rounded-xl bg-muted/5 border border-border/40 hover:bg-muted/15 transition-all",
+                  "absolute top-1 -right-8 p-2 rounded-xl bg-muted/5 border border-border/40 hover:bg-muted/15 transition-all",
                   "opacity-0 group-hover:opacity-100 focus:opacity-100",
                   (isSpeaking || isLoading) && "opacity-100"
                 )}
@@ -251,7 +251,7 @@ function ReadingWorkspace({
         <div className="max-w-3xl mx-auto mt-16 text-center border-t border-border/40 pt-10">
           <Button
             onClick={onComplete}
-            className="rounded-lg px-12 py-6 bg-gradient-to-r from-primary to-primary/95 text-white shadow-lg shadow-primary/20 font-black uppercase tracking-wider text-xs hover:scale-105 active:scale-95 transition-all"
+            className="rounded-lg px-12 py-6 bg-linear-to-r from-primary to-primary/95 text-white shadow-lg shadow-primary/20 font-black uppercase tracking-wider text-xs hover:scale-105 active:scale-95 transition-all"
           >
             <CheckCircle2 className="mr-2 h-4 w-4" /> Tandai Selesai Membaca
           </Button>

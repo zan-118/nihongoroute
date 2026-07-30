@@ -81,11 +81,11 @@ export function CoursesView({ categories }: CoursesViewProps) {
     <div className="w-full relative overflow-hidden bg-transparent text-foreground transition-colors duration-300 min-h-screen pb-24 md:pb-32">
       <div className="absolute inset-0 pointer-events-none">
         <div
-          className="absolute top-0 left-0 w-full h-[300px] md:h-[400px]"
+          className="absolute top-0 left-0 w-full h-75 md:h-100"
           style={{ background: 'linear-gradient(180deg, rgb(var(--primary-rgb)/0.05) 0%, transparent 100%)' }}
         />
         <div
-          className="absolute bottom-0 right-0 w-[260px] h-[260px] rounded-full blur-[55px] opacity-15"
+          className="absolute bottom-0 right-0 w-65 h-65 rounded-full blur-[55px] opacity-15"
           style={{ backgroundColor: 'rgb(var(--secondary-rgb)/0.06)' }}
         />
       </div>
@@ -101,9 +101,9 @@ export function CoursesView({ categories }: CoursesViewProps) {
             variants={itemVariants}
             className="lg:col-span-3 relative group/jumbo"
           >
-            <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-              <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover/jumbo:bg-primary transition-colors duration-500" />
-              <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover/jumbo:bg-primary transition-colors duration-500" />
+            <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 pointer-events-none z-20">
+              <div className="absolute top-0 right-0 w-3.5 h-px bg-primary/20 group-hover/jumbo:bg-primary transition-colors duration-500" />
+              <div className="absolute top-0 right-0 w-px h-3.5 bg-primary/20 group-hover/jumbo:bg-primary transition-colors duration-500" />
             </div>
 
             <Card className="h-full bg-card border border-border/50 dark:border-white/10 rounded-2xl p-8 sm:p-10 md:p-14 relative overflow-hidden shadow-[0_4px_25px_rgba(0,0,0,0.015)]">
