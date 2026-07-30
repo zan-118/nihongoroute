@@ -14,6 +14,7 @@ import {
   shouldDisablePreviousButton,
   performScoreCalculation,
   getErrorMessage,
+  ExamSessionAggregate,
 } from "@/lib/exams/mock-exam-engine";
 
 /**

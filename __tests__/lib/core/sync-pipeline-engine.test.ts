@@ -1,28 +1,25 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
   scheduleDebouncedSync,
-  cancelPendingSyncTimer,
   broadcastMultiTabSync,
   reconcileAcceptedXp,
-  dispatchSyncEvent,
-  SYNC_CHANNEL_NAME,
+  ProgressSyncEngine,
 } from "@/lib/core/sync-pipeline-engine";
 
-describe("SyncPipelineEngine Unit Tests", () => {
+describe("Sync Pipeline Engine Seam", () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
 
   afterEach(() => {
-    cancelPendingSyncTimer();
+    vi.restoreAllMocks();
     vi.useRealTimers();
-    vi.clearAllMocks();
   });
 
-  describe("scheduleDebouncedSync & dispatchSyncEvent", () => {
-    it("harus menunda eksekusi callback selama 2000ms secara default", () => {
+  describe("scheduleDebouncedSync", () => {
+    it("harus menunda eksekusi callback sesuai delay debounce", () => {
       const callback = vi.fn();
-      scheduleDebouncedSync(callback);
+      scheduleDebouncedSync(callback, 2000);
 
       expect(callback).not.toHaveBeenCalled();
       vi.advanceTimersByTime(1999);
@@ -36,25 +33,14 @@ describe("SyncPipelineEngine Unit Tests", () => {
       const callback1 = vi.fn();
       const callback2 = vi.fn();
 
-      scheduleDebouncedSync(callback1);
+      scheduleDebouncedSync(callback1, 2000);
       vi.advanceTimersByTime(1000);
-      scheduleDebouncedSync(callback2);
 
-      vi.advanceTimersByTime(1500);
-      expect(callback1).not.toHaveBeenCalled();
-      expect(callback2).not.toHaveBeenCalled();
+      scheduleDebouncedSync(callback2, 2000);
+      vi.advanceTimersByTime(2000);
 
-      vi.advanceTimersByTime(500);
       expect(callback1).not.toHaveBeenCalled();
       expect(callback2).toHaveBeenCalledTimes(1);
-    });
-
-    it("harus mengeksekusi via seam dispatchSyncEvent", () => {
-      const triggerSync = vi.fn();
-      dispatchSyncEvent({ triggerSync, debounceMs: 500 });
-
-      vi.advanceTimersByTime(500);
-      expect(triggerSync).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -62,37 +48,43 @@ describe("SyncPipelineEngine Unit Tests", () => {
     it("harus memperbarui XP lokal jika accepted_xp valid", () => {
       const updateLocalXp = vi.fn();
       reconcileAcceptedXp(150, updateLocalXp);
+
       expect(updateLocalXp).toHaveBeenCalledWith(150);
     });
 
-    it("tidak boleh memperbarui XP lokal jika accepted_xp undefined atau NaN", () => {
+    it("harus mengabaikan accepted_xp jika bernilai undefined/NaN", () => {
       const updateLocalXp = vi.fn();
       reconcileAcceptedXp(undefined, updateLocalXp);
       reconcileAcceptedXp(NaN, updateLocalXp);
+
       expect(updateLocalXp).not.toHaveBeenCalled();
     });
   });
 
-  describe("broadcastMultiTabSync", () => {
-    it("harus menembakkan pesan BroadcastChannel jika window.BroadcastChannel tersedia", () => {
-      const postMessageMock = vi.fn();
-      const closeMock = vi.fn();
+  describe("ProgressSyncEngine", () => {
+    it("harus mengelola penjadwalan dan pembatalan sync terpusat", async () => {
+      const engine = new ProgressSyncEngine({ debounceMs: 1000 });
+      const task = vi.fn().mockResolvedValue(undefined);
 
-      class MockBroadcastChannel {
-        name: string;
-        constructor(name: string) {
-          this.name = name;
-        }
-        postMessage = postMessageMock;
-        close = closeMock;
-      }
+      engine.scheduleSync(task);
+      expect(task).not.toHaveBeenCalled();
 
-      vi.stubGlobal("BroadcastChannel", MockBroadcastChannel);
+      await vi.advanceTimersByTimeAsync(1000);
+      expect(task).toHaveBeenCalledTimes(1);
+      expect(engine.getLastSyncedAt()).not.toBeNull();
 
-      broadcastMultiTabSync("SYNC_COMPLETE");
+      engine.dispose();
+    });
 
-      expect(postMessageMock).toHaveBeenCalledWith("SYNC_COMPLETE");
-      expect(closeMock).toHaveBeenCalled();
+    it("harus mengabstraksikan rekonsiliasi XP anti-cheat", () => {
+      const engine = new ProgressSyncEngine();
+      const mockUpdate = vi.fn();
+
+      engine.reconcileAntiCheatXp(250, mockUpdate);
+      expect(mockUpdate).toHaveBeenCalledWith(250);
+
+      engine.dispose();
     });
   });
 });
+

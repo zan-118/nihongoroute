@@ -4,6 +4,7 @@ import {
   shouldDisablePreviousButton,
   performScoreCalculation,
   getErrorMessage,
+  ExamSessionAggregate,
 } from "@/lib/exams/mock-exam-engine";
 import type { ExamQuestion } from "@/components/features/exams/mock-engine/types";
 
@@ -71,4 +72,59 @@ describe("Mock Exam Engine Seam", () => {
       expect(getErrorMessage("String error", "Fallback")).toBe("Fallback");
     });
   });
+
+  describe("ExamSessionAggregate", () => {
+    it("harus menginisialisasi state aggregate dengan benar", () => {
+      const aggregate = new ExamSessionAggregate({ questions: MOCK_QUESTIONS });
+      expect(aggregate.getCurrentIndex()).toBe(0);
+      expect(aggregate.getActiveQuestion()?._key).toBe("q1");
+      expect(aggregate.isPreviousDisabled()).toBe(true);
+    });
+
+    it("harus mencatat jawaban dan menandai status dirty", () => {
+      const aggregate = new ExamSessionAggregate({ questions: MOCK_QUESTIONS });
+      expect(aggregate.isDirty()).toBe(false);
+
+      const changed = aggregate.setAnswer("q1", 0);
+      expect(changed).toBe(true);
+      expect(aggregate.isDirty()).toBe(true);
+      expect(aggregate.getAnswers()).toEqual({ q1: 0 });
+
+      // Menyetel jawaban yang sama tidak boleh memicu status dirty ulang
+      aggregate.clearDirtyFlag();
+      const same = aggregate.setAnswer("q1", 0);
+      expect(same).toBe(false);
+      expect(aggregate.isDirty()).toBe(false);
+    });
+
+    it("harus mengelola penandaan (flag) soal", () => {
+      const aggregate = new ExamSessionAggregate({ questions: MOCK_QUESTIONS });
+      expect(aggregate.toggleFlag("q1")).toBe(true);
+      expect(aggregate.getFlagged()).toEqual({ q1: true });
+      expect(aggregate.toggleFlag("q1")).toBe(false);
+      expect(aggregate.getFlagged()).toEqual({ q1: false });
+    });
+
+    it("harus mengevaluasi navigasi dan aturan seksi listening", () => {
+      const aggregate = new ExamSessionAggregate({ questions: MOCK_QUESTIONS });
+      aggregate.setCurrentIndex(1);
+      expect(aggregate.isPreviousDisabled()).toBe(false);
+
+      aggregate.setCurrentIndex(2); // Seksi listening
+      expect(aggregate.isPreviousDisabled()).toBe(true);
+    });
+
+    it("harus menghitung hasil ujian akhir melalui aggregate", () => {
+      const aggregate = new ExamSessionAggregate({
+        questions: MOCK_QUESTIONS,
+        answers: { q1: 0, q2: 1, q3: 0 },
+        passingScore: 90,
+      });
+
+      const res = aggregate.calculateResult();
+      expect(res.correctCount).toBe(3);
+      expect(res.isPassed).toBe(true);
+    });
+  });
 });
+

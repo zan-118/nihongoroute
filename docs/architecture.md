@@ -73,11 +73,13 @@ graph TD
                             │ perubahan terdeteksi
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│ TIER 2 — Debounce Orchestrator (useSyncProgress.ts)             │
+│ TIER 2 — Progress Sync Engine (src/lib/core/sync-pipeline-engine)│
 │                                                                 │
-│  Memantau: profileKey, dirtySrsSize, dirtyLessonsSize           │
-│  Timer debounce 2000ms — reset jika ada mutasi baru             │
-│  Skip jika: isFetching, isPending, isGuest, belum hydrated      │
+│  ProgressSyncEngine mengonsolidasi:                             │
+│  - Memantau dirtySrsSize, dirtyLessonsSize                      │
+│  - Timer debounce 2000ms — reset jika ada mutasi baru           │
+│  - Multi-tab event broadcasting via BroadcastChannel            │
+│  - Anti-cheat XP reconciliation (accepted_xp)                   │
 └───────────────────────────┬─────────────────────────────────────┘
                             │ timer selesai
                             ▼
@@ -87,7 +89,7 @@ graph TD
 │  1. buildSrsUpdates() + buildLessonUpdates()                    │
 │  2. supabase.rpc('sync_user_progress', { ... })                 │
 │  3. Server menghitung accepted_xp (anti-cheat)                  │
-│  4. Client update XP lokal dari accepted_xp                     │
+│  4. Engine merekonsiliasi XP lokal dari accepted_xp             │
 │  5. BroadcastChannel.postMessage("SYNC_COMPLETE")               │
 │  6. Tab lain invalidate query cache                             │
 │                                                                 │
@@ -104,6 +106,8 @@ graph TD
       │
       ▼
 [/api/tts Route Handler]
+      │
+      ├─► Delegate ke processTtsPipeline (src/lib/audio/tts-pipeline.ts)
       │
       ├─► Hash MD5(text + voice + rate)
       │
@@ -186,4 +190,4 @@ Untuk menjaga konsistensi codebase dan mempermudah kontribusi baru, struktur lay
 - **Feature Domain Engines (`src/features/*/`)**:
   Modul dalam (*deep feature modules*) yang mengisolasi klasifikasi, penyaringan, dan transformasi data khusus fitur (mis. `ExamCatalogEngine`, `DashboardStatsEngine`, `PracticeSessionEngine`) dari komponen rute Next.js `app/(main)`. Komponen halaman Next.js hanya bertindak sebagai wrapper tampilan tipis, sementara logika domain dapat diuji 100% secara terisolasi.
 - **Pure Logic Layer (`src/lib/learning/`, `src/lib/tools/`, `src/lib/exams/`)**:
-  Berisi logika bisnis murni (seperti kalkulasi SRS, generator soal, adapter legacy data). Dilarang mengimpor klien Supabase secara langsung. Jika logika membutuhkan data, data tersebut harus dikirimkan dari pemanggil sebagai parameter input.
+  Berisi logika bisnis murni (seperti `ExamSessionAggregate`, kalkulasi SRS, generator soal, adapter legacy data). Dilarang mengimpor klien Supabase secara langsung. Jika logika membutuhkan data, data tersebut harus dikirimkan dari pemanggil sebagai parameter input.

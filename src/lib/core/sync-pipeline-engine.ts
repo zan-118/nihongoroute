@@ -99,3 +99,103 @@ export function dispatchSyncEvent(params: SyncDispatchParams): () => void {
     void params.triggerSync();
   }, delay);
 }
+
+export interface ProgressSyncEngineOptions {
+  debounceMs?: number;
+  channelName?: string;
+  onSyncComplete?: (message: string) => void;
+}
+
+/**
+ * Deep Module Engine murni untuk mengelola seluruh siklus hidup sinkronisasi progres:
+ * debounce queueing, anti-cheat XP reconciliation, dan multi-tab messaging via BroadcastChannel.
+ */
+export class ProgressSyncEngine {
+  private debounceMs: number;
+  private channelName: string;
+  private timer: ReturnType<typeof setTimeout> | null = null;
+  private isSyncingState: boolean = false;
+  private lastSyncedAtState: number | null = null;
+  private broadcastChannel: BroadcastChannel | null = null;
+  private onSyncCompleteCallback?: (message: string) => void;
+
+  constructor(options: ProgressSyncEngineOptions = {}) {
+    this.debounceMs = options.debounceMs ?? DEFAULT_DEBOUNCE_MS;
+    this.channelName = options.channelName ?? SYNC_CHANNEL_NAME;
+    this.onSyncCompleteCallback = options.onSyncComplete;
+
+    this.initBroadcastListener();
+  }
+
+  private initBroadcastListener(): void {
+    if (typeof window !== "undefined" && "BroadcastChannel" in window) {
+      try {
+        this.broadcastChannel = new BroadcastChannel(this.channelName);
+        this.broadcastChannel.onmessage = (event) => {
+          if (typeof event.data === "string" && this.onSyncCompleteCallback) {
+            this.onSyncCompleteCallback(event.data);
+          }
+        };
+      } catch (error) {
+        console.warn("[ProgressSyncEngine] BroadcastChannel error:", error);
+      }
+    }
+  }
+
+  public isSyncing(): boolean {
+    return this.isSyncingState;
+  }
+
+  public getLastSyncedAt(): number | null {
+    return this.lastSyncedAtState;
+  }
+
+  public scheduleSync(syncTask: () => Promise<void> | void): () => void {
+    this.cancelScheduledSync();
+
+    this.timer = setTimeout(() => {
+      this.timer = null;
+      this.executeSync(syncTask);
+    }, this.debounceMs);
+
+    return () => this.cancelScheduledSync();
+  }
+
+  public cancelScheduledSync(): void {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+  }
+
+  public async executeSync(syncTask: () => Promise<void> | void): Promise<void> {
+    this.isSyncingState = true;
+    try {
+      await syncTask();
+      this.lastSyncedAtState = Date.now();
+      this.broadcastSync("SYNC_COMPLETE");
+    } finally {
+      this.isSyncingState = false;
+    }
+  }
+
+  public broadcastSync(message: string = "SYNC_COMPLETE"): void {
+    broadcastMultiTabSync(message);
+  }
+
+  public reconcileAntiCheatXp(
+    acceptedXp: number | undefined,
+    updateLocalXp: (xp: number) => void
+  ): void {
+    reconcileAcceptedXp(acceptedXp, updateLocalXp);
+  }
+
+  public dispose(): void {
+    this.cancelScheduledSync();
+    if (this.broadcastChannel) {
+      this.broadcastChannel.close();
+      this.broadcastChannel = null;
+    }
+  }
+}
+

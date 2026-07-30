@@ -98,3 +98,101 @@ export function performScoreCalculation(
 export function getErrorMessage(error: unknown, fallback: string): string {
   return error instanceof Error ? error.message : fallback;
 }
+
+export interface ExamSessionAggregateOptions {
+  questions: ExamQuestion[];
+  currentIndex?: number;
+  answers?: Record<string, number>;
+  flagged?: Record<string, boolean>;
+  choukaiAudioUrl?: string;
+  passingScore?: number;
+}
+
+/**
+ * Aggregate root murni untuk mengelola state dan aturan bisnis sesi ujian JLPT.
+ * Bebas dari efek samping React DOM/hooks.
+ */
+export class ExamSessionAggregate {
+  private questions: ExamQuestion[];
+  private currentIndex: number;
+  private answers: Record<string, number>;
+  private flagged: Record<string, boolean>;
+  private choukaiAudioUrl?: string;
+  private passingScore: number;
+  private isDirtyState: boolean = false;
+
+  constructor(options: ExamSessionAggregateOptions) {
+    this.questions = options.questions;
+    this.currentIndex = options.currentIndex ?? 0;
+    this.answers = { ...(options.answers ?? {}) };
+    this.flagged = { ...(options.flagged ?? {}) };
+    this.choukaiAudioUrl = options.choukaiAudioUrl;
+    this.passingScore = options.passingScore ?? 90;
+  }
+
+  public getQuestions(): ExamQuestion[] {
+    return this.questions;
+  }
+
+  public getCurrentIndex(): number {
+    return this.currentIndex;
+  }
+
+  public getActiveQuestion(): ExamQuestion | undefined {
+    return this.questions[this.currentIndex];
+  }
+
+  public getAnswers(): Record<string, number> {
+    return { ...this.answers };
+  }
+
+  public getFlagged(): Record<string, boolean> {
+    return { ...this.flagged };
+  }
+
+  public isDirty(): boolean {
+    return this.isDirtyState;
+  }
+
+  public clearDirtyFlag(): void {
+    this.isDirtyState = false;
+  }
+
+  public setAnswer(questionKey: string, optionIndex: number): boolean {
+    if (this.answers[questionKey] === optionIndex) {
+      return false;
+    }
+    this.answers[questionKey] = optionIndex;
+    this.isDirtyState = true;
+    return true;
+  }
+
+  public toggleFlag(questionKey: string): boolean {
+    const nextVal = !this.flagged[questionKey];
+    this.flagged[questionKey] = nextVal;
+    return nextVal;
+  }
+
+  public setCurrentIndex(index: number): boolean {
+    if (index < 0 || index >= this.questions.length) return false;
+    this.currentIndex = index;
+    return true;
+  }
+
+  public getSections(): Record<string, number[]> {
+    return buildQuestionSections(this.questions);
+  }
+
+  public isPreviousDisabled(): boolean {
+    return shouldDisablePreviousButton(
+      this.currentIndex,
+      this.questions,
+      Boolean(this.choukaiAudioUrl)
+    );
+  }
+
+  public calculateResult() {
+    return performScoreCalculation(this.questions, this.answers, this.passingScore);
+  }
+}
+
