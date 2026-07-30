@@ -15,7 +15,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Star, ArrowRight, ShieldCheck, Zap } from "@/components/ui/icons";
-import { useLevelUpOverlay } from "./levelup/useLevelUpOverlay";
+import { useLevelUpOverlay } from "./useLevelUpOverlay";
 
 // ======================
 // EKSEKUSI UTAMA

@@ -13,54 +13,20 @@ import { Download, Loader2, CheckCircle2, CloudLightning } from "@/components/ui
 import { sounds } from "@/lib/audio";
 import { cn } from "@/lib/utils";
 
-// ======================
-// ANTARMUKA / TIPE DATA
-// ======================
+import {
+  extractLessonAssetUrls,
+  checkLessonCacheStatus,
+  downloadLessonAssets,
+  type LessonDataPayload,
+} from "@/lib/lessons/lesson-offline-adapter";
 
-/**
- * Audio item structure.
- */
-interface LessonAudioItem {
-  audioUrl?: string;
-  audio_url?: string;
-}
-
-/**
- * Vocabulary item structure.
- */
-interface LessonVocabItem {
-  vocab?: string;
-  japanese?: string;
-  word?: string;
-}
-
-/**
- * Kanji item structure.
- */
-interface LessonKanjiItem {
-  kanji?: string;
-  character?: string;
-}
-
-/**
- * Lesson data structure.
- */
-export interface LessonData {
-  listeningList?: unknown[];
-  listening_list?: unknown[];
-  readingList?: unknown[];
-  reading_list?: unknown[];
-  vocabList?: unknown[];
-  vocab_list?: unknown[];
-  kanjiList?: unknown[];
-  kanji_list?: unknown[];
-}
+export type LessonData = LessonDataPayload;
 
 /**
  * Component props.
  */
 interface DownloadOfflineButtonProps {
-  lesson: LessonData;
+  lesson: LessonDataPayload;
 }
 
 // ======================
@@ -76,201 +42,43 @@ export default function DownloadOfflineButton({ lesson }: DownloadOfflineButtonP
 
   // Cari aset yang bisa di-cache dalam lesson
   const getAssetUrls = useCallback(() => {
-    const audioUrls: string[] = [];
-    const ttsWords: string[] = [];
-    const kanjiChars: string[] = [];
-
-    // 1. Audio percakapan (listeningList / listening_list)
-    const listeningItems = (lesson?.listeningList || lesson?.listening_list || []) as LessonAudioItem[];
-    listeningItems.forEach((item: LessonAudioItem) => {
-      const url = item?.audioUrl || item?.audio_url;
-      if (url && typeof url === "string") audioUrls.push(url);
-    });
-
-    // 2. Audio bacaan (readingList / reading_list)
-    const readingItems = (lesson?.readingList || lesson?.reading_list || []) as LessonAudioItem[];
-    readingItems.forEach((item: LessonAudioItem) => {
-      const url = item?.audioUrl || item?.audio_url;
-      if (url && typeof url === "string") audioUrls.push(url);
-    });
-
-    // 3. Kata kosa kata untuk TTS caching (vocabList / vocab_list)
-    const vocabItems = (lesson?.vocabList || lesson?.vocab_list || []) as LessonVocabItem[];
-    vocabItems.forEach((item: LessonVocabItem) => {
-      const word = item?.vocab || item?.japanese || item?.word;
-      if (word && typeof word === "string") {
-        ttsWords.push(word);
-      }
-    });
-
-    // 4. Huruf Kanji untuk latihan menulis canvas (kanjiList / kanji_list)
-    const kanjiItems = (lesson?.kanjiList || lesson?.kanji_list || []) as LessonKanjiItem[];
-    kanjiItems.forEach((item: LessonKanjiItem) => {
-      const char = item?.kanji || item?.character;
-      if (char && typeof char === "string") {
-        kanjiChars.push(char.charAt(0));
-      }
-    });
-
-    return { audioUrls, ttsWords, kanjiChars };
+    return extractLessonAssetUrls(lesson);
   }, [lesson]);
 
   // Cek pada mount apakah berkas utama sudah ada di cache
   useEffect(() => {
-    // Skip if SSR or no lesson
     if (typeof window === "undefined" || !lesson) return;
 
-    const checkCacheStatus = async () => {
-      try {
-        const { audioUrls, ttsWords, kanjiChars } = getAssetUrls();
-        if (audioUrls.length === 0 && ttsWords.length === 0 && kanjiChars.length === 0) {
-          return;
-        }
-
-        // Open cache storages
-        const audioCache = await caches.open("nihongoroute_audio_cache");
-        const ttsCache = await caches.open("nihongoroute_tts_cache");
-        const kanjiCache = await caches.open("nihongoroute_kanjivg_cache");
-
-        let allCached = true;
-
-        // Cek audio
-        for (const url of audioUrls) {
-          const match = await audioCache.match(url);
-          if (!match) {
-            allCached = false;
-            break;
-          }
-        }
-
-        // Cek TTS jika audio masih penuh
-        if (allCached) {
-          for (const word of ttsWords) {
-            const params = new URLSearchParams({ text: word, voice: "indah", rate: "medium" });
-            const ttsUrl = `/api/tts?${params.toString()}`;
-            const match = await ttsCache.match(ttsUrl);
-            if (!match) {
-              allCached = false;
-              break;
-            }
-          }
-        }
-
-        // Cek KanjiVG SVG
-        if (allCached) {
-          for (const char of kanjiChars) {
-            const code = char.charCodeAt(0).toString(16).padStart(5, "0");
-            const kanjivgUrl = `https://raw.githubusercontent.com/KanjiVG/kanjivg/master/kanji/${code}.svg`;
-            const match = await kanjiCache.match(kanjivgUrl);
-            if (!match) {
-              allCached = false;
-              break;
-            }
-          }
-        }
-
-        if (allCached) {
-          setStatus("completed");
-          setProgress(100);
-        }
-      } catch (err) {
-        console.warn("Gagal memeriksa cache luring:", err);
+    const checkCache = async () => {
+      const assetUrls = getAssetUrls();
+      const isCached = await checkLessonCacheStatus(assetUrls);
+      if (isCached) {
+        setStatus("completed");
+        setProgress(100);
       }
     };
 
-    checkCacheStatus();
+    checkCache();
   }, [lesson, getAssetUrls]);
 
   /**
    * Download all assets and save to cache.
    */
   const handleDownload = async () => {
-    // Prevent double download
     if (status === "downloading" || status === "completed") return;
 
-    // Play sound, reset state
     sounds?.playPop();
     setStatus("downloading");
     setProgress(0);
 
     try {
-      const { audioUrls, ttsWords, kanjiChars } = getAssetUrls();
-      const totalItems = audioUrls.length + ttsWords.length + kanjiChars.length;
-
-      if (totalItems === 0) {
-        setStatus("completed");
-        setProgress(100);
-        return;
-      }
-
-      let completedItems = 0;
-
-      const updateProgress = () => {
-        completedItems++;
-        setProgress(Math.min(Math.round((completedItems / totalItems) * 100), 100));
-      };
-
-      // 1. Buka seluruh cache storage
-      const audioCache = await caches.open("nihongoroute_audio_cache");
-      const ttsCache = await caches.open("nihongoroute_tts_cache");
-      const kanjiCache = await caches.open("nihongoroute_kanjivg_cache");
-
-      // 2. Unduh dan cache audio asli
-      const audioPromises = audioUrls.map(async (url) => {
-        try {
-          const match = await audioCache.match(url);
-          if (!match) {
-            const res = await fetch(url);
-            if (res.ok) await audioCache.put(url, res);
-          }
-        } catch (e) {
-          console.warn("Gagal pre-cache audio:", url, e);
-        } finally {
-          updateProgress();
-        }
+      const assetUrls = getAssetUrls();
+      await downloadLessonAssets(assetUrls, (percent) => {
+        setProgress(percent);
       });
 
-      // 3. Unduh dan cache TTS pelafalan
-      const ttsPromises = ttsWords.map(async (word) => {
-        const params = new URLSearchParams({ text: word, voice: "indah", rate: "medium" });
-        const ttsUrl = `/api/tts?${params.toString()}`;
-        try {
-          const match = await ttsCache.match(ttsUrl);
-          if (!match) {
-            const res = await fetch(ttsUrl);
-            if (res.ok) await ttsCache.put(ttsUrl, res);
-          }
-        } catch (e) {
-          console.warn("Gagal pre-cache TTS:", word, e);
-        } finally {
-          updateProgress();
-        }
-      });
-
-      // 4. Unduh dan cache KanjiVG SVG
-      const kanjiPromises = kanjiChars.map(async (char) => {
-        const code = char.charCodeAt(0).toString(16).padStart(5, "0");
-        const kanjivgUrl = `https://raw.githubusercontent.com/KanjiVG/kanjivg/master/kanji/${code}.svg`;
-        try {
-          const match = await kanjiCache.match(kanjivgUrl);
-          if (!match) {
-            const res = await fetch(kanjivgUrl);
-            if (res.ok) await kanjiCache.put(kanjivgUrl, res);
-          }
-        } catch (e) {
-          console.warn("Gagal pre-cache Kanji SVG:", char, e);
-        } finally {
-          updateProgress();
-        }
-      });
-
-      // Jalankan seluruh unduhan secara paralel dengan pembatasan
-      await Promise.all([...audioPromises, ...ttsPromises, ...kanjiPromises]);
-
-      // 5. Sukses
       setStatus("completed");
       setProgress(100);
-      // Play success sound, vibrate
       sounds?.playSuccess();
       if ("vibrate" in navigator) {
         navigator.vibrate([10, 50, 10]);

@@ -9,66 +9,12 @@ import {
   startJlptMockSession,
   submitJlptMockSession,
 } from "@/actions/jlpt-exams.actions";
-import { calculateJlptExamSubmission } from "@/lib/exams/jlpt-session";
-import type { SupabaseExamPackage } from "@/lib/exams/supabase-adapter";
-
-
-/**
- * @file useMockExamEngine.ts
- * @description Logic engine untuk Simulasi Ujian JLPT. 
- * Dioptimalkan untuk performa pada device low-end dengan memoization dan minimalisasi re-render.
- */
-
-// ======================
-// UTILITAS MURNI
-// ======================
-
-/**
- * Calculates exam score, section breakdown, and passing status.
- * Requires at least 32% accuracy per section to pass (Maiten rule).
- * 
- * @param questions - List of exam questions.
- * @param answers - User answers mapped by question key.
- * @param passingScore - Minimum score required to pass.
- * @returns Score calculation results.
- */
-const performScoreCalculation = (questions: ExamQuestion[], answers: Record<string, number>, passingScore: number) => {
-  const mockPackage: SupabaseExamPackage = {
-    id: "session-pkg",
-    title: "Exam Session",
-    timeLimitMinutes: 0,
-    passingScore,
-    questions: questions.map((q) => ({
-      id: q._key,
-      sessionType: q.section,
-      choices: (q.choices || q.options.map(val => ({ type: "text", value: val }))),
-      correctChoiceIndex: q.correctAnswer,
-      sourceType: q.sourceType,
-      sourceId: q.sourceId,
-      sourceReference: q.sourceReference,
-    })),
-  };
-
-  const result = calculateJlptExamSubmission(mockPackage, answers);
-  return {
-    correctCount: result.correctCount,
-    finalScore: result.totalScore,
-    sectionBreakdown: result.sectionBreakdown,
-    failedSection: result.failedSection,
-    isPassed: result.isPassed,
-  };
-};
-
-/**
- * Extracts error message from unknown error object.
- * 
- * @param error - Caught error.
- * @param fallback - Default message if extraction fails.
- * @returns Error message string.
- */
-function getErrorMessage(error: unknown, fallback: string) {
-  return error instanceof Error ? error.message : fallback;
-}
+import {
+  buildQuestionSections,
+  shouldDisablePreviousButton,
+  performScoreCalculation,
+  getErrorMessage,
+} from "@/lib/exams/mock-exam-engine";
 
 /**
  * Custom hook managing JLPT mock exam state, timer, audio playback, and progress saving.
@@ -129,15 +75,7 @@ export function useMockExamEngine(initialExam: ExamData) {
   }, []);
 
   // Kelompokkan pertanyaan berdasarkan bagian
-  const sections = useMemo(() => {
-    const groups: Record<string, number[]> = {};
-    exam.questions.forEach((q, idx) => {
-      const section = q.section || "vocabulary";
-      if (!groups[section]) groups[section] = [];
-      groups[section].push(idx);
-    });
-    return groups;
-  }, [exam.questions]);
+  const sections = useMemo(() => buildQuestionSections(exam.questions), [exam.questions]);
 
   const addXP = useUserStore((state) => state.addXP);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -155,13 +93,10 @@ export function useMockExamEngine(initialExam: ExamData) {
   const hasGlobalChoukai = !!exam.choukaiAudioUrl;
 
   // Disable back button during listening sections to match real JLPT constraints
-  const disablePreviousButton = useMemo(() => {
-    if (currentQuestionIndex === 0) return true;
-    if (hasGlobalChoukai) return false;
-    if (isCurrentlyListening) return true;
-    const prevQ = exam.questions[currentQuestionIndex - 1];
-    return prevQ?.section === "listening" || !!prevQ?.audioUrl;
-  }, [currentQuestionIndex, isCurrentlyListening, exam.questions, hasGlobalChoukai]);
+  const disablePreviousButton = useMemo(() => 
+    shouldDisablePreviousButton(currentQuestionIndex, exam.questions, hasGlobalChoukai),
+    [currentQuestionIndex, exam.questions, hasGlobalChoukai]
+  );
 
   // Auto-save answers to database with debounce
   useEffect(() => {

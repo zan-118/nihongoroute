@@ -9,7 +9,7 @@
 // ======================
 // IMPOR
 // ======================
-import { useNavbar } from "@/components/layout/hooks/useNavbar";
+import { useNavbar } from "@/components/layout/navigation/useNavbar";
 import { 
   User, 
   Settings, 
