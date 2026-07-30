@@ -86,16 +86,22 @@ export function useSurvivalMode(cards: CardData[]) {
 
     setHp((prevHp) => {
       const newHp = prevHp - 1;
-      if (newHp <= 0) {
-        setGameState("gameover");
-        // Award XP: score * 2
-        if (score > 0) {
-          addXP(score * 2);
+      // Schedule side-effects outside state updater callback
+      setTimeout(() => {
+        if (newHp <= 0) {
+          setGameState("gameover");
+          if (score > 0) {
+            addXP(score * 2);
+          }
+        } else {
+          const currentIndex = currentCard ? deck.findIndex((c) => c.id === currentCard.id) : -1;
+          if (currentIndex !== -1) {
+            loadNextQuestion(deck, currentIndex + 1, score);
+          } else {
+            setGameState("gameover");
+          }
         }
-      } else {
-        const currentIndex = deck.findIndex((c) => c.id === currentCard?.id);
-        loadNextQuestion(deck, currentIndex + 1, score);
-      }
+      }, 0);
       return newHp;
     });
   }, [deck, currentCard, loadNextQuestion, score, addXP]);

@@ -93,7 +93,7 @@ export function KanjiSentences({ sentences = [], character }: KanjiSentencesProp
                 )}
               </div>
 
-              <div className="flex-shrink-0 select-none">
+              <div className="shrink-0 select-none">
                 <button
                   type="button"
                   onClick={() => playAudio(sentence.japanese, i, { voice: getDeterministicVoice(sentence.japanese) })}

@@ -175,12 +175,12 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
         <div className="relative">
           {/* Loading overlay during data fetch */}
           {isFetching && (
-            <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50  rounded-[2rem]">
+            <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50  rounded-4xl">
               <Loader2 className="size-10 animate-spin text-primary" />
             </div>
           )}
 
-          <div className="flex flex-col gap-2.5 min-h-[400px]">
+          <div className="flex flex-col gap-2.5 min-h-100">
             {/* Kepala Tabel (Disembunyikan di Ponsel / Responsif) */}
             <div className="hidden md:grid md:grid-cols-12 gap-4 px-6 py-4 bg-muted/30 border border-border rounded-lg text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
               <div className="col-span-2">Kanji</div>
@@ -196,9 +196,9 @@ export default function KanjiListClient({ initialData }: KanjiListClientProps) {
                 className="flex md:grid md:grid-cols-12 items-center justify-between gap-6 px-6 py-4 bg-card border border-border/50 dark:border-white/10 hover:border-primary/45 shadow-sm transition-all duration-500 rounded-xl group relative group/row"
               >
                 {/* Tombou Register Mark */}
-                <div className="absolute -top-[6px] -right-[6px] w-[14px] h-[14px] pointer-events-none z-20">
-                  <div className="absolute top-0 right-0 w-[14px] h-[1px] bg-primary/20 group-hover/row:bg-primary transition-colors duration-500" />
-                  <div className="absolute top-0 right-0 w-[1px] h-[14px] bg-primary/20 group-hover/row:bg-primary transition-colors duration-500" />
+                <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 pointer-events-none z-20">
+                  <div className="absolute top-0 right-0 w-3.5 h-px bg-primary/20 group-hover/row:bg-primary transition-colors duration-500" />
+                  <div className="absolute top-0 right-0 w-px h-3.5 bg-primary/20 group-hover/row:bg-primary transition-colors duration-500" />
                 </div>
 
                 {/* Sisi Kiri: Kanji & Arti (Flex di Seluler, Kolom Grid di Desktop) */}

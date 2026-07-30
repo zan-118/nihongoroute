@@ -36,11 +36,14 @@ async function synthesizeEdgeTTS(text: string, edgeVoice: string): Promise<Buffe
 
   return new Promise<Buffer>((resolve, reject) => {
     const chunks: Buffer[] = [];
+    const { audioStream } = tts.toStream(text);
+
     const timer = setTimeout(() => {
+      if (audioStream && typeof audioStream.destroy === "function") {
+        audioStream.destroy();
+      }
       reject(new Error("Timeout koneksi Edge TTS (10 detik)."));
     }, 10000);
-
-    const { audioStream } = tts.toStream(text);
 
     audioStream.on("data", (data: Buffer) => chunks.push(data));
     audioStream.on("end", () => {

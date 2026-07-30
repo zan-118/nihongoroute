@@ -332,6 +332,13 @@ export function useWritingCanvas({ character, strokeColor }: UseWritingCanvasPro
       return;
     }
 
+    // Prevent out-of-bounds error if index exceeds standard paths
+    if (currentStrokeIndex >= standardPaths.length) {
+      currentStrokePointsRef.current = [];
+      redrawCanvas();
+      return;
+    }
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 

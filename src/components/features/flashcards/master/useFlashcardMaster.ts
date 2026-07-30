@@ -150,14 +150,12 @@ export function useFlashcardMaster({
 
     // Combo Logic
     if (isCorrect) {
-      setCombo(prev => {
-        const nextCombo = prev + 1;
-        setSessionStats(stats => ({
-          ...stats,
-          maxCombo: Math.max(stats.maxCombo, nextCombo)
-        }));
-        return nextCombo;
-      });
+      const nextCombo = combo + 1;
+      setCombo(nextCombo);
+      setSessionStats((stats) => ({
+        ...stats,
+        maxCombo: Math.max(stats.maxCombo, nextCombo),
+      }));
     } else {
       setCombo(0);
     }
@@ -191,7 +189,7 @@ export function useFlashcardMaster({
       }
       isProcessing.current = false;
     }, 200);
-  }, [currentCards, currentIndex, srs, updateProgress]);
+  }, [currentCards, currentIndex, srs, updateProgress, combo]);
 
   /**
    * Validates user text input against target word in challenge mode.

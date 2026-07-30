@@ -14,11 +14,16 @@ export function useAudioPlayer(defaultOptions: UseAudioPlayerOptions = {}) {
   const [playingIndex, setPlayingIndex] = useState<number | string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const cancelSpeechRef = useRef<(() => void) | null>(null);
+  const objectUrlRef = useRef<string | null>(null);
 
   const stopAudio = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current = null;
+    }
+    if (objectUrlRef.current) {
+      URL.revokeObjectURL(objectUrlRef.current);
+      objectUrlRef.current = null;
     }
     if (cancelSpeechRef.current) {
       cancelSpeechRef.current();
@@ -58,6 +63,7 @@ export function useAudioPlayer(defaultOptions: UseAudioPlayerOptions = {}) {
       try {
         const audioUrl = await fetchTTSAudio(cleanText, voice, rateStr);
         if (audioUrl) {
+          objectUrlRef.current = audioUrl;
           const audio = new Audio(audioUrl);
           audioRef.current = audio;
           audio.playbackRate = rate;
@@ -65,9 +71,17 @@ export function useAudioPlayer(defaultOptions: UseAudioPlayerOptions = {}) {
           audio.onended = () => {
             setPlayingIndex(null);
             audioRef.current = null;
+            if (objectUrlRef.current === audioUrl) {
+              URL.revokeObjectURL(audioUrl);
+              objectUrlRef.current = null;
+            }
           };
 
           audio.onerror = () => {
+            if (objectUrlRef.current === audioUrl) {
+              URL.revokeObjectURL(audioUrl);
+              objectUrlRef.current = null;
+            }
             // Audio element error, trigger fallback
             cancelSpeechRef.current = speakWithWebSpeech(
               cleanText,
