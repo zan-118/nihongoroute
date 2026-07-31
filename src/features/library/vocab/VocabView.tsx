@@ -113,10 +113,10 @@ export default function VocabView({
       params.delete("search");
     }
 
-    if (level !== "Semua") {
-      params.set("level", level);
+    if (level === "Semua") {
+      params.set("level", "all");
     } else {
-      params.delete("level");
+      params.set("level", level);
     }
 
     if (hinshi !== "all") {

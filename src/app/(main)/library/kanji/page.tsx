@@ -46,8 +46,8 @@ export const metadata: Metadata = {
  * @returns React Server Component rendering the Kanji list.
  */
 export default async function KanjiListPage() {
-  // Fetch initial page of N5 Kanji (24 items) on server to prevent layout shift
-  const initialData = await getPaginatedKanji(1, 24, "", "N5");
+  // Fetch initial page of Kanji (24 items) on server to prevent layout shift
+  const initialData = await getPaginatedKanji(1, 24, "", "all");
 
   return (
     <div className="w-full min-h-screen bg-transparent relative overflow-hidden pt-12 pb-24 px-4 md:px-8">

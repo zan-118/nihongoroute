@@ -45,7 +45,7 @@ export function KanjiHeader({
   onLevelFilterChange,
 }: KanjiHeaderProps) {
   // Available JLPT levels for filtering
-  const levels = ["N5", "N4", "N3", "N2", "N1"];
+  const levels = ["Semua", "N5", "N4", "N3", "N2", "N1"];
   
   // Retrieve layout preference state and setter from UI store
   const layoutPreference = useUIStore((s) => s.settings.layoutPreference) ?? "grid";
@@ -80,21 +80,23 @@ export function KanjiHeader({
         <div className="flex flex-wrap items-center gap-3">
           {/* Tombol Level JLPT */}
           <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0 no-scrollbar">
-            {levels.map(lvl => (
-              <Button
-                key={lvl}
-                variant={levelFilter === lvl ? "default" : "outline"}
-                className={`h-14 px-6 rounded-lg font-bold transition-all duration-300 ${
-                  levelFilter === lvl 
-                    ? "bg-primary text-primary-foreground shadow-[0_0_20px_rgb(var(--primary-rgb)/0.3)]" 
-                    : "bg-card/40 border border-border hover:bg-muted"
-                }`}
-                // Toggle filter off if clicked again, otherwise set new level
-                onClick={() => onLevelFilterChange(levelFilter === lvl ? null : lvl)}
-              >
-                {lvl}
-              </Button>
-            ))}
+            {levels.map(lvl => {
+              const isSelected = lvl === "Semua" ? (!levelFilter || levelFilter === "all" || levelFilter === "Semua") : levelFilter === lvl;
+              return (
+                <Button
+                  key={lvl}
+                  variant={isSelected ? "default" : "outline"}
+                  className={`h-14 px-6 rounded-lg font-bold transition-all duration-300 ${
+                    isSelected
+                      ? "bg-primary text-primary-foreground shadow-[0_0_20px_rgb(var(--primary-rgb)/0.3)]" 
+                      : "bg-card/40 border border-border hover:bg-muted"
+                  }`}
+                  onClick={() => onLevelFilterChange(lvl === "Semua" ? null : (levelFilter === lvl ? null : lvl))}
+                >
+                  {lvl}
+                </Button>
+              );
+            })}
           </div>
 
           {/* Toggle Tata Letak (Grid vs List) */}

@@ -31,7 +31,11 @@ function printUsage() {
       "  --level <N5|N4|N3|N2|N1>       Filter berdasarkan level JLPT (Default: semua level).",
       "  --limit <number>                 Jumlah maksimal baris data yang diproses (Default: 10).",
       "  --batch-size <number>            Jumlah kata per request LLM (Default: 5).",
+      "  --delay <ms>                     Jeda antar batch, dalam milidetik (Default: 1500).",
+      "  --retries <number>               Percobaan ulang per batch jika gagal (Default: 3).",
       "  --force                          Paksa update meskipun data sudah lengkap.",
+      "  --ids <id1,id2,...>              Proses hanya ID tertentu (abaikan filter level/limit/kelengkapan).",
+      "  --dry-run                        Jalankan tanpa menulis perubahan ke Supabase.",
       "  --help, -h                       Tampilkan bantuan ini.",
     ].join("\n")
   );
@@ -62,7 +66,11 @@ function parseArgs(args) {
     level: null,
     limit: 10,
     batchSize: 5,
+    delayMs: 1500,
+    retries: 3,
     force: false,
+    dryRun: false,
+    ids: null,
   };
 
   for (let index = 0; index < args.length; index += 1) {
@@ -103,8 +111,46 @@ function parseArgs(args) {
       continue;
     }
 
+    if (arg === "--delay") {
+      const val = Number.parseInt(args[index + 1], 10);
+      if (Number.isInteger(val) && val >= 0) {
+        options.delayMs = val;
+      }
+      index += 1;
+      continue;
+    }
+
+    if (arg === "--retries") {
+      const val = Number.parseInt(args[index + 1], 10);
+      if (Number.isInteger(val) && val >= 0) {
+        options.retries = val;
+      }
+      index += 1;
+      continue;
+    }
+
     if (arg === "--force") {
       options.force = true;
+      continue;
+    }
+
+    if (arg === "--ids") {
+      const raw = args[index + 1];
+      if (raw && !raw.startsWith("--")) {
+        options.ids = raw
+          .split(",")
+          .map((id) => id.trim())
+          .filter(Boolean);
+        index += 1;
+      } else {
+        console.error("❌ [Args] --ids butuh daftar ID dipisah koma, contoh: --ids abc123,def456");
+        process.exit(1);
+      }
+      continue;
+    }
+
+    if (arg === "--dry-run") {
+      options.dryRun = true;
       continue;
     }
   }
@@ -255,8 +301,10 @@ Untuk setiap kosakata, hasilkan bidang-bidang berikut:
 - "usage_notes": Catatan singkat penggunaan kata/perbedaan nuansa dalam bahasa Indonesia (atau null jika tidak ada).
 - "mnemonic": Jembatan keledai untuk membantu mengingat kosakata ini (atau null jika tidak ada).
 - "examples": Array berisi tepat 2 objek kalimat contoh Jepang-Indonesia dengan format:
-  - "jp": Kalimat contoh Jepang natural (tanpa furigana/ruby di dalam string jp, tulis kanji secara normal).
-  - "id": Terjemahan kalimat contoh tersebut dalam Bahasa Indonesia.
+  - "jp": Kalimat contoh Jepang natural (tulis kanji secara normal, tanpa furigana/ruby di dalam string ini).
+  - "furigana": Pembacaan kana lengkap dari kalimat "jp" tersebut (hiragana untuk kanji, katakana tetap katakana).
+  - "romaji": Pembacaan romaji standar (Hepburn) dari kalimat "jp" tersebut.
+  - "meaning": Terjemahan kalimat contoh tersebut dalam Bahasa Indonesia.
 
 Format output WAJIB berupa JSON murni dengan struktur:
 {
@@ -271,8 +319,18 @@ Format output WAJIB berupa JSON murni dengan struktur:
       "usage_notes": "...",
       "mnemonic": "...",
       "examples": [
-        { "jp": "日本語の例文です。", "id": "Contoh kalimat..." },
-        { "jp": "二番目の例文です。", "id": "Contoh kalimat kedua..." }
+        {
+          "jp": "日本語の例文です。",
+          "furigana": "にほんごのれいぶんです。",
+          "romaji": "nihongo no reibun desu.",
+          "meaning": "Ini adalah contoh kalimat bahasa Jepang."
+        },
+        {
+          "jp": "二番目の例文です。",
+          "furigana": "にばんめのれいぶんです。",
+          "romaji": "nibanme no reibun desu.",
+          "meaning": "Ini adalah contoh kalimat kedua."
+        }
       ]
     }
   ]
@@ -280,21 +338,121 @@ Format output WAJIB berupa JSON murni dengan struktur:
 `.trim();
 }
 
-function validateEnrichedItem(item) {
-  if (!item || typeof item !== "object") return false;
-  if (typeof item.id !== "string" || !item.id) return false;
-  if (typeof item.meaning_id !== "string" || !item.meaning_id) return false;
-  if (typeof item.furigana !== "string" || !item.furigana) return false;
-  if (typeof item.romaji !== "string" || !item.romaji) return false;
-  if (!Array.isArray(item.hinshi) || item.hinshi.length === 0) return false;
-  
-  if (!Array.isArray(item.examples) || item.examples.length !== 2) return false;
-  for (const ex of item.examples) {
-    if (typeof ex.jp !== "string" || !ex.jp) return false;
-    if (typeof ex.id !== "string" || !ex.id) return false;
+const KANA_PATTERN = /^[\u3040-\u309F\u30A0-\u30FFー、。・\s]+$/;
+const ROMAJI_PATTERN = /^[a-zA-Z0-9À-ʯ\s.,'’\-!?]+$/;
+const PITCH_ACCENT_PATTERN = /^\d+(\s*[,/]\s*\d+)*$/;
+const KNOWN_HINSHI = new Set([
+  "noun",
+  "verb-u",
+  "verb-ru",
+  "verb-irregular",
+  "adjective-i",
+  "adjective-na",
+  "adverb",
+  "particle",
+  "conjunction",
+  "interjection",
+  "prefix",
+  "suffix",
+  "counter",
+  "expression",
+  "pronoun",
+]);
+
+function isNonEmptyString(value) {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function validateEnrichedItem(item, sourceWord) {
+  const reasons = [];
+
+  if (!item || typeof item !== "object") {
+    return { valid: false, reasons: ["item bukan objek"] };
+  }
+  if (!isNonEmptyString(item.id)) reasons.push("id kosong/tidak valid");
+  if (!isNonEmptyString(item.meaning_id)) reasons.push("meaning_id kosong");
+  if (sourceWord && isNonEmptyString(item.meaning_id) && item.meaning_id.trim() === sourceWord.trim()) {
+    reasons.push("meaning_id sama persis dengan kata sumber (kemungkinan LLM tidak menerjemahkan)");
   }
 
-  return true;
+  if (!isNonEmptyString(item.furigana)) {
+    reasons.push("furigana kosong");
+  } else if (!KANA_PATTERN.test(item.furigana.trim())) {
+    reasons.push(`furigana mengandung karakter non-kana: "${item.furigana}"`);
+  }
+
+  if (!isNonEmptyString(item.romaji)) {
+    reasons.push("romaji kosong");
+  } else if (!ROMAJI_PATTERN.test(item.romaji.trim())) {
+    reasons.push(`romaji mengandung karakter tak terduga: "${item.romaji}"`);
+  }
+
+  if (!Array.isArray(item.hinshi) || item.hinshi.length === 0) {
+    reasons.push("hinshi kosong/bukan array");
+  } else {
+    for (const tag of item.hinshi) {
+      if (!isNonEmptyString(tag)) {
+        reasons.push("hinshi berisi elemen kosong/bukan string");
+        break;
+      }
+      if (!KNOWN_HINSHI.has(tag)) {
+        reasons.push(`hinshi "${tag}" di luar daftar yang dikenal (tetap diterima, cek manual disarankan)`);
+      }
+    }
+  }
+
+  if (item.pitch_accent != null && !PITCH_ACCENT_PATTERN.test(String(item.pitch_accent).trim())) {
+    reasons.push(`pitch_accent format tidak valid: "${item.pitch_accent}"`);
+  }
+
+  if (item.usage_notes != null && typeof item.usage_notes !== "string") {
+    reasons.push("usage_notes bukan string/null");
+  }
+  if (item.mnemonic != null && typeof item.mnemonic !== "string") {
+    reasons.push("mnemonic bukan string/null");
+  }
+
+  if (!Array.isArray(item.examples) || item.examples.length !== 2) {
+    reasons.push("examples harus berisi tepat 2 item");
+  } else {
+    item.examples.forEach((ex, idx) => {
+      if (!ex || typeof ex !== "object") {
+        reasons.push(`examples[${idx}] bukan objek`);
+        return;
+      }
+      if (!isNonEmptyString(ex.jp)) reasons.push(`examples[${idx}].jp kosong`);
+      if (!isNonEmptyString(ex.furigana)) {
+        reasons.push(`examples[${idx}].furigana kosong`);
+      } else if (!KANA_PATTERN.test(ex.furigana.trim())) {
+        reasons.push(`examples[${idx}].furigana mengandung karakter non-kana`);
+      }
+      if (!isNonEmptyString(ex.romaji)) {
+        reasons.push(`examples[${idx}].romaji kosong`);
+      } else if (!ROMAJI_PATTERN.test(ex.romaji.trim())) {
+        reasons.push(`examples[${idx}].romaji mengandung karakter tak terduga`);
+      }
+      if (!isNonEmptyString(ex.meaning)) reasons.push(`examples[${idx}].meaning kosong`);
+
+      if (sourceWord && isNonEmptyString(ex.jp) && !ex.jp.includes(sourceWord.trim())) {
+        reasons.push(`examples[${idx}].jp sepertinya tidak memuat kata "${sourceWord}" (cek manual disarankan)`);
+      }
+    });
+
+    if (
+      Array.isArray(item.examples) &&
+      item.examples.length === 2 &&
+      isNonEmptyString(item.examples[0]?.jp) &&
+      isNonEmptyString(item.examples[1]?.jp) &&
+      item.examples[0].jp.trim() === item.examples[1].jp.trim()
+    ) {
+      reasons.push("kedua examples identik (duplikat)");
+    }
+  }
+
+  // Reasons that are purely advisory (won't fail validation) are prefixed accordingly.
+  const hardFailures = reasons.filter((r) => !r.includes("(tetap diterima") && !r.includes("(cek manual disarankan)"));
+
+  return { valid: hardFailures.length === 0, reasons };
 }
 
 async function main() {
@@ -316,26 +474,67 @@ async function main() {
   const aiClient = await createAiClient();
   console.log(`🤖 [AI] Model aktif: ${aiClient.provider}`);
 
+  if (options.dryRun) {
+    console.log("🧪 [Dry-run] Mode simulasi aktif — tidak ada perubahan yang akan ditulis ke Supabase.");
+  }
+
   console.log("🔍 [Database] Mencari data kosong pada tabel \"vocab\"...");
 
-  let query = supabase.from("vocab").select("id, word, meaning_id, furigana, examples, hinshi");
+  const dbItems = [];
 
-  if (options.level) {
-    query = query.eq("jlpt_level", options.level);
+  if (options.ids && options.ids.length > 0) {
+    console.log(`🎯 [Target] Mode --ids aktif: memproses ${options.ids.length} ID spesifik (mengabaikan --limit dan filter kelengkapan).`);
+
+    let idQuery = supabase.from("vocab").select("id, word, meaning_id, furigana, examples, hinshi").in("id", options.ids);
+    if (options.level) {
+      idQuery = idQuery.eq("jlpt_level", options.level);
+    }
+
+    const { data: chunk, error } = await idQuery;
+    if (error) {
+      console.error("❌ [Supabase] Gagal membaca tabel:", error.message);
+      process.exit(1);
+    }
+
+    dbItems.push(...(chunk ?? []));
+
+    const foundIds = new Set(dbItems.map((item) => item.id));
+    const notFound = options.ids.filter((id) => !foundIds.has(id));
+    if (notFound.length > 0) {
+      console.warn(`⚠️ [Target] ${notFound.length} ID tidak ditemukan di tabel "vocab": ${notFound.join(", ")}`);
+    }
+  } else {
+    const PAGE_SIZE = 1000;
+    let fromOffset = 0;
+
+    while (dbItems.length < options.limit) {
+      const fetchSize = Math.min(PAGE_SIZE, options.limit - dbItems.length);
+      let pageQuery = supabase.from("vocab").select("id, word, meaning_id, furigana, examples, hinshi");
+
+      if (options.level) {
+        pageQuery = pageQuery.eq("jlpt_level", options.level);
+      }
+
+      if (!options.force) {
+        pageQuery = pageQuery.or("meaning_id.is.null,furigana.is.null,examples.is.null,hinshi.is.null");
+      }
+
+      const { data: chunk, error } = await pageQuery.range(fromOffset, fromOffset + fetchSize - 1);
+
+      if (error) {
+        console.error("❌ [Supabase] Gagal membaca tabel:", error.message);
+        process.exit(1);
+      }
+
+      if (!chunk || chunk.length === 0) break;
+      dbItems.push(...chunk);
+
+      if (chunk.length < fetchSize) break;
+      fromOffset += chunk.length;
+    }
   }
 
-  if (!options.force) {
-    query = query.or("meaning_id.is.null,furigana.is.null,examples.is.null,hinshi.is.null");
-  }
-
-  const { data: dbItems, error } = await query.limit(options.limit);
-
-  if (error) {
-    console.error("❌ [Supabase] Gagal membaca tabel:", error.message);
-    process.exit(1);
-  }
-
-  const filteredItems = options.force
+  const filteredItems = options.force || (options.ids && options.ids.length > 0)
     ? dbItems
     : dbItems.filter((item) => {
         const hasExamples = Array.isArray(item.examples) && item.examples.length === 2;
@@ -350,6 +549,10 @@ async function main() {
 
   console.log(`📈 [Database] Menemukan ${filteredItems.length} baris data yang siap diperkaya.`);
 
+  let totalUpdated = 0;
+  let totalFailed = 0;
+  const failedItems = []; // { id, word, reason }
+
   for (let i = 0; i < filteredItems.length; i += options.batchSize) {
     const batch = filteredItems.slice(i, i + options.batchSize);
     const batchIndex = Math.floor(i / options.batchSize) + 1;
@@ -360,26 +563,76 @@ async function main() {
     const promptItems = batch.map((item) => ({ id: item.id, word: item.word }));
     const prompt = buildPrompt(promptItems);
 
-    try {
-      const responseText = await aiClient.generateText(prompt);
-      const cleanJson = responseText.trim().replace(/^```json|```$/g, "").trim();
-      const parsed = JSON.parse(cleanJson);
+    let parsed = null;
+    for (let attempt = 1; attempt <= options.retries; attempt += 1) {
+      try {
+        const responseText = await aiClient.generateText(prompt);
+        const cleanJson = responseText.trim().replace(/^```json|```$/g, "").trim();
+        const candidate = JSON.parse(cleanJson);
 
-      if (!Array.isArray(parsed.results)) {
-        console.error("⚠️ [Format] Hasil kembalian LLM tidak valid (bukan array 'results').");
-        continue;
+        if (!Array.isArray(candidate.results)) {
+          throw new Error("Hasil kembalian LLM tidak valid (bukan array 'results').");
+        }
+
+        parsed = candidate;
+        break;
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        console.error(
+          `⚠️ [Error] Percobaan ${attempt}/${options.retries} untuk batch ${batchIndex} gagal: ${message}`
+        );
+        if (attempt < options.retries) {
+          const backoffMs = 1000 * 2 ** (attempt - 1);
+          await sleep(backoffMs);
+        }
       }
+    }
+
+    if (!parsed) {
+      console.error(`❌ [Error] Batch ${batchIndex} dilewati setelah ${options.retries} percobaan gagal.`);
+      totalFailed += batch.length;
+      batch.forEach((item) =>
+        failedItems.push({ id: item.id, word: item.word, reason: "Generate LLM gagal setelah retry habis" })
+      );
+    } else {
+      const returnedIds = new Set();
 
       for (const enriched of parsed.results) {
-        if (!validateEnrichedItem(enriched)) {
-          console.warn(`⚠️ [Validasi] Item dengan ID "${enriched.id}" gagal dalam validasi skema. Dilewati.`);
+        const original = batch.find((b) => b.id === enriched?.id);
+
+        if (!original) {
+          console.warn(
+            `⚠️ [Validasi] LLM mengembalikan ID "${enriched?.id}" yang tidak ada di batch ini. Dilewati (kemungkinan halusinasi).`
+          );
+          totalFailed += 1;
+          failedItems.push({ id: enriched?.id ?? "unknown", word: "?", reason: "ID hasil LLM tidak cocok dengan batch (halusinasi)" });
           continue;
         }
 
-        const original = batch.find((b) => b.id === enriched.id);
-        const wordLabel = original ? original.word : enriched.id;
-        
-        console.log(`  ✨ [Update] ID: "${enriched.id}" (${wordLabel}) -> diperbarui.`);
+        returnedIds.add(original.id);
+
+        const { valid, reasons } = validateEnrichedItem(enriched, original.word);
+        const advisories = reasons.filter((r) => r.includes("(tetap diterima") || r.includes("(cek manual disarankan)"));
+        const hardFailures = reasons.filter((r) => !advisories.includes(r));
+
+        if (!valid) {
+          console.warn(`⚠️ [Validasi] ID "${enriched.id}" (${original.word}) gagal validasi:`);
+          hardFailures.forEach((r) => console.warn(`      - ${r}`));
+          totalFailed += 1;
+          failedItems.push({ id: enriched.id, word: original.word, reason: hardFailures.join("; ") });
+          continue;
+        }
+
+        if (advisories.length > 0) {
+          console.warn(`ℹ️  [Peringatan] ID "${enriched.id}" (${original.word}) lolos validasi tapi perlu ditinjau:`);
+          advisories.forEach((r) => console.warn(`      - ${r}`));
+        }
+
+        if (options.dryRun) {
+          console.log(`  🧪 [Dry-run] ID: "${enriched.id}" (${original.word}) -> akan diperbarui (tidak ditulis).`);
+          totalUpdated += 1;
+          continue;
+        }
 
         const { error: updateError } = await supabase
           .from("vocab")
@@ -395,21 +648,60 @@ async function main() {
           })
           .eq("id", enriched.id);
 
-          if (updateError) {
-            console.error(`  ❌ [Supabase] Gagal menyimpan ID "${enriched.id}":`, updateError.message);
-          }
+        if (updateError) {
+          console.error(`  ❌ [Supabase] Gagal menyimpan ID "${enriched.id}":`, updateError.message);
+          totalFailed += 1;
+          failedItems.push({ id: enriched.id, word: original.word, reason: `Gagal menulis ke Supabase: ${updateError.message}` });
+        } else {
+          console.log(`  ✨ [Update] ID: "${enriched.id}" (${original.word}) -> diperbarui.`);
+          totalUpdated += 1;
+        }
       }
-    } catch (err) {
-      console.error(`❌ [Error] Gagal menyelesaikan batch ${batchIndex}:`, err.message || err);
+
+      const missing = batch.filter((b) => !returnedIds.has(b.id));
+      if (missing.length > 0) {
+        console.warn(
+          `⚠️ [Validasi] ${missing.length} kata di batch ${batchIndex} tidak dikembalikan sama sekali oleh LLM: ${missing
+            .map((m) => `${m.word} (${m.id})`)
+            .join(", ")}`
+        );
+        totalFailed += missing.length;
+        missing.forEach((m) =>
+          failedItems.push({ id: m.id, word: m.word, reason: "Tidak dikembalikan sama sekali oleh LLM" })
+        );
+      }
     }
 
     if (batchIndex < totalBatches) {
-      await sleep(1500);
+      await sleep(options.delayMs);
     }
   }
 
-  console.log("\n🎉 [Sukses] Pengayaan database kosakata selesai!");
-  process.exit(0);
+  console.log(
+    `\n🎉 [Selesai] ${totalUpdated} baris berhasil${options.dryRun ? " disimulasikan" : " diperbarui"}, ${totalFailed} baris gagal/dilewati.`
+  );
+
+  if (failedItems.length > 0 && !options.dryRun) {
+    const reportsDir = path.resolve(process.cwd(), "reports");
+    if (!fs.existsSync(reportsDir)) fs.mkdirSync(reportsDir, { recursive: true });
+
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const reportPath = path.join(reportsDir, `enrich-vocab-failures-${timestamp}.json`);
+    const uniqueFailedIds = Array.from(new Set(failedItems.map((f) => f.id).filter((id) => id && id !== "unknown")));
+
+    fs.writeFileSync(
+      reportPath,
+      JSON.stringify({ generatedAt: new Date().toISOString(), totalFailed: failedItems.length, items: failedItems }, null, 2)
+    );
+
+    console.log(`\n📄 [Report] Detail kegagalan disimpan di: ${reportPath}`);
+    if (uniqueFailedIds.length > 0) {
+      console.log(`\n🔁 [Retry] Jalankan ini untuk retry hanya baris yang gagal:`);
+      console.log(`   node scripts/enrich-vocab.mjs --force --ids ${uniqueFailedIds.join(",")}`);
+    }
+  }
+
+  process.exit(totalFailed > 0 && totalUpdated === 0 ? 1 : 0);
 }
 
 main();

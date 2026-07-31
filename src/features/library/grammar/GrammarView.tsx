@@ -27,7 +27,7 @@ import { GrammarHeader } from "@/features/library/grammar/components/GrammarHead
 // KONFIGURASI / KONSTANTA
 // ======================
 /** JLPT levels for filtering. */
-const LEVELS = ["n5", "n4", "n3", "n2", "n1"];
+const LEVELS = ["all", "n5", "n4", "n3", "n2", "n1"];
 /** Pagination limit. */
 const ITEMS_PER_PAGE = 12;
 /** Static empty array reference. Prevent unnecessary re-renders. */

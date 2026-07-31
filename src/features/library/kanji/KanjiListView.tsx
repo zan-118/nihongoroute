@@ -47,8 +47,10 @@ const DEFAULT_KANJI_LEVEL = "N5";
  * @returns Normalized uppercase level string or default level.
  */
 function normalizeLevelParam(value: string | null) {
-  if (!value || value.toLowerCase() === "all") return DEFAULT_KANJI_LEVEL;
-  if (/^n[1-5]$/i.test(value)) return value.toUpperCase();
+  if (!value) return null;
+  const lower = value.toLowerCase();
+  if (lower === "all" || value === "Semua") return null;
+  if (/^n[1-5]$/i.test(lower)) return lower.toUpperCase();
   return value;
 }
 
@@ -137,9 +139,9 @@ export default function KanjiListView({ initialData }: KanjiListViewProps) {
   // Fetch paginated kanji data using React Query.
   const { data, isFetching } = useQuery({
     queryKey: ["kanji", currentPage, debouncedSearch, levelFilter],
-    queryFn: () => getPaginatedKanji(currentPage, ITEMS_PER_PAGE, debouncedSearch, levelFilter || ""),
+    queryFn: () => getPaginatedKanji(currentPage, ITEMS_PER_PAGE, debouncedSearch, levelFilter || "all"),
     placeholderData: keepPreviousData,
-    initialData: currentPage === 1 && debouncedSearch === "" && levelFilter === DEFAULT_KANJI_LEVEL ? initialData : undefined,
+    initialData: currentPage === 1 && debouncedSearch === "" && (!levelFilter || levelFilter === "all") ? initialData : undefined,
   });
 
   const kanjis = data?.data || [];

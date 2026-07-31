@@ -6,11 +6,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Search, Headphones, Play, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Loader2, CheckCircle2, Radio, ArrowUpRight } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { getPaginatedListening, PaginatedListeningResponse, ListeningTaskItem } from "@/actions/library.actions";
 import { useUserStore } from "@/store/useUserStore";
@@ -25,19 +26,62 @@ const JLPT_FILTERS = ["all", "N5", "N4", "N3", "N2", "N1"] as const;
 type JlptFilter = (typeof JLPT_FILTERS)[number];
 
 export default function ListeningListView({ initialData }: ListeningListViewProps) {
-  const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [level, setLevel] = useState<JlptFilter>("all");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const initialSearch = searchParams.get("search") || "";
+  const initialPage = Number(searchParams.get("page") || "1");
+  const rawLevel = (searchParams.get("level") || "all").toUpperCase();
+  const initialLevel: JlptFilter = JLPT_FILTERS.includes(rawLevel as JlptFilter)
+    ? (rawLevel as JlptFilter)
+    : "all";
+
+  const [search, setSearch] = useState(initialSearch);
+  const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
+  const [currentPage, setCurrentPage] = useState(initialPage);
+  const [level, setLevel] = useState<JlptFilter>(initialLevel);
   const completedLessons = useUserStore((state) => state.completedLessons);
 
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(search);
-      setCurrentPage(1);
+      if (search !== initialSearch) {
+        setCurrentPage(1);
+      }
     }, 500);
     return () => clearTimeout(handler);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (debouncedSearch) {
+      params.set("search", debouncedSearch);
+    } else {
+      params.delete("search");
+    }
+
+    if (level !== "all") {
+      params.set("level", level);
+    } else {
+      params.delete("level");
+    }
+
+    if (currentPage > 1) {
+      params.set("page", String(currentPage));
+    } else {
+      params.delete("page");
+    }
+
+    const currentParamsString = searchParams.toString();
+    const newParamsString = params.toString();
+
+    if (currentParamsString !== newParamsString) {
+      router.replace(`${pathname}?${newParamsString}`, { scroll: false });
+    }
+  }, [debouncedSearch, level, currentPage, pathname, router, searchParams]);
 
   const { data, isFetching } = useQuery({
     queryKey: ["listening", currentPage, debouncedSearch, level],

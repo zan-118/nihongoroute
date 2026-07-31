@@ -98,7 +98,7 @@ export async function getGrammarArticles(level: string = "") {
  * @param s - String to validate.
  * @returns True if valid UUID.
  */
-const isUUID = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
+const isUUID = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
 
 /**
  * Fetch detailed grammar item by slug or ID.

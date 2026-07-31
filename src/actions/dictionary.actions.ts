@@ -70,7 +70,7 @@ export async function searchToolDictionaryAction(
         .from("vocab")
         .select("id, word, meaning:meaning_id, furigana, romaji, hinshi, jlpt_level, slug, is_common")
         .or(
-          `word.ilike."${searchTerm}",meaning.ilike."${searchTerm}",romaji.ilike."${searchTerm}",furigana.ilike."${searchTerm}",word.ilike."${kanaTerm}",furigana.ilike."${kanaTerm}"`
+          `word.ilike."${searchTerm}",meaning_id.ilike."${searchTerm}",romaji.ilike."${searchTerm}",furigana.ilike."${searchTerm}",word.ilike."${kanaTerm}",furigana.ilike."${kanaTerm}"`
         )
         .limit(limitPerType),
       supabase

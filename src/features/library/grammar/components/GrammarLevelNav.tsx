@@ -59,7 +59,7 @@ export function GrammarLevelNav({ levels, selectedLevel, onLevelChange }: Gramma
               transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
             />
           )}
-          <span className="relative z-10">{lvl}</span>
+          <span className="relative z-10">{lvl === "all" ? "Semua" : lvl}</span>
         </button>
       ))}
     </nav>
